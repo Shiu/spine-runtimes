@@ -164,7 +164,12 @@ void TrackEntry::setMixDuration(float inValue) { _mixDuration = inValue; }
 
 void TrackEntry::setMixDuration(float mixDuration, float delay) {
 	_mixDuration = mixDuration;
-	if (_previous && delay <= 0) delay += _previous->getTrackComplete() - mixDuration;
+	if (delay <= 0) {
+		if (_previous != nullptr)
+			delay = MathUtil::max(delay + _previous->getTrackComplete() - mixDuration, 0.0f);
+		else
+			delay = 0;
+	}
 	this->_delay = delay;
 }
 
@@ -606,10 +611,11 @@ TrackEntry *AnimationState::addAnimation(size_t trackIndex, Animation *animation
 	if (last == NULL) {
 		setCurrent(trackIndex, entry, true);
 		_queue->drain();
+		if (delay < 0) delay = 0;
 	} else {
 		last->_next = entry;
 		entry->_previous = last;
-		if (delay <= 0) delay += last->getTrackComplete() - entry->_mixDuration;
+		if (delay <= 0) delay = MathUtil::max(delay + last->getTrackComplete() - entry->_mixDuration, 0.0f);
 	}
 
 	entry->_delay = delay;
@@ -625,7 +631,7 @@ TrackEntry *AnimationState::setEmptyAnimation(size_t trackIndex, float mixDurati
 
 TrackEntry *AnimationState::addEmptyAnimation(size_t trackIndex, float mixDuration, float delay) {
 	TrackEntry *entry = addAnimation(trackIndex, AnimationState::getEmptyAnimation(), false, delay);
-	if (delay <= 0) entry->_delay += entry->_mixDuration - mixDuration;
+	if (delay <= 0) entry->_delay = MathUtil::max(entry->_delay + entry->_mixDuration - mixDuration, 0.0f);
 	entry->_mixDuration = mixDuration;
 	entry->_trackEnd = mixDuration;
 	return entry;
@@ -794,12 +800,12 @@ bool AnimationState::updateMixingFrom(TrackEntry *to, float delta) {
 	from->_animationLast = from->_nextAnimationLast;
 	from->_trackLast = from->_nextTrackLast;
 
-	// Require mixTime > 0 to ensure the mixing from entry was applied at least once.
-	if (to->_mixTime > 0 && to->_mixTime >= to->_mixDuration) {
-		// Require totalAlpha == 0 to ensure mixing is complete, unless mixDuration == 0 (the transition is a single frame).
+	// The from entry was applied at least once and the mix is complete.
+	if (to->_nextTrackLast != -1 && to->_mixTime >= to->_mixDuration) {
+		// Mixing is complete for all entries before the from entry or the mix is instantaneous.
 		if (from->_totalAlpha == 0 || to->_mixDuration == 0) {
 			to->_mixingFrom = from->_mixingFrom;
-			if (from->_mixingFrom != NULL) from->_mixingFrom->_mixingTo = to;
+			if (from->_mixingFrom) from->_mixingFrom->_mixingTo = to;
 			to->_interruptAlpha = from->_interruptAlpha;
 			_queue->end(from);
 		}

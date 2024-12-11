@@ -1178,11 +1178,6 @@ spAttachment *spSkeletonBinary_readAttachment(spSkeletonBinary *self, _dataInput
 				return NULL;
 			mesh = SUB_CAST(spMeshAttachment, attachment);
 			mesh->path = (char *) path;
-			if (mesh->path) {
-				char *tmp = NULL;
-				MALLOC_STR(tmp, mesh->path);
-				mesh->path = tmp;
-			}
 			spColor_setFromColor(&mesh->color, &color);
 			mesh->sequence = sequence;
 			mesh->width = width;
@@ -1341,9 +1336,9 @@ spSkeletonData *spSkeletonBinary_readSkeletonData(spSkeletonBinary *self, const 
 	} else {
 		if (!string_starts_with(skeletonData->version, SPINE_VERSION_STRING)) {
 			FREE(input);
-			spSkeletonData_dispose(skeletonData);
 			char errorMsg[255];
 			snprintf(errorMsg, 255, "Skeleton version %s does not match runtime version %s", skeletonData->version, SPINE_VERSION_STRING);
+			spSkeletonData_dispose(skeletonData);
 			_spSkeletonBinary_setError(self, errorMsg, NULL);
 			return NULL;
 		}

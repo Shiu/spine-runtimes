@@ -23,11 +23,24 @@ public final class TransformConstraintData: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? TransformConstraintData else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var bones: [BoneData] {
-        let num = Int(spine_transform_constraint_data_get_num_bones(wrappee))
         let ptr = spine_transform_constraint_data_get_bones(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_transform_constraint_data_get_num_bones(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
@@ -179,6 +192,17 @@ public final class BoundingBoxAttachment: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? BoundingBoxAttachment else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var color: Color {
         return .init(spine_bounding_box_attachment_get_color(wrappee))
     }
@@ -198,6 +222,17 @@ public final class PhysicsConstraintData: NSObject {
     internal init(_ wrappee: spine_physics_constraint_data) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? PhysicsConstraintData else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var bone: BoneData {
@@ -411,6 +446,17 @@ public final class AnimationStateEvents: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? AnimationStateEvents else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     @discardableResult
     public func getEventType(index: Int32) -> EventType {
         return spine_animation_state_events_get_event_type(wrappee, index)
@@ -443,6 +489,17 @@ public final class TransformConstraint: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? TransformConstraint else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var order: Int32 {
         return spine_transform_constraint_get_order(wrappee)
     }
@@ -452,10 +509,12 @@ public final class TransformConstraint: NSObject {
     }
 
     public var bones: [Bone] {
-        let num = Int(spine_transform_constraint_get_num_bones(wrappee))
         let ptr = spine_transform_constraint_get_bones(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_transform_constraint_get_num_bones(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
@@ -548,11 +607,24 @@ public final class PathConstraintData: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? PathConstraintData else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var bones: [BoneData] {
-        let num = Int(spine_path_constraint_data_get_num_bones(wrappee))
         let ptr = spine_path_constraint_data_get_bones(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_path_constraint_data_get_num_bones(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
@@ -659,6 +731,17 @@ public final class AnimationStateData: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? AnimationStateData else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var skeletonData: SkeletonData {
         return .init(spine_animation_state_data_get_skeleton_data(wrappee))
     }
@@ -708,6 +791,17 @@ public final class SkeletonDataResult: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? SkeletonDataResult else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var error: String? {
         return spine_skeleton_data_result_get_error(wrappee).flatMap { String(cString: $0) }
     }
@@ -733,6 +827,17 @@ public final class ClippingAttachment: NSObject {
     internal init(_ wrappee: spine_clipping_attachment) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? ClippingAttachment else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var color: Color {
@@ -765,11 +870,24 @@ public final class IkConstraintData: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? IkConstraintData else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var bones: [BoneData] {
-        let num = Int(spine_ik_constraint_data_get_num_bones(wrappee))
         let ptr = spine_ik_constraint_data_get_bones(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_ik_constraint_data_get_num_bones(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
@@ -847,6 +965,17 @@ public final class PhysicsConstraint: NSObject {
     internal init(_ wrappee: spine_physics_constraint) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? PhysicsConstraint else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var bone: Bone {
@@ -1112,6 +1241,17 @@ public final class RegionAttachment: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? RegionAttachment else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var color: Color {
         return .init(spine_region_attachment_get_color(wrappee))
     }
@@ -1129,19 +1269,19 @@ public final class RegionAttachment: NSObject {
     }
 
     public var offset: [Float?] {
-        let num = Int(spine_region_attachment_get_num_offset(wrappee))
         let ptr = spine_region_attachment_get_offset(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0]
-        }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_region_attachment_get_num_offset(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return Array(buffer)
     }
 
     public var uvs: [Float?] {
-        let num = Int(spine_region_attachment_get_num_uvs(wrappee))
         let ptr = spine_region_attachment_get_uvs(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0]
-        }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_region_attachment_get_num_uvs(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return Array(buffer)
     }
 
     public var x: Float {
@@ -1228,24 +1368,35 @@ public final class VertexAttachment: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? VertexAttachment else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var worldVerticesLength: Int32 {
         return spine_vertex_attachment_get_world_vertices_length(wrappee)
     }
 
     public var bones: [Int32?] {
-        let num = Int(spine_vertex_attachment_get_num_bones(wrappee))
         let ptr = spine_vertex_attachment_get_bones(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0]
-        }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_vertex_attachment_get_num_bones(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return Array(buffer)
     }
 
     public var vertices: [Float?] {
-        let num = Int(spine_vertex_attachment_get_num_vertices(wrappee))
         let ptr = spine_vertex_attachment_get_vertices(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0]
-        }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_vertex_attachment_get_num_vertices(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return Array(buffer)
     }
 
     public var timelineAttachment: Attachment? {
@@ -1269,6 +1420,17 @@ public final class SkeletonDrawable: NSObject {
     internal init(_ wrappee: spine_skeleton_drawable) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? SkeletonDrawable else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var skeleton: Skeleton {
@@ -1304,6 +1466,17 @@ public final class PointAttachment: NSObject {
     internal init(_ wrappee: spine_point_attachment) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? PointAttachment else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var color: Color {
@@ -1364,28 +1537,39 @@ public final class MeshAttachment: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? MeshAttachment else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var regionUvs: [Float?] {
-        let num = Int(spine_mesh_attachment_get_num_region_uvs(wrappee))
         let ptr = spine_mesh_attachment_get_region_uvs(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0]
-        }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_mesh_attachment_get_num_region_uvs(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return Array(buffer)
     }
 
     public var uvs: [Float?] {
-        let num = Int(spine_mesh_attachment_get_num_uvs(wrappee))
         let ptr = spine_mesh_attachment_get_uvs(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0]
-        }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_mesh_attachment_get_num_uvs(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return Array(buffer)
     }
 
     public var triangles: [UInt16] {
-        let num = Int(spine_mesh_attachment_get_num_triangles(wrappee))
         let ptr = spine_mesh_attachment_get_triangles(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0]
-        }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_mesh_attachment_get_num_triangles(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return Array(buffer)
     }
 
     public var color: Color {
@@ -1405,11 +1589,11 @@ public final class MeshAttachment: NSObject {
     }
 
     public var edges: [UInt16] {
-        let num = Int(spine_mesh_attachment_get_num_edges(wrappee))
         let ptr = spine_mesh_attachment_get_edges(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0]
-        }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_mesh_attachment_get_num_edges(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return Array(buffer)
     }
 
     public var hullLength: Int32 {
@@ -1469,12 +1653,23 @@ public final class PathAttachment: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? PathAttachment else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var lengths: [Float?] {
-        let num = Int(spine_path_attachment_get_num_lengths(wrappee))
         let ptr = spine_path_attachment_get_lengths(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0]
-        }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_path_attachment_get_num_lengths(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return Array(buffer)
     }
 
     public var color: Color {
@@ -1516,6 +1711,17 @@ public final class ConstraintData: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? ConstraintData else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var type: ConstraintType {
         return spine_constraint_data_get_type(wrappee)
     }
@@ -1555,6 +1761,17 @@ public final class PathConstraint: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? PathConstraint else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var order: Int32 {
         return spine_path_constraint_get_order(wrappee)
     }
@@ -1564,10 +1781,12 @@ public final class PathConstraint: NSObject {
     }
 
     public var bones: [Bone] {
-        let num = Int(spine_path_constraint_get_num_bones(wrappee))
         let ptr = spine_path_constraint_get_bones(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_path_constraint_get_num_bones(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
@@ -1651,6 +1870,17 @@ public final class AnimationState: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? AnimationState else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var data: AnimationStateData {
         return .init(spine_animation_state_get_data(wrappee))
     }
@@ -1721,6 +1951,114 @@ public final class AnimationState: NSObject {
 
 }
 
+@objc(SpineSkeletonBounds)
+@objcMembers
+public final class SkeletonBounds: NSObject {
+
+    internal let wrappee: spine_skeleton_bounds
+    internal var disposed = false
+
+    internal init(_ wrappee: spine_skeleton_bounds) {
+        self.wrappee = wrappee
+        super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? SkeletonBounds else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
+    public var polygons: [Polygon] {
+        let ptr = spine_skeleton_bounds_get_polygons(wrappee)
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_bounds_get_num_polygons(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
+        }
+    }
+
+    public var boundingBoxes: [BoundingBoxAttachment] {
+        let ptr = spine_skeleton_bounds_get_bounding_boxes(wrappee)
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_bounds_get_num_bounding_boxes(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
+        }
+    }
+
+    public var width: Float {
+        return spine_skeleton_bounds_get_width(wrappee)
+    }
+
+    public var height: Float {
+        return spine_skeleton_bounds_get_height(wrappee)
+    }
+
+    public func dispose() {
+        if disposed { return }
+        disposed = true
+        spine_skeleton_bounds_dispose(wrappee)
+    }
+
+    public func update(skeleton: Skeleton, updateAabb: Bool) {
+        spine_skeleton_bounds_update(wrappee, skeleton.wrappee, updateAabb ? -1 : 0)
+    }
+
+    @discardableResult
+    public func aabbContainsPoint(x: Float, y: Float) -> Bool {
+        return spine_skeleton_bounds_aabb_contains_point(wrappee, x, y) != 0
+    }
+
+    @discardableResult
+    public func aabbIntersectsSegment(x1: Float, y1: Float, x2: Float, y2: Float) -> Bool {
+        return spine_skeleton_bounds_aabb_intersects_segment(wrappee, x1, y1, x2, y2) != 0
+    }
+
+    @discardableResult
+    public func aabbIntersectsSkeleton(otherBounds: SkeletonBounds) -> Bool {
+        return spine_skeleton_bounds_aabb_intersects_skeleton(wrappee, otherBounds.wrappee) != 0
+    }
+
+    @discardableResult
+    public func containsPoint(polygon: Polygon, x: Float, y: Float) -> Bool {
+        return spine_skeleton_bounds_contains_point(wrappee, polygon.wrappee, x, y) != 0
+    }
+
+    @discardableResult
+    public func containsPointAttachment(x: Float, y: Float) -> BoundingBoxAttachment {
+        return .init(spine_skeleton_bounds_contains_point_attachment(wrappee, x, y))
+    }
+
+    @discardableResult
+    public func intersectsSegmentAttachment(x1: Float, y1: Float, x2: Float, y2: Float) -> BoundingBoxAttachment {
+        return .init(spine_skeleton_bounds_intersects_segment_attachment(wrappee, x1, y1, x2, y2))
+    }
+
+    @discardableResult
+    public func intersectsSegment(polygon: Polygon, x1: Float, y1: Float, x2: Float, y2: Float) -> Bool {
+        return spine_skeleton_bounds_intersects_segment(wrappee, polygon.wrappee, x1, y1, x2, y2) != 0
+    }
+
+    @discardableResult
+    public func getPolygon(attachment: BoundingBoxAttachment) -> Polygon {
+        return .init(spine_skeleton_bounds_get_polygon(wrappee, attachment.wrappee))
+    }
+
+    @discardableResult
+    public func getBoundingBox(polygon: Polygon) -> BoundingBoxAttachment {
+        return .init(spine_skeleton_bounds_get_bounding_box(wrappee, polygon.wrappee))
+    }
+
+}
+
 @objc(SpineTextureRegion)
 @objcMembers
 public final class TextureRegion: NSObject {
@@ -1730,6 +2068,17 @@ public final class TextureRegion: NSObject {
     internal init(_ wrappee: spine_texture_region) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? TextureRegion else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var texture: UnsafeMutableRawPointer {
@@ -1853,12 +2202,23 @@ public final class RenderCommand: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? RenderCommand else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var indices: [UInt16] {
-        let num = Int(spine_render_command_get_num_indices(wrappee))
         let ptr = spine_render_command_get_indices(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0]
-        }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_render_command_get_num_indices(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return Array(buffer)
     }
 
     public var atlasPage: Int32 {
@@ -1887,79 +2247,108 @@ public final class SkeletonData: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? SkeletonData else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var name: String? {
         return spine_skeleton_data_get_name(wrappee).flatMap { String(cString: $0) }
     }
 
     public var bones: [BoneData] {
-        let num = Int(spine_skeleton_data_get_num_bones(wrappee))
         let ptr = spine_skeleton_data_get_bones(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_data_get_num_bones(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var slots: [SlotData] {
-        let num = Int(spine_skeleton_data_get_num_slots(wrappee))
         let ptr = spine_skeleton_data_get_slots(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_data_get_num_slots(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var skins: [Skin] {
-        let num = Int(spine_skeleton_data_get_num_skins(wrappee))
         let ptr = spine_skeleton_data_get_skins(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_data_get_num_skins(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var events: [EventData] {
-        let num = Int(spine_skeleton_data_get_num_events(wrappee))
         let ptr = spine_skeleton_data_get_events(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_data_get_num_events(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var animations: [Animation] {
-        let num = Int(spine_skeleton_data_get_num_animations(wrappee))
         let ptr = spine_skeleton_data_get_animations(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_data_get_num_animations(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var ikConstraints: [IkConstraintData] {
-        let num = Int(spine_skeleton_data_get_num_ik_constraints(wrappee))
         let ptr = spine_skeleton_data_get_ik_constraints(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_data_get_num_ik_constraints(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var transformConstraints: [TransformConstraintData] {
-        let num = Int(spine_skeleton_data_get_num_transform_constraints(wrappee))
         let ptr = spine_skeleton_data_get_transform_constraints(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_data_get_num_transform_constraints(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var pathConstraints: [PathConstraintData] {
-        let num = Int(spine_skeleton_data_get_num_path_constraints(wrappee))
         let ptr = spine_skeleton_data_get_path_constraints(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_data_get_num_path_constraints(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var physicsConstraints: [PhysicsConstraintData] {
-        let num = Int(spine_skeleton_data_get_num_physics_constraints(wrappee))
         let ptr = spine_skeleton_data_get_physics_constraints(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_data_get_num_physics_constraints(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
@@ -2092,6 +2481,17 @@ public final class IkConstraint: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? IkConstraint else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var order: Int32 {
         return spine_ik_constraint_get_order(wrappee)
     }
@@ -2101,10 +2501,12 @@ public final class IkConstraint: NSObject {
     }
 
     public var bones: [Bone] {
-        let num = Int(spine_ik_constraint_get_num_bones(wrappee))
         let ptr = spine_ik_constraint_get_bones(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_ik_constraint_get_num_bones(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
@@ -2189,6 +2591,17 @@ public final class SkinEntries: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? SkinEntries else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     @discardableResult
     public func getEntry(index: Int32) -> SkinEntry {
         return .init(spine_skin_entries_get_entry(wrappee, index))
@@ -2211,6 +2624,17 @@ public final class TrackEntry: NSObject {
     internal init(_ wrappee: spine_track_entry) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? TrackEntry else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var trackIndex: Int32 {
@@ -2447,12 +2871,28 @@ public final class Attachment: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Attachment else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var name: String? {
         return spine_attachment_get_name(wrappee).flatMap { String(cString: $0) }
     }
 
     public var type: AttachmentType {
         return spine_attachment_get_type(wrappee)
+    }
+
+    @discardableResult
+    public func castToBoundingBoxAttachment() -> BoundingBoxAttachment? {
+        return spine_attachment_cast_to_bounding_box_attachment(wrappee).flatMap { .init($0) }
     }
 
     public func dispose() {
@@ -2474,6 +2914,17 @@ public final class Constraint: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Constraint else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
 }
 
 @objc(SpineEventData)
@@ -2485,6 +2936,17 @@ public final class EventData: NSObject {
     internal init(_ wrappee: spine_event_data) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? EventData else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var name: String? {
@@ -2553,6 +3015,17 @@ public final class SkinEntry: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? SkinEntry else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var slotIndex: Int32 {
         return spine_skin_entry_get_slot_index(wrappee)
     }
@@ -2576,6 +3049,17 @@ public final class BoneData: NSObject {
     internal init(_ wrappee: spine_bone_data) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? BoneData else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var index: Int32 {
@@ -2710,6 +3194,17 @@ public final class SlotData: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? SlotData else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var index: Int32 {
         return spine_slot_data_get_index(wrappee)
     }
@@ -2787,6 +3282,17 @@ public final class Animation: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Animation else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var name: String? {
         return spine_animation_get_name(wrappee).flatMap { String(cString: $0) }
     }
@@ -2808,6 +3314,17 @@ public final class Skeleton: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Skeleton else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var bounds: Bounds {
         return .init(spine_skeleton_get_bounds(wrappee))
     }
@@ -2821,58 +3338,72 @@ public final class Skeleton: NSObject {
     }
 
     public var bones: [Bone] {
-        let num = Int(spine_skeleton_get_num_bones(wrappee))
         let ptr = spine_skeleton_get_bones(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_get_num_bones(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var slots: [Slot] {
-        let num = Int(spine_skeleton_get_num_slots(wrappee))
         let ptr = spine_skeleton_get_slots(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_get_num_slots(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var drawOrder: [Slot] {
-        let num = Int(spine_skeleton_get_num_draw_order(wrappee))
         let ptr = spine_skeleton_get_draw_order(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_get_num_draw_order(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var ikConstraints: [IkConstraint] {
-        let num = Int(spine_skeleton_get_num_ik_constraints(wrappee))
         let ptr = spine_skeleton_get_ik_constraints(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_get_num_ik_constraints(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var transformConstraints: [TransformConstraint] {
-        let num = Int(spine_skeleton_get_num_transform_constraints(wrappee))
         let ptr = spine_skeleton_get_transform_constraints(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_get_num_transform_constraints(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var pathConstraints: [PathConstraint] {
-        let num = Int(spine_skeleton_get_num_path_constraints(wrappee))
         let ptr = spine_skeleton_get_path_constraints(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_get_num_path_constraints(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var physicsConstraints: [PhysicsConstraint] {
-        let num = Int(spine_skeleton_get_num_physics_constraints(wrappee))
         let ptr = spine_skeleton_get_physics_constraints(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skeleton_get_num_physics_constraints(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
@@ -3035,11 +3566,24 @@ public final class Sequence: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Sequence else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var regions: [TextureRegion] {
-        let num = Int(spine_sequence_get_num_regions(wrappee))
         let ptr = spine_sequence_get_regions(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_sequence_get_num_regions(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
@@ -3090,6 +3634,38 @@ public final class Sequence: NSObject {
 
 }
 
+@objc(SpinePolygon)
+@objcMembers
+public final class Polygon: NSObject {
+
+    internal let wrappee: spine_polygon
+
+    internal init(_ wrappee: spine_polygon) {
+        self.wrappee = wrappee
+        super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Polygon else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
+    public var vertices: [Float?] {
+        let ptr = spine_polygon_get_vertices(wrappee)
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_polygon_get_num_vertices(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return Array(buffer)
+    }
+
+}
+
 @objc(SpineBounds)
 @objcMembers
 public final class Bounds: NSObject {
@@ -3099,6 +3675,17 @@ public final class Bounds: NSObject {
     internal init(_ wrappee: spine_bounds) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Bounds else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var x: Float {
@@ -3130,6 +3717,17 @@ public final class Vector: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Vector else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var x: Float {
         return spine_vector_get_x(wrappee)
     }
@@ -3149,6 +3747,17 @@ public final class Event: NSObject {
     internal init(_ wrappee: spine_event) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Event else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var data: EventData {
@@ -3218,6 +3827,17 @@ public final class Atlas: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Atlas else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var isPma: Bool {
         return spine_atlas_is_pma(wrappee) != 0
     }
@@ -3227,7 +3847,7 @@ public final class Atlas: NSObject {
     }
 
     @discardableResult
-    public func load(atlasData: String?) -> Atlas {
+    public static func load(atlasData: String?) -> Atlas {
         return .init(spine_atlas_load(atlasData))
     }
 
@@ -3253,6 +3873,17 @@ public final class Color: NSObject {
     internal init(_ wrappee: spine_color) {
         self.wrappee = wrappee
         super.init()
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Color else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
     }
 
     public var r: Float {
@@ -3284,7 +3915,18 @@ public final class Bone: NSObject {
         super.init()
     }
 
-    public func setIsYDown(yDown: Bool) {
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Bone else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
+    public static func setIsYDown(yDown: Bool) {
         spine_bone_set_is_y_down(yDown ? -1 : 0)
     }
 
@@ -3309,10 +3951,12 @@ public final class Bone: NSObject {
     }
 
     public var children: [Bone] {
-        let num = Int(spine_bone_get_num_children(wrappee))
         let ptr = spine_bone_get_children(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_bone_get_num_children(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
@@ -3601,6 +4245,17 @@ public final class Slot: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Slot else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var data: SlotData {
         return .init(spine_slot_get_data(wrappee))
     }
@@ -3670,6 +4325,17 @@ public final class Skin: NSObject {
         super.init()
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Skin else { return false }
+        return self.wrappee == other.wrappee
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(self.wrappee)
+        return hasher.finalize()
+    }
+
     public var name: String? {
         return spine_skin_get_name(wrappee).flatMap { String(cString: $0) }
     }
@@ -3679,18 +4345,22 @@ public final class Skin: NSObject {
     }
 
     public var bones: [BoneData] {
-        let num = Int(spine_skin_get_num_bones(wrappee))
         let ptr = spine_skin_get_bones(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skin_get_num_bones(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 
     public var constraints: [ConstraintData] {
-        let num = Int(spine_skin_get_num_constraints(wrappee))
         let ptr = spine_skin_get_constraints(wrappee)
-        return (0..<num).compactMap {
-            ptr?[$0].flatMap { .init($0) }
+        guard let validPtr = ptr else { return [] }
+        let num = Int(spine_skin_get_num_constraints(wrappee))
+        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
+        return buffer.compactMap {
+            $0.flatMap { .init($0) }
         }
     }
 

@@ -41,6 +41,8 @@ struct SPINEPLUGIN_API FSpineEvent {
 	GENERATED_BODY();
 
 public:
+	FSpineEvent() : IntValue(0), FloatValue(0.0f), Time(0.0f) {}
+
 	void SetEvent(spine::Event *event) {
 		Name = FString(UTF8_TO_TCHAR(event->getData().getName().buffer()));
 		if (!event->getStringValue().isEmpty()) {
@@ -303,6 +305,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = Spine)
 	FString PreviewSkin;
 
+	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Skeleton")
+	void SetPhysicsTimeScale(float scale);
+
+	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Skeleton")
+	float GetPhysicsTimeScale();
+
 	// used in C event callback. Needs to be public as we can't call
 	// protected methods from plain old C function.
 	void GCTrackEntry(UTrackEntry *entry) { trackEntries.Remove(entry); }
@@ -318,6 +326,8 @@ protected:
 	// in transit within a blueprint
 	UPROPERTY()
 	TSet<UTrackEntry *> trackEntries;
+
+	float physicsTimeScale;
 
 private:
 	/* If the animation should update automatically. */

@@ -148,13 +148,12 @@ class AnimationState {
 		from.animationLast = from.nextAnimationLast;
 		from.trackLast = from.nextTrackLast;
 
-		// Require mixTime > 0 to ensure the mixing from entry was applied at least once.
-		if (to.mixTime > 0 && to.mixTime >= to.mixDuration) {
-			// Require totalAlpha == 0 to ensure mixing is complete, unless mixDuration == 0 (the transition is a single frame).
+		// The from entry was applied at least once and the mix is complete.
+		if (to.nextTrackLast != -1 && to.mixTime >= to.mixDuration) {
+			// Mixing is complete for all entries before the from entry or the mix is instantaneous.
 			if (from.totalAlpha == 0 || to.mixDuration == 0) {
 				to.mixingFrom = from.mixingFrom;
-				if (from.mixingFrom != null)
-					from.mixingFrom.mixingTo = to;
+				if (from.mixingFrom != null) from.mixingFrom.mixingTo = to;
 				to.interruptAlpha = from.interruptAlpha;
 				queue.end(from);
 			}
@@ -595,11 +594,11 @@ class AnimationState {
 		if (last == null) {
 			setCurrent(trackIndex, entry, true);
 			queue.drain();
+			if (delay < 0) delay = 0;
 		} else {
 			last.next = entry;
 			entry.previous = last;
-			if (delay <= 0)
-				delay += last.getTrackComplete() - entry.mixDuration;
+			if (delay <= 0) delay = Math.max(delay + last.getTrackComplete() - entry.mixDuration, 0);
 		}
 
 		entry.delay = delay;
@@ -615,8 +614,7 @@ class AnimationState {
 
 	public function addEmptyAnimation(trackIndex:Int, mixDuration:Float, delay:Float):TrackEntry {
 		var entry:TrackEntry = addAnimation(trackIndex, emptyAnimation, false, delay);
-		if (delay <= 0)
-			entry.delay += entry.mixDuration - mixDuration;
+		if (delay <= 0) entry.delay = Math.max(entry.delay + entry.mixDuration - mixDuration, 0);
 		entry.mixDuration = mixDuration;
 		entry.trackEnd = mixDuration;
 		return entry;

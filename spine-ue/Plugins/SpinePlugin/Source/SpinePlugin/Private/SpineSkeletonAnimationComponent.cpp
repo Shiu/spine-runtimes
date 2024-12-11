@@ -35,6 +35,7 @@
 using namespace spine;
 
 void UTrackEntry::SetTrackEntry(TrackEntry *trackEntry) {
+	if (entry) entry->setRendererObject(nullptr);
 	this->entry = trackEntry;
 	if (entry) entry->setRendererObject((void *) this);
 }
@@ -75,17 +76,20 @@ USpineSkeletonAnimationComponent::USpineSkeletonAnimationComponent() {
 	bTickInEditor = true;
 	bAutoActivate = true;
 	bAutoPlaying = true;
+	physicsTimeScale = 1;
 }
 
 void USpineSkeletonAnimationComponent::BeginPlay() {
 	Super::BeginPlay();
+	for (UTrackEntry *entry : trackEntries) {
+		if (entry && entry->GetTrackEntry()) {
+			entry->GetTrackEntry()->setRendererObject(nullptr);
+		}
+	}
 	trackEntries.Empty();
 }
 
 void UTrackEntry::BeginDestroy() {
-	if (entry) {
-		entry->setRendererObject(nullptr);
-	}
 	Super::BeginDestroy();
 }
 
@@ -117,7 +121,7 @@ void USpineSkeletonAnimationComponent::InternalTick(float DeltaTime, bool CallDe
 		state->update(DeltaTime);
 		state->apply(*skeleton);
 		if (CallDelegates) BeforeUpdateWorldTransform.Broadcast(this);
-		skeleton->update(DeltaTime);
+		skeleton->update(physicsTimeScale * DeltaTime);
 		skeleton->updateWorldTransform(Physics_Update);
 		if (CallDelegates) AfterUpdateWorldTransform.Broadcast(this);
 	}
@@ -297,6 +301,14 @@ void USpineSkeletonAnimationComponent::ClearTrack(int trackIndex) {
 	if (state) {
 		state->clearTrack(trackIndex);
 	}
+}
+
+void USpineSkeletonAnimationComponent::SetPhysicsTimeScale(float scale) {
+	physicsTimeScale = scale;
+}
+
+float USpineSkeletonAnimationComponent::GetPhysicsTimeScale() {
+	return physicsTimeScale;
 }
 
 #undef LOCTEXT_NAMESPACE

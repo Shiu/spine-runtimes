@@ -1,3 +1,13 @@
+# 4.2.35
+ - Port of commit f1e0f0f: Fixed animation not being mixed out in some cases.
+
+# 4.2.34
+- Support latest emscripten SDK (4.0.6+) via update of web_ffi
+
+# 4.2.33
+- Merge fixes in spine-cpp(-lite)
+- Prepare for upcoming Dart/Flutter releases, see https://github.com/EsotericSoftware/spine-runtimes/pull/2690
+
 # 4.2.32
 - Fix spine-flutter spec checksum in `Podfile.lock`, keeping version control cleaner. See https://github.com/EsotericSoftware/spine-runtimes/pull/2609
 

@@ -239,8 +239,6 @@ class SwiftFunctionBodyWriter:
 
     if swift_return_type_is_array:
       body += self.write_array_call(num_function_name, function_call)
-      body += inset + inset
-      body += "}"
     else:
       if not self.spine_function.return_type == "void":
         body += "return "
@@ -305,24 +303,46 @@ class SwiftFunctionBodyWriter:
          function_call += " != 0"
 
       return function_call
-    
-  def write_array_call(self, num_function_name, function_call):
-    array_call = f"let num = Int({num_function_name}({self.spine_object.var_name}))"
+  
+  def write_array_spine_class(self, num_function_name, function_call):
+    array_call = f"let ptr = {function_call}"
     array_call += "\n"
     array_call += inset + inset
-    array_call += f"let ptr = {function_call}"
+    array_call += "guard let validPtr = ptr else { return [] }"
     array_call += "\n"
     array_call += inset + inset
-    array_call += "return (0..<num).compactMap {"
+    array_call += f"let num = Int({num_function_name}({self.spine_object.var_name}))"
+    array_call += "\n"
+    array_call += inset + inset
+    array_call += "let buffer = UnsafeBufferPointer(start: validPtr, count: num)"
+    array_call += "\n"
+    array_call += inset + inset
+    array_call += "return buffer.compactMap {"
     array_call += "\n"
     array_call += inset + inset + inset
-
-    if self.spine_function.isReturningSpineClass():
-        array_call += "ptr?[$0].flatMap { .init($0) }" 
-    else:
-      array_call += "ptr?[$0]"
-
+    array_call += "$0.flatMap { .init($0) }"
     array_call += "\n"
+    array_call += inset + inset
+    array_call += "}"
+    return array_call
+    
+  def write_array_call(self, num_function_name, function_call):
+    if self.spine_function.isReturningSpineClass():
+       return self.write_array_spine_class(num_function_name, function_call)
+    array_call = f"let ptr = {function_call}"
+    array_call += "\n"
+    array_call += inset + inset
+    array_call += "guard let validPtr = ptr else { return [] }"
+    array_call += "\n"
+    array_call += inset + inset
+    array_call += f"let num = Int({num_function_name}({self.spine_object.var_name}))"
+    array_call += "\n"
+    array_call += inset + inset
+
+    array_call += "let buffer = UnsafeBufferPointer(start: validPtr, count: num)"
+    array_call += "\n"
+    array_call += inset + inset
+    array_call += "return Array(buffer)"
     return array_call
   
   def write_dispose_call(self):
@@ -419,6 +439,7 @@ class SwiftFunctionWriter:
       if spine_params and spine_params[0].type == self.spine_object.name:
         spine_params_without_ivar = spine_params[1:] 
       else:
+        function_string = function_string.replace("public func ", "public static func ")
         spine_params_without_ivar = spine_params
 
       swift_params = [
@@ -475,6 +496,39 @@ class SwiftObjectWriter:
         object_string += "\n"
         object_string += inset + inset
         object_string += "super.init()"
+        object_string += "\n"
+        object_string += inset
+        object_string += "}"
+        object_string += "\n"
+        object_string += "\n"
+        
+        object_string += inset
+        object_string += "public override func isEqual(_ object: Any?) -> Bool"
+        object_string += " {"
+        object_string += "\n"
+        object_string += inset + inset
+        object_string += f"guard let other = object as? {class_name} else {{ return false }}"
+        object_string += "\n"
+        object_string += inset + inset
+        object_string += f"return self.{ivar_name} == other.{ivar_name}"
+        object_string += "\n"
+        object_string += inset
+        object_string += "}"
+        object_string += "\n"
+        object_string += "\n"
+        
+        object_string += inset
+        object_string += "public override var hash: Int"
+        object_string += " {"
+        object_string += "\n"
+        object_string += inset + inset
+        object_string += "var hasher = Hasher()"
+        object_string += "\n"
+        object_string += inset + inset
+        object_string += f"hasher.combine(self.{ivar_name})"
+        object_string += "\n"
+        object_string += inset + inset
+        object_string += "return hasher.finalize()"
         object_string += "\n"
         object_string += inset
         object_string += "}"

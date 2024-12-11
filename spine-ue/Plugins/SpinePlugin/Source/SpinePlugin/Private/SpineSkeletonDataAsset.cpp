@@ -70,6 +70,14 @@ void USpineSkeletonDataAsset::PostInitProperties() {
 	Super::PostInitProperties();
 }
 
+#if ((ENGINE_MAJOR_VERSION >= 5) && (ENGINE_MINOR_VERSION >= 4))
+void USpineSkeletonDataAsset::GetAssetRegistryTags(FAssetRegistryTagsContext Context) const {
+	if (importData) {
+		Context.AddTag(FAssetRegistryTag(SourceFileTagName(), importData->GetSourceData().ToJson(), FAssetRegistryTag::TT_Hidden));
+	}
+	Super::GetAssetRegistryTags(Context);
+}
+#else
 void USpineSkeletonDataAsset::GetAssetRegistryTags(
 		TArray<FAssetRegistryTag> &OutTags) const {
 	if (importData) {
@@ -80,11 +88,15 @@ void USpineSkeletonDataAsset::GetAssetRegistryTags(
 
 	Super::GetAssetRegistryTags(OutTags);
 }
+#endif
 
 void USpineSkeletonDataAsset::Serialize(FArchive &Ar) {
 	Super::Serialize(Ar);
-	if (Ar.IsLoading() && Ar.UE4Ver() < VER_UE4_ASSET_IMPORT_DATA_AS_JSON &&
-		!importData)
+#if ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION <= 27
+	if (Ar.IsLoading() && Ar.UE4Ver() < VER_UE4_ASSET_IMPORT_DATA_AS_JSON && !importData)
+#else
+	if (Ar.IsLoading() && Ar.UEVer() < VER_UE4_ASSET_IMPORT_DATA_AS_JSON && !importData)
+#endif
 		importData = NewObject<UAssetImportData>(this, TEXT("AssetImportData"));
 	LoadInfo();
 }

@@ -145,7 +145,10 @@ spine-ts/spine-canvas/dist
 spine-ts/spine-webgl/dist
 spine-ts/spine-player/dist
 spine-ts/spine-threejs/dist
-spine-ts/spine-pixi/dist
+spine-ts/spine-phaser-v3/dist
+spine-ts/spine-phaser-v4/dist
+spine-ts/spine-pixi-v7/dist
+spine-ts/spine-pixi-v8/dist
 spine-libgdx/gradle
 spine-libgdx/gradlew
 spine-libgdx/gradlew.bat
@@ -188,7 +191,6 @@ spine-flutter/src/spine-cpp
 
 spine-godot/.clang-format
 
-spine-ts/spine-phaser/dist
 spine-godot/.cache
 spine-godot/build/compile_commands.json
 
@@ -204,3 +206,17 @@ spine-flutter/src/spine-cpp-lite
 spine-sdl/.vs
 spine-ts/spine-canvaskit/dist
 spine-ts/output.png
+spine-godot/godot-cpp
+spine-godot/__pycache__
+*.os
+spine-godot/.sconsign.dblite
+spine-godot/example-v4-extension/.godot
+spine-godot/src
+spine-godot/compile_commands.json
+spine-godot/bin
+spine-godot/example-v4-extension/bin/macos/macos.framework/libspine_godot.macos.editor
+spine-godot/.idea
+spine-godot/build/version.txt
+spine-godot/vc140.pdb
+spine-godot/example-v4-extension/bin
+spine-godot/example-v4-extension/MoltenVK.xcframework

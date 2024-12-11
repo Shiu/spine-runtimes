@@ -47,7 +47,9 @@ void SpineAnimation::_bind_methods() {
 
 String SpineAnimation::get_name() {
 	SPINE_CHECK(get_spine_object(), "")
-	return get_spine_object()->getName().buffer();
+	String name;
+	name.parse_utf8(get_spine_object()->getName().buffer());
+	return name;
 }
 
 float SpineAnimation::get_duration() {
@@ -82,7 +84,11 @@ Array SpineAnimation::get_timelines() {
 	for (int i = 0; i < (int) result.size(); ++i) {
 		auto timeline_ref = Ref<SpineTimeline>(memnew(SpineTimeline));
 		timeline_ref->set_spine_object(get_spine_owner(), timelines[i]);
+#ifdef SPINE_GODOT_EXTENSION
+		result[i] = timeline_ref;
+#else
 		result.set(i, timeline_ref);
+#endif
 	}
 	return result;
 }
