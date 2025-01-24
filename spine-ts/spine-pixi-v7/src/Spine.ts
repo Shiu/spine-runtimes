@@ -402,6 +402,16 @@ export class Spine extends Container {
 		this.slotsObject.delete(slot);
 	}
 
+	/**
+	 * Removes all PixiJS containers attached to any slot.
+	 */
+	public removeSlotObjects () {
+		for (const [, slotObject] of this.slotsObject) {
+			slotObject.container.removeFromParent();
+		}
+		this.slotsObject.clear();
+	}
+
 	private verticesCache: NumberArrayLike = Utils.newFloatArray(1024);
 	private clippingSlotToPixiMasks: Record<string, Graphics> = {};
 	private pixiMaskCleanup (slot: Slot) {

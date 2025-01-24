@@ -776,6 +776,16 @@ export class Spine extends ViewContainer {
 	}
 
 	/**
+	 * Removes all PixiJS containers attached to any slot.
+	 */
+	public removeSlotObjects () {
+		Object.entries(this._slotsObject).forEach(([slotName, slotObject]) => {
+			if (slotObject) slotObject.container.removeFromParent();
+			delete this._slotsObject[slotName];
+		});
+	}
+
+	/**
 	 * Returns a container attached to a slot, or undefined if no container is attached.
 	 *
 	 * @param slotRef - The slot id or slot to get the attachment from
