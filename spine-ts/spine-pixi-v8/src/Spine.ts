@@ -712,6 +712,8 @@ export class Spine extends ViewContainer {
 	 *
 	 * @param container - The container to attach to the slot
 	 * @param slotRef - The slot id or  slot to attach to
+	 * @param options - Optional settings for the attachment.
+	 * @param options.followAttachmentTimeline - If true, the attachment will follow the slot's attachment timeline.
 	 */
 	public addSlotObject (slot: number | string | Slot, container: Container, options?: { followAttachmentTimeline?: boolean }) {
 		slot = this.getSlotFromRef(slot);

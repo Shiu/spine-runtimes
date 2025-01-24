@@ -348,6 +348,8 @@ export class Spine extends Container {
 	 * slot before adding it to the current one.
 	 * @param slotRef - The slot index, or the slot name, or the Slot where the pixi object will be added to.
 	 * @param pixiObject - The pixi Container to add.
+	 * @param options - Optional settings for the attachment.
+	 * @param options.followAttachmentTimeline - If true, the attachment will follow the slot's attachment timeline.
 	 */
 	addSlotObject (slotRef: number | string | Slot, pixiObject: Container, options?: { followAttachmentTimeline?: boolean }): void {
 		let slot = this.getSlotFromRef(slotRef);
