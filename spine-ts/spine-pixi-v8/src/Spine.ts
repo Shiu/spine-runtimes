@@ -173,7 +173,7 @@ export class Spine extends ViewContainer {
 	private darkTint = false;
 	private _debug?: ISpineDebugRenderer | undefined = undefined;
 
-	readonly _slotsObject: Record<string, { slot: Slot, container: Container } | null> = Object.create(null);
+	readonly _slotsObject: Record<string, { slot: Slot, container: Container, followAttachmentTimeline: boolean } | null> = Object.create(null);
 	private clippingSlotToPixiMasks: Record<string, SlotsToClipping> = Object.create(null);
 
 	private getSlotFromRef (slotRef: number | string | Slot): Slot {
@@ -625,10 +625,11 @@ export class Spine extends ViewContainer {
 		}
 	}
 
-	private updateSlotObject (slotAttachment: { slot: Slot, container: Container }) {
+	private updateSlotObject (slotAttachment: { slot: Slot, container: Container, followAttachmentTimeline: boolean }) {
 		const { slot, container } = slotAttachment;
 
-		container.visible = this.skeleton.drawOrder.includes(slot);
+		const followAttachmentValue = slotAttachment.followAttachmentTimeline ? Boolean(slot.attachment) : true;
+		container.visible = this.skeleton.drawOrder.includes(slot) && followAttachmentValue;
 
 		if (container.visible) {
 			const bone = slot.bone;
@@ -712,7 +713,7 @@ export class Spine extends ViewContainer {
 	 * @param container - The container to attach to the slot
 	 * @param slotRef - The slot id or  slot to attach to
 	 */
-	public addSlotObject (slot: number | string | Slot, container: Container) {
+	public addSlotObject (slot: number | string | Slot, container: Container, options?: { followAttachmentTimeline?: boolean }) {
 		slot = this.getSlotFromRef(slot);
 
 		// need to check in on the container too...
@@ -729,7 +730,11 @@ export class Spine extends ViewContainer {
 		// TODO only add once??
 		this.addChild(container);
 
-		const slotObject = { container, slot };
+		const slotObject = {
+			container,
+			slot,
+			followAttachmentTimeline: options?.followAttachmentTimeline || false,
+		};
 		this._slotsObject[slot.data.name] = slotObject;
 
 		this.updateSlotObject(slotObject);
