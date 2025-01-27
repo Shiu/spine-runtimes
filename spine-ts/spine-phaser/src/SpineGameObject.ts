@@ -149,8 +149,8 @@ export class SkinsAndAnimationBoundsProvider
 				const bounds = skeleton.getBoundsRect();
 				minX = Math.min(minX, bounds.x);
 				minY = Math.min(minY, bounds.y);
-				maxX = Math.max(maxX, minX + bounds.width);
-				maxY = Math.max(maxY, minY + bounds.height);
+				maxX = Math.max(maxX, bounds.x + bounds.width);
+				maxY = Math.max(maxY, bounds.y + bounds.height);
 			}
 			const bounds = {
 				x: minX,
