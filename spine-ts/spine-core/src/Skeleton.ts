@@ -613,10 +613,10 @@ export class Skeleton {
 
 	/** Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose as `{ x: number, y: number, width: number, height: number }`.
 	 * Note that this method will create temporary objects which can add to garbage collection pressure. Use `getBounds()` if garbage collection is a concern. */
-	getBoundsRect () {
+	getBoundsRect (clipper?: SkeletonClipping) {
 		let offset = new Vector2();
 		let size = new Vector2();
-		this.getBounds(offset, size);
+		this.getBounds(offset, size, undefined, clipper);
 		return { x: offset.x, y: offset.y, width: size.x, height: size.y };
 	}
 
