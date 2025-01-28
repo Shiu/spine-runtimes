@@ -61,6 +61,7 @@ import {
 	SkeletonClipping,
 	SkeletonData,
 	SkeletonJson,
+	Skin,
 	Slot,
 	type TextureAtlas,
 	TrackEntry,
@@ -89,6 +90,9 @@ export interface SpineFromOptions {
 	 * If `undefined`, use the dark tint renderer if at least one slot has tint black
 	 */
 	darkTint?: boolean;
+
+	/** The bounds provider to use. If undefined the bounds will be dynamic, calculated when requested and based on the current frame. */
+	boundsProvider?: SpineBoundsProvider,
 };
 
 const vectorAux = new Vector2();
@@ -96,6 +100,138 @@ const vectorAux = new Vector2();
 Skeleton.yDown = true;
 
 const clipper = new SkeletonClipping();
+
+/** A bounds provider calculates the bounding box for a skeleton, which is then assigned as the size of the SpineGameObject. */
+export interface SpineBoundsProvider {
+	/** Returns the bounding box for the skeleton, in skeleton space. */
+	calculateBounds (gameObject: Spine): {
+		x: number;
+		y: number;
+		width: number;
+		height: number;
+	};
+}
+
+/** A bounds provider that provides a fixed size given by the user. */
+export class AABBRectangleBoundsProvider implements SpineBoundsProvider {
+	constructor (
+		private x: number,
+		private y: number,
+		private width: number,
+		private height: number,
+	) { }
+	calculateBounds () {
+		return { x: this.x, y: this.y, width: this.width, height: this.height };
+	}
+}
+
+/** A bounds provider that calculates the bounding box from the setup pose. */
+export class SetupPoseBoundsProvider implements SpineBoundsProvider {
+	/**
+	 * @param clipping If true, clipping attachments are used to compute the bounds. False, by default.
+	 */
+	constructor (
+		private clipping = false,
+	) { }
+
+	calculateBounds (gameObject: Spine) {
+		if (!gameObject.skeleton) return { x: 0, y: 0, width: 0, height: 0 };
+		// Make a copy of animation state and skeleton as this might be called while
+		// the skeleton in the GameObject has already been heavily modified. We can not
+		// reconstruct that state.
+		const skeleton = new Skeleton(gameObject.skeleton.data);
+		skeleton.setToSetupPose();
+		skeleton.updateWorldTransform(Physics.update);
+		const bounds = skeleton.getBoundsRect(this.clipping ? new SkeletonClipping() : undefined);
+		return bounds.width == Number.NEGATIVE_INFINITY
+			? { x: 0, y: 0, width: 0, height: 0 }
+			: bounds;
+	}
+}
+
+/** A bounds provider that calculates the bounding box by taking the maximumg bounding box for a combination of skins and specific animation. */
+export class SkinsAndAnimationBoundsProvider
+	implements SpineBoundsProvider {
+	/**
+	 * @param animation The animation to use for calculating the bounds. If null, the setup pose is used.
+	 * @param skins The skins to use for calculating the bounds. If empty, the default skin is used.
+	 * @param timeStep The time step to use for calculating the bounds. A smaller time step means more precision, but slower calculation.
+	 * @param clipping If true, clipping attachments are used to compute the bounds. False, by default.
+	 */
+	constructor (
+		private animation: string | null,
+		private skins: string[] = [],
+		private timeStep: number = 0.05,
+		private clipping = false,
+	) { }
+
+	calculateBounds (gameObject: Spine): {
+		x: number;
+		y: number;
+		width: number;
+		height: number;
+	} {
+		if (!gameObject.skeleton || !gameObject.state)
+			return { x: 0, y: 0, width: 0, height: 0 };
+		// Make a copy of animation state and skeleton as this might be called while
+		// the skeleton in the GameObject has already been heavily modified. We can not
+		// reconstruct that state.
+		const animationState = new AnimationState(gameObject.state.data);
+		const skeleton = new Skeleton(gameObject.skeleton.data);
+		const clipper = this.clipping ? new SkeletonClipping() : undefined;
+		const data = skeleton.data;
+		if (this.skins.length > 0) {
+			let customSkin = new Skin("custom-skin");
+			for (const skinName of this.skins) {
+				const skin = data.findSkin(skinName);
+				if (skin == null) continue;
+				customSkin.addSkin(skin);
+			}
+			skeleton.setSkin(customSkin);
+		}
+		skeleton.setToSetupPose();
+
+		const animation = this.animation != null ? data.findAnimation(this.animation!) : null;
+
+		if (animation == null) {
+			skeleton.updateWorldTransform(Physics.update);
+			const bounds = skeleton.getBoundsRect(clipper);
+			return bounds.width == Number.NEGATIVE_INFINITY
+				? { x: 0, y: 0, width: 0, height: 0 }
+				: bounds;
+		} else {
+			let minX = Number.POSITIVE_INFINITY,
+				minY = Number.POSITIVE_INFINITY,
+				maxX = Number.NEGATIVE_INFINITY,
+				maxY = Number.NEGATIVE_INFINITY;
+			animationState.clearTracks();
+			animationState.setAnimationWith(0, animation, false);
+			const steps = Math.max(animation.duration / this.timeStep, 1.0);
+			for (let i = 0; i < steps; i++) {
+				const delta = i > 0 ? this.timeStep : 0;
+				animationState.update(delta);
+				animationState.apply(skeleton);
+				skeleton.update(delta);
+				skeleton.updateWorldTransform(Physics.update);
+
+				const bounds = skeleton.getBoundsRect(clipper);
+				minX = Math.min(minX, bounds.x);
+				minY = Math.min(minY, bounds.y);
+				maxX = Math.max(maxX, bounds.x + bounds.width);
+				maxY = Math.max(maxY, bounds.y + bounds.height);
+			}
+			const bounds = {
+				x: minX,
+				y: minY,
+				width: maxX - minX,
+				height: maxY - minY,
+			};
+			return bounds.width == Number.NEGATIVE_INFINITY
+				? { x: 0, y: 0, width: 0, height: 0 }
+				: bounds;
+		}
+	}
+}
 
 export interface SpineOptions extends ContainerOptions {
 	/** the {@link SkeletonData} used to instantiate the skeleton */
@@ -106,6 +242,9 @@ export interface SpineOptions extends ContainerOptions {
 
 	/**  See {@link SpineFromOptions.darkTint}. */
 	darkTint?: boolean;
+
+	/**  See {@link SpineFromOptions.boundsProvider}. */
+	boundsProvider?: SpineBoundsProvider,
 }
 
 /**
@@ -229,6 +368,19 @@ export class Spine extends ViewContainer {
 		this._autoUpdate = value;
 	}
 
+	public _boundsProvider?: SpineBoundsProvider;
+	/** The bounds provider to use. If undefined the bounds will be dynamic, calculated when requested and based on the current frame. */
+	public get boundsProvider (): SpineBoundsProvider | undefined {
+		return this._boundsProvider;
+	}
+	public set boundsProvider (value: SpineBoundsProvider | undefined) {
+		this._boundsProvider = value;
+		if (value) {
+			this._boundsDirty = false;
+		}
+		this.updateBounds();
+	}
+
 	private hasNeverUpdated = true;
 	constructor (options: SpineOptions | SkeletonData) {
 		if (options instanceof SkeletonData) {
@@ -255,6 +407,8 @@ export class Spine extends ViewContainer {
 		for (let i = 0; i < slots.length; i++) {
 			this.attachmentCacheData[i] = Object.create(null);
 		}
+
+		this._boundsProvider = options.boundsProvider;
 	}
 
 	/** If {@link Spine.autoUpdate} is `false`, this method allows to update the AnimationState and the Skeleton with the given delta. */
@@ -356,8 +510,6 @@ export class Spine extends ViewContainer {
 		this.updateSlotObjects();
 
 		this._stateChanged = true;
-
-		this._boundsDirty = true;
 
 		this.onViewUpdate();
 	}
@@ -692,7 +844,9 @@ export class Spine extends ViewContainer {
 	protected onViewUpdate () {
 		// increment from the 12th bit!
 		this._didViewChangeTick++;
-		this._boundsDirty = true;
+		if (!this._boundsProvider) {
+			this._boundsDirty = true;
+		}
 
 		if (this.didViewUpdate) return;
 		this.didViewUpdate = true;
@@ -806,7 +960,18 @@ export class Spine extends ViewContainer {
 
 		skeletonBounds.update(this.skeleton, true);
 
-		if (skeletonBounds.minX === Infinity) {
+		if (this._boundsProvider) {
+			const boundsSpine = this._boundsProvider.calculateBounds(this);
+
+			const bounds = this._bounds;
+			bounds.clear();
+
+			bounds.x = boundsSpine.x;
+			bounds.y = boundsSpine.y;
+			bounds.width = boundsSpine.width;
+			bounds.height = boundsSpine.height;
+
+		} else if (skeletonBounds.minX === Infinity) {
 			if (this.hasNeverUpdated) {
 				this._updateAndApplyState(0);
 				this._boundsDirty = false;
@@ -898,11 +1063,16 @@ export class Spine extends ViewContainer {
 	 * @param options - Options to configure the Spine game object. See {@link SpineFromOptions}
 	 * @returns {Spine} The Spine game object instantiated
 	 */
-	static from ({ skeleton, atlas, scale = 1, darkTint, autoUpdate = true }: SpineFromOptions) {
+	static from ({ skeleton, atlas, scale = 1, darkTint, autoUpdate = true, boundsProvider }: SpineFromOptions) {
 		const cacheKey = `${skeleton}-${atlas}-${scale}`;
 
 		if (Cache.has(cacheKey)) {
-			return new Spine(Cache.get<SkeletonData>(cacheKey));
+			return new Spine({
+				skeletonData: Cache.get<SkeletonData>(cacheKey),
+				darkTint,
+				autoUpdate,
+				boundsProvider,
+			});
 		}
 
 		const skeletonAsset = Assets.get<any | Uint8Array>(skeleton);
@@ -922,6 +1092,7 @@ export class Spine extends ViewContainer {
 			skeletonData,
 			darkTint,
 			autoUpdate,
+			boundsProvider,
 		});
 	}
 }
