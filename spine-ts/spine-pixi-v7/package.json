@@ -39,6 +39,7 @@
     "@pixi/graphics": "^7.2.4",
     "@pixi/text": "^7.2.4",
     "@pixi/assets": "^7.2.4",
-    "@pixi/mesh": "^7.2.4"
+    "@pixi/mesh": "^7.2.4",
+    "@pixi/events": "^7.2.4"
   }
 }

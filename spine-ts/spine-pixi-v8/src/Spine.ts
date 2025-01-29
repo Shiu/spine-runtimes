@@ -368,7 +368,7 @@ export class Spine extends ViewContainer {
 		this._autoUpdate = value;
 	}
 
-	public _boundsProvider?: SpineBoundsProvider;
+	private _boundsProvider?: SpineBoundsProvider;
 	/** The bounds provider to use. If undefined the bounds will be dynamic, calculated when requested and based on the current frame. */
 	public get boundsProvider (): SpineBoundsProvider | undefined {
 		return this._boundsProvider;
