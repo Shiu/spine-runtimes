@@ -121,6 +121,11 @@ namespace Spine {
 
 			for (int i = 0, n = drawOrder.Count; i < n; i++) {
 				Slot slot = drawOrderItems[i];
+				if (!slot.Bone.Active) {
+					clipper.ClipEnd(slot);
+					continue;
+				}
+
 				Attachment attachment = slot.Attachment;
 				float attachmentZOffset = z + zSpacing * i;
 
