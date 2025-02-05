@@ -159,6 +159,7 @@ namespace Spine {
 					clipper.ClipStart(slot, clip);
 					continue;
 				} else {
+					clipper.ClipEnd(slot);
 					continue;
 				}
 
@@ -214,8 +215,10 @@ namespace Spine {
 					uvs = clipper.ClippedUVs.Items;
 				}
 
-				if (verticesCount == 0 || indicesCount == 0)
+				if (verticesCount == 0 || indicesCount == 0) {
+					clipper.ClipEnd(slot);
 					continue;
+				}
 
 				// submit to batch
 				MeshItem item = batcher.NextItem(verticesCount, indicesCount);
