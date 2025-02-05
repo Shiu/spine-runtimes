@@ -112,8 +112,7 @@ namespace Spine.Unity.Editor {
 			if (selectedClip != null) {
 				float time = AnimationWindowPreview.GetAnimationTime(animationWindow);
 				PreviewAnimationInScene(selectedClip, time);
-			}
-			else // back to setup pose
+			} else // back to setup pose
 				PreviewAnimationInScene(null, 0.0f);
 		}
 
