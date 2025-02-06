@@ -159,7 +159,7 @@ class PhysicsConstraint implements Updatable {
 							var m:Float = massInverse * t,
 								e:Float = strength,
 								w:Float = wind * f * skeleton.scaleX,
-								g:Float = (Bone.yDown ? -gravity : gravity) * f * skeleton.scaleY;
+								g:Float = gravity * f * skeleton.scaleY;
 							do {
 								if (x) {
 									xVelocity += (w - xOffset * e) * m;
