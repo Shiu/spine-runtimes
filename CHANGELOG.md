@@ -167,6 +167,7 @@
   - URP Shaders: Added `ZWrite` variant of outline shader `Universal Render Pipeline/Spine/Outline/Skeleton-OutlineOnly ZWrite`. Suitable for e.g. depth of field (DoF) effect where writing to the depth buffer is required. Note that for DoF effect, `Render Queue` needs to be set to `Alpha Test`.
   - SkeletonGraphic: Exposed `SetScaledPivotOffset` as public method outside of the editor to support programatically moving mesh offsets at runtime based on mesh bounds.
   - SkeletonMecanim: Added `Scene Preview` option to preview an Animation Clip for e.g. easier event placement. When enabled, the Animation Clip selected in the Animation window is previewed in the Scene and Game views. Lock the `SkeletonMecanim` Inspector window, open the Animation window and select the Animation Clip. Then in the Animation window scrub through the timeline to see the current animation frame previewed.
+  - `Universal Render Pipeline/Spine/Skeleton Lit` shader now supports [Adaptive Probe Volumes (APV)](https://docs.unity3d.com/6000.0/Documentation/Manual/urp/probevolumes-concept.html) introduced in Unity 6. The shader also provides a new material property `APV per Pixel` to either calculate APV lighting contribution per pixel (the default) or per vertex. 
 
 - **Breaking changes**
 
