@@ -294,7 +294,7 @@ export class SkeletonMesh extends THREE.Object3D {
 
 				let darkColor = this.tempDarkColor;
 				if (!slot.darkColor)
-					darkColor.set(1, 1, 1, 0);
+					darkColor.set(0, 0, 0, 1);
 				else {
 					darkColor.r = slot.darkColor.r * alpha;
 					darkColor.g = slot.darkColor.g * alpha;
