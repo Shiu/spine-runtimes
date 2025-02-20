@@ -560,6 +560,7 @@ export class Spine extends ViewContainer {
 		this.spineAttachmentsDirty ||= spineAttachmentsDirty;
 	}
 
+	private currentClippingSlot: SlotsToClipping | undefined;
 	private updateAndSetPixiMask (slot: Slot, last: boolean) {
 		// assign/create the currentClippingSlot
 		const attachment = slot.attachment;
@@ -614,10 +615,10 @@ export class Spine extends ViewContainer {
 					clippingSlotToPixiMask.mask = undefined;
 				}
 			}
+			this.currentClippingSlot = undefined;
 		}
 	}
 
-	private currentClippingSlot: SlotsToClipping | undefined;
 	private transformAttachments () {
 		const currentDrawOrder = this.skeleton.drawOrder;
 
