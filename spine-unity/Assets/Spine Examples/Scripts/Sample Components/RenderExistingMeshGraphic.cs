@@ -31,6 +31,10 @@
 #define NEW_PREFAB_SYSTEM
 #endif
 
+#if UNITY_2018_2_OR_NEWER
+#define HAS_CULL_TRANSPARENT_MESH
+#endif
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -101,7 +105,9 @@ namespace Spine.Unity.Examples {
 				ownGraphic = this.gameObject.AddComponent<SkeletonSubmeshGraphic>();
 
 			ownGraphic.maskable = referenceSkeletonGraphic.maskable;
+#if HAS_CULL_TRANSPARENT_MESH
 			ownGraphic.canvasRenderer.cullTransparentMesh = referenceSkeletonGraphic.canvasRenderer.cullTransparentMesh;
+#endif
 			ownGraphic.canvasRenderer.SetMaterial(replacementMaterial, referenceSkeletonGraphic.mainTexture);
 		}
 
@@ -109,7 +115,9 @@ namespace Spine.Unity.Examples {
 			if (ownSubmeshGraphics == null)
 				ownSubmeshGraphics = new List<SkeletonSubmeshGraphic>();
 
+#if HAS_CULL_TRANSPARENT_MESH
 			bool cullTransparentMesh = referenceSkeletonGraphic.canvasRenderer.cullTransparentMesh;
+#endif
 			Vector2 pivot = referenceSkeletonGraphic.rectTransform.pivot;
 
 			int currentCount = ownSubmeshGraphics.Count;
@@ -118,7 +126,9 @@ namespace Spine.Unity.Examples {
 				go.transform.SetParent(this.transform, false);
 				go.transform.localPosition = Vector3.zero;
 				CanvasRenderer canvasRenderer = go.AddComponent<CanvasRenderer>();
+#if HAS_CULL_TRANSPARENT_MESH
 				canvasRenderer.cullTransparentMesh = cullTransparentMesh;
+#endif
 				SkeletonSubmeshGraphic submeshGraphic = go.AddComponent<SkeletonSubmeshGraphic>();
 				ownSubmeshGraphics.Add(submeshGraphic);
 				submeshGraphic.maskable = referenceSkeletonGraphic.maskable;
