@@ -170,6 +170,11 @@
   - `Universal Render Pipeline/Spine/Skeleton Lit` shader now supports [Adaptive Probe Volumes (APV)](https://docs.unity3d.com/6000.0/Documentation/Manual/urp/probevolumes-concept.html) introduced in Unity 6. The shader also provides a new material property `APV per Pixel` to either calculate APV lighting contribution per pixel (the default) or per vertex.
   - `Universal Render Pipeline/Spine/Sprite` shader now also supports [Adaptive Probe Volumes (APV)](https://docs.unity3d.com/6000.0/Documentation/Manual/urp/probevolumes-concept.html) introduced in Unity 6. APV lighting contribution is automatically calculated per pixel.
   - All Spine Outline shaders, including the URP outline shaders, now provide an additional parameter `Fill`. Enable it to also fill the opaque area inside the outline with the outline color. Prevents a semi-transparent gap between outline and skeleton. Defaults to `disabled` to maintain existing behaviour.
+  - Added example component `RenderExistingMeshGraphic` (similar to `RenderExistingMesh`) to render a `SkeletonGraphic` mesh again with different materials. This might be required by e.g. URP and SkeletonGraphic outline shaders skipping additional render passes. To add a second outline variant of your SkeletonGraphic:
+    1. Add a GameObject at the same hierarchy level as the reference SkeletonGraphic and move it before the reference SkeletonGraphic to render behind.
+    2. Add a `RenderExistingMeshGraphic` component.
+    3. In the `RenderExistingMeshGraphic` component Inspector at `Reference Skeleton Graphic` assign the original `SkeletonGraphic` object.
+    4. At `Replacement Material` assign e.g. the included _SkeletonGraphicDefaultOutline_ material to replace all materials with this material. Alternatively, if `Multiple CanvasRenderers` is enabled at the reference SkeletonGraphic, you can add entries to the `Replacement Materials` list and at each entry assign the original SkeletonGraphic material (e.g. _SkeletonGraphicDefault_) to be replaced and the respective `Replacement Material` (e.g. _SkeletonGraphicDefaultOutline_).
 
 - **Breaking changes**
 
