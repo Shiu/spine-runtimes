@@ -266,19 +266,19 @@ void SpineSkeletonDataResource::_on_resources_reimported(const PackedStringArray
 	for (int i = 0; i < resources.size(); i++) {
 		if (atlas_res.is_valid() && atlas_res->get_path() == resources[i]) {
 			print_line("Atlas resource was reimported: " + resources[i]);
-			#ifdef SPINE_GODOT_EXTENSION
+#ifdef SPINE_GODOT_EXTENSION
 			atlas_res = ResourceLoader::get_singleton()->load(resources[i], "SpineAtlasResource", ResourceLoader::CACHE_MODE_IGNORE);
-			#else
+#else
 			atlas_res = ResourceLoader::load(resources[i], "SpineAtlasResource", ResourceFormatLoader::CACHE_MODE_IGNORE);
-			#endif
+#endif
 			update_skeleton_data();
 		} else if (skeleton_file_res.is_valid() && skeleton_file_res->get_path() == resources[i]) {
 			print_line("Skeleton file resource was reimported: " + resources[i]);
-			#ifdef SPINE_GODOT_EXTENSION
+#ifdef SPINE_GODOT_EXTENSION
 			skeleton_file_res = ResourceLoader::get_singleton()->load(resources[i], "SpineSkeletonFileResource", ResourceLoader::CACHE_MODE_IGNORE);
-			#else
+#else
 			skeleton_file_res = ResourceLoader::load(resources[i], "SpineSkeletonFileResource", ResourceFormatLoader::CACHE_MODE_IGNORE);
-			#endif
+#endif
 			update_skeleton_data();
 		}
 	}

@@ -212,9 +212,9 @@ public:
 
 #ifdef TOOLS_ENABLED
 #if VERSION_MAJOR > 3
-void _on_resources_reimported(const PackedStringArray &resources);
+	void _on_resources_reimported(const PackedStringArray &resources);
 #else
-void _on_resources_reimported(const PoolStringArray &resources);
+	void _on_resources_reimported(const PoolStringArray &resources);
 #endif
 #endif
 };
