@@ -203,6 +203,7 @@ void SpineSkeletonDataResource::_bind_methods() {
 #endif
 }
 
+#ifdef TOOLS_ENABLED
 EditorFileSystem *get_editor_file_system() {
 #ifdef SPINE_GODOT_EXTENSION
 	EditorInterface *editor_interface = EditorInterface::get_singleton();
@@ -214,6 +215,7 @@ EditorFileSystem *get_editor_file_system() {
 	return EditorFileSystem::get_singleton();
 #endif
 }
+#endif
 
 SpineSkeletonDataResource::SpineSkeletonDataResource()
 	: default_mix(0), skeleton_data(nullptr), animation_state_data(nullptr) {
