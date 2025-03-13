@@ -27,7 +27,9 @@
  * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-import Scene.SceneManager;
+package starlingExamples;
+
+import starlingExamples.Scene.SceneManager;
 import openfl.utils.Assets;
 import spine.SkeletonData;
 import spine.animation.AnimationStateData;
@@ -38,25 +40,27 @@ import starling.core.Starling;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 
-class TankExample extends Scene {
-	var loadBinary = false;
+class BasicExample extends Scene {
+	var loadBinary = true;
 
 	public function load():Void {
-		background.color = 0xffffffff;
-		var atlas = new TextureAtlas(Assets.getText("assets/tank.atlas"), new StarlingTextureLoader("assets/tank.atlas"));
-		var skeletondata = SkeletonData.from(loadBinary ? Assets.getBytes("assets/tank-pro.skel") : Assets.getText("assets/tank-pro.json"), atlas);
+		var atlas = new TextureAtlas(Assets.getText("assets/raptor.atlas"), new StarlingTextureLoader("assets/raptor-pro.atlas"));
+		var skeletondata = SkeletonData.from(loadBinary ? Assets.getBytes("assets/raptor-pro.skel") : Assets.getText("assets/raptor-pro.json"), atlas);
 		var animationStateData = new AnimationStateData(skeletondata);
 		animationStateData.defaultMix = 0.25;
 
 		var skeletonSprite = new SkeletonSprite(skeletondata, animationStateData);
 		var bounds = skeletonSprite.skeleton.getBounds();
-		skeletonSprite.scale = Starling.current.stage.stageWidth / bounds.width;
+		skeletonSprite.scale = Starling.current.stage.stageWidth / bounds.width * 0.5;
 		skeletonSprite.x = Starling.current.stage.stageWidth / 2;
-		skeletonSprite.y = Starling.current.stage.stageHeight * 0.5;
-		skeletonSprite.state.setAnimationByName(0, "drive", true);
+		skeletonSprite.y = Starling.current.stage.stageHeight * 0.9;
+
+		skeletonSprite.state.setAnimationByName(0, "walk", true);
 
 		addChild(skeletonSprite);
 		juggler.add(skeletonSprite);
+
+		addText("Click anywhere for next scene");
 
 		addEventListener(TouchEvent.TOUCH, onTouch);
 	}
@@ -64,7 +68,7 @@ class TankExample extends Scene {
 	public function onTouch(e:TouchEvent) {
 		var touch = e.getTouch(this);
 		if (touch != null && touch.phase == TouchPhase.ENDED) {
-			SceneManager.getInstance().switchScene(new VineExample());
+			SceneManager.getInstance().switchScene(new SequenceExample());
 		}
 	}
 }

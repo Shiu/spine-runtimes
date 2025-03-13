@@ -27,51 +27,14 @@
  * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-import Scene.SceneManager;
-import openfl.utils.Assets;
-import spine.SkeletonData;
-import spine.Physics;
-import spine.animation.AnimationStateData;
-import spine.atlas.TextureAtlas;
-import spine.starling.SkeletonSprite;
-import spine.starling.StarlingTextureLoader;
-import starling.core.Starling;
-import starling.events.TouchEvent;
-import starling.events.TouchPhase;
+package spine.flixel;
 
-class SnowglobeExample extends Scene {
-	var loadBinary = false;
+import flixel.FlxStrip;
 
-	public function load():Void {
-		background.color = 0x333333;
-
-		var atlas = new TextureAtlas(Assets.getText("assets/snowglobe.atlas"), new StarlingTextureLoader("assets/snowglobe.atlas"));
-		var skeletondata = SkeletonData.from(Assets.getText("assets/snowglobe-pro.json"), atlas);
-
-		var animationStateData = new AnimationStateData(skeletondata);
-		animationStateData.defaultMix = 0.25;
-
-		var skeletonSprite = new SkeletonSprite(skeletondata, animationStateData);
-		skeletonSprite.skeleton.updateWorldTransform(Physics.update);
-		var bounds = skeletonSprite.skeleton.getBounds();
-
-		
-		skeletonSprite.scale = 0.15;
-		skeletonSprite.x = Starling.current.stage.stageWidth / 2;
-		skeletonSprite.y = Starling.current.stage.stageHeight/ 1.5;
-		
-		skeletonSprite.state.setAnimationByName(0, "shake", true);
-
-		addChild(skeletonSprite);
-		juggler.add(skeletonSprite);
-
-		addEventListener(TouchEvent.TOUCH, onTouch);
-	}
-
-	public function onTouch(e:TouchEvent) {
-		var touch = e.getTouch(this);
-		if (touch != null && touch.phase == TouchPhase.ENDED) {
-			SceneManager.getInstance().switchScene(new CloudPotExample());
-		}
+// this class is just to make the implementation coherent with the starling implementation
+class SkeletonMesh extends FlxStrip {
+	public function new(/*texture:FlxGraphicAsset*/) {
+		super();
+		// graphic = texture;
 	}
 }

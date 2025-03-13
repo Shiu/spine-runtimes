@@ -27,7 +27,9 @@
  * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *****************************************************************************/
 
-import Scene.SceneManager;
+package starlingExamples;
+
+import starlingExamples.Scene.SceneManager;
 import openfl.utils.Assets;
 import spine.SkeletonData;
 import spine.animation.AnimationStateData;
@@ -38,22 +40,26 @@ import starling.core.Starling;
 import starling.events.TouchEvent;
 import starling.events.TouchPhase;
 
-class BasicExample extends Scene {
+class Test extends Scene {
 	var loadBinary = true;
 
 	public function load():Void {
-		var atlas = new TextureAtlas(Assets.getText("assets/raptor.atlas"), new StarlingTextureLoader("assets/raptor-pro.atlas"));
-		var skeletondata = SkeletonData.from(loadBinary ? Assets.getBytes("assets/raptor-pro.skel") : Assets.getText("assets/raptor-pro.json"), atlas);
+		background.color = 0xaaaaaaff;
+
+		var atlas = new TextureAtlas(Assets.getText("assets/avatar.spine_atlas"), new StarlingTextureLoader("assets/avatar.spine_atlas"));
+		var skeletondata = SkeletonData.from(loadBinary ? Assets.getBytes("assets/avatar.skel") : Assets.getText("assets/avatar.json"), atlas);
 		var animationStateData = new AnimationStateData(skeletondata);
 		animationStateData.defaultMix = 0.25;
 
 		var skeletonSprite = new SkeletonSprite(skeletondata, animationStateData);
 		var bounds = skeletonSprite.skeleton.getBounds();
-		skeletonSprite.scale = Starling.current.stage.stageWidth / bounds.width * 0.5;
+		skeletonSprite.scale = Starling.current.stage.stageWidth / bounds.width * 0.2;
 		skeletonSprite.x = Starling.current.stage.stageWidth / 2;
 		skeletonSprite.y = Starling.current.stage.stageHeight * 0.9;
 
-		skeletonSprite.state.setAnimationByName(0, "walk", true);
+		for (i in 0...skeletondata.animations.length) {
+			skeletonSprite.state.addAnimation(0, skeletondata.animations[i], false, 0);
+		}
 
 		addChild(skeletonSprite);
 		juggler.add(skeletonSprite);
@@ -65,6 +71,7 @@ class BasicExample extends Scene {
 
 	public function onTouch(e:TouchEvent) {
 		var touch = e.getTouch(this);
+		trace(touch);
 		if (touch != null && touch.phase == TouchPhase.ENDED) {
 			SceneManager.getInstance().switchScene(new SequenceExample());
 		}
