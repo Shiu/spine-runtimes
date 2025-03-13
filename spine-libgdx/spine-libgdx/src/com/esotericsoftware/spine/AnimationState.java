@@ -1190,7 +1190,7 @@ public class AnimationState {
 		 * <p>
 		 * The <code>mixDuration</code> can be set manually rather than use the value from
 		 * {@link AnimationStateData#getMix(Animation, Animation)}. In that case, the <code>mixDuration</code> can be set for a new
-		 * track entry only before {@link AnimationState#update(float)} is first called.
+		 * track entry only before {@link AnimationState#update(float)} is next called.
 		 * <p>
 		 * When using {@link AnimationState#addAnimation(int, Animation, boolean, float)} with a <code>delay</code> <= 0, the
 		 * {@link #getDelay()} is set using the mix duration from the {@link AnimationStateData}. If <code>mixDuration</code> is set
@@ -1221,7 +1221,7 @@ public class AnimationState {
 		 * <p>
 		 * Track entries on track 0 ignore this setting and always use {@link MixBlend#first}.
 		 * <p>
-		 * The <code>mixBlend</code> can be set for a new track entry only before {@link AnimationState#apply(Skeleton)} is first
+		 * The <code>mixBlend</code> can be set for a new track entry only before {@link AnimationState#apply(Skeleton)} is next
 		 * called. */
 		public MixBlend getMixBlend () {
 			return mixBlend;
