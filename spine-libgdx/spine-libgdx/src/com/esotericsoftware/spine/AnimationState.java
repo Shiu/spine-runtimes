@@ -1412,7 +1412,10 @@ public class AnimationState {
 	 * {@link AnimationState#addListener(AnimationStateListener)}. */
 	static public interface AnimationStateListener {
 		/** Invoked when this entry has been set as the current entry. {@link #end(TrackEntry)} will occur when this entry will no
-		 * longer be applied. */
+		 * longer be applied.
+		 * <p>
+		 * When this event is triggered by calling {@link AnimationState#setAnimation(int, Animation, boolean)}, take care not to
+		 * call {@link AnimationState#update(float)} until after the TrackEntry has been configured. */
 		public void start (TrackEntry entry);
 
 		/** Invoked when another entry has replaced this entry as the current entry. This entry may continue being applied for
