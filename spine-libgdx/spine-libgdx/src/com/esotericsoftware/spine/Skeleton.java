@@ -267,7 +267,7 @@ public class Skeleton {
 
 		Object[] constrained = constraint.bones.items;
 		int boneCount = constraint.bones.size;
-		if (constraint.data.local) {
+		if (constraint.data.localFrom) {
 			for (int i = 0; i < boneCount; i++) {
 				var child = (Bone)constrained[i];
 				sortBone(child.parent);

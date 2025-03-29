@@ -86,6 +86,20 @@ import com.esotericsoftware.spine.BoneData.Inherit;
 import com.esotericsoftware.spine.PathConstraintData.PositionMode;
 import com.esotericsoftware.spine.PathConstraintData.RotateMode;
 import com.esotericsoftware.spine.PathConstraintData.SpacingMode;
+import com.esotericsoftware.spine.TransformConstraintData.FromProperty;
+import com.esotericsoftware.spine.TransformConstraintData.FromRotate;
+import com.esotericsoftware.spine.TransformConstraintData.FromScaleX;
+import com.esotericsoftware.spine.TransformConstraintData.FromScaleY;
+import com.esotericsoftware.spine.TransformConstraintData.FromShearY;
+import com.esotericsoftware.spine.TransformConstraintData.FromX;
+import com.esotericsoftware.spine.TransformConstraintData.FromY;
+import com.esotericsoftware.spine.TransformConstraintData.ToProperty;
+import com.esotericsoftware.spine.TransformConstraintData.ToRotate;
+import com.esotericsoftware.spine.TransformConstraintData.ToScaleX;
+import com.esotericsoftware.spine.TransformConstraintData.ToScaleY;
+import com.esotericsoftware.spine.TransformConstraintData.ToShearY;
+import com.esotericsoftware.spine.TransformConstraintData.ToX;
+import com.esotericsoftware.spine.TransformConstraintData.ToY;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.AttachmentLoader;
 import com.esotericsoftware.spine.attachments.AttachmentType;
@@ -242,15 +256,38 @@ public class SkeletonJson extends SkeletonLoader {
 			data.target = skeletonData.findBone(targetName);
 			if (data.target == null) throw new SerializationException("Transform constraint target bone not found: " + targetName);
 
-			data.local = constraintMap.getBoolean("local", false);
+			data.localFrom = constraintMap.getBoolean("localFrom", false);
+			data.localTo = constraintMap.getBoolean("localTo", false);
 			data.relative = constraintMap.getBoolean("relative", false);
+			data.clamp = constraintMap.getBoolean("clamp", false);
 
-			data.offsetRotation = constraintMap.getFloat("rotation", 0);
-			data.offsetX = constraintMap.getFloat("x", 0) * scale;
-			data.offsetY = constraintMap.getFloat("y", 0) * scale;
-			data.offsetScaleX = constraintMap.getFloat("scaleX", 0);
-			data.offsetScaleY = constraintMap.getFloat("scaleY", 0);
-			data.offsetShearY = constraintMap.getFloat("shearY", 0);
+			for (JsonValue fromEntry = constraintMap.getChild("properties"); fromEntry != null; fromEntry = fromEntry.next) {
+				FromProperty from = switch (fromEntry.name) {
+				case "rotate" -> new FromRotate();
+				case "x" -> new FromX();
+				case "y" -> new FromY();
+				case "scaleX" -> new FromScaleX();
+				case "scaleY" -> new FromScaleY();
+				case "shearY" -> new FromShearY();
+				default -> throw new SerializationException("Invalid transform constraint from property: " + fromEntry.name);
+				};
+				from.offset = fromEntry.getFloat("offset", 0) * scale;
+				for (JsonValue toEntry = constraintMap.getChild("to"); toEntry != null; toEntry = toEntry.next) {
+					ToProperty to = switch (fromEntry.name) {
+					case "rotate" -> new ToRotate();
+					case "x" -> new ToX();
+					case "y" -> new ToY();
+					case "scaleX" -> new ToScaleX();
+					case "scaleY" -> new ToScaleY();
+					case "shearY" -> new ToShearY();
+					default -> throw new SerializationException("Invalid transform constraint to property: " + fromEntry.name);
+					};
+					to.offset = toEntry.getFloat("offset", 0) * scale;
+					to.max = toEntry.getFloat("max", 1) * scale;
+					to.scale = toEntry.getFloat("scale");
+					from.to.add(to);
+				}
+			}
 
 			data.mixRotate = constraintMap.getFloat("mixRotate", 1);
 			data.mixX = constraintMap.getFloat("mixX", 1);

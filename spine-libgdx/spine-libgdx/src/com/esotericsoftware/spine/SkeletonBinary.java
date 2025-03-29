@@ -85,6 +85,20 @@ import com.esotericsoftware.spine.BoneData.Inherit;
 import com.esotericsoftware.spine.PathConstraintData.PositionMode;
 import com.esotericsoftware.spine.PathConstraintData.RotateMode;
 import com.esotericsoftware.spine.PathConstraintData.SpacingMode;
+import com.esotericsoftware.spine.TransformConstraintData.FromProperty;
+import com.esotericsoftware.spine.TransformConstraintData.FromRotate;
+import com.esotericsoftware.spine.TransformConstraintData.FromScaleX;
+import com.esotericsoftware.spine.TransformConstraintData.FromScaleY;
+import com.esotericsoftware.spine.TransformConstraintData.FromShearY;
+import com.esotericsoftware.spine.TransformConstraintData.FromX;
+import com.esotericsoftware.spine.TransformConstraintData.FromY;
+import com.esotericsoftware.spine.TransformConstraintData.ToProperty;
+import com.esotericsoftware.spine.TransformConstraintData.ToRotate;
+import com.esotericsoftware.spine.TransformConstraintData.ToScaleX;
+import com.esotericsoftware.spine.TransformConstraintData.ToScaleY;
+import com.esotericsoftware.spine.TransformConstraintData.ToShearY;
+import com.esotericsoftware.spine.TransformConstraintData.ToX;
+import com.esotericsoftware.spine.TransformConstraintData.ToY;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.AttachmentLoader;
 import com.esotericsoftware.spine.attachments.AttachmentType;
@@ -269,21 +283,46 @@ public class SkeletonBinary extends SkeletonLoader {
 				data.target = (BoneData)bones[input.readInt(true)];
 				int flags = input.read();
 				data.skinRequired = (flags & 1) != 0;
-				data.local = (flags & 2) != 0;
-				data.relative = (flags & 4) != 0;
-				if ((flags & 8) != 0) data.offsetRotation = input.readFloat();
-				if ((flags & 16) != 0) data.offsetX = input.readFloat() * scale;
-				if ((flags & 32) != 0) data.offsetY = input.readFloat() * scale;
-				if ((flags & 64) != 0) data.offsetScaleX = input.readFloat();
-				if ((flags & 128) != 0) data.offsetScaleY = input.readFloat();
+				data.localFrom = (flags & 2) != 0;
+				data.localTo = (flags & 4) != 0;
+				data.relative = (flags & 8) != 0;
+				data.clamp = (flags & 16) != 0;
+				nn = flags >> 5;
+				for (int ii = 0, tn; ii < nn; ii++) {
+					FromProperty from = switch (input.readByte()) {
+					case 0 -> new FromRotate();
+					case 1 -> new FromX();
+					case 2 -> new FromY();
+					case 3 -> new FromScaleX();
+					case 4 -> new FromScaleY();
+					case 5 -> new FromShearY();
+					default -> null;
+					};
+					from.offset = input.readFloat() * scale;
+					Object[] properties = from.to.setSize(tn = input.readInt(true));
+					for (int t = 0; t < tn; t++) {
+						ToProperty to = switch (input.readByte()) {
+						case 0 -> new ToRotate();
+						case 1 -> new ToX();
+						case 2 -> new ToY();
+						case 3 -> new ToScaleX();
+						case 4 -> new ToScaleY();
+						case 5 -> new ToShearY();
+						default -> null;
+						};
+						to.offset = input.readFloat() * scale;
+						to.max = input.readFloat() * scale;
+						to.scale = input.readFloat();
+						properties[i] = to;
+					}
+				}
 				flags = input.read();
-				if ((flags & 1) != 0) data.offsetShearY = input.readFloat();
-				if ((flags & 2) != 0) data.mixRotate = input.readFloat();
-				if ((flags & 4) != 0) data.mixX = input.readFloat();
-				if ((flags & 8) != 0) data.mixY = input.readFloat();
-				if ((flags & 16) != 0) data.mixScaleX = input.readFloat();
-				if ((flags & 32) != 0) data.mixScaleY = input.readFloat();
-				if ((flags & 64) != 0) data.mixShearY = input.readFloat();
+				if ((flags & 1) != 0) data.mixRotate = input.readFloat();
+				if ((flags & 2) != 0) data.mixX = input.readFloat();
+				if ((flags & 4) != 0) data.mixY = input.readFloat();
+				if ((flags & 8) != 0) data.mixScaleX = input.readFloat();
+				if ((flags & 16) != 0) data.mixScaleY = input.readFloat();
+				if ((flags & 32) != 0) data.mixShearY = input.readFloat();
 				o[i] = data;
 			}
 
