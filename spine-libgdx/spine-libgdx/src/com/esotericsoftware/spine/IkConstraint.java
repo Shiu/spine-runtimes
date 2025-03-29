@@ -94,12 +94,9 @@ public class IkConstraint implements Updatable {
 		Bone target = this.target;
 		Object[] bones = this.bones.items;
 		switch (this.bones.size) {
-		case 1:
-			apply((Bone)bones[0], target.worldX, target.worldY, compress, stretch, data.uniform, mix);
-			break;
-		case 2:
+		case 1 -> apply((Bone)bones[0], target.worldX, target.worldY, compress, stretch, data.uniform, mix);
+		case 2 -> //
 			apply((Bone)bones[0], (Bone)bones[1], target.worldX, target.worldY, bendDirection, stretch, data.uniform, softness, mix);
-			break;
 		}
 	}
 
@@ -222,10 +219,10 @@ public class IkConstraint implements Updatable {
 		float sx = bone.ascaleX, sy = bone.ascaleY;
 		if (compress || stretch) {
 			switch (bone.inherit) {
-			case noScale:
-			case noScaleOrReflection:
+			case noScale, noScaleOrReflection -> {
 				tx = targetX - bone.worldX;
 				ty = targetY - bone.worldY;
+			}
 			}
 			float b = bone.data.length * sx;
 			if (b > 0.0001f) {

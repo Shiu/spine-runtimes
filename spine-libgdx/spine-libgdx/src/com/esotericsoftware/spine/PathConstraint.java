@@ -40,7 +40,6 @@ import com.esotericsoftware.spine.PathConstraintData.PositionMode;
 import com.esotericsoftware.spine.PathConstraintData.RotateMode;
 import com.esotericsoftware.spine.PathConstraintData.SpacingMode;
 import com.esotericsoftware.spine.Skeleton.Physics;
-import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.PathAttachment;
 
 /** Stores the current pose for a path constraint. A path constraint adjusts the rotation, translation, and scale of the
@@ -102,8 +101,7 @@ public class PathConstraint implements Updatable {
 
 	/** Applies the constraint to the constrained bones. */
 	public void update (Physics physics) {
-		Attachment attachment = target.attachment;
-		if (!(attachment instanceof PathAttachment)) return;
+		if (!(target.attachment instanceof PathAttachment pathAttachment)) return;
 
 		float mixRotate = this.mixRotate, mixX = this.mixX, mixY = this.mixY;
 		if (mixRotate == 0 && mixX == 0 && mixY == 0) return;
@@ -116,21 +114,21 @@ public class PathConstraint implements Updatable {
 		float spacing = this.spacing;
 
 		switch (data.spacingMode) {
-		case percent:
+		case percent -> {
 			if (scale) {
 				for (int i = 0, n = spacesCount - 1; i < n; i++) {
-					Bone bone = (Bone)bones[i];
+					var bone = (Bone)bones[i];
 					float setupLength = bone.data.length;
 					float x = setupLength * bone.a, y = setupLength * bone.c;
 					lengths[i] = (float)Math.sqrt(x * x + y * y);
 				}
 			}
 			Arrays.fill(spaces, 1, spacesCount, spacing);
-			break;
-		case proportional:
+		}
+		case proportional -> {
 			float sum = 0;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
-				Bone bone = (Bone)bones[i];
+				var bone = (Bone)bones[i];
 				float setupLength = bone.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
@@ -148,11 +146,11 @@ public class PathConstraint implements Updatable {
 				for (int i = 1; i < spacesCount; i++)
 					spaces[i] *= sum;
 			}
-			break;
-		default:
+		}
+		default -> {
 			boolean lengthSpacing = data.spacingMode == SpacingMode.length;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
-				Bone bone = (Bone)bones[i];
+				var bone = (Bone)bones[i];
 				float setupLength = bone.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
@@ -165,8 +163,9 @@ public class PathConstraint implements Updatable {
 				}
 			}
 		}
+		}
 
-		float[] positions = computeWorldPositions((PathAttachment)attachment, spacesCount, tangents);
+		float[] positions = computeWorldPositions(pathAttachment, spacesCount, tangents);
 		float boneX = positions[0], boneY = positions[1], offsetRotation = data.offsetRotation;
 		boolean tip;
 		if (offsetRotation == 0)
@@ -177,7 +176,7 @@ public class PathConstraint implements Updatable {
 			offsetRotation *= p.a * p.d - p.b * p.c > 0 ? degRad : -degRad;
 		}
 		for (int i = 0, p = 3; i < boneCount; i++, p += 3) {
-			Bone bone = (Bone)bones[i];
+			var bone = (Bone)bones[i];
 			bone.worldX += (boneX - bone.worldX) * mixX;
 			bone.worldY += (boneY - bone.worldY) * mixY;
 			float x = positions[p], y = positions[p + 1], dx = x - boneX, dy = y - boneY;
@@ -238,17 +237,11 @@ public class PathConstraint implements Updatable {
 
 			if (data.positionMode == PositionMode.percent) position *= pathLength;
 
-			float multiplier;
-			switch (data.spacingMode) {
-			case percent:
-				multiplier = pathLength;
-				break;
-			case proportional:
-				multiplier = pathLength / spacesCount;
-				break;
-			default:
-				multiplier = 1;
-			}
+			float multiplier = switch (data.spacingMode) {
+			case percent -> pathLength;
+			case proportional -> pathLength / spacesCount;
+			default -> 1;
+			};
 
 			world = this.world.setSize(8);
 			for (int i = 0, o = 0, curve = 0; i < spacesCount; i++, o += 3) {
@@ -356,17 +349,11 @@ public class PathConstraint implements Updatable {
 
 		if (data.positionMode == PositionMode.percent) position *= pathLength;
 
-		float multiplier;
-		switch (data.spacingMode) {
-		case percent:
-			multiplier = pathLength;
-			break;
-		case proportional:
-			multiplier = pathLength / spacesCount;
-			break;
-		default:
-			multiplier = 1;
-		}
+		float multiplier = switch (data.spacingMode) {
+		case percent -> pathLength;
+		case proportional -> pathLength / spacesCount;
+		default -> 1;
+		};
 
 		float[] segments = this.segments;
 		float curveLength = 0;

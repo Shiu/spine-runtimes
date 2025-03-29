@@ -109,8 +109,7 @@ public class SkeletonRendererDebug {
 				Slot slot = slots.get(i);
 				if (!slot.bone.active) continue;
 				Attachment attachment = slot.attachment;
-				if (!(attachment instanceof PointAttachment)) continue;
-				PointAttachment point = (PointAttachment)attachment;
+				if (!(attachment instanceof PointAttachment point)) continue;
 				point.computeWorldPosition(slot.getBone(), temp1);
 				temp2.set(8, 0).rotate(point.computeWorldRotation(slot.getBone()));
 				shapes.rectLine(temp1, temp2, boneWidth / 2 * scale);
@@ -126,8 +125,7 @@ public class SkeletonRendererDebug {
 				Slot slot = slots.get(i);
 				if (!slot.bone.active) continue;
 				Attachment attachment = slot.attachment;
-				if (attachment instanceof RegionAttachment) {
-					RegionAttachment region = (RegionAttachment)attachment;
+				if (attachment instanceof RegionAttachment region) {
 					float[] vertices = this.vertices.items;
 					region.computeWorldVertices(slot, vertices, 0, 2);
 					shapes.line(vertices[0], vertices[1], vertices[2], vertices[3]);
@@ -143,8 +141,7 @@ public class SkeletonRendererDebug {
 				Slot slot = slots.get(i);
 				if (!slot.bone.active) continue;
 				Attachment attachment = slot.attachment;
-				if (!(attachment instanceof MeshAttachment)) continue;
-				MeshAttachment mesh = (MeshAttachment)attachment;
+				if (!(attachment instanceof MeshAttachment mesh)) continue;
 				float[] vertices = this.vertices.setSize(mesh.getWorldVerticesLength());
 				mesh.computeWorldVertices(slot, 0, mesh.getWorldVerticesLength(), vertices, 0, 2);
 				short[] triangles = mesh.getTriangles();
@@ -191,8 +188,7 @@ public class SkeletonRendererDebug {
 				Slot slot = slots.get(i);
 				if (!slot.bone.active) continue;
 				Attachment attachment = slot.attachment;
-				if (!(attachment instanceof ClippingAttachment)) continue;
-				ClippingAttachment clip = (ClippingAttachment)attachment;
+				if (!(attachment instanceof ClippingAttachment clip)) continue;
 				int nn = clip.getWorldVerticesLength();
 				float[] vertices = this.vertices.setSize(nn);
 				clip.computeWorldVertices(slot, 0, nn, vertices, 0, 2);
@@ -208,8 +204,7 @@ public class SkeletonRendererDebug {
 				Slot slot = slots.get(i);
 				if (!slot.bone.active) continue;
 				Attachment attachment = slot.attachment;
-				if (!(attachment instanceof PathAttachment)) continue;
-				PathAttachment path = (PathAttachment)attachment;
+				if (!(attachment instanceof PathAttachment path)) continue;
 				int nn = path.getWorldVerticesLength();
 				float[] vertices = this.vertices.setSize(nn);
 				path.computeWorldVertices(slot, 0, nn, vertices, 0, 2);
@@ -259,8 +254,7 @@ public class SkeletonRendererDebug {
 				Slot slot = slots.get(i);
 				if (!slot.bone.active) continue;
 				Attachment attachment = slot.attachment;
-				if (!(attachment instanceof PointAttachment)) continue;
-				PointAttachment point = (PointAttachment)attachment;
+				if (!(attachment instanceof PointAttachment point)) continue;
 				point.computeWorldPosition(slot.getBone(), temp1);
 				shapes.circle(temp1.x, temp1.y, 3 * scale, 8);
 			}

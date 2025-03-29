@@ -116,7 +116,7 @@ public class AnimationState {
 		delta *= timeScale;
 		Object[] tracks = this.tracks.items;
 		for (int i = 0, n = this.tracks.size; i < n; i++) {
-			TrackEntry current = (TrackEntry)tracks[i];
+			var current = (TrackEntry)tracks[i];
 			if (current == null) continue;
 
 			current.animationLast = current.nextAnimationLast;
@@ -208,7 +208,7 @@ public class AnimationState {
 		boolean applied = false;
 		Object[] tracks = this.tracks.items;
 		for (int i = 0, n = this.tracks.size; i < n; i++) {
-			TrackEntry current = (TrackEntry)tracks[i];
+			var current = (TrackEntry)tracks[i];
 			if (current == null || current.delay > 0) continue;
 			applied = true;
 
@@ -236,8 +236,8 @@ public class AnimationState {
 				if (i == 0) attachments = true;
 				for (int ii = 0; ii < timelineCount; ii++) {
 					Object timeline = timelines[ii];
-					if (timeline instanceof AttachmentTimeline)
-						applyAttachmentTimeline((AttachmentTimeline)timeline, skeleton, applyTime, blend, attachments);
+					if (timeline instanceof AttachmentTimeline attachmentTimeline)
+						applyAttachmentTimeline(attachmentTimeline, skeleton, applyTime, blend, attachments);
 					else
 						((Timeline)timeline).apply(skeleton, animationLast, applyTime, applyEvents, alpha, blend, MixDirection.in);
 				}
@@ -250,13 +250,13 @@ public class AnimationState {
 				float[] timelinesRotation = current.timelinesRotation.items;
 
 				for (int ii = 0; ii < timelineCount; ii++) {
-					Timeline timeline = (Timeline)timelines[ii];
+					var timeline = (Timeline)timelines[ii];
 					MixBlend timelineBlend = timelineMode[ii] == SUBSEQUENT ? blend : MixBlend.setup;
-					if (!shortestRotation && timeline instanceof RotateTimeline) {
-						applyRotateTimeline((RotateTimeline)timeline, skeleton, applyTime, alpha, timelineBlend, timelinesRotation,
-							ii << 1, firstFrame);
-					} else if (timeline instanceof AttachmentTimeline)
-						applyAttachmentTimeline((AttachmentTimeline)timeline, skeleton, applyTime, blend, attachments);
+					if (!shortestRotation && timeline instanceof RotateTimeline rotateTimeline) {
+						applyRotateTimeline(rotateTimeline, skeleton, applyTime, alpha, timelineBlend, timelinesRotation, ii << 1,
+							firstFrame);
+					} else if (timeline instanceof AttachmentTimeline attachmentTimeline)
+						applyAttachmentTimeline(attachmentTimeline, skeleton, applyTime, blend, attachments);
 					else
 						timeline.apply(skeleton, animationLast, applyTime, applyEvents, alpha, timelineBlend, MixDirection.in);
 				}
@@ -273,7 +273,7 @@ public class AnimationState {
 		int setupState = unkeyedState + SETUP;
 		Object[] slots = skeleton.slots.items;
 		for (int i = 0, n = skeleton.slots.size; i < n; i++) {
-			Slot slot = (Slot)slots[i];
+			var slot = (Slot)slots[i];
 			if (slot.attachmentState == setupState) {
 				String attachmentName = slot.data.attachmentName;
 				slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
@@ -325,7 +325,7 @@ public class AnimationState {
 
 			from.totalAlpha = 0;
 			for (int i = 0; i < timelineCount; i++) {
-				Timeline timeline = (Timeline)timelines[i];
+				var timeline = (Timeline)timelines[i];
 				MixDirection direction = MixDirection.out;
 				MixBlend timelineBlend;
 				float alpha;
@@ -349,16 +349,16 @@ public class AnimationState {
 					break;
 				default: // HOLD_MIX
 					timelineBlend = MixBlend.setup;
-					TrackEntry holdMix = (TrackEntry)timelineHoldMix[i];
+					var holdMix = (TrackEntry)timelineHoldMix[i];
 					alpha = alphaHold * Math.max(0, 1 - holdMix.mixTime / holdMix.mixDuration);
 					break;
 				}
 				from.totalAlpha += alpha;
-				if (!shortestRotation && timeline instanceof RotateTimeline) {
-					applyRotateTimeline((RotateTimeline)timeline, skeleton, applyTime, alpha, timelineBlend, timelinesRotation, i << 1,
+				if (!shortestRotation && timeline instanceof RotateTimeline rotateTimeline) {
+					applyRotateTimeline(rotateTimeline, skeleton, applyTime, alpha, timelineBlend, timelinesRotation, i << 1,
 						firstFrame);
-				} else if (timeline instanceof AttachmentTimeline)
-					applyAttachmentTimeline((AttachmentTimeline)timeline, skeleton, applyTime, timelineBlend,
+				} else if (timeline instanceof AttachmentTimeline attachmentTimeline)
+					applyAttachmentTimeline(attachmentTimeline, skeleton, applyTime, timelineBlend,
 						attachments && alpha >= from.alphaAttachmentThreshold);
 				else {
 					if (drawOrder && timeline instanceof DrawOrderTimeline && timelineBlend == MixBlend.setup)
@@ -475,7 +475,7 @@ public class AnimationState {
 		Object[] events = this.events.items;
 		int i = 0, n = this.events.size;
 		for (; i < n; i++) {
-			Event event = (Event)events[i];
+			var event = (Event)events[i];
 			if (event.time < trackLastWrapped) break;
 			if (event.time > animationEnd) continue; // Discard events outside animation start/end.
 			queue.event(entry, event);
@@ -496,7 +496,7 @@ public class AnimationState {
 
 		// Queue events after complete.
 		for (; i < n; i++) {
-			Event event = (Event)events[i];
+			var event = (Event)events[i];
 			if (event.time < animationStart) continue; // Discard events outside animation start/end.
 			queue.event(entry, event);
 		}
@@ -694,7 +694,7 @@ public class AnimationState {
 		queue.drainDisabled = true;
 		Object[] tracks = this.tracks.items;
 		for (int i = 0, n = this.tracks.size; i < n; i++) {
-			TrackEntry current = (TrackEntry)tracks[i];
+			var current = (TrackEntry)tracks[i];
 			if (current != null) setEmptyAnimation(current.trackIndex, mixDuration);
 		}
 		queue.drainDisabled = oldDrainDisabled;
@@ -762,7 +762,7 @@ public class AnimationState {
 		int n = tracks.size;
 		Object[] tracks = this.tracks.items;
 		for (int i = 0; i < n; i++) {
-			TrackEntry entry = (TrackEntry)tracks[i];
+			var entry = (TrackEntry)tracks[i];
 			if (entry == null) continue;
 			while (entry.mixingFrom != null) // Move to last entry, then iterate in reverse.
 				entry = entry.mixingFrom;
@@ -790,7 +790,7 @@ public class AnimationState {
 
 		outer:
 		for (int i = 0; i < timelinesCount; i++) {
-			Timeline timeline = (Timeline)timelines[i];
+			var timeline = (Timeline)timelines[i];
 			String[] ids = timeline.getPropertyIds();
 			if (!propertyIds.addAll(ids))
 				timelineMode[i] = SUBSEQUENT;
@@ -870,10 +870,10 @@ public class AnimationState {
 	}
 
 	public String toString () {
-		StringBuilder buffer = new StringBuilder(64);
+		var buffer = new StringBuilder(64);
 		Object[] tracks = this.tracks.items;
 		for (int i = 0, n = this.tracks.size; i < n; i++) {
-			TrackEntry entry = (TrackEntry)tracks[i];
+			var entry = (TrackEntry)tracks[i];
 			if (entry == null) continue;
 			if (buffer.length() > 0) buffer.append(", ");
 			buffer.append(entry.toString());
@@ -1348,8 +1348,8 @@ public class AnimationState {
 
 			SnapshotArray<AnimationStateListener> listenersArray = AnimationState.this.listeners;
 			for (int i = 0; i < this.objects.size; i += 2) {
-				EventType type = (EventType)objects.get(i);
-				TrackEntry entry = (TrackEntry)objects.get(i + 1);
+				var type = (EventType)objects.get(i);
+				var entry = (TrackEntry)objects.get(i + 1);
 				int listenersCount = listenersArray.size;
 				Object[] listeners = listenersArray.begin();
 				switch (type) {
@@ -1380,7 +1380,7 @@ public class AnimationState {
 						((AnimationStateListener)listeners[ii]).complete(entry);
 					break;
 				case event:
-					Event event = (Event)objects.get(i++ + 2);
+					var event = (Event)objects.get(i++ + 2);
 					if (entry.listener != null) entry.listener.event(entry, event);
 					for (int ii = 0; ii < listenersCount; ii++)
 						((AnimationStateListener)listeners[ii]).event(entry, event);
@@ -1448,7 +1448,7 @@ public class AnimationState {
 		public void event (TrackEntry entry, Event event);
 	}
 
-	static public abstract class AnimationStateAdapter implements AnimationStateListener {
+	static abstract public class AnimationStateAdapter implements AnimationStateListener {
 		public void start (TrackEntry entry) {
 		}
 

@@ -60,12 +60,12 @@ public class SkeletonRenderer {
 	 * previous blend function is not restored, since that could result in unnecessary flushes, depending on what is rendered
 	 * next. */
 	public void draw (Batch batch, Skeleton skeleton) {
-		if (batch instanceof TwoColorPolygonBatch) {
-			draw((TwoColorPolygonBatch)batch, skeleton);
+		if (batch instanceof TwoColorPolygonBatch twoColorBatch) {
+			draw(twoColorBatch, skeleton);
 			return;
 		}
-		if (batch instanceof PolygonSpriteBatch) {
-			draw((PolygonSpriteBatch)batch, skeleton);
+		if (batch instanceof PolygonSpriteBatch polygonBatch) {
+			draw(polygonBatch, skeleton);
 			return;
 		}
 		if (batch == null) throw new IllegalArgumentException("batch cannot be null.");
@@ -78,11 +78,10 @@ public class SkeletonRenderer {
 		float r = skeletonColor.r, g = skeletonColor.g, b = skeletonColor.b, a = skeletonColor.a;
 		Object[] drawOrder = skeleton.drawOrder.items;
 		for (int i = 0, n = skeleton.drawOrder.size; i < n; i++) {
-			Slot slot = (Slot)drawOrder[i];
+			var slot = (Slot)drawOrder[i];
 			if (!slot.bone.active) continue;
 			Attachment attachment = slot.attachment;
-			if (attachment instanceof RegionAttachment) {
-				RegionAttachment region = (RegionAttachment)attachment;
+			if (attachment instanceof RegionAttachment region) {
 				region.computeWorldVertices(slot, vertices, 0, 5);
 				Color color = region.getColor(), slotColor = slot.getColor();
 				float alpha = a * slotColor.a * color.a * 255;
@@ -119,8 +118,8 @@ public class SkeletonRenderer {
 				throw new RuntimeException(batch.getClass().getSimpleName()
 					+ " cannot render meshes, PolygonSpriteBatch or TwoColorPolygonBatch is required.");
 
-			} else if (attachment instanceof SkeletonAttachment) {
-				Skeleton attachmentSkeleton = ((SkeletonAttachment)attachment).getSkeleton();
+			} else if (attachment instanceof SkeletonAttachment skeletonAttachment) {
+				Skeleton attachmentSkeleton = skeletonAttachment.getSkeleton();
 				if (attachmentSkeleton != null) draw(batch, attachmentSkeleton);
 			}
 		}
@@ -144,15 +143,14 @@ public class SkeletonRenderer {
 		float r = skeletonColor.r, g = skeletonColor.g, b = skeletonColor.b, a = skeletonColor.a;
 		Object[] drawOrder = skeleton.drawOrder.items;
 		for (int i = 0, n = skeleton.drawOrder.size; i < n; i++) {
-			Slot slot = (Slot)drawOrder[i];
+			var slot = (Slot)drawOrder[i];
 			if (!slot.bone.active) {
 				clipper.clipEnd(slot);
 				continue;
 			}
 			Texture texture = null;
 			Attachment attachment = slot.attachment;
-			if (attachment instanceof RegionAttachment) {
-				RegionAttachment region = (RegionAttachment)attachment;
+			if (attachment instanceof RegionAttachment region) {
 				verticesLength = 20;
 				vertices = this.vertices.items;
 				region.computeWorldVertices(slot, vertices, 0, 5);
@@ -161,8 +159,7 @@ public class SkeletonRenderer {
 				uvs = region.getUVs();
 				color = region.getColor();
 
-			} else if (attachment instanceof MeshAttachment) {
-				MeshAttachment mesh = (MeshAttachment)attachment;
+			} else if (attachment instanceof MeshAttachment mesh) {
 				int count = mesh.getWorldVerticesLength();
 				verticesLength = (count >> 1) * 5;
 				vertices = this.vertices.setSize(verticesLength);
@@ -172,13 +169,12 @@ public class SkeletonRenderer {
 				uvs = mesh.getUVs();
 				color = mesh.getColor();
 
-			} else if (attachment instanceof ClippingAttachment) {
-				ClippingAttachment clip = (ClippingAttachment)attachment;
+			} else if (attachment instanceof ClippingAttachment clip) {
 				clipper.clipStart(slot, clip);
 				continue;
 
-			} else if (attachment instanceof SkeletonAttachment) {
-				Skeleton attachmentSkeleton = ((SkeletonAttachment)attachment).getSkeleton();
+			} else if (attachment instanceof SkeletonAttachment skeletonAttachment) {
+				Skeleton attachmentSkeleton = skeletonAttachment.getSkeleton();
 				if (attachmentSkeleton != null) draw(batch, attachmentSkeleton);
 			}
 
@@ -241,15 +237,14 @@ public class SkeletonRenderer {
 		float r = skeletonColor.r, g = skeletonColor.g, b = skeletonColor.b, a = skeletonColor.a;
 		Object[] drawOrder = skeleton.drawOrder.items;
 		for (int i = 0, n = skeleton.drawOrder.size; i < n; i++) {
-			Slot slot = (Slot)drawOrder[i];
+			var slot = (Slot)drawOrder[i];
 			if (!slot.bone.active) {
 				clipper.clipEnd(slot);
 				continue;
 			}
 			Texture texture = null;
 			Attachment attachment = slot.attachment;
-			if (attachment instanceof RegionAttachment) {
-				RegionAttachment region = (RegionAttachment)attachment;
+			if (attachment instanceof RegionAttachment region) {
 				verticesLength = 24;
 				vertices = this.vertices.items;
 				region.computeWorldVertices(slot, vertices, 0, 6);
@@ -258,8 +253,7 @@ public class SkeletonRenderer {
 				uvs = region.getUVs();
 				color = region.getColor();
 
-			} else if (attachment instanceof MeshAttachment) {
-				MeshAttachment mesh = (MeshAttachment)attachment;
+			} else if (attachment instanceof MeshAttachment mesh) {
 				int count = mesh.getWorldVerticesLength();
 				verticesLength = count * 3;
 				vertices = this.vertices.setSize(verticesLength);
@@ -269,13 +263,12 @@ public class SkeletonRenderer {
 				uvs = mesh.getUVs();
 				color = mesh.getColor();
 
-			} else if (attachment instanceof ClippingAttachment) {
-				ClippingAttachment clip = (ClippingAttachment)attachment;
+			} else if (attachment instanceof ClippingAttachment clip) {
 				clipper.clipStart(slot, clip);
 				continue;
 
-			} else if (attachment instanceof SkeletonAttachment) {
-				Skeleton attachmentSkeleton = ((SkeletonAttachment)attachment).getSkeleton();
+			} else if (attachment instanceof SkeletonAttachment skeletonAttachment) {
+				Skeleton attachmentSkeleton = skeletonAttachment.getSkeleton();
 				if (attachmentSkeleton != null) draw(batch, attachmentSkeleton);
 			}
 
