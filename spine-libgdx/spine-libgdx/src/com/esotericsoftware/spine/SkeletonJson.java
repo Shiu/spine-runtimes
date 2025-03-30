@@ -272,8 +272,8 @@ public class SkeletonJson extends SkeletonLoader {
 				default -> throw new SerializationException("Invalid transform constraint from property: " + fromEntry.name);
 				};
 				from.offset = fromEntry.getFloat("offset", 0) * scale;
-				for (JsonValue toEntry = constraintMap.getChild("to"); toEntry != null; toEntry = toEntry.next) {
-					ToProperty to = switch (fromEntry.name) {
+				for (JsonValue toEntry = fromEntry.getChild("to"); toEntry != null; toEntry = toEntry.next) {
+					ToProperty to = switch (toEntry.name) {
 					case "rotate" -> new ToRotate();
 					case "x" -> new ToX();
 					case "y" -> new ToY();
@@ -287,6 +287,7 @@ public class SkeletonJson extends SkeletonLoader {
 					to.scale = toEntry.getFloat("scale");
 					from.to.add(to);
 				}
+				if (from.to.notEmpty()) data.properties.add(from);
 			}
 
 			data.mixRotate = constraintMap.getFloat("mixRotate", 1);

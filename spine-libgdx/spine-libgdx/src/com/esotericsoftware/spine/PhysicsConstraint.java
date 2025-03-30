@@ -38,7 +38,7 @@ import com.esotericsoftware.spine.Skeleton.Physics;
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
 public class PhysicsConstraint implements Updatable {
 	final PhysicsConstraintData data;
-	public Bone bone;
+	Bone bone;
 	float inertia, strength, damping, massInverse, wind, gravity, mix;
 
 	boolean reset = true;

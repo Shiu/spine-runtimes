@@ -287,7 +287,7 @@ public class SkeletonBinary extends SkeletonLoader {
 				data.localTo = (flags & 4) != 0;
 				data.relative = (flags & 8) != 0;
 				data.clamp = (flags & 16) != 0;
-				nn = flags >> 5;
+				Object[] froms = data.properties.setSize(nn = flags >> 5);
 				for (int ii = 0, tn; ii < nn; ii++) {
 					FromProperty from = switch (input.readByte()) {
 					case 0 -> new FromRotate();
@@ -299,7 +299,7 @@ public class SkeletonBinary extends SkeletonLoader {
 					default -> null;
 					};
 					from.offset = input.readFloat() * scale;
-					Object[] properties = from.to.setSize(tn = input.readInt(true));
+					Object[] tos = from.to.setSize(tn = input.readByte());
 					for (int t = 0; t < tn; t++) {
 						ToProperty to = switch (input.readByte()) {
 						case 0 -> new ToRotate();
@@ -313,8 +313,9 @@ public class SkeletonBinary extends SkeletonLoader {
 						to.offset = input.readFloat() * scale;
 						to.max = input.readFloat() * scale;
 						to.scale = input.readFloat();
-						properties[i] = to;
+						tos[i] = to;
 					}
+					froms[ii] = from;
 				}
 				flags = input.read();
 				if ((flags & 1) != 0) data.mixRotate = input.readFloat();
