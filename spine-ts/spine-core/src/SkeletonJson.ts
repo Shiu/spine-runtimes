@@ -39,7 +39,7 @@ import { PathConstraintData, PositionMode, SpacingMode, RotateMode } from "./Pat
 import { SkeletonData } from "./SkeletonData.js";
 import { Skin } from "./Skin.js";
 import { SlotData, BlendMode } from "./SlotData.js";
-import { TransformConstraintData } from "./TransformConstraintData.js";
+import { FromProperty, FromRotate, FromScaleX, FromScaleY, FromShearY, FromX, FromY, ToProperty, ToRotate, ToScaleX, ToScaleY, ToShearY, ToX, ToY, TransformConstraintData } from "./TransformConstraintData.js";
 import { Utils, Color, NumberArrayLike } from "./Utils.js";
 import { Sequence, SequenceMode } from "./attachments/Sequence.js";
 import { SequenceTimeline } from "./Animation.js";
@@ -184,14 +184,47 @@ export class SkeletonJson {
 				if (!target) throw new Error(`Couldn't find target bone ${targetName} for transform constraint ${constraintMap.name}.`);
 				data.target = target;
 
-				data.local = getValue(constraintMap, "local", false);
+				data.localFrom = getValue(constraintMap, "localFrom", false);
+				data.localFrom = getValue(constraintMap, "localTo", false);
 				data.relative = getValue(constraintMap, "relative", false);
-				data.offsetRotation = getValue(constraintMap, "rotation", 0);
-				data.offsetX = getValue(constraintMap, "x", 0) * scale;
-				data.offsetY = getValue(constraintMap, "y", 0) * scale;
-				data.offsetScaleX = getValue(constraintMap, "scaleX", 0);
-				data.offsetScaleY = getValue(constraintMap, "scaleY", 0);
-				data.offsetShearY = getValue(constraintMap, "shearY", 0);
+				data.clamp = getValue(constraintMap, "clamp", false);
+
+				const propertiesEntries = Object.entries(getValue(constraintMap, "properties", {})) as [string, any][];
+				for (let ii = 0; ii < propertiesEntries.length; ii++) {
+					let name = propertiesEntries[ii][0];
+					let from: FromProperty;
+					switch (name) {
+						case "rotate": from = new FromRotate(); break;
+						case "x": from = new FromX(); break;
+						case "y": from = new FromY(); break;
+						case "scaleX": from = new FromScaleX(); break;
+						case "scaleY": from = new FromScaleY(); break;
+						case "shearY": from = new FromShearY(); break;
+						default: throw new Error("Invalid transform constraint from property: " + name);
+					}
+					const fromEntry = propertiesEntries[ii][1];
+					from.offset = getValue(fromEntry, "offset", 0) * scale;
+					const toEntries = Object.entries(getValue(fromEntry, "to", {})) as [string, any][];
+					for (let t = 0; t < toEntries.length; t++) {
+						let name = toEntries[t][0];
+						let to: ToProperty;
+						switch (name) {
+							case "rotate": to = new ToRotate(); break;
+							case "x": to = new ToX(); break;
+							case "y": to = new ToY(); break;
+							case "scaleX": to = new ToScaleX(); break;
+							case "scaleY": to = new ToScaleY(); break;
+							case "shearY": to = new ToShearY(); break;
+							default: throw new Error("Invalid transform constraint to property: " + name);
+						}
+						let toEntry = toEntries[t][1];
+						to.offset = getValue(toEntry, "offset", 0) * scale;
+						to.max = getValue(toEntry, "max", 1) * scale;
+						to.scale = getValue(toEntry, "scale", 1);
+						from.to.push(to);
+					}
+					if (from.to.length > 0) data.properties.push(from);
+				}
 
 				data.mixRotate = getValue(constraintMap, "mixRotate", 1);
 				data.mixX = getValue(constraintMap, "mixX", 1);
@@ -687,7 +720,10 @@ export class SkeletonJson {
 						}
 
 						timelines.push(timeline);
+					} else {
+						throw new Error("Invalid timeline type for a slot: " + timelineMap.name + " (" + slotMap.name + ")");
 					}
+
 				}
 			}
 		}
@@ -740,6 +776,8 @@ export class SkeletonJson {
 							timeline.setFrame(frame, getValue(aFrame, "time", 0), Utils.enumValue(Inherit, getValue(aFrame, "inherit", "Normal")));
 						}
 						timelines.push(timeline);
+					} else {
+						throw new Error("Invalid timeline type for a bone: " + timelineMap.name + " (" + boneMap.name + ")");
 					}
 				}
 			}

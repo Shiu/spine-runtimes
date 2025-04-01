@@ -299,7 +299,7 @@ export class Skeleton {
 
 		let constrained = constraint.bones;
 		let boneCount = constrained.length;
-		if (constraint.data.local) {
+		if (constraint.data.localFrom) {
 			for (let i = 0; i < boneCount; i++) {
 				let child = constrained[i];
 				this.sortBone(child.parent!);
