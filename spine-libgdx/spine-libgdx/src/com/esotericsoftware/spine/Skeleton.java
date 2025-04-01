@@ -238,8 +238,7 @@ public class Skeleton {
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
 
-		Bone target = constraint.target;
-		sortBone(target);
+		sortBone(constraint.target);
 
 		Array<Bone> constrained = constraint.bones;
 		Bone parent = constrained.first();
@@ -259,15 +258,15 @@ public class Skeleton {
 	}
 
 	private void sortTransformConstraint (TransformConstraint constraint) {
-		constraint.active = constraint.target.active
+		constraint.active = constraint.source.active
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
 
-		sortBone(constraint.target);
+		sortBone(constraint.source);
 
 		Object[] constrained = constraint.bones.items;
 		int boneCount = constraint.bones.size;
-		if (constraint.data.localFrom) {
+		if (constraint.data.localSource) {
 			for (int i = 0; i < boneCount; i++) {
 				var child = (Bone)constrained[i];
 				sortBone(child.parent);
@@ -287,11 +286,11 @@ public class Skeleton {
 	}
 
 	private void sortPathConstraint (PathConstraint constraint) {
-		constraint.active = constraint.target.bone.active
+		constraint.active = constraint.slot.bone.active
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
 
-		Slot slot = constraint.target;
+		Slot slot = constraint.slot;
 		int slotIndex = slot.getData().index;
 		Bone slotBone = slot.bone;
 		if (skin != null) sortPathConstraintAttachment(skin, slotIndex, slotBone);

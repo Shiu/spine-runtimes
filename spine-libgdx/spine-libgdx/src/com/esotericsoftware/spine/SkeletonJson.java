@@ -252,12 +252,12 @@ public class SkeletonJson extends SkeletonLoader {
 				data.bones.add(bone);
 			}
 
-			String targetName = constraintMap.getString("target");
-			data.target = skeletonData.findBone(targetName);
-			if (data.target == null) throw new SerializationException("Transform constraint target bone not found: " + targetName);
+			String sourceName = constraintMap.getString("source");
+			data.source = skeletonData.findBone(sourceName);
+			if (data.source == null) throw new SerializationException("Transform constraint source bone not found: " + sourceName);
 
-			data.localFrom = constraintMap.getBoolean("localFrom", false);
-			data.localTo = constraintMap.getBoolean("localTo", false);
+			data.localSource = constraintMap.getBoolean("localSource", false);
+			data.localTarget = constraintMap.getBoolean("localTarget", false);
 			data.relative = constraintMap.getBoolean("relative", false);
 			data.clamp = constraintMap.getBoolean("clamp", false);
 
@@ -312,9 +312,9 @@ public class SkeletonJson extends SkeletonLoader {
 				data.bones.add(bone);
 			}
 
-			String targetName = constraintMap.getString("target");
-			data.target = skeletonData.findSlot(targetName);
-			if (data.target == null) throw new SerializationException("Path target slot not found: " + targetName);
+			String slotName = constraintMap.getString("slot");
+			data.slot = skeletonData.findSlot(slotName);
+			if (data.slot == null) throw new SerializationException("Path slot not found: " + slotName);
 
 			data.positionMode = PositionMode.valueOf(constraintMap.getString("positionMode", "percent"));
 			data.spacingMode = SpacingMode.valueOf(constraintMap.getString("spacingMode", "length"));

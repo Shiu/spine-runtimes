@@ -39,13 +39,13 @@ import com.esotericsoftware.spine.TransformConstraintData.FromProperty;
 import com.esotericsoftware.spine.TransformConstraintData.ToProperty;
 
 /** Stores the current pose for a transform constraint. A transform constraint adjusts the world transform of the constrained
- * bones to match that of the target bone.
+ * bones to match that of the source bone.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide. */
 public class TransformConstraint implements Updatable {
 	final TransformConstraintData data;
 	final Array<Bone> bones;
-	Bone target;
+	Bone source;
 	float mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY;
 
 	boolean active;
@@ -60,7 +60,7 @@ public class TransformConstraint implements Updatable {
 		for (BoneData boneData : data.bones)
 			bones.add(skeleton.bones.get(boneData.index));
 
-		target = skeleton.bones.get(data.target.index);
+		source = skeleton.bones.get(data.source.index);
 
 		mixRotate = data.mixRotate;
 		mixX = data.mixX;
@@ -96,8 +96,8 @@ public class TransformConstraint implements Updatable {
 	public void update (Physics physics) {
 		if (mixRotate == 0 && mixX == 0 && mixY == 0 && mixScaleX == 0 && mixScaleY == 0 && mixShearY == 0) return;
 
-		boolean localFrom = data.localFrom, localTo = data.localTo, relative = data.relative, clamp = data.clamp;
-		Bone target = this.target;
+		boolean localFrom = data.localSource, localTarget = data.localTarget, relative = data.relative, clamp = data.clamp;
+		Bone source = this.source;
 		Object[] fromItems = data.properties.items;
 		int fn = data.properties.size;
 		Object[] bones = this.bones.items;
@@ -107,7 +107,7 @@ public class TransformConstraint implements Updatable {
 				var from = (FromProperty)fromItems[f];
 				float mix = from.mix(this);
 				if (mix != 0) {
-					float value = from.value(target, localFrom) - from.offset;
+					float value = from.value(source, localFrom) - from.offset;
 					Object[] toItems = from.to.items;
 					for (int t = 0, tn = from.to.size; t < tn; t++) {
 						var to = (ToProperty)toItems[t];
@@ -118,11 +118,11 @@ public class TransformConstraint implements Updatable {
 							else
 								clamped = clamp(clamped, to.max, to.offset);
 						}
-						to.apply(bone, clamped, localTo, relative, mix);
+						to.apply(bone, clamped, localTarget, relative, mix);
 					}
 				}
 			}
-			if (localTo)
+			if (localTarget)
 				bone.update(null);
 			else
 				bone.updateAppliedTransform();
@@ -134,14 +134,14 @@ public class TransformConstraint implements Updatable {
 		return bones;
 	}
 
-	/** The target bone whose world transform will be copied to the constrained bones. */
-	public Bone getTarget () {
-		return target;
+	/** The bone whose world transform will be copied to the constrained bones. */
+	public Bone getSource () {
+		return source;
 	}
 
-	public void setTarget (Bone target) {
-		if (target == null) throw new IllegalArgumentException("target cannot be null.");
-		this.target = target;
+	public void setSource (Bone source) {
+		if (source == null) throw new IllegalArgumentException("source cannot be null.");
+		this.source = source;
 	}
 
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */

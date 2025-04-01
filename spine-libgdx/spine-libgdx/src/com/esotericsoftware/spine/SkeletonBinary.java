@@ -280,11 +280,11 @@ public class SkeletonBinary extends SkeletonLoader {
 				Object[] constraintBones = data.bones.setSize(nn = input.readInt(true));
 				for (int ii = 0; ii < nn; ii++)
 					constraintBones[ii] = bones[input.readInt(true)];
-				data.target = (BoneData)bones[input.readInt(true)];
+				data.source = (BoneData)bones[input.readInt(true)];
 				int flags = input.read();
 				data.skinRequired = (flags & 1) != 0;
-				data.localFrom = (flags & 2) != 0;
-				data.localTo = (flags & 4) != 0;
+				data.localSource = (flags & 2) != 0;
+				data.localTarget = (flags & 4) != 0;
 				data.relative = (flags & 8) != 0;
 				data.clamp = (flags & 16) != 0;
 				Object[] froms = data.properties.setSize(nn = flags >> 5);
@@ -336,7 +336,7 @@ public class SkeletonBinary extends SkeletonLoader {
 				Object[] constraintBones = data.bones.setSize(nn = input.readInt(true));
 				for (int ii = 0; ii < nn; ii++)
 					constraintBones[ii] = bones[input.readInt(true)];
-				data.target = (SlotData)slots[input.readInt(true)];
+				data.slot = (SlotData)slots[input.readInt(true)];
 				int flags = input.read();
 				data.positionMode = PositionMode.values[flags & 1];
 				data.spacingMode = SpacingMode.values[(flags >> 1) & 3];
