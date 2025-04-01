@@ -938,7 +938,7 @@ export class TrackEntry {
 	 *
 	 * The `mixDuration` can be set manually rather than use the value from
 	 * {@link AnimationStateData#getMix()}. In that case, the `mixDuration` can be set for a new
-	 * track entry only before {@link AnimationState#update(float)} is first called.
+	 * track entry only before {@link AnimationState#update(float)} is next called.
 	 *
 	 * When using {@link AnimationState#addAnimation()} with a `delay` <= 0, note the
 	 * {@link #delay} is set using the mix duration from the {@link AnimationStateData}, not a mix duration set
@@ -963,7 +963,7 @@ export class TrackEntry {
 	 * replaces the values from the lower tracks with the animation values. {@link MixBlend#add} adds the animation values to
 	 * the values from the lower tracks.
 	 *
-	 * The `mixBlend` can be set for a new track entry only before {@link AnimationState#apply()} is first
+	 * The `mixBlend` can be set for a new track entry only before {@link AnimationState#apply()} is next
 	 * called. */
 	mixBlend = MixBlend.replace;
 	timelineMode = new Array<number>();
@@ -1155,11 +1155,18 @@ export enum EventType {
 
 /** The interface to implement for receiving TrackEntry events. It is always safe to call AnimationState methods when receiving
  * events.
- *
+ * <p>
+ * TrackEntry events are collected during {@link AnimationState#update} and {@link AnimationState#apply} and
+ * fired only after those methods are finished.
+ * <p>
  * See TrackEntry {@link TrackEntry#listener} and AnimationState
- * {@link AnimationState#addListener()}. */
+ * {@link AnimationState#addListener}. */
 export interface AnimationStateListener {
-	/** Invoked when this entry has been set as the current entry. */
+	/** Invoked when this entry has been set as the current entry. {@link #end(TrackEntry)} will occur when this entry will no
+	 * longer be applied.
+	 * <p>
+	 * When this event is triggered by calling {@link AnimationState#setAnimation}, take care not to
+	 * call {@link AnimationState#update} until after the TrackEntry has been configured. */
 	start?: (entry: TrackEntry) => void;
 
 	/** Invoked when another entry has replaced this entry as the current entry. This entry may continue being applied for

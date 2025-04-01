@@ -263,7 +263,8 @@ export class Skeleton {
 	}
 
 	sortPathConstraint (constraint: PathConstraint) {
-		constraint.active = constraint.target.bone.isActive() && (!constraint.data.skinRequired || (this.skin && Utils.contains(this.skin.constraints, constraint.data, true)))!;
+		constraint.active = constraint.target.bone.isActive()
+			&& (!constraint.data.skinRequired || (this.skin && Utils.contains(this.skin.constraints, constraint.data, true)))!;
 		if (!constraint.active) return;
 
 		let slot = constraint.target;
@@ -275,8 +276,7 @@ export class Skeleton {
 		for (let i = 0, n = this.data.skins.length; i < n; i++)
 			this.sortPathConstraintAttachment(this.data.skins[i], slotIndex, slotBone);
 
-		let attachment = slot.getAttachment();
-		if (attachment instanceof PathAttachment) this.sortPathConstraintAttachmentWith(attachment, slotBone);
+		this.sortPathConstraintAttachmentWith(slot.attachment, slotBone);
 
 		let constrained = constraint.bones;
 		let boneCount = constrained.length;
@@ -327,9 +327,9 @@ export class Skeleton {
 		}
 	}
 
-	sortPathConstraintAttachmentWith (attachment: Attachment, slotBone: Bone) {
+	sortPathConstraintAttachmentWith (attachment: Attachment | null, slotBone: Bone) {
 		if (!(attachment instanceof PathAttachment)) return;
-		let pathBones = (<PathAttachment>attachment).bones;
+		let pathBones = attachment.bones;
 		if (!pathBones)
 			this.sortBone(slotBone);
 		else {
@@ -643,11 +643,10 @@ export class Skeleton {
 				attachment.computeWorldVertices(slot, vertices, 0, 2);
 				triangles = Skeleton.quadTriangles;
 			} else if (attachment instanceof MeshAttachment) {
-				let mesh = (<MeshAttachment>attachment);
-				verticesLength = mesh.worldVerticesLength;
+				verticesLength = attachment.worldVerticesLength;
 				vertices = Utils.setArraySize(temp, verticesLength, 0);
-				mesh.computeWorldVertices(slot, 0, verticesLength, vertices, 0, 2);
-				triangles = mesh.triangles;
+				attachment.computeWorldVertices(slot, 0, verticesLength, vertices, 0, 2);
+				triangles = attachment.triangles;
 			} else if (attachment instanceof ClippingAttachment && clipper != null) {
 				clipper.clipStart(slot, attachment);
 				continue;

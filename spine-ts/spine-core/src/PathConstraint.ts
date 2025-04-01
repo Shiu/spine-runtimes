@@ -172,7 +172,7 @@ export class PathConstraint implements Updatable {
 				}
 		}
 
-		let positions = this.computeWorldPositions(<PathAttachment>attachment, spacesCount, tangents);
+		let positions = this.computeWorldPositions(attachment, spacesCount, tangents);
 		let boneX = positions[0], boneY = positions[1], offsetRotation = data.offsetRotation;
 		let tip = false;
 		if (offsetRotation == 0)
