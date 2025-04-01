@@ -659,7 +659,7 @@ export class Spine extends Container {
 			}
 
 			const useDarkColor = slot.darkColor != null;
-			const vertexSize = Spine.clipper.isClipping() ? 2 : useDarkColor ? Spine.DARK_VERTEX_SIZE : Spine.VERTEX_SIZE;
+			const vertexSize = useDarkColor ? Spine.DARK_VERTEX_SIZE : Spine.VERTEX_SIZE;
 			if (!slot.bone.active) {
 				Spine.clipper.clipEndWithSlot(slot);
 				this.pixiMaskCleanup(slot);
@@ -728,9 +728,7 @@ export class Spine extends Container {
 				let finalIndices: NumberArrayLike;
 				let finalIndicesLength: number;
 
-				if (Spine.clipper.isClipping()) {
-					Spine.clipper.clipTriangles(this.verticesCache, triangles, triangles.length, uvs, this.lightColor, this.darkColor, useDarkColor);
-
+				if (Spine.clipper.isClipping() && Spine.clipper.clipTriangles(this.verticesCache, triangles, triangles.length, uvs, this.lightColor, this.darkColor, useDarkColor, vertexSize)) {
 					finalVertices = Spine.clipper.clippedVertices;
 					finalVerticesLength = finalVertices.length;
 
