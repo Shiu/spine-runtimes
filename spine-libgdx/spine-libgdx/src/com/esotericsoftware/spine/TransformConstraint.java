@@ -97,7 +97,7 @@ public class TransformConstraint implements Updatable {
 		if (mixRotate == 0 && mixX == 0 && mixY == 0 && mixScaleX == 0 && mixScaleY == 0 && mixShearY == 0) return;
 
 		TransformConstraintData data = this.data;
-		boolean localFrom = data.localSource, localTarget = data.localTarget, relative = data.relative, clamp = data.clamp;
+		boolean localFrom = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
 		Bone source = this.source;
 		Object[] fromItems = data.properties.items;
 		int fn = data.properties.size;
@@ -106,11 +106,11 @@ public class TransformConstraint implements Updatable {
 			var bone = (Bone)bones[i];
 			for (int f = 0; f < fn; f++) {
 				var from = (FromProperty)fromItems[f];
-				if (from.mix(this) != 0) {
-					float value = from.value(data, source, localFrom) - from.offset;
-					Object[] toItems = from.to.items;
-					for (int t = 0, tn = from.to.size; t < tn; t++) {
-						var to = (ToProperty)toItems[t];
+				float value = from.value(data, source, localFrom) - from.offset;
+				Object[] toItems = from.to.items;
+				for (int t = 0, tn = from.to.size; t < tn; t++) {
+					var to = (ToProperty)toItems[t];
+					if (to.mix(this) != 0) {
 						float clamped = to.offset + value * to.scale;
 						if (clamp) {
 							if (to.offset < to.max)
@@ -118,7 +118,7 @@ public class TransformConstraint implements Updatable {
 							else
 								clamped = clamp(clamped, to.max, to.offset);
 						}
-						to.apply(data, bone, clamped, localTarget, relative);
+						to.apply(data, bone, clamped, localTarget, additive);
 					}
 				}
 			}

@@ -285,7 +285,7 @@ public class SkeletonBinary extends SkeletonLoader {
 				data.skinRequired = (flags & 1) != 0;
 				data.localSource = (flags & 2) != 0;
 				data.localTarget = (flags & 4) != 0;
-				data.relative = (flags & 8) != 0;
+				data.additive = (flags & 8) != 0;
 				data.clamp = (flags & 16) != 0;
 				Object[] froms = data.properties.setSize(nn = flags >> 5);
 				for (int ii = 0, tn; ii < nn; ii++) {

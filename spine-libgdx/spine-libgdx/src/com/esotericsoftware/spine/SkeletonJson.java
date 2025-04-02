@@ -258,7 +258,7 @@ public class SkeletonJson extends SkeletonLoader {
 
 			data.localSource = constraintMap.getBoolean("localSource", false);
 			data.localTarget = constraintMap.getBoolean("localTarget", false);
-			data.relative = constraintMap.getBoolean("relative", false);
+			data.additive = constraintMap.getBoolean("additive", false);
 			data.clamp = constraintMap.getBoolean("clamp", false);
 
 			for (JsonValue fromEntry = constraintMap.getChild("properties"); fromEntry != null; fromEntry = fromEntry.next) {
