@@ -313,7 +313,7 @@ public class SkeletonBinary extends SkeletonLoader {
 						to.offset = input.readFloat() * scale;
 						to.max = input.readFloat() * scale;
 						to.scale = input.readFloat();
-						tos[i] = to;
+						tos[t] = to;
 					}
 					froms[ii] = from;
 				}
