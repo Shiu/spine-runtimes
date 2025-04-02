@@ -304,7 +304,7 @@ export class SkeletonMesh extends THREE.Object3D {
 				let finalIndices: NumberArrayLike;
 				let finalIndicesLength: number;
 
-				if (clipper.isClipping() && clipper.clipTriangles( vertices, triangles, triangles.length, uvs, color, tempLight, this.twoColorTint, vertexSize)) {
+				if (clipper.isClipping() && clipper.clipTriangles(vertices, triangles, triangles.length, uvs, color, tempLight, this.twoColorTint, vertexSize)) {
 					let clippedVertices = clipper.clippedVertices;
 					let clippedTriangles = clipper.clippedTriangles;
 					finalVertices = clippedVertices;
