@@ -106,8 +106,7 @@ public class TransformConstraint implements Updatable {
 			var bone = (Bone)bones[i];
 			for (int f = 0; f < fn; f++) {
 				var from = (FromProperty)fromItems[f];
-				float mix = from.mix(this);
-				if (mix != 0) {
+				if (from.mix(this) != 0) {
 					float value = from.value(data, source, localFrom) - from.offset;
 					Object[] toItems = from.to.items;
 					for (int t = 0, tn = from.to.size; t < tn; t++) {
@@ -119,7 +118,7 @@ public class TransformConstraint implements Updatable {
 							else
 								clamped = clamp(clamped, to.max, to.offset);
 						}
-						to.apply(bone, clamped, localTarget, relative, mix);
+						to.apply(data, bone, clamped, localTarget, relative);
 					}
 				}
 			}

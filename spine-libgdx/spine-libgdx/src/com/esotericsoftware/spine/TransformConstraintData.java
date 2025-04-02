@@ -202,7 +202,7 @@ public class TransformConstraintData extends ConstraintData {
 		public float scale;
 
 		/** Applies the value to this property. */
-		abstract public void apply (Bone bone, float value, boolean local, boolean relative, float mix);
+		abstract public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean relative);
 	}
 
 	static public class FromRotate extends FromProperty {
@@ -216,10 +216,10 @@ public class TransformConstraintData extends ConstraintData {
 	}
 
 	static public class ToRotate extends ToProperty {
-		public void apply (Bone bone, float value, boolean local, boolean relative, float mix) {
+		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean relative) {
 			if (local) {
 				if (!relative) value -= bone.arotation;
-				bone.arotation += value * mix;
+				bone.arotation += value * data.mixRotate;
 			} else {
 				float a = bone.a, b = bone.b, c = bone.c, d = bone.d;
 				value *= degRad;
@@ -228,7 +228,7 @@ public class TransformConstraintData extends ConstraintData {
 					value -= PI2;
 				else if (value < -PI) //
 					value += PI2;
-				value *= mix;
+				value *= data.mixRotate;
 				float cos = cos(value), sin = sin(value);
 				bone.a = cos * a - sin * c;
 				bone.b = cos * b - sin * d;
@@ -249,13 +249,13 @@ public class TransformConstraintData extends ConstraintData {
 	}
 
 	static public class ToX extends ToProperty {
-		public void apply (Bone bone, float value, boolean local, boolean relative, float mix) {
+		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean relative) {
 			if (local) {
 				if (!relative) value -= bone.ax;
-				bone.ax += value * mix;
+				bone.ax += value * data.mixX;
 			} else {
 				if (!relative) value -= bone.worldX;
-				bone.worldX += value * mix;
+				bone.worldX += value * data.mixX;
 			}
 		}
 	}
@@ -271,13 +271,13 @@ public class TransformConstraintData extends ConstraintData {
 	}
 
 	static public class ToY extends ToProperty {
-		public void apply (Bone bone, float value, boolean local, boolean relative, float mix) {
+		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean relative) {
 			if (local) {
 				if (!relative) value -= bone.ay;
-				bone.ay += value * mix;
+				bone.ay += value * data.mixY;
 			} else {
 				if (!relative) value -= bone.worldY;
-				bone.worldY += value * mix;
+				bone.worldY += value * data.mixY;
 			}
 		}
 	}
@@ -293,19 +293,19 @@ public class TransformConstraintData extends ConstraintData {
 	}
 
 	static public class ToScaleX extends ToProperty {
-		public void apply (Bone bone, float value, boolean local, boolean relative, float mix) {
+		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean relative) {
 			if (local) {
 				if (relative)
-					bone.ascaleX *= 1 + ((value - 1) * mix);
+					bone.ascaleX *= 1 + ((value - 1) * data.mixScaleX);
 				else if (bone.ascaleX != 0) //
-					bone.ascaleX = 1 + (value / bone.ascaleX - 1) * mix;
+					bone.ascaleX = 1 + (value / bone.ascaleX - 1) * data.mixScaleX;
 			} else {
 				float s;
 				if (relative)
-					s = 1 + (value - 1) * mix;
+					s = 1 + (value - 1) * data.mixScaleX;
 				else {
 					s = (float)Math.sqrt(bone.a * bone.a + bone.c * bone.c);
-					if (s != 0) s = 1 + (value / s - 1) * mix;
+					if (s != 0) s = 1 + (value / s - 1) * data.mixScaleX;
 				}
 				bone.a *= s;
 				bone.c *= s;
@@ -324,19 +324,19 @@ public class TransformConstraintData extends ConstraintData {
 	}
 
 	static public class ToScaleY extends ToProperty {
-		public void apply (Bone bone, float value, boolean local, boolean relative, float mix) {
+		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean relative) {
 			if (local) {
 				if (relative)
-					bone.ascaleY *= 1 + ((value - 1) * mix);
+					bone.ascaleY *= 1 + ((value - 1) * data.mixScaleY);
 				else if (bone.ascaleY != 0) //
-					bone.ascaleY = 1 + (value / bone.ascaleY - 1) * mix;
+					bone.ascaleY = 1 + (value / bone.ascaleY - 1) * data.mixScaleY;
 			} else {
 				float s;
 				if (relative)
-					s = 1 + (value - 1) * mix;
+					s = 1 + (value - 1) * data.mixScaleY;
 				else {
 					s = (float)Math.sqrt(bone.b * bone.b + bone.d * bone.d);
-					if (s != 0) s = 1 + (value / s - 1) * mix;
+					if (s != 0) s = 1 + (value / s - 1) * data.mixScaleY;
 				}
 				bone.b *= s;
 				bone.d *= s;
@@ -355,10 +355,10 @@ public class TransformConstraintData extends ConstraintData {
 	}
 
 	static public class ToShearY extends ToProperty {
-		public void apply (Bone bone, float value, boolean local, boolean relative, float mix) {
+		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean relative) {
 			if (local) {
 				if (!relative) value -= bone.ashearY;
-				bone.ashearY += value * mix;
+				bone.ashearY += value * data.mixShearY;
 			} else {
 				float b = bone.b, d = bone.d, by = atan2(d, b);
 				value = (value + 90) * degRad;
@@ -371,7 +371,7 @@ public class TransformConstraintData extends ConstraintData {
 					else if (value < -PI) //
 						value += PI2;
 				}
-				value = by + value * mix;
+				value = by + value * data.mixShearY;
 				float s = (float)Math.sqrt(b * b + d * d);
 				bone.b = cos(value) * s;
 				bone.d = sin(value) * s;
