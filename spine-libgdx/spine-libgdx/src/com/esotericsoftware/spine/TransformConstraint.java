@@ -96,6 +96,7 @@ public class TransformConstraint implements Updatable {
 	public void update (Physics physics) {
 		if (mixRotate == 0 && mixX == 0 && mixY == 0 && mixScaleX == 0 && mixScaleY == 0 && mixShearY == 0) return;
 
+		TransformConstraintData data = this.data;
 		boolean localFrom = data.localSource, localTarget = data.localTarget, relative = data.relative, clamp = data.clamp;
 		Bone source = this.source;
 		Object[] fromItems = data.properties.items;
@@ -107,7 +108,7 @@ public class TransformConstraint implements Updatable {
 				var from = (FromProperty)fromItems[f];
 				float mix = from.mix(this);
 				if (mix != 0) {
-					float value = from.value(source, localFrom) - from.offset;
+					float value = from.value(data, source, localFrom) - from.offset;
 					Object[] toItems = from.to.items;
 					for (int t = 0, tn = from.to.size; t < tn; t++) {
 						var to = (ToProperty)toItems[t];

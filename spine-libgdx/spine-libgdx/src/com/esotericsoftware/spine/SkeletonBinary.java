@@ -318,12 +318,14 @@ public class SkeletonBinary extends SkeletonLoader {
 					froms[ii] = from;
 				}
 				flags = input.read();
-				if ((flags & 1) != 0) data.mixRotate = input.readFloat();
-				if ((flags & 2) != 0) data.mixX = input.readFloat();
-				if ((flags & 4) != 0) data.mixY = input.readFloat();
-				if ((flags & 8) != 0) data.mixScaleX = input.readFloat();
-				if ((flags & 16) != 0) data.mixScaleY = input.readFloat();
-				if ((flags & 32) != 0) data.mixShearY = input.readFloat();
+				if ((flags & 1) != 0) data.offsetX = input.readFloat();
+				if ((flags & 2) != 0) data.offsetY = input.readFloat();
+				if ((flags & 4) != 0) data.mixRotate = input.readFloat();
+				if ((flags & 8) != 0) data.mixX = input.readFloat();
+				if ((flags & 16) != 0) data.mixY = input.readFloat();
+				if ((flags & 32) != 0) data.mixScaleX = input.readFloat();
+				if ((flags & 64) != 0) data.mixScaleY = input.readFloat();
+				if ((flags & 128) != 0) data.mixShearY = input.readFloat();
 				o[i] = data;
 			}
 

@@ -290,6 +290,8 @@ public class SkeletonJson extends SkeletonLoader {
 				if (from.to.notEmpty()) data.properties.add(from);
 			}
 
+			data.offsetX = constraintMap.getFloat("x", 0);
+			data.offsetY = constraintMap.getFloat("y", 0);
 			data.mixRotate = constraintMap.getFloat("mixRotate", 1);
 			data.mixX = constraintMap.getFloat("mixX", 1);
 			data.mixY = constraintMap.getFloat("mixY", data.mixX);
