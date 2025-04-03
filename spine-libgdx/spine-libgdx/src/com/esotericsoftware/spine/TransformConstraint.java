@@ -118,7 +118,7 @@ public class TransformConstraint implements Updatable {
 							else
 								clamped = clamp(clamped, to.max, to.offset);
 						}
-						to.apply(data, bone, clamped, localTarget, additive);
+						to.apply(this, bone, clamped, localTarget, additive);
 					}
 				}
 			}

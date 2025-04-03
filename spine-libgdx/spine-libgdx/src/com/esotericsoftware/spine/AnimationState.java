@@ -613,7 +613,7 @@ public class AnimationState {
 		return addAnimation(trackIndex, animation, loop, delay);
 	}
 
-	/** Adds an animation to be played after the current or last queued animation for a track. If the track is empty, it is
+	/** Adds an animation to be played after the current or last queued animation for a track. If the track has no entries, this is
 	 * equivalent to calling {@link #setAnimation(int, Animation, boolean)}.
 	 * @param delay If > 0, sets {@link TrackEntry#getDelay()}. If <= 0, the delay set is the duration of the previous track entry
 	 *           minus any mix duration (from the {@link AnimationStateData}) plus the specified <code>delay</code> (ie the mix
@@ -659,8 +659,10 @@ public class AnimationState {
 	 * {@link #addAnimation(int, Animation, boolean, float)} with the desired delay (an empty animation has a duration of 0) and on
 	 * the returned track entry, set the {@link TrackEntry#setMixDuration(float)}. Mixing from an empty animation causes the new
 	 * animation to be applied more and more over the mix duration. Properties keyed in the new animation transition from the value
-	 * from lower tracks or from the setup pose value if no lower tracks key the property to the value keyed in the new
-	 * animation. */
+	 * from lower tracks or from the setup pose value if no lower tracks key the property to the value keyed in the new animation.
+	 * <p>
+	 * See <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+	 * Runtimes Guide. */
 	public TrackEntry setEmptyAnimation (int trackIndex, float mixDuration) {
 		TrackEntry entry = setAnimation(trackIndex, emptyAnimation, false);
 		entry.mixDuration = mixDuration;
@@ -669,10 +671,12 @@ public class AnimationState {
 	}
 
 	/** Adds an empty animation to be played after the current or last queued animation for a track, and sets the track entry's
-	 * {@link TrackEntry#getMixDuration()}. If the track is empty, it is equivalent to calling
+	 * {@link TrackEntry#getMixDuration()}. If the track has no entries, it is equivalent to calling
 	 * {@link #setEmptyAnimation(int, float)}.
 	 * <p>
-	 * See {@link #setEmptyAnimation(int, float)}.
+	 * See {@link #setEmptyAnimation(int, float)} and
+	 * <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+	 * Runtimes Guide.
 	 * @param delay If > 0, sets {@link TrackEntry#getDelay()}. If <= 0, the delay set is the duration of the previous track entry
 	 *           minus any mix duration plus the specified <code>delay</code> (ie the mix ends at (<code>delay</code> = 0) or
 	 *           before (<code>delay</code> < 0) the previous track entry duration). If the previous entry is looping, its next
@@ -687,8 +691,10 @@ public class AnimationState {
 		return entry;
 	}
 
-	/** Sets an empty animation for every track, discarding any queued animations, and mixes to it over the specified mix
-	 * duration. */
+	/** Sets an empty animation for every track, discarding any queued animations, and mixes to it over the specified mix duration.
+	 * <p>
+	 * See <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+	 * Runtimes Guide. */
 	public void setEmptyAnimations (float mixDuration) {
 		boolean oldDrainDisabled = queue.drainDisabled;
 		queue.drainDisabled = true;

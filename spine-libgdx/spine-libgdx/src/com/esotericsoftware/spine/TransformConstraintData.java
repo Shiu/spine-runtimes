@@ -202,7 +202,7 @@ public class TransformConstraintData extends ConstraintData {
 		abstract public float mix (TransformConstraint constraint);
 
 		/** Applies the value to this property. */
-		abstract public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean additive);
+		abstract public void apply (TransformConstraint constraint, Bone bone, float value, boolean local, boolean additive);
 	}
 
 	static public class FromRotate extends FromProperty {
@@ -216,10 +216,10 @@ public class TransformConstraintData extends ConstraintData {
 			return constraint.mixRotate;
 		}
 
-		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean additive) {
+		public void apply (TransformConstraint constraint, Bone bone, float value, boolean local, boolean additive) {
 			if (local) {
 				if (!additive) value -= bone.arotation;
-				bone.arotation += value * data.mixRotate;
+				bone.arotation += value * constraint.mixRotate;
 			} else {
 				float a = bone.a, b = bone.b, c = bone.c, d = bone.d;
 				value *= degRad;
@@ -228,7 +228,7 @@ public class TransformConstraintData extends ConstraintData {
 					value -= PI2;
 				else if (value < -PI) //
 					value += PI2;
-				value *= data.mixRotate;
+				value *= constraint.mixRotate;
 				float cos = cos(value), sin = sin(value);
 				bone.a = cos * a - sin * c;
 				bone.b = cos * b - sin * d;
@@ -249,13 +249,13 @@ public class TransformConstraintData extends ConstraintData {
 			return constraint.mixX;
 		}
 
-		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean additive) {
+		public void apply (TransformConstraint constraint, Bone bone, float value, boolean local, boolean additive) {
 			if (local) {
 				if (!additive) value -= bone.ax;
-				bone.ax += value * data.mixX;
+				bone.ax += value * constraint.mixX;
 			} else {
 				if (!additive) value -= bone.worldX;
-				bone.worldX += value * data.mixX;
+				bone.worldX += value * constraint.mixX;
 			}
 		}
 	}
@@ -271,13 +271,13 @@ public class TransformConstraintData extends ConstraintData {
 			return constraint.mixY;
 		}
 
-		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean additive) {
+		public void apply (TransformConstraint constraint, Bone bone, float value, boolean local, boolean additive) {
 			if (local) {
 				if (!additive) value -= bone.ay;
-				bone.ay += value * data.mixY;
+				bone.ay += value * constraint.mixY;
 			} else {
 				if (!additive) value -= bone.worldY;
-				bone.worldY += value * data.mixY;
+				bone.worldY += value * constraint.mixY;
 			}
 		}
 	}
@@ -293,19 +293,19 @@ public class TransformConstraintData extends ConstraintData {
 			return constraint.mixScaleX;
 		}
 
-		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean additive) {
+		public void apply (TransformConstraint constraint, Bone bone, float value, boolean local, boolean additive) {
 			if (local) {
 				if (additive)
-					bone.ascaleX *= 1 + ((value - 1) * data.mixScaleX);
+					bone.ascaleX *= 1 + ((value - 1) * constraint.mixScaleX);
 				else if (bone.ascaleX != 0) //
-					bone.ascaleX = 1 + (value / bone.ascaleX - 1) * data.mixScaleX;
+					bone.ascaleX = 1 + (value / bone.ascaleX - 1) * constraint.mixScaleX;
 			} else {
 				float s;
 				if (additive)
-					s = 1 + (value - 1) * data.mixScaleX;
+					s = 1 + (value - 1) * constraint.mixScaleX;
 				else {
 					s = (float)Math.sqrt(bone.a * bone.a + bone.c * bone.c);
-					if (s != 0) s = 1 + (value / s - 1) * data.mixScaleX;
+					if (s != 0) s = 1 + (value / s - 1) * constraint.mixScaleX;
 				}
 				bone.a *= s;
 				bone.c *= s;
@@ -324,19 +324,19 @@ public class TransformConstraintData extends ConstraintData {
 			return constraint.mixScaleY;
 		}
 
-		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean additive) {
+		public void apply (TransformConstraint constraint, Bone bone, float value, boolean local, boolean additive) {
 			if (local) {
 				if (additive)
-					bone.ascaleY *= 1 + ((value - 1) * data.mixScaleY);
+					bone.ascaleY *= 1 + ((value - 1) * constraint.mixScaleY);
 				else if (bone.ascaleY != 0) //
-					bone.ascaleY = 1 + (value / bone.ascaleY - 1) * data.mixScaleY;
+					bone.ascaleY = 1 + (value / bone.ascaleY - 1) * constraint.mixScaleY;
 			} else {
 				float s;
 				if (additive)
-					s = 1 + (value - 1) * data.mixScaleY;
+					s = 1 + (value - 1) * constraint.mixScaleY;
 				else {
 					s = (float)Math.sqrt(bone.b * bone.b + bone.d * bone.d);
-					if (s != 0) s = 1 + (value / s - 1) * data.mixScaleY;
+					if (s != 0) s = 1 + (value / s - 1) * constraint.mixScaleY;
 				}
 				bone.b *= s;
 				bone.d *= s;
@@ -355,10 +355,10 @@ public class TransformConstraintData extends ConstraintData {
 			return constraint.mixShearY;
 		}
 
-		public void apply (TransformConstraintData data, Bone bone, float value, boolean local, boolean additive) {
+		public void apply (TransformConstraint constraint, Bone bone, float value, boolean local, boolean additive) {
 			if (local) {
 				if (!additive) value -= bone.ashearY;
-				bone.ashearY += value * data.mixShearY;
+				bone.ashearY += value * constraint.mixShearY;
 			} else {
 				float b = bone.b, d = bone.d, by = atan2(d, b);
 				value = (value + 90) * degRad;
@@ -371,7 +371,7 @@ public class TransformConstraintData extends ConstraintData {
 					else if (value < -PI) //
 						value += PI2;
 				}
-				value = by + value * data.mixShearY;
+				value = by + value * constraint.mixShearY;
 				float s = (float)Math.sqrt(b * b + d * d);
 				bone.b = cos(value) * s;
 				bone.d = sin(value) * s;
