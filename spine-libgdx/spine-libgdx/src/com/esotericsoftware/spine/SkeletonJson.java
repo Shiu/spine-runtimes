@@ -261,6 +261,7 @@ public class SkeletonJson extends SkeletonLoader {
 			data.additive = constraintMap.getBoolean("additive", false);
 			data.clamp = constraintMap.getBoolean("clamp", false);
 
+			boolean rotate = false, x = false, y = false, scaleX = false, scaleY = false, shearY = false;
 			for (JsonValue fromEntry = constraintMap.getChild("properties"); fromEntry != null; fromEntry = fromEntry.next) {
 				FromProperty from = switch (fromEntry.name) {
 				case "rotate" -> new FromRotate();
@@ -273,15 +274,34 @@ public class SkeletonJson extends SkeletonLoader {
 				};
 				from.offset = fromEntry.getFloat("offset", 0) * scale;
 				for (JsonValue toEntry = fromEntry.getChild("to"); toEntry != null; toEntry = toEntry.next) {
-					ToProperty to = switch (toEntry.name) {
-					case "rotate" -> new ToRotate();
-					case "x" -> new ToX();
-					case "y" -> new ToY();
-					case "scaleX" -> new ToScaleX();
-					case "scaleY" -> new ToScaleY();
-					case "shearY" -> new ToShearY();
+					ToProperty to;
+					switch (toEntry.name) {
+					case "rotate" -> {
+						rotate = true;
+						to = new ToRotate();
+					}
+					case "x" -> {
+						x = true;
+						to = new ToX();
+					}
+					case "y" -> {
+						y = true;
+						to = new ToY();
+					}
+					case "scaleX" -> {
+						scaleX = true;
+						to = new ToScaleX();
+					}
+					case "scaleY" -> {
+						scaleY = true;
+						to = new ToScaleY();
+					}
+					case "shearY" -> {
+						shearY = true;
+						to = new ToShearY();
+					}
 					default -> throw new SerializationException("Invalid transform constraint to property: " + fromEntry.name);
-					};
+					}
 					to.offset = toEntry.getFloat("offset", 0) * scale;
 					to.max = toEntry.getFloat("max", 1) * scale;
 					to.scale = toEntry.getFloat("scale");
@@ -292,12 +312,12 @@ public class SkeletonJson extends SkeletonLoader {
 
 			data.offsetX = constraintMap.getFloat("x", 0);
 			data.offsetY = constraintMap.getFloat("y", 0);
-			data.mixRotate = constraintMap.getFloat("mixRotate", 1);
-			data.mixX = constraintMap.getFloat("mixX", 1);
-			data.mixY = constraintMap.getFloat("mixY", data.mixX);
-			data.mixScaleX = constraintMap.getFloat("mixScaleX", 1);
-			data.mixScaleY = constraintMap.getFloat("mixScaleY", data.mixScaleX);
-			data.mixShearY = constraintMap.getFloat("mixShearY", 1);
+			if (rotate) data.mixRotate = constraintMap.getFloat("mixRotate", 1);
+			if (x) data.mixX = constraintMap.getFloat("mixX", 1);
+			if (y) data.mixY = constraintMap.getFloat("mixY", data.mixX);
+			if (scaleX) data.mixScaleX = constraintMap.getFloat("mixScaleX", 1);
+			if (scaleY) data.mixScaleY = constraintMap.getFloat("mixScaleY", data.mixScaleX);
+			if (shearY) data.mixShearY = constraintMap.getFloat("mixShearY", 1);
 
 			skeletonData.transformConstraints.add(data);
 		}
