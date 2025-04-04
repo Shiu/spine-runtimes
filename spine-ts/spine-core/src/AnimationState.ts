@@ -564,7 +564,7 @@ export class AnimationState {
 		return this.addAnimationWith(trackIndex, animation, loop, delay);
 	}
 
-	/** Adds an animation to be played after the current or last queued animation for a track. If the track is empty, it is
+	/** Adds an animation to be played after the current or last queued animation for a track. If the track has no entries, this is
 	 * equivalent to calling {@link #setAnimationWith()}.
 	 * @param delay If > 0, sets {@link TrackEntry#delay}. If <= 0, the delay set is the duration of the previous track entry
 	 *           minus any mix duration (from the {@link AnimationStateData}) plus the specified `delay` (ie the mix
@@ -609,7 +609,10 @@ export class AnimationState {
 	 * {@link #addAnimation()} and on the returned track entry, set the
 	 * {@link TrackEntry#setMixDuration()}. Mixing from an empty animation causes the new animation to be applied more and
 	 * more over the mix duration. Properties keyed in the new animation transition from the value from lower tracks or from the
-	 * setup pose value if no lower tracks key the property to the value keyed in the new animation. */
+	 * setup pose value if no lower tracks key the property to the value keyed in the new animation.
+	 * <p>
+	 * See <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+	 * Runtimes Guide. */
 	setEmptyAnimation (trackIndex: number, mixDuration: number = 0) {
 		let entry = this.setAnimationWith(trackIndex, AnimationState.emptyAnimation(), false);
 		entry.mixDuration = mixDuration;
@@ -618,16 +621,18 @@ export class AnimationState {
 	}
 
 	/** Adds an empty animation to be played after the current or last queued animation for a track, and sets the track entry's
-	 * {@link TrackEntry#mixDuration}. If the track is empty, it is equivalent to calling
-	 * {@link #setEmptyAnimation()}.
-	 *
-	 * See {@link #setEmptyAnimation()}.
-	 * @param delay If > 0, sets {@link TrackEntry#delay}. If <= 0, the delay set is the duration of the previous track entry
-	 *           minus any mix duration plus the specified `delay` (ie the mix ends at (`delay` = 0) or
-	 *           before (`delay` < 0) the previous track entry duration). If the previous entry is looping, its next
+	 * {@link TrackEntry#getMixDuration()}. If the track has no entries, it is equivalent to calling
+	 * {@link #setEmptyAnimation(int, float)}.
+	 * <p>
+	 * See {@link #setEmptyAnimation(int, float)} and
+	 * <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+	 * Runtimes Guide.
+	 * @param delay If > 0, sets {@link TrackEntry#getDelay()}. If <= 0, the delay set is the duration of the previous track entry
+	 *           minus any mix duration plus the specified <code>delay</code> (ie the mix ends at (<code>delay</code> = 0) or
+	 *           before (<code>delay</code> < 0) the previous track entry duration). If the previous entry is looping, its next
 	 *           loop completion is used instead of its duration.
 	 * @return A track entry to allow further customization of animation playback. References to the track entry must not be kept
-	 *         after the {@link AnimationStateListener#dispose()} event occurs. */
+	 *         after the {@link AnimationStateListener#dispose(TrackEntry)} event occurs. */
 	addEmptyAnimation (trackIndex: number, mixDuration: number = 0, delay: number = 0) {
 		let entry = this.addAnimationWith(trackIndex, AnimationState.emptyAnimation(), false, delay);
 		if (delay <= 0) entry.delay += entry.mixDuration - mixDuration;
@@ -636,8 +641,10 @@ export class AnimationState {
 		return entry;
 	}
 
-	/** Sets an empty animation for every track, discarding any queued animations, and mixes to it over the specified mix
-	  * duration. */
+	/** Sets an empty animation for every track, discarding any queued animations, and mixes to it over the specified mix duration.
+	 * <p>
+	 * See <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+	 * Runtimes Guide. */
 	setEmptyAnimations (mixDuration: number = 0) {
 		let oldDrainDisabled = this.queue.drainDisabled;
 		this.queue.drainDisabled = true;

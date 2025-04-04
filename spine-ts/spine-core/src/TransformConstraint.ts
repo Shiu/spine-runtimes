@@ -35,7 +35,7 @@ import { Vector2, MathUtils } from "./Utils.js";
 
 
 /** Stores the current pose for a transform constraint. A transform constraint adjusts the world transform of the constrained
- * bones to match that of the target bone.
+ * bones to match that of the source bone.
  *
  * See [Transform constraints](http://esotericsoftware.com/spine-transform-constraints) in the Spine User Guide. */
 export class TransformConstraint implements Updatable {
@@ -46,8 +46,8 @@ export class TransformConstraint implements Updatable {
 	/** The bones that will be modified by this transform constraint. */
 	bones: Array<Bone>;
 
-	/** The target bone whose world transform will be copied to the constrained bones. */
-	target: Bone;
+	/** The bone whose world transform will be copied to the constrained bones. */
+	source: Bone;
 
 	mixRotate = 0; mixX = 0; mixY = 0; mixScaleX = 0; mixScaleY = 0; mixShearY = 0;
 
@@ -65,9 +65,9 @@ export class TransformConstraint implements Updatable {
 			if (!bone) throw new Error(`Couldn't find bone ${data.bones[i].name}.`);
 			this.bones.push(bone);
 		}
-		let target = skeleton.findBone(data.target.name);
-		if (!target) throw new Error(`Couldn't find target bone ${data.target.name}.`);
-		this.target = target;
+		let target = skeleton.findBone(data.source.name);
+		if (!target) throw new Error(`Couldn't find target bone ${data.source.name}.`);
+		this.source = target;
 
 		this.mixRotate = data.mixRotate;
 		this.mixX = data.mixX;
@@ -94,8 +94,9 @@ export class TransformConstraint implements Updatable {
 	update (physics: Physics) {
 		if (this.mixRotate == 0 && this.mixX == 0 && this.mixY == 0 && this.mixScaleX == 0 && this.mixScaleY == 0 && this.mixShearY == 0) return;
 
-		const data = this.data, localFrom = data.localFrom, localTo = data.localTo, relative = data.relative, clamp = data.clamp;
-		const target = this.target;
+		const data = this.data;
+		const localFrom = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
+		const source = this.source;
 		const fromItems = data.properties;
 		const fn = data.properties.length;
 		const bones = this.bones;
@@ -103,12 +104,11 @@ export class TransformConstraint implements Updatable {
 			const bone = bones[i];
 			for (let f = 0; f < fn; f++) {
 				const from = fromItems[f];
-				const mix = from.mix(this);
-				if (mix != 0) {
-					const value = from.value(target, localFrom) - from.offset;
-					const toItems = from.to;
-					for (let t = 0, tn = from.to.length; t < tn; t++) {
-						var to = toItems[t];
+				const value = from.value(data, source, localFrom) - from.offset;
+				const toItems = from.to;
+				for (let t = 0, tn = from.to.length; t < tn; t++) {
+					var to = toItems[t];
+					if (to.mix(this) != 0) {
 						let clamped = to.offset + value * to.scale;
 						if (clamp) {
 							if (to.offset < to.max)
@@ -116,11 +116,11 @@ export class TransformConstraint implements Updatable {
 							else
 								clamped = MathUtils.clamp(clamped, to.max, to.offset);
 						}
-						to.apply(bone, clamped, localTo, relative, mix);
+						to.apply(this, bone, clamped, localTarget, additive);
 					}
 				}
 			}
-			if (localTo)
+			if (localTarget)
 				bone.update(null);
 			else
 				bone.updateAppliedTransform();

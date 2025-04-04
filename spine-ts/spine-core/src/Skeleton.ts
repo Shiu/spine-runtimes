@@ -241,8 +241,7 @@ export class Skeleton {
 		constraint.active = constraint.target.isActive() && (!constraint.data.skinRequired || (this.skin && Utils.contains(this.skin.constraints, constraint.data, true)))!;
 		if (!constraint.active) return;
 
-		let target = constraint.target;
-		this.sortBone(target);
+		this.sortBone(constraint.target);
 
 		let constrained = constraint.bones;
 		let parent = constrained[0];
@@ -263,11 +262,11 @@ export class Skeleton {
 	}
 
 	sortPathConstraint (constraint: PathConstraint) {
-		constraint.active = constraint.target.bone.isActive()
+		constraint.active = constraint.slot.bone.isActive()
 			&& (!constraint.data.skinRequired || (this.skin && Utils.contains(this.skin.constraints, constraint.data, true)))!;
 		if (!constraint.active) return;
 
-		let slot = constraint.target;
+		let slot = constraint.slot;
 		let slotIndex = slot.data.index;
 		let slotBone = slot.bone;
 		if (this.skin) this.sortPathConstraintAttachment(this.skin, slotIndex, slotBone);
@@ -292,14 +291,14 @@ export class Skeleton {
 	}
 
 	sortTransformConstraint (constraint: TransformConstraint) {
-		constraint.active = constraint.target.isActive() && (!constraint.data.skinRequired || (this.skin && Utils.contains(this.skin.constraints, constraint.data, true)))!;
+		constraint.active = constraint.source.isActive() && (!constraint.data.skinRequired || (this.skin && Utils.contains(this.skin.constraints, constraint.data, true)))!;
 		if (!constraint.active) return;
 
-		this.sortBone(constraint.target);
+		this.sortBone(constraint.source);
 
 		let constrained = constraint.bones;
 		let boneCount = constrained.length;
-		if (constraint.data.localFrom) {
+		if (constraint.data.localSource) {
 			for (let i = 0; i < boneCount; i++) {
 				let child = constrained[i];
 				this.sortBone(child.parent!);

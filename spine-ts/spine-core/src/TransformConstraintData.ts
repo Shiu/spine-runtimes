@@ -41,29 +41,46 @@ export class TransformConstraintData extends ConstraintData {
 	/** The bones that will be modified by this transform constraint. */
 	bones = new Array<BoneData>();
 
-	/** The target bone whose world transform will be copied to the constrained bones. */
-	private _target: BoneData | null = null;
-	public set target (boneData: BoneData) { this._target = boneData; }
-	public get target () {
-		if (!this._target) throw new Error("BoneData not set.")
-		else return this._target;
+	/** The bone whose world transform will be copied to the constrained bones. */
+	private _source: BoneData | null = null;
+	public set source (source: BoneData) { this._source = source; }
+	public get source () {
+		if (!this._source) throw new Error("BoneData not set.")
+		else return this._source;
 	}
 
+	/** An offset added to the constrained bone X translation. */
+	offsetX = 0;
+
+	/** An offset added to the constrained bone Y translation. */
+	offsetY = 0;
+
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
 	mixRotate = 0;
+
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
 	mixX = 0;
+
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
 	mixY = 0;
+
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale X. */
 	mixScaleX = 0;
+
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale Y. */
 	mixScaleY = 0;
+
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y. */
 	mixShearY = 0;
 
-	/** Reads the target bone's local transform instead of its world transform. */
-	localFrom = false;
+	/** Reads the source bone's local transform instead of its world transform. */
+	localSource = false;
 
 	/** Sets the constrained bones' local transforms instead of their world transforms. */
-	localTo = false;
+	localTarget = false;
 
-	/** Adds the target bone transform to the constrained bones instead of setting it absolutely. */
-	relative = false;
+	/** Adds the source bone transform to the constrained bones instead of setting it absolutely. */
+	additive = false;
 
 	/** Prevents constrained bones from exceeding the ranged defined by {@link ToProperty#offset} and {@link ToProperty#max}. */
 	clamp = false;
@@ -86,10 +103,7 @@ export abstract class FromProperty {
 	readonly to: Array<ToProperty> = [];
 
 	/** Reads this property from the specified bone. */
-	abstract value (target: Bone, local: boolean): number;
-
-	/** Reads the mix for this property from the specified constraint. */
-	abstract mix (constraint: TransformConstraint): number;
+	abstract value (data: TransformConstraintData, source: Bone, local: boolean): number;
 }
 
 /** Constrained property for a {@link TransformConstraint}. */
@@ -103,34 +117,37 @@ export abstract class ToProperty {
 	/** The scale of the {@link FromProperty} value in relation to this property. */
 	scale = 0;
 
+	/** Reads the mix for this property from the specified constraint. */
+	abstract mix (constraint: TransformConstraint): number;
+
 	/** Applies the value to this property. */
-	abstract apply (bone: Bone, value: number, local: boolean, relative: boolean, mix: number): void;
+	abstract apply (constraint: TransformConstraint, bone: Bone, value: number, local: boolean, additive: boolean): void;
 }
 
 export class FromRotate extends FromProperty {
-	value (target: Bone, local: boolean): number {
-		return local ? target.arotation : Math.atan2(target.c, target.a) * MathUtils.radDeg;
-	}
-
-	mix (constraint: TransformConstraint): number {
-		return constraint.mixRotate;
+	value (data: TransformConstraintData, source: Bone, local: boolean): number {
+		return local ? source.arotation : Math.atan2(source.c, source.a) * MathUtils.radDeg;
 	}
 }
 
 export class ToRotate extends ToProperty {
-	apply (bone: Bone, value: number, local: boolean, relative: boolean, mix: number): void {
+	mix (constraint: TransformConstraint): number {
+		return constraint.mixRotate;
+	}
+
+	apply (constraint: TransformConstraint, bone: Bone, value: number, local: boolean, additive: boolean): void {
 		if (local) {
-			if (!relative) value -= bone.arotation;
-			bone.arotation += value * mix;
+			if (!additive) value -= bone.arotation;
+			bone.arotation += value * constraint.mixRotate;
 		} else {
 			const a = bone.a, b = bone.b, c = bone.c, d = bone.d;
 			value *= MathUtils.degRad;
-			if (!relative) value -= Math.atan2(c, a);
+			if (!additive) value -= Math.atan2(c, a);
 			if (value > MathUtils.PI)
 				value -= MathUtils.PI2;
 			else if (value < -MathUtils.PI) //
 				value += MathUtils.PI2;
-			value *= mix;
+			value *= constraint.mixRotate;
 			const cos = Math.cos(value), sin = Math.sin(value);
 			bone.a = cos * a - sin * c;
 			bone.b = cos * b - sin * d;
@@ -141,73 +158,73 @@ export class ToRotate extends ToProperty {
 }
 
 export class FromX extends FromProperty {
-	value (target: Bone, local: boolean): number {
-		return local ? target.ax : target.worldX;
-	}
-
-	mix (constraint: TransformConstraint): number {
-		return constraint.mixX;
+	value (data: TransformConstraintData, source: Bone, local: boolean): number {
+		return local ? source.ax + data.offsetX : data.offsetX * source.a + data.offsetY * source.b + source.worldX;
 	}
 }
 
 export class ToX extends ToProperty {
-	apply (bone: Bone, value: number, local: boolean, relative: boolean, mix: number): void {
+	mix (constraint: TransformConstraint): number {
+		return constraint.mixX;
+	}
+
+	apply (constraint: TransformConstraint, bone: Bone, value: number, local: boolean, additive: boolean): void {
 		if (local) {
-			if (!relative) value -= bone.ax;
-			bone.ax += value * mix;
+			if (!additive) value -= bone.ax;
+			bone.ax += value * constraint.mixX;
 		} else {
-			if (!relative) value -= bone.worldX;
-			bone.worldX += value * mix;
+			if (!additive) value -= bone.worldX;
+			bone.worldX += value * constraint.mixX;
 		}
 	}
 }
 
 export class FromY extends FromProperty {
-	value (target: Bone, local: boolean): number {
-		return local ? target.ay : target.worldY;
-	}
-
-	mix (constraint: TransformConstraint): number {
-		return constraint.mixY;
+	value (data: TransformConstraintData, source: Bone, local: boolean): number {
+		return local ? source.ay + data.offsetY : data.offsetX * source.c + data.offsetY * source.d + source.worldY;
 	}
 }
 
 export class ToY extends ToProperty {
-	apply (bone: Bone, value: number, local: boolean, relative: boolean, mix: number): void {
+	mix (constraint: TransformConstraint): number {
+		return constraint.mixY;
+	}
+
+	apply (constraint: TransformConstraint, bone: Bone, value: number, local: boolean, additive: boolean): void {
 		if (local) {
-			if (!relative) value -= bone.ay;
-			bone.ay += value * mix;
+			if (!additive) value -= bone.ay;
+			bone.ay += value * constraint.mixY;
 		} else {
-			if (!relative) value -= bone.worldY;
-			bone.worldY += value * mix;
+			if (!additive) value -= bone.worldY;
+			bone.worldY += value * constraint.mixY;
 		}
 	}
 }
 
 export class FromScaleX extends FromProperty {
-	value (target: Bone, local: boolean): number {
-		return local ? target.ascaleX : Math.sqrt(target.a * target.a + target.c * target.c);
-	}
-
-	mix (constraint: TransformConstraint): number {
-		return constraint.mixScaleX;
+	value (data: TransformConstraintData, source: Bone, local: boolean): number {
+		return local ? source.ascaleX : Math.sqrt(source.a * source.a + source.c * source.c);
 	}
 }
 
 export class ToScaleX extends ToProperty {
-	apply (bone: Bone, value: number, local: boolean, relative: boolean, mix: number): void {
+	mix (constraint: TransformConstraint): number {
+		return constraint.mixScaleX;
+	}
+
+	apply (constraint: TransformConstraint, bone: Bone, value: number, local: boolean, additive: boolean): void {
 		if (local) {
-			if (relative)
-				bone.ascaleX *= 1 + ((value - 1) * mix);
-			else if (bone.ascaleX != 0) //
-				bone.ascaleX = 1 + (value / bone.ascaleX - 1) * mix;
+			if (additive)
+				bone.ascaleX *= 1 + ((value - 1) * constraint.mixScaleX);
+			else if (bone.ascaleX != 0)
+				bone.ascaleX = 1 + (value / bone.ascaleX - 1) * constraint.mixScaleX;
 		} else {
 			let s: number;
-			if (relative)
-				s = 1 + (value - 1) * mix;
+			if (additive)
+				s = 1 + (value - 1) * constraint.mixScaleX;
 			else {
 				s = Math.sqrt(bone.a * bone.a + bone.c * bone.c);
-				if (s != 0) s = 1 + (value / s - 1) * mix;
+				if (s != 0) s = 1 + (value / s - 1) * constraint.mixScaleX;
 			}
 			bone.a *= s;
 			bone.c *= s;
@@ -216,29 +233,29 @@ export class ToScaleX extends ToProperty {
 }
 
 export class FromScaleY extends FromProperty {
-	value (target: Bone, local: boolean): number {
-		return local ? target.ascaleY : Math.sqrt(target.b * target.b + target.d * target.d);
-	}
-
-	mix (constraint: TransformConstraint): number {
-		return constraint.mixScaleY;
+	value (data: TransformConstraintData, source: Bone, local: boolean): number {
+		return local ? source.ascaleY : Math.sqrt(source.b * source.b + source.d * source.d);
 	}
 }
 
 export class ToScaleY extends ToProperty {
-	apply (bone: Bone, value: number, local: boolean, relative: boolean, mix: number): void {
+	mix (constraint: TransformConstraint): number {
+		return constraint.mixScaleY;
+	}
+
+	apply (constraint: TransformConstraint, bone: Bone, value: number, local: boolean, additive: boolean): void {
 		if (local) {
-			if (relative)
-				bone.ascaleY *= 1 + ((value - 1) * mix);
+			if (additive)
+				bone.ascaleY *= 1 + ((value - 1) * constraint.mixScaleY);
 			else if (bone.ascaleY != 0) //
-				bone.ascaleY = 1 + (value / bone.ascaleY - 1) * mix;
+				bone.ascaleY = 1 + (value / bone.ascaleY - 1) * constraint.mixScaleY;
 		} else {
 			let s: number;
-			if (relative)
-				s = 1 + (value - 1) * mix;
+			if (additive)
+				s = 1 + (value - 1) * constraint.mixScaleY;
 			else {
 				s = Math.sqrt(bone.b * bone.b + bone.d * bone.d);
-				if (s != 0) s = 1 + (value / s - 1) * mix;
+				if (s != 0) s = 1 + (value / s - 1) * constraint.mixScaleY;
 			}
 			bone.b *= s;
 			bone.d *= s;
@@ -247,33 +264,33 @@ export class ToScaleY extends ToProperty {
 }
 
 export class FromShearY extends FromProperty {
-	value (target: Bone, local: boolean): number {
-		return local ? target.ashearY : (Math.atan2(target.d, target.b) - Math.atan2(target.c, target.a)) * MathUtils.radDeg - 90;
-	}
-
-	mix (constraint: TransformConstraint): number {
-		return constraint.mixShearY;
+	value (data: TransformConstraintData, source: Bone, local: boolean): number {
+		return local ? source.ashearY : (Math.atan2(source.d, source.b) - Math.atan2(source.c, source.a)) * MathUtils.radDeg - 90;
 	}
 }
 
 export class ToShearY extends ToProperty {
-	apply (bone: Bone, value: number, local: boolean, relative: boolean, mix: number): void {
+	mix (constraint: TransformConstraint): number {
+		return constraint.mixShearY;
+	}
+
+	apply (constraint: TransformConstraint, bone: Bone, value: number, local: boolean, additive: boolean): void {
 		if (local) {
-			if (!relative) value -= bone.ashearY;
-			bone.ashearY += value * mix;
+			if (!additive) value -= bone.ashearY;
+			bone.ashearY += value * constraint.mixShearY;
 		} else {
 			const b = bone.b, d = bone.d, by = Math.atan2(d, b);
 			value = (value + 90) * MathUtils.degRad;
-			if (relative)
+			if (additive)
 				value -= MathUtils.PI / 2;
 			else {
 				value -= by - Math.atan2(bone.c, bone.a);
 				if (value > MathUtils.PI)
 					value -= MathUtils.PI2;
-				else if (value < -MathUtils.PI) //
+				else if (value < -MathUtils.PI)
 					value += MathUtils.PI2;
 			}
-			value = by + value * mix;
+			value = by + value * constraint.mixShearY;
 			const s = Math.sqrt(b * b + d * d);
 			bone.b = Math.cos(value) * s;
 			bone.d = Math.sin(value) * s;

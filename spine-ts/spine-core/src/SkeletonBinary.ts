@@ -173,12 +173,12 @@ export class SkeletonBinary {
 			nn = input.readInt(true);
 			for (let ii = 0; ii < nn; ii++)
 				data.bones.push(skeletonData.bones[input.readInt(true)]);
-			data.target = skeletonData.bones[input.readInt(true)];
+			data.source = skeletonData.bones[input.readInt(true)];
 			let flags = input.readUnsignedByte();
 			data.skinRequired = (flags & 1) != 0;
-			data.localFrom = (flags & 2) != 0;
-			data.localTo = (flags & 4) != 0;
-			data.relative = (flags & 8) != 0;
+			data.localSource = (flags & 2) != 0;
+			data.localTarget = (flags & 4) != 0;
+			data.additive = (flags & 8) != 0;
 			data.clamp = (flags & 16) != 0;
 
 			nn = flags >> 5;
@@ -219,12 +219,15 @@ export class SkeletonBinary {
 			}
 
 			flags = input.readByte();
-			if ((flags & 1) != 0) data.mixRotate = input.readFloat();
-			if ((flags & 2) != 0) data.mixX = input.readFloat();
-			if ((flags & 4) != 0) data.mixY = input.readFloat();
-			if ((flags & 8) != 0) data.mixScaleX = input.readFloat();
-			if ((flags & 16) != 0) data.mixScaleY = input.readFloat();
-			if ((flags & 32) != 0) data.mixShearY = input.readFloat();
+			if ((flags & 1) != 0) data.offsetX = input.readFloat();
+			if ((flags & 2) != 0) data.offsetY = input.readFloat();
+			if ((flags & 4) != 0) data.mixRotate = input.readFloat();
+			if ((flags & 8) != 0) data.mixX = input.readFloat();
+			if ((flags & 16) != 0) data.mixY = input.readFloat();
+			if ((flags & 32) != 0) data.mixScaleX = input.readFloat();
+			if ((flags & 64) != 0) data.mixScaleY = input.readFloat();
+			if ((flags & 128) != 0) data.mixShearY = input.readFloat();
+
 			skeletonData.transformConstraints.push(data);
 		}
 
@@ -239,7 +242,7 @@ export class SkeletonBinary {
 			nn = input.readInt(true);
 			for (let ii = 0; ii < nn; ii++)
 				data.bones.push(skeletonData.bones[input.readInt(true)]);
-			data.target = skeletonData.slots[input.readInt(true)];
+			data.slot = skeletonData.slots[input.readInt(true)];
 			const flags = input.readByte();
 			data.positionMode = flags & 1;
 			data.spacingMode = (flags >> 1) & 3;
