@@ -1243,7 +1243,7 @@ namespace Spine {
 		/// <para>
 		/// The <c>MixDuration</c> can be set manually rather than use the value from
 		/// <see cref="AnimationStateData.GetMix(Animation, Animation)"/>. In that case, the <c>MixDuration</c> can be set for a new
-		/// track entry only before <see cref="AnimationState.Update(float)"/> is first called.</para>
+		/// track entry only before <see cref="AnimationState.Update(float)"/> is next called.</para>
 		/// <para>
 		/// When using <seealso cref="AnimationState.AddAnimation(int, Animation, bool, float)"/> with a <c>Delay</c> &lt;= 0, the
 		/// <see cref="TrackEntry.Delay"/> is set using the mix duration from the <see cref=" AnimationStateData"/>. If <c>mixDuration</c> is set
@@ -1271,7 +1271,7 @@ namespace Spine {
 		/// </para><para>
 		/// Track entries on track 0 ignore this setting and always use <see cref="MixBlend.First"/>.
 		/// </para><para>
-		///  The <c>MixBlend</c> can be set for a new track entry only before <see cref="AnimationState.Apply(Skeleton)"/> is first
+		///  The <c>MixBlend</c> can be set for a new track entry only before <see cref="AnimationState.Apply(Skeleton)"/> is next
 		///  called.</para>
 		/// </summary>
 		public MixBlend MixBlend { get { return mixBlend; } set { mixBlend = value; } }
