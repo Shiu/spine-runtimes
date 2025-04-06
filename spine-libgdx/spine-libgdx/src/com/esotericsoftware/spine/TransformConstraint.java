@@ -62,24 +62,13 @@ public class TransformConstraint implements Updatable {
 
 		source = skeleton.bones.get(data.source.index);
 
-		mixRotate = data.mixRotate;
-		mixX = data.mixX;
-		mixY = data.mixY;
-		mixScaleX = data.mixScaleX;
-		mixScaleY = data.mixScaleY;
-		mixShearY = data.mixShearY;
+		setToSetupPose();
 	}
 
 	/** Copy constructor. */
 	public TransformConstraint (TransformConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-
-		mixRotate = constraint.mixRotate;
-		mixX = constraint.mixX;
-		mixY = constraint.mixY;
-		mixScaleX = constraint.mixScaleX;
-		mixScaleY = constraint.mixScaleY;
-		mixShearY = constraint.mixShearY;
+		setToSetupPose();
 	}
 
 	public void setToSetupPose () {

@@ -61,26 +61,13 @@ public class PhysicsConstraint implements Updatable {
 
 		bone = skeleton.bones.get(data.bone.index);
 
-		inertia = data.inertia;
-		strength = data.strength;
-		damping = data.damping;
-		massInverse = data.massInverse;
-		wind = data.wind;
-		gravity = data.gravity;
-		mix = data.mix;
+		setToSetupPose();
 	}
 
 	/** Copy constructor. */
 	public PhysicsConstraint (PhysicsConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-
-		inertia = constraint.inertia;
-		strength = constraint.strength;
-		damping = constraint.damping;
-		massInverse = constraint.massInverse;
-		wind = constraint.wind;
-		gravity = constraint.gravity;
-		mix = constraint.mix;
+		setToSetupPose();
 	}
 
 	public void reset () {

@@ -72,22 +72,13 @@ public class PathConstraint implements Updatable {
 
 		slot = skeleton.slots.get(data.slot.index);
 
-		position = data.position;
-		spacing = data.spacing;
-		mixRotate = data.mixRotate;
-		mixX = data.mixX;
-		mixY = data.mixY;
+		setToSetupPose();
 	}
 
 	/** Copy constructor. */
 	public PathConstraint (PathConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-
-		position = constraint.position;
-		spacing = constraint.spacing;
-		mixRotate = constraint.mixRotate;
-		mixX = constraint.mixX;
-		mixY = constraint.mixY;
+		setToSetupPose();
 	}
 
 	public void setToSetupPose () {

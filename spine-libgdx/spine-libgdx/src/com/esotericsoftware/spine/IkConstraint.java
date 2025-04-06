@@ -61,22 +61,13 @@ public class IkConstraint implements Updatable {
 
 		target = skeleton.bones.get(data.target.index);
 
-		mix = data.mix;
-		softness = data.softness;
-		bendDirection = data.bendDirection;
-		compress = data.compress;
-		stretch = data.stretch;
+		setToSetupPose();
 	}
 
 	/** Copy constructor. */
 	public IkConstraint (IkConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-
-		mix = constraint.mix;
-		softness = constraint.softness;
-		bendDirection = constraint.bendDirection;
-		compress = constraint.compress;
-		stretch = constraint.stretch;
+		setToSetupPose();
 	}
 
 	public void setToSetupPose () {
