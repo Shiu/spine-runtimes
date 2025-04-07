@@ -300,7 +300,7 @@ public class SkeletonJson extends SkeletonLoader {
 						shearY = true;
 						to = new ToShearY();
 					}
-					default -> throw new SerializationException("Invalid transform constraint to property: " + fromEntry.name);
+					default -> throw new SerializationException("Invalid transform constraint to property: " + toEntry.name);
 					}
 					to.offset = toEntry.getFloat("offset", 0) * scale;
 					to.max = toEntry.getFloat("max", 1) * scale;
@@ -310,8 +310,8 @@ public class SkeletonJson extends SkeletonLoader {
 				if (from.to.notEmpty()) data.properties.add(from);
 			}
 
-			data.offsetX = constraintMap.getFloat("x", 0);
-			data.offsetY = constraintMap.getFloat("y", 0);
+			data.offsetX = constraintMap.getFloat("x", 0) * scale;
+			data.offsetY = constraintMap.getFloat("y", 0) * scale;
 			if (rotate) data.mixRotate = constraintMap.getFloat("mixRotate", 1);
 			if (x) data.mixX = constraintMap.getFloat("mixX", 1);
 			if (y) data.mixY = constraintMap.getFloat("mixY", data.mixX);
