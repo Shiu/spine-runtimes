@@ -59,6 +59,7 @@
 #include "core/variant/array.h"
 #include "scene/resources/mesh.h"
 #include "servers/rendering_server.h"
+#include "scene/resources/canvas_item_material.h"
 #if VERSION_MINOR > 0
 #include "editor/editor_interface.h"
 #endif
