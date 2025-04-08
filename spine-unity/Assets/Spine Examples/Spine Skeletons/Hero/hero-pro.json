@@ -1,7 +1,7 @@
 {
 "skeleton": {
 	"hash": "1GKrwevyJb4",
-	"spine": "4.2.22",
+	"spine": "4.3.12-beta",
 	"x": -85.7,
 	"y": -0.02,
 	"width": 321.77,
@@ -148,7 +148,7 @@
 		"order": 3,
 		"skin": true,
 		"bones": [ "chain1", "chain2", "chain3", "chain4", "chain5", "chain6", "chain7", "chain8" ],
-		"target": "weapon-morningstar-path",
+		"slot": "weapon-morningstar-path",
 		"rotateMode": "chain"
 	}
 ],

@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "XrCABmFcV0A",
-	"spine": "4.2.22",
+	"hash": "6J9sKh3pJyY",
+	"spine": "4.3.12-beta",
 	"x": -221.22,
 	"y": -8.55,
 	"width": 371.09,
@@ -204,8 +204,41 @@
 		"name": "gun2 rotation",
 		"order": 4,
 		"bones": [ "gun2" ],
-		"target": "gun rotation",
-		"rotation": 72.7,
+		"source": "gun rotation",
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "offset": 72.7, "max": 172.7, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,
@@ -215,8 +248,41 @@
 		"name": "gun3 rotation",
 		"order": 5,
 		"bones": [ "gun3" ],
-		"target": "gun rotation",
-		"rotation": -116.2,
+		"source": "gun rotation",
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "offset": -116.2, "max": -16.2, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,
@@ -226,8 +292,41 @@
 		"name": "gun4 rotation",
 		"order": 6,
 		"bones": [ "gun4" ],
-		"target": "gun rotation",
-		"rotation": 166.9,
+		"source": "gun rotation",
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "offset": 166.9, "max": 266.9, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,
@@ -237,7 +336,42 @@
 		"name": "gun flying",
 		"order": 3,
 		"bones": [ "gun" ],
-		"target": "free gun bone",
+		"source": "free gun bone",
+		"properties": {
+			"rotate": {
+				"offset": -37.23,
+				"to": {
+					"rotate": { "offset": -37.23, "max": 62.77, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,
@@ -249,7 +383,7 @@
 		"name": "spinning guns",
 		"order": 2,
 		"bones": [ "gun4", "gun3", "gun2" ],
-		"target": "gunspath",
+		"slot": "gunspath",
 		"spacingMode": "percent",
 		"spacing": 0.335,
 		"mixRotate": 0,

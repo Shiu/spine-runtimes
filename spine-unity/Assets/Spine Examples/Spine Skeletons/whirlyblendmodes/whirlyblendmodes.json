@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "tfwPbA2MCzE",
-	"spine": "4.2.22",
+	"hash": "2y7ACMyctGU",
+	"spine": "4.3.12-beta",
 	"x": -252.71,
 	"y": -232.55,
 	"width": 456.71,
@@ -27,7 +27,41 @@
 	{
 		"name": "rotation",
 		"bones": [ "additive", "multiply", "normal", "screen" ],
-		"target": "_rotation",
+		"source": "_rotation",
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixX": 0,
 		"mixScaleX": 0,
 		"mixShearY": 0

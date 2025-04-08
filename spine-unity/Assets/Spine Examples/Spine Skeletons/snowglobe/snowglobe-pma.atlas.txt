@@ -152,7 +152,7 @@ leg-down-r
 pupil-l
 	bounds: 51, 2, 32, 32
 pupil-r
-	bounds: 85, 2, 32, 32
+	bounds: 939, 859, 32, 32
 red-present-decoration
 	bounds: 426, 99, 41, 40
 scarf-pompom-l

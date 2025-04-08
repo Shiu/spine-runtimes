@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "bpqXaGsNIZs",
-	"spine": "4.2.22",
+	"hash": "AJJUxcmEnS8",
+	"spine": "4.3.12-beta",
 	"x": -214.04,
 	"y": -80.91,
 	"width": 519.95,
@@ -152,12 +152,83 @@
 		"name": "rotateHandleTarget",
 		"order": 1,
 		"bones": [ "rotateHandle" ],
-		"target": "handleCenterTargetR"
+		"source": "handleCenterTargetR",
+		"properties": {
+			"rotate": {
+				"offset": 124.72,
+				"to": {
+					"rotate": { "offset": 124.72, "max": 224.72, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"offset": -360,
+				"to": {
+					"shearY": { "offset": -360, "max": -260, "scale": 1 }
+				}
+			}
+		}
 	},
 	{
 		"name": "translateHandleTarget",
 		"bones": [ "arrowOrigin" ],
-		"target": "handL",
+		"source": "handL",
+		"properties": {
+			"rotate": {
+				"offset": -2.47,
+				"to": {
+					"rotate": { "offset": -2.47, "max": 97.53, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0
 	}
 ],

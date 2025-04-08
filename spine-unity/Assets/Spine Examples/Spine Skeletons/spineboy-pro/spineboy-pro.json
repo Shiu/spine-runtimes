@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "a+YTUe6ARJY",
-	"spine": "4.2.22",
+	"hash": "CAE47sqQF0s",
+	"spine": "4.3.12-beta",
 	"x": -190.61,
 	"y": -7.99,
 	"width": 419.76,
@@ -368,8 +368,42 @@
 		"name": "aim-front-arm-transform",
 		"order": 10,
 		"bones": [ "front-upper-arm" ],
-		"target": "aim-constraint-target",
-		"rotation": -180,
+		"source": "aim-constraint-target",
+		"properties": {
+			"rotate": {
+				"offset": 15.95,
+				"to": {
+					"rotate": { "offset": -164.05, "max": -64.05, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,
@@ -379,8 +413,42 @@
 		"name": "aim-head-transform",
 		"order": 9,
 		"bones": [ "head" ],
-		"target": "aim-constraint-target",
-		"rotation": 84.3,
+		"source": "aim-constraint-target",
+		"properties": {
+			"rotate": {
+				"offset": 15.95,
+				"to": {
+					"rotate": { "offset": 100.25, "max": 200.25, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,
@@ -390,9 +458,44 @@
 		"name": "aim-rear-arm-transform",
 		"order": 11,
 		"bones": [ "rear-upper-arm" ],
-		"target": "aim-constraint-target",
+		"source": "aim-constraint-target",
 		"x": 57.7,
 		"y": 56.4,
+		"properties": {
+			"rotate": {
+				"offset": 15.95,
+				"to": {
+					"rotate": { "offset": 15.95, "max": 115.95, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,
@@ -402,9 +505,42 @@
 		"name": "aim-torso-transform",
 		"order": 8,
 		"bones": [ "torso" ],
-		"target": "aim-constraint-target",
-		"rotation": 69.5,
-		"shearY": -36,
+		"source": "aim-constraint-target",
+		"properties": {
+			"rotate": {
+				"offset": 15.95,
+				"to": {
+					"rotate": { "offset": 85.45, "max": 185.45, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "offset": -36, "max": 64, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,
@@ -414,9 +550,44 @@
 		"name": "front-foot-board",
 		"order": 1,
 		"bones": [ "front-foot-ik" ],
-		"target": "hoverboard-controller",
+		"source": "hoverboard-controller",
 		"x": -69.8,
 		"y": 20.7,
+		"properties": {
+			"rotate": {
+				"offset": 0.07,
+				"to": {
+					"rotate": { "offset": 0.07, "max": 100.07, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,
@@ -426,9 +597,44 @@
 		"name": "rear-foot-board",
 		"order": 2,
 		"bones": [ "rear-foot-ik" ],
-		"target": "hoverboard-controller",
+		"source": "hoverboard-controller",
 		"x": 86.6,
 		"y": 21.3,
+		"properties": {
+			"rotate": {
+				"offset": 0.07,
+				"to": {
+					"rotate": { "offset": 0.07, "max": 100.07, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,
@@ -438,7 +644,42 @@
 		"name": "toes-board",
 		"order": 13,
 		"bones": [ "front-foot-tip", "back-foot-tip" ],
-		"target": "hoverboard-controller",
+		"source": "hoverboard-controller",
+		"properties": {
+			"rotate": {
+				"offset": 0.07,
+				"to": {
+					"rotate": { "offset": 0.07, "max": 100.07, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"offset": 1,
+				"to": {
+					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"offset": 1,
+				"to": {
+					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,

@@ -66,13 +66,13 @@ pot-mouth-smile
 pot-mouth-smile-big
 	bounds: 878, 352, 20, 9
 rain-blue
-	bounds: 926, 360, 12, 18
+	bounds: 900, 349, 12, 18
 	rotate: 90
 rain-color
 	bounds: 264, 4, 9, 17
 	rotate: 90
 rain-green
-	bounds: 900, 349, 12, 18
+	bounds: 741, 336, 12, 18
 	rotate: 90
 rain-white
 	bounds: 727, 337, 12, 22
@@ -83,4 +83,4 @@ stem
 	bounds: 907, 392, 8, 105
 	rotate: 90
 stem-end
-	bounds: 300, 62, 13, 13
+	bounds: 761, 335, 13, 13

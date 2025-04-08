@@ -12,9 +12,9 @@ arrow
 body
 	bounds: 2, 171, 274, 339
 bootR
-	bounds: 783, 426, 91, 84
+	bounds: 675, 330, 91, 84
 browL
-	bounds: 126, 12, 40, 22
+	bounds: 79, 12, 40, 22
 browR
 	bounds: 2, 2, 32, 25
 	rotate: 90
@@ -23,73 +23,77 @@ eyelids closed
 eyelids open
 	bounds: 502, 421, 176, 89
 hairL
-	bounds: 548, 239, 54, 60
+	bounds: 846, 333, 54, 60
 hairL2
-	bounds: 385, 49, 71, 76
+	bounds: 768, 322, 71, 76
+	rotate: 90
 hairM
-	bounds: 876, 433, 96, 77
+	bounds: 890, 433, 96, 77
 hairM blob
-	bounds: 29, 4, 30, 45
+	bounds: 609, 302, 30, 45
 	rotate: 90
 hairM blobS
-	bounds: 448, 146, 16, 20
+	bounds: 548, 195, 16, 20
+	rotate: 90
 hairR
-	bounds: 974, 427, 41, 83
+	bounds: 783, 395, 41, 83
+	rotate: 90
 hairR2
 	bounds: 680, 416, 94, 101
 	rotate: 90
 hairSide
-	bounds: 76, 10, 48, 24
+	bounds: 29, 10, 48, 24
 head
 	bounds: 278, 285, 222, 225
 indexL
-	bounds: 640, 260, 24, 36
+	bounds: 692, 304, 24, 36
+	rotate: 90
 indexR
-	bounds: 207, 6, 34, 28
+	bounds: 923, 403, 34, 28
 inmouth
-	bounds: 548, 191, 46, 55
-	rotate: 90
+	bounds: 633, 245, 46, 55
 irisL
-	bounds: 609, 298, 34, 47
-	rotate: 90
+	bounds: 988, 463, 34, 47
 irisL flatspec
-	bounds: 278, 41, 19, 10
+	bounds: 768, 395, 19, 10
+	rotate: 90
 irisL spec
-	bounds: 448, 168, 18, 21
+	bounds: 902, 372, 18, 21
 irisR
-	bounds: 604, 249, 34, 47
+	bounds: 988, 414, 34, 47
 irisR flatspec
-	bounds: 502, 288, 22, 11
+	bounds: 448, 167, 22, 11
+	rotate: 90
 irisR spec
-	bounds: 448, 127, 16, 17
+	bounds: 121, 17, 16, 17
 middleL
-	bounds: 243, 8, 26, 36
-	rotate: 90
+	bounds: 868, 395, 26, 36
 middleR
-	bounds: 766, 342, 34, 26
-	rotate: 90
+	bounds: 656, 302, 34, 26
 mouth
-	bounds: 675, 331, 89, 83
+	bounds: 463, 194, 89, 83
+	rotate: 90
 nose
-	bounds: 658, 322, 11, 10
+	bounds: 502, 289, 11, 10
 pinkyL
-	bounds: 605, 191, 24, 27
+	bounds: 959, 407, 24, 27
 	rotate: 90
 pony1
-	bounds: 278, 53, 72, 105
+	bounds: 783, 438, 72, 105
 	rotate: 90
 pony2
-	bounds: 463, 197, 86, 83
+	bounds: 548, 213, 86, 83
 	rotate: 90
 ringL
-	bounds: 605, 217, 26, 30
+	bounds: 730, 302, 26, 30
+	rotate: 90
 rotate
 	bounds: 502, 301, 105, 118
 strap
 	bounds: 278, 127, 62, 168
 	rotate: 90
 thumbL
-	bounds: 168, 6, 37, 28
+	bounds: 633, 215, 37, 28
 thumbR
-	bounds: 766, 378, 36, 25
+	bounds: 896, 395, 36, 25
 	rotate: 90
