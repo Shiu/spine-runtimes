@@ -263,17 +263,34 @@ public class SkeletonJson extends SkeletonLoader {
 
 			boolean rotate = false, x = false, y = false, scaleX = false, scaleY = false, shearY = false;
 			for (JsonValue fromEntry = constraintMap.getChild("properties"); fromEntry != null; fromEntry = fromEntry.next) {
-				FromProperty from = switch (fromEntry.name) {
-				case "rotate" -> new FromRotate();
-				case "x" -> new FromX();
-				case "y" -> new FromY();
-				case "scaleX" -> new FromScaleX();
-				case "scaleY" -> new FromScaleY();
-				case "shearY" -> new FromShearY();
+				float fromScale = 1;
+				FromProperty from;
+				switch (fromEntry.name) {
+				case "rotate" -> {
+					from = new FromRotate();
+				}
+				case "x" -> {
+					from = new FromX();
+					fromScale = scale;
+				}
+				case "y" -> {
+					from = new FromY();
+					fromScale = scale;
+				}
+				case "scaleX" -> {
+					from = new FromScaleX();
+				}
+				case "scaleY" -> {
+					from = new FromScaleY();
+				}
+				case "shearY" -> {
+					from = new FromShearY();
+				}
 				default -> throw new SerializationException("Invalid transform constraint from property: " + fromEntry.name);
-				};
-				from.offset = fromEntry.getFloat("offset", 0) * scale;
+				}
+				from.offset = fromEntry.getFloat("offset", 0) * fromScale;
 				for (JsonValue toEntry = fromEntry.getChild("to"); toEntry != null; toEntry = toEntry.next) {
+					float toScale = 1;
 					ToProperty to;
 					switch (toEntry.name) {
 					case "rotate" -> {
@@ -283,10 +300,12 @@ public class SkeletonJson extends SkeletonLoader {
 					case "x" -> {
 						x = true;
 						to = new ToX();
+						toScale = scale;
 					}
 					case "y" -> {
 						y = true;
 						to = new ToY();
+						toScale = scale;
 					}
 					case "scaleX" -> {
 						scaleX = true;
@@ -302,9 +321,9 @@ public class SkeletonJson extends SkeletonLoader {
 					}
 					default -> throw new SerializationException("Invalid transform constraint to property: " + toEntry.name);
 					}
-					to.offset = toEntry.getFloat("offset", 0) * scale;
-					to.max = toEntry.getFloat("max", 1) * scale;
-					to.scale = toEntry.getFloat("scale");
+					to.offset = toEntry.getFloat("offset", 0) * toScale;
+					to.max = toEntry.getFloat("max", 1) * toScale;
+					to.scale = toEntry.getFloat("scale") * toScale / fromScale;
 					from.to.add(to);
 				}
 				if (from.to.notEmpty()) data.properties.add(from);
