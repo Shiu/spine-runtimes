@@ -360,7 +360,7 @@ namespace Spine.Unity {
 
 				ExposedList<TransformConstraint> transformConstraints = skeleton.TransformConstraints;
 				for (int i = 0, n = transformConstraints.Count; i < n; i++)
-					constraintTargets.Add(transformConstraints.Items[i].Target);
+					constraintTargets.Add(transformConstraints.Items[i].Source);
 
 				List<SkeletonUtilityBone> boneComponents = this.boneComponents;
 				for (int i = 0, n = boneComponents.Count; i < n; i++) {

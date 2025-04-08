@@ -199,7 +199,7 @@ namespace Spine {
 
 		/// <summary>Returns a new mesh with this mesh set as the <see cref="ParentMesh"/>.
 		public MeshAttachment NewLinkedMesh () {
-			MeshAttachment mesh = new MeshAttachment(Name);
+			var mesh = new MeshAttachment(Name);
 
 			mesh.timelineAttachment = timelineAttachment;
 			mesh.region = region;

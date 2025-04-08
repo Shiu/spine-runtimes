@@ -289,8 +289,7 @@ namespace Spine {
 				&& (!constraint.data.skinRequired || (skin != null && skin.constraints.Contains(constraint.data)));
 			if (!constraint.active) return;
 
-			Bone target = constraint.target;
-			SortBone(target);
+			SortBone(constraint.target);
 
 			ExposedList<Bone> constrained = constraint.bones;
 			Bone parent = constrained.Items[0];
@@ -311,15 +310,15 @@ namespace Spine {
 		}
 
 		private void SortTransformConstraint (TransformConstraint constraint) {
-			constraint.active = constraint.target.active
+			constraint.active = constraint.source.active
 				&& (!constraint.data.skinRequired || (skin != null && skin.constraints.Contains(constraint.data)));
 			if (!constraint.active) return;
 
-			SortBone(constraint.target);
+			SortBone(constraint.source);
 
 			Bone[] constrained = constraint.bones.Items;
 			int boneCount = constraint.bones.Count;
-			if (constraint.data.local) {
+			if (constraint.data.localSource) {
 				for (int i = 0; i < boneCount; i++) {
 					Bone child = constrained[i];
 					SortBone(child.parent);
@@ -339,19 +338,18 @@ namespace Spine {
 		}
 
 		private void SortPathConstraint (PathConstraint constraint) {
-			constraint.active = constraint.target.bone.active
+			constraint.active = constraint.slot.bone.active
 				&& (!constraint.data.skinRequired || (skin != null && skin.constraints.Contains(constraint.data)));
 			if (!constraint.active) return;
 
-			Slot slot = constraint.target;
+			Slot slot = constraint.slot;
 			int slotIndex = slot.data.index;
 			Bone slotBone = slot.bone;
 			if (skin != null) SortPathConstraintAttachment(skin, slotIndex, slotBone);
 			if (data.defaultSkin != null && data.defaultSkin != skin)
 				SortPathConstraintAttachment(data.defaultSkin, slotIndex, slotBone);
 
-			Attachment attachment = slot.attachment;
-			if (attachment is PathAttachment) SortPathConstraintAttachment(attachment, slotBone);
+			SortPathConstraintAttachment(slot.attachment, slotBone);
 
 			Bone[] constrained = constraint.bones.Items;
 			int boneCount = constraint.bones.Count;

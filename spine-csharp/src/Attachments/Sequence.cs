@@ -79,7 +79,7 @@ namespace Spine {
 		}
 
 		public string GetPath (string basePath, int index) {
-			StringBuilder buffer = new StringBuilder(basePath.Length + digits);
+			var buffer = new StringBuilder(basePath.Length + digits);
 			buffer.Append(basePath);
 			string frame = (start + index).ToString();
 			for (int i = digits - frame.Length; i > 0; i--)

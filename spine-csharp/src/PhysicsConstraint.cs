@@ -39,7 +39,7 @@ namespace Spine {
 	/// </summary>
 	public class PhysicsConstraint : IUpdatable {
 		internal readonly PhysicsConstraintData data;
-		public Bone bone;
+		internal Bone bone;
 		internal float inertia, strength, damping, massInverse, wind, gravity, mix;
 
 		bool reset = true;

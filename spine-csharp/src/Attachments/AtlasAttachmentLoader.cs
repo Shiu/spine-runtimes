@@ -53,7 +53,7 @@ namespace Spine {
 		}
 
 		public RegionAttachment NewRegionAttachment (Skin skin, string name, string path, Sequence sequence) {
-			RegionAttachment attachment = new RegionAttachment(name);
+			var attachment = new RegionAttachment(name);
 			if (sequence != null)
 				LoadSequence(name, path, sequence);
 			else {
@@ -66,7 +66,7 @@ namespace Spine {
 		}
 
 		public MeshAttachment NewMeshAttachment (Skin skin, string name, string path, Sequence sequence) {
-			MeshAttachment attachment = new MeshAttachment(name);
+			var attachment = new MeshAttachment(name);
 			if (sequence != null)
 				LoadSequence(name, path, sequence);
 			else {

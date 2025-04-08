@@ -397,8 +397,8 @@ namespace Spine.Unity.Editor {
 			// Transform Constraints
 			handleColor = SpineHandles.TransformContraintColor;
 			foreach (TransformConstraint tc in skeleton.TransformConstraints) {
-				Bone targetBone = tc.Target;
-				targetPos = targetBone.GetWorldPosition(transform, skeletonRenderScale, offset);
+				Bone sourceBone = tc.Source;
+				targetPos = sourceBone.GetWorldPosition(transform, skeletonRenderScale, offset);
 
 				if (tc.MixX > 0 || tc.MixY > 0) {
 					if ((tc.MixX > 0 && tc.MixX != 1f) ||
@@ -411,7 +411,7 @@ namespace Spine.Unity.Editor {
 					}
 					SpineHandles.DrawBoneCircle(targetPos, handleColor, normal, 1.3f * skeletonRenderScale);
 					Handles.color = handleColor;
-					SpineHandles.DrawCrosshairs(targetPos, 0.2f, targetBone.A, targetBone.B, targetBone.C, targetBone.D, transform, skeletonRenderScale);
+					SpineHandles.DrawCrosshairs(targetPos, 0.2f, sourceBone.A, sourceBone.B, sourceBone.C, sourceBone.D, transform, skeletonRenderScale);
 				}
 			}
 

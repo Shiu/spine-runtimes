@@ -446,8 +446,8 @@ namespace Spine.Unity {
 			if (useLastConstraintPos)
 				constraintPos = transformConstraintLastPos[GetConstraintLastPosIndex(constraintIndex)];
 			else {
-				Bone targetBone = constraint.Target;
-				constraintPos = new Vector2(targetBone.X, targetBone.Y);
+				Bone sourceBone = constraint.Source;
+				constraintPos = new Vector2(sourceBone.X, sourceBone.Y);
 			}
 			pos = new Vector2(
 				pos.x * invMixXY.x + constraintPos.x * mixXY.x,
@@ -465,8 +465,8 @@ namespace Spine.Unity {
 			if (useLastConstraintRotation)
 				constraintRotation = transformConstraintLastRotation[GetConstraintLastPosIndex(constraintIndex)];
 			else {
-				Bone targetBone = constraint.Target;
-				constraintRotation = targetBone.Rotation;
+				Bone sourceBone = constraint.Source;
+				constraintRotation = sourceBone.Rotation;
 			}
 			rotation = rotation * invMixRotate + constraintRotation * mixRotate;
 		}
@@ -474,16 +474,16 @@ namespace Spine.Unity {
 		void UpdateLastConstraintPos (TransformConstraint[] transformConstraintsItems) {
 			foreach (int constraintIndex in this.transformConstraintIndices) {
 				TransformConstraint constraint = transformConstraintsItems[constraintIndex];
-				Bone targetBone = constraint.Target;
-				transformConstraintLastPos[GetConstraintLastPosIndex(constraintIndex)] = new Vector2(targetBone.X, targetBone.Y);
+				Bone sourceBone = constraint.Source;
+				transformConstraintLastPos[GetConstraintLastPosIndex(constraintIndex)] = new Vector2(sourceBone.X, sourceBone.Y);
 			}
 		}
 
 		void UpdateLastConstraintRotation (TransformConstraint[] transformConstraintsItems) {
 			foreach (int constraintIndex in this.transformConstraintIndices) {
 				TransformConstraint constraint = transformConstraintsItems[constraintIndex];
-				Bone targetBone = constraint.Target;
-				transformConstraintLastRotation[GetConstraintLastPosIndex(constraintIndex)] = targetBone.Rotation;
+				Bone sourceBone = constraint.Source;
+				transformConstraintLastRotation[GetConstraintLastPosIndex(constraintIndex)] = sourceBone.Rotation;
 			}
 		}
 
@@ -524,10 +524,10 @@ namespace Spine.Unity {
 				TransformConstraint constraint = constraintsItems[i];
 				if (constraint.Bones.Contains(rootMotionBone)) {
 					transformConstraintIndices.Add(i);
-					Bone targetBone = constraint.Target;
-					Vector2 constraintPos = new Vector2(targetBone.X, targetBone.Y);
+					Bone sourceBone = constraint.Source;
+					Vector2 constraintPos = new Vector2(sourceBone.X, sourceBone.Y);
 					transformConstraintLastPos.Add(constraintPos);
-					transformConstraintLastRotation.Add(targetBone.Rotation);
+					transformConstraintLastRotation.Add(sourceBone.Rotation);
 				}
 			}
 		}

@@ -415,7 +415,7 @@ namespace Spine.Unity.Editor {
 									foreach (TransformConstraint c in skeleton.TransformConstraints) {
 										EditorGUILayout.LabelField(SpineInspectorUtility.TempContent(c.Data.Name, Icons.constraintTransform));
 										EditorGUI.BeginDisabledGroup(true);
-										FalseDropDown("Goal", c.Data.Target.Name, Icons.bone);
+										FalseDropDown("Source", c.Data.Source.Name, Icons.bone);
 										EditorGUI.EndDisabledGroup();
 
 										EditorGUI.BeginChangeCheck();
@@ -469,7 +469,7 @@ namespace Spine.Unity.Editor {
 									foreach (PathConstraint c in skeleton.PathConstraints) {
 										EditorGUILayout.LabelField(SpineInspectorUtility.TempContent(c.Data.Name, Icons.constraintPath));
 										EditorGUI.BeginDisabledGroup(true);
-										FalseDropDown("Path Slot", c.Data.Target.Name, Icons.slot);
+										FalseDropDown("Path Slot", c.Data.Slot.Name, Icons.slot);
 										Attachment activeAttachment = c.Target.Attachment;
 										FalseDropDown("Active Path", activeAttachment != null ? activeAttachment.Name : "<None>", activeAttachment is PathAttachment ? Icons.path : null);
 										EditorGUILayout.LabelField("PositionMode." + c.Data.PositionMode);

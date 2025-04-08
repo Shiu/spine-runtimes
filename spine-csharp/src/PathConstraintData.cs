@@ -32,7 +32,7 @@ using System;
 namespace Spine {
 	public class PathConstraintData : ConstraintData {
 		internal ExposedList<BoneData> bones = new ExposedList<BoneData>();
-		internal SlotData target;
+		internal SlotData slot;
 		internal PositionMode positionMode;
 		internal SpacingMode spacingMode;
 		internal RotateMode rotateMode;
@@ -43,7 +43,7 @@ namespace Spine {
 		}
 
 		public ExposedList<BoneData> Bones { get { return bones; } }
-		public SlotData Target { get { return target; } set { target = value; } }
+		public SlotData Slot { get { return slot; } set { slot = value; } }
 		public PositionMode PositionMode { get { return positionMode; } set { positionMode = value; } }
 		public SpacingMode SpacingMode { get { return spacingMode; } set { spacingMode = value; } }
 		public RotateMode RotateMode { get { return rotateMode; } set { rotateMode = value; } }

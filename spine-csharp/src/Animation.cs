@@ -63,7 +63,7 @@ namespace Spine {
 			Timeline[] timelinesItems = timelines.Items;
 			for (int t = 0; t < timelinesCount; ++t)
 				idCount += timelinesItems[t].PropertyIds.Length;
-			string[] propertyIds = new string[idCount];
+			var propertyIds = new string[idCount];
 			int currentId = 0;
 			for (int t = 0; t < timelinesCount; ++t) {
 				string[] ids = timelinesItems[t].PropertyIds;
@@ -320,7 +320,7 @@ namespace Spine {
 		public void Shrink (int bezierCount) {
 			int size = FrameCount + bezierCount * BEZIER_SIZE;
 			if (curves.Length > size) {
-				float[] newCurves = new float[size];
+				var newCurves = new float[size];
 				Array.Copy(curves, 0, newCurves, 0, size);
 				curves = newCurves;
 			}

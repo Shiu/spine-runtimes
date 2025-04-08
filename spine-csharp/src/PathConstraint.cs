@@ -45,7 +45,7 @@ namespace Spine {
 
 		internal readonly PathConstraintData data;
 		internal readonly ExposedList<Bone> bones;
-		internal Slot target;
+		internal Slot slot;
 		internal float position, spacing, mixRotate, mixX, mixY;
 
 		internal bool active;
@@ -63,7 +63,7 @@ namespace Spine {
 			foreach (BoneData boneData in data.bones)
 				bones.Add(skeleton.bones.Items[boneData.index]);
 
-			target = skeleton.slots.Items[data.target.index];
+			slot = skeleton.slots.Items[data.slot.index];
 
 			position = data.position;
 			spacing = data.spacing;
@@ -98,7 +98,7 @@ namespace Spine {
 		}
 
 		public void Update (Physics physics) {
-			PathAttachment attachment = target.Attachment as PathAttachment;
+			PathAttachment attachment = slot.Attachment as PathAttachment;
 			if (attachment == null) return;
 
 			float mixRotate = this.mixRotate, mixX = this.mixX, mixY = this.mixY;
@@ -171,7 +171,7 @@ namespace Spine {
 				tip = data.rotateMode == RotateMode.Chain;
 			} else {
 				tip = false;
-				Bone p = target.bone;
+				Bone p = slot.bone;
 				offsetRotation *= p.a * p.d - p.b * p.c > 0 ? MathUtils.DegRad : -MathUtils.DegRad;
 			}
 			for (int i = 0, p = 3; i < boneCount; i++, p += 3) {
@@ -223,7 +223,7 @@ namespace Spine {
 		}
 
 		float[] ComputeWorldPositions (PathAttachment path, int spacesCount, bool tangents) {
-			Slot target = this.target;
+			Slot target = this.slot;
 			float position = this.position;
 			float[] spaces = this.spaces.Items, output = this.positions.Resize(spacesCount * 3 + 2).Items, world;
 			bool closed = path.Closed;
@@ -506,7 +506,7 @@ namespace Spine {
 		/// <summary>The bones that will be modified by this path constraint.</summary>
 		public ExposedList<Bone> Bones { get { return bones; } }
 		/// <summary>The slot whose path attachment will be used to constrained the bones.</summary>
-		public Slot Target { get { return target; } set { target = value; } }
+		public Slot Target { get { return slot; } set { slot = value; } }
 		public bool Active { get { return active; } }
 		/// <summary>The path constraint's setup pose data.</summary>
 		public PathConstraintData Data { get { return data; } }

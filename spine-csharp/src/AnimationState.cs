@@ -7,7 +7,7 @@
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
+ * https://esotericsoftware.com/spine-editor-license
  *
  * Otherwise, it is permitted to integrate the Spine Runtimes into software
  * or otherwise create derivative works of the Spine Runtimes (collectively,
@@ -37,7 +37,7 @@ namespace Spine {
 	/// Applies animations over time, queues animations for later playback, mixes (crossfading) between animations, and applies
 	/// multiple animations on top of each other (layering).</para>
 	/// <para>
-	/// See <a href='http://esotericsoftware.com/spine-applying-animations/'>Applying Animations</a> in the Spine Runtimes Guide.</para>
+	/// See <see href='https://esotericsoftware.com/spine-applying-animations/'>Applying Animations</a> in the Spine Runtimes Guide.</para>
 	/// </summary>
 	public class AnimationState {
 		internal static readonly Animation EmptyAnimation = new Animation("<empty>", new ExposedList<Timeline>(), 0);
@@ -87,7 +87,7 @@ namespace Spine {
 		internal void OnEvent (TrackEntry entry, Event e) { if (Event != null) Event(entry, e); }
 
 		public delegate void TrackEntryDelegate (TrackEntry trackEntry);
-		/// <summary>See <see href="http://esotericsoftware.com/spine-api-reference#AnimationStateListener-Methods">
+		/// <summary>See <see href="https://esotericsoftware.com/spine-api-reference#AnimationStateListener-Methods">
 		/// API Reference documentation pages here</see> for details. Usage in C# and spine-unity is explained
 		/// <see href="https://esotericsoftware.com/spine-unity-main-components#Processing-AnimationState-Events">here</see>
 		/// on the spine-unity documentation pages.</summary>
@@ -726,7 +726,7 @@ namespace Spine {
 			return AddAnimation(trackIndex, animation, loop, delay);
 		}
 
-		/// <summary>Adds an animation to be played after the current or last queued animation for a track. If the track is empty, it is
+		/// <summary>Adds an animation to be played after the current or last queued animation for a track. If the track has no entries, this is
 		/// equivalent to calling <see cref="SetAnimation(int, Animation, bool)"/>.</summary>
 		/// <param name="delay">
 		/// If &gt; 0, sets <see cref="TrackEntry.Delay"/>. If &lt;= 0, the delay set is the duration of the previous track entry
@@ -774,8 +774,10 @@ namespace Spine {
 		/// <see cref="AnimationState.AddAnimation(int, Animation, bool, float)"/> with the desired delay (an empty animation has a duration of 0) and on
 		/// the returned track entry, set the <see cref="TrackEntry.SetMixDuration(float)"/>. Mixing from an empty animation causes the new
 		/// animation to be applied more and more over the mix duration. Properties keyed in the new animation transition from the value
-		/// from lower tracks or from the setup pose value if no lower tracks key the property to the value keyed in the new
-		/// animation.</para></summary>
+		/// from lower tracks or from the setup pose value if no lower tracks key the property to the value keyed in the new animation.</para>
+		/// <para>
+		/// See  <see href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+		/// Runtimes Guide.</para></summary>
 		public TrackEntry SetEmptyAnimation (int trackIndex, float mixDuration) {
 			TrackEntry entry = SetAnimation(trackIndex, AnimationState.EmptyAnimation, false);
 			entry.mixDuration = mixDuration;
@@ -785,7 +787,7 @@ namespace Spine {
 
 		/// <summary>
 		/// Adds an empty animation to be played after the current or last queued animation for a track, and sets the track entry's
-		/// <see cref="TrackEntry.MixDuration"/>. If the track is empty, it is equivalent to calling
+		/// <see cref="TrackEntry.MixDuration"/>. If the track has no entries, this is equivalent to calling
 		/// <see cref="AnimationState.SetEmptyAnimation(int, float)"/>.</summary>
 		/// <seealso cref="AnimationState.SetEmptyAnimation(int, float)"/>
 		/// <param name="trackIndex">Track number.</param>
@@ -967,7 +969,7 @@ namespace Spine {
 		public ExposedList<TrackEntry> Tracks { get { return tracks; } }
 
 		override public string ToString () {
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+			var buffer = new System.Text.StringBuilder();
 			TrackEntry[] tracksItems = tracks.Items;
 			for (int i = 0, n = tracks.Count; i < n; i++) {
 				TrackEntry entry = tracksItems[i];
@@ -991,7 +993,7 @@ namespace Spine {
 
 		internal TrackEntry previous, next, mixingFrom, mixingTo;
 		// difference to libgdx reference: delegates are used for event callbacks instead of 'AnimationStateListener listener'.
-		/// <summary>See <see href="http://esotericsoftware.com/spine-api-reference#AnimationStateListener-Methods">
+		/// <summary>See <see href="https://esotericsoftware.com/spine-api-reference#AnimationStateListener-Methods">
 		/// API Reference documentation pages here</see> for details. Usage in C# and spine-unity is explained
 		/// <see href="https://esotericsoftware.com/spine-unity-main-components#Processing-AnimationState-Events">here</see>
 		/// on the spine-unity documentation pages.</summary>
