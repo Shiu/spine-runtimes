@@ -271,39 +271,41 @@ namespace Spine {
 				data.clamp = (flags & 16) != 0;
 				FromProperty[] froms = data.properties.Resize(nn = flags >> 5).Items;
 				for (int ii = 0, tn; ii < nn; ii++) {
+					float fromScale = 1.0f;
 					FromProperty from;
 					switch (input.ReadSByte()) {
 					case 0: from = new FromRotate(); break;
-					case 1: from = new FromX(); break;
-					case 2: from = new FromY(); break;
+					case 1: from = new FromX(); fromScale = scale; break;
+					case 2: from = new FromY(); fromScale = scale; break;
 					case 3: from = new FromScaleX(); break;
 					case 4: from = new FromScaleY(); break;
 					case 5: from = new FromShearY(); break;
 					default: from = null; break;
 					};
-					from.offset = input.ReadFloat() * scale;
+					from.offset = input.ReadFloat() * fromScale;
 					ToProperty[] tos = from.to.Resize(tn = input.ReadSByte()).Items;
 					for (int t = 0; t < tn; t++) {
+						float toScale = 1.0f;
 						ToProperty to;
 						switch (input.ReadSByte()) {
 						case 0: to = new ToRotate(); break;
-						case 1: to = new ToX(); break;
-						case 2: to = new ToY(); break;
+						case 1: to = new ToX(); toScale = scale; break;
+						case 2: to = new ToY(); toScale = scale; break;
 						case 3: to = new ToScaleX(); break;
 						case 4: to = new ToScaleY(); break;
 						case 5: to = new ToShearY(); break;
 						default: to = null; break;
 						};
-						to.offset = input.ReadFloat() * scale;
-						to.max = input.ReadFloat() * scale;
-						to.scale = input.ReadFloat();
+						to.offset = input.ReadFloat() * toScale;
+						to.max = input.ReadFloat() * toScale;
+						to.scale = input.ReadFloat() * (toScale / fromScale);
 						tos[t] = to;
 					}
 					froms[ii] = from;
 				}
 				flags = input.Read();
-				if ((flags & 1) != 0) data.offsetX = input.ReadFloat();
-				if ((flags & 2) != 0) data.offsetY = input.ReadFloat();
+				if ((flags & 1) != 0) data.offsetX = input.ReadFloat() * scale;
+				if ((flags & 2) != 0) data.offsetY = input.ReadFloat() * scale;
 				if ((flags & 4) != 0) data.mixRotate = input.ReadFloat();
 				if ((flags & 8) != 0) data.mixX = input.ReadFloat();
 				if ((flags & 16) != 0) data.mixY = input.ReadFloat();

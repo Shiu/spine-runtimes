@@ -249,23 +249,25 @@ namespace Spine {
 							var fromEntry = (Dictionary<string, Object>)fromEntryObject.Value;
 							string fromEntryName = fromEntryObject.Key;
 
+							float fromScale = 1.0f;
 							FromProperty from;
 							switch (fromEntryName) {
 							case "rotate": from = new FromRotate(); break;
-							case "x": from = new FromX(); break;
-							case "y": from = new FromY(); break;
+							case "x": from = new FromX(); fromScale = scale; break;
+							case "y": from = new FromY(); fromScale = scale; break;
 							case "scaleX": from = new FromScaleX(); break;
 							case "scaleY": from = new FromScaleY(); break;
 							case "shearY": from = new FromShearY(); break;
 							default: throw new Exception("Invalid transform constraint from property: " + fromEntryName);
 							};
 
-							from.offset = GetFloat(fromEntry, "offset", 0) * scale;
+							from.offset = GetFloat(fromEntry, "offset", 0) * fromScale;
 							if (fromEntry.ContainsKey("to")) {
 								foreach (KeyValuePair<string, Object> toEntryObject in (Dictionary<string, Object>)fromEntry["to"]) {
 									var toEntry = (Dictionary<string, Object>)toEntryObject.Value;
 									string toEntryName = toEntryObject.Key;
 
+									float toScale = 1.0f;
 									ToProperty to;
 									switch (toEntryName) {
 									case "rotate": {
@@ -276,11 +278,13 @@ namespace Spine {
 									case "x": {
 										x = true;
 										to = new ToX();
+										toScale = scale;
 										break;
 									}
 									case "y": {
 										y = true;
 										to = new ToY();
+										toScale = scale;
 										break;
 									}
 									case "scaleX": {
@@ -300,9 +304,9 @@ namespace Spine {
 									}
 									default: throw new Exception("Invalid transform constraint to property: " + toEntryName);
 									}
-									to.offset = GetFloat(toEntry, "offset", 0) * scale;
-									to.max = GetFloat(toEntry, "max", 1) * scale;
-									to.scale = GetFloat(toEntry, "scale");
+									to.offset = GetFloat(toEntry, "offset", 0) * toScale;
+									to.max = GetFloat(toEntry, "max", 1) * toScale;
+									to.scale = GetFloat(toEntry, "scale") * (toScale / fromScale);
 									from.to.Add(to);
 								}
 							}
@@ -310,8 +314,8 @@ namespace Spine {
 						}
 					}
 
-					data.offsetX = GetFloat(constraintMap, "x", 0);
-					data.offsetY = GetFloat(constraintMap, "y", 0);
+					data.offsetX = GetFloat(constraintMap, "x", 0) * scale;
+					data.offsetY = GetFloat(constraintMap, "y", 0) * scale;
 					if (rotate) data.mixRotate = GetFloat(constraintMap, "mixRotate", 1);
 					if (x) data.mixX = GetFloat(constraintMap, "mixX", 1);
 					if (y) data.mixY = GetFloat(constraintMap, "mixY", data.mixX);
