@@ -266,9 +266,7 @@ public class SkeletonJson extends SkeletonLoader {
 				float fromScale = 1;
 				FromProperty from;
 				switch (fromEntry.name) {
-				case "rotate" -> {
-					from = new FromRotate();
-				}
+				case "rotate" -> from = new FromRotate();
 				case "x" -> {
 					from = new FromX();
 					fromScale = scale;
@@ -277,15 +275,9 @@ public class SkeletonJson extends SkeletonLoader {
 					from = new FromY();
 					fromScale = scale;
 				}
-				case "scaleX" -> {
-					from = new FromScaleX();
-				}
-				case "scaleY" -> {
-					from = new FromScaleY();
-				}
-				case "shearY" -> {
-					from = new FromShearY();
-				}
+				case "scaleX" -> from = new FromScaleX();
+				case "scaleY" -> from = new FromScaleY();
+				case "shearY" -> from = new FromShearY();
 				default -> throw new SerializationException("Invalid transform constraint from property: " + fromEntry.name);
 				}
 				from.offset = fromEntry.getFloat("offset", 0) * fromScale;

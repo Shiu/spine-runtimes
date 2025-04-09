@@ -289,30 +289,46 @@ public class SkeletonBinary extends SkeletonLoader {
 				data.clamp = (flags & 16) != 0;
 				Object[] froms = data.properties.setSize(nn = flags >> 5);
 				for (int ii = 0, tn; ii < nn; ii++) {
-					FromProperty from = switch (input.readByte()) {
-					case 0 -> new FromRotate();
-					case 1 -> new FromX();
-					case 2 -> new FromY();
-					case 3 -> new FromScaleX();
-					case 4 -> new FromScaleY();
-					case 5 -> new FromShearY();
-					default -> null;
-					};
-					from.offset = input.readFloat() * scale;
+					float fromScale = 1;
+					FromProperty from;
+					switch (input.readByte()) {
+					case 0 -> from = new FromRotate();
+					case 1 -> {
+						from = new FromX();
+						fromScale = scale;
+					}
+					case 2 -> {
+						from = new FromY();
+						fromScale = scale;
+					}
+					case 3 -> from = new FromScaleX();
+					case 4 -> from = new FromScaleY();
+					case 5 -> from = new FromShearY();
+					default -> from = null;
+					}
+					from.offset = input.readFloat() * fromScale;
 					Object[] tos = from.to.setSize(tn = input.readByte());
 					for (int t = 0; t < tn; t++) {
-						ToProperty to = switch (input.readByte()) {
-						case 0 -> new ToRotate();
-						case 1 -> new ToX();
-						case 2 -> new ToY();
-						case 3 -> new ToScaleX();
-						case 4 -> new ToScaleY();
-						case 5 -> new ToShearY();
-						default -> null;
-						};
-						to.offset = input.readFloat() * scale;
-						to.max = input.readFloat() * scale;
-						to.scale = input.readFloat();
+						float toScale = 1;
+						ToProperty to;
+						switch (input.readByte()) {
+						case 0 -> to = new ToRotate();
+						case 1 -> {
+							to = new ToX();
+							toScale = scale;
+						}
+						case 2 -> {
+							to = new ToY();
+							toScale = scale;
+						}
+						case 3 -> to = new ToScaleX();
+						case 4 -> to = new ToScaleY();
+						case 5 -> to = new ToShearY();
+						default -> to = null;
+						}
+						to.offset = input.readFloat() * toScale;
+						to.max = input.readFloat() * toScale;
+						to.scale = input.readFloat() * toScale / fromScale;
 						tos[t] = to;
 					}
 					froms[ii] = from;
