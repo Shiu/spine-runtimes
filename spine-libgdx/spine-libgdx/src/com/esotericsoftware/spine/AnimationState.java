@@ -638,10 +638,11 @@ public class AnimationState {
 		if (last == null) {
 			setCurrent(trackIndex, entry, true);
 			queue.drain();
+			if (delay < 0) delay = 0;
 		} else {
 			last.next = entry;
 			entry.previous = last;
-			if (delay <= 0) delay += last.getTrackComplete() - entry.mixDuration;
+			if (delay <= 0) delay = Math.max(delay + last.getTrackComplete() - entry.mixDuration, 0);
 		}
 
 		entry.delay = delay;
@@ -687,7 +688,7 @@ public class AnimationState {
 	 *         after the {@link AnimationStateListener#dispose(TrackEntry)} event occurs. */
 	public TrackEntry addEmptyAnimation (int trackIndex, float mixDuration, float delay) {
 		TrackEntry entry = addAnimation(trackIndex, emptyAnimation, false, delay);
-		if (delay <= 0) entry.delay += entry.mixDuration - mixDuration;
+		if (delay <= 0) entry.delay = Math.max(entry.delay + entry.mixDuration - mixDuration, 0);
 		entry.mixDuration = mixDuration;
 		entry.trackEnd = mixDuration;
 		return entry;
@@ -948,21 +949,23 @@ public class AnimationState {
 			this.loop = loop;
 		}
 
-		/** Seconds to postpone playing the animation. When this track entry is the current track entry, <code>delay</code>
-		 * postpones incrementing the {@link #getTrackTime()}. When this track entry is queued, <code>delay</code> is the time from
-		 * the start of the previous animation to when this track entry will become the current track entry (ie when the previous
-		 * track entry {@link TrackEntry#getTrackTime()} >= this track entry's <code>delay</code>).
+		/** Seconds to postpone playing the animation. Must be >= 0. When this track entry is the current track entry,
+		 * <code>delay</code> postpones incrementing the {@link #getTrackTime()}. When this track entry is queued,
+		 * <code>delay</code> is the time from the start of the previous animation to when this track entry will become the current
+		 * track entry (ie when the previous track entry {@link TrackEntry#getTrackTime()} >= this track entry's
+		 * <code>delay</code>).
 		 * <p>
 		 * {@link #getTimeScale()} affects the delay.
 		 * <p>
-		 * When using {@link AnimationState#addAnimation(int, Animation, boolean, float)} with a <code>delay</code> <= 0, the delay
-		 * is set using the mix duration from the {@link AnimationStateData}. If {@link #mixDuration} is set afterward, the delay
-		 * may need to be adjusted. */
+		 * When passing <code>delay</code> <= 0 to {@link AnimationState#addAnimation(int, Animation, boolean, float)} this
+		 * <code>delay</code> is set using a mix duration from {@link AnimationStateData}. To change the {@link #getMixDuration()}
+		 * afterward, use {@link #setMixDuration(float, float)} so this <code>delay</code> is adjusted. */
 		public float getDelay () {
 			return delay;
 		}
 
 		public void setDelay (float delay) {
+			if (delay < 0) throw new IllegalArgumentException("delay must be >= 0.");
 			this.delay = delay;
 		}
 
@@ -1219,7 +1222,12 @@ public class AnimationState {
 		 *           entry is looping, its next loop completion is used instead of its duration. */
 		public void setMixDuration (float mixDuration, float delay) {
 			this.mixDuration = mixDuration;
-			if (previous != null && delay <= 0) delay += previous.getTrackComplete() - mixDuration;
+			if (delay <= 0) {
+				if (previous != null)
+					delay = Math.max(delay + previous.getTrackComplete() - mixDuration, 0);
+				else
+					delay = 0;
+			}
 			this.delay = delay;
 		}
 
@@ -1283,7 +1291,7 @@ public class AnimationState {
 		}
 
 		/** Resets the rotation directions for mixing this entry's rotate timelines. This can be useful to avoid bones rotating the
-		 * long way around when using {@link #alpha} and starting animations on other tracks.
+		 * long way around when using {@link #getAlpha()} and starting animations on other tracks.
 		 * <p>
 		 * Mixing with {@link MixBlend#replace} involves finding a rotation between two others, which has two possible solutions:
 		 * the short way or the long way around. The two rotations likely change over time, so which direction is the short or long
