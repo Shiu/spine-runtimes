@@ -12,6 +12,7 @@ em++ \
 	-Isrc/spine-cpp/include \
 	-O2 --closure 1 -fno-rtti -fno-exceptions \
 	-s STRICT=1 \
+	-s EXPORTED_RUNTIME_METHODS=wasmExports \
 	-s ERROR_ON_UNDEFINED_SYMBOLS=1 \
 	-s MODULARIZE=1 \
 	-s ALLOW_MEMORY_GROWTH=1 \
