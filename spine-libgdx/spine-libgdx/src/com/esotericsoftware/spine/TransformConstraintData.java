@@ -39,7 +39,8 @@ import com.badlogic.gdx.utils.Array;
 public class TransformConstraintData extends ConstraintData {
 	final Array<BoneData> bones = new Array();
 	BoneData source;
-	float offsetX, offsetY, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY;
+	float mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY;
+	float offsetRotation, offsetX, offsetY, offsetScaleX, offsetScaleY, offsetShearY;
 	boolean localSource, localTarget, additive, clamp;
 	final Array<FromProperty> properties = new Array();
 
@@ -121,6 +122,15 @@ public class TransformConstraintData extends ConstraintData {
 		this.mixShearY = mixShearY;
 	}
 
+	/** An offset added to the constrained bone rotation. */
+	public float getOffsetRotation () {
+		return offsetRotation;
+	}
+
+	public void setOffsetRotation (float offsetRotation) {
+		this.offsetRotation = offsetRotation;
+	}
+
 	/** An offset added to the constrained bone X translation. */
 	public float getOffsetX () {
 		return offsetX;
@@ -137,6 +147,33 @@ public class TransformConstraintData extends ConstraintData {
 
 	public void setOffsetY (float offsetY) {
 		this.offsetY = offsetY;
+	}
+
+	/** An offset added to the constrained bone scaleX. */
+	public float getOffsetScaleX () {
+		return offsetScaleX;
+	}
+
+	public void setOffsetScaleX (float offsetScaleX) {
+		this.offsetScaleX = offsetScaleX;
+	}
+
+	/** An offset added to the constrained bone scaleY. */
+	public float getOffsetScaleY () {
+		return offsetScaleY;
+	}
+
+	public void setOffsetScaleY (float offsetScaleY) {
+		this.offsetScaleY = offsetScaleY;
+	}
+
+	/** An offset added to the constrained bone shearY. */
+	public float getOffsetShearY () {
+		return offsetShearY;
+	}
+
+	public void setOffsetShearY (float offsetShearY) {
+		this.offsetShearY = offsetShearY;
 	}
 
 	/** Reads the source bone's local transform instead of its world transform. */
@@ -207,7 +244,11 @@ public class TransformConstraintData extends ConstraintData {
 
 	static public class FromRotate extends FromProperty {
 		public float value (TransformConstraintData data, Bone source, boolean local) {
-			return local ? source.arotation : atan2(source.c, source.a) * radDeg;
+			if (local) return source.arotation + data.offsetRotation;
+			float value = atan2(source.c, source.a) * radDeg
+				+ (source.a * source.d - source.b * source.c > 0 ? data.offsetRotation : -data.offsetRotation);
+			if (value < 0) value += 360;
+			return value;
 		}
 	}
 
@@ -284,7 +325,7 @@ public class TransformConstraintData extends ConstraintData {
 
 	static public class FromScaleX extends FromProperty {
 		public float value (TransformConstraintData data, Bone source, boolean local) {
-			return local ? source.ascaleX : (float)Math.sqrt(source.a * source.a + source.c * source.c);
+			return (local ? source.ascaleX : (float)Math.sqrt(source.a * source.a + source.c * source.c)) + data.offsetScaleX;
 		}
 	}
 
@@ -315,7 +356,7 @@ public class TransformConstraintData extends ConstraintData {
 
 	static public class FromScaleY extends FromProperty {
 		public float value (TransformConstraintData data, Bone source, boolean local) {
-			return local ? source.ascaleY : (float)Math.sqrt(source.b * source.b + source.d * source.d);
+			return (local ? source.ascaleY : (float)Math.sqrt(source.b * source.b + source.d * source.d)) + data.offsetScaleY;
 		}
 	}
 
@@ -346,7 +387,8 @@ public class TransformConstraintData extends ConstraintData {
 
 	static public class FromShearY extends FromProperty {
 		public float value (TransformConstraintData data, Bone source, boolean local) {
-			return local ? source.ashearY : (atan2(source.d, source.b) - atan2(source.c, source.a)) * radDeg - 90;
+			return (local ? source.ashearY : (atan2(source.d, source.b) - atan2(source.c, source.a)) * radDeg - 90)
+				+ data.offsetShearY;
 		}
 	}
 
