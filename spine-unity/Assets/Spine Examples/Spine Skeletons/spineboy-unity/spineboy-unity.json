@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "6J9sKh3pJyY",
-	"spine": "4.3.13-beta",
+	"hash": "F0Z2MKqmL3o",
+	"spine": "4.3.14-beta",
 	"x": -221.22,
 	"y": -8.55,
 	"width": 371.09,
@@ -205,10 +205,11 @@
 		"order": 4,
 		"bones": [ "gun2" ],
 		"source": "gun rotation",
+		"rotation": 72.7,
 		"properties": {
 			"rotate": {
 				"to": {
-					"rotate": { "offset": 72.7, "max": 172.7, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -222,15 +223,13 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {
@@ -249,10 +248,11 @@
 		"order": 5,
 		"bones": [ "gun3" ],
 		"source": "gun rotation",
+		"rotation": -116.2,
 		"properties": {
 			"rotate": {
 				"to": {
-					"rotate": { "offset": -116.2, "max": -16.2, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -266,15 +266,13 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {
@@ -293,10 +291,11 @@
 		"order": 6,
 		"bones": [ "gun4" ],
 		"source": "gun rotation",
+		"rotation": 166.9,
 		"properties": {
 			"rotate": {
 				"to": {
-					"rotate": { "offset": 166.9, "max": 266.9, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -310,15 +309,13 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {
@@ -339,9 +336,8 @@
 		"source": "free gun bone",
 		"properties": {
 			"rotate": {
-				"offset": -37.23,
 				"to": {
-					"rotate": { "offset": -37.23, "max": 62.77, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -355,15 +351,13 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {

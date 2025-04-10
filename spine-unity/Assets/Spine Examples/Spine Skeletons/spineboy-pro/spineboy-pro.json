@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "CAE47sqQF0s",
-	"spine": "4.3.13-beta",
+	"hash": "5qNhWfelBlY",
+	"spine": "4.3.14-beta",
 	"x": -190.61,
 	"y": -7.99,
 	"width": 419.76,
@@ -369,11 +369,11 @@
 		"order": 10,
 		"bones": [ "front-upper-arm" ],
 		"source": "aim-constraint-target",
+		"rotation": -180,
 		"properties": {
 			"rotate": {
-				"offset": 15.95,
 				"to": {
-					"rotate": { "offset": -164.05, "max": -64.05, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -387,15 +387,13 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {
@@ -414,11 +412,11 @@
 		"order": 9,
 		"bones": [ "head" ],
 		"source": "aim-constraint-target",
+		"rotation": 84.3,
 		"properties": {
 			"rotate": {
-				"offset": 15.95,
 				"to": {
-					"rotate": { "offset": 100.25, "max": 200.25, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -432,15 +430,13 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {
@@ -463,9 +459,8 @@
 		"y": 56.4,
 		"properties": {
 			"rotate": {
-				"offset": 15.95,
 				"to": {
-					"rotate": { "offset": 15.95, "max": 115.95, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -479,15 +474,13 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {
@@ -506,11 +499,12 @@
 		"order": 8,
 		"bones": [ "torso" ],
 		"source": "aim-constraint-target",
+		"rotation": 69.5,
+		"shearY": -36,
 		"properties": {
 			"rotate": {
-				"offset": 15.95,
 				"to": {
-					"rotate": { "offset": 85.45, "max": 185.45, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -524,20 +518,18 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {
 				"to": {
-					"shearY": { "offset": -36, "max": 64, "scale": 1 }
+					"shearY": { "max": 100, "scale": 1 }
 				}
 			}
 		},
@@ -555,9 +547,8 @@
 		"y": 20.7,
 		"properties": {
 			"rotate": {
-				"offset": 0.07,
 				"to": {
-					"rotate": { "offset": 0.07, "max": 100.07, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -571,15 +562,13 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {
@@ -602,9 +591,8 @@
 		"y": 21.3,
 		"properties": {
 			"rotate": {
-				"offset": 0.07,
 				"to": {
-					"rotate": { "offset": 0.07, "max": 100.07, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -618,15 +606,13 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {
@@ -647,9 +633,8 @@
 		"source": "hoverboard-controller",
 		"properties": {
 			"rotate": {
-				"offset": 0.07,
 				"to": {
-					"rotate": { "offset": 0.07, "max": 100.07, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -663,15 +648,13 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {

@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "2y7ACMyctGU",
-	"spine": "4.3.13-beta",
+	"hash": "7+KnTV9RS7Q",
+	"spine": "4.3.14-beta",
 	"x": -252.71,
 	"y": -232.55,
 	"width": 456.71,
@@ -45,15 +45,13 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1,
 				"to": {
-					"scaleX": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 1, "max": 2, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {

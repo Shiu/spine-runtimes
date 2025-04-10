@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "ZqKiK7oBADQ",
-	"spine": "4.3.13-beta",
+	"hash": "T5Ot5+7kP3g",
+	"spine": "4.3.14-beta",
 	"x": -100.47,
 	"y": -9.21,
 	"width": 260.65,
@@ -419,13 +419,16 @@
 		"order": 8,
 		"bones": [ "back-foot1" ],
 		"source": "back-leg8",
+		"rotation": 108.8,
 		"x": 41.2,
 		"y": -0.03,
+		"scaleX": 5.0E-4,
+		"scaleY": -3.0E-4,
+		"shearY": 0.1,
 		"properties": {
 			"rotate": {
-				"offset": -103.59,
 				"to": {
-					"rotate": { "offset": 5.21, "max": 105.21, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -439,20 +442,18 @@
 				}
 			},
 			"scaleX": {
-				"offset": 0.8948,
 				"to": {
-					"scaleX": { "offset": 0.8953, "max": 1.8953, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 0.9997, "max": 1.9997, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {
 				"to": {
-					"shearY": { "offset": 0.1, "max": 100.1, "scale": 1 }
+					"shearY": { "max": 100, "scale": 1 }
 				}
 			}
 		},
@@ -464,13 +465,16 @@
 		"order": 9,
 		"bones": [ "front-foot1" ],
 		"source": "front-leg8",
+		"rotation": 101.55,
 		"x": 38.92,
 		"y": -0.02,
+		"scaleX": 4.0E-4,
+		"scaleY": -3.0E-4,
+		"shearY": 0.1,
 		"properties": {
 			"rotate": {
-				"offset": -112.09,
 				"to": {
-					"rotate": { "offset": -10.54, "max": 89.46, "scale": 1 }
+					"rotate": { "max": 100, "scale": 1 }
 				}
 			},
 			"x": {
@@ -484,20 +488,18 @@
 				}
 			},
 			"scaleX": {
-				"offset": 1.0075,
 				"to": {
-					"scaleX": { "offset": 1.0079, "max": 2.0079, "scale": 1 }
+					"scaleX": { "scale": 1 }
 				}
 			},
 			"scaleY": {
-				"offset": 1,
 				"to": {
-					"scaleY": { "offset": 0.9997, "max": 1.9997, "scale": 1 }
+					"scaleY": { "scale": 1 }
 				}
 			},
 			"shearY": {
 				"to": {
-					"shearY": { "offset": 0.1, "max": 100.1, "scale": 1 }
+					"shearY": { "max": 100, "scale": 1 }
 				}
 			}
 		},
