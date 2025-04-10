@@ -335,8 +335,8 @@ public class SkeletonBinary extends SkeletonLoader {
 				}
 				flags = input.read();
 				if ((flags & 1) != 0) data.offsetRotation = input.readFloat();
-				if ((flags & 2) != 0) data.offsetX = input.readFloat();
-				if ((flags & 4) != 0) data.offsetY = input.readFloat();
+				if ((flags & 2) != 0) data.offsetX = input.readFloat() * scale;
+				if ((flags & 4) != 0) data.offsetY = input.readFloat() * scale;
 				if ((flags & 8) != 0) data.offsetScaleX = input.readFloat();
 				if ((flags & 16) != 0) data.offsetScaleY = input.readFloat();
 				if ((flags & 32) != 0) data.offsetShearY = input.readFloat();
