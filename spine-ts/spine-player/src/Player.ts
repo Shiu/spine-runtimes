@@ -103,6 +103,9 @@ export interface SpinePlayerConfig {
 		width?: number
 		height?: number
 
+		/* Optional: When true, drawing won't go outside the viewport. Default: false */
+		clip?: boolean
+
 		/* Optional: Padding around the viewport size, given as a number or percentage (eg "25%"). Default: 10% */
 		padLeft?: string | number
 		padRight?: string | number
@@ -736,6 +739,7 @@ export class SpinePlayer implements Disposable {
 		// Determine the base viewport.
 		let globalViewport = this.config.viewport!;
 		let viewport = this.currentViewport = {
+			clip: globalViewport.clip,
 			padLeft: globalViewport.padLeft !== void 0 ? globalViewport.padLeft : "10%",
 			padRight: globalViewport.padRight !== void 0 ? globalViewport.padRight : "10%",
 			padTop: globalViewport.padTop !== void 0 ? globalViewport.padTop : "10%",
@@ -758,6 +762,7 @@ export class SpinePlayer implements Disposable {
 				viewport.width = userAnimViewport.width;
 				viewport.height = userAnimViewport.height;
 			}
+			if (userAnimViewport.clip !== void 0) viewport.clip = userAnimViewport.clip;
 			if (userAnimViewport.padLeft !== void 0) viewport.padLeft = userAnimViewport.padLeft;
 			if (userAnimViewport.padRight !== void 0) viewport.padRight = userAnimViewport.padRight;
 			if (userAnimViewport.padTop !== void 0) viewport.padTop = userAnimViewport.padTop;
@@ -827,10 +832,6 @@ export class SpinePlayer implements Disposable {
 			let skeleton = this.skeleton!;
 			let config = this.config!;
 			if (skeleton) {
-				// Resize the canvas.
-				let renderer = this.sceneRenderer!;
-				renderer.resize(ResizeMode.Expand);
-
 				let playDelta = this.paused ? 0 : delta * this.speed;
 				if (config.frame) config.frame(this, playDelta);
 
@@ -878,10 +879,14 @@ export class SpinePlayer implements Disposable {
 					}
 				}
 
+				let renderer = this.sceneRenderer!;
 				renderer.camera.zoom = this.canvas!.height / this.canvas!.width > viewport.height / viewport.width
 					? viewport.width / this.canvas!.width : viewport.height / this.canvas!.height;
 				renderer.camera.position.x = viewport.x + viewport.width / 2;
 				renderer.camera.position.y = viewport.y + viewport.height / 2;
+
+				// Resize the canvas.
+				renderer.resize(this.currentViewport.clip ? ResizeMode.FitClip : ResizeMode.Fit, viewport.width, viewport.height);
 
 				// Clear the screen.
 				let gl = this.context!.gl;

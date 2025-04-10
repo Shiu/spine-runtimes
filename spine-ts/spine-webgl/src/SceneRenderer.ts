@@ -463,28 +463,34 @@ export class SceneRenderer implements Disposable {
 		this.activeRenderer = null;
 	}
 
-	resize (resizeMode: ResizeMode) {
+	resize (resizeMode: ResizeMode, worldWidth?: number, worldHeight?: number) {
 		let canvas = this.canvas;
 		var dpr = window.devicePixelRatio || 1;
 		var w = Math.round(canvas.clientWidth * dpr);
 		var h = Math.round(canvas.clientHeight * dpr);
-
 		if (canvas.width != w || canvas.height != h) {
 			canvas.width = w;
 			canvas.height = h;
 		}
-		this.context.gl.viewport(0, 0, canvas.width, canvas.height);
 
-		// Nothing to do for stretch, we simply apply the viewport size of the camera.
-		if (resizeMode === ResizeMode.Expand)
-			this.camera.setViewport(w, h);
-		else if (resizeMode === ResizeMode.Fit) {
-			let sourceWidth = canvas.width, sourceHeight = canvas.height;
-			let targetWidth = this.camera.viewportWidth, targetHeight = this.camera.viewportHeight;
-			let targetRatio = targetHeight / targetWidth;
-			let sourceRatio = sourceHeight / sourceWidth;
-			let scale = targetRatio < sourceRatio ? targetWidth / sourceWidth : targetHeight / sourceHeight;
-			this.camera.setViewport(sourceWidth * scale, sourceHeight * scale);
+		if (resizeMode === ResizeMode.FitClip) {
+			let targetRatio = h / w, sourceRatio = worldHeight / worldWidth;
+			let scale = targetRatio > sourceRatio ? w / worldWidth : h / worldHeight;
+			worldWidth *= scale;
+			worldHeight *= scale;
+			this.camera.setViewport(worldWidth, worldHeight);
+			this.context.gl.viewport((w - worldWidth) / 2, (h - worldHeight) / 2, worldWidth, worldHeight);
+		} else {
+			if (resizeMode === ResizeMode.Fit) {
+				let targetWidth = this.camera.viewportWidth, targetHeight = this.camera.viewportHeight;
+				let targetRatio = targetHeight / targetWidth, sourceRatio = h / w;
+				let scale = targetRatio < sourceRatio ? targetWidth / w : targetHeight / h;
+				this.camera.setViewport(w * scale, h * scale);
+			} else if (resizeMode === ResizeMode.Expand)
+				this.camera.setViewport(w, h);
+			// Nothing to do for stretch, we simply apply the viewport size of the camera.
+
+			this.context.gl.viewport(0, 0, w, h);
 		}
 		this.camera.update();
 	}
@@ -511,5 +517,6 @@ export class SceneRenderer implements Disposable {
 export enum ResizeMode {
 	Stretch,
 	Expand,
-	Fit
+	Fit,
+	FitClip,
 }
