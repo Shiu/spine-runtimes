@@ -290,14 +290,11 @@ public:
 #else
 	explicit SpineEditorPlugin(EditorNode *node);
 
-#if VERSION_MAJOR > 3
-#if VERSION_MINOR > 3
-	String get_plugin_name() const override { return "SpineEditorPlugin"; }
+#if VERSION_MAJOR > 3 && VERSION_MINOR > 3
+    String get_plugin_name() const override { return "SpineEditorPlugin"; }
 #else
-	String get_name() const override { return "SpineEditorPlugin"; }
+    String get_name() const override { return "SpineEditorPlugin"; }
 #endif
-#else
-	String get_name() const override { return "SpineEditorPlugin"; }
 #endif
 };
 
