@@ -271,12 +271,20 @@ namespace Spine {
 				data.clamp = (flags & 16) != 0;
 				FromProperty[] froms = data.properties.Resize(nn = flags >> 5).Items;
 				for (int ii = 0, tn; ii < nn; ii++) {
-					float fromScale = 1.0f;
+					float fromScale = 1;
 					FromProperty from;
 					switch (input.ReadSByte()) {
 					case 0: from = new FromRotate(); break;
-					case 1: from = new FromX(); fromScale = scale; break;
-					case 2: from = new FromY(); fromScale = scale; break;
+					case 1: {
+						from = new FromX();
+						fromScale = scale;
+						break;
+					}
+					case 2: {
+						from = new FromY();
+						fromScale = scale;
+						break;
+					}
 					case 3: from = new FromScaleX(); break;
 					case 4: from = new FromScaleY(); break;
 					case 5: from = new FromShearY(); break;
@@ -285,12 +293,20 @@ namespace Spine {
 					from.offset = input.ReadFloat() * fromScale;
 					ToProperty[] tos = from.to.Resize(tn = input.ReadSByte()).Items;
 					for (int t = 0; t < tn; t++) {
-						float toScale = 1.0f;
+						float toScale = 1;
 						ToProperty to;
 						switch (input.ReadSByte()) {
 						case 0: to = new ToRotate(); break;
-						case 1: to = new ToX(); toScale = scale; break;
-						case 2: to = new ToY(); toScale = scale; break;
+						case 1: {
+							to = new ToX();
+							toScale = scale;
+							break;
+						}
+						case 2: {
+							to = new ToY();
+							toScale = scale;
+							break;
+						}
 						case 3: to = new ToScaleX(); break;
 						case 4: to = new ToScaleY(); break;
 						case 5: to = new ToShearY(); break;
@@ -304,14 +320,19 @@ namespace Spine {
 					froms[ii] = from;
 				}
 				flags = input.Read();
-				if ((flags & 1) != 0) data.offsetX = input.ReadFloat() * scale;
-				if ((flags & 2) != 0) data.offsetY = input.ReadFloat() * scale;
-				if ((flags & 4) != 0) data.mixRotate = input.ReadFloat();
-				if ((flags & 8) != 0) data.mixX = input.ReadFloat();
-				if ((flags & 16) != 0) data.mixY = input.ReadFloat();
-				if ((flags & 32) != 0) data.mixScaleX = input.ReadFloat();
-				if ((flags & 64) != 0) data.mixScaleY = input.ReadFloat();
-				if ((flags & 128) != 0) data.mixShearY = input.ReadFloat();
+				if ((flags & 1) != 0) data.offsetRotation = input.ReadFloat();
+				if ((flags & 2) != 0) data.offsetX = input.ReadFloat() * scale;
+				if ((flags & 4) != 0) data.offsetY = input.ReadFloat() * scale;
+				if ((flags & 8) != 0) data.offsetScaleX = input.ReadFloat();
+				if ((flags & 16) != 0) data.offsetScaleY = input.ReadFloat();
+				if ((flags & 32) != 0) data.offsetShearY = input.ReadFloat();
+				flags = input.Read();
+				if ((flags & 1) != 0) data.mixRotate = input.ReadFloat();
+				if ((flags & 2) != 0) data.mixX = input.ReadFloat();
+				if ((flags & 4) != 0) data.mixY = input.ReadFloat();
+				if ((flags & 8) != 0) data.mixScaleX = input.ReadFloat();
+				if ((flags & 16) != 0) data.mixScaleY = input.ReadFloat();
+				if ((flags & 32) != 0) data.mixShearY = input.ReadFloat();
 				o[i] = data;
 			}
 

@@ -240,6 +240,7 @@ namespace Spine {
 					if (data.source == null) throw new Exception("Transform constraint source bone not found: " + sourceName);
 
 					data.localSource = GetBoolean(constraintMap, "localSource", false);
+					data.localTarget = GetBoolean(constraintMap, "localTarget", false);
 					data.additive = GetBoolean(constraintMap, "additive", false);
 					data.clamp = GetBoolean(constraintMap, "clamp", false);
 
@@ -249,12 +250,20 @@ namespace Spine {
 							var fromEntry = (Dictionary<string, Object>)fromEntryObject.Value;
 							string fromEntryName = fromEntryObject.Key;
 
-							float fromScale = 1.0f;
+							float fromScale = 1;
 							FromProperty from;
 							switch (fromEntryName) {
 							case "rotate": from = new FromRotate(); break;
-							case "x": from = new FromX(); fromScale = scale; break;
-							case "y": from = new FromY(); fromScale = scale; break;
+							case "x": {
+								from = new FromX();
+								fromScale = scale;
+								break;
+							}
+							case "y": {
+								from = new FromY();
+								fromScale = scale;
+								break;
+							}
 							case "scaleX": from = new FromScaleX(); break;
 							case "scaleY": from = new FromScaleY(); break;
 							case "shearY": from = new FromShearY(); break;
@@ -267,7 +276,7 @@ namespace Spine {
 									var toEntry = (Dictionary<string, Object>)toEntryObject.Value;
 									string toEntryName = toEntryObject.Key;
 
-									float toScale = 1.0f;
+									float toScale = 1;
 									ToProperty to;
 									switch (toEntryName) {
 									case "rotate": {
@@ -314,8 +323,13 @@ namespace Spine {
 						}
 					}
 
+					data.offsetRotation = GetFloat(constraintMap, "rotation", 0);
 					data.offsetX = GetFloat(constraintMap, "x", 0) * scale;
 					data.offsetY = GetFloat(constraintMap, "y", 0) * scale;
+					data.offsetScaleX = GetFloat(constraintMap, "scaleX", 0);
+					data.offsetScaleY = GetFloat(constraintMap, "scaleY", 0);
+					data.offsetShearY = GetFloat(constraintMap, "shearY", 0);
+
 					if (rotate) data.mixRotate = GetFloat(constraintMap, "mixRotate", 1);
 					if (x) data.mixX = GetFloat(constraintMap, "mixX", 1);
 					if (y) data.mixY = GetFloat(constraintMap, "mixY", data.mixX);

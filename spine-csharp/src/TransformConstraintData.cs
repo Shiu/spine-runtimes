@@ -33,7 +33,8 @@ namespace Spine {
 	public class TransformConstraintData : ConstraintData {
 		internal readonly ExposedList<BoneData> bones = new ExposedList<BoneData>();
 		internal BoneData source;
-		internal float offsetX, offsetY, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY;
+		internal float mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY;
+		internal float offsetRotation, offsetX, offsetY, offsetScaleX, offsetScaleY, offsetShearY;
 		internal bool localSource, localTarget, additive, clamp;
 		internal readonly ExposedList<FromProperty> properties = new ExposedList<FromProperty>();
 
@@ -68,10 +69,19 @@ namespace Spine {
 		public float MixScaleY { get { return mixScaleY; } set { mixScaleY = value; } }
 		/// <summary>A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y.</summary>
 		public float MixShearY { get { return mixShearY; } set { mixShearY = value; } }
+		/// <summary>An offset added to the constrained bone rotation.</summary>
+		public float OffsetRotation { get { return offsetRotation; } set { offsetRotation = value; } }
 		/// <summary>An offset added to the constrained bone X translation.</summary>
 		public float OffsetX { get { return offsetX; } set { offsetX = value; } }
 		/// <summary>An offset added to the constrained bone Y translation.</summary>
 		public float OffsetY { get { return offsetY; } set { offsetY = value; } }
+		/// <summary>An offset added to the constrained bone scaleX.</summary>
+		public float OffsetScaleX { get { return offsetScaleX; } set { offsetScaleX = value; } }
+		/// <summary>An offset added to the constrained bone scaleY.</summary>
+		public float OffsetScaleY { get { return offsetScaleY; } set { offsetScaleY = value; } }
+		/// <summary>An offset added to the constrained bone shearY.</summary>
+		public float OffsetShearY { get { return offsetShearY; } set { offsetShearY = value; } }
+
 		/// <summary>Reads the source bone's local transform instead of its world transform.</summary>
 		public bool LocalSource { get { return localSource; } set { localSource = value; } }
 		/// <summary>Sets the constrained bones' local transforms instead of their world transforms.</summary>
@@ -114,7 +124,11 @@ namespace Spine {
 
 		public class FromRotate : FromProperty {
 			public override float Value (TransformConstraintData data, Bone source, bool local) {
-				return local ? source.arotation : MathUtils.Atan2(source.c, source.a) * MathUtils.RadDeg;
+				if (local) return source.arotation + data.offsetRotation;
+				float value = MathUtils.Atan2(source.c, source.a) * MathUtils.RadDeg
+					+ (source.a * source.d - source.b * source.c > 0 ? data.offsetRotation : -data.offsetRotation);
+				if (value < 0) value += 360;
+				return value;
 			}
 		}
 
@@ -191,7 +205,7 @@ namespace Spine {
 
 		public class FromScaleX : FromProperty {
 			public override float Value (TransformConstraintData data, Bone source, bool local) {
-				return local ? source.ascaleX : (float)Math.Sqrt(source.a * source.a + source.c * source.c);
+				return (local ? source.ascaleX : (float)Math.Sqrt(source.a * source.a + source.c * source.c)) + data.offsetScaleX;
 			}
 		}
 
@@ -222,7 +236,7 @@ namespace Spine {
 
 		public class FromScaleY : FromProperty {
 			public override float Value (TransformConstraintData data, Bone source, bool local) {
-				return local ? source.ascaleY : (float)Math.Sqrt(source.b * source.b + source.d * source.d);
+				return (local ? source.ascaleY : (float)Math.Sqrt(source.b * source.b + source.d * source.d)) + data.offsetScaleY;
 			}
 		}
 
@@ -253,7 +267,8 @@ namespace Spine {
 
 		public class FromShearY : FromProperty {
 			public override float Value (TransformConstraintData data, Bone source, bool local) {
-				return local ? source.ashearY : (MathUtils.Atan2(source.d, source.b) - MathUtils.Atan2(source.c, source.a)) * MathUtils.RadDeg - 90;
+				return (local ? source.ashearY : (MathUtils.Atan2(source.d, source.b) - MathUtils.Atan2(source.c, source.a)) * MathUtils.RadDeg - 90)
+					+ data.offsetShearY;
 			}
 		}
 
