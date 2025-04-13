@@ -35,6 +35,7 @@ import java.util.Arrays;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
+import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.PathConstraintData.PositionMode;
 import com.esotericsoftware.spine.PathConstraintData.RotateMode;
@@ -51,15 +52,22 @@ public class PathConstraint implements Updatable {
 	static final float epsilon = 0.00001f;
 
 	final PathConstraintData data;
-	final Array<Bone> bones;
+	final Array<BoneApplied> bones;
 	Slot slot;
-	float position, spacing, mixRotate, mixX, mixY;
-
+	PathConstraint applied;
 	boolean active;
+
+	float position, spacing, mixRotate, mixX, mixY;
 
 	private final FloatArray spaces = new FloatArray(), positions = new FloatArray();
 	private final FloatArray world = new FloatArray(), curves = new FloatArray(), lengths = new FloatArray();
 	private final float[] segments = new float[10];
+
+	public PathConstraint (PathConstraintData data, Array<BoneApplied> bones, Slot slot) {
+		this.data = data;
+		this.bones = bones;
+		this.slot = slot;
+	}
 
 	public PathConstraint (PathConstraintData data, Skeleton skeleton) {
 		if (data == null) throw new IllegalArgumentException("data cannot be null.");
@@ -68,9 +76,11 @@ public class PathConstraint implements Updatable {
 
 		bones = new Array(data.bones.size);
 		for (BoneData boneData : data.bones)
-			bones.add(skeleton.bones.get(boneData.index));
+			bones.add(skeleton.bones.get(boneData.index).applied);
 
 		slot = skeleton.slots.get(data.slot.index);
+
+		applied = new PathConstraint(data, bones, slot);
 
 		setToSetupPose();
 	}
@@ -108,7 +118,7 @@ public class PathConstraint implements Updatable {
 		case percent -> {
 			if (scale) {
 				for (int i = 0, n = spacesCount - 1; i < n; i++) {
-					var bone = (Bone)bones[i];
+					var bone = (BoneApplied)bones[i];
 					float setupLength = bone.data.length;
 					float x = setupLength * bone.a, y = setupLength * bone.c;
 					lengths[i] = (float)Math.sqrt(x * x + y * y);
@@ -119,7 +129,7 @@ public class PathConstraint implements Updatable {
 		case proportional -> {
 			float sum = 0;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
-				var bone = (Bone)bones[i];
+				var bone = (BoneApplied)bones[i];
 				float setupLength = bone.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
@@ -141,7 +151,7 @@ public class PathConstraint implements Updatable {
 		default -> {
 			boolean lengthSpacing = data.spacingMode == SpacingMode.length;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
-				var bone = (Bone)bones[i];
+				var bone = (BoneApplied)bones[i];
 				float setupLength = bone.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
@@ -163,11 +173,11 @@ public class PathConstraint implements Updatable {
 			tip = data.rotateMode == RotateMode.chain;
 		else {
 			tip = false;
-			Bone p = slot.bone;
+			BoneApplied p = slot.bone.applied;
 			offsetRotation *= p.a * p.d - p.b * p.c > 0 ? degRad : -degRad;
 		}
 		for (int i = 0, p = 3; i < boneCount; i++, p += 3) {
-			var bone = (Bone)bones[i];
+			var bone = (BoneApplied)bones[i];
 			bone.worldX += (boneX - bone.worldX) * mixX;
 			bone.worldY += (boneY - bone.worldY) * mixY;
 			float x = positions[p], y = positions[p + 1], dx = x - boneX, dy = y - boneY;
@@ -518,7 +528,7 @@ public class PathConstraint implements Updatable {
 	}
 
 	/** The bones that will be modified by this path constraint. */
-	public Array<Bone> getBones () {
+	public Array<BoneApplied> getBones () {
 		return bones;
 	}
 

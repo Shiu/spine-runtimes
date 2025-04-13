@@ -76,14 +76,14 @@ public class BonePlotting {
 
 		SkeletonData skeletonData = json.readSkeletonData(new FileHandle("assets/spineboy/spineboy-ess.json"));
 		Skeleton skeleton = new Skeleton(skeletonData);
-		Bone bone = skeleton.findBone("gun-tip");
+		BoneApplied bone = skeleton.findBone("gun-tip").getApplied();
 
 		// Pose the skeleton at regular intervals throughout each animation.
 		float fps = 1 / 15f;
 		for (Animation animation : skeletonData.getAnimations()) {
 			float time = 0;
 			while (time < animation.getDuration()) {
-				animation.apply(skeleton, time, time, false, null, 1, MixBlend.first, MixDirection.in);
+				animation.apply(skeleton, time, time, false, null, 1, MixBlend.first, MixDirection.in, false);
 				skeleton.update(fps);
 				skeleton.updateWorldTransform(Physics.update);
 

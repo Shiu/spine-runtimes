@@ -107,7 +107,7 @@ public class IKTest extends ApplicationAdapter {
 
 		Bone crosshair = skeleton.findBone("crosshair"); // Should be cached.
 		boneCoords.set(cameraCoords.x, cameraCoords.y);
-		crosshair.getParent().worldToLocal(boneCoords); // camera space to local bone space
+		crosshair.getParent().getApplied().worldToLocal(boneCoords); // camera space to local bone space
 		crosshair.setPosition(boneCoords.x, boneCoords.y); // override the crosshair position
 
 		// Calculate final world transform with the crosshair bone set to the mouse cursor position. Update physics this time.

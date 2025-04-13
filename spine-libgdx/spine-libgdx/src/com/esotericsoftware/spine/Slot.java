@@ -44,20 +44,34 @@ import com.esotericsoftware.spine.attachments.VertexAttachment;
 public class Slot {
 	final SlotData data;
 	final Bone bone;
-	Color color = new Color();
+	Slot applied;
+
+	final Color color = new Color();
 	@Null final Color darkColor;
 	@Null Attachment attachment;
 	int sequenceIndex;
-	FloatArray deform = new FloatArray();
+	FloatArray deform;
 
 	int attachmentState;
 
-	public Slot (SlotData data, Bone bone) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
-		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
+	private Slot (SlotData data, Bone bone) {
 		this.data = data;
 		this.bone = bone;
+
 		darkColor = data.darkColor == null ? null : new Color();
+	}
+
+	public Slot (SlotData data, Skeleton skeleton) {
+		if (data == null) throw new IllegalArgumentException("data cannot be null.");
+		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
+		this.data = data;
+		this.bone = skeleton.bones.get(data.boneData.index);
+
+		darkColor = data.darkColor == null ? null : new Color();
+		deform = new FloatArray();
+
+		applied = new Slot(data, bone);
+
 		setToSetupPose();
 	}
 
@@ -71,7 +85,7 @@ public class Slot {
 		darkColor = slot.darkColor == null ? null : new Color(slot.darkColor);
 		attachment = slot.attachment;
 		sequenceIndex = slot.sequenceIndex;
-		deform.addAll(slot.deform);
+		deform = new FloatArray(slot.deform);
 	}
 
 	/** The slot's setup pose data. */
@@ -93,10 +107,6 @@ public class Slot {
 	 * color tinting. */
 	public Color getColor () {
 		return color;
-	}
-
-	public void setColor (Color color) {
-		this.color = color;
 	}
 
 	/** The dark color used to tint the slot's attachment for two color tinting, or null if two color tinting is not used. The dark
@@ -156,6 +166,11 @@ public class Slot {
 			attachment = null;
 			setAttachment(bone.skeleton.getAttachment(data.index, data.attachmentName));
 		}
+	}
+
+	/** Returns the bone for applied pose. */
+	public Slot getApplied () {
+		return applied;
 	}
 
 	public String toString () {

@@ -37,6 +37,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Null;
 
+import com.esotericsoftware.spine.Animation.BoneTimeline;
+import com.esotericsoftware.spine.Animation.Timeline;
 import com.esotericsoftware.spine.Skin.SkinEntry;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.ClippingAttachment;
@@ -55,6 +57,7 @@ public class Skeleton {
 	final Array<Bone> bones;
 	final Array<Slot> slots;
 	Array<Slot> drawOrder;
+	final Array<Slider> sliders;
 	final Array<IkConstraint> ikConstraints;
 	final Array<TransformConstraint> transformConstraints;
 	final Array<PathConstraint> pathConstraints;
@@ -85,27 +88,30 @@ public class Skeleton {
 		slots = new Array(data.slots.size);
 		drawOrder = new Array(data.slots.size);
 		for (SlotData slotData : data.slots) {
-			var bone = (Bone)bones[slotData.boneData.index];
-			var slot = new Slot(slotData, bone);
+			var slot = new Slot(slotData, this);
 			slots.add(slot);
 			drawOrder.add(slot);
 		}
 
+		sliders = new Array(data.sliders.size);
+		for (SliderData constraint : data.sliders)
+			sliders.add(new Slider(constraint, this));
+
 		ikConstraints = new Array(data.ikConstraints.size);
-		for (IkConstraintData ikConstraintData : data.ikConstraints)
-			ikConstraints.add(new IkConstraint(ikConstraintData, this));
+		for (IkConstraintData constraint : data.ikConstraints)
+			ikConstraints.add(new IkConstraint(constraint, this));
 
 		transformConstraints = new Array(data.transformConstraints.size);
-		for (TransformConstraintData transformConstraintData : data.transformConstraints)
-			transformConstraints.add(new TransformConstraint(transformConstraintData, this));
+		for (TransformConstraintData constraint : data.transformConstraints)
+			transformConstraints.add(new TransformConstraint(constraint, this));
 
 		pathConstraints = new Array(data.pathConstraints.size);
-		for (PathConstraintData pathConstraintData : data.pathConstraints)
-			pathConstraints.add(new PathConstraint(pathConstraintData, this));
+		for (PathConstraintData constraint : data.pathConstraints)
+			pathConstraints.add(new PathConstraint(constraint, this));
 
 		physicsConstraints = new Array(data.physicsConstraints.size);
-		for (PhysicsConstraintData physicsConstraintData : data.physicsConstraints)
-			physicsConstraints.add(new PhysicsConstraint(physicsConstraintData, this));
+		for (PhysicsConstraintData constraint : data.physicsConstraints)
+			physicsConstraints.add(new PhysicsConstraint(constraint, this));
 
 		color = new Color(1, 1, 1, 1);
 
@@ -140,21 +146,25 @@ public class Skeleton {
 		for (Slot slot : skeleton.drawOrder)
 			drawOrder.add(slots.get(slot.data.index));
 
+		sliders = new Array(skeleton.sliders.size);
+		for (Slider constraint : skeleton.sliders)
+			sliders.add(new Slider(constraint, skeleton));
+
 		ikConstraints = new Array(skeleton.ikConstraints.size);
-		for (IkConstraint ikConstraint : skeleton.ikConstraints)
-			ikConstraints.add(new IkConstraint(ikConstraint, skeleton));
+		for (IkConstraint constraint : skeleton.ikConstraints)
+			ikConstraints.add(new IkConstraint(constraint, skeleton));
 
 		transformConstraints = new Array(skeleton.transformConstraints.size);
-		for (TransformConstraint transformConstraint : skeleton.transformConstraints)
-			transformConstraints.add(new TransformConstraint(transformConstraint, skeleton));
+		for (TransformConstraint constraint : skeleton.transformConstraints)
+			transformConstraints.add(new TransformConstraint(constraint, skeleton));
 
 		pathConstraints = new Array(skeleton.pathConstraints.size);
-		for (PathConstraint pathConstraint : skeleton.pathConstraints)
-			pathConstraints.add(new PathConstraint(pathConstraint, skeleton));
+		for (PathConstraint constraint : skeleton.pathConstraints)
+			pathConstraints.add(new PathConstraint(constraint, skeleton));
 
 		physicsConstraints = new Array(skeleton.physicsConstraints.size);
-		for (PhysicsConstraint physicsConstraint : skeleton.physicsConstraints)
-			physicsConstraints.add(new PhysicsConstraint(physicsConstraint, skeleton));
+		for (PhysicsConstraint constraint : skeleton.physicsConstraints)
+			physicsConstraints.add(new PhysicsConstraint(constraint, skeleton));
 
 		skin = skeleton.skin;
 		color = new Color(skeleton.color);
@@ -192,13 +202,21 @@ public class Skeleton {
 			}
 		}
 
-		int ikCount = ikConstraints.size, transformCount = transformConstraints.size, pathCount = pathConstraints.size,
-			physicsCount = physicsConstraints.size;
-		Object[] ikConstraints = this.ikConstraints.items, transformConstraints = this.transformConstraints.items,
-			pathConstraints = this.pathConstraints.items, physicsConstraints = this.physicsConstraints.items;
+		int sliderCount = sliders.size, ikCount = ikConstraints.size, transformCount = transformConstraints.size,
+			pathCount = pathConstraints.size, physicsCount = physicsConstraints.size;
+		Object[] sliders = this.sliders.items, ikConstraints = this.ikConstraints.items,
+			transformConstraints = this.transformConstraints.items, pathConstraints = this.pathConstraints.items,
+			physicsConstraints = this.physicsConstraints.items;
 		int constraintCount = ikCount + transformCount + pathCount + physicsCount;
 		outer:
 		for (int i = 0; i < constraintCount; i++) {
+			for (int ii = 0; ii < sliderCount; ii++) {
+				var constraint = (Slider)sliders[ii];
+				if (constraint.data.order == i) {
+					sortSlider(constraint);
+					continue outer;
+				}
+			}
 			for (int ii = 0; ii < ikCount; ii++) {
 				var constraint = (IkConstraint)ikConstraints[ii];
 				if (constraint.data.order == i) {
@@ -233,21 +251,42 @@ public class Skeleton {
 			sortBone((Bone)bones[i]);
 	}
 
+	private void sortSlider (Slider constraint) {
+		constraint.active = !constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true));
+		if (!constraint.active) return;
+
+		Object[] bones = this.bones.items;
+		for (Timeline timeline : constraint.animation.timelines)
+			if (timeline instanceof BoneTimeline boneTimeline) sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
+
+		updateCache.add(constraint);
+
+		for (Timeline timeline : constraint.animation.timelines) {
+			if (timeline instanceof BoneTimeline boneTimeline) {
+				var bone = (Bone)bones[boneTimeline.getBoneIndex()];
+				sortReset(bone.children);
+				bone.sorted = false;
+			}
+		}
+		for (Timeline timeline : constraint.animation.timelines)
+			if (timeline instanceof BoneTimeline boneTimeline) sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
+	}
+
 	private void sortIkConstraint (IkConstraint constraint) {
 		constraint.active = constraint.target.active
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
 
-		sortBone(constraint.target);
+		sortBone(constraint.target.pose);
 
-		Array<Bone> constrained = constraint.bones;
-		Bone parent = constrained.first();
+		Array<BoneApplied> constrained = constraint.bones;
+		Bone parent = constrained.first().pose;
 		sortBone(parent);
 		if (constrained.size == 1) {
 			updateCache.add(constraint);
 			sortReset(parent.children);
 		} else {
-			Bone child = constrained.peek();
+			Bone child = constrained.peek().pose;
 			sortBone(child);
 
 			updateCache.add(constraint);
@@ -262,27 +301,27 @@ public class Skeleton {
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
 
-		sortBone(constraint.source);
+		sortBone(constraint.source.pose);
 
 		Object[] constrained = constraint.bones.items;
 		int boneCount = constraint.bones.size;
 		if (constraint.data.localSource) {
 			for (int i = 0; i < boneCount; i++) {
-				var child = (Bone)constrained[i];
+				Bone child = ((BoneApplied)constrained[i]).pose;
 				sortBone(child.parent);
 				sortBone(child);
 			}
 		} else {
 			for (int i = 0; i < boneCount; i++)
-				sortBone((Bone)constrained[i]);
+				sortBone(((BoneApplied)constrained[i]).pose);
 		}
 
 		updateCache.add(constraint);
 
 		for (int i = 0; i < boneCount; i++)
-			sortReset(((Bone)constrained[i]).children);
+			sortReset(((BoneApplied)constrained[i]).children);
 		for (int i = 0; i < boneCount; i++)
-			((Bone)constrained[i]).sorted = true;
+			((BoneApplied)constrained[i]).pose.sorted = true;
 	}
 
 	private void sortPathConstraint (PathConstraint constraint) {
@@ -302,7 +341,7 @@ public class Skeleton {
 		Object[] constrained = constraint.bones.items;
 		int boneCount = constraint.bones.size;
 		for (int i = 0; i < boneCount; i++)
-			sortBone((Bone)constrained[i]);
+			sortBone(((BoneApplied)constrained[i]).pose);
 
 		updateCache.add(constraint);
 
@@ -331,13 +370,13 @@ public class Skeleton {
 				int nn = pathBones[i++];
 				nn += i;
 				while (i < nn)
-					sortBone((Bone)bones[pathBones[i++]]);
+					sortBone(((BoneApplied)bones[pathBones[i++]]).pose);
 			}
 		}
 	}
 
 	private void sortPhysicsConstraint (PhysicsConstraint constraint) {
-		Bone bone = constraint.bone;
+		Bone bone = constraint.bone.pose;
 		constraint.active = bone.active
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
@@ -355,7 +394,7 @@ public class Skeleton {
 		Bone parent = bone.parent;
 		if (parent != null) sortBone(parent);
 		bone.sorted = true;
-		updateCache.add(bone);
+		updateCache.add(bone.applied);
 	}
 
 	private void sortReset (Array<Bone> bones) {
@@ -376,14 +415,29 @@ public class Skeleton {
 		Object[] bones = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++) {
 			var bone = (Bone)bones[i];
-			bone.ax = bone.x;
-			bone.ay = bone.y;
-			bone.arotation = bone.rotation;
-			bone.ascaleX = bone.scaleX;
-			bone.ascaleY = bone.scaleY;
-			bone.ashearX = bone.shearX;
-			bone.ashearY = bone.shearY;
+			if (!bone.active) continue;
+			BoneApplied applied = bone.applied;
+			applied.x = bone.x;
+			applied.y = bone.y;
+			applied.rotation = bone.rotation;
+			applied.scaleX = bone.scaleX;
+			applied.scaleY = bone.scaleY;
+			applied.shearX = bone.shearX;
+			applied.shearY = bone.shearY;
+			applied.inherit = bone.inherit;
 		}
+		Object[] slots = this.slots.items;
+		for (int i = 0, n = this.slots.size; i < n; i++) {
+			var slot = (Slot)slots[i];
+			if (!slot.bone.active) continue;
+			Slot applied = slot.applied;
+			applied.color.set(slot.color);
+			if (applied.darkColor != null) applied.darkColor.set(slot.darkColor);
+			applied.attachment = slot.attachment;
+			applied.sequenceIndex = slot.sequenceIndex;
+			applied.deform = slot.deform;
+		}
+		// BOZO! - Reset the rest.
 
 		Object[] updateCache = this.updateCache.items;
 		for (int i = 0, n = this.updateCache.size; i < n; i++)
@@ -395,23 +449,26 @@ public class Skeleton {
 	 * <p>
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
-	public void updateWorldTransform (Physics physics, Bone parent) {
+	public void updateWorldTransform (Physics physics, BoneApplied parent) {
 		if (parent == null) throw new IllegalArgumentException("parent cannot be null.");
 
 		Object[] bones = this.bones.items;
 		for (int i = 1, n = this.bones.size; i < n; i++) { // Skip root bone.
 			var bone = (Bone)bones[i];
-			bone.ax = bone.x;
-			bone.ay = bone.y;
-			bone.arotation = bone.rotation;
-			bone.ascaleX = bone.scaleX;
-			bone.ascaleY = bone.scaleY;
-			bone.ashearX = bone.shearX;
-			bone.ashearY = bone.shearY;
+			BoneApplied applied = bone.applied;
+			applied.x = bone.x;
+			applied.y = bone.y;
+			applied.rotation = bone.rotation;
+			applied.scaleX = bone.scaleX;
+			applied.scaleY = bone.scaleY;
+			applied.shearX = bone.shearX;
+			applied.shearY = bone.shearY;
+			applied.inherit = bone.inherit;
 		}
+		// BOZO! - Reset the rest.
 
 		// Apply the parent bone transform to the root bone. The root bone always inherits scale, rotation and reflection.
-		Bone rootBone = getRootBone();
+		BoneApplied rootBone = getRootBone().applied;
 		float pa = parent.a, pb = parent.b, pc = parent.c, pd = parent.d;
 		rootBone.worldX = pa * x + pb * y + parent.worldX;
 		rootBone.worldY = pc * x + pd * y + parent.worldY;
@@ -447,21 +504,25 @@ public class Skeleton {
 		for (int i = 0, n = this.bones.size; i < n; i++)
 			((Bone)bones[i]).setToSetupPose();
 
-		Object[] ikConstraints = this.ikConstraints.items;
-		for (int i = 0, n = this.ikConstraints.size; i < n; i++)
-			((IkConstraint)ikConstraints[i]).setToSetupPose();
+		Object[] constraints = sliders.items;
+		for (int i = 0, n = sliders.size; i < n; i++)
+			((Slider)constraints[i]).setToSetupPose();
 
-		Object[] transformConstraints = this.transformConstraints.items;
-		for (int i = 0, n = this.transformConstraints.size; i < n; i++)
-			((TransformConstraint)transformConstraints[i]).setToSetupPose();
+		constraints = ikConstraints.items;
+		for (int i = 0, n = ikConstraints.size; i < n; i++)
+			((IkConstraint)constraints[i]).setToSetupPose();
 
-		Object[] pathConstraints = this.pathConstraints.items;
-		for (int i = 0, n = this.pathConstraints.size; i < n; i++)
-			((PathConstraint)pathConstraints[i]).setToSetupPose();
+		constraints = transformConstraints.items;
+		for (int i = 0, n = transformConstraints.size; i < n; i++)
+			((TransformConstraint)constraints[i]).setToSetupPose();
 
-		Object[] physicsConstraints = this.physicsConstraints.items;
-		for (int i = 0, n = this.physicsConstraints.size; i < n; i++)
-			((PhysicsConstraint)physicsConstraints[i]).setToSetupPose();
+		constraints = pathConstraints.items;
+		for (int i = 0, n = pathConstraints.size; i < n; i++)
+			((PathConstraint)constraints[i]).setToSetupPose();
+
+		constraints = physicsConstraints.items;
+		for (int i = 0, n = physicsConstraints.size; i < n; i++)
+			((PhysicsConstraint)constraints[i]).setToSetupPose();
 	}
 
 	/** Sets the slots and draw order to their setup pose values. */
@@ -615,6 +676,23 @@ public class Skeleton {
 				throw new IllegalArgumentException("Attachment not found: " + attachmentName + ", for slot: " + slotName);
 		}
 		slot.setAttachment(attachment);
+	}
+
+	/** The skeleton's sliders. */
+	public Array<Slider> getSliders () {
+		return sliders;
+	}
+
+	/** Finds a slider by comparing each slider's name. It is more efficient to cache the results of this method than to call it
+	 * repeatedly. */
+	public @Null Slider findSlider (String constraintName) {
+		if (constraintName == null) throw new IllegalArgumentException("constraintName cannot be null.");
+		Object[] sliders = this.sliders.items;
+		for (int i = 0, n = this.sliders.size; i < n; i++) {
+			var slider = (Slider)sliders[i];
+			if (slider.data.name.equals(constraintName)) return slider;
+		}
+		return null;
 	}
 
 	/** The skeleton's IK constraints. */

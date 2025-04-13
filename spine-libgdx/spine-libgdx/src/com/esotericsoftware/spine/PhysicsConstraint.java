@@ -38,7 +38,11 @@ import com.esotericsoftware.spine.Skeleton.Physics;
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
 public class PhysicsConstraint implements Updatable {
 	final PhysicsConstraintData data;
-	Bone bone;
+	final Skeleton skeleton;
+	BoneApplied bone;
+	PhysicsConstraint applied;
+	boolean active;
+
 	float inertia, strength, damping, massInverse, wind, gravity, mix;
 
 	boolean reset = true;
@@ -47,11 +51,13 @@ public class PhysicsConstraint implements Updatable {
 	float yOffset, yVelocity;
 	float rotateOffset, rotateVelocity;
 	float scaleOffset, scaleVelocity;
-
-	boolean active;
-
-	final Skeleton skeleton;
 	float remaining, lastTime;
+
+	private PhysicsConstraint (PhysicsConstraintData data, Skeleton skeleton, BoneApplied bone) {
+		this.data = data;
+		this.skeleton = skeleton;
+		this.bone = bone;
+	}
 
 	public PhysicsConstraint (PhysicsConstraintData data, Skeleton skeleton) {
 		if (data == null) throw new IllegalArgumentException("data cannot be null.");
@@ -59,7 +65,9 @@ public class PhysicsConstraint implements Updatable {
 		this.data = data;
 		this.skeleton = skeleton;
 
-		bone = skeleton.bones.get(data.bone.index);
+		bone = skeleton.bones.get(data.bone.index).applied;
+
+		applied = new PhysicsConstraint(data, skeleton, bone);
 
 		setToSetupPose();
 	}
@@ -118,7 +126,7 @@ public class PhysicsConstraint implements Updatable {
 		if (mix == 0) return;
 
 		boolean x = data.x > 0, y = data.y > 0, rotateOrShearX = data.rotate > 0 || data.shearX > 0, scaleX = data.scaleX > 0;
-		Bone bone = this.bone;
+		BoneApplied bone = this.bone;
 		float l = bone.data.length;
 
 		switch (physics) {
@@ -278,11 +286,11 @@ public class PhysicsConstraint implements Updatable {
 	}
 
 	/** The bone constrained by this physics constraint. */
-	public Bone getBone () {
+	public BoneApplied getBone () {
 		return bone;
 	}
 
-	public void setBone (Bone bone) {
+	public void setBone (BoneApplied bone) {
 		this.bone = bone;
 	}
 

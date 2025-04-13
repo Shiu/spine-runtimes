@@ -104,7 +104,7 @@ public class PngExportTest extends ApplicationAdapter {
 		float fps = 1 / 15f, time = 0;
 		int frame = 1;
 		while (time < animation.getDuration()) {
-			animation.apply(skeleton, time, time, false, null, 1, MixBlend.first, MixDirection.in);
+			animation.apply(skeleton, time, time, false, null, 1, MixBlend.first, MixDirection.in, false);
 			skeleton.update(fps);
 			skeleton.updateWorldTransform(Physics.update);
 

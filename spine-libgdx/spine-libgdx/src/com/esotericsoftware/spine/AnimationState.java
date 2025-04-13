@@ -238,8 +238,10 @@ public class AnimationState {
 					Object timeline = timelines[ii];
 					if (timeline instanceof AttachmentTimeline attachmentTimeline)
 						applyAttachmentTimeline(attachmentTimeline, skeleton, applyTime, blend, attachments);
-					else
-						((Timeline)timeline).apply(skeleton, animationLast, applyTime, applyEvents, alpha, blend, MixDirection.in);
+					else {
+						((Timeline)timeline).apply(skeleton, animationLast, applyTime, applyEvents, alpha, blend, MixDirection.in,
+							false);
+					}
 				}
 			} else {
 				int[] timelineMode = current.timelineMode.items;
@@ -258,7 +260,7 @@ public class AnimationState {
 					} else if (timeline instanceof AttachmentTimeline attachmentTimeline)
 						applyAttachmentTimeline(attachmentTimeline, skeleton, applyTime, blend, attachments);
 					else
-						timeline.apply(skeleton, animationLast, applyTime, applyEvents, alpha, timelineBlend, MixDirection.in);
+						timeline.apply(skeleton, animationLast, applyTime, applyEvents, alpha, timelineBlend, MixDirection.in, false);
 				}
 			}
 			queueEvents(current, animationTime);
@@ -313,7 +315,7 @@ public class AnimationState {
 
 		if (blend == MixBlend.add) {
 			for (int i = 0; i < timelineCount; i++)
-				((Timeline)timelines[i]).apply(skeleton, animationLast, applyTime, events, alphaMix, blend, MixDirection.out);
+				((Timeline)timelines[i]).apply(skeleton, animationLast, applyTime, events, alphaMix, blend, MixDirection.out, false);
 		} else {
 			int[] timelineMode = from.timelineMode.items;
 			Object[] timelineHoldMix = from.timelineHoldMix.items;
@@ -363,7 +365,7 @@ public class AnimationState {
 				else {
 					if (drawOrder && timeline instanceof DrawOrderTimeline && timelineBlend == MixBlend.setup)
 						direction = MixDirection.in;
-					timeline.apply(skeleton, animationLast, applyTime, events, alpha, timelineBlend, direction);
+					timeline.apply(skeleton, animationLast, applyTime, events, alpha, timelineBlend, direction, false);
 				}
 			}
 		}
@@ -409,7 +411,7 @@ public class AnimationState {
 		if (firstFrame) timelinesRotation[i] = 0;
 
 		if (alpha == 1) {
-			timeline.apply(skeleton, 0, time, null, 1, blend, MixDirection.in);
+			timeline.apply(skeleton, 0, time, null, 1, blend, MixDirection.in, false);
 			return;
 		}
 

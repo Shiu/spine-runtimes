@@ -31,8 +31,8 @@ package com.esotericsoftware.spine;
 
 import static com.badlogic.gdx.math.MathUtils.*;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.TransformConstraintData.FromProperty;
@@ -44,12 +44,18 @@ import com.esotericsoftware.spine.TransformConstraintData.ToProperty;
  * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide. */
 public class TransformConstraint implements Updatable {
 	final TransformConstraintData data;
-	final Array<Bone> bones;
-	Bone source;
+	final Array<BoneApplied> bones;
+	BoneApplied source;
+	TransformConstraint applied;
+	boolean active;
+
 	float mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY;
 
-	boolean active;
-	final Vector2 temp = new Vector2();
+	public TransformConstraint (TransformConstraintData data, Array<BoneApplied> bones, BoneApplied source) {
+		this.data = data;
+		this.bones = bones;
+		this.source = source;
+	}
 
 	public TransformConstraint (TransformConstraintData data, Skeleton skeleton) {
 		if (data == null) throw new IllegalArgumentException("data cannot be null.");
@@ -58,9 +64,11 @@ public class TransformConstraint implements Updatable {
 
 		bones = new Array(data.bones.size);
 		for (BoneData boneData : data.bones)
-			bones.add(skeleton.bones.get(boneData.index));
+			bones.add(skeleton.bones.get(boneData.index).applied);
 
-		source = skeleton.bones.get(data.source.index);
+		source = skeleton.bones.get(data.source.index).applied;
+
+		applied = new TransformConstraint(data, bones, source);
 
 		setToSetupPose();
 	}
@@ -87,12 +95,12 @@ public class TransformConstraint implements Updatable {
 
 		TransformConstraintData data = this.data;
 		boolean localFrom = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
-		Bone source = this.source;
+		BoneApplied source = this.source;
 		Object[] fromItems = data.properties.items;
 		int fn = data.properties.size;
 		Object[] bones = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++) {
-			var bone = (Bone)bones[i];
+			var bone = (BoneApplied)bones[i];
 			for (int f = 0; f < fn; f++) {
 				var from = (FromProperty)fromItems[f];
 				float value = from.value(data, source, localFrom) - from.offset;
@@ -119,16 +127,16 @@ public class TransformConstraint implements Updatable {
 	}
 
 	/** The bones that will be modified by this transform constraint. */
-	public Array<Bone> getBones () {
+	public Array<BoneApplied> getBones () {
 		return bones;
 	}
 
 	/** The bone whose world transform will be copied to the constrained bones. */
-	public Bone getSource () {
+	public BoneApplied getSource () {
 		return source;
 	}
 
-	public void setSource (Bone source) {
+	public void setSource (BoneApplied source) {
 		if (source == null) throw new IllegalArgumentException("source cannot be null.");
 		this.source = source;
 	}

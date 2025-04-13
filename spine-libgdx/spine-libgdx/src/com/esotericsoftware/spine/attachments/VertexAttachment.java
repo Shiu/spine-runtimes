@@ -35,6 +35,7 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.Bone;
+import com.esotericsoftware.spine.BoneApplied;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.Slot;
 
@@ -91,7 +92,7 @@ abstract public class VertexAttachment extends Attachment {
 		int[] bones = this.bones;
 		if (bones == null) {
 			if (deformArray.size > 0) vertices = deformArray.items;
-			Bone bone = slot.getBone();
+			BoneApplied bone = slot.getBone().getApplied();
 			float x = bone.getWorldX(), y = bone.getWorldY();
 			float a = bone.getA(), b = bone.getB(), c = bone.getC(), d = bone.getD();
 			for (int v = start, w = offset; w < count; v += 2, w += stride) {
@@ -114,7 +115,7 @@ abstract public class VertexAttachment extends Attachment {
 				int n = bones[v++];
 				n += v;
 				for (; v < n; v++, b += 3) {
-					var bone = (Bone)skeletonBones[bones[v]];
+					BoneApplied bone = ((Bone)skeletonBones[bones[v]]).getApplied();
 					float vx = vertices[b], vy = vertices[b + 1], weight = vertices[b + 2];
 					wx += (vx * bone.getA() + vy * bone.getB() + bone.getWorldX()) * weight;
 					wy += (vx * bone.getC() + vy * bone.getD() + bone.getWorldY()) * weight;
@@ -129,7 +130,7 @@ abstract public class VertexAttachment extends Attachment {
 				int n = bones[v++];
 				n += v;
 				for (; v < n; v++, b += 3, f += 2) {
-					var bone = (Bone)skeletonBones[bones[v]];
+					BoneApplied bone = ((Bone)skeletonBones[bones[v]]).getApplied();
 					float vx = vertices[b] + deform[f], vy = vertices[b + 1] + deform[f + 1], weight = vertices[b + 2];
 					wx += (vx * bone.getA() + vy * bone.getB() + bone.getWorldX()) * weight;
 					wy += (vx * bone.getC() + vy * bone.getD() + bone.getWorldY()) * weight;

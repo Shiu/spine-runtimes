@@ -96,7 +96,7 @@ public class Animation {
 
 	/** Applies the animation's timelines to the specified skeleton.
 	 * <p>
-	 * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection)}.
+	 * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection, boolean)}.
 	 * @param skeleton The skeleton the animation is being applied to. This provides access to the bones, slots, and other skeleton
 	 *           components the timelines may change.
 	 * @param lastTime The last time in seconds this animation was applied. Some timelines trigger only at specific times rather
@@ -115,7 +115,7 @@ public class Animation {
 	 * @param direction Indicates whether the timelines are mixing in or out. Used by timelines which perform instant transitions,
 	 *           such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}. */
 	public void apply (Skeleton skeleton, float lastTime, float time, boolean loop, @Null Array<Event> events, float alpha,
-		MixBlend blend, MixDirection direction) {
+		MixBlend blend, MixDirection direction, boolean appliedPose) {
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 
 		if (loop && duration != 0) {
@@ -125,7 +125,7 @@ public class Animation {
 
 		Object[] timelines = this.timelines.items;
 		for (int i = 0, n = this.timelines.size; i < n; i++)
-			((Timeline)timelines[i]).apply(skeleton, lastTime, time, events, alpha, blend, direction);
+			((Timeline)timelines[i]).apply(skeleton, lastTime, time, events, alpha, blend, direction, appliedPose);
 	}
 
 	/** The animation's name, which is unique across all animations in the skeleton. */
@@ -140,7 +140,7 @@ public class Animation {
 	/** Controls how timeline values are mixed with setup pose values or current pose values when a timeline is applied with
 	 * <code>alpha</code> < 1.
 	 * <p>
-	 * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection)}. */
+	 * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection, boolean)}. */
 	static public enum MixBlend {
 		/** Transitions from the setup value to the timeline value (the current value is not used). Before the first frame, the
 		 * setup value is set. */
@@ -168,7 +168,7 @@ public class Animation {
 	/** Indicates whether a timeline's <code>alpha</code> is mixing out over time toward 0 (the setup or current pose value) or
 	 * mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
 	 * <p>
-	 * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection)}. */
+	 * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection, boolean)}. */
 	static public enum MixDirection {
 		in, out
 	}
@@ -239,9 +239,10 @@ public class Animation {
 		 *           apply animations on top of each other (layering).
 		 * @param blend Controls how mixing is applied when <code>alpha</code> < 1.
 		 * @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions,
-		 *           such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}, and others such as {@link ScaleTimeline}. */
+		 *           such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}, and others such as {@link ScaleTimeline}.
+		 * @param appliedPose True to to modify the applied pose. */
 		abstract public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha,
-			MixBlend blend, MixDirection direction);
+			MixBlend blend, MixDirection direction, boolean appliedPose);
 
 		/** Linear search using a stride of 1.
 		 * @param time Must be >= the first value in <code>frames</code>.
@@ -557,10 +558,13 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) bone.rotation = getRelativeValue(time, alpha, blend, bone.rotation, bone.data.rotation);
+			if (bone.active) {
+				if (appliedPose) bone = bone.applied;
+				bone.rotation = getRelativeValue(time, alpha, blend, bone.rotation, bone.data.rotation);
+			}
 		}
 	}
 
@@ -580,10 +584,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (!bone.active) return;
+			if (appliedPose) bone = bone.applied;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
@@ -650,10 +655,13 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) bone.x = getRelativeValue(time, alpha, blend, bone.x, bone.data.x);
+			if (bone.active) {
+				if (appliedPose) bone = bone.applied;
+				bone.x = getRelativeValue(time, alpha, blend, bone.x, bone.data.x);
+			}
 		}
 	}
 
@@ -671,10 +679,13 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) bone.y = getRelativeValue(time, alpha, blend, bone.y, bone.data.y);
+			if (bone.active) {
+				if (appliedPose) bone = bone.applied;
+				bone.y = getRelativeValue(time, alpha, blend, bone.y, bone.data.y);
+			}
 		}
 	}
 
@@ -694,10 +705,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (!bone.active) return;
+			if (appliedPose) bone = bone.applied;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
@@ -803,10 +815,13 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) bone.scaleX = getScaleValue(time, alpha, blend, direction, bone.scaleX, bone.data.scaleX);
+			if (bone.active) {
+				if (appliedPose) bone = bone.applied;
+				bone.scaleX = getScaleValue(time, alpha, blend, direction, bone.scaleX, bone.data.scaleX);
+			}
 		}
 	}
 
@@ -824,10 +839,13 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) bone.scaleY = getScaleValue(time, alpha, blend, direction, bone.scaleY, bone.data.scaleY);
+			if (bone.active) {
+				if (appliedPose) bone = bone.applied;
+				bone.scaleY = getScaleValue(time, alpha, blend, direction, bone.scaleY, bone.data.scaleY);
+			}
 		}
 	}
 
@@ -847,10 +865,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (!bone.active) return;
+			if (appliedPose) bone = bone.applied;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
@@ -917,10 +936,13 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) bone.shearX = getRelativeValue(time, alpha, blend, bone.shearX, bone.data.shearX);
+			if (bone.active) {
+				if (appliedPose) bone = bone.applied;
+				bone.shearX = getRelativeValue(time, alpha, blend, bone.shearX, bone.data.shearX);
+			}
 		}
 	}
 
@@ -938,10 +960,13 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) bone.shearY = getRelativeValue(time, alpha, blend, bone.shearY, bone.data.shearY);
+			if (bone.active) {
+				if (appliedPose) bone = bone.applied;
+				bone.shearY = getRelativeValue(time, alpha, blend, bone.shearY, bone.data.shearY);
+			}
 		}
 	}
 
@@ -975,10 +1000,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (!bone.active) return;
+			if (appliedPose) bone = bone.applied;
 
 			if (direction == out) {
 				if (blend == setup) bone.inherit = bone.data.inherit;
@@ -1029,10 +1055,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Slot slot = skeleton.slots.get(slotIndex);
 			if (!slot.bone.active) return;
+			if (appliedPose) slot = slot.applied;
 
 			float[] frames = this.frames;
 			Color color = slot.color;
@@ -1118,10 +1145,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Slot slot = skeleton.slots.get(slotIndex);
 			if (!slot.bone.active) return;
+			if (appliedPose) slot = slot.applied;
 
 			float[] frames = this.frames;
 			Color color = slot.color;
@@ -1197,10 +1225,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Slot slot = skeleton.slots.get(slotIndex);
 			if (!slot.bone.active) return;
+			if (appliedPose) slot = slot.applied;
 
 			float[] frames = this.frames;
 			Color color = slot.color;
@@ -1267,10 +1296,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Slot slot = skeleton.slots.get(slotIndex);
 			if (!slot.bone.active) return;
+			if (appliedPose) slot = slot.applied;
 
 			float[] frames = this.frames;
 			Color light = slot.color, dark = slot.darkColor;
@@ -1393,10 +1423,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Slot slot = skeleton.slots.get(slotIndex);
 			if (!slot.bone.active) return;
+			if (appliedPose) slot = slot.applied;
 
 			float[] frames = this.frames;
 			Color light = slot.color, dark = slot.darkColor;
@@ -1518,10 +1549,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Slot slot = skeleton.slots.get(slotIndex);
 			if (!slot.bone.active) return;
+			if (appliedPose) slot = slot.applied;
 
 			if (direction == out) {
 				if (blend == setup) setAttachment(skeleton, slot, slot.data.attachmentName);
@@ -1636,11 +1668,12 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Slot slot = skeleton.slots.get(slotIndex);
 			if (!slot.bone.active || !(slot.attachment instanceof VertexAttachment vertexAttachment)
 				|| vertexAttachment.getTimelineAttachment() != attachment) return;
+			if (appliedPose) slot = slot.applied;
 
 			FloatArray deformArray = slot.deform;
 			if (deformArray.size == 0) blend = setup;
@@ -1838,7 +1871,7 @@ public class Animation {
 
 		/** Fires events for frames > <code>lastTime</code> and <= <code>time</code>. */
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> firedEvents, float alpha,
-			MixBlend blend, MixDirection direction) {
+			MixBlend blend, MixDirection direction, boolean appliedPose) {
 
 			if (firedEvents == null) return;
 
@@ -1846,7 +1879,7 @@ public class Animation {
 			int frameCount = frames.length;
 
 			if (lastTime > time) { // Apply after lastTime for looped animations.
-				apply(skeleton, lastTime, Integer.MAX_VALUE, firedEvents, alpha, blend, direction);
+				apply(skeleton, lastTime, Integer.MAX_VALUE, firedEvents, alpha, blend, direction, appliedPose);
 				lastTime = -1f;
 			} else if (lastTime >= frames[frameCount - 1]) // Last time is after last frame.
 				return;
@@ -1899,7 +1932,7 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			if (direction == out) {
 				if (blend == setup) arraycopy(skeleton.slots.items, 0, skeleton.drawOrder.items, 0, skeleton.slots.size);
@@ -1963,10 +1996,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			IkConstraint constraint = skeleton.ikConstraints.get(constraintIndex);
 			if (!constraint.active) return;
+			if (appliedPose) constraint = constraint.applied;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
@@ -2072,10 +2106,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			TransformConstraint constraint = skeleton.transformConstraints.get(constraintIndex);
 			if (!constraint.active) return;
+			if (appliedPose) constraint = constraint.applied;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
@@ -2171,11 +2206,13 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			PathConstraint constraint = skeleton.pathConstraints.get(constraintIndex);
-			if (constraint.active)
+			if (constraint.active) {
+				if (appliedPose) constraint = constraint.applied;
 				constraint.position = getAbsoluteValue(time, alpha, blend, constraint.position, constraint.data.position);
+			}
 		}
 	}
 
@@ -2195,11 +2232,13 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			PathConstraint constraint = skeleton.pathConstraints.get(constraintIndex);
-			if (constraint.active)
+			if (constraint.active) {
+				if (appliedPose) constraint = constraint.applied;
 				constraint.spacing = getAbsoluteValue(time, alpha, blend, constraint.spacing, constraint.data.spacing);
+			}
 		}
 	}
 
@@ -2238,10 +2277,11 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			PathConstraint constraint = skeleton.pathConstraints.get(constraintIndex);
 			if (!constraint.active) return;
+			if (appliedPose) constraint = constraint.applied;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
@@ -2314,7 +2354,7 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			PhysicsConstraint constraint;
 			if (constraintIndex == -1) {
@@ -2323,12 +2363,17 @@ public class Animation {
 				Object[] constraints = skeleton.physicsConstraints.items;
 				for (int i = 0, n = skeleton.physicsConstraints.size; i < n; i++) {
 					constraint = (PhysicsConstraint)constraints[i];
-					if (constraint.active && global(constraint.data))
+					if (constraint.active && global(constraint.data)) {
+						if (appliedPose) constraint = constraint.applied;
 						set(constraint, getAbsoluteValue(time, alpha, blend, get(constraint), setup(constraint), value));
+					}
 				}
 			} else {
 				constraint = skeleton.physicsConstraints.get(constraintIndex);
-				if (constraint.active) set(constraint, getAbsoluteValue(time, alpha, blend, get(constraint), setup(constraint)));
+				if (constraint.active) {
+					if (appliedPose) constraint = constraint.applied;
+					set(constraint, getAbsoluteValue(time, alpha, blend, get(constraint), setup(constraint)));
+				}
 			}
 		}
 
@@ -2532,7 +2577,7 @@ public class Animation {
 
 		/** Resets the physics constraint when frames > <code>lastTime</code> and <= <code>time</code>. */
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> firedEvents, float alpha,
-			MixBlend blend, MixDirection direction) {
+			MixBlend blend, MixDirection direction, boolean appliedPose) {
 
 			PhysicsConstraint constraint = null;
 			if (constraintIndex != -1) {
@@ -2543,20 +2588,24 @@ public class Animation {
 			float[] frames = this.frames;
 
 			if (lastTime > time) { // Apply after lastTime for looped animations.
-				apply(skeleton, lastTime, Integer.MAX_VALUE, null, alpha, blend, direction);
+				apply(skeleton, lastTime, Integer.MAX_VALUE, null, alpha, blend, direction, appliedPose);
 				lastTime = -1f;
 			} else if (lastTime >= frames[frames.length - 1]) // Last time is after last frame.
 				return;
 			if (time < frames[0]) return;
 
 			if (lastTime < frames[0] || time >= frames[search(frames, lastTime) + 1]) {
-				if (constraint != null)
+				if (constraint != null) {
+					if (appliedPose) constraint = constraint.applied;
 					constraint.reset();
-				else {
+				} else {
 					Object[] constraints = skeleton.physicsConstraints.items;
 					for (int i = 0, n = skeleton.physicsConstraints.size; i < n; i++) {
 						constraint = (PhysicsConstraint)constraints[i];
-						if (constraint.active) constraint.reset();
+						if (constraint.active) {
+							if (appliedPose) constraint = constraint.applied;
+							constraint.reset();
+						}
 					}
 				}
 			}
@@ -2601,10 +2650,12 @@ public class Animation {
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction) {
+			MixDirection direction, boolean appliedPose) {
 
 			Slot slot = skeleton.slots.get(slotIndex);
 			if (!slot.bone.active) return;
+			if (appliedPose) slot = slot.applied;
+
 			Attachment slotAttachment = slot.attachment;
 			if (slotAttachment != attachment) {
 				if (!(slotAttachment instanceof VertexAttachment vertexAttachment)

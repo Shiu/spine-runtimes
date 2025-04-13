@@ -37,6 +37,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.Bone;
+import com.esotericsoftware.spine.BoneApplied;
 import com.esotericsoftware.spine.Slot;
 
 /** An attachment that displays a textured quadrilateral.
@@ -179,7 +180,7 @@ public class RegionAttachment extends Attachment implements HasTextureRegion {
 		if (sequence != null) sequence.apply(slot, this);
 
 		float[] vertexOffset = this.offset;
-		Bone bone = slot.getBone();
+		BoneApplied bone = slot.getBone().getApplied();
 		float x = bone.getWorldX(), y = bone.getWorldY();
 		float a = bone.getA(), b = bone.getB(), c = bone.getC(), d = bone.getD();
 		float offsetX, offsetY;

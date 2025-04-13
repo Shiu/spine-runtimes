@@ -137,7 +137,7 @@ public class NormalMapTest extends ApplicationAdapter {
 		float lastTime = time;
 		float delta = Gdx.graphics.getDeltaTime();
 		time += delta;
-		if (animation != null) animation.apply(skeleton, lastTime, time, true, null, 1, MixBlend.first, MixDirection.in);
+		if (animation != null) animation.apply(skeleton, lastTime, time, true, null, 1, MixBlend.first, MixDirection.in, false);
 		skeleton.update(delta);
 		skeleton.updateWorldTransform(Physics.update);
 

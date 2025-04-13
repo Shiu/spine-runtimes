@@ -41,7 +41,7 @@ public class SkeletonClipping {
 	private final FloatArray clippingPolygon = new FloatArray();
 	private final FloatArray clipOutput = new FloatArray(128);
 	private final FloatArray clippedVertices = new FloatArray(128);
-	private final FloatArray clippedUvs = new FloatArray(128);
+	private final FloatArray clippedUvs = new FloatArray(0);
 	private final ShortArray clippedTriangles = new ShortArray(128);
 	private final FloatArray scratch = new FloatArray();
 
@@ -459,7 +459,7 @@ public class SkeletonClipping {
 		return clippedVertices;
 	}
 
-	/** Only returns a non-empty array if clipTrianglesUnpacked() was used **/
+	/** Returns an empty array unless {@link #clipTrianglesUnpacked(float[], int, short[], int, float[])} was used. **/
 	public FloatArray getClippedUvs () {
 		return clippedUvs;
 	}

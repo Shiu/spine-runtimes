@@ -80,8 +80,8 @@ public class SkeletonRendererDebug {
 		Gdx.gl.glBlendFunc(srcFunc, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		ShapeRenderer shapes = this.shapes;
-		Array<Bone> bones = skeleton.getBones();
-		Array<Slot> slots = skeleton.getSlots();
+		Array<Bone> bones = skeleton.bones;
+		Array<Slot> slots = skeleton.slots;
 
 		shapes.begin(ShapeType.Filled);
 
@@ -96,11 +96,12 @@ public class SkeletonRendererDebug {
 					shapes.setColor(boneOriginColor);
 				} else
 					shapes.setColor(boneLineColor);
-				float x = length * bone.a + bone.worldX;
-				float y = length * bone.c + bone.worldY;
-				shapes.rectLine(bone.worldX, bone.worldY, x, y, width * scale);
+				BoneApplied applied = bone.applied;
+				float x = length * applied.a + applied.worldX;
+				float y = length * applied.c + applied.worldY;
+				shapes.rectLine(applied.worldX, applied.worldY, x, y, width * scale);
 			}
-			shapes.x(skeleton.getX(), skeleton.getY(), 4 * scale);
+			shapes.x(skeleton.x, skeleton.y, 4 * scale);
 		}
 
 		if (drawPoints) {
@@ -110,8 +111,8 @@ public class SkeletonRendererDebug {
 				if (!slot.bone.active) continue;
 				Attachment attachment = slot.attachment;
 				if (!(attachment instanceof PointAttachment point)) continue;
-				point.computeWorldPosition(slot.getBone(), temp1);
-				temp2.set(8, 0).rotate(point.computeWorldRotation(slot.getBone()));
+				point.computeWorldPosition(slot.bone.applied, temp1);
+				temp2.set(8, 0).rotate(point.computeWorldRotation(slot.bone.applied));
 				shapes.rectLine(temp1, temp2, boneWidth / 2 * scale);
 			}
 		}
@@ -244,7 +245,7 @@ public class SkeletonRendererDebug {
 			for (int i = 0, n = bones.size; i < n; i++) {
 				Bone bone = bones.get(i);
 				if (!bone.active) continue;
-				shapes.circle(bone.worldX, bone.worldY, 3 * scale, 8);
+				shapes.circle(bone.applied.worldX, bone.applied.worldY, 3 * scale, 8);
 			}
 		}
 
@@ -255,7 +256,7 @@ public class SkeletonRendererDebug {
 				if (!slot.bone.active) continue;
 				Attachment attachment = slot.attachment;
 				if (!(attachment instanceof PointAttachment point)) continue;
-				point.computeWorldPosition(slot.getBone(), temp1);
+				point.computeWorldPosition(slot.bone.applied, temp1);
 				shapes.circle(temp1.x, temp1.y, 3 * scale, 8);
 			}
 		}

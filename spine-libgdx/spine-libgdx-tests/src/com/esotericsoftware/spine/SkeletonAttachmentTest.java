@@ -48,7 +48,7 @@ public class SkeletonAttachmentTest extends ApplicationAdapter {
 
 	Skeleton spineboy, goblin;
 	AnimationState spineboyState, goblinState;
-	Bone attachmentBone;
+	BoneApplied attachmentBone;
 
 	public void create () {
 		camera = new OrthographicCamera();
@@ -87,7 +87,7 @@ public class SkeletonAttachmentTest extends ApplicationAdapter {
 			skeletonAttachment.setSkeleton(goblin);
 			Slot slot = spineboy.findSlot("front-upper-arm");
 			slot.setAttachment(skeletonAttachment);
-			attachmentBone = slot.getBone();
+			attachmentBone = slot.getBone().getApplied();
 		}
 	}
 

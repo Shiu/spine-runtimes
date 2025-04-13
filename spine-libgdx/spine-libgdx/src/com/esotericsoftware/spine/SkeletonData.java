@@ -44,6 +44,7 @@ public class SkeletonData {
 	@Null Skin defaultSkin;
 	final Array<EventData> events = new Array();
 	final Array<Animation> animations = new Array();
+	final Array<SliderData> sliders = new Array();
 	final Array<IkConstraintData> ikConstraints = new Array();
 	final Array<TransformConstraintData> transformConstraints = new Array();
 	final Array<PathConstraintData> pathConstraints = new Array();
@@ -155,6 +156,25 @@ public class SkeletonData {
 		for (int i = 0, n = this.animations.size; i < n; i++) {
 			var animation = (Animation)animations[i];
 			if (animation.name.equals(animationName)) return animation;
+		}
+		return null;
+	}
+
+	// --- Sliders
+
+	/** The skeleton's sliders. */
+	public Array<SliderData> getSliders () {
+		return sliders;
+	}
+
+	/** Finds a slider by comparing each IK constraint's name. It is more efficient to cache the results of this method than to
+	 * call it multiple times. */
+	public @Null SliderData findSlider (String constraintName) {
+		if (constraintName == null) throw new IllegalArgumentException("constraintName cannot be null.");
+		Object[] sliders = this.sliders.items;
+		for (int i = 0, n = this.sliders.size; i < n; i++) {
+			var constraint = (SliderData)sliders[i];
+			if (constraint.name.equals(constraintName)) return constraint;
 		}
 		return null;
 	}

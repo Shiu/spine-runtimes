@@ -29,81 +29,72 @@
 
 package com.esotericsoftware.spine;
 
-import com.esotericsoftware.spine.Animation.Timeline;
-import com.esotericsoftware.spine.AnimationState.AnimationStateListener;
+import com.esotericsoftware.spine.Animation.MixBlend;
+import com.esotericsoftware.spine.Animation.MixDirection;
+import com.esotericsoftware.spine.Skeleton.Physics;
 
-/** Stores the current pose values for an {@link Event}.
+/** Stores the setup pose for a {@link PhysicsConstraint}.
  * <p>
- * See Timeline
- * {@link Timeline#apply(Skeleton, float, float, com.badlogic.gdx.utils.Array, float, com.esotericsoftware.spine.Animation.MixBlend, com.esotericsoftware.spine.Animation.MixDirection, boolean)},
- * AnimationStateListener {@link AnimationStateListener#event(com.esotericsoftware.spine.AnimationState.TrackEntry, Event)}, and
- * <a href="https://esotericsoftware.com/spine-events">Events</a> in the Spine User Guide. */
-public class Event {
-	private final EventData data;
-	int intValue;
-	float floatValue;
-	String stringValue;
-	float volume, balance;
-	final float time;
+ * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
+public class Slider implements Updatable {
+	final SliderData data;
+	final Skeleton skeleton;
+	Animation animation;
+	float time, mix;
 
-	public Event (float time, EventData data) {
+	boolean active;
+
+	public Slider (SliderData data, Skeleton skeleton) {
 		if (data == null) throw new IllegalArgumentException("data cannot be null.");
-		this.time = time;
+		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 		this.data = data;
+		this.skeleton = skeleton;
+
+		setToSetupPose();
 	}
 
-	public int getInt () {
-		return intValue;
+	/** Copy constructor. */
+	public Slider (Slider slider, Skeleton skeleton) {
+		this(slider.data, skeleton);
+		setToSetupPose();
 	}
 
-	public void setInt (int intValue) {
-		this.intValue = intValue;
+	public void update (Physics physics) {
+		animation.apply(skeleton, time, time, false, null, mix, MixBlend.replace, MixDirection.in, true);
 	}
 
-	public float getFloat () {
-		return floatValue;
+	public void setToSetupPose () {
+		SliderData data = this.data;
+		animation = data.animation;
+		time = data.time;
+		mix = data.mix;
 	}
 
-	public void setFloat (float floatValue) {
-		this.floatValue = floatValue;
+	public boolean isActive () {
+		return true;
 	}
 
-	public String getString () {
-		return stringValue;
+	public Animation getAnimation () {
+		return animation;
 	}
 
-	public void setString (String stringValue) {
-		if (stringValue == null) throw new IllegalArgumentException("stringValue cannot be null.");
-		this.stringValue = stringValue;
+	public void setAnimation (Animation animation) {
+		this.animation = animation;
 	}
 
-	public float getVolume () {
-		return volume;
-	}
-
-	public void setVolume (float volume) {
-		this.volume = volume;
-	}
-
-	public float getBalance () {
-		return balance;
-	}
-
-	public void setBalance (float balance) {
-		this.balance = balance;
-	}
-
-	/** The animation time this event was keyed. */
 	public float getTime () {
 		return time;
 	}
 
-	/** The events's setup pose data. */
-	public EventData getData () {
-		return data;
+	public void setTime (float time) {
+		this.time = time;
 	}
 
-	public String toString () {
-		return data.name;
+	public float getMix () {
+		return mix;
+	}
+
+	public void setMix (float mix) {
+		this.mix = mix;
 	}
 }
