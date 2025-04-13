@@ -34,8 +34,9 @@ import static com.esotericsoftware.spine.utils.SpineUtils.*;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Null;
 
-import com.esotericsoftware.spine.Bone;
+import com.esotericsoftware.spine.BonePose;
 import com.esotericsoftware.spine.BoneApplied;
+import com.esotericsoftware.spine.Bone;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.Slot;
 

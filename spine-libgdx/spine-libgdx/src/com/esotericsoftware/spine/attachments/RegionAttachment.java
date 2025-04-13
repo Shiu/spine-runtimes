@@ -36,7 +36,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Null;
 
-import com.esotericsoftware.spine.Bone;
+import com.esotericsoftware.spine.BonePose;
 import com.esotericsoftware.spine.BoneApplied;
 import com.esotericsoftware.spine.Slot;
 

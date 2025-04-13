@@ -32,31 +32,19 @@ package com.esotericsoftware.spine;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Null;
 
-import com.esotericsoftware.spine.BoneData.Inherit;
-
 /** Stores a bone's current pose.
  * <p>
  * A bone has a local transform which is used to compute its world transform. A bone also has an applied transform, which is a
  * local transform that can be applied to compute the world transform. The local transform and applied transform may differ if a
  * constraint or application code modifies the world transform after it was computed from the local transform. */
-public class Bone {
+public class Bone extends BonePose {
 	final BoneData data;
 	final Skeleton skeleton;
 	@Null final Bone parent;
 	final Array<Bone> children;
-	BoneApplied applied;
-
-	float x, y, rotation, scaleX, scaleY, shearX, shearY;
-	Inherit inherit;
+	final BoneApplied applied = new BoneApplied(this);
 
 	boolean sorted, active;
-
-	Bone (Bone bone) {
-		this.data = bone.data;
-		this.skeleton = bone.skeleton;
-		this.parent = bone.parent;
-		this.children = bone.children;
-	}
 
 	public Bone (BoneData data, Skeleton skeleton, @Null Bone parent) {
 		if (data == null) throw new IllegalArgumentException("data cannot be null.");
@@ -66,27 +54,16 @@ public class Bone {
 		this.parent = parent;
 		children = new Array();
 
-		applied = new BoneApplied(this);
-
 		setToSetupPose();
 	}
 
 	/** Copy constructor. Does not copy the {@link #getChildren()} bones. */
 	public Bone (Bone bone, Skeleton skeleton, @Null Bone parent) {
-		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
-		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
+		super(bone);
 		this.skeleton = skeleton;
 		this.parent = parent;
 		children = new Array();
 		data = bone.data;
-		x = bone.x;
-		y = bone.y;
-		rotation = bone.rotation;
-		scaleX = bone.scaleX;
-		scaleY = bone.scaleY;
-		shearX = bone.shearX;
-		shearY = bone.shearY;
-		inherit = bone.inherit;
 	}
 
 	/** Sets this bone's local transform to the setup pose. */
@@ -122,96 +99,15 @@ public class Bone {
 		return children;
 	}
 
+	/** Returns false when this bone won't be updated by
+	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Skeleton.Physics)} because a skin is required and the
+	 * {@link Skeleton#getSkin() active skin} does not contain this item.
+	 * @see Skin#getBones()
+	 * @see Skin#getConstraints()
+	 * @see BoneData#getSkinRequired()
+	 * @see Skeleton#updateCache() */
 	public boolean isActive () {
 		return active;
-	}
-
-	/** The local x translation. */
-	public float getX () {
-		return x;
-	}
-
-	public void setX (float x) {
-		this.x = x;
-	}
-
-	/** The local y translation. */
-	public float getY () {
-		return y;
-	}
-
-	public void setY (float y) {
-		this.y = y;
-	}
-
-	public void setPosition (float x, float y) {
-		this.x = x;
-		this.y = y;
-	}
-
-	/** The local rotation in degrees, counter clockwise. */
-	public float getRotation () {
-		return rotation;
-	}
-
-	public void setRotation (float rotation) {
-		this.rotation = rotation;
-	}
-
-	/** The local scaleX. */
-	public float getScaleX () {
-		return scaleX;
-	}
-
-	public void setScaleX (float scaleX) {
-		this.scaleX = scaleX;
-	}
-
-	/** The local scaleY. */
-	public float getScaleY () {
-		return scaleY;
-	}
-
-	public void setScaleY (float scaleY) {
-		this.scaleY = scaleY;
-	}
-
-	public void setScale (float scaleX, float scaleY) {
-		this.scaleX = scaleX;
-		this.scaleY = scaleY;
-	}
-
-	public void setScale (float scale) {
-		scaleX = scale;
-		scaleY = scale;
-	}
-
-	/** The local shearX. */
-	public float getShearX () {
-		return shearX;
-	}
-
-	public void setShearX (float shearX) {
-		this.shearX = shearX;
-	}
-
-	/** The local shearY. */
-	public float getShearY () {
-		return shearY;
-	}
-
-	public void setShearY (float shearY) {
-		this.shearY = shearY;
-	}
-
-	/** Determines how parent world transforms affect this bone. */
-	public Inherit getInherit () {
-		return inherit;
-	}
-
-	public void setInherit (Inherit inherit) {
-		if (inherit == null) throw new IllegalArgumentException("inherit cannot be null.");
-		this.inherit = inherit;
 	}
 
 	/** Returns the bone for applied pose. */

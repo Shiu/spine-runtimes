@@ -107,7 +107,7 @@ public class IkConstraint implements Updatable {
 	}
 
 	/** The bone that is the IK target. */
-	public Bone getTarget () {
+	public BoneApplied getTarget () {
 		return target;
 	}
 
@@ -167,6 +167,13 @@ public class IkConstraint implements Updatable {
 		this.stretch = stretch;
 	}
 
+	/** Returns false when this constraint won't be updated by
+	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Skeleton.Physics)} because a skin is required and the
+	 * {@link Skeleton#getSkin() active skin} does not contain this item.
+	 * @see Skin#getBones()
+	 * @see Skin#getConstraints()
+	 * @see ConstraintData#getSkinRequired()
+	 * @see Skeleton#updateCache() */
 	public boolean isActive () {
 		return active;
 	}
@@ -184,20 +191,21 @@ public class IkConstraint implements Updatable {
 	static public void apply (BoneApplied bone, float targetX, float targetY, boolean compress, boolean stretch, boolean uniform,
 		float alpha) {
 		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
-		BoneApplied p = bone.parentApplied;
+		BoneApplied p = bone.parent;
 		float pa = p.a, pb = p.b, pc = p.c, pd = p.d;
 		float rotationIK = -bone.shearX - bone.rotation, tx, ty;
 		switch (bone.inherit) {
 		case onlyTranslation:
-			tx = (targetX - bone.worldX) * Math.signum(bone.skeleton.scaleX);
-			ty = (targetY - bone.worldY) * Math.signum(bone.skeleton.scaleY);
+			tx = (targetX - bone.worldX) * Math.signum(bone.pose.skeleton.scaleX);
+			ty = (targetY - bone.worldY) * Math.signum(bone.pose.skeleton.scaleY);
 			break;
 		case noRotationOrReflection:
 			float s = Math.abs(pa * pd - pb * pc) / Math.max(0.0001f, pa * pa + pc * pc);
-			float sa = pa / bone.skeleton.scaleX;
-			float sc = pc / bone.skeleton.scaleY;
-			pb = -sc * s * bone.skeleton.scaleX;
-			pd = sa * s * bone.skeleton.scaleY;
+			Skeleton skeleton = bone.pose.skeleton;
+			float sa = pa / skeleton.scaleX;
+			float sc = pc / skeleton.scaleY;
+			pb = -sc * s * skeleton.scaleX;
+			pd = sa * s * skeleton.scaleY;
 			rotationIK += atan2Deg(sc, sa);
 			// Fall through.
 		default:
@@ -225,7 +233,7 @@ public class IkConstraint implements Updatable {
 				ty = targetY - bone.worldY;
 			}
 			}
-			float b = bone.data.length * bone.scaleX;
+			float b = bone.pose.data.length * bone.scaleX;
 			if (b > 0.0001f) {
 				float dd = tx * tx + ty * ty;
 				if ((compress && dd < b * b) || (stretch && dd > b * b)) {
@@ -274,7 +282,7 @@ public class IkConstraint implements Updatable {
 			cwx = a * child.x + b * child.y + parent.worldX;
 			cwy = c * child.x + d * child.y + parent.worldY;
 		}
-		BoneApplied pp = parent.parentApplied;
+		BoneApplied pp = parent.parent;
 		a = pp.a;
 		b = pp.b;
 		c = pp.c;
@@ -282,7 +290,7 @@ public class IkConstraint implements Updatable {
 		float id = a * d - b * c, x = cwx - pp.worldX, y = cwy - pp.worldY;
 		id = Math.abs(id) <= 0.0001f ? 0 : 1 / id;
 		float dx = (x * d - y * b) * id - px, dy = (y * a - x * c) * id - py;
-		float l1 = (float)Math.sqrt(dx * dx + dy * dy), l2 = child.data.length * csx, a1, a2;
+		float l1 = (float)Math.sqrt(dx * dx + dy * dy), l2 = child.pose.data.length * csx, a1, a2;
 		if (l1 < 0.0001f) {
 			apply(parent, targetX, targetY, false, stretch, false, alpha);
 			child.rotation = 0;

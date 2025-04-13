@@ -70,8 +70,15 @@ public class Slider implements Updatable {
 		mix = data.mix;
 	}
 
+	/** Returns false when this constraint won't be updated by
+	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Skeleton.Physics)} because a skin is required and the
+	 * {@link Skeleton#getSkin() active skin} does not contain this item.
+	 * @see Skin#getBones()
+	 * @see Skin#getConstraints()
+	 * @see ConstraintData#getSkinRequired()
+	 * @see Skeleton#updateCache() */
 	public boolean isActive () {
-		return true;
+		return active;
 	}
 
 	public Animation getAnimation () {

@@ -29,41 +29,22 @@
 
 package com.esotericsoftware.spine;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.Null;
+import com.esotericsoftware.spine.BoneData.Inherit;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
+/** Stores a bone's current pose.
+ * <p>
+ * A bone has a local transform which is used to compute its world transform. A bone also has an applied transform, which is a
+ * local transform that can be applied to compute the world transform. The local transform and applied transform may differ if a
+ * constraint or application code modifies the world transform after it was computed from the local transform. */
+public class BonePose {
+	float x, y, rotation, scaleX, scaleY, shearX, shearY;
+	Inherit inherit;
 
-/** Stores the setup pose for a {@link BonePose}. */
-public class BoneData {
-	final int index;
-	final String name;
-	@Null final BoneData parent;
-	float length;
-	float x, y, rotation, scaleX = 1, scaleY = 1, shearX, shearY;
-	Inherit inherit = Inherit.normal;
-	boolean skinRequired;
-
-	// Nonessential.
-	final Color color = new Color(0.61f, 0.61f, 0.61f, 1); // 9b9b9bff
-	@Null String icon;
-	boolean visible;
-
-	public BoneData (int index, String name, @Null BoneData parent) {
-		if (index < 0) throw new IllegalArgumentException("index must be >= 0.");
-		if (name == null) throw new IllegalArgumentException("name cannot be null.");
-		this.index = index;
-		this.name = name;
-		this.parent = parent;
+	BonePose () {
 	}
 
 	/** Copy constructor. */
-	public BoneData (BoneData bone, @Null BoneData parent) {
-		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
-		index = bone.index;
-		name = bone.name;
-		this.parent = parent;
-		length = bone.length;
+	public BonePose (BonePose bone) {
 		x = bone.x;
 		y = bone.y;
 		rotation = bone.rotation;
@@ -71,29 +52,7 @@ public class BoneData {
 		scaleY = bone.scaleY;
 		shearX = bone.shearX;
 		shearY = bone.shearY;
-	}
-
-	/** The index of the bone in {@link Skeleton#getBones()}. */
-	public int getIndex () {
-		return index;
-	}
-
-	/** The name of the bone, which is unique across all bones in the skeleton. */
-	public String getName () {
-		return name;
-	}
-
-	public @Null BoneData getParent () {
-		return parent;
-	}
-
-	/** The bone's length. */
-	public float getLength () {
-		return length;
-	}
-
-	public void setLength (float length) {
-		this.length = length;
+		inherit = bone.inherit;
 	}
 
 	/** The local x translation. */
@@ -151,6 +110,11 @@ public class BoneData {
 		this.scaleY = scaleY;
 	}
 
+	public void setScale (float scale) {
+		scaleX = scale;
+		scaleY = scale;
+	}
+
 	/** The local shearX. */
 	public float getShearX () {
 		return shearX;
@@ -160,7 +124,7 @@ public class BoneData {
 		this.shearX = shearX;
 	}
 
-	/** The local shearX. */
+	/** The local shearY. */
 	public float getShearY () {
 		return shearY;
 	}
@@ -177,52 +141,5 @@ public class BoneData {
 	public void setInherit (Inherit inherit) {
 		if (inherit == null) throw new IllegalArgumentException("inherit cannot be null.");
 		this.inherit = inherit;
-	}
-
-	/** When true, {@link Skeleton#updateWorldTransform(Physics)} only updates this bone if the {@link Skeleton#getSkin()} contains
-	 * this bone.
-	 * <p>
-	 * See {@link Skin#getBones()}. */
-	public boolean getSkinRequired () {
-		return skinRequired;
-	}
-
-	public void setSkinRequired (boolean skinRequired) {
-		this.skinRequired = skinRequired;
-	}
-
-	/** The color of the bone as it was in Spine, or a default color if nonessential data was not exported. Bones are not usually
-	 * rendered at runtime. */
-	public Color getColor () {
-		return color;
-	}
-
-	/** The bone icon as it was in Spine, or null if nonessential data was not exported. */
-	public @Null String getIcon () {
-		return icon;
-	}
-
-	public void setIcon (@Null String icon) {
-		this.icon = icon;
-	}
-
-	/** False if the bone was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
-	public boolean getVisible () {
-		return visible;
-	}
-
-	public void setVisible (boolean visible) {
-		this.visible = visible;
-	}
-
-	public String toString () {
-		return name;
-	}
-
-	/** Determines how a bone inherits world transforms from parent bones. */
-	static public enum Inherit {
-		normal, onlyTranslation, noRotationOrReflection, noScale, noScaleOrReflection;
-
-		static public final Inherit[] values = Inherit.values();
 	}
 }

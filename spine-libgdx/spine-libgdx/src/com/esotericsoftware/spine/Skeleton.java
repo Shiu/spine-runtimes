@@ -273,7 +273,7 @@ public class Skeleton {
 	}
 
 	private void sortIkConstraint (IkConstraint constraint) {
-		constraint.active = constraint.target.active
+		constraint.active = constraint.target.pose.active
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
 
@@ -297,7 +297,7 @@ public class Skeleton {
 	}
 
 	private void sortTransformConstraint (TransformConstraint constraint) {
-		constraint.active = constraint.source.active
+		constraint.active = constraint.source.pose.active
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
 
@@ -319,7 +319,7 @@ public class Skeleton {
 		updateCache.add(constraint);
 
 		for (int i = 0; i < boneCount; i++)
-			sortReset(((BoneApplied)constrained[i]).children);
+			sortReset(((BoneApplied)constrained[i]).pose.children);
 		for (int i = 0; i < boneCount; i++)
 			((BoneApplied)constrained[i]).pose.sorted = true;
 	}

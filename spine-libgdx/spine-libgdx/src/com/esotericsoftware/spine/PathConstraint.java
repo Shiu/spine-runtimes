@@ -119,7 +119,7 @@ public class PathConstraint implements Updatable {
 			if (scale) {
 				for (int i = 0, n = spacesCount - 1; i < n; i++) {
 					var bone = (BoneApplied)bones[i];
-					float setupLength = bone.data.length;
+					float setupLength = bone.pose.data.length;
 					float x = setupLength * bone.a, y = setupLength * bone.c;
 					lengths[i] = (float)Math.sqrt(x * x + y * y);
 				}
@@ -130,7 +130,7 @@ public class PathConstraint implements Updatable {
 			float sum = 0;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
 				var bone = (BoneApplied)bones[i];
-				float setupLength = bone.data.length;
+				float setupLength = bone.pose.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
 					spaces[++i] = spacing;
@@ -152,7 +152,7 @@ public class PathConstraint implements Updatable {
 			boolean lengthSpacing = data.spacingMode == SpacingMode.length;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
 				var bone = (BoneApplied)bones[i];
-				float setupLength = bone.data.length;
+				float setupLength = bone.pose.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
 					spaces[++i] = spacing;
@@ -203,7 +203,7 @@ public class PathConstraint implements Updatable {
 				if (tip) {
 					cos = cos(r);
 					sin = sin(r);
-					float length = bone.data.length;
+					float length = bone.pose.data.length;
 					boneX += (length * (cos * a - sin * c) - dx) * mixRotate;
 					boneY += (length * (sin * a + cos * c) - dy) * mixRotate;
 				} else
@@ -220,7 +220,7 @@ public class PathConstraint implements Updatable {
 				bone.c = sin * a + cos * c;
 				bone.d = sin * b + cos * d;
 			}
-			bone.updateAppliedTransform();
+			bone.updateLocalTransform();
 		}
 	}
 
@@ -542,6 +542,13 @@ public class PathConstraint implements Updatable {
 		this.slot = slot;
 	}
 
+	/** Returns false when this constraint won't be updated by
+	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Skeleton.Physics)} because a skin is required and the
+	 * {@link Skeleton#getSkin() active skin} does not contain this item.
+	 * @see Skin#getBones()
+	 * @see Skin#getConstraints()
+	 * @see ConstraintData#getSkinRequired()
+	 * @see Skeleton#updateCache() */
 	public boolean isActive () {
 		return active;
 	}

@@ -127,7 +127,7 @@ public class PhysicsConstraint implements Updatable {
 
 		boolean x = data.x > 0, y = data.y > 0, rotateOrShearX = data.rotate > 0 || data.shearX > 0, scaleX = data.scaleX > 0;
 		BoneApplied bone = this.bone;
-		float l = bone.data.length;
+		float l = bone.pose.data.length;
 
 		switch (physics) {
 		case none:
@@ -282,7 +282,7 @@ public class PhysicsConstraint implements Updatable {
 			tx = l * bone.a;
 			ty = l * bone.c;
 		}
-		bone.updateAppliedTransform();
+		bone.updateLocalTransform();
 	}
 
 	/** The bone constrained by this physics constraint. */
@@ -351,6 +351,13 @@ public class PhysicsConstraint implements Updatable {
 		this.mix = mix;
 	}
 
+	/** Returns false when this constraint won't be updated by
+	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Skeleton.Physics)} because a skin is required and the
+	 * {@link Skeleton#getSkin() active skin} does not contain this item.
+	 * @see Skin#getBones()
+	 * @see Skin#getConstraints()
+	 * @see ConstraintData#getSkinRequired()
+	 * @see Skeleton#updateCache() */
 	public boolean isActive () {
 		return active;
 	}

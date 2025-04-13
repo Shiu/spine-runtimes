@@ -11,21 +11,20 @@ import com.badlogic.gdx.utils.Null;
 import com.esotericsoftware.spine.BoneData.Inherit;
 import com.esotericsoftware.spine.Skeleton.Physics;
 
-public class BoneApplied extends Bone implements Updatable {
+public class BoneApplied extends BonePose implements Updatable {
 	final Bone pose;
-	@Null final BoneApplied parentApplied;
+	@Null final BoneApplied parent;
 	float a, b, worldX;
 	float c, d, worldY;
 
 	BoneApplied (Bone bone) {
-		super(bone);
 		pose = bone;
-		parentApplied = parent == null ? null : parent.applied;
+		parent = bone.parent == null ? null : bone.parent.applied;
 	}
 
 	/** Computes the world transform using the parent bone and this bone's local applied transform. */
 	public void updateWorldTransform () {
-		updateWorldTransform();
+		update(null);
 	}
 
 	/** Computes the world transform using the parent bone and this bone's local transform.
@@ -37,9 +36,10 @@ public class BoneApplied extends Bone implements Updatable {
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
 	public void update (Physics physics) {
-		BoneApplied parent = parentApplied;
+		Skeleton skeleton = pose.skeleton;
+
+		BoneApplied parent = this.parent;
 		if (parent == null) { // Root bone.
-			Skeleton skeleton = this.skeleton;
 			float sx = skeleton.scaleX, sy = skeleton.scaleY;
 			float rx = (rotation + shearX) * degRad;
 			float ry = (rotation + 90 + shearY) * degRad;
@@ -136,16 +136,18 @@ public class BoneApplied extends Bone implements Updatable {
 		d *= skeleton.scaleY;
 	}
 
-	/** Computes the applied transform values from the world transform.
+	/** Computes the local transform values from the world transform.
 	 * <p>
 	 * If the world transform is modified (by a constraint, {@link #rotateWorld(float)}, etc) then this method should be called so
-	 * the applied transform matches the world transform. The applied transform may be needed by other code (eg to apply another
+	 * the local transform matches the world transform. The local transform may be needed by other code (eg to apply another
 	 * constraint).
 	 * <p>
-	 * Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The applied transform after
+	 * Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The local transform after
 	 * calling this method is equivalent to the local transform used to compute the world transform, but may not be identical. */
-	public void updateAppliedTransform () {
-		BoneApplied parent = parentApplied;
+	public void updateLocalTransform () {
+		Skeleton skeleton = pose.skeleton;
+
+		BoneApplied parent = this.parent;
 		if (parent == null) {
 			x = worldX - skeleton.x;
 			y = worldY - skeleton.y;
@@ -222,7 +224,7 @@ public class BoneApplied extends Bone implements Updatable {
 		}
 	}
 
-	/** Part of the world transform matrix for the X axis. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** Part of the world transform matrix for the X axis. If changed, {@link #updateLocalTransform()} should be called. */
 	public float getA () {
 		return a;
 	}
@@ -231,7 +233,7 @@ public class BoneApplied extends Bone implements Updatable {
 		this.a = a;
 	}
 
-	/** Part of the world transform matrix for the Y axis. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** Part of the world transform matrix for the Y axis. If changed, {@link #updateLocalTransform()} should be called. */
 	public float getB () {
 		return b;
 	}
@@ -240,7 +242,7 @@ public class BoneApplied extends Bone implements Updatable {
 		this.b = b;
 	}
 
-	/** Part of the world transform matrix for the X axis. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** Part of the world transform matrix for the X axis. If changed, {@link #updateLocalTransform()} should be called. */
 	public float getC () {
 		return c;
 	}
@@ -249,7 +251,7 @@ public class BoneApplied extends Bone implements Updatable {
 		this.c = c;
 	}
 
-	/** Part of the world transform matrix for the Y axis. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** Part of the world transform matrix for the Y axis. If changed, {@link #updateLocalTransform()} should be called. */
 	public float getD () {
 		return d;
 	}
@@ -258,7 +260,7 @@ public class BoneApplied extends Bone implements Updatable {
 		this.d = d;
 	}
 
-	/** The world X position. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** The world X position. If changed, {@link #updateLocalTransform()} should be called. */
 	public float getWorldX () {
 		return worldX;
 	}
@@ -267,7 +269,7 @@ public class BoneApplied extends Bone implements Updatable {
 		this.worldX = worldX;
 	}
 
-	/** The world Y position. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** The world Y position. If changed, {@link #updateLocalTransform()} should be called. */
 	public float getWorldY () {
 		return worldY;
 	}
@@ -333,13 +335,13 @@ public class BoneApplied extends Bone implements Updatable {
 	/** Transforms a point from world coordinates to the parent bone's local coordinates. */
 	public Vector2 worldToParent (Vector2 world) {
 		if (world == null) throw new IllegalArgumentException("world cannot be null.");
-		return parent == null ? world : parentApplied.worldToLocal(world);
+		return parent == null ? world : parent.worldToLocal(world);
 	}
 
 	/** Transforms a point from the parent bone's coordinates to world coordinates. */
 	public Vector2 parentToWorld (Vector2 world) {
 		if (world == null) throw new IllegalArgumentException("world cannot be null.");
-		return parent == null ? world : parentApplied.localToWorld(world);
+		return parent == null ? world : parent.localToWorld(world);
 	}
 
 	/** Transforms a world rotation to a local rotation. */
@@ -358,8 +360,8 @@ public class BoneApplied extends Bone implements Updatable {
 
 	/** Rotates the world transform the specified amount.
 	 * <p>
-	 * After changes are made to the world transform, {@link #updateAppliedTransform()} should be called and
-	 * {@link #update(Physics)} will need to be called on any child bones, recursively. */
+	 * After changes are made to the world transform, {@link #updateLocalTransform()} should be called and {@link #update(Physics)}
+	 * will need to be called on any child bones, recursively. */
 	public void rotateWorld (float degrees) {
 		degrees *= degRad;
 		float sin = sin(degrees), cos = cos(degrees);
