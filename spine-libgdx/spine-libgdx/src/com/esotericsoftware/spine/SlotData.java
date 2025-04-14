@@ -33,12 +33,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Null;
 
 /** Stores the setup pose for a {@link Slot}. */
-public class SlotData {
+public class SlotData extends SlotPose {
 	final int index;
 	final String name;
 	final BoneData boneData;
-	final Color color = new Color(1, 1, 1, 1);
-	@Null Color darkColor;
 	@Null String attachmentName;
 	BlendMode blendMode;
 

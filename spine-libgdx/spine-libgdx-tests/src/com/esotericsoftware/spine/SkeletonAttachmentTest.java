@@ -37,7 +37,6 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.attachments.SkeletonAttachment;
 
 /** Demonstrates using {@link SkeletonAttachment} to use an entire skeleton as an attachment. */
@@ -77,7 +76,7 @@ public class SkeletonAttachmentTest extends ApplicationAdapter {
 			SkeletonData skeletonData = json.readSkeletonData(Gdx.files.internal("goblins/goblins-pro.json"));
 			goblin = new Skeleton(skeletonData);
 			goblin.setSkin("goblin");
-			goblin.setSlotsToSetupPose();
+			goblin.setupPoseSlots();
 
 			goblinState = new AnimationState(new AnimationStateData(skeletonData));
 			goblinState.setAnimation(0, "walk", true);
@@ -86,8 +85,8 @@ public class SkeletonAttachmentTest extends ApplicationAdapter {
 			SkeletonAttachment skeletonAttachment = new SkeletonAttachment("goblin");
 			skeletonAttachment.setSkeleton(goblin);
 			Slot slot = spineboy.findSlot("front-upper-arm");
-			slot.setAttachment(skeletonAttachment);
-			attachmentBone = slot.getBone().getApplied();
+			slot.getPose().setAttachment(skeletonAttachment);
+			attachmentBone = slot.getBone().getAppliedPose();
 		}
 	}
 

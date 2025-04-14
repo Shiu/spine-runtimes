@@ -370,17 +370,17 @@ class SkeletonViewerUI {
 
 		setupPoseButton.addListener(new ChangeListener() {
 			public void changed (ChangeEvent event, Actor actor) {
-				if (viewer.skeleton != null) viewer.skeleton.setToSetupPose();
+				if (viewer.skeleton != null) viewer.skeleton.setupPose();
 			}
 		});
 		bonesSetupPoseButton.addListener(new ChangeListener() {
 			public void changed (ChangeEvent event, Actor actor) {
-				if (viewer.skeleton != null) viewer.skeleton.setBonesToSetupPose();
+				if (viewer.skeleton != null) viewer.skeleton.setupPoseBones();
 			}
 		});
 		slotsSetupPoseButton.addListener(new ChangeListener() {
 			public void changed (ChangeEvent event, Actor actor) {
-				if (viewer.skeleton != null) viewer.skeleton.setSlotsToSetupPose();
+				if (viewer.skeleton != null) viewer.skeleton.setupPoseSlots();
 			}
 		});
 
@@ -547,7 +547,7 @@ class SkeletonViewerUI {
 						viewer.skeleton.setSkin((Skin)null);
 					else
 						viewer.skeleton.setSkin(skinName);
-					viewer.skeleton.setSlotsToSetupPose();
+					viewer.skeleton.setupPoseSlots();
 				}
 			}
 		});

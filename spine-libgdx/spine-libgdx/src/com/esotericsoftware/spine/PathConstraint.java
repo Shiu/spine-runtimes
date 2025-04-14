@@ -35,12 +35,10 @@ import java.util.Arrays;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
-import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.PathConstraintData.PositionMode;
 import com.esotericsoftware.spine.PathConstraintData.RotateMode;
 import com.esotericsoftware.spine.PathConstraintData.SpacingMode;
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.attachments.PathAttachment;
 
 /** Stores the current pose for a path constraint. A path constraint adjusts the rotation, translation, and scale of the
@@ -82,16 +80,16 @@ public class PathConstraint implements Updatable {
 
 		applied = new PathConstraint(data, bones, slot);
 
-		setToSetupPose();
+		setupPose();
 	}
 
 	/** Copy constructor. */
 	public PathConstraint (PathConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-		setToSetupPose();
+		setupPose();
 	}
 
-	public void setToSetupPose () {
+	public void setupPose () {
 		PathConstraintData data = this.data;
 		position = data.position;
 		spacing = data.spacing;
@@ -102,7 +100,7 @@ public class PathConstraint implements Updatable {
 
 	/** Applies the constraint to the constrained bones. */
 	public void update (Physics physics) {
-		if (!(slot.attachment instanceof PathAttachment pathAttachment)) return;
+		if (!(slot.applied.attachment instanceof PathAttachment pathAttachment)) return;
 
 		float mixRotate = this.mixRotate, mixX = this.mixX, mixY = this.mixY;
 		if (mixRotate == 0 && mixX == 0 && mixY == 0) return;
@@ -119,7 +117,7 @@ public class PathConstraint implements Updatable {
 			if (scale) {
 				for (int i = 0, n = spacesCount - 1; i < n; i++) {
 					var bone = (BoneApplied)bones[i];
-					float setupLength = bone.pose.data.length;
+					float setupLength = bone.bone.data.length;
 					float x = setupLength * bone.a, y = setupLength * bone.c;
 					lengths[i] = (float)Math.sqrt(x * x + y * y);
 				}
@@ -130,7 +128,7 @@ public class PathConstraint implements Updatable {
 			float sum = 0;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
 				var bone = (BoneApplied)bones[i];
-				float setupLength = bone.pose.data.length;
+				float setupLength = bone.bone.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
 					spaces[++i] = spacing;
@@ -152,7 +150,7 @@ public class PathConstraint implements Updatable {
 			boolean lengthSpacing = data.spacingMode == SpacingMode.length;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
 				var bone = (BoneApplied)bones[i];
-				float setupLength = bone.pose.data.length;
+				float setupLength = bone.bone.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
 					spaces[++i] = spacing;
@@ -203,7 +201,7 @@ public class PathConstraint implements Updatable {
 				if (tip) {
 					cos = cos(r);
 					sin = sin(r);
-					float length = bone.pose.data.length;
+					float length = bone.bone.data.length;
 					boneX += (length * (cos * a - sin * c) - dx) * mixRotate;
 					boneY += (length * (sin * a + cos * c) - dy) * mixRotate;
 				} else
@@ -543,7 +541,7 @@ public class PathConstraint implements Updatable {
 	}
 
 	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Skeleton.Physics)} because a skin is required and the
+	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
 	 * {@link Skeleton#getSkin() active skin} does not contain this item.
 	 * @see Skin#getBones()
 	 * @see Skin#getConstraints()

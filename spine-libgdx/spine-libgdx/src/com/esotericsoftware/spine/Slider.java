@@ -31,7 +31,6 @@ package com.esotericsoftware.spine;
 
 import com.esotericsoftware.spine.Animation.MixBlend;
 import com.esotericsoftware.spine.Animation.MixDirection;
-import com.esotericsoftware.spine.Skeleton.Physics;
 
 /** Stores the setup pose for a {@link PhysicsConstraint}.
  * <p>
@@ -50,20 +49,20 @@ public class Slider implements Updatable {
 		this.data = data;
 		this.skeleton = skeleton;
 
-		setToSetupPose();
+		setupPose();
 	}
 
 	/** Copy constructor. */
 	public Slider (Slider slider, Skeleton skeleton) {
 		this(slider.data, skeleton);
-		setToSetupPose();
+		setupPose();
 	}
 
 	public void update (Physics physics) {
 		animation.apply(skeleton, time, time, false, null, mix, MixBlend.replace, MixDirection.in, true);
 	}
 
-	public void setToSetupPose () {
+	public void setupPose () {
 		SliderData data = this.data;
 		animation = data.animation;
 		time = data.time;
@@ -71,7 +70,7 @@ public class Slider implements Updatable {
 	}
 
 	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Skeleton.Physics)} because a skin is required and the
+	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
 	 * {@link Skeleton#getSkin() active skin} does not contain this item.
 	 * @see Skin#getBones()
 	 * @see Skin#getConstraints()

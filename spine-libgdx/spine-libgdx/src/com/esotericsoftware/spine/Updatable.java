@@ -29,8 +29,6 @@
 
 package com.esotericsoftware.spine;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
-
 /** The interface for items updated by {@link Skeleton#updateWorldTransform(Physics)}. */
 public interface Updatable {
 	/** @param physics Determines how physics and other non-deterministic updates are applied. */

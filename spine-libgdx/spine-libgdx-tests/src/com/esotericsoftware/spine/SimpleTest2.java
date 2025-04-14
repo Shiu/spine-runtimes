@@ -41,7 +41,6 @@ import com.badlogic.gdx.math.Vector3;
 
 import com.esotericsoftware.spine.AnimationState.AnimationStateListener;
 import com.esotericsoftware.spine.AnimationState.TrackEntry;
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.attachments.BoundingBoxAttachment;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
 
@@ -123,14 +122,14 @@ public class SimpleTest2 extends ApplicationAdapter {
 					BoundingBoxAttachment hit = bounds.containsPoint(point.x, point.y); // Check if inside a bounding box.
 					if (hit != null) {
 						System.out.println("hit: " + hit);
-						skeleton.findSlot("head").getColor().set(Color.RED); // Turn head red until touchUp.
+						skeleton.findSlot("head").getPose().getColor().set(Color.RED); // Turn head red until touchUp.
 					}
 				}
 				return true;
 			}
 
 			public boolean touchUp (int screenX, int screenY, int pointer, int button) {
-				skeleton.findSlot("head").getColor().set(Color.WHITE);
+				skeleton.findSlot("head").getPose().getColor().set(Color.WHITE);
 				return true;
 			}
 

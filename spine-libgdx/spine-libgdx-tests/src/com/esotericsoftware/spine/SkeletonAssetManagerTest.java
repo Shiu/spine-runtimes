@@ -38,7 +38,6 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.utils.SkeletonDataLoader;
 import com.esotericsoftware.spine.utils.SkeletonDataLoader.SkeletonDataParameter;
 

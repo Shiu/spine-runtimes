@@ -37,8 +37,6 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
-
 /** Demonstrates applying multiple animations at once using {@link AnimationState} tracks. */
 public class SimpleTest3 extends ApplicationAdapter {
 	OrthographicCamera camera;

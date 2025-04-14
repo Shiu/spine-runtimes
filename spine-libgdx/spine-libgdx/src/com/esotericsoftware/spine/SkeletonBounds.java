@@ -67,7 +67,7 @@ public class SkeletonBounds {
 		for (int i = 0; i < slotCount; i++) {
 			var slot = (Slot)slots[i];
 			if (!slot.bone.active) continue;
-			Attachment attachment = slot.attachment;
+			Attachment attachment = slot.applied.attachment;
 			if (attachment instanceof BoundingBoxAttachment boundingBox) {
 				boundingBoxes.add(boundingBox);
 

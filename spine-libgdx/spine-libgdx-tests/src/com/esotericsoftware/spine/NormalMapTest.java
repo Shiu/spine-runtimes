@@ -58,7 +58,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.esotericsoftware.spine.Animation.MixBlend;
 import com.esotericsoftware.spine.Animation.MixDirection;
-import com.esotericsoftware.spine.Skeleton.Physics;
 
 /** Demonstrates simplistic usage of lighting with normal maps.
  * <p>
@@ -107,7 +106,7 @@ public class NormalMapTest extends ApplicationAdapter {
 		if (animation == null) animation = skeletonData.getAnimations().first();
 
 		skeleton = new Skeleton(skeletonData);
-		skeleton.setToSetupPose();
+		skeleton.setupPose();
 		skeleton = new Skeleton(skeleton);
 		skeleton.setX(ui.prefs.getFloat("x", Gdx.graphics.getWidth() / 2));
 		skeleton.setY(ui.prefs.getFloat("y", Gdx.graphics.getHeight() / 4));

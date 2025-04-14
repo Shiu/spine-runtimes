@@ -54,7 +54,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import com.esotericsoftware.spine.Animation.MixBlend;
 import com.esotericsoftware.spine.Animation.MixDirection;
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.attachments.AtlasAttachmentLoader;
 import com.esotericsoftware.spine.attachments.RegionAttachment;
 import com.esotericsoftware.spine.attachments.Sequence;
@@ -116,8 +115,8 @@ public class Box2DExample extends ApplicationAdapter {
 		// Create a body for each attachment. Note it is probably better to create just a few bodies rather than one for each
 		// region attachment, but this is just an example.
 		for (Slot slot : skeleton.getSlots()) {
-			if (!(slot.getAttachment() instanceof Box2dAttachment)) continue;
-			Box2dAttachment attachment = (Box2dAttachment)slot.getAttachment();
+			if (!(slot.getPose().getAttachment() instanceof Box2dAttachment)) continue;
+			Box2dAttachment attachment = (Box2dAttachment)slot.getPose().getAttachment();
 
 			PolygonShape boxPoly = new PolygonShape();
 			boxPoly.setAsBox(attachment.getWidth() / 2 * attachment.getScaleX(), attachment.getHeight() / 2 * attachment.getScaleY(),
@@ -159,10 +158,10 @@ public class Box2DExample extends ApplicationAdapter {
 
 		// Position the physics body for each attachment.
 		for (Slot slot : skeleton.getSlots()) {
-			if (!(slot.getAttachment() instanceof Box2dAttachment)) continue;
-			Box2dAttachment attachment = (Box2dAttachment)slot.getAttachment();
+			if (!(slot.getAppliedPose().getAttachment() instanceof Box2dAttachment)) continue;
+			Box2dAttachment attachment = (Box2dAttachment)slot.getAppliedPose().getAttachment();
 			if (attachment.body == null) continue;
-			BoneApplied bone = slot.getBone().getApplied();
+			BoneApplied bone = slot.getBone().getAppliedPose();
 			float x = bone.getWorldX();
 			float y = bone.getWorldY();
 			float rotation = bone.getWorldRotationX();

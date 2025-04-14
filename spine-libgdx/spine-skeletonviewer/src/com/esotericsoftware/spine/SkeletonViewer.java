@@ -52,7 +52,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.esotericsoftware.spine.Animation.MixBlend;
 import com.esotericsoftware.spine.AnimationState.AnimationStateAdapter;
 import com.esotericsoftware.spine.AnimationState.TrackEntry;
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
 import org.lwjgl.system.Configuration;
 
@@ -260,11 +259,11 @@ public class SkeletonViewer extends ApplicationAdapter {
 			skeleton.setScale(scaleX, scaleY);
 
 			if (ui.setupPoseButton.isChecked())
-				skeleton.setToSetupPose();
+				skeleton.setupPose();
 			else if (ui.bonesSetupPoseButton.isChecked())
-				skeleton.setBonesToSetupPose();
+				skeleton.setupPoseBones();
 			else if (ui.slotsSetupPoseButton.isChecked()) //
-				skeleton.setSlotsToSetupPose();
+				skeleton.setupPoseSlots();
 
 			delta = Math.min(delta, 0.032f) * ui.speedSlider.getValue();
 			state.update(delta);

@@ -37,8 +37,6 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
-
 /** Demonstrates creating and configuring a new skin at runtime. */
 public class MixAndMatchTest extends ApplicationAdapter {
 	OrthographicCamera camera;

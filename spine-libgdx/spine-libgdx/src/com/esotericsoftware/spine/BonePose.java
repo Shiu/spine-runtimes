@@ -31,11 +31,7 @@ package com.esotericsoftware.spine;
 
 import com.esotericsoftware.spine.BoneData.Inherit;
 
-/** Stores a bone's current pose.
- * <p>
- * A bone has a local transform which is used to compute its world transform. A bone also has an applied transform, which is a
- * local transform that can be applied to compute the world transform. The local transform and applied transform may differ if a
- * constraint or application code modifies the world transform after it was computed from the local transform. */
+/** Stores a bone's local pose. */
 public class BonePose {
 	float x, y, rotation, scaleX, scaleY, shearX, shearY;
 	Inherit inherit;
@@ -43,8 +39,8 @@ public class BonePose {
 	BonePose () {
 	}
 
-	/** Copy constructor. */
-	public BonePose (BonePose bone) {
+	public void set (BonePose bone) {
+		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
 		x = bone.x;
 		y = bone.y;
 		rotation = bone.rotation;

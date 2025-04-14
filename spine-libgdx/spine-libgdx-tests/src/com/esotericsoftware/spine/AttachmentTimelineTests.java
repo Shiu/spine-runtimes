@@ -92,8 +92,8 @@ public class AttachmentTimelineTests {
 	private void test (float delta, Attachment attachment) {
 		state.update(delta);
 		state.apply(skeleton);
-		if (slot.getAttachment() != attachment)
-			throw new FailException("Wrong attachment: " + slot.getAttachment() + " != " + attachment);
+		if (slot.getPose().getAttachment() != attachment)
+			throw new FailException("Wrong attachment: " + slot.getPose().getAttachment() + " != " + attachment);
 
 	}
 

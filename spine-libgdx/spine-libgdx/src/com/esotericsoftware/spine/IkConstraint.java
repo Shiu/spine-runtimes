@@ -34,7 +34,6 @@ import static com.esotericsoftware.spine.utils.SpineUtils.*;
 import com.badlogic.gdx.utils.Array;
 
 import com.esotericsoftware.spine.BoneData.Inherit;
-import com.esotericsoftware.spine.Skeleton.Physics;
 
 /** Stores the current pose for an IK constraint. An IK constraint adjusts the rotation of 1 or 2 constrained bones so the tip of
  * the last bone is as close to the target bone as possible.
@@ -70,16 +69,16 @@ public class IkConstraint implements Updatable {
 
 		applied = new IkConstraint(data, bones, target);
 
-		setToSetupPose();
+		setupPose();
 	}
 
 	/** Copy constructor. */
 	public IkConstraint (IkConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-		setToSetupPose();
+		setupPose();
 	}
 
-	public void setToSetupPose () {
+	public void setupPose () {
 		IkConstraintData data = this.data;
 		mix = data.mix;
 		softness = data.softness;
@@ -168,7 +167,7 @@ public class IkConstraint implements Updatable {
 	}
 
 	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Skeleton.Physics)} because a skin is required and the
+	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
 	 * {@link Skeleton#getSkin() active skin} does not contain this item.
 	 * @see Skin#getBones()
 	 * @see Skin#getConstraints()
@@ -196,12 +195,12 @@ public class IkConstraint implements Updatable {
 		float rotationIK = -bone.shearX - bone.rotation, tx, ty;
 		switch (bone.inherit) {
 		case onlyTranslation:
-			tx = (targetX - bone.worldX) * Math.signum(bone.pose.skeleton.scaleX);
-			ty = (targetY - bone.worldY) * Math.signum(bone.pose.skeleton.scaleY);
+			tx = (targetX - bone.worldX) * Math.signum(bone.bone.skeleton.scaleX);
+			ty = (targetY - bone.worldY) * Math.signum(bone.bone.skeleton.scaleY);
 			break;
 		case noRotationOrReflection:
 			float s = Math.abs(pa * pd - pb * pc) / Math.max(0.0001f, pa * pa + pc * pc);
-			Skeleton skeleton = bone.pose.skeleton;
+			Skeleton skeleton = bone.bone.skeleton;
 			float sa = pa / skeleton.scaleX;
 			float sc = pc / skeleton.scaleY;
 			pb = -sc * s * skeleton.scaleX;
@@ -233,7 +232,7 @@ public class IkConstraint implements Updatable {
 				ty = targetY - bone.worldY;
 			}
 			}
-			float b = bone.pose.data.length * bone.scaleX;
+			float b = bone.bone.data.length * bone.scaleX;
 			if (b > 0.0001f) {
 				float dd = tx * tx + ty * ty;
 				if ((compress && dd < b * b) || (stretch && dd > b * b)) {
@@ -290,7 +289,7 @@ public class IkConstraint implements Updatable {
 		float id = a * d - b * c, x = cwx - pp.worldX, y = cwy - pp.worldY;
 		id = Math.abs(id) <= 0.0001f ? 0 : 1 / id;
 		float dx = (x * d - y * b) * id - px, dy = (y * a - x * c) * id - py;
-		float l1 = (float)Math.sqrt(dx * dx + dy * dy), l2 = child.pose.data.length * csx, a1, a2;
+		float l1 = (float)Math.sqrt(dx * dx + dy * dy), l2 = child.bone.data.length * csx, a1, a2;
 		if (l1 < 0.0001f) {
 			apply(parent, targetX, targetY, false, stretch, false, alpha);
 			child.rotation = 0;

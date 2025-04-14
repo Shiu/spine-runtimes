@@ -32,16 +32,12 @@ package com.esotericsoftware.spine;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Null;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
-
-/** Stores the setup pose for a {@link BonePose}. */
-public class BoneData {
+/** The setup pose for a bone. */
+public class BoneData extends BonePose {
 	final int index;
 	final String name;
 	@Null final BoneData parent;
 	float length;
-	float x, y, rotation, scaleX = 1, scaleY = 1, shearX, shearY;
-	Inherit inherit = Inherit.normal;
 	boolean skinRequired;
 
 	// Nonessential.
@@ -59,18 +55,11 @@ public class BoneData {
 
 	/** Copy constructor. */
 	public BoneData (BoneData bone, @Null BoneData parent) {
-		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
 		index = bone.index;
 		name = bone.name;
 		this.parent = parent;
 		length = bone.length;
-		x = bone.x;
-		y = bone.y;
-		rotation = bone.rotation;
-		scaleX = bone.scaleX;
-		scaleY = bone.scaleY;
-		shearX = bone.shearX;
-		shearY = bone.shearY;
+		set(bone);
 	}
 
 	/** The index of the bone in {@link Skeleton#getBones()}. */
@@ -94,89 +83,6 @@ public class BoneData {
 
 	public void setLength (float length) {
 		this.length = length;
-	}
-
-	/** The local x translation. */
-	public float getX () {
-		return x;
-	}
-
-	public void setX (float x) {
-		this.x = x;
-	}
-
-	/** The local y translation. */
-	public float getY () {
-		return y;
-	}
-
-	public void setY (float y) {
-		this.y = y;
-	}
-
-	public void setPosition (float x, float y) {
-		this.x = x;
-		this.y = y;
-	}
-
-	/** The local rotation in degrees, counter clockwise. */
-	public float getRotation () {
-		return rotation;
-	}
-
-	public void setRotation (float rotation) {
-		this.rotation = rotation;
-	}
-
-	/** The local scaleX. */
-	public float getScaleX () {
-		return scaleX;
-	}
-
-	public void setScaleX (float scaleX) {
-		this.scaleX = scaleX;
-	}
-
-	/** The local scaleY. */
-	public float getScaleY () {
-		return scaleY;
-	}
-
-	public void setScaleY (float scaleY) {
-		this.scaleY = scaleY;
-	}
-
-	public void setScale (float scaleX, float scaleY) {
-		this.scaleX = scaleX;
-		this.scaleY = scaleY;
-	}
-
-	/** The local shearX. */
-	public float getShearX () {
-		return shearX;
-	}
-
-	public void setShearX (float shearX) {
-		this.shearX = shearX;
-	}
-
-	/** The local shearX. */
-	public float getShearY () {
-		return shearY;
-	}
-
-	public void setShearY (float shearY) {
-		this.shearY = shearY;
-	}
-
-	/** Determines how parent world transforms affect this bone. */
-	public Inherit getInherit () {
-		return inherit;
-	}
-
-	public void setInherit (Inherit inherit) {
-		if (inherit == null) throw new IllegalArgumentException("inherit cannot be null.");
-		this.inherit = inherit;
 	}
 
 	/** When true, {@link Skeleton#updateWorldTransform(Physics)} only updates this bone if the {@link Skeleton#getSkin()} contains

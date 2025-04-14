@@ -36,7 +36,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Null;
 
-import com.esotericsoftware.spine.BonePose;
 import com.esotericsoftware.spine.BoneApplied;
 import com.esotericsoftware.spine.Slot;
 
@@ -177,10 +176,10 @@ public class RegionAttachment extends Attachment implements HasTextureRegion {
 	 * @param offset The <code>worldVertices</code> index to begin writing values.
 	 * @param stride The number of <code>worldVertices</code> entries between the value pairs written. */
 	public void computeWorldVertices (Slot slot, float[] worldVertices, int offset, int stride) {
-		if (sequence != null) sequence.apply(slot, this);
+		if (sequence != null) sequence.apply(slot.getAppliedPose(), this);
 
 		float[] vertexOffset = this.offset;
-		BoneApplied bone = slot.getBone().getApplied();
+		BoneApplied bone = slot.getBone().getAppliedPose();
 		float x = bone.getWorldX(), y = bone.getWorldY();
 		float a = bone.getA(), b = bone.getB(), c = bone.getC(), d = bone.getD();
 		float offsetX, offsetY;

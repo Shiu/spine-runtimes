@@ -30,13 +30,6 @@
 package com.esotericsoftware.spine;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.FloatArray;
-import com.badlogic.gdx.utils.Null;
-
-import com.esotericsoftware.spine.Animation.DeformTimeline;
-import com.esotericsoftware.spine.attachments.Attachment;
-import com.esotericsoftware.spine.attachments.Sequence;
-import com.esotericsoftware.spine.attachments.VertexAttachment;
 
 /** Stores a slot's current pose. Slots organize attachments for {@link Skeleton#drawOrder} purposes and provide a place to store
  * state for an attachment. State cannot be stored in an attachment itself because attachments are stateless and may be shared
@@ -44,35 +37,19 @@ import com.esotericsoftware.spine.attachments.VertexAttachment;
 public class Slot {
 	final SlotData data;
 	final Bone bone;
-	Slot applied;
-
-	final Color color = new Color();
-	@Null final Color darkColor;
-	@Null Attachment attachment;
-	int sequenceIndex;
-	FloatArray deform;
-
+	final SlotPose pose = new SlotPose(), applied = new SlotPose();
 	int attachmentState;
 
-	private Slot (SlotData data, Bone bone) {
-		this.data = data;
-		this.bone = bone;
-
-		darkColor = data.darkColor == null ? null : new Color();
-	}
-
 	public Slot (SlotData data, Skeleton skeleton) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
+		if (data == null) throw new IllegalArgumentException("slot cannot be null.");
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 		this.data = data;
-		this.bone = skeleton.bones.get(data.boneData.index);
-
-		darkColor = data.darkColor == null ? null : new Color();
-		deform = new FloatArray();
-
-		applied = new Slot(data, bone);
-
-		setToSetupPose();
+		bone = skeleton.bones.get(data.boneData.index);
+		if (data.darkColor != null) {
+			pose.darkColor = new Color();
+			applied.darkColor = new Color();
+		}
+		setupPose();
 	}
 
 	/** Copy constructor. */
@@ -81,16 +58,32 @@ public class Slot {
 		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
 		data = slot.data;
 		this.bone = bone;
-		color.set(slot.color);
-		darkColor = slot.darkColor == null ? null : new Color(slot.darkColor);
-		attachment = slot.attachment;
-		sequenceIndex = slot.sequenceIndex;
-		deform = new FloatArray(slot.deform);
+		if (data.darkColor != null) {
+			pose.darkColor = new Color();
+			applied.darkColor = new Color();
+		}
+		pose.set(slot.pose);
+	}
+
+	/** Sets this slot to the setup pose. */
+	public void setupPose () {
+		pose.set(data);
+		if (data.attachmentName != null) pose.setAttachment(bone.skeleton.getAttachment(data.index, data.attachmentName));
 	}
 
 	/** The slot's setup pose data. */
 	public SlotData getData () {
 		return data;
+	}
+
+	/** Returns the slot's pose. */
+	public SlotPose getPose () {
+		return pose;
+	}
+
+	/** Returns the slot's applied pose. */
+	public SlotPose getAppliedPose () {
+		return applied;
 	}
 
 	/** The bone this slot belongs to. */
@@ -101,76 +94,6 @@ public class Slot {
 	/** The skeleton this slot belongs to. */
 	public Skeleton getSkeleton () {
 		return bone.skeleton;
-	}
-
-	/** The color used to tint the slot's attachment. If {@link #getDarkColor()} is set, this is used as the light color for two
-	 * color tinting. */
-	public Color getColor () {
-		return color;
-	}
-
-	/** The dark color used to tint the slot's attachment for two color tinting, or null if two color tinting is not used. The dark
-	 * color's alpha is not used. */
-	public @Null Color getDarkColor () {
-		return darkColor;
-	}
-
-	/** The current attachment for the slot, or null if the slot has no attachment. */
-	public @Null Attachment getAttachment () {
-		return attachment;
-	}
-
-	/** Sets the slot's attachment and, if the attachment changed, resets {@link #sequenceIndex} and clears the {@link #deform}.
-	 * The deform is not cleared if the old attachment has the same {@link VertexAttachment#getTimelineAttachment()} as the
-	 * specified attachment. */
-	public void setAttachment (@Null Attachment attachment) {
-		if (this.attachment == attachment) return;
-		if (!(attachment instanceof VertexAttachment newAttachment) || !(this.attachment instanceof VertexAttachment oldAttachment)
-			|| newAttachment.getTimelineAttachment() != oldAttachment.getTimelineAttachment()) {
-			deform.clear();
-		}
-		this.attachment = attachment;
-		sequenceIndex = -1;
-	}
-
-	/** The index of the texture region to display when the slot's attachment has a {@link Sequence}. -1 represents the
-	 * {@link Sequence#getSetupIndex()}. */
-	public int getSequenceIndex () {
-		return sequenceIndex;
-	}
-
-	public void setSequenceIndex (int sequenceIndex) {
-		this.sequenceIndex = sequenceIndex;
-	}
-
-	/** Values to deform the slot's attachment. For an unweighted mesh, the entries are local positions for each vertex. For a
-	 * weighted mesh, the entries are an offset for each vertex which will be added to the mesh's local vertex positions.
-	 * <p>
-	 * See {@link VertexAttachment#computeWorldVertices(Slot, int, int, float[], int, int)} and {@link DeformTimeline}. */
-	public FloatArray getDeform () {
-		return deform;
-	}
-
-	public void setDeform (FloatArray deform) {
-		if (deform == null) throw new IllegalArgumentException("deform cannot be null.");
-		this.deform = deform;
-	}
-
-	/** Sets this slot to the setup pose. */
-	public void setToSetupPose () {
-		color.set(data.color);
-		if (darkColor != null) darkColor.set(data.darkColor);
-		if (data.attachmentName == null)
-			setAttachment(null);
-		else {
-			attachment = null;
-			setAttachment(bone.skeleton.getAttachment(data.index, data.attachmentName));
-		}
-	}
-
-	/** Returns the bone for applied pose. */
-	public Slot getApplied () {
-		return applied;
 	}
 
 	public String toString () {

@@ -80,10 +80,11 @@ public class SkeletonRenderer {
 		for (int i = 0, n = skeleton.drawOrder.size; i < n; i++) {
 			var slot = (Slot)drawOrder[i];
 			if (!slot.bone.active) continue;
-			Attachment attachment = slot.attachment;
+			SlotPose pose = slot.getAppliedPose();
+			Attachment attachment = pose.attachment;
 			if (attachment instanceof RegionAttachment region) {
 				region.computeWorldVertices(slot, vertices, 0, 5);
-				Color color = region.getColor(), slotColor = slot.getColor();
+				Color color = region.getColor(), slotColor = pose.getColor();
 				float alpha = a * slotColor.a * color.a * 255;
 				float multiplier = pmaColors ? alpha : 255;
 
@@ -148,8 +149,9 @@ public class SkeletonRenderer {
 				clipper.clipEnd(slot);
 				continue;
 			}
+			SlotPose pose = slot.getAppliedPose();
 			Texture texture = null;
-			Attachment attachment = slot.attachment;
+			Attachment attachment = pose.attachment;
 			if (attachment instanceof RegionAttachment region) {
 				verticesLength = 20;
 				vertices = this.vertices.items;
@@ -179,7 +181,7 @@ public class SkeletonRenderer {
 			}
 
 			if (texture != null) {
-				Color slotColor = slot.getColor();
+				Color slotColor = pose.getColor();
 				float alpha = a * slotColor.a * color.a * 255;
 				float multiplier = pmaColors ? alpha : 255;
 
@@ -242,8 +244,9 @@ public class SkeletonRenderer {
 				clipper.clipEnd(slot);
 				continue;
 			}
+			SlotPose pose = slot.getAppliedPose();
 			Texture texture = null;
-			Attachment attachment = slot.attachment;
+			Attachment attachment = pose.attachment;
 			if (attachment instanceof RegionAttachment region) {
 				verticesLength = 24;
 				vertices = this.vertices.items;
@@ -273,7 +276,7 @@ public class SkeletonRenderer {
 			}
 
 			if (texture != null) {
-				Color lightColor = slot.getColor();
+				Color lightColor = pose.getColor();
 				float alpha = a * lightColor.a * color.a * 255;
 				float multiplier = pmaColors ? alpha : 255;
 
@@ -294,7 +297,7 @@ public class SkeletonRenderer {
 					| (int)(blue * lightColor.b) << 16 //
 					| (int)(green * lightColor.g) << 8 //
 					| (int)(red * lightColor.r));
-				Color darkColor = slot.getDarkColor();
+				Color darkColor = pose.getDarkColor();
 				float dark = darkColor == null ? 0
 					: NumberUtils.intToFloatColor((int)(blue * darkColor.b) << 16 //
 						| (int)(green * darkColor.g) << 8 //

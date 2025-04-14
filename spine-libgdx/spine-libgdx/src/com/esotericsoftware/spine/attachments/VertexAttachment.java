@@ -34,14 +34,14 @@ import static com.esotericsoftware.spine.utils.SpineUtils.*;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Null;
 
-import com.esotericsoftware.spine.BonePose;
-import com.esotericsoftware.spine.BoneApplied;
 import com.esotericsoftware.spine.Bone;
+import com.esotericsoftware.spine.BoneApplied;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.Slot;
+import com.esotericsoftware.spine.SlotPose;
 
 /** Base class for an attachment with vertices that are transformed by one or more bones and can be deformed by a slot's
- * {@link Slot#getDeform()}. */
+ * {@link SlotPose#getDeform()}. */
 abstract public class VertexAttachment extends Attachment {
 	static private int nextID;
 
@@ -75,8 +75,8 @@ abstract public class VertexAttachment extends Attachment {
 		worldVerticesLength = other.worldVerticesLength;
 	}
 
-	/** Transforms the attachment's local {@link #getVertices()} to world coordinates. If the slot's {@link Slot#getDeform()} is
-	 * not empty, it is used to deform the vertices.
+	/** Transforms the attachment's local {@link #getVertices()} to world coordinates. If the slot's {@link SlotPose#getDeform()}
+	 * is not empty, it is used to deform the vertices.
 	 * <p>
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide.
@@ -88,12 +88,12 @@ abstract public class VertexAttachment extends Attachment {
 	 * @param stride The number of <code>worldVertices</code> entries between the value pairs written. */
 	public void computeWorldVertices (Slot slot, int start, int count, float[] worldVertices, int offset, int stride) {
 		count = offset + (count >> 1) * stride;
-		FloatArray deformArray = slot.getDeform();
+		FloatArray deformArray = slot.getAppliedPose().getDeform();
 		float[] vertices = this.vertices;
 		int[] bones = this.bones;
 		if (bones == null) {
 			if (deformArray.size > 0) vertices = deformArray.items;
-			BoneApplied bone = slot.getBone().getApplied();
+			BoneApplied bone = slot.getBone().getAppliedPose();
 			float x = bone.getWorldX(), y = bone.getWorldY();
 			float a = bone.getA(), b = bone.getB(), c = bone.getC(), d = bone.getD();
 			for (int v = start, w = offset; w < count; v += 2, w += stride) {
@@ -116,7 +116,7 @@ abstract public class VertexAttachment extends Attachment {
 				int n = bones[v++];
 				n += v;
 				for (; v < n; v++, b += 3) {
-					BoneApplied bone = ((Bone)skeletonBones[bones[v]]).getApplied();
+					BoneApplied bone = ((Bone)skeletonBones[bones[v]]).getAppliedPose();
 					float vx = vertices[b], vy = vertices[b + 1], weight = vertices[b + 2];
 					wx += (vx * bone.getA() + vy * bone.getB() + bone.getWorldX()) * weight;
 					wy += (vx * bone.getC() + vy * bone.getD() + bone.getWorldY()) * weight;
@@ -131,7 +131,7 @@ abstract public class VertexAttachment extends Attachment {
 				int n = bones[v++];
 				n += v;
 				for (; v < n; v++, b += 3, f += 2) {
-					BoneApplied bone = ((Bone)skeletonBones[bones[v]]).getApplied();
+					BoneApplied bone = ((Bone)skeletonBones[bones[v]]).getAppliedPose();
 					float vx = vertices[b] + deform[f], vy = vertices[b + 1] + deform[f + 1], weight = vertices[b + 2];
 					wx += (vx * bone.getA() + vy * bone.getB() + bone.getWorldX()) * weight;
 					wy += (vx * bone.getC() + vy * bone.getD() + bone.getWorldY()) * weight;

@@ -32,9 +32,7 @@ package com.esotericsoftware.spine;
 import static com.badlogic.gdx.math.MathUtils.*;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Null;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.TransformConstraintData.FromProperty;
 import com.esotericsoftware.spine.TransformConstraintData.ToProperty;
 
@@ -70,16 +68,16 @@ public class TransformConstraint implements Updatable {
 
 		applied = new TransformConstraint(data, bones, source);
 
-		setToSetupPose();
+		setupPose();
 	}
 
 	/** Copy constructor. */
 	public TransformConstraint (TransformConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-		setToSetupPose();
+		setupPose();
 	}
 
-	public void setToSetupPose () {
+	public void setupPose () {
 		TransformConstraintData data = this.data;
 		mixRotate = data.mixRotate;
 		mixX = data.mixX;
@@ -196,7 +194,7 @@ public class TransformConstraint implements Updatable {
 	}
 
 	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Skeleton.Physics)} because a skin is required and the
+	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
 	 * {@link Skeleton#getSkin() active skin} does not contain this item.
 	 * @see Skin#getBones()
 	 * @see Skin#getConstraints()

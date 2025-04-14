@@ -31,8 +31,6 @@ package com.esotericsoftware.spine;
 
 import static com.esotericsoftware.spine.utils.SpineUtils.*;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
-
 /** Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
@@ -69,13 +67,13 @@ public class PhysicsConstraint implements Updatable {
 
 		applied = new PhysicsConstraint(data, skeleton, bone);
 
-		setToSetupPose();
+		setupPose();
 	}
 
 	/** Copy constructor. */
 	public PhysicsConstraint (PhysicsConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-		setToSetupPose();
+		setupPose();
 	}
 
 	public void reset () {
@@ -92,7 +90,7 @@ public class PhysicsConstraint implements Updatable {
 		scaleVelocity = 0;
 	}
 
-	public void setToSetupPose () {
+	public void setupPose () {
 		PhysicsConstraintData data = this.data;
 		inertia = data.inertia;
 		strength = data.strength;
@@ -127,7 +125,7 @@ public class PhysicsConstraint implements Updatable {
 
 		boolean x = data.x > 0, y = data.y > 0, rotateOrShearX = data.rotate > 0 || data.shearX > 0, scaleX = data.scaleX > 0;
 		BoneApplied bone = this.bone;
-		float l = bone.pose.data.length;
+		float l = bone.bone.data.length;
 
 		switch (physics) {
 		case none:
@@ -352,7 +350,7 @@ public class PhysicsConstraint implements Updatable {
 	}
 
 	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Skeleton.Physics)} because a skin is required and the
+	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
 	 * {@link Skeleton#getSkin() active skin} does not contain this item.
 	 * @see Skin#getBones()
 	 * @see Skin#getConstraints()

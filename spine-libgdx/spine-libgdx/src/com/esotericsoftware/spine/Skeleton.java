@@ -273,20 +273,20 @@ public class Skeleton {
 	}
 
 	private void sortIkConstraint (IkConstraint constraint) {
-		constraint.active = constraint.target.pose.active
+		constraint.active = constraint.target.bone.active
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
 
-		sortBone(constraint.target.pose);
+		sortBone(constraint.target.bone);
 
 		Array<BoneApplied> constrained = constraint.bones;
-		Bone parent = constrained.first().pose;
+		Bone parent = constrained.first().bone;
 		sortBone(parent);
 		if (constrained.size == 1) {
 			updateCache.add(constraint);
 			sortReset(parent.children);
 		} else {
-			Bone child = constrained.peek().pose;
+			Bone child = constrained.peek().bone;
 			sortBone(child);
 
 			updateCache.add(constraint);
@@ -297,31 +297,31 @@ public class Skeleton {
 	}
 
 	private void sortTransformConstraint (TransformConstraint constraint) {
-		constraint.active = constraint.source.pose.active
+		constraint.active = constraint.source.bone.active
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
 
-		sortBone(constraint.source.pose);
+		sortBone(constraint.source.bone);
 
 		Object[] constrained = constraint.bones.items;
 		int boneCount = constraint.bones.size;
 		if (constraint.data.localSource) {
 			for (int i = 0; i < boneCount; i++) {
-				Bone child = ((BoneApplied)constrained[i]).pose;
+				Bone child = ((BoneApplied)constrained[i]).bone;
 				sortBone(child.parent);
 				sortBone(child);
 			}
 		} else {
 			for (int i = 0; i < boneCount; i++)
-				sortBone(((BoneApplied)constrained[i]).pose);
+				sortBone(((BoneApplied)constrained[i]).bone);
 		}
 
 		updateCache.add(constraint);
 
 		for (int i = 0; i < boneCount; i++)
-			sortReset(((BoneApplied)constrained[i]).pose.children);
+			sortReset(((BoneApplied)constrained[i]).bone.children);
 		for (int i = 0; i < boneCount; i++)
-			((BoneApplied)constrained[i]).pose.sorted = true;
+			((BoneApplied)constrained[i]).bone.sorted = true;
 	}
 
 	private void sortPathConstraint (PathConstraint constraint) {
@@ -336,12 +336,12 @@ public class Skeleton {
 		if (data.defaultSkin != null && data.defaultSkin != skin)
 			sortPathConstraintAttachment(data.defaultSkin, slotIndex, slotBone);
 
-		sortPathConstraintAttachment(slot.attachment, slotBone);
+		sortPathConstraintAttachment(slot.pose.attachment, slotBone);
 
 		Object[] constrained = constraint.bones.items;
 		int boneCount = constraint.bones.size;
 		for (int i = 0; i < boneCount; i++)
-			sortBone(((BoneApplied)constrained[i]).pose);
+			sortBone(((BoneApplied)constrained[i]).bone);
 
 		updateCache.add(constraint);
 
@@ -370,13 +370,13 @@ public class Skeleton {
 				int nn = pathBones[i++];
 				nn += i;
 				while (i < nn)
-					sortBone(((BoneApplied)bones[pathBones[i++]]).pose);
+					sortBone(((BoneApplied)bones[pathBones[i++]]).bone);
 			}
 		}
 	}
 
 	private void sortPhysicsConstraint (PhysicsConstraint constraint) {
-		Bone bone = constraint.bone.pose;
+		Bone bone = constraint.bone.bone;
 		constraint.active = bone.active
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
@@ -415,27 +415,12 @@ public class Skeleton {
 		Object[] bones = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++) {
 			var bone = (Bone)bones[i];
-			if (!bone.active) continue;
-			BoneApplied applied = bone.applied;
-			applied.x = bone.x;
-			applied.y = bone.y;
-			applied.rotation = bone.rotation;
-			applied.scaleX = bone.scaleX;
-			applied.scaleY = bone.scaleY;
-			applied.shearX = bone.shearX;
-			applied.shearY = bone.shearY;
-			applied.inherit = bone.inherit;
+			if (bone.active) bone.applied.set(bone.pose);
 		}
 		Object[] slots = this.slots.items;
 		for (int i = 0, n = this.slots.size; i < n; i++) {
 			var slot = (Slot)slots[i];
-			if (!slot.bone.active) continue;
-			Slot applied = slot.applied;
-			applied.color.set(slot.color);
-			if (applied.darkColor != null) applied.darkColor.set(slot.darkColor);
-			applied.attachment = slot.attachment;
-			applied.sequenceIndex = slot.sequenceIndex;
-			applied.deform = slot.deform;
+			if (slot.bone.active) slot.applied.set(slot.pose);
 		}
 		// BOZO! - Reset the rest.
 
@@ -455,15 +440,7 @@ public class Skeleton {
 		Object[] bones = this.bones.items;
 		for (int i = 1, n = this.bones.size; i < n; i++) { // Skip root bone.
 			var bone = (Bone)bones[i];
-			BoneApplied applied = bone.applied;
-			applied.x = bone.x;
-			applied.y = bone.y;
-			applied.rotation = bone.rotation;
-			applied.scaleX = bone.scaleX;
-			applied.scaleY = bone.scaleY;
-			applied.shearX = bone.shearX;
-			applied.shearY = bone.shearY;
-			applied.inherit = bone.inherit;
+			if (bone.active) bone.applied.set(bone.pose);
 		}
 		// BOZO! - Reset the rest.
 
@@ -493,45 +470,45 @@ public class Skeleton {
 	}
 
 	/** Sets the bones, constraints, slots, and draw order to their setup pose values. */
-	public void setToSetupPose () {
-		setBonesToSetupPose();
-		setSlotsToSetupPose();
+	public void setupPose () {
+		setupPoseBones();
+		setupPoseSlots();
 	}
 
 	/** Sets the bones and constraints to their setup pose values. */
-	public void setBonesToSetupPose () {
+	public void setupPoseBones () {
 		Object[] bones = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++)
-			((Bone)bones[i]).setToSetupPose();
+			((Bone)bones[i]).setupPose();
 
 		Object[] constraints = sliders.items;
 		for (int i = 0, n = sliders.size; i < n; i++)
-			((Slider)constraints[i]).setToSetupPose();
+			((Slider)constraints[i]).setupPose();
 
 		constraints = ikConstraints.items;
 		for (int i = 0, n = ikConstraints.size; i < n; i++)
-			((IkConstraint)constraints[i]).setToSetupPose();
+			((IkConstraint)constraints[i]).setupPose();
 
 		constraints = transformConstraints.items;
 		for (int i = 0, n = transformConstraints.size; i < n; i++)
-			((TransformConstraint)constraints[i]).setToSetupPose();
+			((TransformConstraint)constraints[i]).setupPose();
 
 		constraints = pathConstraints.items;
 		for (int i = 0, n = pathConstraints.size; i < n; i++)
-			((PathConstraint)constraints[i]).setToSetupPose();
+			((PathConstraint)constraints[i]).setupPose();
 
 		constraints = physicsConstraints.items;
 		for (int i = 0, n = physicsConstraints.size; i < n; i++)
-			((PhysicsConstraint)constraints[i]).setToSetupPose();
+			((PhysicsConstraint)constraints[i]).setupPose();
 	}
 
 	/** Sets the slots and draw order to their setup pose values. */
-	public void setSlotsToSetupPose () {
+	public void setupPoseSlots () {
 		Object[] slots = this.slots.items;
 		int n = this.slots.size;
 		arraycopy(slots, 0, drawOrder.items, 0, n);
 		for (int i = 0; i < n; i++)
-			((Slot)slots[i]).setToSetupPose();
+			((Slot)slots[i]).setupPose();
 	}
 
 	/** The skeleton's setup pose data. */
@@ -614,9 +591,8 @@ public class Skeleton {
 	 * old skin, each slot's setup mode attachment is attached from the new skin.
 	 * <p>
 	 * After changing the skin, the visible attachments can be reset to those attached in the setup pose by calling
-	 * {@link #setSlotsToSetupPose()}. Also, often {@link AnimationState#apply(Skeleton)} is called before the next time the
-	 * skeleton is rendered to allow any attachment keys in the current animation(s) to hide or show attachments from the new
-	 * skin. */
+	 * {@link #setupPoseSlots()}. Also, often {@link AnimationState#apply(Skeleton)} is called before the next time the skeleton is
+	 * rendered to allow any attachment keys in the current animation(s) to hide or show attachments from the new skin. */
 	public void setSkin (@Null Skin newSkin) {
 		if (newSkin == skin) return;
 		if (newSkin != null) {
@@ -629,7 +605,7 @@ public class Skeleton {
 					String name = slot.data.attachmentName;
 					if (name != null) {
 						Attachment attachment = newSkin.getAttachment(i, name);
-						if (attachment != null) slot.setAttachment(attachment);
+						if (attachment != null) slot.pose.setAttachment(attachment);
 					}
 				}
 			}
@@ -663,7 +639,7 @@ public class Skeleton {
 	}
 
 	/** A convenience method to set an attachment by finding the slot with {@link #findSlot(String)}, finding the attachment with
-	 * {@link #getAttachment(int, String)}, then setting the slot's {@link Slot#attachment}.
+	 * {@link #getAttachment(int, String)}, then setting the slot's {@link SlotPose#attachment}.
 	 * @param attachmentName May be null to clear the slot's attachment. */
 	public void setAttachment (String slotName, @Null String attachmentName) {
 		if (slotName == null) throw new IllegalArgumentException("slotName cannot be null.");
@@ -675,7 +651,7 @@ public class Skeleton {
 			if (attachment == null)
 				throw new IllegalArgumentException("Attachment not found: " + attachmentName + ", for slot: " + slotName);
 		}
-		slot.setAttachment(attachment);
+		slot.pose.setAttachment(attachment);
 	}
 
 	/** The skeleton's sliders. */
@@ -789,7 +765,7 @@ public class Skeleton {
 			int verticesLength = 0;
 			float[] vertices = null;
 			short[] triangles = null;
-			Attachment attachment = slot.attachment;
+			Attachment attachment = slot.pose.attachment;
 			if (attachment instanceof RegionAttachment region) {
 				verticesLength = 8;
 				vertices = temp.setSize(8);
@@ -932,20 +908,5 @@ public class Skeleton {
 
 	public String toString () {
 		return data.name != null ? data.name : super.toString();
-	}
-
-	/** Determines how physics and other non-deterministic updates are applied. */
-	static public enum Physics {
-		/** Physics are not updated or applied. */
-		none,
-
-		/** Physics are reset to the current pose. */
-		reset,
-
-		/** Physics are updated and the pose from physics is applied. */
-		update,
-
-		/** Physics are not updated but the pose from physics is applied. */
-		pose
 	}
 }

@@ -34,7 +34,6 @@ import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.Animation.MixBlend;
 import com.esotericsoftware.spine.Animation.MixDirection;
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.attachments.AttachmentLoader;
 import com.esotericsoftware.spine.attachments.BoundingBoxAttachment;
 import com.esotericsoftware.spine.attachments.ClippingAttachment;
@@ -76,7 +75,7 @@ public class BonePlotting {
 
 		SkeletonData skeletonData = json.readSkeletonData(new FileHandle("assets/spineboy/spineboy-ess.json"));
 		Skeleton skeleton = new Skeleton(skeletonData);
-		BoneApplied bone = skeleton.findBone("gun-tip").getApplied();
+		BoneApplied bone = skeleton.findBone("gun-tip").getAppliedPose();
 
 		// Pose the skeleton at regular intervals throughout each animation.
 		float fps = 1 / 15f;

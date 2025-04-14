@@ -33,7 +33,7 @@ import static com.esotericsoftware.spine.utils.SpineUtils.*;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import com.esotericsoftware.spine.Slot;
+import com.esotericsoftware.spine.SlotPose;
 
 public class Sequence {
 	static private int nextID;
@@ -56,7 +56,7 @@ public class Sequence {
 		setupIndex = other.setupIndex;
 	}
 
-	public void apply (Slot slot, HasTextureRegion attachment) {
+	public void apply (SlotPose slot, HasTextureRegion attachment) {
 		int index = slot.getSequenceIndex();
 		if (index == -1) index = setupIndex;
 		if (index >= regions.length) index = regions.length - 1;

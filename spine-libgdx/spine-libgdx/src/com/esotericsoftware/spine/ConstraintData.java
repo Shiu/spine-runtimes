@@ -29,8 +29,6 @@
 
 package com.esotericsoftware.spine;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
-
 /** The base class for all constraint datas. */
 abstract public class ConstraintData {
 	final String name;

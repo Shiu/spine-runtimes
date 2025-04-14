@@ -32,18 +32,19 @@ package com.esotericsoftware.spine;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Null;
 
-/** Stores a bone's current pose.
+// BOZO - Update javadocs.
+/** The current pose for a bone, before constraints are applied.
  * <p>
  * A bone has a local transform which is used to compute its world transform. A bone also has an applied transform, which is a
  * local transform that can be applied to compute the world transform. The local transform and applied transform may differ if a
  * constraint or application code modifies the world transform after it was computed from the local transform. */
-public class Bone extends BonePose {
+public class Bone {
 	final BoneData data;
 	final Skeleton skeleton;
 	@Null final Bone parent;
-	final Array<Bone> children;
+	final Array<Bone> children = new Array();
+	final BonePose pose = new BonePose();
 	final BoneApplied applied = new BoneApplied(this);
-
 	boolean sorted, active;
 
 	public Bone (BoneData data, Skeleton skeleton, @Null Bone parent) {
@@ -52,36 +53,35 @@ public class Bone extends BonePose {
 		this.data = data;
 		this.skeleton = skeleton;
 		this.parent = parent;
-		children = new Array();
-
-		setToSetupPose();
+		setupPose();
 	}
 
 	/** Copy constructor. Does not copy the {@link #getChildren()} bones. */
 	public Bone (Bone bone, Skeleton skeleton, @Null Bone parent) {
-		super(bone);
+		this.data = bone.data;
 		this.skeleton = skeleton;
 		this.parent = parent;
-		children = new Array();
-		data = bone.data;
+		pose.set(bone.pose);
 	}
 
 	/** Sets this bone's local transform to the setup pose. */
-	public void setToSetupPose () {
-		BoneData data = this.data;
-		x = data.x;
-		y = data.y;
-		rotation = data.rotation;
-		scaleX = data.scaleX;
-		scaleY = data.scaleY;
-		shearX = data.shearX;
-		shearY = data.shearY;
-		inherit = data.inherit;
+	public void setupPose () {
+		pose.set(data);
 	}
 
 	/** The bone's setup pose data. */
 	public BoneData getData () {
 		return data;
+	}
+
+	/** Returns the bone's pose. */
+	public BonePose getPose () {
+		return pose;
+	}
+
+	/** Returns the bone's applied pose. */
+	public BoneApplied getAppliedPose () {
+		return applied;
 	}
 
 	/** The skeleton this bone belongs to. */
@@ -99,20 +99,14 @@ public class Bone extends BonePose {
 		return children;
 	}
 
-	/** Returns false when this bone won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Skeleton.Physics)} because a skin is required and the
-	 * {@link Skeleton#getSkin() active skin} does not contain this item.
+	/** Returns false when this bone won't be updated by {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)}
+	 * because a skin is required and the {@link Skeleton#getSkin() active skin} does not contain this item.
 	 * @see Skin#getBones()
 	 * @see Skin#getConstraints()
 	 * @see BoneData#getSkinRequired()
 	 * @see Skeleton#updateCache() */
 	public boolean isActive () {
 		return active;
-	}
-
-	/** Returns the bone for applied pose. */
-	public BoneApplied getApplied () {
-		return applied;
 	}
 
 	public String toString () {

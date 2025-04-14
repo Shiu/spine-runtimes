@@ -9,16 +9,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.BoneData.Inherit;
-import com.esotericsoftware.spine.Skeleton.Physics;
 
+/** The applied pose for a bone. This is the {@link Bone} pose with constraints applied and the world transform computed by
+ * {@link Skeleton#updateWorldTransform(Physics)}. */
 public class BoneApplied extends BonePose implements Updatable {
-	final Bone pose;
+	final Bone bone;
 	@Null final BoneApplied parent;
 	float a, b, worldX;
 	float c, d, worldY;
 
 	BoneApplied (Bone bone) {
-		pose = bone;
+		this.bone = bone;
 		parent = bone.parent == null ? null : bone.parent.applied;
 	}
 
@@ -36,10 +37,9 @@ public class BoneApplied extends BonePose implements Updatable {
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
 	public void update (Physics physics) {
-		Skeleton skeleton = pose.skeleton;
-
 		BoneApplied parent = this.parent;
 		if (parent == null) { // Root bone.
+			Skeleton skeleton = bone.skeleton;
 			float sx = skeleton.scaleX, sy = skeleton.scaleY;
 			float rx = (rotation + shearX) * degRad;
 			float ry = (rotation + 90 + shearY) * degRad;
@@ -79,7 +79,7 @@ public class BoneApplied extends BonePose implements Updatable {
 			d = sin(ry) * scaleY;
 		}
 		case noRotationOrReflection -> {
-			float sx = 1 / skeleton.scaleX, sy = 1 / skeleton.scaleY;
+			float sx = 1 / bone.skeleton.scaleX, sy = 1 / bone.skeleton.scaleY;
 			pa *= sx;
 			pc *= sy;
 			float s = pa * pa + pc * pc, prx;
@@ -105,6 +105,7 @@ public class BoneApplied extends BonePose implements Updatable {
 			d = pc * lb + pd * ld;
 		}
 		case noScale, noScaleOrReflection -> {
+			Skeleton skeleton = bone.skeleton;
 			rotation *= degRad;
 			float cos = cos(rotation), sin = sin(rotation);
 			float za = (pa * cos + pb * sin) / skeleton.scaleX;
@@ -130,6 +131,7 @@ public class BoneApplied extends BonePose implements Updatable {
 			d = zc * lb + zd * ld;
 		}
 		}
+		Skeleton skeleton = bone.skeleton;
 		a *= skeleton.scaleX;
 		b *= skeleton.scaleX;
 		c *= skeleton.scaleY;
@@ -145,12 +147,10 @@ public class BoneApplied extends BonePose implements Updatable {
 	 * Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The local transform after
 	 * calling this method is equivalent to the local transform used to compute the world transform, but may not be identical. */
 	public void updateLocalTransform () {
-		Skeleton skeleton = pose.skeleton;
-
 		BoneApplied parent = this.parent;
 		if (parent == null) {
-			x = worldX - skeleton.x;
-			y = worldY - skeleton.y;
+			x = worldX - bone.skeleton.x;
+			y = worldY - bone.skeleton.y;
 			float a = this.a, b = this.b, c = this.c, d = this.d;
 			rotation = atan2Deg(c, a);
 			scaleX = (float)Math.sqrt(a * a + c * c);
@@ -174,6 +174,7 @@ public class BoneApplied extends BonePose implements Updatable {
 			rc = c;
 			rd = d;
 		} else {
+			Skeleton skeleton = bone.skeleton;
 			switch (inherit) {
 			case noRotationOrReflection -> {
 				float s = Math.abs(pa * pd - pb * pc) / (pa * pa + pc * pc);
@@ -370,5 +371,9 @@ public class BoneApplied extends BonePose implements Updatable {
 		b = cos * rb - sin * d;
 		c = sin * ra + cos * c;
 		d = sin * rb + cos * d;
+	}
+
+	public String toString () {
+		return bone.data.name;
 	}
 }

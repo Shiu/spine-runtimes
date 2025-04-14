@@ -278,7 +278,7 @@ public class AnimationState {
 			var slot = (Slot)slots[i];
 			if (slot.attachmentState == setupState) {
 				String attachmentName = slot.data.attachmentName;
-				slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
+				slot.getPose().setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
 			}
 		}
 		unkeyedState += 2; // Increasing after each use avoids the need to reset attachmentState for every slot.
@@ -399,7 +399,7 @@ public class AnimationState {
 	}
 
 	private void setAttachment (Skeleton skeleton, Slot slot, String attachmentName, boolean attachments) {
-		slot.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
+		slot.getPose().setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
 		if (attachments) slot.attachmentState = unkeyedState + CURRENT;
 	}
 
@@ -417,21 +417,22 @@ public class AnimationState {
 
 		Bone bone = skeleton.bones.get(timeline.boneIndex);
 		if (!bone.active) return;
+		BonePose pose = bone.getPose();
 		float[] frames = timeline.frames;
 		float r1, r2;
 		if (time < frames[0]) { // Time is before first frame.
 			switch (blend) {
 			case setup:
-				bone.rotation = bone.data.rotation;
+				pose.rotation = bone.data.rotation;
 				// Fall through.
 			default:
 				return;
 			case first:
-				r1 = bone.rotation;
+				r1 = pose.rotation;
 				r2 = bone.data.rotation;
 			}
 		} else {
-			r1 = blend == MixBlend.setup ? bone.data.rotation : bone.rotation;
+			r1 = blend == MixBlend.setup ? bone.data.rotation : pose.rotation;
 			r2 = bone.data.rotation + timeline.getCurveValue(time);
 		}
 
@@ -465,7 +466,7 @@ public class AnimationState {
 			timelinesRotation[i] = total;
 		}
 		timelinesRotation[i + 1] = diff;
-		bone.rotation = r1 + total * alpha;
+		pose.rotation = r1 + total * alpha;
 	}
 
 	private void queueEvents (TrackEntry entry, float animationTime) {

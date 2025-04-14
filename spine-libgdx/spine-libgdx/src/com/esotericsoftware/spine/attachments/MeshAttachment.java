@@ -165,7 +165,7 @@ public class MeshAttachment extends VertexAttachment implements HasTextureRegion
 
 	/** If the attachment has a {@link #sequence}, the region may be changed. */
 	public void computeWorldVertices (Slot slot, int start, int count, float[] worldVertices, int offset, int stride) {
-		if (sequence != null) sequence.apply(slot, this);
+		if (sequence != null) sequence.apply(slot.getAppliedPose(), this);
 		super.computeWorldVertices(slot, start, count, worldVertices, offset, stride);
 	}
 
