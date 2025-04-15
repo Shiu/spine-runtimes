@@ -473,7 +473,7 @@ export class SceneRenderer implements Disposable {
 			canvas.height = h;
 		}
 
-		if (resizeMode === ResizeMode.FitClip) {
+		if (resizeMode === ResizeMode.FitClip && worldWidth !== undefined && worldHeight !== undefined) {
 			let targetRatio = h / w, sourceRatio = worldHeight / worldWidth;
 			let scale = targetRatio > sourceRatio ? w / worldWidth : h / worldHeight;
 			worldWidth *= scale;
