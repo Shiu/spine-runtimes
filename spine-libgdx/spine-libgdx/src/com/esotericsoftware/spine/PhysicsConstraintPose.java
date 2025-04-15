@@ -29,63 +29,74 @@
 
 package com.esotericsoftware.spine;
 
-import com.esotericsoftware.spine.Animation.MixBlend;
-import com.esotericsoftware.spine.Animation.MixDirection;
+/** Stores a pose for a physics constraint. */
+public class PhysicsConstraintPose {
+	float inertia, strength, damping, massInverse, wind, gravity, mix;
 
-/** Stores the setup pose for a {@link PhysicsConstraint}.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-public class Slider implements Updatable {
-	final SliderData data;
-	final Skeleton skeleton;
-	final SliderPose pose = new SliderPose(), applied = new SliderPose();
-
-	boolean active;
-
-	public Slider (SliderData data, Skeleton skeleton) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
-		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
-		this.data = data;
-		this.skeleton = skeleton;
-
-		setupPose();
+	public void set (PhysicsConstraintPose pose) {
+		inertia = pose.inertia;
+		strength = pose.strength;
+		damping = pose.damping;
+		massInverse = pose.massInverse;
+		wind = pose.wind;
+		gravity = pose.gravity;
+		mix = pose.mix;
 	}
 
-	/** Copy constructor. */
-	public Slider (Slider slider, Skeleton skeleton) {
-		this(slider.data, skeleton);
-		setupPose();
+	public float getInertia () {
+		return inertia;
 	}
 
-	public void update (Physics physics) {
-		SliderPose pose = applied;
-		data.animation.apply(skeleton, pose.time, pose.time, false, null, pose.mix, MixBlend.replace, MixDirection.in, true);
+	public void setInertia (float inertia) {
+		this.inertia = inertia;
 	}
 
-	public void setupPose () {
-		pose.set(data.setup);
+	public float getStrength () {
+		return strength;
 	}
 
-	public SliderPose getPose () {
-		return pose;
+	public void setStrength (float strength) {
+		this.strength = strength;
 	}
 
-	public SliderPose getAppliedPose () {
-		return applied;
+	public float getDamping () {
+		return damping;
 	}
 
-	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
-	 * {@link Skeleton#getSkin() active skin} does not contain this item.
-	 * @see Skin#getBones()
-	 * @see Skin#getConstraints()
-	 * @see ConstraintData#getSkinRequired()
-	 * @see Skeleton#updateCache() */
-	public boolean isActive () {
-		return active;
+	public void setDamping (float damping) {
+		this.damping = damping;
 	}
 
-	public String toString () {
-		return data.name;
+	public float getMassInverse () {
+		return massInverse;
+	}
+
+	public void setMassInverse (float massInverse) {
+		this.massInverse = massInverse;
+	}
+
+	public float getWind () {
+		return wind;
+	}
+
+	public void setWind (float wind) {
+		this.wind = wind;
+	}
+
+	public float getGravity () {
+		return gravity;
+	}
+
+	public void setGravity (float gravity) {
+		this.gravity = gravity;
+	}
+
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
+	public float getMix () {
+		return mix;
+	}
+
+	public void setMix (float mix) {
+		this.mix = mix;
 	}
 }

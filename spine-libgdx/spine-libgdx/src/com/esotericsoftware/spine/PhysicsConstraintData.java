@@ -33,13 +33,17 @@ package com.esotericsoftware.spine;
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
 public class PhysicsConstraintData extends ConstraintData {
+	final PhysicsConstraintPose setup = new PhysicsConstraintPose();
 	BoneData bone;
-	float x, y, rotate, scaleX, shearX, limit;
-	float step, inertia, strength, damping, massInverse, wind, gravity, mix;
+	float x, y, rotate, scaleX, shearX, limit, step;
 	boolean inertiaGlobal, strengthGlobal, dampingGlobal, massGlobal, windGlobal, gravityGlobal, mixGlobal;
 
 	public PhysicsConstraintData (String name) {
 		super(name);
+	}
+
+	public PhysicsConstraintPose getSetupPose () {
+		return setup;
 	}
 
 	/** The bone constrained by this physics constraint. */
@@ -105,63 +109,6 @@ public class PhysicsConstraintData extends ConstraintData {
 
 	public void setLimit (float limit) {
 		this.limit = limit;
-	}
-
-	public float getInertia () {
-		return inertia;
-	}
-
-	public void setInertia (float inertia) {
-		this.inertia = inertia;
-	}
-
-	public float getStrength () {
-		return strength;
-	}
-
-	public void setStrength (float strength) {
-		this.strength = strength;
-	}
-
-	public float getDamping () {
-		return damping;
-	}
-
-	public void setDamping (float damping) {
-		this.damping = damping;
-	}
-
-	public float getMassInverse () {
-		return massInverse;
-	}
-
-	public void setMassInverse (float massInverse) {
-		this.massInverse = massInverse;
-	}
-
-	public float getWind () {
-		return wind;
-	}
-
-	public void setWind (float wind) {
-		this.wind = wind;
-	}
-
-	public float getGravity () {
-		return gravity;
-	}
-
-	public void setGravity (float gravity) {
-		this.gravity = gravity;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
-	public float getMix () {
-		return mix;
-	}
-
-	public void setMix (float mix) {
-		this.mix = mix;
 	}
 
 	public boolean getInertiaGlobal () {

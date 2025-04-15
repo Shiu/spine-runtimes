@@ -63,7 +63,7 @@ public class IkConstraint implements Updatable {
 	/** Copy constructor. */
 	public IkConstraint (IkConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-		setupPose();
+		pose.set(constraint.pose);
 	}
 
 	public void setupPose () {
@@ -72,15 +72,15 @@ public class IkConstraint implements Updatable {
 
 	/** Applies the constraint to the constrained bones. */
 	public void update (Physics physics) {
-		IkConstraintPose pose = applied;
-		if (pose.mix == 0) return;
+		IkConstraintPose a = applied;
+		if (a.mix == 0) return;
 		BoneApplied target = this.target;
 		Object[] bones = this.bones.items;
 		switch (this.bones.size) {
-		case 1 -> apply((BoneApplied)bones[0], target.worldX, target.worldY, pose.compress, pose.stretch, data.uniform, pose.mix);
+		case 1 -> apply((BoneApplied)bones[0], target.worldX, target.worldY, a.compress, a.stretch, data.uniform, a.mix);
 		case 2 -> //
-			apply((BoneApplied)bones[0], (BoneApplied)bones[1], target.worldX, target.worldY, pose.bendDirection, pose.stretch,
-				data.uniform, pose.softness, pose.mix);
+			apply((BoneApplied)bones[0], (BoneApplied)bones[1], target.worldX, target.worldY, a.bendDirection, a.stretch,
+				data.uniform, a.softness, a.mix);
 		}
 	}
 

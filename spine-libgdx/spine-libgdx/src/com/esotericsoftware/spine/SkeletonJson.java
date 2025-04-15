@@ -330,12 +330,13 @@ public class SkeletonJson extends SkeletonLoader {
 			data.offsetScaleY = constraintMap.getFloat("scaleY", 0);
 			data.offsetShearY = constraintMap.getFloat("shearY", 0);
 
-			if (rotate) data.mixRotate = constraintMap.getFloat("mixRotate", 1);
-			if (x) data.mixX = constraintMap.getFloat("mixX", 1);
-			if (y) data.mixY = constraintMap.getFloat("mixY", data.mixX);
-			if (scaleX) data.mixScaleX = constraintMap.getFloat("mixScaleX", 1);
-			if (scaleY) data.mixScaleY = constraintMap.getFloat("mixScaleY", data.mixScaleX);
-			if (shearY) data.mixShearY = constraintMap.getFloat("mixShearY", 1);
+			TransformConstraintPose setup = data.setup;
+			if (rotate) setup.mixRotate = constraintMap.getFloat("mixRotate", 1);
+			if (x) setup.mixX = constraintMap.getFloat("mixX", 1);
+			if (y) setup.mixY = constraintMap.getFloat("mixY", setup.mixX);
+			if (scaleX) setup.mixScaleX = constraintMap.getFloat("mixScaleX", 1);
+			if (scaleY) setup.mixScaleY = constraintMap.getFloat("mixScaleY", setup.mixScaleX);
+			if (shearY) setup.mixShearY = constraintMap.getFloat("mixShearY", 1);
 
 			skeletonData.transformConstraints.add(data);
 		}
@@ -360,13 +361,14 @@ public class SkeletonJson extends SkeletonLoader {
 			data.spacingMode = SpacingMode.valueOf(constraintMap.getString("spacingMode", "length"));
 			data.rotateMode = RotateMode.valueOf(constraintMap.getString("rotateMode", "tangent"));
 			data.offsetRotation = constraintMap.getFloat("rotation", 0);
-			data.position = constraintMap.getFloat("position", 0);
-			if (data.positionMode == PositionMode.fixed) data.position *= scale;
-			data.spacing = constraintMap.getFloat("spacing", 0);
-			if (data.spacingMode == SpacingMode.length || data.spacingMode == SpacingMode.fixed) data.spacing *= scale;
-			data.mixRotate = constraintMap.getFloat("mixRotate", 1);
-			data.mixX = constraintMap.getFloat("mixX", 1);
-			data.mixY = constraintMap.getFloat("mixY", 1);
+			PathConstraintPose setup = data.setup;
+			setup.position = constraintMap.getFloat("position", 0);
+			if (data.positionMode == PositionMode.fixed) setup.position *= scale;
+			setup.spacing = constraintMap.getFloat("spacing", 0);
+			if (data.spacingMode == SpacingMode.length || data.spacingMode == SpacingMode.fixed) setup.spacing *= scale;
+			setup.mixRotate = constraintMap.getFloat("mixRotate", 1);
+			setup.mixX = constraintMap.getFloat("mixX", 1);
+			setup.mixY = constraintMap.getFloat("mixY", 1);
 
 			skeletonData.pathConstraints.add(data);
 		}
@@ -388,13 +390,14 @@ public class SkeletonJson extends SkeletonLoader {
 			data.shearX = constraintMap.getFloat("shearX", 0);
 			data.limit = constraintMap.getFloat("limit", 5000) * scale;
 			data.step = 1f / constraintMap.getInt("fps", 60);
-			data.inertia = constraintMap.getFloat("inertia", 1);
-			data.strength = constraintMap.getFloat("strength", 100);
-			data.damping = constraintMap.getFloat("damping", 1);
-			data.massInverse = 1 / constraintMap.getFloat("mass", 1);
-			data.wind = constraintMap.getFloat("wind", 0);
-			data.gravity = constraintMap.getFloat("gravity", 0);
-			data.mix = constraintMap.getFloat("mix", 1);
+			PhysicsConstraintPose setup = data.getSetupPose();
+			setup.inertia = constraintMap.getFloat("inertia", 1);
+			setup.strength = constraintMap.getFloat("strength", 100);
+			setup.damping = constraintMap.getFloat("damping", 1);
+			setup.massInverse = 1 / constraintMap.getFloat("mass", 1);
+			setup.wind = constraintMap.getFloat("wind", 0);
+			setup.gravity = constraintMap.getFloat("gravity", 0);
+			setup.mix = constraintMap.getFloat("mix", 1);
 			data.inertiaGlobal = constraintMap.getBoolean("inertiaGlobal", false);
 			data.strengthGlobal = constraintMap.getBoolean("strengthGlobal", false);
 			data.dampingGlobal = constraintMap.getBoolean("dampingGlobal", false);

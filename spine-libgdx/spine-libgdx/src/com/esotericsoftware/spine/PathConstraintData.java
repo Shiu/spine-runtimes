@@ -35,16 +35,20 @@ import com.badlogic.gdx.utils.Array;
  * <p>
  * See <a href="https://esotericsoftware.com/spine-path-constraints">Path constraints</a> in the Spine User Guide. */
 public class PathConstraintData extends ConstraintData {
+	final PathConstraintPose setup = new PathConstraintPose();
 	final Array<BoneData> bones = new Array();
 	SlotData slot;
 	PositionMode positionMode;
 	SpacingMode spacingMode;
 	RotateMode rotateMode;
 	float offsetRotation;
-	float position, spacing, mixRotate, mixX, mixY;
 
 	public PathConstraintData (String name) {
 		super(name);
+	}
+
+	public PathConstraintPose getSetupPose () {
+		return setup;
 	}
 
 	/** The bones that will be modified by this path constraint. */
@@ -99,51 +103,6 @@ public class PathConstraintData extends ConstraintData {
 
 	public void setOffsetRotation (float offsetRotation) {
 		this.offsetRotation = offsetRotation;
-	}
-
-	/** The position along the path. */
-	public float getPosition () {
-		return position;
-	}
-
-	public void setPosition (float position) {
-		this.position = position;
-	}
-
-	/** The spacing between bones. */
-	public float getSpacing () {
-		return spacing;
-	}
-
-	public void setSpacing (float spacing) {
-		this.spacing = spacing;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
-	public float getMixRotate () {
-		return mixRotate;
-	}
-
-	public void setMixRotate (float mixRotate) {
-		this.mixRotate = mixRotate;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
-	public float getMixX () {
-		return mixX;
-	}
-
-	public void setMixX (float mixX) {
-		this.mixX = mixX;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
-	public float getMixY () {
-		return mixY;
-	}
-
-	public void setMixY (float mixY) {
-		this.mixY = mixY;
 	}
 
 	/** Controls how the first bone is positioned along the path.

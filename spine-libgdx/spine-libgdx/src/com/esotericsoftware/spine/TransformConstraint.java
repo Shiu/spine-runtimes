@@ -44,10 +44,8 @@ public class TransformConstraint implements Updatable {
 	final TransformConstraintData data;
 	final Array<BoneApplied> bones;
 	BoneApplied source;
-	TransformConstraint applied;
+	final TransformConstraintPose pose = new TransformConstraintPose(), applied = new TransformConstraintPose();
 	boolean active;
-
-	float mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY;
 
 	public TransformConstraint (TransformConstraintData data, Array<BoneApplied> bones, BoneApplied source) {
 		this.data = data;
@@ -66,30 +64,24 @@ public class TransformConstraint implements Updatable {
 
 		source = skeleton.bones.get(data.source.index).applied;
 
-		applied = new TransformConstraint(data, bones, source);
-
 		setupPose();
 	}
 
 	/** Copy constructor. */
 	public TransformConstraint (TransformConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-		setupPose();
+		pose.set(constraint.pose);
 	}
 
 	public void setupPose () {
-		TransformConstraintData data = this.data;
-		mixRotate = data.mixRotate;
-		mixX = data.mixX;
-		mixY = data.mixY;
-		mixScaleX = data.mixScaleX;
-		mixScaleY = data.mixScaleY;
-		mixShearY = data.mixShearY;
+		pose.set(data.setup);
 	}
 
 	/** Applies the constraint to the constrained bones. */
 	public void update (Physics physics) {
-		if (mixRotate == 0 && mixX == 0 && mixY == 0 && mixScaleX == 0 && mixScaleY == 0 && mixShearY == 0) return;
+		TransformConstraintPose pose = applied;
+		if (pose.mixRotate == 0 && pose.mixX == 0 && pose.mixY == 0 && pose.mixScaleX == 0 && pose.mixScaleY == 0
+			&& pose.mixShearY == 0) return;
 
 		TransformConstraintData data = this.data;
 		boolean localFrom = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
@@ -105,7 +97,7 @@ public class TransformConstraint implements Updatable {
 				Object[] toItems = from.to.items;
 				for (int t = 0, tn = from.to.size; t < tn; t++) {
 					var to = (ToProperty)toItems[t];
-					if (to.mix(this) != 0) {
+					if (to.mix(pose) != 0) {
 						float clamped = to.offset + value * to.scale;
 						if (clamp) {
 							if (to.offset < to.max)
@@ -113,7 +105,7 @@ public class TransformConstraint implements Updatable {
 							else
 								clamped = clamp(clamped, to.max, to.offset);
 						}
-						to.apply(this, bone, clamped, localTarget, additive);
+						to.apply(pose, bone, clamped, localTarget, additive);
 					}
 				}
 			}
@@ -139,58 +131,12 @@ public class TransformConstraint implements Updatable {
 		this.source = source;
 	}
 
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
-	public float getMixRotate () {
-		return mixRotate;
+	public TransformConstraintPose getPose () {
+		return pose;
 	}
 
-	public void setMixRotate (float mixRotate) {
-		this.mixRotate = mixRotate;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
-	public float getMixX () {
-		return mixX;
-	}
-
-	public void setMixX (float mixX) {
-		this.mixX = mixX;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
-	public float getMixY () {
-		return mixY;
-	}
-
-	public void setMixY (float mixY) {
-		this.mixY = mixY;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale X. */
-	public float getMixScaleX () {
-		return mixScaleX;
-	}
-
-	public void setMixScaleX (float mixScaleX) {
-		this.mixScaleX = mixScaleX;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale X. */
-	public float getMixScaleY () {
-		return mixScaleY;
-	}
-
-	public void setMixScaleY (float mixScaleY) {
-		this.mixScaleY = mixScaleY;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y. */
-	public float getMixShearY () {
-		return mixShearY;
-	}
-
-	public void setMixShearY (float mixShearY) {
-		this.mixShearY = mixShearY;
+	public TransformConstraintPose getAppliedPose () {
+		return applied;
 	}
 
 	/** Returns false when this constraint won't be updated by

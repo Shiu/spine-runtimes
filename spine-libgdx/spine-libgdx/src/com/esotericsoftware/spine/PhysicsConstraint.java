@@ -38,10 +38,8 @@ public class PhysicsConstraint implements Updatable {
 	final PhysicsConstraintData data;
 	final Skeleton skeleton;
 	BoneApplied bone;
-	PhysicsConstraint applied;
+	final PhysicsConstraintPose pose = new PhysicsConstraintPose(), applied = new PhysicsConstraintPose();
 	boolean active;
-
-	float inertia, strength, damping, massInverse, wind, gravity, mix;
 
 	boolean reset = true;
 	float ux, uy, cx, cy, tx, ty;
@@ -65,15 +63,13 @@ public class PhysicsConstraint implements Updatable {
 
 		bone = skeleton.bones.get(data.bone.index).applied;
 
-		applied = new PhysicsConstraint(data, skeleton, bone);
-
 		setupPose();
 	}
 
 	/** Copy constructor. */
 	public PhysicsConstraint (PhysicsConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-		setupPose();
+		pose.set(constraint.pose);
 	}
 
 	public void reset () {
@@ -91,14 +87,7 @@ public class PhysicsConstraint implements Updatable {
 	}
 
 	public void setupPose () {
-		PhysicsConstraintData data = this.data;
-		inertia = data.inertia;
-		strength = data.strength;
-		damping = data.damping;
-		massInverse = data.massInverse;
-		wind = data.wind;
-		gravity = data.gravity;
-		mix = data.mix;
+		pose.set(data.setup);
 	}
 
 	/** Translates the physics constraint so next {@link #update(Physics)} forces are applied as if the bone moved an additional
@@ -120,7 +109,8 @@ public class PhysicsConstraint implements Updatable {
 
 	/** Applies the constraint to the constrained bones. */
 	public void update (Physics physics) {
-		float mix = this.mix;
+		PhysicsConstraintPose pose = applied;
+		float mix = pose.mix;
 		if (mix == 0) return;
 
 		boolean x = data.x > 0, y = data.y > 0, rotateOrShearX = data.rotate > 0 || data.shearX > 0, scaleX = data.scaleX > 0;
@@ -145,7 +135,7 @@ public class PhysicsConstraint implements Updatable {
 				ux = bx;
 				uy = by;
 			} else {
-				float a = remaining, i = inertia, t = data.step, f = skeleton.data.referenceScale, d = -1;
+				float a = remaining, i = pose.inertia, t = data.step, f = skeleton.data.referenceScale, d = -1;
 				float qx = data.limit * delta, qy = qx * Math.abs(skeleton.scaleY);
 				qx *= Math.abs(skeleton.scaleX);
 				if (x || y) {
@@ -160,8 +150,9 @@ public class PhysicsConstraint implements Updatable {
 						uy = by;
 					}
 					if (a >= t) {
-						d = (float)Math.pow(damping, 60 * t);
-						float m = massInverse * t, e = strength, w = wind * f * skeleton.scaleX, g = gravity * f * skeleton.scaleY;
+						d = (float)Math.pow(pose.damping, 60 * t);
+						float m = pose.massInverse * t, e = pose.strength, w = pose.wind * f * skeleton.scaleX,
+							g = pose.gravity * f * skeleton.scaleY;
 						do {
 							if (x) {
 								xVelocity += (w - xOffset * e) * m;
@@ -209,8 +200,8 @@ public class PhysicsConstraint implements Updatable {
 					}
 					a = remaining;
 					if (a >= t) {
-						if (d == -1) d = (float)Math.pow(damping, 60 * t);
-						float m = massInverse * t, e = strength, w = wind, g = gravity, h = l / f;
+						if (d == -1) d = (float)Math.pow(pose.damping, 60 * t);
+						float m = pose.massInverse * t, e = pose.strength, w = pose.wind, g = pose.gravity, h = l / f;
 						while (true) {
 							a -= t;
 							if (scaleX) {
@@ -283,6 +274,15 @@ public class PhysicsConstraint implements Updatable {
 		bone.updateLocalTransform();
 	}
 
+	/** The physics constraint's setup pose data. */
+	public PhysicsConstraintData getData () {
+		return data;
+	}
+
+	public Skeleton getSkeleton () {
+		return skeleton;
+	}
+
 	/** The bone constrained by this physics constraint. */
 	public BoneApplied getBone () {
 		return bone;
@@ -292,61 +292,12 @@ public class PhysicsConstraint implements Updatable {
 		this.bone = bone;
 	}
 
-	public float getInertia () {
-		return inertia;
+	public PhysicsConstraintPose getPose () {
+		return pose;
 	}
 
-	public void setInertia (float inertia) {
-		this.inertia = inertia;
-	}
-
-	public float getStrength () {
-		return strength;
-	}
-
-	public void setStrength (float strength) {
-		this.strength = strength;
-	}
-
-	public float getDamping () {
-		return damping;
-	}
-
-	public void setDamping (float damping) {
-		this.damping = damping;
-	}
-
-	public float getMassInverse () {
-		return massInverse;
-	}
-
-	public void setMassInverse (float massInverse) {
-		this.massInverse = massInverse;
-	}
-
-	public float getWind () {
-		return wind;
-	}
-
-	public void setWind (float wind) {
-		this.wind = wind;
-	}
-
-	public float getGravity () {
-		return gravity;
-	}
-
-	public void setGravity (float gravity) {
-		this.gravity = gravity;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
-	public float getMix () {
-		return mix;
-	}
-
-	public void setMix (float mix) {
-		this.mix = mix;
+	public PhysicsConstraintPose getAppliedPose () {
+		return applied;
 	}
 
 	/** Returns false when this constraint won't be updated by
@@ -358,11 +309,6 @@ public class PhysicsConstraint implements Updatable {
 	 * @see Skeleton#updateCache() */
 	public boolean isActive () {
 		return active;
-	}
-
-	/** The physics constraint's setup pose data. */
-	public PhysicsConstraintData getData () {
-		return data;
 	}
 
 	public String toString () {

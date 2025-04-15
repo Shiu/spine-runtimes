@@ -2072,9 +2072,9 @@ public class Animation {
 		}
 	}
 
-	/** Changes a transform constraint's {@link TransformConstraint#getMixRotate()}, {@link TransformConstraint#getMixX()},
-	 * {@link TransformConstraint#getMixY()}, {@link TransformConstraint#getMixScaleX()},
-	 * {@link TransformConstraint#getMixScaleY()}, and {@link TransformConstraint#getMixShearY()}. */
+	/** Changes a transform constraint's {@link TransformConstraintPose#getMixRotate()}, {@link TransformConstraintPose#getMixX()},
+	 * {@link TransformConstraintPose#getMixY()}, {@link TransformConstraintPose#getMixScaleX()},
+	 * {@link TransformConstraintPose#getMixScaleY()}, and {@link TransformConstraintPose#getMixShearY()}. */
 	static public class TransformConstraintTimeline extends CurveTimeline {
 		static public final int ENTRIES = 7;
 		static private final int ROTATE = 1, X = 2, Y = 3, SCALEX = 4, SCALEY = 5, SHEARY = 6;
@@ -2116,27 +2116,27 @@ public class Animation {
 
 			TransformConstraint constraint = skeleton.transformConstraints.get(constraintIndex);
 			if (!constraint.active) return;
-			if (appliedPose) constraint = constraint.applied;
+			TransformConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
-				TransformConstraintData data = constraint.data;
+				TransformConstraintPose setup = constraint.data.setup;
 				switch (blend) {
 				case setup:
-					constraint.mixRotate = data.mixRotate;
-					constraint.mixX = data.mixX;
-					constraint.mixY = data.mixY;
-					constraint.mixScaleX = data.mixScaleX;
-					constraint.mixScaleY = data.mixScaleY;
-					constraint.mixShearY = data.mixShearY;
+					pose.mixRotate = setup.mixRotate;
+					pose.mixX = setup.mixX;
+					pose.mixY = setup.mixY;
+					pose.mixScaleX = setup.mixScaleX;
+					pose.mixScaleY = setup.mixScaleY;
+					pose.mixShearY = setup.mixShearY;
 					return;
 				case first:
-					constraint.mixRotate += (data.mixRotate - constraint.mixRotate) * alpha;
-					constraint.mixX += (data.mixX - constraint.mixX) * alpha;
-					constraint.mixY += (data.mixY - constraint.mixY) * alpha;
-					constraint.mixScaleX += (data.mixScaleX - constraint.mixScaleX) * alpha;
-					constraint.mixScaleY += (data.mixScaleY - constraint.mixScaleY) * alpha;
-					constraint.mixShearY += (data.mixShearY - constraint.mixShearY) * alpha;
+					pose.mixRotate += (setup.mixRotate - pose.mixRotate) * alpha;
+					pose.mixX += (setup.mixX - pose.mixX) * alpha;
+					pose.mixY += (setup.mixY - pose.mixY) * alpha;
+					pose.mixScaleX += (setup.mixScaleX - pose.mixScaleX) * alpha;
+					pose.mixScaleY += (setup.mixScaleY - pose.mixScaleY) * alpha;
+					pose.mixShearY += (setup.mixShearY - pose.mixShearY) * alpha;
 				}
 				return;
 			}
@@ -2178,25 +2178,25 @@ public class Animation {
 			}
 
 			if (blend == setup) {
-				TransformConstraintData data = constraint.data;
-				constraint.mixRotate = data.mixRotate + (rotate - data.mixRotate) * alpha;
-				constraint.mixX = data.mixX + (x - data.mixX) * alpha;
-				constraint.mixY = data.mixY + (y - data.mixY) * alpha;
-				constraint.mixScaleX = data.mixScaleX + (scaleX - data.mixScaleX) * alpha;
-				constraint.mixScaleY = data.mixScaleY + (scaleY - data.mixScaleY) * alpha;
-				constraint.mixShearY = data.mixShearY + (shearY - data.mixShearY) * alpha;
+				TransformConstraintPose setup = constraint.data.setup;
+				pose.mixRotate = setup.mixRotate + (rotate - setup.mixRotate) * alpha;
+				pose.mixX = setup.mixX + (x - setup.mixX) * alpha;
+				pose.mixY = setup.mixY + (y - setup.mixY) * alpha;
+				pose.mixScaleX = setup.mixScaleX + (scaleX - setup.mixScaleX) * alpha;
+				pose.mixScaleY = setup.mixScaleY + (scaleY - setup.mixScaleY) * alpha;
+				pose.mixShearY = setup.mixShearY + (shearY - setup.mixShearY) * alpha;
 			} else {
-				constraint.mixRotate += (rotate - constraint.mixRotate) * alpha;
-				constraint.mixX += (x - constraint.mixX) * alpha;
-				constraint.mixY += (y - constraint.mixY) * alpha;
-				constraint.mixScaleX += (scaleX - constraint.mixScaleX) * alpha;
-				constraint.mixScaleY += (scaleY - constraint.mixScaleY) * alpha;
-				constraint.mixShearY += (shearY - constraint.mixShearY) * alpha;
+				pose.mixRotate += (rotate - pose.mixRotate) * alpha;
+				pose.mixX += (x - pose.mixX) * alpha;
+				pose.mixY += (y - pose.mixY) * alpha;
+				pose.mixScaleX += (scaleX - pose.mixScaleX) * alpha;
+				pose.mixScaleY += (scaleY - pose.mixScaleY) * alpha;
+				pose.mixShearY += (shearY - pose.mixShearY) * alpha;
 			}
 		}
 	}
 
-	/** Changes a path constraint's {@link PathConstraint#getPosition()}. */
+	/** Changes a path constraint's {@link PathConstraintPose#getPosition()}. */
 	static public class PathConstraintPositionTimeline extends CurveTimeline1 {
 		final int constraintIndex;
 
@@ -2216,13 +2216,13 @@ public class Animation {
 
 			PathConstraint constraint = skeleton.pathConstraints.get(constraintIndex);
 			if (constraint.active) {
-				if (appliedPose) constraint = constraint.applied;
-				constraint.position = getAbsoluteValue(time, alpha, blend, constraint.position, constraint.data.position);
+				PathConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
+				pose.position = getAbsoluteValue(time, alpha, blend, pose.position, constraint.data.setup.position);
 			}
 		}
 	}
 
-	/** Changes a path constraint's {@link PathConstraint#getSpacing()}. */
+	/** Changes a path constraint's {@link PathConstraintPose#getSpacing()}. */
 	static public class PathConstraintSpacingTimeline extends CurveTimeline1 {
 		final int constraintIndex;
 
@@ -2242,14 +2242,14 @@ public class Animation {
 
 			PathConstraint constraint = skeleton.pathConstraints.get(constraintIndex);
 			if (constraint.active) {
-				if (appliedPose) constraint = constraint.applied;
-				constraint.spacing = getAbsoluteValue(time, alpha, blend, constraint.spacing, constraint.data.spacing);
+				PathConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
+				pose.spacing = getAbsoluteValue(time, alpha, blend, pose.spacing, constraint.data.setup.spacing);
 			}
 		}
 	}
 
-	/** Changes a path constraint's {@link PathConstraint#getMixRotate()}, {@link PathConstraint#getMixX()}, and
-	 * {@link PathConstraint#getMixY()}. */
+	/** Changes a path constraint's {@link PathConstraintPose#getMixRotate()}, {@link PathConstraintPose#getMixX()}, and
+	 * {@link PathConstraintPose#getMixY()}. */
 	static public class PathConstraintMixTimeline extends CurveTimeline {
 		static public final int ENTRIES = 4;
 		static private final int ROTATE = 1, X = 2, Y = 3;
@@ -2287,21 +2287,21 @@ public class Animation {
 
 			PathConstraint constraint = skeleton.pathConstraints.get(constraintIndex);
 			if (!constraint.active) return;
-			if (appliedPose) constraint = constraint.applied;
+			PathConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
-				PathConstraintData data = constraint.data;
+				PathConstraintPose setup = constraint.data.setup;
 				switch (blend) {
 				case setup:
-					constraint.mixRotate = data.mixRotate;
-					constraint.mixX = data.mixX;
-					constraint.mixY = data.mixY;
+					pose.mixRotate = setup.mixRotate;
+					pose.mixX = setup.mixX;
+					pose.mixY = setup.mixY;
 					return;
 				case first:
-					constraint.mixRotate += (data.mixRotate - constraint.mixRotate) * alpha;
-					constraint.mixX += (data.mixX - constraint.mixX) * alpha;
-					constraint.mixY += (data.mixY - constraint.mixY) * alpha;
+					pose.mixRotate += (setup.mixRotate - pose.mixRotate) * alpha;
+					pose.mixX += (setup.mixX - pose.mixX) * alpha;
+					pose.mixY += (setup.mixY - pose.mixY) * alpha;
 				}
 				return;
 			}
@@ -2331,14 +2331,14 @@ public class Animation {
 			}
 
 			if (blend == setup) {
-				PathConstraintData data = constraint.data;
-				constraint.mixRotate = data.mixRotate + (rotate - data.mixRotate) * alpha;
-				constraint.mixX = data.mixX + (x - data.mixX) * alpha;
-				constraint.mixY = data.mixY + (y - data.mixY) * alpha;
+				PathConstraintPose setup = constraint.data.setup;
+				pose.mixRotate = setup.mixRotate + (rotate - setup.mixRotate) * alpha;
+				pose.mixX = setup.mixX + (x - setup.mixX) * alpha;
+				pose.mixY = setup.mixY + (y - setup.mixY) * alpha;
 			} else {
-				constraint.mixRotate += (rotate - constraint.mixRotate) * alpha;
-				constraint.mixX += (x - constraint.mixX) * alpha;
-				constraint.mixY += (y - constraint.mixY) * alpha;
+				pose.mixRotate += (rotate - pose.mixRotate) * alpha;
+				pose.mixX += (x - pose.mixX) * alpha;
+				pose.mixY += (y - pose.mixY) * alpha;
 			}
 		}
 	}
@@ -2370,44 +2370,38 @@ public class Animation {
 				for (int i = 0, n = skeleton.physicsConstraints.size; i < n; i++) {
 					constraint = (PhysicsConstraint)constraints[i];
 					if (constraint.active && global(constraint.data)) {
-						if (appliedPose) constraint = constraint.applied;
-						set(constraint, getAbsoluteValue(time, alpha, blend, get(constraint), setup(constraint), value));
+						PhysicsConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
+						set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(constraint.data.setup), value));
 					}
 				}
 			} else {
 				constraint = skeleton.physicsConstraints.get(constraintIndex);
 				if (constraint.active) {
-					if (appliedPose) constraint = constraint.applied;
-					set(constraint, getAbsoluteValue(time, alpha, blend, get(constraint), setup(constraint)));
+					PhysicsConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
+					set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(constraint.data.setup)));
 				}
 			}
 		}
 
-		abstract protected float setup (PhysicsConstraint constraint);
+		abstract protected float get (PhysicsConstraintPose pose);
 
-		abstract protected float get (PhysicsConstraint constraint);
-
-		abstract protected void set (PhysicsConstraint constraint, float value);
+		abstract protected void set (PhysicsConstraintPose pose, float value);
 
 		abstract protected boolean global (PhysicsConstraintData constraint);
 	}
 
-	/** Changes a physics constraint's {@link PhysicsConstraint#getInertia()}. */
+	/** Changes a physics constraint's {@link PhysicsConstraintPose#getInertia()}. */
 	static public class PhysicsConstraintInertiaTimeline extends PhysicsConstraintTimeline {
 		public PhysicsConstraintInertiaTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
 			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintInertia);
 		}
 
-		protected float setup (PhysicsConstraint constraint) {
-			return constraint.data.inertia;
+		protected float get (PhysicsConstraintPose pose) {
+			return pose.inertia;
 		}
 
-		protected float get (PhysicsConstraint constraint) {
-			return constraint.inertia;
-		}
-
-		protected void set (PhysicsConstraint constraint, float value) {
-			constraint.inertia = value;
+		protected void set (PhysicsConstraintPose pose, float value) {
+			pose.inertia = value;
 		}
 
 		protected boolean global (PhysicsConstraintData constraint) {
@@ -2415,22 +2409,18 @@ public class Animation {
 		}
 	}
 
-	/** Changes a physics constraint's {@link PhysicsConstraint#getStrength()}. */
+	/** Changes a physics constraint's {@link PhysicsConstraintPose#getStrength()}. */
 	static public class PhysicsConstraintStrengthTimeline extends PhysicsConstraintTimeline {
 		public PhysicsConstraintStrengthTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
 			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintStrength);
 		}
 
-		protected float setup (PhysicsConstraint constraint) {
-			return constraint.data.strength;
+		protected float get (PhysicsConstraintPose pose) {
+			return pose.strength;
 		}
 
-		protected float get (PhysicsConstraint constraint) {
-			return constraint.strength;
-		}
-
-		protected void set (PhysicsConstraint constraint, float value) {
-			constraint.strength = value;
+		protected void set (PhysicsConstraintPose pose, float value) {
+			pose.strength = value;
 		}
 
 		protected boolean global (PhysicsConstraintData constraint) {
@@ -2438,22 +2428,18 @@ public class Animation {
 		}
 	}
 
-	/** Changes a physics constraint's {@link PhysicsConstraint#getDamping()}. */
+	/** Changes a physics constraint's {@link PhysicsConstraintPose#getDamping()}. */
 	static public class PhysicsConstraintDampingTimeline extends PhysicsConstraintTimeline {
 		public PhysicsConstraintDampingTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
 			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintDamping);
 		}
 
-		protected float setup (PhysicsConstraint constraint) {
-			return constraint.data.damping;
+		protected float get (PhysicsConstraintPose pose) {
+			return pose.damping;
 		}
 
-		protected float get (PhysicsConstraint constraint) {
-			return constraint.damping;
-		}
-
-		protected void set (PhysicsConstraint constraint, float value) {
-			constraint.damping = value;
+		protected void set (PhysicsConstraintPose pose, float value) {
+			pose.damping = value;
 		}
 
 		protected boolean global (PhysicsConstraintData constraint) {
@@ -2461,22 +2447,18 @@ public class Animation {
 		}
 	}
 
-	/** Changes a physics constraint's {@link PhysicsConstraint#getMassInverse()}. The timeline values are not inverted. */
+	/** Changes a physics constraint's {@link PhysicsConstraintPose#getMassInverse()}. The timeline values are not inverted. */
 	static public class PhysicsConstraintMassTimeline extends PhysicsConstraintTimeline {
 		public PhysicsConstraintMassTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
 			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintMass);
 		}
 
-		protected float setup (PhysicsConstraint constraint) {
-			return 1 / constraint.data.massInverse;
+		protected float get (PhysicsConstraintPose pose) {
+			return 1 / pose.massInverse;
 		}
 
-		protected float get (PhysicsConstraint constraint) {
-			return 1 / constraint.massInverse;
-		}
-
-		protected void set (PhysicsConstraint constraint, float value) {
-			constraint.massInverse = 1 / value;
+		protected void set (PhysicsConstraintPose pose, float value) {
+			pose.massInverse = 1 / value;
 		}
 
 		protected boolean global (PhysicsConstraintData constraint) {
@@ -2484,22 +2466,18 @@ public class Animation {
 		}
 	}
 
-	/** Changes a physics constraint's {@link PhysicsConstraint#getWind()}. */
+	/** Changes a physics constraint's {@link PhysicsConstraintPose#getWind()}. */
 	static public class PhysicsConstraintWindTimeline extends PhysicsConstraintTimeline {
 		public PhysicsConstraintWindTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
 			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintWind);
 		}
 
-		protected float setup (PhysicsConstraint constraint) {
-			return constraint.data.wind;
+		protected float get (PhysicsConstraintPose pose) {
+			return pose.wind;
 		}
 
-		protected float get (PhysicsConstraint constraint) {
-			return constraint.wind;
-		}
-
-		protected void set (PhysicsConstraint constraint, float value) {
-			constraint.wind = value;
+		protected void set (PhysicsConstraintPose pose, float value) {
+			pose.wind = value;
 		}
 
 		protected boolean global (PhysicsConstraintData constraint) {
@@ -2507,22 +2485,18 @@ public class Animation {
 		}
 	}
 
-	/** Changes a physics constraint's {@link PhysicsConstraint#getGravity()}. */
+	/** Changes a physics constraint's {@link PhysicsConstraintPose#getGravity()}. */
 	static public class PhysicsConstraintGravityTimeline extends PhysicsConstraintTimeline {
 		public PhysicsConstraintGravityTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
 			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintGravity);
 		}
 
-		protected float setup (PhysicsConstraint constraint) {
-			return constraint.data.gravity;
+		protected float get (PhysicsConstraintPose pose) {
+			return pose.gravity;
 		}
 
-		protected float get (PhysicsConstraint constraint) {
-			return constraint.gravity;
-		}
-
-		protected void set (PhysicsConstraint constraint, float value) {
-			constraint.gravity = value;
+		protected void set (PhysicsConstraintPose pose, float value) {
+			pose.gravity = value;
 		}
 
 		protected boolean global (PhysicsConstraintData constraint) {
@@ -2530,22 +2504,18 @@ public class Animation {
 		}
 	}
 
-	/** Changes a physics constraint's {@link PhysicsConstraint#getMix()}. */
+	/** Changes a physics constraint's {@link PhysicsConstraintPose#getMix()}. */
 	static public class PhysicsConstraintMixTimeline extends PhysicsConstraintTimeline {
 		public PhysicsConstraintMixTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
 			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintMix);
 		}
 
-		protected float setup (PhysicsConstraint constraint) {
-			return constraint.data.mix;
+		protected float get (PhysicsConstraintPose pose) {
+			return pose.mix;
 		}
 
-		protected float get (PhysicsConstraint constraint) {
-			return constraint.mix;
-		}
-
-		protected void set (PhysicsConstraint constraint, float value) {
-			constraint.mix = value;
+		protected void set (PhysicsConstraintPose pose, float value) {
+			pose.mix = value;
 		}
 
 		protected boolean global (PhysicsConstraintData constraint) {
@@ -2601,17 +2571,13 @@ public class Animation {
 			if (time < frames[0]) return;
 
 			if (lastTime < frames[0] || time >= frames[search(frames, lastTime) + 1]) {
-				if (constraint != null) {
-					if (appliedPose) constraint = constraint.applied;
+				if (constraint != null)
 					constraint.reset();
-				} else {
+				else {
 					Object[] constraints = skeleton.physicsConstraints.items;
 					for (int i = 0, n = skeleton.physicsConstraints.size; i < n; i++) {
 						constraint = (PhysicsConstraint)constraints[i];
-						if (constraint.active) {
-							if (appliedPose) constraint = constraint.applied;
-							constraint.reset();
-						}
+						if (constraint.active) constraint.reset();
 					}
 				}
 			}

@@ -343,12 +343,13 @@ public class SkeletonBinary extends SkeletonLoader {
 				if ((flags & 16) != 0) data.offsetScaleY = input.readFloat();
 				if ((flags & 32) != 0) data.offsetShearY = input.readFloat();
 				flags = input.read();
-				if ((flags & 1) != 0) data.mixRotate = input.readFloat();
-				if ((flags & 2) != 0) data.mixX = input.readFloat();
-				if ((flags & 4) != 0) data.mixY = input.readFloat();
-				if ((flags & 8) != 0) data.mixScaleX = input.readFloat();
-				if ((flags & 16) != 0) data.mixScaleY = input.readFloat();
-				if ((flags & 32) != 0) data.mixShearY = input.readFloat();
+				TransformConstraintPose setup = data.getSetupPose();
+				if ((flags & 1) != 0) setup.mixRotate = input.readFloat();
+				if ((flags & 2) != 0) setup.mixX = input.readFloat();
+				if ((flags & 4) != 0) setup.mixY = input.readFloat();
+				if ((flags & 8) != 0) setup.mixScaleX = input.readFloat();
+				if ((flags & 16) != 0) setup.mixScaleY = input.readFloat();
+				if ((flags & 32) != 0) setup.mixShearY = input.readFloat();
 				o[i] = data;
 			}
 
@@ -367,13 +368,14 @@ public class SkeletonBinary extends SkeletonLoader {
 				data.spacingMode = SpacingMode.values[(flags >> 1) & 3];
 				data.rotateMode = RotateMode.values[(flags >> 3) & 3];
 				if ((flags & 128) != 0) data.offsetRotation = input.readFloat();
-				data.position = input.readFloat();
-				if (data.positionMode == PositionMode.fixed) data.position *= scale;
-				data.spacing = input.readFloat();
-				if (data.spacingMode == SpacingMode.length || data.spacingMode == SpacingMode.fixed) data.spacing *= scale;
-				data.mixRotate = input.readFloat();
-				data.mixX = input.readFloat();
-				data.mixY = input.readFloat();
+				PathConstraintPose setup = data.setup;
+				setup.position = input.readFloat();
+				if (data.positionMode == PositionMode.fixed) setup.position *= scale;
+				setup.spacing = input.readFloat();
+				if (data.spacingMode == SpacingMode.length || data.spacingMode == SpacingMode.fixed) setup.spacing *= scale;
+				setup.mixRotate = input.readFloat();
+				setup.mixX = input.readFloat();
+				setup.mixY = input.readFloat();
 				o[i] = data;
 			}
 
@@ -392,12 +394,13 @@ public class SkeletonBinary extends SkeletonLoader {
 				if ((flags & 32) != 0) data.shearX = input.readFloat();
 				data.limit = ((flags & 64) != 0 ? input.readFloat() : 5000) * scale;
 				data.step = 1f / input.readUnsignedByte();
-				data.inertia = input.readFloat();
-				data.strength = input.readFloat();
-				data.damping = input.readFloat();
-				data.massInverse = (flags & 128) != 0 ? input.readFloat() : 1;
-				data.wind = input.readFloat();
-				data.gravity = input.readFloat();
+				PhysicsConstraintPose setup = data.getSetupPose();
+				setup.inertia = input.readFloat();
+				setup.strength = input.readFloat();
+				setup.damping = input.readFloat();
+				setup.massInverse = (flags & 128) != 0 ? input.readFloat() : 1;
+				setup.wind = input.readFloat();
+				setup.gravity = input.readFloat();
 				flags = input.read();
 				if ((flags & 1) != 0) data.inertiaGlobal = true;
 				if ((flags & 2) != 0) data.strengthGlobal = true;
@@ -406,7 +409,7 @@ public class SkeletonBinary extends SkeletonLoader {
 				if ((flags & 16) != 0) data.windGlobal = true;
 				if ((flags & 32) != 0) data.gravityGlobal = true;
 				if ((flags & 64) != 0) data.mixGlobal = true;
-				data.mix = (flags & 128) != 0 ? input.readFloat() : 1;
+				setup.mix = (flags & 128) != 0 ? input.readFloat() : 1;
 				o[i] = data;
 			}
 

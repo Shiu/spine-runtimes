@@ -29,63 +29,60 @@
 
 package com.esotericsoftware.spine;
 
-import com.esotericsoftware.spine.Animation.MixBlend;
-import com.esotericsoftware.spine.Animation.MixDirection;
+/** Stores a pose for a path constraint. */
+public class PathConstraintPose {
+	float position, spacing, mixRotate, mixX, mixY;
 
-/** Stores the setup pose for a {@link PhysicsConstraint}.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-public class Slider implements Updatable {
-	final SliderData data;
-	final Skeleton skeleton;
-	final SliderPose pose = new SliderPose(), applied = new SliderPose();
-
-	boolean active;
-
-	public Slider (SliderData data, Skeleton skeleton) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
-		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
-		this.data = data;
-		this.skeleton = skeleton;
-
-		setupPose();
+	public void set (PathConstraintPose pose) {
+		position = pose.position;
+		spacing = pose.spacing;
+		mixRotate = pose.mixRotate;
+		mixX = pose.mixX;
+		mixY = pose.mixY;
 	}
 
-	/** Copy constructor. */
-	public Slider (Slider slider, Skeleton skeleton) {
-		this(slider.data, skeleton);
-		setupPose();
+	/** The position along the path. */
+	public float getPosition () {
+		return position;
 	}
 
-	public void update (Physics physics) {
-		SliderPose pose = applied;
-		data.animation.apply(skeleton, pose.time, pose.time, false, null, pose.mix, MixBlend.replace, MixDirection.in, true);
+	public void setPosition (float position) {
+		this.position = position;
 	}
 
-	public void setupPose () {
-		pose.set(data.setup);
+	/** The spacing between bones. */
+	public float getSpacing () {
+		return spacing;
 	}
 
-	public SliderPose getPose () {
-		return pose;
+	public void setSpacing (float spacing) {
+		this.spacing = spacing;
 	}
 
-	public SliderPose getAppliedPose () {
-		return applied;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
+	public float getMixRotate () {
+		return mixRotate;
 	}
 
-	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
-	 * {@link Skeleton#getSkin() active skin} does not contain this item.
-	 * @see Skin#getBones()
-	 * @see Skin#getConstraints()
-	 * @see ConstraintData#getSkinRequired()
-	 * @see Skeleton#updateCache() */
-	public boolean isActive () {
-		return active;
+	public void setMixRotate (float mixRotate) {
+		this.mixRotate = mixRotate;
 	}
 
-	public String toString () {
-		return data.name;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
+	public float getMixX () {
+		return mixX;
+	}
+
+	public void setMixX (float mixX) {
+		this.mixX = mixX;
+	}
+
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
+	public float getMixY () {
+		return mixY;
+	}
+
+	public void setMixY (float mixY) {
+		this.mixY = mixY;
 	}
 }

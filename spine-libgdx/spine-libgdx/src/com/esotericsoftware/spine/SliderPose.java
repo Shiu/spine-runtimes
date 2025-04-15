@@ -29,63 +29,29 @@
 
 package com.esotericsoftware.spine;
 
-import com.esotericsoftware.spine.Animation.MixBlend;
-import com.esotericsoftware.spine.Animation.MixDirection;
+/** Stores a pose for a slider. */
+public class SliderPose {
+	float time, mix;
 
-/** Stores the setup pose for a {@link PhysicsConstraint}.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-public class Slider implements Updatable {
-	final SliderData data;
-	final Skeleton skeleton;
-	final SliderPose pose = new SliderPose(), applied = new SliderPose();
-
-	boolean active;
-
-	public Slider (SliderData data, Skeleton skeleton) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
-		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
-		this.data = data;
-		this.skeleton = skeleton;
-
-		setupPose();
+	public void set (SliderPose pose) {
+		time = pose.time;
+		mix = pose.mix;
 	}
 
-	/** Copy constructor. */
-	public Slider (Slider slider, Skeleton skeleton) {
-		this(slider.data, skeleton);
-		setupPose();
+
+	public float getTime () {
+		return time;
 	}
 
-	public void update (Physics physics) {
-		SliderPose pose = applied;
-		data.animation.apply(skeleton, pose.time, pose.time, false, null, pose.mix, MixBlend.replace, MixDirection.in, true);
+	public void setTime (float time) {
+		this.time = time;
 	}
 
-	public void setupPose () {
-		pose.set(data.setup);
+	public float getMix () {
+		return mix;
 	}
 
-	public SliderPose getPose () {
-		return pose;
-	}
-
-	public SliderPose getAppliedPose () {
-		return applied;
-	}
-
-	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
-	 * {@link Skeleton#getSkin() active skin} does not contain this item.
-	 * @see Skin#getBones()
-	 * @see Skin#getConstraints()
-	 * @see ConstraintData#getSkinRequired()
-	 * @see Skeleton#updateCache() */
-	public boolean isActive () {
-		return active;
-	}
-
-	public String toString () {
-		return data.name;
+	public void setMix (float mix) {
+		this.mix = mix;
 	}
 }

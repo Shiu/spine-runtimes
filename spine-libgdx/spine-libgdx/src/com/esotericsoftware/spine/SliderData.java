@@ -33,11 +33,15 @@ package com.esotericsoftware.spine;
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
 public class SliderData extends ConstraintData {
+	final SliderPose setup = new SliderPose();
 	Animation animation;
-	float time, mix;
 
 	public SliderData (String name) {
 		super(name);
+	}
+
+	public SliderPose getSetupPose () {
+		return setup;
 	}
 
 	public Animation getAnimation () {
@@ -46,21 +50,5 @@ public class SliderData extends ConstraintData {
 
 	public void setAnimation (Animation animation) {
 		this.animation = animation;
-	}
-
-	public float getTime () {
-		return time;
-	}
-
-	public void setTime (float time) {
-		this.time = time;
-	}
-
-	public float getMix () {
-		return mix;
-	}
-
-	public void setMix (float mix) {
-		this.mix = mix;
 	}
 }

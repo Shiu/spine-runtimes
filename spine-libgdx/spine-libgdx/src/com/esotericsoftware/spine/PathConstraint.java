@@ -52,10 +52,8 @@ public class PathConstraint implements Updatable {
 	final PathConstraintData data;
 	final Array<BoneApplied> bones;
 	Slot slot;
-	PathConstraint applied;
+	final PathConstraintPose pose = new PathConstraintPose(), applied = new PathConstraintPose();
 	boolean active;
-
-	float position, spacing, mixRotate, mixX, mixY;
 
 	private final FloatArray spaces = new FloatArray(), positions = new FloatArray();
 	private final FloatArray world = new FloatArray(), curves = new FloatArray(), lengths = new FloatArray();
@@ -78,31 +76,25 @@ public class PathConstraint implements Updatable {
 
 		slot = skeleton.slots.get(data.slot.index);
 
-		applied = new PathConstraint(data, bones, slot);
-
 		setupPose();
 	}
 
 	/** Copy constructor. */
 	public PathConstraint (PathConstraint constraint, Skeleton skeleton) {
 		this(constraint.data, skeleton);
-		setupPose();
+		pose.set(constraint.pose);
 	}
 
 	public void setupPose () {
-		PathConstraintData data = this.data;
-		position = data.position;
-		spacing = data.spacing;
-		mixRotate = data.mixRotate;
-		mixX = data.mixX;
-		mixY = data.mixY;
+		pose.set(data.setup);
 	}
 
 	/** Applies the constraint to the constrained bones. */
 	public void update (Physics physics) {
 		if (!(slot.applied.attachment instanceof PathAttachment pathAttachment)) return;
 
-		float mixRotate = this.mixRotate, mixX = this.mixX, mixY = this.mixY;
+		PathConstraintPose pose = applied;
+		float mixRotate = pose.mixRotate, mixX = pose.mixX, mixY = pose.mixY;
 		if (mixRotate == 0 && mixX == 0 && mixY == 0) return;
 
 		PathConstraintData data = this.data;
@@ -110,7 +102,7 @@ public class PathConstraint implements Updatable {
 		int boneCount = this.bones.size, spacesCount = tangents ? boneCount : boneCount + 1;
 		Object[] bones = this.bones.items;
 		float[] spaces = this.spaces.setSize(spacesCount), lengths = scale ? this.lengths.setSize(boneCount) : null;
-		float spacing = this.spacing;
+		float spacing = pose.spacing;
 
 		switch (data.spacingMode) {
 		case percent -> {
@@ -224,7 +216,7 @@ public class PathConstraint implements Updatable {
 
 	float[] computeWorldPositions (PathAttachment path, int spacesCount, boolean tangents) {
 		Slot slot = this.slot;
-		float position = this.position;
+		float position = applied.position;
 		float[] spaces = this.spaces.items, out = this.positions.setSize(spacesCount * 3 + 2), world;
 		boolean closed = path.getClosed();
 		int verticesLength = path.getWorldVerticesLength(), curveCount = verticesLength / 6, prevCurve = NONE;
@@ -480,51 +472,6 @@ public class PathConstraint implements Updatable {
 		}
 	}
 
-	/** The position along the path. */
-	public float getPosition () {
-		return position;
-	}
-
-	public void setPosition (float position) {
-		this.position = position;
-	}
-
-	/** The spacing between bones. */
-	public float getSpacing () {
-		return spacing;
-	}
-
-	public void setSpacing (float spacing) {
-		this.spacing = spacing;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
-	public float getMixRotate () {
-		return mixRotate;
-	}
-
-	public void setMixRotate (float mixRotate) {
-		this.mixRotate = mixRotate;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
-	public float getMixX () {
-		return mixX;
-	}
-
-	public void setMixX (float mixX) {
-		this.mixX = mixX;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
-	public float getMixY () {
-		return mixY;
-	}
-
-	public void setMixY (float mixY) {
-		this.mixY = mixY;
-	}
-
 	/** The bones that will be modified by this path constraint. */
 	public Array<BoneApplied> getBones () {
 		return bones;
@@ -538,6 +485,14 @@ public class PathConstraint implements Updatable {
 	public void setSlot (Slot slot) {
 		if (slot == null) throw new IllegalArgumentException("slot cannot be null.");
 		this.slot = slot;
+	}
+
+	public PathConstraintPose getPose () {
+		return pose;
+	}
+
+	public PathConstraintPose getAppliedPose () {
+		return applied;
 	}
 
 	/** Returns false when this constraint won't be updated by

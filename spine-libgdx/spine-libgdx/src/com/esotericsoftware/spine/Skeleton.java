@@ -38,7 +38,6 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.Animation.BoneTimeline;
-import com.esotericsoftware.spine.Animation.Timeline;
 import com.esotericsoftware.spine.Skin.SkinEntry;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.ClippingAttachment;
@@ -256,21 +255,24 @@ public class Skeleton {
 		constraint.active = !constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true));
 		if (!constraint.active) return;
 
+		Object[] timelines = constraint.data.animation.timelines.items;
+		int timelineCount = constraint.data.animation.timelines.size;
+
 		Object[] bones = this.bones.items;
-		for (Timeline timeline : constraint.animation.timelines)
-			if (timeline instanceof BoneTimeline boneTimeline) sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
+		for (int i = 0; i < timelineCount; i++)
+			if (timelines[i] instanceof BoneTimeline boneTimeline) sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
 
 		updateCache.add(constraint);
 
-		for (Timeline timeline : constraint.animation.timelines) {
-			if (timeline instanceof BoneTimeline boneTimeline) {
+		for (int i = 0; i < timelineCount; i++) {
+			if (timelines[i] instanceof BoneTimeline boneTimeline) {
 				var bone = (Bone)bones[boneTimeline.getBoneIndex()];
 				sortReset(bone.children);
 				bone.sorted = false;
 			}
 		}
-		for (Timeline timeline : constraint.animation.timelines)
-			if (timeline instanceof BoneTimeline boneTimeline) sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
+		for (int i = 0; i < timelineCount; i++)
+			if (timelines[i] instanceof BoneTimeline boneTimeline) sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
 	}
 
 	private void sortIkConstraint (IkConstraint constraint) {
@@ -347,9 +349,9 @@ public class Skeleton {
 		updateCache.add(constraint);
 
 		for (int i = 0; i < boneCount; i++)
-			sortReset(((Bone)constrained[i]).children);
+			sortReset(((BoneApplied)constrained[i]).bone.children);
 		for (int i = 0; i < boneCount; i++)
-			((Bone)constrained[i]).sorted = true;
+			((BoneApplied)constrained[i]).bone.sorted = true;
 	}
 
 	private void sortPathConstraintAttachment (Skin skin, int slotIndex, Bone slotBone) {
@@ -371,7 +373,7 @@ public class Skeleton {
 				int nn = pathBones[i++];
 				nn += i;
 				while (i < nn)
-					sortBone(((BoneApplied)bones[pathBones[i++]]).bone);
+					sortBone((Bone)bones[pathBones[i++]]);
 			}
 		}
 	}
@@ -428,8 +430,26 @@ public class Skeleton {
 			var constraint = (IkConstraint)objects[i];
 			if (constraint.active) constraint.applied.set(constraint.pose);
 		}
-
-		// BOZO! - Reset the rest.
+		objects = pathConstraints.items;
+		for (int i = 0, n = pathConstraints.size; i < n; i++) {
+			var constraint = (PathConstraint)objects[i];
+			if (constraint.active) constraint.applied.set(constraint.pose);
+		}
+		objects = transformConstraints.items;
+		for (int i = 0, n = transformConstraints.size; i < n; i++) {
+			var constraint = (TransformConstraint)objects[i];
+			if (constraint.active) constraint.applied.set(constraint.pose);
+		}
+		objects = physicsConstraints.items;
+		for (int i = 0, n = physicsConstraints.size; i < n; i++) {
+			var constraint = (PhysicsConstraint)objects[i];
+			if (constraint.active) constraint.applied.set(constraint.pose);
+		}
+		objects = sliders.items;
+		for (int i = 0, n = sliders.size; i < n; i++) {
+			var constraint = (Slider)objects[i];
+			if (constraint.active) constraint.applied.set(constraint.pose);
+		}
 
 		Object[] updateCache = this.updateCache.items;
 		for (int i = 0, n = this.updateCache.size; i < n; i++)
@@ -444,12 +464,41 @@ public class Skeleton {
 	public void updateWorldTransform (Physics physics, BoneApplied parent) {
 		if (parent == null) throw new IllegalArgumentException("parent cannot be null.");
 
-		Object[] bones = this.bones.items;
-		for (int i = 1, n = this.bones.size; i < n; i++) { // Skip root bone.
-			var bone = (Bone)bones[i];
+		Object[] objects = this.bones.items;
+		for (int i = 0, n = this.bones.size; i < n; i++) {
+			var bone = (Bone)objects[i];
 			if (bone.active) bone.applied.set(bone.pose);
 		}
-		// BOZO! - Reset the rest.
+		objects = this.slots.items;
+		for (int i = 0, n = this.slots.size; i < n; i++) {
+			var slot = (Slot)objects[i];
+			if (slot.bone.active) slot.applied.set(slot.pose);
+		}
+		objects = ikConstraints.items;
+		for (int i = 0, n = ikConstraints.size; i < n; i++) {
+			var constraint = (IkConstraint)objects[i];
+			if (constraint.active) constraint.applied.set(constraint.pose);
+		}
+		objects = pathConstraints.items;
+		for (int i = 0, n = pathConstraints.size; i < n; i++) {
+			var constraint = (PathConstraint)objects[i];
+			if (constraint.active) constraint.applied.set(constraint.pose);
+		}
+		objects = transformConstraints.items;
+		for (int i = 0, n = transformConstraints.size; i < n; i++) {
+			var constraint = (TransformConstraint)objects[i];
+			if (constraint.active) constraint.applied.set(constraint.pose);
+		}
+		objects = physicsConstraints.items;
+		for (int i = 0, n = physicsConstraints.size; i < n; i++) {
+			var constraint = (PhysicsConstraint)objects[i];
+			if (constraint.active) constraint.applied.set(constraint.pose);
+		}
+		objects = sliders.items;
+		for (int i = 0, n = sliders.size; i < n; i++) {
+			var constraint = (Slider)objects[i];
+			if (constraint.active) constraint.applied.set(constraint.pose);
+		}
 
 		// Apply the parent bone transform to the root bone. The root bone always inherits scale, rotation and reflection.
 		BoneApplied rootBone = getRootBone().applied;

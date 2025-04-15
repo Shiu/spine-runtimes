@@ -35,13 +35,17 @@ import com.badlogic.gdx.utils.Array;
  * <p>
  * See <a href="https://esotericsoftware.com/spine-ik-constraints">IK constraints</a> in the Spine User Guide. */
 public class IkConstraintData extends ConstraintData {
+	final IkConstraintPose setup = new IkConstraintPose();
 	final Array<BoneData> bones = new Array();
 	BoneData target;
-	final IkConstraintPose setup = new IkConstraintPose();
 	boolean uniform;
 
 	public IkConstraintData (String name) {
 		super(name);
+	}
+
+	public IkConstraintPose getSetupPose () {
+		return setup;
 	}
 
 	/** The bones that are constrained by this IK constraint. */
@@ -57,10 +61,6 @@ public class IkConstraintData extends ConstraintData {
 	public void setTarget (BoneData target) {
 		if (target == null) throw new IllegalArgumentException("target cannot be null.");
 		this.target = target;
-	}
-
-	public IkConstraintPose getSetupPose () {
-		return setup;
 	}
 
 	/** When true and {@link IkConstraintPose#getCompress()} or {@link IkConstraintPose#getStretch()} is used, the bone is scaled
