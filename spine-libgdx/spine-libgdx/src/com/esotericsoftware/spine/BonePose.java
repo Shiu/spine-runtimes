@@ -39,16 +39,16 @@ public class BonePose {
 	BonePose () {
 	}
 
-	public void set (BonePose bone) {
-		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
-		x = bone.x;
-		y = bone.y;
-		rotation = bone.rotation;
-		scaleX = bone.scaleX;
-		scaleY = bone.scaleY;
-		shearX = bone.shearX;
-		shearY = bone.shearY;
-		inherit = bone.inherit;
+	public void set (BonePose pose) {
+		if (pose == null) throw new IllegalArgumentException("pose cannot be null.");
+		x = pose.x;
+		y = pose.y;
+		rotation = pose.rotation;
+		scaleX = pose.scaleX;
+		scaleY = pose.scaleY;
+		shearX = pose.shearX;
+		shearY = pose.shearY;
+		inherit = pose.inherit;
 	}
 
 	/** The local x translation. */

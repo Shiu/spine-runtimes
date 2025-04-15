@@ -44,21 +44,21 @@ import com.esotericsoftware.spine.attachments.VertexAttachment;
 public class SlotPose {
 	final Color color = new Color();
 	@Null Color darkColor;
-	@Null Attachment attachment;
+	@Null Attachment attachment; // Not used in setup pose.
 	int sequenceIndex;
 	final FloatArray deform = new FloatArray(0);
 
 	SlotPose () {
 	}
 
-	public void set (SlotPose slot) {
-		if (slot == null) throw new IllegalArgumentException("slot cannot be null.");
-		color.set(slot.color);
-		if (slot.darkColor != null) darkColor.set(slot.darkColor);
-		attachment = slot.attachment;
-		sequenceIndex = slot.sequenceIndex;
+	public void set (SlotPose pose) {
+		if (pose == null) throw new IllegalArgumentException("pose cannot be null.");
+		color.set(pose.color);
+		if (darkColor != null) darkColor.set(pose.darkColor);
+		attachment = pose.attachment;
+		sequenceIndex = pose.sequenceIndex;
 		deform.size = 0;
-		deform.addAll(slot.deform);
+		deform.addAll(pose.deform);
 	}
 
 	/** The color used to tint the slot's attachment. If {@link #getDarkColor()} is set, this is used as the light color for two

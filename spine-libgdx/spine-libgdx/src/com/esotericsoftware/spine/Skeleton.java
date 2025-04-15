@@ -53,6 +53,7 @@ import com.esotericsoftware.spine.utils.SkeletonClipping;
  * Runtimes Guide. */
 public class Skeleton {
 	static private final short[] quadTriangles = {0, 1, 2, 2, 3, 0};
+	private static final Object IkConstraint = null;
 	final SkeletonData data;
 	final Array<Bone> bones;
 	final Array<Slot> slots;
@@ -412,16 +413,22 @@ public class Skeleton {
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
 	public void updateWorldTransform (Physics physics) {
-		Object[] bones = this.bones.items;
+		Object[] objects = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++) {
-			var bone = (Bone)bones[i];
+			var bone = (Bone)objects[i];
 			if (bone.active) bone.applied.set(bone.pose);
 		}
-		Object[] slots = this.slots.items;
+		objects = this.slots.items;
 		for (int i = 0, n = this.slots.size; i < n; i++) {
-			var slot = (Slot)slots[i];
+			var slot = (Slot)objects[i];
 			if (slot.bone.active) slot.applied.set(slot.pose);
 		}
+		objects = ikConstraints.items;
+		for (int i = 0, n = ikConstraints.size; i < n; i++) {
+			var constraint = (IkConstraint)objects[i];
+			if (constraint.active) constraint.applied.set(constraint.pose);
+		}
+
 		// BOZO! - Reset the rest.
 
 		Object[] updateCache = this.updateCache.items;

@@ -66,7 +66,7 @@ public class Bone {
 
 	/** Sets this bone's local transform to the setup pose. */
 	public void setupPose () {
-		pose.set(data);
+		pose.set(data.setup);
 	}
 
 	/** The bone's setup pose data. */

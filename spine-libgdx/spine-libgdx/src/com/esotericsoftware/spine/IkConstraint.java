@@ -43,18 +43,8 @@ public class IkConstraint implements Updatable {
 	final IkConstraintData data;
 	final Array<BoneApplied> bones;
 	BoneApplied target;
-	IkConstraint applied;
+	final IkConstraintPose pose = new IkConstraintPose(), applied = new IkConstraintPose();
 	boolean active;
-
-	int bendDirection;
-	boolean compress, stretch;
-	float mix = 1, softness;
-
-	private IkConstraint (IkConstraintData data, Array<BoneApplied> bones, BoneApplied target) {
-		this.data = data;
-		this.bones = bones;
-		this.target = target;
-	}
 
 	public IkConstraint (IkConstraintData data, Skeleton skeleton) {
 		if (data == null) throw new IllegalArgumentException("data cannot be null.");
@@ -67,8 +57,6 @@ public class IkConstraint implements Updatable {
 
 		target = skeleton.bones.get(data.target.index).applied;
 
-		applied = new IkConstraint(data, bones, target);
-
 		setupPose();
 	}
 
@@ -79,24 +67,20 @@ public class IkConstraint implements Updatable {
 	}
 
 	public void setupPose () {
-		IkConstraintData data = this.data;
-		mix = data.mix;
-		softness = data.softness;
-		bendDirection = data.bendDirection;
-		compress = data.compress;
-		stretch = data.stretch;
+		pose.set(data.setup);
 	}
 
 	/** Applies the constraint to the constrained bones. */
 	public void update (Physics physics) {
-		if (mix == 0) return;
+		IkConstraintPose pose = applied;
+		if (pose.mix == 0) return;
 		BoneApplied target = this.target;
 		Object[] bones = this.bones.items;
 		switch (this.bones.size) {
-		case 1 -> apply((BoneApplied)bones[0], target.worldX, target.worldY, compress, stretch, data.uniform, mix);
+		case 1 -> apply((BoneApplied)bones[0], target.worldX, target.worldY, pose.compress, pose.stretch, data.uniform, pose.mix);
 		case 2 -> //
-			apply((BoneApplied)bones[0], (BoneApplied)bones[1], target.worldX, target.worldY, bendDirection, stretch, data.uniform,
-				softness, mix);
+			apply((BoneApplied)bones[0], (BoneApplied)bones[1], target.worldX, target.worldY, pose.bendDirection, pose.stretch,
+				data.uniform, pose.softness, pose.mix);
 		}
 	}
 
@@ -115,55 +99,12 @@ public class IkConstraint implements Updatable {
 		this.target = target;
 	}
 
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
-	 * <p>
-	 * For two bone IK: if the parent bone has local nonuniform scale, the child bone's local Y translation is set to 0. */
-	public float getMix () {
-		return mix;
+	public IkConstraintPose getPose () {
+		return pose;
 	}
 
-	public void setMix (float mix) {
-		this.mix = mix;
-	}
-
-	/** For two bone IK, the target bone's distance from the maximum reach of the bones where rotation begins to slow. The bones
-	 * will not straighten completely until the target is this far out of range. */
-	public float getSoftness () {
-		return softness;
-	}
-
-	public void setSoftness (float softness) {
-		this.softness = softness;
-	}
-
-	/** For two bone IK, controls the bend direction of the IK bones, either 1 or -1. */
-	public int getBendDirection () {
-		return bendDirection;
-	}
-
-	public void setBendDirection (int bendDirection) {
-		this.bendDirection = bendDirection;
-	}
-
-	/** For one bone IK, when true and the target is too close, the bone is scaled to reach it. */
-	public boolean getCompress () {
-		return compress;
-	}
-
-	public void setCompress (boolean compress) {
-		this.compress = compress;
-	}
-
-	/** When true and the target is out of range, the parent bone is scaled to reach it.
-	 * <p>
-	 * For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not applied if {@link #getSoftness()} is
-	 * > 0, and 3) if the parent bone has local nonuniform scale, stretch is not applied. */
-	public boolean getStretch () {
-		return stretch;
-	}
-
-	public void setStretch (boolean stretch) {
-		this.stretch = stretch;
+	public IkConstraintPose getAppliedPose () {
+		return applied;
 	}
 
 	/** Returns false when this constraint won't be updated by

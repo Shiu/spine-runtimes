@@ -29,14 +29,14 @@
 
 package com.esotericsoftware.spine;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Null;
 
 /** Stores the setup pose for a {@link Slot}. */
-public class SlotData extends SlotPose {
+public class SlotData {
 	final int index;
 	final String name;
 	final BoneData boneData;
+	final SlotPose setup = new SlotPose();
 	@Null String attachmentName;
 	BlendMode blendMode;
 
@@ -67,20 +67,8 @@ public class SlotData extends SlotPose {
 		return boneData;
 	}
 
-	/** The color used to tint the slot's attachment. If {@link #getDarkColor()} is set, this is used as the light color for two
-	 * color tinting. */
-	public Color getColor () {
-		return color;
-	}
-
-	/** The dark color used to tint the slot's attachment for two color tinting, or null if two color tinting is not used. The dark
-	 * color's alpha is not used. */
-	public @Null Color getDarkColor () {
-		return darkColor;
-	}
-
-	public void setDarkColor (@Null Color darkColor) {
-		this.darkColor = darkColor;
+	public SlotPose getSetupPose () {
+		return setup;
 	}
 
 	public void setAttachmentName (@Null String attachmentName) {

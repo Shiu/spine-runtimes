@@ -417,23 +417,23 @@ public class AnimationState {
 
 		Bone bone = skeleton.bones.get(timeline.boneIndex);
 		if (!bone.active) return;
-		BonePose pose = bone.getPose();
+		BonePose pose = bone.getPose(), setup = bone.data.setup;
 		float[] frames = timeline.frames;
 		float r1, r2;
 		if (time < frames[0]) { // Time is before first frame.
 			switch (blend) {
 			case setup:
-				pose.rotation = bone.data.rotation;
+				pose.rotation = setup.rotation;
 				// Fall through.
 			default:
 				return;
 			case first:
 				r1 = pose.rotation;
-				r2 = bone.data.rotation;
+				r2 = setup.rotation;
 			}
 		} else {
-			r1 = blend == MixBlend.setup ? bone.data.rotation : pose.rotation;
-			r2 = bone.data.rotation + timeline.getCurveValue(time);
+			r1 = blend == MixBlend.setup ? setup.rotation : pose.rotation;
+			r2 = setup.rotation + timeline.getCurveValue(time);
 		}
 
 		// Mix between rotations using the direction of the shortest route on the first frame.

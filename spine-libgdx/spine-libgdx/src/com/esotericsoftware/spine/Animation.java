@@ -563,7 +563,7 @@ public class Animation {
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (bone.active) {
 				BonePose pose = appliedPose ? bone.applied : bone.pose;
-				pose.rotation = getRelativeValue(time, alpha, blend, pose.rotation, bone.data.rotation);
+				pose.rotation = getRelativeValue(time, alpha, blend, pose.rotation, bone.data.setup.rotation);
 			}
 		}
 	}
@@ -588,18 +588,18 @@ public class Animation {
 
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (!bone.active) return;
-			BonePose pose = appliedPose ? bone.applied : bone.pose;
+			BonePose pose = appliedPose ? bone.applied : bone.pose, setup = bone.data.setup;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				switch (blend) {
 				case setup:
-					pose.x = bone.data.x;
-					pose.y = bone.data.y;
+					pose.x = setup.x;
+					pose.y = setup.y;
 					return;
 				case first:
-					pose.x += (bone.data.x - pose.x) * alpha;
-					pose.y += (bone.data.y - pose.y) * alpha;
+					pose.x += (setup.x - pose.x) * alpha;
+					pose.y += (setup.y - pose.y) * alpha;
 				}
 				return;
 			}
@@ -626,13 +626,13 @@ public class Animation {
 
 			switch (blend) {
 			case setup:
-				pose.x = bone.data.x + x * alpha;
-				pose.y = bone.data.y + y * alpha;
+				pose.x = setup.x + x * alpha;
+				pose.y = setup.y + y * alpha;
 				break;
 			case first:
 			case replace:
-				pose.x += (bone.data.x + x - pose.x) * alpha;
-				pose.y += (bone.data.y + y - pose.y) * alpha;
+				pose.x += (setup.x + x - pose.x) * alpha;
+				pose.y += (setup.y + y - pose.y) * alpha;
 				break;
 			case add:
 				pose.x += x * alpha;
@@ -660,7 +660,7 @@ public class Animation {
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (bone.active) {
 				BonePose pose = appliedPose ? bone.applied : bone.pose;
-				pose.x = getRelativeValue(time, alpha, blend, pose.x, bone.data.x);
+				pose.x = getRelativeValue(time, alpha, blend, pose.x, bone.data.setup.x);
 			}
 		}
 	}
@@ -684,7 +684,7 @@ public class Animation {
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (bone.active) {
 				BonePose pose = appliedPose ? bone.applied : bone.pose;
-				pose.y = getRelativeValue(time, alpha, blend, pose.y, bone.data.y);
+				pose.y = getRelativeValue(time, alpha, blend, pose.y, bone.data.setup.y);
 			}
 		}
 	}
@@ -709,18 +709,18 @@ public class Animation {
 
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (!bone.active) return;
-			BonePose pose = appliedPose ? bone.applied : bone.pose;
+			BonePose pose = appliedPose ? bone.applied : bone.pose, setup = bone.data.setup;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				switch (blend) {
 				case setup:
-					pose.scaleX = bone.data.scaleX;
-					pose.scaleY = bone.data.scaleY;
+					pose.scaleX = setup.scaleX;
+					pose.scaleY = setup.scaleY;
 					return;
 				case first:
-					pose.scaleX += (bone.data.scaleX - pose.scaleX) * alpha;
-					pose.scaleY += (bone.data.scaleY - pose.scaleY) * alpha;
+					pose.scaleX += (setup.scaleX - pose.scaleX) * alpha;
+					pose.scaleY += (setup.scaleY - pose.scaleY) * alpha;
 				}
 				return;
 			}
@@ -744,13 +744,13 @@ public class Animation {
 				x = getBezierValue(time, i, VALUE1, curveType - BEZIER);
 				y = getBezierValue(time, i, VALUE2, curveType + BEZIER_SIZE - BEZIER);
 			}
-			x *= bone.data.scaleX;
-			y *= bone.data.scaleY;
+			x *= setup.scaleX;
+			y *= setup.scaleY;
 
 			if (alpha == 1) {
 				if (blend == add) {
-					pose.scaleX += x - bone.data.scaleX;
-					pose.scaleY += y - bone.data.scaleY;
+					pose.scaleX += x - setup.scaleX;
+					pose.scaleY += y - setup.scaleY;
 				} else {
 					pose.scaleX = x;
 					pose.scaleY = y;
@@ -761,8 +761,8 @@ public class Animation {
 				if (direction == out) {
 					switch (blend) {
 					case setup:
-						bx = bone.data.scaleX;
-						by = bone.data.scaleY;
+						bx = setup.scaleX;
+						by = setup.scaleY;
 						pose.scaleX = bx + (Math.abs(x) * Math.signum(bx) - bx) * alpha;
 						pose.scaleY = by + (Math.abs(y) * Math.signum(by) - by) * alpha;
 						break;
@@ -774,14 +774,14 @@ public class Animation {
 						pose.scaleY = by + (Math.abs(y) * Math.signum(by) - by) * alpha;
 						break;
 					case add:
-						pose.scaleX += (x - bone.data.scaleX) * alpha;
-						pose.scaleY += (y - bone.data.scaleY) * alpha;
+						pose.scaleX += (x - setup.scaleX) * alpha;
+						pose.scaleY += (y - setup.scaleY) * alpha;
 					}
 				} else {
 					switch (blend) {
 					case setup:
-						bx = Math.abs(bone.data.scaleX) * Math.signum(x);
-						by = Math.abs(bone.data.scaleY) * Math.signum(y);
+						bx = Math.abs(setup.scaleX) * Math.signum(x);
+						by = Math.abs(setup.scaleY) * Math.signum(y);
 						pose.scaleX = bx + (x - bx) * alpha;
 						pose.scaleY = by + (y - by) * alpha;
 						break;
@@ -793,8 +793,8 @@ public class Animation {
 						pose.scaleY = by + (y - by) * alpha;
 						break;
 					case add:
-						pose.scaleX += (x - bone.data.scaleX) * alpha;
-						pose.scaleY += (y - bone.data.scaleY) * alpha;
+						pose.scaleX += (x - setup.scaleX) * alpha;
+						pose.scaleY += (y - setup.scaleY) * alpha;
 					}
 				}
 			}
@@ -820,7 +820,7 @@ public class Animation {
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (bone.active) {
 				BonePose pose = appliedPose ? bone.applied : bone.pose;
-				pose.scaleX = getScaleValue(time, alpha, blend, direction, pose.scaleX, bone.data.scaleX);
+				pose.scaleX = getScaleValue(time, alpha, blend, direction, pose.scaleX, bone.data.setup.scaleX);
 			}
 		}
 	}
@@ -844,7 +844,7 @@ public class Animation {
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (bone.active) {
 				BonePose pose = appliedPose ? bone.applied : bone.pose;
-				pose.scaleY = getScaleValue(time, alpha, blend, direction, pose.scaleY, bone.data.scaleY);
+				pose.scaleY = getScaleValue(time, alpha, blend, direction, pose.scaleY, bone.data.setup.scaleY);
 			}
 		}
 	}
@@ -869,18 +869,18 @@ public class Animation {
 
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (!bone.active) return;
-			BonePose pose = appliedPose ? bone.applied : bone.pose;
+			BonePose pose = appliedPose ? bone.applied : bone.pose, setup = bone.data.setup;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				switch (blend) {
 				case setup:
-					pose.shearX = bone.data.shearX;
-					pose.shearY = bone.data.shearY;
+					pose.shearX = setup.shearX;
+					pose.shearY = setup.shearY;
 					return;
 				case first:
-					pose.shearX += (bone.data.shearX - pose.shearX) * alpha;
-					pose.shearY += (bone.data.shearY - pose.shearY) * alpha;
+					pose.shearX += (setup.shearX - pose.shearX) * alpha;
+					pose.shearY += (setup.shearY - pose.shearY) * alpha;
 				}
 				return;
 			}
@@ -907,13 +907,13 @@ public class Animation {
 
 			switch (blend) {
 			case setup:
-				pose.shearX = bone.data.shearX + x * alpha;
-				pose.shearY = bone.data.shearY + y * alpha;
+				pose.shearX = setup.shearX + x * alpha;
+				pose.shearY = setup.shearY + y * alpha;
 				break;
 			case first:
 			case replace:
-				pose.shearX += (bone.data.shearX + x - pose.shearX) * alpha;
-				pose.shearY += (bone.data.shearY + y - pose.shearY) * alpha;
+				pose.shearX += (setup.shearX + x - pose.shearX) * alpha;
+				pose.shearY += (setup.shearY + y - pose.shearY) * alpha;
 				break;
 			case add:
 				pose.shearX += x * alpha;
@@ -941,7 +941,7 @@ public class Animation {
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (bone.active) {
 				BonePose pose = appliedPose ? bone.applied : bone.pose;
-				pose.shearX = getRelativeValue(time, alpha, blend, pose.shearX, bone.data.shearX);
+				pose.shearX = getRelativeValue(time, alpha, blend, pose.shearX, bone.data.setup.shearX);
 			}
 		}
 	}
@@ -965,7 +965,7 @@ public class Animation {
 			Bone bone = skeleton.bones.get(boneIndex);
 			if (bone.active) {
 				BonePose pose = appliedPose ? bone.applied : bone.pose;
-				pose.shearY = getRelativeValue(time, alpha, blend, pose.shearY, bone.data.shearY);
+				pose.shearY = getRelativeValue(time, alpha, blend, pose.shearY, bone.data.setup.shearY);
 			}
 		}
 	}
@@ -1007,13 +1007,13 @@ public class Animation {
 			BonePose pose = appliedPose ? bone.applied : bone.pose;
 
 			if (direction == out) {
-				if (blend == setup) pose.inherit = bone.data.inherit;
+				if (blend == setup) pose.inherit = bone.data.setup.inherit;
 				return;
 			}
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
-				if (blend == setup || blend == first) pose.inherit = bone.data.inherit;
+				if (blend == setup || blend == first) pose.inherit = bone.data.setup.inherit;
 				return;
 			}
 			pose.inherit = Inherit.values[(int)frames[search(frames, time, ENTRIES) + INHERIT]];
@@ -1064,7 +1064,7 @@ public class Animation {
 			float[] frames = this.frames;
 			Color color = pose.color;
 			if (time < frames[0]) {
-				Color setup = slot.data.color;
+				Color setup = slot.data.setup.color;
 				switch (blend) {
 				case setup:
 					color.set(setup);
@@ -1107,7 +1107,7 @@ public class Animation {
 			if (alpha == 1)
 				color.set(r, g, b, a);
 			else {
-				if (blend == setup) color.set(slot.data.color);
+				if (blend == setup) color.set(slot.data.setup.color);
 				color.add((r - color.r) * alpha, (g - color.g) * alpha, (b - color.b) * alpha, (a - color.a) * alpha);
 			}
 		}
@@ -1154,7 +1154,7 @@ public class Animation {
 			float[] frames = this.frames;
 			Color color = pose.color;
 			if (time < frames[0]) {
-				Color setup = slot.data.color;
+				Color setup = slot.data.setup.color;
 				switch (blend) {
 				case setup:
 					color.r = setup.r;
@@ -1199,7 +1199,7 @@ public class Animation {
 				color.b = b;
 			} else {
 				if (blend == setup) {
-					Color setup = slot.data.color;
+					Color setup = slot.data.setup.color;
 					color.r = setup.r;
 					color.g = setup.g;
 					color.b = setup.b;
@@ -1234,7 +1234,7 @@ public class Animation {
 			float[] frames = this.frames;
 			Color color = pose.color;
 			if (time < frames[0]) {
-				Color setup = slot.data.color;
+				Color setup = slot.data.setup.color;
 				switch (blend) {
 				case setup:
 					color.a = setup.a;
@@ -1249,7 +1249,7 @@ public class Animation {
 			if (alpha == 1)
 				color.a = a;
 			else {
-				if (blend == setup) color.a = slot.data.color.a;
+				if (blend == setup) color.a = slot.data.setup.color.a;
 				color.a += (a - color.a) * alpha;
 			}
 		}
@@ -1305,7 +1305,8 @@ public class Animation {
 			float[] frames = this.frames;
 			Color light = pose.color, dark = pose.darkColor;
 			if (time < frames[0]) {
-				Color setupLight = slot.data.color, setupDark = slot.data.darkColor;
+				SlotPose setup = slot.data.setup;
+				Color setupLight = setup.color, setupDark = setup.darkColor;
 				switch (blend) {
 				case setup:
 					light.set(setupLight);
@@ -1370,8 +1371,9 @@ public class Animation {
 				dark.b = b2;
 			} else {
 				if (blend == setup) {
-					light.set(slot.data.color);
-					Color setupDark = slot.data.darkColor;
+					SlotPose setup = slot.data.setup;
+					light.set(setup.color);
+					Color setupDark = setup.darkColor;
 					dark.r = setupDark.r;
 					dark.g = setupDark.g;
 					dark.b = setupDark.b;
@@ -1432,7 +1434,8 @@ public class Animation {
 			float[] frames = this.frames;
 			Color light = pose.color, dark = pose.darkColor;
 			if (time < frames[0]) {
-				Color setupLight = slot.data.color, setupDark = slot.data.darkColor;
+				SlotPose setup = slot.data.setup;
+				Color setupLight = setup.color, setupDark = setup.darkColor;
 				switch (blend) {
 				case setup:
 					light.r = setupLight.r;
@@ -1498,7 +1501,8 @@ public class Animation {
 				dark.b = b2;
 			} else {
 				if (blend == setup) {
-					Color setupLight = slot.data.color, setupDark = slot.data.darkColor;
+					SlotPose setup = slot.data.setup;
+					Color setupLight = setup.color, setupDark = setup.darkColor;
 					light.r = setupLight.r;
 					light.g = setupLight.g;
 					light.b = setupLight.b;
@@ -1958,8 +1962,9 @@ public class Animation {
 		}
 	}
 
-	/** Changes an IK constraint's {@link IkConstraint#getMix()}, {@link IkConstraint#getSoftness()},
-	 * {@link IkConstraint#getBendDirection()}, {@link IkConstraint#getStretch()}, and {@link IkConstraint#getCompress()}. */
+	/** Changes an IK constraint's {@link IkConstraintPose#getMix()}, {@link IkConstraintPose#getSoftness()},
+	 * {@link IkConstraintPose#getBendDirection()}, {@link IkConstraintPose#getStretch()}, and
+	 * {@link IkConstraintPose#getCompress()}. */
 	static public class IkConstraintTimeline extends CurveTimeline {
 		static public final int ENTRIES = 6;
 		static private final int MIX = 1, SOFTNESS = 2, BEND_DIRECTION = 3, COMPRESS = 4, STRETCH = 5;
@@ -2001,24 +2006,24 @@ public class Animation {
 
 			IkConstraint constraint = skeleton.ikConstraints.get(constraintIndex);
 			if (!constraint.active) return;
-			if (appliedPose) constraint = constraint.applied;
+			IkConstraintPose pose = appliedPose ? constraint.applied : constraint.pose, setup = constraint.data.setup;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				switch (blend) {
 				case setup:
-					constraint.mix = constraint.data.mix;
-					constraint.softness = constraint.data.softness;
-					constraint.bendDirection = constraint.data.bendDirection;
-					constraint.compress = constraint.data.compress;
-					constraint.stretch = constraint.data.stretch;
+					pose.mix = setup.mix;
+					pose.softness = setup.softness;
+					pose.bendDirection = setup.bendDirection;
+					pose.compress = setup.compress;
+					pose.stretch = setup.stretch;
 					return;
 				case first:
-					constraint.mix += (constraint.data.mix - constraint.mix) * alpha;
-					constraint.softness += (constraint.data.softness - constraint.softness) * alpha;
-					constraint.bendDirection = constraint.data.bendDirection;
-					constraint.compress = constraint.data.compress;
-					constraint.stretch = constraint.data.stretch;
+					pose.mix += (setup.mix - pose.mix) * alpha;
+					pose.softness += (setup.softness - pose.softness) * alpha;
+					pose.bendDirection = setup.bendDirection;
+					pose.compress = setup.compress;
+					pose.stretch = setup.stretch;
 				}
 				return;
 			}
@@ -2043,25 +2048,25 @@ public class Animation {
 				softness = getBezierValue(time, i, SOFTNESS, curveType + BEZIER_SIZE - BEZIER);
 			}
 
-			if (blend == setup) {
-				constraint.mix = constraint.data.mix + (mix - constraint.data.mix) * alpha;
-				constraint.softness = constraint.data.softness + (softness - constraint.data.softness) * alpha;
+			if (blend == MixBlend.setup) {
+				pose.mix = setup.mix + (mix - setup.mix) * alpha;
+				pose.softness = setup.softness + (softness - setup.softness) * alpha;
 				if (direction == out) {
-					constraint.bendDirection = constraint.data.bendDirection;
-					constraint.compress = constraint.data.compress;
-					constraint.stretch = constraint.data.stretch;
+					pose.bendDirection = setup.bendDirection;
+					pose.compress = setup.compress;
+					pose.stretch = setup.stretch;
 				} else {
-					constraint.bendDirection = (int)frames[i + BEND_DIRECTION];
-					constraint.compress = frames[i + COMPRESS] != 0;
-					constraint.stretch = frames[i + STRETCH] != 0;
+					pose.bendDirection = (int)frames[i + BEND_DIRECTION];
+					pose.compress = frames[i + COMPRESS] != 0;
+					pose.stretch = frames[i + STRETCH] != 0;
 				}
 			} else {
-				constraint.mix += (mix - constraint.mix) * alpha;
-				constraint.softness += (softness - constraint.softness) * alpha;
+				pose.mix += (mix - pose.mix) * alpha;
+				pose.softness += (softness - pose.softness) * alpha;
 				if (direction == in) {
-					constraint.bendDirection = (int)frames[i + BEND_DIRECTION];
-					constraint.compress = frames[i + COMPRESS] != 0;
-					constraint.stretch = frames[i + STRETCH] != 0;
+					pose.bendDirection = (int)frames[i + BEND_DIRECTION];
+					pose.compress = frames[i + COMPRESS] != 0;
+					pose.stretch = frames[i + STRETCH] != 0;
 				}
 			}
 		}

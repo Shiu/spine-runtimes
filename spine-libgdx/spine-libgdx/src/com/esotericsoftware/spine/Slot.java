@@ -45,7 +45,7 @@ public class Slot {
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 		this.data = data;
 		bone = skeleton.bones.get(data.boneData.index);
-		if (data.darkColor != null) {
+		if (data.setup.darkColor != null) {
 			pose.darkColor = new Color();
 			applied.darkColor = new Color();
 		}
@@ -58,7 +58,7 @@ public class Slot {
 		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
 		data = slot.data;
 		this.bone = bone;
-		if (data.darkColor != null) {
+		if (data.setup.darkColor != null) {
 			pose.darkColor = new Color();
 			applied.darkColor = new Color();
 		}
@@ -67,7 +67,7 @@ public class Slot {
 
 	/** Sets this slot to the setup pose. */
 	public void setupPose () {
-		pose.set(data);
+		pose.set(data.setup);
 		if (data.attachmentName != null) pose.setAttachment(bone.skeleton.getAttachment(data.index, data.attachmentName));
 	}
 

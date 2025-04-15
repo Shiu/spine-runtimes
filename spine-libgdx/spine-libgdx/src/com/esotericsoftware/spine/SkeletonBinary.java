@@ -217,15 +217,16 @@ public class SkeletonBinary extends SkeletonLoader {
 				String name = input.readString();
 				BoneData parent = i == 0 ? null : (BoneData)bones[input.readInt(true)];
 				var data = new BoneData(i, name, parent);
-				data.rotation = input.readFloat();
-				data.x = input.readFloat() * scale;
-				data.y = input.readFloat() * scale;
-				data.scaleX = input.readFloat();
-				data.scaleY = input.readFloat();
-				data.shearX = input.readFloat();
-				data.shearY = input.readFloat();
+				BonePose setup = data.setup;
+				setup.rotation = input.readFloat();
+				setup.x = input.readFloat() * scale;
+				setup.y = input.readFloat() * scale;
+				setup.scaleX = input.readFloat();
+				setup.scaleY = input.readFloat();
+				setup.shearX = input.readFloat();
+				setup.shearY = input.readFloat();
+				setup.inherit = Inherit.values[input.readByte()];
 				data.length = input.readFloat() * scale;
-				data.inherit = Inherit.values[input.readByte()];
 				data.skinRequired = input.readBoolean();
 				if (nonessential) {
 					Color.rgba8888ToColor(data.color, input.readInt());
@@ -241,10 +242,10 @@ public class SkeletonBinary extends SkeletonLoader {
 				String slotName = input.readString();
 				var boneData = (BoneData)bones[input.readInt(true)];
 				var data = new SlotData(i, slotName, boneData);
-				Color.rgba8888ToColor(data.color, input.readInt());
+				Color.rgba8888ToColor(data.setup.color, input.readInt());
 
 				int darkColor = input.readInt();
-				if (darkColor != -1) Color.rgb888ToColor(data.darkColor = new Color(), darkColor);
+				if (darkColor != -1) Color.rgb888ToColor(data.setup.darkColor = new Color(), darkColor);
 
 				data.attachmentName = input.readStringRef();
 				data.blendMode = BlendMode.values[input.readInt(true)];
@@ -263,12 +264,13 @@ public class SkeletonBinary extends SkeletonLoader {
 				data.target = (BoneData)bones[input.readInt(true)];
 				int flags = input.read();
 				data.skinRequired = (flags & 1) != 0;
-				data.bendDirection = (flags & 2) != 0 ? 1 : -1;
-				data.compress = (flags & 4) != 0;
-				data.stretch = (flags & 8) != 0;
-				data.uniform = (flags & 16) != 0;
-				if ((flags & 32) != 0) data.mix = (flags & 64) != 0 ? input.readFloat() : 1;
-				if ((flags & 128) != 0) data.softness = input.readFloat() * scale;
+				data.uniform = (flags & 2) != 0;
+				IkConstraintPose setup = data.setup;
+				setup.bendDirection = (flags & 4) != 0 ? 1 : -1;
+				setup.compress = (flags & 8) != 0;
+				setup.stretch = (flags & 16) != 0;
+				if ((flags & 32) != 0) setup.mix = (flags & 64) != 0 ? input.readFloat() : 1;
+				if ((flags & 128) != 0) setup.softness = input.readFloat() * scale;
 				o[i] = data;
 			}
 

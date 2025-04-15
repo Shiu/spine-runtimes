@@ -174,14 +174,15 @@ public class SkeletonJson extends SkeletonLoader {
 			}
 			var data = new BoneData(skeletonData.bones.size, boneMap.getString("name"), parent);
 			data.length = boneMap.getFloat("length", 0) * scale;
-			data.x = boneMap.getFloat("x", 0) * scale;
-			data.y = boneMap.getFloat("y", 0) * scale;
-			data.rotation = boneMap.getFloat("rotation", 0);
-			data.scaleX = boneMap.getFloat("scaleX", 1);
-			data.scaleY = boneMap.getFloat("scaleY", 1);
-			data.shearX = boneMap.getFloat("shearX", 0);
-			data.shearY = boneMap.getFloat("shearY", 0);
-			data.inherit = Inherit.valueOf(boneMap.getString("inherit", Inherit.normal.name()));
+			BonePose setup = data.setup;
+			setup.x = boneMap.getFloat("x", 0) * scale;
+			setup.y = boneMap.getFloat("y", 0) * scale;
+			setup.rotation = boneMap.getFloat("rotation", 0);
+			setup.scaleX = boneMap.getFloat("scaleX", 1);
+			setup.scaleY = boneMap.getFloat("scaleY", 1);
+			setup.shearX = boneMap.getFloat("shearX", 0);
+			setup.shearY = boneMap.getFloat("shearY", 0);
+			setup.inherit = Inherit.valueOf(boneMap.getString("inherit", Inherit.normal.name()));
 			data.skinRequired = boneMap.getBoolean("skin", false);
 
 			String color = boneMap.getString("color", null);
@@ -203,10 +204,10 @@ public class SkeletonJson extends SkeletonLoader {
 			var data = new SlotData(skeletonData.slots.size, slotName, boneData);
 
 			String color = slotMap.getString("color", null);
-			if (color != null) Color.valueOf(color, data.getColor());
+			if (color != null) Color.valueOf(color, data.getSetupPose().getColor());
 
 			String dark = slotMap.getString("dark", null);
-			if (dark != null) data.setDarkColor(Color.valueOf(dark));
+			if (dark != null) Color.valueOf(dark, data.getSetupPose().getDarkColor());
 
 			data.attachmentName = slotMap.getString("attachment", null);
 			data.blendMode = BlendMode.valueOf(slotMap.getString("blend", BlendMode.normal.name()));
@@ -230,12 +231,13 @@ public class SkeletonJson extends SkeletonLoader {
 			data.target = skeletonData.findBone(targetName);
 			if (data.target == null) throw new SerializationException("IK target bone not found: " + targetName);
 
-			data.mix = constraintMap.getFloat("mix", 1);
-			data.softness = constraintMap.getFloat("softness", 0) * scale;
-			data.bendDirection = constraintMap.getBoolean("bendPositive", true) ? 1 : -1;
-			data.compress = constraintMap.getBoolean("compress", false);
-			data.stretch = constraintMap.getBoolean("stretch", false);
 			data.uniform = constraintMap.getBoolean("uniform", false);
+			IkConstraintPose setup = data.setup;
+			setup.mix = constraintMap.getFloat("mix", 1);
+			setup.softness = constraintMap.getFloat("softness", 0) * scale;
+			setup.bendDirection = constraintMap.getBoolean("bendPositive", true) ? 1 : -1;
+			setup.compress = constraintMap.getBoolean("compress", false);
+			setup.stretch = constraintMap.getBoolean("stretch", false);
 
 			skeletonData.ikConstraints.add(data);
 		}

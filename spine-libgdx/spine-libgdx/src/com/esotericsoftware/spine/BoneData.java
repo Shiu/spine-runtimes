@@ -33,10 +33,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Null;
 
 /** The setup pose for a bone. */
-public class BoneData extends BonePose {
+public class BoneData {
 	final int index;
 	final String name;
 	@Null final BoneData parent;
+	final BonePose setup = new BonePose();
 	float length;
 	boolean skinRequired;
 
@@ -54,12 +55,12 @@ public class BoneData extends BonePose {
 	}
 
 	/** Copy constructor. */
-	public BoneData (BoneData bone, @Null BoneData parent) {
-		index = bone.index;
-		name = bone.name;
+	public BoneData (BoneData data, @Null BoneData parent) {
+		index = data.index;
+		name = data.name;
 		this.parent = parent;
-		length = bone.length;
-		set(bone);
+		length = data.length;
+		setup.set(data.setup);
 	}
 
 	/** The index of the bone in {@link Skeleton#getBones()}. */
@@ -74,6 +75,10 @@ public class BoneData extends BonePose {
 
 	public @Null BoneData getParent () {
 		return parent;
+	}
+
+	public BonePose getSetupPose () {
+		return setup;
 	}
 
 	/** The bone's length. */
