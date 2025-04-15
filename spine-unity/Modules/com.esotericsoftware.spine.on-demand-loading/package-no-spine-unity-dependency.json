@@ -9,9 +9,7 @@
 		"email": "contact@esotericsoftware.com",
 		"url": "http://esotericsoftware.com/"
 	},
-	"dependencies": {
-		"com.esotericsoftware.spine.spine-unity": "4.3.0"
-	},
+	"dependencies": { },
 	"keywords": [
 		"spine",
 		"on-demand",
