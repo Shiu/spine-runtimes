@@ -184,16 +184,19 @@ export interface SpinePlayerConfig {
 export interface Viewport {
 	/* Optional: The position and size of the viewport in the skeleton's world coordinates. Default: the bounding box that fits
 	   the current animation */
-	x: number,
-	y: number,
-	width: number,
-	height: number,
+	x: number
+	y: number
+	width: number
+	height: number
 
 	/* Optional: Padding around the viewport size, given as a number or percentage (eg "25%"). Default: 10% */
 	padLeft: string | number
 	padRight: string | number
 	padTop: string | number
 	padBottom: string | number
+
+	/* Optional: if true, rendering occurs only within the viewport */
+	clip?: boolean
 }
 
 export class SpinePlayer implements Disposable {
