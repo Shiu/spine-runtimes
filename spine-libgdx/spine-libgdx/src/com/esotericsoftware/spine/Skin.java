@@ -157,7 +157,7 @@ public class Skin {
 		Object[] slots = skeleton.slots.items;
 		for (SkinEntry entry : oldSkin.attachments.orderedItems()) {
 			int slotIndex = entry.slotIndex;
-			SlotPose slot = ((Slot)slots[slotIndex]).getPose();
+			SlotPose slot = ((Slot)slots[slotIndex]).pose;
 			if (slot.attachment == entry.attachment) {
 				Attachment attachment = getAttachment(slotIndex, entry.name);
 				if (attachment != null) slot.setAttachment(attachment);

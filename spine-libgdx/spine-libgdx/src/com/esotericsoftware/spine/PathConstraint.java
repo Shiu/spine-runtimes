@@ -45,14 +45,15 @@ import com.esotericsoftware.spine.attachments.PathAttachment;
  * constrained bones so they follow a {@link PathAttachment}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-path-constraints">Path constraints</a> in the Spine User Guide. */
-public class PathConstraint implements Updatable {
+public class PathConstraint implements Constrained, Update {
 	static final int NONE = -1, BEFORE = -2, AFTER = -3;
 	static final float epsilon = 0.00001f;
 
 	final PathConstraintData data;
 	final Array<BoneApplied> bones;
 	Slot slot;
-	final PathConstraintPose pose = new PathConstraintPose(), applied = new PathConstraintPose();
+	final PathConstraintPose pose = new PathConstraintPose(), constrained = new PathConstraintPose();
+	PathConstraintPose applied = pose;
 	boolean active;
 
 	private final FloatArray spaces = new FloatArray(), positions = new FloatArray();
@@ -72,7 +73,7 @@ public class PathConstraint implements Updatable {
 
 		bones = new Array(data.bones.size);
 		for (BoneData boneData : data.bones)
-			bones.add(skeleton.bones.get(boneData.index).applied);
+			bones.add(skeleton.bones.get(boneData.index).constrained);
 
 		slot = skeleton.slots.get(data.slot.index);
 
@@ -493,6 +494,18 @@ public class PathConstraint implements Updatable {
 
 	public PathConstraintPose getAppliedPose () {
 		return applied;
+	}
+
+	public PathConstraintPose getConstrainedPose () {
+		return constrained;
+	}
+
+	public void setConstrained (boolean constrained) {
+		applied = constrained ? this.constrained : pose;
+	}
+
+	public void resetAppliedPose () {
+		applied.set(pose);
 	}
 
 	/** Returns false when this constraint won't be updated by

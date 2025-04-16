@@ -278,7 +278,7 @@ public class AnimationState {
 			var slot = (Slot)slots[i];
 			if (slot.attachmentState == setupState) {
 				String attachmentName = slot.data.attachmentName;
-				slot.getPose().setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
+				slot.pose.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
 			}
 		}
 		unkeyedState += 2; // Increasing after each use avoids the need to reset attachmentState for every slot.
@@ -399,7 +399,7 @@ public class AnimationState {
 	}
 
 	private void setAttachment (Skeleton skeleton, Slot slot, String attachmentName, boolean attachments) {
-		slot.getPose().setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
+		slot.pose.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slot.data.index, attachmentName));
 		if (attachments) slot.attachmentState = unkeyedState + CURRENT;
 	}
 
@@ -417,7 +417,7 @@ public class AnimationState {
 
 		Bone bone = skeleton.bones.get(timeline.boneIndex);
 		if (!bone.active) return;
-		BonePose pose = bone.getPose(), setup = bone.data.setup;
+		BonePose pose = bone.pose, setup = bone.data.setup;
 		float[] frames = timeline.frames;
 		float r1, r2;
 		if (time < frames[0]) { // Time is before first frame.

@@ -38,6 +38,7 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.Animation.BoneTimeline;
+import com.esotericsoftware.spine.Animation.Timeline;
 import com.esotericsoftware.spine.Skin.SkinEntry;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.ClippingAttachment;
@@ -52,7 +53,7 @@ import com.esotericsoftware.spine.utils.SkeletonClipping;
  * Runtimes Guide. */
 public class Skeleton {
 	static private final short[] quadTriangles = {0, 1, 2, 2, 3, 0};
-	private static final Object IkConstraint = null;
+
 	final SkeletonData data;
 	final Array<Bone> bones;
 	final Array<Slot> slots;
@@ -62,7 +63,8 @@ public class Skeleton {
 	final Array<TransformConstraint> transformConstraints;
 	final Array<PathConstraint> pathConstraints;
 	final Array<PhysicsConstraint> physicsConstraints;
-	final Array<Updatable> updateCache = new Array();
+	final Array updateCache = new Array();
+	final Array<Constrained> resetCache = new Array();
 	@Null Skin skin;
 	final Color color;
 	float x, y, scaleX = 1, scaleY = 1, time;
@@ -180,8 +182,8 @@ public class Skeleton {
 	/** Caches information about bones and constraints. Must be called if the {@link #getSkin()} is modified or if bones,
 	 * constraints, or weighted path attachments are added or removed. */
 	public void updateCache () {
-		Array<Updatable> updateCache = this.updateCache;
 		updateCache.clear();
+		resetCache.clear();
 
 		int boneCount = bones.size;
 		Object[] bones = this.bones.items;
@@ -189,6 +191,7 @@ public class Skeleton {
 			var bone = (Bone)bones[i];
 			bone.sorted = bone.data.skinRequired;
 			bone.active = !bone.sorted;
+			bone.setConstrained(false);
 		}
 		if (skin != null) {
 			Object[] skinBones = skin.bones.items;
@@ -207,6 +210,17 @@ public class Skeleton {
 		Object[] sliders = this.sliders.items, ikConstraints = this.ikConstraints.items,
 			transformConstraints = this.transformConstraints.items, pathConstraints = this.pathConstraints.items,
 			physicsConstraints = this.physicsConstraints.items;
+		for (int ii = 0; ii < sliderCount; ii++)
+			((Slider)sliders[ii]).setConstrained(false);
+		for (int ii = 0; ii < ikCount; ii++)
+			((IkConstraint)ikConstraints[ii]).setConstrained(false);
+		for (int ii = 0; ii < transformCount; ii++)
+			((TransformConstraint)transformConstraints[ii]).setConstrained(false);
+		for (int ii = 0; ii < pathCount; ii++)
+			((PathConstraint)pathConstraints[ii]).setConstrained(false);
+		for (int ii = 0; ii < physicsCount; ii++)
+			((PhysicsConstraint)physicsConstraints[ii]).setConstrained(false);
+
 		int constraintCount = ikCount + transformCount + pathCount + physicsCount;
 		outer:
 		for (int i = 0; i < constraintCount; i++) {
@@ -249,47 +263,29 @@ public class Skeleton {
 
 		for (int i = 0; i < boneCount; i++)
 			sortBone((Bone)bones[i]);
-	}
 
-	private void sortSlider (Slider constraint) {
-		constraint.active = !constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true));
-		if (!constraint.active) return;
-
-		Object[] timelines = constraint.data.animation.timelines.items;
-		int timelineCount = constraint.data.animation.timelines.size;
-
-		Object[] bones = this.bones.items;
-		for (int i = 0; i < timelineCount; i++)
-			if (timelines[i] instanceof BoneTimeline boneTimeline) sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
-
-		updateCache.add(constraint);
-
-		for (int i = 0; i < timelineCount; i++) {
-			if (timelines[i] instanceof BoneTimeline boneTimeline) {
-				var bone = (Bone)bones[boneTimeline.getBoneIndex()];
-				sortReset(bone.children);
-				bone.sorted = false;
-			}
-		}
-		for (int i = 0; i < timelineCount; i++)
-			if (timelines[i] instanceof BoneTimeline boneTimeline) sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
+		Object[] updateCache = this.updateCache.items;
+		for (int i = 0, n = this.updateCache.size; i < n; i++)
+			if (updateCache[i] instanceof Bone bone) updateCache[i] = bone.applied;
 	}
 
 	private void sortIkConstraint (IkConstraint constraint) {
-		constraint.active = constraint.target.bone.active
+		constraint.active = constraint.target.active
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
 
-		sortBone(constraint.target.bone);
+		sortBone(constraint.target);
 
 		Array<BoneApplied> constrained = constraint.bones;
 		Bone parent = constrained.first().bone;
 		sortBone(parent);
+		resetCache(parent);
 		if (constrained.size == 1) {
 			updateCache.add(constraint);
 			sortReset(parent.children);
 		} else {
 			Bone child = constrained.peek().bone;
+			resetCache(child);
 			sortBone(child);
 
 			updateCache.add(constraint);
@@ -300,23 +296,27 @@ public class Skeleton {
 	}
 
 	private void sortTransformConstraint (TransformConstraint constraint) {
-		constraint.active = constraint.source.bone.active
+		constraint.active = constraint.source.active
 			&& (!constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true)));
 		if (!constraint.active) return;
 
-		sortBone(constraint.source.bone);
+		sortBone(constraint.source);
 
 		Object[] constrained = constraint.bones.items;
 		int boneCount = constraint.bones.size;
 		if (constraint.data.localSource) {
 			for (int i = 0; i < boneCount; i++) {
 				Bone child = ((BoneApplied)constrained[i]).bone;
+				resetCache(child);
 				sortBone(child.parent);
 				sortBone(child);
 			}
 		} else {
-			for (int i = 0; i < boneCount; i++)
-				sortBone(((BoneApplied)constrained[i]).bone);
+			for (int i = 0; i < boneCount; i++) {
+				Bone bone = ((BoneApplied)constrained[i]).bone;
+				resetCache(bone);
+				sortBone(bone);
+			}
 		}
 
 		updateCache.add(constraint);
@@ -343,8 +343,11 @@ public class Skeleton {
 
 		Object[] constrained = constraint.bones.items;
 		int boneCount = constraint.bones.size;
-		for (int i = 0; i < boneCount; i++)
-			sortBone(((BoneApplied)constrained[i]).bone);
+		for (int i = 0; i < boneCount; i++) {
+			Bone bone = ((BoneApplied)constrained[i]).bone;
+			resetCache(bone);
+			sortBone(bone);
+		}
 
 		updateCache.add(constraint);
 
@@ -386,10 +389,45 @@ public class Skeleton {
 
 		sortBone(bone);
 
+		resetCache(bone);
 		updateCache.add(constraint);
 
 		sortReset(bone.children);
 		bone.sorted = true;
+	}
+
+	private void sortSlider (Slider constraint) {
+		constraint.active = !constraint.data.skinRequired || (skin != null && skin.constraints.contains(constraint.data, true));
+		if (!constraint.active) return;
+
+		Object[] timelines = constraint.data.animation.timelines.items;
+		int timelineCount = constraint.data.animation.timelines.size;
+
+		Object[] bones = this.bones.items;
+		for (int i = 0; i < timelineCount; i++) {
+			var timeline = (Timeline)timelines[i];
+			if (timeline instanceof BoneTimeline boneTimeline) sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
+		}
+
+		updateCache.add(constraint);
+
+		for (int i = 0; i < timelineCount; i++) {
+			if (timelines[i] instanceof BoneTimeline boneTimeline) {
+				var bone = (Bone)bones[boneTimeline.getBoneIndex()];
+				resetCache(bone);
+				sortReset(bone.children);
+				bone.sorted = false;
+			}
+		}
+		for (int i = 0; i < timelineCount; i++)
+			if (timelines[i] instanceof BoneTimeline boneTimeline) sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
+	}
+
+	private void resetCache (Constrained object) {
+		if (!resetCache.contains(object, true)) {
+			resetCache.add(object);
+			object.setConstrained(true);
+		}
 	}
 
 	private void sortBone (Bone bone) {
@@ -397,7 +435,7 @@ public class Skeleton {
 		Bone parent = bone.parent;
 		if (parent != null) sortBone(parent);
 		bone.sorted = true;
-		updateCache.add(bone.applied);
+		updateCache.add(bone);
 	}
 
 	private void sortReset (Array<Bone> bones) {
@@ -415,45 +453,13 @@ public class Skeleton {
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
 	public void updateWorldTransform (Physics physics) {
-		Object[] objects = this.bones.items;
-		for (int i = 0, n = this.bones.size; i < n; i++) {
-			var bone = (Bone)objects[i];
-			if (bone.active) bone.applied.set(bone.pose);
-		}
-		objects = this.slots.items;
-		for (int i = 0, n = this.slots.size; i < n; i++) {
-			var slot = (Slot)objects[i];
-			if (slot.bone.active) slot.applied.set(slot.pose);
-		}
-		objects = ikConstraints.items;
-		for (int i = 0, n = ikConstraints.size; i < n; i++) {
-			var constraint = (IkConstraint)objects[i];
-			if (constraint.active) constraint.applied.set(constraint.pose);
-		}
-		objects = pathConstraints.items;
-		for (int i = 0, n = pathConstraints.size; i < n; i++) {
-			var constraint = (PathConstraint)objects[i];
-			if (constraint.active) constraint.applied.set(constraint.pose);
-		}
-		objects = transformConstraints.items;
-		for (int i = 0, n = transformConstraints.size; i < n; i++) {
-			var constraint = (TransformConstraint)objects[i];
-			if (constraint.active) constraint.applied.set(constraint.pose);
-		}
-		objects = physicsConstraints.items;
-		for (int i = 0, n = physicsConstraints.size; i < n; i++) {
-			var constraint = (PhysicsConstraint)objects[i];
-			if (constraint.active) constraint.applied.set(constraint.pose);
-		}
-		objects = sliders.items;
-		for (int i = 0, n = sliders.size; i < n; i++) {
-			var constraint = (Slider)objects[i];
-			if (constraint.active) constraint.applied.set(constraint.pose);
-		}
+		Object[] resetCache = this.resetCache.items;
+		for (int i = 0, n = this.resetCache.size; i < n; i++)
+			((Constrained)resetCache[i]).resetAppliedPose();
 
 		Object[] updateCache = this.updateCache.items;
 		for (int i = 0, n = this.updateCache.size; i < n; i++)
-			((Updatable)updateCache[i]).update(physics);
+			((Update)updateCache[i]).update(physics);
 	}
 
 	/** Temporarily sets the root bone as a child of the specified bone, then updates the world transform for each bone and applies
@@ -464,41 +470,9 @@ public class Skeleton {
 	public void updateWorldTransform (Physics physics, BoneApplied parent) {
 		if (parent == null) throw new IllegalArgumentException("parent cannot be null.");
 
-		Object[] objects = this.bones.items;
-		for (int i = 0, n = this.bones.size; i < n; i++) {
-			var bone = (Bone)objects[i];
-			if (bone.active) bone.applied.set(bone.pose);
-		}
-		objects = this.slots.items;
-		for (int i = 0, n = this.slots.size; i < n; i++) {
-			var slot = (Slot)objects[i];
-			if (slot.bone.active) slot.applied.set(slot.pose);
-		}
-		objects = ikConstraints.items;
-		for (int i = 0, n = ikConstraints.size; i < n; i++) {
-			var constraint = (IkConstraint)objects[i];
-			if (constraint.active) constraint.applied.set(constraint.pose);
-		}
-		objects = pathConstraints.items;
-		for (int i = 0, n = pathConstraints.size; i < n; i++) {
-			var constraint = (PathConstraint)objects[i];
-			if (constraint.active) constraint.applied.set(constraint.pose);
-		}
-		objects = transformConstraints.items;
-		for (int i = 0, n = transformConstraints.size; i < n; i++) {
-			var constraint = (TransformConstraint)objects[i];
-			if (constraint.active) constraint.applied.set(constraint.pose);
-		}
-		objects = physicsConstraints.items;
-		for (int i = 0, n = physicsConstraints.size; i < n; i++) {
-			var constraint = (PhysicsConstraint)objects[i];
-			if (constraint.active) constraint.applied.set(constraint.pose);
-		}
-		objects = sliders.items;
-		for (int i = 0, n = sliders.size; i < n; i++) {
-			var constraint = (Slider)objects[i];
-			if (constraint.active) constraint.applied.set(constraint.pose);
-		}
+		Object[] resetCache = this.resetCache.items;
+		for (int i = 0, n = this.resetCache.size; i < n; i++)
+			((Constrained)resetCache[i]).resetAppliedPose();
 
 		// Apply the parent bone transform to the root bone. The root bone always inherits scale, rotation and reflection.
 		BoneApplied rootBone = getRootBone().applied;
@@ -520,7 +494,7 @@ public class Skeleton {
 		// Update everything except root bone.
 		Object[] updateCache = this.updateCache.items;
 		for (int i = 0, n = this.updateCache.size; i < n; i++) {
-			var updatable = (Updatable)updateCache[i];
+			var updatable = (Update)updateCache[i];
 			if (updatable != rootBone) updatable.update(physics);
 		}
 	}
@@ -578,7 +552,7 @@ public class Skeleton {
 	}
 
 	/** The list of bones and constraints, sorted in the order they should be updated, as computed by {@link #updateCache()}. */
-	public Array<Updatable> getUpdateCache () {
+	public Array<Update> getUpdateCache () {
 		return updateCache;
 	}
 

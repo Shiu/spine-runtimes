@@ -80,7 +80,7 @@ public class SkeletonRenderer {
 		for (int i = 0, n = skeleton.drawOrder.size; i < n; i++) {
 			var slot = (Slot)drawOrder[i];
 			if (!slot.bone.active) continue;
-			SlotPose pose = slot.getAppliedPose();
+			SlotPose pose = slot.applied;
 			Attachment attachment = pose.attachment;
 			if (attachment instanceof RegionAttachment region) {
 				region.computeWorldVertices(slot, vertices, 0, 5);
@@ -149,7 +149,7 @@ public class SkeletonRenderer {
 				clipper.clipEnd(slot);
 				continue;
 			}
-			SlotPose pose = slot.getAppliedPose();
+			SlotPose pose = slot.applied;
 			Texture texture = null;
 			Attachment attachment = pose.attachment;
 			if (attachment instanceof RegionAttachment region) {
@@ -244,7 +244,7 @@ public class SkeletonRenderer {
 				clipper.clipEnd(slot);
 				continue;
 			}
-			SlotPose pose = slot.getAppliedPose();
+			SlotPose pose = slot.applied;
 			Texture texture = null;
 			Attachment attachment = pose.attachment;
 			if (attachment instanceof RegionAttachment region) {

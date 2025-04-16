@@ -35,10 +35,11 @@ import com.esotericsoftware.spine.Animation.MixDirection;
 /** Stores the setup pose for a {@link PhysicsConstraint}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-public class Slider implements Updatable {
+public class Slider implements Constrained, Update {
 	final SliderData data;
 	final Skeleton skeleton;
-	final SliderPose pose = new SliderPose(), applied = new SliderPose();
+	final SliderPose pose = new SliderPose(), constrained = new SliderPose();
+	SliderPose applied = pose;
 
 	boolean active;
 
@@ -54,7 +55,7 @@ public class Slider implements Updatable {
 	/** Copy constructor. */
 	public Slider (Slider slider, Skeleton skeleton) {
 		this(slider.data, skeleton);
-		setupPose();
+		pose.set(slider.pose);
 	}
 
 	public void update (Physics physics) {
@@ -72,6 +73,18 @@ public class Slider implements Updatable {
 
 	public SliderPose getAppliedPose () {
 		return applied;
+	}
+
+	public SliderPose getConstrainedPose () {
+		return constrained;
+	}
+
+	public void setConstrained (boolean constrained) {
+		applied = constrained ? this.constrained : pose;
+	}
+
+	public void resetAppliedPose () {
+		applied.set(pose);
 	}
 
 	/** Returns false when this constraint won't be updated by

@@ -34,10 +34,11 @@ import com.badlogic.gdx.graphics.Color;
 /** Stores a slot's current pose. Slots organize attachments for {@link Skeleton#drawOrder} purposes and provide a place to store
  * state for an attachment. State cannot be stored in an attachment itself because attachments are stateless and may be shared
  * across multiple skeletons. */
-public class Slot {
+public class Slot implements Constrained {
 	final SlotData data;
 	final Bone bone;
-	final SlotPose pose = new SlotPose(), applied = new SlotPose();
+	final SlotPose pose = new SlotPose(), constrained = new SlotPose();
+	SlotPose applied = pose;
 	int attachmentState;
 
 	public Slot (SlotData data, Skeleton skeleton) {
@@ -76,14 +77,24 @@ public class Slot {
 		return data;
 	}
 
-	/** Returns the slot's pose. */
 	public SlotPose getPose () {
 		return pose;
 	}
 
-	/** Returns the slot's applied pose. */
 	public SlotPose getAppliedPose () {
 		return applied;
+	}
+
+	public SlotPose getConstrainedPose () {
+		return constrained;
+	}
+
+	public void setConstrained (boolean constrained) {
+		applied = constrained ? this.constrained : pose;
+	}
+
+	public void resetAppliedPose () {
+		applied.set(pose);
 	}
 
 	/** The bone this slot belongs to. */

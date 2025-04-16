@@ -38,13 +38,13 @@ import com.badlogic.gdx.utils.Null;
  * A bone has a local transform which is used to compute its world transform. A bone also has an applied transform, which is a
  * local transform that can be applied to compute the world transform. The local transform and applied transform may differ if a
  * constraint or application code modifies the world transform after it was computed from the local transform. */
-public class Bone {
+public class Bone implements Constrained {
 	final BoneData data;
 	final Skeleton skeleton;
 	@Null final Bone parent;
 	final Array<Bone> children = new Array();
-	final BonePose pose = new BonePose();
-	final BoneApplied applied = new BoneApplied(this);
+	final BoneApplied pose = new BoneApplied(this), constrained = new BoneApplied(this);
+	BoneApplied applied = pose;
 	boolean sorted, active;
 
 	public Bone (BoneData data, Skeleton skeleton, @Null Bone parent) {
@@ -74,14 +74,24 @@ public class Bone {
 		return data;
 	}
 
-	/** Returns the bone's pose. */
 	public BonePose getPose () {
 		return pose;
 	}
 
-	/** Returns the bone's applied pose. */
 	public BoneApplied getAppliedPose () {
 		return applied;
+	}
+
+	public BoneApplied getConstrainedPose () {
+		return constrained;
+	}
+
+	public void setConstrained (boolean constrained) {
+		applied = constrained ? this.constrained : pose;
+	}
+
+	public void resetAppliedPose () {
+		applied.set(pose);
 	}
 
 	/** The skeleton this bone belongs to. */

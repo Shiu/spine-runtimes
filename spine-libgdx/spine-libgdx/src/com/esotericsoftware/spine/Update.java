@@ -29,28 +29,8 @@
 
 package com.esotericsoftware.spine;
 
-/** Stores a pose for a slider. */
-public class SliderPose {
-	float time, mix;
-
-	public void set (SliderPose pose) {
-		time = pose.time;
-		mix = pose.mix;
-	}
-
-	public float getTime () {
-		return time;
-	}
-
-	public void setTime (float time) {
-		this.time = time;
-	}
-
-	public float getMix () {
-		return mix;
-	}
-
-	public void setMix (float mix) {
-		this.mix = mix;
-	}
+/** The interface for items updated by {@link Skeleton#updateWorldTransform(Physics)}. */
+public interface Update {
+	/** @param physics Determines how physics and other non-deterministic updates are applied. */
+	public void update (Physics physics);
 }

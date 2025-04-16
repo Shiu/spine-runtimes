@@ -343,7 +343,7 @@ public class SkeletonBinary extends SkeletonLoader {
 				if ((flags & 16) != 0) data.offsetScaleY = input.readFloat();
 				if ((flags & 32) != 0) data.offsetShearY = input.readFloat();
 				flags = input.read();
-				TransformConstraintPose setup = data.getSetupPose();
+				TransformConstraintPose setup = data.setup;
 				if ((flags & 1) != 0) setup.mixRotate = input.readFloat();
 				if ((flags & 2) != 0) setup.mixX = input.readFloat();
 				if ((flags & 4) != 0) setup.mixY = input.readFloat();
@@ -394,7 +394,7 @@ public class SkeletonBinary extends SkeletonLoader {
 				if ((flags & 32) != 0) data.shearX = input.readFloat();
 				data.limit = ((flags & 64) != 0 ? input.readFloat() : 5000) * scale;
 				data.step = 1f / input.readUnsignedByte();
-				PhysicsConstraintPose setup = data.getSetupPose();
+				PhysicsConstraintPose setup = data.setup;
 				setup.inertia = input.readFloat();
 				setup.strength = input.readFloat();
 				setup.damping = input.readFloat();

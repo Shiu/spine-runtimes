@@ -29,8 +29,8 @@
 
 package com.esotericsoftware.spine;
 
-/** The interface for items updated by {@link Skeleton#updateWorldTransform(Physics)}. */
-public interface Updatable {
-	/** @param physics Determines how physics and other non-deterministic updates are applied. */
-	public void update (Physics physics);
+public interface Constrained {
+	public void setConstrained (boolean constrained);
+
+	public void resetAppliedPose ();
 }

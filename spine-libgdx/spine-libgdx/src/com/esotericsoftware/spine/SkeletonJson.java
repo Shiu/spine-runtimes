@@ -204,10 +204,10 @@ public class SkeletonJson extends SkeletonLoader {
 			var data = new SlotData(skeletonData.slots.size, slotName, boneData);
 
 			String color = slotMap.getString("color", null);
-			if (color != null) Color.valueOf(color, data.getSetupPose().getColor());
+			if (color != null) Color.valueOf(color, data.setup.getColor());
 
 			String dark = slotMap.getString("dark", null);
-			if (dark != null) Color.valueOf(dark, data.getSetupPose().getDarkColor());
+			if (dark != null) Color.valueOf(dark, data.setup.getDarkColor());
 
 			data.attachmentName = slotMap.getString("attachment", null);
 			data.blendMode = BlendMode.valueOf(slotMap.getString("blend", BlendMode.normal.name()));
@@ -390,7 +390,7 @@ public class SkeletonJson extends SkeletonLoader {
 			data.shearX = constraintMap.getFloat("shearX", 0);
 			data.limit = constraintMap.getFloat("limit", 5000) * scale;
 			data.step = 1f / constraintMap.getInt("fps", 60);
-			PhysicsConstraintPose setup = data.getSetupPose();
+			PhysicsConstraintPose setup = data.setup;
 			setup.inertia = constraintMap.getFloat("inertia", 1);
 			setup.strength = constraintMap.getFloat("strength", 100);
 			setup.damping = constraintMap.getFloat("damping", 1);

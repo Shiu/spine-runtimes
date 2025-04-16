@@ -40,14 +40,15 @@ import com.esotericsoftware.spine.TransformConstraintData.ToProperty;
  * bones to match that of the source bone.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide. */
-public class TransformConstraint implements Updatable {
+public class TransformConstraint implements Constrained, Update {
 	final TransformConstraintData data;
 	final Array<BoneApplied> bones;
-	BoneApplied source;
-	final TransformConstraintPose pose = new TransformConstraintPose(), applied = new TransformConstraintPose();
+	Bone source;
+	final TransformConstraintPose pose = new TransformConstraintPose(), constrained = new TransformConstraintPose();
+	TransformConstraintPose applied = pose;
 	boolean active;
 
-	public TransformConstraint (TransformConstraintData data, Array<BoneApplied> bones, BoneApplied source) {
+	public TransformConstraint (TransformConstraintData data, Array<BoneApplied> bones, Bone source) {
 		this.data = data;
 		this.bones = bones;
 		this.source = source;
@@ -60,9 +61,9 @@ public class TransformConstraint implements Updatable {
 
 		bones = new Array(data.bones.size);
 		for (BoneData boneData : data.bones)
-			bones.add(skeleton.bones.get(boneData.index).applied);
+			bones.add(skeleton.bones.get(boneData.index).constrained);
 
-		source = skeleton.bones.get(data.source.index).applied;
+		source = skeleton.bones.get(data.source.index);
 
 		setupPose();
 	}
@@ -85,12 +86,13 @@ public class TransformConstraint implements Updatable {
 
 		TransformConstraintData data = this.data;
 		boolean localFrom = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
-		BoneApplied source = this.source;
+		BoneApplied source = this.source.applied;
 		Object[] fromItems = data.properties.items;
 		int fn = data.properties.size;
 		Object[] bones = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++) {
 			var bone = (BoneApplied)bones[i];
+			if (bone.bone.applied != bone.bone.constrained) System.out.println();
 			for (int f = 0; f < fn; f++) {
 				var from = (FromProperty)fromItems[f];
 				float value = from.value(data, source, localFrom) - from.offset;
@@ -122,11 +124,11 @@ public class TransformConstraint implements Updatable {
 	}
 
 	/** The bone whose world transform will be copied to the constrained bones. */
-	public BoneApplied getSource () {
+	public Bone getSource () {
 		return source;
 	}
 
-	public void setSource (BoneApplied source) {
+	public void setSource (Bone source) {
 		if (source == null) throw new IllegalArgumentException("source cannot be null.");
 		this.source = source;
 	}
@@ -137,6 +139,18 @@ public class TransformConstraint implements Updatable {
 
 	public TransformConstraintPose getAppliedPose () {
 		return applied;
+	}
+
+	public TransformConstraintPose getConstrainedPose () {
+		return constrained;
+	}
+
+	public void setConstrained (boolean constrained) {
+		applied = constrained ? this.constrained : pose;
+	}
+
+	public void resetAppliedPose () {
+		applied.set(pose);
 	}
 
 	/** Returns false when this constraint won't be updated by

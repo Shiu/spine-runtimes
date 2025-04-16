@@ -34,11 +34,12 @@ import static com.esotericsoftware.spine.utils.SpineUtils.*;
 /** Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-public class PhysicsConstraint implements Updatable {
+public class PhysicsConstraint implements Constrained, Update {
 	final PhysicsConstraintData data;
 	final Skeleton skeleton;
 	BoneApplied bone;
-	final PhysicsConstraintPose pose = new PhysicsConstraintPose(), applied = new PhysicsConstraintPose();
+	final PhysicsConstraintPose pose = new PhysicsConstraintPose(), constrained = new PhysicsConstraintPose();
+	PhysicsConstraintPose applied = pose;
 	boolean active;
 
 	boolean reset = true;
@@ -49,19 +50,13 @@ public class PhysicsConstraint implements Updatable {
 	float scaleOffset, scaleVelocity;
 	float remaining, lastTime;
 
-	private PhysicsConstraint (PhysicsConstraintData data, Skeleton skeleton, BoneApplied bone) {
-		this.data = data;
-		this.skeleton = skeleton;
-		this.bone = bone;
-	}
-
 	public PhysicsConstraint (PhysicsConstraintData data, Skeleton skeleton) {
 		if (data == null) throw new IllegalArgumentException("data cannot be null.");
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 		this.data = data;
 		this.skeleton = skeleton;
 
-		bone = skeleton.bones.get(data.bone.index).applied;
+		bone = skeleton.bones.get(data.bone.index).constrained;
 
 		setupPose();
 	}
@@ -298,6 +293,18 @@ public class PhysicsConstraint implements Updatable {
 
 	public PhysicsConstraintPose getAppliedPose () {
 		return applied;
+	}
+
+	public PhysicsConstraintPose getConstrainedPose () {
+		return constrained;
+	}
+
+	public void setConstrained (boolean constrained) {
+		applied = constrained ? this.constrained : pose;
+	}
+
+	public void resetAppliedPose () {
+		applied.set(pose);
 	}
 
 	/** Returns false when this constraint won't be updated by

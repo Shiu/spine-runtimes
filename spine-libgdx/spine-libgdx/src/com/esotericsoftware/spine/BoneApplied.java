@@ -6,21 +6,18 @@ import static com.esotericsoftware.spine.utils.SpineUtils.*;
 
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.BoneData.Inherit;
 
 /** The applied pose for a bone. This is the {@link Bone} pose with constraints applied and the world transform computed by
  * {@link Skeleton#updateWorldTransform(Physics)}. */
-public class BoneApplied extends BonePose implements Updatable {
+public class BoneApplied extends BonePose implements Update {
 	final Bone bone;
-	@Null final BoneApplied parent;
 	float a, b, worldX;
 	float c, d, worldY;
 
 	BoneApplied (Bone bone) {
 		this.bone = bone;
-		parent = bone.parent == null ? null : bone.parent.applied;
 	}
 
 	/** Computes the world transform using the parent bone and this bone's local applied transform. */
@@ -37,8 +34,7 @@ public class BoneApplied extends BonePose implements Updatable {
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
 	public void update (Physics physics) {
-		BoneApplied parent = this.parent;
-		if (parent == null) { // Root bone.
+		if (bone.parent == null) { // Root bone.
 			Skeleton skeleton = bone.skeleton;
 			float sx = skeleton.scaleX, sy = skeleton.scaleY;
 			float rx = (rotation + shearX) * degRad;
@@ -52,6 +48,7 @@ public class BoneApplied extends BonePose implements Updatable {
 			return;
 		}
 
+		BoneApplied parent = bone.parent.applied;
 		float pa = parent.a, pb = parent.b, pc = parent.c, pd = parent.d;
 		worldX = pa * x + pb * y + parent.worldX;
 		worldY = pc * x + pd * y + parent.worldY;
@@ -147,7 +144,7 @@ public class BoneApplied extends BonePose implements Updatable {
 	 * Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The local transform after
 	 * calling this method is equivalent to the local transform used to compute the world transform, but may not be identical. */
 	public void updateLocalTransform () {
-		BoneApplied parent = this.parent;
+		BoneApplied parent = bone.parent.applied;
 		if (parent == null) {
 			x = worldX - bone.skeleton.x;
 			y = worldY - bone.skeleton.y;
@@ -336,13 +333,13 @@ public class BoneApplied extends BonePose implements Updatable {
 	/** Transforms a point from world coordinates to the parent bone's local coordinates. */
 	public Vector2 worldToParent (Vector2 world) {
 		if (world == null) throw new IllegalArgumentException("world cannot be null.");
-		return parent == null ? world : parent.worldToLocal(world);
+		return bone.parent == null ? world : bone.parent.applied.worldToLocal(world);
 	}
 
 	/** Transforms a point from the parent bone's coordinates to world coordinates. */
 	public Vector2 parentToWorld (Vector2 world) {
 		if (world == null) throw new IllegalArgumentException("world cannot be null.");
-		return parent == null ? world : parent.localToWorld(world);
+		return bone.parent == null ? world : bone.parent.applied.localToWorld(world);
 	}
 
 	/** Transforms a world rotation to a local rotation. */

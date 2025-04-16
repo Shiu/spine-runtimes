@@ -39,11 +39,12 @@ import com.esotericsoftware.spine.BoneData.Inherit;
  * the last bone is as close to the target bone as possible.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-ik-constraints">IK constraints</a> in the Spine User Guide. */
-public class IkConstraint implements Updatable {
+public class IkConstraint implements Constrained, Update {
 	final IkConstraintData data;
 	final Array<BoneApplied> bones;
-	BoneApplied target;
-	final IkConstraintPose pose = new IkConstraintPose(), applied = new IkConstraintPose();
+	Bone target;
+	final IkConstraintPose pose = new IkConstraintPose(), constrained = new IkConstraintPose();
+	IkConstraintPose applied = pose;
 	boolean active;
 
 	public IkConstraint (IkConstraintData data, Skeleton skeleton) {
@@ -53,9 +54,9 @@ public class IkConstraint implements Updatable {
 
 		bones = new Array(data.bones.size);
 		for (BoneData boneData : data.bones)
-			bones.add(skeleton.bones.get(boneData.index).applied);
+			bones.add(skeleton.bones.get(boneData.index).constrained);
 
-		target = skeleton.bones.get(data.target.index).applied;
+		target = skeleton.bones.get(data.target.index);
 
 		setupPose();
 	}
@@ -74,7 +75,7 @@ public class IkConstraint implements Updatable {
 	public void update (Physics physics) {
 		IkConstraintPose a = applied;
 		if (a.mix == 0) return;
-		BoneApplied target = this.target;
+		BoneApplied target = this.target.applied;
 		Object[] bones = this.bones.items;
 		switch (this.bones.size) {
 		case 1 -> apply((BoneApplied)bones[0], target.worldX, target.worldY, a.compress, a.stretch, data.uniform, a.mix);
@@ -90,11 +91,11 @@ public class IkConstraint implements Updatable {
 	}
 
 	/** The bone that is the IK target. */
-	public BoneApplied getTarget () {
+	public Bone getTarget () {
 		return target;
 	}
 
-	public void setTarget (BoneApplied target) {
+	public void setTarget (Bone target) {
 		if (target == null) throw new IllegalArgumentException("target cannot be null.");
 		this.target = target;
 	}
@@ -105,6 +106,18 @@ public class IkConstraint implements Updatable {
 
 	public IkConstraintPose getAppliedPose () {
 		return applied;
+	}
+
+	public IkConstraintPose getConstrainedPose () {
+		return constrained;
+	}
+
+	public void setConstrained (boolean constrained) {
+		applied = constrained ? this.constrained : pose;
+	}
+
+	public void resetAppliedPose () {
+		applied.set(pose);
 	}
 
 	/** Returns false when this constraint won't be updated by
@@ -131,7 +144,7 @@ public class IkConstraint implements Updatable {
 	static public void apply (BoneApplied bone, float targetX, float targetY, boolean compress, boolean stretch, boolean uniform,
 		float alpha) {
 		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
-		BoneApplied p = bone.parent;
+		BoneApplied p = bone.bone.parent.applied;
 		float pa = p.a, pb = p.b, pc = p.c, pd = p.d;
 		float rotationIK = -bone.shearX - bone.rotation, tx, ty;
 		switch (bone.inherit) {
@@ -222,7 +235,7 @@ public class IkConstraint implements Updatable {
 			cwx = a * child.x + b * child.y + parent.worldX;
 			cwy = c * child.x + d * child.y + parent.worldY;
 		}
-		BoneApplied pp = parent.parent;
+		BoneApplied pp = parent.bone.parent.applied;
 		a = pp.a;
 		b = pp.b;
 		c = pp.c;
