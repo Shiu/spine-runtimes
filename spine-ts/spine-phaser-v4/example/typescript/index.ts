@@ -1,5 +1,5 @@
 import * as Phaser from "phaser"
-import * as spine from "@esotericsoftware/spine-phaser"
+import * as spine from "@esotericsoftware/spine-phaser-v4"
 
 class SpineDemo extends Phaser.Scene {
     preload() {
@@ -8,13 +8,13 @@ class SpineDemo extends Phaser.Scene {
     }
 
     create() {
-        const spineboy = this.add.spine(400, 500, 'spineboy-data', "spineboy-atlas");        
+        const spineboy = this.add.spine(400, 500, 'spineboy-data', "spineboy-atlas");
         spineboy.scale = 0.5;
         spineboy.animationState.setAnimation(0, "walk", true);
     }
 }
 
-const config = {    
+const config = {
     width: 800,
     height: 600,
     type: Phaser.WEBGL,
