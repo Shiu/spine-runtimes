@@ -34,7 +34,7 @@ import static com.esotericsoftware.spine.utils.SpineUtils.*;
 /** Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-public class PhysicsConstraint extends Constraint<PhysicsConstraintData, PhysicsConstraintPose> {
+public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> {
 	BonePose bone;
 
 	boolean reset = true;
@@ -52,10 +52,10 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraintData, Physics
 		bone = skeleton.bones.get(data.bone.index).constrained;
 	}
 
-	/** Copy constructor. */
-	public PhysicsConstraint (PhysicsConstraint constraint, Skeleton skeleton) {
-		this(constraint.data, skeleton);
-		pose.set(constraint.pose);
+	public PhysicsConstraint copy (Skeleton skeleton) {
+		var copy = new PhysicsConstraint(data, skeleton);
+		copy.pose.set(pose);
+		return copy;
 	}
 
 	public void reset (Skeleton skeleton) {
@@ -255,7 +255,19 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraintData, Physics
 		bone.updateLocalTransform(skeleton);
 	}
 
-	public void sort () {
+	void sort (Skeleton skeleton) {
+		Bone bone = this.bone.bone;
+		skeleton.sortBone(bone);
+
+		skeleton.resetCache(bone);
+		skeleton.updateCache.add(this);
+
+		skeleton.sortReset(bone.children);
+		bone.sorted = true;
+	}
+
+	boolean isSourceActive () {
+		return bone.bone.active;
 	}
 
 	/** The bone constrained by this physics constraint. */

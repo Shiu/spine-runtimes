@@ -40,7 +40,7 @@ import com.esotericsoftware.spine.TransformConstraintData.ToProperty;
  * bones to match that of the source bone.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide. */
-public class TransformConstraint extends Constraint<TransformConstraintData, TransformConstraintPose> {
+public class TransformConstraint extends Constraint<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
 	final Array<BonePose> bones;
 	Bone source;
 
@@ -55,10 +55,10 @@ public class TransformConstraint extends Constraint<TransformConstraintData, Tra
 		source = skeleton.bones.get(data.source.index);
 	}
 
-	/** Copy constructor. */
-	public TransformConstraint (TransformConstraint constraint, Skeleton skeleton) {
-		this(constraint.data, skeleton);
-		pose.set(constraint.pose);
+	public TransformConstraint copy (Skeleton skeleton) {
+		var copy = new TransformConstraint(data, skeleton);
+		copy.pose.set(pose);
+		return copy;
 	}
 
 	/** Applies the constraint to the constrained bones. */
@@ -101,7 +101,36 @@ public class TransformConstraint extends Constraint<TransformConstraintData, Tra
 		}
 	}
 
-	public void sort () {
+	void sort (Skeleton skeleton) {
+		skeleton.sortBone(source);
+
+		Object[] bones = this.bones.items;
+		int boneCount = this.bones.size;
+		if (data.localSource) {
+			for (int i = 0; i < boneCount; i++) {
+				Bone child = ((BonePose)bones[i]).bone;
+				skeleton.resetCache(child);
+				skeleton.sortBone(child.parent);
+				skeleton.sortBone(child);
+			}
+		} else {
+			for (int i = 0; i < boneCount; i++) {
+				Bone bone = ((BonePose)bones[i]).bone;
+				skeleton.resetCache(bone);
+				skeleton.sortBone(bone);
+			}
+		}
+
+		skeleton.updateCache.add(this);
+
+		for (int i = 0; i < boneCount; i++)
+			skeleton.sortReset(((BonePose)bones[i]).bone.children);
+		for (int i = 0; i < boneCount; i++)
+			((BonePose)bones[i]).bone.sorted = true;
+	}
+
+	boolean isSourceActive () {
+		return source.active;
 	}
 
 	/** The bones that will be modified by this transform constraint. */

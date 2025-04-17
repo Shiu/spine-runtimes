@@ -1980,7 +1980,7 @@ public class Animation {
 			return ENTRIES;
 		}
 
-		/** The index of the IK constraint in {@link Skeleton#getIkConstraints()} that will be changed when this timeline is
+		/** The index of the IK constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
 		 * applied. */
 		public int getIkConstraintIndex () {
 			return constraintIndex;
@@ -2004,7 +2004,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			IkConstraint constraint = skeleton.ikConstraints.get(constraintIndex);
+			var constraint = (IkConstraint)skeleton.constraints.get(constraintIndex);
 			if (!constraint.active) return;
 			IkConstraintPose pose = appliedPose ? constraint.applied : constraint.pose, setup = constraint.data.setup;
 
@@ -2090,8 +2090,8 @@ public class Animation {
 			return ENTRIES;
 		}
 
-		/** The index of the transform constraint in {@link Skeleton#getTransformConstraints()} that will be changed when this
-		 * timeline is applied. */
+		/** The index of the transform constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
+		 * applied. */
 		public int getTransformConstraintIndex () {
 			return constraintIndex;
 		}
@@ -2114,7 +2114,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			TransformConstraint constraint = skeleton.transformConstraints.get(constraintIndex);
+			var constraint = (TransformConstraint)skeleton.constraints.get(constraintIndex);
 			if (!constraint.active) return;
 			TransformConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 
@@ -2205,7 +2205,7 @@ public class Animation {
 			constraintIndex = pathConstraintIndex;
 		}
 
-		/** The index of the path constraint in {@link Skeleton#getPathConstraints()} that will be changed when this timeline is
+		/** The index of the path constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
 		 * applied. */
 		public int getPathConstraintIndex () {
 			return constraintIndex;
@@ -2214,7 +2214,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			PathConstraint constraint = skeleton.pathConstraints.get(constraintIndex);
+			var constraint = (PathConstraint)skeleton.constraints.get(constraintIndex);
 			if (constraint.active) {
 				PathConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 				pose.position = getAbsoluteValue(time, alpha, blend, pose.position, constraint.data.setup.position);
@@ -2231,7 +2231,7 @@ public class Animation {
 			constraintIndex = pathConstraintIndex;
 		}
 
-		/** The index of the path constraint in {@link Skeleton#getPathConstraints()} that will be changed when this timeline is
+		/** The index of the path constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
 		 * applied. */
 		public int getPathConstraintIndex () {
 			return constraintIndex;
@@ -2240,7 +2240,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			PathConstraint constraint = skeleton.pathConstraints.get(constraintIndex);
+			var constraint = (PathConstraint)skeleton.constraints.get(constraintIndex);
 			if (constraint.active) {
 				PathConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 				pose.spacing = getAbsoluteValue(time, alpha, blend, pose.spacing, constraint.data.setup.spacing);
@@ -2265,7 +2265,7 @@ public class Animation {
 			return ENTRIES;
 		}
 
-		/** The index of the path constraint in {@link Skeleton#getPathConstraints()} that will be changed when this timeline is
+		/** The index of the path constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
 		 * applied. */
 		public int getPathConstraintIndex () {
 			return constraintIndex;
@@ -2285,7 +2285,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			PathConstraint constraint = skeleton.pathConstraints.get(constraintIndex);
+			var constraint = (PathConstraint)skeleton.constraints.get(constraintIndex);
 			if (!constraint.active) return;
 			PathConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 
@@ -2362,20 +2362,19 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			PhysicsConstraint constraint;
 			if (constraintIndex == -1) {
 				float value = time >= frames[0] ? getCurveValue(time) : 0;
 
-				Object[] constraints = skeleton.physicsConstraints.items;
-				for (int i = 0, n = skeleton.physicsConstraints.size; i < n; i++) {
-					constraint = (PhysicsConstraint)constraints[i];
+				Object[] constraints = skeleton.physics.items;
+				for (int i = 0, n = skeleton.physics.size; i < n; i++) {
+					var constraint = (PhysicsConstraint)constraints[i];
 					if (constraint.active && global(constraint.data)) {
 						PhysicsConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 						set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(constraint.data.setup), value));
 					}
 				}
 			} else {
-				constraint = skeleton.physicsConstraints.get(constraintIndex);
+				var constraint = (PhysicsConstraint)skeleton.constraints.get(constraintIndex);
 				if (constraint.active) {
 					PhysicsConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 					set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(constraint.data.setup)));
@@ -2557,7 +2556,7 @@ public class Animation {
 
 			PhysicsConstraint constraint = null;
 			if (constraintIndex != -1) {
-				constraint = skeleton.physicsConstraints.get(constraintIndex);
+				constraint = (PhysicsConstraint)skeleton.constraints.get(constraintIndex);
 				if (!constraint.active) return;
 			}
 
@@ -2574,8 +2573,8 @@ public class Animation {
 				if (constraint != null)
 					constraint.reset(skeleton);
 				else {
-					Object[] constraints = skeleton.physicsConstraints.items;
-					for (int i = 0, n = skeleton.physicsConstraints.size; i < n; i++) {
+					Object[] constraints = skeleton.physics.items;
+					for (int i = 0, n = skeleton.physics.size; i < n; i++) {
 						constraint = (PhysicsConstraint)constraints[i];
 						if (constraint.active) constraint.reset(skeleton);
 					}

@@ -39,13 +39,15 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.esotericsoftware.spine.PathConstraintData.PositionMode;
 import com.esotericsoftware.spine.PathConstraintData.RotateMode;
 import com.esotericsoftware.spine.PathConstraintData.SpacingMode;
+import com.esotericsoftware.spine.Skin.SkinEntry;
+import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.PathAttachment;
 
 /** Stores the current pose for a path constraint. A path constraint adjusts the rotation, translation, and scale of the
  * constrained bones so they follow a {@link PathAttachment}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-path-constraints">Path constraints</a> in the Spine User Guide. */
-public class PathConstraint extends Constraint<PathConstraintData, PathConstraintPose> {
+public class PathConstraint extends Constraint<PathConstraint, PathConstraintData, PathConstraintPose> {
 	static final int NONE = -1, BEFORE = -2, AFTER = -3;
 	static final float epsilon = 0.00001f;
 
@@ -67,10 +69,10 @@ public class PathConstraint extends Constraint<PathConstraintData, PathConstrain
 		slot = skeleton.slots.get(data.slot.index);
 	}
 
-	/** Copy constructor. */
-	public PathConstraint (PathConstraint constraint, Skeleton skeleton) {
-		this(constraint.data, skeleton);
-		pose.set(constraint.pose);
+	public PathConstraint copy (Skeleton skeleton) {
+		var copy = new PathConstraint(data, skeleton);
+		copy.pose.set(pose);
+		return copy;
 	}
 
 	/** Applies the constraint to the constrained bones. */
@@ -456,7 +458,57 @@ public class PathConstraint extends Constraint<PathConstraintData, PathConstrain
 		}
 	}
 
-	public void sort () {
+	void sort (Skeleton skeleton) {
+		int slotIndex = slot.getData().index;
+		Bone slotBone = slot.bone;
+		if (skeleton.skin != null) sortPathConstraintAttachment(skeleton, skeleton.skin, slotIndex, slotBone);
+		if (skeleton.data.defaultSkin != null && skeleton.data.defaultSkin != skeleton.skin)
+			sortPathConstraintAttachment(skeleton, skeleton.data.defaultSkin, slotIndex, slotBone);
+
+		sortPathConstraintAttachment(skeleton, slot.pose.attachment, slotBone);
+
+		Object[] bones = this.bones.items;
+		int boneCount = this.bones.size;
+		for (int i = 0; i < boneCount; i++) {
+			Bone bone = ((BonePose)bones[i]).bone;
+			skeleton.resetCache(bone);
+			skeleton.sortBone(bone);
+		}
+
+		skeleton.updateCache.add(this);
+
+		for (int i = 0; i < boneCount; i++)
+			skeleton.sortReset(((BonePose)bones[i]).bone.children);
+		for (int i = 0; i < boneCount; i++)
+			((BonePose)bones[i]).bone.sorted = true;
+	}
+
+	private void sortPathConstraintAttachment (Skeleton skeleton, Skin skin, int slotIndex, Bone slotBone) {
+		Object[] entries = skin.attachments.orderedItems().items;
+		for (int i = 0, n = skin.attachments.size; i < n; i++) {
+			var entry = (SkinEntry)entries[i];
+			if (entry.slotIndex == slotIndex) sortPathConstraintAttachment(skeleton, entry.attachment, slotBone);
+		}
+	}
+
+	private void sortPathConstraintAttachment (Skeleton skeleton, Attachment attachment, Bone slotBone) {
+		if (!(attachment instanceof PathAttachment pathAttachment)) return;
+		int[] pathBones = pathAttachment.getBones();
+		if (pathBones == null)
+			skeleton.sortBone(slotBone);
+		else {
+			Object[] bones = skeleton.bones.items;
+			for (int i = 0, n = pathBones.length; i < n;) {
+				int nn = pathBones[i++];
+				nn += i;
+				while (i < nn)
+					skeleton.sortBone((Bone)bones[pathBones[i++]]);
+			}
+		}
+	}
+
+	boolean isSourceActive () {
+		return slot.bone.active;
 	}
 
 	/** The bones that will be modified by this path constraint. */

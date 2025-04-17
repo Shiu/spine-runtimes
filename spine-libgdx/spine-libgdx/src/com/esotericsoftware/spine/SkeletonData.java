@@ -44,11 +44,7 @@ public class SkeletonData {
 	@Null Skin defaultSkin;
 	final Array<EventData> events = new Array();
 	final Array<Animation> animations = new Array();
-	final Array<SliderData> sliders = new Array();
-	final Array<IkConstraintData> ikConstraints = new Array();
-	final Array<TransformConstraintData> transformConstraints = new Array();
-	final Array<PathConstraintData> pathConstraints = new Array();
-	final Array<PhysicsConstraintData> physicsConstraints = new Array();
+	final Array<ConstraintData> constraints = new Array();
 	float x, y, width, height, referenceScale = 100;
 	@Null String version, hash;
 
@@ -160,97 +156,20 @@ public class SkeletonData {
 		return null;
 	}
 
-	// --- Sliders
+	// --- Constraints.
 
-	/** The skeleton's sliders. */
-	public Array<SliderData> getSliders () {
-		return sliders;
+	/** The skeleton's constraints. */
+	public Array<ConstraintData> getConstraints () {
+		return constraints;
 	}
 
-	/** Finds a slider by comparing each IK constraint's name. It is more efficient to cache the results of this method than to
-	 * call it multiple times. */
-	public @Null SliderData findSlider (String constraintName) {
+	public @Null <T extends ConstraintData> T findConstraint (String constraintName, Class<T> type) {
 		if (constraintName == null) throw new IllegalArgumentException("constraintName cannot be null.");
-		Object[] sliders = this.sliders.items;
-		for (int i = 0, n = this.sliders.size; i < n; i++) {
-			var constraint = (SliderData)sliders[i];
-			if (constraint.name.equals(constraintName)) return constraint;
-		}
-		return null;
-	}
-
-	// --- IK constraints
-
-	/** The skeleton's IK constraints. */
-	public Array<IkConstraintData> getIkConstraints () {
-		return ikConstraints;
-	}
-
-	/** Finds an IK constraint by comparing each IK constraint's name. It is more efficient to cache the results of this method
-	 * than to call it multiple times. */
-	public @Null IkConstraintData findIkConstraint (String constraintName) {
-		if (constraintName == null) throw new IllegalArgumentException("constraintName cannot be null.");
-		Object[] ikConstraints = this.ikConstraints.items;
-		for (int i = 0, n = this.ikConstraints.size; i < n; i++) {
-			var constraint = (IkConstraintData)ikConstraints[i];
-			if (constraint.name.equals(constraintName)) return constraint;
-		}
-		return null;
-	}
-
-	// --- Transform constraints
-
-	/** The skeleton's transform constraints. */
-	public Array<TransformConstraintData> getTransformConstraints () {
-		return transformConstraints;
-	}
-
-	/** Finds a transform constraint by comparing each transform constraint's name. It is more efficient to cache the results of
-	 * this method than to call it multiple times. */
-	public @Null TransformConstraintData findTransformConstraint (String constraintName) {
-		if (constraintName == null) throw new IllegalArgumentException("constraintName cannot be null.");
-		Object[] transformConstraints = this.transformConstraints.items;
-		for (int i = 0, n = this.transformConstraints.size; i < n; i++) {
-			var constraint = (TransformConstraintData)transformConstraints[i];
-			if (constraint.name.equals(constraintName)) return constraint;
-		}
-		return null;
-	}
-
-	// --- Path constraints
-
-	/** The skeleton's path constraints. */
-	public Array<PathConstraintData> getPathConstraints () {
-		return pathConstraints;
-	}
-
-	/** Finds a path constraint by comparing each path constraint's name. It is more efficient to cache the results of this method
-	 * than to call it multiple times. */
-	public @Null PathConstraintData findPathConstraint (String constraintName) {
-		if (constraintName == null) throw new IllegalArgumentException("constraintName cannot be null.");
-		Object[] pathConstraints = this.pathConstraints.items;
-		for (int i = 0, n = this.pathConstraints.size; i < n; i++) {
-			var constraint = (PathConstraintData)pathConstraints[i];
-			if (constraint.name.equals(constraintName)) return constraint;
-		}
-		return null;
-	}
-
-	// --- Physics constraints
-
-	/** The skeleton's physics constraints. */
-	public Array<PhysicsConstraintData> getPhysicsConstraints () {
-		return physicsConstraints;
-	}
-
-	/** Finds a physics constraint by comparing each physics constraint's name. It is more efficient to cache the results of this
-	 * method than to call it multiple times. */
-	public @Null PhysicsConstraintData findPhysicsConstraint (String constraintName) {
-		if (constraintName == null) throw new IllegalArgumentException("constraintName cannot be null.");
-		Object[] physicsConstraints = this.physicsConstraints.items;
-		for (int i = 0, n = this.physicsConstraints.size; i < n; i++) {
-			var constraint = (PhysicsConstraintData)physicsConstraints[i];
-			if (constraint.name.equals(constraintName)) return constraint;
+		if (type == null) throw new IllegalArgumentException("type cannot be null.");
+		Object[] constraints = this.constraints.items;
+		for (int i = 0, n = this.constraints.size; i < n; i++) {
+			Object constraint = constraints[i];
+			if (type.isInstance(constraint) && ((PosedData)constraint).name.equals(constraintName)) return (T)constraint;
 		}
 		return null;
 	}

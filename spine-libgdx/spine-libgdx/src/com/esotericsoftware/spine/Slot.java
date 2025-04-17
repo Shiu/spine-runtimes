@@ -35,12 +35,14 @@ import com.badlogic.gdx.graphics.Color;
  * state for an attachment. State cannot be stored in an attachment itself because attachments are stateless and may be shared
  * across multiple skeletons. */
 public class Slot extends Posed<SlotData, SlotPose, SlotPose> {
+	final Skeleton skeleton;
 	final Bone bone;
 	int attachmentState;
 
 	public Slot (SlotData data, Skeleton skeleton) {
 		super(data, new SlotPose(), new SlotPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
+		this.skeleton = skeleton;
 		bone = skeleton.bones.get(data.boneData.index);
 		if (data.setup.darkColor != null) {
 			pose.darkColor = new Color();
@@ -50,9 +52,12 @@ public class Slot extends Posed<SlotData, SlotPose, SlotPose> {
 	}
 
 	/** Copy constructor. */
-	public Slot (Slot slot, Bone bone) {
+	public Slot (Slot slot, Bone bone, Skeleton skeleton) {
 		super(slot.data, new SlotPose(), new SlotPose());
+		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
+		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 		this.bone = bone;
+		this.skeleton = skeleton;
 		if (data.setup.darkColor != null) {
 			pose.darkColor = new Color();
 			applied.darkColor = new Color();
@@ -63,5 +68,17 @@ public class Slot extends Posed<SlotData, SlotPose, SlotPose> {
 	/** The bone this slot belongs to. */
 	public Bone getBone () {
 		return bone;
+	}
+
+	public void setupPose () {
+		pose.color.set(data.setup.color);
+		if (pose.darkColor != null) pose.darkColor.set(data.setup.darkColor);
+		pose.sequenceIndex = pose.sequenceIndex;
+		if (data.attachmentName == null)
+			pose.setAttachment(null);
+		else {
+			pose.attachment = null;
+			pose.setAttachment(skeleton.getAttachment(data.index, data.attachmentName));
+		}
 	}
 }

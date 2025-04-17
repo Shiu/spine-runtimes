@@ -34,13 +34,17 @@ import com.badlogic.gdx.utils.Array;
 /** Stores the setup pose for an {@link IkConstraint}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-ik-constraints">IK constraints</a> in the Spine User Guide. */
-public class IkConstraintData extends PosedData<IkConstraintPose> {
+public class IkConstraintData extends ConstraintData<IkConstraint, IkConstraintPose> {
 	final Array<BoneData> bones = new Array();
 	BoneData target;
 	boolean uniform;
 
 	public IkConstraintData (String name) {
 		super(name, new IkConstraintPose());
+	}
+
+	public IkConstraint create (Skeleton skeleton) {
+		return new IkConstraint(this, skeleton);
 	}
 
 	/** The bones that are constrained by this IK constraint. */

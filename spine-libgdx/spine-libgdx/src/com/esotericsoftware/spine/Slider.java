@@ -29,21 +29,23 @@
 
 package com.esotericsoftware.spine;
 
+import com.esotericsoftware.spine.Animation.BoneTimeline;
 import com.esotericsoftware.spine.Animation.MixBlend;
 import com.esotericsoftware.spine.Animation.MixDirection;
+import com.esotericsoftware.spine.Animation.Timeline;
 
 /** Stores the setup pose for a {@link PhysicsConstraint}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-public class Slider extends Constraint<SliderData, SliderPose> {
+public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 	public Slider (SliderData data) {
 		super(data, new SliderPose(), new SliderPose());
 	}
 
-	/** Copy constructor. */
-	public Slider (Slider slider) {
-		this(slider.data);
-		pose.set(slider.pose);
+	public Slider copy (Skeleton skeleton) {
+		var copy = new Slider(data);
+		copy.pose.set(pose);
+		return copy;
 	}
 
 	public void update (Skeleton skeleton, Physics physics) {
@@ -51,6 +53,28 @@ public class Slider extends Constraint<SliderData, SliderPose> {
 		data.animation.apply(skeleton, pose.time, pose.time, false, null, pose.mix, MixBlend.replace, MixDirection.in, true);
 	}
 
-	public void sort () {
+	void sort (Skeleton skeleton) {
+		Object[] timelines = data.animation.timelines.items;
+		int timelineCount = data.animation.timelines.size;
+
+		// BOZO - Sort and reset other timeline types.
+		Object[] bones = skeleton.bones.items;
+		for (int i = 0; i < timelineCount; i++) {
+			var timeline = (Timeline)timelines[i];
+			if (timeline instanceof BoneTimeline boneTimeline) skeleton.sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
+		}
+
+		skeleton.updateCache.add(this);
+
+		for (int i = 0; i < timelineCount; i++) {
+			if (timelines[i] instanceof BoneTimeline boneTimeline) {
+				var bone = (Bone)bones[boneTimeline.getBoneIndex()];
+				skeleton.resetCache(bone);
+				skeleton.sortReset(bone.children);
+				bone.sorted = false;
+			}
+		}
+		for (int i = 0; i < timelineCount; i++)
+			if (timelines[i] instanceof BoneTimeline boneTimeline) skeleton.sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
 	}
 }

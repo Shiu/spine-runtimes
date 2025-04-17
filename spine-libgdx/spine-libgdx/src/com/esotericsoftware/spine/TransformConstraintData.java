@@ -36,7 +36,7 @@ import com.badlogic.gdx.utils.Array;
 /** Stores the setup pose for a {@link TransformConstraint}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide. */
-public class TransformConstraintData extends PosedData<TransformConstraintPose> {
+public class TransformConstraintData extends ConstraintData<TransformConstraint, TransformConstraintPose> {
 	final Array<BoneData> bones = new Array();
 	BoneData source;
 	float offsetRotation, offsetX, offsetY, offsetScaleX, offsetScaleY, offsetShearY;
@@ -45,6 +45,10 @@ public class TransformConstraintData extends PosedData<TransformConstraintPose> 
 
 	public TransformConstraintData (String name) {
 		super(name, new TransformConstraintPose());
+	}
+
+	public TransformConstraint create (Skeleton skeleton) {
+		return new TransformConstraint(this, skeleton);
 	}
 
 	/** The bones that will be modified by this transform constraint. */

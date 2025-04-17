@@ -1,11 +1,17 @@
 
 package com.esotericsoftware.spine;
 
-abstract public class PosedActive<D extends PosedData<P>, P extends Pose, A extends P> extends Posed<D, P, A> {
+abstract public class PosedActive< //
+	D extends PosedData<P>, //
+	P extends Pose, //
+	A extends P> //
+	extends Posed<D, P, A> {
+
 	boolean active;
 
 	public PosedActive (D data, P pose, A constrained) {
 		super(data, pose, constrained);
+		setupPose();
 	}
 
 	/** Returns false when this constraint won't be updated by

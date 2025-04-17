@@ -1,7 +1,11 @@
 
 package com.esotericsoftware.spine;
 
-abstract public class Posed<D extends PosedData<P>, P extends Pose, A extends P> {
+abstract public class Posed< //
+	D extends PosedData<P>, //
+	P extends Pose, //
+	A extends P> {
+
 	final D data;
 	final P pose;
 	final A constrained;
@@ -13,7 +17,6 @@ abstract public class Posed<D extends PosedData<P>, P extends Pose, A extends P>
 		this.pose = pose;
 		this.constrained = constrained;
 		applied = (A)pose;
-		setupPose();
 	}
 
 	public void setupPose () {

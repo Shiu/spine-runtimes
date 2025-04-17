@@ -39,7 +39,7 @@ import com.esotericsoftware.spine.BoneData.Inherit;
  * the last bone is as close to the target bone as possible.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-ik-constraints">IK constraints</a> in the Spine User Guide. */
-public class IkConstraint extends Constraint<IkConstraintData, IkConstraintPose> {
+public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkConstraintPose> {
 	final Array<BonePose> bones;
 	Bone target;
 
@@ -54,10 +54,10 @@ public class IkConstraint extends Constraint<IkConstraintData, IkConstraintPose>
 		target = skeleton.bones.get(data.target.index);
 	}
 
-	/** Copy constructor. */
-	public IkConstraint (IkConstraint constraint, Skeleton skeleton) {
-		this(constraint.data, skeleton);
-		pose.set(constraint.pose);
+	public IkConstraint copy (Skeleton skeleton) {
+		var copy = new IkConstraint(data, skeleton);
+		copy.pose.set(pose);
+		return copy;
 	}
 
 	/** Applies the constraint to the constrained bones. */
@@ -73,8 +73,29 @@ public class IkConstraint extends Constraint<IkConstraintData, IkConstraintPose>
 		}
 	}
 
-	public void sort () {
-		// BOZO
+	void sort (Skeleton skeleton) {
+		skeleton.sortBone(target);
+
+		Bone parent = bones.first().bone;
+		skeleton.sortBone(parent);
+		skeleton.resetCache(parent);
+		if (bones.size == 1) {
+			skeleton.updateCache.add(this);
+			skeleton.sortReset(parent.children);
+		} else {
+			Bone child = bones.peek().bone;
+			skeleton.resetCache(child);
+			skeleton.sortBone(child);
+
+			skeleton.updateCache.add(this);
+
+			skeleton.sortReset(parent.children);
+			child.sorted = true;
+		}
+	}
+
+	boolean isSourceActive () {
+		return target.active;
 	}
 
 	/** The 1 or 2 bones that will be modified by this IK constraint. */
