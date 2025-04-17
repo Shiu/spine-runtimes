@@ -165,14 +165,14 @@ public class SkeletonRenderer {
 				int count = mesh.getWorldVerticesLength();
 				verticesLength = (count >> 1) * 5;
 				vertices = this.vertices.setSize(verticesLength);
-				mesh.computeWorldVertices(slot, 0, count, vertices, 0, 5);
+				mesh.computeWorldVertices(skeleton, slot, 0, count, vertices, 0, 5);
 				triangles = mesh.getTriangles();
 				texture = mesh.getRegion().getTexture();
 				uvs = mesh.getUVs();
 				color = mesh.getColor();
 
 			} else if (attachment instanceof ClippingAttachment clip) {
-				clipper.clipStart(slot, clip);
+				clipper.clipStart(skeleton, slot, clip);
 				continue;
 
 			} else if (attachment instanceof SkeletonAttachment skeletonAttachment) {
@@ -260,14 +260,14 @@ public class SkeletonRenderer {
 				int count = mesh.getWorldVerticesLength();
 				verticesLength = count * 3;
 				vertices = this.vertices.setSize(verticesLength);
-				mesh.computeWorldVertices(slot, 0, count, vertices, 0, 6);
+				mesh.computeWorldVertices(skeleton, slot, 0, count, vertices, 0, 6);
 				triangles = mesh.getTriangles();
 				texture = mesh.getRegion().getTexture();
 				uvs = mesh.getUVs();
 				color = mesh.getColor();
 
 			} else if (attachment instanceof ClippingAttachment clip) {
-				clipper.clipStart(slot, clip);
+				clipper.clipStart(skeleton, slot, clip);
 				continue;
 
 			} else if (attachment instanceof SkeletonAttachment skeletonAttachment) {

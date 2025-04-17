@@ -45,39 +45,26 @@ import com.esotericsoftware.spine.attachments.PathAttachment;
  * constrained bones so they follow a {@link PathAttachment}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-path-constraints">Path constraints</a> in the Spine User Guide. */
-public class PathConstraint implements Constrained, Update {
+public class PathConstraint extends Constraint<PathConstraintData, PathConstraintPose> {
 	static final int NONE = -1, BEFORE = -2, AFTER = -3;
 	static final float epsilon = 0.00001f;
 
-	final PathConstraintData data;
-	final Array<BoneApplied> bones;
+	final Array<BonePose> bones;
 	Slot slot;
-	final PathConstraintPose pose = new PathConstraintPose(), constrained = new PathConstraintPose();
-	PathConstraintPose applied = pose;
-	boolean active;
 
 	private final FloatArray spaces = new FloatArray(), positions = new FloatArray();
 	private final FloatArray world = new FloatArray(), curves = new FloatArray(), lengths = new FloatArray();
 	private final float[] segments = new float[10];
 
-	public PathConstraint (PathConstraintData data, Array<BoneApplied> bones, Slot slot) {
-		this.data = data;
-		this.bones = bones;
-		this.slot = slot;
-	}
-
 	public PathConstraint (PathConstraintData data, Skeleton skeleton) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
+		super(data, new PathConstraintPose(), new PathConstraintPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
-		this.data = data;
 
 		bones = new Array(data.bones.size);
 		for (BoneData boneData : data.bones)
 			bones.add(skeleton.bones.get(boneData.index).constrained);
 
 		slot = skeleton.slots.get(data.slot.index);
-
-		setupPose();
 	}
 
 	/** Copy constructor. */
@@ -86,12 +73,8 @@ public class PathConstraint implements Constrained, Update {
 		pose.set(constraint.pose);
 	}
 
-	public void setupPose () {
-		pose.set(data.setup);
-	}
-
 	/** Applies the constraint to the constrained bones. */
-	public void update (Physics physics) {
+	public void update (Skeleton skeleton, Physics physics) {
 		if (!(slot.applied.attachment instanceof PathAttachment pathAttachment)) return;
 
 		PathConstraintPose pose = applied;
@@ -109,7 +92,7 @@ public class PathConstraint implements Constrained, Update {
 		case percent -> {
 			if (scale) {
 				for (int i = 0, n = spacesCount - 1; i < n; i++) {
-					var bone = (BoneApplied)bones[i];
+					var bone = (BonePose)bones[i];
 					float setupLength = bone.bone.data.length;
 					float x = setupLength * bone.a, y = setupLength * bone.c;
 					lengths[i] = (float)Math.sqrt(x * x + y * y);
@@ -120,7 +103,7 @@ public class PathConstraint implements Constrained, Update {
 		case proportional -> {
 			float sum = 0;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
-				var bone = (BoneApplied)bones[i];
+				var bone = (BonePose)bones[i];
 				float setupLength = bone.bone.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
@@ -142,7 +125,7 @@ public class PathConstraint implements Constrained, Update {
 		default -> {
 			boolean lengthSpacing = data.spacingMode == SpacingMode.length;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
-				var bone = (BoneApplied)bones[i];
+				var bone = (BonePose)bones[i];
 				float setupLength = bone.bone.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
@@ -157,18 +140,18 @@ public class PathConstraint implements Constrained, Update {
 		}
 		}
 
-		float[] positions = computeWorldPositions(pathAttachment, spacesCount, tangents);
+		float[] positions = computeWorldPositions(skeleton, pathAttachment, spacesCount, tangents);
 		float boneX = positions[0], boneY = positions[1], offsetRotation = data.offsetRotation;
 		boolean tip;
 		if (offsetRotation == 0)
 			tip = data.rotateMode == RotateMode.chain;
 		else {
 			tip = false;
-			BoneApplied p = slot.bone.applied;
+			BonePose p = slot.bone.applied;
 			offsetRotation *= p.a * p.d - p.b * p.c > 0 ? degRad : -degRad;
 		}
 		for (int i = 0, p = 3; i < boneCount; i++, p += 3) {
-			var bone = (BoneApplied)bones[i];
+			var bone = (BonePose)bones[i];
 			bone.worldX += (boneX - bone.worldX) * mixX;
 			bone.worldY += (boneY - bone.worldY) * mixY;
 			float x = positions[p], y = positions[p + 1], dx = x - boneX, dy = y - boneY;
@@ -211,11 +194,11 @@ public class PathConstraint implements Constrained, Update {
 				bone.c = sin * a + cos * c;
 				bone.d = sin * b + cos * d;
 			}
-			bone.updateLocalTransform();
+			bone.updateLocalTransform(skeleton);
 		}
 	}
 
-	float[] computeWorldPositions (PathAttachment path, int spacesCount, boolean tangents) {
+	float[] computeWorldPositions (Skeleton skeleton, PathAttachment path, int spacesCount, boolean tangents) {
 		Slot slot = this.slot;
 		float position = applied.position;
 		float[] spaces = this.spaces.items, out = this.positions.setSize(spacesCount * 3 + 2), world;
@@ -248,14 +231,14 @@ public class PathConstraint implements Constrained, Update {
 				} else if (p < 0) {
 					if (prevCurve != BEFORE) {
 						prevCurve = BEFORE;
-						path.computeWorldVertices(slot, 2, 4, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, 2, 4, world, 0, 2);
 					}
 					addBeforePosition(p, world, 0, out, o);
 					continue;
 				} else if (p > pathLength) {
 					if (prevCurve != AFTER) {
 						prevCurve = AFTER;
-						path.computeWorldVertices(slot, verticesLength - 6, 4, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, verticesLength - 6, 4, world, 0, 2);
 					}
 					addAfterPosition(p - pathLength, world, 0, out, o);
 					continue;
@@ -276,10 +259,10 @@ public class PathConstraint implements Constrained, Update {
 				if (curve != prevCurve) {
 					prevCurve = curve;
 					if (closed && curve == curveCount) {
-						path.computeWorldVertices(slot, verticesLength - 4, 4, world, 0, 2);
-						path.computeWorldVertices(slot, 0, 4, world, 4, 2);
+						path.computeWorldVertices(skeleton, slot, verticesLength - 4, 4, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, 0, 4, world, 4, 2);
 					} else
-						path.computeWorldVertices(slot, curve * 6 + 2, 8, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, curve * 6 + 2, 8, world, 0, 2);
 				}
 				addCurvePosition(p, world[0], world[1], world[2], world[3], world[4], world[5], world[6], world[7], out, o,
 					tangents || (i > 0 && space < epsilon));
@@ -291,15 +274,15 @@ public class PathConstraint implements Constrained, Update {
 		if (closed) {
 			verticesLength += 2;
 			world = this.world.setSize(verticesLength);
-			path.computeWorldVertices(slot, 2, verticesLength - 4, world, 0, 2);
-			path.computeWorldVertices(slot, 0, 2, world, verticesLength - 4, 2);
+			path.computeWorldVertices(skeleton, slot, 2, verticesLength - 4, world, 0, 2);
+			path.computeWorldVertices(skeleton, slot, 0, 2, world, verticesLength - 4, 2);
 			world[verticesLength - 2] = world[0];
 			world[verticesLength - 1] = world[1];
 		} else {
 			curveCount--;
 			verticesLength -= 4;
 			world = this.world.setSize(verticesLength);
-			path.computeWorldVertices(slot, 2, verticesLength, world, 0, 2);
+			path.computeWorldVertices(skeleton, slot, 2, verticesLength, world, 0, 2);
 		}
 
 		// Curve lengths.
@@ -473,8 +456,11 @@ public class PathConstraint implements Constrained, Update {
 		}
 	}
 
+	public void sort () {
+	}
+
 	/** The bones that will be modified by this path constraint. */
-	public Array<BoneApplied> getBones () {
+	public Array<BonePose> getBones () {
 		return bones;
 	}
 
@@ -486,45 +472,5 @@ public class PathConstraint implements Constrained, Update {
 	public void setSlot (Slot slot) {
 		if (slot == null) throw new IllegalArgumentException("slot cannot be null.");
 		this.slot = slot;
-	}
-
-	public PathConstraintPose getPose () {
-		return pose;
-	}
-
-	public PathConstraintPose getAppliedPose () {
-		return applied;
-	}
-
-	public PathConstraintPose getConstrainedPose () {
-		return constrained;
-	}
-
-	public void setConstrained (boolean constrained) {
-		applied = constrained ? this.constrained : pose;
-	}
-
-	public void resetAppliedPose () {
-		applied.set(pose);
-	}
-
-	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
-	 * {@link Skeleton#getSkin() active skin} does not contain this item.
-	 * @see Skin#getBones()
-	 * @see Skin#getConstraints()
-	 * @see ConstraintData#getSkinRequired()
-	 * @see Skeleton#updateCache() */
-	public boolean isActive () {
-		return active;
-	}
-
-	/** The path constraint's setup pose data. */
-	public PathConstraintData getData () {
-		return data;
-	}
-
-	public String toString () {
-		return data.name;
 	}
 }

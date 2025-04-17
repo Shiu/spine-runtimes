@@ -39,26 +39,19 @@ import com.esotericsoftware.spine.BoneData.Inherit;
  * the last bone is as close to the target bone as possible.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-ik-constraints">IK constraints</a> in the Spine User Guide. */
-public class IkConstraint implements Constrained, Update {
-	final IkConstraintData data;
-	final Array<BoneApplied> bones;
+public class IkConstraint extends Constraint<IkConstraintData, IkConstraintPose> {
+	final Array<BonePose> bones;
 	Bone target;
-	final IkConstraintPose pose = new IkConstraintPose(), constrained = new IkConstraintPose();
-	IkConstraintPose applied = pose;
-	boolean active;
 
 	public IkConstraint (IkConstraintData data, Skeleton skeleton) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
+		super(data, new IkConstraintPose(), new IkConstraintPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
-		this.data = data;
 
 		bones = new Array(data.bones.size);
 		for (BoneData boneData : data.bones)
 			bones.add(skeleton.bones.get(boneData.index).constrained);
 
 		target = skeleton.bones.get(data.target.index);
-
-		setupPose();
 	}
 
 	/** Copy constructor. */
@@ -67,26 +60,25 @@ public class IkConstraint implements Constrained, Update {
 		pose.set(constraint.pose);
 	}
 
-	public void setupPose () {
-		pose.set(data.setup);
-	}
-
 	/** Applies the constraint to the constrained bones. */
-	public void update (Physics physics) {
+	public void update (Skeleton skeleton, Physics physics) {
 		IkConstraintPose a = applied;
 		if (a.mix == 0) return;
-		BoneApplied target = this.target.applied;
+		BonePose target = this.target.applied;
 		Object[] bones = this.bones.items;
 		switch (this.bones.size) {
-		case 1 -> apply((BoneApplied)bones[0], target.worldX, target.worldY, a.compress, a.stretch, data.uniform, a.mix);
-		case 2 -> //
-			apply((BoneApplied)bones[0], (BoneApplied)bones[1], target.worldX, target.worldY, a.bendDirection, a.stretch,
-				data.uniform, a.softness, a.mix);
+		case 1 -> apply(skeleton, (BonePose)bones[0], target.worldX, target.worldY, a.compress, a.stretch, data.uniform, a.mix);
+		case 2 -> apply(skeleton, (BonePose)bones[0], (BonePose)bones[1], target.worldX, target.worldY, a.bendDirection, a.stretch,
+			data.uniform, a.softness, a.mix);
 		}
 	}
 
+	public void sort () {
+		// BOZO
+	}
+
 	/** The 1 or 2 bones that will be modified by this IK constraint. */
-	public Array<BoneApplied> getBones () {
+	public Array<BonePose> getBones () {
 		return bones;
 	}
 
@@ -100,61 +92,20 @@ public class IkConstraint implements Constrained, Update {
 		this.target = target;
 	}
 
-	public IkConstraintPose getPose () {
-		return pose;
-	}
-
-	public IkConstraintPose getAppliedPose () {
-		return applied;
-	}
-
-	public IkConstraintPose getConstrainedPose () {
-		return constrained;
-	}
-
-	public void setConstrained (boolean constrained) {
-		applied = constrained ? this.constrained : pose;
-	}
-
-	public void resetAppliedPose () {
-		applied.set(pose);
-	}
-
-	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
-	 * {@link Skeleton#getSkin() active skin} does not contain this item.
-	 * @see Skin#getBones()
-	 * @see Skin#getConstraints()
-	 * @see ConstraintData#getSkinRequired()
-	 * @see Skeleton#updateCache() */
-	public boolean isActive () {
-		return active;
-	}
-
-	/** The IK constraint's setup pose data. */
-	public IkConstraintData getData () {
-		return data;
-	}
-
-	public String toString () {
-		return data.name;
-	}
-
 	/** Applies 1 bone IK. The target is specified in the world coordinate system. */
-	static public void apply (BoneApplied bone, float targetX, float targetY, boolean compress, boolean stretch, boolean uniform,
-		float alpha) {
+	static public void apply (Skeleton skeleton, BonePose bone, float targetX, float targetY, boolean compress, boolean stretch,
+		boolean uniform, float alpha) {
 		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
-		BoneApplied p = bone.bone.parent.applied;
+		BonePose p = bone.bone.parent.applied;
 		float pa = p.a, pb = p.b, pc = p.c, pd = p.d;
 		float rotationIK = -bone.shearX - bone.rotation, tx, ty;
 		switch (bone.inherit) {
 		case onlyTranslation:
-			tx = (targetX - bone.worldX) * Math.signum(bone.bone.skeleton.scaleX);
-			ty = (targetY - bone.worldY) * Math.signum(bone.bone.skeleton.scaleY);
+			tx = (targetX - bone.worldX) * Math.signum(skeleton.scaleX);
+			ty = (targetY - bone.worldY) * Math.signum(skeleton.scaleY);
 			break;
 		case noRotationOrReflection:
 			float s = Math.abs(pa * pd - pb * pc) / Math.max(0.0001f, pa * pa + pc * pc);
-			Skeleton skeleton = bone.bone.skeleton;
 			float sa = pa / skeleton.scaleX;
 			float sc = pc / skeleton.scaleY;
 			pb = -sc * s * skeleton.scaleX;
@@ -196,13 +147,13 @@ public class IkConstraint implements Constrained, Update {
 				}
 			}
 		}
-		bone.updateWorldTransform();
+		bone.updateWorldTransform(skeleton);
 	}
 
 	/** Applies 2 bone IK. The target is specified in the world coordinate system.
 	 * @param child A direct descendant of the parent bone. */
-	static public void apply (BoneApplied parent, BoneApplied child, float targetX, float targetY, int bendDir, boolean stretch,
-		boolean uniform, float softness, float alpha) {
+	static public void apply (Skeleton skeleton, BonePose parent, BonePose child, float targetX, float targetY, int bendDir,
+		boolean stretch, boolean uniform, float softness, float alpha) {
 		if (parent == null) throw new IllegalArgumentException("parent cannot be null.");
 		if (child == null) throw new IllegalArgumentException("child cannot be null.");
 		if (parent.inherit != Inherit.normal || child.inherit != Inherit.normal) return;
@@ -235,7 +186,7 @@ public class IkConstraint implements Constrained, Update {
 			cwx = a * child.x + b * child.y + parent.worldX;
 			cwy = c * child.x + d * child.y + parent.worldY;
 		}
-		BoneApplied pp = parent.bone.parent.applied;
+		BonePose pp = parent.bone.parent.applied;
 		a = pp.a;
 		b = pp.b;
 		c = pp.c;
@@ -245,9 +196,9 @@ public class IkConstraint implements Constrained, Update {
 		float dx = (x * d - y * b) * id - px, dy = (y * a - x * c) * id - py;
 		float l1 = (float)Math.sqrt(dx * dx + dy * dy), l2 = child.bone.data.length * csx, a1, a2;
 		if (l1 < 0.0001f) {
-			apply(parent, targetX, targetY, false, stretch, false, alpha);
+			apply(skeleton, parent, targetX, targetY, false, stretch, false, alpha);
 			child.rotation = 0;
-			child.updateWorldTransform();
+			child.updateWorldTransform(skeleton);
 			return;
 		}
 		x = targetX - pp.worldX;
@@ -342,13 +293,13 @@ public class IkConstraint implements Constrained, Update {
 		else if (a1 < -180) //
 			a1 += 360;
 		parent.rotation += a1 * alpha;
-		parent.updateWorldTransform();
+		parent.updateWorldTransform(skeleton);
 		a2 = ((a2 + os) * radDeg - child.shearX) * s2 + os2 - child.rotation;
 		if (a2 > 180)
 			a2 -= 360;
 		else if (a2 < -180) //
 			a2 += 360;
 		child.rotation += a2 * alpha;
-		child.updateWorldTransform();
+		child.updateWorldTransform(skeleton);
 	}
 }

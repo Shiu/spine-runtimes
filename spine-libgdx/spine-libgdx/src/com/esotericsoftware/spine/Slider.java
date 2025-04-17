@@ -35,70 +35,22 @@ import com.esotericsoftware.spine.Animation.MixDirection;
 /** Stores the setup pose for a {@link PhysicsConstraint}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-public class Slider implements Constrained, Update {
-	final SliderData data;
-	final Skeleton skeleton;
-	final SliderPose pose = new SliderPose(), constrained = new SliderPose();
-	SliderPose applied = pose;
-
-	boolean active;
-
-	public Slider (SliderData data, Skeleton skeleton) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
-		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
-		this.data = data;
-		this.skeleton = skeleton;
-
-		setupPose();
+public class Slider extends Constraint<SliderData, SliderPose> {
+	public Slider (SliderData data) {
+		super(data, new SliderPose(), new SliderPose());
 	}
 
 	/** Copy constructor. */
-	public Slider (Slider slider, Skeleton skeleton) {
-		this(slider.data, skeleton);
+	public Slider (Slider slider) {
+		this(slider.data);
 		pose.set(slider.pose);
 	}
 
-	public void update (Physics physics) {
+	public void update (Skeleton skeleton, Physics physics) {
 		SliderPose pose = applied;
 		data.animation.apply(skeleton, pose.time, pose.time, false, null, pose.mix, MixBlend.replace, MixDirection.in, true);
 	}
 
-	public void setupPose () {
-		pose.set(data.setup);
-	}
-
-	public SliderPose getPose () {
-		return pose;
-	}
-
-	public SliderPose getAppliedPose () {
-		return applied;
-	}
-
-	public SliderPose getConstrainedPose () {
-		return constrained;
-	}
-
-	public void setConstrained (boolean constrained) {
-		applied = constrained ? this.constrained : pose;
-	}
-
-	public void resetAppliedPose () {
-		applied.set(pose);
-	}
-
-	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
-	 * {@link Skeleton#getSkin() active skin} does not contain this item.
-	 * @see Skin#getBones()
-	 * @see Skin#getConstraints()
-	 * @see ConstraintData#getSkinRequired()
-	 * @see Skeleton#updateCache() */
-	public boolean isActive () {
-		return active;
-	}
-
-	public String toString () {
-		return data.name;
+	public void sort () {
 	}
 }

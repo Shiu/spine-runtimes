@@ -47,7 +47,7 @@ public class SkeletonAttachmentTest extends ApplicationAdapter {
 
 	Skeleton spineboy, goblin;
 	AnimationState spineboyState, goblinState;
-	BoneApplied attachmentBone;
+	BonePose attachmentBone;
 
 	public void create () {
 		camera = new OrthographicCamera();

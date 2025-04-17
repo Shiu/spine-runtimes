@@ -40,32 +40,19 @@ import com.esotericsoftware.spine.TransformConstraintData.ToProperty;
  * bones to match that of the source bone.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide. */
-public class TransformConstraint implements Constrained, Update {
-	final TransformConstraintData data;
-	final Array<BoneApplied> bones;
+public class TransformConstraint extends Constraint<TransformConstraintData, TransformConstraintPose> {
+	final Array<BonePose> bones;
 	Bone source;
-	final TransformConstraintPose pose = new TransformConstraintPose(), constrained = new TransformConstraintPose();
-	TransformConstraintPose applied = pose;
-	boolean active;
-
-	public TransformConstraint (TransformConstraintData data, Array<BoneApplied> bones, Bone source) {
-		this.data = data;
-		this.bones = bones;
-		this.source = source;
-	}
 
 	public TransformConstraint (TransformConstraintData data, Skeleton skeleton) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
+		super(data, new TransformConstraintPose(), new TransformConstraintPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
-		this.data = data;
 
 		bones = new Array(data.bones.size);
 		for (BoneData boneData : data.bones)
 			bones.add(skeleton.bones.get(boneData.index).constrained);
 
 		source = skeleton.bones.get(data.source.index);
-
-		setupPose();
 	}
 
 	/** Copy constructor. */
@@ -74,24 +61,20 @@ public class TransformConstraint implements Constrained, Update {
 		pose.set(constraint.pose);
 	}
 
-	public void setupPose () {
-		pose.set(data.setup);
-	}
-
 	/** Applies the constraint to the constrained bones. */
-	public void update (Physics physics) {
+	public void update (Skeleton skeleton, Physics physics) {
 		TransformConstraintPose pose = applied;
 		if (pose.mixRotate == 0 && pose.mixX == 0 && pose.mixY == 0 && pose.mixScaleX == 0 && pose.mixScaleY == 0
 			&& pose.mixShearY == 0) return;
 
 		TransformConstraintData data = this.data;
 		boolean localFrom = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
-		BoneApplied source = this.source.applied;
+		BonePose source = this.source.applied;
 		Object[] fromItems = data.properties.items;
 		int fn = data.properties.size;
 		Object[] bones = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++) {
-			var bone = (BoneApplied)bones[i];
+			var bone = (BonePose)bones[i];
 			if (bone.bone.applied != bone.bone.constrained) System.out.println();
 			for (int f = 0; f < fn; f++) {
 				var from = (FromProperty)fromItems[f];
@@ -112,14 +95,17 @@ public class TransformConstraint implements Constrained, Update {
 				}
 			}
 			if (localTarget)
-				bone.update(null);
+				bone.update(skeleton, null);
 			else
-				bone.updateLocalTransform();
+				bone.updateLocalTransform(skeleton);
 		}
 	}
 
+	public void sort () {
+	}
+
 	/** The bones that will be modified by this transform constraint. */
-	public Array<BoneApplied> getBones () {
+	public Array<BonePose> getBones () {
 		return bones;
 	}
 
@@ -131,45 +117,5 @@ public class TransformConstraint implements Constrained, Update {
 	public void setSource (Bone source) {
 		if (source == null) throw new IllegalArgumentException("source cannot be null.");
 		this.source = source;
-	}
-
-	public TransformConstraintPose getPose () {
-		return pose;
-	}
-
-	public TransformConstraintPose getAppliedPose () {
-		return applied;
-	}
-
-	public TransformConstraintPose getConstrainedPose () {
-		return constrained;
-	}
-
-	public void setConstrained (boolean constrained) {
-		applied = constrained ? this.constrained : pose;
-	}
-
-	public void resetAppliedPose () {
-		applied.set(pose);
-	}
-
-	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
-	 * {@link Skeleton#getSkin() active skin} does not contain this item.
-	 * @see Skin#getBones()
-	 * @see Skin#getConstraints()
-	 * @see ConstraintData#getSkinRequired()
-	 * @see Skeleton#updateCache() */
-	public boolean isActive () {
-		return active;
-	}
-
-	/** The transform constraint's setup pose data. */
-	public TransformConstraintData getData () {
-		return data;
-	}
-
-	public String toString () {
-		return data.name;
 	}
 }

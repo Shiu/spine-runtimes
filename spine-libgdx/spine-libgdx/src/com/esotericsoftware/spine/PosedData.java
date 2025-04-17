@@ -29,15 +29,26 @@
 
 package com.esotericsoftware.spine;
 
-/** The base class for all constraint datas. */
-abstract public class ConstraintData {
+/** The base class for all constrained datas. */
+abstract public class PosedData<P extends Pose> {
 	final String name;
-	int order;
+	final P setup;
 	boolean skinRequired;
 
-	public ConstraintData (String name) {
+	int order; // BOZO - Remove order.
+
+	public int getOrder () {
+		return order;
+	}
+
+	public void setOrder (int order) {
+		this.order = order;
+	}
+
+	public PosedData (String name, P setup) {
 		if (name == null) throw new IllegalArgumentException("name cannot be null.");
 		this.name = name;
+		this.setup = setup;
 	}
 
 	/** The constraint's name, which is unique across all constraints in the skeleton of the same type. */
@@ -45,14 +56,8 @@ abstract public class ConstraintData {
 		return name;
 	}
 
-	/** The ordinal of this constraint for the order a skeleton's constraints will be applied by
-	 * {@link Skeleton#updateWorldTransform(Physics)}. */
-	public int getOrder () {
-		return order;
-	}
-
-	public void setOrder (int order) {
-		this.order = order;
+	public P getSetupPose () {
+		return setup;
 	}
 
 	/** When true, {@link Skeleton#updateWorldTransform(Physics)} only updates this constraint if the {@link Skeleton#getSkin()}

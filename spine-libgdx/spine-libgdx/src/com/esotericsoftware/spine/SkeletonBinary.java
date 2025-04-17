@@ -217,7 +217,7 @@ public class SkeletonBinary extends SkeletonLoader {
 				String name = input.readString();
 				BoneData parent = i == 0 ? null : (BoneData)bones[input.readInt(true)];
 				var data = new BoneData(i, name, parent);
-				BonePose setup = data.setup;
+				BoneLocal setup = data.setup;
 				setup.rotation = input.readFloat();
 				setup.x = input.readFloat() * scale;
 				setup.y = input.readFloat() * scale;
@@ -493,16 +493,16 @@ public class SkeletonBinary extends SkeletonLoader {
 
 			items = skeletonData.ikConstraints.items;
 			for (int i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.add((ConstraintData)items[input.readInt(true)]);
+				skin.constraints.add((PosedData)items[input.readInt(true)]);
 			items = skeletonData.transformConstraints.items;
 			for (int i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.add((ConstraintData)items[input.readInt(true)]);
+				skin.constraints.add((PosedData)items[input.readInt(true)]);
 			items = skeletonData.pathConstraints.items;
 			for (int i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.add((ConstraintData)items[input.readInt(true)]);
+				skin.constraints.add((PosedData)items[input.readInt(true)]);
 			items = skeletonData.physicsConstraints.items;
 			for (int i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.add((ConstraintData)items[input.readInt(true)]);
+				skin.constraints.add((PosedData)items[input.readInt(true)]);
 			skin.constraints.shrink();
 
 			slotCount = input.readInt(true);

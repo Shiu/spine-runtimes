@@ -38,65 +38,22 @@ import com.badlogic.gdx.utils.Null;
  * A bone has a local transform which is used to compute its world transform. A bone also has an applied transform, which is a
  * local transform that can be applied to compute the world transform. The local transform and applied transform may differ if a
  * constraint or application code modifies the world transform after it was computed from the local transform. */
-public class Bone implements Constrained {
-	final BoneData data;
-	final Skeleton skeleton;
+public class Bone extends PosedActive<BoneData, BoneLocal, BonePose> {
 	@Null final Bone parent;
 	final Array<Bone> children = new Array();
-	final BoneApplied pose = new BoneApplied(this), constrained = new BoneApplied(this);
-	BoneApplied applied = pose;
-	boolean sorted, active;
+	boolean sorted;
 
-	public Bone (BoneData data, Skeleton skeleton, @Null Bone parent) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
-		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
-		this.data = data;
-		this.skeleton = skeleton;
+	public Bone (BoneData data, @Null Bone parent) {
+		super(data, new BonePose(), new BonePose());
 		this.parent = parent;
-		setupPose();
+		applied.bone = this;
+		constrained.bone = this;
 	}
 
 	/** Copy constructor. Does not copy the {@link #getChildren()} bones. */
-	public Bone (Bone bone, Skeleton skeleton, @Null Bone parent) {
-		this.data = bone.data;
-		this.skeleton = skeleton;
-		this.parent = parent;
+	public Bone (Bone bone, @Null Bone parent) {
+		this(bone.data, parent);
 		pose.set(bone.pose);
-	}
-
-	/** Sets this bone's local transform to the setup pose. */
-	public void setupPose () {
-		pose.set(data.setup);
-	}
-
-	/** The bone's setup pose data. */
-	public BoneData getData () {
-		return data;
-	}
-
-	public BonePose getPose () {
-		return pose;
-	}
-
-	public BoneApplied getAppliedPose () {
-		return applied;
-	}
-
-	public BoneApplied getConstrainedPose () {
-		return constrained;
-	}
-
-	public void setConstrained (boolean constrained) {
-		applied = constrained ? this.constrained : pose;
-	}
-
-	public void resetAppliedPose () {
-		applied.set(pose);
-	}
-
-	/** The skeleton this bone belongs to. */
-	public Skeleton getSkeleton () {
-		return skeleton;
 	}
 
 	/** The parent bone, or null if this is the root bone. */
@@ -107,19 +64,5 @@ public class Bone implements Constrained {
 	/** The immediate children of this bone. */
 	public Array<Bone> getChildren () {
 		return children;
-	}
-
-	/** Returns false when this bone won't be updated by {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)}
-	 * because a skin is required and the {@link Skeleton#getSkin() active skin} does not contain this item.
-	 * @see Skin#getBones()
-	 * @see Skin#getConstraints()
-	 * @see BoneData#getSkinRequired()
-	 * @see Skeleton#updateCache() */
-	public boolean isActive () {
-		return active;
-	}
-
-	public String toString () {
-		return data.name;
 	}
 }

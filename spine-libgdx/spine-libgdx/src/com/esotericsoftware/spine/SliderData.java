@@ -32,16 +32,11 @@ package com.esotericsoftware.spine;
 /** Stores the setup pose for a {@link PhysicsConstraint}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-public class SliderData extends ConstraintData {
-	final SliderPose setup = new SliderPose();
+public class SliderData extends PosedData<SliderPose> {
 	Animation animation;
 
 	public SliderData (String name) {
-		super(name);
-	}
-
-	public SliderPose getSetupPose () {
-		return setup;
+		super(name, new SliderPose());
 	}
 
 	public Animation getAnimation () {

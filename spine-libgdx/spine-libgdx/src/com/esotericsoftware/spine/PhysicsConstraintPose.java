@@ -30,7 +30,7 @@
 package com.esotericsoftware.spine;
 
 /** Stores a pose for a physics constraint. */
-public class PhysicsConstraintPose {
+public class PhysicsConstraintPose implements Pose<PhysicsConstraintPose> {
 	float inertia, strength, damping, massInverse, wind, gravity, mix;
 
 	public void set (PhysicsConstraintPose pose) {

@@ -32,11 +32,9 @@ package com.esotericsoftware.spine;
 import com.badlogic.gdx.utils.Null;
 
 /** Stores the setup pose for a {@link Slot}. */
-public class SlotData {
+public class SlotData extends PosedData<SlotPose> {
 	final int index;
-	final String name;
 	final BoneData boneData;
-	final SlotPose setup = new SlotPose();
 	@Null String attachmentName;
 	BlendMode blendMode;
 
@@ -44,11 +42,10 @@ public class SlotData {
 	boolean visible = true;
 
 	public SlotData (int index, String name, BoneData boneData) {
+		super(name, new SlotPose());
 		if (index < 0) throw new IllegalArgumentException("index must be >= 0.");
-		if (name == null) throw new IllegalArgumentException("name cannot be null.");
 		if (boneData == null) throw new IllegalArgumentException("boneData cannot be null.");
 		this.index = index;
-		this.name = name;
 		this.boneData = boneData;
 	}
 
@@ -57,18 +54,9 @@ public class SlotData {
 		return index;
 	}
 
-	/** The name of the slot, which is unique across all slots in the skeleton. */
-	public String getName () {
-		return name;
-	}
-
 	/** The bone this slot belongs to. */
 	public BoneData getBoneData () {
 		return boneData;
-	}
-
-	public SlotPose getSetupPose () {
-		return setup;
 	}
 
 	public void setAttachmentName (@Null String attachmentName) {
@@ -97,9 +85,5 @@ public class SlotData {
 
 	public void setVisible (boolean visible) {
 		this.visible = visible;
-	}
-
-	public String toString () {
-		return name;
 	}
 }

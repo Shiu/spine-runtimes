@@ -30,7 +30,7 @@
 package com.esotericsoftware.spine;
 
 /** Stores a pose for a slider. */
-public class SliderPose {
+public class SliderPose implements Pose<SliderPose> {
 	float time, mix;
 
 	public void set (SliderPose pose) {

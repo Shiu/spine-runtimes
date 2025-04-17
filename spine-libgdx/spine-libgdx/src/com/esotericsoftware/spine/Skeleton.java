@@ -64,7 +64,7 @@ public class Skeleton {
 	final Array<PathConstraint> pathConstraints;
 	final Array<PhysicsConstraint> physicsConstraints;
 	final Array updateCache = new Array();
-	final Array<Constrained> resetCache = new Array();
+	final Array<Posed> resetCache = new Array();
 	@Null Skin skin;
 	final Color color;
 	float x, y, scaleX = 1, scaleY = 1, time;
@@ -78,10 +78,10 @@ public class Skeleton {
 		for (BoneData boneData : data.bones) {
 			Bone bone;
 			if (boneData.parent == null)
-				bone = new Bone(boneData, this, null);
+				bone = new Bone(boneData, null);
 			else {
 				var parent = (Bone)bones[boneData.parent.index];
-				bone = new Bone(boneData, this, parent);
+				bone = new Bone(boneData, parent);
 				parent.children.add(bone);
 			}
 			this.bones.add(bone);
@@ -97,7 +97,7 @@ public class Skeleton {
 
 		sliders = new Array(data.sliders.size);
 		for (SliderData constraint : data.sliders)
-			sliders.add(new Slider(constraint, this));
+			sliders.add(new Slider(constraint));
 
 		ikConstraints = new Array(data.ikConstraints.size);
 		for (IkConstraintData constraint : data.ikConstraints)
@@ -129,10 +129,10 @@ public class Skeleton {
 		for (Bone bone : skeleton.bones) {
 			Bone newBone;
 			if (bone.parent == null)
-				newBone = new Bone(bone, this, null);
+				newBone = new Bone(bone, null);
 			else {
 				Bone parent = bones.get(bone.parent.data.index);
-				newBone = new Bone(bone, this, parent);
+				newBone = new Bone(bone, parent);
 				parent.children.add(newBone);
 			}
 			bones.add(newBone);
@@ -150,7 +150,7 @@ public class Skeleton {
 
 		sliders = new Array(skeleton.sliders.size);
 		for (Slider constraint : skeleton.sliders)
-			sliders.add(new Slider(constraint, skeleton));
+			sliders.add(new Slider(constraint));
 
 		ikConstraints = new Array(skeleton.ikConstraints.size);
 		for (IkConstraint constraint : skeleton.ikConstraints)
@@ -276,7 +276,7 @@ public class Skeleton {
 
 		sortBone(constraint.target);
 
-		Array<BoneApplied> constrained = constraint.bones;
+		Array<BonePose> constrained = constraint.bones;
 		Bone parent = constrained.first().bone;
 		sortBone(parent);
 		resetCache(parent);
@@ -306,14 +306,14 @@ public class Skeleton {
 		int boneCount = constraint.bones.size;
 		if (constraint.data.localSource) {
 			for (int i = 0; i < boneCount; i++) {
-				Bone child = ((BoneApplied)constrained[i]).bone;
+				Bone child = ((BonePose)constrained[i]).bone;
 				resetCache(child);
 				sortBone(child.parent);
 				sortBone(child);
 			}
 		} else {
 			for (int i = 0; i < boneCount; i++) {
-				Bone bone = ((BoneApplied)constrained[i]).bone;
+				Bone bone = ((BonePose)constrained[i]).bone;
 				resetCache(bone);
 				sortBone(bone);
 			}
@@ -322,9 +322,9 @@ public class Skeleton {
 		updateCache.add(constraint);
 
 		for (int i = 0; i < boneCount; i++)
-			sortReset(((BoneApplied)constrained[i]).bone.children);
+			sortReset(((BonePose)constrained[i]).bone.children);
 		for (int i = 0; i < boneCount; i++)
-			((BoneApplied)constrained[i]).bone.sorted = true;
+			((BonePose)constrained[i]).bone.sorted = true;
 	}
 
 	private void sortPathConstraint (PathConstraint constraint) {
@@ -344,7 +344,7 @@ public class Skeleton {
 		Object[] constrained = constraint.bones.items;
 		int boneCount = constraint.bones.size;
 		for (int i = 0; i < boneCount; i++) {
-			Bone bone = ((BoneApplied)constrained[i]).bone;
+			Bone bone = ((BonePose)constrained[i]).bone;
 			resetCache(bone);
 			sortBone(bone);
 		}
@@ -352,9 +352,9 @@ public class Skeleton {
 		updateCache.add(constraint);
 
 		for (int i = 0; i < boneCount; i++)
-			sortReset(((BoneApplied)constrained[i]).bone.children);
+			sortReset(((BonePose)constrained[i]).bone.children);
 		for (int i = 0; i < boneCount; i++)
-			((BoneApplied)constrained[i]).bone.sorted = true;
+			((BonePose)constrained[i]).bone.sorted = true;
 	}
 
 	private void sortPathConstraintAttachment (Skin skin, int slotIndex, Bone slotBone) {
@@ -423,7 +423,7 @@ public class Skeleton {
 			if (timelines[i] instanceof BoneTimeline boneTimeline) sortBone((Bone)bones[boneTimeline.getBoneIndex()]);
 	}
 
-	private void resetCache (Constrained object) {
+	private void resetCache (Posed object) {
 		if (!resetCache.contains(object, true)) {
 			resetCache.add(object);
 			object.setConstrained(true);
@@ -455,11 +455,11 @@ public class Skeleton {
 	public void updateWorldTransform (Physics physics) {
 		Object[] resetCache = this.resetCache.items;
 		for (int i = 0, n = this.resetCache.size; i < n; i++)
-			((Constrained)resetCache[i]).resetAppliedPose();
+			((Posed)resetCache[i]).resetAppliedPose();
 
 		Object[] updateCache = this.updateCache.items;
 		for (int i = 0, n = this.updateCache.size; i < n; i++)
-			((Update)updateCache[i]).update(physics);
+			((Update)updateCache[i]).update(this, physics);
 	}
 
 	/** Temporarily sets the root bone as a child of the specified bone, then updates the world transform for each bone and applies
@@ -467,15 +467,15 @@ public class Skeleton {
 	 * <p>
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
-	public void updateWorldTransform (Physics physics, BoneApplied parent) {
+	public void updateWorldTransform (Physics physics, BonePose parent) {
 		if (parent == null) throw new IllegalArgumentException("parent cannot be null.");
 
 		Object[] resetCache = this.resetCache.items;
 		for (int i = 0, n = this.resetCache.size; i < n; i++)
-			((Constrained)resetCache[i]).resetAppliedPose();
+			((Posed)resetCache[i]).resetAppliedPose();
 
 		// Apply the parent bone transform to the root bone. The root bone always inherits scale, rotation and reflection.
-		BoneApplied rootBone = getRootBone().applied;
+		BonePose rootBone = getRootBone().applied;
 		float pa = parent.a, pb = parent.b, pc = parent.c, pd = parent.d;
 		rootBone.worldX = pa * x + pb * y + parent.worldX;
 		rootBone.worldY = pc * x + pd * y + parent.worldY;
@@ -495,7 +495,7 @@ public class Skeleton {
 		Object[] updateCache = this.updateCache.items;
 		for (int i = 0, n = this.updateCache.size; i < n; i++) {
 			var updatable = (Update)updateCache[i];
-			if (updatable != rootBone) updatable.update(physics);
+			if (updatable != rootBone) updatable.update(this, physics);
 		}
 	}
 
@@ -804,10 +804,10 @@ public class Skeleton {
 			} else if (attachment instanceof MeshAttachment mesh) {
 				verticesLength = mesh.getWorldVerticesLength();
 				vertices = temp.setSize(verticesLength);
-				mesh.computeWorldVertices(slot, 0, verticesLength, vertices, 0, 2);
+				mesh.computeWorldVertices(this, slot, 0, verticesLength, vertices, 0, 2);
 				triangles = mesh.getTriangles();
 			} else if (attachment instanceof ClippingAttachment clip && clipper != null) {
-				clipper.clipStart(slot, clip);
+				clipper.clipStart(this, slot, clip);
 				continue;
 			}
 			if (vertices != null) {

@@ -36,6 +36,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Null;
 
+import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.Slot;
 
 /** An attachment that displays a textured mesh. A mesh has hull vertices and internal vertices within the hull. Holes are not
@@ -164,9 +165,10 @@ public class MeshAttachment extends VertexAttachment implements HasTextureRegion
 	}
 
 	/** If the attachment has a {@link #sequence}, the region may be changed. */
-	public void computeWorldVertices (Slot slot, int start, int count, float[] worldVertices, int offset, int stride) {
+	public void computeWorldVertices (Skeleton skeleton, Slot slot, int start, int count, float[] worldVertices, int offset,
+		int stride) {
 		if (sequence != null) sequence.apply(slot.getAppliedPose(), this);
-		super.computeWorldVertices(slot, start, count, worldVertices, offset, stride);
+		super.computeWorldVertices(skeleton, slot, start, count, worldVertices, offset, stride);
 	}
 
 	/** Triplets of vertex indices which describe the mesh's triangulation. */

@@ -30,7 +30,7 @@
 package com.esotericsoftware.spine;
 
 /** Stores a pose for a transform constraint. */
-public class TransformConstraintPose {
+public class TransformConstraintPose implements Pose<TransformConstraintPose> {
 	float mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY;
 
 	public void set (TransformConstraintPose pose) {

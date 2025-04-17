@@ -41,7 +41,7 @@ import com.esotericsoftware.spine.attachments.VertexAttachment;
 /** Stores a slot's pose. Slots organize attachments for {@link Skeleton#drawOrder} purposes and provide a place to store state
  * for an attachment. State cannot be stored in an attachment itself because attachments are stateless and may be shared across
  * multiple skeletons. */
-public class SlotPose {
+public class SlotPose implements Pose<SlotPose> {
 	final Color color = new Color();
 	@Null Color darkColor;
 	@Null Attachment attachment; // Not used in setup pose.
@@ -104,7 +104,8 @@ public class SlotPose {
 	/** Values to deform the slot's attachment. For an unweighted mesh, the entries are local positions for each vertex. For a
 	 * weighted mesh, the entries are an offset for each vertex which will be added to the mesh's local vertex positions.
 	 * <p>
-	 * See {@link VertexAttachment#computeWorldVertices(Slot, int, int, float[], int, int)} and {@link DeformTimeline}. */
+	 * See {@link VertexAttachment#computeWorldVertices(Skeleton, Slot, int, int, float[], int, int)} and
+	 * {@link DeformTimeline}. */
 	public FloatArray getDeform () {
 		return deform;
 	}

@@ -34,17 +34,13 @@ import com.badlogic.gdx.graphics.Color;
 /** Stores a slot's current pose. Slots organize attachments for {@link Skeleton#drawOrder} purposes and provide a place to store
  * state for an attachment. State cannot be stored in an attachment itself because attachments are stateless and may be shared
  * across multiple skeletons. */
-public class Slot implements Constrained {
-	final SlotData data;
+public class Slot extends Posed<SlotData, SlotPose, SlotPose> {
 	final Bone bone;
-	final SlotPose pose = new SlotPose(), constrained = new SlotPose();
-	SlotPose applied = pose;
 	int attachmentState;
 
 	public Slot (SlotData data, Skeleton skeleton) {
-		if (data == null) throw new IllegalArgumentException("slot cannot be null.");
+		super(data, new SlotPose(), new SlotPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
-		this.data = data;
 		bone = skeleton.bones.get(data.boneData.index);
 		if (data.setup.darkColor != null) {
 			pose.darkColor = new Color();
@@ -55,9 +51,7 @@ public class Slot implements Constrained {
 
 	/** Copy constructor. */
 	public Slot (Slot slot, Bone bone) {
-		if (slot == null) throw new IllegalArgumentException("slot cannot be null.");
-		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
-		data = slot.data;
+		super(slot.data, new SlotPose(), new SlotPose());
 		this.bone = bone;
 		if (data.setup.darkColor != null) {
 			pose.darkColor = new Color();
@@ -66,48 +60,8 @@ public class Slot implements Constrained {
 		pose.set(slot.pose);
 	}
 
-	/** Sets this slot to the setup pose. */
-	public void setupPose () {
-		pose.set(data.setup);
-		if (data.attachmentName != null) pose.setAttachment(bone.skeleton.getAttachment(data.index, data.attachmentName));
-	}
-
-	/** The slot's setup pose data. */
-	public SlotData getData () {
-		return data;
-	}
-
-	public SlotPose getPose () {
-		return pose;
-	}
-
-	public SlotPose getAppliedPose () {
-		return applied;
-	}
-
-	public SlotPose getConstrainedPose () {
-		return constrained;
-	}
-
-	public void setConstrained (boolean constrained) {
-		applied = constrained ? this.constrained : pose;
-	}
-
-	public void resetAppliedPose () {
-		applied.set(pose);
-	}
-
 	/** The bone this slot belongs to. */
 	public Bone getBone () {
 		return bone;
-	}
-
-	/** The skeleton this slot belongs to. */
-	public Skeleton getSkeleton () {
-		return bone.skeleton;
-	}
-
-	public String toString () {
-		return data.name;
 	}
 }

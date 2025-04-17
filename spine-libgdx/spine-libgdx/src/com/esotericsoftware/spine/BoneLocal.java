@@ -27,39 +27,31 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-package com.esotericsoftware.spine.attachments;
+package com.esotericsoftware.spine;
 
-import static com.esotericsoftware.spine.utils.SpineUtils.*;
+import com.esotericsoftware.spine.BoneData.Inherit;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.math.Vector2;
+/** Stores a bone's local pose. */
+public class BoneLocal implements Pose<BoneLocal> {
+	float x, y, rotation, scaleX, scaleY, shearX, shearY;
+	Inherit inherit;
 
-import com.esotericsoftware.spine.BonePose;
-
-/** An attachment which is a single point and a rotation. This can be used to spawn projectiles, particles, etc. A bone can be
- * used in similar ways, but a PointAttachment is slightly less expensive to compute and can be hidden, shown, and placed in a
- * skin.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-points">Point Attachments</a> in the Spine User Guide. */
-public class PointAttachment extends Attachment {
-	float x, y, rotation;
-
-	// Nonessential.
-	final Color color = new Color(0.9451f, 0.9451f, 0, 1); // f1f100ff
-
-	public PointAttachment (String name) {
-		super(name);
+	BoneLocal () {
 	}
 
-	/** Copy constructor. */
-	protected PointAttachment (PointAttachment other) {
-		super(other);
-		x = other.x;
-		y = other.y;
-		rotation = other.rotation;
-		color.set(other.color);
+	public void set (BoneLocal pose) {
+		if (pose == null) throw new IllegalArgumentException("pose cannot be null.");
+		x = pose.x;
+		y = pose.y;
+		rotation = pose.rotation;
+		scaleX = pose.scaleX;
+		scaleY = pose.scaleY;
+		shearX = pose.shearX;
+		shearY = pose.shearY;
+		inherit = pose.inherit;
 	}
 
+	/** The local x translation. */
 	public float getX () {
 		return x;
 	}
@@ -68,6 +60,7 @@ public class PointAttachment extends Attachment {
 		this.x = x;
 	}
 
+	/** The local y translation. */
 	public float getY () {
 		return y;
 	}
@@ -76,6 +69,12 @@ public class PointAttachment extends Attachment {
 		this.y = y;
 	}
 
+	public void setPosition (float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	/** The local rotation in degrees, counter clockwise. */
 	public float getRotation () {
 		return rotation;
 	}
@@ -84,26 +83,59 @@ public class PointAttachment extends Attachment {
 		this.rotation = rotation;
 	}
 
-	/** The color of the point attachment as it was in Spine, or a default clor if nonessential data was not exported. Point
-	 * attachments are not usually rendered at runtime. */
-	public Color getColor () {
-		return color;
+	/** The local scaleX. */
+	public float getScaleX () {
+		return scaleX;
 	}
 
-	public Vector2 computeWorldPosition (BonePose bone, Vector2 point) {
-		point.x = x * bone.getA() + y * bone.getB() + bone.getWorldX();
-		point.y = x * bone.getC() + y * bone.getD() + bone.getWorldY();
-		return point;
+	public void setScaleX (float scaleX) {
+		this.scaleX = scaleX;
 	}
 
-	public float computeWorldRotation (BonePose bone) {
-		float r = rotation * degRad, cos = cos(r), sin = sin(r);
-		float x = cos * bone.getA() + sin * bone.getB();
-		float y = cos * bone.getC() + sin * bone.getD();
-		return atan2Deg(y, x);
+	/** The local scaleY. */
+	public float getScaleY () {
+		return scaleY;
 	}
 
-	public PointAttachment copy () {
-		return new PointAttachment(this);
+	public void setScaleY (float scaleY) {
+		this.scaleY = scaleY;
+	}
+
+	public void setScale (float scaleX, float scaleY) {
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
+	}
+
+	public void setScale (float scale) {
+		scaleX = scale;
+		scaleY = scale;
+	}
+
+	/** The local shearX. */
+	public float getShearX () {
+		return shearX;
+	}
+
+	public void setShearX (float shearX) {
+		this.shearX = shearX;
+	}
+
+	/** The local shearY. */
+	public float getShearY () {
+		return shearY;
+	}
+
+	public void setShearY (float shearY) {
+		this.shearY = shearY;
+	}
+
+	/** Determines how parent world transforms affect this bone. */
+	public Inherit getInherit () {
+		return inherit;
+	}
+
+	public void setInherit (Inherit inherit) {
+		if (inherit == null) throw new IllegalArgumentException("inherit cannot be null.");
+		this.inherit = inherit;
 	}
 }

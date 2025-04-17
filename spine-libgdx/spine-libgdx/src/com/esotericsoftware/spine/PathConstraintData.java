@@ -34,8 +34,7 @@ import com.badlogic.gdx.utils.Array;
 /** Stores the setup pose for a {@link PathConstraint}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-path-constraints">Path constraints</a> in the Spine User Guide. */
-public class PathConstraintData extends ConstraintData {
-	final PathConstraintPose setup = new PathConstraintPose();
+public class PathConstraintData extends PosedData<PathConstraintPose> {
 	final Array<BoneData> bones = new Array();
 	SlotData slot;
 	PositionMode positionMode;
@@ -44,11 +43,7 @@ public class PathConstraintData extends ConstraintData {
 	float offsetRotation;
 
 	public PathConstraintData (String name) {
-		super(name);
-	}
-
-	public PathConstraintPose getSetupPose () {
-		return setup;
+		super(name, new PathConstraintPose());
 	}
 
 	/** The bones that will be modified by this path constraint. */

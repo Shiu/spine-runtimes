@@ -45,7 +45,7 @@ public class Skin {
 	final String name;
 	final OrderedSet<SkinEntry> attachments = new OrderedSet();
 	final Array<BoneData> bones = new Array(0);
-	final Array<ConstraintData> constraints = new Array(0);
+	final Array<PosedData> constraints = new Array(0);
 	private final SkinEntry lookup = new SkinEntry(0, "", null);
 
 	// Nonessential.
@@ -71,7 +71,7 @@ public class Skin {
 		for (BoneData data : skin.bones)
 			if (!bones.contains(data, true)) bones.add(data);
 
-		for (ConstraintData data : skin.constraints)
+		for (PosedData data : skin.constraints)
 			if (!constraints.contains(data, true)) constraints.add(data);
 
 		for (SkinEntry entry : skin.attachments.orderedItems())
@@ -86,7 +86,7 @@ public class Skin {
 		for (BoneData data : skin.bones)
 			if (!bones.contains(data, true)) bones.add(data);
 
-		for (ConstraintData data : skin.constraints)
+		for (PosedData data : skin.constraints)
 			if (!constraints.contains(data, true)) constraints.add(data);
 
 		for (SkinEntry entry : skin.attachments.orderedItems()) {
@@ -134,7 +134,7 @@ public class Skin {
 		return bones;
 	}
 
-	public Array<ConstraintData> getConstraints () {
+	public Array<PosedData> getConstraints () {
 		return constraints;
 	}
 

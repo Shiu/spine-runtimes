@@ -30,7 +30,7 @@
 package com.esotericsoftware.spine;
 
 /** Stores the current pose for an IK constraint. */
-public class IkConstraintPose {
+public class IkConstraintPose implements Pose<IkConstraintPose> {
 	int bendDirection;
 	boolean compress, stretch;
 	float mix, softness;

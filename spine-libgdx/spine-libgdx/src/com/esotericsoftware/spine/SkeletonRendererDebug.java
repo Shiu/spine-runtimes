@@ -95,7 +95,7 @@ public class SkeletonRendererDebug {
 					shapes.setColor(boneOriginColor);
 				} else
 					shapes.setColor(boneLineColor);
-				BoneApplied applied = bone.applied;
+				BonePose applied = bone.applied;
 				float x = length * applied.a + applied.worldX;
 				float y = length * applied.c + applied.worldY;
 				shapes.rectLine(applied.worldX, applied.worldY, x, y, width * scale);
@@ -140,7 +140,7 @@ public class SkeletonRendererDebug {
 				if (!slot.bone.active) continue;
 				if (!(slot.pose.attachment instanceof MeshAttachment mesh)) continue;
 				float[] vertices = this.vertices.setSize(mesh.getWorldVerticesLength());
-				mesh.computeWorldVertices(slot, 0, mesh.getWorldVerticesLength(), vertices, 0, 2);
+				mesh.computeWorldVertices(skeleton, slot, 0, mesh.getWorldVerticesLength(), vertices, 0, 2);
 				short[] triangles = mesh.getTriangles();
 				int hullLength = mesh.getHullLength();
 				if (drawMeshTriangles) {
@@ -187,7 +187,7 @@ public class SkeletonRendererDebug {
 				if (!(slot.pose.attachment instanceof ClippingAttachment clip)) continue;
 				int nn = clip.getWorldVerticesLength();
 				float[] vertices = this.vertices.setSize(nn);
-				clip.computeWorldVertices(slot, 0, nn, vertices, 0, 2);
+				clip.computeWorldVertices(skeleton, slot, 0, nn, vertices, 0, 2);
 				shapes.setColor(clip.getColor());
 				for (int ii = 2; ii < nn; ii += 2)
 					shapes.line(vertices[ii - 2], vertices[ii - 1], vertices[ii], vertices[ii + 1]);
@@ -202,7 +202,7 @@ public class SkeletonRendererDebug {
 				if (!(slot.pose.attachment instanceof PathAttachment path)) continue;
 				int nn = path.getWorldVerticesLength();
 				float[] vertices = this.vertices.setSize(nn);
-				path.computeWorldVertices(slot, 0, nn, vertices, 0, 2);
+				path.computeWorldVertices(skeleton, slot, 0, nn, vertices, 0, 2);
 				Color color = path.getColor();
 				float x1 = vertices[2], y1 = vertices[3], x2 = 0, y2 = 0;
 				if (path.getClosed()) {

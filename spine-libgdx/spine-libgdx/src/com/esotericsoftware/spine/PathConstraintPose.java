@@ -30,7 +30,7 @@
 package com.esotericsoftware.spine;
 
 /** Stores a pose for a path constraint. */
-public class PathConstraintPose {
+public class PathConstraintPose implements Pose<PathConstraintPose> {
 	float position, spacing, mixRotate, mixX, mixY;
 
 	public void set (PathConstraintPose pose) {

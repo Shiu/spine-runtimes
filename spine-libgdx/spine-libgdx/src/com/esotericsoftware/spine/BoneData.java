@@ -33,13 +33,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Null;
 
 /** The setup pose for a bone. */
-public class BoneData {
+public class BoneData extends PosedData<BoneLocal> {
 	final int index;
-	final String name;
 	@Null final BoneData parent;
-	final BonePose setup = new BonePose();
 	float length;
-	boolean skinRequired;
 
 	// Nonessential.
 	final Color color = new Color(0.61f, 0.61f, 0.61f, 1); // 9b9b9bff
@@ -47,18 +44,16 @@ public class BoneData {
 	boolean visible;
 
 	public BoneData (int index, String name, @Null BoneData parent) {
+		super(name, new BoneLocal());
 		if (index < 0) throw new IllegalArgumentException("index must be >= 0.");
 		if (name == null) throw new IllegalArgumentException("name cannot be null.");
 		this.index = index;
-		this.name = name;
 		this.parent = parent;
 	}
 
 	/** Copy constructor. */
 	public BoneData (BoneData data, @Null BoneData parent) {
-		index = data.index;
-		name = data.name;
-		this.parent = parent;
+		this(data.index, data.name, parent);
 		length = data.length;
 		setup.set(data.setup);
 	}
@@ -68,17 +63,8 @@ public class BoneData {
 		return index;
 	}
 
-	/** The name of the bone, which is unique across all bones in the skeleton. */
-	public String getName () {
-		return name;
-	}
-
 	public @Null BoneData getParent () {
 		return parent;
-	}
-
-	public BonePose getSetupPose () {
-		return setup;
 	}
 
 	/** The bone's length. */
@@ -88,18 +74,6 @@ public class BoneData {
 
 	public void setLength (float length) {
 		this.length = length;
-	}
-
-	/** When true, {@link Skeleton#updateWorldTransform(Physics)} only updates this bone if the {@link Skeleton#getSkin()} contains
-	 * this bone.
-	 * <p>
-	 * See {@link Skin#getBones()}. */
-	public boolean getSkinRequired () {
-		return skinRequired;
-	}
-
-	public void setSkinRequired (boolean skinRequired) {
-		this.skinRequired = skinRequired;
 	}
 
 	/** The color of the bone as it was in Spine, or a default color if nonessential data was not exported. Bones are not usually
@@ -124,10 +98,6 @@ public class BoneData {
 
 	public void setVisible (boolean visible) {
 		this.visible = visible;
-	}
-
-	public String toString () {
-		return name;
 	}
 
 	/** Determines how a bone inherits world transforms from parent bones. */

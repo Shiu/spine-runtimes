@@ -35,7 +35,7 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.Bone;
-import com.esotericsoftware.spine.BoneApplied;
+import com.esotericsoftware.spine.BonePose;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.SlotPose;
@@ -86,14 +86,16 @@ abstract public class VertexAttachment extends Attachment {
 	 *           <code>stride</code> / 2.
 	 * @param offset The <code>worldVertices</code> index to begin writing values.
 	 * @param stride The number of <code>worldVertices</code> entries between the value pairs written. */
-	public void computeWorldVertices (Slot slot, int start, int count, float[] worldVertices, int offset, int stride) {
+	public void computeWorldVertices (Skeleton skeleton, Slot slot, int start, int count, float[] worldVertices, int offset,
+		int stride) {
+
 		count = offset + (count >> 1) * stride;
 		FloatArray deformArray = slot.getAppliedPose().getDeform();
 		float[] vertices = this.vertices;
 		int[] bones = this.bones;
 		if (bones == null) {
 			if (deformArray.size > 0) vertices = deformArray.items;
-			BoneApplied bone = slot.getBone().getAppliedPose();
+			BonePose bone = slot.getBone().getAppliedPose();
 			float x = bone.getWorldX(), y = bone.getWorldY();
 			float a = bone.getA(), b = bone.getB(), c = bone.getC(), d = bone.getD();
 			for (int v = start, w = offset; w < count; v += 2, w += stride) {
@@ -109,14 +111,14 @@ abstract public class VertexAttachment extends Attachment {
 			v += n + 1;
 			skip += n;
 		}
-		Object[] skeletonBones = slot.getSkeleton().getBones().items;
+		Object[] skeletonBones = skeleton.getBones().items;
 		if (deformArray.size == 0) {
 			for (int w = offset, b = skip * 3; w < count; w += stride) {
 				float wx = 0, wy = 0;
 				int n = bones[v++];
 				n += v;
 				for (; v < n; v++, b += 3) {
-					BoneApplied bone = ((Bone)skeletonBones[bones[v]]).getAppliedPose();
+					BonePose bone = ((Bone)skeletonBones[bones[v]]).getAppliedPose();
 					float vx = vertices[b], vy = vertices[b + 1], weight = vertices[b + 2];
 					wx += (vx * bone.getA() + vy * bone.getB() + bone.getWorldX()) * weight;
 					wy += (vx * bone.getC() + vy * bone.getD() + bone.getWorldY()) * weight;
@@ -131,7 +133,7 @@ abstract public class VertexAttachment extends Attachment {
 				int n = bones[v++];
 				n += v;
 				for (; v < n; v++, b += 3, f += 2) {
-					BoneApplied bone = ((Bone)skeletonBones[bones[v]]).getAppliedPose();
+					BonePose bone = ((Bone)skeletonBones[bones[v]]).getAppliedPose();
 					float vx = vertices[b] + deform[f], vy = vertices[b + 1] + deform[f + 1], weight = vertices[b + 2];
 					wx += (vx * bone.getA() + vy * bone.getB() + bone.getWorldX()) * weight;
 					wy += (vx * bone.getC() + vy * bone.getD() + bone.getWorldY()) * weight;
@@ -166,7 +168,7 @@ abstract public class VertexAttachment extends Attachment {
 	}
 
 	/** The maximum number of world vertex values that can be output by
-	 * {@link #computeWorldVertices(Slot, int, int, float[], int, int)} using the <code>count</code> parameter. */
+	 * {@link #computeWorldVertices(Skeleton, Slot, int, int, float[], int, int)} using the <code>count</code> parameter. */
 	public int getWorldVerticesLength () {
 		return worldVerticesLength;
 	}

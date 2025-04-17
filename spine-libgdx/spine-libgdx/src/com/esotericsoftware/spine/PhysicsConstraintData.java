@@ -32,18 +32,13 @@ package com.esotericsoftware.spine;
 /** Stores the setup pose for a {@link PhysicsConstraint}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-public class PhysicsConstraintData extends ConstraintData {
-	final PhysicsConstraintPose setup = new PhysicsConstraintPose();
+public class PhysicsConstraintData extends PosedData<PhysicsConstraintPose> {
 	BoneData bone;
 	float x, y, rotate, scaleX, shearX, limit, step;
 	boolean inertiaGlobal, strengthGlobal, dampingGlobal, massGlobal, windGlobal, gravityGlobal, mixGlobal;
 
 	public PhysicsConstraintData (String name) {
-		super(name);
-	}
-
-	public PhysicsConstraintPose getSetupPose () {
-		return setup;
+		super(name, new PhysicsConstraintPose());
 	}
 
 	/** The bone constrained by this physics constraint. */

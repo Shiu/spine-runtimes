@@ -33,6 +33,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ShortArray;
 
+import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.attachments.ClippingAttachment;
 
@@ -48,14 +49,14 @@ public class SkeletonClipping {
 	private ClippingAttachment clipAttachment;
 	private Array<FloatArray> clippingPolygons;
 
-	public void clipStart (Slot slot, ClippingAttachment clip) {
+	public void clipStart (Skeleton skeleton, Slot slot, ClippingAttachment clip) {
 		if (clipAttachment != null) return;
 		int n = clip.getWorldVerticesLength();
 		if (n < 6) return;
 		clipAttachment = clip;
 
 		float[] vertices = clippingPolygon.setSize(n);
-		clip.computeWorldVertices(slot, 0, n, vertices, 0, 2);
+		clip.computeWorldVertices(skeleton, slot, 0, n, vertices, 0, 2);
 		makeClockwise(clippingPolygon);
 		ShortArray triangles = triangulator.triangulate(clippingPolygon);
 		clippingPolygons = triangulator.decompose(clippingPolygon, triangles);

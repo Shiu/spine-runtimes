@@ -34,13 +34,8 @@ import static com.esotericsoftware.spine.utils.SpineUtils.*;
 /** Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-public class PhysicsConstraint implements Constrained, Update {
-	final PhysicsConstraintData data;
-	final Skeleton skeleton;
-	BoneApplied bone;
-	final PhysicsConstraintPose pose = new PhysicsConstraintPose(), constrained = new PhysicsConstraintPose();
-	PhysicsConstraintPose applied = pose;
-	boolean active;
+public class PhysicsConstraint extends Constraint<PhysicsConstraintData, PhysicsConstraintPose> {
+	BonePose bone;
 
 	boolean reset = true;
 	float ux, uy, cx, cy, tx, ty;
@@ -51,14 +46,10 @@ public class PhysicsConstraint implements Constrained, Update {
 	float remaining, lastTime;
 
 	public PhysicsConstraint (PhysicsConstraintData data, Skeleton skeleton) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
+		super(data, new PhysicsConstraintPose(), new PhysicsConstraintPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
-		this.data = data;
-		this.skeleton = skeleton;
 
 		bone = skeleton.bones.get(data.bone.index).constrained;
-
-		setupPose();
 	}
 
 	/** Copy constructor. */
@@ -67,7 +58,7 @@ public class PhysicsConstraint implements Constrained, Update {
 		pose.set(constraint.pose);
 	}
 
-	public void reset () {
+	public void reset (Skeleton skeleton) {
 		remaining = 0;
 		lastTime = skeleton.time;
 		reset = true;
@@ -81,12 +72,8 @@ public class PhysicsConstraint implements Constrained, Update {
 		scaleVelocity = 0;
 	}
 
-	public void setupPose () {
-		pose.set(data.setup);
-	}
-
-	/** Translates the physics constraint so next {@link #update(Physics)} forces are applied as if the bone moved an additional
-	 * amount in world space. */
+	/** Translates the physics constraint so next {@link #update(Skeleton, Physics)} forces are applied as if the bone moved an
+	 * additional amount in world space. */
 	public void translate (float x, float y) {
 		ux -= x;
 		uy -= y;
@@ -94,8 +81,8 @@ public class PhysicsConstraint implements Constrained, Update {
 		cy -= y;
 	}
 
-	/** Rotates the physics constraint so next {@link #update(Physics)} forces are applied as if the bone rotated around the
-	 * specified point in world space. */
+	/** Rotates the physics constraint so next {@link #update(Skeleton, Physics)} forces are applied as if the bone rotated around
+	 * the specified point in world space. */
 	public void rotate (float x, float y, float degrees) {
 		float r = degrees * degRad, cos = cos(r), sin = sin(r);
 		float dx = cx - x, dy = cy - y;
@@ -103,23 +90,22 @@ public class PhysicsConstraint implements Constrained, Update {
 	}
 
 	/** Applies the constraint to the constrained bones. */
-	public void update (Physics physics) {
+	public void update (Skeleton skeleton, Physics physics) {
 		PhysicsConstraintPose pose = applied;
 		float mix = pose.mix;
 		if (mix == 0) return;
 
 		boolean x = data.x > 0, y = data.y > 0, rotateOrShearX = data.rotate > 0 || data.shearX > 0, scaleX = data.scaleX > 0;
-		BoneApplied bone = this.bone;
+		BonePose bone = this.bone;
 		float l = bone.bone.data.length;
 
 		switch (physics) {
 		case none:
 			return;
 		case reset:
-			reset();
+			reset(skeleton);
 			// Fall through.
 		case update:
-			Skeleton skeleton = this.skeleton;
 			float delta = Math.max(skeleton.time - lastTime, 0);
 			remaining += delta;
 			lastTime = skeleton.time;
@@ -266,59 +252,18 @@ public class PhysicsConstraint implements Constrained, Update {
 			tx = l * bone.a;
 			ty = l * bone.c;
 		}
-		bone.updateLocalTransform();
+		bone.updateLocalTransform(skeleton);
 	}
 
-	/** The physics constraint's setup pose data. */
-	public PhysicsConstraintData getData () {
-		return data;
-	}
-
-	public Skeleton getSkeleton () {
-		return skeleton;
+	public void sort () {
 	}
 
 	/** The bone constrained by this physics constraint. */
-	public BoneApplied getBone () {
+	public BonePose getBone () {
 		return bone;
 	}
 
-	public void setBone (BoneApplied bone) {
+	public void setBone (BonePose bone) {
 		this.bone = bone;
-	}
-
-	public PhysicsConstraintPose getPose () {
-		return pose;
-	}
-
-	public PhysicsConstraintPose getAppliedPose () {
-		return applied;
-	}
-
-	public PhysicsConstraintPose getConstrainedPose () {
-		return constrained;
-	}
-
-	public void setConstrained (boolean constrained) {
-		applied = constrained ? this.constrained : pose;
-	}
-
-	public void resetAppliedPose () {
-		applied.set(pose);
-	}
-
-	/** Returns false when this constraint won't be updated by
-	 * {@link Skeleton#updateWorldTransform(com.esotericsoftware.spine.Physics)} because a skin is required and the
-	 * {@link Skeleton#getSkin() active skin} does not contain this item.
-	 * @see Skin#getBones()
-	 * @see Skin#getConstraints()
-	 * @see ConstraintData#getSkinRequired()
-	 * @see Skeleton#updateCache() */
-	public boolean isActive () {
-		return active;
-	}
-
-	public String toString () {
-		return data.name;
 	}
 }
