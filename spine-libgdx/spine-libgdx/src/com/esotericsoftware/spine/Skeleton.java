@@ -498,6 +498,7 @@ public class Skeleton {
 					mesh.computeWorldVertices(this, slot, 0, verticesLength, vertices, 0, 2);
 					triangles = mesh.getTriangles();
 				} else if (attachment instanceof ClippingAttachment clip && clipper != null) {
+					clipper.clipEnd(slot);
 					clipper.clipStart(this, slot, clip);
 					continue;
 				}

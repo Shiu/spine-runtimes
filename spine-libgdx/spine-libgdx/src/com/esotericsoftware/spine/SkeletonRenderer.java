@@ -170,6 +170,7 @@ public class SkeletonRenderer {
 						color = mesh.getColor();
 
 					} else if (attachment instanceof ClippingAttachment clip) {
+						clipper.clipEnd(slot);
 						clipper.clipStart(skeleton, slot, clip);
 						continue;
 
@@ -264,6 +265,7 @@ public class SkeletonRenderer {
 						color = mesh.getColor();
 
 					} else if (attachment instanceof ClippingAttachment clip) {
+						clipper.clipEnd(slot);
 						clipper.clipStart(skeleton, slot, clip);
 						continue;
 
