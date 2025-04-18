@@ -40,7 +40,7 @@ import com.badlogic.gdx.utils.Null;
  * constraint or application code modifies the world transform after it was computed from the local transform. */
 public class Bone extends PosedActive<BoneData, BoneLocal, BonePose> {
 	@Null final Bone parent;
-	final Array<Bone> children = new Array();
+	final Array<Bone> children = new Array(true, 4, Bone[]::new);
 	boolean sorted;
 
 	public Bone (BoneData data, @Null Bone parent) {

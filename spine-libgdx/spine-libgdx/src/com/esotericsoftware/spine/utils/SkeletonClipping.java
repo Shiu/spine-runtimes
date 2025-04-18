@@ -88,7 +88,7 @@ public class SkeletonClipping {
 	public boolean clipTriangles (float[] vertices, short[] triangles, int trianglesLength) {
 		FloatArray clipOutput = this.clipOutput, clippedVertices = this.clippedVertices;
 		ShortArray clippedTriangles = this.clippedTriangles;
-		Object[] polygons = clippingPolygons.items;
+		FloatArray[] polygons = clippingPolygons.items;
 		int polygonsCount = clippingPolygons.size;
 
 		short index = 0;
@@ -108,7 +108,7 @@ public class SkeletonClipping {
 
 			for (int p = 0; p < polygonsCount; p++) {
 				int s = clippedVertices.size;
-				if (clip(x1, y1, x2, y2, x3, y3, (FloatArray)polygons[p], clipOutput)) {
+				if (clip(x1, y1, x2, y2, x3, y3, polygons[p], clipOutput)) {
 					clipOutputItems = clipOutput.items;
 					int clipOutputLength = clipOutput.size;
 					if (clipOutputLength == 0) continue;
@@ -160,7 +160,7 @@ public class SkeletonClipping {
 
 		FloatArray clipOutput = this.clipOutput, clippedVertices = this.clippedVertices;
 		ShortArray clippedTriangles = this.clippedTriangles;
-		Object[] polygons = clippingPolygons.items;
+		FloatArray[] polygons = clippingPolygons.items;
 		int polygonsCount = clippingPolygons.size;
 
 		short index = 0;
@@ -183,7 +183,7 @@ public class SkeletonClipping {
 
 			for (int p = 0; p < polygonsCount; p++) {
 				int s = clippedVertices.size;
-				if (clip(x1, y1, x2, y2, x3, y3, (FloatArray)polygons[p], clipOutput)) {
+				if (clip(x1, y1, x2, y2, x3, y3, polygons[p], clipOutput)) {
 					clipOutputItems = clipOutput.items;
 					int clipOutputLength = clipOutput.size;
 					if (clipOutputLength == 0) continue;
@@ -277,7 +277,7 @@ public class SkeletonClipping {
 		FloatArray clipOutput = this.clipOutput, clippedVertices = this.clippedVertices;
 		FloatArray clippedUvs = this.clippedUvs;
 		ShortArray clippedTriangles = this.clippedTriangles;
-		Object[] polygons = clippingPolygons.items;
+		FloatArray[] polygons = clippingPolygons.items;
 		int polygonsCount = clippingPolygons.size;
 		int vertexSize = 2;
 
@@ -300,7 +300,7 @@ public class SkeletonClipping {
 
 			for (int p = 0; p < polygonsCount; p++) {
 				int s = clippedVertices.size;
-				if (clip(x1, y1, x2, y2, x3, y3, (FloatArray)polygons[p], clipOutput)) {
+				if (clip(x1, y1, x2, y2, x3, y3, polygons[p], clipOutput)) {
 					int clipOutputLength = clipOutput.size;
 					if (clipOutputLength == 0) continue;
 					float d0 = y2 - y3, d1 = x3 - x2, d2 = x1 - x3, d4 = y3 - y1;

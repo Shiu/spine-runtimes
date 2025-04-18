@@ -79,14 +79,15 @@ public class SkeletonRendererDebug {
 		Gdx.gl.glBlendFunc(srcFunc, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		ShapeRenderer shapes = this.shapes;
-		Array<Bone> bones = skeleton.bones;
-		Array<Slot> slots = skeleton.slots;
+		Bone[] bones = skeleton.bones.items;
+		Slot[] slots = skeleton.slots.items;
+		int boneCount = skeleton.bones.size, slotCount = skeleton.slots.size;
 
 		shapes.begin(ShapeType.Filled);
 
 		if (drawBones) {
-			for (int i = 0, n = bones.size; i < n; i++) {
-				Bone bone = bones.get(i);
+			for (int i = 0; i < boneCount; i++) {
+				Bone bone = bones[i];
 				if (bone.parent == null || !bone.active) continue;
 				float length = bone.data.length, width = boneWidth;
 				if (length == 0) {
@@ -105,8 +106,8 @@ public class SkeletonRendererDebug {
 
 		if (drawPoints) {
 			shapes.setColor(boneOriginColor);
-			for (int i = 0, n = slots.size; i < n; i++) {
-				Slot slot = slots.get(i);
+			for (int i = 0; i < slotCount; i++) {
+				Slot slot = slots[i];
 				if (!slot.bone.active) continue;
 				if (!(slot.applied.attachment instanceof PointAttachment point)) continue;
 				point.computeWorldPosition(slot.bone.applied, temp1);
@@ -120,8 +121,8 @@ public class SkeletonRendererDebug {
 
 		if (drawRegionAttachments) {
 			shapes.setColor(attachmentLineColor);
-			for (int i = 0, n = slots.size; i < n; i++) {
-				Slot slot = slots.get(i);
+			for (int i = 0; i < slotCount; i++) {
+				Slot slot = slots[i];
 				if (!slot.bone.active) continue;
 				if (slot.pose.attachment instanceof RegionAttachment region) {
 					float[] vertices = this.vertices.items;
@@ -135,8 +136,8 @@ public class SkeletonRendererDebug {
 		}
 
 		if (drawMeshHull || drawMeshTriangles) {
-			for (int i = 0, n = slots.size; i < n; i++) {
-				Slot slot = slots.get(i);
+			for (int i = 0; i < slotCount; i++) {
+				Slot slot = slots[i];
 				if (!slot.bone.active) continue;
 				if (!(slot.pose.attachment instanceof MeshAttachment mesh)) continue;
 				float[] vertices = this.vertices.setSize(mesh.getWorldVerticesLength());
@@ -174,15 +175,15 @@ public class SkeletonRendererDebug {
 			Array<FloatArray> polygons = bounds.getPolygons();
 			Array<BoundingBoxAttachment> boxes = bounds.getBoundingBoxes();
 			for (int i = 0, n = polygons.size; i < n; i++) {
-				FloatArray polygon = polygons.get(i);
-				shapes.setColor(boxes.get(i).getColor());
+				FloatArray polygon = polygons.items[i];
+				shapes.setColor(boxes.items[i].getColor());
 				shapes.polygon(polygon.items, 0, polygon.size);
 			}
 		}
 
 		if (drawClipping) {
-			for (int i = 0, n = slots.size; i < n; i++) {
-				Slot slot = slots.get(i);
+			for (int i = 0; i < slotCount; i++) {
+				Slot slot = slots[i];
 				if (!slot.bone.active) continue;
 				if (!(slot.pose.attachment instanceof ClippingAttachment clip)) continue;
 				int nn = clip.getWorldVerticesLength();
@@ -196,8 +197,8 @@ public class SkeletonRendererDebug {
 		}
 
 		if (drawPaths) {
-			for (int i = 0, n = slots.size; i < n; i++) {
-				Slot slot = slots.get(i);
+			for (int i = 0; i < slotCount; i++) {
+				Slot slot = slots[i];
 				if (!slot.bone.active) continue;
 				if (!(slot.pose.attachment instanceof PathAttachment path)) continue;
 				int nn = path.getWorldVerticesLength();
@@ -236,8 +237,8 @@ public class SkeletonRendererDebug {
 
 		if (drawBones) {
 			shapes.setColor(boneOriginColor);
-			for (int i = 0, n = bones.size; i < n; i++) {
-				Bone bone = bones.get(i);
+			for (int i = 0; i < boneCount; i++) {
+				Bone bone = bones[i];
 				if (!bone.active) continue;
 				shapes.circle(bone.applied.worldX, bone.applied.worldY, 3 * scale, 8);
 			}
@@ -245,8 +246,8 @@ public class SkeletonRendererDebug {
 
 		if (drawPoints) {
 			shapes.setColor(boneOriginColor);
-			for (int i = 0, n = slots.size; i < n; i++) {
-				Slot slot = slots.get(i);
+			for (int i = 0; i < slotCount; i++) {
+				Slot slot = slots[i];
 				if (!slot.bone.active) continue;
 				if (!(slot.pose.attachment instanceof PointAttachment point)) continue;
 				point.computeWorldPosition(slot.bone.applied, temp1);

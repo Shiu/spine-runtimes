@@ -36,15 +36,11 @@ abstract public class Posed< //
 		return applied;
 	}
 
-	public A getConstrainedPose () {
-		return constrained;
-	}
-
-	public void setConstrained (boolean constrained) {
+	void setConstrained (boolean constrained) {
 		applied = constrained ? this.constrained : (A)pose;
 	}
 
-	public void resetAppliedPose () {
+	void resetAppliedPose () {
 		applied.set(pose);
 	}
 

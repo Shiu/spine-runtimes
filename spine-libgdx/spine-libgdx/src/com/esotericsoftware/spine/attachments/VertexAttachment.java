@@ -111,14 +111,14 @@ abstract public class VertexAttachment extends Attachment {
 			v += n + 1;
 			skip += n;
 		}
-		Object[] skeletonBones = skeleton.getBones().items;
+		Bone[] skeletonBones = skeleton.getBones().items;
 		if (deformArray.size == 0) {
 			for (int w = offset, b = skip * 3; w < count; w += stride) {
 				float wx = 0, wy = 0;
 				int n = bones[v++];
 				n += v;
 				for (; v < n; v++, b += 3) {
-					BonePose bone = ((Bone)skeletonBones[bones[v]]).getAppliedPose();
+					BonePose bone = skeletonBones[bones[v]].getAppliedPose();
 					float vx = vertices[b], vy = vertices[b + 1], weight = vertices[b + 2];
 					wx += (vx * bone.getA() + vy * bone.getB() + bone.getWorldX()) * weight;
 					wy += (vx * bone.getC() + vy * bone.getD() + bone.getWorldY()) * weight;
@@ -133,7 +133,7 @@ abstract public class VertexAttachment extends Attachment {
 				int n = bones[v++];
 				n += v;
 				for (; v < n; v++, b += 3, f += 2) {
-					BonePose bone = ((Bone)skeletonBones[bones[v]]).getAppliedPose();
+					BonePose bone = skeletonBones[bones[v]].getAppliedPose();
 					float vx = vertices[b] + deform[f], vy = vertices[b + 1] + deform[f + 1], weight = vertices[b + 2];
 					wx += (vx * bone.getA() + vy * bone.getB() + bone.getWorldX()) * weight;
 					wy += (vx * bone.getC() + vy * bone.getD() + bone.getWorldY()) * weight;

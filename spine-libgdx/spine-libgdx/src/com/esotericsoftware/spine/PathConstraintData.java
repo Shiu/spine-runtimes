@@ -35,7 +35,7 @@ import com.badlogic.gdx.utils.Array;
  * <p>
  * See <a href="https://esotericsoftware.com/spine-path-constraints">Path constraints</a> in the Spine User Guide. */
 public class PathConstraintData extends ConstraintData<PathConstraint, PathConstraintPose> {
-	final Array<BoneData> bones = new Array();
+	final Array<BoneData> bones = new Array(true, 0, BoneData[]::new);
 	SlotData slot;
 	PositionMode positionMode;
 	SpacingMode spacingMode;

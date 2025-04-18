@@ -41,8 +41,8 @@ import com.esotericsoftware.spine.attachments.BoundingBoxAttachment;
  * provided along with convenience methods for doing hit detection. */
 public class SkeletonBounds {
 	private float minX, minY, maxX, maxY;
-	private Array<BoundingBoxAttachment> boundingBoxes = new Array();
-	private Array<FloatArray> polygons = new Array();
+	private Array<BoundingBoxAttachment> boundingBoxes = new Array(true, 8, BoundingBoxAttachment[]::new);
+	private Array<FloatArray> polygons = new Array(true, 8, FloatArray[]::new);
 	private Pool<FloatArray> polygonPool = new Pool() {
 		protected Object newObject () {
 			return new FloatArray();
@@ -55,17 +55,17 @@ public class SkeletonBounds {
 	 *           SkeletonBounds AABB methods will always return true. */
 	public void update (Skeleton skeleton, boolean updateAabb) {
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
+
 		Array<BoundingBoxAttachment> boundingBoxes = this.boundingBoxes;
 		Array<FloatArray> polygons = this.polygons;
-		Object[] slots = skeleton.slots.items;
-		int slotCount = skeleton.slots.size;
-
 		boundingBoxes.clear();
 		polygonPool.freeAll(polygons);
 		polygons.clear();
 
+		Slot[] slots = skeleton.slots.items;
+		int slotCount = skeleton.slots.size;
 		for (int i = 0; i < slotCount; i++) {
-			var slot = (Slot)slots[i];
+			Slot slot = slots[i];
 			if (!slot.bone.active) continue;
 			Attachment attachment = slot.applied.attachment;
 			if (attachment instanceof BoundingBoxAttachment boundingBox) {
@@ -90,9 +90,9 @@ public class SkeletonBounds {
 
 	private void aabbCompute () {
 		float minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
-		Object[] polygons = this.polygons.items;
+		FloatArray[] polygons = this.polygons.items;
 		for (int i = 0, n = this.polygons.size; i < n; i++) {
-			var polygon = (FloatArray)polygons[i];
+			FloatArray polygon = polygons[i];
 			float[] vertices = polygon.items;
 			for (int ii = 0, nn = polygon.size; ii < nn; ii += 2) {
 				float x = vertices[ii];
@@ -143,9 +143,9 @@ public class SkeletonBounds {
 	/** Returns the first bounding box attachment that contains the point, or null. When doing many checks, it is usually more
 	 * efficient to only call this method if {@link #aabbContainsPoint(float, float)} returns true. */
 	public @Null BoundingBoxAttachment containsPoint (float x, float y) {
-		Object[] polygons = this.polygons.items;
+		FloatArray[] polygons = this.polygons.items;
 		for (int i = 0, n = this.polygons.size; i < n; i++)
-			if (containsPoint((FloatArray)polygons[i], x, y)) return boundingBoxes.get(i);
+			if (containsPoint(polygons[i], x, y)) return boundingBoxes.items[i];
 		return null;
 	}
 
@@ -173,9 +173,9 @@ public class SkeletonBounds {
 	 * is usually more efficient to only call this method if {@link #aabbIntersectsSegment(float, float, float, float)} returns
 	 * true. */
 	public @Null BoundingBoxAttachment intersectsSegment (float x1, float y1, float x2, float y2) {
-		Object[] polygons = this.polygons.items;
+		FloatArray[] polygons = this.polygons.items;
 		for (int i = 0, n = this.polygons.size; i < n; i++)
-			if (intersectsSegment((FloatArray)polygons[i], x1, y1, x2, y2)) return boundingBoxes.get(i);
+			if (intersectsSegment(polygons[i], x1, y1, x2, y2)) return boundingBoxes.items[i];
 		return null;
 	}
 
@@ -248,6 +248,6 @@ public class SkeletonBounds {
 	public @Null FloatArray getPolygon (BoundingBoxAttachment boundingBox) {
 		if (boundingBox == null) throw new IllegalArgumentException("boundingBox cannot be null.");
 		int index = boundingBoxes.indexOf(boundingBox, true);
-		return index == -1 ? null : polygons.get(index);
+		return index == -1 ? null : polygons.items[index];
 	}
 }

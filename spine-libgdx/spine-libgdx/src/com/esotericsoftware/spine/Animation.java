@@ -72,9 +72,9 @@ public class Animation {
 
 		int n = timelines.size;
 		timelineIds.clear(n);
-		Object[] items = timelines.items;
+		Timeline[] items = timelines.items;
 		for (int i = 0; i < n; i++)
-			timelineIds.addAll(((Timeline)items[i]).getPropertyIds());
+			timelineIds.addAll(items[i].getPropertyIds());
 	}
 
 	/** Returns true if this animation contains a timeline with any of the specified property IDs. */
@@ -123,9 +123,9 @@ public class Animation {
 			if (lastTime > 0) lastTime %= duration;
 		}
 
-		Object[] timelines = this.timelines.items;
+		Timeline[] timelines = this.timelines.items;
 		for (int i = 0, n = this.timelines.size; i < n; i++)
-			((Timeline)timelines[i]).apply(skeleton, lastTime, time, events, alpha, blend, direction, appliedPose);
+			timelines[i].apply(skeleton, lastTime, time, events, alpha, blend, direction, appliedPose);
 	}
 
 	/** The animation's name, which is unique across all animations in the skeleton. */
@@ -263,12 +263,6 @@ public class Animation {
 				if (frames[i] > time) return i - step;
 			return n - step;
 		}
-	}
-
-	/** An interface for timelines which change the property of a bone. */
-	static public interface BoneTimeline {
-		/** The index of the bone in {@link Skeleton#getBones()} that will be changed when this timeline is applied. */
-		public int getBoneIndex ();
 	}
 
 	/** An interface for timelines which change the property of a slot. */
@@ -544,12 +538,17 @@ public class Animation {
 		}
 	}
 
-	/** Changes a bone's local {@link BoneLocal#getRotation()}. */
-	static public class RotateTimeline extends CurveTimeline1 implements BoneTimeline {
+	/** An interface for timelines which change the property of a bone. */
+	static public interface BoneTimeline {
+		/** The index of the bone in {@link Skeleton#getBones()} that will be changed when this timeline is applied. */
+		public int getBoneIndex ();
+	}
+
+	static abstract public class BoneTimeline1 extends CurveTimeline1 implements BoneTimeline {
 		final int boneIndex;
 
-		public RotateTimeline (int frameCount, int bezierCount, int boneIndex) {
-			super(frameCount, bezierCount, Property.rotate.ordinal() + "|" + boneIndex);
+		public BoneTimeline1 (int frameCount, int bezierCount, int boneIndex, Property property) {
+			super(frameCount, bezierCount, property.ordinal() + "|" + boneIndex);
 			this.boneIndex = boneIndex;
 		}
 
@@ -560,36 +559,55 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) {
-				BoneLocal pose = appliedPose ? bone.applied : bone.pose;
-				pose.rotation = getRelativeValue(time, alpha, blend, pose.rotation, bone.data.setup.rotation);
-			}
+			Bone bone = skeleton.bones.items[boneIndex];
+			if (bone.active) apply(appliedPose ? bone.applied : bone.pose, bone.data.setup, time, alpha, blend, direction);
+		}
+
+		abstract protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend,
+			MixDirection direction);
+	}
+
+	static abstract public class BoneTimeline2 extends CurveTimeline2 implements BoneTimeline {
+		final int boneIndex;
+
+		public BoneTimeline2 (int frameCount, int bezierCount, int boneIndex, Property property1, Property property2) {
+			super(frameCount, bezierCount, property1.ordinal() + "|" + boneIndex, property2.ordinal() + "|" + boneIndex);
+			this.boneIndex = boneIndex;
+		}
+
+		public int getBoneIndex () {
+			return boneIndex;
+		}
+
+		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
+			MixDirection direction, boolean appliedPose) {
+
+			Bone bone = skeleton.bones.items[boneIndex];
+			if (bone.active) apply(appliedPose ? bone.applied : bone.pose, bone.data.setup, time, alpha, blend, direction);
+		}
+
+		abstract protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend,
+			MixDirection direction);
+	}
+
+	/** Changes a bone's local {@link BoneLocal#getRotation()}. */
+	static public class RotateTimeline extends BoneTimeline1 {
+		public RotateTimeline (int frameCount, int bezierCount, int boneIndex) {
+			super(frameCount, bezierCount, boneIndex, Property.rotate);
+		}
+
+		protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+			pose.rotation = getRelativeValue(time, alpha, blend, pose.rotation, setup.rotation);
 		}
 	}
 
 	/** Changes a bone's local {@link BoneLocal#getX()} and {@link BoneLocal#getY()}. */
-	static public class TranslateTimeline extends CurveTimeline2 implements BoneTimeline {
-		final int boneIndex;
-
+	static public class TranslateTimeline extends BoneTimeline2 {
 		public TranslateTimeline (int frameCount, int bezierCount, int boneIndex) {
-			super(frameCount, bezierCount, //
-				Property.x.ordinal() + "|" + boneIndex, //
-				Property.y.ordinal() + "|" + boneIndex);
-			this.boneIndex = boneIndex;
+			super(frameCount, bezierCount, boneIndex, Property.x, Property.y);
 		}
 
-		public int getBoneIndex () {
-			return boneIndex;
-		}
-
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Bone bone = skeleton.bones.get(boneIndex);
-			if (!bone.active) return;
-			BoneLocal pose = appliedPose ? bone.applied : bone.pose, setup = bone.data.setup;
-
+		protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				switch (blend) {
@@ -642,75 +660,34 @@ public class Animation {
 	}
 
 	/** Changes a bone's local {@link BoneLocal#getX()}. */
-	static public class TranslateXTimeline extends CurveTimeline1 implements BoneTimeline {
-		final int boneIndex;
-
+	static public class TranslateXTimeline extends BoneTimeline1 {
 		public TranslateXTimeline (int frameCount, int bezierCount, int boneIndex) {
-			super(frameCount, bezierCount, Property.x.ordinal() + "|" + boneIndex);
-			this.boneIndex = boneIndex;
+			super(frameCount, bezierCount, boneIndex, Property.x);
 		}
 
-		public int getBoneIndex () {
-			return boneIndex;
-		}
-
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) {
-				BoneLocal pose = appliedPose ? bone.applied : bone.pose;
-				pose.x = getRelativeValue(time, alpha, blend, pose.x, bone.data.setup.x);
-			}
+		protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+			pose.x = getRelativeValue(time, alpha, blend, pose.x, setup.x);
 		}
 	}
 
 	/** Changes a bone's local {@link BoneLocal#getY()}. */
-	static public class TranslateYTimeline extends CurveTimeline1 implements BoneTimeline {
-		final int boneIndex;
-
+	static public class TranslateYTimeline extends BoneTimeline1 {
 		public TranslateYTimeline (int frameCount, int bezierCount, int boneIndex) {
-			super(frameCount, bezierCount, Property.y.ordinal() + "|" + boneIndex);
-			this.boneIndex = boneIndex;
+			super(frameCount, bezierCount, boneIndex, Property.y);
 		}
 
-		public int getBoneIndex () {
-			return boneIndex;
-		}
-
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) {
-				BoneLocal pose = appliedPose ? bone.applied : bone.pose;
-				pose.y = getRelativeValue(time, alpha, blend, pose.y, bone.data.setup.y);
-			}
+		protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+			pose.y = getRelativeValue(time, alpha, blend, pose.y, setup.y);
 		}
 	}
 
 	/** Changes a bone's local {@link BoneLocal#getScaleX()} and {@link BoneLocal#getScaleY()}. */
-	static public class ScaleTimeline extends CurveTimeline2 implements BoneTimeline {
-		final int boneIndex;
-
+	static public class ScaleTimeline extends BoneTimeline2 {
 		public ScaleTimeline (int frameCount, int bezierCount, int boneIndex) {
-			super(frameCount, bezierCount, //
-				Property.scaleX.ordinal() + "|" + boneIndex, //
-				Property.scaleY.ordinal() + "|" + boneIndex);
-			this.boneIndex = boneIndex;
+			super(frameCount, bezierCount, boneIndex, Property.scaleX, Property.scaleY);
 		}
 
-		public int getBoneIndex () {
-			return boneIndex;
-		}
-
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Bone bone = skeleton.bones.get(boneIndex);
-			if (!bone.active) return;
-			BoneLocal pose = appliedPose ? bone.applied : bone.pose, setup = bone.data.setup;
-
+		protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				switch (blend) {
@@ -802,75 +779,34 @@ public class Animation {
 	}
 
 	/** Changes a bone's local {@link BoneLocal#getScaleX()}. */
-	static public class ScaleXTimeline extends CurveTimeline1 implements BoneTimeline {
-		final int boneIndex;
-
+	static public class ScaleXTimeline extends BoneTimeline1 {
 		public ScaleXTimeline (int frameCount, int bezierCount, int boneIndex) {
-			super(frameCount, bezierCount, Property.scaleX.ordinal() + "|" + boneIndex);
-			this.boneIndex = boneIndex;
+			super(frameCount, bezierCount, boneIndex, Property.scaleX);
 		}
 
-		public int getBoneIndex () {
-			return boneIndex;
-		}
-
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) {
-				BoneLocal pose = appliedPose ? bone.applied : bone.pose;
-				pose.scaleX = getScaleValue(time, alpha, blend, direction, pose.scaleX, bone.data.setup.scaleX);
-			}
+		protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+			pose.scaleX = getScaleValue(time, alpha, blend, direction, pose.scaleX, setup.scaleX);
 		}
 	}
 
 	/** Changes a bone's local {@link BoneLocal#getScaleY()}. */
-	static public class ScaleYTimeline extends CurveTimeline1 implements BoneTimeline {
-		final int boneIndex;
-
+	static public class ScaleYTimeline extends BoneTimeline1 {
 		public ScaleYTimeline (int frameCount, int bezierCount, int boneIndex) {
-			super(frameCount, bezierCount, Property.scaleY.ordinal() + "|" + boneIndex);
-			this.boneIndex = boneIndex;
+			super(frameCount, bezierCount, boneIndex, Property.scaleY);
 		}
 
-		public int getBoneIndex () {
-			return boneIndex;
-		}
-
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) {
-				BoneLocal pose = appliedPose ? bone.applied : bone.pose;
-				pose.scaleY = getScaleValue(time, alpha, blend, direction, pose.scaleY, bone.data.setup.scaleY);
-			}
+		protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+			pose.scaleY = getScaleValue(time, alpha, blend, direction, pose.scaleY, setup.scaleY);
 		}
 	}
 
 	/** Changes a bone's local {@link BoneLocal#getShearX()} and {@link BoneLocal#getShearY()}. */
-	static public class ShearTimeline extends CurveTimeline2 implements BoneTimeline {
-		final int boneIndex;
-
+	static public class ShearTimeline extends BoneTimeline2 {
 		public ShearTimeline (int frameCount, int bezierCount, int boneIndex) {
-			super(frameCount, bezierCount, //
-				Property.shearX.ordinal() + "|" + boneIndex, //
-				Property.shearY.ordinal() + "|" + boneIndex);
-			this.boneIndex = boneIndex;
+			super(frameCount, bezierCount, boneIndex, Property.shearX, Property.shearY);
 		}
 
-		public int getBoneIndex () {
-			return boneIndex;
-		}
-
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Bone bone = skeleton.bones.get(boneIndex);
-			if (!bone.active) return;
-			BoneLocal pose = appliedPose ? bone.applied : bone.pose, setup = bone.data.setup;
-
+		protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				switch (blend) {
@@ -923,50 +859,24 @@ public class Animation {
 	}
 
 	/** Changes a bone's local {@link BoneLocal#getShearX()}. */
-	static public class ShearXTimeline extends CurveTimeline1 implements BoneTimeline {
-		final int boneIndex;
-
+	static public class ShearXTimeline extends BoneTimeline1 {
 		public ShearXTimeline (int frameCount, int bezierCount, int boneIndex) {
-			super(frameCount, bezierCount, Property.shearX.ordinal() + "|" + boneIndex);
-			this.boneIndex = boneIndex;
+			super(frameCount, bezierCount, boneIndex, Property.shearX);
 		}
 
-		public int getBoneIndex () {
-			return boneIndex;
-		}
-
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) {
-				BoneLocal pose = appliedPose ? bone.applied : bone.pose;
-				pose.shearX = getRelativeValue(time, alpha, blend, pose.shearX, bone.data.setup.shearX);
-			}
+		protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+			pose.shearX = getRelativeValue(time, alpha, blend, pose.shearX, setup.shearX);
 		}
 	}
 
 	/** Changes a bone's local {@link BoneLocal#getShearY()}. */
-	static public class ShearYTimeline extends CurveTimeline1 implements BoneTimeline {
-		final int boneIndex;
-
+	static public class ShearYTimeline extends BoneTimeline1 {
 		public ShearYTimeline (int frameCount, int bezierCount, int boneIndex) {
-			super(frameCount, bezierCount, Property.shearY.ordinal() + "|" + boneIndex);
-			this.boneIndex = boneIndex;
+			super(frameCount, bezierCount, boneIndex, Property.shearY);
 		}
 
-		public int getBoneIndex () {
-			return boneIndex;
-		}
-
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Bone bone = skeleton.bones.get(boneIndex);
-			if (bone.active) {
-				BoneLocal pose = appliedPose ? bone.applied : bone.pose;
-				pose.shearY = getRelativeValue(time, alpha, blend, pose.shearY, bone.data.setup.shearY);
-			}
+		protected void apply (BoneLocal pose, BoneLocal setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+			pose.shearY = getRelativeValue(time, alpha, blend, pose.shearY, setup.shearY);
 		}
 	}
 
@@ -1002,7 +912,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			Bone bone = skeleton.bones.get(boneIndex);
+			Bone bone = skeleton.bones.items[boneIndex];
 			if (!bone.active) return;
 			BoneLocal pose = appliedPose ? bone.applied : bone.pose;
 
@@ -1020,26 +930,41 @@ public class Animation {
 		}
 	}
 
-	/** Changes a slot's {@link SlotPose#getColor()}. */
-	static public class RGBATimeline extends CurveTimeline implements SlotTimeline {
-		static public final int ENTRIES = 5;
-		static private final int R = 1, G = 2, B = 3, A = 4;
-
+	static abstract public class SlotCurveTimeline extends CurveTimeline implements SlotTimeline {
 		final int slotIndex;
 
-		public RGBATimeline (int frameCount, int bezierCount, int slotIndex) {
-			super(frameCount, bezierCount, //
-				Property.rgb.ordinal() + "|" + slotIndex, //
-				Property.alpha.ordinal() + "|" + slotIndex);
+		public SlotCurveTimeline (int frameCount, int bezierCount, int slotIndex, String... propertyIds) {
+			super(frameCount, bezierCount, propertyIds);
 			this.slotIndex = slotIndex;
-		}
-
-		public int getFrameEntries () {
-			return ENTRIES;
 		}
 
 		public int getSlotIndex () {
 			return slotIndex;
+		}
+
+		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
+			MixDirection direction, boolean appliedPose) {
+
+			Slot slot = skeleton.slots.items[slotIndex];
+			if (slot.bone.active) apply(slot, appliedPose ? slot.applied : slot.pose, time, alpha, blend);
+		}
+
+		abstract protected void apply (Slot slot, SlotPose pose, float time, float alpha, MixBlend blend);
+	}
+
+	/** Changes a slot's {@link SlotPose#getColor()}. */
+	static public class RGBATimeline extends SlotCurveTimeline {
+		static public final int ENTRIES = 5;
+		static private final int R = 1, G = 2, B = 3, A = 4;
+
+		public RGBATimeline (int frameCount, int bezierCount, int slotIndex) {
+			super(frameCount, bezierCount, slotIndex, //
+				Property.rgb.ordinal() + "|" + slotIndex, //
+				Property.alpha.ordinal() + "|" + slotIndex);
+		}
+
+		public int getFrameEntries () {
+			return ENTRIES;
 		}
 
 		/** Sets the time and color for the specified frame.
@@ -1054,13 +979,7 @@ public class Animation {
 			frames[frame + A] = a;
 		}
 
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Slot slot = skeleton.slots.get(slotIndex);
-			if (!slot.bone.active) return;
-			SlotPose pose = appliedPose ? slot.applied : slot.pose;
-
+		protected void apply (Slot slot, SlotPose pose, float time, float alpha, MixBlend blend) {
 			float[] frames = this.frames;
 			Color color = pose.color;
 			if (time < frames[0]) {
@@ -1114,23 +1033,16 @@ public class Animation {
 	}
 
 	/** Changes the RGB for a slot's {@link SlotPose#getColor()}. */
-	static public class RGBTimeline extends CurveTimeline implements SlotTimeline {
+	static public class RGBTimeline extends SlotCurveTimeline {
 		static public final int ENTRIES = 4;
 		static private final int R = 1, G = 2, B = 3;
 
-		final int slotIndex;
-
 		public RGBTimeline (int frameCount, int bezierCount, int slotIndex) {
-			super(frameCount, bezierCount, Property.rgb.ordinal() + "|" + slotIndex);
-			this.slotIndex = slotIndex;
+			super(frameCount, bezierCount, slotIndex, Property.rgb.ordinal() + "|" + slotIndex);
 		}
 
 		public int getFrameEntries () {
 			return ENTRIES;
-		}
-
-		public int getSlotIndex () {
-			return slotIndex;
 		}
 
 		/** Sets the time and color for the specified frame.
@@ -1144,13 +1056,7 @@ public class Animation {
 			frames[frame + B] = b;
 		}
 
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Slot slot = skeleton.slots.get(slotIndex);
-			if (!slot.bone.active) return;
-			SlotPose pose = appliedPose ? slot.applied : slot.pose;
-
+		protected void apply (Slot slot, SlotPose pose, float time, float alpha, MixBlend blend) {
 			float[] frames = this.frames;
 			Color color = pose.color;
 			if (time < frames[0]) {
@@ -1227,7 +1133,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			Slot slot = skeleton.slots.get(slotIndex);
+			Slot slot = skeleton.slots.items[slotIndex];
 			if (!slot.bone.active) return;
 			SlotPose pose = appliedPose ? slot.applied : slot.pose;
 
@@ -1256,28 +1162,19 @@ public class Animation {
 	}
 
 	/** Changes a slot's {@link SlotPose#getColor()} and {@link SlotPose#getDarkColor()} for two color tinting. */
-	static public class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
+	static public class RGBA2Timeline extends SlotCurveTimeline {
 		static public final int ENTRIES = 8;
 		static private final int R = 1, G = 2, B = 3, A = 4, R2 = 5, G2 = 6, B2 = 7;
 
-		final int slotIndex;
-
 		public RGBA2Timeline (int frameCount, int bezierCount, int slotIndex) {
-			super(frameCount, bezierCount, //
+			super(frameCount, bezierCount, slotIndex, //
 				Property.rgb.ordinal() + "|" + slotIndex, //
 				Property.alpha.ordinal() + "|" + slotIndex, //
 				Property.rgb2.ordinal() + "|" + slotIndex);
-			this.slotIndex = slotIndex;
 		}
 
 		public int getFrameEntries () {
 			return ENTRIES;
-		}
-
-		/** The index of the slot in {@link Skeleton#getSlots()} that will be changed when this timeline is applied. The
-		 * {@link SlotPose#getDarkColor()} must not be null. */
-		public int getSlotIndex () {
-			return slotIndex;
 		}
 
 		/** Sets the time, light color, and dark color for the specified frame.
@@ -1295,13 +1192,7 @@ public class Animation {
 			frames[frame + B2] = b2;
 		}
 
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Slot slot = skeleton.slots.get(slotIndex);
-			if (!slot.bone.active) return;
-			SlotPose pose = appliedPose ? slot.applied : slot.pose;
-
+		protected void apply (Slot slot, SlotPose pose, float time, float alpha, MixBlend blend) {
 			float[] frames = this.frames;
 			Color light = pose.color, dark = pose.darkColor;
 			if (time < frames[0]) {
@@ -1387,27 +1278,18 @@ public class Animation {
 	}
 
 	/** Changes the RGB for a slot's {@link SlotPose#getColor()} and {@link SlotPose#getDarkColor()} for two color tinting. */
-	static public class RGB2Timeline extends CurveTimeline implements SlotTimeline {
+	static public class RGB2Timeline extends SlotCurveTimeline {
 		static public final int ENTRIES = 7;
 		static private final int R = 1, G = 2, B = 3, R2 = 4, G2 = 5, B2 = 6;
 
-		final int slotIndex;
-
 		public RGB2Timeline (int frameCount, int bezierCount, int slotIndex) {
-			super(frameCount, bezierCount, //
+			super(frameCount, bezierCount, slotIndex, //
 				Property.rgb.ordinal() + "|" + slotIndex, //
 				Property.rgb2.ordinal() + "|" + slotIndex);
-			this.slotIndex = slotIndex;
 		}
 
 		public int getFrameEntries () {
 			return ENTRIES;
-		}
-
-		/** The index of the slot in {@link Skeleton#getSlots()} that will be changed when this timeline is applied. The
-		 * {@link SlotPose#getDarkColor()} must not be null. */
-		public int getSlotIndex () {
-			return slotIndex;
 		}
 
 		/** Sets the time, light color, and dark color for the specified frame.
@@ -1424,13 +1306,7 @@ public class Animation {
 			frames[frame + B2] = b2;
 		}
 
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Slot slot = skeleton.slots.get(slotIndex);
-			if (!slot.bone.active) return;
-			SlotPose pose = appliedPose ? slot.applied : slot.pose;
-
+		protected void apply (Slot slot, SlotPose pose, float time, float alpha, MixBlend blend) {
 			float[] frames = this.frames;
 			Color light = pose.color, dark = pose.darkColor;
 			if (time < frames[0]) {
@@ -1555,7 +1431,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			Slot slot = skeleton.slots.get(slotIndex);
+			Slot slot = skeleton.slots.items[slotIndex];
 			if (!slot.bone.active) return;
 			SlotPose pose = appliedPose ? slot.applied : slot.pose;
 
@@ -1578,24 +1454,18 @@ public class Animation {
 	}
 
 	/** Changes a slot's {@link SlotPose#getDeform()} to deform a {@link VertexAttachment}. */
-	static public class DeformTimeline extends CurveTimeline implements SlotTimeline {
-		final int slotIndex;
+	static public class DeformTimeline extends SlotCurveTimeline {
 		final VertexAttachment attachment;
 		private final float[][] vertices;
 
 		public DeformTimeline (int frameCount, int bezierCount, int slotIndex, VertexAttachment attachment) {
-			super(frameCount, bezierCount, Property.deform.ordinal() + "|" + slotIndex + "|" + attachment.getId());
-			this.slotIndex = slotIndex;
+			super(frameCount, bezierCount, slotIndex, Property.deform.ordinal() + "|" + slotIndex + "|" + attachment.getId());
 			this.attachment = attachment;
 			vertices = new float[frameCount][];
 		}
 
 		public int getFrameCount () {
 			return frames.length;
-		}
-
-		public int getSlotIndex () {
-			return slotIndex;
 		}
 
 		/** The attachment that will be deformed.
@@ -1671,12 +1541,7 @@ public class Animation {
 			return y + (1 - y) * (time - x) / (frames[frame + getFrameEntries()] - x);
 		}
 
-		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
-			MixDirection direction, boolean appliedPose) {
-
-			Slot slot = skeleton.slots.get(slotIndex);
-			if (!slot.bone.active) return;
-			SlotPose pose = appliedPose ? slot.applied : slot.pose;
+		protected void apply (Slot slot, SlotPose pose, float time, float alpha, MixBlend blend) {
 			if (!(pose.attachment instanceof VertexAttachment vertexAttachment)
 				|| vertexAttachment.getTimelineAttachment() != attachment) return;
 
@@ -1954,8 +1819,8 @@ public class Animation {
 			if (drawOrderToSetupIndex == null)
 				arraycopy(skeleton.slots.items, 0, skeleton.drawOrder.items, 0, skeleton.slots.size);
 			else {
-				Object[] slots = skeleton.slots.items;
-				Object[] drawOrder = skeleton.drawOrder.items;
+				Slot[] slots = skeleton.slots.items;
+				Slot[] drawOrder = skeleton.drawOrder.items;
 				for (int i = 0, n = drawOrderToSetupIndex.length; i < n; i++)
 					drawOrder[i] = slots[drawOrderToSetupIndex[i]];
 			}
@@ -2004,12 +1869,13 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			var constraint = (IkConstraint)skeleton.constraints.get(constraintIndex);
+			var constraint = (IkConstraint)skeleton.constraints.items[constraintIndex];
 			if (!constraint.active) return;
-			IkConstraintPose pose = appliedPose ? constraint.applied : constraint.pose, setup = constraint.data.setup;
+			IkConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
+				IkConstraintPose setup = constraint.data.setup;
 				switch (blend) {
 				case setup:
 					pose.mix = setup.mix;
@@ -2049,6 +1915,7 @@ public class Animation {
 			}
 
 			if (blend == MixBlend.setup) {
+				IkConstraintPose setup = constraint.data.setup;
 				pose.mix = setup.mix + (mix - setup.mix) * alpha;
 				pose.softness = setup.softness + (softness - setup.softness) * alpha;
 				if (direction == out) {
@@ -2114,7 +1981,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			var constraint = (TransformConstraint)skeleton.constraints.get(constraintIndex);
+			var constraint = (TransformConstraint)skeleton.constraints.items[constraintIndex];
 			if (!constraint.active) return;
 			TransformConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 
@@ -2214,7 +2081,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			var constraint = (PathConstraint)skeleton.constraints.get(constraintIndex);
+			var constraint = (PathConstraint)skeleton.constraints.items[constraintIndex];
 			if (constraint.active) {
 				PathConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 				pose.position = getAbsoluteValue(time, alpha, blend, pose.position, constraint.data.setup.position);
@@ -2240,7 +2107,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			var constraint = (PathConstraint)skeleton.constraints.get(constraintIndex);
+			var constraint = (PathConstraint)skeleton.constraints.items[constraintIndex];
 			if (constraint.active) {
 				PathConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 				pose.spacing = getAbsoluteValue(time, alpha, blend, pose.spacing, constraint.data.setup.spacing);
@@ -2285,7 +2152,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			var constraint = (PathConstraint)skeleton.constraints.get(constraintIndex);
+			var constraint = (PathConstraint)skeleton.constraints.items[constraintIndex];
 			if (!constraint.active) return;
 			PathConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 
@@ -2365,16 +2232,16 @@ public class Animation {
 			if (constraintIndex == -1) {
 				float value = time >= frames[0] ? getCurveValue(time) : 0;
 
-				Object[] constraints = skeleton.physics.items;
+				PhysicsConstraint[] constraints = skeleton.physics.items;
 				for (int i = 0, n = skeleton.physics.size; i < n; i++) {
-					var constraint = (PhysicsConstraint)constraints[i];
+					PhysicsConstraint constraint = constraints[i];
 					if (constraint.active && global(constraint.data)) {
 						PhysicsConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 						set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(constraint.data.setup), value));
 					}
 				}
 			} else {
-				var constraint = (PhysicsConstraint)skeleton.constraints.get(constraintIndex);
+				var constraint = (PhysicsConstraint)skeleton.constraints.items[constraintIndex];
 				if (constraint.active) {
 					PhysicsConstraintPose pose = appliedPose ? constraint.applied : constraint.pose;
 					set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(constraint.data.setup)));
@@ -2556,7 +2423,7 @@ public class Animation {
 
 			PhysicsConstraint constraint = null;
 			if (constraintIndex != -1) {
-				constraint = (PhysicsConstraint)skeleton.constraints.get(constraintIndex);
+				constraint = (PhysicsConstraint)skeleton.constraints.items[constraintIndex];
 				if (!constraint.active) return;
 			}
 
@@ -2573,9 +2440,9 @@ public class Animation {
 				if (constraint != null)
 					constraint.reset(skeleton);
 				else {
-					Object[] constraints = skeleton.physics.items;
+					PhysicsConstraint[] constraints = skeleton.physics.items;
 					for (int i = 0, n = skeleton.physics.size; i < n; i++) {
-						constraint = (PhysicsConstraint)constraints[i];
+						constraint = constraints[i];
 						if (constraint.active) constraint.reset(skeleton);
 					}
 				}
@@ -2623,7 +2490,7 @@ public class Animation {
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			Slot slot = skeleton.slots.get(slotIndex);
+			Slot slot = skeleton.slots.items[slotIndex];
 			if (!slot.bone.active) return;
 			SlotPose pose = appliedPose ? slot.applied : slot.pose;
 

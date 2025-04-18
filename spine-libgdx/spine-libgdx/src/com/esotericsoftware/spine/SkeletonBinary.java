@@ -162,7 +162,7 @@ public class SkeletonBinary extends SkeletonLoader {
 	static public final int CURVE_STEPPED = 1;
 	static public final int CURVE_BEZIER = 2;
 
-	private final Array<LinkedMesh> linkedMeshes = new Array();
+	private final Array<LinkedMesh> linkedMeshes = new Array(true, 8, LinkedMesh[]::new);
 
 	public SkeletonBinary (AttachmentLoader attachmentLoader) {
 		super(attachmentLoader);
@@ -217,10 +217,10 @@ public class SkeletonBinary extends SkeletonLoader {
 				o[i] = input.readString();
 
 			// Bones.
-			Object[] bones = skeletonData.bones.setSize(n = input.readInt(true));
+			BoneData[] bones = skeletonData.bones.setSize(n = input.readInt(true));
 			for (int i = 0; i < n; i++) {
 				String name = input.readString();
-				BoneData parent = i == 0 ? null : (BoneData)bones[input.readInt(true)];
+				BoneData parent = i == 0 ? null : bones[input.readInt(true)];
 				var data = new BoneData(i, name, parent);
 				BoneLocal setup = data.setup;
 				setup.rotation = input.readFloat();
@@ -242,10 +242,10 @@ public class SkeletonBinary extends SkeletonLoader {
 			}
 
 			// Slots.
-			Object[] slots = skeletonData.slots.setSize(n = input.readInt(true));
+			SlotData[] slots = skeletonData.slots.setSize(n = input.readInt(true));
 			for (int i = 0; i < n; i++) {
 				String slotName = input.readString();
-				var boneData = (BoneData)bones[input.readInt(true)];
+				var boneData = bones[input.readInt(true)];
 				var data = new SlotData(i, slotName, boneData);
 				Color.rgba8888ToColor(data.setup.color, input.readInt());
 
@@ -264,10 +264,10 @@ public class SkeletonBinary extends SkeletonLoader {
 				switch (input.readByte()) {
 				case CONSTRAINT_IK -> {
 					var data = new IkConstraintData(input.readString());
-					Object[] constraintBones = data.bones.setSize(nn = input.readInt(true));
+					BoneData[] constraintBones = data.bones.setSize(nn = input.readInt(true));
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
-					data.target = (BoneData)bones[input.readInt(true)];
+					data.target = bones[input.readInt(true)];
 					int flags = input.read();
 					data.skinRequired = (flags & 1) != 0;
 					data.uniform = (flags & 2) != 0;
@@ -281,17 +281,17 @@ public class SkeletonBinary extends SkeletonLoader {
 				}
 				case CONSTRAINT_TRANSFORM -> {
 					var data = new TransformConstraintData(input.readString());
-					Object[] constraintBones = data.bones.setSize(nn = input.readInt(true));
+					BoneData[] constraintBones = data.bones.setSize(nn = input.readInt(true));
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
-					data.source = (BoneData)bones[input.readInt(true)];
+					data.source = bones[input.readInt(true)];
 					int flags = input.read();
 					data.skinRequired = (flags & 1) != 0;
 					data.localSource = (flags & 2) != 0;
 					data.localTarget = (flags & 4) != 0;
 					data.additive = (flags & 8) != 0;
 					data.clamp = (flags & 16) != 0;
-					Object[] froms = data.properties.setSize(nn = flags >> 5);
+					FromProperty[] froms = data.properties.setSize(nn = flags >> 5);
 					for (int ii = 0, tn; ii < nn; ii++) {
 						float fromScale = 1;
 						FromProperty from;
@@ -311,7 +311,7 @@ public class SkeletonBinary extends SkeletonLoader {
 						default -> from = null;
 						}
 						from.offset = input.readFloat() * fromScale;
-						Object[] tos = from.to.setSize(tn = input.readByte());
+						ToProperty[] tos = from.to.setSize(tn = input.readByte());
 						for (int t = 0; t < tn; t++) {
 							float toScale = 1;
 							ToProperty to;
@@ -356,10 +356,10 @@ public class SkeletonBinary extends SkeletonLoader {
 				}
 				case CONSTRAINT_PATH -> {
 					var data = new PathConstraintData(input.readString());
-					Object[] constraintBones = data.bones.setSize(nn = input.readInt(true));
+					BoneData[] constraintBones = data.bones.setSize(nn = input.readInt(true));
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
-					data.slot = (SlotData)slots[input.readInt(true)];
+					data.slot = slots[input.readInt(true)];
 					int flags = input.read();
 					data.skinRequired = (flags & 1) != 0;
 					data.positionMode = PositionMode.values[flags & 2];
@@ -378,7 +378,7 @@ public class SkeletonBinary extends SkeletonLoader {
 				}
 				case CONSTRAINT_PHYSICS -> {
 					var data = new PhysicsConstraintData(input.readString());
-					data.bone = (BoneData)bones[input.readInt(true)];
+					data.bone = bones[input.readInt(true)];
 					int flags = input.read();
 					data.skinRequired = (flags & 1) != 0;
 					if ((flags & 2) != 0) data.x = input.readFloat();
@@ -426,10 +426,10 @@ public class SkeletonBinary extends SkeletonLoader {
 
 			// Linked meshes.
 			n = linkedMeshes.size;
-			Object[] items = linkedMeshes.items;
+			LinkedMesh[] items = linkedMeshes.items;
 			for (int i = 0; i < n; i++) {
-				var linkedMesh = (LinkedMesh)items[i];
-				Skin skin = skeletonData.skins.get(linkedMesh.skinIndex);
+				LinkedMesh linkedMesh = items[i];
+				Skin skin = skeletonData.skins.items[linkedMesh.skinIndex];
 				Attachment parent = skin.getAttachment(linkedMesh.slotIndex, linkedMesh.parent);
 				if (parent == null) throw new SerializationException("Parent mesh not found: " + linkedMesh.parent);
 				linkedMesh.mesh.setTimelineAttachment(linkedMesh.inheritTimelines ? (VertexAttachment)parent : linkedMesh.mesh);
@@ -656,7 +656,7 @@ public class SkeletonBinary extends SkeletonLoader {
 
 			ClippingAttachment clip = attachmentLoader.newClippingAttachment(skin, name);
 			if (clip == null) return null;
-			clip.setEndSlot(skeletonData.slots.get(endSlotIndex));
+			clip.setEndSlot(skeletonData.slots.items[endSlotIndex]);
 			clip.setWorldVerticesLength(vertices.length);
 			clip.setVertices(vertices.vertices);
 			clip.setBones(vertices.bones);
@@ -720,7 +720,7 @@ public class SkeletonBinary extends SkeletonLoader {
 	}
 
 	private Animation readAnimation (SkeletonInput input, String name, SkeletonData skeletonData) throws IOException {
-		var timelines = new Array<Timeline>(input.readInt(true));
+		var timelines = new Array<Timeline>(true, input.readInt(true), Timeline[]::new);
 		float scale = this.scale;
 
 		// Slot timelines.
@@ -969,7 +969,7 @@ public class SkeletonBinary extends SkeletonLoader {
 		// Path constraint timelines.
 		for (int i = 0, n = input.readInt(true); i < n; i++) {
 			int index = input.readInt(true);
-			var data = (PathConstraintData)skeletonData.constraints.get(index);
+			var data = (PathConstraintData)skeletonData.constraints.items[index];
 			for (int ii = 0, nn = input.readInt(true); ii < nn; ii++) {
 				int type = input.readByte(), frameCount = input.readInt(true), bezierCount = input.readInt(true);
 				switch (type) {
@@ -1036,7 +1036,7 @@ public class SkeletonBinary extends SkeletonLoader {
 
 		// Attachment timelines.
 		for (int i = 0, n = input.readInt(true); i < n; i++) {
-			Skin skin = skeletonData.skins.get(input.readInt(true));
+			Skin skin = skeletonData.skins.items[input.readInt(true)];
 			for (int ii = 0, nn = input.readInt(true); ii < nn; ii++) {
 				int slotIndex = input.readInt(true);
 				for (int iii = 0, nnn = input.readInt(true); iii < nnn; iii++) {
@@ -1140,7 +1140,7 @@ public class SkeletonBinary extends SkeletonLoader {
 			var timeline = new EventTimeline(eventCount);
 			for (int i = 0; i < eventCount; i++) {
 				float time = input.readFloat();
-				EventData eventData = skeletonData.events.get(input.readInt(true));
+				EventData eventData = skeletonData.events.items[input.readInt(true)];
 				var event = new Event(time, eventData);
 				event.intValue = input.readInt(false);
 				event.floatValue = input.readFloat();
@@ -1156,9 +1156,9 @@ public class SkeletonBinary extends SkeletonLoader {
 		}
 
 		float duration = 0;
-		Object[] items = timelines.items;
+		Timeline[] items = timelines.items;
 		for (int i = 0, n = timelines.size; i < n; i++)
-			duration = Math.max(duration, ((Timeline)items[i]).getDuration());
+			duration = Math.max(duration, items[i].getDuration());
 		return new Animation(name, timelines, duration);
 	}
 

@@ -48,11 +48,11 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 		super(data, new TransformConstraintPose(), new TransformConstraintPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 
-		bones = new Array(data.bones.size);
+		bones = new Array(true, data.bones.size, BonePose[]::new);
 		for (BoneData boneData : data.bones)
-			bones.add(skeleton.bones.get(boneData.index).constrained);
+			bones.add(skeleton.bones.items[boneData.index].constrained);
 
-		source = skeleton.bones.get(data.source.index);
+		source = skeleton.bones.items[data.source.index];
 	}
 
 	public TransformConstraint copy (Skeleton skeleton) {
@@ -70,18 +70,17 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 		TransformConstraintData data = this.data;
 		boolean localFrom = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
 		BonePose source = this.source.applied;
-		Object[] fromItems = data.properties.items;
+		FromProperty[] fromItems = data.properties.items;
 		int fn = data.properties.size;
-		Object[] bones = this.bones.items;
+		BonePose[] bones = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++) {
-			var bone = (BonePose)bones[i];
-			if (bone.bone.applied != bone.bone.constrained) System.out.println();
+			BonePose bone = bones[i];
 			for (int f = 0; f < fn; f++) {
-				var from = (FromProperty)fromItems[f];
+				FromProperty from = fromItems[f];
 				float value = from.value(data, source, localFrom) - from.offset;
-				Object[] toItems = from.to.items;
+				ToProperty[] toItems = from.to.items;
 				for (int t = 0, tn = from.to.size; t < tn; t++) {
-					var to = (ToProperty)toItems[t];
+					ToProperty to = toItems[t];
 					if (to.mix(pose) != 0) {
 						float clamped = to.offset + value * to.scale;
 						if (clamp) {
@@ -104,18 +103,18 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 	void sort (Skeleton skeleton) {
 		skeleton.sortBone(source);
 
-		Object[] bones = this.bones.items;
+		BonePose[] bones = this.bones.items;
 		int boneCount = this.bones.size;
 		if (data.localSource) {
 			for (int i = 0; i < boneCount; i++) {
-				Bone child = ((BonePose)bones[i]).bone;
+				Bone child = bones[i].bone;
 				skeleton.resetCache(child);
 				skeleton.sortBone(child.parent);
 				skeleton.sortBone(child);
 			}
 		} else {
 			for (int i = 0; i < boneCount; i++) {
-				Bone bone = ((BonePose)bones[i]).bone;
+				Bone bone = bones[i].bone;
 				skeleton.resetCache(bone);
 				skeleton.sortBone(bone);
 			}
@@ -124,9 +123,9 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 		skeleton.updateCache.add(this);
 
 		for (int i = 0; i < boneCount; i++)
-			skeleton.sortReset(((BonePose)bones[i]).bone.children);
+			skeleton.sortReset(bones[i].bone.children);
 		for (int i = 0; i < boneCount; i++)
-			((BonePose)bones[i]).bone.sorted = true;
+			bones[i].bone.sorted = true;
 	}
 
 	boolean isSourceActive () {

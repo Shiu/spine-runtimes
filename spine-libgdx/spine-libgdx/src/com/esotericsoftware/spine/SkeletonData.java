@@ -38,13 +38,13 @@ import com.badlogic.gdx.utils.Null;
  * Guide. */
 public class SkeletonData {
 	@Null String name;
-	final Array<BoneData> bones = new Array(); // Ordered parents first.
-	final Array<SlotData> slots = new Array(); // Setup pose draw order.
-	final Array<Skin> skins = new Array();
+	final Array<BoneData> bones = new Array(true, 0, BoneData[]::new); // Ordered parents first.
+	final Array<SlotData> slots = new Array(true, 0, SlotData[]::new); // Setup pose draw order.
+	final Array<Skin> skins = new Array(true, 0, Skin[]::new);
 	@Null Skin defaultSkin;
-	final Array<EventData> events = new Array();
-	final Array<Animation> animations = new Array();
-	final Array<ConstraintData> constraints = new Array();
+	final Array<EventData> events = new Array(true, 0, EventData[]::new);
+	final Array<Animation> animations = new Array(true, 0, Animation[]::new);
+	final Array<ConstraintData> constraints = new Array(true, 0, ConstraintData[]::new);
 	float x, y, width, height, referenceScale = 100;
 	@Null String version, hash;
 
@@ -67,11 +67,9 @@ public class SkeletonData {
 	 * multiple times. */
 	public @Null BoneData findBone (String boneName) {
 		if (boneName == null) throw new IllegalArgumentException("boneName cannot be null.");
-		Object[] bones = this.bones.items;
-		for (int i = 0, n = this.bones.size; i < n; i++) {
-			var bone = (BoneData)bones[i];
-			if (bone.name.equals(boneName)) return bone;
-		}
+		BoneData[] bones = this.bones.items;
+		for (int i = 0, n = this.bones.size; i < n; i++)
+			if (bones[i].name.equals(boneName)) return bones[i];
 		return null;
 	}
 
@@ -86,11 +84,9 @@ public class SkeletonData {
 	 * multiple times. */
 	public @Null SlotData findSlot (String slotName) {
 		if (slotName == null) throw new IllegalArgumentException("slotName cannot be null.");
-		Object[] slots = this.slots.items;
-		for (int i = 0, n = this.slots.size; i < n; i++) {
-			var slot = (SlotData)slots[i];
-			if (slot.name.equals(slotName)) return slot;
-		}
+		SlotData[] slots = this.slots.items;
+		for (int i = 0, n = this.slots.size; i < n; i++)
+			if (slots[i].name.equals(slotName)) return slots[i];
 		return null;
 	}
 
@@ -148,11 +144,9 @@ public class SkeletonData {
 	 * call it multiple times. */
 	public @Null Animation findAnimation (String animationName) {
 		if (animationName == null) throw new IllegalArgumentException("animationName cannot be null.");
-		Object[] animations = this.animations.items;
-		for (int i = 0, n = this.animations.size; i < n; i++) {
-			var animation = (Animation)animations[i];
-			if (animation.name.equals(animationName)) return animation;
-		}
+		Animation[] animations = this.animations.items;
+		for (int i = 0, n = this.animations.size; i < n; i++)
+			if (animations[i].name.equals(animationName)) return animations[i];
 		return null;
 	}
 
@@ -166,10 +160,10 @@ public class SkeletonData {
 	public @Null <T extends ConstraintData> T findConstraint (String constraintName, Class<T> type) {
 		if (constraintName == null) throw new IllegalArgumentException("constraintName cannot be null.");
 		if (type == null) throw new IllegalArgumentException("type cannot be null.");
-		Object[] constraints = this.constraints.items;
+		ConstraintData[] constraints = this.constraints.items;
 		for (int i = 0, n = this.constraints.size; i < n; i++) {
-			Object constraint = constraints[i];
-			if (type.isInstance(constraint) && ((PosedData)constraint).name.equals(constraintName)) return (T)constraint;
+			ConstraintData constraint = constraints[i];
+			if (type.isInstance(constraint) && constraint.name.equals(constraintName)) return (T)constraint;
 		}
 		return null;
 	}

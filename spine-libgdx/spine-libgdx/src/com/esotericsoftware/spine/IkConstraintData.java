@@ -35,7 +35,7 @@ import com.badlogic.gdx.utils.Array;
  * <p>
  * See <a href="https://esotericsoftware.com/spine-ik-constraints">IK constraints</a> in the Spine User Guide. */
 public class IkConstraintData extends ConstraintData<IkConstraint, IkConstraintPose> {
-	final Array<BoneData> bones = new Array();
+	final Array<BoneData> bones = new Array(true, 2, BoneData[]::new);
 	BoneData target;
 	boolean uniform;
 

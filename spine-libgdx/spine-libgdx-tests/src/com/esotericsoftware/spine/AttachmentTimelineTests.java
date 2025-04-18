@@ -73,7 +73,9 @@ public class AttachmentTimelineTests {
 		timeline.setFrame(0, 0, "attachment1");
 		timeline.setFrame(1, 0.5f, "attachment2");
 
-		Animation animation = new Animation("animation", Array.with((Timeline)timeline), 1);
+		Array<Timeline> timelines = new Array(true, 1, Timeline[]::new);
+		timelines.add(timeline);
+		Animation animation = new Animation("animation", timelines, 1);
 		animation.setDuration(1);
 
 		state = new AnimationState(new AnimationStateData(skeletonData));

@@ -76,9 +76,9 @@ public class SkeletonRenderer {
 		float[] vertices = this.vertices.items;
 		Color skeletonColor = skeleton.color;
 		float r = skeletonColor.r, g = skeletonColor.g, b = skeletonColor.b, a = skeletonColor.a;
-		Object[] drawOrder = skeleton.drawOrder.items;
+		Slot[] drawOrder = skeleton.drawOrder.items;
 		for (int i = 0, n = skeleton.drawOrder.size; i < n; i++) {
-			var slot = (Slot)drawOrder[i];
+			Slot slot = drawOrder[i];
 			if (!slot.bone.active) continue;
 			SlotPose pose = slot.applied;
 			Attachment attachment = pose.attachment;
@@ -142,9 +142,9 @@ public class SkeletonRenderer {
 		short[] triangles = null;
 		Color color = null, skeletonColor = skeleton.color;
 		float r = skeletonColor.r, g = skeletonColor.g, b = skeletonColor.b, a = skeletonColor.a;
-		Object[] drawOrder = skeleton.drawOrder.items;
+		Slot[] drawOrder = skeleton.drawOrder.items;
 		for (int i = 0, n = skeleton.drawOrder.size; i < n; i++) {
-			var slot = (Slot)drawOrder[i];
+			Slot slot = drawOrder[i];
 			if (slot.bone.active) {
 				SlotPose pose = slot.applied;
 				Attachment attachment = pose.attachment;
@@ -237,9 +237,9 @@ public class SkeletonRenderer {
 		short[] triangles = null;
 		Color color = null, skeletonColor = skeleton.color;
 		float r = skeletonColor.r, g = skeletonColor.g, b = skeletonColor.b, a = skeletonColor.a;
-		Object[] drawOrder = skeleton.drawOrder.items;
+		Slot[] drawOrder = skeleton.drawOrder.items;
 		for (int i = 0, n = skeleton.drawOrder.size; i < n; i++) {
-			var slot = (Slot)drawOrder[i];
+			Slot slot = drawOrder[i];
 			if (slot.bone.active) {
 				SlotPose pose = slot.applied;
 				Attachment attachment = pose.attachment;

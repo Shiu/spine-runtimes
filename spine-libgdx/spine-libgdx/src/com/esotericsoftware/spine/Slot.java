@@ -43,7 +43,7 @@ public class Slot extends Posed<SlotData, SlotPose, SlotPose> {
 		super(data, new SlotPose(), new SlotPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 		this.skeleton = skeleton;
-		bone = skeleton.bones.get(data.boneData.index);
+		bone = skeleton.bones.items[data.boneData.index];
 		if (data.setup.darkColor != null) {
 			pose.darkColor = new Color();
 			applied.darkColor = new Color();

@@ -47,11 +47,11 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 		super(data, new IkConstraintPose(), new IkConstraintPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 
-		bones = new Array(data.bones.size);
+		bones = new Array(true, data.bones.size, BonePose[]::new);
 		for (BoneData boneData : data.bones)
-			bones.add(skeleton.bones.get(boneData.index).constrained);
+			bones.add(skeleton.bones.items[boneData.index].constrained);
 
-		target = skeleton.bones.get(data.target.index);
+		target = skeleton.bones.items[data.target.index];
 	}
 
 	public IkConstraint copy (Skeleton skeleton) {
@@ -65,25 +65,25 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 		IkConstraintPose a = applied;
 		if (a.mix == 0) return;
 		BonePose target = this.target.applied;
-		Object[] bones = this.bones.items;
+		BonePose[] bones = this.bones.items;
 		switch (this.bones.size) {
-		case 1 -> apply(skeleton, (BonePose)bones[0], target.worldX, target.worldY, a.compress, a.stretch, data.uniform, a.mix);
-		case 2 -> apply(skeleton, (BonePose)bones[0], (BonePose)bones[1], target.worldX, target.worldY, a.bendDirection, a.stretch,
-			data.uniform, a.softness, a.mix);
+		case 1 -> apply(skeleton, bones[0], target.worldX, target.worldY, a.compress, a.stretch, data.uniform, a.mix);
+		case 2 -> apply(skeleton, bones[0], bones[1], target.worldX, target.worldY, a.bendDirection, a.stretch, data.uniform,
+			a.softness, a.mix);
 		}
 	}
 
 	void sort (Skeleton skeleton) {
 		skeleton.sortBone(target);
 
-		Bone parent = bones.first().bone;
+		Bone parent = bones.items[0].bone;
 		skeleton.sortBone(parent);
 		skeleton.resetCache(parent);
 		if (bones.size == 1) {
 			skeleton.updateCache.add(this);
 			skeleton.sortReset(parent.children);
 		} else {
-			Bone child = bones.peek().bone;
+			Bone child = bones.items[1].bone;
 			skeleton.resetCache(child);
 			skeleton.sortBone(child);
 

@@ -49,7 +49,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 		super(data, new PhysicsConstraintPose(), new PhysicsConstraintPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 
-		bone = skeleton.bones.get(data.bone.index).constrained;
+		bone = skeleton.bones.items[data.bone.index].constrained;
 	}
 
 	public PhysicsConstraint copy (Skeleton skeleton) {

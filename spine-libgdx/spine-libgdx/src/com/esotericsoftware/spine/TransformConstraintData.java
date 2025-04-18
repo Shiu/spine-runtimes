@@ -37,11 +37,11 @@ import com.badlogic.gdx.utils.Array;
  * <p>
  * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide. */
 public class TransformConstraintData extends ConstraintData<TransformConstraint, TransformConstraintPose> {
-	final Array<BoneData> bones = new Array();
+	final Array<BoneData> bones = new Array(true, 0, BoneData[]::new);
 	BoneData source;
 	float offsetRotation, offsetX, offsetY, offsetScaleX, offsetScaleY, offsetShearY;
 	boolean localSource, localTarget, additive, clamp;
-	final Array<FromProperty> properties = new Array();
+	final Array<FromProperty> properties = new Array(true, 1, FromProperty[]::new);
 
 	public TransformConstraintData (String name) {
 		super(name, new TransformConstraintPose());
@@ -167,7 +167,7 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 		public float offset;
 
 		/** Constrained properties. */
-		public final Array<ToProperty> to = new Array();
+		public final Array<ToProperty> to = new Array(true, 1, ToProperty[]::new);
 
 		/** Reads this property from the specified bone. */
 		abstract public float value (TransformConstraintData data, BonePose source, boolean local);

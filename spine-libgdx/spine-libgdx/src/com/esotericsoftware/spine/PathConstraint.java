@@ -62,11 +62,11 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 		super(data, new PathConstraintPose(), new PathConstraintPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 
-		bones = new Array(data.bones.size);
+		bones = new Array(true, data.bones.size, BonePose[]::new);
 		for (BoneData boneData : data.bones)
-			bones.add(skeleton.bones.get(boneData.index).constrained);
+			bones.add(skeleton.bones.items[boneData.index].constrained);
 
-		slot = skeleton.slots.get(data.slot.index);
+		slot = skeleton.slots.items[data.slot.index];
 	}
 
 	public PathConstraint copy (Skeleton skeleton) {
@@ -86,7 +86,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 		PathConstraintData data = this.data;
 		boolean tangents = data.rotateMode == RotateMode.tangent, scale = data.rotateMode == RotateMode.chainScale;
 		int boneCount = this.bones.size, spacesCount = tangents ? boneCount : boneCount + 1;
-		Object[] bones = this.bones.items;
+		BonePose[] bones = this.bones.items;
 		float[] spaces = this.spaces.setSize(spacesCount), lengths = scale ? this.lengths.setSize(boneCount) : null;
 		float spacing = pose.spacing;
 
@@ -94,7 +94,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 		case percent -> {
 			if (scale) {
 				for (int i = 0, n = spacesCount - 1; i < n; i++) {
-					var bone = (BonePose)bones[i];
+					BonePose bone = bones[i];
 					float setupLength = bone.bone.data.length;
 					float x = setupLength * bone.a, y = setupLength * bone.c;
 					lengths[i] = (float)Math.sqrt(x * x + y * y);
@@ -105,7 +105,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 		case proportional -> {
 			float sum = 0;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
-				var bone = (BonePose)bones[i];
+				BonePose bone = bones[i];
 				float setupLength = bone.bone.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
@@ -127,7 +127,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 		default -> {
 			boolean lengthSpacing = data.spacingMode == SpacingMode.length;
 			for (int i = 0, n = spacesCount - 1; i < n;) {
-				var bone = (BonePose)bones[i];
+				BonePose bone = bones[i];
 				float setupLength = bone.bone.data.length;
 				if (setupLength < epsilon) {
 					if (scale) lengths[i] = 0;
@@ -153,7 +153,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 			offsetRotation *= p.a * p.d - p.b * p.c > 0 ? degRad : -degRad;
 		}
 		for (int i = 0, p = 3; i < boneCount; i++, p += 3) {
-			var bone = (BonePose)bones[i];
+			BonePose bone = bones[i];
 			bone.worldX += (boneX - bone.worldX) * mixX;
 			bone.worldY += (boneY - bone.worldY) * mixY;
 			float x = positions[p], y = positions[p + 1], dx = x - boneX, dy = y - boneY;
@@ -467,10 +467,10 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 
 		sortPathConstraintAttachment(skeleton, slot.pose.attachment, slotBone);
 
-		Object[] bones = this.bones.items;
+		BonePose[] bones = this.bones.items;
 		int boneCount = this.bones.size;
 		for (int i = 0; i < boneCount; i++) {
-			Bone bone = ((BonePose)bones[i]).bone;
+			Bone bone = bones[i].bone;
 			skeleton.resetCache(bone);
 			skeleton.sortBone(bone);
 		}
@@ -478,9 +478,9 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 		skeleton.updateCache.add(this);
 
 		for (int i = 0; i < boneCount; i++)
-			skeleton.sortReset(((BonePose)bones[i]).bone.children);
+			skeleton.sortReset(bones[i].bone.children);
 		for (int i = 0; i < boneCount; i++)
-			((BonePose)bones[i]).bone.sorted = true;
+			bones[i].bone.sorted = true;
 	}
 
 	private void sortPathConstraintAttachment (Skeleton skeleton, Skin skin, int slotIndex, Bone slotBone) {
@@ -497,12 +497,12 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 		if (pathBones == null)
 			skeleton.sortBone(slotBone);
 		else {
-			Object[] bones = skeleton.bones.items;
+			Bone[] bones = skeleton.bones.items;
 			for (int i = 0, n = pathBones.length; i < n;) {
 				int nn = pathBones[i++];
 				nn += i;
 				while (i < nn)
-					skeleton.sortBone((Bone)bones[pathBones[i++]]);
+					skeleton.sortBone(bones[pathBones[i++]]);
 			}
 		}
 	}

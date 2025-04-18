@@ -121,7 +121,7 @@ import com.esotericsoftware.spine.attachments.VertexAttachment;
  * <a href="https://esotericsoftware.com/spine-loading-skeleton-data#JSON-and-binary-data">JSON and binary data</a> in the Spine
  * Runtimes Guide. */
 public class SkeletonJson extends SkeletonLoader {
-	private final Array<LinkedMesh> linkedMeshes = new Array();
+	private final Array<LinkedMesh> linkedMeshes = new Array(true, 8, LinkedMesh[]::new);
 
 	public SkeletonJson (AttachmentLoader attachmentLoader) {
 		super(attachmentLoader);
@@ -456,9 +456,9 @@ public class SkeletonJson extends SkeletonLoader {
 		}
 
 		// Linked meshes.
-		Object[] items = linkedMeshes.items;
+		LinkedMesh[] items = linkedMeshes.items;
 		for (int i = 0, n = linkedMeshes.size; i < n; i++) {
-			var linkedMesh = (LinkedMesh)items[i];
+			LinkedMesh linkedMesh = items[i];
 			Skin skin = linkedMesh.skin == null ? skeletonData.defaultSkin : skeletonData.findSkin(linkedMesh.skin);
 			if (skin == null) throw new SerializationException("Skin not found: " + linkedMesh.skin);
 			Attachment parent = skin.getAttachment(linkedMesh.slotIndex, linkedMesh.parent);
@@ -656,7 +656,7 @@ public class SkeletonJson extends SkeletonLoader {
 
 	private void readAnimation (JsonValue map, String name, SkeletonData skeletonData) {
 		float scale = this.scale;
-		var timelines = new Array<Timeline>();
+		var timelines = new Array<Timeline>(true, 16, Timeline[]::new);
 
 		// Slot timelines.
 		for (JsonValue slotMap = map.getChild("slots"); slotMap != null; slotMap = slotMap.next) {
@@ -1186,9 +1186,9 @@ public class SkeletonJson extends SkeletonLoader {
 
 		timelines.shrink();
 		float duration = 0;
-		Object[] items = timelines.items;
+		Timeline[] items = timelines.items;
 		for (int i = 0, n = timelines.size; i < n; i++)
-			duration = Math.max(duration, ((Timeline)items[i]).getDuration());
+			duration = Math.max(duration, items[i].getDuration());
 		skeletonData.animations.add(new Animation(name, timelines, duration));
 	}
 
