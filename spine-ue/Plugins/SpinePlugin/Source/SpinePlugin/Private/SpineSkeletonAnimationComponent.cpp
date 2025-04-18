@@ -81,7 +81,7 @@ USpineSkeletonAnimationComponent::USpineSkeletonAnimationComponent() {
 
 void USpineSkeletonAnimationComponent::BeginPlay() {
 	Super::BeginPlay();
-	for (UTrackEntry* entry : trackEntries) {
+	for (UTrackEntry *entry : trackEntries) {
 		if (entry && entry->GetTrackEntry()) {
 			entry->GetTrackEntry()->setRendererObject(nullptr);
 		}

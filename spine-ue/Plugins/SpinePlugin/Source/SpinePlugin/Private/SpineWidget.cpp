@@ -108,7 +108,7 @@ void USpineWidget::SynchronizeProperties() {
 		} else {
 			slateWidget->SetData(nullptr);
 		}
-		for (UTrackEntry* entry : trackEntries) {
+		for (UTrackEntry *entry : trackEntries) {
 			if (entry && entry->GetTrackEntry()) {
 				entry->GetTrackEntry()->setRendererObject(nullptr);
 			}
