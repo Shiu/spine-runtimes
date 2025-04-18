@@ -1,5 +1,5 @@
 ext {
-	libgdxVersion = "1.12.2-SNAPSHOT"
+	libgdxVersion = "1.13.2-SNAPSHOT"
 }
 
 allprojects {
