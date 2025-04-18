@@ -156,6 +156,32 @@ namespace Spine.Unity {
 
 			Transform thisTransform = this.transform;
 			float additionalFlipScale = 1;
+
+			float scaleSignX = 1;
+			float scaleSignY = 1;
+			Bone parentBone = bone.Parent;
+			if (followParentWorldScale || followLocalScale || followSkeletonFlip) {
+				Vector3 localScale = new Vector3(1f, 1f, 1f);
+				if (followParentWorldScale && parentBone != null) {
+					float cumulativeScaleX = 1.0f;
+					float cumulativeScaleY = 1.0f;
+					Bone p = parentBone;
+					while (p != null) {
+						cumulativeScaleX *= p.ScaleX;
+						cumulativeScaleY *= p.ScaleY;
+						p = p.Parent;
+					};
+					scaleSignX = Mathf.Sign(cumulativeScaleX);
+					scaleSignY = Mathf.Sign(cumulativeScaleY);
+					localScale = new Vector3(parentBone.WorldScaleX * scaleSignX, parentBone.WorldScaleY * scaleSignY, 1f);
+				}
+				if (followLocalScale)
+					localScale.Scale(new Vector3(bone.ScaleX, bone.ScaleY, 1f));
+				if (followSkeletonFlip)
+					localScale.y *= Mathf.Sign(bone.Skeleton.ScaleX * bone.Skeleton.ScaleY) * additionalFlipScale;
+				thisTransform.localScale = localScale;
+			}
+
 			if (skeletonTransformIsParent) {
 				// Recommended setup: Use local transform properties if Spine GameObject is the immediate parent
 				thisTransform.localPosition = new Vector3(followXYPosition ? bone.WorldX : thisTransform.localPosition.x,
@@ -164,6 +190,8 @@ namespace Spine.Unity {
 				if (followBoneRotation) {
 					float halfRotation = Mathf.Atan2(bone.C, bone.A) * 0.5f;
 					if (followLocalScale && bone.ScaleX < 0) // Negate rotation from negative scaleX. Don't use negative determinant. local scaleY doesn't factor into used rotation.
+						halfRotation += Mathf.PI * 0.5f;
+					if (followParentWorldScale && scaleSignX < 0)
 						halfRotation += Mathf.PI * 0.5f;
 
 					Quaternion q = default(Quaternion);
@@ -196,6 +224,8 @@ namespace Spine.Unity {
 						if ((skeletonLossyScale.y * parentLossyScale.y < 0))
 							boneWorldRotation += 180f;
 					}
+					if (followParentWorldScale && scaleSignX < 0)
+						boneWorldRotation += 180f;
 
 					Vector3 worldRotation = skeletonTransform.rotation.eulerAngles;
 					if (followLocalScale && bone.ScaleX < 0) boneWorldRotation += 180f;
@@ -206,18 +236,6 @@ namespace Spine.Unity {
 
 				additionalFlipScale = Mathf.Sign(skeletonLossyScale.x * parentLossyScale.x
 												* skeletonLossyScale.y * parentLossyScale.y);
-			}
-
-			Bone parentBone = bone.Parent;
-			if (followParentWorldScale || followLocalScale || followSkeletonFlip) {
-				Vector3 localScale = new Vector3(1f, 1f, 1f);
-				if (followParentWorldScale && parentBone != null)
-					localScale = new Vector3(parentBone.WorldScaleX, parentBone.WorldScaleY, 1f);
-				if (followLocalScale)
-					localScale.Scale(new Vector3(bone.ScaleX, bone.ScaleY, 1f));
-				if (followSkeletonFlip)
-					localScale.y *= Mathf.Sign(bone.Skeleton.ScaleX * bone.Skeleton.ScaleY) * additionalFlipScale;
-				thisTransform.localScale = localScale;
 			}
 		}
 	}
