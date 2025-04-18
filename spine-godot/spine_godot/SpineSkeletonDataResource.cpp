@@ -627,7 +627,9 @@ SpineSkeletonDataResource::find_physics_constraint(
 
 String SpineSkeletonDataResource::get_skeleton_name() const {
 	SPINE_CHECK(skeleton_data, "")
-	return skeleton_data->getName().buffer();
+	String name;
+	name.parse_utf8(skeleton_data->getName().buffer());
+	return name;
 }
 
 Array SpineSkeletonDataResource::get_bones() const {
