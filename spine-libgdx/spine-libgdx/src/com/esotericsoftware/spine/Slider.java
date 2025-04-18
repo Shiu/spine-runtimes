@@ -30,8 +30,10 @@
 package com.esotericsoftware.spine;
 
 import com.esotericsoftware.spine.Animation.BoneTimeline;
+import com.esotericsoftware.spine.Animation.ConstraintTimeline;
 import com.esotericsoftware.spine.Animation.MixBlend;
 import com.esotericsoftware.spine.Animation.MixDirection;
+import com.esotericsoftware.spine.Animation.PhysicsConstraintTimeline;
 import com.esotericsoftware.spine.Animation.SlotTimeline;
 import com.esotericsoftware.spine.Animation.Timeline;
 
@@ -66,23 +68,23 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 
 		Slot[] slots = skeleton.slots.items;
 		for (int i = 0; i < timelineCount; i++) {
-			Timeline timeline = timelines[i];
-			if (timeline instanceof BoneTimeline boneTimeline) {
-				Bone bone = bones[boneTimeline.getBoneIndex()];
+			Timeline t = timelines[i];
+			if (t instanceof BoneTimeline timeline) {
+				Bone bone = bones[timeline.getBoneIndex()];
 				skeleton.sortBone(bone);
 				skeleton.sortReset(bone.children);
 				bone.sorted = false;
-			} else if (timeline instanceof SlotTimeline slotTimeline) //
-				skeleton.resetCache(slots[slotTimeline.getSlotIndex()]);
-			// BOZO!
-// skeleton.resetCache(skeleton.constraints.items[constraintIndex]);
-
-// if (constraintIndex == -1) {
-// Object[] constraints = skeleton.physics.items;
-// for (int i = 0, n = skeleton.physics.size; i < n; i++)
-// skeleton.resetCache((PhysicsConstraint)constraints[i]);
-// } else
-// skeleton.resetCache(skeleton.constraints.items[constraintIndex]);
+			} else if (t instanceof SlotTimeline timeline)
+				skeleton.resetCache(slots[timeline.getSlotIndex()]);
+			else if (t instanceof PhysicsConstraintTimeline timeline) {
+				if (timeline.constraintIndex == -1) {
+					PhysicsConstraint[] constraints = skeleton.physics.items;
+					for (int ii = 0, nn = skeleton.physics.size; ii < nn; ii++)
+						skeleton.resetCache(constraints[ii]);
+				} else
+					skeleton.resetCache(skeleton.constraints.items[timeline.constraintIndex]);
+			} else if (t instanceof ConstraintTimeline timeline) //
+				skeleton.resetCache(skeleton.constraints.items[timeline.getConstraintIndex()]);
 		}
 		for (int i = 0; i < timelineCount; i++)
 			if (timelines[i] instanceof BoneTimeline boneTimeline) skeleton.sortBone(bones[boneTimeline.getBoneIndex()]);

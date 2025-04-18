@@ -1135,10 +1135,9 @@ public class Animation {
 
 			Slot slot = skeleton.slots.items[slotIndex];
 			if (!slot.bone.active) return;
-			SlotPose pose = appliedPose ? slot.applied : slot.pose;
 
+			Color color = (appliedPose ? slot.applied : slot.pose).color;
 			float[] frames = this.frames;
-			Color color = pose.color;
 			if (time < frames[0]) {
 				Color setup = slot.data.setup.color;
 				switch (blend) {
@@ -1827,18 +1826,22 @@ public class Animation {
 		}
 	}
 
+	static public interface ConstraintTimeline {
+		public int getConstraintIndex ();
+	}
+
 	/** Changes an IK constraint's {@link IkConstraintPose#getMix()}, {@link IkConstraintPose#getSoftness()},
 	 * {@link IkConstraintPose#getBendDirection()}, {@link IkConstraintPose#getStretch()}, and
 	 * {@link IkConstraintPose#getCompress()}. */
-	static public class IkConstraintTimeline extends CurveTimeline {
+	static public class IkConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
 		static public final int ENTRIES = 6;
 		static private final int MIX = 1, SOFTNESS = 2, BEND_DIRECTION = 3, COMPRESS = 4, STRETCH = 5;
 
 		final int constraintIndex;
 
-		public IkConstraintTimeline (int frameCount, int bezierCount, int ikConstraintIndex) {
-			super(frameCount, bezierCount, Property.ikConstraint.ordinal() + "|" + ikConstraintIndex);
-			constraintIndex = ikConstraintIndex;
+		public IkConstraintTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, Property.ikConstraint.ordinal() + "|" + constraintIndex);
+			this.constraintIndex = constraintIndex;
 		}
 
 		public int getFrameEntries () {
@@ -1847,7 +1850,7 @@ public class Animation {
 
 		/** The index of the IK constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
 		 * applied. */
-		public int getIkConstraintIndex () {
+		public int getConstraintIndex () {
 			return constraintIndex;
 		}
 
@@ -1942,15 +1945,15 @@ public class Animation {
 	/** Changes a transform constraint's {@link TransformConstraintPose#getMixRotate()}, {@link TransformConstraintPose#getMixX()},
 	 * {@link TransformConstraintPose#getMixY()}, {@link TransformConstraintPose#getMixScaleX()},
 	 * {@link TransformConstraintPose#getMixScaleY()}, and {@link TransformConstraintPose#getMixShearY()}. */
-	static public class TransformConstraintTimeline extends CurveTimeline {
+	static public class TransformConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
 		static public final int ENTRIES = 7;
 		static private final int ROTATE = 1, X = 2, Y = 3, SCALEX = 4, SCALEY = 5, SHEARY = 6;
 
 		final int constraintIndex;
 
-		public TransformConstraintTimeline (int frameCount, int bezierCount, int transformConstraintIndex) {
-			super(frameCount, bezierCount, Property.transformConstraint.ordinal() + "|" + transformConstraintIndex);
-			constraintIndex = transformConstraintIndex;
+		public TransformConstraintTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, Property.transformConstraint.ordinal() + "|" + constraintIndex);
+			this.constraintIndex = constraintIndex;
 		}
 
 		public int getFrameEntries () {
@@ -1959,7 +1962,7 @@ public class Animation {
 
 		/** The index of the transform constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
 		 * applied. */
-		public int getTransformConstraintIndex () {
+		public int getConstraintIndex () {
 			return constraintIndex;
 		}
 
@@ -2064,17 +2067,17 @@ public class Animation {
 	}
 
 	/** Changes a path constraint's {@link PathConstraintPose#getPosition()}. */
-	static public class PathConstraintPositionTimeline extends CurveTimeline1 {
+	static public class PathConstraintPositionTimeline extends CurveTimeline1 implements ConstraintTimeline {
 		final int constraintIndex;
 
-		public PathConstraintPositionTimeline (int frameCount, int bezierCount, int pathConstraintIndex) {
-			super(frameCount, bezierCount, Property.pathConstraintPosition.ordinal() + "|" + pathConstraintIndex);
-			constraintIndex = pathConstraintIndex;
+		public PathConstraintPositionTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, Property.pathConstraintPosition.ordinal() + "|" + constraintIndex);
+			this.constraintIndex = constraintIndex;
 		}
 
 		/** The index of the path constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
 		 * applied. */
-		public int getPathConstraintIndex () {
+		public int getConstraintIndex () {
 			return constraintIndex;
 		}
 
@@ -2090,17 +2093,17 @@ public class Animation {
 	}
 
 	/** Changes a path constraint's {@link PathConstraintPose#getSpacing()}. */
-	static public class PathConstraintSpacingTimeline extends CurveTimeline1 {
+	static public class PathConstraintSpacingTimeline extends CurveTimeline1 implements ConstraintTimeline {
 		final int constraintIndex;
 
-		public PathConstraintSpacingTimeline (int frameCount, int bezierCount, int pathConstraintIndex) {
-			super(frameCount, bezierCount, Property.pathConstraintSpacing.ordinal() + "|" + pathConstraintIndex);
-			constraintIndex = pathConstraintIndex;
+		public PathConstraintSpacingTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, Property.pathConstraintSpacing.ordinal() + "|" + constraintIndex);
+			this.constraintIndex = constraintIndex;
 		}
 
 		/** The index of the path constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
 		 * applied. */
-		public int getPathConstraintIndex () {
+		public int getConstraintIndex () {
 			return constraintIndex;
 		}
 
@@ -2117,15 +2120,15 @@ public class Animation {
 
 	/** Changes a path constraint's {@link PathConstraintPose#getMixRotate()}, {@link PathConstraintPose#getMixX()}, and
 	 * {@link PathConstraintPose#getMixY()}. */
-	static public class PathConstraintMixTimeline extends CurveTimeline {
+	static public class PathConstraintMixTimeline extends CurveTimeline implements ConstraintTimeline {
 		static public final int ENTRIES = 4;
 		static private final int ROTATE = 1, X = 2, Y = 3;
 
 		final int constraintIndex;
 
-		public PathConstraintMixTimeline (int frameCount, int bezierCount, int pathConstraintIndex) {
-			super(frameCount, bezierCount, Property.pathConstraintMix.ordinal() + "|" + pathConstraintIndex);
-			constraintIndex = pathConstraintIndex;
+		public PathConstraintMixTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, Property.pathConstraintMix.ordinal() + "|" + constraintIndex);
+			this.constraintIndex = constraintIndex;
 		}
 
 		public int getFrameEntries () {
@@ -2134,7 +2137,7 @@ public class Animation {
 
 		/** The index of the path constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
 		 * applied. */
-		public int getPathConstraintIndex () {
+		public int getConstraintIndex () {
 			return constraintIndex;
 		}
 
@@ -2211,18 +2214,18 @@ public class Animation {
 	}
 
 	/** The base class for most {@link PhysicsConstraint} timelines. */
-	static abstract public class PhysicsConstraintTimeline extends CurveTimeline1 {
+	static abstract public class PhysicsConstraintTimeline extends CurveTimeline1 implements ConstraintTimeline {
 		final int constraintIndex;
 
-		/** @param physicsConstraintIndex -1 for all physics constraints in the skeleton. */
-		public PhysicsConstraintTimeline (int frameCount, int bezierCount, int physicsConstraintIndex, Property property) {
-			super(frameCount, bezierCount, property.ordinal() + "|" + physicsConstraintIndex);
-			constraintIndex = physicsConstraintIndex;
+		/** @param constraintIndex -1 for all physics constraints in the skeleton. */
+		public PhysicsConstraintTimeline (int frameCount, int bezierCount, int constraintIndex, Property property) {
+			super(frameCount, bezierCount, property.ordinal() + "|" + constraintIndex);
+			this.constraintIndex = constraintIndex;
 		}
 
 		/** The index of the physics constraint in {@link Skeleton#getPhysicsConstraints()} that will be changed when this timeline
 		 * is applied, or -1 if all physics constraints in the skeleton will be changed. */
-		public int getPhysicsConstraintIndex () {
+		public int getConstraintIndex () {
 			return constraintIndex;
 		}
 
@@ -2258,8 +2261,8 @@ public class Animation {
 
 	/** Changes a physics constraint's {@link PhysicsConstraintPose#getInertia()}. */
 	static public class PhysicsConstraintInertiaTimeline extends PhysicsConstraintTimeline {
-		public PhysicsConstraintInertiaTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
-			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintInertia);
+		public PhysicsConstraintInertiaTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintInertia);
 		}
 
 		protected float get (PhysicsConstraintPose pose) {
@@ -2277,8 +2280,8 @@ public class Animation {
 
 	/** Changes a physics constraint's {@link PhysicsConstraintPose#getStrength()}. */
 	static public class PhysicsConstraintStrengthTimeline extends PhysicsConstraintTimeline {
-		public PhysicsConstraintStrengthTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
-			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintStrength);
+		public PhysicsConstraintStrengthTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintStrength);
 		}
 
 		protected float get (PhysicsConstraintPose pose) {
@@ -2296,8 +2299,8 @@ public class Animation {
 
 	/** Changes a physics constraint's {@link PhysicsConstraintPose#getDamping()}. */
 	static public class PhysicsConstraintDampingTimeline extends PhysicsConstraintTimeline {
-		public PhysicsConstraintDampingTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
-			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintDamping);
+		public PhysicsConstraintDampingTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintDamping);
 		}
 
 		protected float get (PhysicsConstraintPose pose) {
@@ -2315,8 +2318,8 @@ public class Animation {
 
 	/** Changes a physics constraint's {@link PhysicsConstraintPose#getMassInverse()}. The timeline values are not inverted. */
 	static public class PhysicsConstraintMassTimeline extends PhysicsConstraintTimeline {
-		public PhysicsConstraintMassTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
-			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintMass);
+		public PhysicsConstraintMassTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintMass);
 		}
 
 		protected float get (PhysicsConstraintPose pose) {
@@ -2334,8 +2337,8 @@ public class Animation {
 
 	/** Changes a physics constraint's {@link PhysicsConstraintPose#getWind()}. */
 	static public class PhysicsConstraintWindTimeline extends PhysicsConstraintTimeline {
-		public PhysicsConstraintWindTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
-			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintWind);
+		public PhysicsConstraintWindTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintWind);
 		}
 
 		protected float get (PhysicsConstraintPose pose) {
@@ -2353,8 +2356,8 @@ public class Animation {
 
 	/** Changes a physics constraint's {@link PhysicsConstraintPose#getGravity()}. */
 	static public class PhysicsConstraintGravityTimeline extends PhysicsConstraintTimeline {
-		public PhysicsConstraintGravityTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
-			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintGravity);
+		public PhysicsConstraintGravityTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintGravity);
 		}
 
 		protected float get (PhysicsConstraintPose pose) {
@@ -2372,8 +2375,8 @@ public class Animation {
 
 	/** Changes a physics constraint's {@link PhysicsConstraintPose#getMix()}. */
 	static public class PhysicsConstraintMixTimeline extends PhysicsConstraintTimeline {
-		public PhysicsConstraintMixTimeline (int frameCount, int bezierCount, int physicsConstraintIndex) {
-			super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintMix);
+		public PhysicsConstraintMixTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintMix);
 		}
 
 		protected float get (PhysicsConstraintPose pose) {
@@ -2390,20 +2393,20 @@ public class Animation {
 	}
 
 	/** Resets a physics constraint when specific animation times are reached. */
-	static public class PhysicsConstraintResetTimeline extends Timeline {
+	static public class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimeline {
 		static private final String[] propertyIds = {Integer.toString(Property.physicsConstraintReset.ordinal())};
 
 		final int constraintIndex;
 
-		/** @param physicsConstraintIndex -1 for all physics constraints in the skeleton. */
-		public PhysicsConstraintResetTimeline (int frameCount, int physicsConstraintIndex) {
+		/** @param constraintIndex -1 for all physics constraints in the skeleton. */
+		public PhysicsConstraintResetTimeline (int frameCount, int constraintIndex) {
 			super(frameCount, propertyIds);
-			constraintIndex = physicsConstraintIndex;
+			this.constraintIndex = constraintIndex;
 		}
 
 		/** The index of the physics constraint in {@link Skeleton#getPhysicsConstraints()} that will be reset when this timeline is
 		 * applied, or -1 if all physics constraints in the skeleton will be reset. */
-		public int getPhysicsConstraintIndex () {
+		public int getConstraintIndex () {
 			return constraintIndex;
 		}
 
