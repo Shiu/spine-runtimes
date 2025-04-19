@@ -649,8 +649,8 @@ public class Animation {
 				break;
 			case first:
 			case replace:
-				pose.x = x;
-				pose.y = y;
+				pose.x += (setup.x + x - pose.x) * alpha;
+				pose.y += (setup.y + y - pose.y) * alpha;
 				break;
 			case add:
 				pose.x += x * alpha;
