@@ -201,7 +201,7 @@ public class Skeleton {
 	}
 
 	void sortBone (Bone bone) {
-		if (bone.sorted) return;
+		if (bone.sorted || !bone.active) return;
 		Bone parent = bone.parent;
 		if (parent != null) sortBone(parent);
 		bone.sorted = true;
@@ -212,9 +212,10 @@ public class Skeleton {
 		Bone[] items = bones.items;
 		for (int i = 0, n = bones.size; i < n; i++) {
 			Bone bone = items[i];
-			if (!bone.active) continue;
-			if (bone.sorted) sortReset(bone.children);
-			bone.sorted = false;
+			if (bone.active) {
+				if (bone.sorted) sortReset(bone.children);
+				bone.sorted = false;
+			}
 		}
 	}
 

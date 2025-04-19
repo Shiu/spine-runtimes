@@ -269,12 +269,9 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 	void sort (Skeleton skeleton) {
 		Bone bone = this.bone.bone;
 		skeleton.sortBone(bone);
-
 		skeleton.resetCache(bone);
 		skeleton.updateCache.add(this);
-
 		skeleton.sortReset(bone.children);
-		bone.sorted = true;
 	}
 
 	boolean isSourceActive () {

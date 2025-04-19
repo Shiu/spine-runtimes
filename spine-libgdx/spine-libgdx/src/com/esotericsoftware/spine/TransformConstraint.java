@@ -102,26 +102,14 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 
 	void sort (Skeleton skeleton) {
 		skeleton.sortBone(source);
-
 		BonePose[] bones = this.bones.items;
 		int boneCount = this.bones.size;
-		if (data.localSource) {
-			for (int i = 0; i < boneCount; i++) {
-				Bone child = bones[i].bone;
-				skeleton.resetCache(child);
-				skeleton.sortBone(child.parent);
-				skeleton.sortBone(child);
-			}
-		} else {
-			for (int i = 0; i < boneCount; i++) {
-				Bone bone = bones[i].bone;
-				skeleton.resetCache(bone);
-				skeleton.sortBone(bone);
-			}
+		for (int i = 0; i < boneCount; i++) {
+			Bone bone = bones[i].bone;
+			skeleton.resetCache(bone);
+			skeleton.sortBone(bone);
 		}
-
 		skeleton.updateCache.add(this);
-
 		for (int i = 0; i < boneCount; i++)
 			skeleton.sortReset(bones[i].bone.children);
 		for (int i = 0; i < boneCount; i++)

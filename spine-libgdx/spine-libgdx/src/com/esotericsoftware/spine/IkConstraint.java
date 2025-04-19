@@ -75,10 +75,9 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 
 	void sort (Skeleton skeleton) {
 		skeleton.sortBone(target);
-
 		Bone parent = bones.items[0].bone;
-		skeleton.sortBone(parent);
 		skeleton.resetCache(parent);
+		skeleton.sortBone(parent);
 		if (bones.size == 1) {
 			skeleton.updateCache.add(this);
 			skeleton.sortReset(parent.children);
@@ -86,9 +85,7 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 			Bone child = bones.items[1].bone;
 			skeleton.resetCache(child);
 			skeleton.sortBone(child);
-
 			skeleton.updateCache.add(this);
-
 			skeleton.sortReset(parent.children);
 			child.sorted = true;
 		}

@@ -464,9 +464,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 		if (skeleton.skin != null) sortPathConstraintAttachment(skeleton, skeleton.skin, slotIndex, slotBone);
 		if (skeleton.data.defaultSkin != null && skeleton.data.defaultSkin != skeleton.skin)
 			sortPathConstraintAttachment(skeleton, skeleton.data.defaultSkin, slotIndex, slotBone);
-
 		sortPathConstraintAttachment(skeleton, slot.pose.attachment, slotBone);
-
 		BonePose[] bones = this.bones.items;
 		int boneCount = this.bones.size;
 		for (int i = 0; i < boneCount; i++) {
@@ -474,9 +472,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 			skeleton.resetCache(bone);
 			skeleton.sortBone(bone);
 		}
-
 		skeleton.updateCache.add(this);
-
 		for (int i = 0; i < boneCount; i++)
 			skeleton.sortReset(bones[i].bone.children);
 		for (int i = 0; i < boneCount; i++)

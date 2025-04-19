@@ -52,6 +52,7 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 	}
 
 	public void update (Skeleton skeleton, Physics physics) {
+		if (pose.mix == 0) return;
 		SliderPose pose = applied;
 		data.animation.apply(skeleton, pose.time, pose.time, false, null, pose.mix, MixBlend.replace, MixDirection.in, true);
 	}
@@ -71,7 +72,6 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 			Timeline t = timelines[i];
 			if (t instanceof BoneTimeline timeline) {
 				Bone bone = bones[timeline.getBoneIndex()];
-				skeleton.sortBone(bone);
 				skeleton.sortReset(bone.children);
 				bone.sorted = false;
 			} else if (t instanceof SlotTimeline timeline)
@@ -86,7 +86,5 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 			} else if (t instanceof ConstraintTimeline timeline) //
 				skeleton.resetCache(skeleton.constraints.items[timeline.getConstraintIndex()]);
 		}
-		for (int i = 0; i < timelineCount; i++)
-			if (timelines[i] instanceof BoneTimeline boneTimeline) skeleton.sortBone(bones[boneTimeline.getBoneIndex()]);
 	}
 }
