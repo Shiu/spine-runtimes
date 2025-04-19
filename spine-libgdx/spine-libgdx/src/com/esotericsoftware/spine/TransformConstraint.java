@@ -94,7 +94,7 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 				}
 			}
 			if (localTarget)
-				bone.update(skeleton, null);
+				bone.updateWorldTransform(skeleton);
 			else
 				bone.updateLocalTransform(skeleton);
 		}

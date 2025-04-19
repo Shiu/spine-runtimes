@@ -61,6 +61,7 @@ public class Skeleton {
 	@Null Skin skin;
 	final Color color;
 	float x, y, scaleX = 1, scaleY = 1, time;
+	int update;
 
 	public Skeleton (SkeletonData data) {
 		if (data == null) throw new IllegalArgumentException("data cannot be null.");
@@ -224,6 +225,8 @@ public class Skeleton {
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
 	public void updateWorldTransform (Physics physics) {
+		update++;
+
 		Posed[] resetCache = this.resetCache.items;
 		for (int i = 0, n = this.resetCache.size; i < n; i++)
 			resetCache[i].resetAppliedPose();
@@ -240,6 +243,8 @@ public class Skeleton {
 	 * Runtimes Guide. */
 	public void updateWorldTransform (Physics physics, BonePose parent) {
 		if (parent == null) throw new IllegalArgumentException("parent cannot be null.");
+
+		update++;
 
 		Posed[] resetCache = this.resetCache.items;
 		for (int i = 0, n = this.resetCache.size; i < n; i++)

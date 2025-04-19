@@ -15,24 +15,23 @@ public class BonePose extends BoneLocal implements Update {
 	Bone bone;
 	float a, b, worldX;
 	float c, d, worldY;
+	int update;
 
 	BonePose () {
 	}
 
-	/** Computes the world transform using the parent bone and this bone's local applied transform. */
-	public void updateWorldTransform (Skeleton skeleton) {
-		update(skeleton, null);
+	/** Called by {@link Skeleton#updateCache()} to compute the world transform, if needed. */
+	public void update (Skeleton skeleton, Physics physics) {
+		if (update != skeleton.update) updateWorldTransform(skeleton);
 	}
 
-	/** Computes the world transform using the parent bone and this bone's local transform.
-	 * <p>
-	 * See {@link #updateWorldTransform(float, float, float, float, float, float, float)}. */
-	/** Computes the world transform using the parent bone and the specified local transform. The applied transform is set to the
-	 * specified local transform. Child bones are not updated.
+	/** Computes the world transform using the parent bone's applied pose and this pose. Child bones are not updated.
 	 * <p>
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
-	public void update (Skeleton skeleton, Physics physics) {
+	public void updateWorldTransform (Skeleton skeleton) {
+		update = skeleton.update;
+
 		if (bone.parent == null) { // Root bone.
 			float sx = skeleton.scaleX, sy = skeleton.scaleY;
 			float rx = (rotation + shearX) * degRad;
@@ -140,6 +139,8 @@ public class BonePose extends BoneLocal implements Update {
 	 * Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The local transform after
 	 * calling this method is equivalent to the local transform used to compute the world transform, but may not be identical. */
 	public void updateLocalTransform (Skeleton skeleton) {
+		update = skeleton.update;
+
 		if (bone.parent == null) {
 			x = worldX - skeleton.x;
 			y = worldY - skeleton.y;
@@ -353,8 +354,8 @@ public class BonePose extends BoneLocal implements Update {
 
 	/** Rotates the world transform the specified amount.
 	 * <p>
-	 * After changes are made to the world transform, {@link #updateLocalTransform(Skeleton)} should be called and
-	 * {@link #update(Skeleton, Physics)} will need to be called on any child bones, recursively. */
+	 * After changes are made to the world transform, {@link #updateLocalTransform(Skeleton)} should be called on this bone and any
+	 * child bones, recursively. */
 	public void rotateWorld (float degrees) {
 		degrees *= degRad;
 		float sin = sin(degrees), cos = cos(degrees);
