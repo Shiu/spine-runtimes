@@ -42,7 +42,7 @@ import com.esotericsoftware.spine.attachments.VertexAttachment;
  * for an attachment. State cannot be stored in an attachment itself because attachments are stateless and may be shared across
  * multiple skeletons. */
 public class SlotPose implements Pose<SlotPose> {
-	final Color color = new Color();
+	final Color color = new Color(1, 1, 1, 1);
 	@Null Color darkColor;
 	@Null Attachment attachment; // Not used in setup pose.
 	int sequenceIndex;

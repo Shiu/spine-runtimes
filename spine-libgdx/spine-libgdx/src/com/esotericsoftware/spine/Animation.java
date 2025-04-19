@@ -57,7 +57,7 @@ public class Animation {
 		if (name == null) throw new IllegalArgumentException("name cannot be null.");
 		this.name = name;
 		this.duration = duration;
-		timelineIds = new ObjectSet(timelines.size);
+		timelineIds = new ObjectSet(timelines.size << 1);
 		setTimelines(timelines);
 	}
 
@@ -71,7 +71,7 @@ public class Animation {
 		this.timelines = timelines;
 
 		int n = timelines.size;
-		timelineIds.clear(n);
+		timelineIds.clear(n << 1);
 		Timeline[] items = timelines.items;
 		for (int i = 0; i < n; i++)
 			timelineIds.addAll(items[i].getPropertyIds());
@@ -649,8 +649,8 @@ public class Animation {
 				break;
 			case first:
 			case replace:
-				pose.x += (setup.x + x - pose.x) * alpha;
-				pose.y += (setup.y + y - pose.y) * alpha;
+				pose.x = x;
+				pose.y = y;
 				break;
 			case add:
 				pose.x += x * alpha;
