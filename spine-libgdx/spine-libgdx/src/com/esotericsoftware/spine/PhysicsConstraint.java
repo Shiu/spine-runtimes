@@ -39,10 +39,10 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 
 	boolean reset = true;
 	float ux, uy, cx, cy, tx, ty;
-	float xOffset, xVelocity;
-	float yOffset, yVelocity;
-	float rotateOffset, rotateVelocity;
-	float scaleOffset, scaleVelocity;
+	float xOffset, xLag, xVelocity;
+	float yOffset, yLag, yVelocity;
+	float rotateOffset, rotateLag, rotateVelocity;
+	float scaleOffset, scaleLag, scaleVelocity;
 	float remaining, lastTime;
 
 	public PhysicsConstraint (PhysicsConstraintData data, Skeleton skeleton) {
@@ -63,12 +63,16 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 		lastTime = skeleton.time;
 		reset = true;
 		xOffset = 0;
+		xLag = 0;
 		xVelocity = 0;
 		yOffset = 0;
+		yLag = 0;
 		yVelocity = 0;
 		rotateOffset = 0;
+		rotateLag = 0;
 		rotateVelocity = 0;
 		scaleOffset = 0;
+		scaleLag = 0;
 		scaleVelocity = 0;
 	}
 
@@ -97,7 +101,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 
 		boolean x = data.x > 0, y = data.y > 0, rotateOrShearX = data.rotate > 0 || data.shearX > 0, scaleX = data.scaleX > 0;
 		BonePose bone = this.bone;
-		float l = bone.bone.data.length;
+		float l = bone.bone.data.length, t = data.step, z = 0;
 
 		switch (physics) {
 		case none:
@@ -116,8 +120,8 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 				ux = bx;
 				uy = by;
 			} else {
-				float a = remaining, i = pose.inertia, t = data.step, f = skeleton.data.referenceScale, d = -1;
-				float qx = data.limit * delta, qy = qx * Math.abs(skeleton.scaleY);
+				float a = remaining, i = pose.inertia, f = skeleton.data.referenceScale, d = -1, qx = data.limit * delta,
+					qy = qx * Math.abs(skeleton.scaleY);
 				qx *= Math.abs(skeleton.scaleX);
 				if (x || y) {
 					if (x) {
@@ -133,7 +137,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 					if (a >= t) {
 						d = (float)Math.pow(pose.damping, 60 * t);
 						float m = pose.massInverse * t, e = pose.strength, w = pose.wind * f * skeleton.scaleX,
-							g = pose.gravity * f * skeleton.scaleY;
+							g = pose.gravity * f * skeleton.scaleY, xs = xOffset, ys = yOffset;
 						do {
 							if (x) {
 								xVelocity += (w - xOffset * e) * m;
@@ -147,13 +151,16 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 							}
 							a -= t;
 						} while (a >= t);
+						xLag = xOffset - xs;
+						yLag = yOffset - ys;
 					}
-					if (x) bone.worldX += xOffset * mix * data.x;
-					if (y) bone.worldY += yOffset * mix * data.y;
-				}
+					z = Math.max(0, 1 - a / t);
+					if (x) bone.worldX += (xOffset - xLag * z) * mix * data.x;
+					if (y) bone.worldY += (yOffset - yLag * z) * mix * data.y;
+				} else
+					z = Math.max(0, 1 - a / t);
 				if (rotateOrShearX || scaleX) {
-					float ca = atan2(bone.c, bone.a), c, s, mr = 0;
-					float dx = cx - bone.worldX, dy = cy - bone.worldY;
+					float ca = atan2(bone.c, bone.a), c, s, mr = 0, dx = cx - bone.worldX, dy = cy - bone.worldY;
 					if (dx > qx)
 						dx = qx;
 					else if (dx < -qx) //
@@ -162,11 +169,12 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 						dy = qy;
 					else if (dy < -qy) //
 						dy = -qy;
+					a = remaining;
 					if (rotateOrShearX) {
 						mr = (data.rotate + data.shearX) * mix;
-						float r = atan2(dy + ty, dx + tx) - ca - rotateOffset * mr;
+						float rz = rotateLag * Math.max(0, 1 - a / t), r = atan2(dy + ty, dx + tx) - ca - (rotateOffset - rz) * mr;
 						rotateOffset += (r - (float)Math.ceil(r * invPI2 - 0.5f) * PI2) * i;
-						r = rotateOffset * mr + ca;
+						r = (rotateOffset - rz) * mr + ca;
 						c = cos(r);
 						s = sin(r);
 						if (scaleX) {
@@ -179,10 +187,10 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 						float r = l * bone.getWorldScaleX();
 						if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
 					}
-					a = remaining;
 					if (a >= t) {
 						if (d == -1) d = (float)Math.pow(pose.damping, 60 * t);
-						float m = pose.massInverse * t, e = pose.strength, w = pose.wind, g = pose.gravity, h = l / f;
+						float m = pose.massInverse * t, e = pose.strength, w = pose.wind, g = pose.gravity, h = l / f,
+							rs = rotateOffset, ss = scaleOffset;
 						while (true) {
 							a -= t;
 							if (scaleX) {
@@ -201,6 +209,8 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 							} else if (a < t) //
 								break;
 						}
+						rotateLag = rotateOffset - rs;
+						scaleLag = scaleOffset - ss;
 					}
 				}
 				remaining = a;
@@ -209,12 +219,13 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 			cy = bone.worldY;
 			break;
 		case pose:
-			if (x) bone.worldX += xOffset * mix * data.x;
-			if (y) bone.worldY += yOffset * mix * data.y;
+			z = Math.max(0, 1 - remaining / t);
+			if (x) bone.worldX += (xOffset - xLag * z) * mix * data.x;
+			if (y) bone.worldY += (yOffset - yLag * z) * mix * data.y;
 		}
 
 		if (rotateOrShearX) {
-			float o = rotateOffset * mix, s, c, a;
+			float o = (rotateOffset - rotateLag * z) * mix, s, c, a;
 			if (data.shearX > 0) {
 				float r = 0;
 				if (data.rotate > 0) {
@@ -244,7 +255,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 			}
 		}
 		if (scaleX) {
-			float s = 1 + scaleOffset * mix * data.scaleX;
+			float s = 1 + (scaleOffset - scaleLag * z) * mix * data.scaleX;
 			bone.a *= s;
 			bone.c *= s;
 		}
