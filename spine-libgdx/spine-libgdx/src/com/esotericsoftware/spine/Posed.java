@@ -36,14 +36,6 @@ abstract public class Posed< //
 		return applied;
 	}
 
-	void setConstrained (boolean constrained) {
-		applied = constrained ? this.constrained : (A)pose;
-	}
-
-	void resetAppliedPose () {
-		applied.set(pose);
-	}
-
 	public String toString () {
 		return data.name;
 	}

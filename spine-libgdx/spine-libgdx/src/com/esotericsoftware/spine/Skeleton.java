@@ -154,13 +154,19 @@ public class Skeleton {
 		updateCache.clear();
 		resetCache.clear();
 
+		Slot[] slots = this.slots.items;
+		for (int i = 0, n = this.slots.size; i < n; i++) {
+			Slot slot = slots[i];
+			slot.applied = slot.pose;
+		}
+
 		int boneCount = bones.size;
 		Bone[] bones = this.bones.items;
 		for (int i = 0; i < boneCount; i++) {
 			Bone bone = bones[i];
 			bone.sorted = bone.data.skinRequired;
 			bone.active = !bone.sorted;
-			bone.setConstrained(false);
+			bone.applied = (BonePose)bone.pose;
 		}
 		if (skin != null) {
 			BoneData[] skinBones = skin.bones.items;
@@ -176,8 +182,10 @@ public class Skeleton {
 
 		Constraint[] constraints = this.constraints.items;
 		int n = this.constraints.size;
-		for (int i = 0; i < n; i++)
-			constraints[i].setConstrained(false);
+		for (int i = 0; i < n; i++) {
+			Constraint constraint = constraints[i];
+			constraint.applied = constraint.pose;
+		}
 		for (int i = 0; i < n; i++) {
 			Constraint<?, ?, ?> constraint = constraints[i];
 			constraint.active = constraint.isSourceActive()
@@ -196,7 +204,7 @@ public class Skeleton {
 
 	void resetCache (Posed object) {
 		if (object.pose == object.applied) {
-			object.setConstrained(true);
+			object.applied = object.constrained;
 			resetCache.add(object);
 		}
 	}
@@ -228,8 +236,10 @@ public class Skeleton {
 		update++;
 
 		Posed[] resetCache = this.resetCache.items;
-		for (int i = 0, n = this.resetCache.size; i < n; i++)
-			resetCache[i].resetAppliedPose();
+		for (int i = 0, n = this.resetCache.size; i < n; i++) {
+			Posed object = resetCache[i];
+			object.applied.set(object.pose);
+		}
 
 		Object[] updateCache = this.updateCache.items;
 		for (int i = 0, n = this.updateCache.size; i < n; i++)
@@ -241,14 +251,16 @@ public class Skeleton {
 	 * <p>
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
-	public void updateWorldTransform (Physics physics, BonePose parent) {
+	public void updateWorldTransform (Physics physics, BonePose parent) { // Do not port.
 		if (parent == null) throw new IllegalArgumentException("parent cannot be null.");
 
 		update++;
 
 		Posed[] resetCache = this.resetCache.items;
-		for (int i = 0, n = this.resetCache.size; i < n; i++)
-			resetCache[i].resetAppliedPose();
+		for (int i = 0, n = this.resetCache.size; i < n; i++) {
+			Posed object = resetCache[i];
+			object.applied.set(object.pose);
+		}
 
 		// Apply the parent bone transform to the root bone. The root bone always inherits scale, rotation and reflection.
 		BonePose rootBone = getRootBone().applied;

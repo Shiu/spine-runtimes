@@ -46,7 +46,7 @@ public class Slot extends Posed<SlotData, SlotPose, SlotPose> {
 		bone = skeleton.bones.items[data.boneData.index];
 		if (data.setup.darkColor != null) {
 			pose.darkColor = new Color();
-			applied.darkColor = new Color();
+			constrained.darkColor = new Color();
 		}
 		setupPose();
 	}
@@ -60,7 +60,7 @@ public class Slot extends Posed<SlotData, SlotPose, SlotPose> {
 		this.skeleton = skeleton;
 		if (data.setup.darkColor != null) {
 			pose.darkColor = new Color();
-			applied.darkColor = new Color();
+			constrained.darkColor = new Color();
 		}
 		pose.set(slot.pose);
 	}
