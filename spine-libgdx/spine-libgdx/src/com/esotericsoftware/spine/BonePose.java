@@ -16,9 +16,7 @@ public class BonePose extends BoneLocal implements Update {
 	float a, b, worldX;
 	float c, d, worldY;
 	int update;
-
-	BonePose () {
-	}
+	boolean localDirty;
 
 	/** Called by {@link Skeleton#updateCache()} to compute the world transform, if needed. */
 	public void update (Skeleton skeleton, Physics physics) {
@@ -31,6 +29,7 @@ public class BonePose extends BoneLocal implements Update {
 	 * Runtimes Guide. */
 	public void updateWorldTransform (Skeleton skeleton) {
 		update = skeleton.update;
+		localDirty = false;
 
 		if (bone.parent == null) { // Root bone.
 			float sx = skeleton.scaleX, sy = skeleton.scaleY;
@@ -140,6 +139,7 @@ public class BonePose extends BoneLocal implements Update {
 	 * calling this method is equivalent to the local transform used to compute the world transform, but may not be identical. */
 	public void updateLocalTransform (Skeleton skeleton) {
 		update = skeleton.update;
+		localDirty = false;
 
 		if (bone.parent == null) {
 			x = worldX - skeleton.x;
@@ -216,6 +216,12 @@ public class BonePose extends BoneLocal implements Update {
 			shearY = 0;
 			rotation = 90 - atan2Deg(rd, rb);
 		}
+	}
+
+	/** When true, the world transform has been modified and the local transform no longer matches. Call
+	 * {@link #updateLocalTransform(Skeleton)} before using the local transform. */
+	public boolean isLocalDirty () {
+		return localDirty;
 	}
 
 	/** Part of the world transform matrix for the X axis. If changed, {@link #updateLocalTransform(Skeleton)} should be called. */

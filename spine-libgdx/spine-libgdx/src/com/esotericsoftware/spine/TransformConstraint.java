@@ -68,16 +68,18 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 			&& pose.mixShearY == 0) return;
 
 		TransformConstraintData data = this.data;
-		boolean localFrom = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
+		boolean localSource = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
 		BonePose source = this.source.applied;
+		if (localSource && source.localDirty) source.updateLocalTransform(skeleton);
 		FromProperty[] fromItems = data.properties.items;
 		int fn = data.properties.size;
 		BonePose[] bones = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++) {
 			BonePose bone = bones[i];
+			if (localTarget && bone.localDirty) bone.updateLocalTransform(skeleton);
 			for (int f = 0; f < fn; f++) {
 				FromProperty from = fromItems[f];
-				float value = from.value(data, source, localFrom) - from.offset;
+				float value = from.value(data, source, localSource) - from.offset;
 				ToProperty[] toItems = from.to.items;
 				for (int t = 0, tn = from.to.size; t < tn; t++) {
 					ToProperty to = toItems[t];
@@ -95,8 +97,8 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 			}
 			if (localTarget)
 				bone.updateWorldTransform(skeleton);
-			else
-				bone.updateLocalTransform(skeleton);
+			else 
+				bone.localDirty = true;
 			bone.bone.resetUpdate(skeleton);
 		}
 	}

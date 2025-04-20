@@ -114,6 +114,7 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 	static public void apply (Skeleton skeleton, BonePose bone, float targetX, float targetY, boolean compress, boolean stretch,
 		boolean uniform, float alpha) {
 		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
+		if (bone.localDirty) bone.updateLocalTransform(skeleton);
 		BonePose p = bone.bone.parent.applied;
 		float pa = p.a, pb = p.b, pc = p.c, pd = p.d;
 		float rotationIK = -bone.shearX - bone.rotation, tx, ty;
@@ -176,6 +177,8 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 		if (parent == null) throw new IllegalArgumentException("parent cannot be null.");
 		if (child == null) throw new IllegalArgumentException("child cannot be null.");
 		if (parent.inherit != Inherit.normal || child.inherit != Inherit.normal) return;
+		if (parent.localDirty) parent.updateLocalTransform(skeleton);
+		if (child.localDirty) child.updateLocalTransform(skeleton);
 		float px = parent.x, py = parent.y, psx = parent.scaleX, psy = parent.scaleY, csx = child.scaleX;
 		int os1, os2, s2;
 		if (psx < 0) {

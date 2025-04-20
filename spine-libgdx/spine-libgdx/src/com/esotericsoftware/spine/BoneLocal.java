@@ -36,9 +36,6 @@ public class BoneLocal implements Pose<BoneLocal> {
 	float x, y, rotation, scaleX, scaleY, shearX, shearY;
 	Inherit inherit;
 
-	BoneLocal () {
-	}
-
 	public void set (BoneLocal pose) {
 		if (pose == null) throw new IllegalArgumentException("pose cannot be null.");
 		x = pose.x;
