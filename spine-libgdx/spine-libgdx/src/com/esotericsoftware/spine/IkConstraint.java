@@ -166,6 +166,7 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 			}
 		}
 		bone.updateWorldTransform(skeleton);
+		bone.bone.resetUpdate(skeleton);
 	}
 
 	/** Applies 2 bone IK. The target is specified in the world coordinate system.
@@ -217,6 +218,7 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 			apply(skeleton, parent, targetX, targetY, false, stretch, false, alpha);
 			child.rotation = 0;
 			child.updateWorldTransform(skeleton);
+			child.bone.resetUpdate(skeleton);
 			return;
 		}
 		x = targetX - pp.worldX;
@@ -319,5 +321,6 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 			a2 += 360;
 		child.rotation += a2 * alpha;
 		child.updateWorldTransform(skeleton);
+		parent.bone.resetUpdate(skeleton);
 	}
 }

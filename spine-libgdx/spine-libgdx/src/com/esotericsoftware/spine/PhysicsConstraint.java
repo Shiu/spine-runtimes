@@ -264,6 +264,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 			ty = l * bone.c;
 		}
 		bone.updateLocalTransform(skeleton);
+		bone.bone.resetUpdate(skeleton);
 	}
 
 	void sort (Skeleton skeleton) {

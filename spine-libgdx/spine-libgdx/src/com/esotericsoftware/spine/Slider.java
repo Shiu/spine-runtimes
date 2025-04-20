@@ -60,7 +60,7 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 		int timelineCount = data.animation.timelines.size;
 		Bone[] bones = skeleton.bones.items;
 		for (int i = 0; i < timelineCount; i++)
-			if (timelines[i] instanceof BoneTimeline boneTimeline) bones[boneTimeline.getBoneIndex()].resetUpdate();
+			if (timelines[i] instanceof BoneTimeline boneTimeline) bones[boneTimeline.getBoneIndex()].resetUpdate(skeleton);
 	}
 
 	void sort (Skeleton skeleton) {
