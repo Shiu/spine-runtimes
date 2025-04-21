@@ -182,7 +182,8 @@ public class Animation {
 		pathConstraintPosition, pathConstraintSpacing, pathConstraintMix, //
 		physicsConstraintInertia, physicsConstraintStrength, physicsConstraintDamping, physicsConstraintMass, //
 		physicsConstraintWind, physicsConstraintGravity, physicsConstraintMix, physicsConstraintReset, //
-		sequence
+		sequence, //
+		sliderMix
 	}
 
 	/** The base class for all timelines. */
@@ -1711,6 +1712,107 @@ public class Animation {
 		}
 	}
 
+	/** Changes a slot's {@link SlotPose#getSequenceIndex()} for an attachment's {@link Sequence}. */
+	static public class SequenceTimeline extends Timeline implements SlotTimeline {
+		static public final int ENTRIES = 3;
+		static private final int MODE = 1, DELAY = 2;
+
+		final int slotIndex;
+		final HasTextureRegion attachment;
+
+		public SequenceTimeline (int frameCount, int slotIndex, Attachment attachment) {
+			super(frameCount,
+				Property.sequence.ordinal() + "|" + slotIndex + "|" + ((HasTextureRegion)attachment).getSequence().getId());
+			this.slotIndex = slotIndex;
+			this.attachment = (HasTextureRegion)attachment;
+		}
+
+		public int getFrameEntries () {
+			return ENTRIES;
+		}
+
+		public int getSlotIndex () {
+			return slotIndex;
+		}
+
+		public Attachment getAttachment () {
+			return (Attachment)attachment;
+		}
+
+		/** Sets the time, mode, index, and frame time for the specified frame.
+		 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+		 * @param time Seconds between frames. */
+		public void setFrame (int frame, float time, SequenceMode mode, int index, float delay) {
+			frame *= ENTRIES;
+			frames[frame] = time;
+			frames[frame + MODE] = mode.ordinal() | (index << 4);
+			frames[frame + DELAY] = delay;
+		}
+
+		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
+			MixDirection direction, boolean appliedPose) {
+
+			Slot slot = skeleton.slots.items[slotIndex];
+			if (!slot.bone.active) return;
+			SlotPose pose = appliedPose ? slot.applied : slot.pose;
+
+			Attachment slotAttachment = pose.attachment;
+			if (slotAttachment != attachment) {
+				if (!(slotAttachment instanceof VertexAttachment vertexAttachment)
+					|| vertexAttachment.getTimelineAttachment() != attachment) return;
+			}
+			Sequence sequence = ((HasTextureRegion)slotAttachment).getSequence();
+			if (sequence == null) return;
+
+			if (direction == out) {
+				if (blend == setup) pose.setSequenceIndex(-1);
+				return;
+			}
+
+			float[] frames = this.frames;
+			if (time < frames[0]) {
+				if (blend == setup || blend == first) pose.setSequenceIndex(-1);
+				return;
+			}
+
+			int i = search(frames, time, ENTRIES);
+			float before = frames[i];
+			int modeAndIndex = (int)frames[i + MODE];
+			float delay = frames[i + DELAY];
+
+			int index = modeAndIndex >> 4, count = sequence.getRegions().length;
+			SequenceMode mode = SequenceMode.values[modeAndIndex & 0xf];
+			if (mode != SequenceMode.hold) {
+				index += (time - before) / delay + 0.0001f;
+				switch (mode) {
+				case once:
+					index = Math.min(count - 1, index);
+					break;
+				case loop:
+					index %= count;
+					break;
+				case pingpong: {
+					int n = (count << 1) - 2;
+					index = n == 0 ? 0 : index % n;
+					if (index >= count) index = n - index;
+					break;
+				}
+				case onceReverse:
+					index = Math.max(count - 1 - index, 0);
+					break;
+				case loopReverse:
+					index = count - 1 - (index % count);
+					break;
+				case pingpongReverse:
+					int n = (count << 1) - 2;
+					index = n == 0 ? 0 : (index + count - 1) % n;
+					if (index >= count) index = n - index;
+				}
+			}
+			pose.setSequenceIndex(index);
+		}
+	}
+
 	/** Fires an {@link Event} when specific animation times are reached. */
 	static public class EventTimeline extends Timeline {
 		static private final String[] propertyIds = {Integer.toString(Property.event.ordinal())};
@@ -1827,6 +1929,7 @@ public class Animation {
 	}
 
 	static public interface ConstraintTimeline {
+		/** The index of the constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is applied. */
 		public int getConstraintIndex ();
 	}
 
@@ -1848,8 +1951,6 @@ public class Animation {
 			return ENTRIES;
 		}
 
-		/** The index of the IK constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
-		 * applied. */
 		public int getConstraintIndex () {
 			return constraintIndex;
 		}
@@ -1960,8 +2061,6 @@ public class Animation {
 			return ENTRIES;
 		}
 
-		/** The index of the transform constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
-		 * applied. */
 		public int getConstraintIndex () {
 			return constraintIndex;
 		}
@@ -2075,8 +2174,6 @@ public class Animation {
 			this.constraintIndex = constraintIndex;
 		}
 
-		/** The index of the path constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
-		 * applied. */
 		public int getConstraintIndex () {
 			return constraintIndex;
 		}
@@ -2101,8 +2198,6 @@ public class Animation {
 			this.constraintIndex = constraintIndex;
 		}
 
-		/** The index of the path constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
-		 * applied. */
 		public int getConstraintIndex () {
 			return constraintIndex;
 		}
@@ -2135,8 +2230,6 @@ public class Animation {
 			return ENTRIES;
 		}
 
-		/** The index of the path constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
-		 * applied. */
 		public int getConstraintIndex () {
 			return constraintIndex;
 		}
@@ -2223,8 +2316,8 @@ public class Animation {
 			this.constraintIndex = constraintIndex;
 		}
 
-		/** The index of the physics constraint in {@link Skeleton#getPhysicsConstraints()} that will be changed when this timeline
-		 * is applied, or -1 if all physics constraints in the skeleton will be changed. */
+		/** The index of the physics constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
+		 * applied, or -1 if all physics constraints in the skeleton will be changed. */
 		public int getConstraintIndex () {
 			return constraintIndex;
 		}
@@ -2404,7 +2497,7 @@ public class Animation {
 			this.constraintIndex = constraintIndex;
 		}
 
-		/** The index of the physics constraint in {@link Skeleton#getPhysicsConstraints()} that will be reset when this timeline is
+		/** The index of the physics constraint in {@link Skeleton#getConstraints()} that will be reset when this timeline is
 		 * applied, or -1 if all physics constraints in the skeleton will be reset. */
 		public int getConstraintIndex () {
 			return constraintIndex;
@@ -2453,104 +2546,27 @@ public class Animation {
 		}
 	}
 
-	/** Changes a slot's {@link SlotPose#getSequenceIndex()} for an attachment's {@link Sequence}. */
-	static public class SequenceTimeline extends Timeline implements SlotTimeline {
-		static public final int ENTRIES = 3;
-		static private final int MODE = 1, DELAY = 2;
+	/** Changes a slider's {@link SliderPose#getMix()}. */
+	static public class SliderMixTimeline extends CurveTimeline1 implements ConstraintTimeline {
+		final int constraintIndex;
 
-		final int slotIndex;
-		final HasTextureRegion attachment;
-
-		public SequenceTimeline (int frameCount, int slotIndex, Attachment attachment) {
-			super(frameCount,
-				Property.sequence.ordinal() + "|" + slotIndex + "|" + ((HasTextureRegion)attachment).getSequence().getId());
-			this.slotIndex = slotIndex;
-			this.attachment = (HasTextureRegion)attachment;
+		public SliderMixTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, Property.sliderMix.ordinal() + "|" + constraintIndex);
+			this.constraintIndex = constraintIndex;
 		}
 
-		public int getFrameEntries () {
-			return ENTRIES;
-		}
-
-		public int getSlotIndex () {
-			return slotIndex;
-		}
-
-		public Attachment getAttachment () {
-			return (Attachment)attachment;
-		}
-
-		/** Sets the time, mode, index, and frame time for the specified frame.
-		 * @param frame Between 0 and <code>frameCount</code>, inclusive.
-		 * @param time Seconds between frames. */
-		public void setFrame (int frame, float time, SequenceMode mode, int index, float delay) {
-			frame *= ENTRIES;
-			frames[frame] = time;
-			frames[frame + MODE] = mode.ordinal() | (index << 4);
-			frames[frame + DELAY] = delay;
+		public int getConstraintIndex () {
+			return constraintIndex;
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
 			MixDirection direction, boolean appliedPose) {
 
-			Slot slot = skeleton.slots.items[slotIndex];
-			if (!slot.bone.active) return;
-			SlotPose pose = appliedPose ? slot.applied : slot.pose;
-
-			Attachment slotAttachment = pose.attachment;
-			if (slotAttachment != attachment) {
-				if (!(slotAttachment instanceof VertexAttachment vertexAttachment)
-					|| vertexAttachment.getTimelineAttachment() != attachment) return;
+			var constraint = (Slider)skeleton.constraints.items[constraintIndex];
+			if (constraint.active) {
+				SliderPose pose = appliedPose ? constraint.applied : constraint.pose;
+				pose.mix = getAbsoluteValue(time, alpha, blend, pose.mix, constraint.data.setup.mix);
 			}
-			Sequence sequence = ((HasTextureRegion)slotAttachment).getSequence();
-			if (sequence == null) return;
-
-			if (direction == out) {
-				if (blend == setup) pose.setSequenceIndex(-1);
-				return;
-			}
-
-			float[] frames = this.frames;
-			if (time < frames[0]) {
-				if (blend == setup || blend == first) pose.setSequenceIndex(-1);
-				return;
-			}
-
-			int i = search(frames, time, ENTRIES);
-			float before = frames[i];
-			int modeAndIndex = (int)frames[i + MODE];
-			float delay = frames[i + DELAY];
-
-			int index = modeAndIndex >> 4, count = sequence.getRegions().length;
-			SequenceMode mode = SequenceMode.values[modeAndIndex & 0xf];
-			if (mode != SequenceMode.hold) {
-				index += (time - before) / delay + 0.0001f;
-				switch (mode) {
-				case once:
-					index = Math.min(count - 1, index);
-					break;
-				case loop:
-					index %= count;
-					break;
-				case pingpong: {
-					int n = (count << 1) - 2;
-					index = n == 0 ? 0 : index % n;
-					if (index >= count) index = n - index;
-					break;
-				}
-				case onceReverse:
-					index = Math.max(count - 1 - index, 0);
-					break;
-				case loopReverse:
-					index = count - 1 - (index % count);
-					break;
-				case pingpongReverse:
-					int n = (count << 1) - 2;
-					index = n == 0 ? 0 : (index + count - 1) % n;
-					if (index >= count) index = n - index;
-				}
-			}
-			pose.setSequenceIndex(index);
 		}
 	}
 }

@@ -76,6 +76,7 @@ import com.esotericsoftware.spine.Animation.SequenceTimeline;
 import com.esotericsoftware.spine.Animation.ShearTimeline;
 import com.esotericsoftware.spine.Animation.ShearXTimeline;
 import com.esotericsoftware.spine.Animation.ShearYTimeline;
+import com.esotericsoftware.spine.Animation.SliderMixTimeline;
 import com.esotericsoftware.spine.Animation.Timeline;
 import com.esotericsoftware.spine.Animation.TransformConstraintTimeline;
 import com.esotericsoftware.spine.Animation.TranslateTimeline;
@@ -141,6 +142,7 @@ public class SkeletonBinary extends SkeletonLoader {
 	static public final int CONSTRAINT_PATH = 1;
 	static public final int CONSTRAINT_TRANSFORM = 2;
 	static public final int CONSTRAINT_PHYSICS = 3;
+	static public final int CONSTRAINT_SLIDER = 4;
 
 	static public final int ATTACHMENT_DEFORM = 0;
 	static public final int ATTACHMENT_SEQUENCE = 1;
@@ -157,6 +159,8 @@ public class SkeletonBinary extends SkeletonLoader {
 	static public final int PHYSICS_GRAVITY = 6;
 	static public final int PHYSICS_MIX = 7;
 	static public final int PHYSICS_RESET = 8;
+
+	static public final int SLIDER_MIX = 0;
 
 	static public final int CURVE_LINEAR = 0;
 	static public final int CURVE_STEPPED = 1;
@@ -259,12 +263,15 @@ public class SkeletonBinary extends SkeletonLoader {
 			}
 
 			// Constraints.
-			o = skeletonData.constraints.setSize(n = input.readInt(true));
-			for (int i = 0, nn; i < n; i++) {
+			int constraintCount = input.readInt(true);
+			ConstraintData[] constraints = skeletonData.constraints.setSize(constraintCount);
+			for (int i = 0; i < constraintCount; i++) {
+				String name = input.readString();
+				int nn = input.readInt(true);
 				switch (input.readByte()) {
 				case CONSTRAINT_IK -> {
-					var data = new IkConstraintData(input.readString());
-					BoneData[] constraintBones = data.bones.setSize(nn = input.readInt(true));
+					var data = new IkConstraintData(name);
+					BoneData[] constraintBones = data.bones.setSize(nn);
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
 					data.target = bones[input.readInt(true)];
@@ -277,11 +284,11 @@ public class SkeletonBinary extends SkeletonLoader {
 					setup.stretch = (flags & 16) != 0;
 					if ((flags & 32) != 0) setup.mix = (flags & 64) != 0 ? input.readFloat() : 1;
 					if ((flags & 128) != 0) setup.softness = input.readFloat() * scale;
-					o[i] = data;
+					constraints[i] = data;
 				}
 				case CONSTRAINT_TRANSFORM -> {
-					var data = new TransformConstraintData(input.readString());
-					BoneData[] constraintBones = data.bones.setSize(nn = input.readInt(true));
+					var data = new TransformConstraintData(name);
+					BoneData[] constraintBones = data.bones.setSize(nn);
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
 					data.source = bones[input.readInt(true)];
@@ -352,11 +359,11 @@ public class SkeletonBinary extends SkeletonLoader {
 					if ((flags & 8) != 0) setup.mixScaleX = input.readFloat();
 					if ((flags & 16) != 0) setup.mixScaleY = input.readFloat();
 					if ((flags & 32) != 0) setup.mixShearY = input.readFloat();
-					o[i] = data;
+					constraints[i] = data;
 				}
 				case CONSTRAINT_PATH -> {
-					var data = new PathConstraintData(input.readString());
-					BoneData[] constraintBones = data.bones.setSize(nn = input.readInt(true));
+					var data = new PathConstraintData(name);
+					BoneData[] constraintBones = data.bones.setSize(nn);
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
 					data.slot = slots[input.readInt(true)];
@@ -374,11 +381,11 @@ public class SkeletonBinary extends SkeletonLoader {
 					setup.mixRotate = input.readFloat();
 					setup.mixX = input.readFloat();
 					setup.mixY = input.readFloat();
-					o[i] = data;
+					constraints[i] = data;
 				}
 				case CONSTRAINT_PHYSICS -> {
-					var data = new PhysicsConstraintData(input.readString());
-					data.bone = bones[input.readInt(true)];
+					var data = new PhysicsConstraintData(name);
+					data.bone = bones[nn];
 					int flags = input.read();
 					data.skinRequired = (flags & 1) != 0;
 					if ((flags & 2) != 0) data.x = input.readFloat();
@@ -404,7 +411,14 @@ public class SkeletonBinary extends SkeletonLoader {
 					if ((flags & 32) != 0) data.gravityGlobal = true;
 					if ((flags & 64) != 0) data.mixGlobal = true;
 					setup.mix = (flags & 128) != 0 ? input.readFloat() : 1;
-					o[i] = data;
+					constraints[i] = data;
+				}
+				case CONSTRAINT_SLIDER -> {
+					var data = new SliderData(name);
+					data.skinRequired = (nn & 1) != 0;
+					if ((nn & 2) != 0) data.setup.mix = (nn & 4) != 0 ? input.readFloat() : 1;
+					if ((nn & 8) != 0) data.setup.time = input.readFloat();
+					constraints[i] = data;
 				}
 				}
 			}
@@ -454,10 +468,12 @@ public class SkeletonBinary extends SkeletonLoader {
 			}
 
 			// Animations.
-			o = skeletonData.animations.setSize(n = input.readInt(true));
+			Animation[] animations = skeletonData.animations.setSize(n = input.readInt(true));
 			for (int i = 0; i < n; i++)
-				o[i] = readAnimation(input, input.readString(), skeletonData);
+				animations[i] = readAnimation(input, input.readString(), skeletonData);
 
+			for (int i = 0; i < constraintCount; i++)
+				if (constraints[i] instanceof SliderData data) data.animation = animations[input.readInt(true)];
 		} catch (IOException ex) {
 			throw new SerializationException("Error reading skeleton file.", ex);
 		} finally {
@@ -1031,6 +1047,32 @@ public class SkeletonBinary extends SkeletonLoader {
 				case PHYSICS_MIX -> new PhysicsConstraintMixTimeline(frameCount, bezierCount, index);
 				default -> throw new SerializationException();
 				}, 1);
+			}
+		}
+
+		// Slider timelines.
+		for (int i = 0, n = input.readInt(true); i < n; i++) {
+			int index = input.readInt(true);
+			for (int ii = 0, nn = input.readInt(true); ii < nn; ii++) {
+				int type = input.readByte(), frameCount = input.readInt(true), bezierCount = input.readInt(true);
+				switch (type) {
+				case SLIDER_MIX -> {
+					var timeline = new SliderMixTimeline(frameCount, bezierCount, index);
+					float time = input.readFloat(), mix = input.readFloat();
+					for (int frame = 0, bezier = 0, frameLast = timeline.getFrameCount() - 1;; frame++) {
+						timeline.setFrame(frame, time, mix);
+						if (frame == frameLast) break;
+						float time2 = input.readFloat(), mix2 = input.readFloat();
+						switch (input.readByte()) {
+						case CURVE_STEPPED -> timeline.setStepped(frame);
+						case CURVE_BEZIER -> setBezier(input, timeline, bezier++, frame, 0, time, time2, mix, mix2, 1);
+						}
+						time = time2;
+						mix = mix2;
+					}
+					timelines.add(timeline);
+				}
+				}
 			}
 		}
 
