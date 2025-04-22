@@ -418,8 +418,9 @@ public class SkeletonBinary extends SkeletonLoader {
 				case CONSTRAINT_SLIDER -> {
 					var data = new SliderData(name);
 					data.skinRequired = (nn & 1) != 0;
-					if ((nn & 2) != 0) data.setup.mix = (nn & 4) != 0 ? input.readFloat() : 1;
-					if ((nn & 8) != 0) data.setup.time = input.readFloat();
+					data.additive = (nn & 2) != 0;
+					if ((nn & 4) != 0) data.setup.mix = (nn & 8) != 0 ? input.readFloat() : 1;
+					if ((nn & 16) != 0) data.setup.time = input.readFloat();
 					constraints[i] = data;
 				}
 				}
