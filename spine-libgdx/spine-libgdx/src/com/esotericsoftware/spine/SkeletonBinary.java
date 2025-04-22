@@ -45,9 +45,9 @@ import com.badlogic.gdx.utils.SerializationException;
 
 import com.esotericsoftware.spine.Animation.AlphaTimeline;
 import com.esotericsoftware.spine.Animation.AttachmentTimeline;
+import com.esotericsoftware.spine.Animation.BoneTimeline2;
 import com.esotericsoftware.spine.Animation.CurveTimeline;
 import com.esotericsoftware.spine.Animation.CurveTimeline1;
-import com.esotericsoftware.spine.Animation.CurveTimeline2;
 import com.esotericsoftware.spine.Animation.DeformTimeline;
 import com.esotericsoftware.spine.Animation.DrawOrderTimeline;
 import com.esotericsoftware.spine.Animation.EventTimeline;
@@ -77,6 +77,7 @@ import com.esotericsoftware.spine.Animation.ShearTimeline;
 import com.esotericsoftware.spine.Animation.ShearXTimeline;
 import com.esotericsoftware.spine.Animation.ShearYTimeline;
 import com.esotericsoftware.spine.Animation.SliderMixTimeline;
+import com.esotericsoftware.spine.Animation.SliderTimeline;
 import com.esotericsoftware.spine.Animation.Timeline;
 import com.esotericsoftware.spine.Animation.TransformConstraintTimeline;
 import com.esotericsoftware.spine.Animation.TranslateTimeline;
@@ -160,7 +161,8 @@ public class SkeletonBinary extends SkeletonLoader {
 	static public final int PHYSICS_MIX = 7;
 	static public final int PHYSICS_RESET = 8;
 
-	static public final int SLIDER_MIX = 0;
+	static public final int SLIDER_TIME = 0;
+	static public final int SLIDER_MIX = 1;
 
 	static public final int CURVE_LINEAR = 0;
 	static public final int CURVE_STEPPED = 1;
@@ -1055,24 +1057,11 @@ public class SkeletonBinary extends SkeletonLoader {
 			int index = input.readInt(true);
 			for (int ii = 0, nn = input.readInt(true); ii < nn; ii++) {
 				int type = input.readByte(), frameCount = input.readInt(true), bezierCount = input.readInt(true);
-				switch (type) {
-				case SLIDER_MIX -> {
-					var timeline = new SliderMixTimeline(frameCount, bezierCount, index);
-					float time = input.readFloat(), mix = input.readFloat();
-					for (int frame = 0, bezier = 0, frameLast = timeline.getFrameCount() - 1;; frame++) {
-						timeline.setFrame(frame, time, mix);
-						if (frame == frameLast) break;
-						float time2 = input.readFloat(), mix2 = input.readFloat();
-						switch (input.readByte()) {
-						case CURVE_STEPPED -> timeline.setStepped(frame);
-						case CURVE_BEZIER -> setBezier(input, timeline, bezier++, frame, 0, time, time2, mix, mix2, 1);
-						}
-						time = time2;
-						mix = mix2;
-					}
-					timelines.add(timeline);
-				}
-				}
+				readTimeline(input, timelines, switch (type) {
+				case SLIDER_TIME -> new SliderTimeline(frameCount, bezierCount, index);
+				case SLIDER_MIX -> new SliderMixTimeline(frameCount, bezierCount, index);
+				default -> throw new SerializationException();
+				}, 1);
 			}
 		}
 
@@ -1221,7 +1210,7 @@ public class SkeletonBinary extends SkeletonLoader {
 		timelines.add(timeline);
 	}
 
-	private void readTimeline (SkeletonInput input, Array<Timeline> timelines, CurveTimeline2 timeline, float scale)
+	private void readTimeline (SkeletonInput input, Array<Timeline> timelines, BoneTimeline2 timeline, float scale)
 		throws IOException {
 		float time = input.readFloat(), value1 = input.readFloat() * scale, value2 = input.readFloat() * scale;
 		for (int frame = 0, bezier = 0, frameLast = timeline.getFrameCount() - 1;; frame++) {

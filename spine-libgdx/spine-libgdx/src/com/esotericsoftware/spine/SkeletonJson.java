@@ -46,9 +46,9 @@ import com.badlogic.gdx.utils.SerializationException;
 
 import com.esotericsoftware.spine.Animation.AlphaTimeline;
 import com.esotericsoftware.spine.Animation.AttachmentTimeline;
+import com.esotericsoftware.spine.Animation.BoneTimeline2;
 import com.esotericsoftware.spine.Animation.CurveTimeline;
 import com.esotericsoftware.spine.Animation.CurveTimeline1;
-import com.esotericsoftware.spine.Animation.CurveTimeline2;
 import com.esotericsoftware.spine.Animation.DeformTimeline;
 import com.esotericsoftware.spine.Animation.DrawOrderTimeline;
 import com.esotericsoftware.spine.Animation.EventTimeline;
@@ -78,6 +78,7 @@ import com.esotericsoftware.spine.Animation.ShearTimeline;
 import com.esotericsoftware.spine.Animation.ShearXTimeline;
 import com.esotericsoftware.spine.Animation.ShearYTimeline;
 import com.esotericsoftware.spine.Animation.SliderMixTimeline;
+import com.esotericsoftware.spine.Animation.SliderTimeline;
 import com.esotericsoftware.spine.Animation.Timeline;
 import com.esotericsoftware.spine.Animation.TransformConstraintTimeline;
 import com.esotericsoftware.spine.Animation.TranslateTimeline;
@@ -763,7 +764,7 @@ public class SkeletonJson extends SkeletonLoader {
 					}
 					timelines.add(timeline);
 				}
-				case "alpha" -> timelines.add(readTimeline(keyMap, new AlphaTimeline(frames, frames, slot.index), 0, 1));
+				case "alpha" -> readTimeline(timelines, keyMap, new AlphaTimeline(frames, frames, slot.index), 0, 1);
 				case "rgba2" -> {
 					var timeline = new RGBA2Timeline(frames, frames * 7, slot.index);
 					float time = keyMap.getFloat("time", 0);
@@ -878,21 +879,17 @@ public class SkeletonJson extends SkeletonLoader {
 
 				int frames = timelineMap.size;
 				switch (timelineMap.name) {
-				case "rotate" -> timelines.add(readTimeline(keyMap, new RotateTimeline(frames, frames, bone.index), 0, 1));
+				case "rotate" -> readTimeline(timelines, keyMap, new RotateTimeline(frames, frames, bone.index), 0, 1);
 				case "translate" -> //
-					timelines.add(readTimeline(keyMap, new TranslateTimeline(frames, frames << 1, bone.index), "x", "y", 0, scale));
-				case "translatex" -> //
-					timelines.add(readTimeline(keyMap, new TranslateXTimeline(frames, frames, bone.index), 0, scale));
-				case "translatey" -> //
-					timelines.add(readTimeline(keyMap, new TranslateYTimeline(frames, frames, bone.index), 0, scale));
-				case "scale" -> timelines
-					.add(readTimeline(keyMap, new ScaleTimeline(frames, frames << 1, bone.index), "x", "y", 1, 1));
-				case "scalex" -> timelines.add(readTimeline(keyMap, new ScaleXTimeline(frames, frames, bone.index), 1, 1));
-				case "scaley" -> timelines.add(readTimeline(keyMap, new ScaleYTimeline(frames, frames, bone.index), 1, 1));
-				case "shear" -> //
-					timelines.add(readTimeline(keyMap, new ShearTimeline(frames, frames << 1, bone.index), "x", "y", 0, 1));
-				case "shearx" -> timelines.add(readTimeline(keyMap, new ShearXTimeline(frames, frames, bone.index), 0, 1));
-				case "sheary" -> timelines.add(readTimeline(keyMap, new ShearYTimeline(frames, frames, bone.index), 0, 1));
+					readTimeline(timelines, keyMap, new TranslateTimeline(frames, frames << 1, bone.index), "x", "y", 0, scale);
+				case "translatex" -> readTimeline(timelines, keyMap, new TranslateXTimeline(frames, frames, bone.index), 0, scale);
+				case "translatey" -> readTimeline(timelines, keyMap, new TranslateYTimeline(frames, frames, bone.index), 0, scale);
+				case "scale" -> readTimeline(timelines, keyMap, new ScaleTimeline(frames, frames << 1, bone.index), "x", "y", 1, 1);
+				case "scalex" -> readTimeline(timelines, keyMap, new ScaleXTimeline(frames, frames, bone.index), 1, 1);
+				case "scaley" -> readTimeline(timelines, keyMap, new ScaleYTimeline(frames, frames, bone.index), 1, 1);
+				case "shear" -> readTimeline(timelines, keyMap, new ShearTimeline(frames, frames << 1, bone.index), "x", "y", 0, 1);
+				case "shearx" -> readTimeline(timelines, keyMap, new ShearXTimeline(frames, frames, bone.index), 0, 1);
+				case "sheary" -> readTimeline(timelines, keyMap, new ShearYTimeline(frames, frames, bone.index), 0, 1);
 				case "inherit" -> {
 					var timeline = new InheritTimeline(frames, bone.index);
 					for (int frame = 0; keyMap != null; keyMap = keyMap.next, frame++) {
@@ -997,12 +994,12 @@ public class SkeletonJson extends SkeletonLoader {
 				switch (timelineMap.name) {
 				case "position" -> {
 					var timeline = new PathConstraintPositionTimeline(frames, frames, index);
-					timelines.add(readTimeline(keyMap, timeline, 0, constraint.positionMode == PositionMode.fixed ? scale : 1));
+					readTimeline(timelines, keyMap, timeline, 0, constraint.positionMode == PositionMode.fixed ? scale : 1);
 				}
 				case "spacing" -> {
 					var timeline = new PathConstraintSpacingTimeline(frames, frames, index);
-					timelines.add(readTimeline(keyMap, timeline, 0,
-						constraint.spacingMode == SpacingMode.length || constraint.spacingMode == SpacingMode.fixed ? scale : 1));
+					readTimeline(timelines, keyMap, timeline, 0,
+						constraint.spacingMode == SpacingMode.length || constraint.spacingMode == SpacingMode.fixed ? scale : 1);
 				}
 				case "mix" -> {
 					var timeline = new PathConstraintMixTimeline(frames, frames * 3, index);
@@ -1074,7 +1071,7 @@ public class SkeletonJson extends SkeletonLoader {
 					continue;
 				}
 				}
-				timelines.add(readTimeline(keyMap, timeline, defaultValue, 1));
+				readTimeline(timelines, keyMap, timeline, defaultValue, 1);
 			}
 		}
 
@@ -1089,7 +1086,8 @@ public class SkeletonJson extends SkeletonLoader {
 
 				int frames = timelineMap.size;
 				switch (timelineMap.name) {
-				case "mix" -> timelines.add(readTimeline(keyMap, new SliderMixTimeline(frames, frames, index), 1, 1));
+				case "time" -> readTimeline(timelines, keyMap, new SliderTimeline(frames, frames, index), 1, 1);
+				case "mix" -> readTimeline(timelines, keyMap, new SliderMixTimeline(frames, frames, index), 1, 1);
 				}
 			}
 		}
@@ -1231,14 +1229,16 @@ public class SkeletonJson extends SkeletonLoader {
 		skeletonData.animations.add(new Animation(name, timelines, duration));
 	}
 
-	private Timeline readTimeline (JsonValue keyMap, CurveTimeline1 timeline, float defaultValue, float scale) {
+	private void readTimeline (Array<Timeline> timelines, JsonValue keyMap, CurveTimeline1 timeline, float defaultValue,
+		float scale) {
 		float time = keyMap.getFloat("time", 0), value = keyMap.getFloat("value", defaultValue) * scale;
 		for (int frame = 0, bezier = 0;; frame++) {
 			timeline.setFrame(frame, time, value);
 			JsonValue nextMap = keyMap.next;
 			if (nextMap == null) {
 				timeline.shrink(bezier);
-				return timeline;
+				timelines.add(timeline);
+				return;
 			}
 			float time2 = nextMap.getFloat("time", 0);
 			float value2 = nextMap.getFloat("value", defaultValue) * scale;
@@ -1250,8 +1250,8 @@ public class SkeletonJson extends SkeletonLoader {
 		}
 	}
 
-	private Timeline readTimeline (JsonValue keyMap, CurveTimeline2 timeline, String name1, String name2, float defaultValue,
-		float scale) {
+	private void readTimeline (Array<Timeline> timelines, JsonValue keyMap, BoneTimeline2 timeline, String name1, String name2,
+		float defaultValue, float scale) {
 		float time = keyMap.getFloat("time", 0);
 		float value1 = keyMap.getFloat(name1, defaultValue) * scale, value2 = keyMap.getFloat(name2, defaultValue) * scale;
 		for (int frame = 0, bezier = 0;; frame++) {
@@ -1259,7 +1259,8 @@ public class SkeletonJson extends SkeletonLoader {
 			JsonValue nextMap = keyMap.next;
 			if (nextMap == null) {
 				timeline.shrink(bezier);
-				return timeline;
+				timelines.add(timeline);
+				return;
 			}
 			float time2 = nextMap.getFloat("time", 0);
 			float nvalue1 = nextMap.getFloat(name1, defaultValue) * scale, nvalue2 = nextMap.getFloat(name2, defaultValue) * scale;

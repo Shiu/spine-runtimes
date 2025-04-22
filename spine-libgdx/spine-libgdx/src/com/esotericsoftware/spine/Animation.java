@@ -183,7 +183,7 @@ public class Animation {
 		physicsConstraintInertia, physicsConstraintStrength, physicsConstraintDamping, physicsConstraintMass, //
 		physicsConstraintWind, physicsConstraintGravity, physicsConstraintMix, physicsConstraintReset, //
 		sequence, //
-		sliderMix
+		sliderTime, sliderMix
 	}
 
 	/** The base class for all timelines. */
@@ -512,16 +512,17 @@ public class Animation {
 		}
 	}
 
-	/** The base class for a {@link CurveTimeline} which sets two properties. */
-	static abstract public class CurveTimeline2 extends CurveTimeline {
+	/** The base class for a {@link CurveTimeline} that is a {@link BoneTimeline} and sets two properties. */
+	static abstract public class BoneTimeline2 extends CurveTimeline implements BoneTimeline {
 		static public final int ENTRIES = 3;
 		static final int VALUE1 = 1, VALUE2 = 2;
 
-		/** @param bezierCount The maximum number of Bezier curves. See {@link #shrink(int)}.
-		 * @param propertyId1 Unique identifier for the first property the timeline modifies.
-		 * @param propertyId2 Unique identifier for the second property the timeline modifies. */
-		public CurveTimeline2 (int frameCount, int bezierCount, String propertyId1, String propertyId2) {
-			super(frameCount, bezierCount, propertyId1, propertyId2);
+		final int boneIndex;
+
+		/** @param bezierCount The maximum number of Bezier curves. See {@link #shrink(int)}. */
+		public BoneTimeline2 (int frameCount, int bezierCount, int boneIndex, Property property1, Property property2) {
+			super(frameCount, bezierCount, property1.ordinal() + "|" + boneIndex, property2.ordinal() + "|" + boneIndex);
+			this.boneIndex = boneIndex;
 		}
 
 		public int getFrameEntries () {
@@ -536,21 +537,6 @@ public class Animation {
 			frames[frame] = time;
 			frames[frame + VALUE1] = value1;
 			frames[frame + VALUE2] = value2;
-		}
-	}
-
-	/** An interface for timelines which change the property of a bone. */
-	static public interface BoneTimeline {
-		/** The index of the bone in {@link Skeleton#getBones()} that will be changed when this timeline is applied. */
-		public int getBoneIndex ();
-	}
-
-	static abstract public class BoneTimeline1 extends CurveTimeline1 implements BoneTimeline {
-		final int boneIndex;
-
-		public BoneTimeline1 (int frameCount, int bezierCount, int boneIndex, Property property) {
-			super(frameCount, bezierCount, property.ordinal() + "|" + boneIndex);
-			this.boneIndex = boneIndex;
 		}
 
 		public int getBoneIndex () {
@@ -568,11 +554,17 @@ public class Animation {
 			MixDirection direction);
 	}
 
-	static abstract public class BoneTimeline2 extends CurveTimeline2 implements BoneTimeline {
+	/** An interface for timelines which change the property of a bone. */
+	static public interface BoneTimeline {
+		/** The index of the bone in {@link Skeleton#getBones()} that will be changed when this timeline is applied. */
+		public int getBoneIndex ();
+	}
+
+	static abstract public class BoneTimeline1 extends CurveTimeline1 implements BoneTimeline {
 		final int boneIndex;
 
-		public BoneTimeline2 (int frameCount, int bezierCount, int boneIndex, Property property1, Property property2) {
-			super(frameCount, bezierCount, property1.ordinal() + "|" + boneIndex, property2.ordinal() + "|" + boneIndex);
+		public BoneTimeline1 (int frameCount, int bezierCount, int boneIndex, Property property) {
+			super(frameCount, bezierCount, property.ordinal() + "|" + boneIndex);
 			this.boneIndex = boneIndex;
 		}
 
@@ -2165,17 +2157,23 @@ public class Animation {
 		}
 	}
 
-	/** Changes a path constraint's {@link PathConstraintPose#getPosition()}. */
-	static public class PathConstraintPositionTimeline extends CurveTimeline1 implements ConstraintTimeline {
+	static abstract public class ConstraintTimeline1 extends CurveTimeline1 implements ConstraintTimeline {
 		final int constraintIndex;
 
-		public PathConstraintPositionTimeline (int frameCount, int bezierCount, int constraintIndex) {
-			super(frameCount, bezierCount, Property.pathConstraintPosition.ordinal() + "|" + constraintIndex);
+		public ConstraintTimeline1 (int frameCount, int bezierCount, int constraintIndex, Property property) {
+			super(frameCount, bezierCount, property.ordinal() + "|" + constraintIndex);
 			this.constraintIndex = constraintIndex;
 		}
 
 		public int getConstraintIndex () {
 			return constraintIndex;
+		}
+	}
+
+	/** Changes a path constraint's {@link PathConstraintPose#getPosition()}. */
+	static public class PathConstraintPositionTimeline extends ConstraintTimeline1 {
+		public PathConstraintPositionTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, constraintIndex, Property.pathConstraintPosition);
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
@@ -2190,16 +2188,9 @@ public class Animation {
 	}
 
 	/** Changes a path constraint's {@link PathConstraintPose#getSpacing()}. */
-	static public class PathConstraintSpacingTimeline extends CurveTimeline1 implements ConstraintTimeline {
-		final int constraintIndex;
-
+	static public class PathConstraintSpacingTimeline extends ConstraintTimeline1 {
 		public PathConstraintSpacingTimeline (int frameCount, int bezierCount, int constraintIndex) {
-			super(frameCount, bezierCount, Property.pathConstraintSpacing.ordinal() + "|" + constraintIndex);
-			this.constraintIndex = constraintIndex;
-		}
-
-		public int getConstraintIndex () {
-			return constraintIndex;
+			super(frameCount, bezierCount, constraintIndex, Property.pathConstraintSpacing);
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
@@ -2307,19 +2298,10 @@ public class Animation {
 	}
 
 	/** The base class for most {@link PhysicsConstraint} timelines. */
-	static abstract public class PhysicsConstraintTimeline extends CurveTimeline1 implements ConstraintTimeline {
-		final int constraintIndex;
-
+	static abstract public class PhysicsConstraintTimeline extends ConstraintTimeline1 {
 		/** @param constraintIndex -1 for all physics constraints in the skeleton. */
 		public PhysicsConstraintTimeline (int frameCount, int bezierCount, int constraintIndex, Property property) {
-			super(frameCount, bezierCount, property.ordinal() + "|" + constraintIndex);
-			this.constraintIndex = constraintIndex;
-		}
-
-		/** The index of the physics constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is
-		 * applied, or -1 if all physics constraints in the skeleton will be changed. */
-		public int getConstraintIndex () {
-			return constraintIndex;
+			super(frameCount, bezierCount, constraintIndex, property);
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
@@ -2546,17 +2528,27 @@ public class Animation {
 		}
 	}
 
-	/** Changes a slider's {@link SliderPose#getMix()}. */
-	static public class SliderMixTimeline extends CurveTimeline1 implements ConstraintTimeline {
-		final int constraintIndex;
-
-		public SliderMixTimeline (int frameCount, int bezierCount, int constraintIndex) {
-			super(frameCount, bezierCount, Property.sliderMix.ordinal() + "|" + constraintIndex);
-			this.constraintIndex = constraintIndex;
+	/** Changes a slider's {@link SliderPose#getTime()}. */
+	static public class SliderTimeline extends ConstraintTimeline1 {
+		public SliderTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, constraintIndex, Property.sliderTime);
 		}
 
-		public int getConstraintIndex () {
-			return constraintIndex;
+		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
+			MixDirection direction, boolean appliedPose) {
+
+			var constraint = (Slider)skeleton.constraints.items[constraintIndex];
+			if (constraint.active) {
+				SliderPose pose = appliedPose ? constraint.applied : constraint.pose;
+				pose.time = getAbsoluteValue(time, alpha, blend, pose.time, constraint.data.setup.time);
+			}
+		}
+	}
+
+	/** Changes a slider's {@link SliderPose#getMix()}. */
+	static public class SliderMixTimeline extends ConstraintTimeline1 {
+		public SliderMixTimeline (int frameCount, int bezierCount, int constraintIndex) {
+			super(frameCount, bezierCount, constraintIndex, Property.sliderMix);
 		}
 
 		public void apply (Skeleton skeleton, float lastTime, float time, @Null Array<Event> events, float alpha, MixBlend blend,
