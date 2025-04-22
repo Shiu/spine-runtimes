@@ -263,7 +263,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 			tx = l * bone.a;
 			ty = l * bone.c;
 		}
-		bone.localDirty = true;
+		bone.local = skeleton.update;
 		bone.bone.resetUpdate(skeleton);
 	}
 

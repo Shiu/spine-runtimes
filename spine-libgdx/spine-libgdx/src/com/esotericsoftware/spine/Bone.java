@@ -67,8 +67,8 @@ public class Bone extends PosedActive<BoneData, BoneLocal, BonePose> {
 	}
 
 	void resetUpdate (Skeleton skeleton) {
-		if (applied.update != skeleton.update) return;
-		applied.update = 0;
+		if (applied.world != skeleton.update) return;
+		applied.world = 0;
 		Bone[] children = this.children.items;
 		for (int i = 0, n = this.children.size; i < n; i++)
 			children[i].resetUpdate(skeleton);

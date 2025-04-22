@@ -196,7 +196,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 				bone.c = sin * a + cos * c;
 				bone.d = sin * b + cos * d;
 			}
-			bone.localDirty = true;
+			bone.local = skeleton.update;
 			bone.bone.resetUpdate(skeleton);
 		}
 	}

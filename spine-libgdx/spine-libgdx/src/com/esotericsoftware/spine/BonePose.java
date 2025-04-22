@@ -15,12 +15,11 @@ public class BonePose extends BoneLocal implements Update {
 	Bone bone;
 	float a, b, worldX;
 	float c, d, worldY;
-	int update;
-	boolean localDirty;
+	int world, local;
 
 	/** Called by {@link Skeleton#updateCache()} to compute the world transform, if needed. */
 	public void update (Skeleton skeleton, Physics physics) {
-		if (update != skeleton.update) updateWorldTransform(skeleton);
+		if (world != skeleton.update) updateWorldTransform(skeleton);
 	}
 
 	/** Computes the world transform using the parent bone's applied pose and this pose. Child bones are not updated.
@@ -28,8 +27,10 @@ public class BonePose extends BoneLocal implements Update {
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
 	public void updateWorldTransform (Skeleton skeleton) {
-		update = skeleton.update;
-		localDirty = false;
+		if (local == skeleton.update)
+			updateLocalTransform(skeleton);
+		else
+			world = skeleton.update;
 
 		if (bone.parent == null) { // Root bone.
 			float sx = skeleton.scaleX, sy = skeleton.scaleY;
@@ -138,8 +139,8 @@ public class BonePose extends BoneLocal implements Update {
 	 * Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The local transform after
 	 * calling this method is equivalent to the local transform used to compute the world transform, but may not be identical. */
 	public void updateLocalTransform (Skeleton skeleton) {
-		update = skeleton.update;
-		localDirty = false;
+		world = skeleton.update;
+		local = 0;
 
 		if (bone.parent == null) {
 			x = worldX - skeleton.x;
@@ -220,8 +221,8 @@ public class BonePose extends BoneLocal implements Update {
 
 	/** When true, the world transform has been modified and the local transform no longer matches. Call
 	 * {@link #updateLocalTransform(Skeleton)} before using the local transform. */
-	public boolean isLocalDirty () {
-		return localDirty;
+	public boolean isLocalDirty (Skeleton skeleton) {
+		return local == skeleton.update;
 	}
 
 	/** Part of the world transform matrix for the X axis. If changed, {@link #updateLocalTransform(Skeleton)} should be called. */

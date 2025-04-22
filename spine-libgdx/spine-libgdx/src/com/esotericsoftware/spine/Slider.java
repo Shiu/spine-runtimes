@@ -65,7 +65,7 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 				if (timelines[i] instanceof BoneTimeline timeline) {
 					Bone bone = bones[timeline.getBoneIndex()];
 					bone.resetUpdate(skeleton);
-					if (bone.applied.localDirty) bone.applied.updateLocalTransform(skeleton);
+					if (bone.applied.local == skeleton.update) bone.applied.updateLocalTransform(skeleton);
 				}
 			}
 		}
