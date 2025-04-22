@@ -157,8 +157,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 					z = Math.max(0, 1 - a / t);
 					if (x) bone.worldX += (xOffset - xLag * z) * mix * data.x;
 					if (y) bone.worldY += (yOffset - yLag * z) * mix * data.y;
-				} else
-					z = Math.max(0, 1 - a / t);
+				}
 				if (rotateOrShearX || scaleX) {
 					float ca = atan2(bone.c, bone.a), c, s, mr = 0, dx = cx - bone.worldX, dy = cy - bone.worldY;
 					if (dx > qx)
@@ -212,6 +211,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 						rotateLag = rotateOffset - rs;
 						scaleLag = scaleOffset - ss;
 					}
+					z = Math.max(0, 1 - a / t);
 				}
 				remaining = a;
 			}
