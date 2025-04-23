@@ -59,6 +59,7 @@
 #include "core/variant/array.h"
 #include "scene/resources/mesh.h"
 #include "servers/rendering_server.h"
+#include "scene/resources/canvas_item_material.h"
 #if VERSION_MINOR > 0
 #include "editor/editor_interface.h"
 #endif
@@ -1222,7 +1223,9 @@ void SpineSprite::draw() {
 	float inverse_zoom = 1 / get_viewport()->get_global_canvas_transform().get_scale().x * editor_scale;
 	Vector<String> hover_text_lines;
 	if (hovered_slot) {
-		hover_text_lines.push_back(String("Slot: ") + hovered_slot->getData().getName().buffer());
+		String name;
+		name.parse_utf8(hovered_slot->getData().getName().buffer());
+		hover_text_lines.push_back(String("Slot: ") + name);
 	}
 
 	if (hovered_bone) {
@@ -1230,7 +1233,9 @@ void SpineSprite::draw() {
 		debug_bones_thickness *= 1.1;
 		draw_bone(hovered_bone, Color(debug_bones_color.r, debug_bones_color.g, debug_bones_color.b, 1));
 		debug_bones_thickness = thickness;
-		hover_text_lines.push_back(String("Bone: ") + hovered_bone->getData().getName().buffer());
+		String name;
+		name.parse_utf8(hovered_bone->getData().getName().buffer());
+		hover_text_lines.push_back(String("Bone: ") + name);
 	}
 
 	auto global_scale = get_global_scale();
