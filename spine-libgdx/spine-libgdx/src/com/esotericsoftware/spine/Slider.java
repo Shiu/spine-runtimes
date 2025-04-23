@@ -71,8 +71,8 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 		}
 
 		SliderPose pose = applied;
-		data.animation.apply(skeleton, pose.time, pose.time, false, null, pose.mix, data.additive ? MixBlend.add : MixBlend.replace,
-			MixDirection.in, true);
+		data.animation.apply(skeleton, pose.time, pose.time, data.loop, null, pose.mix,
+			data.additive ? MixBlend.add : MixBlend.replace, MixDirection.in, true);
 	}
 
 	void sort (Skeleton skeleton) {

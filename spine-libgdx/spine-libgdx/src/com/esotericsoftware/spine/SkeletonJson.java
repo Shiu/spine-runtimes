@@ -408,6 +408,7 @@ public class SkeletonJson extends SkeletonLoader {
 			case "slider" -> {
 				var data = new SliderData(name);
 				data.skinRequired = skinRequired;
+				data.loop = constraintMap.getBoolean("loop", false);
 				data.additive = constraintMap.getBoolean("additive", false);
 				data.setup.time = constraintMap.getFloat("time", 0);
 				data.setup.mix = constraintMap.getFloat("mix", 1);

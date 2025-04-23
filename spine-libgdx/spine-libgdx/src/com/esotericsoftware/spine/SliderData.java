@@ -34,7 +34,7 @@ package com.esotericsoftware.spine;
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
 public class SliderData extends ConstraintData<Slider, SliderPose> {
 	Animation animation;
-	boolean additive;
+	boolean additive, loop;
 
 	public SliderData (String name) {
 		super(name, new SliderPose());
@@ -58,5 +58,13 @@ public class SliderData extends ConstraintData<Slider, SliderPose> {
 
 	public void setAdditive (boolean additive) {
 		this.additive = additive;
+	}
+
+	public boolean getLoop () {
+		return loop;
+	}
+
+	public void setLoop (boolean loop) {
+		this.loop = loop;
 	}
 }
