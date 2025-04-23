@@ -369,8 +369,8 @@ export class SpineGameObject extends DepthMixin(
 			tx = transform.tx,
 			ty = transform.ty;
 
-		let offsetX = (src.offsetX - src.displayOriginX) * src.scaleX;
-		let offsetY = (src.offsetY - src.displayOriginY) * src.scaleY;
+		let offsetX = src.offsetX - src.displayOriginX;
+		let offsetY = src.offsetY - src.displayOriginY;
 
 		sceneRenderer.drawSkeleton(
 			src.skeleton,
@@ -379,10 +379,10 @@ export class SpineGameObject extends DepthMixin(
 			-1,
 			(vertices, numVertices, stride) => {
 				for (let i = 0; i < numVertices; i += stride) {
-					let vx = vertices[i];
-					let vy = vertices[i + 1];
-					vertices[i] = vx * a + vy * c + tx + offsetX;
-					vertices[i + 1] = vx * b + vy * d + ty + offsetY;
+					let vx = vertices[i] + offsetX;
+					let vy = vertices[i + 1] + offsetY;
+					vertices[i] = vx * a + vy * c + tx;
+					vertices[i + 1] = vx * b + vy * d + ty;
 				}
 			}
 		);
