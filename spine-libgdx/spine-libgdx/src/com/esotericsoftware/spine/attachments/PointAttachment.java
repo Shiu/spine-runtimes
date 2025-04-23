@@ -34,7 +34,7 @@ import static com.esotericsoftware.spine.utils.SpineUtils.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
-import com.esotericsoftware.spine.Bone;
+import com.esotericsoftware.spine.BonePose;
 
 /** An attachment which is a single point and a rotation. This can be used to spawn projectiles, particles, etc. A bone can be
  * used in similar ways, but a PointAttachment is slightly less expensive to compute and can be hidden, shown, and placed in a
@@ -90,13 +90,13 @@ public class PointAttachment extends Attachment {
 		return color;
 	}
 
-	public Vector2 computeWorldPosition (Bone bone, Vector2 point) {
+	public Vector2 computeWorldPosition (BonePose bone, Vector2 point) {
 		point.x = x * bone.getA() + y * bone.getB() + bone.getWorldX();
 		point.y = x * bone.getC() + y * bone.getD() + bone.getWorldY();
 		return point;
 	}
 
-	public float computeWorldRotation (Bone bone) {
+	public float computeWorldRotation (BonePose bone) {
 		float r = rotation * degRad, cos = cos(r), sin = sin(r);
 		float x = cos * bone.getA() + sin * bone.getB();
 		float y = cos * bone.getC() + sin * bone.getD();

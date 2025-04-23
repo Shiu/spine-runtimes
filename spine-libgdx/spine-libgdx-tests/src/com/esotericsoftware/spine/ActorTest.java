@@ -37,7 +37,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.utils.SkeletonActor;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
 

@@ -32,6 +32,8 @@ package com.esotericsoftware.spine;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Field;
 
+import org.lwjgl.system.Configuration;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -52,9 +54,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.esotericsoftware.spine.Animation.MixBlend;
 import com.esotericsoftware.spine.AnimationState.AnimationStateAdapter;
 import com.esotericsoftware.spine.AnimationState.TrackEntry;
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
-import org.lwjgl.system.Configuration;
 
 import java.awt.Toolkit;
 
@@ -196,6 +196,14 @@ public class SkeletonViewer extends ApplicationAdapter {
 		return true;
 	}
 
+	void clearSkeleton () {
+		skeleton = null;
+		state = null;
+		ui.skinList.clearItems();
+		ui.animationList.clearItems();
+		ui.statusLabel.setText("");
+	}
+
 	void setAnimation (boolean first) {
 		if (!ui.prefsLoaded) return;
 		if (ui.animationList.getSelected() == null) return;
@@ -260,17 +268,24 @@ public class SkeletonViewer extends ApplicationAdapter {
 			skeleton.setScale(scaleX, scaleY);
 
 			if (ui.setupPoseButton.isChecked())
-				skeleton.setToSetupPose();
+				skeleton.setupPose();
 			else if (ui.bonesSetupPoseButton.isChecked())
-				skeleton.setBonesToSetupPose();
+				skeleton.setupPoseBones();
 			else if (ui.slotsSetupPoseButton.isChecked()) //
-				skeleton.setSlotsToSetupPose();
+				skeleton.setupPoseSlots();
 
 			delta = Math.min(delta, 0.032f) * ui.speedSlider.getValue();
-			state.update(delta);
-			state.apply(skeleton);
-			skeleton.update(delta);
-			skeleton.updateWorldTransform(Physics.update);
+			try {
+				state.update(delta);
+				state.apply(skeleton);
+				skeleton.update(delta);
+				skeleton.updateWorldTransform(Physics.update);
+			} catch (Throwable ex) {
+				ex.printStackTrace();
+				ui.toast("Error updating skeleton.");
+				clearSkeleton();
+				return;
+			}
 
 			batch.begin();
 			renderer.draw(batch, skeleton);

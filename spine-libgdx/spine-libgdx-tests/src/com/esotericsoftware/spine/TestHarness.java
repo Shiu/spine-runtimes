@@ -39,8 +39,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
-
 /** Boilerplate for basic skeleton rendering, used for various testing. */
 public class TestHarness extends ApplicationAdapter {
 	static String JSON = "raptor/raptor-pro.json";

@@ -36,8 +36,8 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.ShortArray;
 
 class Triangulator {
-	private final Array<FloatArray> convexPolygons = new Array(false, 16);
-	private final Array<ShortArray> convexPolygonsIndices = new Array(false, 16);
+	private final Array<FloatArray> convexPolygons = new Array(false, 8, FloatArray[]::new);
+	private final Array<ShortArray> convexPolygonsIndices = new Array(false, 8, ShortArray[]::new);
 
 	private final ShortArray indicesArray = new ShortArray();
 	private final BooleanArray isConcaveArray = new BooleanArray();
@@ -204,14 +204,15 @@ class Triangulator {
 		}
 
 		// Go through the list of polygons and try to merge the remaining triangles with the found triangle fans.
-		Object[] convexPolygonsIndicesItems = convexPolygonsIndices.items, convexPolygonsItems = convexPolygons.items;
+		ShortArray[] convexPolygonsIndicesItems = convexPolygonsIndices.items;
+		FloatArray[] convexPolygonsItems = convexPolygons.items;
 		for (int i = 0, n = convexPolygons.size; i < n; i++) {
-			polygonIndices = (ShortArray)convexPolygonsIndicesItems[i];
+			polygonIndices = convexPolygonsIndicesItems[i];
 			if (polygonIndices.size == 0) continue;
 			int firstIndex = polygonIndices.first();
-			int lastIndex = polygonIndices.get(polygonIndices.size - 1);
+			int lastIndex = polygonIndices.items[polygonIndices.size - 1];
 
-			polygon = (FloatArray)convexPolygonsItems[i];
+			polygon = convexPolygonsItems[i];
 			int o = polygon.size - 4;
 			float[] p = polygon.items;
 			float prevPrevX = p[o], prevPrevY = p[o + 1];
@@ -222,14 +223,14 @@ class Triangulator {
 
 			for (int ii = 0; ii < n; ii++) {
 				if (ii == i) continue;
-				var otherIndices = (ShortArray)convexPolygonsIndicesItems[ii];
+				ShortArray otherIndices = convexPolygonsIndicesItems[ii];
 				if (otherIndices.size != 3) continue;
 				int otherFirstIndex = otherIndices.first();
-				int otherSecondIndex = otherIndices.get(1);
-				int otherLastIndex = otherIndices.get(2);
+				int otherSecondIndex = otherIndices.items[1];
+				int otherLastIndex = otherIndices.items[2];
 
-				var otherPoly = (FloatArray)convexPolygonsItems[ii];
-				float x3 = otherPoly.get(otherPoly.size - 2), y3 = otherPoly.get(otherPoly.size - 1);
+				FloatArray otherPoly = convexPolygonsItems[ii];
+				float x3 = otherPoly.items[otherPoly.size - 2], y3 = otherPoly.items[otherPoly.size - 1];
 
 				if (otherFirstIndex != firstIndex || otherSecondIndex != lastIndex) continue;
 				int winding1 = winding(prevPrevX, prevPrevY, prevX, prevY, x3, y3);
@@ -251,7 +252,7 @@ class Triangulator {
 
 		// Remove empty polygons that resulted from the merge step above.
 		for (int i = convexPolygons.size - 1; i >= 0; i--) {
-			polygon = (FloatArray)convexPolygonsItems[i];
+			polygon = convexPolygonsItems[i];
 			if (polygon.size == 0) {
 				convexPolygons.removeIndex(i);
 				polygonPool.free(polygon);
@@ -259,7 +260,6 @@ class Triangulator {
 				polygonIndicesPool.free(polygonIndices);
 			}
 		}
-
 		return convexPolygons;
 	}
 

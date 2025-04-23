@@ -61,7 +61,7 @@ public class SkeletonActorPool extends Pool<SkeletonActor> {
 		this.skeletonData = skeletonData;
 		this.stateData = stateData;
 
-		obtained = new Array(false, initialCapacity);
+		obtained = new Array(false, initialCapacity, SkeletonActor[]::new);
 
 		skeletonPool = new Pool<Skeleton>(initialCapacity, max) {
 			protected Skeleton newObject () {
@@ -73,7 +73,7 @@ public class SkeletonActorPool extends Pool<SkeletonActor> {
 				skeleton.setScale(1, 1);
 				skeleton.setSkin((Skin)null);
 				skeleton.setSkin(SkeletonActorPool.this.skeletonData.getDefaultSkin());
-				skeleton.setToSetupPose();
+				skeleton.setupPose();
 			}
 		};
 
@@ -91,10 +91,10 @@ public class SkeletonActorPool extends Pool<SkeletonActor> {
 
 	/** Each obtained skeleton actor that is no longer playing an animation is removed from the stage and returned to the pool. */
 	public void freeComplete () {
-		Object[] obtained = this.obtained.items;
+		SkeletonActor[] obtained = this.obtained.items;
 		outer:
 		for (int i = this.obtained.size - 1; i >= 0; i--) {
-			var actor = (SkeletonActor)obtained[i];
+			SkeletonActor actor = obtained[i];
 			Array<TrackEntry> tracks = actor.state.getTracks();
 			for (int ii = 0, nn = tracks.size; ii < nn; ii++)
 				if (tracks.get(ii) != null) continue outer;

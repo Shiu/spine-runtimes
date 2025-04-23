@@ -34,8 +34,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import com.esotericsoftware.spine.AnimationState;
+import com.esotericsoftware.spine.Physics;
 import com.esotericsoftware.spine.Skeleton;
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.SkeletonRenderer;
 
 /** A scene2d actor that draws a skeleton. */

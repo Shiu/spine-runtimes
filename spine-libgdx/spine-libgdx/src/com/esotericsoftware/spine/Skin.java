@@ -44,8 +44,8 @@ import com.esotericsoftware.spine.attachments.MeshAttachment;
 public class Skin {
 	final String name;
 	final OrderedSet<SkinEntry> attachments = new OrderedSet();
-	final Array<BoneData> bones = new Array(0);
-	final Array<ConstraintData> constraints = new Array(0);
+	final Array<BoneData> bones = new Array(true, 0, BoneData[]::new);
+	final Array<ConstraintData> constraints = new Array(true, 0, ConstraintData[]::new);
 	private final SkinEntry lookup = new SkinEntry(0, "", null);
 
 	// Nonessential.
@@ -154,12 +154,11 @@ public class Skin {
 
 	/** Attach each attachment in this skin if the corresponding attachment in the old skin is currently attached. */
 	void attachAll (Skeleton skeleton, Skin oldSkin) {
-		Object[] slots = skeleton.slots.items;
+		Slot[] slots = skeleton.slots.items;
 		for (SkinEntry entry : oldSkin.attachments.orderedItems()) {
-			int slotIndex = entry.slotIndex;
-			var slot = (Slot)slots[slotIndex];
+			SlotPose slot = slots[entry.slotIndex].pose;
 			if (slot.attachment == entry.attachment) {
-				Attachment attachment = getAttachment(slotIndex, entry.name);
+				Attachment attachment = getAttachment(entry.slotIndex, entry.name);
 				if (attachment != null) slot.setAttachment(attachment);
 			}
 		}

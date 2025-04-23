@@ -45,9 +45,9 @@ import com.badlogic.gdx.utils.SerializationException;
 
 import com.esotericsoftware.spine.Animation.AlphaTimeline;
 import com.esotericsoftware.spine.Animation.AttachmentTimeline;
+import com.esotericsoftware.spine.Animation.BoneTimeline2;
 import com.esotericsoftware.spine.Animation.CurveTimeline;
 import com.esotericsoftware.spine.Animation.CurveTimeline1;
-import com.esotericsoftware.spine.Animation.CurveTimeline2;
 import com.esotericsoftware.spine.Animation.DeformTimeline;
 import com.esotericsoftware.spine.Animation.DrawOrderTimeline;
 import com.esotericsoftware.spine.Animation.EventTimeline;
@@ -76,6 +76,8 @@ import com.esotericsoftware.spine.Animation.SequenceTimeline;
 import com.esotericsoftware.spine.Animation.ShearTimeline;
 import com.esotericsoftware.spine.Animation.ShearXTimeline;
 import com.esotericsoftware.spine.Animation.ShearYTimeline;
+import com.esotericsoftware.spine.Animation.SliderMixTimeline;
+import com.esotericsoftware.spine.Animation.SliderTimeline;
 import com.esotericsoftware.spine.Animation.Timeline;
 import com.esotericsoftware.spine.Animation.TransformConstraintTimeline;
 import com.esotericsoftware.spine.Animation.TranslateTimeline;
@@ -137,6 +139,12 @@ public class SkeletonBinary extends SkeletonLoader {
 	static public final int SLOT_RGB2 = 4;
 	static public final int SLOT_ALPHA = 5;
 
+	static public final int CONSTRAINT_IK = 0;
+	static public final int CONSTRAINT_PATH = 1;
+	static public final int CONSTRAINT_TRANSFORM = 2;
+	static public final int CONSTRAINT_PHYSICS = 3;
+	static public final int CONSTRAINT_SLIDER = 4;
+
 	static public final int ATTACHMENT_DEFORM = 0;
 	static public final int ATTACHMENT_SEQUENCE = 1;
 
@@ -153,11 +161,14 @@ public class SkeletonBinary extends SkeletonLoader {
 	static public final int PHYSICS_MIX = 7;
 	static public final int PHYSICS_RESET = 8;
 
+	static public final int SLIDER_TIME = 0;
+	static public final int SLIDER_MIX = 1;
+
 	static public final int CURVE_LINEAR = 0;
 	static public final int CURVE_STEPPED = 1;
 	static public final int CURVE_BEZIER = 2;
 
-	private final Array<LinkedMesh> linkedMeshes = new Array();
+	private final Array<LinkedMesh> linkedMeshes = new Array(true, 8, LinkedMesh[]::new);
 
 	public SkeletonBinary (AttachmentLoader attachmentLoader) {
 		super(attachmentLoader);
@@ -212,20 +223,21 @@ public class SkeletonBinary extends SkeletonLoader {
 				o[i] = input.readString();
 
 			// Bones.
-			Object[] bones = skeletonData.bones.setSize(n = input.readInt(true));
+			BoneData[] bones = skeletonData.bones.setSize(n = input.readInt(true));
 			for (int i = 0; i < n; i++) {
 				String name = input.readString();
-				BoneData parent = i == 0 ? null : (BoneData)bones[input.readInt(true)];
+				BoneData parent = i == 0 ? null : bones[input.readInt(true)];
 				var data = new BoneData(i, name, parent);
-				data.rotation = input.readFloat();
-				data.x = input.readFloat() * scale;
-				data.y = input.readFloat() * scale;
-				data.scaleX = input.readFloat();
-				data.scaleY = input.readFloat();
-				data.shearX = input.readFloat();
-				data.shearY = input.readFloat();
+				BoneLocal setup = data.setup;
+				setup.rotation = input.readFloat();
+				setup.x = input.readFloat() * scale;
+				setup.y = input.readFloat() * scale;
+				setup.scaleX = input.readFloat();
+				setup.scaleY = input.readFloat();
+				setup.shearX = input.readFloat();
+				setup.shearY = input.readFloat();
+				setup.inherit = Inherit.values[input.readByte()];
 				data.length = input.readFloat() * scale;
-				data.inherit = Inherit.values[input.readByte()];
 				data.skinRequired = input.readBoolean();
 				if (nonessential) {
 					Color.rgba8888ToColor(data.color, input.readInt());
@@ -236,15 +248,15 @@ public class SkeletonBinary extends SkeletonLoader {
 			}
 
 			// Slots.
-			Object[] slots = skeletonData.slots.setSize(n = input.readInt(true));
+			SlotData[] slots = skeletonData.slots.setSize(n = input.readInt(true));
 			for (int i = 0; i < n; i++) {
 				String slotName = input.readString();
-				var boneData = (BoneData)bones[input.readInt(true)];
+				var boneData = bones[input.readInt(true)];
 				var data = new SlotData(i, slotName, boneData);
-				Color.rgba8888ToColor(data.color, input.readInt());
+				Color.rgba8888ToColor(data.setup.color, input.readInt());
 
 				int darkColor = input.readInt();
-				if (darkColor != -1) Color.rgb888ToColor(data.darkColor = new Color(), darkColor);
+				if (darkColor != -1) Color.rgb888ToColor(data.setup.darkColor = new Color(), darkColor);
 
 				data.attachmentName = input.readStringRef();
 				data.blendMode = BlendMode.values[input.readInt(true)];
@@ -252,160 +264,167 @@ public class SkeletonBinary extends SkeletonLoader {
 				slots[i] = data;
 			}
 
-			// IK constraints.
-			o = skeletonData.ikConstraints.setSize(n = input.readInt(true));
-			for (int i = 0, nn; i < n; i++) {
-				var data = new IkConstraintData(input.readString());
-				data.order = input.readInt(true);
-				Object[] constraintBones = data.bones.setSize(nn = input.readInt(true));
-				for (int ii = 0; ii < nn; ii++)
-					constraintBones[ii] = bones[input.readInt(true)];
-				data.target = (BoneData)bones[input.readInt(true)];
-				int flags = input.read();
-				data.skinRequired = (flags & 1) != 0;
-				data.bendDirection = (flags & 2) != 0 ? 1 : -1;
-				data.compress = (flags & 4) != 0;
-				data.stretch = (flags & 8) != 0;
-				data.uniform = (flags & 16) != 0;
-				if ((flags & 32) != 0) data.mix = (flags & 64) != 0 ? input.readFloat() : 1;
-				if ((flags & 128) != 0) data.softness = input.readFloat() * scale;
-				o[i] = data;
-			}
-
-			// Transform constraints.
-			o = skeletonData.transformConstraints.setSize(n = input.readInt(true));
-			for (int i = 0, nn; i < n; i++) {
-				var data = new TransformConstraintData(input.readString());
-				data.order = input.readInt(true);
-				Object[] constraintBones = data.bones.setSize(nn = input.readInt(true));
-				for (int ii = 0; ii < nn; ii++)
-					constraintBones[ii] = bones[input.readInt(true)];
-				data.source = (BoneData)bones[input.readInt(true)];
-				int flags = input.read();
-				data.skinRequired = (flags & 1) != 0;
-				data.localSource = (flags & 2) != 0;
-				data.localTarget = (flags & 4) != 0;
-				data.additive = (flags & 8) != 0;
-				data.clamp = (flags & 16) != 0;
-				Object[] froms = data.properties.setSize(nn = flags >> 5);
-				for (int ii = 0, tn; ii < nn; ii++) {
-					float fromScale = 1;
-					FromProperty from;
-					switch (input.readByte()) {
-					case 0 -> from = new FromRotate();
-					case 1 -> {
-						from = new FromX();
-						fromScale = scale;
-					}
-					case 2 -> {
-						from = new FromY();
-						fromScale = scale;
-					}
-					case 3 -> from = new FromScaleX();
-					case 4 -> from = new FromScaleY();
-					case 5 -> from = new FromShearY();
-					default -> from = null;
-					}
-					from.offset = input.readFloat() * fromScale;
-					Object[] tos = from.to.setSize(tn = input.readByte());
-					for (int t = 0; t < tn; t++) {
-						float toScale = 1;
-						ToProperty to;
+			// Constraints.
+			int constraintCount = input.readInt(true);
+			ConstraintData[] constraints = skeletonData.constraints.setSize(constraintCount);
+			for (int i = 0; i < constraintCount; i++) {
+				String name = input.readString();
+				int nn = input.readInt(true);
+				switch (input.readByte()) {
+				case CONSTRAINT_IK -> {
+					var data = new IkConstraintData(name);
+					BoneData[] constraintBones = data.bones.setSize(nn);
+					for (int ii = 0; ii < nn; ii++)
+						constraintBones[ii] = bones[input.readInt(true)];
+					data.target = bones[input.readInt(true)];
+					int flags = input.read();
+					data.skinRequired = (flags & 1) != 0;
+					data.uniform = (flags & 2) != 0;
+					IkConstraintPose setup = data.setup;
+					setup.bendDirection = (flags & 4) != 0 ? 1 : -1;
+					setup.compress = (flags & 8) != 0;
+					setup.stretch = (flags & 16) != 0;
+					if ((flags & 32) != 0) setup.mix = (flags & 64) != 0 ? input.readFloat() : 1;
+					if ((flags & 128) != 0) setup.softness = input.readFloat() * scale;
+					constraints[i] = data;
+				}
+				case CONSTRAINT_TRANSFORM -> {
+					var data = new TransformConstraintData(name);
+					BoneData[] constraintBones = data.bones.setSize(nn);
+					for (int ii = 0; ii < nn; ii++)
+						constraintBones[ii] = bones[input.readInt(true)];
+					data.source = bones[input.readInt(true)];
+					int flags = input.read();
+					data.skinRequired = (flags & 1) != 0;
+					data.localSource = (flags & 2) != 0;
+					data.localTarget = (flags & 4) != 0;
+					data.additive = (flags & 8) != 0;
+					data.clamp = (flags & 16) != 0;
+					FromProperty[] froms = data.properties.setSize(nn = flags >> 5);
+					for (int ii = 0, tn; ii < nn; ii++) {
+						float fromScale = 1;
+						FromProperty from;
 						switch (input.readByte()) {
-						case 0 -> to = new ToRotate();
+						case 0 -> from = new FromRotate();
 						case 1 -> {
-							to = new ToX();
-							toScale = scale;
+							from = new FromX();
+							fromScale = scale;
 						}
 						case 2 -> {
-							to = new ToY();
-							toScale = scale;
+							from = new FromY();
+							fromScale = scale;
 						}
-						case 3 -> to = new ToScaleX();
-						case 4 -> to = new ToScaleY();
-						case 5 -> to = new ToShearY();
-						default -> to = null;
+						case 3 -> from = new FromScaleX();
+						case 4 -> from = new FromScaleY();
+						case 5 -> from = new FromShearY();
+						default -> from = null;
 						}
-						to.offset = input.readFloat() * toScale;
-						to.max = input.readFloat() * toScale;
-						to.scale = input.readFloat() * toScale / fromScale;
-						tos[t] = to;
+						from.offset = input.readFloat() * fromScale;
+						ToProperty[] tos = from.to.setSize(tn = input.readByte());
+						for (int t = 0; t < tn; t++) {
+							float toScale = 1;
+							ToProperty to;
+							switch (input.readByte()) {
+							case 0 -> to = new ToRotate();
+							case 1 -> {
+								to = new ToX();
+								toScale = scale;
+							}
+							case 2 -> {
+								to = new ToY();
+								toScale = scale;
+							}
+							case 3 -> to = new ToScaleX();
+							case 4 -> to = new ToScaleY();
+							case 5 -> to = new ToShearY();
+							default -> to = null;
+							}
+							to.offset = input.readFloat() * toScale;
+							to.max = input.readFloat() * toScale;
+							to.scale = input.readFloat() * toScale / fromScale;
+							tos[t] = to;
+						}
+						froms[ii] = from;
 					}
-					froms[ii] = from;
+					flags = input.read();
+					if ((flags & 1) != 0) data.offsetRotation = input.readFloat();
+					if ((flags & 2) != 0) data.offsetX = input.readFloat() * scale;
+					if ((flags & 4) != 0) data.offsetY = input.readFloat() * scale;
+					if ((flags & 8) != 0) data.offsetScaleX = input.readFloat();
+					if ((flags & 16) != 0) data.offsetScaleY = input.readFloat();
+					if ((flags & 32) != 0) data.offsetShearY = input.readFloat();
+					flags = input.read();
+					TransformConstraintPose setup = data.setup;
+					if ((flags & 1) != 0) setup.mixRotate = input.readFloat();
+					if ((flags & 2) != 0) setup.mixX = input.readFloat();
+					if ((flags & 4) != 0) setup.mixY = input.readFloat();
+					if ((flags & 8) != 0) setup.mixScaleX = input.readFloat();
+					if ((flags & 16) != 0) setup.mixScaleY = input.readFloat();
+					if ((flags & 32) != 0) setup.mixShearY = input.readFloat();
+					constraints[i] = data;
 				}
-				flags = input.read();
-				if ((flags & 1) != 0) data.offsetRotation = input.readFloat();
-				if ((flags & 2) != 0) data.offsetX = input.readFloat() * scale;
-				if ((flags & 4) != 0) data.offsetY = input.readFloat() * scale;
-				if ((flags & 8) != 0) data.offsetScaleX = input.readFloat();
-				if ((flags & 16) != 0) data.offsetScaleY = input.readFloat();
-				if ((flags & 32) != 0) data.offsetShearY = input.readFloat();
-				flags = input.read();
-				if ((flags & 1) != 0) data.mixRotate = input.readFloat();
-				if ((flags & 2) != 0) data.mixX = input.readFloat();
-				if ((flags & 4) != 0) data.mixY = input.readFloat();
-				if ((flags & 8) != 0) data.mixScaleX = input.readFloat();
-				if ((flags & 16) != 0) data.mixScaleY = input.readFloat();
-				if ((flags & 32) != 0) data.mixShearY = input.readFloat();
-				o[i] = data;
-			}
-
-			// Path constraints.
-			o = skeletonData.pathConstraints.setSize(n = input.readInt(true));
-			for (int i = 0, nn; i < n; i++) {
-				var data = new PathConstraintData(input.readString());
-				data.order = input.readInt(true);
-				data.skinRequired = input.readBoolean();
-				Object[] constraintBones = data.bones.setSize(nn = input.readInt(true));
-				for (int ii = 0; ii < nn; ii++)
-					constraintBones[ii] = bones[input.readInt(true)];
-				data.slot = (SlotData)slots[input.readInt(true)];
-				int flags = input.read();
-				data.positionMode = PositionMode.values[flags & 1];
-				data.spacingMode = SpacingMode.values[(flags >> 1) & 3];
-				data.rotateMode = RotateMode.values[(flags >> 3) & 3];
-				if ((flags & 128) != 0) data.offsetRotation = input.readFloat();
-				data.position = input.readFloat();
-				if (data.positionMode == PositionMode.fixed) data.position *= scale;
-				data.spacing = input.readFloat();
-				if (data.spacingMode == SpacingMode.length || data.spacingMode == SpacingMode.fixed) data.spacing *= scale;
-				data.mixRotate = input.readFloat();
-				data.mixX = input.readFloat();
-				data.mixY = input.readFloat();
-				o[i] = data;
-			}
-
-			// Physics constraints.
-			o = skeletonData.physicsConstraints.setSize(n = input.readInt(true));
-			for (int i = 0; i < n; i++) {
-				var data = new PhysicsConstraintData(input.readString());
-				data.order = input.readInt(true);
-				data.bone = (BoneData)bones[input.readInt(true)];
-				int flags = input.read();
-				data.skinRequired = (flags & 1) != 0;
-				if ((flags & 2) != 0) data.x = input.readFloat();
-				if ((flags & 4) != 0) data.y = input.readFloat();
-				if ((flags & 8) != 0) data.rotate = input.readFloat();
-				if ((flags & 16) != 0) data.scaleX = input.readFloat();
-				if ((flags & 32) != 0) data.shearX = input.readFloat();
-				data.limit = ((flags & 64) != 0 ? input.readFloat() : 5000) * scale;
-				data.step = 1f / input.readUnsignedByte();
-				data.inertia = input.readFloat();
-				data.strength = input.readFloat();
-				data.damping = input.readFloat();
-				data.massInverse = (flags & 128) != 0 ? input.readFloat() : 1;
-				data.wind = input.readFloat();
-				data.gravity = input.readFloat();
-				flags = input.read();
-				if ((flags & 1) != 0) data.inertiaGlobal = true;
-				if ((flags & 2) != 0) data.strengthGlobal = true;
-				if ((flags & 4) != 0) data.dampingGlobal = true;
-				if ((flags & 8) != 0) data.massGlobal = true;
-				if ((flags & 16) != 0) data.windGlobal = true;
-				if ((flags & 32) != 0) data.gravityGlobal = true;
-				if ((flags & 64) != 0) data.mixGlobal = true;
-				data.mix = (flags & 128) != 0 ? input.readFloat() : 1;
-				o[i] = data;
+				case CONSTRAINT_PATH -> {
+					var data = new PathConstraintData(name);
+					BoneData[] constraintBones = data.bones.setSize(nn);
+					for (int ii = 0; ii < nn; ii++)
+						constraintBones[ii] = bones[input.readInt(true)];
+					data.slot = slots[input.readInt(true)];
+					int flags = input.read();
+					data.skinRequired = (flags & 1) != 0;
+					data.positionMode = PositionMode.values[flags & 2];
+					data.spacingMode = SpacingMode.values[(flags >> 2) & 3];
+					data.rotateMode = RotateMode.values[(flags >> 4) & 3];
+					if ((flags & 128) != 0) data.offsetRotation = input.readFloat();
+					PathConstraintPose setup = data.setup;
+					setup.position = input.readFloat();
+					if (data.positionMode == PositionMode.fixed) setup.position *= scale;
+					setup.spacing = input.readFloat();
+					if (data.spacingMode == SpacingMode.length || data.spacingMode == SpacingMode.fixed) setup.spacing *= scale;
+					setup.mixRotate = input.readFloat();
+					setup.mixX = input.readFloat();
+					setup.mixY = input.readFloat();
+					constraints[i] = data;
+				}
+				case CONSTRAINT_PHYSICS -> {
+					var data = new PhysicsConstraintData(name);
+					data.bone = bones[nn];
+					int flags = input.read();
+					data.skinRequired = (flags & 1) != 0;
+					if ((flags & 2) != 0) data.x = input.readFloat();
+					if ((flags & 4) != 0) data.y = input.readFloat();
+					if ((flags & 8) != 0) data.rotate = input.readFloat();
+					if ((flags & 16) != 0) data.scaleX = input.readFloat();
+					if ((flags & 32) != 0) data.shearX = input.readFloat();
+					data.limit = ((flags & 64) != 0 ? input.readFloat() : 5000) * scale;
+					data.step = 1f / input.readUnsignedByte();
+					PhysicsConstraintPose setup = data.setup;
+					setup.inertia = input.readFloat();
+					setup.strength = input.readFloat();
+					setup.damping = input.readFloat();
+					setup.massInverse = (flags & 128) != 0 ? input.readFloat() : 1;
+					setup.wind = input.readFloat();
+					setup.gravity = input.readFloat();
+					flags = input.read();
+					if ((flags & 1) != 0) data.inertiaGlobal = true;
+					if ((flags & 2) != 0) data.strengthGlobal = true;
+					if ((flags & 4) != 0) data.dampingGlobal = true;
+					if ((flags & 8) != 0) data.massGlobal = true;
+					if ((flags & 16) != 0) data.windGlobal = true;
+					if ((flags & 32) != 0) data.gravityGlobal = true;
+					if ((flags & 64) != 0) data.mixGlobal = true;
+					setup.mix = (flags & 128) != 0 ? input.readFloat() : 1;
+					constraints[i] = data;
+				}
+				case CONSTRAINT_SLIDER -> {
+					var data = new SliderData(name);
+					data.skinRequired = (nn & 1) != 0;
+					data.loop = (nn & 2) != 0;
+					data.additive = (nn & 4) != 0;
+					if ((nn & 8) != 0) data.setup.mix = (nn & 16) != 0 ? input.readFloat() : 1;
+					if ((nn & 32) != 0) data.setup.time = input.readFloat();
+					constraints[i] = data;
+				}
+				}
 			}
 
 			// Default skin.
@@ -425,10 +444,10 @@ public class SkeletonBinary extends SkeletonLoader {
 
 			// Linked meshes.
 			n = linkedMeshes.size;
-			Object[] items = linkedMeshes.items;
+			LinkedMesh[] items = linkedMeshes.items;
 			for (int i = 0; i < n; i++) {
-				var linkedMesh = (LinkedMesh)items[i];
-				Skin skin = skeletonData.skins.get(linkedMesh.skinIndex);
+				LinkedMesh linkedMesh = items[i];
+				Skin skin = skeletonData.skins.items[linkedMesh.skinIndex];
 				Attachment parent = skin.getAttachment(linkedMesh.slotIndex, linkedMesh.parent);
 				if (parent == null) throw new SerializationException("Parent mesh not found: " + linkedMesh.parent);
 				linkedMesh.mesh.setTimelineAttachment(linkedMesh.inheritTimelines ? (VertexAttachment)parent : linkedMesh.mesh);
@@ -453,10 +472,12 @@ public class SkeletonBinary extends SkeletonLoader {
 			}
 
 			// Animations.
-			o = skeletonData.animations.setSize(n = input.readInt(true));
+			Animation[] animations = skeletonData.animations.setSize(n = input.readInt(true));
 			for (int i = 0; i < n; i++)
-				o[i] = readAnimation(input, input.readString(), skeletonData);
+				animations[i] = readAnimation(input, input.readString(), skeletonData);
 
+			for (int i = 0; i < constraintCount; i++)
+				if (constraints[i] instanceof SliderData data) data.animation = animations[input.readInt(true)];
 		} catch (IOException ex) {
 			throw new SerializationException("Error reading skeleton file.", ex);
 		} finally {
@@ -482,23 +503,15 @@ public class SkeletonBinary extends SkeletonLoader {
 
 			if (nonessential) Color.rgba8888ToColor(skin.color, input.readInt());
 
-			Object[] bones = skin.bones.setSize(input.readInt(true)), items = skeletonData.bones.items;
-			for (int i = 0, n = skin.bones.size; i < n; i++)
-				bones[i] = items[input.readInt(true)];
+			int n;
+			Object[] from = skeletonData.bones.items, to = skin.bones.setSize(n = input.readInt(true));
+			for (int i = 0; i < n; i++)
+				to[i] = from[input.readInt(true)];
 
-			items = skeletonData.ikConstraints.items;
-			for (int i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.add((ConstraintData)items[input.readInt(true)]);
-			items = skeletonData.transformConstraints.items;
-			for (int i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.add((ConstraintData)items[input.readInt(true)]);
-			items = skeletonData.pathConstraints.items;
-			for (int i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.add((ConstraintData)items[input.readInt(true)]);
-			items = skeletonData.physicsConstraints.items;
-			for (int i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.add((ConstraintData)items[input.readInt(true)]);
-			skin.constraints.shrink();
+			from = skeletonData.constraints.items;
+			to = skin.constraints.setSize(n = input.readInt(true));
+			for (int i = 0; i < n; i++)
+				to[i] = from[input.readInt(true)];
 
 			slotCount = input.readInt(true);
 		}
@@ -663,7 +676,7 @@ public class SkeletonBinary extends SkeletonLoader {
 
 			ClippingAttachment clip = attachmentLoader.newClippingAttachment(skin, name);
 			if (clip == null) return null;
-			clip.setEndSlot(skeletonData.slots.get(endSlotIndex));
+			clip.setEndSlot(skeletonData.slots.items[endSlotIndex]);
 			clip.setWorldVerticesLength(vertices.length);
 			clip.setVertices(vertices.vertices);
 			clip.setBones(vertices.bones);
@@ -727,7 +740,7 @@ public class SkeletonBinary extends SkeletonLoader {
 	}
 
 	private Animation readAnimation (SkeletonInput input, String name, SkeletonData skeletonData) throws IOException {
-		var timelines = new Array<Timeline>(input.readInt(true));
+		var timelines = new Array<Timeline>(true, input.readInt(true), Timeline[]::new);
 		float scale = this.scale;
 
 		// Slot timelines.
@@ -976,7 +989,7 @@ public class SkeletonBinary extends SkeletonLoader {
 		// Path constraint timelines.
 		for (int i = 0, n = input.readInt(true); i < n; i++) {
 			int index = input.readInt(true);
-			PathConstraintData data = skeletonData.pathConstraints.get(index);
+			var data = (PathConstraintData)skeletonData.constraints.items[index];
 			for (int ii = 0, nn = input.readInt(true); ii < nn; ii++) {
 				int type = input.readByte(), frameCount = input.readInt(true), bezierCount = input.readInt(true);
 				switch (type) {
@@ -1041,9 +1054,22 @@ public class SkeletonBinary extends SkeletonLoader {
 			}
 		}
 
+		// Slider timelines.
+		for (int i = 0, n = input.readInt(true); i < n; i++) {
+			int index = input.readInt(true);
+			for (int ii = 0, nn = input.readInt(true); ii < nn; ii++) {
+				int type = input.readByte(), frameCount = input.readInt(true), bezierCount = input.readInt(true);
+				readTimeline(input, timelines, switch (type) {
+				case SLIDER_TIME -> new SliderTimeline(frameCount, bezierCount, index);
+				case SLIDER_MIX -> new SliderMixTimeline(frameCount, bezierCount, index);
+				default -> throw new SerializationException();
+				}, 1);
+			}
+		}
+
 		// Attachment timelines.
 		for (int i = 0, n = input.readInt(true); i < n; i++) {
-			Skin skin = skeletonData.skins.get(input.readInt(true));
+			Skin skin = skeletonData.skins.items[input.readInt(true)];
 			for (int ii = 0, nn = input.readInt(true); ii < nn; ii++) {
 				int slotIndex = input.readInt(true);
 				for (int iii = 0, nnn = input.readInt(true); iii < nnn; iii++) {
@@ -1147,13 +1173,13 @@ public class SkeletonBinary extends SkeletonLoader {
 			var timeline = new EventTimeline(eventCount);
 			for (int i = 0; i < eventCount; i++) {
 				float time = input.readFloat();
-				EventData eventData = skeletonData.events.get(input.readInt(true));
+				EventData eventData = skeletonData.events.items[input.readInt(true)];
 				var event = new Event(time, eventData);
 				event.intValue = input.readInt(false);
 				event.floatValue = input.readFloat();
 				event.stringValue = input.readString();
 				if (event.stringValue == null) event.stringValue = eventData.stringValue;
-				if (event.getData().audioPath != null) {
+				if (event.data.audioPath != null) {
 					event.volume = input.readFloat();
 					event.balance = input.readFloat();
 				}
@@ -1163,9 +1189,9 @@ public class SkeletonBinary extends SkeletonLoader {
 		}
 
 		float duration = 0;
-		Object[] items = timelines.items;
+		Timeline[] items = timelines.items;
 		for (int i = 0, n = timelines.size; i < n; i++)
-			duration = Math.max(duration, ((Timeline)items[i]).getDuration());
+			duration = Math.max(duration, items[i].getDuration());
 		return new Animation(name, timelines, duration);
 	}
 
@@ -1186,7 +1212,7 @@ public class SkeletonBinary extends SkeletonLoader {
 		timelines.add(timeline);
 	}
 
-	private void readTimeline (SkeletonInput input, Array<Timeline> timelines, CurveTimeline2 timeline, float scale)
+	private void readTimeline (SkeletonInput input, Array<Timeline> timelines, BoneTimeline2 timeline, float scale)
 		throws IOException {
 		float time = input.readFloat(), value1 = input.readFloat() * scale, value2 = input.readFloat() * scale;
 		for (int frame = 0, bezier = 0, frameLast = timeline.getFrameCount() - 1;; frame++) {

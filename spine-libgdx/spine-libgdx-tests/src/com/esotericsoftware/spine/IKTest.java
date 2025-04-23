@@ -38,7 +38,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.utils.TwoColorPolygonBatch;
 
 /** Demonstrates how to let the target bone of an IK constraint follow the mouse or touch position, which in turn repositions part
@@ -107,8 +106,8 @@ public class IKTest extends ApplicationAdapter {
 
 		Bone crosshair = skeleton.findBone("crosshair"); // Should be cached.
 		boneCoords.set(cameraCoords.x, cameraCoords.y);
-		crosshair.getParent().worldToLocal(boneCoords); // camera space to local bone space
-		crosshair.setPosition(boneCoords.x, boneCoords.y); // override the crosshair position
+		crosshair.getParent().getAppliedPose().worldToLocal(boneCoords); // camera space to local bone space
+		crosshair.getPose().setPosition(boneCoords.x, boneCoords.y); // override the crosshair position
 
 		// Calculate final world transform with the crosshair bone set to the mouse cursor position. Update physics this time.
 		skeleton.updateWorldTransform(Physics.update);

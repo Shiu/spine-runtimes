@@ -31,10 +31,8 @@ package com.esotericsoftware.spine;
 
 import static com.badlogic.gdx.math.MathUtils.*;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-import com.esotericsoftware.spine.Skeleton.Physics;
 import com.esotericsoftware.spine.TransformConstraintData.FromProperty;
 import com.esotericsoftware.spine.TransformConstraintData.ToProperty;
 
@@ -42,64 +40,51 @@ import com.esotericsoftware.spine.TransformConstraintData.ToProperty;
  * bones to match that of the source bone.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide. */
-public class TransformConstraint implements Updatable {
-	final TransformConstraintData data;
-	final Array<Bone> bones;
+public class TransformConstraint extends Constraint<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
+	final Array<BonePose> bones;
 	Bone source;
-	float mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY;
-
-	boolean active;
-	final Vector2 temp = new Vector2();
 
 	public TransformConstraint (TransformConstraintData data, Skeleton skeleton) {
-		if (data == null) throw new IllegalArgumentException("data cannot be null.");
+		super(data, new TransformConstraintPose(), new TransformConstraintPose());
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
-		this.data = data;
 
-		bones = new Array(data.bones.size);
+		bones = new Array(true, data.bones.size, BonePose[]::new);
 		for (BoneData boneData : data.bones)
-			bones.add(skeleton.bones.get(boneData.index));
+			bones.add(skeleton.bones.items[boneData.index].constrained);
 
-		source = skeleton.bones.get(data.source.index);
-
-		setToSetupPose();
+		source = skeleton.bones.items[data.source.index];
 	}
 
-	/** Copy constructor. */
-	public TransformConstraint (TransformConstraint constraint, Skeleton skeleton) {
-		this(constraint.data, skeleton);
-		setToSetupPose();
-	}
-
-	public void setToSetupPose () {
-		TransformConstraintData data = this.data;
-		mixRotate = data.mixRotate;
-		mixX = data.mixX;
-		mixY = data.mixY;
-		mixScaleX = data.mixScaleX;
-		mixScaleY = data.mixScaleY;
-		mixShearY = data.mixShearY;
+	public TransformConstraint copy (Skeleton skeleton) {
+		var copy = new TransformConstraint(data, skeleton);
+		copy.pose.set(pose);
+		return copy;
 	}
 
 	/** Applies the constraint to the constrained bones. */
-	public void update (Physics physics) {
-		if (mixRotate == 0 && mixX == 0 && mixY == 0 && mixScaleX == 0 && mixScaleY == 0 && mixShearY == 0) return;
+	public void update (Skeleton skeleton, Physics physics) {
+		TransformConstraintPose pose = applied;
+		if (pose.mixRotate == 0 && pose.mixX == 0 && pose.mixY == 0 && pose.mixScaleX == 0 && pose.mixScaleY == 0
+			&& pose.mixShearY == 0) return;
 
 		TransformConstraintData data = this.data;
-		boolean localFrom = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
-		Bone source = this.source;
-		Object[] fromItems = data.properties.items;
+		boolean localSource = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
+		BonePose source = this.source.applied;
+		int update = skeleton.update;
+		if (localSource && source.local == skeleton.update) source.updateLocalTransform(skeleton);
+		FromProperty[] fromItems = data.properties.items;
 		int fn = data.properties.size;
-		Object[] bones = this.bones.items;
+		BonePose[] bones = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++) {
-			var bone = (Bone)bones[i];
+			BonePose bone = bones[i];
+			if (localTarget && bone.local == update) bone.updateLocalTransform(skeleton);
 			for (int f = 0; f < fn; f++) {
-				var from = (FromProperty)fromItems[f];
-				float value = from.value(data, source, localFrom) - from.offset;
-				Object[] toItems = from.to.items;
+				FromProperty from = fromItems[f];
+				float value = from.value(data, source, localSource) - from.offset;
+				ToProperty[] toItems = from.to.items;
 				for (int t = 0, tn = from.to.size; t < tn; t++) {
-					var to = (ToProperty)toItems[t];
-					if (to.mix(this) != 0) {
+					ToProperty to = toItems[t];
+					if (to.mix(pose) != 0) {
 						float clamped = to.offset + value * to.scale;
 						if (clamp) {
 							if (to.offset < to.max)
@@ -107,19 +92,40 @@ public class TransformConstraint implements Updatable {
 							else
 								clamped = clamp(clamped, to.max, to.offset);
 						}
-						to.apply(this, bone, clamped, localTarget, additive);
+						to.apply(pose, bone, clamped, localTarget, additive);
 					}
 				}
 			}
 			if (localTarget)
-				bone.update(null);
+				bone.updateWorldTransform(skeleton);
 			else
-				bone.updateAppliedTransform();
+				bone.local = update;
+			bone.bone.resetUpdate(skeleton);
 		}
 	}
 
+	void sort (Skeleton skeleton) {
+		skeleton.sortBone(source);
+		BonePose[] bones = this.bones.items;
+		int boneCount = this.bones.size;
+		for (int i = 0; i < boneCount; i++) {
+			Bone bone = bones[i].bone;
+			skeleton.resetCache(bone);
+			skeleton.sortBone(bone);
+		}
+		skeleton.updateCache.add(this);
+		for (int i = 0; i < boneCount; i++)
+			skeleton.sortReset(bones[i].bone.children);
+		for (int i = 0; i < boneCount; i++)
+			bones[i].bone.sorted = true;
+	}
+
+	boolean isSourceActive () {
+		return source.active;
+	}
+
 	/** The bones that will be modified by this transform constraint. */
-	public Array<Bone> getBones () {
+	public Array<BonePose> getBones () {
 		return bones;
 	}
 
@@ -131,72 +137,5 @@ public class TransformConstraint implements Updatable {
 	public void setSource (Bone source) {
 		if (source == null) throw new IllegalArgumentException("source cannot be null.");
 		this.source = source;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
-	public float getMixRotate () {
-		return mixRotate;
-	}
-
-	public void setMixRotate (float mixRotate) {
-		this.mixRotate = mixRotate;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
-	public float getMixX () {
-		return mixX;
-	}
-
-	public void setMixX (float mixX) {
-		this.mixX = mixX;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
-	public float getMixY () {
-		return mixY;
-	}
-
-	public void setMixY (float mixY) {
-		this.mixY = mixY;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale X. */
-	public float getMixScaleX () {
-		return mixScaleX;
-	}
-
-	public void setMixScaleX (float mixScaleX) {
-		this.mixScaleX = mixScaleX;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale X. */
-	public float getMixScaleY () {
-		return mixScaleY;
-	}
-
-	public void setMixScaleY (float mixScaleY) {
-		this.mixScaleY = mixScaleY;
-	}
-
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y. */
-	public float getMixShearY () {
-		return mixShearY;
-	}
-
-	public void setMixShearY (float mixShearY) {
-		this.mixShearY = mixShearY;
-	}
-
-	public boolean isActive () {
-		return active;
-	}
-
-	/** The transform constraint's setup pose data. */
-	public TransformConstraintData getData () {
-		return data;
-	}
-
-	public String toString () {
-		return data.name;
 	}
 }

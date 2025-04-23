@@ -73,7 +73,9 @@ public class AttachmentTimelineTests {
 		timeline.setFrame(0, 0, "attachment1");
 		timeline.setFrame(1, 0.5f, "attachment2");
 
-		Animation animation = new Animation("animation", Array.with((Timeline)timeline), 1);
+		Array<Timeline> timelines = new Array(true, 1, Timeline[]::new);
+		timelines.add(timeline);
+		Animation animation = new Animation("animation", timelines, 1);
 		animation.setDuration(1);
 
 		state = new AnimationState(new AnimationStateData(skeletonData));
@@ -92,8 +94,8 @@ public class AttachmentTimelineTests {
 	private void test (float delta, Attachment attachment) {
 		state.update(delta);
 		state.apply(skeleton);
-		if (slot.getAttachment() != attachment)
-			throw new FailException("Wrong attachment: " + slot.getAttachment() + " != " + attachment);
+		if (slot.getPose().getAttachment() != attachment)
+			throw new FailException("Wrong attachment: " + slot.getPose().getAttachment() + " != " + attachment);
 
 	}
 

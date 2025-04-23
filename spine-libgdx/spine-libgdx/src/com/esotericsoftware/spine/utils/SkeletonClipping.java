@@ -33,6 +33,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.ShortArray;
 
+import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.attachments.ClippingAttachment;
 
@@ -41,21 +42,21 @@ public class SkeletonClipping {
 	private final FloatArray clippingPolygon = new FloatArray();
 	private final FloatArray clipOutput = new FloatArray(128);
 	private final FloatArray clippedVertices = new FloatArray(128);
-	private final FloatArray clippedUvs = new FloatArray(128);
+	private final FloatArray clippedUvs = new FloatArray(0);
 	private final ShortArray clippedTriangles = new ShortArray(128);
 	private final FloatArray scratch = new FloatArray();
 
 	private ClippingAttachment clipAttachment;
 	private Array<FloatArray> clippingPolygons;
 
-	public void clipStart (Slot slot, ClippingAttachment clip) {
+	public void clipStart (Skeleton skeleton, Slot slot, ClippingAttachment clip) {
 		if (clipAttachment != null) return;
 		int n = clip.getWorldVerticesLength();
 		if (n < 6) return;
 		clipAttachment = clip;
 
 		float[] vertices = clippingPolygon.setSize(n);
-		clip.computeWorldVertices(slot, 0, n, vertices, 0, 2);
+		clip.computeWorldVertices(skeleton, slot, 0, n, vertices, 0, 2);
 		makeClockwise(clippingPolygon);
 		ShortArray triangles = triangulator.triangulate(clippingPolygon);
 		clippingPolygons = triangulator.decompose(clippingPolygon, triangles);
@@ -87,7 +88,7 @@ public class SkeletonClipping {
 	public boolean clipTriangles (float[] vertices, short[] triangles, int trianglesLength) {
 		FloatArray clipOutput = this.clipOutput, clippedVertices = this.clippedVertices;
 		ShortArray clippedTriangles = this.clippedTriangles;
-		Object[] polygons = clippingPolygons.items;
+		FloatArray[] polygons = clippingPolygons.items;
 		int polygonsCount = clippingPolygons.size;
 
 		short index = 0;
@@ -107,7 +108,7 @@ public class SkeletonClipping {
 
 			for (int p = 0; p < polygonsCount; p++) {
 				int s = clippedVertices.size;
-				if (clip(x1, y1, x2, y2, x3, y3, (FloatArray)polygons[p], clipOutput)) {
+				if (clip(x1, y1, x2, y2, x3, y3, polygons[p], clipOutput)) {
 					clipOutputItems = clipOutput.items;
 					int clipOutputLength = clipOutput.size;
 					if (clipOutputLength == 0) continue;
@@ -159,7 +160,7 @@ public class SkeletonClipping {
 
 		FloatArray clipOutput = this.clipOutput, clippedVertices = this.clippedVertices;
 		ShortArray clippedTriangles = this.clippedTriangles;
-		Object[] polygons = clippingPolygons.items;
+		FloatArray[] polygons = clippingPolygons.items;
 		int polygonsCount = clippingPolygons.size;
 
 		short index = 0;
@@ -182,7 +183,7 @@ public class SkeletonClipping {
 
 			for (int p = 0; p < polygonsCount; p++) {
 				int s = clippedVertices.size;
-				if (clip(x1, y1, x2, y2, x3, y3, (FloatArray)polygons[p], clipOutput)) {
+				if (clip(x1, y1, x2, y2, x3, y3, polygons[p], clipOutput)) {
 					clipOutputItems = clipOutput.items;
 					int clipOutputLength = clipOutput.size;
 					if (clipOutputLength == 0) continue;
@@ -276,7 +277,7 @@ public class SkeletonClipping {
 		FloatArray clipOutput = this.clipOutput, clippedVertices = this.clippedVertices;
 		FloatArray clippedUvs = this.clippedUvs;
 		ShortArray clippedTriangles = this.clippedTriangles;
-		Object[] polygons = clippingPolygons.items;
+		FloatArray[] polygons = clippingPolygons.items;
 		int polygonsCount = clippingPolygons.size;
 		int vertexSize = 2;
 
@@ -299,7 +300,7 @@ public class SkeletonClipping {
 
 			for (int p = 0; p < polygonsCount; p++) {
 				int s = clippedVertices.size;
-				if (clip(x1, y1, x2, y2, x3, y3, (FloatArray)polygons[p], clipOutput)) {
+				if (clip(x1, y1, x2, y2, x3, y3, polygons[p], clipOutput)) {
 					int clipOutputLength = clipOutput.size;
 					if (clipOutputLength == 0) continue;
 					float d0 = y2 - y3, d1 = x3 - x2, d2 = x1 - x3, d4 = y3 - y1;
@@ -459,7 +460,7 @@ public class SkeletonClipping {
 		return clippedVertices;
 	}
 
-	/** Only returns a non-empty array if clipTrianglesUnpacked() was used **/
+	/** Returns an empty array unless {@link #clipTrianglesUnpacked(float[], int, short[], int, float[])} was used. **/
 	public FloatArray getClippedUvs () {
 		return clippedUvs;
 	}
