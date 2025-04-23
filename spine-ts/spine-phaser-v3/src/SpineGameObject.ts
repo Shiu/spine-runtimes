@@ -68,6 +68,19 @@ export interface SpineGameObjectBoundsProvider {
 	};
 }
 
+/** A bounds provider that provides a fixed size given by the user. */
+export class AABBRectangleBoundsProvider implements SpineGameObjectBoundsProvider {
+	constructor (
+		private x: number,
+		private y: number,
+		private width: number,
+		private height: number,
+	) { }
+	calculateBounds () {
+		return { x: this.x, y: this.y, width: this.width, height: this.height };
+	}
+}
+
 /** A bounds provider that calculates the bounding box from the setup pose. */
 export class SetupPoseBoundsProvider implements SpineGameObjectBoundsProvider {
 	/**
@@ -215,6 +228,8 @@ export class SpineGameObject extends DepthMixin(
 	beforeUpdateWorldTransforms: (object: SpineGameObject) => void = () => { };
 	afterUpdateWorldTransforms: (object: SpineGameObject) => void = () => { };
 	private premultipliedAlpha = false;
+	private offsetX = 0;
+	private offsetY = 0;
 
 	constructor (
 		scene: Phaser.Scene,
@@ -239,13 +254,11 @@ export class SpineGameObject extends DepthMixin(
 	updateSize () {
 		if (!this.skeleton) return;
 		let bounds = this.boundsProvider.calculateBounds(this);
-		// For some reason the TS compiler and the ComputedSize mixin don't work well together and we have
-		// to cast to any.
-		let self = this as any;
-		self.width = bounds.width;
-		self.height = bounds.height;
-		this.displayOriginX = -bounds.x;
-		this.displayOriginY = -bounds.y;
+		this.width = bounds.width;
+		this.height = bounds.height;
+		this.setDisplayOrigin(-bounds.x, -bounds.y);
+		this.offsetX = -bounds.x;
+		this.offsetY = -bounds.y;
 	}
 
 	/** Converts a point from the skeleton coordinate system to the Phaser world coordinate system. */
@@ -355,17 +368,21 @@ export class SpineGameObject extends DepthMixin(
 			d = transform.d,
 			tx = transform.tx,
 			ty = transform.ty;
+
+		let offsetX = (src.offsetX - src.displayOriginX) * src.scaleX;
+		let offsetY = (src.offsetY - src.displayOriginY) * src.scaleY;
+
 		sceneRenderer.drawSkeleton(
-			this.skeleton,
-			this.premultipliedAlpha,
+			src.skeleton,
+			src.premultipliedAlpha,
 			-1,
 			-1,
 			(vertices, numVertices, stride) => {
 				for (let i = 0; i < numVertices; i += stride) {
 					let vx = vertices[i];
 					let vy = vertices[i + 1];
-					vertices[i] = vx * a + vy * c + tx;
-					vertices[i + 1] = vx * b + vy * d + ty;
+					vertices[i] = vx * a + vy * c + tx + offsetX;
+					vertices[i + 1] = vx * b + vy * d + ty + offsetY;
 				}
 			}
 		);
