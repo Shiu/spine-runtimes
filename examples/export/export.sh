@@ -42,10 +42,17 @@ rm -rf ../vine/export/*
 rm -rf ../owl/export/*
 rm -rf ../mix-and-match/export/*
 rm -rf ../chibi-stickers/export/*
-rm -rf ../sack/export/*
 rm -rf ../celestial-circus/export/*
 rm -rf ../snowglobe/export/*
 rm -rf ../cloud-pot/export/*
+rm -rf ../1-weight-and-mass/export/*
+rm -rf ../2-the-12-principles/export/*
+rm -rf ../3-timing-and-spacing/export/*
+rm -rf ../4-wave-principle/export/*
+rm -rf ../5-squash-and-stretch/export/*
+rm -rf ../6-arcs/export/*
+rm -rf ../7-anticipation/export/*
+rm -rf ../8-follow-through/export/*
 
 echo ""
 echo "Exporting assets..."
@@ -91,11 +98,6 @@ echo "Exporting assets..."
 -i ../chibi-stickers/chibi-stickers-pro.spine -o ../chibi-stickers/export -e binary.json \
 -i ../chibi-stickers/images -o ../chibi-stickers/export -n chibi-stickers -p atlas-0.5.json \
 -i ../chibi-stickers/images -o ../chibi-stickers/export -n chibi-stickers-pma -p atlas-0.5-pma.json \
-\
--i ../sack/sack-pro.spine -o ../sack/export -e json.json \
--i ../sack/sack-pro.spine -o ../sack/export -e binary.json \
--i ../sack/images -o ../sack/export -n sack -p atlas-0.5.json \
--i ../sack/images -o ../sack/export -n sack-pma -p atlas-0.5-pma.json \
 \
 -i ../celestial-circus/celestial-circus-pro.spine -o ../celestial-circus/export -e json.json \
 -i ../celestial-circus/celestial-circus-pro.spine -o ../celestial-circus/export -e binary.json \
@@ -164,6 +166,46 @@ echo "Exporting assets..."
 -i ../windmill/windmill-ess.spine -o ../windmill/export -e binary.json \
 -i ../windmill/images -o ../windmill/export -n windmill -p atlas-0.5.json \
 -i ../windmill/images -o ../windmill/export -n windmill-pma -p atlas-0.5-pma.json
+\
+-i ../1-weight-and-mass/1-weight-and-mass-ess.spine -o ../1-weight-and-mass/export -e json.json \
+-i ../1-weight-and-mass/1-weight-and-mass-ess.spine -o ../1-weight-and-mass/export -e binary.json \
+-i ../1-weight-and-mass/images -o ../1-weight-and-mass/export -n 1-weight-and-mass -p atlas-0.5.json \
+-i ../1-weight-and-mass/images -o ../1-weight-and-mass/export -n 1-weight-and-mass-pma -p atlas-0.5-pma.json \
+\
+-i ../2-the-12-principles/2-the-12-principles-ess.spine -o ../2-the-12-principles/export -e json.json \
+-i ../2-the-12-principles/2-the-12-principles-ess.spine -o ../2-the-12-principles/export -e binary.json \
+-i ../2-the-12-principles/images -o ../2-the-12-principles/export -n 2-the-12-principles -p atlas-0.5.json \
+-i ../2-the-12-principles/images -o ../2-the-12-principles/export -n 2-the-12-principles-pma -p atlas-0.5-pma.json \
+\
+-i ../3-timing-and-spacing/3-timing-and-spacing-ess.spine -o ../3-timing-and-spacing/export -e json.json \
+-i ../3-timing-and-spacing/3-timing-and-spacing-ess.spine -o ../3-timing-and-spacing/export -e binary.json \
+-i ../3-timing-and-spacing/images -o ../3-timing-and-spacing/export -n 3-timing-and-spacing -p atlas-0.5.json \
+-i ../3-timing-and-spacing/images -o ../3-timing-and-spacing/export -n 3-timing-and-spacing-pma -p atlas-0.5-pma.json \
+\
+-i ../4-wave-principle/4-wave-principle-ess.spine -o ../4-wave-principle/export -e json.json \
+-i ../4-wave-principle/4-wave-principle-ess.spine -o ../4-wave-principle/export -e binary.json \
+-i ../4-wave-principle/images -o ../4-wave-principle/export -n 4-wave-principle -p atlas-0.5.json \
+-i ../4-wave-principle/images -o ../4-wave-principle/export -n 4-wave-principle-pma -p atlas-0.5-pma.json \
+\
+-i ../5-squash-and-stretch/5-squash-and-stretch-ess.spine -o ../5-squash-and-stretch/export -e json.json \
+-i ../5-squash-and-stretch/5-squash-and-stretch-ess.spine -o ../5-squash-and-stretch/export -e binary.json \
+-i ../5-squash-and-stretch/images -o ../5-squash-and-stretch/export -n 5-squash-and-stretch -p atlas-0.5.json \
+-i ../5-squash-and-stretch/images -o ../5-squash-and-stretch/export -n 5-squash-and-stretch-pma -p atlas-0.5-pma.json \
+\
+-i ../6-arcs/6-arcs-pro.spine -o ../6-arcs/export -e json.json \
+-i ../6-arcs/6-arcs-pro.spine -o ../6-arcs/export -e binary.json \
+-i ../6-arcs/images -o ../6-arcs/export -n 6-arcs -p atlas-0.5.json \
+-i ../6-arcs/images -o ../6-arcs/export -n 6-arcs-pma -p atlas-0.5-pma.json \
+\
+-i ../7-anticipation/7-anticipation-pro.spine -o ../7-anticipation/export -e json.json \
+-i ../7-anticipation/7-anticipation-pro.spine -o ../7-anticipation/export -e binary.json \
+-i ../7-anticipation/images -o ../7-anticipation/export -n 7-anticipation -p atlas-0.5.json \
+-i ../7-anticipation/images -o ../7-anticipation/export -n 7-anticipation-pma -p atlas-0.5-pma.json \
+\
+-i ../8-follow-through/8-follow-through-pro.spine -o ../8-follow-through/export -e json.json \
+-i ../8-follow-through/8-follow-through-pro.spine -o ../8-follow-through/export -e binary.json \
+-i ../8-follow-through/images -o ../8-follow-through/export -n 8-follow-through -p atlas-0.5.json \
+-i ../8-follow-through/images -o ../8-follow-through/export -n 8-follow-through-pma -p atlas-0.5-pma.json
 
 # spineboy-old.spine needs separate export, as its images are in an atlas.
 "$SPINE_EXE" \
