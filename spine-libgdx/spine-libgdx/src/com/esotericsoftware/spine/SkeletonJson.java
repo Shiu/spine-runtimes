@@ -1154,8 +1154,8 @@ public class SkeletonJson extends SkeletonLoader {
 							float lastDelay = 0;
 							for (int frame = 0; keyMap != null; keyMap = keyMap.next, frame++) {
 								float delay = keyMap.getFloat("delay", lastDelay);
-								timeline.setFrame(frame, keyMap.getFloat("time", 0), SequenceMode.valueOf(keyMap.getString("mode", "hold")),
-									keyMap.getInt("index", 0), delay);
+								timeline.setFrame(frame, keyMap.getFloat("time", 0),
+									SequenceMode.valueOf(keyMap.getString("mode", "hold")), keyMap.getInt("index", 0), delay);
 								lastDelay = delay;
 							}
 							timelines.add(timeline);
