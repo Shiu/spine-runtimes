@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "CKnF82un6n8",
-	"spine": "4.2.22",
+	"hash": "Dz/AbGg4iW4",
+	"spine": "4.3.15-beta",
 	"x": -345,
 	"y": -272846.84,
 	"width": 756,
@@ -119,42 +119,54 @@
 	{ "name": "cloud/cloud-eyes-reflex", "bone": "cloud-face", "attachment": "cloud-eyes-reflex" },
 	{ "name": "cloud/cloud-mouth", "bone": "cloud-face", "attachment": "cloud-mouth-closed" }
 ],
-"physics": [
+"constraints": [
 	{
-		"name": "cloud",
-		"order": 25,
-		"bone": "cloud",
+		"type": "physics",
+		"name": "rain/rain-white",
+		"bone": "rain-white",
 		"x": 1,
 		"y": 1,
-		"inertia": 0.5,
-		"strength": 172.8,
-		"damping": 0.8571,
-		"mass": 3
+		"inertia": 1,
+		"strength": 0,
+		"damping": 1,
+		"gravity": 70
 	},
 	{
-		"name": "cloud-face",
-		"order": 24,
-		"bone": "cloud-face",
-		"x": 0.1923,
-		"y": 0.141,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.15
+		"type": "physics",
+		"name": "rain/rain-green",
+		"bone": "rain-green",
+		"x": 1,
+		"y": 1,
+		"inertia": 1,
+		"strength": 0,
+		"damping": 1,
+		"gravity": 70
 	},
 	{
-		"name": "pot-face",
-		"order": 23,
-		"bone": "pot-face",
-		"x": 0.1667,
-		"y": 0.1026,
-		"limit": 500,
-		"inertia": 0.5,
-		"strength": 137.3,
-		"damping": 0.6078
+		"type": "physics",
+		"name": "rain/rain-color",
+		"bone": "rain-color",
+		"x": 1,
+		"y": 1,
+		"inertia": 1,
+		"strength": 0,
+		"damping": 1,
+		"gravity": 70
 	},
 	{
+		"type": "physics",
+		"name": "rain/rain-blue",
+		"bone": "rain-blue",
+		"x": 1,
+		"y": 1,
+		"inertia": 1,
+		"strength": 0,
+		"damping": 1,
+		"gravity": 70
+	},
+	{
+		"type": "physics",
 		"name": "cloud-base/cloud-base-1",
-		"order": 4,
 		"bone": "cloud-base-1",
 		"x": 1,
 		"y": 1,
@@ -165,8 +177,8 @@
 		"mass": 2.8
 	},
 	{
+		"type": "physics",
 		"name": "cloud-base/cloud-base-2",
-		"order": 5,
 		"bone": "cloud-base-2",
 		"x": 1,
 		"y": 1,
@@ -177,8 +189,8 @@
 		"mass": 2.8
 	},
 	{
+		"type": "physics",
 		"name": "cloud-base/cloud-base-3",
-		"order": 6,
 		"bone": "cloud-base-3",
 		"x": 1,
 		"y": 1,
@@ -189,8 +201,8 @@
 		"mass": 2.8
 	},
 	{
+		"type": "physics",
 		"name": "cloud-base/cloud-base-4",
-		"order": 7,
 		"bone": "cloud-base-4",
 		"x": 1,
 		"y": 1,
@@ -201,8 +213,8 @@
 		"mass": 2.8
 	},
 	{
+		"type": "physics",
 		"name": "cloud-base/cloud-base-5",
-		"order": 8,
 		"bone": "cloud-base-5",
 		"x": 1,
 		"y": 1,
@@ -213,8 +225,8 @@
 		"mass": 2.8
 	},
 	{
+		"type": "physics",
 		"name": "cloud-base/cloud-base-6",
-		"order": 9,
 		"bone": "cloud-base-6",
 		"x": 1,
 		"y": 1,
@@ -225,8 +237,8 @@
 		"mass": 2.8
 	},
 	{
+		"type": "physics",
 		"name": "cloud-base/cloud-base-7",
-		"order": 10,
 		"bone": "cloud-base-7",
 		"x": 1,
 		"y": 1,
@@ -237,8 +249,8 @@
 		"mass": 2.8
 	},
 	{
+		"type": "physics",
 		"name": "cloud-base/cloud-base-8",
-		"order": 11,
 		"bone": "cloud-base-8",
 		"x": 1,
 		"y": 1,
@@ -249,8 +261,8 @@
 		"mass": 2.8
 	},
 	{
+		"type": "physics",
 		"name": "cloud-base/cloud-base-9",
-		"order": 12,
 		"bone": "cloud-base-9",
 		"x": 1,
 		"y": 1,
@@ -261,8 +273,8 @@
 		"mass": 2.8
 	},
 	{
+		"type": "physics",
 		"name": "cloud-base/cloud-base-10",
-		"order": 13,
 		"bone": "cloud-base-10",
 		"x": 1,
 		"y": 1,
@@ -273,133 +285,125 @@
 		"mass": 2.8
 	},
 	{
+		"type": "physics",
 		"name": "plant/leaf-big",
-		"order": 14,
 		"bone": "leaf-big",
 		"rotate": 0.7532,
 		"shearX": 0.2468,
 		"limit": 500,
-		"inertia": 0.5,
 		"strength": 160.5,
 		"damping": 0.8367,
 		"mass": 4
 	},
 	{
-		"name": "plant/leaf-big-tip",
-		"order": 22,
-		"bone": "leaf-big-tip",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"strength": 160.5,
-		"damping": 0.8367,
-		"mass": 4
-	},
-	{
+		"type": "physics",
 		"name": "plant/leaf-small",
-		"order": 15,
 		"bone": "leaf-small",
 		"rotate": 0.6026,
 		"limit": 500,
-		"inertia": 0.5,
 		"strength": 160.5,
 		"damping": 0.8367,
 		"mass": 4
 	},
 	{
+		"type": "physics",
+		"name": "plant/stem",
+		"bone": "stem",
+		"rotate": 0.8205,
+		"limit": 700,
+		"strength": 152.4,
+		"damping": 0.9388,
+		"mass": 2.6
+	},
+	{
+		"type": "physics",
+		"name": "plant/stem2",
+		"bone": "stem2",
+		"rotate": 0.8205,
+		"limit": 700,
+		"strength": 152.4,
+		"damping": 0.9388,
+		"mass": 2.6
+	},
+	{
+		"type": "physics",
+		"name": "plant/stem3",
+		"bone": "stem3",
+		"rotate": 0.8205,
+		"limit": 700,
+		"strength": 152.4,
+		"damping": 0.9388,
+		"mass": 2.6
+	},
+	{
+		"type": "physics",
 		"name": "plant/petal-1",
-		"order": 19,
 		"bone": "petal-1",
 		"rotate": 1,
 		"limit": 500,
-		"inertia": 0.5,
 		"strength": 164.6,
 		"damping": 0.6531,
 		"mass": 2.6
 	},
 	{
-		"name": "plant/petal-2",
-		"order": 21,
-		"bone": "petal-2",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"strength": 164.6,
-		"damping": 0.6531,
-		"mass": 2.6
-	},
-	{
+		"type": "physics",
 		"name": "plant/petal-3",
-		"order": 20,
 		"bone": "petal-3",
 		"rotate": 1,
 		"limit": 500,
-		"inertia": 0.5,
 		"strength": 164.6,
 		"damping": 0.7823,
 		"mass": 3.83
 	},
 	{
-		"name": "plant/stem",
-		"order": 16,
-		"bone": "stem",
-		"rotate": 0.8205,
-		"limit": 700,
-		"inertia": 0.5,
-		"strength": 152.4,
-		"damping": 0.9388,
+		"type": "physics",
+		"name": "plant/petal-2",
+		"bone": "petal-2",
+		"rotate": 1,
+		"limit": 500,
+		"strength": 164.6,
+		"damping": 0.6531,
 		"mass": 2.6
 	},
 	{
-		"name": "plant/stem2",
-		"order": 17,
-		"bone": "stem2",
-		"rotate": 0.8205,
-		"limit": 700,
-		"inertia": 0.5,
-		"strength": 152.4,
-		"damping": 0.9388,
-		"mass": 2.6
+		"type": "physics",
+		"name": "plant/leaf-big-tip",
+		"bone": "leaf-big-tip",
+		"rotate": 1,
+		"limit": 500,
+		"strength": 160.5,
+		"damping": 0.8367,
+		"mass": 4
 	},
 	{
-		"name": "plant/stem3",
-		"order": 18,
-		"bone": "stem3",
-		"rotate": 0.8205,
-		"limit": 700,
-		"inertia": 0.5,
-		"strength": 152.4,
-		"damping": 0.9388,
-		"mass": 2.6
+		"type": "physics",
+		"name": "pot-face",
+		"bone": "pot-face",
+		"x": 0.1667,
+		"y": 0.1026,
+		"limit": 500,
+		"strength": 137.3,
+		"damping": 0.6078
 	},
 	{
-		"name": "rain/rain-blue",
-		"order": 3,
-		"bone": "rain-blue",
+		"type": "physics",
+		"name": "cloud-face",
+		"bone": "cloud-face",
+		"x": 0.1923,
+		"y": 0.141,
+		"limit": 500,
+		"damping": 0.15
+	},
+	{
+		"type": "physics",
+		"name": "cloud",
+		"bone": "cloud",
 		"x": 1,
 		"y": 1,
-		"strength": 0,
-		"gravity": 70
-	},
-	{
-		"name": "rain/rain-color",
-		"order": 2,
-		"bone": "rain-color",
-		"x": 1,
-		"y": 1,
-		"strength": 0,
-		"gravity": 70
-	},
-	{
-		"name": "rain/rain-green",
-		"order": 1,
-		"bone": "rain-green",
-		"x": 1,
-		"y": 1,
-		"strength": 0,
-		"gravity": 70
-	},
-	{ "name": "rain/rain-white", "bone": "rain-white", "x": 1, "y": 1, "strength": 0, "gravity": 70 }
+		"strength": 172.8,
+		"damping": 0.8571,
+		"mass": 3
+	}
 ],
 "skins": [
 	{

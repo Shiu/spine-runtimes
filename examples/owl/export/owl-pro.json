@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "XOfL7Ab60mk",
-	"spine": "4.2.22",
+	"hash": "GGWRx9bsQjg",
+	"spine": "4.3.15-beta",
 	"x": -644,
 	"y": -274,
 	"width": 1350.84,
@@ -140,11 +140,44 @@
 	{ "name": "leaf-2", "bone": "leaf-2", "attachment": "leaf-2" },
 	{ "name": "leaf-1", "bone": "leaf-1", "attachment": "leaf-1" }
 ],
-"transform": [
+"constraints": [
 	{
+		"type": "transform",
 		"name": "control-back",
 		"bones": [ "control-back" ],
-		"target": "control",
+		"source": "control",
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": -1,
 		"mixScaleX": 0,

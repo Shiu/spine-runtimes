@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "ej2SKFlZb7Q",
-	"spine": "4.2.22",
+	"hash": "oIOsLdqSJQw",
+	"spine": "4.3.15-beta",
 	"x": -87.7,
 	"y": -1.71,
 	"width": 227.65,
@@ -137,11 +137,12 @@
 	{ "name": "vine-path", "bone": "root", "attachment": "vine-path" },
 	{ "name": "vine", "bone": "vine1", "attachment": "vine" }
 ],
-"path": [
+"constraints": [
 	{
+		"type": "path",
 		"name": "vine-path",
 		"bones": [ "vine1", "vine2", "vine3", "vine4", "vine5", "vine6", "vine7", "vine8", "vine9", "vine10", "vine11", "vine12", "vine13" ],
-		"target": "vine-path",
+		"slot": "vine-path",
 		"rotateMode": "chainScale"
 	}
 ],

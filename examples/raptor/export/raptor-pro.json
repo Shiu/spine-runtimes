@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "PlcXzl8RAT8",
-	"spine": "4.2.22",
+	"hash": "QSRhez8fvyA",
+	"spine": "4.3.15-beta",
 	"x": -809.16,
 	"y": -73.54,
 	"width": 1287.65,
@@ -577,64 +577,65 @@
 	{ "name": "front-hand", "bone": "front-hand2", "attachment": "front-hand" },
 	{ "name": "tail-shadow", "bone": "torso1", "color": "00000000" }
 ],
-"ik": [
+"constraints": [
 	{
-		"name": "back-foot-ik",
-		"order": 3,
-		"bones": [ "back-leg3", "back-foot1" ],
-		"target": "back-foot-target"
-	},
-	{
-		"name": "back-leg-ik",
-		"order": 2,
-		"bones": [ "back-leg1", "back-leg2" ],
-		"target": "back-leg-target",
-		"bendPositive": false
-	},
-	{
-		"name": "front-foot-ik",
-		"order": 1,
-		"bones": [ "front-leg3", "front-foot1" ],
-		"target": "front-foot-target"
-	},
-	{
+		"type": "ik",
 		"name": "front-leg-ik",
 		"bones": [ "front-leg1", "front-leg2" ],
 		"target": "front-leg-target",
 		"bendPositive": false
 	},
 	{
-		"name": "spineboy-back-arm-ik",
-		"order": 8,
-		"bones": [ "back-arm", "back-bracer" ],
-		"target": "spineboy-back-arm-target",
+		"type": "ik",
+		"name": "front-foot-ik",
+		"bones": [ "front-leg3", "front-foot1" ],
+		"target": "front-foot-target"
+	},
+	{
+		"type": "ik",
+		"name": "back-leg-ik",
+		"bones": [ "back-leg1", "back-leg2" ],
+		"target": "back-leg-target",
 		"bendPositive": false
 	},
 	{
-		"name": "spineboy-back-leg-ik",
-		"order": 5,
-		"bones": [ "back-thigh", "back-knee" ],
-		"target": "spineboy-back-foot-target",
-		"bendPositive": false
+		"type": "ik",
+		"name": "back-foot-ik",
+		"bones": [ "back-leg3", "back-foot1" ],
+		"target": "back-foot-target"
 	},
 	{
-		"name": "spineboy-front-arm-ik",
-		"order": 7,
-		"bones": [ "front-arm", "front-bracer" ],
-		"target": "spineboy-front-arm-target"
-	},
-	{
+		"type": "ik",
 		"name": "spineboy-front-leg-ik",
-		"order": 4,
 		"bones": [ "front-thigh", "lower-leg" ],
 		"target": "spineboy-front-foot-target",
 		"bendPositive": false
 	},
 	{
+		"type": "ik",
+		"name": "spineboy-back-leg-ik",
+		"bones": [ "back-thigh", "back-knee" ],
+		"target": "spineboy-back-foot-target",
+		"bendPositive": false
+	},
+	{
+		"type": "ik",
 		"name": "stirrup",
-		"order": 6,
 		"bones": [ "stirrup-strap1", "stirrup-strap2" ],
 		"target": "stirrup",
+		"bendPositive": false
+	},
+	{
+		"type": "ik",
+		"name": "spineboy-front-arm-ik",
+		"bones": [ "front-arm", "front-bracer" ],
+		"target": "spineboy-front-arm-target"
+	},
+	{
+		"type": "ik",
+		"name": "spineboy-back-arm-ik",
+		"bones": [ "back-arm", "back-bracer" ],
+		"target": "spineboy-back-arm-target",
 		"bendPositive": false
 	}
 ],

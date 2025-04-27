@@ -1,0 +1,50 @@
+{
+"skeleton": {
+	"hash": "oS+zNqYd+3A",
+	"spine": "4.3.15-beta",
+	"x": -625.5,
+	"y": -1171.12,
+	"width": 1251,
+	"height": 909,
+	"images": "./images/",
+	"audio": ""
+},
+"bones": [
+	{ "name": "root", "y": -974.12 },
+	{ "name": "sword", "parent": "root", "length": 56.19, "rotation": 90, "x": 124.55, "y": 520.16 },
+	{ "name": "stick", "parent": "root", "length": 56.19, "rotation": 90, "x": -7.18, "y": 570.25 },
+	{ "name": "rock", "parent": "root", "length": 35.78, "rotation": 90, "x": -133.35, "y": 565.62 }
+],
+"slots": [
+	{ "name": "ground-bg", "bone": "root", "attachment": "ground-bg" },
+	{ "name": "ground-cover", "bone": "root", "attachment": "ground-cover" },
+	{ "name": "sword", "bone": "sword", "attachment": "sword" },
+	{ "name": "stick", "bone": "stick", "attachment": "stick" },
+	{ "name": "rock", "bone": "rock", "attachment": "rock" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"ground-bg": {
+				"ground-bg": { "width": 1251, "height": 394 }
+			},
+			"ground-cover": {
+				"ground-cover": { "x": 132.5, "y": -138, "width": 341, "height": 118 }
+			},
+			"rock": {
+				"rock": { "x": 3.88, "y": 3.65, "rotation": -90, "width": 88, "height": 75 }
+			},
+			"stick": {
+				"stick": { "x": -0.75, "y": -7.18, "rotation": -90, "width": 44, "height": 267 }
+			},
+			"sword": {
+				"sword": { "x": 54.34, "y": 0.55, "rotation": -90, "width": 44, "height": 275 }
+			}
+		}
+	}
+],
+"animations": {
+	"ready-to-animate": {}
+}
+}

@@ -18,7 +18,7 @@ hood-end1b
 	bounds: 795, 67, 28, 79
 	rotate: 90
 hood-end1c
-	bounds: 636, 24, 31, 70
+	bounds: 781, 34, 31, 70
 	rotate: 90
 hood-end1d
 	bounds: 795, 97, 29, 82
@@ -27,24 +27,24 @@ hood-end1e
 	bounds: 248, 2, 35, 78
 	rotate: 90
 hood-end1f
-	bounds: 509, 42, 39, 71
+	bounds: 635, 46, 39, 71
 	rotate: 90
 hood-end2a
 	bounds: 120, 9, 30, 76
 	rotate: 90
 hood-end2b
-	bounds: 509, 2, 38, 71
+	bounds: 708, 43, 38, 71
 	rotate: 90
 hood-end2c
-	bounds: 337, 18, 42, 64
+	bounds: 583, 17, 42, 64
 hood-end2d
-	bounds: 712, 58, 23, 76
+	bounds: 879, 78, 23, 76
 	rotate: 90
 hood-end2e
-	bounds: 636, 57, 28, 74
+	bounds: 876, 48, 28, 74
 	rotate: 90
 hood-end2f
-	bounds: 879, 70, 31, 70
+	bounds: 383, 50, 31, 70
 	rotate: 90
 left-foot
 	bounds: 199, 2, 80, 47
@@ -56,9 +56,10 @@ left-foot-bent02
 left-foot-side
 	bounds: 199, 84, 90, 42
 left-hand
-	bounds: 582, 28, 52, 53
+	bounds: 957, 27, 52, 53
+	rotate: 90
 right-foot
-	bounds: 381, 25, 66, 56
+	bounds: 455, 25, 66, 56
 right-foot-bent01
 	bounds: 383, 83, 85, 43
 right-foot-bent02
@@ -66,7 +67,7 @@ right-foot-bent02
 right-foot-side
 	bounds: 291, 84, 90, 42
 right-hand
-	bounds: 449, 25, 56, 58
+	bounds: 523, 25, 56, 58
 	rotate: 90
 torso
 	bounds: 120, 41, 77, 85

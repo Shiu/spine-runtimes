@@ -165,7 +165,7 @@ echo "Exporting assets..."
 -i ../windmill/windmill-ess.spine -o ../windmill/export -e json.json \
 -i ../windmill/windmill-ess.spine -o ../windmill/export -e binary.json \
 -i ../windmill/images -o ../windmill/export -n windmill -p atlas-0.5.json \
--i ../windmill/images -o ../windmill/export -n windmill-pma -p atlas-0.5-pma.json
+-i ../windmill/images -o ../windmill/export -n windmill-pma -p atlas-0.5-pma.json \
 \
 -i ../1-weight-and-mass/1-weight-and-mass-ess.spine -o ../1-weight-and-mass/export -e json.json \
 -i ../1-weight-and-mass/1-weight-and-mass-ess.spine -o ../1-weight-and-mass/export -e binary.json \
@@ -174,7 +174,7 @@ echo "Exporting assets..."
 \
 -i ../2-the-12-principles/2-the-12-principles-ess.spine -o ../2-the-12-principles/export -e json.json \
 -i ../2-the-12-principles/2-the-12-principles-ess.spine -o ../2-the-12-principles/export -e binary.json \
--i ../2-the-12-principles/images -o ../2-the-12-principles/export -n 2-the-12-principles -p atlas-0.5.json \
+-i ../2-the-12-principles/images -o ../2-the-12-principles/export -n 2-the-12-principles -p atlas-0.4.json \
 -i ../2-the-12-principles/images -o ../2-the-12-principles/export -n 2-the-12-principles-pma -p atlas-0.5-pma.json \
 \
 -i ../3-timing-and-spacing/3-timing-and-spacing-ess.spine -o ../3-timing-and-spacing/export -e json.json \

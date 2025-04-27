@@ -28,9 +28,9 @@ burst03-fg
 eye
 	bounds: 494, 640, 75, 75
 eye-highlight
-	bounds: 261, 256, 22, 22
+	bounds: 293, 301, 22, 22
 eye-pupil
-	bounds: 293, 305, 18, 18
+	bounds: 372, 559, 18, 18
 eye-stalk
 	bounds: 494, 572, 74, 66
 front-foot

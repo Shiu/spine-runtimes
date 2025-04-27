@@ -13,13 +13,13 @@ common/big-tear
 common/eye-3
 	bounds: 226, 25, 15, 26
 common/eye-closed-happy
-	bounds: 267, 7, 25, 9
+	bounds: 273, 2, 25, 9
 	rotate: 90
 common/eye-dafault
 	bounds: 203, 20, 22, 21
 	rotate: 90
 common/eye-equal
-	bounds: 308, 43, 25, 15
+	bounds: 433, 79, 25, 15
 common/eye-fire
 	bounds: 278, 57, 26, 28
 	rotate: 90
@@ -30,7 +30,8 @@ common/eye-heart
 common/eye-reverse-v
 	bounds: 166, 2, 26, 16
 common/eye-sideway-v
-	bounds: 336, 60, 21, 23
+	bounds: 226, 2, 21, 23
+	rotate: 90
 common/eye-slant-close
 	bounds: 194, 2, 23, 16
 common/eye-small-dot
@@ -40,8 +41,7 @@ common/eye-sparkle
 common/eye-star
 	bounds: 404, 99, 29, 27
 common/eye-twirl
-	bounds: 226, 2, 21, 23
-	rotate: 90
+	bounds: 243, 26, 21, 23
 common/eye-u
 	bounds: 2, 2, 24, 17
 common/eye-x
@@ -55,7 +55,7 @@ common/mouth-3
 common/mouth-bracket
 	bounds: 322, 85, 34, 11
 common/mouth-doubt
-	bounds: 243, 34, 26, 15
+	bounds: 308, 43, 26, 15
 common/mouth-fangs
 	bounds: 205, 52, 39, 14
 	rotate: 90
@@ -81,23 +81,22 @@ common/mouth-toungue-sticking-out
 common/mouth-u
 	bounds: 472, 107, 36, 19
 common/mouth-v
-	bounds: 251, 5, 27, 14
-	rotate: 90
+	bounds: 404, 83, 27, 14
 common/mouth-x
-	bounds: 335, 38, 21, 20
+	bounds: 251, 3, 21, 20
+	rotate: 90
 common/purple-fear-lines
 	bounds: 322, 98, 48, 28
 common/shadow
 	bounds: 2, 21, 113, 31
 common/small-dash
-	bounds: 404, 88, 9, 20
-	rotate: 90
+	bounds: 266, 29, 9, 20
 common/small-drop-line
 	bounds: 71, 2, 16, 17
 common/small-purple-fear
 	bounds: 222, 88, 54, 38
 common/tear
-	bounds: 274, 36, 20, 19
+	bounds: 277, 36, 20, 19
 
 chibi-stickers-pma_2.png
 	size: 1024, 256

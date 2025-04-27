@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "B+1abJH59zk",
-	"spine": "4.2.22",
+	"hash": "8WtDnaylNLY",
+	"spine": "4.3.15-beta",
 	"x": -180,
 	"y": -37.5,
 	"width": 360,
@@ -193,26 +193,57 @@
 	{ "name": "small-drop-line3", "bone": "small-drop-line3" },
 	{ "name": "lamp", "bone": "effect-head" }
 ],
-"ik": [
+"constraints": [
 	{
+		"type": "ik",
+		"name": "leg-target-r",
+		"bones": [ "leg-up-r", "leg-down-r" ],
+		"target": "leg-target-r"
+	},
+	{
+		"type": "ik",
 		"name": "leg-target-l",
-		"order": 1,
 		"bones": [ "leg-up-l", "leg-down-l" ],
 		"target": "leg-target-l"
 	},
 	{
-		"name": "leg-target-r",
-		"bones": [ "leg-up-r", "leg-down-r" ],
-		"target": "leg-target-r"
-	}
-],
-"transform": [
-	{
+		"type": "transform",
 		"name": "face-holder",
-		"order": 2,
 		"bones": [ "head-inverse" ],
-		"target": "face-holder",
+		"source": "face-holder",
 		"x": 56.82,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": -1,
 		"mixScaleX": 0,

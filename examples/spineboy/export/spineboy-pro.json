@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "dr3Kr/vMgPA",
-	"spine": "4.2.22",
+	"hash": "r8Qsokyqm1E",
+	"spine": "4.3.15-beta",
 	"x": -188.63,
 	"y": -7.94,
 	"width": 418.45,
@@ -318,140 +318,395 @@
 	{ "name": "muzzle-ring3", "bone": "muzzle-ring3", "color": "d8baffff", "blend": "additive" },
 	{ "name": "muzzle-ring4", "bone": "muzzle-ring4", "color": "d8baffff", "blend": "additive" }
 ],
-"ik": [
+"constraints": [
 	{
-		"name": "aim-ik",
-		"order": 13,
-		"bones": [ "rear-upper-arm" ],
-		"target": "crosshair",
-		"mix": 0
-	},
-	{
-		"name": "aim-torso-ik",
-		"order": 8,
-		"bones": [ "aim-constraint-target" ],
-		"target": "crosshair"
-	},
-	{
-		"name": "board-ik",
-		"order": 1,
-		"bones": [ "hoverboard-controller" ],
-		"target": "board-ik"
-	},
-	{
-		"name": "front-foot-ik",
-		"order": 6,
-		"bones": [ "front-foot" ],
-		"target": "front-foot-target"
-	},
-	{
-		"name": "front-leg-ik",
-		"order": 4,
-		"bones": [ "front-thigh", "front-shin" ],
-		"target": "front-leg-target",
-		"bendPositive": false
-	},
-	{
-		"name": "rear-foot-ik",
-		"order": 7,
-		"bones": [ "rear-foot" ],
-		"target": "rear-foot-target"
-	},
-	{
-		"name": "rear-leg-ik",
-		"order": 5,
-		"bones": [ "rear-thigh", "rear-shin" ],
-		"target": "rear-leg-target",
-		"bendPositive": false
-	}
-],
-"transform": [
-	{
-		"name": "aim-front-arm-transform",
-		"order": 11,
-		"bones": [ "front-upper-arm" ],
-		"target": "aim-constraint-target",
-		"rotation": -180,
-		"mixRotate": 0,
-		"mixX": 0,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	},
-	{
-		"name": "aim-head-transform",
-		"order": 10,
-		"bones": [ "head" ],
-		"target": "aim-constraint-target",
-		"rotation": 84.3,
-		"mixRotate": 0,
-		"mixX": 0,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	},
-	{
-		"name": "aim-rear-arm-transform",
-		"order": 12,
-		"bones": [ "rear-upper-arm" ],
-		"target": "aim-constraint-target",
-		"x": 57.7,
-		"y": 56.4,
-		"mixRotate": 0,
-		"mixX": 0,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	},
-	{
-		"name": "aim-torso-transform",
-		"order": 9,
-		"bones": [ "torso" ],
-		"target": "aim-constraint-target",
-		"rotation": 69.5,
-		"shearY": -36,
-		"mixRotate": 0,
-		"mixX": 0,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	},
-	{
-		"name": "front-foot-board-transform",
-		"order": 2,
-		"bones": [ "front-foot-target" ],
-		"target": "hoverboard-controller",
-		"x": -69.8,
-		"y": 20.7,
-		"mixRotate": 0,
-		"mixX": 0,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	},
-	{
-		"name": "rear-foot-board-transform",
-		"order": 3,
-		"bones": [ "rear-foot-target" ],
-		"target": "hoverboard-controller",
-		"x": 86.6,
-		"y": 21.3,
-		"mixRotate": 0,
-		"mixX": 0,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	},
-	{
+		"type": "transform",
 		"name": "shoulder",
 		"bones": [ "back-shoulder" ],
-		"target": "front-shoulder",
+		"source": "front-shoulder",
 		"x": 40.17,
 		"y": -1.66,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": -1,
 		"mixScaleX": 0,
 		"mixShearY": 0
 	},
 	{
+		"type": "ik",
+		"name": "board-ik",
+		"bones": [ "hoverboard-controller" ],
+		"target": "board-ik"
+	},
+	{
+		"type": "transform",
+		"name": "front-foot-board-transform",
+		"bones": [ "front-foot-target" ],
+		"source": "hoverboard-controller",
+		"x": -69.8,
+		"y": 20.7,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixRotate": 0,
+		"mixX": 0,
+		"mixScaleX": 0,
+		"mixShearY": 0
+	},
+	{
+		"type": "transform",
+		"name": "rear-foot-board-transform",
+		"bones": [ "rear-foot-target" ],
+		"source": "hoverboard-controller",
+		"x": 86.6,
+		"y": 21.3,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixRotate": 0,
+		"mixX": 0,
+		"mixScaleX": 0,
+		"mixShearY": 0
+	},
+	{
+		"type": "ik",
+		"name": "front-leg-ik",
+		"bones": [ "front-thigh", "front-shin" ],
+		"target": "front-leg-target",
+		"bendPositive": false
+	},
+	{
+		"type": "ik",
+		"name": "rear-leg-ik",
+		"bones": [ "rear-thigh", "rear-shin" ],
+		"target": "rear-leg-target",
+		"bendPositive": false
+	},
+	{
+		"type": "ik",
+		"name": "front-foot-ik",
+		"bones": [ "front-foot" ],
+		"target": "front-foot-target"
+	},
+	{
+		"type": "ik",
+		"name": "rear-foot-ik",
+		"bones": [ "rear-foot" ],
+		"target": "rear-foot-target"
+	},
+	{
+		"type": "ik",
+		"name": "aim-torso-ik",
+		"bones": [ "aim-constraint-target" ],
+		"target": "crosshair"
+	},
+	{
+		"type": "transform",
+		"name": "aim-torso-transform",
+		"bones": [ "torso" ],
+		"source": "aim-constraint-target",
+		"rotation": 69.5,
+		"shearY": -36,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixRotate": 0,
+		"mixX": 0,
+		"mixScaleX": 0,
+		"mixShearY": 0
+	},
+	{
+		"type": "transform",
+		"name": "aim-head-transform",
+		"bones": [ "head" ],
+		"source": "aim-constraint-target",
+		"rotation": 84.3,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixRotate": 0,
+		"mixX": 0,
+		"mixScaleX": 0,
+		"mixShearY": 0
+	},
+	{
+		"type": "transform",
+		"name": "aim-front-arm-transform",
+		"bones": [ "front-upper-arm" ],
+		"source": "aim-constraint-target",
+		"rotation": -180,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixRotate": 0,
+		"mixX": 0,
+		"mixScaleX": 0,
+		"mixShearY": 0
+	},
+	{
+		"type": "transform",
+		"name": "aim-rear-arm-transform",
+		"bones": [ "rear-upper-arm" ],
+		"source": "aim-constraint-target",
+		"x": 57.7,
+		"y": 56.4,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixRotate": 0,
+		"mixX": 0,
+		"mixScaleX": 0,
+		"mixShearY": 0
+	},
+	{
+		"type": "ik",
+		"name": "aim-ik",
+		"bones": [ "rear-upper-arm" ],
+		"target": "crosshair",
+		"mix": 0
+	},
+	{
+		"type": "transform",
 		"name": "toes-board",
-		"order": 14,
 		"bones": [ "front-foot-tip", "back-foot-tip" ],
-		"target": "hoverboard-controller",
+		"source": "hoverboard-controller",
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixX": 0,
 		"mixScaleX": 0,

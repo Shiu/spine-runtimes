@@ -1,0 +1,25 @@
+8-follow-through-pma.png
+	size: 1024, 128
+	filter: Linear, Linear
+	pma: true
+	scale: 0.5
+ball
+	bounds: 462, 2, 78, 78
+chain-1
+	bounds: 194, 10, 54, 152
+	rotate: 90
+chain-2
+	bounds: 348, 82, 37, 126
+	rotate: 90
+chain-3
+	bounds: 348, 43, 37, 112
+	rotate: 90
+chain-4
+	bounds: 476, 82, 37, 98
+	rotate: 90
+chain-end
+	bounds: 576, 59, 63, 60
+platform
+	bounds: 2, 66, 344, 53
+tail
+	bounds: 2, 8, 190, 56

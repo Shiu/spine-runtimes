@@ -1,0 +1,24 @@
+4-wave-principle-pma.png
+	size: 1024, 128
+	filter: Linear, Linear
+	pma: true
+	scale: 0.5
+basket-ball
+	bounds: 476, 8, 103, 103
+basket-lambertian
+	bounds: 581, 8, 103, 103
+chain-1
+	bounds: 2, 2, 54, 152
+	rotate: 90
+chain-2
+	bounds: 348, 74, 37, 126
+	rotate: 90
+chain-3
+	bounds: 156, 19, 37, 112
+	rotate: 90
+chain-4
+	bounds: 686, 13, 37, 98
+chain-end
+	bounds: 725, 51, 63, 60
+platform
+	bounds: 2, 58, 344, 53

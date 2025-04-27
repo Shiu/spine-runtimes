@@ -1,0 +1,74 @@
+5-squash-and-stretch.png
+	size: 1024, 512
+	filter: Linear, Linear
+	scale: 0.5
+ball
+	bounds: 62, 50, 38, 38
+belt-ends
+	bounds: 773, 238, 23, 28
+course
+	bounds: 2, 90, 769, 411
+hair-1
+	bounds: 773, 368, 41, 20
+	rotate: 90
+hair-2
+	bounds: 62, 26, 37, 22
+head
+	bounds: 2, 26, 58, 62
+hood-end1a
+	bounds: 102, 52, 12, 42
+	rotate: 90
+hood-end1b
+	bounds: 274, 74, 14, 40
+	rotate: 90
+hood-end1c
+	bounds: 899, 485, 16, 35
+	rotate: 90
+hood-end1d
+	bounds: 796, 415, 15, 41
+hood-end1e
+	bounds: 48, 6, 18, 39
+	rotate: 90
+hood-end1f
+	bounds: 814, 458, 20, 36
+	rotate: 90
+hood-end2a
+	bounds: 773, 328, 15, 38
+hood-end2b
+	bounds: 861, 482, 19, 36
+	rotate: 90
+hood-end2c
+	bounds: 973, 480, 21, 32
+	rotate: 90
+hood-end2d
+	bounds: 146, 52, 12, 38
+	rotate: 90
+hood-end2e
+	bounds: 316, 74, 14, 37
+	rotate: 90
+hood-end2f
+	bounds: 936, 485, 16, 35
+	rotate: 90
+left-foot
+	bounds: 190, 64, 40, 24
+left-foot-bent01
+	bounds: 2, 2, 44, 22
+left-foot-bent02
+	bounds: 147, 66, 41, 22
+left-foot-side
+	bounds: 773, 411, 45, 21
+	rotate: 90
+left-hand
+	bounds: 773, 268, 26, 27
+right-foot
+	bounds: 813, 428, 33, 28
+right-foot-bent01
+	bounds: 102, 66, 43, 22
+right-foot-bent02
+	bounds: 232, 66, 40, 22
+right-foot-side
+	bounds: 814, 480, 45, 21
+right-hand
+	bounds: 773, 297, 28, 29
+torso
+	bounds: 773, 458, 39, 43

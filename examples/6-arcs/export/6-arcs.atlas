@@ -1,0 +1,12 @@
+6-arcs.png
+	size: 1024, 256
+	filter: Linear, Linear
+	scale: 0.5
+arc-tracker
+	bounds: 2, 2, 9, 9
+ball
+	bounds: 536, 75, 78, 78
+platform
+	bounds: 2, 13, 532, 198
+tail
+	bounds: 536, 155, 190, 56

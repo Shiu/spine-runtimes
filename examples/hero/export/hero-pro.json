@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "1GKrwevyJb4",
-	"spine": "4.2.22",
+	"hash": "vGjIW+hEFWg",
+	"spine": "4.3.15-beta",
 	"x": -85.7,
 	"y": -0.02,
 	"width": 321.77,
@@ -120,35 +120,34 @@
 	{ "name": "forearm1", "bone": "forearm1", "attachment": "forearm1" },
 	{ "name": "hand1", "bone": "hand1", "attachment": "hand1" }
 ],
-"ik": [
+"constraints": [
 	{
+		"type": "ik",
 		"name": "left-leg",
 		"bones": [ "thigh1", "shin1" ],
 		"target": "left-ankle",
 		"bendPositive": false
 	},
 	{
+		"type": "ik",
 		"name": "look-constraint",
-		"order": 1,
 		"bones": [ "head" ],
 		"target": "look-constraint-goal",
 		"mix": 0
 	},
 	{
+		"type": "ik",
 		"name": "right-leg",
-		"order": 2,
 		"bones": [ "thigh2", "shin2" ],
 		"target": "right-ankle",
 		"bendPositive": false
-	}
-],
-"path": [
+	},
 	{
+		"type": "path",
 		"name": "weapon-morningstar",
-		"order": 3,
 		"skin": true,
 		"bones": [ "chain1", "chain2", "chain3", "chain4", "chain5", "chain6", "chain7", "chain8" ],
-		"target": "weapon-morningstar-path",
+		"slot": "weapon-morningstar-path",
 		"rotateMode": "chain"
 	}
 ],

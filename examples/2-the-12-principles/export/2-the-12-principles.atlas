@@ -1,0 +1,35 @@
+2-the-12-principles.png
+	size: 1024, 1024
+	filter: Linear, Linear
+	scale: 0.4
+basket-ball
+	bounds: 655, 627, 55, 55
+basket-lambertian
+	bounds: 904, 873, 55, 55
+billiard-ball
+	bounds: 712, 668, 14, 14
+billiard-lambertian
+	bounds: 904, 857, 14, 14
+billiard-specular
+	bounds: 961, 914, 14, 14
+bowling-ball
+	bounds: 2, 2, 42, 42
+bowling-lambertian
+	bounds: 329, 134, 42, 42
+bowling-specular
+	bounds: 655, 583, 42, 42
+obstacle-course
+	bounds: 2, 398, 651, 530
+platform
+	bounds: 2, 46, 130, 325
+	rotate: 90
+ring-big
+	bounds: 655, 684, 247, 244
+ring-small
+	bounds: 415, 205, 202, 191
+tennis-ball
+	bounds: 415, 187, 16, 16
+tennis-lambertian
+	bounds: 619, 380, 16, 16
+water
+	bounds: 2, 178, 411, 218

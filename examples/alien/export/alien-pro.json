@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "tTPHKN0ryvs",
-	"spine": "4.2.22",
+	"hash": "rfTztyhi/gY",
+	"spine": "4.3.15-beta",
 	"x": -191.3,
 	"y": -4.51,
 	"width": 368.26,
@@ -200,35 +200,132 @@
 	{ "name": "front-upper-arm", "bone": "front-upper-arm", "attachment": "front-upper-arm" },
 	{ "name": "front-lower-arm", "bone": "front-lower-arm", "attachment": "front-lower-arm" }
 ],
-"transform": [
+"constraints": [
 	{
-		"name": "eye",
-		"order": 2,
-		"bones": [ "eye" ],
-		"target": "head",
-		"x": 91.94,
-		"y": -84.12
-	},
-	{
+		"type": "transform",
 		"name": "eye-root",
 		"bones": [ "eye-root" ],
-		"target": "head",
+		"source": "head",
 		"rotation": -63.5,
 		"x": -143,
 		"y": -143.95,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixScaleX": 0
 	},
 	{
+		"type": "transform",
 		"name": "jaw",
-		"order": 1,
 		"bones": [ "metaljaw" ],
-		"target": "head",
+		"source": "head",
 		"rotation": -138.36,
 		"x": 47,
 		"y": -7.76,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
 		"mixRotate": 0,
 		"mixScaleX": 0
+	},
+	{
+		"type": "transform",
+		"name": "eye",
+		"bones": [ "eye" ],
+		"source": "head",
+		"x": 91.94,
+		"y": -84.12,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		}
 	}
 ],
 "skins": [

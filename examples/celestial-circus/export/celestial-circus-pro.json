@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "FsTlpSGjt5g",
-	"spine": "4.2.22",
+	"hash": "1hJM7EeI0hk",
+	"spine": "4.3.15-beta",
 	"x": -755,
 	"y": -556.02,
 	"width": 1332,
@@ -295,58 +295,12 @@
 	{ "name": "stars/star5", "bone": "star5" },
 	{ "name": "stars/star6", "bone": "star6" }
 ],
-"transform": [
+"constraints": [
+	{ "type": "physics", "name": "swing-top", "bone": "swing-top", "rotate": 1, "limit": 7000 },
+	{ "type": "physics", "name": "swing-bottom", "bone": "swing-bottom", "rotate": 1 },
 	{
-		"name": "girl/face-control",
-		"order": 9,
-		"bones": [ "face-holder" ],
-		"target": "face-control",
-		"x": 33.48,
-		"y": 16.63,
-		"mixRotate": 0,
-		"mixX": 0.8,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	},
-	{
-		"name": "girl/head-control",
-		"order": 8,
-		"bones": [ "face-inverse" ],
-		"target": "face-control",
-		"x": 109.57,
-		"y": 251.66,
-		"mixRotate": 0,
-		"mixX": -0.5,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	},
-	{
-		"name": "girl/shoulders-perspective",
-		"order": 6,
-		"bones": [ "arm-back-up-holder" ],
-		"target": "arm-front-up-holder",
-		"x": 25.8,
-		"y": -257.4,
-		"mixRotate": 0,
-		"mixX": -1,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	}
-],
-"physics": [
-	{
-		"name": "bench-back",
-		"order": 31,
-		"bone": "bench-back",
-		"x": 0.4949,
-		"y": 0.4579,
-		"limit": 1500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
+		"type": "physics",
 		"name": "bench-front",
-		"order": 2,
 		"bone": "bench-front",
 		"x": 0.1279,
 		"y": 0.2256,
@@ -354,225 +308,156 @@
 		"strength": 81.4,
 		"damping": 0.792
 	},
+	{ "type": "physics", "name": "girl/body-down", "bone": "body-down", "rotate": 1, "limit": 1500, "inertia": 0.1195 },
+	{ "type": "physics", "name": "girl/body-up", "bone": "body-up", "rotate": 0.3098, "limit": 1500, "inertia": 0.2257 },
+	{ "type": "physics", "name": "girl/arm-front-up-holder", "bone": "arm-front-up-holder", "x": 0.6522, "y": 0.1359, "limit": 500 },
 	{
-		"name": "cloud-perspective",
-		"order": 32,
-		"bone": "cloud-perspective",
-		"x": 1,
-		"y": 1,
-		"limit": 500,
-		"inertia": 0.25,
-		"damping": 0.85,
-		"windGlobal": true
+		"type": "transform",
+		"name": "girl/shoulders-perspective",
+		"bones": [ "arm-back-up-holder" ],
+		"source": "arm-front-up-holder",
+		"x": 25.8,
+		"y": -257.4,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixRotate": 0,
+		"mixX": -1,
+		"mixScaleX": 0,
+		"mixShearY": 0
 	},
-	{ "name": "swing-bottom", "order": 1, "bone": "swing-bottom", "rotate": 1, "inertia": 0.5, "damping": 0.85 },
-	{ "name": "swing-top", "bone": "swing-top", "rotate": 1, "limit": 7000, "inertia": 0.5, "damping": 0.85 },
 	{
-		"name": "girl/hair/fringe-side-back",
-		"order": 26,
-		"bone": "fringe-side-back",
-		"rotate": 1,
-		"scaleX": 0.6033,
+		"type": "physics",
+		"name": "girl/face-control",
+		"bone": "face-control",
+		"x": 0.5,
+		"y": 0.5,
 		"limit": 1500,
-		"inertia": 0.5,
-		"damping": 0.85
+		"inertia": 0.1372,
+		"strength": 138.9,
+		"damping": 0.6372
 	},
 	{
-		"name": "girl/hair/fringe-side-front",
-		"order": 25,
-		"bone": "fringe-side-front",
-		"rotate": 1,
-		"scaleX": 0.6033,
-		"limit": 1500,
-		"inertia": 0.5,
-		"damping": 0.85
+		"type": "transform",
+		"name": "girl/head-control",
+		"bones": [ "face-inverse" ],
+		"source": "face-control",
+		"x": 109.57,
+		"y": 251.66,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixRotate": 0,
+		"mixX": -0.5,
+		"mixScaleX": 0,
+		"mixShearY": 0
 	},
 	{
-		"name": "girl/hair/hair-back",
-		"order": 23,
-		"bone": "hair-back",
-		"rotate": 1,
-		"limit": 1500,
-		"inertia": 0.5,
-		"damping": 0.85
+		"type": "transform",
+		"name": "girl/face-control",
+		"bones": [ "face-holder" ],
+		"source": "face-control",
+		"x": 33.48,
+		"y": 16.63,
+		"properties": {
+			"rotate": {
+				"to": {
+					"rotate": { "max": 100, "scale": 1 }
+				}
+			},
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			},
+			"scaleX": {
+				"to": {
+					"scaleX": { "scale": 1 }
+				}
+			},
+			"scaleY": {
+				"to": {
+					"scaleY": { "scale": 1 }
+				}
+			},
+			"shearY": {
+				"to": {
+					"shearY": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixRotate": 0,
+		"mixX": 0.8,
+		"mixScaleX": 0,
+		"mixShearY": 0
 	},
+	{ "type": "physics", "name": "girl/feathers-front", "bone": "feathers-front", "rotate": 1, "limit": 1500, "strength": 48.8 },
 	{
-		"name": "girl/hair/hair-back-down",
-		"order": 24,
-		"bone": "hair-back-down",
-		"x": 1,
-		"y": 1,
-		"rotate": 1,
-		"scaleX": 0.3641,
-		"limit": 1500,
-		"inertia": 0.7345,
-		"damping": 0.8142,
-		"windGlobal": true
-	},
-	{
-		"name": "girl/legs/foot-back",
-		"order": 22,
-		"bone": "foot-back",
-		"rotate": 1,
-		"limit": 1500,
-		"inertia": 0.1593,
-		"damping": 0.85
-	},
-	{
-		"name": "girl/legs/foot-front",
-		"order": 20,
-		"bone": "foot-front",
-		"rotate": 1,
-		"limit": 1500,
-		"inertia": 0.1593,
-		"damping": 0.85
-	},
-	{
-		"name": "girl/legs/leg-back-down",
-		"order": 21,
-		"bone": "leg-back-down",
-		"rotate": 1,
-		"limit": 1500,
-		"inertia": 0.8496,
-		"damping": 0.85
-	},
-	{
-		"name": "girl/legs/leg-front-down",
-		"order": 18,
-		"bone": "leg-front-down",
-		"rotate": 1,
-		"limit": 1500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "girl/legs/sock-bow",
-		"order": 19,
-		"bone": "sock-bow",
-		"rotate": 1,
-		"limit": 1500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "girl/skirt/skirt-back",
-		"order": 27,
-		"bone": "skirt-back",
-		"rotate": 1,
-		"limit": 1500,
-		"inertia": 0.3805,
-		"strength": 113.3,
-		"damping": 0.8982,
-		"mass": 2.27
-	},
-	{
-		"name": "girl/skirt/skirt-front",
-		"order": 29,
-		"bone": "skirt-front",
-		"rotate": 1,
-		"limit": 1500,
-		"inertia": 0.3805,
-		"strength": 113.3,
-		"damping": 0.8982,
-		"mass": 2.27
-	},
-	{
-		"name": "girl/skirt/underskirt-back",
-		"order": 28,
-		"bone": "underskirt-back",
-		"x": 0.3737,
-		"y": 0.3737,
-		"limit": 100,
-		"inertia": 0.5,
-		"strength": 164.6,
-		"damping": 0.85,
-		"windGlobal": true
-	},
-	{
-		"name": "girl/skirt/underskirt-front",
-		"order": 30,
-		"bone": "underskirt-front",
-		"x": 0.3737,
-		"y": 0.3737,
-		"limit": 100,
-		"inertia": 0.5,
-		"strength": 164.6,
-		"damping": 0.85,
-		"windGlobal": true
-	},
-	{
-		"name": "girl/wings/wing-back",
-		"order": 16,
-		"bone": "wing-back",
-		"rotate": 0.4105,
-		"shearX": 0.1602,
-		"limit": 1600,
-		"inertia": 0.5,
-		"strength": 164.6,
-		"damping": 0.85
-	},
-	{
-		"name": "girl/wings/wing-back-tip",
-		"order": 17,
-		"bone": "wing-back-tip",
-		"rotate": 1,
-		"limit": 1600,
-		"inertia": 0.5,
-		"damping": 0.85,
-		"windGlobal": true
-	},
-	{
-		"name": "girl/wings/wing-front",
-		"order": 14,
-		"bone": "wing-front",
-		"rotate": 0.4105,
-		"shearX": 0.1602,
-		"limit": 1600,
-		"inertia": 0.5,
-		"strength": 164.6,
-		"damping": 0.85
-	},
-	{
-		"name": "girl/wings/wing-front-tip",
-		"order": 15,
-		"bone": "wing-front-tip",
-		"rotate": 1,
-		"limit": 1600,
-		"inertia": 0.5,
-		"damping": 0.85,
-		"windGlobal": true
-	},
-	{
-		"name": "girl/arm-front-up-holder",
-		"order": 5,
-		"bone": "arm-front-up-holder",
-		"x": 0.6522,
-		"y": 0.1359,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "girl/body-down",
-		"order": 3,
-		"bone": "body-down",
-		"rotate": 1,
-		"limit": 1500,
-		"inertia": 0.1195,
-		"damping": 0.85
-	},
-	{
-		"name": "girl/body-up",
-		"order": 4,
-		"bone": "body-up",
-		"rotate": 0.3098,
-		"limit": 1500,
-		"inertia": 0.2257,
-		"damping": 0.85
-	},
-	{
+		"type": "physics",
 		"name": "girl/chest-control",
-		"order": 11,
 		"bone": "chest-control",
 		"x": 1,
 		"y": 1,
@@ -583,39 +468,8 @@
 		"mass": 2
 	},
 	{
-		"name": "girl/face-control",
-		"order": 7,
-		"bone": "face-control",
-		"x": 0.5,
-		"y": 0.5,
-		"limit": 1500,
-		"inertia": 0.1372,
-		"strength": 138.9,
-		"damping": 0.6372
-	},
-	{
-		"name": "girl/feathers-front",
-		"order": 10,
-		"bone": "feathers-front",
-		"rotate": 1,
-		"limit": 1500,
-		"inertia": 0.5,
-		"strength": 48.8,
-		"damping": 0.85
-	},
-	{
-		"name": "girl/feathers-front-top",
-		"order": 13,
-		"bone": "feathers-front-top",
-		"rotate": 1,
-		"limit": 1500,
-		"inertia": 0.5,
-		"strength": 48.8,
-		"damping": 0.85
-	},
-	{
+		"type": "physics",
 		"name": "girl/jabot",
-		"order": 12,
 		"bone": "jabot",
 		"rotate": 1,
 		"scaleX": 0.7011,
@@ -623,6 +477,101 @@
 		"inertia": 0.2566,
 		"damping": 0.7965,
 		"mass": 1.36,
+		"windGlobal": true
+	},
+	{ "type": "physics", "name": "girl/feathers-front-top", "bone": "feathers-front-top", "rotate": 1, "limit": 1500, "strength": 48.8 },
+	{
+		"type": "physics",
+		"name": "girl/wings/wing-front",
+		"bone": "wing-front",
+		"rotate": 0.4105,
+		"shearX": 0.1602,
+		"limit": 1600,
+		"strength": 164.6
+	},
+	{ "type": "physics", "name": "girl/wings/wing-front-tip", "bone": "wing-front-tip", "rotate": 1, "limit": 1600, "windGlobal": true },
+	{
+		"type": "physics",
+		"name": "girl/wings/wing-back",
+		"bone": "wing-back",
+		"rotate": 0.4105,
+		"shearX": 0.1602,
+		"limit": 1600,
+		"strength": 164.6
+	},
+	{ "type": "physics", "name": "girl/wings/wing-back-tip", "bone": "wing-back-tip", "rotate": 1, "limit": 1600, "windGlobal": true },
+	{ "type": "physics", "name": "girl/legs/leg-front-down", "bone": "leg-front-down", "rotate": 1, "limit": 1500 },
+	{ "type": "physics", "name": "girl/legs/sock-bow", "bone": "sock-bow", "rotate": 1, "limit": 1500 },
+	{ "type": "physics", "name": "girl/legs/foot-front", "bone": "foot-front", "rotate": 1, "limit": 1500, "inertia": 0.1593 },
+	{ "type": "physics", "name": "girl/legs/leg-back-down", "bone": "leg-back-down", "rotate": 1, "limit": 1500, "inertia": 0.8 },
+	{ "type": "physics", "name": "girl/legs/foot-back", "bone": "foot-back", "rotate": 1, "limit": 1500, "inertia": 0.1593 },
+	{ "type": "physics", "name": "girl/hair/hair-back", "bone": "hair-back", "rotate": 1, "limit": 1500 },
+	{
+		"type": "physics",
+		"name": "girl/hair/hair-back-down",
+		"bone": "hair-back-down",
+		"x": 1,
+		"y": 1,
+		"rotate": 1,
+		"scaleX": 0.35,
+		"limit": 1500,
+		"inertia": 0.75,
+		"damping": 0.815,
+		"windGlobal": true
+	},
+	{ "type": "physics", "name": "girl/hair/fringe-side-front", "bone": "fringe-side-front", "rotate": 1, "scaleX": 0.6033, "limit": 1500 },
+	{ "type": "physics", "name": "girl/hair/fringe-side-back", "bone": "fringe-side-back", "rotate": 1, "scaleX": 0.6033, "limit": 1500 },
+	{
+		"type": "physics",
+		"name": "girl/skirt/skirt-back",
+		"bone": "skirt-back",
+		"rotate": 1,
+		"limit": 1500,
+		"inertia": 0.3805,
+		"strength": 113.3,
+		"damping": 0.8982,
+		"mass": 2.27
+	},
+	{
+		"type": "physics",
+		"name": "girl/skirt/underskirt-back",
+		"bone": "underskirt-back",
+		"x": 0.3737,
+		"y": 0.3737,
+		"limit": 100,
+		"strength": 164.6,
+		"windGlobal": true
+	},
+	{
+		"type": "physics",
+		"name": "girl/skirt/skirt-front",
+		"bone": "skirt-front",
+		"rotate": 1,
+		"limit": 1500,
+		"inertia": 0.3805,
+		"strength": 113.3,
+		"damping": 0.8982,
+		"mass": 2.27
+	},
+	{
+		"type": "physics",
+		"name": "girl/skirt/underskirt-front",
+		"bone": "underskirt-front",
+		"x": 0.3737,
+		"y": 0.3737,
+		"limit": 100,
+		"strength": 164.6,
+		"windGlobal": true
+	},
+	{ "type": "physics", "name": "bench-back", "bone": "bench-back", "x": 0.4949, "y": 0.4579, "limit": 1500 },
+	{
+		"type": "physics",
+		"name": "cloud-perspective",
+		"bone": "cloud-perspective",
+		"x": 1,
+		"y": 1,
+		"limit": 500,
+		"inertia": 0.25,
 		"windGlobal": true
 	}
 ],
