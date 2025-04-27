@@ -54,6 +54,7 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 	public void update (Skeleton skeleton, Physics physics) {
 		if (pose.mix == 0) return;
 
+		SliderData data = this.data;
 		Timeline[] timelines = data.animation.timelines.items;
 		int timelineCount = data.animation.timelines.size;
 		Bone[] bones = skeleton.bones.items;
@@ -85,6 +86,9 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 		skeleton.updateCache.add(this);
 
 		Slot[] slots = skeleton.slots.items;
+		Constraint[] constraints = skeleton.constraints.items;
+		PhysicsConstraint[] physics = skeleton.physics.items;
+		int physicsCount = skeleton.physics.size;
 		for (int i = 0; i < timelineCount; i++) {
 			Timeline t = timelines[i];
 			if (t instanceof BoneTimeline timeline) {
@@ -96,13 +100,12 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 				skeleton.resetCache(slots[timeline.getSlotIndex()]);
 			else if (t instanceof PhysicsConstraintTimeline timeline) {
 				if (timeline.constraintIndex == -1) {
-					PhysicsConstraint[] constraints = skeleton.physics.items;
-					for (int ii = 0, nn = skeleton.physics.size; ii < nn; ii++)
-						skeleton.resetCache(constraints[ii]);
+					for (int ii = 0; ii < physicsCount; ii++)
+						skeleton.resetCache(physics[ii]);
 				} else
-					skeleton.resetCache(skeleton.constraints.items[timeline.constraintIndex]);
+					skeleton.resetCache(constraints[timeline.constraintIndex]);
 			} else if (t instanceof ConstraintTimeline timeline) //
-				skeleton.resetCache(skeleton.constraints.items[timeline.getConstraintIndex()]);
+				skeleton.resetCache(constraints[timeline.getConstraintIndex()]);
 		}
 	}
 }

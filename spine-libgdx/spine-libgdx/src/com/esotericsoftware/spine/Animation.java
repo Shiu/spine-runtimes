@@ -893,7 +893,7 @@ public class Animation {
 			return ENTRIES;
 		}
 
-		/** Sets the transform mode for the specified frame.
+		/** Sets the inherit transform mode for the specified frame.
 		 * @param frame Between 0 and <code>frameCount</code>, inclusive.
 		 * @param time The frame time in seconds. */
 		public void setFrame (int frame, float time, Inherit inherit) {
@@ -917,9 +917,8 @@ public class Animation {
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				if (blend == setup || blend == first) pose.inherit = bone.data.setup.inherit;
-				return;
-			}
-			pose.inherit = Inherit.values[(int)frames[search(frames, time, ENTRIES) + INHERIT]];
+			} else
+				pose.inherit = Inherit.values[(int)frames[search(frames, time, ENTRIES) + INHERIT]];
 		}
 	}
 
@@ -1733,7 +1732,7 @@ public class Animation {
 
 		/** Sets the time, mode, index, and frame time for the specified frame.
 		 * @param frame Between 0 and <code>frameCount</code>, inclusive.
-		 * @param time Seconds between frames. */
+		 * @param delay Seconds between frames. */
 		public void setFrame (int frame, float time, SequenceMode mode, int index, float delay) {
 			frame *= ENTRIES;
 			frames[frame] = time;

@@ -895,8 +895,8 @@ public class SkeletonJson extends SkeletonLoader {
 				case "inherit" -> {
 					var timeline = new InheritTimeline(frames, bone.index);
 					for (int frame = 0; keyMap != null; keyMap = keyMap.next, frame++) {
-						float time = keyMap.getFloat("time", 0);
-						timeline.setFrame(frame, time, Inherit.valueOf(keyMap.getString("inherit", Inherit.normal.name())));
+						timeline.setFrame(frame, keyMap.getFloat("time", 0),
+							Inherit.valueOf(keyMap.getString("inherit", Inherit.normal.name())));
 					}
 					timelines.add(timeline);
 				}
@@ -1154,8 +1154,8 @@ public class SkeletonJson extends SkeletonLoader {
 							float lastDelay = 0;
 							for (int frame = 0; keyMap != null; keyMap = keyMap.next, frame++) {
 								float delay = keyMap.getFloat("delay", lastDelay);
-								timeline.setFrame(frame, keyMap.getFloat("time", 0),
-									SequenceMode.valueOf(keyMap.getString("mode", "hold")), keyMap.getInt("index", 0), delay);
+								timeline.setFrame(frame, keyMap.getFloat("time", 0), SequenceMode.valueOf(keyMap.getString("mode", "hold")),
+									keyMap.getInt("index", 0), delay);
 								lastDelay = delay;
 							}
 							timelines.add(timeline);
