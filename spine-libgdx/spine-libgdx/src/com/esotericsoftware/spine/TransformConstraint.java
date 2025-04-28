@@ -69,6 +69,7 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 
 		TransformConstraintData data = this.data;
 		boolean localSource = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
+		float[] offsets = data.offsets;
 		BonePose source = this.source.applied;
 		int update = skeleton.update;
 		if (localSource && source.local == skeleton.update) source.updateLocalTransform(skeleton);
@@ -80,7 +81,7 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 			if (localTarget && bone.local == update) bone.updateLocalTransform(skeleton);
 			for (int f = 0; f < fn; f++) {
 				FromProperty from = fromItems[f];
-				float value = from.value(data, source, localSource) - from.offset;
+				float value = from.value(source, localSource, offsets) - from.offset;
 				ToProperty[] toItems = from.to.items;
 				for (int t = 0, tn = from.to.size; t < tn; t++) {
 					ToProperty to = toItems[t];

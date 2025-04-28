@@ -268,23 +268,8 @@ public class SkeletonJson extends SkeletonLoader {
 
 				boolean rotate = false, x = false, y = false, scaleX = false, scaleY = false, shearY = false;
 				for (JsonValue fromEntry = constraintMap.getChild("properties"); fromEntry != null; fromEntry = fromEntry.next) {
-					float fromScale = 1;
-					FromProperty from;
-					switch (fromEntry.name) {
-					case "rotate" -> from = new FromRotate();
-					case "x" -> {
-						from = new FromX();
-						fromScale = scale;
-					}
-					case "y" -> {
-						from = new FromY();
-						fromScale = scale;
-					}
-					case "scaleX" -> from = new FromScaleX();
-					case "scaleY" -> from = new FromScaleY();
-					case "shearY" -> from = new FromShearY();
-					default -> throw new SerializationException("Invalid transform constraint from property: " + fromEntry.name);
-					}
+					FromProperty from = fromProperty(fromEntry.name);
+					float fromScale = propertyScale(fromEntry.name, scale);
 					from.offset = fromEntry.getFloat("offset", 0) * fromScale;
 					for (JsonValue toEntry = fromEntry.getChild("to"); toEntry != null; toEntry = toEntry.next) {
 						float toScale = 1;
@@ -326,12 +311,12 @@ public class SkeletonJson extends SkeletonLoader {
 					if (from.to.notEmpty()) data.properties.add(from);
 				}
 
-				data.offsetRotation = constraintMap.getFloat("rotation", 0);
-				data.offsetX = constraintMap.getFloat("x", 0) * scale;
-				data.offsetY = constraintMap.getFloat("y", 0) * scale;
-				data.offsetScaleX = constraintMap.getFloat("scaleX", 0);
-				data.offsetScaleY = constraintMap.getFloat("scaleY", 0);
-				data.offsetShearY = constraintMap.getFloat("shearY", 0);
+				data.offsets[0] = constraintMap.getFloat("rotation", 0);
+				data.offsets[1] = constraintMap.getFloat("x", 0) * scale;
+				data.offsets[2] = constraintMap.getFloat("y", 0) * scale;
+				data.offsets[3] = constraintMap.getFloat("scaleX", 0);
+				data.offsets[4] = constraintMap.getFloat("scaleY", 0);
+				data.offsets[5] = constraintMap.getFloat("shearY", 0);
 
 				TransformConstraintPose setup = data.setup;
 				if (rotate) setup.mixRotate = constraintMap.getFloat("mixRotate", 1);
@@ -408,10 +393,22 @@ public class SkeletonJson extends SkeletonLoader {
 			case "slider" -> {
 				var data = new SliderData(name);
 				data.skinRequired = skinRequired;
-				data.loop = constraintMap.getBoolean("loop", false);
 				data.additive = constraintMap.getBoolean("additive", false);
+				data.loop = constraintMap.getBoolean("loop", false);
 				data.setup.time = constraintMap.getFloat("time", 0);
 				data.setup.mix = constraintMap.getFloat("mix", 1);
+
+				String boneName = constraintMap.getString("bone", null);
+				if (boneName != null) {
+					data.bone = skeletonData.findBone(boneName);
+					if (data.bone == null) throw new SerializationException("Slider bone not found: " + boneName);
+					String property = constraintMap.getString("property");
+					data.property = fromProperty(property);
+					data.property.offset = constraintMap.getFloat("offset", 0) * propertyScale(property, scale);
+					data.scale = constraintMap.getFloat("scale");
+					data.local = constraintMap.getBoolean("local", false);
+				}
+
 				skeletonData.constraints.add(data);
 			}
 			}
@@ -521,6 +518,25 @@ public class SkeletonJson extends SkeletonLoader {
 		skeletonData.animations.shrink();
 		skeletonData.constraints.shrink();
 		return skeletonData;
+	}
+
+	private FromProperty fromProperty (String type) {
+		return switch (type) {
+		case "rotate" -> new FromRotate();
+		case "x" -> new FromX();
+		case "y" -> new FromY();
+		case "scaleX" -> new FromScaleX();
+		case "scaleY" -> new FromScaleY();
+		case "shearY" -> new FromShearY();
+		default -> throw new SerializationException("Invalid from property: " + type);
+		};
+	}
+
+	private float propertyScale (String type, float scale) {
+		return switch (type) {
+		case "x", "y" -> scale;
+		default -> 1;
+		};
 	}
 
 	private Attachment readAttachment (JsonValue map, Skin skin, int slotIndex, String name, SkeletonData skeletonData) {

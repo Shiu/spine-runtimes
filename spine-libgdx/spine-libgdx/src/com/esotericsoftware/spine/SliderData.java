@@ -29,19 +29,27 @@
 
 package com.esotericsoftware.spine;
 
+import com.badlogic.gdx.utils.Null;
+
+import com.esotericsoftware.spine.TransformConstraintData.FromProperty;
+
 /** Stores the setup pose for a {@link PhysicsConstraint}.
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
 public class SliderData extends ConstraintData<Slider, SliderPose> {
 	Animation animation;
 	boolean additive, loop;
+	@Null BoneData bone;
+	@Null FromProperty property;
+	float scale;
+	boolean local;
 
 	public SliderData (String name) {
 		super(name, new SliderPose());
 	}
 
 	public Slider create (Skeleton skeleton) {
-		return new Slider(this);
+		return new Slider(this, skeleton);
 	}
 
 	public Animation getAnimation () {
@@ -66,5 +74,37 @@ public class SliderData extends ConstraintData<Slider, SliderPose> {
 
 	public void setLoop (boolean loop) {
 		this.loop = loop;
+	}
+
+	public @Null BoneData getBone () {
+		return bone;
+	}
+
+	public void setBone (@Null BoneData bone) {
+		this.bone = bone;
+	}
+
+	public @Null FromProperty getProperty () {
+		return property;
+	}
+
+	public void setProperty (@Null FromProperty property) {
+		this.property = property;
+	}
+
+	public float getScale () {
+		return scale;
+	}
+
+	public void setScale (float scale) {
+		this.scale = scale;
+	}
+
+	public boolean getLocal () {
+		return local;
+	}
+
+	public void setLocal (boolean local) {
+		this.local = local;
 	}
 }

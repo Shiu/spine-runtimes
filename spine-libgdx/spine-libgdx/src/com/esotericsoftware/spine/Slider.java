@@ -41,12 +41,19 @@ import com.esotericsoftware.spine.Animation.Timeline;
  * <p>
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
 public class Slider extends Constraint<Slider, SliderData, SliderPose> {
-	public Slider (SliderData data) {
+	static private final float[] offsets = new float[6];
+
+	Bone bone;
+
+	public Slider (SliderData data, Skeleton skeleton) {
 		super(data, new SliderPose(), new SliderPose());
+		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
+
+		if (data.bone != null) bone = skeleton.bones.items[data.bone.index];
 	}
 
 	public Slider copy (Skeleton skeleton) {
-		var copy = new Slider(data);
+		var copy = new Slider(data, skeleton);
 		copy.pose.set(pose);
 		return copy;
 	}
@@ -54,9 +61,18 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 	public void update (Skeleton skeleton, Physics physics) {
 		if (pose.mix == 0) return;
 
+		Animation animation = data.animation;
+		if (bone != null && bone.active) {
+			pose.time = (data.property.value(bone.applied, data.local, offsets) - data.property.offset) * data.scale;
+			if (data.loop)
+				pose.time = animation.duration + (pose.time % animation.duration);
+			else
+				pose.time = Math.max(0, pose.time);
+		}
+
 		SliderData data = this.data;
-		Timeline[] timelines = data.animation.timelines.items;
-		int timelineCount = data.animation.timelines.size;
+		Timeline[] timelines = animation.timelines.items;
+		int timelineCount = animation.timelines.size;
 		Bone[] bones = skeleton.bones.items;
 		if (pose.mix == 1) {
 			for (int i = 0; i < timelineCount; i++)
@@ -72,8 +88,8 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 		}
 
 		SliderPose pose = applied;
-		data.animation.apply(skeleton, pose.time, pose.time, data.loop, null, pose.mix,
-			data.additive ? MixBlend.add : MixBlend.replace, MixDirection.in, true);
+		animation.apply(skeleton, pose.time, pose.time, data.loop, null, pose.mix, data.additive ? MixBlend.add : MixBlend.replace,
+			MixDirection.in, true);
 	}
 
 	void sort (Skeleton skeleton) {
@@ -107,5 +123,13 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 			} else if (t instanceof ConstraintTimeline timeline) //
 				skeleton.resetCache(constraints[timeline.getConstraintIndex()]);
 		}
+	}
+
+	public Bone getBone () {
+		return bone;
+	}
+
+	public void setBone (Bone bone) {
+		this.bone = bone;
 	}
 }

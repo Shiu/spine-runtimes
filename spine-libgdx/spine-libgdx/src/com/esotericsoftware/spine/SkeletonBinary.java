@@ -303,42 +303,40 @@ public class SkeletonBinary extends SkeletonLoader {
 					FromProperty[] froms = data.properties.setSize(nn = flags >> 5);
 					for (int ii = 0, tn; ii < nn; ii++) {
 						float fromScale = 1;
-						FromProperty from;
-						switch (input.readByte()) {
-						case 0 -> from = new FromRotate();
+						FromProperty from = switch (input.readByte()) {
+						case 0 -> new FromRotate();
 						case 1 -> {
-							from = new FromX();
 							fromScale = scale;
+							yield new FromX();
 						}
 						case 2 -> {
-							from = new FromY();
 							fromScale = scale;
+							yield new FromY();
 						}
-						case 3 -> from = new FromScaleX();
-						case 4 -> from = new FromScaleY();
-						case 5 -> from = new FromShearY();
-						default -> from = null;
-						}
+						case 3 -> new FromScaleX();
+						case 4 -> new FromScaleY();
+						case 5 -> new FromShearY();
+						default -> null;
+						};
 						from.offset = input.readFloat() * fromScale;
 						ToProperty[] tos = from.to.setSize(tn = input.readByte());
 						for (int t = 0; t < tn; t++) {
 							float toScale = 1;
-							ToProperty to;
-							switch (input.readByte()) {
-							case 0 -> to = new ToRotate();
+							ToProperty to = switch (input.readByte()) {
+							case 0 -> new ToRotate();
 							case 1 -> {
-								to = new ToX();
 								toScale = scale;
+								yield new ToX();
 							}
 							case 2 -> {
-								to = new ToY();
 								toScale = scale;
+								yield new ToY();
 							}
-							case 3 -> to = new ToScaleX();
-							case 4 -> to = new ToScaleY();
-							case 5 -> to = new ToShearY();
-							default -> to = null;
-							}
+							case 3 -> new ToScaleX();
+							case 4 -> new ToScaleY();
+							case 5 -> new ToShearY();
+							default -> null;
+							};
 							to.offset = input.readFloat() * toScale;
 							to.max = input.readFloat() * toScale;
 							to.scale = input.readFloat() * toScale / fromScale;
@@ -347,12 +345,12 @@ public class SkeletonBinary extends SkeletonLoader {
 						froms[ii] = from;
 					}
 					flags = input.read();
-					if ((flags & 1) != 0) data.offsetRotation = input.readFloat();
-					if ((flags & 2) != 0) data.offsetX = input.readFloat() * scale;
-					if ((flags & 4) != 0) data.offsetY = input.readFloat() * scale;
-					if ((flags & 8) != 0) data.offsetScaleX = input.readFloat();
-					if ((flags & 16) != 0) data.offsetScaleY = input.readFloat();
-					if ((flags & 32) != 0) data.offsetShearY = input.readFloat();
+					if ((flags & 1) != 0) data.offsets[0] = input.readFloat();
+					if ((flags & 2) != 0) data.offsets[1] = input.readFloat() * scale;
+					if ((flags & 4) != 0) data.offsets[2] = input.readFloat() * scale;
+					if ((flags & 8) != 0) data.offsets[3] = input.readFloat();
+					if ((flags & 16) != 0) data.offsets[4] = input.readFloat();
+					if ((flags & 32) != 0) data.offsets[5] = input.readFloat();
 					flags = input.read();
 					TransformConstraintPose setup = data.setup;
 					if ((flags & 1) != 0) setup.mixRotate = input.readFloat();
@@ -422,6 +420,28 @@ public class SkeletonBinary extends SkeletonLoader {
 					data.additive = (nn & 4) != 0;
 					if ((nn & 8) != 0) data.setup.time = input.readFloat();
 					if ((nn & 16) != 0) data.setup.mix = (nn & 32) != 0 ? input.readFloat() : 1;
+					if ((nn & 64) != 0) {
+						data.local = (nn & 128) != 0;
+						data.bone = bones[input.readInt(true)];
+						float offset = input.readFloat();
+						data.property = switch (input.readByte()) {
+						case 0 -> new FromRotate();
+						case 1 -> {
+							offset *= scale;
+							yield new FromX();
+						}
+						case 2 -> {
+							offset *= scale;
+							yield new FromY();
+						}
+						case 3 -> new FromScaleX();
+						case 4 -> new FromScaleY();
+						case 5 -> new FromShearY();
+						default -> null;
+						};
+						data.property.offset = offset;
+						data.scale = input.readFloat();
+					}
 					constraints[i] = data;
 				}
 				}
