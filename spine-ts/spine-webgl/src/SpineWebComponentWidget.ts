@@ -237,21 +237,6 @@ interface WidgetInternalProperties {
 
 export class SpineWebComponentWidget extends HTMLElement implements Disposable, WidgetAttributes, WidgetOverridableMethods, WidgetInternalProperties, Partial<WidgetPublicProperties> {
 
-	// this promise in necessary only for manual start. Before calling manual start is necessary that the overlay has been assigned to the widget.
-	// overlay assignment is asynchronous due to webcomponent promotion and dom load termination.
-	// When manual start is false, loadSkeleton is invoked after the overlay is assigned. loadSkeleton needs the assetManager that is owned by the overlay.
-	// the overlay owns the assetManager because the overly owns the gl context.
-	// if it wasn't for the gl context with which textures are created, we could:
-	// - have a unique asset manager independent from the overlay (we literally reload the same assets in two different overlays)
-	// - remove overlayAssignedPromise and the needs to wait for its resolving
-	// - remove appendTo that is just to avoid the user to use the overlayAssignedPromise when the widget is created using js
-	public overlayAssignedPromise: Promise<void>;
-
-	public async appendTo (element: HTMLElement): Promise<void> {
-		element.appendChild(this);
-		await this.overlayAssignedPromise;
-	}
-
 	/**
 	 * If true, enables a top-left span showing FPS (it has black text)
 	 */
@@ -768,6 +753,16 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	// Invoked when widget has an overlay assigned
 	private resolveOverlayAssignedPromise!: () => void;
 
+	// this promise in necessary only for manual start. Before calling manual start is necessary that the overlay has been assigned to the widget.
+	// overlay assignment is asynchronous due to webcomponent promotion and dom load termination.
+	// When manual start is false, loadSkeleton is invoked after the overlay is assigned. loadSkeleton needs the assetManager that is owned by the overlay.
+	// the overlay owns the assetManager because the overly owns the gl context.
+	// if it wasn't for the gl context with which textures are created, we could:
+	// - have a unique asset manager independent from the overlay (we literally reload the same assets in two different overlays)
+	// - remove overlayAssignedPromise and the needs to wait for its resolving
+	// - remove appendTo that is just to avoid the user to use the overlayAssignedPromise when the widget is created using js
+	private overlayAssignedPromise: Promise<void>;
+
 	static attributesDescription: Record<string, { propertyName: keyof WidgetAttributes, type: AttributeTypes, defaultValue?: any }> = {
 		atlas: { propertyName: "atlasPath", type: "string" },
 		skeleton: { propertyName: "skeletonPath", type: "string" },
@@ -937,6 +932,15 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	}
 
 	/**
+	 * Append the widget to the given `HTMLElement`.
+	 * @param atlas the `HTMLElement` to append this widget to.
+	 */
+	public async appendTo (element: HTMLElement): Promise<void> {
+		element.appendChild(this);
+		await this.overlayAssignedPromise;
+	}
+
+	/**
 	 * Recalculates and sets the bounds of the current animation on track 0.
 	 * Useful when animations or skins are set programmatically.
 	 * @returns void
@@ -992,6 +996,9 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 				this.overlay.assetManager.setRawDataURI(key, isBase64(value) ? `data:application/octet-stream;base64,${value}` : value);
 			}
 		}
+
+		// this ensure there is an overlay assigned because the overlay owns the asset manager
+		await this.overlayAssignedPromise;
 
 		// skeleton and atlas txt are loaded immeaditely
 		// textures are loaeded depending on the 'pages' param:
