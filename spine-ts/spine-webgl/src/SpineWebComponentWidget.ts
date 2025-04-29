@@ -1345,7 +1345,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 
 interface OverlayAttributes {
 	overlayId?: string
-	scrollableTweakOff: boolean
+	noAutoParentTransform: boolean
 	overflowTop: number
 	overflowBottom: number
 	overflowLeft: number
@@ -1395,9 +1395,9 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	 * If `false` (default value), the overlay container style will be affected adding `transform: translateZ(0);` to it.
 	 * The `transform` is not affected if it already exists on the container.
 	 * This is necessary to make the scrolling works with containers that scroll in a different way with respect to the page, as explained in {@link appendedToBody}.
-	 * Connected to `scrollable-tweak-off` attribute.
+	 * Connected to `no-auto-parent-transform` attribute.
 	 */
-	public scrollableTweakOff = false;
+	public noAutoParentTransform = false;
 
 	/**
 	 * How many pixels to add to the top of the canvas to prevent "edge cutting" on fast scrolling, in canvas height units.
@@ -1461,7 +1461,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	 * In order to fix this behaviour, it is necessary to insert a dedicated `spine-overlay` webcomponent as a direct child of the container.
 	 * Moreover, it is necessary to perform the following actions:
 	 * 1) The scrollable container must have a `transform` css attribute. If it hasn't this attribute the `spine-overlay` will add it for you.
-	 * If your scrollable container has already this css attribute, or if you prefer to add it by yourself (example: `transform: translateZ(0);`), set the `scrollable-tweak-off` to the `spine-overlay`.
+	 * If your scrollable container has already this css attribute, or if you prefer to add it by yourself (example: `transform: translateZ(0);`), set the `no-auto-parent-transform` to the `spine-overlay`.
 	 * 2) The `spine-overlay` must have the `scrollable` attribute
 	 * 3) The `spine-overlay` must have an `overlay-id` attribute. Choose the value you prefer.
 	 * 4) Each `spine-widget` must have an `overlay-id` attribute. The same as the hosting `spine-overlay`.
@@ -1558,7 +1558,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		// if they differs call the resizeCallback. I already tested it, and it works. ResizeObserver should be more efficient.
 		if (this.appendedToBody) {
 			// if the element is scrollable, the user does not disable translate tweak, and the parent did not have already a transform, add the tweak
-			if (this.appendedToBody && !this.scrollableTweakOff && getComputedStyle(this.parentElement!).transform === "none") {
+			if (this.appendedToBody && !this.noAutoParentTransform && getComputedStyle(this.parentElement!).transform === "none") {
 				this.parentElement!.style.transform = `translateZ(0)`;
 			}
 			this.resizeObserver = new ResizeObserver(this.resizeCallback);
@@ -1576,7 +1576,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	}
 
 	private hasCssTweakOff () {
-		return this.scrollableTweakOff && getComputedStyle(this.parentElement!).transform === "none";
+		return this.noAutoParentTransform && getComputedStyle(this.parentElement!).transform === "none";
 	}
 
 	private running = false;
@@ -1595,7 +1595,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 	static attributesDescription: Record<string, { propertyName: keyof OverlayAttributes, type: AttributeTypes, defaultValue?: any }> = {
 		"overlay-id": { propertyName: "overlayId", type: "string" },
-		"scrollable-tweak-off": { propertyName: "scrollableTweakOff", type: "boolean" },
+		"no-auto-parent-transform": { propertyName: "noAutoParentTransform", type: "boolean" },
 		"overflow-top": { propertyName: "overflowTop", type: "number" },
 		"overflow-bottom": { propertyName: "overflowBottom", type: "number" },
 		"overflow-left": { propertyName: "overflowLeft", type: "number" },
@@ -2231,7 +2231,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			scrollPositionY += window.scrollY;
 		} else {
 
-			// Ideally this should be the only scrollable case (scrollable-tweak-off not enabled or at least an ancestor has transform)
+			// Ideally this should be the only scrollable case (no-auto-parent-transform not enabled or at least an ancestor has transform)
 			// I'd like to get rid of the code below
 			if (!this.hasCssTweakOff()) {
 				scrollPositionX += this.parentElement!.scrollLeft;

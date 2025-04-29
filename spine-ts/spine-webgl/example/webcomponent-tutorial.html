@@ -2334,7 +2334,7 @@ stretchyman.update = (canvas, delta, skeleton, state) => {
             Moreover, it is necessary to perform the following actions: <br>
             <br>
             1) The scrollable container must have a <code>transform</code> css attribute. If it hasn't this attribute the <code>spine-overlay</code> will add it for you.
-            If your scrollable container has already this css attribute, or if you prefer to add it by yourself (example: <code>transform: translateZ(0);</code>), set the <code>scrollable-tweak-off</code> to the <code>spine-overlay</code>.
+            If you don't want this attribute to be added, set the <code>no-auto-parent-transform</code> to the <code>spine-overlay</code>.
             <br>
             2) The <code>spine-overlay</code> must have the <code>scrollable</code> attribute
             <br>
@@ -2442,7 +2442,7 @@ stretchyman.update = (canvas, delta, skeleton, state) => {
                 <spine-overlay
                     overlay-id="scroll"
                     scrollable
-                    scrollable-tweak-off
+                    no-auto-parent-transform
                     overflow-top=".2"
                     overflow-bottom=".2"
                     overflow-left=".2"
@@ -2502,7 +2502,7 @@ stretchyman.update = (canvas, delta, skeleton, state) => {
             <spine-overlay
                 overlay-id="popup"
                 scrollable
-                scrollable-tweak-off
+                no-auto-parent-transform
             ></spine-overlay>
             <spine-widget
                 atlas="../demos/assets/atlas2.atlas"
@@ -2550,7 +2550,7 @@ stretchyman.update = (canvas, delta, skeleton, state) => {
         <spine-overlay
             overlay-id="scroll"
             scrollable
-            scrollable-tweak-off
+            no-auto-parent-transform
             overflow-top=".2"
             overflow-bottom=".2"
             overflow-left=".2"
