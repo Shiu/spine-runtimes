@@ -571,8 +571,8 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	public identifier = "";
 
 	/**
-	 * If true, assets loading are loaded immediately and the skeleton shown as soon as the assets are loaded
-	 * If false, it is necessary to invoke the start method to start the loading process
+	 * If false, assets loading are loaded immediately and the skeleton shown as soon as the assets are loaded
+	 * If true, it is necessary to invoke the start method to start the loading process
 	 * Connected to `manual-start` attribute.
 	 */
 	public manualStart = false;
@@ -1345,7 +1345,6 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 
 interface OverlayAttributes {
 	overlayId?: string
-	scrollable: boolean
 	scrollableTweakOff: boolean
 	overflowTop: number
 	overflowBottom: number
@@ -1393,29 +1392,9 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	public overlayId?: string;
 
 	/**
-	 * If true, the overlay will have the size of the element container in contrast to the default behaviour where the
-	 * overlay has always the size of the screen.
-	 * This is necessary when the overlay is inserted into a container that scroll in a different way with respect to the page.
-	 * Otherwise the following problems might occur:
-	 * 1) For scrollable containers, the widget will be slightly slower to scroll than the html behind. The effect is more evident for lower refresh rate display.
-	 * 2) For scrollable containers, the widget will overflow the container bounds until the widget html element container is visible
-	 * 3) For fixed containers, the widget will scroll in a jerky way
-	 *
-	 * In order to fix this behaviour, it is necessary to insert a dedicated `spine-overlay` webcomponent as a direct child of the container.
-	 * Moreover, it is necessary to perform the following actions:
-	 * 1) The scrollable container must have a `transform`css attribute. If it hasn't this attribute the `spine-overlay` will add it for you.
-	 * If your scrollable container has already this css attribute, or if you prefer to add it by yourself (example: `transform: translateZ(0);`), set the `scrollable-tweak-off` to the `spine-overlay`.
-	 * 2) The `spine-overlay` must have the `scrollable`attribute
-	 * 3) The `spine-overlay` must have an `overlay-id` attribute. Choose the value you prefer.
-	 * 4) Each `spine-widget` must have an `overlay-id` attribute. The same as the hosting `spine-overlay`.
-	   * Connected to `scrollable` attribute.
-	 */
-	public scrollable = false;
-
-	/**
 	 * If `false` (default value), the overlay container style will be affected adding `transform: translateZ(0);` to it.
 	 * The `transform` is not affected if it already exists on the container.
-	 * This is necessary to make the scrolling works with containers that scroll in a different way with respect to the page, as explained in {@link scrollable}.
+	 * This is necessary to make the scrolling works with containers that scroll in a different way with respect to the page, as explained in {@link appendedToBody}.
 	 * Connected to `scrollable-tweak-off` attribute.
 	 */
 	public scrollableTweakOff = false;
@@ -1468,6 +1447,28 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 	private disposed = false;
 	private loaded = false;
+
+	/**
+	 * appendedToBody is assegned in the connectedCallback.
+	 * When true, the overlay will have the size of the element container in contrast to the default behaviour where the
+	 * overlay has always the size of the screen.
+	 * This is necessary when the overlay is inserted into a container that scroll in a different way with respect to the page.
+	 * Otherwise the following problems might occur:
+	 * 1) For containers appendedToBody, the widget will be slightly slower to scroll than the html behind. The effect is more evident for lower refresh rate display.
+	 * 2) For containers appendedToBody, the widget will overflow the container bounds until the widget html element container is visible
+	 * 3) For fixed containers, the widget will scroll in a jerky way
+	 *
+	 * In order to fix this behaviour, it is necessary to insert a dedicated `spine-overlay` webcomponent as a direct child of the container.
+	 * Moreover, it is necessary to perform the following actions:
+	 * 1) The scrollable container must have a `transform` css attribute. If it hasn't this attribute the `spine-overlay` will add it for you.
+	 * If your scrollable container has already this css attribute, or if you prefer to add it by yourself (example: `transform: translateZ(0);`), set the `scrollable-tweak-off` to the `spine-overlay`.
+	 * 2) The `spine-overlay` must have the `scrollable` attribute
+	 * 3) The `spine-overlay` must have an `overlay-id` attribute. Choose the value you prefer.
+	 * 4) Each `spine-widget` must have an `overlay-id` attribute. The same as the hosting `spine-overlay`.
+	   * Connected to `scrollable` attribute.
+	 */
+	private appendedToBody = true;
+
 	readonly time = new TimeKeeper();
 
 	constructor () {
@@ -1516,6 +1517,8 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	}
 
 	connectedCallback (): void {
+		this.appendedToBody = this.parentElement !== document.body;
+
 		let overlayId = this.getAttribute('overlay-id');
 		if (!overlayId) {
 			overlayId = SpineWebComponentOverlay.OVERLAY_ID;
@@ -1553,9 +1556,9 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		// we cannot use window.resize event since it does not fire when body resizes, but not the window
 		// Alternatively, we can store the body size, check the current body size in the loop (like the translateCanvas), and
 		// if they differs call the resizeCallback. I already tested it, and it works. ResizeObserver should be more efficient.
-		if (this.scrollable) {
+		if (this.appendedToBody) {
 			// if the element is scrollable, the user does not disable translate tweak, and the parent did not have already a transform, add the tweak
-			if (this.scrollable && !this.scrollableTweakOff && getComputedStyle(this.parentElement!).transform === "none") {
+			if (this.appendedToBody && !this.scrollableTweakOff && getComputedStyle(this.parentElement!).transform === "none") {
 				this.parentElement!.style.transform = `translateZ(0)`;
 			}
 			this.resizeObserver = new ResizeObserver(this.resizeCallback);
@@ -1592,7 +1595,6 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 	static attributesDescription: Record<string, { propertyName: keyof OverlayAttributes, type: AttributeTypes, defaultValue?: any }> = {
 		"overlay-id": { propertyName: "overlayId", type: "string" },
-		"scrollable": { propertyName: "scrollable", type: "boolean" },
 		"scrollable-tweak-off": { propertyName: "scrollableTweakOff", type: "boolean" },
 		"overflow-top": { propertyName: "overflowTop", type: "number" },
 		"overflow-bottom": { propertyName: "overflowBottom", type: "number" },
@@ -1734,7 +1736,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			let ref: DOMRect;
 			let offsetLeftForOevrlay = 0;
 			let offsetTopForOverlay = 0;
-			if (this.scrollable) {
+			if (this.appendedToBody) {
 				ref = this.parentElement!.getBoundingClientRect();
 				const computedStyle = getComputedStyle(this.parentElement!);
 				offsetLeftForOevrlay = ref.left + parseFloat(computedStyle.borderLeftWidth);
@@ -1752,7 +1754,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				divBounds.x = divBounds.left + this.overflowLeftSize;
 				divBounds.y = divBounds.top + this.overflowTopSize;
 
-				if (this.scrollable) {
+				if (this.appendedToBody) {
 					divBounds.x -= offsetLeftForOevrlay;
 					divBounds.y -= offsetTopForOverlay;
 				}
@@ -1921,7 +1923,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 						let x = this.tempFollowBoneVector.x - this.overflowLeftSize;
 						let y = this.tempFollowBoneVector.y - this.overflowTopSize;
 
-						if (!this.scrollable) {
+						if (!this.appendedToBody) {
 							x += window.scrollX;
 							y += window.scrollY;
 						}
@@ -1978,7 +1980,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		this.cursorCanvasX = input.x - window.scrollX;
 		this.cursorCanvasY = input.y - window.scrollY;
 
-		if (this.scrollable) {
+		if (this.appendedToBody) {
 			const ref = this.parentElement!.getBoundingClientRect();
 			this.cursorCanvasX -= ref.left;
 			this.cursorCanvasY -= ref.top;
@@ -2118,7 +2120,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		// this.div!.style.width = 0 + "px";
 		// this.div!.style.height = 0 + "px";
 		this.div!.style.display = "none";
-		if (!this.scrollable) {
+		if (!this.appendedToBody) {
 			const { width, height } = this.getPageSize();
 			this.div!.style.width = width + "px";
 			this.div!.style.height = height + "px";
@@ -2162,7 +2164,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	private static readonly MAX_CANVAS_WIDTH = 7000;
 	private static readonly MAX_CANVAS_HEIGHT = 7000;
 	private getScreenSize (): { width: number, height: number } {
-		if (this.scrollable) {
+		if (this.appendedToBody) {
 			return {
 				width: this.parentElement!.clientWidth,
 				height: this.parentElement!.clientHeight,
@@ -2224,7 +2226,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		let scrollPositionX = -this.overflowLeftSize;
 		let scrollPositionY = -this.overflowTopSize;
 
-		if (!this.scrollable) {
+		if (!this.appendedToBody) {
 			scrollPositionX += window.scrollX;
 			scrollPositionY += window.scrollY;
 		} else {
