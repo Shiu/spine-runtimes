@@ -1949,7 +1949,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			renderer.end();
 		}
 
-		const updateFollowSlotsPosition = () => {
+		const updateBoneFollowers = () => {
 			for (const { skeleton, onScreen, boneFollowerList, worldX, worldY } of this.widgets) {
 				if (skeleton && onScreen) {
 					for (const { slot, bone, element, followAttachmentAttach, followRotation, followOpacity, followScale } of boneFollowerList) {
@@ -1995,7 +1995,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			this.translateCanvas();
 			updateWidgets();
 			renderWidgets();
-			updateFollowSlotsPosition();
+			updateBoneFollowers();
 		}
 
 		requestAnimationFrame(loop);
@@ -2054,8 +2054,8 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			return inputPointTemp;
 		}
 
-		let prevX = 0;
-		let prevY = 0;
+		let lastX = 0;
+		let lastY = 0;
 		inputManager.addListener({
 			// moved is used to pass cursor position wrt to canvas and widget position and currently is EXPERIMENTAL
 			moved: (x, y, ev) => {
@@ -2087,14 +2087,14 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 					}
 
 				}
-				prevX = input.x;
-				prevY = input.y;
+				lastX = input.x;
+				lastY = input.y;
 			},
 			dragged: (x, y, ev) => {
 				const input = getInput(ev);
 
-				let dragX = input.x - prevX;
-				let dragY = input.y - prevY;
+				let dragX = input.x - lastX;
+				let dragY = input.y - lastY;
 
 				this.updateCursor(input);
 
@@ -2112,8 +2112,8 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 					ev?.preventDefault();
 					ev?.stopPropagation();
 				}
-				prevX = input.x;
-				prevY = input.y;
+				lastX = input.x;
+				lastY = input.y;
 			},
 			up: (x, y, ev) => {
 				for (const widget of this.widgets) {
@@ -2221,7 +2221,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			this.lastViewportWidth = this.lastViewportWidth === 0 ? width : width * SpineWebComponentOverlay.WIDTH_INCREMENT;
 			this.lastViewportHeight = height * SpineWebComponentOverlay.HEIGHT_INCREMENT;
 
-			this.scaleSkeletonDPR();
+			this.updateWidgetScales();
 		} else {
 			if (width > this.lastViewportWidth) this.lastViewportWidth = width * SpineWebComponentOverlay.WIDTH_INCREMENT;
 			if (height > this.lastViewportHeight) this.lastViewportHeight = height * SpineWebComponentOverlay.HEIGHT_INCREMENT;
@@ -2248,7 +2248,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	}
 	private dprScale = 1;
 
-	private scaleSkeletonDPR () {
+	private updateWidgetScales () {
 		for (const widget of this.widgets) {
 			// inside mode scale automatically to fit the skeleton within its parent
 			if (widget.mode !== "origin" && widget.fit !== "none") return;
