@@ -939,11 +939,11 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		const pagesIndexToLoad = this.pages ?? atlas.pages.map((_, i) => i); // if no pages provided, loads all
 		const atlasPath = this.atlasPath?.includes("/") ? this.atlasPath.substring(0, this.atlasPath.lastIndexOf("/") + 1) : "";
 		const promisePageList: Array<Promise<any>> = [];
-		pagesIndexToLoad.forEach((index) => {
+		for (const index of pagesIndexToLoad) {
 			const page = atlas.pages[index];
 			const promiseTextureLoad = this.overlay.assetManager.loadTextureAsync(`${atlasPath}${page.name}`).then(texture => page.setTexture(texture));
 			promisePageList.push(promiseTextureLoad);
-		});
+		}
 
 		return Promise.all(promisePageList)
 	}
@@ -980,7 +980,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		if (this.animationsBound && forcedRecalculate) {
 			let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
 
-			this.animationsBound.forEach((animationName) => {
+			for (const animationName of this.animationsBound) {
 				const animation = this.skeleton?.data.animations.find(({ name }) => animationName === name)
 				const { x, y, width, height } = this.calculateAnimationViewport(animation);
 
@@ -988,7 +988,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 				minY = Math.min(minY, y);
 				maxX = Math.max(maxX, x + width);
 				maxY = Math.max(maxY, y + height);
-			});
+			}
 
 			bounds = {
 				x: minX,
@@ -1083,11 +1083,10 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 			state.data.defaultMix = defaultMix;
 
 			if (animationsInfo) {
-				Object.entries(animationsInfo).forEach(([trackIndexString, { cycle, animations }]) => {
-
+				for (const [trackIndexString, { cycle, animations }] of Object.entries(animationsInfo)) {
 					const cycleFn = () => {
 						const trackIndex = Number(trackIndexString);
-						animations.forEach(({ animationName, delay, loop, mixDuration }, index) => {
+						for (const [index, { animationName, delay, loop, mixDuration }] of animations.entries()) {
 							let track;
 							if (index === 0) {
 								if (animationName === "#EMPTY#") {
@@ -1108,12 +1107,11 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 							if (cycle && index === animations.length - 1) {
 								track.listener = { complete: () => cycleFn() };
 							};
-
-						});
+						}
 					}
 
 					cycleFn();
-				});
+				}
 			} else if (animation) {
 				state.setAnimation(0, animation, true);
 			} else {
@@ -1573,8 +1571,10 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		window.screen.orientation.addEventListener('change', this.orientationChangedCallback);
 
 		this.intersectionObserver = new IntersectionObserver((widgets) => {
-			widgets.forEach(({ isIntersecting, target, intersectionRatio }) => {
-				this.widgets.forEach(widget => {
+			for (const elem of widgets) {
+				const { target, intersectionRatio } = elem;
+				let { isIntersecting } = elem;
+				for (const widget of this.widgets) {
 					if (widget.getHostElement() != target) return;
 
 					// old browsers do not have isIntersecting
@@ -1586,8 +1586,8 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 					if (isIntersecting) {
 						widget.onScreenFunction(widget);
 					}
-				});
-			})
+				}
+			}
 		}, { rootMargin: "30px 20px 30px 20px" });
 
 		// resize observer is supported by all major browsers today chrome started to support it in version 64 (early 2018)
@@ -1605,9 +1605,9 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			window.addEventListener("resize", this.resizedCallback)
 		}
 
-		this.widgets.forEach((widget) => {
+		for (const widget of this.widgets) {
 			this.intersectionObserver?.observe(widget.getHostElement());
-		})
+		}
 		this.input = this.setupDragUtility();
 
 		this.startRenderingLoop();
@@ -1710,7 +1710,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 		const updateWidgets = () => {
 			const delta = this.time.delta;
-			this.widgets.forEach(({ skeleton, state, update, onScreen, offScreenUpdateBehaviour, beforeUpdateWorldTransforms, afterUpdateWorldTransforms }) => {
+			for (const { skeleton, state, update, onScreen, offScreenUpdateBehaviour, beforeUpdateWorldTransforms, afterUpdateWorldTransforms } of this.widgets) {
 				if (!skeleton || !state) return;
 				if (!onScreen && offScreenUpdateBehaviour === "pause") return;
 				if (update) update(delta, skeleton, state)
@@ -1726,7 +1726,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 						afterUpdateWorldTransforms(skeleton, state);
 					}
 				}
-			});
+			}
 
 			// fps top-left span
 			if (SpineWebComponentWidget.SHOW_FPS) {
@@ -1782,7 +1782,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			}
 
 			const tempVector = new Vector3();
-			this.widgets.forEach((widget) => {
+			for (const widget of this.widgets) {
 				const { skeleton, pma, bounds, mode, debug, offsetX, offsetY, xAxis, yAxis, dragX, dragY, fit, loadingSpinner, onScreen, loading, clip, isDraggable } = widget;
 
 				if ((!onScreen && dragX === 0 && dragY === 0)) return;
@@ -1944,17 +1944,17 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 					if (clip) endScissor();
 				}
-			});
+			}
 
 			renderer.end();
 		}
 
 		const updateFollowSlotsPosition = () => {
-			this.widgets.forEach((widget) => {
-				if (widget.skeleton && widget.onScreen) {
-					widget.boneFollowerList.forEach(({ slot, bone, element, followAttachmentAttach, followRotation, followOpacity, followScale, hideAttachment }) => {
+			for (const { skeleton, onScreen, boneFollowerList, worldX, worldY } of this.widgets) {
+				if (skeleton && onScreen) {
+					for (const { slot, bone, element, followAttachmentAttach, followRotation, followOpacity, followScale } of boneFollowerList) {
 
-						this.worldToScreen(this.tempFollowBoneVector, bone.worldX + widget.worldX, bone.worldY + widget.worldY);
+						this.worldToScreen(this.tempFollowBoneVector, bone.worldX + worldX, bone.worldY + worldY);
 
 						if (Number.isNaN(this.tempFollowBoneVector.x)) return;
 
@@ -1979,9 +1979,9 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 							element.style.opacity = `${slot.color.a}`;
 						}
 
-					});
-				};
-			});
+					}
+				}
+			}
 		}
 
 		const loop = () => {
@@ -2062,18 +2062,18 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				const input = getInput(ev);
 				this.updateCursor(input);
 
-				this.widgets.forEach(widget => {
+				for (const widget of this.widgets) {
 					if (!this.updateWidgetCursor(widget) || !widget.onScreen) return;
 
 					widget.cursorEventUpdate("move", ev);
-				});
+				}
 			},
 			down: (x, y, ev) => {
 				const input = getInput(ev);
 
 				this.updateCursor(input);
 
-				this.widgets.forEach(widget => {
+				for (const widget of this.widgets) {
 					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) return;
 
 					widget.cursorEventUpdate("down", ev);
@@ -2086,7 +2086,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 					}
 
-				});
+				}
 				prevX = input.x;
 				prevY = input.y;
 			},
@@ -2098,7 +2098,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 				this.updateCursor(input);
 
-				this.widgets.forEach(widget => {
+				for (const widget of this.widgets) {
 					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) return;
 
 					widget.cursorEventUpdate("drag", ev);
@@ -2111,18 +2111,18 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 					skeleton.physicsTranslate(dragX, -dragY);
 					ev?.preventDefault();
 					ev?.stopPropagation();
-				});
+				}
 				prevX = input.x;
 				prevY = input.y;
 			},
 			up: (x, y, ev) => {
-				this.widgets.forEach(widget => {
+				for (const widget of this.widgets) {
 					widget.dragging = false;
 
 					if (widget.cursorInsideBounds) {
 						widget.cursorEventUpdate("up", ev);
 					}
-				});
+				}
 			}
 		});
 
@@ -2249,7 +2249,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	private dprScale = 1;
 
 	private scaleSkeletonDPR () {
-		this.widgets.forEach((widget) => {
+		for (const widget of this.widgets) {
 			// inside mode scale automatically to fit the skeleton within its parent
 			if (widget.mode !== "origin" && widget.fit !== "none") return;
 
@@ -2263,7 +2263,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			skeleton.scaleX = skeleton.scaleX / widget.dprScale * scale;
 			skeleton.scaleY = skeleton.scaleY / widget.dprScale * scale;
 			widget.dprScale = scale;
-		});
+		}
 	}
 
 	private translateCanvas () {
