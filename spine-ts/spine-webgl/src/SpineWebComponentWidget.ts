@@ -229,7 +229,7 @@ interface WidgetPublicProperties {
 // Usage of this properties is discouraged because they can be made private in the future
 interface WidgetInternalProperties {
 	pma: boolean
-	currentScaleDpi: number
+	dprScale: number
 	dragging: boolean
 	dragX: number
 	dragY: number
@@ -723,30 +723,35 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	public onScreenAtLeastOnce = false;
 
 	/**
-	 * Holds the dpi (devicePixelRatio) currently used to calculate the scale for this skeleton
+	 * @internal
+	 * Holds the dpr (devicePixelRatio) currently used to calculate the scale for this skeleton
 	 * Do not rely on this properties. It might be made private in the future.
 	 */
-	public currentScaleDpi = 1;
+	public dprScale = 1;
 
 	/**
+	 * @internal
 	 * The accumulated offset on the x axis due to dragging
 	 * Do not rely on this properties. It might be made private in the future.
 	 */
 	public dragX = 0;
 
 	/**
+	 * @internal
 	 * The accumulated offset on the y axis due to dragging
 	 * Do not rely on this properties. It might be made private in the future.
 	 */
 	public dragY = 0;
 
 	/**
+	 * @internal
 	 * If true, the widget is currently being dragged
 	 * Do not rely on this properties. It might be made private in the future.
 	 */
 	public dragging = false;
 
 	/**
+	 * @internal
 	 * If true, the widget has texture with premultiplied alpha
 	 * Do not rely on this properties. It might be made private in the future.
 	 */
@@ -1055,9 +1060,9 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		// to simplify we just assume that the user wants to load the skeleton at scale 1
 		// at the current browser zoom level
 		// this might be problematic for free-scale modes (origin and inside+none)
-		this.currentScaleDpi = this.overlay.getDPR();
-		// skeleton.scaleX = this.currentScaleDpi;
-		// skeleton.scaleY = this.currentScaleDpi;
+		this.dprScale = this.overlay.getDevicePixelRatio();
+		// skeleton.scaleX = this.dprScale;
+		// skeleton.scaleY = this.dprScale;
 
 		// the bounds are calculated the first time, if no custom bound is provided
 		this.initWidget(this.bounds.width <= 0 || this.bounds.height <= 0);
@@ -2194,7 +2199,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		let width = window.innerWidth;
 		let height = window.innerHeight;
 
-		const dpr = this.getDPR();
+		const dpr = this.getDevicePixelRatio();
 		if (dpr !== this.previousDPR) {
 			this.previousDPR = dpr;
 			this.previousWidth = this.previousWidth === 0 ? width : width * SpineWebComponentOverlay.WIDTH_INCREMENT;
@@ -2209,7 +2214,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		// if the resulting canvas width/height is too high, scale the DPI
 		if (this.previousHeight * (1 + this.overflowTop + this.overflowBottom) * dpr > SpineWebComponentOverlay.MAX_CANVAS_HEIGHT ||
 			this.previousWidth * (1 + this.overflowLeft + this.overflowRight) * dpr > SpineWebComponentOverlay.MAX_CANVAS_WIDTH) {
-			this.scaleDPR += .5;
+			this.dprScale += .5;
 			return this.getScreenSize();
 		}
 
@@ -2219,10 +2224,13 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		}
 	}
 
-	private scaleDPR = 1;
-	public getDPR () {
-		return window.devicePixelRatio / this.scaleDPR;
+	/**
+	 * @internal
+	 */
+	public getDevicePixelRatio () {
+		return window.devicePixelRatio / this.dprScale;
 	}
+	private dprScale = 1;
 
 	private scaleSkeletonDPR () {
 		this.skeletonList.forEach((widget) => {
@@ -2235,10 +2243,10 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			// I'm not sure about this. With mode origin and fit none:
 			// case 1) If I comment this scale code, the skeleton is never scaled and will be always at the same size and won't change size while zooming
 			// case 2) Otherwise, the skeleton is loaded always at the same size, but changes size while zooming
-			const scale = this.getDPR();
-			skeleton.scaleX = skeleton.scaleX / widget.currentScaleDpi * scale;
-			skeleton.scaleY = skeleton.scaleY / widget.currentScaleDpi * scale;
-			widget.currentScaleDpi = scale;
+			const scale = this.getDevicePixelRatio();
+			skeleton.scaleX = skeleton.scaleX / widget.dprScale * scale;
+			skeleton.scaleY = skeleton.scaleY / widget.dprScale * scale;
+			widget.dprScale = scale;
 		});
 	}
 
@@ -2299,10 +2307,10 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		this.renderer.camera.worldToScreen(vec, this.worldToScreenLength(this.renderer.camera.viewportWidth), this.worldToScreenLength(this.renderer.camera.viewportHeight));
 	}
 	public screenToWorldLength (length: number) {
-		return length * this.getDPR();
+		return length * this.getDevicePixelRatio();
 	}
 	public worldToScreenLength (length: number) {
-		return length / this.getDPR();
+		return length / this.getDevicePixelRatio();
 	}
 }
 
