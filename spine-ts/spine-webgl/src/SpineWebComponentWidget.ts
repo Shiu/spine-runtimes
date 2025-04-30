@@ -160,8 +160,8 @@ function castToAnimationsInfo (value: string | null): AnimationsInfo | undefined
 
 export type AttributeTypes = "string" | "number" | "boolean" | "array-number" | "array-string" | "object" | "fitType" | "modeType" | "offScreenUpdateBehaviourType" | "animationsInfo";
 
-export type CursorEventTypes = "down" | "up" | "enter" | "leave" | "move" | "drag";
-export type CursorEventTypesInput = Exclude<CursorEventTypes, "enter" | "leave">;
+export type CursorEventType = "down" | "up" | "enter" | "leave" | "move" | "drag";
+export type CursorEventTypesInput = Exclude<CursorEventType, "enter" | "leave">;
 
 // The properties that map to widget attributes
 interface WidgetAttributes {
@@ -539,22 +539,42 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	public isInteractive = false;
 
 	/**
-	 * If the widget is interactive, this method is invoked with a {@link CursorEventTypes} when the cursor
+	 * If the widget is interactive, this method is invoked with a {@link CursorEventType} when the cursor
 	 * performs actions within the widget bounds (for example, it enter or leaves the bounds).
 	 * By default, the function does nothing.
 	 * This is an experimental property and might be removed in the future.
 	 */
-	public cursorBoundsEventCallback = (event: CursorEventTypes, originalEvent?: UIEvent) => { }
+	public cursorEventCallback = (event: CursorEventType, originalEvent?: UIEvent) => { }
 
 	// TODO: probably it makes sense to associate a single callback to a groups of slots to avoid the same callback to be called for each slot of the group
 	/**
 	 * This methods allows to associate to a Slot a callback. For these slots, if the widget is interactive,
 	 * when the cursor performs actions within the slot's attachment the associated callback is invoked with
-	 * a {@link CursorEventTypes} (for example, it enter or leaves the slot's attachment bounds).
+	 * a {@link CursorEventType} (for example, it enter or leaves the slot's attachment bounds).
 	 * This is an experimental property and might be removed in the future.
 	 */
-	public addCursorSlotEventCallbacks (slot: Slot, slotFunction: (slot: Slot, event: CursorEventTypes) => void) {
-		this.cursorSlotEventCallbacks.set(slot, { slotFunction, inside: false });
+	public addCursorSlotEventCallback (slot: number | string | Slot, slotFunction: (slot: Slot, event: CursorEventType) => void) {
+		this.cursorSlotEventCallbacks.set(this.getSlotFromRef(slot), { slotFunction, inside: false });
+	}
+
+	/**
+	 * Remove callbacks added through {@link addCursorSlotEventCallback}.
+	 * @param slot: the slot reference to which remove the associated callback
+	 */
+	public removeCursorSlotEventCallbacks(slot: number | string | Slot) {
+		this.cursorSlotEventCallbacks.delete(this.getSlotFromRef(slot));
+	}
+
+	private getSlotFromRef (slotRef: number | string | Slot): Slot {
+		let slot: Slot | null;
+
+		if (typeof slotRef === 'number') slot = this.skeleton!.slots[slotRef];
+		else if (typeof slotRef === 'string') slot = this.skeleton!.findSlot(slotRef);
+		else slot = slotRef;
+
+		if (!slot) throw new Error(`No slot found with the given slot reference: ${slotRef}`);
+
+		return slot;
 	}
 
 	/**
@@ -1136,7 +1156,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	 * @internal
 	 */
 	public cursorSlotEventCallbacks: Map<Slot, {
-		slotFunction: (slot: Slot, event: CursorEventTypes, originalEvent?: UIEvent) => void,
+		slotFunction: (slot: Slot, event: CursorEventType, originalEvent?: UIEvent) => void,
 		inside: boolean,
 	}> = new Map();
 
@@ -1151,19 +1171,19 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	}
 
 	private checkBoundsInteraction (type: CursorEventTypesInput, originalEvent?: UIEvent) {
-		if (this.checkCursorInsideBounds()) {
+		if (this.isCursorInsideBounds()) {
 
 			if (!this.cursorInsideBounds) {
-				this.cursorBoundsEventCallback("enter", originalEvent);
+				this.cursorEventCallback("enter", originalEvent);
 			}
 			this.cursorInsideBounds = true;
 
-			this.cursorBoundsEventCallback(type, originalEvent);
+			this.cursorEventCallback(type, originalEvent);
 
 		} else {
 
 			if (this.cursorInsideBounds) {
-				this.cursorBoundsEventCallback("leave", originalEvent);
+				this.cursorEventCallback("leave", originalEvent);
 			}
 			this.cursorInsideBounds = false;
 
@@ -1173,7 +1193,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	/**
 	 * @internal
 	 */
-	public checkCursorInsideBounds (): boolean {
+	public isCursorInsideBounds (): boolean {
 		if (!this.onScreen || !this.skeleton) return false;
 
 		this.pointTemp.set(
@@ -1976,7 +1996,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	public cursorWorldY = 1;
 
 	private tempVector = new Vector3();
-	private cursorUpdate (input: Point) {
+	private updateCursor (input: Point) {
 		this.cursorCanvasX = input.x - window.scrollX;
 		this.cursorCanvasY = input.y - window.scrollY;
 
@@ -1995,8 +2015,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		this.cursorWorldY = tempVector.y;
 	}
 
-	// return true if updated
-	private cursorWidgetUpdate (widget: SpineWebComponentWidget): boolean {
+	private updateWidgetCursor (widget: SpineWebComponentWidget): boolean {
 		if (widget.worldX === Infinity) return false;
 
 		widget.cursorWorldX = this.cursorWorldX - widget.worldX;
@@ -2023,10 +2042,10 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			// moved is used to pass cursor position wrt to canvas and widget position and currently is EXPERIMENTAL
 			moved: (x, y, ev) => {
 				const input = getInput(ev);
-				this.cursorUpdate(input);
+				this.updateCursor(input);
 
 				this.skeletonList.forEach(widget => {
-					if (!this.cursorWidgetUpdate(widget) || !widget.onScreen) return;
+					if (!this.updateWidgetCursor(widget) || !widget.onScreen) return;
 
 					widget.cursorEventUpdate("move", ev);
 				});
@@ -2034,14 +2053,14 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			down: (x, y, ev) => {
 				const input = getInput(ev);
 
-				this.cursorUpdate(input);
+				this.updateCursor(input);
 
 				this.skeletonList.forEach(widget => {
-					if (!this.cursorWidgetUpdate(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) return;
+					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) return;
 
 					widget.cursorEventUpdate("down", ev);
 
-					if ((widget.isInteractive && widget.cursorInsideBounds) || (!widget.isInteractive && widget.checkCursorInsideBounds())) {
+					if ((widget.isInteractive && widget.cursorInsideBounds) || (!widget.isInteractive && widget.isCursorInsideBounds())) {
 						if (!widget.isDraggable) return;
 
 						widget.dragging = true;
@@ -2059,10 +2078,10 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				let dragX = input.x - prevX;
 				let dragY = input.y - prevY;
 
-				this.cursorUpdate(input);
+				this.updateCursor(input);
 
 				this.skeletonList.forEach(widget => {
-					if (!this.cursorWidgetUpdate(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) return;
+					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) return;
 
 					widget.cursorEventUpdate("drag", ev);
 
