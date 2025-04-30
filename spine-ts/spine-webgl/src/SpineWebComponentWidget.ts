@@ -1426,29 +1426,41 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	public noAutoParentTransform = false;
 
 	/**
-	 * How many pixels to add to the top of the canvas to prevent "edge cutting" on fast scrolling, in canvas height units.
-	 * By default, the canvas is big as the screen resolution. Making it too big might reduce performance.
+	 * The canvas is continuously translated so that it covers the viewport. This translation might be slightly slower during fast scrolling.
+	 * If the canvas has the same size as the viewport, while scrolling it might be slighlty misaligned with the viewport.
+	 * This parameter defines, as percentage of the viewport height, the pixels to add to the top of the canvas to prevent this effect.
+	 * Making the canvas too big might reduce performance.
+	 * Default value: 0.2.
 	 * Connected to `overflow-top` attribute.
 	 */
 	public overflowTop = .2;
 
 	/**
-	 * How many pixels to add to the bottom of the canvas to prevent "edge cutting" on fast scrolling, in canvas height units.
-	 * By default, the canvas is big as the screen resolution. Making it too big might reduce performance.
+	 * The canvas is continuously translated so that it covers the viewport. This translation might be slightly slower during fast scrolling.
+	 * If the canvas has the same size as the viewport, while scrolling it might be slighlty misaligned with the viewport.
+	 * This parameter defines, as percentage of the viewport height, the pixels to add to the bottom of the canvas to prevent this effect.
+	 * Making the canvas too big might reduce performance.
+	 * Default value: 0.
 	 * Connected to `overflow-bottom` attribute.
 	 */
 	public overflowBottom = .0;
 
 	/**
-	 * How many pixels to add to the left of the canvas to prevent "edge cutting" on fast scrolling, in canvas width units.
-	 * By default, the canvas is big as the screen resolution. Making it too big might reduce performance.
+	 * The canvas is continuously translated so that it covers the viewport. This translation might be slightly slower during fast scrolling.
+	 * If the canvas has the same size as the viewport, while scrolling it might be slighlty misaligned with the viewport.
+	 * This parameter defines, as percentage of the viewport width, the pixels to add to the left of the canvas to prevent this effect.
+	 * Making the canvas too big might reduce performance.
+	 * Default value: 0.
 	 * Connected to `overflow-left` attribute.
 	 */
 	public overflowLeft = .0;
 
 	/**
-	 * How many pixels to add to the right of the canvas to prevent "edge cutting" on fast scrolling, in canvas width units.
-	 * By default, the canvas is big as the screen resolution. Making it too big might reduce performance.
+	 * The canvas is continuously translated so that it covers the viewport. This translation might be slightly slower during fast scrolling.
+	 * If the canvas has the same size as the viewport, while scrolling it might be slighlty misaligned with the viewport.
+	 * This parameter defines, as percentage of the viewport width, the pixels to add to the right of the canvas to prevent this effect.
+	 * Making the canvas too big might reduce performance.
+	 * Default value: 0.
 	 * Connected to `overflow-right` attribute.
 	 */
 	public overflowRight = .0;
@@ -1468,8 +1480,8 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	private overflowLeftSize = 0;
 	private overflowTopSize = 0;
 
-	private currentCanvasBaseWidth = 0;
-	private currentCanvasBaseHeight = 0;
+	private lastCanvasBaseWidth = 0;
+	private lastCanvasBaseHeight = 0;
 
 	private disposed = false;
 	private loaded = false;
@@ -2122,11 +2134,12 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	*/
 
 	private updateCanvasSize () {
-		const { width, height } = this.getScreenSize();
+		const { width, height } = this.getViewportSize();
 
-		if (this.currentCanvasBaseWidth !== width || this.currentCanvasBaseHeight !== height) {
-			this.currentCanvasBaseWidth = width;
-			this.currentCanvasBaseHeight = height;
+		// if the target width/height changes, resize the canvas.
+		if (this.lastCanvasBaseWidth !== width || this.lastCanvasBaseHeight !== height) {
+			this.lastCanvasBaseWidth = width;
+			this.lastCanvasBaseHeight = height;
 			this.overflowLeftSize = this.overflowLeft * width;
 			this.overflowTopSize = this.overflowTop * height;
 
@@ -2181,14 +2194,17 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		return document.body.getBoundingClientRect();
 	}
 
-	private previousWidth = 0;
-	private previousHeight = 0;
-	private previousDPR = 0;
+	private lastViewportWidth = 0;
+	private lastViewportHeight = 0;
+	private lastDPR = 0;
 	private static readonly WIDTH_INCREMENT = 1.15;
 	private static readonly HEIGHT_INCREMENT = 1.2;
 	private static readonly MAX_CANVAS_WIDTH = 7000;
 	private static readonly MAX_CANVAS_HEIGHT = 7000;
-	private getScreenSize (): { width: number, height: number } {
+
+	// determine the target viewport width and height.
+	// The target width/height won't change if the viewport shrink to avoid useless re render (especially re render bursts on mobile)
+	private getViewportSize (): { width: number, height: number } {
 		if (this.appendedToBody) {
 			return {
 				width: this.parentElement!.clientWidth,
@@ -2200,27 +2216,27 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		let height = window.innerHeight;
 
 		const dpr = this.getDevicePixelRatio();
-		if (dpr !== this.previousDPR) {
-			this.previousDPR = dpr;
-			this.previousWidth = this.previousWidth === 0 ? width : width * SpineWebComponentOverlay.WIDTH_INCREMENT;
-			this.previousHeight = height * SpineWebComponentOverlay.HEIGHT_INCREMENT;
+		if (dpr !== this.lastDPR) {
+			this.lastDPR = dpr;
+			this.lastViewportWidth = this.lastViewportWidth === 0 ? width : width * SpineWebComponentOverlay.WIDTH_INCREMENT;
+			this.lastViewportHeight = height * SpineWebComponentOverlay.HEIGHT_INCREMENT;
 
 			this.scaleSkeletonDPR();
 		} else {
-			if (width > this.previousWidth) this.previousWidth = width * SpineWebComponentOverlay.WIDTH_INCREMENT;
-			if (height > this.previousHeight) this.previousHeight = height * SpineWebComponentOverlay.HEIGHT_INCREMENT;
+			if (width > this.lastViewportWidth) this.lastViewportWidth = width * SpineWebComponentOverlay.WIDTH_INCREMENT;
+			if (height > this.lastViewportHeight) this.lastViewportHeight = height * SpineWebComponentOverlay.HEIGHT_INCREMENT;
 		}
 
 		// if the resulting canvas width/height is too high, scale the DPI
-		if (this.previousHeight * (1 + this.overflowTop + this.overflowBottom) * dpr > SpineWebComponentOverlay.MAX_CANVAS_HEIGHT ||
-			this.previousWidth * (1 + this.overflowLeft + this.overflowRight) * dpr > SpineWebComponentOverlay.MAX_CANVAS_WIDTH) {
+		if (this.lastViewportHeight * (1 + this.overflowTop + this.overflowBottom) * dpr > SpineWebComponentOverlay.MAX_CANVAS_HEIGHT ||
+			this.lastViewportWidth * (1 + this.overflowLeft + this.overflowRight) * dpr > SpineWebComponentOverlay.MAX_CANVAS_WIDTH) {
 			this.dprScale += .5;
-			return this.getScreenSize();
+			return this.getViewportSize();
 		}
 
 		return {
-			width: this.previousWidth,
-			height: this.previousHeight,
+			width: this.lastViewportWidth,
+			height: this.lastViewportHeight,
 		}
 	}
 
