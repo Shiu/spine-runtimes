@@ -585,7 +585,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	public debug = false;
 
 	/**
-	 * An identifier to obtain a reference to this widget using the {@link getSpineWidget} function.
+	 * An identifier to obtain this widget using the {@link getSpineWidget} function.
 	 * This is useful when you need to interact with the widget using js.
 	 * Connected to `identifier` attribute.
 	 */
@@ -640,8 +640,8 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	/**
 	 * Replace the default state and skeleton update logic for this widget.
 	 * @param delta - The milliseconds elapsed since the last update.
-	 * @param skeleton - A reference to the widget's skeleton
-	 * @param state - A reference to the widget's state
+	 * @param skeleton - The widget's skeleton
+	 * @param state - The widget's state
 	 */
 	public update?: UpdateSpineWidgetFunction;
 
@@ -700,7 +700,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	public loading = true;
 
 	/**
-	 * A reference to the {@link LoadingScreenWidget} of this widget.
+	 * The {@link LoadingScreenWidget} of this widget.
 	 * This is instantiated only if it is really necessary.
 	 * For example, if {@link loadingSpinner} is `false`, this property value is null
 	 */
@@ -880,9 +880,9 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 
 	disconnectedCallback (): void {
 		window.removeEventListener("DOMContentLoaded", this.DOMContentLoadedHandler);
-		const index = this.overlay?.skeletonList.indexOf(this);
+		const index = this.overlay?.widgets.indexOf(this);
 		if (index > 0) {
-			this.overlay!.skeletonList.splice(index, 1);
+			this.overlay!.widgets.splice(index, 1);
 		}
 	}
 
@@ -1399,15 +1399,15 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	/**
 	 * A list holding the widgets added to this overlay.
 	 */
-	public skeletonList = new Array<SpineWebComponentWidget>();
+	public widgets = new Array<SpineWebComponentWidget>();
 
 	/**
-	 * A reference to the {@link SceneRenderer} used by this overlay.
+	 * The {@link SceneRenderer} used by this overlay.
 	 */
 	public renderer: SceneRenderer;
 
 	/**
-	 * A reference to the {@link AssetManager} used by this overlay.
+	 * The {@link AssetManager} used by this overlay.
 	 */
 	public assetManager: AssetManager;
 
@@ -1456,7 +1456,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	private root: ShadowRoot;
 
 	private div: HTMLDivElement;
-	private slotFollowerElementsHolder: HTMLDivElement;
+	private boneFollowersParent: HTMLDivElement;
 	private canvas: HTMLCanvasElement;
 	private fps: HTMLSpanElement;
 	private fpsAppended = false;
@@ -1512,20 +1512,20 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		this.root.appendChild(this.div);
 
 		this.canvas = document.createElement("canvas");
-		this.slotFollowerElementsHolder = document.createElement("div");
+		this.boneFollowersParent = document.createElement("div");
 
 		this.div.appendChild(this.canvas);
 		this.canvas.style.position = "absolute";
 		this.canvas.style.top = "0";
 		this.canvas.style.left = "0";
 
-		this.div.appendChild(this.slotFollowerElementsHolder);
-		this.slotFollowerElementsHolder.style.position = "absolute";
-		this.slotFollowerElementsHolder.style.top = "0";
-		this.slotFollowerElementsHolder.style.left = "0";
-		this.slotFollowerElementsHolder.style.whiteSpace = "nowrap";
-		this.slotFollowerElementsHolder.style.setProperty("pointer-events", "none");
-		this.slotFollowerElementsHolder.style.transform = `translate(0px,0px)`;
+		this.div.appendChild(this.boneFollowersParent);
+		this.boneFollowersParent.style.position = "absolute";
+		this.boneFollowersParent.style.top = "0";
+		this.boneFollowersParent.style.left = "0";
+		this.boneFollowersParent.style.whiteSpace = "nowrap";
+		this.boneFollowersParent.style.setProperty("pointer-events", "none");
+		this.boneFollowersParent.style.transform = `translate(0px,0px)`;
 
 		this.canvas.style.setProperty("pointer-events", "none");
 		this.canvas.style.transform = `translate(0px,0px)`;
@@ -1562,7 +1562,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 		this.intersectionObserver = new IntersectionObserver((widgets) => {
 			widgets.forEach(({ isIntersecting, target, intersectionRatio }) => {
-				this.skeletonList.forEach(widget => {
+				this.widgets.forEach(widget => {
 					if (widget.getHostElement() != target) return;
 
 					// old browsers do not have isIntersecting
@@ -1593,7 +1593,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			window.addEventListener("resize", this.resizeCallback)
 		}
 
-		this.skeletonList.forEach((widget) => {
+		this.widgets.forEach((widget) => {
 			this.intersectionObserver?.observe(widget.getHostElement());
 		})
 		this.input = this.setupDragUtility();
@@ -1669,14 +1669,14 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	 */
 	dispose (): void {
 		this.remove();
-		this.skeletonList.forEach(widget => widget.dispose());
-		this.skeletonList.length = 0;
+		this.widgets.forEach(widget => widget.dispose());
+		this.widgets.length = 0;
 		this.renderer.dispose();
 		this.disposed = true;
 	}
 
 	addWidget (widget: SpineWebComponentWidget) {
-		this.skeletonList.push(widget);
+		this.widgets.push(widget);
 		this.intersectionObserver?.observe(widget.getHostElement());
 		if (this.loaded) {
 			const comparison = this.compareDocumentPosition(widget);
@@ -1688,7 +1688,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	}
 
 	addSlotFollowerElement (element: HTMLElement) {
-		this.slotFollowerElementsHolder.appendChild(element);
+		this.boneFollowersParent.appendChild(element);
 		this.resizeCallback();
 	}
 
@@ -1698,7 +1698,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 		const updateWidgets = () => {
 			const delta = this.time.delta;
-			this.skeletonList.forEach(({ skeleton, state, update, onScreen, offScreenUpdateBehaviour, beforeUpdateWorldTransforms, afterUpdateWorldTransforms }) => {
+			this.widgets.forEach(({ skeleton, state, update, onScreen, offScreenUpdateBehaviour, beforeUpdateWorldTransforms, afterUpdateWorldTransforms }) => {
 				if (!skeleton || !state) return;
 				if (!onScreen && offScreenUpdateBehaviour === "pause") return;
 				if (update) update(delta, skeleton, state)
@@ -1770,7 +1770,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			}
 
 			const tempVector = new Vector3();
-			this.skeletonList.forEach((widget) => {
+			this.widgets.forEach((widget) => {
 				const { skeleton, pma, bounds, mode, debug, offsetX, offsetY, xAxis, yAxis, dragX, dragY, fit, loadingSpinner, onScreen, loading, clip, isDraggable } = widget;
 
 				if ((!onScreen && dragX === 0 && dragY === 0)) return;
@@ -1938,7 +1938,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		}
 
 		const updateFollowSlotsPosition = () => {
-			this.skeletonList.forEach((widget) => {
+			this.widgets.forEach((widget) => {
 				if (widget.skeleton && widget.onScreen) {
 					widget.boneFollowerList.forEach(({ slot, bone, element, followAttachmentAttach, followRotation, followOpacity, followScale, hideAttachment }) => {
 
@@ -2050,7 +2050,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				const input = getInput(ev);
 				this.updateCursor(input);
 
-				this.skeletonList.forEach(widget => {
+				this.widgets.forEach(widget => {
 					if (!this.updateWidgetCursor(widget) || !widget.onScreen) return;
 
 					widget.cursorEventUpdate("move", ev);
@@ -2061,7 +2061,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 				this.updateCursor(input);
 
-				this.skeletonList.forEach(widget => {
+				this.widgets.forEach(widget => {
 					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) return;
 
 					widget.cursorEventUpdate("down", ev);
@@ -2086,7 +2086,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 				this.updateCursor(input);
 
-				this.skeletonList.forEach(widget => {
+				this.widgets.forEach(widget => {
 					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) return;
 
 					widget.cursorEventUpdate("drag", ev);
@@ -2104,7 +2104,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				prevY = input.y;
 			},
 			up: (x, y, ev) => {
-				this.skeletonList.forEach(widget => {
+				this.widgets.forEach(widget => {
 					widget.dragging = false;
 
 					if (widget.cursorInsideBounds) {
@@ -2233,7 +2233,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	private dprScale = 1;
 
 	private scaleSkeletonDPR () {
-		this.skeletonList.forEach((widget) => {
+		this.widgets.forEach((widget) => {
 			// inside mode scale automatically to fit the skeleton within its parent
 			if (widget.mode !== "origin" && widget.fit !== "none") return;
 
