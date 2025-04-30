@@ -434,6 +434,9 @@ void SpineSprite::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_screen_material", "material"), &SpineSprite::set_screen_material);
 	ClassDB::bind_method(D_METHOD("get_screen_material"), &SpineSprite::get_screen_material);
 
+	ClassDB::bind_method(D_METHOD("get_time_scale"), &SpineSprite::get_time_scale);
+	ClassDB::bind_method(D_METHOD("set_time_scale", "v"), &SpineSprite::set_time_scale);
+
 	ClassDB::bind_method(D_METHOD("set_debug_root", "v"), &SpineSprite::set_debug_root);
 	ClassDB::bind_method(D_METHOD("get_debug_root"), &SpineSprite::get_debug_root);
 	ClassDB::bind_method(D_METHOD("set_debug_root_color", "v"), &SpineSprite::set_debug_root_color);
@@ -509,7 +512,7 @@ void SpineSprite::_bind_methods() {
 	// Filled in in _get_property_list()
 }
 
-SpineSprite::SpineSprite() : update_mode(SpineConstant::UpdateMode_Process), preview_skin("Default"), preview_animation("-- Empty --"), preview_frame(false), preview_time(0), skeleton_clipper(nullptr), modified_bones(false) {
+SpineSprite::SpineSprite() : update_mode(SpineConstant::UpdateMode_Process), time_scale(1.0), preview_skin("Default"), preview_animation("-- Empty --"), preview_frame(false), preview_time(0), skeleton_clipper(nullptr), modified_bones(false) {
 	skeleton_clipper = new spine::SkeletonClipping();
 	auto statics = SpineSpriteStatics::instance();
 
@@ -817,12 +820,12 @@ void SpineSprite::update_skeleton(float delta) {
 		return;
 
 	emit_signal(SNAME("before_animation_state_update"), this);
-	animation_state->update(delta);
+	animation_state->update(delta * time_scale);
 	if (!is_visible_in_tree()) return;
 	emit_signal(SNAME("before_animation_state_apply"), this);
 	animation_state->apply(skeleton);
 	emit_signal(SNAME("before_world_transforms_change"), this);
-	skeleton->update(delta);
+	skeleton->update(delta * time_scale);
 	skeleton->update_world_transform(SpineConstant::Physics_Update);
 	modified_bones = false;
 	emit_signal(SNAME("world_transforms_changed"), this);
@@ -1399,6 +1402,14 @@ Ref<Material> SpineSprite::get_screen_material() {
 
 void SpineSprite::set_screen_material(Ref<Material> material) {
 	screen_material = material;
+}
+
+void SpineSprite::set_time_scale(float time_scale) {
+	this->time_scale = time_scale;
+}
+
+float SpineSprite::get_time_scale() {
+	return time_scale;
 }
 
 #ifndef SPINE_GODOT_EXTENSION

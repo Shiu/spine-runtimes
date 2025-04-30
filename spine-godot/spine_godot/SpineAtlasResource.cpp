@@ -62,10 +62,9 @@ class GodotSpineTextureLoader : public spine::TextureLoader {
 	Array *textures;
 	Array *normal_maps;
 	String normal_map_prefix;
-	bool is_importing;
 
 public:
-	GodotSpineTextureLoader(Array *_textures, Array *_normal_maps, const String &normal_map_prefix, bool is_importing) : textures(_textures), normal_maps(_normal_maps), normal_map_prefix(normal_map_prefix), is_importing(is_importing) {
+	GodotSpineTextureLoader(Array *_textures, Array *_normal_maps, const String &normal_map_prefix, bool is_importing) : textures(_textures), normal_maps(_normal_maps), normal_map_prefix(normal_map_prefix) {
 	}
 
 	static bool fix_path(String &path) {

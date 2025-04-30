@@ -251,7 +251,7 @@ Ref<Animation> SpineAnimationTrack::create_animation(spine::Animation *animation
 	Ref<Animation> animation_ref;
 	INSTANTIATE(animation_ref);
 	String name;
-	name.parse_utf8(animation.getName().buffer());
+	name.parse_utf8(animation->getName().buffer());
 	animation_ref->set_name(name + (loop ? "" : "_looped"));
 #if VERSION_MAJOR > 3
 	// animation_ref->set_loop(!loop);
