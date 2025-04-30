@@ -45,7 +45,7 @@
                 identifier="boi"
                 atlas="assets/spineboy-pma.atlas"
                 skeleton="assets/spineboy-pro.skel"
-                auto-recalculate-bounds
+                auto-calculate-bounds
                 debug
             ></spine-widget>
         </div>
@@ -98,7 +98,7 @@
                 padBottom: 0,
                 padTop: 0,
                 customBounds: false,
-                autoRecalculateBounds: true,
+                autoCalculateBounds: true,
                 fit: "contain",
                 mode: "inside",
                 scaleX: 1,
@@ -296,10 +296,10 @@
 
             const boundsFolder = gui.addFolder( 'Bounds' );
             boundsFolder
-                .add(myObject, 'autoRecalculateBounds')
-                .name( 'auto-recalculate-bounds' )
+                .add(myObject, 'autoCalculateBounds')
+                .name( 'auto-calculate-bounds' )
                 .onChange(value => {
-                    boi.setAttribute("auto-recalculate-bounds", value)
+                    boi.setAttribute("auto-calculate-bounds", value)
                 });
 
             boundsFolder

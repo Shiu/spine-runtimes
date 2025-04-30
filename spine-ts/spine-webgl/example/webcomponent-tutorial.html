@@ -589,7 +589,7 @@
                 setInterval(() => {
                     const newAnimation = isRoaring ? "walk" : "roar";
                     state.setAnimation(0, newAnimation, true);
-                    widget.recalculateBounds(); // scale the skeleton based on the new animation
+                    widget.calculateBounds(); // scale the skeleton based on the new animation
                     isRoaring = !isRoaring;
                 }, 4000);
             })();
@@ -616,7 +616,7 @@
     setInterval(() => {
         const newAnimation = isRoaring ? "walk" : "roar";
         state.setAnimation(0, newAnimation, true);
-        widget.recalculateBounds(); // scale the skeleton based on the new animation
+        widget.calculateBounds(); // scale the skeleton based on the new animation
         isRoaring = !isRoaring;
     }, 4000);
 })();
@@ -644,7 +644,7 @@
         <div class="split-top split">
             <div class="split-left">
                 <p>To change animation, we could also just change the animation attribute. The widget will reinitiate itself and change animation.</p>
-                <p>In this case you would use <code>auto-recalculate-bounds</code> to ask the widget to always recalculate the bounds, as in the top example.</p>
+                <p>In this case you would use <code>auto-calculate-bounds</code> to ask the widget to always recalculate the bounds, as in the top example.</p>
                 <p>If want to keep the scale consistent, but fit multiple animations in the container, you can use the <code>animation-bounds</code> attribute to define a bounds containing a list of animations, as in the bottom example.</p>
 
             </div>
@@ -655,7 +655,7 @@
                     atlas="assets/spineboy-pma.atlas"
                     skeleton="assets/spineboy-pro.skel"
                     animation="jump"
-                    auto-recalculate-bounds
+                    auto-calculate-bounds
                 ></spine-widget>
                 <spine-widget
                     style="width: 100%; flex: 1; border: 1px solid black; box-sizing: border-box;"
@@ -703,7 +703,7 @@
     atlas="assets/spineboy-pma.atlas"
     skeleton="assets/spineboy-pro.skel"
     animation="jump"
-    auto-recalculate-bounds
+    auto-calculate-bounds
 ></spine-widget>
 <spine-widget
     style="width: 100%; height: 150px; border: 1px solid black;"
@@ -914,7 +914,7 @@
     setInterval(() => {
         const newAnimation = isRoaring ? "walk" : "roar";
         state.setAnimation(0, newAnimation, true);
-        widget.recalculateBounds(); // scale the skeleton based on the new animation
+        widget.calculateBounds(); // scale the skeleton based on the new animation
         isRoaring = !isRoaring;
     }, 4000);
 })();

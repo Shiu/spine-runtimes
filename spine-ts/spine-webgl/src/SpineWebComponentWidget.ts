@@ -189,7 +189,7 @@ interface WidgetAttributes {
 	boundsY: number
 	boundsWidth: number
 	boundsHeight: number
-	autoRecalculateBounds: boolean
+	autoCalculateBounds: boolean
 	width: number
 	height: number
 	isDraggable: boolean
@@ -409,7 +409,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	 * If no skin is provided, it is used the default skin.
 	 * If no animation is provided, it is used the setup pose.
 	 * Bounds are not automatically recalculated.when the animation or skin change.
-	 * Invoke {@link recalculateBounds} to recalculate them, or set {@link autoRecalculateBounds} to true.
+	 * Invoke {@link calculateBounds} to recalculate them, or set {@link autoCalculateBounds} to true.
 	 * Use `setBounds` to set you desired bounds. Bounding Box might be useful to determine the bounds to be used.
 	 * If the skeleton overflow the element container consider setting {@link clip} to `true`.
 	 */
@@ -469,9 +469,9 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 
 	/**
 	 * Whether or not the bounds are recalculated when an animation or a skin is changed. `false` by default.
-	 * Connected to `auto-recalculate-bounds` attribute.
+	 * Connected to `auto-calculate-bounds` attribute.
 	 */
-	public autoRecalculateBounds = false;
+	public autoCalculateBounds = false;
 
 	/**
 	 * Specify a fixed width for the widget. If at least one of `width` and `height` is > 0,
@@ -811,7 +811,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		"bounds-y": { propertyName: "boundsY", type: "number" },
 		"bounds-width": { propertyName: "boundsWidth", type: "number", defaultValue: -1 },
 		"bounds-height": { propertyName: "boundsHeight", type: "number", defaultValue: -1 },
-		"auto-recalculate-bounds": { propertyName: "autoRecalculateBounds", type: "boolean" },
+		"auto-calculate-bounds": { propertyName: "autoCalculateBounds", type: "boolean" },
 		identifier: { propertyName: "identifier", type: "string" },
 		debug: { propertyName: "debug", type: "boolean" },
 		"manual-start": { propertyName: "manualStart", type: "boolean" },
@@ -962,11 +962,11 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	}
 
 	/**
-	 * Recalculates and sets the bounds of the current animation on track 0.
+	 * Calculates and sets the bounds of the current animation on track 0.
 	 * Useful when animations or skins are set programmatically.
 	 * @returns void
 	 */
-	public recalculateBounds (forcedRecalculate = false): void {
+	public calculateBounds (forcedRecalculate = false): void {
 		const { skeleton, state } = this;
 		if (!skeleton || !state) return;
 
@@ -1116,7 +1116,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 			}
 		}
 
-		if (forceRecalculate || this.autoRecalculateBounds) this.recalculateBounds(forceRecalculate);
+		if (forceRecalculate || this.autoCalculateBounds) this.calculateBounds(forceRecalculate);
 	}
 
 	private render (): void {
