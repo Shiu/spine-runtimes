@@ -585,7 +585,8 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	public debug = false;
 
 	/**
-	 * An identifier to obtain a reference to this widget using the getSpineWidget function
+	 * An identifier to obtain a reference to this widget using the {@link getSpineWidget} function.
+	 * This is useful when you need to interact with the widget using js.
 	 * Connected to `identifier` attribute.
 	 */
 	public identifier = "";
@@ -945,7 +946,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	/**
 	 * @returns The `HTMLElement` where the widget is hosted.
 	 */
-	public getHTMLElementReference (): HTMLElement {
+	public getHostElement (): HTMLElement {
 		return (this.width <= 0 || this.width <= 0) && !this.getAttribute("style")
 			? this.parentElement!
 			: this;
@@ -1557,7 +1558,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		this.intersectionObserver = new IntersectionObserver((widgets) => {
 			widgets.forEach(({ isIntersecting, target, intersectionRatio }) => {
 				this.skeletonList.forEach(widget => {
-					if (widget.getHTMLElementReference() != target) return;
+					if (widget.getHostElement() != target) return;
 
 					// old browsers do not have isIntersecting
 					if (isIntersecting === undefined) {
@@ -1588,7 +1589,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		}
 
 		this.skeletonList.forEach((widget) => {
-			this.intersectionObserver?.observe(widget.getHTMLElementReference());
+			this.intersectionObserver?.observe(widget.getHostElement());
 		})
 		this.input = this.setupDragUtility();
 
@@ -1671,7 +1672,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 	addWidget (widget: SpineWebComponentWidget) {
 		this.skeletonList.push(widget);
-		this.intersectionObserver?.observe(widget.getHTMLElementReference());
+		this.intersectionObserver?.observe(widget.getHostElement());
 		if (this.loaded) {
 			const comparison = this.compareDocumentPosition(widget);
 			// DOCUMENT_POSITION_DISCONNECTED is needed when a widget is inside the overlay (due to followBone)
@@ -1768,7 +1769,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				const { skeleton, pma, bounds, mode, debug, offsetX, offsetY, xAxis, yAxis, dragX, dragY, fit, loadingSpinner, onScreen, loading, clip, isDraggable } = widget;
 
 				if ((!onScreen && dragX === 0 && dragY === 0)) return;
-				const elementRef = widget.getHTMLElementReference();
+				const elementRef = widget.getHostElement();
 				const divBounds = elementRef.getBoundingClientRect();
 				// need to use left and top, because x and y are not available on older browser
 				divBounds.x = divBounds.left + this.overflowLeftSize;

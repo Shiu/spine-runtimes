@@ -3523,7 +3523,7 @@ TODO`
                         if (focusInput) {
                             blendTo(moveVector[0], moveVector[1]);
                         } else {
-                            const { x, y, width, height} = widget.getHTMLElementReference().getBoundingClientRect();
+                            const { x, y, width, height} = widget.getHostElement().getBoundingClientRect();
                             const l = -((widget.overlay.cursorCanvasX - (x + width)) / window.innerWidth) * ALPHA_LEFT_RANGE;
                             const d = ((widget.overlay.cursorCanvasY - (y + height)) / window.innerHeight) * ALPHA_DOWN_RANGE;
                             blendTo(l, d);
