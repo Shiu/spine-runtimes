@@ -1567,10 +1567,10 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			throw new Error(`"SpineWebComponentOverlay - You cannot have two spine-overlay with the same overlay-id: ${overlayId}"`);
 		}
 		SpineWebComponentOverlay.OVERLAY_LIST.set(overlayId, this);
-		// window.addEventListener("scroll", this.scrollHandler);
-		window.addEventListener("load", this.onLoadCallback);
-		if (this.loaded) this.onLoadCallback();
-		window.screen.orientation.addEventListener('change', this.orientationChangeCallback);
+		// window.addEventListener("scroll", this.scrolledCallback);
+		window.addEventListener("load", this.loadedCallback);
+		if (this.loaded) this.loadedCallback();
+		window.screen.orientation.addEventListener('change', this.orientationChangedCallback);
 
 		this.intersectionObserver = new IntersectionObserver((widgets) => {
 			widgets.forEach(({ isIntersecting, target, intersectionRatio }) => {
@@ -1599,10 +1599,10 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			if (this.appendedToBody && !this.noAutoParentTransform && getComputedStyle(this.parentElement!).transform === "none") {
 				this.parentElement!.style.transform = `translateZ(0)`;
 			}
-			this.resizeObserver = new ResizeObserver(this.resizeCallback);
+			this.resizeObserver = new ResizeObserver(this.resizedCallback);
 			this.resizeObserver.observe(this.parentElement!);
 		} else {
-			window.addEventListener("resize", this.resizeCallback)
+			window.addEventListener("resize", this.resizedCallback)
 		}
 
 		this.widgets.forEach((widget) => {
@@ -1621,10 +1621,10 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	disconnectedCallback (): void {
 		const id = this.getAttribute('overlay-id');
 		if (id) SpineWebComponentOverlay.OVERLAY_LIST.delete(id);
-		// window.removeEventListener("scroll", this.scrollHandler);
-		window.removeEventListener("load", this.onLoadCallback);
-		window.removeEventListener("resize", this.resizeCallback);
-		window.screen.orientation.removeEventListener('change', this.orientationChangeCallback);
+		// window.removeEventListener("scroll", this.scrolledCallback);
+		window.removeEventListener("load", this.loadedCallback);
+		window.removeEventListener("resize", this.resizedCallback);
+		window.screen.orientation.removeEventListener('change', this.orientationChangedCallback);
 		this.intersectionObserver?.disconnect();
 		this.resizeObserver?.disconnect();
 		this.input?.dispose();
@@ -1651,25 +1651,25 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		return;
 	}
 
-	private resizeCallback = () => {
+	private resizedCallback = () => {
 		this.updateCanvasSize();
 	}
 
-	private orientationChangeCallback = () => {
+	private orientationChangedCallback = () => {
 		this.updateCanvasSize();
 		// after an orientation change the scrolling changes, but the scroll event does not fire
-		this.scrollHandler();
+		this.scrolledCallback();
 	}
 
 	// right now, we scroll the canvas each frame before rendering loop, that makes scrolling on mobile waaay more smoother
 	// this is way scroll handler do nothing
-	private scrollHandler = () => {
+	private scrolledCallback = () => {
 		// this.translateCanvas();
 	}
 
-	private onLoadCallback = () => {
+	private loadedCallback = () => {
 		this.updateCanvasSize();
-		this.scrollHandler();
+		this.scrolledCallback();
 		if (!this.loaded) {
 			this.parentElement!.appendChild(this);
 		}
@@ -1701,7 +1701,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 	addSlotFollowerElement (element: HTMLElement) {
 		this.boneFollowersParent.appendChild(element);
-		this.resizeCallback();
+		this.resizedCallback();
 	}
 
 	private tempFollowBoneVector = new Vector3();
