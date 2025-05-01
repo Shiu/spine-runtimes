@@ -197,7 +197,7 @@ interface WidgetAttributes {
 	debug: boolean
 	identifier: string
 	manualStart: boolean
-	onScreenManualStart: boolean
+	startWhenVisible: boolean
 	pages?: Array<number>
 	clip: boolean
 	offScreenUpdateBehaviour: OffScreenUpdateBehaviourType
@@ -593,18 +593,27 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 
 	/**
 	 * If false, assets loading are loaded immediately and the skeleton shown as soon as the assets are loaded
-	 * If true, it is necessary to invoke the start method to start the loading process
+	 * If true, it is necessary to invoke the start method to start the widget and the loading process
 	 * Connected to `manual-start` attribute.
 	 */
 	public manualStart = false;
 
 	/**
-	 * If true and manualStart is true, allows the default {@link onScreenFunction} to invoke the {@link start} method.
+	 * If true, automatically sets manualStart to true to pervent widget to start immediately.
+	 * Then, in combination with the default {@link onScreenFunction}, the widget {@link start}
+	 * the first time it enters the viewport.
 	 * This is useful when you want to load the assets only when the widget is revealed.
-	 * By default, is false implying the start method to be invoked manually.
-	 * Connected to `on-screen-manual-start` attribute.
+	 * By default, is false.
+	 * Connected to `start-when-visible` attribute.
 	 */
-	public onScreenManualStart = false;
+	public set startWhenVisible (value: boolean) {
+		this.manualStart = true;
+		this._startWhenVisible = value;
+	}
+	public get startWhenVisible (): boolean {
+		return this._startWhenVisible;
+	}
+	public _startWhenVisible = false;
 
 	/**
 	 * An array of indexes indicating the atlas pages indexes to be loaded.
@@ -664,7 +673,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		if (widget.loading && !widget.onScreenAtLeastOnce) {
 			widget.onScreenAtLeastOnce = true;
 
-			if (widget.manualStart && widget.onScreenManualStart) {
+			if (widget.manualStart && widget.startWhenVisible) {
 				widget.start();
 			}
 		}
@@ -820,7 +829,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		identifier: { propertyName: "identifier", type: "string" },
 		debug: { propertyName: "debug", type: "boolean" },
 		"manual-start": { propertyName: "manualStart", type: "boolean" },
-		"on-screen-manual-start": { propertyName: "onScreenManualStart", type: "boolean" },
+		"start-when-visible": { propertyName: "startWhenVisible", type: "boolean" },
 		spinner: { propertyName: "loadingSpinner", type: "boolean" },
 		clip: { propertyName: "clip", type: "boolean" },
 		pages: { propertyName: "pages", type: "array-number" },

@@ -1782,7 +1782,7 @@ skins.forEach((skin, i) => {
                 By default, the callback does two things:
                 <ul>
                     <li>set <code>onScreenAtLeastOnce</code> to <code>true</code> when the widget enters the viewport the first time</li>
-                    <li>if <code>manual-start</code> and <code>on-screen-manual-start</code> are set the widget <code>start</code> is invoked
+                    <li>if <code>start-when-visible</code> is set, the widget <code>start</code> is invoked
                         the first time the widget enters the viewport and the assets are loaded only in that moment.</li>
                 </ul>
                 <br>
@@ -1799,8 +1799,7 @@ skins.forEach((skin, i) => {
                         atlas="assets/coin-pma.atlas"
                         skeleton="assets/coin-pro.skel"
                         animation="animation"
-                        manual-start
-                        on-screen-manual-start
+                        start-when-visible
                     ></spine-widget>
                 </div>
                 <div class="skin-grid-element">
