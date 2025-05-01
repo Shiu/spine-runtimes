@@ -4029,7 +4029,6 @@ TODO`
                     widget1.addCursorSlotEventCallback(itemSlot, (slot, event) => {
 
                         if (event === "enter") {
-                            console.log("focus");
                             widget1.state.setAnimation(0, `focus-${itemName}`, true);
                             widget1.state.setAnimation(trackNumber, `shake-${itemName}`, true);
                         }

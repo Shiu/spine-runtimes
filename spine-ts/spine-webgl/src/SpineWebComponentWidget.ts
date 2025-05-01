@@ -1584,7 +1584,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				const { target, intersectionRatio } = elem;
 				let { isIntersecting } = elem;
 				for (const widget of this.widgets) {
-					if (widget.getHostElement() != target) return;
+					if (widget.getHostElement() != target) continue;
 
 					// old browsers do not have isIntersecting
 					if (isIntersecting === undefined) {
@@ -1720,8 +1720,8 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		const updateWidgets = () => {
 			const delta = this.time.delta;
 			for (const { skeleton, state, update, onScreen, offScreenUpdateBehaviour, beforeUpdateWorldTransforms, afterUpdateWorldTransforms } of this.widgets) {
-				if (!skeleton || !state) return;
-				if (!onScreen && offScreenUpdateBehaviour === "pause") return;
+				if (!skeleton || !state) continue;
+				if (!onScreen && offScreenUpdateBehaviour === "pause") continue;
 				if (update) update(delta, skeleton, state)
 				else {
 					// delta = 0
@@ -1794,7 +1794,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			for (const widget of this.widgets) {
 				const { skeleton, pma, bounds, mode, debug, offsetX, offsetY, xAxis, yAxis, dragX, dragY, fit, loadingSpinner, onScreen, loading, clip, isDraggable } = widget;
 
-				if ((!onScreen && dragX === 0 && dragY === 0)) return;
+				if ((!onScreen && dragX === 0 && dragY === 0)) continue;
 				const elementRef = widget.getHostElement();
 				const divBounds = elementRef.getBoundingClientRect();
 				// need to use left and top, because x and y are not available on older browser
@@ -1830,13 +1830,13 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 						widget.loadingScreen!.drawInCoordinates(divOriginX, divOriginY);
 					}
 					if (clip) endScissor();
-					return;
+					continue;
 				}
 
 				if (skeleton) {
 					if (mode === "inside") {
 						let { x: ax, y: ay, width: aw, height: ah } = bounds;
-						if (aw <= 0 || ah <= 0) return;
+						if (aw <= 0 || ah <= 0) continue;
 
 						// scale ratio
 						const scaleWidth = divWidthWorld / aw;
@@ -1965,7 +1965,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 						this.worldToScreen(this.tempFollowBoneVector, bone.worldX + worldX, bone.worldY + worldY);
 
-						if (Number.isNaN(this.tempFollowBoneVector.x)) return;
+						if (Number.isNaN(this.tempFollowBoneVector.x)) continue;
 
 						let x = this.tempFollowBoneVector.x - this.overflowLeftSize;
 						let y = this.tempFollowBoneVector.y - this.overflowTopSize;
@@ -2072,7 +2072,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				this.updateCursor(input);
 
 				for (const widget of this.widgets) {
-					if (!this.updateWidgetCursor(widget) || !widget.onScreen) return;
+					if (!this.updateWidgetCursor(widget) || !widget.onScreen) continue;
 
 					widget.cursorEventUpdate("move", ev);
 				}
@@ -2083,12 +2083,12 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				this.updateCursor(input);
 
 				for (const widget of this.widgets) {
-					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) return;
+					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) continue;
 
 					widget.cursorEventUpdate("down", ev);
 
 					if ((widget.isInteractive && widget.cursorInsideBounds) || (!widget.isInteractive && widget.isCursorInsideBounds())) {
-						if (!widget.isDraggable) return;
+						if (!widget.isDraggable) continue;
 
 						widget.dragging = true;
 						ev?.preventDefault();
@@ -2108,11 +2108,11 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				this.updateCursor(input);
 
 				for (const widget of this.widgets) {
-					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) return;
+					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) continue;
 
 					widget.cursorEventUpdate("drag", ev);
 
-					if (!widget.dragging) return;
+					if (!widget.dragging) continue;
 
 					const skeleton = widget.skeleton!;
 					widget.dragX += this.screenToWorldLength(dragX);
@@ -2260,10 +2260,10 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	private updateWidgetScales () {
 		for (const widget of this.widgets) {
 			// inside mode scale automatically to fit the skeleton within its parent
-			if (widget.mode !== "origin" && widget.fit !== "none") return;
+			if (widget.mode !== "origin" && widget.fit !== "none") continue;
 
 			const skeleton = widget.skeleton;
-			if (!skeleton) return;
+			if (!skeleton) continue;
 
 			// I'm not sure about this. With mode origin and fit none:
 			// case 1) If I comment this scale code, the skeleton is never scaled and will be always at the same size and won't change size while zooming
