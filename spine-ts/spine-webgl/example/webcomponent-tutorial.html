@@ -988,101 +988,6 @@
 
         <div class="split-top split">
             <div class="split-left">
-                <button id="add-delete" onclick="addDiv()" disabled>Add</button>
-                <button onclick="removeDiv()">Remove</button>
-            </div>
-            <div class="split-right">
-                <div id="container-delete" style="display: flex; height: 300px;"></div>
-            </div>
-        </div>
-
-        <script>
-            const containerDelete = document.getElementById('container-delete');
-            window.addEventListener("DOMContentLoaded", () => {
-                document.getElementById('add-delete').removeAttribute("disabled");
-            });
-
-
-            function addDiv() {
-                const skins = [
-                    "Assassin", "Beardy", "Buck",
-                    "Chuck", "Commander", "Ducky", "Dummy",
-                    "Fletch", "Gabriel", "MetalMan", "Pamela-1",
-                    "Pamela-2", "Pamela-3", "Pamela-4", "Pamela-5",
-                    "Stumpy", "Truck", "Turbo", "Young",
-                ];
-                const div = document.createElement('div');
-                const randomIndex = Math.floor(Math.random() * skins.length);
-                const skin = skins[randomIndex];
-                console.log(randomIndex, skin);
-                div.style.flex = "1";
-                div.style.margin = "1px";
-                div.style.backgroundColor = "lightblue";
-                div.style.flex = "1";
-                div.innerHTML = `
-                    <spine-widget
-                        atlas="assets/spineboy-pma.atlas"
-                        skeleton="assets/spineboy-pro.skel"
-                        animation="walk"
-                    ></spine-widget>
-                `;
-
-                // div.innerHTML = `
-                //     <spine-widget
-                //         atlas="../demos/assets/heroes.atlas"
-                //         skeleton="../demos/assets/demos.json"
-                //         json-skeleton-key="heroes"
-                //         animation="floorIdle"
-                //         skin="${skin}"
-                //         isdraggable
-                //     ></spine-widget>
-                // `;
-
-                containerDelete.appendChild(div);
-            }
-
-            function removeDiv() {
-                if (containerDelete.lastChild) {
-                    containerDelete.removeChild(containerDelete.lastChild);
-                }
-            }
-        </script>
-
-        <div class="split-bottom">
-            <pre><code id="code-display">
-                <script>escapeHTMLandInject(`
-    <spine-widget
-    atlas="assets/sack-pma.atlas"
-    skeleton="assets/sack-pro.skel"
-    animation="cape-follow-example"
-    debug
-    ></spine-widget>`
-    );</script>
-            </code></pre>
-        </div>
-
-</div>
-
-
-
-    <!--
-    /////////////////////
-    // end section //
-    /////////////////////
-    -->
-
-
-
-    <!--
-    /////////////////////
-    // start section //
-    /////////////////////
-    -->
-
-    <div class="section vertical-split">
-
-        <div class="split-top split">
-            <div class="split-left">
                 You can view the skeleton world origin (green), the root bone position (red), and the bounds rectangle and center (blue) by setting <code>debug</code> to <code>true</code>.
             </div>
             <div class="split-right">
@@ -1105,6 +1010,235 @@
     debug
 ></spine-widget>`
 );</script>
+            </code></pre>
+        </div>
+
+    </div>
+
+    <!--
+    /////////////////////
+    // end section //
+    /////////////////////
+    -->
+
+    <!--
+    /////////////////////
+    // start section //
+    /////////////////////
+    -->
+
+    <div class="section vertical-split">
+
+        <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
+            If you remove a widget from the DOM, it won't be disposed because you might want to append to another node.
+            If you want to actually dispose a widget, invoke <code>dispose()</code> on it.
+            Dispose is safe an won't dispose resources if used by other widgets.
+
+            <br>
+            If you want to dispose everything, invoke <code>dispose()</code> on the overlay.
+
+            <p>
+                The following example allows to create and dispose widgets using the same assets.
+                Below you can view the number of references to the same assets.
+                You'll se a red message when an asset is actually disposed.
+                If you see a number of references to the skeleton higher than expected, it's because other widgets in the page are using it.
+            </p>
+            <p>
+                <button id="add-delete" onclick="addDiv()">Add</button>
+                <button onclick="removeDiv()">Dispose last</button>
+            </p>
+            Widgets: <span id="delete-widget-counter">?</span>
+            <br>
+            Skeleton references<span id="delete-skeleton-counter">: ?</span>
+            <br>
+            Atlas references<span id="delete-atlas-counter">: ?</span> <span id="delete-atlas-dispose" style="color: red; opacity: 0; transition: opacity 1s;">DISPOSED</span>
+            <br>
+            Texture references<span id="delete-texture-counter">: ?</span> <span id="delete-texture-dispose" style="color: red; opacity: 0; transition: opacity 1s;">DISPOSED</span>
+        </div>
+
+        <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
+            <div id="container-delete" style="display: flex; height: auto; flex-wrap: wrap; width: 100%;"></div>
+        </div>
+
+        <script>
+            const deleteContainer = document.getElementById('container-delete');
+            const deleteWidgetCounter = document.getElementById('delete-widget-counter');
+            const deleteSkeletonCounter = document.getElementById('delete-skeleton-counter');
+            const deleteAtlasCounter = document.getElementById('delete-atlas-counter');
+            const deleteAtlasDisposeLabel = document.getElementById('delete-atlas-dispose');
+            const deleteTextureCounter = document.getElementById('delete-texture-counter');
+            const deleteTextureDisposeLabel = document.getElementById('delete-texture-dispose');
+            const deleteSkeletonPath = "../demos/assets/demos.json";
+            const deleteAtlasPath = "../demos/assets/heroes.atlas";
+            const deleteTexturePath = "../demos/assets/heroes.png";
+            let deleteAssetManager;
+
+            async function addDiv() {
+                const skins = [
+                    "Assassin", "Beardy", "Buck",
+                    "Chuck", "Commander", "Ducky", "Dummy",
+                    "Fletch", "Gabriel", "MetalMan", "Pamela-1",
+                    "Pamela-2", "Pamela-3", "Pamela-4", "Pamela-5",
+                    "Stumpy", "Truck", "Turbo", "Young",
+                ];
+                const animations = [
+                    "block", "crouchIdle", "crouchWalk", "empty",
+                    "floorGetUp", "floorIdle", "hideSword", "hitBig",
+                    "idle", "idleTired", "jump", "meleeSwing1",
+                    "meleeSwing2", "meleeSwing1-fullBody", "meleeSwing2-fullBody", "punch1",
+                    "punch2", "roll", "run", "run2",
+                    "walk", "walk2"
+                ];
+
+                const div = document.createElement('div');
+                const skin = skins[Math.floor(Math.random() * skins.length)];
+                div.style.flex = "1";
+                div.style.margin = "1px";
+                div.style.width = "25%";
+                div.style.height = "100px";
+                div.style.backgroundColor = "lightblue";
+                div.style.flex = "1";
+                div.style.boxShadow = "border-box";
+                div.innerHTML = `
+                    <spine-widget
+                        atlas="${deleteAtlasPath}"
+                        skeleton="${deleteSkeletonPath}"
+                        json-skeleton-key="heroes"
+                        animation="${animations[Math.floor(Math.random() * animations.length)]}"
+                        skin="${skins[Math.floor(Math.random() * skins.length)]}"
+                    ></spine-widget>
+                `;
+
+                deleteContainer.appendChild(div);
+
+                deleteAssetManager = (await div.firstElementChild.whenReady).overlay.assetManager;
+
+                deleteWidgetCounter.innerText = deleteContainer.childNodes.length
+                deleteSkeletonCounter.innerText = ` (${deleteSkeletonPath}): ${deleteAssetManager.assetsRefCount[deleteSkeletonPath]}`
+                deleteAtlasCounter.innerText = ` (${deleteAtlasPath}): ${deleteAssetManager.assetsRefCount[deleteAtlasPath]}`
+                deleteTextureCounter.innerText = ` (${deleteTexturePath}): ${deleteAssetManager.assetsRefCount[deleteTexturePath]}`
+
+                deleteAtlasDisposeLabel.style.transition = undefined;
+                deleteAtlasDisposeLabel.style.opacity = 0;
+
+                deleteTextureDisposeLabel.style.transition = undefined;
+                deleteTextureDisposeLabel.style.opacity = 0;
+            }
+
+            function removeDiv() {
+                if (deleteContainer.lastChild) {
+                    deleteContainer.removeChild(deleteContainer.lastChild).firstElementChild.dispose();
+
+                    deleteWidgetCounter.innerText = deleteContainer.childNodes.length
+                    deleteSkeletonCounter.innerText = ` (${deleteSkeletonPath}): ${deleteAssetManager.assetsRefCount[deleteSkeletonPath]}`
+                    deleteAtlasCounter.innerText = ` (${deleteAtlasPath}): ${deleteAssetManager.assetsRefCount[deleteAtlasPath] || 0}`
+                    deleteTextureCounter.innerText = ` (${deleteTexturePath}): ${deleteAssetManager.assetsRefCount[deleteTexturePath] || 0}`
+
+                    if (!deleteAssetManager.assetsRefCount[deleteSkeletonPath]) console.log("disposed");
+
+                    if (!deleteAssetManager.assetsRefCount[deleteAtlasPath]) {
+                        deleteAtlasDisposeLabel.style.transition = 'opacity 1s';
+                        deleteAtlasDisposeLabel.style.opacity = 1;
+                    }
+
+                    if (!deleteAssetManager.assetsRefCount[deleteTexturePath]) {
+                        deleteTextureDisposeLabel.style.transition = 'opacity 1s';
+                        deleteTextureDisposeLabel.style.opacity = 1;
+                    }
+                }
+            }
+        </script>
+
+        <div class="split-bottom">
+            <pre><code id="code-display">
+                <script>escapeHTMLandInject(`
+const deleteContainer = document.getElementById('container-delete');
+const deleteWidgetCounter = document.getElementById('delete-widget-counter');
+const deleteSkeletonCounter = document.getElementById('delete-skeleton-counter');
+const deleteAtlasCounter = document.getElementById('delete-atlas-counter');
+const deleteAtlasDisposeLabel = document.getElementById('delete-atlas-dispose');
+const deleteTextureCounter = document.getElementById('delete-texture-counter');
+const deleteTextureDisposeLabel = document.getElementById('delete-texture-dispose');
+const deleteSkeletonPath = "../demos/assets/demos.json";
+const deleteAtlasPath = "../demos/assets/heroes.atlas";
+const deleteTexturePath = "../demos/assets/heroes.png";
+let deleteAssetManager;
+
+async function addDiv() {
+    const skins = [
+        "Assassin", "Beardy", "Buck",
+        "Chuck", "Commander", "Ducky", "Dummy",
+        "Fletch", "Gabriel", "MetalMan", "Pamela-1",
+        "Pamela-2", "Pamela-3", "Pamela-4", "Pamela-5",
+        "Stumpy", "Truck", "Turbo", "Young",
+    ];
+    const animations = [
+        "block", "crouchIdle", "crouchWalk", "empty",
+        "floorGetUp", "floorIdle", "hideSword", "hitBig",
+        "idle", "idleTired", "jump", "meleeSwing1",
+        "meleeSwing2", "meleeSwing1-fullBody", "meleeSwing2-fullBody", "punch1",
+        "punch2", "roll", "run", "run2",
+        "walk", "walk2"
+    ];
+
+    const div = document.createElement('div');
+    const skin = skins[Math.floor(Math.random() * skins.length)];
+    div.style.flex = "1";
+    div.style.margin = "1px";
+    div.style.width = "25%";
+    div.style.height = "100px";
+    div.style.backgroundColor = "lightblue";
+    div.style.flex = "1";
+    div.style.boxShadow = "border-box";
+    div.innerHTML = \`
+        <spine-widget
+            atlas="\${deleteAtlasPath}"
+            skeleton="\${deleteSkeletonPath}"
+            json-skeleton-key="heroes"
+            animation="\${animations[Math.floor(Math.random() * animations.length)]}"
+            skin="\${skins[Math.floor(Math.random() * skins.length)]}"
+        ></spine-widget>
+    \`;
+
+    deleteContainer.appendChild(div);
+
+    deleteAssetManager = (await div.firstElementChild.whenReady).overlay.assetManager;
+
+    deleteWidgetCounter.innerText = deleteContainer.childNodes.length
+    deleteSkeletonCounter.innerText = \` (\${deleteSkeletonPath}): \${deleteAssetManager.assetsRefCount[deleteSkeletonPath]}\`
+    deleteAtlasCounter.innerText = \` (\${deleteAtlasPath}): \${deleteAssetManager.assetsRefCount[deleteAtlasPath]}\`
+    deleteTextureCounter.innerText = \` (\${deleteTexturePath}): \${deleteAssetManager.assetsRefCount[deleteTexturePath]}\`
+
+    deleteAtlasDisposeLabel.style.transition = undefined;
+    deleteAtlasDisposeLabel.style.opacity = 0;
+
+    deleteTextureDisposeLabel.style.transition = undefined;
+    deleteTextureDisposeLabel.style.opacity = 0;
+}
+
+function removeDiv() {
+    if (deleteContainer.lastChild) {
+        deleteContainer.removeChild(deleteContainer.lastChild).firstElementChild.dispose();
+
+        deleteWidgetCounter.innerText = deleteContainer.childNodes.length
+        deleteSkeletonCounter.innerText = \` (\${deleteSkeletonPath}): \${deleteAssetManager.assetsRefCount[deleteSkeletonPath]}\`
+        deleteAtlasCounter.innerText = \` (\${deleteAtlasPath}): \${deleteAssetManager.assetsRefCount[deleteAtlasPath] || 0}\`
+        deleteTextureCounter.innerText = \` (\${deleteTexturePath}): \${deleteAssetManager.assetsRefCount[deleteTexturePath] || 0}\`
+
+        if (!deleteAssetManager.assetsRefCount[deleteSkeletonPath]) console.log("disposed");
+
+        if (!deleteAssetManager.assetsRefCount[deleteAtlasPath]) {
+            deleteAtlasDisposeLabel.style.transition = 'opacity 1s';
+            deleteAtlasDisposeLabel.style.opacity = 1;
+        }
+
+        if (!deleteAssetManager.assetsRefCount[deleteTexturePath]) {
+            deleteTextureDisposeLabel.style.transition = 'opacity 1s';
+            deleteTextureDisposeLabel.style.opacity = 1;
+        }
+    }
+}`
+    );</script>
             </code></pre>
         </div>
 
