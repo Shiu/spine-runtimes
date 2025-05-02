@@ -583,12 +583,11 @@
 
         <script>
             (async () => {
-                const widget = spine.getSpineWidget("raptor");
-                const { state } = await widget.whenReady;
+                const widget = await spine.getSpineWidget("raptor").whenReady;
                 let isRoaring = false;
                 setInterval(() => {
                     const newAnimation = isRoaring ? "walk" : "roar";
-                    state.setAnimation(0, newAnimation, true);
+                    widget.state.setAnimation(0, newAnimation, true);
                     widget.calculateBounds(); // scale the skeleton based on the new animation
                     isRoaring = !isRoaring;
                 }, 4000);
@@ -610,12 +609,11 @@
 
 // using js, access the skeleton and the state asynchronously
 (async () => {
-    const widget = spine.getSpineWidget("raptor");
-    const { state } = await widget.whenReady;
+    const widget = await spine.getSpineWidget("raptor").whenReady;
     let isRoaring = false;
     setInterval(() => {
         const newAnimation = isRoaring ? "walk" : "roar";
-        state.setAnimation(0, newAnimation, true);
+        widget.state.setAnimation(0, newAnimation, true);
         widget.calculateBounds(); // scale the skeleton based on the new animation
         isRoaring = !isRoaring;
     }, 4000);
@@ -670,7 +668,6 @@
 
         <script>
             (async () => {
-
                 {
                     const widget = await spine.getSpineWidget("spineboy-change-animation").whenReady;
                     let toogleAnimation = false;
@@ -718,7 +715,7 @@
 
 // using js, access the skeleton and the state asynchronously
 {
-    const widget = document.querySelector('[identifier="spineboy-change-animation"]');
+    const widget = await spine.getSpineWidget("spineboy-change-animation").whenReady;
     let toogleAnimation = false;
     setInterval(() => {
         const newAnimation = toogleAnimation ? "jump" : "death";
@@ -728,7 +725,7 @@
 }
 
 {
-    const widget = document.querySelector('[identifier="spineboy-change-animation2"]');
+    const widget = await spine.getSpineWidget("spineboy-change-animation2").whenReady;
     let toogleAnimation = false;
     setInterval(() => {
         const newAnimation = toogleAnimation ? "jump" : "death";
@@ -896,42 +893,61 @@
         <div class="split-bottom">
             <pre><code id="code-display">
                 <script>escapeHTMLandInject(`
-// access the spine widget
 <spine-widget
-    identifier="raptor"
-    atlas="assets/raptor-pma.atlas"
-    skeleton="assets/raptor-pro.skel"
-    animation="walk"
+    atlas="assets/spineboy-pma.atlas"
+    skeleton="assets/spineboy-pro.skel"
+    animation-bounds="jump,death"
+    default-mix="0.05"
+    animations="
+        [loop, 0]
+        [0, idle, true]
+        [0, run, false, 2, 0.25]
+        [0, run, false]
+        [0, run, false]
+        [0, run-to-idle, false, 0, 0.15]
+        [0, idle, true]
+        [0, jump, false, 0, 0.15]
+        [0, walk, false, 0, 0.05]
+        [0, death, false, 0, 0.05]
+    "
 ></spine-widget>
 
+<spine-widget
+    identifier="celeste-animations"
+    atlas="assets/celestial-circus-pma.atlas"
+    skeleton="assets/celestial-circus-pro.skel"
+    animations="
+        [0, wings-and-feet, true]
+        [loop, 1]
+        [1, #EMPTY#, false]
+        [1, eyeblink, false, 2]
+    "
+></spine-widget>
+
+<textarea id="celeste-animations-text-area" style="font-size: 0.6rem; width: 100%;" rows="5">
+[0, wings-and-feet, true]
+[loop, 1]
+[1, #EMPTY#, false]
+[1, eyeblink, false, 2]
+</textarea>
+
+<input type="button" value="Update animation" onclick="updateCelesteAnimations(this)">
 ...
 
-// using js, access the skeleton and the state asynchronously
-(async () => {
-    const widget = spine.getSpineWidget("raptor");
-    const { state } = await widget.whenReady;
-    let isRoaring = false;
-    setInterval(() => {
-        const newAnimation = isRoaring ? "walk" : "roar";
-        state.setAnimation(0, newAnimation, true);
-        widget.calculateBounds(); // scale the skeleton based on the new animation
-        isRoaring = !isRoaring;
-    }, 4000);
-})();
-
-`);</script>
+async function updateCelesteAnimations() {
+    const celesteAnimations = await spine.getSpineWidget("celeste-animations").whenReady;
+    var celesteAnimationsTextArea = document.getElementById("celeste-animations-text-area");
+    celesteAnimations.setAttribute("animations", celesteAnimationsTextArea.value)
+}`);</script>
             </code></pre>
         </div>
     </div>
-
 
     <!--
     /////////////////////
     // end section //
     /////////////////////
     -->
-
-
 
 
     <!--
@@ -989,14 +1005,24 @@
         <div class="split-top split">
             <div class="split-left">
                 You can view the skeleton world origin (green), the root bone position (red), and the bounds rectangle and center (blue) by setting <code>debug</code> to <code>true</code>.
+                <br>
+                Here we shift the root a little to avoid it to be overlapped with the origin.
             </div>
             <div class="split-right">
                 <spine-widget
+                    identifier="sack-debug"
                     atlas="assets/sack-pma.atlas"
                     skeleton="assets/sack-pro.skel"
                     animation="cape-follow-example"
                     debug
                 ></spine-widget>
+
+                <script>
+                    (async () => {
+                        const widget = await spine.getSpineWidget("sack-debug").whenReady;
+                        widget.skeleton.getRootBone().x += 50;
+                    })();
+                </script>
             </div>
         </div>
 
@@ -1004,11 +1030,17 @@
             <pre><code id="code-display">
                 <script>escapeHTMLandInject(`
 <spine-widget
+    identifier="sack-debug"
     atlas="assets/sack-pma.atlas"
     skeleton="assets/sack-pro.skel"
     animation="cape-follow-example"
     debug
-></spine-widget>`
+></spine-widget>
+...
+(async () => {
+    const widget = await spine.getSpineWidget("sack-debug").whenReady;
+    widget.skeleton.getRootBone().x += 50;
+})();`
 );</script>
             </code></pre>
         </div>
@@ -1357,11 +1389,32 @@ function removeDiv() {
                 <script>
                 escapeHTMLandInject(`
 <spine-widget
+    identifier="widget-loading"
     atlas="assets/spineboy-pma.atlas"
     skeleton="assets/spineboy-pro.skel"
     animation="walk"
     spinner
-></spine-widget>`)
+></spine-widget>
+<input type="button" value="Simulate reload" onclick="reloadWidget(this)">
+<input type="button" value="Spinner ON" onclick="toggleSpinner(this)">
+
+...
+
+const widget = spine.getSpineWidget("widget-loading");
+async function reloadWidget(element) {
+    element.disabled = true;
+    await widget.whenReady;
+    const skeleton = widget.skeleton;
+    widget.loading = true;
+    setTimeout(() => {
+        element.disabled = false;
+        widget.loading = false;
+    }, 1000)
+}
+function toggleSpinner(element) {
+    widget.loadingSpinner = !widget.loadingSpinner;
+    element.value = widget.loadingSpinner ? "Spinner ON" : "Spinner OFF";
+}`)
                 </script>
             </code></pre>
         </div>
@@ -2033,7 +2086,7 @@ skins.forEach((skin, i) => {
                 </div>
                 <div class="skin-grid-element">
                     <spine-widget
-                        identifier="coin"
+                        identifier="coin-with-raptor"
                         atlas="assets/raptor-pma.atlas"
                         skeleton="assets/raptor-pro.skel"
                         animation="walk"
@@ -2041,11 +2094,10 @@ skins.forEach((skin, i) => {
 
                     <script>
                         (async () => {
-                            const coinWidget = spine.getSpineWidget("coin");
-                            await coinWidget.whenReady;
+                            const raptorWidget = await spine.getSpineWidget("coin-with-raptor").whenReady;
 
                             let raptorWalking = true;
-                            coinWidget.onScreenFunction = widget => {
+                            raptorWidget.onScreenFunction = widget => {
                                 raptorWalking = !raptorWalking;
                                 widget.state.setAnimation(0, raptorWalking ? "walk" : "jump", true);
                             }
@@ -2070,18 +2122,12 @@ skins.forEach((skin, i) => {
 
 ...
 
-(async () => {
-    const coinWidget = spine.getSpineWidget("coin");
-    await coinWidget.whenReady;
-
-    let raptorWalking = true;
-    coinWidget.onScreenFunction = widget => {
-        raptorWalking = !raptorWalking;
-        widget.state.setAnimation(0, raptorWalking ? "walk" : "jump", true);
-    }
-})();
-
-`)
+const raptorWidget = await spine.getSpineWidget("coin-with-raptor").whenReady;
+let raptorWalking = true;
+raptorWidget.onScreenFunction = widget => {
+    raptorWalking = !raptorWalking;
+    widget.state.setAnimation(0, raptorWalking ? "walk" : "jump", true);
+}`)
                 </script>
             </code></pre>
         </div>
@@ -2329,9 +2375,8 @@ stretchyman.update = (canvas, delta, skeleton, state) => {
 
             <script>
                 (async () => {
-                    const tank = spine.getSpineWidget("tank");
-                    const tank2 = spine.getSpineWidget("tank2");
-                    await Promise.all([tank.whenReady, tank2.whenReady]);
+                    const [tank, tank2] = await Promise.all([
+                        spine.getSpineWidget("tank").whenReady, spine.getSpineWidget("tank2").whenReady]);
 
                     tank.beforeUpdateWorldTransforms = (skeleton, state) => {
                         if (!tank.onScreen) return;
@@ -2369,19 +2414,14 @@ stretchyman.update = (canvas, delta, skeleton, state) => {
 
 ...
 
-(async () => {
-    const tank = spine.getSpineWidget("tank");
-    const tank2 = spine.getSpineWidget("tank2");
-    await Promise.all([tank.whenReady, tank2.whenReady]);
+const [tank, tank2] = await Promise.all([
+    spine.getSpineWidget("tank").whenReady, spine.getSpineWidget("tank2").whenReady]);
 
-    // since we want the tank to overflow the div, we set fit to none
-    // then we "sync" the tank scale to the one of the tank above
-    tank.beforeUpdateWorldTransforms = (canvas, delta, skeleton, state) => {
-        if (!tank.onScreen) return;
-        tank.skeleton.scaleX = tank2.skeleton.scaleX;
-        tank.skeleton.scaleY = tank2.skeleton.scaleY;
-    }
-})();`);
+tank.beforeUpdateWorldTransforms = (skeleton, state) => {
+    if (!tank.onScreen) return;
+    tank.skeleton.scaleX = tank2.skeleton.scaleX;
+    tank.skeleton.scaleY = tank2.skeleton.scaleY;
+}`);
                 </script>
             </code></pre>
         </div>
@@ -2952,9 +2992,8 @@ function createCircleOfDivs(numDivs = 8) {
 
         container.appendChild(div);
 
-        customElements.whenDefined('spine-widget').then(async () => {
-            const widget = spine.getSpineWidget(\`owl\${i}\`);
-            await widget.whenReady;
+        (async () => {
+            const widget = await div.lastElementChild.whenReady;
             widget.state.setAnimation(1, "blink", true);
 
             const control = widget.skeleton.findBone("control");
@@ -2964,9 +3003,7 @@ function createCircleOfDivs(numDivs = 8) {
             widget.afterUpdateWorldTransforms = () => {
                 updateControl(widget, control, mouseX, mouseY, tempVector);
             }
-        });
-
-
+        })();
     }
 
     return container;
@@ -3048,9 +3085,8 @@ function createCircleOfDivs(numDivs = 8) {
 
         container.appendChild(div);
 
-        customElements.whenDefined('spine-widget').then(async () => {
-            const widget = spine.getSpineWidget(`owl${i}`);
-            await widget.whenReady;
+        (async () => {
+            const widget = await div.lastElementChild.whenReady;
             widget.state.setAnimation(1, "blink", true);
 
             const control = widget.skeleton.findBone("control");
@@ -3060,9 +3096,7 @@ function createCircleOfDivs(numDivs = 8) {
             widget.afterUpdateWorldTransforms = () => {
                 updateControl(widget, control, mouseX, mouseY, tempVector);
             }
-        });
-
-
+        })();
     }
 
     return container;
@@ -3512,15 +3546,109 @@ const darkPicker = document.getElementById("dark-picker");
                     widget.state.setAnimation(0, leaveAnimation, true).mixDuration = .25;
                 }
             }
-        })
-
-
+        });
     </script>
 
     <div class="split-bottom">
         <pre><code id="code-display">
             <script>escapeHTMLandInject(`
-TODO`
+<div style=" background-color: #fff;">
+    <h2 style="text-align: center; padding: 2rem; color: #333;">Meet our team!</h2>
+    <div id="team-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; width: 100%;">
+    </div>
+</div>
+
+const container = document.getElementById("team-container");
+
+const members = [
+    { skin: "mario", name: "Mario", role: "Developer" },
+    { skin: "misaki", name: "Misaki", role: "Artist"  },
+    { skin: "erikari", name: "Erika", role: "Artist"  },
+    { skin: "nate", name: "Nate", role: "Developer"  },
+    { skin: "luke", name: "Luke", role: "Support"  },
+    { skin: "sinisa", name: "Sinisa", role: "Artist"  },
+    { skin: "harri", name: "Harri", role: "Developer"  },
+    { skin: "soeren", name: "Sören", role: "Artist"  },
+    { skin: "spineboy", name: "Spineboy", role: "Mascotte"  },
+];
+
+const style = document.createElement("style");
+style.innerHTML = \`
+.team-member:hover {
+    transform: scale(1.25);
+    transition: transform 0.3s ease;
+}
+\`;
+document.head.appendChild(style);
+
+members.forEach(async (member, i) => {
+    const div1 = document.createElement("div");
+    container.appendChild(div1);
+    div1.style.display = "flex";
+    div1.style.flexDirection = "column";
+    div1.style.alignItems = "center";
+    div1.style.textAlign = "center";
+    div1.style.backgroundColor = "#f9f9f9";
+    div1.style.padding = "1rem";
+    div1.style.borderRadius = "8px";
+    div1.style.boxShadow = "0 4px 6px rgba(0,0,0,0.1)";
+    div1.style.transition = "transform 0.3s ease";
+    div1.classList.add("team-member");
+
+
+    const div2 = document.createElement("div");
+    div1.appendChild(div2);
+    div2.style.width = "150px";
+    div2.style.height = "150px";
+    div2.style.border = "4px solid #333";
+
+
+    const widget = spine.createSpineWidget({
+        identifier: member.skin,
+        atlasPath: "assets/pwd/chibi-stickers-pro-pwd-test.atlas",
+        skeletonPath: "assets/pwd/chibi-stickers.json",
+        skin: member.skin,
+        animation: "emotes/wave",
+        padTop: "0.05",
+        padBottom: "0.05",
+        isInteractive: true,
+    });
+
+    div2.appendChild(widget);
+
+    const div3 = document.createElement("div");
+    div1.appendChild(div3);
+    div3.style.marginTop = "15px";
+    div3.style.width = "100%";
+
+    const div4 = document.createElement("div");
+    div3.appendChild(div4);
+    div4.innerHTML = member.name;
+    div4.style.fontWeight = "bold";
+    div4.style.fontSize = "1.1rem";
+    div4.style.marginBottom = "5px";
+    div4.style.color = "#333";
+
+    const div5 = document.createElement("div");
+    div3.appendChild(div5);
+    div5.classList.add("team-member-role");
+    div5.innerHTML = member.role;
+    div5.style.fontSize = "0.9rem";
+    div5.style.color = "#666";
+
+    await widget.whenReady;
+
+    const emotes = widget.skeleton.data.animations.reduce((acc, { name }) => name.startsWith("emotes") ? [...acc, name] : acc, []);
+    let leaveAnimation = "emotes/wave";
+    widget.cursorEventCallback = (event) => {
+        if (event === "enter") widget.state.setAnimation(0, "emotes/hooray", true).mixDuration = .15;
+        else if (event === "leave") widget.state.setAnimation(0, leaveAnimation, true).mixDuration = .25;
+        else if (event === "down") {
+            leaveAnimation = emotes[Math.floor(Math.random() * emotes.length)];
+            widget.state.setAnimation(0, leaveAnimation, true).mixDuration = .25;
+        }
+    }
+});`
 );</script>
         </code></pre>
     </div>
@@ -3771,7 +3899,7 @@ TODO`
         <div class="split-bottom">
             <pre><code id="code-display">
                 <script>escapeHTMLandInject(`
-TODO`
+Look at the source code`
 );</script>
             </code></pre>
         </div>
@@ -4467,7 +4595,7 @@ TODO`
     <div class="split-bottom">
         <pre><code id="code-display">
             <script>escapeHTMLandInject(`
-TODO`
+Look at the source code`
 );</script>
         </code></pre>
     </div>
@@ -4791,11 +4919,7 @@ TODO`
             <pre><code id="code-display">
                 <script>
                 escapeHTMLandInject(`
-<spine-widget
-    atlas="assets/spineboy-pma.atlas"
-    skeleton="assets/spineboy-pro.skel"
-    animation="walk"
-></spine-widget>`)
+Look at the source code`)
                 </script>
             </code></pre>
         </div>
