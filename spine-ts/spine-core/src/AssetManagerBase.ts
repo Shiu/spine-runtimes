@@ -337,6 +337,7 @@ export class AssetManagerBase implements Disposable {
 		if (asset.dispose) asset.dispose();
 		delete this.assets[path];
 		delete this.assetsRefCount[path];
+		delete this.assetsLoaded[path];
 		return asset;
 	}
 
@@ -346,6 +347,8 @@ export class AssetManagerBase implements Disposable {
 			if (asset.dispose) asset.dispose();
 		}
 		this.assets = {};
+		this.assetsLoaded = {};
+		this.assetsRefCount = {};
 	}
 
 	isLoadingComplete (): boolean {
@@ -365,10 +368,9 @@ export class AssetManagerBase implements Disposable {
 	}
 
 	// dispose asset only if it's not used by others
-	disposeAsset(path: string, a?: string) {
+	disposeAsset(path: string) {
 		if (--this.assetsRefCount[path] === 0) {
-			const asset = this.assets[path];
-			if (asset.dispose) asset.dispose();
+			this.remove(path)
 		}
 	}
 
