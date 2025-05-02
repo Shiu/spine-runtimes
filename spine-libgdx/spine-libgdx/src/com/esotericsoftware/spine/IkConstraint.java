@@ -76,19 +76,12 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 	void sort (Skeleton skeleton) {
 		skeleton.sortBone(target);
 		Bone parent = bones.items[0].bone;
-		skeleton.resetCache(parent);
 		skeleton.sortBone(parent);
-		if (bones.size == 1) {
-			skeleton.updateCache.add(this);
-			skeleton.sortReset(parent.children);
-		} else {
-			Bone child = bones.items[1].bone;
-			skeleton.resetCache(child);
-			skeleton.sortBone(child);
-			skeleton.updateCache.add(this);
-			skeleton.sortReset(parent.children);
-			child.sorted = true;
-		}
+		skeleton.updateCache.add(this);
+		parent.sorted = false;
+		skeleton.sortReset(parent.children);
+		skeleton.constrained(parent);
+		if (bones.size > 1) skeleton.constrained(bones.items[1].bone);
 	}
 
 	boolean isSourceActive () {
@@ -112,9 +105,9 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 
 	/** Applies 1 bone IK. The target is specified in the world coordinate system. */
 	static public void apply (Skeleton skeleton, BonePose bone, float targetX, float targetY, boolean compress, boolean stretch,
-		boolean uniform, float alpha) {
+		boolean uniform, float mix) {
 		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
-		if (bone.local == skeleton.update) bone.updateLocalTransform(skeleton);
+		bone.modifyLocal(skeleton);
 		BonePose p = bone.bone.parent.applied;
 		float pa = p.a, pb = p.b, pc = p.c, pd = p.d;
 		float rotationIK = -bone.shearX - bone.rotation, tx, ty;
@@ -148,7 +141,7 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 			rotationIK -= 360;
 		else if (rotationIK < -180) //
 			rotationIK += 360;
-		bone.rotation += rotationIK * alpha;
+		bone.rotation += rotationIK * mix;
 		if (compress || stretch) {
 			switch (bone.inherit) {
 			case noScale, noScaleOrReflection -> {
@@ -160,25 +153,23 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 			if (b > 0.0001f) {
 				float dd = tx * tx + ty * ty;
 				if ((compress && dd < b * b) || (stretch && dd > b * b)) {
-					float s = ((float)Math.sqrt(dd) / b - 1) * alpha + 1;
+					float s = ((float)Math.sqrt(dd) / b - 1) * mix + 1;
 					bone.scaleX *= s;
 					if (uniform) bone.scaleY *= s;
 				}
 			}
 		}
-		bone.updateWorldTransform(skeleton);
-		bone.bone.resetUpdate(skeleton);
 	}
 
 	/** Applies 2 bone IK. The target is specified in the world coordinate system.
 	 * @param child A direct descendant of the parent bone. */
 	static public void apply (Skeleton skeleton, BonePose parent, BonePose child, float targetX, float targetY, int bendDir,
-		boolean stretch, boolean uniform, float softness, float alpha) {
+		boolean stretch, boolean uniform, float softness, float mix) {
 		if (parent == null) throw new IllegalArgumentException("parent cannot be null.");
 		if (child == null) throw new IllegalArgumentException("child cannot be null.");
 		if (parent.inherit != Inherit.normal || child.inherit != Inherit.normal) return;
-		if (parent.local == skeleton.update) parent.updateLocalTransform(skeleton);
-		if (child.local == skeleton.update) child.updateLocalTransform(skeleton);
+		parent.modifyLocal(skeleton);
+		child.modifyLocal(skeleton);
 		float px = parent.x, py = parent.y, psx = parent.scaleX, psy = parent.scaleY, csx = child.scaleX;
 		int os1, os2, s2;
 		if (psx < 0) {
@@ -218,10 +209,8 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 		float dx = (x * d - y * b) * id - px, dy = (y * a - x * c) * id - py;
 		float l1 = (float)Math.sqrt(dx * dx + dy * dy), l2 = child.bone.data.length * csx, a1, a2;
 		if (l1 < 0.0001f) {
-			apply(skeleton, parent, targetX, targetY, false, stretch, false, alpha);
+			apply(skeleton, parent, targetX, targetY, false, stretch, false, mix);
 			child.rotation = 0;
-			child.updateWorldTransform(skeleton);
-			child.bone.resetUpdate(skeleton);
 			return;
 		}
 		x = targetX - pp.worldX;
@@ -250,7 +239,7 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 				cos = 1;
 				a2 = 0;
 				if (stretch) {
-					a = ((float)Math.sqrt(dd) / (l1 + l2) - 1) * alpha + 1;
+					a = ((float)Math.sqrt(dd) / (l1 + l2) - 1) * mix + 1;
 					parent.scaleX *= a;
 					if (uniform) parent.scaleY *= a;
 				}
@@ -315,15 +304,12 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 			a1 -= 360;
 		else if (a1 < -180) //
 			a1 += 360;
-		parent.rotation += a1 * alpha;
-		parent.updateWorldTransform(skeleton);
+		parent.rotation += a1 * mix;
 		a2 = ((a2 + os) * radDeg - child.shearX) * s2 + os2 - child.rotation;
 		if (a2 > 180)
 			a2 -= 360;
 		else if (a2 < -180) //
 			a2 += 360;
-		child.rotation += a2 * alpha;
-		child.updateWorldTransform(skeleton);
-		parent.bone.resetUpdate(skeleton);
+		child.rotation += a2 * mix;
 	}
 }

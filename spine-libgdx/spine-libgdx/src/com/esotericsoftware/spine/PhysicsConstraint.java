@@ -263,16 +263,15 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 			tx = l * bone.a;
 			ty = l * bone.c;
 		}
-		bone.local = skeleton.update;
-		bone.bone.resetUpdate(skeleton);
+		bone.modifyWorld(skeleton.update);
 	}
 
 	void sort (Skeleton skeleton) {
 		Bone bone = this.bone.bone;
 		skeleton.sortBone(bone);
-		skeleton.resetCache(bone);
 		skeleton.updateCache.add(this);
 		skeleton.sortReset(bone.children);
+		skeleton.constrained(bone);
 	}
 
 	boolean isSourceActive () {

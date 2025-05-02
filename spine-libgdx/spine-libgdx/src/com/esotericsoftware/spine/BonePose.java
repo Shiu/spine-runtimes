@@ -139,8 +139,8 @@ public class BonePose extends BoneLocal implements Update {
 	 * Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The local transform after
 	 * calling this method is equivalent to the local transform used to compute the world transform, but may not be identical. */
 	public void updateLocalTransform (Skeleton skeleton) {
-		world = skeleton.update;
 		local = 0;
+		world = skeleton.update;
 
 		if (bone.parent == null) {
 			x = worldX - skeleton.x;
@@ -219,10 +219,33 @@ public class BonePose extends BoneLocal implements Update {
 		}
 	}
 
-	/** When true, the world transform has been modified and the local transform no longer matches. Call
-	 * {@link #updateLocalTransform(Skeleton)} before using the local transform. */
-	public boolean isLocalDirty (Skeleton skeleton) {
-		return local == skeleton.update;
+	/** If the world transform has been modified and the local transform no longer matches, {@link #updateLocalTransform(Skeleton)}
+	 * is called. */
+	public void validateLocalTransform (Skeleton skeleton) {
+		if (local == skeleton.update) updateLocalTransform(skeleton);
+	}
+
+	void modifyLocal (Skeleton skeleton) {
+		if (local == skeleton.update) updateLocalTransform(skeleton);
+		world = 0;
+		resetWorld(skeleton.update);
+	}
+
+	void modifyWorld (int update) {
+		local = update;
+		world = update;
+		resetWorld(update);
+	}
+
+	void resetWorld (int update) {
+		Bone[] children = bone.children.items;
+		for (int i = 0, n = bone.children.size; i < n; i++) {
+			BonePose child = children[i].applied;
+			if (child.world == update) {
+				child.world = 0;
+				child.resetWorld(update);
+			}
+		}
 	}
 
 	/** Part of the world transform matrix for the X axis. If changed, {@link #updateLocalTransform(Skeleton)} should be called. */

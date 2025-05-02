@@ -202,7 +202,7 @@ public class Skeleton {
 			if (updateCache[i] instanceof Bone bone) updateCache[i] = bone.applied;
 	}
 
-	void resetCache (Posed object) {
+	void constrained (Posed object) {
 		if (object.pose == object.applied) {
 			object.applied = object.constrained;
 			resetCache.add(object);

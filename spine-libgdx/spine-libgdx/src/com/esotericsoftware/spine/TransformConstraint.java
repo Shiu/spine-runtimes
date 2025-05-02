@@ -72,13 +72,16 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 		float[] offsets = data.offsets;
 		BonePose source = this.source.applied;
 		int update = skeleton.update;
-		if (localSource && source.local == skeleton.update) source.updateLocalTransform(skeleton);
+		if (localSource) source.modifyLocal(skeleton);
 		FromProperty[] fromItems = data.properties.items;
 		int fn = data.properties.size;
 		BonePose[] bones = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++) {
 			BonePose bone = bones[i];
-			if (localTarget && bone.local == update) bone.updateLocalTransform(skeleton);
+			if (localTarget)
+				bone.modifyLocal(skeleton);
+			else
+				bone.modifyWorld(update);
 			for (int f = 0; f < fn; f++) {
 				FromProperty from = fromItems[f];
 				float value = from.value(source, localSource, offsets) - from.offset;
@@ -97,28 +100,26 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 					}
 				}
 			}
-			if (localTarget)
-				bone.updateWorldTransform(skeleton);
-			else
-				bone.local = update;
-			bone.bone.resetUpdate(skeleton);
 		}
 	}
 
 	void sort (Skeleton skeleton) {
-		skeleton.sortBone(source);
+		if (!data.localSource) skeleton.sortBone(source);
 		BonePose[] bones = this.bones.items;
 		int boneCount = this.bones.size;
-		for (int i = 0; i < boneCount; i++) {
-			Bone bone = bones[i].bone;
-			skeleton.resetCache(bone);
-			skeleton.sortBone(bone);
+		boolean worldTarget = !data.localTarget;
+		if (worldTarget) {
+			for (int i = 0; i < boneCount; i++)
+				skeleton.sortBone(bones[i].bone);
 		}
 		skeleton.updateCache.add(this);
+		for (int i = 0; i < boneCount; i++) {
+			Bone bone = bones[i].bone;
+			skeleton.sortReset(bone.children);
+			skeleton.constrained(bone);
+		}
 		for (int i = 0; i < boneCount; i++)
-			skeleton.sortReset(bones[i].bone.children);
-		for (int i = 0; i < boneCount; i++)
-			bones[i].bone.sorted = true;
+			bones[i].bone.sorted = worldTarget;
 	}
 
 	boolean isSourceActive () {

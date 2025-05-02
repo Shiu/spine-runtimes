@@ -70,22 +70,10 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 				pose.time = Math.max(0, pose.time);
 		}
 
-		SliderData data = this.data;
-		Timeline[] timelines = animation.timelines.items;
-		int timelineCount = animation.timelines.size;
 		Bone[] bones = skeleton.bones.items;
-		if (pose.mix == 1) {
-			for (int i = 0; i < timelineCount; i++)
-				if (timelines[i] instanceof BoneTimeline timeline) bones[timeline.getBoneIndex()].resetUpdate(skeleton);
-		} else {
-			for (int i = 0; i < timelineCount; i++) {
-				if (timelines[i] instanceof BoneTimeline timeline) {
-					Bone bone = bones[timeline.getBoneIndex()];
-					bone.resetUpdate(skeleton);
-					if (bone.applied.local == skeleton.update) bone.applied.updateLocalTransform(skeleton);
-				}
-			}
-		}
+		Timeline[] timelines = animation.timelines.items;
+		for (int i = 0, n = animation.timelines.size; i < n; i++)
+			if (timelines[i] instanceof BoneTimeline timeline) bones[timeline.getBoneIndex()].applied.modifyLocal(skeleton);
 
 		SliderPose pose = applied;
 		animation.apply(skeleton, pose.time, pose.time, data.loop, null, pose.mix, data.additive ? MixBlend.add : MixBlend.replace,
@@ -93,35 +81,32 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 	}
 
 	void sort (Skeleton skeleton) {
-		Timeline[] timelines = data.animation.timelines.items;
-		int timelineCount = data.animation.timelines.size;
-		Bone[] bones = skeleton.bones.items;
-		for (int i = 0; i < timelineCount; i++)
-			if (timelines[i] instanceof BoneTimeline timeline) skeleton.sortBone(bones[timeline.getBoneIndex()]);
-
+		if (bone != null && !data.local) skeleton.sortBone(bone);
 		skeleton.updateCache.add(this);
 
+		Timeline[] timelines = data.animation.timelines.items;
+		Bone[] bones = skeleton.bones.items;
 		Slot[] slots = skeleton.slots.items;
 		Constraint[] constraints = skeleton.constraints.items;
 		PhysicsConstraint[] physics = skeleton.physics.items;
 		int physicsCount = skeleton.physics.size;
-		for (int i = 0; i < timelineCount; i++) {
+		for (int i = 0, n = data.animation.timelines.size; i < n; i++) {
 			Timeline t = timelines[i];
 			if (t instanceof BoneTimeline timeline) {
 				Bone bone = bones[timeline.getBoneIndex()];
-				skeleton.resetCache(bone);
-				skeleton.sortReset(bone.children);
 				bone.sorted = false;
+				skeleton.sortReset(bone.children);
+				skeleton.constrained(bone);
 			} else if (t instanceof SlotTimeline timeline)
-				skeleton.resetCache(slots[timeline.getSlotIndex()]);
+				skeleton.constrained(slots[timeline.getSlotIndex()]);
 			else if (t instanceof PhysicsConstraintTimeline timeline) {
 				if (timeline.constraintIndex == -1) {
 					for (int ii = 0; ii < physicsCount; ii++)
-						skeleton.resetCache(physics[ii]);
+						skeleton.constrained(physics[ii]);
 				} else
-					skeleton.resetCache(constraints[timeline.constraintIndex]);
+					skeleton.constrained(constraints[timeline.constraintIndex]);
 			} else if (t instanceof ConstraintTimeline timeline) //
-				skeleton.resetCache(constraints[timeline.getConstraintIndex()]);
+				skeleton.constrained(constraints[timeline.getConstraintIndex()]);
 		}
 	}
 

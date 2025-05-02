@@ -152,7 +152,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 			BonePose p = slot.bone.applied;
 			offsetRotation *= p.a * p.d - p.b * p.c > 0 ? degRad : -degRad;
 		}
-		for (int i = 0, p = 3; i < boneCount; i++, p += 3) {
+		for (int i = 0, p = 3, u = skeleton.update; i < boneCount; i++, p += 3) {
 			BonePose bone = bones[i];
 			bone.worldX += (boneX - bone.worldX) * mixX;
 			bone.worldY += (boneY - bone.worldY) * mixY;
@@ -196,8 +196,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 				bone.c = sin * a + cos * c;
 				bone.d = sin * b + cos * d;
 			}
-			bone.local = skeleton.update;
-			bone.bone.resetUpdate(skeleton);
+			bone.modifyWorld(u);
 		}
 	}
 
@@ -462,16 +461,16 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 	void sort (Skeleton skeleton) {
 		int slotIndex = slot.getData().index;
 		Bone slotBone = slot.bone;
-		if (skeleton.skin != null) sortPathConstraintAttachment(skeleton, skeleton.skin, slotIndex, slotBone);
+		if (skeleton.skin != null) sortPathSlot(skeleton, skeleton.skin, slotIndex, slotBone);
 		if (skeleton.data.defaultSkin != null && skeleton.data.defaultSkin != skeleton.skin)
-			sortPathConstraintAttachment(skeleton, skeleton.data.defaultSkin, slotIndex, slotBone);
-		sortPathConstraintAttachment(skeleton, slot.pose.attachment, slotBone);
+			sortPathSlot(skeleton, skeleton.data.defaultSkin, slotIndex, slotBone);
+		sortPath(skeleton, slot.pose.attachment, slotBone);
 		BonePose[] bones = this.bones.items;
 		int boneCount = this.bones.size;
 		for (int i = 0; i < boneCount; i++) {
 			Bone bone = bones[i].bone;
-			skeleton.resetCache(bone);
 			skeleton.sortBone(bone);
+			skeleton.constrained(bone);
 		}
 		skeleton.updateCache.add(this);
 		for (int i = 0; i < boneCount; i++)
@@ -480,15 +479,15 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 			bones[i].bone.sorted = true;
 	}
 
-	private void sortPathConstraintAttachment (Skeleton skeleton, Skin skin, int slotIndex, Bone slotBone) {
+	private void sortPathSlot (Skeleton skeleton, Skin skin, int slotIndex, Bone slotBone) {
 		Object[] entries = skin.attachments.orderedItems().items;
 		for (int i = 0, n = skin.attachments.size; i < n; i++) {
 			var entry = (SkinEntry)entries[i];
-			if (entry.slotIndex == slotIndex) sortPathConstraintAttachment(skeleton, entry.attachment, slotBone);
+			if (entry.slotIndex == slotIndex) sortPath(skeleton, entry.attachment, slotBone);
 		}
 	}
 
-	private void sortPathConstraintAttachment (Skeleton skeleton, Attachment attachment, Bone slotBone) {
+	private void sortPath (Skeleton skeleton, Attachment attachment, Bone slotBone) {
 		if (!(attachment instanceof PathAttachment pathAttachment)) return;
 		int[] pathBones = pathAttachment.getBones();
 		if (pathBones == null)
