@@ -1347,7 +1347,7 @@ function removeDiv() {
                     atlas="assets/spineboy-pma.atlas"
                     skeleton="assets/spineboy-pro.skel"
                     animation="walk"
-                    spinner
+                    no-spinner
                 ></spine-widget>
             </div>
             <div class="split-right">
@@ -1357,7 +1357,7 @@ function removeDiv() {
                 <input type="button" value="Simulate reload" onclick="reloadWidget(this)">
                 <br>
                 <br>
-                If you do not want to show the loading spinner, set <code>spinner="false"</code>.
+                If you do not want to show the loading spinner, set <code>no-spinner</code>.
                 <br>
                 Click the button below to toggle the spinner.
                 <br>
@@ -1379,8 +1379,8 @@ function removeDiv() {
                 }, 1000)
             }
             function toggleSpinner(element) {
-                widget.loadingSpinner = !widget.loadingSpinner;
-                element.value = widget.loadingSpinner ? "Spinner ON" : "Spinner OFF";
+                widget.noSpinner = !widget.noSpinner;
+                element.value = widget.noSpinner ? "Spinner ON" : "Spinner OFF";
             }
         </script>
 
@@ -1393,7 +1393,7 @@ function removeDiv() {
     atlas="assets/spineboy-pma.atlas"
     skeleton="assets/spineboy-pro.skel"
     animation="walk"
-    spinner
+    no-spinner
 ></spine-widget>
 <input type="button" value="Simulate reload" onclick="reloadWidget(this)">
 <input type="button" value="Spinner ON" onclick="toggleSpinner(this)">
@@ -1412,8 +1412,8 @@ async function reloadWidget(element) {
     }, 1000)
 }
 function toggleSpinner(element) {
-    widget.loadingSpinner = !widget.loadingSpinner;
-    element.value = widget.loadingSpinner ? "Spinner ON" : "Spinner OFF";
+    widget.noSpinner = !widget.noSpinner;
+    element.value = widget.noSpinner ? "Spinner ON" : "Spinner OFF";
 }`)
                 </script>
             </code></pre>

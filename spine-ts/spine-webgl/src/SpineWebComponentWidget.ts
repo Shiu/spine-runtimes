@@ -201,7 +201,7 @@ interface WidgetAttributes {
 	pages?: Array<number>
 	clip: boolean
 	offScreenUpdateBehaviour: OffScreenUpdateBehaviourType
-	loadingSpinner: boolean
+	noSpinner: boolean
 }
 
 // The methods user can override to have custom behaviour
@@ -641,10 +641,10 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	public offScreenUpdateBehaviour: OffScreenUpdateBehaviourType = "pause";
 
 	/**
-	 * If true, the a Spine loading spinner is shown during asset loading
-	 * Connected to `spinner` attribute.
+	 * If false (default), a Spine loading spinner is shown during asset loading
+	 * Connected to `no-spinner` attribute.
 	 */
-	public loadingSpinner = true;
+	public noSpinner = false;
 
 	/**
 	 * Replace the default state and skeleton update logic for this widget.
@@ -714,7 +714,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	/**
 	 * The {@link LoadingScreenWidget} of this widget.
 	 * This is instantiated only if it is really necessary.
-	 * For example, if {@link loadingSpinner} is `false`, this property value is null
+	 * For example, if {@link noSpinner} is `false`, this property value is null
 	 */
 	public loadingScreen: LoadingScreen | null = null;
 
@@ -833,7 +833,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		debug: { propertyName: "debug", type: "boolean" },
 		"manual-start": { propertyName: "manualStart", type: "boolean" },
 		"start-when-visible": { propertyName: "startWhenVisible", type: "boolean" },
-		spinner: { propertyName: "loadingSpinner", type: "boolean" },
+		"no-spinner": { propertyName: "noSpinner", type: "boolean" },
 		clip: { propertyName: "clip", type: "boolean" },
 		pages: { propertyName: "pages", type: "array-number" },
 		fit: { propertyName: "fit", type: "fitType", defaultValue: "contain" },
@@ -1866,7 +1866,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 			const tempVector = new Vector3();
 			for (const widget of this.widgets) {
-				const { skeleton, pma, bounds, mode, debug, offsetX, offsetY, xAxis, yAxis, dragX, dragY, fit, loadingSpinner, onScreen, loading, clip, isDraggable } = widget;
+				const { skeleton, pma, bounds, mode, debug, offsetX, offsetY, xAxis, yAxis, dragX, dragY, fit, noSpinner, onScreen, loading, clip, isDraggable } = widget;
 
 				if ((!onScreen && dragX === 0 && dragY === 0)) continue;
 				const elementRef = widget.getHostElement();
@@ -1899,7 +1899,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				if (clip) startScissor(divBounds);
 
 				if (loading) {
-					if (loadingSpinner) {
+					if (noSpinner) {
 						if (!widget.loadingScreen) widget.loadingScreen = new LoadingScreen(renderer);
 						widget.loadingScreen!.drawInCoordinates(divOriginX, divOriginY);
 					}
