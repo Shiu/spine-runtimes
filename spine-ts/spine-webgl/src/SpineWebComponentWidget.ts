@@ -866,10 +866,8 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		if (this.overlay) {
 			this.initAfterConnect();
 		} else {
-			window.addEventListener("DOMContentLoaded", this.DOMContentLoadedHandler);
-			if (document.readyState === "complete") {
-				this.DOMContentLoadedHandler();
-			}
+			if (document.readyState === "loading") window.addEventListener("DOMContentLoaded", this.DOMContentLoadedCallback);
+			else this.DOMContentLoadedCallback();
 		}
 
 		this.render();
@@ -882,7 +880,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		}
 	}
 
-	private DOMContentLoadedHandler = () => {
+	private DOMContentLoadedCallback = () => {
 		customElements.whenDefined("spine-overlay").then(async () => {
 			this.overlay = SpineWebComponentOverlay.getOrCreateOverlay(this.getAttribute("overlay-id"));
 			this.resolveOverlayAssignedPromise();
@@ -891,7 +889,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	}
 
 	disconnectedCallback (): void {
-		window.removeEventListener("DOMContentLoaded", this.DOMContentLoadedHandler);
+		window.removeEventListener("DOMContentLoaded", this.DOMContentLoadedCallback);
 		const index = this.overlay?.widgets.indexOf(this);
 		if (index > 0) {
 			this.overlay!.widgets.splice(index, 1);
@@ -1078,13 +1076,15 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		// - []: no page is loaded
 		// - undefined: all pages are loaded (default)
 		await Promise.all([
-			this.lastSkelPath ? Promise.resolve()
+			this.lastSkelPath
+				? Promise.resolve()
 				: (isBinary ? this.overlay.assetManager.loadBinaryAsync(skeletonPath) : this.overlay.assetManager.loadJsonAsync(skeletonPath))
 					.then(() => this.lastSkelPath = skeletonPath),
-			this.lastAtlasPath ? Promise.resolve()
-				: this.overlay.assetManager.loadTextureAtlasButNoTexturesAsync(atlasPath).then(atlas => {
+			this.lastAtlasPath
+				? Promise.resolve()
+				: this.overlay.assetManager.loadTextureAtlasButNoTexturesAsync(atlasPath).then(() => {
 					this.lastAtlasPath = atlasPath;
-					this.loadTexturesInPagesAttribute();
+					return this.loadTexturesInPagesAttribute();
 			}),
 		]);
 
@@ -1419,7 +1419,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 
 	private disposeGLResources() {
 		const { assetManager } = this.overlay;
-		if (this.lastAtlasPath) assetManager.disposeAsset(this.lastAtlasPath, this.identifier);
+		if (this.lastAtlasPath) assetManager.disposeAsset(this.lastAtlasPath);
 		if (this.lastSkelPath) assetManager.disposeAsset(this.lastSkelPath);
 		for (const texturePath of this.lastTexturePaths) assetManager.disposeAsset(texturePath);
 	}
@@ -1624,8 +1624,13 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		}
 		SpineWebComponentOverlay.OVERLAY_LIST.set(overlayId, this);
 		// window.addEventListener("scroll", this.scrolledCallback);
-		window.addEventListener("load", this.loadedCallback);
-		if (this.loaded) this.loadedCallback();
+
+		if (document.readyState !== "complete") {
+			window.addEventListener("load", this.loadedCallback);
+		} else {
+			this.loadedCallback();
+		}
+
 		window.screen.orientation.addEventListener('change', this.orientationChangedCallback);
 
 		this.intersectionObserver = new IntersectionObserver((widgets) => {
@@ -1729,9 +1734,9 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		this.updateCanvasSize();
 		this.scrolledCallback();
 		if (!this.loaded) {
+			this.loaded = true;
 			this.parentElement!.appendChild(this);
 		}
-		this.loaded = true;
 	}
 
 	/**
