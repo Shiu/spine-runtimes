@@ -219,7 +219,7 @@ interface WidgetPublicProperties {
 	bounds: Rectangle
 	onScreen: boolean
 	onScreenAtLeastOnce: boolean
-	loadingPromise: Promise<SpineWebComponentWidget>
+	whenReady: Promise<SpineWebComponentWidget>
 	loading: boolean
 	started: boolean
 	textureAtlas: TextureAtlas
@@ -681,19 +681,19 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 
 	/**
 	 * The skeleton hosted by this widget. It's ready once assets are loaded.
-	 * Safely acces this property by using {@link loadingPromise}.
+	 * Safely acces this property by using {@link whenReady}.
 	 */
 	public skeleton?: Skeleton;
 
 	/**
 	 * The animation state hosted by this widget. It's ready once assets are loaded.
-	 * Safely acces this property by using {@link loadingPromise}.
+	 * Safely acces this property by using {@link whenReady}.
 	 */
 	public state?: AnimationState;
 
 	/**
 	 * The textureAtlas used by this widget to reference attachments. It's ready once assets are loaded.
-	 * Safely acces this property by using {@link loadingPromise}.
+	 * Safely acces this property by using {@link whenReady}.
 	 */
 	public textureAtlas?: TextureAtlas;
 
@@ -701,7 +701,10 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	 * A Promise that resolve to the widget itself once assets loading is terminated.
 	 * Useful to safely access {@link skeleton} and {@link state} after a new widget has been just created.
 	 */
-	public loadingPromise: Promise<this>;
+	public get whenReady(): Promise<this> {
+		return this._whenReady;
+	};
+	private _whenReady: Promise<this>;
 
 	/**
 	 * If true, the widget is in the assets loading process.
@@ -847,7 +850,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		this.root = this.attachShadow({ mode: "closed" });
 
 		// these two are terrible code smells
-		this.loadingPromise = new Promise<this>((resolve) => {
+		this._whenReady = new Promise<this>((resolve) => {
 			this.resolveLoadingPromise = resolve;
 		});
 		this.overlayAssignedPromise = new Promise<void>((resolve) => {
@@ -899,12 +902,14 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	 * Remove the widget from the overlay and the DOM.
 	 */
 	dispose () {
-		this.remove();
+		this.disposed = true;
+		this.disposeGLResources();
 		this.loadingScreen?.dispose();
+		this.overlay.removeWidget(this);
+		this.remove();
 		this.skeletonData = undefined;
 		this.skeleton = undefined;
 		this.state = undefined;
-		this.disposed = true;
 	}
 
 	attributeChangedCallback (name: string, oldValue: string | null, newValue: string | null): void {
@@ -917,16 +922,17 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	/**
 	 * Starts the widget. Starting the widget means to load the assets currently set into
 	 * {@link atlasPath} and {@link skeletonPath}. If start is invoked when the widget is already started,
-	 * the skeleton, state, skin and animation will be reset.
+	 * the skeleton, the state, and the bounds will be reset.
 	 */
 	public start () {
 		if (this.started) {
 			this.skeleton = undefined;
 			this.state = undefined;
-			this._skin = undefined;
-			this._animation = undefined;
 			this.bounds.width = -1;
 			this.bounds.height = -1;
+			this._whenReady = new Promise<this>((resolve) => {
+				this.resolveLoadingPromise = resolve;
+			});
 		}
 		this.started = true;
 
@@ -944,14 +950,32 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	 * @param atlas the `TextureAtlas` from which to get the `TextureAtlasPage`s
 	 * @returns The list of loaded assets
 	 */
-	public async loadTexturesInPagesAttribute (atlas: TextureAtlas): Promise<Array<any>> {
+	public async loadTexturesInPagesAttribute (): Promise<Array<any>> {
+		const atlas = this.overlay.assetManager.require(this.atlasPath!) as TextureAtlas;
 		const pagesIndexToLoad = this.pages ?? atlas.pages.map((_, i) => i); // if no pages provided, loads all
 		const atlasPath = this.atlasPath?.includes("/") ? this.atlasPath.substring(0, this.atlasPath.lastIndexOf("/") + 1) : "";
 		const promisePageList: Array<Promise<any>> = [];
+		const texturePaths = [];
+
 		for (const index of pagesIndexToLoad) {
 			const page = atlas.pages[index];
-			const promiseTextureLoad = this.overlay.assetManager.loadTextureAsync(`${atlasPath}${page.name}`).then(texture => page.setTexture(texture));
+			const texturePath = `${atlasPath}${page.name}`;
+			texturePaths.push(texturePath);
+
+			const promiseTextureLoad = this.lastTexturePaths.includes(texturePath)
+				? Promise.resolve(texturePath)
+				: this.overlay.assetManager.loadTextureAsync(texturePath).then(texture => {
+					this.lastTexturePaths.push(texturePath);
+					page.setTexture(texture);
+					return texturePath;
+				});
+
 			promisePageList.push(promiseTextureLoad);
+		}
+
+		// dispose textures no longer used
+		for (const lastTexturePath of this.lastTexturePaths) {
+			if (!texturePaths.includes(lastTexturePath)) this.overlay.assetManager.disposeAsset(lastTexturePath);
 		}
 
 		return Promise.all(promisePageList)
@@ -1016,6 +1040,9 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		this.bounds = bounds;
 	}
 
+	private lastSkelPath = "";
+	private lastAtlasPath = "";
+	private lastTexturePaths: string[] = [];
 	// add a skeleton to the overlay and set the bounds to the given animation or to the setup pose
 	private async loadSkeleton () {
 		this.loading = true;
@@ -1032,8 +1059,18 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 			}
 		}
 
-		// this ensure there is an overlay assigned because the overlay owns the asset manager
+		// this ensure there is an overlay assigned because the overlay owns the asset manager used to load assets below
 		await this.overlayAssignedPromise;
+
+		if (this.lastSkelPath && this.lastSkelPath !== skeletonPath) {
+			this.overlay.assetManager.disposeAsset(this.lastSkelPath);
+			this.lastSkelPath = "";
+		}
+
+		if (this.lastAtlasPath && this.lastAtlasPath !== atlasPath) {
+			this.overlay.assetManager.disposeAsset(this.lastAtlasPath);
+			this.lastAtlasPath = "";
+		}
 
 		// skeleton and atlas txt are loaded immeaditely
 		// textures are loaeded depending on the 'pages' param:
@@ -1041,8 +1078,14 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		// - []: no page is loaded
 		// - undefined: all pages are loaded (default)
 		await Promise.all([
-			isBinary ? this.overlay.assetManager.loadBinaryAsync(skeletonPath) : this.overlay.assetManager.loadJsonAsync(skeletonPath),
-			this.overlay.assetManager.loadTextureAtlasButNoTexturesAsync(atlasPath).then(atlas => this.loadTexturesInPagesAttribute(atlas)),
+			this.lastSkelPath ? Promise.resolve()
+				: (isBinary ? this.overlay.assetManager.loadBinaryAsync(skeletonPath) : this.overlay.assetManager.loadJsonAsync(skeletonPath))
+					.then(() => this.lastSkelPath = skeletonPath),
+			this.lastAtlasPath ? Promise.resolve()
+				: this.overlay.assetManager.loadTextureAtlasButNoTexturesAsync(atlasPath).then(atlas => {
+					this.lastAtlasPath = atlasPath;
+					this.loadTexturesInPagesAttribute();
+			}),
 		]);
 
 		const atlas = this.overlay.assetManager.require(atlasPath) as TextureAtlas;
@@ -1374,6 +1417,13 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		}
 	}
 
+	private disposeGLResources() {
+		const { assetManager } = this.overlay;
+		if (this.lastAtlasPath) assetManager.disposeAsset(this.lastAtlasPath, this.identifier);
+		if (this.lastSkelPath) assetManager.disposeAsset(this.lastSkelPath);
+		for (const texturePath of this.lastTexturePaths) assetManager.disposeAsset(texturePath);
+	}
+
 }
 
 interface OverlayAttributes {
@@ -1386,7 +1436,6 @@ interface OverlayAttributes {
 }
 
 class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes, Disposable {
-
 	private static OVERLAY_ID = "spine-overlay-default-identifier";
 	private static OVERLAY_LIST = new Map<string, SpineWebComponentOverlay>();
 
@@ -1689,13 +1738,20 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	 * Remove the overlay from the DOM, dispose all the contained widgets, and dispose the renderer.
 	 */
 	dispose (): void {
+		for (const widget of [...this.widgets]) widget.dispose();
+
 		this.remove();
-		this.widgets.forEach(widget => widget.dispose());
 		this.widgets.length = 0;
 		this.renderer.dispose();
 		this.disposed = true;
+		this.assetManager.dispose();
 	}
 
+	/**
+	 * Add the widget to the overlay.
+	 * If the widget is after the overlay in the DOM, the overlay is appended after the widget.
+	 * @param widget The widget to add to the overlay
+	 */
 	addWidget (widget: SpineWebComponentWidget) {
 		this.widgets.push(widget);
 		this.intersectionObserver?.observe(widget.getHostElement());
@@ -1706,6 +1762,19 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				this.parentElement!.appendChild(this);
 			}
 		}
+	}
+
+	/**
+	 * Remove the widget from the overlay.
+	 * @param widget The widget to remove from the overlay
+	 */
+	removeWidget (widget: SpineWebComponentWidget) {
+		const index = this.widgets.findIndex(w => w === widget);
+		if (index === -1) return false;
+
+		this.widgets.splice(index);
+		this.intersectionObserver?.unobserve(widget.getHostElement());
+		return true;
 	}
 
 	addSlotFollowerElement (element: HTMLElement) {

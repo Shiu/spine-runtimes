@@ -584,7 +584,7 @@
         <script>
             (async () => {
                 const widget = spine.getSpineWidget("raptor");
-                const { state } = await widget.loadingPromise;
+                const { state } = await widget.whenReady;
                 let isRoaring = false;
                 setInterval(() => {
                     const newAnimation = isRoaring ? "walk" : "roar";
@@ -611,7 +611,7 @@
 // using js, access the skeleton and the state asynchronously
 (async () => {
     const widget = spine.getSpineWidget("raptor");
-    const { state } = await widget.loadingPromise;
+    const { state } = await widget.whenReady;
     let isRoaring = false;
     setInterval(() => {
         const newAnimation = isRoaring ? "walk" : "roar";
@@ -672,7 +672,7 @@
             (async () => {
 
                 {
-                    const widget = await spine.getSpineWidget("spineboy-change-animation").loadingPromise;
+                    const widget = await spine.getSpineWidget("spineboy-change-animation").whenReady;
                     let toogleAnimation = false;
                     setInterval(() => {
                         const newAnimation = toogleAnimation ? "jump" : "death";
@@ -682,7 +682,7 @@
                 }
 
                 {
-                    const widget = await spine.getSpineWidget("spineboy-change-animation2").loadingPromise;
+                    const widget = await spine.getSpineWidget("spineboy-change-animation2").whenReady;
                     let toogleAnimation = false;
                     setInterval(() => {
                         const newAnimation = toogleAnimation ? "jump" : "death";
@@ -886,7 +886,7 @@
 
         <script>
             async function updateCelesteAnimations() {
-                const celesteAnimations = await spine.getSpineWidget("celeste-animations").loadingPromise;
+                const celesteAnimations = await spine.getSpineWidget("celeste-animations").whenReady;
                 var celesteAnimationsTextArea = document.getElementById("celeste-animations-text-area");
                 celesteAnimations.setAttribute("animations", celesteAnimationsTextArea.value)
             }
@@ -909,7 +909,7 @@
 // using js, access the skeleton and the state asynchronously
 (async () => {
     const widget = spine.getSpineWidget("raptor");
-    const { state } = await widget.loadingPromise;
+    const { state } = await widget.whenReady;
     let isRoaring = false;
     setInterval(() => {
         const newAnimation = isRoaring ? "walk" : "roar";
@@ -977,6 +977,101 @@
     // end section //
     /////////////////////
     -->
+
+    <!--
+    /////////////////////
+    // start section //
+    /////////////////////
+    -->
+
+    <div class="section vertical-split">
+
+        <div class="split-top split">
+            <div class="split-left">
+                <button id="add-delete" onclick="addDiv()" disabled>Add</button>
+                <button onclick="removeDiv()">Remove</button>
+            </div>
+            <div class="split-right">
+                <div id="container-delete" style="display: flex; height: 300px;"></div>
+            </div>
+        </div>
+
+        <script>
+            const containerDelete = document.getElementById('container-delete');
+            window.addEventListener("DOMContentLoaded", () => {
+                document.getElementById('add-delete').removeAttribute("disabled");
+            });
+
+
+            function addDiv() {
+                const skins = [
+                    "Assassin", "Beardy", "Buck",
+                    "Chuck", "Commander", "Ducky", "Dummy",
+                    "Fletch", "Gabriel", "MetalMan", "Pamela-1",
+                    "Pamela-2", "Pamela-3", "Pamela-4", "Pamela-5",
+                    "Stumpy", "Truck", "Turbo", "Young",
+                ];
+                const div = document.createElement('div');
+                const randomIndex = Math.floor(Math.random() * skins.length);
+                const skin = skins[randomIndex];
+                console.log(randomIndex, skin);
+                div.style.flex = "1";
+                div.style.margin = "1px";
+                div.style.backgroundColor = "lightblue";
+                div.style.flex = "1";
+                div.innerHTML = `
+                    <spine-widget
+                        atlas="assets/spineboy-pma.atlas"
+                        skeleton="assets/spineboy-pro.skel"
+                        animation="walk"
+                    ></spine-widget>
+                `;
+
+                // div.innerHTML = `
+                //     <spine-widget
+                //         atlas="../demos/assets/heroes.atlas"
+                //         skeleton="../demos/assets/demos.json"
+                //         json-skeleton-key="heroes"
+                //         animation="floorIdle"
+                //         skin="${skin}"
+                //         isdraggable
+                //     ></spine-widget>
+                // `;
+
+                containerDelete.appendChild(div);
+            }
+
+            function removeDiv() {
+                if (containerDelete.lastChild) {
+                    containerDelete.removeChild(containerDelete.lastChild);
+                }
+            }
+        </script>
+
+        <div class="split-bottom">
+            <pre><code id="code-display">
+                <script>escapeHTMLandInject(`
+    <spine-widget
+    atlas="assets/sack-pma.atlas"
+    skeleton="assets/sack-pro.skel"
+    animation="cape-follow-example"
+    debug
+    ></spine-widget>`
+    );</script>
+            </code></pre>
+        </div>
+
+</div>
+
+
+
+    <!--
+    /////////////////////
+    // end section //
+    /////////////////////
+    -->
+
+
 
     <!--
     /////////////////////
@@ -1109,7 +1204,7 @@
             const widget = spine.getSpineWidget("widget-loading");
             async function reloadWidget(element) {
                 element.disabled = true;
-                await widget.loadingPromise;
+                await widget.whenReady;
                 const skeleton = widget.skeleton;
                 widget.loading = true;
                 setTimeout(() => {
@@ -1663,7 +1758,7 @@
                 <br>
                 By default, assets are loaded immeaditely. You can postpone that by setting <code>manual-start="false"</code>.
                 Then add the widget to the dom using the asynchronous method <code>appendTo</code>. It's your responsibility to call <code>start()</code> on the widget.
-                As usual, just wait on the <code>loadingPromise</code> to act on the <code>skeleton</code> or the <code>state</code>.
+                As usual, just wait on the <code>whenReady</code> to act on the <code>skeleton</code> or the <code>state</code>.
             </div>
 
             <script>
@@ -1701,7 +1796,7 @@
 
                         // access the state of the first widget and change the animation
                         if (i === 0 && j === 0) {
-                            await widgetSection.loadingPromise;
+                            await widgetSection.whenReady;
                             widgetSection.state.setAnimation(0, "emotes/angry", true);
                         }
 
@@ -1749,7 +1844,7 @@ skins.forEach((skin, i) => {
 
         // access the state of the first widget and change the animation
         if (i === 0 && j === 0) {
-            await widgetSection.loadingPromise;
+            await widgetSection.whenReady;
             widgetSection.state.setAnimation(0, "emotes/angry", true);
         }
 
@@ -1813,7 +1908,7 @@ skins.forEach((skin, i) => {
                     <script>
                         (async () => {
                             const coinWidget = spine.getSpineWidget("coin");
-                            await coinWidget.loadingPromise;
+                            await coinWidget.whenReady;
 
                             let raptorWalking = true;
                             coinWidget.onScreenFunction = widget => {
@@ -1843,7 +1938,7 @@ skins.forEach((skin, i) => {
 
 (async () => {
     const coinWidget = spine.getSpineWidget("coin");
-    await coinWidget.loadingPromise;
+    await coinWidget.whenReady;
 
     let raptorWalking = true;
     coinWidget.onScreenFunction = widget => {
@@ -1913,7 +2008,7 @@ skins.forEach((skin, i) => {
                 }
                 if (!dragon.pages.includes(pageIndex)) {
                     dragon.pages.push(pageIndex);
-                    dragon.loadTexturesInPagesAttribute(dragon.textureAtlas);
+                    dragon.loadTexturesInPagesAttribute();
                 }
             }
         </script>
@@ -1945,7 +2040,7 @@ function loadPageDragon(pageIndex) {
     }
     if (!dragon.pages.includes(pageIndex)) {
         dragon.pages.push(pageIndex);
-        dragon.loadTexturesInPagesAttribute(dragon.textureAtlas);
+        dragon.loadTexturesInPagesAttribute();
     }
 }`)
                 </script>
@@ -2102,7 +2197,7 @@ stretchyman.update = (canvas, delta, skeleton, state) => {
                 (async () => {
                     const tank = spine.getSpineWidget("tank");
                     const tank2 = spine.getSpineWidget("tank2");
-                    await Promise.all([tank.loadingPromise, tank2.loadingPromise]);
+                    await Promise.all([tank.whenReady, tank2.whenReady]);
 
                     tank.beforeUpdateWorldTransforms = (skeleton, state) => {
                         if (!tank.onScreen) return;
@@ -2143,7 +2238,7 @@ stretchyman.update = (canvas, delta, skeleton, state) => {
 (async () => {
     const tank = spine.getSpineWidget("tank");
     const tank2 = spine.getSpineWidget("tank2");
-    await Promise.all([tank.loadingPromise, tank2.loadingPromise]);
+    await Promise.all([tank.whenReady, tank2.whenReady]);
 
     // since we want the tank to overflow the div, we set fit to none
     // then we "sync" the tank scale to the one of the tank above
@@ -2230,7 +2325,7 @@ stretchyman.update = (canvas, delta, skeleton, state) => {
                     <script>
                         (async () => {
                             const celeste = spine.getSpineWidget("celeste");
-                            await celeste.loadingPromise;
+                            await celeste.whenReady;
                             celeste.state.setAnimation(0, "swing", true);
                         })();
                     </script>
@@ -2299,7 +2394,7 @@ stretchyman.update = (canvas, delta, skeleton, state) => {
 
 (async () => {
     const celeste = spine.getSpineWidget("celeste");
-    await celeste.loadingPromise;
+    await celeste.whenReady;
     celeste.state.setAnimation(0, "swing", true);
 })();`);
                 </script>
@@ -2725,7 +2820,7 @@ function createCircleOfDivs(numDivs = 8) {
 
         customElements.whenDefined('spine-widget').then(async () => {
             const widget = spine.getSpineWidget(\`owl\${i}\`);
-            await widget.loadingPromise;
+            await widget.whenReady;
             widget.state.setAnimation(1, "blink", true);
 
             const control = widget.skeleton.findBone("control");
@@ -2821,7 +2916,7 @@ function createCircleOfDivs(numDivs = 8) {
 
         customElements.whenDefined('spine-widget').then(async () => {
             const widget = spine.getSpineWidget(`owl${i}`);
-            await widget.loadingPromise;
+            await widget.whenReady;
             widget.state.setAnimation(1, "blink", true);
 
             const control = widget.skeleton.findBone("control");
@@ -2935,7 +3030,7 @@ const colorPicker = document.getElementById("color-picker");
 const darkPicker = document.getElementById("dark-picker");
 
 [0, 1].forEach(async (i) => {
-    const widget = await spine.getSpineWidget(`interactive${i}`).loadingPromise;
+    const widget = await spine.getSpineWidget(`interactive${i}`).whenReady;
 
     widget.cursorEventCallback = (event) => {
         if (event === "enter") widget.state.setAnimation(0, "emotes/hooray", true).mixDuration = .15;
@@ -2978,7 +3073,7 @@ const darkPicker = document.getElementById("dark-picker");
 ></spine-widget>
 
 [0, 1].forEach(async (i) => {
-    const widget = await spine.getSpineWidget(\`interactive\${i}\`).loadingPromise;
+    const widget = await spine.getSpineWidget(\`interactive\${i}\`).whenReady;
 
     widget.cursorEventCallback = (event) => {
         if (event === "enter") widget.state.setAnimation(0, "emotes/hooray", true).mixDuration = .15;
@@ -3055,7 +3150,7 @@ const darkPicker = document.getElementById("dark-picker");
 
         <script>
             (async () => {
-                const widget = await spine.getSpineWidget("potty").loadingPromise;
+                const widget = await spine.getSpineWidget("potty").whenReady;
                 widget.followSlot("rain/rain-color", document.getElementById("rain/rain-color"), { followAttachmentAttach: false, hideAttachment: true });
                 widget.followSlot("rain/rain-white", document.getElementById("rain/rain-white"), { followAttachmentAttach: false, hideAttachment: true });
                 widget.followSlot("rain/rain-blue", document.getElementById("rain/rain-blue"), { followAttachmentAttach: false, hideAttachment: true });
@@ -3082,7 +3177,7 @@ const darkPicker = document.getElementById("dark-picker");
 ...
 
 (async () => {
-    const widget = await spine.getSpineWidget("potty").loadingPromise;
+    const widget = await spine.getSpineWidget("potty").whenReady;
     widget.followSlot("rain/rain-color", document.getElementById("rain/rain-color"), { followAttachmentAttach: false, hideAttachment: true });
     widget.followSlot("rain/rain-white", document.getElementById("rain/rain-white"), { followAttachmentAttach: false, hideAttachment: true });
     widget.followSlot("rain/rain-blue", document.getElementById("rain/rain-blue"), { followAttachmentAttach: false, hideAttachment: true });
@@ -3129,7 +3224,7 @@ const darkPicker = document.getElementById("dark-picker");
 
         <script>
             (async () => {
-                const widget = await spine.getSpineWidget("potty2").loadingPromise;
+                const widget = await spine.getSpineWidget("potty2").whenReady;
                 widget.followSlot("rain/rain-color", spine.getSpineWidget("potty2-1"), { followAttachmentAttach: false, hideAttachment: true });
                 widget.followSlot("rain/rain-white", spine.getSpineWidget("potty2-2"), { followAttachmentAttach: false, hideAttachment: true });
                 widget.followSlot("rain/rain-blue", spine.getSpineWidget("potty2-3"), { followAttachmentAttach: false, hideAttachment: true });
@@ -3156,7 +3251,7 @@ const darkPicker = document.getElementById("dark-picker");
 ...
 
 (async () => {
-    const widget = await spine.getSpineWidget("potty2").loadingPromise;
+    const widget = await spine.getSpineWidget("potty2").whenReady;
     widget.followSlot("rain/rain-color", spine.getSpineWidget("potty2-1"), { followAttachmentAttach: false, hideAttachment: true });
     widget.followSlot("rain/rain-white", spine.getSpineWidget("potty2-2"), { followAttachmentAttach: false, hideAttachment: true });
     widget.followSlot("rain/rain-blue", spine.getSpineWidget("potty2-3"), { followAttachmentAttach: false, hideAttachment: true });
@@ -3271,7 +3366,7 @@ const darkPicker = document.getElementById("dark-picker");
             div5.style.fontSize = "0.9rem";
             div5.style.color = "#666";
 
-            await widget.loadingPromise;
+            await widget.whenReady;
 
             const emotes = widget.skeleton.data.animations.reduce((acc, { name }) => name.startsWith("emotes") ? [...acc, name] : acc, []);
             let leaveAnimation = "emotes/wave";
@@ -3394,7 +3489,7 @@ TODO`
 
                     const form = document.getElementById('loginForm');
                     const widgetButton = spine.getSpineWidget("button-login");
-                    await widgetButton.loadingPromise;
+                    await widgetButton.whenReady;
 
                     widgetButton.skeleton.color.set(.85, .85, .85, 1);
                     widgetButton.cursorEventCallback = (event, originalEvent) => {
@@ -3432,7 +3527,7 @@ TODO`
                     widgetButton.followSlot("CLICK ME", divText, { followScale: false });
 
                     const widget = spine.getSpineWidget("spineboy-login");
-                    await widget.loadingPromise;
+                    await widget.whenReady;
 
                     // default settings
                     widget.state.data.defaultMix = 0.15;
@@ -3987,7 +4082,7 @@ TODO`
             (async () => {
 
                 /* SECTION 1 */
-                const widget1 = await spine.getSpineWidget("list").loadingPromise;
+                const widget1 = await spine.getSpineWidget("list").whenReady;
 
                 const setInteractionSectionOne = (itemName, trackNumber) => {
                     const divName = `${itemName}Div`;
@@ -4077,7 +4172,7 @@ TODO`
                 /* SECTION 2 */
                 const btnNext2 = document.getElementById("btn-next-2");
 
-                const widget2 = await spine.getSpineWidget("pan").loadingPromise;
+                const widget2 = await spine.getSpineWidget("pan").whenReady;
                 const foodPiece1 = widget2.skeleton.findSlot(`food-piece-1`);
                 const foodPiece2 = widget2.skeleton.findSlot(`food-piece-2`);
                 const foodPiece3 = widget2.skeleton.findSlot(`food-piece-3`);
@@ -4137,7 +4232,7 @@ TODO`
                 /* SECTION 2 */
 
                 /* SECTION 3 */
-                const widget3 = await spine.getSpineWidget("delivery").loadingPromise;
+                const widget3 = await spine.getSpineWidget("delivery").whenReady;
                 const btnNext3 = document.getElementById("btn-next-3");
                 const box = widget3.skeleton.findSlot("box");
 
@@ -4186,7 +4281,7 @@ TODO`
 
 
                 /* SECTION 4 */
-                const widget4 = await spine.getSpineWidget("ready").loadingPromise;
+                const widget4 = await spine.getSpineWidget("ready").whenReady;
 
                 const slot4Bread = widget4.skeleton.findSlot("salad");
                 widget4.addCursorSlotEventCallback(slot4Bread, (slot, event) => {
@@ -4326,7 +4421,7 @@ TODO`
             (async () => {
                 const spineboy = spine.getSpineWidget("spineboy-game");
                 const windmill = spine.getSpineWidget("windmill-game");
-                await Promise.all([spineboy.loadingPromise, windmill.loadingPromise]);
+                await Promise.all([spineboy.whenReady, windmill.whenReady]);
 
                 spineboy.state.setAnimation(2, "aim", true);
 

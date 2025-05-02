@@ -36,6 +36,7 @@ export class AssetManagerBase implements Disposable {
 	private textureLoader: (image: HTMLImageElement | ImageBitmap) => Texture;
 	private downloader: Downloader;
 	private assets: StringMap<any> = {};
+	private assetsRefCount: StringMap<number> = {};
 	private assetsLoaded: StringMap<Promise<any>> = {};
 	private errors: StringMap<string> = {};
 	private toLoad = 0;
@@ -56,6 +57,7 @@ export class AssetManagerBase implements Disposable {
 		this.toLoad--;
 		this.loaded++;
 		this.assets[path] = asset;
+		this.assetsRefCount[path] = (this.assetsRefCount[path] || 0) + 1;
 		if (callback) callback(path, asset);
 	}
 
@@ -332,15 +334,16 @@ export class AssetManagerBase implements Disposable {
 	remove (path: string) {
 		path = this.pathPrefix + path;
 		let asset = this.assets[path];
-		if ((<any>asset).dispose) (<any>asset).dispose();
+		if (asset.dispose) asset.dispose();
 		delete this.assets[path];
+		delete this.assetsRefCount[path];
 		return asset;
 	}
 
 	removeAll () {
-		for (let key in this.assets) {
-			let asset = this.assets[key];
-			if ((<any>asset).dispose) (<any>asset).dispose();
+		for (let path in this.assets) {
+			let asset = this.assets[path];
+			if (asset.dispose) asset.dispose();
 		}
 		this.assets = {};
 	}
@@ -359,6 +362,14 @@ export class AssetManagerBase implements Disposable {
 
 	dispose () {
 		this.removeAll();
+	}
+
+	// dispose asset only if it's not used by others
+	disposeAsset(path: string, a?: string) {
+		if (--this.assetsRefCount[path] === 0) {
+			const asset = this.assets[path];
+			if (asset.dispose) asset.dispose();
+		}
 	}
 
 	hasErrors () {

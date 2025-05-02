@@ -58,7 +58,7 @@
     <script>
         (async () => {
             const boi = spine.getSpineWidget("boi");
-            let { skeleton } = await boi.loadingPromise;
+            let { skeleton } = await boi.whenReady;
 
             const animations = skeleton.data.animations.map(({ name }) => name);
             animations.push("none");
@@ -119,7 +119,7 @@
                     boi.skeletonPath = skeletonPath;
                     boi.start();
 
-                    await boi.loadingPromise;
+                    await boi.whenReady;
                     skeleton = boi.skeleton;
 
                     refillAnimations();
