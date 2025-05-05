@@ -368,7 +368,7 @@ export class AssetManagerBase implements Disposable {
 	}
 
 	// dispose asset only if it's not used by others
-	disposeAsset(path: string) {
+	disposeAsset (path: string) {
 		if (--this.assetsRefCount[path] === 0) {
 			this.remove(path)
 		}

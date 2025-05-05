@@ -560,7 +560,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	 * Remove callbacks added through {@link addCursorSlotEventCallback}.
 	 * @param slot: the slot reference to which remove the associated callback
 	 */
-	public removeCursorSlotEventCallbacks(slot: number | string | Slot) {
+	public removeCursorSlotEventCallbacks (slot: number | string | Slot) {
 		this.cursorSlotEventCallbacks.delete(this.getSlotFromRef(slot));
 	}
 
@@ -700,7 +700,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	 * A Promise that resolve to the widget itself once assets loading is terminated.
 	 * Useful to safely access {@link skeleton} and {@link state} after a new widget has been just created.
 	 */
-	public get whenReady(): Promise<this> {
+	public get whenReady (): Promise<this> {
 		return this._whenReady;
 	};
 	private _whenReady: Promise<this>;
@@ -1082,7 +1082,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 				: this.overlay.assetManager.loadTextureAtlasButNoTexturesAsync(atlasPath).then(() => {
 					this.lastAtlasPath = atlasPath;
 					return this.loadTexturesInPagesAttribute();
-			}),
+				}),
 		]);
 
 		const atlas = this.overlay.assetManager.require(atlasPath) as TextureAtlas;
@@ -1414,7 +1414,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		}
 	}
 
-	private disposeGLResources() {
+	private disposeGLResources () {
 		const { assetManager } = this.overlay;
 		if (this.lastAtlasPath) assetManager.disposeAsset(this.lastAtlasPath);
 		if (this.lastSkelPath) assetManager.disposeAsset(this.lastSkelPath);
