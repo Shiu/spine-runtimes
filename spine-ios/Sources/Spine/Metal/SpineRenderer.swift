@@ -294,7 +294,8 @@ fileprivate extension BlendMode {
 		case SPINE_BLEND_MODE_NORMAL:
 			return premultipliedAlpha ? .one : .sourceAlpha
 		case SPINE_BLEND_MODE_ADDITIVE:
-			return .sourceAlpha
+			// additvie only needs sourceAlpha multiply if it is not pma
+			return premultipliedAlpha ? .one : .sourceAlpha
 		case SPINE_BLEND_MODE_MULTIPLY:
 			return .destinationColor
 		case SPINE_BLEND_MODE_SCREEN:
@@ -304,12 +305,13 @@ fileprivate extension BlendMode {
 		}
 	}
 	
-	func sourceAlphaBlendFactor(premultipliedAlpha: Bool) -> MTLBlendFactor {
+	var sourceAlphaBlendFactor: MTLBlendFactor {
+		// pma and non-pma has no-relation ship with alpha blending
 		switch self {
 		case SPINE_BLEND_MODE_NORMAL:
-			return premultipliedAlpha ? .one : .sourceAlpha
+			return .one
 		case SPINE_BLEND_MODE_ADDITIVE:
-			return .sourceAlpha
+			return .one
 		case SPINE_BLEND_MODE_MULTIPLY:
 			return .oneMinusSourceAlpha
 		case SPINE_BLEND_MODE_SCREEN:
@@ -355,7 +357,7 @@ fileprivate extension MTLRenderPipelineColorAttachmentDescriptor {
 	func apply(blendMode: BlendMode, with premultipliedAlpha: Bool) {
 		isBlendingEnabled = true
 		sourceRGBBlendFactor = blendMode.sourceRGBBlendFactor(premultipliedAlpha: premultipliedAlpha)
-		sourceAlphaBlendFactor = blendMode.sourceAlphaBlendFactor(premultipliedAlpha: premultipliedAlpha)
+		sourceAlphaBlendFactor = blendMode.sourceAlphaBlendFactor
 		destinationRGBBlendFactor = blendMode.destinationRGBBlendFactor
 		destinationAlphaBlendFactor = blendMode.destinationAlphaBlendFactor
 	}
