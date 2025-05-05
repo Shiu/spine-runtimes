@@ -68,7 +68,6 @@ interface Rectangle extends Point {
 	height: number,
 }
 
-type BeforeAfterUpdateSpineWidgetFunction = (skeleton: Skeleton, state: AnimationState) => void;
 type UpdateSpineWidgetFunction = (delta: number, skeleton: Skeleton, state: AnimationState) => void;
 
 export type OffScreenUpdateBehaviourType = "pause" | "update" | "pose";
@@ -207,8 +206,8 @@ interface WidgetAttributes {
 // The methods user can override to have custom behaviour
 interface WidgetOverridableMethods {
 	update?: UpdateSpineWidgetFunction;
-	beforeUpdateWorldTransforms: BeforeAfterUpdateSpineWidgetFunction;
-	afterUpdateWorldTransforms: BeforeAfterUpdateSpineWidgetFunction;
+	beforeUpdateWorldTransforms: UpdateSpineWidgetFunction;
+	afterUpdateWorldTransforms: UpdateSpineWidgetFunction;
 	onScreenFunction: (widget: SpineWebComponentWidget) => void
 }
 
@@ -657,12 +656,12 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	/**
 	 * This callback is invoked before the world transforms are computed allows to execute additional logic.
 	 */
-	public beforeUpdateWorldTransforms: BeforeAfterUpdateSpineWidgetFunction = () => { };
+	public beforeUpdateWorldTransforms: UpdateSpineWidgetFunction = () => { };
 
 	/**
 	 * This callback is invoked after the world transforms are computed allows to execute additional logic.
 	 */
-	public afterUpdateWorldTransforms: BeforeAfterUpdateSpineWidgetFunction = () => { };
+	public afterUpdateWorldTransforms: UpdateSpineWidgetFunction = () => { };
 
 	/**
 	 * A callback invoked each time the element container enters the screen viewport.
@@ -1801,9 +1800,9 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 					if (onScreen || (!onScreen && offScreenUpdateBehaviour === "pose")) {
 						state.apply(skeleton);
-						beforeUpdateWorldTransforms(skeleton, state);
+						beforeUpdateWorldTransforms(delta, skeleton, state);
 						skeleton.updateWorldTransform(Physics.update);
-						afterUpdateWorldTransforms(skeleton, state);
+						afterUpdateWorldTransforms(delta, skeleton, state);
 					}
 				}
 			}
