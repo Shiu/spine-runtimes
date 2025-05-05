@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19.2/dist/lil-gui.umd.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/lil-gui@0.19.2/dist/lil-gui.min.css" rel="stylesheet">
-    <script src="../dist/iife/spine-webgl.js"></script>
+    <script src="../dist/iife/spine-widget.js"></script>
     <title>Webcomponent GUI</title>
     <style>
         body, html {
@@ -57,25 +57,24 @@
 
     <script>
         (async () => {
-            const boi = spine.getSpineWidget("boi");
-            let { skeleton } = await boi.whenReady;
+            const boi = await spine.getSpineWidget("boi").whenReady;
 
-            const animations = skeleton.data.animations.map(({ name }) => name);
+            const animations = boi.skeleton.data.animations.map(({ name }) => name);
             animations.push("none");
 
-            const skins = skeleton.data.skins.map(({ name }) => name);
+            const skins = boi.skeleton.data.skins.map(({ name }) => name);
 
             const gui = new lil.GUI({ container: document.getElementById('lil'), autoPlace: false, width: "100%" });
 
             const refillAnimations = () => {
-                const animations = skeleton.data.animations.map(({ name }) => name);
+                const animations = boi.skeleton.data.animations.map(({ name }) => name);
                 animations.push("none");
                 const animationController = getController("animation");
                 animationController.options(animations).setValue(animations[animations.length - 1]);
             }
 
             const refillSkins = () => {
-                const skins = skeleton.data.skins.map(({ name }) => name);
+                const skins = boi.skeleton.data.skins.map(({ name }) => name);
                 const skinController = getController("skin");
                 skinController.options(skins).setValue(skins[0]);
             }
@@ -120,7 +119,8 @@
                     boi.start();
 
                     await boi.whenReady;
-                    skeleton = boi.skeleton;
+
+                    console.log(boi.bounds);
 
                     refillAnimations();
                     refillSkins();
@@ -340,8 +340,8 @@
 
             setInterval(() => {
                 if (myObject.fit === "none" || myObject.mode === "origin") return;
-                getController("scaleX").setValue(skeleton.scaleX);
-                getController("scaleY").setValue(skeleton.scaleY);
+                getController("scaleX").setValue(boi.skeleton.scaleX);
+                getController("scaleY").setValue(boi.skeleton.scaleY);
             }, 100)
 
         })();

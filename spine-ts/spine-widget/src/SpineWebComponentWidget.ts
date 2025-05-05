@@ -56,7 +56,7 @@ import {
 	RegionAttachment,
 	MeshAttachment,
 	Bone,
-} from "./index.js";
+} from "@esotericsoftware/spine-webgl";
 
 interface Point {
 	x: number,
