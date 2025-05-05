@@ -920,14 +920,12 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	/**
 	 * Starts the widget. Starting the widget means to load the assets currently set into
 	 * {@link atlasPath} and {@link skeletonPath}. If start is invoked when the widget is already started,
-	 * the skeleton, the state, and the bounds will be reset.
+	 * the skeleton and the state are reset. Bounds are recalculated only if {@link autoCalculateBounds} is true.
 	 */
 	public start () {
 		if (this.started) {
 			this.skeleton = undefined;
 			this.state = undefined;
-			this.bounds.width = -1;
-			this.bounds.height = -1;
 			this._whenReady = new Promise<this>((resolve) => {
 				this.resolveLoadingPromise = resolve;
 			});
