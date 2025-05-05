@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+import subprocess
 
 from methods import print_error
 
@@ -131,7 +132,7 @@ if env["platform"] == "macos" or env["platform"] == "ios":
         "${BUNDLE_LIBRARY}": file,
         "${BUNDLE_NAME}": "spine-godot",
         "${BUNDLE_IDENTIFIER}": "com.esotericsoftware.spine.spine-godot",
-        "${BUNDLE_VERSION}": "4.2.0", # TODO: Get the proper version from somewhere. Note that this must be three integers.
+        "${BUNDLE_VERSION}": subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).decode('utf-8').strip().split('-')[0] + '.0',
         "${MIN_MACOS_VERSION}": "10.12",
         "${MIN_IOS_VERSION}": "12.0"
     }
