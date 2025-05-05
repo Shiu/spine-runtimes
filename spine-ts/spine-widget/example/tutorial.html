@@ -163,12 +163,12 @@
                 ></spine-widget>
             </div>
             <div class="split-right">
-                The <code>&lt;spine-widget&gt;</code> tag allows you to place your Spine animations into a web page.
+                The <code>&lt;spine-widget&gt;</code> tag allows you to embed your Spine animations into a web page.
                 <br>
                 <br>
-                By default, the animation bounds are calculated using the given animation, or the setup pose if no animation is provided.
+                By default, the animation bounds are calculated using the specified animation, or the setup pose if no animation is provided.
                 <br>
-                The bounds is centered and scaled to fit the parent container.
+                The bounds are centered and scaled to fit the parent container.
             </div>
         </div>
 
@@ -216,7 +216,7 @@
                     You can change the fit mode of your Spine animation using the <code>fit</code> attribute.
                     <br>
                     <br>
-                    This is <code>fit="fill"</code>. Default fit value is <code>fit="contain"</code>.
+                    This is <code>fit="fill"</code>. The default fit value is <code>fit="contain"</code>.
                 </div>
             </div>
 
@@ -231,18 +231,15 @@
                     ></spine-widget>
                 </div>
                 <div class="split-right">
-                    If you want to preserve the original scale, you can use the <code>fit="none"</code>.
-                    In combination with that, you can use the <code>scale</code> attribute to choose you desired scale.
+                    If you want to preserve the original scale, you can use <code>fit="none"</code>.
+                    In combination with that, you can use the <code>scale</code> attribute to set your desired scale.
                     <br>
                     <br>
-                    Other fit modes are <code>width</code>, <code>width</code>, <code>height</code>, <code>cover</code>,and <code>scaleDown</code>.
+                    Other fit modes are <code>width</code>, <code>height</code>, <code>cover</code>, and <code>scaleDown</code>.
                 </div>
             </div>
 
         </div>
-
-
-
 
         <div class="split-bottom">
             <pre><code id="code-display">
@@ -304,10 +301,10 @@
                 ></spine-widget>
             </div>
             <div class="split-right">
-                If you want to manually size the Spine widget, specify the attributes <code>width</code> and <code>height</code> in pixels (without the px unit).
+                If you want to manually size the Spine widget, specify the <code>width</code> and <code>height</code> attributes in pixels (without the "px" unit).
                 <br>
                 <br>
-                If you prefer you can style the component using the <code>style</code> attribute. There you have more styling options.
+                If you prefer, you can style the component using the <code>style</code> attribute, which provides more styling options.
             </div>
         </div>
 
@@ -359,12 +356,12 @@
 
         <div class="split-top split">
             <div class="split-left">
-                Mode <code>origin</code> center the animation world origin with the center of the HTML element.
+                The <code>origin</code> mode centers the animation's world origin with the center of the HTML element.
                 <br>
-                You are responsible to scale the skeleton using this mode.
+                You are responsible for scaling the skeleton when using this mode.
                 <br>
                 <br>
-                Move the origin by a percentage of the div width and height by using <code>x-axis</code> and <code>y-axis</code> respectively.
+                Move the origin by a percentage of the div's width and height using the <code>x-axis</code> and <code>y-axis</code> attributes, respectively.
             </div>
             <div class="split-right">
                 <spine-widget
@@ -420,7 +417,7 @@
                 ></spine-widget>
             </div>
             <div class="split-right">
-                Use <code>offset-x</code> and <code>offset-y</code> to move you skeleton left or right by the pixel amount you specify.
+                Use <code>offset-x</code> and <code>offset-y</code> to move your skeleton left or right by the specified number of pixels.
             </div>
         </div>
 
@@ -468,10 +465,10 @@
                 ></spine-widget>
             </div>
             <div class="split-right">
-                You can virtually add a padding to the element container by using <code>pad-left</code>, <code>pad-right</code>, <code>pad-top</code>, <code>pad-bottom</code>.
+                You can virtually add padding to the element container using <code>pad-left</code>, <code>pad-right</code>, <code>pad-top</code>, and <code>pad-bottom</code>.
                 <br>
                 <br>
-                As a value you can use a percentage of the width for left and right, and of the height for top and bottom.
+                For the values, you can use a percentage of the width for left and right, and a percentage of the height for top and bottom.
             </div>
         </div>
 
@@ -509,13 +506,13 @@
 
         <div class="split-top split">
             <div class="split-left">
-                You can customize the bounds, for example to focus on certain details of your animation.
+                You can customize the bounds, for example to focus on specific details of your animation.
                 <br>
                 <br>
-                The <code>bounds-x</code>, <code>bounds-y</code>, <code>bounds-width</code> and <code>bounds-height</code> allows to define custom bounds.
+                The <code>bounds-x</code>, <code>bounds-y</code>, <code>bounds-width</code>, and <code>bounds-height</code> attributes allow you to define custom bounds.
                 <br>
                 <br>
-                In this example we're zooming in into Celeste's face. You probably want to use <code>clip</code> in this case to avoid the skeleton overflow.
+                In this example, we're zooming in on Celeste's face. You’ll probably want to use <code>clip</code> in this case to prevent the skeleton from overflowing.
             </div>
             <div class="split-right">
                 <spine-widget
@@ -565,11 +562,11 @@
 
         <div class="split-top split">
             <div class="split-left">
-                Give an <code>identifier</code> to your widget to get it by using the <code>spine.getSpineWidget</code> function.
-                You can easily access the <code>Skeleton</code> and the <code>AnimationState</code> of your character, and use them as if you were using <code>spine-webgl</code>.
+                Assign an <code>identifier</code> to your widget to retrieve it using the <code>spine.getSpineWidget</code> function.
+                You can easily access the <code>Skeleton</code> and <code>AnimationState</code> of your character, and use them as if you were working with <code>spine-webgl</code>.
                 <br>
                 <br>
-                If you change animation, you can ask the widget to scale the skeleton based on the new animation.
+                If you change the animation, you can ask the widget to rescale the skeleton based on the new animation. See the code below.
             </div>
             <div class="split-right">
                 <spine-widget
@@ -641,10 +638,9 @@
 
         <div class="split-top split">
             <div class="split-left">
-                <p>To change animation, we could also just change the animation attribute. The widget will reinitiate itself and change animation.</p>
-                <p>In this case you would use <code>auto-calculate-bounds</code> to ask the widget to always recalculate the bounds, as in the top example.</p>
-                <p>If want to keep the scale consistent, but fit multiple animations in the container, you can use the <code>animation-bounds</code> attribute to define a bounds containing a list of animations, as in the bottom example.</p>
-
+                <p>To change the animation, you can simply modify the animation attribute. The widget will reinitialize itself and switch to the new animation.</p>
+                <p>In this case, you should use <code>auto-calculate-bounds</code> to have the widget always recalculate the bounds, as shown in the top example.</p>
+                <p>If you want to keep the scale consistent while fitting multiple animations in the container, you can use the <code>animation-bounds</code> attribute to define bounds that include a list of animations, as shown in the bottom example.</p>
             </div>
             <div class="split-right" style="display: flex; flex-direction: column;">
                 <spine-widget
@@ -756,40 +752,32 @@
 
         <div class="split" style="flex-direction: column;">
             <div class="split-nosize full-width" style="width: 80%; padding: 1em;">
-                <p>If you want to display a sequence of animations without using js or on multiple tracks, you can use the <code>animations</code> attribute.</p>
+                <p>If you want to display a sequence of animations without using JavaScript, you can use the <code>animations</code> attribute.</p>
 
-                <p>It accepts a string composed of groups surrounded by square brackets, like this: <code>[...][...][...]</code></p>
+                <p>It accepts a string composed of groups enclosed in square brackets, like this: <code>[...][...][...]</code></p>
 
-                <p>Each square bracket represents an animation to play, with some parameters. It contains a comma separated list with the following:
-                    <ol>
-                        <li><code>track</code>: the number of the track on which to play the animation</li>
-                        <li><code>animation name</code>: the name of the animation to play</li>
-                        <li><code>loop</code>: true, if this animation has to loop. False, otherwise</li>
-                        <li><code>delay</code>: the seconds to wait after the start of the previous animation, to play the animatino of this group (not available for the first animation on this track)</li>
-                        <li><code>mixDuration</code>: the mix duration between this animation and the previous (not available for the first animation on this track)</li>
-                    </ol>
-                </p>
+                <p>Each group represents an animation to play, with parameters in a comma-separated list:</p>
+                <ol>
+                    <li><code>track</code>: the track number to play the animation on</li>
+                    <li><code>animation name</code>: the name of the animation</li>
+                    <li><code>loop</code>: true to loop the animation, false otherwise</li>
+                    <li><code>delay</code>: the number of seconds to wait after the previous animation starts (not used for the first animation on a track)</li>
+                    <li><code>mixDuration</code>: the mix duration between this animation and the previous one (not used for the first animation on a track)</li>
+                </ol>
 
-                <p>Once you composed your animation, if you that is loops once it reaches the end, you can add the special group <code>[loop, trackNumber]</code>, where:
-                    <ul>
-                        <li><code>loop</code>: is the "loop" string to identify this special group</li>
-                        <li><code>trackNumber</code>: is the number of the track you want to be looped</li>
-                    </ul>
-                </p>
+                <p>To loop a track once it reaches the end, add the special group <code>[loop, trackNumber]</code>, where:</p>
+                <ul>
+                    <li><code>loop</code>: identifies this as a loop instruction</li>
+                    <li><code>trackNumber</code>: the number of the track to loop</li>
+                </ul>
 
-                <p>
-                    The parameters of the first group of each track are passed to the `setAnimation` method, while the remaining groups on the track use `addAnimation`.
-                </p>
+                <p>The parameters of the first group on each track are passed to the <code>setAnimation</code> method, while the remaining groups use <code>addAnimation</code>.</p>
 
-                <p>
-                    You can use respectively use `setEmptyAnimation` or `addEmptyAnimation`, by using the string <code>#EMPTY#</code> as animation name. In this case the <code>loop</code> parameter is ignored.
-                </p>
+                <p>To use <code>setEmptyAnimation</code> or <code>addEmptyAnimation</code>, use <code>#EMPTY#</code> as the animation name. In this case, the <code>loop</code> parameter is ignored.</p>
 
-                <p>
-                    The <code>default-mix</code> attribute allow to the the default mix of the <code>AnimationState</code>.
-                </p>
+                <p>The <code>default-mix</code> attribute allows you to set the default mix duration for the <code>AnimationState</code>.</p>
 
-                <p>Have a look at the two examples below.</p>
+                <p>See the two examples below.</p>
             </div>
 
             <div class="split-nosize full-width" style="width: 80%; min-height: 300px; margin: 1em; padding: 1em;">
@@ -810,11 +798,11 @@
                         [0, walk, false, 0, 0.05]
                         [0, death, false, 0, 0.05]
                     "
-	            ></spine-widget>
+                ></spine-widget>
             </div>
 
             <div class="split-nosize full-width" style="width: 80%; padding: 1em;">
-                <p>Spineboy here uses the following value for <code>animations</code> attribute.</p>
+                <p>Spineboy uses the following value for the <code>animations</code> attribute:</p>
                 <p>
                     <textarea style="font-size: 0.6rem; width: 100%;" rows="10" readonly>
 [loop, 0]
@@ -829,18 +817,18 @@
 [0, death, false, 0, 0.05]</textarea>
                 </p>
 
-                We use a single track for this animation. Let's analyze it:
+                We use a single track for this animation. Let's break it down:
                 <ol>
-                    <li><code>[loop, 0]</code>: when the track 0 reaches the end, start from the beginning</li>
-                    <li><code>[0, idle, true]</code>: set the idle animation in loop</li>
-                    <li><code>[0, run, true, 2, 0.25]</code>: queue a cycle of the run animation, start it after 2 seconds from the beginning of the previous one, set a mix of 0.25 seconds from the previous one.</li>
-                    <li><code>[0, run, false]</code>: queue a cycle of run animation</li>
-                    <li><code>[0, run, false]</code>: queue a cycle of run animation</li>
-                    <li><code>[0, run-to-idle, false, 0, 0.15]</code>: queue a cycle of run-to-idle animation, with no delay, and a mix of 0.15 seconds</li>
-                    <li><code>[0, idle, true]</code>: queue the idle animation in loop</li>
-                    <li><code>[0, jump, false, 0, 0.15]</code>: queue a cycle of jump animation in loop, with no delay, and a mix of 0.15 seconds</li>
-                    <li><code>[0, walk, false, 0, 0.05]</code>: queue a cycle of walk animation in loop, with no delay, and a mix of 0.05 seconds</li>
-                    <li><code>[0, death, false, 0, 0.05]</code>: queue a cycle of death animation in loop, with no delay, and a mix of 0.05 seconds</li>
+                    <li><code>[loop, 0]</code>: when track 0 reaches the end, it loops back to the beginning</li>
+                    <li><code>[0, idle, true]</code>: sets the idle animation to loop</li>
+                    <li><code>[0, run, false, 2, 0.25]</code>: queues the run animation, starts it after 2 seconds with a 0.25-second mix</li>
+                    <li><code>[0, run, false]</code>: queues another run animation</li>
+                    <li><code>[0, run, false]</code>: queues another run animation</li>
+                    <li><code>[0, run-to-idle, false, 0, 0.15]</code>: queues run-to-idle with no delay and a 0.15-second mix</li>
+                    <li><code>[0, idle, true]</code>: queues the idle animation to loop</li>
+                    <li><code>[0, jump, false, 0, 0.15]</code>: queues jump with no delay and a 0.15-second mix</li>
+                    <li><code>[0, walk, false, 0, 0.05]</code>: queues walk with no delay and a 0.05-second mix</li>
+                    <li><code>[0, death, false, 0, 0.05]</code>: queues death with no delay and a 0.05-second mix</li>
                 </ol>
             </div>
 
@@ -859,9 +847,9 @@
             </div>
 
             <div class="split-nosize full-width" style="width: 80%; padding: 1em;">
-                <p>Celeste here uses the following value for <code>animations</code> attribute.</p>
+                <p>Celeste uses the following value for the <code>animations</code> attribute:</p>
                 <p>
-                    <textarea id="celeste-animations-text-area" style="font-size: 0.6rem; width: 100%;" rows="5">
+                    <textarea id="celeste-animations-text-area" style="font-size: 0.6rem; width: 100%;" rows="4">
 [0, wings-and-feet, true]
 [loop, 1]
 [1, #EMPTY#, false]
@@ -869,16 +857,14 @@
                 </p>
 
                 <p>
-                    It uses two tracks. In track 0 we simply set the wings-and-feet animation. <br>
-                    In track 1 we loop over the entire animation, set an empty animation and queue an eyeblink animation with a 2 seconds delay.
+                    This example uses two tracks. Track 0 plays the <code>wings-and-feet</code> animation. <br>
+                    Track 1 loops, playing an empty animation followed by an <code>eyeblink</code> animation with a 2-second delay.
                 </p>
 
-                <p>You can modify the textarea above and experiment with the values. For example, change the delay from 2 to 0.5, or add the swing animation to track 0 like this <code>[0, swing, true, 5, .5]</code>  with a delay of 5 seconds and a mix of 0.5 seconds. Click the button below and Celeste will start to blink the eyes more frequently.</p>
+                <p>You can modify the textarea above and experiment. For example, change the delay from 2 to 0.5, or add the <code>swing</code> animation to track 0 like this: <code>[0, swing, true, 5, 0.5]</code> to start it after 5 seconds with a 0.5-second mix. Click the button below and Celeste will start blinking more frequently.</p>
 
                 <input type="button" value="Update animation" onclick="updateCelesteAnimations(this)">
             </div>
-
-
         </div>
 
         <script>
@@ -959,11 +945,9 @@ async function updateCelesteAnimations() {
     <div class="section vertical-split">
         <div class="split high-page" style="flex-direction: column;">
             <div class="split-nosize full-width" style="width: 80%; padding: 1em;">
-                Moving the div will move the skeleton origin.
-                <br>
-                Resizing the div will resize the skeleton in <code>inside</code> mode, but not in <code>origin</code> mode.
-                <br>
-                Interact with the example above dragging the div and resizing it
+                Moving the div changes the position of the skeleton's origin.<br>
+                Resizing the div will scale the skeleton when in <code>inside</code> mode, but not when in <code>origin</code> mode.<br>
+                Try dragging and resizing the div in the example above to see the effect.
             </div>
             <div class="split-nosize full-width" style="width: 80%; height: 50%; margin: 1em; padding: 1em;" id="section7-element">
                 <spine-widget
@@ -1004,9 +988,9 @@ async function updateCelesteAnimations() {
 
         <div class="split-top split">
             <div class="split-left">
-                You can view the skeleton world origin (green), the root bone position (red), and the bounds rectangle and center (blue) by setting <code>debug</code> to <code>true</code>.
+                You can view the skeleton's world origin (green), the root bone position (red), and the bounds rectangle and center (blue) by setting <code>debug</code> to <code>true</code>.
                 <br>
-                Here we shift the root a little to avoid it to be overlapped with the origin.
+                Here we slightly shift the root to prevent it from overlapping with the origin.
             </div>
             <div class="split-right">
                 <spine-widget
@@ -1062,18 +1046,18 @@ async function updateCelesteAnimations() {
     <div class="section vertical-split">
 
         <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
-            If you remove a widget from the DOM, it won't be disposed because you might want to append to another node.
-            If you want to actually dispose a widget, invoke <code>dispose()</code> on it.
-            Dispose is safe an won't dispose resources if used by other widgets.
+            If you remove a widget from the DOM, it won't be disposed because you might want to append it to another node.
+            If you want to actually dispose of a widget, call <code>dispose()</code> on it.
+            <code>dispose()</code> is safe and won't release resources if they're still used by other widgets.
 
             <br>
-            If you want to dispose everything, invoke <code>dispose()</code> on the overlay.
+            If you want to dispose of everything, call <code>dispose()</code> on the overlay.
 
             <p>
-                The following example allows to create and dispose widgets using the same assets.
-                Below you can view the number of references to the same assets.
-                You'll se a red message when an asset is actually disposed.
-                If you see a number of references to the skeleton higher than expected, it's because other widgets in the page are using it.
+                The following example allows you to create and dispose of widgets using the same assets.
+                Below, you can see the number of references to each asset.
+                A red message will appear when an asset is actually disposed.
+                If the number of skeleton references is higher than expected, it's because other widgets on the page are still using it.
             </p>
             <p>
                 <button id="add-delete" onclick="addDiv()">Add</button>
@@ -1292,7 +1276,7 @@ function removeDiv() {
 
         <div class="split-top split">
             <div class="split-left">
-                If you want to embed your assets within the page, you can inline them using their base64 version. Use a stringified json object containing as keys the assets name and as values their base64 version.
+                If you want to embed your assets within the page, you can inline them using their base64 versions. Use a stringified JSON object where the keys are the asset names and the values are their base64-encoded contents.
             </div>
             <div class="split-right">
                 <spine-widget
@@ -1351,13 +1335,13 @@ function removeDiv() {
                 ></spine-widget>
             </div>
             <div class="split-right">
-                A loading spinner is shown during assets loading. Click the button below to simulate a 2 seconds loading:
+                A loading spinner is shown while assets are loading. Click the button below to simulate a 2-second loading delay:
                 <br>
                 <br>
                 <input type="button" value="Simulate reload" onclick="reloadWidget(this)">
                 <br>
                 <br>
-                If you do not want to show the loading spinner, set <code>no-spinner</code>.
+                If you don't want to show the loading spinner, set <code>no-spinner</code>.
                 <br>
                 Click the button below to toggle the spinner.
                 <br>
@@ -1435,7 +1419,7 @@ function toggleSpinner(element) {
         <div class="split" style="width: 100%; flex-direction: column;">
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
-                It's super easy to show your different skins and animations. Just make a table and use the <code>skin</code> and <code>animation</code> attributes.
+                It's very easy to display your different skins and animations. Simply create a table and use the <code>skin</code> and <code>animation</code> attributes.
             </div>
 
             <div class="skin-grid">
@@ -1673,8 +1657,8 @@ function toggleSpinner(element) {
         <div class="split" style="width: 100%; flex-direction: column;">
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
-                If you have many atlas pages, for example one for each skin, and you want to show only some of the skins,
-                pass to the <code>pages</code> the atlas pages you want to load as a comma concatenated list of indices.
+                If you have multiple atlas pages, for example one for each skin, and you want to display only some of the skins,
+                pass the atlas pages you want to load to the <code>pages</code> attribute as a comma-separated list of indices.
             </div>
 
             <div class="skin-grid">
@@ -1937,15 +1921,15 @@ function toggleSpinner(element) {
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
                 Let's do the same thing above, but programmatically!
-                Create two arrays, one for the skin and the other for the animations, and loop over them.
+                Create two arrays, one for the skins and the other for the animations, and loop through them.
                 <br>
                 <br>
-                <code>spine.createSpineWidget</code> allows you to create a spine widget.
+                <code>spine.createSpineWidget</code> allows you to create a Spine widget.
                 <br>
                 <br>
-                By default, assets are loaded immeaditely. You can postpone that by setting <code>manual-start="false"</code>.
-                Then add the widget to the dom using the asynchronous method <code>appendTo</code>. It's your responsibility to call <code>start()</code> on the widget.
-                As usual, just wait on the <code>whenReady</code> to act on the <code>skeleton</code> or the <code>state</code>.
+                By default, assets are loaded immediately. You can delay this by setting <code>manual-start="false"</code>.
+                Then, add the widget to the DOM using the asynchronous method <code>appendTo</code>. It is your responsibility to call <code>start()</code> on the widget.
+                As usual, just wait for the <code>whenReady</code> to interact with the <code>skeleton</code> or the <code>state</code>.
             </div>
 
             <script>
@@ -2058,21 +2042,19 @@ skins.forEach((skin, i) => {
         <div class="split" style="width: 100%; flex-direction: column;">
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
-                When the widget (or the parent element) enters in the viewport, the callback <code>onScreenFunction</code> is invoked.
+                When the widget (or the parent element) enters the viewport, the callback <code>onScreenFunction</code> is invoked.
                 <br>
                 <br>
                 By default, the callback does two things:
                 <ul>
-                    <li>set <code>onScreenAtLeastOnce</code> to <code>true</code> when the widget enters the viewport the first time</li>
-                    <li>if <code>start-when-visible</code> is set, the widget <code>start</code> is invoked
-                        the first time the widget enters the viewport and the assets are loaded only in that moment.</li>
+                    <li>sets <code>onScreenAtLeastOnce</code> to <code>true</code> when the widget enters the viewport for the first time</li>
+                    <li>if <code>start-when-visible</code> is set, the widget's <code>start</code> method is invoked the first time the widget enters the viewport, and the assets are loaded at that moment.</li>
                 </ul>
                 <br>
                 The assets of the coin below are loaded only when the widget enters the viewport.
                 <br>
                 <br>
-                You can overwrite the <code>onScreenFunction</code> behaviour. For example, the raptor below changes animation everytime the widget enters the viewport.
-
+                You can overwrite the <code>onScreenFunction</code> behavior. For example, the raptor below changes its animation every time the widget enters the viewport.
             </div>
 
             <div class="skin-grid">
@@ -2156,12 +2138,12 @@ raptorWidget.onScreenFunction = widget => {
                 ></spine-widget>
             </div>
             <div class="split-right">
-                If you want to load textures programmatically, you can just pass as pages to load an empty value liek this <code>pages=""</code>.
+                If you want to load textures programmatically, you can just pass an empty value for pages like this <code>pages=""</code>.
                 <br>
                 <br>
-                In this way the skeleton and the atlas are loaded, but not the textures.
+                In this way, the skeleton and the atlas are loaded, but not the textures.
                 <br>
-                Then you can loads the textures whenever you want.
+                Then you can load the textures whenever you want.
                 <br>
                 <br>
                 <input type="button" value="Load page 0" onclick="loadPageDragon(0)">
@@ -2243,10 +2225,10 @@ function loadPageDragon(pageIndex) {
         <div class="split" style="width: 100%; flex-direction: column;">
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
-                Widgets are not rendered while they are off screen.
+                Widgets are not rendered while they are off-screen.
                 <br>
                 <br>
-                The state and skeleton <code>update</code>, and the skeleton <code>apply</code> and the skeleton <code>updateWorldTransform</code> functions are not invoked when the widget is off screen.
+                The state and skeleton <code>update</code>, and the skeleton <code>apply</code> and the skeleton <code>updateWorldTransform</code> functions are not invoked when the widget is off-screen.
                 <br>
                 <br>
                 If you want the update functions to be invoked in any case, set <code>offscreen=update</code>.
@@ -2255,7 +2237,7 @@ function loadPageDragon(pageIndex) {
                 <br>
                 <br>
                 You can also overwrite the update function. Just assign a function to the <code>update</code> property of the widget.
-                In that it's your responsibility to skip the update/apply. You can use the <code>onScreen</code> property for convinience.
+                In that case, it's your responsibility to skip the update/apply. You can use the <code>onScreen</code> property for convenience.
             </div>
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; height: 150px; min-height: 0;">
@@ -2347,7 +2329,7 @@ stretchyman.update = (canvas, delta, skeleton, state) => {
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
                 If for some reason your skeleton bounds go outside the div,
-                you can use the <code>clip</code> property to clip everything is outside the html container.
+                you can use the <code>clip</code> property to clip everything that is outside the HTML container.
                 <br>
                 <br>
                 Be aware that this will break batching!
@@ -2591,24 +2573,22 @@ tank.beforeUpdateWorldTransforms = (skeleton, state) => {
     <div class="section vertical-split">
 
         <div class="split-left">
-            If you use a spine widget in a element that has an ancestor that does not follow the webpage scroll, the effect might not be the desired one. You might encounter these problems:
+            If you use a spine widget in an element that has an ancestor that does not follow the webpage scroll, the effect might not be the desired one. You might encounter these problems:
             <br>
             <br>
-            1) For scrollable containers, the widget will be slightly slower to scroll than the html behind. The effect is more evident for lower refresh rate display.<br>
-            2) For scrollable containers, the widget will overflow the container bounds until the widget html element container is visible <br>
-            3) For fixed containers, the widget will scroll in a jerky way <br>
+            1) For scrollable containers, the widget will be slightly slower to scroll than the HTML behind. The effect is more evident for lower refresh rate displays.<br>
+            2) For scrollable containers, the widget will overflow the container bounds until the widget HTML element container is visible.<br>
+            3) For fixed containers, the widget will scroll in a jerky way.<br>
             <br>
-            In order to fix this behaviour, it is necessary to insert a dedicated <code>spine-overlay</code> webcomponent as a direct child of the container.
+            In order to fix this behavior, it is necessary to insert a dedicated <code>spine-overlay</code> web component as a direct child of the container.
             Moreover, it is necessary to perform the following actions: <br>
             <br>
-            1) The scrollable container must have a <code>transform</code> css attribute. If it hasn't this attribute the <code>spine-overlay</code> will add it for you.
-            If you don't want this attribute to be added, set the <code>no-auto-parent-transform</code> to the <code>spine-overlay</code>.
+            1) The scrollable container must have a <code>transform</code> CSS attribute. If it doesn't have this attribute, the <code>spine-overlay</code> will add it for you.
+            If you don't want this attribute to be added, set the <code>no-auto-parent-transform</code> on the <code>spine-overlay</code>. But watch out, the widget might not work as intended.
             <br>
-            2) The <code>spine-overlay</code> must have the <code>scrollable</code> attribute
+            2) The <code>spine-overlay</code> must have an <code>overlay-id</code> attribute. Choose the value you prefer.
             <br>
-            3) The <code>spine-overlay</code> must have an <code>overlay-id</code> attribute. Choose the value you prefer.
-            <br>
-            4) Each <code>spine-widget</code> must have an <code>overlay-id</code> attribute. The same as the hosting <code>spine-overlay</code>.
+            3) Each <code>spine-widget</code> must have an <code>overlay-id</code> attribute. The same as the hosting <code>spine-overlay</code>.
             <br>
             <br>
             Additionally, you can set <code>overflow-top</code>, <code>overflow-bottom</code>, <code>overflow-left</code>, <code>overflow-right</code> attributes to the <code>spine-overlay</code> in order to make the canvas bigger and prevent scrolling artifacts.
@@ -2616,7 +2596,7 @@ tank.beforeUpdateWorldTransforms = (skeleton, state) => {
             <br>
             See the two examples below:
             <br>
-            - Click the following button to open two elements with fixed positioned. The left one does not have a dedicated overlay and will scroll in a jerky way. <button id="popup-overlay-button-open">Open Popup</button>
+            - Click the following button to open two elements with fixed positioning. The left one does not have a dedicated overlay and will scroll in a jerky way. <button id="popup-overlay-button-open">Open Popup</button>
             <br>
             - Below there are two scrolling items. The left one does not have a dedicated overlay, it will lag on scroll and the widgets will overflow the container.
             <br>
@@ -2871,7 +2851,7 @@ tank.beforeUpdateWorldTransforms = (skeleton, state) => {
 
         <div class="split-top split">
             <div class="split-left">
-                As a bonus item, you can move you skeleton around just by setting the <code>isdraggable</code> property to <code>true</code>.
+                As a bonus item, you can move your skeleton around just by setting the <code>isdraggable</code> property to <code>true</code>.
             </div>
             <div class="split-right">
                 <spine-widget
@@ -2927,8 +2907,8 @@ tank.beforeUpdateWorldTransforms = (skeleton, state) => {
                 <li><code>cursorWorldX</code> and <code>cursorWorldY</code> are the x and y of the cursor relative to the canvas/webgl context origin (spine world).</li>
             </ul>
 
-            You can use these property to interact with your widget. See the following examples where the owl eyes will follow the cursor, even if you drag the owls in another position.
-            Exaggerate the movement by deselection the checkbox below.
+            You can use these properties to interact with your widget. See the following examples where the owl eyes will follow the cursor, even if you drag the owls to another position.
+            Exaggerate the movement by deselecting the checkbox below.
 
             <br>
             <br>
@@ -3148,10 +3128,10 @@ const updateControl = (widget, controlBone, mouseX, mouseY, tempVector) => {
     <div class="section vertical-split" id="above-popup">
 
         <div class="split-left" style="width: 80%; box-sizing: border-box;">
-            You can attach callback to your widget to react at pointer interactions. Just make it <code>isinteractive</code>.
+            You can attach callbacks to your widget to react to pointer interactions. Just make it <code>isinteractive</code>.
             <br>
             <br>
-            You can attach a callback for interactions with the widget <code>bounds</code> or with <code>slots</code>.
+            You can attach a callback for interactions with the widget's <code>bounds</code> or with <code>slots</code>.
             The available events are <code>down</code>, <code>up</code>, <code>enter</code>, <code>leave</code>, <code>move</code>, and <code>drag</code>.
             <br>
             <br>
@@ -3172,8 +3152,8 @@ const updateControl = (widget, controlBone, mouseX, mouseY, tempVector) => {
 
                 <spine-widget
                     identifier="interactive0"
-                    atlas="assets/chibi-stickers-pma.atlas",
-                    skeleton="assets/chibi-stickers.json",
+                    atlas="assets/chibi-stickers-pma.atlas"
+                    skeleton="assets/chibi-stickers.json"
                     skin="mario"
                     animation="emotes/wave"
                     isinteractive
@@ -3182,8 +3162,8 @@ const updateControl = (widget, controlBone, mouseX, mouseY, tempVector) => {
 
                 <spine-widget
                     identifier="interactive1"
-                    atlas="assets/chibi-stickers-pma.atlas",
-                    skeleton="assets/chibi-stickers.json",
+                    atlas="assets/chibi-stickers-pma.atlas"
+                    skeleton="assets/chibi-stickers.json"
                     skin="nate"
                     animation="emotes/wave"
                     isinteractive
@@ -3293,10 +3273,9 @@ const darkPicker = document.getElementById("dark-picker");
                                 <li><code>followOpacity</code>: the element opacity is connected to the slot alpha</li>
                                 <li><code>followScale</code>: the element scale is connected to the slot scale</li>
                                 <li><code>followRotation</code>: the element rotation is connected to the slot rotation</li>
-                                <li><code>followAttachmentAttach</code>: the element is shown/hidden depending if the slots contains an attachment or not</li>
+                                <li><code>followAttachmentAttach</code>: the element is shown/hidden depending if the slot contains an attachment or not</li>
                                 <li><code>hideAttachment</code>: the slot attachment is hidden as if the element replaced the attachment</li>
                             </ul>
-
                         </li>
                     </ol>
                 </p>
@@ -3444,232 +3423,232 @@ const darkPicker = document.getElementById("dark-picker");
 
     <div class="section vertical-split">
 
-            <div class="split-left">
-                A login UI made using the chibi stickers and a button made using Spine.
-                <p>
-                    The chibi sticker does the following:
-                    <ul>
-                        <li>It looks at the cursor when no input field is selected</li>
-                        <li>Look at the caret when username input field is selected</li>
-                        <li>Cover its eyes when password input field is selected</li>
-                        <li>React in two different ways depending on the password</li>
-                    </ul>
-                </p>
+        <div class="split-left">
+            A login UI made using the chibi stickers and a button made using Spine.
+            <p>
+                The chibi sticker does the following:
+                <ul>
+                    <li>It looks at the cursor when no input field is selected</li>
+                    <li>Look at the caret when username input field is selected</li>
+                    <li>Cover its eyes when password input field is selected</li>
+                    <li>React in two different ways depending on the password</li>
+                </ul>
+            </p>
 
-                <p>
-                    The button does the following:
-                    <ul>
-                        <li>Starts some animation when cursor enters, leaves, stays, or click the button</li>
-                        <li>Appends a div containing the <code>LOGIN</code> text to a slot</li>
-                        <li>Submits the form on click</li>
-                    </ul>
-                </p>
+            <p>
+                The button does the following:
+                <ul>
+                    <li>Starts some animation when cursor enters, leaves, stays, or click the button</li>
+                    <li>Appends a div containing the <code>LOGIN</code> text to a slot</li>
+                    <li>Submits the form on click</li>
+                </ul>
+            </p>
+        </div>
+
+
+
+        <span id="ruler" style="visibility: hidden; white-space: nowrap; position: absolute"></span>
+        <div style="background-color: white; width: 250px; padding: 30px; text-align: center;">
+            <div style="display: flex; justify-content: center;">
+                <div style="width: 150px; height:150px; border-radius: 5%; border: 1px solid rgb(113, 113, 113); background-color: rgb(211, 211, 211); margin-bottom: 30px;">
+                    <spine-widget
+                        identifier="spineboy-login"
+                        atlas="assets/pwd/chibi-stickers-pro-pwd-test.atlas"
+                        skeleton="assets/pwd/chibi-stickers.json"
+                        skin="spineboy"
+                        bounds-x="-177"
+                        bounds-y="238"
+                        bounds-width="364"
+                        bounds-height="412"
+                        animation="interactive/head/idle"
+                        clip
+                        isinteractive
+                    ></spine-widget>
+                </div>
             </div>
 
+            <div class="input-group" style="margin-bottom: 15px;"><select id="skinSelect"></select></div>
 
-
-            <span id="ruler" style="visibility: hidden; white-space: nowrap; position: absolute"></span>
-            <div style="background-color: white; width: 250px; padding: 30px; text-align: center;">
-                <div style="display: flex; justify-content: center;">
-                    <div style="width: 150px; height:150px; border-radius: 5%; border: 1px solid rgb(113, 113, 113); background-color: rgb(211, 211, 211); margin-bottom: 30px;">
-                        <spine-widget
-                            identifier="spineboy-login"
-                            atlas="assets/pwd/chibi-stickers-pro-pwd-test.atlas"
-                            skeleton="assets/pwd/chibi-stickers.json"
-                            skin="spineboy"
-                            bounds-x="-177"
-                            bounds-y="238"
-                            bounds-width="364"
-                            bounds-height="412"
-                            animation="interactive/head/idle"
-                            clip
-                            isinteractive
-                        ></spine-widget>
-                    </div>
+            <form id="loginForm">
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <input style="width: 100%; padding: 10px; box-sizing: border-box;" type="text" id="username" name="username" placeholder="Username" autocomplete="off" required>
+                </div>
+                <div class="input-group" style="margin-bottom: 15px;">
+                    <input style="width: 100%; padding: 10px; box-sizing: border-box;" type="password" id="password" name="password" placeholder="Password" required>
                 </div>
 
-                <div class="input-group" style="margin-bottom: 15px;"><select id="skinSelect"></select></div>
+                <div style="margin-bottom: 10px; color: black">Password is <code>password</code></div>
 
-                <form id="loginForm">
-                    <div class="input-group" style="margin-bottom: 15px;">
-                        <input style="width: 100%; padding: 10px; box-sizing: border-box;" type="text" id="username" name="username" placeholder="Username" autocomplete="off" required>
-                    </div>
-                    <div class="input-group" style="margin-bottom: 15px;">
-                        <input style="width: 100%; padding: 10px; box-sizing: border-box;" type="password" id="password" name="password" placeholder="Password" required>
-                    </div>
+                <div style="height: 75px; cursor: pointer;">
+                    <div id="button-text" style="font-size: xx-large; cursor: pointer; user-select: none; display: none;"> LOGIN </div>
+                    <spine-widget
+                        identifier="button-login"
+                        atlas="assets/pwd/button.atlas"
+                        skeleton="assets/pwd/button.json"
+                        animation="idle"
+                        isinteractive
+                        fit="fill"
+                    ></spine-widget>
+                </div>
 
-                    <div style="margin-bottom: 10px; color: black">Password is <code>password</code></div>
-
-                    <div style="height: 75px; cursor: pointer;">
-                        <div id="button-text" style="font-size: xx-large; cursor: pointer; user-select: none; display: none;"> LOGIN </div>
-                        <spine-widget
-                            identifier="button-login"
-                            atlas="assets/pwd/button.atlas"
-                            skeleton="assets/pwd/button.json"
-                            animation="idle"
-                            isinteractive
-                            fit="fill"
-                        ></spine-widget>
-                    </div>
-
-                </form>
-            </div>
+            </form>
+        </div>
 
 
 
 
 
-            <script>
-                const mouseX = Smooth(0, 200);
-                const mouseY = Smooth(0, 200);
+        <script>
+            const mouseX = Smooth(0, 200);
+            const mouseY = Smooth(0, 200);
 
-                (async () => {
+            (async () => {
 
-                    const form = document.getElementById('loginForm');
-                    const widgetButton = spine.getSpineWidget("button-login");
-                    await widgetButton.whenReady;
+                const form = document.getElementById('loginForm');
+                const widgetButton = spine.getSpineWidget("button-login");
+                await widgetButton.whenReady;
 
-                    widgetButton.skeleton.color.set(.85, .85, .85, 1);
-                    widgetButton.cursorEventCallback = (event, originalEvent) => {
-                        if (event === "enter") {
-                            widgetButton.state.setAnimation(0, "enhance-in", false);
-                            widgetButton.state.setAnimation(1, "shadow-in", false);
-                            widgetButton.state.setAnimation(2, "jump", true);
-                        };
-                        if (event === "leave") {
-                            widgetButton.state.setAnimation(0, "enhance-out", false).timeScale = 2;
-                            widgetButton.state.setAnimation(1, "shadow-out", false);
-                            widgetButton.state.setEmptyAnimation(2, 0).mixDuration = .25;
-                        };
-                        if (event === "down") {
-                            widgetButton.state.setAnimation(0, "enhance-in", false).timeScale = 2;
-                            originalEvent.preventDefault();
-                            if (form.reportValidity()) {
-                                if (passwordInput.value === "password") {
-                                    widget.state.setAnimation(0, "interactive/pwd/hooray", 0);
-                                    widget.state.addAnimation(0, "interactive/head/idle", true);
-                                } else {
-                                    widget.state.setAnimation(0, "interactive/pwd/sad", 0);
-                                    widget.state.addAnimation(0, "interactive/head/idle", true);
-                                }
+                widgetButton.skeleton.color.set(.85, .85, .85, 1);
+                widgetButton.cursorEventCallback = (event, originalEvent) => {
+                    if (event === "enter") {
+                        widgetButton.state.setAnimation(0, "enhance-in", false);
+                        widgetButton.state.setAnimation(1, "shadow-in", false);
+                        widgetButton.state.setAnimation(2, "jump", true);
+                    };
+                    if (event === "leave") {
+                        widgetButton.state.setAnimation(0, "enhance-out", false).timeScale = 2;
+                        widgetButton.state.setAnimation(1, "shadow-out", false);
+                        widgetButton.state.setEmptyAnimation(2, 0).mixDuration = .25;
+                    };
+                    if (event === "down") {
+                        widgetButton.state.setAnimation(0, "enhance-in", false).timeScale = 2;
+                        originalEvent.preventDefault();
+                        if (form.reportValidity()) {
+                            if (passwordInput.value === "password") {
+                                widget.state.setAnimation(0, "interactive/pwd/hooray", 0);
+                                widget.state.addAnimation(0, "interactive/head/idle", true);
+                            } else {
+                                widget.state.setAnimation(0, "interactive/pwd/sad", 0);
+                                widget.state.addAnimation(0, "interactive/head/idle", true);
                             }
-                        };
-                    }
-
-                    const textSlot = widgetButton.skeleton.findSlot("CLICK ME");
-                    textSlot.setAttachment(null);
-
-
-                    const divText = document.getElementById("button-text");
-
-                    widgetButton.followSlot("CLICK ME", divText, { followScale: false });
-
-                    const widget = spine.getSpineWidget("spineboy-login");
-                    await widget.whenReady;
-
-                    // default settings
-                    widget.state.data.defaultMix = 0.15;
-
-                    // Skin selection
-                    const skinSelect = document.getElementById('skinSelect');
-                    widget.skeleton.data.skins.forEach(({ name }) => {
-                        if (name === "default") return;
-                        skinSelect.add(new Option(name, name, name === "spineboy"));
-                    });
-                    skinSelect.value = "spineboy";
-                    skinSelect.addEventListener('change', (e) => widget.skin = e.target.value);
-
-                    // click on spineboy
-                    widget.cursorEventCallback = (event) => {
-                        if (event === "down") {
-                            widget.state.setAnimation(0, "interactive/pwd/touch", false);
-                            widget.state.addAnimation(0, "interactive/head/idle", true);
                         }
-                        if (event === "enter") widget.state.setAnimation(0, "emotes/wave", true);
-                        if (event === "leave") widget.state.setAnimation(0, "interactive/head/idle", false);
+                    };
+                }
+
+                const textSlot = widgetButton.skeleton.findSlot("CLICK ME");
+                textSlot.setAttachment(null);
+
+
+                const divText = document.getElementById("button-text");
+
+                widgetButton.followSlot("CLICK ME", divText, { followScale: false });
+
+                const widget = spine.getSpineWidget("spineboy-login");
+                await widget.whenReady;
+
+                // default settings
+                widget.state.data.defaultMix = 0.15;
+
+                // Skin selection
+                const skinSelect = document.getElementById('skinSelect');
+                widget.skeleton.data.skins.forEach(({ name }) => {
+                    if (name === "default") return;
+                    skinSelect.add(new Option(name, name, name === "spineboy"));
+                });
+                skinSelect.value = "spineboy";
+                skinSelect.addEventListener('change', (e) => widget.skin = e.target.value);
+
+                // click on spineboy
+                widget.cursorEventCallback = (event) => {
+                    if (event === "down") {
+                        widget.state.setAnimation(0, "interactive/pwd/touch", false);
+                        widget.state.addAnimation(0, "interactive/head/idle", true);
                     }
+                    if (event === "enter") widget.state.setAnimation(0, "emotes/wave", true);
+                    if (event === "leave") widget.state.setAnimation(0, "interactive/head/idle", false);
+                }
 
-                    // Head follow logic
-                    let focusInput = false;
+                // Head follow logic
+                let focusInput = false;
 
-                    // Password input field
-                    const passwordInput = document.getElementById('password');
-                    passwordInput.addEventListener('focus', () => {
-                        focusInput = true;
-                        resetBlendTracks();
-                        widget.state.setAnimation(0, "interactive/pwd/hide", 0);
-                    });
-                    passwordInput.addEventListener('blur', () => {
-                        focusInput = false;
-                        widget.state.setAnimation(0, "interactive/head/idle", 0);
-                    });
-
-                    // Username input field
-                    const usernameInput = document.getElementById('username');
-                    usernameInput.addEventListener('input', () => {
-                        setBlendTracks();
-                    });
-                    usernameInput.addEventListener('focus', () => {
-                        focusInput = true;
-                        setBlendTracks();
-                    });
-                    usernameInput.addEventListener('blur', () => {
-                        focusInput = false;
-                        setBlendTracks();
-                    });
-
-                    // Animation left/down blending
-                    const ALPHA_LEFT_RANGE = 4;
-                    const ALPHA_DOWN = .8;
-                    const ALPHA_DOWN_RANGE = 2;
-                    const moveVector = [0, 0];
-                    const leftTrack = widget.state.setAnimation(1, "interactive/head/left", true);
-                    const downTrack = widget.state.setAnimation(2, "interactive/head/down", true);
-                    leftTrack.mixBlend = spine.MixBlend.add;
-                    downTrack.mixBlend = spine.MixBlend.add;
-
-                    const setBlendTracks = () => {
-                        moveVector[0] = getAlphaLeft();
-                        moveVector[1] = ALPHA_DOWN;
-                    }
-                    const resetBlendTracks = () => {
-                        moveVector[0] = 0;
-                        moveVector[1] = 0;
-                    }
+                // Password input field
+                const passwordInput = document.getElementById('password');
+                passwordInput.addEventListener('focus', () => {
+                    focusInput = true;
                     resetBlendTracks();
+                    widget.state.setAnimation(0, "interactive/pwd/hide", 0);
+                });
+                passwordInput.addEventListener('blur', () => {
+                    focusInput = false;
+                    widget.state.setAnimation(0, "interactive/head/idle", 0);
+                });
 
-                    const getWidthOfText = (txt) => {
-                        const ruler = document.getElementById("ruler");
-                        ruler.innerHTML = txt;
-                        return ruler.offsetWidth;
+                // Username input field
+                const usernameInput = document.getElementById('username');
+                usernameInput.addEventListener('input', () => {
+                    setBlendTracks();
+                });
+                usernameInput.addEventListener('focus', () => {
+                    focusInput = true;
+                    setBlendTracks();
+                });
+                usernameInput.addEventListener('blur', () => {
+                    focusInput = false;
+                    setBlendTracks();
+                });
+
+                // Animation left/down blending
+                const ALPHA_LEFT_RANGE = 4;
+                const ALPHA_DOWN = .8;
+                const ALPHA_DOWN_RANGE = 2;
+                const moveVector = [0, 0];
+                const leftTrack = widget.state.setAnimation(1, "interactive/head/left", true);
+                const downTrack = widget.state.setAnimation(2, "interactive/head/down", true);
+                leftTrack.mixBlend = spine.MixBlend.add;
+                downTrack.mixBlend = spine.MixBlend.add;
+
+                const setBlendTracks = () => {
+                    moveVector[0] = getAlphaLeft();
+                    moveVector[1] = ALPHA_DOWN;
+                }
+                const resetBlendTracks = () => {
+                    moveVector[0] = 0;
+                    moveVector[1] = 0;
+                }
+                resetBlendTracks();
+
+                const getWidthOfText = (txt) => {
+                    const ruler = document.getElementById("ruler");
+                    ruler.innerHTML = txt;
+                    return ruler.offsetWidth;
+                }
+
+                const getAlphaLeft = () => {
+                    const { width } = usernameInput.getBoundingClientRect();
+                    const length = getWidthOfText(usernameInput.value);
+                    const alpha = Math.min(1, length / width) * 2
+                    return 1 - alpha;
+                };
+
+                widget.afterUpdateWorldTransforms = () => {
+                    if (focusInput) {
+                        blendTo(moveVector[0], moveVector[1]);
+                    } else {
+                        const { x, y, width, height} = widget.getHostElement().getBoundingClientRect();
+                        const l = -((widget.overlay.cursorCanvasX - (x + width)) / window.innerWidth) * ALPHA_LEFT_RANGE;
+                        const d = ((widget.overlay.cursorCanvasY - (y + height)) / window.innerHeight) * ALPHA_DOWN_RANGE;
+                        blendTo(l, d);
                     }
+                };
 
-                    const getAlphaLeft = () => {
-                        const { width } = usernameInput.getBoundingClientRect();
-                        const length = getWidthOfText(usernameInput.value);
-                        const alpha = Math.min(1, length / width) * 2
-                        return 1 - alpha;
-                    };
+                const blendTo = (x, y) => {
+                    leftTrack.alpha = mouseX(x);
+                    downTrack.alpha = mouseY(y);
+                }
 
-                    widget.afterUpdateWorldTransforms = () => {
-                        if (focusInput) {
-                            blendTo(moveVector[0], moveVector[1]);
-                        } else {
-                            const { x, y, width, height} = widget.getHostElement().getBoundingClientRect();
-                            const l = -((widget.overlay.cursorCanvasX - (x + width)) / window.innerWidth) * ALPHA_LEFT_RANGE;
-                            const d = ((widget.overlay.cursorCanvasY - (y + height)) / window.innerHeight) * ALPHA_DOWN_RANGE;
-                            blendTo(l, d);
-                        }
-                    };
+            })();
 
-                    const blendTo = (x, y) => {
-                        leftTrack.alpha = mouseX(x);
-                        downTrack.alpha = mouseY(y);
-                    }
-
-                })();
-
-            </script>
+        </script>
 
 
         <div class="split-bottom">
@@ -4376,7 +4355,7 @@ Look at the source code`
         </code></pre>
     </div>
 
-</div>
+    </div>
 
 
     <!--
@@ -4562,7 +4541,7 @@ Look at the source code`
 
                     if (!ammoLocationActive && ammo <= 2) {
                         ammoLocationActive = true;
-                        spineboy.overlay.worldToScreen(gameVectorTemp, spineboy.worldX + spineboy.skeleton.x, spineboy.worldY + spineboy.skeleton.y)
+                        spineboy.overlay.worldToScreen(gameVectorTemp, spineboy.worldX + spineboy.skeleton.x, spineboy.worldY + spineboy.skeleton.y);
                         const { x, width } = containerGame.getBoundingClientRect();
                         const containerGameMiddle = x + width / 2;
                         const left = gameVectorTemp.x < containerGameMiddle;
@@ -4668,6 +4647,7 @@ Look at the source code`
                                 ammo = 5;
                                 element.darkColor = null;
                                 ammoLocationActive = false;
+                                ammoSpan.innerText = `Ammo: ${ammo}`;
                             }
                         }
                     });

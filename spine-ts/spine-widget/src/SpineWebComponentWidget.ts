@@ -1554,9 +1554,8 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 	 * Moreover, it is necessary to perform the following actions:
 	 * 1) The scrollable container must have a `transform` css attribute. If it hasn't this attribute the `spine-overlay` will add it for you.
 	 * If your scrollable container has already this css attribute, or if you prefer to add it by yourself (example: `transform: translateZ(0);`), set the `no-auto-parent-transform` to the `spine-overlay`.
-	 * 2) The `spine-overlay` must have the `scrollable` attribute
-	 * 3) The `spine-overlay` must have an `overlay-id` attribute. Choose the value you prefer.
-	 * 4) Each `spine-widget` must have an `overlay-id` attribute. The same as the hosting `spine-overlay`.
+	 * 2) The `spine-overlay` must have an `overlay-id` attribute. Choose the value you prefer.
+	 * 3) Each `spine-widget` must have an `overlay-id` attribute. The same as the hosting `spine-overlay`.
 	   * Connected to `scrollable` attribute.
 	 */
 	private appendedToBody = true;
