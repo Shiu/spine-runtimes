@@ -62,7 +62,8 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 		if (pose.mix == 0) return;
 
 		Animation animation = data.animation;
-		if (bone != null && bone.active) {
+		if (bone != null) {
+			if (!bone.active) return;
 			pose.time = (data.property.value(bone.applied, data.local, offsets) - data.property.offset) * data.scale;
 			if (data.loop)
 				pose.time = animation.duration + (pose.time % animation.duration);
