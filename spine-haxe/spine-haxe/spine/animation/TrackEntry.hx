@@ -56,7 +56,20 @@ class TrackEntry implements Poolable {
 	public var animationEnd:Float = 0;
 	public var animationLast:Float = 0;
 	public var nextAnimationLast:Float = 0;
-	public var delay:Float = 0;
+
+	/** Seconds to postpone playing the animation. Must be >= 0. When this track entry is the current track entry,
+	* <code>delay</code> postpones incrementing the {@link #getTrackTime()}. When this track entry is queued,
+	* <code>delay</code> is the time from the start of the previous animation to when this track entry will become the current
+	* track entry (ie when the previous track entry {@link TrackEntry#getTrackTime()} >= this track entry's
+	* <code>delay</code>).
+	* <p>
+	* {@link #getTimeScale()} affects the delay.
+	* <p>
+	* When passing <code>delay</code> <= 0 to {@link AnimationState#addAnimation(int, Animation, boolean, float)} this
+	* <code>delay</code> is set using a mix duration from {@link AnimationStateData}. To change the {@link #getMixDuration()}
+	* afterward, use {@link #setMixDuration(float, float)} so this <code>delay</code> is adjusted. */
+	public var delay(default, set):Float = 0;
+
 	public var trackTime:Float = 0;
 	public var trackLast:Float = 0;
 	public var nextTrackLast:Float = 0;
@@ -64,7 +77,7 @@ class TrackEntry implements Poolable {
 	public var timeScale:Float = 0;
 	public var alpha:Float = 0;
 	public var mixTime:Float = 0;
-	@:isVar public var mixDuration(get, set):Float = 0;
+	public var mixDuration:Float = 0;
 	public var interruptAlpha:Float = 0;
 	public var totalAlpha:Float = 0;
 	public var mixBlend:MixBlend = MixBlend.replace;
@@ -73,14 +86,9 @@ class TrackEntry implements Poolable {
 	public var timelinesRotation:Array<Float> = new Array<Float>();
 	public var shortestRotation = false;
 
-	function get_mixDuration():Float {
-		return mixDuration;
-	}
-
-	function set_mixDuration(mixDuration:Float):Float {
-		this.mixDuration = mixDuration;
-		if (previous != null && delay <= 0) delay += previous.getTrackComplete() - mixDuration;
-		return mixDuration;
+	function set_delay(delay:Float):Float {
+		if (delay < 0) throw new SpineException("delay must be >= 0.");
+		return this.delay = delay;
 	}
 
 	public function new() {}
@@ -141,5 +149,16 @@ class TrackEntry implements Poolable {
 
 	public function resetRotationDirection():Void {
 		timelinesRotation.resize(0);
+	}
+
+	public function setMixDurationWithDelay(mixDuration:Float):Float {
+		this.mixDuration = mixDuration;
+		if (delay <= 0) {
+			if (this.previous != null)
+				delay = Math.max(delay + this.previous.getTrackComplete() - mixDuration, 0);
+			else
+				delay = 0;
+		}
+		return mixDuration;
 	}
 }
