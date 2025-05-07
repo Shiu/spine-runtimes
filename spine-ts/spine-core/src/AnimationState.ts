@@ -586,10 +586,11 @@ export class AnimationState {
 		if (!last) {
 			this.setCurrent(trackIndex, entry, true);
 			this.queue.drain();
+			if (delay < 0) delay = 0;
 		} else {
 			last.next = entry;
 			entry.previous = last;
-			if (delay <= 0) delay += last.getTrackComplete() - entry.mixDuration;
+			if (delay <= 0) delay = Math.max(delay + last.getTrackComplete() - entry.mixDuration, 0);
 		}
 
 		entry.delay = delay;
@@ -630,7 +631,7 @@ export class AnimationState {
 	 *         after the {@link AnimationStateListener#dispose()} event occurs. */
 	addEmptyAnimation (trackIndex: number, mixDuration: number = 0, delay: number = 0) {
 		let entry = this.addAnimationWith(trackIndex, AnimationState.emptyAnimation(), false, delay);
-		if (delay <= 0) entry.delay += entry.mixDuration - mixDuration;
+		if (delay <= 0) entry.delay = Math.max(entry.delay + entry.mixDuration - mixDuration, 0);
 		entry.mixDuration = mixDuration;
 		entry.trackEnd = mixDuration;
 		return entry;
@@ -955,7 +956,12 @@ export class TrackEntry {
 
 	setMixDurationWithDelay (mixDuration: number, delay: number) {
 		this._mixDuration = mixDuration;
-		if (this.previous != null && delay <= 0) delay += this.previous.getTrackComplete() - mixDuration;
+		if (delay <= 0) {
+			if (this.previous != null)
+				delay = Math.max(delay + this.previous.getTrackComplete() - mixDuration, 0);
+			else
+				delay = 0;
+		}
 		this.delay = delay;
 	}
 

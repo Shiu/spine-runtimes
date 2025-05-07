@@ -852,10 +852,11 @@ spAnimationState_addAnimation(spAnimationState *self, int trackIndex, spAnimatio
 	if (!last) {
 		_spAnimationState_setCurrent(self, trackIndex, entry, 1);
 		_spEventQueue_drain(internal->queue);
+		if (delay < 0) delay = 0;
 	} else {
 		last->next = entry;
 		entry->previous = last;
-		if (delay <= 0) delay = MAX(delay +spTrackEntry_getTrackComplete(last) - entry->mixDuration, 0);
+		if (delay <= 0) delay = MAX(delay + spTrackEntry_getTrackComplete(last) - entry->mixDuration, 0);
 	}
 
 	entry->delay = delay;
@@ -872,7 +873,7 @@ spTrackEntry *spAnimationState_setEmptyAnimation(spAnimationState *self, int tra
 spTrackEntry *
 spAnimationState_addEmptyAnimation(spAnimationState *self, int trackIndex, float mixDuration, float delay) {
 	spTrackEntry *entry = spAnimationState_addAnimation(self, trackIndex, SP_EMPTY_ANIMATION, 0, delay);
-	if (delay <= 0) entry->delay = MAX(delay + entry->mixDuration - mixDuration, 0);
+	if (delay <= 0) entry->delay = MAX(entry->delay + entry->mixDuration - mixDuration, 0);
 	entry->mixDuration = mixDuration;
 	entry->trackEnd = mixDuration;
 	return entry;
