@@ -855,7 +855,7 @@ spAnimationState_addAnimation(spAnimationState *self, int trackIndex, spAnimatio
 	} else {
 		last->next = entry;
 		entry->previous = last;
-		if (delay <= 0) delay += spTrackEntry_getTrackComplete(last) - entry->mixDuration;
+		if (delay <= 0) delay = MAX(delay +spTrackEntry_getTrackComplete(last) - entry->mixDuration, 0);
 	}
 
 	entry->delay = delay;
@@ -872,7 +872,7 @@ spTrackEntry *spAnimationState_setEmptyAnimation(spAnimationState *self, int tra
 spTrackEntry *
 spAnimationState_addEmptyAnimation(spAnimationState *self, int trackIndex, float mixDuration, float delay) {
 	spTrackEntry *entry = spAnimationState_addAnimation(self, trackIndex, SP_EMPTY_ANIMATION, 0, delay);
-	if (delay <= 0) entry->delay += entry->mixDuration - mixDuration;
+	if (delay <= 0) entry->delay = MAX(delay + entry->mixDuration - mixDuration, 0);
 	entry->mixDuration = mixDuration;
 	entry->trackEnd = mixDuration;
 	return entry;
@@ -1061,7 +1061,12 @@ float spTrackEntry_getTrackComplete(spTrackEntry *entry) {
 
 void spTrackEntry_setMixDuration(spTrackEntry *entry, float mixDuration, float delay) {
 	entry->mixDuration = mixDuration;
-	if (entry->previous && delay <= 0) delay += spTrackEntry_getTrackComplete(entry) - mixDuration;
+	if (delay <= 0) {
+		if (entry->previous)
+			delay = MAX(delay + spTrackEntry_getTrackComplete(entry->previous) - mixDuration, 0);
+		else
+			delay = 0;
+	}
 	entry->delay = delay;
 }
 
