@@ -21,7 +21,7 @@
         <div style="background-color: white; width: 250px; padding: 30px; text-align: center; border-radius: 10px; border: 3px solid black; box-shadow: 5px 5px rgb(0, 0, 0);">
             <div style="display: flex; justify-content: center;">
                 <div style="width: 150px; height:150px; border-radius: 5%; border: 1px solid rgb(113, 113, 113); background-color: rgb(211, 211, 211); margin-bottom: 30px;">
-                    <spine-widget
+                    <spine-skeleton
                         identifier="spineboy-login"
                         atlas="assets/pwd/chibi-stickers-pro-pwd-test.atlas"
                         skeleton="assets/pwd/chibi-stickers.json"
@@ -33,7 +33,7 @@
                         animation="interactive/head/idle"
                         clip
                         isinteractive
-                    ></spine-widget>
+                    ></spine-skeleton>
                 </div>
             </div>
 
@@ -51,14 +51,14 @@
 
                 <div style="height: 75px; cursor: pointer;">
                     <div id="button-text" style="font-size: xx-large; cursor: pointer; user-select: none; display: none;"> LOGIN </div>
-                    <spine-widget
+                    <spine-skeleton
                         identifier="button-login"
                         atlas="assets/pwd/button.atlas"
                         skeleton="assets/pwd/button.json"
                         animation="idle"
                         isinteractive
                         fit="fill"
-                    ></spine-widget>
+                    ></spine-skeleton>
                 </div>
 
             </form>
