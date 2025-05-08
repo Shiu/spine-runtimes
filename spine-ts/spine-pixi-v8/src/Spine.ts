@@ -390,6 +390,8 @@ export class Spine extends ViewContainer {
 
 		super({});
 
+		this.allowChildren = true;
+
 		const skeletonData = options instanceof SkeletonData ? options : options.skeletonData;
 
 		this.skeleton = new Skeleton(skeletonData);
