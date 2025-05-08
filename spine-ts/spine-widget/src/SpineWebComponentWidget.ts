@@ -1247,7 +1247,7 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 	 * @internal
 	 */
 	public isCursorInsideBounds (): boolean {
-		if (!this.onScreen || !this.skeleton) return false;
+		if (this.isOffScreenAndWasMoved() || !this.skeleton) return false;
 
 		this.pointTemp.set(
 			this.cursorWorldX / this.skeleton.scaleX,
@@ -1365,6 +1365,10 @@ export class SpineWebComponentWidget extends HTMLElement implements Disposable, 
 		if (index > -1) {
 			return this.boneFollowerList.splice(index, 1)[0].element;
 		}
+	}
+
+	public isOffScreenAndWasMoved (): boolean {
+		return !this.onScreen && this.dragX === 0 && this.dragY === 0;
 	}
 
 	private calculateAnimationViewport (animation?: Animation): Rectangle {
@@ -1864,7 +1868,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 			for (const widget of this.widgets) {
 				const { skeleton, pma, bounds, mode, debug, offsetX, offsetY, xAxis, yAxis, dragX, dragY, fit, noSpinner, onScreen, loading, clip, isDraggable } = widget;
 
-				if ((!onScreen && dragX === 0 && dragY === 0)) continue;
+				if (widget.isOffScreenAndWasMoved()) continue;
 				const elementRef = widget.getHostElement();
 				const divBounds = elementRef.getBoundingClientRect();
 				// need to use left and top, because x and y are not available on older browser
@@ -2029,36 +2033,37 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 		}
 
 		const updateBoneFollowers = () => {
-			for (const { skeleton, onScreen, boneFollowerList, worldX, worldY } of this.widgets) {
-				if (skeleton && onScreen) {
-					for (const { slot, bone, element, followAttachmentAttach, followRotation, followOpacity, followScale } of boneFollowerList) {
+			for (const widget of this.widgets) {
+				if (widget.isOffScreenAndWasMoved() || !widget.skeleton) continue;
 
-						this.worldToScreen(this.tempFollowBoneVector, bone.worldX + worldX, bone.worldY + worldY);
+				for (const boneFollower of widget.boneFollowerList) {
+					const { slot, bone, element, followAttachmentAttach, followRotation, followOpacity, followScale } = boneFollower;
+					const { worldX, worldY } = widget;
+					this.worldToScreen(this.tempFollowBoneVector, bone.worldX + worldX, bone.worldY + worldY);
 
-						if (Number.isNaN(this.tempFollowBoneVector.x)) continue;
+					if (Number.isNaN(this.tempFollowBoneVector.x)) continue;
 
-						let x = this.tempFollowBoneVector.x - this.overflowLeftSize;
-						let y = this.tempFollowBoneVector.y - this.overflowTopSize;
+					let x = this.tempFollowBoneVector.x - this.overflowLeftSize;
+					let y = this.tempFollowBoneVector.y - this.overflowTopSize;
 
-						if (!this.appendedToBody) {
-							x += window.scrollX;
-							y += window.scrollY;
-						}
-
-						element.style.transform = `translate(calc(-50% + ${x.toFixed(2)}px),calc(-50% + ${y.toFixed(2)}px))`
-							+ (followRotation ? ` rotate(${-bone.getWorldRotationX()}deg)` : "")
-							+ (followScale ? ` scale(${bone.getWorldScaleX()}, ${bone.getWorldScaleY()})` : "")
-							;
-
-						element.style.display = ""
-
-						if (followAttachmentAttach && !slot.attachment) {
-							element.style.opacity = "0";
-						} else if (followOpacity) {
-							element.style.opacity = `${slot.color.a}`;
-						}
-
+					if (!this.appendedToBody) {
+						x += window.scrollX;
+						y += window.scrollY;
 					}
+
+					element.style.transform = `translate(calc(-50% + ${x.toFixed(2)}px),calc(-50% + ${y.toFixed(2)}px))`
+						+ (followRotation ? ` rotate(${-bone.getWorldRotationX()}deg)` : "")
+						+ (followScale ? ` scale(${bone.getWorldScaleX()}, ${bone.getWorldScaleY()})` : "")
+						;
+
+					element.style.display = ""
+
+					if (followAttachmentAttach && !slot.attachment) {
+						element.style.opacity = "0";
+					} else if (followOpacity) {
+						element.style.opacity = `${slot.color.a}`;
+					}
+
 				}
 			}
 		}
@@ -2153,7 +2158,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				this.updateCursor(input);
 
 				for (const widget of this.widgets) {
-					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) continue;
+					if (!this.updateWidgetCursor(widget) || widget.isOffScreenAndWasMoved()) continue;
 
 					widget.cursorEventUpdate("down", ev);
 
@@ -2162,7 +2167,6 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 
 						widget.dragging = true;
 						ev?.preventDefault();
-
 					}
 
 				}
@@ -2178,7 +2182,7 @@ class SpineWebComponentOverlay extends HTMLElement implements OverlayAttributes,
 				this.updateCursor(input);
 
 				for (const widget of this.widgets) {
-					if (!this.updateWidgetCursor(widget) || !widget.onScreen && widget.dragX === 0 && widget.dragY === 0) continue;
+					if (!this.updateWidgetCursor(widget) || widget.isOffScreenAndWasMoved()) continue;
 
 					widget.cursorEventUpdate("drag", ev);
 
@@ -2502,4 +2506,5 @@ function castValue (type: AttributeTypes, value: string | null, defaultValue?: a
 		default:
 			break;
 	}
+
 }
