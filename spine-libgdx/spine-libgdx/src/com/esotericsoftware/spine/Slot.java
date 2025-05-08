@@ -73,7 +73,7 @@ public class Slot extends Posed<SlotData, SlotPose, SlotPose> {
 	public void setupPose () {
 		pose.color.set(data.setup.color);
 		if (pose.darkColor != null) pose.darkColor.set(data.setup.darkColor);
-		pose.sequenceIndex = pose.sequenceIndex;
+		pose.sequenceIndex = data.setup.sequenceIndex;
 		if (data.attachmentName == null)
 			pose.setAttachment(null);
 		else {
