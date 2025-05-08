@@ -27,7 +27,7 @@
  * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { AnimationsInfo, FitType, ModeType, OffScreenUpdateBehaviourType } from "./SpineWebComponentSkeleton";
+import { AnimationsInfo, FitType, ModeType, OffScreenUpdateBehaviourType } from "./SpineWebComponentSkeleton.js";
 
 const animatonTypeRegExp = /\[([^\]]+)\]/g;
 export type AttributeTypes = "string" | "number" | "boolean" | "array-number" | "array-string" | "object" | "fitType" | "modeType" | "offScreenUpdateBehaviourType" | "animationsInfo";

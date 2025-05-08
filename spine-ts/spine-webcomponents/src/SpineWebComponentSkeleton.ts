@@ -50,8 +50,8 @@ import {
 	MeshAttachment,
 	Bone,
 } from "@esotericsoftware/spine-webgl";
-import { AttributeTypes, castValue, isBase64, Rectangle } from "./wcUtils";
-import { SpineWebComponentOverlay } from "./SpineWebComponentOverlay";
+import { AttributeTypes, castValue, isBase64, Rectangle } from "./wcUtils.js";
+import { SpineWebComponentOverlay } from "./SpineWebComponentOverlay.js";
 
 type UpdateSpineWidgetFunction = (delta: number, skeleton: Skeleton, state: AnimationState) => void;
 

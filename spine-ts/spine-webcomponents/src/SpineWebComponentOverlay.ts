@@ -28,8 +28,8 @@
  *****************************************************************************/
 
 import { AssetManager, Color, Input, LoadingScreen, ManagedWebGLRenderingContext, Physics, SceneRenderer, TimeKeeper, Vector2, Vector3 } from "@esotericsoftware/spine-webgl"
-import { SpineWebComponentSkeleton } from "./SpineWebComponentSkeleton"
-import { AttributeTypes, castValue, Point, Rectangle } from "./wcUtils"
+import { SpineWebComponentSkeleton } from "./SpineWebComponentSkeleton.js"
+import { AttributeTypes, castValue, Point, Rectangle } from "./wcUtils.js"
 
 interface OverlayAttributes {
 	overlayId?: string

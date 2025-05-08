@@ -32,7 +32,7 @@
       "path": "./spine-pixi-v8"
     },
     {
-      "path": "./spine-widget"
+      "path": "./spine-webcomponents"
     }
   ]
 }
