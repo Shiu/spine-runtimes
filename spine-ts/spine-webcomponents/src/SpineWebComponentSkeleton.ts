@@ -138,11 +138,6 @@ interface WidgetInternalProperties {
 export class SpineWebComponentSkeleton extends HTMLElement implements Disposable, WidgetAttributes, WidgetOverridableMethods, WidgetInternalProperties, Partial<WidgetPublicProperties> {
 
 	/**
-	 * If true, enables a top-left span showing FPS (it has black text)
-	 */
-	public static SHOW_FPS = false;
-
-	/**
 	 * The URL of the skeleton atlas file (.atlas)
 	 * Connected to `atlas` attribute.
 	 */

@@ -58,6 +58,11 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 	}
 
 	/**
+	 * If true, enables a top-left span showing FPS (it has black text)
+	 */
+	public static SHOW_FPS = false;
+
+	/**
 	 * A list holding the widgets added to this overlay.
 	 */
 	public widgets = new Array<SpineWebComponentSkeleton>();
@@ -416,7 +421,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 			}
 
 			// fps top-left span
-			if (SpineWebComponentSkeleton.SHOW_FPS) {
+			if (SpineWebComponentOverlay.SHOW_FPS) {
 				if (!this.fpsAppended) {
 					this.div.appendChild(this.fps);
 					this.fpsAppended = true;
