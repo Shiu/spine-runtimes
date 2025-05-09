@@ -95,8 +95,8 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 
 	/** Applies the constraint to the constrained bones. */
 	public void update (Skeleton skeleton, Physics physics) {
-		PhysicsConstraintPose pose = applied;
-		float mix = pose.mix;
+		PhysicsConstraintPose p = applied;
+		float mix = p.mix;
 		if (mix == 0) return;
 
 		boolean x = data.x > 0, y = data.y > 0, rotateOrShearX = data.rotate > 0 || data.shearX > 0, scaleX = data.scaleX > 0;
@@ -120,7 +120,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 				ux = bx;
 				uy = by;
 			} else {
-				float a = remaining, i = pose.inertia, f = skeleton.data.referenceScale, d = -1, qx = data.limit * delta,
+				float a = remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1, qx = data.limit * delta,
 					qy = qx * Math.abs(skeleton.scaleY);
 				qx *= Math.abs(skeleton.scaleX);
 				if (x || y) {
@@ -135,9 +135,9 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 						uy = by;
 					}
 					if (a >= t) {
-						d = (float)Math.pow(pose.damping, 60 * t);
-						float m = pose.massInverse * t, e = pose.strength, w = pose.wind * f * skeleton.scaleX,
-							g = pose.gravity * f * skeleton.scaleY, xs = xOffset, ys = yOffset;
+						d = (float)Math.pow(p.damping, 60 * t);
+						float m = p.massInverse * t, e = p.strength, w = p.wind * f * skeleton.scaleX,
+							g = p.gravity * f * skeleton.scaleY, xs = xOffset, ys = yOffset;
 						do {
 							if (x) {
 								xVelocity += (w - xOffset * e) * m;
@@ -187,9 +187,9 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 						if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
 					}
 					if (a >= t) {
-						if (d == -1) d = (float)Math.pow(pose.damping, 60 * t);
-						float m = pose.massInverse * t, e = pose.strength, w = pose.wind, g = pose.gravity, h = l / f,
-							rs = rotateOffset, ss = scaleOffset;
+						if (d == -1) d = (float)Math.pow(p.damping, 60 * t);
+						float m = p.massInverse * t, e = p.strength, w = p.wind, g = p.gravity, h = l / f, rs = rotateOffset,
+							ss = scaleOffset;
 						while (true) {
 							a -= t;
 							if (scaleX) {

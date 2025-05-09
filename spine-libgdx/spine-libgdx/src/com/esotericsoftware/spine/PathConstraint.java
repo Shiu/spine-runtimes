@@ -79,8 +79,8 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 	public void update (Skeleton skeleton, Physics physics) {
 		if (!(slot.applied.attachment instanceof PathAttachment pathAttachment)) return;
 
-		PathConstraintPose pose = applied;
-		float mixRotate = pose.mixRotate, mixX = pose.mixX, mixY = pose.mixY;
+		PathConstraintPose p = applied;
+		float mixRotate = p.mixRotate, mixX = p.mixX, mixY = p.mixY;
 		if (mixRotate == 0 && mixX == 0 && mixY == 0) return;
 
 		PathConstraintData data = this.data;
@@ -88,7 +88,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 		int boneCount = this.bones.size, spacesCount = tangents ? boneCount : boneCount + 1;
 		BonePose[] bones = this.bones.items;
 		float[] spaces = this.spaces.setSize(spacesCount), lengths = scale ? this.lengths.setSize(boneCount) : null;
-		float spacing = pose.spacing;
+		float spacing = p.spacing;
 
 		switch (data.spacingMode) {
 		case percent -> {
@@ -149,14 +149,14 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 			tip = data.rotateMode == RotateMode.chain;
 		else {
 			tip = false;
-			BonePose p = slot.bone.applied;
-			offsetRotation *= p.a * p.d - p.b * p.c > 0 ? degRad : -degRad;
+			BonePose bone = slot.bone.applied;
+			offsetRotation *= bone.a * bone.d - bone.b * bone.c > 0 ? degRad : -degRad;
 		}
-		for (int i = 0, p = 3, u = skeleton.update; i < boneCount; i++, p += 3) {
+		for (int i = 0, ip = 3, u = skeleton.update; i < boneCount; i++, ip += 3) {
 			BonePose bone = bones[i];
 			bone.worldX += (boneX - bone.worldX) * mixX;
 			bone.worldY += (boneY - bone.worldY) * mixY;
-			float x = positions[p], y = positions[p + 1], dx = x - boneX, dy = y - boneY;
+			float x = positions[ip], y = positions[ip + 1], dx = x - boneX, dy = y - boneY;
 			if (scale) {
 				float length = lengths[i];
 				if (length >= epsilon) {
@@ -170,9 +170,9 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 			if (mixRotate > 0) {
 				float a = bone.a, b = bone.b, c = bone.c, d = bone.d, r, cos, sin;
 				if (tangents)
-					r = positions[p - 1];
+					r = positions[ip - 1];
 				else if (spaces[i + 1] < epsilon)
-					r = positions[p + 2];
+					r = positions[ip + 2];
 				else
 					r = atan2(dy, dx);
 				r -= atan2(c, a);

@@ -59,16 +59,17 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 	}
 
 	public void update (Skeleton skeleton, Physics physics) {
-		if (pose.mix == 0) return;
+		SliderPose p = applied;
+		if (p.mix == 0) return;
 
 		Animation animation = data.animation;
 		if (bone != null) {
 			if (!bone.active) return;
-			pose.time = (data.property.value(bone.applied, data.local, offsets) - data.property.offset) * data.scale;
+			p.time = (data.property.value(bone.applied, data.local, offsets) - data.property.offset) * data.scale;
 			if (data.loop)
-				pose.time = animation.duration + (pose.time % animation.duration);
+				p.time = animation.duration + (p.time % animation.duration);
 			else
-				pose.time = Math.max(0, pose.time);
+				p.time = Math.max(0, p.time);
 		}
 
 		Bone[] bones = skeleton.bones.items;
@@ -76,8 +77,7 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 		for (int i = 0, n = animation.timelines.size; i < n; i++)
 			if (timelines[i] instanceof BoneTimeline timeline) bones[timeline.getBoneIndex()].applied.modifyLocal(skeleton);
 
-		SliderPose pose = applied;
-		animation.apply(skeleton, pose.time, pose.time, data.loop, null, pose.mix, data.additive ? MixBlend.add : MixBlend.replace,
+		animation.apply(skeleton, p.time, p.time, data.loop, null, p.mix, data.additive ? MixBlend.add : MixBlend.replace,
 			MixDirection.in, true);
 	}
 

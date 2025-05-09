@@ -62,14 +62,14 @@ public class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 
 	/** Applies the constraint to the constrained bones. */
 	public void update (Skeleton skeleton, Physics physics) {
-		IkConstraintPose a = applied;
-		if (a.mix == 0) return;
+		IkConstraintPose p = applied;
+		if (p.mix == 0) return;
 		BonePose target = this.target.applied;
 		BonePose[] bones = this.bones.items;
 		switch (this.bones.size) {
-		case 1 -> apply(skeleton, bones[0], target.worldX, target.worldY, a.compress, a.stretch, data.uniform, a.mix);
-		case 2 -> apply(skeleton, bones[0], bones[1], target.worldX, target.worldY, a.bendDirection, a.stretch, data.uniform,
-			a.softness, a.mix);
+		case 1 -> apply(skeleton, bones[0], target.worldX, target.worldY, p.compress, p.stretch, data.uniform, p.mix);
+		case 2 -> apply(skeleton, bones[0], bones[1], target.worldX, target.worldY, p.bendDirection, p.stretch, data.uniform,
+			p.softness, p.mix);
 		}
 	}
 

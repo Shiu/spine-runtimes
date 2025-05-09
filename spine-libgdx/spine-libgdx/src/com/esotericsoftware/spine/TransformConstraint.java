@@ -63,9 +63,8 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 
 	/** Applies the constraint to the constrained bones. */
 	public void update (Skeleton skeleton, Physics physics) {
-		TransformConstraintPose pose = applied;
-		if (pose.mixRotate == 0 && pose.mixX == 0 && pose.mixY == 0 && pose.mixScaleX == 0 && pose.mixScaleY == 0
-			&& pose.mixShearY == 0) return;
+		TransformConstraintPose p = applied;
+		if (p.mixRotate == 0 && p.mixX == 0 && p.mixY == 0 && p.mixScaleX == 0 && p.mixScaleY == 0 && p.mixShearY == 0) return;
 
 		TransformConstraintData data = this.data;
 		boolean localSource = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
@@ -88,7 +87,7 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 				ToProperty[] toItems = from.to.items;
 				for (int t = 0, tn = from.to.size; t < tn; t++) {
 					ToProperty to = toItems[t];
-					if (to.mix(pose) != 0) {
+					if (to.mix(p) != 0) {
 						float clamped = to.offset + value * to.scale;
 						if (clamp) {
 							if (to.offset < to.max)
@@ -96,7 +95,7 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 							else
 								clamped = clamp(clamped, to.max, to.offset);
 						}
-						to.apply(pose, bone, clamped, localTarget, additive);
+						to.apply(p, bone, clamped, localTarget, additive);
 					}
 				}
 			}
