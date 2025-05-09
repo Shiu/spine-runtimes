@@ -23,8 +23,8 @@
         document.body.appendChild(app.canvas);
 
         // Pre-load the skeleton data and atlas. You can also load .json skeleton data.
-        PIXI.Assets.add({alias: "snowglobeData", src: "./assets/snowglobe-pro.skel"});
-        PIXI.Assets.add({alias: "snowglobeAtlas", src: "./assets/snowglobe-pma.atlas"});
+        PIXI.Assets.add({alias: "snowglobeData", src: "/assets/snowglobe-pro.skel"});
+        PIXI.Assets.add({alias: "snowglobeAtlas", src: "/assets/snowglobe-pma.atlas"});
         await PIXI.Assets.load(["snowglobeData", "snowglobeAtlas"]);
 
         // Create the spine display object
