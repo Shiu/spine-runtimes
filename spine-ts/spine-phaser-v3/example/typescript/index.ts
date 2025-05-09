@@ -3,8 +3,8 @@ import * as spine from "@esotericsoftware/spine-phaser-v3"
 
 class SpineDemo extends Phaser.Scene {
     preload() {
-        this.load.spineBinary("spineboy-data", "assets/spineboy-pro.skel");
-        this.load.spineAtlas("spineboy-atlas", "assets/spineboy-pma.atlas");
+        this.load.spineBinary("spineboy-data", "/assets/spineboy-pro.skel");
+        this.load.spineAtlas("spineboy-atlas", "/assets/spineboy-pma.atlas");
     }
 
     create() {

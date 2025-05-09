@@ -916,8 +916,8 @@ export class Spine extends Container {
 	 * Use this method to instantiate a Spine game object.
 	 * Before instantiating a Spine game object, the skeleton (`.skel` or `.json`) and the atlas text files must be loaded into the Assets. For example:
 	 * ```
-	 * PIXI.Assets.add("sackData", "./assets/sack-pro.skel");
-	 * PIXI.Assets.add("sackAtlas", "./assets/sack-pma.atlas");
+	 * PIXI.Assets.add("sackData", "/assets/sack-pro.skel");
+	 * PIXI.Assets.add("sackAtlas", "/assets/sack-pma.atlas");
 	 * await PIXI.Assets.load(["sackData", "sackAtlas"]);
 	 * ```
 	 * Once a Spine game object is created, its skeleton data is cached into {@link Spine.skeletonCache} using the key:
@@ -933,8 +933,8 @@ export class Spine extends Container {
 	 * Use this method to instantiate a Spine game object.
 	 * Before instantiating a Spine game object, the skeleton (`.skel` or `.json`) and the atlas text files must be loaded into the Assets. For example:
 	 * ```
-	 * PIXI.Assets.add("sackData", "./assets/sack-pro.skel");
-	 * PIXI.Assets.add("sackAtlas", "./assets/sack-pma.atlas");
+	 * PIXI.Assets.add("sackData", "/assets/sack-pro.skel");
+	 * PIXI.Assets.add("sackAtlas", "/assets/sack-pma.atlas");
 	 * await PIXI.Assets.load(["sackData", "sackAtlas"]);
 	 * ```
 	 * Once a Spine game object is created, its skeleton data is cached into {@link Spine.skeletonCache} using the key:

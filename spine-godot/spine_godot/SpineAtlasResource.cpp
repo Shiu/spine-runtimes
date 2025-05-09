@@ -140,23 +140,18 @@ public:
 	}
 
 	void load(spine::AtlasPage &page, const spine::String &path) override {
-		Error error = OK;
 		String fixed_path;
 		fixed_path.parse_utf8(path.buffer());
 		bool is_resource = fix_path(fixed_path);
 
 		import_image_resource(fixed_path);
 
-#if SPINE_GODOT_EXTENSION
-		Ref<Texture2D> texture = ResourceLoader::get_singleton()->load(fixed_path, "", ResourceLoader::CACHE_MODE_REUSE);
-#else
 #if VERSION_MAJOR > 3
 		Ref<Texture2D> texture = get_texture_from_image(fixed_path, is_resource);
 #else
 		Ref<Texture> texture = get_texture_from_image(fixed_path, is_resource);
 #endif
-#endif
-		if (error != OK || !texture.is_valid()) {
+		if (!texture.is_valid()) {
 			ERR_PRINT(vformat("Can't load texture: \"%s\"", fixed_path));
 			auto renderer_object = memnew(SpineRendererObject);
 			renderer_object->texture = Ref<Texture>(nullptr);
@@ -170,17 +165,19 @@ public:
 		renderer_object->texture = texture;
 		renderer_object->normal_map = Ref<Texture>(nullptr);
 
-		String new_path = vformat("%s/%s_%s", fixed_path.get_base_dir(), normal_map_prefix, fixed_path.get_file());
+		String normal_map_path = vformat("%s/%s_%s", fixed_path.get_base_dir(), normal_map_prefix, fixed_path.get_file());
+		is_resource = fix_path(normal_map_path);
 #if SPINE_GODOT_EXTENSION
-		if (ResourceLoader::get_singleton()->exists(new_path)) {
-			Ref<Texture> normal_map = ResourceLoader::get_singleton()->load(new_path);
+		if (ResourceLoader::get_singleton()->exists(normal_map_path)) {
+			import_image_resource(normal_map_path);
+			Ref<Texture> normal_map = get_texture_from_image(normal_map_path, is_resource);
 			normal_maps->append(normal_map);
 			renderer_object->normal_map = normal_map;
 		}
 #else
-		if (ResourceLoader::exists(new_path)) {
-			import_image_resource(new_path);
-			Ref<Texture> normal_map = get_texture_from_image(new_path, is_resource);
+		if (ResourceLoader::exists(normal_map_path)) {
+			import_image_resource(normal_map_path);
+			Ref<Texture> normal_map = get_texture_from_image(normal_map_path, is_resource);
 			normal_maps->append(normal_map);
 			renderer_object->normal_map = normal_map;
 		}

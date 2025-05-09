@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>spine-pixi</title>
-    <script src="https://cdn.jsdelivr.net/npm/pixi.js@8/dist/pixi.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.4.1/dist/pixi.js"></script>
     <script src="../dist/iife/spine-pixi-v8.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tweakpane@3.1.9/dist/tweakpane.min.js"></script>
     <link rel="stylesheet" href="../../index.css">
@@ -23,7 +23,7 @@
           backgroundColor: 0x2c3e50,
           hello: true,
         })
-        document.body.appendChild(app.view);
+        document.body.appendChild(app.canvas);
 
         // adding skeleton to cache
         PIXI.Assets.cache.set("jsonSkel", jsonSkel);

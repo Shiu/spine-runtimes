@@ -7,8 +7,9 @@ up into multiple modules:
 1. `spine-webgl/`, a self-contained WebGL backend, built on the core classes.
 1. `spine-canvas/`, a self-contained Canvas backend, built on the core classes.
 1. `spine-canvaskit/`, a self-contained [CanvasKit](https://skia.org/docs/user/modules/canvaskit/) backend, built on the core classes for CanvasKit, supporting both NodeJS for headless rendering, and browsers.
-1. `spine-threejs/`, a self-contained [THREE.JS](https://threejs.org/) backend, built on the core classes.
 1. `spine-player/`, a self-contained player to easily display Spine animations on your website, built on the core classes and WebGL backend.
+1. `spine-webcomponents/`, web components to easily display Spine animations on your website, built on the core classes and WebGL backend.
+1. `spine-threejs/`, a [THREE.JS](https://threejs.org/) backend, built on the core classes.
 1. `spine-phaser-v3/`, a [Phaser v3](https://phaser.io/) backend, built on the core classes.
 1. `spine-phaser-v4/`, a [Phaser v4](https://phaser.io/) backend, built on the core classes.
 1. `spine-pixi-v7/`, a [PixiJS v7](https://pixijs.com/) backend, built on the core classes.

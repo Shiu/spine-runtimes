@@ -164,7 +164,12 @@ void TrackEntry::setMixDuration(float inValue) { _mixDuration = inValue; }
 
 void TrackEntry::setMixDuration(float mixDuration, float delay) {
 	_mixDuration = mixDuration;
-	if (_previous && delay <= 0) delay += _previous->getTrackComplete() - mixDuration;
+	if (delay <= 0) {
+		if (_previous != nullptr)
+			delay = MathUtil::max(delay + _previous->getTrackComplete() - mixDuration, 0.0f);
+		else
+			delay = 0;
+	}
 	this->_delay = delay;
 }
 
@@ -606,10 +611,11 @@ TrackEntry *AnimationState::addAnimation(size_t trackIndex, Animation *animation
 	if (last == NULL) {
 		setCurrent(trackIndex, entry, true);
 		_queue->drain();
+		if (delay < 0) delay = 0;
 	} else {
 		last->_next = entry;
 		entry->_previous = last;
-		if (delay <= 0) delay += last->getTrackComplete() - entry->_mixDuration;
+		if (delay <= 0) delay = MathUtil::max(delay + last->getTrackComplete() - entry->_mixDuration, 0.0f);
 	}
 
 	entry->_delay = delay;
@@ -625,7 +631,7 @@ TrackEntry *AnimationState::setEmptyAnimation(size_t trackIndex, float mixDurati
 
 TrackEntry *AnimationState::addEmptyAnimation(size_t trackIndex, float mixDuration, float delay) {
 	TrackEntry *entry = addAnimation(trackIndex, AnimationState::getEmptyAnimation(), false, delay);
-	if (delay <= 0) entry->_delay += entry->_mixDuration - mixDuration;
+	if (delay <= 0) entry->_delay = MathUtil::max(entry->_delay + entry->_mixDuration - mixDuration, 0.0f);
 	entry->_mixDuration = mixDuration;
 	entry->_trackEnd = mixDuration;
 	return entry;

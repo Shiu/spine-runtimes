@@ -144,6 +144,7 @@ spine-ts/spine-core/dist
 spine-ts/spine-canvas/dist
 spine-ts/spine-webgl/dist
 spine-ts/spine-player/dist
+spine-ts/spine-webcomponents/dist
 spine-ts/spine-threejs/dist
 spine-ts/spine-phaser-v3/dist
 spine-ts/spine-phaser-v4/dist

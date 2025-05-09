@@ -594,11 +594,11 @@ class AnimationState {
 		if (last == null) {
 			setCurrent(trackIndex, entry, true);
 			queue.drain();
+			if (delay < 0) delay = 0;
 		} else {
 			last.next = entry;
 			entry.previous = last;
-			if (delay <= 0)
-				delay += last.getTrackComplete() - entry.mixDuration;
+			if (delay <= 0) delay = Math.max(delay + last.getTrackComplete() - entry.mixDuration, 0);
 		}
 
 		entry.delay = delay;
@@ -614,8 +614,7 @@ class AnimationState {
 
 	public function addEmptyAnimation(trackIndex:Int, mixDuration:Float, delay:Float):TrackEntry {
 		var entry:TrackEntry = addAnimation(trackIndex, emptyAnimation, false, delay);
-		if (delay <= 0)
-			entry.delay += entry.mixDuration - mixDuration;
+		if (delay <= 0) entry.delay = Math.max(entry.delay + entry.mixDuration - mixDuration, 0);
 		entry.mixDuration = mixDuration;
 		entry.trackEnd = mixDuration;
 		return entry;
