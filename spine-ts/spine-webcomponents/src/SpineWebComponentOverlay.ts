@@ -27,7 +27,7 @@
  * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { AssetManager, Color, Input, LoadingScreen, ManagedWebGLRenderingContext, Physics, SceneRenderer, TimeKeeper, Vector2, Vector3 } from "@esotericsoftware/spine-webgl"
+import { AssetManager, Color, Disposable, Input, LoadingScreen, ManagedWebGLRenderingContext, Physics, SceneRenderer, TimeKeeper, Vector2, Vector3 } from "@esotericsoftware/spine-webgl"
 import { SpineWebComponentSkeleton } from "./SpineWebComponentSkeleton.js"
 import { AttributeTypes, castValue, Point, Rectangle } from "./wcUtils.js"
 
@@ -212,9 +212,6 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		this.renderer = new SceneRenderer(this.canvas, context);
 
 		this.assetManager = new AssetManager(context);
-	}
-	[Symbol.dispose](): void {
-		throw new Error("Method not implemented.")
 	}
 
 	connectedCallback (): void {

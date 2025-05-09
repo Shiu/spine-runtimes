@@ -1333,7 +1333,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 customElements.define("spine-skeleton", SpineWebComponentSkeleton);
 
 export function getSpineWidget (identifier: string): SpineWebComponentSkeleton {
-    return document.querySelector(`spine-skeleton[identifier=${identifier}]`) as SpineWebComponentSkeleton;
+	return document.querySelector(`spine-skeleton[identifier=${identifier}]`) as SpineWebComponentSkeleton;
 }
 
 export function createSpineWidget (parameters: WidgetAttributes): SpineWebComponentSkeleton {
