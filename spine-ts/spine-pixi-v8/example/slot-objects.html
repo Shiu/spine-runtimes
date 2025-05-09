@@ -23,9 +23,9 @@
         document.body.appendChild(app.canvas);
 
         // Pre-load the skeleton data and atlas. You can also load .json skeleton data.
-        PIXI.Assets.add({alias: "spineboyData", src: "./assets/spineboy-pro.skel" });
-        PIXI.Assets.add({alias: "spineboyAtlas", src: "./assets/spineboy-pma.atlas" });
-        PIXI.Assets.add({alias: "raptor_jaw", src: "./assets/raptor-jaw-tooth.png" });
+        PIXI.Assets.add({alias: "spineboyData", src: "/assets/spineboy-pro.skel" });
+        PIXI.Assets.add({alias: "spineboyAtlas", src: "/assets/spineboy-pma.atlas" });
+        PIXI.Assets.add({alias: "raptor_jaw", src: "/assets/raptor-jaw-tooth.png" });
         await PIXI.Assets.load(["spineboyData", "spineboyAtlas", "raptor_jaw"]);
 
         // Create the spine display object

@@ -23,8 +23,8 @@
         document.body.appendChild(app.canvas);
 
         // Pre-load the skeleton data and atlas. You can also load .json skeleton data.
-        PIXI.Assets.add({alias: "girlData", src: "./assets/celestial-circus-pro.skel"});
-        PIXI.Assets.add({alias: "girlAtlas", src: "./assets/celestial-circus-pma.atlas"});
+        PIXI.Assets.add({alias: "girlData", src: "/assets/celestial-circus-pro.skel"});
+        PIXI.Assets.add({alias: "girlAtlas", src: "/assets/celestial-circus-pma.atlas"});
         await PIXI.Assets.load(["girlData", "girlAtlas"]);
 
         // Create the spine display object

@@ -36,6 +36,8 @@ export class AssetManagerBase implements Disposable {
 	private textureLoader: (image: HTMLImageElement | ImageBitmap) => Texture;
 	private downloader: Downloader;
 	private assets: StringMap<any> = {};
+	private assetsRefCount: StringMap<number> = {};
+	private assetsLoaded: StringMap<Promise<any>> = {};
 	private errors: StringMap<string> = {};
 	private toLoad = 0;
 	private loaded = 0;
@@ -55,6 +57,7 @@ export class AssetManagerBase implements Disposable {
 		this.toLoad--;
 		this.loaded++;
 		this.assets[path] = asset;
+		this.assetsRefCount[path] = (this.assetsRefCount[path] || 0) + 1;
 		if (callback) callback(path, asset);
 	}
 
@@ -89,10 +92,17 @@ export class AssetManagerBase implements Disposable {
 		error: (path: string, message: string) => void = () => { }) {
 		path = this.start(path);
 
-		this.downloader.downloadBinary(path, (data: Uint8Array): void => {
-			this.success(success, path, data);
-		}, (status: number, responseText: string): void => {
-			this.error(error, path, `Couldn't load binary ${path}: status ${status}, ${responseText}`);
+		if (this.reuseAssets(path, success, error)) return;
+
+		this.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
+			this.downloader.downloadBinary(path, (data: Uint8Array): void => {
+				this.success(success, path, data);
+				resolve(data);
+			}, (status: number, responseText: string): void => {
+				const errorMsg = `Couldn't load binary ${path}: status ${status}, ${responseText}`;
+				this.error(error, path, errorMsg);
+				reject(errorMsg);
+			});
 		});
 	}
 
@@ -113,42 +123,76 @@ export class AssetManagerBase implements Disposable {
 		error: (path: string, message: string) => void = () => { }) {
 		path = this.start(path);
 
-		this.downloader.downloadJson(path, (data: object): void => {
-			this.success(success, path, data);
-		}, (status: number, responseText: string): void => {
-			this.error(error, path, `Couldn't load JSON ${path}: status ${status}, ${responseText}`);
+		if (this.reuseAssets(path, success, error)) return;
+
+		this.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
+			this.downloader.downloadJson(path, (data: object): void => {
+				this.success(success, path, data);
+				resolve(data);
+			}, (status: number, responseText: string): void => {
+				const errorMsg = `Couldn't load JSON ${path}: status ${status}, ${responseText}`;
+				this.error(error, path, errorMsg);
+				reject(errorMsg);
+			});
 		});
+	}
+
+	reuseAssets (path: string,
+		success: (path: string, data: any) => void = () => { },
+		error: (path: string, message: string) => void = () => { }) {
+		const loadedStatus = this.assetsLoaded[path];
+		const alreadyExistsOrLoading = loadedStatus !== undefined;
+		if (alreadyExistsOrLoading) {
+			loadedStatus
+				.then(data => this.success(success, path, data))
+				.catch(errorMsg => this.error(error, path, errorMsg));
+		}
+		return alreadyExistsOrLoading;
 	}
 
 	loadTexture (path: string,
 		success: (path: string, texture: Texture) => void = () => { },
 		error: (path: string, message: string) => void = () => { }) {
+
 		path = this.start(path);
 
-		let isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document);
-		let isWebWorker = !isBrowser; // && typeof importScripts !== 'undefined';
-		if (isWebWorker) {
-			fetch(path, { mode: <RequestMode>"cors" }).then((response) => {
-				if (response.ok) return response.blob();
-				this.error(error, path, `Couldn't load image: ${path}`);
-				return null;
-			}).then((blob) => {
-				return blob ? createImageBitmap(blob, { premultiplyAlpha: "none", colorSpaceConversion: "none" }) : null;
-			}).then((bitmap) => {
-				if (bitmap) this.success(success, path, this.textureLoader(bitmap));
-			});
-		} else {
-			let image = new Image();
-			image.crossOrigin = "anonymous";
-			image.onload = () => {
-				this.success(success, path, this.textureLoader(image));
-			};
-			image.onerror = () => {
-				this.error(error, path, `Couldn't load image: ${path}`);
-			};
-			if (this.downloader.rawDataUris[path]) path = this.downloader.rawDataUris[path];
-			image.src = path;
-		}
+		if (this.reuseAssets(path, success, error)) return;
+
+		this.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
+			let isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document);
+			let isWebWorker = !isBrowser; // && typeof importScripts !== 'undefined';
+			if (isWebWorker) {
+				fetch(path, { mode: <RequestMode>"cors" }).then((response) => {
+					if (response.ok) return response.blob();
+					const errorMsg = `Couldn't load image: ${path}`;
+					this.error(error, path, `Couldn't load image: ${path}`);
+					reject(errorMsg);
+				}).then((blob) => {
+					return blob ? createImageBitmap(blob, { premultiplyAlpha: "none", colorSpaceConversion: "none" }) : null;
+				}).then((bitmap) => {
+					if (bitmap) {
+						const texture = this.textureLoader(bitmap)
+						this.success(success, path, texture);
+						resolve(texture);
+					};
+				});
+			} else {
+				let image = new Image();
+				image.crossOrigin = "anonymous";
+				image.onload = () => {
+					const texture = this.textureLoader(image)
+					this.success(success, path, texture);
+					resolve(texture);
+				};
+				image.onerror = () => {
+					const errorMsg = `Couldn't load image: ${path}`;
+					this.error(error, path, errorMsg);
+					reject(errorMsg);
+				};
+				if (this.downloader.rawDataUris[path]) path = this.downloader.rawDataUris[path];
+				image.src = path;
+			}
+		});
 	}
 
 	loadTextureAtlas (path: string,
@@ -160,29 +204,118 @@ export class AssetManagerBase implements Disposable {
 		let parent = index >= 0 ? path.substring(0, index + 1) : "";
 		path = this.start(path);
 
-		this.downloader.downloadText(path, (atlasText: string): void => {
-			try {
-				let atlas = new TextureAtlas(atlasText);
-				let toLoad = atlas.pages.length, abort = false;
-				for (let page of atlas.pages) {
-					this.loadTexture(!fileAlias ? parent + page.name : fileAlias[page.name!],
-						(imagePath: string, texture: Texture) => {
-							if (!abort) {
-								page.setTexture(texture);
-								if (--toLoad == 0) this.success(success, path, atlas);
+		if (this.reuseAssets(path, success, error)) return;
+
+		this.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
+			this.downloader.downloadText(path, (atlasText: string): void => {
+				try {
+					let atlas = new TextureAtlas(atlasText);
+					let toLoad = atlas.pages.length, abort = false;
+					for (let page of atlas.pages) {
+						this.loadTexture(!fileAlias ? parent + page.name : fileAlias[page.name!],
+							(imagePath: string, texture: Texture) => {
+								if (!abort) {
+									page.setTexture(texture);
+									if (--toLoad == 0) {
+										this.success(success, path, atlas);
+										resolve(atlas);
+									}
+								}
+							},
+							(imagePath: string, message: string) => {
+								if (!abort) {
+									const errorMsg = `Couldn't load texture atlas ${path} page image: ${imagePath}`;
+									this.error(error, path, errorMsg);
+									reject(errorMsg);
+								}
+								abort = true;
 							}
-						},
-						(imagePath: string, message: string) => {
-							if (!abort) this.error(error, path, `Couldn't load texture atlas ${path} page image: ${imagePath}`);
-							abort = true;
-						}
-					);
+						);
+					}
+				} catch (e) {
+					const errorMsg = `Couldn't parse texture atlas ${path}: ${(e as any).message}`;
+					this.error(error, path, errorMsg);
+					reject(errorMsg);
 				}
-			} catch (e) {
-				this.error(error, path, `Couldn't parse texture atlas ${path}: ${(e as any).message}`);
-			}
-		}, (status: number, responseText: string): void => {
-			this.error(error, path, `Couldn't load texture atlas ${path}: status ${status}, ${responseText}`);
+			}, (status: number, responseText: string): void => {
+				const errorMsg = `Couldn't load texture atlas ${path}: status ${status}, ${responseText}`;
+				this.error(error, path, errorMsg);
+				reject(errorMsg);
+			});
+		});
+	}
+
+	loadTextureAtlasButNoTextures (path: string,
+		success: (path: string, atlas: TextureAtlas) => void = () => { },
+		error: (path: string, message: string) => void = () => { },
+		fileAlias?: { [keyword: string]: string }
+	) {
+		path = this.start(path);
+
+		if (this.reuseAssets(path, success, error)) return;
+
+		this.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
+			this.downloader.downloadText(path, (atlasText: string): void => {
+				try {
+					const atlas = new TextureAtlas(atlasText);
+					this.success(success, path, atlas);
+					resolve(atlas);
+				} catch (e) {
+					const errorMsg = `Couldn't parse texture atlas ${path}: ${(e as any).message}`;
+					this.error(error, path, errorMsg);
+					reject(errorMsg);
+				}
+			}, (status: number, responseText: string): void => {
+				const errorMsg = `Couldn't load texture atlas ${path}: status ${status}, ${responseText}`;
+				this.error(error, path, errorMsg);
+				reject(errorMsg);
+			});
+		});
+	}
+
+	// Promisified versions of load function
+	async loadBinaryAsync (path: string) {
+		return new Promise((resolve, reject) => {
+			this.loadBinary(path,
+				(_, binary) => resolve(binary),
+				(_, message) => reject(message),
+			);
+		});
+	}
+
+	async loadJsonAsync (path: string) {
+		return new Promise((resolve, reject) => {
+			this.loadJson(path,
+				(_, object) => resolve(object),
+				(_, message) => reject(message),
+			);
+		});
+	}
+
+	async loadTextureAsync (path: string) {
+		return new Promise<Texture>((resolve, reject) => {
+			this.loadTexture(path,
+				(_, texture) => resolve(texture),
+				(_, message) => reject(message),
+			);
+		});
+	}
+
+	async loadTextureAtlasAsync (path: string) {
+		return new Promise((resolve, reject) => {
+			this.loadTextureAtlas(path,
+				(_, atlas) => resolve(atlas),
+				(_, message) => reject(message),
+			);
+		});
+	}
+
+	async loadTextureAtlasButNoTexturesAsync (path: string) {
+		return new Promise<TextureAtlas>((resolve, reject) => {
+			this.loadTextureAtlasButNoTextures(path,
+				(_, atlas) => resolve(atlas),
+				(_, message) => reject(message),
+			);
 		});
 	}
 
@@ -201,17 +334,21 @@ export class AssetManagerBase implements Disposable {
 	remove (path: string) {
 		path = this.pathPrefix + path;
 		let asset = this.assets[path];
-		if ((<any>asset).dispose) (<any>asset).dispose();
+		if (asset.dispose) asset.dispose();
 		delete this.assets[path];
+		delete this.assetsRefCount[path];
+		delete this.assetsLoaded[path];
 		return asset;
 	}
 
 	removeAll () {
-		for (let key in this.assets) {
-			let asset = this.assets[key];
-			if ((<any>asset).dispose) (<any>asset).dispose();
+		for (let path in this.assets) {
+			let asset = this.assets[path];
+			if (asset.dispose) asset.dispose();
 		}
 		this.assets = {};
+		this.assetsLoaded = {};
+		this.assetsRefCount = {};
 	}
 
 	isLoadingComplete (): boolean {
@@ -228,6 +365,13 @@ export class AssetManagerBase implements Disposable {
 
 	dispose () {
 		this.removeAll();
+	}
+
+	// dispose asset only if it's not used by others
+	disposeAsset (path: string) {
+		if (--this.assetsRefCount[path] === 0) {
+			this.remove(path)
+		}
 	}
 
 	hasErrors () {
@@ -280,18 +424,21 @@ export class Downloader {
 
 	downloadText (url: string, success: (data: string) => void, error: (status: number, responseText: string) => void) {
 		if (this.start(url, success, error)) return;
-		if (this.rawDataUris[url]) {
+
+		const rawDataUri = this.rawDataUris[url];
+		// we assume if a "." is included in a raw data uri, it is used to rewrite an asset URL
+		if (rawDataUri && !rawDataUri.includes(".")) {
 			try {
-				let dataUri = this.rawDataUris[url];
-				this.finish(url, 200, this.dataUriToString(dataUri));
+				this.finish(url, 200, this.dataUriToString(rawDataUri));
 			} catch (e) {
 				this.finish(url, 400, JSON.stringify(e));
 			}
 			return;
 		}
+
 		let request = new XMLHttpRequest();
 		request.overrideMimeType("text/html");
-		request.open("GET", url, true);
+		request.open("GET", rawDataUri ? rawDataUri : url, true);
 		let done = () => {
 			this.finish(url, request.status, request.responseText);
 		};
@@ -308,17 +455,20 @@ export class Downloader {
 
 	downloadBinary (url: string, success: (data: Uint8Array) => void, error: (status: number, responseText: string) => void) {
 		if (this.start(url, success, error)) return;
-		if (this.rawDataUris[url]) {
+
+		const rawDataUri = this.rawDataUris[url];
+		// we assume if a "." is included in a raw data uri, it is used to rewrite an asset URL
+		if (rawDataUri && !rawDataUri.includes(".")) {
 			try {
-				let dataUri = this.rawDataUris[url];
-				this.finish(url, 200, this.dataUriToUint8Array(dataUri));
+				this.finish(url, 200, this.dataUriToUint8Array(rawDataUri));
 			} catch (e) {
 				this.finish(url, 400, JSON.stringify(e));
 			}
 			return;
 		}
+
 		let request = new XMLHttpRequest();
-		request.open("GET", url, true);
+		request.open("GET", rawDataUri ? rawDataUri : url, true);
 		request.responseType = "arraybuffer";
 		let onerror = () => {
 			this.finish(url, request.status, request.response);
