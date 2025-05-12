@@ -149,6 +149,8 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 	private lastCanvasBaseWidth = 0;
 	private lastCanvasBaseHeight = 0;
 
+	private zIndex?: number;
+
 	private disposed = false;
 	private loaded = false;
 
@@ -376,6 +378,8 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 				this.parentElement!.appendChild(this);
 			}
 		}
+
+		this.updateZIndexIfNecessary(widget);
 	}
 
 	/**
@@ -998,6 +1002,23 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		}
 
 		this.canvas.style.transform = `translate(${scrollPositionX}px,${scrollPositionY}px)`;
+	}
+
+	private updateZIndexIfNecessary (element: HTMLElement) {
+		let parent: HTMLElement | null = element;
+		let zIndex: undefined | number;
+		do {
+			let currentZIndex = parseInt(parent!.style.zIndex);
+
+			// searching the shallowest z-index
+			if (!isNaN(currentZIndex)) zIndex = currentZIndex;
+			parent = parent.parentElement;
+		} while (parent && parent !== document.body)
+
+		if (zIndex && (!this.zIndex || this.zIndex < zIndex)) {
+			this.zIndex = zIndex;
+			this.div.style.zIndex = `${this.zIndex}`;
+		}
 	}
 
 	/*
