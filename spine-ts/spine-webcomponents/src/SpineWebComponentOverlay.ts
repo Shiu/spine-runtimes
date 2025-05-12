@@ -1008,7 +1008,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		let parent: HTMLElement | null = element;
 		let zIndex: undefined | number;
 		do {
-			let currentZIndex = parseInt(parent!.style.zIndex);
+			let currentZIndex = parseInt(getComputedStyle(parent).zIndex);
 
 			// searching the shallowest z-index
 			if (!isNaN(currentZIndex)) zIndex = currentZIndex;
