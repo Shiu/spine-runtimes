@@ -65,7 +65,7 @@ jobs:
           path: spine-godot/godot/bin/**/*
 
   godot-editor-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
         with:
@@ -161,7 +161,7 @@ jobs:
           path: spine-godot/godot/bin/macos.zip
 
   godot-template-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
         with:
