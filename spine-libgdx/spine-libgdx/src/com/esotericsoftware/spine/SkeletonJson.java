@@ -881,8 +881,6 @@ public class SkeletonJson extends SkeletonLoader {
 					}
 					timelines.add(timeline);
 				}
-				default -> throw new RuntimeException(
-					"Invalid timeline type for a slot: " + timelineMap.name + " (" + slotMap.name + ")");
 				}
 			}
 		}
@@ -916,8 +914,6 @@ public class SkeletonJson extends SkeletonLoader {
 					}
 					timelines.add(timeline);
 				}
-				default -> //
-					throw new RuntimeException("Invalid timeline type for a bone: " + timelineMap.name + " (" + boneMap.name + ")");
 				}
 			}
 		}
