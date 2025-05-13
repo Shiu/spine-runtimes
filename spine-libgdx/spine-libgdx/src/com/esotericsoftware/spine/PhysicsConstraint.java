@@ -110,7 +110,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 			reset(skeleton);
 			// Fall through.
 		case update:
-			float delta = Math.max(skeleton.time - lastTime, 0);
+			float delta = Math.max(skeleton.time - lastTime, 0), aa = remaining;
 			remaining += delta;
 			lastTime = skeleton.time;
 
@@ -171,9 +171,10 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 					a = remaining;
 					if (rotateOrShearX) {
 						mr = (data.rotate + data.shearX) * mix;
-						float rz = rotateLag * Math.max(0, 1 - a / t), r = atan2(dy + ty, dx + tx) - ca - (rotateOffset - rz) * mr;
+						z = rotateLag * Math.max(0, 1 - aa / t);
+						float r = atan2(dy + ty, dx + tx) - ca - (rotateOffset - z) * mr;
 						rotateOffset += (r - (float)Math.ceil(r * invPI2 - 0.5f) * PI2) * i;
-						r = (rotateOffset - rz) * mr + ca;
+						r = (rotateOffset - z) * mr + ca;
 						c = cos(r);
 						s = sin(r);
 						if (scaleX) {
@@ -183,7 +184,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 					} else {
 						c = cos(ca);
 						s = sin(ca);
-						float r = l * bone.getWorldScaleX();
+						float r = l * bone.getWorldScaleX() - scaleLag * Math.max(0, 1 - aa / t);
 						if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
 					}
 					if (a >= t) {
