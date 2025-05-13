@@ -1,1 +1,1 @@
-- [ ] I hereby grant Esoteric Software LLC the non-exclusive, irrevocable right to publish my contribution under the terms of the [Spine Runtimes License Agreement](https://en.esotericsoftware.com/spine-runtimes-license).
+- [ ] I hereby grant Esoteric Software LLC the non-exclusive, irrevocable right to publish my contribution under the terms of the [Spine Runtimes License Agreement](https://esotericsoftware.com/spine-runtimes-license).
