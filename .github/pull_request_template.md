@@ -1,1 +1,1 @@
-- [ ] I hereby grant Esoteric Software LLC the non-exclusive, irrevocable right to publish my contribution under the terms of the [Spine Runtimes License Agreement](https://esotericsoftware.com/spine-runtimes-license).
+* [ ] I confirm this contribution is made under the Esoteric Software LLC [CLA](http://esotericsoftware.com/licenses/cla.txt).
