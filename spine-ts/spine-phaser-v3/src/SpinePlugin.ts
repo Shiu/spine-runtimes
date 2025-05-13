@@ -371,7 +371,7 @@ class SpineAtlasFile extends Phaser.Loader.MultiFile {
 				}
 
 				let basePath = (file.src.match(/^.*\//) ?? "").toString();
-				if(this.loader.path && this.loader.path.length > 0 && basePath.startsWith(this.loader.path))
+				if (this.loader.path && this.loader.path.length > 0 && basePath.startsWith(this.loader.path))
 					basePath = basePath.slice(this.loader.path.length);
 
 				for (var i = 0; i < textures.length; i++) {
