@@ -136,7 +136,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 					float x = setupLength * bone.a, y = setupLength * bone.c;
 					float length = (float)Math.sqrt(x * x + y * y);
 					if (scale) lengths[i] = length;
-					spaces[++i] = (lengthSpacing ? setupLength + spacing : spacing) * length / setupLength;
+					spaces[++i] = (lengthSpacing ? Math.max(0, setupLength + spacing) : spacing) * length / setupLength;
 				}
 			}
 		}
@@ -343,6 +343,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 				p %= pathLength;
 				if (p < 0) p += pathLength;
 				curve = 0;
+				segment = 0;
 			} else if (p < 0) {
 				addBeforePosition(p, world, 0, out, o);
 				continue;
