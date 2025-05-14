@@ -27,16 +27,11 @@
  * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-declare global {
-	var require: any;
-	var PIXI: any;
-}
-
-if (typeof window !== 'undefined' && window.PIXI) {
+if (typeof window !== 'undefined' && (window as any).PIXI) {
 	let prevRequire = window.require;
-	window.require = (x: string) => {
+	(window as any).require = (x: string) => {
 		if (prevRequire) return prevRequire(x);
-		else if (x.startsWith("@pixi/")) return window.PIXI;
+		else if (x.startsWith("@pixi/")) return (window as any).PIXI;
 	}
 }
 

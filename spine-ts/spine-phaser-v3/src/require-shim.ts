@@ -27,12 +27,9 @@
  * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-declare global {
-	var require: any;
-}
 if (typeof window !== 'undefined' && window.Phaser) {
 	let prevRequire = window.require;
-	window.require = (x: string) => {
+	(window as any).require = (x: string) => {
 		if (prevRequire) return prevRequire(x);
 		else if (x === "Phaser") return window.Phaser;
 	}
