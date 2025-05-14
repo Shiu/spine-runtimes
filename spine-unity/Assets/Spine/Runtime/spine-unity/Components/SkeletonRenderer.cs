@@ -680,10 +680,12 @@ namespace Spine.Unity {
 			} else if (materialsChanged) {
 				meshRenderer.sharedMaterials = rendererBuffers.GetUpdatedSharedMaterialsArray();
 			}
-			if (materialsChanged && (this.maskMaterials.AnyMaterialCreated)) {
-				this.maskMaterials = new SpriteMaskInteractionMaterials();
-			}
 
+#if BUILT_IN_SPRITE_MASK_COMPONENT
+			if (materialsChanged && this.maskMaterials.AnyMaterialCreated && meshRenderer != null) {
+				UpdateSpriteMaskMaterials();
+			}
+#endif
 			meshGenerator.FillLateVertexData(currentMesh);
 
 			// STEP 4. The UnityEngine.Mesh is ready. Set it as the MeshFilter's mesh. Store the instructions used for that mesh. ===========
@@ -784,13 +786,49 @@ namespace Spine.Unity {
 		}
 
 #if BUILT_IN_SPRITE_MASK_COMPONENT
+		private void UpdateSpriteMaskMaterials () {
+			if (maskInteraction == SpriteMaskInteraction.None) return;
+			if (maskMaterials.materialsMaskDisabled == null || maskMaterials.materialsMaskDisabled.Length == 0) {
+				maskMaterials = new SpriteMaskInteractionMaterials();
+				return;
+			}
+
+			Material[] maskedMaterials;
+			int maskFunction;
+			if (maskInteraction == SpriteMaskInteraction.VisibleInsideMask) {
+				if (maskMaterials.materialsInsideMask == null || maskMaterials.materialsInsideMask.Length == 0)
+					maskMaterials.materialsInsideMask = new Material[maskMaterials.materialsMaskDisabled.Length];
+				maskedMaterials = maskMaterials.materialsInsideMask;
+
+				maskFunction = (int)STENCIL_COMP_MASKINTERACTION_VISIBLE_INSIDE;
+			} else {
+				if (maskMaterials.materialsOutsideMask == null || maskMaterials.materialsOutsideMask.Length == 0)
+					maskMaterials.materialsOutsideMask = new Material[maskMaterials.materialsMaskDisabled.Length];
+				maskedMaterials = maskMaterials.materialsOutsideMask;
+
+				maskFunction = (int)STENCIL_COMP_MASKINTERACTION_VISIBLE_OUTSIDE;
+			}
+
+			Material[] currentMaterials = meshRenderer.sharedMaterials;
+			for (int c = 0; c < currentMaterials.Length; ++c) {
+				Material currentMaterial = currentMaterials[c];
+				int disabledIndex = System.Array.IndexOf(maskMaterials.materialsMaskDisabled, currentMaterial);
+				if (disabledIndex != -1) {
+					meshRenderer.sharedMaterials[c] = maskedMaterials[disabledIndex];
+				} else {
+					Material newMaterial = new Material(currentMaterial);
+					newMaterial.SetFloat(STENCIL_COMP_PARAM_ID, maskFunction);
+					meshRenderer.sharedMaterials[c] = newMaterial;
+				}
+			}
+		}
+
 		private void AssignSpriteMaskMaterials () {
 #if UNITY_EDITOR
 			if (!Application.isPlaying && !UnityEditor.EditorApplication.isUpdating) {
 				EditorFixStencilCompParameters();
 			}
 #endif
-
 			if (Application.isPlaying) {
 				if (maskInteraction != SpriteMaskInteraction.None && maskMaterials.materialsMaskDisabled.Length == 0)
 					maskMaterials.materialsMaskDisabled = meshRenderer.sharedMaterials;
