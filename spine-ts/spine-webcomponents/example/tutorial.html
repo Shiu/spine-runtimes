@@ -2043,19 +2043,16 @@ skins.forEach((skin, i) => {
         <div class="split" style="width: 100%; flex-direction: column;">
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
-                When the widget (or the parent element) enters the viewport, the callback <code>onScreenFunction</code> is invoked.
-                <br>
-                <br>
-                By default, the callback does two things:
-                <ul>
-                    <li>sets <code>onScreenAtLeastOnce</code> to <code>true</code> when the widget enters the viewport for the first time</li>
-                    <li>if <code>start-when-visible</code> is set, the widget's <code>start</code> method is invoked the first time the widget enters the viewport, and the assets are loaded at that moment.</li>
-                </ul>
-                <br>
-                The assets of the coin below are loaded only when the widget enters the viewport.
-                <br>
-                <br>
-                You can overwrite the <code>onScreenFunction</code> behavior. For example, the raptor below changes its animation every time the widget enters the viewport.
+              When the widget (or its parent element) enters the viewport, two things happen:<br>
+              <ul>
+                <li>the widget's <code>onScreenAtLeastOnce</code> property is set to <code>true</code></li>
+                <li>the widget's <code>onScreenFunction</code> callback is invoked</li>
+              </ul>
+              By default, <code>onScreenFunction</code> invokes the widget's <code>start</code> method if the widget has the <code>start-when-visible</code> attribute set, and this occurs only the first time it enters the viewport.<br>
+              <br>
+              The assets of the coin below are loaded only when the widget enters the viewport.<br>
+              <br>
+              You can override the <code>onScreenFunction</code> behavior. For example, the raptor below changes its animation every time the widget enters the viewport.
             </div>
 
             <div class="skin-grid">
@@ -2078,7 +2075,6 @@ skins.forEach((skin, i) => {
                     <script>
                         (async () => {
                             const raptorWidget = await spine.getSpineWidget("coin-with-raptor").whenReady;
-
                             let raptorWalking = true;
                             raptorWidget.onScreenFunction = widget => {
                                 raptorWalking = !raptorWalking;
@@ -2097,7 +2093,14 @@ skins.forEach((skin, i) => {
                 <script>
                 escapeHTMLandInject(`
 <spine-skeleton
-    identifier="coin"
+    atlas="/assets/coin-pma.atlas"
+    skeleton="/assets/coin-pro.skel"
+    animation="animation"
+    start-when-visible
+></spine-skeleton>
+
+<spine-skeleton
+    identifier="coin-with-raptor"
     atlas="/assets/raptor-pma.atlas"
     skeleton="/assets/raptor-pro.skel"
     animation="walk"

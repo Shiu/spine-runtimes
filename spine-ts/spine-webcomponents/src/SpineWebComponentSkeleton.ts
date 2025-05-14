@@ -566,16 +566,11 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	/**
 	 * A callback invoked each time the element container enters the screen viewport.
 	 * By default, the callback call the {@link start} method the first time the widget
-	 * enters the screen viewport.
+	 * enters the screen viewport and {@link startWhenVisible} is `true`.
 	 */
 	public onScreenFunction: (widget: SpineWebComponentSkeleton) => void = async (widget) => {
-		if (widget.loading && !widget.onScreenAtLeastOnce) {
-			widget.onScreenAtLeastOnce = true;
-
-			if (widget.manualStart && widget.startWhenVisible) {
-				widget.start();
-			}
-		}
+		if (widget.loading && !widget.onScreenAtLeastOnce && widget.manualStart && widget.startWhenVisible)
+			widget.start()
 	}
 
 	/**

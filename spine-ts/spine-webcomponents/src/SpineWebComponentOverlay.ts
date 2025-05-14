@@ -259,6 +259,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 					widget.onScreen = isIntersecting;
 					if (isIntersecting) {
 						widget.onScreenFunction(widget);
+						widget.onScreenAtLeastOnce = true;
 					}
 				}
 			}
