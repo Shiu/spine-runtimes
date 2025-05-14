@@ -353,7 +353,7 @@ public class SkeletonJson extends SkeletonLoader {
 				if (data.spacingMode == SpacingMode.length || data.spacingMode == SpacingMode.fixed) setup.spacing *= scale;
 				setup.mixRotate = constraintMap.getFloat("mixRotate", 1);
 				setup.mixX = constraintMap.getFloat("mixX", 1);
-				setup.mixY = constraintMap.getFloat("mixY", 1);
+				setup.mixY = constraintMap.getFloat("mixY", setup.mixX);
 
 				skeletonData.constraints.add(data);
 			}
