@@ -58,7 +58,11 @@ type UpdateSpineWidgetFunction = (delta: number, skeleton: Skeleton, state: Anim
 export type OffScreenUpdateBehaviourType = "pause" | "update" | "pose";
 export type ModeType = "inside" | "origin";
 export type FitType = "fill" | "width" | "height" | "contain" | "cover" | "none" | "scaleDown";
-export type AnimationsInfo = Record<string, { cycle?: boolean, animations: Array<AnimationsType> }>;
+export type AnimationsInfo = Record<string, {
+	cycle?: boolean,
+	holdDurationLastAnimation?: number;
+	animations: Array<AnimationsType>
+}>;
 export type AnimationsType = { animationName: string | "#EMPTY#", loop?: boolean, delay?: number, mixDuration?: number };
 export type CursorEventType = "down" | "up" | "enter" | "leave" | "move" | "drag";
 export type CursorEventTypesInput = Exclude<CursorEventType, "enter" | "leave">;
@@ -1028,7 +1032,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 			state.data.defaultMix = defaultMix;
 
 			if (animationsInfo) {
-				for (const [trackIndexString, { cycle, animations }] of Object.entries(animationsInfo)) {
+				for (const [trackIndexString, { cycle, animations, holdDurationLastAnimation }] of Object.entries(animationsInfo)) {
 					const cycleFn = () => {
 						const trackIndex = Number(trackIndexString);
 						for (const [index, { animationName, delay, loop, mixDuration }] of animations.entries()) {
@@ -1050,7 +1054,15 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 							if (mixDuration) track.mixDuration = mixDuration;
 
 							if (cycle && index === animations.length - 1) {
-								track.listener = { complete: () => cycleFn() };
+								track.listener = {
+									complete: () => {
+										if (holdDurationLastAnimation)
+											setTimeout(() => cycleFn(), 1000 * holdDurationLastAnimation);
+										else
+											cycleFn();
+										delete track.listener?.complete;
+									}
+								};
 							};
 						}
 					}

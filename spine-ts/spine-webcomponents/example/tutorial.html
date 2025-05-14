@@ -765,10 +765,11 @@
                     <li><code>mixDuration</code>: the mix duration between this animation and the previous one (not used for the first animation on a track)</li>
                 </ol>
 
-                <p>To loop a track once it reaches the end, add the special group <code>[loop, trackNumber]</code>, where:</p>
+                <p>To loop a track once it reaches the end, add the special group <code>[loop, trackNumber, holdDurationLastAnimation]</code>, where:</p>
                 <ul>
                     <li><code>loop</code>: identifies this as a loop instruction</li>
                     <li><code>trackNumber</code>: the number of the track to loop</li>
+                    <li><code>holdDurationLastAnimation</code>: the number of seconds to wait after the last animation is completed before repeating the loop</li>
                 </ul>
 
                 <p>The parameters of the first group on each track are passed to the <code>setAnimation</code> method, while the remaining groups use <code>addAnimation</code>.</p>
