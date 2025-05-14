@@ -330,28 +330,28 @@ public class AnimationState {
 				MixBlend timelineBlend;
 				float alpha;
 				switch (timelineMode[i]) {
-				case SUBSEQUENT:
+				case SUBSEQUENT -> {
 					if (!drawOrder && timeline instanceof DrawOrderTimeline) continue;
 					timelineBlend = blend;
 					alpha = alphaMix;
-					break;
-				case FIRST:
+				}
+				case FIRST -> {
 					timelineBlend = MixBlend.setup;
 					alpha = alphaMix;
-					break;
-				case HOLD_SUBSEQUENT:
+				}
+				case HOLD_SUBSEQUENT -> {
 					timelineBlend = blend;
 					alpha = alphaHold;
-					break;
-				case HOLD_FIRST:
+				}
+				case HOLD_FIRST -> {
 					timelineBlend = MixBlend.setup;
 					alpha = alphaHold;
-					break;
-				default: // HOLD_MIX
+				}
+				default -> { // HOLD_MIX
 					timelineBlend = MixBlend.setup;
 					TrackEntry holdMix = timelineHoldMix[i];
 					alpha = alphaHold * Math.max(0, 1 - holdMix.mixTime / holdMix.mixDuration);
-					break;
+				}
 				}
 				from.totalAlpha += alpha;
 				if (!shortestRotation && timeline instanceof RotateTimeline rotateTimeline) {

@@ -114,7 +114,7 @@ public class MeshAttachment extends VertexAttachment implements HasTextureRegion
 			v = region.getV();
 			float textureWidth = region.getTexture().getWidth(), textureHeight = region.getTexture().getHeight();
 			switch (region.degrees) {
-			case 90:
+			case 90 -> {
 				u -= (region.originalHeight - region.offsetY - region.packedWidth) / textureWidth;
 				v -= (region.originalWidth - region.offsetX - region.packedHeight) / textureHeight;
 				width = region.originalHeight / textureWidth;
@@ -123,8 +123,8 @@ public class MeshAttachment extends VertexAttachment implements HasTextureRegion
 					uvs[i] = u + regionUVs[i + 1] * width;
 					uvs[i + 1] = v + (1 - regionUVs[i]) * height;
 				}
-				return;
-			case 180:
+			}
+			case 180 -> {
 				u -= (region.originalWidth - region.offsetX - region.packedWidth) / textureWidth;
 				v -= region.offsetY / textureHeight;
 				width = region.originalWidth / textureWidth;
@@ -133,8 +133,8 @@ public class MeshAttachment extends VertexAttachment implements HasTextureRegion
 					uvs[i] = u + (1 - regionUVs[i]) * width;
 					uvs[i + 1] = v + (1 - regionUVs[i + 1]) * height;
 				}
-				return;
-			case 270:
+			}
+			case 270 -> {
 				u -= region.offsetY / textureWidth;
 				v -= region.offsetX / textureHeight;
 				width = region.originalHeight / textureWidth;
@@ -143,12 +143,15 @@ public class MeshAttachment extends VertexAttachment implements HasTextureRegion
 					uvs[i] = u + (1 - regionUVs[i + 1]) * width;
 					uvs[i + 1] = v + regionUVs[i] * height;
 				}
-				return;
 			}
-			u -= region.offsetX / textureWidth;
-			v -= (region.originalHeight - region.offsetY - region.packedHeight) / textureHeight;
-			width = region.originalWidth / textureWidth;
-			height = region.originalHeight / textureHeight;
+			default -> {
+				u -= region.offsetX / textureWidth;
+				v -= (region.originalHeight - region.offsetY - region.packedHeight) / textureHeight;
+				width = region.originalWidth / textureWidth;
+				height = region.originalHeight / textureHeight;
+			}
+			}
+			return;
 		} else if (region == null) {
 			u = v = 0;
 			width = height = 1;

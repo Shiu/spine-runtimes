@@ -553,8 +553,8 @@ public class SkeletonBinary extends SkeletonLoader {
 
 		int flags = input.readByte();
 		String name = (flags & 8) != 0 ? input.readStringRef() : attachmentName;
-		switch (AttachmentType.values[flags & 0b111]) {
-		case region: {
+		return switch (AttachmentType.values[flags & 0b111]) {
+		case region -> {
 			String path = (flags & 16) != 0 ? input.readStringRef() : null;
 			int color = (flags & 32) != 0 ? input.readInt() : 0xffffffff;
 			Sequence sequence = (flags & 64) != 0 ? readSequence(input) : null;
@@ -568,7 +568,7 @@ public class SkeletonBinary extends SkeletonLoader {
 
 			if (path == null) path = name;
 			RegionAttachment region = attachmentLoader.newRegionAttachment(skin, name, path, sequence);
-			if (region == null) return null;
+			if (region == null) yield null;
 			region.setPath(path);
 			region.setX(x * scale);
 			region.setY(y * scale);
@@ -580,21 +580,21 @@ public class SkeletonBinary extends SkeletonLoader {
 			Color.rgba8888ToColor(region.getColor(), color);
 			region.setSequence(sequence);
 			if (sequence == null) region.updateRegion();
-			return region;
+			yield region;
 		}
-		case boundingbox: {
+		case boundingbox -> {
 			Vertices vertices = readVertices(input, (flags & 16) != 0);
 			int color = nonessential ? input.readInt() : 0;
 
 			BoundingBoxAttachment box = attachmentLoader.newBoundingBoxAttachment(skin, name);
-			if (box == null) return null;
+			if (box == null) yield null;
 			box.setWorldVerticesLength(vertices.length);
 			box.setVertices(vertices.vertices);
 			box.setBones(vertices.bones);
 			if (nonessential) Color.rgba8888ToColor(box.getColor(), color);
-			return box;
+			yield box;
 		}
-		case mesh: {
+		case mesh -> {
 			String path = (flags & 16) != 0 ? input.readStringRef() : name;
 			int color = (flags & 32) != 0 ? input.readInt() : 0xffffffff;
 			Sequence sequence = (flags & 64) != 0 ? readSequence(input) : null;
@@ -612,7 +612,7 @@ public class SkeletonBinary extends SkeletonLoader {
 			}
 
 			MeshAttachment mesh = attachmentLoader.newMeshAttachment(skin, name, path, sequence);
-			if (mesh == null) return null;
+			if (mesh == null) yield null;
 			mesh.setPath(path);
 			Color.rgba8888ToColor(mesh.getColor(), color);
 			mesh.setBones(vertices.bones);
@@ -628,9 +628,9 @@ public class SkeletonBinary extends SkeletonLoader {
 				mesh.setWidth(width * scale);
 				mesh.setHeight(height * scale);
 			}
-			return mesh;
+			yield mesh;
 		}
-		case linkedmesh: {
+		case linkedmesh -> {
 			String path = (flags & 16) != 0 ? input.readStringRef() : name;
 			int color = (flags & 32) != 0 ? input.readInt() : 0xffffffff;
 			Sequence sequence = (flags & 64) != 0 ? readSequence(input) : null;
@@ -644,7 +644,7 @@ public class SkeletonBinary extends SkeletonLoader {
 			}
 
 			MeshAttachment mesh = attachmentLoader.newMeshAttachment(skin, name, path, sequence);
-			if (mesh == null) return null;
+			if (mesh == null) yield null;
 			mesh.setPath(path);
 			Color.rgba8888ToColor(mesh.getColor(), color);
 			mesh.setSequence(sequence);
@@ -653,9 +653,9 @@ public class SkeletonBinary extends SkeletonLoader {
 				mesh.setHeight(height * scale);
 			}
 			linkedMeshes.add(new LinkedMesh(mesh, skinIndex, slotIndex, parent, inheritTimelines));
-			return mesh;
+			yield mesh;
 		}
-		case path: {
+		case path -> {
 			boolean closed = (flags & 16) != 0;
 			boolean constantSpeed = (flags & 32) != 0;
 			Vertices vertices = readVertices(input, (flags & 64) != 0);
@@ -665,7 +665,7 @@ public class SkeletonBinary extends SkeletonLoader {
 			int color = nonessential ? input.readInt() : 0;
 
 			PathAttachment path = attachmentLoader.newPathAttachment(skin, name);
-			if (path == null) return null;
+			if (path == null) yield null;
 			path.setClosed(closed);
 			path.setConstantSpeed(constantSpeed);
 			path.setWorldVerticesLength(vertices.length);
@@ -673,37 +673,38 @@ public class SkeletonBinary extends SkeletonLoader {
 			path.setBones(vertices.bones);
 			path.setLengths(lengths);
 			if (nonessential) Color.rgba8888ToColor(path.getColor(), color);
-			return path;
+			yield path;
 		}
-		case point: {
+		case point -> {
 			float rotation = input.readFloat();
 			float x = input.readFloat();
 			float y = input.readFloat();
 			int color = nonessential ? input.readInt() : 0;
 
 			PointAttachment point = attachmentLoader.newPointAttachment(skin, name);
-			if (point == null) return null;
+			if (point == null) yield null;
 			point.setX(x * scale);
 			point.setY(y * scale);
 			point.setRotation(rotation);
 			if (nonessential) Color.rgba8888ToColor(point.getColor(), color);
-			return point;
+			yield point;
 		}
-		case clipping:
+		case clipping -> {
 			int endSlotIndex = input.readInt(true);
 			Vertices vertices = readVertices(input, (flags & 16) != 0);
 			int color = nonessential ? input.readInt() : 0;
 
 			ClippingAttachment clip = attachmentLoader.newClippingAttachment(skin, name);
-			if (clip == null) return null;
+			if (clip == null) yield null;
 			clip.setEndSlot(skeletonData.slots.items[endSlotIndex]);
 			clip.setWorldVerticesLength(vertices.length);
 			clip.setVertices(vertices.vertices);
 			clip.setBones(vertices.bones);
 			if (nonessential) Color.rgba8888ToColor(clip.getColor(), color);
-			return clip;
+			yield clip;
 		}
-		return null;
+		default -> null;
+		};
 	}
 
 	private Sequence readSequence (SkeletonInput input) throws IOException {

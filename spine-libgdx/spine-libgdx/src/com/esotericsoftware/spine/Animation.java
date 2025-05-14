@@ -411,25 +411,23 @@ public class Animation {
 			}
 
 			int curveType = (int)curves[i >> 1];
-			switch (curveType) {
-			case LINEAR:
+			return switch (curveType) {
+			case LINEAR -> {
 				float before = frames[i], value = frames[i + VALUE];
-				return value + (time - before) / (frames[i + ENTRIES] - before) * (frames[i + ENTRIES + VALUE] - value);
-			case STEPPED:
-				return frames[i + VALUE];
+				yield value + (time - before) / (frames[i + ENTRIES] - before) * (frames[i + ENTRIES + VALUE] - value);
 			}
-			return getBezierValue(time, i, VALUE, curveType - BEZIER);
+			case STEPPED -> frames[i + VALUE];
+			default -> getBezierValue(time, i, VALUE, curveType - BEZIER);
+			};
 		}
 
 		public float getRelativeValue (float time, float alpha, MixBlend blend, float current, float setup) {
 			if (time < frames[0]) {
-				switch (blend) {
-				case setup:
-					return setup;
-				case first:
-					return current + (setup - current) * alpha;
-				}
-				return current;
+				return switch (blend) {
+				case setup -> setup;
+				case first -> current + (setup - current) * alpha;
+				default -> current;
+				};
 			}
 			float value = getCurveValue(time);
 			switch (blend) {
@@ -444,13 +442,11 @@ public class Animation {
 
 		public float getAbsoluteValue (float time, float alpha, MixBlend blend, float current, float setup) {
 			if (time < frames[0]) {
-				switch (blend) {
-				case setup:
-					return setup;
-				case first:
-					return current + (setup - current) * alpha;
-				}
-				return current;
+				return switch (blend) {
+				case setup -> setup;
+				case first -> current + (setup - current) * alpha;
+				default -> current;
+				};
 			}
 			float value = getCurveValue(time);
 			if (blend == MixBlend.setup) return setup + (value - setup) * alpha;
@@ -459,13 +455,11 @@ public class Animation {
 
 		public float getAbsoluteValue (float time, float alpha, MixBlend blend, float current, float setup, float value) {
 			if (time < frames[0]) {
-				switch (blend) {
-				case setup:
-					return setup;
-				case first:
-					return current + (setup - current) * alpha;
-				}
-				return current;
+				return switch (blend) {
+				case setup -> setup;
+				case first -> current + (setup - current) * alpha;
+				default -> current;
+				};
 			}
 			if (blend == MixBlend.setup) return setup + (value - setup) * alpha;
 			return current + (value - current) * alpha;
@@ -474,19 +468,14 @@ public class Animation {
 		public float getScaleValue (float time, float alpha, MixBlend blend, MixDirection direction, float current, float setup) {
 			float[] frames = this.frames;
 			if (time < frames[0]) {
-				switch (blend) {
-				case setup:
-					return setup;
-				case first:
-					return current + (setup - current) * alpha;
-				}
-				return current;
+				return switch (blend) {
+				case setup -> setup;
+				case first -> current + (setup - current) * alpha;
+				default -> current;
+				};
 			}
 			float value = getCurveValue(time) * setup;
-			if (alpha == 1) {
-				if (blend == add) return current + value - setup;
-				return value;
-			}
+			if (alpha == 1) return blend == add ? current + value - setup : value;
 			// Mixing out uses sign of setup or current pose, else use sign of key.
 			if (direction == out) {
 				switch (blend) {
@@ -604,13 +593,14 @@ public class Animation {
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				switch (blend) {
-				case setup:
+				case setup -> {
 					pose.x = setup.x;
 					pose.y = setup.y;
-					return;
-				case first:
+				}
+				case first -> {
 					pose.x += (setup.x - pose.x) * alpha;
 					pose.y += (setup.y - pose.y) * alpha;
+				}
 				}
 				return;
 			}
@@ -618,36 +608,37 @@ public class Animation {
 			float x, y;
 			int i = search(frames, time, ENTRIES), curveType = (int)curves[i / ENTRIES];
 			switch (curveType) {
-			case LINEAR:
+			case LINEAR -> {
 				float before = frames[i];
 				x = frames[i + VALUE1];
 				y = frames[i + VALUE2];
 				float t = (time - before) / (frames[i + ENTRIES] - before);
 				x += (frames[i + ENTRIES + VALUE1] - x) * t;
 				y += (frames[i + ENTRIES + VALUE2] - y) * t;
-				break;
-			case STEPPED:
+			}
+			case STEPPED -> {
 				x = frames[i + VALUE1];
 				y = frames[i + VALUE2];
-				break;
-			default:
+			}
+			default -> {
 				x = getBezierValue(time, i, VALUE1, curveType - BEZIER);
 				y = getBezierValue(time, i, VALUE2, curveType + BEZIER_SIZE - BEZIER);
 			}
+			}
 
 			switch (blend) {
-			case setup:
+			case setup -> {
 				pose.x = setup.x + x * alpha;
 				pose.y = setup.y + y * alpha;
-				break;
-			case first:
-			case replace:
+			}
+			case first, replace -> {
 				pose.x += (setup.x + x - pose.x) * alpha;
 				pose.y += (setup.y + y - pose.y) * alpha;
-				break;
-			case add:
+			}
+			case add -> {
 				pose.x += x * alpha;
 				pose.y += y * alpha;
+			}
 			}
 		}
 	}
@@ -684,13 +675,14 @@ public class Animation {
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				switch (blend) {
-				case setup:
+				case setup -> {
 					pose.scaleX = setup.scaleX;
 					pose.scaleY = setup.scaleY;
-					return;
-				case first:
+				}
+				case first -> {
 					pose.scaleX += (setup.scaleX - pose.scaleX) * alpha;
 					pose.scaleY += (setup.scaleY - pose.scaleY) * alpha;
+				}
 				}
 				return;
 			}
@@ -698,21 +690,22 @@ public class Animation {
 			float x, y;
 			int i = search(frames, time, ENTRIES), curveType = (int)curves[i / ENTRIES];
 			switch (curveType) {
-			case LINEAR:
+			case LINEAR -> {
 				float before = frames[i];
 				x = frames[i + VALUE1];
 				y = frames[i + VALUE2];
 				float t = (time - before) / (frames[i + ENTRIES] - before);
 				x += (frames[i + ENTRIES + VALUE1] - x) * t;
 				y += (frames[i + ENTRIES + VALUE2] - y) * t;
-				break;
-			case STEPPED:
+			}
+			case STEPPED -> {
 				x = frames[i + VALUE1];
 				y = frames[i + VALUE2];
-				break;
-			default:
+			}
+			default -> {
 				x = getBezierValue(time, i, VALUE1, curveType - BEZIER);
 				y = getBezierValue(time, i, VALUE2, curveType + BEZIER_SIZE - BEZIER);
+			}
 			}
 			x *= setup.scaleX;
 			y *= setup.scaleY;
@@ -730,41 +723,41 @@ public class Animation {
 				float bx, by;
 				if (direction == out) {
 					switch (blend) {
-					case setup:
+					case setup -> {
 						bx = setup.scaleX;
 						by = setup.scaleY;
 						pose.scaleX = bx + (Math.abs(x) * Math.signum(bx) - bx) * alpha;
 						pose.scaleY = by + (Math.abs(y) * Math.signum(by) - by) * alpha;
-						break;
-					case first:
-					case replace:
+					}
+					case first, replace -> {
 						bx = pose.scaleX;
 						by = pose.scaleY;
 						pose.scaleX = bx + (Math.abs(x) * Math.signum(bx) - bx) * alpha;
 						pose.scaleY = by + (Math.abs(y) * Math.signum(by) - by) * alpha;
-						break;
-					case add:
+					}
+					case add -> {
 						pose.scaleX += (x - setup.scaleX) * alpha;
 						pose.scaleY += (y - setup.scaleY) * alpha;
 					}
+					}
 				} else {
 					switch (blend) {
-					case setup:
+					case setup -> {
 						bx = Math.abs(setup.scaleX) * Math.signum(x);
 						by = Math.abs(setup.scaleY) * Math.signum(y);
 						pose.scaleX = bx + (x - bx) * alpha;
 						pose.scaleY = by + (y - by) * alpha;
-						break;
-					case first:
-					case replace:
+					}
+					case first, replace -> {
 						bx = Math.abs(pose.scaleX) * Math.signum(x);
 						by = Math.abs(pose.scaleY) * Math.signum(y);
 						pose.scaleX = bx + (x - bx) * alpha;
 						pose.scaleY = by + (y - by) * alpha;
-						break;
-					case add:
+					}
+					case add -> {
 						pose.scaleX += (x - setup.scaleX) * alpha;
 						pose.scaleY += (y - setup.scaleY) * alpha;
+					}
 					}
 				}
 			}
@@ -803,13 +796,14 @@ public class Animation {
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				switch (blend) {
-				case setup:
+				case setup -> {
 					pose.shearX = setup.shearX;
 					pose.shearY = setup.shearY;
-					return;
-				case first:
+				}
+				case first -> {
 					pose.shearX += (setup.shearX - pose.shearX) * alpha;
 					pose.shearY += (setup.shearY - pose.shearY) * alpha;
+				}
 				}
 				return;
 			}
@@ -817,36 +811,37 @@ public class Animation {
 			float x, y;
 			int i = search(frames, time, ENTRIES), curveType = (int)curves[i / ENTRIES];
 			switch (curveType) {
-			case LINEAR:
+			case LINEAR -> {
 				float before = frames[i];
 				x = frames[i + VALUE1];
 				y = frames[i + VALUE2];
 				float t = (time - before) / (frames[i + ENTRIES] - before);
 				x += (frames[i + ENTRIES + VALUE1] - x) * t;
 				y += (frames[i + ENTRIES + VALUE2] - y) * t;
-				break;
-			case STEPPED:
+			}
+			case STEPPED -> {
 				x = frames[i + VALUE1];
 				y = frames[i + VALUE2];
-				break;
-			default:
+			}
+			default -> {
 				x = getBezierValue(time, i, VALUE1, curveType - BEZIER);
 				y = getBezierValue(time, i, VALUE2, curveType + BEZIER_SIZE - BEZIER);
 			}
+			}
 
 			switch (blend) {
-			case setup:
+			case setup -> {
 				pose.shearX = setup.shearX + x * alpha;
 				pose.shearY = setup.shearY + y * alpha;
-				break;
-			case first:
-			case replace:
+			}
+			case first, replace -> {
 				pose.shearX += (setup.shearX + x - pose.shearX) * alpha;
 				pose.shearY += (setup.shearY + y - pose.shearY) * alpha;
-				break;
-			case add:
+			}
+			case add -> {
 				pose.shearX += x * alpha;
 				pose.shearY += y * alpha;
+			}
 			}
 		}
 	}
@@ -977,12 +972,9 @@ public class Animation {
 			if (time < frames[0]) {
 				Color setup = slot.data.setup.color;
 				switch (blend) {
-				case setup:
-					color.set(setup);
-					return;
-				case first:
-					color.add((setup.r - color.r) * alpha, (setup.g - color.g) * alpha, (setup.b - color.b) * alpha,
-						(setup.a - color.a) * alpha);
+				case setup -> color.set(setup);
+				case first -> color.add((setup.r - color.r) * alpha, (setup.g - color.g) * alpha, (setup.b - color.b) * alpha,
+					(setup.a - color.a) * alpha);
 				}
 				return;
 			}
@@ -990,7 +982,7 @@ public class Animation {
 			float r, g, b, a;
 			int i = search(frames, time, ENTRIES), curveType = (int)curves[i / ENTRIES];
 			switch (curveType) {
-			case LINEAR:
+			case LINEAR -> {
 				float before = frames[i];
 				r = frames[i + R];
 				g = frames[i + G];
@@ -1001,18 +993,19 @@ public class Animation {
 				g += (frames[i + ENTRIES + G] - g) * t;
 				b += (frames[i + ENTRIES + B] - b) * t;
 				a += (frames[i + ENTRIES + A] - a) * t;
-				break;
-			case STEPPED:
+			}
+			case STEPPED -> {
 				r = frames[i + R];
 				g = frames[i + G];
 				b = frames[i + B];
 				a = frames[i + A];
-				break;
-			default:
+			}
+			default -> {
 				r = getBezierValue(time, i, R, curveType - BEZIER);
 				g = getBezierValue(time, i, G, curveType + BEZIER_SIZE - BEZIER);
 				b = getBezierValue(time, i, B, curveType + BEZIER_SIZE * 2 - BEZIER);
 				a = getBezierValue(time, i, A, curveType + BEZIER_SIZE * 3 - BEZIER);
+			}
 			}
 
 			if (alpha == 1)
@@ -1054,15 +1047,16 @@ public class Animation {
 			if (time < frames[0]) {
 				Color setup = slot.data.setup.color;
 				switch (blend) {
-				case setup:
+				case setup -> {
 					color.r = setup.r;
 					color.g = setup.g;
 					color.b = setup.b;
-					return;
-				case first:
+				}
+				case first -> {
 					color.r += (setup.r - color.r) * alpha;
 					color.g += (setup.g - color.g) * alpha;
 					color.b += (setup.b - color.b) * alpha;
+				}
 				}
 				return;
 			}
@@ -1070,7 +1064,7 @@ public class Animation {
 			float r, g, b;
 			int i = search(frames, time, ENTRIES), curveType = (int)curves[i >> 2];
 			switch (curveType) {
-			case LINEAR:
+			case LINEAR -> {
 				float before = frames[i];
 				r = frames[i + R];
 				g = frames[i + G];
@@ -1079,16 +1073,17 @@ public class Animation {
 				r += (frames[i + ENTRIES + R] - r) * t;
 				g += (frames[i + ENTRIES + G] - g) * t;
 				b += (frames[i + ENTRIES + B] - b) * t;
-				break;
-			case STEPPED:
+			}
+			case STEPPED -> {
 				r = frames[i + R];
 				g = frames[i + G];
 				b = frames[i + B];
-				break;
-			default:
+			}
+			default -> {
 				r = getBezierValue(time, i, R, curveType - BEZIER);
 				g = getBezierValue(time, i, G, curveType + BEZIER_SIZE - BEZIER);
 				b = getBezierValue(time, i, B, curveType + BEZIER_SIZE * 2 - BEZIER);
+			}
 			}
 
 			if (alpha == 1) {
@@ -1133,11 +1128,8 @@ public class Animation {
 			if (time < frames[0]) {
 				Color setup = slot.data.setup.color;
 				switch (blend) {
-				case setup:
-					color.a = setup.a;
-					return;
-				case first:
-					color.a += (setup.a - color.a) * alpha;
+				case setup -> color.a = setup.a;
+				case first -> color.a += (setup.a - color.a) * alpha;
 				}
 				return;
 			}
@@ -1190,18 +1182,19 @@ public class Animation {
 				SlotPose setup = slot.data.setup;
 				Color setupLight = setup.color, setupDark = setup.darkColor;
 				switch (blend) {
-				case setup:
+				case setup -> {
 					light.set(setupLight);
 					dark.r = setupDark.r;
 					dark.g = setupDark.g;
 					dark.b = setupDark.b;
-					return;
-				case first:
+				}
+				case first -> {
 					light.add((setupLight.r - light.r) * alpha, (setupLight.g - light.g) * alpha, (setupLight.b - light.b) * alpha,
 						(setupLight.a - light.a) * alpha);
 					dark.r += (setupDark.r - dark.r) * alpha;
 					dark.g += (setupDark.g - dark.g) * alpha;
 					dark.b += (setupDark.b - dark.b) * alpha;
+				}
 				}
 				return;
 			}
@@ -1209,7 +1202,7 @@ public class Animation {
 			float r, g, b, a, r2, g2, b2;
 			int i = search(frames, time, ENTRIES), curveType = (int)curves[i >> 3];
 			switch (curveType) {
-			case LINEAR:
+			case LINEAR -> {
 				float before = frames[i];
 				r = frames[i + R];
 				g = frames[i + G];
@@ -1226,8 +1219,8 @@ public class Animation {
 				r2 += (frames[i + ENTRIES + R2] - r2) * t;
 				g2 += (frames[i + ENTRIES + G2] - g2) * t;
 				b2 += (frames[i + ENTRIES + B2] - b2) * t;
-				break;
-			case STEPPED:
+			}
+			case STEPPED -> {
 				r = frames[i + R];
 				g = frames[i + G];
 				b = frames[i + B];
@@ -1235,8 +1228,8 @@ public class Animation {
 				r2 = frames[i + R2];
 				g2 = frames[i + G2];
 				b2 = frames[i + B2];
-				break;
-			default:
+			}
+			default -> {
 				r = getBezierValue(time, i, R, curveType - BEZIER);
 				g = getBezierValue(time, i, G, curveType + BEZIER_SIZE - BEZIER);
 				b = getBezierValue(time, i, B, curveType + BEZIER_SIZE * 2 - BEZIER);
@@ -1244,6 +1237,7 @@ public class Animation {
 				r2 = getBezierValue(time, i, R2, curveType + BEZIER_SIZE * 4 - BEZIER);
 				g2 = getBezierValue(time, i, G2, curveType + BEZIER_SIZE * 5 - BEZIER);
 				b2 = getBezierValue(time, i, B2, curveType + BEZIER_SIZE * 6 - BEZIER);
+			}
 			}
 
 			if (alpha == 1) {
@@ -1304,15 +1298,15 @@ public class Animation {
 				SlotPose setup = slot.data.setup;
 				Color setupLight = setup.color, setupDark = setup.darkColor;
 				switch (blend) {
-				case setup:
+				case setup -> {
 					light.r = setupLight.r;
 					light.g = setupLight.g;
 					light.b = setupLight.b;
 					dark.r = setupDark.r;
 					dark.g = setupDark.g;
 					dark.b = setupDark.b;
-					return;
-				case first:
+				}
+				case first -> {
 					light.r += (setupLight.r - light.r) * alpha;
 					light.g += (setupLight.g - light.g) * alpha;
 					light.b += (setupLight.b - light.b) * alpha;
@@ -1320,13 +1314,14 @@ public class Animation {
 					dark.g += (setupDark.g - dark.g) * alpha;
 					dark.b += (setupDark.b - dark.b) * alpha;
 				}
+				}
 				return;
 			}
 
 			float r, g, b, r2, g2, b2;
 			int i = search(frames, time, ENTRIES), curveType = (int)curves[i / ENTRIES];
 			switch (curveType) {
-			case LINEAR:
+			case LINEAR -> {
 				float before = frames[i];
 				r = frames[i + R];
 				g = frames[i + G];
@@ -1341,22 +1336,23 @@ public class Animation {
 				r2 += (frames[i + ENTRIES + R2] - r2) * t;
 				g2 += (frames[i + ENTRIES + G2] - g2) * t;
 				b2 += (frames[i + ENTRIES + B2] - b2) * t;
-				break;
-			case STEPPED:
+			}
+			case STEPPED -> {
 				r = frames[i + R];
 				g = frames[i + G];
 				b = frames[i + B];
 				r2 = frames[i + R2];
 				g2 = frames[i + G2];
 				b2 = frames[i + B2];
-				break;
-			default:
+			}
+			default -> {
 				r = getBezierValue(time, i, R, curveType - BEZIER);
 				g = getBezierValue(time, i, G, curveType + BEZIER_SIZE - BEZIER);
 				b = getBezierValue(time, i, B, curveType + BEZIER_SIZE * 2 - BEZIER);
 				r2 = getBezierValue(time, i, R2, curveType + BEZIER_SIZE * 3 - BEZIER);
 				g2 = getBezierValue(time, i, G2, curveType + BEZIER_SIZE * 4 - BEZIER);
 				b2 = getBezierValue(time, i, B2, curveType + BEZIER_SIZE * 5 - BEZIER);
+			}
 			}
 
 			if (alpha == 1) {
@@ -1545,10 +1541,8 @@ public class Animation {
 			float[] frames = this.frames;
 			if (time < frames[0]) {
 				switch (blend) {
-				case setup:
-					deformArray.clear();
-					return;
-				case first:
+				case setup -> deformArray.clear();
+				case first -> {
 					if (alpha == 1) {
 						deformArray.clear();
 						return;
@@ -1563,6 +1557,7 @@ public class Animation {
 						for (int i = 0; i < vertexCount; i++)
 							deform[i] *= alpha;
 					}
+				}
 				}
 				return;
 			}
@@ -1585,7 +1580,7 @@ public class Animation {
 						arraycopy(lastVertices, 0, deform, 0, vertexCount);
 				} else {
 					switch (blend) {
-					case setup: {
+					case setup -> {
 						if (vertexAttachment.getBones() == null) { // Unweighted vertex positions, with alpha.
 							float[] setupVertices = vertexAttachment.getVertices();
 							for (int i = 0; i < vertexCount; i++) {
@@ -1596,14 +1591,12 @@ public class Animation {
 							for (int i = 0; i < vertexCount; i++)
 								deform[i] = lastVertices[i] * alpha;
 						}
-						break;
 					}
-					case first:
-					case replace: // Vertex positions or deform offsets, with alpha.
+					case first, replace -> { // Vertex positions or deform offsets, with alpha.
 						for (int i = 0; i < vertexCount; i++)
 							deform[i] += (lastVertices[i] - deform[i]) * alpha;
-						break;
-					case add:
+					}
+					case add -> {
 						if (vertexAttachment.getBones() == null) { // Unweighted vertex positions, no alpha.
 							float[] setupVertices = vertexAttachment.getVertices();
 							for (int i = 0; i < vertexCount; i++)
@@ -1612,6 +1605,7 @@ public class Animation {
 							for (int i = 0; i < vertexCount; i++)
 								deform[i] += lastVertices[i] * alpha;
 						}
+					}
 					}
 				}
 				return;
@@ -1646,7 +1640,7 @@ public class Animation {
 				}
 			} else {
 				switch (blend) {
-				case setup: {
+				case setup -> {
 					if (vertexAttachment.getBones() == null) { // Unweighted vertex positions, with alpha.
 						float[] setupVertices = vertexAttachment.getVertices();
 						for (int i = 0; i < vertexCount; i++) {
@@ -1659,16 +1653,14 @@ public class Animation {
 							deform[i] = (prev + (nextVertices[i] - prev) * percent) * alpha;
 						}
 					}
-					break;
 				}
-				case first:
-				case replace: // Vertex positions or deform offsets, with alpha.
+				case first, replace -> {// Vertex positions or deform offsets, with alpha.
 					for (int i = 0; i < vertexCount; i++) {
 						float prev = prevVertices[i];
 						deform[i] += (prev + (nextVertices[i] - prev) * percent - deform[i]) * alpha;
 					}
-					break;
-				case add:
+				}
+				case add -> {
 					if (vertexAttachment.getBones() == null) { // Unweighted vertex positions, with alpha.
 						float[] setupVertices = vertexAttachment.getVertices();
 						for (int i = 0; i < vertexCount; i++) {
@@ -1681,6 +1673,7 @@ public class Animation {
 							deform[i] += (prev + (nextVertices[i] - prev) * percent) * alpha;
 						}
 					}
+				}
 				}
 			}
 		}
@@ -1759,28 +1752,20 @@ public class Animation {
 			if (mode != SequenceMode.hold) {
 				index += (time - before) / delay + 0.0001f;
 				switch (mode) {
-				case once:
-					index = Math.min(count - 1, index);
-					break;
-				case loop:
-					index %= count;
-					break;
-				case pingpong: {
+				case once -> index = Math.min(count - 1, index);
+				case loop -> index %= count;
+				case pingpong -> {
 					int n = (count << 1) - 2;
 					index = n == 0 ? 0 : index % n;
 					if (index >= count) index = n - index;
-					break;
 				}
-				case onceReverse:
-					index = Math.max(count - 1 - index, 0);
-					break;
-				case loopReverse:
-					index = count - 1 - (index % count);
-					break;
-				case pingpongReverse:
+				case onceReverse -> index = Math.max(count - 1 - index, 0);
+				case loopReverse -> index = count - 1 - (index % count);
+				case pingpongReverse -> {
 					int n = (count << 1) - 2;
 					index = n == 0 ? 0 : (index + count - 1) % n;
 					if (index >= count) index = n - index;
+				}
 				}
 			}
 			pose.setSequenceIndex(index);
@@ -1955,19 +1940,20 @@ public class Animation {
 			if (time < frames[0]) {
 				IkConstraintPose setup = constraint.data.setup;
 				switch (blend) {
-				case setup:
+				case setup -> {
 					pose.mix = setup.mix;
 					pose.softness = setup.softness;
 					pose.bendDirection = setup.bendDirection;
 					pose.compress = setup.compress;
 					pose.stretch = setup.stretch;
-					return;
-				case first:
+				}
+				case first -> {
 					pose.mix += (setup.mix - pose.mix) * alpha;
 					pose.softness += (setup.softness - pose.softness) * alpha;
 					pose.bendDirection = setup.bendDirection;
 					pose.compress = setup.compress;
 					pose.stretch = setup.stretch;
+				}
 				}
 				return;
 			}
@@ -1975,21 +1961,22 @@ public class Animation {
 			float mix, softness;
 			int i = search(frames, time, ENTRIES), curveType = (int)curves[i / ENTRIES];
 			switch (curveType) {
-			case LINEAR:
+			case LINEAR -> {
 				float before = frames[i];
 				mix = frames[i + MIX];
 				softness = frames[i + SOFTNESS];
 				float t = (time - before) / (frames[i + ENTRIES] - before);
 				mix += (frames[i + ENTRIES + MIX] - mix) * t;
 				softness += (frames[i + ENTRIES + SOFTNESS] - softness) * t;
-				break;
-			case STEPPED:
+			}
+			case STEPPED -> {
 				mix = frames[i + MIX];
 				softness = frames[i + SOFTNESS];
-				break;
-			default:
+			}
+			default -> {
 				mix = getBezierValue(time, i, MIX, curveType - BEZIER);
 				softness = getBezierValue(time, i, SOFTNESS, curveType + BEZIER_SIZE - BEZIER);
+			}
 			}
 
 			if (blend == MixBlend.setup) {
@@ -2065,15 +2052,15 @@ public class Animation {
 			if (time < frames[0]) {
 				TransformConstraintPose setup = constraint.data.setup;
 				switch (blend) {
-				case setup:
+				case setup -> {
 					pose.mixRotate = setup.mixRotate;
 					pose.mixX = setup.mixX;
 					pose.mixY = setup.mixY;
 					pose.mixScaleX = setup.mixScaleX;
 					pose.mixScaleY = setup.mixScaleY;
 					pose.mixShearY = setup.mixShearY;
-					return;
-				case first:
+				}
+				case first -> {
 					pose.mixRotate += (setup.mixRotate - pose.mixRotate) * alpha;
 					pose.mixX += (setup.mixX - pose.mixX) * alpha;
 					pose.mixY += (setup.mixY - pose.mixY) * alpha;
@@ -2081,13 +2068,14 @@ public class Animation {
 					pose.mixScaleY += (setup.mixScaleY - pose.mixScaleY) * alpha;
 					pose.mixShearY += (setup.mixShearY - pose.mixShearY) * alpha;
 				}
+				}
 				return;
 			}
 
 			float rotate, x, y, scaleX, scaleY, shearY;
 			int i = search(frames, time, ENTRIES), curveType = (int)curves[i / ENTRIES];
 			switch (curveType) {
-			case LINEAR:
+			case LINEAR -> {
 				float before = frames[i];
 				rotate = frames[i + ROTATE];
 				x = frames[i + X];
@@ -2102,22 +2090,23 @@ public class Animation {
 				scaleX += (frames[i + ENTRIES + SCALEX] - scaleX) * t;
 				scaleY += (frames[i + ENTRIES + SCALEY] - scaleY) * t;
 				shearY += (frames[i + ENTRIES + SHEARY] - shearY) * t;
-				break;
-			case STEPPED:
+			}
+			case STEPPED -> {
 				rotate = frames[i + ROTATE];
 				x = frames[i + X];
 				y = frames[i + Y];
 				scaleX = frames[i + SCALEX];
 				scaleY = frames[i + SCALEY];
 				shearY = frames[i + SHEARY];
-				break;
-			default:
+			}
+			default -> {
 				rotate = getBezierValue(time, i, ROTATE, curveType - BEZIER);
 				x = getBezierValue(time, i, X, curveType + BEZIER_SIZE - BEZIER);
 				y = getBezierValue(time, i, Y, curveType + BEZIER_SIZE * 2 - BEZIER);
 				scaleX = getBezierValue(time, i, SCALEX, curveType + BEZIER_SIZE * 3 - BEZIER);
 				scaleY = getBezierValue(time, i, SCALEY, curveType + BEZIER_SIZE * 4 - BEZIER);
 				shearY = getBezierValue(time, i, SHEARY, curveType + BEZIER_SIZE * 5 - BEZIER);
+			}
 			}
 
 			if (blend == setup) {
@@ -2229,15 +2218,16 @@ public class Animation {
 			if (time < frames[0]) {
 				PathConstraintPose setup = constraint.data.setup;
 				switch (blend) {
-				case setup:
+				case setup -> {
 					pose.mixRotate = setup.mixRotate;
 					pose.mixX = setup.mixX;
 					pose.mixY = setup.mixY;
-					return;
-				case first:
+				}
+				case first -> {
 					pose.mixRotate += (setup.mixRotate - pose.mixRotate) * alpha;
 					pose.mixX += (setup.mixX - pose.mixX) * alpha;
 					pose.mixY += (setup.mixY - pose.mixY) * alpha;
+				}
 				}
 				return;
 			}
@@ -2245,7 +2235,7 @@ public class Animation {
 			float rotate, x, y;
 			int i = search(frames, time, ENTRIES), curveType = (int)curves[i >> 2];
 			switch (curveType) {
-			case LINEAR:
+			case LINEAR -> {
 				float before = frames[i];
 				rotate = frames[i + ROTATE];
 				x = frames[i + X];
@@ -2254,16 +2244,17 @@ public class Animation {
 				rotate += (frames[i + ENTRIES + ROTATE] - rotate) * t;
 				x += (frames[i + ENTRIES + X] - x) * t;
 				y += (frames[i + ENTRIES + Y] - y) * t;
-				break;
-			case STEPPED:
+			}
+			case STEPPED -> {
 				rotate = frames[i + ROTATE];
 				x = frames[i + X];
 				y = frames[i + Y];
-				break;
-			default:
+			}
+			default -> {
 				rotate = getBezierValue(time, i, ROTATE, curveType - BEZIER);
 				x = getBezierValue(time, i, X, curveType + BEZIER_SIZE - BEZIER);
 				y = getBezierValue(time, i, Y, curveType + BEZIER_SIZE * 2 - BEZIER);
+			}
 			}
 
 			if (blend == setup) {

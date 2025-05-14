@@ -543,12 +543,12 @@ public class SkeletonJson extends SkeletonLoader {
 		float scale = this.scale;
 		name = map.getString("name", name);
 
-		switch (AttachmentType.valueOf(map.getString("type", AttachmentType.region.name()))) {
-		case region: {
+		return switch (AttachmentType.valueOf(map.getString("type", AttachmentType.region.name()))) {
+		case region -> {
 			String path = map.getString("path", name);
 			Sequence sequence = readSequence(map.get("sequence"));
 			RegionAttachment region = attachmentLoader.newRegionAttachment(skin, name, path, sequence);
-			if (region == null) return null;
+			if (region == null) yield null;
 			region.setPath(path);
 			region.setX(map.getFloat("x", 0) * scale);
 			region.setY(map.getFloat("y", 0) * scale);
@@ -563,23 +563,22 @@ public class SkeletonJson extends SkeletonLoader {
 			if (color != null) Color.valueOf(color, region.getColor());
 
 			if (region.getRegion() != null) region.updateRegion();
-			return region;
+			yield region;
 		}
-		case boundingbox: {
+		case boundingbox -> {
 			BoundingBoxAttachment box = attachmentLoader.newBoundingBoxAttachment(skin, name);
-			if (box == null) return null;
+			if (box == null) yield null;
 			readVertices(map, box, map.getInt("vertexCount") << 1);
 
 			String color = map.getString("color", null);
 			if (color != null) Color.valueOf(color, box.getColor());
-			return box;
+			yield box;
 		}
-		case mesh:
-		case linkedmesh: {
+		case mesh, linkedmesh -> {
 			String path = map.getString("path", name);
 			Sequence sequence = readSequence(map.get("sequence"));
 			MeshAttachment mesh = attachmentLoader.newMeshAttachment(skin, name, path, sequence);
-			if (mesh == null) return null;
+			if (mesh == null) yield null;
 			mesh.setPath(path);
 
 			String color = map.getString("color", null);
@@ -593,7 +592,7 @@ public class SkeletonJson extends SkeletonLoader {
 			if (parent != null) {
 				linkedMeshes
 					.add(new LinkedMesh(mesh, map.getString("skin", null), slotIndex, parent, map.getBoolean("timelines", true)));
-				return mesh;
+				yield mesh;
 			}
 
 			float[] uvs = map.require("uvs").asFloatArray();
@@ -604,11 +603,11 @@ public class SkeletonJson extends SkeletonLoader {
 
 			if (map.has("hull")) mesh.setHullLength(map.require("hull").asInt() << 1);
 			if (map.has("edges")) mesh.setEdges(map.require("edges").asShortArray());
-			return mesh;
+			yield mesh;
 		}
-		case path: {
+		case path -> {
 			PathAttachment path = attachmentLoader.newPathAttachment(skin, name);
-			if (path == null) return null;
+			if (path == null) yield null;
 			path.setClosed(map.getBoolean("closed", false));
 			path.setConstantSpeed(map.getBoolean("constantSpeed", true));
 
@@ -623,22 +622,22 @@ public class SkeletonJson extends SkeletonLoader {
 
 			String color = map.getString("color", null);
 			if (color != null) Color.valueOf(color, path.getColor());
-			return path;
+			yield path;
 		}
-		case point: {
+		case point -> {
 			PointAttachment point = attachmentLoader.newPointAttachment(skin, name);
-			if (point == null) return null;
+			if (point == null) yield null;
 			point.setX(map.getFloat("x", 0) * scale);
 			point.setY(map.getFloat("y", 0) * scale);
 			point.setRotation(map.getFloat("rotation", 0));
 
 			String color = map.getString("color", null);
 			if (color != null) Color.valueOf(color, point.getColor());
-			return point;
+			yield point;
 		}
-		case clipping:
+		case clipping -> {
 			ClippingAttachment clip = attachmentLoader.newClippingAttachment(skin, name);
-			if (clip == null) return null;
+			if (clip == null) yield null;
 
 			String end = map.getString("end", null);
 			if (end != null) {
@@ -651,9 +650,10 @@ public class SkeletonJson extends SkeletonLoader {
 
 			String color = map.getString("color", null);
 			if (color != null) Color.valueOf(color, clip.getColor());
-			return clip;
+			yield clip;
 		}
-		return null;
+		default -> null;
+		};
 	}
 
 	private Sequence readSequence (@Null JsonValue map) {
