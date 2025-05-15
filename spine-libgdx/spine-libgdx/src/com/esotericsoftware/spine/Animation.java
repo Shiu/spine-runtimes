@@ -430,14 +430,11 @@ public class Animation {
 				};
 			}
 			float value = getCurveValue(time);
-			switch (blend) {
-			case setup:
-				return setup + value * alpha;
-			case first:
-			case replace:
-				value += setup - current;
-			}
-			return current + value * alpha;
+			return switch (blend) {
+			case setup -> setup + value * alpha;
+			case first, replace -> current + (value + setup - current) * alpha;
+			case add -> current + value * alpha;
+			};
 		}
 
 		public float getAbsoluteValue (float time, float alpha, MixBlend blend, float current, float setup) {
@@ -449,8 +446,11 @@ public class Animation {
 				};
 			}
 			float value = getCurveValue(time);
-			if (blend == MixBlend.setup) return setup + (value - setup) * alpha;
-			return current + (value - current) * alpha;
+			return switch (blend) {
+			case setup -> setup + (value - setup) * alpha;
+			case first, replace -> current + (value - current) * alpha;
+			case add -> current + value * alpha;
+			};
 		}
 
 		public float getAbsoluteValue (float time, float alpha, MixBlend blend, float current, float setup, float value) {
@@ -461,8 +461,11 @@ public class Animation {
 				default -> current;
 				};
 			}
-			if (blend == MixBlend.setup) return setup + (value - setup) * alpha;
-			return current + (value - current) * alpha;
+			return switch (blend) {
+			case setup -> setup + (value - setup) * alpha;
+			case first, replace -> current + (value - current) * alpha;
+			case add -> current + value * alpha;
+			};
 		}
 
 		public float getScaleValue (float time, float alpha, MixBlend blend, MixDirection direction, float current, float setup) {
@@ -1979,7 +1982,8 @@ public class Animation {
 			}
 			}
 
-			if (blend == MixBlend.setup) {
+			switch (blend) {
+			case setup -> {
 				IkConstraintPose setup = constraint.data.setup;
 				pose.mix = setup.mix + (mix - setup.mix) * alpha;
 				pose.softness = setup.softness + (softness - setup.softness) * alpha;
@@ -1987,20 +1991,23 @@ public class Animation {
 					pose.bendDirection = setup.bendDirection;
 					pose.compress = setup.compress;
 					pose.stretch = setup.stretch;
-				} else {
-					pose.bendDirection = (int)frames[i + BEND_DIRECTION];
-					pose.compress = frames[i + COMPRESS] != 0;
-					pose.stretch = frames[i + STRETCH] != 0;
-				}
-			} else {
-				pose.mix += (mix - pose.mix) * alpha;
-				pose.softness += (softness - pose.softness) * alpha;
-				if (direction == in) {
-					pose.bendDirection = (int)frames[i + BEND_DIRECTION];
-					pose.compress = frames[i + COMPRESS] != 0;
-					pose.stretch = frames[i + STRETCH] != 0;
+					return;
 				}
 			}
+			case first, replace -> {
+				pose.mix += (mix - pose.mix) * alpha;
+				pose.softness += (softness - pose.softness) * alpha;
+				if (direction == out) return;
+			}
+			case add -> {
+				pose.mix += mix * alpha;
+				pose.softness += softness * alpha;
+				if (direction == out) return;
+			}
+			}
+			pose.bendDirection = (int)frames[i + BEND_DIRECTION];
+			pose.compress = frames[i + COMPRESS] != 0;
+			pose.stretch = frames[i + STRETCH] != 0;
 		}
 	}
 
@@ -2109,7 +2116,8 @@ public class Animation {
 			}
 			}
 
-			if (blend == setup) {
+			switch (blend) {
+			case setup -> {
 				TransformConstraintPose setup = constraint.data.setup;
 				pose.mixRotate = setup.mixRotate + (rotate - setup.mixRotate) * alpha;
 				pose.mixX = setup.mixX + (x - setup.mixX) * alpha;
@@ -2117,13 +2125,23 @@ public class Animation {
 				pose.mixScaleX = setup.mixScaleX + (scaleX - setup.mixScaleX) * alpha;
 				pose.mixScaleY = setup.mixScaleY + (scaleY - setup.mixScaleY) * alpha;
 				pose.mixShearY = setup.mixShearY + (shearY - setup.mixShearY) * alpha;
-			} else {
+			}
+			case first, replace -> {
 				pose.mixRotate += (rotate - pose.mixRotate) * alpha;
 				pose.mixX += (x - pose.mixX) * alpha;
 				pose.mixY += (y - pose.mixY) * alpha;
 				pose.mixScaleX += (scaleX - pose.mixScaleX) * alpha;
 				pose.mixScaleY += (scaleY - pose.mixScaleY) * alpha;
 				pose.mixShearY += (shearY - pose.mixShearY) * alpha;
+			}
+			case add -> {
+				pose.mixRotate += rotate * alpha;
+				pose.mixX += x * alpha;
+				pose.mixY += y * alpha;
+				pose.mixScaleX += scaleX * alpha;
+				pose.mixScaleY += scaleY * alpha;
+				pose.mixShearY += shearY * alpha;
+			}
 			}
 		}
 	}
@@ -2257,15 +2275,23 @@ public class Animation {
 			}
 			}
 
-			if (blend == setup) {
+			switch (blend) {
+			case setup -> {
 				PathConstraintPose setup = constraint.data.setup;
 				pose.mixRotate = setup.mixRotate + (rotate - setup.mixRotate) * alpha;
 				pose.mixX = setup.mixX + (x - setup.mixX) * alpha;
 				pose.mixY = setup.mixY + (y - setup.mixY) * alpha;
-			} else {
+			}
+			case first, replace -> {
 				pose.mixRotate += (rotate - pose.mixRotate) * alpha;
 				pose.mixX += (x - pose.mixX) * alpha;
 				pose.mixY += (y - pose.mixY) * alpha;
+			}
+			case add -> {
+				pose.mixRotate += rotate * alpha;
+				pose.mixX += x * alpha;
+				pose.mixY += y * alpha;
+			}
 			}
 		}
 	}
@@ -2282,7 +2308,6 @@ public class Animation {
 
 			if (constraintIndex == -1) {
 				float value = time >= frames[0] ? getCurveValue(time) : 0;
-
 				PhysicsConstraint[] constraints = skeleton.physics.items;
 				for (int i = 0, n = skeleton.physics.size; i < n; i++) {
 					PhysicsConstraint constraint = constraints[i];
