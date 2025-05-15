@@ -36,6 +36,7 @@ import static com.esotericsoftware.spine.utils.SpineUtils.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
+import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ObjectSet;
 
@@ -49,15 +50,18 @@ import com.esotericsoftware.spine.attachments.VertexAttachment;
 /** Stores a list of timelines to animate a skeleton's pose over time. */
 public class Animation {
 	final String name;
+	float duration;
 	Array<Timeline> timelines;
 	final ObjectSet<String> timelineIds;
-	float duration;
+	final IntArray bones;
 
 	public Animation (String name, Array<Timeline> timelines, float duration) {
 		if (name == null) throw new IllegalArgumentException("name cannot be null.");
 		this.name = name;
 		this.duration = duration;
-		timelineIds = new ObjectSet(timelines.size << 1);
+		int n = timelines.size << 1;
+		timelineIds = new ObjectSet(n);
+		bones = new IntArray(n);
 		setTimelines(timelines);
 	}
 
@@ -72,9 +76,14 @@ public class Animation {
 
 		int n = timelines.size;
 		timelineIds.clear(n << 1);
+		bones.clear();
 		Timeline[] items = timelines.items;
-		for (int i = 0; i < n; i++)
-			timelineIds.addAll(items[i].getPropertyIds());
+		for (int i = 0; i < n; i++) {
+			Timeline timeline = items[i];
+			timelineIds.addAll(timeline.getPropertyIds());
+			if (timeline instanceof BoneTimeline boneTimeline) bones.add(boneTimeline.getBoneIndex());
+		}
+		bones.shrink();
 	}
 
 	/** Returns true if this animation contains a timeline with any of the specified property IDs. */

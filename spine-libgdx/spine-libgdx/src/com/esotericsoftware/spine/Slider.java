@@ -29,7 +29,6 @@
 
 package com.esotericsoftware.spine;
 
-import com.esotericsoftware.spine.Animation.BoneTimeline;
 import com.esotericsoftware.spine.Animation.ConstraintTimeline;
 import com.esotericsoftware.spine.Animation.MixBlend;
 import com.esotericsoftware.spine.Animation.MixDirection;
@@ -75,9 +74,9 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 
 		if (p.mix != 1) {
 			Bone[] bones = skeleton.bones.items;
-			Timeline[] timelines = animation.timelines.items;
-			for (int i = 0, n = animation.timelines.size; i < n; i++)
-				if (timelines[i] instanceof BoneTimeline timeline) bones[timeline.getBoneIndex()].applied.modifyLocal(skeleton);
+			int[] indices = animation.bones.items;
+			for (int i = 0, n = animation.bones.size; i < n; i++)
+				bones[indices[i]].applied.modifyLocal(skeleton);
 		}
 
 		animation.apply(skeleton, p.time, p.time, data.loop, null, p.mix, data.additive ? MixBlend.add : MixBlend.replace,
@@ -88,20 +87,23 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 		if (bone != null && !data.local) skeleton.sortBone(bone);
 		skeleton.updateCache.add(this);
 
-		Timeline[] timelines = data.animation.timelines.items;
 		Bone[] bones = skeleton.bones.items;
+		int[] indices = data.animation.bones.items;
+		for (int i = 0, n = data.animation.bones.size; i < n; i++) {
+			Bone bone = bones[indices[i]];
+			bone.sorted = false;
+			skeleton.sortReset(bone.children);
+			skeleton.constrained(bone);
+		}
+
+		Timeline[] timelines = data.animation.timelines.items;
 		Slot[] slots = skeleton.slots.items;
 		Constraint[] constraints = skeleton.constraints.items;
 		PhysicsConstraint[] physics = skeleton.physics.items;
 		int physicsCount = skeleton.physics.size;
 		for (int i = 0, n = data.animation.timelines.size; i < n; i++) {
 			Timeline t = timelines[i];
-			if (t instanceof BoneTimeline timeline) {
-				Bone bone = bones[timeline.getBoneIndex()];
-				bone.sorted = false;
-				skeleton.sortReset(bone.children);
-				skeleton.constrained(bone);
-			} else if (t instanceof SlotTimeline timeline)
+			if (t instanceof SlotTimeline timeline)
 				skeleton.constrained(slots[timeline.getSlotIndex()]);
 			else if (t instanceof PhysicsConstraintTimeline timeline) {
 				if (timeline.constraintIndex == -1) {
