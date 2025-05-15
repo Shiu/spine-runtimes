@@ -1356,7 +1356,6 @@ function removeDiv() {
             async function reloadWidget(element) {
                 element.disabled = true;
                 await widget.whenReady;
-                const skeleton = widget.skeleton;
                 widget.loading = true;
                 setTimeout(() => {
                     element.disabled = false;

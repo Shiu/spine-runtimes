@@ -166,11 +166,11 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 	 *
 	 * In order to fix this behaviour, it is necessary to insert a dedicated `spine-overlay` webcomponent as a direct child of the container.
 	 * Moreover, it is necessary to perform the following actions:
-	 * 1) The scrollable container must have a `transform` css attribute. If it hasn't this attribute the `spine-overlay` will add it for you.
-	 * If your scrollable container has already this css attribute, or if you prefer to add it by yourself (example: `transform: translateZ(0);`), set the `no-auto-parent-transform` to the `spine-overlay`.
+	 * 1) The appendedToBody container must have a `transform` css attribute. If it hasn't this attribute the `spine-overlay` will add it for you.
+	 * If your appendedToBody container has already this css attribute, or if you prefer to add it by yourself (example: `transform: translateZ(0);`), set the `no-auto-parent-transform` to the `spine-overlay`.
 	 * 2) The `spine-overlay` must have an `overlay-id` attribute. Choose the value you prefer.
 	 * 3) Each `spine-skeleton` must have an `overlay-id` attribute. The same as the hosting `spine-overlay`.
-	   * Connected to `scrollable` attribute.
+	   * Connected to `appendedToBody` attribute.
 	 */
 	private appendedToBody = true;
 
@@ -270,7 +270,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		// Alternatively, we can store the body size, check the current body size in the loop (like the translateCanvas), and
 		// if they differs call the resizeCallback. I already tested it, and it works. ResizeObserver should be more efficient.
 		if (this.appendedToBody) {
-			// if the element is scrollable, the user does not disable translate tweak, and the parent did not have already a transform, add the tweak
+			// if the element is appendedToBody, the user does not disable translate tweak, and the parent did not have already a transform, add the tweak
 			if (this.appendedToBody && !this.noAutoParentTransform && getComputedStyle(this.parentElement!).transform === "none") {
 				this.parentElement!.style.transform = `translateZ(0)`;
 			}
@@ -963,6 +963,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		}
 	}
 
+	// this function is invoked each frame - pay attention to what you add here
 	private translateCanvas () {
 		let scrollPositionX = -this.overflowLeftSize;
 		let scrollPositionY = -this.overflowTopSize;
@@ -972,9 +973,9 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 			scrollPositionY += window.scrollY;
 		} else {
 
-			// Ideally this should be the only scrollable case (no-auto-parent-transform not enabled or at least an ancestor has transform)
-			// I'd like to get rid of the code below
-			if (!this.hasCssTweakOff()) {
+			// Ideally this should be the only appendedToBody case (no-auto-parent-transform not enabled or at least an ancestor has transform)
+			// I'd like to get rid of the else case
+			if (!this.noAutoParentTransform) {
 				scrollPositionX += this.parentElement!.scrollLeft;
 				scrollPositionY += this.parentElement!.scrollTop;
 			} else {
@@ -984,7 +985,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 				let offsetParent = this.offsetParent;
 				do {
-					if (offsetParent === document.body) break;
+					if (offsetParent === null || offsetParent === document.body) break;
 
 					const htmlOffsetParentElement = offsetParent as HTMLElement;
 					if (htmlOffsetParentElement.style.position === "fixed" || htmlOffsetParentElement.style.position === "sticky" || htmlOffsetParentElement.style.position === "absolute") {
