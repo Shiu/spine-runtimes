@@ -1,3 +1,6 @@
+# 4.2.36
+- Support for 16KB page alignement on Android. You must specify the NDK version in the build.gradle file of your app's Android project. See https://github.com/EsotericSoftware/spine-runtimes/issues/2849
+
 # 4.2.35
  - Port of commit f1e0f0f: Fixed animation not being mixed out in some cases.
 
