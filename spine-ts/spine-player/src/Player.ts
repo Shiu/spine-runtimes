@@ -236,6 +236,7 @@ export class SpinePlayer implements Disposable {
 	private previousViewport: Viewport = {} as Viewport;
 	private viewportTransitionStart = 0;
 	private eventListeners: Array<{ target: any, event: any, func: any }> = [];
+	private input?: Input;
 
 	constructor (parent: HTMLElement | string, private config: SpinePlayerConfig) {
 		let parentDom = typeof parent === "string" ? document.getElementById(parent) : parent;
@@ -283,6 +284,7 @@ export class SpinePlayer implements Disposable {
 			var eventListener = this.eventListeners[i];
 			eventListener.target.removeEventListener(eventListener.event, eventListener.func);
 		}
+		this.input?.dispose();
 		this.parent.removeChild(this.dom);
 		this.disposed = true;
 	}
@@ -615,7 +617,8 @@ export class SpinePlayer implements Disposable {
 				return best;
 			};
 
-			new Input(canvas).addListener({
+			this.input = new Input(canvas);
+			this.input.addListener({
 				down: (x, y) => {
 					target = closest(x, y);
 				},
