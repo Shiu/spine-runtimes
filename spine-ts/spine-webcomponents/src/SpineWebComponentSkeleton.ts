@@ -875,7 +875,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	 * @returns The `HTMLElement` where the widget is hosted.
 	 */
 	public getHostElement (): HTMLElement {
-		return (this.width <= 0 || this.width <= 0) && !this.getAttribute("style")
+		return (this.width <= 0 || this.width <= 0) && !this.getAttribute("style") && !this.getAttribute("class")
 			? this.parentElement!
 			: this;
 	}
@@ -1075,22 +1075,13 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	}
 
 	private render (): void {
-		let width;
-		let height;
-		if (this.width === -1 || this.height === -1) {
-			width = "0";
-			height = "0";
-		} else {
-			width = `${this.width}px`
-			height = `${this.height}px`
-		}
+		let noSize = (!this.getAttribute("style") && !this.getAttribute("class"));
 		this.root.innerHTML = `
         <style>
             :host {
                 position: relative;
                 display: inline-block;
-                width:  ${width};
-                height: ${height};
+				${noSize ? "width: 0; height: 0;" : ""}
             }
         </style>
         `;

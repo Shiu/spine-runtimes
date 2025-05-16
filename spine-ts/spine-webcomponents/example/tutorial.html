@@ -280,12 +280,20 @@
 
         <div class="split-top split">
             <div class="split-left">
+                <style>
+                    .custom-class {
+                        width: 150px;
+                        height: 150px;
+                        border: 1px solid green;
+                        border-radius: 10px;
+                        box-shadow: -5px 5px 3px rgba(255, 0, 0, 0.3);
+                    }
+                </style>
                 <spine-skeleton
                     atlas="/assets/spineboy-pma.atlas"
                     skeleton="/assets/spineboy-pro.skel"
                     animation="walk"
-                    height="150"
-                    width="150"
+                    class="custom-class"
                 ></spine-skeleton>
                 <spine-skeleton
                     atlas="/assets/spineboy-pma.atlas"
@@ -301,10 +309,9 @@
                 ></spine-skeleton>
             </div>
             <div class="split-right">
-                If you want to manually size the Spine widget, specify the <code>width</code> and <code>height</code> attributes in pixels (without the "px" unit).
+                By default, the widget occupy zero width and height.
+                If you want to manually size the Spine widget, you can style the component using the <code>style</code> or <code>class</code> attribute, which provides more styling options.
                 <br>
-                <br>
-                If you prefer, you can style the component using the <code>style</code> attribute, which provides more styling options.
             </div>
         </div>
 
