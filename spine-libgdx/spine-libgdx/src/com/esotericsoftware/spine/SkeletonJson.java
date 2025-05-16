@@ -958,10 +958,10 @@ public class SkeletonJson extends SkeletonLoader {
 			var timeline = new TransformConstraintTimeline(timelineMap.size, timelineMap.size * 6,
 				skeletonData.constraints.indexOf(constraint, true));
 			float time = keyMap.getFloat("time", 0);
-			float mixRotate = keyMap.getFloat("mixRotate", 1);
-			float mixX = keyMap.getFloat("mixX", 1), mixY = keyMap.getFloat("mixY", mixX);
-			float mixScaleX = keyMap.getFloat("mixScaleX", 1), mixScaleY = keyMap.getFloat("mixScaleY", mixScaleX);
-			float mixShearY = keyMap.getFloat("mixShearY", 1);
+			float mixRotate = keyMap.getFloat("mixRotate", 0);
+			float mixX = keyMap.getFloat("mixX", 0), mixY = keyMap.getFloat("mixY", mixX);
+			float mixScaleX = keyMap.getFloat("mixScaleX", 0), mixScaleY = keyMap.getFloat("mixScaleY", mixScaleX);
+			float mixShearY = keyMap.getFloat("mixShearY", 0);
 			for (int frame = 0, bezier = 0;; frame++) {
 				timeline.setFrame(frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
 				JsonValue nextMap = keyMap.next;

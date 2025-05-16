@@ -64,16 +64,15 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 	/** Applies the constraint to the constrained bones. */
 	public void update (Skeleton skeleton, Physics physics) {
 		TransformConstraintPose p = applied;
-		if (p.mixRotate == 0 && p.mixX == 0 && p.mixY == 0 && p.mixScaleX == 0 && p.mixScaleY == 0 && p.mixShearY == 0) return;
+		if (p.mixRotate == 0 & p.mixX == 0 & p.mixY == 0 & p.mixScaleX == 0 & p.mixScaleY == 0 & p.mixShearY == 0) return;
 
 		TransformConstraintData data = this.data;
 		boolean localSource = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
 		float[] offsets = data.offsets;
 		BonePose source = this.source.applied;
-		int update = skeleton.update;
-		if (localSource) source.modifyLocal(skeleton);
+		if (localSource) source.validateLocalTransform(skeleton);
 		FromProperty[] fromItems = data.properties.items;
-		int fn = data.properties.size;
+		int fn = data.properties.size, update = skeleton.update;
 		BonePose[] bones = this.bones.items;
 		for (int i = 0, n = this.bones.size; i < n; i++) {
 			BonePose bone = bones[i];

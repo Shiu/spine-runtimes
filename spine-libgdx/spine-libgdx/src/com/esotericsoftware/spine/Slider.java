@@ -64,7 +64,7 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 		Animation animation = data.animation;
 		if (bone != null) {
 			if (!bone.active) return;
-			if (data.local) bone.applied.modifyLocal(skeleton);
+			if (data.local) bone.applied.validateLocalTransform(skeleton);
 			p.time = (data.property.value(bone.applied, data.local, offsets) - data.property.offset) * data.scale;
 			if (data.loop)
 				p.time = animation.duration + (p.time % animation.duration);
@@ -72,12 +72,10 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 				p.time = Math.max(0, p.time);
 		}
 
-		if (p.mix != 1) {
-			Bone[] bones = skeleton.bones.items;
-			int[] indices = animation.bones.items;
-			for (int i = 0, n = animation.bones.size; i < n; i++)
-				bones[indices[i]].applied.modifyLocal(skeleton);
-		}
+		Bone[] bones = skeleton.bones.items;
+		int[] indices = animation.bones.items;
+		for (int i = 0, n = animation.bones.size; i < n; i++)
+			bones[indices[i]].applied.modifyLocal(skeleton);
 
 		animation.apply(skeleton, p.time, p.time, data.loop, null, p.mix, data.additive ? MixBlend.add : MixBlend.replace,
 			MixDirection.in, true);

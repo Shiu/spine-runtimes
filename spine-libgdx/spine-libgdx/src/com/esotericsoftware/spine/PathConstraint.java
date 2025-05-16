@@ -81,7 +81,7 @@ public class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 
 		PathConstraintPose p = applied;
 		float mixRotate = p.mixRotate, mixX = p.mixX, mixY = p.mixY;
-		if (mixRotate == 0 && mixX == 0 && mixY == 0) return;
+		if (mixRotate == 0 & mixX == 0 & mixY == 0) return;
 
 		PathConstraintData data = this.data;
 		boolean tangents = data.rotateMode == RotateMode.tangent, scale = data.rotateMode == RotateMode.chainScale;
