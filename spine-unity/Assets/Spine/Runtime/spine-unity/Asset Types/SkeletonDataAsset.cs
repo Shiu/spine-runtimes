@@ -63,7 +63,7 @@ namespace Spine.Unity {
 
 	[CreateAssetMenu(fileName = "New SkeletonDataAsset", menuName = "Spine/SkeletonData Asset")]
 	public class SkeletonDataAsset : ScriptableObject {
-#region Inspector
+		#region Inspector
 		public AtlasAssetBase[] atlasAssets = new AtlasAssetBase[0];
 
 #if SPINE_TK2D
@@ -97,12 +97,12 @@ namespace Spine.Unity {
 		void Reset () {
 			Clear();
 		}
-#endregion
+		#endregion
 
 		SkeletonData skeletonData;
 		AnimationStateData stateData;
 
-#region Runtime Instantiation
+		#region Runtime Instantiation
 		/// <summary>
 		/// Creates a runtime SkeletonDataAsset.</summary>
 		public static SkeletonDataAsset CreateRuntimeInstance (TextAsset skeletonDataFile, AtlasAssetBase atlasAsset, bool initialize, float scale = 0.01f) {
@@ -137,7 +137,7 @@ namespace Spine.Unity {
 			Clear();
 			GetSkeletonData(true);
 		}
-#endregion
+		#endregion
 
 		/// <summary>Clears the loaded SkeletonData and AnimationStateData. Use this to force a reload for the next time GetSkeletonData is called.</summary>
 		public void Clear () {
