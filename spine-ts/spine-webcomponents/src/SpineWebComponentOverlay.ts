@@ -173,6 +173,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 	   * Connected to `appendedToBody` attribute.
 	 */
 	private appendedToBody = true;
+	private hasParentTransform = true;
 
 	readonly time = new TimeKeeper();
 
@@ -271,7 +272,9 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		// if they differs call the resizeCallback. I already tested it, and it works. ResizeObserver should be more efficient.
 		if (this.appendedToBody) {
 			// if the element is appendedToBody, the user does not disable translate tweak, and the parent did not have already a transform, add the tweak
-			if (this.appendedToBody && !this.noAutoParentTransform && getComputedStyle(this.parentElement!).transform === "none") {
+			if (this.hasCssTweakOff()) {
+				this.hasParentTransform = false;
+			} else {
 				this.parentElement!.style.transform = `translateZ(0)`;
 			}
 			this.resizeObserver = new ResizeObserver(this.resizedCallback);
@@ -975,7 +978,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 			// Ideally this should be the only appendedToBody case (no-auto-parent-transform not enabled or at least an ancestor has transform)
 			// I'd like to get rid of the else case
-			if (!this.noAutoParentTransform) {
+			if (this.hasParentTransform) {
 				scrollPositionX += this.parentElement!.scrollLeft;
 				scrollPositionY += this.parentElement!.scrollTop;
 			} else {
