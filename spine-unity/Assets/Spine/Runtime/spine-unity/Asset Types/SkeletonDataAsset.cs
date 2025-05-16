@@ -215,7 +215,9 @@ namespace Spine.Unity {
 			try {
 				if (hasBinaryExtension) {
 #if UNSAFE_DIRECT_ACCESS_TEXT_ASSET_DATA
-					loadedSkeletonData = SkeletonDataAsset.ReadSkeletonData(skeletonJSON.GetStreamUnsafe(), attachmentLoader, skeletonDataScale);
+					using (Stream stream = skeletonJSON.GetStreamUnsafe()) {
+						loadedSkeletonData = SkeletonDataAsset.ReadSkeletonData(stream, attachmentLoader, skeletonDataScale);
+					}
 #else
 					loadedSkeletonData = SkeletonDataAsset.ReadSkeletonData(skeletonJSON.bytes, attachmentLoader, skeletonDataScale);
 #endif
