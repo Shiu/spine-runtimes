@@ -923,6 +923,7 @@ public class SkeletonJson extends SkeletonLoader {
 			JsonValue keyMap = timelineMap.child;
 			if (keyMap == null) continue;
 			IkConstraintData constraint = skeletonData.findConstraint(timelineMap.name, IkConstraintData.class);
+			if (constraint == null) throw new SerializationException("IK constraint not found: " + timelineMap.name);
 			var timeline = new IkConstraintTimeline(timelineMap.size, timelineMap.size << 1,
 				skeletonData.constraints.indexOf(constraint, true));
 			float time = keyMap.getFloat("time", 0);
@@ -955,6 +956,7 @@ public class SkeletonJson extends SkeletonLoader {
 			JsonValue keyMap = timelineMap.child;
 			if (keyMap == null) continue;
 			TransformConstraintData constraint = skeletonData.findConstraint(timelineMap.name, TransformConstraintData.class);
+			if (constraint == null) throw new SerializationException("Transform constraint not found: " + timelineMap.name);
 			var timeline = new TransformConstraintTimeline(timelineMap.size, timelineMap.size * 6,
 				skeletonData.constraints.indexOf(constraint, true));
 			float time = keyMap.getFloat("time", 0);
