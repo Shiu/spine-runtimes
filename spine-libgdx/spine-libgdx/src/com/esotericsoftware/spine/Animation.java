@@ -151,26 +151,27 @@ public class Animation {
 	 * <p>
 	 * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection, boolean)}. */
 	static public enum MixBlend {
-		/** Transitions from the setup value to the timeline value (the current value is not used). Before the first frame, the
-		 * setup value is set. */
-		setup,
-		/** Transitions from the current value to the timeline value. Before the first frame, transitions from the current value to
-		 * the setup value. Timelines which perform instant transitions, such as {@link DrawOrderTimeline} or
-		 * {@link AttachmentTimeline}, use the setup value before the first frame.
+		/** Transitions between the setup and timeline values (the current value is not used). Before the first frame, the setup
+		 * value is used.
 		 * <p>
-		 * <code>first</code> is intended for the first animations applied, not for animations layered on top of those. */
+		 * <code>setup</code> is intended to transition to or from the setup pose, not for animations layered on top of others. */
+		setup,
+		/** Transitions between the current and timeline values. Before the first frame, transitions between the current and setup
+		 * values. Timelines which perform instant transitions, such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}, use
+		 * the setup value before the first frame.
+		 * <p>
+		 * <code>first</code> is intended for the first animations applied, not for animations layered on top of others. */
 		first,
-		/** Transitions from the current value to the timeline value. No change is made before the first frame (the current value is
-		 * kept until the first frame).
+		/** Transitions between the current and timeline values. No change is made before the first frame.
 		 * <p>
 		 * <code>replace</code> is intended for animations layered on top of others, not for the first animations applied. */
 		replace,
-		/** Transitions from the current value to the current value plus the timeline value. No change is made before the first
-		 * frame (the current value is kept until the first frame).
+		/** Transitions between the current value and the current plus timeline values. No change is made before the first frame.
 		 * <p>
-		 * <code>add</code> is intended for animations layered on top of others, not for the first animations applied. Properties
-		 * set by additive animations must be set manually or by another animation before applying the additive animations, else the
-		 * property values will increase each time the additive animations are applied. */
+		 * <code>add</code> is intended for animations layered on top of others, not for the first animations applied.
+		 * <p>
+		 * Properties set by additive animations must be set manually or by another animation before applying the additive
+		 * animations, else the property values will increase each time the additive animations are applied. */
 		add
 	}
 
@@ -1422,7 +1423,7 @@ public class Animation {
 		/** Sets the time and attachment name for the specified frame.
 		 * @param frame Between 0 and <code>frameCount</code>, inclusive.
 		 * @param time The frame time in seconds. */
-		public void setFrame (int frame, float time, String attachmentName) {
+		public void setFrame (int frame, float time, @Null String attachmentName) {
 			frames[frame] = time;
 			attachmentNames[frame] = attachmentName;
 		}
@@ -1436,18 +1437,13 @@ public class Animation {
 
 			if (direction == out) {
 				if (blend == setup) setAttachment(skeleton, pose, slot.data.attachmentName);
-				return;
-			}
-
-			if (time < this.frames[0]) {
+			} else if (time < this.frames[0]) {
 				if (blend == setup || blend == first) setAttachment(skeleton, pose, slot.data.attachmentName);
-				return;
-			}
-
-			setAttachment(skeleton, pose, attachmentNames[search(this.frames, time)]);
+			} else
+				setAttachment(skeleton, pose, attachmentNames[search(this.frames, time)]);
 		}
 
-		private void setAttachment (Skeleton skeleton, SlotPose pose, String attachmentName) {
+		private void setAttachment (Skeleton skeleton, SlotPose pose, @Null String attachmentName) {
 			pose.setAttachment(attachmentName == null ? null : skeleton.getAttachment(slotIndex, attachmentName));
 		}
 	}
