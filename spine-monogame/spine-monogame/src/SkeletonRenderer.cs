@@ -210,9 +210,10 @@ namespace Spine {
 				darkColor.A = premultipliedAlpha ? (byte)255 : (byte)0;
 
 				// clip
+				float[] usedVertices = vertices;
 				if (clipper.IsClipping) {
 					clipper.ClipTriangles(vertices, indices, indicesCount, uvs);
-					vertices = clipper.ClippedVertices.Items;
+					usedVertices = clipper.ClippedVertices.Items;
 					verticesCount = clipper.ClippedVertices.Count >> 1;
 					indices = clipper.ClippedTriangles.Items;
 					indicesCount = clipper.ClippedTriangles.Count;
@@ -239,8 +240,8 @@ namespace Spine {
 				for (int ii = 0, v = 0, nn = verticesCount << 1; v < nn; ii++, v += 2) {
 					itemVertices[ii].Color = color;
 					itemVertices[ii].Color2 = darkColor;
-					itemVertices[ii].Position.X = vertices[v];
-					itemVertices[ii].Position.Y = vertices[v + 1];
+					itemVertices[ii].Position.X = usedVertices[v];
+					itemVertices[ii].Position.Y = usedVertices[v + 1];
 					itemVertices[ii].Position.Z = attachmentZOffset;
 					itemVertices[ii].TextureCoordinate.X = uvs[v];
 					itemVertices[ii].TextureCoordinate.Y = uvs[v + 1];
