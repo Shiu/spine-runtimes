@@ -132,7 +132,6 @@ namespace Spine {
 				float attachmentColorR, attachmentColorG, attachmentColorB, attachmentColorA;
 				object textureObject = null;
 				int verticesCount = 0;
-				float[] vertices = this.vertices;
 				int indicesCount = 0;
 				int[] indices = null;
 				float[] uvs = null;
