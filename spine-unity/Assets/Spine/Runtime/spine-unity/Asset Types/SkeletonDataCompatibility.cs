@@ -236,5 +236,5 @@ namespace Spine.Unity {
 				spineJson.name, descriptionString), spineJson);
 		}
 #endif // UNITY_EDITOR
-		}
-		}
+	}
+}
