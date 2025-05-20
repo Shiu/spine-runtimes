@@ -146,7 +146,7 @@ function castToAnimationsInfo (value: string | null): AnimationsInfo | undefined
 		const animationInfoObject = obj[trackIndexStringOrLoopDefinition] ||= { animations: [] };
 		animationInfoObject.animations.push({
 			animationName: animationNameOrTrackIndexStringCycle,
-			loop: loopOrRepeatDelay.trim().toLowerCase() === "true",
+			loop: (loopOrRepeatDelay || "").trim().toLowerCase() === "true",
 			delay,
 			mixDuration,
 		});
