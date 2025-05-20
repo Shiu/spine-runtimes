@@ -3,71 +3,73 @@ speedy-pma.png
 	filter: Linear, Linear
 	pma: true
 belt-ends
-	bounds: 965, 81, 45, 56
-	rotate: 90
+	bounds: 934, 70, 45, 56
 hair-1
-	bounds: 635, 87, 82, 39
+	bounds: 632, 44, 82, 39
+	rotate: 90
 hair-2
-	bounds: 719, 83, 74, 43
+	bounds: 673, 52, 74, 43
+	rotate: 90
 head
 	bounds: 2, 2, 116, 124
 hood-end1a
-	bounds: 879, 103, 23, 84
+	bounds: 381, 16, 23, 84
 	rotate: 90
 hood-end1b
-	bounds: 795, 67, 28, 79
+	bounds: 718, 25, 28, 79
 	rotate: 90
 hood-end1c
-	bounds: 781, 34, 31, 70
+	bounds: 529, 14, 31, 70
 	rotate: 90
 hood-end1d
-	bounds: 795, 97, 29, 82
-	rotate: 90
+	bounds: 981, 44, 29, 82
 hood-end1e
-	bounds: 248, 2, 35, 78
-	rotate: 90
+	bounds: 813, 48, 35, 78
 hood-end1f
-	bounds: 635, 46, 39, 71
-	rotate: 90
+	bounds: 718, 55, 39, 71
 hood-end2a
-	bounds: 120, 9, 30, 76
+	bounds: 890, 30, 30, 76
 	rotate: 90
 hood-end2b
-	bounds: 708, 43, 38, 71
-	rotate: 90
+	bounds: 850, 55, 38, 71
 hood-end2c
-	bounds: 583, 17, 42, 64
+	bounds: 890, 62, 42, 64
 hood-end2d
-	bounds: 879, 78, 23, 76
+	bounds: 120, 16, 23, 76
 	rotate: 90
 hood-end2e
-	bounds: 876, 48, 28, 74
+	bounds: 601, 14, 28, 74
 	rotate: 90
 hood-end2f
-	bounds: 383, 50, 31, 70
+	bounds: 799, 15, 31, 70
 	rotate: 90
 left-foot
-	bounds: 199, 2, 80, 47
+	bounds: 287, 46, 80, 47
 	rotate: 90
 left-foot-bent01
-	bounds: 248, 39, 87, 43
+	bounds: 336, 39, 87, 43
+	rotate: 90
 left-foot-bent02
-	bounds: 470, 83, 82, 43
+	bounds: 484, 44, 82, 43
+	rotate: 90
 left-foot-side
-	bounds: 199, 84, 90, 42
+	bounds: 243, 36, 90, 42
+	rotate: 90
 left-hand
-	bounds: 957, 27, 52, 53
-	rotate: 90
+	bounds: 759, 73, 52, 53
 right-foot
-	bounds: 455, 25, 66, 56
-right-foot-bent01
-	bounds: 383, 83, 85, 43
-right-foot-bent02
-	bounds: 554, 83, 79, 43
-right-foot-side
-	bounds: 291, 84, 90, 42
-right-hand
-	bounds: 523, 25, 56, 58
+	bounds: 381, 60, 66, 56
 	rotate: 90
+right-foot-bent01
+	bounds: 439, 41, 85, 43
+	rotate: 90
+right-foot-bent02
+	bounds: 529, 47, 79, 43
+	rotate: 90
+right-foot-side
+	bounds: 199, 36, 90, 42
+	rotate: 90
+right-hand
+	bounds: 574, 68, 56, 58
 torso
 	bounds: 120, 41, 77, 85

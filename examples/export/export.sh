@@ -45,6 +45,7 @@ rm -rf ../chibi-stickers/export/*
 rm -rf ../celestial-circus/export/*
 rm -rf ../snowglobe/export/*
 rm -rf ../cloud-pot/export/*
+rm -rf ../food-app/export/*
 rm -rf ../1-weight-and-mass/export/*
 rm -rf ../2-the-12-principles/export/*
 rm -rf ../3-timing-and-spacing/export/*
@@ -67,8 +68,8 @@ echo "Exporting assets..."
 \
 -i ../coin/coin-pro.spine -o ../coin/export -e json.json \
 -i ../coin/coin-pro.spine -o ../coin/export -e binary.json \
--i ../coin/images -o ../coin/export -n coin -p atlas-1.0.json \
--i ../coin/images -o ../coin/export -n coin-pma -p atlas-1.0-pma.json \
+-i ../coin/images -o ../coin/export -n coin -j ../coin/coin-pro.spine -p atlas-1.0.json \
+-i ../coin/images -o ../coin/export -n coin-pma -j ../coin/coin-pro.spine -p atlas-1.0-pma.json \
 \
 -i ../dragon/dragon-ess.spine -o ../dragon/export -e json.json \
 -i ../dragon/dragon-ess.spine -o ../dragon/export -e binary.json \
@@ -91,33 +92,40 @@ echo "Exporting assets..."
 \
 -i ../mix-and-match/mix-and-match-pro.spine -o ../mix-and-match/export -e json.json \
 -i ../mix-and-match/mix-and-match-pro.spine -o ../mix-and-match/export -e binary.json \
--i ../mix-and-match/images -o ../mix-and-match/export -n mix-and-match -p atlas-0.5.json \
--i ../mix-and-match/images -o ../mix-and-match/export -n mix-and-match-pma -p atlas-0.5-pma.json \
+-i ../mix-and-match/images -o ../mix-and-match/export -n mix-and-match -j ../mix-and-match/mix-and-match-pro.spine -p atlas-0.5.json \
+-i ../mix-and-match/images -o ../mix-and-match/export -n mix-and-match-pma -j ../mix-and-match/mix-and-match-pro.spine -p atlas-0.5-pma.json \
 \
 -i ../chibi-stickers/chibi-stickers-pro.spine -o ../chibi-stickers/export -e json.json \
 -i ../chibi-stickers/chibi-stickers-pro.spine -o ../chibi-stickers/export -e binary.json \
--i ../chibi-stickers/images -o ../chibi-stickers/export -n chibi-stickers -p atlas-0.5.json \
--i ../chibi-stickers/images -o ../chibi-stickers/export -n chibi-stickers-pma -p atlas-0.5-pma.json \
+-i ../chibi-stickers/images -o ../chibi-stickers/export -n chibi-stickers -j ../chibi-stickers/chibi-stickers-pro.spine -p atlas-0.5.json \
+-i ../chibi-stickers/images -o ../chibi-stickers/export -n chibi-stickers-pma -j ../chibi-stickers/chibi-stickers-pro.spine -p atlas-0.5-pma.json \
 \
 -i ../celestial-circus/celestial-circus-pro.spine -o ../celestial-circus/export -e json.json \
 -i ../celestial-circus/celestial-circus-pro.spine -o ../celestial-circus/export -e binary.json \
--i ../celestial-circus/images -o ../celestial-circus/export -n celestial-circus -p atlas-0.4.json \
--i ../celestial-circus/images -o ../celestial-circus/export -n celestial-circus-pma -p atlas-0.4-pma.json \
+-i ../celestial-circus/images -o ../celestial-circus/export -n celestial-circus -j ../celestial-circus/celestial-circus-pro.spine -p atlas-0.4.json \
+-i ../celestial-circus/images -o ../celestial-circus/export -n celestial-circus-pma -j ../celestial-circus/celestial-circus-pro.spine -p atlas-0.4-pma.json \
 \
 -i ../snowglobe/snowglobe-pro.spine -o ../snowglobe/export -e json.json \
 -i ../snowglobe/snowglobe-pro.spine -o ../snowglobe/export -e binary.json \
--i ../snowglobe/images -o ../snowglobe/export -n snowglobe -p atlas-0.5.json \
--i ../snowglobe/images -o ../snowglobe/export -n snowglobe-pma -p atlas-0.5-pma.json \
+-i ../snowglobe/images -o ../snowglobe/export -n snowglobe -j ../snowglobe/snowglobe-pro.spine -p atlas-0.5.json \
+-i ../snowglobe/images -o ../snowglobe/export -n snowglobe-pma -j ../snowglobe/snowglobe-pro.spine -p atlas-0.5-pma.json \
 \
 -i ../cloud-pot/cloud-pot-pro.spine -o ../cloud-pot/export -e json.json \
 -i ../cloud-pot/cloud-pot-pro.spine -o ../cloud-pot/export -e binary.json \
--i ../cloud-pot/images -o ../cloud-pot/export -n cloud-pot -p atlas-0.5.json \
--i ../cloud-pot/images -o ../cloud-pot/export -n cloud-pot-pma -p atlas-0.5-pma.json \
+-i ../cloud-pot/images -o ../cloud-pot/export -n cloud-pot -j ../cloud-pot/cloud-pot-pro.spine -p atlas-0.5.json \
+-i ../cloud-pot/images -o ../cloud-pot/export -n cloud-pot-pma -j ../cloud-pot/cloud-pot-pro.spine -p atlas-0.5-pma.json \
+\
+-i ../food-app/food-app-ess.spine -o ../food-app/export -e json.json \
+-i ../food-app/food-app-ess.spine -o ../food-app/export -e binary.json \
+-i ../food-app/food-app-pro.spine -o ../food-app/export -e json.json \
+-i ../food-app/food-app-pro.spine -o ../food-app/export -e binary.json \
+-i ../food-app/images -o ../food-app/export -n food-app -p atlas-0.4.json \
+-i ../food-app/images -o ../food-app/export -n food-app-pma -p atlas-0.4-pma.json \
 \
 -i ../owl/owl-pro.spine -o ../owl/export -e json.json \
 -i ../owl/owl-pro.spine -o ../owl/export -e binary.json \
--i ../owl/images -o ../owl/export -n owl -p atlas-0.5.json \
--i ../owl/images -o ../owl/export -n owl-pma -p atlas-0.5-pma.json \
+-i ../owl/images -o ../owl/export -n owl -j ../owl/owl-pro.spine -p atlas-0.5.json \
+-i ../owl/images -o ../owl/export -n owl-pma -j ../owl/owl-pro.spine -p atlas-0.5-pma.json \
 \
 -i ../powerup/powerup-ess.spine -o ../powerup/export -e json.json \
 -i ../powerup/powerup-ess.spine -o ../powerup/export -e binary.json \
@@ -128,8 +136,8 @@ echo "Exporting assets..."
 \
 -i ../raptor/raptor-pro.spine -o ../raptor/export -e json.json \
 -i ../raptor/raptor-pro.spine -o ../raptor/export -e binary.json \
--i ../raptor/images -o ../raptor/export -n raptor -p atlas-0.5.json \
--i ../raptor/images -o ../raptor/export -n raptor-pma -p atlas-0.5-pma.json \
+-i ../raptor/images -o ../raptor/export -n raptor -j ../raptor/raptor-pro.spine -p atlas-0.5.json \
+-i ../raptor/images -o ../raptor/export -n raptor-pma -j ../raptor/raptor-pro.spine -p atlas-0.5-pma.json \
 \
 -i ../speedy/speedy-ess.spine -o ../speedy/export -e json.json \
 -i ../speedy/speedy-ess.spine -o ../speedy/export -e binary.json \
@@ -149,13 +157,13 @@ echo "Exporting assets..."
 \
 -i ../stretchyman/stretchyman-pro.spine -o ../stretchyman/export -e json.json \
 -i ../stretchyman/stretchyman-pro.spine -o ../stretchyman/export -e binary.json \
--i ../stretchyman/images -o ../stretchyman/export -n stretchyman -p atlas-1.0.json \
--i ../stretchyman/images -o ../stretchyman/export -n stretchyman-pma -p atlas-1.0-pma.json \
+-i ../stretchyman/images -o ../stretchyman/export -n stretchyman -j ../stretchyman/stretchyman-pro.spine -p atlas-1.0.json \
+-i ../stretchyman/images -o ../stretchyman/export -n stretchyman-pma -j ../stretchyman/stretchyman-pro.spine -p atlas-1.0-pma.json \
 \
 -i ../tank/tank-pro.spine -o ../tank/export -e json.json \
 -i ../tank/tank-pro.spine -o ../tank/export -e binary.json \
--i ../tank/images -o ../tank/export -n tank -p atlas-0.5.json \
--i ../tank/images -o ../tank/export -n tank-pma -p atlas-0.5-pma.json \
+-i ../tank/images -o ../tank/export -n tank -j ../tank/tank-pro.spine -p atlas-0.5.json \
+-i ../tank/images -o ../tank/export -n tank-pma -j ../tank/tank-pro.spine -p atlas-0.5-pma.json \
 \
 -i ../vine/vine-pro.spine -o ../vine/export -e json.json \
 -i ../vine/vine-pro.spine -o ../vine/export -e binary.json \
@@ -194,18 +202,18 @@ echo "Exporting assets..."
 \
 -i ../6-arcs/6-arcs-pro.spine -o ../6-arcs/export -e json.json \
 -i ../6-arcs/6-arcs-pro.spine -o ../6-arcs/export -e binary.json \
--i ../6-arcs/images -o ../6-arcs/export -n 6-arcs -p atlas-0.5.json \
--i ../6-arcs/images -o ../6-arcs/export -n 6-arcs-pma -p atlas-0.5-pma.json \
+-i ../6-arcs/images -o ../6-arcs/export -n 6-arcs -j ../6-arcs/6-arcs-pro.spine -p atlas-0.5.json \
+-i ../6-arcs/images -o ../6-arcs/export -n 6-arcs-pma -j ../6-arcs/6-arcs-pro.spine -p atlas-0.5-pma.json \
 \
 -i ../7-anticipation/7-anticipation-pro.spine -o ../7-anticipation/export -e json.json \
 -i ../7-anticipation/7-anticipation-pro.spine -o ../7-anticipation/export -e binary.json \
--i ../7-anticipation/images -o ../7-anticipation/export -n 7-anticipation -p atlas-0.5.json \
--i ../7-anticipation/images -o ../7-anticipation/export -n 7-anticipation-pma -p atlas-0.5-pma.json \
+-i ../7-anticipation/images -o ../7-anticipation/export -n 7-anticipation -j ../7-anticipation/7-anticipation-pro.spine -p atlas-0.5.json \
+-i ../7-anticipation/images -o ../7-anticipation/export -n 7-anticipation-pma -j ../7-anticipation/7-anticipation-pro.spine -p atlas-0.5-pma.json \
 \
 -i ../8-follow-through/8-follow-through-pro.spine -o ../8-follow-through/export -e json.json \
 -i ../8-follow-through/8-follow-through-pro.spine -o ../8-follow-through/export -e binary.json \
--i ../8-follow-through/images -o ../8-follow-through/export -n 8-follow-through -p atlas-0.5.json \
--i ../8-follow-through/images -o ../8-follow-through/export -n 8-follow-through-pma -p atlas-0.5-pma.json
+-i ../8-follow-through/images -o ../8-follow-through/export -n 8-follow-through -j ../8-follow-through/8-follow-through-pro.spine -p atlas-0.5.json \
+-i ../8-follow-through/images -o ../8-follow-through/export -n 8-follow-through-pma -j ../8-follow-through/8-follow-through-pro.spine -p atlas-0.5-pma.json
 
 # spineboy-old.spine needs separate export, as its images are in an atlas.
 "$SPINE_EXE" \
@@ -258,8 +266,8 @@ if [ -d "$UNITY_BASE_DIR" ]; then
 	\
 	-i $UNITY_BASE_DIR/spineboy-pro/spineboy-pro.spine -o $UNITY_BASE_DIR/spineboy-pro/export -e json.json \
 	-i $UNITY_BASE_DIR/spineboy-pro/spineboy-pro.spine -o $UNITY_BASE_DIR/spineboy-pro/export -e binary.json \
-	-i $UNITY_BASE_DIR/spineboy-pro/images -o $UNITY_BASE_DIR/spineboy-pro/export -n spineboy -p atlas-1.0-2048.json \
-	-i $UNITY_BASE_DIR/spineboy-pro/images -o $UNITY_BASE_DIR/spineboy-pro/export -n spineboy-pma -p atlas-1.0-2048-pma.json \
+	-i $UNITY_BASE_DIR/spineboy-pro/images -o $UNITY_BASE_DIR/spineboy-pro/export -n spineboy -j $UNITY_BASE_DIR/spineboy-pro/spineboy-pro.spine -p atlas-1.0-2048.json \
+	-i $UNITY_BASE_DIR/spineboy-pro/images -o $UNITY_BASE_DIR/spineboy-pro/export -n spineboy-pma -j $UNITY_BASE_DIR/spineboy-pro/spineboy-pro.spine -p atlas-1.0-2048-pma.json \
 	\
 	-i $UNITY_BASE_DIR/spineboy-unity/spineboy-unity.spine -o $UNITY_BASE_DIR/spineboy-unity/export -e json.json \
 	-i $UNITY_BASE_DIR/spineboy-unity/spineboy-unity.spine -o $UNITY_BASE_DIR/spineboy-unity/export -e binary.json \

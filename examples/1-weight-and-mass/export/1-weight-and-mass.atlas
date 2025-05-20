@@ -3,30 +3,29 @@
 	filter: Linear, Linear
 	scale: 0.5
 beach-ball
-	bounds: 2, 2, 286, 286
+	bounds: 678, 55, 286, 286
 blue-rubber-ball
-	bounds: 290, 46, 103, 103
+	bounds: 534, 39, 103, 103
 cast-shadow-beach
-	bounds: 630, 414, 286, 73
+	bounds: 2, 69, 286, 73
 cast-shadow-blue
-	bounds: 803, 363, 110, 49
+	bounds: 175, 18, 110, 49
 cast-shadow-iron
-	bounds: 803, 363, 110, 49
+	bounds: 175, 18, 110, 49
 cast-shadow-red
-	bounds: 630, 300, 137, 51
+	bounds: 639, 2, 137, 51
 ground-bg
-	bounds: 2, 290, 626, 197
+	bounds: 50, 144, 626, 197
 ground-cover
-	bounds: 630, 353, 171, 59
+	bounds: 2, 8, 171, 59
 red-rubber-ball
-	bounds: 290, 151, 137, 137
+	bounds: 290, 5, 137, 137
 rock
-	bounds: 918, 449, 44, 38
+	bounds: 966, 297, 44, 38
+	rotate: 90
 steel-ball
-	bounds: 429, 185, 103, 103
+	bounds: 429, 39, 103, 103
 stick
-	bounds: 290, 22, 22, 134
-	rotate: 90
+	bounds: 26, 207, 22, 134
 sword
-	bounds: 630, 276, 22, 138
-	rotate: 90
+	bounds: 2, 203, 22, 138

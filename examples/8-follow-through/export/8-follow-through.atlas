@@ -3,22 +3,22 @@
 	filter: Linear, Linear
 	scale: 0.5
 ball
-	bounds: 462, 2, 78, 78
+	bounds: 694, 23, 78, 78
 chain-1
-	bounds: 194, 10, 54, 152
+	bounds: 348, 47, 54, 152
 	rotate: 90
 chain-2
-	bounds: 348, 82, 37, 126
+	bounds: 774, 64, 37, 126
 	rotate: 90
 chain-3
-	bounds: 348, 43, 37, 112
+	bounds: 902, 64, 37, 112
 	rotate: 90
 chain-4
-	bounds: 476, 82, 37, 98
+	bounds: 839, 25, 37, 98
 	rotate: 90
 chain-end
-	bounds: 576, 59, 63, 60
+	bounds: 774, 2, 63, 60
 platform
-	bounds: 2, 66, 344, 53
+	bounds: 2, 48, 344, 53
 tail
-	bounds: 2, 8, 190, 56
+	bounds: 502, 45, 190, 56
