@@ -37,6 +37,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.IntSet;
 import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ObjectSet;
 
@@ -77,11 +78,13 @@ public class Animation {
 		int n = timelines.size;
 		timelineIds.clear(n << 1);
 		bones.clear();
+		var boneSet = new IntSet();
 		Timeline[] items = timelines.items;
 		for (int i = 0; i < n; i++) {
 			Timeline timeline = items[i];
 			timelineIds.addAll(timeline.getPropertyIds());
-			if (timeline instanceof BoneTimeline boneTimeline) bones.add(boneTimeline.getBoneIndex());
+			if (timeline instanceof BoneTimeline boneTimeline && boneSet.add(boneTimeline.getBoneIndex()))
+				bones.add(boneTimeline.getBoneIndex());
 		}
 		bones.shrink();
 	}
