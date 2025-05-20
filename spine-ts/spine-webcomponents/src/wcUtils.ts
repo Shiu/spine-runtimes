@@ -102,7 +102,7 @@ function castToAnimationsInfo (value: string | null): AnimationsInfo | undefined
 	if (!matches) return undefined;
 
 	return matches.reduce((obj, group) => {
-		const [trackIndexStringOrLoopDefinition, animationNameOrTrackIndexStringCycle, loopOrHoldDurationLastAnimation, delayString, mixDurationString] = group.slice(1, -1).split(',').map(v => v.trim());
+		const [trackIndexStringOrLoopDefinition, animationNameOrTrackIndexStringCycle, loopOrRepeatDelay, delayString, mixDurationString] = group.slice(1, -1).split(',').map(v => v.trim());
 
 		if (trackIndexStringOrLoopDefinition === "loop") {
 			if (!Number.isInteger(Number(animationNameOrTrackIndexStringCycle))) {
@@ -111,12 +111,12 @@ function castToAnimationsInfo (value: string | null): AnimationsInfo | undefined
 			const animationInfoObject = obj[animationNameOrTrackIndexStringCycle] ||= { animations: [] };
 			animationInfoObject.cycle = true;
 
-			if (loopOrHoldDurationLastAnimation !== undefined) {
-				const holdDurationLastAnimation = Number(loopOrHoldDurationLastAnimation);
-				if (Number.isNaN(holdDurationLastAnimation)) {
-					throw new Error(`If present, duration of last animation of cycle in ${group} must be a positive integer number, instead it is ${loopOrHoldDurationLastAnimation}. Original value: ${value}`);
+			if (loopOrRepeatDelay !== undefined) {
+				const repeatDelay = Number(loopOrRepeatDelay);
+				if (Number.isNaN(repeatDelay)) {
+					throw new Error(`If present, duration of last animation of cycle in ${group} must be a positive integer number, instead it is ${loopOrRepeatDelay}. Original value: ${value}`);
 				}
-				animationInfoObject.holdDurationLastAnimation = holdDurationLastAnimation;
+				animationInfoObject.repeatDelay = repeatDelay;
 			}
 
 			return obj;
@@ -146,7 +146,7 @@ function castToAnimationsInfo (value: string | null): AnimationsInfo | undefined
 		const animationInfoObject = obj[trackIndexStringOrLoopDefinition] ||= { animations: [] };
 		animationInfoObject.animations.push({
 			animationName: animationNameOrTrackIndexStringCycle,
-			loop: loopOrHoldDurationLastAnimation.trim().toLowerCase() === "true",
+			loop: loopOrRepeatDelay.trim().toLowerCase() === "true",
 			delay,
 			mixDuration,
 		});

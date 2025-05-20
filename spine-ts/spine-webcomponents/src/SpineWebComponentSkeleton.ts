@@ -60,7 +60,7 @@ export type OffScreenUpdateBehaviourType = "pause" | "update" | "pose";
 export type FitType = "fill" | "width" | "height" | "contain" | "cover" | "none" | "scaleDown" | "origin";
 export type AnimationsInfo = Record<string, {
 	cycle?: boolean,
-	holdDurationLastAnimation?: number;
+	repeatDelay?: number;
 	animations: Array<AnimationsType>
 }>;
 export type AnimationsType = { animationName: string | "#EMPTY#", loop?: boolean, delay?: number, mixDuration?: number };
@@ -1027,7 +1027,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 			state.data.defaultMix = defaultMix;
 
 			if (animationsInfo) {
-				for (const [trackIndexString, { cycle, animations, holdDurationLastAnimation }] of Object.entries(animationsInfo)) {
+				for (const [trackIndexString, { cycle, animations, repeatDelay }] of Object.entries(animationsInfo)) {
 					const cycleFn = () => {
 						const trackIndex = Number(trackIndexString);
 						for (const [index, { animationName, delay, loop, mixDuration }] of animations.entries()) {
@@ -1051,8 +1051,8 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 							if (cycle && index === animations.length - 1) {
 								track.listener = {
 									complete: () => {
-										if (holdDurationLastAnimation)
-											setTimeout(() => cycleFn(), 1000 * holdDurationLastAnimation);
+										if (repeatDelay)
+											setTimeout(() => cycleFn(), 1000 * repeatDelay);
 										else
 											cycleFn();
 										delete track.listener?.complete;
