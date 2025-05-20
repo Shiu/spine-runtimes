@@ -209,7 +209,7 @@ public class SkeletonJson extends SkeletonLoader {
 			if (color != null) Color.valueOf(color, data.setup.getColor());
 
 			String dark = slotMap.getString("dark", null);
-			if (dark != null) Color.valueOf(dark, data.setup.getDarkColor());
+			if (dark != null) data.setup.darkColor = Color.valueOf(dark);
 
 			data.attachmentName = slotMap.getString("attachment", null);
 			data.blendMode = BlendMode.valueOf(slotMap.getString("blend", BlendMode.normal.name()));
