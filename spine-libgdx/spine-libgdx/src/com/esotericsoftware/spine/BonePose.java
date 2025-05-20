@@ -243,6 +243,7 @@ public class BonePose extends BoneLocal implements Update {
 			BonePose child = children[i].applied;
 			if (child.world == update) {
 				child.world = 0;
+				child.local = 0;
 				child.resetWorld(update);
 			}
 		}
