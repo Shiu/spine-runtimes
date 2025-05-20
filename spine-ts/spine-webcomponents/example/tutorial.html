@@ -231,11 +231,11 @@
                     ></spine-skeleton>
                 </div>
                 <div class="split-right">
-                    If you want to preserve the original scale, you can use <code>fit="none"</code>.
+                    If you want to preserve the original scale, you can use <code>fit="none"</code> (center the bounds) or <code>fit="origin"</code> (center the skeleton origin).
                     In combination with that, you can use the <code>scale</code> attribute to set your desired scale.
                     <br>
                     <br>
-                    Other fit modes are <code>width</code>, <code>height</code>, <code>cover</code>, and <code>scaleDown</code>.
+                    Other fit modes are <code>width</code>, <code>height</code>, <code>cover</code>, <code>scaleDown</code>..
                 </div>
             </div>
 
@@ -363,11 +363,6 @@
 
         <div class="split-top split">
             <div class="split-left">
-                The <code>origin</code> mode centers the animation's world origin with the center of the HTML element.
-                <br>
-                You are responsible for scaling the skeleton when using this mode.
-                <br>
-                <br>
                 Move the origin by a percentage of the div's width and height using the <code>x-axis</code> and <code>y-axis</code> attributes, respectively.
             </div>
             <div class="split-right">

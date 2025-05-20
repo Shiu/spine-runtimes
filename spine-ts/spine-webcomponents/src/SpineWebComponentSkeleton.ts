@@ -56,8 +56,7 @@ import { SpineWebComponentOverlay } from "./SpineWebComponentOverlay.js";
 type UpdateSpineWidgetFunction = (delta: number, skeleton: Skeleton, state: AnimationState) => void;
 
 export type OffScreenUpdateBehaviourType = "pause" | "update" | "pose";
-export type ModeType = "inside" | "origin";
-export type FitType = "fill" | "width" | "height" | "contain" | "cover" | "none" | "scaleDown";
+export type FitType = "fill" | "width" | "height" | "contain" | "cover" | "none" | "scaleDown" | "origin";
 export type AnimationsInfo = Record<string, {
 	cycle?: boolean,
 	holdDurationLastAnimation?: number;
@@ -79,7 +78,6 @@ interface WidgetAttributes {
 	defaultMix?: number
 	skin?: string
 	fit: FitType
-	mode: ModeType
 	xAxis: number
 	yAxis: number
 	offsetX: number
@@ -240,18 +238,10 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	 * - `cover`: as small as possible while still covering the entire element container.
 	 * - `scaleDown`: scale the skeleton down to ensure that the skeleton fits within the element container.
 	 * - `none`: display the skeleton without autoscaling it.
+	 * - `origin`: the skeleton origin is centered with the element container regardless of the bounds.
 	 * Connected to `fit` attribute.
 	 */
 	public fit: FitType = "contain";
-
-	/**
-	 * Specify the way the skeleton is centered within the element container:
-	 * - `inside`: the skeleton bounds center is centered with the element container (Default)
-	 * - `origin`: the skeleton origin is centered with the element container regardless of the bounds.
-	 * Origin does not allow to specify any {@link fit} type and guarantee the skeleton to not be autoscaled.
-	 * Connected to `mode` attribute.
-	 */
-	public mode: ModeType = "inside";
 
 	/**
 	 * The x offset of the skeleton world origin x axis as a percentage of the element container width
@@ -731,7 +721,6 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		clip: { propertyName: "clip", type: "boolean" },
 		pages: { propertyName: "pages", type: "array-number" },
 		fit: { propertyName: "fit", type: "fitType", defaultValue: "contain" },
-		mode: { propertyName: "mode", type: "modeType", defaultValue: "inside" },
 		offscreen: { propertyName: "offScreenUpdateBehaviour", type: "offScreenUpdateBehaviourType", defaultValue: "pause" },
 	}
 
