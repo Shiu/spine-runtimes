@@ -370,7 +370,7 @@
                     atlas="/assets/vine-pma.atlas"
                     skeleton="/assets/vine-pro.skel"
                     animation="grow"
-                    mode="origin"
+                    fit="origin"
                     scale=".5"
                     y-axis="-.5"
                 ></spine-skeleton>
@@ -385,7 +385,7 @@
     atlas="/assets/vine-pma.atlas"
     skeleton="/assets/vine-pro.skel"
     animation="grow"
-    mode="origin"
+    fit="origin"
     scale=".5"
     y-axis="-.5"
 ></spine-skeleton>
@@ -1422,6 +1422,8 @@ function toggleSpinner(element) {
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
                 It's very easy to display your different skins and animations. Simply create a table and use the <code>skin</code> and <code>animation</code> attributes.
+                <br>
+                <code>skin</code> accepts an comma separated list of skin names. The skins will be combined in a new one, from the first to the last. If multiple skins set the same slot, the latest in the list will be used.
             </div>
 
             <div class="skin-grid">

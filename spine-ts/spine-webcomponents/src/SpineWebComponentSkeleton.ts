@@ -49,6 +49,7 @@ import {
 	RegionAttachment,
 	MeshAttachment,
 	Bone,
+	Skin,
 } from "@esotericsoftware/spine-webgl";
 import { AttributeTypes, castValue, isBase64, Rectangle } from "./wcUtils.js";
 import { SpineWebComponentOverlay } from "./SpineWebComponentOverlay.js";
@@ -76,7 +77,7 @@ interface WidgetAttributes {
 	animation?: string
 	animations?: AnimationsInfo
 	defaultMix?: number
-	skin?: string
+	skin?: string[]
 	fit: FitType
 	xAxis: number
 	yAxis: number
@@ -219,14 +220,14 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	 * Optional: The name of the skin to be set
 	 * Connected to `skin` attribute.
 	 */
-	public get skin (): string | undefined {
+	public get skin (): string[] | undefined {
 		return this._skin;
 	}
-	public set skin (value: string | undefined) {
+	public set skin (value: string[] | undefined) {
 		this._skin = value;
 		this.initWidget();
 	}
-	private _skin?: string
+	private _skin?: string[]
 
 	/**
 	 * Specify the way the skeleton is sized within the element automatically changing its `scaleX` and `scaleY`.
@@ -695,7 +696,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		animations: { propertyName: "animations", type: "animationsInfo", defaultValue: undefined },
 		"animation-bounds": { propertyName: "animationsBound", type: "array-string", defaultValue: undefined },
 		"default-mix": { propertyName: "defaultMix", type: "number", defaultValue: 0 },
-		skin: { propertyName: "skin", type: "string" },
+		skin: { propertyName: "skin", type: "array-string" },
 		width: { propertyName: "width", type: "number", defaultValue: -1 },
 		height: { propertyName: "height", type: "number", defaultValue: -1 },
 		isdraggable: { propertyName: "isDraggable", type: "boolean" },
@@ -997,18 +998,28 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		// skeleton.scaleX = this.dprScale;
 		// skeleton.scaleY = this.dprScale;
 
+		this.loading = false;
+
 		// the bounds are calculated the first time, if no custom bound is provided
 		this.initWidget(this.bounds.width <= 0 || this.bounds.height <= 0);
 
-		this.loading = false;
 		return this;
 	}
 
 	private initWidget (forceRecalculate = false) {
+		if (this.loading) return;
+
 		const { skeleton, state, animation, animations: animationsInfo, skin, defaultMix } = this;
 
 		if (skin) {
-			skeleton?.setSkinByName(skin);
+			if (skin.length === 1) {
+				skeleton?.setSkinByName(skin[0]);
+			} else {
+				const customSkin = new Skin("custom");
+				for (const s of skin)  customSkin.addSkin(skeleton?.data.findSkin(s) as Skin);
+				skeleton?.setSkin(customSkin);
+			}
+
 			skeleton?.setSlotsToSetupPose();
 		}
 
