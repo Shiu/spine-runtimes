@@ -123,6 +123,7 @@ public class MeshAttachment extends VertexAttachment implements HasTextureRegion
 					uvs[i] = u + regionUVs[i + 1] * width;
 					uvs[i + 1] = v + (1 - regionUVs[i]) * height;
 				}
+				return;
 			}
 			case 180 -> {
 				u -= (region.originalWidth - region.offsetX - region.packedWidth) / textureWidth;
@@ -133,6 +134,7 @@ public class MeshAttachment extends VertexAttachment implements HasTextureRegion
 					uvs[i] = u + (1 - regionUVs[i]) * width;
 					uvs[i + 1] = v + (1 - regionUVs[i + 1]) * height;
 				}
+				return;
 			}
 			case 270 -> {
 				u -= region.offsetY / textureWidth;
@@ -143,6 +145,7 @@ public class MeshAttachment extends VertexAttachment implements HasTextureRegion
 					uvs[i] = u + (1 - regionUVs[i + 1]) * width;
 					uvs[i + 1] = v + regionUVs[i] * height;
 				}
+				return;
 			}
 			default -> {
 				u -= region.offsetX / textureWidth;
@@ -151,7 +154,6 @@ public class MeshAttachment extends VertexAttachment implements HasTextureRegion
 				height = region.originalHeight / textureHeight;
 			}
 			}
-			return;
 		} else if (region == null) {
 			u = v = 0;
 			width = height = 1;
