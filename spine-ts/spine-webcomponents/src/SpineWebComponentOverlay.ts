@@ -653,7 +653,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 				if (widget.isOffScreenAndWasMoved() || !widget.skeleton) continue;
 
 				for (const boneFollower of widget.boneFollowerList) {
-					const { slot, bone, element, followAttachmentAttach, followRotation, followOpacity, followScale } = boneFollower;
+					const { slot, bone, element, followVisibility, followRotation, followOpacity, followScale } = boneFollower;
 					const { worldX, worldY } = widget;
 					this.worldToScreen(this.tempFollowBoneVector, bone.worldX + worldX, bone.worldY + worldY);
 
@@ -674,7 +674,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 					element.style.display = ""
 
-					if (followAttachmentAttach && !slot.attachment) {
+					if (followVisibility && !slot.attachment) {
 						element.style.opacity = "0";
 					} else if (followOpacity) {
 						element.style.opacity = `${slot.color.a}`;

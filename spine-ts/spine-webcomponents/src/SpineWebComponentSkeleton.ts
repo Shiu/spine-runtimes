@@ -1016,7 +1016,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 				skeleton?.setSkinByName(skin[0]);
 			} else {
 				const customSkin = new Skin("custom");
-				for (const s of skin)  customSkin.addSkin(skeleton?.data.findSkin(s) as Skin);
+				for (const s of skin) customSkin.addSkin(skeleton?.data.findSkin(s) as Skin);
 				skeleton?.setSkin(customSkin);
 			}
 
@@ -1231,10 +1231,10 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	* Other utilities
 	*/
 
-	public boneFollowerList: Array<{ slot: Slot, bone: Bone, element: HTMLElement, followAttachmentAttach: boolean, followRotation: boolean, followOpacity: boolean, followScale: boolean, hideAttachment: boolean }> = [];
-	public followSlot (slotName: string | Slot, element: HTMLElement, options: { followAttachmentAttach?: boolean, followRotation?: boolean, followOpacity?: boolean, followScale?: boolean, hideAttachment?: boolean } = {}) {
+	public boneFollowerList: Array<{ slot: Slot, bone: Bone, element: HTMLElement, followVisibility: boolean, followRotation: boolean, followOpacity: boolean, followScale: boolean, hideAttachment: boolean }> = [];
+	public followSlot (slotName: string | Slot, element: HTMLElement, options: { followVisibility?: boolean, followRotation?: boolean, followOpacity?: boolean, followScale?: boolean, hideAttachment?: boolean } = {}) {
 		const {
-			followAttachmentAttach = false,
+			followVisibility = false,
 			followRotation = true,
 			followOpacity = true,
 			followScale = true,
@@ -1253,7 +1253,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		element.style.left = '0px';
 		element.style.display = 'none';
 
-		this.boneFollowerList.push({ slot, bone: slot.bone, element, followAttachmentAttach, followRotation, followOpacity, followScale, hideAttachment });
+		this.boneFollowerList.push({ slot, bone: slot.bone, element, followVisibility, followRotation, followOpacity, followScale, hideAttachment });
 		this.overlay.addSlotFollowerElement(element);
 	}
 	public unfollowSlot (element: HTMLElement): HTMLElement | undefined {
