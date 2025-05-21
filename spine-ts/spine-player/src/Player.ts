@@ -151,6 +151,9 @@ export interface SpinePlayerConfig {
 	   filter settings from the texture atlas are used. Default: true */
 	mipmaps?: boolean
 
+	/* Optional: Whether the player responds to user click/touch (play/pause, or control bones). Default: true */
+	interactive?: boolean
+
 	/* Optional: List of bone names that the user can drag to position. Default: none */
 	controlBones?: string[]
 
@@ -239,6 +242,7 @@ export class SpinePlayer implements Disposable {
 	private previousViewport: Viewport = {} as Viewport;
 	private viewportTransitionStart = 0;
 	private eventListeners: Array<{ target: any, event: any, func: any }> = [];
+	private input?: Input;
 
 	constructor (parent: HTMLElement | string, private config: SpinePlayerConfig) {
 		let parentDom = typeof parent === "string" ? document.getElementById(parent) : parent;
@@ -286,6 +290,7 @@ export class SpinePlayer implements Disposable {
 			var eventListener = this.eventListeners[i];
 			eventListener.target.removeEventListener(eventListener.event, eventListener.func);
 		}
+		this.input?.dispose();
 		this.parent.removeChild(this.dom);
 		this.disposed = true;
 	}
@@ -312,6 +317,7 @@ export class SpinePlayer implements Disposable {
 		if (config.premultipliedAlpha === void 0) config.premultipliedAlpha = true;
 		if (config.preserveDrawingBuffer === void 0) config.preserveDrawingBuffer = false;
 		if (config.mipmaps === void 0) config.mipmaps = true;
+		if (config.interactive === void 0) config.interactive = true;
 		if (!config.debug) config.debug = {
 			bones: false,
 			clipping: false,
@@ -592,57 +598,61 @@ export class SpinePlayer implements Disposable {
 		let skeleton = this.skeleton!;
 		let renderer = this.sceneRenderer!;
 
-		let closest = function (x: number, y: number): Bone | null {
-			mouse.set(x, canvas.clientHeight - y, 0)
-			offset.x = offset.y = 0;
-			let bestDistance = 24, index = 0;
-			let best: Bone | null = null;
-			for (let i = 0; i < controlBones.length; i++) {
-				selectedBones[i] = null;
-				let bone = skeleton.findBone(controlBones[i]);
-				if (!bone) continue;
-				let distance = renderer.camera.worldToScreen(
-					coords.set(bone.worldX, bone.worldY, 0),
-					canvas.clientWidth, canvas.clientHeight).distance(mouse);
-				if (distance < bestDistance) {
-					bestDistance = distance;
-					best = bone;
-					index = i;
-					offset.x = coords.x - mouse.x;
-					offset.y = coords.y - mouse.y;
-				}
-			}
-			if (best) selectedBones[index] = best;
-			return best;
-		};
-
-		new Input(canvas).addListener({
-			down: (x, y) => {
-				target = closest(x, y);
-			},
-			up: () => {
-				if (target)
-					target = null;
-				else if (config.showControls)
-					(this.paused ? this.play() : this.pause());
-			},
-			dragged: (x, y) => {
-				if (target) {
-					x = MathUtils.clamp(x + offset.x, 0, canvas.clientWidth)
-					y = MathUtils.clamp(y - offset.y, 0, canvas.clientHeight);
-					renderer.camera.screenToWorld(coords.set(x, y, 0), canvas.clientWidth, canvas.clientHeight);
-					if (target.parent) {
-						target.parent.worldToLocal(position.set(coords.x - skeleton.x, coords.y - skeleton.y));
-						target.x = position.x;
-						target.y = position.y;
-					} else {
-						target.x = coords.x - skeleton.x;
-						target.y = coords.y - skeleton.y;
+		if (config.interactive) {
+			let closest = function (x: number, y: number): Bone | null {
+				mouse.set(x, canvas.clientHeight - y, 0)
+				offset.x = offset.y = 0;
+				let bestDistance = 24, index = 0;
+				let best: Bone | null = null;
+				for (let i = 0; i < controlBones.length; i++) {
+					selectedBones[i] = null;
+					let bone = skeleton.findBone(controlBones[i]);
+					if (!bone) continue;
+					let distance = renderer.camera.worldToScreen(
+						coords.set(bone.worldX, bone.worldY, 0),
+						canvas.clientWidth, canvas.clientHeight).distance(mouse);
+					if (distance < bestDistance) {
+						bestDistance = distance;
+						best = bone;
+						index = i;
+						offset.x = coords.x - mouse.x;
+						offset.y = coords.y - mouse.y;
 					}
 				}
-			},
-			moved: (x, y) => closest(x, y)
-		});
+				if (best) selectedBones[index] = best;
+				return best;
+			};
+
+			this.input = new Input(canvas);
+			this.input.addListener({
+				down: (x, y) => {
+					target = closest(x, y);
+				},
+				up: () => {
+					if (target)
+						target = null;
+					else if (config.showControls)
+						(this.paused ? this.play() : this.pause());
+				},
+				dragged: (x, y) => {
+					if (target) {
+						x = MathUtils.clamp(x + offset.x, 0, canvas.clientWidth)
+						y = MathUtils.clamp(y - offset.y, 0, canvas.clientHeight);
+						renderer.camera.screenToWorld(coords.set(x, y, 0), canvas.clientWidth, canvas.clientHeight);
+						if (target.parent) {
+							target.parent.worldToLocal(position.set(coords.x - skeleton.x, coords.y - skeleton.y));
+							target.x = position.x;
+							target.y = position.y;
+						} else {
+							target.x = coords.x - skeleton.x;
+							target.y = coords.y - skeleton.y;
+						}
+					}
+				},
+				moved: (x, y) => closest(x, y)
+			});
+		}
+
 
 		if (config.showControls) {
 			// For manual hover to work, we need to disable hidding controls if the mouse/touch entered the clickable area of a child of the controls.

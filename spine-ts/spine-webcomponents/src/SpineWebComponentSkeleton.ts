@@ -49,6 +49,7 @@ import {
 	RegionAttachment,
 	MeshAttachment,
 	Bone,
+	Skin,
 } from "@esotericsoftware/spine-webgl";
 import { AttributeTypes, castValue, isBase64, Rectangle } from "./wcUtils.js";
 import { SpineWebComponentOverlay } from "./SpineWebComponentOverlay.js";
@@ -56,9 +57,12 @@ import { SpineWebComponentOverlay } from "./SpineWebComponentOverlay.js";
 type UpdateSpineWidgetFunction = (delta: number, skeleton: Skeleton, state: AnimationState) => void;
 
 export type OffScreenUpdateBehaviourType = "pause" | "update" | "pose";
-export type ModeType = "inside" | "origin";
-export type FitType = "fill" | "width" | "height" | "contain" | "cover" | "none" | "scaleDown";
-export type AnimationsInfo = Record<string, { cycle?: boolean, animations: Array<AnimationsType> }>;
+export type FitType = "fill" | "width" | "height" | "contain" | "cover" | "none" | "scaleDown" | "origin";
+export type AnimationsInfo = Record<string, {
+	cycle?: boolean,
+	repeatDelay?: number;
+	animations: Array<AnimationsType>
+}>;
 export type AnimationsType = { animationName: string | "#EMPTY#", loop?: boolean, delay?: number, mixDuration?: number };
 export type CursorEventType = "down" | "up" | "enter" | "leave" | "move" | "drag";
 export type CursorEventTypesInput = Exclude<CursorEventType, "enter" | "leave">;
@@ -73,9 +77,8 @@ interface WidgetAttributes {
 	animation?: string
 	animations?: AnimationsInfo
 	defaultMix?: number
-	skin?: string
+	skin?: string[]
 	fit: FitType
-	mode: ModeType
 	xAxis: number
 	yAxis: number
 	offsetX: number
@@ -217,14 +220,14 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	 * Optional: The name of the skin to be set
 	 * Connected to `skin` attribute.
 	 */
-	public get skin (): string | undefined {
+	public get skin (): string[] | undefined {
 		return this._skin;
 	}
-	public set skin (value: string | undefined) {
+	public set skin (value: string[] | undefined) {
 		this._skin = value;
 		this.initWidget();
 	}
-	private _skin?: string
+	private _skin?: string[]
 
 	/**
 	 * Specify the way the skeleton is sized within the element automatically changing its `scaleX` and `scaleY`.
@@ -236,18 +239,10 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	 * - `cover`: as small as possible while still covering the entire element container.
 	 * - `scaleDown`: scale the skeleton down to ensure that the skeleton fits within the element container.
 	 * - `none`: display the skeleton without autoscaling it.
+	 * - `origin`: the skeleton origin is centered with the element container regardless of the bounds.
 	 * Connected to `fit` attribute.
 	 */
 	public fit: FitType = "contain";
-
-	/**
-	 * Specify the way the skeleton is centered within the element container:
-	 * - `inside`: the skeleton bounds center is centered with the element container (Default)
-	 * - `origin`: the skeleton origin is centered with the element container regardless of the bounds.
-	 * Origin does not allow to specify any {@link fit} type and guarantee the skeleton to not be autoscaled.
-	 * Connected to `mode` attribute.
-	 */
-	public mode: ModeType = "inside";
 
 	/**
 	 * The x offset of the skeleton world origin x axis as a percentage of the element container width
@@ -562,16 +557,11 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	/**
 	 * A callback invoked each time the element container enters the screen viewport.
 	 * By default, the callback call the {@link start} method the first time the widget
-	 * enters the screen viewport.
+	 * enters the screen viewport and {@link startWhenVisible} is `true`.
 	 */
 	public onScreenFunction: (widget: SpineWebComponentSkeleton) => void = async (widget) => {
-		if (widget.loading && !widget.onScreenAtLeastOnce) {
-			widget.onScreenAtLeastOnce = true;
-
-			if (widget.manualStart && widget.startWhenVisible) {
-				widget.start();
-			}
-		}
+		if (widget.loading && !widget.onScreenAtLeastOnce && widget.manualStart && widget.startWhenVisible)
+			widget.start()
 	}
 
 	/**
@@ -706,7 +696,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		animations: { propertyName: "animations", type: "animationsInfo", defaultValue: undefined },
 		"animation-bounds": { propertyName: "animationsBound", type: "array-string", defaultValue: undefined },
 		"default-mix": { propertyName: "defaultMix", type: "number", defaultValue: 0 },
-		skin: { propertyName: "skin", type: "string" },
+		skin: { propertyName: "skin", type: "array-string" },
 		width: { propertyName: "width", type: "number", defaultValue: -1 },
 		height: { propertyName: "height", type: "number", defaultValue: -1 },
 		isdraggable: { propertyName: "isDraggable", type: "boolean" },
@@ -732,7 +722,6 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		clip: { propertyName: "clip", type: "boolean" },
 		pages: { propertyName: "pages", type: "array-number" },
 		fit: { propertyName: "fit", type: "fitType", defaultValue: "contain" },
-		mode: { propertyName: "mode", type: "modeType", defaultValue: "inside" },
 		offscreen: { propertyName: "offScreenUpdateBehaviour", type: "offScreenUpdateBehaviourType", defaultValue: "pause" },
 	}
 
@@ -876,7 +865,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	 * @returns The `HTMLElement` where the widget is hosted.
 	 */
 	public getHostElement (): HTMLElement {
-		return (this.width <= 0 || this.width <= 0) && !this.getAttribute("style")
+		return (this.width <= 0 || this.width <= 0) && !this.getAttribute("style") && !this.getAttribute("class")
 			? this.parentElement!
 			: this;
 	}
@@ -1009,18 +998,28 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		// skeleton.scaleX = this.dprScale;
 		// skeleton.scaleY = this.dprScale;
 
+		this.loading = false;
+
 		// the bounds are calculated the first time, if no custom bound is provided
 		this.initWidget(this.bounds.width <= 0 || this.bounds.height <= 0);
 
-		this.loading = false;
 		return this;
 	}
 
 	private initWidget (forceRecalculate = false) {
+		if (this.loading) return;
+
 		const { skeleton, state, animation, animations: animationsInfo, skin, defaultMix } = this;
 
 		if (skin) {
-			skeleton?.setSkinByName(skin);
+			if (skin.length === 1) {
+				skeleton?.setSkinByName(skin[0]);
+			} else {
+				const customSkin = new Skin("custom");
+				for (const s of skin) customSkin.addSkin(skeleton?.data.findSkin(s) as Skin);
+				skeleton?.setSkin(customSkin);
+			}
+
 			skeleton?.setSlotsToSetupPose();
 		}
 
@@ -1028,7 +1027,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 			state.data.defaultMix = defaultMix;
 
 			if (animationsInfo) {
-				for (const [trackIndexString, { cycle, animations }] of Object.entries(animationsInfo)) {
+				for (const [trackIndexString, { cycle, animations, repeatDelay }] of Object.entries(animationsInfo)) {
 					const cycleFn = () => {
 						const trackIndex = Number(trackIndexString);
 						for (const [index, { animationName, delay, loop, mixDuration }] of animations.entries()) {
@@ -1050,7 +1049,15 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 							if (mixDuration) track.mixDuration = mixDuration;
 
 							if (cycle && index === animations.length - 1) {
-								track.listener = { complete: () => cycleFn() };
+								track.listener = {
+									complete: () => {
+										if (repeatDelay)
+											setTimeout(() => cycleFn(), 1000 * repeatDelay);
+										else
+											cycleFn();
+										delete track.listener?.complete;
+									}
+								};
 							};
 						}
 					}
@@ -1068,22 +1075,13 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	}
 
 	private render (): void {
-		let width;
-		let height;
-		if (this.width === -1 || this.height === -1) {
-			width = "0";
-			height = "0";
-		} else {
-			width = `${this.width}px`
-			height = `${this.height}px`
-		}
+		let noSize = (!this.getAttribute("style") && !this.getAttribute("class"));
 		this.root.innerHTML = `
         <style>
             :host {
                 position: relative;
                 display: inline-block;
-                width:  ${width};
-                height: ${height};
+				${noSize ? "width: 0; height: 0;" : ""}
             }
         </style>
         `;
@@ -1233,10 +1231,10 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	* Other utilities
 	*/
 
-	public boneFollowerList: Array<{ slot: Slot, bone: Bone, element: HTMLElement, followAttachmentAttach: boolean, followRotation: boolean, followOpacity: boolean, followScale: boolean, hideAttachment: boolean }> = [];
-	public followSlot (slotName: string | Slot, element: HTMLElement, options: { followAttachmentAttach?: boolean, followRotation?: boolean, followOpacity?: boolean, followScale?: boolean, hideAttachment?: boolean } = {}) {
+	public boneFollowerList: Array<{ slot: Slot, bone: Bone, element: HTMLElement, followVisibility: boolean, followRotation: boolean, followOpacity: boolean, followScale: boolean, hideAttachment: boolean }> = [];
+	public followSlot (slotName: string | Slot, element: HTMLElement, options: { followVisibility?: boolean, followRotation?: boolean, followOpacity?: boolean, followScale?: boolean, hideAttachment?: boolean } = {}) {
 		const {
-			followAttachmentAttach = false,
+			followVisibility = false,
 			followRotation = true,
 			followOpacity = true,
 			followScale = true,
@@ -1255,7 +1253,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		element.style.left = '0px';
 		element.style.display = 'none';
 
-		this.boneFollowerList.push({ slot, bone: slot.bone, element, followAttachmentAttach, followRotation, followOpacity, followScale, hideAttachment });
+		this.boneFollowerList.push({ slot, bone: slot.bone, element, followVisibility, followRotation, followOpacity, followScale, hideAttachment });
 		this.overlay.addSlotFollowerElement(element);
 	}
 	public unfollowSlot (element: HTMLElement): HTMLElement | undefined {

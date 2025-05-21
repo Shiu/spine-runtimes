@@ -231,11 +231,11 @@
                     ></spine-skeleton>
                 </div>
                 <div class="split-right">
-                    If you want to preserve the original scale, you can use <code>fit="none"</code>.
+                    If you want to preserve the original scale, you can use <code>fit="none"</code> (center the bounds) or <code>fit="origin"</code> (center the skeleton origin).
                     In combination with that, you can use the <code>scale</code> attribute to set your desired scale.
                     <br>
                     <br>
-                    Other fit modes are <code>width</code>, <code>height</code>, <code>cover</code>, and <code>scaleDown</code>.
+                    Other fit modes are <code>width</code>, <code>height</code>, <code>cover</code>, <code>scaleDown</code>..
                 </div>
             </div>
 
@@ -280,12 +280,20 @@
 
         <div class="split-top split">
             <div class="split-left">
+                <style>
+                    .custom-class {
+                        width: 150px;
+                        height: 150px;
+                        border: 1px solid green;
+                        border-radius: 10px;
+                        box-shadow: -5px 5px 3px rgba(255, 0, 0, 0.3);
+                    }
+                </style>
                 <spine-skeleton
                     atlas="/assets/spineboy-pma.atlas"
                     skeleton="/assets/spineboy-pro.skel"
                     animation="walk"
-                    height="150"
-                    width="150"
+                    class="custom-class"
                 ></spine-skeleton>
                 <spine-skeleton
                     atlas="/assets/spineboy-pma.atlas"
@@ -301,10 +309,9 @@
                 ></spine-skeleton>
             </div>
             <div class="split-right">
-                If you want to manually size the Spine widget, specify the <code>width</code> and <code>height</code> attributes in pixels (without the "px" unit).
+                By default, the widget occupy zero width and height.
+                If you want to manually size the Spine widget, you can style the component using the <code>style</code> or <code>class</code> attribute, which provides more styling options.
                 <br>
-                <br>
-                If you prefer, you can style the component using the <code>style</code> attribute, which provides more styling options.
             </div>
         </div>
 
@@ -356,11 +363,6 @@
 
         <div class="split-top split">
             <div class="split-left">
-                The <code>origin</code> mode centers the animation's world origin with the center of the HTML element.
-                <br>
-                You are responsible for scaling the skeleton when using this mode.
-                <br>
-                <br>
                 Move the origin by a percentage of the div's width and height using the <code>x-axis</code> and <code>y-axis</code> attributes, respectively.
             </div>
             <div class="split-right">
@@ -368,7 +370,7 @@
                     atlas="/assets/vine-pma.atlas"
                     skeleton="/assets/vine-pro.skel"
                     animation="grow"
-                    mode="origin"
+                    fit="origin"
                     scale=".5"
                     y-axis="-.5"
                 ></spine-skeleton>
@@ -383,7 +385,7 @@
     atlas="/assets/vine-pma.atlas"
     skeleton="/assets/vine-pro.skel"
     animation="grow"
-    mode="origin"
+    fit="origin"
     scale=".5"
     y-axis="-.5"
 ></spine-skeleton>
@@ -765,10 +767,11 @@
                     <li><code>mixDuration</code>: the mix duration between this animation and the previous one (not used for the first animation on a track)</li>
                 </ol>
 
-                <p>To loop a track once it reaches the end, add the special group <code>[loop, trackNumber]</code>, where:</p>
+                <p>To loop a track once it reaches the end, add the special group <code>[loop, trackNumber, repeatDelay]</code>, where:</p>
                 <ul>
                     <li><code>loop</code>: identifies this as a loop instruction</li>
                     <li><code>trackNumber</code>: the number of the track to loop</li>
+                    <li><code>repeatDelay</code>: the number of seconds to wait after the last animation is completed before repeating the loop</li>
                 </ul>
 
                 <p>The parameters of the first group on each track are passed to the <code>setAnimation</code> method, while the remaining groups use <code>addAnimation</code>.</p>
@@ -1346,7 +1349,7 @@ function removeDiv() {
                 Click the button below to toggle the spinner.
                 <br>
                 <br>
-                <input type="button" value="Spinner ON" onclick="toggleSpinner(this)">
+                <input type="button" value="Spinner OFF" onclick="toggleSpinner(this)">
             </div>
         </div>
 
@@ -1355,7 +1358,6 @@ function removeDiv() {
             async function reloadWidget(element) {
                 element.disabled = true;
                 await widget.whenReady;
-                const skeleton = widget.skeleton;
                 widget.loading = true;
                 setTimeout(() => {
                     element.disabled = false;
@@ -1364,7 +1366,7 @@ function removeDiv() {
             }
             function toggleSpinner(element) {
                 widget.noSpinner = !widget.noSpinner;
-                element.value = widget.noSpinner ? "Spinner ON" : "Spinner OFF";
+                element.value = widget.noSpinner ? "Spinner OFF" : "Spinner ON";
             }
         </script>
 
@@ -1420,6 +1422,8 @@ function toggleSpinner(element) {
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
                 It's very easy to display your different skins and animations. Simply create a table and use the <code>skin</code> and <code>animation</code> attributes.
+                <br>
+                <code>skin</code> accepts a comma separated list of skin names. The skins will be combined in a new one, from the first to the last. If multiple skins set the same slot, the latest in the list will be used.
             </div>
 
             <div class="skin-grid">
@@ -2042,19 +2046,16 @@ skins.forEach((skin, i) => {
         <div class="split" style="width: 100%; flex-direction: column;">
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
-                When the widget (or the parent element) enters the viewport, the callback <code>onScreenFunction</code> is invoked.
-                <br>
-                <br>
-                By default, the callback does two things:
-                <ul>
-                    <li>sets <code>onScreenAtLeastOnce</code> to <code>true</code> when the widget enters the viewport for the first time</li>
-                    <li>if <code>start-when-visible</code> is set, the widget's <code>start</code> method is invoked the first time the widget enters the viewport, and the assets are loaded at that moment.</li>
-                </ul>
-                <br>
-                The assets of the coin below are loaded only when the widget enters the viewport.
-                <br>
-                <br>
-                You can overwrite the <code>onScreenFunction</code> behavior. For example, the raptor below changes its animation every time the widget enters the viewport.
+              When the widget (or its parent element) enters the viewport, two things happen:<br>
+              <ul>
+                <li>the widget's <code>onScreenAtLeastOnce</code> property is set to <code>true</code></li>
+                <li>the widget's <code>onScreenFunction</code> callback is invoked</li>
+              </ul>
+              By default, <code>onScreenFunction</code> invokes the widget's <code>start</code> method if the widget has the <code>start-when-visible</code> attribute set, and this occurs only the first time it enters the viewport.<br>
+              <br>
+              The assets of the coin below are loaded only when the widget enters the viewport.<br>
+              <br>
+              You can override the <code>onScreenFunction</code> behavior. For example, the raptor below changes its animation every time the widget enters the viewport.
             </div>
 
             <div class="skin-grid">
@@ -2077,7 +2078,6 @@ skins.forEach((skin, i) => {
                     <script>
                         (async () => {
                             const raptorWidget = await spine.getSpineWidget("coin-with-raptor").whenReady;
-
                             let raptorWalking = true;
                             raptorWidget.onScreenFunction = widget => {
                                 raptorWalking = !raptorWalking;
@@ -2096,7 +2096,14 @@ skins.forEach((skin, i) => {
                 <script>
                 escapeHTMLandInject(`
 <spine-skeleton
-    identifier="coin"
+    atlas="/assets/coin-pma.atlas"
+    skeleton="/assets/coin-pro.skel"
+    animation="animation"
+    start-when-visible
+></spine-skeleton>
+
+<spine-skeleton
+    identifier="coin-with-raptor"
     atlas="/assets/raptor-pma.atlas"
     skeleton="/assets/raptor-pro.skel"
     animation="walk"
@@ -2689,8 +2696,6 @@ tank.beforeUpdateWorldTransforms = (delta, skeleton, state) => {
             <div class="split-left" style="overflow-y: auto; width: 100px; height: 200px; transform: translateZ(0);">
                 <spine-overlay
                     overlay-id="scroll"
-                    scrollable
-                    no-auto-parent-transform
                     overflow-top=".2"
                     overflow-bottom=".2"
                     overflow-left=".2"
@@ -3271,7 +3276,7 @@ const darkPicker = document.getElementById("dark-picker");
                                 <li><code>followOpacity</code>: the element opacity is connected to the slot alpha</li>
                                 <li><code>followScale</code>: the element scale is connected to the slot scale</li>
                                 <li><code>followRotation</code>: the element rotation is connected to the slot rotation</li>
-                                <li><code>followAttachmentAttach</code>: the element is shown/hidden depending if the slot contains an attachment or not</li>
+                                <li><code>followVisibility</code>: the element is shown/hidden depending if the slot contains an attachment or not</li>
                                 <li><code>hideAttachment</code>: the slot attachment is hidden as if the element replaced the attachment</li>
                             </ul>
                         </li>
@@ -3296,10 +3301,10 @@ const darkPicker = document.getElementById("dark-picker");
         <script>
             (async () => {
                 const widget = await spine.getSpineWidget("potty").whenReady;
-                widget.followSlot("rain/rain-color", document.getElementById("rain/rain-color"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-white", document.getElementById("rain/rain-white"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-blue", document.getElementById("rain/rain-blue"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-green", document.getElementById("rain/rain-green"), { followAttachmentAttach: false, hideAttachment: true });
+                widget.followSlot("rain/rain-color", document.getElementById("rain/rain-color"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-white", document.getElementById("rain/rain-white"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-blue", document.getElementById("rain/rain-blue"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-green", document.getElementById("rain/rain-green"), { followVisibility: false, hideAttachment: true });
             })();
         </script>
 
@@ -3323,10 +3328,10 @@ const darkPicker = document.getElementById("dark-picker");
 
 (async () => {
     const widget = await spine.getSpineWidget("potty").whenReady;
-    widget.followSlot("rain/rain-color", document.getElementById("rain/rain-color"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-white", document.getElementById("rain/rain-white"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-blue", document.getElementById("rain/rain-blue"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-green", document.getElementById("rain/rain-green"), { followAttachmentAttach: false, hideAttachment: true });
+    widget.followSlot("rain/rain-color", document.getElementById("rain/rain-color"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-white", document.getElementById("rain/rain-white"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-blue", document.getElementById("rain/rain-blue"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-green", document.getElementById("rain/rain-green"), { followVisibility: false, hideAttachment: true });
 })();`);</script>
             </code></pre>
         </div>
@@ -3370,10 +3375,10 @@ const darkPicker = document.getElementById("dark-picker");
         <script>
             (async () => {
                 const widget = await spine.getSpineWidget("potty2").whenReady;
-                widget.followSlot("rain/rain-color", spine.getSpineWidget("potty2-1"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-white", spine.getSpineWidget("potty2-2"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-blue", spine.getSpineWidget("potty2-3"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-green", spine.getSpineWidget("potty2-4"), { followAttachmentAttach: false, hideAttachment: true });
+                widget.followSlot("rain/rain-color", spine.getSpineWidget("potty2-1"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-white", spine.getSpineWidget("potty2-2"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-blue", spine.getSpineWidget("potty2-3"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-green", spine.getSpineWidget("potty2-4"), { followVisibility: false, hideAttachment: true });
             })();
         </script>
 
@@ -3397,10 +3402,10 @@ const darkPicker = document.getElementById("dark-picker");
 
 (async () => {
     const widget = await spine.getSpineWidget("potty2").whenReady;
-    widget.followSlot("rain/rain-color", spine.getSpineWidget("potty2-1"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-white", spine.getSpineWidget("potty2-2"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-blue", spine.getSpineWidget("potty2-3"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-green", spine.getSpineWidget("potty2-4"), { followAttachmentAttach: false, hideAttachment: true });
+    widget.followSlot("rain/rain-color", spine.getSpineWidget("potty2-1"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-white", spine.getSpineWidget("potty2-2"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-blue", spine.getSpineWidget("potty2-3"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-green", spine.getSpineWidget("potty2-4"), { followVisibility: false, hideAttachment: true });
 })();`);</script>
             </code></pre>
         </div>
