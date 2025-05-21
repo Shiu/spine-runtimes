@@ -411,7 +411,7 @@
         (async () => {
 
             /* SECTION 1 */
-            const widget1 = await spine.getSpineWidget("list").whenReady;
+            const widget1 = await spine.getSkeleton("list").whenReady;
 
             const setInteractionSectionOne = (itemName, trackNumber) => {
                 const divName = `${itemName}Div`;
@@ -501,7 +501,7 @@
             /* SECTION 2 */
             const btnNext2 = document.getElementById("btn-next-2");
 
-            const widget2 = await spine.getSpineWidget("pan").whenReady;
+            const widget2 = await spine.getSkeleton("pan").whenReady;
             const foodPiece1 = widget2.skeleton.findSlot(`food-piece-1`);
             const foodPiece2 = widget2.skeleton.findSlot(`food-piece-2`);
             const foodPiece3 = widget2.skeleton.findSlot(`food-piece-3`);
@@ -561,7 +561,7 @@
             /* SECTION 2 */
 
             /* SECTION 3 */
-            const widget3 = await spine.getSpineWidget("delivery").whenReady;
+            const widget3 = await spine.getSkeleton("delivery").whenReady;
             const btnNext3 = document.getElementById("btn-next-3");
             const box = widget3.skeleton.findSlot("box");
 
@@ -610,7 +610,7 @@
 
 
             /* SECTION 4 */
-            const widget4 = await spine.getSpineWidget("ready").whenReady;
+            const widget4 = await spine.getSkeleton("ready").whenReady;
 
             const slot4Bread = widget4.skeleton.findSlot("salad");
             widget4.addPointerSlotEventCallback(slot4Bread, (slot, event) => {

@@ -23,7 +23,7 @@
     </div>
 
 	<script type="module">
-		import { createSpineWidget } from '../dist/esm/spine-webcomponents.mjs';
+		import { createSkeleton } from '../dist/esm/spine-webcomponents.mjs';
 
 		const container = document.getElementById("team-container");
 
@@ -69,7 +69,7 @@
             div2.style.height = "150px";
             div2.style.border = "4px solid #333";
 
-            const widget = createSpineWidget({
+            const widget = createSkeleton({
                 identifier: member.skin,
                 atlasPath: "/assets/chibi-stickers-pma.atlas",
                 skeletonPath: "/assets/chibi-stickers.json",

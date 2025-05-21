@@ -475,7 +475,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	public debug = false;
 
 	/**
-	 * An identifier to obtain this widget using the {@link getSpineWidget} function.
+	 * An identifier to obtain this widget using the {@link getSkeleton} function.
 	 * This is useful when you need to interact with the widget using js.
 	 * Connected to `identifier` attribute.
 	 */
@@ -1325,11 +1325,21 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 
 customElements.define("spine-skeleton", SpineWebComponentSkeleton);
 
-export function getSpineWidget (identifier: string): SpineWebComponentSkeleton {
+/**
+ * Return the first {@link SpineWebComponentSkeleton} with the given {@link SpineWebComponentSkeleton.identifier}
+ * @param identifier The {@link SpineWebComponentSkeleton.identifier} to search on the DOM
+ * @returns A skeleton web component instance with the given identifier
+ */
+export function getSkeleton (identifier: string): SpineWebComponentSkeleton {
 	return document.querySelector(`spine-skeleton[identifier=${identifier}]`) as SpineWebComponentSkeleton;
 }
 
-export function createSpineWidget (parameters: WidgetAttributes): SpineWebComponentSkeleton {
+/**
+ * Create a {@link SpineWebComponentSkeleton} with the given {@link WidgetAttributes}.
+ * @param parameters The options to pass to the {@link SpineWebComponentSkeleton}
+ * @returns The skeleton web component instance created
+ */
+export function createSkeleton (parameters: WidgetAttributes): SpineWebComponentSkeleton {
 	const widget = document.createElement("spine-skeleton") as SpineWebComponentSkeleton;
 
 	Object.entries(SpineWebComponentSkeleton.attributesDescription).forEach(entry => {

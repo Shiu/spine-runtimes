@@ -94,8 +94,8 @@
             const containerGame = document.getElementById("container-game");
 
             (async () => {
-                const spineboy = spine.getSpineWidget("spineboy-game");
-                const windmill = spine.getSpineWidget("windmill-game");
+                const spineboy = spine.getSkeleton("spineboy-game");
+                const windmill = spine.getSkeleton("windmill-game");
                 await Promise.all([spineboy.whenReady, windmill.whenReady]);
 
                 spineboy.state.setAnimation(2, "aim", true);

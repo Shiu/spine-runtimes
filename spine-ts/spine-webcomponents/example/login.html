@@ -88,7 +88,7 @@
     </div>
 
 	<script type="module">
-		import { getSpineWidget, MixBlend } from '../dist/esm/spine-webcomponents.mjs';
+		import { getSkeleton, MixBlend } from '../dist/esm/spine-webcomponents.mjs';
 
 		const mouseX = Smooth(0, 200);
         const mouseY = Smooth(0, 200);
@@ -96,7 +96,7 @@
         (async () => {
 
             const form = document.getElementById('loginForm');
-            const widgetButton = getSpineWidget("button-login");
+            const widgetButton = getSkeleton("button-login");
             await widgetButton.whenReady;
 
             widgetButton.skeleton.color.set(.85, .85, .85, 1);
@@ -134,7 +134,7 @@
 
             widgetButton.followSlot("CLICK ME", divText, { followScale: false });
 
-            const widget = getSpineWidget("spineboy-login");
+            const widget = getSkeleton("spineboy-login");
             await widget.whenReady;
 
             // default settings

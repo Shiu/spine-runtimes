@@ -57,7 +57,7 @@
 
     <script>
         (async () => {
-            const boi = await spine.getSpineWidget("boi").whenReady;
+            const boi = await spine.getSkeleton("boi").whenReady;
 
             const animations = boi.skeleton.data.animations.map(({ name }) => name);
             animations.push("none");
