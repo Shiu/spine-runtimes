@@ -60,7 +60,7 @@ public class Skeleton {
 	final Array<Posed> resetCache = new Array(true, 16, Posed[]::new);
 	@Null Skin skin;
 	final Color color;
-	float x, y, scaleX = 1, scaleY = 1, time;
+	float x, y, scaleX = 1, scaleY = 1, time, windX = 1, windY = 0, gravityX = 0, gravityY = 1;
 	int update;
 
 	public Skeleton (SkeletonData data) {
@@ -610,6 +610,38 @@ public class Skeleton {
 	public void setPosition (float x, float y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	public float getWindX () {
+		return windX;
+	}
+
+	public void setWindX (float windX) {
+		this.windX = windX;
+	}
+
+	public float getWindY () {
+		return windY;
+	}
+
+	public void setWindY (float windY) {
+		this.windY = windY;
+	}
+
+	public float getGravityX () {
+		return gravityX;
+	}
+
+	public void setGravityX (float gravityX) {
+		this.gravityX = gravityX;
+	}
+
+	public float getGravityY () {
+		return gravityY;
+	}
+
+	public void setGravityY (float gravityY) {
+		this.gravityY = gravityY;
 	}
 
 	/** Calls {@link PhysicsConstraint#translate(float, float)} for each physics constraint. */

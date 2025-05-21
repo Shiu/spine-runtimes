@@ -120,7 +120,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 				ux = bx;
 				uy = by;
 			} else {
-				float a = remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1, qx = data.limit * delta,
+				float a = remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1, m = 0, e = 0, qx = data.limit * delta,
 					qy = qx * Math.abs(skeleton.scaleY);
 				qx *= Math.abs(skeleton.scaleX);
 				if (x || y) {
@@ -135,17 +135,20 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 						uy = by;
 					}
 					if (a >= t) {
+						float xs = xOffset, ys = yOffset;
 						d = (float)Math.pow(p.damping, 60 * t);
-						float m = p.massInverse * t, e = p.strength, w = p.wind * f * skeleton.scaleX,
-							g = p.gravity * f * skeleton.scaleY, xs = xOffset, ys = yOffset;
+						m = t * p.massInverse;
+						e = p.strength;
+						float w = f * p.wind * skeleton.scaleX, g = f * p.gravity * skeleton.scaleY,
+							ax = w * skeleton.windX + g * skeleton.gravityX, ay = w * skeleton.windY + g * skeleton.gravityY;
 						do {
 							if (x) {
-								xVelocity += (w - xOffset * e) * m;
+								xVelocity += (ax - xOffset * e) * m;
 								xOffset += xVelocity * t;
 								xVelocity *= d;
 							}
 							if (y) {
-								yVelocity -= (g + yOffset * e) * m;
+								yVelocity -= (ay + yOffset * e) * m;
 								yOffset += yVelocity * t;
 								yVelocity *= d;
 							}
@@ -188,18 +191,23 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 						if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
 					}
 					if (a >= t) {
-						if (d == -1) d = (float)Math.pow(p.damping, 60 * t);
-						float m = p.massInverse * t, e = p.strength, w = p.wind, g = p.gravity, h = l / f, rs = rotateOffset,
-							ss = scaleOffset;
+						if (d == -1) {
+							d = (float)Math.pow(p.damping, 60 * t);
+							m = t * p.massInverse;
+							e = p.strength;
+						}
+						float rs = rotateOffset, ss = scaleOffset, h = l / f,
+							ax = p.wind * skeleton.windX + p.gravity * skeleton.gravityX,
+							ay = p.wind * skeleton.windY + p.gravity * skeleton.gravityY;
 						while (true) {
 							a -= t;
 							if (scaleX) {
-								scaleVelocity += (w * c - g * s - scaleOffset * e) * m;
+								scaleVelocity += (ax * c - ay * s - scaleOffset * e) * m;
 								scaleOffset += scaleVelocity * t;
 								scaleVelocity *= d;
 							}
 							if (rotateOrShearX) {
-								rotateVelocity -= ((w * s + g * c) * h + rotateOffset * e) * m;
+								rotateVelocity -= ((ax * s + ay * c) * h + rotateOffset * e) * m;
 								rotateOffset += rotateVelocity * t;
 								rotateVelocity *= d;
 								if (a < t) break;
