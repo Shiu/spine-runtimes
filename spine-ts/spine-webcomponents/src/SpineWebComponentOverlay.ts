@@ -483,7 +483,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 			const tempVector = new Vector3();
 			for (const widget of this.widgets) {
-				const { skeleton, pma, bounds, debug, offsetX, offsetY, dragX, dragY, fit, noSpinner, loading, clip, drag } = widget;
+				const { skeleton, pma, bounds, debug, offsetX, offsetY, dragX, dragY, fit, spinner, loading, clip, drag } = widget;
 
 				if (widget.isOffScreenAndWasMoved()) continue;
 				const elementRef = widget.getHostElement();
@@ -516,7 +516,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 				if (clip) startScissor(divBounds);
 
 				if (loading) {
-					if (!noSpinner) {
+					if (spinner) {
 						if (!widget.loadingScreen) widget.loadingScreen = new LoadingScreen(renderer);
 						widget.loadingScreen!.drawInCoordinates(divOriginX, divOriginY);
 					}

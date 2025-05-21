@@ -1334,22 +1334,20 @@ function removeDiv() {
                     atlas="/assets/spineboy-pma.atlas"
                     skeleton="/assets/spineboy-pro.skel"
                     animation="walk"
-                    no-spinner
+                    spinner
                 ></spine-skeleton>
             </div>
             <div class="split-right">
-                A loading spinner is shown while assets are loading. Click the button below to simulate a 2-second loading delay:
+                If you want to show loading spinner while assets are loading, set the <code>spinner</code> attribute. Click the button below to simulate a 2-second loading delay:
                 <br>
                 <br>
                 <input type="button" value="Simulate reload" onclick="reloadWidget(this)">
                 <br>
                 <br>
-                If you don't want to show the loading spinner, set <code>no-spinner</code>.
-                <br>
                 Click the button below to toggle the spinner.
                 <br>
                 <br>
-                <input type="button" value="Spinner OFF" onclick="toggleSpinner(this)">
+                <input type="button" value="Spinner ON" onclick="toggleSpinner(this)">
             </div>
         </div>
 
@@ -1365,8 +1363,8 @@ function removeDiv() {
                 }, 1000)
             }
             function toggleSpinner(element) {
-                widget.noSpinner = !widget.noSpinner;
-                element.value = widget.noSpinner ? "Spinner OFF" : "Spinner ON";
+                widget.spinner = !widget.spinner;
+                element.value = widget.spinner ? "Spinner ON" : "Spinner OFF";
             }
         </script>
 
@@ -1379,7 +1377,7 @@ function removeDiv() {
     atlas="/assets/spineboy-pma.atlas"
     skeleton="/assets/spineboy-pro.skel"
     animation="walk"
-    no-spinner
+    spinner
 ></spine-skeleton>
 <input type="button" value="Simulate reload" onclick="reloadWidget(this)">
 <input type="button" value="Spinner ON" onclick="toggleSpinner(this)">
@@ -1398,8 +1396,8 @@ async function reloadWidget(element) {
     }, 1000)
 }
 function toggleSpinner(element) {
-    widget.noSpinner = !widget.noSpinner;
-    element.value = widget.noSpinner ? "Spinner ON" : "Spinner OFF";
+    widget.spinner = !widget.spinner;
+    element.value = widget.spinner ? "Spinner ON" : "Spinner OFF";
 }`)
                 </script>
             </code></pre>

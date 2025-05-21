@@ -104,7 +104,7 @@ interface WidgetAttributes {
 	pages?: Array<number>
 	clip: boolean
 	offScreenUpdateBehaviour: OffScreenUpdateBehaviourType
-	noSpinner: boolean
+	spinner: boolean
 }
 
 // The methods user can override to have custom behaviour
@@ -531,10 +531,10 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	public offScreenUpdateBehaviour: OffScreenUpdateBehaviourType = "pause";
 
 	/**
-	 * If false (default), a Spine loading spinner is shown during asset loading
-	 * Connected to `no-spinner` attribute.
+	 * If true, a Spine loading spinner is shown during asset loading. Default to false.
+	 * Connected to `spinner` attribute.
 	 */
-	public noSpinner = false;
+	public spinner = false;
 
 	/**
 	 * Replace the default state and skeleton update logic for this widget.
@@ -599,7 +599,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	/**
 	 * The {@link LoadingScreenWidget} of this widget.
 	 * This is instantiated only if it is really necessary.
-	 * For example, if {@link noSpinner} is `false`, this property value is null
+	 * For example, if {@link spinner} is `false`, this property value is null
 	 */
 	public loadingScreen: LoadingScreen | null = null;
 
@@ -718,7 +718,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		debug: { propertyName: "debug", type: "boolean" },
 		"manual-start": { propertyName: "manualStart", type: "boolean" },
 		"start-when-visible": { propertyName: "startWhenVisible", type: "boolean" },
-		"no-spinner": { propertyName: "noSpinner", type: "boolean" },
+		"spinner": { propertyName: "spinner", type: "boolean" },
 		clip: { propertyName: "clip", type: "boolean" },
 		pages: { propertyName: "pages", type: "array-number" },
 		fit: { propertyName: "fit", type: "fitType", defaultValue: "contain" },
