@@ -95,7 +95,7 @@ interface WidgetAttributes {
 	autoCalculateBounds: boolean
 	width: number
 	height: number
-	isDraggable: boolean
+	drag: boolean
 	isInteractive: boolean
 	debug: boolean
 	identifier: string
@@ -393,9 +393,9 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 
 	/**
 	 * If true, the widget is draggable
-	 * Connected to `isdraggable` attribute.
+	 * Connected to `drag` attribute.
 	 */
-	public isDraggable = false;
+	public drag = false;
 
 	/**
 	 * The x of the root relative to the canvas/webgl context center in spine world coordinates.
@@ -699,7 +699,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		skin: { propertyName: "skin", type: "array-string" },
 		width: { propertyName: "width", type: "number", defaultValue: -1 },
 		height: { propertyName: "height", type: "number", defaultValue: -1 },
-		isdraggable: { propertyName: "isDraggable", type: "boolean" },
+		drag: { propertyName: "drag", type: "boolean" },
 		isinteractive: { propertyName: "isInteractive", type: "boolean" },
 		"x-axis": { propertyName: "xAxis", type: "number" },
 		"y-axis": { propertyName: "yAxis", type: "number" },

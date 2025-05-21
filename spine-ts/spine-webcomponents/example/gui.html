@@ -87,7 +87,7 @@
             }
 
             const myObject = {
-                isDraggable: false,
+                drag: false,
                 debug: true,
                 clip: false,
                 animation: "none",
@@ -213,11 +213,11 @@
                 .disable();
 
             gui
-                .add(myObject, 'isDraggable')
-                .name( 'isdraggable' )
+                .add(myObject, 'drag')
+                .name( 'drag' )
                 .onChange(value => {
-                    if (value) boi.setAttribute("isdraggable", '')
-                    else boi.removeAttribute("isdraggable");
+                    if (value) boi.setAttribute("drag", '')
+                    else boi.removeAttribute("drag");
                 });
 
             gui

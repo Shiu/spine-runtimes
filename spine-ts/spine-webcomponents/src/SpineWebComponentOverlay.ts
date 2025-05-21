@@ -483,7 +483,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 			const tempVector = new Vector3();
 			for (const widget of this.widgets) {
-				const { skeleton, pma, bounds, debug, offsetX, offsetY, dragX, dragY, fit, noSpinner, loading, clip, isDraggable } = widget;
+				const { skeleton, pma, bounds, debug, offsetX, offsetY, dragX, dragY, fit, noSpinner, loading, clip, drag } = widget;
 
 				if (widget.isOffScreenAndWasMoved()) continue;
 				const elementRef = widget.getHostElement();
@@ -611,7 +611,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 						let { x: ax, y: ay, width: aw, height: ah } = bounds;
 
 						// show bounds and its center
-						if (isDraggable) {
+						if (drag) {
 							renderer.rect(true,
 								ax * skeleton.scaleX + worldOffsetX,
 								ay * skeleton.scaleY + worldOffsetY,
@@ -779,7 +779,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 					widget.pointerEventUpdate("down", ev);
 
 					if ((widget.isInteractive && widget.pointerInsideBounds) || (!widget.isInteractive && widget.isPointerInsideBounds())) {
-						if (!widget.isDraggable) continue;
+						if (!widget.drag) continue;
 
 						widget.dragging = true;
 						ev?.preventDefault();

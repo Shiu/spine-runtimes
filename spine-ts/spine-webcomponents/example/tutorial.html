@@ -2482,7 +2482,7 @@ tank.beforeUpdateWorldTransforms = (delta, skeleton, state) => {
                         atlas="/assets/celestial-circus-pma.atlas"
                         skeleton="/assets/celestial-circus-pro.skel"
                         clip
-                        isdraggable
+                        drag
                     ></spine-skeleton>
 
                     <script>
@@ -2549,7 +2549,7 @@ tank.beforeUpdateWorldTransforms = (delta, skeleton, state) => {
         skeleton="/assets/celestial-circus-pro.skel"
         animation="wings-and-feet"
         clip
-        isdraggable
+        drag
     ></spine-skeleton>
 </div>
 
@@ -2856,14 +2856,14 @@ tank.beforeUpdateWorldTransforms = (delta, skeleton, state) => {
 
         <div class="split-top split">
             <div class="split-left">
-                As a bonus item, you can move your skeleton around just by setting the <code>isdraggable</code> property to <code>true</code>.
+                As a bonus item, you can move your skeleton around just by setting the <code>drag</code> property to <code>true</code>.
             </div>
             <div class="split-right">
                 <spine-skeleton
                     atlas="/assets/celestial-circus-pma.atlas"
                     skeleton="/assets/celestial-circus-pro.skel"
                     animation="wings-and-feet"
-                    isdraggable
+                    drag
                 ></spine-skeleton>
             </div>
         </div>
@@ -2875,7 +2875,7 @@ tank.beforeUpdateWorldTransforms = (delta, skeleton, state) => {
     atlas="/assets/celestial-circus-pma.atlas"
     skeleton="/assets/celestial-circus-pro.skel"
     animation="wings-and-feet"
-    isdraggable="true"
+    drag
 ></spine-skeleton>`
 );</script>
             </code></pre>
@@ -2970,7 +2970,7 @@ function createCircleOfDivs(numDivs = 8) {
                 atlas="/assets/owl-pma.atlas"
                 skeleton="/assets/owl-pro.json"
                 animation="idle"
-                isdraggable
+                drag
             ></spine-skeleton>
         \`;
 
@@ -3062,7 +3062,7 @@ function createCircleOfDivs(numDivs = 8) {
                 atlas="/assets/owl-pma.atlas"
                 skeleton="/assets/owl-pro.json"
                 animation="idle"
-                isdraggable
+                drag
             ></spine-skeleton>
         `;
 
@@ -3362,7 +3362,7 @@ const darkPicker = document.getElementById("dark-picker");
                     atlas="/assets/cloud-pot-pma.atlas"
                     skeleton="/assets/cloud-pot.skel"
                     animation="rain"
-                    isdraggable
+                    drag
                 ></spine-skeleton>
             </div>
         </div>
