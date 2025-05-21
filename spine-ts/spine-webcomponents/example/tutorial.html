@@ -3131,7 +3131,7 @@ const updateControl = (widget, controlBone, mouseX, mouseY, tempVector) => {
     <div class="section vertical-split" id="above-popup">
 
         <div class="split-left" style="width: 80%; box-sizing: border-box;">
-            You can attach callbacks to your widget to react to pointer interactions. Just make it <code>isinteractive</code>.
+            You can attach callbacks to your widget to react to pointer interactions. Just make it <code>interactive</code>.
             <br>
             <br>
             You can attach a callback for interactions with the widget's <code>bounds</code> or with <code>slots</code>.
@@ -3159,7 +3159,7 @@ const updateControl = (widget, controlBone, mouseX, mouseY, tempVector) => {
                     skeleton="/assets/chibi-stickers.json"
                     skin="mario"
                     animation="emotes/wave"
-                    isinteractive
+                    interactive
                     style="width: 150px; height: 150px;"
                 ></spine-skeleton>
 
@@ -3169,7 +3169,7 @@ const updateControl = (widget, controlBone, mouseX, mouseY, tempVector) => {
                     skeleton="/assets/chibi-stickers.json"
                     skin="nate"
                     animation="emotes/wave"
-                    isinteractive
+                    interactive
                     style="width: 150px; height: 150px;"
                 ></spine-skeleton>
 
@@ -3209,7 +3209,7 @@ const darkPicker = document.getElementById("dark-picker");
     skeleton="/assets/chibi-stickers.json",
     skin="mario"
     animation="emotes/wave"
-    isinteractive
+    interactive
     style="width: 150px; height: 150px;"
 ></spine-skeleton>
 
@@ -3219,7 +3219,7 @@ const darkPicker = document.getElementById("dark-picker");
     skeleton="/assets/chibi-stickers.json",
     skin="nate"
     animation="emotes/wave"
-    isinteractive
+    interactive
     style="width: 150px; height: 150px;"
 ></spine-skeleton>
 
@@ -3391,6 +3391,7 @@ const darkPicker = document.getElementById("dark-picker");
     atlas="/assets/cloud-pot-pma.atlas"
     skeleton="/assets/cloud-pot.skel"
     animation="playing-in-the-rain"
+    drag
 ></spine-skeleton>
 
 <spine-skeleton identifier="potty2-1" atlas="/assets/raptor-pma.atlas" skeleton="/assets/raptor-pro.skel" animation="walk" style="height:200px; width: 200px;"></spine-skeleton>

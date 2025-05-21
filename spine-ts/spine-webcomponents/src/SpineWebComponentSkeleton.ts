@@ -96,7 +96,7 @@ interface WidgetAttributes {
 	width: number
 	height: number
 	drag: boolean
-	isInteractive: boolean
+	interactive: boolean
 	debug: boolean
 	identifier: string
 	manualStart: boolean
@@ -423,10 +423,10 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 
 	/**
 	 * If true, the widget is interactive
-	 * Connected to `isinteractive` attribute.
+	 * Connected to `interactive` attribute.
 	 * This is an experimental property and might be removed in the future.
 	 */
-	public isInteractive = false;
+	public interactive = false;
 
 	/**
 	 * If the widget is interactive, this method is invoked with a {@link PointerEventType} when the pointer
@@ -700,7 +700,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		width: { propertyName: "width", type: "number", defaultValue: -1 },
 		height: { propertyName: "height", type: "number", defaultValue: -1 },
 		drag: { propertyName: "drag", type: "boolean" },
-		isinteractive: { propertyName: "isInteractive", type: "boolean" },
+		interactive: { propertyName: "interactive", type: "boolean" },
 		"x-axis": { propertyName: "xAxis", type: "number" },
 		"y-axis": { propertyName: "yAxis", type: "number" },
 		"offset-x": { propertyName: "offsetX", type: "number" },
@@ -1110,7 +1110,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	 * @internal
 	 */
 	public pointerEventUpdate (type: PointerEventTypesInput, originalEvent?: UIEvent) {
-		if (!this.isInteractive) return;
+		if (!this.interactive) return;
 
 		this.checkBoundsInteraction(type, originalEvent);
 		this.checkSlotInteraction(type, originalEvent);

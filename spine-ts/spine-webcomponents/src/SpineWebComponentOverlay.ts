@@ -778,7 +778,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 					widget.pointerEventUpdate("down", ev);
 
-					if ((widget.isInteractive && widget.pointerInsideBounds) || (!widget.isInteractive && widget.isPointerInsideBounds())) {
+					if ((widget.interactive && widget.pointerInsideBounds) || (!widget.interactive && widget.isPointerInsideBounds())) {
 						if (!widget.drag) continue;
 
 						widget.dragging = true;
