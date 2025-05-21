@@ -231,11 +231,11 @@
                     ></spine-skeleton>
                 </div>
                 <div class="split-right">
-                    If you want to preserve the original scale, you can use <code>fit="none"</code>.
+                    If you want to preserve the original scale, you can use <code>fit="none"</code> (center the bounds) or <code>fit="origin"</code> (center the skeleton origin).
                     In combination with that, you can use the <code>scale</code> attribute to set your desired scale.
                     <br>
                     <br>
-                    Other fit modes are <code>width</code>, <code>height</code>, <code>cover</code>, and <code>scaleDown</code>.
+                    Other fit modes are <code>width</code>, <code>height</code>, <code>cover</code>, <code>scaleDown</code>..
                 </div>
             </div>
 
@@ -363,11 +363,6 @@
 
         <div class="split-top split">
             <div class="split-left">
-                The <code>origin</code> mode centers the animation's world origin with the center of the HTML element.
-                <br>
-                You are responsible for scaling the skeleton when using this mode.
-                <br>
-                <br>
                 Move the origin by a percentage of the div's width and height using the <code>x-axis</code> and <code>y-axis</code> attributes, respectively.
             </div>
             <div class="split-right">
@@ -375,7 +370,7 @@
                     atlas="/assets/vine-pma.atlas"
                     skeleton="/assets/vine-pro.skel"
                     animation="grow"
-                    mode="origin"
+                    fit="origin"
                     scale=".5"
                     y-axis="-.5"
                 ></spine-skeleton>
@@ -390,7 +385,7 @@
     atlas="/assets/vine-pma.atlas"
     skeleton="/assets/vine-pro.skel"
     animation="grow"
-    mode="origin"
+    fit="origin"
     scale=".5"
     y-axis="-.5"
 ></spine-skeleton>
@@ -772,11 +767,11 @@
                     <li><code>mixDuration</code>: the mix duration between this animation and the previous one (not used for the first animation on a track)</li>
                 </ol>
 
-                <p>To loop a track once it reaches the end, add the special group <code>[loop, trackNumber, holdDurationLastAnimation]</code>, where:</p>
+                <p>To loop a track once it reaches the end, add the special group <code>[loop, trackNumber, repeatDelay]</code>, where:</p>
                 <ul>
                     <li><code>loop</code>: identifies this as a loop instruction</li>
                     <li><code>trackNumber</code>: the number of the track to loop</li>
-                    <li><code>holdDurationLastAnimation</code>: the number of seconds to wait after the last animation is completed before repeating the loop</li>
+                    <li><code>repeatDelay</code>: the number of seconds to wait after the last animation is completed before repeating the loop</li>
                 </ul>
 
                 <p>The parameters of the first group on each track are passed to the <code>setAnimation</code> method, while the remaining groups use <code>addAnimation</code>.</p>
@@ -1427,6 +1422,8 @@ function toggleSpinner(element) {
 
             <div class="split-left" style="width: 80%; box-sizing: border-box; min-height: 0;">
                 It's very easy to display your different skins and animations. Simply create a table and use the <code>skin</code> and <code>animation</code> attributes.
+                <br>
+                <code>skin</code> accepts a comma separated list of skin names. The skins will be combined in a new one, from the first to the last. If multiple skins set the same slot, the latest in the list will be used.
             </div>
 
             <div class="skin-grid">
@@ -3279,7 +3276,7 @@ const darkPicker = document.getElementById("dark-picker");
                                 <li><code>followOpacity</code>: the element opacity is connected to the slot alpha</li>
                                 <li><code>followScale</code>: the element scale is connected to the slot scale</li>
                                 <li><code>followRotation</code>: the element rotation is connected to the slot rotation</li>
-                                <li><code>followAttachmentAttach</code>: the element is shown/hidden depending if the slot contains an attachment or not</li>
+                                <li><code>followVisibility</code>: the element is shown/hidden depending if the slot contains an attachment or not</li>
                                 <li><code>hideAttachment</code>: the slot attachment is hidden as if the element replaced the attachment</li>
                             </ul>
                         </li>
@@ -3304,10 +3301,10 @@ const darkPicker = document.getElementById("dark-picker");
         <script>
             (async () => {
                 const widget = await spine.getSpineWidget("potty").whenReady;
-                widget.followSlot("rain/rain-color", document.getElementById("rain/rain-color"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-white", document.getElementById("rain/rain-white"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-blue", document.getElementById("rain/rain-blue"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-green", document.getElementById("rain/rain-green"), { followAttachmentAttach: false, hideAttachment: true });
+                widget.followSlot("rain/rain-color", document.getElementById("rain/rain-color"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-white", document.getElementById("rain/rain-white"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-blue", document.getElementById("rain/rain-blue"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-green", document.getElementById("rain/rain-green"), { followVisibility: false, hideAttachment: true });
             })();
         </script>
 
@@ -3331,10 +3328,10 @@ const darkPicker = document.getElementById("dark-picker");
 
 (async () => {
     const widget = await spine.getSpineWidget("potty").whenReady;
-    widget.followSlot("rain/rain-color", document.getElementById("rain/rain-color"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-white", document.getElementById("rain/rain-white"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-blue", document.getElementById("rain/rain-blue"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-green", document.getElementById("rain/rain-green"), { followAttachmentAttach: false, hideAttachment: true });
+    widget.followSlot("rain/rain-color", document.getElementById("rain/rain-color"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-white", document.getElementById("rain/rain-white"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-blue", document.getElementById("rain/rain-blue"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-green", document.getElementById("rain/rain-green"), { followVisibility: false, hideAttachment: true });
 })();`);</script>
             </code></pre>
         </div>
@@ -3378,10 +3375,10 @@ const darkPicker = document.getElementById("dark-picker");
         <script>
             (async () => {
                 const widget = await spine.getSpineWidget("potty2").whenReady;
-                widget.followSlot("rain/rain-color", spine.getSpineWidget("potty2-1"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-white", spine.getSpineWidget("potty2-2"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-blue", spine.getSpineWidget("potty2-3"), { followAttachmentAttach: false, hideAttachment: true });
-                widget.followSlot("rain/rain-green", spine.getSpineWidget("potty2-4"), { followAttachmentAttach: false, hideAttachment: true });
+                widget.followSlot("rain/rain-color", spine.getSpineWidget("potty2-1"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-white", spine.getSpineWidget("potty2-2"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-blue", spine.getSpineWidget("potty2-3"), { followVisibility: false, hideAttachment: true });
+                widget.followSlot("rain/rain-green", spine.getSpineWidget("potty2-4"), { followVisibility: false, hideAttachment: true });
             })();
         </script>
 
@@ -3405,10 +3402,10 @@ const darkPicker = document.getElementById("dark-picker");
 
 (async () => {
     const widget = await spine.getSpineWidget("potty2").whenReady;
-    widget.followSlot("rain/rain-color", spine.getSpineWidget("potty2-1"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-white", spine.getSpineWidget("potty2-2"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-blue", spine.getSpineWidget("potty2-3"), { followAttachmentAttach: false, hideAttachment: true });
-    widget.followSlot("rain/rain-green", spine.getSpineWidget("potty2-4"), { followAttachmentAttach: false, hideAttachment: true });
+    widget.followSlot("rain/rain-color", spine.getSpineWidget("potty2-1"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-white", spine.getSpineWidget("potty2-2"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-blue", spine.getSpineWidget("potty2-3"), { followVisibility: false, hideAttachment: true });
+    widget.followSlot("rain/rain-green", spine.getSpineWidget("potty2-4"), { followVisibility: false, hideAttachment: true });
 })();`);</script>
             </code></pre>
         </div>

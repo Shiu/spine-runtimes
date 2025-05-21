@@ -483,7 +483,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 			const tempVector = new Vector3();
 			for (const widget of this.widgets) {
-				const { skeleton, pma, bounds, mode, debug, offsetX, offsetY, xAxis, yAxis, dragX, dragY, fit, noSpinner, loading, clip, isDraggable } = widget;
+				const { skeleton, pma, bounds, debug, offsetX, offsetY, dragX, dragY, fit, noSpinner, loading, clip, isDraggable } = widget;
 
 				if (widget.isOffScreenAndWasMoved()) continue;
 				const elementRef = widget.getHostElement();
@@ -497,7 +497,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 					divBounds.y -= offsetTopForOverlay;
 				}
 
-				const { padLeft, padRight, padTop, padBottom } = widget
+				const { padLeft, padRight, padTop, padBottom, xAxis, yAxis } = widget
 				const paddingShiftHorizontal = (padLeft - padRight) / 2;
 				const paddingShiftVertical = (padTop - padBottom) / 2;
 
@@ -525,7 +525,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 				}
 
 				if (skeleton) {
-					if (mode === "inside") {
+					if (fit !== "origin") {
 						let { x: ax, y: ay, width: aw, height: ah } = bounds;
 						if (aw <= 0 || ah <= 0) continue;
 
@@ -591,8 +591,9 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 						}
 					}
 
-					const worldOffsetX = divOriginX + offsetX + dragX;
-					const worldOffsetY = divOriginY + offsetY + dragY;
+					// const worldOffsetX = divOriginX + offsetX + dragX;
+					const worldOffsetX = divOriginX + offsetX * window.devicePixelRatio + dragX;
+					const worldOffsetY = divOriginY + offsetY * window.devicePixelRatio + dragY;
 
 					widget.worldX = worldOffsetX;
 					widget.worldY = worldOffsetY;
@@ -634,12 +635,10 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 						renderer.circle(true, root.x + worldOffsetX, root.y + worldOffsetY, 10, red);
 
 						// show shifted origin
-						const originX = worldOffsetX - dragX - offsetX;
-						const originY = worldOffsetY - dragY - offsetY;
-						renderer.circle(true, originX, originY, 10, green);
+						renderer.circle(true, divOriginX, divOriginY, 10, green);
 
 						// show line from origin to bounds center
-						renderer.line(originX, originY, bbCenterX, bbCenterY, green);
+						renderer.line(divOriginX, divOriginY, bbCenterX, bbCenterY, green);
 					}
 
 					if (clip) endScissor();
@@ -654,7 +653,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 				if (widget.isOffScreenAndWasMoved() || !widget.skeleton) continue;
 
 				for (const boneFollower of widget.boneFollowerList) {
-					const { slot, bone, element, followAttachmentAttach, followRotation, followOpacity, followScale } = boneFollower;
+					const { slot, bone, element, followVisibility, followRotation, followOpacity, followScale } = boneFollower;
 					const { worldX, worldY } = widget;
 					this.worldToScreen(this.tempFollowBoneVector, bone.worldX + worldX, bone.worldY + worldY);
 
@@ -675,7 +674,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 					element.style.display = ""
 
-					if (followAttachmentAttach && !slot.attachment) {
+					if (followVisibility && !slot.attachment) {
 						element.style.opacity = "0";
 					} else if (followOpacity) {
 						element.style.opacity = `${slot.color.a}`;
@@ -951,7 +950,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 	private updateWidgetScales () {
 		for (const widget of this.widgets) {
 			// inside mode scale automatically to fit the skeleton within its parent
-			if (widget.mode !== "origin" && widget.fit !== "none") continue;
+			if (widget.fit !== "origin" && widget.fit !== "none") continue;
 
 			const skeleton = widget.skeleton;
 			if (!skeleton) continue;

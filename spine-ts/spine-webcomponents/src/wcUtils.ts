@@ -27,10 +27,10 @@
  * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { AnimationsInfo, FitType, ModeType, OffScreenUpdateBehaviourType } from "./SpineWebComponentSkeleton.js";
+import { AnimationsInfo, FitType, OffScreenUpdateBehaviourType } from "./SpineWebComponentSkeleton.js";
 
 const animatonTypeRegExp = /\[([^\]]+)\]/g;
-export type AttributeTypes = "string" | "number" | "boolean" | "array-number" | "array-string" | "object" | "fitType" | "modeType" | "offScreenUpdateBehaviourType" | "animationsInfo";
+export type AttributeTypes = "string" | "number" | "boolean" | "array-number" | "array-string" | "object" | "fitType" | "offScreenUpdateBehaviourType" | "animationsInfo";
 
 export function castValue (type: AttributeTypes, value: string | null, defaultValue?: any) {
 	switch (type) {
@@ -48,8 +48,6 @@ export function castValue (type: AttributeTypes, value: string | null, defaultVa
 			return castObject(value, defaultValue);
 		case "fitType":
 			return isFitType(value) ? value : defaultValue;
-		case "modeType":
-			return isModeType(value) ? value : defaultValue;
 		case "offScreenUpdateBehaviourType":
 			return isOffScreenUpdateBehaviourType(value) ? value : defaultValue;
 		case "animationsInfo":
@@ -104,7 +102,7 @@ function castToAnimationsInfo (value: string | null): AnimationsInfo | undefined
 	if (!matches) return undefined;
 
 	return matches.reduce((obj, group) => {
-		const [trackIndexStringOrLoopDefinition, animationNameOrTrackIndexStringCycle, loopOrHoldDurationLastAnimation, delayString, mixDurationString] = group.slice(1, -1).split(',').map(v => v.trim());
+		const [trackIndexStringOrLoopDefinition, animationNameOrTrackIndexStringCycle, loopOrRepeatDelay, delayString, mixDurationString] = group.slice(1, -1).split(',').map(v => v.trim());
 
 		if (trackIndexStringOrLoopDefinition === "loop") {
 			if (!Number.isInteger(Number(animationNameOrTrackIndexStringCycle))) {
@@ -113,12 +111,12 @@ function castToAnimationsInfo (value: string | null): AnimationsInfo | undefined
 			const animationInfoObject = obj[animationNameOrTrackIndexStringCycle] ||= { animations: [] };
 			animationInfoObject.cycle = true;
 
-			if (loopOrHoldDurationLastAnimation !== undefined) {
-				const holdDurationLastAnimation = Number(loopOrHoldDurationLastAnimation);
-				if (Number.isNaN(holdDurationLastAnimation)) {
-					throw new Error(`If present, duration of last animation of cycle in ${group} must be a positive integer number, instead it is ${loopOrHoldDurationLastAnimation}. Original value: ${value}`);
+			if (loopOrRepeatDelay !== undefined) {
+				const repeatDelay = Number(loopOrRepeatDelay);
+				if (Number.isNaN(repeatDelay)) {
+					throw new Error(`If present, duration of last animation of cycle in ${group} must be a positive integer number, instead it is ${loopOrRepeatDelay}. Original value: ${value}`);
 				}
-				animationInfoObject.holdDurationLastAnimation = holdDurationLastAnimation;
+				animationInfoObject.repeatDelay = repeatDelay;
 			}
 
 			return obj;
@@ -148,7 +146,7 @@ function castToAnimationsInfo (value: string | null): AnimationsInfo | undefined
 		const animationInfoObject = obj[trackIndexStringOrLoopDefinition] ||= { animations: [] };
 		animationInfoObject.animations.push({
 			animationName: animationNameOrTrackIndexStringCycle,
-			loop: loopOrHoldDurationLastAnimation.trim().toLowerCase() === "true",
+			loop: (loopOrRepeatDelay || "").trim().toLowerCase() === "true",
 			delay,
 			mixDuration,
 		});
@@ -164,7 +162,8 @@ function isFitType (value: string | null): value is FitType {
 		value === "contain" ||
 		value === "cover" ||
 		value === "none" ||
-		value === "scaleDown"
+		value === "scaleDown" ||
+		value === "origin"
 	);
 }
 
@@ -176,12 +175,6 @@ function isOffScreenUpdateBehaviourType (value: string | null): value is OffScre
 	);
 }
 
-function isModeType (value: string | null): value is ModeType {
-	return (
-		value === "inside" ||
-		value === "origin"
-	);
-}
 const base64RegExp = /^(([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==))$/;
 export function isBase64 (str: string) {
 	return base64RegExp.test(str);
