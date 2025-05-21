@@ -212,7 +212,7 @@ namespace Spine {
 				// clip
 				float[] usedVertices = vertices;
 				if (clipper.IsClipping) {
-					clipper.ClipTriangles(vertices, indices, indicesCount, uvs);
+					clipper.ClipTriangles(usedVertices, indices, indicesCount, uvs);
 					usedVertices = clipper.ClippedVertices.Items;
 					verticesCount = clipper.ClippedVertices.Count >> 1;
 					indices = clipper.ClippedTriangles.Items;
