@@ -112,7 +112,7 @@
             border: none;
             background: #007bff;
             color: white;
-            cursor: pointer;
+            pointer: pointer;
             border-radius: 3px;
             margin: 1px 0;
         }
@@ -151,7 +151,7 @@
             border: none;
             background: #dc3545;
             color: white;
-            cursor: pointer;
+            pointer: pointer;
         }
 
         .btn.next {
@@ -175,7 +175,7 @@
             align-items: center;
             border: 3px solid transparent;
             transition: border-color 0.3s ease-in-out;
-            cursor: pointer;
+            pointer: pointer;
             background: white;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -450,7 +450,7 @@
 
                 const itemSlot = widget1.skeleton.findSlot(`bubble-base-${itemName.charAt(0)}`);
                 let onItem = false;
-                widget1.addCursorSlotEventCallback(itemSlot, (slot, event) => {
+                widget1.addPointerSlotEventCallback(itemSlot, (slot, event) => {
 
                     if (event === "enter") {
                         widget1.state.setAnimation(0, `focus-${itemName}`, true);
@@ -613,7 +613,7 @@
             const widget4 = await spine.getSpineWidget("ready").whenReady;
 
             const slot4Bread = widget4.skeleton.findSlot("salad");
-            widget4.addCursorSlotEventCallback(slot4Bread, (slot, event) => {
+            widget4.addPointerSlotEventCallback(slot4Bread, (slot, event) => {
 
                 if (event === "enter") {
                     widget4.state.setAnimation(1, "bread-opening", false);
@@ -627,7 +627,7 @@
             });
 
             const slot4Bottle = widget4.skeleton.findSlot("bottle-base");
-            widget4.addCursorSlotEventCallback(slot4Bottle, (slot, event) => {
+            widget4.addPointerSlotEventCallback(slot4Bottle, (slot, event) => {
 
                 if (event === "enter") {
                     widget4.state.setAnimation(2, "bottle-opening", false);
@@ -641,7 +641,7 @@
             });
 
             const slot4Fries = widget4.skeleton.findSlot("fries-case-back");
-            widget4.addCursorSlotEventCallback(slot4Fries, (slot, event) => {
+            widget4.addPointerSlotEventCallback(slot4Fries, (slot, event) => {
 
                 if (event === "enter") {
                     widget4.state.setAnimation(3, "fries", true);

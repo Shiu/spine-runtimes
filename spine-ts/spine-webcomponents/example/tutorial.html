@@ -2898,21 +2898,21 @@ tank.beforeUpdateWorldTransforms = (delta, skeleton, state) => {
 
     <div class="section vertical-split" >
         <div class="split-left">
-            If you need to determine the cursor position in the overlay world, you might find useful the following properties.
+            If you need to determine the pointer position in the overlay world, you might find useful the following properties.
             <br>
             For <code>spine-skeleton</code>:
             <ul>
-                <li><code>cursorWorldX</code> and <code>cursorWorldY</code> are the x and y of the cursor relative to the skeleton root (spine world).</li>
+                <li><code>pointerWorldX</code> and <code>pointerWorldY</code> are the x and y of the pointer relative to the skeleton root (spine world).</li>
                 <li><code>worldX</code> and <code>worldY</code> are the x and y of the root relative to the canvas/webgl context origin (spine world).</li>
             </ul>
 
             For <code>spine-overlay</code>:
             <ul>
-                <li><code>cursorCanvasX</code> and <code>cursorCanvasY</code> are the x and y of the cursor relative to the canvas top-left corner (screen world).</li>
-                <li><code>cursorWorldX</code> and <code>cursorWorldY</code> are the x and y of the cursor relative to the canvas/webgl context origin (spine world).</li>
+                <li><code>pointerCanvasX</code> and <code>pointerCanvasY</code> are the x and y of the pointer relative to the canvas top-left corner (screen world).</li>
+                <li><code>pointerWorldX</code> and <code>pointerWorldY</code> are the x and y of the pointer relative to the canvas/webgl context origin (spine world).</li>
             </ul>
 
-            You can use these properties to interact with your widget. See the following examples where the owl eyes will follow the cursor, even if you drag the owls to another position.
+            You can use these properties to interact with your widget. See the following examples where the owl eyes will follow the pointer, even if you drag the owls to another position.
             Exaggerate the movement by deselecting the checkbox below.
 
             <br>
@@ -3002,8 +3002,8 @@ checkbox.addEventListener('change', () => limitOwl = checkbox.checked);
 
 const updateControl = (widget, controlBone, mouseX, mouseY, tempVector) => {
     controlBone.parent.worldToLocal(tempVector.set(
-        widget.cursorWorldX,
-        widget.cursorWorldY,
+        widget.pointerWorldX,
+        widget.pointerWorldY,
     ));
 
     let x = tempVector.x;
@@ -3094,8 +3094,8 @@ checkbox.addEventListener('change', () => limitOwl = checkbox.checked);
 
 const updateControl = (widget, controlBone, mouseX, mouseY, tempVector) => {
     controlBone.parent.worldToLocal(tempVector.set(
-        widget.cursorWorldX,
-        widget.cursorWorldY,
+        widget.pointerWorldX,
+        widget.pointerWorldY,
     ));
 
     let x = tempVector.x;
@@ -3138,7 +3138,7 @@ const updateControl = (widget, controlBone, mouseX, mouseY, tempVector) => {
             The available events are <code>down</code>, <code>up</code>, <code>enter</code>, <code>leave</code>, <code>move</code>, and <code>drag</code>.
             <br>
             <br>
-            In the following example, if the cursor enters the bounds, the jump animation is set, while the wave animation is set when the cursor leaves.
+            In the following example, if the pointer enters the bounds, the jump animation is set, while the wave animation is set when the pointer leaves.
             <br>
             If you click on the <code>head-base</code> slot (the face), you can change the normal and dark tint with the colors selected in the two following selectors.
 
@@ -3183,7 +3183,7 @@ const darkPicker = document.getElementById("dark-picker");
 [0, 1].forEach(async (i) => {
     const widget = await spine.getSpineWidget(`interactive${i}`).whenReady;
 
-    widget.cursorEventCallback = (event) => {
+    widget.pointerEventCallback = (event) => {
         if (event === "enter") widget.state.setAnimation(0, "emotes/hooray", true).mixDuration = .15;
         if (event === "leave") widget.state.setAnimation(0, "emotes/wave", true).mixDuration = .25;
     }
@@ -3191,7 +3191,7 @@ const darkPicker = document.getElementById("dark-picker");
     const tempColor = new spine.Color();
     const slot = widget.skeleton.findSlot("head-base");
     slot.darkColor = new spine.Color(0, 0, 0, 1);
-    widget.addCursorSlotEventCallback(slot, (slot, event) => {
+    widget.addPointerSlotEventCallback(slot, (slot, event) => {
         if (event === "down") {
             slot.darkColor.setFromColor(spine.Color.fromString(darkPicker.value, tempColor));
             slot.color.setFromColor(spine.Color.fromString(colorPicker.value, tempColor));
@@ -3226,7 +3226,7 @@ const darkPicker = document.getElementById("dark-picker");
 [0, 1].forEach(async (i) => {
     const widget = await spine.getSpineWidget(\`interactive\${i}\`).whenReady;
 
-    widget.cursorEventCallback = (event) => {
+    widget.pointerEventCallback = (event) => {
         if (event === "enter") widget.state.setAnimation(0, "emotes/hooray", true).mixDuration = .15;
         if (event === "leave") widget.state.setAnimation(0, "emotes/wave", true).mixDuration = .25;
     }
@@ -3234,7 +3234,7 @@ const darkPicker = document.getElementById("dark-picker");
     const tempColor = new spine.Color();
     const slot = widget.skeleton.findSlot("head-base");
     slot.darkColor = new spine.Color(0, 0, 0, 1);
-    widget.addCursorSlotEventCallback(slot, (slot, event) => {
+    widget.addPointerSlotEventCallback(slot, (slot, event) => {
         if (event === "down") {
             slot.darkColor.setFromColor(spine.Color.fromString(darkPicker.value, tempColor));
             slot.color.setFromColor(spine.Color.fromString(colorPicker.value, tempColor));
@@ -3478,7 +3478,7 @@ const darkPicker = document.getElementById("dark-picker");
         resizeHandle.style.right = "0";
         resizeHandle.style.position = "absolute";
         resizeHandle.style["background-color"] = "#007bff";
-        resizeHandle.style["cursor"] = "se-resize";
+        resizeHandle.style["pointer"] = "se-resize";
 
         element.style["position"] = "relative";
         element.style["touch-action"] = "none";

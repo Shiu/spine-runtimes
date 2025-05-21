@@ -708,36 +708,36 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		const transparentRed = new Color(1, 0, 0, .3);
 	}
 
-	public cursorCanvasX = 1;
-	public cursorCanvasY = 1;
-	public cursorWorldX = 1;
-	public cursorWorldY = 1;
+	public pointerCanvasX = 1;
+	public pointerCanvasY = 1;
+	public pointerWorldX = 1;
+	public pointerWorldY = 1;
 
 	private tempVector = new Vector3();
-	private updateCursor (input: Point) {
-		this.cursorCanvasX = input.x - window.scrollX;
-		this.cursorCanvasY = input.y - window.scrollY;
+	private updatePointer (input: Point) {
+		this.pointerCanvasX = input.x - window.scrollX;
+		this.pointerCanvasY = input.y - window.scrollY;
 
 		if (this.appendedToBody) {
 			const ref = this.parentElement!.getBoundingClientRect();
-			this.cursorCanvasX -= ref.left;
-			this.cursorCanvasY -= ref.top;
+			this.pointerCanvasX -= ref.left;
+			this.pointerCanvasY -= ref.top;
 		}
 
 		let tempVector = this.tempVector;
-		tempVector.set(this.cursorCanvasX, this.cursorCanvasY, 0);
+		tempVector.set(this.pointerCanvasX, this.pointerCanvasY, 0);
 		this.renderer.camera.screenToWorld(tempVector, this.canvas.clientWidth, this.canvas.clientHeight);
 
 		if (Number.isNaN(tempVector.x) || Number.isNaN(tempVector.y)) return;
-		this.cursorWorldX = tempVector.x;
-		this.cursorWorldY = tempVector.y;
+		this.pointerWorldX = tempVector.x;
+		this.pointerWorldY = tempVector.y;
 	}
 
-	private updateWidgetCursor (widget: SpineWebComponentSkeleton): boolean {
+	private updateWidgetPointer (widget: SpineWebComponentSkeleton): boolean {
 		if (widget.worldX === Infinity) return false;
 
-		widget.cursorWorldX = this.cursorWorldX - widget.worldX;
-		widget.cursorWorldY = this.cursorWorldY - widget.worldY;
+		widget.pointerWorldX = this.pointerWorldX - widget.worldX;
+		widget.pointerWorldY = this.pointerWorldY - widget.worldY;
 
 		return true;
 	}
@@ -757,28 +757,28 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		let lastX = 0;
 		let lastY = 0;
 		inputManager.addListener({
-			// moved is used to pass cursor position wrt to canvas and widget position and currently is EXPERIMENTAL
+			// moved is used to pass pointer position wrt to canvas and widget position and currently is EXPERIMENTAL
 			moved: (x, y, ev) => {
 				const input = getInput(ev);
-				this.updateCursor(input);
+				this.updatePointer(input);
 
 				for (const widget of this.widgets) {
-					if (!this.updateWidgetCursor(widget) || !widget.onScreen) continue;
+					if (!this.updateWidgetPointer(widget) || !widget.onScreen) continue;
 
-					widget.cursorEventUpdate("move", ev);
+					widget.pointerEventUpdate("move", ev);
 				}
 			},
 			down: (x, y, ev) => {
 				const input = getInput(ev);
 
-				this.updateCursor(input);
+				this.updatePointer(input);
 
 				for (const widget of this.widgets) {
-					if (!this.updateWidgetCursor(widget) || widget.isOffScreenAndWasMoved()) continue;
+					if (!this.updateWidgetPointer(widget) || widget.isOffScreenAndWasMoved()) continue;
 
-					widget.cursorEventUpdate("down", ev);
+					widget.pointerEventUpdate("down", ev);
 
-					if ((widget.isInteractive && widget.cursorInsideBounds) || (!widget.isInteractive && widget.isCursorInsideBounds())) {
+					if ((widget.isInteractive && widget.pointerInsideBounds) || (!widget.isInteractive && widget.isPointerInsideBounds())) {
 						if (!widget.isDraggable) continue;
 
 						widget.dragging = true;
@@ -795,12 +795,12 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 				let dragX = input.x - lastX;
 				let dragY = input.y - lastY;
 
-				this.updateCursor(input);
+				this.updatePointer(input);
 
 				for (const widget of this.widgets) {
-					if (!this.updateWidgetCursor(widget) || widget.isOffScreenAndWasMoved()) continue;
+					if (!this.updateWidgetPointer(widget) || widget.isOffScreenAndWasMoved()) continue;
 
-					widget.cursorEventUpdate("drag", ev);
+					widget.pointerEventUpdate("drag", ev);
 
 					if (!widget.dragging) continue;
 
@@ -818,8 +818,8 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 				for (const widget of this.widgets) {
 					widget.dragging = false;
 
-					if (widget.cursorInsideBounds) {
-						widget.cursorEventUpdate("up", ev);
+					if (widget.pointerInsideBounds) {
+						widget.pointerEventUpdate("up", ev);
 					}
 				}
 			}

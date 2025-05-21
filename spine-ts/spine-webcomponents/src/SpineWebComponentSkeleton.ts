@@ -64,8 +64,8 @@ export type AnimationsInfo = Record<string, {
 	animations: Array<AnimationsType>
 }>;
 export type AnimationsType = { animationName: string | "#EMPTY#", loop?: boolean, delay?: number, mixDuration?: number };
-export type CursorEventType = "down" | "up" | "enter" | "leave" | "move" | "drag";
-export type CursorEventTypesInput = Exclude<CursorEventType, "enter" | "leave">;
+export type PointerEventType = "down" | "up" | "enter" | "leave" | "move" | "drag";
+export type PointerEventTypesInput = Exclude<PointerEventType, "enter" | "leave">;
 
 // The properties that map to widget attributes
 interface WidgetAttributes {
@@ -410,16 +410,16 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	public worldY = Infinity;
 
 	/**
-	 * The x coordinate of the cursor relative to the cursor relative to the skeleton root in spine world coordinates.
+	 * The x coordinate of the pointer relative to the pointer relative to the skeleton root in spine world coordinates.
 	 * This is an experimental property and might be removed in the future.
 	 */
-	public cursorWorldX = 1;
+	public pointerWorldX = 1;
 
 	/**
-	 * The x coordinate of the cursor relative to the cursor relative to the skeleton root in spine world coordinates.
+	 * The x coordinate of the pointer relative to the pointer relative to the skeleton root in spine world coordinates.
 	 * This is an experimental property and might be removed in the future.
 	 */
-	public cursorWorldY = 1;
+	public pointerWorldY = 1;
 
 	/**
 	 * If true, the widget is interactive
@@ -429,30 +429,30 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	public isInteractive = false;
 
 	/**
-	 * If the widget is interactive, this method is invoked with a {@link CursorEventType} when the cursor
+	 * If the widget is interactive, this method is invoked with a {@link PointerEventType} when the pointer
 	 * performs actions within the widget bounds (for example, it enter or leaves the bounds).
 	 * By default, the function does nothing.
 	 * This is an experimental property and might be removed in the future.
 	 */
-	public cursorEventCallback = (event: CursorEventType, originalEvent?: UIEvent) => { }
+	public pointerEventCallback = (event: PointerEventType, originalEvent?: UIEvent) => { }
 
 	// TODO: probably it makes sense to associate a single callback to a groups of slots to avoid the same callback to be called for each slot of the group
 	/**
 	 * This methods allows to associate to a Slot a callback. For these slots, if the widget is interactive,
-	 * when the cursor performs actions within the slot's attachment the associated callback is invoked with
-	 * a {@link CursorEventType} (for example, it enter or leaves the slot's attachment bounds).
+	 * when the pointer performs actions within the slot's attachment the associated callback is invoked with
+	 * a {@link PointerEventType} (for example, it enter or leaves the slot's attachment bounds).
 	 * This is an experimental property and might be removed in the future.
 	 */
-	public addCursorSlotEventCallback (slot: number | string | Slot, slotFunction: (slot: Slot, event: CursorEventType) => void) {
-		this.cursorSlotEventCallbacks.set(this.getSlotFromRef(slot), { slotFunction, inside: false });
+	public addPointerSlotEventCallback (slot: number | string | Slot, slotFunction: (slot: Slot, event: PointerEventType) => void) {
+		this.pointerSlotEventCallbacks.set(this.getSlotFromRef(slot), { slotFunction, inside: false });
 	}
 
 	/**
-	 * Remove callbacks added through {@link addCursorSlotEventCallback}.
+	 * Remove callbacks added through {@link addPointerSlotEventCallback}.
 	 * @param slot: the slot reference to which remove the associated callback
 	 */
-	public removeCursorSlotEventCallbacks (slot: number | string | Slot) {
-		this.cursorSlotEventCallbacks.delete(this.getSlotFromRef(slot));
+	public removePointerSlotEventCallbacks (slot: number | string | Slot) {
+		this.pointerSlotEventCallbacks.delete(this.getSlotFromRef(slot));
 	}
 
 	private getSlotFromRef (slotRef: number | string | Slot): Slot {
@@ -1094,44 +1094,44 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	/**
 	 * @internal
 	 */
-	public cursorInsideBounds = false;
+	public pointerInsideBounds = false;
 
 	private verticesTemp = Utils.newFloatArray(2 * 1024);
 
 	/**
 	 * @internal
 	 */
-	public cursorSlotEventCallbacks: Map<Slot, {
-		slotFunction: (slot: Slot, event: CursorEventType, originalEvent?: UIEvent) => void,
+	public pointerSlotEventCallbacks: Map<Slot, {
+		slotFunction: (slot: Slot, event: PointerEventType, originalEvent?: UIEvent) => void,
 		inside: boolean,
 	}> = new Map();
 
 	/**
 	 * @internal
 	 */
-	public cursorEventUpdate (type: CursorEventTypesInput, originalEvent?: UIEvent) {
+	public pointerEventUpdate (type: PointerEventTypesInput, originalEvent?: UIEvent) {
 		if (!this.isInteractive) return;
 
 		this.checkBoundsInteraction(type, originalEvent);
 		this.checkSlotInteraction(type, originalEvent);
 	}
 
-	private checkBoundsInteraction (type: CursorEventTypesInput, originalEvent?: UIEvent) {
-		if (this.isCursorInsideBounds()) {
+	private checkBoundsInteraction (type: PointerEventTypesInput, originalEvent?: UIEvent) {
+		if (this.isPointerInsideBounds()) {
 
-			if (!this.cursorInsideBounds) {
-				this.cursorEventCallback("enter", originalEvent);
+			if (!this.pointerInsideBounds) {
+				this.pointerEventCallback("enter", originalEvent);
 			}
-			this.cursorInsideBounds = true;
+			this.pointerInsideBounds = true;
 
-			this.cursorEventCallback(type, originalEvent);
+			this.pointerEventCallback(type, originalEvent);
 
 		} else {
 
-			if (this.cursorInsideBounds) {
-				this.cursorEventCallback("leave", originalEvent);
+			if (this.pointerInsideBounds) {
+				this.pointerEventCallback("leave", originalEvent);
 			}
-			this.cursorInsideBounds = false;
+			this.pointerInsideBounds = false;
 
 		}
 	}
@@ -1139,11 +1139,11 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	/**
 	 * @internal
 	 */
-	public isCursorInsideBounds (): boolean {
+	public isPointerInsideBounds (): boolean {
 		if (this.isOffScreenAndWasMoved() || !this.skeleton) return false;
 
-		const x = this.cursorWorldX / this.skeleton.scaleX;
-		const y = this.cursorWorldY / this.skeleton.scaleY;
+		const x = this.pointerWorldX / this.skeleton.scaleX;
+		const y = this.pointerWorldY / this.skeleton.scaleY;
 
 		return (
 			x >= this.bounds.x &&
@@ -1153,8 +1153,8 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		);
 	}
 
-	private checkSlotInteraction (type: CursorEventTypesInput, originalEvent?: UIEvent) {
-		for (let [slot, interactionState] of this.cursorSlotEventCallbacks) {
+	private checkSlotInteraction (type: PointerEventTypesInput, originalEvent?: UIEvent) {
+		for (let [slot, interactionState] of this.pointerSlotEventCallbacks) {
 			if (!slot.bone.active) continue;
 			let attachment = slot.getAttachment();
 
@@ -1176,7 +1176,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 			}
 
 			// here we have only "move" and "drag" events
-			if (this.isPointInPolygon(vertices, hullLength, [this.cursorWorldX, this.cursorWorldY])) {
+			if (this.isPointInPolygon(vertices, hullLength, [this.pointerWorldX, this.pointerWorldY])) {
 
 				if (!inside) {
 					interactionState.inside = true;

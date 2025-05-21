@@ -106,7 +106,7 @@
 
             const emotes = widget.skeleton.data.animations.reduce((acc, { name }) => name.startsWith("emotes") ? [...acc, name] : acc, []);
             let leaveAnimation = "emotes/wave";
-            widget.cursorEventCallback = (event) => {
+            widget.pointerEventCallback = (event) => {
                 if (event === "enter") widget.state.setAnimation(0, "emotes/hooray", true).mixDuration = .15;
                 else if (event === "leave") widget.state.setAnimation(0, leaveAnimation, true).mixDuration = .25;
                 else if (event === "down") {
