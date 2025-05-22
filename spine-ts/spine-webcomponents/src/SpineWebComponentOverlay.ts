@@ -863,8 +863,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 			this.div!.style.height = height + "px";
 		} else {
 			if (this.hasCssTweakOff()) {
-				// this case lags if scrolls or position fixed
-				// users should never use tweak off, unless the parent container has already a transform
+				// this case lags if scrolls or position fixed. Users should never use tweak off
 				this.div!.style.width = this.parentElement!.clientWidth + "px";
 				this.div!.style.height = this.parentElement!.clientHeight + "px";
 				this.canvas.style.transform = `translate(${-this.overflowLeftSize}px,${-this.overflowTopSize}px)`;
@@ -890,7 +889,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 	// this means that during zoom it might occurs that the div would be resized
 	// rounded 1px more making a scrollbar appear
 	private getPageSize () {
-		return document.body.getBoundingClientRect();
+		return document.documentElement.getBoundingClientRect();
 	}
 
 	private lastViewportWidth = 0;
