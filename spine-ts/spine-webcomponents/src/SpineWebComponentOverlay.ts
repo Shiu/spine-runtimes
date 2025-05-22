@@ -274,7 +274,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 				this.parentElement!.style.transform = `translateZ(0)`;
 			}
 		} else {
-			window.addEventListener("resize", () => this.resizedCallback(true));
+			window.addEventListener("resize", this.windowResizeCallback);
 		}
 		this.resizeObserver = new ResizeObserver(() => this.resizedCallback());
 		this.resizeObserver.observe(this.parentElement!);
@@ -297,7 +297,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		if (id) SpineWebComponentOverlay.OVERLAY_LIST.delete(id);
 		// window.removeEventListener("scroll", this.scrolledCallback);
 		window.removeEventListener("load", this.loadedCallback);
-		window.removeEventListener("resize", this.resizedCallback);
+		window.removeEventListener("resize", this.windowResizeCallback);
 		window.screen.orientation.removeEventListener('change', this.orientationChangedCallback);
 		this.intersectionObserver?.disconnect();
 		this.resizeObserver?.disconnect();
@@ -324,6 +324,8 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		(this as any)[propertyName] = val;
 		return;
 	}
+
+	private windowResizeCallback = () => this.resizedCallback(true);
 
 	private resizedCallback = (onlyDiv = false) => {
 		this.updateCanvasSize(onlyDiv);
