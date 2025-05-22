@@ -156,8 +156,8 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 	/**
 	 * appendedToBody is assegned in the connectedCallback.
-	 * When true, the overlay will have the size of the element container in contrast to the default behaviour where the
-	 * overlay has always the size of the screen.
+	 * When false, the overlay will have the size of the element container in contrast to the default behaviour where the
+	 * overlay has always the size of the viewport.
 	 * This is necessary when the overlay is inserted into a container that scroll in a different way with respect to the page.
 	 * Otherwise the following problems might occur:
 	 * 1) For containers appendedToBody, the widget will be slightly slower to scroll than the html behind. The effect is more evident for lower refresh rate display.
@@ -223,7 +223,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 	}
 
 	connectedCallback (): void {
-		this.appendedToBody = this.parentElement !== document.body;
+		this.appendedToBody = this.parentElement === document.body;
 
 		let overlayId = this.getAttribute('overlay-id');
 		if (!overlayId) {
@@ -270,7 +270,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		// we cannot use window.resize event since it does not fire when body resizes, but not the window
 		// Alternatively, we can store the body size, check the current body size in the loop (like the translateCanvas), and
 		// if they differs call the resizeCallback. I already tested it, and it works. ResizeObserver should be more efficient.
-		if (this.appendedToBody) {
+		if (!this.appendedToBody) {
 			// if the element is appendedToBody, the user does not disable translate tweak, and the parent did not have already a transform, add the tweak
 			if (this.hasCssTweakOff()) {
 				this.hasParentTransform = false;
@@ -474,7 +474,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 			let ref: DOMRect;
 			let offsetLeftForOevrlay = 0;
 			let offsetTopForOverlay = 0;
-			if (this.appendedToBody) {
+			if (!this.appendedToBody) {
 				ref = this.parentElement!.getBoundingClientRect();
 				const computedStyle = getComputedStyle(this.parentElement!);
 				offsetLeftForOevrlay = ref.left + parseFloat(computedStyle.borderLeftWidth);
@@ -492,7 +492,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 				divBounds.x = divBounds.left + this.overflowLeftSize;
 				divBounds.y = divBounds.top + this.overflowTopSize;
 
-				if (this.appendedToBody) {
+				if (!this.appendedToBody) {
 					divBounds.x -= offsetLeftForOevrlay;
 					divBounds.y -= offsetTopForOverlay;
 				}
@@ -662,7 +662,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 					let x = this.tempFollowBoneVector.x - this.overflowLeftSize;
 					let y = this.tempFollowBoneVector.y - this.overflowTopSize;
 
-					if (!this.appendedToBody) {
+					if (this.appendedToBody) {
 						x += window.scrollX;
 						y += window.scrollY;
 					}
@@ -718,7 +718,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		this.pointerCanvasX = input.x - window.scrollX;
 		this.pointerCanvasY = input.y - window.scrollY;
 
-		if (this.appendedToBody) {
+		if (!this.appendedToBody) {
 			const ref = this.parentElement!.getBoundingClientRect();
 			this.pointerCanvasX -= ref.left;
 			this.pointerCanvasY -= ref.top;
@@ -857,7 +857,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		// this.div!.style.width = 0 + "px";
 		// this.div!.style.height = 0 + "px";
 		this.div!.style.display = "none";
-		if (!this.appendedToBody) {
+		if (this.appendedToBody) {
 			const { width, height } = this.getPageSize();
 			this.div!.style.width = width + "px";
 			this.div!.style.height = height + "px";
@@ -903,7 +903,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 	// determine the target viewport width and height.
 	// The target width/height won't change if the viewport shrink to avoid useless re render (especially re render bursts on mobile)
 	private getViewportSize (): { width: number, height: number } {
-		if (this.appendedToBody) {
+		if (!this.appendedToBody) {
 			return {
 				width: this.parentElement!.clientWidth,
 				height: this.parentElement!.clientHeight,
@@ -969,7 +969,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		let scrollPositionX = -this.overflowLeftSize;
 		let scrollPositionY = -this.overflowTopSize;
 
-		if (!this.appendedToBody) {
+		if (this.appendedToBody) {
 			scrollPositionX += window.scrollX;
 			scrollPositionY += window.scrollY;
 		} else {
