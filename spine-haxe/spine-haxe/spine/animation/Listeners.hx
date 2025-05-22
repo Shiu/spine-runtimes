@@ -88,7 +88,7 @@ class EventListeners {
 
 	/** Invoked when this entry's animation triggers an event. This may occur during mixing (after
 	 * interrupt(TrackEntry)), see spine.animation.TrackEntry.eventThreshold.
-	 * <p>
+	 *
 	 * Because this event is triggered at the end of spine.animation.AnimationState.apply(Skeleton), any animations set in response to
 	 * the event won't be applied until the next time the AnimationState is applied. */
 	public function invoke(entry:TrackEntry, event:Event) {

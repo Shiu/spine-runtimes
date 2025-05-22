@@ -35,7 +35,7 @@ import spine.Skeleton;
 
 /** Resets a physics constraint when specific animation times are reached. */
 class PhysicsConstraintResetTimeline extends Timeline {
-	/** The index of the physics constraint in {@link Skeleton#physicsConstraints} that will be reset when this timeline is
+	/** The index of the physics constraint in Skeleton#physicsConstraints that will be reset when this timeline is
 	 * applied, or -1 if all physics constraints in the skeleton will be reset. */
 	public var constraintIndex:Int = 0;
 
@@ -51,12 +51,12 @@ class PhysicsConstraintResetTimeline extends Timeline {
 	}
 
 	/** Sets the time for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive. */
+	 * @param frame Between 0 and frameCount, inclusive. */
 	public function setFrame(frame:Int, time:Float):Void {
 		frames[frame] = time;
 	}
 
-	/** Resets the physics constraint when frames > <code>lastTime</code> and <= <code>time</code>. */
+	/** Resets the physics constraint when frames > lastTime and <= time. */
 	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, firedEvents:Array<Event>, alpha:Float, blend:MixBlend,
 			direction:MixDirection):Void {
 		var constraint:PhysicsConstraint = null;

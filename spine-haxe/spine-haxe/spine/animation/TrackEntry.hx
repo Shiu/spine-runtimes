@@ -33,14 +33,14 @@ import spine.animation.Listeners.EventListeners;
 import spine.Poolable;
 
 /** Stores settings and other state for the playback of an animation on an spine.animation.AnimationState track.
- * <p>
+ *
  * References to a track entry must not be kept after the AnimationStateListener.dispose(TrackEntry) event occurs. */
 class TrackEntry implements Poolable {
 	/** The animation to apply for this track entry. */
 	public var animation:Animation;
 	/** The animation queued to start after this animation, or null if there is none. next makes up a doubly linked
 	 * list.
-	 * <p>
+	 *
 	 * See spine.animation.AnimationState.clearNext(TrackEntry) to truncate the list. */
 	public var next:TrackEntry;
 	/** The animation queued to play before this animation, or null. previous makes up a doubly linked list. */
@@ -58,7 +58,7 @@ class TrackEntry implements Poolable {
 	public var onComplete:Listeners = new Listeners();
 	public var onEvent:EventListeners = new EventListeners();
 	/** The index of the track where this track entry is either current or queued.
-	 * <p>
+	 *
 	 * See spine.animation.AnimationState.getCurrent(int). */
 	public var trackIndex:Int = 0;
 	/** If true, the animation will repeat. If false it will not, instead its last frame is applied if played beyond its
@@ -68,13 +68,13 @@ class TrackEntry implements Poolable {
 	public var reverse:Bool = false;
 	/** If true, when mixing from the previous animation to this animation, the previous animation is applied as normal instead
 	 * of being mixed out.
-	 * <p>
+	 *
 	 * When mixing between animations that key the same property, if a lower track also keys that property then the value will
 	 * briefly dip toward the lower track value during the mix. This happens because the first animation mixes from 100% to 0%
 	 * while the second animation mixes from 0% to 100%. Setting holdPrevious to true applies the first animation
 	 * at 100% during the mix so the lower track value is overwritten. Such dipping does not occur on the lowest track which
 	 * keys the property, only when a higher track also keys the property.
-	 * <p>
+	 *
 	 * Snapping will occur if holdPrevious is true and this animation does not key all the same properties as the
 	 * previous animation. */
 	public var holdPrevious:Bool = false;
@@ -94,7 +94,7 @@ class TrackEntry implements Poolable {
 	 * 0, so draw order timelines are not applied while this animation is being mixed out. */
 	public var mixDrawOrderThreshold:Float = 0;
 	/** Seconds when this animation starts, both initially and after looping. Defaults to 0.
-	 * <p>
+	 *
 	 * When changing the animationStart time, it often makes sense to set TrackEntry.getAnimationLast() to the same
 	 * value to prevent timeline keys before the start time from triggering. */
 	public var animationStart:Float = 0;
@@ -113,9 +113,9 @@ class TrackEntry implements Poolable {
 	* delay is the time from the start of the previous animation to when this track entry will become the current
 	* track entry (ie when the previous track entry TrackEntry.getTrackTime() >= this track entry's
 	* delay).
-	* <p>
+	*
 	* TrackEntry.getTimeScale() affects the delay.
-	* <p>
+	*
 	* When passing delay <= 0 to spine.animation.AnimationState.addAnimation(int, Animation, boolean, float) this
 	* delay is set using a mix duration from spine.animation.AnimationStateData. To change the TrackEntry.getMixDuration()
 	* afterward, use TrackEntry.setMixDuration(float, float) so this delay is adjusted. */
@@ -131,27 +131,27 @@ class TrackEntry implements Poolable {
 	 * value, meaning the animation will be applied until a new animation is set or the track is cleared. If the track end time
 	 * is reached, no other animations are queued for playback, and mixing from any previous animations is complete, then the
 	 * properties keyed by the animation are set to the setup pose and the track is cleared.
-	 * <p>
+	 *
 	 * It may be desired to use spine.animation.AnimationState.addEmptyAnimation(int, float, float) rather than have the animation
 	 * abruptly cease being applied. */
 	public var trackEnd:Float = 0;
 	/** Multiplier for the delta time when this track entry is updated, causing time for this animation to pass slower or
 	 * faster. Defaults to 1.
-	 * <p>
+	 *
 	 * Values < 0 are not supported. To play an animation in reverse, use TrackEntry.getReverse().
-	 * <p>
+	 *
 	 * TrackEntry.getMixTime() is not affected by track entry time scale, so TrackEntry.getMixDuration() may need to be adjusted to
 	 * match the animation speed.
-	 * <p>
+	 *
 	 * When using spine.animation.AnimationState.addAnimation(int, Animation, boolean, float) with a delay <= 0, the
 	 * TrackEntry.getDelay() is set using the mix duration from the spine.animation.AnimationStateData, assuming time scale to be 1. If
 	 * the time scale is not 1, the delay may need to be adjusted.
-	 * <p>
+	 *
 	 * See AnimationState spine.animation.AnimationState.getTimeScale() for affecting all animations. */
 	public var timeScale:Float = 0;
 	/** Values < 1 mix this animation with the skeleton's current pose (usually the pose resulting from lower tracks). Defaults
 	 * to 1, which overwrites the skeleton's current pose with this animation.
-	 * <p>
+	 *
 	 * Typically track 0 is used to completely pose the skeleton, then alpha is used on higher tracks. It doesn't make sense to
 	 * use alpha on track 0 if the skeleton pose is from the last frame render. */
 	public var alpha:Float = 0;
@@ -160,28 +160,28 @@ class TrackEntry implements Poolable {
 	public var mixTime:Float = 0;
 	/** Seconds for mixing from the previous animation to this animation. Defaults to the value provided by AnimationStateData
 	 * spine.animation.AnimationStateData.getMix(Animation, Animation) based on the animation before this animation (if any).
-	 * <p>
+	 *
 	 * A mix duration of 0 still mixes out over one frame to provide the track entry being mixed out a chance to revert the
 	 * properties it was animating. A mix duration of 0 can be set at any time to end the mix on the next
 	 * spine.animation.AnimationState.update(float) update.
-	 * <p>
+	 *
 	 * The mixDuration can be set manually rather than use the value from
 	 * spine.animation.AnimationStateData.getMix(Animation, Animation). In that case, the mixDuration can be set for a new
 	 * track entry only before spine.animation.AnimationState.update(float) is first called.
-	 * <p>
+	 *
 	 * When using spine.animation.AnimationState.addAnimation(int, Animation, boolean, float) with a delay <= 0, the
 	 * TrackEntry.getDelay() is set using the mix duration from the spine.animation.AnimationStateData. If mixDuration is set
-	 * afterward, the delay may need to be adjusted. For example:<br>
-	 * entry.delay = entry.previous.getTrackComplete() - entry.mixDuration;<br>
-	 * Alternatively, TrackEntry.setMixDuration(float, float) can be used to recompute the delay:<br>
+	 * afterward, the delay may need to be adjusted. For example:\n
+	 * entry.delay = entry.previous.getTrackComplete() - entry.mixDuration;\n
+	 * Alternatively, TrackEntry.setMixDuration(float, float) can be used to recompute the delay:\n
 	 * entry.setMixDuration(0.25f, 0); */
 	public var mixDuration:Float = 0;
 	public var interruptAlpha:Float = 0;
 	public var totalAlpha:Float = 0;
 	/** Controls how properties keyed in the animation are mixed with lower tracks. Defaults to spine.animation.MixBlend.replace.
-	 * <p>
+	 *
 	 * Track entries on track 0 ignore this setting and always use spine.animation.MixBlend.first.
-	 * <p>
+	 *
 	 * The mixBlend can be set for a new track entry only before spine.animation.AnimationState.apply(Skeleton) is first
 	 * called. */
 	public var mixBlend:MixBlend = MixBlend.replace;
@@ -190,7 +190,7 @@ class TrackEntry implements Poolable {
 	public var timelinesRotation:Array<Float> = new Array<Float>();
 	/** If true, mixing rotation between tracks always uses the shortest rotation direction. If the rotation is animated, the
 	 * shortest rotation direction may change during the mix.
-	 * <p>
+	 *
 	 * If false, the shortest rotation direction is remembered when the mix starts and the same direction is used for the rest
 	 * of the mix. Defaults to false. */
 	public var shortestRotation = false;
@@ -204,7 +204,7 @@ class TrackEntry implements Poolable {
 
 	/** Uses TrackEntry.getTrackTime() to compute the animationTime. When the trackTime is 0, the
 	 * animationTime is equal to the animationStart time.
-	 * <p>
+	 *
 	 * The animationTime is between TrackEntry.getAnimationStart() and TrackEntry.getAnimationEnd(), except if this
 	 * track entry is non-looping and TrackEntry.getAnimationEnd() is >= to the animation spine.animation.Animation.duration, then
 	 * animationTime continues to increase past TrackEntry.getAnimationEnd(). */
@@ -233,7 +233,7 @@ class TrackEntry implements Poolable {
 	}
 
 	/** Returns true if this track entry has been applied at least once.
-	 * <p>
+	 *
 	 * See spine.animation.AnimationState.apply(Skeleton). */
 	public function wasApplied() {
 		return nextTrackLast != -1;
@@ -264,7 +264,7 @@ class TrackEntry implements Poolable {
 
 	/** Resets the rotation directions for mixing this entry's rotate timelines. This can be useful to avoid bones rotating the
 	 * long way around when using TrackEntry.getAlpha() and starting animations on other tracks.
-	 * <p>
+	 *
 	 * Mixing with spine.animation.MixBlend.replace involves finding a rotation between two others, which has two possible solutions:
 	 * the short way or the long way around. The two rotations likely change over time, so which direction is the short or long
 	 * way also changes. If the short way was always chosen, bones would flip to the other side when that direction became the

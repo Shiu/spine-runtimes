@@ -34,7 +34,8 @@ package spine;
  * @see spine.Timeline
  * @see spine.Timeline.apply()
  * @see spine.AnimationStateListener.event()
- * @see <a href="https://esotericsoftware.com/spine-events">Events</a> in the Spine User Guide. */
+ * @see https://esotericsoftware.com/spine-events Events in the Spine User Guide
+ */
 class Event {
 	private var _data:EventData;
 

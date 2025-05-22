@@ -65,7 +65,7 @@ class DeformTimeline extends CurveTimeline implements SlotTimeline {
 	}
 
 	/** Sets the time and vertices for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param frame Between 0 and frameCount, inclusive.
 	 * @param time The frame time in seconds.
 	 * @param verticesOrDeform Vertex positions for an unweighted VertexAttachment, or deform offsets if it has weights. */
 	public function setFrame(frame:Int, time:Float, verticesOrDeform:Array<Float>):Void {
@@ -113,7 +113,7 @@ class DeformTimeline extends CurveTimeline implements SlotTimeline {
 	}
 
 	/** Returns the interpolated percentage for the specified time.
-	 * @param frame The frame before <code>time</code>. */
+	 * @param frame The frame before time. */
 	private function getCurvePercent(time:Float, frame:Int):Float {
 		var i:Int = Std.int(curves[frame]);
 		var x:Float;

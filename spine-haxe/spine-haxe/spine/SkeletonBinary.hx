@@ -84,10 +84,9 @@ import spine.attachments.VertexAttachment;
 
 /**
  * Loads skeleton data in the Spine binary format.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-binary-format">Spine binary format</a> and
- * <a href="https://esotericsoftware.com/spine-loading-skeleton-data#JSON-and-binary-data">JSON and binary data</a> in the Spine
- * Runtimes Guide.
+ *
+ * @see https://esotericsoftware.com/spine-binary-format Spine binary format
+ * @see https://esotericsoftware.com/spine-loading-skeleton-data#JSON-and-binary-data JSON and binary data in the Spine Runtimes Guide
  */
 class SkeletonBinary {
 	public var attachmentLoader:AttachmentLoader;

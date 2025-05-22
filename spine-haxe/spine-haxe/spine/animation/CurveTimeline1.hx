@@ -46,7 +46,7 @@ class CurveTimeline1 extends CurveTimeline {
 	}
 
 	/** Sets the time and value for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param frame Between 0 and frameCount, inclusive.
 	 * @param time The frame time in seconds. */
 	public function setFrame(frame:Int, time:Float, value1:Float):Void {
 		frame <<= 1;

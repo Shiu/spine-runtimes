@@ -62,9 +62,8 @@ class VertexAttachment extends Attachment {
 
 	/** Transforms the attachment's local vertices to world coordinates. If the slot's spine.Slot.deform is
 	 * not empty, it is used to deform the vertices.
-	 * <p>
-	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
-	 * Runtimes Guide.
+	 *
+	 * @see https://esotericsoftware.com/spine-runtime-skeletons#World-transforms World transforms in the Spine Runtimes Guide
 	 * @param start The index of the first vertices value to transform. Each vertex has 2 values, x and y.
 	 * @param count The number of world vertex values to output. Must be <= worldVerticesLength - `start`.
 	 * @param worldVertices The output world vertices. Must have a length >= `offset` + `count` *

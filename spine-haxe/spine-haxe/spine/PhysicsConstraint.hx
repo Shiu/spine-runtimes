@@ -31,7 +31,9 @@ package spine;
 
 /** Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
  * 
- * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
+ * 
+ * @see https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide
+ */
 class PhysicsConstraint implements Updatable {
 	private var _data:PhysicsConstraintData;
 	private var _bone:Bone = null;

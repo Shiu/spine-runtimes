@@ -31,7 +31,7 @@ package spine;
 
 /** Controls how bones are rotated, translated, and scaled to match the path.
  * 
- * See <a href="https://esotericsoftware.com/spine-path-constraints#Rotate-mode">Rotate mode</a> in the Spine User Guide. */
+ * @see https://esotericsoftware.com/spine-path-constraints#Rotate-mode Rotate mode in the Spine User Guide */
 class RotateMode {
 	public static var tangent(default, never):RotateMode = new RotateMode("tangent");
 	public static var chain(default, never):RotateMode = new RotateMode("chain");

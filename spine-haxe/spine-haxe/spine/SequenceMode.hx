@@ -30,7 +30,7 @@
 package spine;
 
 /**
- * Defines how a {@link Sequence} is played.
+ * Defines how a Sequence is played.
  */
 class SequenceMode {
 	public static var hold(default, never):SequenceMode = new SequenceMode("hold", 0);

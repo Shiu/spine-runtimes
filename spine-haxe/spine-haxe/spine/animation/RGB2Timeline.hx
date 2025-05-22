@@ -57,7 +57,7 @@ class RGB2Timeline extends CurveTimeline implements SlotTimeline {
 	}
 
 	/** Sets the time, light color, and dark color for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param frame Between 0 and frameCount, inclusive.
 	 * @param time The frame time in seconds. */
 	public function setFrame(frame:Int, time:Float, r:Float, g:Float, b:Float, r2:Float, g2:Float, b2:Float):Void {
 		frame *= ENTRIES;

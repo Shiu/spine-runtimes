@@ -60,7 +60,7 @@ class TransformConstraintTimeline extends CurveTimeline {
 	}
 
 	/** Sets the time, rotate mix, translate mix, scale mix, and shear mix for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param frame Between 0 and frameCount, inclusive.
 	 * @param time The frame time in seconds. */
 	public function setFrame(frame:Int, time:Float, mixRotate:Float, mixX:Float, mixY:Float, mixScaleX:Float, mixScaleY:Float, mixShearY:Float):Void {
 		frame *= ENTRIES;

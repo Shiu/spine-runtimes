@@ -29,9 +29,9 @@
 
 package spine;
 
-/** Stores the setup pose for a {@link PhysicsConstraint}.
+/** Stores the setup pose for a PhysicsConstraint.
  * 
- * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
+ * @see https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide */
 class PhysicsConstraintData extends ConstraintData {
 	/** The bone constrained by this physics constraint. */
 	public var bone:BoneData;

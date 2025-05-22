@@ -31,9 +31,8 @@ package spine;
 
 /**
  * Controls how the first bone is positioned along the path.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-path-constraints#Position-mode">Position mode</a> in the Spine User
- * Guide.
+ *
+ * @see https://esotericsoftware.com/spine-path-constraints#Position-mode Position mode in the Spine User Guide
  */
 class PositionMode {
 	public static var fixed(default, never):PositionMode = new PositionMode("fixed");

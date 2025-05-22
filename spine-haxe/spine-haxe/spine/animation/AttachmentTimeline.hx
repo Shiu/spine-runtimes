@@ -56,7 +56,7 @@ class AttachmentTimeline extends Timeline implements SlotTimeline {
 	}
 
 	/** Sets the time and attachment name for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param frame Between 0 and frameCount, inclusive.
 	 * @param time The frame time in seconds. */
 	public function setFrame(frame:Int, time:Float, attachmentName:String):Void {
 		frames[frame] = time;

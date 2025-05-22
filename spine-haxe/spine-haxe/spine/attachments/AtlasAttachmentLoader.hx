@@ -34,9 +34,8 @@ import spine.Skin;
 
 /**
  * The interface which can be implemented to customize creating and populating attachments.
- * <p>
- * See <a href='https://esotericsoftware.com/spine-loading-skeleton-data#AttachmentLoader'>Loading skeleton data</a> in the Spine
- * Runtimes Guide.
+ *
+ * @see https://esotericsoftware.com/spine-loading-skeleton-data#AttachmentLoader Loading skeleton data in the Spine Runtimes Guide
  */
 class AtlasAttachmentLoader implements AttachmentLoader {
 	private var atlas:TextureAtlas;

@@ -33,9 +33,9 @@ import spine.Event;
 import spine.PathConstraint;
 import spine.Skeleton;
 
-/** Changes a path constraint's {@link PathConstraint#spacing}. */
+/** Changes a path constraint's PathConstraint#spacing. */
 class PathConstraintSpacingTimeline extends CurveTimeline1 {
-	/** The index of the path constraint in {@link Skeleton#pathConstraints} that will be changed when this timeline is
+	/** The index of the path constraint in Skeleton#pathConstraints that will be changed when this timeline is
 	 * applied. */
 	public var constraintIndex:Int = 0;
 

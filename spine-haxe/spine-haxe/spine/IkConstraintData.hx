@@ -31,7 +31,7 @@ package spine;
 
 /** Stores the setup pose for a spine.IkConstraint.
  * 
- * See <a href="https://esotericsoftware.com/spine-ik-constraints">IK constraints</a> in the Spine User Guide. */
+ * @see https://esotericsoftware.com/spine-ik-constraints IK constraints in the Spine User Guide */
 class IkConstraintData extends ConstraintData {
 	/** The bones that are constrained by this IK constraint. */
 	public var bones:Array<BoneData> = new Array<BoneData>();

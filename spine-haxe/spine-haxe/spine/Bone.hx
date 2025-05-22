@@ -30,7 +30,7 @@
 package spine;
 
 /** Stores a bone's current pose.
- * <p>
+ *
  * A bone has a local transform which is used to compute its world transform. A bone also has an applied transform, which is a
  * local transform that can be applied to compute the world transform. The local transform and applied transform may differ if a
  * constraint or application code modifies the world transform after it was computed from the local transform. */
@@ -137,7 +137,7 @@ class Bone implements Updatable {
 	}
 
 	/** Computes the world transform using the parent bone and this bone's local transform.
-	 * <p>
+	 *
 	 * See updateWorldTransformWith(). */
 	public function updateWorldTransform():Void {
 		updateWorldTransformWith(x, y, rotation, scaleX, scaleY, shearX, shearY);
@@ -145,9 +145,9 @@ class Bone implements Updatable {
 
 	/** Computes the world transform using the parent bone and the specified local transform. The applied transform is set to the
 	 * specified local transform. Child bones are not updated.
-	 * <p>
-	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
-	 * Runtimes Guide. */
+	 *
+	 * @see https://esotericsoftware.com/spine-runtime-skeletons#World-transforms World transforms in the Spine Runtimes Guide
+	 */
 	public function updateWorldTransformWith(x:Float, y:Float, rotation:Float, scaleX:Float, scaleY:Float, shearX:Float, shearY:Float):Void {
 		ax = x;
 		ay = y;
@@ -283,11 +283,11 @@ class Bone implements Updatable {
 	}
 
 	/** Computes the applied transform values from the world transform.
-	 * <p>
+	 *
 	 * If the world transform is modified (by a constraint, rotateWorld(), etc) then this method should be called so
 	 * the applied transform matches the world transform. The applied transform may be needed by other code (eg to apply another
 	 * constraint).
-	 * <p>
+	 *
 	 * Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The applied transform after
 	 * calling this method is equivalent to the local transform used to compute the world transform, but may not be identical. */
 	public function updateAppliedTransform():Void {
@@ -446,7 +446,7 @@ class Bone implements Updatable {
 	}
 
 	/** Rotates the world transform the specified amount.
-	 * <p>
+	 *
 	 * After changes are made to the world transform, updateAppliedTransform() should be called and
 	 * update() will need to be called on any child bones, recursively. */
 	public function rotateWorld(degrees:Float):Void {

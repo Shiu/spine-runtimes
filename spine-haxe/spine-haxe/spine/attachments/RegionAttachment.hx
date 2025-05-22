@@ -32,8 +32,9 @@ package spine.attachments;
 import spine.Color;
 
 /** An attachment that displays a textured quadrilateral.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-regions">Region attachments</a> in the Spine User Guide. */
+ *
+ * @see https://esotericsoftware.com/spine-regions Region attachments in the Spine User Guide
+ */
 class RegionAttachment extends Attachment implements HasTextureRegion {
 	public static inline var BLX:Int = 0;
 	public static inline var BLY:Int = 1;
@@ -64,7 +65,7 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 	public var region:TextureRegion;
 	public var sequence:Sequence;
 
-	/** For each of the 4 vertices, a pair of <code>x,y</code> values that is the local position of the vertex.
+	/** For each of the 4 vertices, a pair of x,y values that is the local position of the vertex.
 	 * 
 	 * See RegionAttachment.updateRegion(). */
 	private var offsets:Array<Float> = new Array<Float>();
@@ -148,11 +149,10 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 	/** Transforms the attachment's four vertices to world coordinates. If the attachment has a RegionAttachment.sequence, the region may
 	 * be changed.
 	 * 
-	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
-	 * Runtimes Guide.
-	 * @param worldVertices The output world vertices. Must have a length >= <code>offset</code> + 8.
-	 * @param offset The <code>worldVertices</code> index to begin writing values.
-	 * @param stride The number of <code>worldVertices</code> entries between the value pairs written. */
+	 * @see https://esotericsoftware.com/spine-runtime-skeletons#World-transforms World transforms in the Spine Runtimes Guide
+	 * @param worldVertices The output world vertices. Must have a length >= offset + 8.
+	 * @param offset The worldVertices index to begin writing values.
+	 * @param stride The number of worldVertices entries between the value pairs written. */
 	public function computeWorldVertices(slot:Slot, worldVertices:Array<Float>, offset:Int, stride:Int):Void {
 		if (sequence != null)
 			sequence.apply(slot, this);

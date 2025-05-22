@@ -36,8 +36,9 @@ import spine.atlas.TextureAtlas;
 import spine.attachments.AtlasAttachmentLoader;
 
 /** Stores the setup pose and all of the stateless data for a skeleton.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-runtime-architecture#Data-objects">Data objects</a> in the Spine Runtimes
+ *
+ * 
+ * @see https://esotericsoftware.com/spine-runtime-architecture#Data-objects Data objects in the Spine Runtimes
  * Guide. */
 class SkeletonData {
 	/** The skeleton's name, which by default is the name of the skeleton data file when possible, or null when a name hasn't been
@@ -51,8 +52,8 @@ class SkeletonData {
 	/** All skins, including the default skin. */
 	public var skins:Array<Skin> = new Array<Skin>();
 	/** The skeleton's default skin. By default this skin contains all attachments that were not in a skin in Spine.
-	 * <p>
-	 * See {@link Skeleton#getAttachment(int, String)}. */
+	 *
+	 * See Skeleton#getAttachment(int, String). */
 	public var defaultSkin:Skin;
 	/** The skeleton's events. */
 	public var events:Array<EventData> = new Array<EventData>();

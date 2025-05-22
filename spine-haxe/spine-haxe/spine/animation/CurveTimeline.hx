@@ -48,18 +48,18 @@ class CurveTimeline extends Timeline {
 	}
 
 	/** Sets the specified frame to linear interpolation.
-	 * @param frame Between 0 and <code>frameCount - 1</code>, inclusive. */
+	 * @param frame Between 0 and frameCount - 1, inclusive. */
 	public function setLinear(frame:Int):Void {
 		curves[frame] = LINEAR;
 	}
 
 	/** Sets the specified frame to stepped interpolation.
-	 * @param frame Between 0 and <code>frameCount - 1</code>, inclusive. */
+	 * @param frame Between 0 and frameCount - 1, inclusive. */
 	public function setStepped(frame:Int):Void {
 		curves[frame] = STEPPED;
 	}
 
-	/** Shrinks the storage for Bezier curves, for use when <code>bezierCount</code> (specified in the constructor) was larger
+	/** Shrinks the storage for Bezier curves, for use when bezierCount (specified in the constructor) was larger
 	 * than the actual number of Bezier curves. */
 	public function shrink(bezierCount:Int):Void {
 		var size:Int = getFrameCount() + bezierCount * BEZIER_SIZE;
@@ -68,9 +68,9 @@ class CurveTimeline extends Timeline {
 
 	/** Stores the segments for the specified Bezier curve. For timelines that modify multiple values, there may be more than
 	 * one curve per frame.
-	 * @param bezier The ordinal of this Bezier curve for this timeline, between 0 and <code>bezierCount - 1</code> (specified
+	 * @param bezier The ordinal of this Bezier curve for this timeline, between 0 and bezierCount - 1 (specified
 	 *           in the constructor), inclusive.
-	 * @param frame Between 0 and <code>frameCount - 1</code>, inclusive.
+	 * @param frame Between 0 and frameCount - 1, inclusive.
 	 * @param value The index of the value for the frame this curve is used for.
 	 * @param time1 The time for the first key.
 	 * @param value1 The value for the first key.
@@ -109,8 +109,8 @@ class CurveTimeline extends Timeline {
 	}
 
 	/** Returns the Bezier interpolated value for the specified time.
-	 * @param frameIndex The index into Timeline.getFrames() for the values of the frame before <code>time</code>.
-	 * @param valueOffset The offset from <code>frameIndex</code> to the value this curve is used for.
+	 * @param frameIndex The index into Timeline.getFrames() for the values of the frame before time.
+	 * @param valueOffset The offset from frameIndex to the value this curve is used for.
 	 * @param i The index of the Bezier segments. See CurveTimeline.getCurveType(). */
 	public function getBezierValue(time:Float, frameIndex:Int, valueOffset:Int, i:Int):Float {
 		var x:Float, y:Float;

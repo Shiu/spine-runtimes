@@ -38,9 +38,9 @@ import spine.attachments.PathAttachment;
 import spine.attachments.RegionAttachment;
 
 /** Stores the current pose for a skeleton.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-runtime-architecture#Instance-objects">Instance objects</a> in the Spine
- * Runtimes Guide. */
+ *
+ * @see https://esotericsoftware.com/spine-runtime-architecture#Instance-objects Instance objects in the Spine Runtimes Guide
+ */
 class Skeleton {
 	private static var quadTriangles:Array<Int> = [0, 1, 2, 2, 3, 0];
 	private var _data:SkeletonData;
@@ -66,12 +66,12 @@ class Skeleton {
 	/** The color to tint all the skeleton's attachments. */
 	public var color:Color = new Color(1, 1, 1, 1);
 	/** Scales the entire skeleton on the X axis.
-	 * <p>
+	 *
 	 * Bones that do not inherit scale are still affected by this property. */
 	public var scaleX:Float = 1;
 
 	/** Scales the entire skeleton on the Y axis.
-	 * <p>
+	 *
 	 * Bones that do not inherit scale are still affected by this property. */
 	public var scaleY(get, default):Float = 1;
 	function get_scaleY() {
@@ -79,15 +79,15 @@ class Skeleton {
 	}
 
 	/** Sets the skeleton X position, which is added to the root bone worldX position.
-	 * <p>
+	 *
 	 * Bones that do not inherit translation are still affected by this property. */
 	public var x:Float = 0;
 	/** Sets the skeleton Y position, which is added to the root bone worldY position.
-	 * <p>
+	 *
 	 * Bones that do not inherit translation are still affected by this property. */
 	public var y:Float = 0;
 	/** Returns the skeleton's time. This is used for time-based manipulations, such as spine.PhysicsConstraint.
-	 * <p>
+	 *
 	 * See Skeleton.update(). */
 	public var time:Float = 0;
 
@@ -379,9 +379,9 @@ class Skeleton {
 	}
 
 	/** Updates the world transform for each bone and applies all constraints.
-	 * <p>
-	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
-	 * Runtimes Guide. */
+	 *
+	 * @see https://esotericsoftware.com/spine-runtime-skeletons#World-transforms World transforms in the Spine Runtimes Guide
+	 */
 	public function updateWorldTransform(physics:Physics):Void {
 		if (physics == null) throw new SpineException("physics is undefined");
 		for (bone in bones) {
@@ -401,9 +401,9 @@ class Skeleton {
 
 	/** Temporarily sets the root bone as a child of the specified bone, then updates the world transform for each bone and applies
 	 * all constraints.
-	 * <p>
-	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
-	 * Runtimes Guide. */
+	 *
+	 * @see https://esotericsoftware.com/spine-runtime-skeletons#World-transforms World transforms in the Spine Runtimes Guide
+	 */
 	public function updateWorldTransformWith(physics:Physics, parent:Bone):Void {
 		// Apply the parent bone transform to the root bone. The root bone always inherits scale, rotation and reflection.
 		var rootBone:Bone = rootBone;
@@ -523,7 +523,7 @@ class Skeleton {
 	public var skinName(get, set):String;
 
 	/** Sets a skin by name.
-	 * <p>
+	 *
 	 * See Skeleton.skin. */
 	private function set_skinName(skinName:String):String {
 		var skin:Skin = data.findSkin(skinName);
@@ -547,10 +547,10 @@ class Skeleton {
 
 	/** Sets the skin used to look up attachments before looking in the spine.SkeletonData default skin. If the
 	 * skin is changed, Skeleton.updateCache() is called.
-	 * <p>
+	 *
 	 * Attachments from the new skin are attached if the corresponding attachment from the old skin was attached. If there was no
 	 * old skin, each slot's setup mode attachment is attached from the new skin.
-	 * <p>
+	 *
 	 * After changing the skin, the visible attachments can be reset to those attached in the setup pose by calling
 	 * Skeleton.setSlotsToSetupPose(). Also, often spine.AnimationState.apply() is called before the next time the
 	 * skeleton is rendered to allow any attachment keys in the current animation(s) to hide or show attachments from the new
@@ -581,7 +581,7 @@ class Skeleton {
 
 	/** Finds an attachment by looking in the Skeleton.skin and spine.SkeletonData defaultSkin using the slot name and attachment
 	 * name.
-	 * <p>
+	 *
 	 * See Skeleton.getAttachmentForSlotIndex(). */
 	public function getAttachmentForSlotName(slotName:String, attachmentName:String):Attachment {
 		return getAttachmentForSlotIndex(data.findSlot(slotName).index, attachmentName);
@@ -589,8 +589,9 @@ class Skeleton {
 
 	/** Finds an attachment by looking in the Skeleton.skin and spine.SkeletonData defaultSkin using the slot index and
 	 * attachment name. First the skin is checked and if the attachment was not found, the default skin is checked.
-	 * <p>
-	 * See <a href="https://esotericsoftware.com/spine-runtime-skins">Runtime skins</a> in the Spine Runtimes Guide. */
+	 *
+	 * @see https://esotericsoftware.com/spine-runtime-skins Runtime skins in the Spine Runtimes Guide
+	 */
 	public function getAttachmentForSlotIndex(slotIndex:Int, attachmentName:String):Attachment {
 		if (attachmentName == null)
 			throw new SpineException("attachmentName cannot be null.");

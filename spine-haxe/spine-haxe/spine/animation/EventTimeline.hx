@@ -49,13 +49,13 @@ class EventTimeline extends Timeline {
 	}
 
 	/** Sets the time and event for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive. */
+	 * @param frame Between 0 and frameCount, inclusive. */
 	public function setFrame(frame:Int, event:Event):Void {
 		frames[frame] = event.time;
 		events[frame] = event;
 	}
 
-	/** Fires events for frames > <code>lastTime</code> and <= <code>time</code>. */
+	/** Fires events for frames > lastTime and <= time. */
 	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
 			direction:MixDirection):Void {
 		if (events == null)

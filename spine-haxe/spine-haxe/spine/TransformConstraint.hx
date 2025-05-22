@@ -31,8 +31,8 @@ package spine;
 
 /** Stores the current pose for a transform constraint. A transform constraint adjusts the world transform of the constrained
  * bones to match that of the target bone.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide. */
+ *
+ * @see https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide */
 class TransformConstraint implements Updatable {
 	private var _data:TransformConstraintData;
 	private var _bones:Array<Bone>;

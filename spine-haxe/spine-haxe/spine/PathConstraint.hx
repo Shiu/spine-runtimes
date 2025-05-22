@@ -32,9 +32,9 @@ package spine;
 import spine.attachments.PathAttachment;
 
 /** Stores the current pose for a path constraint. A path constraint adjusts the rotation, translation, and scale of the
- * constrained bones so they follow a {@link PathAttachment}.
+ * constrained bones so they follow a PathAttachment.
  *
- * See <a href="https://esotericsoftware.com/spine-path-constraints">Path constraints</a> in the Spine User Guide. */
+ * @see https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User Guide */
 class PathConstraint implements Updatable {
 	private static inline var NONE:Int = -1;
 	private static inline var BEFORE:Int = -2;

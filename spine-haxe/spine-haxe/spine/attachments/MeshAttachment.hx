@@ -35,15 +35,15 @@ import spine.atlas.TextureAtlasPage;
 
 /** An attachment that displays a textured mesh. A mesh has hull vertices and internal vertices within the hull. Holes are not
  * supported. Each vertex has UVs (texture coordinates) and triangles are used to map an image on to the mesh.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-meshes">Mesh attachments</a> in the Spine User Guide. */
+ *
+ * @see https://esotericsoftware.com/spine-meshes Mesh attachments in the Spine User Guide */
 class MeshAttachment extends VertexAttachment implements HasTextureRegion {
 	public var region:TextureRegion;
 	public var path:String;
 	/** The UV pair for each vertex, normalized within the texture region. */
 	public var regionUVs = new Array<Float>();
 	/** The UV pair for each vertex, normalized within the entire texture.
-	 * See {@link #updateRegion()}. */
+	 * See #updateRegion(). */
 	public var uvs = new Array<Float>();
 	/** Triplets of vertex indices which describe the mesh's triangulation. */
 	public var triangles = new Array<Int>();
@@ -52,7 +52,7 @@ class MeshAttachment extends VertexAttachment implements HasTextureRegion {
 	public var width:Float = 0;
 	/** The height of the mesh's image, or zero if nonessential data was not exported. */
 	public var height:Float = 0;
-	/** The number of entries at the beginning of {@link #vertices} that make up the mesh hull. */
+	/** The number of entries at the beginning of #vertices that make up the mesh hull. */
 	public var hullLength:Int = 0;
 	/** Vertex index pairs describing edges for controlling triangulation, or null if nonessential data was not exported. Mesh
 	 * triangles will never cross edges. Triangulation is not performed at runtime. */
@@ -60,9 +60,9 @@ class MeshAttachment extends VertexAttachment implements HasTextureRegion {
 	public var rendererObject:Dynamic;
 	public var sequence:Sequence;
 
-	/** The parent mesh if this is a linked mesh, else null. A linked mesh shares the {@link #bones}, {@link #vertices},
-	 * {@link #regionUVs}, {@link #triangles}, {@link #hullLength}, {@link #edges}, {@link #width}, and {@link #height} with the
-	 * parent mesh, but may have a different {@link #name} or {@link #path} (and therefore a different texture). */
+	/** The parent mesh if this is a linked mesh, else null. A linked mesh shares the #bones, #vertices,
+	 * #regionUVs, #triangles, #hullLength, #edges, #width, and #height with the
+	 * parent mesh, but may have a different #name or #path (and therefore a different texture). */
 	private var _parentMesh:MeshAttachment;
 
 	/** Copy constructor. Use newLinkedMesh() if the other mesh is a linked mesh. */

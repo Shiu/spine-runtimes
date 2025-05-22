@@ -57,7 +57,7 @@ class IkConstraintTimeline extends CurveTimeline {
 	}
 
 	/** Sets the time, mix, softness, bend direction, compress, and stretch for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param frame Between 0 and frameCount, inclusive.
 	 * @param time The frame time in seconds.
 	 * @param bendDirection 1 or -1. */
 	public function setFrame(frame:Int, time:Float, mix:Float, softness:Float, bendDirection:Int, compress:Bool, stretch:Bool):Void {

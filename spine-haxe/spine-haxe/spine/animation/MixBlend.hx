@@ -30,7 +30,7 @@
 package spine.animation;
 
 /** Controls how timeline values are mixed with setup pose values or current pose values when a timeline is applied with
- * <code>alpha</code> < 1.
+ * alpha < 1.
  * 
  * @see spine.animation.Timeline.apply() */
 class MixBlend {
@@ -47,17 +47,17 @@ class MixBlend {
 	 * the setup value. Timelines which perform instant transitions, such as spine.animation.DrawOrderTimeline or
 	 * spine.animation.AttachmentTimeline, use the setup value before the first frame.
 	 * 
-	 * <code>first</code> is intended for the first animations applied, not for animations layered on top of those. */
+	 * first is intended for the first animations applied, not for animations layered on top of those. */
 	public static var first(default, never):MixBlend = new MixBlend(1);
 	/** Transitions from the current value to the timeline value. No change is made before the first frame (the current value is
 	 * kept until the first frame).
 	 * 
-	 * <code>replace</code> is intended for animations layered on top of others, not for the first animations applied. */
+	 * replace is intended for animations layered on top of others, not for the first animations applied. */
 	public static var replace(default, never):MixBlend = new MixBlend(2);
 	/** Transitions from the current value to the current value plus the timeline value. No change is made before the first
 	 * frame (the current value is kept until the first frame).
 	 * 
-	 * <code>add</code> is intended for animations layered on top of others, not for the first animations applied. Properties
+	 * add is intended for animations layered on top of others, not for the first animations applied. Properties
 	 * set by additive animations must be set manually or by another animation before applying the additive animations, else the
 	 * property values will increase each time the additive animations are applied. */
 	public static var add(default, never):MixBlend = new MixBlend(3);

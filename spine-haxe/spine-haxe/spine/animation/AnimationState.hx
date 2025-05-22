@@ -38,44 +38,44 @@ import spine.Skeleton;
 /**
  * Applies animations over time, queues animations for later playback, mixes (crossfading) between animations, and applies
  * multiple animations on top of each other (layering).
- * <p>
- * See <a href='https://esotericsoftware.com/spine-applying-animations/'>Applying Animations</a> in the Spine Runtimes Guide.
+ *
+ * @see https://esotericsoftware.com/spine-applying-animations/ Applying Animations in the Spine Runtimes Guide
  */
 class AnimationState {
 	/**
-	 * 1) A previously applied timeline has set this property.<br>
+	 * 1) A previously applied timeline has set this property.\n
 	 * Result: Mix from the current pose to the timeline pose.
 	 */
 	public static inline var SUBSEQUENT:Int = 0;
 	/**
-	 * 1) This is the first timeline to set this property.<br>
-	 * 2) The next track entry applied after this one does not have a timeline to set this property.<br>
+	 * 1) This is the first timeline to set this property.\n
+	 * 2) The next track entry applied after this one does not have a timeline to set this property.\n
 	 * Result: Mix from the setup pose to the timeline pose.
 	 */
 	public static inline var FIRST:Int = 1;
 	/**
-	 * 1) A previously applied timeline has set this property.<br>
-	 * 2) The next track entry to be applied does have a timeline to set this property.<br>
-	 * 3) The next track entry after that one does not have a timeline to set this property.<br>
+	 * 1) A previously applied timeline has set this property.\n
+	 * 2) The next track entry to be applied does have a timeline to set this property.\n
+	 * 3) The next track entry after that one does not have a timeline to set this property.\n
 	 * Result: Mix from the current pose to the timeline pose, but do not mix out. This avoids "dipping" when crossfading
 	 * animations that key the same property. A subsequent timeline will set this property using a mix.
 	 */
 	public static inline var HOLD_SUBSEQUENT:Int = 2;
 	/**
-	 * 1) This is the first timeline to set this property.<br>
-	 * 2) The next track entry to be applied does have a timeline to set this property.<br>
-	 * 3) The next track entry after that one does not have a timeline to set this property.<br>
+	 * 1) This is the first timeline to set this property.\n
+	 * 2) The next track entry to be applied does have a timeline to set this property.\n
+	 * 3) The next track entry after that one does not have a timeline to set this property.\n
 	 * Result: Mix from the setup pose to the timeline pose, but do not mix out. This avoids "dipping" when crossfading animations
 	 * that key the same property. A subsequent timeline will set this property using a mix.
 	 */
 	public static inline var HOLD_FIRST:Int = 3;
 	/**
-	 * 1) This is the first timeline to set this property.<br>
-	 * 2) The next track entry to be applied does have a timeline to set this property.<br>
-	 * 3) The next track entry after that one does have a timeline to set this property.<br>
-	 * 4) timelineHoldMix stores the first subsequent track entry that does not have a timeline to set this property.<br>
+	 * 1) This is the first timeline to set this property.\n
+	 * 2) The next track entry to be applied does have a timeline to set this property.\n
+	 * 3) The next track entry after that one does have a timeline to set this property.\n
+	 * 4) timelineHoldMix stores the first subsequent track entry that does not have a timeline to set this property.\n
 	 * Result: The same as HOLD except the mix percentage from the timelineHoldMix track entry is used. This handles when more than
-	 * 2 track entries in a row have a timeline that sets the same property.<br>
+	 * 2 track entries in a row have a timeline that sets the same property.\n
 	 * Eg, A -> B -> C -> D where A, B, and C have a timeline setting same property, but D does not. When A is applied, to avoid
 	 * "dipping" A is not mixed out, however D (the first entry that doesn't set the property) mixing in is used to mix out A
 	 * (which affects B and C). Without using D to mix out, A would be applied fully until mixing completes, then snap to the mixed
@@ -548,7 +548,7 @@ class AnimationState {
 
 	/**
 	 * Removes all animations from all tracks, leaving skeletons in their current pose.
-	 * <p>
+	 *
 	 * It may be desired to use spine.animation.AnimationState.setEmptyAnimations() to mix the skeletons back to the setup pose,
 	 * rather than leaving them in their current pose.
 	 */
@@ -565,7 +565,7 @@ class AnimationState {
 
 	/**
 	 * Removes all animations from the track, leaving skeletons in their current pose.
-	 * <p>
+	 *
 	 * It may be desired to use spine.animation.AnimationState.setEmptyAnimation() to mix the skeletons back to the setup pose,
 	 * rather than leaving them in their current pose.
 	 */
@@ -619,7 +619,7 @@ class AnimationState {
 
 	/**
 	 * Sets an animation by name.
-	 * <p>
+	 *
 	 * See spine.animation.AnimationState.setAnimation().
 	 */
 	public function setAnimationByName(trackIndex:Int, animationName:String, loop:Bool):TrackEntry {
@@ -663,7 +663,7 @@ class AnimationState {
 
 	/**
 	 * Queues an animation by name.
-	 * <p>
+	 *
 	 * See spine.animation.AnimationState.addAnimation().
 	 */
 	public function addAnimationByName(trackIndex:Int, animationName:String, loop:Bool, delay:Float):TrackEntry {
@@ -713,13 +713,13 @@ class AnimationState {
 	/**
 	 * Sets an empty animation for a track, discarding any queued animations, and sets the track entry's
 	 * spine.animation.TrackEntry.getMixDuration(). An empty animation has no timelines and serves as a placeholder for mixing in or out.
-	 * <p>
+	 *
 	 * Mixing out is done by setting an empty animation with a mix duration using either spine.animation.AnimationState.setEmptyAnimation(),
 	 * spine.animation.AnimationState.setEmptyAnimations(), or spine.animation.AnimationState.addEmptyAnimation(). Mixing to an empty animation causes
 	 * the previous animation to be applied less and less over the mix duration. Properties keyed in the previous animation
 	 * transition to the value from lower tracks or to the setup pose value if no lower tracks key the property. A mix duration of
 	 * 0 still mixes out over one frame.
-	 * <p>
+	 *
 	 * Mixing in is done by first setting an empty animation, then adding an animation using
 	 * spine.animation.AnimationState.addAnimation() with the desired delay (an empty animation has a duration of 0) and on
 	 * the returned track entry, set the spine.animation.TrackEntry.setMixDuration(). Mixing from an empty animation causes the new
@@ -738,7 +738,7 @@ class AnimationState {
 	 * Adds an empty animation to be played after the current or last queued animation for a track, and sets the track entry's
 	 * spine.animation.TrackEntry.getMixDuration(). If the track is empty, it is equivalent to calling
 	 * spine.animation.AnimationState.setEmptyAnimation().
-	 * <p>
+	 *
 	 * See spine.animation.AnimationState.setEmptyAnimation().
 	 * @param delay If > 0, sets spine.animation.TrackEntry.getDelay(). If <= 0, the delay set is the duration of the previous track entry
 	 *           minus any mix duration plus the specified delay (ie the mix ends at (delay = 0) or

@@ -31,8 +31,8 @@ package spine;
 
 /** Stores the current pose for an IK constraint. An IK constraint adjusts the rotation of 1 or 2 constrained bones so the tip of
  * the last bone is as close to the target bone as possible.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-ik-constraints">IK constraints</a> in the Spine User Guide. */
+ *
+ * @see https://esotericsoftware.com/spine-ik-constraints IK constraints in the Spine User Guide */
 class IkConstraint implements Updatable {
 	private var _data:IkConstraintData;
 
@@ -45,12 +45,12 @@ class IkConstraint implements Updatable {
 	/** For one bone IK, when true and the target is too close, the bone is scaled to reach it. */
 	public var compress:Bool = false;
 	/** When true and the target is out of range, the parent bone is scaled to reach it.
-	 * <p>
+	 *
 	 * For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not applied if getSoftness() is
 	 * > 0, and 3) if the parent bone has local nonuniform scale, stretch is not applied. */
 	public var stretch:Bool = false;
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
-	 * <p>
+	 *
 	 * For two bone IK: if the parent bone has local nonuniform scale, the child bone's local Y translation is set to 0. */
 	public var mix:Float = 0;
 	/** For two bone IK, the target bone's distance from the maximum reach of the bones where rotation begins to slow. The bones

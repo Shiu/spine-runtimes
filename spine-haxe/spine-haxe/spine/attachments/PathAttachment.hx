@@ -32,8 +32,10 @@ package spine.attachments;
 import spine.Color;
 
 /** An attachment whose vertices make up a composite Bezier curve.
- * <p>
- * See {@link PathConstraint} and <a href="https://esotericsoftware.com/spine-paths">Paths</a> in the Spine User Guide. */
+ *
+ * @see PathConstraint
+ * @see https://esotericsoftware.com/spine-paths Paths in the Spine User Guide
+ */
 class PathAttachment extends VertexAttachment {
 	/** The lengths along the path in the setup pose from the start of the path to the end of each Bezier curve. */
 	public var lengths:Array<Float>;
