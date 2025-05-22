@@ -31,6 +31,9 @@ package spine.attachments;
 
 import spine.Color;
 
+/** An attachment that displays a textured quadrilateral.
+ * <p>
+ * See <a href="https://esotericsoftware.com/spine-regions">Region attachments</a> in the Spine User Guide. */
 class RegionAttachment extends Attachment implements HasTextureRegion {
 	public static inline var BLX:Int = 0;
 	public static inline var BLY:Int = 1;
@@ -41,12 +44,19 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 	public static inline var BRX:Int = 6;
 	public static inline var BRY:Int = 7;
 
+	/** The local x translation. */
 	public var x:Float = 0;
+	/** The local y translation. */
 	public var y:Float = 0;
+	/** The local scaleX. */
 	public var scaleX:Float = 1;
+	/** The local scaleY. */
 	public var scaleY:Float = 1;
+	/** The local rotation. */
 	public var rotation:Float = 0;
+	/** The width of the region attachment in Spine. */
 	public var width:Float = 0;
+	/** The height of the region attachment in Spine. */
 	public var height:Float = 0;
 	public var color:Color = new Color(1, 1, 1, 1);
 	public var path:String;
@@ -54,15 +64,24 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 	public var region:TextureRegion;
 	public var sequence:Sequence;
 
+	/** For each of the 4 vertices, a pair of <code>x,y</code> values that is the local position of the vertex.
+	 * 
+	 * See {@link #updateRegion()}. */
 	private var offsets:Array<Float> = new Array<Float>();
 
 	public var uvs:Array<Float> = new Array<Float>();
 
+	/** 
+	 * @param name The attachment name.
+	 * @param path The path used to find the region for the attachment.
+	 */
 	public function new(name:String, path:String) {
 		super(name);
 		this.path = path;
 	}
 
+	/** Calculates the {@link #offsets} and {@link #uvs} using the region and the attachment's transform. Must be called if the
+	 * region, the region's properties, or the transform are changed. */
 	public function updateRegion():Void {
 		if (region == null) {
 			throw new SpineException("Region not set.");
@@ -126,6 +145,15 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 		}
 	}
 
+	/** Transforms the attachment's four vertices to world coordinates. If the attachment has a {@link #sequence}, the region may
+	 * be changed.
+	 * 
+	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
+	 * Runtimes Guide.
+	 * @param slot The slot the attachment is bound to.
+	 * @param worldVertices The output world vertices. Must have a length >= <code>offset</code> + 8.
+	 * @param offset The <code>worldVertices</code> index to begin writing values.
+	 * @param stride The number of <code>worldVertices</code> entries between the value pairs written. */
 	public function computeWorldVertices(slot:Slot, worldVertices:Array<Float>, offset:Int, stride:Int):Void {
 		if (sequence != null)
 			sequence.apply(slot, this);

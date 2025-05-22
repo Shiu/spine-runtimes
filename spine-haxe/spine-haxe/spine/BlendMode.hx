@@ -29,6 +29,7 @@
 
 package spine;
 
+/** Determines how images are blended with existing pixels when drawn. */
 class BlendMode {
 	public static var normal(default, never):BlendMode = new BlendMode(0, "normal");
 	public static var additive(default, never):BlendMode = new BlendMode(1, "additive");

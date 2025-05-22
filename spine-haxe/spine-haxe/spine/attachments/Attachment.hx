@@ -29,6 +29,7 @@
 
 package spine.attachments;
 
+/** The base class for all attachments. */
 class Attachment {
 	private var _name:String;
 
@@ -39,6 +40,7 @@ class Attachment {
 		_name = name;
 	}
 
+	/** The attachment's name. */
 	public var name(get, never):String;
 
 	private function get_name():String {
@@ -49,6 +51,7 @@ class Attachment {
 		return name;
 	}
 
+	/** Returns a copy of the attachment. */
 	public function copy():Attachment {
 		throw new SpineException("Not implemented");
 	}

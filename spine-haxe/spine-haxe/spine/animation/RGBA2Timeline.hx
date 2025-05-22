@@ -29,6 +29,7 @@
 
 package spine.animation;
 
+/** Changes a slot's {@link Slot#getColor()} and {@link Slot#getDarkColor()} for two color tinting. */
 class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
 	private static inline var ENTRIES:Int = 8;
 	private static inline var R:Int = 1;
@@ -54,11 +55,15 @@ class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
 		return ENTRIES;
 	}
 
+	/** The index of the slot in {@link Skeleton#getSlots()} that will be changed when this timeline is applied. The
+	 * {@link Slot#getDarkColor()} must not be null. */
 	public function getSlotIndex():Int {
 		return slotIndex;
 	}
 
-	/** Sets the time in seconds, light, and dark colors for the specified key frame. */
+	/** Sets the time, light color, and dark color for the specified frame.
+	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param time The frame time in seconds. */
 	public function setFrame(frame:Int, time:Float, r:Float, g:Float, b:Float, a:Float, r2:Float, g2:Float, b2:Float):Void {
 		frame <<= 3;
 		frames[frame] = time;

@@ -33,6 +33,7 @@ import spine.Bone;
 import spine.Event;
 import spine.Skeleton;
 
+/** Changes a bone's local x value. */
 class TranslateXTimeline extends CurveTimeline1 implements BoneTimeline {
 	public var boneIndex:Int = 0;
 

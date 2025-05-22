@@ -29,23 +29,41 @@
 
 package spine;
 
+/** Stores the setup pose for a {@link Bone}. */
 class BoneData {
 	private var _index:Int;
 	private var _name:String;
 	private var _parent:BoneData;
 
+	/** The bone's length. */
 	public var length:Float = 0;
+	/** The local x translation. */
 	public var x:Float = 0;
+	/** The local y translation. */
 	public var y:Float = 0;
+	/** The local rotation in degrees, counter clockwise. */
 	public var rotation:Float = 0;
+	/** The local scaleX. */
 	public var scaleX:Float = 1;
+	/** The local scaleY. */
 	public var scaleY:Float = 1;
+	/** The local shearX. */
 	public var shearX:Float = 0;
+	/** The local shearY. */
 	public var shearY:Float = 0;
+	/** Determines how parent world transforms affect this bone. */
 	public var inherit:Inherit = Inherit.normal;
+	/** When true, {@link Skeleton#updateWorldTransform()} only updates this bone if the {@link Skeleton#getSkin()} contains
+	 * this bone.
+	 * 
+	 * See {@link Skin#getBones()}. */
 	public var skinRequired:Bool = false;
+	/** The color of the bone as it was in Spine, or a default color if nonessential data was not exported. Bones are not usually
+	 * rendered at runtime. */
 	public var color:Color = new Color(0, 0, 0, 0);
+	/** The bone icon as it was in Spine, or null if nonessential data was not exported. */
 	public var icon:String;
+	/** False if the bone was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
 	public var visible:Bool = false;
 
 	/** @param parent May be null. */
@@ -59,12 +77,14 @@ class BoneData {
 		_parent = parent;
 	}
 
+	/** The index of the bone in {@link Skeleton#getBones()}. */
 	public var index(get, never):Int;
 
 	private function get_index():Int {
 		return _index;
 	}
 
+	/** The name of the bone, which is unique across all bones in the skeleton. */
 	public var name(get, never):String;
 
 	function get_name():String {

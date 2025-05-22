@@ -36,13 +36,16 @@ import spine.Event;
 import spine.Skeleton;
 import spine.Slot;
 
+/** Changes a slot's {@link Slot#getDeform()} to deform a {@link VertexAttachment}. */
 class DeformTimeline extends CurveTimeline implements SlotTimeline {
 	public var slotIndex:Int = 0;
 
-	/** The attachment that will be deformed. */
+	/** The attachment that will be deformed.
+	 * <p>
+	 * See {@link VertexAttachment#getTimelineAttachment()}. */
 	public var attachment:VertexAttachment;
 
-	/** The vertices for each key frame. */
+	/** The vertices for each frame. */
 	public var vertices:Array<Array<Float>>;
 
 	public function new(frameCount:Int, bezierCount:Int, slotIndex:Int, attachment:VertexAttachment) {
@@ -61,14 +64,25 @@ class DeformTimeline extends CurveTimeline implements SlotTimeline {
 		return slotIndex;
 	}
 
-	/** Sets the time in seconds and the vertices for the specified key frame.
-	 * @param vertices Vertex positions for an unweighted VertexAttachment, or deform offsets if it has weights. */
+	/** Sets the time and vertices for the specified frame.
+	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param time The frame time in seconds.
+	 * @param verticesOrDeform Vertex positions for an unweighted VertexAttachment, or deform offsets if it has weights. */
 	public function setFrame(frame:Int, time:Float, verticesOrDeform:Array<Float>):Void {
 		frames[frame] = time;
 		vertices[frame] = verticesOrDeform;
 	}
 
-	/** @param value1 Ignored (0 is used for a deform timeline).
+	/** @param bezier The bezier index.
+	 * @param frame The frame index.
+	 * @param value Ignored (0 is used for a deform timeline).
+	 * @param time1 The first time.
+	 * @param value1 Ignored (0 is used for a deform timeline).
+	 * @param cx1 The first control point x.
+	 * @param cy1 The first control point y.
+	 * @param cx2 The second control point x.
+	 * @param cy2 The second control point y.
+	 * @param time2 The second time.
 	 * @param value2 Ignored (1 is used for a deform timeline). */
 	public override function setBezier(bezier:Int, frame:Int, value:Float, time1:Float, value1:Float, cx1:Float, cy1:Float, cx2:Float, cy2:Float, time2:Float,
 			value2:Float):Void {
@@ -98,6 +112,8 @@ class DeformTimeline extends CurveTimeline implements SlotTimeline {
 		}
 	}
 
+	/** Returns the interpolated percentage for the specified time.
+	 * @param frame The frame before <code>time</code>. */
 	private function getCurvePercent(time:Float, frame:Int):Float {
 		var i:Int = Std.int(curves[frame]);
 		var x:Float;

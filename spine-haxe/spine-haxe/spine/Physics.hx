@@ -29,10 +29,15 @@
 
 package spine;
 
+/** Determines how physics and other non-deterministic updates are applied. */
 class Physics {
+	/** Physics are not updated or applied. */
 	public static var none(default, never):Physics = new Physics("none");
+	/** Physics are reset to the current pose. */
 	public static var reset(default, never):Physics = new Physics("reset");
+	/** Physics are updated and the pose from physics is applied. */
 	public static var update(default, never):Physics = new Physics("update");
+	/** Physics are not updated but the pose from physics is applied. */
 	public static var pose(default, never):Physics = new Physics("pose");
 
 	public static var values:Array<Physics> = [none, reset, update, pose];

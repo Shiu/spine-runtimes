@@ -57,6 +57,7 @@ import starling.utils.Color;
 import starling.utils.MatrixUtil;
 import starling.utils.Max;
 
+/** A starling display object that draws a skeleton. */
 class SkeletonSprite extends DisplayObject implements IAnimatable {
 	static private var _tempPoint:Point = new Point();
 	static private var _tempMatrix:Matrix = new Matrix();

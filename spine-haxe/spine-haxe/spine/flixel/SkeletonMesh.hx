@@ -31,8 +31,9 @@ package spine.flixel;
 
 import flixel.FlxStrip;
 
-// this class is just to make the implementation coherent with the starling implementation
+/** A FlxStrip that draws a skeleton. This class is just to make the implementation coherent with the starling implementation. */
 class SkeletonMesh extends FlxStrip {
+	/** Creates an uninitialized SkeletonMesh. */
 	public function new(/*texture:FlxGraphicAsset*/) {
 		super();
 		// graphic = texture;

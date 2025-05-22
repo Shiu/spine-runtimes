@@ -32,32 +32,66 @@ package spine.animation;
 import spine.Event;
 import spine.Skeleton;
 
+/** The base class for all timelines. */
 class Timeline {
+	/** Uniquely encodes both the type of this timeline and the skeleton properties that it affects. */
 	public var propertyIds:Array<String>;
+	/** The time in seconds and any other values for each frame. */
 	public var frames:Array<Float>;
 
+	/**
+	 * @param propertyIds Unique identifiers for the properties the timeline modifies.
+	 * @param frameCount The number of frames for this timeline.
+	 */
 	public function new(frameCount:Int, propertyIds:Array<String>) {
 		this.propertyIds = propertyIds;
 		frames = new Array<Float>();
 		frames.resize(frameCount * getFrameEntries());
 	}
 
+	/** The number of entries stored per frame. */
 	public function getFrameEntries():Int {
 		return 1;
 	}
 
+	/** The number of frames for this timeline. */
 	public function getFrameCount():Int {
 		return Std.int(frames.length / getFrameEntries());
 	}
 
+	/** Returns the duration of this timeline in seconds. */
 	public function getDuration():Float {
 		return frames[frames.length - getFrameEntries()];
 	}
 
+	/** Applies this timeline to the skeleton.
+	 * @param skeleton The skeleton to which the timeline is being applied. This provides access to the bones, slots, and other
+	 *           skeleton components that the timeline may change.
+	 * @param lastTime The last time in seconds this timeline was applied. Timelines such as {@link EventTimeline} trigger only
+	 *           at specific times rather than every frame. In that case, the timeline triggers everything between
+	 *           <code>lastTime</code> (exclusive) and <code>time</code> (inclusive). Pass -1 the first time an animation is
+	 *           applied to ensure frame 0 is triggered.
+	 * @param time The time in seconds that the skeleton is being posed for. Most timelines find the frame before and the frame
+	 *           after this time and interpolate between the frame values. If beyond the last frame, the last frame will be
+	 *           applied.
+	 * @param events If any events are fired, they are added to this list. Can be null to ignore fired events or if the timeline
+	 *           does not fire events.
+	 * @param alpha 0 applies the current or setup value (depending on <code>blend</code>). 1 applies the timeline value.
+	 *           Between 0 and 1 applies a value between the current or setup value and the timeline value. By adjusting
+	 *           <code>alpha</code> over time, an animation can be mixed in or out. <code>alpha</code> can also be useful to
+	 *           apply animations on top of each other (layering).
+	 * @param blend Controls how mixing is applied when <code>alpha</code> < 1.
+	 * @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions,
+	 *           such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}, and others such as {@link ScaleTimeline}.
+	 */
 	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection):Void {
 		throw new SpineException("Timeline implementations must override apply()");
 	}
 
+	/** Linear search using a stride of 1.
+	 * @param time Must be >= the first value in <code>frames</code>.
+	 * @return The index of the first value <= <code>time</code>.
+	 */
 	public static function search1(frames:Array<Float>, time:Float):Int {
 		var n:Int = frames.length;
 		for (i in 1...n) {
@@ -67,6 +101,10 @@ class Timeline {
 		return n - 1;
 	}
 
+	/** Linear search using the specified stride.
+	 * @param time Must be >= the first value in <code>frames</code>.
+	 * @return The index of the first value <= <code>time</code>.
+	 */
 	public static function search(values:Array<Float>, time:Float, step:Int):Int {
 		var n:Int = values.length;
 		var i:Int = step;

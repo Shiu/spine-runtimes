@@ -33,7 +33,9 @@ import spine.Event;
 import spine.Skeleton;
 import spine.Slot;
 
+/** Changes a skeleton's {@link Skeleton#drawOrder}. */
 class DrawOrderTimeline extends Timeline {
+	/** The draw order for each frame. See {@link #setFrame(Int, Float, Array<Int>)}. */
 	public var drawOrders:Array<Array<Int>>;
 
 	public function new(frameCount:Int) {
@@ -48,7 +50,10 @@ class DrawOrderTimeline extends Timeline {
 		return frames.length;
 	}
 
-	/** Sets the time and value of the specified keyframe. */
+	/** Sets the time and draw order for the specified frame.
+	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param time The frame time in seconds.
+	 * @param drawOrder For each slot in {@link Skeleton#slots}, the index of the slot in the new draw order. May be null to use setup pose draw order. */
 	public function setFrame(frame:Int, time:Float, drawOrder:Array<Int>):Void {
 		frames[frame] = time;
 		drawOrders[frame] = drawOrder;

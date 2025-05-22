@@ -29,6 +29,14 @@
 
 package spine.animation;
 
+/** The interface to implement for receiving TrackEntry events. It is always safe to call AnimationState methods when receiving
+ * events.
+ * <p>
+ * TrackEntry events are collected during {@link AnimationState#update(float)} and {@link AnimationState#apply(Skeleton)} and
+ * fired only after those methods are finished.
+ * <p>
+ * See TrackEntry {@link TrackEntry#setListener(AnimationStateListener)} and AnimationState
+ * {@link AnimationState#addListener(AnimationStateListener)}. */
 class Listeners {
 	private var _listeners:Array<TrackEntry->Void>;
 
@@ -42,6 +50,8 @@ class Listeners {
 		_listeners = new Array<TrackEntry->Void>();
 	}
 
+	/** Invoked when this entry has been set as the current entry. {@link #end(TrackEntry)} will occur when this entry will no
+	 * longer be applied. */
 	public function invoke(entry:TrackEntry) {
 		for (listener in _listeners) {
 			listener(entry);
@@ -65,6 +75,14 @@ class Listeners {
 	}
 }
 
+/** The interface to implement for receiving TrackEntry events. It is always safe to call AnimationState methods when receiving
+ * events.
+ * <p>
+ * TrackEntry events are collected during {@link AnimationState#update(float)} and {@link AnimationState#apply(Skeleton)} and
+ * fired only after those methods are finished.
+ * <p>
+ * See TrackEntry {@link TrackEntry#setListener(AnimationStateListener)} and AnimationState
+ * {@link AnimationState#addListener(AnimationStateListener)}. */
 class EventListeners {
 	private var _listeners:Array<TrackEntry->Event->Void>;
 
@@ -78,6 +96,11 @@ class EventListeners {
 		_listeners = new Array<TrackEntry->Event->Void>();
 	}
 
+	/** Invoked when this entry's animation triggers an event. This may occur during mixing (after
+	 * {@link #interrupt(TrackEntry)}), see {@link TrackEntry#eventThreshold}.
+	 * <p>
+	 * Because this event is triggered at the end of {@link AnimationState#apply(Skeleton)}, any animations set in response to
+	 * the event won't be applied until the next time the AnimationState is applied. */
 	public function invoke(entry:TrackEntry, event:Event) {
 		for (listener in _listeners) {
 			listener(entry, event);

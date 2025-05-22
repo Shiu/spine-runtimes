@@ -33,6 +33,7 @@ import spine.Event;
 import spine.Skeleton;
 import spine.Slot;
 
+/** Changes the alpha for a slot's {@link Slot#color}. */
 class AlphaTimeline extends CurveTimeline1 implements SlotTimeline {
 	private static inline var ENTRIES:Int = 4;
 	private static inline var R:Float = 1;

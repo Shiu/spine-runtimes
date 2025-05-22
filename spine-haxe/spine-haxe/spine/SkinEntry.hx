@@ -31,8 +31,10 @@ package spine;
 
 import spine.attachments.Attachment;
 
+/** Stores an entry in the skin consisting of the slot index and the attachment name. */
 class SkinEntry {
 	public var slotIndex:Int = 0;
+	/** The name the attachment is associated with, equivalent to the skin placeholder name in the Spine editor. */
 	public var name:String;
 	public var attachment:Attachment;
 

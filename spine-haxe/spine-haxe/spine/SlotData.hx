@@ -29,15 +29,23 @@
 
 package spine;
 
+/** Stores the setup pose for a {@link Slot}. */
 class SlotData {
 	private var _index:Int;
 	private var _name:String;
 	private var _boneData:BoneData;
 
+	/** The color used to tint the slot's attachment. If {@link #getDarkColor()} is set, this is used as the light color for two
+	 * color tinting. */
 	public var color:Color = new Color(1, 1, 1, 1);
+	/** The dark color used to tint the slot's attachment for two color tinting, or null if two color tinting is not used. The dark
+	 * color's alpha is not used. */
 	public var darkColor:Color = null;
+	/** The name of the attachment that is visible for this slot in the setup pose, or null if no attachment is visible. */
 	public var attachmentName:String;
+	/** The blend mode for drawing the slot's attachment. */
 	public var blendMode:BlendMode = BlendMode.normal;
+	/** False if the slot was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
 	public var visible:Bool = true;
 
 	public function new(index:Int, name:String, boneData:BoneData) {
@@ -52,18 +60,21 @@ class SlotData {
 		_boneData = boneData;
 	}
 
+	/** The index of the slot in {@link Skeleton#getSlots()}. */
 	public var index(get, never):Int;
 
 	private function get_index():Int {
 		return _index;
 	}
 
+	/** The name of the slot, which is unique across all slots in the skeleton. */
 	public var name(get, never):String;
 
 	private function get_name():String {
 		return _name;
 	}
 
+	/** The bone this slot belongs to. */
 	public var boneData(get, never):BoneData;
 
 	private function get_boneData():BoneData {

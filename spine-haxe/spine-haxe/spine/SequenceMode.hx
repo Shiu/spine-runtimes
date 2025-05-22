@@ -29,6 +29,9 @@
 
 package spine;
 
+/**
+ * Defines how a {@link Sequence} is played.
+ */
 class SequenceMode {
 	public static var hold(default, never):SequenceMode = new SequenceMode("hold", 0);
 	public static var once(default, never):SequenceMode = new SequenceMode("once", 1);

@@ -31,6 +31,10 @@ package spine;
 
 import spine.attachments.PathAttachment;
 
+/** Stores the current pose for a path constraint. A path constraint adjusts the rotation, translation, and scale of the
+ * constrained bones so they follow a {@link PathAttachment}.
+ *
+ * See <a href="https://esotericsoftware.com/spine-path-constraints">Path constraints</a> in the Spine User Guide. */
 class PathConstraint implements Updatable {
 	private static inline var NONE:Int = -1;
 	private static inline var BEFORE:Int = -2;
@@ -40,11 +44,17 @@ class PathConstraint implements Updatable {
 	private var _data:PathConstraintData;
 	private var _bones:Array<Bone>;
 
+	/** The slot whose path attachment will be used to constrained the bones. */
 	public var target:Slot;
+	/** The position along the path. */
 	public var position:Float = 0;
+	/** The spacing between bones. */
 	public var spacing:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
 	public var mixRotate:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
 	public var mixX:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
 	public var mixY:Float = 0;
 
 	private var _spaces(default, never):Array<Float> = new Array<Float>();
@@ -89,6 +99,7 @@ class PathConstraint implements Updatable {
 		mixY = data.mixY;
 	}
 
+	/** Applies the constraint to the constrained bones. */
 	public function update(physics:Physics):Void {
 		var attachment:PathAttachment = cast(target.attachment, PathAttachment);
 		if (attachment == null)
@@ -585,12 +596,14 @@ class PathConstraint implements Updatable {
 		}
 	}
 
+	/** The bones that will be modified by this path constraint. */
 	public var bones(get, never):Array<Bone>;
 
 	private function get_bones():Array<Bone> {
 		return _bones;
 	}
 
+	/** The path constraint's setup pose data. */
 	public var data(get, never):PathConstraintData;
 
 	private function get_data():PathConstraintData {

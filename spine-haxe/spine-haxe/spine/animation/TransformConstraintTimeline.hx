@@ -34,6 +34,9 @@ import spine.Skeleton;
 import spine.TransformConstraint;
 import spine.TransformConstraintData;
 
+/** Changes a transform constraint's {@link TransformConstraint#mixRotate}, {@link TransformConstraint#mixX},
+ * {@link TransformConstraint#mixY}, {@link TransformConstraint#mixScaleX},
+ * {@link TransformConstraint#mixScaleY}, and {@link TransformConstraint#mixShearY}. */
 class TransformConstraintTimeline extends CurveTimeline {
 	static public inline var ENTRIES:Int = 7;
 	private static inline var ROTATE:Int = 1;
@@ -43,7 +46,8 @@ class TransformConstraintTimeline extends CurveTimeline {
 	private static inline var SCALEY:Int = 5;
 	private static inline var SHEARY:Int = 6;
 
-	/** The index of the transform constraint slot in {@link Skeleton#transformConstraints} that will be changed. */
+	/** The index of the transform constraint in {@link Skeleton#transformConstraints} that will be changed when this
+	 * timeline is applied. */
 	public var constraintIndex:Int = 0;
 
 	public function new(frameCount:Int, bezierCount:Int, transformConstraintIndex:Int) {
@@ -55,7 +59,9 @@ class TransformConstraintTimeline extends CurveTimeline {
 		return ENTRIES;
 	}
 
-	/** The time in seconds, rotate mix, translate mix, scale mix, and shear mix for the specified key frame. */
+	/** Sets the time, rotate mix, translate mix, scale mix, and shear mix for the specified frame.
+	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param time The frame time in seconds. */
 	public function setFrame(frame:Int, time:Float, mixRotate:Float, mixX:Float, mixY:Float, mixScaleX:Float, mixScaleY:Float, mixShearY:Float):Void {
 		frame *= ENTRIES;
 		frames[frame] = time;

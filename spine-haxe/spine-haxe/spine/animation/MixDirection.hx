@@ -29,6 +29,10 @@
 
 package spine.animation;
 
+/** Indicates whether a timeline's alpha is mixing out over time toward 0 (the setup or current pose value) or
+ * mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
+ *
+ * See Timeline apply(Skeleton, float, float, Array, float, MixBlend, MixDirection). */
 class MixDirection {
 	public var ordinal:Int = 0;
 

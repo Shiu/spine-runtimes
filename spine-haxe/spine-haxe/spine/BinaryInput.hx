@@ -32,6 +32,9 @@ package spine;
 import haxe.io.FPHelper;
 import haxe.io.Bytes;
 
+/**
+ * Input for reading skeleton data.
+ */
 class BinaryInput {
 	private var bytes:Bytes;
 	private var index:Int = 0;

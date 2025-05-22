@@ -31,22 +31,26 @@ package spine.attachments;
 
 import spine.Skin;
 
+/** The interface which can be implemented to customize creating and populating attachments.
+ * <p>
+ * See <a href='https://esotericsoftware.com/spine-loading-skeleton-data#AttachmentLoader'>Loading skeleton data</a> in the Spine
+ * Runtimes Guide. */
 interface AttachmentLoader {
-	/** @return May be null to not load an attachment. */
+	/** @return May be null to not load the attachment. */
 	function newRegionAttachment(skin:Skin, name:String, path:String, sequence:Sequence):RegionAttachment;
 
-	/** @return May be null to not load an attachment. */
+	/** @return May be null to not load the attachment. In that case null should also be returned for child meshes. */
 	function newMeshAttachment(skin:Skin, name:String, path:String, sequence:Sequence):MeshAttachment;
 
-	/** @return May be null to not load an attachment. */
+	/** @return May be null to not load the attachment. */
 	function newBoundingBoxAttachment(skin:Skin, name:String):BoundingBoxAttachment;
 
-	/** @return May be null to not load an attachment */
+	/** @return May be null to not load the attachment. */
 	function newPathAttachment(skin:Skin, name:String):PathAttachment;
 
-	/** @return May be null to not load an attachment */
+	/** @return May be null to not load the attachment. */
 	function newPointAttachment(skin:Skin, name:String):PointAttachment;
 
-	/** @return May be null to not load an attachment */
+	/** @return May be null to not load the attachment. */
 	function newClippingAttachment(skin:Skin, name:String):ClippingAttachment;
 }

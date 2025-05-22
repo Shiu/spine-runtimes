@@ -33,6 +33,7 @@ import spine.Bone;
 import spine.Event;
 import spine.Skeleton;
 
+/** Changes a bone's {@link Bone#getInherit()}. */
 class InheritTimeline extends Timeline implements BoneTimeline {
 	public static inline var ENTRIES:Int = 2;
 	private static inline var INHERIT:Int = 1;
@@ -52,6 +53,10 @@ class InheritTimeline extends Timeline implements BoneTimeline {
 		return boneIndex;
 	}
 
+	/** Sets the inherit value for the specified frame.
+	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param time The frame time in seconds.
+	 * @param inherit The inherit value for this frame. */
 	public function setFrame(frame:Int, time:Float, inherit: Inherit):Void {
 		frame *= ENTRIES;
 		frames[frame] = time;

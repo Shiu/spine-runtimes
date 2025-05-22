@@ -29,6 +29,9 @@
 
 package spine.animation;
 
+/**
+ * Animation state event type.
+ */
 class EventType {
 	public static var start(default, never):EventType = new EventType();
 	public static var interrupt(default, never):EventType = new EventType();

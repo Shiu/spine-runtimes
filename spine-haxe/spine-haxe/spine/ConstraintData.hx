@@ -29,9 +29,17 @@
 
 package spine;
 
+/** The base class for all constraint datas. */
 class ConstraintData {
+	/** The constraint's name, which is unique across all constraints in the skeleton of the same type. */
 	public var name:String;
+	/** The ordinal of this constraint for the order a skeleton's constraints will be applied by
+	 * Skeleton#updateWorldTransform(). */
 	public var order:Int = 0;
+	/** When true, Skeleton#updateWorldTransform() only updates this constraint if the Skeleton#getSkin()
+	 * contains this constraint.
+	 * 
+	 * See Skin#getConstraints(). */
 	public var skinRequired:Bool = false;
 
 	function new(name:String, order:Int, skinRequired:Bool) {

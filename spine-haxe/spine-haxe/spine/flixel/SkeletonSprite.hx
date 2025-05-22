@@ -33,6 +33,7 @@ import spine.attachments.RegionAttachment;
 import spine.attachments.ClippingAttachment;
 import spine.flixel.SkeletonMesh;
 
+/** A FlxObject that draws a skeleton. The animation state and skeleton must be updated each frame. */
 class SkeletonSprite extends FlxObject
 {
 	public var skeleton(default, null):Skeleton;
@@ -63,6 +64,7 @@ class SkeletonSprite extends FlxObject
 	private var _tempPoint = new Point();
 
 	private static var QUAD_INDICES:Array<Int> = [0, 1, 2, 2, 3, 0];
+	/** Creates an uninitialized SkeletonSprite. The renderer, skeleton, and animation state must be set before use. */
 	public function new(skeletonData:SkeletonData, animationStateData:AnimationStateData = null)
 	{
 		super(0, 0);

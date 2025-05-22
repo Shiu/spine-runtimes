@@ -29,6 +29,9 @@
 
 package spine.attachments;
 
+/**
+ * The type of attachment.
+ */
 class AttachmentType {
 	public static var region(default, never):AttachmentType = new AttachmentType(0, "region");
 	public static var boundingbox(default, never):AttachmentType = new AttachmentType(1, "boundingbox");
