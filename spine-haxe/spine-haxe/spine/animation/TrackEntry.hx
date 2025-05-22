@@ -171,9 +171,9 @@ class TrackEntry implements Poolable {
 	 *
 	 * When using spine.animation.AnimationState.addAnimation(int, Animation, boolean, float) with a delay <= 0, the
 	 * TrackEntry.getDelay() is set using the mix duration from the spine.animation.AnimationStateData. If mixDuration is set
-	 * afterward, the delay may need to be adjusted. For example:\n
-	 * entry.delay = entry.previous.getTrackComplete() - entry.mixDuration;\n
-	 * Alternatively, TrackEntry.setMixDuration(float, float) can be used to recompute the delay:\n
+	 * afterward, the delay may need to be adjusted. For example:
+	 * entry.delay = entry.previous.getTrackComplete() - entry.mixDuration;
+	 * Alternatively, TrackEntry.setMixDuration(float, float) can be used to recompute the delay:
 	 * entry.setMixDuration(0.25f, 0); */
 	public var mixDuration:Float = 0;
 	public var interruptAlpha:Float = 0;

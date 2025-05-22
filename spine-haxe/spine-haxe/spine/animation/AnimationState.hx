@@ -43,39 +43,39 @@ import spine.Skeleton;
  */
 class AnimationState {
 	/**
-	 * 1) A previously applied timeline has set this property.\n
+	 * 1) A previously applied timeline has set this property.
 	 * Result: Mix from the current pose to the timeline pose.
 	 */
 	public static inline var SUBSEQUENT:Int = 0;
 	/**
-	 * 1) This is the first timeline to set this property.\n
-	 * 2) The next track entry applied after this one does not have a timeline to set this property.\n
+	 * 1) This is the first timeline to set this property.
+	 * 2) The next track entry applied after this one does not have a timeline to set this property.
 	 * Result: Mix from the setup pose to the timeline pose.
 	 */
 	public static inline var FIRST:Int = 1;
 	/**
-	 * 1) A previously applied timeline has set this property.\n
-	 * 2) The next track entry to be applied does have a timeline to set this property.\n
-	 * 3) The next track entry after that one does not have a timeline to set this property.\n
+	 * 1) A previously applied timeline has set this property.
+	 * 2) The next track entry to be applied does have a timeline to set this property.
+	 * 3) The next track entry after that one does not have a timeline to set this property.
 	 * Result: Mix from the current pose to the timeline pose, but do not mix out. This avoids "dipping" when crossfading
 	 * animations that key the same property. A subsequent timeline will set this property using a mix.
 	 */
 	public static inline var HOLD_SUBSEQUENT:Int = 2;
 	/**
-	 * 1) This is the first timeline to set this property.\n
-	 * 2) The next track entry to be applied does have a timeline to set this property.\n
-	 * 3) The next track entry after that one does not have a timeline to set this property.\n
+	 * 1) This is the first timeline to set this property.
+	 * 2) The next track entry to be applied does have a timeline to set this property.
+	 * 3) The next track entry after that one does not have a timeline to set this property.
 	 * Result: Mix from the setup pose to the timeline pose, but do not mix out. This avoids "dipping" when crossfading animations
 	 * that key the same property. A subsequent timeline will set this property using a mix.
 	 */
 	public static inline var HOLD_FIRST:Int = 3;
 	/**
-	 * 1) This is the first timeline to set this property.\n
-	 * 2) The next track entry to be applied does have a timeline to set this property.\n
-	 * 3) The next track entry after that one does have a timeline to set this property.\n
-	 * 4) timelineHoldMix stores the first subsequent track entry that does not have a timeline to set this property.\n
+	 * 1) This is the first timeline to set this property.
+	 * 2) The next track entry to be applied does have a timeline to set this property.
+	 * 3) The next track entry after that one does have a timeline to set this property.
+	 * 4) timelineHoldMix stores the first subsequent track entry that does not have a timeline to set this property.
 	 * Result: The same as HOLD except the mix percentage from the timelineHoldMix track entry is used. This handles when more than
-	 * 2 track entries in a row have a timeline that sets the same property.\n
+	 * 2 track entries in a row have a timeline that sets the same property.
 	 * Eg, A -> B -> C -> D where A, B, and C have a timeline setting same property, but D does not. When A is applied, to avoid
 	 * "dipping" A is not mixed out, however D (the first entry that doesn't set the property) mixing in is used to mix out A
 	 * (which affects B and C). Without using D to mix out, A would be applied fully until mixing completes, then snap to the mixed
