@@ -464,9 +464,9 @@ class Skeleton {
 	}
 
 	/** The list of bones and constraints, sorted in the order they should be updated, as computed by {@link #updateCache()}. */
-	public var updateCache(get, never):Array<Updatable>;
+	public var getUpdateCache(get, never):Array<Updatable>;
 
-	private function get_updateCache():Array<Updatable> {
+	private function get_getUpdateCache():Array<Updatable> {
 		return _updateCache;
 	}
 
