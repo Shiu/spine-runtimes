@@ -32,6 +32,12 @@ package spine.attachments;
 import spine.atlas.TextureAtlas;
 import spine.Skin;
 
+/**
+ * The interface which can be implemented to customize creating and populating attachments.
+ * <p>
+ * See <a href='https://esotericsoftware.com/spine-loading-skeleton-data#AttachmentLoader'>Loading skeleton data</a> in the Spine
+ * Runtimes Guide.
+ */
 class AtlasAttachmentLoader implements AttachmentLoader {
 	private var atlas:TextureAtlas;
 
@@ -53,6 +59,9 @@ class AtlasAttachmentLoader implements AttachmentLoader {
 		}
 	}
 
+	/**
+	 * @return May be null to not load the attachment.
+	 */
 	public function newRegionAttachment(skin:Skin, name:String, path:String, sequence:Sequence):RegionAttachment {
 		var attachment = new RegionAttachment(name, path);
 		if (sequence != null) {
@@ -66,6 +75,9 @@ class AtlasAttachmentLoader implements AttachmentLoader {
 		return attachment;
 	}
 
+	/**
+	 * @return May be null to not load the attachment. In that case null should also be returned for child meshes.
+	 */
 	public function newMeshAttachment(skin:Skin, name:String, path:String, sequence:Sequence):MeshAttachment {
 		var attachment = new MeshAttachment(name, path);
 		if (sequence != null) {
@@ -79,18 +91,30 @@ class AtlasAttachmentLoader implements AttachmentLoader {
 		return attachment;
 	}
 
+	/**
+	 * @return May be null to not load the attachment.
+	 */
 	public function newBoundingBoxAttachment(skin:Skin, name:String):BoundingBoxAttachment {
 		return new BoundingBoxAttachment(name);
 	}
 
+	/**
+	 * @return May be null to not load the attachment.
+	 */
 	public function newPathAttachment(skin:Skin, name:String):PathAttachment {
 		return new PathAttachment(name);
 	}
 
+	/**
+	 * @return May be null to not load the attachment.
+	 */
 	public function newPointAttachment(skin:Skin, name:String):PointAttachment {
 		return new PointAttachment(name);
 	}
 
+	/**
+	 * @return May be null to not load the attachment.
+	 */
 	public function newClippingAttachment(skin:Skin, name:String):ClippingAttachment {
 		return new ClippingAttachment(name);
 	}

@@ -29,7 +29,7 @@
 
 package spine.animation;
 
-/** Changes a physics constraint's {@link PhysicsConstraint#getMassInverse()}. The timeline values are not inverted. */
+/** Changes a physics constraint's spine.PhysicsConstraint.massInverse. The timeline values are not inverted. */
 class PhysicsConstraintMassTimeline extends PhysicsConstraintTimeline {
 	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int) {
 		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintMass);

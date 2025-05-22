@@ -44,6 +44,11 @@ typedef Function = haxe.Constraints.Function;
 		this.instantiator = instantiator;
 	}
 
+	/**
+	 * This pool keeps a reference to the obtained instance, so it should be returned to the pool via Pool.free(),
+	 * Pool.freeAll() or clear() to avoid leaking memory.
+	 * @return The obtained instance from the pool or a new instance if the pool is empty.
+	 */
 	public function obtain():T {
 		return this.items.length > 0 ? this.items.pop() : this.instantiator();
 	}

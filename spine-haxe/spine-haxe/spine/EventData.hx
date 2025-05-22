@@ -29,8 +29,8 @@
 
 package spine;
 
-/** Stores the setup pose values for an {@link Event}.
- * <p>
+/** Stores the setup pose values for an spine.Event.
+ * 
  * See <a href="https://esotericsoftware.com/spine-events">Events</a> in the Spine User Guide. */
 class EventData {
 	private var _name:String;

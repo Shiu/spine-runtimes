@@ -79,6 +79,7 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 	public var beforeUpdateWorldTransforms: SkeletonSprite -> Void = function(_) {};
 	public var afterUpdateWorldTransforms: SkeletonSprite -> Void = function(_) {};
 
+	/** Creates an uninitialized SkeletonSprite. The skeleton and animation state must be set before use. */
 	public function new(skeletonData:SkeletonData, animationStateData:AnimationStateData = null) {
 		super();
 		Bone.yDown = true;

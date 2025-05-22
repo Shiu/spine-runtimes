@@ -29,17 +29,17 @@
 
 package spine;
 
-/** The interface for items updated by {@link Skeleton#updateWorldTransform(Physics)}. */
+/** The interface for items updated by spine.Skeleton.updateWorldTransform(). */
 interface Updatable {
 	/** @param physics Determines how physics and other non-deterministic updates are applied. */
 	function update(physics:Physics):Void;
 
 	/** Returns false when this item won't be updated by
-	 * {@link Skeleton#updateWorldTransform(Physics)} because a skin is required and the
-	 * {@link Skeleton#getSkin() active skin} does not contain this item.
-	 * @see Skin#getBones()
-	 * @see Skin#getConstraints()
-	 * @see BoneData#getSkinRequired()
-	 * @see ConstraintData#getSkinRequired() */
+	 * spine.Skeleton.updateWorldTransform() because a skin is required and the
+	 * active skin does not contain this item.
+	 * @see spine.Skin.getBones()
+	 * @see spine.Skin.getConstraints()
+	 * @see spine.BoneData.getSkinRequired()
+	 * @see spine.ConstraintData.getSkinRequired() */
 	function isActive():Bool;
 }

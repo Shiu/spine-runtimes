@@ -33,13 +33,15 @@ import spine.Event;
 import spine.PathConstraint;
 import spine.Skeleton;
 
-/** The base class for most {@link PhysicsConstraint} timelines. */
+/** The base class for most spine.PhysicsConstraint timelines. */
 abstract class PhysicsConstraintTimeline extends CurveTimeline1 {
-	/** The index of the physics constraint in {@link Skeleton#getPhysicsConstraints()} that will be changed when this timeline
+	/** The index of the physics constraint in Skeleton.physicsConstraints that will be changed when this timeline
 	 * is applied, or -1 if all physics constraints in the skeleton will be changed. */
 	public var constraintIndex:Int = 0;
 
-	/** @param physicsConstraintIndex -1 for all physics constraints in the skeleton. */
+	/**
+	 * @param physicsConstraintIndex -1 for all physics constraints in the skeleton.
+	 */
 	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int, property:Int) {
 		super(frameCount, bezierCount, [property + "|" + physicsConstraintIndex]);
 		constraintIndex = physicsConstraintIndex;

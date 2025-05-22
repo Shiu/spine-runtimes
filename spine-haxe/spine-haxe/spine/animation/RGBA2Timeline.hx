@@ -29,7 +29,7 @@
 
 package spine.animation;
 
-/** Changes a slot's {@link Slot#getColor()} and {@link Slot#getDarkColor()} for two color tinting. */
+/** Changes a slot's spine.Slot.getColor() and spine.Slot.getDarkColor() for two color tinting. */
 class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
 	private static inline var ENTRIES:Int = 8;
 	private static inline var R:Int = 1;
@@ -55,8 +55,8 @@ class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
 		return ENTRIES;
 	}
 
-	/** The index of the slot in {@link Skeleton#getSlots()} that will be changed when this timeline is applied. The
-	 * {@link Slot#getDarkColor()} must not be null. */
+	/** The index of the slot in spine.Skeleton.getSlots() that will be changed when this timeline is applied. The
+	 * spine.Slot.getDarkColor() must not be null. */
 	public function getSlotIndex():Int {
 		return slotIndex;
 	}

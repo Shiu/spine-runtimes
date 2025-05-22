@@ -29,12 +29,12 @@
 
 package spine;
 
-/** Stores the current pose values for an {@link Event}.
- * <p>
- * See Timeline
- * {@link Timeline#apply(Skeleton, float, float, com.badlogic.gdx.utils.Array, float, com.esotericsoftware.spine.Animation.MixBlend, com.esotericsoftware.spine.Animation.MixDirection)},
- * AnimationStateListener {@link AnimationStateListener#event(com.esotericsoftware.spine.AnimationState.TrackEntry, Event)}, and
- * <a href="https://esotericsoftware.com/spine-events">Events</a> in the Spine User Guide. */
+/** Stores the current pose values for an Event.
+ * 
+ * @see spine.Timeline
+ * @see spine.Timeline.apply()
+ * @see spine.AnimationStateListener.event()
+ * @see <a href="https://esotericsoftware.com/spine-events">Events</a> in the Spine User Guide. */
 class Event {
 	private var _data:EventData;
 

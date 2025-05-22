@@ -31,6 +31,6 @@ package spine.animation;
 
 /** An interface for timelines which change the property of a slot. */
 interface SlotTimeline {
-	/** The index of the slot in {@link Skeleton#getSlots()} that will be changed when this timeline is applied. */
+	/** The index of the slot in spine.Skeleton.getSlots() that will be changed when this timeline is applied. */
 	function getSlotIndex():Int;
 }

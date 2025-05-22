@@ -108,6 +108,7 @@ class SkeletonData {
 
 	/** Finds a bone by comparing each bone's name. It is more efficient to cache the results of this method than to call it
 	 * multiple times.
+	 * @param boneName The name of the bone to find.
 	 * @return May be null. */
 	public function findBone(boneName:String):BoneData {
 		if (boneName == null)
@@ -121,6 +122,7 @@ class SkeletonData {
 	}
 
 	/** Finds the index of a bone by comparing each bone's name.
+	 * @param boneName The name of the bone to find.
 	 * @return -1 if the bone was not found. */
 	public function findBoneIndex(boneName:String):Int {
 		if (boneName == null)
@@ -136,6 +138,7 @@ class SkeletonData {
 
 	/** Finds a slot by comparing each slot's name. It is more efficient to cache the results of this method than to call it
 	 * multiple times.
+	 * @param slotName The name of the slot to find.
 	 * @return May be null. */
 	public function findSlot(slotName:String):SlotData {
 		if (slotName == null)
@@ -152,6 +155,7 @@ class SkeletonData {
 
 	/** Finds a skin by comparing each skin's name. It is more efficient to cache the results of this method than to call it
 	 * multiple times.
+	 * @param skinName The name of the skin to find.
 	 * @return May be null. */
 	public function findSkin(skinName:String):Skin {
 		if (skinName == null)
@@ -167,6 +171,7 @@ class SkeletonData {
 
 	/** Finds an event by comparing each events's name. It is more efficient to cache the results of this method than to call it
 	 * multiple times.
+	 * @param eventName The name of the event to find.
 	 * @return May be null. */
 	public function findEvent(eventName:String):EventData {
 		if (eventName == null)
@@ -182,6 +187,7 @@ class SkeletonData {
 
 	/** Finds an animation by comparing each animation's name. It is more efficient to cache the results of this method than to
 	 * call it multiple times.
+	 * @param animationName The name of the animation to find.
 	 * @return May be null. */
 	public function findAnimation(animationName:String):Animation {
 		if (animationName == null)
@@ -197,6 +203,7 @@ class SkeletonData {
 
 	/** Finds an IK constraint by comparing each IK constraint's name. It is more efficient to cache the results of this method
 	 * than to call it multiple times.
+	 * @param constraintName The name of the IK constraint to find.
 	 * @return May be null. */
 	public function findIkConstraint(constraintName:String):IkConstraintData {
 		if (constraintName == null)
@@ -212,6 +219,7 @@ class SkeletonData {
 
 	/** Finds a transform constraint by comparing each transform constraint's name. It is more efficient to cache the results of
 	 * this method than to call it multiple times.
+	 * @param constraintName The name of the transform constraint to find.
 	 * @return May be null. */
 	public function findTransformConstraint(constraintName:String):TransformConstraintData {
 		if (constraintName == null)
@@ -224,6 +232,7 @@ class SkeletonData {
 	}
 
 	/** Finds the index of a transform constraint by comparing each transform constraint's name.
+	 * @param transformConstraintName The name of the transform constraint to find.
 	 * @return -1 if the transform constraint was not found. */
 	public function findTransformConstraintIndex(transformConstraintName:String):Int {
 		if (transformConstraintName == null)
@@ -239,6 +248,7 @@ class SkeletonData {
 
 	/** Finds a path constraint by comparing each path constraint's name. It is more efficient to cache the results of this method
 	 * than to call it multiple times.
+	 * @param constraintName The name of the path constraint to find.
 	 * @return May be null. */
 	public function findPathConstraint(constraintName:String):PathConstraintData {
 		if (constraintName == null)
@@ -252,6 +262,7 @@ class SkeletonData {
 	}
 
 	/** Finds the index of a path constraint by comparing each path constraint's name.
+	 * @param pathConstraintName The name of the path constraint to find.
 	 * @return -1 if the path constraint was not found. */
 	public function findPathConstraintIndex(pathConstraintName:String):Int {
 		if (pathConstraintName == null)
@@ -267,10 +278,11 @@ class SkeletonData {
 
 	/** Finds a physics constraint by comparing each physics constraint's name. It is more efficient to cache the results of this
 	 * method than to call it multiple times.
+	 * @param constraintName The name of the physics constraint to find.
 	 * @return May be null. */
 	public function findPhysicsConstraint(constraintName:String):PhysicsConstraintData {
 		if (constraintName == null)
-			throw new SpineException("physicsConstraintName cannot be null.");
+			throw new SpineException("constraintName cannot be null.");
 		for (i in 0...physicsConstraints.length) {
 			var constraint:PhysicsConstraintData = physicsConstraints[i];
 			if (constraint.name == constraintName)
@@ -280,6 +292,7 @@ class SkeletonData {
 	}
 	
 	/** Finds the index of a physics constraint by comparing each physics constraint's name.
+	 * @param constraintName The name of the physics constraint to find.
 	 * @return -1 if the physics constraint was not found. */
 	public function findPhysicsConstraintIndex(constraintName:String):Int {
 		if (constraintName == null)

@@ -33,7 +33,7 @@ import spine.Bone;
 import spine.Event;
 import spine.Skeleton;
 
-/** Changes a bone's local {@link Bone#shearY}. */
+/** Changes a bone's local Bone.shearY. */
 class ShearYTimeline extends CurveTimeline1 implements BoneTimeline {
 	private var boneIndex:Int = 0;
 

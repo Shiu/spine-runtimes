@@ -29,14 +29,15 @@
 
 package spine.animation;
 
-/** The base class for a {@link CurveTimeline} which sets two properties. */
+/** The base class for a spine.animation.CurveTimeline which sets two properties. */
 class CurveTimeline2 extends CurveTimeline {
 	private static inline var ENTRIES:Int = 3;
 	private static inline var VALUE1:Int = 1;
 	private static inline var VALUE2:Int = 2;
 
-	/** @param bezierCount The maximum number of Bezier curves. See {@link #shrink(Int)}.
-	 * @param propertyIds Unique identifiers for the properties the timeline modifies. */
+	/** @param frameCount The number of frames in the timeline.
+	 * @param bezierCount The maximum number of Bezier curves. See spine.animation.CurveTimeline.shrink().
+	 * @param propertyIds Array of unique identifiers for the properties the timeline modifies. */
 	public function new(frameCount:Int, bezierCount:Int, propertyIds:Array<String>) {
 		super(frameCount, bezierCount, propertyIds);
 	}

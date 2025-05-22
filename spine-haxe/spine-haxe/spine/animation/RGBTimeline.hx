@@ -29,7 +29,7 @@
 
 package spine.animation;
 
-/** Changes the RGB for a slot's {@link Slot#getColor()}. */
+/** Changes the RGB for a slot's spine.Slot.color. */
 class RGBTimeline extends CurveTimeline implements SlotTimeline {
 	private static inline var ENTRIES:Int = 4;
 	private static inline var R:Int = 1;

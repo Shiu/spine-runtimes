@@ -46,6 +46,7 @@ class PointAttachment extends VertexAttachment {
 	 * attachments are not usually rendered at runtime. */
 	public var color:Color = new Color(0.38, 0.94, 0, 1);
 
+	/** Copy constructor. */
 	public function new(name:String) {
 		super(name);
 	}

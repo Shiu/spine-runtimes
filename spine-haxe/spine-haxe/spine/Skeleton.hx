@@ -86,9 +86,9 @@ class Skeleton {
 	 * <p>
 	 * Bones that do not inherit translation are still affected by this property. */
 	public var y:Float = 0;
-	/** Returns the skeleton's time. This is used for time-based manipulations, such as {@link PhysicsConstraint}.
+	/** Returns the skeleton's time. This is used for time-based manipulations, such as spine.PhysicsConstraint.
 	 * <p>
-	 * See {@link #update(float)}. */
+	 * See Skeleton.update(). */
 	public var time:Float = 0;
 
 	/** Creates a new skeleton with the specified skeleton data. */
@@ -143,7 +143,7 @@ class Skeleton {
 		updateCache();
 	}
 
-	/** Caches information about bones and constraints. Must be called if the {@link #getSkin()} is modified or if bones,
+	/** Caches information about bones and constraints. Must be called if the Skeleton.skin is modified or if bones,
 	 * constraints, or weighted path attachments are added or removed. */
 	public function updateCache():Void {
 		_updateCache.resize(0);
@@ -463,7 +463,7 @@ class Skeleton {
 		return _data;
 	}
 
-	/** The list of bones and constraints, sorted in the order they should be updated, as computed by {@link #updateCache()}. */
+	/** The list of bones and constraints, sorted in the order they should be updated, as computed by Skeleton.updateCache(). */
 	public var getUpdateCache(get, never):Array<Updatable>;
 
 	private function get_getUpdateCache():Array<Updatable> {
@@ -524,7 +524,7 @@ class Skeleton {
 
 	/** Sets a skin by name.
 	 * <p>
-	 * See {@link #setSkin(Skin)}. */
+	 * See Skeleton.skin. */
 	private function set_skinName(skinName:String):String {
 		var skin:Skin = data.findSkin(skinName);
 		if (skin == null)
@@ -545,14 +545,14 @@ class Skeleton {
 		return _skin;
 	}
 
-	/** Sets the skin used to look up attachments before looking in the {@link SkeletonData#getDefaultSkin() default skin}. If the
-	 * skin is changed, {@link #updateCache()} is called.
+	/** Sets the skin used to look up attachments before looking in the spine.SkeletonData default skin. If the
+	 * skin is changed, Skeleton.updateCache() is called.
 	 * <p>
 	 * Attachments from the new skin are attached if the corresponding attachment from the old skin was attached. If there was no
 	 * old skin, each slot's setup mode attachment is attached from the new skin.
 	 * <p>
 	 * After changing the skin, the visible attachments can be reset to those attached in the setup pose by calling
-	 * {@link #setSlotsToSetupPose()}. Also, often {@link AnimationState#apply(Skeleton)} is called before the next time the
+	 * Skeleton.setSlotsToSetupPose(). Also, often spine.AnimationState.apply() is called before the next time the
 	 * skeleton is rendered to allow any attachment keys in the current animation(s) to hide or show attachments from the new
 	 * skin. */
 	private function set_skin(newSkin:Skin):Skin {
@@ -579,15 +579,15 @@ class Skeleton {
 		return _skin;
 	}
 
-	/** Finds an attachment by looking in the {@link #skin} and {@link SkeletonData#defaultSkin} using the slot name and attachment
+	/** Finds an attachment by looking in the Skeleton.skin and spine.SkeletonData defaultSkin using the slot name and attachment
 	 * name.
 	 * <p>
-	 * See {@link #getAttachment(int, String)}. */
+	 * See Skeleton.getAttachmentForSlotIndex(). */
 	public function getAttachmentForSlotName(slotName:String, attachmentName:String):Attachment {
 		return getAttachmentForSlotIndex(data.findSlot(slotName).index, attachmentName);
 	}
 
-	/** Finds an attachment by looking in the {@link #skin} and {@link SkeletonData#defaultSkin} using the slot index and
+	/** Finds an attachment by looking in the Skeleton.skin and spine.SkeletonData defaultSkin using the slot index and
 	 * attachment name. First the skin is checked and if the attachment was not found, the default skin is checked.
 	 * <p>
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skins">Runtime skins</a> in the Spine Runtimes Guide. */
@@ -604,8 +604,8 @@ class Skeleton {
 		return null;
 	}
 
-	/** A convenience method to set an attachment by finding the slot with {@link #findSlot(String)}, finding the attachment with
-	 * {@link #getAttachment(int, String)}, then setting the slot's {@link Slot#attachment}.
+	/** A convenience method to set an attachment by finding the slot with Skeleton.findSlot(), finding the attachment with
+	 * Skeleton.getAttachmentForSlotIndex(), then setting the slot's spine.Slot attachment.
 	 * @param attachmentName May be null to clear the slot's attachment. */
 	public function setAttachment(slotName:String, attachmentName:String):Void {
 		if (slotName == null)
@@ -683,8 +683,8 @@ class Skeleton {
 	private var _tempVertices = new Array<Float>();
 	private var _bounds = new Rectangle();
 
-	/** Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose.
-	 * Optionally applies clipping. */
+	/** Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose. Optionally applies
+	 * clipping. */
 	public function getBounds(clipper: SkeletonClipping = null):Rectangle {
 		var minX:Float = Math.POSITIVE_INFINITY;
 		var minY:Float = Math.POSITIVE_INFINITY;
@@ -741,18 +741,18 @@ class Skeleton {
 		return _bounds;
 	}
 
-	/** Increments the skeleton's {@link #time}. */
+	/** Increments the skeleton's Skeleton.time. */
 	public function update (delta:Float):Void {
 		time += delta;
 	}
 
-	/** Calls {@link PhysicsConstraint#translate(float, float)} for each physics constraint. */
+	/** Calls spine.PhysicsConstraint.translate() for each physics constraint. */
 	public function physicsTranslate (x:Float, y:Float):Void {
 		for (physicsConstraint in physicsConstraints)
 			physicsConstraint.translate(x, y);
 	}
 
-	/** Calls {@link PhysicsConstraint#rotate(float, float, float)} for each physics constraint. */
+	/** Calls spine.PhysicsConstraint.rotate() for each physics constraint. */
 	public function physicsRotate (x:Float, y:Float, degrees:Float):Void {
 		for (physicsConstraint in physicsConstraints)
 			physicsConstraint.rotate(x, y, degrees);

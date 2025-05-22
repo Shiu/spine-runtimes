@@ -32,14 +32,14 @@ package spine;
 import spine.attachments.Attachment;
 import spine.attachments.VertexAttachment;
 
-/** Stores a slot's current pose. Slots organize attachments for {@link Skeleton#drawOrder} purposes and provide a place to store
+/** Stores a slot's current pose. Slots organize attachments for Skeleton.drawOrder purposes and provide a place to store
  * state for an attachment. State cannot be stored in an attachment itself because attachments are stateless and may be shared
  * across multiple skeletons. */
 class Slot {
 	private var _data:SlotData;
 	private var _bone:Bone;
 
-	/** The color used to tint the slot's attachment. If {@link #darkColor} is set, this is used as the light color for two
+	/** The color used to tint the slot's attachment. If darkColor is set, this is used as the light color for two
 	 * color tinting. */
 	public var color:Color;
 	/** The dark color used to tint the slot's attachment for two color tinting, or null if two color tinting is not used. The dark
@@ -48,16 +48,15 @@ class Slot {
 
 	private var _attachment:Attachment;
 
-	/** The index of the texture region to display when the slot's attachment has a {@link Sequence}. -1 represents the
-	 * {@link Sequence#setupIndex}. */
+	/** The index of the texture region to display when the slot's attachment has a spine.attachments.Sequence. -1 represents the
+	 * Sequence.getSetupIndex(). */
 	public var sequenceIndex = -1;
 
 	public var attachmentState:Int = 0;
 	/** Values to deform the slot's attachment. For an unweighted mesh, the entries are local positions for each vertex. For a
 	 * weighted mesh, the entries are an offset for each vertex which will be added to the mesh's local vertex positions.
-	 * <p>
-	 * See {@link VertexAttachment#computeWorldVertices(Slot, int, int, float[], int, int)} and {@link DeformTimeline}. */
-
+	 * @see spine.attachments.VertexAttachment.computeWorldVertices()
+	 * @see spine.animation.DeformTimeline */
 	public var deform:Array<Float> = new Array<Float>();
 
 	/** Copy constructor. */
@@ -101,8 +100,8 @@ class Slot {
 		return _attachment;
 	}
 
-	/** Sets the slot's attachment and, if the attachment changed, resets {@link #sequenceIndex} and clears the {@link #deform}.
-	 * The deform is not cleared if the old attachment has the same {@link VertexAttachment#timelineAttachment} as the
+	/** Sets the slot's attachment and, if the attachment changed, resets sequenceIndex and clears the deform.
+	 * The deform is not cleared if the old attachment has the same spine.attachments.VertexAttachment.timelineAttachment as the
 	 * specified attachment. */
 	public function set_attachment(attachmentNew:Attachment):Attachment {
 		if (attachment == attachmentNew)

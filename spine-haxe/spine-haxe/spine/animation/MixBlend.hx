@@ -32,7 +32,7 @@ package spine.animation;
 /** Controls how timeline values are mixed with setup pose values or current pose values when a timeline is applied with
  * <code>alpha</code> < 1.
  * 
- * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection)}. */
+ * @see spine.animation.Timeline.apply() */
 class MixBlend {
 	public var ordinal:Int = 0;
 
@@ -44,8 +44,8 @@ class MixBlend {
 	 * setup value is set. */
 	public static var setup(default, never):MixBlend = new MixBlend(0);
 	/** Transitions from the current value to the timeline value. Before the first frame, transitions from the current value to
-	 * the setup value. Timelines which perform instant transitions, such as {@link DrawOrderTimeline} or
-	 * {@link AttachmentTimeline}, use the setup value before the first frame.
+	 * the setup value. Timelines which perform instant transitions, such as spine.animation.DrawOrderTimeline or
+	 * spine.animation.AttachmentTimeline, use the setup value before the first frame.
 	 * 
 	 * <code>first</code> is intended for the first animations applied, not for animations layered on top of those. */
 	public static var first(default, never):MixBlend = new MixBlend(1);

@@ -36,13 +36,13 @@ import spine.Event;
 import spine.Skeleton;
 import spine.Slot;
 
-/** Changes a slot's {@link Slot#getDeform()} to deform a {@link VertexAttachment}. */
+/** Changes a slot's spine.Slot.deform to deform a spine.attachments.VertexAttachment. */
 class DeformTimeline extends CurveTimeline implements SlotTimeline {
 	public var slotIndex:Int = 0;
 
 	/** The attachment that will be deformed.
-	 * <p>
-	 * See {@link VertexAttachment#getTimelineAttachment()}. */
+	 * 
+	 * @see spine.attachments.VertexAttachment.getTimelineAttachment() */
 	public var attachment:VertexAttachment;
 
 	/** The vertices for each frame. */

@@ -46,7 +46,7 @@ class IkConstraint implements Updatable {
 	public var compress:Bool = false;
 	/** When true and the target is out of range, the parent bone is scaled to reach it.
 	 * <p>
-	 * For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not applied if {@link #getSoftness()} is
+	 * For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not applied if getSoftness() is
 	 * > 0, and 3) if the parent bone has local nonuniform scale, stretch is not applied. */
 	public var stretch:Bool = false;
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
@@ -58,6 +58,7 @@ class IkConstraint implements Updatable {
 	public var softness:Float = 0;
 	public var active:Bool = false;
 
+	/** Copy constructor. */
 	public function new(data:IkConstraintData, skeleton:Skeleton) {
 		if (data == null)
 			throw new SpineException("data cannot be null.");
@@ -111,7 +112,7 @@ class IkConstraint implements Updatable {
 	}
 
 	public function toString():String {
-		return _data.name != null ? _data.name : "IkContstraint?";
+		return _data.name != null ? _data.name : "IkConstraint?";
 	}
 
 	/** Applies 1 bone IK. The target is specified in the world coordinate system. */

@@ -35,8 +35,8 @@ import spine.attachments.MeshAttachment;
 
 /** Stores attachments by slot index and attachment name.
  * 
- * See SkeletonData {@link SkeletonData#defaultSkin}, Skeleton {@link Skeleton#skin}, and
- * <a href="https://esotericsoftware.com/spine-runtime-skins">Runtime skins</a> in the Spine Runtimes Guide. */
+ * See spine.SkeletonData.defaultSkin, spine.Skeleton.skin, and
+ * Runtime skins at https://esotericsoftware.com/spine-runtime-skins in the Spine Runtimes Guide. */
 class Skin {
 	private var _name:String;
 	private var _attachments:Array<StringMap<Attachment>> = new Array<StringMap<Attachment>>();
@@ -215,16 +215,16 @@ class Skin {
 		return _constraints;
 	}
 
+	/** The skin's name, which is unique across all skins in the skeleton. */
 	public var name(get, never):String;
 
-	/** The skin's name, which is unique across all skins in the skeleton. */
 	private function get_name():String {
 		return _name;
 	}
 
+	/** The color of the skin as it was in Spine, or a default color if nonessential data was not exported. */
 	public var color(get, never):Color;
 
-	/** The color of the skin as it was in Spine, or a default color if nonessential data was not exported. */
 	private function get_color():Color {
 		return _color;
 	}

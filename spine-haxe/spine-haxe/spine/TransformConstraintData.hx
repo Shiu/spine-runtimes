@@ -29,9 +29,11 @@
 
 package spine;
 
-/** Stores the setup pose for a {@link TransformConstraint}.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide. */
+/**
+ * Stores the setup pose for a spine.TransformConstraint.
+ * 
+ * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide.
+ */
 class TransformConstraintData extends ConstraintData {
 	private var _bones:Array<BoneData> = new Array<BoneData>();
 
@@ -68,7 +70,9 @@ class TransformConstraintData extends ConstraintData {
 		super(name, 0, false);
 	}
 
-	/** The bones that will be modified by this transform constraint. */
+	/**
+	 * The bones that will be modified by this transform constraint.
+	 */
 	public var bones(get, never):Array<BoneData>;
 
 	private function get_bones():Array<BoneData> {

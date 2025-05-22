@@ -66,7 +66,7 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 
 	/** For each of the 4 vertices, a pair of <code>x,y</code> values that is the local position of the vertex.
 	 * 
-	 * See {@link #updateRegion()}. */
+	 * See RegionAttachment.updateRegion(). */
 	private var offsets:Array<Float> = new Array<Float>();
 
 	public var uvs:Array<Float> = new Array<Float>();
@@ -80,7 +80,7 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 		this.path = path;
 	}
 
-	/** Calculates the {@link #offsets} and {@link #uvs} using the region and the attachment's transform. Must be called if the
+	/** Calculates the RegionAttachment.offsets and RegionAttachment.uvs using the region and the attachment's transform. Must be called if the
 	 * region, the region's properties, or the transform are changed. */
 	public function updateRegion():Void {
 		if (region == null) {
@@ -145,12 +145,11 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 		}
 	}
 
-	/** Transforms the attachment's four vertices to world coordinates. If the attachment has a {@link #sequence}, the region may
+	/** Transforms the attachment's four vertices to world coordinates. If the attachment has a RegionAttachment.sequence, the region may
 	 * be changed.
 	 * 
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide.
-	 * @param slot The slot the attachment is bound to.
 	 * @param worldVertices The output world vertices. Must have a length >= <code>offset</code> + 8.
 	 * @param offset The <code>worldVertices</code> index to begin writing values.
 	 * @param stride The number of <code>worldVertices</code> entries between the value pairs written. */

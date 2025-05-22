@@ -38,7 +38,7 @@ class CurveTimeline extends Timeline {
 
 	private var curves:Array<Float>; // type, x, y, ...
 
-	/** @param bezierCount The maximum number of Bezier curves. See {@link #shrink(int)}.
+	/** @param bezierCount The maximum number of Bezier curves. See CurveTimeline.shrink().
 	 * @param propertyIds Unique identifiers for the properties the timeline modifies. */
 	public function new(frameCount:Int, bezierCount:Int, propertyIds:Array<String>) {
 		super(frameCount, propertyIds);
@@ -109,9 +109,9 @@ class CurveTimeline extends Timeline {
 	}
 
 	/** Returns the Bezier interpolated value for the specified time.
-	 * @param frameIndex The index into {@link #getFrames()} for the values of the frame before <code>time</code>.
+	 * @param frameIndex The index into Timeline.getFrames() for the values of the frame before <code>time</code>.
 	 * @param valueOffset The offset from <code>frameIndex</code> to the value this curve is used for.
-	 * @param i The index of the Bezier segments. See {@link #getCurveType}. */
+	 * @param i The index of the Bezier segments. See CurveTimeline.getCurveType(). */
 	public function getBezierValue(time:Float, frameIndex:Int, valueOffset:Int, i:Int):Float {
 		var x:Float, y:Float;
 		if (curves[i] > time) {

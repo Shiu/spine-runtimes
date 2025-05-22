@@ -29,7 +29,7 @@
 
 package spine.animation;
 
-/** Changes a slot's {@link Slot#getColor()}. */
+/** Changes a slot's spine.Slot.color. */
 class RGBATimeline extends CurveTimeline implements SlotTimeline {
 	private static inline var ENTRIES:Int = 5;
 	private static inline var R:Int = 1;
@@ -53,12 +53,8 @@ class RGBATimeline extends CurveTimeline implements SlotTimeline {
 	}
 
 	/** Sets the time and color for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
-	 * @param time The frame time in seconds.
-	 * @param r The red component.
-	 * @param g The green component.
-	 * @param b The blue component.
-	 * @param a The alpha component. */
+	 * @param frame Between 0 and frameCount, inclusive.
+	 * @param time The frame time in seconds. */
 	public function setFrame(frame:Int, time:Float, r:Float, g:Float, b:Float, a:Float):Void {
 		frame *= ENTRIES;
 		frames[frame] = time;

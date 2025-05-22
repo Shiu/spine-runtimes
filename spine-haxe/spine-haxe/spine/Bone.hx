@@ -70,17 +70,17 @@ class Bone implements Updatable {
 	public var ashearX:Float = 0;
 	/** The applied local shearY. */
 	public var ashearY:Float = 0;
-	/** Part of the world transform matrix for the X axis. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** Part of the world transform matrix for the X axis. If changed, updateAppliedTransform() should be called. */
 	public var a:Float = 0;
-	/** Part of the world transform matrix for the Y axis. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** Part of the world transform matrix for the Y axis. If changed, updateAppliedTransform() should be called. */
 	public var b:Float = 0;
-	/** Part of the world transform matrix for the X axis. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** Part of the world transform matrix for the X axis. If changed, updateAppliedTransform() should be called. */
 	public var c:Float = 0;
-	/** Part of the world transform matrix for the Y axis. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** Part of the world transform matrix for the Y axis. If changed, updateAppliedTransform() should be called. */
 	public var d:Float = 0;
-	/** The world X position. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** The world X position. If changed, updateAppliedTransform() should be called. */
 	public var worldX:Float = 0;
-	/** The world Y position. If changed, {@link #updateAppliedTransform()} should be called. */
+	/** The world Y position. If changed, updateAppliedTransform() should be called. */
 	public var worldY:Float = 0;
 	/** Determines how parent world transforms affect this bone. */
 	public var inherit:Inherit = Inherit.normal;
@@ -115,7 +115,7 @@ class Bone implements Updatable {
 		return _children;
 	}
 
-	/** @param parent May be null. */
+	/** Copy constructor. Does not copy the children bones. */
 	public function new(data:BoneData, skeleton:Skeleton, parent:Bone) {
 		if (data == null)
 			throw new SpineException("data cannot be null.");
@@ -138,7 +138,7 @@ class Bone implements Updatable {
 
 	/** Computes the world transform using the parent bone and this bone's local transform.
 	 * <p>
-	 * See {@link #updateWorldTransformWith(float, float, float, float, float, float, float)}. */
+	 * See updateWorldTransformWith(). */
 	public function updateWorldTransform():Void {
 		updateWorldTransformWith(x, y, rotation, scaleX, scaleY, shearX, shearY);
 	}
@@ -284,7 +284,7 @@ class Bone implements Updatable {
 
 	/** Computes the applied transform values from the world transform.
 	 * <p>
-	 * If the world transform is modified (by a constraint, {@link #rotateWorld(float)}, etc) then this method should be called so
+	 * If the world transform is modified (by a constraint, rotateWorld(), etc) then this method should be called so
 	 * the applied transform matches the world transform. The applied transform may be needed by other code (eg to apply another
 	 * constraint).
 	 * <p>
@@ -370,58 +370,49 @@ class Bone implements Updatable {
 		}
 	}
 
-	/** The world rotation for the X axis, calculated using {@link #a} and {@link #c}. */
+	/** The world rotation for the X axis, calculated using a and c. */
 	public var worldRotationX(get, never):Float;
 
 	private function get_worldRotationX():Float {
 		return Math.atan2(c, a) * MathUtils.radDeg;
 	}
 
-	/** The world rotation for the Y axis, calculated using {@link #b} and {@link #d}. */
+	/** The world rotation for the Y axis, calculated using b and d. */
 	public var worldRotationY(get, never):Float;
 
 	private function get_worldRotationY():Float {
 		return Math.atan2(d, b) * MathUtils.radDeg;
 	}
 
-	/** The magnitude (always positive) of the world scale X, calculated using {@link #a} and {@link #c}. */
+	/** The magnitude (always positive) of the world scale X, calculated using a and c. */
 	public var worldScaleX(get, never):Float;
 
 	private function get_worldScaleX():Float {
 		return Math.sqrt(a * a + c * c);
 	}
 
-	/** The magnitude (always positive) of the world scale Y, calculated using {@link #b} and {@link #d}. */
+	/** The magnitude (always positive) of the world scale Y, calculated using b and d. */
 	public var worldScaleY(get, never):Float;
 
 	private function get_worldScaleY():Float {
 		return Math.sqrt(b * b + d * d);
 	}
 
-	/** Transforms a point from world coordinates to the parent bone's local coordinates.
-	 * @param world The world coordinates to transform.
-	 * @return The transformed coordinates in the parent's local space.
-	 */
-	private function worldToParent(world: Array<Float>):Array<Float> {
+	/** Transforms a point from world coordinates to the parent bone's local coordinates. */
+	public function worldToParent(world: Array<Float>):Array<Float> {
 		if (world == null)
 			throw new SpineException("world cannot be null.");
 		return parent == null ? world : parent.worldToLocal(world);
 	}
 
-	/** Transforms a point from the parent bone's coordinates to world coordinates.
-	 * @param world The parent coordinates to transform.
-	 * @return The transformed coordinates in world space.
-	 */
-	private function parentToWorld(world: Array<Float>):Array<Float> {
+	/** Transforms a point from the parent bone's coordinates to world coordinates. */
+	public function parentToWorld(world: Array<Float>):Array<Float> {
 		if (world == null)
 			throw new SpineException("world cannot be null.");
 		return parent == null ? world : parent.localToWorld(world);
 	}
 
-	/** Transforms a point from world coordinates to the bone's local coordinates.
-	 * @param world The world coordinates to transform.
-	 * @return The transformed coordinates in local space.
-	 */
+	/** Transforms a point from world coordinates to the bone's local coordinates. */
 	public function worldToLocal(world:Array<Float>):Array<Float> {
 		var a:Float = a, b:Float = b, c:Float = c, d:Float = d;
 		var invDet:Float = 1 / (a * d - b * c);
@@ -431,10 +422,7 @@ class Bone implements Updatable {
 		return world;
 	}
 
-	/** Transforms a point from the bone's local coordinates to world coordinates.
-	 * @param local The local coordinates to transform.
-	 * @return The transformed coordinates in world space.
-	 */
+	/** Transforms a point from the bone's local coordinates to world coordinates. */
 	public function localToWorld(local:Array<Float>):Array<Float> {
 		var localX:Float = local[0], localY:Float = local[1];
 		local[0] = localX * a + localY * b + worldX;
@@ -442,20 +430,14 @@ class Bone implements Updatable {
 		return local;
 	}
 
-	/** Transforms a world rotation to a local rotation.
-	 * @param worldRotation The world rotation in degrees.
-	 * @return The rotation in local space in degrees.
-	 */
+	/** Transforms a world rotation to a local rotation. */
 	public function worldToLocalRotation(worldRotation:Float):Float {
 		var sin:Float = MathUtils.sinDeg(worldRotation),
 			cos:Float = MathUtils.cosDeg(worldRotation);
 		return Math.atan2(a * sin - c * cos, d * cos - b * sin) * MathUtils.radDeg + rotation - shearX;
 	}
 
-	/** Transforms a local rotation to a world rotation.
-	 * @param localRotation The local rotation in degrees.
-	 * @return The rotation in world space in degrees.
-	 */
+	/** Transforms a local rotation to a world rotation. */
 	public function localToWorldRotation(localRotation:Float):Float {
 		localRotation -= rotation - shearX;
 		var sin:Float = MathUtils.sinDeg(localRotation),
@@ -465,10 +447,8 @@ class Bone implements Updatable {
 
 	/** Rotates the world transform the specified amount.
 	 * <p>
-	 * After changes are made to the world transform, {@link #updateAppliedTransform()} should be called and
-	 * {@link #update(Physics)} will need to be called on any child bones, recursively.
-	 * @param degrees The rotation in degrees.
-	 */
+	 * After changes are made to the world transform, updateAppliedTransform() should be called and
+	 * update() will need to be called on any child bones, recursively. */
 	public function rotateWorld(degrees:Float):Void {
 		degrees *= MathUtils.degRad;
 		var sin:Float = Math.sin(degrees), cos:Float = Math.cos(degrees);

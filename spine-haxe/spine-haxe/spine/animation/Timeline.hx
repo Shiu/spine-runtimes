@@ -41,7 +41,6 @@ class Timeline {
 
 	/**
 	 * @param propertyIds Unique identifiers for the properties the timeline modifies.
-	 * @param frameCount The number of frames for this timeline.
 	 */
 	public function new(frameCount:Int, propertyIds:Array<String>) {
 		this.propertyIds = propertyIds;
@@ -67,7 +66,7 @@ class Timeline {
 	/** Applies this timeline to the skeleton.
 	 * @param skeleton The skeleton to which the timeline is being applied. This provides access to the bones, slots, and other
 	 *           skeleton components that the timeline may change.
-	 * @param lastTime The last time in seconds this timeline was applied. Timelines such as {@link EventTimeline} trigger only
+	 * @param lastTime The last time in seconds this timeline was applied. Timelines such as spine.animation.EventTimeline trigger only
 	 *           at specific times rather than every frame. In that case, the timeline triggers everything between
 	 *           <code>lastTime</code> (exclusive) and <code>time</code> (inclusive). Pass -1 the first time an animation is
 	 *           applied to ensure frame 0 is triggered.
@@ -82,7 +81,7 @@ class Timeline {
 	 *           apply animations on top of each other (layering).
 	 * @param blend Controls how mixing is applied when <code>alpha</code> < 1.
 	 * @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions,
-	 *           such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}, and others such as {@link ScaleTimeline}.
+	 *           such as spine.animation.DrawOrderTimeline or spine.animation.AttachmentTimeline, and others such as spine.animation.ScaleTimeline.
 	 */
 	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection):Void {
 		throw new SpineException("Timeline implementations must override apply()");

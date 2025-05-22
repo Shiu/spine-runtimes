@@ -29,7 +29,7 @@
 
 package spine.animation;
 
-/** Changes a physics constraint's {@link PhysicsConstraint#getMix()}. */
+/** Changes a physics constraint's spine.PhysicsConstraint.mix. */
 class PhysicsConstraintMixTimeline extends PhysicsConstraintTimeline {
 	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int) {
 		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintMix);

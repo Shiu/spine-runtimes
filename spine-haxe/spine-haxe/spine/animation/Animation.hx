@@ -74,25 +74,25 @@ class Animation {
 	}
 
 	/** Applies the animation's timelines to the specified skeleton.
-	 * <p>
-	 * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection)}.
+	 * 
+	 * See Timeline.apply().
 	 * @param skeleton The skeleton the animation is being applied to. This provides access to the bones, slots, and other skeleton
 	 *           components the timelines may change.
 	 * @param lastTime The last time in seconds this animation was applied. Some timelines trigger only at specific times rather
 	 *           than every frame. Pass -1 the first time an animation is applied to ensure frame 0 is triggered.
 	 * @param time The time in seconds the skeleton is being posed for. Most timelines find the frame before and the frame after
-	 *           this time and interpolate between the frame values. If beyond the {@link #getDuration()} and <code>loop</code> is
+	 *           this time and interpolate between the frame values. If beyond the duration and loop is
 	 *           true then the animation will repeat, else the last frame will be applied.
-	 * @param loop If true, the animation repeats after the {@link #getDuration()}.
+	 * @param loop If true, the animation repeats after the duration.
 	 * @param events If any events are fired, they are added to this list. Can be null to ignore fired events or if no timelines
 	 *           fire events.
-	 * @param alpha 0 applies the current or setup values (depending on <code>blend</code>). 1 applies the timeline values. Between
+	 * @param alpha 0 applies the current or setup values (depending on blend). 1 applies the timeline values. Between
 	 *           0 and 1 applies values between the current or setup values and the timeline values. By adjusting
-	 *           <code>alpha</code> over time, an animation can be mixed in or out. <code>alpha</code> can also be useful to apply
+	 *           alpha over time, an animation can be mixed in or out. alpha can also be useful to apply
 	 *           animations on top of each other (layering).
-	 * @param blend Controls how mixing is applied when <code>alpha</code> < 1.
+	 * @param blend Controls how mixing is applied when alpha < 1.
 	 * @param direction Indicates whether the timelines are mixing in or out. Used by timelines which perform instant transitions,
-	 *           such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}. */
+	 *           such as DrawOrderTimeline or AttachmentTimeline. */
 	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, loop:Bool, events:Array<Event>, alpha:Float, blend:MixBlend,
 			direction:MixDirection):Void {
 		if (skeleton == null)
@@ -109,9 +109,9 @@ class Animation {
 		}
 	}
 
+	/** The animation's name, which is unique across all animations in the skeleton. */
 	public var name(get, never):String;
 
-	/** The animation's name, which is unique across all animations in the skeleton. */
 	private function get_name():String {
 		return _name;
 	}
@@ -120,9 +120,9 @@ class Animation {
 		return _name;
 	}
 
+	/** If the returned array or the timelines it contains are modified, setTimelines() must be called. */
 	public var timelines(get, never):Array<Timeline>;
 
-	/** If the returned array or the timelines it contains are modified, {@link #setTimelines(Array)} must be called. */
 	private function get_timelines():Array<Timeline> {
 		return _timelines;
 	}

@@ -33,7 +33,7 @@ import spine.Bone;
 import spine.Event;
 import spine.Skeleton;
 
-/** Changes a bone's local {@link Bone#rotation}. */
+/** Changes a bone's local rotation. */
 class RotateTimeline extends CurveTimeline1 implements BoneTimeline {
 	public var boneIndex:Int = 0;
 

@@ -29,14 +29,14 @@
 
 package spine;
 
-/** Stores the setup pose for a {@link PathConstraint}.
- * <p>
+/** Stores the setup pose for a spine.PathConstraint.
+ * 
  * See <a href="https://esotericsoftware.com/spine-path-constraints">Path constraints</a> in the Spine User Guide. */
 class PathConstraintData extends ConstraintData {
 	/** The bones that will be modified by this path constraint. */
 	private var _bones:Array<BoneData> = new Array<BoneData>();
 
-	/** The slot whose path attachment will be used to constrained the bones. */
+	/** The slot whose path attachment will be used to constrain the bones. */
 	public var target:SlotData;
 	/** The mode for positioning the first bone on the path. */
 	public var positionMode:PositionMode = PositionMode.fixed;

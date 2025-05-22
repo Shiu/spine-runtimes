@@ -33,7 +33,7 @@ import spine.Event;
 import spine.Skeleton;
 import spine.Slot;
 
-/** Changes a slot's attachment. */
+/** Changes a slot's spine.Slot.attachment. */
 class AttachmentTimeline extends Timeline implements SlotTimeline {
 	public var slotIndex:Int = 0;
 

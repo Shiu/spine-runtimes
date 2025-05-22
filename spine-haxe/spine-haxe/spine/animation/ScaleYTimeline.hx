@@ -34,7 +34,7 @@ import spine.Event;
 import spine.MathUtils;
 import spine.Skeleton;
 
-/** Changes a bone's local {@link Bone#scaleY}. */
+/** Changes a bone's local spine.Bone.scaleY. */
 class ScaleYTimeline extends CurveTimeline1 implements BoneTimeline {
 	private var boneIndex:Int = 0;
 

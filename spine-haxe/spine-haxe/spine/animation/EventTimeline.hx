@@ -33,7 +33,7 @@ import spine.animation.Timeline;
 import spine.Event;
 import spine.Skeleton;
 
-/** Fires an {@link Event} when specific animation times are reached. */
+/** Fires an spine.Event when specific animation times are reached. */
 class EventTimeline extends Timeline {
 	/** The event for each frame. */
 	public var events:Array<Event>;
@@ -49,8 +49,7 @@ class EventTimeline extends Timeline {
 	}
 
 	/** Sets the time and event for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
-	 * @param event The event to set for the frame. */
+	 * @param frame Between 0 and <code>frameCount</code>, inclusive. */
 	public function setFrame(frame:Int, event:Event):Void {
 		frames[frame] = event.time;
 		events[frame] = event;

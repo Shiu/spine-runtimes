@@ -34,20 +34,20 @@ import spine.Skeleton;
 import spine.Slot;
 
 /** Base class for an attachment with vertices that are transformed by one or more bones and can be deformed by a slot's
- * {@link Slot#deform}. */
+ * spine.Slot.deform. */
 class VertexAttachment extends Attachment {
 	private static var nextID:Int = 0;
 
-	/** The bones which affect the {@link vertices}. The array entries are, for each vertex, the number of bones affecting
-	 * the vertex followed by that many bone indices, which is the index of the bone in {@link Skeleton#bones}. Will be null
+	/** The bones which affect the vertices. The array entries are, for each vertex, the number of bones affecting
+	 * the vertex followed by that many bone indices, which is the index of the bone in spine.Skeleton.bones. Will be null
 	 * if this attachment has no weights. */
 	public var bones:Array<Int>;
-	/** The vertex positions in the bone's coordinate system. For a non-weighted attachment, the values are <code>x,y</code>
-	 * entries for each vertex. For a weighted attachment, the values are <code>x,y,weight</code> entries for each bone affecting
+	/** The vertex positions in the bone's coordinate system. For a non-weighted attachment, the values are `x,y`
+	 * entries for each vertex. For a weighted attachment, the values are `x,y,weight` entries for each bone affecting
 	 * each vertex. */
 	public var vertices = new Array<Float>();
 	/** The maximum number of world vertex values that can be output by
-	 * {@link computeWorldVertices} using the <code>count</code> parameter. */
+	 * computeWorldVertices() using the `count` parameter. */
 	public var worldVerticesLength:Int = 0;
 	/** Returns a unique ID for this attachment. */
 	public var id:Int = nextID++;
@@ -60,17 +60,17 @@ class VertexAttachment extends Attachment {
 		timelineAttachment = this;
 	}
 
-	/** Transforms the attachment's local {@link #vertices} to world coordinates. If the slot's {@link Slot#deform} is
+	/** Transforms the attachment's local vertices to world coordinates. If the slot's spine.Slot.deform is
 	 * not empty, it is used to deform the vertices.
 	 * <p>
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide.
-	 * @param start The index of the first {@link #vertices} value to transform. Each vertex has 2 values, x and y.
-	 * @param count The number of world vertex values to output. Must be <= {@link #worldVerticesLength} - <code>start</code>.
-	 * @param worldVertices The output world vertices. Must have a length >= <code>offset</code> + <code>count</code> *
-	 *           <code>stride</code> / 2.
-	 * @param offset The <code>worldVertices</code> index to begin writing values.
-	 * @param stride The number of <code>worldVertices</code> entries between the value pairs written. */
+	 * @param start The index of the first vertices value to transform. Each vertex has 2 values, x and y.
+	 * @param count The number of world vertex values to output. Must be <= worldVerticesLength - `start`.
+	 * @param worldVertices The output world vertices. Must have a length >= `offset` + `count` *
+	 *           `stride` / 2.
+	 * @param offset The `worldVertices` index to begin writing values.
+	 * @param stride The number of `worldVertices` entries between the value pairs written. */
 	public function computeWorldVertices(slot:Slot, start:Int, count:Int, worldVertices:Array<Float>, offset:Int, stride:Int):Void {
 		count = offset + (count >> 1) * stride;
 		var skeleton:Skeleton = slot.skeleton;

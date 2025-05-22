@@ -33,8 +33,8 @@ import spine.Event;
 import spine.IkConstraint;
 import spine.Skeleton;
 
-/** Changes an IK constraint's {@link IkConstraint#mix}, {@link IkConstraint#softness},
- * {@link IkConstraint#bendDirection}, {@link IkConstraint#stretch}, and {@link IkConstraint#compress}. */
+/** Changes an IK constraint's spine.IkConstraint.mix, spine.IkConstraint.softness,
+ * spine.IkConstraint.bendDirection, spine.IkConstraint.stretch, and spine.IkConstraint.compress. */
 class IkConstraintTimeline extends CurveTimeline {
 	private static inline var ENTRIES:Int = 6;
 	private static inline var MIX:Int = 1;
@@ -43,7 +43,7 @@ class IkConstraintTimeline extends CurveTimeline {
 	private static inline var COMPRESS:Int = 4;
 	private static inline var STRETCH:Int = 5;
 
-	/** The index of the IK constraint in {@link Skeleton#ikConstraints} that will be changed when this timeline is
+	/** The index of the IK constraint in spine.Skeleton.ikConstraints that will be changed when this timeline is
 	 * applied. */
 	public var constraintIndex:Int = 0;
 
@@ -59,11 +59,7 @@ class IkConstraintTimeline extends CurveTimeline {
 	/** Sets the time, mix, softness, bend direction, compress, and stretch for the specified frame.
 	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
 	 * @param time The frame time in seconds.
-	 * @param mix The mix value.
-	 * @param softness The softness value.
-	 * @param bendDirection 1 or -1.
-	 * @param compress Whether to compress.
-	 * @param stretch Whether to stretch. */
+	 * @param bendDirection 1 or -1. */
 	public function setFrame(frame:Int, time:Float, mix:Float, softness:Float, bendDirection:Int, compress:Bool, stretch:Bool):Void {
 		frame *= ENTRIES;
 		frames[frame] = time;

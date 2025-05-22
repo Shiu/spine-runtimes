@@ -30,7 +30,7 @@
 package spine;
 
 /** Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
- * <p>
+ * 
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
 class PhysicsConstraint implements Updatable {
 	private var _data:PhysicsConstraintData;
@@ -42,6 +42,7 @@ class PhysicsConstraint implements Updatable {
 	public var massInverse:Float = 0;
 	public var wind:Float = 0;
 	public var gravity:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
 	public var mix:Float = 0;
 
 	private var _reset:Bool = true;

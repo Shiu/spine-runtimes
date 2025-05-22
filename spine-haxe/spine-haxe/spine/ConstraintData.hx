@@ -34,12 +34,11 @@ class ConstraintData {
 	/** The constraint's name, which is unique across all constraints in the skeleton of the same type. */
 	public var name:String;
 	/** The ordinal of this constraint for the order a skeleton's constraints will be applied by
-	 * Skeleton#updateWorldTransform(). */
+	 * spine.Skeleton.updateWorldTransform(). */
 	public var order:Int = 0;
-	/** When true, Skeleton#updateWorldTransform() only updates this constraint if the Skeleton#getSkin()
+	/** When true, spine.Skeleton.updateWorldTransform() only updates this constraint if the spine.Skeleton.getSkin()
 	 * contains this constraint.
-	 * 
-	 * See Skin#getConstraints(). */
+	 * @see spine.Skin.getConstraints() */
 	public var skinRequired:Bool = false;
 
 	function new(name:String, order:Int, skinRequired:Bool) {

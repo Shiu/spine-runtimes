@@ -29,9 +29,6 @@
 
 package spine;
 
-/**
- * Triangulator class used for polygon triangulation and decomposition.
- */
 class Triangulator {
 	private var convexPolygons:Array<Array<Float>> = new Array<Array<Float>>();
 	private var convexPolygonsIndices:Array<Array<Int>> = new Array<Array<Int>>();

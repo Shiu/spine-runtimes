@@ -29,13 +29,13 @@
 
 package spine;
 
-/** Stores the setup pose for a {@link Slot}. */
+/** Stores the setup pose for a spine.Slot. */
 class SlotData {
 	private var _index:Int;
 	private var _name:String;
 	private var _boneData:BoneData;
 
-	/** The color used to tint the slot's attachment. If {@link #getDarkColor()} is set, this is used as the light color for two
+	/** The color used to tint the slot's attachment. If SlotData.darkColor is set, this is used as the light color for two
 	 * color tinting. */
 	public var color:Color = new Color(1, 1, 1, 1);
 	/** The dark color used to tint the slot's attachment for two color tinting, or null if two color tinting is not used. The dark
@@ -60,7 +60,7 @@ class SlotData {
 		_boneData = boneData;
 	}
 
-	/** The index of the slot in {@link Skeleton#getSlots()}. */
+	/** The index of the slot in spine.Skeleton.getSlots(). */
 	public var index(get, never):Int;
 
 	private function get_index():Int {

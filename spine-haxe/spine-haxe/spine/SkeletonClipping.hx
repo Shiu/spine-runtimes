@@ -274,8 +274,10 @@ class SkeletonClipping {
 		}
 	}
 
-	/** Clips the input triangle against the convex, clockwise clipping area. If the triangle lies entirely within the clipping
-	 * area, false is returned. The clipping area must duplicate the first vertex at the end of the vertices list. */
+	/**
+	 * Clips the input triangle against the convex, clockwise clipping area. If the triangle lies entirely within the clipping
+	 * area, false is returned. The clipping area must duplicate the first vertex at the end of the vertices list.
+	 */
 	public function clip(x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float, clippingArea:Array<Float>, output:Array<Float>):Bool {
 		var originalOutput:Array<Float> = output;
 		var clipped:Bool = false;

@@ -54,7 +54,7 @@ class MeshAttachment extends VertexAttachment implements HasTextureRegion {
 	public var height:Float = 0;
 	/** The number of entries at the beginning of {@link #vertices} that make up the mesh hull. */
 	public var hullLength:Int = 0;
-	/** Vertex index pairs describing edges for controlling triangulation, or be null if nonessential data was not exported. Mesh
+	/** Vertex index pairs describing edges for controlling triangulation, or null if nonessential data was not exported. Mesh
 	 * triangles will never cross edges. Triangulation is not performed at runtime. */
 	public var edges = new Array<Int>();
 	public var rendererObject:Dynamic;
@@ -65,13 +65,14 @@ class MeshAttachment extends VertexAttachment implements HasTextureRegion {
 	 * parent mesh, but may have a different {@link #name} or {@link #path} (and therefore a different texture). */
 	private var _parentMesh:MeshAttachment;
 
+	/** Copy constructor. Use newLinkedMesh() if the other mesh is a linked mesh. */
 	public function new(name:String, path:String) {
 		super(name);
 		this.path = path;
 	}
 
-	/** Calculates {@link #uvs} using the {@link #regionUVs} and region. Must be called if the region, the region's properties, or
-	 * the {@link #regionUVs} are changed. */
+	/** Calculates uvs using the regionUVs and region. Must be called if the region, the region's properties, or
+	 * the regionUVs are changed. */
 	public function updateRegion():Void {
 		if (region == null) {
 			throw new SpineException("Region not set.");
@@ -192,14 +193,14 @@ class MeshAttachment extends VertexAttachment implements HasTextureRegion {
 		return copy;
 	}
 
-	/** If the attachment has a {@link #sequence}, the region may be changed. */
+	/** If the attachment has a sequence, the region may be changed. */
 	public override function computeWorldVertices(slot:Slot, start:Int, count:Int, worldVertices:Array<Float>, offset:Int, stride:Int):Void {
 		if (sequence != null)
 			sequence.apply(slot, this);
 		super.computeWorldVertices(slot, start, count, worldVertices, offset, stride);
 	}
 
-	/** Returns a new mesh with the {@link #parentMesh} set to this mesh's parent mesh, if any, else to this mesh. */
+	/** Returns a new mesh with the parentMesh set to this mesh's parent mesh, if any, else to this mesh. */
 	public function newLinkedMesh():MeshAttachment {
 		var copy:MeshAttachment = new MeshAttachment(name, path);
 		copy.rendererObject = rendererObject;

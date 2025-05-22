@@ -33,15 +33,15 @@ import spine.Event;
 import spine.PathConstraint;
 import spine.Skeleton;
 
-/** Changes a path constraint's {@link PathConstraint#getMixRotate()}, {@link PathConstraint#getMixX()}, and
- * {@link PathConstraint#getMixY()}. */
+/** Changes a path constraint's PathConstraint.mixRotate, PathConstraint.mixX, and
+ * PathConstraint.mixY. */
 class PathConstraintMixTimeline extends CurveTimeline {
 	private static inline var ENTRIES:Int = 4;
 	private static inline var ROTATE:Int = 1;
 	private static inline var X:Int = 2;
 	private static inline var Y:Int = 3;
 
-	/** The index of the path constraint in {@link Skeleton#getPathConstraints()} that will be changed when this timeline is
+	/** The index of the path constraint in spine.Skeleton.pathConstraints that will be changed when this timeline is
 	 * applied. */
 	public var constraintIndex:Int = 0;
 
@@ -54,7 +54,7 @@ class PathConstraintMixTimeline extends CurveTimeline {
 		return ENTRIES;
 	}
 
-	/** Sets the time and mix values for the specified frame.
+	/** Sets the time and color for the specified frame.
 	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
 	 * @param time The frame time in seconds. */
 	public function setFrame(frame:Int, time:Float, mixRotate:Float, mixX:Float, mixY:Float):Void {

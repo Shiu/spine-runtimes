@@ -34,9 +34,9 @@ import spine.Skeleton;
 import spine.TransformConstraint;
 import spine.TransformConstraintData;
 
-/** Changes a transform constraint's {@link TransformConstraint#mixRotate}, {@link TransformConstraint#mixX},
- * {@link TransformConstraint#mixY}, {@link TransformConstraint#mixScaleX},
- * {@link TransformConstraint#mixScaleY}, and {@link TransformConstraint#mixShearY}. */
+/** Changes a transform constraint's spine.TransformConstraint.mixRotate, spine.TransformConstraint.mixX,
+ * spine.TransformConstraint.mixY, spine.TransformConstraint.mixScaleX,
+ * spine.TransformConstraint.mixScaleY, and spine.TransformConstraint.mixShearY. */
 class TransformConstraintTimeline extends CurveTimeline {
 	static public inline var ENTRIES:Int = 7;
 	private static inline var ROTATE:Int = 1;
@@ -46,7 +46,7 @@ class TransformConstraintTimeline extends CurveTimeline {
 	private static inline var SCALEY:Int = 5;
 	private static inline var SHEARY:Int = 6;
 
-	/** The index of the transform constraint in {@link Skeleton#transformConstraints} that will be changed when this
+	/** The index of the transform constraint in spine.Skeleton.transformConstraints that will be changed when this
 	 * timeline is applied. */
 	public var constraintIndex:Int = 0;
 
