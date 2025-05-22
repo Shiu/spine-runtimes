@@ -266,22 +266,18 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 			}
 		}, { rootMargin: "30px 20px 30px 20px" });
 
-		// resize observer is supported by all major browsers today chrome started to support it in version 64 (early 2018)
-		// we cannot use window.resize event since it does not fire when body resizes, but not the window
-		// Alternatively, we can store the body size, check the current body size in the loop (like the translateCanvas), and
-		// if they differs call the resizeCallback. I already tested it, and it works. ResizeObserver should be more efficient.
+		// if the element is not appendedToBody, the user does not disable translate tweak, and the parent did not have already a transform, add the tweak
 		if (!this.appendedToBody) {
-			// if the element is appendedToBody, the user does not disable translate tweak, and the parent did not have already a transform, add the tweak
 			if (this.hasCssTweakOff()) {
 				this.hasParentTransform = false;
 			} else {
 				this.parentElement!.style.transform = `translateZ(0)`;
 			}
-			this.resizeObserver = new ResizeObserver(this.resizedCallback);
-			this.resizeObserver.observe(this.parentElement!);
 		} else {
-			window.addEventListener("resize", this.resizedCallback)
+			window.addEventListener("resize", () => this.resizedCallback(true));
 		}
+		this.resizeObserver = new ResizeObserver(() => this.resizedCallback());
+		this.resizeObserver.observe(this.parentElement!);
 
 		for (const widget of this.widgets) {
 			this.intersectionObserver?.observe(widget.getHostElement());
@@ -329,8 +325,8 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		return;
 	}
 
-	private resizedCallback = () => {
-		this.updateCanvasSize();
+	private resizedCallback = (onlyDiv = false) => {
+		this.updateCanvasSize(onlyDiv);
 	}
 
 	private orientationChangedCallback = () => {
@@ -832,11 +828,11 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 	* Resize/scroll utilities
 	*/
 
-	private updateCanvasSize () {
+	private updateCanvasSize (onlyDiv = false) {
 		const { width, height } = this.getViewportSize();
 
 		// if the target width/height changes, resize the canvas.
-		if (this.lastCanvasBaseWidth !== width || this.lastCanvasBaseHeight !== height) {
+		if (!onlyDiv && this.lastCanvasBaseWidth !== width || this.lastCanvasBaseHeight !== height) {
 			this.lastCanvasBaseWidth = width;
 			this.lastCanvasBaseHeight = height;
 			this.overflowLeftSize = this.overflowLeft * width;
