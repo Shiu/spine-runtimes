@@ -153,6 +153,8 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 	private disposed = false;
 	private loaded = false;
+	private running = false;
+	private visible = true;
 
 	/**
 	 * appendedToBody is assegned in the connectedCallback.
@@ -284,26 +286,23 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		}
 		this.input = this.setupDragUtility();
 
+		document.addEventListener('visibilitychange', this.visibilityChangeCallback);
+
 		this.startRenderingLoop();
 	}
 
-	private hasCssTweakOff () {
-		return this.noAutoParentTransform && getComputedStyle(this.parentElement!).transform === "none";
-	}
-
-	private running = false;
 	disconnectedCallback (): void {
 		const id = this.getAttribute('overlay-id');
 		if (id) SpineWebComponentOverlay.OVERLAY_LIST.delete(id);
 		// window.removeEventListener("scroll", this.scrolledCallback);
 		window.removeEventListener("load", this.loadedCallback);
 		window.removeEventListener("resize", this.windowResizeCallback);
+		document.removeEventListener('visibilitychange', this.visibilityChangeCallback);
 		window.screen.orientation.removeEventListener('change', this.orientationChangedCallback);
 		this.intersectionObserver?.disconnect();
 		this.resizeObserver?.disconnect();
 		this.input?.dispose();
 	}
-
 
 	static attributesDescription: Record<string, { propertyName: keyof OverlayAttributes, type: AttributeTypes, defaultValue?: any }> = {
 		"overlay-id": { propertyName: "overlayId", type: "string" },
@@ -323,6 +322,15 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		const val = castValue(type, newValue, defaultValue);
 		(this as any)[propertyName] = val;
 		return;
+	}
+
+	private visibilityChangeCallback = () => {
+		if (document.hidden) {
+			this.visible = false;
+		} else {
+			this.visible = true;
+			this.startRenderingLoop();
+		}
 	}
 
 	private windowResizeCallback = () => this.resizedCallback(true);
@@ -350,6 +358,10 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 			this.loaded = true;
 			this.parentElement!.appendChild(this);
 		}
+	}
+
+	private hasCssTweakOff () {
+		return this.noAutoParentTransform && getComputedStyle(this.parentElement!).transform === "none";
 	}
 
 	/**
@@ -683,7 +695,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 		}
 
 		const loop = () => {
-			if (this.disposed || !this.isConnected) {
+			if (this.disposed || !this.isConnected || !this.visible) {
 				this.running = false;
 				return;
 			};
