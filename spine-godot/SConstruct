@@ -70,6 +70,11 @@ env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 env.Append(CPPDEFINES=["SPINE_GODOT_EXTENSION"])
 env.Append(CPPPATH=["spine_godot", "spine_godot/spine-cpp/include"])
 
+# Set iOS minimum deployment target
+if env["platform"] == "ios":
+    env.Append(CCFLAGS=["-miphoneos-version-min=12.0"])
+    env.Append(LINKFLAGS=["-miphoneos-version-min=12.0"])
+
 # sources = Glob("spine_godot/*.cpp") + Glob("spine_godot/spine-cpp/src/spine/*.cpp")
 sources = Glob("spine_godot/spine-cpp/src/spine/*.cpp")
 sources.append("spine_godot/GodotSpineExtension.cpp")
