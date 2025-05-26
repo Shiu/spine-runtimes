@@ -107,7 +107,11 @@
 #include <spine/TransformConstraintTimeline.h>
 #include <spine/TranslateTimeline.h>
 #include <spine/Triangulator.h>
-#include <spine/Updatable.h>
+#include <spine/Update.h>
+#include <spine/Pose.h>
+#include <spine/PosedData.h>
+#include <spine/Posed.h>
+#include <spine/PosedActive.h>
 #include <spine/Vector.h>
 #include <spine/VertexAttachment.h>
 #include <spine/Vertices.h>
