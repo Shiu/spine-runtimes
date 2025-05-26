@@ -32,7 +32,7 @@
                         bounds-height="412"
                         animation="interactive/head/idle"
                         clip
-                        isinteractive
+                        interactive
                     ></spine-skeleton>
                 </div>
             </div>
@@ -49,14 +49,14 @@
 
                 <div style="margin-bottom: 10px; color: black">Password is <code>password</code></div>
 
-                <div style="height: 75px; cursor: pointer;">
-                    <div id="button-text" style="font-size: xx-large; cursor: pointer; user-select: none; display: none;"> LOGIN </div>
+                <div style="height: 75px; pointer: pointer;">
+                    <div id="button-text" style="font-size: xx-large; pointer: pointer; user-select: none; display: none;"> LOGIN </div>
                     <spine-skeleton
                         identifier="button-login"
                         atlas="/assets/pwd/button.atlas"
                         skeleton="/assets/pwd/button.json"
                         animation="idle"
-                        isinteractive
+                        interactive
                         fit="fill"
                     ></spine-skeleton>
                 </div>
@@ -69,7 +69,7 @@
             <p>
                 The chibi sticker does the following:
                 <ul>
-                    <li>It looks at the cursor when no input field is selected</li>
+                    <li>It looks at the pointer when no input field is selected</li>
                     <li>Look at the caret when username input field is selected</li>
                     <li>Cover its eyes when password input field is selected</li>
                     <li>React in two different ways depending on the password</li>
@@ -79,7 +79,7 @@
             <p>
                 The button does the following:
                 <ul>
-                    <li>Starts some animation when cursor enters, leaves, stays, or click the button</li>
+                    <li>Starts some animation when pointer enters, leaves, stays, or click the button</li>
                     <li>Appends a div containing the <code>LOGIN</code> text to a slot</li>
                     <li>Submits the form on click</li>
                 </ul>
@@ -88,7 +88,7 @@
     </div>
 
 	<script type="module">
-		import { getSpineWidget, MixBlend } from '../dist/esm/spine-webcomponents.mjs';
+		import { getSkeleton, MixBlend } from '../dist/esm/spine-webcomponents.mjs';
 
 		const mouseX = Smooth(0, 200);
         const mouseY = Smooth(0, 200);
@@ -96,11 +96,11 @@
         (async () => {
 
             const form = document.getElementById('loginForm');
-            const widgetButton = getSpineWidget("button-login");
+            const widgetButton = getSkeleton("button-login");
             await widgetButton.whenReady;
 
             widgetButton.skeleton.color.set(.85, .85, .85, 1);
-            widgetButton.cursorEventCallback = (event, originalEvent) => {
+            widgetButton.pointerEventCallback = (event, originalEvent) => {
                 if (event === "enter") {
                     widgetButton.state.setAnimation(0, "enhance-in", false);
                     widgetButton.state.setAnimation(1, "shadow-in", false);
@@ -134,7 +134,7 @@
 
             widgetButton.followSlot("CLICK ME", divText, { followScale: false });
 
-            const widget = getSpineWidget("spineboy-login");
+            const widget = getSkeleton("spineboy-login");
             await widget.whenReady;
 
             // default settings
@@ -150,7 +150,7 @@
             skinSelect.addEventListener('change', (e) => widget.skin = e.target.value);
 
             // click on spineboy
-            widget.cursorEventCallback = (event) => {
+            widget.pointerEventCallback = (event) => {
                 if (event === "down") {
                     widget.state.setAnimation(0, "interactive/pwd/touch", false);
                     widget.state.addAnimation(0, "interactive/head/idle", true);
@@ -226,8 +226,8 @@
                     blendTo(moveVector[0], moveVector[1]);
                 } else {
                     const { x, y, width, height} = widget.getHostElement().getBoundingClientRect();
-                    const l = -((widget.overlay.cursorCanvasX - (x + width)) / window.innerWidth) * ALPHA_LEFT_RANGE;
-                    const d = ((widget.overlay.cursorCanvasY - (y + height)) / window.innerHeight) * ALPHA_DOWN_RANGE;
+                    const l = -((widget.overlay.pointerCanvasX - (x + width)) / window.innerWidth) * ALPHA_LEFT_RANGE;
+                    const d = ((widget.overlay.pointerCanvasY - (y + height)) / window.innerHeight) * ALPHA_DOWN_RANGE;
                     blendTo(l, d);
                 }
             };

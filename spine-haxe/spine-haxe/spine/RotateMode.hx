@@ -29,9 +29,14 @@
 
 package spine;
 
+/** Controls how bones are rotated, translated, and scaled to match the path.
+ * 
+ * @see https://esotericsoftware.com/spine-path-constraints#Rotate-mode Rotate mode in the Spine User Guide */
 class RotateMode {
 	public static var tangent(default, never):RotateMode = new RotateMode("tangent");
 	public static var chain(default, never):RotateMode = new RotateMode("chain");
+	/** When chain scale, constrained bones should all have the same parent. That way when the path constraint scales a bone, it
+	 * doesn't affect other constrained bones. */
 	public static var chainScale(default, never):RotateMode = new RotateMode("chainScale");
 
 	public static var values(default, never):Array<RotateMode> = [tangent, chain, chainScale];

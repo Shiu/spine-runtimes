@@ -57,6 +57,7 @@ import starling.utils.Color;
 import starling.utils.MatrixUtil;
 import starling.utils.Max;
 
+/** A starling display object that draws a skeleton. */
 class SkeletonSprite extends DisplayObject implements IAnimatable {
 	static private var _tempPoint:Point = new Point();
 	static private var _tempMatrix:Matrix = new Matrix();
@@ -78,6 +79,7 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 	public var beforeUpdateWorldTransforms: SkeletonSprite -> Void = function(_) {};
 	public var afterUpdateWorldTransforms: SkeletonSprite -> Void = function(_) {};
 
+	/** Creates an uninitialized SkeletonSprite. The skeleton and animation state must be set before use. */
 	public function new(skeletonData:SkeletonData, animationStateData:AnimationStateData = null) {
 		super();
 		Bone.yDown = true;

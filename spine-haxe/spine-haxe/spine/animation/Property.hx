@@ -29,6 +29,9 @@
 
 package spine.animation;
 
+/**
+ * Constants for animation property types.
+ */
 class Property {
 	public static inline var rotate:Int = 0;
 	public static inline var x:Int = 1;

@@ -35,7 +35,9 @@ import starling.rendering.VertexData;
 import starling.styles.MeshStyle;
 import starling.textures.Texture;
 
+/** A Starling Mesh that draws a skeleton. */
 class SkeletonMesh extends Mesh {
+	/** Creates a SkeletonMesh with the specified texture and optional vertex, index data and style. */
 	public function new(texture:Texture, vertexData:VertexData = null, indexData:IndexData = null, style:MeshStyle = null) {
 		super(vertexData == null ? new VertexData() : vertexData, indexData == null ? new IndexData() : indexData, style);
 		this.texture = texture;

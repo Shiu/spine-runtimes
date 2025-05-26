@@ -31,6 +31,9 @@ package spine.animation;
 
 import spine.Event;
 
+/**
+ * Stores events raised by AnimationState and allows them to be processed later.
+ */
 class EventQueue {
 	private var objects:Array<Dynamic>;
 	private var animationState:AnimationState;

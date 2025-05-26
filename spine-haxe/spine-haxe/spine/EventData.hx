@@ -29,6 +29,11 @@
 
 package spine;
 
+/** Stores the setup pose values for an spine.Event.
+ * 
+ * 
+ * @see https://esotericsoftware.com/spine-events Events in the Spine User Guide
+ */
 class EventData {
 	private var _name:String;
 
@@ -45,6 +50,7 @@ class EventData {
 		_name = name;
 	}
 
+	/** The name of the event, which is unique across all events in the skeleton. */
 	public var name(get, never):String;
 
 	private function get_name():String {

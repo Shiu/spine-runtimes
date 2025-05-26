@@ -29,6 +29,12 @@
 
 package spine;
 
+/**
+ * Objects implementing this interface can be reset to prepare them for reuse by an object pool.
+ */
 interface Poolable {
+	/**
+	 * Resets this object to prepare it for reuse by an object pool.
+	 */
 	function reset():Void;
 }

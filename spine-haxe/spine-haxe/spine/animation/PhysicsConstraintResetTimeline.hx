@@ -33,11 +33,13 @@ import spine.animation.Timeline;
 import spine.Event;
 import spine.Skeleton;
 
+/** Resets a physics constraint when specific animation times are reached. */
 class PhysicsConstraintResetTimeline extends Timeline {
-	/** The index of the physics constraint in {@link Skeleton#physicsConstraints} that will be reset when this timeline is
-	* applied, or -1 if all physics constraints in the skeleton will be reset. */
+	/** The index of the physics constraint in Skeleton#physicsConstraints that will be reset when this timeline is
+	 * applied, or -1 if all physics constraints in the skeleton will be reset. */
 	public var constraintIndex:Int = 0;
 
+	/** @param physicsConstraintIndex -1 for all physics constraints in the skeleton. */
 	public function new(frameCount:Int, physicsConstraintIndex:Int) {
 		propertyIds = [Std.string(Property.physicsConstraintReset)];
 		super(frameCount, propertyIds);
@@ -48,7 +50,8 @@ class PhysicsConstraintResetTimeline extends Timeline {
 		return frames.length;
 	}
 
-	/** Sets the time in seconds and the event for the specified key frame. */
+	/** Sets the time for the specified frame.
+	 * @param frame Between 0 and frameCount, inclusive. */
 	public function setFrame(frame:Int, time:Float):Void {
 		frames[frame] = time;
 	}

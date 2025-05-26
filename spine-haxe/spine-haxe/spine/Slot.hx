@@ -32,20 +32,34 @@ package spine;
 import spine.attachments.Attachment;
 import spine.attachments.VertexAttachment;
 
+/** Stores a slot's current pose. Slots organize attachments for Skeleton.drawOrder purposes and provide a place to store
+ * state for an attachment. State cannot be stored in an attachment itself because attachments are stateless and may be shared
+ * across multiple skeletons. */
 class Slot {
 	private var _data:SlotData;
 	private var _bone:Bone;
 
+	/** The color used to tint the slot's attachment. If darkColor is set, this is used as the light color for two
+	 * color tinting. */
 	public var color:Color;
+	/** The dark color used to tint the slot's attachment for two color tinting, or null if two color tinting is not used. The dark
+	 * color's alpha is not used. */
 	public var darkColor:Color;
 
 	private var _attachment:Attachment;
 
+	/** The index of the texture region to display when the slot's attachment has a spine.attachments.Sequence. -1 represents the
+	 * Sequence.getSetupIndex(). */
 	public var sequenceIndex = -1;
 
 	public var attachmentState:Int = 0;
+	/** Values to deform the slot's attachment. For an unweighted mesh, the entries are local positions for each vertex. For a
+	 * weighted mesh, the entries are an offset for each vertex which will be added to the mesh's local vertex positions.
+	 * @see spine.attachments.VertexAttachment.computeWorldVertices()
+	 * @see spine.animation.DeformTimeline */
 	public var deform:Array<Float> = new Array<Float>();
 
+	/** Copy constructor. */
 	public function new(data:SlotData, bone:Bone) {
 		if (data == null)
 			throw new SpineException("data cannot be null.");
@@ -58,34 +72,37 @@ class Slot {
 		setToSetupPose();
 	}
 
+	/** The slot's setup pose data. */
 	public var data(get, never):SlotData;
 
 	private function get_data():SlotData {
 		return _data;
 	}
 
+	/** The bone this slot belongs to. */
 	public var bone(get, never):Bone;
 
 	private function get_bone():Bone {
 		return _bone;
 	}
 
+	/** The skeleton this slot belongs to. */
 	public var skeleton(get, never):Skeleton;
 
 	private function get_skeleton():Skeleton {
 		return _bone.skeleton;
 	}
 
-	/** @return May be null. */
+	/** The current attachment for the slot, or null if the slot has no attachment. */
 	public var attachment(get, set):Attachment;
 
 	private function get_attachment():Attachment {
 		return _attachment;
 	}
 
-	/** Sets the slot's attachment and, if the attachment changed, resets {@link #attachmentTime} and clears the {@link #deform}.
-	 * The deform is not cleared if the old attachment has the same {@link VertexAttachment#getDeformAttachment()} as the specified attachment.
-	 * @param attachment May be null. */
+	/** Sets the slot's attachment and, if the attachment changed, resets sequenceIndex and clears the deform.
+	 * The deform is not cleared if the old attachment has the same spine.attachments.VertexAttachment.timelineAttachment as the
+	 * specified attachment. */
 	public function set_attachment(attachmentNew:Attachment):Attachment {
 		if (attachment == attachmentNew)
 			return attachmentNew;
@@ -99,6 +116,7 @@ class Slot {
 		return attachmentNew;
 	}
 
+	/** Sets this slot to the setup pose. */
 	public function setToSetupPose():Void {
 		color.setFromColor(data.color);
 		if (darkColor != null)

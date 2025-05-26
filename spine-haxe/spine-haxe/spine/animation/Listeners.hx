@@ -29,6 +29,9 @@
 
 package spine.animation;
 
+/**
+ * Manages a collection of listeners for TrackEntry events.
+ */
 class Listeners {
 	private var _listeners:Array<TrackEntry->Void>;
 
@@ -42,6 +45,8 @@ class Listeners {
 		_listeners = new Array<TrackEntry->Void>();
 	}
 
+	/** Invoked when this entry has been set as the current entry. spine.animation.Listeners.end(TrackEntry) will occur when this entry will no
+	 * longer be applied. */
 	public function invoke(entry:TrackEntry) {
 		for (listener in _listeners) {
 			listener(entry);
@@ -65,6 +70,9 @@ class Listeners {
 	}
 }
 
+/**
+ * Manages a collection of event listeners for TrackEntry events.
+ */
 class EventListeners {
 	private var _listeners:Array<TrackEntry->Event->Void>;
 
@@ -78,6 +86,11 @@ class EventListeners {
 		_listeners = new Array<TrackEntry->Event->Void>();
 	}
 
+	/** Invoked when this entry's animation triggers an event. This may occur during mixing (after
+	 * interrupt(TrackEntry)), see spine.animation.TrackEntry.eventThreshold.
+	 *
+	 * Because this event is triggered at the end of spine.animation.AnimationState.apply(Skeleton), any animations set in response to
+	 * the event won't be applied until the next time the AnimationState is applied. */
 	public function invoke(entry:TrackEntry, event:Event) {
 		for (listener in _listeners) {
 			listener(entry, event);

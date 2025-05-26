@@ -42,7 +42,7 @@
                             atlas="/assets/windmill-pma.atlas"
                             skeleton="/assets/windmill-ess.json"
                             animation="animation"
-                            isinteractive
+                            interactive
                         ></spine-skeleton>
                         <spine-skeleton
                             identifier="spineboy-game"
@@ -94,15 +94,15 @@
             const containerGame = document.getElementById("container-game");
 
             (async () => {
-                const spineboy = spine.getSpineWidget("spineboy-game");
-                const windmill = spine.getSpineWidget("windmill-game");
+                const spineboy = spine.getSkeleton("spineboy-game");
+                const windmill = spine.getSkeleton("windmill-game");
                 await Promise.all([spineboy.whenReady, windmill.whenReady]);
 
                 spineboy.state.setAnimation(2, "aim", true);
 
                 spineboy.skeleton.slots.forEach(slot => {
                     if (slot.data.name === "gun") {
-                        spineboy.addCursorSlotEventCallback(slot, (slot,event) => {
+                        spineboy.addPointerSlotEventCallback(slot, (slot,event) => {
                             if (event === "down") {
                                 spineboy.state.setAnimation(1, "shoot", false);
                             }
@@ -110,7 +110,7 @@
                     }
 
                     if (slot.data.name === "torso") {
-                        spineboy.addCursorSlotEventCallback(slot, (slot,event) => {
+                        spineboy.addPointerSlotEventCallback(slot, (slot,event) => {
                             if (event === "down") {
                                 spineboy.state.setAnimation(0, "jump", false).mixDuration = 0.2;
                                 spineboy.state.addAnimation(0, "walk", true).mixDuration = 0.2;
@@ -119,7 +119,7 @@
                     }
 
                     if (slot.data.name === "head") {
-                        spineboy.addCursorSlotEventCallback(slot, (slot,event) => {
+                        spineboy.addPointerSlotEventCallback(slot, (slot,event) => {
                             if (event === "down") {
                                 spineboy.state.setAnimation(1, "run", true).mixDuration = 0.2;
                             } else {
@@ -158,7 +158,7 @@
 
                         flowers.push(slot);
 
-                        windmill.addCursorSlotEventCallback(slot, (slot, event) => {
+                        windmill.addPointerSlotEventCallback(slot, (slot, event) => {
                             if (ammo === 0) return;
 
                             if (event !== "down") return;

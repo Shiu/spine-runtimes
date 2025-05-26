@@ -29,7 +29,7 @@
 
 package spine.animation;
 
-/** Changes a physics constraint's {@link PhysicsConstraint#getWind()}. */
+/** Changes a physics constraint's spine.PhysicsConstraint.gravity. */
 class PhysicsConstraintGravityTimeline extends PhysicsConstraintTimeline {
 	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int) {
 		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintGravity);

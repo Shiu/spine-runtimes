@@ -29,6 +29,7 @@
 
 package spine;
 
+/** A color class, storing the r, g, b and alpha components as floats in the range [0,1]. */
 class Color {
 	public static var WHITE:Color = new Color(1, 1, 1, 1);
 	public static var RED:Color = new Color(1, 0, 0, 1);

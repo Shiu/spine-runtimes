@@ -29,9 +29,11 @@
 
 package spine;
 
+/** A sequence for an attachment with multiple texture regions, which can be used for animation. */
 class Sequence {
 	private static var _nextID = 0;
 
+	/** Returns a unique ID for this attachment. */
 	public var id = _nextID++;
 	public var regions:Array<TextureRegion>;
 	public var start = 0;
@@ -45,6 +47,7 @@ class Sequence {
 		this.regions.resize(count);
 	}
 
+	/** Copy constructor. */
 	public function copy():Sequence {
 		var copy = new Sequence(this.regions.length);
 		for (i in 0...this.regions.length) {

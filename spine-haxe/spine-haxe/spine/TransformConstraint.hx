@@ -29,22 +29,34 @@
 
 package spine;
 
+/** Stores the current pose for a transform constraint. A transform constraint adjusts the world transform of the constrained
+ * bones to match that of the target bone.
+ *
+ * @see https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide */
 class TransformConstraint implements Updatable {
 	private var _data:TransformConstraintData;
 	private var _bones:Array<Bone>;
 
+	/** The target bone whose world transform will be copied to the constrained bones. */
 	public var target:Bone;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
 	public var mixRotate:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
 	public var mixX:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
 	public var mixY:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale X. */
 	public var mixScaleX:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale Y. */
 	public var mixScaleY:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y. */
 	public var mixShearY:Float = 0;
 
 	private var _temp:Array<Float> = new Array<Float>();
 
 	public var active:Bool = false;
 
+	/** Copy constructor. */
 	public function new(data:TransformConstraintData, skeleton:Skeleton) {
 		if (data == null)
 			throw new SpineException("data cannot be null.");
@@ -80,6 +92,7 @@ class TransformConstraint implements Updatable {
 		mixShearY = data.mixShearY;
 	}
 
+	/** Applies the constraint to the constrained bones. */
 	public function update(physics:Physics):Void {
 		if (mixRotate == 0 && mixX == 0 && mixY == 0 && mixScaleX == 0 && mixScaleY == 0 && mixShearY == 0)
 			return;
@@ -271,12 +284,14 @@ class TransformConstraint implements Updatable {
 		}
 	}
 
+	/** The transform constraint's setup pose data. */
 	public var data(get, never):TransformConstraintData;
 
 	private function get_data():TransformConstraintData {
 		return _data;
 	}
 
+	/** The bones that will be modified by this transform constraint. */
 	public var bones(get, never):Array<Bone>;
 
 	private function get_bones():Array<Bone> {

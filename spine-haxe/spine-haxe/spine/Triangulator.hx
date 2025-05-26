@@ -44,6 +44,11 @@ class Triangulator {
 
 	public function new() {}
 
+	/**
+	 * Triangulates a convex or concave polygon.
+	 * @param vertices List of polygon vertices in x,y order.
+	 * @return Indices of triangle vertices in clockwise order.
+	 */
 	public function triangulate(vertices:Array<Float>):Array<Int> {
 		var vertexCount:Int = vertices.length >> 1;
 
@@ -129,6 +134,12 @@ class Triangulator {
 		return triangles;
 	}
 
+	/**
+	 * Decomposes a polygon into convex polygons.
+	 * @param vertices List of polygon vertices in x,y order.
+	 * @param triangles Indices of triangle vertices in clockwise order.
+	 * @return List of convex polygons.
+	 */
 	public function decompose(vertices:Array<Float>, triangles:Array<Int>):Array<Array<Float>> {
 		for (i in 0...convexPolygons.length) {
 			this.polygonPool.free(convexPolygons[i]);

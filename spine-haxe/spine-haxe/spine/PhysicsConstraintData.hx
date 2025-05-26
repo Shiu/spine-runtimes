@@ -29,7 +29,11 @@
 
 package spine;
 
+/** Stores the setup pose for a PhysicsConstraint.
+ * 
+ * @see https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide */
 class PhysicsConstraintData extends ConstraintData {
+	/** The bone constrained by this physics constraint. */
 	public var bone:BoneData;
 	public var x:Float = 0;
 	public var y:Float = 0;
@@ -44,6 +48,7 @@ class PhysicsConstraintData extends ConstraintData {
 	public var massInverse:Float = 0;
 	public var wind:Float = 0;
 	public var gravity:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
 	public var mix:Float = 0;
 	public var inertiaGlobal:Bool = false;
 	public var strengthGlobal:Bool = false;

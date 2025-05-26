@@ -29,7 +29,7 @@
 
 package spine.animation;
 
-/** Changes a physics constraint's {@link PhysicsConstraint#getStrength()}. */
+/** Changes a physics constraint's spine.PhysicsConstraint.strength. */
 class PhysicsConstraintStrengthTimeline extends PhysicsConstraintTimeline {
 	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int) {
 		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintStrength);

@@ -29,24 +29,39 @@
 
 package spine;
 
+/** Stores the setup pose for a spine.PathConstraint.
+ * 
+ * @see https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User Guide */
 class PathConstraintData extends ConstraintData {
+	/** The bones that will be modified by this path constraint. */
 	private var _bones:Array<BoneData> = new Array<BoneData>();
 
+	/** The slot whose path attachment will be used to constrain the bones. */
 	public var target:SlotData;
+	/** The mode for positioning the first bone on the path. */
 	public var positionMode:PositionMode = PositionMode.fixed;
+	/** The mode for positioning the bones after the first bone on the path. */
 	public var spacingMode:SpacingMode = SpacingMode.fixed;
+	/** The mode for adjusting the rotation of the bones. */
 	public var rotateMode:RotateMode = RotateMode.chain;
+	/** An offset added to the constrained bone rotation. */
 	public var offsetRotation:Float = 0;
+	/** The position along the path. */
 	public var position:Float = 0;
+	/** The spacing between bones. */
 	public var spacing:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
 	public var mixRotate:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
 	public var mixX:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
 	public var mixY:Float = 0;
 
 	public function new(name:String) {
 		super(name, 0, false);
 	}
 
+	/** The bones that will be modified by this path constraint. */
 	public var bones(get, never):Array<BoneData>;
 
 	private function get_bones():Array<BoneData> {

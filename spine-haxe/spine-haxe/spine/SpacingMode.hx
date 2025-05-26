@@ -29,6 +29,9 @@
 
 package spine;
 
+/** Controls how bones after the first bone are positioned along the path.
+ *
+ * @see https://esotericsoftware.com/spine-path-constraints#Spacing-mode Spacing mode in the Spine User Guide */
 class SpacingMode {
 	public static var length(default, never):SpacingMode = new SpacingMode("length");
 	public static var fixed(default, never):SpacingMode = new SpacingMode("fixed");

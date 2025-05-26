@@ -29,6 +29,9 @@
 
 package spine;
 
+/**
+ * Various math utility functions.
+ */
 class MathUtils {
 	static public var PI:Float = Math.PI;
 	static public var PI2:Float = Math.PI * 2;
@@ -36,18 +39,41 @@ class MathUtils {
 	static public var radDeg:Float = 180 / Math.PI;
 	static public var degRad:Float = Math.PI / 180;
 
+	/**
+	 * Returns the cosine in degrees.
+	 * @param degrees The angle in degrees.
+	 * @return The cosine.
+	 */
 	static public function cosDeg(degrees:Float):Float {
 		return Math.cos(degrees * degRad);
 	}
 
+	/**
+	 * Returns the sine in degrees.
+	 * @param degrees The angle in degrees.
+	 * @return The sine.
+	 */
 	static public function sinDeg(degrees:Float):Float {
 		return Math.sin(degrees * degRad);
 	}
 
+	/**
+	 * Returns the arc tangent in degrees.
+	 * @param y The y-coordinate.
+	 * @param x The x-coordinate.
+	 * @return The arc tangent in degrees.
+	 */
 	static public function atan2Deg (y:Float, x:Float):Float {
-		return Math.atan2(y, x) * MathUtils.degRad;
+		return Math.atan2(y, x) * MathUtils.radDeg;
 	}
 
+	/**
+	 * Clamps a value between a minimum and maximum value.
+	 * @param value The value to clamp.
+	 * @param min The minimum value.
+	 * @param max The maximum value.
+	 * @return The clamped value.
+	 */
 	static public function clamp(value:Float, min:Float, max:Float):Float {
 		if (value < min)
 			return min;
@@ -56,14 +82,32 @@ class MathUtils {
 		return value;
 	}
 
+	/**
+	 * Returns the signum function of the value.
+	 * @param value The value.
+	 * @return -1 if the value is negative, 1 if the value is positive, 0 if the value is zero.
+	 */
 	static public function signum(value:Float):Float {
 		return value > 0 ? 1 : value < 0 ? -1 : 0;
 	}
 
+	/**
+	 * Returns a random number between the specified minimum and maximum values using a triangular distribution.
+	 * @param min The minimum value.
+	 * @param max The maximum value.
+	 * @return A random number using a triangular distribution.
+	 */
 	static public function randomTriangular(min:Float, max:Float):Float {
 		return randomTriangularWith(min, max, (min + max) * 0.5);
 	}
 
+	/**
+	 * Returns a random number between the specified minimum and maximum values using a triangular distribution.
+	 * @param min The minimum value.
+	 * @param max The maximum value.
+	 * @param mode The mode of the triangular distribution.
+	 * @return A random number using a triangular distribution.
+	 */
 	static public function randomTriangularWith(min:Float, max:Float, mode:Float):Float {
 		var u:Float = Math.random();
 		var d:Float = max - min;

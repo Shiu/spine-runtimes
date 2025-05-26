@@ -29,9 +29,17 @@
 
 package spine;
 
+/** Stores the current pose values for an Event.
+ * 
+ * @see spine.Timeline
+ * @see spine.Timeline.apply()
+ * @see spine.AnimationStateListener.event()
+ * @see https://esotericsoftware.com/spine-events Events in the Spine User Guide
+ */
 class Event {
 	private var _data:EventData;
 
+	/** The animation time this event was keyed. */
 	public var time:Float = 0;
 	public var intValue:Int = 0;
 	public var floatValue:Float = 0;
@@ -46,6 +54,7 @@ class Event {
 		_data = data;
 	}
 
+	/** The event's setup pose data. */
 	public var data(get, never):EventData;
 
 	private function get_data():EventData {

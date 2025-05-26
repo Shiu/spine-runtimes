@@ -29,18 +29,36 @@
 
 package spine;
 
+/** Stores the current pose for an IK constraint. An IK constraint adjusts the rotation of 1 or 2 constrained bones so the tip of
+ * the last bone is as close to the target bone as possible.
+ *
+ * @see https://esotericsoftware.com/spine-ik-constraints IK constraints in the Spine User Guide */
 class IkConstraint implements Updatable {
 	private var _data:IkConstraintData;
 
+	/** The bones that will be modified by this IK constraint. */
 	public var bones:Array<Bone>;
+	/** The bone that is the IK target. */
 	public var target:Bone;
+	/** For two bone IK, controls the bend direction of the IK bones, either 1 or -1. */
 	public var bendDirection:Int = 0;
+	/** For one bone IK, when true and the target is too close, the bone is scaled to reach it. */
 	public var compress:Bool = false;
+	/** When true and the target is out of range, the parent bone is scaled to reach it.
+	 *
+	 * For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not applied if getSoftness() is
+	 * > 0, and 3) if the parent bone has local nonuniform scale, stretch is not applied. */
 	public var stretch:Bool = false;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
+	 *
+	 * For two bone IK: if the parent bone has local nonuniform scale, the child bone's local Y translation is set to 0. */
 	public var mix:Float = 0;
+	/** For two bone IK, the target bone's distance from the maximum reach of the bones where rotation begins to slow. The bones
+	 * will not straighten completely until the target is this far out of range. */
 	public var softness:Float = 0;
 	public var active:Bool = false;
 
+	/** Copy constructor. */
 	public function new(data:IkConstraintData, skeleton:Skeleton) {
 		if (data == null)
 			throw new SpineException("data cannot be null.");
@@ -74,6 +92,7 @@ class IkConstraint implements Updatable {
 		stretch = data.stretch;
 	}
 
+	/** Applies the constraint to the constrained bones. */
 	public function update(physics:Physics):Void {
 		if (mix == 0)
 			return;
@@ -85,6 +104,7 @@ class IkConstraint implements Updatable {
 		}
 	}
 
+	/** The IK constraint's setup pose data. */
 	public var data(get, never):IkConstraintData;
 
 	private function get_data():IkConstraintData {
@@ -92,11 +112,10 @@ class IkConstraint implements Updatable {
 	}
 
 	public function toString():String {
-		return _data.name != null ? _data.name : "IkContstraint?";
+		return _data.name != null ? _data.name : "IkConstraint?";
 	}
 
-	/** Adjusts the bone rotation so the tip is as close to the target position as possible. The target is specified in the world
-	 * coordinate system. */
+	/** Applies 1 bone IK. The target is specified in the world coordinate system. */
 	static public function apply1(bone:Bone, targetX:Float, targetY:Float, compress:Bool, stretch:Bool, uniform:Bool, alpha:Float):Void {
 		var p:Bone = bone.parent;
 		var pa:Float = p.a, pb:Float = p.b, pc:Float = p.c, pd:Float = p.d;
@@ -164,9 +183,8 @@ class IkConstraint implements Updatable {
 		bone.updateWorldTransformWith(bone.ax, bone.ay, bone.arotation + rotationIK * alpha, sx, sy, bone.ashearX, bone.ashearY);
 	}
 
-	/** Adjusts the parent and child bone rotations so the tip of the child is as close to the target position as possible. The
-	 * target is specified in the world coordinate system.
-	 * @param child Any descendant bone of the parent. */
+	/** Applies 2 bone IK. The target is specified in the world coordinate system.
+	 * @param child A direct descendant of the parent bone. */
 	static public function apply2(parent:Bone, child:Bone, targetX:Float, targetY:Float, bendDir:Int, stretch:Bool, uniform:Bool, softness:Float,
 			alpha:Float):Void {
 		if (parent.inherit != Inherit.normal || child.inherit != Inherit.normal) return;

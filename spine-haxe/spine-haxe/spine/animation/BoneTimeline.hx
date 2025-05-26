@@ -29,6 +29,8 @@
 
 package spine.animation;
 
+/** An interface for timelines which change the property of a bone. */
 interface BoneTimeline {
+	/** The index of the bone in spine.Skeleton.getBones() that will be changed when this timeline is applied. */
 	function getBoneIndex():Int;
 }

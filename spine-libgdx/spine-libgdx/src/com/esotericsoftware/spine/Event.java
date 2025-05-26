@@ -98,7 +98,7 @@ public class Event {
 		return time;
 	}
 
-	/** The events's setup pose data. */
+	/** The event's setup pose data. */
 	public EventData getData () {
 		return data;
 	}

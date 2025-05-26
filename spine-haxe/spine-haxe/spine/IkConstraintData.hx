@@ -29,14 +29,31 @@
 
 package spine;
 
+/** Stores the setup pose for a spine.IkConstraint.
+ * 
+ * @see https://esotericsoftware.com/spine-ik-constraints IK constraints in the Spine User Guide */
 class IkConstraintData extends ConstraintData {
+	/** The bones that are constrained by this IK constraint. */
 	public var bones:Array<BoneData> = new Array<BoneData>();
+	/** The bone that is the IK target. */
 	public var target:BoneData;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
+	 * 
+	 * For two bone IK: if the parent bone has local nonuniform scale, the child bone's local Y translation is set to 0. */
 	public var mix:Float = 0;
+	/** For two bone IK, controls the bend direction of the IK bones, either 1 or -1. */
 	public var bendDirection:Int = 0;
+	/** For one bone IK, when true and the target is too close, the bone is scaled to reach it. */
 	public var compress:Bool = false;
+	/** When true and the target is out of range, the parent bone is scaled to reach it.
+	 * 
+	 * For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not applied if softness is
+	 * > 0, and 3) if the parent bone has local nonuniform scale, stretch is not applied. */
 	public var stretch:Bool = false;
+	/** When true and compress or stretch is used, the bone is scaled on both the X and Y axes. */
 	public var uniform:Bool = false;
+	/** For two bone IK, the target bone's distance from the maximum reach of the bones where rotation begins to slow. The bones
+	 * will not straighten completely until the target is this far out of range. */
 	public var softness:Float = 0;
 
 	public function new(name:String) {

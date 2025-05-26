@@ -33,10 +33,11 @@ import spine.Event;
 import spine.Skeleton;
 import spine.Slot;
 
+/** Changes a slot's spine.Slot.attachment. */
 class AttachmentTimeline extends Timeline implements SlotTimeline {
 	public var slotIndex:Int = 0;
 
-	/** The attachment name for each key frame. May contain null values to clear the attachment. */
+	/** The attachment name for each frame. May contain null values to clear the attachment. */
 	public var attachmentNames:Array<String>;
 
 	public function new(frameCount:Int, slotIndex:Int) {
@@ -54,7 +55,9 @@ class AttachmentTimeline extends Timeline implements SlotTimeline {
 		return slotIndex;
 	}
 
-	/** Sets the time in seconds and the attachment name for the specified key frame. */
+	/** Sets the time and attachment name for the specified frame.
+	 * @param frame Between 0 and frameCount, inclusive.
+	 * @param time The frame time in seconds. */
 	public function setFrame(frame:Int, time:Float, attachmentName:String):Void {
 		frames[frame] = time;
 		attachmentNames[frame] = attachmentName;

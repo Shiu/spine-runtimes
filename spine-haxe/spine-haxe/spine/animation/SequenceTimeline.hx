@@ -32,6 +32,7 @@ package spine.animation;
 import spine.attachments.VertexAttachment;
 import spine.attachments.Attachment;
 
+/** Changes a slot's Slot#getSequenceIndex() for an attachment's Sequence. */
 class SequenceTimeline extends Timeline implements SlotTimeline {
 	static var ENTRIES = 3;
 	static var MODE = 1;
@@ -61,7 +62,7 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
 	}
 
 	/** Sets the time, mode, index, and frame time for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param frame Between 0 and frameCount, inclusive.
 	 * @param time Seconds between frames. */
 	public function setFrame(frame:Int, time:Float, mode:SequenceMode, index:Int, delay:Float) {
 		frame *= SequenceTimeline.ENTRIES;

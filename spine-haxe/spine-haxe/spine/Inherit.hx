@@ -29,6 +29,7 @@
 
 package spine;
 
+/** Determines how a bone inherits world transforms from parent bones. */
 class Inherit {
 	public static var normal(default, never):Inherit = new Inherit(0, "normal");
 	public static var onlyTranslation(default, never):Inherit = new Inherit(1, "onlyTranslation");

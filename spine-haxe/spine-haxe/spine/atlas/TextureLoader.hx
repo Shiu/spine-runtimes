@@ -29,10 +29,18 @@
 
 package spine.atlas;
 
+/** The interface which can be implemented to customize loading images for texture atlas pages and regions. */
 interface TextureLoader {
+	/** Loads a texture atlas page.
+	 * @param page The page to load.
+	 * @param path The path to the page image. */
 	function loadPage(page:TextureAtlasPage, path:String):Void;
 
+	/** Loads a texture atlas region.
+	 * @param region The region to load. */
 	function loadRegion(region:TextureAtlasRegion):Void;
 
+	/** Unloads a texture atlas page.
+	 * @param page The page to unload. */
 	function unloadPage(page:TextureAtlasPage):Void;
 }

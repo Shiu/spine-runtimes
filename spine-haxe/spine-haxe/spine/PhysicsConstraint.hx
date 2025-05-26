@@ -29,6 +29,11 @@
 
 package spine;
 
+/** Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
+ * 
+ * 
+ * @see https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide
+ */
 class PhysicsConstraint implements Updatable {
 	private var _data:PhysicsConstraintData;
 	private var _bone:Bone = null;
@@ -39,6 +44,7 @@ class PhysicsConstraint implements Updatable {
 	public var massInverse:Float = 0;
 	public var wind:Float = 0;
 	public var gravity:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
 	public var mix:Float = 0;
 
 	private var _reset:Bool = true;
@@ -108,6 +114,7 @@ class PhysicsConstraint implements Updatable {
 		return active;
 	}
 
+	/** Applies the constraint to the constrained bones. */
 	public function update(physics:Physics):Void {
 		var mix:Float = this.mix;
 		if (mix == 0) return;
@@ -291,6 +298,8 @@ class PhysicsConstraint implements Updatable {
 		bone.updateAppliedTransform();
 	}
 
+	/** Translates the physics constraint so next update(Physics) forces are applied as if the bone moved an additional
+	 * amount in world space. */
 	public function translate (x:Float, y:Float):Void {
 		ux -= x;
 		uy -= y;
@@ -298,12 +307,15 @@ class PhysicsConstraint implements Updatable {
 		cy -= y;
 	}
 
+	/** Rotates the physics constraint so next update(Physics) forces are applied as if the bone rotated around the
+	 * specified point in world space. */
 	public function rotate (x:Float, y:Float, degrees:Float):Void {
 		var r:Float = degrees * MathUtils.degRad, cos:Float = Math.cos(r), sin:Float = Math.sin(r);
 		var dx:Float = cx - x, dy:Float = cy - y;
 		translate(dx * cos - dy * sin - dx, dx * sin + dy * cos - dy);
 	}
 
+	/** The bone constrained by this physics constraint. */
 	public var bone(get, never):Bone;
 
 	private function get_bone():Bone {
@@ -312,6 +324,7 @@ class PhysicsConstraint implements Updatable {
 		else return _bone;
 	}
 
+	/** The physics constraint's setup pose data. */
 	public var data(get, never):PhysicsConstraintData;
 
 	private function get_data():PhysicsConstraintData {

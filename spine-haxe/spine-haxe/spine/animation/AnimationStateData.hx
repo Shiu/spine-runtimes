@@ -32,22 +32,28 @@ package spine.animation;
 import haxe.ds.StringMap;
 import spine.SkeletonData;
 
+/** Stores mix (crossfade) durations to be applied when spine.animation.AnimationState animations are changed. */
 class AnimationStateData {
 	private var _skeletonData:SkeletonData;
 	private var animationToMixTime:StringMap<Float> = new StringMap<Float>();
 
+	/** The mix duration to use when no mix duration has been defined between two animations. */
 	public var defaultMix:Float = 0;
 
 	public function new(skeletonData:SkeletonData) {
 		_skeletonData = skeletonData;
 	}
 
+	/** The SkeletonData to look up animations when they are specified by name. */
 	public var skeletonData(get, never):SkeletonData;
 
 	private function get_skeletonData():SkeletonData {
 		return _skeletonData;
 	}
 
+	/** Sets a mix duration by animation name.
+	 * 
+	 * See AnimationStateData.setMix(). */
 	public function setMixByName(fromName:String, toName:String, duration:Float):Void {
 		var from:Animation = _skeletonData.findAnimation(fromName);
 		if (from == null)
@@ -58,6 +64,9 @@ class AnimationStateData {
 		setMix(from, to, duration);
 	}
 
+	/** Sets the mix duration when changing from the specified animation to the other.
+	 * 
+	 * See spine.animation.TrackEntry.mixDuration. */
 	public function setMix(from:Animation, to:Animation, duration:Float):Void {
 		if (from == null)
 			throw new SpineException("from cannot be null.");
@@ -66,6 +75,8 @@ class AnimationStateData {
 		animationToMixTime.set(from.name + ":" + to.name, duration);
 	}
 
+	/** Returns the mix duration to use when changing from the specified animation to the other, or the AnimationStateData.defaultMix if
+	 * no mix duration has been set. */
 	public function getMix(from:Animation, to:Animation):Float {
 		if (animationToMixTime.exists(from.name + ":" + to.name))
 			return animationToMixTime.get(from.name + ":" + to.name);

@@ -29,21 +29,40 @@
 
 package spine;
 
+/**
+ * Stores the setup pose for a spine.TransformConstraint.
+ * 
+ * 
+ * @see https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide
+ */
 class TransformConstraintData extends ConstraintData {
 	private var _bones:Array<BoneData> = new Array<BoneData>();
 
+	/** The target bone whose world transform will be copied to the constrained bones. */
 	public var target:BoneData;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
 	public var mixRotate:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
 	public var mixX:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
 	public var mixY:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale X. */
 	public var mixScaleX:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale Y. */
 	public var mixScaleY:Float = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y. */
 	public var mixShearY:Float = 0;
+	/** An offset added to the constrained bone rotation. */
 	public var offsetRotation:Float = 0;
+	/** An offset added to the constrained bone X translation. */
 	public var offsetX:Float = 0;
+	/** An offset added to the constrained bone Y translation. */
 	public var offsetY:Float = 0;
+	/** An offset added to the constrained bone scaleX. */
 	public var offsetScaleX:Float = 0;
+	/** An offset added to the constrained bone scaleY. */
 	public var offsetScaleY:Float = 0;
+	/** An offset added to the constrained bone shearY. */
 	public var offsetShearY:Float = 0;
 	public var relative:Bool = false;
 	public var local:Bool = false;
@@ -52,6 +71,9 @@ class TransformConstraintData extends ConstraintData {
 		super(name, 0, false);
 	}
 
+	/**
+	 * The bones that will be modified by this transform constraint.
+	 */
 	public var bones(get, never):Array<BoneData>;
 
 	private function get_bones():Array<BoneData> {

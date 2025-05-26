@@ -33,12 +33,20 @@ import spine.Bone;
 import spine.Color;
 import spine.MathUtils;
 
+/** An attachment which is a single point and a rotation. This can be used to spawn projectiles, particles, etc. A bone can be
+ * used in similar ways, but a PointAttachment is slightly less expensive to compute and can be hidden, shown, and placed in a
+ * skin.
+ *
+ * @see https://esotericsoftware.com/spine-points Point Attachments in the Spine User Guide */
 class PointAttachment extends VertexAttachment {
 	public var x:Float = 0;
 	public var y:Float = 0;
 	public var rotation:Float = 0;
+	/** The color of the point attachment as it was in Spine, or a default color if nonessential data was not exported. Point
+	 * attachments are not usually rendered at runtime. */
 	public var color:Color = new Color(0.38, 0.94, 0, 1);
 
+	/** Copy constructor. */
 	public function new(name:String) {
 		super(name);
 	}
