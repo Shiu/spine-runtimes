@@ -37,7 +37,7 @@ BoneLocal::BoneLocal() : _x(0), _y(0), _rotation(0), _scaleX(1), _scaleY(1), _sh
 BoneLocal::~BoneLocal() {
 }
 
-void BoneLocal::set(const BoneLocal& pose) {
+void BoneLocal::set(const BoneLocal &pose) {
 	_x = pose._x;
 	_y = pose._y;
 	_rotation = pose._rotation;

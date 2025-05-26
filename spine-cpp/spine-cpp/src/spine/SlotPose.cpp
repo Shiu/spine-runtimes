@@ -39,7 +39,7 @@ SlotPose::SlotPose() : _color(1, 1, 1, 1), _darkColor(0, 0, 0, 1), _hasDarkColor
 SlotPose::~SlotPose() {
 }
 
-void SlotPose::set(const SlotPose& pose) {
+void SlotPose::set(const SlotPose &pose) {
 	_color.set(pose._color);
 	if (_hasDarkColor) _darkColor.set(pose._darkColor);
 	_hasDarkColor = pose._hasDarkColor;
@@ -49,11 +49,11 @@ void SlotPose::set(const SlotPose& pose) {
 	_deform.addAll(pose._deform);
 }
 
-Color& SlotPose::getColor() {
+Color &SlotPose::getColor() {
 	return _color;
 }
 
-Color& SlotPose::getDarkColor() {
+Color &SlotPose::getDarkColor() {
 	return _darkColor;
 }
 
@@ -65,20 +65,20 @@ void SlotPose::setHasDarkColor(bool hasDarkColor) {
 	_hasDarkColor = hasDarkColor;
 }
 
-Attachment* SlotPose::getAttachment() {
+Attachment *SlotPose::getAttachment() {
 	return _attachment;
 }
 
-void SlotPose::setAttachment(Attachment* attachment) {
+void SlotPose::setAttachment(Attachment *attachment) {
 	if (_attachment == attachment) return;
-	
-	if (attachment == nullptr || _attachment == nullptr || 
+
+	if (attachment == nullptr || _attachment == nullptr ||
 		!attachment->getRTTI().instanceOf(VertexAttachment::rtti) ||
 		!_attachment->getRTTI().instanceOf(VertexAttachment::rtti) ||
-		((VertexAttachment*)attachment)->getTimelineAttachment() != ((VertexAttachment*)_attachment)->getTimelineAttachment()) {
+		((VertexAttachment *) attachment)->getTimelineAttachment() != ((VertexAttachment *) _attachment)->getTimelineAttachment()) {
 		_deform.clear();
 	}
-	
+
 	_attachment = attachment;
 	_sequenceIndex = -1;
 }
@@ -91,6 +91,6 @@ void SlotPose::setSequenceIndex(int sequenceIndex) {
 	_sequenceIndex = sequenceIndex;
 }
 
-Vector<float>& SlotPose::getDeform() {
+Vector<float> &SlotPose::getDeform() {
 	return _deform;
 }
