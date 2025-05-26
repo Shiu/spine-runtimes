@@ -112,6 +112,9 @@
 #include <spine/PosedData.h>
 #include <spine/Posed.h>
 #include <spine/PosedActive.h>
+#include <spine/BoneLocal.h>
+#include <spine/BonePose.h>
+#include <spine/SlotPose.h>
 #include <spine/Vector.h>
 #include <spine/VertexAttachment.h>
 #include <spine/Vertices.h>
