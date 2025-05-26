@@ -75,7 +75,7 @@ Error SpineAtlasResourceImportPlugin::import(const String &source_file, const St
 #ifdef SPINE_GODOT_EXTENSION
 TypedArray<Dictionary> SpineAtlasResourceImportPlugin::_get_import_options(const String &p_path, int32_t p_preset_index) const {
 	TypedArray<Dictionary> options;
-	
+
 	Dictionary normal_map_dictionary;
 	normal_map_dictionary["name"] = "normal_map_prefix";
 	normal_map_dictionary["type"] = Variant::STRING;
@@ -89,7 +89,7 @@ TypedArray<Dictionary> SpineAtlasResourceImportPlugin::_get_import_options(const
 	specular_map_dictionary["hint_string"] = "String";
 	specular_map_dictionary["default_value"] = String("s");
 	options.push_back(specular_map_dictionary);
-	
+
 	return options;
 }
 #else
