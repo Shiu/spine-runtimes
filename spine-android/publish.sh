@@ -26,8 +26,9 @@ VERSION=$(grep '^version=' ../spine-libgdx/gradle.properties | cut -d'=' -f2)
 
 if echo "$VERSION" | grep -q "SNAPSHOT"; then
     echo "Publishing SNAPSHOT version $VERSION to Central Portal..."
-    ./gradlew publishReleasePublicationToSonaTypeRepository --info
+    ./gradlew :spine-android:publishReleasePublicationToSonaTypeRepository --info
 else
     echo "Publishing RELEASE version $VERSION to Central Portal via JReleaser..."
-    ./gradlew publishRelease -PRELEASE --info
+    ./gradlew :spine-android:publishReleasePublicationToSonaTypeRepository -PRELEASE
+    ./gradlew :spine-android:jreleaserDeploy -PRELEASE --info
 fi
