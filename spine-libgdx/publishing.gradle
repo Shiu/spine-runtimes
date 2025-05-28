@@ -92,8 +92,8 @@ project("spine-libgdx") {
                     name = "SonaType"
                     url = project.version.endsWith("-SNAPSHOT")
                             ? getSnapshotRepositoryUrl()
-                            // If release build, dump artifacts to local build/staging-deploy folder for consumption by jreleaser
-                            : layout.buildDirectory.dir('staging-deploy')
+                            // If release build, dump artifacts to root project build/staging-deploy folder for consumption by jreleaser
+                            : rootProject.layout.buildDirectory.dir('staging-deploy')
 
                     if (project.version.endsWith("-SNAPSHOT") && (getRepositoryUsername() || getRepositoryPassword())) {
                         credentials {
@@ -119,8 +119,29 @@ project("spine-libgdx") {
     }
 }
 
-// For release builds, create a task that depends on publishing and finalizes with jreleaser
+// JReleaser config for release builds to Central Portal
 if (project.hasProperty('RELEASE')) {
+    apply plugin: 'org.jreleaser'
+
+    jreleaser {
+        deploy {
+            maven {
+                mavenCentral {
+                    sonatype {
+                        active = 'ALWAYS'
+                        username = getRepositoryUsername()
+                        password = getRepositoryPassword()
+                        url = 'https://central.sonatype.com/api/v1/publisher'
+                        stagingRepository("${rootProject.buildDir}/staging-deploy")
+                        sign = false
+                        verifyPom = false
+                    }
+                }
+            }
+        }
+    }
+
+    // For release builds, create a task that depends on publishing and finalizes with jreleaser
     tasks.register('publishRelease') {
         dependsOn tasks.withType(PublishToMavenRepository)
         finalizedBy tasks.named('jreleaserDeploy')

@@ -29,5 +29,6 @@ if echo "$VERSION" | grep -q "SNAPSHOT"; then
     ./gradlew publishReleasePublicationToSonaTypeRepository
 else
     echo "Publishing RELEASE version $VERSION to Central Portal via JReleaser..."
-    ./gradlew publishRelease -PRELEASE
+    ./gradlew publishReleasePublicationToSonaTypeRepository -PRELEASE
+    ./gradlew jreleaserDeploy -PRELEASE
 fi

@@ -21,10 +21,6 @@ fun readSpineLibgdxProperty(propertyName: String): String {
     throw GradleException("Property '$propertyName' not found in spine-libgdx gradle.properties")
 }
 
-// JReleaser config for release builds to Central Portal
-if (project.hasProperty("RELEASE")) {
-    apply(plugin = "org.jreleaser")
-}
 
 android {
     namespace = "com.esotericsoftware.spine"
@@ -176,14 +172,31 @@ afterEvaluate {
     }
 }
 
-// For release builds, create a task that depends on publishing and finalizes with jreleaser
+// JReleaser config for release builds to Central Portal
 if (project.hasProperty("RELEASE")) {
-    tasks.register("publishRelease") {
-        dependsOn(tasks.withType<PublishToMavenRepository>())
-        doLast {
-            exec {
-                commandLine("./gradlew", "jreleaserDeploy")
+    apply(plugin = "org.jreleaser")
+
+    configure<org.jreleaser.gradle.plugin.JReleaserExtension> {
+        deploy {
+            maven {
+                mavenCentral {
+                    create("sonatype") {
+                        setActive("ALWAYS")
+                        url = "https://central.sonatype.com/api/v1/publisher"
+                        username = if (hasProperty("MAVEN_USERNAME")) property("MAVEN_USERNAME").toString() else ""
+                        password = if (hasProperty("MAVEN_PASSWORD")) property("MAVEN_PASSWORD").toString() else ""
+                        stagingRepository(layout.buildDirectory.dir("staging-deploy").get().asFile.absolutePath)
+                        sign = false
+                        verifyPom = false
+                    }
+                }
             }
         }
     }
+
+    tasks.register("publishRelease") {
+        dependsOn(tasks.withType<PublishToMavenRepository>())
+        finalizedBy(tasks.named("jreleaserDeploy"))
+    }
 }
+
