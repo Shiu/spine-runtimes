@@ -56,10 +56,18 @@ allprojects {
         mavenCentral()
     }
 
+    dependencies {
+        annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:0.4.2'
+        compileOnly 'com.github.bsideup.jabel:jabel-javac-plugin:0.4.2'
+    }
+
     tasks.withType(JavaCompile).configureEach {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-        options.release.set(8)
+        sourceCompatibility = 17 // for the IDE support
+        options.release = 8
+
+        javaCompiler = javaToolchains.compilerFor {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
     }
 }
 

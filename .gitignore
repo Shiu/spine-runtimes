@@ -226,3 +226,9 @@ CLAUDE.md
 .claude
 port-plan.md
 port-todo.md
+spine-libgdx/spine-libgdx/.settings/org.eclipse.buildship.core.prefs
+spine-libgdx/spine-libgdx/.settings/org.eclipse.jdt.apt.core.prefs
+spine-libgdx/spine-libgdx-tests/.settings/org.eclipse.buildship.core.prefs
+spine-libgdx/spine-libgdx-tests/.settings/org.eclipse.jdt.apt.core.prefs
+spine-libgdx/spine-skeletonviewer/.settings/org.eclipse.buildship.core.prefs
+spine-libgdx/spine-skeletonviewer/.settings/org.eclipse.jdt.apt.core.prefs
