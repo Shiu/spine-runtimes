@@ -222,3 +222,7 @@ spine-godot/vc140.pdb
 spine-godot/example-v4-extension/bin
 spine-godot/example-v4-extension/MoltenVK.xcframework
 spine-flutter/example/android/app/.cxx
+.claude
+CLAUDE.md
+port-plan.md
+port-todo.md
