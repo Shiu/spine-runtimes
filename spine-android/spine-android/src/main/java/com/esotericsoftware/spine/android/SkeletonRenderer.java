@@ -39,6 +39,7 @@ import com.badlogic.gdx.utils.ShortArray;
 import com.esotericsoftware.spine.BlendMode;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.Slot;
+import com.esotericsoftware.spine.SlotPose;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.ClippingAttachment;
 import com.esotericsoftware.spine.attachments.MeshAttachment;
@@ -110,7 +111,8 @@ public class SkeletonRenderer {
 			int vertexSize = 2;
 			float[] uvs = null;
 			short[] indices = null;
-			Attachment attachment = slot.getAttachment();
+			SlotPose pose = slot.getAppliedPose();
+			Attachment attachment = pose.getAttachment();
 			if (attachment == null) {
 				clipper.clipEnd(slot);
 				continue;
@@ -119,7 +121,7 @@ public class SkeletonRenderer {
 			if (attachment instanceof RegionAttachment) {
 				RegionAttachment region = (RegionAttachment)attachment;
 				verticesLength = vertexSize << 2;
-				if (region.getSequence() != null) region.getSequence().apply(slot, region);
+				if (region.getSequence() != null) region.getSequence().apply(pose, region);
 				AndroidTexture texture = (AndroidTexture)region.getRegion().getTexture();
 				BlendMode blendMode = slot.getData().getBlendMode();
 				if (command.blendMode == null && command.texture == null) {
@@ -143,7 +145,7 @@ public class SkeletonRenderer {
 			} else if (attachment instanceof MeshAttachment) {
 				MeshAttachment mesh = (MeshAttachment)attachment;
 				verticesLength = mesh.getWorldVerticesLength();
-				if (mesh.getSequence() != null) mesh.getSequence().apply(slot, mesh);
+				if (mesh.getSequence() != null) mesh.getSequence().apply(pose, mesh);
 				AndroidTexture texture = (AndroidTexture)mesh.getRegion().getTexture();
 				BlendMode blendMode = slot.getData().getBlendMode();
 
@@ -161,19 +163,19 @@ public class SkeletonRenderer {
 				}
 
 				command.vertices.setSize(command.vertices.size + verticesLength);
-				mesh.computeWorldVertices(slot, 0, verticesLength, command.vertices.items, vertexStart, vertexSize);
+				mesh.computeWorldVertices(skeleton, slot, 0, verticesLength, command.vertices.items, vertexStart, vertexSize);
 				uvs = mesh.getUVs();
 				indices = mesh.getTriangles();
 				color = mesh.getColor();
 			} else if (attachment instanceof ClippingAttachment) {
 				ClippingAttachment clip = (ClippingAttachment)attachment;
-				clipper.clipStart(slot, clip);
+				clipper.clipStart(skeleton, slot, clip);
 				continue;
 			} else {
 				continue;
 			}
 
-			Color slotColor = slot.getColor();
+			Color slotColor = pose.getColor();
 			int c = (int)(a * slotColor.a * color.a * 255) << 24 //
 				| (int)(r * slotColor.r * color.r * 255) << 16 //
 				| (int)(g * slotColor.g * color.g * 255) << 8 //

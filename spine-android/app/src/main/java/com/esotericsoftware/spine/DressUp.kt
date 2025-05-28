@@ -128,7 +128,7 @@ fun DressUp(nav: NavHostController) {
         if (customSkinValue != null) {
             drawable.skeleton.setSkin(customSkinValue)
         }
-        drawable.skeleton.setSlotsToSetupPose()
+        drawable.skeleton.setupPoseSlots()
     }
 
     val localDensity = LocalDensity.current
@@ -138,9 +138,9 @@ fun DressUp(nav: NavHostController) {
             if (skin.getName() == "default") continue
             val skeleton = drawable.skeleton
             skeleton.setSkin(skin)
-            skeleton.setToSetupPose()
+            skeleton.setupPose()
             skeleton.update(0f)
-            skeleton.updateWorldTransform(Skeleton.Physics.update)
+            skeleton.updateWorldTransform(Physics.update)
             skinImages[skin.getName()] = renderer.renderToBitmap(
                 with(localDensity) { thumbnailSize.dp.toPx() },
                 with(localDensity) { thumbnailSize.dp.toPx() },

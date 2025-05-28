@@ -46,8 +46,8 @@ public class DebugRenderer {
 		bonePaint.setStyle(Paint.Style.FILL);
 
 		for (Bone bone : drawable.getSkeleton().getBones()) {
-			float x = bone.getWorldX();
-			float y = bone.getWorldY();
+			float x = bone.getAppliedPose().getWorldX();
+			float y = bone.getAppliedPose().getWorldY();
 			canvas.drawRect(new RectF(x - 2.5f, y - 2.5f, x + 2.5f, y + 2.5f), bonePaint);
 		}
 	}

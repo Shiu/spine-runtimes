@@ -74,9 +74,9 @@ fun IKFollowing(nav: NavHostController) {
             val skeleton = it.skeleton
             val bone = skeleton.findBone("crosshair") ?: return@setOnAfterUpdateWorldTransforms
             val parent = bone.parent ?: return@setOnAfterUpdateWorldTransforms
-            val position = parent.worldToLocal(Vector2(worldPosition.x.toFloat(), worldPosition.y.toFloat()))
-            bone.x = position.x
-            bone.y = position.y
+            val position = parent.appliedPose.worldToLocal(Vector2(worldPosition.x.toFloat(), worldPosition.y.toFloat()))
+            bone.appliedPose.x = position.x
+            bone.appliedPose.y = position.y
         }
         .build()
     }

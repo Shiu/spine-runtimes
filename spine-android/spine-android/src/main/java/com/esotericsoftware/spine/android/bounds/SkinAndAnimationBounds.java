@@ -75,7 +75,7 @@ public class SkinAndAnimationBounds implements BoundsProvider {
 			customSkin.addSkin(skin);
 		}
 		drawable.getSkeleton().setSkin(customSkin);
-		drawable.getSkeleton().setToSetupPose();
+		drawable.getSkeleton().setupPose();
 
 		Animation animation = (this.animation != null) ? data.findAnimation(this.animation) : null;
 		double minX = Double.POSITIVE_INFINITY;
@@ -104,7 +104,7 @@ public class SkinAndAnimationBounds implements BoundsProvider {
 		drawable.getSkeleton().setSkin("default");
 		drawable.getAnimationState().clearTracks();
 		if (oldSkin != null) drawable.getSkeleton().setSkin(oldSkin);
-		drawable.getSkeleton().setToSetupPose();
+		drawable.getSkeleton().setupPose();
 		drawable.update(0);
 		return new Bounds(minX, minY, maxX - minX, maxY - minY);
 	}

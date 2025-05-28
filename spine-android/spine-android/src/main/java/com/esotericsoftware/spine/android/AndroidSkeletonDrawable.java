@@ -41,6 +41,7 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.esotericsoftware.spine.Animation;
 import com.esotericsoftware.spine.AnimationState;
 import com.esotericsoftware.spine.AnimationStateData;
+import com.esotericsoftware.spine.Physics;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.android.utils.SkeletonDataUtils;
@@ -90,7 +91,7 @@ public class AndroidSkeletonDrawable {
 		animationStateData = new AnimationStateData(skeletonData);
 		animationState = new AnimationState(animationStateData);
 
-		skeleton.updateWorldTransform(Skeleton.Physics.none);
+		skeleton.updateWorldTransform(Physics.none);
 	}
 
 	/** Updates the {@link AnimationState} using the {@code delta} time given in seconds, applies the animation state to the
@@ -100,7 +101,7 @@ public class AndroidSkeletonDrawable {
 		animationState.apply(skeleton);
 
 		skeleton.update(delta);
-		skeleton.updateWorldTransform(Skeleton.Physics.update);
+		skeleton.updateWorldTransform(Physics.update);
 	}
 
 	/** Get the {@link AndroidTextureAtlas} */
