@@ -66,7 +66,7 @@
 				// Center the camera on the skeleton
 				const offset = new spine.Vector2();
 				const size = new spine.Vector2();
-				this.skeleton.setToSetupPose();
+				this.skeleton.setupPose();
 				this.skeleton.update(0);
 				this.skeleton.updateWorldTransform(spine.Physics.update);
 				this.skeleton.getBounds(offset, size);

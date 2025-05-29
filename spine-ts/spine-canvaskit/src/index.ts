@@ -24,7 +24,6 @@ import {
 } from "@esotericsoftware/spine-core";
 import {
 	Canvas,
-	Surface,
 	CanvasKit,
 	Image,
 	Paint,
@@ -232,11 +231,12 @@ export class SkeletonRenderer {
 		for (let i = 0, n = drawOrder.length; i < n; i++) {
 			let slot = drawOrder[i];
 			if (!slot.bone.active) {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
 
-			let attachment = slot.getAttachment();
+			let pose = slot.pose;
+			let attachment = pose.attachment;
 			let positions = this.scratchPositions;
 			let colors = this.scratchColors;
 			let uvs: NumberArrayLike;
@@ -261,6 +261,7 @@ export class SkeletonRenderer {
 						: positions;
 				numVertices = mesh.worldVerticesLength >> 1;
 				mesh.computeWorldVertices(
+					skeleton,
 					slot,
 					0,
 					mesh.worldVerticesLength,
@@ -274,10 +275,10 @@ export class SkeletonRenderer {
 				attachmentColor = mesh.color;
 			} else if (attachment instanceof ClippingAttachment) {
 				let clip = attachment as ClippingAttachment;
-				clipper.clipStart(slot, clip);
+				clipper.clipStart(skeleton, slot, clip);
 				continue;
 			} else {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
 
@@ -294,7 +295,7 @@ export class SkeletonRenderer {
 					triangles = clipper.clippedTriangles;
 				}
 
-				let slotColor = slot.color;
+				let slotColor = pose.color;
 				let finalColor = this.tempColor;
 				finalColor.r = skeletonColor.r * slotColor.r * attachmentColor.r;
 				finalColor.g = skeletonColor.g * slotColor.g * attachmentColor.g;
@@ -338,7 +339,7 @@ export class SkeletonRenderer {
 				vertices.delete();
 			}
 
-			clipper.clipEndWithSlot(slot);
+			clipper.clipEnd(slot);
 		}
 		clipper.clipEnd();
 	}

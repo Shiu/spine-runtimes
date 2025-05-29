@@ -80,7 +80,7 @@ export class SkeletonRenderer {
 		for (let i = 0, n = drawOrder.length; i < n; i++) {
 			let slot = drawOrder[i];
 			if (!slot.bone.active) {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
 
@@ -89,7 +89,7 @@ export class SkeletonRenderer {
 			}
 
 			if (!inRange) {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
 
@@ -97,7 +97,8 @@ export class SkeletonRenderer {
 				inRange = false;
 			}
 
-			let attachment = slot.getAttachment();
+			const pose = slot.pose;
+			const attachment = pose.attachment;
 			let texture: GLTexture;
 			if (attachment instanceof RegionAttachment) {
 				renderable.vertices = this.vertices;
@@ -116,21 +117,22 @@ export class SkeletonRenderer {
 				if (renderable.numFloats > renderable.vertices.length) {
 					renderable.vertices = this.vertices = Utils.newFloatArray(renderable.numFloats);
 				}
-				attachment.computeWorldVertices(slot, 0, attachment.worldVerticesLength, renderable.vertices, 0, vertexSize);
+				attachment.computeWorldVertices(skeleton, slot, 0, attachment.worldVerticesLength, renderable.vertices, 0, vertexSize);
 				triangles = attachment.triangles;
 				texture = <GLTexture>attachment.region!.texture;
 				uvs = attachment.uvs;
 				attachmentColor = attachment.color;
 			} else if (attachment instanceof ClippingAttachment) {
-				clipper.clipStart(slot, attachment);
+				clipper.clipEnd(slot);
+				clipper.clipStart(skeleton, slot, attachment);
 				continue;
 			} else {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
 
 			if (texture) {
-				let slotColor = slot.color;
+				let slotColor = pose.color;
 				let finalColor = this.tempColor;
 				finalColor.r = skeletonColor.r * slotColor.r * attachmentColor.r;
 				finalColor.g = skeletonColor.g * slotColor.g * attachmentColor.g;
@@ -142,15 +144,15 @@ export class SkeletonRenderer {
 					finalColor.b *= finalColor.a;
 				}
 				let darkColor = this.tempColor2;
-				if (!slot.darkColor)
+				if (!pose.darkColor)
 					darkColor.set(0, 0, 0, 1.0);
 				else {
 					if (premultipliedAlpha) {
-						darkColor.r = slot.darkColor.r * finalColor.a;
-						darkColor.g = slot.darkColor.g * finalColor.a;
-						darkColor.b = slot.darkColor.b * finalColor.a;
+						darkColor.r = pose.darkColor.r * finalColor.a;
+						darkColor.g = pose.darkColor.g * finalColor.a;
+						darkColor.b = pose.darkColor.b * finalColor.a;
 					} else {
-						darkColor.setFromColor(slot.darkColor);
+						darkColor.setFromColor(pose.darkColor);
 					}
 					darkColor.a = premultipliedAlpha ? 1.0 : 0.0;
 				}
@@ -197,7 +199,7 @@ export class SkeletonRenderer {
 				}
 			}
 
-			clipper.clipEndWithSlot(slot);
+			clipper.clipEnd(slot);
 		}
 		clipper.clipEnd();
 	}

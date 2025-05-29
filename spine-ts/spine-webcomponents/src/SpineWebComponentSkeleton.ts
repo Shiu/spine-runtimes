@@ -1013,14 +1013,14 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 
 		if (skin) {
 			if (skin.length === 1) {
-				skeleton?.setSkinByName(skin[0]);
+				skeleton?.setSkin(skin[0]);
 			} else {
 				const customSkin = new Skin("custom");
 				for (const s of skin) customSkin.addSkin(skeleton?.data.findSkin(s) as Skin);
 				skeleton?.setSkin(customSkin);
 			}
 
-			skeleton?.setSlotsToSetupPose();
+			skeleton?.setupPoseSlots();
 		}
 
 		if (state) {
@@ -1156,7 +1156,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	private checkSlotInteraction (type: PointerEventTypesInput, originalEvent?: UIEvent) {
 		for (let [slot, interactionState] of this.pointerSlotEventCallbacks) {
 			if (!slot.bone.active) continue;
-			let attachment = slot.getAttachment();
+			let attachment = slot.pose.attachment;
 
 			if (!(attachment instanceof RegionAttachment || attachment instanceof MeshAttachment)) continue;
 
@@ -1171,7 +1171,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 				regionAttachment.computeWorldVertices(slot, vertices, 0, 2);
 			} else if (attachment instanceof MeshAttachment) {
 				let mesh = <MeshAttachment>attachment;
-				mesh.computeWorldVertices(slot, 0, mesh.worldVerticesLength, vertices, 0, 2);
+				mesh.computeWorldVertices(this.skeleton!, slot, 0, mesh.worldVerticesLength, vertices, 0, 2);
 				hullLength = mesh.hullLength;
 			}
 
@@ -1245,7 +1245,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		if (!slot) return;
 
 		if (hideAttachment) {
-			slot.setAttachment(null);
+			slot.pose.setAttachment(null);
 		}
 
 		element.style.position = 'absolute';
@@ -1271,7 +1271,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		const renderer = this.overlay.renderer;
 		const { skeleton } = this;
 		if (!skeleton) return { x: 0, y: 0, width: 0, height: 0 };
-		skeleton.setToSetupPose();
+		skeleton.setupPose();
 
 		let offset = new Vector2(), size = new Vector2();
 		const tempArray = new Array<number>(2);
@@ -1289,7 +1289,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		let steps = 100, stepTime = animation.duration ? animation.duration / steps : 0, time = 0;
 		let minX = 100000000, maxX = -100000000, minY = 100000000, maxY = -100000000;
 		for (let i = 0; i < steps; i++, time += stepTime) {
-			animation.apply(skeleton, time, time, false, [], 1, MixBlend.setup, MixDirection.mixIn);
+			animation.apply(skeleton, time, time, false, [], 1, MixBlend.setup, MixDirection.in, false);
 			skeleton.updateWorldTransform(Physics.update);
 			skeleton.getBounds(offset, size, tempArray, renderer.skeletonRenderer.getSkeletonClipping());
 
@@ -1304,7 +1304,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 			}
 		}
 
-		skeleton.setToSetupPose();
+		skeleton.setupPose();
 
 		return {
 			x: minX,

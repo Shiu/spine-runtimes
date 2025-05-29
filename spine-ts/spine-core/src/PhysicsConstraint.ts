@@ -27,27 +27,20 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Bone } from "./Bone.js";
+import { BonePose } from "./BonePose.js";
+import { Constraint } from "./Constraint.js";
+import { Physics } from "./Physics.js";
 import { PhysicsConstraintData } from "./PhysicsConstraintData.js";
-import { Physics, Skeleton } from "./Skeleton.js";
-import { Updatable } from "./Updatable.js";
+import { PhysicsConstraintPose } from "./PhysicsConstraintPose.js";
+import { Skeleton } from "./Skeleton.js";
 import { MathUtils } from "./Utils.js";
 
 
 /** Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
  * <p>
  * See <a href="http://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-export class PhysicsConstraint implements Updatable {
-	readonly data: PhysicsConstraintData;
-	bone: Bone;
-
-	inertia = 0;
-	strength = 0;
-	damping = 0;
-	massInverse = 0;
-	wind = 0;
-	gravity = 0;
-	mix = 0;
+export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> {
+	bone: BonePose;
 
 	_reset = true;
 	ux = 0;
@@ -57,84 +50,86 @@ export class PhysicsConstraint implements Updatable {
 	tx = 0;
 	ty = 0;
 	xOffset = 0;
+	xLag = 0;
 	xVelocity = 0;
 	yOffset = 0;
+	yLag = 0;
 	yVelocity = 0;
 	rotateOffset = 0;
+	rotateLag = 0;
 	rotateVelocity = 0;
 	scaleOffset = 0
+	scaleLag = 0
 	scaleVelocity = 0;
-
-	active = false;
-
-	readonly skeleton: Skeleton;
 	remaining = 0;
 	lastTime = 0;
 
 	constructor (data: PhysicsConstraintData, skeleton: Skeleton) {
-		this.data = data;
-		this.skeleton = skeleton;
+		super(data, new PhysicsConstraintPose(), new PhysicsConstraintPose());
+		if (skeleton == null) throw new Error("skeleton cannot be null.");
 
-		let bone = skeleton.findBone(data.bone.name);
-		if (!bone) throw new Error(`Couldn't find bone ${data.bone.name}.`);
-		this.bone = skeleton.bones[data.bone.index];
-
-		this.inertia = data.inertia;
-		this.strength = data.strength;
-		this.damping = data.damping;
-		this.massInverse = data.massInverse;
-		this.wind = data.wind;
-		this.gravity = data.gravity;
-		this.mix = data.mix;
+		this.bone = skeleton.bones[data.bone.index].constrained;
 	}
 
-	reset () {
+	public copy (skeleton: Skeleton) {
+		var copy = new PhysicsConstraint(this.data, skeleton);
+		copy.pose.set(this.pose);
+		return copy;
+	}
+
+	reset (skeleton: Skeleton) {
 		this.remaining = 0;
-		this.lastTime = this.skeleton.time;
+		this.lastTime = skeleton.time;
 		this._reset = true;
 		this.xOffset = 0;
+		this.xLag = 0;
 		this.xVelocity = 0;
 		this.yOffset = 0;
+		this.yLag = 0;
 		this.yVelocity = 0;
 		this.rotateOffset = 0;
+		this.rotateLag = 0;
 		this.rotateVelocity = 0;
 		this.scaleOffset = 0;
+		this.scaleLag = 0;
 		this.scaleVelocity = 0;
 	}
 
-	setToSetupPose () {
-		const data = this.data;
-		this.inertia = data.inertia;
-		this.strength = data.strength;
-		this.damping = data.damping;
-		this.massInverse = data.massInverse;
-		this.wind = data.wind;
-		this.gravity = data.gravity;
-		this.mix = data.mix;
+	/** Translates the physics constraint so next {@link update} forces are applied as if the bone moved an
+	 * additional amount in world space. */
+	translate (x: number, y: number) {
+		this.ux -= x;
+		this.uy -= y;
+		this.cx -= x;
+		this.cy -= y;
 	}
 
-	isActive () {
-		return this.active;
+	/** Rotates the physics constraint so next {@link update} forces are applied as if the bone rotated around the
+	 * specified point in world space. */
+	rotate (x: number, y: number, degrees: number) {
+		const r = degrees * MathUtils.degRad, cos = Math.cos(r), sin = Math.sin(r);
+		const dx = this.cx - x, dy = this.cy - y;
+		this.translate(dx * cos - dy * sin - dx, dx * sin + dy * cos - dy);
 	}
 
 	/** Applies the constraint to the constrained bones. */
-	update (physics: Physics) {
-		const mix = this.mix;
-		if (mix == 0) return;
+	update (skeleton: Skeleton, physics: Physics) {
+		const p = this.applied;
+		const mix = p.mix;
+		if (mix === 0) return;
 
 		const x = this.data.x > 0, y = this.data.y > 0, rotateOrShearX = this.data.rotate > 0 || this.data.shearX > 0, scaleX = this.data.scaleX > 0;
 		const bone = this.bone;
-		const l = bone.data.length;
+		let l = bone.bone.data.length, t = this.data.step, z = 0;
 
 		switch (physics) {
 			case Physics.none:
 				return;
 			case Physics.reset:
-				this.reset();
+				this.reset(skeleton);
 			// Fall through.
 			case Physics.update:
-				const skeleton = this.skeleton;
-				const delta = Math.max(this.skeleton.time - this.lastTime, 0);
+				const delta = Math.max(skeleton.time - this.lastTime, 0), aa = this.remaining;
 				this.remaining += delta;
 				this.lastTime = skeleton.time;
 
@@ -144,8 +139,8 @@ export class PhysicsConstraint implements Updatable {
 					this.ux = bx;
 					this.uy = by;
 				} else {
-					let a = this.remaining, i = this.inertia, t = this.data.step, f = this.skeleton.data.referenceScale, d = -1;
-					let qx = this.data.limit * delta, qy = qx * Math.abs(skeleton.scaleY);
+					let a = this.remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1, m = 0, e = 0, qx = this.data.limit * delta,
+						qy = qx * Math.abs(skeleton.scaleY);
 					qx *= Math.abs(skeleton.scaleX);
 					if (x || y) {
 						if (x) {
@@ -159,28 +154,34 @@ export class PhysicsConstraint implements Updatable {
 							this.uy = by;
 						}
 						if (a >= t) {
-							d = Math.pow(this.damping, 60 * t);
-							const m = this.massInverse * t, e = this.strength, w = this.wind * f * skeleton.scaleX, g = this.gravity * f * skeleton.scaleY;
+							let xs = this.xOffset, ys = this.yOffset;
+							d = Math.pow(p.damping, 60 * t);
+							m = t * p.massInverse;
+							e = p.strength;
+							let w = f * p.wind * skeleton.scaleX, g = f * p.gravity * skeleton.scaleY,
+								ax = w * skeleton.windX + g * skeleton.gravityX, ay = w * skeleton.windY + g * skeleton.gravityY;
 							do {
 								if (x) {
-									this.xVelocity += (w - this.xOffset * e) * m;
+									this.xVelocity += (ax - this.xOffset * e) * m;
 									this.xOffset += this.xVelocity * t;
 									this.xVelocity *= d;
 								}
 								if (y) {
-									this.yVelocity -= (g + this.yOffset * e) * m;
+									this.yVelocity -= (ay + this.yOffset * e) * m;
 									this.yOffset += this.yVelocity * t;
 									this.yVelocity *= d;
 								}
 								a -= t;
 							} while (a >= t);
+							this.xLag = this.xOffset - xs;
+							this.yLag = this.yOffset - ys;
 						}
-						if (x) bone.worldX += this.xOffset * mix * this.data.x;
-						if (y) bone.worldY += this.yOffset * mix * this.data.y;
+						z = Math.max(0, 1 - a / t);
+						if (x) bone.worldX += (this.xOffset - this.xLag * z) * mix * this.data.x;
+						if (y) bone.worldY += (this.yOffset - this.yLag * z) * mix * this.data.y;
 					}
 					if (rotateOrShearX || scaleX) {
-						let ca = Math.atan2(bone.c, bone.a), c = 0, s = 0, mr = 0;
-						let dx = this.cx - bone.worldX, dy = this.cy - bone.worldY;
+						let ca = Math.atan2(bone.c, bone.a), c, s, mr = 0, dx = this.cx - bone.worldX, dy = this.cy - bone.worldY;
 						if (dx > qx)
 							dx = qx;
 						else if (dx < -qx) //
@@ -189,11 +190,13 @@ export class PhysicsConstraint implements Updatable {
 							dy = qy;
 						else if (dy < -qy) //
 							dy = -qy;
+						a = this.remaining;
 						if (rotateOrShearX) {
 							mr = (this.data.rotate + this.data.shearX) * mix;
-							let r = Math.atan2(dy + this.ty, dx + this.tx) - ca - this.rotateOffset * mr;
+							z = this.rotateLag * Math.max(0, 1 - aa / t);
+							let r = Math.atan2(dy + this.ty, dx + this.tx) - ca - (this.rotateOffset - z) * mr;
 							this.rotateOffset += (r - Math.ceil(r * MathUtils.invPI2 - 0.5) * MathUtils.PI2) * i;
-							r = this.rotateOffset * mr + ca;
+							r = (this.rotateOffset - z) * mr + ca;
 							c = Math.cos(r);
 							s = Math.sin(r);
 							if (scaleX) {
@@ -203,22 +206,28 @@ export class PhysicsConstraint implements Updatable {
 						} else {
 							c = Math.cos(ca);
 							s = Math.sin(ca);
-							const r = l * bone.getWorldScaleX();
+							let r = l * bone.getWorldScaleX() - this.scaleLag * Math.max(0, 1 - aa / t);
 							if (r > 0) this.scaleOffset += (dx * c + dy * s) * i / r;
 						}
 						a = this.remaining;
 						if (a >= t) {
-							if (d == -1) d = Math.pow(this.damping, 60 * t);
-							const m = this.massInverse * t, e = this.strength, w = this.wind, g = (Skeleton.yDown ? -this.gravity : this.gravity), h = l / f;
+							if (d == -1) {
+								d = Math.pow(p.damping, 60 * t);
+								m = t * p.massInverse;
+								e = p.strength;
+							}
+							let rs = this.rotateOffset, ss = this.scaleOffset, h = l / f,
+								ax = p.wind * skeleton.windX + p.gravity * skeleton.gravityX,
+								ay = p.wind * skeleton.windY + p.gravity * skeleton.gravityY;
 							while (true) {
 								a -= t;
 								if (scaleX) {
-									this.scaleVelocity += (w * c - g * s - this.scaleOffset * e) * m;
+									this.scaleVelocity += (ax * c - ay * s - this.scaleOffset * e) * m;
 									this.scaleOffset += this.scaleVelocity * t;
 									this.scaleVelocity *= d;
 								}
 								if (rotateOrShearX) {
-									this.rotateVelocity -= ((w * s + g * c) * h + this.rotateOffset * e) * m;
+									this.rotateVelocity -= ((ax * s + ay * c) * h + this.rotateOffset * e) * m;
 									this.rotateOffset += this.rotateVelocity * t;
 									this.rotateVelocity *= d;
 									if (a < t) break;
@@ -228,7 +237,10 @@ export class PhysicsConstraint implements Updatable {
 								} else if (a < t) //
 									break;
 							}
+							this.rotateLag = this.rotateOffset - rs;
+							this.scaleLag = this.scaleOffset - ss;
 						}
+						z = Math.max(0, 1 - a / t);
 					}
 					this.remaining = a;
 				}
@@ -236,12 +248,13 @@ export class PhysicsConstraint implements Updatable {
 				this.cy = bone.worldY;
 				break;
 			case Physics.pose:
-				if (x) bone.worldX += this.xOffset * mix * this.data.x;
-				if (y) bone.worldY += this.yOffset * mix * this.data.y;
+				z = Math.max(0, 1 - this.remaining / t);
+				if (x) bone.worldX += (this.xOffset - this.xLag * z) * mix * this.data.x;
+				if (y) bone.worldY += (this.yOffset - this.yLag * z) * mix * this.data.y;
 		}
 
 		if (rotateOrShearX) {
-			let o = this.rotateOffset * mix, s = 0, c = 0, a = 0;
+			let o = (this.rotateOffset - this.rotateLag * z) * mix, s = 0, c = 0, a = 0;
 			if (this.data.shearX > 0) {
 				let r = 0;
 				if (this.data.rotate > 0) {
@@ -271,7 +284,7 @@ export class PhysicsConstraint implements Updatable {
 			}
 		}
 		if (scaleX) {
-			const s = 1 + this.scaleOffset * mix * this.data.scaleX;
+			const s = 1 + (this.scaleOffset - this.scaleLag * z) * mix * this.data.scaleX;
 			bone.a *= s;
 			bone.c *= s;
 		}
@@ -279,23 +292,19 @@ export class PhysicsConstraint implements Updatable {
 			this.tx = l * bone.a;
 			this.ty = l * bone.c;
 		}
-		bone.updateAppliedTransform();
+		bone.modifyWorld(skeleton._update);
 	}
 
-	/** Translates the physics constraint so next {@link #update(Physics)} forces are applied as if the bone moved an additional
-	 * amount in world space. */
-	translate (x: number, y: number) {
-		this.ux -= x;
-		this.uy -= y;
-		this.cx -= x;
-		this.cy -= y;
+	sort (skeleton: Skeleton) {
+		const bone = this.bone.bone;
+		skeleton.sortBone(bone);
+		skeleton._updateCache.push(this);
+		skeleton.sortReset(bone.children);
+		skeleton.constrained(bone);
 	}
 
-	/** Rotates the physics constraint so next {@link #update(Physics)} forces are applied as if the bone rotated around the
-	 * specified point in world space. */
-	rotate (x: number, y: number, degrees: number) {
-		const r = degrees * MathUtils.degRad, cos = Math.cos(r), sin = Math.sin(r);
-		const dx = this.cx - x, dy = this.cy - y;
-		this.translate(dx * cos - dy * sin - dx, dx * sin + dy * cos - dy);
+	isSourceActive () {
+		return this.bone.bone.active;
 	}
+
 }

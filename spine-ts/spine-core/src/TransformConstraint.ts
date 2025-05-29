@@ -28,87 +28,71 @@
  *****************************************************************************/
 
 import { Bone } from "./Bone.js";
-import { Physics, Skeleton } from "./Skeleton.js";
+import { BonePose } from "./BonePose.js";
+import { Constraint } from "./Constraint.js";
+import { Physics } from "./Physics.js";
+import { Skeleton } from "./Skeleton.js";
 import { TransformConstraintData } from "./TransformConstraintData.js";
-import { Updatable } from "./Updatable.js";
-import { Vector2, MathUtils } from "./Utils.js";
+import { TransformConstraintPose } from "./TransformConstraintPose.js";
+import { MathUtils } from "./Utils.js";
 
 
 /** Stores the current pose for a transform constraint. A transform constraint adjusts the world transform of the constrained
  * bones to match that of the source bone.
  *
  * See [Transform constraints](http://esotericsoftware.com/spine-transform-constraints) in the Spine User Guide. */
-export class TransformConstraint implements Updatable {
-
-	/** The transform constraint's setup pose data. */
-	data: TransformConstraintData;
+export class TransformConstraint extends Constraint<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
 
 	/** The bones that will be modified by this transform constraint. */
-	bones: Array<Bone>;
+	bones: Array<BonePose>;
 
 	/** The bone whose world transform will be copied to the constrained bones. */
 	source: Bone;
 
-	mixRotate = 0; mixX = 0; mixY = 0; mixScaleX = 0; mixScaleY = 0; mixShearY = 0;
-
-	temp = new Vector2();
-	active = false;
-
 	constructor (data: TransformConstraintData, skeleton: Skeleton) {
-		if (!data) throw new Error("data cannot be null.");
+		super(data, new TransformConstraintPose(), new TransformConstraintPose());
 		if (!skeleton) throw new Error("skeleton cannot be null.");
-		this.data = data;
 
-		this.bones = new Array<Bone>();
-		for (let i = 0; i < data.bones.length; i++) {
-			let bone = skeleton.findBone(data.bones[i].name);
-			if (!bone) throw new Error(`Couldn't find bone ${data.bones[i].name}.`);
-			this.bones.push(bone);
-		}
-		let target = skeleton.findBone(data.source.name);
-		if (!target) throw new Error(`Couldn't find target bone ${data.source.name}.`);
-		this.source = target;
+		this.bones = new Array<BonePose>();
+		for (const boneData of data.bones)
+			this.bones.push(skeleton.bones[boneData.index].constrained);
 
-		this.mixRotate = data.mixRotate;
-		this.mixX = data.mixX;
-		this.mixY = data.mixY;
-		this.mixScaleX = data.mixScaleX;
-		this.mixScaleY = data.mixScaleY;
-		this.mixShearY = data.mixShearY;
+		const source = skeleton.bones[data.source.index];
+		if (source == null) throw new Error("source cannot be null.");
+		this.source = source;
 	}
 
-	isActive () {
-		return this.active;
+	public copy (skeleton: Skeleton) {
+		var copy = new TransformConstraint(this.data, skeleton);
+		copy.pose.set(this.pose);
+		return copy;
 	}
 
-	setToSetupPose () {
-		const data = this.data;
-		this.mixRotate = data.mixRotate;
-		this.mixX = data.mixX;
-		this.mixY = data.mixY;
-		this.mixScaleX = data.mixScaleX;
-		this.mixScaleY = data.mixScaleY;
-		this.mixShearY = data.mixShearY;
-	}
-
-	update (physics: Physics) {
-		if (this.mixRotate == 0 && this.mixX == 0 && this.mixY == 0 && this.mixScaleX == 0 && this.mixScaleY == 0 && this.mixShearY == 0) return;
+	update (skeleton: Skeleton, physics: Physics) {
+		const p = this.applied;
+		if (p.mixRotate == 0 && p.mixX == 0 && p.mixY == 0 && p.mixScaleX == 0 && p.mixScaleY == 0 && p.mixShearY == 0) return;
 
 		const data = this.data;
-		const localFrom = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
-		const source = this.source;
+		const localSource = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
+		const offsets = data.offsets;
+		const source = this.source.applied;
+		if (localSource) source.validateLocalTransform(skeleton);
 		const fromItems = data.properties;
-		const fn = data.properties.length;
+		const fn = data.properties.length, update = skeleton._update;
 		const bones = this.bones;
 		for (let i = 0, n = this.bones.length; i < n; i++) {
 			const bone = bones[i];
+			if (localTarget)
+				bone.modifyLocal(skeleton);
+			else
+				bone.modifyWorld(update);
 			for (let f = 0; f < fn; f++) {
 				const from = fromItems[f];
-				const value = from.value(data, source, localFrom) - from.offset;
+				const value = from.value(source, localSource, offsets) - from.offset;
 				const toItems = from.to;
 				for (let t = 0, tn = from.to.length; t < tn; t++) {
-					var to = toItems[t];
-					if (to.mix(this) != 0) {
+					const to = toItems[t];
+					if (to.mix(p) !== 0) {
 						let clamped = to.offset + value * to.scale;
 						if (clamp) {
 							if (to.offset < to.max)
@@ -116,14 +100,34 @@ export class TransformConstraint implements Updatable {
 							else
 								clamped = MathUtils.clamp(clamped, to.max, to.offset);
 						}
-						to.apply(this, bone, clamped, localTarget, additive);
+						to.apply(p, bone, clamped, localTarget, additive);
 					}
 				}
 			}
-			if (localTarget)
-				bone.update(null);
-			else
-				bone.updateAppliedTransform();
 		}
 	}
+
+	sort (skeleton: Skeleton) {
+		if (!this.data.localSource) skeleton.sortBone(this.source);
+		const bones = this.bones;
+		const boneCount = this.bones.length;
+		const worldTarget = !this.data.localTarget;
+		if (worldTarget) {
+			for (let i = 0; i < boneCount; i++)
+				skeleton.sortBone(bones[i].bone);
+		}
+		skeleton._updateCache.push(this);
+		for (let i = 0; i < boneCount; i++) {
+			const bone = bones[i].bone;
+			skeleton.sortReset(bone.children);
+			skeleton.constrained(bone);
+		}
+		for (let i = 0; i < boneCount; i++)
+			bones[i].bone.sorted = worldTarget;
+	}
+
+	isSourceActive () {
+		return this.source.active;
+	}
+
 }

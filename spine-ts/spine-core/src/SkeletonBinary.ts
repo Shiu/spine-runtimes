@@ -27,7 +27,7 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Animation, Timeline, InheritTimeline, AttachmentTimeline, RGBATimeline, RGBTimeline, RGBA2Timeline, RGB2Timeline, AlphaTimeline, RotateTimeline, TranslateTimeline, TranslateXTimeline, TranslateYTimeline, ScaleTimeline, ScaleXTimeline, ScaleYTimeline, ShearTimeline, ShearXTimeline, ShearYTimeline, IkConstraintTimeline, TransformConstraintTimeline, PathConstraintPositionTimeline, PathConstraintSpacingTimeline, PathConstraintMixTimeline, DeformTimeline, DrawOrderTimeline, EventTimeline, CurveTimeline1, CurveTimeline2, CurveTimeline, SequenceTimeline, PhysicsConstraintResetTimeline, PhysicsConstraintInertiaTimeline, PhysicsConstraintStrengthTimeline, PhysicsConstraintDampingTimeline, PhysicsConstraintMassTimeline, PhysicsConstraintWindTimeline, PhysicsConstraintGravityTimeline, PhysicsConstraintMixTimeline } from "./Animation.js";
+import { Animation, Timeline, InheritTimeline, AttachmentTimeline, RGBATimeline, RGBTimeline, RGBA2Timeline, RGB2Timeline, AlphaTimeline, RotateTimeline, TranslateTimeline, TranslateXTimeline, TranslateYTimeline, ScaleTimeline, ScaleXTimeline, ScaleYTimeline, ShearTimeline, ShearXTimeline, ShearYTimeline, IkConstraintTimeline, TransformConstraintTimeline, PathConstraintPositionTimeline, PathConstraintSpacingTimeline, PathConstraintMixTimeline, DeformTimeline, DrawOrderTimeline, EventTimeline, CurveTimeline1, CurveTimeline, SequenceTimeline, PhysicsConstraintResetTimeline, PhysicsConstraintInertiaTimeline, PhysicsConstraintStrengthTimeline, PhysicsConstraintDampingTimeline, PhysicsConstraintMassTimeline, PhysicsConstraintWindTimeline, PhysicsConstraintGravityTimeline, PhysicsConstraintMixTimeline, BoneTimeline2, SliderTimeline, SliderMixTimeline } from "./Animation.js";
 import { VertexAttachment, Attachment } from "./attachments/Attachment.js";
 import { AttachmentLoader } from "./attachments/AttachmentLoader.js";
 import { HasTextureRegion } from "./attachments/HasTextureRegion.js";
@@ -37,10 +37,12 @@ import { BoneData } from "./BoneData.js";
 import { Event } from "./Event.js";
 import { EventData } from "./EventData.js";
 import { IkConstraintData } from "./IkConstraintData.js";
+import { PathConstraint } from "./PathConstraint.js";
 import { PathConstraintData, PositionMode, SpacingMode } from "./PathConstraintData.js";
 import { PhysicsConstraintData } from "./PhysicsConstraintData.js";
 import { SkeletonData } from "./SkeletonData.js";
 import { Skin } from "./Skin.js";
+import { SliderData } from "./SliderData.js";
 import { SlotData } from "./SlotData.js";
 import { FromProperty, FromRotate, FromScaleX, FromScaleY, FromShearY, FromX, FromY, ToProperty, ToRotate, ToScaleX, ToScaleY, ToShearY, ToX, ToY, TransformConstraintData } from "./TransformConstraintData.js";
 import { Color, Utils } from "./Utils.js";
@@ -99,28 +101,30 @@ export class SkeletonBinary {
 		}
 
 		// Bones.
+		const bones = skeletonData.bones;
 		n = input.readInt(true)
 		for (let i = 0; i < n; i++) {
 			let name = input.readString();
 			if (!name) throw new Error("Bone name must not be null.");
-			let parent = i == 0 ? null : skeletonData.bones[input.readInt(true)];
+			let parent = i == 0 ? null : bones[input.readInt(true)];
 			let data = new BoneData(i, name, parent);
-			data.rotation = input.readFloat();
-			data.x = input.readFloat() * scale;
-			data.y = input.readFloat() * scale;
-			data.scaleX = input.readFloat();
-			data.scaleY = input.readFloat();
-			data.shearX = input.readFloat();
-			data.shearY = input.readFloat();
+			const setup = data.setup;
+			setup.rotation = input.readFloat();
+			setup.x = input.readFloat() * scale;
+			setup.y = input.readFloat() * scale;
+			setup.scaleX = input.readFloat();
+			setup.scaleY = input.readFloat();
+			setup.shearX = input.readFloat();
+			setup.shearY = input.readFloat();
+			setup.inherit = input.readByte();
 			data.length = input.readFloat() * scale;
-			data.inherit = input.readByte();
 			data.skinRequired = input.readBoolean();
 			if (nonessential) {
 				Color.rgba8888ToColor(data.color, input.readInt32());
 				data.icon = input.readString() ?? undefined;
 				data.visible = input.readBoolean();
 			}
-			skeletonData.bones.push(data);
+			bones.push(data);
 		}
 
 		// Slots.
@@ -128,12 +132,12 @@ export class SkeletonBinary {
 		for (let i = 0; i < n; i++) {
 			let slotName = input.readString();
 			if (!slotName) throw new Error("Slot name must not be null.");
-			let boneData = skeletonData.bones[input.readInt(true)];
+			let boneData = bones[input.readInt(true)];
 			let data = new SlotData(i, slotName, boneData);
-			Color.rgba8888ToColor(data.color, input.readInt32());
+			Color.rgba8888ToColor(data.setup.color, input.readInt32());
 
 			let darkColor = input.readInt32();
-			if (darkColor != -1) Color.rgb888ToColor(data.darkColor = new Color(), darkColor);
+			if (darkColor != -1) Color.rgb888ToColor(data.setup.darkColor = new Color(), darkColor);
 
 			data.attachmentName = input.readStringRef();
 			data.blendMode = input.readInt(true);
@@ -141,156 +145,203 @@ export class SkeletonBinary {
 			skeletonData.slots.push(data);
 		}
 
-		// IK constraints.
-		n = input.readInt(true);
-		for (let i = 0, nn; i < n; i++) {
+		// Constraints.
+		const constraints = skeletonData.constraints;
+		const constraintCount = input.readInt(true);
+		for (let i = 0; i < constraintCount; i++) {
 			let name = input.readString();
-			if (!name) throw new Error("IK constraint data name must not be null.");
-			let data = new IkConstraintData(name);
-			data.order = input.readInt(true);
-			nn = input.readInt(true);
-			for (let ii = 0; ii < nn; ii++)
-				data.bones.push(skeletonData.bones[input.readInt(true)]);
-			data.target = skeletonData.bones[input.readInt(true)];
-			let flags = input.readByte();
-			data.skinRequired = (flags & 1) != 0;
-			data.bendDirection = (flags & 2) != 0 ? 1 : -1;
-			data.compress = (flags & 4) != 0;
-			data.stretch = (flags & 8) != 0;
-			data.uniform = (flags & 16) != 0;
-			if ((flags & 32) != 0) data.mix = (flags & 64) != 0 ? input.readFloat() : 1;
-			if ((flags & 128) != 0) data.softness = input.readFloat() * scale;
-			skeletonData.ikConstraints.push(data);
-		}
-
-		// Transform constraints.
-		n = input.readInt(true);
-		for (let i = 0, nn; i < n; i++) {
-			let name = input.readString();
-			if (!name) throw new Error("Transform constraint data name must not be null.");
-			let data = new TransformConstraintData(name);
-			data.order = input.readInt(true);
-			nn = input.readInt(true);
-			for (let ii = 0; ii < nn; ii++)
-				data.bones.push(skeletonData.bones[input.readInt(true)]);
-			data.source = skeletonData.bones[input.readInt(true)];
-			let flags = input.readUnsignedByte();
-			data.skinRequired = (flags & 1) != 0;
-			data.localSource = (flags & 2) != 0;
-			data.localTarget = (flags & 4) != 0;
-			data.additive = (flags & 8) != 0;
-			data.clamp = (flags & 16) != 0;
-
-			nn = flags >> 5;
-			for (let ii = 0, tn; ii < nn; ii++) {
-				let from: FromProperty | null;
-				let type = input.readByte();
-				switch (type) {
-					case 0: from = new FromRotate(); break;
-					case 1: from = new FromX(); break;
-					case 2: from = new FromY(); break;
-					case 3: from = new FromScaleX(); break;
-					case 4: from = new FromScaleY(); break;
-					case 5: from = new FromShearY(); break;
-					default: from = null;
+			if (!name) throw new Error("Constraint data name must not be null.");
+			let nn = input.readInt(true);
+			switch (input.readByte()) {
+				case CONSTRAINT_IK: {
+					let data = new IkConstraintData(name);
+					for (let ii = 0; ii < nn; ii++)
+						data.bones.push(bones[input.readInt(true)]);
+					data.target = bones[input.readInt(true)];
+					let flags = input.readByte();
+					data.skinRequired = (flags & 1) != 0;
+					data.uniform = (flags & 2) != 0;
+					const setup = data.setup;
+					setup.bendDirection = (flags & 4) != 0 ? 1 : -1;
+					setup.compress = (flags & 8) != 0;
+					setup.stretch = (flags & 16) != 0;
+					if ((flags & 32) != 0) setup.mix = (flags & 64) != 0 ? input.readFloat() : 1;
+					if ((flags & 128) != 0) setup.softness = input.readFloat() * scale;
+					constraints.push(data);
+					break;
 				}
-				if (!from) continue;
-				from.offset = input.readFloat() * scale;
-				tn = input.readByte();
-				for (let t = 0; t < tn; t++) {
-					let to: ToProperty | null;
-					type = input.readByte();
-					switch (type) {
-						case 0: to = new ToRotate(); break;
-						case 1: to = new ToX(); break;
-						case 2: to = new ToY(); break;
-						case 3: to = new ToScaleX(); break;
-						case 4: to = new ToScaleY(); break;
-						case 5: to = new ToShearY(); break;
-						default: to = null;
+				case CONSTRAINT_TRANSFORM: {
+					let data = new TransformConstraintData(name);
+					for (let ii = 0; ii < nn; ii++)
+						data.bones.push(bones[input.readInt(true)]);
+					data.source = bones[input.readInt(true)];
+					let flags = input.readUnsignedByte();
+					data.skinRequired = (flags & 1) != 0;
+					data.localSource = (flags & 2) != 0;
+					data.localTarget = (flags & 4) != 0;
+					data.additive = (flags & 8) != 0;
+					data.clamp = (flags & 16) != 0;
+
+					nn = flags >> 5;
+					for (let ii = 0, tn; ii < nn; ii++) {
+						let fromScale = 1;
+						let from: FromProperty | null;
+						switch (input.readByte()) {
+							case 0: from = new FromRotate(); break;
+							case 1: {
+								fromScale = scale;
+								from = new FromX();
+								break;
+							}
+							case 2: {
+								fromScale = scale;
+								from = new FromY();
+								break;
+							}
+							case 3: from = new FromScaleX(); break;
+							case 4: from = new FromScaleY(); break;
+							case 5: from = new FromShearY(); break;
+							default: from = null;
+						}
+						if (!from) continue;
+						from.offset = input.readFloat() * fromScale;
+						tn = input.readByte();
+						for (let t = 0; t < tn; t++) {
+							let toScale = 1;
+							let to: ToProperty | null;
+							switch (input.readByte()) {
+								case 0: to = new ToRotate(); break;
+								case 1: {
+									toScale = scale;
+									to = new ToX();
+									break;
+								}
+								case 2: {
+									toScale = scale;
+									to = new ToY();
+									break;
+								}
+								case 3: to = new ToScaleX(); break;
+								case 4: to = new ToScaleY(); break;
+								case 5: to = new ToShearY(); break;
+								default: to = null;
+							}
+							if (!to) continue;
+							to.offset = input.readFloat() * scale;
+							to.max = input.readFloat() * scale;
+							to.scale = input.readFloat();
+							from.to[t] = to;
+						}
+						data.properties[ii] = from;
 					}
-					if (!to) continue;
-					to.offset = input.readFloat() * scale;
-					to.max = input.readFloat() * scale;
-					to.scale = input.readFloat();
-					from.to[t] = to;
+					flags = input.readByte();
+					if ((flags & 1) != 0) data.offsets[0] = input.readFloat();
+					if ((flags & 2) != 0) data.offsets[1] = input.readFloat() * scale;
+					if ((flags & 4) != 0) data.offsets[2] = input.readFloat() * scale;
+					if ((flags & 8) != 0) data.offsets[3] = input.readFloat();
+					if ((flags & 16) != 0) data.offsets[4] = input.readFloat();
+					if ((flags & 32) != 0) data.offsets[5] = input.readFloat();
+					flags = input.readByte();
+					const setup = data.setup;
+					if ((flags & 1) != 0) setup.mixRotate = input.readFloat();
+					if ((flags & 2) != 0) setup.mixX = input.readFloat();
+					if ((flags & 4) != 0) setup.mixY = input.readFloat();
+					if ((flags & 8) != 0) setup.mixScaleX = input.readFloat();
+					if ((flags & 16) != 0) setup.mixScaleY = input.readFloat();
+					if ((flags & 32) != 0) setup.mixShearY = input.readFloat();
+					constraints.push(data);
+					break;
 				}
-				data.properties[ii] = from;
+				case CONSTRAINT_PATH: {
+					let data = new PathConstraintData(name);
+					data.skinRequired = input.readBoolean();
+					nn = input.readInt(true);
+					for (let ii = 0; ii < nn; ii++)
+						data.bones.push(bones[input.readInt(true)]);
+					data.slot = skeletonData.slots[input.readInt(true)];
+					const flags = input.readByte();
+					data.skinRequired = (flags & 1) != 0;
+					data.positionMode = (flags >> 1) & 2;
+					data.spacingMode = (flags >> 2) & 3;
+					data.rotateMode = (flags >> 4) & 3;
+					if ((flags & 128) != 0) data.offsetRotation = input.readFloat();
+					const setup = data.setup;
+					setup.position = input.readFloat();
+					if (data.positionMode == PositionMode.Fixed) setup.position *= scale;
+					setup.spacing = input.readFloat();
+					if (data.spacingMode == SpacingMode.Length || data.spacingMode == SpacingMode.Fixed) setup.spacing *= scale;
+					setup.mixRotate = input.readFloat();
+					setup.mixX = input.readFloat();
+					setup.mixY = input.readFloat();
+					constraints.push(data);
+					break;
+				}
+				case CONSTRAINT_PHYSICS: {
+					const data = new PhysicsConstraintData(name);
+					data.bone = bones[nn];
+					let flags = input.readByte();
+					data.skinRequired = (flags & 1) != 0;
+					if ((flags & 2) != 0) data.x = input.readFloat();
+					if ((flags & 4) != 0) data.y = input.readFloat();
+					if ((flags & 8) != 0) data.rotate = input.readFloat();
+					if ((flags & 16) != 0) data.scaleX = input.readFloat();
+					if ((flags & 32) != 0) data.shearX = input.readFloat();
+					data.limit = ((flags & 64) != 0 ? input.readFloat() : 5000) * scale;
+					data.step = 1 / input.readUnsignedByte();
+					const setup = data.setup;
+					setup.inertia = input.readFloat();
+					setup.strength = input.readFloat();
+					setup.damping = input.readFloat();
+					setup.massInverse = (flags & 128) != 0 ? input.readFloat() : 1;
+					setup.wind = input.readFloat();
+					setup.gravity = input.readFloat();
+					flags = input.readByte();
+					if ((flags & 1) != 0) data.inertiaGlobal = true;
+					if ((flags & 2) != 0) data.strengthGlobal = true;
+					if ((flags & 4) != 0) data.dampingGlobal = true;
+					if ((flags & 8) != 0) data.massGlobal = true;
+					if ((flags & 16) != 0) data.windGlobal = true;
+					if ((flags & 32) != 0) data.gravityGlobal = true;
+					if ((flags & 64) != 0) data.mixGlobal = true;
+					setup.mix = (flags & 128) != 0 ? input.readFloat() : 1;
+					constraints.push(data);
+					break;
+				}
+				case CONSTRAINT_PHYSICS: {
+					const data = new SliderData(name);
+					data.skinRequired = (nn & 1) != 0;
+					data.loop = (nn & 2) != 0;
+					data.additive = (nn & 4) != 0;
+					if ((nn & 8) != 0) data.setup.time = input.readFloat();
+					if ((nn & 16) != 0) data.setup.mix = (nn & 32) != 0 ? input.readFloat() : 1;
+					if ((nn & 64) != 0) {
+						data.local = (nn & 128) != 0;
+						data.bone = bones[input.readInt(true)];
+						let offset = input.readFloat();
+						switch (input.readByte()) {
+							case 0: data.property = new FromRotate(); break;
+							case 1: {
+								offset *= scale;
+								data.property = new FromX();
+								break;
+							}
+							case 2: {
+								offset *= scale;
+								data.property = new FromY();
+								break;
+							}
+							case 3: data.property = new FromScaleX(); break;
+							case 4: data.property = new FromScaleY(); break;
+							case 5: data.property = new FromShearY(); break;
+							default: continue;
+						};
+						data.property.offset = offset;
+						data.scale = input.readFloat();
+					}
+					constraints.push(data);
+					break;
+				}
 			}
-
-			flags = input.readByte();
-			if ((flags & 1) != 0) data.offsetX = input.readFloat();
-			if ((flags & 2) != 0) data.offsetY = input.readFloat();
-			if ((flags & 4) != 0) data.mixRotate = input.readFloat();
-			if ((flags & 8) != 0) data.mixX = input.readFloat();
-			if ((flags & 16) != 0) data.mixY = input.readFloat();
-			if ((flags & 32) != 0) data.mixScaleX = input.readFloat();
-			if ((flags & 64) != 0) data.mixScaleY = input.readFloat();
-			if ((flags & 128) != 0) data.mixShearY = input.readFloat();
-
-			skeletonData.transformConstraints.push(data);
-		}
-
-		// Path constraints.
-		n = input.readInt(true);
-		for (let i = 0, nn; i < n; i++) {
-			let name = input.readString();
-			if (!name) throw new Error("Path constraint data name must not be null.");
-			let data = new PathConstraintData(name);
-			data.order = input.readInt(true);
-			data.skinRequired = input.readBoolean();
-			nn = input.readInt(true);
-			for (let ii = 0; ii < nn; ii++)
-				data.bones.push(skeletonData.bones[input.readInt(true)]);
-			data.slot = skeletonData.slots[input.readInt(true)];
-			const flags = input.readByte();
-			data.positionMode = flags & 1;
-			data.spacingMode = (flags >> 1) & 3;
-			data.rotateMode = (flags >> 3) & 3;
-			if ((flags & 128) != 0) data.offsetRotation = input.readFloat();
-			data.position = input.readFloat();
-			if (data.positionMode == PositionMode.Fixed) data.position *= scale;
-			data.spacing = input.readFloat();
-			if (data.spacingMode == SpacingMode.Length || data.spacingMode == SpacingMode.Fixed) data.spacing *= scale;
-			data.mixRotate = input.readFloat();
-			data.mixX = input.readFloat();
-			data.mixY = input.readFloat();
-			skeletonData.pathConstraints.push(data);
-		}
-
-		// Physics constraints.
-		n = input.readInt(true);
-		for (let i = 0, nn; i < n; i++) {
-			const name = input.readString();
-			if (!name) throw new Error("Physics constraint data name must not be null.");
-			const data = new PhysicsConstraintData(name);
-			data.order = input.readInt(true);
-			data.bone = skeletonData.bones[input.readInt(true)];
-			let flags = input.readByte();
-			data.skinRequired = (flags & 1) != 0;
-			if ((flags & 2) != 0) data.x = input.readFloat();
-			if ((flags & 4) != 0) data.y = input.readFloat();
-			if ((flags & 8) != 0) data.rotate = input.readFloat();
-			if ((flags & 16) != 0) data.scaleX = input.readFloat();
-			if ((flags & 32) != 0) data.shearX = input.readFloat();
-			data.limit = ((flags & 64) != 0 ? input.readFloat() : 5000) * scale;
-			data.step = 1 / input.readUnsignedByte();
-			data.inertia = input.readFloat();
-			data.strength = input.readFloat();
-			data.damping = input.readFloat();
-			data.massInverse = (flags & 128) != 0 ? input.readFloat() : 1;
-			data.wind = input.readFloat();
-			data.gravity = input.readFloat();
-			flags = input.readByte();
-			if ((flags & 1) != 0) data.inertiaGlobal = true;
-			if ((flags & 2) != 0) data.strengthGlobal = true;
-			if ((flags & 4) != 0) data.dampingGlobal = true;
-			if ((flags & 8) != 0) data.massGlobal = true;
-			if ((flags & 16) != 0) data.windGlobal = true;
-			if ((flags & 32) != 0) data.gravityGlobal = true;
-			if ((flags & 64) != 0) data.mixGlobal = true;
-			data.mix = (flags & 128) != 0 ? input.readFloat() : 1;
-			skeletonData.physicsConstraints.push(data);
 		}
 
 		// Default skin.
@@ -343,12 +394,19 @@ export class SkeletonBinary {
 		}
 
 		// Animations.
+		const animations = skeletonData.animations;
 		n = input.readInt(true);
 		for (let i = 0; i < n; i++) {
 			let animationName = input.readString();
-			if (!animationName) throw new Error("Animatio name must not be null.");
-			skeletonData.animations.push(this.readAnimation(input, animationName, skeletonData));
+			if (!animationName) throw new Error("Animation name must not be null.");
+			animations.push(this.readAnimation(input, animationName, skeletonData));
 		}
+
+		for (let i = 0; i < constraintCount; i++) {
+			const constraint = constraints[i];
+			if (constraint instanceof SliderData) constraint.animation = animations[input.readInt(true)];
+		}
+
 		return skeletonData;
 	}
 
@@ -364,19 +422,19 @@ export class SkeletonBinary {
 			let skinName = input.readString();
 			if (!skinName) throw new Error("Skin name must not be null.");
 			skin = new Skin(skinName);
-			if (nonessential) Color.rgba8888ToColor(skin.color, input.readInt32());
-			skin.bones.length = input.readInt(true);
-			for (let i = 0, n = skin.bones.length; i < n; i++)
-				skin.bones[i] = skeletonData.bones[input.readInt(true)];
 
-			for (let i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.push(skeletonData.ikConstraints[input.readInt(true)]);
-			for (let i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.push(skeletonData.transformConstraints[input.readInt(true)]);
-			for (let i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.push(skeletonData.pathConstraints[input.readInt(true)]);
-			for (let i = 0, n = input.readInt(true); i < n; i++)
-				skin.constraints.push(skeletonData.physicsConstraints[input.readInt(true)]);
+			if (nonessential) Color.rgba8888ToColor(skin.color, input.readInt32());
+
+			let n = input.readInt(true);
+			let from: Object[] = skeletonData.bones, to: Object[] = skin.bones;
+			for (let i = 0; i < n; i++)
+				to[i] = from[input.readInt(true)];
+
+			n = input.readInt(true);
+			from = skeletonData.constraints;
+			to = skin.constraints;
+			for (let i = 0; i < n; i++)
+				to[i] = from[input.readInt(true)];
 
 			slotCount = input.readInt(true);
 		}
@@ -553,7 +611,6 @@ export class SkeletonBinary {
 				return clip;
 			}
 		}
-		return null;
 	}
 
 	private readSequence (input: BinaryInput) {
@@ -838,35 +895,16 @@ export class SkeletonBinary {
 				}
 				let bezierCount = input.readInt(true);
 				switch (type) {
-					case BONE_ROTATE:
-						timelines.push(readTimeline1(input, new RotateTimeline(frameCount, bezierCount, boneIndex), 1));
-						break;
-					case BONE_TRANSLATE:
-						timelines.push(readTimeline2(input, new TranslateTimeline(frameCount, bezierCount, boneIndex), scale));
-						break;
-					case BONE_TRANSLATEX:
-						timelines.push(readTimeline1(input, new TranslateXTimeline(frameCount, bezierCount, boneIndex), scale));
-						break;
-					case BONE_TRANSLATEY:
-						timelines.push(readTimeline1(input, new TranslateYTimeline(frameCount, bezierCount, boneIndex), scale));
-						break;
-					case BONE_SCALE:
-						timelines.push(readTimeline2(input, new ScaleTimeline(frameCount, bezierCount, boneIndex), 1));
-						break;
-					case BONE_SCALEX:
-						timelines.push(readTimeline1(input, new ScaleXTimeline(frameCount, bezierCount, boneIndex), 1));
-						break;
-					case BONE_SCALEY:
-						timelines.push(readTimeline1(input, new ScaleYTimeline(frameCount, bezierCount, boneIndex), 1));
-						break;
-					case BONE_SHEAR:
-						timelines.push(readTimeline2(input, new ShearTimeline(frameCount, bezierCount, boneIndex), 1));
-						break;
-					case BONE_SHEARX:
-						timelines.push(readTimeline1(input, new ShearXTimeline(frameCount, bezierCount, boneIndex), 1));
-						break;
-					case BONE_SHEARY:
-						timelines.push(readTimeline1(input, new ShearYTimeline(frameCount, bezierCount, boneIndex), 1));
+					case BONE_ROTATE: readTimeline(input, timelines, new RotateTimeline(frameCount, bezierCount, boneIndex), 1); break;
+					case BONE_TRANSLATE: readTimeline(input, timelines, new TranslateTimeline(frameCount, bezierCount, boneIndex), scale); break;
+					case BONE_TRANSLATEX: readTimeline(input, timelines, new TranslateXTimeline(frameCount, bezierCount, boneIndex), scale); break;
+					case BONE_TRANSLATEY: readTimeline(input, timelines, new TranslateYTimeline(frameCount, bezierCount, boneIndex), scale); break;
+					case BONE_SCALE: readTimeline(input, timelines, new ScaleTimeline(frameCount, bezierCount, boneIndex), 1); break;
+					case BONE_SCALEX: readTimeline(input, timelines, new ScaleXTimeline(frameCount, bezierCount, boneIndex), 1); break;
+					case BONE_SCALEY: readTimeline(input, timelines, new ScaleYTimeline(frameCount, bezierCount, boneIndex), 1); break;
+					case BONE_SHEAR: readTimeline(input, timelines, new ShearTimeline(frameCount, bezierCount, boneIndex), 1); break;
+					case BONE_SHEARX: readTimeline(input, timelines, new ShearXTimeline(frameCount, bezierCount, boneIndex), 1); break;
+					case BONE_SHEARY: readTimeline(input, timelines, new ShearYTimeline(frameCount, bezierCount, boneIndex), 1); break;
 				}
 			}
 		}
@@ -934,19 +972,17 @@ export class SkeletonBinary {
 		// Path constraint timelines.
 		for (let i = 0, n = input.readInt(true); i < n; i++) {
 			let index = input.readInt(true);
-			let data = skeletonData.pathConstraints[index];
+			let data = skeletonData.constraints[index] as PathConstraintData;
 			for (let ii = 0, nn = input.readInt(true); ii < nn; ii++) {
 				const type = input.readByte(), frameCount = input.readInt(true), bezierCount = input.readInt(true);
 				switch (type) {
 					case PATH_POSITION:
-						timelines
-							.push(readTimeline1(input, new PathConstraintPositionTimeline(frameCount, bezierCount, index),
-								data.positionMode == PositionMode.Fixed ? scale : 1));
+						readTimeline(input, timelines, new PathConstraintPositionTimeline(frameCount, bezierCount, index),
+							data.positionMode == PositionMode.Fixed ? scale : 1);
 						break;
 					case PATH_SPACING:
-						timelines
-							.push(readTimeline1(input, new PathConstraintSpacingTimeline(frameCount, bezierCount, index),
-								data.spacingMode == SpacingMode.Length || data.spacingMode == SpacingMode.Fixed ? scale : 1));
+						readTimeline(input, timelines, new PathConstraintSpacingTimeline(frameCount, bezierCount, index),
+							data.spacingMode == SpacingMode.Length || data.spacingMode == SpacingMode.Fixed ? scale : 1);
 						break;
 					case PATH_MIX:
 						let timeline = new PathConstraintMixTimeline(frameCount, bezierCount, index);
@@ -989,33 +1025,33 @@ export class SkeletonBinary {
 				}
 				const bezierCount = input.readInt(true);
 				switch (type) {
-					case PHYSICS_INERTIA:
-						timelines.push(readTimeline1(input, new PhysicsConstraintInertiaTimeline(frameCount, bezierCount, index), 1));
-						break;
-					case PHYSICS_STRENGTH:
-						timelines.push(readTimeline1(input, new PhysicsConstraintStrengthTimeline(frameCount, bezierCount, index), 1));
-						break;
-					case PHYSICS_DAMPING:
-						timelines.push(readTimeline1(input, new PhysicsConstraintDampingTimeline(frameCount, bezierCount, index), 1));
-						break;
-					case PHYSICS_MASS:
-						timelines.push(readTimeline1(input, new PhysicsConstraintMassTimeline(frameCount, bezierCount, index), 1));
-						break;
-					case PHYSICS_WIND:
-						timelines.push(readTimeline1(input, new PhysicsConstraintWindTimeline(frameCount, bezierCount, index), 1));
-						break;
-					case PHYSICS_GRAVITY:
-						timelines.push(readTimeline1(input, new PhysicsConstraintGravityTimeline(frameCount, bezierCount, index), 1));
-						break;
-					case PHYSICS_MIX:
-						timelines.push(readTimeline1(input, new PhysicsConstraintMixTimeline(frameCount, bezierCount, index), 1));
-					default:
-						throw new Error("Unknown physics timeline type.");
+					case PHYSICS_INERTIA: readTimeline(input, timelines, new PhysicsConstraintInertiaTimeline(frameCount, bezierCount, index), 1); break;
+					case PHYSICS_STRENGTH: readTimeline(input, timelines, new PhysicsConstraintStrengthTimeline(frameCount, bezierCount, index), 1); break;
+					case PHYSICS_DAMPING: readTimeline(input, timelines, new PhysicsConstraintDampingTimeline(frameCount, bezierCount, index), 1); break;
+					case PHYSICS_MASS: readTimeline(input, timelines, new PhysicsConstraintMassTimeline(frameCount, bezierCount, index), 1); break;
+					case PHYSICS_WIND: readTimeline(input, timelines, new PhysicsConstraintWindTimeline(frameCount, bezierCount, index), 1); break;
+					case PHYSICS_GRAVITY: readTimeline(input, timelines, new PhysicsConstraintGravityTimeline(frameCount, bezierCount, index), 1); break;
+					case PHYSICS_MIX: readTimeline(input, timelines, new PhysicsConstraintMixTimeline(frameCount, bezierCount, index), 1); break;
+					default: throw new Error("Unknown physics timeline type.");
 				}
 			}
 		}
 
-		// Deform timelines.
+		// Slider timelines.
+		for (let i = 0, n = input.readInt(true); i < n; i++) {
+			const index = input.readInt(true);
+			for (let ii = 0, nn = input.readInt(true); ii < nn; ii++) {
+				const type = input.readByte(), frameCount = input.readInt(true), bezierCount = input.readInt(true);
+				switch (type) {
+					case SLIDER_TIME: readTimeline(input, timelines, new SliderTimeline(frameCount, bezierCount, index), 1); break;
+					case SLIDER_MIX: readTimeline(input, timelines, new SliderMixTimeline(frameCount, bezierCount, index), 1); break;
+					default: throw new Error("Uknown slider type: " + type);
+				}
+
+			}
+		}
+
+		// Attachment timelines.
 		for (let i = 0, n = input.readInt(true); i < n; i++) {
 			let skin = skeletonData.skins[input.readInt(true)];
 			for (let ii = 0, nn = input.readInt(true); ii < nn; ii++) {
@@ -1267,7 +1303,16 @@ class Vertices {
 
 enum AttachmentType { Region, BoundingBox, Mesh, LinkedMesh, Path, Point, Clipping }
 
-function readTimeline1 (input: BinaryInput, timeline: CurveTimeline1, scale: number): CurveTimeline1 {
+function readTimeline (input: BinaryInput, timelines: Array<Timeline>, timeline: CurveTimeline1, scale: number): void;
+function readTimeline (input: BinaryInput, timelines: Array<Timeline>, timeline: BoneTimeline2, scale: number): void;
+function readTimeline (input: BinaryInput, timelines: Array<Timeline>, timeline: CurveTimeline1 | BoneTimeline2, scale: number): void {
+	if (timeline instanceof CurveTimeline1)
+		readTimeline1(input, timelines, timeline, scale);
+	else
+		readTimeline2(input, timelines, timeline, scale);
+}
+
+function readTimeline1 (input: BinaryInput, timelines: Array<Timeline>, timeline: CurveTimeline1, scale: number): void {
 	let time = input.readFloat(), value = input.readFloat() * scale;
 	for (let frame = 0, bezier = 0, frameLast = timeline.getFrameCount() - 1; ; frame++) {
 		timeline.setFrame(frame, time, value);
@@ -1283,10 +1328,10 @@ function readTimeline1 (input: BinaryInput, timeline: CurveTimeline1, scale: num
 		time = time2;
 		value = value2;
 	}
-	return timeline;
+	timelines.push(timeline);
 }
 
-function readTimeline2 (input: BinaryInput, timeline: CurveTimeline2, scale: number): CurveTimeline2 {
+function readTimeline2 (input: BinaryInput, timelines: Array<Timeline>, timeline: BoneTimeline2, scale: number): void {
 	let time = input.readFloat(), value1 = input.readFloat() * scale, value2 = input.readFloat() * scale;
 	for (let frame = 0, bezier = 0, frameLast = timeline.getFrameCount() - 1; ; frame++) {
 		timeline.setFrame(frame, time, value1, value2);
@@ -1304,7 +1349,7 @@ function readTimeline2 (input: BinaryInput, timeline: CurveTimeline2, scale: num
 		value1 = nvalue1;
 		value2 = nvalue2;
 	}
-	return timeline;
+	timelines.push(timeline);
 }
 
 function setBezier (input: BinaryInput, timeline: CurveTimeline, bezier: number, frame: number, value: number,
@@ -1331,6 +1376,12 @@ const SLOT_RGBA2 = 3;
 const SLOT_RGB2 = 4;
 const SLOT_ALPHA = 5;
 
+const CONSTRAINT_IK = 0;
+const CONSTRAINT_PATH = 1;
+const CONSTRAINT_TRANSFORM = 2;
+const CONSTRAINT_PHYSICS = 3;
+const CONSTRAINT_SLIDER = 4;
+
 const ATTACHMENT_DEFORM = 0;
 const ATTACHMENT_SEQUENCE = 1;
 
@@ -1346,6 +1397,9 @@ const PHYSICS_WIND = 5;
 const PHYSICS_GRAVITY = 6;
 const PHYSICS_MIX = 7;
 const PHYSICS_RESET = 8;
+
+const SLIDER_TIME = 0;
+const SLIDER_MIX = 1;
 
 const CURVE_LINEAR = 0;
 const CURVE_STEPPED = 1;

@@ -29,13 +29,10 @@
 
 import { Animation } from "./Animation"
 import { BoneData } from "./BoneData.js";
+import { ConstraintData } from "./ConstraintData";
 import { EventData } from "./EventData.js";
-import { IkConstraintData } from "./IkConstraintData.js";
-import { PathConstraintData } from "./PathConstraintData.js";
-import { PhysicsConstraintData } from "./PhysicsConstraintData.js";
 import { Skin } from "./Skin.js";
 import { SlotData } from "./SlotData.js";
-import { TransformConstraintData } from "./TransformConstraintData.js";
 
 /** Stores the setup pose and all of the stateless data for a skeleton.
  *
@@ -67,16 +64,7 @@ export class SkeletonData {
 	animations = new Array<Animation>();
 
 	/** The skeleton's IK constraints. */
-	ikConstraints = new Array<IkConstraintData>();
-
-	/** The skeleton's transform constraints. */
-	transformConstraints = new Array<TransformConstraintData>();
-
-	/** The skeleton's path constraints. */
-	pathConstraints = new Array<PathConstraintData>();
-
-	/** The skeleton's physics constraints. */
-	physicsConstraints = new Array<PhysicsConstraintData>();
+	constraints = new Array<ConstraintData<any, any>>();
 
 	/** The X coordinate of the skeleton's axis aligned bounding box in the setup pose. */
 	x: number = 0;
@@ -116,10 +104,8 @@ export class SkeletonData {
 	findBone (boneName: string) {
 		if (!boneName) throw new Error("boneName cannot be null.");
 		let bones = this.bones;
-		for (let i = 0, n = bones.length; i < n; i++) {
-			let bone = bones[i];
-			if (bone.name == boneName) return bone;
-		}
+		for (let i = 0, n = bones.length; i < n; i++)
+			if (bones[i].name == boneName) return bones[i];
 		return null;
 	}
 
@@ -129,10 +115,8 @@ export class SkeletonData {
 	findSlot (slotName: string) {
 		if (!slotName) throw new Error("slotName cannot be null.");
 		let slots = this.slots;
-		for (let i = 0, n = slots.length; i < n; i++) {
-			let slot = slots[i];
-			if (slot.name == slotName) return slot;
-		}
+		for (let i = 0, n = slots.length; i < n; i++)
+			if (slots[i].name == slotName) return slots[i];
 		return null;
 	}
 
@@ -142,10 +126,8 @@ export class SkeletonData {
 	findSkin (skinName: string) {
 		if (!skinName) throw new Error("skinName cannot be null.");
 		let skins = this.skins;
-		for (let i = 0, n = skins.length; i < n; i++) {
-			let skin = skins[i];
-			if (skin.name == skinName) return skin;
-		}
+		for (let i = 0, n = skins.length; i < n; i++)
+			if (skins[i].name == skinName) return skins[i];
 		return null;
 	}
 
@@ -155,10 +137,8 @@ export class SkeletonData {
 	findEvent (eventDataName: string) {
 		if (!eventDataName) throw new Error("eventDataName cannot be null.");
 		let events = this.events;
-		for (let i = 0, n = events.length; i < n; i++) {
-			let event = events[i];
-			if (event.name == eventDataName) return event;
-		}
+		for (let i = 0, n = events.length; i < n; i++)
+			if (events[i].name == eventDataName) return events[i];
 		return null;
 	}
 
@@ -168,62 +148,22 @@ export class SkeletonData {
 	findAnimation (animationName: string) {
 		if (!animationName) throw new Error("animationName cannot be null.");
 		let animations = this.animations;
-		for (let i = 0, n = animations.length; i < n; i++) {
-			let animation = animations[i];
-			if (animation.name == animationName) return animation;
+		for (let i = 0, n = animations.length; i < n; i++)
+			if (animations[i].name == animationName) return animations[i];
+		return null;
+	}
+
+	// --- Constraints.
+
+	findConstraint<T extends ConstraintData<any, any>> (constraintName: string, type: new (name: string) => T): T | null {
+		if (!constraintName) throw new Error("constraintName cannot be null.");
+		if (type == null) throw new Error("type cannot be null.");
+		const constraints = this.constraints;
+		for (let i = 0, n = this.constraints.length; i < n; i++) {
+			let constraint = constraints[i];
+			if (constraint instanceof type && constraint.name === constraintName) return constraint as T;
 		}
 		return null;
 	}
 
-	/** Finds an IK constraint by comparing each IK constraint's name. It is more efficient to cache the results of this method
-	 * than to call it multiple times.
-	 * @return May be null. */
-	findIkConstraint (constraintName: string) {
-		if (!constraintName) throw new Error("constraintName cannot be null.");
-		const ikConstraints = this.ikConstraints;
-		for (let i = 0, n = ikConstraints.length; i < n; i++) {
-			const constraint = ikConstraints[i];
-			if (constraint.name == constraintName) return constraint;
-		}
-		return null;
-	}
-
-	/** Finds a transform constraint by comparing each transform constraint's name. It is more efficient to cache the results of
-	 * this method than to call it multiple times.
-	 * @return May be null. */
-	findTransformConstraint (constraintName: string) {
-		if (!constraintName) throw new Error("constraintName cannot be null.");
-		const transformConstraints = this.transformConstraints;
-		for (let i = 0, n = transformConstraints.length; i < n; i++) {
-			const constraint = transformConstraints[i];
-			if (constraint.name == constraintName) return constraint;
-		}
-		return null;
-	}
-
-	/** Finds a path constraint by comparing each path constraint's name. It is more efficient to cache the results of this method
-	 * than to call it multiple times.
-	 * @return May be null. */
-	findPathConstraint (constraintName: string) {
-		if (!constraintName) throw new Error("constraintName cannot be null.");
-		const pathConstraints = this.pathConstraints;
-		for (let i = 0, n = pathConstraints.length; i < n; i++) {
-			const constraint = pathConstraints[i];
-			if (constraint.name == constraintName) return constraint;
-		}
-		return null;
-	}
-
-	/** Finds a physics constraint by comparing each physics constraint's name. It is more efficient to cache the results of this method
-	 * than to call it multiple times.
-	 * @return May be null. */
-	findPhysicsConstraint (constraintName: string) {
-		if (!constraintName) throw new Error("constraintName cannot be null.");
-		const physicsConstraints = this.physicsConstraints;
-		for (let i = 0, n = physicsConstraints.length; i < n; i++) {
-			const constraint = physicsConstraints[i];
-			if (constraint.name == constraintName) return constraint;
-		}
-		return null;
-	}
 }

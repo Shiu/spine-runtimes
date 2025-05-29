@@ -86,7 +86,7 @@ export class SpinePipe implements RenderPipe<Spine> {
 
 			for (let i = 0, n = drawOrder.length; i < n; i++) {
 				const slot = drawOrder[i];
-				const attachment = slot.getAttachment();
+				const attachment = slot.pose.attachment;
 
 				if (attachment instanceof RegionAttachment || attachment instanceof MeshAttachment) {
 					const cacheData = spine._getCachedData(slot, attachment);
@@ -122,7 +122,7 @@ export class SpinePipe implements RenderPipe<Spine> {
 
 		for (let i = 0, n = drawOrder.length; i < n; i++) {
 			const slot = drawOrder[i];
-			const attachment = slot.getAttachment();
+			const attachment = slot.pose.attachment;
 			const blendMode = spineBlendModeMap[slot.data.blendMode];
 
 			if (attachment instanceof RegionAttachment || attachment instanceof MeshAttachment) {
@@ -165,7 +165,7 @@ export class SpinePipe implements RenderPipe<Spine> {
 
 		for (let i = 0, n = drawOrder.length; i < n; i++) {
 			const slot = drawOrder[i];
-			const attachment = slot.getAttachment();
+			const attachment = slot.pose.attachment;
 
 			if (attachment instanceof RegionAttachment || attachment instanceof MeshAttachment) {
 				const cacheData = spine._getCachedData(slot, attachment);

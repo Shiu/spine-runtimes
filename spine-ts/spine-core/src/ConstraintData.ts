@@ -27,7 +27,20 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
+import { Constraint } from "./Constraint";
+import { Pose } from "./Pose";
+import { PosedData } from "./PosedData";
+import { Skeleton } from "./Skeleton";
+
 /** The base class for all constraint datas. */
-export abstract class ConstraintData {
-	constructor (public name: string, public order: number, public skinRequired: boolean) { }
+export abstract class ConstraintData<
+	T extends Constraint<any, any, any>,
+	P extends Pose<any>>
+	extends PosedData<P> {
+
+	constructor (name: string, setup: P) {
+		super(name, setup);
+	}
+
+	abstract create (skeleton: Skeleton): T;
 }

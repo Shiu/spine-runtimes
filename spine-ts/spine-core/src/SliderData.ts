@@ -27,49 +27,31 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { BoneLocal } from "./BoneLocal.js";
-import { PosedData } from "./PosedData.js";
-import { Color } from "./Utils.js";
+import { Animation } from "./Animation";
+import { BoneData } from "./BoneData";
+import { ConstraintData } from "./ConstraintData";
+import { Skeleton } from "./Skeleton";
+import { Slider } from "./Slider";
+import { SliderPose } from "./SliderPose";
+import { FromProperty } from "./TransformConstraintData";
 
-import type { Skeleton } from "./Skeleton.js";
+/** Stores the setup pose for a {@link SliderConstraint}.
+ *
+ * See <a href="https://esotericsoftware.com/spine-slider-constraints">Slider constraints</a> in the Spine User Guide. */
+export class SliderData extends ConstraintData<Slider, SliderPose> {
+	animation!: Animation;
+	additive = false;
+	loop = false;
+	bone: BoneData | null = null;
+	property!: FromProperty;
+	scale = 0;
+	local = false;
 
-/** The setup pose for a bone. */
-export class BoneData extends PosedData<BoneLocal> {
-	/** The index of the bone in {@link Skeleton.getBones}. */
-	index: number = 0;
-
-	/** @returns May be null. */
-	parent: BoneData | null = null;
-
-	/** The bone's length. */
-	length: number = 0;
-
-	// Nonessential.
-	/** The color of the bone as it was in Spine. Available only when nonessential data was exported. Bones are not usually
-	 * rendered at runtime. */
-	readonly color = new Color();
-
-	/** The bone icon as it was in Spine, or null if nonessential data was not exported. */
-	icon?: string;
-
-	/** False if the bone was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
-	visible = false;
-
-	constructor (index: number, name: string, parent: BoneData | null) {
-		super(name, new BoneLocal());
-		if (index < 0) throw new Error("index must be >= 0.");
-		if (!name) throw new Error("name cannot be null.");
-		this.index = index;
-		this.parent = parent;
+	constructor (name: string) {
+		super(name, new SliderPose());
 	}
 
-	copy (parent: BoneData | null): BoneData {
-		const copy = new BoneData(this.index, this.name, parent);
-		copy.length = this.length;
-		copy.setup.set(this.setup);
-		return copy;
+	public create (skeleton: Skeleton) {
+		return new Slider(this, skeleton);
 	}
 }
-
-/** Determines how a bone inherits world transforms from parent bones. */
-export enum Inherit { Normal, OnlyTranslation, NoRotationOrReflection, NoScale, NoScaleOrReflection }

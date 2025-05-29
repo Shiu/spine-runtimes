@@ -49,7 +49,7 @@ export class Skin {
 
 	attachments = new Array<StringMap<Attachment>>();
 	bones = Array<BoneData>();
-	constraints = new Array<ConstraintData>();
+	constraints = new Array<ConstraintData<any, any>>();
 
 	/** The color of the skin as it was in Spine, or a default color if nonessential data was not exported. */
 	color = new Color(0.99607843, 0.61960787, 0.30980393, 1); // fe9e4fff
@@ -192,14 +192,14 @@ export class Skin {
 		let slotIndex = 0;
 		for (let i = 0; i < skeleton.slots.length; i++) {
 			let slot = skeleton.slots[i];
-			let slotAttachment = slot.getAttachment();
+			let slotAttachment = slot.pose.getAttachment();
 			if (slotAttachment && slotIndex < oldSkin.attachments.length) {
 				let dictionary = oldSkin.attachments[slotIndex];
 				for (let key in dictionary) {
 					let skinAttachment: Attachment = dictionary[key];
 					if (slotAttachment == skinAttachment) {
 						let attachment = this.getAttachment(slotIndex, key);
-						if (attachment) slot.setAttachment(attachment);
+						if (attachment) slot.pose.setAttachment(attachment);
 						break;
 					}
 				}

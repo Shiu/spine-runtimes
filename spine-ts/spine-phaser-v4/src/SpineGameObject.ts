@@ -96,7 +96,7 @@ export class SetupPoseBoundsProvider implements SpineGameObjectBoundsProvider {
 		// the skeleton in the GameObject has already been heavily modified. We can not
 		// reconstruct that state.
 		const skeleton = new Skeleton(gameObject.skeleton.data);
-		skeleton.setToSetupPose();
+		skeleton.setupPose();
 		skeleton.updateWorldTransform(Physics.update);
 		const bounds = skeleton.getBoundsRect(this.clipping ? new SkeletonClipping() : undefined);
 		return bounds.width == Number.NEGATIVE_INFINITY
@@ -145,7 +145,7 @@ export class SkinsAndAnimationBoundsProvider
 			}
 			skeleton.setSkin(customSkin);
 		}
-		skeleton.setToSetupPose();
+		skeleton.setupPose();
 
 		const animation =
 			this.animation != null ? data.findAnimation(this.animation!) : null;
@@ -161,7 +161,7 @@ export class SkinsAndAnimationBoundsProvider
 				maxX = Number.NEGATIVE_INFINITY,
 				maxY = Number.NEGATIVE_INFINITY;
 			animationState.clearTracks();
-			animationState.setAnimationWith(0, animation, false);
+			animationState.setAnimation(0, animation, false);
 			const steps = Math.max(animation.duration / this.timeStep, 1.0);
 			for (let i = 0; i < steps; i++) {
 				const delta = i > 0 ? this.timeStep : 0;
@@ -296,9 +296,9 @@ export class SpineGameObject extends DepthMixin(
 	phaserWorldCoordinatesToBone (point: { x: number; y: number }, bone: Bone) {
 		this.phaserWorldCoordinatesToSkeleton(point);
 		if (bone.parent) {
-			bone.parent.worldToLocal(point as Vector2);
+			bone.parent.applied.worldToLocal(point as Vector2);
 		} else {
-			bone.worldToLocal(point as Vector2);
+			bone.applied.worldToLocal(point as Vector2);
 		}
 	}
 
@@ -440,7 +440,7 @@ export class SpineGameObject extends DepthMixin(
 		skeleton.scaleX = transform.scaleX;
 		skeleton.scaleY = transform.scaleY;
 		let root = skeleton.getRootBone()!;
-		root.rotation = -MathUtils.radiansToDegrees * transform.rotationNormalized;
+		root.applied.rotation = -MathUtils.radiansToDegrees * transform.rotationNormalized;
 		this.skeleton.updateWorldTransform(Physics.update);
 
 		context.save();

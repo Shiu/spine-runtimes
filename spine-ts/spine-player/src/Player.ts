@@ -528,8 +528,8 @@ export class SpinePlayer implements Disposable {
 		if (config.skin) {
 			if (!this.skeleton.data.findSkin(config.skin))
 				this.showError(`Error: Skin does not exist in skeleton: ${config.skin}`);
-			this.skeleton.setSkinByName(config.skin);
-			this.skeleton.setSlotsToSetupPose();
+			this.skeleton.setSkin(config.skin);
+			this.skeleton.setupPoseSlots();
 		}
 
 		// Check if all animations given a viewport exist.
@@ -609,7 +609,7 @@ export class SpinePlayer implements Disposable {
 					let bone = skeleton.findBone(controlBones[i]);
 					if (!bone) continue;
 					let distance = renderer.camera.worldToScreen(
-						coords.set(bone.worldX, bone.worldY, 0),
+						coords.set(bone.applied.worldX, bone.applied.worldY, 0),
 						canvas.clientWidth, canvas.clientHeight).distance(mouse);
 					if (distance < bestDistance) {
 						bestDistance = distance;
@@ -639,13 +639,14 @@ export class SpinePlayer implements Disposable {
 						x = MathUtils.clamp(x + offset.x, 0, canvas.clientWidth)
 						y = MathUtils.clamp(y - offset.y, 0, canvas.clientHeight);
 						renderer.camera.screenToWorld(coords.set(x, y, 0), canvas.clientWidth, canvas.clientHeight);
+						const applied = target.applied;
 						if (target.parent) {
-							target.parent.worldToLocal(position.set(coords.x - skeleton.x, coords.y - skeleton.y));
-							target.x = position.x;
-							target.y = position.y;
+							target.parent.applied.worldToLocal(position.set(coords.x - skeleton.x, coords.y - skeleton.y));
+							applied.x = position.x;
+							applied.y = position.y;
 						} else {
-							target.x = coords.x - skeleton.x;
-							target.y = coords.y - skeleton.y;
+							applied.x = coords.x - skeleton.x;
+							applied.y = coords.y - skeleton.y;
 						}
 					}
 				},
@@ -730,13 +731,13 @@ export class SpinePlayer implements Disposable {
 	/* Sets a new animation and viewport on track 0. */
 	setAnimation (animation: string | Animation, loop: boolean = true): TrackEntry {
 		animation = this.setViewport(animation);
-		return this.animationState!.setAnimationWith(0, animation, loop);
+		return this.animationState!.setAnimation(0, animation, loop);
 	}
 
 	/* Adds a new animation and viewport on track 0. */
 	addAnimation (animation: string | Animation, loop: boolean = true, delay: number = 0): TrackEntry {
 		animation = this.setViewport(animation);
-		return this.animationState!.addAnimationWith(0, animation, loop, delay);
+		return this.animationState!.addAnimation(0, animation, loop, delay);
 	}
 
 	/* Sets the viewport for the specified animation. */
@@ -799,7 +800,7 @@ export class SpinePlayer implements Disposable {
 	}
 
 	private calculateAnimationViewport (animation: Animation, viewport: Viewport) {
-		this.skeleton!.setToSetupPose();
+		this.skeleton!.setupPose();
 
 		let steps = 100, stepTime = animation.duration ? animation.duration / steps : 0, time = 0;
 		let minX = 100000000, maxX = -100000000, minY = 100000000, maxY = -100000000;
@@ -807,7 +808,7 @@ export class SpinePlayer implements Disposable {
 
 		const tempArray = new Array<number>(2);
 		for (let i = 0; i < steps; i++, time += stepTime) {
-			animation.apply(this.skeleton!, time, time, false, [], 1, MixBlend.setup, MixDirection.mixIn);
+			animation.apply(this.skeleton!, time, time, false, [], 1, MixBlend.setup, MixDirection.in, false);
 			this.skeleton!.updateWorldTransform(Physics.update);
 			this.skeleton!.getBounds(offset, size, tempArray, this.sceneRenderer!.skeletonRenderer.getSkeletonClipping());
 
@@ -943,8 +944,9 @@ export class SpinePlayer implements Disposable {
 						if (!bone) continue;
 						let colorInner = selectedBones[i] ? BONE_INNER_OVER : BONE_INNER;
 						let colorOuter = selectedBones[i] ? BONE_OUTER_OVER : BONE_OUTER;
-						renderer.circle(true, skeleton.x + bone.worldX, skeleton.y + bone.worldY, 20, colorInner);
-						renderer.circle(false, skeleton.x + bone.worldX, skeleton.y + bone.worldY, 20, colorOuter);
+						const applied = bone.applied;
+						renderer.circle(true, skeleton.x + applied.worldX, skeleton.y + applied.worldY, 20, colorInner);
+						renderer.circle(false, skeleton.x + applied.worldX, skeleton.y + applied.worldY, 20, colorOuter);
 					}
 				}
 
@@ -1055,8 +1057,8 @@ export class SpinePlayer implements Disposable {
 				removeClass(rows.children, "selected");
 				row.classList.add("selected");
 				this.config.skin = skin.name;
-				this.skeleton!.setSkinByName(this.config.skin);
-				this.skeleton!.setSlotsToSetupPose();
+				this.skeleton!.setSkin(this.config.skin);
+				this.skeleton!.setupPose();
 			}
 		});
 		popup.show();

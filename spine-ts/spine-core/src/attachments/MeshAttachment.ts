@@ -34,6 +34,7 @@ import { VertexAttachment, Attachment } from "./Attachment.js";
 import { HasTextureRegion } from "./HasTextureRegion.js";
 import { Sequence } from "./Sequence.js";
 import { Slot } from "../Slot.js";
+import { Skeleton } from "src/Skeleton.js";
 
 /** An attachment that displays a textured mesh. A mesh has hull vertices and internal vertices within the hull. Holes are not
  * supported. Each vertex has UVs (texture coordinates) and triangles are used to map an image on to the mesh.
@@ -126,11 +127,12 @@ export class MeshAttachment extends VertexAttachment implements HasTextureRegion
 						uvs[i + 1] = v + regionUVs[i] * height;
 					}
 					return;
+				default:
+					u -= region.offsetX / textureWidth;
+					v -= (region.originalHeight - region.offsetY - region.height) / textureHeight;
+					width = region.originalWidth / textureWidth;
+					height = region.originalHeight / textureHeight;
 			}
-			u -= region.offsetX / textureWidth;
-			v -= (region.originalHeight - region.offsetY - region.height) / textureHeight;
-			width = region.originalWidth / textureWidth;
-			height = region.originalHeight / textureHeight;
 		} else if (!this.region) {
 			u = v = 0;
 			width = height = 1;
@@ -195,9 +197,9 @@ export class MeshAttachment extends VertexAttachment implements HasTextureRegion
 		return copy;
 	}
 
-	computeWorldVertices (slot: Slot, start: number, count: number, worldVertices: NumberArrayLike, offset: number, stride: number) {
-		if (this.sequence != null) this.sequence.apply(slot, this);
-		super.computeWorldVertices(slot, start, count, worldVertices, offset, stride);
+	computeWorldVertices (skeleton: Skeleton, slot: Slot, start: number, count: number, worldVertices: NumberArrayLike, offset: number, stride: number) {
+		if (this.sequence != null) this.sequence.apply(slot.applied, this);
+		super.computeWorldVertices(skeleton, slot, start, count, worldVertices, offset, stride);
 	}
 
 	/** Returns a new mesh with the {@link #parentMesh} set to this mesh's parent mesh, if any, else to this mesh. **/

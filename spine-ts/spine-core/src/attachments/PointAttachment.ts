@@ -27,7 +27,7 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Bone } from "../Bone.js";
+import { BonePose } from "src/BonePose.js";
 import { Color, Vector2, MathUtils } from "../Utils.js";
 import { VertexAttachment, Attachment } from "./Attachment.js";
 
@@ -49,17 +49,17 @@ export class PointAttachment extends VertexAttachment {
 		super(name);
 	}
 
-	computeWorldPosition (bone: Bone, point: Vector2) {
+	computeWorldPosition (bone: BonePose, point: Vector2) {
 		point.x = this.x * bone.a + this.y * bone.b + bone.worldX;
 		point.y = this.x * bone.c + this.y * bone.d + bone.worldY;
 		return point;
 	}
 
-	computeWorldRotation (bone: Bone) {
+	computeWorldRotation (bone: BonePose) {
 		const r = this.rotation * MathUtils.degRad, cos = Math.cos(r), sin = Math.sin(r);
 		const x = cos * bone.a + sin * bone.b;
 		const y = cos * bone.c + sin * bone.d;
-		return MathUtils.atan2Deg(y, x);		
+		return MathUtils.atan2Deg(y, x);
 	}
 
 	copy (): Attachment {

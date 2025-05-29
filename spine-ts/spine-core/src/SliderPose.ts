@@ -27,19 +27,15 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Physics } from "./Skeleton.js";
+import { Pose } from "./Pose";
 
-/** The interface for items updated by {@link Skeleton#updateWorldTransform()}. */
-export interface Updatable {
-	/** @param physics Determines how physics and other non-deterministic updates are applied. */
-	update (physics: Physics): void;
+/** Stores a pose for a slider. */
+export class SliderPose implements Pose<SliderPose> {
+	time = 0;
+	mix = 0;
 
-	/** Returns false when this item won't be updated by
-	 * {@link Skeleton#updateWorldTransform()} because a skin is required and the
-	 * {@link Skeleton#getSkin() active skin} does not contain this item.
-	 * @see Skin#getBones()
-	 * @see Skin#getConstraints()
-	 * @see BoneData#getSkinRequired()
-	 * @see ConstraintData#getSkinRequired() */
-	isActive (): boolean;
+	set (pose: SliderPose) {
+		this.time = pose.time;
+		this.mix = pose.mix;
+	}
 }

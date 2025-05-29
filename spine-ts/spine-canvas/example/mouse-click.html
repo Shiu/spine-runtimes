@@ -37,7 +37,7 @@
 
 		// Instantiate a new skeleton based on the atlas and skeleton data.
 		skeleton = new spine.Skeleton(skeletonData);
-		skeleton.setToSetupPose();
+		skeleton.setupPose();
 		skeleton.updateWorldTransform(spine.Physics.update);
 		bounds = skeleton.getBoundsRect();
 

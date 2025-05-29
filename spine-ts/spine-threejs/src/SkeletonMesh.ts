@@ -219,14 +219,13 @@ export class SkeletonMesh extends THREE.Object3D {
 	private updateGeometry () {
 		this.clearBatches();
 
-		let tempLight = this.tempLight;
-		let tempDark = this.tempDark;
 		let clipper = this.clipper;
 
 		let vertices: NumberArrayLike = this.vertices;
 		let triangles: Array<number> | null = null;
 		let uvs: NumberArrayLike | null = null;
-		let drawOrder = this.skeleton.drawOrder;
+		const skeleton = this.skeleton;
+		let drawOrder = skeleton.drawOrder;
 		let batch = this.nextBatch();
 		batch.begin();
 		let z = 0;
@@ -235,10 +234,11 @@ export class SkeletonMesh extends THREE.Object3D {
 		for (let i = 0, n = drawOrder.length; i < n; i++) {
 			let slot = drawOrder[i];
 			if (!slot.bone.active) {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
-			let attachment = slot.getAttachment();
+			let pose = slot.pose;
+			let attachment = pose.attachment;
 			let attachmentColor: Color | null;
 			let texture: ThreeJsTexture | null;
 			let numFloats = 0;
@@ -258,6 +258,7 @@ export class SkeletonMesh extends THREE.Object3D {
 					vertices = this.vertices = Utils.newFloatArray(numFloats);
 				}
 				attachment.computeWorldVertices(
+					skeleton,
 					slot,
 					0,
 					attachment.worldVerticesLength,
@@ -269,17 +270,17 @@ export class SkeletonMesh extends THREE.Object3D {
 				uvs = attachment.uvs;
 				texture = <ThreeJsTexture>attachment.region!.texture;
 			} else if (attachment instanceof ClippingAttachment) {
-				clipper.clipStart(slot, attachment);
+				clipper.clipEnd(slot);
+				clipper.clipStart(skeleton, slot, attachment);
 				continue;
 			} else {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
 
 			if (texture != null) {
-				let skeleton = slot.bone.skeleton;
 				let skeletonColor = skeleton.color;
-				let slotColor = slot.color;
+				let slotColor = pose.color;
 				let alpha = skeletonColor.a * slotColor.a * attachmentColor.a;
 				let color = this.tempColor;
 				color.set(
@@ -290,12 +291,12 @@ export class SkeletonMesh extends THREE.Object3D {
 				);
 
 				let darkColor = this.tempDarkColor;
-				if (!slot.darkColor)
+				if (!pose.darkColor)
 					darkColor.set(0, 0, 0, 1);
 				else {
-					darkColor.r = slot.darkColor.r * alpha;
-					darkColor.g = slot.darkColor.g * alpha;
-					darkColor.b = slot.darkColor.b * alpha;
+					darkColor.r = pose.darkColor.r * alpha;
+					darkColor.g = pose.darkColor.g * alpha;
+					darkColor.b = pose.darkColor.b * alpha;
 					darkColor.a = 1;
 				}
 
@@ -304,7 +305,7 @@ export class SkeletonMesh extends THREE.Object3D {
 				let finalIndices: NumberArrayLike;
 				let finalIndicesLength: number;
 
-				if (clipper.isClipping() && clipper.clipTriangles(vertices, triangles, triangles.length, uvs, color, tempLight, this.twoColorTint, vertexSize)) {
+				if (clipper.isClipping() && clipper.clipTriangles(vertices, triangles, triangles.length, uvs, color, darkColor, this.twoColorTint, vertexSize)) {
 					let clippedVertices = clipper.clippedVertices;
 					let clippedTriangles = clipper.clippedTriangles;
 					finalVertices = clippedVertices;
@@ -344,7 +345,7 @@ export class SkeletonMesh extends THREE.Object3D {
 				}
 
 				if (finalVerticesLength == 0 || finalIndicesLength == 0) {
-					clipper.clipEndWithSlot(slot);
+					clipper.clipEnd(slot);
 					continue;
 				}
 
@@ -378,7 +379,7 @@ export class SkeletonMesh extends THREE.Object3D {
 				z += zOffset;
 			}
 
-			clipper.clipEndWithSlot(slot);
+			clipper.clipEnd(slot);
 		}
 		clipper.clipEnd();
 		batch.end();

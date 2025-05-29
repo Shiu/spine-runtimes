@@ -28,6 +28,7 @@
  *****************************************************************************/
 
 import { ClippingAttachment } from "./attachments/ClippingAttachment.js";
+import { Skeleton } from "./Skeleton.js";
 import { Slot } from "./Slot.js";
 import { Triangulator } from "./Triangulator.js";
 import { Utils, Color, NumberArrayLike } from "./Utils.js";
@@ -37,20 +38,23 @@ export class SkeletonClipping {
 	private clippingPolygon = new Array<number>();
 	private clipOutput = new Array<number>();
 	clippedVertices = new Array<number>();
+
+	/** An empty array unless {@link clipTrianglesUnpacked} was used. **/
 	clippedUVs = new Array<number>();
+
 	clippedTriangles = new Array<number>();
 	private scratch = new Array<number>();
 
 	private clipAttachment: ClippingAttachment | null = null;
 	private clippingPolygons: Array<Array<number>> | null = null;
 
-	clipStart (slot: Slot, clip: ClippingAttachment): number {
+	clipStart (skeleton: Skeleton, slot: Slot, clip: ClippingAttachment): number {
 		if (this.clipAttachment) return 0;
 		this.clipAttachment = clip;
 
 		let n = clip.worldVerticesLength;
 		let vertices = Utils.setArraySize(this.clippingPolygon, n);
-		clip.computeWorldVertices(slot, 0, n, vertices, 0, 2);
+		clip.computeWorldVertices(skeleton, slot, 0, n, vertices, 0, 2);
 		let clippingPolygon = this.clippingPolygon;
 		SkeletonClipping.makeClockwise(clippingPolygon);
 		let clippingPolygons = this.clippingPolygons = this.triangulator.decompose(clippingPolygon, this.triangulator.triangulate(clippingPolygon));
@@ -64,12 +68,9 @@ export class SkeletonClipping {
 		return clippingPolygons.length;
 	}
 
-	clipEndWithSlot (slot: Slot) {
-		if (this.clipAttachment && this.clipAttachment.endSlot == slot.data) this.clipEnd();
-	}
-
-	clipEnd () {
+	clipEnd (slot?: Slot) {
 		if (!this.clipAttachment) return;
+		if (slot && this.clipAttachment.endSlot !== slot.data) return;
 		this.clipAttachment = null;
 		this.clippingPolygons = null;
 		this.clippedVertices.length = 0;

@@ -30,19 +30,18 @@
 import { Attachment } from "./attachments/Attachment.js";
 import { ClippingAttachment } from "./attachments/ClippingAttachment.js";
 import { MeshAttachment } from "./attachments/MeshAttachment.js";
-import { PathAttachment } from "./attachments/PathAttachment.js";
 import { RegionAttachment } from "./attachments/RegionAttachment.js";
 import { Bone } from "./Bone.js";
-import { IkConstraint } from "./IkConstraint.js";
-import { PathConstraint } from "./PathConstraint.js";
+import { BonePose } from "./BonePose.js";
+import { Constraint } from "./Constraint.js";
+import { Physics } from "./Physics.js";
 import { PhysicsConstraint } from "./PhysicsConstraint.js";
+import { Posed } from "./Posed.js";
 import { SkeletonClipping } from "./SkeletonClipping.js";
 import { SkeletonData } from "./SkeletonData.js";
 import { Skin } from "./Skin.js";
 import { Slot } from "./Slot.js";
-import { TransformConstraint } from "./TransformConstraint.js";
-import { Updatable } from "./Updatable.js";
-import { Color, Utils, MathUtils, Vector2, NumberArrayLike } from "./Utils.js";
+import { Color, Utils, Vector2, NumberArrayLike } from "./Utils.js";
 
 /** Stores the current pose for a skeleton.
  *
@@ -52,47 +51,44 @@ export class Skeleton {
 	static yDown = false;
 
 	/** The skeleton's setup pose data. */
-	data: SkeletonData;
+	readonly data: SkeletonData;
 
 	/** The skeleton's bones, sorted parent first. The root bone is always the first bone. */
-	bones: Array<Bone>;
+	readonly bones: Array<Bone>;
 
-	/** The skeleton's slots in the setup pose draw order. */
-	slots: Array<Slot>;
+	/** The skeleton's slots. */
+	readonly slots: Array<Slot>;
 
 	/** The skeleton's slots in the order they should be drawn. The returned array may be modified to change the draw order. */
 	drawOrder: Array<Slot>;
 
-	/** The skeleton's IK constraints. */
-	ikConstraints: Array<IkConstraint>;
-
-	/** The skeleton's transform constraints. */
-	transformConstraints: Array<TransformConstraint>;
-
-	/** The skeleton's path constraints. */
-	pathConstraints: Array<PathConstraint>;
-
+	/** The skeleton's constraints. */
+	readonly constraints: Array<Constraint<any, any, any>>;
 
 	/** The skeleton's physics constraints. */
-	physicsConstraints: Array<PhysicsConstraint>;
+	readonly physics: Array<PhysicsConstraint>;
 
-	/** The list of bones and constraints, sorted in the order they should be updated, as computed by {@link #updateCache()}. */
-	_updateCache = new Array<Updatable>();
+	/** The list of bones and constraints, sorted in the order they should be updated, as computed by {@link updateCache()}. */
+	readonly _updateCache = new Array();
+
+	readonly resetCache: Array<Posed<any, any, any>> = new Array();
 
 	/** The skeleton's current skin. May be null. */
 	skin: Skin | null = null;
 
 	/** The color to tint all the skeleton's attachments. */
-	color: Color;
+	readonly color: Color;
 
-	/** Scales the entire skeleton on the X axis. This affects all bones, even if the bone's transform mode disallows scale
-	  * inheritance. */
+	/** Scales the entire skeleton on the X axis.
+	 *
+	 * Bones that do not inherit scale are still affected by this property. */
 	scaleX = 1;
 
-	/** Scales the entire skeleton on the Y axis. This affects all bones, even if the bone's transform mode disallows scale
-	  * inheritance. */
 	private _scaleY = 1;
 
+	/** Scales the entire skeleton on the Y axis.
+	 *
+	 * Bones that do not inherit scale are still affected by this property. */
 	public get scaleY () {
 		return Skeleton.yDown ? -this._scaleY : this._scaleY;
 	}
@@ -101,16 +97,27 @@ export class Skeleton {
 		this._scaleY = scaleY;
 	}
 
-	/** Sets the skeleton X position, which is added to the root bone worldX position. */
+	/** Sets the skeleton X position, which is added to the root bone worldX position.
+	 *
+	 * Bones that do not inherit translation are still affected by this property. */
 	x = 0;
 
-	/** Sets the skeleton Y position, which is added to the root bone worldY position. */
+	/** Sets the skeleton Y position, which is added to the root bone worldY position.
+	 *
+	 * Bones that do not inherit translation are still affected by this property. */
 	y = 0;
 
 	/** Returns the skeleton's time. This is used for time-based manipulations, such as {@link PhysicsConstraint}.
-	 * <p>
-	 * See {@link #update(float)}. */
+	 *
+	 * See {@link _update()}. */
 	time = 0;
+
+	windX = 1;
+	windY = 0;
+	gravityX = 0;
+	gravityY = 1;
+
+	_update = 0;
 
 	constructor (data: SkeletonData) {
 		if (!data) throw new Error("data cannot be null.");
@@ -121,10 +128,10 @@ export class Skeleton {
 			let boneData = data.bones[i];
 			let bone: Bone;
 			if (!boneData.parent)
-				bone = new Bone(boneData, this, null);
+				bone = new Bone(boneData, null);
 			else {
 				let parent = this.bones[boneData.parent.index];
-				bone = new Bone(boneData, this, parent);
+				bone = new Bone(boneData, parent);
 				parent.children.push(bone);
 			}
 			this.bones.push(bone);
@@ -132,55 +139,45 @@ export class Skeleton {
 
 		this.slots = new Array<Slot>();
 		this.drawOrder = new Array<Slot>();
-		for (let i = 0; i < data.slots.length; i++) {
-			let slotData = data.slots[i];
-			let bone = this.bones[slotData.boneData.index];
-			let slot = new Slot(slotData, bone);
+		for (const slotData of this.data.slots) {
+			let slot = new Slot(slotData, this);
 			this.slots.push(slot);
 			this.drawOrder.push(slot);
 		}
 
-		this.ikConstraints = new Array<IkConstraint>();
-		for (let i = 0; i < data.ikConstraints.length; i++) {
-			let ikConstraintData = data.ikConstraints[i];
-			this.ikConstraints.push(new IkConstraint(ikConstraintData, this));
-		}
-
-		this.transformConstraints = new Array<TransformConstraint>();
-		for (let i = 0; i < data.transformConstraints.length; i++) {
-			let transformConstraintData = data.transformConstraints[i];
-			this.transformConstraints.push(new TransformConstraint(transformConstraintData, this));
-		}
-
-		this.pathConstraints = new Array<PathConstraint>();
-		for (let i = 0; i < data.pathConstraints.length; i++) {
-			let pathConstraintData = data.pathConstraints[i];
-			this.pathConstraints.push(new PathConstraint(pathConstraintData, this));
-		}
-
-		this.physicsConstraints = new Array<PhysicsConstraint>();
-		for (let i = 0; i < data.physicsConstraints.length; i++) {
-			let physicsConstraintData = data.physicsConstraints[i];
-			this.physicsConstraints.push(new PhysicsConstraint(physicsConstraintData, this));
+		this.physics = new Array<PhysicsConstraint>();
+		this.constraints = new Array<Constraint<any, any, any>>();
+		for (const constraintData of this.data.constraints) {
+			const constraint = constraintData.create(this);
+			if (constraint instanceof PhysicsConstraint) this.physics.push(constraint);
+			this.constraints.push(constraint);
 		}
 
 		this.color = new Color(1, 1, 1, 1);
+
 		this.updateCache();
 	}
 
-	/** Caches information about bones and constraints. Must be called if the {@link #getSkin()} is modified or if bones,
+	/** Caches information about bones and constraints. Must be called if the {@link getSkin()} is modified or if bones,
 	 * constraints, or weighted path attachments are added or removed. */
 	updateCache () {
-		let updateCache = this._updateCache;
-		updateCache.length = 0;
+		this._updateCache.length = 0;
+		this.resetCache.length = 0;
+
+		let slots = this.slots;
+		for (let i = 0, n = slots.length; i < n; i++) {
+			const slot = slots[i];
+			slot.applied = slot.pose;
+		}
 
 		let bones = this.bones;
-		for (let i = 0, n = bones.length; i < n; i++) {
+		const boneCount = bones.length;
+		for (let i = 0, n = boneCount; i < n; i++) {
 			let bone = bones[i];
 			bone.sorted = bone.data.skinRequired;
 			bone.active = !bone.sorted;
+			bone.applied = bone.pose as BonePose;
 		}
-
 		if (this.skin) {
 			let skinBones = this.skin.bones;
 			for (let i = 0, n = this.skin.bones.length; i < n; i++) {
@@ -193,171 +190,39 @@ export class Skeleton {
 			}
 		}
 
-		// IK first, lowest hierarchy depth first.
-		let ikConstraints = this.ikConstraints;
-		let transformConstraints = this.transformConstraints;
-		let pathConstraints = this.pathConstraints;
-		let physicsConstraints = this.physicsConstraints;
-		let ikCount = ikConstraints.length, transformCount = transformConstraints.length, pathCount = pathConstraints.length, physicsCount = this.physicsConstraints.length;
-		let constraintCount = ikCount + transformCount + pathCount + physicsCount;
-
-		outer:
-		for (let i = 0; i < constraintCount; i++) {
-			for (let ii = 0; ii < ikCount; ii++) {
-				let constraint = ikConstraints[ii];
-				if (constraint.data.order == i) {
-					this.sortIkConstraint(constraint);
-					continue outer;
-				}
-			}
-			for (let ii = 0; ii < transformCount; ii++) {
-				let constraint = transformConstraints[ii];
-				if (constraint.data.order == i) {
-					this.sortTransformConstraint(constraint);
-					continue outer;
-				}
-			}
-			for (let ii = 0; ii < pathCount; ii++) {
-				let constraint = pathConstraints[ii];
-				if (constraint.data.order == i) {
-					this.sortPathConstraint(constraint);
-					continue outer;
-				}
-			}
-			for (let ii = 0; ii < physicsCount; ii++) {
-				const constraint = physicsConstraints[ii];
-				if (constraint.data.order == i) {
-					this.sortPhysicsConstraint(constraint);
-					continue outer;
-				}
-			}
+		let constraints = this.constraints;
+		let n = this.constraints.length;
+		for (let i = 0; i < n; i++) {
+			const constraint = constraints[i];
+			constraint.applied = constraint.pose;
+		}
+		for (let i = 0; i < n; i++) {
+			const constraint = constraints[i];
+			constraint.active = constraint.isSourceActive()
+				&& (!constraint.data.skinRequired || (this.skin != null && this.skin.constraints.includes(constraint.data)));
+			if (constraint.active) constraint.sort(this);
 		}
 
-		for (let i = 0, n = bones.length; i < n; i++)
+		for (let i = 0; i < boneCount; i++)
 			this.sortBone(bones[i]);
-	}
 
-	sortIkConstraint (constraint: IkConstraint) {
-		constraint.active = constraint.target.isActive() && (!constraint.data.skinRequired || (this.skin && Utils.contains(this.skin.constraints, constraint.data, true)))!;
-		if (!constraint.active) return;
-
-		this.sortBone(constraint.target);
-
-		let constrained = constraint.bones;
-		let parent = constrained[0];
-		this.sortBone(parent);
-
-		if (constrained.length == 1) {
-			this._updateCache.push(constraint);
-			this.sortReset(parent.children);
-		} else {
-			let child = constrained[constrained.length - 1];
-			this.sortBone(child);
-
-			this._updateCache.push(constraint);
-
-			this.sortReset(parent.children);
-			child.sorted = true;
-		}
-	}
-
-	sortPathConstraint (constraint: PathConstraint) {
-		constraint.active = constraint.slot.bone.isActive()
-			&& (!constraint.data.skinRequired || (this.skin && Utils.contains(this.skin.constraints, constraint.data, true)))!;
-		if (!constraint.active) return;
-
-		let slot = constraint.slot;
-		let slotIndex = slot.data.index;
-		let slotBone = slot.bone;
-		if (this.skin) this.sortPathConstraintAttachment(this.skin, slotIndex, slotBone);
-		if (this.data.defaultSkin && this.data.defaultSkin != this.skin)
-			this.sortPathConstraintAttachment(this.data.defaultSkin, slotIndex, slotBone);
-		for (let i = 0, n = this.data.skins.length; i < n; i++)
-			this.sortPathConstraintAttachment(this.data.skins[i], slotIndex, slotBone);
-
-		this.sortPathConstraintAttachmentWith(slot.attachment, slotBone);
-
-		let constrained = constraint.bones;
-		let boneCount = constrained.length;
-		for (let i = 0; i < boneCount; i++)
-			this.sortBone(constrained[i]);
-
-		this._updateCache.push(constraint);
-
-		for (let i = 0; i < boneCount; i++)
-			this.sortReset(constrained[i].children);
-		for (let i = 0; i < boneCount; i++)
-			constrained[i].sorted = true;
-	}
-
-	sortTransformConstraint (constraint: TransformConstraint) {
-		constraint.active = constraint.source.isActive() && (!constraint.data.skinRequired || (this.skin && Utils.contains(this.skin.constraints, constraint.data, true)))!;
-		if (!constraint.active) return;
-
-		this.sortBone(constraint.source);
-
-		let constrained = constraint.bones;
-		let boneCount = constrained.length;
-		if (constraint.data.localSource) {
-			for (let i = 0; i < boneCount; i++) {
-				let child = constrained[i];
-				this.sortBone(child.parent!);
-				this.sortBone(child);
-			}
-		} else {
-			for (let i = 0; i < boneCount; i++) {
-				this.sortBone(constrained[i]);
-			}
+		n = this._updateCache.length;
+		for (let i = 0; i < n; i++) {
+			const updateable = this._updateCache[i];
+			if (updateable instanceof Bone) this._updateCache[i] = updateable.applied;
 		}
 
-		this._updateCache.push(constraint);
-
-		for (let i = 0; i < boneCount; i++)
-			this.sortReset(constrained[i].children);
-		for (let i = 0; i < boneCount; i++)
-			constrained[i].sorted = true;
 	}
 
-	sortPathConstraintAttachment (skin: Skin, slotIndex: number, slotBone: Bone) {
-		let attachments = skin.attachments[slotIndex];
-		if (!attachments) return;
-		for (let key in attachments) {
-			this.sortPathConstraintAttachmentWith(attachments[key], slotBone);
+	constrained (object: Posed<any, any, any>) {
+		if (object.pose === object.applied) {
+			object.applied = object.constrained;
+			this.resetCache.push(object);
 		}
-	}
-
-	sortPathConstraintAttachmentWith (attachment: Attachment | null, slotBone: Bone) {
-		if (!(attachment instanceof PathAttachment)) return;
-		let pathBones = attachment.bones;
-		if (!pathBones)
-			this.sortBone(slotBone);
-		else {
-			let bones = this.bones;
-			for (let i = 0, n = pathBones.length; i < n;) {
-				let nn = pathBones[i++];
-				nn += i;
-				while (i < nn)
-					this.sortBone(bones[pathBones[i++]]);
-			}
-		}
-	}
-
-	sortPhysicsConstraint (constraint: PhysicsConstraint) {
-		const bone = constraint.bone;
-		constraint.active = bone.active && (!constraint.data.skinRequired || (this.skin != null && Utils.contains(this.skin.constraints, constraint.data, true)));
-		if (!constraint.active) return;
-
-		this.sortBone(bone);
-
-		this._updateCache.push(constraint);
-
-		this.sortReset(bone.children);
-		bone.sorted = true;
 	}
 
 	sortBone (bone: Bone) {
-		if (!bone) return;
-		if (bone.sorted) return;
+		if (bone.sorted || !bone.active) return;
 		let parent = bone.parent;
 		if (parent) this.sortBone(parent);
 		bone.sorted = true;
@@ -367,149 +232,112 @@ export class Skeleton {
 	sortReset (bones: Array<Bone>) {
 		for (let i = 0, n = bones.length; i < n; i++) {
 			let bone = bones[i];
-			if (!bone.active) continue;
-			if (bone.sorted) this.sortReset(bone.children);
-			bone.sorted = false;
+			if (!bone.active) {
+				if (bone.sorted) this.sortReset(bone.children);
+				bone.sorted = false;
+			}
 		}
 	}
 
 	/** Updates the world transform for each bone and applies all constraints.
-	 *
-	 * See [World transforms](http://esotericsoftware.com/spine-runtime-skeletons#World-transforms) in the Spine
+	 * <p>
+	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
-	updateWorldTransform (physics: Physics) {
-		if (physics === undefined || physics === null) throw new Error("physics is undefined");
-		let bones = this.bones;
-		for (let i = 0, n = bones.length; i < n; i++) {
-			let bone = bones[i];
-			bone.ax = bone.x;
-			bone.ay = bone.y;
-			bone.arotation = bone.rotation;
-			bone.ascaleX = bone.scaleX;
-			bone.ascaleY = bone.scaleY;
-			bone.ashearX = bone.shearX;
-			bone.ashearY = bone.shearY;
+	updateWorldTransform(physics: Physics): void {
+		this._update++;
+
+		const resetCache = this.resetCache;
+		for (let i = 0, n = this.resetCache.length; i < n; i++) {
+			const object = resetCache[i];
+			object.applied.set(object.pose);
 		}
 
-		let updateCache = this._updateCache;
-		for (let i = 0, n = updateCache.length; i < n; i++)
-			updateCache[i].update(physics);
-	}
-
-	updateWorldTransformWith (physics: Physics, parent: Bone) {
-		if (!parent) throw new Error("parent cannot be null.");
-
-		let bones = this.bones;
-		for (let i = 1, n = bones.length; i < n; i++) { // Skip root bone.
-			let bone = bones[i];
-			bone.ax = bone.x;
-			bone.ay = bone.y;
-			bone.arotation = bone.rotation;
-			bone.ascaleX = bone.scaleX;
-			bone.ascaleY = bone.scaleY;
-			bone.ashearX = bone.shearX;
-			bone.ashearY = bone.shearY;
-		}
-
-		// Apply the parent bone transform to the root bone. The root bone always inherits scale, rotation and reflection.
-		let rootBone = this.getRootBone();
-		if (!rootBone) throw new Error("Root bone must not be null.");
-		let pa = parent.a, pb = parent.b, pc = parent.c, pd = parent.d;
-		rootBone.worldX = pa * this.x + pb * this.y + parent.worldX;
-		rootBone.worldY = pc * this.x + pd * this.y + parent.worldY;
-
-		const rx = (rootBone.rotation + rootBone.shearX) * MathUtils.degRad;
-		const ry = (rootBone.rotation + 90 + rootBone.shearY) * MathUtils.degRad;
-		const la = Math.cos(rx) * rootBone.scaleX;
-		const lb = Math.cos(ry) * rootBone.scaleY;
-		const lc = Math.sin(rx) * rootBone.scaleX;
-		const ld = Math.sin(ry) * rootBone.scaleY;
-		rootBone.a = (pa * la + pb * lc) * this.scaleX;
-		rootBone.b = (pa * lb + pb * ld) * this.scaleX;
-		rootBone.c = (pc * la + pd * lc) * this.scaleY;
-		rootBone.d = (pc * lb + pd * ld) * this.scaleY;
-
-		// Update everything except root bone.
-		let updateCache = this._updateCache;
-		for (let i = 0, n = updateCache.length; i < n; i++) {
-			let updatable = updateCache[i];
-			if (updatable != rootBone) updatable.update(physics);
-		}
+		const updateCache = this._updateCache;
+		for (let i = 0, n = this._updateCache.length; i < n; i++)
+			updateCache[i].update(this, physics);
 	}
 
 	/** Sets the bones, constraints, and slots to their setup pose values. */
-	setToSetupPose () {
-		this.setBonesToSetupPose();
-		this.setSlotsToSetupPose();
+	setupPose () {
+		this.setupPoseBones();
+		this.setupPoseSlots();
 	}
 
 	/** Sets the bones and constraints to their setup pose values. */
-	setBonesToSetupPose () {
-		for (const bone of this.bones) bone.setToSetupPose();
-		for (const constraint of this.ikConstraints) constraint.setToSetupPose();
-		for (const constraint of this.transformConstraints) constraint.setToSetupPose();
-		for (const constraint of this.pathConstraints) constraint.setToSetupPose();
-		for (const constraint of this.physicsConstraints) constraint.setToSetupPose();
+	setupPoseBones () {
+		const bones = this.bones;
+		for (let i = 0, n = bones.length; i < n; i++)
+			bones[i].setupPose();
+
+		const constraints = this.constraints;
+		for (let i = 0, n = constraints.length; i < n; i++)
+			constraints[i].setupPose();
 	}
 
 	/** Sets the slots and draw order to their setup pose values. */
-	setSlotsToSetupPose () {
+	setupPoseSlots () {
 		let slots = this.slots;
 		Utils.arrayCopy(slots, 0, this.drawOrder, 0, slots.length);
 		for (let i = 0, n = slots.length; i < n; i++)
-			slots[i].setToSetupPose();
+			slots[i].setupPose();
 	}
 
-	/** @returns May return null. */
+	/** Returns the root bone, or null if the skeleton has no bones. */
 	getRootBone () {
 		if (this.bones.length == 0) return null;
 		return this.bones[0];
 	}
 
-	/** @returns May be null. */
+	/** Finds a bone by comparing each bone's name. It is more efficient to cache the results of this method than to call it
+	 * repeatedly. */
 	findBone (boneName: string) {
 		if (!boneName) throw new Error("boneName cannot be null.");
 		let bones = this.bones;
-		for (let i = 0, n = bones.length; i < n; i++) {
-			let bone = bones[i];
-			if (bone.data.name == boneName) return bone;
-		}
+		for (let i = 0, n = bones.length; i < n; i++)
+			if (bones[i].data.name == boneName) return bones[i];
 		return null;
 	}
 
 	/** Finds a slot by comparing each slot's name. It is more efficient to cache the results of this method than to call it
-	 * repeatedly.
-	 * @returns May be null. */
+	 * repeatedly. */
 	findSlot (slotName: string) {
 		if (!slotName) throw new Error("slotName cannot be null.");
 		let slots = this.slots;
-		for (let i = 0, n = slots.length; i < n; i++) {
-			let slot = slots[i];
-			if (slot.data.name == slotName) return slot;
-		}
+		for (let i = 0, n = slots.length; i < n; i++)
+			if (slots[i].data.name == slotName) return slots[i];
 		return null;
 	}
 
 	/** Sets a skin by name.
 	 *
-	 * See {@link #setSkin()}. */
-	setSkinByName (skinName: string) {
+	 * See {@link setSkin()}. */
+	setSkin (skinName: string): void;
+
+	/** Sets the skin used to look up attachments before looking in the {@link SkeletonData#getDefaultSkin() default skin}. If the
+	 * skin is changed, {@link updateCache} is called.
+	 * <p>
+	 * Attachments from the new skin are attached if the corresponding attachment from the old skin was attached. If there was no
+	 * old skin, each slot's setup mode attachment is attached from the new skin.
+	 * <p>
+	 * After changing the skin, the visible attachments can be reset to those attached in the setup pose by calling
+	 * {@link setupPoseSlots()}. Also, often {@link AnimationState.apply(Skeleton)} is called before the next time the skeleton is
+	 * rendered to allow any attachment keys in the current animation(s) to hide or show attachments from the new skin. */
+	setSkin (newSkin: Skin): void;
+
+	setSkin (newSkin: Skin | string): void {
+		if (newSkin instanceof Skin)
+			this.setSkinBySkin(newSkin);
+		else
+			this.setSkinByName(newSkin);
+	};
+
+	private setSkinByName (skinName: string) {
 		let skin = this.data.findSkin(skinName);
 		if (!skin) throw new Error("Skin not found: " + skinName);
 		this.setSkin(skin);
 	}
 
-	/** Sets the skin used to look up attachments before looking in the {@link SkeletonData#defaultSkin default skin}. If the
-	 * skin is changed, {@link #updateCache()} is called.
-	 *
-	 * Attachments from the new skin are attached if the corresponding attachment from the old skin was attached. If there was no
-	 * old skin, each slot's setup mode attachment is attached from the new skin.
-	 *
-	 * After changing the skin, the visible attachments can be reset to those attached in the setup pose by calling
-	 * {@link #setSlotsToSetupPose()}. Also, often {@link AnimationState#apply()} is called before the next time the
-	 * skeleton is rendered to allow any attachment keys in the current animation(s) to hide or show attachments from the new skin.
-	 * @param newSkin May be null. */
-	setSkin (newSkin: Skin) {
+	private setSkinBySkin (newSkin: Skin) {
 		if (newSkin == this.skin) return;
 		if (newSkin) {
 			if (this.skin)
@@ -521,7 +349,7 @@ export class Skeleton {
 					let name = slot.data.attachmentName;
 					if (name) {
 						let attachment = newSkin.getAttachment(i, name);
-						if (attachment) slot.setAttachment(attachment);
+						if (attachment) slot.pose.setAttachment(attachment);
 					}
 				}
 			}
@@ -530,13 +358,30 @@ export class Skeleton {
 		this.updateCache();
 	}
 
+	/** Finds an attachment by looking in the {@link skin} and {@link SkeletonData.defaultSkin} using the slot name and attachment
+	 * name.
+	 *
+	 * See {@link getAttachment(number, string)}. */
+	getAttachment (slotName: string, attachmentName: string): Attachment | null;
+
+	/** Finds an attachment by looking in the {@link skin} and {@link SkeletonData.defaultSkin} using the slot index and
+	 * attachment name. First the skin is checked and if the attachment was not found, the default skin is checked.
+	 *
+	 * See <a href="https://esotericsoftware.com/spine-runtime-skins">Runtime skins</a> in the Spine Runtimes Guide. */
+	getAttachment (slotIndex: number, attachmentName: string): Attachment | null;
+
+	getAttachment (slotNameOrIndex: string | number, attachmentName: string): Attachment | null {
+		if (typeof slotNameOrIndex === 'string')
+			return this.getAttachmentByName(slotNameOrIndex, attachmentName);
+		return this.getAttachmentByIndex(slotNameOrIndex, attachmentName);
+	}
 
 	/** Finds an attachment by looking in the {@link #skin} and {@link SkeletonData#defaultSkin} using the slot name and attachment
 	 * name.
 	 *
 	 * See {@link #getAttachment()}.
 	 * @returns May be null. */
-	getAttachmentByName (slotName: string, attachmentName: string): Attachment | null {
+	private getAttachmentByName (slotName: string, attachmentName: string): Attachment | null {
 		let slot = this.data.findSlot(slotName);
 		if (!slot) throw new Error(`Can't find slot with name ${slotName}`);
 		return this.getAttachment(slot.index, attachmentName);
@@ -547,7 +392,7 @@ export class Skeleton {
 	 *
 	 * See [Runtime skins](http://esotericsoftware.com/spine-runtime-skins) in the Spine Runtimes Guide.
 	 * @returns May be null. */
-	getAttachment (slotIndex: number, attachmentName: string): Attachment | null {
+	private getAttachmentByIndex (slotIndex: number, attachmentName: string): Attachment | null {
 		if (!attachmentName) throw new Error("attachmentName cannot be null.");
 		if (this.skin) {
 			let attachment = this.skin.getAttachment(slotIndex, attachmentName);
@@ -557,57 +402,31 @@ export class Skeleton {
 		return null;
 	}
 
-	/** A convenience method to set an attachment by finding the slot with {@link #findSlot()}, finding the attachment with
-	 * {@link #getAttachment()}, then setting the slot's {@link Slot#attachment}.
+	/** A convenience method to set an attachment by finding the slot with {@link findSlot()}, finding the attachment with
+	 * {@link getAttachment()}, then setting the slot's {@link Slot.attachment}.
 	 * @param attachmentName May be null to clear the slot's attachment. */
 	setAttachment (slotName: string, attachmentName: string) {
 		if (!slotName) throw new Error("slotName cannot be null.");
-		let slots = this.slots;
-		for (let i = 0, n = slots.length; i < n; i++) {
-			let slot = slots[i];
-			if (slot.data.name == slotName) {
-				let attachment: Attachment | null = null;
-				if (attachmentName) {
-					attachment = this.getAttachment(i, attachmentName);
-					if (!attachment) throw new Error("Attachment not found: " + attachmentName + ", for slot: " + slotName);
-				}
-				slot.setAttachment(attachment);
-				return;
-			}
+		const slot = this.findSlot(slotName);
+		if (!slot) throw new Error("Slot not found: " + slotName);
+		let attachment: Attachment | null = null;
+		if (attachmentName) {
+			attachment = this.getAttachment(slot.data.index, attachmentName);
+			if (!attachment)
+				throw new Error("Attachment not found: " + attachmentName + ", for slot: " + slotName);
 		}
-		throw new Error("Slot not found: " + slotName);
+		slot.pose.setAttachment(attachment);
 	}
 
-
-	/** Finds an IK constraint by comparing each IK constraint's name. It is more efficient to cache the results of this method
-	 * than to call it repeatedly.
-	 * @return May be null. */
-	findIkConstraint (constraintName: string) {
-		if (!constraintName) throw new Error("constraintName cannot be null.");
-		return this.ikConstraints.find((constraint) => constraint.data.name == constraintName) ?? null;
-	}
-
-	/** Finds a transform constraint by comparing each transform constraint's name. It is more efficient to cache the results of
-	 * this method than to call it repeatedly.
-	 * @return May be null. */
-	findTransformConstraint (constraintName: string) {
-		if (!constraintName) throw new Error("constraintName cannot be null.");
-		return this.transformConstraints.find((constraint) => constraint.data.name == constraintName) ?? null;
-	}
-
-	/** Finds a path constraint by comparing each path constraint's name. It is more efficient to cache the results of this method
-	 * than to call it repeatedly.
-	 * @return May be null. */
-	findPathConstraint (constraintName: string) {
-		if (!constraintName) throw new Error("constraintName cannot be null.");
-		return this.pathConstraints.find((constraint) => constraint.data.name == constraintName) ?? null;
-	}
-
-	/** Finds a physics constraint by comparing each physics constraint's name. It is more efficient to cache the results of this
-	 * method than to call it repeatedly. */
-	findPhysicsConstraint (constraintName: string) {
+	findConstraint<T extends Constraint<any, any, any>> (constraintName: string, type: new () => T): T | null {
 		if (constraintName == null) throw new Error("constraintName cannot be null.");
-		return this.physicsConstraints.find((constraint) => constraint.data.name == constraintName) ?? null;
+		if (type == null) throw new Error("type cannot be null.");
+		const constraints = this.constraints;
+		for (let i = 0, n = constraints.length; i < n; i++) {
+			const constraint = constraints[i];
+			if (constraint instanceof type && constraint.data.name === constraintName) return constraint as T;
+		}
+		return null;
 	}
 
 	/** Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose as `{ x: number, y: number, width: number, height: number }`.
@@ -635,39 +454,58 @@ export class Skeleton {
 			let verticesLength = 0;
 			let vertices: NumberArrayLike | null = null;
 			let triangles: NumberArrayLike | null = null;
-			let attachment = slot.getAttachment();
-			if (attachment instanceof RegionAttachment) {
-				verticesLength = 8;
-				vertices = Utils.setArraySize(temp, verticesLength, 0);
-				attachment.computeWorldVertices(slot, vertices, 0, 2);
-				triangles = Skeleton.quadTriangles;
-			} else if (attachment instanceof MeshAttachment) {
-				verticesLength = attachment.worldVerticesLength;
-				vertices = Utils.setArraySize(temp, verticesLength, 0);
-				attachment.computeWorldVertices(slot, 0, verticesLength, vertices, 0, 2);
-				triangles = attachment.triangles;
-			} else if (attachment instanceof ClippingAttachment && clipper != null) {
-				clipper.clipStart(slot, attachment);
-				continue;
-			}
-			if (vertices && triangles) {
-				if (clipper != null && clipper.isClipping() && clipper.clipTriangles(vertices, triangles, triangles.length)) {
-					vertices = clipper.clippedVertices;
-					verticesLength = clipper.clippedVertices.length;
+			let attachment = slot.pose.attachment;
+			if (attachment) {
+				if (attachment instanceof RegionAttachment) {
+					verticesLength = 8;
+					vertices = Utils.setArraySize(temp, verticesLength, 0);
+					attachment.computeWorldVertices(slot, vertices, 0, 2);
+					triangles = Skeleton.quadTriangles;
+				} else if (attachment instanceof MeshAttachment) {
+					verticesLength = attachment.worldVerticesLength;
+					vertices = Utils.setArraySize(temp, verticesLength, 0);
+					attachment.computeWorldVertices(this, slot, 0, verticesLength, vertices, 0, 2);
+					triangles = attachment.triangles;
+				} else if (attachment instanceof ClippingAttachment && clipper) {
+					clipper.clipEnd(slot);
+					clipper.clipStart(this, slot, attachment);
+					continue;
 				}
-				for (let ii = 0, nn = vertices.length; ii < nn; ii += 2) {
-					let x = vertices[ii], y = vertices[ii + 1];
-					minX = Math.min(minX, x);
-					minY = Math.min(minY, y);
-					maxX = Math.max(maxX, x);
-					maxY = Math.max(maxY, y);
+				if (vertices && triangles) {
+					if (clipper && clipper.isClipping() && clipper.clipTriangles(vertices, triangles, triangles.length)) {
+						vertices = clipper.clippedVertices;
+						verticesLength = clipper.clippedVertices.length;
+					}
+					for (let ii = 0, nn = vertices.length; ii < nn; ii += 2) {
+						let x = vertices[ii], y = vertices[ii + 1];
+						minX = Math.min(minX, x);
+						minY = Math.min(minY, y);
+						maxX = Math.max(maxX, x);
+						maxY = Math.max(maxY, y);
+					}
 				}
 			}
-			if (clipper != null) clipper.clipEndWithSlot(slot);
+			if (clipper) clipper.clipEnd(slot);
 		}
-		if (clipper != null) clipper.clipEnd();
+		if (clipper) clipper.clipEnd();
 		offset.set(minX, minY);
 		size.set(maxX - minX, maxY - minY);
+	}
+
+	/** Scales the entire skeleton on the X and Y axes.
+	 *
+	 * Bones that do not inherit scale are still affected by this property. */
+	public setScale (scaleX: number, scaleY: number) {
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
+	}
+
+	/** Sets the skeleton X and Y position, which is added to the root bone worldX and worldY position.
+	 *
+	 * Bones that do not inherit translation are still affected by this property. */
+	public setPosition (x: number, y: number) {
+		this.x = x;
+		this.y = y;
 	}
 
 	/** Increments the skeleton's {@link #time}. */
@@ -675,31 +513,17 @@ export class Skeleton {
 		this.time += delta;
 	}
 
+	/** Calls {@link PhysicsConstraint.translate} for each physics constraint. */
 	physicsTranslate (x: number, y: number) {
-		const physicsConstraints = this.physicsConstraints;
-		for (let i = 0, n = physicsConstraints.length; i < n; i++)
-			physicsConstraints[i].translate(x, y);
+		const constraints = this.physics;
+		for (let i = 0, n = constraints.length; i < n; i++)
+			constraints[i].translate(x, y);
 	}
 
-	/** Calls {@link PhysicsConstraint#rotate(float, float, float)} for each physics constraint. */
+	/** Calls {@link PhysicsConstraint.rotate} for each physics constraint. */
 	physicsRotate (x: number, y: number, degrees: number) {
-		const physicsConstraints = this.physicsConstraints;
-		for (let i = 0, n = physicsConstraints.length; i < n; i++)
-			physicsConstraints[i].rotate(x, y, degrees);
+		const constraints = this.physics;
+		for (let i = 0, n = constraints.length; i < n; i++)
+			constraints[i].rotate(x, y, degrees);
 	}
-}
-
-/** Determines how physics and other non-deterministic updates are applied. */
-export enum Physics {
-	/** Physics are not updated or applied. */
-	none,
-
-	/** Physics are reset to the current pose. */
-	reset,
-
-	/** Physics are updated and the pose from physics is applied. */
-	update,
-
-	/** Physics are not updated but the pose from physics is applied. */
-	pose
 }

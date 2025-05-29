@@ -27,49 +27,34 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { BoneLocal } from "./BoneLocal.js";
-import { PosedData } from "./PosedData.js";
-import { Color } from "./Utils.js";
+import { Pose } from "./Pose"
 
-import type { Skeleton } from "./Skeleton.js";
+/** Stores a pose for a transform constraint. */
+export class TransformConstraintPose implements Pose<TransformConstraintPose> {
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
+	mixRotate = 0;
 
-/** The setup pose for a bone. */
-export class BoneData extends PosedData<BoneLocal> {
-	/** The index of the bone in {@link Skeleton.getBones}. */
-	index: number = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
+	mixX = 0;
 
-	/** @returns May be null. */
-	parent: BoneData | null = null;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
+	mixY = 0;
 
-	/** The bone's length. */
-	length: number = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale X. */
+	mixScaleX = 0;
 
-	// Nonessential.
-	/** The color of the bone as it was in Spine. Available only when nonessential data was exported. Bones are not usually
-	 * rendered at runtime. */
-	readonly color = new Color();
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale Y. */
+	mixScaleY = 0;
 
-	/** The bone icon as it was in Spine, or null if nonessential data was not exported. */
-	icon?: string;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y. */
+	mixShearY = 0;
 
-	/** False if the bone was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
-	visible = false;
-
-	constructor (index: number, name: string, parent: BoneData | null) {
-		super(name, new BoneLocal());
-		if (index < 0) throw new Error("index must be >= 0.");
-		if (!name) throw new Error("name cannot be null.");
-		this.index = index;
-		this.parent = parent;
-	}
-
-	copy (parent: BoneData | null): BoneData {
-		const copy = new BoneData(this.index, this.name, parent);
-		copy.length = this.length;
-		copy.setup.set(this.setup);
-		return copy;
+	public set (pose: TransformConstraintPose) {
+		this.mixRotate = pose.mixRotate;
+		this.mixX = pose.mixX;
+		this.mixY = pose.mixY;
+		this.mixScaleX = pose.mixScaleX;
+		this.mixScaleY = pose.mixScaleY;
+		this.mixShearY = pose.mixShearY;
 	}
 }
-
-/** Determines how a bone inherits world transforms from parent bones. */
-export enum Inherit { Normal, OnlyTranslation, NoRotationOrReflection, NoScale, NoScaleOrReflection }

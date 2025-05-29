@@ -29,24 +29,26 @@
 
 import { BoneData } from "./BoneData.js";
 import { ConstraintData } from "./ConstraintData.js";
+import { PathConstraint } from "./PathConstraint.js";
+import { PathConstraintPose } from "./PathConstraintPose.js";
+import { Skeleton } from "./Skeleton.js";
 import { SlotData } from "./SlotData.js";
 
 
 /** Stores the setup pose for a {@link PathConstraint}.
  *
  * See [path constraints](http://esotericsoftware.com/spine-path-constraints) in the Spine User Guide. */
-export class PathConstraintData extends ConstraintData {
-
+export class PathConstraintData extends ConstraintData<PathConstraint, PathConstraintPose> {
 	/** The bones that will be modified by this path constraint. */
 	bones = new Array<BoneData>();
 
 	/** The slot whose path attachment will be used to constrained the bones. */
-	private _slot: SlotData | null = null;
 	public set slot (slotData: SlotData) { this._slot = slotData; }
 	public get slot () {
 		if (!this._slot) throw new Error("SlotData not set.")
-		else return this._slot;
+			else return this._slot;
 	}
+	private _slot: SlotData | null = null;
 
 	/** The mode for positioning the first bone on the path. */
 	positionMode: PositionMode = PositionMode.Fixed;
@@ -60,18 +62,12 @@ export class PathConstraintData extends ConstraintData {
 	/** An offset added to the constrained bone rotation. */
 	offsetRotation: number = 0;
 
-	/** The position along the path. */
-	position: number = 0;
-
-	/** The spacing between bones. */
-	spacing: number = 0;
-
-	mixRotate = 0;
-	mixX = 0;
-	mixY = 0;
-
 	constructor (name: string) {
-		super(name, 0, false);
+		super(name, new PathConstraintPose());
+	}
+
+	public create (skeleton: Skeleton) {
+		return new PathConstraint(this, skeleton);
 	}
 }
 

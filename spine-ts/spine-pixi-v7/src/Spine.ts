@@ -168,7 +168,7 @@ export class SetupPoseBoundsProvider implements SpineBoundsProvider {
 		// the skeleton in the GameObject has already been heavily modified. We can not
 		// reconstruct that state.
 		const skeleton = new Skeleton(gameObject.skeleton.data);
-		skeleton.setToSetupPose();
+		skeleton.setupPose();
 		skeleton.updateWorldTransform(Physics.update);
 		const bounds = skeleton.getBoundsRect(this.clipping ? new SkeletonClipping() : undefined);
 		return bounds.width == Number.NEGATIVE_INFINITY
@@ -217,7 +217,7 @@ export class SkinsAndAnimationBoundsProvider
 			}
 			skeleton.setSkin(customSkin);
 		}
-		skeleton.setToSetupPose();
+		skeleton.setupPose();
 
 		const animation = this.animation != null ? data.findAnimation(this.animation!) : null;
 
@@ -233,7 +233,7 @@ export class SkinsAndAnimationBoundsProvider
 				maxX = Number.NEGATIVE_INFINITY,
 				maxY = Number.NEGATIVE_INFINITY;
 			animationState.clearTracks();
-			animationState.setAnimationWith(0, animation, false);
+			animationState.setAnimation(0, animation, false);
 			const steps = Math.max(animation.duration / this.timeStep, 1.0);
 			for (let i = 0; i < steps; i++) {
 				const delta = i > 0 ? this.timeStep : 0;
@@ -367,7 +367,7 @@ export class Spine extends Container {
 		// dark tint can be enabled by options, otherwise is enable if at least one slot has tint black
 		if (options?.darkTint !== undefined || oldOptions?.slotMeshFactory === undefined) {
 			this.darkTint = options?.darkTint === undefined
-				? this.skeleton.slots.some(slot => !!slot.data.darkColor)
+				? this.skeleton.slots.some(slot => !!slot.data.setup.darkColor)
 				: options?.darkTint;
 			if (this.darkTint) this.slotMeshFactory = () => new DarkSlotMesh();
 		} else {
@@ -390,7 +390,7 @@ export class Spine extends Container {
 			tempSlotMeshFactory.destroy();
 		} else {
 			for (let i = 0; i < this.skeleton.slots.length; i++) {
-				if (this.skeleton.slots[i].data.darkColor) {
+				if (this.skeleton.slots[i].data.setup.darkColor) {
 					this.slotMeshFactory = () => new DarkSlotMesh();
 					this.darkTint = true;
 					break;
@@ -587,31 +587,33 @@ export class Spine extends Container {
 	private updateSlotObject (element: { container: Container, followAttachmentTimeline: boolean }, slot: Slot, zIndex: number) {
 		const { container: slotObject, followAttachmentTimeline } = element
 
-		const followAttachmentValue = followAttachmentTimeline ? Boolean(slot.attachment) : true;
+		const pose = slot.pose;
+		const followAttachmentValue = followAttachmentTimeline ? Boolean(pose.attachment) : true;
 		slotObject.visible = this.skeleton.drawOrder.includes(slot) && followAttachmentValue;
 
 		if (slotObject.visible) {
-			slotObject.position.set(slot.bone.worldX, slot.bone.worldY);
-			slotObject.angle = slot.bone.getWorldRotationX();
+			const applied = slot.bone.applied;
+			slotObject.position.set(applied.worldX, applied.worldY);
+			slotObject.angle = applied.getWorldRotationX();
 
 			let bone: Bone | null = slot.bone;
 			let cumulativeScaleX = 1;
 			let cumulativeScaleY = 1;
 			while (bone) {
-				cumulativeScaleX *= bone.scaleX;
-				cumulativeScaleY *= bone.scaleY;
+				cumulativeScaleX *= bone.applied.scaleX;
+				cumulativeScaleY *= bone.applied.scaleY;
 				bone = bone.parent;
 			};
 
 			if (cumulativeScaleX < 0) slotObject.angle -= 180;
 
 			slotObject.scale.set(
-				slot.bone.getWorldScaleX() * Math.sign(cumulativeScaleX),
-				slot.bone.getWorldScaleY() * Math.sign(cumulativeScaleY),
+				applied.getWorldScaleX() * Math.sign(cumulativeScaleX),
+				applied.getWorldScaleY() * Math.sign(cumulativeScaleY),
 			);
 
 			slotObject.zIndex = zIndex + 1;
-			slotObject.alpha = this.skeleton.color.a * slot.color.a;
+			slotObject.alpha = this.skeleton.color.a * pose.color.a;
 		}
 	}
 
@@ -625,10 +627,10 @@ export class Spine extends Container {
 			}
 			if (!pixiMaskSource.computed) {
 				pixiMaskSource.computed = true;
-				const clippingAttachment = pixiMaskSource.slot.attachment as ClippingAttachment;
+				const clippingAttachment = pixiMaskSource.slot.pose.attachment as ClippingAttachment;
 				const worldVerticesLength = clippingAttachment.worldVerticesLength;
 				if (this.clippingVertAux.length < worldVerticesLength) this.clippingVertAux = new Float32Array(worldVerticesLength);
-				clippingAttachment.computeWorldVertices(pixiMaskSource.slot, 0, worldVerticesLength, this.clippingVertAux, 0, 2);
+				clippingAttachment.computeWorldVertices(this.skeleton, pixiMaskSource.slot, 0, worldVerticesLength, this.clippingVertAux, 0, 2);
 				mask.clear().lineStyle(0).beginFill(0x000000);
 				mask.moveTo(this.clippingVertAux[0], this.clippingVertAux[1]);
 				for (let i = 2; i < worldVerticesLength; i += 2) {
@@ -673,17 +675,19 @@ export class Spine extends Container {
 				this.updateAndSetPixiMask(pixiMaskSource, pixiObject.container);
 			}
 
-			const useDarkColor = slot.darkColor != null;
+			const pose = slot.pose;
+			const useDarkColor = !!pose.darkColor;
 			const vertexSize = useDarkColor ? Spine.DARK_VERTEX_SIZE : Spine.VERTEX_SIZE;
 			if (!slot.bone.active) {
-				Spine.clipper.clipEndWithSlot(slot);
+				Spine.clipper.clipEnd(slot);
 				this.pixiMaskCleanup(slot);
 				continue;
 			}
-			const attachment = slot.getAttachment();
+			const attachment = pose.attachment;
 			let attachmentColor: Color | null;
 			let texture: SpineTexture | null;
 			let numFloats = 0;
+			const skeleton = this.skeleton;
 			if (attachment instanceof RegionAttachment) {
 				const region = attachment;
 				attachmentColor = region.color;
@@ -699,26 +703,25 @@ export class Spine extends Container {
 				if (numFloats > this.verticesCache.length) {
 					this.verticesCache = Utils.newFloatArray(numFloats);
 				}
-				mesh.computeWorldVertices(slot, 0, mesh.worldVerticesLength, this.verticesCache, 0, vertexSize);
+				mesh.computeWorldVertices(skeleton, slot, 0, mesh.worldVerticesLength, this.verticesCache, 0, vertexSize);
 				triangles = mesh.triangles;
 				uvs = mesh.uvs;
 				texture = <SpineTexture>mesh.region?.texture;
 			} else if (attachment instanceof ClippingAttachment) {
-				Spine.clipper.clipStart(slot, attachment);
+				Spine.clipper.clipStart(skeleton, slot, attachment);
 				pixiMaskSource = { slot, computed: false };
 				continue;
 			} else {
 				if (this.hasMeshForSlot(slot)) {
 					this.getMeshForSlot(slot).visible = false;
 				}
-				Spine.clipper.clipEndWithSlot(slot);
+				Spine.clipper.clipEnd(slot);
 				this.pixiMaskCleanup(slot);
 				continue;
 			}
 			if (texture != null) {
-				const skeleton = slot.bone.skeleton;
 				const skeletonColor = skeleton.color;
-				const slotColor = slot.color;
+				const slotColor = pose.color;
 				const alpha = skeletonColor.a * slotColor.a * attachmentColor.a;
 				// cannot premultiply the colors because the default mesh renderer already does that
 				this.lightColor.set(
@@ -727,11 +730,11 @@ export class Spine extends Container {
 					skeletonColor.b * slotColor.b * attachmentColor.b,
 					alpha
 				);
-				if (slot.darkColor != null) {
+				if (pose.darkColor != null) {
 					this.darkColor.set(
-						slot.darkColor.r,
-						slot.darkColor.g,
-						slot.darkColor.b,
+						pose.darkColor.r,
+						pose.darkColor.g,
+						pose.darkColor.b,
 						1,
 					);
 				} else {
@@ -775,7 +778,7 @@ export class Spine extends Container {
 				}
 
 				if (finalVerticesLength == 0 || finalIndicesLength == 0) {
-					Spine.clipper.clipEndWithSlot(slot);
+					Spine.clipper.clipEnd(slot);
 					continue;
 				}
 
@@ -785,7 +788,7 @@ export class Spine extends Container {
 				mesh.updateFromSpineData(texture, slot.data.blendMode, slot.data.name, finalVertices, finalVerticesLength, finalIndices, finalIndicesLength, useDarkColor);
 			}
 
-			Spine.clipper.clipEndWithSlot(slot);
+			Spine.clipper.clipEnd(slot);
 			this.pixiMaskCleanup(slot);
 		}
 		Spine.clipper.clipEnd();
@@ -852,14 +855,14 @@ export class Spine extends Container {
 		if (!bone) throw Error(`Cannot set bone position, bone ${String(boneAux)} not found`);
 		Spine.vectorAux.set(position.x, position.y);
 
+		const applied = bone.applied;
 		if (bone.parent) {
-			const aux = bone.parent.worldToLocal(Spine.vectorAux);
-			bone.x = aux.x;
-			bone.y = aux.y;
-		}
-		else {
-			bone.x = Spine.vectorAux.x;
-			bone.y = Spine.vectorAux.y;
+			const aux = bone.parent.applied.worldToLocal(Spine.vectorAux);
+			applied.x = aux.x;
+			applied.y = aux.y;
+		} else {
+			applied.x = Spine.vectorAux.x;
+			applied.y = Spine.vectorAux.y;
 		}
 	}
 
@@ -884,8 +887,8 @@ export class Spine extends Container {
 			outPos = { x: 0, y: 0 };
 		}
 
-		outPos.x = bone.worldX;
-		outPos.y = bone.worldY;
+		outPos.x = bone.applied.worldX;
+		outPos.y = bone.applied.worldY;
 		return outPos;
 	}
 
@@ -903,9 +906,9 @@ export class Spine extends Container {
 	pixiWorldCoordinatesToBone (point: { x: number; y: number }, bone: Bone) {
 		this.pixiWorldCoordinatesToSkeleton(point);
 		if (bone.parent) {
-			bone.parent.worldToLocal(point as Vector2);
+			bone.parent.applied.worldToLocal(point as Vector2);
 		} else {
-			bone.worldToLocal(point as Vector2);
+			bone.applied.worldToLocal(point as Vector2);
 		}
 	}
 

@@ -27,49 +27,30 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { BoneLocal } from "./BoneLocal.js";
-import { PosedData } from "./PosedData.js";
-import { Color } from "./Utils.js";
+import { ConstraintData } from "./ConstraintData";
+import { Physics } from "./Physics";
+import { Pose } from "./Pose";
+import { PosedActive } from "./PosedActive";
+import { Skeleton } from "./Skeleton";
+import { Update } from "./Update";
 
-import type { Skeleton } from "./Skeleton.js";
+export abstract class Constraint<
+	T extends Constraint<T, D, P>,
+	D extends ConstraintData<T, P>,
+	P extends Pose<any>>
+	extends PosedActive<D, P, P> implements Update {
 
-/** The setup pose for a bone. */
-export class BoneData extends PosedData<BoneLocal> {
-	/** The index of the bone in {@link Skeleton.getBones}. */
-	index: number = 0;
-
-	/** @returns May be null. */
-	parent: BoneData | null = null;
-
-	/** The bone's length. */
-	length: number = 0;
-
-	// Nonessential.
-	/** The color of the bone as it was in Spine. Available only when nonessential data was exported. Bones are not usually
-	 * rendered at runtime. */
-	readonly color = new Color();
-
-	/** The bone icon as it was in Spine, or null if nonessential data was not exported. */
-	icon?: string;
-
-	/** False if the bone was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
-	visible = false;
-
-	constructor (index: number, name: string, parent: BoneData | null) {
-		super(name, new BoneLocal());
-		if (index < 0) throw new Error("index must be >= 0.");
-		if (!name) throw new Error("name cannot be null.");
-		this.index = index;
-		this.parent = parent;
+	constructor (data: D, pose: P, constrained: P) {
+		super(data, pose, constrained);
 	}
 
-	copy (parent: BoneData | null): BoneData {
-		const copy = new BoneData(this.index, this.name, parent);
-		copy.length = this.length;
-		copy.setup.set(this.setup);
-		return copy;
+	abstract copy (skeleton: Skeleton): T;
+
+	abstract sort (skeleton: Skeleton): void;
+
+	abstract update (skeleton: Skeleton, physics: Physics): void;
+
+	isSourceActive (): boolean {
+		return true;
 	}
 }
-
-/** Determines how a bone inherits world transforms from parent bones. */
-export enum Inherit { Normal, OnlyTranslation, NoRotationOrReflection, NoScale, NoScaleOrReflection }

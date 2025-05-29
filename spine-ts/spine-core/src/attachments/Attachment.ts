@@ -27,6 +27,7 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
+import { Skeleton } from "src/Skeleton.js";
 import { Slot } from "../Slot.js";
 import { NumberArrayLike, Utils } from "../Utils.js";
 
@@ -43,15 +44,15 @@ export abstract class Attachment {
 }
 
 /** Base class for an attachment with vertices that are transformed by one or more bones and can be deformed by a slot's
- * {@link Slot#deform}. */
+ * {@link SlotPose.deform}. */
 export abstract class VertexAttachment extends Attachment {
 	private static nextID = 0;
 
 	/** The unique ID for this attachment. */
 	id = VertexAttachment.nextID++;
 
-	/** The bones which affect the {@link #getVertices()}. The array entries are, for each vertex, the number of bones affecting
-	 * the vertex followed by that many bone indices, which is the index of the bone in {@link Skeleton#bones}. Will be null
+	/** The bones which affect the {@link vertices}. The array entries are, for each vertex, the number of bones affecting
+	 * the vertex followed by that many bone indices, which is the index of the bone in {@link Skeleton.bones}. Will be null
 	 * if this attachment has no weights. */
 	bones: Array<number> | null = null;
 
@@ -61,7 +62,7 @@ export abstract class VertexAttachment extends Attachment {
 	vertices: NumberArrayLike = [];
 
 	/** The maximum number of world vertex values that can be output by
-	 * {@link #computeWorldVertices()} using the `count` parameter. */
+	 * {@link computeWorldVertices} using the `count` parameter. */
 	worldVerticesLength = 0;
 
 	/** Timelines for the timeline attachment are also applied to this attachment.
@@ -72,7 +73,7 @@ export abstract class VertexAttachment extends Attachment {
 		super(name);
 	}
 
-	/** Transforms the attachment's local {@link #vertices} to world coordinates. If the slot's {@link Slot#deform} is
+	/** Transforms the attachment's local {@link #vertices} to world coordinates. If the slot's {@link SlotPose.deform} is
 	 * not empty, it is used to deform the vertices.
 	 *
 	 * See [World transforms](http://esotericsoftware.com/spine-runtime-skeletons#World-transforms) in the Spine
@@ -83,15 +84,16 @@ export abstract class VertexAttachment extends Attachment {
 	 *           `stride` / 2.
 	 * @param offset The `worldVertices` index to begin writing values.
 	 * @param stride The number of `worldVertices` entries between the value pairs written. */
-	computeWorldVertices (slot: Slot, start: number, count: number, worldVertices: NumberArrayLike, offset: number, stride: number) {
+	computeWorldVertices (skeleton: Skeleton, slot: Slot, start: number, count: number, worldVertices: NumberArrayLike, offset: number,
+		stride: number) {
+
 		count = offset + (count >> 1) * stride;
-		let skeleton = slot.bone.skeleton;
-		let deformArray = slot.deform;
+		let deformArray = slot.applied.deform;
 		let vertices = this.vertices;
 		let bones = this.bones;
 		if (!bones) {
 			if (deformArray.length > 0) vertices = deformArray;
-			let bone = slot.bone;
+			let bone = slot.bone.applied;
 			let x = bone.worldX;
 			let y = bone.worldY;
 			let a = bone.a, b = bone.b, c = bone.c, d = bone.d;
@@ -115,7 +117,7 @@ export abstract class VertexAttachment extends Attachment {
 				let n = bones[v++];
 				n += v;
 				for (; v < n; v++, b += 3) {
-					let bone = skeletonBones[bones[v]];
+					let bone = skeletonBones[bones[v]].applied;
 					let vx = vertices[b], vy = vertices[b + 1], weight = vertices[b + 2];
 					wx += (vx * bone.a + vy * bone.b + bone.worldX) * weight;
 					wy += (vx * bone.c + vy * bone.d + bone.worldY) * weight;
@@ -130,7 +132,7 @@ export abstract class VertexAttachment extends Attachment {
 				let n = bones[v++];
 				n += v;
 				for (; v < n; v++, b += 3, f += 2) {
-					let bone = skeletonBones[bones[v]];
+					let bone = skeletonBones[bones[v]].applied;
 					let vx = vertices[b] + deform[f], vy = vertices[b + 1] + deform[f + 1], weight = vertices[b + 2];
 					wx += (vx * bone.a + vy * bone.b + bone.worldX) * weight;
 					wy += (vx * bone.c + vy * bone.d + bone.worldY) * weight;

@@ -61,18 +61,19 @@ export class SkeletonRenderer {
 		if (this.debugRendering) ctx.strokeStyle = "green";
 
 		for (let i = 0, n = drawOrder.length; i < n; i++) {
-			let slot = drawOrder[i];
+			const slot = drawOrder[i];
 			let bone = slot.bone;
 			if (!bone.active) continue;
 
-			let attachment = slot.getAttachment();
+			let pose = slot.pose;
+			let attachment = pose.attachment;
 			if (!(attachment instanceof RegionAttachment)) continue;
 			attachment.computeWorldVertices(slot, worldVertices, 0, 2);
 			let region: TextureRegion = <TextureRegion>attachment.region;
 
 			let image: HTMLImageElement = (<CanvasTexture>region.texture).getImage() as HTMLImageElement;
 
-			let slotColor = slot.color;
+			let slotColor = pose.color;
 			let regionColor = attachment.color;
 			color.set(skeletonColor.r * slotColor.r * regionColor.r,
 				skeletonColor.g * slotColor.g * regionColor.g,
@@ -80,7 +81,8 @@ export class SkeletonRenderer {
 				skeletonColor.a * slotColor.a * regionColor.a);
 
 			ctx.save();
-			ctx.transform(bone.a, bone.c, bone.b, bone.d, bone.worldX, bone.worldY);
+			const boneApplied = bone.applied;
+			ctx.transform(boneApplied.a, boneApplied.c, boneApplied.b, boneApplied.d, boneApplied.worldX, boneApplied.worldY);
 			ctx.translate(attachment.offset[0], attachment.offset[1]);
 			ctx.rotate(attachment.rotation * Math.PI / 180);
 
@@ -116,8 +118,9 @@ export class SkeletonRenderer {
 		let triangles: Array<number> | null = null;
 
 		for (let i = 0, n = drawOrder.length; i < n; i++) {
-			let slot = drawOrder[i];
-			let attachment = slot.getAttachment();
+			const slot = drawOrder[i];
+			let pose = slot.pose;
+			let attachment = pose.attachment;
 
 			let texture: HTMLImageElement;
 			let region: TextureAtlasRegion;
@@ -137,7 +140,7 @@ export class SkeletonRenderer {
 			if (texture) {
 				if (slot.data.blendMode != blendMode) blendMode = slot.data.blendMode;
 
-				let slotColor = slot.color;
+				let slotColor = pose.color;
 				let attachmentColor = attachment.color;
 				color.set(skeletonColor.r * slotColor.r * attachmentColor.r,
 					skeletonColor.g * slotColor.g * attachmentColor.g,
@@ -225,8 +228,8 @@ export class SkeletonRenderer {
 	}
 
 	private computeRegionVertices (slot: Slot, region: RegionAttachment, pma: boolean) {
-		let skeletonColor = slot.bone.skeleton.color;
-		let slotColor = slot.color;
+		let skeletonColor = slot.skeleton.color;
+		let slotColor = slot.pose.color;
 		let regionColor = region.color;
 		let alpha = skeletonColor.a * slotColor.a * regionColor.a;
 		let multiplier = pma ? alpha : 1;
@@ -273,8 +276,9 @@ export class SkeletonRenderer {
 	}
 
 	private computeMeshVertices (slot: Slot, mesh: MeshAttachment, pma: boolean) {
-		let skeletonColor = slot.bone.skeleton.color;
-		let slotColor = slot.color;
+		let skeleton = slot.skeleton;
+		let skeletonColor = skeleton.color;
+		let slotColor = slot.pose.color;
 		let regionColor = mesh.color;
 		let alpha = skeletonColor.a * slotColor.a * regionColor.a;
 		let multiplier = pma ? alpha : 1;
@@ -287,7 +291,7 @@ export class SkeletonRenderer {
 		let vertexCount = mesh.worldVerticesLength / 2;
 		let vertices = this.vertices;
 		if (vertices.length < mesh.worldVerticesLength) this.vertices = vertices = Utils.newFloatArray(mesh.worldVerticesLength);
-		mesh.computeWorldVertices(slot, 0, mesh.worldVerticesLength, vertices, 0, SkeletonRenderer.VERTEX_SIZE);
+		mesh.computeWorldVertices(skeleton, slot, 0, mesh.worldVerticesLength, vertices, 0, SkeletonRenderer.VERTEX_SIZE);
 
 		let uvs = mesh.uvs;
 		for (let i = 0, u = 0, v = 2; i < vertexCount; i++) {

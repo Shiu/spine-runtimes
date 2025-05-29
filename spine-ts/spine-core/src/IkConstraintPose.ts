@@ -27,49 +27,36 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { BoneLocal } from "./BoneLocal.js";
-import { PosedData } from "./PosedData.js";
-import { Color } from "./Utils.js";
+import { Pose } from "./Pose";
 
-import type { Skeleton } from "./Skeleton.js";
+/** Stores the current pose for an IK constraint. */
+export class IkConstraintPose implements Pose<IkConstraintPose> {
+	/** For two bone IK, controls the bend direction of the IK bones, either 1 or -1. */
+	bendDirection = 0;
 
-/** The setup pose for a bone. */
-export class BoneData extends PosedData<BoneLocal> {
-	/** The index of the bone in {@link Skeleton.getBones}. */
-	index: number = 0;
+	/** For one bone IK, when true and the target is too close, the bone is scaled to reach it. */
+	compress = false;
 
-	/** @returns May be null. */
-	parent: BoneData | null = null;
+	/** When true and the target is out of range, the parent bone is scaled to reach it.
+	 *
+	 * For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not applied if {@link softness} is
+	 * > 0, and 3) if the parent bone has local nonuniform scale, stretch is not applied. */
+	stretch = false;
 
-	/** The bone's length. */
-	length: number = 0;
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
+	 *
+	 * For two bone IK: if the parent bone has local nonuniform scale, the child bone's local Y translation is set to 0. */
+	mix = 0;
 
-	// Nonessential.
-	/** The color of the bone as it was in Spine. Available only when nonessential data was exported. Bones are not usually
-	 * rendered at runtime. */
-	readonly color = new Color();
+	/** For two bone IK, the target bone's distance from the maximum reach of the bones where rotation begins to slow. The bones
+	 * will not straighten completely until the target is this far out of range. */
+	softness = 0;
 
-	/** The bone icon as it was in Spine, or null if nonessential data was not exported. */
-	icon?: string;
-
-	/** False if the bone was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
-	visible = false;
-
-	constructor (index: number, name: string, parent: BoneData | null) {
-		super(name, new BoneLocal());
-		if (index < 0) throw new Error("index must be >= 0.");
-		if (!name) throw new Error("name cannot be null.");
-		this.index = index;
-		this.parent = parent;
-	}
-
-	copy (parent: BoneData | null): BoneData {
-		const copy = new BoneData(this.index, this.name, parent);
-		copy.length = this.length;
-		copy.setup.set(this.setup);
-		return copy;
+	public set (pose: IkConstraintPose) {
+		this.mix = pose.mix;
+		this.softness = pose.softness;
+		this.bendDirection = pose.bendDirection;
+		this.compress = pose.compress;
+		this.stretch = pose.stretch;
 	}
 }
-
-/** Determines how a bone inherits world transforms from parent bones. */
-export enum Inherit { Normal, OnlyTranslation, NoRotationOrReflection, NoScale, NoScaleOrReflection }

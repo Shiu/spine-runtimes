@@ -29,13 +29,16 @@
 
 import { EventData } from "./EventData.js";
 
+import type { Timeline } from "./Animation.js";
+import type { AnimationStateListener } from "./AnimationState.js";
+
 /** Stores the current pose values for an {@link Event}.
  *
- * See Timeline {@link Timeline#apply()},
- * AnimationStateListener {@link AnimationStateListener#event()}, and
+ * See Timeline {@link Timeline.apply()},
+ * AnimationStateListener {@link AnimationStateListener.event()}, and
  * [Events](http://esotericsoftware.com/spine-events) in the Spine User Guide. */
 export class Event {
-	data: EventData;
+	readonly data: EventData;
 	intValue: number = 0;
 	floatValue: number = 0;
 	stringValue: string | null = null;

@@ -27,49 +27,66 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { BoneLocal } from "./BoneLocal.js";
-import { PosedData } from "./PosedData.js";
-import { Color } from "./Utils.js";
+import { Inherit } from "./BoneData";
+import { Pose } from "./Pose"
 
-import type { Skeleton } from "./Skeleton.js";
+/** Stores a bone's local pose. */
+export class BoneLocal implements Pose<BoneLocal> {
 
-/** The setup pose for a bone. */
-export class BoneData extends PosedData<BoneLocal> {
-	/** The index of the bone in {@link Skeleton.getBones}. */
-	index: number = 0;
+	/** The local x translation. */
+	x = 0;
 
-	/** @returns May be null. */
-	parent: BoneData | null = null;
+	/** The local y translation. */
+	y = 0;
 
-	/** The bone's length. */
-	length: number = 0;
+	/** The local rotation in degrees, counter clockwise. */
+	rotation = 0;
 
-	// Nonessential.
-	/** The color of the bone as it was in Spine. Available only when nonessential data was exported. Bones are not usually
-	 * rendered at runtime. */
-	readonly color = new Color();
+	/** The local scaleX. */
+	scaleX = 0;
 
-	/** The bone icon as it was in Spine, or null if nonessential data was not exported. */
-	icon?: string;
+	/** The local scaleY. */
+	scaleY = 0;
 
-	/** False if the bone was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
-	visible = false;
+	/** The local shearX. */
+	shearX = 0;
 
-	constructor (index: number, name: string, parent: BoneData | null) {
-		super(name, new BoneLocal());
-		if (index < 0) throw new Error("index must be >= 0.");
-		if (!name) throw new Error("name cannot be null.");
-		this.index = index;
-		this.parent = parent;
+	/** The local shearY. */
+	shearY = 0;
+
+	inherit = Inherit.Normal;
+
+	set (pose: BoneLocal): void {
+		if (pose == null) throw new Error("pose cannot be null.");
+		this.x = pose.x;
+		this.y = pose.y;
+		this.rotation = pose.rotation;
+		this.scaleX = pose.scaleX;
+		this.scaleY = pose.scaleY;
+		this.shearX = pose.shearX;
+		this.shearY = pose.shearY;
+		this.inherit = pose.inherit;
 	}
 
-	copy (parent: BoneData | null): BoneData {
-		const copy = new BoneData(this.index, this.name, parent);
-		copy.length = this.length;
-		copy.setup.set(this.setup);
-		return copy;
+	setPosition (x: number, y: number): void {
+		this.x = x;
+		this.y = y;
+	}
+
+	setScale(scaleX: number, scaleY: number): void;
+	setScale(scale: number): void;
+	setScale(scaleOrX: number, scaleY?: number): void {
+		this.scaleX = scaleOrX;
+		this.scaleY = scaleY === undefined ? scaleOrX : scaleY;
+	}
+
+	/** Determines how parent world transforms affect this bone. */
+	public getInherit (): Inherit {
+		return this.inherit;
+	}
+
+	public setInherit (inherit: Inherit): void {
+		if (inherit == null) throw new Error("inherit cannot be null.");
+		this.inherit = inherit;
 	}
 }
-
-/** Determines how a bone inherits world transforms from parent bones. */
-export enum Inherit { Normal, OnlyTranslation, NoRotationOrReflection, NoScale, NoScaleOrReflection }

@@ -28,11 +28,9 @@
  *****************************************************************************/
 
 import { VertexAttachment, Attachment } from "./attachments/Attachment.js";
-import { IkConstraint } from "./IkConstraint.js";
 import { PathConstraint } from "./PathConstraint.js";
 import { Skeleton } from "./Skeleton.js";
 import { Slot } from "./Slot.js";
-import { TransformConstraint } from "./TransformConstraint.js";
 import { StringSet, Utils, MathUtils, NumberArrayLike } from "./Utils.js";
 import { Event } from "./Event.js";
 import { HasTextureRegion } from "./attachments/HasTextureRegion.js";
@@ -40,30 +38,49 @@ import { SequenceMode, SequenceModeValues } from "./attachments/Sequence.js";
 import { PhysicsConstraint } from "./PhysicsConstraint.js";
 import { PhysicsConstraintData } from "./PhysicsConstraintData.js";
 import { Inherit } from "./BoneData.js";
+import { BoneLocal } from "./BoneLocal.js";
+import { SlotPose } from "./SlotPose.js";
+import { PhysicsConstraintPose } from "./PhysicsConstraintPose.js";
 
 /** A simple container for a list of timelines and a name. */
 export class Animation {
 	/** The animation's name, which is unique across all animations in the skeleton. */
-	name: string;
-	timelines: Array<Timeline> = [];
-	timelineIds: StringSet = new StringSet();
+	readonly name: string;
 
-	/** The duration of the animation in seconds, which is the highest time of all keys in the timeline. */
+	/** If the returned array or the timelines it contains are modified, {@link setTimelines()} must be called. */
+	timelines: Array<Timeline> = [];
+
+	readonly timelineIds: StringSet;
+	readonly bones: Array<number>;
+
+	/** The duration of the animation in seconds, which is usually the highest time of all frames in the timeline. The duration is
+	 * used to know when it has completed and when it should loop back to the start. */
 	duration: number;
 
 	constructor (name: string, timelines: Array<Timeline>, duration: number) {
 		if (!name) throw new Error("name cannot be null.");
 		this.name = name;
-		this.setTimelines(timelines);
 		this.duration = duration;
+		this.timelineIds = new StringSet();
+		this.bones = new Array<number>();
+		this.setTimelines(timelines);
 	}
 
 	setTimelines (timelines: Array<Timeline>) {
 		if (!timelines) throw new Error("timelines cannot be null.");
 		this.timelines = timelines;
+
+		const n = timelines.length;
 		this.timelineIds.clear();
-		for (var i = 0; i < timelines.length; i++)
-			this.timelineIds.addAll(timelines[i].getPropertyIds());
+		this.bones.length = 0;
+		const boneSet = new Set();
+		const items = timelines;
+		for (let i = 0; i < n; i++) {
+			const timeline = items[i];
+			this.timelineIds.addAll(timeline.getPropertyIds());
+			if (isBoneTimeline(timeline) && boneSet.add(timeline.boneIndex))
+				this.bones.push(timeline.boneIndex);
+		}
 	}
 
 	hasTimeline (ids: string[]): boolean {
@@ -72,12 +89,29 @@ export class Animation {
 		return false;
 	}
 
-	/** Applies all the animation's timelines to the specified skeleton.
+	/** Applies the animation's timelines to the specified skeleton.
 	 *
-	 * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection)}.
-	 * @param loop If true, the animation repeats after {@link #getDuration()}.
-	 * @param events May be null to ignore fired events. */
-	apply (skeleton: Skeleton, lastTime: number, time: number, loop: boolean, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
+	 * See Timeline {@link Timeline.apply}.
+	 * @param skeleton The skeleton the animation is being applied to. This provides access to the bones, slots, and other skeleton
+	 *           components the timelines may change.
+	 * @param lastTime The last time in seconds this animation was applied. Some timelines trigger only at specific times rather
+	 *           than every frame. Pass -1 the first time an animation is applied to ensure frame 0 is triggered.
+	 * @param time The time in seconds the skeleton is being posed for. Most timelines find the frame before and the frame after
+	 *           this time and interpolate between the frame values. If beyond the {@link duration} and <code>loop</code> is
+	 *           true then the animation will repeat, else the last frame will be applied.
+	 * @param loop If true, the animation repeats after the {@link duration}.
+	 * @param events If any events are fired, they are added to this list. Can be null to ignore fired events or if no timelines
+	 *           fire events.
+	 * @param alpha 0 applies the current or setup values (depending on <code>blend</code>). 1 applies the timeline values. Between
+	 *           0 and 1 applies values between the current or setup values and the timeline values. By adjusting
+	 *           <code>alpha</code> over time, an animation can be mixed in or out. <code>alpha</code> can also be useful to apply
+	 *           animations on top of each other (layering).
+	 * @param blend Controls how mixing is applied when <code>alpha</code> < 1.
+	 * @param direction Indicates whether the timelines are mixing in or out. Used by timelines which perform instant transitions,
+	 *           such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}.
+	 * @param appliedPose True to to modify the applied pose. */
+	apply (skeleton: Skeleton, lastTime: number, time: number, loop: boolean, events: Array<Event> | null, alpha: number,
+		blend: MixBlend, direction: MixDirection, appliedPose: boolean) {
 		if (!skeleton) throw new Error("skeleton cannot be null.");
 
 		if (loop && this.duration != 0) {
@@ -87,83 +121,79 @@ export class Animation {
 
 		let timelines = this.timelines;
 		for (let i = 0, n = timelines.length; i < n; i++)
-			timelines[i].apply(skeleton, lastTime, time, events, alpha, blend, direction);
+			timelines[i].apply(skeleton, lastTime, time, events, alpha, blend, direction, appliedPose);
 	}
 }
 
 /** Controls how a timeline value is mixed with the setup pose value or current pose value when a timeline's `alpha`
  * < 1.
  *
- * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection)}. */
+ * See Timeline {@link Timeline.apply}. */
 export enum MixBlend {
-	/** Transitions from the setup value to the timeline value (the current value is not used). Before the first key, the setup
-	 * value is set. */
+	/** Transitions between the setup and timeline values (the current value is not used). Before the first frame, the setup
+	 * value is used.
+	 * <p>
+	 * <code>setup</code> is intended to transition to or from the setup pose, not for animations layered on top of others. */
 	setup,
-	/** Transitions from the current value to the timeline value. Before the first key, transitions from the current value to
-	 * the setup value. Timelines which perform instant transitions, such as {@link DrawOrderTimeline} or
-	 * {@link AttachmentTimeline}, use the setup value before the first key.
-	 *
-	 * `first` is intended for the first animations applied, not for animations layered on top of those. */
+	/** Transitions between the current and timeline values. Before the first frame, transitions between the current and setup
+	 * values. Timelines which perform instant transitions, such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}, use
+	 * the setup value before the first frame.
+	 * <p>
+	 * <code>first</code> is intended for the first animations applied, not for animations layered on top of others. */
 	first,
-	/** Transitions from the current value to the timeline value. No change is made before the first key (the current value is
-	 * kept until the first key).
-	 *
-	 * `replace` is intended for animations layered on top of others, not for the first animations applied. */
+	/** Transitions between the current and timeline values. No change is made before the first frame.
+	 * <p>
+	 * <code>replace</code> is intended for animations layered on top of others, not for the first animations applied. */
 	replace,
-	/** Transitions from the current value to the current value plus the timeline value. No change is made before the first key
-	 * (the current value is kept until the first key).
-	 *
-	 * `add` is intended for animations layered on top of others, not for the first animations applied. Properties
-	 * keyed by additive animations must be set manually or by another animation before applying the additive animations, else
-	 * the property values will increase continually. */
+	/** Transitions between the current value and the current plus timeline values. No change is made before the first frame.
+	 * <p>
+	 * <code>add</code> is intended for animations layered on top of others, not for the first animations applied.
+	 * <p>
+	 * Properties set by additive animations must be set manually or by another animation before applying the additive
+	 * animations, else the property values will increase each time the additive animations are applied. */
 	add
 }
 
 /** Indicates whether a timeline's `alpha` is mixing out over time toward 0 (the setup or current pose value) or
  * mixing in toward 1 (the timeline's value).
  *
- * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection)}. */
+ * See Timeline {@link Timeline#apply}. */
 export enum MixDirection {
-	mixIn, mixOut
+	in, out
 }
 
-const Property = {
-	rotate: 0,
-	x: 1,
-	y: 2,
-	scaleX: 3,
-	scaleY: 4,
-	shearX: 5,
-	shearY: 6,
-	inherit: 7,
-
-	rgb: 8,
-	alpha: 9,
-	rgb2: 10,
-
-	attachment: 11,
-	deform: 12,
-
-	event: 13,
-	drawOrder: 14,
-
-	ikConstraint: 15,
-	transformConstraint: 16,
-
-	pathConstraintPosition: 17,
-	pathConstraintSpacing: 18,
-	pathConstraintMix: 19,
-
-	physicsConstraintInertia: 20,
-	physicsConstraintStrength: 21,
-	physicsConstraintDamping: 22,
-	physicsConstraintMass: 23,
-	physicsConstraintWind: 24,
-	physicsConstraintGravity: 25,
-	physicsConstraintMix: 26,
-	physicsConstraintReset: 27,
-
-	sequence: 28,
+export enum Property {
+	rotate,
+	x,
+	y,
+	scaleX,
+	scaleY,
+	shearX,
+	shearY,
+	inherit,
+	rgb,
+	alpha,
+	rgb2,
+	attachment,
+	deform,
+	event,
+	drawOrder,
+	ikConstraint,
+	transformConstraint,
+	pathConstraintPosition,
+	pathConstraintSpacing,
+	pathConstraintMix,
+	physicsConstraintInertia,
+	physicsConstraintStrength,
+	physicsConstraintDamping,
+	physicsConstraintMass,
+	physicsConstraintWind,
+	physicsConstraintGravity,
+	physicsConstraintMix,
+	physicsConstraintReset,
+	sequence,
+	sliderTime,
+	sliderMix,
 }
 
 /** The interface for all timelines. */
@@ -171,7 +201,7 @@ export abstract class Timeline {
 	propertyIds: string[];
 	frames: NumberArrayLike;
 
-	constructor (frameCount: number, propertyIds: string[]) {
+	constructor (frameCount: number, ...propertyIds: string[]) {
 		this.propertyIds = propertyIds;
 		this.frames = Utils.newFloatArray(frameCount * this.getFrameEntries());
 	}
@@ -192,16 +222,54 @@ export abstract class Timeline {
 		return this.frames[this.frames.length - this.getFrameEntries()];
 	}
 
-	abstract apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event> | null, alpha: number, blend: MixBlend, direction: MixDirection): void;
+	/** Applies this timeline to the skeleton.
+	 * @param skeleton The skeleton to which the timeline is being applied. This provides access to the bones, slots, and other
+	 *           skeleton components that the timeline may change.
+	 * @param lastTime The last time in seconds this timeline was applied. Timelines such as {@link EventTimeline} trigger only
+	 *           at specific times rather than every frame. In that case, the timeline triggers everything between
+	 *           <code>lastTime</code> (exclusive) and <code>time</code> (inclusive). Pass -1 the first time an animation is
+	 *           applied to ensure frame 0 is triggered.
+	 * @param time The time in seconds that the skeleton is being posed for. Most timelines find the frame before and the frame
+	 *           after this time and interpolate between the frame values. If beyond the last frame, the last frame will be
+	 *           applied.
+	 * @param events If any events are fired, they are added to this list. Can be null to ignore fired events or if the timeline
+	 *           does not fire events.
+	 * @param alpha 0 applies the current or setup value (depending on <code>blend</code>). 1 applies the timeline value.
+	 *           Between 0 and 1 applies a value between the current or setup value and the timeline value. By adjusting
+	 *           <code>alpha</code> over time, an animation can be mixed in or out. <code>alpha</code> can also be useful to
+	 *           apply animations on top of each other (layering).
+	 * @param blend Controls how mixing is applied when <code>alpha</code> < 1.
+	 * @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions,
+	 *           such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}, and others such as {@link ScaleTimeline}.
+	 * @param appliedPose True to to modify the applied pose. */
+	abstract apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event> | null, alpha: number,
+		blend: MixBlend, direction: MixDirection, appliedPose: boolean): void;
 
-	static search1 (frames: NumberArrayLike, time: number) {
+	/** Linear search using a stride of 1.
+	 * @param time Must be >= the first value in <code>frames</code>.
+	 * @return The index of the first value <= <code>time</code>. */
+	static search (frames: NumberArrayLike, time: number): number;
+
+	/** Linear search using the specified stride.
+	 * @param time Must be >= the first value in <code>frames</code>.
+	 * @return The index of the first value <= <code>time</code>. */
+	static search (frames: NumberArrayLike, time: number, step: number): number;
+
+	static search (frames: NumberArrayLike, time: number, step?: number): number {
+		if (step === undefined)
+			return Timeline.search1(frames, time);
+		else
+			return Timeline.search2(frames, time, step);
+	}
+
+	private static search1 (frames: NumberArrayLike, time: number) {
 		let n = frames.length;
 		for (let i = 1; i < n; i++)
 			if (frames[i] > time) return i - 1;
 		return n - 1;
 	}
 
-	static search (frames: NumberArrayLike, time: number, step: number) {
+	private static search2 (frames: NumberArrayLike, time: number, step: number) {
 		let n = frames.length;
 		for (let i = step; i < n; i += step)
 			if (frames[i] > time) return i - step;
@@ -209,22 +277,22 @@ export abstract class Timeline {
 	}
 }
 
-export interface BoneTimeline {
-	/** The index of the bone in {@link Skeleton#bones} that will be changed. */
-	boneIndex: number;
-}
-
+/** An interface for timelines which change the property of a slot. */
 export interface SlotTimeline {
-	/** The index of the slot in {@link Skeleton#slots} that will be changed. */
+	/** The index of the slot in {@link Skeleton.slots} that will be changed when this timeline is applied. */
 	slotIndex: number;
 }
 
-/** The base class for timelines that use interpolation between key frame values. */
+export function isSlotTimeline(obj: any): obj is SlotTimeline {
+	return typeof obj === 'object' && obj !== null && typeof obj.slotIndex === 'number';
+}
+
+/** The base class for timelines that interpolate between frame values using stepped, linear, or a Bezier curve. */
 export abstract class CurveTimeline extends Timeline {
 	protected curves: NumberArrayLike; // type, x, y, ...
 
-	constructor (frameCount: number, bezierCount: number, propertyIds: string[]) {
-		super(frameCount, propertyIds);
+	constructor (frameCount: number, bezierCount: number, ...propertyIds: string[]) {
+		super(frameCount, ...propertyIds);
 		this.curves = Utils.newFloatArray(frameCount + bezierCount * 18/*BEZIER_SIZE*/);
 		this.curves[frameCount - 1] = 1/*STEPPED*/;
 	}
@@ -311,7 +379,7 @@ export abstract class CurveTimeline extends Timeline {
 
 export abstract class CurveTimeline1 extends CurveTimeline {
 	constructor (frameCount: number, bezierCount: number, propertyId: string) {
-		super(frameCount, bezierCount, [propertyId]);
+		super(frameCount, bezierCount, propertyId);
 	}
 
 	getFrameEntries () {
@@ -361,62 +429,66 @@ export abstract class CurveTimeline1 extends CurveTimeline {
 		}
 		let value = this.getCurveValue(time);
 		switch (blend) {
-			case MixBlend.setup:
-				return setup + value * alpha;
+			case MixBlend.setup: return setup + value * alpha;
 			case MixBlend.first:
-			case MixBlend.replace:
-				value += setup - current;
+			case MixBlend.replace: return current + (value + setup - current) * alpha;
+			case MixBlend.add: return current + value * alpha;;
 		}
-		return current + value * alpha;
 	}
 
-	getAbsoluteValue (time: number, alpha: number, blend: MixBlend, current: number, setup: number) {
+	getAbsoluteValue(time: number, alpha: number, blend: MixBlend, current: number, setup: number, value?: number) {
+		if (value === undefined)
+			return this.getAbsoluteValue1(time, alpha, blend, current, setup);
+		else
+			return this.getAbsoluteValue2(time, alpha, blend, current, setup, value);
+	}
+
+	private getAbsoluteValue1 (time: number, alpha: number, blend: MixBlend, current: number, setup: number) {
 		if (time < this.frames[0]) {
 			switch (blend) {
-				case MixBlend.setup:
-					return setup;
-				case MixBlend.first:
-					return current + (setup - current) * alpha;
+				case MixBlend.setup: return setup;
+				case MixBlend.first: return current + (setup - current) * alpha;
+				default: return current;
 			}
-			return current;
 		}
 		let value = this.getCurveValue(time);
-		if (blend == MixBlend.setup) return setup + (value - setup) * alpha;
-		return current + (value - current) * alpha;
+		switch (blend) {
+			case MixBlend.setup: return setup + (value - setup) * alpha;
+			case MixBlend.first:
+			case MixBlend.replace: return current + (value - current) * alpha;
+			case MixBlend.add: return current + value * alpha;
+		}
 	}
 
-	getAbsoluteValue2 (time: number, alpha: number, blend: MixBlend, current: number, setup: number, value: number) {
+	private getAbsoluteValue2 (time: number, alpha: number, blend: MixBlend, current: number, setup: number, value: number) {
 		if (time < this.frames[0]) {
 			switch (blend) {
-				case MixBlend.setup:
-					return setup;
-				case MixBlend.first:
-					return current + (setup - current) * alpha;
+				case MixBlend.setup: return setup;
+				case MixBlend.first: return current + (setup - current) * alpha;
+				default: return current;
 			}
-			return current;
 		}
-		if (blend == MixBlend.setup) return setup + (value - setup) * alpha;
-		return current + (value - current) * alpha;
+		switch (blend) {
+			case MixBlend.setup: return setup + (value - setup) * alpha;
+			case MixBlend.first:
+			case MixBlend.replace: return current + (value - current) * alpha;
+			case MixBlend.add: return current + value * alpha;
+		}
 	}
 
 	getScaleValue (time: number, alpha: number, blend: MixBlend, direction: MixDirection, current: number, setup: number) {
 		const frames = this.frames;
 		if (time < frames[0]) {
 			switch (blend) {
-				case MixBlend.setup:
-					return setup;
-				case MixBlend.first:
-					return current + (setup - current) * alpha;
+				case MixBlend.setup: return setup;
+				case MixBlend.first: return current + (setup - current) * alpha;
+				default: return current;
 			}
-			return current;
 		}
 		let value = this.getCurveValue(time) * setup;
-		if (alpha == 1) {
-			if (blend == MixBlend.add) return current + value - setup;
-			return value;
-		}
+		if (alpha === 1) return blend === MixBlend.add ? current + value - setup : value;
 		// Mixing out uses sign of setup or current pose, else use sign of key.
-		if (direction == MixDirection.mixOut) {
+		if (direction == MixDirection.out) {
 			switch (blend) {
 				case MixBlend.setup:
 					return setup + (Math.abs(value) * MathUtils.signum(setup) - setup) * alpha;
@@ -440,12 +512,15 @@ export abstract class CurveTimeline1 extends CurveTimeline {
 	}
 }
 
-/** The base class for a {@link CurveTimeline} which sets two properties. */
-export abstract class CurveTimeline2 extends CurveTimeline {
+/** The base class for a {@link CurveTimeline} that is a {@link BoneTimeline} and sets two properties. */
+export abstract class BoneTimeline2 extends CurveTimeline implements BoneTimeline {
+	readonly boneIndex;
+
 	/** @param bezierCount The maximum number of Bezier curves. See {@link #shrink(int)}.
 	 * @param propertyIds Unique identifiers for the properties the timeline modifies. */
-	constructor (frameCount: number, bezierCount: number, propertyId1: string, propertyId2: string) {
-		super(frameCount, bezierCount, [propertyId1, propertyId2]);
+	constructor (frameCount: number, bezierCount: number, boneIndex: number, property1: Property, property2: Property) {
+		super(frameCount, bezierCount, property1 + "|" + boneIndex, property2 + "|" + boneIndex);
+		this.boneIndex = boneIndex;
 	}
 
 	getFrameEntries () {
@@ -461,49 +536,73 @@ export abstract class CurveTimeline2 extends CurveTimeline {
 		this.frames[frame + 1/*VALUE1*/] = value1;
 		this.frames[frame + 2/*VALUE2*/] = value2;
 	}
+
+	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event> | null, alpha: number,
+		blend: MixBlend, direction: MixDirection, appliedPose: boolean): void {
+		let bone = skeleton.bones[this.boneIndex];
+		if (bone.active) this.apply1(appliedPose ? bone.applied : bone.pose, bone.data.setup, time, alpha, blend, direction);
+	}
+
+	protected abstract apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,
+		direction: MixDirection): void;
+}
+
+export interface BoneTimeline {
+	/** The index of the bone in {@link Skeleton.bones} that will be changed when this timeline is applied. */
+	boneIndex: number;
+}
+
+export function isBoneTimeline(obj: any): obj is BoneTimeline {
+	return typeof obj === 'object' && obj !== null && typeof obj.boneIndex === 'number';
+}
+
+export abstract class BoneTimeline1 extends CurveTimeline1 implements BoneTimeline {
+	readonly boneIndex: number;
+
+	constructor (frameCount: number, bezierCount: number, boneIndex: number, property: Property) {
+		super(frameCount, bezierCount, property + "|" + boneIndex);
+		this.boneIndex = boneIndex;
+	}
+
+	public apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event> | null, alpha: number,
+		blend: MixBlend, direction: MixDirection, appliedPose: boolean) {
+
+		const bone = skeleton.bones[this.boneIndex];
+		if (bone.active) this.apply1(appliedPose ? bone.applied : bone.pose, bone.data.setup, time, alpha, blend, direction);
+	}
+
+	protected abstract apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,
+		direction: MixDirection): void;
 }
 
 /** Changes a bone's local {@link Bone#rotation}. */
-export class RotateTimeline extends CurveTimeline1 implements BoneTimeline {
-	boneIndex = 0;
-
+export class RotateTimeline extends BoneTimeline1 {
 	constructor (frameCount: number, bezierCount: number, boneIndex: number) {
-		super(frameCount, bezierCount, Property.rotate + "|" + boneIndex);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.rotate);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event> | null, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let bone = skeleton.bones[this.boneIndex];
-		if (bone.active) bone.rotation = this.getRelativeValue(time, alpha, blend, bone.rotation, bone.data.rotation);
+	apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend, direction: MixDirection) {
+		pose.rotation = this.getRelativeValue(time, alpha, blend, pose.rotation, setup.rotation);
 	}
 }
 
-/** Changes a bone's local {@link Bone#x} and {@link Bone#y}. */
-export class TranslateTimeline extends CurveTimeline2 implements BoneTimeline {
-	boneIndex = 0;
-
+/** Changes a bone's local {@link BoneLocal.x} and {@link BoneLocal.y}. */
+export class TranslateTimeline extends BoneTimeline2 {
 	constructor (frameCount: number, bezierCount: number, boneIndex: number) {
-		super(frameCount, bezierCount,
-			Property.x + "|" + boneIndex,
-			Property.y + "|" + boneIndex,
-		);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.x, Property.y);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let bone = skeleton.bones[this.boneIndex];
-		if (!bone.active) return;
-
+	apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
 		let frames = this.frames;
 		if (time < frames[0]) {
 			switch (blend) {
 				case MixBlend.setup:
-					bone.x = bone.data.x;
-					bone.y = bone.data.y;
+					pose.x = setup.x;
+					pose.y = setup.y;
 					return;
 				case MixBlend.first:
-					bone.x += (bone.data.x - bone.x) * alpha;
-					bone.y += (bone.data.y - bone.y) * alpha;
+					pose.x += (setup.x - pose.x) * alpha;
+					pose.y += (setup.y - pose.y) * alpha;
 			}
 			return;
 		}
@@ -531,77 +630,62 @@ export class TranslateTimeline extends CurveTimeline2 implements BoneTimeline {
 
 		switch (blend) {
 			case MixBlend.setup:
-				bone.x = bone.data.x + x * alpha;
-				bone.y = bone.data.y + y * alpha;
+				pose.x = setup.x + x * alpha;
+				pose.y = setup.y + y * alpha;
 				break;
 			case MixBlend.first:
 			case MixBlend.replace:
-				bone.x += (bone.data.x + x - bone.x) * alpha;
-				bone.y += (bone.data.y + y - bone.y) * alpha;
+				pose.x += (setup.x + x - pose.x) * alpha;
+				pose.y += (setup.y + y - pose.y) * alpha;
 				break;
 			case MixBlend.add:
-				bone.x += x * alpha;
-				bone.y += y * alpha;
+				pose.x += x * alpha;
+				pose.y += y * alpha;
 		}
 	}
 }
 
-/** Changes a bone's local {@link Bone#x}. */
-export class TranslateXTimeline extends CurveTimeline1 implements BoneTimeline {
-	boneIndex = 0;
-
+/** Changes a bone's local {@link BoneLocal.x}. */
+export class TranslateXTimeline extends BoneTimeline1 {
 	constructor (frameCount: number, bezierCount: number, boneIndex: number) {
-		super(frameCount, bezierCount, Property.x + "|" + boneIndex);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.x);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let bone = skeleton.bones[this.boneIndex];
-		if (bone.active) bone.x = this.getRelativeValue(time, alpha, blend, bone.x, bone.data.x);
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+		pose.x = this.getRelativeValue(time, alpha, blend, pose.x, setup.x);
 	}
 }
 
-/** Changes a bone's local {@link Bone#x}. */
-export class TranslateYTimeline extends CurveTimeline1 implements BoneTimeline {
-	boneIndex = 0;
-
+/** Changes a bone's local {@link BoneLocal.y}. */
+export class TranslateYTimeline extends BoneTimeline1 {
 	constructor (frameCount: number, bezierCount: number, boneIndex: number) {
-		super(frameCount, bezierCount, Property.y + "|" + boneIndex);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.y);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let bone = skeleton.bones[this.boneIndex];
-		if (bone.active) bone.y = this.getRelativeValue(time, alpha, blend, bone.y, bone.data.y);
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+		pose.y = this.getRelativeValue(time, alpha, blend, pose.y, setup.y);
 	}
 }
 
-/** Changes a bone's local {@link Bone#scaleX)} and {@link Bone#scaleY}. */
-export class ScaleTimeline extends CurveTimeline2 implements BoneTimeline {
+/** Changes a bone's local {@link BoneLocal.scaleX} and {@link BoneLocal.scaleY}. */
+export class ScaleTimeline extends BoneTimeline2 {
 	boneIndex = 0;
 
 	constructor (frameCount: number, bezierCount: number, boneIndex: number) {
-		super(frameCount, bezierCount,
-			Property.scaleX + "|" + boneIndex,
-			Property.scaleY + "|" + boneIndex
-		);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.scaleX, Property.scaleY);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let bone = skeleton.bones[this.boneIndex];
-		if (!bone.active) return;
-
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
 		let frames = this.frames;
 		if (time < frames[0]) {
 			switch (blend) {
 				case MixBlend.setup:
-					bone.scaleX = bone.data.scaleX;
-					bone.scaleY = bone.data.scaleY;
+					pose.scaleX = setup.scaleX;
+					pose.scaleY = setup.scaleY;
 					return;
 				case MixBlend.first:
-					bone.scaleX += (bone.data.scaleX - bone.scaleX) * alpha;
-					bone.scaleY += (bone.data.scaleY - bone.scaleY) * alpha;
+					pose.scaleX += (setup.scaleX - pose.scaleX) * alpha;
+					pose.scaleY += (setup.scaleY - pose.scaleY) * alpha;
 			}
 			return;
 		}
@@ -626,118 +710,101 @@ export class ScaleTimeline extends CurveTimeline2 implements BoneTimeline {
 				x = this.getBezierValue(time, i, 1/*VALUE1*/, curveType - 2/*BEZIER*/);
 				y = this.getBezierValue(time, i, 2/*VALUE2*/, curveType + 18/*BEZIER_SIZE*/ - 2/*BEZIER*/);
 		}
-		x *= bone.data.scaleX;
-		y *= bone.data.scaleY;
+		x *= setup.scaleX;
+		y *= setup.scaleY;
 
 		if (alpha == 1) {
 			if (blend == MixBlend.add) {
-				bone.scaleX += x - bone.data.scaleX;
-				bone.scaleY += y - bone.data.scaleY;
+				pose.scaleX += x - setup.scaleX;
+				pose.scaleY += y - setup.scaleY;
 			} else {
-				bone.scaleX = x;
-				bone.scaleY = y;
+				pose.scaleX = x;
+				pose.scaleY = y;
 			}
 		} else {
 			let bx = 0, by = 0;
-			if (direction == MixDirection.mixOut) {
+			if (direction == MixDirection.out) {
 				switch (blend) {
 					case MixBlend.setup:
-						bx = bone.data.scaleX;
-						by = bone.data.scaleY;
-						bone.scaleX = bx + (Math.abs(x) * MathUtils.signum(bx) - bx) * alpha;
-						bone.scaleY = by + (Math.abs(y) * MathUtils.signum(by) - by) * alpha;
+						bx = setup.scaleX;
+						by = setup.scaleY;
+						pose.scaleX = bx + (Math.abs(x) * MathUtils.signum(bx) - bx) * alpha;
+						pose.scaleY = by + (Math.abs(y) * MathUtils.signum(by) - by) * alpha;
 						break;
 					case MixBlend.first:
 					case MixBlend.replace:
-						bx = bone.scaleX;
-						by = bone.scaleY;
-						bone.scaleX = bx + (Math.abs(x) * MathUtils.signum(bx) - bx) * alpha;
-						bone.scaleY = by + (Math.abs(y) * MathUtils.signum(by) - by) * alpha;
+						bx = pose.scaleX;
+						by = pose.scaleY;
+						pose.scaleX = bx + (Math.abs(x) * MathUtils.signum(bx) - bx) * alpha;
+						pose.scaleY = by + (Math.abs(y) * MathUtils.signum(by) - by) * alpha;
 						break;
 					case MixBlend.add:
-						bone.scaleX += (x - bone.data.scaleX) * alpha;
-						bone.scaleY += (y - bone.data.scaleY) * alpha;
+						pose.scaleX += (x - setup.scaleX) * alpha;
+						pose.scaleY += (y - setup.scaleY) * alpha;
 				}
 			} else {
 				switch (blend) {
 					case MixBlend.setup:
-						bx = Math.abs(bone.data.scaleX) * MathUtils.signum(x);
-						by = Math.abs(bone.data.scaleY) * MathUtils.signum(y);
-						bone.scaleX = bx + (x - bx) * alpha;
-						bone.scaleY = by + (y - by) * alpha;
+						bx = Math.abs(setup.scaleX) * MathUtils.signum(x);
+						by = Math.abs(setup.scaleY) * MathUtils.signum(y);
+						pose.scaleX = bx + (x - bx) * alpha;
+						pose.scaleY = by + (y - by) * alpha;
 						break;
 					case MixBlend.first:
 					case MixBlend.replace:
-						bx = Math.abs(bone.scaleX) * MathUtils.signum(x);
-						by = Math.abs(bone.scaleY) * MathUtils.signum(y);
-						bone.scaleX = bx + (x - bx) * alpha;
-						bone.scaleY = by + (y - by) * alpha;
+						bx = Math.abs(pose.scaleX) * MathUtils.signum(x);
+						by = Math.abs(pose.scaleY) * MathUtils.signum(y);
+						pose.scaleX = bx + (x - bx) * alpha;
+						pose.scaleY = by + (y - by) * alpha;
 						break;
 					case MixBlend.add:
-						bone.scaleX += (x - bone.data.scaleX) * alpha;
-						bone.scaleY += (y - bone.data.scaleY) * alpha;
+						pose.scaleX += (x - setup.scaleX) * alpha;
+						pose.scaleY += (y - setup.scaleY) * alpha;
 				}
 			}
 		}
 	}
 }
 
-/** Changes a bone's local {@link Bone#scaleX)} and {@link Bone#scaleY}. */
-export class ScaleXTimeline extends CurveTimeline1 implements BoneTimeline {
-	boneIndex = 0;
-
+/** Changes a bone's local {@link BoneLocal.scaleX}. */
+export class ScaleXTimeline extends BoneTimeline1 {
 	constructor (frameCount: number, bezierCount: number, boneIndex: number) {
-		super(frameCount, bezierCount, Property.scaleX + "|" + boneIndex);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.scaleX);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let bone = skeleton.bones[this.boneIndex];
-		if (bone.active) bone.scaleX = this.getScaleValue(time, alpha, blend, direction, bone.scaleX, bone.data.scaleX);
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+		pose.scaleX = this.getScaleValue(time, alpha, blend, direction, pose.scaleX, setup.scaleX);
 	}
 }
 
-/** Changes a bone's local {@link Bone#scaleX)} and {@link Bone#scaleY}. */
-export class ScaleYTimeline extends CurveTimeline1 implements BoneTimeline {
-	boneIndex = 0;
-
+/** Changes a bone's local {@link BoneLocal.scaleY}. */
+export class ScaleYTimeline extends BoneTimeline1 {
 	constructor (frameCount: number, bezierCount: number, boneIndex: number) {
-		super(frameCount, bezierCount, Property.scaleY + "|" + boneIndex);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.scaleY);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let bone = skeleton.bones[this.boneIndex];
-		if (bone.active) bone.scaleY = this.getScaleValue(time, alpha, blend, direction, bone.scaleY, bone.data.scaleY);
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+		pose.scaleY = this.getScaleValue(time, alpha, blend, direction, pose.scaleY, setup.scaleY);
 	}
 }
 
 /** Changes a bone's local {@link Bone#shearX} and {@link Bone#shearY}. */
-export class ShearTimeline extends CurveTimeline2 implements BoneTimeline {
-	boneIndex = 0;
-
+export class ShearTimeline extends BoneTimeline2 {
 	constructor (frameCount: number, bezierCount: number, boneIndex: number) {
-		super(frameCount, bezierCount,
-			Property.shearX + "|" + boneIndex,
-			Property.shearY + "|" + boneIndex
-		);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.shearX, Property.shearY);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let bone = skeleton.bones[this.boneIndex];
-		if (!bone.active) return;
-
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
 		let frames = this.frames;
 		if (time < frames[0]) {
 			switch (blend) {
 				case MixBlend.setup:
-					bone.shearX = bone.data.shearX;
-					bone.shearY = bone.data.shearY;
+					pose.shearX = setup.shearX;
+					pose.shearY = setup.shearY;
 					return;
 				case MixBlend.first:
-					bone.shearX += (bone.data.shearX - bone.shearX) * alpha;
-					bone.shearY += (bone.data.shearY - bone.shearY) * alpha;
+					pose.shearX += (setup.shearX - pose.shearX) * alpha;
+					pose.shearY += (setup.shearY - pose.shearY) * alpha;
 			}
 			return;
 		}
@@ -765,56 +832,49 @@ export class ShearTimeline extends CurveTimeline2 implements BoneTimeline {
 
 		switch (blend) {
 			case MixBlend.setup:
-				bone.shearX = bone.data.shearX + x * alpha;
-				bone.shearY = bone.data.shearY + y * alpha;
+				pose.shearX = setup.shearX + x * alpha;
+				pose.shearY = setup.shearY + y * alpha;
 				break;
 			case MixBlend.first:
 			case MixBlend.replace:
-				bone.shearX += (bone.data.shearX + x - bone.shearX) * alpha;
-				bone.shearY += (bone.data.shearY + y - bone.shearY) * alpha;
+				pose.shearX += (setup.shearX + x - pose.shearX) * alpha;
+				pose.shearY += (setup.shearY + y - pose.shearY) * alpha;
 				break;
 			case MixBlend.add:
-				bone.shearX += x * alpha;
-				bone.shearY += y * alpha;
+				pose.shearX += x * alpha;
+				pose.shearY += y * alpha;
 		}
 	}
 }
 
 /** Changes a bone's local {@link Bone#shearX} and {@link Bone#shearY}. */
-export class ShearXTimeline extends CurveTimeline1 implements BoneTimeline {
-	boneIndex = 0;
-
+export class ShearXTimeline extends BoneTimeline1 {
 	constructor (frameCount: number, bezierCount: number, boneIndex: number) {
-		super(frameCount, bezierCount, Property.shearX + "|" + boneIndex);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.shearX);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let bone = skeleton.bones[this.boneIndex];
-		if (bone.active) bone.shearX = this.getRelativeValue(time, alpha, blend, bone.shearX, bone.data.shearX);
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+		pose.shearX = this.getRelativeValue(time, alpha, blend, pose.shearX, setup.shearX);
 	}
 }
 
 /** Changes a bone's local {@link Bone#shearX} and {@link Bone#shearY}. */
-export class ShearYTimeline extends CurveTimeline1 implements BoneTimeline {
-	boneIndex = 0;
-
+export class ShearYTimeline extends BoneTimeline1 {
 	constructor (frameCount: number, bezierCount: number, boneIndex: number) {
-		super(frameCount, bezierCount, Property.shearY + "|" + boneIndex);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.shearY);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let bone = skeleton.bones[this.boneIndex];
-		if (bone.active) bone.shearY = this.getRelativeValue(time, alpha, blend, bone.shearY, bone.data.shearY);
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+		pose.shearY = this.getRelativeValue(time, alpha, blend, pose.shearY, setup.shearY);
 	}
 }
 
+/** Changes a bone's {@link BoneLocal.inherit}. */
 export class InheritTimeline extends Timeline implements BoneTimeline {
-	boneIndex = 0;
+	readonly boneIndex: number;
 
 	constructor (frameCount: number, boneIndex: number) {
-		super(frameCount, [Property.inherit + "|" + boneIndex]);
+		super(frameCount, Property.inherit + "|" + boneIndex);
 		this.boneIndex = boneIndex;
 	}
 
@@ -822,7 +882,7 @@ export class InheritTimeline extends Timeline implements BoneTimeline {
 		return 2/*ENTRIES*/;
 	}
 
-	/** Sets the transform mode for the specified frame.
+	/** Sets the inherit transform mode for the specified frame.
 	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
 	 * @param time The frame time in seconds. */
 	public setFrame (frame: number, time: number, inherit: Inherit) {
@@ -831,34 +891,50 @@ export class InheritTimeline extends Timeline implements BoneTimeline {
 		this.frames[frame + 1/*INHERIT*/] = inherit;
 	}
 
-	public apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
+	public apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
 		let bone = skeleton.bones[this.boneIndex];
 		if (!bone.active) return;
+		const pose = appliedPose ? bone.applied : bone.pose;
 
-		if (direction == MixDirection.mixOut) {
-			if (blend == MixBlend.setup) bone.inherit = bone.data.inherit;
+		if (direction === MixDirection.out) {
+			if (blend === MixBlend.setup) pose.inherit = bone.data.setup.inherit;
 			return;
 		}
 
 		let frames = this.frames;
 		if (time < frames[0]) {
-			if (blend == MixBlend.setup || blend == MixBlend.first) bone.inherit = bone.data.inherit;
-			return;
-		}
-		bone.inherit = this.frames[Timeline.search(frames, time, 2/*ENTRIES*/) + 1/*INHERIT*/];
+			if (blend == MixBlend.setup || blend == MixBlend.first) pose.inherit = bone.data.setup.inherit;
+		} else
+			pose.inherit = this.frames[Timeline.search(frames, time, 2/*ENTRIES*/) + 1/*INHERIT*/];
 	}
 }
 
-/** Changes a slot's {@link Slot#color}. */
-export class RGBATimeline extends CurveTimeline implements SlotTimeline {
-	slotIndex = 0;
+export abstract class SlotCurveTimeline extends CurveTimeline implements SlotTimeline {
+	readonly slotIndex: number;
 
-	constructor (frameCount: number, bezierCount: number, slotIndex: number) {
-		super(frameCount, bezierCount, [
-			Property.rgb + "|" + slotIndex,
-			Property.alpha + "|" + slotIndex
-		]);
+	constructor (frameCount: number, bezierCount: number, slotIndex: number, ...propertyIds: string[]) {
+		super(frameCount, bezierCount, ...propertyIds);
 		this.slotIndex = slotIndex;
+	}
+
+	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
+		const slot = skeleton.slots[this.slotIndex];
+		if (slot.bone.active) this.apply1(slot, appliedPose ? slot.applied : slot.pose, time, alpha, blend);
+	}
+
+	protected abstract apply1 (slot: Slot, pose: SlotPose, time: number, alpha: number, blend: MixBlend): void;
+}
+
+/** Changes a slot's {@link SlotPose.color}. */
+export class RGBATimeline extends SlotCurveTimeline {
+	constructor (frameCount: number, bezierCount: number, slotIndex: number) {
+		super(frameCount, bezierCount, slotIndex, //
+			Property.rgb + "|" + slotIndex, //
+			Property.alpha + "|" + slotIndex);
 	}
 
 	getFrameEntries () {
@@ -875,21 +951,15 @@ export class RGBATimeline extends CurveTimeline implements SlotTimeline {
 		this.frames[frame + 4/*A*/] = a;
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let slot = skeleton.slots[this.slotIndex];
-		if (!slot.bone.active) return;
-
+	protected apply1 (slot: Slot, pose: SlotPose, time: number, alpha: number, blend: MixBlend) {
 		let frames = this.frames;
-		let color = slot.color;
+		let color = pose.color;
 		if (time < frames[0]) {
-			let setup = slot.data.color;
+			let setup = slot.data.setup.color;
 			switch (blend) {
-				case MixBlend.setup:
-					color.setFromColor(setup);
-					return;
-				case MixBlend.first:
-					color.add((setup.r - color.r) * alpha, (setup.g - color.g) * alpha, (setup.b - color.b) * alpha,
-						(setup.a - color.a) * alpha);
+				case MixBlend.setup: color.setFromColor(setup); break;
+				case MixBlend.first: color.add((setup.r - color.r) * alpha, (setup.g - color.g) * alpha, (setup.b - color.b) * alpha,
+						(setup.a - color.a) * alpha); break;
 			}
 			return;
 		}
@@ -925,21 +995,16 @@ export class RGBATimeline extends CurveTimeline implements SlotTimeline {
 		if (alpha == 1)
 			color.set(r, g, b, a);
 		else {
-			if (blend == MixBlend.setup) color.setFromColor(slot.data.color);
+			if (blend == MixBlend.setup) color.setFromColor(slot.data.setup.color);
 			color.add((r - color.r) * alpha, (g - color.g) * alpha, (b - color.b) * alpha, (a - color.a) * alpha);
 		}
 	}
 }
 
-/** Changes a slot's {@link Slot#color}. */
-export class RGBTimeline extends CurveTimeline implements SlotTimeline {
-	slotIndex = 0;
-
+/** Changes the RGB for a slot's {@link SlotPose.color}. */
+export class RGBTimeline extends SlotCurveTimeline {
 	constructor (frameCount: number, bezierCount: number, slotIndex: number) {
-		super(frameCount, bezierCount, [
-			Property.rgb + "|" + slotIndex
-		]);
-		this.slotIndex = slotIndex;
+		super(frameCount, bezierCount, slotIndex, Property.rgb + "|" + slotIndex);
 	}
 
 	getFrameEntries () {
@@ -955,14 +1020,11 @@ export class RGBTimeline extends CurveTimeline implements SlotTimeline {
 		this.frames[frame + 3/*B*/] = b;
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let slot = skeleton.slots[this.slotIndex];
-		if (!slot.bone.active) return;
-
+	protected apply1 (slot: Slot, pose: SlotPose, time: number, alpha: number, blend: MixBlend) {
 		let frames = this.frames;
-		let color = slot.color;
+		let color = pose.color;
 		if (time < frames[0]) {
-			let setup = slot.data.color;
+			let setup = slot.data.setup.color;
 			switch (blend) {
 				case MixBlend.setup:
 					color.r = setup.r;
@@ -1007,7 +1069,7 @@ export class RGBTimeline extends CurveTimeline implements SlotTimeline {
 			color.b = b;
 		} else {
 			if (blend == MixBlend.setup) {
-				let setup = slot.data.color;
+				let setup = slot.data.setup.color;
 				color.r = setup.r;
 				color.g = setup.g;
 				color.b = setup.b;
@@ -1019,7 +1081,7 @@ export class RGBTimeline extends CurveTimeline implements SlotTimeline {
 	}
 }
 
-/** Changes a bone's local {@link Bone#shearX} and {@link Bone#shearY}. */
+/** Changes the alpha for a slot's {@link SlotPose.color}. */
 export class AlphaTimeline extends CurveTimeline1 implements SlotTimeline {
 	slotIndex = 0;
 
@@ -1028,19 +1090,19 @@ export class AlphaTimeline extends CurveTimeline1 implements SlotTimeline {
 		this.slotIndex = slotIndex;
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
+	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
 		let slot = skeleton.slots[this.slotIndex];
 		if (!slot.bone.active) return;
 
-		let color = slot.color;
+		const color = (appliedPose ? slot.applied : slot.pose).color;
+		const frames = this.frames;
 		if (time < this.frames[0]) {
-			let setup = slot.data.color;
+			let setup = slot.data.setup.color;
 			switch (blend) {
-				case MixBlend.setup:
-					color.a = setup.a;
-					return;
-				case MixBlend.first:
-					color.a += (setup.a - color.a) * alpha;
+				case MixBlend.setup: color.a = setup.a; break;
+				case MixBlend.first: color.a += (setup.a - color.a) * alpha; break;
 			}
 			return;
 		}
@@ -1049,23 +1111,19 @@ export class AlphaTimeline extends CurveTimeline1 implements SlotTimeline {
 		if (alpha == 1)
 			color.a = a;
 		else {
-			if (blend == MixBlend.setup) color.a = slot.data.color.a;
+			if (blend == MixBlend.setup) color.a = slot.data.setup.color.a;
 			color.a += (a - color.a) * alpha;
 		}
 	}
 }
 
-/** Changes a slot's {@link Slot#color} and {@link Slot#darkColor} for two color tinting. */
-export class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
-	slotIndex = 0;
-
+/** Changes a slot's {@link SlotPose.color} and {@link SlotPose.darkColor} for two color tinting. */
+export class RGBA2Timeline extends SlotCurveTimeline {
 	constructor (frameCount: number, bezierCount: number, slotIndex: number) {
-		super(frameCount, bezierCount, [
-			Property.rgb + "|" + slotIndex,
-			Property.alpha + "|" + slotIndex,
-			Property.rgb2 + "|" + slotIndex
-		]);
-		this.slotIndex = slotIndex;
+		super(frameCount, bezierCount, slotIndex, //
+			Property.rgb + "|" + slotIndex, //
+			Property.alpha + "|" + slotIndex, //
+			Property.rgb2 + "|" + slotIndex);
 	}
 
 	getFrameEntries () {
@@ -1085,14 +1143,12 @@ export class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
 		this.frames[frame + 7/*B2*/] = b2;
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let slot = skeleton.slots[this.slotIndex];
-		if (!slot.bone.active) return;
-
-		let frames = this.frames;
-		let light = slot.color, dark = slot.darkColor!;
+	protected apply1 (slot: Slot, pose: SlotPose, time: number, alpha: number, blend: MixBlend) {
+		const frames = this.frames;
+		const light = pose.color, dark = pose.darkColor!;
 		if (time < frames[0]) {
-			let setupLight = slot.data.color, setupDark = slot.data.darkColor!;
+			const setup = slot.data.setup;
+			const setupLight = setup.color, setupDark = setup.darkColor!;
 			switch (blend) {
 				case MixBlend.setup:
 					light.setFromColor(setupLight);
@@ -1158,8 +1214,9 @@ export class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
 			dark.b = b2;
 		} else {
 			if (blend == MixBlend.setup) {
-				light.setFromColor(slot.data.color);
-				let setupDark = slot.data.darkColor!;
+				const setup = slot.data.setup;
+				light.setFromColor(setup.color);
+				let setupDark = setup.darkColor!;
 				dark.r = setupDark.r;
 				dark.g = setupDark.g;
 				dark.b = setupDark.b;
@@ -1172,16 +1229,12 @@ export class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
 	}
 }
 
-/** Changes a slot's {@link Slot#color} and {@link Slot#darkColor} for two color tinting. */
-export class RGB2Timeline extends CurveTimeline implements SlotTimeline {
-	slotIndex = 0;
-
+/** Changes a slot's {@link SlotPose.color} and {@link SlotPose.darkColor} for two color tinting. */
+export class RGB2Timeline  extends SlotCurveTimeline {
 	constructor (frameCount: number, bezierCount: number, slotIndex: number) {
-		super(frameCount, bezierCount, [
-			Property.rgb + "|" + slotIndex,
-			Property.rgb2 + "|" + slotIndex
-		]);
-		this.slotIndex = slotIndex;
+		super(frameCount, bezierCount, slotIndex, //
+			Property.rgb + "|" + slotIndex, //
+			Property.rgb2 + "|" + slotIndex);
 	}
 
 	getFrameEntries () {
@@ -1200,14 +1253,12 @@ export class RGB2Timeline extends CurveTimeline implements SlotTimeline {
 		this.frames[frame + 6/*B2*/] = b2;
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let slot = skeleton.slots[this.slotIndex];
-		if (!slot.bone.active) return;
-
-		let frames = this.frames;
-		let light = slot.color, dark = slot.darkColor!;
+	protected apply1 (slot: Slot, pose: SlotPose, time: number, alpha: number, blend: MixBlend) {
+		const frames = this.frames;
+		const light = pose.color, dark = pose.darkColor!;
 		if (time < frames[0]) {
-			let setupLight = slot.data.color, setupDark = slot.data.darkColor!;
+			const setup = slot.data.setup;
+			const setupLight = setup.color, setupDark = setup.darkColor!;
 			switch (blend) {
 				case MixBlend.setup:
 					light.r = setupLight.r;
@@ -1274,7 +1325,8 @@ export class RGB2Timeline extends CurveTimeline implements SlotTimeline {
 			dark.b = b2;
 		} else {
 			if (blend == MixBlend.setup) {
-				let setupLight = slot.data.color, setupDark = slot.data.darkColor!;
+				const setup = slot.data.setup;
+				const setupLight = setup.color, setupDark = setup.darkColor!;
 				light.r = setupLight.r;
 				light.g = setupLight.g;
 				light.b = setupLight.b;
@@ -1292,7 +1344,7 @@ export class RGB2Timeline extends CurveTimeline implements SlotTimeline {
 	}
 }
 
-/** Changes a slot's {@link Slot#attachment}. */
+/** Changes a slot's {@link SlotPose.ttachment}. */
 export class AttachmentTimeline extends Timeline implements SlotTimeline {
 	slotIndex = 0;
 
@@ -1300,9 +1352,7 @@ export class AttachmentTimeline extends Timeline implements SlotTimeline {
 	attachmentNames: Array<string | null>;
 
 	constructor (frameCount: number, slotIndex: number) {
-		super(frameCount, [
-			Property.attachment + "|" + slotIndex
-		]);
+		super(frameCount, Property.attachment + "|" + slotIndex);
 		this.slotIndex = slotIndex;
 		this.attachmentNames = new Array<string>(frameCount);
 	}
@@ -1317,43 +1367,38 @@ export class AttachmentTimeline extends Timeline implements SlotTimeline {
 		this.attachmentNames[frame] = attachmentName;
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
+	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
 		let slot = skeleton.slots[this.slotIndex];
 		if (!slot.bone.active) return;
+		const pose = appliedPose ? slot.applied : slot.pose;
 
-		if (direction == MixDirection.mixOut) {
-			if (blend == MixBlend.setup) this.setAttachment(skeleton, slot, slot.data.attachmentName);
-			return;
-		}
-
-		if (time < this.frames[0]) {
-			if (blend == MixBlend.setup || blend == MixBlend.first) this.setAttachment(skeleton, slot, slot.data.attachmentName);
-			return;
-		}
-
-		this.setAttachment(skeleton, slot, this.attachmentNames[Timeline.search1(this.frames, time)]);
+		if (direction == MixDirection.out) {
+			if (blend == MixBlend.setup) this.setAttachment(skeleton, pose, slot.data.attachmentName);
+		} else if (time < this.frames[0]) {
+			if (blend == MixBlend.setup || blend == MixBlend.first) this.setAttachment(skeleton, pose, slot.data.attachmentName);
+		} else
+			this.setAttachment(skeleton, pose, this.attachmentNames[Timeline.search(this.frames, time)]);
 	}
 
-	setAttachment (skeleton: Skeleton, slot: Slot, attachmentName: string | null) {
-		slot.setAttachment(!attachmentName ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
+	setAttachment (skeleton: Skeleton, pose: SlotPose, attachmentName: string | null) {
+		pose.setAttachment(!attachmentName ? null : skeleton.getAttachment(this.slotIndex, attachmentName));
 	}
 }
 
-/** Changes a slot's {@link Slot#deform} to deform a {@link VertexAttachment}. */
-export class DeformTimeline extends CurveTimeline implements SlotTimeline {
-	slotIndex = 0;
-
-	/** The attachment that will be deformed. */
-	attachment: VertexAttachment;
+/** Changes a slot's {@link SlotPose.deform} to deform a {@link VertexAttachment}. */
+export class DeformTimeline extends SlotCurveTimeline {
+	/** The attachment that will be deformed.
+	 *
+	 * See {@link VertexAttachment.getTimelineAttachment()}. */
+	readonly attachment: VertexAttachment;
 
 	/** The vertices for each key frame. */
 	vertices: Array<NumberArrayLike>;
 
 	constructor (frameCount: number, bezierCount: number, slotIndex: number, attachment: VertexAttachment) {
-		super(frameCount, bezierCount, [
-			Property.deform + "|" + slotIndex + "|" + attachment.id
-		]);
-		this.slotIndex = slotIndex;
+		super(frameCount, bezierCount, slotIndex, Property.deform + "|" + slotIndex + "|" + attachment.id);
 		this.attachment = attachment;
 		this.vertices = new Array<NumberArrayLike>(frameCount);
 	}
@@ -1362,7 +1407,9 @@ export class DeformTimeline extends CurveTimeline implements SlotTimeline {
 		return this.frames.length;
 	}
 
-	/** Sets the time in seconds and the vertices for the specified key frame.
+	/** Sets the time and vertices for the specified frame.
+	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param time The frame time in seconds.
 	 * @param vertices Vertex positions for an unweighted VertexAttachment, or deform offsets if it has weights. */
 	setFrame (frame: number, time: number, vertices: NumberArrayLike) {
 		this.frames[frame] = time;
@@ -1419,13 +1466,12 @@ export class DeformTimeline extends CurveTimeline implements SlotTimeline {
 		return y + (1 - y) * (time - x) / (this.frames[frame + this.getFrameEntries()] - x);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let slot: Slot = skeleton.slots[this.slotIndex];
-		if (!slot.bone.active || !(slot.attachment instanceof VertexAttachment)) return;
-		let vertexAttachment = slot.attachment;
+	protected apply1 (slot: Slot, pose: SlotPose, time: number, alpha: number, blend: MixBlend) {
+		if (!(pose.attachment instanceof VertexAttachment)) return;
+		let vertexAttachment = pose.attachment;
 		if (vertexAttachment.timelineAttachment != this.attachment) return;
 
-		let deform: Array<number> = slot.deform;
+		let deform = pose.deform;
 		if (deform.length == 0) blend = MixBlend.setup;
 
 		let vertices = this.vertices;
@@ -1443,13 +1489,11 @@ export class DeformTimeline extends CurveTimeline implements SlotTimeline {
 						return;
 					}
 					deform.length = vertexCount;
-					if (!vertexAttachment.bones) {
-						// Unweighted vertex positions.
+					if (!vertexAttachment.bones) { // Unweighted vertex positions.
 						let setupVertices = vertexAttachment.vertices;
 						for (var i = 0; i < vertexCount; i++)
 							deform[i] += (setupVertices[i] - deform[i]) * alpha;
-					} else {
-						// Weighted deform offsets.
+					} else { // Weighted deform offsets.
 						alpha = 1 - alpha;
 						for (var i = 0; i < vertexCount; i++)
 							deform[i] *= alpha;
@@ -1459,52 +1503,46 @@ export class DeformTimeline extends CurveTimeline implements SlotTimeline {
 		}
 
 		deform.length = vertexCount;
-		if (time >= frames[frames.length - 1]) {
+		if (time >= frames[frames.length - 1]) { // Time is after last frame.
 			let lastVertices = vertices[frames.length - 1];
 			if (alpha == 1) {
 				if (blend == MixBlend.add) {
-					if (!vertexAttachment.bones) {
-						// Unweighted vertex positions, with alpha.
+					if (!vertexAttachment.bones) { // Unweighted vertex positions, no alpha.
 						let setupVertices = vertexAttachment.vertices;
 						for (let i = 0; i < vertexCount; i++)
 							deform[i] += lastVertices[i] - setupVertices[i];
-					} else {
-						// Weighted deform offsets, with alpha.
+					} else { // Weighted deform offsets, no alpha.
 						for (let i = 0; i < vertexCount; i++)
 							deform[i] += lastVertices[i];
 					}
-				} else
+				} else // Vertex positions or deform offsets, no alpha.
 					Utils.arrayCopy(lastVertices, 0, deform, 0, vertexCount);
 			} else {
 				switch (blend) {
 					case MixBlend.setup: {
-						if (!vertexAttachment.bones) {
-							// Unweighted vertex positions, with alpha.
+						if (!vertexAttachment.bones) { // Unweighted vertex positions, with alpha.
 							let setupVertices = vertexAttachment.vertices;
 							for (let i = 0; i < vertexCount; i++) {
 								let setup = setupVertices[i];
 								deform[i] = setup + (lastVertices[i] - setup) * alpha;
 							}
-						} else {
-							// Weighted deform offsets, with alpha.
+						} else { // Weighted deform offsets, with alpha.
 							for (let i = 0; i < vertexCount; i++)
 								deform[i] = lastVertices[i] * alpha;
 						}
 						break;
 					}
 					case MixBlend.first:
-					case MixBlend.replace:
+					case MixBlend.replace: // Vertex positions or deform offsets, with alpha.
 						for (let i = 0; i < vertexCount; i++)
 							deform[i] += (lastVertices[i] - deform[i]) * alpha;
 						break;
 					case MixBlend.add:
-						if (!vertexAttachment.bones) {
-							// Unweighted vertex positions, with alpha.
+						if (!vertexAttachment.bones) { // Unweighted vertex positions, no alpha.
 							let setupVertices = vertexAttachment.vertices;
 							for (let i = 0; i < vertexCount; i++)
 								deform[i] += (lastVertices[i] - setupVertices[i]) * alpha;
-						} else {
-							// Weighted deform offsets, with alpha.
+						} else { // Weighted deform offsets, alpha.
 							for (let i = 0; i < vertexCount; i++)
 								deform[i] += lastVertices[i] * alpha;
 						}
@@ -1513,29 +1551,28 @@ export class DeformTimeline extends CurveTimeline implements SlotTimeline {
 			return;
 		}
 
-		// Interpolate between the previous frame and the current frame.
-		let frame = Timeline.search1(frames, time);
+		let frame = Timeline.search(frames, time);
 		let percent = this.getCurvePercent(time, frame);
 		let prevVertices = vertices[frame];
 		let nextVertices = vertices[frame + 1];
 
 		if (alpha == 1) {
 			if (blend == MixBlend.add) {
-				if (!vertexAttachment.bones) {
-					// Unweighted vertex positions, with alpha.
+				if (!vertexAttachment.bones) { // Unweighted vertex positions, no alpha.
 					let setupVertices = vertexAttachment.vertices;
 					for (let i = 0; i < vertexCount; i++) {
 						let prev = prevVertices[i];
 						deform[i] += prev + (nextVertices[i] - prev) * percent - setupVertices[i];
 					}
-				} else {
-					// Weighted deform offsets, with alpha.
+				} else { // Weighted deform offsets, no alpha.
 					for (let i = 0; i < vertexCount; i++) {
 						let prev = prevVertices[i];
 						deform[i] += prev + (nextVertices[i] - prev) * percent;
 					}
 				}
-			} else {
+			} else if (percent === 0)
+				Utils.arrayCopy(prevVertices, 0, deform, 0, vertexCount)
+			else { // Vertex positions or deform offsets, no alpha.
 				for (let i = 0; i < vertexCount; i++) {
 					let prev = prevVertices[i];
 					deform[i] = prev + (nextVertices[i] - prev) * percent;
@@ -1544,15 +1581,13 @@ export class DeformTimeline extends CurveTimeline implements SlotTimeline {
 		} else {
 			switch (blend) {
 				case MixBlend.setup: {
-					if (!vertexAttachment.bones) {
-						// Unweighted vertex positions, with alpha.
+					if (!vertexAttachment.bones) { // Unweighted vertex positions, with alpha.
 						let setupVertices = vertexAttachment.vertices;
 						for (let i = 0; i < vertexCount; i++) {
 							let prev = prevVertices[i], setup = setupVertices[i];
 							deform[i] = setup + (prev + (nextVertices[i] - prev) * percent - setup) * alpha;
 						}
-					} else {
-						// Weighted deform offsets, with alpha.
+					} else { // Weighted deform offsets, with alpha.
 						for (let i = 0; i < vertexCount; i++) {
 							let prev = prevVertices[i];
 							deform[i] = (prev + (nextVertices[i] - prev) * percent) * alpha;
@@ -1561,22 +1596,20 @@ export class DeformTimeline extends CurveTimeline implements SlotTimeline {
 					break;
 				}
 				case MixBlend.first:
-				case MixBlend.replace:
+				case MixBlend.replace: // Vertex positions or deform offsets, with alpha.
 					for (let i = 0; i < vertexCount; i++) {
 						let prev = prevVertices[i];
 						deform[i] += (prev + (nextVertices[i] - prev) * percent - deform[i]) * alpha;
 					}
 					break;
 				case MixBlend.add:
-					if (!vertexAttachment.bones) {
-						// Unweighted vertex positions, with alpha.
+					if (!vertexAttachment.bones) { // Unweighted vertex positions, with alpha.
 						let setupVertices = vertexAttachment.vertices;
 						for (let i = 0; i < vertexCount; i++) {
 							let prev = prevVertices[i];
 							deform[i] += (prev + (nextVertices[i] - prev) * percent - setupVertices[i]) * alpha;
 						}
-					} else {
-						// Weighted deform offsets, with alpha.
+					} else { // Weighted deform offsets, with alpha.
 						for (let i = 0; i < vertexCount; i++) {
 							let prev = prevVertices[i];
 							deform[i] += (prev + (nextVertices[i] - prev) * percent) * alpha;
@@ -1584,6 +1617,104 @@ export class DeformTimeline extends CurveTimeline implements SlotTimeline {
 					}
 			}
 		}
+	}
+}
+
+/** Changes a slot's {@link Slot#getSequenceIndex()} for an attachment's {@link Sequence}. */
+export class SequenceTimeline extends Timeline implements SlotTimeline {
+	static ENTRIES = 3;
+	static MODE = 1;
+	static DELAY = 2;
+
+	readonly slotIndex: number;
+	readonly attachment: HasTextureRegion;
+
+	constructor (frameCount: number, slotIndex: number, attachment: HasTextureRegion) {
+		super(frameCount,
+			Property.sequence + "|" + slotIndex + "|" + attachment.sequence!.id);
+		this.slotIndex = slotIndex;
+		this.attachment = attachment;
+	}
+
+	getFrameEntries () {
+		return SequenceTimeline.ENTRIES;
+	}
+
+	getSlotIndex () {
+		return this.slotIndex;
+	}
+
+	getAttachment () {
+		return this.attachment as unknown as Attachment;
+	}
+
+	/** Sets the time, mode, index, and frame time for the specified frame.
+	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param time Seconds between frames. */
+	setFrame (frame: number, time: number, mode: SequenceMode, index: number, delay: number) {
+		let frames = this.frames;
+		frame *= SequenceTimeline.ENTRIES;
+		frames[frame] = time;
+		frames[frame + SequenceTimeline.MODE] = mode | (index << 4);
+		frames[frame + SequenceTimeline.DELAY] = delay;
+	}
+
+	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
+		let slot = skeleton.slots[this.slotIndex];
+		if (!slot.bone.active) return;
+		const pose = appliedPose ? slot.applied : slot.pose;
+
+		let slotAttachment = pose.attachment;
+		let attachment = this.attachment as unknown as Attachment;
+		if (slotAttachment !== attachment) {
+			if (!(slotAttachment instanceof VertexAttachment)
+				|| slotAttachment.timelineAttachment !== attachment) return;
+		}
+
+		const sequence = (slotAttachment as unknown as HasTextureRegion).sequence;
+		if (!sequence) return;
+
+		if (direction === MixDirection.out) {
+			if (blend === MixBlend.setup) pose.sequenceIndex = -1;
+			return;
+		}
+
+		let frames = this.frames;
+		if (time < frames[0]) {
+			if (blend === MixBlend.setup || blend === MixBlend.first) pose.sequenceIndex = -1;
+			return;
+		}
+
+		const i = Timeline.search(frames, time, SequenceTimeline.ENTRIES);
+		const before = frames[i];
+		const modeAndIndex = frames[i + SequenceTimeline.MODE];
+		const delay = frames[i + SequenceTimeline.DELAY];
+
+		let index = modeAndIndex >> 4, count = sequence.regions.length;
+		const mode = SequenceModeValues[modeAndIndex & 0xf];
+		if (mode !== SequenceMode.hold) {
+			index += (((time - before) / delay + 0.00001) | 0);
+			switch (mode) {
+				case SequenceMode.once: index = Math.min(count - 1, index); break;
+				case SequenceMode.loop: index %= count; break;
+				case SequenceMode.pingpong: {
+					let n = (count << 1) - 2;
+					index = n === 0 ? 0 : index % n;
+					if (index >= count) index = n - index;
+					break;
+				}
+				case SequenceMode.onceReverse: index = Math.max(count - 1 - index, 0); break;
+				case SequenceMode.loopReverse: index = count - 1 - (index % count); break;
+				case SequenceMode.pingpongReverse: {
+					let n = (count << 1) - 2;
+					index = n == 0 ? 0 : (index + count - 1) % n;
+					if (index >= count) index = n - index;
+				}
+			}
+		}
+		pose.sequenceIndex = index;
 	}
 }
 
@@ -1595,7 +1726,7 @@ export class EventTimeline extends Timeline {
 	events: Array<Event>;
 
 	constructor (frameCount: number) {
-		super(frameCount, EventTimeline.propertyIds);
+		super(frameCount, ...EventTimeline.propertyIds);
 
 		this.events = new Array<Event>(frameCount);
 	}
@@ -1611,14 +1742,16 @@ export class EventTimeline extends Timeline {
 	}
 
 	/** Fires events for frames > `lastTime` and <= `time`. */
-	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
+	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number,
+		blend: MixBlend, direction: MixDirection, appliedPose: boolean) {
+
 		if (!firedEvents) return;
 
 		let frames = this.frames;
 		let frameCount = this.frames.length;
 
 		if (lastTime > time) { // Apply after lastTime for looped animations.
-			this.apply(skeleton, lastTime, Number.MAX_VALUE, firedEvents, alpha, blend, direction);
+			this.apply(skeleton, lastTime, Number.MAX_VALUE, firedEvents, alpha, blend, direction, appliedPose);
 			lastTime = -1;
 		} else if (lastTime >= frames[frameCount - 1]) // Last time is after last frame.
 			return;
@@ -1628,7 +1761,7 @@ export class EventTimeline extends Timeline {
 		if (lastTime < frames[0])
 			i = 0;
 		else {
-			i = Timeline.search1(frames, lastTime) + 1;
+			i = Timeline.search(frames, lastTime) + 1;
 			let frameTime = frames[i];
 			while (i > 0) { // Fire multiple events with the same frame.
 				if (frames[i - 1] != frameTime) break;
@@ -1648,7 +1781,7 @@ export class DrawOrderTimeline extends Timeline {
 	drawOrders: Array<Array<number> | null>;
 
 	constructor (frameCount: number) {
-		super(frameCount, DrawOrderTimeline.propertyIds);
+		super(frameCount, ...DrawOrderTimeline.propertyIds);
 		this.drawOrders = new Array<Array<number> | null>(frameCount);
 	}
 
@@ -1664,8 +1797,10 @@ export class DrawOrderTimeline extends Timeline {
 		this.drawOrders[frame] = drawOrder;
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		if (direction == MixDirection.mixOut) {
+	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number,
+		blend: MixBlend, direction: MixDirection, appliedPose: boolean) {
+
+		if (direction == MixDirection.out) {
 			if (blend == MixBlend.setup) Utils.arrayCopy(skeleton.slots, 0, skeleton.drawOrder, 0, skeleton.slots.length);
 			return;
 		}
@@ -1675,7 +1810,7 @@ export class DrawOrderTimeline extends Timeline {
 			return;
 		}
 
-		let idx = Timeline.search1(this.frames, time);
+		let idx = Timeline.search(this.frames, time);
 		let drawOrderToSetupIndex = this.drawOrders[idx];
 		if (!drawOrderToSetupIndex)
 			Utils.arrayCopy(skeleton.slots, 0, skeleton.drawOrder, 0, skeleton.slots.length);
@@ -1688,24 +1823,34 @@ export class DrawOrderTimeline extends Timeline {
 	}
 }
 
-/** Changes an IK constraint's {@link IkConstraint#mix}, {@link IkConstraint#softness},
- * {@link IkConstraint#bendDirection}, {@link IkConstraint#stretch}, and {@link IkConstraint#compress}. */
-export class IkConstraintTimeline extends CurveTimeline {
-	/** The index of the IK constraint in {@link Skeleton#getIkConstraints()} that will be changed when this timeline is applied */
-	constraintIndex: number = 0;
+export interface ConstraintTimeline {
+	/** The index of the constraint in {@link Skeleton.constraints} that will be changed when this timeline is applied. */
+	readonly constraintIndex: number;
+}
 
-	constructor (frameCount: number, bezierCount: number, ikConstraintIndex: number) {
-		super(frameCount, bezierCount, [
-			Property.ikConstraint + "|" + ikConstraintIndex
-		]);
-		this.constraintIndex = ikConstraintIndex;
+export function isConstraintTimeline(obj: any): obj is ConstraintTimeline {
+	return typeof obj === 'object' && obj !== null && typeof obj.constraintIndex === 'number';
+}
+
+/** Changes an IK constraint's {@link IkConstraintPose.mix)}, {@link IkConstraintPose.softness},
+ * {@link IkConstraintPose.bendDirection}, {@link IkConstraintPose.stretch}, and
+ * {@link IkConstraintPose.compress}. */
+export class IkConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
+	readonly constraintIndex: number = 0;
+
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, Property.ikConstraint + "|" + constraintIndex);
+		this.constraintIndex = constraintIndex;
 	}
 
 	getFrameEntries () {
 		return 6/*ENTRIES*/;
 	}
 
-	/** Sets the time in seconds, mix, softness, bend direction, compress, and stretch for the specified key frame. */
+	/** Sets the time, mix, softness, bend direction, compress, and stretch for the specified frame.
+	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param time The frame time in seconds.
+	 * @param bendDirection 1 or -1. */
 	setFrame (frame: number, time: number, mix: number, softness: number, bendDirection: number, compress: boolean, stretch: boolean) {
 		frame *= 6/*ENTRIES*/;
 		this.frames[frame] = time;
@@ -1716,26 +1861,30 @@ export class IkConstraintTimeline extends CurveTimeline {
 		this.frames[frame + 5/*STRETCH*/] = stretch ? 1 : 0;
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let constraint: IkConstraint = skeleton.ikConstraints[this.constraintIndex];
+	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
+		const constraint = skeleton.constraints[this.constraintIndex];
 		if (!constraint.active) return;
+		const pose = appliedPose ? constraint.applied : constraint.pose;
 
 		let frames = this.frames;
 		if (time < frames[0]) {
+			const setup = constraint.data.setup;
 			switch (blend) {
 				case MixBlend.setup:
-					constraint.mix = constraint.data.mix;
-					constraint.softness = constraint.data.softness;
-					constraint.bendDirection = constraint.data.bendDirection;
-					constraint.compress = constraint.data.compress;
-					constraint.stretch = constraint.data.stretch;
+					pose.mix = setup.mix;
+					pose.softness = setup.softness;
+					pose.bendDirection = setup.bendDirection;
+					pose.compress = setup.compress;
+					pose.stretch = setup.stretch;
 					return;
 				case MixBlend.first:
-					constraint.mix += (constraint.data.mix - constraint.mix) * alpha;
-					constraint.softness += (constraint.data.softness - constraint.softness) * alpha;
-					constraint.bendDirection = constraint.data.bendDirection;
-					constraint.compress = constraint.data.compress;
-					constraint.stretch = constraint.data.stretch;
+					pose.mix += (setup.mix - pose.mix) * alpha;
+					pose.softness += (setup.softness - pose.softness) * alpha;
+					pose.bendDirection = setup.bendDirection;
+					pose.compress = setup.compress;
+					pose.stretch = setup.stretch;
 			}
 			return;
 		}
@@ -1761,49 +1910,55 @@ export class IkConstraintTimeline extends CurveTimeline {
 				softness = this.getBezierValue(time, i, 2/*SOFTNESS*/, curveType + 18/*BEZIER_SIZE*/ - 2/*BEZIER*/);
 		}
 
-		if (blend == MixBlend.setup) {
-			constraint.mix = constraint.data.mix + (mix - constraint.data.mix) * alpha;
-			constraint.softness = constraint.data.softness + (softness - constraint.data.softness) * alpha;
-
-			if (direction == MixDirection.mixOut) {
-				constraint.bendDirection = constraint.data.bendDirection;
-				constraint.compress = constraint.data.compress;
-				constraint.stretch = constraint.data.stretch;
-			} else {
-				constraint.bendDirection = frames[i + 3/*BEND_DIRECTION*/];
-				constraint.compress = frames[i + 4/*COMPRESS*/] != 0;
-				constraint.stretch = frames[i + 5/*STRETCH*/] != 0;
-			}
-		} else {
-			constraint.mix += (mix - constraint.mix) * alpha;
-			constraint.softness += (softness - constraint.softness) * alpha;
-			if (direction == MixDirection.mixIn) {
-				constraint.bendDirection = frames[i + 3/*BEND_DIRECTION*/];
-				constraint.compress = frames[i + 4/*COMPRESS*/] != 0;
-				constraint.stretch = frames[i + 5/*STRETCH*/] != 0;
-			}
+		switch (blend) {
+			case MixBlend.setup:
+				const setup = constraint.data.setup;
+				pose.mix = setup.mix + (mix - setup.mix) * alpha;
+				pose.softness = setup.softness + (softness - setup.softness) * alpha;
+				if (direction === MixDirection.out) {
+					pose.bendDirection = setup.bendDirection;
+					pose.compress = setup.compress;
+					pose.stretch = setup.stretch;
+					return;
+				}
+				break;
+			case MixBlend.first:
+			case MixBlend.replace:
+				pose.mix += (mix - pose.mix) * alpha;
+				pose.softness += (softness - pose.softness) * alpha;
+				if (direction === MixDirection.out) return;
+				break;
+			case MixBlend.add:
+				pose.mix += mix * alpha;
+				pose.softness += softness * alpha;
+				if (direction === MixDirection.out) return;
+				break;
 		}
+		pose.bendDirection = frames[i + 3/*BEND_DIRECTION*/];
+		pose.compress = frames[i + 4/*COMPRESS*/] != 0;
+		pose.stretch = frames[i + 5/*STRETCH*/] != 0;
 	}
 }
 
-/** Changes a transform constraint's {@link TransformConstraint#rotateMix}, {@link TransformConstraint#translateMix},
- * {@link TransformConstraint#scaleMix}, and {@link TransformConstraint#shearMix}. */
-export class TransformConstraintTimeline extends CurveTimeline {
-	/** The index of the transform constraint slot in {@link Skeleton#transformConstraints} that will be changed. */
+/** Changes a transform constraint's {@link TransformConstraintPose.mixRotate}, {@link TransformConstraintPose.mixX},
+ * {@link TransformConstraintPose.mixY}, {@link TransformConstraintPose.mixScaleX},
+ * {@link TransformConstraintPose.mixScaleY}, and {@link TransformConstraintPose.mixShearY}. */
+export class TransformConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
+	/** The index of the transform constraint slot in {@link Skeleton.transformConstraints} that will be changed. */
 	constraintIndex: number = 0;
 
-	constructor (frameCount: number, bezierCount: number, transformConstraintIndex: number) {
-		super(frameCount, bezierCount, [
-			Property.transformConstraint + "|" + transformConstraintIndex
-		]);
-		this.constraintIndex = transformConstraintIndex;
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, Property.transformConstraint + "|" + constraintIndex);
+		this.constraintIndex = constraintIndex;
 	}
 
 	getFrameEntries () {
 		return 7/*ENTRIES*/;
 	}
 
-	/** The time in seconds, rotate mix, translate mix, scale mix, and shear mix for the specified key frame. */
+	/** Sets the time, rotate mix, translate mix, scale mix, and shear mix for the specified frame.
+	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param time The frame time in seconds. */
 	setFrame (frame: number, time: number, mixRotate: number, mixX: number, mixY: number, mixScaleX: number, mixScaleY: number,
 		mixShearY: number) {
 		let frames = this.frames;
@@ -1817,29 +1972,32 @@ export class TransformConstraintTimeline extends CurveTimeline {
 		frames[frame + 6/*SHEARY*/] = mixShearY;
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let constraint: TransformConstraint = skeleton.transformConstraints[this.constraintIndex];
+	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
+		const constraint = skeleton.constraints[this.constraintIndex];
 		if (!constraint.active) return;
+		const pose = appliedPose ? constraint.applied : constraint.pose;
 
 		let frames = this.frames;
 		if (time < frames[0]) {
-			let data = constraint.data;
+			const setup = constraint.data.setup;
 			switch (blend) {
 				case MixBlend.setup:
-					constraint.mixRotate = data.mixRotate;
-					constraint.mixX = data.mixX;
-					constraint.mixY = data.mixY;
-					constraint.mixScaleX = data.mixScaleX;
-					constraint.mixScaleY = data.mixScaleY;
-					constraint.mixShearY = data.mixShearY;
+					pose.mixRotate = setup.mixRotate;
+					pose.mixX = setup.mixX;
+					pose.mixY = setup.mixY;
+					pose.mixScaleX = setup.mixScaleX;
+					pose.mixScaleY = setup.mixScaleY;
+					pose.mixShearY = setup.mixShearY;
 					return;
 				case MixBlend.first:
-					constraint.mixRotate += (data.mixRotate - constraint.mixRotate) * alpha;
-					constraint.mixX += (data.mixX - constraint.mixX) * alpha;
-					constraint.mixY += (data.mixY - constraint.mixY) * alpha;
-					constraint.mixScaleX += (data.mixScaleX - constraint.mixScaleX) * alpha;
-					constraint.mixScaleY += (data.mixScaleY - constraint.mixScaleY) * alpha;
-					constraint.mixShearY += (data.mixShearY - constraint.mixShearY) * alpha;
+					pose.mixRotate += (setup.mixRotate - pose.mixRotate) * alpha;
+					pose.mixX += (setup.mixX - pose.mixX) * alpha;
+					pose.mixY += (setup.mixY - pose.mixY) * alpha;
+					pose.mixScaleX += (setup.mixScaleX - pose.mixScaleX) * alpha;
+					pose.mixScaleY += (setup.mixScaleY - pose.mixScaleY) * alpha;
+					pose.mixShearY += (setup.mixShearY - pose.mixShearY) * alpha;
 			}
 			return;
 		}
@@ -1881,79 +2039,97 @@ export class TransformConstraintTimeline extends CurveTimeline {
 				shearY = this.getBezierValue(time, i, 6/*SHEARY*/, curveType + 18/*BEZIER_SIZE*/ * 5 - 2/*BEZIER*/);
 		}
 
-		if (blend == MixBlend.setup) {
-			let data = constraint.data;
-			constraint.mixRotate = data.mixRotate + (rotate - data.mixRotate) * alpha;
-			constraint.mixX = data.mixX + (x - data.mixX) * alpha;
-			constraint.mixY = data.mixY + (y - data.mixY) * alpha;
-			constraint.mixScaleX = data.mixScaleX + (scaleX - data.mixScaleX) * alpha;
-			constraint.mixScaleY = data.mixScaleY + (scaleY - data.mixScaleY) * alpha;
-			constraint.mixShearY = data.mixShearY + (shearY - data.mixShearY) * alpha;
-		} else {
-			constraint.mixRotate += (rotate - constraint.mixRotate) * alpha;
-			constraint.mixX += (x - constraint.mixX) * alpha;
-			constraint.mixY += (y - constraint.mixY) * alpha;
-			constraint.mixScaleX += (scaleX - constraint.mixScaleX) * alpha;
-			constraint.mixScaleY += (scaleY - constraint.mixScaleY) * alpha;
-			constraint.mixShearY += (shearY - constraint.mixShearY) * alpha;
+		switch (blend) {
+			case MixBlend.setup:
+				const setup = constraint.data.setup;
+				pose.mixRotate = setup.mixRotate + (rotate - setup.mixRotate) * alpha;
+				pose.mixX = setup.mixX + (x - setup.mixX) * alpha;
+				pose.mixY = setup.mixY + (y - setup.mixY) * alpha;
+				pose.mixScaleX = setup.mixScaleX + (scaleX - setup.mixScaleX) * alpha;
+				pose.mixScaleY = setup.mixScaleY + (scaleY - setup.mixScaleY) * alpha;
+				pose.mixShearY = setup.mixShearY + (shearY - setup.mixShearY) * alpha;
+				break;
+			case MixBlend.first:
+			case MixBlend.replace:
+				pose.mixRotate += (rotate - pose.mixRotate) * alpha;
+				pose.mixX += (x - pose.mixX) * alpha;
+				pose.mixY += (y - pose.mixY) * alpha;
+				pose.mixScaleX += (scaleX - pose.mixScaleX) * alpha;
+				pose.mixScaleY += (scaleY - pose.mixScaleY) * alpha;
+				pose.mixShearY += (shearY - pose.mixShearY) * alpha;
+				break;
+			case MixBlend.add:
+				pose.mixRotate += rotate * alpha;
+				pose.mixX += x * alpha;
+				pose.mixY += y * alpha;
+				pose.mixScaleX += scaleX * alpha;
+				pose.mixScaleY += scaleY * alpha;
+				pose.mixShearY += shearY * alpha;
+				break;
 		}
 	}
 }
 
-/** Changes a path constraint's {@link PathConstraint#position}. */
-export class PathConstraintPositionTimeline extends CurveTimeline1 {
-	/** The index of the path constraint in {@link Skeleton#getPathConstraints()} that will be changed when this timeline is
-	 * applied. */
-	constraintIndex: number = 0;
+export abstract class ConstraintTimeline1 extends CurveTimeline1 implements ConstraintTimeline {
+	readonly constraintIndex: number;
 
-	constructor (frameCount: number, bezierCount: number, pathConstraintIndex: number) {
-		super(frameCount, bezierCount, Property.pathConstraintPosition + "|" + pathConstraintIndex);
-		this.constraintIndex = pathConstraintIndex;
-	}
-
-	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let constraint: PathConstraint = skeleton.pathConstraints[this.constraintIndex];
-		if (constraint.active)
-			constraint.position = this.getAbsoluteValue(time, alpha, blend, constraint.position, constraint.data.position);
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number, property: Property) {
+		super(frameCount, bezierCount, property + "|" + constraintIndex);
+		this.constraintIndex = constraintIndex;
 	}
 }
 
-/** Changes a path constraint's {@link PathConstraint#spacing}. */
-export class PathConstraintSpacingTimeline extends CurveTimeline1 {
-	/** The index of the path constraint in {@link Skeleton#getPathConstraints()} that will be changed when this timeline is
-	 * applied. */
-	constraintIndex = 0;
-
-	constructor (frameCount: number, bezierCount: number, pathConstraintIndex: number) {
-		super(frameCount, bezierCount, Property.pathConstraintSpacing + "|" + pathConstraintIndex);
-		this.constraintIndex = pathConstraintIndex;
+/** Changes a path constraint's {@link PathConstraintPose.position}. */
+export class PathConstraintPositionTimeline extends ConstraintTimeline1 {
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, constraintIndex, Property.pathConstraintPosition);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let constraint: PathConstraint = skeleton.pathConstraints[this.constraintIndex];
-		if (constraint.active)
-			constraint.spacing = this.getAbsoluteValue(time, alpha, blend, constraint.spacing, constraint.data.spacing);
+	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
+		const constraint = skeleton.constraints[this.constraintIndex];
+		if (constraint.active) {
+			const pose = appliedPose ? constraint.applied : constraint.pose;
+			pose.position = this.getAbsoluteValue(time, alpha, blend, pose.position, constraint.data.setup.position);
+		}
 	}
 }
 
-/** Changes a transform constraint's {@link PathConstraint#getMixRotate()}, {@link PathConstraint#getMixX()}, and
- * {@link PathConstraint#getMixY()}. */
-export class PathConstraintMixTimeline extends CurveTimeline {
-	/** The index of the path constraint in {@link Skeleton#getPathConstraints()} that will be changed when this timeline is
-	 * applied. */
-	constraintIndex = 0;
+/** Changes a path constraint's {@link PathConstraintPose.spacing}. */
+export class PathConstraintSpacingTimeline extends ConstraintTimeline1 {
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, constraintIndex, Property.pathConstraintSpacing);
+	}
 
-	constructor (frameCount: number, bezierCount: number, pathConstraintIndex: number) {
-		super(frameCount, bezierCount, [
-			Property.pathConstraintMix + "|" + pathConstraintIndex
-		]);
-		this.constraintIndex = pathConstraintIndex;
+	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
+			const constraint = skeleton.constraints[this.constraintIndex];
+			if (constraint.active) {
+				const pose = appliedPose ? constraint.applied : constraint.pose;
+				pose.spacing = this.getAbsoluteValue(time, alpha, blend, pose.spacing, constraint.data.setup.spacing);
+			}
+	}
+}
+
+/** Changes a transform constraint's {@link PathConstraint.mixRotate()}, {@link PathConstraint.mixX()}, and
+ * {@link PathConstraint.mixY()}. */
+export class PathConstraintMixTimeline extends CurveTimeline implements ConstraintTimeline {
+	readonly constraintIndex: number;
+
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, Property.pathConstraintMix + "|" + constraintIndex);
+		this.constraintIndex = constraintIndex;
 	}
 
 	getFrameEntries () {
 		return 4/*ENTRIES*/;
 	}
 
+	/** Sets the time and color for the specified frame.
+	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
+	 * @param time The frame time in seconds. */
 	setFrame (frame: number, time: number, mixRotate: number, mixX: number, mixY: number) {
 		let frames = this.frames;
 		frame <<= 2;
@@ -1963,22 +2139,26 @@ export class PathConstraintMixTimeline extends CurveTimeline {
 		frames[frame + 3/*Y*/] = mixY;
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let constraint: PathConstraint = skeleton.pathConstraints[this.constraintIndex];
+	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
+		const constraint = skeleton.constraints[this.constraintIndex];
 		if (!constraint.active) return;
+		const pose = appliedPose ? constraint.applied : constraint.pose;
 
 		let frames = this.frames;
 		if (time < frames[0]) {
+			const setup = constraint.data.setup;
 			switch (blend) {
 				case MixBlend.setup:
-					constraint.mixRotate = constraint.data.mixRotate;
-					constraint.mixX = constraint.data.mixX;
-					constraint.mixY = constraint.data.mixY;
+					pose.mixRotate = setup.mixRotate;
+					pose.mixX = setup.mixX;
+					pose.mixY = setup.mixY;
 					return;
 				case MixBlend.first:
-					constraint.mixRotate += (constraint.data.mixRotate - constraint.mixRotate) * alpha;
-					constraint.mixX += (constraint.data.mixX - constraint.mixX) * alpha;
-					constraint.mixY += (constraint.data.mixY - constraint.mixY) * alpha;
+					pose.mixRotate += (setup.mixRotate - pose.mixRotate) * alpha;
+					pose.mixX += (setup.mixX - pose.mixX) * alpha;
+					pose.mixY += (setup.mixY - pose.mixY) * alpha;
 			}
 			return;
 		}
@@ -2008,71 +2188,75 @@ export class PathConstraintMixTimeline extends CurveTimeline {
 				y = this.getBezierValue(time, i, 3/*Y*/, curveType + 18/*BEZIER_SIZE*/ * 2 - 2/*BEZIER*/);
 		}
 
-		if (blend == MixBlend.setup) {
-			let data = constraint.data;
-			constraint.mixRotate = data.mixRotate + (rotate - data.mixRotate) * alpha;
-			constraint.mixX = data.mixX + (x - data.mixX) * alpha;
-			constraint.mixY = data.mixY + (y - data.mixY) * alpha;
-		} else {
-			constraint.mixRotate += (rotate - constraint.mixRotate) * alpha;
-			constraint.mixX += (x - constraint.mixX) * alpha;
-			constraint.mixY += (y - constraint.mixY) * alpha;
+		switch (blend) {
+			case MixBlend.setup:
+				const setup = constraint.data.setup;
+				pose.mixRotate = setup.mixRotate + (rotate - setup.mixRotate) * alpha;
+				pose.mixX = setup.mixX + (x - setup.mixX) * alpha;
+				pose.mixY = setup.mixY + (y - setup.mixY) * alpha;
+				break;
+			case MixBlend.first:
+			case MixBlend.replace:
+				pose.mixRotate += (rotate - pose.mixRotate) * alpha;
+				pose.mixX += (x - pose.mixX) * alpha;
+				pose.mixY += (y - pose.mixY) * alpha;
+				break;
+			case MixBlend.add:
+				pose.mixRotate += rotate * alpha;
+				pose.mixX += x * alpha;
+				pose.mixY += y * alpha;
+				break;
 		}
 	}
 }
 
 /** The base class for most {@link PhysicsConstraint} timelines. */
-export abstract class PhysicsConstraintTimeline extends CurveTimeline1 {
-	/** The index of the physics constraint in {@link Skeleton#getPhysicsConstraints()} that will be changed when this timeline
-	 * is applied, or -1 if all physics constraints in the skeleton will be changed. */
-	constraintIndex = 0;
-
-	/** @param physicsConstraintIndex -1 for all physics constraints in the skeleton. */
-	constructor (frameCount: number, bezierCount: number, physicsConstraintIndex: number, property: number) {
-		super(frameCount, bezierCount, property + "|" + physicsConstraintIndex);
-		this.constraintIndex = physicsConstraintIndex;
+export abstract class PhysicsConstraintTimeline extends ConstraintTimeline1 {
+	/** @param constraintIndex -1 for all physics constraints in the skeleton. */
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number, property: number) {
+		super(frameCount, bezierCount, constraintIndex, property);
 	}
 
-	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let constraint: PhysicsConstraint;
+	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
 		if (this.constraintIndex == -1) {
 			const value = time >= this.frames[0] ? this.getCurveValue(time) : 0;
-
-			for (const constraint of skeleton.physicsConstraints) {
-				if (constraint.active && this.global(constraint.data))
-					this.set(constraint, this.getAbsoluteValue2(time, alpha, blend, this.get(constraint), this.setup(constraint), value));
+			const constraints = skeleton.physics;
+			for (const constraint of constraints) {
+				if (constraint.active && this.global(constraint.data)) {
+					const pose = appliedPose ? constraint.applied : constraint.pose;
+					this.set(pose, this.getAbsoluteValue(time, alpha, blend, this.get(pose), this.get(constraint.data.setup), value));
+				}
 			}
 		} else {
-			constraint = skeleton.physicsConstraints[this.constraintIndex];
-			if (constraint.active) this.set(constraint, this.getAbsoluteValue(time, alpha, blend, this.get(constraint), this.setup(constraint)));
+			const constraint = skeleton.constraints[this.constraintIndex];
+			if (constraint.active) {
+				const pose = appliedPose ? constraint.applied : constraint.pose;
+				this.set(pose, this.getAbsoluteValue(time, alpha, blend, this.get(pose), this.get(constraint.data.setup)));
+			}
 		}
 	}
 
-	abstract setup (constraint: PhysicsConstraint): number;
+	abstract get (pose: PhysicsConstraintPose): number;
 
-	abstract get (constraint: PhysicsConstraint): number;
-
-	abstract set (constraint: PhysicsConstraint, value: number): void;
+	abstract set (pose: PhysicsConstraintPose, value: number): void;
 
 	abstract global (constraint: PhysicsConstraintData): boolean;
 }
 
-/** Changes a physics constraint's {@link PhysicsConstraint#getInertia()}. */
+/** Changes a physics constraint's {@link PhysicsConstraintPose.inertia}. */
 export class PhysicsConstraintInertiaTimeline extends PhysicsConstraintTimeline {
-	constructor (frameCount: number, bezierCount: number, physicsConstraintIndex: number) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintInertia);
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintInertia);
 	}
 
-	setup (constraint: PhysicsConstraint): number {
-		return constraint.data.inertia;
+	get (pose: PhysicsConstraintPose): number {
+		return pose.inertia;
 	}
 
-	get (constraint: PhysicsConstraint): number {
-		return constraint.inertia;
-	}
-
-	set (constraint: PhysicsConstraint, value: number): void {
-		constraint.inertia = value;
+	set (pose: PhysicsConstraintPose, value: number): void {
+		pose.inertia = value;
 	}
 
 	global (constraint: PhysicsConstraintData): boolean {
@@ -2080,22 +2264,17 @@ export class PhysicsConstraintInertiaTimeline extends PhysicsConstraintTimeline 
 	}
 }
 
-/** Changes a physics constraint's {@link PhysicsConstraint#getStrength()}. */
+/** Changes a physics constraint's {@link PhysicsConstraintPose.strength}. */
 export class PhysicsConstraintStrengthTimeline extends PhysicsConstraintTimeline {
-	constructor (frameCount: number, bezierCount: number, physicsConstraintIndex: number) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintStrength);
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintStrength);
+	}
+	get (pose: PhysicsConstraintPose): number {
+		return pose.strength;
 	}
 
-	setup (constraint: PhysicsConstraint): number {
-		return constraint.data.strength;
-	}
-
-	get (constraint: PhysicsConstraint): number {
-		return constraint.strength;
-	}
-
-	set (constraint: PhysicsConstraint, value: number): void {
-		constraint.strength = value;
+	set (pose: PhysicsConstraintPose, value: number): void {
+		pose.strength = value;
 	}
 
 	global (constraint: PhysicsConstraintData): boolean {
@@ -2103,22 +2282,18 @@ export class PhysicsConstraintStrengthTimeline extends PhysicsConstraintTimeline
 	}
 }
 
-/** Changes a physics constraint's {@link PhysicsConstraint#getDamping()}. */
+/** Changes a physics constraint's {@link PhysicsConstraintPose.damping}. */
 export class PhysicsConstraintDampingTimeline extends PhysicsConstraintTimeline {
-	constructor (frameCount: number, bezierCount: number, physicsConstraintIndex: number) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintDamping);
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintDamping);
 	}
 
-	setup (constraint: PhysicsConstraint): number {
-		return constraint.data.damping;
+	get (pose: PhysicsConstraintPose): number {
+		return pose.damping;
 	}
 
-	get (constraint: PhysicsConstraint): number {
-		return constraint.damping;
-	}
-
-	set (constraint: PhysicsConstraint, value: number): void {
-		constraint.damping = value;
+	set (pose: PhysicsConstraintPose, value: number): void {
+		pose.damping = value;
 	}
 
 	global (constraint: PhysicsConstraintData): boolean {
@@ -2126,22 +2301,18 @@ export class PhysicsConstraintDampingTimeline extends PhysicsConstraintTimeline 
 	}
 }
 
-/** Changes a physics constraint's {@link PhysicsConstraint#getMassInverse()}. The timeline values are not inverted. */
+/** Changes a physics constraint's {@link PhysicsConstraintPose.massInverse}. The timeline values are not inverted. */
 export class PhysicsConstraintMassTimeline extends PhysicsConstraintTimeline {
-	constructor (frameCount: number, bezierCount: number, physicsConstraintIndex: number) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintMass);
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintMass);
 	}
 
-	setup (constraint: PhysicsConstraint): number {
-		return 1 / constraint.data.massInverse;
+	get (pose: PhysicsConstraintPose): number {
+		return 1 / pose.massInverse;
 	}
 
-	get (constraint: PhysicsConstraint): number {
-		return 1 / constraint.massInverse;
-	}
-
-	set (constraint: PhysicsConstraint, value: number): void {
-		constraint.massInverse = 1 / value;
+	set (pose: PhysicsConstraintPose, value: number): void {
+		pose.massInverse = 1 / value;
 	}
 
 	global (constraint: PhysicsConstraintData): boolean {
@@ -2149,22 +2320,18 @@ export class PhysicsConstraintMassTimeline extends PhysicsConstraintTimeline {
 	}
 }
 
-/** Changes a physics constraint's {@link PhysicsConstraint#getWind()}. */
+/** Changes a physics constraint's {@link PhysicsConstraintPose.wind}. */
 export class PhysicsConstraintWindTimeline extends PhysicsConstraintTimeline {
-	constructor (frameCount: number, bezierCount: number, physicsConstraintIndex: number) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintWind);
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintWind);
 	}
 
-	setup (constraint: PhysicsConstraint): number {
-		return constraint.data.wind;
+	get (pose: PhysicsConstraintPose): number {
+		return pose.wind;
 	}
 
-	get (constraint: PhysicsConstraint): number {
-		return constraint.wind;
-	}
-
-	set (constraint: PhysicsConstraint, value: number): void {
-		constraint.wind = value;
+	set (pose: PhysicsConstraintPose, value: number): void {
+		pose.wind = value;
 	}
 
 	global (constraint: PhysicsConstraintData): boolean {
@@ -2172,22 +2339,18 @@ export class PhysicsConstraintWindTimeline extends PhysicsConstraintTimeline {
 	}
 }
 
-/** Changes a physics constraint's {@link PhysicsConstraint#getGravity()}. */
+/** Changes a physics constraint's {@link PhysicsConstraintPose.gravity}. */
 export class PhysicsConstraintGravityTimeline extends PhysicsConstraintTimeline {
-	constructor (frameCount: number, bezierCount: number, physicsConstraintIndex: number) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintGravity);
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintGravity);
 	}
 
-	setup (constraint: PhysicsConstraint): number {
-		return constraint.data.gravity;
+	get (pose: PhysicsConstraintPose): number {
+		return pose.gravity;
 	}
 
-	get (constraint: PhysicsConstraint): number {
-		return constraint.gravity;
-	}
-
-	set (constraint: PhysicsConstraint, value: number): void {
-		constraint.gravity = value;
+	set (pose: PhysicsConstraintPose, value: number): void {
+		pose.gravity = value;
 	}
 
 	global (constraint: PhysicsConstraintData): boolean {
@@ -2195,22 +2358,18 @@ export class PhysicsConstraintGravityTimeline extends PhysicsConstraintTimeline 
 	}
 }
 
-/** Changes a physics constraint's {@link PhysicsConstraint#getMix()}. */
+/** Changes a physics constraint's {@link PhysicsConstraintPose.mix}. */
 export class PhysicsConstraintMixTimeline extends PhysicsConstraintTimeline {
-	constructor (frameCount: number, bezierCount: number, physicsConstraintIndex: number) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintMix);
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintMix);
 	}
 
-	setup (constraint: PhysicsConstraint): number {
-		return constraint.data.mix;
+	get (pose: PhysicsConstraintPose): number {
+		return pose.mix;
 	}
 
-	get (constraint: PhysicsConstraint): number {
-		return constraint.mix;
-	}
-
-	set (constraint: PhysicsConstraint, value: number): void {
-		constraint.mix = value;
+	set (pose: PhysicsConstraintPose, value: number): void {
+		pose.mix = value;
 	}
 
 	global (constraint: PhysicsConstraintData): boolean {
@@ -2219,17 +2378,17 @@ export class PhysicsConstraintMixTimeline extends PhysicsConstraintTimeline {
 }
 
 /** Resets a physics constraint when specific animation times are reached. */
-export class PhysicsConstraintResetTimeline extends Timeline {
+export class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimeline {
 	private static propertyIds: string[] = [Property.physicsConstraintReset.toString()];
 
-	/** The index of the physics constraint in {@link Skeleton#getPhysicsConstraints()} that will be reset when this timeline is
+	/** The index of the physics constraint in {@link Skeleton.contraints} that will be reset when this timeline is
 	* applied, or -1 if all physics constraints in the skeleton will be reset. */
-	constraintIndex: number;
+	readonly constraintIndex: number;
 
-	/** @param physicsConstraintIndex -1 for all physics constraints in the skeleton. */
-	constructor (frameCount: number, physicsConstraintIndex: number) {
-		super(frameCount, PhysicsConstraintResetTimeline.propertyIds);
-		this.constraintIndex = physicsConstraintIndex;
+	/** @param constraintIndex -1 for all physics constraints in the skeleton. */
+	constructor (frameCount: number, constraintIndex: number) {
+		super(frameCount, ...PhysicsConstraintResetTimeline.propertyIds);
+		this.constraintIndex = constraintIndex;
 	}
 
 	getFrameCount () {
@@ -2243,132 +2402,66 @@ export class PhysicsConstraintResetTimeline extends Timeline {
 	}
 
 	/** Resets the physics constraint when frames > <code>lastTime</code> and <= <code>time</code>. */
-	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
+	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
 
 		let constraint: PhysicsConstraint | undefined;
-		if (this.constraintIndex != -1) {
-			constraint = skeleton.physicsConstraints[this.constraintIndex];
+		if (this.constraintIndex !== -1) {
+			constraint = skeleton.constraints[this.constraintIndex] as PhysicsConstraint;
 			if (!constraint.active) return;
 		}
 
 		const frames = this.frames;
 
 		if (lastTime > time) { // Apply after lastTime for looped animations.
-			this.apply(skeleton, lastTime, Number.MAX_VALUE, [], alpha, blend, direction);
+			this.apply(skeleton, lastTime, Number.MAX_VALUE, [], alpha, blend, direction, appliedPose);
 			lastTime = -1;
 		} else if (lastTime >= frames[frames.length - 1]) // Last time is after last frame.
 			return;
 		if (time < frames[0]) return;
 
-		if (lastTime < frames[0] || time >= frames[Timeline.search1(frames, lastTime) + 1]) {
+		if (lastTime < frames[0] || time >= frames[Timeline.search(frames, lastTime) + 1]) {
 			if (constraint != null)
-				constraint.reset();
+				constraint.reset(skeleton);
 			else {
-				for (const constraint of skeleton.physicsConstraints) {
-					if (constraint.active) constraint.reset();
+				for (const constraint of skeleton.physics) {
+					if (constraint.active) constraint.reset(skeleton);
 				}
 			}
 		}
 	}
 }
 
-/** Changes a slot's {@link Slot#getSequenceIndex()} for an attachment's {@link Sequence}. */
-export class SequenceTimeline extends Timeline implements SlotTimeline {
-	static ENTRIES = 3;
-	static MODE = 1;
-	static DELAY = 2;
-
-	slotIndex: number;
-	attachment: HasTextureRegion;
-
-	constructor (frameCount: number, slotIndex: number, attachment: HasTextureRegion) {
-		super(frameCount, [
-			Property.sequence + "|" + slotIndex + "|" + attachment.sequence!.id
-		]);
-		this.slotIndex = slotIndex;
-		this.attachment = attachment;
+/** Changes a slider's {@link SliderPose.time()}. */
+export class SliderTimeline extends ConstraintTimeline1 {
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, constraintIndex, Property.sliderTime);
 	}
 
-	getFrameEntries () {
-		return SequenceTimeline.ENTRIES;
-	}
+	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
 
-	getSlotIndex () {
-		return this.slotIndex;
-	}
-
-	getAttachment () {
-		return this.attachment as unknown as Attachment;
-	}
-
-	/** Sets the time, mode, index, and frame time for the specified frame.
-	 * @param frame Between 0 and <code>frameCount</code>, inclusive.
-	 * @param time Seconds between frames. */
-	setFrame (frame: number, time: number, mode: SequenceMode, index: number, delay: number) {
-		let frames = this.frames;
-		frame *= SequenceTimeline.ENTRIES;
-		frames[frame] = time;
-		frames[frame + SequenceTimeline.MODE] = mode | (index << 4);
-		frames[frame + SequenceTimeline.DELAY] = delay;
-	}
-
-	apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event>, alpha: number, blend: MixBlend, direction: MixDirection) {
-		let slot = skeleton.slots[this.slotIndex];
-		if (!slot.bone.active) return;
-		let slotAttachment = slot.attachment;
-		let attachment = this.attachment as unknown as Attachment;
-		if (slotAttachment != attachment) {
-			if (!(slotAttachment instanceof VertexAttachment)
-				|| slotAttachment.timelineAttachment != attachment) return;
+		const constraint = skeleton.constraints[this.constraintIndex];
+		if (constraint.active) {
+			const pose = appliedPose ? constraint.applied : constraint.pose;
+			pose.time = this.getAbsoluteValue(time, alpha, blend, pose.time, constraint.data.setup.time);
 		}
+	}
+}
 
-		if (direction == MixDirection.mixOut) {
-			if (blend == MixBlend.setup) slot.sequenceIndex = -1;
-			return;
+/** Changes a slider's {@link SliderPose.mix()}. */
+export class SliderMixTimeline extends ConstraintTimeline1 {
+	constructor (frameCount: number, bezierCount: number, constraintIndex: number) {
+		super(frameCount, bezierCount, constraintIndex, Property.sliderMix);
+	}
+
+	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend,
+		direction: MixDirection, appliedPose: boolean) {
+
+		const constraint = skeleton.constraints[this.constraintIndex];
+		if (constraint.active) {
+			const pose = appliedPose ? constraint.applied : constraint.pose;
+			pose.mix = this.getAbsoluteValue(time, alpha, blend, pose.mix, constraint.data.setup.mix);
 		}
-
-		let frames = this.frames;
-		if (time < frames[0]) {
-			if (blend == MixBlend.setup || blend == MixBlend.first) slot.sequenceIndex = -1;
-			return;
-		}
-
-		let i = Timeline.search(frames, time, SequenceTimeline.ENTRIES);
-		let before = frames[i];
-		let modeAndIndex = frames[i + SequenceTimeline.MODE];
-		let delay = frames[i + SequenceTimeline.DELAY];
-
-		if (!this.attachment.sequence) return;
-		let index = modeAndIndex >> 4, count = this.attachment.sequence!.regions.length;
-		let mode = SequenceModeValues[modeAndIndex & 0xf];
-		if (mode != SequenceMode.hold) {
-			index += (((time - before) / delay + 0.00001) | 0);
-			switch (mode) {
-				case SequenceMode.once:
-					index = Math.min(count - 1, index);
-					break;
-				case SequenceMode.loop:
-					index %= count;
-					break;
-				case SequenceMode.pingpong: {
-					let n = (count << 1) - 2;
-					index = n == 0 ? 0 : index % n;
-					if (index >= count) index = n - index;
-					break;
-				}
-				case SequenceMode.onceReverse:
-					index = Math.max(count - 1 - index, 0);
-					break;
-				case SequenceMode.loopReverse:
-					index = count - 1 - (index % count);
-					break;
-				case SequenceMode.pingpongReverse: {
-					let n = (count << 1) - 2;
-					index = n == 0 ? 0 : (index + count - 1) % n;
-					if (index >= count) index = n - index;
-				}
-			}
-		}
-		slot.sequenceIndex = index;
 	}
 }

@@ -29,19 +29,22 @@
 
 import { BoneData } from "./BoneData.js";
 import { ConstraintData } from "./ConstraintData.js";
+import { PhysicsConstraint } from "./PhysicsConstraint.js";
+import { PhysicsConstraintPose } from "./PhysicsConstraintPose.js";
+import { Skeleton } from "./Skeleton.js";
 
 
 /** Stores the setup pose for a {@link PhysicsConstraint}.
  * <p>
  * See <a href="http://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
-export class PhysicsConstraintData extends ConstraintData {
-	private _bone: BoneData | null = null;
+export class PhysicsConstraintData extends ConstraintData<PhysicsConstraint, PhysicsConstraintPose> {
 	/** The bone constrained by this physics constraint. */
 	public set bone (boneData: BoneData) { this._bone = boneData; }
 	public get bone () {
 		if (!this._bone) throw new Error("BoneData not set.")
-		else return this._bone;
+			else return this._bone;
 	}
+	private _bone: BoneData | null = null;
 
 	x = 0;
 	y = 0;
@@ -50,14 +53,6 @@ export class PhysicsConstraintData extends ConstraintData {
 	shearX = 0;
 	limit = 0;
 	step = 0;
-	inertia = 0;
-	strength = 0;
-	damping = 0;
-	massInverse = 0;
-	wind = 0;
-	gravity = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
-	mix = 0;
 	inertiaGlobal = false;
 	strengthGlobal = false;
 	dampingGlobal = false;
@@ -67,6 +62,10 @@ export class PhysicsConstraintData extends ConstraintData {
 	mixGlobal = false;
 
 	constructor (name: string) {
-		super(name, 0, false);
+		super(name, new PhysicsConstraintPose());
+	}
+
+	public create (skeleton: Skeleton) {
+		return new PhysicsConstraint(this, skeleton);
 	}
 }

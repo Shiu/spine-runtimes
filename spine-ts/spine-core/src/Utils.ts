@@ -203,7 +203,7 @@ export class MathUtils {
 	}
 
 	static atan2Deg (y: number, x: number) {
-		return Math.atan2(y, x) * MathUtils.degRad;
+		return Math.atan2(y, x) * MathUtils.radDeg;
 	}
 
 	static signum (value: number): number {
@@ -347,8 +347,8 @@ export class Utils {
 export class DebugUtils {
 	static logBones (skeleton: Skeleton) {
 		for (let i = 0; i < skeleton.bones.length; i++) {
-			let bone = skeleton.bones[i];
-			console.log(bone.data.name + ", " + bone.a + ", " + bone.b + ", " + bone.c + ", " + bone.d + ", " + bone.worldX + ", " + bone.worldY);
+			let bone = skeleton.bones[i].applied;
+			console.log(bone.bone.data.name + ", " + bone.a + ", " + bone.b + ", " + bone.c + ", " + bone.d + ", " + bone.worldX + ", " + bone.worldY);
 		}
 	}
 }

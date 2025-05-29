@@ -259,10 +259,11 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 		for (let i = 0, len = bones.length; i < len; i++) {
 			const bone = bones[i];
 			const boneLen = bone.data.length;
-			const starX = skeletonX + bone.worldX;
-			const starY = skeletonY + bone.worldY;
-			const endX = skeletonX + (boneLen * bone.a) + bone.worldX;
-			const endY = skeletonY + (boneLen * bone.b) + bone.worldY;
+			const applied = bone.applied;
+			const starX = skeletonX + applied.worldX;
+			const starY = skeletonY + applied.worldY;
+			const endX = skeletonX + (boneLen * applied.a) + applied.worldX;
+			const endY = skeletonY + (boneLen * applied.b) + applied.worldY;
 
 			if (bone.data.name === 'root' || bone.data.parent === null) {
 				continue;
@@ -359,7 +360,7 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 
 		for (let i = 0, len = slots.length; i < len; i++) {
 			const slot = slots[i];
-			const attachment = slot.getAttachment();
+			const attachment = slot.pose.attachment;
 
 			if (attachment === null || !(attachment instanceof RegionAttachment)) {
 				continue;
@@ -390,7 +391,7 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 			if (!slot.bone.active) {
 				continue;
 			}
-			const attachment = slot.getAttachment();
+			const attachment = slot.pose.attachment;
 
 			if (attachment === null || !(attachment instanceof MeshAttachment)) {
 				continue;
@@ -402,7 +403,7 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 			const triangles = meshAttachment.triangles;
 			let hullLength = meshAttachment.hullLength;
 
-			meshAttachment.computeWorldVertices(slot, 0, meshAttachment.worldVerticesLength, vertices, 0, 2);
+			meshAttachment.computeWorldVertices(skeleton, slot, 0, meshAttachment.worldVerticesLength, vertices, 0, 2);
 			// draw the skinned mesh (triangle)
 			if (this.drawMeshTriangles) {
 				for (let i = 0, len = triangles.length; i < len; i += 3) {
@@ -450,7 +451,7 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 			if (!slot.bone.active) {
 				continue;
 			}
-			const attachment = slot.getAttachment();
+			const attachment = slot.pose.attachment;
 
 			if (attachment === null || !(attachment instanceof ClippingAttachment)) {
 				continue;
@@ -461,7 +462,7 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 			const nn = clippingAttachment.worldVerticesLength;
 			const world = new Float32Array(nn);
 
-			clippingAttachment.computeWorldVertices(slot, 0, nn, world, 0, 2);
+			clippingAttachment.computeWorldVertices(skeleton, slot, 0, nn, world, 0, 2);
 			debugDisplayObjects.clippingPolygon.poly(Array.from(world));
 		}
 
@@ -535,7 +536,7 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 			if (!slot.bone.active) {
 				continue;
 			}
-			const attachment = slot.getAttachment();
+			const attachment = slot.pose.attachment;
 
 			if (attachment === null || !(attachment instanceof PathAttachment)) {
 				continue;
@@ -545,7 +546,7 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 			let nn = pathAttachment.worldVerticesLength;
 			const world = new Float32Array(nn);
 
-			pathAttachment.computeWorldVertices(slot, 0, nn, world, 0, 2);
+			pathAttachment.computeWorldVertices(skeleton, slot, 0, nn, world, 0, 2);
 			let x1 = world[2];
 			let y1 = world[3];
 			let x2 = 0;

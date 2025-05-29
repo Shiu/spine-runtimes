@@ -76,7 +76,7 @@ export class SkeletonBounds {
 		for (let i = 0; i < slotCount; i++) {
 			let slot = slots[i];
 			if (!slot.bone.active) continue;
-			let attachment = slot.getAttachment();
+			let attachment = slot.pose.attachment;
 			if (attachment instanceof BoundingBoxAttachment) {
 				boundingBoxes.push(attachment);
 
@@ -85,7 +85,7 @@ export class SkeletonBounds {
 					polygon = Utils.newFloatArray(attachment.worldVerticesLength);
 				}
 				polygons.push(polygon);
-				attachment.computeWorldVertices(slot, 0, attachment.worldVerticesLength, polygon, 0, 2);
+				attachment.computeWorldVertices(skeleton, slot, 0, attachment.worldVerticesLength, polygon, 0, 2);
 			}
 		}
 

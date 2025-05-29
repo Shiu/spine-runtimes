@@ -115,7 +115,7 @@
 					newSkin.addSkin(this.skeletonData.findSkin(skinName));
 				}
 				this.skeleton.setSkin(newSkin);
-				this.skeleton.setToSetupPose();
+				this.skeleton.setupPose();
 				this.skeleton.updateWorldTransform(spine.Physics.update);
 
 				// Calculate the bounds so we can center and zoom
@@ -153,7 +153,7 @@
 					// Set the skin, then update the skeleton
 					// to the setup pose and calculate the world transforms
 					this.skeleton.setSkin(skin);
-					this.skeleton.setToSetupPose();
+					this.skeleton.setupPose();
 					this.skeleton.updateWorldTransform(spine.Physics.update);
 
 					// Calculate the bounding box enclosing the skeleton.

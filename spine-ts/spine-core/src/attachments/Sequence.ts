@@ -28,9 +28,9 @@
  *****************************************************************************/
 
 import { TextureRegion } from "../Texture.js";
-import { Slot } from "../Slot.js";
 import { HasTextureRegion } from "./HasTextureRegion.js";
 import { Utils } from "../Utils.js";
+import { SlotPose } from "src/SlotPose.js";
 
 
 export class Sequence {
@@ -56,7 +56,7 @@ export class Sequence {
 		return copy;
 	}
 
-	apply (slot: Slot, attachment: HasTextureRegion) {
+	apply (slot: SlotPose, attachment: HasTextureRegion) {
 		let index = slot.sequenceIndex;
 		if (index == -1) index = this.setupIndex;
 		if (index >= this.regions.length) index = this.regions.length - 1;

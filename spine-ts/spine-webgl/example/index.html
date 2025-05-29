@@ -223,7 +223,7 @@
 		}
 
 		function calculateSetupPoseBounds(skeleton) {
-			skeleton.setToSetupPose();
+			skeleton.setupPose();
 			skeleton.updateWorldTransform(spine.Physics.update);
 			let offset = new spine.Vector2();
 			let size = new spine.Vector2();
@@ -260,7 +260,7 @@
 					let state = skeletons[activeSkeleton][format].state;
 					let skeleton = skeletons[activeSkeleton][format].skeleton;
 					let animationName = $("#animationList option:selected").text();
-					skeleton.setToSetupPose();
+					skeleton.setupPose();
 					state.setAnimation(0, animationName, true);
 				})
 			}

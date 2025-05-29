@@ -642,7 +642,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 						// show skeleton root
 						const root = skeleton.getRootBone()!;
-						renderer.circle(true, root.x + worldOffsetX, root.y + worldOffsetY, 10, red);
+						renderer.circle(true, root.applied.x + worldOffsetX, root.applied.y + worldOffsetY, 10, red);
 
 						// show shifted origin
 						renderer.circle(true, divOriginX, divOriginY, 10, green);
@@ -665,7 +665,8 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 				for (const boneFollower of widget.boneFollowerList) {
 					const { slot, bone, element, followVisibility, followRotation, followOpacity, followScale } = boneFollower;
 					const { worldX, worldY } = widget;
-					this.worldToScreen(this.tempFollowBoneVector, bone.worldX + worldX, bone.worldY + worldY);
+					const applied = bone.applied;
+					this.worldToScreen(this.tempFollowBoneVector, applied.worldX + worldX, applied.worldY + worldY);
 
 					if (Number.isNaN(this.tempFollowBoneVector.x)) continue;
 
@@ -678,16 +679,17 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 					}
 
 					element.style.transform = `translate(calc(-50% + ${x.toFixed(2)}px),calc(-50% + ${y.toFixed(2)}px))`
-						+ (followRotation ? ` rotate(${-bone.getWorldRotationX()}deg)` : "")
-						+ (followScale ? ` scale(${bone.getWorldScaleX()}, ${bone.getWorldScaleY()})` : "")
+						+ (followRotation ? ` rotate(${-applied.getWorldRotationX()}deg)` : "")
+						+ (followScale ? ` scale(${applied.getWorldScaleX()}, ${applied.getWorldScaleY()})` : "")
 						;
 
 					element.style.display = ""
 
-					if (followVisibility && !slot.attachment) {
+					const pose = slot.pose;
+					if (followVisibility && !pose.attachment) {
 						element.style.opacity = "0";
 					} else if (followOpacity) {
-						element.style.opacity = `${slot.color.a}`;
+						element.style.opacity = `${pose.color.a}`;
 					}
 
 				}

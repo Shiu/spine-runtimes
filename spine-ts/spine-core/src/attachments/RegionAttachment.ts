@@ -27,7 +27,6 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Bone } from "../Bone.js";
 import { TextureRegion } from "../Texture.js";
 import { Color, MathUtils, NumberArrayLike, Utils } from "../Utils.js";
 import { Attachment } from "./Attachment.js";
@@ -159,10 +158,9 @@ export class RegionAttachment extends Attachment implements HasTextureRegion {
 	 * @param offset The <code>worldVertices</code> index to begin writing values.
 	 * @param stride The number of <code>worldVertices</code> entries between the value pairs written. */
 	computeWorldVertices (slot: Slot, worldVertices: NumberArrayLike, offset: number, stride: number) {
-		if (this.sequence != null)
-			this.sequence.apply(slot, this);
+		if (this.sequence) this.sequence.apply(slot.applied, this);
 
-		let bone = slot.bone;
+		let bone = slot.bone.applied;
 		let vertexOffset = this.offset;
 		let x = bone.worldX, y = bone.worldY;
 		let a = bone.a, b = bone.b, c = bone.c, d = bone.d;

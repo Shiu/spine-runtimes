@@ -27,12 +27,17 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
+import { Attachment } from "./attachments/Attachment.js";
 import { PathAttachment } from "./attachments/PathAttachment.js";
 import { Bone } from "./Bone.js";
+import { BonePose } from "./BonePose.js";
+import { Constraint } from "./Constraint.js";
 import { PathConstraintData, RotateMode, SpacingMode, PositionMode } from "./PathConstraintData.js";
-import { Physics, Skeleton } from "./Skeleton.js";
+import { PathConstraintPose } from "./PathConstraintPose.js";
+import { Physics } from "./Physics.js";
+import { Skeleton } from "./Skeleton.js";
+import { Skin, SkinEntry } from "./Skin.js";
 import { Slot } from "./Slot.js";
-import { Updatable } from "./Updatable.js";
 import { Utils, MathUtils } from "./Utils.js";
 
 
@@ -40,7 +45,7 @@ import { Utils, MathUtils } from "./Utils.js";
  * constrained bones so they follow a {@link PathAttachment}.
  *
  * See [Path constraints](http://esotericsoftware.com/spine-path-constraints) in the Spine User Guide. */
-export class PathConstraint implements Updatable {
+export class PathConstraint extends Constraint<PathConstraint, PathConstraintData, PathConstraintPose> {
 	static NONE = -1; static BEFORE = -2; static AFTER = -3;
 	static epsilon = 0.00001;
 
@@ -48,70 +53,40 @@ export class PathConstraint implements Updatable {
 	data: PathConstraintData;
 
 	/** The bones that will be modified by this path constraint. */
-	bones: Array<Bone>;
+	bones: Array<BonePose>;
 
 	/** The slot whose path attachment will be used to constrained the bones. */
 	slot: Slot;
-
-	/** The position along the path. */
-	position = 0;
-
-	/** The spacing between bones. */
-	spacing = 0;
-
-	mixRotate = 0;
-
-	mixX = 0;
-
-	mixY = 0;
 
 	spaces = new Array<number>(); positions = new Array<number>();
 	world = new Array<number>(); curves = new Array<number>(); lengths = new Array<number>();
 	segments = new Array<number>();
 
-	active = false;
-
 	constructor (data: PathConstraintData, skeleton: Skeleton) {
-		if (!data) throw new Error("data cannot be null.");
+		super(data, new PathConstraintPose(), new PathConstraintPose());
 		if (!skeleton) throw new Error("skeleton cannot be null.");
 		this.data = data;
 
-		this.bones = new Array<Bone>();
-		for (let i = 0, n = data.bones.length; i < n; i++) {
-			let bone = skeleton.findBone(data.bones[i].name);
-			if (!bone) throw new Error(`Couldn't find bone ${data.bones[i].name}.`);
-			this.bones.push(bone);
-		}
-		let target = skeleton.findSlot(data.slot.name);
-		if (!target) throw new Error(`Couldn't find target bone ${data.slot.name}`);
-		this.slot = target;
+		this.bones = new Array<BonePose>();
+		for (const boneData of this.data.bones)
+			this.bones.push(skeleton.bones[boneData.index].constrained);
 
-		this.position = data.position;
-		this.spacing = data.spacing;
-		this.mixRotate = data.mixRotate;
-		this.mixX = data.mixX;
-		this.mixY = data.mixY;
+		this.slot = skeleton.slots[data.slot.index];;
 	}
 
-	isActive () {
-		return this.active;
+	public copy (skeleton: Skeleton) {
+		var copy = new PathConstraint(this.data, skeleton);
+		copy.pose.set(this.pose);
+		return copy;
 	}
 
-	setToSetupPose () {
-		const data = this.data;
-		this.position = data.position;
-		this.spacing = data.spacing;
-		this.mixRotate = data.mixRotate;
-		this.mixX = data.mixX;
-		this.mixY = data.mixY;
-	}
-
-	update (physics: Physics) {
-		let attachment = this.slot.getAttachment();
+	update (skeleton: Skeleton, physics: Physics) {
+		let attachment = this.slot.applied.attachment;
 		if (!(attachment instanceof PathAttachment)) return;
 
-		let mixRotate = this.mixRotate, mixX = this.mixX, mixY = this.mixY;
-		if (mixRotate == 0 && mixX == 0 && mixY == 0) return;
+		const p = this.applied;
+		let mixRotate = p.mixRotate, mixX = p.mixX, mixY = p.mixY;
+		if (mixRotate === 0 && mixX === 0 && mixY === 0) return;
 
 		let data = this.data;
 		let tangents = data.rotateMode == RotateMode.Tangent, scale = data.rotateMode == RotateMode.ChainScale;
@@ -119,14 +94,14 @@ export class PathConstraint implements Updatable {
 		let bones = this.bones;
 		let boneCount = bones.length, spacesCount = tangents ? boneCount : boneCount + 1;
 		let spaces = Utils.setArraySize(this.spaces, spacesCount), lengths: Array<number> = scale ? this.lengths = Utils.setArraySize(this.lengths, boneCount) : [];
-		let spacing = this.spacing;
+		let spacing = p.spacing;
 
 		switch (data.spacingMode) {
 			case SpacingMode.Percent:
 				if (scale) {
 					for (let i = 0, n = spacesCount - 1; i < n; i++) {
 						let bone = bones[i];
-						let setupLength = bone.data.length;
+						let setupLength = bone.bone.data.length;
 						let x = setupLength * bone.a, y = setupLength * bone.c;
 						lengths[i] = Math.sqrt(x * x + y * y);
 					}
@@ -137,7 +112,7 @@ export class PathConstraint implements Updatable {
 				let sum = 0;
 				for (let i = 0, n = spacesCount - 1; i < n;) {
 					let bone = bones[i];
-					let setupLength = bone.data.length;
+					let setupLength = bone.bone.data.length;
 					if (setupLength < PathConstraint.epsilon) {
 						if (scale) lengths[i] = 0;
 						spaces[++i] = spacing;
@@ -159,7 +134,7 @@ export class PathConstraint implements Updatable {
 				let lengthSpacing = data.spacingMode == SpacingMode.Length;
 				for (let i = 0, n = spacesCount - 1; i < n;) {
 					let bone = bones[i];
-					let setupLength = bone.data.length;
+					let setupLength = bone.bone.data.length;
 					if (setupLength < PathConstraint.epsilon) {
 						if (scale) lengths[i] = 0;
 						spaces[++i] = spacing;
@@ -167,26 +142,26 @@ export class PathConstraint implements Updatable {
 						let x = setupLength * bone.a, y = setupLength * bone.c;
 						let length = Math.sqrt(x * x + y * y);
 						if (scale) lengths[i] = length;
-						spaces[++i] = (lengthSpacing ? setupLength + spacing : spacing) * length / setupLength;
+						spaces[++i] = (lengthSpacing ? Math.max(0, setupLength + spacing) : spacing) * length / setupLength;
 					}
 				}
 		}
 
-		let positions = this.computeWorldPositions(attachment, spacesCount, tangents);
+		let positions = this.computeWorldPositions(skeleton, attachment, spacesCount, tangents);
 		let boneX = positions[0], boneY = positions[1], offsetRotation = data.offsetRotation;
 		let tip = false;
 		if (offsetRotation == 0)
 			tip = data.rotateMode == RotateMode.Chain;
 		else {
 			tip = false;
-			let p = this.slot.bone;
-			offsetRotation *= p.a * p.d - p.b * p.c > 0 ? MathUtils.degRad : -MathUtils.degRad;
+			let bone = this.slot.bone.applied;
+			offsetRotation *= bone.a * bone.d - bone.b * bone.c > 0 ? MathUtils.degRad : -MathUtils.degRad;
 		}
-		for (let i = 0, p = 3; i < boneCount; i++, p += 3) {
+		for (let i = 0, ip = 3, u = skeleton._update; i < boneCount; i++, ip += 3) {
 			let bone = bones[i];
 			bone.worldX += (boneX - bone.worldX) * mixX;
 			bone.worldY += (boneY - bone.worldY) * mixY;
-			let x = positions[p], y = positions[p + 1], dx = x - boneX, dy = y - boneY;
+			let x = positions[ip], y = positions[ip + 1], dx = x - boneX, dy = y - boneY;
 			if (scale) {
 				let length = lengths[i];
 				if (length != 0) {
@@ -200,16 +175,16 @@ export class PathConstraint implements Updatable {
 			if (mixRotate > 0) {
 				let a = bone.a, b = bone.b, c = bone.c, d = bone.d, r = 0, cos = 0, sin = 0;
 				if (tangents)
-					r = positions[p - 1];
+					r = positions[ip - 1];
 				else if (spaces[i + 1] == 0)
-					r = positions[p + 2];
+					r = positions[ip + 2];
 				else
 					r = Math.atan2(dy, dx);
 				r -= Math.atan2(c, a);
 				if (tip) {
 					cos = Math.cos(r);
 					sin = Math.sin(r);
-					let length = bone.data.length;
+					let length = bone.bone.data.length;
 					boneX += (length * (cos * a - sin * c) - dx) * mixRotate;
 					boneY += (length * (sin * a + cos * c) - dy) * mixRotate;
 				} else {
@@ -227,13 +202,13 @@ export class PathConstraint implements Updatable {
 				bone.c = sin * a + cos * c;
 				bone.d = sin * b + cos * d;
 			}
-			bone.updateAppliedTransform();
+			bone.modifyWorld(u);
 		}
 	}
 
-	computeWorldPositions (path: PathAttachment, spacesCount: number, tangents: boolean) {
+	computeWorldPositions (skeleton: Skeleton, path: PathAttachment, spacesCount: number, tangents: boolean) {
 		let slot = this.slot;
-		let position = this.position;
+		let position = this.applied.position;
 		let spaces = this.spaces, out = Utils.setArraySize(this.positions, spacesCount * 3 + 2), world: Array<number> = this.world;
 		let closed = path.closed;
 		let verticesLength = path.worldVerticesLength, curveCount = verticesLength / 6, prevCurve = PathConstraint.NONE;
@@ -246,15 +221,11 @@ export class PathConstraint implements Updatable {
 
 			let multiplier;
 			switch (this.data.spacingMode) {
-				case SpacingMode.Percent:
-					multiplier = pathLength;
-					break;
-				case SpacingMode.Proportional:
-					multiplier = pathLength / spacesCount;
-					break;
-				default:
-					multiplier = 1;
+				case SpacingMode.Percent: multiplier = pathLength; break;
+				case SpacingMode.Proportional: multiplier = pathLength / spacesCount; break;
+				default: multiplier = 1;
 			}
+
 			world = Utils.setArraySize(this.world, 8);
 			for (let i = 0, o = 0, curve = 0; i < spacesCount; i++, o += 3) {
 				let space = spaces[i] * multiplier;
@@ -268,14 +239,14 @@ export class PathConstraint implements Updatable {
 				} else if (p < 0) {
 					if (prevCurve != PathConstraint.BEFORE) {
 						prevCurve = PathConstraint.BEFORE;
-						path.computeWorldVertices(slot, 2, 4, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, 2, 4, world, 0, 2);
 					}
 					this.addBeforePosition(p, world, 0, out, o);
 					continue;
 				} else if (p > pathLength) {
 					if (prevCurve != PathConstraint.AFTER) {
 						prevCurve = PathConstraint.AFTER;
-						path.computeWorldVertices(slot, verticesLength - 6, 4, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, verticesLength - 6, 4, world, 0, 2);
 					}
 					this.addAfterPosition(p - pathLength, world, 0, out, o);
 					continue;
@@ -296,10 +267,10 @@ export class PathConstraint implements Updatable {
 				if (curve != prevCurve) {
 					prevCurve = curve;
 					if (closed && curve == curveCount) {
-						path.computeWorldVertices(slot, verticesLength - 4, 4, world, 0, 2);
-						path.computeWorldVertices(slot, 0, 4, world, 4, 2);
+						path.computeWorldVertices(skeleton, slot, verticesLength - 4, 4, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, 0, 4, world, 4, 2);
 					} else
-						path.computeWorldVertices(slot, curve * 6 + 2, 8, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, curve * 6 + 2, 8, world, 0, 2);
 				}
 				this.addCurvePosition(p, world[0], world[1], world[2], world[3], world[4], world[5], world[6], world[7], out, o,
 					tangents || (i > 0 && space == 0));
@@ -311,15 +282,15 @@ export class PathConstraint implements Updatable {
 		if (closed) {
 			verticesLength += 2;
 			world = Utils.setArraySize(this.world, verticesLength);
-			path.computeWorldVertices(slot, 2, verticesLength - 4, world, 0, 2);
-			path.computeWorldVertices(slot, 0, 2, world, verticesLength - 4, 2);
+			path.computeWorldVertices(skeleton, slot, 2, verticesLength - 4, world, 0, 2);
+			path.computeWorldVertices(skeleton, slot, 0, 2, world, verticesLength - 4, 2);
 			world[verticesLength - 2] = world[0];
 			world[verticesLength - 1] = world[1];
 		} else {
 			curveCount--;
 			verticesLength -= 4;
 			world = Utils.setArraySize(this.world, verticesLength);
-			path.computeWorldVertices(slot, 2, verticesLength, world, 0, 2);
+			path.computeWorldVertices(skeleton, slot, 2, verticesLength, world, 0, 2);
 		}
 
 		// Curve lengths.
@@ -363,14 +334,9 @@ export class PathConstraint implements Updatable {
 
 		let multiplier;
 		switch (this.data.spacingMode) {
-			case SpacingMode.Percent:
-				multiplier = pathLength;
-				break;
-			case SpacingMode.Proportional:
-				multiplier = pathLength / spacesCount;
-				break;
-			default:
-				multiplier = 1;
+			case SpacingMode.Percent: multiplier = pathLength; break;
+			case SpacingMode.Proportional: multiplier = pathLength / spacesCount; break;
+			default: multiplier = 1;
 		}
 
 		let segments = this.segments;
@@ -384,6 +350,7 @@ export class PathConstraint implements Updatable {
 				p %= pathLength;
 				if (p < 0) p += pathLength;
 				curve = 0;
+				segment = 0;
 			} else if (p < 0) {
 				this.addBeforePosition(p, world, 0, out, o);
 				continue;
@@ -497,5 +464,54 @@ export class PathConstraint implements Updatable {
 			else
 				out[o + 2] = Math.atan2(y - (y1 * uu + cy1 * ut * 2 + cy2 * tt), x - (x1 * uu + cx1 * ut * 2 + cx2 * tt));
 		}
+	}
+
+	sort (skeleton: Skeleton) {
+		const slotIndex = this.slot.data.index;
+		const slotBone = this.slot.bone;
+		if (skeleton.skin != null) this.sortPathSlot(skeleton, skeleton.skin, slotIndex, slotBone);
+		if (skeleton.data.defaultSkin != null && skeleton.data.defaultSkin != skeleton.skin)
+			this.sortPathSlot(skeleton, skeleton.data.defaultSkin, slotIndex, slotBone);
+		this.sortPath(skeleton, this.slot.pose.attachment, slotBone);
+		const bones = this.bones;
+		const boneCount = this.bones.length;
+		for (let i = 0; i < boneCount; i++) {
+			const bone = bones[i].bone;
+			skeleton.sortBone(bone);
+			skeleton.constrained(bone);
+		}
+		skeleton._updateCache.push(this);
+		for (let i = 0; i < boneCount; i++)
+			skeleton.sortReset(bones[i].bone.children);
+		for (let i = 0; i < boneCount; i++)
+			bones[i].bone.sorted = true;
+	}
+
+	private sortPathSlot (skeleton: Skeleton, skin: Skin, slotIndex: number, slotBone: Bone) {
+		const entries = skin.getAttachments();
+		for (let i = 0, n = entries.length; i < n; i++) {
+			const entry = entries[i];
+			if (entry.slotIndex == slotIndex) this.sortPath(skeleton, entry.attachment, slotBone);
+		}
+	}
+
+	private sortPath (skeleton: Skeleton, attachment: Attachment | null, slotBone: Bone) {
+		if (!(attachment instanceof PathAttachment)) return;
+		const pathBones = attachment.bones;
+		if (pathBones == null)
+			skeleton.sortBone(slotBone);
+		else {
+			const bones = skeleton.bones;
+			for (let i = 0, n = pathBones.length; i < n;) {
+				let nn = pathBones[i++];
+				nn += i;
+				while (i < nn)
+					skeleton.sortBone(bones[pathBones[i++]]);
+			}
+		}
+	}
+
+	isSourceActive () {
+		return this.slot.bone.active;
 	}
 }
