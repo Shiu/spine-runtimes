@@ -123,7 +123,6 @@ export class SkeletonRenderer {
 			let attachment = pose.attachment;
 
 			let texture: HTMLImageElement;
-			let region: TextureAtlasRegion;
 			if (attachment instanceof RegionAttachment) {
 				let regionAttachment = <RegionAttachment>attachment;
 				vertices = this.computeRegionVertices(slot, regionAttachment, false);

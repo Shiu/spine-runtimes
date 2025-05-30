@@ -669,13 +669,11 @@ export class TranslateYTimeline extends BoneTimeline1 {
 
 /** Changes a bone's local {@link BoneLocal.scaleX} and {@link BoneLocal.scaleY}. */
 export class ScaleTimeline extends BoneTimeline2 {
-	boneIndex = 0;
-
 	constructor (frameCount: number, bezierCount: number, boneIndex: number) {
 		super(frameCount, bezierCount, boneIndex, Property.scaleX, Property.scaleY);
 	}
 
-	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend, direction: MixDirection) {
 		let frames = this.frames;
 		if (time < frames[0]) {
 			switch (blend) {

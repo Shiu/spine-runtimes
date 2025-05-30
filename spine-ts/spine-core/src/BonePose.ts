@@ -63,7 +63,7 @@ export class BonePose extends BoneLocal implements Update {
 
 	/** Called by {@link Skeleton#updateCache()} to compute the world transform, if needed. */
 	public update (skeleton: Skeleton, physics: Physics): void {
-		if (this.world != skeleton._update) this.updateWorldTransform(skeleton);
+		if (this.world !== skeleton._update) this.updateWorldTransform(skeleton);
 	}
 
 	/** Computes the world transform using the parent bone's applied pose and this pose. Child bones are not updated.
@@ -71,17 +71,17 @@ export class BonePose extends BoneLocal implements Update {
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
 	updateWorldTransform (skeleton: Skeleton): void {
-		if (this.local == skeleton._update)
+		if (this.local === skeleton._update)
 			this.updateLocalTransform(skeleton);
 		else
 			this.world = skeleton._update;
 
-		const rotation = this.rotation;
+		let rotation = this.rotation;
 		const scaleX = this.scaleX;
 		const scaleY = this.scaleY;
 		const shearX = this.shearX;
 		const shearY = this.shearY;
-		if (this.bone.parent == null) { // Root bone.
+		if (!this.bone.parent) { // Root bone.
 			const sx = skeleton.scaleX, sy = skeleton.scaleY;
 			const rx = (rotation + shearX) * MathUtils.degRad;
 			const ry = (rotation + 90 + shearY) * MathUtils.degRad;
@@ -152,7 +152,7 @@ export class BonePose extends BoneLocal implements Update {
 			}
 			case Inherit.NoScale:
 			case Inherit.NoScaleOrReflection: {
-				this.rotation *= MathUtils.degRad;
+				rotation *= MathUtils.degRad;
 				const cos = Math.cos(rotation), sin = Math.sin(rotation);
 				let za = (pa * cos + pb * sin) / skeleton.scaleX;
 				let zc = (pc * cos + pd * sin) / skeleton.scaleY;

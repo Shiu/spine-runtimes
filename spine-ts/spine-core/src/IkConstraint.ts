@@ -68,8 +68,8 @@ export class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 	update (skeleton: Skeleton, physics: Physics) {
 		const p = this.applied;
 		if (p.mix === 0) return;
-		let target = this.target.applied;
-		let bones = this.bones;
+		const target = this.target.applied;
+		const bones = this.bones;
 		switch (bones.length) {
 			case 1:
 				IkConstraint.apply(skeleton, bones[0], target.worldX, target.worldY, p.compress, p.stretch, this.data.uniform, p.mix);
@@ -177,7 +177,7 @@ export class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 		if (parent.inherit != Inherit.Normal || child.inherit != Inherit.Normal) return;
 		parent.modifyLocal(skeleton);
 		child.modifyLocal(skeleton);
-		let px = parent.x, py = parent.y, psx = parent.scaleX, psy = parent.scaleY, sx = psx, sy = psy, csx = child.scaleX;
+		let px = parent.x, py = parent.y, psx = parent.scaleX, psy = parent.scaleY, csx = child.scaleX;
 		let os1 = 0, os2 = 0, s2 = 0;
 		if (psx < 0) {
 			psx = -psx;

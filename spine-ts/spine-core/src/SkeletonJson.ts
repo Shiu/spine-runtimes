@@ -140,7 +140,7 @@ export class SkeletonJson {
 		// Constraints.
 		if (root.constraints) {
 			for (const constraintMap of root.constraints) {
-				const name = constraintMap.getString("name");
+				const name = constraintMap.name;
 				const skinRequired = getValue(constraintMap, "skin", false);
 				switch (getValue(constraintMap, "type", false)) {
 					case "ik": {
@@ -259,6 +259,7 @@ export class SkeletonJson {
 						if (shearY) setup.mixShearY = getValue(constraintMap, "mixShearY", 1);
 
 						skeletonData.constraints.push(data);
+						break;
 					}
 					case "path": {
 						const data = new PathConstraintData(name);

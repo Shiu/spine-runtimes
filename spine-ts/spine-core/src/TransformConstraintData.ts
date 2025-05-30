@@ -50,7 +50,7 @@ export class TransformConstraintData extends ConstraintData<TransformConstraint,
 	}
 	private _source: BoneData | null = null;
 
-	offsets = new Array<number>();
+	offsets = [0, 0, 0, 0, 0, 0];
 
 	/** An offset added to the constrained bone X translation. */
 	offsetX = 0;
