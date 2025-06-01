@@ -180,9 +180,13 @@ public class SkeletonBinary extends SkeletonLoader {
 
 	public SkeletonData readSkeletonData (FileHandle file) {
 		if (file == null) throw new IllegalArgumentException("file cannot be null.");
-		SkeletonData skeletonData = readSkeletonData(file.read());
-		skeletonData.name = file.nameWithoutExtension();
-		return skeletonData;
+		try {
+			SkeletonData skeletonData = readSkeletonData(file.read());
+			skeletonData.name = file.nameWithoutExtension();
+			return skeletonData;
+		} catch (Throwable ex) {
+			throw new SerializationException("Error reading binary skeleton file: " + file, ex);
+		}
 	}
 
 	public SkeletonData readSkeletonData (InputStream dataInput) {
@@ -192,11 +196,13 @@ public class SkeletonBinary extends SkeletonLoader {
 
 		var input = new SkeletonInput(dataInput);
 		var skeletonData = new SkeletonData();
+		String version = null;
 		try {
 			long hash = input.readLong();
 			skeletonData.hash = hash == 0 ? null : Long.toString(hash);
 			skeletonData.version = input.readString();
 			if (skeletonData.version.isEmpty()) skeletonData.version = null;
+			version = skeletonData.version;
 			skeletonData.x = input.readFloat();
 			skeletonData.y = input.readFloat();
 			skeletonData.width = input.readFloat();
@@ -498,8 +504,9 @@ public class SkeletonBinary extends SkeletonLoader {
 
 			for (int i = 0; i < constraintCount; i++)
 				if (constraints[i] instanceof SliderData data) data.animation = animations[input.readInt(true)];
-		} catch (IOException ex) {
-			throw new SerializationException("Error reading skeleton file.", ex);
+		} catch (Throwable ex) {
+			if (version != null) throw new SerializationException("Error reading binary skeleton data, version: " + version, ex);
+			throw new SerializationException("Error binary skeleton data.", ex);
 		} finally {
 			try {
 				input.close();
