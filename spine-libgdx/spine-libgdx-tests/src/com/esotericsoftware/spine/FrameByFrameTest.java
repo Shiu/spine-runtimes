@@ -88,7 +88,7 @@ public class FrameByFrameTest extends ApplicationAdapter {
 		atlas.dispose();
 	}
 
-	public static void main (String[] args) throws Exception {
+	static public void main (String[] args) throws Exception {
 		new Lwjgl3Application(new FrameByFrameTest());
 	}
 }

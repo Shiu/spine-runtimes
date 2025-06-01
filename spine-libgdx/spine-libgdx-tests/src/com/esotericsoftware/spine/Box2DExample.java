@@ -236,7 +236,7 @@ public class Box2DExample extends ApplicationAdapter {
 		}
 	}
 
-	public static void main (String[] args) throws Exception {
+	static public void main (String[] args) throws Exception {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setTitle("Box2D - Spine");
 		config.setWindowedMode(800, 600);

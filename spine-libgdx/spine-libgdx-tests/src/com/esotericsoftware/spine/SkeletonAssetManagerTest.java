@@ -126,7 +126,7 @@ public class SkeletonAssetManagerTest extends ApplicationAdapter {
 		assetManager.dispose();
 	}
 
-	public static void main (String[] args) throws Exception {
+	static public void main (String[] args) throws Exception {
 		new Lwjgl3Application(new SkeletonAssetManagerTest());
 	}
 }

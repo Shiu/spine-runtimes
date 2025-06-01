@@ -106,7 +106,7 @@ public class TestHarness extends ApplicationAdapter {
 		atlas.dispose();
 	}
 
-	public static void main (String[] args) throws Exception {
+	static public void main (String[] args) throws Exception {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setWindowedMode(640, 640);
 		new Lwjgl3Application(new TestHarness(), config);
