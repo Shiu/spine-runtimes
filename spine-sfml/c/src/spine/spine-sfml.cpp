@@ -125,10 +125,13 @@ void SkeletonDrawable::draw (RenderTarget& target, RenderStates states) const {
 	for (int i = 0; i < skeleton->slotsCount; ++i) {
 		Slot* slot = skeleton->drawOrder[i];
 		Attachment* attachment = slot->attachment;
-		if (!attachment) continue;
+		if (!attachment) {
+			spSkeletonClipping_clipEnd(clipper, slot);
+			continue;
+		}
 
 		// Early out if slot is invisible
-		if (slot->color.a == 0 || !slot->bone->active) {
+		if ((slot->color.a == 0 || !slot->bone->active) && attachment->type != SP_ATTACHMENT_CLIPPING) {
 			spSkeletonClipping_clipEnd(clipper, slot);
 			continue;
 		}
