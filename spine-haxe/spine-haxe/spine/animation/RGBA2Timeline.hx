@@ -30,7 +30,7 @@
 package spine.animation;
 
 /** Changes a slot's spine.Slot.getColor() and spine.Slot.getDarkColor() for two color tinting. */
-class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
+class RGBA2Timeline extends SlotCurveTimeline {
 	private static inline var ENTRIES:Int = 8;
 	private static inline var R:Int = 1;
 	private static inline var G:Int = 2;
@@ -40,25 +40,16 @@ class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
 	private static inline var G2:Int = 6;
 	private static inline var B2:Int = 7;
 
-	private var slotIndex:Int = 0;
-
 	public function new(frameCount:Int, bezierCount:Int, slotIndex:Int) {
-		super(frameCount, bezierCount, [
+		super(frameCount, bezierCount, slotIndex,
 			Property.rgb + "|" + slotIndex,
 			Property.alpha + "|" + slotIndex,
 			Property.rgb2 + "|" + slotIndex
-		]);
-		this.slotIndex = slotIndex;
+		);
 	}
 
 	public override function getFrameEntries():Int {
 		return ENTRIES;
-	}
-
-	/** The index of the slot in spine.Skeleton.getSlots() that will be changed when this timeline is applied. The
-	 * spine.Slot.getDarkColor() must not be null. */
-	public function getSlotIndex():Int {
-		return slotIndex;
 	}
 
 	/** Sets the time, light color, and dark color for the specified frame.
@@ -76,16 +67,11 @@ class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
 		frames[frame + B2] = b2;
 	}
 
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var slot:Slot = skeleton.slots[slotIndex];
-		if (!slot.bone.active)
-			return;
-
-		var light:Color = slot.color, dark:Color = slot.darkColor;
+	public function apply1 (slot:Slot, pose:SlotPose, time:Float, alpha:Float, blend:MixBlend) {
+		var light = pose.color, dark = pose.darkColor;
 		if (time < frames[0]) {
-			var setupLight:Color = slot.data.color,
-				setupDark:Color = slot.data.darkColor;
+			var setup = slot.data.setup;
+			var setupLight = setup.color, setupDark = setup.darkColor;
 			switch (blend) {
 				case MixBlend.setup:
 					light.setFromColor(setupLight);
@@ -148,8 +134,9 @@ class RGBA2Timeline extends CurveTimeline implements SlotTimeline {
 			dark.b = b2;
 		} else {
 			if (blend == MixBlend.setup) {
-				light.setFromColor(slot.data.color);
-				dark.setFromColor(slot.data.darkColor);
+				var setup = slot.data.setup;
+				light.setFromColor(setup.color);
+				dark.setFromColor(setup.darkColor);
 			}
 			light.add((r - light.r) * alpha, (g - light.g) * alpha, (b - light.b) * alpha, (a - light.a) * alpha);
 			dark.r += (r2 - dark.r) * alpha;

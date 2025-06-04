@@ -41,7 +41,7 @@ class AttachmentTimeline extends Timeline implements SlotTimeline {
 	public var attachmentNames:Array<String>;
 
 	public function new(frameCount:Int, slotIndex:Int) {
-		super(frameCount, [Property.attachment + "|" + slotIndex]);
+		super(frameCount, Property.attachment + "|" + slotIndex);
 		this.slotIndex = slotIndex;
 		attachmentNames = new Array<String>();
 		attachmentNames.resize(frameCount);
@@ -63,30 +63,22 @@ class AttachmentTimeline extends Timeline implements SlotTimeline {
 		attachmentNames[frame] = attachmentName;
 	}
 
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var slot:Slot = skeleton.slots[slotIndex];
-		if (!slot.bone.active)
-			return;
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
+
+		var slot = skeleton.slots[slotIndex];
+		if (!slot.bone.active) return;
+		var pose = appliedPose ? slot.applied : slot.pose;
 
 		if (direction == MixDirection.mixOut) {
-			if (blend == MixBlend.setup) {
-				setAttachment(skeleton, slot, slot.data.attachmentName);
-			}
-			return;
-		}
-
-		if (time < frames[0]) {
-			if (blend == MixBlend.setup || blend == MixBlend.first) {
-				setAttachment(skeleton, slot, slot.data.attachmentName);
-			}
-			return;
-		}
-
-		setAttachment(skeleton, slot, attachmentNames[Timeline.search1(frames, time)]);
+			if (blend == MixBlend.setup) setAttachment(skeleton, pose, slot.data.attachmentName);
+		} else if (time < frames[0]) {
+			if (blend == MixBlend.setup || blend == MixBlend.first) setAttachment(skeleton, pose, slot.data.attachmentName);
+		} else
+			setAttachment(skeleton, pose, attachmentNames[Timeline.search1(frames, time)]);
 	}
 
-	private function setAttachment(skeleton:Skeleton, slot:Slot, attachmentName:String):Void {
-		slot.attachment = attachmentName == null ? null : skeleton.getAttachmentForSlotIndex(slotIndex, attachmentName);
+	private function setAttachment(skeleton:Skeleton, pose:SlotPose, attachmentName:String):Void {
+		pose.attachment = attachmentName == null ? null : skeleton.getAttachmentForSlotIndex(slotIndex, attachmentName);
 	}
 }

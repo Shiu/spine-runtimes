@@ -29,22 +29,18 @@
 
 package spine.animation;
 
-/** Changes a physics constraint's spine.PhysicsConstraint.mix. */
+/** Changes a physics constraint's spine.PhysicsConstraintPose.mix. */
 class PhysicsConstraintMixTimeline extends PhysicsConstraintTimeline {
-	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintMix);
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintMix);
 	}
 
-	public function setup (constraint: PhysicsConstraint):Float {
-		return constraint.data.mix;
+	public function get (pose: PhysicsConstraintPose):Float {
+		return pose.mix;
 	}
 
-	public function get (constraint: PhysicsConstraint):Float {
-		return constraint.mix;
-	}
-
-	public function set (constraint: PhysicsConstraint, value:Float):Void {
-		constraint.mix = value;
+	public function set (pose: PhysicsConstraintPose, value:Float):Void {
+		pose.mix = value;
 	}
 
 	public function global (constraint: PhysicsConstraintData):Bool {

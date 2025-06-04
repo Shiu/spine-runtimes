@@ -31,27 +31,34 @@ package spine;
 
 /**
  * Stores the setup pose for a spine.TransformConstraint.
- * 
- * 
+ *
+ *
  * @see https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide
  */
-class TransformConstraintData extends ConstraintData {
-	private var _bones:Array<BoneData> = new Array<BoneData>();
+class TransformConstraintData extends ConstraintData<TransformConstraint, TransformConstraintPose> {
+	/** The bones that will be modified by this transform constraint. */
+	public final bones:Array<BoneData> = new Array<BoneData>();
 
-	/** The target bone whose world transform will be copied to the constrained bones. */
-	public var target:BoneData;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
-	public var mixRotate:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
-	public var mixX:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
-	public var mixY:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale X. */
-	public var mixScaleX:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale Y. */
-	public var mixScaleY:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y. */
-	public var mixShearY:Float = 0;
+	/** The bone whose world transform will be copied to the constrained bones. */
+	public var source(default, set):BoneData;
+
+	public var offsets:Array<Float> = [for (_ in 0...6) 0.0];
+
+	/** Reads the source bone's local transform instead of its world transform. */
+	public var localSource = false;
+
+	/** Sets the constrained bones' local transforms instead of their world transforms. */
+	public var localTarget = false;
+
+	/** Adds the source bone transform to the constrained bones instead of setting it absolutely. */
+	public var additive = false;
+
+	/** Prevents constrained bones from exceeding the ranged defined by ToProperty.offset and ToProperty.max. */
+	public var clamp = false;
+
+	/** The mapping of transform properties to other transform properties. */
+	public final properties = new Array<FromProperty>();
+
 	/** An offset added to the constrained bone rotation. */
 	public var offsetRotation:Float = 0;
 	/** An offset added to the constrained bone X translation. */
@@ -67,16 +74,286 @@ class TransformConstraintData extends ConstraintData {
 	public var relative:Bool = false;
 	public var local:Bool = false;
 
-	public function new(name:String) {
-		super(name, 0, false);
+	public function new (name:String) {
+		super(name, new TransformConstraintPose());
 	}
 
-	/**
-	 * The bones that will be modified by this transform constraint.
-	 */
-	public var bones(get, never):Array<BoneData>;
+	public function create (skeleton:Skeleton) {
+		return new TransformConstraint(this, skeleton);
+	}
 
-	private function get_bones():Array<BoneData> {
-		return _bones;
+	public function set_source (source:BoneData):BoneData {
+		if (source == null) throw new SpineException("source cannot be null.");
+		this.source = source;
+		return source;
+	}
+
+	/** An offset added to the constrained bone rotation. */
+	public function getOffsetRotation ():Float {
+		return offsets[0];
+	}
+
+	public function setOffsetRotation (offsetRotation:Float):Float {
+		offsets[0] = offsetRotation;
+		return offsetRotation;
+	}
+
+	/** An offset added to the constrained bone X translation. */
+	public function getOffsetX ():Float {
+		return offsets[1];
+	}
+
+	public function setOffsetX (offsetX:Float):Float {
+		offsets[1] = offsetX;
+		return offsetX;
+	}
+
+	/** An offset added to the constrained bone Y translation. */
+	public function getOffsetY ():Float {
+		return offsets[2];
+	}
+
+	public function setOffsetY (offsetY:Float):Float {
+		offsets[2] = offsetY;
+		return offsetY;
+	}
+
+	/** An offset added to the constrained bone scaleX. */
+	public function getOffsetScaleX ():Float {
+		return offsets[3];
+	}
+
+	public function setOffsetScaleX (offsetScaleX:Float):Float {
+		offsets[3] = offsetScaleX;
+		return offsetScaleX;
+	}
+
+	/** An offset added to the constrained bone scaleY. */
+	public function getOffsetScaleY ():Float {
+		return offsets[4];
+	}
+
+	public function setOffsetScaleY (offsetScaleY:Float):Float {
+		offsets[4] = offsetScaleY;
+		return offsetScaleY;
+	}
+
+	/** An offset added to the constrained bone shearY. */
+	public function getOffsetShearY ():Float {
+		return offsets[5];
+	}
+
+	public function setOffsetShearY (offsetShearY:Float):Float {
+		offsets[5] = offsetShearY;
+		return offsetShearY;
+	}
+
+}
+
+/** Source property for a {@link TransformConstraint}. */
+abstract class FromProperty {
+	/** The value of this property that corresponds to ToProperty.offset. */
+	public var offset:Float;
+
+	/** Constrained properties. */
+	public final to = new Array<ToProperty>();
+
+	/** Reads this property from the specified bone. */
+	abstract public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float;
+}
+
+/** Constrained property for a TransformConstraint. */
+abstract class ToProperty {
+	/** The value of this property that corresponds to FromProperty.offset. */
+	public var offset:Float;
+
+	/** The maximum value of this property when is clamped (TransformConstraintData.clamp). */
+	public var max:Float;
+
+	/** The scale of the FromProperty value in relation to this property. */
+	public var scale:Float;
+
+	/** Reads the mix for this property from the specified pose. */
+	abstract public function mix (pose:TransformConstraintPose):Float;
+
+	/** Applies the value to this property. */
+	abstract public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void;
+}
+
+class FromRotate extends FromProperty {
+	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
+		if (local) return source.rotation + offsets[0];
+		var value = Math.atan2(source.c, source.a) * MathUtils.radDeg
+			+ (source.a * source.d - source.b * source.c > 0 ? offsets[0] : -offsets[0]);
+		if (value < 0) value += 360;
+		return value;
+	}
+}
+
+class ToRotate extends ToProperty {
+	public function mix (pose:TransformConstraintPose):Float {
+		return pose.mixRotate;
+	}
+
+	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+		if (local) {
+			if (!additive) value -= bone.rotation;
+			bone.rotation += value * pose.mixRotate;
+		} else {
+			var a = bone.a, b = bone.b, c = bone.c, d = bone.d;
+			value *= MathUtils.degRad;
+			if (!additive) value -= Math.atan2(c, a);
+			if (value > Math.PI)
+				value -= MathUtils.PI2;
+			else if (value < -Math.PI) //
+				value += MathUtils.PI2;
+			value *= pose.mixRotate;
+			var cos = Math.cos(value), sin = Math.sin(value);
+			bone.a = cos * a - sin * c;
+			bone.b = cos * b - sin * d;
+			bone.c = sin * a + cos * c;
+			bone.d = sin * b + cos * d;
+		}
+	}
+}
+
+class FromX extends FromProperty {
+	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
+		return local ? source.x + offsets[1] : offsets[1] * source.a + offsets[2] * source.b + source.worldX;
+	}
+}
+
+class ToX extends ToProperty {
+	public function mix (pose:TransformConstraintPose):Float {
+		return pose.mixX;
+	}
+
+	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+		if (local) {
+			if (!additive) value -= bone.x;
+			bone.x += value * pose.mixX;
+		} else {
+			if (!additive) value -= bone.worldX;
+			bone.worldX += value * pose.mixX;
+		}
+	}
+}
+
+class FromY extends FromProperty {
+	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
+		return local ? source.y + offsets[2] : offsets[1] * source.c + offsets[2] * source.d + source.worldY;
+	}
+}
+
+class ToY extends ToProperty {
+	public function mix (pose:TransformConstraintPose):Float {
+		return pose.mixY;
+	}
+
+	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+		if (local) {
+			if (!additive) value -= bone.y;
+			bone.y += value * pose.mixY;
+		} else {
+			if (!additive) value -= bone.worldY;
+			bone.worldY += value * pose.mixY;
+		}
+	}
+}
+
+class FromScaleX extends FromProperty {
+	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
+		return (local ? source.scaleX : Math.sqrt(source.a * source.a + source.c * source.c)) + offsets[3];
+	}
+}
+
+class ToScaleX extends ToProperty {
+	public function mix (pose:TransformConstraintPose):Float {
+		return pose.mixScaleX;
+	}
+
+	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+		if (local) {
+			if (additive)
+				bone.scaleX *= 1 + ((value - 1) * pose.mixScaleX);
+			else if (bone.scaleX != 0) //
+				bone.scaleX = 1 + (value / bone.scaleX - 1) * pose.mixScaleX;
+		} else {
+			var s:Float;
+			if (additive)
+				s = 1 + (value - 1) * pose.mixScaleX;
+			else {
+				s = Math.sqrt(bone.a * bone.a + bone.c * bone.c);
+				if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleX;
+			}
+			bone.a *= s;
+			bone.c *= s;
+		}
+	}
+}
+
+class FromScaleY extends FromProperty {
+	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
+		return (local ? source.scaleY : Math.sqrt(source.b * source.b + source.d * source.d)) + offsets[4];
+	}
+}
+
+class ToScaleY extends ToProperty {
+	public function mix (pose:TransformConstraintPose):Float {
+		return pose.mixScaleY;
+	}
+
+	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+		if (local) {
+			if (additive)
+				bone.scaleY *= 1 + ((value - 1) * pose.mixScaleY);
+			else if (bone.scaleY != 0) //
+				bone.scaleY = 1 + (value / bone.scaleY - 1) * pose.mixScaleY;
+		} else {
+			var s:Float;
+			if (additive)
+				s = 1 + (value - 1) * pose.mixScaleY;
+			else {
+				s = Math.sqrt(bone.b * bone.b + bone.d * bone.d);
+				if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleY;
+			}
+			bone.b *= s;
+			bone.d *= s;
+		}
+	}
+}
+
+class FromShearY extends FromProperty {
+	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
+		return (local ? source.shearY : (Math.atan2(source.d, source.b) - Math.atan2(source.c, source.a)) * MathUtils.radDeg - 90) + offsets[5];
+	}
+}
+
+class ToShearY extends ToProperty {
+	public function mix (pose:TransformConstraintPose):Float {
+		return pose.mixShearY;
+	}
+
+	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+		if (local) {
+			if (!additive) value -= bone.shearY;
+			bone.shearY += value * pose.mixShearY;
+		} else {
+			var b = bone.b, d = bone.d, by = Math.atan2(d, b);
+			value = (value + 90) * MathUtils.degRad;
+			if (additive)
+				value -= Math.PI / 2;
+			else {
+				value -= by - Math.atan2(bone.c, bone.a);
+				if (value > Math.PI)
+					value -= MathUtils.PI2;
+				else if (value < -Math.PI) //
+					value += MathUtils.PI2;
+			}
+			value = by + value * pose.mixShearY;
+			var s = Math.sqrt(b * b + d * d);
+			bone.b = Math.cos(value) * s;
+			bone.d = Math.sin(value) * s;
+		}
 	}
 }

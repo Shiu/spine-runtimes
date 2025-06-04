@@ -29,22 +29,18 @@
 
 package spine.animation;
 
-/** Changes a physics constraint's spine.PhysicsConstraint.massInverse. The timeline values are not inverted. */
+/** Changes a physics constraint's spine.PhysicsConstraintPose.massInverse. The timeline values are not inverted. */
 class PhysicsConstraintMassTimeline extends PhysicsConstraintTimeline {
-	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintMass);
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintMass);
 	}
 
-	public function setup (constraint: PhysicsConstraint):Float {
-		return constraint.data.massInverse;
+	public function get (pose: PhysicsConstraintPose):Float {
+		return pose.massInverse;
 	}
 
-	public function get (constraint: PhysicsConstraint):Float {
-		return constraint.massInverse;
-	}
-
-	public function set (constraint: PhysicsConstraint, value:Float):Void {
-		constraint.massInverse = value;
+	public function set (pose: PhysicsConstraintPose, value:Float):Void {
+		pose.massInverse = value;
 	}
 
 	public function global (constraint: PhysicsConstraintData):Bool {

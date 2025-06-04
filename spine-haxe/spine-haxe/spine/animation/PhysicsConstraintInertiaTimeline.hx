@@ -29,22 +29,18 @@
 
 package spine.animation;
 
-/** Changes a physics constraint's spine.PhysicsConstraint.inertia. */
+/** Changes a physics constraint's spine.PhysicsConstraintPose.inertia. */
 class PhysicsConstraintInertiaTimeline extends PhysicsConstraintTimeline {
-	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintInertia);
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintInertia);
 	}
 
-	public function setup (constraint: PhysicsConstraint):Float {
-		return constraint.data.inertia;
+	public function get (pose: PhysicsConstraintPose):Float {
+		return pose.inertia;
 	}
 
-	public function get (constraint: PhysicsConstraint):Float {
-		return constraint.inertia;
-	}
-
-	public function set (constraint: PhysicsConstraint, value:Float):Void {
-		constraint.inertia = value;
+	public function set (pose: PhysicsConstraintPose, value:Float):Void {
+		pose.inertia = value;
 	}
 
 	public function global (constraint: PhysicsConstraintData):Bool {

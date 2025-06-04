@@ -32,43 +32,44 @@ package spine.animation;
 /**
  * Constants for animation property types.
  */
-class Property {
-	public static inline var rotate:Int = 0;
-	public static inline var x:Int = 1;
-	public static inline var y:Int = 2;
-	public static inline var scaleX:Int = 3;
-	public static inline var scaleY:Int = 4;
-	public static inline var shearX:Int = 5;
-	public static inline var shearY:Int = 6;
-	public static inline var inherit:Int = 7;
+enum abstract Property(String) from String to String {
+	var rotate = "0";
+	var x = "1";
+	var y = "2";
+	var scaleX = "3";
+	var scaleY = "4";
+	var shearX = "5";
+	var shearY = "6";
+	var inherit = "7";
 
-	public static inline var rgb:Int = 8;
-	public static inline var alpha:Int = 9;
-	public static inline var rgb2:Int = 10;
+	var rgb = "8";
+	var alpha = "9";
+	var rgb2 = "10";
 
-	public static inline var attachment:Int = 11;
-	public static inline var deform:Int = 12;
+	var attachment = "11";
+	var deform = "12";
 
-	public static inline var event:Int = 13;
-	public static inline var drawOrder:Int = 14;
+	var event = "13";
+	var drawOrder = "14";
 
-	public static inline var ikConstraint:Int = 15;
-	public static inline var transformConstraint:Int = 16;
+	var ikConstraint = "15";
+	var transformConstraint = "16";
 
-	public static inline var pathConstraintPosition:Int = 17;
-	public static inline var pathConstraintSpacing:Int = 18;
-	public static inline var pathConstraintMix:Int = 19;
+	var pathConstraintPosition = "17";
+	var pathConstraintSpacing = "18";
+	var pathConstraintMix = "19";
 
-	public static inline var physicsConstraintInertia:Int = 20;
-	public static inline var physicsConstraintStrength:Int = 21;
-	public static inline var physicsConstraintDamping:Int = 22;
-	public static inline var physicsConstraintMass:Int = 23;
-	public static inline var physicsConstraintWind:Int = 24;
-	public static inline var physicsConstraintGravity:Int = 25;
-	public static inline var physicsConstraintMix:Int = 26;
-	public static inline var physicsConstraintReset:Int = 27;
+	var physicsConstraintInertia = "20";
+	var physicsConstraintStrength = "21";
+	var physicsConstraintDamping = "22";
+	var physicsConstraintMass = "23";
+	var physicsConstraintWind = "24";
+	var physicsConstraintGravity = "25";
+	var physicsConstraintMix = "26";
+	var physicsConstraintReset = "27";
 
-	public static inline var sequence:Int = 28;
+	var sequence = "28";
 
-	public function new() {}
+	var sliderTime = "29";
+	var sliderMix = "30";
 }

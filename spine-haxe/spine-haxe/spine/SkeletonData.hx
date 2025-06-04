@@ -37,55 +37,66 @@ import spine.attachments.AtlasAttachmentLoader;
 
 /** Stores the setup pose and all of the stateless data for a skeleton.
  *
- * 
+ *
  * @see https://esotericsoftware.com/spine-runtime-architecture#Data-objects Data objects in the Spine Runtimes
  * Guide. */
 class SkeletonData {
 	/** The skeleton's name, which by default is the name of the skeleton data file when possible, or null when a name hasn't been
 	 * set. */
-	public var name:String;
+	public var name:String = null;
 
 	/** The skeleton's bones, sorted parent first. The root bone is always the first bone. */
-	public var bones:Array<BoneData> = new Array<BoneData>(); // Ordered parents first.
+	public final bones = new Array<BoneData>(); // Ordered parents first.
+
 	/** The skeleton's slots in the setup pose draw order. */
-	public var slots:Array<SlotData> = new Array<SlotData>(); // Setup pose draw order.
+	public final slots = new Array<SlotData>(); // Setup pose draw order.
+
 	/** All skins, including the default skin. */
-	public var skins:Array<Skin> = new Array<Skin>();
+	public final skins = new Array<Skin>();
+
 	/** The skeleton's default skin. By default this skin contains all attachments that were not in a skin in Spine.
 	 *
 	 * See Skeleton#getAttachment(int, String). */
-	public var defaultSkin:Skin;
+	public var defaultSkin:Skin = null;
+
 	/** The skeleton's events. */
-	public var events:Array<EventData> = new Array<EventData>();
+	public var events = new Array<EventData>();
+
 	/** The skeleton's animations. */
-	public var animations:Array<Animation> = new Array<Animation>();
-	/** The skeleton's IK constraints. */
-	public var ikConstraints:Array<IkConstraintData> = new Array<IkConstraintData>();
-	/** The skeleton's transform constraints. */
-	public var transformConstraints:Array<TransformConstraintData> = new Array<TransformConstraintData>();
-	/** The skeleton's path constraints. */
-	public var pathConstraints:Array<PathConstraintData> = new Array<PathConstraintData>();
-	/** The skeleton's physics constraints. */
-	public var physicsConstraints:Array<PhysicsConstraintData> = new Array<PhysicsConstraintData>();
+	public var animations = new Array<Animation>();
+
+	/** The skeleton's constraints. */
+	public var constraints = new Array<ConstraintData<Dynamic, Dynamic>>();
+
 	/** The X coordinate of the skeleton's axis aligned bounding box in the setup pose. */
 	public var x:Float = 0;
+
 	/** The Y coordinate of the skeleton's axis aligned bounding box in the setup pose. */
 	public var y:Float = 0;
+
 	/** The width of the skeleton's axis aligned bounding box in the setup pose. */
 	public var width:Float = 0;
+
 	/** The height of the skeleton's axis aligned bounding box in the setup pose. */
 	public var height:Float = 0;
+
 	/** Baseline scale factor for applying physics and other effects based on distance to non-scalable properties, such as angle or
 	 * scale. Default is 100. */
 	public var referenceScale:Float = 100;
+
 	/** The Spine version used to export the skeleton data, or null. */
 	public var version:String;
+
 	/** The skeleton data hash. This value will change if any of the skeleton data has changed. */
 	public var hash:String;
+
+	// Nonessential.
 	/** The dopesheet FPS in Spine, or zero if nonessential data was not exported. */
 	public var fps:Float = 0;
+
 	/** The path to the images directory as defined in Spine, or null if nonessential data was not exported. */
 	public var imagesPath:String;
+
 	/** The path to the audio directory as defined in Spine, or null if nonessential data was not exported. */
 	public var audioPath:String;
 
@@ -112,13 +123,9 @@ class SkeletonData {
 	 * @param boneName The name of the bone to find.
 	 * @return May be null. */
 	public function findBone(boneName:String):BoneData {
-		if (boneName == null)
-			throw new SpineException("boneName cannot be null.");
-		for (i in 0...bones.length) {
-			var bone:BoneData = bones[i];
-			if (bone.name == boneName)
-				return bone;
-		}
+		if (boneName == null) throw new SpineException("boneName cannot be null.");
+		for (bone in bones)
+			if (bone.name == boneName) return bone;
 		return null;
 	}
 
@@ -142,13 +149,9 @@ class SkeletonData {
 	 * @param slotName The name of the slot to find.
 	 * @return May be null. */
 	public function findSlot(slotName:String):SlotData {
-		if (slotName == null)
-			throw new SpineException("slotName cannot be null.");
-		for (i in 0...slots.length) {
-			var slot:SlotData = slots[i];
-			if (slot.name == slotName)
-				return slot;
-		}
+		if (slotName == null) throw new SpineException("slotName cannot be null.");
+		for (slot in slots)
+			if (slot.name == slotName) return slot;
 		return null;
 	}
 
@@ -159,12 +162,9 @@ class SkeletonData {
 	 * @param skinName The name of the skin to find.
 	 * @return May be null. */
 	public function findSkin(skinName:String):Skin {
-		if (skinName == null)
-			throw new SpineException("skinName cannot be null.");
-		for (skin in skins) {
-			if (skin.name == skinName)
-				return skin;
-		}
+		if (skinName == null) throw new SpineException("skinName cannot be null.");
+		for (skin in skins)
+			if (skin.name == skinName) return skin;
 		return null;
 	}
 
@@ -175,12 +175,9 @@ class SkeletonData {
 	 * @param eventName The name of the event to find.
 	 * @return May be null. */
 	public function findEvent(eventName:String):EventData {
-		if (eventName == null)
-			throw new SpineException("eventName cannot be null.");
-		for (eventData in events) {
-			if (eventData.name == eventName)
-				return eventData;
-		}
+		if (eventName == null) throw new SpineException("eventName cannot be null.");
+		for (eventData in events)
+			if (eventData.name == eventName) return eventData;
 		return null;
 	}
 
@@ -191,118 +188,23 @@ class SkeletonData {
 	 * @param animationName The name of the animation to find.
 	 * @return May be null. */
 	public function findAnimation(animationName:String):Animation {
-		if (animationName == null)
-			throw new SpineException("animationName cannot be null.");
-		for (animation in animations) {
-			if (animation.name == animationName)
-				return animation;
-		}
+		if (animationName == null) throw new SpineException("animationName cannot be null.");
+		for (animation in animations)
+			if (animation.name == animationName) return animation;
 		return null;
 	}
 
-	// --- IK constraints.
+	// --- Constraints.
 
-	/** Finds an IK constraint by comparing each IK constraint's name. It is more efficient to cache the results of this method
-	 * than to call it multiple times.
-	 * @param constraintName The name of the IK constraint to find.
-	 * @return May be null. */
-	public function findIkConstraint(constraintName:String):IkConstraintData {
-		if (constraintName == null)
-			throw new SpineException("constraintName cannot be null.");
-		for (ikConstraintData in ikConstraints) {
-			if (ikConstraintData.name == constraintName)
-				return ikConstraintData;
+	public function findConstraint<T:ConstraintData<Dynamic, Dynamic>>(constraintName:String, type:Class<T>):Null<T> {
+		if (constraintName == null) throw new SpineException("constraintName cannot be null.");
+		if (type == null) throw new SpineException("type cannot be null.");
+
+		for (constraint in constraints) {
+			if (Std.is(constraint, type) && constraint.name == constraintName)
+				return Std.downcast(constraint, type);
 		}
 		return null;
-	}
-
-	// --- Transform constraints.
-
-	/** Finds a transform constraint by comparing each transform constraint's name. It is more efficient to cache the results of
-	 * this method than to call it multiple times.
-	 * @param constraintName The name of the transform constraint to find.
-	 * @return May be null. */
-	public function findTransformConstraint(constraintName:String):TransformConstraintData {
-		if (constraintName == null)
-			throw new SpineException("constraintName cannot be null.");
-		for (transformConstraintData in transformConstraints) {
-			if (transformConstraintData.name == constraintName)
-				return transformConstraintData;
-		}
-		return null;
-	}
-
-	/** Finds the index of a transform constraint by comparing each transform constraint's name.
-	 * @param transformConstraintName The name of the transform constraint to find.
-	 * @return -1 if the transform constraint was not found. */
-	public function findTransformConstraintIndex(transformConstraintName:String):Int {
-		if (transformConstraintName == null)
-			throw new SpineException("transformConstraintName cannot be null.");
-		for (i in 0...transformConstraints.length) {
-			if (transformConstraints[i].name == transformConstraintName)
-				return i;
-		}
-		return -1;
-	}
-
-	// --- Path constraints.
-
-	/** Finds a path constraint by comparing each path constraint's name. It is more efficient to cache the results of this method
-	 * than to call it multiple times.
-	 * @param constraintName The name of the path constraint to find.
-	 * @return May be null. */
-	public function findPathConstraint(constraintName:String):PathConstraintData {
-		if (constraintName == null)
-			throw new SpineException("constraintName cannot be null.");
-		for (i in 0...pathConstraints.length) {
-			var constraint:PathConstraintData = pathConstraints[i];
-			if (constraint.name == constraintName)
-				return constraint;
-		}
-		return null;
-	}
-
-	/** Finds the index of a path constraint by comparing each path constraint's name.
-	 * @param pathConstraintName The name of the path constraint to find.
-	 * @return -1 if the path constraint was not found. */
-	public function findPathConstraintIndex(pathConstraintName:String):Int {
-		if (pathConstraintName == null)
-			throw new SpineException("pathConstraintName cannot be null.");
-		for (i in 0...pathConstraints.length) {
-			if (pathConstraints[i].name == pathConstraintName)
-				return i;
-		}
-		return -1;
-	}
-
-	// --- Physics constraints.
-
-	/** Finds a physics constraint by comparing each physics constraint's name. It is more efficient to cache the results of this
-	 * method than to call it multiple times.
-	 * @param constraintName The name of the physics constraint to find.
-	 * @return May be null. */
-	public function findPhysicsConstraint(constraintName:String):PhysicsConstraintData {
-		if (constraintName == null)
-			throw new SpineException("constraintName cannot be null.");
-		for (i in 0...physicsConstraints.length) {
-			var constraint:PhysicsConstraintData = physicsConstraints[i];
-			if (constraint.name == constraintName)
-				return constraint;
-		}
-		return null;
-	}
-	
-	/** Finds the index of a physics constraint by comparing each physics constraint's name.
-	 * @param constraintName The name of the physics constraint to find.
-	 * @return -1 if the physics constraint was not found. */
-	public function findPhysicsConstraintIndex(constraintName:String):Int {
-		if (constraintName == null)
-			throw new SpineException("constraintName cannot be null.");
-		for (i in 0...physicsConstraints.length) {
-			if (physicsConstraints[i].name == constraintName)
-				return i;
-		}
-		return -1;
 	}
 
 	public function toString():String {

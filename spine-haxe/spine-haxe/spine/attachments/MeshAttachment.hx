@@ -125,11 +125,12 @@ class MeshAttachment extends VertexAttachment implements HasTextureRegion {
 						i += 2;
 					}
 					return;
+				default:
+					u -= region.offsetX / textureWidth;
+					v -= (region.originalHeight - region.offsetY - region.height) / textureHeight;
+					width = region.originalWidth / textureWidth;
+					height = region.originalHeight / textureHeight;
 			}
-			u -= region.offsetX / textureWidth;
-			v -= (region.originalHeight - region.offsetY - region.height) / textureHeight;
-			width = region.originalWidth / textureWidth;
-			height = region.originalHeight / textureHeight;
 		} else if (region == null) {
 			u = v = 0;
 			width = height = 1;
@@ -194,10 +195,10 @@ class MeshAttachment extends VertexAttachment implements HasTextureRegion {
 	}
 
 	/** If the attachment has a sequence, the region may be changed. */
-	public override function computeWorldVertices(slot:Slot, start:Int, count:Int, worldVertices:Array<Float>, offset:Int, stride:Int):Void {
+	public override function computeWorldVertices(skeleton:Skeleton, slot:Slot, start:Int, count:Int, worldVertices:Array<Float>, offset:Int, stride:Int):Void {
 		if (sequence != null)
-			sequence.apply(slot, this);
-		super.computeWorldVertices(slot, start, count, worldVertices, offset, stride);
+			sequence.apply(slot.applied, this);
+		super.computeWorldVertices(skeleton, slot, start, count, worldVertices, offset, stride);
 	}
 
 	/** Returns a new mesh with the parentMesh set to this mesh's parent mesh, if any, else to this mesh. */

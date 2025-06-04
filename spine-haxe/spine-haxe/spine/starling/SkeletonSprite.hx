@@ -111,7 +111,7 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 
 		for (slot in drawOrder) {
 			if (!slot.bone.active) {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
 
@@ -178,13 +178,13 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 				clipper.clipStart(slot, clip);
 				continue;
 			} else {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
 
 			a = slot.color.a * attachmentColor.a;
 			if (a == 0) {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
 			rgb = Color.rgb(Std.int(r * slot.color.r * attachmentColor.r), Std.int(g * slot.color.g * attachmentColor.g),
@@ -230,7 +230,7 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 				painter.batchMesh(mesh);
 			}
 
-			clipper.clipEndWithSlot(slot);
+			clipper.clipEnd(slot);
 		}
 		painter.state.blendMode = originalBlendMode;
 		clipper.clipEnd();

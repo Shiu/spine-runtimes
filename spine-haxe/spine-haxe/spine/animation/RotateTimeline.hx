@@ -29,27 +29,14 @@
 
 package spine.animation;
 
-import spine.Bone;
-import spine.Event;
-import spine.Skeleton;
-
 /** Changes a bone's local rotation. */
-class RotateTimeline extends CurveTimeline1 implements BoneTimeline {
-	public var boneIndex:Int = 0;
-
+class RotateTimeline extends BoneTimeline1 {
 	public function new(frameCount:Int, bezierCount:Int, boneIndex:Int) {
-		super(frameCount, bezierCount, [Property.rotate + "|" + boneIndex]);
+		super(frameCount, bezierCount, boneIndex, Property.rotate);
 		this.boneIndex = boneIndex;
 	}
 
-	public function getBoneIndex():Int {
-		return boneIndex;
-	}
-
-	override public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var bone:Bone = skeleton.bones[boneIndex];
-		if (bone.active)
-			bone.rotation = getRelativeValue(time, alpha, blend, bone.rotation, bone.data.rotation);
+	public function apply1 (pose:BoneLocal, setup:BoneLocal, time:Float, alpha:Float, blend:MixBlend, direction:MixDirection):Void {
+		pose.rotation = getRelativeValue(time, alpha, blend, pose.rotation, setup.rotation);
 	}
 }

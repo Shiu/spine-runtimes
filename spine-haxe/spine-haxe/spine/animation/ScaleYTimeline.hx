@@ -29,28 +29,13 @@
 
 package spine.animation;
 
-import spine.Bone;
-import spine.Event;
-import spine.MathUtils;
-import spine.Skeleton;
-
 /** Changes a bone's local spine.Bone.scaleY. */
-class ScaleYTimeline extends CurveTimeline1 implements BoneTimeline {
-	private var boneIndex:Int = 0;
-
+class ScaleYTimeline extends BoneTimeline1 {
 	public function new(frameCount:Int, bezierCount:Int, boneIndex:Int) {
-		super(frameCount, bezierCount, [Property.scaleY + "|" + boneIndex]);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.scaleY);
 	}
 
-	public function getBoneIndex():Int {
-		return boneIndex;
-	}
-
-	override public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var bone:Bone = skeleton.bones[boneIndex];
-		if (bone.active) bone.scaleY = getScaleValue(time, alpha, blend, direction, bone.scaleY, bone.data.scaleY);
-
+	public function apply1 (pose:BoneLocal, setup:BoneLocal, time:Float, alpha:Float, blend:MixBlend, direction:MixDirection) {
+		pose.scaleY = getScaleValue(time, alpha, blend, direction, pose.scaleY, setup.scaleY);
 	}
 }

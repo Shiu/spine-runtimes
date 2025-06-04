@@ -30,41 +30,56 @@
 package spine;
 
 /** Stores the setup pose for a spine.PathConstraint.
- * 
+ *
  * @see https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User Guide */
-class PathConstraintData extends ConstraintData {
+class PathConstraintData extends ConstraintData<PathConstraint, PathConstraintPose> {
 	/** The bones that will be modified by this path constraint. */
-	private var _bones:Array<BoneData> = new Array<BoneData>();
+	public final bones:Array<BoneData> = new Array<BoneData>();
 
 	/** The slot whose path attachment will be used to constrain the bones. */
-	public var target:SlotData;
+	public var slot(default, set):SlotData;
+
 	/** The mode for positioning the first bone on the path. */
-	public var positionMode:PositionMode = PositionMode.fixed;
+	public var positionMode(default, set):PositionMode = PositionMode.fixed;
+
 	/** The mode for positioning the bones after the first bone on the path. */
-	public var spacingMode:SpacingMode = SpacingMode.fixed;
+	public var spacingMode(default, set):SpacingMode = SpacingMode.fixed;
+
 	/** The mode for adjusting the rotation of the bones. */
-	public var rotateMode:RotateMode = RotateMode.chain;
+	public var rotateMode(default, set):RotateMode = RotateMode.chain;
+
 	/** An offset added to the constrained bone rotation. */
 	public var offsetRotation:Float = 0;
-	/** The position along the path. */
-	public var position:Float = 0;
-	/** The spacing between bones. */
-	public var spacing:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
-	public var mixRotate:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
-	public var mixX:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
-	public var mixY:Float = 0;
 
-	public function new(name:String) {
-		super(name, 0, false);
+	public function new (name:String) {
+		super(name, new PathConstraintPose());
 	}
 
-	/** The bones that will be modified by this path constraint. */
-	public var bones(get, never):Array<BoneData>;
+	public function create (skeleton:Skeleton) {
+		return new PathConstraint(this, skeleton);
+	}
 
-	private function get_bones():Array<BoneData> {
-		return _bones;
+	public function set_slot (slot:SlotData):SlotData {
+		if (slot == null) throw new SpineException("slot cannot be null.");
+		this.slot = slot;
+		return slot;
+	}
+
+	public function set_positionMode (positionMode:PositionMode):PositionMode {
+		if (positionMode == null) throw new SpineException("positionMode cannot be null.");
+		this.positionMode = positionMode;
+		return positionMode;
+	}
+
+	public function set_spacingMode (spacingMode:SpacingMode):SpacingMode {
+		if (spacingMode == null) throw new SpineException("spacingMode cannot be null.");
+		this.spacingMode = spacingMode;
+		return spacingMode;
+	}
+
+	public function set_rotateMode (rotateMode:RotateMode):RotateMode {
+		if (rotateMode == null) throw new SpineException("rotateMode cannot be null.");
+		this.rotateMode = rotateMode;
+		return rotateMode;
 	}
 }

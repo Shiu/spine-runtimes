@@ -32,27 +32,29 @@ package spine;
 import spine.attachments.ClippingAttachment;
 
 class SkeletonClipping {
-	private var triangulator:Triangulator = new Triangulator();
-	private var clippingPolygon:Array<Float> = new Array<Float>();
-	private var clipOutput:Array<Float> = new Array<Float>();
+	private var triangulator = new Triangulator();
+	private var clippingPolygon = new Array<Float>();
+	private var clipOutput = new Array<Float>();
 
-	public var clippedVertices:Array<Float> = new Array<Float>();
-	public var clippedUvs:Array<Float> = new Array<Float>();
-	public var clippedTriangles:Array<Int> = new Array<Int>();
+	public var clippedVertices = new Array<Float>();
+	public var clippedUvs = new Array<Float>();
+	public var clippedTriangles = new Array<Int>();
 
-	private var scratch:Array<Float> = new Array<Float>();
+	private var scratch = new Array<Float>();
 
 	private var clipAttachment:ClippingAttachment;
 	private var clippingPolygons:Array<Array<Float>>;
 
 	public function new() {}
 
-	public function clipStart(slot:Slot, clip:ClippingAttachment):Int {
-		if (clipAttachment != null)
-			return 0;
+	public function clipStart(skeleton:Skeleton, slot:Slot, clip:ClippingAttachment):Int {
+		if (clipAttachment != null) return 0;
+		var n = clip.worldVerticesLength;
+		if (n < 6) return 0;
 		clipAttachment = clip;
-		clippingPolygon.resize(clip.worldVerticesLength);
-		clip.computeWorldVertices(slot, 0, clippingPolygon.length, clippingPolygon, 0, 2);
+
+		clippingPolygon.resize(n);
+		clip.computeWorldVertices(skeleton, slot, 0, n, clippingPolygon, 0, 2);
 		SkeletonClipping.makeClockwise(clippingPolygon);
 		clippingPolygons = triangulator.decompose(clippingPolygon, triangulator.triangulate(clippingPolygon));
 		for (polygon in clippingPolygons) {
@@ -63,14 +65,8 @@ class SkeletonClipping {
 		return clippingPolygons.length;
 	}
 
-	public function clipEndWithSlot(slot:Slot):Void {
-		if (clipAttachment != null && clipAttachment.endSlot == slot.data)
-			clipEnd();
-	}
-
-	public function clipEnd():Void {
-		if (clipAttachment == null)
-			return;
+	public function clipEnd(?slot:Slot):Void {
+		if (clipAttachment == null || (slot != null && clipAttachment.endSlot != slot.data)) return;
 		clipAttachment = null;
 		clippingPolygons = null;
 		clippedVertices.resize(0);
@@ -84,36 +80,34 @@ class SkeletonClipping {
 		return clipAttachment != null;
 	}
 
-	private function clipTrianglesNoRender(vertices:Array<Float>, triangles:Array<Int>, trianglesLength:Float):Void {
+	private function clipTrianglesNoRender(vertices:Array<Float>, triangles:Array<Int>, trianglesLength:Float):Bool {
 		var polygonsCount:Int = clippingPolygons.length;
 		var index:Int = 0;
 		clippedVertices.resize(0);
 		clippedTriangles.resize(0);
 		var i:Int = 0;
+		var clipOutputItems:Array<Float> = null;
 		while (i < trianglesLength) {
-			var vertexOffset:Int = triangles[i] << 1;
-			var x1:Float = vertices[vertexOffset],
-				y1:Float = vertices[vertexOffset + 1];
+			var v:Int = triangles[i] << 1;
+			var x1:Float = vertices[v], y1:Float = vertices[v + 1];
 
-			vertexOffset = triangles[i + 1] << 1;
-			var x2:Float = vertices[vertexOffset],
-				y2:Float = vertices[vertexOffset + 1];
+			v = triangles[i + 1] << 1;
+			var x2:Float = vertices[v], y2:Float = vertices[v + 1];
 
-			vertexOffset = triangles[i + 2] << 1;
-			var x3:Float = vertices[vertexOffset],
-				y3:Float = vertices[vertexOffset + 1];
+			v = triangles[i + 2] << 1;
+			var x3:Float = vertices[v], y3:Float = vertices[v + 1];
 
 			for (p in 0...polygonsCount) {
 				var s:Int = clippedVertices.length;
 				var clippedVerticesItems:Array<Float>;
 				var clippedTrianglesItems:Array<Int>;
 				if (this.clip(x1, y1, x2, y2, x3, y3, clippingPolygons[p], clipOutput)) {
+					clipOutputItems = clipOutput;
 					var clipOutputLength:Int = clipOutput.length;
 					if (clipOutputLength == 0)
 						continue;
 
 					var clipOutputCount:Int = clipOutputLength >> 1;
-					var clipOutputItems:Array<Float> = clipOutput;
 					clippedVerticesItems = clippedVertices;
 					clippedVerticesItems.resize(s + clipOutputLength);
 					var ii:Int = 0;
@@ -160,12 +154,12 @@ class SkeletonClipping {
 
 			i += 3;
 		}
+		return clipOutputItems != null;
 	}
 
-	public function clipTriangles(vertices:Array<Float>, triangles:Array<Int>, trianglesLength:Float, uvs:Array<Float> = null):Void {
+	public function clipTriangles(vertices:Array<Float>, triangles:Array<Int>, trianglesLength:Float, uvs:Array<Float> = null, stride:Int = 0):Bool {
 		if (uvs == null) {
-			clipTrianglesNoRender(vertices, triangles, trianglesLength);
-			return;
+			return clipTrianglesNoRender(vertices, triangles, trianglesLength);
 		}
 
 		var polygonsCount:Int = clippingPolygons.length;
@@ -174,21 +168,19 @@ class SkeletonClipping {
 		clippedUvs.resize(0);
 		clippedTriangles.resize(0);
 		var i:Int = 0;
+		var clipOutputItems:Array<Float> = null;
 		while (i < trianglesLength) {
-			var vertexOffset:Int = triangles[i] << 1;
-			var x1:Float = vertices[vertexOffset],
-				y1:Float = vertices[vertexOffset + 1];
-			var u1:Float = uvs[vertexOffset], v1:Float = uvs[vertexOffset + 1];
+			var t:Int = triangles[i];
+			var u1:Float = uvs[t << 1], v1:Float = uvs[(t << 1) + 1];
+			var x1:Float = vertices[t * stride], y1:Float = vertices[t * stride + 1];
 
-			vertexOffset = triangles[i + 1] << 1;
-			var x2:Float = vertices[vertexOffset],
-				y2:Float = vertices[vertexOffset + 1];
-			var u2:Float = uvs[vertexOffset], v2:Float = uvs[vertexOffset + 1];
+			t = triangles[i + 1];
+			var u2:Float = uvs[t << 1], v2:Float = uvs[(t << 1) + 1];
+			var x2:Float = vertices[t * stride], y2:Float = vertices[t * stride + 1];
 
-			vertexOffset = triangles[i + 2] << 1;
-			var x3:Float = vertices[vertexOffset],
-				y3:Float = vertices[vertexOffset + 1];
-			var u3:Float = uvs[vertexOffset], v3:Float = uvs[vertexOffset + 1];
+			t = triangles[i + 2];
+			var u3:Float = uvs[t << 1], v3:Float = uvs[(t << 1) + 1];
+			var x3:Float = vertices[t * stride], y3:Float = vertices[t * stride + 1];
 
 			for (p in 0...polygonsCount) {
 				var s:Int = clippedVertices.length;
@@ -196,6 +188,7 @@ class SkeletonClipping {
 				var clippedUvsItems:Array<Float>;
 				var clippedTrianglesItems:Array<Int>;
 				if (this.clip(x1, y1, x2, y2, x3, y3, clippingPolygons[p], clipOutput)) {
+					clipOutputItems = clipOutput;
 					var clipOutputLength:Int = clipOutput.length;
 					if (clipOutputLength == 0)
 						continue;
@@ -206,9 +199,8 @@ class SkeletonClipping {
 					var d:Float = 1 / (d0 * d2 + d1 * (y1 - y3));
 
 					var clipOutputCount:Int = clipOutputLength >> 1;
-					var clipOutputItems:Array<Float> = clipOutput;
 					clippedVerticesItems = clippedVertices;
-					clippedVerticesItems.resize(s + clipOutputLength);
+					clippedVerticesItems.resize(s + clipOutputLength * stride);
 					clippedUvsItems = clippedUvs;
 					clippedUvsItems.resize(s + clipOutputLength);
 
@@ -242,7 +234,7 @@ class SkeletonClipping {
 					index += clipOutputCount + 1;
 				} else {
 					clippedVerticesItems = clippedVertices;
-					clippedVerticesItems.resize(s + 3 * 2);
+					clippedVerticesItems.resize(s + 3 * stride);
 					clippedVerticesItems[s] = x1;
 					clippedVerticesItems[s + 1] = y1;
 					clippedVerticesItems[s + 2] = x2;
@@ -272,13 +264,14 @@ class SkeletonClipping {
 
 			i += 3;
 		}
+		return clipOutputItems != null;
 	}
 
 	/**
 	 * Clips the input triangle against the convex, clockwise clipping area. If the triangle lies entirely within the clipping
 	 * area, false is returned. The clipping area must duplicate the first vertex at the end of the vertices list.
 	 */
-	public function clip(x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float, clippingArea:Array<Float>, output:Array<Float>):Bool {
+	private function clip(x1:Float, y1:Float, x2:Float, y2:Float, x3:Float, y3:Float, clippingArea:Array<Float>, output:Array<Float>):Bool {
 		var originalOutput:Array<Float> = output;
 		var clipped:Bool = false;
 

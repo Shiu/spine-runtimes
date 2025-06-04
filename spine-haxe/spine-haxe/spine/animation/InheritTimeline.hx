@@ -41,16 +41,16 @@ class InheritTimeline extends Timeline implements BoneTimeline {
 	private var boneIndex:Int = 0;
 
 	public function new(frameCount:Int, boneIndex:Int) {
-		super(frameCount, [Property.inherit + "|" + boneIndex]);
+		super(frameCount, Property.inherit + "|" + boneIndex);
 		this.boneIndex = boneIndex;
+	}
+
+	public function getBoneIndex () {
+		return boneIndex;
 	}
 
 	public override function getFrameEntries():Int {
 		return ENTRIES;
-	}
-
-	public function getBoneIndex():Int {
-		return boneIndex;
 	}
 
 	/** Sets the transform mode for the specified frame.
@@ -62,21 +62,22 @@ class InheritTimeline extends Timeline implements BoneTimeline {
 		frames[frame + INHERIT] = inherit.ordinal;
 	}
 
-	override public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool):Void {
+
 		var bone:Bone = skeleton.bones[boneIndex];
 		if (!bone.active) return;
+		var pose = appliedPose ? bone.applied : bone.pose;
 
 		if (direction == MixDirection.mixOut) {
-			if (blend == MixBlend.setup) bone.inherit = bone.data.inherit;
+			if (blend == MixBlend.setup) pose.inherit = bone.data.setup.inherit;
 			return;
 		}
 
 		var frames:Array<Float> = frames;
 		if (time < frames[0]) {
-			if (blend == MixBlend.setup || blend == MixBlend.first) bone.inherit = bone.data.inherit;
-			return;
-		}
-		bone.inherit = Inherit.values[Std.int(frames[Timeline.search(frames, time, ENTRIES) + INHERIT])];
+			if (blend == MixBlend.setup || blend == MixBlend.first) pose.inherit = bone.data.setup.inherit;
+		} else
+			pose.inherit = Inherit.values[Std.int(frames[Timeline.search(frames, time, ENTRIES) + INHERIT])];
 	}
 }

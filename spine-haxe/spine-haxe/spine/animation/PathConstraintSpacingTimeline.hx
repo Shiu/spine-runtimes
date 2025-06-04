@@ -34,19 +34,18 @@ import spine.PathConstraint;
 import spine.Skeleton;
 
 /** Changes a path constraint's PathConstraint#spacing. */
-class PathConstraintSpacingTimeline extends CurveTimeline1 {
-	/** The index of the path constraint in Skeleton#pathConstraints that will be changed when this timeline is
-	 * applied. */
-	public var constraintIndex:Int = 0;
-
-	public function new(frameCount:Int, bezierCount:Int, pathConstraintIndex:Int) {
-		super(frameCount, bezierCount, [Property.pathConstraintSpacing + "|" + pathConstraintIndex]);
-		this.constraintIndex = pathConstraintIndex;
+class PathConstraintSpacingTimeline extends ConstraintTimeline1 {
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+		super(frameCount, bezierCount, constraintIndex, Property.pathConstraintSpacing);
 	}
 
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var constraint:PathConstraint = skeleton.pathConstraints[constraintIndex];
-		if (constraint.active) constraint.spacing = getAbsoluteValue(time, alpha, blend, constraint.spacing, constraint.data.spacing);
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
+
+		var constraint = cast(skeleton.constraints[constraintIndex], PathConstraint);
+		if (constraint.active) {
+			var pose = appliedPose ? constraint.applied : constraint.pose;
+			pose.spacing = getAbsoluteValue(time, alpha, blend, pose.spacing, constraint.data.setup.spacing);
+		}
 	}
 }

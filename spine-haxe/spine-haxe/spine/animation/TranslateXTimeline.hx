@@ -34,21 +34,13 @@ import spine.Event;
 import spine.Skeleton;
 
 /** Changes a bone's local spine.Bone.x. */
-class TranslateXTimeline extends CurveTimeline1 implements BoneTimeline {
-	public var boneIndex:Int = 0;
-
+class TranslateXTimeline extends BoneTimeline1 {
 	public function new(frameCount:Int, bezierCount:Int, boneIndex:Int) {
-		super(frameCount, bezierCount, [Property.x + "|" + boneIndex]);
+		super(frameCount, bezierCount, boneIndex, Property.x);
 		this.boneIndex = boneIndex;
 	}
 
-	public function getBoneIndex():Int {
-		return boneIndex;
-	}
-
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var bone:Bone = skeleton.bones[boneIndex];
-		if (bone.active) bone.x = getRelativeValue(time, alpha, blend, bone.x, bone.data.x);
+	public function apply1 (pose:BoneLocal, setup:BoneLocal, time:Float, alpha:Float, blend:MixBlend, direction:MixDirection) {
+		pose.x = getRelativeValue(time, alpha, blend, pose.x, setup.x);
 	}
 }

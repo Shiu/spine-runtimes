@@ -29,22 +29,18 @@
 
 package spine.animation;
 
-/** Changes a physics constraint's spine.PhysicsConstraint.wind. */
+/** Changes a physics constraint's spine.PhysicsConstraintPose.wind. */
 class PhysicsConstraintWindTimeline extends PhysicsConstraintTimeline {
-	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintWind);
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintWind);
 	}
 
-	public function setup (constraint: PhysicsConstraint):Float {
-		return constraint.data.wind;
+	public function get (pose: PhysicsConstraintPose):Float {
+		return pose.wind;
 	}
 
-	public function get (constraint: PhysicsConstraint):Float {
-		return constraint.wind;
-	}
-
-	public function set (constraint: PhysicsConstraint, value:Float):Void {
-		constraint.wind = value;
+	public function set (pose: PhysicsConstraintPose, value:Float):Void {
+		pose.wind = value;
 	}
 
 	public function global (constraint: PhysicsConstraintData):Bool {

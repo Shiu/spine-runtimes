@@ -29,30 +29,24 @@
 
 package spine.animation;
 
-/** The base class for a spine.animation.CurveTimeline which sets two properties. */
-class CurveTimeline2 extends CurveTimeline {
-	private static inline var ENTRIES:Int = 3;
-	private static inline var VALUE1:Int = 1;
-	private static inline var VALUE2:Int = 2;
+abstract class SlotCurveTimeline extends CurveTimeline implements SlotTimeline {
+	public final slotIndex:Int;
 
-	/** @param frameCount The number of frames in the timeline.
-	 * @param bezierCount The maximum number of Bezier curves. See spine.animation.CurveTimeline.shrink().
-	 * @param propertyIds Array of unique identifiers for the properties the timeline modifies. */
-	public function new(frameCount:Int, bezierCount:Int, propertyIds:Array<String>) {
-		super(frameCount, bezierCount, propertyIds);
+	public function new (frameCount:Int, bezierCount:Int, slotIndex:Int, propertyIds:...String) {
+		super(frameCount, bezierCount, ...propertyIds);
+		this.slotIndex = slotIndex;
 	}
 
-	public override function getFrameEntries():Int {
-		return ENTRIES;
+	public function getSlotIndex () {
+		return slotIndex;
 	}
 
-	/** Sets the time and values for the specified frame.
-	 * @param frame Between 0 and frameCount, inclusive.
-	 * @param time The frame time in seconds. */
-	public function setFrame(frame:Int, time:Float, value1:Float, value2:Float):Void {
-		frame *= ENTRIES;
-		frames[frame] = time;
-		frames[frame + VALUE1] = value1;
-		frames[frame + VALUE2] = value2;
+	public function apply (skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
+		direction:MixDirection, appliedPose:Bool) {
+
+		var slot = skeleton.slots[slotIndex];
+		if (slot.bone.active) apply1(slot, appliedPose ? slot.applied : slot.pose, time, alpha, blend);
 	}
+
+	abstract function apply1 (slot:Slot, pose:SlotPose, time:Float, alpha:Float, blend:MixBlend):Void;
 }

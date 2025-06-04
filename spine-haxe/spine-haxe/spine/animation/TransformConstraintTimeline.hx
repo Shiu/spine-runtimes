@@ -29,15 +29,10 @@
 
 package spine.animation;
 
-import spine.Event;
-import spine.Skeleton;
-import spine.TransformConstraint;
-import spine.TransformConstraintData;
-
 /** Changes a transform constraint's spine.TransformConstraint.mixRotate, spine.TransformConstraint.mixX,
  * spine.TransformConstraint.mixY, spine.TransformConstraint.mixScaleX,
  * spine.TransformConstraint.mixScaleY, and spine.TransformConstraint.mixShearY. */
-class TransformConstraintTimeline extends CurveTimeline {
+class TransformConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
 	static public inline var ENTRIES:Int = 7;
 	private static inline var ROTATE:Int = 1;
 	private static inline var X:Int = 2;
@@ -50,13 +45,17 @@ class TransformConstraintTimeline extends CurveTimeline {
 	 * timeline is applied. */
 	public var constraintIndex:Int = 0;
 
-	public function new(frameCount:Int, bezierCount:Int, transformConstraintIndex:Int) {
-		super(frameCount, bezierCount, [Property.transformConstraint + "|" + transformConstraintIndex]);
-		this.constraintIndex = transformConstraintIndex;
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+		super(frameCount, bezierCount, Property.transformConstraint + "|" + constraintIndex);
+		this.constraintIndex = constraintIndex;
 	}
 
 	public override function getFrameEntries():Int {
 		return ENTRIES;
+	}
+
+	public function getConstraintIndex () {
+		return constraintIndex;
 	}
 
 	/** Sets the time, rotate mix, translate mix, scale mix, and shear mix for the specified frame.
@@ -73,30 +72,30 @@ class TransformConstraintTimeline extends CurveTimeline {
 		frames[frame + SHEARY] = mixShearY;
 	}
 
-	override public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var constraint:TransformConstraint = skeleton.transformConstraints[constraintIndex];
-		if (!constraint.active)
-			return;
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
 
-		var data:TransformConstraintData;
+		var constraint = cast(skeleton.constraints[constraintIndex], TransformConstraint);
+		if (!constraint.active) return;
+		var pose = appliedPose ? constraint.applied : constraint.pose;
+
 		if (time < frames[0]) {
-			data = constraint.data;
+			var setup = constraint.data.setup;
 			switch (blend) {
 				case MixBlend.setup:
-					constraint.mixRotate = data.mixRotate;
-					constraint.mixX = data.mixX;
-					constraint.mixY = data.mixY;
-					constraint.mixScaleX = data.mixScaleX;
-					constraint.mixScaleY = data.mixScaleY;
-					constraint.mixShearY = data.mixShearY;
+					pose.mixRotate = setup.mixRotate;
+					pose.mixX = setup.mixX;
+					pose.mixY = setup.mixY;
+					pose.mixScaleX = setup.mixScaleX;
+					pose.mixScaleY = setup.mixScaleY;
+					pose.mixShearY = setup.mixShearY;
 				case MixBlend.first:
-					constraint.mixRotate += (data.mixRotate - constraint.mixRotate) * alpha;
-					constraint.mixX += (data.mixX - constraint.mixX) * alpha;
-					constraint.mixY += (data.mixY - constraint.mixY) * alpha;
-					constraint.mixScaleX += (data.mixScaleX - constraint.mixScaleX) * alpha;
-					constraint.mixScaleY += (data.mixScaleY - constraint.mixScaleY) * alpha;
-					constraint.mixShearY += (data.mixShearY - constraint.mixShearY) * alpha;
+					pose.mixRotate += (setup.mixRotate - pose.mixRotate) * alpha;
+					pose.mixX += (setup.mixX - pose.mixX) * alpha;
+					pose.mixY += (setup.mixY - pose.mixY) * alpha;
+					pose.mixScaleX += (setup.mixScaleX - pose.mixScaleX) * alpha;
+					pose.mixScaleY += (setup.mixScaleY - pose.mixScaleY) * alpha;
+					pose.mixShearY += (setup.mixShearY - pose.mixShearY) * alpha;
 			}
 			return;
 		}
@@ -136,21 +135,29 @@ class TransformConstraintTimeline extends CurveTimeline {
 				shearY = getBezierValue(time, i, SHEARY, curveType + CurveTimeline.BEZIER_SIZE * 5 - CurveTimeline.BEZIER);
 		}
 
-		if (blend == MixBlend.setup) {
-			data = constraint.data;
-			constraint.mixRotate = data.mixRotate + (rotate - data.mixRotate) * alpha;
-			constraint.mixX = data.mixX + (x - data.mixX) * alpha;
-			constraint.mixY = data.mixY + (y - data.mixY) * alpha;
-			constraint.mixScaleX = data.mixScaleX + (scaleX - data.mixScaleX) * alpha;
-			constraint.mixScaleY = data.mixScaleY + (scaleY - data.mixScaleY) * alpha;
-			constraint.mixShearY = data.mixShearY + (shearY - data.mixShearY) * alpha;
-		} else {
-			constraint.mixRotate += (rotate - constraint.mixRotate) * alpha;
-			constraint.mixX += (x - constraint.mixX) * alpha;
-			constraint.mixY += (y - constraint.mixY) * alpha;
-			constraint.mixScaleX += (scaleX - constraint.mixScaleX) * alpha;
-			constraint.mixScaleY += (scaleY - constraint.mixScaleY) * alpha;
-			constraint.mixShearY += (shearY - constraint.mixShearY) * alpha;
+		switch (blend) {
+			case MixBlend.setup:
+				var setup = constraint.data.setup;
+				pose.mixRotate = setup.mixRotate + (rotate - setup.mixRotate) * alpha;
+				pose.mixX = setup.mixX + (x - setup.mixX) * alpha;
+				pose.mixY = setup.mixY + (y - setup.mixY) * alpha;
+				pose.mixScaleX = setup.mixScaleX + (scaleX - setup.mixScaleX) * alpha;
+				pose.mixScaleY = setup.mixScaleY + (scaleY - setup.mixScaleY) * alpha;
+				pose.mixShearY = setup.mixShearY + (shearY - setup.mixShearY) * alpha;
+			case MixBlend.first, MixBlend.replace:
+				pose.mixRotate += (rotate - pose.mixRotate) * alpha;
+				pose.mixX += (x - pose.mixX) * alpha;
+				pose.mixY += (y - pose.mixY) * alpha;
+				pose.mixScaleX += (scaleX - pose.mixScaleX) * alpha;
+				pose.mixScaleY += (scaleY - pose.mixScaleY) * alpha;
+				pose.mixShearY += (shearY - pose.mixShearY) * alpha;
+			case MixBlend.add:
+				pose.mixRotate += rotate * alpha;
+				pose.mixX += x * alpha;
+				pose.mixY += y * alpha;
+				pose.mixScaleX += scaleX * alpha;
+				pose.mixScaleY += scaleY * alpha;
+				pose.mixShearY += shearY * alpha;
 		}
 	}
 }

@@ -34,16 +34,17 @@ import spine.Event;
 import spine.Skeleton;
 
 /** Resets a physics constraint when specific animation times are reached. */
-class PhysicsConstraintResetTimeline extends Timeline {
-	/** The index of the physics constraint in Skeleton#physicsConstraints that will be reset when this timeline is
-	 * applied, or -1 if all physics constraints in the skeleton will be reset. */
-	public var constraintIndex:Int = 0;
+class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimeline {
+	public var constraintIndex:Int;
 
-	/** @param physicsConstraintIndex -1 for all physics constraints in the skeleton. */
-	public function new(frameCount:Int, physicsConstraintIndex:Int) {
-		propertyIds = [Std.string(Property.physicsConstraintReset)];
-		super(frameCount, propertyIds);
-		constraintIndex = physicsConstraintIndex;
+	/** @param constraintIndex -1 for all physics constraints in the skeleton. */
+	public function new(frameCount:Int, constraintIndex:Int) {
+		super(frameCount, Property.physicsConstraintReset);
+		this.constraintIndex = constraintIndex;
+	}
+
+	public function getConstraintIndex () {
+		return constraintIndex;
 	}
 
 	public override function getFrameCount():Int {
@@ -57,31 +58,30 @@ class PhysicsConstraintResetTimeline extends Timeline {
 	}
 
 	/** Resets the physics constraint when frames > lastTime and <= time. */
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, firedEvents:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
+
 		var constraint:PhysicsConstraint = null;
-		if (this.constraintIndex != -1) {
-			constraint = skeleton.physicsConstraints[constraintIndex];
+		if (constraintIndex != -1) {
+			constraint = cast(skeleton.constraints[constraintIndex], PhysicsConstraint);
 			if (!constraint.active) return;
 		}
 
 		var frames:Array<Float> = this.frames;
-		if (lastTime > time) // Apply events after lastTime for looped animations.
-		{
-			apply(skeleton, lastTime, 2147483647, [], alpha, blend, direction);
+
+		if (lastTime > time) { // Apply events after lastTime for looped animations.
+			apply(skeleton, lastTime, 2147483647, [], alpha, blend, direction, appliedPose);
 			lastTime = -1;
 		} else if (lastTime >= frames[frames.length - 1]) // Last time is after last frame.
-		{
 			return;
-		}
 		if (time < frames[0]) return;
 
 		if (lastTime < frames[0] || time >= frames[Timeline.search1(frames, lastTime) + 1]) {
 			if (constraint != null)
-				constraint.reset();
+				constraint.reset(skeleton);
 			else {
-				for (constraint in skeleton.physicsConstraints) {
-					if (constraint.active) constraint.reset();
+				for (constraint in skeleton.physics) {
+					if (constraint.active) constraint.reset(skeleton);
 				}
 			}
 		}

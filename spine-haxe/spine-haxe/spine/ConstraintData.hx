@@ -30,24 +30,14 @@
 package spine;
 
 /** The base class for all constraint datas. */
-class ConstraintData {
-	/** The constraint's name, which is unique across all constraints in the skeleton of the same type. */
-	public var name:String;
-	/** The ordinal of this constraint for the order a skeleton's constraints will be applied by
-	 * spine.Skeleton.updateWorldTransform(). */
-	public var order:Int = 0;
-	/** When true, spine.Skeleton.updateWorldTransform() only updates this constraint if the spine.Skeleton.getSkin()
-	 * contains this constraint.
-	 * @see spine.Skin.getConstraints() */
-	public var skinRequired:Bool = false;
+abstract class ConstraintData< //
+	T:Constraint<Dynamic, Dynamic, Dynamic>, //
+	P:Pose<Any>> //
+	extends PosedData<P> {
 
-	function new(name:String, order:Int, skinRequired:Bool) {
-		this.name = name;
-		this.order = order;
-		this.skinRequired = skinRequired;
+	function new(name:String, setup:P) {
+		super(name, setup);
 	}
 
-	public function toString():String {
-		return name;
-	}
+	public abstract function create (skeleton:Skeleton):T;
 }

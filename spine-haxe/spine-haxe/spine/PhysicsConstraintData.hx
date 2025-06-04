@@ -30,36 +30,42 @@
 package spine;
 
 /** Stores the setup pose for a PhysicsConstraint.
- * 
+ *
  * @see https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide */
-class PhysicsConstraintData extends ConstraintData {
+class PhysicsConstraintData extends ConstraintData<PhysicsConstraint, PhysicsConstraintPose> {
+
 	/** The bone constrained by this physics constraint. */
 	public var bone:BoneData;
-	public var x:Float = 0;
-	public var y:Float = 0;
-	public var rotate:Float = 0;
-	public var scaleX:Float = 0;
-	public var shearX:Float = 0;
-	public var limit:Float = 0;
-	public var step:Float = 0;
-	public var inertia:Float = 0;
-	public var strength:Float = 0;
-	public var damping:Float = 0;
-	public var massInverse:Float = 0;
-	public var wind:Float = 0;
-	public var gravity:Float = 0;
+
+	public var x = 0.;
+	public var y = 0.;
+	public var rotate = 0.;
+	public var scaleX = 0.;
+	public var shearX = 0.;
+	public var limit = 0.;
+	public var step = 0.;
+	public var inertia = 0.;
+	public var strength = 0.;
+	public var damping = 0.;
+	public var massInverse = 0.;
+	public var wind = 0.;
+	public var gravity = 0.;
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
-	public var mix:Float = 0;
-	public var inertiaGlobal:Bool = false;
-	public var strengthGlobal:Bool = false;
-	public var dampingGlobal:Bool = false;
-	public var massGlobal:Bool = false;
-	public var windGlobal:Bool = false;
-	public var gravityGlobal:Bool = false;
-	public var mixGlobal:Bool = false;
-	
+	public var mix = 0.;
+	public var inertiaGlobal = false;
+	public var strengthGlobal = false;
+	public var dampingGlobal = false;
+	public var massGlobal = false;
+	public var windGlobal = false;
+	public var gravityGlobal = false;
+	public var mixGlobal = false;
+
 	public function new(name:String) {
-		super(name, 0, false);
+		super(name, new PhysicsConstraintPose());
+	}
+
+	public function create (skeleton:Skeleton) {
+		return new PhysicsConstraint(this, skeleton);
 	}
 
 }

@@ -34,7 +34,7 @@ import spine.Skeleton;
 import spine.Slot;
 
 /** Base class for an attachment with vertices that are transformed by one or more bones and can be deformed by a slot's
- * spine.Slot.deform. */
+ * spine.SlotPose.deform. */
 class VertexAttachment extends Attachment {
 	private static var nextID:Int = 0;
 
@@ -42,15 +42,19 @@ class VertexAttachment extends Attachment {
 	 * the vertex followed by that many bone indices, which is the index of the bone in spine.Skeleton.bones. Will be null
 	 * if this attachment has no weights. */
 	public var bones:Array<Int>;
+
 	/** The vertex positions in the bone's coordinate system. For a non-weighted attachment, the values are `x,y`
 	 * entries for each vertex. For a weighted attachment, the values are `x,y,weight` entries for each bone affecting
 	 * each vertex. */
 	public var vertices = new Array<Float>();
+
 	/** The maximum number of world vertex values that can be output by
 	 * computeWorldVertices() using the `count` parameter. */
 	public var worldVerticesLength:Int = 0;
+
 	/** Returns a unique ID for this attachment. */
 	public var id:Int = nextID++;
+
 	/** Timelines for the timeline attachment are also applied to this attachment.
 	 * May be null if no attachment-specific timelines should be applied. */
 	public var timelineAttachment:VertexAttachment;
@@ -60,7 +64,7 @@ class VertexAttachment extends Attachment {
 		timelineAttachment = this;
 	}
 
-	/** Transforms the attachment's local vertices to world coordinates. If the slot's spine.Slot.deform is
+	/** Transforms the attachment's local vertices to world coordinates. If the slot's spine.SlotPose.deform is
 	 * not empty, it is used to deform the vertices.
 	 *
 	 * @see https://esotericsoftware.com/spine-runtime-skeletons#World-transforms World transforms in the Spine Runtimes Guide
@@ -70,61 +74,42 @@ class VertexAttachment extends Attachment {
 	 *           `stride` / 2.
 	 * @param offset The `worldVertices` index to begin writing values.
 	 * @param stride The number of `worldVertices` entries between the value pairs written. */
-	public function computeWorldVertices(slot:Slot, start:Int, count:Int, worldVertices:Array<Float>, offset:Int, stride:Int):Void {
+	public function computeWorldVertices(skeleton:Skeleton, slot:Slot, start:Int, count:Int, worldVertices:Array<Float>, offset:Int, stride:Int):Void {
 		count = offset + (count >> 1) * stride;
-		var skeleton:Skeleton = slot.skeleton;
-		var deform:Array<Float> = slot.deform;
-
-		var v:Int, w:Int, n:Int, i:Int, skip:Int, b:Int, f:Int;
-		var vx:Float, vy:Float;
-		var wx:Float, wy:Float;
-		var bone:Bone;
-
+		var deform:Array<Float> = slot.applied.deform;
+		var vertices = vertices;
 		if (bones == null) {
-			if (deform.length > 0)
-				vertices = deform;
-			bone = slot.bone;
-			var x:Float = bone.worldX;
-			var y:Float = bone.worldY;
-			var a:Float = bone.a,
-				bb:Float = bone.b,
-				c:Float = bone.c,
-				d:Float = bone.d;
-			v = start;
-			w = offset;
+			if (deform.length > 0) vertices = deform;
+			var bone = slot.bone.applied;
+			var x = bone.worldX, y = bone.worldY;
+			var a = bone.a, b = bone.b, c = bone.c, d = bone.d;
+			var v = start, w = offset;
 			while (w < count) {
-				vx = vertices[v];
-				vy = vertices[v + 1];
-				worldVertices[w] = vx * a + vy * bb + x;
+				var vx = vertices[v], vy = vertices[v + 1];
+				worldVertices[w] = vx * a + vy * b + x;
 				worldVertices[w + 1] = vx * c + vy * d + y;
 				v += 2;
 				w += stride;
 			}
 			return;
 		}
-		v = 0;
-		skip = 0;
-		i = 0;
+		var v = 0, skip = 0, i = 0;
 		while (i < start) {
-			n = bones[v];
+			var n = bones[v];
 			v += n + 1;
 			skip += n;
 			i += 2;
 		}
-		var skeletonBones:Array<Bone> = skeleton.bones;
+		var skeletonBones = skeleton.bones;
 		if (deform.length == 0) {
-			w = offset;
-			b = skip * 3;
+			var w = offset, b = skip * 3;
 			while (w < count) {
-				wx = 0;
-				wy = 0;
-				n = bones[v++];
+				var wx = 0., wy = 0.;
+				var n = bones[v++];
 				n += v;
 				while (v < n) {
-					bone = skeletonBones[bones[v]];
-					vx = vertices[b];
-					vy = vertices[b + 1];
-					var weight:Float = vertices[b + 2];
+					var bone = skeletonBones[bones[v]].applied;
+					var vx = vertices[b], vy = vertices[b + 1], weight = vertices[b + 2];
 					wx += (vx * bone.a + vy * bone.b + bone.worldX) * weight;
 					wy += (vx * bone.c + vy * bone.d + bone.worldY) * weight;
 					v++;
@@ -135,19 +120,14 @@ class VertexAttachment extends Attachment {
 				w += stride;
 			}
 		} else {
-			w = offset;
-			b = skip * 3;
-			f = skip << 1;
+			var w = offset, b = skip * 3, f = skip << 1;
 			while (w < count) {
-				wx = 0;
-				wy = 0;
-				n = bones[v++];
+				var wx = 0., wy = 0.;
+				var n = bones[v++];
 				n += v;
 				while (v < n) {
-					bone = skeletonBones[bones[v]];
-					vx = vertices[b] + deform[f];
-					vy = vertices[b + 1] + deform[f + 1];
-					var weight = vertices[b + 2];
+					var bone = skeletonBones[bones[v]].applied;
+					var vx = vertices[b] + deform[f], vy = vertices[b + 1] + deform[f + 1], weight = vertices[b + 2];
 					wx += (vx * bone.a + vy * bone.b + bone.worldX) * weight;
 					wy += (vx * bone.c + vy * bone.d + bone.worldY) * weight;
 					v++;

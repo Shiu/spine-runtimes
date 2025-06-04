@@ -34,31 +34,35 @@ import spine.attachments.Attachment;
 import spine.attachments.MeshAttachment;
 
 /** Stores attachments by slot index and attachment name.
- * 
+ *
  * See spine.SkeletonData.defaultSkin, spine.Skeleton.skin, and
  * Runtime skins at https://esotericsoftware.com/spine-runtime-skins in the Spine Runtimes Guide. */
 class Skin {
-	private var _name:String;
-	private var _attachments:Array<StringMap<Attachment>> = new Array<StringMap<Attachment>>();
-	private var _bones:Array<BoneData> = new Array<BoneData>();
-	private var _constraints:Array<ConstraintData> = new Array<ConstraintData>();
-	private var _color:Color = new Color(0.99607843, 0.61960787, 0.30980393, 1); // fe9e4fff
+	/** The skin's name, which is unique across all skins in the skeleton. */
+	public final name:String;
+
+	/** Returns the attachment for the specified slot index and name, or null. */
+	public final attachments:Array<StringMap<Attachment>> = new Array<StringMap<Attachment>>();
+
+	public final bones:Array<BoneData> = new Array<BoneData>();
+	public final constraints = new Array<ConstraintData<Dynamic, Pose<Any>>>();
+
+	/** The color of the skin as it was in Spine, or a default color if nonessential data was not exported. */
+	public final color:Color = new Color(0.99607843, 0.61960787, 0.30980393, 1); // fe9e4fff
 
 	public function new(name:String) {
-		if (name == null)
-			throw new SpineException("name cannot be null.");
-		_name = name;
+		if (name == null) throw new SpineException("name cannot be null.");
+		this.name = name;
 	}
 
 	/** Adds an attachment to the skin for the specified slot index and name. */
 	public function setAttachment(slotIndex:Int, name:String, attachment:Attachment):Void {
-		if (attachment == null)
-			throw new SpineException("attachment cannot be null.");
-		if (slotIndex >= _attachments.length)
-			_attachments.resize(slotIndex + 1);
-		if (_attachments[slotIndex] == null)
-			_attachments[slotIndex] = new StringMap<Attachment>();
-		_attachments[slotIndex].set(name, attachment);
+		if (attachment == null) throw new SpineException("attachment cannot be null.");
+		if (slotIndex >= attachments.length)
+			attachments.resize(slotIndex + 1);
+		if (attachments[slotIndex] == null)
+			attachments[slotIndex] = new StringMap<Attachment>();
+		attachments[slotIndex].set(name, attachment);
 	}
 
 	/** Adds all attachments, bones, and constraints from the specified skin to this skin. */
@@ -68,26 +72,26 @@ class Skin {
 			var bone:BoneData = skin.bones[i];
 			contained = false;
 			for (j in 0...bones.length) {
-				if (_bones[j] == bone) {
+				if (bones[j] == bone) {
 					contained = true;
 					break;
 				}
 			}
 			if (!contained)
-				_bones.push(bone);
+				bones.push(bone);
 		}
 
 		for (i in 0...skin.constraints.length) {
-			var constraint:ConstraintData = skin.constraints[i];
+			var constraint = skin.constraints[i];
 			contained = false;
-			for (j in 0..._constraints.length) {
-				if (_constraints[j] == constraint) {
+			for (j in 0...constraints.length) {
+				if (constraints[j] == constraint) {
 					contained = true;
 					break;
 				}
 			}
 			if (!contained)
-				_constraints.push(constraint);
+				constraints.push(constraint);
 		}
 
 		var attachments:Array<SkinEntry> = skin.getAttachments();
@@ -106,27 +110,27 @@ class Skin {
 		for (i in 0...skin.bones.length) {
 			var bone:BoneData = skin.bones[i];
 			contained = false;
-			for (j in 0..._bones.length) {
-				if (_bones[j] == bone) {
+			for (j in 0...bones.length) {
+				if (bones[j] == bone) {
 					contained = true;
 					break;
 				}
 			}
 			if (!contained)
-				_bones.push(bone);
+				bones.push(bone);
 		}
 
 		for (i in 0...skin.constraints.length) {
-			var constraint:ConstraintData = skin.constraints[i];
+			var constraint = skin.constraints[i];
 			contained = false;
-			for (j in 0..._constraints.length) {
-				if (_constraints[j] == constraint) {
+			for (j in 0...constraints.length) {
+				if (constraints[j] == constraint) {
 					contained = true;
 					break;
 				}
 			}
 			if (!contained)
-				_constraints.push(constraint);
+				constraints.push(constraint);
 		}
 
 		var attachments:Array<SkinEntry> = skin.getAttachments();
@@ -147,15 +151,15 @@ class Skin {
 
 	/** Returns the attachment for the specified slot index and name, or null. */
 	public function getAttachment(slotIndex:Int, name:String):Attachment {
-		if (slotIndex >= _attachments.length)
+		if (slotIndex >= attachments.length)
 			return null;
-		var dictionary:StringMap<Attachment> = _attachments[slotIndex];
+		var dictionary:StringMap<Attachment> = attachments[slotIndex];
 		return dictionary != null ? dictionary.get(name) : null;
 	}
 
 	/** Removes the attachment in the skin for the specified slot index and name, if any. */
 	public function removeAttachment(slotIndex:Int, name:String):Void {
-		var dictionary:StringMap<Attachment> = _attachments[slotIndex];
+		var dictionary:StringMap<Attachment> = attachments[slotIndex];
 		if (dictionary != null)
 			dictionary.remove(name);
 	}
@@ -163,8 +167,8 @@ class Skin {
 	/** Returns all attachments in this skin. */
 	public function getAttachments():Array<SkinEntry> {
 		var entries:Array<SkinEntry> = new Array<SkinEntry>();
-		for (slotIndex in 0..._attachments.length) {
-			var attachments:StringMap<Attachment> = _attachments[slotIndex];
+		for (slotIndex in 0...attachments.length) {
+			var attachments:StringMap<Attachment> = attachments[slotIndex];
 			if (attachments != null) {
 				for (name in attachments.keys()) {
 					var attachment:Attachment = attachments.get(name);
@@ -179,7 +183,7 @@ class Skin {
 	/** Returns all attachments in this skin for the specified slot index. */
 	public function getAttachmentsForSlot(slotIndex:Int):Array<SkinEntry> {
 		var entries:Array<SkinEntry> = new Array<SkinEntry>();
-		var attachments:StringMap<Attachment> = _attachments[slotIndex];
+		var attachments:StringMap<Attachment> = attachments[slotIndex];
 		if (attachments != null) {
 			for (name in attachments.keys()) {
 				var attachment:Attachment = attachments.get(name);
@@ -192,54 +196,21 @@ class Skin {
 
 	/** Clears all attachments, bones, and constraints. */
 	public function clear():Void {
-		_attachments.resize(0);
-		_bones.resize(0);
-		_constraints.resize(0);
+		attachments.resize(0);
+		bones.resize(0);
+		constraints.resize(0);
 	}
 
-	public var attachments(get, never):Array<StringMap<Attachment>>;
-
-	private function get_attachments():Array<StringMap<Attachment>> {
-		return _attachments;
+	public function toString():String {
+		return name;
 	}
 
-	public var bones(get, never):Array<BoneData>;
-
-	private function get_bones():Array<BoneData> {
-		return _bones;
-	}
-
-	public var constraints(get, never):Array<ConstraintData>;
-
-	private function get_constraints():Array<ConstraintData> {
-		return _constraints;
-	}
-
-	/** The skin's name, which is unique across all skins in the skeleton. */
-	public var name(get, never):String;
-
-	private function get_name():String {
-		return _name;
-	}
-
-	/** The color of the skin as it was in Spine, or a default color if nonessential data was not exported. */
-	public var color(get, never):Color;
-
-	private function get_color():Color {
-		return _color;
-	}
-
-	/*
-		public function toString():String
-		{
-			return _name;
-		}
-	 */
 	/** Attach each attachment in this skin if the corresponding attachment in the old skin is currently attached. */
 	public function attachAll(skeleton:Skeleton, oldSkin:Skin):Void {
 		var slotIndex:Int = 0;
-		for (slot in skeleton.slots) {
-			var slotAttachment:Attachment = slot.attachment;
+		for (element in skeleton.slots) {
+			var slot = element.pose;
+			var slotAttachment = slot.attachment;
 			if (slotAttachment != null && slotIndex < oldSkin.attachments.length) {
 				var dictionary:StringMap<Attachment> = oldSkin.attachments[slotIndex];
 				if (null != dictionary) {
@@ -247,8 +218,7 @@ class Skin {
 						var skinAttachment:Attachment = dictionary.get(name);
 						if (slotAttachment == skinAttachment) {
 							var attachment:Attachment = getAttachment(slotIndex, name);
-							if (attachment != null)
-								slot.attachment = attachment;
+							if (attachment != null) slot.attachment = attachment;
 							break;
 						}
 					}

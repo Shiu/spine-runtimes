@@ -29,194 +29,140 @@
 
 package spine;
 
+import spine.Skeleton;
+import spine.attachments.Attachment;
 import spine.attachments.PathAttachment;
 
 /** Stores the current pose for a path constraint. A path constraint adjusts the rotation, translation, and scale of the
  * constrained bones so they follow a PathAttachment.
  *
  * @see https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User Guide */
-class PathConstraint implements Updatable {
-	private static inline var NONE:Int = -1;
-	private static inline var BEFORE:Int = -2;
-	private static inline var AFTER:Int = -3;
-	private static inline var epsilon:Float = 0.00001;
+class PathConstraint extends Constraint<PathConstraint, PathConstraintData, PathConstraintPose> {
+	private static inline var NONE = -1;
+	private static inline var BEFORE = -2;
+	private static inline var AFTER = -3;
+	private static inline var epsilon = 0.00001;
 
-	private var _data:PathConstraintData;
-	private var _bones:Array<Bone>;
+	/** The bones that will be modified by this path constraint. */
+	public final bones:Array<BonePose>;
 
 	/** The slot whose path attachment will be used to constrained the bones. */
-	public var target:Slot;
-	/** The position along the path. */
-	public var position:Float = 0;
-	/** The spacing between bones. */
-	public var spacing:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
-	public var mixRotate:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
-	public var mixX:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
-	public var mixY:Float = 0;
+	public var slot:Slot;
 
-	private var _spaces(default, never):Array<Float> = new Array<Float>();
-	private var _positions(default, never):Array<Float> = new Array<Float>();
-	private var _world(default, never):Array<Float> = new Array<Float>();
-	private var _curves(default, never):Array<Float> = new Array<Float>();
-	private var _lengths(default, never):Array<Float> = new Array<Float>();
-	private var _segments(default, never):Array<Float> = new Array<Float>();
+	private final spaces = new Array<Float>();
+	private final positions = new Array<Float>();
+	private final world = new Array<Float>();
+	private final curves = new Array<Float>();
+	private final lengths = new Array<Float>();
+	private final segments = new Array<Float>();
 
-	public var active:Bool = false;
+	public function new (data:PathConstraintData, skeleton:Skeleton) {
+		super(data, new PathConstraintPose(), new PathConstraintPose());
+		if (skeleton == null) throw new SpineException("skeleton cannot be null.");
 
-	public function new(data:PathConstraintData, skeleton:Skeleton) {
-		if (data == null)
-			throw new SpineException("data cannot be null.");
-		if (skeleton == null)
-			throw new SpineException("skeleton cannot be null.");
-		_data = data;
+		bones = new Array<BonePose>();
+		for (boneData in data.bones)
+			bones.push(skeleton.bones[boneData.index].constrained);
 
-		_bones = new Array<Bone>();
-		for (boneData in data.bones) {
-			_bones.push(skeleton.findBone(boneData.name));
-		}
-		target = skeleton.findSlot(data.target.name);
-
-		position = data.position;
-		spacing = data.spacing;
-		mixRotate = data.mixRotate;
-		mixX = data.mixX;
-		mixY = data.mixY;
+		slot = skeleton.slots[data.slot.index];
 	}
 
-	public function isActive():Bool {
-		return active;
-	}
-
-	public function setToSetupPose () {
-		var data:PathConstraintData = _data;
-		position = data.position;
-		spacing = data.spacing;
-		mixRotate = data.mixRotate;
-		mixX = data.mixX;
-		mixY = data.mixY;
+	public function copy(skeleton:Skeleton) {
+		var copy = new PathConstraint(data, skeleton);
+		copy.pose.set(pose);
+		return copy;
 	}
 
 	/** Applies the constraint to the constrained bones. */
-	public function update(physics:Physics):Void {
-		var attachment:PathAttachment = cast(target.attachment, PathAttachment);
-		if (attachment == null)
-			return;
-		if (mixRotate == 0 && mixX == 0 && mixY == 0)
-			return;
+	public function update(skeleton:Skeleton, physics:Physics):Void {
+		var attachment = slot.applied.attachment;
+		if (!Std.isOfType(attachment, PathAttachment)) return;
+		var pathAttachment = cast(attachment, PathAttachment);
 
-		var data:PathConstraintData = _data;
-		var fTangents:Bool = data.rotateMode == RotateMode.tangent,
-			fScale:Bool = data.rotateMode == RotateMode.chainScale;
-		var boneCount:Int = _bones.length;
-		var spacesCount:Int = fTangents ? boneCount : boneCount + 1;
-		ArrayUtils.resize(_spaces, spacesCount, 0);
-		if (fScale) {
-			ArrayUtils.resize(_lengths, boneCount, 0);
-		}
+		var p = applied;
+		var mixRotate = p.mixRotate, mixX = p.mixX, mixY = p.mixY;
+		if (mixRotate == 0 && mixX == 0 && mixY == 0) return;
 
-		var bones:Array<Bone> = _bones;
+		var data = data;
+		var fTangents = data.rotateMode == RotateMode.tangent, fScale = data.rotateMode == RotateMode.chainScale;
+		var boneCount = bones.length, spacesCount = fTangents ? boneCount : boneCount + 1;
+		ArrayUtils.resize(spaces, spacesCount, 0);
+		if (fScale) ArrayUtils.resize(lengths, boneCount, 0);
+		var spacing = p.spacing;
 
-		var i:Int,
-			n:Int,
-			bone:Bone,
-			setupLength:Float,
-			x:Float,
-			y:Float,
-			length:Float;
+		var bones = bones;
 		switch (data.spacingMode) {
 			case SpacingMode.percent:
 				if (fScale) {
-					n = spacesCount - 1;
+					var n = spacesCount - 1;
 					for (i in 0...n) {
-						bone = bones[i];
-						setupLength = bone.data.length;
-						x = setupLength * bone.a;
-						y = setupLength * bone.c;
-						_lengths[i] = Math.sqrt(x * x + y * y);
+						var bone = bones[i];
+						var setupLength:Float = bone.bone.data.length;
+						var x = setupLength * bone.a, y = setupLength * bone.c;
+						lengths[i] = Math.sqrt(x * x + y * y);
 					}
 				}
-				for (i in 1...spacesCount) {
-					_spaces[i] = spacing;
-				}
+				for (i in 1...spacesCount) spaces[i] = spacing;
 			case SpacingMode.proportional:
-				var sum:Float = 0;
-				i = 0;
-				n = spacesCount - 1;
+				var sum = 0.;
+				var i = 0, n = spacesCount - 1;
 				while (i < n) {
-					bone = bones[i];
-					setupLength = bone.data.length;
+					var bone = bones[i];
+					var setupLength:Float = bone.bone.data.length;
 					if (setupLength < PathConstraint.epsilon) {
-						if (fScale)
-							_lengths[i] = 0;
-						_spaces[++i] = spacing;
+						if (fScale) lengths[i] = 0;
+						spaces[++i] = spacing;
 					} else {
-						x = setupLength * bone.a;
-						y = setupLength * bone.c;
-						length = Math.sqrt(x * x + y * y);
-						if (fScale)
-							_lengths[i] = length;
-						_spaces[++i] = length;
+						var x = setupLength * bone.a, y = setupLength * bone.c;
+						var length = Math.sqrt(x * x + y * y);
+						if (fScale) lengths[i] = length;
+						spaces[++i] = length;
 						sum += length;
 					}
 				}
 				if (sum > 0) {
 					sum = spacesCount / sum * spacing;
-					for (i in 1...spacesCount) {
-						_spaces[i] *= sum;
-					}
+					for (i in 1...spacesCount)
+						spaces[i] *= sum;
 				}
 			default:
-				var lengthSpacing:Bool = data.spacingMode == SpacingMode.length;
-				i = 0;
-				n = spacesCount - 1;
+				var lengthSpacing = data.spacingMode == SpacingMode.length;
+				var i = 0, n = spacesCount - 1;
 				while (i < n) {
-					bone = bones[i];
-					setupLength = bone.data.length;
+					var bone = bones[i];
+					var setupLength = bone.bone.data.length;
 					if (setupLength < PathConstraint.epsilon) {
-						if (fScale)
-							_lengths[i] = 0;
-						_spaces[++i] = spacing;
+						if (fScale) lengths[i] = 0;
+						spaces[++i] = spacing;
 					} else {
-						x = setupLength * bone.a;
-						y = setupLength * bone.c;
-						length = Math.sqrt(x * x + y * y);
-						if (fScale)
-							_lengths[i] = length;
-						_spaces[++i] = (lengthSpacing ? setupLength + spacing : spacing) * length / setupLength;
+						var x = setupLength * bone.a, y = setupLength * bone.c;
+						var length = Math.sqrt(x * x + y * y);
+						if (fScale) lengths[i] = length;
+						spaces[++i] = (lengthSpacing ? Math.max(0, setupLength + spacing) : spacing) * length / setupLength;
 					}
 				}
 		}
 
-		var positions:Array<Float> = computeWorldPositions(attachment, spacesCount, fTangents);
-		var boneX:Float = positions[0];
-		var boneY:Float = positions[1];
-		var offsetRotation:Float = data.offsetRotation;
-		var tip:Bool = false;
-		if (offsetRotation == 0) {
+		var positions = computeWorldPositions(skeleton, pathAttachment, spacesCount, fTangents);
+		var boneX = positions[0], boneY = positions[1], offsetRotation = data.offsetRotation;
+		var tip = false;
+		if (offsetRotation == 0)
 			tip = data.rotateMode == RotateMode.chain;
-		} else {
+		else {
 			tip = false;
-			var pa:Bone = target.bone;
-			offsetRotation *= pa.a * pa.d - pa.b * pa.c > 0 ? MathUtils.degRad : -MathUtils.degRad;
+			var bone = slot.bone.applied;
+			offsetRotation *= bone.a * bone.d - bone.b * bone.c > 0 ? MathUtils.degRad : -MathUtils.degRad;
 		}
-
-		i = 0;
-		var p:Int = 3;
+		var i = 0, ip = 3, u = skeleton._update;
 		while (i < boneCount) {
-			var bone:Bone = bones[i];
+			var bone = bones[i];
 			bone.worldX += (boneX - bone.worldX) * mixX;
 			bone.worldY += (boneY - bone.worldY) * mixY;
-			var x:Float = positions[p];
-			var y:Float = positions[p + 1];
-			var dx:Float = x - boneX;
-			var dy:Float = y - boneY;
+			var x = positions[ip], y = positions[ip + 1], dx = x - boneX, dy = y - boneY;
 			if (fScale) {
-				var length = _lengths[i];
-				if (length != 0) {
-					var s:Float = (Math.sqrt(dx * dx + dy * dy) / length - 1) * mixRotate + 1;
+				var length = lengths[i];
+				if (length >= epsilon) {
+					var s = (Math.sqrt(dx * dx + dy * dy) / length - 1) * mixRotate + 1;
 					bone.a *= s;
 					bone.c *= s;
 				}
@@ -224,35 +170,26 @@ class PathConstraint implements Updatable {
 			boneX = x;
 			boneY = y;
 			if (mixRotate > 0) {
-				var a:Float = bone.a,
-					b:Float = bone.b,
-					c:Float = bone.c,
-					d:Float = bone.d,
-					r:Float,
-					cos:Float,
-					sin:Float;
-				if (fTangents) {
-					r = positions[p - 1];
-				} else if (_spaces[i + 1] == 0) {
-					r = positions[p + 2];
-				} else {
+				var a = bone.a, b = bone.b, c = bone.c, d = bone.d, r:Float, cos:Float, sin:Float;
+				if (fTangents)
+					r = positions[ip - 1];
+				else if (spaces[i + 1] < epsilon)
+					r = positions[ip + 2];
+				else
 					r = Math.atan2(dy, dx);
-				}
 				r -= Math.atan2(c, a);
 				if (tip) {
 					cos = Math.cos(r);
 					sin = Math.sin(r);
-					var length:Float = bone.data.length;
+					var length = bone.bone.data.length;
 					boneX += (length * (cos * a - sin * c) - dx) * mixRotate;
 					boneY += (length * (sin * a + cos * c) - dy) * mixRotate;
-				} else {
+				} else
 					r += offsetRotation;
-				}
-				if (r > Math.PI) {
+				if (r > Math.PI)
 					r -= (Math.PI * 2);
-				} else if (r < -Math.PI) {
+				else if (r < -Math.PI) //
 					r += (Math.PI * 2);
-				}
 				r *= mixRotate;
 				cos = Math.cos(r);
 				sin = Math.sin(r);
@@ -261,64 +198,55 @@ class PathConstraint implements Updatable {
 				bone.c = sin * a + cos * c;
 				bone.d = sin * b + cos * d;
 			}
-			bone.updateAppliedTransform();
-
+			bone.modifyWorld(u);
 			i++;
-			p += 3;
+			ip += 3;
 		}
 	}
 
-	private function computeWorldPositions(path:PathAttachment, spacesCount:Int, tangents:Bool):Array<Float> {
-		var position:Float = this.position;
-		ArrayUtils.resize(_positions, spacesCount * 3 + 2, 0);
-		var out:Array<Float> = _positions, world:Array<Float>;
-		var closed:Bool = path.closed;
-		var verticesLength:Int = path.worldVerticesLength;
-		var curveCount:Int = Std.int(verticesLength / 6);
-		var prevCurve:Int = NONE;
-		var multiplier:Float, i:Int;
+	private function computeWorldPositions(skeleton:Skeleton, path:PathAttachment, spacesCount:Int, tangents:Bool):Array<Float> {
+		var position = applied.position;
+		ArrayUtils.resize(positions, spacesCount * 3 + 2, 0);
+		var out:Array<Float> = positions, world:Array<Float>;
+		var closed = path.closed;
+		var verticesLength = path.worldVerticesLength, curveCount = Std.int(verticesLength / 6), prevCurve = NONE;
 
 		if (!path.constantSpeed) {
-			var lengths:Array<Float> = path.lengths;
+			var lengths = path.lengths;
 			curveCount -= closed ? 1 : 2;
-			var pathLength:Float = lengths[curveCount];
-			if (data.positionMode == PositionMode.percent)
-				position *= pathLength;
+			var pathLength = lengths[curveCount];
+
+			if (data.positionMode == PositionMode.percent) position *= pathLength;
+
+			var multiplier: Float;
 			switch (data.spacingMode) {
-				case SpacingMode.percent:
-					multiplier = pathLength;
-				case SpacingMode.proportional:
-					multiplier = pathLength / spacesCount;
-				default:
-					multiplier = 1;
+				case SpacingMode.percent: multiplier = pathLength;
+				case SpacingMode.proportional: multiplier = pathLength / spacesCount;
+				default: multiplier = 1;
 			}
 
-			ArrayUtils.resize(_world, 8, 0);
-			world = _world;
-			var i:Int = 0;
-			var o:Int = 0;
-			var curve:Int = 0;
+			ArrayUtils.resize(world, 8, 0);
+			var i = 0, o = 0, curve = 0;
 			while (i < spacesCount) {
-				var space:Float = _spaces[i] * multiplier;
+				var space = spaces[i] * multiplier;
 				position += space;
-				var p:Float = position;
+				var p = position;
 
 				if (closed) {
 					p %= pathLength;
-					if (p < 0)
-						p += pathLength;
+					if (p < 0) p += pathLength;
 					curve = 0;
 				} else if (p < 0) {
 					if (prevCurve != BEFORE) {
 						prevCurve = BEFORE;
-						path.computeWorldVertices(target, 2, 4, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, 2, 4, world, 0, 2);
 					}
 					addBeforePosition(p, world, 0, out, o);
 					continue;
 				} else if (p > pathLength) {
 					if (prevCurve != AFTER) {
 						prevCurve = AFTER;
-						path.computeWorldVertices(target, verticesLength - 6, 4, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, verticesLength - 6, 4, world, 0, 2);
 					}
 					addAfterPosition(p - pathLength, world, 0, out, o);
 					continue;
@@ -326,15 +254,15 @@ class PathConstraint implements Updatable {
 
 				// Determine curve containing position.
 				while (true) {
-					var length:Float = lengths[curve];
+					var length = lengths[curve];
 					if (p > length) {
 						curve++;
 						continue;
 					}
-					if (curve == 0) {
+					if (curve == 0)
 						p /= length;
-					} else {
-						var prev:Float = lengths[curve - 1];
+					else {
+						var prev = lengths[curve - 1];
 						p = (p - prev) / (length - prev);
 					}
 					break;
@@ -342,14 +270,14 @@ class PathConstraint implements Updatable {
 				if (curve != prevCurve) {
 					prevCurve = curve;
 					if (closed && curve == curveCount) {
-						path.computeWorldVertices(target, verticesLength - 4, 4, world, 0, 2);
-						path.computeWorldVertices(target, 0, 4, world, 4, 2);
+						path.computeWorldVertices(skeleton, slot, verticesLength - 4, 4, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, 0, 4, world, 4, 2);
 					} else {
-						path.computeWorldVertices(target, curve * 6 + 2, 8, world, 0, 2);
+						path.computeWorldVertices(skeleton, slot, curve * 6 + 2, 8, world, 0, 2);
 					}
 				}
-				addCurvePosition(p, world[0], world[1], world[2], world[3], world[4], world[5], world[6], world[7], out, o, tangents || (i > 0 && space == 0));
-
+				addCurvePosition(p, world[0], world[1], world[2], world[3], world[4], world[5], world[6], world[7], out, o,
+					tangents || (i > 0 && space == 0));
 				i++;
 				o += 3;
 			}
@@ -359,35 +287,25 @@ class PathConstraint implements Updatable {
 		// World vertices.
 		if (closed) {
 			verticesLength += 2;
-			ArrayUtils.resize(_world, verticesLength, 0);
-			world = _world;
-			path.computeWorldVertices(target, 2, verticesLength - 4, world, 0, 2);
-			path.computeWorldVertices(target, 0, 2, world, verticesLength - 4, 2);
+			ArrayUtils.resize(world, verticesLength, 0);
+			path.computeWorldVertices(skeleton, slot, 2, verticesLength - 4, world, 0, 2);
+			path.computeWorldVertices(skeleton, slot, 0, 2, world, verticesLength - 4, 2);
 			world[verticesLength - 2] = world[0];
 			world[verticesLength - 1] = world[1];
 		} else {
 			curveCount--;
 			verticesLength -= 4;
-			ArrayUtils.resize(_world, verticesLength, 0);
-			world = _world;
-			path.computeWorldVertices(target, 2, verticesLength, world, 0, 2);
+			ArrayUtils.resize(world, verticesLength, 0);
+			path.computeWorldVertices(skeleton, slot, 2, verticesLength, world, 0, 2);
 		}
 
 		// Curve lengths.
-		ArrayUtils.resize(_curves, curveCount, 0);
-		var curves:Array<Float> = _curves;
+		ArrayUtils.resize(curves, curveCount, 0);
+		var curves:Array<Float> = curves;
 		var pathLength:Float = 0;
-		var x1:Float = world[0],
-			y1:Float = world[1],
-			cx1:Float = 0,
-			cy1:Float = 0,
-			cx2:Float = 0,
-			cy2:Float = 0,
-			x2:Float = 0,
-			y2:Float = 0;
+		var x1 = world[0], y1 = world[1], cx1 = 0., cy1 = 0., cx2 = 0., cy2 = 0., x2 = 0., y2 = 0.;
 		var tmpx:Float, tmpy:Float, dddfx:Float, dddfy:Float, ddfx:Float, ddfy:Float, dfx:Float, dfy:Float;
-		var i:Int = 0;
-		var w:Int = 2;
+		var i = 0, w = 2;
 		while (i < curveCount) {
 			cx1 = world[w];
 			cy1 = world[w + 1];
@@ -423,33 +341,28 @@ class PathConstraint implements Updatable {
 			w += 6;
 		}
 
-		if (data.positionMode == PositionMode.percent)
-			position *= pathLength;
+		if (data.positionMode == PositionMode.percent) position *= pathLength;
 
+		var multiplier:Float;
 		switch (data.spacingMode) {
-			case SpacingMode.percent:
-				multiplier = pathLength;
-			case SpacingMode.proportional:
-				multiplier = pathLength / spacesCount;
-			default:
-				multiplier = 1;
+			case SpacingMode.percent: multiplier = pathLength;
+			case SpacingMode.proportional: multiplier = pathLength / spacesCount;
+			default: multiplier = 1;
 		}
 
-		var segments:Array<Float> = _segments;
-		var curveLength:Float = 0;
-		var segment:Int;
-		i = 0;
-		var o:Int = 0;
-		var segment:Int = 0;
+		var segments = segments;
+		var curveLength = 0.;
+		var i = 0, o = 0, curve = 0, segment = 0;
 		while (i < spacesCount) {
-			var space = _spaces[i] * multiplier;
+			var space = spaces[i] * multiplier;
 			position += space;
 			var p = position;
 
 			if (closed) {
 				p %= pathLength;
-				if (p < 0)
-					p += pathLength;
+				if (p < 0) p += pathLength;
+				curve = 0;
+				segment = 0;
 			} else if (p < 0) {
 				addBeforePosition(p, world, 0, out, o);
 				i++;
@@ -528,9 +441,9 @@ class PathConstraint implements Updatable {
 					segment++;
 					continue;
 				}
-				if (segment == 0) {
+				if (segment == 0)
 					p /= length;
-				} else {
+				else {
 					var prev = segments[segment - 1];
 					p = segment + (p - prev) / (length - prev);
 				}
@@ -596,21 +509,51 @@ class PathConstraint implements Updatable {
 		}
 	}
 
-	/** The bones that will be modified by this path constraint. */
-	public var bones(get, never):Array<Bone>;
-
-	private function get_bones():Array<Bone> {
-		return _bones;
+	public function sort (skeleton:Skeleton) {
+		var slotIndex = slot.data.index;
+		var slotBone = slot.bone;
+		if (skeleton.skin != null) sortPathSlot(skeleton, skeleton.skin, slotIndex, slotBone);
+		if (skeleton.data.defaultSkin != null && skeleton.data.defaultSkin != skeleton.skin)
+			sortPathSlot(skeleton, skeleton.data.defaultSkin, slotIndex, slotBone);
+		sortPath(skeleton, slot.pose.attachment, slotBone);
+		var boneCount = bones.length;
+		for (i in 0...boneCount) {
+			var bone = bones[i].bone;
+			skeleton.sortBone(bone);
+			skeleton.constrained(bone);
+		}
+		skeleton._updateCache.push(this);
+		for (i in 0...boneCount)
+			skeleton.sortReset(bones[i].bone.children);
+		for (i in 0...boneCount)
+			bones[i].bone.sorted = true;
 	}
 
-	/** The path constraint's setup pose data. */
-	public var data(get, never):PathConstraintData;
-
-	private function get_data():PathConstraintData {
-		return _data;
+	public function sortPathSlot (skeleton:Skeleton, skin:Skin, slotIndex:Int, slotBone:Bone) {
+		var entries = skin.getAttachments();
+		for (entry in entries) {
+			if (entry.slotIndex == slotIndex) sortPath(skeleton, entry.attachment, slotBone);
+		}
 	}
 
-	public function toString():String {
-		return _data.name != null ? _data.name : "PathConstraint?";
+	private function sortPath (skeleton:Skeleton, attachment:Attachment, slotBone:Bone) {
+		if (!(Std.isOfType(attachment, PathAttachment))) return;
+		var pathBones = cast(attachment, PathAttachment).bones;
+		if (pathBones == null)
+			skeleton.sortBone(slotBone);
+		else {
+			var bones = skeleton.bones;
+			var i = 0, n = pathBones.length;
+			while (i < n) {
+				var nn = pathBones[i++];
+				nn += i;
+				while (i < nn)
+					skeleton.sortBone(bones[pathBones[i++]]);
+			}
+		}
+	}
+
+	override public function isSourceActive (): Bool {
+		return slot.bone.active;
 	}
 }

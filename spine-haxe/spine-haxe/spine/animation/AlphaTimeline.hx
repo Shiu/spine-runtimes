@@ -43,7 +43,7 @@ class AlphaTimeline extends CurveTimeline1 implements SlotTimeline {
 	private var slotIndex:Int = 0;
 
 	public function new(frameCount:Int, bezierCount:Int, slotIndex:Int) {
-		super(frameCount, bezierCount, [Property.alpha + "|" + slotIndex]);
+		super(frameCount, bezierCount, Property.alpha + "|" + slotIndex);
 		this.slotIndex = slotIndex;
 	}
 
@@ -55,15 +55,15 @@ class AlphaTimeline extends CurveTimeline1 implements SlotTimeline {
 		return slotIndex;
 	}
 
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var slot:Slot = skeleton.slots[slotIndex];
-		if (!slot.bone.active)
-			return;
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
 
-		var color:Color = slot.color;
+		var slot = skeleton.slots[slotIndex];
+		if (!slot.bone.active) return;
+
+		var color = (appliedPose ? slot.applied : slot.pose).color;
 		if (time < frames[0]) {
-			var setup:Color = slot.data.color;
+			var setup:Color = slot.data.setup.color;
 			switch (blend) {
 				case MixBlend.setup:
 					color.a = setup.a;
@@ -78,7 +78,7 @@ class AlphaTimeline extends CurveTimeline1 implements SlotTimeline {
 			color.a = a;
 		} else {
 			if (blend == MixBlend.setup)
-				color.a = slot.data.color.a;
+				color.a = slot.data.setup.color.a;
 			color.a += (a - color.a) * alpha;
 		}
 	}

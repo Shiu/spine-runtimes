@@ -298,7 +298,7 @@ class AnimationState {
 		for (slot in skeleton.slots) {
 			if (slot.attachmentState == setupState) {
 				var attachmentName:String = slot.data.attachmentName;
-				slot.attachment = attachmentName == null ? null : skeleton.getAttachmentForSlotIndex(slot.data.index, attachmentName);
+				slot.pose.attachment = attachmentName == null ? null : skeleton.getAttachmentForSlotIndex(slot.data.index, attachmentName);
 			}
 		}
 		unkeyedState += 2; // Increasing after each use avoids the need to reset attachmentState for every slot.
@@ -437,28 +437,29 @@ class AnimationState {
 			timelinesRotation[i] = 0;
 
 		if (alpha == 1) {
-			timeline.apply(skeleton, 0, time, null, 1, blend, MixDirection.mixIn);
+			timeline.apply(skeleton, 0, time, null, 1, blend, MixDirection.mixIn, false);
 			return;
 		}
 
 		var bone = skeleton.bones[timeline.boneIndex];
 		if (!bone.active)
 			return;
+		var pose = bone.pose, setup = bone.data.setup;
 		var frames = timeline.frames;
 		var r1:Float = 0, r2:Float = 0;
 		if (time < frames[0]) {
 			switch (blend) {
 				case MixBlend.setup:
-					bone.rotation = bone.data.rotation;
+					pose.rotation = setup.rotation;
 				default:
 					return;
 				case MixBlend.first:
-					r1 = bone.rotation;
-					r2 = bone.data.rotation;
+					r1 = pose.rotation;
+					r2 = setup.rotation;
 			}
 		} else {
-			r1 = blend == MixBlend.setup ? bone.data.rotation : bone.rotation;
-			r2 = bone.data.rotation + timeline.getCurveValue(time);
+			r1 = blend == MixBlend.setup ? setup.rotation : pose.rotation;
+			r2 = setup.rotation + timeline.getCurveValue(time);
 		}
 
 		// Mix between rotations using the direction of the shortest route on the first frame while detecting crosses.
@@ -492,11 +493,11 @@ class AnimationState {
 			timelinesRotation[i] = total;
 		}
 		timelinesRotation[i + 1] = diff;
-		bone.rotation = r1 + total * alpha;
+		pose.rotation = r1 + total * alpha;
 	}
 
 	private function setAttachment(skeleton:Skeleton, slot:Slot, attachmentName:String, attachments:Bool):Void {
-		slot.attachment = attachmentName == null ? null : skeleton.getAttachmentForSlotIndex(slot.data.index, attachmentName);
+		slot.pose.attachment = attachmentName == null ? null : skeleton.getAttachmentForSlotIndex(slot.data.index, attachmentName);
 		if (attachments)
 			slot.attachmentState = unkeyedState + CURRENT;
 	}
@@ -629,9 +630,9 @@ class AnimationState {
 		return setAnimation(trackIndex, animation, loop);
 	}
 
-	/**
-	 * Sets the current animation for a track, discarding any queued animations. If the formerly current track entry was never
-	 * applied to a skeleton, it is replaced (not mixed from).
+	/** Sets the current animation for a track, discarding any queued animations.
+	 * If the formerly current track entry is for the same animation and was never applied to a skeleton, it is replaced (not mixed
+	 * from).
 	 * @param loop If true, the animation will repeat. If false it will not, instead its last frame is applied if played beyond its
 	 *           duration. In either case spine.animation.TrackEntry.getTrackEnd() determines when the track is cleared.
 	 * @return A track entry to allow further customization of animation playback. References to the track entry must not be kept
@@ -643,7 +644,7 @@ class AnimationState {
 		var interrupt:Bool = true;
 		var current:TrackEntry = expandToIndex(trackIndex);
 		if (current != null) {
-			if (current.nextTrackLast == -1) {
+			if (current.nextTrackLast == -1 && current.animation == animation) {
 				// Don't mix from an entry that was never applied.
 				tracks[trackIndex] = current.mixingFrom;
 				queue.interrupt(current);
@@ -673,8 +674,7 @@ class AnimationState {
 		return addAnimation(trackIndex, animation, loop, delay);
 	}
 
-	/**
-	 * Adds an animation to be played after the current or last queued animation for a track. If the track is empty, it is
+	/** Adds an animation to be played after the current or last queued animation for a track. If the track has no entries, this is
 	 * equivalent to calling spine.animation.AnimationState.setAnimation().
 	 * @param delay If > 0, sets spine.animation.TrackEntry.getDelay(). If <= 0, the delay set is the duration of the previous track entry
 	 *           minus any mix duration (from the spine.animation.AnimationStateData) plus the specified delay (ie the mix
@@ -726,7 +726,9 @@ class AnimationState {
 	 * animation to be applied more and more over the mix duration. Properties keyed in the new animation transition from the value
 	 * from lower tracks or from the setup pose value if no lower tracks key the property to the value keyed in the new
 	 * animation.
-	 */
+	 *
+	 * See <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+	 * Runtimes Guide. */
 	public function setEmptyAnimation(trackIndex:Int, mixDuration:Float):TrackEntry {
 		var entry:TrackEntry = setAnimation(trackIndex, emptyAnimation, false);
 		entry.mixDuration = mixDuration;
@@ -736,10 +738,12 @@ class AnimationState {
 
 	/**
 	 * Adds an empty animation to be played after the current or last queued animation for a track, and sets the track entry's
-	 * spine.animation.TrackEntry.getMixDuration(). If the track is empty, it is equivalent to calling
+	 * spine.animation.TrackEntry.getMixDuration(). If the track has no entries,, it is equivalent to calling
 	 * spine.animation.AnimationState.setEmptyAnimation().
 	 *
-	 * See spine.animation.AnimationState.setEmptyAnimation().
+	 * See spine.animation.AnimationState.setEmptyAnimation() and
+	 * <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+	 * Runtimes Guide.
 	 * @param delay If > 0, sets spine.animation.TrackEntry.getDelay(). If <= 0, the delay set is the duration of the previous track entry
 	 *           minus any mix duration plus the specified delay (ie the mix ends at (delay = 0) or
 	 *           before (delay < 0) the previous track entry duration). If the previous entry is looping, its next
@@ -755,10 +759,10 @@ class AnimationState {
 		return entry;
 	}
 
-	/**
-	 * Sets an empty animation for every track, discarding any queued animations, and mixes to it over the specified mix
-	 * duration.
-	 */
+	/** Sets an empty animation for every track, discarding any queued animations, and mixes to it over the specified mix duration.
+	 *
+	 * See <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+	 * Runtimes Guide. */
 	public function setEmptyAnimations(mixDuration:Float):Void {
 		var oldDrainDisabled:Bool = queue.drainDisabled;
 		queue.drainDisabled = true;

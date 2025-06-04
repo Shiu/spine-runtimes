@@ -30,277 +30,72 @@
 package spine;
 
 /** Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
- * 
- * 
+ *
+ *
  * @see https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide
  */
-class PhysicsConstraint implements Updatable {
-	private var _data:PhysicsConstraintData;
-	private var _bone:Bone = null;
+class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> {
 
-	public var inertia:Float = 0;
-	public var strength:Float = 0;
-	public var damping:Float = 0;
-	public var massInverse:Float = 0;
-	public var wind:Float = 0;
-	public var gravity:Float = 0;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
-	public var mix:Float = 0;
+	/** The bone constrained by this physics constraint. */
+	public var bone:BonePose = null;
 
-	private var _reset:Bool = true;
+	public var _reset = true;
 
-	public var ux:Float = 0;
-	public var uy:Float = 0;
-	public var cx:Float = 0;
-	public var cy:Float = 0;
-	public var tx:Float = 0;
-	public var ty:Float = 0;
-	public var xOffset:Float = 0;
-	public var xVelocity:Float = 0;
-	public var yOffset:Float = 0;
-	public var yVelocity:Float = 0;
-	public var rotateOffset:Float = 0;
-	public var rotateVelocity:Float = 0;
-	public var scaleOffset:Float = 0;
-	public var scaleVelocity:Float = 0;
-
-	public var active:Bool = false;
-
-	private var _skeleton:Skeleton;
+	public var ux = 0.;
+	public var uy = 0.;
+	public var cx = 0.;
+	public var cy = 0.;
+	public var tx = 0.;
+	public var ty = 0.;
+	public var xOffset = 0.;
+	public var xLag = 0.;
+	public var xVelocity = 0.;
+	public var yOffset = 0.;
+	public var yLag = 0.;
+	public var yVelocity = 0.;
+	public var rotateOffset = 0.;
+	public var rotateLag = 0.;
+	public var rotateVelocity = 0.;
+	public var scaleOffset = 0.;
+	public var scaleLag = 0.;
+	public var scaleVelocity = 0.;
 	public var remaining:Float = 0;
 	public var lastTime:Float = 0;
 
 	public function new(data: PhysicsConstraintData, skeleton: Skeleton) {
-		_data = data;
-		_skeleton = skeleton;
+		super(data, new PhysicsConstraintPose(), new PhysicsConstraintPose());
+		if (skeleton == null) throw new SpineException("skeleton cannot be null.");
 
-		_bone = skeleton.bones[data.bone.index];
-
-		inertia = data.inertia;
-		strength = data.strength;
-		damping = data.damping;
-		massInverse = data.massInverse;
-		wind = data.wind;
-		gravity = data.gravity;
-		mix = data.mix;
+		bone = skeleton.bones[data.bone.index].constrained;
 	}
 
-	public function reset () {
+	public function copy(skeleton:Skeleton) {
+		var copy = new PhysicsConstraint(data, skeleton);
+		copy.pose.set(pose);
+		return copy;
+	}
+
+	public function reset (skeleton:Skeleton) {
 		remaining = 0;
 		lastTime = skeleton.time;
 		_reset = true;
 		xOffset = 0;
+		xLag = 0;
 		xVelocity = 0;
 		yOffset = 0;
+		yLag = 0;
 		yVelocity = 0;
 		rotateOffset = 0;
+		rotateLag = 0;
 		rotateVelocity = 0;
 		scaleOffset = 0;
+		scaleLag = 0;
 		scaleVelocity = 0;
-	}
-
-	public function setToSetupPose () {
-		var data:PhysicsConstraintData = _data;
-		inertia = data.inertia;
-		strength = data.strength;
-		damping = data.damping;
-		massInverse = data.massInverse;
-		wind = data.wind;
-		gravity = data.gravity;
-		mix = data.mix;
-	}
-
-	public function isActive():Bool {
-		return active;
-	}
-
-	/** Applies the constraint to the constrained bones. */
-	public function update(physics:Physics):Void {
-		var mix:Float = this.mix;
-		if (mix == 0) return;
-
-		var x:Bool = _data.x > 0, y:Bool = _data.y > 0,
-			rotateOrShearX:Bool = _data.rotate > 0 || _data.shearX > 0,
-			scaleX:Bool = _data.scaleX > 0;
-		var bone:Bone = _bone;
-		var l:Float = bone.data.length;
-
-		switch (physics) {
-			case Physics.none:
-				return;
-			case Physics.reset, Physics.update:
-				if (physics == Physics.reset) reset();
-
-				var delta:Float = Math.max(skeleton.time - lastTime, 0);
-				remaining += delta;
-				lastTime = _skeleton.time;
-
-				var bx:Float = bone.worldX, by:Float = bone.worldY;
-				if (_reset) {
-					_reset = false;
-					ux = bx;
-					uy = by;
-				} else {
-					var a:Float = remaining,
-						i:Float = inertia,
-						t:Float = _data.step,
-						f:Float = skeleton.data.referenceScale,
-						d:Float = -1;
-
-					var qx:Float = _data.limit * delta,
-						qy:Float = qx * Math.abs(skeleton.scaleY);
-					qx *= Math.abs(skeleton.scaleX);
-					if (x || y) {
-						if (x) {
-							var u:Float = (ux - bx) * i;
-							xOffset += u > qx ? qx : u < -qx ? -qx : u;
-							ux = bx;
-						}
-						if (y) {
-							var u:Float = (uy - by) * i;
-							yOffset += u > qy ? qy : u < -qy ? -qy : u;
-							uy = by;
-						}
-						if (a >= t) {
-							d = Math.pow(damping, 60 * t);
-							var m:Float = massInverse * t,
-								e:Float = strength,
-								w:Float = wind * f * skeleton.scaleX,
-								g:Float = gravity * f * skeleton.scaleY;
-							do {
-								if (x) {
-									xVelocity += (w - xOffset * e) * m;
-									xOffset += xVelocity * t;
-									xVelocity *= d;
-								}
-								if (y) {
-									yVelocity -= (g + yOffset * e) * m;
-									yOffset += yVelocity * t;
-									yVelocity *= d;
-								}
-								a -= t;
-							}  while (a >= t);
-						}
-						if (x) bone.worldX += xOffset * mix * data.x;
-						if (y) bone.worldY += yOffset * mix * data.y;
-					}
-					if (rotateOrShearX || scaleX) {
-						var ca:Float = Math.atan2(bone.c, bone.a),
-							c:Float = 0,
-							s:Float = 0,
-							mr:Float = 0;
-						var dx:Float = cx - bone.worldX,
-							dy:Float = cy - bone.worldY;
-						if (dx > qx)
-							dx = qx;
-						else if (dx < -qx) //
-							dx = -qx;
-						if (dy > qy)
-							dy = qy;
-						else if (dy < -qy) //
-							dy = -qy;
-						if (rotateOrShearX) {
-							mr = (_data.rotate + _data.shearX) * mix;
-							var r:Float = Math.atan2(dy + ty, dx + tx) - ca - rotateOffset * mr;
-							rotateOffset += (r - Math.ceil(r * MathUtils.invPI2 - 0.5) * MathUtils.PI2) * i;
-							r = rotateOffset * mr + ca;
-							c = Math.cos(r);
-							s = Math.sin(r);
-							if (scaleX) {
-								r = l * bone.worldScaleX;
-								if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
-							}
-						} else {
-							c = Math.cos(ca);
-							s = Math.sin(ca);
-							var r:Float = l * bone.worldScaleX;
-							if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
-						}
-						a = remaining;
-						if (a >= t) {
-							if (d == -1) d = Math.pow(damping, 60 * t);
-							var m:Float = massInverse * t,
-							e:Float = strength,
-							w:Float = wind,
-							g:Float = (Bone.yDown ? -gravity : gravity),
-							h:Float = l / f;
-							while (true) {
-								a -= t;
-								if (scaleX) {
-									scaleVelocity += (w * c - g * s - scaleOffset * e) * m;
-									scaleOffset += scaleVelocity * t;
-									scaleVelocity *= d;
-								}
-								if (rotateOrShearX) {
-									rotateVelocity -= ((w * s + g * c) * h + rotateOffset * e) * m;
-									rotateOffset += rotateVelocity * t;
-									rotateVelocity *= d;
-									if (a < t) break;
-									var r:Float = rotateOffset * mr + ca;
-									c = Math.cos(r);
-									s = Math.sin(r);
-								} else if (a < t) //
-									break;
-							}
-						}
-					}
-					remaining = a;
-				}
-				cx = bone.worldX;
-				cy = bone.worldY;
-			case Physics.pose:
-				if (x) bone.worldX += xOffset * mix * data.x;
-				if (y) bone.worldY += yOffset * mix * data.y;
-		}
-
-		if (rotateOrShearX) {
-			var o:Float = rotateOffset * mix,
-				s:Float = 0,
-				c:Float = 0,
-				a:Float = 0;
-			if (_data.shearX > 0) {
-				var r:Float = 0;
-				if (_data.rotate > 0) {
-					r = o * _data.rotate;
-					s = Math.sin(r);
-					c = Math.cos(r);
-					a = bone.b;
-					bone.b = c * a - s * bone.d;
-					bone.d = s * a + c * bone.d;
-				}
-				r += o * _data.shearX;
-				s = Math.sin(r);
-				c = Math.cos(r);
-				a = bone.a;
-				bone.a = c * a - s * bone.c;
-				bone.c = s * a + c * bone.c;
-			} else {
-				o *= _data.rotate;
-				s = Math.sin(o);
-				c = Math.cos(o);
-				a = bone.a;
-				bone.a = c * a - s * bone.c;
-				bone.c = s * a + c * bone.c;
-				a = bone.b;
-				bone.b = c * a - s * bone.d;
-				bone.d = s * a + c * bone.d;
-			}
-		}
-		if (scaleX) {
-			var s:Float = 1 + scaleOffset * mix * data.scaleX;
-			bone.a *= s;
-			bone.c *= s;
-		}
-		if (physics != Physics.pose) {
-			tx = l * bone.a;
-			ty = l * bone.c;
-		}
-		bone.updateAppliedTransform();
 	}
 
 	/** Translates the physics constraint so next update(Physics) forces are applied as if the bone moved an additional
 	 * amount in world space. */
-	public function translate (x:Float, y:Float):Void {
+	 public function translate (x:Float, y:Float):Void {
 		ux -= x;
 		uy -= y;
 		cx -= x;
@@ -315,26 +110,199 @@ class PhysicsConstraint implements Updatable {
 		translate(dx * cos - dy * sin - dx, dx * sin + dy * cos - dy);
 	}
 
-	/** The bone constrained by this physics constraint. */
-	public var bone(get, never):Bone;
+	/** Applies the constraint to the constrained bones. */
+	public function update(skeleton:Skeleton, physics:Physics):Void {
+		var p = applied;
+		var mix = p.mix;
+		if (mix == 0) return;
 
-	private function get_bone():Bone {
-		if (_bone == null)
-			throw new SpineException("Bone not set.")
-		else return _bone;
+		var x = data.x > 0, y = data.y > 0, rotateOrShearX = data.rotate > 0 || data.shearX > 0, scaleX = data.scaleX > 0;
+		var l = bone.bone.data.length, t = data.step, z = 0.;
+
+		switch (physics) {
+			case Physics.none:
+				return;
+			case Physics.reset, Physics.update:
+				if (physics == Physics.reset) reset(skeleton);
+
+				var delta = Math.max(skeleton.time - lastTime, 0), aa = remaining;
+				remaining += delta;
+				lastTime = skeleton.time;
+
+				var bx = bone.worldX, by = bone.worldY;
+				if (_reset) {
+					_reset = false;
+					ux = bx;
+					uy = by;
+				} else {
+					var a = remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1., m = 0., e = 0., qx = data.limit * delta,
+						qy = qx * Math.abs(skeleton.scaleY);
+					qx *= Math.abs(skeleton.scaleX);
+					if (x || y) {
+						if (x) {
+							var u = (ux - bx) * i;
+							xOffset += u > qx ? qx : u < -qx ? -qx : u;
+							ux = bx;
+						}
+						if (y) {
+							var u = (uy - by) * i;
+							yOffset += u > qy ? qy : u < -qy ? -qy : u;
+							uy = by;
+						}
+						if (a >= t) {
+							var xs = xOffset, ys = yOffset;
+							d = Math.pow(p.damping, 60 * t);
+							m = t * p.massInverse;
+							e = p.strength;
+							var w = f * p.wind * skeleton.scaleX, g = f * p.gravity * skeleton.scaleY,
+								ax = w * skeleton.windX + g * skeleton.gravityX, ay = w * skeleton.windY + g * skeleton.gravityY;
+							do {
+								if (x) {
+									xVelocity += (ax - xOffset * e) * m;
+									xOffset += xVelocity * t;
+									xVelocity *= d;
+								}
+								if (y) {
+									yVelocity -= (ay + yOffset * e) * m;
+									yOffset += yVelocity * t;
+									yVelocity *= d;
+								}
+								a -= t;
+							} while (a >= t);
+							xLag = xOffset - xs;
+							yLag = yOffset - ys;
+						}
+						z = Math.max(0, 1 - a / t);
+						if (x) bone.worldX += xOffset * mix * this.data.x;
+						if (y) bone.worldY += yOffset * mix * this.data.y;
+					}
+					if (rotateOrShearX || scaleX) {
+						var ca = Math.atan2(bone.c, bone.a), c = 0., s = 0., mr = 0., dx = cx - bone.worldX, dy = cy - bone.worldY;
+						if (dx > qx)
+							dx = qx;
+						else if (dx < -qx) //
+							dx = -qx;
+						if (dy > qy)
+							dy = qy;
+						else if (dy < -qy) //
+							dy = -qy;
+						a = remaining;
+						if (rotateOrShearX) {
+							mr = (data.rotate + data.shearX) * mix;
+							z = rotateLag * Math.max(0, 1 - aa / t);
+							var r = Math.atan2(dy + ty, dx + tx) - ca - (rotateOffset - z) * mr;
+							rotateOffset += (r - Math.ceil(r * MathUtils.invPI2 - 0.5) * MathUtils.PI2) * i;
+							r = (rotateOffset - z) * mr + ca;
+							c = Math.cos(r);
+							s = Math.sin(r);
+							if (scaleX) {
+								r = l * bone.worldScaleX;
+								if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
+							}
+						} else {
+							c = Math.cos(ca);
+							s = Math.sin(ca);
+							var r = l * bone.worldScaleX - scaleLag * Math.max(0, 1 - aa / t);
+							if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
+						}
+						a = remaining;
+						if (a >= t) {
+							if (d == -1) {
+								d = Math.pow(p.damping, 60 * t);
+								m = t * p.massInverse;
+								e = p.strength;
+							}
+							var g = Bone.yDown ? -p.gravity : p.gravity;
+							var rs = rotateOffset, ss = scaleLag, h = l / f,
+								ax = p.wind * skeleton.windX + g * skeleton.gravityX,
+								ay = p.wind * skeleton.windY + g * skeleton.gravityY;
+							while (true) {
+								a -= t;
+								if (scaleX) {
+									scaleVelocity += (ax * c - ay * s - scaleOffset * e) * m;
+									scaleOffset += scaleVelocity * t;
+									scaleVelocity *= d;
+								}
+								if (rotateOrShearX) {
+									rotateVelocity -= ((ax * s + ay * c) * h + rotateOffset * e) * m;
+									rotateOffset += rotateVelocity * t;
+									rotateVelocity *= d;
+									if (a < t) break;
+									var r:Float = rotateOffset * mr + ca;
+									c = Math.cos(r);
+									s = Math.sin(r);
+								} else if (a < t) //
+									break;
+							}
+							rotateLag = rotateOffset - rs;
+							scaleLag = scaleOffset - ss;
+						}
+						z = Math.max(0, 1 - a / t);
+					}
+					remaining = a;
+				}
+				cx = bone.worldX;
+				cy = bone.worldY;
+			case Physics.pose:
+				z = Math.max(0, 1 - remaining / t);
+				if (x) bone.worldX += (xOffset - xLag * z) * mix * data.x;
+				if (y) bone.worldY += (yOffset - yLag * z) * mix * data.y;
+		}
+
+		if (rotateOrShearX) {
+			var o:Float = (rotateOffset - rotateLag * z) * mix,
+				s:Float = 0,
+				c:Float = 0,
+				a:Float = 0;
+			if (data.shearX > 0) {
+				var r:Float = 0;
+				if (data.rotate > 0) {
+					r = o * data.rotate;
+					s = Math.sin(r);
+					c = Math.cos(r);
+					a = bone.b;
+					bone.b = c * a - s * bone.d;
+					bone.d = s * a + c * bone.d;
+				}
+				r += o * data.shearX;
+				s = Math.sin(r);
+				c = Math.cos(r);
+				a = bone.a;
+				bone.a = c * a - s * bone.c;
+				bone.c = s * a + c * bone.c;
+			} else {
+				o *= data.rotate;
+				s = Math.sin(o);
+				c = Math.cos(o);
+				a = bone.a;
+				bone.a = c * a - s * bone.c;
+				bone.c = s * a + c * bone.c;
+				a = bone.b;
+				bone.b = c * a - s * bone.d;
+				bone.d = s * a + c * bone.d;
+			}
+		}
+		if (scaleX) {
+			var s:Float = 1 + (scaleOffset - scaleLag * z) * mix * this.data.scaleX;
+			bone.a *= s;
+			bone.c *= s;
+		}
+		if (physics != Physics.pose) {
+			tx = l * bone.a;
+			ty = l * bone.c;
+		}
+		bone.modifyWorld(skeleton._update);
 	}
 
-	/** The physics constraint's setup pose data. */
-	public var data(get, never):PhysicsConstraintData;
-
-	private function get_data():PhysicsConstraintData {
-		return _data;
+	public function sort (skeleton: Skeleton) {
+		var bone = bone.bone;
+		skeleton.sortBone(bone);
+		skeleton._updateCache.push(this);
+		skeleton.sortReset(bone.children);
+		skeleton.constrained(bone);
 	}
 
-	public var skeleton(get, never):Skeleton;
-
-	private function get_skeleton():Skeleton {
-		return _skeleton;
+	override public function isSourceActive () {
+		return bone.bone.active;
 	}
-
 }

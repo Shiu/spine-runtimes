@@ -30,26 +30,21 @@
 package spine.animation;
 
 /** Changes a slot's spine.Slot.color. */
-class RGBATimeline extends CurveTimeline implements SlotTimeline {
+class RGBATimeline extends SlotCurveTimeline {
 	private static inline var ENTRIES:Int = 5;
 	private static inline var R:Int = 1;
 	private static inline var G:Int = 2;
 	private static inline var B:Int = 3;
 	private static inline var A:Int = 4;
 
-	private var slotIndex:Int = 0;
-
 	public function new(frameCount:Int, bezierCount:Int, slotIndex:Int) {
-		super(frameCount, bezierCount, [Property.rgb + "|" + slotIndex, Property.alpha + "|" + slotIndex]);
-		this.slotIndex = slotIndex;
+		super(frameCount, bezierCount, slotIndex,
+			Property.rgb + "|" + slotIndex,
+			Property.alpha + "|" + slotIndex);
 	}
 
 	public override function getFrameEntries():Int {
 		return ENTRIES;
-	}
-
-	public function getSlotIndex():Int {
-		return slotIndex;
 	}
 
 	/** Sets the time and color for the specified frame.
@@ -64,15 +59,10 @@ class RGBATimeline extends CurveTimeline implements SlotTimeline {
 		frames[frame + A] = a;
 	}
 
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var slot:Slot = skeleton.slots[slotIndex];
-		if (!slot.bone.active)
-			return;
-
-		var color:Color = slot.color;
+	public function apply1 (slot:Slot, pose:SlotPose, time:Float, alpha:Float, blend:MixBlend) {
+		var color = pose.color;
 		if (time < frames[0]) {
-			var setup:Color = slot.data.color;
+			var setup:Color = slot.data.setup.color;
 			switch (blend) {
 				case MixBlend.setup:
 					color.setFromColor(setup);
@@ -113,7 +103,7 @@ class RGBATimeline extends CurveTimeline implements SlotTimeline {
 			color.set(r, g, b, a);
 		} else {
 			if (blend == MixBlend.setup)
-				color.setFromColor(slot.data.color);
+				color.setFromColor(slot.data.setup.color);
 			color.add((r - color.r) * alpha, (g - color.g) * alpha, (b - color.b) * alpha, (a - color.a) * alpha);
 		}
 	}

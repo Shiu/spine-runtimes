@@ -31,7 +31,7 @@ package spine.animation;
 
 /** Controls how timeline values are mixed with setup pose values or current pose values when a timeline is applied with
  * alpha < 1.
- * 
+ *
  * @see spine.animation.Timeline.apply() */
 class MixBlend {
 	public var ordinal:Int = 0;
@@ -40,25 +40,29 @@ class MixBlend {
 		this.ordinal = ordinal;
 	}
 
-	/** Transitions from the setup value to the timeline value (the current value is not used). Before the first frame, the
-	 * setup value is set. */
+	/** Transitions between the setup and timeline values (the current value is not used). Before the first frame, the setup
+	* value is used.
+	*
+	* `setup` is intended to transition to or from the setup pose, not for animations layered on top of others. */
 	public static var setup(default, never):MixBlend = new MixBlend(0);
-	/** Transitions from the current value to the timeline value. Before the first frame, transitions from the current value to
-	 * the setup value. Timelines which perform instant transitions, such as spine.animation.DrawOrderTimeline or
-	 * spine.animation.AttachmentTimeline, use the setup value before the first frame.
-	 * 
-	 * first is intended for the first animations applied, not for animations layered on top of those. */
+
+	/** Transitions between the current and timeline values. Before the first frame, transitions between the current and setup
+	* values. Timelines which perform instant transitions, such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}, use
+	* the setup value before the first frame.
+	*
+	* `first` is intended for the first animations applied, not for animations layered on top of others. */
 	public static var first(default, never):MixBlend = new MixBlend(1);
-	/** Transitions from the current value to the timeline value. No change is made before the first frame (the current value is
-	 * kept until the first frame).
-	 * 
-	 * replace is intended for animations layered on top of others, not for the first animations applied. */
+
+	/** Transitions between the current and timeline values. No change is made before the first frame.
+	*
+	* `replace` is intended for animations layered on top of others, not for the first animations applied. */
 	public static var replace(default, never):MixBlend = new MixBlend(2);
-	/** Transitions from the current value to the current value plus the timeline value. No change is made before the first
-	 * frame (the current value is kept until the first frame).
-	 * 
-	 * add is intended for animations layered on top of others, not for the first animations applied. Properties
-	 * set by additive animations must be set manually or by another animation before applying the additive animations, else the
-	 * property values will increase each time the additive animations are applied. */
+
+	/** Transitions between the current value and the current plus timeline values. No change is made before the first frame.
+	*
+	* `add` is intended for animations layered on top of others, not for the first animations applied.
+	*
+	* Properties set by additive animations must be set manually or by another animation before applying the additive
+	* animations, else the property values will increase each time the additive animations are applied. */
 	public static var add(default, never):MixBlend = new MixBlend(3);
 }

@@ -29,22 +29,18 @@
 
 package spine.animation;
 
-/** Changes a physics constraint's spine.PhysicsConstraint.gravity. */
+/** Changes a physics constraint's spine.PhysicsConstraintPose.gravity. */
 class PhysicsConstraintGravityTimeline extends PhysicsConstraintTimeline {
-	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintGravity);
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintGravity);
 	}
 
-	public function setup (constraint: PhysicsConstraint):Float {
-		return constraint.data.gravity;
+	public function get (pose: PhysicsConstraintPose):Float {
+		return pose.gravity;
 	}
 
-	public function get (constraint: PhysicsConstraint):Float {
-		return constraint.gravity;
-	}
-
-	public function set (constraint: PhysicsConstraint, value:Float):Void {
-		constraint.gravity = value;
+	public function set (pose: PhysicsConstraintPose, value:Float):Void {
+		pose.gravity = value;
 	}
 
 	public function global (constraint: PhysicsConstraintData):Bool {

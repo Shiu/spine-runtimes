@@ -30,25 +30,18 @@
 package spine.animation;
 
 /** Changes the RGB for a slot's spine.Slot.color. */
-class RGBTimeline extends CurveTimeline implements SlotTimeline {
+class RGBTimeline extends SlotCurveTimeline {
 	private static inline var ENTRIES:Int = 4;
 	private static inline var R:Int = 1;
 	private static inline var G:Int = 2;
 	private static inline var B:Int = 3;
 
-	private var slotIndex:Int = 0;
-
 	public function new(frameCount:Int, bezierCount:Int, slotIndex:Int) {
-		super(frameCount, bezierCount, [Property.rgb + "|" + slotIndex]);
-		this.slotIndex = slotIndex;
+		super(frameCount, bezierCount, slotIndex, Property.rgb + "|" + slotIndex);
 	}
 
 	public override function getFrameEntries():Int {
 		return ENTRIES;
-	}
-
-	public function getSlotIndex():Int {
-		return slotIndex;
 	}
 
 	/** Sets the time and color for the specified frame.
@@ -62,15 +55,10 @@ class RGBTimeline extends CurveTimeline implements SlotTimeline {
 		frames[frame + B] = b;
 	}
 
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var slot:Slot = skeleton.slots[slotIndex];
-		if (!slot.bone.active)
-			return;
-
-		var color:Color = slot.color, setup:Color;
+	public function apply1 (slot:Slot, pose:SlotPose, time:Float, alpha:Float, blend:MixBlend) {
+		var color = pose.color;
 		if (time < frames[0]) {
-			setup = slot.data.color;
+			var setup = slot.data.setup.color;
 			switch (blend) {
 				case MixBlend.setup:
 					color.r = setup.r;
@@ -112,7 +100,7 @@ class RGBTimeline extends CurveTimeline implements SlotTimeline {
 			color.b = b;
 		} else {
 			if (blend == MixBlend.setup) {
-				setup = slot.data.color;
+				var setup = slot.data.setup.color;
 				color.r = setup.r;
 				color.g = setup.g;
 				color.b = setup.b;

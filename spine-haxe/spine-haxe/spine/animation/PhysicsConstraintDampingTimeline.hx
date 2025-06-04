@@ -29,22 +29,18 @@
 
 package spine.animation;
 
-/** Changes a physics constraint's spine.PhysicsConstraint.damping. */
+/** Changes a physics constraint's spine.PhysicsConstraintPose.damping. */
 class PhysicsConstraintDampingTimeline extends PhysicsConstraintTimeline {
-	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintDamping);
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintDamping);
 	}
 
-	public function setup (constraint: PhysicsConstraint):Float {
-		return constraint.data.damping;
+	public function get (pose: PhysicsConstraintPose):Float {
+		return pose.damping;
 	}
 
-	public function get (constraint: PhysicsConstraint):Float {
-		return constraint.damping;
-	}
-
-	public function set (constraint: PhysicsConstraint, value:Float):Void {
-		constraint.damping = value;
+	public function set (pose: PhysicsConstraintPose, value:Float):Void {
+		pose.damping = value;
 	}
 
 	public function global (constraint: PhysicsConstraintData):Bool {

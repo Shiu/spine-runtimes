@@ -39,7 +39,7 @@ class DrawOrderTimeline extends Timeline {
 	public var drawOrders:Array<Array<Int>>;
 
 	public function new(frameCount:Int) {
-		super(frameCount, [Std.string(Property.drawOrder)]);
+		super(frameCount, Property.drawOrder);
 		drawOrders = new Array<Array<Int>>();
 		drawOrders.resize(frameCount);
 	}
@@ -59,8 +59,9 @@ class DrawOrderTimeline extends Timeline {
 		drawOrders[frame] = drawOrder;
 	}
 
-	override public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
+
 		var drawOrder:Array<Slot> = skeleton.drawOrder;
 		var slots:Array<Slot> = skeleton.slots;
 		var i:Int = 0, n:Int = slots.length;

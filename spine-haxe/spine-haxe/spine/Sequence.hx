@@ -59,7 +59,7 @@ class Sequence {
 		return copy;
 	}
 
-	public function apply(slot:Slot, attachment:HasTextureRegion) {
+	public function apply(slot:SlotPose, attachment:HasTextureRegion) {
 		var index:Int = slot.sequenceIndex;
 		if (index == -1)
 			index = this.setupIndex;

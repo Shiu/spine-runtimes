@@ -34,39 +34,37 @@ import spine.PathConstraint;
 import spine.Skeleton;
 
 /** The base class for most spine.PhysicsConstraint timelines. */
-abstract class PhysicsConstraintTimeline extends CurveTimeline1 {
-	/** The index of the physics constraint in Skeleton.physicsConstraints that will be changed when this timeline
-	 * is applied, or -1 if all physics constraints in the skeleton will be changed. */
-	public var constraintIndex:Int = 0;
-
+abstract class PhysicsConstraintTimeline extends ConstraintTimeline1 {
 	/**
-	 * @param physicsConstraintIndex -1 for all physics constraints in the skeleton.
+	 * @param constraintIndex -1 for all physics constraints in the skeleton.
 	 */
-	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int, property:Int) {
-		super(frameCount, bezierCount, [property + "|" + physicsConstraintIndex]);
-		constraintIndex = physicsConstraintIndex;
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int, property:Property) {
+		super(frameCount, bezierCount, constraintIndex, property);
 	}
 
-	public override function apply (skeleton:Skeleton, lastTime:Float, time:Float, firedEvents:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection):Void {
-		var constraint:PhysicsConstraint;
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
+
 		if (constraintIndex == -1) {
 			var value:Float = time >= frames[0] ? getCurveValue(time) : 0;
-
-			for (constraint in skeleton.physicsConstraints) {
-				if (constraint.active && global(constraint.data))
-					set(constraint, getAbsoluteValue2(time, alpha, blend, get(constraint), setup(constraint), value));
+			for (constraint in skeleton.physics) {
+				if (constraint.active && global(constraint.data)) {
+					var pose = appliedPose ? constraint.applied : constraint.pose;
+					set(pose, getAbsoluteValue2(time, alpha, blend, get(pose), get(constraint.data.setup), value));
+				}
 			}
 		} else {
-			constraint = skeleton.physicsConstraints[constraintIndex];
-			if (constraint.active) set(constraint, getAbsoluteValue(time, alpha, blend, get(constraint), setup(constraint)));
+			var constraint = cast(skeleton.constraints[constraintIndex], PhysicsConstraint);
+			if (constraint.active) {
+				var pose = appliedPose ? constraint.applied : constraint.pose;
+				set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(constraint.data.setup)));
+			}
 		}
 	}
 
-	abstract public function setup (constraint: PhysicsConstraint):Float;
+	abstract public function get (pose: PhysicsConstraintPose):Float;
 
-	abstract public function get (constraint: PhysicsConstraint):Float;
-
-	abstract public function set (constraint: PhysicsConstraint, value:Float):Void;
+	abstract public function set (pose: PhysicsConstraintPose, value:Float):Void;
 
 	abstract public function global (constraint: PhysicsConstraintData):Bool;
 }

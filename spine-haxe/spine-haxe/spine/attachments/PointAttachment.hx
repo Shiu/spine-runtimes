@@ -29,7 +29,7 @@
 
 package spine.attachments;
 
-import spine.Bone;
+import spine.BonePose;
 import spine.Color;
 import spine.MathUtils;
 
@@ -51,13 +51,13 @@ class PointAttachment extends VertexAttachment {
 		super(name);
 	}
 
-	public function computeWorldPosition(bone:Bone, point:Array<Float>):Array<Float> {
+	public function computeWorldPosition(bone:BonePose, point:Array<Float>):Array<Float> {
 		point[0] = x * bone.a + y * bone.b + bone.worldX;
 		point[1] = x * bone.c + y * bone.d + bone.worldY;
 		return point;
 	}
 
-	public function computeWorldRotation(bone:Bone):Float {
+	public function computeWorldRotation(bone:BonePose):Float {
 		var r:Float = this.rotation * MathUtils.degRad, cos:Float = Math.cos(r), sin:Float = Math.sin(r);
 		var x:Float = cos * bone.a + sin * bone.b;
 		var y:Float = cos * bone.c + sin * bone.d;

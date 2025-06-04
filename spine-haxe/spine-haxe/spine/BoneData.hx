@@ -29,75 +29,41 @@
 
 package spine;
 
-/** Stores the setup pose for a spine.Bone. */
-class BoneData {
-	private var _index:Int;
-	private var _name:String;
-	private var _parent:BoneData;
-
-	/** The bone's length. */
-	public var length:Float = 0;
-	/** The local x translation. */
-	public var x:Float = 0;
-	/** The local y translation. */
-	public var y:Float = 0;
-	/** The local rotation in degrees, counter clockwise. */
-	public var rotation:Float = 0;
-	/** The local scaleX. */
-	public var scaleX:Float = 1;
-	/** The local scaleY. */
-	public var scaleY:Float = 1;
-	/** The local shearX. */
-	public var shearX:Float = 0;
-	/** The local shearY. */
-	public var shearY:Float = 0;
-	/** Determines how parent world transforms affect this bone. */
-	public var inherit:Inherit = Inherit.normal;
-	/** When true, spine.Skeleton.updateWorldTransform() only updates this bone if the spine.Skeleton.getSkin() contains
-	 * this bone.
-	 * @see spine.Skin.getBones() */
-	public var skinRequired:Bool = false;
-	/** The color of the bone as it was in Spine, or a default color if nonessential data was not exported. Bones are not usually
-	 * rendered at runtime. */
-	public var color:Color = new Color(0, 0, 0, 0);
-	/** The bone icon as it was in Spine, or null if nonessential data was not exported. */
-	public var icon:String;
-	/** False if the bone was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
-	public var visible:Bool = false;
-
-	/** Copy constructor. */
-	public function new(index:Int, name:String, parent:BoneData) {
-		if (index < 0)
-			throw new SpineException("index must be >= 0");
-		if (name == null)
-			throw new SpineException("name cannot be null.");
-		_index = index;
-		_name = name;
-		_parent = parent;
-	}
+/** The setup pose for a bone. */
+class BoneData extends PosedData<BoneLocal> {
 
 	/** The index of the bone in spine.Skeleton.getBones(). */
-	public var index(get, never):Int;
+	public final index:Int;
 
-	private function get_index():Int {
-		return _index;
+	public final parent:BoneData = null;
+
+	/** The bone's length. */
+	public var length = 0.;
+
+	// Nonessential.
+	/** The color of the bone as it was in Spine, or a default color if nonessential data was not exported. Bones are not usually
+	 * rendered at runtime. */
+	public var color = new Color(0, 0, 0, 0);
+
+	/** The bone icon as it was in Spine, or null if nonessential data was not exported. */
+	public var icon:String = null;
+
+	/** False if the bone was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
+	public var visible = false;
+
+	public function new (index:Int, name:String, parent:BoneData) {
+		super(name, new BoneLocal());
+		if (index < 0) throw new SpineException("index must be >= 0.");
+		if (name == null) throw new SpineException("name cannot be null.");
+		this.index = index;
+		this.parent = parent;
 	}
 
-	/** The name of the bone, which is unique across all bones in the skeleton. */
-	public var name(get, never):String;
-
-	private function get_name():String {
-		return _name;
-	}
-
-	/** @return May be null. */
-	public var parent(get, never):BoneData;
-
-	private function get_parent():BoneData {
-		return _parent;
-	}
-
-	public function toString():String {
-		return _name;
+	/** Copy method. */
+	public function copy(data:BoneData, parent:BoneData) {
+		var copy = new BoneData(data.index, data.name, parent);
+		length = data.length;
+		setup.set(data.setup);
+		return copy;
 	}
 }

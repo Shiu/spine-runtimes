@@ -33,171 +33,136 @@ package spine;
  * the last bone is as close to the target bone as possible.
  *
  * @see https://esotericsoftware.com/spine-ik-constraints IK constraints in the Spine User Guide */
-class IkConstraint implements Updatable {
-	private var _data:IkConstraintData;
+class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkConstraintPose> {
 
-	/** The bones that will be modified by this IK constraint. */
-	public var bones:Array<Bone>;
+	/** The 1 or 2 bones that will be modified by this IK constraint. */
+	public final bones:Array<BonePose>;
+
 	/** The bone that is the IK target. */
-	public var target:Bone;
-	/** For two bone IK, controls the bend direction of the IK bones, either 1 or -1. */
-	public var bendDirection:Int = 0;
-	/** For one bone IK, when true and the target is too close, the bone is scaled to reach it. */
-	public var compress:Bool = false;
-	/** When true and the target is out of range, the parent bone is scaled to reach it.
-	 *
-	 * For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not applied if getSoftness() is
-	 * > 0, and 3) if the parent bone has local nonuniform scale, stretch is not applied. */
-	public var stretch:Bool = false;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
-	 *
-	 * For two bone IK: if the parent bone has local nonuniform scale, the child bone's local Y translation is set to 0. */
-	public var mix:Float = 0;
-	/** For two bone IK, the target bone's distance from the maximum reach of the bones where rotation begins to slow. The bones
-	 * will not straighten completely until the target is this far out of range. */
-	public var softness:Float = 0;
-	public var active:Bool = false;
+	public var target(default, set):Bone;
 
-	/** Copy constructor. */
 	public function new(data:IkConstraintData, skeleton:Skeleton) {
-		if (data == null)
-			throw new SpineException("data cannot be null.");
-		if (skeleton == null)
-			throw new SpineException("skeleton cannot be null.");
-		_data = data;
+		super(data, new IkConstraintPose(), new IkConstraintPose());
+		if (skeleton == null) throw new SpineException("skeleton cannot be null.");
 
-		bones = new Array<Bone>();
-		for (boneData in data.bones) {
-			bones.push(skeleton.findBone(boneData.name));
-		}
-		target = skeleton.findBone(data.target.name);
-
-		mix = data.mix;
-		softness = data.softness;
-		bendDirection = data.bendDirection;
-		compress = data.compress;
-		stretch = data.stretch;
+		bones = new Array<BonePose>();
+		for (boneData in data.bones)
+			bones.push(skeleton.bones[boneData.index].constrained);
+		target = skeleton.bones[data.target.index];
 	}
 
-	public function isActive():Bool {
-		return active;
-	}
-
-	public function setToSetupPose () {
-		var data:IkConstraintData = _data;
-		mix = data.mix;
-		softness = data.softness;
-		bendDirection = data.bendDirection;
-		compress = data.compress;
-		stretch = data.stretch;
+	public function copy (skeleton:Skeleton) {
+		var copy = new IkConstraint(data, skeleton);
+		copy.pose.set(pose);
+		return copy;
 	}
 
 	/** Applies the constraint to the constrained bones. */
-	public function update(physics:Physics):Void {
-		if (mix == 0)
-			return;
+	public function update (skeleton:Skeleton, physics:Physics):Void {
+		var p = applied;
+		if (p.mix == 0) return;
+		var target = target.applied;
 		switch (bones.length) {
-			case 1:
-				apply1(bones[0], target.worldX, target.worldY, compress, stretch, _data.uniform, mix);
-			case 2:
-				apply2(bones[0], bones[1], target.worldX, target.worldY, bendDirection, stretch, _data.uniform, softness, mix);
+			case 1: apply1(skeleton, bones[0], target.worldX, target.worldY, p.compress, p.stretch, data.uniform, p.mix);
+			case 2: apply2(skeleton, bones[0], bones[1], target.worldX, target.worldY, p.bendDirection, p.stretch, data.uniform, p.softness, p.mix);
 		}
 	}
 
-	/** The IK constraint's setup pose data. */
-	public var data(get, never):IkConstraintData;
-
-	private function get_data():IkConstraintData {
-		return _data;
+	public function sort (skeleton:Skeleton) {
+		skeleton.sortBone(target);
+		var parent = bones[0].bone;
+		skeleton.sortBone(parent);
+		skeleton._updateCache.push(this);
+		parent.sorted = false;
+		skeleton.sortReset(parent.children);
+		skeleton.constrained(parent);
+		if (bones.length > 1) skeleton.constrained(bones[1].bone);
 	}
 
-	public function toString():String {
-		return _data.name != null ? _data.name : "IkConstraint?";
+	override public function isSourceActive () {
+		return target.active;
+	}
+
+	public function set_target (target:Bone):Bone {
+		if (target == null) throw new SpineException("target cannot be null.");
+		this.target = target;
+		return target;
 	}
 
 	/** Applies 1 bone IK. The target is specified in the world coordinate system. */
-	static public function apply1(bone:Bone, targetX:Float, targetY:Float, compress:Bool, stretch:Bool, uniform:Bool, alpha:Float):Void {
-		var p:Bone = bone.parent;
-		var pa:Float = p.a, pb:Float = p.b, pc:Float = p.c, pd:Float = p.d;
-		var rotationIK:Float = -bone.ashearX - bone.arotation,
-			tx:Float = 0,
-			ty:Float = 0;
+	static public function apply1(skeleton:Skeleton, bone:BonePose, targetX:Float, targetY:Float, compress:Bool, stretch:Bool,
+		uniform:Bool, mix:Float) {
+
+		if (bone == null) throw new SpineException("bone cannot be null.");
+		bone.modifyLocal(skeleton);
+		var p = bone.bone.parent.applied;
+		var pa = p.a, pb = p.b, pc = p.c, pd = p.d;
+		var rotationIK = -bone.shearX - bone.rotation, tx = 0., ty = 0.;
 
 		function switchDefault() {
-			var x:Float = targetX - p.worldX, y:Float = targetY - p.worldY;
-			var d:Float = pa * pd - pb * pc;
+			var x = targetX - p.worldX, y = targetY - p.worldY;
+			var d = pa * pd - pb * pc;
 			if (Math.abs(d) <= 0.0001) {
 				tx = 0;
 				ty = 0;
 			} else {
-				tx = (x * pd - y * pb) / d - bone.ax;
-				ty = (y * pa - x * pc) / d - bone.ay;
+				tx = (x * pd - y * pb) / d - bone.x;
+				ty = (y * pa - x * pc) / d - bone.y;
 			}
 		}
 
 		switch (bone.inherit) {
 			case Inherit.onlyTranslation:
-				tx = (targetX - bone.worldX) * MathUtils.signum(bone.skeleton.scaleX);
-				ty = (targetY - bone.worldY) * MathUtils.signum(bone.skeleton.scaleY);
+				tx = (targetX - bone.worldX) * MathUtils.signum(skeleton.scaleX);
+				ty = (targetY - bone.worldY) * MathUtils.signum(skeleton.scaleY);
 			case Inherit.noRotationOrReflection:
 				var s = Math.abs(pa * pd - pb * pc) / Math.max(0.0001, pa * pa + pc * pc);
-				var sa:Float = pa / bone.skeleton.scaleX;
-				var sc:Float = pc / bone.skeleton.scaleY;
-				pb = -sc * s * bone.skeleton.scaleX;
-				pd = sa * s * bone.skeleton.scaleY;
-				rotationIK += Math.atan2(sc, sa) * MathUtils.radDeg;
-				var x:Float = targetX - p.worldX, y:Float = targetY - p.worldY;
-				var d:Float = pa * pd - pb * pc;
-				tx = (x * pd - y * pb) / d - bone.ax;
-				ty = (y * pa - x * pc) / d - bone.ay;
+				var sa:Float = pa / skeleton.scaleX;
+				var sc:Float = pc / skeleton.scaleY;
+				pb = -sc * s * skeleton.scaleX;
+				pd = sa * s * skeleton.scaleY;
+				rotationIK += MathUtils.atan2Deg(sc, sa);
 				switchDefault(); // Fall through.
 			default:
 				switchDefault();
 		}
-
-		rotationIK += Math.atan2(ty, tx) * MathUtils.radDeg;
-		if (bone.ascaleX < 0)
-			rotationIK += 180;
+		rotationIK += MathUtils.atan2Deg(ty, tx);
+		if (bone.scaleX < 0) rotationIK += 180;
 		if (rotationIK > 180)
 			rotationIK -= 360;
-		else if (rotationIK < -180)
+		else if (rotationIK < -180) //
 			rotationIK += 360;
-		var sx:Float = bone.ascaleX;
-		var sy:Float = bone.ascaleY;
+		bone.rotation += rotationIK * mix;
 		if (compress || stretch) {
 			switch (bone.inherit) {
 				case Inherit.noScale, Inherit.noScaleOrReflection:
 					tx = targetX - bone.worldX;
 					ty = targetY - bone.worldY;
 			}
-			var b:Float = bone.data.length * sx;
+			var  b = bone.bone.data.length * bone.scaleX;
 			if (b > 0.0001) {
-				var	dd:Float = tx * tx + ty * ty;
+				var	dd = tx * tx + ty * ty;
 				if ((compress && dd < b * b) || (stretch && dd > b * b)) {
-					var s:Float = (Math.sqrt(dd) / b - 1) * alpha + 1;
-					sx *= s;
-					if (uniform) sy *= s;
+					var s = (Math.sqrt(dd) / b - 1) * mix + 1;
+					bone.scaleX *= s;
+					if (uniform) bone.scaleY *= s;
 				}
 			}
 		}
-		bone.updateWorldTransformWith(bone.ax, bone.ay, bone.arotation + rotationIK * alpha, sx, sy, bone.ashearX, bone.ashearY);
 	}
 
 	/** Applies 2 bone IK. The target is specified in the world coordinate system.
 	 * @param child A direct descendant of the parent bone. */
-	static public function apply2(parent:Bone, child:Bone, targetX:Float, targetY:Float, bendDir:Int, stretch:Bool, uniform:Bool, softness:Float,
-			alpha:Float):Void {
+	static public function apply2(skeleton:Skeleton, parent:BonePose, child:BonePose, targetX:Float, targetY:Float, bendDir:Int,
+		stretch:Bool, uniform:Bool, softness:Float, mix:Float):Void {
+
+		if (parent == null) throw new SpineException("parent cannot be null.");
+		if (child == null) throw new SpineException("child cannot be null.");
 		if (parent.inherit != Inherit.normal || child.inherit != Inherit.normal) return;
-		var px:Float = parent.ax;
-		var py:Float = parent.ay;
-		var psx:Float = parent.ascaleX;
-		var sx:Float = psx;
-		var psy:Float = parent.ascaleY;
-		var sy:Float = psy;
-		var csx:Float = child.ascaleX;
-		var os1:Int;
-		var os2:Int;
-		var s2:Int;
+		parent.modifyLocal(skeleton);
+		child.modifyLocal(skeleton);
+		var px = parent.x, py = parent.y, psx = parent.scaleX, psy = parent.scaleY, csx = child.scaleX;
+		var os1 = 0, os2 = 0, s2 = 0;
 		if (psx < 0) {
 			psx = -psx;
 			os1 = 180;
@@ -213,43 +178,30 @@ class IkConstraint implements Updatable {
 		if (csx < 0) {
 			csx = -csx;
 			os2 = 180;
-		} else {
+		} else
 			os2 = 0;
-		}
-		var cx:Float = child.ax;
-		var cy:Float;
-		var cwx:Float;
-		var cwy:Float;
-		var a:Float = parent.a;
-		var b:Float = parent.b;
-		var c:Float = parent.c;
-		var d:Float = parent.d;
-		var u:Bool = Math.abs(psx - psy) <= 0.0001;
+		var cwx = 0., cwy = 0., a = parent.a, b = parent.b, c = parent.c, d = parent.d;
+		var u = Math.abs(psx - psy) <= 0.0001;
 		if (!u || stretch) {
-			cy = 0;
-			cwx = a * cx + parent.worldX;
-			cwy = c * cx + parent.worldY;
+			child.y = 0;
+			cwx = a * child.x + parent.worldX;
+			cwy = c * child.x + parent.worldY;
 		} else {
-			cy = child.ay;
-			cwx = a * cx + b * cy + parent.worldX;
-			cwy = c * cx + d * cy + parent.worldY;
+			cwx = a * child.x + b * child.y + parent.worldX;
+			cwy = c * child.x + d * child.y + parent.worldY;
 		}
-		var pp:Bone = parent.parent;
+		var pp = parent.bone.parent.applied;
 		a = pp.a;
 		b = pp.b;
 		c = pp.c;
 		d = pp.d;
 		var id = a * d - b * c, x = cwx - pp.worldX, y = cwy - pp.worldY;
 		id = Math.abs(id) <= 0.0001 ? 0 : 1 / id;
-		var dx:Float = (x * d - y * b) * id - px,
-			dy:Float = (y * a - x * c) * id - py;
-		var l1:Float = Math.sqrt(dx * dx + dy * dy);
-		var l2:Float = child.data.length * csx;
-		var a1:Float = 0;
-		var a2:Float = 0;
+		var dx = (x * d - y * b) * id - px, dy = (y * a - x * c) * id - py;
+		var l1 = Math.sqrt(dx * dx + dy * dy), l2 = child.bone.data.length * csx, a1 = 0., a2 = 0.;
 		if (l1 < 0.0001) {
-			apply1(parent, targetX, targetY, false, stretch, false, alpha);
-			child.updateWorldTransformWith(cx, cy, 0, child.ascaleX, child.ascaleY, child.ashearX, child.ashearY);
+			apply1(skeleton, parent, targetX, targetY, false, stretch, false, mix);
+			child.rotation = 0;
 			return;
 		}
 		x = targetX - pp.worldX;
@@ -279,10 +231,9 @@ class IkConstraint implements Updatable {
 			} else if (cos > 1) {
 				cos = 1;
 				if (stretch) {
-					a = (Math.sqrt(dd) / (l1 + l2) - 1) * alpha + 1;
-					sx *= a;
-					if (uniform)
-						sy *= a;
+					a = (Math.sqrt(dd) / (l1 + l2) - 1) * mix + 1;
+					parent.scaleX  *= a;
+					if (uniform) parent.scaleY *= a;
 				}
 			}
 			a2 = Math.acos(cos) * bendDir;
@@ -352,23 +303,18 @@ class IkConstraint implements Updatable {
 				}
 			}
 		}
-
-		var os:Float = Math.atan2(cy, cx) * s2;
-		var rotation:Float = parent.arotation;
-		a1 = (a1 - os) * MathUtils.radDeg + os1 - rotation;
-		if (a1 > 180) {
+		var os:Float = Math.atan2(child.y, child.x) * s2;
+		a1 = (a1 - os) * MathUtils.radDeg + os1 - parent.rotation;
+		if (a1 > 180)
 			a1 -= 360;
-		} else if (a1 < -180) {
+		else if (a1 < -180) //
 			a1 += 360;
-		}
-		parent.updateWorldTransformWith(px, py, rotation + a1 * alpha, sx, sy, 0, 0);
-		rotation = child.arotation;
-		a2 = ((a2 + os) * MathUtils.radDeg - child.ashearX) * s2 + os2 - rotation;
-		if (a2 > 180) {
+		parent.rotation += a1 * mix;
+		a2 = ((a2 + os) * MathUtils.radDeg - child.shearX) * s2 + os2 - child.rotation;
+		if (a2 > 180)
 			a2 -= 360;
-		} else if (a2 < -180) {
+		else if (a2 < -180) //
 			a2 += 360;
-		}
-		child.updateWorldTransformWith(cx, cy, rotation + a2 * alpha, child.ascaleX, child.ascaleY, child.ashearX, child.ashearY);
+		child.rotation += a2 * mix;
 	}
 }

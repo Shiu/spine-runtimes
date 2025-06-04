@@ -35,7 +35,7 @@ import spine.Skeleton;
 
 /** Changes a path constraint's PathConstraint.mixRotate, PathConstraint.mixX, and
  * PathConstraint.mixY. */
-class PathConstraintMixTimeline extends CurveTimeline {
+class PathConstraintMixTimeline extends CurveTimeline implements ConstraintTimeline {
 	private static inline var ENTRIES:Int = 4;
 	private static inline var ROTATE:Int = 1;
 	private static inline var X:Int = 2;
@@ -45,13 +45,17 @@ class PathConstraintMixTimeline extends CurveTimeline {
 	 * applied. */
 	public var constraintIndex:Int = 0;
 
-	public function new(frameCount:Int, bezierCount:Int, pathConstraintIndex:Int) {
-		super(frameCount, bezierCount, [Property.pathConstraintMix + "|" + pathConstraintIndex]);
-		this.constraintIndex = pathConstraintIndex;
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+		super(frameCount, bezierCount, Property.pathConstraintMix + "|" + constraintIndex);
+		this.constraintIndex = constraintIndex;
 	}
 
 	public override function getFrameEntries():Int {
 		return ENTRIES;
+	}
+
+	public function getConstraintIndex () {
+		return constraintIndex;
 	}
 
 	/** Sets the time and color for the specified frame.
@@ -65,24 +69,24 @@ class PathConstraintMixTimeline extends CurveTimeline {
 		frames[frame + Y] = mixY;
 	}
 
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var constraint:PathConstraint = skeleton.pathConstraints[constraintIndex];
-		if (!constraint.active)
-			return;
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
 
-		var data:PathConstraintData;
+		var constraint = cast(skeleton.constraints[constraintIndex], PathConstraint);
+		if (!constraint.active) return;
+		var pose = appliedPose ? constraint.applied : constraint.pose;
+
 		if (time < frames[0]) {
-			data = constraint.data;
+			var setup = constraint.data.setup;
 			switch (blend) {
 				case MixBlend.setup:
-					constraint.mixRotate = data.mixRotate;
-					constraint.mixX = data.mixX;
-					constraint.mixY = data.mixY;
+					pose.mixRotate = setup.mixRotate;
+					pose.mixX = setup.mixX;
+					pose.mixY = setup.mixY;
 				case MixBlend.first:
-					constraint.mixRotate += (data.mixRotate - constraint.mixRotate) * alpha;
-					constraint.mixX += (data.mixX - constraint.mixX) * alpha;
-					constraint.mixY += (data.mixY - constraint.mixY) * alpha;
+					pose.mixRotate += (setup.mixRotate - pose.mixRotate) * alpha;
+					pose.mixX += (setup.mixX - pose.mixX) * alpha;
+					pose.mixY += (setup.mixY - pose.mixY) * alpha;
 			}
 			return;
 		}
@@ -110,15 +114,20 @@ class PathConstraintMixTimeline extends CurveTimeline {
 				y = getBezierValue(time, i, Y, curveType + CurveTimeline.BEZIER_SIZE * 2 - CurveTimeline.BEZIER);
 		}
 
-		if (blend == MixBlend.setup) {
-			data = constraint.data;
-			constraint.mixRotate = data.mixRotate + (rotate - data.mixRotate) * alpha;
-			constraint.mixX = data.mixX + (x - data.mixX) * alpha;
-			constraint.mixY = data.mixY + (y - data.mixY) * alpha;
-		} else {
-			constraint.mixRotate += (rotate - constraint.mixRotate) * alpha;
-			constraint.mixX += (x - constraint.mixX) * alpha;
-			constraint.mixY += (y - constraint.mixY) * alpha;
+		switch (blend) {
+			case MixBlend.setup:
+				var setup = constraint.data.setup;
+				pose.mixRotate = setup.mixRotate + (rotate - setup.mixRotate) * alpha;
+				pose.mixX = setup.mixX + (x - setup.mixX) * alpha;
+				pose.mixY = setup.mixY + (y - setup.mixY) * alpha;
+			case MixBlend.first, MixBlend.replace:
+				pose.mixRotate += (rotate - pose.mixRotate) * alpha;
+				pose.mixX += (x - pose.mixX) * alpha;
+				pose.mixY += (y - pose.mixY) * alpha;
+			case MixBlend.add:
+				pose.mixRotate += rotate * alpha;
+				pose.mixX += x * alpha;
+				pose.mixY += y * alpha;
 		}
 	}
 }

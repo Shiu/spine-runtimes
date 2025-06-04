@@ -29,25 +29,20 @@
 
 package spine.animation;
 
-import spine.Event;
-import spine.PathConstraint;
-import spine.Skeleton;
-
 /** Changes a path constraint's spine.PathConstraint.position. */
-class PathConstraintPositionTimeline extends CurveTimeline1 {
-	/** The index of the path constraint in spine.Skeleton.pathConstraints that will be changed when this timeline is
-	 * applied. */
-	public var constraintIndex:Int = 0;
-
-	public function new(frameCount:Int, bezierCount:Int, pathConstraintIndex:Int) {
-		super(frameCount, bezierCount, [Property.pathConstraintPosition + "|" + pathConstraintIndex]);
-		this.constraintIndex = pathConstraintIndex;
+class PathConstraintPositionTimeline extends ConstraintTimeline1 {
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+		super(frameCount, bezierCount, constraintIndex, Property.pathConstraintPosition);
 	}
 
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var constraint:PathConstraint = skeleton.pathConstraints[constraintIndex];
-		if (constraint.active)
-			constraint.position = getAbsoluteValue(time, alpha, blend, constraint.position, constraint.data.position);
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
+
+		var constraint = cast(skeleton.constraints[constraintIndex], PathConstraint);
+		if (constraint.active) {
+			var pose = appliedPose ? constraint.applied : constraint.pose;
+			pose.position = getAbsoluteValue(time, alpha, blend, pose.position, constraint.data.setup.position);
+		}
+
 	}
 }

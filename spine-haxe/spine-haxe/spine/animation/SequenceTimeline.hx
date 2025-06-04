@@ -42,9 +42,8 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
 	var attachment:HasTextureRegion;
 
 	public function new(frameCount:Int, slotIndex:Int, attachment:HasTextureRegion) {
-		super(frameCount, [
-			Std.string(Property.sequence) + "|" + Std.string(slotIndex) + "|" + Std.string(attachment.sequence.id)
-		]);
+		super(frameCount,
+			Std.string(Property.sequence) + "|" + Std.string(slotIndex) + "|" + Std.string(attachment.sequence.id));
 		this.slotIndex = slotIndex;
 		this.attachment = attachment;
 	}
@@ -71,12 +70,14 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
 		frames[frame + SequenceTimeline.DELAY] = delay;
 	}
 
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
+
 		var slot = skeleton.slots[this.slotIndex];
-		if (!slot.bone.active)
-			return;
-		var slotAttachment = slot.attachment;
+		if (!slot.bone.active) return;
+		var pose = appliedPose ? slot.applied : slot.pose;
+
+		var slotAttachment = pose.attachment;
 		var attachment = cast(this.attachment, Attachment);
 		if (slotAttachment != attachment) {
 			if (!Std.isOfType(slotAttachment, VertexAttachment) || cast(slotAttachment, VertexAttachment).timelineAttachment != attachment)
@@ -84,13 +85,12 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
 		}
 
 		if (direction == MixDirection.mixOut) {
-			if (blend == MixBlend.setup) slot.sequenceIndex = -1;
+			if (blend == MixBlend.setup) pose.sequenceIndex = -1;
 			return;
 		}
 
 		if (time < frames[0]) {
-			if (blend == MixBlend.setup || blend == MixBlend.first)
-				slot.sequenceIndex = -1;
+			if (blend == MixBlend.setup || blend == MixBlend.first) pose.sequenceIndex = -1;
 			return;
 		}
 
@@ -127,6 +127,6 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
 						index = n - index;
 			}
 		}
-		slot.sequenceIndex = index;
+		pose.sequenceIndex = index;
 	}
 }

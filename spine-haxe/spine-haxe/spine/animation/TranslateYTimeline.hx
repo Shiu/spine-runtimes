@@ -29,26 +29,13 @@
 
 package spine.animation;
 
-import spine.Bone;
-import spine.Event;
-import spine.Skeleton;
-
 /** Changes a bone's local y translation. */
-class TranslateYTimeline extends CurveTimeline1 implements BoneTimeline {
-	public var boneIndex:Int = 0;
-
+class TranslateYTimeline extends BoneTimeline1 {
 	public function new(frameCount:Int, bezierCount:Int, boneIndex:Int) {
-		super(frameCount, bezierCount, [Property.y + "|" + boneIndex]);
-		this.boneIndex = boneIndex;
+		super(frameCount, bezierCount, boneIndex, Property.y);
 	}
 
-	public function getBoneIndex():Int {
-		return boneIndex;
-	}
-
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		var bone:Bone = skeleton.bones[boneIndex];
-		if (bone.active) bone.y = getRelativeValue(time, alpha, blend, bone.y, bone.data.y);
+	public function apply1 (pose:BoneLocal, setup:BoneLocal, time:Float, alpha:Float, blend:MixBlend, direction:MixDirection) {
+		pose.y = getRelativeValue(time, alpha, blend, pose.y, setup.y);
 	}
 }

@@ -201,7 +201,7 @@ class SkeletonSprite extends FlxObject
 		for (slot in drawOrder) {
 			var clippedVertexSize:Int = clipper.isClipping() ? 2 : vertexSize;
 			if (!slot.bone.active) {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
 
@@ -239,7 +239,7 @@ class SkeletonSprite extends FlxObject
 				clipper.clipStart(slot, clip);
 				continue;
 			} else {
-				clipper.clipEndWithSlot(slot);
+				clipper.clipEnd(slot);
 				continue;
 			}
 
@@ -312,7 +312,7 @@ class SkeletonSprite extends FlxObject
 				mesh.draw();
 			}
 
-			clipper.clipEndWithSlot(slot);
+			clipper.clipEnd(slot);
 		}
 		clipper.clipEnd();
 	}

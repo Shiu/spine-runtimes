@@ -29,22 +29,18 @@
 
 package spine.animation;
 
-/** Changes a physics constraint's spine.PhysicsConstraint.strength. */
+/** Changes a physics constraint's spine.PhysicsConstraintPose.strength. */
 class PhysicsConstraintStrengthTimeline extends PhysicsConstraintTimeline {
-	public function new(frameCount:Int, bezierCount:Int, physicsConstraintIndex:Int) {
-		super(frameCount, bezierCount, physicsConstraintIndex, Property.physicsConstraintStrength);
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintStrength);
 	}
 
-	public function setup (constraint: PhysicsConstraint):Float {
-		return constraint.data.strength;
+	public function get (pose: PhysicsConstraintPose):Float {
+		return pose.strength;
 	}
 
-	public function get (constraint: PhysicsConstraint):Float {
-		return constraint.strength;
-	}
-
-	public function set (constraint: PhysicsConstraint, value:Float):Void {
-		constraint.strength = value;
+	public function set (pose: PhysicsConstraintPose, value:Float):Void {
+		pose.strength = value;
 	}
 
 	public function global (constraint: PhysicsConstraintData):Bool {

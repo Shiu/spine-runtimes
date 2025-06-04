@@ -79,8 +79,7 @@ class EventQueue {
 	}
 
 	public function drain():Void {
-		if (drainDisabled)
-			return; // Not reentrant.
+		if (drainDisabled) return; // Not reentrant.
 		drainDisabled = true;
 
 		var i:Int = 0;

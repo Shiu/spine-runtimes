@@ -39,7 +39,7 @@ class EventTimeline extends Timeline {
 	public var events:Array<Event>;
 
 	public function new(frameCount:Int) {
-		super(frameCount, [Std.string(Property.event)]);
+		super(frameCount, Property.event);
 		events = new Array<Event>();
 		events.resize(frameCount);
 	}
@@ -56,22 +56,17 @@ class EventTimeline extends Timeline {
 	}
 
 	/** Fires events for frames > lastTime and <= time. */
-	public override function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection):Void {
-		if (events == null)
-			return;
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, firedEvents:Array<Event>, alpha:Float,
+		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
+		if (firedEvents == null) return;
 
 		var frameCount:Int = frames.length;
 
-		if (lastTime > time) // Apply events after lastTime for looped animations.
-		{
-			apply(skeleton, lastTime, 2147483647, events, alpha, blend, direction);
+		if (lastTime > time) { // Apply events after lastTime for looped animations.
+			apply(skeleton, lastTime, 2147483647, firedEvents, alpha, blend, direction, appliedPose);
 			lastTime = -1;
 		} else if (lastTime >= frames[frameCount - 1]) // Last time is after last frame.
-		{
 			return;
-		}
-
 		if (time < frames[0]) return;
 
 		var frame:Int;
@@ -87,7 +82,7 @@ class EventTimeline extends Timeline {
 			}
 		}
 		while (i < frameCount && time >= frames[i]) {
-			events.push(this.events[i]);
+			firedEvents.push(this.events[i]);
 			i++;
 		}
 	}

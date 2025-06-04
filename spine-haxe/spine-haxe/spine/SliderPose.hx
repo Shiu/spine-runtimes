@@ -29,17 +29,13 @@
 
 package spine;
 
-/** The interface for items updated by spine.Skeleton.updateWorldTransform(). */
-interface Updatable {
-	/** @param physics Determines how physics and other non-deterministic updates are applied. */
-	function update(physics:Physics):Void;
+/** Stores a pose for a slider. */
+class SliderPose implements Pose<SliderPose> {
+	public var time = 0.;
+	public var mix = 0.;
 
-	/** Returns false when this item won't be updated by
-	 * spine.Skeleton.updateWorldTransform() because a skin is required and the
-	 * active skin does not contain this item.
-	 * @see spine.Skin.getBones()
-	 * @see spine.Skin.getConstraints()
-	 * @see spine.BoneData.getSkinRequired()
-	 * @see spine.ConstraintData.getSkinRequired() */
-	function isActive():Bool;
+	public function set (pose:SliderPose) {
+		time = pose.time;
+		mix = pose.mix;
+	}
 }
