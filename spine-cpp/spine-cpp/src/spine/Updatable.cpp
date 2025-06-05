@@ -27,35 +27,14 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_PosedActive_h
-#define Spine_PosedActive_h
+#include <spine/Updatable.h>
 
-#include <spine/Posed.h>
+using namespace spine;
 
-namespace spine {
-	template<typename D, typename P, typename A>
-	class PosedActive : public Posed<D, P, A> {
-	public:
-		PosedActive(D& data, P& pose, A& constrained) : Posed<D, P, A>(data, pose, constrained), _active(false) {
-			this->setupPose();
-		}
+RTTI_IMPL_NOPARENT(Updatable)
 
-		virtual ~PosedActive() {}
-
-		/// Returns false when this constraint won't be updated by
-		/// Skeleton::updateWorldTransform(Physics) because a skin is required and the
-		/// active skin does not contain this item.
-		/// @see Skin::getBones()
-		/// @see Skin::getConstraints()
-		/// @see PosedData::getSkinRequired()
-		/// @see Skeleton::updateCache()
-		bool isActive() const {
-			return _active;
-		}
-
-	protected:
-		bool _active;
-	};
+Updatable::Updatable() {
 }
 
-#endif /* Spine_PosedActive_h */
+Updatable::~Updatable() {
+}

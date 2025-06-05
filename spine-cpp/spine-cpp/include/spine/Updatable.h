@@ -27,29 +27,28 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_Update_h
-#define Spine_Update_h
+#ifndef Spine_Updatable_h
+#define Spine_Updatable_h
 
 #include <spine/RTTI.h>
 #include <spine/SpineObject.h>
 #include <spine/Physics.h>
 
 namespace spine {
-	class Skeleton;
-
-	/// The interface for items updated by Skeleton::updateWorldTransform(Physics).
-	class SP_API Update : public SpineObject {
+	class SP_API Updatable : public SpineObject {
 	RTTI_DECL
 
 	public:
-		Update();
+		Updatable();
 
-		virtual ~Update();
+		virtual ~Updatable();
 
-		/// @param skeleton The skeleton being updated.
-		/// @param physics Determines how physics and other non-deterministic updates are applied.
-		virtual void update(Skeleton& skeleton, Physics physics) = 0;
+		virtual void update(Physics physics) = 0;
+
+		virtual bool isActive() = 0;
+
+		virtual void setActive(bool inValue) = 0;
 	};
 }
 
-#endif /* Spine_Update_h */
+#endif /* Spine_Updatable_h */
