@@ -73,7 +73,7 @@ class EventsExample extends FlxState {
 
 		skeletonSprite.setBoundingBox();
 		skeletonSprite.screenCenter();
-		skeletonSprite.skeleton.setBonesToSetupPose();
+		skeletonSprite.skeleton.setupPoseBones();
 		add(skeletonSprite);
 
 		trackEntry.onEvent.add(

@@ -80,7 +80,7 @@ class ControlBonesExample extends FlxState {
 		var radius = 6;
 		for (boneName in controlBoneNames) {
 			var bone = skeletonSprite.skeleton.findBone(boneName);
-			var point = [bone.worldX, bone.worldY];
+			var point = [bone.applied.worldX, bone.applied.worldY];
 			skeletonSprite.skeletonToHaxeWorldCoordinates(point);
 			var control = new FlxSprite();
 			control.makeGraphic(radius * 2, radius * 2, FlxColor.TRANSPARENT, true);
@@ -99,8 +99,8 @@ class ControlBonesExample extends FlxState {
 				point[0] = control.x + radius;
 				point[1] = control.y + radius;
 				go.haxeWorldCoordinatesToBone(point, bone);
-				bone.x = point[0];
-				bone.y = point[1];
+				bone.pose.x = point[0];
+				bone.pose.y = point[1];
             }
 		};
 

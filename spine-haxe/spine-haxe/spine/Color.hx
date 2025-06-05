@@ -87,19 +87,21 @@ class Color {
 		return this;
 	}
 
-	public function setFromRgba8888(value:Int):Void {
+	public function setFromRgba8888(value:Int):Color {
 		r = ((value & 0xff000000) >>> 24) / 255;
 		g = ((value & 0x00ff0000) >>> 16) / 255;
 		b = ((value & 0x0000ff00) >>> 8) / 255;
 		a = ((value & 0x000000ff)) / 255;
 		clamp();
+		return this;
 	}
 
-	public function setFromRgb888(value:Int):Void {
+	public function setFromRgb888(value:Int):Color {
 		r = ((value & 0x00ff0000) >>> 16) / 255;
 		g = ((value & 0x0000ff00) >>> 8) / 255;
 		b = ((value & 0x000000ff)) / 255;
 		clamp();
+		return this;
 	}
 
 	private function clamp():Color {

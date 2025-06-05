@@ -29,13 +29,16 @@
 
 package spine;
 
+import spine.animation.SliderMixTimeline;
+import spine.animation.SliderTimeline;
+import spine.TransformConstraintData;
 import haxe.io.Bytes;
 import StringTools;
 import spine.animation.AlphaTimeline;
 import spine.animation.Animation;
 import spine.animation.AttachmentTimeline;
+import spine.animation.BoneTimeline2;
 import spine.animation.CurveTimeline1;
-import spine.animation.CurveTimeline2;
 import spine.animation.CurveTimeline;
 import spine.animation.DeformTimeline;
 import spine.animation.DrawOrderTimeline;
@@ -113,6 +116,12 @@ class SkeletonBinary {
 	private static inline var SLOT_RGB2:Int = 4;
 	private static inline var SLOT_ALPHA:Int = 5;
 
+	private static inline var CONSTRAINT_IK = 0;
+	private static inline var CONSTRAINT_PATH = 1;
+	private static inline var CONSTRAINT_TRANSFORM = 2;
+	private static inline var CONSTRAINT_PHYSICS = 3;
+	private static inline var CONSTRAINT_SLIDER = 4;
+
 	private static inline var ATTACHMENT_DEFORM = 0;
 	private static inline var ATTACHMENT_SEQUENCE = 1;
 
@@ -128,6 +137,9 @@ class SkeletonBinary {
 	private static inline var PHYSICS_GRAVITY:Int = 6;
 	private static inline var PHYSICS_MIX:Int = 7;
 	private static inline var PHYSICS_RESET:Int = 8;
+
+	private static inline var SLIDER_TIME = 0;
+	private static inline var SLIDER_MIX = 1;
 
 	private static inline var CURVE_LINEAR:Int = 0;
 	private static inline var CURVE_STEPPED:Int = 1;
@@ -172,161 +184,225 @@ class SkeletonBinary {
 		}
 
 		// Bones.
+		var bones = skeletonData.bones;
 		n = input.readInt(true);
 		for (i in 0...n) {
-			var boneName:String = input.readString();
-			var boneParent:BoneData = i == 0 ? null : skeletonData.bones[input.readInt(true)];
-			var boneData:BoneData = new BoneData(i, boneName, boneParent);
-			boneData.rotation = input.readFloat();
-			boneData.x = input.readFloat() * scale;
-			boneData.y = input.readFloat() * scale;
-			boneData.scaleX = input.readFloat();
-			boneData.scaleY = input.readFloat();
-			boneData.shearX = input.readFloat();
-			boneData.shearY = input.readFloat();
-			boneData.length = input.readFloat() * scale;
-			boneData.inherit = Inherit.values[input.readInt(true)];
-			boneData.skinRequired = input.readBoolean();
+			var boneName = input.readString();
+			var boneParent:BoneData = i == 0 ? null : bones[input.readInt(true)];
+			var data = new BoneData(i, boneName, boneParent);
+			var setup = data.setup;
+			setup.rotation = input.readFloat();
+			setup.x = input.readFloat() * scale;
+			setup.y = input.readFloat() * scale;
+			setup.scaleX = input.readFloat();
+			setup.scaleY = input.readFloat();
+			setup.shearX = input.readFloat();
+			setup.shearY = input.readFloat();
+			setup.inherit = Inherit.values[input.readInt(true)];
+			data.length = input.readFloat() * scale;
+			data.skinRequired = input.readBoolean();
 			if (nonessential) {
-				boneData.color.setFromRgba8888(input.readInt32());
-				boneData.icon = input.readString();
-				boneData.visible = input.readBoolean();
+				data.color.setFromRgba8888(input.readInt32());
+				data.icon = input.readString();
+				data.visible = input.readBoolean();
 			}
-			skeletonData.bones.push(boneData);
+			bones.push(data);
 		}
 
 		// Slots.
+		var slots = skeletonData.slots;
 		n = input.readInt(true);
 		for (i in 0...n) {
-			var slotName:String = input.readString();
+			var slotName = input.readString();
 
-			var slotBoneData:BoneData = skeletonData.bones[input.readInt(true)];
-			var slotData:SlotData = new SlotData(i, slotName, slotBoneData);
-			slotData.color.setFromRgba8888(input.readInt32());
+			var boneData = bones[input.readInt(true)];
+			var data = new SlotData(i, slotName, boneData);
+			data.setup.color.setFromRgba8888(input.readInt32());
 
-			var darkColor:Int = input.readInt32();
-			if (darkColor != -1) {
-				slotData.darkColor = new Color(0, 0, 0);
-				slotData.darkColor.setFromRgb888(darkColor);
+			var darkColor = input.readInt32();
+			if (darkColor != -1) data.setup.darkColor = new Color(0, 0, 0).setFromRgb888(darkColor);
+
+			data.attachmentName = input.readStringRef();
+			data.blendMode = BlendMode.values[input.readInt(true)];
+			if (nonessential) data.visible = input.readBoolean();
+			slots.push(data);
+		}
+
+		// Constraints.
+		var constraintCount = input.readInt(true);
+		var constraints = skeletonData.constraints;
+		for (i in 0...constraintCount) {
+			var name = input.readString();
+			var nn = input.readInt(true);
+			switch (input.readByte()) {
+				case CONSTRAINT_IK:
+					var data = new IkConstraintData(name);
+					var constraintBones = data.bones;
+					for (ii in 0...nn)
+						constraintBones.push(bones[input.readInt(true)]);
+					data.target = bones[input.readInt(true)];
+					var flags = input.readByte();
+					data.skinRequired = (flags & 1) != 0;
+					data.uniform = (flags & 2) != 0;
+					var setup = data.setup;
+					setup.bendDirection = (flags & 4) != 0 ? 1 : -1;
+					setup.compress = (flags & 8) != 0;
+					setup.stretch = (flags & 16) != 0;
+					if ((flags & 32) != 0) setup.mix = (flags & 64) != 0 ? input.readFloat() : 1;
+					if ((flags & 128) != 0) setup.softness = input.readFloat() * scale;
+					constraints[i] = data;
+				case CONSTRAINT_TRANSFORM:
+					var data = new TransformConstraintData(name);
+					var constraintBones = data.bones;
+					for (ii in 0...nn)
+						constraintBones.push(bones[input.readInt(true)]);
+					data.source = bones[input.readInt(true)];
+					var flags = input.readByte();
+					data.skinRequired = (flags & 1) != 0;
+					data.localSource = (flags & 2) != 0;
+					data.localTarget = (flags & 4) != 0;
+					data.additive = (flags & 8) != 0;
+					data.clamp = (flags & 16) != 0;
+					var froms = data.properties;
+					for (ii in 0...nn) {
+						var fromScale = 1.;
+						var from:FromProperty;
+						switch (input.readByte()) {
+							case 0: from = new FromRotate();
+							case 1:
+								fromScale = scale;
+								from = new FromX();
+							case 2:
+								fromScale = scale;
+								from = new FromY();
+							case 3: from = new FromScaleX();
+							case 4: from = new FromScaleY();
+							case 5: from = new FromShearY();
+							default: from = null;
+						}
+						from.offset = input.readFloat() * fromScale;
+						var tn = input.readByte();
+						var tos = from.to;
+						for (t in 0...tn) {
+							var toScale = 1.;
+							var to:ToProperty;
+							switch (input.readByte()) {
+								case 0: to = new ToRotate();
+								case 1:
+									toScale = scale;
+									to = new ToX();
+								case 2:
+									toScale = scale;
+									to = new ToY();
+								case 3: to = new ToScaleX();
+								case 4: to = new ToScaleY();
+								case 5: to = new ToShearY();
+								default: to = null;
+							}
+							to.offset = input.readFloat() * toScale;
+							to.max = input.readFloat() * toScale;
+							to.scale = input.readFloat() * toScale / fromScale;
+							tos[t] = to;
+						}
+						froms[ii] = from;
+					}
+					flags = input.readByte();
+					if ((flags & 1) != 0) data.offsets[0] = input.readFloat();
+					if ((flags & 2) != 0) data.offsets[1] = input.readFloat() * scale;
+					if ((flags & 4) != 0) data.offsets[2] = input.readFloat() * scale;
+					if ((flags & 8) != 0) data.offsets[3] = input.readFloat();
+					if ((flags & 16) != 0) data.offsets[4] = input.readFloat();
+					if ((flags & 32) != 0) data.offsets[5] = input.readFloat();
+					flags = input.readByte();
+					var setup = data.setup;
+					if ((flags & 1) != 0) setup.mixRotate = input.readFloat();
+					if ((flags & 2) != 0) setup.mixX = input.readFloat();
+					if ((flags & 4) != 0) setup.mixY = input.readFloat();
+					if ((flags & 8) != 0) setup.mixScaleX = input.readFloat();
+					if ((flags & 16) != 0) setup.mixScaleY = input.readFloat();
+					if ((flags & 32) != 0) setup.mixShearY = input.readFloat();
+					constraints[i] = data;
+				case CONSTRAINT_PATH:
+					var data = new PathConstraintData(name);
+					var constraintBones = data.bones;
+					for (ii in 0...nn)
+						constraintBones[ii] = bones[input.readInt(true)];
+					data.slot = slots[input.readInt(true)];
+					var flags = input.readByte();
+					data.skinRequired = (flags & 1) != 0;
+					data.positionMode = PositionMode.values[(flags >> 1) & 2];
+					data.spacingMode = SpacingMode.values[(flags >> 2) & 3];
+					data.rotateMode = RotateMode.values[(flags >> 4) & 3];
+					if ((flags & 128) != 0) data.offsetRotation = input.readFloat();
+					var setup = data.setup;
+					setup.position = input.readFloat();
+					if (data.positionMode == PositionMode.fixed) setup.position *= scale;
+					setup.spacing = input.readFloat();
+					if (data.spacingMode == SpacingMode.length || data.spacingMode == SpacingMode.fixed) setup.spacing *= scale;
+					setup.mixRotate = input.readFloat();
+					setup.mixX = input.readFloat();
+					setup.mixY = input.readFloat();
+					constraints[i] = data;
+				case CONSTRAINT_PHYSICS:
+					var data = new PhysicsConstraintData(name);
+					data.bone = bones[nn];
+					var flags = input.readByte();
+					data.skinRequired = (flags & 1) != 0;
+					if ((flags & 2) != 0) data.x = input.readFloat();
+					if ((flags & 4) != 0) data.y = input.readFloat();
+					if ((flags & 8) != 0) data.rotate = input.readFloat();
+					if ((flags & 16) != 0) data.scaleX = input.readFloat();
+					if ((flags & 32) != 0) data.shearX = input.readFloat();
+					data.limit = ((flags & 64) != 0 ? input.readFloat() : 5000) * scale;
+					data.step = .1 / input.readUnsignedByte();
+					var setup = data.setup;
+					setup.inertia = input.readFloat();
+					setup.strength = input.readFloat();
+					setup.damping = input.readFloat();
+					setup.massInverse = (flags & 128) != 0 ? input.readFloat() : 1;
+					setup.wind = input.readFloat();
+					setup.gravity = input.readFloat();
+					flags = input.readByte();
+					if ((flags & 1) != 0) data.inertiaGlobal = true;
+					if ((flags & 2) != 0) data.strengthGlobal = true;
+					if ((flags & 4) != 0) data.dampingGlobal = true;
+					if ((flags & 8) != 0) data.massGlobal = true;
+					if ((flags & 16) != 0) data.windGlobal = true;
+					if ((flags & 32) != 0) data.gravityGlobal = true;
+					if ((flags & 64) != 0) data.mixGlobal = true;
+					setup.mix = (flags & 128) != 0 ? input.readFloat() : 1;
+					constraints[i] = data;
+				case CONSTRAINT_SLIDER:
+					var data = new SliderData(name);
+					data.skinRequired = (nn & 1) != 0;
+					data.loop = (nn & 2) != 0;
+					data.additive = (nn & 4) != 0;
+					if ((nn & 8) != 0) data.setup.time = input.readFloat();
+					if ((nn & 16) != 0) data.setup.mix = (nn & 32) != 0 ? input.readFloat() : 1;
+					if ((nn & 64) != 0) {
+						data.local = (nn & 128) != 0;
+						data.bone = bones[input.readInt(true)];
+						var offset = input.readFloat();
+						switch (input.readByte()) {
+							case 0: data.property = new FromRotate();
+							case 1:
+								offset *= scale;
+								data.property =  new FromX();
+							case 2:
+								offset *= scale;
+								data.property =  new FromY();
+							case 3: data.property = new FromScaleX();
+							case 4: data.property = new FromScaleY();
+							case 5: data.property = new FromShearY();
+							default: data.property = null;
+						}
+						data.property.offset = offset;
+						data.scale = input.readFloat();
+					}
+					constraints[i] = data;
 			}
-
-			slotData.attachmentName = input.readStringRef();
-			slotData.blendMode = BlendMode.values[input.readInt(true)];
-			if (nonessential) slotData.visible = input.readBoolean();
-			skeletonData.slots.push(slotData);
 		}
 
-		// IK constraints.
-		n = input.readInt(true);
-		for (i in 0...n) {
-			var ikData:IkConstraintData = new IkConstraintData(input.readString());
-			ikData.order = input.readInt(true);
-			nn = input.readInt(true);
-			for (ii in 0...nn) {
-				ikData.bones.push(skeletonData.bones[input.readInt(true)]);
-			}
-			ikData.target = skeletonData.bones[input.readInt(true)];
-			var flags = input.readByte();
-			ikData.skinRequired = (flags & 1) != 0;
-			ikData.bendDirection = (flags & 2) != 0 ? 1 : -1;
-			ikData.compress = (flags & 4) != 0;
-			ikData.stretch = (flags & 8) != 0;
-			ikData.uniform = (flags & 16) != 0;
-			if ((flags & 32) != 0) ikData.mix = (flags & 64) != 0 ? input.readFloat() : 1;
-			if ((flags & 128) != 0) ikData.softness = input.readFloat() * scale;
-			skeletonData.ikConstraints.push(ikData);
-		}
-
-		// Transform constraints.
-		n = input.readInt(true);
-		for (i in 0...n) {
-			var transformData:TransformConstraintData = new TransformConstraintData(input.readString());
-			transformData.order = input.readInt(true);
-			nn = input.readInt(true);
-			for (ii in 0...nn) {
-				transformData.bones.push(skeletonData.bones[input.readInt(true)]);
-			}
-			transformData.target = skeletonData.bones[input.readInt(true)];
-			var flags = input.readByte();
-			transformData.skinRequired = (flags & 1) != 0;
-			transformData.local = (flags & 2) != 0;
-			transformData.relative = (flags & 4) != 0;
-			if ((flags & 8) != 0) transformData.offsetRotation = input.readFloat();
-			if ((flags & 16) != 0) transformData.offsetX = input.readFloat() * scale;
-			if ((flags & 32) != 0) transformData.offsetY = input.readFloat() * scale;
-			if ((flags & 64) != 0) transformData.offsetScaleX = input.readFloat();
-			if ((flags & 128) != 0) transformData.offsetScaleY = input.readFloat();
-			flags = input.readByte();
-			if ((flags & 1) != 0) transformData.offsetShearY = input.readFloat();
-			if ((flags & 2) != 0) transformData.mixRotate = input.readFloat();
-			if ((flags & 4) != 0) transformData.mixX = input.readFloat();
-			if ((flags & 8) != 0) transformData.mixY = input.readFloat();
-			if ((flags & 16) != 0) transformData.mixScaleX = input.readFloat();
-			if ((flags & 32) != 0) transformData.mixScaleY = input.readFloat();
-			if ((flags & 64) != 0) transformData.mixShearY = input.readFloat();
-			skeletonData.transformConstraints.push(transformData);
-		}
-
-		// Path constraints.
-		n = input.readInt(true);
-		for (i in 0...n) {
-			var pathData:PathConstraintData = new PathConstraintData(input.readString());
-			pathData.order = input.readInt(true);
-			pathData.skinRequired = input.readBoolean();
-			nn = input.readInt(true);
-			for (ii in 0...nn) {
-				pathData.bones.push(skeletonData.bones[input.readInt(true)]);
-			}
-			pathData.target = skeletonData.slots[input.readInt(true)];
-			var flags = input.readByte();
-			pathData.positionMode = PositionMode.values[flags & 1];
-			pathData.spacingMode = SpacingMode.values[(flags >> 1) & 3];
-			pathData.rotateMode = RotateMode.values[(flags >> 3) & 3];
-			if ((flags & 128) != 0) pathData.offsetRotation = input.readFloat();
-			pathData.position = input.readFloat();
-			if (pathData.positionMode == PositionMode.fixed)
-				pathData.position *= scale;
-			pathData.spacing = input.readFloat();
-			if (pathData.spacingMode == SpacingMode.length || pathData.spacingMode == SpacingMode.fixed)
-				pathData.spacing *= scale;
-			pathData.mixRotate = input.readFloat();
-			pathData.mixX = input.readFloat();
-			pathData.mixY = input.readFloat();
-			skeletonData.pathConstraints.push(pathData);
-		}
-
-		// Physics constraints.
-		n = input.readInt(true);
-		for (i in 0...n) {
-			var physicsData:PhysicsConstraintData = new PhysicsConstraintData(input.readString());
-			physicsData.order = input.readInt(true);
-			physicsData.bone = skeletonData.bones[input.readInt(true)];
-			var flags = input.readByte();
-			physicsData.skinRequired = (flags & 1) != 0;
-			if ((flags & 2) != 0) physicsData.x = input.readFloat();
-			if ((flags & 4) != 0) physicsData.y = input.readFloat();
-			if ((flags & 8) != 0) physicsData.rotate = input.readFloat();
-			if ((flags & 16) != 0) physicsData.scaleX = input.readFloat();
-			if ((flags & 32) != 0) physicsData.shearX = input.readFloat();
-			physicsData.limit = ((flags & 64) != 0 ? input.readFloat() : 5000) * scale;
-			physicsData.step = 1 / input.readUnsignedByte();
-			physicsData.inertia = input.readFloat();
-			physicsData.strength = input.readFloat();
-			physicsData.damping = input.readFloat();
-			physicsData.massInverse = (flags & 128) != 0 ? input.readFloat() : 1;
-			physicsData.wind = input.readFloat();
-			physicsData.gravity = input.readFloat();
-			flags = input.readByte();
-			if ((flags & 1) != 0) physicsData.inertiaGlobal = true;
-			if ((flags & 2) != 0) physicsData.strengthGlobal = true;
-			if ((flags & 4) != 0) physicsData.dampingGlobal = true;
-			if ((flags & 8) != 0) physicsData.massGlobal = true;
-			if ((flags & 16) != 0) physicsData.windGlobal = true;
-			if ((flags & 32) != 0) physicsData.gravityGlobal = true;
-			if ((flags & 64) != 0) physicsData.mixGlobal = true;
-			physicsData.mix = (flags & 128) != 0 ? input.readFloat() : 1;
-			skeletonData.physicsConstraints.push(physicsData);
-		}
 
 		// Default skin.
 		var defaultSkin:Skin = readSkin(input, skeletonData, true, nonessential);
@@ -374,16 +450,22 @@ class SkeletonBinary {
 		}
 
 		// Animations.
+		var animations = skeletonData.animations;
 		n = input.readInt(true);
-		for (i in 0...n) {
-			skeletonData.animations.push(readAnimation(input, input.readString(), skeletonData));
-		}
+		for (i in 0...n)
+			animations[i] = readAnimation(input, input.readString(), skeletonData);
+
+		for (i in 0...constraintCount)
+			if (Std.isOfType(constraints[i], SliderData)){
+				var data = cast(constraints[i], SliderData);
+				data.animation = animations[input.readInt(true)];
+			};
 		return skeletonData;
 	}
 
 	private function readSkin(input:BinaryInput, skeletonData:SkeletonData, defaultSkin:Bool, nonessential:Bool):Skin {
 		var skin:Skin = null;
-		var slotCount:Int = 0;
+		var slotCount = 0;
 
 		if (defaultSkin) {
 			slotCount = input.readInt(true);
@@ -392,24 +474,21 @@ class SkeletonBinary {
 			skin = new Skin("default");
 		} else {
 			skin = new Skin(input.readString());
-			if (nonessential) skin.color.setFromRgba8888(input.readInt32());
-			skin.bones.resize(input.readInt(true));
-			for (i in 0...skin.bones.length) {
-				skin.bones[i] = skeletonData.bones[input.readInt(true)];
-			}
 
-			for (i in 0...input.readInt(true)) {
-				skin.constraints.push(skeletonData.ikConstraints[input.readInt(true)]);
-			}
-			for (i in 0...input.readInt(true)) {
-				skin.constraints.push(skeletonData.transformConstraints[input.readInt(true)]);
-			}
-			for (i in 0...input.readInt(true)) {
-				skin.constraints.push(skeletonData.pathConstraints[input.readInt(true)]);
-			}
-			for (i in 0...input.readInt(true)) {
-				skin.constraints.push(skeletonData.physicsConstraints[input.readInt(true)]);
-			}
+			if (nonessential) skin.color.setFromRgba8888(input.readInt32());
+
+			var n:Int;
+			var from1 = skeletonData.bones;
+			var to1 = skin.bones;
+			to1.resize(n = input.readInt(true));
+			for (i in 0...n)
+				to1[i] = from1[input.readInt(true)];
+
+			var from2 = skeletonData.constraints;
+			var to2 = skin.constraints;
+			to2.resize(n = input.readInt(true));
+			for (i in 0...n)
+				to2[i] = from2[input.readInt(true)];
 
 			slotCount = input.readInt(true);
 		}
@@ -451,9 +530,7 @@ class SkeletonBinary {
 		var mesh:MeshAttachment;
 
 		var flags = input.readByte();
-		var name:String = (flags & 8) != 0 ? input.readStringRef() : attachmentName;
-		if (name == null)
-			throw new SpineException("Attachment name must not be null");
+		var name = (flags & 8) != 0 ? input.readStringRef() : attachmentName;
 		switch (AttachmentType.values[flags & 7]) {
 			case AttachmentType.region:
 				path = (flags & 16) != 0 ? input.readStringRef() : null;
@@ -926,26 +1003,19 @@ class SkeletonBinary {
 				}
 				bezierCount = input.readInt(true);
 				switch (timelineType) {
-					case BONE_ROTATE:
-						timelines.push(readTimeline(input, new RotateTimeline(frameCount, bezierCount, boneIndex), 1));
-					case BONE_TRANSLATE:
-						timelines.push(readTimeline2(input, new TranslateTimeline(frameCount, bezierCount, boneIndex), scale));
-					case BONE_TRANSLATEX:
-						timelines.push(readTimeline(input, new TranslateXTimeline(frameCount, bezierCount, boneIndex), scale));
-					case BONE_TRANSLATEY:
-						timelines.push(readTimeline(input, new TranslateYTimeline(frameCount, bezierCount, boneIndex), scale));
-					case BONE_SCALE:
-						timelines.push(readTimeline2(input, new ScaleTimeline(frameCount, bezierCount, boneIndex), 1));
-					case BONE_SCALEX:
-						timelines.push(readTimeline(input, new ScaleXTimeline(frameCount, bezierCount, boneIndex), 1));
-					case BONE_SCALEY:
-						timelines.push(readTimeline(input, new ScaleYTimeline(frameCount, bezierCount, boneIndex), 1));
-					case BONE_SHEAR:
-						timelines.push(readTimeline2(input, new ShearTimeline(frameCount, bezierCount, boneIndex), 1));
-					case BONE_SHEARX:
-						timelines.push(readTimeline(input, new ShearXTimeline(frameCount, bezierCount, boneIndex), 1));
-					case BONE_SHEARY:
-						timelines.push(readTimeline(input, new ShearYTimeline(frameCount, bezierCount, boneIndex), 1));
+					case BONE_ROTATE: readTimeline(input, timelines, new RotateTimeline(frameCount, bezierCount, boneIndex), 1);
+					case BONE_TRANSLATE: //
+						readTimeline2(input, timelines, new TranslateTimeline(frameCount, bezierCount, boneIndex), scale);
+					case BONE_TRANSLATEX: //
+						readTimeline(input, timelines, new TranslateXTimeline(frameCount, bezierCount, boneIndex), scale);
+					case BONE_TRANSLATEY: //
+						readTimeline(input, timelines, new TranslateYTimeline(frameCount, bezierCount, boneIndex), scale);
+					case BONE_SCALE: readTimeline2(input, timelines, new ScaleTimeline(frameCount, bezierCount, boneIndex), 1);
+					case BONE_SCALEX: readTimeline(input, timelines, new ScaleXTimeline(frameCount, bezierCount, boneIndex), 1);
+					case BONE_SCALEY: readTimeline(input, timelines, new ScaleYTimeline(frameCount, bezierCount, boneIndex), 1);
+					case BONE_SHEAR: readTimeline2(input, timelines, new ShearTimeline(frameCount, bezierCount, boneIndex), 1);
+					case BONE_SHEARX: readTimeline(input, timelines, new ShearXTimeline(frameCount, bezierCount, boneIndex), 1);
+					case BONE_SHEARY: readTimeline(input, timelines, new ShearYTimeline(frameCount, bezierCount, boneIndex), 1);
 				}
 			}
 		}
@@ -1018,8 +1088,7 @@ class SkeletonBinary {
 					mixScaleY2:Float = input.readFloat(),
 					mixShearY2:Float = input.readFloat();
 				switch (input.readByte()) {
-					case CURVE_STEPPED:
-						transformTimeline.setStepped(frame);
+					case CURVE_STEPPED: transformTimeline.setStepped(frame);
 					case CURVE_BEZIER:
 						setBezier(input, transformTimeline, bezier++, frame, 0, time, time2, mixRotate, mixRotate2, 1);
 						setBezier(input, transformTimeline, bezier++, frame, 1, time, time2, mixX, mixX2, 1);
@@ -1045,17 +1114,17 @@ class SkeletonBinary {
 		// Path constraint timelines.
 		for (i in 0...input.readInt(true)) {
 			index = input.readInt(true);
-			var data:PathConstraintData = skeletonData.pathConstraints[index];
+			var data = cast(skeletonData.constraints[index], PathConstraintData);
 			for (ii in 0...input.readInt(true)) {
 				var type:Int = input.readByte(), frameCount:Int = input.readInt(true), bezierCount:Int = input.readInt(true);
 				switch (type) {
 					case PATH_POSITION:
-						timelines.push(readTimeline(input, new PathConstraintPositionTimeline(frameCount, bezierCount, index),
-							data.positionMode == PositionMode.fixed ? scale : 1));
+						readTimeline(input, timelines, new PathConstraintPositionTimeline(frameCount, bezierCount, index),
+							data.positionMode == PositionMode.fixed ? scale : 1);
 					case PATH_SPACING:
-						timelines.push(readTimeline(input, new PathConstraintSpacingTimeline(frameCount, bezierCount, index),
+						readTimeline(input, timelines, new PathConstraintSpacingTimeline(frameCount, bezierCount, index),
 							data.spacingMode == SpacingMode.length
-							|| data.spacingMode == SpacingMode.fixed ? scale : 1));
+							|| data.spacingMode == SpacingMode.fixed ? scale : 1);
 					case PATH_MIX:
 						var mixTimeline:PathConstraintMixTimeline = new PathConstraintMixTimeline(frameCount, bezierCount, index);
 						time = input.readFloat();
@@ -1075,8 +1144,7 @@ class SkeletonBinary {
 							mixX2 = input.readFloat();
 							mixY2 = input.readFloat();
 							switch (input.readByte()) {
-								case CURVE_STEPPED:
-									mixTimeline.setStepped(frame);
+								case CURVE_STEPPED: mixTimeline.setStepped(frame);
 								case CURVE_BEZIER:
 									setBezier(input, mixTimeline, bezier++, frame, 0, time, time2, mixRotate, mixRotate2, 1);
 									setBezier(input, mixTimeline, bezier++, frame, 1, time, time2, mixX, mixX2, 1);
@@ -1107,28 +1175,33 @@ class SkeletonBinary {
 					continue;
 				}
 				var bezierCount = input.readInt(true);
+				var timeline:CurveTimeline1;
 				switch (type) {
-					case PHYSICS_INERTIA:
-						timelines.push(readTimeline(input, new PhysicsConstraintInertiaTimeline(frameCount, bezierCount, constraintIndex), 1));
-						break;
-					case PHYSICS_STRENGTH:
-						timelines.push(readTimeline(input, new PhysicsConstraintStrengthTimeline(frameCount, bezierCount, constraintIndex), 1));
-						break;
-					case PHYSICS_DAMPING:
-						timelines.push(readTimeline(input, new PhysicsConstraintDampingTimeline(frameCount, bezierCount, constraintIndex), 1));
-						break;
-					case PHYSICS_MASS:
-						timelines.push(readTimeline(input, new PhysicsConstraintMassTimeline(frameCount, bezierCount, constraintIndex), 1));
-						break;
-					case PHYSICS_WIND:
-						timelines.push(readTimeline(input, new PhysicsConstraintWindTimeline(frameCount, bezierCount, constraintIndex), 1));
-						break;
-					case PHYSICS_GRAVITY:
-						timelines.push(readTimeline(input, new PhysicsConstraintGravityTimeline(frameCount, bezierCount, constraintIndex), 1));
-						break;
-					case PHYSICS_MIX:
-						timelines.push(readTimeline(input, new PhysicsConstraintMixTimeline(frameCount, bezierCount, constraintIndex), 1));
+					case PHYSICS_INERTIA: timeline = new PhysicsConstraintInertiaTimeline(frameCount, bezierCount, constraintIndex);
+					case PHYSICS_STRENGTH: timeline = new PhysicsConstraintStrengthTimeline(frameCount, bezierCount, constraintIndex);
+					case PHYSICS_DAMPING: timeline = new PhysicsConstraintDampingTimeline(frameCount, bezierCount, constraintIndex);
+					case PHYSICS_MASS: timeline = new PhysicsConstraintMassTimeline(frameCount, bezierCount, constraintIndex);
+					case PHYSICS_WIND: timeline = new PhysicsConstraintWindTimeline(frameCount, bezierCount, constraintIndex);
+					case PHYSICS_GRAVITY: timeline = new PhysicsConstraintGravityTimeline(frameCount, bezierCount, constraintIndex);
+					case PHYSICS_MIX: timeline = new PhysicsConstraintMixTimeline(frameCount, bezierCount, constraintIndex);
+					default: throw new SpineException("Unknown physics timeline type: " + type);
 				}
+				readTimeline(input, timelines, timeline, 1);
+			}
+		}
+
+		// Slider timelines.
+		for (i in 0...input.readInt(true)) {
+			var index = input.readInt(true);
+			for (ii in 0...input.readInt(true)) {
+				var type = input.readByte(), frameCount = input.readInt(true), bezierCount = input.readInt(true);
+				var timeline:CurveTimeline1;
+				switch (type) {
+					case SLIDER_TIME: timeline = new SliderTimeline(frameCount, bezierCount, index);
+					case SLIDER_MIX: timeline = new SliderMixTimeline(frameCount, bezierCount, index);
+					default: throw new SpineException("Unknown slider timeline type: " + type);
+				}
+				readTimeline(input, timelines, timeline, 1);
 			}
 		}
 
@@ -1196,10 +1269,8 @@ class SkeletonBinary {
 									break;
 								time2 = input.readFloat();
 								switch (input.readByte()) {
-									case CURVE_STEPPED:
-										deformTimeline.setStepped(frame);
-									case CURVE_BEZIER:
-										SkeletonBinary.setBezier(input, deformTimeline, bezier++, frame, 0, time, time2, 0, 1, 1);
+									case CURVE_STEPPED: deformTimeline.setStepped(frame);
+									case CURVE_BEZIER: SkeletonBinary.setBezier(input, deformTimeline, bezier++, frame, 0, time, time2, 0, 1, 1);
 								}
 								time = time2;
 
@@ -1284,13 +1355,12 @@ class SkeletonBinary {
 		}
 
 		var duration:Float = 0;
-		for (i in 0...timelines.length) {
+		for (i in 0...timelines.length)
 			duration = Math.max(duration, timelines[i].getDuration());
-		}
 		return new Animation(name, timelines, duration);
 	}
 
-	static private function readTimeline(input:BinaryInput, timeline:CurveTimeline1, scale:Float):CurveTimeline1 {
+	static private function readTimeline(input:BinaryInput, timelines:Array<Timeline>, timeline:CurveTimeline1, scale:Float) {
 		var time:Float = input.readFloat(),
 			value:Float = input.readFloat() * scale;
 
@@ -1305,20 +1375,18 @@ class SkeletonBinary {
 			var time2:Float = input.readFloat(),
 				value2:Float = input.readFloat() * scale;
 			switch (input.readByte()) {
-				case CURVE_STEPPED:
-					timeline.setStepped(frame);
-				case CURVE_BEZIER:
-					setBezier(input, timeline, bezier++, frame, 0, time, time2, value, value2, scale);
+				case CURVE_STEPPED: timeline.setStepped(frame);
+				case CURVE_BEZIER: setBezier(input, timeline, bezier++, frame, 0, time, time2, value, value2, scale);
 			}
 			time = time2;
 			value = value2;
 
 			frame++;
 		}
-		return timeline;
+		timelines.push(timeline);
 	}
 
-	static private function readTimeline2(input:BinaryInput, timeline:CurveTimeline2, scale:Float):CurveTimeline2 {
+	static private function readTimeline2(input:BinaryInput, timelines:Array<Timeline>, timeline:BoneTimeline2, scale:Float) {
 		var time:Float = input.readFloat(),
 			value1:Float = input.readFloat() * scale,
 			value2:Float = input.readFloat() * scale;
@@ -1335,8 +1403,7 @@ class SkeletonBinary {
 				nvalue1:Float = input.readFloat() * scale,
 				nvalue2:Float = input.readFloat() * scale;
 			switch (input.readByte()) {
-				case CURVE_STEPPED:
-					timeline.setStepped(frame);
+				case CURVE_STEPPED: timeline.setStepped(frame);
 				case CURVE_BEZIER:
 					setBezier(input, timeline, bezier++, frame, 0, time, time2, value1, nvalue1, scale);
 					setBezier(input, timeline, bezier++, frame, 1, time, time2, value2, nvalue2, scale);
@@ -1347,7 +1414,7 @@ class SkeletonBinary {
 
 			frame++;
 		}
-		return timeline;
+		timelines.push(timeline);
 	}
 
 	static private function setBezier(input:BinaryInput, timeline:CurveTimeline, bezier:Int, frame:Int, value:Float, time1:Float, time2:Float, value1:Float,

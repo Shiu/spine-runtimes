@@ -152,6 +152,9 @@ class TransformConstraintData extends ConstraintData<TransformConstraint, Transf
 
 /** Source property for a {@link TransformConstraint}. */
 abstract class FromProperty {
+	public function new () {
+	}
+
 	/** The value of this property that corresponds to ToProperty.offset. */
 	public var offset:Float;
 
@@ -164,6 +167,9 @@ abstract class FromProperty {
 
 /** Constrained property for a TransformConstraint. */
 abstract class ToProperty {
+	public function new () {
+	}
+
 	/** The value of this property that corresponds to FromProperty.offset. */
 	public var offset:Float;
 

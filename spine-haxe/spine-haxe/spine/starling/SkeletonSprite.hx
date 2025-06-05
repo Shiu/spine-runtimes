@@ -116,8 +116,10 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 			}
 
 			var worldVertices:Array<Float> = _tempVertices;
-			if (Std.isOfType(slot.attachment, RegionAttachment)) {
-				var region:RegionAttachment = cast(slot.attachment, RegionAttachment);
+			var pose = slot.pose;
+			var attachment = pose.attachment;
+			if (Std.isOfType(pose, RegionAttachment)) {
+				var region:RegionAttachment = cast(pose, RegionAttachment);
 				verticesLength = 8;
 				verticesCount = verticesLength >> 1;
 				if (worldVertices.length < verticesLength)
@@ -144,13 +146,13 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 				indexData = mesh.getIndexData();
 				attachmentColor = region.color;
 				uvs = region.uvs;
-			} else if (Std.isOfType(slot.attachment, MeshAttachment)) {
-				var meshAttachment:MeshAttachment = cast(slot.attachment, MeshAttachment);
+			} else if (Std.isOfType(pose, MeshAttachment)) {
+				var meshAttachment:MeshAttachment = cast(pose, MeshAttachment);
 				verticesLength = meshAttachment.worldVerticesLength;
 				verticesCount = verticesLength >> 1;
 				if (worldVertices.length < verticesLength)
 					worldVertices.resize(verticesLength);
-				meshAttachment.computeWorldVertices(slot, 0, meshAttachment.worldVerticesLength, worldVertices, 0, 2);
+				meshAttachment.computeWorldVertices(skeleton, slot, 0, meshAttachment.worldVerticesLength, worldVertices, 0, 2);
 
 				mesh = null;
 				if (Std.isOfType(meshAttachment.rendererObject, SkeletonMesh)) {
@@ -173,26 +175,26 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 				indexData = mesh.getIndexData();
 				attachmentColor = meshAttachment.color;
 				uvs = meshAttachment.uvs;
-			} else if (Std.isOfType(slot.attachment, ClippingAttachment)) {
-				var clip:ClippingAttachment = cast(slot.attachment, ClippingAttachment);
-				clipper.clipStart(slot, clip);
+			} else if (Std.isOfType(pose, ClippingAttachment)) {
+				var clip:ClippingAttachment = cast(pose, ClippingAttachment);
+				clipper.clipStart(skeleton, slot, clip);
 				continue;
 			} else {
 				clipper.clipEnd(slot);
 				continue;
 			}
 
-			a = slot.color.a * attachmentColor.a;
+			a = pose.color.a * attachmentColor.a;
 			if (a == 0) {
 				clipper.clipEnd(slot);
 				continue;
 			}
-			rgb = Color.rgb(Std.int(r * slot.color.r * attachmentColor.r), Std.int(g * slot.color.g * attachmentColor.g),
-				Std.int(b * slot.color.b * attachmentColor.b));
-			if (slot.darkColor == null) {
+			rgb = Color.rgb(Std.int(r * pose.color.r * attachmentColor.r), Std.int(g * pose.color.g * attachmentColor.g),
+				Std.int(b * pose.color.b * attachmentColor.b));
+			if (pose.darkColor == null) {
 				dark = Color.rgb(0, 0, 0);
 			} else {
-				dark = Color.rgb(Std.int(slot.darkColor.r * 255), Std.int(slot.darkColor.g * 255), Std.int(slot.darkColor.b * 255));
+				dark = Color.rgb(Std.int(pose.darkColor.r * 255), Std.int(pose.darkColor.g * 255), Std.int(pose.darkColor.b * 255));
 			}
 
 			if (clipper.isClipping()) {
@@ -249,12 +251,13 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 		var empty:Bool = true;
 		for (i in 0...slots.length) {
 			var slot:Slot = slots[i];
-			var attachment:Attachment = slot.attachment;
+			var pose = slot.pose;
+			var attachment = pose.attachment;
 			if (attachment == null)
 				continue;
 			var verticesLength:Int;
 			if (Std.isOfType(attachment, RegionAttachment)) {
-				var region:RegionAttachment = cast(slot.attachment, RegionAttachment);
+				var region:RegionAttachment = cast(attachment, RegionAttachment);
 				verticesLength = 8;
 				region.computeWorldVertices(slot, worldVertices, 0, 2);
 			} else if (Std.isOfType(attachment, MeshAttachment)) {
@@ -262,7 +265,7 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 				verticesLength = mesh.worldVerticesLength;
 				if (worldVertices.length < verticesLength)
 					worldVertices.resize(verticesLength);
-				mesh.computeWorldVertices(slot, 0, verticesLength, worldVertices, 0, 2);
+				mesh.computeWorldVertices(skeleton, slot, 0, verticesLength, worldVertices, 0, 2);
 			} else {
 				continue;
 			}
@@ -324,7 +327,7 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 
 	public function getAnimationBounds(animation:Animation, clip:Bool = true): Rectangle {
 		var clipper = clip ? SkeletonSprite.clipper : null;
-		_skeleton.setToSetupPose();
+		_skeleton.setupPose();
 
 		var steps = 100, time = 0.;
 		var stepTime = animation.duration != 0 ? animation.duration / steps : 0;
@@ -332,7 +335,7 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 
 		var bound:lime.math.Rectangle;
 		for (i in 0...steps) {
-			animation.apply(_skeleton, time , time, false, [], 1, MixBlend.setup, MixDirection.mixIn);
+			animation.apply(_skeleton, time , time, false, [], 1, MixBlend.setup, MixDirection.mixIn, false);
 			_skeleton.updateWorldTransform(Physics.update);
 			bound = _skeleton.getBounds(clipper);
 
@@ -412,10 +415,11 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 
 	public function haxeWorldCoordinatesToBone(point:Array<Float>, bone: Bone):Void {
 		this.haxeWorldCoordinatesToSkeleton(point);
-		if (bone.parent != null) {
-			bone.parent.worldToLocal(point);
+		var parentBone = bone.parent;
+		if (parentBone != null) {
+			parentBone.applied.worldToLocal(point);
 		} else {
-			bone.worldToLocal(point);
+			bone.applied.worldToLocal(point);
 		}
 	}
 

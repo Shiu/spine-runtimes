@@ -34,6 +34,9 @@ class SliderPose implements Pose<SliderPose> {
 	public var time = 0.;
 	public var mix = 0.;
 
+	public function new () {
+	}
+
 	public function set (pose:SliderPose) {
 		time = pose.time;
 		mix = pose.mix;

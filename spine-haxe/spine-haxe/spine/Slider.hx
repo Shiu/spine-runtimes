@@ -29,6 +29,12 @@
 
 package spine;
 
+import spine.animation.ConstraintTimeline;
+import spine.animation.PhysicsConstraintTimeline;
+import spine.animation.SlotTimeline;
+import spine.animation.MixDirection;
+import spine.animation.MixBlend;
+
 /** Stores the setup pose for a {@link PhysicsConstraint}.
 * <p>
 * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
@@ -39,9 +45,9 @@ class Slider extends Constraint<Slider, SliderData, SliderPose> {
 
 	public function new (data:SliderData, skeleton:Skeleton) {
 		super(data, new SliderPose(), new SliderPose());
-		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
+		if (skeleton == null) throw new SpineException("skeleton cannot be null.");
 
-		if (data.bone != null) bone = skeleton.bones.items[data.bone.index];
+		if (data.bone != null) bone = skeleton.bones[data.bone.index];
 	}
 
 	public function copy (skeleton:Skeleton) {
@@ -67,7 +73,7 @@ class Slider extends Constraint<Slider, SliderData, SliderPose> {
 
 		var bones = skeleton.bones;
 		var indices = animation.bones;
-		var i = 0, n = animation.bones.size;
+		var i = 0, n = animation.bones.length;
 		while (i < n)
 			bones[indices[i++]].applied.modifyLocal(skeleton);
 
@@ -77,7 +83,7 @@ class Slider extends Constraint<Slider, SliderData, SliderPose> {
 
 	function sort (skeleton:Skeleton) {
 		if (bone != null && !data.local) skeleton.sortBone(bone);
-		skeleton.updateCache.add(this);
+		skeleton._updateCache.push(this);
 
 		var bones = skeleton.bones;
 		var indices = data.animation.bones;
@@ -97,15 +103,16 @@ class Slider extends Constraint<Slider, SliderData, SliderPose> {
 		var i = 0, n = data.animation.timelines.length;
 		while (i < n) {
 			var t = timelines[i++];
-			if (std.isOfType(t, SlotTimeline))
+			if (Std.isOfType(t, SlotTimeline))
 				skeleton.constrained(slots[cast(t, SlotTimeline).getSlotIndex()]);
-			else if (std.isOfType(t, PhysicsConstraintTimeline)) {
-				if (cast(t, PhysicsConstraintTimeline).constraintIndex == -1) {
+			else if (Std.isOfType(t, PhysicsConstraintTimeline)) {
+				var timeline = cast(t, PhysicsConstraintTimeline);
+				if (timeline.constraintIndex == -1) {
 					for (ii in 0...physicsCount)
 						skeleton.constrained(physics[ii]);
 				} else
 					skeleton.constrained(constraints[timeline.constraintIndex]);
-			} else if (std.isOfType(t, ConstraintTimeline)) //
+			} else if (Std.isOfType(t, ConstraintTimeline)) //
 				skeleton.constrained(constraints[cast(t, ConstraintTimeline).getConstraintIndex()]);
 		}
 	}

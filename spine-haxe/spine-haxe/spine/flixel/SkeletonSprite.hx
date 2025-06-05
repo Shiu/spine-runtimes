@@ -116,7 +116,7 @@ class SkeletonSprite extends FlxObject
 
 	public function getAnimationBounds(animation:Animation, clip:Bool = true): lime.math.Rectangle {
 		var clipper = clip ? SkeletonSprite.clipper : null;
-		skeleton.setToSetupPose();
+		skeleton.setupPose();
 
 		var steps = 100, time = 0.;
 		var stepTime = animation.duration != 0 ? animation.duration / steps : 0;
@@ -124,7 +124,7 @@ class SkeletonSprite extends FlxObject
 
 		var bounds = new lime.math.Rectangle();
 		for (i in 0...steps) {
-			animation.apply(skeleton, time , time, false, [], 1, MixBlend.setup, MixDirection.mixIn);
+			animation.apply(skeleton, time , time, false, [], 1, MixBlend.setup, MixDirection.mixIn, false);
 			skeleton.updateWorldTransform(Physics.update);
 			bounds = skeleton.getBounds(clipper);
 
@@ -206,8 +206,10 @@ class SkeletonSprite extends FlxObject
 			}
 
 			var worldVertices:Array<Float> = _tempVertices;
-			if (Std.isOfType(slot.attachment, RegionAttachment)) {
-				var region:RegionAttachment = cast(slot.attachment, RegionAttachment);
+			var pose = slot.pose;
+			var attachment = pose.attachment;
+			if (Std.isOfType(attachment, RegionAttachment)) {
+				var region:RegionAttachment = cast(attachment, RegionAttachment);
 				numVertices = 4;
 				numFloats = clippedVertexSize << 2;
 				if (numFloats > worldVertices.length) {
@@ -220,23 +222,23 @@ class SkeletonSprite extends FlxObject
 				triangles = QUAD_INDICES;
 				uvs = region.uvs;
 				attachmentColor = region.color;
-			} else if (Std.isOfType(slot.attachment, MeshAttachment)) {
-				var meshAttachment:MeshAttachment = cast(slot.attachment, MeshAttachment);
+			} else if (Std.isOfType(attachment, MeshAttachment)) {
+				var meshAttachment:MeshAttachment = cast(attachment, MeshAttachment);
 				numVertices = meshAttachment.worldVerticesLength >> 1;
 				numFloats = numVertices * clippedVertexSize; // 8 for now because I'm excluding clipping
 				if (numFloats > worldVertices.length) {
 					worldVertices.resize(numFloats);
 				}
-				meshAttachment.computeWorldVertices(slot, 0, meshAttachment.worldVerticesLength, worldVertices, 0, clippedVertexSize);
+				meshAttachment.computeWorldVertices(skeleton, slot, 0, meshAttachment.worldVerticesLength, worldVertices, 0, clippedVertexSize);
 
 				mesh = getFlixelMeshFromRendererAttachment(meshAttachment);
 				mesh.graphic = meshAttachment.region.texture;
 				triangles = meshAttachment.triangles;
 				uvs = meshAttachment.uvs;
 				attachmentColor = meshAttachment.color;
-			} else if (Std.isOfType(slot.attachment, ClippingAttachment)) {
-				var clip:ClippingAttachment = cast(slot.attachment, ClippingAttachment);
-				clipper.clipStart(slot, clip);
+			} else if (Std.isOfType(attachment, ClippingAttachment)) {
+				var clip:ClippingAttachment = cast(attachment, ClippingAttachment);
+				clipper.clipStart(skeleton, slot, clip);
 				continue;
 			} else {
 				clipper.clipEnd(slot);
@@ -247,12 +249,12 @@ class SkeletonSprite extends FlxObject
 
 				// cannot use directly mesh.color.setRGBFloat otherwise the setter won't be called and transfor color not set
 				mesh.color = FlxColor.fromRGBFloat(
-					skeleton.color.r * slot.color.r * attachmentColor.r * color.redFloat,
-					skeleton.color.g * slot.color.g * attachmentColor.g * color.greenFloat,
-					skeleton.color.b * slot.color.b * attachmentColor.b * color.blueFloat,
+					skeleton.color.r * pose.color.r * attachmentColor.r * color.redFloat,
+					skeleton.color.g * pose.color.g * attachmentColor.g * color.greenFloat,
+					skeleton.color.b * pose.color.b * attachmentColor.b * color.blueFloat,
 					1
 				);
-				mesh.alpha = skeleton.color.a * slot.color.a * attachmentColor.a * alpha;
+				mesh.alpha = skeleton.color.a * pose.color.a * attachmentColor.a * alpha;
 
 				if (clipper.isClipping()) {
 					clipper.clipTriangles(worldVertices, triangles, triangles.length, uvs);
@@ -356,10 +358,11 @@ class SkeletonSprite extends FlxObject
 
 	public function haxeWorldCoordinatesToBone(point:Array<Float>, bone: Bone):Void {
 		this.haxeWorldCoordinatesToSkeleton(point);
-		if (bone.parent != null) {
-			bone.parent.worldToLocal(point);
+		var parentBone = bone.parent;
+		if (parentBone != null) {
+			parentBone.applied.worldToLocal(point);
 		} else {
-			bone.worldToLocal(point);
+			bone.applied.worldToLocal(point);
 		}
 	}
 

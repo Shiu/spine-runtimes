@@ -196,12 +196,12 @@ class SkeletonData {
 
 	// --- Constraints.
 
-	public function findConstraint<T:ConstraintData<Dynamic, Dynamic>>(constraintName:String, type:Class<T>):Null<T> {
+	public function findConstraint<T:ConstraintData<Dynamic, Dynamic>>(constraintName:String, type:Class<T>):T {
 		if (constraintName == null) throw new SpineException("constraintName cannot be null.");
 		if (type == null) throw new SpineException("type cannot be null.");
 
 		for (constraint in constraints) {
-			if (Std.is(constraint, type) && constraint.name == constraintName)
+			if (Std.isOfType(constraint, type) && constraint.name == constraintName)
 				return Std.downcast(constraint, type);
 		}
 		return null;

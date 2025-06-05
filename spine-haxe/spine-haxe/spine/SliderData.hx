@@ -31,6 +31,9 @@
 
  package spine;
 
+import spine.TransformConstraintData.FromProperty;
+import spine.animation.Animation;
+
 /** Stores the setup pose for a PhysicsConstraint.
 *
 * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */

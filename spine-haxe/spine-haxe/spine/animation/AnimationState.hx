@@ -261,7 +261,7 @@ class AnimationState {
 					if (Std.isOfType(timeline, AttachmentTimeline)) {
 						applyAttachmentTimeline(cast(timeline, AttachmentTimeline), skeleton, applyTime, blend, attachments);
 					} else {
-						timeline.apply(skeleton, animationLast, applyTime, applyEvents, alpha, blend, MixDirection.mixIn);
+						timeline.apply(skeleton, animationLast, applyTime, applyEvents, alpha, blend, MixDirection.mixIn, false);
 					}
 				}
 			} else {
@@ -281,7 +281,7 @@ class AnimationState {
 					} else if (Std.isOfType(timeline, AttachmentTimeline)) {
 						this.applyAttachmentTimeline(cast(timeline, AttachmentTimeline), skeleton, applyTime, blend, attachments);
 					} else {
-						timeline.apply(skeleton, animationLast, applyTime, applyEvents, alpha, timelineBlend, MixDirection.mixIn);
+						timeline.apply(skeleton, animationLast, applyTime, applyEvents, alpha, timelineBlend, MixDirection.mixIn, false);
 					}
 				}
 			}
@@ -344,7 +344,7 @@ class AnimationState {
 
 		if (blend == MixBlend.add) {
 			for (timeline in timelines) {
-				timeline.apply(skeleton, animationLast, applyTime, applyEvents, alphaMix, blend, MixDirection.mixOut);
+				timeline.apply(skeleton, animationLast, applyTime, applyEvents, alphaMix, blend, MixDirection.mixOut, false);
 			}
 		} else {
 			var timelineMode:Array<Int> = from.timelineMode;
@@ -391,7 +391,7 @@ class AnimationState {
 				} else {
 					if (drawOrder && Std.isOfType(timeline, DrawOrderTimeline) && timelineBlend == MixBlend.setup)
 						direction = MixDirection.mixIn;
-					timeline.apply(skeleton, animationLast, applyTime, events, alpha, timelineBlend, direction);
+					timeline.apply(skeleton, animationLast, applyTime, events, alpha, timelineBlend, direction, false);
 				}
 			}
 		}

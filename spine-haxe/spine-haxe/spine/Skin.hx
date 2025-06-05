@@ -45,7 +45,7 @@ class Skin {
 	public final attachments:Array<StringMap<Attachment>> = new Array<StringMap<Attachment>>();
 
 	public final bones:Array<BoneData> = new Array<BoneData>();
-	public final constraints = new Array<ConstraintData<Dynamic, Pose<Any>>>();
+	public final constraints = new Array<ConstraintData<Dynamic, Dynamic>>();
 
 	/** The color of the skin as it was in Spine, or a default color if nonessential data was not exported. */
 	public final color:Color = new Color(0.99607843, 0.61960787, 0.30980393, 1); // fe9e4fff

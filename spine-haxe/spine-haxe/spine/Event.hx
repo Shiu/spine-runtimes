@@ -44,7 +44,7 @@ class Event {
 	public var time = 0.;
 
 	public var intValue = 0;
-	public var floatValue = 0;
+	public var floatValue = 0.;
 	public var stringValue:String;
 	public var volume = 1.;
 	public var balance = 0.;

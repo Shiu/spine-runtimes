@@ -141,11 +141,11 @@ class FlixelState extends FlxState
 		var diff = .0;
 		spineSprite.afterUpdateWorldTransforms = spineSprite -> {
 			if (jumping) {
-				diff -= hip.y;
+				diff -= hip.pose.y;
 				spineSprite.offsetY -= diff;
 				spineSprite.y += diff;
 			}
-			diff = hip.y;
+			diff = hip.pose.y;
 		}
 
 		// adding spineboy to the stage
