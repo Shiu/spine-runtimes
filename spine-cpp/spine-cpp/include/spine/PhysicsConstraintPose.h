@@ -27,20 +27,54 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_MixDirection_h
-#define Spine_MixDirection_h
+#ifndef Spine_PhysicsConstraintPose_h
+#define Spine_PhysicsConstraintPose_h
+
+#include <spine/Pose.h>
+#include <spine/RTTI.h>
 
 namespace spine {
-
-	/// Indicates whether a timeline's alpha is mixing out over time toward 0 (the setup or current pose value) or
-	/// mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
-	/// 
-	/// See Timeline::apply().
-	enum MixDirection {
-		MixDirection_In = 0,
-		MixDirection_Out
-	};
-
+    /// Stores a pose for a physics constraint.
+    class SP_API PhysicsConstraintPose : public Pose<PhysicsConstraintPose> {
+        RTTI_DECL
+    
+    private:
+        float _inertia;
+        float _strength;
+        float _damping;
+        float _massInverse;
+        float _wind;
+        float _gravity;
+        float _mix;
+    
+    public:
+        PhysicsConstraintPose();
+        virtual ~PhysicsConstraintPose();
+        
+        virtual void set(PhysicsConstraintPose& pose) override;
+        
+        float getInertia();
+        void setInertia(float inertia);
+        
+        float getStrength();
+        void setStrength(float strength);
+        
+        float getDamping();
+        void setDamping(float damping);
+        
+        float getMassInverse();
+        void setMassInverse(float massInverse);
+        
+        float getWind();
+        void setWind(float wind);
+        
+        float getGravity();
+        void setGravity(float gravity);
+        
+        /// A percentage (0-1) that controls the mix between the constrained and unconstrained poses.
+        float getMix();
+        void setMix(float mix);
+    };
 }
 
-#endif /* Spine_MixDirection_h */
+#endif

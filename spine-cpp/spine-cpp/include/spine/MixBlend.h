@@ -32,12 +32,32 @@
 
 namespace spine {
 
-/// Controls how a timeline is mixed with the setup or current pose.
-/// See also Timeline::apply(Skeleton&, float, float, Vector&, float, Blend, MixDirection)
+	/// Controls how timeline values are mixed with setup pose values or current pose values when a timeline is applied with
+	/// alpha < 1.
+	/// 
+	/// See Timeline::apply().
 	enum MixBlend {
+		/// Transitions between the setup and timeline values (the current value is not used). Before the first frame, the setup
+		/// value is used.
+		/// 
+		/// MixBlend_Setup is intended to transition to or from the setup pose, not for animations layered on top of others.
 		MixBlend_Setup = 0,
+		/// Transitions between the current and timeline values. Before the first frame, transitions between the current and setup
+		/// values. Timelines which perform instant transitions, such as DrawOrderTimeline or AttachmentTimeline, use
+		/// the setup value before the first frame.
+		/// 
+		/// MixBlend_First is intended for the first animations applied, not for animations layered on top of others.
 		MixBlend_First,
+		/// Transitions between the current and timeline values. No change is made before the first frame.
+		/// 
+		/// MixBlend_Replace is intended for animations layered on top of others, not for the first animations applied.
 		MixBlend_Replace,
+		/// Transitions between the current value and the current plus timeline values. No change is made before the first frame.
+		/// 
+		/// MixBlend_Add is intended for animations layered on top of others, not for the first animations applied.
+		/// 
+		/// Properties set by additive animations must be set manually or by another animation before applying the additive
+		/// animations, else the property values will increase each time the additive animations are applied.
 		MixBlend_Add
 	};
 }

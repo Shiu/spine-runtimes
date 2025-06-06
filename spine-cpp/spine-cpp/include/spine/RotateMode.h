@@ -31,9 +31,14 @@
 #define Spine_RotateMode_h
 
 namespace spine {
+	/// Controls how bones are rotated, translated, and scaled to match the path.
+	/// 
+	/// @see https://esotericsoftware.com/spine-path-constraints#Rotate-Mix Rotate mode in the Spine User Guide.
 	enum RotateMode {
 		RotateMode_Tangent = 0,
 		RotateMode_Chain,
+		/// When chain scale, constrained bones should all have the same parent. That way when the path constraint scales a bone, it
+		/// doesn't affect other constrained bones.
 		RotateMode_ChainScale
 	};
 }

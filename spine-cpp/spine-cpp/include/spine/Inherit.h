@@ -31,6 +31,7 @@
 #define Spine_TransformMode_h
 
 namespace spine {
+	/// Determines how a bone inherits world transforms from parent bones.
 	enum Inherit {
 		Inherit_Normal = 0,
 		Inherit_OnlyTranslation,

@@ -27,20 +27,62 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_MixDirection_h
-#define Spine_MixDirection_h
+#include <spine/IkConstraintPose.h>
 
-namespace spine {
+using namespace spine;
 
-	/// Indicates whether a timeline's alpha is mixing out over time toward 0 (the setup or current pose value) or
-	/// mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
-	/// 
-	/// See Timeline::apply().
-	enum MixDirection {
-		MixDirection_In = 0,
-		MixDirection_Out
-	};
+RTTI_IMPL_NOPARENT(IkConstraintPose)
 
+IkConstraintPose::IkConstraintPose() : _bendDirection(0), _compress(false), _stretch(false), _mix(0), _softness(0) {
 }
 
-#endif /* Spine_MixDirection_h */
+IkConstraintPose::~IkConstraintPose() {
+}
+
+void IkConstraintPose::set(IkConstraintPose& pose) {
+	_mix = pose._mix;
+	_softness = pose._softness;
+	_bendDirection = pose._bendDirection;
+	_compress = pose._compress;
+	_stretch = pose._stretch;
+}
+
+float IkConstraintPose::getMix() {
+	return _mix;
+}
+
+void IkConstraintPose::setMix(float mix) {
+	_mix = mix;
+}
+
+float IkConstraintPose::getSoftness() {
+	return _softness;
+}
+
+void IkConstraintPose::setSoftness(float softness) {
+	_softness = softness;
+}
+
+int IkConstraintPose::getBendDirection() {
+	return _bendDirection;
+}
+
+void IkConstraintPose::setBendDirection(int bendDirection) {
+	_bendDirection = bendDirection;
+}
+
+bool IkConstraintPose::getCompress() {
+	return _compress;
+}
+
+void IkConstraintPose::setCompress(bool compress) {
+	_compress = compress;
+}
+
+bool IkConstraintPose::getStretch() {
+	return _stretch;
+}
+
+void IkConstraintPose::setStretch(bool stretch) {
+	_stretch = stretch;
+}

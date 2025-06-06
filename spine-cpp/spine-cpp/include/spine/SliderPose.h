@@ -27,20 +27,31 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_MixDirection_h
-#define Spine_MixDirection_h
+#ifndef Spine_SliderPose_h
+#define Spine_SliderPose_h
+
+#include <spine/Pose.h>
+#include <spine/RTTI.h>
 
 namespace spine {
+    /// Stores a pose for a slider.
+    class SP_API SliderPose : public Pose<SliderPose> {
+        RTTI_DECL
+    private:
+        float _time, _mix;
 
-	/// Indicates whether a timeline's alpha is mixing out over time toward 0 (the setup or current pose value) or
-	/// mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
-	/// 
-	/// See Timeline::apply().
-	enum MixDirection {
-		MixDirection_In = 0,
-		MixDirection_Out
-	};
+    public:
+        SliderPose();
+        virtual ~SliderPose();
 
+        virtual void set(SliderPose& pose) override;
+
+        float getTime();
+        void setTime(float time);
+
+        float getMix();
+        void setMix(float mix);
+    };
 }
 
-#endif /* Spine_MixDirection_h */
+#endif

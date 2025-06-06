@@ -31,6 +31,9 @@
 #define Spine_PositionMode_h
 
 namespace spine {
+	/// Controls how the first bone is positioned along the path.
+	/// 
+	/// @see https://esotericsoftware.com/spine-path-constraints#Position-mode Position mode in the Spine User Guide.
 	enum PositionMode {
 		PositionMode_Fixed = 0,
 		PositionMode_Percent

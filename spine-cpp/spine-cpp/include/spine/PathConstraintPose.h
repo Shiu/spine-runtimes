@@ -27,20 +27,50 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_MixDirection_h
-#define Spine_MixDirection_h
+#ifndef Spine_PathConstraintPose_h
+#define Spine_PathConstraintPose_h
+
+#include <spine/Pose.h>
+#include <spine/RTTI.h>
 
 namespace spine {
-
-	/// Indicates whether a timeline's alpha is mixing out over time toward 0 (the setup or current pose value) or
-	/// mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
-	/// 
-	/// See Timeline::apply().
-	enum MixDirection {
-		MixDirection_In = 0,
-		MixDirection_Out
-	};
-
+    /// Stores a pose for a path constraint.
+    class SP_API PathConstraintPose : public Pose<PathConstraintPose> {
+        RTTI_DECL
+    
+    private:
+        float _position;
+        float _spacing;
+        float _mixRotate;
+        float _mixX;
+        float _mixY;
+    
+    public:
+        PathConstraintPose();
+        virtual ~PathConstraintPose();
+        
+        virtual void set(PathConstraintPose& pose) override;
+        
+        /// The position along the path.
+        float getPosition();
+        void setPosition(float position);
+        
+        /// The spacing between bones.
+        float getSpacing();
+        void setSpacing(float spacing);
+        
+        /// A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
+        float getMixRotate();
+        void setMixRotate(float mixRotate);
+        
+        /// A percentage (0-1) that controls the mix between the constrained and unconstrained translation X.
+        float getMixX();
+        void setMixX(float mixX);
+        
+        /// A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y.
+        float getMixY();
+        void setMixY(float mixY);
+    };
 }
 
-#endif /* Spine_MixDirection_h */
+#endif

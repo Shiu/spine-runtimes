@@ -27,20 +27,75 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_MixDirection_h
-#define Spine_MixDirection_h
+#ifndef Spine_PosedData_h
+#define Spine_PosedData_h
+
+#include <spine/SpineObject.h>
+#include <spine/SpineString.h>
 
 namespace spine {
+    template<class P>
+    class Pose;
 
-	/// Indicates whether a timeline's alpha is mixing out over time toward 0 (the setup or current pose value) or
-	/// mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
-	/// 
-	/// See Timeline::apply().
-	enum MixDirection {
-		MixDirection_In = 0,
-		MixDirection_Out
-	};
+    /// The base class for all constrained datas.
+    template<class P>
+    class SP_API PosedData : public SpineObject {
+    private:
+        spine::String _name;
+        P* _setup;
+        bool _skinRequired;
 
+    public:
+        PosedData(const spine::String& name, P* setup);
+        virtual ~PosedData();
+
+        /// The constraint's name, which is unique across all constraints in the skeleton of the same type.
+        const spine::String& getName();
+
+        P* getSetupPose();
+
+        /// When true, Skeleton::updateWorldTransform(Physics) only updates this constraint if the Skeleton::getSkin()
+        /// contains this constraint.
+        /// 
+        /// See Skin::getConstraints().
+        bool getSkinRequired();
+        void setSkinRequired(bool skinRequired);
+
+        virtual spine::String toString();
+    };
+
+    template<class P>
+    PosedData<P>::PosedData(const spine::String& name, P* setup) : _name(name), _setup(setup), _skinRequired(false) {
+    }
+
+    template<class P>
+    PosedData<P>::~PosedData() {
+    }
+
+    template<class P>
+    const spine::String& PosedData<P>::getName() {
+        return _name;
+    }
+
+    template<class P>
+    P* PosedData<P>::getSetupPose() {
+        return _setup;
+    }
+
+    template<class P>
+    bool PosedData<P>::getSkinRequired() {
+        return _skinRequired;
+    }
+
+    template<class P>
+    void PosedData<P>::setSkinRequired(bool skinRequired) {
+        _skinRequired = skinRequired;
+    }
+
+    template<class P>
+    spine::String PosedData<P>::toString() {
+        return _name;
+    }
 }
 
-#endif /* Spine_MixDirection_h */
+#endif

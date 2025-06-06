@@ -27,20 +27,21 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_MixDirection_h
-#define Spine_MixDirection_h
+#ifndef Spine_ConstraintTimeline_h
+#define Spine_ConstraintTimeline_h
+
+#include <spine/dll.h>
 
 namespace spine {
-
-	/// Indicates whether a timeline's alpha is mixing out over time toward 0 (the setup or current pose value) or
-	/// mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
-	/// 
-	/// See Timeline::apply().
-	enum MixDirection {
-		MixDirection_In = 0,
-		MixDirection_Out
-	};
-
+    /// An interface for timelines which change the property of a constraint.
+    class SP_API ConstraintTimeline {
+    public:
+        ConstraintTimeline();
+        virtual ~ConstraintTimeline();
+        
+        /// The index of the constraint in Skeleton::getConstraints() that will be changed when this timeline is applied.
+        virtual int getConstraintIndex() = 0;
+    };
 }
 
-#endif /* Spine_MixDirection_h */
+#endif

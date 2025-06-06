@@ -27,20 +27,62 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_MixDirection_h
-#define Spine_MixDirection_h
+#include <spine/PathConstraintPose.h>
 
-namespace spine {
+using namespace spine;
 
-	/// Indicates whether a timeline's alpha is mixing out over time toward 0 (the setup or current pose value) or
-	/// mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
-	/// 
-	/// See Timeline::apply().
-	enum MixDirection {
-		MixDirection_In = 0,
-		MixDirection_Out
-	};
+RTTI_IMPL_NOPARENT(PathConstraintPose)
 
+PathConstraintPose::PathConstraintPose() : Pose<PathConstraintPose>(), _position(0), _spacing(0), _mixRotate(0), _mixX(0), _mixY(0) {
 }
 
-#endif /* Spine_MixDirection_h */
+PathConstraintPose::~PathConstraintPose() {
+}
+
+void PathConstraintPose::set(PathConstraintPose& pose) {
+    _position = pose._position;
+    _spacing = pose._spacing;
+    _mixRotate = pose._mixRotate;
+    _mixX = pose._mixX;
+    _mixY = pose._mixY;
+}
+
+float PathConstraintPose::getPosition() {
+    return _position;
+}
+
+void PathConstraintPose::setPosition(float position) {
+    _position = position;
+}
+
+float PathConstraintPose::getSpacing() {
+    return _spacing;
+}
+
+void PathConstraintPose::setSpacing(float spacing) {
+    _spacing = spacing;
+}
+
+float PathConstraintPose::getMixRotate() {
+    return _mixRotate;
+}
+
+void PathConstraintPose::setMixRotate(float mixRotate) {
+    _mixRotate = mixRotate;
+}
+
+float PathConstraintPose::getMixX() {
+    return _mixX;
+}
+
+void PathConstraintPose::setMixX(float mixX) {
+    _mixX = mixX;
+}
+
+float PathConstraintPose::getMixY() {
+    return _mixY;
+}
+
+void PathConstraintPose::setMixY(float mixY) {
+    _mixY = mixY;
+}

@@ -27,20 +27,80 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_MixDirection_h
-#define Spine_MixDirection_h
+#include <spine/PhysicsConstraintPose.h>
 
-namespace spine {
+using namespace spine;
 
-	/// Indicates whether a timeline's alpha is mixing out over time toward 0 (the setup or current pose value) or
-	/// mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
-	/// 
-	/// See Timeline::apply().
-	enum MixDirection {
-		MixDirection_In = 0,
-		MixDirection_Out
-	};
+RTTI_IMPL_NOPARENT(PhysicsConstraintPose)
 
+PhysicsConstraintPose::PhysicsConstraintPose() : Pose<PhysicsConstraintPose>(), _inertia(0), _strength(0), _damping(0), _massInverse(0), _wind(0), _gravity(0), _mix(0) {
 }
 
-#endif /* Spine_MixDirection_h */
+PhysicsConstraintPose::~PhysicsConstraintPose() {
+}
+
+void PhysicsConstraintPose::set(PhysicsConstraintPose& pose) {
+    _inertia = pose._inertia;
+    _strength = pose._strength;
+    _damping = pose._damping;
+    _massInverse = pose._massInverse;
+    _wind = pose._wind;
+    _gravity = pose._gravity;
+    _mix = pose._mix;
+}
+
+float PhysicsConstraintPose::getInertia() {
+    return _inertia;
+}
+
+void PhysicsConstraintPose::setInertia(float inertia) {
+    _inertia = inertia;
+}
+
+float PhysicsConstraintPose::getStrength() {
+    return _strength;
+}
+
+void PhysicsConstraintPose::setStrength(float strength) {
+    _strength = strength;
+}
+
+float PhysicsConstraintPose::getDamping() {
+    return _damping;
+}
+
+void PhysicsConstraintPose::setDamping(float damping) {
+    _damping = damping;
+}
+
+float PhysicsConstraintPose::getMassInverse() {
+    return _massInverse;
+}
+
+void PhysicsConstraintPose::setMassInverse(float massInverse) {
+    _massInverse = massInverse;
+}
+
+float PhysicsConstraintPose::getWind() {
+    return _wind;
+}
+
+void PhysicsConstraintPose::setWind(float wind) {
+    _wind = wind;
+}
+
+float PhysicsConstraintPose::getGravity() {
+    return _gravity;
+}
+
+void PhysicsConstraintPose::setGravity(float gravity) {
+    _gravity = gravity;
+}
+
+float PhysicsConstraintPose::getMix() {
+    return _mix;
+}
+
+void PhysicsConstraintPose::setMix(float mix) {
+    _mix = mix;
+}

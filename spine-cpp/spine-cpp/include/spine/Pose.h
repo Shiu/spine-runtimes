@@ -27,20 +27,29 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_MixDirection_h
-#define Spine_MixDirection_h
+#ifndef Spine_Pose_h
+#define Spine_Pose_h
+
+#include <spine/SpineObject.h>
 
 namespace spine {
+    template<class P>
+    class SP_API Pose : public SpineObject {
+    public:
+        Pose();
+        virtual ~Pose();
+        
+        /// Sets the pose values.
+        virtual void set(P& pose) = 0;
+    };
 
-	/// Indicates whether a timeline's alpha is mixing out over time toward 0 (the setup or current pose value) or
-	/// mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
-	/// 
-	/// See Timeline::apply().
-	enum MixDirection {
-		MixDirection_In = 0,
-		MixDirection_Out
-	};
+    template<class P>
+    Pose<P>::Pose() {
+    }
 
+    template<class P>
+    Pose<P>::~Pose() {
+    }
 }
 
-#endif /* Spine_MixDirection_h */
+#endif

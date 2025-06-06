@@ -31,6 +31,9 @@
 #define Spine_SpacingMode_h
 
 namespace spine {
+	/// Controls how bones after the first bone are positioned along the path.
+	/// 
+	/// @see https://esotericsoftware.com/spine-path-constraints#Spacing-mode Spacing mode in the Spine User Guide.
 	enum SpacingMode {
 		SpacingMode_Length = 0,
 		SpacingMode_Fixed,

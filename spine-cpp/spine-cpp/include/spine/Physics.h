@@ -30,19 +30,19 @@
 #ifndef Spine_Physics_h
 #define Spine_Physics_h
 
-/** Determines how physics and other non-deterministic updates are applied. */
+/// Determines how physics and other non-deterministic updates are applied.
 namespace spine {
     enum Physics {
-        /** Physics are not updated or applied. */
+        /// Physics are not updated or applied.
         Physics_None,
 
-        /** Physics are reset to the current pose. */
+        /// Physics are reset to the current pose.
         Physics_Reset,
 
-        /** Physics are updated and the pose from physics is applied. */
+        /// Physics are updated and the pose from physics is applied.
         Physics_Update,
 
-        /** Physics are not updated but the pose from physics is applied. */
+        /// Physics are not updated but the pose from physics is applied.
         Physics_Pose
     };
 }
