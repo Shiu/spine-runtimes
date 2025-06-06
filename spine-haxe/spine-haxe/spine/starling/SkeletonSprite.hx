@@ -118,8 +118,8 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 			var worldVertices:Array<Float> = _tempVertices;
 			var pose = slot.pose;
 			var attachment = pose.attachment;
-			if (Std.isOfType(pose, RegionAttachment)) {
-				var region:RegionAttachment = cast(pose, RegionAttachment);
+			if (Std.isOfType(attachment, RegionAttachment)) {
+				var region:RegionAttachment = cast(attachment, RegionAttachment);
 				verticesLength = 8;
 				verticesCount = verticesLength >> 1;
 				if (worldVertices.length < verticesLength)
@@ -146,8 +146,8 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 				indexData = mesh.getIndexData();
 				attachmentColor = region.color;
 				uvs = region.uvs;
-			} else if (Std.isOfType(pose, MeshAttachment)) {
-				var meshAttachment:MeshAttachment = cast(pose, MeshAttachment);
+			} else if (Std.isOfType(attachment, MeshAttachment)) {
+				var meshAttachment:MeshAttachment = cast(attachment, MeshAttachment);
 				verticesLength = meshAttachment.worldVerticesLength;
 				verticesCount = verticesLength >> 1;
 				if (worldVertices.length < verticesLength)
@@ -175,8 +175,9 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 				indexData = mesh.getIndexData();
 				attachmentColor = meshAttachment.color;
 				uvs = meshAttachment.uvs;
-			} else if (Std.isOfType(pose, ClippingAttachment)) {
-				var clip:ClippingAttachment = cast(pose, ClippingAttachment);
+			} else if (Std.isOfType(attachment, ClippingAttachment)) {
+				var clip:ClippingAttachment = cast(attachment, ClippingAttachment);
+				clipper.clipEnd(slot);
 				clipper.clipStart(skeleton, slot, clip);
 				continue;
 			} else {
@@ -197,9 +198,7 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 				dark = Color.rgb(Std.int(pose.darkColor.r * 255), Std.int(pose.darkColor.g * 255), Std.int(pose.darkColor.b * 255));
 			}
 
-			if (clipper.isClipping()) {
-				clipper.clipTriangles(worldVertices, indices, indices.length, uvs);
-
+			if (clipper.isClipping() && clipper.clipTriangles(worldVertices, indices, indices.length, uvs)) {
 				// Need to create a new mesh here, see https://github.com/EsotericSoftware/spine-runtimes/issues/1125
 				mesh = new SkeletonMesh(mesh.texture);
 				indexData = mesh.getIndexData();

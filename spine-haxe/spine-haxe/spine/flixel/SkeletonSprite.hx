@@ -199,7 +199,9 @@ class SkeletonSprite extends FlxObject
 		var vertexSize:Int = twoColorTint ? 12 : 8;
 		_tempMatrix = getTransformMatrix();
 		for (slot in drawOrder) {
-			var clippedVertexSize:Int = clipper.isClipping() ? 2 : vertexSize;
+			// no two tint color support and tint is passed as parameter to mesh, so vertex size is 2
+			// var clippedVertexSize = clipper.isClipping() ? 2 : vertexSize;
+			var clippedVertexSize = 2;
 			if (!slot.bone.active) {
 				clipper.clipEnd(slot);
 				continue;
@@ -212,9 +214,8 @@ class SkeletonSprite extends FlxObject
 				var region:RegionAttachment = cast(attachment, RegionAttachment);
 				numVertices = 4;
 				numFloats = clippedVertexSize << 2;
-				if (numFloats > worldVertices.length) {
+				if (numFloats > worldVertices.length)
 					worldVertices.resize(numFloats);
-				}
 				region.computeWorldVertices(slot, worldVertices, 0, clippedVertexSize);
 
 				mesh = getFlixelMeshFromRendererAttachment(region);
@@ -238,6 +239,7 @@ class SkeletonSprite extends FlxObject
 				attachmentColor = meshAttachment.color;
 			} else if (Std.isOfType(attachment, ClippingAttachment)) {
 				var clip:ClippingAttachment = cast(attachment, ClippingAttachment);
+				clipper.clipEnd(slot);
 				clipper.clipStart(skeleton, slot, clip);
 				continue;
 			} else {
@@ -256,12 +258,9 @@ class SkeletonSprite extends FlxObject
 				);
 				mesh.alpha = skeleton.color.a * pose.color.a * attachmentColor.a * alpha;
 
-				if (clipper.isClipping()) {
-					clipper.clipTriangles(worldVertices, triangles, triangles.length, uvs);
-
+				if (clipper.isClipping() && clipper.clipTriangles(worldVertices, triangles, triangles.length, uvs)) {
 					mesh.indices = Vector.ofArray(clipper.clippedTriangles);
 					mesh.uvtData = Vector.ofArray(clipper.clippedUvs);
-
 					if (angle == 0) {
 						mesh.vertices = Vector.ofArray(clipper.clippedVertices);
 						mesh.x = x + offsetX;
@@ -278,21 +277,19 @@ class SkeletonSprite extends FlxObject
 						}
 					}
 				} else {
-					var v = 0;
 					var n = numFloats;
 					var i = 0;
 					mesh.vertices.length = numVertices;
-					while (v < n) {
+					while (i < n) {
 						if (angle == 0) {
-							mesh.vertices[i] = worldVertices[v];
-							mesh.vertices[i + 1] = worldVertices[v + 1];
+							mesh.vertices[i] = worldVertices[i];
+							mesh.vertices[i + 1] = worldVertices[i + 1];
 						} else {
-							_tempPoint.setTo(worldVertices[v], worldVertices[v + 1]);
+							_tempPoint.setTo(worldVertices[i], worldVertices[i + 1]);
 							_tempPoint = _tempMatrix.transformPoint(_tempPoint);
 							mesh.vertices[i] = _tempPoint.x;
 							mesh.vertices[i + 1] = _tempPoint.y;
 						}
-						v += 8;
 						i += 2;
 					}
 					if (angle == 0) {

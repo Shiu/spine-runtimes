@@ -157,7 +157,7 @@ class SkeletonClipping {
 		return clipOutputItems != null;
 	}
 
-	public function clipTriangles(vertices:Array<Float>, triangles:Array<Int>, trianglesLength:Float, uvs:Array<Float> = null, stride:Int = 0):Bool {
+	public function clipTriangles(vertices:Array<Float>, triangles:Array<Int>, trianglesLength:Float, uvs:Array<Float> = null):Bool {
 		if (uvs == null) {
 			return clipTrianglesNoRender(vertices, triangles, trianglesLength);
 		}
@@ -170,17 +170,17 @@ class SkeletonClipping {
 		var i:Int = 0;
 		var clipOutputItems:Array<Float> = null;
 		while (i < trianglesLength) {
-			var t:Int = triangles[i];
-			var u1:Float = uvs[t << 1], v1:Float = uvs[(t << 1) + 1];
-			var x1:Float = vertices[t * stride], y1:Float = vertices[t * stride + 1];
+			var vertexOffset:Int = triangles[i] << 1;
+			var x1 = vertices[vertexOffset], y1 = vertices[vertexOffset + 1];
+			var u1 = uvs[vertexOffset], v1 = uvs[vertexOffset + 1];
 
-			t = triangles[i + 1];
-			var u2:Float = uvs[t << 1], v2:Float = uvs[(t << 1) + 1];
-			var x2:Float = vertices[t * stride], y2:Float = vertices[t * stride + 1];
+			vertexOffset = triangles[i + 1] << 1;
+			var x2 = vertices[vertexOffset], y2 = vertices[vertexOffset + 1];
+			var u2 = uvs[vertexOffset], v2 = uvs[vertexOffset + 1];
 
-			t = triangles[i + 2];
-			var u3:Float = uvs[t << 1], v3:Float = uvs[(t << 1) + 1];
-			var x3:Float = vertices[t * stride], y3:Float = vertices[t * stride + 1];
+			vertexOffset = triangles[i + 2] << 1;
+			var x3 = vertices[vertexOffset], y3 = vertices[vertexOffset + 1];
+			var u3 = uvs[vertexOffset], v3 = uvs[vertexOffset + 1];
 
 			for (p in 0...polygonsCount) {
 				var s:Int = clippedVertices.length;
@@ -192,28 +192,24 @@ class SkeletonClipping {
 					var clipOutputLength:Int = clipOutput.length;
 					if (clipOutputLength == 0)
 						continue;
-					var d0:Float = y2 - y3,
-						d1:Float = x3 - x2,
-						d2:Float = x1 - x3,
-						d4:Float = y3 - y1;
-					var d:Float = 1 / (d0 * d2 + d1 * (y1 - y3));
+					var d0 = y2 - y3, d1 = x3 - x2, d2 = x1 - x3, d4 = y3 - y1;
+					var d = 1 / (d0 * d2 + d1 * (y1 - y3));
 
 					var clipOutputCount:Int = clipOutputLength >> 1;
 					clippedVerticesItems = clippedVertices;
-					clippedVerticesItems.resize(s + clipOutputLength * stride);
+					clippedVerticesItems.resize(s + clipOutputLength);
 					clippedUvsItems = clippedUvs;
 					clippedUvsItems.resize(s + clipOutputLength);
 
 					var ii:Int = 0;
 					while (ii < clipOutputLength) {
-						var x:Float = clipOutputItems[ii],
-							y:Float = clipOutputItems[ii + 1];
+						var x = clipOutputItems[ii], y = clipOutputItems[ii + 1];
 						clippedVerticesItems[s] = x;
 						clippedVerticesItems[s + 1] = y;
-						var c0:Float = x - x3, c1:Float = y - y3;
-						var a:Float = (d0 * c0 + d1 * c1) * d;
-						var b:Float = (d4 * c0 + d2 * c1) * d;
-						var c:Float = 1 - a - b;
+						var c0 = x - x3, c1 = y - y3;
+						var a = (d0 * c0 + d1 * c1) * d;
+						var b = (d4 * c0 + d2 * c1) * d;
+						var c = 1 - a - b;
 						clippedUvsItems[s] = u1 * a + u2 * b + u3 * c;
 						clippedUvsItems[s + 1] = v1 * a + v2 * b + v3 * c;
 						s += 2;
@@ -234,7 +230,7 @@ class SkeletonClipping {
 					index += clipOutputCount + 1;
 				} else {
 					clippedVerticesItems = clippedVertices;
-					clippedVerticesItems.resize(s + 3 * stride);
+					clippedVerticesItems.resize(s + 3 * 2);
 					clippedVerticesItems[s] = x1;
 					clippedVerticesItems[s + 1] = y1;
 					clippedVerticesItems[s + 2] = x2;
@@ -243,7 +239,7 @@ class SkeletonClipping {
 					clippedVerticesItems[s + 5] = y3;
 
 					clippedUvsItems = clippedUvs;
-					clippedUvsItems.resize(s + 3 * 2);
+					clippedUvsItems.resize(s + 3);
 					clippedUvsItems[s] = u1;
 					clippedUvsItems[s + 1] = v1;
 					clippedUvsItems[s + 2] = u2;

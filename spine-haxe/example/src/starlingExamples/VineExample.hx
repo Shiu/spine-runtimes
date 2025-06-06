@@ -54,9 +54,11 @@ class VineExample extends Scene {
 		var skeletonSprite = new SkeletonSprite(skeletondata, animationStateData);
 		skeletonSprite.skeleton.updateWorldTransform(Physics.none);
 		var bounds = skeletonSprite.skeleton.getBounds();
-		skeletonSprite.scale = Starling.current.stage.stageWidth / bounds.width;
+		skeletonSprite.scale = Starling.current.stage.stageWidth / bounds.width / 10;
 		skeletonSprite.x = Starling.current.stage.stageWidth / 2;
 		skeletonSprite.y = Starling.current.stage.stageHeight * 0.5;
+
+		skeletonSprite.state.setAnimationByName(0, "grow", true);
 
 		addChild(skeletonSprite);
 		juggler.add(skeletonSprite);
@@ -67,7 +69,8 @@ class VineExample extends Scene {
 	public function onTouch(e:TouchEvent) {
 		var touch = e.getTouch(this);
 		if (touch != null && touch.phase == TouchPhase.ENDED) {
-			SceneManager.getInstance().switchScene(new SackExample());
+			SceneManager.getInstance().switchScene(new CelestialCircusExample());
+			// SceneManager.getInstance().switchScene(new SackExample());
 		}
 	}
 }
