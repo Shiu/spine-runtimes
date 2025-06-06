@@ -291,6 +291,7 @@ public class SkeletonViewer extends ApplicationAdapter {
 			renderer.draw(batch, skeleton);
 			batch.end();
 
+			debugRenderer.setScale(camera.zoom);
 			debugRenderer.setBones(ui.debugBonesCheckbox.isChecked());
 			debugRenderer.setRegionAttachments(ui.debugRegionsCheckbox.isChecked());
 			debugRenderer.setBoundingBoxes(ui.debugBoundingBoxesCheckbox.isChecked());
