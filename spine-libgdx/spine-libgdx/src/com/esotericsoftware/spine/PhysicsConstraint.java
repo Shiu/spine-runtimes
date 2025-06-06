@@ -171,7 +171,6 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 						dy = qy;
 					else if (dy < -qy) //
 						dy = -qy;
-					a = remaining;
 					if (rotateOrShearX) {
 						mr = (data.rotate + data.shearX) * mix;
 						z = rotateLag * Math.max(0, 1 - aa / t);
@@ -190,6 +189,7 @@ public class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 						float r = l * bone.getWorldScaleX() - scaleLag * Math.max(0, 1 - aa / t);
 						if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
 					}
+					a = remaining;
 					if (a >= t) {
 						if (d == -1) {
 							d = (float)Math.pow(p.damping, 60 * t);
