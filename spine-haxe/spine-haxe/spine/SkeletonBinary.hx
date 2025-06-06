@@ -55,7 +55,6 @@ import spine.animation.PhysicsConstraintMassTimeline;
 import spine.animation.PhysicsConstraintMixTimeline;
 import spine.animation.PhysicsConstraintResetTimeline;
 import spine.animation.PhysicsConstraintStrengthTimeline;
-import spine.animation.PhysicsConstraintTimeline;
 import spine.animation.PhysicsConstraintWindTimeline;
 import spine.animation.RGB2Timeline;
 import spine.animation.RGBA2Timeline;
@@ -257,12 +256,13 @@ class SkeletonBinary {
 					for (ii in 0...nn)
 						constraintBones.push(bones[input.readInt(true)]);
 					data.source = bones[input.readInt(true)];
-					var flags = input.readByte();
+					var flags = input.readUnsignedByte();
 					data.skinRequired = (flags & 1) != 0;
 					data.localSource = (flags & 2) != 0;
 					data.localTarget = (flags & 4) != 0;
 					data.additive = (flags & 8) != 0;
 					data.clamp = (flags & 16) != 0;
+					nn = flags >> 5;
 					var froms = data.properties;
 					for (ii in 0...nn) {
 						var fromScale = 1.;
