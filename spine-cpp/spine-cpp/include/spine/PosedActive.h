@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2025, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,28 +27,45 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_Updatable_h
-#define Spine_Updatable_h
+#ifndef SPINE_POSEDACTIVE_H_
+#define SPINE_POSEDACTIVE_H_
 
-#include <spine/RTTI.h>
-#include <spine/SpineObject.h>
-#include <spine/Physics.h>
+#include <spine/dll.h>
+#include <spine/Posed.h>
 
 namespace spine {
-	class SP_API Updatable : public SpineObject {
-	RTTI_DECL
+	template<class D, class P, class A>
+	class SP_API PosedActive : public Posed<D, P, A> {
+	protected:
+		bool _active;
 
 	public:
-		Updatable();
+		PosedActive(D& data, P& pose, A& constrained);
+		virtual ~PosedActive();
 
-		virtual ~Updatable();
-
-		virtual void update(Physics physics) = 0;
-
-		virtual bool isActive() = 0;
-
-		virtual void setActive(bool inValue) = 0;
+		/// Returns false when this constraint won't be updated by
+		/// Skeleton::updateWorldTransform() because a skin is required and the
+		/// active skin does not contain this item.
+		/// @see Skin::getBones()
+		/// @see Skin::getConstraints()
+		/// @see PosedData::getSkinRequired()
+		/// @see Skeleton::updateCache()
+		bool isActive();
 	};
+
+	template<class D, class P, class A>
+	PosedActive<D, P, A>::PosedActive(D& data, P& pose, A& constrained) : Posed<D, P, A>(data, pose, constrained), _active(false) {
+		this->setupPose();
+	}
+
+	template<class D, class P, class A>
+	PosedActive<D, P, A>::~PosedActive() {
+	}
+
+	template<class D, class P, class A>
+	bool PosedActive<D, P, A>::isActive() {
+		return _active;
+	}
 }
 
-#endif /* Spine_Updatable_h */
+#endif /* SPINE_POSEDACTIVE_H_ */

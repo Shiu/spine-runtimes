@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
+ * Last updated January 1, 2020. Replaces all prior versions.
  *
- * Copyright (c) 2013-2025, Esoteric Software LLC
+ * Copyright (c) 2013-2020, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,64 +27,66 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_Event_h
-#define Spine_Event_h
+#ifndef SPINE_BONELOCAL_H_
+#define SPINE_BONELOCAL_H_
 
 #include <spine/SpineObject.h>
-#include <spine/SpineString.h>
+#include <spine/RTTI.h>
+#include <spine/Pose.h>
+#include <spine/Inherit.h>
 
 namespace spine {
-	class EventData;
-
-	/// Stores the current pose values for an Event.
-	///
-	/// See Timeline::apply(), AnimationStateListener::event(), and
-	/// @see https://esotericsoftware.com/spine-events Events in the Spine User Guide.
-	class SP_API Event : public SpineObject {
-		friend class SkeletonBinary;
-
-		friend class SkeletonJson;
-
-		friend class AnimationState;
-
-	public:
-		Event(float time, const EventData &data);
-
-		/// The event's setup pose data.
-		const EventData &getData();
-
-		/// The animation time this event was keyed.
-		float getTime();
-
-		int getIntValue();
-
-		void setIntValue(int inValue);
-
-		float getFloatValue();
-
-		void setFloatValue(float inValue);
-
-		const String &getStringValue();
-
-		void setStringValue(const String &inValue);
-
-		float getVolume();
-
-		void setVolume(float inValue);
-
-		float getBalance();
-
-		void setBalance(float inValue);
+	/// Stores a bone's local pose.
+	class SP_API BoneLocal : public SpineObject, public Pose<BoneLocal> {
+		RTTI_DECL
 
 	private:
-		const EventData &_data;
-		const float _time;
-		int _intValue;
-		float _floatValue;
-		String _stringValue;
-		float _volume;
-		float _balance;
+		float _x, _y, _rotation, _scaleX, _scaleY, _shearX, _shearY;
+		Inherit _inherit;
+
+	public:
+		BoneLocal();
+		virtual ~BoneLocal();
+
+		virtual void set(BoneLocal& pose) override;
+
+		/// The local x translation.
+		float getX();
+		void setX(float x);
+
+		/// The local y translation.
+		float getY();
+		void setY(float y);
+
+		void setPosition(float x, float y);
+
+		/// The local rotation in degrees, counter clockwise.
+		float getRotation();
+		void setRotation(float rotation);
+
+		/// The local scaleX.
+		float getScaleX();
+		void setScaleX(float scaleX);
+
+		/// The local scaleY.
+		float getScaleY();
+		void setScaleY(float scaleY);
+
+		void setScale(float scaleX, float scaleY);
+		void setScale(float scale);
+
+		/// The local shearX.
+		float getShearX();
+		void setShearX(float shearX);
+
+		/// The local shearY.
+		float getShearY();
+		void setShearY(float shearY);
+
+		/// Determines how parent world transforms affect this bone.
+		Inherit getInherit();
+		void setInherit(Inherit inherit);
 	};
 }
 
-#endif /* Spine_Event_h */
+#endif /* SPINE_BONELOCAL_H_ */

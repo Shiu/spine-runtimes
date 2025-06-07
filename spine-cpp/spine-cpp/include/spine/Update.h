@@ -27,64 +27,27 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_Event_h
-#define Spine_Event_h
+#ifndef Spine_Update_h
+#define Spine_Update_h
 
+#include <spine/dll.h>
+#include <spine/Physics.h>
+#include <spine/RTTI.h>
 #include <spine/SpineObject.h>
-#include <spine/SpineString.h>
 
 namespace spine {
-	class EventData;
+	class Skeleton;
 
-	/// Stores the current pose values for an Event.
-	///
-	/// See Timeline::apply(), AnimationStateListener::event(), and
-	/// @see https://esotericsoftware.com/spine-events Events in the Spine User Guide.
-	class SP_API Event : public SpineObject {
-		friend class SkeletonBinary;
-
-		friend class SkeletonJson;
-
-		friend class AnimationState;
-
+	/// The interface for items updated by Skeleton::updateWorldTransform().
+	class SP_API Update : public SpineObject {
+		RTTI_DECL
 	public:
-		Event(float time, const EventData &data);
+		Update();
+		virtual ~Update();
 
-		/// The event's setup pose data.
-		const EventData &getData();
-
-		/// The animation time this event was keyed.
-		float getTime();
-
-		int getIntValue();
-
-		void setIntValue(int inValue);
-
-		float getFloatValue();
-
-		void setFloatValue(float inValue);
-
-		const String &getStringValue();
-
-		void setStringValue(const String &inValue);
-
-		float getVolume();
-
-		void setVolume(float inValue);
-
-		float getBalance();
-
-		void setBalance(float inValue);
-
-	private:
-		const EventData &_data;
-		const float _time;
-		int _intValue;
-		float _floatValue;
-		String _stringValue;
-		float _volume;
-		float _balance;
+		/// @param physics Determines how physics and other non-deterministic updates are applied.
+		virtual void update(Skeleton& skeleton, Physics physics) = 0;
 	};
 }
 
-#endif /* Spine_Event_h */
+#endif /* Spine_Update_h */

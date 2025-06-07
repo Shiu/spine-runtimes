@@ -27,64 +27,14 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_Event_h
-#define Spine_Event_h
+#include <spine/Update.h>
 
-#include <spine/SpineObject.h>
-#include <spine/SpineString.h>
+using namespace spine;
 
-namespace spine {
-	class EventData;
+RTTI_IMPL_NOPARENT(Update)
 
-	/// Stores the current pose values for an Event.
-	///
-	/// See Timeline::apply(), AnimationStateListener::event(), and
-	/// @see https://esotericsoftware.com/spine-events Events in the Spine User Guide.
-	class SP_API Event : public SpineObject {
-		friend class SkeletonBinary;
-
-		friend class SkeletonJson;
-
-		friend class AnimationState;
-
-	public:
-		Event(float time, const EventData &data);
-
-		/// The event's setup pose data.
-		const EventData &getData();
-
-		/// The animation time this event was keyed.
-		float getTime();
-
-		int getIntValue();
-
-		void setIntValue(int inValue);
-
-		float getFloatValue();
-
-		void setFloatValue(float inValue);
-
-		const String &getStringValue();
-
-		void setStringValue(const String &inValue);
-
-		float getVolume();
-
-		void setVolume(float inValue);
-
-		float getBalance();
-
-		void setBalance(float inValue);
-
-	private:
-		const EventData &_data;
-		const float _time;
-		int _intValue;
-		float _floatValue;
-		String _stringValue;
-		float _volume;
-		float _balance;
-	};
+Update::Update() {
 }
 
-#endif /* Spine_Event_h */
+Update::~Update() {
+}

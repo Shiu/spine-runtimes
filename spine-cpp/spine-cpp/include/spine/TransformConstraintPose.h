@@ -27,64 +27,49 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_Event_h
-#define Spine_Event_h
+#ifndef Spine_TransformConstraintPose_h
+#define Spine_TransformConstraintPose_h
 
-#include <spine/SpineObject.h>
-#include <spine/SpineString.h>
+#include <spine/Pose.h>
+#include <spine/RTTI.h>
 
 namespace spine {
-	class EventData;
+    /// Stores a pose for a transform constraint.
+    class SP_API TransformConstraintPose : public Pose<TransformConstraintPose> {
+        RTTI_DECL
+    private:
+        float _mixRotate, _mixX, _mixY, _mixScaleX, _mixScaleY, _mixShearY;
 
-	/// Stores the current pose values for an Event.
-	///
-	/// See Timeline::apply(), AnimationStateListener::event(), and
-	/// @see https://esotericsoftware.com/spine-events Events in the Spine User Guide.
-	class SP_API Event : public SpineObject {
-		friend class SkeletonBinary;
+    public:
+        TransformConstraintPose();
+        virtual ~TransformConstraintPose();
 
-		friend class SkeletonJson;
+        virtual void set(TransformConstraintPose& pose) override;
 
-		friend class AnimationState;
+        /// A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
+        float getMixRotate();
+        void setMixRotate(float mixRotate);
 
-	public:
-		Event(float time, const EventData &data);
+        /// A percentage (0-1) that controls the mix between the constrained and unconstrained translation X.
+        float getMixX();
+        void setMixX(float mixX);
 
-		/// The event's setup pose data.
-		const EventData &getData();
+        /// A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y.
+        float getMixY();
+        void setMixY(float mixY);
 
-		/// The animation time this event was keyed.
-		float getTime();
+        /// A percentage (0-1) that controls the mix between the constrained and unconstrained scale X.
+        float getMixScaleX();
+        void setMixScaleX(float mixScaleX);
 
-		int getIntValue();
+        /// A percentage (0-1) that controls the mix between the constrained and unconstrained scale Y.
+        float getMixScaleY();
+        void setMixScaleY(float mixScaleY);
 
-		void setIntValue(int inValue);
-
-		float getFloatValue();
-
-		void setFloatValue(float inValue);
-
-		const String &getStringValue();
-
-		void setStringValue(const String &inValue);
-
-		float getVolume();
-
-		void setVolume(float inValue);
-
-		float getBalance();
-
-		void setBalance(float inValue);
-
-	private:
-		const EventData &_data;
-		const float _time;
-		int _intValue;
-		float _floatValue;
-		String _stringValue;
-		float _volume;
-		float _balance;
-	};
+        /// A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y.
+        float getMixShearY();
+        void setMixShearY(float mixShearY);
+    };
 }
 
-#endif /* Spine_Event_h */
+#endif

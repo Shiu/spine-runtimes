@@ -27,64 +27,62 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_Event_h
-#define Spine_Event_h
+#ifndef Spine_Posed_h
+#define Spine_Posed_h
 
 #include <spine/SpineObject.h>
-#include <spine/SpineString.h>
 
 namespace spine {
-	class EventData;
-
-	/// Stores the current pose values for an Event.
-	///
-	/// See Timeline::apply(), AnimationStateListener::event(), and
-	/// @see https://esotericsoftware.com/spine-events Events in the Spine User Guide.
-	class SP_API Event : public SpineObject {
-		friend class SkeletonBinary;
-
-		friend class SkeletonJson;
-
-		friend class AnimationState;
-
+	template<class D, class P, class A>
+	class SP_API Posed : public SpineObject {
 	public:
-		Event(float time, const EventData &data);
+		Posed(D& data, P& pose, A& constrained);
+		virtual ~Posed();
 
-		/// The event's setup pose data.
-		const EventData &getData();
+		void setupPose();
 
-		/// The animation time this event was keyed.
-		float getTime();
+		/// The constraint's setup pose data.
+		D& getData();
 
-		int getIntValue();
+		P& getPose();
 
-		void setIntValue(int inValue);
+		A& getAppliedPose();
 
-		float getFloatValue();
-
-		void setFloatValue(float inValue);
-
-		const String &getStringValue();
-
-		void setStringValue(const String &inValue);
-
-		float getVolume();
-
-		void setVolume(float inValue);
-
-		float getBalance();
-
-		void setBalance(float inValue);
-
-	private:
-		const EventData &_data;
-		const float _time;
-		int _intValue;
-		float _floatValue;
-		String _stringValue;
-		float _volume;
-		float _balance;
+	protected:
+		D& _data;
+		P& _pose;
+		A& _constrained;
+		A* _applied;
 	};
+
+	template<class D, class P, class A>
+	Posed<D, P, A>::Posed(D& data, P& pose, A& constrained) : _data(data), _pose(pose), _constrained(constrained) {
+		_applied = &pose;
+	}
+
+	template<class D, class P, class A>
+	Posed<D, P, A>::~Posed() {
+	}
+
+	template<class D, class P, class A>
+	void Posed<D, P, A>::setupPose() {
+		_pose.set(_data.setup);
+	}
+
+	template<class D, class P, class A>
+	D& Posed<D, P, A>::getData() {
+		return _data;
+	}
+
+	template<class D, class P, class A>
+	P& Posed<D, P, A>::getPose() {
+		return _pose;
+	}
+
+	template<class D, class P, class A>
+	A& Posed<D, P, A>::getAppliedPose() {
+		return *_applied;
+	}
 }
 
-#endif /* Spine_Event_h */
+#endif /* Spine_Posed_h */

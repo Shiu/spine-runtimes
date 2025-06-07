@@ -41,8 +41,9 @@
 #include <spine/AttachmentType.h>
 #include <spine/BlendMode.h>
 #include <spine/Bone.h>
-#include <spine/BoneTimeline.h>
 #include <spine/BoneData.h>
+#include <spine/BoneLocal.h>
+#include <spine/BoneTimeline.h>
 #include <spine/BoundingBoxAttachment.h>
 #include <spine/ClippingAttachment.h>
 #include <spine/Color.h>
@@ -83,6 +84,8 @@
 #include <spine/PhysicsConstraintData.h>
 #include <spine/PhysicsConstraintPose.h>
 #include <spine/Pose.h>
+#include <spine/Posed.h>
+#include <spine/PosedActive.h>
 #include <spine/PointAttachment.h>
 #include <spine/Pool.h>
 #include <spine/PosedData.h>
@@ -113,10 +116,11 @@
 #include <spine/Timeline.h>
 #include <spine/TransformConstraint.h>
 #include <spine/TransformConstraintData.h>
+#include <spine/TransformConstraintPose.h>
 #include <spine/TransformConstraintTimeline.h>
 #include <spine/TranslateTimeline.h>
 #include <spine/Triangulator.h>
-#include <spine/Updatable.h>
+#include <spine/Update.h>
 #include <spine/Vector.h>
 #include <spine/VertexAttachment.h>
 #include <spine/Vertices.h>
