@@ -27,66 +27,70 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_BONELOCAL_H_
-#define SPINE_BONELOCAL_H_
+#include <spine/SlotPose.h>
+#include <spine/Attachment.h>
+#include <spine/VertexAttachment.h>
 
-#include <spine/SpineObject.h>
-#include <spine/RTTI.h>
-#include <spine/Pose.h>
-#include <spine/Inherit.h>
+using namespace spine;
 
-namespace spine {
-	/// Stores a bone's local pose.
-	class SP_API BoneLocal : public Pose<BoneLocal> {
-		RTTI_DECL
+RTTI_IMPL_NOPARENT(SlotPose)
 
-	private:
-		float _x, _y, _rotation, _scaleX, _scaleY, _shearX, _shearY;
-		Inherit _inherit;
-
-	public:
-		BoneLocal();
-		virtual ~BoneLocal();
-
-		virtual void set(BoneLocal& pose) override;
-
-		/// The local x translation.
-		float getX();
-		void setX(float x);
-
-		/// The local y translation.
-		float getY();
-		void setY(float y);
-
-		void setPosition(float x, float y);
-
-		/// The local rotation in degrees, counter clockwise.
-		float getRotation();
-		void setRotation(float rotation);
-
-		/// The local scaleX.
-		float getScaleX();
-		void setScaleX(float scaleX);
-
-		/// The local scaleY.
-		float getScaleY();
-		void setScaleY(float scaleY);
-
-		void setScale(float scaleX, float scaleY);
-		void setScale(float scale);
-
-		/// The local shearX.
-		float getShearX();
-		void setShearX(float shearX);
-
-		/// The local shearY.
-		float getShearY();
-		void setShearY(float shearY);
-
-		/// Determines how parent world transforms affect this bone.
-		Inherit getInherit();
-		void setInherit(Inherit inherit);
-	};
+SlotPose::SlotPose() : _color(1, 1, 1, 1), _darkColor(0, 0, 0, 0), _hasDarkColor(false), _attachment(nullptr), _sequenceIndex(-1) {
 }
 
-#endif /* SPINE_BONELOCAL_H_ */
+SlotPose::~SlotPose() {
+}
+
+void SlotPose::set(SlotPose& pose) {
+	_color.set(pose._color);
+	if (pose._hasDarkColor) _darkColor.set(pose._darkColor);
+	_hasDarkColor = pose._hasDarkColor;
+	_attachment = pose._attachment;
+	_sequenceIndex = pose._sequenceIndex;
+	_deform.clear();
+	_deform.addAll(pose._deform);
+}
+
+Color& SlotPose::getColor() {
+	return _color;
+}
+
+Color& SlotPose::getDarkColor() {
+	return _darkColor;
+}
+
+bool SlotPose::hasDarkColor() {
+	return _hasDarkColor;
+}
+
+Attachment* SlotPose::getAttachment() {
+	return _attachment;
+}
+
+void SlotPose::setAttachment(Attachment* attachment) {
+	if (_attachment == attachment) return;
+	
+	// Check if we need to clear deform based on timeline attachment
+	if (!attachment ||
+		!_attachment ||
+		!attachment->getRTTI().instanceOf(VertexAttachment::rtti) ||
+		!_attachment->getRTTI().instanceOf(VertexAttachment::rtti) ||
+		static_cast<VertexAttachment*>(attachment)->getTimelineAttachment() !=
+			static_cast<VertexAttachment*>(_attachment)->getTimelineAttachment()) {
+		_deform.clear();
+	}
+	_attachment = attachment;
+	_sequenceIndex = -1;
+}
+
+int SlotPose::getSequenceIndex() {
+	return _sequenceIndex;
+}
+
+void SlotPose::setSequenceIndex(int sequenceIndex) {
+	_sequenceIndex = sequenceIndex;
+}
+
+Vector<float>& SlotPose::getDeform() {
+	return _deform;
+}

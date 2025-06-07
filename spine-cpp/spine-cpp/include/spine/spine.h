@@ -108,6 +108,7 @@
 #include <spine/SliderPose.h>
 #include <spine/Slot.h>
 #include <spine/SlotData.h>
+#include <spine/SlotPose.h>
 #include <spine/SlotTimeline.h>
 #include <spine/SpacingMode.h>
 #include <spine/SpineObject.h>

@@ -27,66 +27,66 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_BONELOCAL_H_
-#define SPINE_BONELOCAL_H_
+#ifndef SPINE_SLOTPOSE_H_
+#define SPINE_SLOTPOSE_H_
 
 #include <spine/SpineObject.h>
 #include <spine/RTTI.h>
 #include <spine/Pose.h>
-#include <spine/Inherit.h>
+#include <spine/Color.h>
+#include <spine/Vector.h>
 
 namespace spine {
-	/// Stores a bone's local pose.
-	class SP_API BoneLocal : public Pose<BoneLocal> {
+	class Attachment;
+	class VertexAttachment;
+
+	class SP_API SlotPose : public Pose<SlotPose> {
 		RTTI_DECL
 
 	private:
-		float _x, _y, _rotation, _scaleX, _scaleY, _shearX, _shearY;
-		Inherit _inherit;
+		Color _color;
+		Color _darkColor;
+		bool _hasDarkColor;
+		Attachment* _attachment;
+		int _sequenceIndex;
+		Vector<float> _deform;
 
 	public:
-		BoneLocal();
-		virtual ~BoneLocal();
+		SlotPose();
+		virtual ~SlotPose();
 
-		virtual void set(BoneLocal& pose) override;
+		virtual void set(SlotPose& pose) override;
 
-		/// The local x translation.
-		float getX();
-		void setX(float x);
+		/// The color used to tint the slot's attachment. If getDarkColor() is set, this is used as the light color for two
+		/// color tinting.
+		Color& getColor();
 
-		/// The local y translation.
-		float getY();
-		void setY(float y);
+		/// The dark color used to tint the slot's attachment for two color tinting. The dark
+		/// color's alpha is not used.
+		Color& getDarkColor();
 
-		void setPosition(float x, float y);
+		/// Returns true if this slot has a dark color.
+		bool hasDarkColor();
 
-		/// The local rotation in degrees, counter clockwise.
-		float getRotation();
-		void setRotation(float rotation);
+		/// The current attachment for the slot, or null if the slot has no attachment.
+		Attachment* getAttachment();
 
-		/// The local scaleX.
-		float getScaleX();
-		void setScaleX(float scaleX);
+		/// Sets the slot's attachment and, if the attachment changed, resets sequenceIndex and clears the deform.
+		/// The deform is not cleared if the old attachment has the same VertexAttachment::getTimelineAttachment() as the
+		/// specified attachment.
+		void setAttachment(Attachment* attachment);
 
-		/// The local scaleY.
-		float getScaleY();
-		void setScaleY(float scaleY);
+		/// The index of the texture region to display when the slot's attachment has a Sequence. -1 represents the
+		/// Sequence::getSetupIndex().
+		int getSequenceIndex();
+		void setSequenceIndex(int sequenceIndex);
 
-		void setScale(float scaleX, float scaleY);
-		void setScale(float scale);
-
-		/// The local shearX.
-		float getShearX();
-		void setShearX(float shearX);
-
-		/// The local shearY.
-		float getShearY();
-		void setShearY(float shearY);
-
-		/// Determines how parent world transforms affect this bone.
-		Inherit getInherit();
-		void setInherit(Inherit inherit);
+		/// Values to deform the slot's attachment. For an unweighted mesh, the entries are local positions for each vertex. For a
+		/// weighted mesh, the entries are an offset for each vertex which will be added to the mesh's local vertex positions.
+		/// 
+		/// See VertexAttachment::computeWorldVertices() and DeformTimeline.
+		Vector<float>& getDeform();
 	};
 }
 
-#endif /* SPINE_BONELOCAL_H_ */
+#endif /* SPINE_SLOTPOSE_H_ */

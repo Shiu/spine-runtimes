@@ -28,7 +28,6 @@
  *****************************************************************************/
 
 #include <spine/BoneLocal.h>
-#include <spine/SpineException.h>
 
 using namespace spine;
 
