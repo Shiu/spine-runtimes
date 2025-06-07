@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated January 1, 2020. Replaces all prior versions.
+ * Last updated July 28, 2023. Replaces all prior versions.
  *
- * Copyright (c) 2013-2020, Esoteric Software LLC
+ * Copyright (c) 2013-2023, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,66 +27,12 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_BONELOCAL_H_
-#define SPINE_BONELOCAL_H_
+#include <spine/FromProperty.h>
 
-#include <spine/SpineObject.h>
-#include <spine/RTTI.h>
-#include <spine/Pose.h>
-#include <spine/Inherit.h>
+using namespace spine;
 
-namespace spine {
-	/// Stores a bone's local pose.
-	class SP_API BoneLocal : public Pose<BoneLocal> {
-		RTTI_DECL
-
-	protected:
-		float _x, _y, _rotation, _scaleX, _scaleY, _shearX, _shearY;
-		Inherit _inherit;
-
-	public:
-		BoneLocal();
-		virtual ~BoneLocal();
-
-		virtual void set(BoneLocal& pose) override;
-
-		/// The local x translation.
-		float getX();
-		void setX(float x);
-
-		/// The local y translation.
-		float getY();
-		void setY(float y);
-
-		void setPosition(float x, float y);
-
-		/// The local rotation in degrees, counter clockwise.
-		float getRotation();
-		void setRotation(float rotation);
-
-		/// The local scaleX.
-		float getScaleX();
-		void setScaleX(float scaleX);
-
-		/// The local scaleY.
-		float getScaleY();
-		void setScaleY(float scaleY);
-
-		void setScale(float scaleX, float scaleY);
-		void setScale(float scale);
-
-		/// The local shearX.
-		float getShearX();
-		void setShearX(float shearX);
-
-		/// The local shearY.
-		float getShearY();
-		void setShearY(float shearY);
-
-		/// Determines how parent world transforms affect this bone.
-		Inherit getInherit();
-		void setInherit(Inherit inherit);
-	};
+FromProperty::FromProperty() : offset(0) {
 }
 
-#endif /* SPINE_BONELOCAL_H_ */
+FromProperty::~FromProperty() {
+}

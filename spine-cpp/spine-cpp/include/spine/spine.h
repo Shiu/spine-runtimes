@@ -43,6 +43,7 @@
 #include <spine/Bone.h>
 #include <spine/BoneData.h>
 #include <spine/BoneLocal.h>
+#include <spine/BonePose.h>
 #include <spine/BoneTimeline.h>
 #include <spine/BoundingBoxAttachment.h>
 #include <spine/ClippingAttachment.h>
@@ -58,6 +59,7 @@
 #include <spine/EventData.h>
 #include <spine/EventTimeline.h>
 #include <spine/Extension.h>
+#include <spine/FromProperty.h>
 #include <spine/HasRendererObject.h>
 #include <spine/HashMap.h>
 #include <spine/IkConstraint.h>
