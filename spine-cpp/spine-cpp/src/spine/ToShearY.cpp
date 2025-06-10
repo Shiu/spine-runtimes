@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated April 5, 2025. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2025, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,14 +27,44 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/ToProperty.h>
+#include <spine/ToShearY.h>
+#include <spine/TransformConstraintPose.h>
+#include <spine/BonePose.h>
+#include <spine/MathUtil.h>
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(ToProperty)
+RTTI_IMPL(ToShearY, ToProperty)
 
-ToProperty::ToProperty() : offset(0), max(0), scale(1) {
+ToShearY::ToShearY() {
 }
 
-ToProperty::~ToProperty() {
+ToShearY::~ToShearY() {
+}
+
+float ToShearY::mix(TransformConstraintPose& pose) {
+	return pose.getMixShearY();
+}
+
+void ToShearY::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) {
+	if (local) {
+		if (!additive) value -= bone.getShearY();
+		bone.setShearY(bone.getShearY() + value * pose.getMixShearY());
+	} else {
+		float b = bone._b, d = bone._d, by = MathUtil::atan2(d, b);
+		value = (value + 90) * MathUtil::Deg_Rad;
+		if (additive)
+			value -= MathUtil::Pi / 2;
+		else {
+			value -= by - MathUtil::atan2(bone._c, bone._a);
+			if (value > MathUtil::Pi)
+				value -= MathUtil::Pi * 2;
+			else if (value < -MathUtil::Pi)
+				value += MathUtil::Pi * 2;
+		}
+		value = by + value * pose.getMixShearY();
+		float s = MathUtil::sqrt(b * b + d * d);
+		bone._b = MathUtil::cos(value) * s;
+		bone._d = MathUtil::sin(value) * s;
+	}
 }

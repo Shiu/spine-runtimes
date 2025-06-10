@@ -126,6 +126,12 @@
 #include <spine/TextureLoader.h>
 #include <spine/Timeline.h>
 #include <spine/ToProperty.h>
+#include <spine/ToRotate.h>
+#include <spine/ToScaleX.h>
+#include <spine/ToScaleY.h>
+#include <spine/ToShearY.h>
+#include <spine/ToX.h>
+#include <spine/ToY.h>
 #include <spine/TransformConstraint.h>
 #include <spine/TransformConstraintData.h>
 #include <spine/TransformConstraintPose.h>

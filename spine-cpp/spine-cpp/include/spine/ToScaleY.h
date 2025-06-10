@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated April 5, 2025. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2025, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,14 +27,30 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
+#ifndef SPINE_TOSCALEY_H_
+#define SPINE_TOSCALEY_H_
+
+#include <spine/dll.h>
 #include <spine/ToProperty.h>
+#include <spine/RTTI.h>
 
-using namespace spine;
+namespace spine {
+	class TransformConstraintPose;
+	class BonePose;
 
-RTTI_IMPL_NOPARENT(ToProperty)
+	class SP_API ToScaleY : public ToProperty {
+		RTTI_DECL
 
-ToProperty::ToProperty() : offset(0), max(0), scale(1) {
+	public:
+		ToScaleY();
+		virtual ~ToScaleY();
+
+		/// Returns the mix scale Y value from the pose.
+		virtual float mix(TransformConstraintPose& pose) override;
+
+		/// Applies the scale Y value to the bone.
+		virtual void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+	};
 }
 
-ToProperty::~ToProperty() {
-}
+#endif /* SPINE_TOSCALEY_H_ */

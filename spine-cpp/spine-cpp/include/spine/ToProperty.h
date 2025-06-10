@@ -31,6 +31,7 @@
 #define SPINE_TOPROPERTY_H_
 
 #include <spine/dll.h>
+#include <spine/RTTI.h>
 
 namespace spine {
 	class TransformConstraintPose;
@@ -38,10 +39,12 @@ namespace spine {
 
 	/// Constrained property for a TransformConstraint.
 	class SP_API ToProperty {
+		RTTI_DECL
 	public:
 		ToProperty();
 		virtual ~ToProperty();
 
+	protected:
 		/// The value of this property that corresponds to FromProperty::offset.
 		float offset;
 
@@ -51,6 +54,7 @@ namespace spine {
 		/// The scale of the FromProperty value in relation to this property.
 		float scale;
 
+	public:
 		/// Reads the mix for this property from the specified pose.
 		virtual float mix(TransformConstraintPose& pose) = 0;
 

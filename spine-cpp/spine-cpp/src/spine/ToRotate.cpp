@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated April 5, 2025. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2025, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,14 +27,42 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/ToProperty.h>
+#include <spine/ToRotate.h>
+#include <spine/TransformConstraintPose.h>
+#include <spine/BonePose.h>
+#include <spine/MathUtil.h>
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(ToProperty)
+RTTI_IMPL(ToRotate, ToProperty)
 
-ToProperty::ToProperty() : offset(0), max(0), scale(1) {
+ToRotate::ToRotate() {
 }
 
-ToProperty::~ToProperty() {
+ToRotate::~ToRotate() {
+}
+
+float ToRotate::mix(TransformConstraintPose& pose) {
+	return pose.getMixRotate();
+}
+
+void ToRotate::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) {
+	if (local) {
+		if (!additive) value -= bone.getRotation();
+		bone.setRotation(bone.getRotation() + value * pose.getMixRotate());
+	} else {
+		float a = bone._a, b = bone._b, c = bone._c, d = bone._d;
+		value *= MathUtil::Deg_Rad;
+		if (!additive) value -= MathUtil::atan2(c, a);
+		if (value > MathUtil::Pi)
+			value -= MathUtil::Pi * 2;
+		else if (value < -MathUtil::Pi)
+			value += MathUtil::Pi * 2;
+		value *= pose.getMixRotate();
+		float cosVal = MathUtil::cos(value), sinVal = MathUtil::sin(value);
+		bone._a = cosVal * a - sinVal * c;
+		bone._b = cosVal * b - sinVal * d;
+		bone._c = sinVal * a + cosVal * c;
+		bone._d = sinVal * b + cosVal * d;
+	}
 }

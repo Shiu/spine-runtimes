@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated April 5, 2025. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2025, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,14 +27,30 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/ToProperty.h>
+#include <spine/ToY.h>
+#include <spine/TransformConstraintPose.h>
+#include <spine/BonePose.h>
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(ToProperty)
+RTTI_IMPL(ToY, ToProperty)
 
-ToProperty::ToProperty() : offset(0), max(0), scale(1) {
+ToY::ToY() {
 }
 
-ToProperty::~ToProperty() {
+ToY::~ToY() {
+}
+
+float ToY::mix(TransformConstraintPose& pose) {
+	return pose.getMixY();
+}
+
+void ToY::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) {
+	if (local) {
+		if (!additive) value -= bone.getY();
+		bone.setY(bone.getY() + value * pose.getMixY());
+	} else {
+		if (!additive) value -= bone.getWorldY();
+		bone.setWorldY(bone.getWorldY() + value * pose.getMixY());
+	}
 }

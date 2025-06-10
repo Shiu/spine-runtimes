@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated April 5, 2025. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2025, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,14 +27,40 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/ToProperty.h>
+#include <spine/ToScaleX.h>
+#include <spine/TransformConstraintPose.h>
+#include <spine/BonePose.h>
+#include <spine/MathUtil.h>
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(ToProperty)
+RTTI_IMPL(ToScaleX, ToProperty)
 
-ToProperty::ToProperty() : offset(0), max(0), scale(1) {
+ToScaleX::ToScaleX() {
 }
 
-ToProperty::~ToProperty() {
+ToScaleX::~ToScaleX() {
+}
+
+float ToScaleX::mix(TransformConstraintPose& pose) {
+	return pose.getMixScaleX();
+}
+
+void ToScaleX::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) {
+	if (local) {
+		if (additive)
+			bone.setScaleX(bone.getScaleX() * (1 + ((value - 1) * pose.getMixScaleX())));
+		else if (bone.getScaleX() != 0)
+			bone.setScaleX(1 + (value / bone.getScaleX() - 1) * pose.getMixScaleX());
+	} else {
+		float s;
+		if (additive)
+			s = 1 + (value - 1) * pose.getMixScaleX();
+		else {
+			s = MathUtil::sqrt(bone._a * bone._a + bone._c * bone._c);
+			if (s != 0) s = 1 + (value / s - 1) * pose.getMixScaleX();
+		}
+		bone._a *= s;
+		bone._c *= s;
+	}
 }
