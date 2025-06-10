@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
+ * Last updated July 28, 2023. Replaces all prior versions.
  *
- * Copyright (c) 2013-2025, Esoteric Software LLC
+ * Copyright (c) 2013-2023, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,75 +27,36 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_BoneData_h
-#define Spine_BoneData_h
+#ifndef SPINE_TOPROPERTY_H_
+#define SPINE_TOPROPERTY_H_
 
-#include <spine/PosedData.h>
-#include <spine/BoneLocal.h>
-#include <spine/SpineString.h>
-#include <spine/Color.h>
-#include <spine/RTTI.h>
+#include <spine/dll.h>
 
 namespace spine {
-	class SP_API BoneData : public PosedData<BoneLocal> {
-		RTTI_DECL
-		friend class SkeletonBinary;
+	class TransformConstraintPose;
+	class BonePose;
 
-		friend class SkeletonJson;
-
-		friend class AnimationState;
-
-		friend class RotateTimeline;
-
-		friend class ScaleTimeline;
-
-		friend class ScaleXTimeline;
-
-		friend class ScaleYTimeline;
-
-		friend class ShearTimeline;
-
-		friend class ShearXTimeline;
-
-		friend class ShearYTimeline;
-
-		friend class TranslateTimeline;
-
-		friend class TranslateXTimeline;
-
-		friend class TranslateYTimeline;
-
+	/// Constrained property for a TransformConstraint.
+	class SP_API ToProperty {
 	public:
-		BoneData(int index, const String &name, BoneData *parent = NULL);
+		ToProperty();
+		virtual ~ToProperty();
 
-		/// The index of the bone in Skeleton.Bones
-		int getIndex();
+		/// The value of this property that corresponds to FromProperty::offset.
+		float offset;
 
-		/// May be NULL.
-		BoneData *getParent();
+		/// The maximum value of this property when TransformConstraintData::clamp clamped.
+		float max;
 
-		float getLength();
+		/// The scale of the FromProperty value in relation to this property.
+		float scale;
 
-		void setLength(float inValue);
+		/// Reads the mix for this property from the specified pose.
+		virtual float mix(TransformConstraintPose& pose) = 0;
 
-		Color &getColor();
-
-		const String &getIcon();
-
-		void setIcon(const String &icon);
-
-		bool isVisible();
-
-		void setVisible(bool inValue);
-
-	private:
-		const int _index;
-		BoneData *_parent;
-		float _length;
-		Color _color;
-		String _icon;
-		bool _visible;
+		/// Applies the value to this property.
+		virtual void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) = 0;
 	};
 }
 
-#endif /* Spine_BoneData_h */
+#endif /* SPINE_TOPROPERTY_H_ */

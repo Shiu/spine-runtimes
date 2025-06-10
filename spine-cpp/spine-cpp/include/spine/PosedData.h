@@ -70,6 +70,7 @@ namespace spine {
 
     template<class P>
     PosedData<P>::~PosedData() {
+        delete _setup;
     }
 
     template<class P>

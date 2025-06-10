@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
+ * Last updated July 28, 2023. Replaces all prior versions.
  *
- * Copyright (c) 2013-2025, Esoteric Software LLC
+ * Copyright (c) 2013-2023, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,75 +27,12 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_BoneData_h
-#define Spine_BoneData_h
+#include <spine/ToProperty.h>
 
-#include <spine/PosedData.h>
-#include <spine/BoneLocal.h>
-#include <spine/SpineString.h>
-#include <spine/Color.h>
-#include <spine/RTTI.h>
+using namespace spine;
 
-namespace spine {
-	class SP_API BoneData : public PosedData<BoneLocal> {
-		RTTI_DECL
-		friend class SkeletonBinary;
-
-		friend class SkeletonJson;
-
-		friend class AnimationState;
-
-		friend class RotateTimeline;
-
-		friend class ScaleTimeline;
-
-		friend class ScaleXTimeline;
-
-		friend class ScaleYTimeline;
-
-		friend class ShearTimeline;
-
-		friend class ShearXTimeline;
-
-		friend class ShearYTimeline;
-
-		friend class TranslateTimeline;
-
-		friend class TranslateXTimeline;
-
-		friend class TranslateYTimeline;
-
-	public:
-		BoneData(int index, const String &name, BoneData *parent = NULL);
-
-		/// The index of the bone in Skeleton.Bones
-		int getIndex();
-
-		/// May be NULL.
-		BoneData *getParent();
-
-		float getLength();
-
-		void setLength(float inValue);
-
-		Color &getColor();
-
-		const String &getIcon();
-
-		void setIcon(const String &icon);
-
-		bool isVisible();
-
-		void setVisible(bool inValue);
-
-	private:
-		const int _index;
-		BoneData *_parent;
-		float _length;
-		Color _color;
-		String _icon;
-		bool _visible;
-	};
+ToProperty::ToProperty() : offset(0), max(0), scale(1) {
 }
 
-#endif /* Spine_BoneData_h */
+ToProperty::~ToProperty() {
+}

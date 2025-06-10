@@ -123,6 +123,7 @@
 #include <spine/SpineString.h>
 #include <spine/TextureLoader.h>
 #include <spine/Timeline.h>
+#include <spine/ToProperty.h>
 #include <spine/TransformConstraint.h>
 #include <spine/TransformConstraintData.h>
 #include <spine/TransformConstraintPose.h>
