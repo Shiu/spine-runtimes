@@ -51,6 +51,7 @@
 #include <spine/ColorTimeline.h>
 #include <spine/ConstraintData.h>
 #include <spine/ConstraintTimeline.h>
+#include <spine/ConstraintTimeline1.h>
 #include <spine/ContainerUtil.h>
 #include <spine/CurveTimeline.h>
 #include <spine/DeformTimeline.h>
