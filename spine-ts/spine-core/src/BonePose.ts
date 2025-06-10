@@ -167,10 +167,10 @@ export class BonePose extends BoneLocal implements Update {
 				const zd = Math.sin(this.rotation) * s;
 				this.shearX *= MathUtils.degRad;
 				this.shearY = (90 + shearY) * MathUtils.degRad;
-				const la = Math.cos(shearX) * scaleX;
-				const lb = Math.cos(shearY) * scaleY;
-				const lc = Math.sin(shearX) * scaleX;
-				const ld = Math.sin(shearY) * scaleY;
+				const la = Math.cos(this.shearX) * scaleX;
+				const lb = Math.cos(this.shearY) * scaleY;
+				const lc = Math.sin(this.shearX) * scaleX;
+				const ld = Math.sin(this.shearY) * scaleY;
 				this.a = za * la + zb * lc;
 				this.b = za * lb + zb * ld;
 				this.c = zc * la + zd * lc;

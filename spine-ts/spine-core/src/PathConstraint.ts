@@ -71,7 +71,7 @@ export class PathConstraint extends Constraint<PathConstraint, PathConstraintDat
 		for (const boneData of this.data.bones)
 			this.bones.push(skeleton.bones[boneData.index].constrained);
 
-		this.slot = skeleton.slots[data.slot.index];;
+		this.slot = skeleton.slots[data.slot.index];
 	}
 
 	public copy (skeleton: Skeleton) {

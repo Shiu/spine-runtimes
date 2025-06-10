@@ -202,34 +202,34 @@ export class SkeletonJson {
 								let to: ToProperty;
 								switch (name) {
 									case "rotate": {
-										rotate = true
+										rotate = true;
 										to = new ToRotate();
 										break;
 									}
 									case "x": {
-										x = true
+										x = true;
 										to = new ToX();
 										toScale = scale;
 										break;
 									}
 									case "y": {
-										y = true
+										y = true;
 										to = new ToY();
 										toScale = scale;
 										break;
 									}
 									case "scaleX": {
-										scaleX = true
+										scaleX = true;
 										to = new ToScaleX();
 										break;
 									}
 									case "scaleY": {
-										scaleY = true
+										scaleY = true;
 										to = new ToScaleY();
 										break;
 									}
 									case "shearY": {
-										shearY = true
+										shearY = true;
 										to = new ToShearY();
 										break;
 									}

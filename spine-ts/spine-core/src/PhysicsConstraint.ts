@@ -127,7 +127,7 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 				return;
 			case Physics.reset:
 				this.reset(skeleton);
-			// Fall through.
+				// Fall through.
 			case Physics.update:
 				const delta = Math.max(skeleton.time - this.lastTime, 0), aa = this.remaining;
 				this.remaining += delta;
@@ -209,7 +209,6 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 							let r = l * bone.getWorldScaleX() - this.scaleLag * Math.max(0, 1 - aa / t);
 							if (r > 0) this.scaleOffset += (dx * c + dy * s) * i / r;
 						}
-						a = this.remaining;
 						if (a >= t) {
 							if (d == -1) {
 								d = Math.pow(p.damping, 60 * t);

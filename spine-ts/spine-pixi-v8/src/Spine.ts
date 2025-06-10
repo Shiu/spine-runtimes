@@ -632,7 +632,7 @@ export class Spine extends ViewContainer {
 			this.updateAndSetPixiMask(slot, i === currentDrawOrder.length - 1);
 
 			const pose = slot.pose;
-			const attachment = pose;
+			const attachment = pose.attachment;
 
 			if (attachment) {
 				if (attachment instanceof MeshAttachment || attachment instanceof RegionAttachment) {
@@ -691,6 +691,7 @@ export class Spine extends ViewContainer {
 					}
 				}
 				else if (attachment instanceof ClippingAttachment) {
+					clipper.clipEnd(slot);
 					clipper.clipStart(skeleton, slot, attachment);
 					continue;
 				}

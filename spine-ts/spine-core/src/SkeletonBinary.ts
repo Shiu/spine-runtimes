@@ -254,8 +254,6 @@ export class SkeletonBinary {
 				}
 				case CONSTRAINT_PATH: {
 					let data = new PathConstraintData(name);
-					data.skinRequired = input.readBoolean();
-					nn = input.readInt(true);
 					for (let ii = 0; ii < nn; ii++)
 						data.bones.push(bones[input.readInt(true)]);
 					data.slot = skeletonData.slots[input.readInt(true)];
@@ -307,7 +305,7 @@ export class SkeletonBinary {
 					constraints.push(data);
 					break;
 				}
-				case CONSTRAINT_PHYSICS: {
+				case CONSTRAINT_SLIDER: {
 					const data = new SliderData(name);
 					data.skinRequired = (nn & 1) != 0;
 					data.loop = (nn & 2) != 0;

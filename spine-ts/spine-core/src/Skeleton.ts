@@ -232,7 +232,7 @@ export class Skeleton {
 	sortReset (bones: Array<Bone>) {
 		for (let i = 0, n = bones.length; i < n; i++) {
 			let bone = bones[i];
-			if (!bone.active) {
+			if (bone.active) {
 				if (bone.sorted) this.sortReset(bone.children);
 				bone.sorted = false;
 			}
