@@ -65,7 +65,7 @@
                         // Find the first bone within a radius of 20 pixels to the mouse position
                         this.selectedBone = null;
                         for (let bone of this.draggableBones) {
-                            if (mousePosition.distance(new spine.Vector3(bone.worldX, bone.worldY, 0)) < 20) {
+                            if (mousePosition.distance(new spine.Vector3(bone.pose.worldX, bone.pose.worldY, 0)) < 20) {
                                 this.selectedBone = bone;
                                 break;
                             }
@@ -84,14 +84,14 @@
                             // If the bone to be dragged has a parent, transform the mouse world position to
                             // the parent bone's coordinate system, and set the bone's position accordingly.
                             let position = new spine.Vector2(mousePosition.x, mousePosition.y);
-                            this.selectedBone.parent.worldToLocal(position);
-                            this.selectedBone.x = position.x;
-                            this.selectedBone.y = position.y;
+                            this.selectedBone.parent.pose.worldToLocal(position);
+                            this.selectedBone.pose.x = position.x;
+                            this.selectedBone.pose.y = position.y;
                         } else {
                             // If the dragged bone has no parent, it's the root bone and we can simply set its
                             // position to the mouse world position.
-                            this.selectedBone.x = mousePosition.x;
-                            this.selectedBone.y = mousePosition.y;
+                            this.selectedBone.pose.x = mousePosition.x;
+                            this.selectedBone.pose.y = mousePosition.y;
                         }
                     }
                 })
@@ -115,7 +115,7 @@
                 let boneColor = new spine.Color(1, 0, 0, 0.5);
                 let selectedBoneColor = new spine.Color(0, 1, 0, 0.5);
                 for (let bone of this.draggableBones) {
-                    renderer.circle(true, bone.worldX, bone.worldY, 20, bone == this.selectedBone ? selectedBoneColor : boneColor);
+                    renderer.circle(true, bone.pose.worldX, bone.pose.worldY, 20, bone == this.selectedBone ? selectedBoneColor : boneColor);
                 }
 
                 renderer.end();

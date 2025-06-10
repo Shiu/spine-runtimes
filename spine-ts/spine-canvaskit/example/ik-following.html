@@ -75,11 +75,11 @@
         // bone's parent bone coordinate system
         const parent = crosshair.parent;
         const parentPosition = new spine.Vector2(x, y);
-        parent.worldToLocal(parentPosition)
+        parent.pose.worldToLocal(parentPosition)
 
         // Set the position on the bone (relative to its parent bone)
-        crosshair.x = parentPosition.x;
-        crosshair.y = parentPosition.y;
+        crosshair.pose.x = parentPosition.x;
+        crosshair.pose.y = parentPosition.y;
     }
 
 

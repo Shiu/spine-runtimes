@@ -998,7 +998,7 @@ async function updateCelesteAnimations() {
             <div class="split-right">
                 <spine-skeleton
                     identifier="sack-debug"
-                    atlas="/assets/sack-pma.atlas"
+                    atlas="/assets/7-anticipation-pma.atlas"
                     skeleton="/assets/sack-pro.skel"
                     animation="cape-follow-example"
                     debug
@@ -1018,7 +1018,7 @@ async function updateCelesteAnimations() {
                 <script>escapeHTMLandInject(`
 <spine-skeleton
     identifier="sack-debug"
-    atlas="/assets/sack-pma.atlas"
+    atlas="/assets/7-anticipation-pma.atlas"
     skeleton="/assets/sack-pro.skel"
     animation="cape-follow-example"
     debug
@@ -1059,7 +1059,7 @@ async function updateCelesteAnimations() {
                     animation="animation"
                     raw-data='{
                         "inline.atlas":"aW5saW5lLnBuZwpzaXplOjE2LDE2CmZpbHRlcjpMaW5lYXIsTGluZWFyCnBtYTp0cnVlCmRvdApib3VuZHM6MCwwLDEsMQo=",
-                        "inline.skel":"/B8S/IqaXgYHNC4yLjM5wkgAAMJIAABCyAAAQsgAAELIAAAAAQRkb3QCBXJvb3QAAAAAAAAAAAAAAAA/gAAAP4AAAAAAAAAAAAAAAAAAAAAABGRvdAAAAAAAAAAAAAAAAABCyAAAQsgAAAAAAAAAAAAAAAAAAAAAAQRkb3QB//////////8BAAAAAAABAAEBACWwfdcAAAAAP4AAAD+AAAA/gAAAP4AAAAAAAQphbmltYXRpb24BAQABAQMAAAAAAP////8/gAAA/wAA/wBAAAAA/////wAAAAAAAAAAAA==",
+                        "inline.skel":"p5UM+OJCDPwHMC4wLjAwwkgAAMJIAABCyAAAQsgAAELIAAABQfAAAAouL2ltYWdlcy8ILi9hdWRpbwEEZG90AgVyb290AAAAAAAAAAAAAAAAP4AAAD+AAAAAAAAAAAAAAAAAAAAAAJubm/8AAARkb3QAAAAAAAAAAAAAAAAAQsgAAELIAAAAAAAAAAAAAAAAAAAAAJubm/8AAAEEZG90Af//////////AQABAAEAAQEAJbB91wAAAAA/gAAAP4AAAD+AAAA/gAAAAAABCmFuaW1hdGlvbgEBAAEBAwAAAAAA/////z+AAAD/AAD/AEAAAAD/////AAAAAAAAAAAAAA==",
                         "inline.png":"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAANQTFRF////p8QbyAAAAApJREFUeJxjZAAAAAQAAiFkrWoAAAAASUVORK5CYII="
                     }'
                 ></spine-skeleton>
@@ -2862,7 +2862,7 @@ let limitOwl = true;
 checkbox.addEventListener('change', () => limitOwl = checkbox.checked);
 
 const updateControl = (widget, controlBone, mouseX, mouseY, tempVector) => {
-    controlBone.parent.worldToLocal(tempVector.set(
+    controlBone.parent.pose.worldToLocal(tempVector.set(
         widget.pointerWorldX,
         widget.pointerWorldY,
     ));
@@ -2875,8 +2875,8 @@ const updateControl = (widget, controlBone, mouseX, mouseY, tempVector) => {
         y = y / widget.overlay.canvas.height * 30;
     }
 
-    controlBone.x = controlBone.data.x + mouseX(x);
-    controlBone.y = controlBone.data.y + mouseY(y);
+    controlBone.pose.x = controlBone.data.setup.x + mouseX(x);
+    controlBone.pose.y = controlBone.data.setup.y + mouseY(y);
 }
     </script>
 
@@ -2959,11 +2959,11 @@ const darkPicker = document.getElementById("dark-picker");
 
     const tempColor = new spine.Color();
     const slot = widget.skeleton.findSlot("head-base");
-    slot.darkColor = new spine.Color(0, 0, 0, 1);
+    slot.pose.darkColor = new spine.Color(0, 0, 0, 1);
     widget.addPointerSlotEventCallback(slot, (slot, event) => {
         if (event === "down") {
-            slot.darkColor.setFromColor(spine.Color.fromString(darkPicker.value, tempColor));
-            slot.color.setFromColor(spine.Color.fromString(colorPicker.value, tempColor));
+            slot.pose.darkColor.setFromColor(spine.Color.fromString(darkPicker.value, tempColor));
+            slot.pose.color.setFromColor(spine.Color.fromString(colorPicker.value, tempColor));
         }
     });
 })

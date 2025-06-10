@@ -36,8 +36,8 @@
               player.canvas.clientWidth,
               player.canvas.clientHeight
             );
-            player.skeleton.getRootBone().x += mouse.x - last.x;
-            player.skeleton.getRootBone().y += mouse.y - last.y;
+            player.skeleton.getRootBone().pose.x += mouse.x - last.x;
+            player.skeleton.getRootBone().pose.y += mouse.y - last.y;
             last.setFrom(mouse);
           },
           up: () => (player.paused = false),

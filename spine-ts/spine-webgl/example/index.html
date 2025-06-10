@@ -282,7 +282,7 @@
 					let skeleton = skeletons[activeSkeleton][format].skeleton;
 					let skinName = $("#skinList option:selected").text();
 					skeleton.setSkinByName(skinName);
-					skeleton.setSlotsToSetupPose();
+					skeleton.setupPose();
 				})
 			}
 

@@ -134,7 +134,7 @@
 
                 const tempVector = new spine.Vector2();
                 const crosshairSlot = spineboy.skeleton.findSlot("crosshair");
-                crosshairSlot.color.a = 0;
+                crosshairSlot.pose.color.a = 0;
                 const crosshairBone = crosshairSlot.bone;
 
                 let points = 0;
@@ -154,7 +154,7 @@
 
                     if (!Number.isNaN(parseInt(slot.data.name.replace("flower", ""))) || slot.data.name === "flower") {
 
-                        slot.color.set(1, 0, 0, 1);
+                        slot.pose.color.set(1, 0, 0, 1);
 
                         flowers.push(slot);
 
@@ -163,7 +163,7 @@
 
                             if (event !== "down") return;
 
-                            if (slot.color.g === 0) return;
+                            if (slot.pose.color.g === 0) return;
 
                             spineboy.state.setAnimation(1, "shoot", false);
                             ammo--;
@@ -177,14 +177,14 @@
                             ammoSpan.innerText = `Ammo: ${ammo}`;
                             killedSpan.innerText = `Saved: ${killed}`;
 
-                            tempVector.x = slot.bone.x;
-                            tempVector.y = slot.bone.y;
-                            slot.bone.parentToWorld(tempVector);
+                            tempVector.x = slot.bone.applied.x;
+                            tempVector.y = slot.bone.applied.y;
+                            slot.bone.applied.parentToWorld(tempVector);
 
-                            crosshairBone.x = (tempVector.x + (windmill.worldX - spineboy.worldX) - spineboy.skeleton.x) / spineboy.skeleton.scaleX;
-                            crosshairBone.y = (tempVector.y + (windmill.worldY - spineboy.worldY) - spineboy.skeleton.y) / spineboy.skeleton.scaleY;
+                            crosshairBone.pose.x = (tempVector.x + (windmill.worldX - spineboy.worldX) - spineboy.skeleton.x) / spineboy.skeleton.scaleX;
+                            crosshairBone.pose.y = (tempVectora.y + (windmill.worldY - spineboy.worldY) - spineboy.skeleton.y) / spineboy.skeleton.scaleY;
 
-                            slot.color.set(1, 0, 0, 1);
+                            slot.pose.color.set(1, 0, 0, 1);
                         });
 
                     }
@@ -204,14 +204,14 @@
                         const containerGameMiddle = x + width / 2;
                         const left = gameVectorTemp.x < containerGameMiddle;
                         const ammoLocation = ammoLocations[left ? 1 : 0];
-                        (ammoLocation.darkColor ||= new spine.Color()).set(1, 0, 0, 1);
+                        (ammoLocation.pose.darkColor ||= new spine.Color()).set(1, 0, 0, 1);
                         levelSpan.innerText = `Level: ${level} / 10`;
                     };
 
                     if (time >= maxTime) {
                         time = 0;
                         const flower = random(flowers);
-                        flower.color.set(1, 1, 1, 1);
+                        flower.pose.color.set(1, 1, 1, 1);
                     }
 
                     if (checkLoseCondition()) {
@@ -229,7 +229,7 @@
                 }, 100);
 
                 const checkWinCondition = () => level === 10;
-                const checkLoseCondition = () => flowers.every((flowerSlot) => flowerSlot.color.g !== 0);
+                const checkLoseCondition = () => flowers.every((flowerSlot) => flowerSlot.pose.color.g !== 0);
                 const endGame = (win, interval) => {
                     clearInterval(interval);
                     winPanel.style.display = "flex";
@@ -296,15 +296,16 @@
                     }
 
                     ammoLocations.forEach(element => {
-                        const width = element.attachment.region.width * windmill.skeleton.scaleX;
-                        const height = element.attachment.region.height * windmill.skeleton.scaleY;
-                        const x = windmill.worldX + element.bone.worldX - width / 2;
-                        const y = windmill.worldY + element.bone.worldY - height / 2;
+                        const attachment = element.pose.attachment;
+                        const width = attachment.region.width * windmill.skeleton.scaleX;
+                        const height = attachment.region.height * windmill.skeleton.scaleY;
+                        const x = windmill.worldX + element.bone.applied.worldX - width / 2;
+                        const y = windmill.worldY + element.bone.applied.worldY - height / 2;
 
                         if (isIntersecting(spineboyPosition, { x, y, width, height })) {
-                            if (element.darkColor) {
+                            if (element.pose.darkColor) {
                                 ammo = 5;
-                                element.darkColor = null;
+                                element.pose.darkColor = null;
                                 ammoLocationActive = false;
                                 ammoSpan.innerText = `Ammo: ${ammo}`;
                             }

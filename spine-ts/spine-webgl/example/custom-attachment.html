@@ -60,11 +60,11 @@
 					offsetX: 0, offsetY: 0,
 					originalWidth: texture.getImage().width, originalHeight: texture.getImage().height
 				};
-				let headSlot = this.skeleton.findSlot("head");
-				let newHeadAttachment = headSlot.getAttachment().copy();
+				let headSlotPose = this.skeleton.findSlot("head").pose;
+				let newHeadAttachment = headSlotPose.getAttachment().copy();
 				newHeadAttachment.region = textureRegion;
 				newHeadAttachment.updateRegion();
-				headSlot.setAttachment(newHeadAttachment);
+				headSlotPose.setAttachment(newHeadAttachment);
 			}
 
 			update(canvas, delta) {

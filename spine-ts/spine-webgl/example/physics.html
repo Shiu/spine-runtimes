@@ -25,14 +25,14 @@
 				// Load the skeleton file.
 				canvas.assetManager.loadBinary("/assets/sack-pro.skel");
 				// Load the atlas and its pages.
-				canvas.assetManager.loadTextureAtlas("/assets/sack-pma.atlas");
+				canvas.assetManager.loadTextureAtlas("/assets/7-anticipation-pma.atlas");
 			}
 
 			initialize(canvas) {
 				let assetManager = canvas.assetManager;
 
 				// Create the texture atlas.
-				var atlas = assetManager.require("/assets/sack-pma.atlas");
+				var atlas = assetManager.require("/assets/7-anticipation-pma.atlas");
 
 				// Create a AtlasAttachmentLoader that resolves region, mesh, boundingbox and path attachments
 				var atlasLoader = new spine.AtlasAttachmentLoader(atlas);

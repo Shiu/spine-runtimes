@@ -79,11 +79,11 @@
                     // and transform it to the crosshair bone's parent root bone
                     // coordinate system via `worldToLocal()`. `position` is relative
                     // to the crosshair bone's parent bone after this
-                    crosshairBone.parent.worldToLocal(position);
+                    crosshairBone.parent.pose.worldToLocal(position);
 
                     // Set the crosshair bone's position to the mouse position
-                    crosshairBone.x = position.x;
-                    crosshairBone.y = position.y;
+                    crosshairBone.pose.x = position.x;
+                    crosshairBone.pose.y = position.y;
                 };
             })();
         </script>

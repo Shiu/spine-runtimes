@@ -44,7 +44,7 @@
           const controlBones = [];
           for (var i = 0; i < controlBoneNames.length; i++) {
             const bone = stretchyman.skeleton.findBone(controlBoneNames[i]);
-            const point = { x: bone.worldX, y: bone.worldY };
+            const point = { x: bone.pose.worldX, y: bone.pose.worldY };
             stretchyman.skeletonToPhaserWorldCoordinates(point);
 
             const control = this.add
@@ -69,8 +69,8 @@
               const bone = controlBone.getData("bone");
               const point = { x: controlBone.x, y: controlBone.y };
               stretchyman.phaserWorldCoordinatesToBone(point, bone);
-              bone.x = point.x;
-              bone.y = point.y;
+              bone.pose.x = point.x;
+              bone.pose.y = point.y;
             }
           };
         }

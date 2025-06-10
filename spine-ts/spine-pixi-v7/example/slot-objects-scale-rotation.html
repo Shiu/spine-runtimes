@@ -61,15 +61,15 @@
         };
 
         const gui = new lil.GUI({});
-        gui.add(myObject, 'parentScaleX').min(-3).max(3).step(0.1).name('parentScaleX').onChange(value => parentBone.scaleX = value);
-        gui.add(myObject, 'parentScaleY').min(-3).max(3).step(0.1).name('parentScaleY').onChange(value => parentBone.scaleY = value);
-        gui.add(myObject, 'parentRotation').min(-180).max(180).step(1).name('parentRotation').onChange(value => parentBone.rotation = value);
-        gui.add(myObject, 'parent2ScaleX').min(-3).max(3).step(0.1).name('parent2ScaleX').onChange(value => parent2Bone.scaleX = value);
-        gui.add(myObject, 'parent2ScaleY').min(-3).max(3).step(0.1).name('parent2ScaleY').onChange(value => parent2Bone.scaleY = value);
-        gui.add(myObject, 'parent2Rotation').min(-180).max(180).step(1).name('parent2Rotation').onChange(value => parent2Bone.rotation = value);
-        gui.add(myObject, 'scaleX').min(-3).max(3).step(0.1).name('scaleX').onChange(value => bone.scaleX = value);
-        gui.add(myObject, 'scaleY').min(-3).max(3).step(0.1).name('scaleY').onChange(value => bone.scaleY = value);
-        gui.add(myObject, 'rotation').min(-180).max(180).step(1).name('rotation').onChange(value => bone.rotation = value);
+        gui.add(myObject, 'parentScaleX').min(-3).max(3).step(0.1).name('parentScaleX').onChange(value => parentBone.pose.scaleX = value);
+        gui.add(myObject, 'parentScaleY').min(-3).max(3).step(0.1).name('parentScaleY').onChange(value => parentBone.pose.scaleY = value);
+        gui.add(myObject, 'parentRotation').min(-180).max(180).step(1).name('parentRotation').onChange(value => parentBone.pose.rotation = value);
+        gui.add(myObject, 'parent2ScaleX').min(-3).max(3).step(0.1).name('parent2ScaleX').onChange(value => parent2Bone.pose.scaleX = value);
+        gui.add(myObject, 'parent2ScaleY').min(-3).max(3).step(0.1).name('parent2ScaleY').onChange(value => parent2Bone.pose.scaleY = value);
+        gui.add(myObject, 'parent2Rotation').min(-180).max(180).step(1).name('parent2Rotation').onChange(value => parent2Bone.pose.rotation = value);
+        gui.add(myObject, 'scaleX').min(-3).max(3).step(0.1).name('scaleX').onChange(value => bone.pose.scaleX = value);
+        gui.add(myObject, 'scaleY').min(-3).max(3).step(0.1).name('scaleY').onChange(value => bone.pose.scaleY = value);
+        gui.add(myObject, 'rotation').min(-180).max(180).step(1).name('rotation').onChange(value => bone.pose.rotation = value);
 
         // add instructions
         const basicText = new PIXI.Text(
