@@ -283,7 +283,7 @@ export interface SlotTimeline {
 	slotIndex: number;
 }
 
-export function isSlotTimeline(obj: any): obj is SlotTimeline {
+export function isSlotTimeline (obj: any): obj is SlotTimeline {
 	return typeof obj === 'object' && obj !== null && typeof obj.slotIndex === 'number';
 }
 
@@ -436,7 +436,7 @@ export abstract class CurveTimeline1 extends CurveTimeline {
 		}
 	}
 
-	getAbsoluteValue(time: number, alpha: number, blend: MixBlend, current: number, setup: number, value?: number) {
+	getAbsoluteValue (time: number, alpha: number, blend: MixBlend, current: number, setup: number, value?: number) {
 		if (value === undefined)
 			return this.getAbsoluteValue1(time, alpha, blend, current, setup);
 		else
@@ -543,7 +543,7 @@ export abstract class BoneTimeline2 extends CurveTimeline implements BoneTimelin
 		if (bone.active) this.apply1(appliedPose ? bone.applied : bone.pose, bone.data.setup, time, alpha, blend, direction);
 	}
 
-	protected abstract apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,
+	protected abstract apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend,
 		direction: MixDirection): void;
 }
 
@@ -552,7 +552,7 @@ export interface BoneTimeline {
 	boneIndex: number;
 }
 
-export function isBoneTimeline(obj: any): obj is BoneTimeline {
+export function isBoneTimeline (obj: any): obj is BoneTimeline {
 	return typeof obj === 'object' && obj !== null && typeof obj.boneIndex === 'number';
 }
 
@@ -571,7 +571,7 @@ export abstract class BoneTimeline1 extends CurveTimeline1 implements BoneTimeli
 		if (bone.active) this.apply1(appliedPose ? bone.applied : bone.pose, bone.data.setup, time, alpha, blend, direction);
 	}
 
-	protected abstract apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,
+	protected abstract apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend,
 		direction: MixDirection): void;
 }
 
@@ -581,7 +581,7 @@ export class RotateTimeline extends BoneTimeline1 {
 		super(frameCount, bezierCount, boneIndex, Property.rotate);
 	}
 
-	apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend, direction: MixDirection) {
+	apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend, direction: MixDirection) {
 		pose.rotation = this.getRelativeValue(time, alpha, blend, pose.rotation, setup.rotation);
 	}
 }
@@ -592,7 +592,7 @@ export class TranslateTimeline extends BoneTimeline2 {
 		super(frameCount, bezierCount, boneIndex, Property.x, Property.y);
 	}
 
-	apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+	apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend, direction: MixDirection) {
 		let frames = this.frames;
 		if (time < frames[0]) {
 			switch (blend) {
@@ -651,7 +651,7 @@ export class TranslateXTimeline extends BoneTimeline1 {
 		super(frameCount, bezierCount, boneIndex, Property.x);
 	}
 
-	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend, direction: MixDirection) {
 		pose.x = this.getRelativeValue(time, alpha, blend, pose.x, setup.x);
 	}
 }
@@ -662,7 +662,7 @@ export class TranslateYTimeline extends BoneTimeline1 {
 		super(frameCount, bezierCount, boneIndex, Property.y);
 	}
 
-	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend, direction: MixDirection) {
 		pose.y = this.getRelativeValue(time, alpha, blend, pose.y, setup.y);
 	}
 }
@@ -673,7 +673,7 @@ export class ScaleTimeline extends BoneTimeline2 {
 		super(frameCount, bezierCount, boneIndex, Property.scaleX, Property.scaleY);
 	}
 
-	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend, direction: MixDirection) {
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend, direction: MixDirection) {
 		let frames = this.frames;
 		if (time < frames[0]) {
 			switch (blend) {
@@ -770,7 +770,7 @@ export class ScaleXTimeline extends BoneTimeline1 {
 		super(frameCount, bezierCount, boneIndex, Property.scaleX);
 	}
 
-	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend, direction: MixDirection) {
 		pose.scaleX = this.getScaleValue(time, alpha, blend, direction, pose.scaleX, setup.scaleX);
 	}
 }
@@ -781,7 +781,7 @@ export class ScaleYTimeline extends BoneTimeline1 {
 		super(frameCount, bezierCount, boneIndex, Property.scaleY);
 	}
 
-	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend, direction: MixDirection) {
 		pose.scaleY = this.getScaleValue(time, alpha, blend, direction, pose.scaleY, setup.scaleY);
 	}
 }
@@ -792,7 +792,7 @@ export class ShearTimeline extends BoneTimeline2 {
 		super(frameCount, bezierCount, boneIndex, Property.shearX, Property.shearY);
 	}
 
-	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend, direction: MixDirection) {
 		let frames = this.frames;
 		if (time < frames[0]) {
 			switch (blend) {
@@ -851,7 +851,7 @@ export class ShearXTimeline extends BoneTimeline1 {
 		super(frameCount, bezierCount, boneIndex, Property.shearX);
 	}
 
-	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend, direction: MixDirection) {
 		pose.shearX = this.getRelativeValue(time, alpha, blend, pose.shearX, setup.shearX);
 	}
 }
@@ -862,7 +862,7 @@ export class ShearYTimeline extends BoneTimeline1 {
 		super(frameCount, bezierCount, boneIndex, Property.shearY);
 	}
 
-	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha:number, blend: MixBlend,direction: MixDirection) {
+	protected apply1 (pose: BoneLocal, setup: BoneLocal, time: number, alpha: number, blend: MixBlend, direction: MixDirection) {
 		pose.shearY = this.getRelativeValue(time, alpha, blend, pose.shearY, setup.shearY);
 	}
 }
@@ -957,7 +957,7 @@ export class RGBATimeline extends SlotCurveTimeline {
 			switch (blend) {
 				case MixBlend.setup: color.setFromColor(setup); break;
 				case MixBlend.first: color.add((setup.r - color.r) * alpha, (setup.g - color.g) * alpha, (setup.b - color.b) * alpha,
-						(setup.a - color.a) * alpha); break;
+					(setup.a - color.a) * alpha); break;
 			}
 			return;
 		}
@@ -1228,7 +1228,7 @@ export class RGBA2Timeline extends SlotCurveTimeline {
 }
 
 /** Changes a slot's {@link SlotPose.color} and {@link SlotPose.darkColor} for two color tinting. */
-export class RGB2Timeline  extends SlotCurveTimeline {
+export class RGB2Timeline extends SlotCurveTimeline {
 	constructor (frameCount: number, bezierCount: number, slotIndex: number) {
 		super(frameCount, bezierCount, slotIndex, //
 			Property.rgb + "|" + slotIndex, //
@@ -1826,7 +1826,7 @@ export interface ConstraintTimeline {
 	readonly constraintIndex: number;
 }
 
-export function isConstraintTimeline(obj: any): obj is ConstraintTimeline {
+export function isConstraintTimeline (obj: any): obj is ConstraintTimeline {
 	return typeof obj === 'object' && obj !== null && typeof obj.constraintIndex === 'number';
 }
 
@@ -2103,11 +2103,11 @@ export class PathConstraintSpacingTimeline extends ConstraintTimeline1 {
 	apply (skeleton: Skeleton, lastTime: number, time: number, firedEvents: Array<Event>, alpha: number, blend: MixBlend,
 		direction: MixDirection, appliedPose: boolean) {
 
-			const constraint = skeleton.constraints[this.constraintIndex];
-			if (constraint.active) {
-				const pose = appliedPose ? constraint.applied : constraint.pose;
-				pose.spacing = this.getAbsoluteValue(time, alpha, blend, pose.spacing, constraint.data.setup.spacing);
-			}
+		const constraint = skeleton.constraints[this.constraintIndex];
+		if (constraint.active) {
+			const pose = appliedPose ? constraint.applied : constraint.pose;
+			pose.spacing = this.getAbsoluteValue(time, alpha, blend, pose.spacing, constraint.data.setup.spacing);
+		}
 	}
 }
 

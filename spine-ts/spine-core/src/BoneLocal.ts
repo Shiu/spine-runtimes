@@ -73,9 +73,9 @@ export class BoneLocal implements Pose<BoneLocal> {
 		this.y = y;
 	}
 
-	setScale(scaleX: number, scaleY: number): void;
-	setScale(scale: number): void;
-	setScale(scaleOrX: number, scaleY?: number): void {
+	setScale (scaleX: number, scaleY: number): void;
+	setScale (scale: number): void;
+	setScale (scaleOrX: number, scaleY?: number): void {
 		this.scaleX = scaleOrX;
 		this.scaleY = scaleY === undefined ? scaleOrX : scaleY;
 	}

@@ -110,7 +110,7 @@ export class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkC
 			this.apply1(skeleton, boneOrParent, targetXorChild, targetYOrTargetX, compressOrTargetY as boolean, stretchOrBendDir as boolean, uniformOrStretch, mixOrUniform as number);
 		else
 			this.apply2(skeleton, boneOrParent, targetXorChild as BonePose, targetYOrTargetX, compressOrTargetY as number, stretchOrBendDir as number,
-		 		uniformOrStretch, mixOrUniform as boolean, softness as number, mix as number);
+				uniformOrStretch, mixOrUniform as boolean, softness as number, mix as number);
 	}
 
 	private static apply1 (skeleton: Skeleton, bone: BonePose, targetX: number, targetY: number, compress: boolean, stretch: boolean, uniform: boolean, mix: number) {

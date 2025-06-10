@@ -243,7 +243,7 @@ export class Skeleton {
 	 * <p>
 	 * See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 	 * Runtimes Guide. */
-	updateWorldTransform(physics: Physics): void {
+	updateWorldTransform (physics: Physics): void {
 		this._update++;
 
 		const resetCache = this.resetCache;

@@ -46,7 +46,7 @@ export class PathConstraintData extends ConstraintData<PathConstraint, PathConst
 	public set slot (slotData: SlotData) { this._slot = slotData; }
 	public get slot () {
 		if (!this._slot) throw new Error("SlotData not set.")
-			else return this._slot;
+		else return this._slot;
 	}
 	private _slot: SlotData | null = null;
 

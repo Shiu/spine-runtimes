@@ -42,7 +42,7 @@ export class PhysicsConstraintData extends ConstraintData<PhysicsConstraint, Phy
 	public set bone (boneData: BoneData) { this._bone = boneData; }
 	public get bone () {
 		if (!this._bone) throw new Error("BoneData not set.")
-			else return this._bone;
+		else return this._bone;
 	}
 	private _bone: BoneData | null = null;
 

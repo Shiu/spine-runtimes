@@ -46,7 +46,7 @@ export class TransformConstraintData extends ConstraintData<TransformConstraint,
 	public set source (source: BoneData) { this._source = source; }
 	public get source () {
 		if (!this._source) throw new Error("BoneData not set.")
-			else return this._source;
+		else return this._source;
 	}
 	private _source: BoneData | null = null;
 

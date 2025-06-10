@@ -127,7 +127,7 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 				return;
 			case Physics.reset:
 				this.reset(skeleton);
-				// Fall through.
+			// Fall through.
 			case Physics.update:
 				const delta = Math.max(skeleton.time - this.lastTime, 0), aa = this.remaining;
 				this.remaining += delta;
