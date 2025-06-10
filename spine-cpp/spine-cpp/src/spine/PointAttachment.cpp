@@ -37,18 +37,7 @@ using namespace spine;
 
 RTTI_IMPL(PointAttachment, Attachment)
 
-PointAttachment::PointAttachment(const String &name) : Attachment(name), _x(0), _y(0), _rotation(0), _color() {
-}
-
-void PointAttachment::computeWorldPosition(Bone &bone, float &ox, float &oy) {
-	bone.localToWorld(_x, _y, ox, oy);
-}
-
-float PointAttachment::computeWorldRotation(Bone &bone) {
-	float r = _rotation * MathUtil::Deg_Rad, cosine = MathUtil::cos(r), sine = MathUtil::sin(r);
-	float x = cosine * bone._a + sine * bone._b;
-	float y = cosine * bone._c + sine * bone._d;
-	return MathUtil::atan2Deg(y, x);
+PointAttachment::PointAttachment(const String &name) : Attachment(name), _x(0), _y(0), _rotation(0), _color(0.9451f, 0.9451f, 0, 1) {
 }
 
 float PointAttachment::getX() {
@@ -79,10 +68,23 @@ Color &PointAttachment::getColor() {
 	return _color;
 }
 
+void PointAttachment::computeWorldPosition(Bone &bone, float &ox, float &oy) {
+	ox = _x * bone._a + _y * bone._b + bone._worldX;
+	oy = _x * bone._c + _y * bone._d + bone._worldY;
+}
+
+float PointAttachment::computeWorldRotation(Bone &bone) {
+	float r = _rotation * MathUtil::Deg_Rad, cosine = MathUtil::cos(r), sine = MathUtil::sin(r);
+	float x = cosine * bone._a + sine * bone._b;
+	float y = cosine * bone._c + sine * bone._d;
+	return MathUtil::atan2Deg(y, x);
+}
+
 Attachment *PointAttachment::copy() {
 	PointAttachment *copy = new (__FILE__, __LINE__) PointAttachment(getName());
 	copy->_x = _x;
 	copy->_y = _y;
 	copy->_rotation = _rotation;
+	copy->_color.set(_color);
 	return copy;
 }

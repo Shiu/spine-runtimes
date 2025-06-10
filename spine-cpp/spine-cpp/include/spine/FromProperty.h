@@ -32,13 +32,16 @@
 
 #include <spine/dll.h>
 #include <spine/Vector.h>
+#include <spine/SpineObject.h>
+#include <spine/RTTI.h>
 
 namespace spine {
 	class ToProperty;
 	class BonePose;
 
 	/// Source property for a TransformConstraint.
-	class SP_API FromProperty {
+	class SP_API FromProperty : public SpineObject {
+		RTTI_DECL
 	public:
 		FromProperty();
 		virtual ~FromProperty();

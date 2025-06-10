@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
+ * Last updated July 28, 2023. Replaces all prior versions.
  *
- * Copyright (c) 2013-2025, Esoteric Software LLC
+ * Copyright (c) 2013-2023, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -23,59 +23,20 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
+ * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_PointAttachment_h
-#define Spine_PointAttachment_h
+#include <spine/FromX.h>
+#include <spine/BonePose.h>
 
-#include <spine/Attachment.h>
-#include <spine/Color.h>
+using namespace spine;
 
-namespace spine {
-	class Bone;
+RTTI_IMPL(FromX, FromProperty)
 
-	/// An attachment which is a single point and a rotation. This can be used to spawn projectiles, particles, etc. A bone can be
-	/// used in similar ways, but a PointAttachment is slightly less expensive to compute and can be hidden, shown, and placed in a
-	/// skin.
-	///
-	/// See https://esotericsoftware.com/spine-points for Point Attachments in the Spine User Guide.
-	///
-	class SP_API PointAttachment : public Attachment {
-		friend class SkeletonBinary;
-
-		friend class SkeletonJson;
-
-	RTTI_DECL
-
-	public:
-		explicit PointAttachment(const String &name);
-
-		float getX();
-
-		void setX(float inValue);
-
-		float getY();
-
-		void setY(float inValue);
-
-		float getRotation();
-
-		void setRotation(float inValue);
-
-		Color &getColor();
-
-		void computeWorldPosition(Bone &bone, float &ox, float &oy);
-
-		float computeWorldRotation(Bone &bone);
-
-		virtual Attachment *copy();
-
-	private:
-		float _x, _y, _rotation;
-		Color _color;
-	};
+FromX::FromX() : FromProperty() {
 }
 
-#endif /* Spine_PointAttachment_h */
+float FromX::value(BonePose& source, bool local, Vector<float>& offsets) {
+	return local ? source.getX() + offsets[1] : offsets[1] * source._a + offsets[2] * source._b + source._worldX;
+}

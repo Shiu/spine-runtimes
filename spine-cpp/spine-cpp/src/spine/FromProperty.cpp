@@ -31,7 +31,9 @@
 
 using namespace spine;
 
-FromProperty::FromProperty() : offset(0) {
+RTTI_IMPL_NOPARENT(FromProperty)
+
+FromProperty::FromProperty() : SpineObject(), offset(0) {
 }
 
 FromProperty::~FromProperty() {
