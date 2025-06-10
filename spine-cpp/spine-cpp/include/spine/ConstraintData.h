@@ -30,40 +30,32 @@
 #ifndef Spine_Constraint_h
 #define Spine_Constraint_h
 
-#include <spine/Updatable.h>
+#include <spine/PosedData.h>
 #include <spine/SpineString.h>
+#include <spine/RTTI.h>
 
 namespace spine {
-	/// The interface for all constraints.
-	class SP_API ConstraintData : public SpineObject {
+	class Constraint;
+	class Skeleton;
 
-        friend class SkeletonBinary;
-
-	RTTI_DECL
-
+	/// Base class for all constraint data.
+	template<class T, class P>
+	class SP_API ConstraintData : public PosedData<P> {
 	public:
-		ConstraintData(const String &name);
-
+		ConstraintData(const String &name, P* setup);
 		virtual ~ConstraintData();
 
-		/// The IK constraint's name, which is unique within the skeleton.
-		const String &getName();
-
-		/// The ordinal for the order a skeleton's constraints will be applied.
-		size_t getOrder();
-
-		void setOrder(size_t inValue);
-
-		/// Whether the constraint is only active for a specific skin.
-		bool isSkinRequired();
-
-		void setSkinRequired(bool inValue);
-
-	private:
-		const String _name;
-		size_t _order;
-		bool _skinRequired;
+		/// Creates a constraint instance.
+		virtual T* create(Skeleton& skeleton) = 0;
 	};
+
+	template<class T, class P>
+	ConstraintData<T, P>::ConstraintData(const String &name, P* setup) : PosedData<P>(name, setup) {
+	}
+
+	template<class T, class P>
+	ConstraintData<T, P>::~ConstraintData() {
+	}
 }
 
 #endif /* Spine_Constraint_h */
