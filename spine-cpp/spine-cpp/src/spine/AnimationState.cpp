@@ -69,6 +69,13 @@ int TrackEntry::getTrackIndex() { return _trackIndex; }
 
 Animation *TrackEntry::getAnimation() { return _animation; }
 
+void TrackEntry::setAnimation(Animation* animation) {
+	if (animation == NULL) {
+		return;
+	}
+	_animation = animation;
+}
+
 TrackEntry *TrackEntry::getPrevious() { return _previous; }
 
 bool TrackEntry::getLoop() { return _loop; }
@@ -89,7 +96,12 @@ void TrackEntry::setShortestRotation(bool inValue) { _shortestRotation = inValue
 
 float TrackEntry::getDelay() { return _delay; }
 
-void TrackEntry::setDelay(float inValue) { _delay = inValue; }
+void TrackEntry::setDelay(float inValue) {
+	if (inValue < 0) {
+		return;
+	}
+	_delay = inValue;
+}
 
 float TrackEntry::getTrackTime() { return _trackTime; }
 
@@ -120,8 +132,8 @@ float TrackEntry::getAnimationTime() {
 		if (duration == 0) return _animationStart;
 		return MathUtil::fmod(_trackTime, duration) + _animationStart;
 	}
-
-	return MathUtil::min(_trackTime + _animationStart, _animationEnd);
+	float animationTime = _trackTime + _animationStart;
+	return _animationEnd >= _animation->getDuration() ? animationTime : MathUtil::min(animationTime, _animationEnd);
 }
 
 float TrackEntry::getTimeScale() { return _timeScale; }
@@ -177,7 +189,9 @@ TrackEntry *TrackEntry::getMixingFrom() { return _mixingFrom; }
 
 TrackEntry *TrackEntry::getMixingTo() { return _mixingTo; }
 
-void TrackEntry::setMixBlend(MixBlend blend) { _mixBlend = blend; }
+void TrackEntry::setMixBlend(MixBlend blend) {
+	_mixBlend = blend;
+}
 
 MixBlend TrackEntry::getMixBlend() { return _mixBlend; }
 
@@ -223,6 +237,10 @@ float TrackEntry::getTrackComplete() {
 
 bool TrackEntry::wasApplied() {
 	return _nextTrackLast != -1;
+}
+
+bool TrackEntry::isEmptyAnimation() {
+	return _animation == AnimationState::getEmptyAnimation();
 }
 
 EventQueueEntry::EventQueueEntry(EventType eventType, TrackEntry *trackEntry, Event *event) : _type(eventType),

@@ -105,6 +105,9 @@ namespace spine {
 		/// The animation to apply for this track entry.
 		Animation *getAnimation();
 
+		/// Sets the animation for this track entry.
+		void setAnimation(Animation* animation);
+
 		TrackEntry *getPrevious();
 
 		/// If true, the animation will repeat. If false, it will not, instead its last frame is applied if played beyond its duration.
@@ -135,26 +138,35 @@ namespace spine {
 
 		void setShortestRotation(bool inValue);
 
-		/// Seconds to postpone playing the animation. When a track entry is the current track entry, delay postpones incrementing
-		/// the track time. When a track entry is queued, delay is the time from the start of the previous animation to when the
-		/// track entry will become the current track entry.
+		/// Seconds to postpone playing the animation. Must be >= 0. When this track entry is the current track entry,
+		/// delay postpones incrementing the getTrackTime(). When this track entry is queued,
+		/// delay is the time from the start of the previous animation to when this track entry will become the current
+		/// track entry (ie when the previous track entry getTrackTime() >= this track entry's
+		/// delay).
+		///
+		/// getTimeScale() affects the delay.
+		///
+		/// When passing delay <= 0 to AnimationState::addAnimation(int, Animation, bool, float) this
+		/// delay is set using a mix duration from AnimationStateData. To change the getMixDuration()
+		/// afterward, use setMixDuration(float, float) so this delay is adjusted.
 		float getDelay();
 
 		void setDelay(float inValue);
 
 		/// Current time in seconds this track entry has been the current track entry. The track time determines
-		/// TrackEntry.AnimationTime. The track time can be set to start the animation at a time other than 0, without affecting looping.
+		/// getAnimationTime(). The track time can be set to start the animation at a time other than 0, without affecting
+		/// looping.
 		float getTrackTime();
 
 		void setTrackTime(float inValue);
 
-		/// The track time in seconds when this animation will be removed from the track. Defaults to the animation duration for
-		/// non-looping animations and to int.MaxValue for looping animations. If the track end time is reached and no
-		/// other animations are queued for playback, and mixing from any previous animations is complete, properties keyed by the animation,
-		/// are set to the setup pose and the track is cleared.
+		/// The track time in seconds when this animation will be removed from the track. Defaults to the highest possible float
+		/// value, meaning the animation will be applied until a new animation is set or the track is cleared. If the track end time
+		/// is reached, no other animations are queued for playback, and mixing from any previous animations is complete, then the
+		/// properties keyed by the animation are set to the setup pose and the track is cleared.
 		///
-		/// It may be desired to use AnimationState.addEmptyAnimation(int, float, float) to mix the properties back to the
-		/// setup pose over time, rather than have it happen instantly.
+		/// It may be desired to use AnimationState::addEmptyAnimation(int, float, float) rather than have the animation
+		/// abruptly cease being applied.
 		float getTrackEnd();
 
 		void setTrackEnd(float inValue);
@@ -180,12 +192,27 @@ namespace spine {
 
 		void setAnimationLast(float inValue);
 
-		/// Uses TrackEntry.TrackTime to compute the animation time between TrackEntry.AnimationStart. and
-		/// TrackEntry.AnimationEnd. When the track time is 0, the animation time is equal to the animation start time.
+		/// Uses getTrackTime() to compute the animationTime. When the trackTime is 0, the
+		/// animationTime is equal to the animationStart time.
+		///
+		/// The animationTime is between getAnimationStart() and getAnimationEnd(), except if this
+		/// track entry is non-looping and getAnimationEnd() is >= to the animation duration, then
+		/// animationTime continues to increase past getAnimationEnd().
 		float getAnimationTime();
 
-		/// Multiplier for the delta time when the animation state is updated, causing time for this animation to play slower or
+		/// Multiplier for the delta time when this track entry is updated, causing time for this animation to pass slower or
 		/// faster. Defaults to 1.
+		///
+		/// Values < 0 are not supported. To play an animation in reverse, use getReverse().
+		///
+		/// getMixTime() is not affected by track entry time scale, so getMixDuration() may need to be adjusted to
+		/// match the animation speed.
+		///
+		/// When using AnimationState::addAnimation(int, Animation, bool, float) with a delay <= 0, the
+		/// getDelay() is set using the mix duration from the AnimationStateData, assuming time scale to be 1. If
+		/// the time scale is not 1, the delay may need to be adjusted.
+		///
+		/// See AnimationState getTimeScale() for affecting all animations.
 		float getTimeScale();
 
 		void setTimeScale(float inValue);
@@ -250,6 +277,11 @@ namespace spine {
 
 		void setMixDuration(float inValue);
 
+        /// Sets both getMixDuration() and getDelay().
+        /// @param delay If > 0, sets TrackEntry::getDelay(). If <= 0, the delay set is the duration of the previous track
+        ///           entry minus the specified mix duration plus the specified delay (ie the mix ends at
+        ///           (delay = 0) or before (delay < 0) the previous track entry duration). If the previous
+        ///           entry is looping, its next loop completion is used instead of its duration.
         void setMixDuration(float mixDuration, float delay);
 
 		MixBlend getMixBlend();
@@ -278,6 +310,9 @@ namespace spine {
 		void setListener(AnimationStateListener listener);
 
 		void setListener(AnimationStateListenerObject *listener);
+
+		/// Returns true if this entry is for the empty animation.
+		bool isEmptyAnimation();
 
         /// Returns true if this track entry has been applied at least once.
         ///
