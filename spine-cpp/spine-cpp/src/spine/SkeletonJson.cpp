@@ -1476,13 +1476,13 @@ Animation *SkeletonJson::readAnimation(Json *root, SkeletonData *skeletonData) {
 							float time = Json::getFloat(keyMap, "time", 0);
 							String modeString = Json::getString(keyMap, "mode", "hold");
 							int index = Json::getInt(keyMap, "index", 0);
-							SequenceMode mode = SequenceMode::hold;
-							if (modeString == "once") mode = SequenceMode::once;
-							if (modeString == "loop") mode = SequenceMode::loop;
-							if (modeString == "pingpong") mode = SequenceMode::pingpong;
-							if (modeString == "onceReverse") mode = SequenceMode::onceReverse;
-							if (modeString == "loopReverse") mode = SequenceMode::loopReverse;
-							if (modeString == "pingpongReverse") mode = SequenceMode::pingpongReverse;
+							SequenceMode mode = SequenceMode_hold;
+							if (modeString == "once") mode = SequenceMode_once;
+							if (modeString == "loop") mode = SequenceMode_loop;
+							if (modeString == "pingpong") mode = SequenceMode_pingpong;
+							if (modeString == "onceReverse") mode = SequenceMode_onceReverse;
+							if (modeString == "loopReverse") mode = SequenceMode_loopReverse;
+							if (modeString == "pingpongReverse") mode = SequenceMode_pingpongReverse;
 							timeline->setFrame(frame, time, mode, index, delay);
 							lastDelay = delay;
 						}

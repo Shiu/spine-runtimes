@@ -64,16 +64,25 @@ namespace spine {
 		Vector<float> _curves; // type, x, y, ...
 	};
 
+	/// The base class for a CurveTimeline that sets one property.
 	class SP_API CurveTimeline1 : public CurveTimeline {
 	RTTI_DECL
 
 	public:
+		/// @param frameCount The number of frames for this timeline.
+		/// @param bezierCount The maximum number of Bezier curves.
 		explicit CurveTimeline1(size_t frameCount, size_t bezierCount);
 
 		virtual ~CurveTimeline1();
 
+		size_t getFrameEntries();
+
+		/// Sets the time and value for the specified frame.
+		/// @param frame Between 0 and frameCount, inclusive.
+		/// @param time The frame time in seconds.
 		void setFrame(size_t frame, float time, float value);
 
+		/// Returns the interpolated value for the specified time.
 		float getCurveValue(float time);
 
         float getRelativeValue(float time, float alpha, MixBlend blend, float current, float setup);

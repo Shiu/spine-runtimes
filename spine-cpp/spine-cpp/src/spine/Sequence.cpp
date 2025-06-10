@@ -29,13 +29,18 @@
 
 #include <spine/Sequence.h>
 #include <spine/Slot.h>
+#include <spine/SlotPose.h>
 #include <spine/Attachment.h>
 #include <spine/RegionAttachment.h>
 #include <spine/MeshAttachment.h>
 
 using namespace spine;
 
-Sequence::Sequence(int count) : _id(Sequence::getNextID()),
+RTTI_IMPL_NOPARENT(Sequence)
+
+int Sequence::_nextID = 0;
+
+Sequence::Sequence(int count) : _id(nextID()),
 								_regions(),
 								_start(0),
 								_digits(0),
@@ -46,8 +51,8 @@ Sequence::Sequence(int count) : _id(Sequence::getNextID()),
 Sequence::~Sequence() {
 }
 
-Sequence *Sequence::copy() {
-	Sequence *copy = new (__FILE__, __LINE__) Sequence((int) _regions.size());
+Sequence* Sequence::copy() {
+	Sequence* copy = new (__FILE__, __LINE__) Sequence((int)_regions.size());
 	for (size_t i = 0; i < _regions.size(); i++) {
 		copy->_regions[i] = _regions[i];
 	}
@@ -57,7 +62,7 @@ Sequence *Sequence::copy() {
 	return copy;
 }
 
-void Sequence::apply(Slot *slot, Attachment *attachment) {
+void Sequence::apply(SlotPose* slot, Attachment* attachment) {
 	int index = slot->getSequenceIndex();
 	if (index == -1) index = _setupIndex;
 	if (index >= (int) _regions.size()) index = (int) _regions.size() - 1;
@@ -90,7 +95,6 @@ String Sequence::getPath(const String &basePath, int index) {
 	return result;
 }
 
-int Sequence::getNextID() {
-	static int _nextID = 0;
-	return _nextID;
+int Sequence::nextID() {
+	return _nextID++;
 }

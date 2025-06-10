@@ -33,16 +33,17 @@
 #include <spine/Vector.h>
 #include <spine/SpineString.h>
 #include <spine/TextureRegion.h>
+#include <spine/RTTI.h>
 
 namespace spine {
-	class Slot;
-
+	class SlotPose;
 	class Attachment;
 
 	class SkeletonBinary;
 	class SkeletonJson;
 
 	class SP_API Sequence : public SpineObject {
+		RTTI_DECL
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 	public:
@@ -50,12 +51,13 @@ namespace spine {
 
 		~Sequence();
 
-		Sequence *copy();
+		Sequence* copy();
 
-		void apply(Slot *slot, Attachment *attachment);
+		void apply(SlotPose* slot, Attachment* attachment);
 
 		String getPath(const String &basePath, int index);
 
+		/// Returns a unique ID for this attachment.
 		int getId() { return _id; }
 
 		void setId(int id) { _id = id; }
@@ -68,6 +70,7 @@ namespace spine {
 
 		void setDigits(int digits) { _digits = digits; }
 
+		/// The index of the region to show for the setup pose.
 		int getSetupIndex() { return _setupIndex; }
 
 		void setSetupIndex(int setupIndex) { _setupIndex = setupIndex; }
@@ -75,23 +78,24 @@ namespace spine {
 		Vector<TextureRegion *> &getRegions() { return _regions; }
 
 	private:
+		static int _nextID;
 		int _id;
 		Vector<TextureRegion *> _regions;
 		int _start;
 		int _digits;
 		int _setupIndex;
 
-		int getNextID();
+		static int nextID();
 	};
 
 	enum SequenceMode {
-		hold = 0,
-		once = 1,
-		loop = 2,
-		pingpong = 3,
-		onceReverse = 4,
-		loopReverse = 5,
-		pingpongReverse = 6
+		SequenceMode_hold = 0,
+		SequenceMode_once = 1,
+		SequenceMode_loop = 2,
+		SequenceMode_pingpong = 3,
+		SequenceMode_onceReverse = 4,
+		SequenceMode_loopReverse = 5,
+		SequenceMode_pingpongReverse = 6
 	};
 }
 

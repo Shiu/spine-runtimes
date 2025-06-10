@@ -97,28 +97,28 @@ void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vec
 
 	int index = modeAndIndex >> 4, count = (int) sequence->getRegions().size();
 	int mode = modeAndIndex & 0xf;
-	if (mode != SequenceMode::hold) {
+	if (mode != SequenceMode_hold) {
 		index += (int) (((time - before) / delay + 0.0001));
 		switch (mode) {
-			case SequenceMode::once:
+			case SequenceMode_once:
 				index = MathUtil::min(count - 1, index);
 				break;
-			case SequenceMode::loop:
+			case SequenceMode_loop:
 				index %= count;
 				break;
-			case SequenceMode::pingpong: {
+			case SequenceMode_pingpong: {
 				int n = (count << 1) - 2;
 				index = n == 0 ? 0 : index % n;
 				if (index >= count) index = n - index;
 				break;
 			}
-			case SequenceMode::onceReverse:
+			case SequenceMode_onceReverse:
 				index = MathUtil::max(count - 1 - index, 0);
 				break;
-			case SequenceMode::loopReverse:
+			case SequenceMode_loopReverse:
 				index = count - 1 - (index % count);
 				break;
-			case SequenceMode::pingpongReverse: {
+			case SequenceMode_pingpongReverse: {
 				int n = (count << 1) - 2;
 				index = n == 0 ? 0 : (index + count - 1) % n;
 				if (index >= count) index = n - index;

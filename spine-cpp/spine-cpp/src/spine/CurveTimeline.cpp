@@ -104,6 +104,10 @@ CurveTimeline1::CurveTimeline1(size_t frameCount, size_t bezierCount) : CurveTim
 CurveTimeline1::~CurveTimeline1() {
 }
 
+size_t CurveTimeline1::getFrameEntries() {
+	return ENTRIES;
+}
+
 void CurveTimeline1::setFrame(size_t frame, float time, float value) {
 	frame <<= 1;
 	_frames[frame] = time;
@@ -149,12 +153,11 @@ float CurveTimeline1::getRelativeValue(float time, float alpha, MixBlend blend, 
 			return setup + value * alpha;
 		case MixBlend_First:
 		case MixBlend_Replace:
-			value += setup - current;
-			break;
+			return current + (value + setup - current) * alpha;
 		case MixBlend_Add:
-			break;
+			return current + value * alpha;
 	}
-	return current + value * alpha;
+	return current;
 }
 
 float CurveTimeline1::getAbsoluteValue(float time, float alpha, MixBlend blend, float current, float setup) {
@@ -169,8 +172,16 @@ float CurveTimeline1::getAbsoluteValue(float time, float alpha, MixBlend blend, 
 		}
 	}
 	float value = getCurveValue(time);
-	if (blend == MixBlend_Setup) return setup + (value - setup) * alpha;
-	return current + (value - current) * alpha;
+	switch (blend) {
+		case MixBlend_Setup:
+			return setup + (value - setup) * alpha;
+		case MixBlend_First:
+		case MixBlend_Replace:
+			return current + (value - current) * alpha;
+		case MixBlend_Add:
+			return current + value * alpha;
+	}
+	return current;
 }
 
 float CurveTimeline1::getAbsoluteValue(float time, float alpha, MixBlend blend, float current, float setup, float value) {
@@ -184,8 +195,16 @@ float CurveTimeline1::getAbsoluteValue(float time, float alpha, MixBlend blend, 
 				return current;
 		}
 	}
-	if (blend == MixBlend_Setup) return setup + (value - setup) * alpha;
-	return current + (value - current) * alpha;
+	switch (blend) {
+		case MixBlend_Setup:
+			return setup + (value - setup) * alpha;
+		case MixBlend_First:
+		case MixBlend_Replace:
+			return current + (value - current) * alpha;
+		case MixBlend_Add:
+			return current + value * alpha;
+	}
+	return current;
 }
 
 float CurveTimeline1::getScaleValue(float time, float alpha, MixBlend blend, MixDirection direction, float current,
