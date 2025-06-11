@@ -29,10 +29,36 @@
 
 #include <spine/BoneTimeline.h>
 
+#include <spine/Event.h>
+#include <spine/Skeleton.h>
+#include <spine/Bone.h>
+#include <spine/BoneData.h>
+#include <spine/BoneLocal.h>
+#include <spine/Property.h>
+
 using namespace spine;
 
 BoneTimeline::BoneTimeline() {
 }
 
 BoneTimeline::~BoneTimeline() {
+}
+
+RTTI_IMPL(BoneTimeline1, CurveTimeline1)
+
+BoneTimeline1::BoneTimeline1(size_t frameCount, size_t bezierCount, int boneIndex, Property property) : 
+	CurveTimeline1(frameCount, bezierCount), _boneIndex(boneIndex) {
+	PropertyId ids[] = {((PropertyId) property << 32) | boneIndex};
+	setPropertyIds(ids, 1);
+}
+
+void BoneTimeline1::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
+						  MixBlend blend, MixDirection direction, bool appliedPose) {
+	SP_UNUSED(lastTime);
+	SP_UNUSED(pEvents);
+
+	Bone *bone = skeleton._bones[_boneIndex];
+	if (bone->isActive()) {
+		apply(appliedPose ? *bone->_applied : bone->_pose, *bone->_data._setup, time, alpha, blend, direction);
+	}
 }

@@ -31,8 +31,13 @@
 #define Spine_BoneTimeline_h
 
 #include <spine/dll.h>
+#include <spine/CurveTimeline.h>
 
 namespace spine {
+	class Skeleton;
+	class Event;
+	class BoneLocal;
+
     /// An interface for timelines which change the property of a bone.
     class SP_API BoneTimeline {
     public:
@@ -42,6 +47,33 @@ namespace spine {
         /// The index of the bone in Skeleton::getBones() that will be changed when this timeline is applied.
         virtual int getBoneIndex() = 0;
     };
+
+	/// Base class for timelines that animate a single bone property.
+	class SP_API BoneTimeline1 : public CurveTimeline1, public BoneTimeline {
+		friend class SkeletonBinary;
+		friend class SkeletonJson;
+		friend class AnimationState;
+
+	RTTI_DECL
+
+	public:
+		BoneTimeline1(size_t frameCount, size_t bezierCount, int boneIndex, Property property);
+
+		virtual void
+		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
+			  MixDirection direction, bool appliedPose) override;
+
+		virtual int getBoneIndex() override { return _boneIndex; }
+
+		void setBoneIndex(int inValue) { _boneIndex = inValue; }
+
+	protected:
+		/// Applies changes to the pose based on the timeline values.
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+						   MixDirection direction) = 0;
+
+		int _boneIndex;
+	};
 }
 
 #endif

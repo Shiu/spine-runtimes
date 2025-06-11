@@ -107,6 +107,8 @@ namespace spine {
 
 		friend class TransformConstraintTimeline;
 
+		friend class BoneTimeline1;
+
 		friend class RotateTimeline;
 
 		friend class TranslateTimeline;

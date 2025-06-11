@@ -30,10 +30,11 @@
 #ifndef Spine_RotateTimeline_h
 #define Spine_RotateTimeline_h
 
-#include <spine/CurveTimeline.h>
+#include <spine/BoneTimeline.h>
 
 namespace spine {
-	class SP_API RotateTimeline : public CurveTimeline1 {
+	/// Changes a bone's local rotation.
+	class SP_API RotateTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -45,16 +46,9 @@ namespace spine {
 	public:
 		explicit RotateTimeline(size_t frameCount, size_t bezierCount, int boneIndex);
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
-
-		int getBoneIndex() { return _boneIndex; }
-
-		void setBoneIndex(int inValue) { _boneIndex = inValue; }
-
-	private:
-		int _boneIndex;
+	protected:
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+						   MixDirection direction) override;
 	};
 }
 

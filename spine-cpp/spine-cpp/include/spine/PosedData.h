@@ -42,6 +42,24 @@ namespace spine {
     class SP_API PosedData : public SpineObject {
         friend class SkeletonBinary;
         friend class SkeletonJson;
+        friend class BoneTimeline1;
+        friend class RotateTimeline;
+        friend class AttachmentTimeline;
+        friend class RGBATimeline;
+        friend class RGBTimeline;
+        friend class AlphaTimeline;
+        friend class RGBA2Timeline;
+        friend class RGB2Timeline;
+        friend class ScaleTimeline;
+        friend class ScaleXTimeline;
+        friend class ScaleYTimeline;
+        friend class ShearTimeline;
+        friend class ShearXTimeline;
+        friend class ShearYTimeline;
+        friend class TranslateTimeline;
+        friend class TranslateXTimeline;
+        friend class TranslateYTimeline;
+        friend class InheritTimeline;
 
     private:
         spine::String _name;

@@ -37,6 +37,7 @@ namespace spine {
 	template<class D, class P, class A>
 	class SP_API Posed : public SpineObject {
 		friend class AnimationState;
+		friend class BoneTimeline1;
 		friend class RotateTimeline;
 		friend class IkConstraint;
 		friend class TransformConstraint;
