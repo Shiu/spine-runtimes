@@ -37,6 +37,8 @@ namespace spine {
     /// Stores a pose for a physics constraint.
     class SP_API PhysicsConstraintPose : public Pose<PhysicsConstraintPose> {
         RTTI_DECL
+
+        friend class PhysicsConstraint;
     
     private:
         float _inertia;

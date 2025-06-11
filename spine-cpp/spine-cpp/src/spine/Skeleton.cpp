@@ -59,7 +59,7 @@ using namespace spine;
 
 Skeleton::Skeleton(SkeletonData *skeletonData)
 	: _data(skeletonData), _skin(NULL), _color(1, 1, 1, 1), _scaleX(1),
-	  _scaleY(1), _x(0), _y(0), _time(0) {
+	  _scaleY(1), _x(0), _y(0), _time(0), _windX(1), _windY(0), _gravityX(0), _gravityY(1) {
 	_bones.ensureCapacity(_data->getBones().size());
 	for (size_t i = 0; i < _data->getBones().size(); ++i) {
 		BoneData *data = _data->getBones()[i];
@@ -772,3 +772,19 @@ void Skeleton::physicsRotate(float x, float y, float degrees) {
 		_physicsConstraints[i]->rotate(x, y, degrees);
 	}
 }
+
+float Skeleton::getWindX() { return _windX; }
+
+void Skeleton::setWindX(float windX) { _windX = windX; }
+
+float Skeleton::getWindY() { return _windY; }
+
+void Skeleton::setWindY(float windY) { _windY = windY; }
+
+float Skeleton::getGravityX() { return _gravityX; }
+
+void Skeleton::setGravityX(float gravityX) { _gravityX = gravityX; }
+
+float Skeleton::getGravityY() { return _gravityY; }
+
+void Skeleton::setGravityY(float gravityY) { _gravityY = gravityY; }

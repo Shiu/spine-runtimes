@@ -122,6 +122,8 @@ namespace spine {
 
 		friend class TwoColorTimeline;
 
+		friend class PhysicsConstraint;
+
 	public:
 		explicit Skeleton(SkeletonData *skeletonData);
 
@@ -246,6 +248,22 @@ namespace spine {
 
         void update(float delta);
 
+        float getWindX();
+        
+        void setWindX(float windX);
+        
+        float getWindY();
+        
+        void setWindY(float windY);
+        
+        float getGravityX();
+        
+        void setGravityX(float gravityX);
+        
+        float getGravityY();
+        
+        void setGravityY(float gravityY);
+
         /// Rotates the physics constraint so next {@link #update(Physics)} forces are applied as if the bone rotated around the
 	    /// specified point in world space.
         void physicsTranslate(float x, float y);
@@ -268,6 +286,7 @@ namespace spine {
 		float _scaleX, _scaleY;
 		float _x, _y;
         float _time;
+        float _windX, _windY, _gravityX, _gravityY;
 
 		void sortIkConstraint(IkConstraint *constraint);
 
