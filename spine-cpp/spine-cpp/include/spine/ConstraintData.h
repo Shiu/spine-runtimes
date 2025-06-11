@@ -27,15 +27,14 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_Constraint_h
-#define Spine_Constraint_h
+#ifndef Spine_ConstraintData_h
+#define Spine_ConstraintData_h
 
 #include <spine/PosedData.h>
 #include <spine/SpineString.h>
 #include <spine/RTTI.h>
 
 namespace spine {
-	class Constraint;
 	class Skeleton;
 
 	/// Base class for all constraint data.
@@ -61,4 +60,4 @@ namespace spine {
 	}
 }
 
-#endif /* Spine_Constraint_h */
+#endif /* Spine_ConstraintData_h */

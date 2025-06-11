@@ -79,7 +79,7 @@ namespace spine {
 		}
 
 		void setupPose() {
-			_pose.set(*_data.getSetupPose());
+			_pose.set(_data.getSetupPose());
 		}
 
 		/// The constraint's setup pose data.

@@ -30,18 +30,18 @@
 #ifndef Spine_IkConstraint_h
 #define Spine_IkConstraint_h
 
+#include <spine/Constraint.h>
 #include <spine/ConstraintData.h>
-
+#include <spine/IkConstraintData.h>
+#include <spine/IkConstraintPose.h>
 #include <spine/Vector.h>
 
 namespace spine {
-	class IkConstraintData;
-
 	class Skeleton;
-
 	class Bone;
+	class BonePose;
 
-	class SP_API IkConstraint : public Updatable {
+	class SP_API IkConstraint : public Constraint<IkConstraint, IkConstraintData, IkConstraintPose> {
 		friend class Skeleton;
 
 		friend class IkConstraintTimeline;
@@ -52,66 +52,36 @@ namespace spine {
 		/// Adjusts the bone rotation so the tip is as close to the target position as possible. The target is specified
 		/// in the world coordinate system.
 		static void
-		apply(Bone &bone, float targetX, float targetY, bool compress, bool stretch, bool uniform, float alpha);
+		apply(Skeleton& skeleton, BonePose& bone, float targetX, float targetY, bool compress, bool stretch, bool uniform, float mix);
 
 		/// Adjusts the parent and child bone rotations so the tip of the child is as close to the target position as
 		/// possible. The target is specified in the world coordinate system.
 		/// @param child A direct descendant of the parent bone.
 		static void
-		apply(Bone &parent, Bone &child, float targetX, float targetY, int bendDir, bool stretch, bool uniform,
-			  float softness,
-			  float alpha);
+		apply(Skeleton& skeleton, BonePose& parent, BonePose& child, float targetX, float targetY, int bendDirection, bool stretch, bool uniform,
+			  float softness, float mix);
 
 		IkConstraint(IkConstraintData &data, Skeleton &skeleton);
 
-		virtual void update(Physics physics);
+		virtual void update(Skeleton& skeleton, Physics physics);
 
-		virtual int getOrder();
+		virtual void sort(Skeleton& skeleton);
+
+		virtual bool isSourceActive();
+
+		virtual IkConstraint* copy(Skeleton& skeleton);
 
 		IkConstraintData &getData();
 
-		Vector<Bone *> &getBones();
+		Vector<BonePose *> &getBones();
 
 		Bone *getTarget();
 
 		void setTarget(Bone *inValue);
 
-		int getBendDirection();
-
-		void setBendDirection(int inValue);
-
-		bool getCompress();
-
-		void setCompress(bool inValue);
-
-		bool getStretch();
-
-		void setStretch(bool inValue);
-
-		float getMix();
-
-		void setMix(float inValue);
-
-		float getSoftness();
-
-		void setSoftness(float inValue);
-
-		bool isActive();
-
-		void setActive(bool inValue);
-
-        void setToSetupPose();
-
 	private:
-		IkConstraintData &_data;
-		Vector<Bone *> _bones;
-		int _bendDirection;
-		bool _compress;
-		bool _stretch;
-		float _mix;
-		float _softness;
+		Vector<BonePose *> _bones;
 		Bone *_target;
-		bool _active;
 	};
 }
 

@@ -38,6 +38,7 @@
 namespace spine {
 	/// Stores a bone's local pose.
 	class SP_API BoneLocal : public Pose<BoneLocal> {
+		friend class IkConstraint;
 		friend class BoneTimeline1;
 		friend class BoneTimeline2;
 		friend class RotateTimeline;

@@ -42,7 +42,7 @@ namespace spine {
 		RTTI_DECL
 
 	public:
-		Constraint(D& data, P& pose, P& constrained) : PosedActive<D, P, P>(data, pose, constrained) {
+		Constraint(D& data) : PosedActive<D, P, P>(data) {
 		}
 
 		virtual ~Constraint() {

@@ -39,6 +39,7 @@ namespace spine {
 	class Skeleton;
 
 	class SP_API BonePose : public BoneLocal, public Update {
+		friend class IkConstraint;
 		RTTI_DECL
 
 	public:
