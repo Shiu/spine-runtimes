@@ -30,10 +30,12 @@
 #ifndef Spine_ColorTimeline_h
 #define Spine_ColorTimeline_h
 
-#include <spine/CurveTimeline.h>
+#include <spine/SlotCurveTimeline.h>
+#include <spine/SlotTimeline.h>
 
 namespace spine {
-	class SP_API RGBATimeline : public CurveTimeline {
+	/// Changes a slot's SlotPose::getColor().
+	class SP_API RGBATimeline : public SlotCurveTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -45,19 +47,15 @@ namespace spine {
 
 		virtual ~RGBATimeline();
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+		int getFrameEntries();
 
-		/// Sets the time and value of the specified keyframe.
+		/// Sets the time and color for the specified frame.
+		/// @param frame Between 0 and frameCount, inclusive.
+		/// @param time The frame time in seconds.
 		void setFrame(int frame, float time, float r, float g, float b, float a);
 
-		int getSlotIndex() { return _slotIndex; };
-
-		void setSlotIndex(int inValue) { _slotIndex = inValue; }
-
 	protected:
-		int _slotIndex;
+		virtual void apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) override;
 
 		static const int ENTRIES = 5;
 		static const int R = 1;
@@ -66,7 +64,8 @@ namespace spine {
 		static const int A = 4;
 	};
 
-	class SP_API RGBTimeline : public CurveTimeline {
+	/// Changes the RGB for a slot's SlotPose::getColor().
+	class SP_API RGBTimeline : public SlotCurveTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -78,19 +77,15 @@ namespace spine {
 
 		virtual ~RGBTimeline();
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+		int getFrameEntries();
 
-		/// Sets the time and value of the specified keyframe.
+		/// Sets the time and color for the specified frame.
+		/// @param frame Between 0 and frameCount, inclusive.
+		/// @param time The frame time in seconds.
 		void setFrame(int frame, float time, float r, float g, float b);
 
-		int getSlotIndex() { return _slotIndex; };
-
-		void setSlotIndex(int inValue) { _slotIndex = inValue; }
-
 	protected:
-		int _slotIndex;
+		virtual void apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) override;
 
 		static const int ENTRIES = 4;
 		static const int R = 1;
@@ -98,7 +93,7 @@ namespace spine {
 		static const int B = 3;
 	};
 
-	class SP_API AlphaTimeline : public CurveTimeline1 {
+	class SP_API AlphaTimeline : public CurveTimeline1, public SlotTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -112,17 +107,16 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+			  MixDirection direction, bool appliedPose) override;
 
-		int getSlotIndex() { return _slotIndex; };
-
-		void setSlotIndex(int inValue) { _slotIndex = inValue; }
+		virtual int getSlotIndex() override;
 
 	protected:
 		int _slotIndex;
 	};
 
-	class SP_API RGBA2Timeline : public CurveTimeline {
+	/// Changes a slot's SlotPose::getColor() and SlotPose::getDarkColor() for two color tinting.
+	class SP_API RGBA2Timeline : public SlotCurveTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -134,19 +128,15 @@ namespace spine {
 
 		virtual ~RGBA2Timeline();
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+		int getFrameEntries();
 
-		/// Sets the time and value of the specified keyframe.
+		/// Sets the time, light color, and dark color for the specified frame.
+		/// @param frame Between 0 and frameCount, inclusive.
+		/// @param time The frame time in seconds.
 		void setFrame(int frame, float time, float r, float g, float b, float a, float r2, float g2, float b2);
 
-		int getSlotIndex() { return _slotIndex; };
-
-		void setSlotIndex(int inValue) { _slotIndex = inValue; }
-
 	protected:
-		int _slotIndex;
+		virtual void apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) override;
 
 		static const int ENTRIES = 8;
 		static const int R = 1;
@@ -158,7 +148,8 @@ namespace spine {
 		static const int B2 = 7;
 	};
 
-	class SP_API RGB2Timeline : public CurveTimeline {
+	/// Changes the RGB for a slot's SlotPose::getColor() and SlotPose::getDarkColor() for two color tinting.
+	class SP_API RGB2Timeline : public SlotCurveTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -170,19 +161,15 @@ namespace spine {
 
 		virtual ~RGB2Timeline();
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+		int getFrameEntries();
 
-		/// Sets the time and value of the specified keyframe.
+		/// Sets the time, light color, and dark color for the specified frame.
+		/// @param frame Between 0 and frameCount, inclusive.
+		/// @param time The frame time in seconds.
 		void setFrame(int frame, float time, float r, float g, float b, float r2, float g2, float b2);
 
-		int getSlotIndex() { return _slotIndex; };
-
-		void setSlotIndex(int inValue) { _slotIndex = inValue; }
-
 	protected:
-		int _slotIndex;
+		virtual void apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) override;
 
 		static const int ENTRIES = 7;
 		static const int R = 1;

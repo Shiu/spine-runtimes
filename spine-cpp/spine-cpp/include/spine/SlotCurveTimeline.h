@@ -27,113 +27,39 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_Slot_h
-#define Spine_Slot_h
+#ifndef Spine_SlotCurveTimeline_h
+#define Spine_SlotCurveTimeline_h
 
-#include <spine/Vector.h>
-#include <spine/SpineObject.h>
-#include <spine/Color.h>
+#include <spine/CurveTimeline.h>
+#include <spine/SlotTimeline.h>
 
 namespace spine {
-	class SlotData;
+	class Slot;
+	class SlotPose;
 
-	class Bone;
+	/// Base class for slot timelines that use curves.
+	class SP_API SlotCurveTimeline : public CurveTimeline, public SlotTimeline {
+		friend class SkeletonBinary;
+		friend class SkeletonJson;
 
-	class Skeleton;
-
-	class Attachment;
-
-	class SP_API Slot : public SpineObject {
-		friend class VertexAttachment;
-
-		friend class Skeleton;
-
-		friend class SkeletonBounds;
-
-		friend class SkeletonClipping;
-
-		friend class SlotCurveTimeline;
-
-		friend class AttachmentTimeline;
-
-		friend class RGBATimeline;
-
-		friend class RGBTimeline;
-
-		friend class AlphaTimeline;
-
-		friend class RGBA2Timeline;
-
-		friend class RGB2Timeline;
-
-		friend class DeformTimeline;
-
-		friend class DrawOrderTimeline;
-
-		friend class EventTimeline;
-
-		friend class IkConstraintTimeline;
-
-		friend class PathConstraintMixTimeline;
-
-		friend class PathConstraintPositionTimeline;
-
-		friend class PathConstraintSpacingTimeline;
-
-		friend class ScaleTimeline;
-
-		friend class ShearTimeline;
-
-		friend class TransformConstraintTimeline;
-
-		friend class TranslateTimeline;
-
-		friend class TwoColorTimeline;
+	RTTI_DECL
 
 	public:
-		Slot(SlotData &data, Bone &bone);
+		SlotCurveTimeline(size_t frameCount, size_t frameEntries, size_t bezierCount, int slotIndex);
 
-		void setToSetupPose();
+		virtual ~SlotCurveTimeline();
 
-		SlotData &getData();
+		virtual int getSlotIndex() override;
 
-		Bone &getBone();
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, 
+						   MixBlend blend, MixDirection direction, bool appliedPose) override;
 
-		Skeleton &getSkeleton();
+	protected:
+		/// Applies the timeline to the slot pose.
+		virtual void apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) = 0;
 
-		Color &getColor();
-
-		Color &getDarkColor();
-
-		bool hasDarkColor();
-
-		/// May be NULL.
-		Attachment *getAttachment();
-
-		void setAttachment(Attachment *inValue);
-
-		int getAttachmentState();
-
-		void setAttachmentState(int state);
-
-		Vector<float> &getDeform();
-
-		int getSequenceIndex();
-
-		void setSequenceIndex(int index);
-
-	private:
-		SlotData &_data;
-		Bone &_bone;
-		Skeleton &_skeleton;
-		Color _color;
-		Color _darkColor;
-		bool _hasDarkColor;
-		Attachment *_attachment;
-		int _attachmentState;
-		int _sequenceIndex;
-		Vector<float> _deform;
+		int _slotIndex;
 	};
 }
 
-#endif /* Spine_Slot_h */
+#endif /* Spine_SlotCurveTimeline_h */

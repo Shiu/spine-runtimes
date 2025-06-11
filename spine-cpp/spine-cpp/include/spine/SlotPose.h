@@ -41,6 +41,13 @@ namespace spine {
 	class VertexAttachment;
 
 	class SP_API SlotPose : public Pose<SlotPose> {
+		friend class SlotCurveTimeline;
+		friend class RGBATimeline;
+		friend class RGBTimeline;
+		friend class AlphaTimeline;
+		friend class RGBA2Timeline;
+		friend class RGB2Timeline;
+
 		RTTI_DECL
 
 	private:

@@ -67,6 +67,8 @@ namespace spine {
 
 		friend class SkeletonClipping;
 
+		friend class SlotCurveTimeline;
+
 		friend class AttachmentTimeline;
 
 		friend class RGBATimeline;

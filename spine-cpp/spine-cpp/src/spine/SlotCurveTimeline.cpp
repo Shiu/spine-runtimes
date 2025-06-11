@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated January 1, 2020. Replaces all prior versions.
+ * Last updated April 5, 2025. Replaces all prior versions.
  *
- * Copyright (c) 2013-2020, Esoteric Software LLC
+ * Copyright (c) 2013-2025, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,47 +27,34 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_POSEDACTIVE_H_
-#define SPINE_POSEDACTIVE_H_
+#include <spine/SlotCurveTimeline.h>
 
-#include <spine/dll.h>
-#include <spine/Posed.h>
+#include <spine/Bone.h>
+#include <spine/Skeleton.h>
+#include <spine/Slot.h>
+#include <spine/SlotPose.h>
 
-namespace spine {
-	template<class D, class P, class A>
-	class SP_API PosedActive : public Posed<D, P, A> {
-		friend class SlotCurveTimeline;
+using namespace spine;
 
-	protected:
-		bool _active;
+RTTI_IMPL(SlotCurveTimeline, CurveTimeline)
 
-	public:
-		PosedActive(D& data);
-		virtual ~PosedActive();
-
-		/// Returns false when this constraint won't be updated by
-		/// Skeleton::updateWorldTransform() because a skin is required and the
-		/// active skin does not contain this item.
-		/// @see Skin::getBones()
-		/// @see Skin::getConstraints()
-		/// @see PosedData::getSkinRequired()
-		/// @see Skeleton::updateCache()
-		bool isActive();
-	};
-
-	template<class D, class P, class A>
-	PosedActive<D, P, A>::PosedActive(D& data) : Posed<D, P, A>(data), _active(false) {
-		this->setupPose();
-	}
-
-	template<class D, class P, class A>
-	PosedActive<D, P, A>::~PosedActive() {
-	}
-
-	template<class D, class P, class A>
-	bool PosedActive<D, P, A>::isActive() {
-		return _active;
-	}
+SlotCurveTimeline::SlotCurveTimeline(size_t frameCount, size_t frameEntries, size_t bezierCount, int slotIndex) 
+	: CurveTimeline(frameCount, frameEntries, bezierCount), _slotIndex(slotIndex) {
 }
 
-#endif /* SPINE_POSEDACTIVE_H_ */
+SlotCurveTimeline::~SlotCurveTimeline() {
+}
+
+int SlotCurveTimeline::getSlotIndex() {
+	return _slotIndex;
+}
+
+void SlotCurveTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, 
+							  MixBlend blend, MixDirection direction, bool appliedPose) {
+	SP_UNUSED(lastTime);
+	SP_UNUSED(pEvents);
+	SP_UNUSED(direction);
+
+	Slot *slot = skeleton._slots[_slotIndex];
+	if (slot->_bone._active) apply(*slot, appliedPose ? slot->_applied : slot->_pose, time, alpha, blend);
+}
