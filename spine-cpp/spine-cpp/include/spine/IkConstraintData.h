@@ -34,11 +34,13 @@
 #include <spine/SpineObject.h>
 #include <spine/SpineString.h>
 #include <spine/ConstraintData.h>
+#include <spine/IkConstraintPose.h>
 
 namespace spine {
 	class BoneData;
+	class IkConstraint;
 
-	class SP_API IkConstraintData : public ConstraintData {
+	class SP_API IkConstraintData : public ConstraintData<IkConstraint, IkConstraintPose> {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -62,40 +64,15 @@ namespace spine {
 
 		void setTarget(BoneData *inValue);
 
-		/// Controls the bend direction of the IK bones, either 1 or -1.
-		int getBendDirection();
-
-		void setBendDirection(int inValue);
-
-		bool getCompress();
-
-		void setCompress(bool inValue);
-
-		bool getStretch();
-
-		void setStretch(bool inValue);
-
+		/// When true and IkConstraintPose compress or stretch is used, the bone is scaled on both the X and Y axes.
 		bool getUniform();
 
-		void setUniform(bool inValue);
-
-		float getMix();
-
-		void setMix(float inValue);
-
-		float getSoftness();
-
-		void setSoftness(float inValue);
+		void setUniform(bool uniform);
 
 	private:
 		Vector<BoneData *> _bones;
 		BoneData *_target;
-		int _bendDirection;
-		bool _compress;
-		bool _stretch;
 		bool _uniform;
-		float _mix;
-		float _softness;
 	};
 }
 

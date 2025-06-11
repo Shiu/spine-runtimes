@@ -30,121 +30,77 @@
 #ifndef Spine_PhysicsConstraintData_h
 #define Spine_PhysicsConstraintData_h
 
-#include <spine/Vector.h>
-#include <spine/SpineObject.h>
-#include <spine/SpineString.h>
 #include <spine/ConstraintData.h>
+#include <spine/PhysicsConstraintPose.h>
 
 namespace spine {
 	class BoneData;
+	class PhysicsConstraint;
 
-	class SP_API PhysicsConstraintData : public ConstraintData {
+	/// Stores the setup pose for a PhysicsConstraint.
+	/// 
+	/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide.
+	class SP_API PhysicsConstraintData : public ConstraintData<PhysicsConstraint, PhysicsConstraintPose> {
 		friend class SkeletonBinary;
-
 		friend class SkeletonJson;
-
+		friend class PhysicsConstraint;
 		friend class Skeleton;
-
-        friend class PhysicsConstraint;
 
 	public:
 		RTTI_DECL
 
 		explicit PhysicsConstraintData(const String &name);
 
-        void setBone(BoneData* bone);
+		/// The bone constrained by this physics constraint.
+		BoneData* getBone();
+		void setBone(BoneData* bone);
 
-        BoneData* getBone() const;
+		float getStep();
+		void setStep(float step);
 
-        void setX(float x);
+		float getX();
+		void setX(float x);
 
-        float getX() const;
+		float getY();
+		void setY(float y);
 
-        void setY(float y);
+		float getRotate();
+		void setRotate(float rotate);
 
-        float getY() const;
+		float getScaleX();
+		void setScaleX(float scaleX);
 
-        void setRotate(float rotate);
+		float getShearX();
+		void setShearX(float shearX);
 
-        float getRotate() const;
+		float getLimit();
+		void setLimit(float limit);
 
-        void setScaleX(float scaleX);
+		bool getInertiaGlobal();
+		void setInertiaGlobal(bool inertiaGlobal);
 
-        float getScaleX() const;
+		bool getStrengthGlobal();
+		void setStrengthGlobal(bool strengthGlobal);
 
-        void setShearX(float shearX);
+		bool getDampingGlobal();
+		void setDampingGlobal(bool dampingGlobal);
 
-        float getShearX() const;
+		bool getMassGlobal();
+		void setMassGlobal(bool massGlobal);
 
-        void setLimit(float limit);
+		bool getWindGlobal();
+		void setWindGlobal(bool windGlobal);
 
-        float getLimit() const;
+		bool getGravityGlobal();
+		void setGravityGlobal(bool gravityGlobal);
 
-        void setStep(float step);
-
-        float getStep() const;
-
-        void setInertia(float inertia);
-
-        float getInertia() const;
-
-        void setStrength(float strength);
-
-        float getStrength() const;
-
-        void setDamping(float damping);
-
-        float getDamping() const;
-
-        void setMassInverse(float massInverse);
-
-        float getMassInverse() const;
-
-        void setWind(float wind);
-
-        float getWind() const;
-
-        void setGravity(float gravity);
-
-        float getGravity() const;
-
-        void setMix(float mix);
-
-        float getMix() const;
-
-        void setInertiaGlobal(bool inertiaGlobal);
-
-        bool isInertiaGlobal() const;
-
-        void setStrengthGlobal(bool strengthGlobal);
-
-        bool isStrengthGlobal() const;
-
-        void setDampingGlobal(bool dampingGlobal);
-
-        bool isDampingGlobal() const;
-
-        void setMassGlobal(bool massGlobal);
-
-        bool isMassGlobal() const;
-
-        void setWindGlobal(bool windGlobal);
-
-        bool isWindGlobal() const;
-
-        void setGravityGlobal(bool gravityGlobal);
-
-        bool isGravityGlobal() const;
-
-        void setMixGlobal(bool mixGlobal);
-
-        bool isMixGlobal() const;
+		bool getMixGlobal();
+		void setMixGlobal(bool mixGlobal);
 
 	private:
-		BoneData *_bone;
-        float _x, _y, _rotate, _scaleX, _shearX, _limit;
-        float _step, _inertia, _strength, _damping, _massInverse, _wind, _gravity, _mix;
-        bool _inertiaGlobal, _strengthGlobal, _dampingGlobal, _massGlobal, _windGlobal, _gravityGlobal, _mixGlobal;
+		BoneData* _bone;
+		float _x, _y, _rotate, _scaleX, _shearX, _limit, _step;
+		bool _inertiaGlobal, _strengthGlobal, _dampingGlobal, _massGlobal, _windGlobal, _gravityGlobal, _mixGlobal;
 	};
 }
 

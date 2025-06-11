@@ -84,7 +84,7 @@ namespace spine {
 
 		void setIcon(const String &icon);
 
-		bool isVisible();
+		bool getVisible();
 
 		void setVisible(bool inValue);
 

@@ -38,7 +38,7 @@ using namespace spine;
 RTTI_IMPL_NOPARENT(SlotData)
 
 SlotData::SlotData(int index, const String& name, BoneData& boneData) : 
-	PosedData<SlotPose>(name, new (__FILE__, __LINE__) SlotPose()),
+	PosedData<SlotPose>(name),
 	_index(index),
 	_boneData(boneData),
 	_attachmentName(),
@@ -71,7 +71,7 @@ void SlotData::setBlendMode(BlendMode blendMode) {
 	_blendMode = blendMode;
 }
 
-bool SlotData::isVisible() {
+bool SlotData::getVisible() {
 	return _visible;
 }
 

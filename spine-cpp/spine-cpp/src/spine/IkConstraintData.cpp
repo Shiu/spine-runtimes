@@ -33,16 +33,11 @@
 
 using namespace spine;
 
-RTTI_IMPL(IkConstraintData, ConstraintData)
+RTTI_IMPL_NOPARENT(IkConstraintData)
 
-IkConstraintData::IkConstraintData(const String &name) : ConstraintData(name),
+IkConstraintData::IkConstraintData(const String &name) : ConstraintData<IkConstraint, IkConstraintPose>(name),
 														 _target(NULL),
-														 _bendDirection(0),
-														 _compress(false),
-														 _stretch(false),
-														 _uniform(false),
-														 _mix(0),
-														 _softness(0) {
+														 _uniform(false) {
 }
 
 Vector<BoneData *> &IkConstraintData::getBones() {
@@ -57,51 +52,10 @@ void IkConstraintData::setTarget(BoneData *inValue) {
 	_target = inValue;
 }
 
-int IkConstraintData::getBendDirection() {
-	return _bendDirection;
-}
-
-void IkConstraintData::setBendDirection(int inValue) {
-	_bendDirection = inValue;
-}
-
-float IkConstraintData::getMix() {
-	return _mix;
-}
-
-void IkConstraintData::setMix(float inValue) {
-	_mix = inValue;
-}
-
-bool IkConstraintData::getStretch() {
-	return _stretch;
-}
-
-void IkConstraintData::setStretch(bool inValue) {
-	_stretch = inValue;
-}
-
-bool IkConstraintData::getCompress() {
-	return _compress;
-}
-
-void IkConstraintData::setCompress(bool inValue) {
-	_compress = inValue;
-}
-
-
 bool IkConstraintData::getUniform() {
 	return _uniform;
 }
 
-void IkConstraintData::setUniform(bool inValue) {
-	_uniform = inValue;
-}
-
-float IkConstraintData::getSoftness() {
-	return _softness;
-}
-
-void IkConstraintData::setSoftness(float inValue) {
-	_softness = inValue;
+void IkConstraintData::setUniform(bool uniform) {
+	_uniform = uniform;
 }

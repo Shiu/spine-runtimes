@@ -37,6 +37,22 @@ namespace spine {
     /// Stores a pose for a transform constraint.
     class SP_API TransformConstraintPose : public Pose<TransformConstraintPose> {
         RTTI_DECL
+        
+        friend class FromProperty;
+        friend class ToProperty;
+        friend class FromRotate;
+        friend class ToRotate;
+        friend class FromX;
+        friend class ToX;
+        friend class FromY;
+        friend class ToY;
+        friend class FromScaleX;
+        friend class ToScaleX;
+        friend class FromScaleY;
+        friend class ToScaleY;
+        friend class FromShearY;
+        friend class ToShearY;
+        
     private:
         float _mixRotate, _mixX, _mixY, _mixScaleX, _mixScaleY, _mixShearY;
 

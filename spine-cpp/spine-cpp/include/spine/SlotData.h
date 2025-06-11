@@ -34,10 +34,10 @@
 #include <spine/PosedData.h>
 #include <spine/SpineString.h>
 #include <spine/RTTI.h>
+#include <spine/SlotPose.h>
 
 namespace spine {
 	class BoneData;
-	class SlotPose;
 
 	/// Stores the setup pose for a Slot.
 	class SP_API SlotData : public PosedData<SlotPose> {
@@ -83,7 +83,7 @@ namespace spine {
 		void setBlendMode(BlendMode blendMode);
 
 		/// False if the slot was hidden in Spine and nonessential data was exported. Does not affect runtime rendering.
-		bool isVisible();
+		bool getVisible();
 		void setVisible(bool visible);
 
 	private:

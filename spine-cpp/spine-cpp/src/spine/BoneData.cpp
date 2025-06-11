@@ -35,7 +35,7 @@ using namespace spine;
 
 RTTI_IMPL_NOPARENT(BoneData)
 
-BoneData::BoneData(int index, const String &name, BoneData *parent) : PosedData<BoneLocal>(name, new (__FILE__, __LINE__) BoneLocal()),
+BoneData::BoneData(int index, const String &name, BoneData *parent) : PosedData<BoneLocal>(name),
 																	   _index(index),
 																	   _parent(parent),
 																	   _length(0),
@@ -73,7 +73,7 @@ void BoneData::setIcon(const String &icon) {
 	this->_icon = icon;
 }
 
-bool BoneData::isVisible() {
+bool BoneData::getVisible() {
 	return _visible;
 }
 

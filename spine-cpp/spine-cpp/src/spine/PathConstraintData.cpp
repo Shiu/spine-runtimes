@@ -28,8 +28,6 @@
  *****************************************************************************/
 
 #include <spine/PathConstraintData.h>
-#include <spine/PathConstraint.h>
-#include <spine/PathConstraintPose.h>
 #include <spine/BoneData.h>
 #include <spine/SlotData.h>
 #include <spine/Skeleton.h>

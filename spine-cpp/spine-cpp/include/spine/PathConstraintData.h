@@ -32,12 +32,13 @@
 
 #include <spine/ConstraintData.h>
 #include <spine/Vector.h>
+#include <spine/PathConstraintPose.h>
+#include <spine/dll.h>
 
 namespace spine {
 	class BoneData;
 	class SlotData;
 	class PathConstraint;
-	class PathConstraintPose;
 	class Skeleton;
 
 	/// Controls how the first bone is positioned along the path.
