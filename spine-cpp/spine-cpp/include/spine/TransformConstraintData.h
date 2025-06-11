@@ -164,6 +164,8 @@ namespace spine {
 	/// 
 	/// See https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide.
 	class SP_API TransformConstraintData : public ConstraintData<TransformConstraint, TransformConstraintPose> {
+	public:
+		static const int ROTATION = 0, X = 1, Y = 2, SCALEX = 3, SCALEY = 4, SHEARY = 5;
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class TransformConstraint;

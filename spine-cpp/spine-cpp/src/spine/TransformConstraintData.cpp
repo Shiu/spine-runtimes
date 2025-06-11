@@ -62,51 +62,51 @@ void TransformConstraintData::setSource(BoneData* source) {
 }
 
 float TransformConstraintData::getOffsetRotation() {
-	return _offsets[0];
+	return _offsets[ROTATION];
 }
 
 void TransformConstraintData::setOffsetRotation(float offsetRotation) {
-	_offsets[0] = offsetRotation;
+	_offsets[ROTATION] = offsetRotation;
 }
 
 float TransformConstraintData::getOffsetX() {
-	return _offsets[1];
+	return _offsets[X];
 }
 
 void TransformConstraintData::setOffsetX(float offsetX) {
-	_offsets[1] = offsetX;
+	_offsets[X] = offsetX;
 }
 
 float TransformConstraintData::getOffsetY() {
-	return _offsets[2];
+	return _offsets[Y];
 }
 
 void TransformConstraintData::setOffsetY(float offsetY) {
-	_offsets[2] = offsetY;
+	_offsets[Y] = offsetY;
 }
 
 float TransformConstraintData::getOffsetScaleX() {
-	return _offsets[3];
+	return _offsets[SCALEX];
 }
 
 void TransformConstraintData::setOffsetScaleX(float offsetScaleX) {
-	_offsets[3] = offsetScaleX;
+	_offsets[SCALEX] = offsetScaleX;
 }
 
 float TransformConstraintData::getOffsetScaleY() {
-	return _offsets[4];
+	return _offsets[SCALEY];
 }
 
 void TransformConstraintData::setOffsetScaleY(float offsetScaleY) {
-	_offsets[4] = offsetScaleY;
+	_offsets[SCALEY] = offsetScaleY;
 }
 
 float TransformConstraintData::getOffsetShearY() {
-	return _offsets[5];
+	return _offsets[SHEARY];
 }
 
 void TransformConstraintData::setOffsetShearY(float offsetShearY) {
-	_offsets[5] = offsetShearY;
+	_offsets[SHEARY] = offsetShearY;
 }
 
 bool TransformConstraintData::getLocalSource() {
@@ -168,9 +168,9 @@ ToProperty::~ToProperty() {
 RTTI_IMPL(FromRotate, FromProperty)
 
 float FromRotate::value(BonePose& source, bool local, float* offsets) {
-	if (local) return source.getRotation() + offsets[0];
+	if (local) return source.getRotation() + offsets[ROTATION];
 	float value = MathUtil::atan2(source._c, source._a) * MathUtil::Rad_Deg
-		+ (source._a * source._d - source._b * source._c > 0 ? offsets[0] : -offsets[0]);
+		+ (source._a * source._d - source._b * source._c > 0 ? offsets[ROTATION] : -offsets[ROTATION]);
 	if (value < 0) value += 360;
 	return value;
 }
@@ -205,7 +205,7 @@ void ToRotate::apply(TransformConstraintPose& pose, BonePose& bone, float value,
 RTTI_IMPL(FromX, FromProperty)
 
 float FromX::value(BonePose& source, bool local, float* offsets) {
-	return local ? source.getX() + offsets[1] : offsets[1] * source._a + offsets[2] * source._b + source.getWorldX();
+	return local ? source.getX() + offsets[X] : offsets[X] * source._a + offsets[Y] * source._b + source.getWorldX();
 }
 
 RTTI_IMPL(ToX, ToProperty)
@@ -227,7 +227,7 @@ void ToX::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool
 RTTI_IMPL(FromY, FromProperty)
 
 float FromY::value(BonePose& source, bool local, float* offsets) {
-	return local ? source.getY() + offsets[2] : offsets[1] * source._c + offsets[2] * source._d + source.getWorldY();
+	return local ? source.getY() + offsets[Y] : offsets[X] * source._c + offsets[Y] * source._d + source.getWorldY();
 }
 
 RTTI_IMPL(ToY, ToProperty)
@@ -249,7 +249,7 @@ void ToY::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool
 RTTI_IMPL(FromScaleX, FromProperty)
 
 float FromScaleX::value(BonePose& source, bool local, float* offsets) {
-	return (local ? source.getScaleX() : MathUtil::sqrt(source._a * source._a + source._c * source._c)) + offsets[3];
+	return (local ? source.getScaleX() : MathUtil::sqrt(source._a * source._a + source._c * source._c)) + offsets[SCALEX];
 }
 
 RTTI_IMPL(ToScaleX, ToProperty)
@@ -280,7 +280,7 @@ void ToScaleX::apply(TransformConstraintPose& pose, BonePose& bone, float value,
 RTTI_IMPL(FromScaleY, FromProperty)
 
 float FromScaleY::value(BonePose& source, bool local, float* offsets) {
-	return (local ? source.getScaleY() : MathUtil::sqrt(source._b * source._b + source._d * source._d)) + offsets[4];
+	return (local ? source.getScaleY() : MathUtil::sqrt(source._b * source._b + source._d * source._d)) + offsets[SCALEY];
 }
 
 RTTI_IMPL(ToScaleY, ToProperty)
@@ -311,7 +311,7 @@ void ToScaleY::apply(TransformConstraintPose& pose, BonePose& bone, float value,
 RTTI_IMPL(FromShearY, FromProperty)
 
 float FromShearY::value(BonePose& source, bool local, float* offsets) {
-	return (local ? source.getShearY() : (MathUtil::atan2(source._d, source._b) - MathUtil::atan2(source._c, source._a)) * MathUtil::Rad_Deg - 90) + offsets[5];
+	return (local ? source.getShearY() : (MathUtil::atan2(source._d, source._b) - MathUtil::atan2(source._c, source._a)) * MathUtil::Rad_Deg - 90) + offsets[SHEARY];
 }
 
 RTTI_IMPL(ToShearY, ToProperty)
