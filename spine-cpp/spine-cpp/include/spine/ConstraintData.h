@@ -45,7 +45,7 @@ namespace spine {
 		friend class SkeletonJson;
 
 	public:
-		ConstraintData(const String &name, P* setup);
+		ConstraintData(const String &name);
 		virtual ~ConstraintData();
 
 		/// Creates a constraint instance.
@@ -53,7 +53,7 @@ namespace spine {
 	};
 
 	template<class T, class P>
-	ConstraintData<T, P>::ConstraintData(const String &name, P* setup) : PosedData<P>(name, setup) {
+	ConstraintData<T, P>::ConstraintData(const String &name) : PosedData<P>(name) {
 	}
 
 	template<class T, class P>

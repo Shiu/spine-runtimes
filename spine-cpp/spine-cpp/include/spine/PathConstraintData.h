@@ -30,20 +30,49 @@
 #ifndef Spine_PathConstraintData_h
 #define Spine_PathConstraintData_h
 
-#include <spine/PositionMode.h>
-#include <spine/SpacingMode.h>
-#include <spine/RotateMode.h>
-#include <spine/Vector.h>
-#include <spine/SpineObject.h>
-#include <spine/SpineString.h>
 #include <spine/ConstraintData.h>
+#include <spine/Vector.h>
 
 namespace spine {
 	class BoneData;
-
 	class SlotData;
+	class PathConstraint;
+	class PathConstraintPose;
+	class Skeleton;
 
-	class SP_API PathConstraintData : public ConstraintData {
+	/// Controls how the first bone is positioned along the path.
+	/// 
+	/// See https://esotericsoftware.com/spine-path-constraints#Position-mode Position mode in the Spine User Guide.
+	enum PositionMode {
+		PositionMode_Fixed,
+		PositionMode_Percent
+	};
+
+	/// Controls how bones after the first bone are positioned along the path.
+	/// 
+	/// See https://esotericsoftware.com/spine-path-constraints#Spacing-mode Spacing mode in the Spine User Guide.
+	enum SpacingMode {
+		SpacingMode_Length,
+		SpacingMode_Fixed,
+		SpacingMode_Percent,
+		SpacingMode_Proportional
+	};
+
+	/// Controls how bones are rotated, translated, and scaled to match the path.
+	/// 
+	/// See https://esotericsoftware.com/spine-path-constraints#Rotate-Mix Rotate mode in the Spine User Guide.
+	enum RotateMode {
+		RotateMode_Tangent,
+		RotateMode_Chain,
+		/// When chain scale, constrained bones should all have the same parent. That way when the path constraint scales a bone, it
+		/// doesn't affect other constrained bones.
+		RotateMode_ChainScale
+	};
+
+	/// Stores the setup pose for a PathConstraint.
+	/// 
+	/// See https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User Guide.
+	class SP_API PathConstraintData : public ConstraintData<PathConstraint, PathConstraintPose> {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -62,57 +91,42 @@ namespace spine {
 
 		explicit PathConstraintData(const String &name);
 
+
+		/// The bones that will be modified by this path constraint.
 		Vector<BoneData *> &getBones();
 
-		SlotData *getTarget();
+		/// The slot whose path attachment will be used to constrained the bones.
+		SlotData *getSlot();
 
-		void setTarget(SlotData *inValue);
+		void setSlot(SlotData *slot);
 
+		/// The mode for positioning the first bone on the path.
 		PositionMode getPositionMode();
 
-		void setPositionMode(PositionMode inValue);
+		void setPositionMode(PositionMode positionMode);
 
+		/// The mode for positioning the bones after the first bone on the path.
 		SpacingMode getSpacingMode();
 
-		void setSpacingMode(SpacingMode inValue);
+		void setSpacingMode(SpacingMode spacingMode);
 
+		/// The mode for adjusting the rotation of the bones.
 		RotateMode getRotateMode();
 
-		void setRotateMode(RotateMode inValue);
+		void setRotateMode(RotateMode rotateMode);
 
+		/// An offset added to the constrained bone rotation.
 		float getOffsetRotation();
 
-		void setOffsetRotation(float inValue);
-
-		float getPosition();
-
-		void setPosition(float inValue);
-
-		float getSpacing();
-
-		void setSpacing(float inValue);
-
-		float getMixRotate();
-
-		void setMixRotate(float inValue);
-
-		float getMixX();
-
-		void setMixX(float inValue);
-
-		float getMixY();
-
-		void setMixY(float inValue);
+		void setOffsetRotation(float offsetRotation);
 
 	private:
 		Vector<BoneData *> _bones;
-		SlotData *_target;
+		SlotData *_slot;
 		PositionMode _positionMode;
 		SpacingMode _spacingMode;
 		RotateMode _rotateMode;
 		float _offsetRotation;
-		float _position, _spacing;
-		float _mixRotate, _mixX, _mixY;
 	};
 }
 

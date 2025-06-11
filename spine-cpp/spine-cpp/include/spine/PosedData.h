@@ -64,17 +64,17 @@ namespace spine {
 
     private:
         spine::String _name;
-        P* _setup;
+        P _setup;
         bool _skinRequired;
 
     public:
-        PosedData(const spine::String& name, P* setup);
+        PosedData(const spine::String& name);
         virtual ~PosedData();
 
         /// The constraint's name, which is unique across all constraints in the skeleton of the same type.
         const spine::String& getName();
 
-        P* getSetupPose();
+        P& getSetupPose();
 
         /// When true, Skeleton::updateWorldTransform(Physics) only updates this constraint if the Skeleton::getSkin()
         /// contains this constraint.
@@ -87,12 +87,11 @@ namespace spine {
     };
 
     template<class P>
-    PosedData<P>::PosedData(const spine::String& name, P* setup) : _name(name), _setup(setup), _skinRequired(false) {
+    PosedData<P>::PosedData(const spine::String& name) : _name(name), _setup(), _skinRequired(false) {
     }
 
     template<class P>
     PosedData<P>::~PosedData() {
-        delete _setup;
     }
 
     template<class P>
@@ -101,7 +100,7 @@ namespace spine {
     }
 
     template<class P>
-    P* PosedData<P>::getSetupPose() {
+    P& PosedData<P>::getSetupPose() {
         return _setup;
     }
 
