@@ -30,10 +30,11 @@
 #ifndef Spine_ShearTimeline_h
 #define Spine_ShearTimeline_h
 
-#include <spine/TranslateTimeline.h>
+#include <spine/BoneTimeline.h>
 
 namespace spine {
-	class SP_API ShearTimeline : public CurveTimeline2 {
+	/// Changes a bone's local shear X and Y.
+	class SP_API ShearTimeline : public BoneTimeline2 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -43,21 +44,13 @@ namespace spine {
 	public:
 		explicit ShearTimeline(size_t frameCount, size_t bezierCount, int boneIndex);
 
-		virtual ~ShearTimeline();
-
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
-
-		int getBoneIndex() { return _boneIndex; }
-
-		void setBoneIndex(int inValue) { _boneIndex = inValue; }
-
-	private:
-		int _boneIndex;
+	protected:
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+						   MixDirection direction) override;
 	};
 
-	class SP_API ShearXTimeline : public CurveTimeline1 {
+	/// Changes a bone's local shear X.
+	class SP_API ShearXTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -67,21 +60,13 @@ namespace spine {
 	public:
 		explicit ShearXTimeline(size_t frameCount, size_t bezierCount, int boneIndex);
 
-		virtual ~ShearXTimeline();
-
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
-
-		int getBoneIndex() { return _boneIndex; }
-
-		void setBoneIndex(int inValue) { _boneIndex = inValue; }
-
-	private:
-		int _boneIndex;
+	protected:
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+						   MixDirection direction) override;
 	};
 
-	class SP_API ShearYTimeline : public CurveTimeline1 {
+	/// Changes a bone's local shear Y.
+	class SP_API ShearYTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -91,18 +76,9 @@ namespace spine {
 	public:
 		explicit ShearYTimeline(size_t frameCount, size_t bezierCount, int boneIndex);
 
-		virtual ~ShearYTimeline();
-
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
-
-		int getBoneIndex() { return _boneIndex; }
-
-		void setBoneIndex(int inValue) { _boneIndex = inValue; }
-
-	private:
-		int _boneIndex;
+	protected:
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+						   MixDirection direction) override;
 	};
 }
 
