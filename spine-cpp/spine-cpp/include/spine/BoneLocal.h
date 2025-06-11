@@ -47,6 +47,9 @@ namespace spine {
 		friend class ShearTimeline;
 		friend class ShearXTimeline;
 		friend class ShearYTimeline;
+		friend class TranslateTimeline;
+		friend class TranslateXTimeline;
+		friend class TranslateYTimeline;
 
 		RTTI_DECL
 

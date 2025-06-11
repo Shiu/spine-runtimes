@@ -31,6 +31,7 @@
 
 #include <spine/Event.h>
 #include <spine/Skeleton.h>
+#include <spine/Animation.h>
 
 #include <spine/Bone.h>
 #include <spine/BoneData.h>
@@ -39,44 +40,30 @@
 
 using namespace spine;
 
-RTTI_IMPL(TranslateTimeline, CurveTimeline2)
+RTTI_IMPL(TranslateTimeline, BoneTimeline2)
 
-TranslateTimeline::TranslateTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : CurveTimeline2(frameCount,
-																											bezierCount),
-																							 _boneIndex(boneIndex) {
-	PropertyId ids[] = {((PropertyId) Property_X << 32) | boneIndex,
-						((PropertyId) Property_Y << 32) | boneIndex};
-	setPropertyIds(ids, 2);
+TranslateTimeline::TranslateTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
+	BoneTimeline2(frameCount, bezierCount, boneIndex, Property_X, Property_Y) {
 }
 
-TranslateTimeline::~TranslateTimeline() {
-}
-
-void TranslateTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-							  MixBlend blend, MixDirection direction) {
-	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
-	SP_UNUSED(direction);
-
-	Bone *bone = skeleton._bones[_boneIndex];
-	if (!bone->_active) return;
-
+void TranslateTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+							  MixDirection direction) {
 	if (time < _frames[0]) {
 		switch (blend) {
 			case MixBlend_Setup:
-				bone->_x = bone->_data._x;
-				bone->_y = bone->_data._y;
+				pose._x = setup._x;
+				pose._y = setup._y;
 				return;
 			case MixBlend_First:
-				bone->_x += (bone->_data._x - bone->_x) * alpha;
-				bone->_y += (bone->_data._y - bone->_y) * alpha;
+				pose._x += (setup._x - pose._x) * alpha;
+				pose._y += (setup._y - pose._y) * alpha;
 			default: {
 			}
 		}
 		return;
 	}
 
-	float x = 0, y = 0;
+	float x, y;
 	int i = Animation::search(_frames, time, CurveTimeline2::ENTRIES);
 	int curveType = (int) _curves[i / CurveTimeline2::ENTRIES];
 	switch (curveType) {
@@ -95,68 +82,46 @@ void TranslateTimeline::apply(Skeleton &skeleton, float lastTime, float time, Ve
 			break;
 		}
 		default: {
-			x = getBezierValue(time, i, CurveTimeline2::VALUE1, curveType - CurveTimeline::BEZIER);
+			x = getBezierValue(time, i, CurveTimeline2::VALUE1, curveType - CurveTimeline2::BEZIER);
 			y = getBezierValue(time, i, CurveTimeline2::VALUE2,
-							   curveType + CurveTimeline::BEZIER_SIZE - CurveTimeline::BEZIER);
+							   curveType + CurveTimeline2::BEZIER_SIZE - CurveTimeline2::BEZIER);
 		}
 	}
 
 	switch (blend) {
 		case MixBlend_Setup:
-			bone->_x = bone->_data._x + x * alpha;
-			bone->_y = bone->_data._y + y * alpha;
+			pose._x = setup._x + x * alpha;
+			pose._y = setup._y + y * alpha;
 			break;
 		case MixBlend_First:
 		case MixBlend_Replace:
-			bone->_x += (bone->_data._x + x - bone->_x) * alpha;
-			bone->_y += (bone->_data._y + y - bone->_y) * alpha;
+			pose._x += (setup._x + x - pose._x) * alpha;
+			pose._y += (setup._y + y - pose._y) * alpha;
 			break;
 		case MixBlend_Add:
-			bone->_x += x * alpha;
-			bone->_y += y * alpha;
+			pose._x += x * alpha;
+			pose._y += y * alpha;
 	}
 }
 
-RTTI_IMPL(TranslateXTimeline, CurveTimeline1)
+RTTI_IMPL(TranslateXTimeline, BoneTimeline1)
 
-TranslateXTimeline::TranslateXTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : CurveTimeline1(
-																									   frameCount, bezierCount),
-																							   _boneIndex(boneIndex) {
-	PropertyId ids[] = {((PropertyId) Property_X << 32) | boneIndex};
-	setPropertyIds(ids, 1);
+TranslateXTimeline::TranslateXTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
+	BoneTimeline1(frameCount, bezierCount, boneIndex, Property_X) {
 }
 
-TranslateXTimeline::~TranslateXTimeline() {
+void TranslateXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+							   MixDirection direction) {
+	pose._x = getRelativeValue(time, alpha, blend, pose._x, setup._x);
 }
 
-void TranslateXTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-							   MixBlend blend, MixDirection direction) {
-	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
-	SP_UNUSED(direction);
+RTTI_IMPL(TranslateYTimeline, BoneTimeline1)
 
-	Bone *bone = skeleton._bones[_boneIndex];
-	if (bone->_active) bone->_x = getRelativeValue(time, alpha, blend, bone->_x, bone->_data._x);
+TranslateYTimeline::TranslateYTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
+	BoneTimeline1(frameCount, bezierCount, boneIndex, Property_Y) {
 }
 
-RTTI_IMPL(TranslateYTimeline, CurveTimeline1)
-
-TranslateYTimeline::TranslateYTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : CurveTimeline1(
-																									   frameCount, bezierCount),
-																							   _boneIndex(boneIndex) {
-	PropertyId ids[] = {((PropertyId) Property_Y << 32) | boneIndex};
-	setPropertyIds(ids, 1);
-}
-
-TranslateYTimeline::~TranslateYTimeline() {
-}
-
-void TranslateYTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-							   MixBlend blend, MixDirection direction) {
-	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
-	SP_UNUSED(direction);
-
-	Bone *bone = skeleton._bones[_boneIndex];
-	if (bone->_active) bone->_y = getRelativeValue(time, alpha, blend, bone->_y, bone->_data._y);
+void TranslateYTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+							   MixDirection direction) {
+	pose._y = getRelativeValue(time, alpha, blend, pose._y, setup._y);
 }
