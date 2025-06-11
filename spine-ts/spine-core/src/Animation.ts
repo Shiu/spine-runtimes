@@ -245,31 +245,10 @@ export abstract class Timeline {
 	abstract apply (skeleton: Skeleton, lastTime: number, time: number, events: Array<Event> | null, alpha: number,
 		blend: MixBlend, direction: MixDirection, appliedPose: boolean): void;
 
-	/** Linear search using a stride of 1.
+	/** Linear search using the specified stride (default 1).
 	 * @param time Must be >= the first value in <code>frames</code>.
 	 * @return The index of the first value <= <code>time</code>. */
-	static search (frames: NumberArrayLike, time: number): number;
-
-	/** Linear search using the specified stride.
-	 * @param time Must be >= the first value in <code>frames</code>.
-	 * @return The index of the first value <= <code>time</code>. */
-	static search (frames: NumberArrayLike, time: number, step: number): number;
-
-	static search (frames: NumberArrayLike, time: number, step?: number): number {
-		if (step === undefined)
-			return Timeline.search1(frames, time);
-		else
-			return Timeline.search2(frames, time, step);
-	}
-
-	private static search1 (frames: NumberArrayLike, time: number) {
-		let n = frames.length;
-		for (let i = 1; i < n; i++)
-			if (frames[i] > time) return i - 1;
-		return n - 1;
-	}
-
-	private static search2 (frames: NumberArrayLike, time: number, step: number) {
+	static search (frames: NumberArrayLike, time: number, step = 1) {
 		let n = frames.length;
 		for (let i = step; i < n; i += step)
 			if (frames[i] > time) return i - step;

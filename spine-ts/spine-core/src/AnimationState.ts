@@ -989,15 +989,17 @@ export class TrackEntry {
 	 *           entry minus the specified mix duration plus the specified <code>delay</code> (ie the mix ends at
 	 *           (<code>delay</code> = 0) or before (<code>delay</code> < 0) the previous track entry duration). If the previous
 	 *           entry is looping, its next loop completion is used instead of its duration. */
-	setMixDuration (mixDuration: number, delay: number) {
+	setMixDuration (mixDuration: number, delay?: number) {
 		this.mixDuration = mixDuration;
-		if (delay <= 0) {
-			if (this.previous != null)
-				delay = Math.max(delay + this.previous.getTrackComplete() - mixDuration, 0);
-			else
-				delay = 0;
+		if (delay !== undefined) {
+			if (delay <= 0) {
+				if (this.previous != null)
+					delay = Math.max(delay + this.previous.getTrackComplete() - mixDuration, 0);
+				else
+					delay = 0;
+			}
+			this.delay = delay;
 		}
-		this.delay = delay;
 	}
 
 	/** Controls how properties keyed in the animation are mixed with lower tracks. Defaults to {@link MixBlend#replace}, which
