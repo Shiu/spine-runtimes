@@ -37,6 +37,8 @@ import com.badlogic.gdx.utils.Array;
  * <p>
  * See <a href="https://esotericsoftware.com/spine-transform-constraints">Transform constraints</a> in the Spine User Guide. */
 public class TransformConstraintData extends ConstraintData<TransformConstraint, TransformConstraintPose> {
+	static public final int ROTATION = 0, X = 1, Y = 2, SCALEX = 3, SCALEY = 4, SHEARY = 5;
+
 	final Array<BoneData> bones = new Array(true, 0, BoneData[]::new);
 	BoneData source;
 	float[] offsets = new float[6];
@@ -68,56 +70,56 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 
 	/** An offset added to the constrained bone rotation. */
 	public float getOffsetRotation () {
-		return offsets[0];
+		return offsets[ROTATION];
 	}
 
 	public void setOffsetRotation (float offsetRotation) {
-		offsets[0] = offsetRotation;
+		offsets[ROTATION] = offsetRotation;
 	}
 
 	/** An offset added to the constrained bone X translation. */
 	public float getOffsetX () {
-		return offsets[1];
+		return offsets[X];
 	}
 
 	public void setOffsetX (float offsetX) {
-		offsets[1] = offsetX;
+		offsets[X] = offsetX;
 	}
 
 	/** An offset added to the constrained bone Y translation. */
 	public float getOffsetY () {
-		return offsets[2];
+		return offsets[Y];
 	}
 
 	public void setOffsetY (float offsetY) {
-		offsets[2] = offsetY;
+		offsets[Y] = offsetY;
 	}
 
 	/** An offset added to the constrained bone scaleX. */
 	public float getOffsetScaleX () {
-		return offsets[3];
+		return offsets[SCALEX];
 	}
 
 	public void setOffsetScaleX (float offsetScaleX) {
-		offsets[3] = offsetScaleX;
+		offsets[SCALEX] = offsetScaleX;
 	}
 
 	/** An offset added to the constrained bone scaleY. */
 	public float getOffsetScaleY () {
-		return offsets[4];
+		return offsets[SCALEY];
 	}
 
 	public void setOffsetScaleY (float offsetScaleY) {
-		offsets[4] = offsetScaleY;
+		offsets[SCALEY] = offsetScaleY;
 	}
 
 	/** An offset added to the constrained bone shearY. */
 	public float getOffsetShearY () {
-		return offsets[5];
+		return offsets[SHEARY];
 	}
 
 	public void setOffsetShearY (float offsetShearY) {
-		offsets[5] = offsetShearY;
+		offsets[SHEARY] = offsetShearY;
 	}
 
 	/** Reads the source bone's local transform instead of its world transform. */
@@ -193,9 +195,9 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 
 	static public class FromRotate extends FromProperty {
 		public float value (BonePose source, boolean local, float[] offsets) {
-			if (local) return source.rotation + offsets[0];
+			if (local) return source.rotation + offsets[ROTATION];
 			float value = atan2(source.c, source.a) * radDeg
-				+ (source.a * source.d - source.b * source.c > 0 ? offsets[0] : -offsets[0]);
+				+ (source.a * source.d - source.b * source.c > 0 ? offsets[ROTATION] : -offsets[ROTATION]);
 			if (value < 0) value += 360;
 			return value;
 		}
@@ -230,7 +232,7 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 
 	static public class FromX extends FromProperty {
 		public float value (BonePose source, boolean local, float[] offsets) {
-			return local ? source.x + offsets[1] : offsets[1] * source.a + offsets[2] * source.b + source.worldX;
+			return local ? source.x + offsets[X] : offsets[X] * source.a + offsets[Y] * source.b + source.worldX;
 		}
 	}
 
@@ -252,7 +254,7 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 
 	static public class FromY extends FromProperty {
 		public float value (BonePose source, boolean local, float[] offsets) {
-			return local ? source.y + offsets[2] : offsets[1] * source.c + offsets[2] * source.d + source.worldY;
+			return local ? source.y + offsets[Y] : offsets[X] * source.c + offsets[Y] * source.d + source.worldY;
 		}
 	}
 
@@ -274,7 +276,7 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 
 	static public class FromScaleX extends FromProperty {
 		public float value (BonePose source, boolean local, float[] offsets) {
-			return (local ? source.scaleX : (float)Math.sqrt(source.a * source.a + source.c * source.c)) + offsets[3];
+			return (local ? source.scaleX : (float)Math.sqrt(source.a * source.a + source.c * source.c)) + offsets[SCALEX];
 		}
 	}
 
@@ -305,7 +307,7 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 
 	static public class FromScaleY extends FromProperty {
 		public float value (BonePose source, boolean local, float[] offsets) {
-			return (local ? source.scaleY : (float)Math.sqrt(source.b * source.b + source.d * source.d)) + offsets[4];
+			return (local ? source.scaleY : (float)Math.sqrt(source.b * source.b + source.d * source.d)) + offsets[SCALEY];
 		}
 	}
 
@@ -336,7 +338,7 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 
 	static public class FromShearY extends FromProperty {
 		public float value (BonePose source, boolean local, float[] offsets) {
-			return (local ? source.shearY : (atan2(source.d, source.b) - atan2(source.c, source.a)) * radDeg - 90) + offsets[5];
+			return (local ? source.shearY : (atan2(source.d, source.b) - atan2(source.c, source.a)) * radDeg - 90) + offsets[SHEARY];
 		}
 	}
 

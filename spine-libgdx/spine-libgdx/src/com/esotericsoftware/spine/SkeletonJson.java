@@ -320,12 +320,12 @@ public class SkeletonJson extends SkeletonLoader {
 						if (from.to.notEmpty()) data.properties.add(from);
 					}
 
-					data.offsets[0] = constraintMap.getFloat("rotation", 0);
-					data.offsets[1] = constraintMap.getFloat("x", 0) * scale;
-					data.offsets[2] = constraintMap.getFloat("y", 0) * scale;
-					data.offsets[3] = constraintMap.getFloat("scaleX", 0);
-					data.offsets[4] = constraintMap.getFloat("scaleY", 0);
-					data.offsets[5] = constraintMap.getFloat("shearY", 0);
+					data.offsets[TransformConstraintData.ROTATION] = constraintMap.getFloat("rotation", 0);
+					data.offsets[TransformConstraintData.X] = constraintMap.getFloat("x", 0) * scale;
+					data.offsets[TransformConstraintData.Y] = constraintMap.getFloat("y", 0) * scale;
+					data.offsets[TransformConstraintData.SCALEX] = constraintMap.getFloat("scaleX", 0);
+					data.offsets[TransformConstraintData.SCALEY] = constraintMap.getFloat("scaleY", 0);
+					data.offsets[TransformConstraintData.SHEARY] = constraintMap.getFloat("shearY", 0);
 
 					TransformConstraintPose setup = data.setup;
 					if (rotate) setup.mixRotate = constraintMap.getFloat("mixRotate", 1);
