@@ -62,3 +62,22 @@ void BoneTimeline1::apply(Skeleton &skeleton, float lastTime, float time, Vector
 		apply(appliedPose ? *bone->_applied : bone->_pose, *bone->_data._setup, time, alpha, blend, direction);
 	}
 }
+
+RTTI_IMPL(BoneTimeline2, CurveTimeline2)
+
+BoneTimeline2::BoneTimeline2(size_t frameCount, size_t bezierCount, int boneIndex, Property property1, Property property2) : 
+	CurveTimeline2(frameCount, bezierCount), _boneIndex(boneIndex) {
+	PropertyId ids[] = {((PropertyId) property1 << 32) | boneIndex, ((PropertyId) property2 << 32) | boneIndex};
+	setPropertyIds(ids, 2);
+}
+
+void BoneTimeline2::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
+						  MixBlend blend, MixDirection direction, bool appliedPose) {
+	SP_UNUSED(lastTime);
+	SP_UNUSED(pEvents);
+
+	Bone *bone = skeleton._bones[_boneIndex];
+	if (bone->isActive()) {
+		apply(appliedPose ? *bone->_applied : bone->_pose, *bone->_data._setup, time, alpha, blend, direction);
+	}
+}

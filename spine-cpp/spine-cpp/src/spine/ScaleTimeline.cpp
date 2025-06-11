@@ -31,6 +31,7 @@
 
 #include <spine/Event.h>
 #include <spine/Skeleton.h>
+#include <spine/Animation.h>
 
 #include <spine/Bone.h>
 #include <spine/BoneData.h>
@@ -39,35 +40,23 @@
 
 using namespace spine;
 
-RTTI_IMPL(ScaleTimeline, CurveTimeline2)
+RTTI_IMPL(ScaleTimeline, BoneTimeline2)
 
-ScaleTimeline::ScaleTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : CurveTimeline2(frameCount,
-																									bezierCount),
-																					 _boneIndex(boneIndex) {
-	PropertyId ids[] = {((PropertyId) Property_ScaleX << 32) | boneIndex,
-						((PropertyId) Property_ScaleY << 32) | boneIndex};
-	setPropertyIds(ids, 2);
+ScaleTimeline::ScaleTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
+	BoneTimeline2(frameCount, bezierCount, boneIndex, Property_ScaleX, Property_ScaleY) {
 }
 
-ScaleTimeline::~ScaleTimeline() {}
-
-void ScaleTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-						  MixBlend blend, MixDirection direction) {
-	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
-
-	Bone *bone = skeleton._bones[_boneIndex];
-	if (!bone->_active) return;
-
+void ScaleTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+						  MixDirection direction) {
 	if (time < _frames[0]) {
 		switch (blend) {
 			case MixBlend_Setup:
-				bone->_scaleX = bone->_data._scaleX;
-				bone->_scaleY = bone->_data._scaleY;
+				pose._scaleX = setup._scaleX;
+				pose._scaleY = setup._scaleY;
 				return;
 			case MixBlend_First:
-				bone->_scaleX += (bone->_data._scaleX - bone->_scaleX) * alpha;
-				bone->_scaleY += (bone->_data._scaleY - bone->_scaleY) * alpha;
+				pose._scaleX += (setup._scaleX - pose._scaleX) * alpha;
+				pose._scaleY += (setup._scaleY - pose._scaleY) * alpha;
 			default: {
 			}
 		}
@@ -98,97 +87,79 @@ void ScaleTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector
 							   curveType + CurveTimeline2::BEZIER_SIZE - CurveTimeline2::BEZIER);
 		}
 	}
-	x *= bone->_data._scaleX;
-	y *= bone->_data._scaleY;
+	x *= setup._scaleX;
+	y *= setup._scaleY;
 
 	if (alpha == 1) {
 		if (blend == MixBlend_Add) {
-			bone->_scaleX += x - bone->_data._scaleX;
-			bone->_scaleY += y - bone->_data._scaleY;
+			pose._scaleX += x - setup._scaleX;
+			pose._scaleY += y - setup._scaleY;
 		} else {
-			bone->_scaleX = x;
-			bone->_scaleY = y;
+			pose._scaleX = x;
+			pose._scaleY = y;
 		}
 	} else {
 		float bx, by;
 		if (direction == MixDirection_Out) {
 			switch (blend) {
 				case MixBlend_Setup:
-					bx = bone->_data._scaleX;
-					by = bone->_data._scaleY;
-					bone->_scaleX = bx + (MathUtil::abs(x) * MathUtil::sign(bx) - bx) * alpha;
-					bone->_scaleY = by + (MathUtil::abs(y) * MathUtil::sign(by) - by) * alpha;
+					bx = setup._scaleX;
+					by = setup._scaleY;
+					pose._scaleX = bx + (MathUtil::abs(x) * MathUtil::sign(bx) - bx) * alpha;
+					pose._scaleY = by + (MathUtil::abs(y) * MathUtil::sign(by) - by) * alpha;
 					break;
 				case MixBlend_First:
 				case MixBlend_Replace:
-					bx = bone->_scaleX;
-					by = bone->_scaleY;
-					bone->_scaleX = bx + (MathUtil::abs(x) * MathUtil::sign(bx) - bx) * alpha;
-					bone->_scaleY = by + (MathUtil::abs(y) * MathUtil::sign(by) - by) * alpha;
+					bx = pose._scaleX;
+					by = pose._scaleY;
+					pose._scaleX = bx + (MathUtil::abs(x) * MathUtil::sign(bx) - bx) * alpha;
+					pose._scaleY = by + (MathUtil::abs(y) * MathUtil::sign(by) - by) * alpha;
 					break;
 				case MixBlend_Add:
-					bone->_scaleX += (x - bone->_data._scaleX) * alpha;
-					bone->_scaleY += (y - bone->_data._scaleY) * alpha;
+					pose._scaleX += (x - setup._scaleX) * alpha;
+					pose._scaleY += (y - setup._scaleY) * alpha;
 			}
 		} else {
 			switch (blend) {
 				case MixBlend_Setup:
-					bx = MathUtil::abs(bone->_data._scaleX) * MathUtil::sign(x);
-					by = MathUtil::abs(bone->_data._scaleY) * MathUtil::sign(y);
-					bone->_scaleX = bx + (x - bx) * alpha;
-					bone->_scaleY = by + (y - by) * alpha;
+					bx = MathUtil::abs(setup._scaleX) * MathUtil::sign(x);
+					by = MathUtil::abs(setup._scaleY) * MathUtil::sign(y);
+					pose._scaleX = bx + (x - bx) * alpha;
+					pose._scaleY = by + (y - by) * alpha;
 					break;
 				case MixBlend_First:
 				case MixBlend_Replace:
-					bx = MathUtil::abs(bone->_scaleX) * MathUtil::sign(x);
-					by = MathUtil::abs(bone->_scaleY) * MathUtil::sign(y);
-					bone->_scaleX = bx + (x - bx) * alpha;
-					bone->_scaleY = by + (y - by) * alpha;
+					bx = MathUtil::abs(pose._scaleX) * MathUtil::sign(x);
+					by = MathUtil::abs(pose._scaleY) * MathUtil::sign(y);
+					pose._scaleX = bx + (x - bx) * alpha;
+					pose._scaleY = by + (y - by) * alpha;
 					break;
 				case MixBlend_Add:
-					bone->_scaleX += (x - bone->_data._scaleX) * alpha;
-					bone->_scaleY += (y - bone->_data._scaleY) * alpha;
+					pose._scaleX += (x - setup._scaleX) * alpha;
+					pose._scaleY += (y - setup._scaleY) * alpha;
 			}
 		}
 	}
 }
 
-RTTI_IMPL(ScaleXTimeline, CurveTimeline1)
+RTTI_IMPL(ScaleXTimeline, BoneTimeline1)
 
-ScaleXTimeline::ScaleXTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : CurveTimeline1(frameCount,
-																									  bezierCount),
-																					   _boneIndex(boneIndex) {
-	PropertyId ids[] = {((PropertyId) Property_ScaleX << 32) | boneIndex};
-	setPropertyIds(ids, 1);
+ScaleXTimeline::ScaleXTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
+	BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ScaleX) {
 }
 
-ScaleXTimeline::~ScaleXTimeline() {}
-
-void ScaleXTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-						   MixBlend blend, MixDirection direction) {
-	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
-
-	Bone *bone = skeleton._bones[_boneIndex];
-	if (bone->_active) bone->_scaleX = getScaleValue(time, alpha, blend, direction, bone->_scaleX, bone->_data._scaleX);
+void ScaleXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+						   MixDirection direction) {
+	pose._scaleX = getScaleValue(time, alpha, blend, direction, pose._scaleX, setup._scaleX);
 }
 
-RTTI_IMPL(ScaleYTimeline, CurveTimeline1)
+RTTI_IMPL(ScaleYTimeline, BoneTimeline1)
 
-ScaleYTimeline::ScaleYTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : CurveTimeline1(frameCount,
-																									  bezierCount),
-																					   _boneIndex(boneIndex) {
-	PropertyId ids[] = {((PropertyId) Property_ScaleY << 32) | boneIndex};
-	setPropertyIds(ids, 1);
+ScaleYTimeline::ScaleYTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
+	BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ScaleY) {
 }
 
-ScaleYTimeline::~ScaleYTimeline() {}
-
-void ScaleYTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-						   MixBlend blend, MixDirection direction) {
-	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
-
-	Bone *bone = skeleton._bones[_boneIndex];
-	if (bone->_active) bone->_scaleY = getScaleValue(time, alpha, blend, direction, bone->_scaleX, bone->_data._scaleY);
+void ScaleYTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+						   MixDirection direction) {
+	pose._scaleY = getScaleValue(time, alpha, blend, direction, pose._scaleY, setup._scaleY);
 }

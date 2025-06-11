@@ -40,6 +40,9 @@ namespace spine {
 	class SP_API BoneLocal : public Pose<BoneLocal> {
 		friend class BoneTimeline1;
 		friend class RotateTimeline;
+		friend class ScaleTimeline;
+		friend class ScaleXTimeline;
+		friend class ScaleYTimeline;
 
 		RTTI_DECL
 

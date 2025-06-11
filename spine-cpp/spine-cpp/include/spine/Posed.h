@@ -38,6 +38,7 @@ namespace spine {
 	class SP_API Posed : public SpineObject {
 		friend class AnimationState;
 		friend class BoneTimeline1;
+		friend class BoneTimeline2;
 		friend class RotateTimeline;
 		friend class IkConstraint;
 		friend class TransformConstraint;

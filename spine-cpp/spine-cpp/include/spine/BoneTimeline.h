@@ -74,6 +74,33 @@ namespace spine {
 
 		int _boneIndex;
 	};
+
+	/// Base class for timelines that animate two bone properties.
+	class SP_API BoneTimeline2 : public CurveTimeline2, public BoneTimeline {
+		friend class SkeletonBinary;
+		friend class SkeletonJson;
+		friend class AnimationState;
+
+	RTTI_DECL
+
+	public:
+		BoneTimeline2(size_t frameCount, size_t bezierCount, int boneIndex, Property property1, Property property2);
+
+		virtual void
+		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
+			  MixDirection direction, bool appliedPose) override;
+
+		virtual int getBoneIndex() override { return _boneIndex; }
+
+		void setBoneIndex(int inValue) { _boneIndex = inValue; }
+
+	protected:
+		/// Applies changes to the pose based on the timeline values.
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
+						   MixDirection direction) = 0;
+
+		int _boneIndex;
+	};
 }
 
 #endif
