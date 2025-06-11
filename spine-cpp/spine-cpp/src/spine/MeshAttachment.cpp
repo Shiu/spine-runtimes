@@ -234,8 +234,8 @@ MeshAttachment *MeshAttachment::newLinkedMesh() {
 	return copy;
 }
 
-void MeshAttachment::computeWorldVertices(Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
+void MeshAttachment::computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
 										  size_t stride) {
-	if (_sequence) _sequence->apply(&slot, this);
-	VertexAttachment::computeWorldVertices(slot, start, count, worldVertices, offset, stride);
+	if (_sequence) _sequence->apply(slot.getAppliedPose(), this);
+	VertexAttachment::computeWorldVertices(skeleton, slot, start, count, worldVertices, offset, stride);
 }

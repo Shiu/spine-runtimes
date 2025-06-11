@@ -68,15 +68,15 @@ Color &PointAttachment::getColor() {
 	return _color;
 }
 
-void PointAttachment::computeWorldPosition(Bone &bone, float &ox, float &oy) {
-	ox = _x * bone._a + _y * bone._b + bone._worldX;
-	oy = _x * bone._c + _y * bone._d + bone._worldY;
+void PointAttachment::computeWorldPosition(BonePose &bone, float &ox, float &oy) {
+	ox = _x * bone.getA() + _y * bone.getB() + bone.getWorldX();
+	oy = _x * bone.getC() + _y * bone.getD() + bone.getWorldY();
 }
 
-float PointAttachment::computeWorldRotation(Bone &bone) {
+float PointAttachment::computeWorldRotation(BonePose &bone) {
 	float r = _rotation * MathUtil::Deg_Rad, cosine = MathUtil::cos(r), sine = MathUtil::sin(r);
-	float x = cosine * bone._a + sine * bone._b;
-	float y = cosine * bone._c + sine * bone._d;
+	float x = cosine * bone.getA() + sine * bone.getB();
+	float y = cosine * bone.getC() + sine * bone.getD();
 	return MathUtil::atan2Deg(y, x);
 }
 

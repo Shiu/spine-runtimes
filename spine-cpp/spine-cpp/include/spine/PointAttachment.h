@@ -35,6 +35,7 @@
 
 namespace spine {
 	class Bone;
+	class BonePose;
 
 	/// An attachment which is a single point and a rotation. This can be used to spawn projectiles, particles, etc. A bone can be
 	/// used in similar ways, but a PointAttachment is slightly less expensive to compute and can be hidden, shown, and placed in a
@@ -66,9 +67,9 @@ namespace spine {
 
 		Color &getColor();
 
-		void computeWorldPosition(Bone &bone, float &ox, float &oy);
+		void computeWorldPosition(BonePose &bone, float &ox, float &oy);
 
-		float computeWorldRotation(Bone &bone);
+		float computeWorldRotation(BonePose &bone);
 
 		virtual Attachment *copy();
 

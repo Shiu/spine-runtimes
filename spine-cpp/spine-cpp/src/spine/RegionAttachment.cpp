@@ -133,9 +133,9 @@ void RegionAttachment::computeWorldVertices(Slot &slot, Vector<float> &worldVert
 }
 
 void RegionAttachment::computeWorldVertices(Slot &slot, float *worldVertices, size_t offset, size_t stride) {
-	if (_sequence) _sequence->apply(&slot, this);
+	if (_sequence) _sequence->apply(slot.getAppliedPose(), this);
 
-	Bone &bone = slot.getBone();
+	BonePose &bone = slot.getBone().getAppliedPose();
 	float x = bone.getWorldX(), y = bone.getWorldY();
 	float a = bone.getA(), b = bone.getB(), c = bone.getC(), d = bone.getD();
 	float offsetX, offsetY;

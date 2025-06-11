@@ -45,33 +45,25 @@ VertexAttachment::VertexAttachment(const String &name) : Attachment(name), _worl
 VertexAttachment::~VertexAttachment() {
 }
 
-void VertexAttachment::computeWorldVertices(Slot &slot, Vector<float> &worldVertices) {
-	computeWorldVertices(slot, 0, _worldVerticesLength, worldVertices, 0);
-}
 
-void VertexAttachment::computeWorldVertices(Slot &slot, float *worldVertices) {
-	computeWorldVertices(slot, 0, _worldVerticesLength, worldVertices, 0);
-}
-
-void VertexAttachment::computeWorldVertices(Slot &slot, size_t start, size_t count, Vector<float> &worldVertices,
+void VertexAttachment::computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, Vector<float> &worldVertices,
 											size_t offset, size_t stride) {
-	computeWorldVertices(slot, start, count, worldVertices.buffer(), offset, stride);
+	computeWorldVertices(skeleton, slot, start, count, worldVertices.buffer(), offset, stride);
 }
 
-void VertexAttachment::computeWorldVertices(Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
+void VertexAttachment::computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
 											size_t stride) {
 	count = offset + (count >> 1) * stride;
-	Skeleton &skeleton = slot._bone._skeleton;
-	Vector<float> *deformArray = &slot.getDeform();
+	Vector<float> *deformArray = &slot.getAppliedPose().getDeform();
 	Vector<float> *vertices = &_vertices;
 	Vector<int> &bones = _bones;
 	if (bones.size() == 0) {
 		if (deformArray->size() > 0) vertices = deformArray;
 
-		Bone &bone = slot._bone;
-		float x = bone._worldX;
-		float y = bone._worldY;
-		float a = bone._a, b = bone._b, c = bone._c, d = bone._d;
+		BonePose &bone = slot.getBone().getAppliedPose();
+		float x = bone.getWorldX();
+		float y = bone.getWorldY();
+		float a = bone.getA(), b = bone.getB(), c = bone.getC(), d = bone.getD();
 		for (size_t vv = start, w = offset; w < count; vv += 2, w += stride) {
 			float vx = (*vertices)[vv];
 			float vy = (*vertices)[vv + 1];
@@ -96,12 +88,12 @@ void VertexAttachment::computeWorldVertices(Slot &slot, size_t start, size_t cou
 			n += v;
 			for (; v < n; v++, b += 3) {
 				Bone *boneP = skeletonBones[bones[v]];
-				Bone &bone = *boneP;
+				BonePose &bonePose = boneP->getAppliedPose();
 				float vx = (*vertices)[b];
 				float vy = (*vertices)[b + 1];
 				float weight = (*vertices)[b + 2];
-				wx += (vx * bone._a + vy * bone._b + bone._worldX) * weight;
-				wy += (vx * bone._c + vy * bone._d + bone._worldY) * weight;
+				wx += (vx * bonePose.getA() + vy * bonePose.getB() + bonePose.getWorldX()) * weight;
+				wy += (vx * bonePose.getC() + vy * bonePose.getD() + bonePose.getWorldY()) * weight;
 			}
 			worldVertices[w] = wx;
 			worldVertices[w + 1] = wy;
@@ -113,12 +105,12 @@ void VertexAttachment::computeWorldVertices(Slot &slot, size_t start, size_t cou
 			n += v;
 			for (; v < n; v++, b += 3, f += 2) {
 				Bone *boneP = skeletonBones[bones[v]];
-				Bone &bone = *boneP;
+				BonePose &bonePose = boneP->getAppliedPose();
 				float vx = (*vertices)[b] + (*deformArray)[f];
 				float vy = (*vertices)[b + 1] + (*deformArray)[f + 1];
 				float weight = (*vertices)[b + 2];
-				wx += (vx * bone._a + vy * bone._b + bone._worldX) * weight;
-				wy += (vx * bone._c + vy * bone._d + bone._worldY) * weight;
+				wx += (vx * bonePose.getA() + vy * bonePose.getB() + bonePose.getWorldX()) * weight;
+				wy += (vx * bonePose.getC() + vy * bonePose.getD() + bonePose.getWorldY()) * weight;
 			}
 			worldVertices[w] = wx;
 			worldVertices[w + 1] = wy;
