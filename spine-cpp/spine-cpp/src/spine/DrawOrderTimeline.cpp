@@ -53,7 +53,8 @@ DrawOrderTimeline::DrawOrderTimeline(size_t frameCount) : Timeline(frameCount, 1
 }
 
 void DrawOrderTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-							  MixBlend blend, MixDirection direction) {
+							  MixBlend blend, MixDirection direction, bool appliedPose) {
+	SP_UNUSED(appliedPose);
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 	SP_UNUSED(alpha);
@@ -83,18 +84,27 @@ void DrawOrderTimeline::apply(Skeleton &skeleton, float lastTime, float time, Ve
 	Vector<int> &drawOrderToSetupIndex = _drawOrders[Animation::search(_frames, time)];
 	if (drawOrderToSetupIndex.size() == 0) {
 		drawOrder.clear();
+		drawOrder.ensureCapacity(slots.size());
 		for (size_t i = 0, n = slots.size(); i < n; ++i)
 			drawOrder.add(slots[i]);
 	} else {
+		drawOrder.clear();
+		drawOrder.ensureCapacity(drawOrderToSetupIndex.size());
 		for (size_t i = 0, n = drawOrderToSetupIndex.size(); i < n; ++i)
-			drawOrder[i] = slots[drawOrderToSetupIndex[i]];
+			drawOrder.add(slots[drawOrderToSetupIndex[i]]);
 	}
 }
 
-void DrawOrderTimeline::setFrame(size_t frame, float time, Vector<int> &drawOrder) {
+void DrawOrderTimeline::setFrame(size_t frame, float time, Vector<int> *drawOrder) {
 	_frames[frame] = time;
 	_drawOrders[frame].clear();
-	_drawOrders[frame].addAll(drawOrder);
+	if (drawOrder != NULL) {
+		_drawOrders[frame].addAll(*drawOrder);
+	}
+}
+
+size_t DrawOrderTimeline::getFrameCount() {
+	return _frames.size();
 }
 
 Vector<Vector<int>> &DrawOrderTimeline::getDrawOrders() {
