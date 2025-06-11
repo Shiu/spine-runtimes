@@ -92,6 +92,7 @@
 #include <spine/PhysicsConstraint.h>
 #include <spine/PhysicsConstraintData.h>
 #include <spine/PhysicsConstraintPose.h>
+#include <spine/PhysicsConstraintTimeline.h>
 #include <spine/Pose.h>
 #include <spine/Posed.h>
 #include <spine/PosedActive.h>

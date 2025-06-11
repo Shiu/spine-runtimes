@@ -33,6 +33,7 @@
 #include <spine/CurveTimeline.h>
 #include <spine/PhysicsConstraint.h>
 #include <spine/PhysicsConstraintData.h>
+#include <spine/PhysicsConstraintPose.h>
 
 namespace spine {
 
@@ -48,16 +49,15 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+			  MixDirection direction, bool appliedPose);
 
 		int getPhysicsConstraintIndex() { return _constraintIndex; }
 
 		void setPhysicsConstraintIndex(int inValue) { _constraintIndex = inValue; }
 
     protected:
-        virtual float setup(PhysicsConstraint *constraint) = 0;
-        virtual float get(PhysicsConstraint *constraint) = 0;
-        virtual void set(PhysicsConstraint *constraint, float value) = 0;
+        virtual float get(PhysicsConstraintPose &pose) = 0;
+        virtual void set(PhysicsConstraintPose &pose, float value) = 0;
         virtual bool global(PhysicsConstraintData &constraintData) = 0;
 
 	private:
@@ -75,16 +75,12 @@ namespace spine {
         explicit PhysicsConstraintInertiaTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintInertia) {};
 
     protected:
-        float setup(PhysicsConstraint *constraint) {
-            return constraint->_data.getInertia();
+        float get(PhysicsConstraintPose &pose) {
+            return pose.getInertia();
         }
 
-        float get(PhysicsConstraint *constraint) {
-            return constraint->_inertia;
-        }
-
-        void set(PhysicsConstraint *constraint, float value) {
-            constraint->_inertia = value;
+        void set(PhysicsConstraintPose &pose, float value) {
+            pose.setInertia(value);
         }
 
         bool global(PhysicsConstraintData &constraintData) {
@@ -103,16 +99,12 @@ namespace spine {
         explicit PhysicsConstraintStrengthTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintStrength) {};
 
     protected:
-        float setup(PhysicsConstraint *constraint) {
-            return constraint->_data.getStrength();
+        float get(PhysicsConstraintPose &pose) {
+            return pose.getStrength();
         }
 
-        float get(PhysicsConstraint *constraint) {
-            return constraint->_strength;
-        }
-
-        void set(PhysicsConstraint *constraint, float value) {
-            constraint->_strength = value;
+        void set(PhysicsConstraintPose &pose, float value) {
+            pose.setStrength(value);
         }
 
         bool global(PhysicsConstraintData &constraintData) {
@@ -131,16 +123,12 @@ namespace spine {
         explicit PhysicsConstraintDampingTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintDamping) {};
 
     protected:
-        float setup(PhysicsConstraint *constraint) {
-            return constraint->_data.getDamping();
+        float get(PhysicsConstraintPose &pose) {
+            return pose.getDamping();
         }
 
-        float get(PhysicsConstraint *constraint) {
-            return constraint->_damping;
-        }
-
-        void set(PhysicsConstraint *constraint, float value) {
-            constraint->_damping = value;
+        void set(PhysicsConstraintPose &pose, float value) {
+            pose.setDamping(value);
         }
 
         bool global(PhysicsConstraintData &constraintData) {
@@ -159,16 +147,12 @@ namespace spine {
         explicit PhysicsConstraintMassTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintMass) {};
 
     protected:
-        float setup(PhysicsConstraint *constraint) {
-            return 1 / constraint->_data.getMassInverse();
+        float get(PhysicsConstraintPose &pose) {
+            return 1 / pose.getMassInverse();
         }
 
-        float get(PhysicsConstraint *constraint) {
-            return 1 / constraint->_massInverse;
-        }
-
-        void set(PhysicsConstraint *constraint, float value) {
-            constraint->_massInverse = 1 / value;
+        void set(PhysicsConstraintPose &pose, float value) {
+            pose.setMassInverse(1 / value);
         }
 
         bool global(PhysicsConstraintData &constraintData) {
@@ -187,16 +171,12 @@ namespace spine {
         explicit PhysicsConstraintWindTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintWind) {};
 
     protected:
-        float setup(PhysicsConstraint *constraint) {
-            return constraint->_data.getWind();
+        float get(PhysicsConstraintPose &pose) {
+            return pose.getWind();
         }
 
-        float get(PhysicsConstraint *constraint) {
-            return constraint->_wind;
-        }
-
-        void set(PhysicsConstraint *constraint, float value) {
-            constraint->_wind = value;
+        void set(PhysicsConstraintPose &pose, float value) {
+            pose.setWind(value);
         }
 
         bool global(PhysicsConstraintData &constraintData) {
@@ -215,16 +195,12 @@ namespace spine {
         explicit PhysicsConstraintGravityTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintGravity) {};
 
     protected:
-        float setup(PhysicsConstraint *constraint) {
-            return constraint->_data.getGravity();
+        float get(PhysicsConstraintPose &pose) {
+            return pose.getGravity();
         }
 
-        float get(PhysicsConstraint *constraint) {
-            return constraint->_gravity;
-        }
-
-        void set(PhysicsConstraint *constraint, float value) {
-            constraint->_gravity = value;
+        void set(PhysicsConstraintPose &pose, float value) {
+            pose.setGravity(value);
         }
 
         bool global(PhysicsConstraintData &constraintData) {
@@ -243,16 +219,12 @@ namespace spine {
         explicit PhysicsConstraintMixTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintMix) {};
 
     protected:
-        float setup(PhysicsConstraint *constraint) {
-            return constraint->_data.getMix();
+        float get(PhysicsConstraintPose &pose) {
+            return pose.getMix();
         }
 
-        float get(PhysicsConstraint *constraint) {
-            return constraint->_mix;
-        }
-
-        void set(PhysicsConstraint *constraint, float value) {
-            constraint->_mix = value;
+        void set(PhysicsConstraintPose &pose, float value) {
+            pose.setMix(value);
         }
 
         bool global(PhysicsConstraintData &constraintData) {
@@ -275,8 +247,14 @@ namespace spine {
 
         virtual void
         apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-              MixDirection direction);
+              MixDirection direction, bool appliedPose);
 
+        /// The index of the physics constraint that will be reset when this timeline is applied, or -1 if all physics constraints in the skeleton will be reset.
+        int getConstraintIndex() { return _constraintIndex; }
+
+        int getFrameCount() { return (int)_frames.size(); }
+
+        /// Sets the time for the specified frame.
         void setFrame(int frame, float time) {
             _frames[frame] = time;
         }
