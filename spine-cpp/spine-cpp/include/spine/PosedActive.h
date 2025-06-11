@@ -40,7 +40,7 @@ namespace spine {
 		bool _active;
 
 	public:
-		PosedActive(D& data, P& pose, A& constrained);
+		PosedActive(D& data);
 		virtual ~PosedActive();
 
 		/// Returns false when this constraint won't be updated by
@@ -54,7 +54,7 @@ namespace spine {
 	};
 
 	template<class D, class P, class A>
-	PosedActive<D, P, A>::PosedActive(D& data, P& pose, A& constrained) : Posed<D, P, A>(data, pose, constrained), _active(false) {
+	PosedActive<D, P, A>::PosedActive(D& data) : Posed<D, P, A>(data), _active(false) {
 		this->setupPose();
 	}
 

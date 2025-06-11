@@ -41,6 +41,9 @@ namespace spine {
 	/// Base class for all constraint data.
 	template<class T, class P>
 	class SP_API ConstraintData : public PosedData<P> {
+		friend class SkeletonBinary;
+		friend class SkeletonJson;
+
 	public:
 		ConstraintData(const String &name, P* setup);
 		virtual ~ConstraintData();

@@ -27,47 +27,36 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/Timeline.h>
+#ifndef Spine_Constraint_h
+#define Spine_Constraint_h
 
-#include <spine/Event.h>
-#include <spine/Skeleton.h>
+#include <spine/PosedActive.h>
+#include <spine/Update.h>
+#include <spine/RTTI.h>
 
-using namespace spine;
+namespace spine {
+	class Skeleton;
 
-RTTI_IMPL_NOPARENT(Timeline)
+	template<class T, class D, class P>
+	class SP_API Constraint : public PosedActive<D, P, P>, public Update {
+		RTTI_DECL
 
-Timeline::Timeline(size_t frameCount, size_t frameEntries)
-	: _propertyIds(), _frames(), _frameEntries(frameEntries) {
-	_frames.setSize(frameCount * frameEntries, 0);
+	public:
+		Constraint(D& data, P& pose, P& constrained) : PosedActive<D, P, P>(data, pose, constrained) {
+		}
+
+		virtual ~Constraint() {
+		}
+
+		virtual void sort(Skeleton& skeleton) = 0;
+
+		virtual bool isSourceActive() {
+			return true;
+		}
+
+		// Inherited from Update
+		virtual void update(Skeleton& skeleton, Physics physics) = 0;
+	};
 }
 
-Timeline::~Timeline() {
-}
-
-Vector<PropertyId> &Timeline::getPropertyIds() {
-	return _propertyIds;
-}
-
-void Timeline::setPropertyIds(PropertyId propertyIds[], size_t propertyIdsCount) {
-	_propertyIds.clear();
-	_propertyIds.ensureCapacity(propertyIdsCount);
-	for (size_t i = 0; i < propertyIdsCount; i++) {
-		_propertyIds.add(propertyIds[i]);
-	}
-}
-
-size_t Timeline::getFrameCount() {
-	return _frames.size() / _frameEntries;
-}
-
-Vector<float> &Timeline::getFrames() {
-	return _frames;
-}
-
-size_t Timeline::getFrameEntries() {
-	return _frameEntries;
-}
-
-float Timeline::getDuration() {
-	return _frames[_frames.size() - getFrameEntries()];
-}
+#endif /* Spine_Constraint_h */

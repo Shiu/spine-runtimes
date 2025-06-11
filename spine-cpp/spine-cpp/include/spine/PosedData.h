@@ -40,6 +40,9 @@ namespace spine {
     /// The base class for all constrained datas.
     template<class P>
     class SP_API PosedData : public SpineObject {
+        friend class SkeletonBinary;
+        friend class SkeletonJson;
+
     private:
         spine::String _name;
         P* _setup;

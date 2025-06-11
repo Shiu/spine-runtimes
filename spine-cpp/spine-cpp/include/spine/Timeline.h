@@ -60,9 +60,10 @@ namespace spine {
 		///	time, an animation can be mixed in or out. alpha can also be useful to apply animations on top of each other (layered).
 		/// @param blend Controls how mixing is applied when alpha is than 1.
 		/// @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions such as DrawOrderTimeline and AttachmentTimeline.
+		/// @param appliedPose True to modify the applied pose.
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction) = 0;
+			  MixDirection direction, bool appliedPose) = 0;
 
 		size_t getFrameEntries();
 

@@ -31,58 +31,76 @@
 #define Spine_Posed_h
 
 #include <spine/SpineObject.h>
+#include <type_traits>
 
 namespace spine {
 	template<class D, class P, class A>
 	class SP_API Posed : public SpineObject {
-	public:
-		Posed(D& data, P& pose, A& constrained);
-		virtual ~Posed();
+		friend class AnimationState;
+		friend class RotateTimeline;
+		friend class IkConstraint;
+		friend class TransformConstraint;
+		friend class VertexAttachment;
+		friend class PathConstraint;
+		friend class PhysicsConstraint;
+		friend class Skeleton;
+		friend class RegionAttachment;
+		friend class PointAttachment;
+		friend class AttachmentTimeline;
+		friend class RGBATimeline;
+		friend class RGBTimeline;
+		friend class AlphaTimeline;
+		friend class RGBA2Timeline;
+		friend class RGB2Timeline;
+		friend class ScaleTimeline;
+		friend class ScaleXTimeline;
+		friend class ScaleYTimeline;
+		friend class ShearTimeline;
+		friend class ShearXTimeline;
+		friend class ShearYTimeline;
+		friend class TranslateTimeline;
+		friend class TranslateXTimeline;
+		friend class TranslateYTimeline;
+		friend class InheritTimeline;
 
-		void setupPose();
+	public:
+		Posed(D& data) : _data(data), _pose(), _constrained() {
+			static_assert(std::is_base_of<P, A>::value, "A must extend P");
+			// Match Java behavior: applied initially points to pose
+			// Note: Both _pose and _constrained are stored as type A to match Java's
+			// "new BonePose(), new BonePose()" pattern. For most classes P==A, but
+			// Bone uses P=BoneLocal, A=BonePose where BonePose extends BoneLocal.
+			_applied = &_pose;
+		}
+
+		virtual ~Posed() {
+		}
+
+		void setupPose() {
+			_pose.set(*_data.getSetupPose());
+		}
 
 		/// The constraint's setup pose data.
-		D& getData();
+		D& getData() {
+			return _data;
+		}
 
-		P& getPose();
+		P& getPose() {
+			// Upcast A to P (safe due to static_assert that A extends P)
+			// For most classes P==A so this is a no-op, but for Bone it casts BonePose->BoneLocal
+			return _pose;
+		}
 
-		A& getAppliedPose();
+		A& getAppliedPose() {
+			return *_applied;
+		}
 
 	protected:
 		D& _data;
-		P& _pose;
-		A& _constrained;
-		A* _applied;
+		A _pose;        ///< Stored as A type (concrete pose type) to match Java behavior
+		A _constrained; ///< Stored as A type (concrete pose type) to match Java behavior  
+		A* _applied;    ///< Points to either _pose or _constrained, reassignable like Java
 	};
-
-	template<class D, class P, class A>
-	Posed<D, P, A>::Posed(D& data, P& pose, A& constrained) : _data(data), _pose(pose), _constrained(constrained) {
-		_applied = &pose;
-	}
-
-	template<class D, class P, class A>
-	Posed<D, P, A>::~Posed() {
-	}
-
-	template<class D, class P, class A>
-	void Posed<D, P, A>::setupPose() {
-		_pose.set(_data.setup);
-	}
-
-	template<class D, class P, class A>
-	D& Posed<D, P, A>::getData() {
-		return _data;
-	}
-
-	template<class D, class P, class A>
-	P& Posed<D, P, A>::getPose() {
-		return _pose;
-	}
-
-	template<class D, class P, class A>
-	A& Posed<D, P, A>::getAppliedPose() {
-		return *_applied;
-	}
 }
 
 #endif /* Spine_Posed_h */
