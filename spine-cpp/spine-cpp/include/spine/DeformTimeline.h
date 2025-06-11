@@ -31,11 +31,12 @@
 #define Spine_DeformTimeline_h
 
 #include <spine/CurveTimeline.h>
+#include <spine/SlotTimeline.h>
 
 namespace spine {
 	class VertexAttachment;
 
-	class SP_API DeformTimeline : public CurveTimeline {
+	class SP_API DeformTimeline : public CurveTimeline, public SlotTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -47,28 +48,35 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+			  MixDirection direction) override;
 
-		/// Sets the time and value of the specified keyframe.
+		/// Sets the time and vertices for the specified frame.
 		void setFrame(int frameIndex, float time, Vector<float> &vertices);
 
+		/// The vertices for each frame.
 		Vector <Vector<float>> &getVertices();
 
+		/// The attachment that will be deformed.
 		VertexAttachment *getAttachment();
 
 		void setAttachment(VertexAttachment *inValue);
 
 		virtual void
 		setBezier(size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2,
-				  float cy2, float time2, float value2);
+				  float cy2, float time2, float value2) override;
 
 		float getCurvePercent(float time, int frame);
 
-		int getSlotIndex() { return _slotIndex; }
+		int getSlotIndex() override { return _slotIndex; }
 
 		void setSlotIndex(int inValue) { _slotIndex = inValue; }
 
+		size_t getFrameCount() { return _frames.size(); }
+
 	protected:
+		void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend);
+
+	private:
 		int _slotIndex;
 
 		Vector <Vector<float>> _vertices;
