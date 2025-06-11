@@ -56,7 +56,7 @@ EventTimeline::~EventTimeline() {
 }
 
 void EventTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-						  MixBlend blend, MixDirection direction) {
+						  MixBlend blend, MixDirection direction, bool appliedPose) {
 	if (pEvents == NULL) return;
 
 	Vector<Event *> &events = *pEvents;
@@ -64,15 +64,15 @@ void EventTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector
 	size_t frameCount = _frames.size();
 
 	if (lastTime > time) {
-		// Fire events after last time for looped animations.
-		apply(skeleton, lastTime, FLT_MAX, pEvents, alpha, blend, direction);
+		// Apply after lastTime for looped animations.
+		apply(skeleton, lastTime, FLT_MAX, pEvents, alpha, blend, direction, appliedPose);
 		lastTime = -1.0f;
 	} else if (lastTime >= _frames[frameCount - 1]) {
-		// Last time is after last i.
+		// Last time is after last frame.
 		return;
 	}
 
-	if (time < _frames[0]) return;// Time is before first i.
+	if (time < _frames[0]) return; // Time is before first frame.
 
 	int i;
 	if (lastTime < _frames[0]) {
@@ -81,7 +81,7 @@ void EventTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector
 		i = Animation::search(_frames, lastTime) + 1;
 		float frameTime = _frames[i];
 		while (i > 0) {
-			// Fire multiple events with the same i.
+			// Fire multiple events with the same frame.
 			if (_frames[i - 1] != frameTime) break;
 			i--;
 		}
@@ -96,4 +96,10 @@ void EventTimeline::setFrame(size_t frame, Event *event) {
 	_events[frame] = event;
 }
 
-Vector<Event *> &EventTimeline::getEvents() { return _events; }
+size_t EventTimeline::getFrameCount() {
+	return _frames.size();
+}
+
+Vector<Event *> &EventTimeline::getEvents() { 
+	return _events; 
+}
