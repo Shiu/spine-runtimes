@@ -39,6 +39,13 @@ import { BonePose } from "./BonePose.js";
  *
  * See [Transform constraints](http://esotericsoftware.com/spine-transform-constraints) in the Spine User Guide. */
 export class TransformConstraintData extends ConstraintData<TransformConstraint, TransformConstraintPose> {
+	public static readonly ROTATION = 0;
+	public static readonly X = 1;
+	public static readonly Y = 2;
+	public static readonly SCALEX = 3;
+	public static readonly SCALEY = 4;
+	public static readonly SHEARY = 5;
+
 	/** The bones that will be modified by this transform constraint. */
 	bones = new Array<BoneData>();
 
@@ -83,56 +90,56 @@ export class TransformConstraintData extends ConstraintData<TransformConstraint,
 
 	/** An offset added to the constrained bone rotation. */
 	getOffsetRotation () {
-		return this.offsets[0];
+		return this.offsets[TransformConstraintData.ROTATION];
 	}
 
 	setOffsetRotation (offsetRotation: number) {
-		this.offsets[0] = offsetRotation;
+		this.offsets[TransformConstraintData.ROTATION] = offsetRotation;
 	}
 
 	/** An offset added to the constrained bone X translation. */
 	getOffsetX () {
-		return this.offsets[1];
+		return this.offsets[TransformConstraintData.X];
 	}
 
 	setOffsetX (offsetX: number) {
-		this.offsets[1] = offsetX;
+		this.offsets[TransformConstraintData.X] = offsetX;
 	}
 
 	/** An offset added to the constrained bone Y translation. */
 	getOffsetY () {
-		return this.offsets[2];
+		return this.offsets[TransformConstraintData.Y];
 	}
 
 	setOffsetY (offsetY: number) {
-		this.offsets[2] = offsetY;
+		this.offsets[TransformConstraintData.Y] = offsetY;
 	}
 
 	/** An offset added to the constrained bone scaleX. */
 	getOffsetScaleX () {
-		return this.offsets[3];
+		return this.offsets[TransformConstraintData.SCALEX];
 	}
 
 	setOffsetScaleX (offsetScaleX: number) {
-		this.offsets[3] = offsetScaleX;
+		this.offsets[TransformConstraintData.SCALEX] = offsetScaleX;
 	}
 
 	/** An offset added to the constrained bone scaleY. */
 	getOffsetScaleY () {
-		return this.offsets[4];
+		return this.offsets[TransformConstraintData.SCALEY];
 	}
 
 	setOffsetScaleY (offsetScaleY: number) {
-		this.offsets[4] = offsetScaleY;
+		this.offsets[TransformConstraintData.SCALEY] = offsetScaleY;
 	}
 
 	/** An offset added to the constrained bone shearY. */
 	getOffsetShearY () {
-		return this.offsets[5];
+		return this.offsets[TransformConstraintData.SHEARY];
 	}
 
 	setOffsetShearY (offsetShearY: number) {
-		this.offsets[5] = offsetShearY;
+		this.offsets[TransformConstraintData.SHEARY] = offsetShearY;
 	}
 
 }
@@ -169,9 +176,9 @@ export abstract class ToProperty {
 
 export class FromRotate extends FromProperty {
 	value (source: BonePose, local: boolean, offsets: Array<number>): number {
-		if (local) return source.rotation + offsets[0];
+		if (local) return source.rotation + offsets[TransformConstraintData.ROTATION];
 		let value = Math.atan2(source.c, source.a) * MathUtils.radDeg
-			+ (source.a * source.d - source.b * source.c > 0 ? offsets[0] : -offsets[0]);
+			+ (source.a * source.d - source.b * source.c > 0 ? offsets[TransformConstraintData.ROTATION] : -offsets[TransformConstraintData.ROTATION]);
 		if (value < 0) value += 360;
 		return value;
 	}
@@ -206,7 +213,7 @@ export class ToRotate extends ToProperty {
 
 export class FromX extends FromProperty {
 	value (source: BonePose, local: boolean, offsets: Array<number>): number {
-		return local ? source.x + offsets[1] : offsets[1] * source.a + offsets[2] * source.b + source.worldX;
+		return local ? source.x + offsets[TransformConstraintData.X] : offsets[TransformConstraintData.X] * source.a + offsets[TransformConstraintData.Y] * source.b + source.worldX;
 	}
 }
 
@@ -228,7 +235,7 @@ export class ToX extends ToProperty {
 
 export class FromY extends FromProperty {
 	value (source: BonePose, local: boolean, offsets: Array<number>): number {
-		return local ? source.y + offsets[2] : offsets[1] * source.c + offsets[2] * source.d + source.worldY;
+		return local ? source.y + offsets[TransformConstraintData.Y] : offsets[TransformConstraintData.X] * source.c + offsets[TransformConstraintData.Y] * source.d + source.worldY;
 	}
 }
 
@@ -250,7 +257,7 @@ export class ToY extends ToProperty {
 
 export class FromScaleX extends FromProperty {
 	value (source: BonePose, local: boolean, offsets: Array<number>): number {
-		return local ? source.scaleX : Math.sqrt(source.a * source.a + source.c * source.c) + offsets[3];
+		return local ? source.scaleX : Math.sqrt(source.a * source.a + source.c * source.c) + offsets[TransformConstraintData.SCALEX];
 	}
 }
 
@@ -281,7 +288,7 @@ export class ToScaleX extends ToProperty {
 
 export class FromScaleY extends FromProperty {
 	value (source: BonePose, local: boolean, offsets: Array<number>): number {
-		return local ? source.scaleY : Math.sqrt(source.b * source.b + source.d * source.d) + offsets[4];
+		return local ? source.scaleY : Math.sqrt(source.b * source.b + source.d * source.d) + offsets[TransformConstraintData.SCALEY];
 	}
 }
 
@@ -312,7 +319,7 @@ export class ToScaleY extends ToProperty {
 
 export class FromShearY extends FromProperty {
 	value (source: BonePose, local: boolean, offsets: Array<number>): number {
-		return (local ? source.shearY : (Math.atan2(source.d, source.b) - Math.atan2(source.c, source.a)) * MathUtils.radDeg - 90) + offsets[5];
+		return (local ? source.shearY : (Math.atan2(source.d, source.b) - Math.atan2(source.c, source.a)) * MathUtils.radDeg - 90) + offsets[TransformConstraintData.SHEARY];
 	}
 }
 

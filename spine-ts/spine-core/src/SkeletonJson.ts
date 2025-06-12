@@ -243,12 +243,12 @@ export class SkeletonJson {
 							if (from.to.length > 0) data.properties.push(from);
 						}
 
-						data.offsets[0] = getValue(constraintMap, "rotation", 0);
-						data.offsets[1] = getValue(constraintMap, "x", 0) * scale;
-						data.offsets[2] = getValue(constraintMap, "y", 0) * scale;
-						data.offsets[3] = getValue(constraintMap, "scaleX", 0);
-						data.offsets[4] = getValue(constraintMap, "scaleY", 0);
-						data.offsets[5] = getValue(constraintMap, "shearY", 0);
+						data.offsets[TransformConstraintData.ROTATION] = getValue(constraintMap, "rotation", 0);
+						data.offsets[TransformConstraintData.X] = getValue(constraintMap, "x", 0) * scale;
+						data.offsets[TransformConstraintData.Y] = getValue(constraintMap, "y", 0) * scale;
+						data.offsets[TransformConstraintData.SCALEX] = getValue(constraintMap, "scaleX", 0);
+						data.offsets[TransformConstraintData.SCALEY] = getValue(constraintMap, "scaleY", 0);
+						data.offsets[TransformConstraintData.SHEARY] = getValue(constraintMap, "shearY", 0);
 
 						const setup = data.setup;
 						if (rotate) setup.mixRotate = getValue(constraintMap, "mixRotate", 1);
