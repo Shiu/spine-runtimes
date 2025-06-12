@@ -45,6 +45,7 @@ namespace spine {
 
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
+		friend class PathConstraint;
 		friend class AttachmentTimeline;
 		friend class RGBATimeline;
 		friend class RGBTimeline;

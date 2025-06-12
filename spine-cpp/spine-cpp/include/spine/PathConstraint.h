@@ -30,84 +30,58 @@
 #ifndef Spine_PathConstraint_h
 #define Spine_PathConstraint_h
 
+#include <spine/Constraint.h>
 #include <spine/ConstraintData.h>
-
+#include <spine/PathConstraintData.h>
+#include <spine/PathConstraintPose.h>
 #include <spine/Vector.h>
 
 namespace spine {
-	class PathConstraintData;
-
 	class Skeleton;
-
 	class PathAttachment;
-
-	class Bone;
-
+	class BonePose;
 	class Slot;
+	class Bone;
+	class Skin;
+	class Attachment;
 
-	class SP_API PathConstraint : public Updatable {
+	/// Stores the current pose for a path constraint. A path constraint adjusts the rotation, translation, and scale of the
+	/// constrained bones so they follow a PathAttachment.
+	///
+	/// See https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User Guide.
+	class SP_API PathConstraint : public Constraint<PathConstraint, PathConstraintData, PathConstraintPose> {
 		friend class Skeleton;
-
 		friend class PathConstraintMixTimeline;
-
 		friend class PathConstraintPositionTimeline;
-
 		friend class PathConstraintSpacingTimeline;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
+		static const float epsilon;
+		static const int NONE, BEFORE, AFTER;
+
 		PathConstraint(PathConstraintData &data, Skeleton &skeleton);
 
-		virtual void update(Physics physics);
+		virtual void update(Skeleton& skeleton, Physics physics);
 
-		virtual int getOrder();
+		virtual void sort(Skeleton& skeleton);
 
-        PathConstraintData &getData();
+		virtual bool isSourceActive();
 
-        Vector<Bone *> &getBones();
+		PathConstraintData &getData();
 
-        Slot *getTarget();
+		Vector<BonePose *> &getBones();
 
-        void setTarget(Slot *inValue);
+		Slot *getSlot();
 
-		float getPosition();
+		void setSlot(Slot *slot);
 
-		void setPosition(float inValue);
 
-		float getSpacing();
-
-		void setSpacing(float inValue);
-
-		float getMixRotate();
-
-		void setMixRotate(float inValue);
-
-		float getMixX();
-
-		void setMixX(float inValue);
-
-		float getMixY();
-
-		void setMixY(float inValue);
-
-		bool isActive();
-
-		void setActive(bool inValue);
-
-        void setToSetupPose();
 
 	private:
-		static const float EPSILON;
-		static const int NONE;
-		static const int BEFORE;
-		static const int AFTER;
-
-		PathConstraintData &_data;
-		Vector<Bone *> _bones;
-		Slot *_target;
-		float _position, _spacing;
-		float _mixRotate, _mixX, _mixY;
+		Vector<BonePose *> _bones;
+		Slot *_slot;
 
 		Vector<float> _spaces;
 		Vector<float> _positions;
@@ -116,17 +90,18 @@ namespace spine {
 		Vector<float> _lengths;
 		Vector<float> _segments;
 
-		bool _active;
+		Vector<float> &computeWorldPositions(Skeleton& skeleton, PathAttachment &path, int spacesCount, bool tangents);
 
-		Vector<float> &computeWorldPositions(PathAttachment &path, int spacesCount, bool tangents);
+		void addBeforePosition(float p, Vector<float> &temp, int i, Vector<float> &output, int o);
 
-		static void addBeforePosition(float p, Vector<float> &temp, int i, Vector<float> &output, int o);
+		void addAfterPosition(float p, Vector<float> &temp, int i, Vector<float> &output, int o);
 
-		static void addAfterPosition(float p, Vector<float> &temp, int i, Vector<float> &output, int o);
-
-		static void
-		addCurvePosition(float p, float x1, float y1, float cx1, float cy1, float cx2, float cy2, float x2, float y2,
+		void addCurvePosition(float p, float x1, float y1, float cx1, float cy1, float cx2, float cy2, float x2, float y2,
 						 Vector<float> &output, int o, bool tangents);
+
+		void sortPathSlot(Skeleton& skeleton, Skin& skin, int slotIndex, Bone& slotBone);
+
+		void sortPath(Skeleton& skeleton, Attachment* attachment, Bone& slotBone);
 	};
 }
 

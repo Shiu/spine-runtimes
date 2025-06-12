@@ -36,6 +36,8 @@
 namespace spine {
     /// Stores a pose for a path constraint.
     class SP_API PathConstraintPose : public Pose<PathConstraintPose> {
+        friend class PathConstraint;
+        
         RTTI_DECL
     
     private:

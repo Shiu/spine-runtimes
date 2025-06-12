@@ -89,6 +89,8 @@ namespace spine {
 
 		friend class IkConstraintTimeline;
 
+		friend class PathConstraint;
+
 		friend class PathConstraintMixTimeline;
 
 		friend class PathConstraintPositionTimeline;
@@ -206,7 +208,7 @@ namespace spine {
 
 		Vector<Bone *> &getBones();
 
-		Vector<Updatable *> &getUpdateCacheList();
+		Vector<Update *> &getUpdateCacheList();
 
 		Vector<Slot *> &getSlots();
 
@@ -280,7 +282,7 @@ namespace spine {
 		Vector<TransformConstraint *> _transformConstraints;
 		Vector<PathConstraint *> _pathConstraints;
         Vector<PhysicsConstraint *> _physicsConstraints;
-		Vector<Updatable *> _updateCache;
+		Vector<Update *> _updateCache;
 		Skin *_skin;
 		Color _color;
 		float _scaleX, _scaleY;
