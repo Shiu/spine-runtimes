@@ -33,6 +33,7 @@
 #include <spine/PosedActive.h>
 #include <spine/Update.h>
 #include <spine/RTTI.h>
+#include <spine/ConstraintData.h>
 
 namespace spine {
 	class Skeleton;
@@ -42,14 +43,16 @@ namespace spine {
 		public:
 			Constraint();
 			virtual ~Constraint();
+
+			ConstraintData &getData();
 	};
 
 	template<class T, class D, class P>
-	class SP_API ConstraintGeneric : public PosedActive<D, P, P>, public Constraint {
+	class SP_API ConstraintGeneric : public PosedActiveGeneric<D, P, P>, public Constraint {
 		RTTI_DECL
 
 	public:
-		ConstraintGeneric(D& data) : PosedActive<D, P, P>(data), Constraint() {
+		ConstraintGeneric(D& data) : PosedActiveGeneric<D, P, P>(data), Constraint() {
 		}
 
 		virtual ~ConstraintGeneric() {

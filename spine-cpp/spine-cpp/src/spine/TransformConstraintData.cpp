@@ -49,15 +49,15 @@ TransformConstraintData::TransformConstraintData(const String &name) : Constrain
 	}
 }
 
-Vector<BoneData*>& TransformConstraintData::getBones() {
+Vector<BoneData *> &TransformConstraintData::getBones() {
 	return _bones;
 }
 
-BoneData* TransformConstraintData::getSource() {
+BoneData *TransformConstraintData::getSource() {
 	return _source;
 }
 
-void TransformConstraintData::setSource(BoneData* source) {
+void TransformConstraintData::setSource(BoneData *source) {
 	_source = source;
 }
 
@@ -141,7 +141,7 @@ void TransformConstraintData::setClamp(bool clamp) {
 	_clamp = clamp;
 }
 
-Vector<FromProperty*>& TransformConstraintData::getProperties() {
+Vector<FromProperty *> &TransformConstraintData::getProperties() {
 	return _properties;
 }
 
@@ -167,21 +167,20 @@ ToProperty::~ToProperty() {
 
 // No RTTI for FromRotate
 
-float FromRotate::value(BonePose& source, bool local, float* offsets) {
+float FromRotate::value(BonePose &source, bool local, float *offsets) {
 	if (local) return source.getRotation() + offsets[TransformConstraintData::ROTATION];
-	float value = MathUtil::atan2(source._c, source._a) * MathUtil::Rad_Deg
-		+ (source._a * source._d - source._b * source._c > 0 ? offsets[TransformConstraintData::ROTATION] : -offsets[TransformConstraintData::ROTATION]);
+	float value = MathUtil::atan2(source._c, source._a) * MathUtil::Rad_Deg + (source._a * source._d - source._b * source._c > 0 ? offsets[TransformConstraintData::ROTATION] : -offsets[TransformConstraintData::ROTATION]);
 	if (value < 0) value += 360;
 	return value;
 }
 
 // No RTTI for ToRotate
 
-float ToRotate::mix(TransformConstraintPose& pose) {
+float ToRotate::mix(TransformConstraintPose &pose) {
 	return pose._mixRotate;
 }
 
-void ToRotate::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) {
+void ToRotate::apply(TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) {
 	if (local) {
 		if (!additive) value -= bone.getRotation();
 		bone.setRotation(bone.getRotation() + value * pose._mixRotate);
@@ -204,17 +203,17 @@ void ToRotate::apply(TransformConstraintPose& pose, BonePose& bone, float value,
 
 // No RTTI for FromX
 
-float FromX::value(BonePose& source, bool local, float* offsets) {
+float FromX::value(BonePose &source, bool local, float *offsets) {
 	return local ? source.getX() + offsets[TransformConstraintData::X] : offsets[TransformConstraintData::X] * source._a + offsets[TransformConstraintData::Y] * source._b + source.getWorldX();
 }
 
 // No RTTI for ToX
 
-float ToX::mix(TransformConstraintPose& pose) {
+float ToX::mix(TransformConstraintPose &pose) {
 	return pose._mixX;
 }
 
-void ToX::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) {
+void ToX::apply(TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) {
 	if (local) {
 		if (!additive) value -= bone.getX();
 		bone.setX(bone.getX() + value * pose._mixX);
@@ -226,17 +225,17 @@ void ToX::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool
 
 // No RTTI for FromY
 
-float FromY::value(BonePose& source, bool local, float* offsets) {
+float FromY::value(BonePose &source, bool local, float *offsets) {
 	return local ? source.getY() + offsets[TransformConstraintData::Y] : offsets[TransformConstraintData::X] * source._c + offsets[TransformConstraintData::Y] * source._d + source.getWorldY();
 }
 
 // No RTTI for ToY
 
-float ToY::mix(TransformConstraintPose& pose) {
+float ToY::mix(TransformConstraintPose &pose) {
 	return pose._mixY;
 }
 
-void ToY::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) {
+void ToY::apply(TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) {
 	if (local) {
 		if (!additive) value -= bone.getY();
 		bone.setY(bone.getY() + value * pose._mixY);
@@ -248,17 +247,17 @@ void ToY::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool
 
 // No RTTI for FromScaleX
 
-float FromScaleX::value(BonePose& source, bool local, float* offsets) {
+float FromScaleX::value(BonePose &source, bool local, float *offsets) {
 	return (local ? source.getScaleX() : MathUtil::sqrt(source._a * source._a + source._c * source._c)) + offsets[TransformConstraintData::SCALEX];
 }
 
 // No RTTI for ToScaleX
 
-float ToScaleX::mix(TransformConstraintPose& pose) {
+float ToScaleX::mix(TransformConstraintPose &pose) {
 	return pose._mixScaleX;
 }
 
-void ToScaleX::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) {
+void ToScaleX::apply(TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) {
 	if (local) {
 		if (additive)
 			bone.setScaleX(bone.getScaleX() * (1 + ((value - 1) * pose._mixScaleX)));
@@ -279,17 +278,17 @@ void ToScaleX::apply(TransformConstraintPose& pose, BonePose& bone, float value,
 
 // No RTTI for FromScaleY
 
-float FromScaleY::value(BonePose& source, bool local, float* offsets) {
+float FromScaleY::value(BonePose &source, bool local, float *offsets) {
 	return (local ? source.getScaleY() : MathUtil::sqrt(source._b * source._b + source._d * source._d)) + offsets[TransformConstraintData::SCALEY];
 }
 
 // No RTTI for ToScaleY
 
-float ToScaleY::mix(TransformConstraintPose& pose) {
+float ToScaleY::mix(TransformConstraintPose &pose) {
 	return pose._mixScaleY;
 }
 
-void ToScaleY::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) {
+void ToScaleY::apply(TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) {
 	if (local) {
 		if (additive)
 			bone.setScaleY(bone.getScaleY() * (1 + ((value - 1) * pose._mixScaleY)));
@@ -310,17 +309,17 @@ void ToScaleY::apply(TransformConstraintPose& pose, BonePose& bone, float value,
 
 // No RTTI for FromShearY
 
-float FromShearY::value(BonePose& source, bool local, float* offsets) {
+float FromShearY::value(BonePose &source, bool local, float *offsets) {
 	return (local ? source.getShearY() : (MathUtil::atan2(source._d, source._b) - MathUtil::atan2(source._c, source._a)) * MathUtil::Rad_Deg - 90) + offsets[TransformConstraintData::SHEARY];
 }
 
 // No RTTI for ToShearY
 
-float ToShearY::mix(TransformConstraintPose& pose) {
+float ToShearY::mix(TransformConstraintPose &pose) {
 	return pose._mixShearY;
 }
 
-void ToShearY::apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) {
+void ToShearY::apply(TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) {
 	if (local) {
 		if (!additive) value -= bone.getShearY();
 		bone.setShearY(bone.getShearY() + value * pose._mixShearY);
@@ -346,7 +345,7 @@ void ToShearY::apply(TransformConstraintPose& pose, BonePose& bone, float value,
 TransformConstraintData::~TransformConstraintData() {
 	// Clean up all FromProperty objects, which will in turn clean up their ToProperty objects
 	for (size_t i = 0; i < _properties.size(); i++) {
-		FromProperty* fromProp = _properties[i];
+		FromProperty *fromProp = _properties[i];
 		if (fromProp) {
 			// Clean up the ToProperty objects in the FromProperty
 			ContainerUtil::cleanUpVectorOfPointers(fromProp->to);

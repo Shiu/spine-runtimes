@@ -69,7 +69,7 @@ int TrackEntry::getTrackIndex() { return _trackIndex; }
 
 Animation *TrackEntry::getAnimation() { return _animation; }
 
-void TrackEntry::setAnimation(Animation* animation) {
+void TrackEntry::setAnimation(Animation *animation) {
 	if (animation == NULL) {
 		return;
 	}

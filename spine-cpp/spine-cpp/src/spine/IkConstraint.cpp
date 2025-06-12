@@ -41,52 +41,52 @@ using namespace spine;
 
 RTTI_IMPL(IkConstraint, Constraint)
 
-void IkConstraint::apply(Skeleton& skeleton, BonePose& bone, float targetX, float targetY, bool compress, bool stretch, bool uniform, float mix) {
+void IkConstraint::apply(Skeleton &skeleton, BonePose &bone, float targetX, float targetY, bool compress, bool stretch, bool uniform, float mix) {
 	bone.modifyLocal(skeleton);
-	BonePose& p = bone._bone->getParent()->getAppliedPose();
+	BonePose &p = bone._bone->getParent()->getAppliedPose();
 	float pa = p._a, pb = p._b, pc = p._c, pd = p._d;
 	float rotationIK = -bone._shearX - bone._rotation, tx, ty;
 	switch (bone._inherit) {
-	case Inherit_OnlyTranslation:
-		tx = (targetX - bone._worldX) * MathUtil::sign(skeleton.getScaleX());
-		ty = (targetY - bone._worldY) * MathUtil::sign(skeleton.getScaleY());
-		break;
-	case Inherit_NoRotationOrReflection: {
-		float s = MathUtil::abs(pa * pd - pb * pc) / MathUtil::max(0.0001f, pa * pa + pc * pc);
-		float sa = pa / skeleton.getScaleX();
-		float sc = pc / skeleton.getScaleY();
-		pb = -sc * s * skeleton.getScaleX();
-		pd = sa * s * skeleton.getScaleY();
-		rotationIK += MathUtil::atan2Deg(sc, sa);
-		// Fall through.
-	}
-	default:
-		float x = targetX - p._worldX, y = targetY - p._worldY;
-		float d = pa * pd - pb * pc;
-		if (MathUtil::abs(d) <= 0.0001f) {
-			tx = 0;
-			ty = 0;
-		} else {
-			tx = (x * pd - y * pb) / d - bone._x;
-			ty = (y * pa - x * pc) / d - bone._y;
+		case Inherit_OnlyTranslation:
+			tx = (targetX - bone._worldX) * MathUtil::sign(skeleton.getScaleX());
+			ty = (targetY - bone._worldY) * MathUtil::sign(skeleton.getScaleY());
+			break;
+		case Inherit_NoRotationOrReflection: {
+			float s = MathUtil::abs(pa * pd - pb * pc) / MathUtil::max(0.0001f, pa * pa + pc * pc);
+			float sa = pa / skeleton.getScaleX();
+			float sc = pc / skeleton.getScaleY();
+			pb = -sc * s * skeleton.getScaleX();
+			pd = sa * s * skeleton.getScaleY();
+			rotationIK += MathUtil::atan2Deg(sc, sa);
+			// Fall through.
 		}
+		default:
+			float x = targetX - p._worldX, y = targetY - p._worldY;
+			float d = pa * pd - pb * pc;
+			if (MathUtil::abs(d) <= 0.0001f) {
+				tx = 0;
+				ty = 0;
+			} else {
+				tx = (x * pd - y * pb) / d - bone._x;
+				ty = (y * pa - x * pc) / d - bone._y;
+			}
 	}
 	rotationIK += MathUtil::atan2Deg(ty, tx);
 	if (bone._scaleX < 0) rotationIK += 180;
 	if (rotationIK > 180)
 		rotationIK -= 360;
-	else if (rotationIK < -180) //
+	else if (rotationIK < -180)//
 		rotationIK += 360;
 	bone._rotation += rotationIK * mix;
 	if (compress || stretch) {
 		switch (bone._inherit) {
-		case Inherit_NoScale:
-		case Inherit_NoScaleOrReflection:
-			tx = targetX - bone._worldX;
-			ty = targetY - bone._worldY;
-			break;
-		default:
-			break;
+			case Inherit_NoScale:
+			case Inherit_NoScaleOrReflection:
+				tx = targetX - bone._worldX;
+				ty = targetY - bone._worldY;
+				break;
+			default:
+				break;
 		}
 		float b = bone._bone->getData().getLength() * bone._scaleX;
 		if (b > 0.0001f) {
@@ -100,8 +100,8 @@ void IkConstraint::apply(Skeleton& skeleton, BonePose& bone, float targetX, floa
 	}
 }
 
-void IkConstraint::apply(Skeleton& skeleton, BonePose& parent, BonePose& child, float targetX, float targetY, int bendDir,
-			bool stretch, bool uniform, float softness, float mix) {
+void IkConstraint::apply(Skeleton &skeleton, BonePose &parent, BonePose &child, float targetX, float targetY, int bendDir,
+						 bool stretch, bool uniform, float softness, float mix) {
 	if (parent._inherit != Inherit_Normal || child._inherit != Inherit_Normal) return;
 	parent.modifyLocal(skeleton);
 	child.modifyLocal(skeleton);
@@ -134,7 +134,7 @@ void IkConstraint::apply(Skeleton& skeleton, BonePose& parent, BonePose& child, 
 		cwx = a * child._x + b * child._y + parent._worldX;
 		cwy = c * child._x + d * child._y + parent._worldY;
 	}
-	BonePose& pp = parent._bone->getParent()->getAppliedPose();
+	BonePose &pp = parent._bone->getParent()->getAppliedPose();
 	a = pp._a;
 	b = pp._b;
 	c = pp._c;
@@ -163,7 +163,7 @@ void IkConstraint::apply(Skeleton& skeleton, BonePose& parent, BonePose& child, 
 			dd = tx * tx + ty * ty;
 		}
 	}
-	outer:
+outer:
 	if (u) {
 		l2 *= psx;
 		float cos = (dd - l1 * l1 - l2 * l2) / (2 * l1 * l2);
@@ -233,25 +233,24 @@ void IkConstraint::apply(Skeleton& skeleton, BonePose& parent, BonePose& child, 
 			a2 = maxAngle * bendDir;
 		}
 	}
-	outer_break:
+outer_break:
 	float os = MathUtil::atan2(child._y, child._x) * s2;
 	a1 = (a1 - os) * MathUtil::Rad_Deg + os1 - parent._rotation;
 	if (a1 > 180)
 		a1 -= 360;
-	else if (a1 < -180) //
+	else if (a1 < -180)//
 		a1 += 360;
 	parent._rotation += a1 * mix;
 	a2 = ((a2 + os) * MathUtil::Rad_Deg - child._shearX) * s2 + os2 - child._rotation;
 	if (a2 > 180)
 		a2 -= 360;
-	else if (a2 < -180) //
+	else if (a2 < -180)//
 		a2 += 360;
 	child._rotation += a2 * mix;
 }
 
-IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton) :
-	ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>(data),
-	_target(skeleton.findBone(data.getTarget()->getName())) {
+IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton) : ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>(data),
+																		 _target(skeleton.findBone(data.getTarget()->getName())) {
 
 	_bones.ensureCapacity(data.getBones().size());
 	for (size_t i = 0; i < data.getBones().size(); i++) {
@@ -260,10 +259,10 @@ IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton) :
 	}
 }
 
-void IkConstraint::update(Skeleton& skeleton, Physics physics) {
-	IkConstraintPose& p = *_applied;
+void IkConstraint::update(Skeleton &skeleton, Physics physics) {
+	IkConstraintPose &p = *_applied;
 	if (p._mix == 0) return;
-	BonePose& target = _target->getAppliedPose();
+	BonePose &target = _target->getAppliedPose();
 	switch (_bones.size()) {
 		case 1: {
 			apply(skeleton, *_bones[0], target._worldX, target._worldY, p._compress, p._stretch, _data._uniform, p._mix);
@@ -292,23 +291,23 @@ void IkConstraint::setTarget(Bone *target) {
 	_target = target;
 }
 
-void IkConstraint::sort(Skeleton& skeleton) {
+void IkConstraint::sort(Skeleton &skeleton) {
 	skeleton.sortBone(_target);
-	Bone* parent = _bones[0]->_bone;
+	Bone *parent = _bones[0]->_bone;
 	skeleton.sortBone(parent);
 	skeleton._updateCache.add(this);
 	parent->_sorted = false;
 	skeleton.sortReset(parent->_children);
-	skeleton.constrained(parent);
-	if (_bones.size() > 1) skeleton.constrained(_bones[1]->_bone);
+	skeleton.constrained(*parent);
+	if (_bones.size() > 1) skeleton.constrained(*_bones[1]->_bone);
 }
 
 bool IkConstraint::isSourceActive() {
 	return _target->_active;
 }
 
-IkConstraint* IkConstraint::copy(Skeleton& skeleton) {
-	IkConstraint* copy = new IkConstraint(_data, skeleton);
+IkConstraint *IkConstraint::copy(Skeleton &skeleton) {
+	IkConstraint *copy = new IkConstraint(_data, skeleton);
 	copy->_pose.set(_pose);
 	return copy;
 }

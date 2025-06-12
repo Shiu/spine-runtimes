@@ -61,10 +61,10 @@ void RGBATimeline::setFrame(int frame, float time, float r, float g, float b, fl
 	_frames[frame + A] = a;
 }
 
-void RGBATimeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) {
-	Color& color = pose._color;
+void RGBATimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
+	Color &color = pose._color;
 	if (time < _frames[0]) {
-		Color& setup = slot._data._setup._color;
+		Color &setup = slot._data._setup._color;
 		switch (blend) {
 			case MixBlend_Setup:
 				color.set(setup);
@@ -139,10 +139,10 @@ void RGBTimeline::setFrame(int frame, float time, float r, float g, float b) {
 	_frames[frame + B] = b;
 }
 
-void RGBTimeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) {
-	Color& color = pose._color;
+void RGBTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
+	Color &color = pose._color;
 	if (time < _frames[0]) {
-		Color& setup = slot._data._setup._color;
+		Color &setup = slot._data._setup._color;
 		switch (blend) {
 			case MixBlend_Setup:
 				color.r = setup.r;
@@ -194,7 +194,7 @@ void RGBTimeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, Mix
 		color.b = b;
 	} else {
 		if (blend == MixBlend_Setup) {
-			Color& setup = slot._data._setup._color;
+			Color &setup = slot._data._setup._color;
 			color.r = setup.r;
 			color.g = setup.g;
 			color.b = setup.b;
@@ -225,9 +225,9 @@ void AlphaTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector
 	Slot *slot = skeleton._slots[_slotIndex];
 	if (!slot->_bone._active) return;
 
-	Color& color = (appliedPose ? *slot->_applied : slot->_pose)._color;
+	Color &color = (appliedPose ? *slot->_applied : slot->_pose)._color;
 	if (time < _frames[0]) {
-		Color& setup = slot->_data._setup._color;
+		Color &setup = slot->_data._setup._color;
 		switch (blend) {
 			case MixBlend_Setup:
 				color.a = setup.a;
@@ -274,13 +274,13 @@ void RGBA2Timeline::setFrame(int frame, float time, float r, float g, float b, f
 	_frames[frame + B2] = b2;
 }
 
-void RGBA2Timeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) {
-	Color& light = pose._color;
-	Color& dark = pose._darkColor;
+void RGBA2Timeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
+	Color &light = pose._color;
+	Color &dark = pose._darkColor;
 	if (time < _frames[0]) {
-		SlotPose& setup = slot._data._setup;
-		Color& setupLight = setup._color;
-		Color& setupDark = setup._darkColor;
+		SlotPose &setup = slot._data._setup;
+		Color &setupLight = setup._color;
+		Color &setupDark = setup._darkColor;
 		switch (blend) {
 			case MixBlend_Setup:
 				light.set(setupLight);
@@ -352,9 +352,9 @@ void RGBA2Timeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, M
 		dark.b = b2;
 	} else {
 		if (blend == MixBlend_Setup) {
-			SlotPose& setup = slot._data._setup;
+			SlotPose &setup = slot._data._setup;
 			light.set(setup._color);
-			Color& setupDark = setup._darkColor;
+			Color &setupDark = setup._darkColor;
 			dark.r = setupDark.r;
 			dark.g = setupDark.g;
 			dark.b = setupDark.b;
@@ -390,13 +390,13 @@ void RGB2Timeline::setFrame(int frame, float time, float r, float g, float b, fl
 	_frames[frame + B2] = b2;
 }
 
-void RGB2Timeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) {
-	Color& light = pose._color;
-	Color& dark = pose._darkColor;
+void RGB2Timeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
+	Color &light = pose._color;
+	Color &dark = pose._darkColor;
 	if (time < _frames[0]) {
-		SlotPose& setup = slot._data._setup;
-		Color& setupLight = setup._color;
-		Color& setupDark = setup._darkColor;
+		SlotPose &setup = slot._data._setup;
+		Color &setupLight = setup._color;
+		Color &setupDark = setup._darkColor;
 		switch (blend) {
 			case MixBlend_Setup:
 				light.r = setupLight.r;
@@ -469,7 +469,7 @@ void RGB2Timeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, Mi
 		dark.b = b2;
 	} else {
 		if (blend == MixBlend_Setup) {
-			SlotPose& setup = slot._data._setup;
+			SlotPose &setup = slot._data._setup;
 			light.r = setup._color.r;
 			light.g = setup._color.g;
 			light.b = setup._color.b;

@@ -42,8 +42,7 @@ using namespace spine;
 
 RTTI_IMPL(ScaleTimeline, BoneTimeline2)
 
-ScaleTimeline::ScaleTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
-	BoneTimeline2(frameCount, bezierCount, boneIndex, Property_ScaleX, Property_ScaleY) {
+ScaleTimeline::ScaleTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline2(frameCount, bezierCount, boneIndex, Property_ScaleX, Property_ScaleY) {
 }
 
 void ScaleTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
@@ -144,8 +143,7 @@ void ScaleTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float a
 
 RTTI_IMPL(ScaleXTimeline, BoneTimeline1)
 
-ScaleXTimeline::ScaleXTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
-	BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ScaleX) {
+ScaleXTimeline::ScaleXTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ScaleX) {
 }
 
 void ScaleXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
@@ -155,8 +153,7 @@ void ScaleXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float 
 
 RTTI_IMPL(ScaleYTimeline, BoneTimeline1)
 
-ScaleYTimeline::ScaleYTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
-	BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ScaleY) {
+ScaleYTimeline::ScaleYTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ScaleY) {
 }
 
 void ScaleYTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,

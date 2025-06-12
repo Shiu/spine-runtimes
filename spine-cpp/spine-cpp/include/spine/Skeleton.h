@@ -298,21 +298,20 @@ namespace spine {
 		void update(float delta);
 
 	protected:
-		Vector<Update *> _updateCache;
-
-	private:
 		SkeletonData &_data;
 		Vector<Bone *> _bones;
 		Vector<Slot *> _slots;
 		Vector<Slot *> _drawOrder;
 		Vector<Constraint *> _constraints;
 		Vector<PhysicsConstraint *> _physics;
+		Vector<Update *> _updateCache;
+		Vector<Posed *> _resetCache;
 		Skin *_skin;
 		Color _color;
-		float _scaleX, _scaleY;
 		float _x, _y;
-		float _time;
+		float _scaleX, _scaleY;
 		float _windX, _windY, _gravityX, _gravityY;
+		float _time;
 		int _update;
 	};
 }// namespace spine

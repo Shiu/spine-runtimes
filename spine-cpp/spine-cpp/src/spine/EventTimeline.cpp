@@ -72,7 +72,7 @@ void EventTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector
 		return;
 	}
 
-	if (time < _frames[0]) return; // Time is before first frame.
+	if (time < _frames[0]) return;// Time is before first frame.
 
 	int i;
 	if (lastTime < _frames[0]) {
@@ -100,6 +100,6 @@ size_t EventTimeline::getFrameCount() {
 	return _frames.size();
 }
 
-Vector<Event *> &EventTimeline::getEvents() { 
-	return _events; 
+Vector<Event *> &EventTimeline::getEvents() {
+	return _events;
 }

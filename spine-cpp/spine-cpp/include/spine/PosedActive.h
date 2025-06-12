@@ -35,33 +35,22 @@
 
 namespace spine {
 
-	class SP_API PosedActive {
-	public:
-		PosedActive() {}
-		virtual ~PosedActive() {}
-
-		/// Returns false when this constraint won't be updated by
-		/// Skeleton::updateWorldTransform() because a skin is required and the
-		/// active skin does not contain this item.
-		/// @see Skin::getBones()
-		/// @see Skin::getConstraints()
-		/// @see PosedData::getSkinRequired()
-		/// @see Skeleton::updateCache()
-		bool isActive();
-
-	protected:
-		bool _active;
-	};
-
 	template<class D, class P, class A>
 	class SP_API PosedActiveGeneric : public PosedGeneric<D, P, A> {
 		friend class SlotCurveTimeline;
 
 	public:
-		PosedActive(D &data): PosedGeneric<D, P, A>(data), _active(false) {
+		PosedActiveGeneric(D &data): PosedGeneric<D, P, A>(data), _active(false) {
 			this->setupPose();
 		}
-		virtual ~PosedActive() {}
+		virtual ~PosedActiveGeneric() {}
+
+		bool isActive() {
+			return _active;
+		}
+
+	protected:
+		bool _active;
 	};
 }// namespace spine
 

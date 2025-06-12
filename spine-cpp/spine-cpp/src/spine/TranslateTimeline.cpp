@@ -42,8 +42,7 @@ using namespace spine;
 
 RTTI_IMPL(TranslateTimeline, BoneTimeline2)
 
-TranslateTimeline::TranslateTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
-	BoneTimeline2(frameCount, bezierCount, boneIndex, Property_X, Property_Y) {
+TranslateTimeline::TranslateTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline2(frameCount, bezierCount, boneIndex, Property_X, Property_Y) {
 }
 
 void TranslateTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
@@ -106,8 +105,7 @@ void TranslateTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, flo
 
 RTTI_IMPL(TranslateXTimeline, BoneTimeline1)
 
-TranslateXTimeline::TranslateXTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
-	BoneTimeline1(frameCount, bezierCount, boneIndex, Property_X) {
+TranslateXTimeline::TranslateXTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline1(frameCount, bezierCount, boneIndex, Property_X) {
 }
 
 void TranslateXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
@@ -117,8 +115,7 @@ void TranslateXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, fl
 
 RTTI_IMPL(TranslateYTimeline, BoneTimeline1)
 
-TranslateYTimeline::TranslateYTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : 
-	BoneTimeline1(frameCount, bezierCount, boneIndex, Property_Y) {
+TranslateYTimeline::TranslateYTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline1(frameCount, bezierCount, boneIndex, Property_Y) {
 }
 
 void TranslateYTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,

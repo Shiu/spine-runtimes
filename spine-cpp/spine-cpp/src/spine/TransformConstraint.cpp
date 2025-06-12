@@ -41,55 +41,54 @@ using namespace spine;
 
 RTTI_IMPL(TransformConstraint, Constraint)
 
-TransformConstraint::TransformConstraint(TransformConstraintData& data, Skeleton& skeleton) :
-	ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose>(data) {
+TransformConstraint::TransformConstraint(TransformConstraintData &data, Skeleton &skeleton) : ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose>(data) {
 
 	_bones.ensureCapacity(data.getBones().size());
 	for (size_t i = 0; i < data.getBones().size(); i++) {
-		BoneData* boneData = data.getBones()[i];
+		BoneData *boneData = data.getBones()[i];
 		_bones.add(&skeleton.findBone(boneData->getName())->getAppliedPose());
 	}
 
 	_source = skeleton.findBone(data.getSource()->getName());
 }
 
-TransformConstraint TransformConstraint::copy(Skeleton& skeleton) {
+TransformConstraint TransformConstraint::copy(Skeleton &skeleton) {
 	TransformConstraint copy(_data, skeleton);
 	copy._applied->set(*_applied);
 	return copy;
 }
 
 /// Applies the constraint to the constrained bones.
-void TransformConstraint::update(Skeleton& skeleton, Physics physics) {
-	TransformConstraintPose& p = *_applied;
+void TransformConstraint::update(Skeleton &skeleton, Physics physics) {
+	TransformConstraintPose &p = *_applied;
 	if (p.getMixRotate() == 0 && p.getMixX() == 0 && p.getMixY() == 0 && p.getMixScaleX() == 0 && p.getMixScaleY() == 0 && p.getMixShearY() == 0) return;
 
-	TransformConstraintData& data = _data;
+	TransformConstraintData &data = _data;
 	bool localSource = data.getLocalSource(), localTarget = data.getLocalTarget(), additive = data.getAdditive(), clamp = data.getClamp();
-	float* offsets = data._offsets; // Access friend field directly
-	BonePose& source = _source->getAppliedPose();
+	float *offsets = data._offsets;// Access friend field directly
+	BonePose &source = _source->getAppliedPose();
 	if (localSource) {
 		source.validateLocalTransform(skeleton);
 	}
-	Vector<FromProperty*>& properties = data.getProperties();
-	FromProperty** fromItems = properties.buffer();
+	Vector<FromProperty *> &properties = data.getProperties();
+	FromProperty **fromItems = properties.buffer();
 	size_t fn = properties.size();
-	int update = 1; // TODO: Add skeleton.update field
-	BonePose** bones = _bones.buffer();
+	int update = skeleton._update;
+	BonePose **bones = _bones.buffer();
 	for (size_t i = 0, n = _bones.size(); i < n; i++) {
-		BonePose* bone = bones[i];
+		BonePose *bone = bones[i];
 		if (localTarget) {
 			bone->modifyLocal(skeleton);
 		} else {
 			bone->modifyWorld(update);
 		}
 		for (size_t f = 0; f < fn; f++) {
-			FromProperty* from = fromItems[f];
+			FromProperty *from = fromItems[f];
 			float value = from->value(source, localSource, offsets) - from->offset;
-			Vector<ToProperty*>& toProps = from->to;
-			ToProperty** toItems = toProps.buffer();
+			Vector<ToProperty *> &toProps = from->to;
+			ToProperty **toItems = toProps.buffer();
 			for (size_t t = 0, tn = toProps.size(); t < tn; t++) {
-				ToProperty* to = toItems[t];
+				ToProperty *to = toItems[t];
 				if (to->mix(p) != 0) {
 					float clamped = to->offset + value * to->scale;
 					if (clamp) {
@@ -105,23 +104,23 @@ void TransformConstraint::update(Skeleton& skeleton, Physics physics) {
 	}
 }
 
-void TransformConstraint::sort(Skeleton& skeleton) {
-	// if (!_data.getLocalSource()) skeleton.sortBone(_source); // TODO: sortBone is private, need friend access
-	BonePose** bones = _bones.buffer();
+void TransformConstraint::sort(Skeleton &skeleton) {
+	if (!_data.getLocalSource()) skeleton.sortBone(_source);
+	BonePose **bones = _bones.buffer();
 	size_t boneCount = _bones.size();
 	bool worldTarget = !_data.getLocalTarget();
-	// if (worldTarget) {
-	// 	for (size_t i = 0; i < boneCount; i++)
-	// 		skeleton.sortBone(bones[i]->_bone); // TODO: sortBone is private, need friend access
-	// }
-	// skeleton._updateCache.add(this); // TODO: _updateCache is private, need friend access
-	// for (size_t i = 0; i < boneCount; i++) {
-	// 	Bone* bone = bones[i]->_bone;
-	// 	skeleton.sortReset(bone->getChildren()); // TODO: sortReset is private, need friend access
-	// 	// skeleton.constrained(bone); // TODO: Add constrained() method to Skeleton class
-	// }
-	// for (size_t i = 0; i < boneCount; i++)
-	// 	bones[i]->_bone->_sorted = worldTarget; // TODO: _sorted is private, need friend access
+	if (worldTarget) {
+		for (size_t i = 0; i < boneCount; i++)
+			skeleton.sortBone(bones[i]->_bone);
+	}
+	skeleton._updateCache.add(this);
+	for (size_t i = 0; i < boneCount; i++) {
+		Bone* bone = bones[i]->_bone;
+		skeleton.sortReset(bone->getChildren());
+		skeleton.constrained(*bone);
+	}
+	for (size_t i = 0; i < boneCount; i++)
+		bones[i]->_bone->_sorted = worldTarget;
 }
 
 bool TransformConstraint::isSourceActive() {
@@ -129,15 +128,15 @@ bool TransformConstraint::isSourceActive() {
 }
 
 /// The bones that will be modified by this transform constraint.
-Vector<BonePose*>& TransformConstraint::getBones() {
+Vector<BonePose *> &TransformConstraint::getBones() {
 	return _bones;
 }
 
 /// The bone whose world transform will be copied to the constrained bones.
-Bone* TransformConstraint::getSource() {
+Bone *TransformConstraint::getSource() {
 	return _source;
 }
 
-void TransformConstraint::setSource(Bone* source) {
+void TransformConstraint::setSource(Bone *source) {
 	_source = source;
 }

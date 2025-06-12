@@ -37,23 +37,23 @@ SliderPose::SliderPose() : _time(0), _mix(0) {
 SliderPose::~SliderPose() {
 }
 
-void SliderPose::set(SliderPose& pose) {
-    _time = pose._time;
-    _mix = pose._mix;
+void SliderPose::set(SliderPose &pose) {
+	_time = pose._time;
+	_mix = pose._mix;
 }
 
 float SliderPose::getTime() {
-    return _time;
+	return _time;
 }
 
 void SliderPose::setTime(float time) {
-    this->_time = time;
+	this->_time = time;
 }
 
 float SliderPose::getMix() {
-    return _mix;
+	return _mix;
 }
 
 void SliderPose::setMix(float mix) {
-    this->_mix = mix;
+	this->_mix = mix;
 }

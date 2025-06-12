@@ -34,12 +34,12 @@
 using namespace spine;
 
 BoneData::BoneData(int index, const String &name, BoneData *parent) : PosedData<BoneLocal>(name),
-																	   _index(index),
-																	   _parent(parent),
-																	   _length(0),
-																	   _color(0.61f, 0.61f, 0.61f, 1.0f),
-																	   _icon(),
-																	   _visible(true) {
+																	  _index(index),
+																	  _parent(parent),
+																	  _length(0),
+																	  _color(0.61f, 0.61f, 0.61f, 1.0f),
+																	  _icon(),
+																	  _visible(true) {
 	assert(index >= 0);
 }
 

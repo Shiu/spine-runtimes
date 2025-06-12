@@ -118,8 +118,7 @@ void Animation::setTimelines(Vector<Timeline *> &timelines) {
 			_timelineIds.put(propertyIds[ii], true);
 		}
 
-		BoneTimeline *boneTimeline = timeline->getRTTI().instanceOf(BoneTimeline1::rtti) ?
-			static_cast<BoneTimeline1 *>(timeline) : NULL;
+		BoneTimeline *boneTimeline = timeline->getRTTI().instanceOf(BoneTimeline1::rtti) ? static_cast<BoneTimeline1 *>(timeline) : NULL;
 		if (boneTimeline) {
 			int boneIndex = boneTimeline->getBoneIndex();
 			if (!boneSet.containsKey(boneIndex)) {

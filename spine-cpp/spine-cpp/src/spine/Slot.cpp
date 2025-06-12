@@ -37,12 +37,11 @@
 
 using namespace spine;
 
-Slot::Slot(SlotData &data, Skeleton &skeleton) : 
-	Posed<SlotData, SlotPose, SlotPose>(data),
-	_skeleton(skeleton),
-	_bone(*skeleton.getBones()[data.getBoneData().getIndex()]),
-	_attachmentState(0) {
-	
+Slot::Slot(SlotData &data, Skeleton &skeleton) : Posed<SlotData, SlotPose, SlotPose>(data),
+												 _skeleton(skeleton),
+												 _bone(*skeleton.getBones()[data.getBoneData().getIndex()]),
+												 _attachmentState(0) {
+
 	if (data.getSetupPose().hasDarkColor()) {
 		_pose._hasDarkColor = true;
 		_constrained._hasDarkColor = true;

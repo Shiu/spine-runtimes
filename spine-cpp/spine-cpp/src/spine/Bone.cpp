@@ -36,18 +36,18 @@ using namespace spine;
 
 RTTI_IMPL_NOPARENT(Bone)
 
-Bone::Bone(BoneData& data, Bone* parent) : PosedActive(data),
-											_parent(parent),
-											_children(),
-											_sorted(false) {
+Bone::Bone(BoneData &data, Bone *parent) : PosedActiveGeneric(data),
+										   _parent(parent),
+										   _children(),
+										   _sorted(false) {
 	_constrained._bone = this;
 	_applied->_bone = this;
 }
 
-Bone* Bone::getParent() {
+Bone *Bone::getParent() {
 	return _parent;
 }
 
-Vector<Bone*>& Bone::getChildren() {
+Vector<Bone *> &Bone::getChildren() {
 	return _children;
 }

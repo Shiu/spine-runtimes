@@ -123,6 +123,8 @@ namespace spine {
 		static int search(Vector<float> &values, float target);
 
 		static int search(Vector<float> &values, float target, int step);
+
+		Vector<int> &getBones();
 	private:
 		Vector<Timeline *> _timelines;
 		HashMap<PropertyId, bool> _timelineIds;

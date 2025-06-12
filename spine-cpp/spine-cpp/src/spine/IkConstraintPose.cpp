@@ -37,7 +37,7 @@ IkConstraintPose::IkConstraintPose() : _bendDirection(0), _compress(false), _str
 IkConstraintPose::~IkConstraintPose() {
 }
 
-void IkConstraintPose::set(IkConstraintPose& pose) {
+void IkConstraintPose::set(IkConstraintPose &pose) {
 	_mix = pose._mix;
 	_softness = pose._softness;
 	_bendDirection = pose._bendDirection;

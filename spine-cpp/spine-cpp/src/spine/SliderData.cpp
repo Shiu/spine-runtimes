@@ -36,24 +36,24 @@ using namespace spine;
 RTTI_IMPL(SliderData, ConstraintData)
 
 SliderData::SliderData(const String &name) : ConstraintDataGeneric<Slider, SliderPose>(name),
-											  _animation(NULL),
-											  _additive(false),
-											  _loop(false),
-											  _bone(NULL),
-											  _property(NULL),
-											  _scale(0.0f),
-											  _local(false) {
+											 _animation(NULL),
+											 _additive(false),
+											 _loop(false),
+											 _bone(NULL),
+											 _property(NULL),
+											 _scale(0.0f),
+											 _local(false) {
 }
 
-Slider* SliderData::create(Skeleton& skeleton) {
+Slider *SliderData::create(Skeleton &skeleton) {
 	return new (__FILE__, __LINE__) Slider(*this, skeleton);
 }
 
-Animation* SliderData::getAnimation() {
+Animation *SliderData::getAnimation() {
 	return _animation;
 }
 
-void SliderData::setAnimation(Animation* animation) {
+void SliderData::setAnimation(Animation *animation) {
 	_animation = animation;
 }
 
@@ -73,19 +73,19 @@ void SliderData::setLoop(bool loop) {
 	_loop = loop;
 }
 
-BoneData* SliderData::getBone() {
+BoneData *SliderData::getBone() {
 	return _bone;
 }
 
-void SliderData::setBone(BoneData* bone) {
+void SliderData::setBone(BoneData *bone) {
 	_bone = bone;
 }
 
-FromProperty* SliderData::getProperty() {
+FromProperty *SliderData::getProperty() {
 	return _property;
 }
 
-void SliderData::setProperty(FromProperty* property) {
+void SliderData::setProperty(FromProperty *property) {
 	_property = property;
 }
 

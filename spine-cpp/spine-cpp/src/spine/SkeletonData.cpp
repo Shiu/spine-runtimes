@@ -251,16 +251,16 @@ Vector<ConstraintData *> &SkeletonData::getConstraints() {
 	// Build unified constraints array by aggregating all constraint types
 	_constraints.clear();
 	for (size_t i = 0, n = _ikConstraints.size(); i < n; i++) {
-		_constraints.add(static_cast<ConstraintData*>(_ikConstraints[i]));
+		_constraints.add(static_cast<ConstraintData *>(_ikConstraints[i]));
 	}
 	for (size_t i = 0, n = _transformConstraints.size(); i < n; i++) {
-		_constraints.add(static_cast<ConstraintData*>(_transformConstraints[i]));
+		_constraints.add(static_cast<ConstraintData *>(_transformConstraints[i]));
 	}
 	for (size_t i = 0, n = _pathConstraints.size(); i < n; i++) {
-		_constraints.add(static_cast<ConstraintData*>(_pathConstraints[i]));
+		_constraints.add(static_cast<ConstraintData *>(_pathConstraints[i]));
 	}
 	for (size_t i = 0, n = _physicsConstraints.size(); i < n; i++) {
-		_constraints.add(static_cast<ConstraintData*>(_physicsConstraints[i]));
+		_constraints.add(static_cast<ConstraintData *>(_physicsConstraints[i]));
 	}
 	return _constraints;
 }

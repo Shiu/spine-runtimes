@@ -55,20 +55,14 @@ namespace spine {
 		friend class SkeletonJson;
 
 	public:
-		ConstraintDataGeneric(const String &name);
-		virtual ~ConstraintDataGeneric();
+		ConstraintDataGeneric(const String &name) : PosedData<P>(name), ConstraintData(name) {
+		}
+		virtual ~ConstraintDataGeneric() {
+		}
 
 		/// Creates a constraint instance.
 		virtual T* create(Skeleton& skeleton) = 0;
 	};
-
-	template<class T, class P>
-	ConstraintDataGeneric<T, P>::ConstraintDataGeneric(const String &name) : PosedData<P>(name), ConstraintData(name) {
-	}
-
-	template<class T, class P>
-	ConstraintDataGeneric<T, P>::~ConstraintDataGeneric() {
-	}
 }
 
 #endif /* Spine_ConstraintData_h */

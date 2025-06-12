@@ -35,13 +35,12 @@
 
 using namespace spine;
 
-SlotData::SlotData(int index, const String& name, BoneData& boneData) :
-	PosedData<SlotPose>(name),
-	_index(index),
-	_boneData(boneData),
-	_attachmentName(),
-	_blendMode(BlendMode_Normal),
-	_visible(true) {
+SlotData::SlotData(int index, const String &name, BoneData &boneData) : PosedData<SlotPose>(name),
+																		_index(index),
+																		_boneData(boneData),
+																		_attachmentName(),
+																		_blendMode(BlendMode_Normal),
+																		_visible(true) {
 	assert(index >= 0);
 }
 
@@ -49,15 +48,15 @@ int SlotData::getIndex() {
 	return _index;
 }
 
-BoneData& SlotData::getBoneData() {
+BoneData &SlotData::getBoneData() {
 	return _boneData;
 }
 
-void SlotData::setAttachmentName(const String& attachmentName) {
+void SlotData::setAttachmentName(const String &attachmentName) {
 	_attachmentName = attachmentName;
 }
 
-const String& SlotData::getAttachmentName() {
+const String &SlotData::getAttachmentName() {
 	return _attachmentName;
 }
 

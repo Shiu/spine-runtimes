@@ -41,11 +41,11 @@ PhysicsConstraintData::PhysicsConstraintData(const String &name) : ConstraintDat
 																   _windGlobal(false), _gravityGlobal(false), _mixGlobal(false) {
 }
 
-BoneData* PhysicsConstraintData::getBone() {
+BoneData *PhysicsConstraintData::getBone() {
 	return _bone;
 }
 
-void PhysicsConstraintData::setBone(BoneData* bone) {
+void PhysicsConstraintData::setBone(BoneData *bone) {
 	_bone = bone;
 }
 

@@ -38,14 +38,14 @@ using namespace spine;
 
 RTTI_IMPL(SlotCurveTimeline, CurveTimeline)
 
-SlotCurveTimeline::SlotCurveTimeline(size_t frameCount, size_t frameEntries, size_t bezierCount, int slotIndex) 
+SlotCurveTimeline::SlotCurveTimeline(size_t frameCount, size_t frameEntries, size_t bezierCount, int slotIndex)
 	: CurveTimeline(frameCount, frameEntries, bezierCount), SlotTimeline(slotIndex) {
 }
 
 SlotCurveTimeline::~SlotCurveTimeline() {
 }
 
-void SlotCurveTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, 
+void SlotCurveTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
 							  MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);

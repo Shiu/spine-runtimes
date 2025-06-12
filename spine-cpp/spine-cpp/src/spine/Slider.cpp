@@ -44,69 +44,30 @@ RTTI_IMPL(Slider, Constraint)
 
 float Slider::_offsets[6];
 
-Slider::Slider(SliderData& data, Skeleton& skeleton) : ConstraintGeneric<Slider, SliderData, SliderPose>(data), _bone(NULL) {
+Slider::Slider(SliderData &data, Skeleton &skeleton) : ConstraintGeneric<Slider, SliderData, SliderPose>(data), _bone(NULL) {
 	if (data.getBone() != NULL) {
 		_bone = skeleton.findBone(data.getBone()->getName());
 	}
 }
 
-Slider* Slider::copy(Skeleton& skeleton) {
-	Slider* copy = new (__FILE__, __LINE__) Slider(_data, skeleton);
+Slider *Slider::copy(Skeleton &skeleton) {
+	Slider *copy = new (__FILE__, __LINE__) Slider(_data, skeleton);
 	copy->_pose.set(_pose);
 	return copy;
 }
 
-void Slider::update(Skeleton& skeleton, Physics physics) {
-	SliderPose& p = *_applied;
-	if (p.getMix() == 0) return;
-
-	Animation* animation = _data.getAnimation();
-	if (_bone != NULL) {
-		if (!_bone->isActive()) return;
-		if (_data.getLocal()) _bone->getAppliedPose().validateLocalTransform(skeleton);
-		p.setTime((_data.getProperty()->value(_bone->getAppliedPose(), _data.getLocal(), _offsets) - _data.getProperty()->offset) * _data.getScale());
-		if (_data.getLoop()) {
-			// TODO: Implement when Animation is ported
-			p.setTime(animation->getDuration() + MathUtil::fmod(p.getTime(), animation->getDuration()));
-		} else {
-			p.setTime(MathUtil::max(0.0f, p.getTime()));
-		}
-	}
-
+void Slider::update(Skeleton &skeleton, Physics physics) {
 	// TODO: Implement when Animation is ported
-	// Vector<Bone*>& bones = skeleton.getBones();
-	// Vector<size_t>& indices = animation->getBones();
-	// for (size_t i = 0, n = indices.size(); i < n; i++) {
-	//     bones[indices[i]]->getAppliedPose().modifyLocal(skeleton);
-	// }
-
-	// TODO: Implement when Animation is ported
-	// animation->apply(skeleton, p.getTime(), p.getTime(), _data.getLoop(), NULL, p.getMix(),
-	//	_data.getAdditive() ? MixBlend_Add : MixBlend_Replace, MixDirection_In);
 }
 
-void Slider::sort(Skeleton& skeleton) {
+void Slider::sort(Skeleton &skeleton) {
 	// TODO: Implement when Animation is ported
-	// if (_bone != NULL && !_data.getLocal()) skeleton.sortBone(_bone);
-	skeleton.getUpdateCacheList().add(this);
-
-	// TODO: Implement when Animation is ported
-	// Vector<Bone*>& bones = skeleton.getBones();
-	// Vector<size_t>& indices = _data.getAnimation()->getBones();
-	// for (size_t i = 0, n = indices.size(); i < n; i++) {
-	//     Bone* bone = bones[indices[i]];
-	//     bone->setSorted(false);
-	//     skeleton.sortReset(bone->getChildren());
-	//     skeleton.constrained(bone);
-	// }
-
-	// TODO: Implement when Animation is ported - timeline processing
 }
 
-Bone* Slider::getBone() {
+Bone *Slider::getBone() {
 	return _bone;
 }
 
-void Slider::setBone(Bone* bone) {
+void Slider::setBone(Bone *bone) {
 	_bone = bone;
 }

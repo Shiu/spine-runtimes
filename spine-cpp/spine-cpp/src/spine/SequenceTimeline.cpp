@@ -43,7 +43,7 @@ using namespace spine;
 
 RTTI_IMPL(SequenceTimeline, Timeline)
 
-SequenceTimeline::SequenceTimeline(size_t frameCount, int slotIndex, Attachment *attachment) : Timeline(frameCount, ENTRIES), SlotTimeline(slotIndex), _attachment((HasTextureRegion*)attachment) {
+SequenceTimeline::SequenceTimeline(size_t frameCount, int slotIndex, Attachment *attachment) : Timeline(frameCount, ENTRIES), SlotTimeline(slotIndex), _attachment((HasTextureRegion *) attachment) {
 	int sequenceId = 0;
 	if (attachment->getRTTI().instanceOf(RegionAttachment::rtti)) sequenceId = ((RegionAttachment *) attachment)->getSequence()->getId();
 	if (attachment->getRTTI().instanceOf(MeshAttachment::rtti)) sequenceId = ((MeshAttachment *) attachment)->getSequence()->getId();
@@ -70,15 +70,15 @@ void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vec
 
 	Slot *slot = skeleton.getSlots()[getSlotIndex()];
 	if (!slot->getBone().isActive()) return;
-	SlotPose& pose = appliedPose ? slot->getAppliedPose() : slot->getPose();
+	SlotPose &pose = appliedPose ? slot->getAppliedPose() : slot->getPose();
 
 	Attachment *slotAttachment = pose.getAttachment();
-	if (slotAttachment != (Attachment*)_attachment) {
-		if (slotAttachment == NULL || !slotAttachment->getRTTI().instanceOf(VertexAttachment::rtti) || ((VertexAttachment *) slotAttachment)->getTimelineAttachment() != (Attachment*)_attachment) return;
+	if (slotAttachment != (Attachment *) _attachment) {
+		if (slotAttachment == NULL || !slotAttachment->getRTTI().instanceOf(VertexAttachment::rtti) || ((VertexAttachment *) slotAttachment)->getTimelineAttachment() != (Attachment *) _attachment) return;
 	}
 	Sequence *sequence = NULL;
-	if (((Attachment*)_attachment)->getRTTI().instanceOf(RegionAttachment::rtti)) sequence = ((RegionAttachment *) _attachment)->getSequence();
-	if (((Attachment*)_attachment)->getRTTI().instanceOf(MeshAttachment::rtti)) sequence = ((MeshAttachment *) _attachment)->getSequence();
+	if (((Attachment *) _attachment)->getRTTI().instanceOf(RegionAttachment::rtti)) sequence = ((RegionAttachment *) _attachment)->getSequence();
+	if (((Attachment *) _attachment)->getRTTI().instanceOf(MeshAttachment::rtti)) sequence = ((MeshAttachment *) _attachment)->getSequence();
 	if (!sequence) return;
 
 	if (direction == MixDirection_Out) {

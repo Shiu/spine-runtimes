@@ -64,7 +64,7 @@ void DeformTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vecto
 	Slot *slotP = skeleton._slots[_slotIndex];
 	Slot &slot = *slotP;
 	if (!slot._bone.isActive()) return;
-	SlotPose& pose = appliedPose ? *slot._applied : slot._pose;
+	SlotPose &pose = appliedPose ? *slot._applied : slot._pose;
 
 	apply(slot, pose, time, alpha, blend);
 }
@@ -124,7 +124,7 @@ void DeformTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, 
 	deformArray.setSize(vertexCount, 0);
 	Vector<float> &deform = deformArray;
 
-	if (time >= frames[frames.size() - 1]) { // Time is after last frame.
+	if (time >= frames[frames.size() - 1]) {// Time is after last frame.
 		Vector<float> &lastVertices = vertices[frames.size() - 1];
 		if (alpha == 1) {
 			if (blend == MixBlend_Add) {
@@ -266,7 +266,7 @@ void DeformTimeline::setBezier(size_t bezier, size_t frame, float value, float t
 	SP_UNUSED(value2);
 	Vector<float> &curves = _curves;
 	size_t i = getFrameCount() + bezier * BEZIER_SIZE;
-	if (value == 0) curves[frame] = BEZIER + (float)i;
+	if (value == 0) curves[frame] = BEZIER + (float) i;
 	float tmpx = (time1 - cx1 * 2 + cx2) * 0.03f, tmpy = cy2 * 0.03f - cy1 * 0.06f;
 	float dddx = ((cx1 - cx2) * 3 - time1 + time2) * 0.006f, dddy = (cy1 - cy2 + 0.33333333f) * 0.018f;
 	float ddx = tmpx * 2 + dddx, ddy = tmpy * 2 + dddy;
@@ -286,7 +286,7 @@ void DeformTimeline::setBezier(size_t bezier, size_t frame, float value, float t
 
 float DeformTimeline::getCurvePercent(float time, int frame) {
 	Vector<float> &curves = _curves;
-	int i = (int)curves[frame];
+	int i = (int) curves[frame];
 	switch (i) {
 		case LINEAR: {
 			float x = _frames[frame];

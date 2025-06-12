@@ -35,9 +35,15 @@
 
 namespace spine {
 	class SP_API Posed {
-		public:
-			Posed() {}
-			virtual ~Posed() {}
+	public:
+		Posed() {}
+		virtual ~Posed() {}
+
+		virtual void resetApplied() = 0;
+
+		virtual void pose() = 0;
+
+		virtual void constrained() = 0;
 	};
 
 	template<class D, class P, class A>
@@ -72,16 +78,10 @@ namespace spine {
 		friend class InheritTimeline;
 
 	public:
-		Posed(D& data) : _data(data), _pose(), _constrained() {
-			static_assert(std::is_base_of<P, A>::value, "A must extend P");
-			// Match Java behavior: applied initially points to pose
-			// Note: Both _pose and _constrained are stored as type A to match Java's
-			// "new BonePose(), new BonePose()" pattern. For most classes P==A, but
-			// Bone uses P=BoneLocal, A=BonePose where BonePose extends BoneLocal.
-			_applied = &_pose;
+		PosedGeneric(D &data) : _data(data), _pose(), _constrained(), _applied(&_pose) {
 		}
 
-		virtual ~Posed() {
+		virtual ~PosedGeneric() {
 		}
 
 		void setupPose() {
@@ -89,26 +89,38 @@ namespace spine {
 		}
 
 		/// The constraint's setup pose data.
-		D& getData() {
+		D &getData() {
 			return _data;
 		}
 
-		P& getPose() {
+		P &getPose() {
 			// Upcast A to P (safe due to static_assert that A extends P)
 			// For most classes P==A so this is a no-op, but for Bone it casts BonePose->BoneLocal
 			return _pose;
 		}
 
-		A& getAppliedPose() {
+		A &getAppliedPose() {
 			return *_applied;
 		}
 
+		virtual void resetApplied() {
+			_constrained.set(_pose);
+		}
+
+		virtual void pose() {
+			_applied = &_pose;
+		}
+
+		virtual void constrained() {
+			_applied = &_constrained;
+		}
+
 	protected:
-		D& _data;
-		A _pose;        ///< Stored as A type (concrete pose type) to match Java behavior
-		A _constrained; ///< Stored as A type (concrete pose type) to match Java behavior
-		A* _applied;    ///< Points to either _pose or _constrained, reassignable like Java
+		D &_data;
+		A _pose;       ///< Stored as A type (concrete pose type) to match Java behavior
+		A _constrained;///< Stored as A type (concrete pose type) to match Java behavior
+		A *_applied;   ///< Points to either _pose or _constrained, reassignable like Java
 	};
-}
+}// namespace spine
 
 #endif /* Spine_Posed_h */

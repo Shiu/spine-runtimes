@@ -49,8 +49,8 @@ Sequence::Sequence(int count) : _id(nextID()),
 Sequence::~Sequence() {
 }
 
-Sequence* Sequence::copy() {
-	Sequence* copy = new (__FILE__, __LINE__) Sequence((int)_regions.size());
+Sequence *Sequence::copy() {
+	Sequence *copy = new (__FILE__, __LINE__) Sequence((int) _regions.size());
 	for (size_t i = 0; i < _regions.size(); i++) {
 		copy->_regions[i] = _regions[i];
 	}
@@ -60,7 +60,7 @@ Sequence* Sequence::copy() {
 	return copy;
 }
 
-void Sequence::apply(SlotPose* slot, Attachment* attachment) {
+void Sequence::apply(SlotPose *slot, Attachment *attachment) {
 	int index = slot->getSequenceIndex();
 	if (index == -1) index = _setupIndex;
 	if (index >= (int) _regions.size()) index = (int) _regions.size() - 1;
