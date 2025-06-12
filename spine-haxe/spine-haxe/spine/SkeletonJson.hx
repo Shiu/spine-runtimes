@@ -346,7 +346,7 @@ class SkeletonJson {
 						data.setup.time = getFloat(constraintMap, "time", 0);
 						data.setup.mix = getFloat(constraintMap, "mix", 1);
 
-						var boneName = constraintMap.getString("bone", null);
+						var boneName = getString(constraintMap, "bone", null);
 						if (boneName != null) {
 							data.bone = skeletonData.findBone(boneName);
 							if (data.bone == null) throw new SpineException("Slider bone not found: " + boneName);
@@ -1116,7 +1116,7 @@ class SkeletonJson {
 			var constraint = skeletonData.findConstraint(sliderName, SliderData);
 			if (constraint == null) throw new SpineException("Slider not found: " + sliderName);
 			var index = skeletonData.constraints.indexOf(constraint);
-			var timelineMap:Dynamic = Reflect.field(physics, sliderName);
+			var timelineMap:Dynamic = Reflect.field(sliders, sliderName);
 			for (timelineName in Reflect.fields(timelineMap)) {
 				timelineMap = Reflect.field(timelineMap, timelineName);
 				keyMap = timelineMap[0];
