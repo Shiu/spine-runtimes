@@ -40,6 +40,7 @@
 
 namespace spine {
 	class Timeline;
+	class BoneTimeline;
 
 	class Skeleton;
 
@@ -104,11 +105,13 @@ namespace spine {
 		/// Applies all the animation's timelines to the specified skeleton.
 		/// See also Timeline::apply(Skeleton&, float, float, Vector, float, MixPose, MixDirection)
 		void apply(Skeleton &skeleton, float lastTime, float time, bool loop, Vector<Event *> *pEvents, float alpha,
-				   MixBlend blend, MixDirection direction);
+				   MixBlend blend, MixDirection direction, bool appliedPose);
 
 		const String &getName();
 
 		Vector<Timeline *> &getTimelines();
+
+		void setTimelines(Vector<Timeline *> &timelines);
 
 		bool hasTimeline(Vector<PropertyId> &ids);
 
@@ -123,6 +126,7 @@ namespace spine {
 	private:
 		Vector<Timeline *> _timelines;
 		HashMap<PropertyId, bool> _timelineIds;
+		Vector<int> _bones;
 		float _duration;
 		String _name;
 	};

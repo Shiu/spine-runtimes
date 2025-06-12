@@ -31,6 +31,7 @@
 #include <spine/Event.h>
 #include <spine/Skeleton.h>
 #include <spine/Timeline.h>
+#include <spine/BoneTimeline.h>
 
 #include <spine/ContainerUtil.h>
 
@@ -38,16 +39,13 @@
 
 using namespace spine;
 
-Animation::Animation(const String &name, Vector<Timeline *> &timelines, float duration) : _timelines(timelines),
+Animation::Animation(const String &name, Vector<Timeline *> &timelines, float duration) : _timelines(),
 																						  _timelineIds(),
+																						  _bones(),
 																						  _duration(duration),
 																						  _name(name) {
 	assert(_name.length() > 0);
-	for (size_t i = 0; i < timelines.size(); i++) {
-		Vector<PropertyId> propertyIds = timelines[i]->getPropertyIds();
-		for (size_t ii = 0; ii < propertyIds.size(); ii++)
-			_timelineIds.put(propertyIds[ii], true);
-	}
+	setTimelines(timelines);
 }
 
 bool Animation::hasTimeline(Vector<PropertyId> &ids) {
@@ -62,7 +60,7 @@ Animation::~Animation() {
 }
 
 void Animation::apply(Skeleton &skeleton, float lastTime, float time, bool loop, Vector<Event *> *pEvents, float alpha,
-					  MixBlend blend, MixDirection direction) {
+					  MixBlend blend, MixDirection direction, bool appliedPose) {
 	if (loop && _duration != 0) {
 		time = MathUtil::fmod(time, _duration);
 		if (lastTime > 0) {
@@ -71,7 +69,7 @@ void Animation::apply(Skeleton &skeleton, float lastTime, float time, bool loop,
 	}
 
 	for (size_t i = 0, n = _timelines.size(); i < n; ++i) {
-		_timelines[i]->apply(skeleton, lastTime, time, pEvents, alpha, blend, direction);
+		_timelines[i]->apply(skeleton, lastTime, time, pEvents, alpha, blend, direction, appliedPose);
 	}
 }
 
@@ -104,4 +102,36 @@ int Animation::search(Vector<float> &frames, float target, int step) {
 	for (size_t i = step; i < n; i += step)
 		if (frames[i] > target) return (int) (i - step);
 	return (int) (n - step);
+}
+
+void Animation::setTimelines(Vector<Timeline *> &timelines) {
+	_timelines = timelines;
+	
+	size_t n = timelines.size();
+	_timelineIds.clear();
+	_bones.clear();
+	
+	HashMap<int, bool> boneSet;
+	for (size_t i = 0; i < n; i++) {
+		Timeline *timeline = timelines[i];
+		Vector<PropertyId> propertyIds = timeline->getPropertyIds();
+		for (size_t ii = 0; ii < propertyIds.size(); ii++) {
+			_timelineIds.put(propertyIds[ii], true);
+		}
+		
+		BoneTimeline *boneTimeline = nullptr;
+		if (timeline->getRTTI().instanceOf(BoneTimeline1::rtti)) {
+			boneTimeline = static_cast<BoneTimeline1 *>(timeline);
+		} else if (timeline->getRTTI().instanceOf(BoneTimeline2::rtti)) {
+			boneTimeline = static_cast<BoneTimeline2 *>(timeline);
+		}
+		
+		if (boneTimeline) {
+			int boneIndex = boneTimeline->getBoneIndex();
+			if (!boneSet.containsKey(boneIndex)) {
+				boneSet.put(boneIndex, true);
+				_bones.add(boneIndex);
+			}
+		}
+	}
 }
