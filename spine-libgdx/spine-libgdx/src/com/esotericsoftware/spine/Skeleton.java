@@ -155,10 +155,8 @@ public class Skeleton {
 		resetCache.clear();
 
 		Slot[] slots = this.slots.items;
-		for (int i = 0, n = this.slots.size; i < n; i++) {
-			Slot slot = slots[i];
-			slot.applied = slot.pose;
-		}
+		for (int i = 0, n = this.slots.size; i < n; i++)
+			slots[i].pose();
 
 		int boneCount = bones.size;
 		Bone[] bones = this.bones.items;
@@ -166,7 +164,7 @@ public class Skeleton {
 			Bone bone = bones[i];
 			bone.sorted = bone.data.skinRequired;
 			bone.active = !bone.sorted;
-			bone.applied = (BonePose)bone.pose;
+			bone.pose();
 		}
 		if (skin != null) {
 			BoneData[] skinBones = skin.bones.items;
@@ -182,10 +180,8 @@ public class Skeleton {
 
 		Constraint[] constraints = this.constraints.items;
 		int n = this.constraints.size;
-		for (int i = 0; i < n; i++) {
-			Constraint constraint = constraints[i];
-			constraint.applied = constraint.pose;
-		}
+		for (int i = 0; i < n; i++)
+			constraints[i].pose();
 		for (int i = 0; i < n; i++) {
 			Constraint<?, ?, ?> constraint = constraints[i];
 			constraint.active = constraint.isSourceActive()
@@ -204,7 +200,7 @@ public class Skeleton {
 
 	void constrained (Posed object) {
 		if (object.pose == object.applied) {
-			object.applied = object.constrained;
+			object.constrained();
 			resetCache.add(object);
 		}
 	}
@@ -236,10 +232,8 @@ public class Skeleton {
 		update++;
 
 		Posed[] resetCache = this.resetCache.items;
-		for (int i = 0, n = this.resetCache.size; i < n; i++) {
-			Posed object = resetCache[i];
-			object.applied.set(object.pose);
-		}
+		for (int i = 0, n = this.resetCache.size; i < n; i++)
+			resetCache[i].reset();
 
 		Object[] updateCache = this.updateCache.items;
 		for (int i = 0, n = this.updateCache.size; i < n; i++)
@@ -257,10 +251,8 @@ public class Skeleton {
 		update++;
 
 		Posed[] resetCache = this.resetCache.items;
-		for (int i = 0, n = this.resetCache.size; i < n; i++) {
-			Posed object = resetCache[i];
-			object.applied.set(object.pose);
-		}
+		for (int i = 0, n = this.resetCache.size; i < n; i++)
+			resetCache[i].reset();
 
 		// Apply the parent bone transform to the root bone. The root bone always inherits scale, rotation and reflection.
 		BonePose rootBone = getRootBone().applied;

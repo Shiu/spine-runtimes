@@ -9,7 +9,7 @@ abstract public class PosedActive< //
 
 	boolean active;
 
-	public PosedActive (D data, P pose, A constrained) {
+	public PosedActive (D data, A pose, A constrained) {
 		super(data, pose, constrained);
 		setupPose();
 	}
