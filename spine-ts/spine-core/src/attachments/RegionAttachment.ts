@@ -70,7 +70,7 @@ export class RegionAttachment extends Attachment implements HasTextureRegion {
 
 	/** For each of the 4 vertices, a pair of <code>x,y</code> values that is the local position of the vertex.
 	 *
-	 * See {@link #updateOffset()}. */
+	 * See {@link #updateRegion()}. */
 	offset = Utils.newFloatArray(8);
 
 	uvs = Utils.newFloatArray(8);

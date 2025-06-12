@@ -39,7 +39,7 @@ import { SliderPose } from "./SliderPose";
  *
  * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
 export class Slider extends Constraint<Slider, SliderData, SliderPose> {
-	private static readonly offsets = new Array<number>();
+	private static readonly offsets = [0, 0, 0, 0, 0, 0];
 
 	bone: Bone | null = null;
 

@@ -343,7 +343,7 @@ export class SkeletonJson {
 							if (!data.bone) throw new Error("Slider bone not found: " + boneName);
 							const property = constraintMap.property;
 							data.property = this.fromProperty(property);
-							data.property.offset = constraintMap.getFloat("offset", 0) * this.propertyScale(property, scale);
+							data.property.offset = getValue(constraintMap, "offset", 0) * this.propertyScale(property, scale);
 							data.scale = getValue(constraintMap, "scale", 1);
 							data.local = getValue(constraintMap, "local", false);
 						}
