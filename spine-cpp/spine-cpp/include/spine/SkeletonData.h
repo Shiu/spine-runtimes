@@ -32,6 +32,7 @@
 
 #include <spine/Vector.h>
 #include <spine/SpineString.h>
+#include <spine/ConstraintData.h>
 
 namespace spine {
 	class BoneData;

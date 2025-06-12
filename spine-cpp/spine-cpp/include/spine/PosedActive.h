@@ -34,16 +34,11 @@
 #include <spine/Posed.h>
 
 namespace spine {
-	template<class D, class P, class A>
-	class SP_API PosedActive : public Posed<D, P, A> {
-		friend class SlotCurveTimeline;
 
-	protected:
-		bool _active;
-
+	class SP_API PosedActive {
 	public:
-		PosedActive(D& data);
-		virtual ~PosedActive();
+		PosedActive() {}
+		virtual ~PosedActive() {}
 
 		/// Returns false when this constraint won't be updated by
 		/// Skeleton::updateWorldTransform() because a skin is required and the
@@ -53,21 +48,21 @@ namespace spine {
 		/// @see PosedData::getSkinRequired()
 		/// @see Skeleton::updateCache()
 		bool isActive();
+
+	protected:
+		bool _active;
 	};
 
 	template<class D, class P, class A>
-	PosedActive<D, P, A>::PosedActive(D& data) : Posed<D, P, A>(data), _active(false) {
-		this->setupPose();
-	}
+	class SP_API PosedActiveGeneric : public PosedGeneric<D, P, A> {
+		friend class SlotCurveTimeline;
 
-	template<class D, class P, class A>
-	PosedActive<D, P, A>::~PosedActive() {
-	}
-
-	template<class D, class P, class A>
-	bool PosedActive<D, P, A>::isActive() {
-		return _active;
-	}
-}
+	public:
+		PosedActive(D &data): PosedGeneric<D, P, A>(data), _active(false) {
+			this->setupPose();
+		}
+		virtual ~PosedActive() {}
+	};
+}// namespace spine
 
 #endif /* SPINE_POSEDACTIVE_H_ */

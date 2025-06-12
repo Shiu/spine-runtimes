@@ -38,7 +38,7 @@
 
 using namespace spine;
 
-RTTI_IMPL(BoneTimeline, BoneTimeline)
+RTTI_IMPL_NOPARENT(BoneTimeline)
 
 RTTI_IMPL(BoneTimeline1, CurveTimeline1)
 

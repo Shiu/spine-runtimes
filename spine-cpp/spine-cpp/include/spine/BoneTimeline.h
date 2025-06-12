@@ -40,7 +40,7 @@ namespace spine {
 
     /// An interface for timelines which change the property of a bone.
     class SP_API BoneTimeline {
-		RTTI_DECL
+		RTTI_DECL_NOPARENT
 
     public:
         BoneTimeline(int boneIndex) : _boneIndex(boneIndex) {}

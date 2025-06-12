@@ -60,13 +60,6 @@
 #include <spine/EventData.h>
 #include <spine/EventTimeline.h>
 #include <spine/Extension.h>
-#include <spine/FromProperty.h>
-#include <spine/FromRotate.h>
-#include <spine/FromScaleX.h>
-#include <spine/FromScaleY.h>
-#include <spine/FromShearY.h>
-#include <spine/FromX.h>
-#include <spine/FromY.h>
 #include <spine/HasRendererObject.h>
 #include <spine/HashMap.h>
 #include <spine/IkConstraint.h>

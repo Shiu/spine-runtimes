@@ -296,7 +296,7 @@ void IkConstraint::sort(Skeleton& skeleton) {
 	skeleton.sortBone(_target);
 	Bone* parent = _bones[0]->_bone;
 	skeleton.sortBone(parent);
-	skeleton.updateCache.add(this);
+	skeleton._updateCache.add(this);
 	parent->_sorted = false;
 	skeleton.sortReset(parent->_children);
 	skeleton.constrained(parent);

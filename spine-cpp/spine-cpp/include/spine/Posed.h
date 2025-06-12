@@ -34,8 +34,14 @@
 #include <type_traits>
 
 namespace spine {
+	class SP_API Posed {
+		public:
+			Posed() {}
+			virtual ~Posed() {}
+	};
+
 	template<class D, class P, class A>
-	class SP_API Posed : public SpineObject {
+	class SP_API PosedGeneric : public Posed, public SpineObject {
 		friend class AnimationState;
 		friend class BoneTimeline1;
 		friend class BoneTimeline2;
@@ -100,7 +106,7 @@ namespace spine {
 	protected:
 		D& _data;
 		A _pose;        ///< Stored as A type (concrete pose type) to match Java behavior
-		A _constrained; ///< Stored as A type (concrete pose type) to match Java behavior  
+		A _constrained; ///< Stored as A type (concrete pose type) to match Java behavior
 		A* _applied;    ///< Points to either _pose or _constrained, reassignable like Java
 	};
 }
