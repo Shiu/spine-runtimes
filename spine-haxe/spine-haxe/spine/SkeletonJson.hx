@@ -111,7 +111,7 @@ class SkeletonJson {
 			skeletonData.y = getFloat(skeletonMap, "y");
 			skeletonData.width = getFloat(skeletonMap, "width");
 			skeletonData.height = getFloat(skeletonMap, "height");
-			skeletonData.referenceScale = getFloat(skeletonMap, "referenceScale", 100);
+			skeletonData.referenceScale = getFloat(skeletonMap, "referenceScale", 100) * scale;
 			skeletonData.fps = getFloat(skeletonMap, "fps");
 			skeletonData.imagesPath = getString(skeletonMap, "images", "");
 			skeletonData.audioPath = getString(skeletonMap, "audio", "");

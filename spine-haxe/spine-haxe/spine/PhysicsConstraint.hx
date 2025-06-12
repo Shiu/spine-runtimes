@@ -59,8 +59,8 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 	public var scaleOffset = 0.;
 	public var scaleLag = 0.;
 	public var scaleVelocity = 0.;
-	public var remaining:Float = 0;
-	public var lastTime:Float = 0;
+	public var remaining = 0.;
+	public var lastTime = 0.;
 
 	public function new(data: PhysicsConstraintData, skeleton: Skeleton) {
 		super(data, new PhysicsConstraintPose(), new PhysicsConstraintPose());
@@ -105,8 +105,8 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 	/** Rotates the physics constraint so next update(Physics) forces are applied as if the bone rotated around the
 	 * specified point in world space. */
 	public function rotate (x:Float, y:Float, degrees:Float):Void {
-		var r:Float = degrees * MathUtils.degRad, cos:Float = Math.cos(r), sin:Float = Math.sin(r);
-		var dx:Float = cx - x, dy:Float = cy - y;
+		var r = degrees * MathUtils.degRad, cos = Math.cos(r), sin = Math.sin(r);
+		var dx = cx - x, dy = cy - y;
 		translate(dx * cos - dy * sin - dx, dx * sin + dy * cos - dy);
 	}
 

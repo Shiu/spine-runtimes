@@ -36,11 +36,11 @@ class PhysicsConstraintMassTimeline extends PhysicsConstraintTimeline {
 	}
 
 	public function get (pose: PhysicsConstraintPose):Float {
-		return pose.massInverse;
+		return 1 / pose.massInverse;
 	}
 
 	public function set (pose: PhysicsConstraintPose, value:Float):Void {
-		pose.massInverse = value;
+		pose.massInverse = 1 / value;
 	}
 
 	public function global (constraint: PhysicsConstraintData):Bool {

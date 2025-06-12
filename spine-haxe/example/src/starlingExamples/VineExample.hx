@@ -69,8 +69,7 @@ class VineExample extends Scene {
 	public function onTouch(e:TouchEvent) {
 		var touch = e.getTouch(this);
 		if (touch != null && touch.phase == TouchPhase.ENDED) {
-			SceneManager.getInstance().switchScene(new CelestialCircusExample());
-			// SceneManager.getInstance().switchScene(new SackExample());
+			SceneManager.getInstance().switchScene(new SackExample());
 		}
 	}
 }
