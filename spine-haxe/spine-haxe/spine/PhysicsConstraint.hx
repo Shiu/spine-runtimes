@@ -173,8 +173,8 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 							yLag = yOffset - ys;
 						}
 						z = Math.max(0, 1 - a / t);
-						if (x) bone.worldX += xOffset * mix * this.data.x;
-						if (y) bone.worldY += yOffset * mix * this.data.y;
+						if (x) bone.worldX += (xOffset - xLag * z) * mix * data.x;
+						if (y) bone.worldY += (yOffset - yLag * z) * mix * data.y;
 					}
 					if (rotateOrShearX || scaleX) {
 						var ca = Math.atan2(bone.c, bone.a), c = 0., s = 0., mr = 0., dx = cx - bone.worldX, dy = cy - bone.worldY;
@@ -205,7 +205,6 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 							var r = l * bone.worldScaleX - scaleLag * Math.max(0, 1 - aa / t);
 							if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
 						}
-						a = remaining;
 						if (a >= t) {
 							if (d == -1) {
 								d = Math.pow(p.damping, 60 * t);
@@ -213,7 +212,7 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 								e = p.strength;
 							}
 							var g = Bone.yDown ? -p.gravity : p.gravity;
-							var rs = rotateOffset, ss = scaleLag, h = l / f,
+							var rs = rotateOffset, ss = scaleOffset, h = l / f,
 								ax = p.wind * skeleton.windX + g * skeleton.gravityX,
 								ay = p.wind * skeleton.windY + g * skeleton.gravityY;
 							while (true) {
@@ -250,12 +249,9 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 		}
 
 		if (rotateOrShearX) {
-			var o:Float = (rotateOffset - rotateLag * z) * mix,
-				s:Float = 0,
-				c:Float = 0,
-				a:Float = 0;
+			var o = (rotateOffset - rotateLag * z) * mix, s = 0., c = 0., a = 0.;
 			if (data.shearX > 0) {
-				var r:Float = 0;
+				var r = 0.;
 				if (data.rotate > 0) {
 					r = o * data.rotate;
 					s = Math.sin(r);
@@ -283,7 +279,7 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 			}
 		}
 		if (scaleX) {
-			var s:Float = 1 + (scaleOffset - scaleLag * z) * mix * this.data.scaleX;
+			var s = 1 + (scaleOffset - scaleLag * z) * mix * data.scaleX;
 			bone.a *= s;
 			bone.c *= s;
 		}

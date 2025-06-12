@@ -44,12 +44,6 @@ class PhysicsConstraintData extends ConstraintData<PhysicsConstraint, PhysicsCon
 	public var shearX = 0.;
 	public var limit = 0.;
 	public var step = 0.;
-	public var inertia = 0.;
-	public var strength = 0.;
-	public var damping = 0.;
-	public var massInverse = 0.;
-	public var wind = 0.;
-	public var gravity = 0.;
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
 	public var mix = 0.;
 	public var inertiaGlobal = false;
