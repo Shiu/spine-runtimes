@@ -36,6 +36,7 @@
 #include <spine/SpineString.h>
 #include <spine/Color.h>
 #include <spine/Physics.h>
+#include <spine/Update.h>
 
 namespace spine {
 	class SkeletonData;
@@ -251,19 +252,19 @@ namespace spine {
         void update(float delta);
 
         float getWindX();
-        
+
         void setWindX(float windX);
-        
+
         float getWindY();
-        
+
         void setWindY(float windY);
-        
+
         float getGravityX();
-        
+
         void setGravityX(float gravityX);
-        
+
         float getGravityY();
-        
+
         void setGravityY(float gravityY);
 
         /// Rotates the physics constraint so next {@link #update(Physics)} forces are applied as if the bone rotated around the

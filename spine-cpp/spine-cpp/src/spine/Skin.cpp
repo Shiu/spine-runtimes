@@ -147,9 +147,9 @@ void Skin::attachAll(Skeleton &skeleton, Skin &oldSkin) {
 		int slotIndex = (int) entry._slotIndex;
 		Slot *slot = slots[slotIndex];
 
-		if (slot->getAttachment() == entry._attachment) {
+		if (slot->getPose().getAttachment() == entry._attachment) {
 			Attachment *attachment = getAttachment(slotIndex, entry._name);
-			if (attachment) slot->setAttachment(attachment);
+			if (attachment) slot->getPose().setAttachment(attachment);
 		}
 	}
 }
