@@ -262,12 +262,12 @@ class SkeletonJson {
 							if (from.to.length > 0) data.properties.push(from);
 						}
 
-						data.offsets[0] = getFloat(constraintMap, "rotation", 0);
-						data.offsets[1] = getFloat(constraintMap, "x", 0) * scale;
-						data.offsets[2] = getFloat(constraintMap, "y", 0) * scale;
-						data.offsets[3] = getFloat(constraintMap, "scaleX", 0);
-						data.offsets[4] = getFloat(constraintMap, "scaleY", 0);
-						data.offsets[5] = getFloat(constraintMap, "shearY", 0);
+						data.offsets[TransformConstraintData.ROTATION] = getFloat(constraintMap, "rotation", 0);
+						data.offsets[TransformConstraintData.X] = getFloat(constraintMap, "x", 0) * scale;
+						data.offsets[TransformConstraintData.Y] = getFloat(constraintMap, "y", 0) * scale;
+						data.offsets[TransformConstraintData.SCALEX] = getFloat(constraintMap, "scaleX", 0);
+						data.offsets[TransformConstraintData.SCALEY] = getFloat(constraintMap, "scaleY", 0);
+						data.offsets[TransformConstraintData.SHEARY] = getFloat(constraintMap, "shearY", 0);
 
 						var setup = data.setup;
 						if (rotate) setup.mixRotate = getFloat(constraintMap, "mixRotate", 1);

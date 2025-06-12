@@ -307,12 +307,12 @@ class SkeletonBinary {
 						froms[ii] = from;
 					}
 					flags = input.readByte();
-					if ((flags & 1) != 0) data.offsets[0] = input.readFloat();
-					if ((flags & 2) != 0) data.offsets[1] = input.readFloat() * scale;
-					if ((flags & 4) != 0) data.offsets[2] = input.readFloat() * scale;
-					if ((flags & 8) != 0) data.offsets[3] = input.readFloat();
-					if ((flags & 16) != 0) data.offsets[4] = input.readFloat();
-					if ((flags & 32) != 0) data.offsets[5] = input.readFloat();
+					if ((flags & 1) != 0) data.offsets[TransformConstraintData.ROTATION] = input.readFloat();
+					if ((flags & 2) != 0) data.offsets[TransformConstraintData.X] = input.readFloat() * scale;
+					if ((flags & 4) != 0) data.offsets[TransformConstraintData.Y] = input.readFloat() * scale;
+					if ((flags & 8) != 0) data.offsets[TransformConstraintData.SCALEX] = input.readFloat();
+					if ((flags & 16) != 0) data.offsets[TransformConstraintData.SCALEY] = input.readFloat();
+					if ((flags & 32) != 0) data.offsets[TransformConstraintData.SHEARY] = input.readFloat();
 					flags = input.readByte();
 					var setup = data.setup;
 					if ((flags & 1) != 0) setup.mixRotate = input.readFloat();

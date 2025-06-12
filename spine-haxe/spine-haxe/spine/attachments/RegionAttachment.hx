@@ -68,7 +68,7 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 	/** For each of the 4 vertices, a pair of x,y values that is the local position of the vertex.
 	 *
 	 * See RegionAttachment.updateRegion(). */
-	private var offsets:Array<Float> = new Array<Float>();
+	private var offset:Array<Float> = new Array<Float>();
 
 	public var uvs:Array<Float> = new Array<Float>();
 
@@ -116,14 +116,14 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 		var localY2Cos = localY2 * cos + y;
 		var localY2Sin = localY2 * sin;
 
-		offsets[0] = localXCos - localYSin;
-		offsets[1] = localYCos + localXSin;
-		offsets[2] = localXCos - localY2Sin;
-		offsets[3] = localY2Cos + localXSin;
-		offsets[4] = localX2Cos - localY2Sin;
-		offsets[5] = localY2Cos + localX2Sin;
-		offsets[6] = localX2Cos - localYSin;
-		offsets[7] = localYCos + localX2Sin;
+		offset[0] = localXCos - localYSin;
+		offset[1] = localYCos + localXSin;
+		offset[2] = localXCos - localY2Sin;
+		offset[3] = localY2Cos + localXSin;
+		offset[4] = localX2Cos - localY2Sin;
+		offset[5] = localY2Cos + localX2Sin;
+		offset[6] = localX2Cos - localYSin;
+		offset[7] = localYCos + localX2Sin;
 
 		if (region.degrees == 90) {
 			uvs[0] = region.u2;
@@ -156,7 +156,7 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 	public function computeWorldVertices(slot:Slot, worldVertices:Array<Float>, offset:Int, stride:Int):Void {
 		if (sequence != null) sequence.apply(slot.applied, this);
 
-		var vertexOffset = this.offsets;
+		var vertexOffset = this.offset;
 		var bone = slot.bone.applied;
 		var x = bone.worldX, y = bone.worldY;
 		var a = bone.a, b = bone.b, c = bone.c, d = bone.d;
@@ -198,7 +198,7 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 		copy.width = width;
 		copy.height = height;
 		copy.uvs = uvs.copy();
-		copy.offsets = offsets.copy();
+		copy.offset = offset.copy();
 		copy.color.setFromColor(color);
 		copy.sequence = sequence != null ? sequence.copy() : null;
 		return copy;

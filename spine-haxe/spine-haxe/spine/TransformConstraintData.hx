@@ -36,6 +36,13 @@ package spine;
  * @see https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide
  */
 class TransformConstraintData extends ConstraintData<TransformConstraint, TransformConstraintPose> {
+	public static inline final ROTATION = 0;
+	public static inline final X = 1;
+	public static inline final Y = 2;
+	public static inline final SCALEX = 3;
+	public static inline final SCALEY = 4;
+	public static inline final SHEARY = 5;
+
 	/** The bones that will be modified by this transform constraint. */
 	public final bones:Array<BoneData> = new Array<BoneData>();
 
@@ -90,61 +97,61 @@ class TransformConstraintData extends ConstraintData<TransformConstraint, Transf
 
 	/** An offset added to the constrained bone rotation. */
 	public function getOffsetRotation ():Float {
-		return offsets[0];
+		return offsets[TransformConstraintData.ROTATION];
 	}
 
 	public function setOffsetRotation (offsetRotation:Float):Float {
-		offsets[0] = offsetRotation;
+		offsets[TransformConstraintData.ROTATION] = offsetRotation;
 		return offsetRotation;
 	}
 
 	/** An offset added to the constrained bone X translation. */
 	public function getOffsetX ():Float {
-		return offsets[1];
+		return offsets[TransformConstraintData.X];
 	}
 
 	public function setOffsetX (offsetX:Float):Float {
-		offsets[1] = offsetX;
+		offsets[TransformConstraintData.X] = offsetX;
 		return offsetX;
 	}
 
 	/** An offset added to the constrained bone Y translation. */
 	public function getOffsetY ():Float {
-		return offsets[2];
+		return offsets[TransformConstraintData.Y];
 	}
 
 	public function setOffsetY (offsetY:Float):Float {
-		offsets[2] = offsetY;
+		offsets[TransformConstraintData.Y] = offsetY;
 		return offsetY;
 	}
 
 	/** An offset added to the constrained bone scaleX. */
 	public function getOffsetScaleX ():Float {
-		return offsets[3];
+		return offsets[TransformConstraintData.SCALEX];
 	}
 
 	public function setOffsetScaleX (offsetScaleX:Float):Float {
-		offsets[3] = offsetScaleX;
+		offsets[TransformConstraintData.SCALEX] = offsetScaleX;
 		return offsetScaleX;
 	}
 
 	/** An offset added to the constrained bone scaleY. */
 	public function getOffsetScaleY ():Float {
-		return offsets[4];
+		return offsets[TransformConstraintData.SCALEY];
 	}
 
 	public function setOffsetScaleY (offsetScaleY:Float):Float {
-		offsets[4] = offsetScaleY;
+		offsets[TransformConstraintData.SCALEY] = offsetScaleY;
 		return offsetScaleY;
 	}
 
 	/** An offset added to the constrained bone shearY. */
 	public function getOffsetShearY ():Float {
-		return offsets[5];
+		return offsets[TransformConstraintData.SHEARY];
 	}
 
 	public function setOffsetShearY (offsetShearY:Float):Float {
-		offsets[5] = offsetShearY;
+		offsets[TransformConstraintData.SHEARY] = offsetShearY;
 		return offsetShearY;
 	}
 
@@ -188,9 +195,9 @@ abstract class ToProperty {
 
 class FromRotate extends FromProperty {
 	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
-		if (local) return source.rotation + offsets[0];
+		if (local) return source.rotation + offsets[TransformConstraintData.ROTATION];
 		var value = Math.atan2(source.c, source.a) * MathUtils.radDeg
-			+ (source.a * source.d - source.b * source.c > 0 ? offsets[0] : -offsets[0]);
+			+ (source.a * source.d - source.b * source.c > 0 ? offsets[TransformConstraintData.ROTATION] : -offsets[TransformConstraintData.ROTATION]);
 		if (value < 0) value += 360;
 		return value;
 	}
@@ -225,7 +232,7 @@ class ToRotate extends ToProperty {
 
 class FromX extends FromProperty {
 	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
-		return local ? source.x + offsets[1] : offsets[1] * source.a + offsets[2] * source.b + source.worldX;
+		return local ? source.x + offsets[TransformConstraintData.X] : offsets[TransformConstraintData.X] * source.a + offsets[TransformConstraintData.Y] * source.b + source.worldX;
 	}
 }
 
@@ -247,7 +254,7 @@ class ToX extends ToProperty {
 
 class FromY extends FromProperty {
 	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
-		return local ? source.y + offsets[2] : offsets[1] * source.c + offsets[2] * source.d + source.worldY;
+		return local ? source.y + offsets[TransformConstraintData.Y] : offsets[TransformConstraintData.X] * source.c + offsets[TransformConstraintData.Y] * source.d + source.worldY;
 	}
 }
 
@@ -269,7 +276,7 @@ class ToY extends ToProperty {
 
 class FromScaleX extends FromProperty {
 	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
-		return (local ? source.scaleX : Math.sqrt(source.a * source.a + source.c * source.c)) + offsets[3];
+		return (local ? source.scaleX : Math.sqrt(source.a * source.a + source.c * source.c)) + offsets[TransformConstraintData.SCALEX];
 	}
 }
 
@@ -300,7 +307,7 @@ class ToScaleX extends ToProperty {
 
 class FromScaleY extends FromProperty {
 	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
-		return (local ? source.scaleY : Math.sqrt(source.b * source.b + source.d * source.d)) + offsets[4];
+		return (local ? source.scaleY : Math.sqrt(source.b * source.b + source.d * source.d)) + offsets[TransformConstraintData.SCALEY];
 	}
 }
 
@@ -331,7 +338,7 @@ class ToScaleY extends ToProperty {
 
 class FromShearY extends FromProperty {
 	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
-		return (local ? source.shearY : (Math.atan2(source.d, source.b) - Math.atan2(source.c, source.a)) * MathUtils.radDeg - 90) + offsets[5];
+		return (local ? source.shearY : (Math.atan2(source.d, source.b) - Math.atan2(source.c, source.a)) * MathUtils.radDeg - 90) + offsets[TransformConstraintData.SHEARY];
 	}
 }
 
