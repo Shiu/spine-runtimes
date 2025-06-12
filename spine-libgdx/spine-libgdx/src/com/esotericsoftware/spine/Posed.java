@@ -36,15 +36,15 @@ abstract public class Posed< //
 		return applied;
 	}
 
-	void pose () {
+	void pose () { // Port: usePose
 		applied = pose;
 	}
 
-	void constrained () {
+	void constrained () { // Port: useConstrained
 		applied = constrained;
 	}
 
-	void reset () {
+	void reset () { // Port: resetConstrained
 		constrained.set(pose);
 	}
 
