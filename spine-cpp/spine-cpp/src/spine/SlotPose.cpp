@@ -33,8 +33,6 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(SlotPose)
-
 SlotPose::SlotPose() : _color(1, 1, 1, 1), _darkColor(0, 0, 0, 0), _hasDarkColor(false), _attachment(nullptr), _sequenceIndex(-1) {
 }
 
@@ -69,7 +67,7 @@ Attachment* SlotPose::getAttachment() {
 
 void SlotPose::setAttachment(Attachment* attachment) {
 	if (_attachment == attachment) return;
-	
+
 	// Check if we need to clear deform based on timeline attachment
 	if (!attachment ||
 		!_attachment ||

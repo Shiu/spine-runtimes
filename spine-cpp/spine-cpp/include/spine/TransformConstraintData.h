@@ -43,16 +43,16 @@ namespace spine {
 	/// Source property for a TransformConstraint.
 	class SP_API FromProperty : public SpineObject {
 	public:
-		
+
 		/// The value of this property that corresponds to ToProperty offset.
 		float offset;
-		
+
 		/// Constrained properties.
 		Vector<class ToProperty*> to;
-		
+
 		FromProperty();
 		virtual ~FromProperty();
-		
+
 		/// Reads this property from the specified bone.
 		virtual float value(BonePose& source, bool local, float* offsets) = 0;
 	};
@@ -60,22 +60,22 @@ namespace spine {
 	/// Constrained property for a TransformConstraint.
 	class SP_API ToProperty : public SpineObject {
 	public:
-		
+
 		/// The value of this property that corresponds to FromProperty offset.
 		float offset;
-		
+
 		/// The maximum value of this property when clamped.
 		float max;
-		
+
 		/// The scale of the FromProperty value in relation to this property.
 		float scale;
-		
+
 		ToProperty();
 		virtual ~ToProperty();
-		
+
 		/// Reads the mix for this property from the specified pose.
 		virtual float mix(TransformConstraintPose& pose) = 0;
-		
+
 		/// Applies the value to this property.
 		virtual void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) = 0;
 	};
@@ -147,10 +147,11 @@ namespace spine {
 	};
 
 	/// Stores the setup pose for a TransformConstraint.
-	/// 
+	///
 	/// See https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide.
 	class SP_API TransformConstraintData : public ConstraintDataGeneric<TransformConstraint, TransformConstraintPose> {
 	public:
+		RTTI_DECL
 		static const int ROTATION = 0, X = 1, Y = 2, SCALEX = 3, SCALEY = 4, SHEARY = 5;
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
@@ -159,8 +160,6 @@ namespace spine {
 		friend class TransformConstraintTimeline;
 
 	public:
-		RTTI_DECL
-
 		explicit TransformConstraintData(const String &name);
 		~TransformConstraintData();
 

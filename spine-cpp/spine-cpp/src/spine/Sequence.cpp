@@ -36,8 +36,6 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(Sequence)
-
 int Sequence::_nextID = 0;
 
 Sequence::Sequence(int count) : _id(nextID()),

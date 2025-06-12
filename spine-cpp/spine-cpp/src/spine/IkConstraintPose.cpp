@@ -31,8 +31,6 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(IkConstraintPose)
-
 IkConstraintPose::IkConstraintPose() : _bendDirection(0), _compress(false), _stretch(false), _mix(0), _softness(0) {
 }
 

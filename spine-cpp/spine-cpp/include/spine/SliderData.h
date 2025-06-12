@@ -42,16 +42,16 @@ namespace spine {
 	class Skeleton;
 
 	/// Stores the setup pose for a PhysicsConstraint.
-	/// 
+	///
 	/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide.
 	class SP_API SliderData : public ConstraintDataGeneric<Slider, SliderPose> {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class Slider;
 
-	public:
 		RTTI_DECL
 
+	public:
 		explicit SliderData(const String &name);
 
 		/// Creates a slider instance.

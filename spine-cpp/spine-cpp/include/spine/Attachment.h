@@ -36,7 +36,7 @@
 
 namespace spine {
 	class SP_API Attachment : public SpineObject {
-	RTTI_DECL
+	RTTI_DECL_NOPARENT
 
 	public:
 		explicit Attachment(const String &name);

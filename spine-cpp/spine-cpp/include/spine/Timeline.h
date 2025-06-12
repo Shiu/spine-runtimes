@@ -43,7 +43,7 @@ namespace spine {
 	class Event;
 
 	class SP_API Timeline : public SpineObject {
-	RTTI_DECL
+	RTTI_DECL_NOPARENT
 
 	public:
 		Timeline(size_t frameCount, size_t frameEntries);

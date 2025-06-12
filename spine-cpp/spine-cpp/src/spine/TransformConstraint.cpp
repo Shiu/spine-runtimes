@@ -39,11 +39,10 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(TransformConstraint)
+RTTI_IMPL(TransformConstraint, Constraint)
 
-TransformConstraint::TransformConstraint(TransformConstraintData& data, Skeleton& skeleton) : 
-	Constraint<TransformConstraint, TransformConstraintData, TransformConstraintPose>(data) {
-	if (&skeleton == NULL) throw;
+TransformConstraint::TransformConstraint(TransformConstraintData& data, Skeleton& skeleton) :
+	ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose>(data) {
 
 	_bones.ensureCapacity(data.getBones().size());
 	for (size_t i = 0; i < data.getBones().size(); i++) {
@@ -140,6 +139,5 @@ Bone* TransformConstraint::getSource() {
 }
 
 void TransformConstraint::setSource(Bone* source) {
-	if (source == NULL) throw;
 	_source = source;
 }

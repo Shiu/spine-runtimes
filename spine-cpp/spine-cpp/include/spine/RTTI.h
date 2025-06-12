@@ -56,10 +56,15 @@ namespace spine {
 	};
 }
 
-#define RTTI_DECL \
+#define RTTI_DECL_NOPARENT \
 public: \
 static const spine::RTTI rtti; \
 virtual const spine::RTTI& getRTTI() const;
+
+#define RTTI_DECL \
+public: \
+static const spine::RTTI rtti; \
+virtual const spine::RTTI& getRTTI() const override;
 
 #define RTTI_IMPL_NOPARENT(name) \
 const spine::RTTI name::rtti(#name); \

@@ -30,13 +30,12 @@
 #ifndef Spine_DeformTimeline_h
 #define Spine_DeformTimeline_h
 
-#include <spine/CurveTimeline.h>
-#include <spine/SlotTimeline.h>
+#include <spine/SlotCurveTimeline.h>
 
 namespace spine {
 	class VertexAttachment;
 
-	class SP_API DeformTimeline : public CurveTimeline, public SlotTimeline {
+	class SP_API DeformTimeline : public SlotCurveTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -48,7 +47,7 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction) override;
+			  MixDirection direction, bool appliedPose) override;
 
 		/// Sets the time and vertices for the specified frame.
 		void setFrame(int frameIndex, float time, Vector<float> &vertices);
@@ -67,18 +66,12 @@ namespace spine {
 
 		float getCurvePercent(float time, int frame);
 
-		int getSlotIndex() override { return _slotIndex; }
-
-		void setSlotIndex(int inValue) { _slotIndex = inValue; }
-
 		size_t getFrameCount() { return _frames.size(); }
 
 	protected:
-		void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend);
+		void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) override;
 
 	private:
-		int _slotIndex;
-
 		Vector <Vector<float>> _vertices;
 
 		VertexAttachment *_attachment;

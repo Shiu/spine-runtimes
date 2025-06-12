@@ -37,10 +37,16 @@ namespace spine {
 
 	/// An interface for timelines which change the property of a slot.
 	class SP_API SlotTimeline {
-		RTTI_DECL
+		RTTI_DECL_NOPARENT
+
+		friend class AlphaTimeline;
+		friend class AttachmentTimeline;
+		friend class SequenceTimeline;
+		friend class SlotCurveTimeline;
 
 	public:
-		virtual ~SlotTimeline() {}
+		SlotTimeline(int slotIndex);
+		virtual ~SlotTimeline();
 
 		/// The index of the slot in Skeleton::getSlots() that will be changed when this timeline is applied.
 		virtual int getSlotIndex();

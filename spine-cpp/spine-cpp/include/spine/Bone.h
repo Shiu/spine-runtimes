@@ -70,7 +70,7 @@ namespace spine {
 		friend class TranslateYTimeline;
 		friend class InheritTimeline;
 
-		RTTI_DECL
+		RTTI_DECL_NOPARENT
 
 	public:
 		/// @param parent May be NULL.

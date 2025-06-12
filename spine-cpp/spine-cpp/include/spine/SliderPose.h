@@ -36,7 +36,6 @@
 namespace spine {
     /// Stores a pose for a slider.
     class SP_API SliderPose : public Pose<SliderPose> {
-        RTTI_DECL
     private:
         float _time, _mix;
 

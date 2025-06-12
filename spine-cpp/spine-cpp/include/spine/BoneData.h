@@ -38,7 +38,6 @@
 
 namespace spine {
 	class SP_API BoneData : public PosedData<BoneLocal> {
-		RTTI_DECL
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

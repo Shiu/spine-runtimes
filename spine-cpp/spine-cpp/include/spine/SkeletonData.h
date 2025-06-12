@@ -55,7 +55,7 @@ namespace spine {
 	class ConstraintData;
 
 /// Stores the setup pose and all of the stateless data for a skeleton.
-/// 
+///
 /// See <a href="https://esotericsoftware.com/spine-runtime-architecture#Data-objects">Data objects</a> in the Spine Runtimes
 /// Guide.
 	class SP_API SkeletonData : public SpineObject {
@@ -145,7 +145,7 @@ namespace spine {
 			getConstraints(); // Ensure constraints array is populated
 			for (size_t i = 0, n = _constraints.size(); i < n; i++) {
 				ConstraintData *constraint = _constraints[i];
-				if (constraint->getName().equals(constraintName)) {
+				if (constraint->getName() == constraintName) {
 					if (constraint->rtti.isExactly(T::rtti)) {
 						return static_cast<T*>(constraint);
 					}

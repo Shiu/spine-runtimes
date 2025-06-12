@@ -40,11 +40,11 @@
 
 using namespace spine;
 
-RTTI_IMPL(Slider, Update)
+RTTI_IMPL(Slider, Constraint)
 
 float Slider::_offsets[6];
 
-Slider::Slider(SliderData& data, Skeleton& skeleton) : Constraint<Slider, SliderData, SliderPose>(data), _bone(NULL) {
+Slider::Slider(SliderData& data, Skeleton& skeleton) : ConstraintGeneric<Slider, SliderData, SliderPose>(data), _bone(NULL) {
 	if (data.getBone() != NULL) {
 		_bone = skeleton.findBone(data.getBone()->getName());
 	}
@@ -81,7 +81,7 @@ void Slider::update(Skeleton& skeleton, Physics physics) {
 	// }
 
 	// TODO: Implement when Animation is ported
-	// animation->apply(skeleton, p.getTime(), p.getTime(), _data.getLoop(), NULL, p.getMix(), 
+	// animation->apply(skeleton, p.getTime(), p.getTime(), _data.getLoop(), NULL, p.getMix(),
 	//	_data.getAdditive() ? MixBlend_Add : MixBlend_Replace, MixDirection_In);
 }
 

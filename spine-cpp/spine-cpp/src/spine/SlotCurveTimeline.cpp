@@ -39,14 +39,10 @@ using namespace spine;
 RTTI_IMPL(SlotCurveTimeline, CurveTimeline)
 
 SlotCurveTimeline::SlotCurveTimeline(size_t frameCount, size_t frameEntries, size_t bezierCount, int slotIndex) 
-	: CurveTimeline(frameCount, frameEntries, bezierCount), _slotIndex(slotIndex) {
+	: CurveTimeline(frameCount, frameEntries, bezierCount), SlotTimeline(slotIndex) {
 }
 
 SlotCurveTimeline::~SlotCurveTimeline() {
-}
-
-int SlotCurveTimeline::getSlotIndex() {
-	return _slotIndex;
 }
 
 void SlotCurveTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, 
@@ -56,5 +52,5 @@ void SlotCurveTimeline::apply(Skeleton &skeleton, float lastTime, float time, Ve
 	SP_UNUSED(direction);
 
 	Slot *slot = skeleton._slots[_slotIndex];
-	if (slot->_bone._active) apply(*slot, appliedPose ? slot->_applied : slot->_pose, time, alpha, blend);
+	if (slot->_bone._active) apply(*slot, appliedPose ? *slot->_applied : slot->_pose, time, alpha, blend);
 }

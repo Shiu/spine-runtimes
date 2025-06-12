@@ -39,7 +39,7 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(IkConstraint)
+RTTI_IMPL(IkConstraint, Constraint)
 
 void IkConstraint::apply(Skeleton& skeleton, BonePose& bone, float targetX, float targetY, bool compress, bool stretch, bool uniform, float mix) {
 	bone.modifyLocal(skeleton);
@@ -249,10 +249,10 @@ void IkConstraint::apply(Skeleton& skeleton, BonePose& parent, BonePose& child, 
 	child._rotation += a2 * mix;
 }
 
-IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton) : 
-	Constraint<IkConstraint, IkConstraintData, IkConstraintPose>(data),
+IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton) :
+	ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>(data),
 	_target(skeleton.findBone(data.getTarget()->getName())) {
-	
+
 	_bones.ensureCapacity(data.getBones().size());
 	for (size_t i = 0; i < data.getBones().size(); i++) {
 		BoneData *boneData = data.getBones()[i];

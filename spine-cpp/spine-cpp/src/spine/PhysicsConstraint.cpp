@@ -39,15 +39,15 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(PhysicsConstraint)
+RTTI_IMPL(PhysicsConstraint, Constraint)
 
-PhysicsConstraint::PhysicsConstraint(PhysicsConstraintData &data, Skeleton &skeleton) : 
-	Constraint<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>(data),
+PhysicsConstraint::PhysicsConstraint(PhysicsConstraintData &data, Skeleton &skeleton) :
+	ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>(data),
 	_reset(true), _ux(0), _uy(0), _cx(0), _cy(0), _tx(0), _ty(0),
 	_xOffset(0), _xLag(0), _xVelocity(0), _yOffset(0), _yLag(0), _yVelocity(0),
 	_rotateOffset(0), _rotateLag(0), _rotateVelocity(0), _scaleOffset(0), _scaleLag(0), _scaleVelocity(0),
 	_remaining(0), _lastTime(0) {
-	
+
 	_bone = &skeleton.getBones()[(size_t)data.getBone()->getIndex()]->getAppliedPose();
 }
 

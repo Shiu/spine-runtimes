@@ -31,8 +31,6 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(PathConstraintPose)
-
 PathConstraintPose::PathConstraintPose() : Pose<PathConstraintPose>(), _position(0), _spacing(0), _mixRotate(0), _mixX(0), _mixY(0) {
 }
 

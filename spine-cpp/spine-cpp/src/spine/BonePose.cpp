@@ -36,8 +36,6 @@
 
 using namespace spine;
 
-RTTI_IMPL(BonePose, BoneLocal)
-
 BonePose::BonePose() : BoneLocal(), _bone(nullptr), _a(0), _b(0), _worldX(0), _c(0), _d(0), _worldY(0), _world(0), _local(0) {
 }
 
@@ -45,14 +43,14 @@ BonePose::~BonePose() {
 }
 
 void BonePose::update(Skeleton& skeleton, Physics physics) {
-	if (_world != skeleton.getUpdate()) updateWorldTransform(skeleton);
+	if (_world != skeleton._update) updateWorldTransform(skeleton);
 }
 
 void BonePose::updateWorldTransform(Skeleton& skeleton) {
-	if (_local == skeleton.getUpdate())
+	if (_local == skeleton._update)
 		updateLocalTransform(skeleton);
 	else
-		_world = skeleton.getUpdate();
+		_world = skeleton._update;
 
 	if (_bone->getParent() == nullptr) { // Root bone.
 		float sx = skeleton.getScaleX(), sy = skeleton.getScaleY();
@@ -67,7 +65,7 @@ void BonePose::updateWorldTransform(Skeleton& skeleton) {
 		return;
 	}
 
-	BonePose& parent = _bone->getParent()->getApplied();
+	BonePose& parent = _bone->getParent()->getAppliedPose();
 	float pa = parent._a, pb = parent._b, pc = parent._c, pd = parent._d;
 	_worldX = pa * _x + pb * _y + parent._worldX;
 	_worldY = pc * _x + pd * _y + parent._worldY;
@@ -158,7 +156,7 @@ void BonePose::updateWorldTransform(Skeleton& skeleton) {
 
 void BonePose::updateLocalTransform(Skeleton& skeleton) {
 	_local = 0;
-	_world = skeleton.getUpdate();
+	_world = skeleton._update;
 
 	if (_bone->getParent() == nullptr) {
 		_x = _worldX - skeleton.getX();
@@ -172,7 +170,7 @@ void BonePose::updateLocalTransform(Skeleton& skeleton) {
 		return;
 	}
 
-	BonePose& parent = _bone->getParent()->getApplied();
+	BonePose& parent = _bone->getParent()->getAppliedPose();
 	float pa = parent._a, pb = parent._b, pc = parent._c, pd = parent._d;
 	float pid = 1 / (pa * pd - pb * pc);
 	float ia = pd * pid, ib = pb * pid, ic = pc * pid, id = pa * pid;
@@ -243,13 +241,13 @@ void BonePose::updateLocalTransform(Skeleton& skeleton) {
 }
 
 void BonePose::validateLocalTransform(Skeleton& skeleton) {
-	if (_local == skeleton.getUpdate()) updateLocalTransform(skeleton);
+	if (_local == skeleton._update) updateLocalTransform(skeleton);
 }
 
 void BonePose::modifyLocal(Skeleton& skeleton) {
-	if (_local == skeleton.getUpdate()) updateLocalTransform(skeleton);
+	if (_local == skeleton._update) updateLocalTransform(skeleton);
 	_world = 0;
-	resetWorld(skeleton.getUpdate());
+	resetWorld(skeleton._update);
 }
 
 void BonePose::modifyWorld(int update) {
@@ -261,7 +259,7 @@ void BonePose::modifyWorld(int update) {
 void BonePose::resetWorld(int update) {
 	Vector<Bone*>& children = _bone->getChildren();
 	for (size_t i = 0, n = children.size(); i < n; i++) {
-		BonePose& child = children[i]->getApplied();
+		BonePose& child = children[i]->getAppliedPose();
 		if (child._world == update) {
 			child._world = 0;
 			child._local = 0;
@@ -352,7 +350,7 @@ void BonePose::worldToParent(float worldX, float worldY, float& outParentX, floa
 		outParentX = worldX;
 		outParentY = worldY;
 	} else {
-		_bone->getParent()->getApplied().worldToLocal(worldX, worldY, outParentX, outParentY);
+		_bone->getParent()->getAppliedPose().worldToLocal(worldX, worldY, outParentX, outParentY);
 	}
 }
 
@@ -361,7 +359,7 @@ void BonePose::parentToWorld(float parentX, float parentY, float& outWorldX, flo
 		outWorldX = parentX;
 		outWorldY = parentY;
 	} else {
-		_bone->getParent()->getApplied().localToWorld(parentX, parentY, outWorldX, outWorldY);
+		_bone->getParent()->getAppliedPose().localToWorld(parentX, parentY, outWorldX, outWorldY);
 	}
 }
 

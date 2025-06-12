@@ -44,7 +44,7 @@ namespace spine {
 
 		Color &getColor();
 
-		virtual Attachment *copy();
+		virtual Attachment *copy() override;
 
 	private:
 		Color _color;

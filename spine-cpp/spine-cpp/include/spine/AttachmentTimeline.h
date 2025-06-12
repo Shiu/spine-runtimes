@@ -36,6 +36,7 @@
 #include <spine/MixBlend.h>
 #include <spine/MixDirection.h>
 #include <spine/SpineString.h>
+#include <spine/SlotTimeline.h>
 
 namespace spine {
 
@@ -43,9 +44,11 @@ namespace spine {
 
 	class Slot;
 
+	class SlotPose;
+
 	class Event;
 
-	class SP_API AttachmentTimeline : public Timeline {
+	class SP_API AttachmentTimeline : public Timeline, public SlotTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -59,23 +62,17 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+			  MixDirection direction, bool appliedPose) override;
 
 		/// Sets the time and value of the specified keyframe.
 		void setFrame(int frame, float time, const String &attachmentName);
 
 		Vector<String> &getAttachmentNames();
 
-		int getSlotIndex() { return _slotIndex; }
-
-		void setSlotIndex(int inValue) { _slotIndex = inValue; }
-
 	protected:
-		int _slotIndex;
-
 		Vector<String> _attachmentNames;
 
-		void setAttachment(Skeleton &skeleton, Slot &slot, String *attachmentName);
+		void setAttachment(Skeleton &skeleton, SlotPose &pose, String *attachmentName);
 	};
 }
 

@@ -33,8 +33,6 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(BoneData)
-
 BoneData::BoneData(int index, const String &name, BoneData *parent) : PosedData<BoneLocal>(name),
 																	   _index(index),
 																	   _parent(parent),

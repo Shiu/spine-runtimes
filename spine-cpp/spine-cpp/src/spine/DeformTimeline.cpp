@@ -44,7 +44,7 @@ using namespace spine;
 RTTI_IMPL(DeformTimeline, CurveTimeline)
 
 DeformTimeline::DeformTimeline(size_t frameCount, size_t bezierCount, int slotIndex, VertexAttachment *attachment)
-	: CurveTimeline(frameCount, 1, bezierCount), _slotIndex(slotIndex), _attachment(attachment) {
+	: SlotCurveTimeline(frameCount, 1, bezierCount, slotIndex), _attachment(attachment) {
 	PropertyId ids[] = {((PropertyId) Property_Deform << 32) | ((slotIndex << 16 | attachment->_id) & 0xffffffff)};
 	setPropertyIds(ids, 1);
 
@@ -56,7 +56,7 @@ DeformTimeline::DeformTimeline(size_t frameCount, size_t bezierCount, int slotIn
 }
 
 void DeformTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-						   MixBlend blend, MixDirection direction) {
+						   MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 	SP_UNUSED(direction);
@@ -64,12 +64,13 @@ void DeformTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vecto
 	Slot *slotP = skeleton._slots[_slotIndex];
 	Slot &slot = *slotP;
 	if (!slot._bone.isActive()) return;
+	SlotPose& pose = appliedPose ? *slot._applied : slot._pose;
 
-	apply(slot, slot._pose, time, alpha, blend);
+	apply(slot, pose, time, alpha, blend);
 }
 
 void DeformTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
-	Attachment *slotAttachment = pose.attachment;
+	Attachment *slotAttachment = pose._attachment;
 	if (slotAttachment == NULL || !slotAttachment->getRTTI().instanceOf(VertexAttachment::rtti)) {
 		return;
 	}
@@ -79,7 +80,7 @@ void DeformTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, 
 		return;
 	}
 
-	Vector<float> &deformArray = pose.deform;
+	Vector<float> &deformArray = pose._deform;
 	if (deformArray.size() == 0) {
 		blend = MixBlend_Setup;
 	}

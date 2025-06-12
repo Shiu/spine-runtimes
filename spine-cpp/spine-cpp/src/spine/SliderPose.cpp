@@ -31,8 +31,6 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(SliderPose)
-
 SliderPose::SliderPose() : _time(0), _mix(0) {
 }
 

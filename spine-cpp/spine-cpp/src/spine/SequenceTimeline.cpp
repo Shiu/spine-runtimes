@@ -31,18 +31,19 @@
 #include <spine/Bone.h>
 #include <spine/RegionAttachment.h>
 #include <spine/MeshAttachment.h>
+#include <spine/VertexAttachment.h>
 #include <spine/Event.h>
 #include <spine/Skeleton.h>
 #include <spine/Attachment.h>
-#include <spine/PathConstraintData.h>
 #include <spine/Slot.h>
 #include <spine/Animation.h>
+#include <spine/MathUtil.h>
 
 using namespace spine;
 
 RTTI_IMPL(SequenceTimeline, Timeline)
 
-SequenceTimeline::SequenceTimeline(size_t frameCount, int slotIndex, Attachment *attachment) : Timeline(frameCount, ENTRIES), _slotIndex(slotIndex), _attachment(attachment) {
+SequenceTimeline::SequenceTimeline(size_t frameCount, int slotIndex, Attachment *attachment) : Timeline(frameCount, ENTRIES), SlotTimeline(slotIndex), _attachment((HasTextureRegion*)attachment) {
 	int sequenceId = 0;
 	if (attachment->getRTTI().instanceOf(RegionAttachment::rtti)) sequenceId = ((RegionAttachment *) attachment)->getSequence()->getId();
 	if (attachment->getRTTI().instanceOf(MeshAttachment::rtti)) sequenceId = ((MeshAttachment *) attachment)->getSequence()->getId();
@@ -62,31 +63,32 @@ void SequenceTimeline::setFrame(int frame, float time, SequenceMode mode, int in
 }
 
 void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents,
-							 float alpha, MixBlend blend, MixDirection direction) {
+							 float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(alpha);
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
-	SP_UNUSED(direction);
 
-	Slot *slot = skeleton.getSlots()[_slotIndex];
+	Slot *slot = skeleton.getSlots()[getSlotIndex()];
 	if (!slot->getBone().isActive()) return;
-	Attachment *slotAttachment = slot->getAttachment();
-	if (slotAttachment != _attachment) {
-		if (slotAttachment == NULL || !slotAttachment->getRTTI().instanceOf(VertexAttachment::rtti) || ((VertexAttachment *) slotAttachment)->getTimelineAttachment() != _attachment) return;
+	SlotPose& pose = appliedPose ? slot->getAppliedPose() : slot->getPose();
+
+	Attachment *slotAttachment = pose.getAttachment();
+	if (slotAttachment != (Attachment*)_attachment) {
+		if (slotAttachment == NULL || !slotAttachment->getRTTI().instanceOf(VertexAttachment::rtti) || ((VertexAttachment *) slotAttachment)->getTimelineAttachment() != (Attachment*)_attachment) return;
 	}
 	Sequence *sequence = NULL;
-	if (_attachment->getRTTI().instanceOf(RegionAttachment::rtti)) sequence = ((RegionAttachment *) _attachment)->getSequence();
-	if (_attachment->getRTTI().instanceOf(MeshAttachment::rtti)) sequence = ((MeshAttachment *) _attachment)->getSequence();
+	if (((Attachment*)_attachment)->getRTTI().instanceOf(RegionAttachment::rtti)) sequence = ((RegionAttachment *) _attachment)->getSequence();
+	if (((Attachment*)_attachment)->getRTTI().instanceOf(MeshAttachment::rtti)) sequence = ((MeshAttachment *) _attachment)->getSequence();
 	if (!sequence) return;
 
 	if (direction == MixDirection_Out) {
-		if (blend == MixBlend_Setup) slot->setSequenceIndex(-1);
+		if (blend == MixBlend_Setup) pose.setSequenceIndex(-1);
 		return;
 	}
 
 	Vector<float> &frames = this->_frames;
-	if (time < frames[0]) {// Time is before first frame.
-		if (blend == MixBlend_Setup || blend == MixBlend_First) slot->setSequenceIndex(-1);
+	if (time < frames[0]) {
+		if (blend == MixBlend_Setup || blend == MixBlend_First) pose.setSequenceIndex(-1);
 		return;
 	}
 
@@ -122,8 +124,9 @@ void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vec
 				int n = (count << 1) - 2;
 				index = n == 0 ? 0 : (index + count - 1) % n;
 				if (index >= count) index = n - index;
+				break;
 			}
 		}
 	}
-	slot->setSequenceIndex(index);
+	pose.setSequenceIndex(index);
 }

@@ -47,8 +47,6 @@ namespace spine {
 
 		virtual ~RGBATimeline();
 
-		int getFrameEntries();
-
 		/// Sets the time and color for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.
 		/// @param time The frame time in seconds.
@@ -76,8 +74,6 @@ namespace spine {
 		explicit RGBTimeline(size_t frameCount, size_t bezierCount, int slotIndex);
 
 		virtual ~RGBTimeline();
-
-		int getFrameEntries();
 
 		/// Sets the time and color for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.
@@ -108,11 +104,6 @@ namespace spine {
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose) override;
-
-		virtual int getSlotIndex() override;
-
-	protected:
-		int _slotIndex;
 	};
 
 	/// Changes a slot's SlotPose::getColor() and SlotPose::getDarkColor() for two color tinting.
@@ -127,8 +118,6 @@ namespace spine {
 		explicit RGBA2Timeline(size_t frameCount, size_t bezierCount, int slotIndex);
 
 		virtual ~RGBA2Timeline();
-
-		int getFrameEntries();
 
 		/// Sets the time, light color, and dark color for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.
@@ -160,8 +149,6 @@ namespace spine {
 		explicit RGB2Timeline(size_t frameCount, size_t bezierCount, int slotIndex);
 
 		virtual ~RGB2Timeline();
-
-		int getFrameEntries();
 
 		/// Sets the time, light color, and dark color for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.

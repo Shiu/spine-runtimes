@@ -104,10 +104,6 @@ CurveTimeline1::CurveTimeline1(size_t frameCount, size_t bezierCount) : CurveTim
 CurveTimeline1::~CurveTimeline1() {
 }
 
-size_t CurveTimeline1::getFrameEntries() {
-	return ENTRIES;
-}
-
 void CurveTimeline1::setFrame(size_t frame, float time, float value) {
 	frame <<= 1;
 	_frames[frame] = time;

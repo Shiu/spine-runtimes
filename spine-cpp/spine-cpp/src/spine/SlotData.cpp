@@ -35,9 +35,7 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(SlotData)
-
-SlotData::SlotData(int index, const String& name, BoneData& boneData) : 
+SlotData::SlotData(int index, const String& name, BoneData& boneData) :
 	PosedData<SlotPose>(name),
 	_index(index),
 	_boneData(boneData),

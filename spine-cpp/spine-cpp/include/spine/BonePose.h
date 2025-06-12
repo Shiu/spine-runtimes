@@ -40,7 +40,6 @@ namespace spine {
 
 	class SP_API BonePose : public BoneLocal, public Update {
 		friend class IkConstraint;
-		RTTI_DECL
 
 	public:
 		Bone* _bone;
@@ -55,17 +54,17 @@ namespace spine {
 		virtual void update(Skeleton& skeleton, Physics physics) override;
 
 		/// Computes the world transform using the parent bone's applied pose and this pose. Child bones are not updated.
-		/// 
+		///
 		/// See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 		/// Runtimes Guide.
 		void updateWorldTransform(Skeleton& skeleton);
 
 		/// Computes the local transform values from the world transform.
-		/// 
+		///
 		/// If the world transform is modified (by a constraint, rotateWorld(), etc) then this method should be called so
 		/// the local transform matches the world transform. The local transform may be needed by other code (eg to apply another
 		/// constraint).
-		/// 
+		///
 		/// Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The local transform after
 		/// calling this method is equivalent to the local transform used to compute the world transform, but may not be identical.
 		void updateLocalTransform(Skeleton& skeleton);
@@ -132,7 +131,7 @@ namespace spine {
 		float localToWorldRotation(float localRotation);
 
 		/// Rotates the world transform the specified amount.
-		/// 
+		///
 		/// After changes are made to the world transform, updateLocalTransform() should be called on this bone and any
 		/// child bones, recursively.
 		void rotateWorld(float degrees);

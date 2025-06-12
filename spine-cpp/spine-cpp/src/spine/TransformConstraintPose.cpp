@@ -31,9 +31,7 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(TransformConstraintPose)
-
-TransformConstraintPose::TransformConstraintPose() : 
+TransformConstraintPose::TransformConstraintPose() :
     _mixRotate(0), _mixX(0), _mixY(0), _mixScaleX(0), _mixScaleY(0), _mixShearY(0) {
 }
 

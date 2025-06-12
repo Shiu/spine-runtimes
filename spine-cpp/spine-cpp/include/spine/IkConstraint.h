@@ -41,7 +41,7 @@ namespace spine {
 	class Bone;
 	class BonePose;
 
-	class SP_API IkConstraint : public Constraint<IkConstraint, IkConstraintData, IkConstraintPose> {
+	class SP_API IkConstraint : public ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> {
 		friend class Skeleton;
 
 		friend class IkConstraintTimeline;
@@ -63,11 +63,11 @@ namespace spine {
 
 		IkConstraint(IkConstraintData &data, Skeleton &skeleton);
 
-		virtual void update(Skeleton& skeleton, Physics physics);
+		virtual void update(Skeleton& skeleton, Physics physics) override;
 
-		virtual void sort(Skeleton& skeleton);
+		virtual void sort(Skeleton& skeleton) override;
 
-		virtual bool isSourceActive();
+		virtual bool isSourceActive() override;
 
 		virtual IkConstraint* copy(Skeleton& skeleton);
 

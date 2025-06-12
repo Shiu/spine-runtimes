@@ -40,7 +40,7 @@ namespace spine {
 
 	/// The interface for items updated by Skeleton::updateWorldTransform().
 	class SP_API Update : public SpineObject {
-		RTTI_DECL
+		RTTI_DECL_NOPARENT
 	public:
 		Update();
 		virtual ~Update();

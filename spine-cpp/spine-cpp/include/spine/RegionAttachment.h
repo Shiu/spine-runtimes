@@ -42,6 +42,7 @@
 
 namespace spine {
 	class Bone;
+	class Slot;
 
 	/// Attachment that displays a texture region.
 	class SP_API RegionAttachment : public Attachment {
@@ -115,7 +116,7 @@ namespace spine {
 
 		Vector<float> &getUVs();
 
-		virtual Attachment *copy();
+		virtual Attachment *copy() override;
 
 	private:
 		static const int BLX;

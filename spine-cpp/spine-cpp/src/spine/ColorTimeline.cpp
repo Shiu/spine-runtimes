@@ -42,7 +42,7 @@ using namespace spine;
 
 RTTI_IMPL(RGBATimeline, SlotCurveTimeline)
 
-RGBATimeline::RGBATimeline(size_t frameCount, size_t bezierCount, int slotIndex) 
+RGBATimeline::RGBATimeline(size_t frameCount, size_t bezierCount, int slotIndex)
 	: SlotCurveTimeline(frameCount, ENTRIES, bezierCount, slotIndex) {
 	PropertyId ids[] = {((PropertyId) Property_Rgb << 32) | slotIndex,
 						((PropertyId) Property_Alpha << 32) | slotIndex};
@@ -50,10 +50,6 @@ RGBATimeline::RGBATimeline(size_t frameCount, size_t bezierCount, int slotIndex)
 }
 
 RGBATimeline::~RGBATimeline() {
-}
-
-int RGBATimeline::getFrameEntries() {
-	return ENTRIES;
 }
 
 void RGBATimeline::setFrame(int frame, float time, float r, float g, float b, float a) {
@@ -68,13 +64,13 @@ void RGBATimeline::setFrame(int frame, float time, float r, float g, float b, fl
 void RGBATimeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) {
 	Color& color = pose._color;
 	if (time < _frames[0]) {
-		Color& setup = slot._data._setup->_color;
+		Color& setup = slot._data._setup._color;
 		switch (blend) {
 			case MixBlend_Setup:
 				color.set(setup);
 				return;
 			case MixBlend_First:
-				color.add((setup.r - color.r) * alpha, (setup.g - color.g) * alpha, 
+				color.add((setup.r - color.r) * alpha, (setup.g - color.g) * alpha,
 						  (setup.b - color.b) * alpha, (setup.a - color.a) * alpha);
 				return;
 			default:
@@ -118,25 +114,21 @@ void RGBATimeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, Mi
 	if (alpha == 1)
 		color.set(r, g, b, a);
 	else {
-		if (blend == MixBlend_Setup) color.set(slot._data._setup->_color);
-		color.add((r - color.r) * alpha, (g - color.g) * alpha, 
+		if (blend == MixBlend_Setup) color.set(slot._data._setup._color);
+		color.add((r - color.r) * alpha, (g - color.g) * alpha,
 				  (b - color.b) * alpha, (a - color.a) * alpha);
 	}
 }
 
 RTTI_IMPL(RGBTimeline, SlotCurveTimeline)
 
-RGBTimeline::RGBTimeline(size_t frameCount, size_t bezierCount, int slotIndex) 
+RGBTimeline::RGBTimeline(size_t frameCount, size_t bezierCount, int slotIndex)
 	: SlotCurveTimeline(frameCount, ENTRIES, bezierCount, slotIndex) {
 	PropertyId ids[] = {((PropertyId) Property_Rgb << 32) | slotIndex};
 	setPropertyIds(ids, 1);
 }
 
 RGBTimeline::~RGBTimeline() {
-}
-
-int RGBTimeline::getFrameEntries() {
-	return ENTRIES;
 }
 
 void RGBTimeline::setFrame(int frame, float time, float r, float g, float b) {
@@ -150,7 +142,7 @@ void RGBTimeline::setFrame(int frame, float time, float r, float g, float b) {
 void RGBTimeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) {
 	Color& color = pose._color;
 	if (time < _frames[0]) {
-		Color& setup = slot._data._setup->_color;
+		Color& setup = slot._data._setup._color;
 		switch (blend) {
 			case MixBlend_Setup:
 				color.r = setup.r;
@@ -202,7 +194,7 @@ void RGBTimeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, Mix
 		color.b = b;
 	} else {
 		if (blend == MixBlend_Setup) {
-			Color& setup = slot._data._setup->_color;
+			Color& setup = slot._data._setup._color;
 			color.r = setup.r;
 			color.g = setup.g;
 			color.b = setup.b;
@@ -213,10 +205,10 @@ void RGBTimeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, Mix
 	}
 }
 
-RTTI_IMPL(AlphaTimeline, CurveTimeline1)
+RTTI_IMPL(AlphaTimeline, SlotTimeline)
 
-AlphaTimeline::AlphaTimeline(size_t frameCount, size_t bezierCount, int slotIndex) 
-	: CurveTimeline1(frameCount, bezierCount), _slotIndex(slotIndex) {
+AlphaTimeline::AlphaTimeline(size_t frameCount, size_t bezierCount, int slotIndex)
+	: CurveTimeline1(frameCount, bezierCount), SlotTimeline(slotIndex) {
 	PropertyId ids[] = {((PropertyId) Property_Alpha << 32) | slotIndex};
 	setPropertyIds(ids, 1);
 }
@@ -233,9 +225,9 @@ void AlphaTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector
 	Slot *slot = skeleton._slots[_slotIndex];
 	if (!slot->_bone._active) return;
 
-	Color& color = (appliedPose ? slot->_applied : slot->_pose)._color;
+	Color& color = (appliedPose ? *slot->_applied : slot->_pose)._color;
 	if (time < _frames[0]) {
-		Color& setup = slot->_data._setup->_color;
+		Color& setup = slot->_data._setup._color;
 		switch (blend) {
 			case MixBlend_Setup:
 				color.a = setup.a;
@@ -252,18 +244,14 @@ void AlphaTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector
 	if (alpha == 1)
 		color.a = a;
 	else {
-		if (blend == MixBlend_Setup) color.a = slot->_data._setup->_color.a;
+		if (blend == MixBlend_Setup) color.a = slot->_data._setup._color.a;
 		color.a += (a - color.a) * alpha;
 	}
 }
 
-int AlphaTimeline::getSlotIndex() {
-	return _slotIndex;
-}
-
 RTTI_IMPL(RGBA2Timeline, SlotCurveTimeline)
 
-RGBA2Timeline::RGBA2Timeline(size_t frameCount, size_t bezierCount, int slotIndex) 
+RGBA2Timeline::RGBA2Timeline(size_t frameCount, size_t bezierCount, int slotIndex)
 	: SlotCurveTimeline(frameCount, ENTRIES, bezierCount, slotIndex) {
 	PropertyId ids[] = {((PropertyId) Property_Rgb << 32) | slotIndex,
 						((PropertyId) Property_Alpha << 32) | slotIndex,
@@ -272,10 +260,6 @@ RGBA2Timeline::RGBA2Timeline(size_t frameCount, size_t bezierCount, int slotInde
 }
 
 RGBA2Timeline::~RGBA2Timeline() {
-}
-
-int RGBA2Timeline::getFrameEntries() {
-	return ENTRIES;
 }
 
 void RGBA2Timeline::setFrame(int frame, float time, float r, float g, float b, float a, float r2, float g2, float b2) {
@@ -294,7 +278,7 @@ void RGBA2Timeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, M
 	Color& light = pose._color;
 	Color& dark = pose._darkColor;
 	if (time < _frames[0]) {
-		SlotPose& setup = *slot._data._setup;
+		SlotPose& setup = slot._data._setup;
 		Color& setupLight = setup._color;
 		Color& setupDark = setup._darkColor;
 		switch (blend) {
@@ -368,14 +352,14 @@ void RGBA2Timeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, M
 		dark.b = b2;
 	} else {
 		if (blend == MixBlend_Setup) {
-			SlotPose& setup = *slot._data._setup;
+			SlotPose& setup = slot._data._setup;
 			light.set(setup._color);
 			Color& setupDark = setup._darkColor;
 			dark.r = setupDark.r;
 			dark.g = setupDark.g;
 			dark.b = setupDark.b;
 		}
-		light.add((r - light.r) * alpha, (g - light.g) * alpha, 
+		light.add((r - light.r) * alpha, (g - light.g) * alpha,
 				  (b - light.b) * alpha, (a - light.a) * alpha);
 		dark.r += (r2 - dark.r) * alpha;
 		dark.g += (g2 - dark.g) * alpha;
@@ -385,7 +369,7 @@ void RGBA2Timeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, M
 
 RTTI_IMPL(RGB2Timeline, SlotCurveTimeline)
 
-RGB2Timeline::RGB2Timeline(size_t frameCount, size_t bezierCount, int slotIndex) 
+RGB2Timeline::RGB2Timeline(size_t frameCount, size_t bezierCount, int slotIndex)
 	: SlotCurveTimeline(frameCount, ENTRIES, bezierCount, slotIndex) {
 	PropertyId ids[] = {((PropertyId) Property_Rgb << 32) | slotIndex,
 						((PropertyId) Property_Rgb2 << 32) | slotIndex};
@@ -393,10 +377,6 @@ RGB2Timeline::RGB2Timeline(size_t frameCount, size_t bezierCount, int slotIndex)
 }
 
 RGB2Timeline::~RGB2Timeline() {
-}
-
-int RGB2Timeline::getFrameEntries() {
-	return ENTRIES;
 }
 
 void RGB2Timeline::setFrame(int frame, float time, float r, float g, float b, float r2, float g2, float b2) {
@@ -414,7 +394,7 @@ void RGB2Timeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, Mi
 	Color& light = pose._color;
 	Color& dark = pose._darkColor;
 	if (time < _frames[0]) {
-		SlotPose& setup = *slot._data._setup;
+		SlotPose& setup = slot._data._setup;
 		Color& setupLight = setup._color;
 		Color& setupDark = setup._darkColor;
 		switch (blend) {
@@ -489,7 +469,7 @@ void RGB2Timeline::apply(Slot& slot, SlotPose& pose, float time, float alpha, Mi
 		dark.b = b2;
 	} else {
 		if (blend == MixBlend_Setup) {
-			SlotPose& setup = *slot._data._setup;
+			SlotPose& setup = slot._data._setup;
 			light.r = setup._color.r;
 			light.g = setup._color.g;
 			light.b = setup._color.b;

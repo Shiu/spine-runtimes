@@ -38,7 +38,7 @@ namespace spine {
 	class PhysicsConstraint;
 
 	/// Stores the setup pose for a PhysicsConstraint.
-	/// 
+	///
 	/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide.
 	class SP_API PhysicsConstraintData : public ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose> {
 		friend class SkeletonBinary;
@@ -46,9 +46,8 @@ namespace spine {
 		friend class PhysicsConstraint;
 		friend class Skeleton;
 
-	public:
 		RTTI_DECL
-
+	public:
 		explicit PhysicsConstraintData(const String &name);
 
 		/// The bone constrained by this physics constraint.

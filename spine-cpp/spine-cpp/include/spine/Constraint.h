@@ -37,15 +37,22 @@
 namespace spine {
 	class Skeleton;
 
+	class SP_API Constraint: public Update {
+		RTTI_DECL_NOPARENT
+		public:
+			Constraint();
+			virtual ~Constraint();
+	};
+
 	template<class T, class D, class P>
-	class SP_API Constraint : public PosedActive<D, P, P>, public Update {
+	class SP_API ConstraintGeneric : public PosedActive<D, P, P>, public Constraint {
 		RTTI_DECL
 
 	public:
-		Constraint(D& data) : PosedActive<D, P, P>(data) {
+		ConstraintGeneric(D& data) : PosedActive<D, P, P>(data), Constraint() {
 		}
 
-		virtual ~Constraint() {
+		virtual ~ConstraintGeneric() {
 		}
 
 		virtual void sort(Skeleton& skeleton) = 0;
@@ -55,7 +62,7 @@ namespace spine {
 		}
 
 		// Inherited from Update
-		virtual void update(Skeleton& skeleton, Physics physics) = 0;
+		virtual void update(Skeleton& skeleton, Physics physics) override = 0;
 	};
 }
 

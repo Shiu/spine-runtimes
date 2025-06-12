@@ -55,8 +55,6 @@ namespace spine {
 
 	class SP_API AttachmentLoader : public SpineObject {
 	public:
-	RTTI_DECL
-
 		AttachmentLoader();
 
 		virtual ~AttachmentLoader();

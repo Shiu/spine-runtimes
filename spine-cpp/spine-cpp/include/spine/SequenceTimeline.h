@@ -31,12 +31,14 @@
 #define Spine_SequenceTimeline_h
 
 #include <spine/Timeline.h>
+#include <spine/SlotTimeline.h>
 #include <spine/Sequence.h>
 
 namespace spine {
 	class Attachment;
+	class HasTextureRegion;
 
-	class SP_API SequenceTimeline : public Timeline {
+	class SP_API SequenceTimeline : public Timeline, public SlotTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -50,19 +52,14 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+			  MixDirection direction, bool appliedPose) override;
 
 		void setFrame(int frame, float time, SequenceMode mode, int index, float delay);
 
-		int getSlotIndex() { return _slotIndex; };
-
-		void setSlotIndex(int inValue) { _slotIndex = inValue; }
-
-		Attachment *getAttachment() { return _attachment; }
+		Attachment *getAttachment() { return (Attachment*)_attachment; }
 
 	protected:
-		int _slotIndex;
-		Attachment *_attachment;
+		HasTextureRegion *_attachment;
 
 		static const int ENTRIES = 3;
 		static const int MODE = 1;

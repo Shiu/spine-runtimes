@@ -51,9 +51,9 @@ namespace spine {
 
 		friend class IkConstraintTimeline;
 
-	public:
 		RTTI_DECL
 
+	public:
 		explicit IkConstraintData(const String &name);
 
 		/// The bones that are constrained by this IK Constraint.

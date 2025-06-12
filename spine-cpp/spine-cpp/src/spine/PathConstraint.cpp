@@ -44,17 +44,17 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(PathConstraint)
+RTTI_IMPL(PathConstraint, Constraint)
 
 const float PathConstraint::epsilon = 0.00001f;
 const int PathConstraint::NONE = -1;
 const int PathConstraint::BEFORE = -2;
 const int PathConstraint::AFTER = -3;
 
-PathConstraint::PathConstraint(PathConstraintData &data, Skeleton &skeleton) : 
-	Constraint<PathConstraint, PathConstraintData, PathConstraintPose>(data),
+PathConstraint::PathConstraint(PathConstraintData &data, Skeleton &skeleton) :
+	ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>(data),
 	_slot(skeleton._slots.buffer()[data._slot->_index]) {
-	
+
 	_bones.ensureCapacity(data.getBones().size());
 	for (size_t i = 0; i < data.getBones().size(); i++) {
 		BoneData *boneData = data.getBones()[i];
@@ -247,7 +247,6 @@ Slot *PathConstraint::getSlot() {
 }
 
 void PathConstraint::setSlot(Slot *slot) {
-	if (slot == NULL) throw;
 	_slot = slot;
 }
 

@@ -44,7 +44,7 @@ namespace spine {
 	/// Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
 	///
 	/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide.
-	class SP_API PhysicsConstraint : public Constraint<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> {
+	class SP_API PhysicsConstraint : public ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> {
 		friend class Skeleton;
 		friend class PhysicsConstraintTimeline;
 		friend class PhysicsConstraintInertiaTimeline;
@@ -62,8 +62,8 @@ namespace spine {
 		PhysicsConstraint(PhysicsConstraintData& data, Skeleton& skeleton);
 
 		void update(Skeleton& skeleton, Physics physics) override;
-		void sort(Skeleton& skeleton);
-		bool isSourceActive();
+		void sort(Skeleton& skeleton) override;
+		bool isSourceActive() override;
 		PhysicsConstraint* copy(Skeleton& skeleton);
 
 		/// Translates the physics constraint so next update() forces are applied as if the bone moved an additional amount in world space.

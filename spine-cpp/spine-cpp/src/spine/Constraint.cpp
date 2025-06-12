@@ -27,22 +27,12 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/SlotTimeline.h>
+#include <spine/Constraint.h>
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(SlotTimeline)
-
-SlotTimeline::SlotTimeline(int slotIndex) : _slotIndex(slotIndex) {
+Constraint::Constraint() {
 }
 
-SlotTimeline::~SlotTimeline() {
-}
-
-int SlotTimeline::getSlotIndex() {
-	return _slotIndex;
-}
-
-void SlotTimeline::setSlotIndex(int inValue) {
-	_slotIndex = inValue;
+Constraint::~Constraint() {
 }

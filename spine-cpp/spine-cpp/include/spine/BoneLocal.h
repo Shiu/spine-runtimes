@@ -52,8 +52,6 @@ namespace spine {
 		friend class TranslateXTimeline;
 		friend class TranslateYTimeline;
 
-		RTTI_DECL
-
 	protected:
 		float _x, _y, _rotation, _scaleX, _scaleY, _shearX, _shearY;
 		Inherit _inherit;

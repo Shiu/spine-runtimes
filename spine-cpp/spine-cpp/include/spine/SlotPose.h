@@ -43,13 +43,12 @@ namespace spine {
 	class SP_API SlotPose : public Pose<SlotPose> {
 		friend class Slot;
 		friend class SlotCurveTimeline;
+		friend class DeformTimeline;
 		friend class RGBATimeline;
 		friend class RGBTimeline;
 		friend class AlphaTimeline;
 		friend class RGBA2Timeline;
 		friend class RGB2Timeline;
-
-		RTTI_DECL
 
 	private:
 		Color _color;
@@ -91,7 +90,7 @@ namespace spine {
 
 		/// Values to deform the slot's attachment. For an unweighted mesh, the entries are local positions for each vertex. For a
 		/// weighted mesh, the entries are an offset for each vertex which will be added to the mesh's local vertex positions.
-		/// 
+		///
 		/// See VertexAttachment::computeWorldVertices() and DeformTimeline.
 		Vector<float>& getDeform();
 	};

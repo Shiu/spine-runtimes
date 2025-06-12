@@ -38,7 +38,6 @@ namespace spine {
 	/// Stores the current pose for an IK constraint.
 	class SP_API IkConstraintPose : public Pose<IkConstraintPose> {
 		friend class IkConstraint;
-		RTTI_DECL
 
 	public:
 		IkConstraintPose();
@@ -47,7 +46,7 @@ namespace spine {
 		virtual void set(IkConstraintPose& pose) override;
 
 		/// A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
-		/// 
+		///
 		/// For two bone IK: if the parent bone has local nonuniform scale, the child bone's local Y translation is set to 0.
 		float getMix();
 		void setMix(float mix);
@@ -66,7 +65,7 @@ namespace spine {
 		void setCompress(bool compress);
 
 		/// When true and the target is out of range, the parent bone is scaled to reach it.
-		/// 
+		///
 		/// For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not applied if getSoftness() is
 		/// > 0, and 3) if the parent bone has local nonuniform scale, stretch is not applied.
 		bool getStretch();

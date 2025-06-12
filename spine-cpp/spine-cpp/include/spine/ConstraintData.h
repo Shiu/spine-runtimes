@@ -39,8 +39,8 @@ namespace spine {
 
 	/// Base class for all constraint data types.
 	class SP_API ConstraintData : public SpineObject {
-		RTTI_DECL
 	public:
+		RTTI_DECL_NOPARENT
 		ConstraintData(const String &name);
 		virtual ~ConstraintData();
 		const String &getName() const;

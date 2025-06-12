@@ -36,10 +36,8 @@
 namespace spine {
     /// Stores a pose for a physics constraint.
     class SP_API PhysicsConstraintPose : public Pose<PhysicsConstraintPose> {
-        RTTI_DECL
-
         friend class PhysicsConstraint;
-    
+
     private:
         float _inertia;
         float _strength;
@@ -48,31 +46,31 @@ namespace spine {
         float _wind;
         float _gravity;
         float _mix;
-    
+
     public:
         PhysicsConstraintPose();
         virtual ~PhysicsConstraintPose();
-        
+
         virtual void set(PhysicsConstraintPose& pose) override;
-        
+
         float getInertia();
         void setInertia(float inertia);
-        
+
         float getStrength();
         void setStrength(float strength);
-        
+
         float getDamping();
         void setDamping(float damping);
-        
+
         float getMassInverse();
         void setMassInverse(float massInverse);
-        
+
         float getWind();
         void setWind(float wind);
-        
+
         float getGravity();
         void setGravity(float gravity);
-        
+
         /// A percentage (0-1) that controls the mix between the constrained and unconstrained poses.
         float getMix();
         void setMix(float mix);

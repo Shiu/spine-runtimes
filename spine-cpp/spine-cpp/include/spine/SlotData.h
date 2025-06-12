@@ -41,8 +41,6 @@ namespace spine {
 
 	/// Stores the setup pose for a Slot.
 	class SP_API SlotData : public PosedData<SlotPose> {
-		RTTI_DECL
-
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class PathConstraint;

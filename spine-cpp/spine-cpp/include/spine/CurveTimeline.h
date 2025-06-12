@@ -75,8 +75,6 @@ namespace spine {
 
 		virtual ~CurveTimeline1();
 
-		size_t getFrameEntries();
-
 		/// Sets the time and value for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.
 		/// @param time The frame time in seconds.

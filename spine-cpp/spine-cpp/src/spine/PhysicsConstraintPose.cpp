@@ -31,8 +31,6 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(PhysicsConstraintPose)
-
 PhysicsConstraintPose::PhysicsConstraintPose() : Pose<PhysicsConstraintPose>(), _inertia(0), _strength(0), _damping(0), _massInverse(0), _wind(0), _gravity(0), _mix(0) {
 }
 

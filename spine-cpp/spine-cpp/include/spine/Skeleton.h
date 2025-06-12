@@ -127,6 +127,8 @@ namespace spine {
 
 		friend class PhysicsConstraint;
 
+		friend class BonePose;
+
 	public:
 		explicit Skeleton(SkeletonData *skeletonData);
 
@@ -290,6 +292,7 @@ namespace spine {
 		float _x, _y;
         float _time;
         float _windX, _windY, _gravityX, _gravityY;
+        int _update;
 
 		void sortIkConstraint(IkConstraint *constraint);
 

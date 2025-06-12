@@ -56,7 +56,7 @@ namespace spine {
 		using VertexAttachment::computeWorldVertices;
 
 		virtual void computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
-		size_t stride = 2);
+		size_t stride = 2) override;
 
 		void updateRegion();
 
@@ -100,7 +100,7 @@ namespace spine {
 
 		void setHeight(float inValue);
 
-		virtual Attachment *copy();
+		virtual Attachment *copy() override;
 
 		MeshAttachment *newLinkedMesh();
 

@@ -43,7 +43,6 @@ namespace spine {
 	class SkeletonJson;
 
 	class SP_API Sequence : public SpineObject {
-		RTTI_DECL
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 	public:

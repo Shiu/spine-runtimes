@@ -31,8 +31,6 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(BoneLocal)
-
 BoneLocal::BoneLocal() : _x(0), _y(0), _rotation(0), _scaleX(1), _scaleY(1), _shearX(0), _shearY(0), _inherit(Inherit_Normal) {
 }
 

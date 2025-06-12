@@ -40,7 +40,7 @@ namespace spine {
 	class Bone;
 	class BonePose;
 
-	class SP_API TransformConstraint : public Constraint<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
+	class SP_API TransformConstraint : public ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
 		friend class Skeleton;
 		friend class TransformConstraintTimeline;
 
@@ -52,11 +52,11 @@ namespace spine {
 		TransformConstraint copy(Skeleton& skeleton);
 
 		/// Applies the constraint to the constrained bones.
-		void update(Skeleton& skeleton, Physics physics);
+		void update(Skeleton& skeleton, Physics physics) override;
 
-		void sort(Skeleton& skeleton);
+		void sort(Skeleton& skeleton) override;
 
-		bool isSourceActive();
+		bool isSourceActive() override;
 
 		/// The bones that will be modified by this transform constraint.
 		Vector<BonePose*>& getBones();

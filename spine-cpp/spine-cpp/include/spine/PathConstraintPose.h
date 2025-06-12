@@ -37,38 +37,36 @@ namespace spine {
     /// Stores a pose for a path constraint.
     class SP_API PathConstraintPose : public Pose<PathConstraintPose> {
         friend class PathConstraint;
-        
-        RTTI_DECL
-    
+
     private:
         float _position;
         float _spacing;
         float _mixRotate;
         float _mixX;
         float _mixY;
-    
+
     public:
         PathConstraintPose();
         virtual ~PathConstraintPose();
-        
+
         virtual void set(PathConstraintPose& pose) override;
-        
+
         /// The position along the path.
         float getPosition();
         void setPosition(float position);
-        
+
         /// The spacing between bones.
         float getSpacing();
         void setSpacing(float spacing);
-        
+
         /// A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
         float getMixRotate();
         void setMixRotate(float mixRotate);
-        
+
         /// A percentage (0-1) that controls the mix between the constrained and unconstrained translation X.
         float getMixX();
         void setMixX(float mixX);
-        
+
         /// A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y.
         float getMixY();
         void setMixY(float mixY);
