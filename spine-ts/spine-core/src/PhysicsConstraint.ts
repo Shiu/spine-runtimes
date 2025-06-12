@@ -215,9 +215,10 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 								m = t * p.massInverse;
 								e = p.strength;
 							}
+							var g = Skeleton.yDown ? -p.gravity : p.gravity;
 							let rs = this.rotateOffset, ss = this.scaleOffset, h = l / f,
-								ax = p.wind * skeleton.windX + p.gravity * skeleton.gravityX,
-								ay = p.wind * skeleton.windY + p.gravity * skeleton.gravityY;
+								ax = p.wind * skeleton.windX + g * skeleton.gravityX,
+								ay = p.wind * skeleton.windY + g * skeleton.gravityY;
 							while (true) {
 								a -= t;
 								if (scaleX) {
