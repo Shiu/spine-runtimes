@@ -63,7 +63,7 @@ void SkeletonBounds::update(Skeleton &skeleton, bool updateAabb) {
 		Slot *slot = slots[i];
 		if (!slot->getBone().isActive()) continue;
 
-		Attachment *attachment = slot->getAttachment();
+		Attachment *attachment = slot->getAppliedPose().getAttachment();
 		if (attachment == NULL || !attachment->getRTTI().instanceOf(BoundingBoxAttachment::rtti)) continue;
 		BoundingBoxAttachment *boundingBox = static_cast<BoundingBoxAttachment *>(attachment);
 		_boundingBoxes.add(boundingBox);
@@ -78,7 +78,7 @@ void SkeletonBounds::update(Skeleton &skeleton, bool updateAabb) {
 		if (polygon._vertices.size() < count) {
 			polygon._vertices.setSize(count, 0);
 		}
-		boundingBox->computeWorldVertices(*slot, polygon._vertices);
+		boundingBox->computeWorldVertices(skeleton, *slot, 0, count, polygon._vertices, 0, 2);
 	}
 
 	if (updateAabb)
@@ -91,11 +91,11 @@ void SkeletonBounds::update(Skeleton &skeleton, bool updateAabb) {
 	}
 }
 
-bool SkeletonBounds::aabbcontainsPoint(float x, float y) {
+bool SkeletonBounds::aabbContainsPoint(float x, float y) {
 	return x >= _minX && x <= _maxX && y >= _minY && y <= _maxY;
 }
 
-bool SkeletonBounds::aabbintersectsSegment(float x1, float y1, float x2, float y2) {
+bool SkeletonBounds::aabbIntersectsSegment(float x1, float y1, float x2, float y2) {
 	float minX = _minX;
 	float minY = _minY;
 	float maxX = _maxX;

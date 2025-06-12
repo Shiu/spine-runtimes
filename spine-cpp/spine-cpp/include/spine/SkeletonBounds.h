@@ -59,10 +59,10 @@ namespace spine {
 		void update(Skeleton &skeleton, bool updateAabb);
 
 		/// Returns true if the axis aligned bounding box contains the point.
-		bool aabbcontainsPoint(float x, float y);
+		bool aabbContainsPoint(float x, float y);
 
 		/// Returns true if the axis aligned bounding box intersects the line segment.
-		bool aabbintersectsSegment(float x1, float y1, float x2, float y2);
+		bool aabbIntersectsSegment(float x1, float y1, float x2, float y2);
 
 		/// Returns true if the axis aligned bounding box intersects the axis aligned bounding box of the specified bounds.
 		bool aabbIntersectsSkeleton(SkeletonBounds &bounds);
@@ -70,15 +70,15 @@ namespace spine {
 		/// Returns true if the polygon contains the point.
 		bool containsPoint(Polygon *polygon, float x, float y);
 
-		/// Returns the first bounding box attachment that contains the point, or NULL. When doing many checks, it is usually more
-		/// efficient to only call this method if {@link #aabbcontainsPoint(float, float)} returns true.
+		/// Returns the first bounding box attachment that contains the point, or null. When doing many checks, it is usually more
+		/// efficient to only call this method if aabbContainsPoint(float, float) returns true.
 		BoundingBoxAttachment *containsPoint(float x, float y);
 
-		/// Returns the first bounding box attachment that contains the line segment, or NULL. When doing many checks, it is usually
-		/// more efficient to only call this method if {@link #aabbintersectsSegment(float, float, float, float)} returns true.
+		/// Returns the first bounding box attachment that contains any part of the line segment, or null. When doing many checks, it
+		/// is usually more efficient to only call this method if aabbIntersectsSegment(float, float, float, float) returns true.
 		BoundingBoxAttachment *intersectsSegment(float x1, float y1, float x2, float y2);
 
-		/// Returns true if the polygon contains the line segment.
+		/// Returns true if the polygon contains any part of the line segment.
 		bool intersectsSegment(Polygon *polygon, float x1, float y1, float x2, float y2);
 
         /// Returns the polygon for the given bounding box attachment or null if no
