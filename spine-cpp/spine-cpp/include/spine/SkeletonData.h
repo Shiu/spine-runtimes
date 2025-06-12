@@ -52,7 +52,12 @@ namespace spine {
 
     class PhysicsConstraintData;
 
+	class ConstraintData;
+
 /// Stores the setup pose and all of the stateless data for a skeleton.
+/// 
+/// See <a href="https://esotericsoftware.com/spine-runtime-architecture#Data-objects">Data objects</a> in the Spine Runtimes
+/// Guide.
 	class SP_API SkeletonData : public SpineObject {
 		friend class SkeletonBinary;
 
@@ -94,6 +99,8 @@ namespace spine {
         /// @return May be NULL.
         PhysicsConstraintData *findPhysicsConstraint(const String &constraintName);
 
+		/// The skeleton's name, which by default is the name of the skeleton data file when possible, or null when a name hasn't been
+		/// set.
 		const String &getName();
 
 		void setName(const String &inValue);
@@ -101,6 +108,7 @@ namespace spine {
 		/// The skeleton's bones, sorted parent first. The root bone is always the first bone.
 		Vector<BoneData *> &getBones();
 
+		/// The skeleton's slots in the setup pose draw order.
 		Vector<SlotData *> &getSlots();
 
 		/// All skins, including the default skin.
@@ -113,8 +121,10 @@ namespace spine {
 
 		void setDefaultSkin(Skin *inValue);
 
+		/// The skeleton's events.
 		Vector<spine::EventData *> &getEvents();
 
+		/// The skeleton's animations.
 		Vector<Animation *> &getAnimations();
 
 		Vector<IkConstraintData *> &getIkConstraints();
@@ -125,22 +135,47 @@ namespace spine {
 
         Vector<PhysicsConstraintData *> &getPhysicsConstraints();
 
+		/// The skeleton's constraints.
+		Vector<ConstraintData *> &getConstraints();
+
+		/// Finds a constraint by name and type.
+		/// @return May be NULL.
+		template<typename T>
+		T *findConstraint(const String &constraintName) {
+			getConstraints(); // Ensure constraints array is populated
+			for (size_t i = 0, n = _constraints.size(); i < n; i++) {
+				ConstraintData *constraint = _constraints[i];
+				if (constraint->getName().equals(constraintName)) {
+					if (constraint->rtti.isExactly(T::rtti)) {
+						return static_cast<T*>(constraint);
+					}
+				}
+			}
+			return NULL;
+		}
+
+		/// The X coordinate of the skeleton's axis aligned bounding box in the setup pose.
 		float getX();
 
 		void setX(float inValue);
 
+		/// The Y coordinate of the skeleton's axis aligned bounding box in the setup pose.
 		float getY();
 
 		void setY(float inValue);
 
+		/// The width of the skeleton's axis aligned bounding box in the setup pose.
 		float getWidth();
 
 		void setWidth(float inValue);
 
+		/// The height of the skeleton's axis aligned bounding box in the setup pose.
 		float getHeight();
 
 		void setHeight(float inValue);
 
+        /// Baseline scale factor for applying physics and other effects based on distance to non-scalable properties, such as angle or
+        /// scale. Default is 100.
         float getReferenceScale();
 
         void setReferenceScale(float inValue);
@@ -150,14 +185,17 @@ namespace spine {
 
 		void setVersion(const String &inValue);
 
+		/// The skeleton data hash. This value will change if any of the skeleton data has changed.
 		const String &getHash();
 
 		void setHash(const String &inValue);
 
+		/// The path to the images directory as defined in Spine, or null if nonessential data was not exported.
 		const String &getImagesPath();
 
 		void setImagesPath(const String &inValue);
 
+		/// The path to the audio directory as defined in Spine, or null if nonessential data was not exported.
 		const String &getAudioPath();
 
 		void setAudioPath(const String &inValue);
@@ -179,6 +217,7 @@ namespace spine {
 		Vector<TransformConstraintData *> _transformConstraints;
 		Vector<PathConstraintData *> _pathConstraints;
         Vector<PhysicsConstraintData *> _physicsConstraints;
+		Vector<ConstraintData *> _constraints;
 		float _x, _y, _width, _height;
         float _referenceScale;
 		String _version;

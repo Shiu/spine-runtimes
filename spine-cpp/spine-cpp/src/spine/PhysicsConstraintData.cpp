@@ -32,9 +32,9 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(PhysicsConstraintData)
+RTTI_IMPL(PhysicsConstraintData, ConstraintData)
 
-PhysicsConstraintData::PhysicsConstraintData(const String &name) : ConstraintData<PhysicsConstraint, PhysicsConstraintPose>(name),
+PhysicsConstraintData::PhysicsConstraintData(const String &name) : ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>(name),
 																   _bone(NULL),
 																   _x(0), _y(0), _rotate(0), _scaleX(0), _shearX(0), _limit(0), _step(0),
 																   _inertiaGlobal(false), _strengthGlobal(false), _dampingGlobal(false), _massGlobal(false),

@@ -43,7 +43,6 @@ namespace spine {
 	/// Source property for a TransformConstraint.
 	class SP_API FromProperty : public SpineObject {
 	public:
-		RTTI_DECL
 		
 		/// The value of this property that corresponds to ToProperty offset.
 		float offset;
@@ -61,7 +60,6 @@ namespace spine {
 	/// Constrained property for a TransformConstraint.
 	class SP_API ToProperty : public SpineObject {
 	public:
-		RTTI_DECL
 		
 		/// The value of this property that corresponds to FromProperty offset.
 		float offset;
@@ -84,78 +82,66 @@ namespace spine {
 
 	class SP_API FromRotate : public FromProperty {
 	public:
-		RTTI_DECL
 		float value(BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToRotate : public ToProperty {
 	public:
-		RTTI_DECL
 		float mix(TransformConstraintPose& pose) override;
 		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromX : public FromProperty {
 	public:
-		RTTI_DECL
 		float value(BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToX : public ToProperty {
 	public:
-		RTTI_DECL
 		float mix(TransformConstraintPose& pose) override;
 		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromY : public FromProperty {
 	public:
-		RTTI_DECL
 		float value(BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToY : public ToProperty {
 	public:
-		RTTI_DECL
 		float mix(TransformConstraintPose& pose) override;
 		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromScaleX : public FromProperty {
 	public:
-		RTTI_DECL
 		float value(BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToScaleX : public ToProperty {
 	public:
-		RTTI_DECL
 		float mix(TransformConstraintPose& pose) override;
 		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromScaleY : public FromProperty {
 	public:
-		RTTI_DECL
 		float value(BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToScaleY : public ToProperty {
 	public:
-		RTTI_DECL
 		float mix(TransformConstraintPose& pose) override;
 		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromShearY : public FromProperty {
 	public:
-		RTTI_DECL
 		float value(BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToShearY : public ToProperty {
 	public:
-		RTTI_DECL
 		float mix(TransformConstraintPose& pose) override;
 		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
@@ -163,7 +149,7 @@ namespace spine {
 	/// Stores the setup pose for a TransformConstraint.
 	/// 
 	/// See https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide.
-	class SP_API TransformConstraintData : public ConstraintData<TransformConstraint, TransformConstraintPose> {
+	class SP_API TransformConstraintData : public ConstraintDataGeneric<TransformConstraint, TransformConstraintPose> {
 	public:
 		static const int ROTATION = 0, X = 1, Y = 2, SCALEX = 3, SCALEY = 4, SHEARY = 5;
 		friend class SkeletonBinary;

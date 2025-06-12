@@ -30,83 +30,45 @@
 #ifndef Spine_TransformConstraint_h
 #define Spine_TransformConstraint_h
 
-#include <spine/ConstraintData.h>
-
+#include <spine/Constraint.h>
+#include <spine/TransformConstraintData.h>
+#include <spine/TransformConstraintPose.h>
 #include <spine/Vector.h>
 
 namespace spine {
-	class TransformConstraintData;
-
 	class Skeleton;
-
 	class Bone;
+	class BonePose;
 
-	class SP_API TransformConstraint : public Updatable {
+	class SP_API TransformConstraint : public Constraint<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
 		friend class Skeleton;
-
 		friend class TransformConstraintTimeline;
 
 	RTTI_DECL
 
 	public:
-		TransformConstraint(TransformConstraintData &data, Skeleton &skeleton);
+		TransformConstraint(TransformConstraintData& data, Skeleton& skeleton);
 
-		virtual void update(Physics physics);
+		TransformConstraint copy(Skeleton& skeleton);
 
-		virtual int getOrder();
+		/// Applies the constraint to the constrained bones.
+		void update(Skeleton& skeleton, Physics physics);
 
-		TransformConstraintData &getData();
+		void sort(Skeleton& skeleton);
 
-		Vector<Bone *> &getBones();
+		bool isSourceActive();
 
-		Bone *getTarget();
+		/// The bones that will be modified by this transform constraint.
+		Vector<BonePose*>& getBones();
 
-		void setTarget(Bone *inValue);
+		/// The bone whose world transform will be copied to the constrained bones.
+		Bone* getSource();
 
-		float getMixRotate();
-
-		void setMixRotate(float inValue);
-
-		float getMixX();
-
-		void setMixX(float inValue);
-
-		float getMixY();
-
-		void setMixY(float inValue);
-
-		float getMixScaleX();
-
-		void setMixScaleX(float inValue);
-
-		float getMixScaleY();
-
-		void setMixScaleY(float inValue);
-
-		float getMixShearY();
-
-		void setMixShearY(float inValue);
-
-		bool isActive();
-
-		void setActive(bool inValue);
-
-        void setToSetupPose();
+		void setSource(Bone* source);
 
 	private:
-		TransformConstraintData &_data;
-		Vector<Bone *> _bones;
-		Bone *_target;
-		float _mixRotate, _mixX, _mixY, _mixScaleX, _mixScaleY, _mixShearY;
-		bool _active;
-
-		void applyAbsoluteWorld();
-
-		void applyRelativeWorld();
-
-		void applyAbsoluteLocal();
-
-		void applyRelativeLocal();
+		Vector<BonePose*> _bones;
+		Bone* _source;
 	};
 }
 

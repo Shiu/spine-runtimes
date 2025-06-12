@@ -37,26 +37,37 @@
 namespace spine {
 	class Skeleton;
 
-	/// Base class for all constraint data.
+	/// Base class for all constraint data types.
+	class SP_API ConstraintData : public SpineObject {
+		RTTI_DECL
+	public:
+		ConstraintData(const String &name);
+		virtual ~ConstraintData();
+		const String &getName() const;
+	private:
+		String _name;
+	};
+
+	/// Generic base class for all constraint data.
 	template<class T, class P>
-	class SP_API ConstraintData : public PosedData<P> {
+	class SP_API ConstraintDataGeneric : public PosedData<P>, public ConstraintData {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 
 	public:
-		ConstraintData(const String &name);
-		virtual ~ConstraintData();
+		ConstraintDataGeneric(const String &name);
+		virtual ~ConstraintDataGeneric();
 
 		/// Creates a constraint instance.
 		virtual T* create(Skeleton& skeleton) = 0;
 	};
 
 	template<class T, class P>
-	ConstraintData<T, P>::ConstraintData(const String &name) : PosedData<P>(name) {
+	ConstraintDataGeneric<T, P>::ConstraintDataGeneric(const String &name) : PosedData<P>(name), ConstraintData(name) {
 	}
 
 	template<class T, class P>
-	ConstraintData<T, P>::~ConstraintData() {
+	ConstraintDataGeneric<T, P>::~ConstraintDataGeneric() {
 	}
 }
 

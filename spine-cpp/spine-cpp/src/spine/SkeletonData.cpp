@@ -31,6 +31,7 @@
 
 #include <spine/Animation.h>
 #include <spine/BoneData.h>
+#include <spine/ConstraintData.h>
 #include <spine/EventData.h>
 #include <spine/IkConstraintData.h>
 #include <spine/PathConstraintData.h>
@@ -52,8 +53,9 @@ SkeletonData::SkeletonData() : _name(),
 							   _referenceScale(100),
 							   _version(),
 							   _hash(),
-							   _fps(0),
-							   _imagesPath() {
+							   _fps(30),
+							   _imagesPath(),
+							   _audioPath() {
 }
 
 SkeletonData::~SkeletonData() {
@@ -69,6 +71,8 @@ SkeletonData::~SkeletonData() {
 	ContainerUtil::cleanUpVectorOfPointers(_transformConstraints);
 	ContainerUtil::cleanUpVectorOfPointers(_pathConstraints);
 	ContainerUtil::cleanUpVectorOfPointers(_physicsConstraints);
+	// Note: _constraints contains pointers to objects already cleaned up above, so just clear
+	_constraints.clear();
 	for (size_t i = 0; i < _strings.size(); i++) {
 		SpineExtension::free(_strings[i], __FILE__, __LINE__);
 	}
@@ -241,4 +245,22 @@ float SkeletonData::getFps() {
 
 void SkeletonData::setFps(float inValue) {
 	_fps = inValue;
+}
+
+Vector<ConstraintData *> &SkeletonData::getConstraints() {
+	// Build unified constraints array by aggregating all constraint types
+	_constraints.clear();
+	for (size_t i = 0, n = _ikConstraints.size(); i < n; i++) {
+		_constraints.add(static_cast<ConstraintData*>(_ikConstraints[i]));
+	}
+	for (size_t i = 0, n = _transformConstraints.size(); i < n; i++) {
+		_constraints.add(static_cast<ConstraintData*>(_transformConstraints[i]));
+	}
+	for (size_t i = 0, n = _pathConstraints.size(); i < n; i++) {
+		_constraints.add(static_cast<ConstraintData*>(_pathConstraints[i]));
+	}
+	for (size_t i = 0, n = _physicsConstraints.size(); i < n; i++) {
+		_constraints.add(static_cast<ConstraintData*>(_physicsConstraints[i]));
+	}
+	return _constraints;
 }
