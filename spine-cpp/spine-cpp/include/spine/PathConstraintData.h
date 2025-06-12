@@ -34,41 +34,15 @@
 #include <spine/Vector.h>
 #include <spine/PathConstraintPose.h>
 #include <spine/dll.h>
+#include <spine/PositionMode.h>
+#include <spine/SpacingMode.h>
+#include <spine/RotateMode.h>
 
 namespace spine {
 	class BoneData;
 	class SlotData;
 	class PathConstraint;
 	class Skeleton;
-
-	/// Controls how the first bone is positioned along the path.
-	///
-	/// See https://esotericsoftware.com/spine-path-constraints#Position-mode Position mode in the Spine User Guide.
-	enum PositionMode {
-		PositionMode_Fixed,
-		PositionMode_Percent
-	};
-
-	/// Controls how bones after the first bone are positioned along the path.
-	///
-	/// See https://esotericsoftware.com/spine-path-constraints#Spacing-mode Spacing mode in the Spine User Guide.
-	enum SpacingMode {
-		SpacingMode_Length,
-		SpacingMode_Fixed,
-		SpacingMode_Percent,
-		SpacingMode_Proportional
-	};
-
-	/// Controls how bones are rotated, translated, and scaled to match the path.
-	///
-	/// See https://esotericsoftware.com/spine-path-constraints#Rotate-Mix Rotate mode in the Spine User Guide.
-	enum RotateMode {
-		RotateMode_Tangent,
-		RotateMode_Chain,
-		/// When chain scale, constrained bones should all have the same parent. That way when the path constraint scales a bone, it
-		/// doesn't affect other constrained bones.
-		RotateMode_ChainScale
-	};
 
 	/// Stores the setup pose for a PathConstraint.
 	///

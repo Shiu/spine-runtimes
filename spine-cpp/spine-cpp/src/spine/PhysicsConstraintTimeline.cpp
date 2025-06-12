@@ -67,7 +67,7 @@ void PhysicsConstraintTimeline::apply(Skeleton &skeleton, float, float time, Vec
 		for (size_t i = 0; i < physicsConstraints.size(); i++) {
 			PhysicsConstraint *constraint = physicsConstraints[i];
 			if (constraint->_active && global(constraint->_data)) {
-				PhysicsConstraintPose &pose = appliedPose ? constraint->_applied : constraint->_pose;
+				PhysicsConstraintPose &pose = appliedPose ? *constraint->_applied : constraint->_pose;
 				PhysicsConstraintPose &setupPose = constraint->_data._setup;
 				set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(setupPose), value));
 			}

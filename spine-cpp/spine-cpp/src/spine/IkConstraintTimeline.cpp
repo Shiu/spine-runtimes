@@ -54,7 +54,7 @@ void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time,
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 
-	IkConstraint *constraintP = skeleton._ikConstraints[_constraintIndex];
+	IkConstraint *constraintP = (IkConstraint *)skeleton._constraints[_constraintIndex];
 	IkConstraint &constraint = *constraintP;
 	if (!constraint.isActive()) return;
 

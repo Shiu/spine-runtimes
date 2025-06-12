@@ -62,7 +62,7 @@ namespace spine {
         friend class TranslateYTimeline;
         friend class InheritTimeline;
 
-    private:
+    protected:
         spine::String _name;
         P _setup;
         bool _skinRequired;
@@ -78,7 +78,7 @@ namespace spine {
 
         /// When true, Skeleton::updateWorldTransform(Physics) only updates this constraint if the Skeleton::getSkin()
         /// contains this constraint.
-        /// 
+        ///
         /// See Skin::getConstraints().
         bool getSkinRequired();
         void setSkinRequired(bool skinRequired);

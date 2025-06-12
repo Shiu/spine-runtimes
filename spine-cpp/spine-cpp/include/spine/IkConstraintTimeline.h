@@ -46,7 +46,7 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+			  MixDirection direction) override;
 
 		/// Sets the time, mix and bend direction of the specified keyframe.
 		void setFrame(int frame, float time, float mix, float softness, int bendDirection, bool compress, bool stretch);

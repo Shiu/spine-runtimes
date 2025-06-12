@@ -83,9 +83,10 @@ void spine::spDebug_printBoneDatas(Vector<BoneData *> &boneDatas) {
 }
 
 void spine::spDebug_printBoneData(BoneData *boneData) {
-	printf("Bone data %s: %f, %f, %f, %f, %f, %f %f\n", boneData->getName().buffer(), boneData->getRotation(),
-		   boneData->getScaleX(), boneData->getScaleY(), boneData->getX(), boneData->getY(), boneData->getShearX(),
-		   boneData->getShearY());
+	BoneLocal &setupPose = boneData->getSetupPose();
+	printf("Bone data %s: %f, %f, %f, %f, %f, %f %f\n", boneData->getName().buffer(), setupPose.getRotation(),
+		   setupPose.getScaleX(), setupPose.getScaleY(), setupPose.getX(), setupPose.getY(), setupPose.getShearX(),
+		   setupPose.getShearY());
 }
 
 void spine::spDebug_printSkeleton(Skeleton *skeleton) {
@@ -100,8 +101,9 @@ void spine::spDebug_printBones(Vector<Bone *> &bones) {
 }
 
 void spine::spDebug_printBone(Bone *bone) {
-	printf("Bone %s: %f, %f, %f, %f, %f, %f\n", bone->getData().getName().buffer(), bone->getA(), bone->getB(),
-		   bone->getC(), bone->getD(), bone->getWorldX(), bone->getWorldY());
+	BonePose &pose = bone->getAppliedPose();
+	printf("Bone %s: %f, %f, %f, %f, %f, %f, %f\n", bone->getData().getName().buffer(), pose.getRotation(), pose.getScaleX(),
+		   pose.getScaleY(), pose.getX(), pose.getY(), pose.getShearX(), pose.getShearY());
 }
 
 void spine::spDebug_printFloats(float *values, int numFloats) {

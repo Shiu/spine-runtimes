@@ -49,7 +49,7 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose);
+			  MixDirection direction, bool appliedPose) override;
 
 		int getPhysicsConstraintIndex() { return _constraintIndex; }
 
@@ -75,16 +75,16 @@ namespace spine {
         explicit PhysicsConstraintInertiaTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintInertia) {};
 
     protected:
-        float get(PhysicsConstraintPose &pose) {
+        float get(PhysicsConstraintPose &pose) override {
             return pose.getInertia();
         }
 
-        void set(PhysicsConstraintPose &pose, float value) {
+        void set(PhysicsConstraintPose &pose, float value) override {
             pose.setInertia(value);
         }
 
-        bool global(PhysicsConstraintData &constraintData) {
-            return constraintData.isInertiaGlobal();
+        bool global(PhysicsConstraintData &constraintData) override {
+            return constraintData.getInertiaGlobal();
         }
     };
 
@@ -99,16 +99,16 @@ namespace spine {
         explicit PhysicsConstraintStrengthTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintStrength) {};
 
     protected:
-        float get(PhysicsConstraintPose &pose) {
+        float get(PhysicsConstraintPose &pose) override {
             return pose.getStrength();
         }
 
-        void set(PhysicsConstraintPose &pose, float value) {
+        void set(PhysicsConstraintPose &pose, float value) override {
             pose.setStrength(value);
         }
 
-        bool global(PhysicsConstraintData &constraintData) {
-            return constraintData.isStrengthGlobal();
+        bool global(PhysicsConstraintData &constraintData) override {
+            return constraintData.getStrengthGlobal();
         }
     };
 
@@ -123,16 +123,16 @@ namespace spine {
         explicit PhysicsConstraintDampingTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintDamping) {};
 
     protected:
-        float get(PhysicsConstraintPose &pose) {
+        float get(PhysicsConstraintPose &pose) override {
             return pose.getDamping();
         }
 
-        void set(PhysicsConstraintPose &pose, float value) {
+        void set(PhysicsConstraintPose &pose, float value) override {
             pose.setDamping(value);
         }
 
-        bool global(PhysicsConstraintData &constraintData) {
-            return constraintData.isDampingGlobal();
+        bool global(PhysicsConstraintData &constraintData) override {
+            return constraintData.getDampingGlobal();
         }
     };
 
@@ -147,16 +147,16 @@ namespace spine {
         explicit PhysicsConstraintMassTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintMass) {};
 
     protected:
-        float get(PhysicsConstraintPose &pose) {
+        float get(PhysicsConstraintPose &pose) override {
             return 1 / pose.getMassInverse();
         }
 
-        void set(PhysicsConstraintPose &pose, float value) {
+        void set(PhysicsConstraintPose &pose, float value) override {
             pose.setMassInverse(1 / value);
         }
 
-        bool global(PhysicsConstraintData &constraintData) {
-            return constraintData.isMassGlobal();
+        bool global(PhysicsConstraintData &constraintData) override {
+            return constraintData.getMassGlobal();
         }
     };
 
@@ -171,16 +171,16 @@ namespace spine {
         explicit PhysicsConstraintWindTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintWind) {};
 
     protected:
-        float get(PhysicsConstraintPose &pose) {
+        float get(PhysicsConstraintPose &pose) override {
             return pose.getWind();
         }
 
-        void set(PhysicsConstraintPose &pose, float value) {
+        void set(PhysicsConstraintPose &pose, float value) override {
             pose.setWind(value);
         }
 
-        bool global(PhysicsConstraintData &constraintData) {
-            return constraintData.isWindGlobal();
+        bool global(PhysicsConstraintData &constraintData) override {
+            return constraintData.getWindGlobal();
         }
     };
 
@@ -195,16 +195,16 @@ namespace spine {
         explicit PhysicsConstraintGravityTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintGravity) {};
 
     protected:
-        float get(PhysicsConstraintPose &pose) {
+        float get(PhysicsConstraintPose &pose) override {
             return pose.getGravity();
         }
 
-        void set(PhysicsConstraintPose &pose, float value) {
+        void set(PhysicsConstraintPose &pose, float value) override {
             pose.setGravity(value);
         }
 
-        bool global(PhysicsConstraintData &constraintData) {
-            return constraintData.isGravityGlobal();
+        bool global(PhysicsConstraintData &constraintData) override {
+            return constraintData.getGravityGlobal();
         }
     };
 
@@ -219,16 +219,16 @@ namespace spine {
         explicit PhysicsConstraintMixTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintMix) {};
 
     protected:
-        float get(PhysicsConstraintPose &pose) {
+        float get(PhysicsConstraintPose &pose) override {
             return pose.getMix();
         }
 
-        void set(PhysicsConstraintPose &pose, float value) {
+        void set(PhysicsConstraintPose &pose, float value) override {
             pose.setMix(value);
         }
 
-        bool global(PhysicsConstraintData &constraintData) {
-            return constraintData.isMixGlobal();
+        bool global(PhysicsConstraintData &constraintData) override {
+            return constraintData.getMixGlobal();
         }
     };
 
@@ -247,7 +247,7 @@ namespace spine {
 
         virtual void
         apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-              MixDirection direction, bool appliedPose);
+              MixDirection direction, bool appliedPose) override;
 
         /// The index of the physics constraint that will be reset when this timeline is applied, or -1 if all physics constraints in the skeleton will be reset.
         int getConstraintIndex() { return _constraintIndex; }

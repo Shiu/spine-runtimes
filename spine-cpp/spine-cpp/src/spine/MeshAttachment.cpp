@@ -28,6 +28,7 @@
  *****************************************************************************/
 
 #include <spine/MeshAttachment.h>
+#include <spine/Slot.h>
 
 using namespace spine;
 
@@ -236,6 +237,6 @@ MeshAttachment *MeshAttachment::newLinkedMesh() {
 
 void MeshAttachment::computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
 										  size_t stride) {
-	if (_sequence) _sequence->apply(slot.getAppliedPose(), this);
+	if (_sequence) _sequence->apply(&slot.getAppliedPose(), this);
 	VertexAttachment::computeWorldVertices(skeleton, slot, start, count, worldVertices, offset, stride);
 }

@@ -56,7 +56,7 @@ void PathConstraintMixTimeline::apply(Skeleton &skeleton, float lastTime, float 
 	SP_UNUSED(pEvents);
 	SP_UNUSED(direction);
 
-	PathConstraint *constraintP = skeleton._pathConstraints[_constraintIndex];
+	PathConstraint *constraintP = skeleton._cons[_constraintIndex];
 	PathConstraint &constraint = *constraintP;
 	if (!constraint.isActive()) return;
 

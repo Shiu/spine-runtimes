@@ -39,7 +39,7 @@ namespace spine {
 		Posed() {}
 		virtual ~Posed() {}
 
-		virtual void resetApplied() = 0;
+		virtual void resetConstrained() = 0;
 
 		virtual void pose() = 0;
 
@@ -103,7 +103,7 @@ namespace spine {
 			return *_applied;
 		}
 
-		virtual void resetApplied() {
+		virtual void resetConstrained() {
 			_constrained.set(_pose);
 		}
 

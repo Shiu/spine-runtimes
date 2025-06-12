@@ -37,6 +37,8 @@
 #include <spine/Color.h>
 #include <spine/Physics.h>
 #include <spine/Update.h>
+#include <spine/Posed.h>
+#include <spine/Constraint.h>
 
 namespace spine {
 	class SkeletonData;
