@@ -115,6 +115,8 @@
 #include <spine/SkeletonJson.h>
 #include <spine/SkeletonRenderer.h>
 #include <spine/Skin.h>
+#include <spine/Slider.h>
+#include <spine/SliderData.h>
 #include <spine/SliderPose.h>
 #include <spine/Slot.h>
 #include <spine/SlotData.h>
