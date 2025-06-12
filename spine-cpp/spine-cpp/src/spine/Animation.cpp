@@ -44,7 +44,6 @@ Animation::Animation(const String &name, Vector<Timeline *> &timelines, float du
 																						  _bones(),
 																						  _duration(duration),
 																						  _name(name) {
-	assert(_name.length() > 0);
 	setTimelines(timelines);
 }
 
@@ -106,11 +105,11 @@ int Animation::search(Vector<float> &frames, float target, int step) {
 
 void Animation::setTimelines(Vector<Timeline *> &timelines) {
 	_timelines = timelines;
-	
+
 	size_t n = timelines.size();
 	_timelineIds.clear();
 	_bones.clear();
-	
+
 	HashMap<int, bool> boneSet;
 	for (size_t i = 0; i < n; i++) {
 		Timeline *timeline = timelines[i];
@@ -118,14 +117,9 @@ void Animation::setTimelines(Vector<Timeline *> &timelines) {
 		for (size_t ii = 0; ii < propertyIds.size(); ii++) {
 			_timelineIds.put(propertyIds[ii], true);
 		}
-		
-		BoneTimeline *boneTimeline = nullptr;
-		if (timeline->getRTTI().instanceOf(BoneTimeline1::rtti)) {
-			boneTimeline = static_cast<BoneTimeline1 *>(timeline);
-		} else if (timeline->getRTTI().instanceOf(BoneTimeline2::rtti)) {
-			boneTimeline = static_cast<BoneTimeline2 *>(timeline);
-		}
-		
+
+		BoneTimeline *boneTimeline = timeline->getRTTI().instanceOf(BoneTimeline1::rtti) ?
+			static_cast<BoneTimeline1 *>(timeline) : NULL;
 		if (boneTimeline) {
 			int boneIndex = boneTimeline->getBoneIndex();
 			if (!boneSet.containsKey(boneIndex)) {

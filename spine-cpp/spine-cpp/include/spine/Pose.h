@@ -36,20 +36,12 @@ namespace spine {
     template<class P>
     class SP_API Pose : public SpineObject {
     public:
-        Pose();
-        virtual ~Pose();
-        
+        Pose() {};
+        virtual ~Pose() {};
+
         /// Sets the pose values.
         virtual void set(P& pose) = 0;
     };
-
-    template<class P>
-    Pose<P>::Pose() {
-    }
-
-    template<class P>
-    Pose<P>::~Pose() {
-    }
 }
 
 #endif
