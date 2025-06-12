@@ -27,29 +27,16 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_SlotTimeline_h
-#define Spine_SlotTimeline_h
+#include <spine/SlotTimeline.h>
 
-#include <spine/dll.h>
-#include <spine/RTTI.h>
+using namespace spine;
 
-namespace spine {
+RTTI_IMPL_NOPARENT(SlotTimeline)
 
-	/// An interface for timelines which change the property of a slot.
-	class SP_API SlotTimeline {
-		RTTI_DECL
-
-	public:
-		virtual ~SlotTimeline() {}
-
-		/// The index of the slot in Skeleton::getSlots() that will be changed when this timeline is applied.
-		virtual int getSlotIndex();
-
-		virtual void setSlotIndex(int inValue);
-
-	protected:
-		int _slotIndex;
-	};
+int SlotTimeline::getSlotIndex() {
+	return _slotIndex;
 }
 
-#endif /* Spine_SlotTimeline_h */
+void SlotTimeline::setSlotIndex(int inValue) {
+	_slotIndex = inValue;
+}
