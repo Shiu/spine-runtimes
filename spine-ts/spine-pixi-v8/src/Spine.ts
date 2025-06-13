@@ -568,7 +568,7 @@ export class Spine extends ViewContainer {
 		if (attachment && attachment instanceof ClippingAttachment) {
 			const clip = (this.clippingSlotToPixiMasks[slot.data.name] ||= { slot, vertices: new Array<number>() });
 			clip.maskComputed = false;
-			this.currentClippingSlot = this.clippingSlotToPixiMasks[slot.data.name];
+			this.currentClippingSlot = clip;
 			return;
 		}
 
@@ -576,11 +576,8 @@ export class Spine extends ViewContainer {
 		let currentClippingSlot = this.currentClippingSlot;
 		let slotObject = this._slotsObject[slot.data.name];
 		if (currentClippingSlot && slotObject) {
-			let slotClipping = currentClippingSlot.slot;
-			let clippingAttachment = slotClipping.attachment as ClippingAttachment;
-
 			// create the pixi mask, only the first time and if the clipped slot is the first one clipped by this currentClippingSlot
-			let mask = currentClippingSlot.mask as Graphics;
+			let mask = currentClippingSlot.mask;
 			if (!mask) {
 				mask = maskPool.obtain();
 				currentClippingSlot.mask = mask;
@@ -589,6 +586,8 @@ export class Spine extends ViewContainer {
 
 			// compute the pixi mask polygon, if the clipped slot is the first one clipped by this currentClippingSlot
 			if (!currentClippingSlot.maskComputed) {
+				let slotClipping = currentClippingSlot.slot;
+				let clippingAttachment = slotClipping.attachment as ClippingAttachment;
 				currentClippingSlot.maskComputed = true;
 				const worldVerticesLength = clippingAttachment.worldVerticesLength;
 				const vertices = currentClippingSlot.vertices;
@@ -896,7 +895,6 @@ export class Spine extends ViewContainer {
 
 		container.includeInBuild = false;
 
-		// TODO only add once??
 		this.addChild(container);
 
 		const slotObject = {

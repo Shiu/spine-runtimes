@@ -36,6 +36,7 @@ import {
 	Color,
 	MeshAttachment,
 	Physics,
+	Pool,
 	RegionAttachment,
 	Skeleton,
 	SkeletonBinary,
@@ -323,7 +324,6 @@ export class Spine extends Container {
 
 	private lightColor = new Color();
 	private darkColor = new Color();
-	private clippingVertAux = new Float32Array(6);
 
 	private _boundsProvider?: SpineBoundsProvider;
 	/** The bounds provider to use. If undefined the bounds will be dynamic, calculated when requested and based on the current frame. */
@@ -441,8 +441,8 @@ export class Spine extends Container {
 		this.slotsObject.clear();
 
 		for (let maskKey in this.clippingSlotToPixiMasks) {
-			const mask = this.clippingSlotToPixiMasks[maskKey];
-			mask.destroy();
+			const maskObj = this.clippingSlotToPixiMasks[maskKey];
+			maskObj.mask?.destroy();
 			delete this.clippingSlotToPixiMasks[maskKey];
 		}
 
@@ -575,14 +575,7 @@ export class Spine extends Container {
 	}
 
 	private verticesCache: NumberArrayLike = Utils.newFloatArray(1024);
-	private clippingSlotToPixiMasks: Record<string, Graphics> = {};
-	private pixiMaskCleanup (slot: Slot) {
-		let mask = this.clippingSlotToPixiMasks[slot.data.name];
-		if (mask) {
-			delete this.clippingSlotToPixiMasks[slot.data.name];
-			mask.destroy();
-		}
-	}
+	private clippingSlotToPixiMasks: Record<string, SlotsToClipping> = {};
 
 	private updateSlotObject (element: { container: Container, followAttachmentTimeline: boolean }, slot: Slot, zIndex: number) {
 		const { container: slotObject, followAttachmentTimeline } = element
@@ -615,30 +608,62 @@ export class Spine extends Container {
 		}
 	}
 
-	private updateAndSetPixiMask (pixiMaskSource: PixiMaskSource | null, pixiObject: Container) {
-		if (Spine.clipper.isClipping() && pixiMaskSource) {
-			let mask = this.clippingSlotToPixiMasks[pixiMaskSource.slot.data.name] as Graphics;
+	private currentClippingSlot: SlotsToClipping | undefined;
+	private updateAndSetPixiMask (slot: Slot, last: boolean) {
+		// assign/create the currentClippingSlot
+		const attachment = slot.attachment;
+		if (attachment && attachment instanceof ClippingAttachment) {
+			const clip = (this.clippingSlotToPixiMasks[slot.data.name] ||= { slot, vertices: new Array<number>() });
+			clip.maskComputed = false;
+			this.currentClippingSlot = clip;
+			return;
+		}
+
+		// assign the currentClippingSlot mask to the slot object
+		let currentClippingSlot = this.currentClippingSlot;
+		const slotObject = this.slotsObject.get(slot);
+		if (currentClippingSlot && slotObject) {
+			// create the pixi mask, only the first time and if the clipped slot is the first one clipped by this currentClippingSlot
+			let mask = currentClippingSlot.mask;
 			if (!mask) {
-				mask = new Graphics();
-				this.clippingSlotToPixiMasks[pixiMaskSource.slot.data.name] = mask;
+				mask = maskPool.obtain();
+				currentClippingSlot.mask = mask;
 				this.addChild(mask);
 			}
-			if (!pixiMaskSource.computed) {
-				pixiMaskSource.computed = true;
-				const clippingAttachment = pixiMaskSource.slot.attachment as ClippingAttachment;
+
+			// compute the pixi mask polygon, if the clipped slot is the first one clipped by this currentClippingSlot
+			if (!currentClippingSlot.maskComputed) {
+				let slotClipping = currentClippingSlot.slot;
+				let clippingAttachment = slotClipping.attachment as ClippingAttachment;
+				currentClippingSlot.maskComputed = true;
 				const worldVerticesLength = clippingAttachment.worldVerticesLength;
-				if (this.clippingVertAux.length < worldVerticesLength) this.clippingVertAux = new Float32Array(worldVerticesLength);
-				clippingAttachment.computeWorldVertices(pixiMaskSource.slot, 0, worldVerticesLength, this.clippingVertAux, 0, 2);
-				mask.clear().lineStyle(0).beginFill(0x000000);
-				mask.moveTo(this.clippingVertAux[0], this.clippingVertAux[1]);
-				for (let i = 2; i < worldVerticesLength; i += 2) {
-					mask.lineTo(this.clippingVertAux[i], this.clippingVertAux[i + 1]);
-				}
-				mask.finishPoly();
+				const vertices = currentClippingSlot.vertices;
+				clippingAttachment.computeWorldVertices(slotClipping, 0, worldVerticesLength, vertices, 0, 2);
+				mask.clear().lineStyle(0).beginFill(0x000000).drawPolygon(vertices).endFill();
 			}
-			pixiObject.mask = mask;
-		} else if (pixiObject.mask) {
-			pixiObject.mask = null;
+
+			slotObject.container.mask = mask;
+		} else if (slotObject?.container.mask) {
+			// remove the mask, if slot object has a mask, but currentClippingSlot is undefined
+			slotObject.container.mask = null;
+		}
+
+		// if current slot is the ending one of the currentClippingSlot mask, set currentClippingSlot to undefined
+		if (currentClippingSlot && (currentClippingSlot.slot.attachment as ClippingAttachment).endSlot == slot.data) {
+			this.currentClippingSlot = undefined;
+		}
+
+		// clean up unused masks
+		if (last) {
+			for (const key in this.clippingSlotToPixiMasks) {
+				const clippingSlotToPixiMask = this.clippingSlotToPixiMasks[key];
+				if ((!(clippingSlotToPixiMask.slot.attachment instanceof ClippingAttachment) || !clippingSlotToPixiMask.maskComputed) && clippingSlotToPixiMask.mask) {
+					this.removeChild(clippingSlotToPixiMask.mask);
+					maskPool.free(clippingSlotToPixiMask.mask);
+					clippingSlotToPixiMask.mask = undefined;
+				}
+			}
+			this.currentClippingSlot = undefined;
 		}
 	}
 
@@ -658,7 +683,7 @@ export class Spine extends Container {
 
 		let triangles: Array<number> | null = null;
 		let uvs: NumberArrayLike | null = null;
-		let pixiMaskSource: PixiMaskSource | null = null;
+
 		const drawOrder = this.skeleton.drawOrder;
 
 		for (let i = 0, n = drawOrder.length, slotObjectsCounter = 0; i < n; i++) {
@@ -670,14 +695,13 @@ export class Spine extends Container {
 			if (pixiObject) {
 				this.updateSlotObject(pixiObject, slot, zIndex + 1);
 				slotObjectsCounter++;
-				this.updateAndSetPixiMask(pixiMaskSource, pixiObject.container);
 			}
+			this.updateAndSetPixiMask(slot, i === drawOrder.length - 1);
 
 			const useDarkColor = slot.darkColor != null;
 			const vertexSize = Spine.clipper.isClipping() ? 2 : useDarkColor ? Spine.DARK_VERTEX_SIZE : Spine.VERTEX_SIZE;
 			if (!slot.bone.active) {
 				Spine.clipper.clipEndWithSlot(slot);
-				this.pixiMaskCleanup(slot);
 				continue;
 			}
 			const attachment = slot.getAttachment();
@@ -705,14 +729,12 @@ export class Spine extends Container {
 				texture = <SpineTexture>mesh.region?.texture;
 			} else if (attachment instanceof ClippingAttachment) {
 				Spine.clipper.clipStart(slot, attachment);
-				pixiMaskSource = { slot, computed: false };
 				continue;
 			} else {
 				if (this.hasMeshForSlot(slot)) {
 					this.getMeshForSlot(slot).visible = false;
 				}
 				Spine.clipper.clipEndWithSlot(slot);
-				this.pixiMaskCleanup(slot);
 				continue;
 			}
 			if (texture != null) {
@@ -788,7 +810,6 @@ export class Spine extends Container {
 			}
 
 			Spine.clipper.clipEndWithSlot(slot);
-			this.pixiMaskCleanup(slot);
 		}
 		Spine.clipper.clipEnd();
 	}
@@ -997,10 +1018,14 @@ export class Spine extends Container {
 	}
 }
 
-type PixiMaskSource = {
+interface SlotsToClipping {
 	slot: Slot,
-	computed: boolean, // prevent to reculaculate vertices for a mask clipping multiple pixi objects
-}
+	mask?: Graphics,
+	maskComputed?: boolean,
+	vertices: Array<number>,
+};
+
+const maskPool = new Pool<Graphics>(() => new Graphics);
 
 Skeleton.yDown = true;
 
