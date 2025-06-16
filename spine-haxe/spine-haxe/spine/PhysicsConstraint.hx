@@ -135,8 +135,8 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 					ux = bx;
 					uy = by;
 				} else {
-					var a = remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1., m = 0., e = 0., qx = data.limit * delta,
-						qy = qx * Math.abs(skeleton.scaleY);
+					var a = remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1., m = 0., e = 0., ax = 0., ay = 0.,
+						qx = data.limit * delta, qy = qx * Math.abs(skeleton.scaleY);
 					qx *= Math.abs(skeleton.scaleX);
 					if (x || y) {
 						if (x) {
@@ -154,8 +154,9 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 							d = Math.pow(p.damping, 60 * t);
 							m = t * p.massInverse;
 							e = p.strength;
-							var w = f * p.wind * skeleton.scaleX, g = f * p.gravity * skeleton.scaleY,
-								ax = w * skeleton.windX + g * skeleton.gravityX, ay = w * skeleton.windY + g * skeleton.gravityY;
+							var w = f * p.wind, g = f * p.gravity;
+							ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
+							ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.scaleY;
 							do {
 								if (x) {
 									xVelocity += (ax - xOffset * e) * m;
@@ -210,11 +211,11 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 								d = Math.pow(p.damping, 60 * t);
 								m = t * p.massInverse;
 								e = p.strength;
+								var w = f * p.wind, g = f * (Bone.yDown ? -p.gravity : p.gravity);
+								ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
+								ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.scaleY;
 							}
-							var g = Bone.yDown ? -p.gravity : p.gravity;
-							var rs = rotateOffset, ss = scaleOffset, h = l / f,
-								ax = p.wind * skeleton.windX + g * skeleton.gravityX,
-								ay = p.wind * skeleton.windY + g * skeleton.gravityY;
+							var rs = rotateOffset, ss = scaleOffset, h = l / f;
 							while (true) {
 								a -= t;
 								if (scaleX) {

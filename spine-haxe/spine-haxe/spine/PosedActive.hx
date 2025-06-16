@@ -37,7 +37,7 @@ abstract class PosedActive< //
 
 	public var active:Bool;
 
-	public function new (data:D, pose:P, constrained:A) {
+	public function new (data:D, pose:A, constrained:A) {
 		super(data, pose, constrained);
 		setupPose();
 	}

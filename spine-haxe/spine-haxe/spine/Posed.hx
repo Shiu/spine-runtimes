@@ -36,21 +36,45 @@ abstract class Posed< //
 
 	/** The constraint's setup pose data. */
 	public final data:D;
-
-	public final pose:P;
+	public final pose:A;
 	public final constrained:A;
 	public var applied:A;
 
-	public function new (data:D, pose:P, constrained:A) {
+	public function new (data:D, pose:A, constrained:A) {
 		if (data == null) throw new SpineException("data cannot be null.");
 		this.data = data;
 		this.pose = pose;
 		this.constrained = constrained;
-		applied = cast pose;
+		applied = pose;
+	}
+
+	/** The constraint's setup pose data. */
+	public function getData ():D {
+		return data;
+	}
+
+	public function getPose ():P {
+		return pose;
+	}
+
+	public function getAppliedPose ():A {
+		return applied;
 	}
 
 	public function setupPose ():Void {
 		pose.set(data.setup);
+	}
+
+	public function usePose ():Void { // Port: usePose - reference runtime: pose()
+		applied = pose;
+	}
+
+	public function useConstrained ():Void { // Port: useConstrained - reference runtime: constrained()
+		applied = constrained;
+	}
+
+	public function resetConstrained ():Void { // Port: resetConstrained - reference runtime: reset()
+		constrained.set(pose);
 	}
 
 	public function toString ():String {

@@ -154,12 +154,12 @@ class Skeleton {
 		resetCache.resize(0);
 
 		for (slot in slots)
-			slot.applied = slot.pose;
+			slot.usePose();
 
 		for (bone in bones) {
 			bone.sorted = bone.data.skinRequired;
 			bone.active = !bone.sorted;
-			bone.applied = cast(bone.pose, BonePose);
+			bone.usePose();
 		}
 
 		if (skin != null) {
@@ -175,7 +175,7 @@ class Skeleton {
 		}
 
 		for (constraint in constraints)
-			constraint.applied = constraint.pose;
+			constraint.usePose();
 		for (c in constraints) {
 			var constraint:Constraint<Dynamic, Dynamic, Dynamic> = c;
 			constraint.active = constraint.isSourceActive()
@@ -203,7 +203,7 @@ class Skeleton {
 
 	public function constrained (object:Posed<Dynamic, Dynamic, Dynamic>) {
 		if (object.pose == object.applied) {
-			object.applied = object.constrained;
+			object.useConstrained();
 			resetCache.push(object);
 		}
 	}
@@ -232,8 +232,8 @@ class Skeleton {
 	public function updateWorldTransform(physics:Physics):Void {
 		_update++;
 
-		for (object in resetCache)
-			object.applied.set(object.pose);
+		for (resetable in resetCache)
+			resetable.resetConstrained();
 
 		for (updatable in _updateCache)
 			updatable.update(this, physics);
