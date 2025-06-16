@@ -37,19 +37,45 @@ export abstract class Posed<
 
 	/** The constraint's setup pose data. */
 	readonly data: D;
-	readonly pose: P;
+	readonly pose: A;
 	readonly constrained: A;
 	applied: A;
 
-	constructor (data: D, pose: P, constrained: A) {
+	constructor (data: D, pose: A, constrained: A) {
 		if (data == null) throw new Error("data cannot be null.");
 		this.data = data;
 		this.pose = pose;
 		this.constrained = constrained;
-		this.applied = pose as A;
+		this.applied = pose;
 	}
 
 	public setupPose (): void {
 		this.pose.set(this.data.setup);
 	}
+
+	/** The constraint's setup pose data. */
+	public getData (): D {
+		return this.data;
+	}
+
+	public getPose (): P {
+		return this.pose;
+	}
+
+	public getAppliedPose (): A {
+		return this.applied;
+	}
+
+	usePose () { // Port: usePose - reference runtime:  pose()
+		this.applied = this.pose;
+	}
+
+	useConstrained () { // Port: useConstrained - reference runtime:  constrained()
+		this.applied = this.constrained;
+	}
+
+	resetConstrained () { // Port: resetConstrained - reference runtime:  reset()
+		this.constrained.set(this.pose);
+	}
+
 }

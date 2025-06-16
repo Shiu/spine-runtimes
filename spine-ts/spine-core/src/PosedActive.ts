@@ -41,7 +41,7 @@ export abstract class PosedActive<
 
 	active = false;
 
-	constructor (data: D, pose: P, constrained: A) {
+	constructor (data: D, pose: A, constrained: A) {
 		super(data, pose, constrained);
 		this.setupPose();
 	}

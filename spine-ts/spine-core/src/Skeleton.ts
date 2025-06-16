@@ -165,10 +165,8 @@ export class Skeleton {
 		this.resetCache.length = 0;
 
 		let slots = this.slots;
-		for (let i = 0, n = slots.length; i < n; i++) {
-			const slot = slots[i];
-			slot.applied = slot.pose;
-		}
+		for (let i = 0, n = slots.length; i < n; i++)
+			slots[i].usePose();
 
 		let bones = this.bones;
 		const boneCount = bones.length;
@@ -176,7 +174,7 @@ export class Skeleton {
 			let bone = bones[i];
 			bone.sorted = bone.data.skinRequired;
 			bone.active = !bone.sorted;
-			bone.applied = bone.pose as BonePose;
+			bone.usePose();
 		}
 		if (this.skin) {
 			let skinBones = this.skin.bones;
@@ -192,10 +190,8 @@ export class Skeleton {
 
 		let constraints = this.constraints;
 		let n = this.constraints.length;
-		for (let i = 0; i < n; i++) {
-			const constraint = constraints[i];
-			constraint.applied = constraint.pose;
-		}
+		for (let i = 0; i < n; i++)
+			constraints[i].usePose();
 		for (let i = 0; i < n; i++) {
 			const constraint = constraints[i];
 			constraint.active = constraint.isSourceActive()
@@ -216,7 +212,7 @@ export class Skeleton {
 
 	constrained (object: Posed<any, any, any>) {
 		if (object.pose === object.applied) {
-			object.applied = object.constrained;
+			object.useConstrained();
 			this.resetCache.push(object);
 		}
 	}
@@ -247,10 +243,8 @@ export class Skeleton {
 		this._update++;
 
 		const resetCache = this.resetCache;
-		for (let i = 0, n = this.resetCache.length; i < n; i++) {
-			const object = resetCache[i];
-			object.applied.set(object.pose);
-		}
+		for (let i = 0, n = this.resetCache.length; i < n; i++)
+			resetCache[i].resetConstrained();
 
 		const updateCache = this._updateCache;
 		for (let i = 0, n = this._updateCache.length; i < n; i++)

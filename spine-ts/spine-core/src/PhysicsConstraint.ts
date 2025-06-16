@@ -139,8 +139,8 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 					this.ux = bx;
 					this.uy = by;
 				} else {
-					let a = this.remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1, m = 0, e = 0, qx = this.data.limit * delta,
-						qy = qx * Math.abs(skeleton.scaleY);
+					let a = this.remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1, m = 0, e = 0, ax = 0, ay = 0,
+						qx = this.data.limit * delta, qy = qx * Math.abs(skeleton.scaleY);
 					qx *= Math.abs(skeleton.scaleX);
 					if (x || y) {
 						if (x) {
@@ -158,8 +158,9 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 							d = Math.pow(p.damping, 60 * t);
 							m = t * p.massInverse;
 							e = p.strength;
-							let w = f * p.wind * skeleton.scaleX, g = f * p.gravity * skeleton.scaleY,
-								ax = w * skeleton.windX + g * skeleton.gravityX, ay = w * skeleton.windY + g * skeleton.gravityY;
+							let w = f * p.wind, g = f * p.gravity;
+							ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
+							ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.scaleY;
 							do {
 								if (x) {
 									this.xVelocity += (ax - this.xOffset * e) * m;
@@ -214,11 +215,11 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 								d = Math.pow(p.damping, 60 * t);
 								m = t * p.massInverse;
 								e = p.strength;
+								const w = f * p.wind, g = f * (Skeleton.yDown ? -p.gravity : p.gravity);
+								ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
+								ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.scaleY;
 							}
-							var g = Skeleton.yDown ? -p.gravity : p.gravity;
-							let rs = this.rotateOffset, ss = this.scaleOffset, h = l / f,
-								ax = p.wind * skeleton.windX + g * skeleton.gravityX,
-								ay = p.wind * skeleton.windY + g * skeleton.gravityY;
+							let rs = this.rotateOffset, ss = this.scaleOffset, h = l / f
 							while (true) {
 								a -= t;
 								if (scaleX) {
