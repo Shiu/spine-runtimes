@@ -28,20 +28,18 @@
  *****************************************************************************/
 
 namespace Spine {
-	using Physics = Skeleton.Physics;
+	/// <summary>
+	/// Stores a pose for a slider.
+	/// </summary>
+	public class SliderPose : IPose<SliderPose> {
+		internal float time, mix;
 
-	/// <summary>The interface for items updated by <see cref="Skeleton.UpdateWorldTransform(Physics)"/>.</summary>
-	public interface IUpdatable {
-		/// <param name="physics">Determines how physics and other non-deterministic updates are applied.</param>
-		void Update (Physics physics);
+		public void Set (SliderPose pose) {
+			time = pose.time;
+			mix = pose.mix;
+		}
 
-		/// <summary>Returns false when this item won't be updated by
-		/// <see cref="Skeleton.UpdateWorldTransform(Skeleton.Physics)"/> because a skin is required and the
-		/// <see cref="Skeleton.Skin">active skin</see> does not contain this item.</summary>
-		/// <seealso cref="Skin.Bones"/>
-		/// <seealso cref="Skin.Constraints"/>
-		/// <seealso cref="BoneData.SkinRequired"/>
-		/// <seealso cref="ConstraintData.SkinRequired"/>
-		bool Active { get; }
+		public float Time { get { return time; } set { time = value; } }
+		public float Mix { get { return mix; } set { mix = value; } }
 	}
 }

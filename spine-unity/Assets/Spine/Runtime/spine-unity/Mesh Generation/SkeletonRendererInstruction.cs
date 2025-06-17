@@ -109,13 +109,13 @@ namespace Spine.Unity {
 				Slot slot = drawOrderItems[startSlot + i];
 				if (!slot.Bone.Active
 #if SLOT_ALPHA_DISABLES_ATTACHMENT
-					|| slot.A == 0f
+					|| slot.AppliedPose.GetColor().a == 0f
 #endif
 					) {
 					attachmentsItems[i] = null;
 					continue;
 				}
-				attachmentsItems[i] = slot.Attachment;
+				attachmentsItems[i] = slot.AppliedPose.Attachment;
 			}
 
 #endif

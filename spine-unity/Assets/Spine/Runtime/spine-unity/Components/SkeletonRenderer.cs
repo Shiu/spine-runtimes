@@ -439,7 +439,7 @@ namespace Spine.Unity {
 			MeshFilter meshFilter = GetComponent<MeshFilter>();
 			if (meshFilter != null) meshFilter.sharedMesh = null;
 			currentInstructions.Clear();
-			if (skeleton != null) skeleton.SetToSetupPose();
+			if (skeleton != null) skeleton.SetupPose();
 		}
 
 		/// <summary>
@@ -501,7 +501,7 @@ namespace Spine.Unity {
 			// Generate mesh once, required to update mesh bounds for visibility
 			UpdateMode updateModeSaved = updateMode;
 			updateMode = UpdateMode.FullUpdate;
-			UpdateWorldTransform(Skeleton.Physics.Update);
+			UpdateWorldTransform(Physics.Update);
 			LateUpdate();
 			updateMode = updateModeSaved;
 
@@ -565,7 +565,7 @@ namespace Spine.Unity {
 			}
 		}
 
-		protected virtual void UpdateWorldTransform (Skeleton.Physics physics) {
+		protected virtual void UpdateWorldTransform (Physics physics) {
 			skeleton.UpdateWorldTransform(physics);
 		}
 

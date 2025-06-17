@@ -36,6 +36,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -340,8 +341,19 @@ namespace Spine.Unity.Editor {
 				EditorGUILayout.LabelField("SkeletonData", EditorStyles.boldLabel);
 				if (targetSkeletonData != null) {
 					SkeletonData sd = targetSkeletonData;
-					string m = string.Format("{8} - {0} {1}\nBones: {2}\nConstraints: \n {5} IK \n {6} Path \n {7} Transform\n\nSlots: {3}\nSkins: {4}\n\nAnimations: {9}",
-						sd.Version, string.IsNullOrEmpty(sd.Version) ? "" : "export          ", sd.Bones.Count, sd.Slots.Count, sd.Skins.Count, sd.IkConstraints.Count, sd.PathConstraints.Count, sd.TransformConstraints.Count, skeletonJSON.objectReferenceValue.name, sd.Animations.Count);
+					var ikConstraints = sd.Constraints.OfType<IkConstraintData>();
+					var pathConstraints = sd.Constraints.OfType<PathConstraintData>();
+					var transformConstraints = sd.Constraints.OfType<TransformConstraintData>();
+					var physicsConstraints = sd.Constraints.OfType<PhysicsConstraintData>();
+					int ikCount = ikConstraints.Count();
+					int pathCount = pathConstraints.Count();
+					int tcCount = transformConstraints.Count();
+					int physicsCount = physicsConstraints.Count();
+
+					string m = string.Format("{9} - {0} {1}\nBones: {2}\nConstraints: \n {5} IK \n {6} Path \n {7} Transform, {8} Physics, \n\nSlots: {3}\nSkins: {4}\n\nAnimations: {10}",
+						sd.Version, string.IsNullOrEmpty(sd.Version) ? "" : "export          ",
+						sd.Bones.Count, sd.Slots.Count, sd.Skins.Count, ikCount, pathCount, tcCount, physicsCount,
+						skeletonJSON.objectReferenceValue.name, sd.Animations.Count);
 					EditorGUILayout.LabelField(GUIContent.none, new GUIContent(Icons.info, m), GUILayout.Width(30f));
 				}
 			}
@@ -552,14 +564,15 @@ namespace Spine.Unity.Editor {
 							for (int a = 0; a < slotAttachments.Count; a++) {
 								Skin.SkinEntry skinEntry = slotAttachments[a];
 								Attachment attachment = skinEntry.Attachment;
+								var slotPose = slot.AppliedPose;
 								string attachmentName = skinEntry.Name;
 								bool attachmentIsFromSkin = !defaultSkinAttachments.Contains(skinEntry);
 
 								Texture2D attachmentTypeIcon = Icons.GetAttachmentIcon(attachment);
-								bool initialState = slot.Attachment == attachment;
+								bool initialState = slotPose.Attachment == attachment;
 
 								Texture2D iconToUse = attachmentIsFromSkin ? Icons.skinPlaceholder : attachmentTypeIcon;
-								bool toggled = EditorGUILayout.ToggleLeft(SpineInspectorUtility.TempContent(attachmentName, iconToUse), slot.Attachment == attachment, GUILayout.MinWidth(150f));
+								bool toggled = EditorGUILayout.ToggleLeft(SpineInspectorUtility.TempContent(attachmentName, iconToUse), slotPose.Attachment == attachment, GUILayout.MinWidth(150f));
 
 								if (attachmentIsFromSkin) {
 									Rect extraIconRect = GUILayoutUtility.GetLastRect();
@@ -570,7 +583,7 @@ namespace Spine.Unity.Editor {
 								}
 
 								if (toggled != initialState) {
-									slot.Attachment = toggled ? attachment : null;
+									slotPose.Attachment = toggled ? attachment : null;
 									preview.RefreshOnNextUpdate();
 								}
 							}
@@ -1027,7 +1040,7 @@ namespace Spine.Unity.Editor {
 			}
 
 			skeletonAnimation.AnimationState.ClearTracks();
-			skeletonAnimation.Skeleton.SetToSetupPose();
+			skeletonAnimation.Skeleton.SetupPose();
 		}
 
 		public void PlayPauseAnimation (string animationName, bool loop) {
@@ -1041,7 +1054,7 @@ namespace Spine.Unity.Editor {
 			if (!skeletonAnimation.valid) return;
 
 			if (string.IsNullOrEmpty(animationName)) {
-				skeletonAnimation.Skeleton.SetToSetupPose();
+				skeletonAnimation.Skeleton.SetupPose();
 				skeletonAnimation.AnimationState.ClearTracks();
 				return;
 			}
@@ -1056,7 +1069,7 @@ namespace Spine.Unity.Editor {
 				AnimationState animationState = skeletonAnimation.AnimationState;
 
 				if (isEmpty) {
-					skeleton.SetToSetupPose();
+					skeleton.SetupPose();
 					animationState.SetAnimation(0, targetAnimation, loop);
 				} else {
 					bool sameAnimation = (currentTrack.Animation == targetAnimation);

@@ -318,7 +318,7 @@ namespace Spine.Unity.Playables {
 				}
 
 				if (trackIndex == 0)
-					skeleton.SetToSetupPose();
+					skeleton.SetupPose();
 
 				// Approximate what AnimationState might do at runtime.
 				if (fromAnimation != null && mixDuration > 0 && toClipTime < mixDuration) {
@@ -353,7 +353,7 @@ namespace Spine.Unity.Playables {
 					dummyAnimationState.Event -= EditorEvent;
 				} else {
 					if (toAnimation != null) {
-						toAnimation.Apply(skeleton, 0, toClipTime, clipData.loop, editorAnimationEvents, clipData.alpha, MixBlend.Setup, MixDirection.In);
+						toAnimation.Apply(skeleton, 0, toClipTime, clipData.loop, editorAnimationEvents, clipData.alpha, MixBlend.Setup, MixDirection.In, false);
 						if (EditorEvent != null) {
 							foreach (Spine.Event e in editorAnimationEvents) {
 								EditorEvent(null, e);
@@ -362,7 +362,7 @@ namespace Spine.Unity.Playables {
 					}
 				}
 
-				skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+				skeleton.UpdateWorldTransform(Physics.Update);
 				if (skeletonAnimation) {
 					skeletonAnimation.AfterAnimationApplied();
 					skeletonAnimation.LateUpdate();

@@ -142,7 +142,7 @@ namespace Spine.Unity.Examples {
 		/// <summary>Update the slot's attachment to the Attachment generated from the sprite.</summary>
 		public void Attach () {
 			if (spineSlot != null)
-				spineSlot.Attachment = attachment;
+				spineSlot.AppliedPose.Attachment = attachment;
 		}
 
 	}
@@ -162,7 +162,7 @@ namespace Spine.Unity.Examples {
 		[System.Obsolete]
 		public static RegionAttachment AttachUnitySprite (this Skeleton skeleton, string slotName, Sprite sprite, Shader shader, bool applyPMA, float rotation = 0f) {
 			RegionAttachment att = applyPMA ? sprite.ToRegionAttachmentPMAClone(shader, rotation: rotation) : sprite.ToRegionAttachment(new Material(shader), rotation: rotation);
-			skeleton.FindSlot(slotName).Attachment = att;
+			skeleton.FindSlot(slotName).AppliedPose.Attachment = att;
 			return att;
 		}
 

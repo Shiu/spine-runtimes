@@ -99,7 +99,6 @@ namespace Spine.Unity {
 			// Don't reinitialize if the setup did not change.
 			if (!overwrite &&
 				colliderTable.Count > 0 && slot != null &&    // Slot is set and colliders already populated.
-				skeletonRenderer.skeleton == slot.Skeleton && // Skeleton object did not change.
 				slotName == slot.Data.Name                    // Slot object did not change.
 			)
 				return;
@@ -126,10 +125,10 @@ namespace Spine.Unity {
 			PolygonCollider2D[] colliders = GetComponents<PolygonCollider2D>();
 			if (this.gameObject.activeInHierarchy) {
 				foreach (Skin skin in skeleton.Data.Skins)
-					AddCollidersForSkin(skin, slotIndex, colliders, ref requiredCollidersCount);
+					AddCollidersForSkin(skin, skeleton, slotIndex, colliders, ref requiredCollidersCount);
 
 				if (skeleton.Skin != null)
-					AddCollidersForSkin(skeleton.Skin, slotIndex, colliders, ref requiredCollidersCount);
+					AddCollidersForSkin(skeleton.Skin, skeleton, slotIndex, colliders, ref requiredCollidersCount);
 			}
 			DisposeExcessCollidersAfter(requiredCollidersCount);
 			skinBoneEnabled = slot.Bone.Active;
@@ -145,7 +144,7 @@ namespace Spine.Unity {
 			}
 		}
 
-		void AddCollidersForSkin (Skin skin, int slotIndex, PolygonCollider2D[] previousColliders, ref int collidersCount) {
+		void AddCollidersForSkin (Skin skin, Skeleton skeleton, int slotIndex, PolygonCollider2D[] previousColliders, ref int collidersCount) {
 			if (skin == null) return;
 			List<Skin.SkinEntry> skinEntries = new List<Skin.SkinEntry>();
 			skin.GetAttachments(slotIndex, skinEntries);
@@ -162,7 +161,7 @@ namespace Spine.Unity {
 						PolygonCollider2D bbCollider = collidersCount < previousColliders.Length ?
 							previousColliders[collidersCount] : gameObject.AddComponent<PolygonCollider2D>();
 						++collidersCount;
-						SkeletonUtility.SetColliderPointsLocal(bbCollider, slot, boundingBoxAttachment);
+						SkeletonUtility.SetColliderPointsLocal(bbCollider, skeleton, slot, boundingBoxAttachment);
 						bbCollider.isTrigger = isTrigger;
 						bbCollider.usedByEffector = usedByEffector;
 						bbCollider.usedByComposite = usedByComposite;
@@ -211,9 +210,10 @@ namespace Spine.Unity {
 		}
 
 		void LateUpdate () {
-			if (slot != null && (slot.Attachment != currentAttachment || skinBoneEnabled != slot.Bone.Active)) {
+			var slotPose = slot.AppliedPose;
+			if (slot != null && (slotPose.Attachment != currentAttachment || skinBoneEnabled != slot.Bone.Active)) {
 				skinBoneEnabled = slot.Bone.Active;
-				MatchAttachment(slot.Attachment);
+				MatchAttachment(slotPose.Attachment);
 			}
 		}
 

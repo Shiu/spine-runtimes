@@ -30,17 +30,24 @@
 using System;
 
 namespace Spine {
-	public class TransformConstraintData : ConstraintData {
+	public class TransformConstraintData : ConstraintData<TransformConstraint, TransformConstraintPose> {
+		public const int ROTATION = 0, X = 1, Y = 2, SCALEX = 3, SCALEY = 4, SHEARY = 5;
+
 		internal readonly ExposedList<BoneData> bones = new ExposedList<BoneData>();
 		internal BoneData source;
-		internal float mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY;
-		internal float offsetRotation, offsetX, offsetY, offsetScaleX, offsetScaleY, offsetShearY;
+		internal float[] offsets = new float[6];
 		internal bool localSource, localTarget, additive, clamp;
 		internal readonly ExposedList<FromProperty> properties = new ExposedList<FromProperty>();
 
-		public TransformConstraintData (string name) : base(name) {
+		public TransformConstraintData (string name)
+			: base(name, new TransformConstraintPose()) {
 		}
 
+		override public IConstraint Create (Skeleton skeleton) {
+			return new TransformConstraint(this, skeleton);
+		}
+
+		/// <summary>The bones that will be modified by this transform constraint.</summary>
 		public ExposedList<BoneData> Bones { get { return bones; } }
 
 		/// <summary>The bone whose world transform will be copied to the constrained bones.</summary>
@@ -52,35 +59,18 @@ namespace Spine {
 			}
 		}
 
-		/// <summary>The mapping of transform properties to other transform properties.</summary>
-		public ExposedList<FromProperty> Properties {
-			get { return properties; }
-		}
-
-		/// <summary>A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.</summary>
-		public float MixRotate { get { return mixRotate; } set { mixRotate = value; } }
-		/// <summary>A percentage (0-1) that controls the mix between the constrained and unconstrained translation X.</summary>
-		public float MixX { get { return mixX; } set { mixX = value; } }
-		/// <summary>A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y.</summary>
-		public float MixY { get { return mixY; } set { mixY = value; } }
-		/// <summary>A percentage (0-1) that controls the mix between the constrained and unconstrained scale X.</summary>
-		public float MixScaleX { get { return mixScaleX; } set { mixScaleX = value; } }
-		/// <summary>A percentage (0-1) that controls the mix between the constrained and unconstrained scale Y.</summary>
-		public float MixScaleY { get { return mixScaleY; } set { mixScaleY = value; } }
-		/// <summary>A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y.</summary>
-		public float MixShearY { get { return mixShearY; } set { mixShearY = value; } }
 		/// <summary>An offset added to the constrained bone rotation.</summary>
-		public float OffsetRotation { get { return offsetRotation; } set { offsetRotation = value; } }
+		public float OffsetRotation { get { return offsets[ROTATION]; } set { offsets[ROTATION] = value; } }
 		/// <summary>An offset added to the constrained bone X translation.</summary>
-		public float OffsetX { get { return offsetX; } set { offsetX = value; } }
+		public float OffsetX { get { return offsets[X]; } set { offsets[X] = value; } }
 		/// <summary>An offset added to the constrained bone Y translation.</summary>
-		public float OffsetY { get { return offsetY; } set { offsetY = value; } }
+		public float OffsetY { get { return offsets[Y]; } set { offsets[Y] = value; } }
 		/// <summary>An offset added to the constrained bone scaleX.</summary>
-		public float OffsetScaleX { get { return offsetScaleX; } set { offsetScaleX = value; } }
+		public float OffsetScaleX { get { return offsets[SCALEX]; } set { offsets[SCALEX] = value; } }
 		/// <summary>An offset added to the constrained bone scaleY.</summary>
-		public float OffsetScaleY { get { return offsetScaleY; } set { offsetScaleY = value; } }
+		public float OffsetScaleY { get { return offsets[SCALEY]; } set { offsets[SCALEY] = value; } }
 		/// <summary>An offset added to the constrained bone shearY.</summary>
-		public float OffsetShearY { get { return offsetShearY; } set { offsetShearY = value; } }
+		public float OffsetShearY { get { return offsets[SHEARY]; } set { offsets[SHEARY] = value; } }
 
 		/// <summary>Reads the source bone's local transform instead of its world transform.</summary>
 		public bool LocalSource { get { return localSource; } set { localSource = value; } }
@@ -92,16 +82,21 @@ namespace Spine {
 		/// <see cref="ToProperty.max"/>.</summary>
 		public bool Clamp { get { return clamp; } set { clamp = value; } }
 
+		/// <summary>The mapping of transform properties to other transform properties.</summary>
+		public ExposedList<FromProperty> Properties {
+			get { return properties; }
+		}
+
 		/// <summary>Source property for a <see cref="TransformConstraint"/>.</summary>
 		abstract public class FromProperty {
 			/// <summary>The value of this property that corresponds to <see cref="ToProperty.offset"/>.</summary>
 			public float offset;
 
 			/// <summary>Constrained properties.</summary>
-			public readonly ExposedList<ToProperty> to = new ExposedList<ToProperty>();
+			public readonly ExposedList<ToProperty> to = new ExposedList<ToProperty>(1);
 
 			/// <summary>Reads this property from the specified bone.</summary>
-			abstract public float Value (TransformConstraintData data, Bone source, bool local);
+			abstract public float Value (Skeleton skeleton, BonePose source, bool local, float[] offsets);
 		}
 
 		///<summary>Constrained property for a <see cref="TransformConstraint"/>.</summary>
@@ -115,32 +110,32 @@ namespace Spine {
 			/// <summary>The scale of the <see cref="FromProperty"/> value in relation to this property.</summary>
 			public float scale;
 
-			/// <summary>Reads the mix for this property from the specified constraint.</summary>
-			public abstract float Mix (TransformConstraint constraint);
+			/// <summary>Reads the mix for this property from the specified pose.</summary>
+			public abstract float Mix (TransformConstraintPose pose);
 
 			/// <summary>Applies the value to this property.</summary>
-			public abstract void Apply (TransformConstraint constraint, Bone bone, float value, bool local, bool additive);
+			public abstract void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive);
 		}
 
 		public class FromRotate : FromProperty {
-			public override float Value (TransformConstraintData data, Bone source, bool local) {
-				if (local) return source.arotation + data.offsetRotation;
-				float value = MathUtils.Atan2(source.c, source.a) * MathUtils.RadDeg
-					+ (source.a * source.d - source.b * source.c > 0 ? data.offsetRotation : -data.offsetRotation);
+			public override float Value (Skeleton skeleton, BonePose source, bool local, float[] offsets) {
+				if (local) return source.rotation + offsets[ROTATION];
+				float value = MathUtils.Atan2(source.c / skeleton.ScaleY, source.a / skeleton.scaleX) * MathUtils.RadDeg
+					+ (source.a * source.d - source.b * source.c > 0 ? offsets[ROTATION] : -offsets[ROTATION]);
 				if (value < 0) value += 360;
 				return value;
 			}
 		}
 
 		public class ToRotate : ToProperty {
-			public override float Mix (TransformConstraint constraint) {
-				return constraint.mixRotate;
+			public override float Mix (TransformConstraintPose pose) {
+				return pose.mixRotate;
 			}
 
-			public override void Apply (TransformConstraint constraint, Bone bone, float value, bool local, bool additive) {
+			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
 				if (local) {
-					if (!additive) value -= bone.arotation;
-					bone.arotation += value * constraint.mixRotate;
+					if (!additive) value -= bone.rotation;
+					bone.rotation += value * pose.mixRotate;
 				} else {
 					float a = bone.a, b = bone.b, c = bone.c, d = bone.d;
 					value *= MathUtils.DegRad;
@@ -149,7 +144,7 @@ namespace Spine {
 						value -= MathUtils.PI2;
 					else if (value < -MathUtils.PI) //
 						value += MathUtils.PI2;
-					value *= constraint.mixRotate;
+					value *= pose.mixRotate;
 					float cos = MathUtils.Cos(value), sin = MathUtils.Sin(value);
 					bone.a = cos * a - sin * c;
 					bone.b = cos * b - sin * d;
@@ -160,73 +155,75 @@ namespace Spine {
 		}
 
 		public class FromX : FromProperty {
-			public override float Value (TransformConstraintData data, Bone source, bool local) {
-				return local ? source.ax + data.offsetX : data.offsetX * source.a + data.offsetY * source.b + source.worldX;
+			public override float Value (Skeleton skeleton, BonePose source, bool local, float[] offsets) {
+				return local ? source.x + offsets[X] : (offsets[X] * source.a + offsets[Y] * source.b + source.worldX) / skeleton.scaleX;
 			}
 		}
 
 		public class ToX : ToProperty {
-			public override float Mix (TransformConstraint constraint) {
-				return constraint.mixX;
+			public override float Mix (TransformConstraintPose pose) {
+				return pose.mixX;
 			}
 
-			public override void Apply (TransformConstraint constraint, Bone bone, float value, bool local, bool additive) {
+			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
 				if (local) {
-					if (!additive) value -= bone.ax;
-					bone.ax += value * constraint.mixX;
+					if (!additive) value -= bone.x;
+					bone.x += value * pose.mixX;
 				} else {
 					if (!additive) value -= bone.worldX;
-					bone.worldX += value * constraint.mixX;
+					bone.worldX += value * pose.mixX;
 				}
 			}
 		}
 
 		public class FromY : FromProperty {
-			public override float Value (TransformConstraintData data, Bone source, bool local) {
-				return local ? source.ay + data.offsetY : data.offsetX * source.c + data.offsetY * source.d + source.worldY;
+			public override float Value (Skeleton skeleton, BonePose source, bool local, float[] offsets) {
+				return local ? source.y + offsets[Y] : (offsets[X] * source.c + offsets[Y] * source.d + source.worldY) / skeleton.ScaleY;
 			}
 		}
 
 		public class ToY : ToProperty {
-			public override float Mix (TransformConstraint constraint) {
-				return constraint.mixY;
+			public override float Mix (TransformConstraintPose pose) {
+				return pose.mixY;
 			}
 
-			public override void Apply (TransformConstraint constraint, Bone bone, float value, bool local, bool additive) {
+			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
 				if (local) {
-					if (!additive) value -= bone.ay;
-					bone.ay += value * constraint.mixY;
+					if (!additive) value -= bone.y;
+					bone.y += value * pose.mixY;
 				} else {
 					if (!additive) value -= bone.worldY;
-					bone.worldY += value * constraint.mixY;
+					bone.worldY += value * pose.mixY;
 				}
 			}
 		}
 
 		public class FromScaleX : FromProperty {
-			public override float Value (TransformConstraintData data, Bone source, bool local) {
-				return (local ? source.ascaleX : (float)Math.Sqrt(source.a * source.a + source.c * source.c)) + data.offsetScaleX;
+			public override float Value (Skeleton skeleton, BonePose source, bool local, float[] offsets) {
+				if (local) return source.scaleX + offsets[SCALEX];
+				float a = source.a / skeleton.scaleX, c = source.c / skeleton.ScaleY;
+				return (float)Math.Sqrt(a * a + c * c) + offsets[SCALEX];
 			}
 		}
 
 		public class ToScaleX : ToProperty {
-			public override float Mix (TransformConstraint constraint) {
-				return constraint.mixScaleX;
+			public override float Mix (TransformConstraintPose pose) {
+				return pose.mixScaleX;
 			}
 
-			public override void Apply (TransformConstraint constraint, Bone bone, float value, bool local, bool additive) {
+			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
 				if (local) {
 					if (additive)
-						bone.ascaleX *= 1 + ((value - 1) * constraint.mixScaleX);
-					else if (bone.ascaleX != 0) //
-						bone.ascaleX = 1 + (value / bone.ascaleX - 1) * constraint.mixScaleX;
+						bone.scaleX *= 1 + ((value - 1) * pose.mixScaleX);
+					else if (bone.scaleX != 0) //
+						bone.scaleX = 1 + (value / bone.scaleX - 1) * pose.mixScaleX;
 				} else {
 					float s;
 					if (additive)
-						s = 1 + (value - 1) * constraint.mixScaleX;
+						s = 1 + (value - 1) * pose.mixScaleX;
 					else {
 						s = (float)Math.Sqrt(bone.a * bone.a + bone.c * bone.c);
-						if (s != 0) s = 1 + (value / s - 1) * constraint.mixScaleX;
+						if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleX;
 					}
 					bone.a *= s;
 					bone.c *= s;
@@ -235,29 +232,31 @@ namespace Spine {
 		}
 
 		public class FromScaleY : FromProperty {
-			public override float Value (TransformConstraintData data, Bone source, bool local) {
-				return (local ? source.ascaleY : (float)Math.Sqrt(source.b * source.b + source.d * source.d)) + data.offsetScaleY;
+			public override float Value (Skeleton skeleton, BonePose source, bool local, float[] offsets) {
+				if (local) return source.scaleY + offsets[SCALEY];
+				float b = source.b / skeleton.scaleX, d = source.d / skeleton.ScaleY;
+				return (float)Math.Sqrt(b * b + d * d) + offsets[SCALEY];
 			}
 		}
 
 		public class ToScaleY : ToProperty {
-			public override float Mix (TransformConstraint constraint) {
-				return constraint.mixScaleY;
+			public override float Mix (TransformConstraintPose pose) {
+				return pose.mixScaleY;
 			}
 
-			public override void Apply (TransformConstraint constraint, Bone bone, float value, bool local, bool additive) {
+			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
 				if (local) {
 					if (additive)
-						bone.ascaleY *= 1 + ((value - 1) * constraint.mixScaleY);
-					else if (bone.ascaleY != 0) //
-						bone.ascaleY = 1 + (value / bone.ascaleY - 1) * constraint.mixScaleY;
+						bone.scaleY *= 1 + ((value - 1) * pose.mixScaleY);
+					else if (bone.scaleY != 0) //
+						bone.scaleY = 1 + (value / bone.scaleY - 1) * pose.mixScaleY;
 				} else {
 					float s;
 					if (additive)
-						s = 1 + (value - 1) * constraint.mixScaleY;
+						s = 1 + (value - 1) * pose.mixScaleY;
 					else {
 						s = (float)Math.Sqrt(bone.b * bone.b + bone.d * bone.d);
-						if (s != 0) s = 1 + (value / s - 1) * constraint.mixScaleY;
+						if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleY;
 					}
 					bone.b *= s;
 					bone.d *= s;
@@ -266,21 +265,22 @@ namespace Spine {
 		}
 
 		public class FromShearY : FromProperty {
-			public override float Value (TransformConstraintData data, Bone source, bool local) {
-				return (local ? source.ashearY : (MathUtils.Atan2(source.d, source.b) - MathUtils.Atan2(source.c, source.a)) * MathUtils.RadDeg - 90)
-					+ data.offsetShearY;
+			public override float Value (Skeleton skeleton, BonePose source, bool local, float[] offsets) {
+				if (local) return source.shearY + offsets[SHEARY];
+				float sx = 1 / skeleton.scaleX, sy = 1 / skeleton.ScaleY;
+				return (MathUtils.Atan2(source.d * sy, source.b * sx) - MathUtils.Atan2(source.c * sy, source.a * sx)) * MathUtils.RadDeg - 90 + offsets[SHEARY];
 			}
 		}
 
 		public class ToShearY : ToProperty {
-			public override float Mix (TransformConstraint constraint) {
-				return constraint.mixShearY;
+			public override float Mix (TransformConstraintPose pose) {
+				return pose.mixShearY;
 			}
 
-			public override void Apply (TransformConstraint constraint, Bone bone, float value, bool local, bool additive) {
+			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
 				if (local) {
-					if (!additive) value -= bone.ashearY;
-					bone.ashearY += value * constraint.mixShearY;
+					if (!additive) value -= bone.shearY;
+					bone.shearY += value * pose.mixShearY;
 				} else {
 					float b = bone.b, d = bone.d, by = MathUtils.Atan2(d, b);
 					value = (value + 90) * MathUtils.DegRad;
@@ -293,7 +293,7 @@ namespace Spine {
 						else if (value < -MathUtils.PI) //
 							value += MathUtils.PI2;
 					}
-					value = by + value * constraint.mixShearY;
+					value = by + value * pose.mixShearY;
 					float s = (float)Math.Sqrt(b * b + d * d);
 					bone.b = MathUtils.Cos(value) * s;
 					bone.d = MathUtils.Sin(value) * s;

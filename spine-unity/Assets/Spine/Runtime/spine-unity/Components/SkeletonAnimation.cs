@@ -269,11 +269,11 @@ namespace Spine.Unity {
 				_UpdateLocal(this);
 
 			if (_UpdateWorld == null) {
-				UpdateWorldTransform(Skeleton.Physics.Update);
+				UpdateWorldTransform(Physics.Update);
 			} else {
-				UpdateWorldTransform(Skeleton.Physics.Pose);
+				UpdateWorldTransform(Physics.Pose);
 				_UpdateWorld(this);
-				UpdateWorldTransform(Skeleton.Physics.Update);
+				UpdateWorldTransform(Physics.Update);
 			}
 
 			if (_UpdateComplete != null) {

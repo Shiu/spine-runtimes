@@ -48,13 +48,13 @@ namespace Spine {
 
 		public bool IsClipping { get { return clipAttachment != null; } }
 
-		public int ClipStart (Slot slot, ClippingAttachment clip) {
+		public int ClipStart (Skeleton skeleton, Slot slot, ClippingAttachment clip) {
 			if (clipAttachment != null) return 0;
 			clipAttachment = clip;
 
 			int n = clip.worldVerticesLength;
 			float[] vertices = clippingPolygon.Resize(n).Items;
-			clip.ComputeWorldVertices(slot, 0, n, vertices, 0, 2);
+			clip.ComputeWorldVertices(skeleton, slot, 0, n, vertices, 0, 2);
 			MakeClockwise(clippingPolygon);
 			clippingPolygons = triangulator.Decompose(clippingPolygon, triangulator.Triangulate(clippingPolygon));
 			foreach (ExposedList<float> polygon in clippingPolygons) {

@@ -465,18 +465,18 @@ namespace Spine.Unity {
 				UpdateLocal(this);
 
 			if (UpdateWorld == null) {
-				UpdateWorldTransform(Skeleton.Physics.Update);
+				UpdateWorldTransform(Physics.Update);
 			} else {
-				UpdateWorldTransform(Skeleton.Physics.Pose);
+				UpdateWorldTransform(Physics.Pose);
 				UpdateWorld(this);
-				UpdateWorldTransform(Skeleton.Physics.Update);
+				UpdateWorldTransform(Physics.Update);
 			}
 
 			if (UpdateComplete != null)
 				UpdateComplete(this);
 		}
 
-		protected void UpdateWorldTransform (Skeleton.Physics physics) {
+		protected void UpdateWorldTransform (Physics physics) {
 			skeleton.UpdateWorldTransform(physics);
 		}
 

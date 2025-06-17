@@ -97,9 +97,9 @@ namespace Spine.Unity.Examples {
 				bool validHit = false;
 
 				if (useRadius)
-					validHit = Physics.SphereCast(rayOrigin, castRadius, rayDir, out hit, castDistance + groundOffset, groundMask);
+					validHit = UnityEngine.Physics.SphereCast(rayOrigin, castRadius, rayDir, out hit, castDistance + groundOffset, groundMask);
 				else
-					validHit = Physics.Raycast(rayOrigin, rayDir, out hit, castDistance + groundOffset, groundMask);
+					validHit = UnityEngine.Physics.Raycast(rayOrigin, rayDir, out hit, castDistance + groundOffset, groundMask);
 
 				if (validHit) {
 					hitY = hit.point.y + groundOffset;
@@ -116,8 +116,9 @@ namespace Spine.Unity.Examples {
 			v.y = Mathf.Clamp(v.y, Mathf.Min(lastHitY, hitY), float.MaxValue);
 			transform.position = v;
 
-			bone.bone.X = transform.localPosition.x / hierarchy.PositionScale;
-			bone.bone.Y = transform.localPosition.y / hierarchy.PositionScale;
+			var bonePose = bone.bone.Pose;
+			bonePose.X = transform.localPosition.x / hierarchy.PositionScale;
+			bonePose.Y = transform.localPosition.y / hierarchy.PositionScale;
 
 			lastHitY = hitY;
 		}

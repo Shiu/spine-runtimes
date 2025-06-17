@@ -55,11 +55,11 @@ namespace Spine {
 			rotation = other.rotation;
 		}
 
-		public void ComputeWorldPosition (Bone bone, out float ox, out float oy) {
+		public void ComputeWorldPosition (BonePose bone, out float ox, out float oy) {
 			bone.LocalToWorld(this.x, this.y, out ox, out oy);
 		}
 
-		public float ComputeWorldRotation (Bone bone) {
+		public float ComputeWorldRotation (BonePose bone) {
 			float r = rotation * MathUtils.DegRad, cos = (float)Math.Cos(r), sin = (float)Math.Sin(r);
 			float x = cos * bone.a + sin * bone.b;
 			float y = cos * bone.c + sin * bone.d;

@@ -89,7 +89,7 @@ namespace Spine.Unity.Examples {
 			runtimeSkeletonAnimation.Initialize(false);
 			if (skinName != "")
 				runtimeSkeletonAnimation.Skeleton.SetSkin(skinName);
-			runtimeSkeletonAnimation.Skeleton.SetSlotsToSetupPose();
+			runtimeSkeletonAnimation.Skeleton.SetupPoseSlots();
 			if (animationName != "")
 				runtimeSkeletonAnimation.AnimationState.SetAnimation(0, animationName, true);
 		}
@@ -112,7 +112,7 @@ namespace Spine.Unity.Examples {
 			runtimeSkeletonGraphic.Initialize(false);
 			if (skinName != "")
 				runtimeSkeletonGraphic.Skeleton.SetSkin(skinName);
-			runtimeSkeletonGraphic.Skeleton.SetSlotsToSetupPose();
+			runtimeSkeletonGraphic.Skeleton.SetupPoseSlots();
 			if (animationName != "")
 				runtimeSkeletonGraphic.AnimationState.SetAnimation(0, animationName, true);
 		}

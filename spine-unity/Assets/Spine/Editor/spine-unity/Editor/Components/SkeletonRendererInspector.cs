@@ -636,7 +636,7 @@ namespace Spine.Unity.Editor {
 			if (!fieldMatchesSkin) {
 				Skin skinToSet = string.IsNullOrEmpty(componentSkinName) ? null : skeletonRenderer.Skeleton.Data.FindSkin(componentSkinName);
 				skeletonRenderer.Skeleton.SetSkin(skinToSet);
-				skeletonRenderer.Skeleton.SetSlotsToSetupPose();
+				skeletonRenderer.Skeleton.SetupPoseSlots();
 
 				// Note: the UpdateIfSkinMismatch concept shall be replaced with e.g. an OnValidate based
 				// solution or in a separate commit. The current solution does not repaint the Game view because

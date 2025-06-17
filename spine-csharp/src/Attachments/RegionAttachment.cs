@@ -27,9 +27,17 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
+#if (UNITY_5 || UNITY_5_3_OR_NEWER || UNITY_WSA || UNITY_WP8 || UNITY_WP8_1)
+#define IS_UNITY
+#endif
+
 using System;
 
 namespace Spine {
+#if IS_UNITY
+	using Color = UnityEngine.Color;
+#endif
+
 	/// <summary>Attachment that displays a texture region.</summary>
 	public class RegionAttachment : Attachment, IHasTextureRegion {
 		public const int BLX = 0, BLY = 1;
@@ -40,7 +48,11 @@ namespace Spine {
 		internal TextureRegion region;
 		internal float x, y, rotation, scaleX = 1, scaleY = 1, width, height;
 		internal float[] offset = new float[8], uvs = new float[8];
-		internal float r = 1, g = 1, b = 1, a = 1;
+		// Color is a struct, set to protected to prevent
+		// Color color = slot.color; color.a = 0.5;
+		// modifying just a copy of the struct instead of the original
+		// object as in reference implementation.
+		protected Color color = new Color(1, 1, 1, 1);
 		internal Sequence sequence;
 
 		public float X { get { return x; } set { x = value; } }
@@ -51,10 +63,17 @@ namespace Spine {
 		public float Width { get { return width; } set { width = value; } }
 		public float Height { get { return height; } set { height = value; } }
 
-		public float R { get { return r; } set { r = value; } }
-		public float G { get { return g; } set { g = value; } }
-		public float B { get { return b; } set { b = value; } }
-		public float A { get { return a; } set { a = value; } }
+		public Color GetColor () {
+			return color;
+		}
+
+		public void SetColor (Color color) {
+			this.color = color;
+		}
+
+		public void SetColor (float r, float g, float b, float a) {
+			color = new Color(r, g, b, a);
+		}
 
 		public string Path { get; set; }
 		public TextureRegion Region { get { return region; } set { region = value; } }
@@ -83,10 +102,7 @@ namespace Spine {
 			height = other.height;
 			Array.Copy(other.uvs, 0, uvs, 0, 8);
 			Array.Copy(other.offset, 0, offset, 0, 8);
-			r = other.r;
-			g = other.g;
-			b = other.b;
-			a = other.a;
+			color = other.color;
 			sequence = other.sequence == null ? null : new Sequence(other.sequence);
 		}
 
@@ -179,10 +195,10 @@ namespace Spine {
 		/// <param name="offset">The worldVertices index to begin writing values.</param>
 		/// <param name="stride">The number of worldVertices entries between the value pairs written.</param>
 		public void ComputeWorldVertices (Slot slot, float[] worldVertices, int offset, int stride = 2) {
-			if (sequence != null) sequence.Apply(slot, this);
+			if (sequence != null) sequence.Apply(slot.AppliedPose, this);
 
 			float[] vertexOffset = this.offset;
-			Bone bone = slot.Bone;
+			BonePose bone = slot.Bone.AppliedPose;
 			float bwx = bone.worldX, bwy = bone.worldY;
 			float a = bone.a, b = bone.b, c = bone.c, d = bone.d;
 			float offsetX, offsetY;

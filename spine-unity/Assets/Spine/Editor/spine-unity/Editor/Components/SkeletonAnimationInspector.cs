@@ -104,7 +104,7 @@ namespace Spine.Unity.Editor {
 
 					if (!Application.isPlaying) {
 						if (state != null) state.ClearTrack(0);
-						skeleton.SetToSetupPose();
+						skeleton.SetupPose();
 					}
 
 					Spine.Animation animationToUse = skeleton.Data.FindAnimation(animationName.stringValue);

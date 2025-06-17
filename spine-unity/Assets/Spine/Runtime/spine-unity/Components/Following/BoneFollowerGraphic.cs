@@ -129,10 +129,10 @@ namespace Spine.Unity {
 			if (!Application.isPlaying)
 				skeletonTransformIsParent = Transform.ReferenceEquals(skeletonTransform, transform.parent);
 #endif
-
+			Skeleton skeleton = skeletonGraphic.Skeleton;
 			if (bone == null) {
 				if (string.IsNullOrEmpty(boneName)) return;
-				bone = skeletonGraphic.Skeleton.FindBone(boneName);
+				bone = skeleton.FindBone(boneName);
 				if (!SetBone(boneName)) return;
 			}
 
@@ -153,31 +153,31 @@ namespace Spine.Unity {
 					float cumulativeScaleY = 1.0f;
 					Bone p = parentBone;
 					while (p != null) {
-						cumulativeScaleX *= p.ScaleX;
-						cumulativeScaleY *= p.ScaleY;
+						cumulativeScaleX *= p.AppliedPose.ScaleX;
+						cumulativeScaleY *= p.AppliedPose.ScaleY;
 						p = p.Parent;
 					};
 					scaleSignX = Mathf.Sign(cumulativeScaleX);
 					scaleSignY = Mathf.Sign(cumulativeScaleY);
-					localScale = new Vector3(parentBone.WorldScaleX * scaleSignX, parentBone.WorldScaleY * scaleSignY, 1f);
+					localScale = new Vector3(parentBone.AppliedPose.WorldScaleX * scaleSignX, parentBone.AppliedPose.WorldScaleY * scaleSignY, 1f);
 				}
 				if (followLocalScale)
-					localScale.Scale(new Vector3(bone.ScaleX, bone.ScaleY, 1f));
+					localScale.Scale(new Vector3(bone.AppliedPose.ScaleX, bone.AppliedPose.ScaleY, 1f));
 				if (followSkeletonFlip)
-					localScale.y *= Mathf.Sign(bone.Skeleton.ScaleX * bone.Skeleton.ScaleY) * additionalFlipScale;
+					localScale.y *= Mathf.Sign(skeleton.ScaleX * skeleton.ScaleY) * additionalFlipScale;
 				thisTransform.localScale = localScale;
 			}
 
 			if (skeletonTransformIsParent) {
 				// Recommended setup: Use local transform properties if Spine GameObject is the immediate parent
-				thisTransform.localPosition = new Vector3(followXYPosition ? bone.WorldX * scale + offset.x : thisTransform.localPosition.x,
-														followXYPosition ? bone.WorldY * scale + offset.y : thisTransform.localPosition.y,
+				thisTransform.localPosition = new Vector3(followXYPosition ? bone.AppliedPose.WorldX * scale + offset.x : thisTransform.localPosition.x,
+														followXYPosition ? bone.AppliedPose.WorldY * scale + offset.y : thisTransform.localPosition.y,
 														followZPosition ? 0f : thisTransform.localPosition.z);
 				if (followBoneRotation) thisTransform.localRotation = bone.GetQuaternion();
 			} else {
 				// For special cases: Use transform world properties if transform relationship is complicated
 				Vector3 targetWorldPosition = skeletonTransform.TransformPoint(
-					new Vector3(bone.WorldX * scale + offset.x, bone.WorldY * scale + offset.y, 0f));
+					new Vector3(bone.AppliedPose.WorldX * scale + offset.x, bone.AppliedPose.WorldY * scale + offset.y, 0f));
 				if (!followZPosition) targetWorldPosition.z = thisTransform.position.z;
 				if (!followXYPosition) {
 					targetWorldPosition.x = thisTransform.position.x;
@@ -188,7 +188,7 @@ namespace Spine.Unity {
 				Transform transformParent = thisTransform.parent;
 				Vector3 parentLossyScale = transformParent != null ? transformParent.lossyScale : Vector3.one;
 				if (followBoneRotation) {
-					float boneWorldRotation = bone.WorldRotationX;
+					float boneWorldRotation = bone.AppliedPose.WorldRotationX;
 
 					if ((skeletonLossyScale.x * skeletonLossyScale.y) < 0)
 						boneWorldRotation = -boneWorldRotation;
@@ -204,7 +204,7 @@ namespace Spine.Unity {
 						boneWorldRotation += 180f;
 
 					Vector3 worldRotation = skeletonTransform.rotation.eulerAngles;
-					if (followLocalScale && bone.ScaleX < 0) boneWorldRotation += 180f;
+					if (followLocalScale && bone.AppliedPose.ScaleX < 0) boneWorldRotation += 180f;
 					thisTransform.SetPositionAndRotation(targetWorldPosition, Quaternion.Euler(worldRotation.x, worldRotation.y, worldRotation.z + boneWorldRotation));
 				} else {
 					thisTransform.position = targetWorldPosition;

@@ -161,11 +161,11 @@ namespace Spine.Unity {
 				_UpdateLocal(this);
 
 			if (_UpdateWorld == null) {
-				UpdateWorldTransform(Skeleton.Physics.Update);
+				UpdateWorldTransform(Physics.Update);
 			} else {
-				UpdateWorldTransform(Skeleton.Physics.Pose);
+				UpdateWorldTransform(Physics.Pose);
 				_UpdateWorld(this);
-				UpdateWorldTransform(Skeleton.Physics.Update);
+				UpdateWorldTransform(Physics.Update);
 			}
 
 			if (_UpdateComplete != null)
@@ -289,7 +289,7 @@ namespace Spine.Unity {
 										info.clip.isLooping, stateInfo.speed < 0);
 				weight = useCustomClipWeight ? layerWeight * customClipWeight : weight;
 				clip.Apply(skeleton, 0, time, info.clip.isLooping, null,
-						weight, layerBlendMode, MixDirection.In);
+						weight, layerBlendMode, MixDirection.In, false);
 				if (_OnClipApplied != null)
 					OnClipAppliedCallback(clip, stateInfo, layerIndex, time, info.clip.isLooping, weight);
 				return true;
@@ -313,7 +313,7 @@ namespace Spine.Unity {
 										info.clip.length, info.clip.isLooping, stateInfo.speed < 0);
 				weight = useCustomClipWeight ? layerWeight * customClipWeight : weight;
 				clip.Apply(skeleton, 0, time, info.clip.isLooping, null,
-							weight, layerBlendMode, MixDirection.In);
+							weight, layerBlendMode, MixDirection.In, false);
 				if (_OnClipApplied != null) {
 					OnClipAppliedCallback(clip, stateInfo, layerIndex, time, info.clip.isLooping, weight);
 				}
@@ -360,7 +360,7 @@ namespace Spine.Unity {
 				if (autoReset) {
 					List<Animation> previousAnimations = this.previousAnimations;
 					for (int i = 0, n = previousAnimations.Count; i < n; i++)
-						previousAnimations[i].Apply(skeleton, 0, 0, false, null, 0, MixBlend.Setup, MixDirection.Out); // SetKeyedItemsToSetupPose
+						previousAnimations[i].Apply(skeleton, 0, 0, false, null, 0, MixBlend.Setup, MixDirection.Out, false); // SetKeyedItemsToSetupPose
 
 					previousAnimations.Clear();
 					for (int layer = 0, n = animator.layerCount; layer < n; layer++) {

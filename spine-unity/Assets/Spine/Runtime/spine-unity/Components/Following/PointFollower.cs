@@ -118,8 +118,9 @@ namespace Spine.Unity {
 			}
 
 			Vector2 worldPos;
-			point.ComputeWorldPosition(bone, out worldPos.x, out worldPos.y);
-			float rotation = point.ComputeWorldRotation(bone);
+			var bonePose = bone.AppliedPose;
+			point.ComputeWorldPosition(bonePose, out worldPos.x, out worldPos.y);
+			float rotation = point.ComputeWorldRotation(bonePose);
 
 			Transform thisTransform = this.transform;
 			if (skeletonTransformIsParent) {
@@ -156,7 +157,8 @@ namespace Spine.Unity {
 
 			if (followSkeletonFlip) {
 				Vector3 localScale = thisTransform.localScale;
-				localScale.y = Mathf.Abs(localScale.y) * Mathf.Sign(bone.Skeleton.ScaleX * bone.Skeleton.ScaleY);
+				Skeleton skeleton = skeletonRenderer.Skeleton;
+				localScale.y = Mathf.Abs(localScale.y) * Mathf.Sign(skeleton.ScaleX * skeleton.ScaleY);
 				thisTransform.localScale = localScale;
 			}
 		}

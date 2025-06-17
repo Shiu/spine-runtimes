@@ -54,7 +54,7 @@ namespace Spine.Unity.Examples {
 			// Extra Stuff
 			sg.Initialize(false);
 			sg.Skeleton.SetSkin(startingSkin);
-			sg.Skeleton.SetSlotsToSetupPose();
+			sg.Skeleton.SetupPoseSlots();
 			sg.AnimationState.SetAnimation(0, startingAnimation, true);
 		}
 	}

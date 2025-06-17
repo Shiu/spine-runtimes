@@ -62,14 +62,14 @@ namespace Spine.Unity {
 
 			BoundingBoxAttachment box = attachment as BoundingBoxAttachment;
 			if (box != null) {
-				return AddBoundingBoxGameObject(box.Name, box, slot, parent, isTrigger);
+				return AddBoundingBoxGameObject(box.Name, box, skeleton, slot, parent, isTrigger);
 			} else {
 				Debug.LogFormat("Attachment '{0}' was not a Bounding Box.", attachmentName);
 				return null;
 			}
 		}
 
-		public static PolygonCollider2D AddBoundingBoxGameObject (string name, BoundingBoxAttachment box, Slot slot, Transform parent, bool isTrigger = true) {
+		public static PolygonCollider2D AddBoundingBoxGameObject (string name, BoundingBoxAttachment box, Skeleton skeleton, Slot slot, Transform parent, bool isTrigger = true) {
 			GameObject go = new GameObject("[BoundingBox]" + (string.IsNullOrEmpty(name) ? box.Name : name));
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
@@ -80,21 +80,21 @@ namespace Spine.Unity {
 			got.localPosition = Vector3.zero;
 			got.localRotation = Quaternion.identity;
 			got.localScale = Vector3.one;
-			return AddBoundingBoxAsComponent(box, slot, go, isTrigger);
+			return AddBoundingBoxAsComponent(box, skeleton, slot, go, isTrigger);
 		}
 
-		public static PolygonCollider2D AddBoundingBoxAsComponent (BoundingBoxAttachment box, Slot slot, GameObject gameObject, bool isTrigger = true) {
+		public static PolygonCollider2D AddBoundingBoxAsComponent (BoundingBoxAttachment box, Skeleton skeleton, Slot slot, GameObject gameObject, bool isTrigger = true) {
 			if (box == null) return null;
 			PolygonCollider2D collider = gameObject.AddComponent<PolygonCollider2D>();
 			collider.isTrigger = isTrigger;
-			SetColliderPointsLocal(collider, slot, box);
+			SetColliderPointsLocal(collider, skeleton, slot, box);
 			return collider;
 		}
 
-		public static void SetColliderPointsLocal (PolygonCollider2D collider, Slot slot, BoundingBoxAttachment box, float scale = 1.0f) {
+		public static void SetColliderPointsLocal (PolygonCollider2D collider, Skeleton skeleton, Slot slot, BoundingBoxAttachment box, float scale = 1.0f) {
 			if (box == null) return;
 			if (box.IsWeighted()) Debug.LogWarning("UnityEngine.PolygonCollider2D does not support weighted or animated points. Collider points will not be animated and may have incorrect orientation. If you want to use it as a collider, please remove weights and animations from the bounding box in Spine editor.");
-			Vector2[] verts = box.GetLocalVertices(slot, null);
+			Vector2[] verts = box.GetLocalVertices(skeleton, slot, null);
 			if (scale != 1.0f) {
 				for (int i = 0, n = verts.Length; i < n; ++i)
 					verts[i] *= scale;
@@ -353,14 +353,17 @@ namespace Spine.Unity {
 			if (skeleton == null) return;
 
 			if (boneRoot != null) {
-				List<object> constraintTargets = new List<System.Object>();
-				ExposedList<IkConstraint> ikConstraints = skeleton.IkConstraints;
-				for (int i = 0, n = ikConstraints.Count; i < n; i++)
-					constraintTargets.Add(ikConstraints.Items[i].Target);
-
-				ExposedList<TransformConstraint> transformConstraints = skeleton.TransformConstraints;
-				for (int i = 0, n = transformConstraints.Count; i < n; i++)
-					constraintTargets.Add(transformConstraints.Items[i].Source);
+				List<object> constraintTargets = new List<object>();
+				ExposedList<IConstraint> constraints = skeleton.Constraints;
+				for (int i = 0, n = constraints.Count; i < n; i++) {
+					IConstraint constraint = constraints.Items[i];
+					if (constraint is IkConstraint)
+						constraintTargets.Add(((IkConstraint)constraint).Bones);
+					else if (constraint is TransformConstraint)
+						constraintTargets.Add(((TransformConstraint)constraint).Bones);
+					else if (constraint is PathConstraint)
+						constraintTargets.Add(((PathConstraint)constraint).Bones);
+				}
 
 				List<SkeletonUtilityBone> boneComponents = this.boneComponents;
 				for (int i = 0, n = boneComponents.Count; i < n; i++) {
@@ -489,9 +492,11 @@ namespace Spine.Unity {
 			b.valid = true;
 
 			if (mode == SkeletonUtilityBone.Mode.Override) {
-				if (rot) goTransform.localRotation = Quaternion.Euler(0, 0, b.bone.AppliedRotation);
-				if (pos) goTransform.localPosition = new Vector3(b.bone.X * positionScale + positionOffset.x, b.bone.Y * positionScale + positionOffset.y, 0);
-				goTransform.localScale = new Vector3(b.bone.ScaleX, b.bone.ScaleY, 0);
+				var bonePose = b.bone.AppliedPose;
+				if (rot) goTransform.localRotation = Quaternion.Euler(0, 0, bonePose.Rotation);
+				if (pos) goTransform.localPosition = new Vector3(
+					bonePose.X * positionScale + positionOffset.x, bonePose.Y * positionScale + positionOffset.y, 0);
+				goTransform.localScale = new Vector3(bonePose.ScaleX, bonePose.ScaleY, 0);
 			}
 
 			return go;

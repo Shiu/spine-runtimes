@@ -133,8 +133,8 @@ namespace Spine.Unity.Examples {
 				skeleton.SetSkin(customSkin);
 			}
 
-			//skeleton.SetSlotsToSetupPose();
-			skeleton.SetToSetupPose();
+			//skeleton.SetupPoseSlots();
+			skeleton.SetupPose();
 			skeletonGraphic.Update(0);
 			skeletonGraphic.OverrideTexture = runtimeAtlas;
 

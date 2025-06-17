@@ -264,8 +264,10 @@ namespace Spine {
 						Timeline timeline = timelines[ii];
 						if (timeline is AttachmentTimeline)
 							ApplyAttachmentTimeline((AttachmentTimeline)timeline, skeleton, applyTime, blend, attachments);
-						else
-							timeline.Apply(skeleton, animationLast, applyTime, applyEvents, alpha, blend, MixDirection.In);
+						else {
+							timeline.Apply(skeleton, animationLast, applyTime, applyEvents, alpha, blend, MixDirection.In,
+								false);
+						}
 					}
 				} else {
 					int[] timelineMode = current.timelineMode.Items;
@@ -285,7 +287,7 @@ namespace Spine {
 						else if (timeline is AttachmentTimeline)
 							ApplyAttachmentTimeline((AttachmentTimeline)timeline, skeleton, applyTime, blend, attachments);
 						else
-							timeline.Apply(skeleton, animationLast, applyTime, applyEvents, alpha, timelineBlend, MixDirection.In);
+							timeline.Apply(skeleton, animationLast, applyTime, applyEvents, alpha, timelineBlend, MixDirection.In, false);
 					}
 				}
 				QueueEvents(current, animationTime);
@@ -303,7 +305,7 @@ namespace Spine {
 				Slot slot = slots[i];
 				if (slot.attachmentState == setupState) {
 					string attachmentName = slot.data.attachmentName;
-					slot.Attachment = (attachmentName == null ? null : skeleton.GetAttachment(slot.data.index, attachmentName));
+					slot.pose.Attachment = (attachmentName == null ? null : skeleton.GetAttachment(slot.data.index, attachmentName));
 				}
 			}
 			unkeyedState += 2; // Increasing after each use avoids the need to reset attachmentState for every slot.
@@ -339,7 +341,7 @@ namespace Spine {
 					for (int ii = 0; ii < timelineCount; ii++) {
 						Timeline timeline = timelines[ii];
 						if (timeline is EventTimeline)
-							timeline.Apply(skeleton, animationLast, animationTime, events, 1.0f, MixBlend.Setup, MixDirection.In);
+							timeline.Apply(skeleton, animationLast, animationTime, events, 1.0f, MixBlend.Setup, MixDirection.In, false);
 					}
 					QueueEvents(current, animationTime);
 					events.Clear(false);
@@ -381,7 +383,7 @@ namespace Spine {
 
 			if (blend == MixBlend.Add) {
 				for (int i = 0; i < timelineCount; i++)
-					timelines[i].Apply(skeleton, animationLast, applyTime, events, alphaMix, blend, MixDirection.Out);
+					timelines[i].Apply(skeleton, animationLast, applyTime, events, alphaMix, blend, MixDirection.Out, false);
 			} else {
 				int[] timelineMode = from.timelineMode.Items;
 				TrackEntry[] timelineHoldMix = from.timelineHoldMix.Items;
@@ -432,7 +434,7 @@ namespace Spine {
 					} else {
 						if (drawOrder && timeline is DrawOrderTimeline && timelineBlend == MixBlend.Setup)
 							direction = MixDirection.In;
-						timeline.Apply(skeleton, animationLast, applyTime, events, alpha, timelineBlend, direction);
+						timeline.Apply(skeleton, animationLast, applyTime, events, alpha, timelineBlend, direction, false);
 					}
 				}
 			}
@@ -472,7 +474,7 @@ namespace Spine {
 				for (int i = 0; i < timelineCount; i++) {
 					Timeline timeline = timelines[i];
 					if (timeline is EventTimeline)
-						timeline.Apply(skeleton, animationLast, animationTime, eventBuffer, 0, MixBlend.Setup, MixDirection.Out);
+						timeline.Apply(skeleton, animationLast, animationTime, eventBuffer, 0, MixBlend.Setup, MixDirection.Out, false);
 				}
 
 				if (to.mixDuration > 0) QueueEvents(from, animationTime);
@@ -506,7 +508,7 @@ namespace Spine {
 		}
 
 		private void SetAttachment (Skeleton skeleton, Slot slot, String attachmentName, bool attachments) {
-			slot.Attachment = attachmentName == null ? null : skeleton.GetAttachment(slot.data.index, attachmentName);
+			slot.pose.Attachment = attachmentName == null ? null : skeleton.GetAttachment(slot.data.index, attachmentName);
 			if (attachments) slot.attachmentState = unkeyedState + Current;
 		}
 
@@ -519,30 +521,30 @@ namespace Spine {
 			if (firstFrame) timelinesRotation[i] = 0;
 
 			if (alpha == 1) {
-				timeline.Apply(skeleton, 0, time, null, 1, blend, MixDirection.In);
+				timeline.Apply(skeleton, 0, time, null, 1, blend, MixDirection.In, false);
 				return;
 			}
 
 			Bone bone = skeleton.bones.Items[timeline.BoneIndex];
 			if (!bone.active) return;
-
+			BoneLocal pose = bone.pose, setup = bone.data.setup;
 			float[] frames = timeline.frames;
 			float r1, r2;
 			if (time < frames[0]) { // Time is before first frame.
 				switch (blend) {
 				case MixBlend.Setup:
-					bone.rotation = bone.data.rotation;
+					pose.rotation = setup.rotation;
 					goto default; // Fall through.
 				default:
 					return;
 				case MixBlend.First:
-					r1 = bone.rotation;
-					r2 = bone.data.rotation;
+					r1 = pose.rotation;
+					r2 = setup.rotation;
 					break;
 				}
 			} else {
-				r1 = blend == MixBlend.Setup ? bone.data.rotation : bone.rotation;
-				r2 = bone.data.rotation + timeline.GetCurveValue(time);
+				r1 = blend == MixBlend.Setup ? setup.rotation : pose.rotation;
+				r2 = setup.rotation + timeline.GetCurveValue(time);
 			}
 
 			// Mix between rotations using the direction of the shortest route on the first frame.
@@ -575,7 +577,7 @@ namespace Spine {
 				timelinesRotation[i] = total;
 			}
 			timelinesRotation[i + 1] = diff;
-			bone.rotation = r1 + total * alpha;
+			pose.rotation = r1 + total * alpha;
 		}
 
 		private void QueueEvents (TrackEntry entry, float animationTime) {

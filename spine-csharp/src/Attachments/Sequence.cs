@@ -67,7 +67,7 @@ namespace Spine {
 			setupIndex = other.setupIndex;
 		}
 
-		public void Apply (Slot slot, IHasTextureRegion attachment) {
+		public void Apply (SlotPose slot, IHasTextureRegion attachment) {
 			int index = slot.SequenceIndex;
 			if (index == -1) index = setupIndex;
 			if (index >= regions.Length) index = regions.Length - 1;

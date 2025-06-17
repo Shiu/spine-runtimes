@@ -657,7 +657,7 @@ namespace Spine.Unity.Editor {
 			SlotData[] slotsItems = skeletonGraphic.SkeletonData.Slots.Items;
 			for (int i = 0, count = skeletonGraphic.SkeletonData.Slots.Count; i < count; ++i) {
 				SlotData slotData = slotsItems[i];
-				if (slotData.HasSecondColor)
+				if (slotData.GetSetupPose().GetDarkColor().HasValue)
 					return true;
 			}
 			return false;
@@ -857,7 +857,7 @@ namespace Spine.Unity.Editor {
 			graphic.Initialize(false);
 			if (skin != null) graphic.Skeleton.SetSkin(skin);
 			graphic.initialSkinName = skin.Name;
-			graphic.Skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+			graphic.Skeleton.UpdateWorldTransform(Physics.Update);
 			graphic.UpdateMesh();
 			return graphic;
 		}

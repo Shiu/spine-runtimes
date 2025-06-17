@@ -123,10 +123,10 @@ namespace Spine.Unity.Editor {
 				Skeleton skeleton = skeletonRenderer.Skeleton;
 				SkeletonData skeletonData = skeleton.Data;
 
-				skeleton.SetToSetupPose();
+				skeleton.SetupPose();
 				if (clip != null) {
 					Spine.Animation animation = skeletonData.FindAnimation(clip.name);
-					animation.Apply(skeleton, 0, time, false, null, 1.0f, MixBlend.First, MixDirection.In);
+					animation.Apply(skeleton, 0, time, false, null, 1.0f, MixBlend.First, MixDirection.In, false);
 				}
 				skeletonRenderer.LateUpdate();
 			}

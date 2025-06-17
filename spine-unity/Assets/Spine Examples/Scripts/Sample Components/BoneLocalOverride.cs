@@ -55,7 +55,7 @@ namespace Spine.Unity.Examples {
 			if (Application.isPlaying) return;
 			if (spineComponent == null) spineComponent = GetComponent<ISkeletonAnimation>();
 			if (spineComponent.IsNullOrDestroyed()) return;
-			if (bone != null) bone.SetToSetupPose();
+			if (bone != null) bone.SetupPose();
 			OverrideLocal(spineComponent);
 		}
 #endif
@@ -78,13 +78,14 @@ namespace Spine.Unity.Examples {
 				}
 			}
 
+			var bonePose = bone.Pose;
 			if (overridePosition) {
-				bone.X = Mathf.Lerp(bone.X, localPosition.x, alpha);
-				bone.Y = Mathf.Lerp(bone.Y, localPosition.y, alpha);
+				bonePose.X = Mathf.Lerp(bonePose.X, localPosition.x, alpha);
+				bonePose.Y = Mathf.Lerp(bonePose.Y, localPosition.y, alpha);
 			}
 
 			if (overrideRotation)
-				bone.Rotation = Mathf.Lerp(bone.Rotation, rotation, alpha);
+				bonePose.Rotation = Mathf.Lerp(bonePose.Rotation, rotation, alpha);
 		}
 
 	}
