@@ -10,22 +10,22 @@ echo "Copying assets to runtimes..."
 echo ""
 
 echo "spine-libgdx"
-rm "$ROOT/spine-libgdx/spine-libgdx-tests/assets/goblins/"*
+rm -f "$ROOT/spine-libgdx/spine-libgdx-tests/assets/goblins/"*
 cp -f ../goblins/export/*.json "$ROOT/spine-libgdx/spine-libgdx-tests/assets/goblins/"
 cp -f ../goblins/export/*.skel "$ROOT/spine-libgdx/spine-libgdx-tests/assets/goblins/"
 cp -f ../goblins/export/*-pma.* "$ROOT/spine-libgdx/spine-libgdx-tests/assets/goblins/"
 
-rm "$ROOT/spine-libgdx/spine-libgdx-tests/assets/raptor/"*
+rm -f "$ROOT/spine-libgdx/spine-libgdx-tests/assets/raptor/"*
 cp -f ../raptor/export/*.json "$ROOT/spine-libgdx/spine-libgdx-tests/assets/raptor/"
 cp -f ../raptor/export/*.skel "$ROOT/spine-libgdx/spine-libgdx-tests/assets/raptor/"
 cp -f ../raptor/export/*-pma.* "$ROOT/spine-libgdx/spine-libgdx-tests/assets/raptor/"
 
-rm "$ROOT/spine-libgdx/spine-libgdx-tests/assets/spineboy/"*
+rm -f "$ROOT/spine-libgdx/spine-libgdx-tests/assets/spineboy/"*
 cp -f ../spineboy/export/*.json "$ROOT/spine-libgdx/spine-libgdx-tests/assets/spineboy/"
 cp -r ../spineboy/export/*.skel "$ROOT/spine-libgdx/spine-libgdx-tests/assets/spineboy/"
 cp -r ../spineboy/export/*-pma.* "$ROOT/spine-libgdx/spine-libgdx-tests/assets/spineboy/"
 
-rm "$ROOT/spine-libgdx/spine-libgdx-tests/assets/coin/"*
+rm -f "$ROOT/spine-libgdx/spine-libgdx-tests/assets/coin/"*
 cp -f ../coin/export/*.json "$ROOT/spine-libgdx/spine-libgdx-tests/assets/coin/"
 cp -f ../coin/export/*.skel "$ROOT/spine-libgdx/spine-libgdx-tests/assets/coin/"
 cp -f ../coin/export/*-pma.* "$ROOT/spine-libgdx/spine-libgdx-tests/assets/coin/"
@@ -36,7 +36,7 @@ cp -f ../mix-and-match/export/*.skel "$ROOT/spine-libgdx/spine-libgdx-tests/asse
 cp -f ../mix-and-match/export/*-pma.* "$ROOT/spine-libgdx/spine-libgdx-tests/assets/mix-and-match/"
 
 echo "spine-android"
-rm "$ROOT/spine-android/app/src/main/assets/"*
+rm -f "$ROOT/spine-android/app/src/main/assets/"*
 cp -f ../celestial-circus/export/celestial-circus-pro.skel "$ROOT/spine-android/app/src/main/assets/"
 cp -f ../celestial-circus/export/celestial-circus.atlas "$ROOT/spine-android/app/src/main/assets"
 cp -f ../celestial-circus/export/celestial-circus.png "$ROOT/spine-android/app/src/main/assets"
@@ -283,7 +283,7 @@ cp -f ../spineboy/export/spineboy-pma.atlas "$ROOT/spine-glfw/data/"
 cp -f ../spineboy/export/spineboy-pma.png "$ROOT/spine-glfw/data/"
 
 echo "spine-sfml-c"
-rm "$ROOT/spine-sfml/c/data/"*
+rm -f "$ROOT/spine-sfml/c/data/"*
 cp -f ../coin/export/coin-pro.json "$ROOT/spine-sfml/c/data/"
 cp -f ../coin/export/coin-pro.skel "$ROOT/spine-sfml/c/data/"
 cp -f ../coin/export/coin-pma.atlas "$ROOT/spine-sfml/c/data/"
@@ -346,7 +346,7 @@ cp -f ../snowglobe/export/* "$ROOT/spine-sfml/c/data/"
 cp -f ../cloud-pot/export/* "$ROOT/spine-sfml/c/data/"
 
 echo "spine-sfml-cpp"
-rm "$ROOT/spine-sfml/cpp/data/"*
+rm -f "$ROOT/spine-sfml/cpp/data/"*
 cp -f ../coin/export/coin-pro.json "$ROOT/spine-sfml/cpp/data/"
 cp -f ../coin/export/coin-pro.skel "$ROOT/spine-sfml/cpp/data/"
 cp -f ../coin/export/coin-pma.atlas "$ROOT/spine-sfml/cpp/data/"
@@ -409,7 +409,7 @@ cp -f ../snowglobe/export/* "$ROOT/spine-sfml/cpp/data/"
 cp -f ../cloud-pot/export/* "$ROOT/spine-sfml/cpp/data/"
 
 echo "spine-ts"
-rm "$ROOT/spine-ts/assets/"*
+rm -f "$ROOT/spine-ts/assets/"*
 
 cp -f ../celestial-circus/export/celestial-circus-pro.json "$ROOT/spine-ts/assets/"
 cp -f ../celestial-circus/export/celestial-circus-pro.skel "$ROOT/spine-ts/assets/"
@@ -554,7 +554,7 @@ cp -f ../cloud-pot/export/cloud-pot.atlas "$ROOT/spine-monogame/spine-monogame-e
 cp -f ../cloud-pot/export/cloud-pot.png "$ROOT/spine-monogame/spine-monogame-example/data/"
 
 echo "spine-haxe"
-rm "$ROOT/spine-haxe/example/assets/"*
+rm -f "$ROOT/spine-haxe/example/assets/"*
 cp -f ../coin/export/coin-pro.json "$ROOT/spine-haxe/example/assets/"
 cp -f ../coin/export/coin-pro.skel "$ROOT/spine-haxe/example/assets/"
 cp -f ../coin/export/coin.atlas "$ROOT/spine-haxe/example/assets/"
