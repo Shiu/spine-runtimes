@@ -515,7 +515,7 @@ cp -f ../spineboy/export/spineboy-pma.png "$ROOT/spine-ts/spine-pixi-v8/example/
 
 
 echo "spine-monogame"
-rm "$ROOT/spine-monogame/spine-monogame-example/data/"*
+rm -f "$ROOT/spine-monogame/spine-monogame-example/data/"*
 cp -f ../coin/export/coin-pro.json "$ROOT/spine-monogame/spine-monogame-example/data/"
 cp -f ../coin/export/coin-pro.skel "$ROOT/spine-monogame/spine-monogame-example/data/"
 cp -f ../coin/export/coin.atlas "$ROOT/spine-monogame/spine-monogame-example/data/"
@@ -820,9 +820,10 @@ cp -f ../cloud-pot/export/cloud-pot-pma.atlas "$UNITY_TARGET_DIR/cloud-pot-pma.a
 cp -f ../cloud-pot/export/cloud-pot-pma.png "$UNITY_TARGET_DIR/"
 
 UNITY_TARGET_DIR="$ROOT/spine-unity/Assets/Spine Examples/Spine Skeletons/sack"
-cp -f ../sack/export/sack-pro.skel "$UNITY_TARGET_DIR/sack-pro.skel.bytes"
-cp -f ../sack/export/sack-pma.atlas "$UNITY_TARGET_DIR/sack-pma.atlas.txt"
-cp -f ../sack/export/sack-pma.png "$UNITY_TARGET_DIR/"
+cp -f ../7-anticipation/export/sack-pro.skel "$UNITY_TARGET_DIR/sack-pro.skel.bytes"
+cp -f ../7-anticipation/export/7-anticipation-pma.atlas "$UNITY_TARGET_DIR/sack-pma.atlas.txt"
+$sed -i 's/7-anticipation-pma.png/sack-pma.png/g' "$UNITY_TARGET_DIR/sack-pma.atlas.txt"
+cp -f ../7-anticipation/export/7-anticipation-pma.png "$UNITY_TARGET_DIR/sack-pma.png"
 
 echo "--"
 echo "Note regarding spine-xna and spine-unity:"
