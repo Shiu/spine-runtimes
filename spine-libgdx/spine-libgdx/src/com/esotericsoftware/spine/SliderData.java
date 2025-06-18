@@ -41,7 +41,7 @@ public class SliderData extends ConstraintData<Slider, SliderPose> {
 	boolean additive, loop;
 	@Null BoneData bone;
 	@Null FromProperty property;
-	float scale;
+	float offset, scale;
 	boolean local;
 
 	public SliderData (String name) {
@@ -90,6 +90,14 @@ public class SliderData extends ConstraintData<Slider, SliderPose> {
 
 	public void setProperty (@Null FromProperty property) {
 		this.property = property;
+	}
+
+	public float getOffset () {
+		return offset;
+	}
+
+	public void setOffset (float offset) {
+		this.offset = offset;
 	}
 
 	public float getScale () {

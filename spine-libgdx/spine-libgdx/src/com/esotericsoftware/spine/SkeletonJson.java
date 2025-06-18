@@ -413,8 +413,9 @@ public class SkeletonJson extends SkeletonLoader {
 						if (data.bone == null) throw new SerializationException("Slider bone not found: " + boneName);
 						String property = constraintMap.getString("property");
 						data.property = fromProperty(property);
-						data.property.offset = constraintMap.getFloat("offset", 0) * propertyScale(property, scale);
-						data.scale = constraintMap.getFloat("scale");
+						data.property.offset = constraintMap.getFloat("from", 0) * propertyScale(property, scale);
+						data.offset = constraintMap.getFloat("to", 0);
+						data.scale = constraintMap.getFloat("scale", 1);
 						data.local = constraintMap.getBoolean("local", false);
 					}
 

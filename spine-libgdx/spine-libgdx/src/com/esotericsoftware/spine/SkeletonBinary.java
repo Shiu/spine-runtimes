@@ -446,6 +446,7 @@ public class SkeletonBinary extends SkeletonLoader {
 						default -> null;
 						};
 						data.property.offset = offset;
+						data.offset = input.readFloat();
 						data.scale = input.readFloat();
 					}
 					constraints[i] = data;
