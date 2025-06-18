@@ -982,7 +982,7 @@ public class SkeletonJson extends SkeletonLoader {
 			float time = keyMap.getFloat("time", 0);
 			float mixRotate = keyMap.getFloat("mixRotate", 1);
 			float mixX = keyMap.getFloat("mixX", 1), mixY = keyMap.getFloat("mixY", mixX);
-			float mixScaleX = keyMap.getFloat("mixScaleX", 1), mixScaleY = keyMap.getFloat("mixScaleY", mixScaleX);
+			float mixScaleX = keyMap.getFloat("mixScaleX", 1), mixScaleY = keyMap.getFloat("mixScaleY", 1);
 			float mixShearY = keyMap.getFloat("mixShearY", 1);
 			for (int frame = 0, bezier = 0;; frame++) {
 				timeline.setFrame(frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
@@ -994,7 +994,7 @@ public class SkeletonJson extends SkeletonLoader {
 				float time2 = nextMap.getFloat("time", 0);
 				float mixRotate2 = nextMap.getFloat("mixRotate", 1);
 				float mixX2 = nextMap.getFloat("mixX", 1), mixY2 = nextMap.getFloat("mixY", mixX2);
-				float mixScaleX2 = nextMap.getFloat("mixScaleX", 1), mixScaleY2 = nextMap.getFloat("mixScaleY", mixScaleX2);
+				float mixScaleX2 = nextMap.getFloat("mixScaleX", 1), mixScaleY2 = nextMap.getFloat("mixScaleY", 1);
 				float mixShearY2 = nextMap.getFloat("mixShearY", 1);
 				JsonValue curve = keyMap.get("curve");
 				if (curve != null) {
