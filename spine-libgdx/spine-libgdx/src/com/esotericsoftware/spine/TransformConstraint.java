@@ -82,7 +82,7 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 				bone.modifyWorld(update);
 			for (int f = 0; f < fn; f++) {
 				FromProperty from = fromItems[f];
-				float value = from.value(source, localSource, offsets) - from.offset;
+				float value = from.value(skeleton, source, localSource, offsets) - from.offset;
 				ToProperty[] toItems = from.to.items;
 				for (int t = 0, tn = from.to.size; t < tn; t++) {
 					ToProperty to = toItems[t];

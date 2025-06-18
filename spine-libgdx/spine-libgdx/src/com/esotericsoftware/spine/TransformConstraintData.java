@@ -172,7 +172,7 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 		public final Array<ToProperty> to = new Array(true, 1, ToProperty[]::new);
 
 		/** Reads this property from the specified bone. */
-		abstract public float value (BonePose source, boolean local, float[] offsets);
+		abstract public float value (Skeleton skeleton, BonePose source, boolean local, float[] offsets);
 	}
 
 	/** Constrained property for a {@link TransformConstraint}. */
@@ -194,9 +194,9 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 	}
 
 	static public class FromRotate extends FromProperty {
-		public float value (BonePose source, boolean local, float[] offsets) {
+		public float value (Skeleton skeleton, BonePose source, boolean local, float[] offsets) {
 			if (local) return source.rotation + offsets[ROTATION];
-			float value = atan2(source.c, source.a) * radDeg
+			float value = atan2(source.c / skeleton.scaleY, source.a / skeleton.scaleX) * radDeg
 				+ (source.a * source.d - source.b * source.c > 0 ? offsets[ROTATION] : -offsets[ROTATION]);
 			if (value < 0) value += 360;
 			return value;
@@ -231,8 +231,8 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 	}
 
 	static public class FromX extends FromProperty {
-		public float value (BonePose source, boolean local, float[] offsets) {
-			return local ? source.x + offsets[X] : offsets[X] * source.a + offsets[Y] * source.b + source.worldX;
+		public float value (Skeleton skeleton, BonePose source, boolean local, float[] offsets) {
+			return local ? source.x + offsets[X] : (offsets[X] * source.a + offsets[Y] * source.b + source.worldX) / skeleton.scaleX;
 		}
 	}
 
@@ -253,8 +253,8 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 	}
 
 	static public class FromY extends FromProperty {
-		public float value (BonePose source, boolean local, float[] offsets) {
-			return local ? source.y + offsets[Y] : offsets[X] * source.c + offsets[Y] * source.d + source.worldY;
+		public float value (Skeleton skeleton, BonePose source, boolean local, float[] offsets) {
+			return local ? source.y + offsets[Y] : (offsets[X] * source.c + offsets[Y] * source.d + source.worldY) / skeleton.scaleY;
 		}
 	}
 
@@ -275,8 +275,10 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 	}
 
 	static public class FromScaleX extends FromProperty {
-		public float value (BonePose source, boolean local, float[] offsets) {
-			return (local ? source.scaleX : (float)Math.sqrt(source.a * source.a + source.c * source.c)) + offsets[SCALEX];
+		public float value (Skeleton skeleton, BonePose source, boolean local, float[] offsets) {
+			if (local) return source.scaleX + offsets[SCALEX];
+			float a = source.a / skeleton.scaleX, c = source.c / skeleton.scaleY;
+			return (float)Math.sqrt(a * a + c * c) + offsets[SCALEX];
 		}
 	}
 
@@ -306,8 +308,10 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 	}
 
 	static public class FromScaleY extends FromProperty {
-		public float value (BonePose source, boolean local, float[] offsets) {
-			return (local ? source.scaleY : (float)Math.sqrt(source.b * source.b + source.d * source.d)) + offsets[SCALEY];
+		public float value (Skeleton skeleton, BonePose source, boolean local, float[] offsets) {
+			if (local) return source.scaleY + offsets[SCALEY];
+			float b = source.b / skeleton.scaleX, d = source.d / skeleton.scaleY;
+			return (float)Math.sqrt(b * b + d * d) + offsets[SCALEY];
 		}
 	}
 
@@ -337,8 +341,10 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 	}
 
 	static public class FromShearY extends FromProperty {
-		public float value (BonePose source, boolean local, float[] offsets) {
-			return (local ? source.shearY : (atan2(source.d, source.b) - atan2(source.c, source.a)) * radDeg - 90) + offsets[SHEARY];
+		public float value (Skeleton skeleton, BonePose source, boolean local, float[] offsets) {
+			if (local) return source.shearY + offsets[SHEARY];
+			float sx = 1 / skeleton.scaleX, sy = 1 / skeleton.scaleY;
+			return (atan2(source.d * sy, source.b * sx) - atan2(source.c * sy, source.a * sx)) * radDeg - 90 + offsets[SHEARY];
 		}
 	}
 
