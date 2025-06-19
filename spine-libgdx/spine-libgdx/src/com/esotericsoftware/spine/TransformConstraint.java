@@ -94,7 +94,7 @@ public class TransformConstraint extends Constraint<TransformConstraint, Transfo
 							else
 								clamped = clamp(clamped, to.max, to.offset);
 						}
-						to.apply(p, bone, clamped, localTarget, additive);
+						to.apply(skeleton, p, bone, clamped, localTarget, additive);
 					}
 				}
 			}

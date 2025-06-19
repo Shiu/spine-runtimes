@@ -190,7 +190,8 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 		abstract public float mix (TransformConstraintPose pose);
 
 		/** Applies the value to this property. */
-		abstract public void apply (TransformConstraintPose pose, BonePose bone, float value, boolean local, boolean additive);
+		abstract public void apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, boolean local,
+			boolean additive);
 	}
 
 	static public class FromRotate extends FromProperty {
@@ -208,7 +209,8 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 			return pose.mixRotate;
 		}
 
-		public void apply (TransformConstraintPose pose, BonePose bone, float value, boolean local, boolean additive) {
+		public void apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, boolean local,
+			boolean additive) {
 			if (local) {
 				if (!additive) value -= bone.rotation;
 				bone.rotation += value * pose.mixRotate;
@@ -241,7 +243,8 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 			return pose.mixX;
 		}
 
-		public void apply (TransformConstraintPose pose, BonePose bone, float value, boolean local, boolean additive) {
+		public void apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, boolean local,
+			boolean additive) {
 			if (local) {
 				if (!additive) value -= bone.x;
 				bone.x += value * pose.mixX;
@@ -263,7 +266,8 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 			return pose.mixY;
 		}
 
-		public void apply (TransformConstraintPose pose, BonePose bone, float value, boolean local, boolean additive) {
+		public void apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, boolean local,
+			boolean additive) {
 			if (local) {
 				if (!additive) value -= bone.y;
 				bone.y += value * pose.mixY;
@@ -287,7 +291,8 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 			return pose.mixScaleX;
 		}
 
-		public void apply (TransformConstraintPose pose, BonePose bone, float value, boolean local, boolean additive) {
+		public void apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, boolean local,
+			boolean additive) {
 			if (local) {
 				if (additive)
 					bone.scaleX *= 1 + ((value - 1) * pose.mixScaleX);
@@ -298,9 +303,9 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 				if (additive)
 					s = 1 + (value - 1) * pose.mixScaleX;
 				else {
-					s = (float)Math.sqrt(bone.a * bone.a + bone.c * bone.c);
+					s = (float)Math.sqrt(bone.a * bone.a + bone.c * bone.c) / skeleton.scaleX;
 					if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleX;
-				}
+			}
 				bone.a *= s;
 				bone.c *= s;
 			}
@@ -320,7 +325,8 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 			return pose.mixScaleY;
 		}
 
-		public void apply (TransformConstraintPose pose, BonePose bone, float value, boolean local, boolean additive) {
+		public void apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, boolean local,
+			boolean additive) {
 			if (local) {
 				if (additive)
 					bone.scaleY *= 1 + ((value - 1) * pose.mixScaleY);
@@ -331,7 +337,7 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 				if (additive)
 					s = 1 + (value - 1) * pose.mixScaleY;
 				else {
-					s = (float)Math.sqrt(bone.b * bone.b + bone.d * bone.d);
+					s = (float)Math.sqrt(bone.b * bone.b + bone.d * bone.d) / skeleton.scaleY;
 					if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleY;
 				}
 				bone.b *= s;
@@ -353,7 +359,8 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 			return pose.mixShearY;
 		}
 
-		public void apply (TransformConstraintPose pose, BonePose bone, float value, boolean local, boolean additive) {
+		public void apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, boolean local,
+			boolean additive) {
 			if (local) {
 				if (!additive) value -= bone.shearY;
 				bone.shearY += value * pose.mixShearY;
