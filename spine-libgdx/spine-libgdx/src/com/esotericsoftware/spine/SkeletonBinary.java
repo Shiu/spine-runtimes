@@ -275,11 +275,11 @@ public class SkeletonBinary extends SkeletonLoader {
 			ConstraintData[] constraints = skeletonData.constraints.setSize(constraintCount);
 			for (int i = 0; i < constraintCount; i++) {
 				String name = input.readString();
-				int nn = input.readInt(true);
+				int nn;
 				switch (input.readByte()) {
 				case CONSTRAINT_IK -> {
 					var data = new IkConstraintData(name);
-					BoneData[] constraintBones = data.bones.setSize(nn);
+					BoneData[] constraintBones = data.bones.setSize(nn = input.readInt(true));
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
 					data.target = bones[input.readInt(true)];
@@ -296,7 +296,7 @@ public class SkeletonBinary extends SkeletonLoader {
 				}
 				case CONSTRAINT_TRANSFORM -> {
 					var data = new TransformConstraintData(name);
-					BoneData[] constraintBones = data.bones.setSize(nn);
+					BoneData[] constraintBones = data.bones.setSize(nn = input.readInt(true));
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
 					data.source = bones[input.readInt(true)];
@@ -369,7 +369,7 @@ public class SkeletonBinary extends SkeletonLoader {
 				}
 				case CONSTRAINT_PATH -> {
 					var data = new PathConstraintData(name);
-					BoneData[] constraintBones = data.bones.setSize(nn);
+					BoneData[] constraintBones = data.bones.setSize(nn = input.readInt(true));
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
 					data.slot = slots[input.readInt(true)];
@@ -391,7 +391,7 @@ public class SkeletonBinary extends SkeletonLoader {
 				}
 				case CONSTRAINT_PHYSICS -> {
 					var data = new PhysicsConstraintData(name);
-					data.bone = bones[nn];
+					data.bone = bones[input.readInt(true)];
 					int flags = input.read();
 					data.skinRequired = (flags & 1) != 0;
 					if ((flags & 2) != 0) data.x = input.readFloat();
@@ -421,13 +421,14 @@ public class SkeletonBinary extends SkeletonLoader {
 				}
 				case CONSTRAINT_SLIDER -> {
 					var data = new SliderData(name);
-					data.skinRequired = (nn & 1) != 0;
-					data.loop = (nn & 2) != 0;
-					data.additive = (nn & 4) != 0;
-					if ((nn & 8) != 0) data.setup.time = input.readFloat();
-					if ((nn & 16) != 0) data.setup.mix = (nn & 32) != 0 ? input.readFloat() : 1;
-					if ((nn & 64) != 0) {
-						data.local = (nn & 128) != 0;
+					int flags = input.read();
+					data.skinRequired = (flags & 1) != 0;
+					data.loop = (flags & 2) != 0;
+					data.additive = (flags & 4) != 0;
+					if ((flags & 8) != 0) data.setup.time = input.readFloat();
+					if ((flags & 16) != 0) data.setup.mix = (flags & 32) != 0 ? input.readFloat() : 1;
+					if ((flags & 64) != 0) {
+						data.local = (flags & 128) != 0;
 						data.bone = bones[input.readInt(true)];
 						float offset = input.readFloat();
 						float propertyScale = 1;
