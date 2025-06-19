@@ -430,14 +430,15 @@ public class SkeletonBinary extends SkeletonLoader {
 						data.local = (nn & 128) != 0;
 						data.bone = bones[input.readInt(true)];
 						float offset = input.readFloat();
+						float propertyScale = 1;
 						data.property = switch (input.readByte()) {
 						case 0 -> new FromRotate();
 						case 1 -> {
-							offset *= scale;
+							propertyScale = scale;
 							yield new FromX();
 						}
 						case 2 -> {
-							offset *= scale;
+							propertyScale = scale;
 							yield new FromY();
 						}
 						case 3 -> new FromScaleX();
@@ -445,9 +446,9 @@ public class SkeletonBinary extends SkeletonLoader {
 						case 5 -> new FromShearY();
 						default -> null;
 						};
-						data.property.offset = offset;
+						data.property.offset = offset * propertyScale;
 						data.offset = input.readFloat();
-						data.scale = input.readFloat();
+						data.scale = input.readFloat() / propertyScale;
 					}
 					constraints[i] = data;
 				}
