@@ -153,7 +153,7 @@ export abstract class FromProperty {
 	readonly to: Array<ToProperty> = [];
 
 	/** Reads this property from the specified bone. */
-	abstract value (source: BonePose, local: boolean, offsets: Array<number>): number;
+	abstract value (skeleton: Skeleton, source: BonePose, local: boolean, offsets: Array<number>): number;
 }
 
 /** Constrained property for a {@link TransformConstraint}. */
@@ -175,9 +175,9 @@ export abstract class ToProperty {
 }
 
 export class FromRotate extends FromProperty {
-	value (source: BonePose, local: boolean, offsets: Array<number>): number {
+	value (skeleton: Skeleton, source: BonePose, local: boolean, offsets: Array<number>): number {
 		if (local) return source.rotation + offsets[TransformConstraintData.ROTATION];
-		let value = Math.atan2(source.c, source.a) * MathUtils.radDeg
+		let value = Math.atan2(source.c / skeleton.scaleY, source.a / skeleton.scaleX) * MathUtils.radDeg
 			+ (source.a * source.d - source.b * source.c > 0 ? offsets[TransformConstraintData.ROTATION] : -offsets[TransformConstraintData.ROTATION]);
 		if (value < 0) value += 360;
 		return value;
@@ -212,8 +212,10 @@ export class ToRotate extends ToProperty {
 }
 
 export class FromX extends FromProperty {
-	value (source: BonePose, local: boolean, offsets: Array<number>): number {
-		return local ? source.x + offsets[TransformConstraintData.X] : offsets[TransformConstraintData.X] * source.a + offsets[TransformConstraintData.Y] * source.b + source.worldX;
+	value (skeleton: Skeleton, source: BonePose, local: boolean, offsets: Array<number>): number {
+		return local
+			? source.x + offsets[TransformConstraintData.X]
+			: (offsets[TransformConstraintData.X] * source.a + offsets[TransformConstraintData.Y] * source.b + source.worldX) / skeleton.scaleX;
 	}
 }
 
@@ -234,8 +236,10 @@ export class ToX extends ToProperty {
 }
 
 export class FromY extends FromProperty {
-	value (source: BonePose, local: boolean, offsets: Array<number>): number {
-		return local ? source.y + offsets[TransformConstraintData.Y] : offsets[TransformConstraintData.X] * source.c + offsets[TransformConstraintData.Y] * source.d + source.worldY;
+	value (skeleton: Skeleton, source: BonePose, local: boolean, offsets: Array<number>): number {
+		return local
+			? source.y + offsets[TransformConstraintData.Y]
+			: (offsets[TransformConstraintData.X] * source.c + offsets[TransformConstraintData.Y] * source.d + source.worldY) / skeleton.scaleY;
 	}
 }
 
@@ -256,8 +260,10 @@ export class ToY extends ToProperty {
 }
 
 export class FromScaleX extends FromProperty {
-	value (source: BonePose, local: boolean, offsets: Array<number>): number {
-		return local ? source.scaleX : Math.sqrt(source.a * source.a + source.c * source.c) + offsets[TransformConstraintData.SCALEX];
+	value (skeleton: Skeleton, source: BonePose, local: boolean, offsets: Array<number>): number {
+		if (local) return source.scaleX + offsets[TransformConstraintData.SCALEX];
+		const a = source.a / skeleton.scaleX, c = source.c / skeleton.scaleY;
+		return Math.sqrt(a * a + c * c) + offsets[TransformConstraintData.SCALEX];
 	}
 }
 
@@ -287,8 +293,10 @@ export class ToScaleX extends ToProperty {
 }
 
 export class FromScaleY extends FromProperty {
-	value (source: BonePose, local: boolean, offsets: Array<number>): number {
-		return local ? source.scaleY : Math.sqrt(source.b * source.b + source.d * source.d) + offsets[TransformConstraintData.SCALEY];
+	value (skeleton: Skeleton, source: BonePose, local: boolean, offsets: Array<number>): number {
+		if (local) return source.scaleY + offsets[TransformConstraintData.SCALEY];
+		const b = source.b / skeleton.scaleX, d = source.d / skeleton.scaleY;
+		return Math.sqrt(b * b + d * d) + offsets[TransformConstraintData.SCALEY];
 	}
 }
 
@@ -318,8 +326,11 @@ export class ToScaleY extends ToProperty {
 }
 
 export class FromShearY extends FromProperty {
-	value (source: BonePose, local: boolean, offsets: Array<number>): number {
-		return (local ? source.shearY : (Math.atan2(source.d, source.b) - Math.atan2(source.c, source.a)) * MathUtils.radDeg - 90) + offsets[TransformConstraintData.SHEARY];
+	value (skeleton: Skeleton, source: BonePose, local: boolean, offsets: Array<number>): number {
+		if (local) return source.shearY + offsets[TransformConstraintData.SHEARY];
+		const sx = 1 / skeleton.scaleX, sy = 1 / skeleton.scaleY;
+		return (Math.atan2(source.d * sy, source.b * sx) - Math.atan2(source.c * sy, source.a * sx))
+			* MathUtils.radDeg - 90 + offsets[TransformConstraintData.SHEARY];
 	}
 }
 

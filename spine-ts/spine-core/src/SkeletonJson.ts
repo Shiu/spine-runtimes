@@ -343,7 +343,9 @@ export class SkeletonJson {
 							if (!data.bone) throw new Error("Slider bone not found: " + boneName);
 							const property = constraintMap.property;
 							data.property = this.fromProperty(property);
-							data.property.offset = getValue(constraintMap, "offset", 0) * this.propertyScale(property, scale);
+							const propertyScale = this.propertyScale(property, scale);
+							data.property.offset = getValue(constraintMap, "from", 0) * propertyScale;
+							data.offset = getValue(constraintMap, "to", 0);
 							data.scale = getValue(constraintMap, "scale", 1);
 							data.local = getValue(constraintMap, "local", false);
 						}
@@ -919,12 +921,10 @@ export class SkeletonJson {
 					skeletonData.constraints.indexOf(constraint));
 
 				let time = getValue(keyMap, "time", 0);
-				let mixRotate = getValue(keyMap, "mixRotate", 0);
-				let mixX = getValue(keyMap, "mixX", 0);
-				let mixY = getValue(keyMap, "mixY", mixX);
-				let mixScaleX = getValue(keyMap, "mixScaleX", 0);
-				let mixScaleY = getValue(keyMap, "mixScaleY", mixScaleX);
-				let mixShearY = getValue(keyMap, "mixShearY", 0);
+				let mixRotate = getValue(keyMap, "mixRotate", 1);
+				let mixX = getValue(keyMap, "mixX", 1), mixY = getValue(keyMap, "mixY", mixX);
+				let mixScaleX = getValue(keyMap, "mixScaleX", 1), mixScaleY = getValue(keyMap, "mixScaleY", 1);
+				let mixShearY = getValue(keyMap, "mixShearY", 1);
 
 				for (let frame = 0, bezier = 0; ; frame++) {
 					timeline.setFrame(frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
@@ -936,10 +936,8 @@ export class SkeletonJson {
 
 					let time2 = getValue(nextMap, "time", 0);
 					let mixRotate2 = getValue(nextMap, "mixRotate", 1);
-					let mixX2 = getValue(nextMap, "mixX", 1);
-					let mixY2 = getValue(nextMap, "mixY", mixX2);
-					let mixScaleX2 = getValue(nextMap, "mixScaleX", 1);
-					let mixScaleY2 = getValue(nextMap, "mixScaleY", mixScaleX2);
+					let mixX2 = getValue(nextMap, "mixX", 1), mixY2 = getValue(nextMap, "mixY", mixX2);
+					let mixScaleX2 = getValue(nextMap, "mixScaleX", 1), mixScaleY2 = getValue(nextMap, "mixScaleY", 1);
 					let mixShearY2 = getValue(nextMap, "mixShearY", 1);
 					let curve = keyMap.curve;
 					if (curve) {

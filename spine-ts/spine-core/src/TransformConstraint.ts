@@ -88,7 +88,7 @@ export class TransformConstraint extends Constraint<TransformConstraint, Transfo
 				bone.modifyWorld(update);
 			for (let f = 0; f < fn; f++) {
 				const from = fromItems[f];
-				const value = from.value(source, localSource, offsets) - from.offset;
+				const value = from.value(skeleton, source, localSource, offsets) - from.offset;
 				const toItems = from.to;
 				for (let t = 0, tn = from.to.length; t < tn; t++) {
 					const to = toItems[t];

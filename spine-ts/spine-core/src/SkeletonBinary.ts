@@ -334,6 +334,7 @@ export class SkeletonBinary {
 							default: continue;
 						};
 						data.property.offset = offset;
+						data.offset = input.readFloat();
 						data.scale = input.readFloat();
 					}
 					constraints.push(data);

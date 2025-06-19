@@ -45,6 +45,7 @@ export class SliderData extends ConstraintData<Slider, SliderPose> {
 	bone: BoneData | null = null;
 	property!: FromProperty;
 	scale = 0;
+	offset = 0;
 	local = false;
 
 	constructor (name: string) {
