@@ -171,7 +171,7 @@ export abstract class ToProperty {
 	abstract mix (pose: TransformConstraintPose): number;
 
 	/** Applies the value to this property. */
-	abstract apply (pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void;
+	abstract apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void;
 }
 
 export class FromRotate extends FromProperty {
@@ -189,7 +189,7 @@ export class ToRotate extends ToProperty {
 		return pose.mixRotate;
 	}
 
-	apply (pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
 		if (local) {
 			if (!additive) value -= bone.rotation;
 			bone.rotation += value * pose.mixRotate;
@@ -224,7 +224,7 @@ export class ToX extends ToProperty {
 		return pose.mixX;
 	}
 
-	apply (pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
 		if (local) {
 			if (!additive) value -= bone.x;
 			bone.x += value * pose.mixX;
@@ -248,7 +248,7 @@ export class ToY extends ToProperty {
 		return pose.mixY;
 	}
 
-	apply (pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
 		if (local) {
 			if (!additive) value -= bone.y;
 			bone.y += value * pose.mixY;
@@ -272,7 +272,7 @@ export class ToScaleX extends ToProperty {
 		return pose.mixScaleX;
 	}
 
-	apply (pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
 		if (local) {
 			if (additive)
 				bone.scaleX *= 1 + ((value - 1) * pose.mixScaleX);
@@ -283,7 +283,7 @@ export class ToScaleX extends ToProperty {
 			if (additive)
 				s = 1 + (value - 1) * pose.mixScaleX;
 			else {
-				s = Math.sqrt(bone.a * bone.a + bone.c * bone.c);
+				s = Math.sqrt(bone.a * bone.a + bone.c * bone.c) / skeleton.scaleX;
 				if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleX;
 			}
 			bone.a *= s;
@@ -305,7 +305,7 @@ export class ToScaleY extends ToProperty {
 		return pose.mixScaleY;
 	}
 
-	apply (pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
 		if (local) {
 			if (additive)
 				bone.scaleY *= 1 + ((value - 1) * pose.mixScaleY);
@@ -316,7 +316,7 @@ export class ToScaleY extends ToProperty {
 			if (additive)
 				s = 1 + (value - 1) * pose.mixScaleY;
 			else {
-				s = Math.sqrt(bone.b * bone.b + bone.d * bone.d);
+				s = Math.sqrt(bone.b * bone.b + bone.d * bone.d) / skeleton.scaleY;
 				if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleY;
 			}
 			bone.b *= s;
@@ -339,7 +339,7 @@ export class ToShearY extends ToProperty {
 		return pose.mixShearY;
 	}
 
-	apply (pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
 		if (local) {
 			if (!additive) value -= bone.shearY;
 			bone.shearY += value * pose.mixShearY;
