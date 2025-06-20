@@ -97,7 +97,7 @@ export class SkeletonRenderer {
 				inRange = false;
 			}
 
-			const pose = slot.pose;
+			const pose = slot.applied;
 			const attachment = pose.attachment;
 			let texture: GLTexture;
 			if (attachment instanceof RegionAttachment) {

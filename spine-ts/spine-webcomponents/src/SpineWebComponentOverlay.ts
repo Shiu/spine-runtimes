@@ -685,7 +685,7 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 
 					element.style.display = ""
 
-					const pose = slot.pose;
+					const pose = slot.applied;
 					if (followVisibility && !pose.attachment) {
 						element.style.opacity = "0";
 					} else if (followOpacity) {

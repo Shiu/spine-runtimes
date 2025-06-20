@@ -237,7 +237,7 @@ export class SkeletonMesh extends THREE.Object3D {
 				clipper.clipEnd(slot);
 				continue;
 			}
-			let pose = slot.pose;
+			let pose = slot.applied;
 			let attachment = pose.attachment;
 			let attachmentColor: Color | null;
 			let texture: ThreeJsTexture | null;

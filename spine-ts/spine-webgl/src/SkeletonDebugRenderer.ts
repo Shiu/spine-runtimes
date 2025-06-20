@@ -90,7 +90,7 @@ export class SkeletonDebugRenderer implements Disposable {
 			for (let i = 0, n = slots.length; i < n; i++) {
 				let slot = slots[i];
 				if (!slot.bone.active) continue;
-				let attachment = slot.pose.attachment;
+				let attachment = slot.applied.attachment;
 				if (attachment instanceof RegionAttachment) {
 					let vertices = this.vertices;
 					attachment.computeWorldVertices(slot, vertices, 0, 2);
@@ -107,7 +107,7 @@ export class SkeletonDebugRenderer implements Disposable {
 			for (let i = 0, n = slots.length; i < n; i++) {
 				let slot = slots[i];
 				if (!slot.bone.active) continue;
-				let attachment = slot.pose.attachment;
+				let attachment = slot.applied.attachment;
 				if (!(attachment instanceof MeshAttachment)) continue;
 				let vertices = this.vertices;
 				attachment.computeWorldVertices(skeleton, slot, 0, attachment.worldVerticesLength, vertices, 0, 2);
@@ -156,7 +156,7 @@ export class SkeletonDebugRenderer implements Disposable {
 			for (let i = 0, n = slots.length; i < n; i++) {
 				let slot = slots[i];
 				if (!slot.bone.active) continue;
-				let attachment = slot.pose.attachment;
+				let attachment = slot.applied.attachment;
 				if (!(attachment instanceof PathAttachment)) continue;
 				let nn = attachment.worldVerticesLength;
 				let world = this.temp = Utils.setArraySize(this.temp, nn, 0);
@@ -205,7 +205,7 @@ export class SkeletonDebugRenderer implements Disposable {
 			for (let i = 0, n = slots.length; i < n; i++) {
 				let slot = slots[i];
 				if (!slot.bone.active) continue;
-				let attachment = slot.pose.attachment;
+				let attachment = slot.applied.attachment;
 				if (!(attachment instanceof ClippingAttachment)) continue;
 				let nn = attachment.worldVerticesLength;
 				let world = this.temp = Utils.setArraySize(this.temp, nn, 0);

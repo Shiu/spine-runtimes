@@ -65,7 +65,7 @@ export class SkeletonRenderer {
 			let bone = slot.bone;
 			if (!bone.active) continue;
 
-			let pose = slot.pose;
+			let pose = slot.applied;
 			let attachment = pose.attachment;
 			if (!(attachment instanceof RegionAttachment)) continue;
 			attachment.computeWorldVertices(slot, worldVertices, 0, 2);
@@ -119,7 +119,7 @@ export class SkeletonRenderer {
 
 		for (let i = 0, n = drawOrder.length; i < n; i++) {
 			const slot = drawOrder[i];
-			let pose = slot.pose;
+			let pose = slot.applied;
 			let attachment = pose.attachment;
 
 			let texture: HTMLImageElement;
@@ -228,7 +228,7 @@ export class SkeletonRenderer {
 
 	private computeRegionVertices (slot: Slot, region: RegionAttachment, pma: boolean) {
 		let skeletonColor = slot.skeleton.color;
-		let slotColor = slot.pose.color;
+		let slotColor = slot.applied.color;
 		let regionColor = region.color;
 		let alpha = skeletonColor.a * slotColor.a * regionColor.a;
 		let multiplier = pma ? alpha : 1;
@@ -277,7 +277,7 @@ export class SkeletonRenderer {
 	private computeMeshVertices (slot: Slot, mesh: MeshAttachment, pma: boolean) {
 		let skeleton = slot.skeleton;
 		let skeletonColor = skeleton.color;
-		let slotColor = slot.pose.color;
+		let slotColor = slot.applied.color;
 		let regionColor = mesh.color;
 		let alpha = skeletonColor.a * slotColor.a * regionColor.a;
 		let multiplier = pma ? alpha : 1;

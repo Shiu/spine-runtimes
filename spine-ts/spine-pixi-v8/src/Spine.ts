@@ -542,7 +542,7 @@ export class Spine extends ViewContainer {
 
 		for (let i = 0; i < currentDrawOrder.length; i++) {
 			const slot = currentDrawOrder[i];
-			const attachment = slot.pose.attachment;
+			const attachment = slot.applied.attachment;
 
 			if (attachment) {
 				if (attachment !== lastAttachments[index]) {
@@ -565,7 +565,7 @@ export class Spine extends ViewContainer {
 	private currentClippingSlot: SlotsToClipping | undefined;
 	private updateAndSetPixiMask (slot: Slot, last: boolean) {
 		// assign/create the currentClippingSlot
-		const pose = slot.pose;
+		const pose = slot.applied;
 		const attachment = pose.attachment;
 		if (attachment && attachment instanceof ClippingAttachment) {
 			const clip = (this.clippingSlotToPixiMasks[slot.data.name] ||= { slot, vertices: new Array<number>() });
@@ -604,7 +604,7 @@ export class Spine extends ViewContainer {
 		}
 
 		// if current slot is the ending one of the currentClippingSlot mask, set currentClippingSlot to undefined
-		if (currentClippingSlot && (currentClippingSlot.slot.pose.attachment as ClippingAttachment).endSlot == slot.data) {
+		if (currentClippingSlot && (currentClippingSlot.slot.applied.attachment as ClippingAttachment).endSlot == slot.data) {
 			this.currentClippingSlot = undefined;
 		}
 
@@ -612,7 +612,7 @@ export class Spine extends ViewContainer {
 		if (last) {
 			for (const key in this.clippingSlotToPixiMasks) {
 				const clippingSlotToPixiMask = this.clippingSlotToPixiMasks[key];
-				if ((!(clippingSlotToPixiMask.slot.pose.attachment instanceof ClippingAttachment) || !clippingSlotToPixiMask.maskComputed) && clippingSlotToPixiMask.mask) {
+				if ((!(clippingSlotToPixiMask.slot.applied.attachment instanceof ClippingAttachment) || !clippingSlotToPixiMask.maskComputed) && clippingSlotToPixiMask.mask) {
 					this.removeChild(clippingSlotToPixiMask.mask);
 					maskPool.free(clippingSlotToPixiMask.mask);
 					clippingSlotToPixiMask.mask = undefined;
@@ -631,7 +631,7 @@ export class Spine extends ViewContainer {
 
 			this.updateAndSetPixiMask(slot, i === currentDrawOrder.length - 1);
 
-			const pose = slot.pose;
+			const pose = slot.applied;
 			const attachment = pose.attachment;
 
 			if (attachment) {
@@ -787,7 +787,7 @@ export class Spine extends ViewContainer {
 	private updateSlotObject (slotAttachment: { slot: Slot, container: Container, followAttachmentTimeline: boolean }) {
 		const { slot, container } = slotAttachment;
 
-		const pose = slot.pose;
+		const pose = slot.applied;
 		const followAttachmentValue = slotAttachment.followAttachmentTimeline ? Boolean(pose.attachment) : true;
 		container.visible = this.skeleton.drawOrder.includes(slot) && followAttachmentValue;
 
@@ -1006,7 +1006,7 @@ export class Spine extends ViewContainer {
 			for (let i = 0; i < drawOrder.length; i++) {
 				const slot = drawOrder[i];
 
-				const attachment = slot.pose.attachment;
+				const attachment = slot.applied.attachment;
 
 				if (attachment && (attachment instanceof RegionAttachment || attachment instanceof MeshAttachment)) {
 					const cacheData = this._getCachedData(slot, attachment);

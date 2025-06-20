@@ -76,7 +76,7 @@ export class SkeletonBounds {
 		for (let i = 0; i < slotCount; i++) {
 			let slot = slots[i];
 			if (!slot.bone.active) continue;
-			let attachment = slot.pose.attachment;
+			let attachment = slot.applied.attachment;
 			if (attachment instanceof BoundingBoxAttachment) {
 				boundingBoxes.push(attachment);
 

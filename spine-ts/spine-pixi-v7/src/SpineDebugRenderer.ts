@@ -338,7 +338,7 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 
 		for (let i = 0, len = slots.length; i < len; i++) {
 			const slot = slots[i];
-			const attachment = slot.pose.attachment;
+			const attachment = slot.applied.attachment;
 
 			if (attachment == null || !(attachment instanceof RegionAttachment)) {
 				continue;
@@ -366,7 +366,7 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 			if (!slot.bone.active) {
 				continue;
 			}
-			const attachment = slot.pose.attachment;
+			const attachment = slot.applied.attachment;
 
 			if (attachment == null || !(attachment instanceof MeshAttachment)) {
 				continue;
@@ -422,7 +422,7 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 			if (!slot.bone.active) {
 				continue;
 			}
-			const attachment = slot.pose.attachment;
+			const attachment = slot.applied.attachment;
 
 			if (attachment == null || !(attachment instanceof ClippingAttachment)) {
 				continue;
@@ -497,7 +497,7 @@ export class SpineDebugRenderer implements ISpineDebugRenderer {
 			if (!slot.bone.active) {
 				continue;
 			}
-			const attachment = slot.pose.attachment;
+			const attachment = slot.applied.attachment;
 
 			if (attachment == null || !(attachment instanceof PathAttachment)) {
 				continue;

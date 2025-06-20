@@ -587,7 +587,7 @@ export class Spine extends Container {
 	private updateSlotObject (element: { container: Container, followAttachmentTimeline: boolean }, slot: Slot, zIndex: number) {
 		const { container: slotObject, followAttachmentTimeline } = element
 
-		const pose = slot.pose;
+		const pose = slot.applied;
 		const followAttachmentValue = followAttachmentTimeline ? Boolean(pose.attachment) : true;
 		slotObject.visible = this.skeleton.drawOrder.includes(slot) && followAttachmentValue;
 
@@ -627,7 +627,7 @@ export class Spine extends Container {
 			}
 			if (!pixiMaskSource.computed) {
 				pixiMaskSource.computed = true;
-				const clippingAttachment = pixiMaskSource.slot.pose.attachment as ClippingAttachment;
+				const clippingAttachment = pixiMaskSource.slot.applied.attachment as ClippingAttachment;
 				const worldVerticesLength = clippingAttachment.worldVerticesLength;
 				if (this.clippingVertAux.length < worldVerticesLength) this.clippingVertAux = new Float32Array(worldVerticesLength);
 				clippingAttachment.computeWorldVertices(this.skeleton, pixiMaskSource.slot, 0, worldVerticesLength, this.clippingVertAux, 0, 2);
@@ -675,7 +675,7 @@ export class Spine extends Container {
 				this.updateAndSetPixiMask(pixiMaskSource, pixiObject.container);
 			}
 
-			const pose = slot.pose;
+			const pose = slot.applied;
 			const useDarkColor = !!pose.darkColor;
 			const vertexSize = useDarkColor ? Spine.DARK_VERTEX_SIZE : Spine.VERTEX_SIZE;
 			if (!slot.bone.active) {

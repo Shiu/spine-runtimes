@@ -1156,7 +1156,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 	private checkSlotInteraction (type: PointerEventTypesInput, originalEvent?: UIEvent) {
 		for (let [slot, interactionState] of this.pointerSlotEventCallbacks) {
 			if (!slot.bone.active) continue;
-			let attachment = slot.pose.attachment;
+			let attachment = slot.applied.attachment;
 
 			if (!(attachment instanceof RegionAttachment || attachment instanceof MeshAttachment)) continue;
 
@@ -1245,7 +1245,7 @@ export class SpineWebComponentSkeleton extends HTMLElement implements Disposable
 		if (!slot) return;
 
 		if (hideAttachment) {
-			slot.pose.setAttachment(null);
+			slot.applied.setAttachment(null);
 		}
 
 		element.style.position = 'absolute';

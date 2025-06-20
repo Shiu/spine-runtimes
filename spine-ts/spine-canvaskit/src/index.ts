@@ -235,7 +235,7 @@ export class SkeletonRenderer {
 				continue;
 			}
 
-			let pose = slot.pose;
+			let pose = slot.applied;
 			let attachment = pose.attachment;
 			let positions = this.scratchPositions;
 			let colors = this.scratchColors;
