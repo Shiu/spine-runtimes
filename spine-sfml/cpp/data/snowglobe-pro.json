@@ -1,11 +1,11 @@
 {
 "skeleton": {
-	"hash": "7c5zrxkBXpw",
-	"spine": "4.2.22",
+	"hash": "mJ+g/ivitwM",
+	"spine": "4.3.37-beta",
 	"x": -938.98,
 	"y": -1030.95,
 	"width": 1839,
-	"height": 2699,
+	"height": 2699.5,
 	"images": "./images/",
 	"audio": ""
 },
@@ -318,323 +318,13 @@
 	{ "name": "blue-present/blue-present-decoration", "bone": "blue-present-control", "attachment": "blue-present-decoration" },
 	{ "name": "green-present/green-present-base", "bone": "green-present-container", "attachment": "green-present-base" },
 	{ "name": "green-present/green-present-decoration", "bone": "green-present-container", "attachment": "green-present-decoration" },
-	{ "name": "globe-texture-strong", "bone": "globe-holder" },
 	{ "name": "globe-borders", "bone": "globe-holder", "attachment": "globe-borders" },
 	{ "name": "globe-reflections", "bone": "globe-holder", "attachment": "globe-reflections" },
 	{ "name": "globe-base-front", "bone": "globe-holder", "attachment": "globe-base-front" }
 ],
-"transform": [
+"constraints": [
 	{
-		"name": "face-holder",
-		"order": 9,
-		"bones": [ "face-holder" ],
-		"target": "nose",
-		"x": -13.76,
-		"y": 18.39,
-		"mixRotate": 0,
-		"mixX": 0.6,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	},
-	{
-		"name": "inverse-head",
-		"order": 8,
-		"bones": [ "head-inverse" ],
-		"target": "nose",
-		"x": -128.66,
-		"y": 360.4,
-		"mixRotate": 0,
-		"mixX": -1,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	},
-	{
-		"name": "slower-face-holder",
-		"order": 10,
-		"bones": [ "slower-face-holder" ],
-		"target": "nose",
-		"x": -20.31,
-		"y": 34.21,
-		"mixRotate": 0,
-		"mixX": 0.2,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	},
-	{
-		"name": "blue-present/blue-present-control",
-		"order": 1,
-		"bones": [ "blue-present-inverse" ],
-		"target": "blue-present-control",
-		"x": 2.03,
-		"y": 109.6,
-		"mixRotate": 0,
-		"mixX": -1,
-		"mixScaleX": 0,
-		"mixShearY": 0
-	}
-],
-"physics": [
-	{
-		"name": "arm-l-elbow",
-		"order": 25,
-		"bone": "arm-l-elbow",
-		"x": 0.5385,
-		"y": 0.6368,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "arm-r-elbow",
-		"order": 22,
-		"bone": "arm-r-elbow",
-		"x": 0.5385,
-		"y": 0.6368,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "arm-up-l2",
-		"order": 24,
-		"bone": "arm-up-l2",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "arm-up-r2",
-		"order": 21,
-		"bone": "arm-up-r2",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "body",
-		"order": 4,
-		"bone": "body",
-		"rotate": 0.3889,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "body-top",
-		"order": 5,
-		"bone": "body-top",
-		"x": 0.4573,
-		"y": 0.4658,
-		"limit": 500,
-		"inertia": 0.362,
-		"strength": 112.9,
-		"damping": 0.85
-	},
-	{
-		"name": "glove-l",
-		"order": 26,
-		"bone": "glove-l",
-		"x": 0.5385,
-		"y": 0.6368,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "glove-r",
-		"order": 23,
-		"bone": "glove-r",
-		"x": 0.5385,
-		"y": 0.6368,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "hair-l",
-		"order": 40,
-		"bone": "hair-l",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "hair-r",
-		"order": 39,
-		"bone": "hair-r",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "hat",
-		"order": 36,
-		"bone": "hat",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "hat2",
-		"order": 37,
-		"bone": "hat2",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "hat3",
-		"order": 38,
-		"bone": "hat3",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "head-base",
-		"order": 6,
-		"bone": "head-base",
-		"x": 0.3248,
-		"y": 0.3248,
-		"limit": 500,
-		"inertia": 0.362,
-		"damping": 0.85
-	},
-	{
-		"name": "hips",
-		"order": 3,
-		"bone": "hips",
-		"x": 1,
-		"y": 1,
-		"limit": 500,
-		"inertia": 0.227,
-		"strength": 74.8,
-		"damping": 0.9141
-	},
-	{
-		"name": "leg-knee-l",
-		"order": 17,
-		"bone": "leg-knee-l",
-		"x": 1,
-		"y": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "leg-knee-r",
-		"order": 12,
-		"bone": "leg-knee-r",
-		"x": 1,
-		"y": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "leg-up-l",
-		"order": 16,
-		"bone": "leg-up-l",
-		"rotate": 0.4402,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.908
-	},
-	{
-		"name": "leg-up-r",
-		"order": 11,
-		"bone": "leg-up-r",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.816
-	},
-	{
-		"name": "nose",
-		"order": 7,
-		"bone": "nose",
-		"x": 0.6532,
-		"y": 0.6127,
-		"limit": 500,
-		"inertia": 0.2353,
-		"damping": 0.85
-	},
-	{
-		"name": "shoe-l",
-		"order": 18,
-		"bone": "shoe-l",
-		"x": 1,
-		"y": 1,
-		"limit": 500,
-		"inertia": 0.2549,
-		"damping": 0.85
-	},
-	{
-		"name": "shoe-l-rotator",
-		"order": 19,
-		"bone": "shoe-l-rotator",
-		"rotate": 0.5128,
-		"limit": 500,
-		"inertia": 0.2059,
-		"damping": 0.85
-	},
-	{
-		"name": "shoe-l-tip",
-		"order": 20,
-		"bone": "shoe-l-tip",
-		"x": 0.3121,
-		"y": 0.3353,
-		"limit": 500,
-		"inertia": 0.2941,
-		"damping": 0.85
-	},
-	{
-		"name": "shoe-r",
-		"order": 13,
-		"bone": "shoe-r",
-		"x": 1,
-		"y": 1,
-		"limit": 500,
-		"inertia": 0.3333,
-		"damping": 0.85
-	},
-	{
-		"name": "shoe-r-rotator",
-		"order": 14,
-		"bone": "shoe-r-rotator",
-		"rotate": 0.5214,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "shoe-r-tip",
-		"order": 15,
-		"bone": "shoe-r-tip",
-		"x": 0.5085,
-		"y": 0.4872,
-		"limit": 500,
-		"inertia": 0.3333,
-		"damping": 0.85
-	},
-	{
-		"name": "snowball-perspective",
-		"order": 35,
-		"bone": "snowball-perspective",
-		"x": 0.5043,
-		"y": 0.4744,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
+		"type": "physics",
 		"name": "blue-present/blue-present-container",
 		"bone": "blue-present-container",
 		"x": 1,
@@ -644,187 +334,252 @@
 		"damping": 0.9018
 	},
 	{
+		"type": "transform",
 		"name": "blue-present/blue-present-control",
-		"order": 2,
+		"source": "blue-present-control",
+		"bones": [ "blue-present-inverse" ],
+		"x": 2.03,
+		"y": 109.6,
+		"properties": {
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixX": -1
+	},
+	{
+		"type": "physics",
+		"name": "blue-present/blue-present-control",
 		"bone": "blue-present-control",
 		"x": 1,
 		"y": 1,
 		"limit": 300,
-		"inertia": 0.3137,
-		"damping": 0.85
+		"inertia": 0.3137
 	},
 	{
-		"name": "green-present/green-present-container",
-		"order": 31,
-		"bone": "green-present-container",
-		"x": 1,
-		"y": 1,
-		"limit": 400,
-		"inertia": 0.5,
-		"damping": 0.7362
-	},
-	{
-		"name": "green-present/green-present-control",
-		"order": 32,
-		"bone": "green-present-control",
-		"x": 1,
-		"y": 1,
-		"limit": 300,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "red-present/red-present-container",
-		"order": 33,
-		"bone": "red-present-container",
-		"x": 1,
-		"y": 1,
-		"limit": 400,
-		"inertia": 0.5,
-		"damping": 0.6994
-	},
-	{
-		"name": "red-present/red-present-control",
-		"order": 34,
-		"bone": "red-present-control",
-		"x": 1,
-		"y": 1,
-		"limit": 300,
-		"inertia": 0.2353,
-		"damping": 0.85
-	},
-	{
-		"name": "scarf/scarf-end-l",
-		"order": 30,
-		"bone": "scarf-end-l",
+		"type": "physics",
+		"name": "hips",
+		"bone": "hips",
 		"x": 1,
 		"y": 1,
 		"limit": 500,
-		"inertia": 0.5,
-		"strength": 70,
-		"damping": 0.79
+		"inertia": 0.227,
+		"strength": 74.8,
+		"damping": 0.9141
+	},
+	{ "type": "physics", "name": "body", "bone": "body", "rotate": 0.3889, "limit": 500 },
+	{
+		"type": "physics",
+		"name": "body-top",
+		"bone": "body-top",
+		"x": 0.4573,
+		"y": 0.4658,
+		"limit": 500,
+		"inertia": 0.362,
+		"strength": 112.9
 	},
 	{
+		"type": "physics",
+		"name": "head-base",
+		"bone": "head-base",
+		"x": 0.3248,
+		"y": 0.3248,
+		"limit": 500,
+		"inertia": 0.362
+	},
+	{
+		"type": "physics",
+		"name": "nose",
+		"bone": "nose",
+		"x": 0.6532,
+		"y": 0.6127,
+		"limit": 500,
+		"inertia": 0.2353
+	},
+	{
+		"type": "transform",
+		"name": "inverse-head",
+		"source": "nose",
+		"bones": [ "head-inverse" ],
+		"x": -128.66,
+		"y": 360.4,
+		"properties": {
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixX": -1
+	},
+	{
+		"type": "transform",
+		"name": "face-holder",
+		"source": "nose",
+		"bones": [ "face-holder" ],
+		"x": -13.76,
+		"y": 18.39,
+		"properties": {
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixX": 0.6
+	},
+	{
+		"type": "transform",
+		"name": "slower-face-holder",
+		"source": "nose",
+		"bones": [ "slower-face-holder" ],
+		"x": -20.31,
+		"y": 34.21,
+		"properties": {
+			"x": {
+				"to": {
+					"x": { "max": 100, "scale": 1 }
+				}
+			},
+			"y": {
+				"to": {
+					"y": { "max": 100, "scale": 1 }
+				}
+			}
+		},
+		"mixX": 0.2
+	},
+	{ "type": "physics", "name": "leg-up-r", "bone": "leg-up-r", "rotate": 1, "limit": 500, "damping": 0.816 },
+	{ "type": "physics", "name": "leg-knee-r", "bone": "leg-knee-r", "x": 1, "y": 1, "limit": 500 },
+	{
+		"type": "physics",
+		"name": "shoe-r",
+		"bone": "shoe-r",
+		"x": 1,
+		"y": 1,
+		"limit": 500,
+		"inertia": 0.3333
+	},
+	{ "type": "physics", "name": "shoe-r-rotator", "bone": "shoe-r-rotator", "rotate": 0.5214, "limit": 500 },
+	{
+		"type": "physics",
+		"name": "shoe-r-tip",
+		"bone": "shoe-r-tip",
+		"x": 0.5085,
+		"y": 0.4872,
+		"limit": 500,
+		"inertia": 0.3333
+	},
+	{ "type": "physics", "name": "leg-up-l", "bone": "leg-up-l", "rotate": 0.4402, "limit": 500, "damping": 0.908 },
+	{ "type": "physics", "name": "leg-knee-l", "bone": "leg-knee-l", "x": 1, "y": 1, "limit": 500 },
+	{
+		"type": "physics",
+		"name": "shoe-l",
+		"bone": "shoe-l",
+		"x": 1,
+		"y": 1,
+		"limit": 500,
+		"inertia": 0.2549
+	},
+	{ "type": "physics", "name": "shoe-l-rotator", "bone": "shoe-l-rotator", "rotate": 0.5128, "limit": 500, "inertia": 0.2059 },
+	{
+		"type": "physics",
+		"name": "shoe-l-tip",
+		"bone": "shoe-l-tip",
+		"x": 0.3121,
+		"y": 0.3353,
+		"limit": 500,
+		"inertia": 0.2941
+	},
+	{ "type": "physics", "name": "arm-up-r2", "bone": "arm-up-r2", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "arm-r-elbow", "bone": "arm-r-elbow", "x": 0.5385, "y": 0.6368, "limit": 500 },
+	{ "type": "physics", "name": "glove-r", "bone": "glove-r", "x": 0.5385, "y": 0.6368, "limit": 500 },
+	{ "type": "physics", "name": "arm-up-l2", "bone": "arm-up-l2", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "arm-l-elbow", "bone": "arm-l-elbow", "x": 0.5385, "y": 0.6368, "limit": 500 },
+	{ "type": "physics", "name": "glove-l", "bone": "glove-l", "x": 0.5385, "y": 0.6368, "limit": 500 },
+	{ "type": "physics", "name": "scarf/scarf-ribbon-top-r", "bone": "scarf-ribbon-top-r", "x": 1, "y": 1, "limit": 500 },
+	{
+		"type": "physics",
 		"name": "scarf/scarf-end-r",
-		"order": 28,
 		"bone": "scarf-end-r",
 		"x": 1,
 		"y": 1,
 		"limit": 500,
-		"inertia": 0.5,
 		"strength": 69.9,
 		"damping": 0.7853
 	},
+	{ "type": "physics", "name": "scarf/scarf-ribbon-top-l", "bone": "scarf-ribbon-top-l", "x": 1, "y": 1, "limit": 500 },
 	{
-		"name": "scarf/scarf-ribbon-top-l",
-		"order": 29,
-		"bone": "scarf-ribbon-top-l",
+		"type": "physics",
+		"name": "scarf/scarf-end-l",
+		"bone": "scarf-end-l",
 		"x": 1,
 		"y": 1,
 		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
+		"strength": 70,
+		"damping": 0.79
 	},
 	{
-		"name": "scarf/scarf-ribbon-top-r",
-		"order": 27,
-		"bone": "scarf-ribbon-top-r",
+		"type": "physics",
+		"name": "green-present/green-present-container",
+		"bone": "green-present-container",
 		"x": 1,
 		"y": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
+		"limit": 400,
+		"damping": 0.7362
+	},
+	{ "type": "physics", "name": "green-present/green-present-control", "bone": "green-present-control", "x": 1, "y": 1, "limit": 300 },
+	{
+		"type": "physics",
+		"name": "red-present/red-present-container",
+		"bone": "red-present-container",
+		"x": 1,
+		"y": 1,
+		"limit": 400,
+		"damping": 0.6994
 	},
 	{
-		"name": "shoelaces/shoelace",
-		"order": 41,
-		"bone": "shoelace",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
+		"type": "physics",
+		"name": "red-present/red-present-control",
+		"bone": "red-present-control",
+		"x": 1,
+		"y": 1,
+		"limit": 300,
+		"inertia": 0.2353
 	},
-	{
-		"name": "shoelaces/shoelace2",
-		"order": 46,
-		"bone": "shoelace2",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "shoelaces/shoelace3",
-		"order": 42,
-		"bone": "shoelace3",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "shoelaces/shoelace4",
-		"order": 45,
-		"bone": "shoelace4",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "shoelaces/shoelace5",
-		"order": 44,
-		"bone": "shoelace5",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "shoelaces/shoelace6",
-		"order": 43,
-		"bone": "shoelace6",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "shoelaces/shoelace7",
-		"order": 47,
-		"bone": "shoelace7",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "shoelaces/shoelace8",
-		"order": 50,
-		"bone": "shoelace8",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "shoelaces/shoelace9",
-		"order": 48,
-		"bone": "shoelace9",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	},
-	{
-		"name": "shoelaces/shoelace10",
-		"order": 49,
-		"bone": "shoelace10",
-		"rotate": 1,
-		"limit": 500,
-		"inertia": 0.5,
-		"damping": 0.85
-	}
+	{ "type": "physics", "name": "snowball-perspective", "bone": "snowball-perspective", "x": 0.5043, "y": 0.4744, "limit": 500 },
+	{ "type": "physics", "name": "hat", "bone": "hat", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "hat2", "bone": "hat2", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "hat3", "bone": "hat3", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "hair-r", "bone": "hair-r", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "hair-l", "bone": "hair-l", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "shoelaces/shoelace", "bone": "shoelace", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "shoelaces/shoelace3", "bone": "shoelace3", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "shoelaces/shoelace6", "bone": "shoelace6", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "shoelaces/shoelace5", "bone": "shoelace5", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "shoelaces/shoelace4", "bone": "shoelace4", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "shoelaces/shoelace2", "bone": "shoelace2", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "shoelaces/shoelace7", "bone": "shoelace7", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "shoelaces/shoelace9", "bone": "shoelace9", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "shoelaces/shoelace10", "bone": "shoelace10", "rotate": 1, "limit": 500 },
+	{ "type": "physics", "name": "shoelaces/shoelace8", "bone": "shoelace8", "rotate": 1, "limit": 500 }
 ],
 "skins": [
 	{
@@ -858,7 +613,7 @@
 				}
 			},
 			"globe-borders": {
-				"globe-borders": { "x": 0.5, "y": 599.62, "width": 1759, "height": 1761 }
+				"globe-borders": { "x": 0.5, "y": 599.62, "scaleX": 2, "scaleY": 2, "width": 880, "height": 881 }
 			},
 			"globe-reflections": {
 				"globe-reflections": { "y": 602.12, "width": 1292, "height": 1670 }
@@ -867,10 +622,7 @@
 				"globe-shadow": { "x": 3.5, "y": -852.88, "width": 1839, "height": 732 }
 			},
 			"globe-texture": {
-				"globe-texture": { "x": 0.5, "y": 599.62, "width": 1759, "height": 1761 }
-			},
-			"globe-texture-strong": {
-				"globe-texture-strong": { "x": 0.5, "y": 599.62, "width": 1759, "height": 1761 }
+				"globe-texture": { "x": 0.5, "y": 599.62, "scaleX": 2, "scaleY": 2, "width": 880, "height": 881 }
 			},
 			"blue-present/blue-present-base": {
 				"blue-present-base": {

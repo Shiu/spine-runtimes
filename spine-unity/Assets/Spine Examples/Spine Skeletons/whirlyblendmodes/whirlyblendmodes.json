@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "7+KnTV9RS7Q",
-	"spine": "4.3.14-beta",
+	"hash": "qF8ySSylHxY",
+	"spine": "4.3.37-beta",
 	"x": -252.71,
 	"y": -232.55,
 	"width": 456.71,
@@ -23,46 +23,19 @@
 	{ "name": "screen", "bone": "screen", "color": "0670c6ff", "attachment": "whirly", "blend": "screen" },
 	{ "name": "additive", "bone": "additive", "color": "0670c6ff", "attachment": "whirly", "blend": "additive" }
 ],
-"transform": [
+"constraints": [
 	{
+		"type": "transform",
 		"name": "rotation",
-		"bones": [ "additive", "multiply", "normal", "screen" ],
 		"source": "_rotation",
+		"bones": [ "additive", "multiply", "normal", "screen" ],
 		"properties": {
 			"rotate": {
 				"to": {
 					"rotate": { "max": 100, "scale": 1 }
 				}
-			},
-			"x": {
-				"to": {
-					"x": { "max": 100, "scale": 1 }
-				}
-			},
-			"y": {
-				"to": {
-					"y": { "max": 100, "scale": 1 }
-				}
-			},
-			"scaleX": {
-				"to": {
-					"scaleX": { "scale": 1 }
-				}
-			},
-			"scaleY": {
-				"to": {
-					"scaleY": { "scale": 1 }
-				}
-			},
-			"shearY": {
-				"to": {
-					"shearY": { "max": 100, "scale": 1 }
-				}
 			}
-		},
-		"mixX": 0,
-		"mixScaleX": 0,
-		"mixShearY": 0
+		}
 	}
 ],
 "skins": [
