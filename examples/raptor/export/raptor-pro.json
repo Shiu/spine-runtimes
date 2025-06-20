@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "HGE4ymvw6O0",
-	"spine": "4.3.29-beta",
+	"hash": "FPvJD/mamWI",
+	"spine": "4.3.37-beta",
 	"x": -809.16,
 	"y": -73.54,
 	"width": 1287.65,
@@ -581,61 +581,61 @@
 	{
 		"type": "ik",
 		"name": "front-leg-ik",
-		"bones": [ "front-leg1", "front-leg2" ],
 		"target": "front-leg-target",
+		"bones": [ "front-leg1", "front-leg2" ],
 		"bendPositive": false
 	},
 	{
 		"type": "ik",
 		"name": "front-foot-ik",
-		"bones": [ "front-leg3", "front-foot1" ],
-		"target": "front-foot-target"
+		"target": "front-foot-target",
+		"bones": [ "front-leg3", "front-foot1" ]
 	},
 	{
 		"type": "ik",
 		"name": "back-leg-ik",
-		"bones": [ "back-leg1", "back-leg2" ],
 		"target": "back-leg-target",
+		"bones": [ "back-leg1", "back-leg2" ],
 		"bendPositive": false
 	},
 	{
 		"type": "ik",
 		"name": "back-foot-ik",
-		"bones": [ "back-leg3", "back-foot1" ],
-		"target": "back-foot-target"
+		"target": "back-foot-target",
+		"bones": [ "back-leg3", "back-foot1" ]
 	},
 	{
 		"type": "ik",
 		"name": "spineboy-front-leg-ik",
-		"bones": [ "front-thigh", "lower-leg" ],
 		"target": "spineboy-front-foot-target",
+		"bones": [ "front-thigh", "lower-leg" ],
 		"bendPositive": false
 	},
 	{
 		"type": "ik",
 		"name": "spineboy-back-leg-ik",
-		"bones": [ "back-thigh", "back-knee" ],
 		"target": "spineboy-back-foot-target",
+		"bones": [ "back-thigh", "back-knee" ],
 		"bendPositive": false
 	},
 	{
 		"type": "ik",
 		"name": "stirrup",
-		"bones": [ "stirrup-strap1", "stirrup-strap2" ],
 		"target": "stirrup",
+		"bones": [ "stirrup-strap1", "stirrup-strap2" ],
 		"bendPositive": false
 	},
 	{
 		"type": "ik",
 		"name": "spineboy-front-arm-ik",
-		"bones": [ "front-arm", "front-bracer" ],
-		"target": "spineboy-front-arm-target"
+		"target": "spineboy-front-arm-target",
+		"bones": [ "front-arm", "front-bracer" ]
 	},
 	{
 		"type": "ik",
 		"name": "spineboy-back-arm-ik",
-		"bones": [ "back-arm", "back-bracer" ],
 		"target": "spineboy-back-arm-target",
+		"bones": [ "back-arm", "back-bracer" ],
 		"bendPositive": false
 	}
 ],

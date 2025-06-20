@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "0mAc3py/psM",
-	"spine": "4.3.29-beta",
+	"hash": "JtpoCnjMSIk",
+	"spine": "4.3.37-beta",
 	"x": -191.3,
 	"y": -4.51,
 	"width": 368.26,
@@ -204,8 +204,8 @@
 	{
 		"type": "transform",
 		"name": "eye-root",
-		"bones": [ "eye-root" ],
 		"source": "head",
+		"bones": [ "eye-root" ],
 		"rotation": -63.5,
 		"x": -143,
 		"y": -143.95,
@@ -247,8 +247,8 @@
 	{
 		"type": "transform",
 		"name": "jaw",
-		"bones": [ "metaljaw" ],
 		"source": "head",
+		"bones": [ "metaljaw" ],
 		"x": 47,
 		"y": -7.76,
 		"properties": {
@@ -272,8 +272,8 @@
 	{
 		"type": "transform",
 		"name": "eye",
-		"bones": [ "eye" ],
 		"source": "head",
+		"bones": [ "eye" ],
 		"x": 91.94,
 		"y": -84.12,
 		"properties": {
@@ -1274,16 +1274,24 @@
 		},
 		"transform": {
 			"eye": [
-				{}
+				{ "mixRotate": 0, "mixX": 0, "mixY": 0, "mixScaleX": 0, "mixScaleY": 0, "mixShearY": 0 }
 			],
 			"eye-root": [
-				{ "mixRotate": 1, "mixScaleX": 1, "mixShearY": 1, "curve": "stepped" },
-				{ "time": 1.2667, "mixRotate": 1, "mixShearY": 1 },
-				{ "time": 1.3 }
+				{ "mixX": 0, "mixY": 0, "curve": "stepped" },
+				{ "time": 1.2667, "mixX": 0, "mixY": 0, "mixScaleX": 0, "mixScaleY": 0 },
+				{
+					"time": 1.3,
+					"mixRotate": 0,
+					"mixX": 0,
+					"mixY": 0,
+					"mixScaleX": 0,
+					"mixScaleY": 0,
+					"mixShearY": 0
+				}
 			],
 			"jaw": [
-				{ "mixX": 1, "mixShearY": 1, "curve": "stepped" },
-				{ "time": 1.2667 }
+				{ "curve": "stepped" },
+				{ "time": 1.2667, "mixX": 0, "mixY": 0, "mixShearY": 0 }
 			]
 		},
 		"attachments": {
@@ -1824,9 +1832,9 @@
 		},
 		"transform": {
 			"jaw": [
-				{ "time": 0.2667, "mixX": 0.995, "mixShearY": 1 },
-				{ "time": 0.4667, "mixX": 0.005, "mixShearY": 1 },
-				{ "time": 0.6667, "mixX": 0.995, "mixShearY": 1 }
+				{ "time": 0.2667, "mixX": 0.995, "mixY": 0.995 },
+				{ "time": 0.4667, "mixX": 0.005, "mixY": 0.005 },
+				{ "time": 0.6667, "mixX": 0.995, "mixY": 0.995 }
 			]
 		},
 		"attachments": {

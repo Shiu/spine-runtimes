@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "j3LUq+6Dv7I",
-	"spine": "4.3.29-beta",
+	"hash": "mJ+g/ivitwM",
+	"spine": "4.3.37-beta",
 	"x": -938.98,
 	"y": -1030.95,
 	"width": 1839,
@@ -336,8 +336,8 @@
 	{
 		"type": "transform",
 		"name": "blue-present/blue-present-control",
-		"bones": [ "blue-present-inverse" ],
 		"source": "blue-present-control",
+		"bones": [ "blue-present-inverse" ],
 		"x": 2.03,
 		"y": 109.6,
 		"properties": {
@@ -406,8 +406,8 @@
 	{
 		"type": "transform",
 		"name": "inverse-head",
-		"bones": [ "head-inverse" ],
 		"source": "nose",
+		"bones": [ "head-inverse" ],
 		"x": -128.66,
 		"y": 360.4,
 		"properties": {
@@ -427,8 +427,8 @@
 	{
 		"type": "transform",
 		"name": "face-holder",
-		"bones": [ "face-holder" ],
 		"source": "nose",
+		"bones": [ "face-holder" ],
 		"x": -13.76,
 		"y": 18.39,
 		"properties": {
@@ -448,8 +448,8 @@
 	{
 		"type": "transform",
 		"name": "slower-face-holder",
-		"bones": [ "slower-face-holder" ],
 		"source": "nose",
+		"bones": [ "slower-face-holder" ],
 		"x": -20.31,
 		"y": 34.21,
 		"properties": {

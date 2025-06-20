@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "pk8ssp7+N6o",
-	"spine": "4.3.29-beta",
+	"hash": "V8T95yVrFk8",
+	"spine": "4.3.37-beta",
 	"x": -447.9,
 	"y": -130.26,
 	"width": 2774.28,
@@ -35,8 +35,8 @@
 	{
 		"type": "transform",
 		"name": "bone",
-		"bones": [ "bottom" ],
 		"source": "squash-ctrl",
+		"bones": [ "bottom" ],
 		"y": -153.63,
 		"properties": {
 			"x": {
@@ -55,8 +55,8 @@
 	{
 		"type": "transform",
 		"name": "left",
-		"bones": [ "left" ],
 		"source": "squash-ctrl",
+		"bones": [ "left" ],
 		"y": -78.59,
 		"properties": {
 			"x": {
@@ -76,8 +76,8 @@
 	{
 		"type": "transform",
 		"name": "right",
-		"bones": [ "right" ],
 		"source": "squash-ctrl",
+		"bones": [ "right" ],
 		"y": -78.59,
 		"properties": {
 			"x": {
@@ -97,8 +97,8 @@
 	{
 		"type": "transform",
 		"name": "tail",
-		"bones": [ "tail" ],
 		"source": "left",
+		"bones": [ "tail" ],
 		"y": -1.67,
 		"properties": {
 			"x": {

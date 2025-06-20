@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "1rzO+9KeyLU",
-	"spine": "4.3.29-beta",
+	"hash": "2wvEt8weNpI",
+	"spine": "4.3.37-beta",
 	"x": -240.58,
 	"y": -3.38,
 	"width": 410.36,
@@ -1023,22 +1023,22 @@
 	{
 		"type": "ik",
 		"name": "foot-front",
-		"bones": [ "leg-up", "leg-down" ],
 		"target": "foot-front-IK",
+		"bones": [ "leg-up", "leg-down" ],
 		"bendPositive": false
 	},
 	{
 		"type": "ik",
 		"name": "foot-back",
-		"bones": [ "leg-up-back", "leg-down-back" ],
 		"target": "foot-back-IK",
+		"bones": [ "leg-up-back", "leg-down-back" ],
 		"bendPositive": false
 	},
 	{
 		"type": "path",
 		"name": "arm-front",
-		"bones": [ "arm-front-up-2", "arm-front-up-6", "arm-front-up-5", "arm-front-up-4", "arm-front-up-3", "arm-front-up-7" ],
 		"slot": "arm-front-path",
+		"bones": [ "arm-front-up-2", "arm-front-up-6", "arm-front-up-5", "arm-front-up-4", "arm-front-up-3", "arm-front-up-7" ],
 		"spacingMode": "percent",
 		"rotateMode": "chainScale",
 		"spacing": 0.1667
@@ -1046,8 +1046,8 @@
 	{
 		"type": "path",
 		"name": "leg-front",
-		"bones": [ "leg-front-1", "leg-front-2", "leg-front-3", "leg-front-4", "leg-front-5", "leg-front-6", "leg-front-7", "leg-front-8" ],
 		"slot": "leg-front-path",
+		"bones": [ "leg-front-1", "leg-front-2", "leg-front-3", "leg-front-4", "leg-front-5", "leg-front-6", "leg-front-7", "leg-front-8" ],
 		"spacingMode": "percent",
 		"rotateMode": "chainScale",
 		"spacing": 0.125
@@ -1055,8 +1055,8 @@
 	{
 		"type": "path",
 		"name": "arm-back",
-		"bones": [ "arm-back-up-2", "arm-back-up-3", "arm-back-up-4", "arm-back-up-5", "arm-back-up-6", "arm-back-up-7" ],
 		"slot": "arm-back-path",
+		"bones": [ "arm-back-up-2", "arm-back-up-3", "arm-back-up-4", "arm-back-up-5", "arm-back-up-6", "arm-back-up-7" ],
 		"spacingMode": "percent",
 		"rotateMode": "chainScale",
 		"spacing": 0.1667
@@ -1064,8 +1064,8 @@
 	{
 		"type": "path",
 		"name": "leg-back",
-		"bones": [ "leg-back-8", "leg-back-7", "leg-back-6", "leg-back-5", "leg-back-4", "leg-back-3", "leg-back-2", "leg-back-1" ],
 		"slot": "leg-back-path",
+		"bones": [ "leg-back-8", "leg-back-7", "leg-back-6", "leg-back-5", "leg-back-4", "leg-back-3", "leg-back-2", "leg-back-1" ],
 		"spacingMode": "percent",
 		"rotateMode": "chainScale",
 		"spacing": 0.125
@@ -1073,8 +1073,8 @@
 	{
 		"type": "transform",
 		"name": "head-control",
-		"bones": [ "head-back-control" ],
 		"source": "head-control",
+		"bones": [ "head-back-control" ],
 		"x": -88.92,
 		"properties": {
 			"x": {
@@ -1093,8 +1093,8 @@
 	{
 		"type": "transform",
 		"name": "eye-transform",
-		"bones": [ "features-control" ],
 		"source": "head-control",
+		"bones": [ "features-control" ],
 		"properties": {
 			"x": {
 				"to": {
@@ -1112,8 +1112,8 @@
 	{
 		"type": "transform",
 		"name": "hair-side-front-control",
-		"bones": [ "hair-side-front" ],
 		"source": "head-control",
+		"bones": [ "hair-side-front" ],
 		"x": -102.78,
 		"y": 27.17,
 		"properties": {
@@ -1133,8 +1133,8 @@
 	{
 		"type": "transform",
 		"name": "hair-side-back",
-		"bones": [ "hair-side-back" ],
 		"source": "head-back-control",
+		"bones": [ "hair-side-back" ],
 		"x": 132.47,
 		"y": 46.72,
 		"properties": {
@@ -1155,8 +1155,8 @@
 		"type": "transform",
 		"name": "hat-control",
 		"skin": true,
-		"bones": [ "hat-control" ],
 		"source": "head-control",
+		"bones": [ "hat-control" ],
 		"x": -78.91,
 		"y": 123.01,
 		"properties": {
@@ -1176,8 +1176,8 @@
 	{
 		"type": "transform",
 		"name": "eye-front-pupil",
-		"bones": [ "eye-front-iris" ],
 		"source": "eye-front-pupil",
+		"bones": [ "eye-front-iris" ],
 		"properties": {
 			"x": {
 				"to": {
@@ -1195,8 +1195,8 @@
 	{
 		"type": "transform",
 		"name": "eye-back-pupil",
-		"bones": [ "eye-back-iris" ],
 		"source": "eye-back-pupil",
+		"bones": [ "eye-back-iris" ],
 		"properties": {
 			"x": {
 				"to": {
@@ -1215,8 +1215,8 @@
 		"type": "transform",
 		"name": "skirt-rotation-front",
 		"skin": true,
-		"bones": [ "skirt-control-front" ],
 		"source": "skirt-rotation-front",
+		"bones": [ "skirt-control-front" ],
 		"rotation": 242.6,
 		"x": 141.99,
 		"y": 2.23,
@@ -1243,8 +1243,8 @@
 		"type": "transform",
 		"name": "leg-up-back",
 		"skin": true,
-		"bones": [ "dress-control-leg-up-back" ],
 		"source": "leg-up-back",
+		"bones": [ "dress-control-leg-up-back" ],
 		"x": 129.36,
 		"y": 40.42,
 		"properties": {
@@ -1269,8 +1269,8 @@
 		"type": "transform",
 		"name": "leg-up",
 		"skin": true,
-		"bones": [ "dress-control-leg-up-front" ],
 		"source": "leg-up",
+		"bones": [ "dress-control-leg-up-front" ],
 		"x": 130.03,
 		"y": -50.13,
 		"properties": {
@@ -1295,8 +1295,8 @@
 		"type": "transform",
 		"name": "leg-down-front",
 		"skin": true,
-		"bones": [ "dress-control-leg-down-front" ],
 		"source": "leg-down",
+		"bones": [ "dress-control-leg-down-front" ],
 		"x": 23.51,
 		"y": -48.52,
 		"properties": {
@@ -1321,8 +1321,8 @@
 		"type": "transform",
 		"name": "leg-down-down",
 		"skin": true,
-		"bones": [ "dress-control-foot-front" ],
 		"source": "leg-down",
+		"bones": [ "dress-control-foot-front" ],
 		"x": 147.87,
 		"y": -60.85,
 		"properties": {
@@ -1347,8 +1347,8 @@
 		"type": "transform",
 		"name": "leg-down-back",
 		"skin": true,
-		"bones": [ "dress-control-foot-back" ],
 		"source": "leg-down-back",
+		"bones": [ "dress-control-foot-back" ],
 		"x": 132.85,
 		"y": 58.02,
 		"properties": {
@@ -1373,8 +1373,8 @@
 		"type": "transform",
 		"name": "leg-down-back-up",
 		"skin": true,
-		"bones": [ "dress-control-leg-down-back" ],
 		"source": "leg-down-back",
+		"bones": [ "dress-control-leg-down-back" ],
 		"x": 17.25,
 		"y": 41.79,
 		"properties": {
@@ -1399,8 +1399,8 @@
 		"type": "transform",
 		"name": "skirt-rotation-back",
 		"skin": true,
-		"bones": [ "skirt-control-back" ],
 		"source": "skirt-rotation-back",
+		"bones": [ "skirt-control-back" ],
 		"rotation": 114.82,
 		"x": 148.43,
 		"y": -0.72,
@@ -1426,8 +1426,8 @@
 	{
 		"type": "transform",
 		"name": "shoulder-front",
-		"bones": [ "shouder-front-transform" ],
 		"source": "arm-front-up",
+		"bones": [ "shouder-front-transform" ],
 		"rotation": 90,
 		"properties": {
 			"rotate": {
@@ -1441,8 +1441,8 @@
 	{
 		"type": "transform",
 		"name": "shoulder-back",
-		"bones": [ "shoulder-back-transform" ],
 		"source": "arm-back-up",
+		"bones": [ "shoulder-back-transform" ],
 		"rotation": 180,
 		"properties": {
 			"rotate": {
@@ -6397,10 +6397,10 @@
 		},
 		"transform": {
 			"leg-down-back": [
-				{ "mixRotate": 0.269, "mixX": 0.234 }
+				{ "mixRotate": 0.269, "mixX": 0.234, "mixY": 0.234 }
 			],
 			"leg-down-down": [
-				{ "mixRotate": 0.394, "mixX": 0.177 }
+				{ "mixRotate": 0.394, "mixX": 0.177, "mixY": 0.177 }
 			]
 		}
 	},
@@ -7297,29 +7297,29 @@
 		},
 		"transform": {
 			"leg-down-back": [
-				{ "mixRotate": 1, "mixX": 1 },
-				{ "time": 0.1333, "mixX": 0.026, "curve": "stepped" },
-				{ "time": 1.1667, "mixX": 0.026 },
-				{ "time": 1.2667, "mixRotate": 0.1905, "mixX": 0.2115 },
-				{ "time": 1.5333, "mixRotate": 1, "mixX": 1, "curve": "stepped" },
-				{ "time": 2.0667, "mixRotate": 1, "mixX": 1 },
-				{ "time": 2.1, "mixRotate": 0.217, "mixX": 0.078 },
-				{ "time": 2.4667, "mixRotate": 1, "mixX": 1 }
+				{},
+				{ "time": 0.1333, "mixRotate": 0, "mixX": 0.026, "mixY": 0.026, "curve": "stepped" },
+				{ "time": 1.1667, "mixRotate": 0, "mixX": 0.026, "mixY": 0.026 },
+				{ "time": 1.2667, "mixRotate": 0.1905, "mixX": 0.2115, "mixY": 0.2115 },
+				{ "time": 1.5333, "curve": "stepped" },
+				{ "time": 2.0667 },
+				{ "time": 2.1, "mixRotate": 0.217, "mixX": 0.078, "mixY": 0.078 },
+				{ "time": 2.4667 }
 			],
 			"leg-down-down": [
-				{ "mixRotate": 1, "mixX": 1 },
-				{ "time": 0.0667, "mixRotate": 1 },
-				{ "time": 0.3333, "mixRotate": 1, "mixX": 1, "curve": "stepped" },
-				{ "time": 1.0667, "mixRotate": 1, "mixX": 1 },
-				{ "time": 1.3667, "mixRotate": 1, "mixX": 0.774 },
-				{ "time": 2.7667, "mixRotate": 1, "mixX": 1 }
+				{},
+				{ "time": 0.0667, "mixX": 0, "mixY": 0 },
+				{ "time": 0.3333, "curve": "stepped" },
+				{ "time": 1.0667 },
+				{ "time": 1.3667, "mixX": 0.774, "mixY": 0.774 },
+				{ "time": 2.7667 }
 			],
 			"leg-down-front": [
-				{ "mixRotate": 1, "mixX": 1 },
-				{ "time": 0.2333, "mixRotate": 1, "mixX": 0.609 },
-				{ "time": 0.3667, "curve": "stepped" },
-				{ "time": 2.1 },
-				{ "time": 2.5, "mixRotate": 1, "mixX": 1 }
+				{},
+				{ "time": 0.2333, "mixX": 0.609, "mixY": 0.609 },
+				{ "time": 0.3667, "mixRotate": 0, "mixX": 0, "mixY": 0, "curve": "stepped" },
+				{ "time": 2.1, "mixRotate": 0, "mixX": 0, "mixY": 0 },
+				{ "time": 2.5 }
 			]
 		}
 	},
@@ -8350,30 +8350,30 @@
 		},
 		"transform": {
 			"leg-down-back": [
-				{ "curve": "stepped" },
-				{ "time": 0.1 },
-				{ "time": 0.3333, "mixRotate": 1, "mixX": 1 },
-				{ "time": 0.5667 }
+				{ "mixRotate": 0, "mixX": 0, "mixY": 0, "curve": "stepped" },
+				{ "time": 0.1, "mixRotate": 0, "mixX": 0, "mixY": 0 },
+				{ "time": 0.3333 },
+				{ "time": 0.5667, "mixRotate": 0, "mixX": 0, "mixY": 0 }
 			],
 			"leg-down-back-up": [
-				{ "curve": "stepped" },
-				{ "time": 0.1 },
-				{ "time": 0.3333, "mixRotate": 1, "mixX": 1 },
-				{ "time": 0.5667 }
+				{ "mixRotate": 0, "mixX": 0, "mixY": 0, "curve": "stepped" },
+				{ "time": 0.1, "mixRotate": 0, "mixX": 0, "mixY": 0 },
+				{ "time": 0.3333 },
+				{ "time": 0.5667, "mixRotate": 0, "mixX": 0, "mixY": 0 }
 			],
 			"leg-down-down": [
-				{}
+				{ "mixRotate": 0, "mixX": 0, "mixY": 0 }
 			],
 			"leg-down-front": [
-				{}
+				{ "mixRotate": 0, "mixX": 0, "mixY": 0 }
 			],
 			"leg-up": [
-				{}
+				{ "mixRotate": 0, "mixX": 0, "mixY": 0 }
 			],
 			"leg-up-back": [
-				{},
-				{ "time": 0.3333, "mixRotate": 1, "mixX": 1 },
-				{ "time": 0.5667 }
+				{ "mixRotate": 0, "mixX": 0, "mixY": 0 },
+				{ "time": 0.3333 },
+				{ "time": 0.5667, "mixRotate": 0, "mixX": 0, "mixY": 0 }
 			]
 		}
 	}

@@ -1,11 +1,11 @@
 {
 "skeleton": {
-	"hash": "RGcK/CkrakQ",
-	"spine": "4.3.29-beta",
+	"hash": "XPuWaTjiwek",
+	"spine": "4.3.37-beta",
 	"x": -345,
-	"y": -272846.84,
+	"y": -17,
 	"width": 756,
-	"height": 273927.84,
+	"height": 1098,
 	"images": "./images/",
 	"audio": ""
 },
@@ -120,6 +120,16 @@
 	{ "name": "cloud/cloud-mouth", "bone": "cloud-face", "attachment": "cloud-mouth-closed" }
 ],
 "constraints": [
+	{
+		"type": "physics",
+		"name": "cloud",
+		"bone": "cloud",
+		"x": 1,
+		"y": 1,
+		"strength": 172.8,
+		"damping": 0.8571,
+		"mass": 3
+	},
 	{
 		"type": "physics",
 		"name": "rain/rain-white",
@@ -393,16 +403,6 @@
 		"y": 0.141,
 		"limit": 500,
 		"damping": 0.15
-	},
-	{
-		"type": "physics",
-		"name": "cloud",
-		"bone": "cloud",
-		"x": 1,
-		"y": 1,
-		"strength": 172.8,
-		"damping": 0.8571,
-		"mass": 3
 	}
 ],
 "skins": [

@@ -1,12 +1,11 @@
 {
 "skeleton": {
-	"hash": "ya7ceT7qKSg",
-	"spine": "4.3.29-beta",
+	"hash": "FuCsVqj4jGI",
+	"spine": "4.3.37-beta",
 	"x": 134.06,
 	"y": 91.44,
 	"width": 1023.51,
 	"height": 849.03,
-	"referenceScale": 50,
 	"images": "./images/",
 	"audio": ""
 },
@@ -56,8 +55,8 @@
 	{
 		"type": "transform",
 		"name": "pan-front",
-		"bones": [ "pan-back" ],
 		"source": "pan-front",
+		"bones": [ "pan-back" ],
 		"x": 1.45,
 		"y": -130.96,
 		"properties": {

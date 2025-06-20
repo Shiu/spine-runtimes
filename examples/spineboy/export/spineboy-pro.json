@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "0JYVQzyBfX0",
-	"spine": "4.3.29-beta",
+	"hash": "/v2SWUlocF0",
+	"spine": "4.3.37-beta",
 	"x": -188.63,
 	"y": -7.94,
 	"width": 418.45,
@@ -322,8 +322,8 @@
 	{
 		"type": "transform",
 		"name": "shoulder",
-		"bones": [ "back-shoulder" ],
 		"source": "front-shoulder",
+		"bones": [ "back-shoulder" ],
 		"x": 40.17,
 		"y": -1.66,
 		"properties": {
@@ -343,14 +343,14 @@
 	{
 		"type": "ik",
 		"name": "board-ik",
-		"bones": [ "hoverboard-controller" ],
-		"target": "board-ik"
+		"target": "board-ik",
+		"bones": [ "hoverboard-controller" ]
 	},
 	{
 		"type": "transform",
 		"name": "front-foot-board-transform",
-		"bones": [ "front-foot-target" ],
 		"source": "hoverboard-controller",
+		"bones": [ "front-foot-target" ],
 		"x": -69.8,
 		"y": 20.7,
 		"properties": {
@@ -393,8 +393,8 @@
 	{
 		"type": "transform",
 		"name": "rear-foot-board-transform",
-		"bones": [ "rear-foot-target" ],
 		"source": "hoverboard-controller",
+		"bones": [ "rear-foot-target" ],
 		"x": 86.6,
 		"y": 21.3,
 		"properties": {
@@ -437,40 +437,40 @@
 	{
 		"type": "ik",
 		"name": "front-leg-ik",
-		"bones": [ "front-thigh", "front-shin" ],
 		"target": "front-leg-target",
+		"bones": [ "front-thigh", "front-shin" ],
 		"bendPositive": false
 	},
 	{
 		"type": "ik",
 		"name": "rear-leg-ik",
-		"bones": [ "rear-thigh", "rear-shin" ],
 		"target": "rear-leg-target",
+		"bones": [ "rear-thigh", "rear-shin" ],
 		"bendPositive": false
 	},
 	{
 		"type": "ik",
 		"name": "front-foot-ik",
-		"bones": [ "front-foot" ],
-		"target": "front-foot-target"
+		"target": "front-foot-target",
+		"bones": [ "front-foot" ]
 	},
 	{
 		"type": "ik",
 		"name": "rear-foot-ik",
-		"bones": [ "rear-foot" ],
-		"target": "rear-foot-target"
+		"target": "rear-foot-target",
+		"bones": [ "rear-foot" ]
 	},
 	{
 		"type": "ik",
 		"name": "aim-torso-ik",
-		"bones": [ "aim-constraint-target" ],
-		"target": "crosshair"
+		"target": "crosshair",
+		"bones": [ "aim-constraint-target" ]
 	},
 	{
 		"type": "transform",
 		"name": "aim-torso-transform",
-		"bones": [ "torso" ],
 		"source": "aim-constraint-target",
+		"bones": [ "torso" ],
 		"rotation": 69.5,
 		"properties": {
 			"rotate": {
@@ -484,8 +484,8 @@
 	{
 		"type": "transform",
 		"name": "aim-head-transform",
-		"bones": [ "head" ],
 		"source": "aim-constraint-target",
+		"bones": [ "head" ],
 		"rotation": 84.3,
 		"properties": {
 			"rotate": {
@@ -499,8 +499,8 @@
 	{
 		"type": "transform",
 		"name": "aim-front-arm-transform",
-		"bones": [ "front-upper-arm" ],
 		"source": "aim-constraint-target",
+		"bones": [ "front-upper-arm" ],
 		"rotation": -180,
 		"properties": {
 			"rotate": {
@@ -514,15 +514,15 @@
 	{
 		"type": "ik",
 		"name": "aim-ik",
-		"bones": [ "rear-upper-arm" ],
 		"target": "crosshair",
+		"bones": [ "rear-upper-arm" ],
 		"mix": 0
 	},
 	{
 		"type": "transform",
 		"name": "toes-board",
-		"bones": [ "front-foot-tip", "back-foot-tip" ],
 		"source": "hoverboard-controller",
+		"bones": [ "front-foot-tip", "back-foot-tip" ],
 		"properties": {
 			"rotate": {
 				"to": {
@@ -3561,13 +3561,13 @@
 		},
 		"transform": {
 			"front-foot-board-transform": [
-				{ "mixRotate": 0.997, "mixX": 1, "mixScaleX": 1, "mixShearY": 1 }
+				{ "mixRotate": 0.997 }
 			],
 			"rear-foot-board-transform": [
-				{ "mixRotate": 1, "mixX": 1, "mixScaleX": 1, "mixShearY": 1 }
+				{}
 			],
 			"toes-board": [
-				{ "mixRotate": 1 }
+				{}
 			]
 		},
 		"attachments": {

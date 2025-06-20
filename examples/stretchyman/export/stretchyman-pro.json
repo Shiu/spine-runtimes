@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "FFjvEktfmMw",
-	"spine": "4.3.29-beta",
+	"hash": "J7oiW7cwE6w",
+	"spine": "4.3.37-beta",
 	"x": -100.47,
 	"y": -9.21,
 	"width": 260.65,
@@ -406,34 +406,34 @@
 	{
 		"type": "ik",
 		"name": "back-leg-ik",
-		"bones": [ "back-leg-ik1", "back-leg-ik2" ],
 		"target": "back-leg-ik-target",
+		"bones": [ "back-leg-ik1", "back-leg-ik2" ],
 		"bendPositive": false
 	},
 	{
 		"type": "ik",
 		"name": "front-leg-ik",
-		"bones": [ "front-leg-ik1", "front-leg-ik2" ],
 		"target": "front-leg-ik-target",
+		"bones": [ "front-leg-ik1", "front-leg-ik2" ],
 		"bendPositive": false
 	},
 	{
 		"type": "ik",
 		"name": "front-arm-ik",
-		"bones": [ "front-arm-ik1", "front-arm-ik2" ],
-		"target": "front-arm-ik-target"
+		"target": "front-arm-ik-target",
+		"bones": [ "front-arm-ik1", "front-arm-ik2" ]
 	},
 	{
 		"type": "ik",
 		"name": "back-arm-ik",
-		"bones": [ "back-arm-ik1", "back-arm-ik2" ],
-		"target": "back-arm-ik-target"
+		"target": "back-arm-ik-target",
+		"bones": [ "back-arm-ik1", "back-arm-ik2" ]
 	},
 	{
 		"type": "path",
 		"name": "back-leg-path",
-		"bones": [ "back-leg1", "back-leg2", "back-leg3", "back-leg4", "back-leg5", "back-leg6", "back-leg7", "back-leg8" ],
 		"slot": "back-leg-path",
+		"bones": [ "back-leg1", "back-leg2", "back-leg3", "back-leg4", "back-leg5", "back-leg6", "back-leg7", "back-leg8" ],
 		"spacingMode": "percent",
 		"rotateMode": "chainScale",
 		"spacing": 0.125
@@ -441,8 +441,8 @@
 	{
 		"type": "path",
 		"name": "front-leg-path",
-		"bones": [ "front-leg1", "front-leg2", "front-leg3", "front-leg4", "front-leg5", "front-leg6", "front-leg7", "front-leg8" ],
 		"slot": "front-leg-path",
+		"bones": [ "front-leg1", "front-leg2", "front-leg3", "front-leg4", "front-leg5", "front-leg6", "front-leg7", "front-leg8" ],
 		"spacingMode": "percent",
 		"rotateMode": "chainScale",
 		"spacing": 0.125
@@ -450,8 +450,8 @@
 	{
 		"type": "path",
 		"name": "front-arm-path",
-		"bones": [ "front-arm1", "front-arm2", "front-arm3", "front-arm4" ],
 		"slot": "front-arm-path",
+		"bones": [ "front-arm1", "front-arm2", "front-arm3", "front-arm4" ],
 		"spacingMode": "percent",
 		"rotateMode": "chainScale",
 		"spacing": 0.25
@@ -459,8 +459,8 @@
 	{
 		"type": "path",
 		"name": "back-arm-path",
-		"bones": [ "back-arm1", "back-arm2", "back-arm3", "back-arm4" ],
 		"slot": "back-arm-path",
+		"bones": [ "back-arm1", "back-arm2", "back-arm3", "back-arm4" ],
 		"spacingMode": "percent",
 		"rotateMode": "chainScale",
 		"spacing": 0.25
@@ -468,8 +468,8 @@
 	{
 		"type": "transform",
 		"name": "back-foot-position",
-		"bones": [ "back-foot1" ],
 		"source": "back-leg8",
+		"bones": [ "back-foot1" ],
 		"x": 41.2,
 		"y": -0.03,
 		"shearY": 0.1,
@@ -494,8 +494,8 @@
 	{
 		"type": "transform",
 		"name": "front-foot-position",
-		"bones": [ "front-foot1" ],
 		"source": "front-leg8",
+		"bones": [ "front-foot1" ],
 		"x": 38.92,
 		"y": -0.02,
 		"shearY": 0.1,

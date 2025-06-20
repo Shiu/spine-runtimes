@@ -99,6 +99,30 @@ common/tear
 	bounds: 221, 8, 20, 19
 
 chibi-stickers-pma_2.png
+	size: 256, 256
+	filter: Linear, Linear
+	pma: true
+	scale: 0.5
+davide/arm
+	bounds: 102, 14, 28, 90
+	rotate: 90
+davide/body
+	bounds: 2, 2, 70, 98
+	rotate: 90
+davide/body-decoration
+	bounds: 2, 187, 6, 28
+davide/eyebrow
+	bounds: 219, 162, 35, 15
+davide/hair-back
+	bounds: 10, 74, 158, 141
+davide/hair-front
+	bounds: 170, 74, 141, 74
+	rotate: 90
+davide/leg
+	bounds: 102, 44, 28, 101
+	rotate: 90
+
+chibi-stickers-pma_3.png
 	size: 1024, 256
 	filter: Linear, Linear
 	pma: true
@@ -150,7 +174,7 @@ erikari/skirt
 erikari/strawberries-decoration
 	bounds: 2, 63, 112, 56
 
-chibi-stickers-pma_3.png
+chibi-stickers-pma_4.png
 	size: 256, 512
 	filter: Linear, Linear
 	pma: true
@@ -188,7 +212,7 @@ harri/sword
 	bounds: 162, 190, 185, 82
 	rotate: 90
 
-chibi-stickers-pma_4.png
+chibi-stickers-pma_5.png
 	size: 1024, 256
 	filter: Linear, Linear
 	pma: true
@@ -232,7 +256,7 @@ luke/sword
 	bounds: 741, 51, 104, 71
 	rotate: 90
 
-chibi-stickers-pma_5.png
+chibi-stickers-pma_6.png
 	size: 256, 512
 	filter: Linear, Linear
 	pma: true
@@ -262,7 +286,7 @@ mario/leg
 	bounds: 2, 19, 28, 101
 	rotate: 90
 
-chibi-stickers-pma_6.png
+chibi-stickers-pma_7.png
 	size: 1024, 256
 	filter: Linear, Linear
 	pma: true
@@ -305,7 +329,7 @@ misaki/skirt
 	bounds: 611, 84, 108, 90
 	rotate: 90
 
-chibi-stickers-pma_7.png
+chibi-stickers-pma_8.png
 	size: 256, 512
 	filter: Linear, Linear
 	pma: true
@@ -340,7 +364,7 @@ nate/head-base
 nate/leg
 	bounds: 217, 293, 28, 101
 
-chibi-stickers-pma_8.png
+chibi-stickers-pma_9.png
 	size: 256, 512
 	filter: Linear, Linear
 	pma: true
@@ -369,7 +393,7 @@ sinisa/head-base
 sinisa/leg
 	bounds: 209, 163, 28, 101
 
-chibi-stickers-pma_9.png
+chibi-stickers-pma_10.png
 	size: 256, 512
 	filter: Linear, Linear
 	pma: true
@@ -402,7 +426,7 @@ soeren/head-base
 soeren/leg
 	bounds: 154, 292, 28, 101
 
-chibi-stickers-pma_10.png
+chibi-stickers-pma_11.png
 	size: 256, 512
 	filter: Linear, Linear
 	pma: true

@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "uHPCOUpc1kA",
-	"spine": "4.3.29-beta",
+	"hash": "AA2EaK4v1DM",
+	"spine": "4.3.37-beta",
 	"x": -755,
 	"y": -556.02,
 	"width": 1332,
@@ -314,8 +314,8 @@
 	{
 		"type": "transform",
 		"name": "girl/shoulders-perspective",
-		"bones": [ "arm-back-up-holder" ],
 		"source": "arm-front-up-holder",
+		"bones": [ "arm-back-up-holder" ],
 		"x": 25.8,
 		"y": -257.4,
 		"properties": {
@@ -346,8 +346,8 @@
 	{
 		"type": "transform",
 		"name": "girl/head-control",
-		"bones": [ "face-inverse" ],
 		"source": "face-control",
+		"bones": [ "face-inverse" ],
 		"x": 109.57,
 		"y": 251.66,
 		"properties": {
@@ -367,8 +367,8 @@
 	{
 		"type": "transform",
 		"name": "girl/face-control",
-		"bones": [ "face-holder" ],
 		"source": "face-control",
+		"bones": [ "face-holder" ],
 		"x": 33.48,
 		"y": 16.63,
 		"properties": {
