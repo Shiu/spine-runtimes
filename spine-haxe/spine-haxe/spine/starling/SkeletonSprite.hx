@@ -116,7 +116,7 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 			}
 
 			var worldVertices:Array<Float> = _tempVertices;
-			var pose = slot.pose;
+			var pose = slot.applied;
 			var attachment = pose.attachment;
 			if (Std.isOfType(attachment, RegionAttachment)) {
 				var region:RegionAttachment = cast(attachment, RegionAttachment);
@@ -250,7 +250,7 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 		var empty:Bool = true;
 		for (i in 0...slots.length) {
 			var slot:Slot = slots[i];
-			var pose = slot.pose;
+			var pose = slot.applied;
 			var attachment = pose.attachment;
 			if (attachment == null)
 				continue;

@@ -208,7 +208,7 @@ class SkeletonSprite extends FlxObject
 			}
 
 			var worldVertices:Array<Float> = _tempVertices;
-			var pose = slot.pose;
+			var pose = slot.applied;
 			var attachment = pose.attachment;
 			if (Std.isOfType(attachment, RegionAttachment)) {
 				var region:RegionAttachment = cast(attachment, RegionAttachment);
