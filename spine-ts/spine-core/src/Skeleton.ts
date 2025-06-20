@@ -49,6 +49,9 @@ import { Color, Utils, Vector2, NumberArrayLike } from "./Utils.js";
 export class Skeleton {
 	private static quadTriangles = [0, 1, 2, 2, 3, 0];
 	static yDown = false;
+	static get yDir(): number {
+		return Skeleton.yDown ? -1 : 1;
+	}
 
 	/** The skeleton's setup pose data. */
 	readonly data: SkeletonData;
