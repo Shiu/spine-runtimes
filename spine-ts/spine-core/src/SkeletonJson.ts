@@ -346,7 +346,7 @@ export class SkeletonJson {
 							const propertyScale = this.propertyScale(property, scale);
 							data.property.offset = getValue(constraintMap, "from", 0) * propertyScale;
 							data.offset = getValue(constraintMap, "to", 0);
-							data.scale = getValue(constraintMap, "scale", 1);
+							data.scale = getValue(constraintMap, "scale", 1) / propertyScale;
 							data.local = getValue(constraintMap, "local", false);
 						}
 
