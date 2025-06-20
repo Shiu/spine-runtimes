@@ -352,8 +352,10 @@ class SkeletonJson {
 							if (data.bone == null) throw new SpineException("Slider bone not found: " + boneName);
 							var property = getString(constraintMap, "property");
 							data.property = fromProperty(property);
-							data.property.offset = getFloat(constraintMap, "offset", 0) * propertyScale(property, scale);
-							data.scale = getFloat(constraintMap, "scale");
+							var propertyScale = propertyScale(property, scale);
+							data.property.offset = getFloat(constraintMap, "from", 0) * propertyScale;
+							data.offset = getFloat(constraintMap, "to", 0);
+							data.scale = getFloat(constraintMap, "scale", 1) / propertyScale;
 							data.local = getBoolean(constraintMap, "local", false);
 						}
 
@@ -958,13 +960,11 @@ class SkeletonJson {
 			if (constraint == null) throw new SpineException("Transform constraint not found: " + transformName);
 			var timeline = new TransformConstraintTimeline(timelineMap.length, timelineMap.length * 6,
 				skeletonData.constraints.indexOf(constraint));
-			var time = getFloat(keyMap, "time");
-			var mixRotate = getFloat(keyMap, "mixRotate", 0);
-			var mixX = getFloat(keyMap, "mixX", 0);
-			var mixY = getFloat(keyMap, "mixY", mixX);
-			var mixScaleX:Float = getFloat(keyMap, "mixScaleX", 0);
-			var mixScaleY:Float = getFloat(keyMap, "mixScaleY", mixScaleX);
-			var mixShearY:Float = getFloat(keyMap, "mixShearY", 0);
+			var time = getFloat(keyMap, "time", 0);
+			var mixRotate = getFloat(keyMap, "mixRotate", 1);
+			var mixX = getFloat(keyMap, "mixX", 1), mixY = getFloat(keyMap, "mixY", mixX);
+			var mixScaleX:Float = getFloat(keyMap, "mixScaleX", 1), mixScaleY:Float = getFloat(keyMap, "mixScaleY", 1);
+			var mixShearY:Float = getFloat(keyMap, "mixShearY", 1);
 
 			frame = 0;
 			bezier = 0;
@@ -976,13 +976,11 @@ class SkeletonJson {
 					break;
 				}
 
-				var time2 = getFloat(nextMap, "time");
+				var time2 = getFloat(nextMap, "time", 0);
 				var mixRotate2 = getFloat(nextMap, "mixRotate", 1);
+				var mixX2 = getFloat(nextMap, "mixX", 1), mixY2 = getFloat(nextMap, "mixY", mixX2);
+				var mixScaleX2:Float = getFloat(nextMap, "mixScaleX", 1), mixScaleY2:Float = getFloat(nextMap, "mixScaleY", 1);
 				var mixShearY2:Float = getFloat(nextMap, "mixShearY", 1);
-				var mixX2 = getFloat(nextMap, "mixX", 1);
-				var mixY2 = getFloat(nextMap, "mixY", mixX2);
-				var mixScaleX2:Float = getFloat(nextMap, "mixScaleX", 1);
-				var mixScaleY2:Float = getFloat(nextMap, "mixScaleY", mixScaleX2);
 				var curve = keyMap.curve;
 				if (curve != null) {
 					bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, mixRotate, mixRotate2, 1);

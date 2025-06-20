@@ -93,7 +93,7 @@ class Skeleton {
 	* Bones that do not inherit scale are still affected by this property. */
 	public var scaleY(get, default):Float = 1;
 	function get_scaleY() {
-		return Bone.yDown ? -scaleY : scaleY;
+		return scaleY * Bone.yDir;
 	}
 
 	/** Returns the skeleton's time. This is used for time-based manipulations, such as spine.PhysicsConstraint.

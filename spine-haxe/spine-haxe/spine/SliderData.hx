@@ -43,7 +43,8 @@ class SliderData extends ConstraintData<Slider, SliderPose> {
 	public var loop = false;
 	public var bone:BoneData = null;
 	public var property:FromProperty = null;
-	public var scale = 1.;
+	public var scale = 0.;
+	public var offset = 0.;
 	public var local = false;
 
 	public function new (name:String) {

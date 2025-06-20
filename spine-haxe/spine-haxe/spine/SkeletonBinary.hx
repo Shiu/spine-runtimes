@@ -232,10 +232,11 @@ class SkeletonBinary {
 		var constraints = skeletonData.constraints;
 		for (i in 0...constraintCount) {
 			var name = input.readString();
-			var nn = input.readInt(true);
+			var nn;
 			switch (input.readByte()) {
 				case CONSTRAINT_IK:
 					var data = new IkConstraintData(name);
+					nn = input.readInt(true);
 					var constraintBones = data.bones;
 					for (ii in 0...nn)
 						constraintBones.push(bones[input.readInt(true)]);
@@ -252,6 +253,7 @@ class SkeletonBinary {
 					constraints[i] = data;
 				case CONSTRAINT_TRANSFORM:
 					var data = new TransformConstraintData(name);
+					nn = input.readInt(true);
 					var constraintBones = data.bones;
 					for (ii in 0...nn)
 						constraintBones.push(bones[input.readInt(true)]);
@@ -324,6 +326,7 @@ class SkeletonBinary {
 					constraints[i] = data;
 				case CONSTRAINT_PATH:
 					var data = new PathConstraintData(name);
+					nn = input.readInt(true);
 					var constraintBones = data.bones;
 					for (ii in 0...nn)
 						constraintBones[ii] = bones[input.readInt(true)];
@@ -345,7 +348,7 @@ class SkeletonBinary {
 					constraints[i] = data;
 				case CONSTRAINT_PHYSICS:
 					var data = new PhysicsConstraintData(name);
-					data.bone = bones[nn];
+					data.bone = bones[input.readInt(true)];
 					var flags = input.readByte();
 					data.skinRequired = (flags & 1) != 0;
 					if ((flags & 2) != 0) data.x = input.readFloat();
@@ -374,30 +377,33 @@ class SkeletonBinary {
 					constraints[i] = data;
 				case CONSTRAINT_SLIDER:
 					var data = new SliderData(name);
-					data.skinRequired = (nn & 1) != 0;
-					data.loop = (nn & 2) != 0;
-					data.additive = (nn & 4) != 0;
-					if ((nn & 8) != 0) data.setup.time = input.readFloat();
-					if ((nn & 16) != 0) data.setup.mix = (nn & 32) != 0 ? input.readFloat() : 1;
-					if ((nn & 64) != 0) {
-						data.local = (nn & 128) != 0;
+					var flags = input.readByte();
+					data.skinRequired = (flags & 1) != 0;
+					data.loop = (flags & 2) != 0;
+					data.additive = (flags & 4) != 0;
+					if ((flags & 8) != 0) data.setup.time = input.readFloat();
+					if ((flags & 16) != 0) data.setup.mix = (flags & 32) != 0 ? input.readFloat() : 1;
+					if ((flags & 64) != 0) {
+						data.local = (flags & 128) != 0;
 						data.bone = bones[input.readInt(true)];
 						var offset = input.readFloat();
+						var propertyScale = 1.;
 						switch (input.readByte()) {
 							case 0: data.property = new FromRotate();
 							case 1:
-								offset *= scale;
+								propertyScale = scale;
 								data.property =  new FromX();
 							case 2:
-								offset *= scale;
+								propertyScale = scale;
 								data.property =  new FromY();
 							case 3: data.property = new FromScaleX();
 							case 4: data.property = new FromScaleY();
 							case 5: data.property = new FromShearY();
 							default: data.property = null;
 						}
-						data.property.offset = offset;
-						data.scale = input.readFloat();
+						data.property.offset = offset * propertyScale;
+						data.offset = input.readFloat();
+						data.scale = input.readFloat() / propertyScale;
 					}
 					constraints[i] = data;
 			}

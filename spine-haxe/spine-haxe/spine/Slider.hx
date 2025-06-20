@@ -64,7 +64,8 @@ class Slider extends Constraint<Slider, SliderData, SliderPose> {
 		if (bone != null) {
 			if (!bone.active) return;
 			if (data.local) bone.applied.validateLocalTransform(skeleton);
-			p.time = (data.property.value(bone.applied, data.local, offsets) - data.property.offset) * data.scale;
+			p.time = data.offset
+				+ (data.property.value(skeleton, bone.applied, data.local, offsets) - data.property.offset) * data.scale;
 			if (data.loop)
 				p.time = animation.duration + (p.time % animation.duration);
 			else

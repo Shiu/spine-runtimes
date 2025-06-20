@@ -211,7 +211,7 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 								d = Math.pow(p.damping, 60 * t);
 								m = t * p.massInverse;
 								e = p.strength;
-								var w = f * p.wind, g = f * (Bone.yDown ? -p.gravity : p.gravity);
+								var w = f * p.wind, g = f * p.gravity * Bone.yDir;
 								ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
 								ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.scaleY;
 							}

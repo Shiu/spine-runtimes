@@ -36,6 +36,10 @@ package spine;
  * constraint or application code modifies the world transform after it was computed from the local transform. */
 class Bone extends PosedActive<BoneData, BoneLocal, BonePose> {
 	static public var yDown:Bool = false;
+	static public var yDir(get, never):Int;
+	static private function get_yDir(): Int {
+		return Bone.yDown ? -1 : 1;
+	}
 
 	/** The parent bone, or null if this is the root bone. */
 	public final parent:Bone = null;

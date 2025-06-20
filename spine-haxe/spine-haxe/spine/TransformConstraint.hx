@@ -80,7 +80,7 @@ class TransformConstraint extends Constraint<TransformConstraint, TransformConst
 			var f = 0;
 			while (f < fn) {
 				var from = fromItems[f];
-				var value = from.value(source, localSource, offsets) - from.offset;
+				var value = from.value(skeleton, source, localSource, offsets) - from.offset;
 				var toItems = from.to;
 				var t = 0, tn = from.to.length;
 				while (t < tn) {
@@ -93,7 +93,7 @@ class TransformConstraint extends Constraint<TransformConstraint, TransformConst
 							else
 								clamped = MathUtils.clamp(clamped, to.max, to.offset);
 						}
-						to.apply(p, bone, clamped, localTarget, additive);
+						to.apply(skeleton, p, bone, clamped, localTarget, additive);
 					}
 					t++;
 				}

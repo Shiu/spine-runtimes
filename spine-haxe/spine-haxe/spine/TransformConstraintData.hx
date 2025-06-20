@@ -169,7 +169,7 @@ abstract class FromProperty {
 	public final to = new Array<ToProperty>();
 
 	/** Reads this property from the specified bone. */
-	abstract public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float;
+	abstract public function value (skeleton:Skeleton, source:BonePose, local:Bool, offsets:Array<Float>):Float;
 }
 
 /** Constrained property for a TransformConstraint. */
@@ -190,13 +190,13 @@ abstract class ToProperty {
 	abstract public function mix (pose:TransformConstraintPose):Float;
 
 	/** Applies the value to this property. */
-	abstract public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void;
+	abstract public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void;
 }
 
 class FromRotate extends FromProperty {
-	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
+	public function value (skeleton:Skeleton, source:BonePose, local:Bool, offsets:Array<Float>):Float {
 		if (local) return source.rotation + offsets[TransformConstraintData.ROTATION];
-		var value = Math.atan2(source.c, source.a) * MathUtils.radDeg
+		var value = Math.atan2(source.c / skeleton.scaleY, source.a / skeleton.scaleX) * MathUtils.radDeg
 			+ (source.a * source.d - source.b * source.c > 0 ? offsets[TransformConstraintData.ROTATION] : -offsets[TransformConstraintData.ROTATION]);
 		if (value < 0) value += 360;
 		return value;
@@ -208,13 +208,13 @@ class ToRotate extends ToProperty {
 		return pose.mixRotate;
 	}
 
-	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+	public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
 		if (local) {
 			if (!additive) value -= bone.rotation;
 			bone.rotation += value * pose.mixRotate;
 		} else {
 			var a = bone.a, b = bone.b, c = bone.c, d = bone.d;
-			value *= MathUtils.degRad;
+			value *= MathUtils.degRad * Bone.yDir;
 			if (!additive) value -= Math.atan2(c, a);
 			if (value > Math.PI)
 				value -= MathUtils.PI2;
@@ -231,8 +231,10 @@ class ToRotate extends ToProperty {
 }
 
 class FromX extends FromProperty {
-	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
-		return local ? source.x + offsets[TransformConstraintData.X] : offsets[TransformConstraintData.X] * source.a + offsets[TransformConstraintData.Y] * source.b + source.worldX;
+	public function value (skeleton:Skeleton, source:BonePose, local:Bool, offsets:Array<Float>):Float {
+		return local
+			? source.x + offsets[TransformConstraintData.X]
+			: (offsets[TransformConstraintData.X] * source.a + offsets[TransformConstraintData.Y] * source.b + source.worldX) / skeleton.scaleX;
 	}
 }
 
@@ -241,7 +243,7 @@ class ToX extends ToProperty {
 		return pose.mixX;
 	}
 
-	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+	public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
 		if (local) {
 			if (!additive) value -= bone.x;
 			bone.x += value * pose.mixX;
@@ -253,8 +255,10 @@ class ToX extends ToProperty {
 }
 
 class FromY extends FromProperty {
-	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
-		return local ? source.y + offsets[TransformConstraintData.Y] : offsets[TransformConstraintData.X] * source.c + offsets[TransformConstraintData.Y] * source.d + source.worldY;
+	public function value (skeleton:Skeleton, source:BonePose, local:Bool, offsets:Array<Float>):Float {
+		return local
+			? source.y + offsets[TransformConstraintData.Y]
+			: (offsets[TransformConstraintData.X] * source.c + offsets[TransformConstraintData.Y] * source.d + source.worldY) / skeleton.scaleY;
 	}
 }
 
@@ -263,20 +267,22 @@ class ToY extends ToProperty {
 		return pose.mixY;
 	}
 
-	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+	public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
 		if (local) {
 			if (!additive) value -= bone.y;
 			bone.y += value * pose.mixY;
 		} else {
-			if (!additive) value -= bone.worldY;
-			bone.worldY += value * pose.mixY;
+			if (!additive) value -= bone.worldY * Bone.yDir;
+			bone.worldY += value * pose.mixY * Bone.yDir;
 		}
 	}
 }
 
 class FromScaleX extends FromProperty {
-	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
-		return (local ? source.scaleX : Math.sqrt(source.a * source.a + source.c * source.c)) + offsets[TransformConstraintData.SCALEX];
+	public function value (skeleton:Skeleton, source:BonePose, local:Bool, offsets:Array<Float>):Float {
+		if (local) return source.scaleX + offsets[TransformConstraintData.SCALEX];
+		var a = source.a / skeleton.scaleX, c = source.c / skeleton.scaleY;
+		return Math.sqrt(a * a + c * c) + offsets[TransformConstraintData.SCALEX];
 	}
 }
 
@@ -285,7 +291,7 @@ class ToScaleX extends ToProperty {
 		return pose.mixScaleX;
 	}
 
-	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+	public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
 		if (local) {
 			if (additive)
 				bone.scaleX *= 1 + ((value - 1) * pose.mixScaleX);
@@ -296,7 +302,7 @@ class ToScaleX extends ToProperty {
 			if (additive)
 				s = 1 + (value - 1) * pose.mixScaleX;
 			else {
-				s = Math.sqrt(bone.a * bone.a + bone.c * bone.c);
+				s = Math.sqrt(bone.a * bone.a + bone.c * bone.c) / skeleton.scaleX;
 				if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleX;
 			}
 			bone.a *= s;
@@ -306,8 +312,10 @@ class ToScaleX extends ToProperty {
 }
 
 class FromScaleY extends FromProperty {
-	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
-		return (local ? source.scaleY : Math.sqrt(source.b * source.b + source.d * source.d)) + offsets[TransformConstraintData.SCALEY];
+	public function value (skeleton:Skeleton, source:BonePose, local:Bool, offsets:Array<Float>):Float {
+		if (local) return source.scaleY + offsets[TransformConstraintData.SCALEY];
+		var b = source.b / skeleton.scaleX, d = source.d / skeleton.scaleY;
+		return Math.sqrt(b * b + d * d) + offsets[TransformConstraintData.SCALEY];
 	}
 }
 
@@ -316,7 +324,7 @@ class ToScaleY extends ToProperty {
 		return pose.mixScaleY;
 	}
 
-	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+	public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
 		if (local) {
 			if (additive)
 				bone.scaleY *= 1 + ((value - 1) * pose.mixScaleY);
@@ -327,7 +335,7 @@ class ToScaleY extends ToProperty {
 			if (additive)
 				s = 1 + (value - 1) * pose.mixScaleY;
 			else {
-				s = Math.sqrt(bone.b * bone.b + bone.d * bone.d);
+				s = Math.sqrt(bone.b * bone.b + bone.d * bone.d) / skeleton.scaleY * Bone.yDir;
 				if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleY;
 			}
 			bone.b *= s;
@@ -337,8 +345,11 @@ class ToScaleY extends ToProperty {
 }
 
 class FromShearY extends FromProperty {
-	public function value (source:BonePose, local:Bool, offsets:Array<Float>):Float {
-		return (local ? source.shearY : (Math.atan2(source.d, source.b) - Math.atan2(source.c, source.a)) * MathUtils.radDeg - 90) + offsets[TransformConstraintData.SHEARY];
+	public function value (skeleton:Skeleton, source:BonePose, local:Bool, offsets:Array<Float>):Float {
+		if (local) return source.shearY + offsets[TransformConstraintData.SHEARY];
+		var sx = 1 / skeleton.scaleX, sy = 1 / skeleton.scaleY;
+		return (Math.atan2(source.d * sy, source.b * sx) - Math.atan2(source.c * sy, source.a * sx))
+			* MathUtils.radDeg - 90 + offsets[TransformConstraintData.SHEARY];
 	}
 }
 
@@ -347,13 +358,13 @@ class ToShearY extends ToProperty {
 		return pose.mixShearY;
 	}
 
-	public function apply (pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
+	public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
 		if (local) {
 			if (!additive) value -= bone.shearY;
 			bone.shearY += value * pose.mixShearY;
 		} else {
 			var b = bone.b, d = bone.d, by = Math.atan2(d, b);
-			value = (value + 90) * MathUtils.degRad;
+			value = (value + 90) * MathUtils.degRad * Bone.yDir;
 			if (additive)
 				value -= Math.PI / 2;
 			else {
