@@ -4,6 +4,17 @@ set -e
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 cd $SCRIPT_DIR
 
+# On macOS, we need gsed for the -i switch to work. Check it's available
+# and error out otherwise.
+sed="sed"
+if [[ $OSTYPE == 'darwin'* ]]; then
+  if [ ! -f "/opt/homebrew/bin/gsed" ]; then
+	echo "macOS sed detected. Please install GNU sed via brew install gnu-sed"
+	exit -1
+  fi
+  sed="/opt/homebrew/bin/gsed"
+fi
+
 ROOT=$SCRIPT_DIR/../..
 echo "Spine Runtimes path: $ROOT"
 echo "Copying assets to runtimes..."
@@ -62,8 +73,9 @@ rm -f "$ROOT/spine-libgdx/spine-libgdx-tests/assets/sack/"*
 mkdir -p "$ROOT/spine-libgdx/spine-libgdx-tests/assets/sack/"
 cp -f ../7-anticipation/export/sack-pro.json "$ROOT/spine-libgdx/spine-libgdx-tests/assets/sack/"
 cp -f ../7-anticipation/export/sack-pro.skel "$ROOT/spine-libgdx/spine-libgdx-tests/assets/sack/"
-cp -f ../7-anticipation/export/7-anticipation-pma.atlas "$ROOT/spine-libgdx/spine-libgdx-tests/assets/sack/"
-cp -f ../7-anticipation/export/7-anticipation-pma.png "$ROOT/spine-libgdx/spine-libgdx-tests/assets/sack/"
+cp -f ../7-anticipation/export/7-anticipation-pma.atlas "$ROOT/spine-libgdx/spine-libgdx-tests/assets/sack/sack-pma.atlas"
+$sed -i 's/7-anticipation-pma.png/sack-pma.png/g' "$ROOT/spine-libgdx/spine-libgdx-tests/assets/sack/sack-pma.atlas"
+cp -f ../7-anticipation/export/7-anticipation-pma.png "$ROOT/spine-libgdx/spine-libgdx-tests/assets/sack/sack-pma.png"
 
 rm -f "$ROOT/spine-libgdx/spine-libgdx-tests/assets/celestial-circus/"*
 mkdir -p "$ROOT/spine-libgdx/spine-libgdx-tests/assets/celestial-circus/"
@@ -336,8 +348,9 @@ cp -f ../mix-and-match/export/mix-and-match-pma.png "$ROOT/spine-sfml/c/data/"
 
 cp -f ../7-anticipation/export/sack-pro.json "$ROOT/spine-sfml/c/data/"
 cp -f ../7-anticipation/export/sack-pro.skel "$ROOT/spine-sfml/c/data/"
-cp -f ../7-anticipation/export/7-anticipation-pma.atlas "$ROOT/spine-sfml/c/data/"
-cp -f ../7-anticipation/export/7-anticipation-pma.png "$ROOT/spine-sfml/c/data/"
+cp -f ../7-anticipation/export/7-anticipation-pma.atlas "$ROOT/spine-sfml/c/data/sack-pma.atlas"
+$sed -i 's/7-anticipation-pma.png/sack-pma.png/g' "$ROOT/spine-sfml/c/data/sack-pma.atlas"
+cp -f ../7-anticipation/export/7-anticipation-pma.png "$ROOT/spine-sfml/c/data/sack-pma.png"
 
 cp -f ../celestial-circus/export/* "$ROOT/spine-sfml/c/data/"
 
@@ -399,8 +412,9 @@ cp -f ../mix-and-match/export/mix-and-match-pma.png "$ROOT/spine-sfml/cpp/data/"
 
 cp -f ../7-anticipation/export/sack-pro.json "$ROOT/spine-sfml/cpp/data/"
 cp -f ../7-anticipation/export/sack-pro.skel "$ROOT/spine-sfml/cpp/data/"
-cp -f ../7-anticipation/export/7-anticipation-pma.atlas "$ROOT/spine-sfml/cpp/data/"
-cp -f ../7-anticipation/export/7-anticipation-pma.png "$ROOT/spine-sfml/cpp/data/"
+cp -f ../7-anticipation/export/7-anticipation-pma.atlas "$ROOT/spine-sfml/cpp/data/sack-pma.atlas"
+$sed -i 's/7-anticipation-pma.png/sack-pma.png/g' "$ROOT/spine-sfml/cpp/data/sack-pma.atlas"
+cp -f ../7-anticipation/export/7-anticipation-pma.png "$ROOT/spine-sfml/cpp/data/sack-pma.png"
 
 cp -f ../celestial-circus/export/* "$ROOT/spine-sfml/cpp/data/"
 
@@ -464,10 +478,12 @@ cp -f ../raptor/export/raptor.png "$ROOT/spine-ts/assets/"
 cp -f ../raptor/images/raptor-jaw-tooth.png "$ROOT/spine-ts/assets/"
 
 cp -f ../7-anticipation/export/sack-pro.skel "$ROOT/spine-ts/assets/"
-cp -f ../7-anticipation/export/7-anticipation-pma.atlas "$ROOT/spine-ts/assets/"
-cp -f ../7-anticipation/export/7-anticipation-pma.png "$ROOT/spine-ts/assets/"
-cp -f ../7-anticipation/export/7-anticipation.atlas "$ROOT/spine-ts/assets/"
-cp -f ../7-anticipation/export/7-anticipation.png "$ROOT/spine-ts/assets/"
+cp -f ../7-anticipation/export/7-anticipation-pma.atlas "$ROOT/spine-ts/assets/sack-pma.atlas"
+$sed -i 's/7-anticipation-pma.png/sack-pma.png/g' "$ROOT/spine-ts/assets/sack-pma.atlas"
+cp -f ../7-anticipation/export/7-anticipation-pma.png "$ROOT/spine-ts/assets/sack-pma.png"
+cp -f ../7-anticipation/export/7-anticipation.atlas "$ROOT/spine-ts/assets/sack.atlas"
+$sed -i 's/7-anticipation.png/sack.png/g' "$ROOT/spine-ts/assets/sack.atlas"
+cp -f ../7-anticipation/export/7-anticipation.png "$ROOT/spine-ts/assets/sack.png"
 
 cp -f ../snowglobe/export/snowglobe-pro.skel "$ROOT/spine-ts/assets/"
 cp -f ../snowglobe/export/snowglobe-pma* "$ROOT/spine-ts/assets/"
@@ -615,8 +631,9 @@ cp -f ../cloud-pot/export/cloud-pot.png "$ROOT/spine-haxe/example/assets/"
 
 cp -f ../7-anticipation/export/sack-pro.json "$ROOT/spine-haxe/example/assets/"
 cp -f ../7-anticipation/export/sack-pro.skel "$ROOT/spine-haxe/example/assets/"
-cp -f ../7-anticipation/export/7-anticipation.atlas "$ROOT/spine-haxe/example/assets/"
-cp -f ../7-anticipation/export/7-anticipation.png "$ROOT/spine-haxe/example/assets/"
+cp -f ../7-anticipation/export/7-anticipation.atlas "$ROOT/spine-haxe/example/assets/sack-pma.atlas"
+$sed -i 's/7-anticipation-pma.png/sack-pma.png/g' "$ROOT/spine-haxe/example/assets/sack-pma.atlas"
+cp -f ../7-anticipation/export/7-anticipation.png "$ROOT/spine-haxe/example/assets/sack-pma.png"
 
 cp -f ../snowglobe/export/snowglobe-pro.json "$ROOT/spine-haxe/example/assets/"
 cp -f ../snowglobe/export/snowglobe-pro.skel "$ROOT/spine-haxe/example/assets/"
@@ -652,17 +669,6 @@ echo "spine-unity"
 
 # Section of assets specific for the spine-unity runtime.
 UNITY_SOURCE_DIR=../spine-unity
-
-# On macOS, we need gsed for the -i switch to work. Check it's available
-# and error out otherwise.
-sed="sed"
-if [[ $OSTYPE == 'darwin'* ]]; then
-  if [ ! -f "/opt/homebrew/bin/gsed" ]; then
-	echo "macOS sed detected. Please install GNU sed via brew install gnu-sed"
-	exit -1
-  fi
-  sed="/opt/homebrew/bin/gsed"
-fi
 
 # Do not delete everything in unity dirs, especially not .meta files.
 # Note: We copy the files following the existing naming scheme (e.g. goblins.json instead of goblins-pro.json)
