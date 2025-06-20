@@ -305,7 +305,7 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 				else {
 					s = (float)Math.sqrt(bone.a * bone.a + bone.c * bone.c) / skeleton.scaleX;
 					if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleX;
-			}
+				}
 				bone.a *= s;
 				bone.c *= s;
 			}

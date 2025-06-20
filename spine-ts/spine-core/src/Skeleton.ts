@@ -32,7 +32,6 @@ import { ClippingAttachment } from "./attachments/ClippingAttachment.js";
 import { MeshAttachment } from "./attachments/MeshAttachment.js";
 import { RegionAttachment } from "./attachments/RegionAttachment.js";
 import { Bone } from "./Bone.js";
-import { BonePose } from "./BonePose.js";
 import { Constraint } from "./Constraint.js";
 import { Physics } from "./Physics.js";
 import { PhysicsConstraint } from "./PhysicsConstraint.js";
@@ -49,7 +48,7 @@ import { Color, Utils, Vector2, NumberArrayLike } from "./Utils.js";
 export class Skeleton {
 	private static quadTriangles = [0, 1, 2, 2, 3, 0];
 	static yDown = false;
-	static get yDir(): number {
+	static get yDir (): number {
 		return Skeleton.yDown ? -1 : 1;
 	}
 

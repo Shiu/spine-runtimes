@@ -115,7 +115,7 @@ void TransformConstraint::sort(Skeleton &skeleton) {
 	}
 	skeleton._updateCache.add(this);
 	for (size_t i = 0; i < boneCount; i++) {
-		Bone* bone = bones[i]->_bone;
+		Bone *bone = bones[i]->_bone;
 		skeleton.sortReset(bone->getChildren());
 		skeleton.constrained(*bone);
 	}
