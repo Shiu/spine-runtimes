@@ -151,10 +151,11 @@ export class SkeletonBinary {
 		for (let i = 0; i < constraintCount; i++) {
 			let name = input.readString();
 			if (!name) throw new Error("Constraint data name must not be null.");
-			let nn = input.readInt(true);
+			let nn;
 			switch (input.readByte()) {
 				case CONSTRAINT_IK: {
 					let data = new IkConstraintData(name);
+					nn = input.readInt(true);
 					for (let ii = 0; ii < nn; ii++)
 						data.bones.push(bones[input.readInt(true)]);
 					data.target = bones[input.readInt(true)];
@@ -172,6 +173,7 @@ export class SkeletonBinary {
 				}
 				case CONSTRAINT_TRANSFORM: {
 					let data = new TransformConstraintData(name);
+					nn = input.readInt(true);
 					for (let ii = 0; ii < nn; ii++)
 						data.bones.push(bones[input.readInt(true)]);
 					data.source = bones[input.readInt(true)];
@@ -254,6 +256,7 @@ export class SkeletonBinary {
 				}
 				case CONSTRAINT_PATH: {
 					let data = new PathConstraintData(name);
+					nn = input.readInt(true);
 					for (let ii = 0; ii < nn; ii++)
 						data.bones.push(bones[input.readInt(true)]);
 					data.slot = skeletonData.slots[input.readInt(true)];
@@ -276,7 +279,7 @@ export class SkeletonBinary {
 				}
 				case CONSTRAINT_PHYSICS: {
 					const data = new PhysicsConstraintData(name);
-					data.bone = bones[nn];
+					data.bone = bones[input.readInt(true)];
 					let flags = input.readByte();
 					data.skinRequired = (flags & 1) != 0;
 					if ((flags & 2) != 0) data.x = input.readFloat();
@@ -307,13 +310,14 @@ export class SkeletonBinary {
 				}
 				case CONSTRAINT_SLIDER: {
 					const data = new SliderData(name);
-					data.skinRequired = (nn & 1) != 0;
-					data.loop = (nn & 2) != 0;
-					data.additive = (nn & 4) != 0;
-					if ((nn & 8) != 0) data.setup.time = input.readFloat();
-					if ((nn & 16) != 0) data.setup.mix = (nn & 32) != 0 ? input.readFloat() : 1;
-					if ((nn & 64) != 0) {
-						data.local = (nn & 128) != 0;
+					const flags = input.readByte();
+					data.skinRequired = (flags & 1) != 0;
+					data.loop = (flags & 2) != 0;
+					data.additive = (flags & 4) != 0;
+					if ((flags & 8) != 0) data.setup.time = input.readFloat();
+					if ((flags & 16) != 0) data.setup.mix = (flags & 32) != 0 ? input.readFloat() : 1;
+					if ((flags & 64) != 0) {
+						data.local = (flags & 128) != 0;
 						data.bone = bones[input.readInt(true)];
 						let offset = input.readFloat();
 						switch (input.readByte()) {
