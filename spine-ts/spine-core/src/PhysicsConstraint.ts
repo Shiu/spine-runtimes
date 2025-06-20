@@ -215,7 +215,7 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 								d = Math.pow(p.damping, 60 * t);
 								m = t * p.massInverse;
 								e = p.strength;
-								const w = f * p.wind, g = f * (Skeleton.yDown ? -p.gravity : p.gravity);
+								const w = f * p.wind, g = f * p.gravity * Skeleton.yDir;
 								ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
 								ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.scaleY;
 							}

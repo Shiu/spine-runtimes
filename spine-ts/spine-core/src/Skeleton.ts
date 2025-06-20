@@ -93,7 +93,7 @@ export class Skeleton {
 	 *
 	 * Bones that do not inherit scale are still affected by this property. */
 	public get scaleY () {
-		return Skeleton.yDown ? -this._scaleY : this._scaleY;
+		return this._scaleY * Skeleton.yDir;
 	}
 
 	public set scaleY (scaleY: number) {
