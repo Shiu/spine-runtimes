@@ -631,9 +631,9 @@ cp -f ../cloud-pot/export/cloud-pot.png "$ROOT/spine-haxe/example/assets/"
 
 cp -f ../7-anticipation/export/sack-pro.json "$ROOT/spine-haxe/example/assets/"
 cp -f ../7-anticipation/export/sack-pro.skel "$ROOT/spine-haxe/example/assets/"
-cp -f ../7-anticipation/export/7-anticipation.atlas "$ROOT/spine-haxe/example/assets/sack-pma.atlas"
-$sed -i 's/7-anticipation-pma.png/sack-pma.png/g' "$ROOT/spine-haxe/example/assets/sack-pma.atlas"
-cp -f ../7-anticipation/export/7-anticipation.png "$ROOT/spine-haxe/example/assets/sack-pma.png"
+cp -f ../7-anticipation/export/7-anticipation.atlas "$ROOT/spine-haxe/example/assets/sack.atlas"
+$sed -i 's/7-anticipation.png/sack.png/g' "$ROOT/spine-haxe/example/assets/sack.atlas"
+cp -f ../7-anticipation/export/7-anticipation.png "$ROOT/spine-haxe/example/assets/sack.png"
 
 cp -f ../snowglobe/export/snowglobe-pro.json "$ROOT/spine-haxe/example/assets/"
 cp -f ../snowglobe/export/snowglobe-pro.skel "$ROOT/spine-haxe/example/assets/"

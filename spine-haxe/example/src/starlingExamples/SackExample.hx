@@ -47,7 +47,7 @@ class SackExample extends Scene {
 	public function load():Void {
 		background.color = 0x333333;
 
-		var atlas = new TextureAtlas(Assets.getText("assets/7-anticipation.atlas"), new StarlingTextureLoader("assets/7-anticipation.atlas"));
+		var atlas = new TextureAtlas(Assets.getText("assets/sack.atlas"), new StarlingTextureLoader("assets/sack.atlas"));
 		var skeletondata = SkeletonData.from(Assets.getText("assets/sack-pro.json"), atlas);
 
 		var animationStateData = new AnimationStateData(skeletondata);

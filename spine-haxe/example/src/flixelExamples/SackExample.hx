@@ -51,7 +51,7 @@ class SackExample extends FlxState {
 		button.setPosition(FlxG.width * .75, FlxG.height / 10);
 		add(button);
 
-		var atlas = new TextureAtlas(Assets.getText("assets/7-anticipation.atlas"), new FlixelTextureLoader("assets/7-anticipation.atlas"));
+		var atlas = new TextureAtlas(Assets.getText("assets/sack.atlas"), new FlixelTextureLoader("assets/sack.atlas"));
 		var data = SkeletonData.from(loadBinary ? Assets.getBytes("assets/sack-pro.skel") : Assets.getText("assets/sack-pro.json"), atlas, .25);
 		var animationStateData = new AnimationStateData(data);
 		animationStateData.defaultMix = 0.25;
