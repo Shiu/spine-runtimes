@@ -50,9 +50,10 @@ IkConstraintTimeline::IkConstraintTimeline(size_t frameCount, size_t bezierCount
 }
 
 void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-								 MixBlend blend, MixDirection direction) {
+								 MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
+	SP_UNUSED(appliedPose);
 
 	IkConstraint *constraintP = (IkConstraint *) skeleton._constraints[_constraintIndex];
 	IkConstraint &constraint = *constraintP;
@@ -61,18 +62,20 @@ void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time,
 	if (time < _frames[0]) {
 		switch (blend) {
 			case MixBlend_Setup:
-				constraint._mix = constraint._data._mix;
-				constraint._softness = constraint._data._softness;
-				constraint._bendDirection = constraint._data._bendDirection;
-				constraint._compress = constraint._data._compress;
-				constraint._stretch = constraint._data._stretch;
+				constraint.getAppliedPose().setMix(constraint._data.getSetupPose().getMix());
+				constraint.getAppliedPose().setSoftness(constraint._data.getSetupPose().getSoftness());
+				constraint.getAppliedPose().setBendDirection(constraint._data.getSetupPose().getBendDirection());
+				constraint.getAppliedPose().setCompress(constraint._data.getSetupPose().getCompress());
+				constraint.getAppliedPose().setStretch(constraint._data.getSetupPose().getStretch());
 				return;
 			case MixBlend_First:
-				constraint._mix += (constraint._data._mix - constraint._mix) * alpha;
-				constraint._softness += (constraint._data._softness - constraint._softness) * alpha;
-				constraint._bendDirection = constraint._data._bendDirection;
-				constraint._compress = constraint._data._compress;
-				constraint._stretch = constraint._data._stretch;
+				constraint.getAppliedPose().setMix(constraint.getAppliedPose().getMix() + 
+					(constraint._data.getSetupPose().getMix() - constraint.getAppliedPose().getMix()) * alpha);
+				constraint.getAppliedPose().setSoftness(constraint.getAppliedPose().getSoftness() + 
+					(constraint._data.getSetupPose().getSoftness() - constraint.getAppliedPose().getSoftness()) * alpha);
+				constraint.getAppliedPose().setBendDirection(constraint._data.getSetupPose().getBendDirection());
+				constraint.getAppliedPose().setCompress(constraint._data.getSetupPose().getCompress());
+				constraint.getAppliedPose().setStretch(constraint._data.getSetupPose().getStretch());
 				return;
 			default:
 				return;
@@ -106,25 +109,29 @@ void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time,
 	}
 
 	if (blend == MixBlend_Setup) {
-		constraint._mix = constraint._data._mix + (mix - constraint._data._mix) * alpha;
-		constraint._softness = constraint._data._softness + (softness - constraint._data._softness) * alpha;
+		constraint.getAppliedPose().setMix(constraint._data.getSetupPose().getMix() + 
+			(mix - constraint._data.getSetupPose().getMix()) * alpha);
+		constraint.getAppliedPose().setSoftness(constraint._data.getSetupPose().getSoftness() + 
+			(softness - constraint._data.getSetupPose().getSoftness()) * alpha);
 
 		if (direction == MixDirection_Out) {
-			constraint._bendDirection = constraint._data._bendDirection;
-			constraint._compress = constraint._data._compress;
-			constraint._stretch = constraint._data._stretch;
+			constraint.getAppliedPose().setBendDirection(constraint._data.getSetupPose().getBendDirection());
+			constraint.getAppliedPose().setCompress(constraint._data.getSetupPose().getCompress());
+			constraint.getAppliedPose().setStretch(constraint._data.getSetupPose().getStretch());
 		} else {
-			constraint._bendDirection = _frames[i + IkConstraintTimeline::BEND_DIRECTION];
-			constraint._compress = _frames[i + IkConstraintTimeline::COMPRESS] != 0;
-			constraint._stretch = _frames[i + IkConstraintTimeline::STRETCH] != 0;
+			constraint.getAppliedPose().setBendDirection(_frames[i + IkConstraintTimeline::BEND_DIRECTION]);
+			constraint.getAppliedPose().setCompress(_frames[i + IkConstraintTimeline::COMPRESS] != 0);
+			constraint.getAppliedPose().setStretch(_frames[i + IkConstraintTimeline::STRETCH] != 0);
 		}
 	} else {
-		constraint._mix += (mix - constraint._mix) * alpha;
-		constraint._softness += (softness - constraint._softness) * alpha;
+		constraint.getAppliedPose().setMix(constraint.getAppliedPose().getMix() + 
+			(mix - constraint.getAppliedPose().getMix()) * alpha);
+		constraint.getAppliedPose().setSoftness(constraint.getAppliedPose().getSoftness() + 
+			(softness - constraint.getAppliedPose().getSoftness()) * alpha);
 		if (direction == MixDirection_In) {
-			constraint._bendDirection = _frames[i + IkConstraintTimeline::BEND_DIRECTION];
-			constraint._compress = _frames[i + IkConstraintTimeline::COMPRESS] != 0;
-			constraint._stretch = _frames[i + IkConstraintTimeline::STRETCH] != 0;
+			constraint.getAppliedPose().setBendDirection(_frames[i + IkConstraintTimeline::BEND_DIRECTION]);
+			constraint.getAppliedPose().setCompress(_frames[i + IkConstraintTimeline::COMPRESS] != 0);
+			constraint.getAppliedPose().setStretch(_frames[i + IkConstraintTimeline::STRETCH] != 0);
 		}
 	}
 }

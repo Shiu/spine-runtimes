@@ -33,7 +33,7 @@
 
 using namespace spine;
 
-BoneData::BoneData(int index, const String &name, BoneData *parent) : PosedData<BoneLocal>(name),
+BoneData::BoneData(int index, const String &name, BoneData *parent) : PosedDataGeneric<BoneLocal>(name),
 																	  _index(index),
 																	  _parent(parent),
 																	  _length(0),

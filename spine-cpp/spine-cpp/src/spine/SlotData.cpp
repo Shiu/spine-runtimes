@@ -35,7 +35,7 @@
 
 using namespace spine;
 
-SlotData::SlotData(int index, const String &name, BoneData &boneData) : PosedData<SlotPose>(name),
+SlotData::SlotData(int index, const String &name, BoneData &boneData) : PosedDataGeneric<SlotPose>(name),
 																		_index(index),
 																		_boneData(boneData),
 																		_attachmentName(),

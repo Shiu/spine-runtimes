@@ -39,6 +39,8 @@ namespace spine {
 		Posed() {}
 		virtual ~Posed() {}
 
+		virtual void setupPose() = 0;
+
 		virtual void resetConstrained() = 0;
 
 		virtual void pose() = 0;
@@ -84,7 +86,7 @@ namespace spine {
 		virtual ~PosedGeneric() {
 		}
 
-		void setupPose() {
+		virtual void setupPose() override {
 			_pose.set(_data.getSetupPose());
 		}
 
@@ -103,15 +105,15 @@ namespace spine {
 			return *_applied;
 		}
 
-		virtual void resetConstrained() {
+		virtual void resetConstrained() override {
 			_constrained.set(_pose);
 		}
 
-		virtual void pose() {
+		virtual void pose() override {
 			_applied = &_pose;
 		}
 
-		virtual void constrained() {
+		virtual void constrained() override {
 			_applied = &_constrained;
 		}
 

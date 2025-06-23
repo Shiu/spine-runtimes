@@ -141,7 +141,7 @@ namespace spine {
 
 		/// Finds a constraint by name and type.
 		/// @return May be NULL.
-		template<typename T>
+		template<class T>
 		T *findConstraint(const String &constraintName) {
 			getConstraints(); // Ensure constraints array is populated
 			for (size_t i = 0, n = _constraints.size(); i < n; i++) {

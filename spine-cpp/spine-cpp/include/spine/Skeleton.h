@@ -222,7 +222,7 @@ namespace spine {
 
 		Vector<PhysicsConstraint *> &getPhysicsConstraints();
 
-		template<typename T>
+		template<class T>
 		T *findConstraint(const String &constraintName) {
 			if (constraintName.isEmpty()) return NULL;
 			for (size_t i = 0; i < _constraints.size(); i++) {

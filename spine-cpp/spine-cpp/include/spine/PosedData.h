@@ -37,8 +37,6 @@ namespace spine {
     template<class P>
     class Pose;
 
-    /// The base class for all constrained datas.
-    template<class P>
     class SP_API PosedData : public SpineObject {
         friend class SkeletonBinary;
         friend class SkeletonJson;
@@ -62,62 +60,66 @@ namespace spine {
         friend class TranslateYTimeline;
         friend class InheritTimeline;
 
-    protected:
-        spine::String _name;
-        P _setup;
-        bool _skinRequired;
-
     public:
         PosedData(const spine::String& name);
         virtual ~PosedData();
 
         /// The constraint's name, which is unique across all constraints in the skeleton of the same type.
-        const spine::String& getName();
-
-        P& getSetupPose();
+        const spine::String& getName() { return _name; };
 
         /// When true, Skeleton::updateWorldTransform(Physics) only updates this constraint if the Skeleton::getSkin()
         /// contains this constraint.
         ///
         /// See Skin::getConstraints().
-        bool getSkinRequired();
-        void setSkinRequired(bool skinRequired);
+        bool getSkinRequired() { return _skinRequired; };
+        void setSkinRequired(bool skinRequired) { _skinRequired = skinRequired; };
 
-        virtual spine::String toString();
+        protected:
+            spine::String _name;
+            bool _skinRequired;
     };
 
-    template<class P>
-    PosedData<P>::PosedData(const spine::String& name) : _name(name), _setup(), _skinRequired(false) {
+    inline PosedData::PosedData(const spine::String& name) : _name(name), _skinRequired(false) {
     }
 
-    template<class P>
-    PosedData<P>::~PosedData() {
+    inline PosedData::~PosedData() {
     }
 
+    /// The base class for all constrained datas.
     template<class P>
-    const spine::String& PosedData<P>::getName() {
-        return _name;
-    }
+    class SP_API PosedDataGeneric : public PosedData {
+        friend class SkeletonBinary;
+        friend class SkeletonJson;
+        friend class BoneTimeline1;
+        friend class BoneTimeline2;
+        friend class RotateTimeline;
+        friend class AttachmentTimeline;
+        friend class RGBATimeline;
+        friend class RGBTimeline;
+        friend class AlphaTimeline;
+        friend class RGBA2Timeline;
+        friend class RGB2Timeline;
+        friend class ScaleTimeline;
+        friend class ScaleXTimeline;
+        friend class ScaleYTimeline;
+        friend class ShearTimeline;
+        friend class ShearXTimeline;
+        friend class ShearYTimeline;
+        friend class TranslateTimeline;
+        friend class TranslateXTimeline;
+        friend class TranslateYTimeline;
+        friend class InheritTimeline;
 
-    template<class P>
-    P& PosedData<P>::getSetupPose() {
-        return _setup;
-    }
+    protected:
+        P _setup;
 
-    template<class P>
-    bool PosedData<P>::getSkinRequired() {
-        return _skinRequired;
+    public:
+        PosedDataGeneric(const spine::String& name): PosedData(name), _setup() {
     }
+        virtual ~PosedDataGeneric() {};
 
-    template<class P>
-    void PosedData<P>::setSkinRequired(bool skinRequired) {
-        _skinRequired = skinRequired;
-    }
-
-    template<class P>
-    spine::String PosedData<P>::toString() {
-        return _name;
-    }
+        P& getSetupPose() { return _setup; };
+    };
 }
 
 #endif

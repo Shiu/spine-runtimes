@@ -37,7 +37,7 @@
 
 using namespace spine;
 
-Slot::Slot(SlotData &data, Skeleton &skeleton) : Posed<SlotData, SlotPose, SlotPose>(data),
+Slot::Slot(SlotData &data, Skeleton &skeleton) : PosedGeneric<SlotData, SlotPose, SlotPose>(data),
 												 _skeleton(skeleton),
 												 _bone(*skeleton.getBones()[data.getBoneData().getIndex()]),
 												 _attachmentState(0) {

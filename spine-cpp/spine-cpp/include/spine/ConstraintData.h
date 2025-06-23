@@ -50,12 +50,12 @@ namespace spine {
 
 	/// Generic base class for all constraint data.
 	template<class T, class P>
-	class SP_API ConstraintDataGeneric : public PosedData<P>, public ConstraintData {
+	class SP_API ConstraintDataGeneric : public PosedDataGeneric<P>, public ConstraintData {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 
 	public:
-		ConstraintDataGeneric(const String &name) : PosedData<P>(name), ConstraintData(name) {
+		ConstraintDataGeneric(const String &name) : PosedDataGeneric<P>(name), ConstraintData(name) {
 		}
 		virtual ~ConstraintDataGeneric() {
 		}
