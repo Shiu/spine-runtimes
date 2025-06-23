@@ -31,6 +31,7 @@
 #define Spine_PhysicsConstraintData_h
 
 #include <spine/ConstraintData.h>
+#include <spine/PosedData.h>
 #include <spine/PhysicsConstraintPose.h>
 
 namespace spine {
@@ -40,7 +41,7 @@ namespace spine {
 	/// Stores the setup pose for a PhysicsConstraint.
 	///
 	/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide.
-	class SP_API PhysicsConstraintData : public ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose> {
+	class SP_API PhysicsConstraintData : public ConstraintData, public PosedDataGeneric<PhysicsConstraintPose> {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class PhysicsConstraint;
@@ -49,6 +50,8 @@ namespace spine {
 		RTTI_DECL
 	public:
 		explicit PhysicsConstraintData(const String &name);
+		
+		virtual Constraint* create(Skeleton& skeleton) override;
 
 		/// The bone constrained by this physics constraint.
 		BoneData* getBone();

@@ -31,6 +31,7 @@
 #define Spine_PathConstraintData_h
 
 #include <spine/ConstraintData.h>
+#include <spine/PosedData.h>
 #include <spine/Vector.h>
 #include <spine/PathConstraintPose.h>
 #include <spine/dll.h>
@@ -47,7 +48,7 @@ namespace spine {
 	/// Stores the setup pose for a PathConstraint.
 	///
 	/// See https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User Guide.
-	class SP_API PathConstraintData : public ConstraintDataGeneric<PathConstraint, PathConstraintPose> {
+	class SP_API PathConstraintData : public ConstraintData, public PosedDataGeneric<PathConstraintPose> {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -66,6 +67,8 @@ namespace spine {
 	public:
 
 		explicit PathConstraintData(const String &name);
+		
+		virtual Constraint* create(Skeleton& skeleton) override;
 
 
 		/// The bones that will be modified by this path constraint.

@@ -30,6 +30,7 @@
 #ifndef Spine_Constraint_h
 #define Spine_Constraint_h
 
+#include <spine/Posed.h>
 #include <spine/PosedActive.h>
 #include <spine/Update.h>
 #include <spine/RTTI.h>
@@ -38,35 +39,50 @@
 namespace spine {
 	class Skeleton;
 
-	class SP_API Constraint: public Update {
+	class SP_API Constraint : public Update {
 		RTTI_DECL_NOPARENT
-		public:
-			Constraint();
-			virtual ~Constraint();
-
-			ConstraintData &getData();
-	};
-
-	template<class T, class D, class P>
-	class SP_API ConstraintGeneric : public PosedActiveGeneric<D, P, P>, public Constraint {
-		RTTI_DECL
-
+		friend class Skeleton;
+		
 	public:
-		ConstraintGeneric(D& data) : PosedActiveGeneric<D, P, P>(data), Constraint() {
-		}
+		Constraint();
+		virtual ~Constraint();
 
-		virtual ~ConstraintGeneric() {
-		}
+		virtual ConstraintData &getData() = 0;
 
-		virtual void sort(Skeleton& skeleton) = 0;
+		virtual void sort(Skeleton &skeleton) = 0;
 
 		virtual bool isSourceActive() {
 			return true;
 		}
+		
+		virtual void pose() = 0;
 
 		// Inherited from Update
-		virtual void update(Skeleton& skeleton, Physics physics) override = 0;
+		virtual void update(Skeleton &skeleton, Physics physics) override = 0;
+		
+	protected:
+		bool _active;
 	};
-}
+
+	template<class T, class D, class P>
+	class SP_API ConstraintGeneric : public PosedGeneric<D, P, P>, public PosedActive, public Constraint {
+		RTTI_DECL
+
+	public:
+		ConstraintGeneric(D &data) : PosedGeneric<D, P, P>(data), PosedActive(), Constraint() {
+		}
+
+		virtual ~ConstraintGeneric() {
+		}
+		
+		virtual ConstraintData &getData() override {
+			return PosedGeneric<D, P, P>::getData();
+		}
+		
+		virtual void pose() override {
+			PosedGeneric<D, P, P>::pose();
+		}
+	};
+}// namespace spine
 
 #endif /* Spine_Constraint_h */

@@ -28,17 +28,20 @@
  *****************************************************************************/
 
 #include <spine/TransformConstraintData.h>
+#include <spine/TransformConstraint.h>
 #include <spine/BoneData.h>
 #include <spine/BonePose.h>
 #include <spine/TransformConstraintPose.h>
 #include <spine/MathUtil.h>
 #include <spine/ContainerUtil.h>
+#include <spine/Skeleton.h>
 
 using namespace spine;
 
 RTTI_IMPL(TransformConstraintData, ConstraintData)
 
-TransformConstraintData::TransformConstraintData(const String &name) : ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>(name),
+TransformConstraintData::TransformConstraintData(const String &name) : ConstraintData(name),
+																	   PosedDataGeneric<TransformConstraintPose>(name),
 																	   _source(NULL),
 																	   _localSource(false),
 																	   _localTarget(false),
@@ -353,4 +356,8 @@ TransformConstraintData::~TransformConstraintData() {
 		}
 	}
 	_properties.clear();
+}
+
+Constraint* TransformConstraintData::create(Skeleton& skeleton) {
+	return new (__FILE__, __LINE__) TransformConstraint(*this, skeleton);
 }

@@ -30,12 +30,13 @@
 #ifndef Spine_ConstraintData_h
 #define Spine_ConstraintData_h
 
-#include <spine/PosedData.h>
 #include <spine/SpineString.h>
+#include <spine/SpineObject.h>
 #include <spine/RTTI.h>
 
 namespace spine {
 	class Skeleton;
+	class Constraint;
 
 	/// Base class for all constraint data types.
 	class SP_API ConstraintData : public SpineObject {
@@ -44,24 +45,11 @@ namespace spine {
 		ConstraintData(const String &name);
 		virtual ~ConstraintData();
 		const String &getName() const;
+
+		virtual Constraint* create(Skeleton& skeleton) = 0;
+
 	private:
 		String _name;
-	};
-
-	/// Generic base class for all constraint data.
-	template<class T, class P>
-	class SP_API ConstraintDataGeneric : public PosedDataGeneric<P>, public ConstraintData {
-		friend class SkeletonBinary;
-		friend class SkeletonJson;
-
-	public:
-		ConstraintDataGeneric(const String &name) : PosedDataGeneric<P>(name), ConstraintData(name) {
-		}
-		virtual ~ConstraintDataGeneric() {
-		}
-
-		/// Creates a constraint instance.
-		virtual T* create(Skeleton& skeleton) = 0;
 	};
 }
 

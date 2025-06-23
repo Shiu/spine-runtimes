@@ -28,13 +28,16 @@
  *****************************************************************************/
 
 #include <spine/PhysicsConstraintData.h>
+#include <spine/PhysicsConstraint.h>
 #include <spine/BoneData.h>
+#include <spine/Skeleton.h>
 
 using namespace spine;
 
 RTTI_IMPL(PhysicsConstraintData, ConstraintData)
 
-PhysicsConstraintData::PhysicsConstraintData(const String &name) : ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>(name),
+PhysicsConstraintData::PhysicsConstraintData(const String &name) : ConstraintData(name),
+																   PosedDataGeneric<PhysicsConstraintPose>(name),
 																   _bone(NULL),
 																   _x(0), _y(0), _rotate(0), _scaleX(0), _shearX(0), _limit(0), _step(0),
 																   _inertiaGlobal(false), _strengthGlobal(false), _dampingGlobal(false), _massGlobal(false),
@@ -159,4 +162,8 @@ bool PhysicsConstraintData::getMixGlobal() {
 
 void PhysicsConstraintData::setMixGlobal(bool mixGlobal) {
 	_mixGlobal = mixGlobal;
+}
+
+Constraint* PhysicsConstraintData::create(Skeleton& skeleton) {
+	return new (__FILE__, __LINE__) PhysicsConstraint(*this, skeleton);
 }

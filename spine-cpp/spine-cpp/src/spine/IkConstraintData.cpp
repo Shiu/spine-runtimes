@@ -28,14 +28,16 @@
  *****************************************************************************/
 
 #include <spine/IkConstraintData.h>
-
+#include <spine/IkConstraint.h>
 #include <spine/BoneData.h>
+#include <spine/Skeleton.h>
 
 using namespace spine;
 
 RTTI_IMPL(IkConstraintData, ConstraintData)
 
-IkConstraintData::IkConstraintData(const String &name) : ConstraintDataGeneric<IkConstraint, IkConstraintPose>(name),
+IkConstraintData::IkConstraintData(const String &name) : ConstraintData(name),
+														 PosedDataGeneric<IkConstraintPose>(name),
 														 _target(NULL),
 														 _uniform(false) {
 }
@@ -58,4 +60,8 @@ bool IkConstraintData::getUniform() {
 
 void IkConstraintData::setUniform(bool uniform) {
 	_uniform = uniform;
+}
+
+Constraint* IkConstraintData::create(Skeleton& skeleton) {
+	return new (__FILE__, __LINE__) IkConstraint(*this, skeleton);
 }

@@ -31,6 +31,7 @@
 #define Spine_TransformConstraintData_h
 
 #include <spine/ConstraintData.h>
+#include <spine/PosedData.h>
 #include <spine/Vector.h>
 #include <spine/TransformConstraintPose.h>
 
@@ -149,7 +150,7 @@ namespace spine {
 	/// Stores the setup pose for a TransformConstraint.
 	///
 	/// See https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide.
-	class SP_API TransformConstraintData : public ConstraintDataGeneric<TransformConstraint, TransformConstraintPose> {
+	class SP_API TransformConstraintData : public ConstraintData, public PosedDataGeneric<TransformConstraintPose> {
 	public:
 		RTTI_DECL
 		static const int ROTATION = 0, X = 1, Y = 2, SCALEX = 3, SCALEY = 4, SHEARY = 5;
@@ -162,6 +163,8 @@ namespace spine {
 	public:
 		explicit TransformConstraintData(const String &name);
 		~TransformConstraintData();
+		
+		virtual Constraint* create(Skeleton& skeleton) override;
 
 		/// The bones that will be modified by this transform constraint.
 		Vector<BoneData*>& getBones();

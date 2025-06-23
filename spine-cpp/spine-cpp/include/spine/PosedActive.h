@@ -1,8 +1,8 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated January 1, 2020. Replaces all prior versions.
+ * Last updated April 5, 2025. Replaces all prior versions.
  *
- * Copyright (c) 2013-2020, Esoteric Software LLC
+ * Copyright (c) 2013-2025, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
@@ -27,31 +27,24 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_POSEDACTIVE_H_
-#define SPINE_POSEDACTIVE_H_
+#ifndef Spine_PosedActive_h
+#define Spine_PosedActive_h
 
 #include <spine/dll.h>
-#include <spine/Posed.h>
 
 namespace spine {
-
-	template<class D, class P, class A>
-	class SP_API PosedActiveGeneric : public PosedGeneric<D, P, A> {
-		friend class SlotCurveTimeline;
-
-	public:
-		PosedActiveGeneric(D &data): PosedGeneric<D, P, A>(data), _active(false) {
-			this->setupPose();
-		}
-		virtual ~PosedActiveGeneric() {}
-
-		bool isActive() {
-			return _active;
-		}
-
+	/// Simple mixin class that adds active state tracking
+	class SP_API PosedActive {
 	protected:
 		bool _active;
-	};
-}// namespace spine
 
-#endif /* SPINE_POSEDACTIVE_H_ */
+	public:
+		PosedActive() : _active(true) {}
+		virtual ~PosedActive() {}
+
+		bool isActive() const { return _active; }
+		void setActive(bool active) { _active = active; }
+	};
+}
+
+#endif /* Spine_PosedActive_h */

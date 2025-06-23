@@ -34,13 +34,14 @@
 #include <spine/SpineObject.h>
 #include <spine/SpineString.h>
 #include <spine/ConstraintData.h>
+#include <spine/PosedData.h>
 #include <spine/IkConstraintPose.h>
 
 namespace spine {
 	class BoneData;
 	class IkConstraint;
 
-	class SP_API IkConstraintData : public ConstraintDataGeneric<IkConstraint, IkConstraintPose> {
+	class SP_API IkConstraintData : public ConstraintData, public PosedDataGeneric<IkConstraintPose> {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -55,6 +56,8 @@ namespace spine {
 
 	public:
 		explicit IkConstraintData(const String &name);
+		
+		virtual Constraint* create(Skeleton& skeleton) override;
 
 		/// The bones that are constrained by this IK Constraint.
 		Vector<BoneData *> &getBones();

@@ -71,7 +71,7 @@ namespace spine {
         /// contains this constraint.
         ///
         /// See Skin::getConstraints().
-        bool getSkinRequired() { return _skinRequired; };
+        bool isSkinRequired() { return _skinRequired; };
         void setSkinRequired(bool skinRequired) { _skinRequired = skinRequired; };
 
         protected:

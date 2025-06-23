@@ -36,7 +36,8 @@ using namespace spine;
 
 RTTI_IMPL_NOPARENT(Bone)
 
-Bone::Bone(BoneData &data, Bone *parent) : PosedActiveGeneric(data),
+Bone::Bone(BoneData &data, Bone *parent) : PosedGeneric<BoneData, BoneLocal, BonePose>(data),
+										   PosedActive(),
 										   _parent(parent),
 										   _children(),
 										   _sorted(false) {

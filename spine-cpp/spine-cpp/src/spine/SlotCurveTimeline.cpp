@@ -52,5 +52,5 @@ void SlotCurveTimeline::apply(Skeleton &skeleton, float lastTime, float time, Ve
 	SP_UNUSED(direction);
 
 	Slot *slot = skeleton._slots[_slotIndex];
-	if (slot->_bone._active) apply(*slot, appliedPose ? *slot->_applied : slot->_pose, time, alpha, blend);
+	if (slot->_bone.isActive()) apply(*slot, appliedPose ? *slot->_applied : slot->_pose, time, alpha, blend);
 }

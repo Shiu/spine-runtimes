@@ -31,6 +31,7 @@
 #define Spine_SliderData_h
 
 #include <spine/ConstraintData.h>
+#include <spine/PosedData.h>
 #include <spine/SliderPose.h>
 #include <spine/SpineString.h>
 
@@ -44,7 +45,7 @@ namespace spine {
 	/// Stores the setup pose for a PhysicsConstraint.
 	///
 	/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide.
-	class SP_API SliderData : public ConstraintDataGeneric<Slider, SliderPose> {
+	class SP_API SliderData : public ConstraintData, public PosedDataGeneric<SliderPose> {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class Slider;
@@ -55,7 +56,7 @@ namespace spine {
 		explicit SliderData(const String &name);
 
 		/// Creates a slider instance.
-		virtual Slider* create(Skeleton& skeleton) override;
+		virtual Constraint* create(Skeleton& skeleton) override;
 
 		Animation* getAnimation();
 		void setAnimation(Animation* animation);

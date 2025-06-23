@@ -35,7 +35,8 @@ using namespace spine;
 
 RTTI_IMPL(SliderData, ConstraintData)
 
-SliderData::SliderData(const String &name) : ConstraintDataGeneric<Slider, SliderPose>(name),
+SliderData::SliderData(const String &name) : ConstraintData(name),
+											 PosedDataGeneric<SliderPose>(name),
 											 _animation(NULL),
 											 _additive(false),
 											 _loop(false),
@@ -45,7 +46,7 @@ SliderData::SliderData(const String &name) : ConstraintDataGeneric<Slider, Slide
 											 _local(false) {
 }
 
-Slider *SliderData::create(Skeleton &skeleton) {
+Constraint *SliderData::create(Skeleton &skeleton) {
 	return new (__FILE__, __LINE__) Slider(*this, skeleton);
 }
 

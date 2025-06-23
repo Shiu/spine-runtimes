@@ -28,6 +28,7 @@
  *****************************************************************************/
 
 #include <spine/PathConstraintData.h>
+#include <spine/PathConstraint.h>
 #include <spine/BoneData.h>
 #include <spine/SlotData.h>
 #include <spine/Skeleton.h>
@@ -36,7 +37,8 @@ using namespace spine;
 
 RTTI_IMPL(PathConstraintData, ConstraintData)
 
-PathConstraintData::PathConstraintData(const String &name) : ConstraintDataGeneric<PathConstraint, PathConstraintPose>(name),
+PathConstraintData::PathConstraintData(const String &name) : ConstraintData(name),
+															 PosedDataGeneric<PathConstraintPose>(name),
 															 _slot(NULL),
 															 _positionMode(PositionMode_Fixed),
 															 _spacingMode(SpacingMode_Length),
@@ -87,4 +89,8 @@ float PathConstraintData::getOffsetRotation() {
 
 void PathConstraintData::setOffsetRotation(float offsetRotation) {
 	_offsetRotation = offsetRotation;
+}
+
+Constraint* PathConstraintData::create(Skeleton& skeleton) {
+	return new (__FILE__, __LINE__) PathConstraint(*this, skeleton);
 }
