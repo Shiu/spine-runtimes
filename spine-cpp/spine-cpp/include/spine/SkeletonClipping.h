@@ -35,26 +35,26 @@
 
 namespace spine {
 	class Slot;
-
+	class Skeleton;
 	class ClippingAttachment;
 
 	class SP_API SkeletonClipping : public SpineObject {
 	public:
 		SkeletonClipping();
 
-		size_t clipStart(Slot &slot, ClippingAttachment *clip);
+		size_t clipStart(Skeleton &skeleton, Slot &slot, ClippingAttachment *clip);
 
 		void clipEnd(Slot &slot);
 
 		void clipEnd();
 
-        void
+        bool
         clipTriangles(float *vertices, unsigned short *triangles, size_t trianglesLength);
 
-		void
+		bool
 		clipTriangles(float *vertices, unsigned short *triangles, size_t trianglesLength, float *uvs, size_t stride);
 
-		void
+		bool
 		clipTriangles(Vector<float> &vertices, Vector<unsigned short> &triangles, Vector<float> &uvs, size_t stride);
 
 		bool isClipping();

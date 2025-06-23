@@ -32,24 +32,41 @@
 
 #include <spine/SpineString.h>
 #include <spine/SpineObject.h>
+#include <spine/PosedData.h>
 #include <spine/RTTI.h>
 
 namespace spine {
 	class Skeleton;
 	class Constraint;
 
-	/// Base class for all constraint data types.
 	class SP_API ConstraintData : public SpineObject {
-	public:
 		RTTI_DECL_NOPARENT
-		ConstraintData(const String &name);
-		virtual ~ConstraintData();
-		const String &getName() const;
+		friend class Skeleton;
+		friend class Constraint;
+
+	public:
+		ConstraintData(const String &name) : SpineObject(name) {}
+		virtual ~ConstraintData() {}
 
 		virtual Constraint* create(Skeleton& skeleton) = 0;
 
-	private:
-		String _name;
+		virtual const String &getName() const = 0;
+
+		virtual const bool &isSkinRequired() const = 0;
+	};
+
+	/// Base class for all constraint data types.
+	template<class T, class P>
+	class SP_API ConstraintDataGeneric: public PosedDataGeneric<P>, public ConstraintData {
+	public:
+		ConstraintDataGeneric(const String &name) : PosedDataGeneric<P>(name), ConstraintData(name) {}
+		virtual ~ConstraintDataGeneric() {}
+
+		virtual Constraint* create(Skeleton& skeleton) = 0;
+		
+		// Resolve ambiguity by forwarding to PosedData's implementation
+		virtual const String &getName() const override { return PosedDataGeneric<P>::getName(); }
+		virtual const bool &isSkinRequired() const override { return PosedDataGeneric<P>::isSkinRequired(); }
 	};
 }
 

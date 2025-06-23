@@ -46,33 +46,32 @@ TransformConstraint::TransformConstraint(TransformConstraintData &data, Skeleton
 	_bones.ensureCapacity(data.getBones().size());
 	for (size_t i = 0; i < data.getBones().size(); i++) {
 		BoneData *boneData = data.getBones()[i];
-		_bones.add(&skeleton.findBone(boneData->getName())->getAppliedPose());
+		_bones.add(&skeleton._bones[boneData->getIndex()]->_constrained);
 	}
 
-	_source = skeleton.findBone(data.getSource()->getName());
+	_source = skeleton._bones[data._source->getIndex()];
 }
 
-TransformConstraint TransformConstraint::copy(Skeleton &skeleton) {
-	TransformConstraint copy(_data, skeleton);
-	copy._applied->set(*_applied);
+TransformConstraint *TransformConstraint::copy(Skeleton &skeleton) {
+	TransformConstraint *copy = new (__FILE__, __LINE__) TransformConstraint(_data, skeleton);
+	copy->_pose.set(_pose);
 	return copy;
 }
 
 /// Applies the constraint to the constrained bones.
 void TransformConstraint::update(Skeleton &skeleton, Physics physics) {
 	TransformConstraintPose &p = *_applied;
-	if (p.getMixRotate() == 0 && p.getMixX() == 0 && p.getMixY() == 0 && p.getMixScaleX() == 0 && p.getMixScaleY() == 0 && p.getMixShearY() == 0) return;
+	if (p._mixRotate == 0 && p._mixX == 0 && p._mixY == 0 && p._mixScaleX == 0 && p._mixScaleY == 0 && p._mixShearY == 0) return;
 
 	TransformConstraintData &data = _data;
-	bool localSource = data.getLocalSource(), localTarget = data.getLocalTarget(), additive = data.getAdditive(), clamp = data.getClamp();
-	float *offsets = data._offsets;// Access friend field directly
-	BonePose &source = _source->getAppliedPose();
+	bool localSource = data._localSource, localTarget = data._localTarget, additive = data._additive, clamp = data._clamp;
+	float *offsets = data._offsets;
+	BonePose &source = *_source->_applied;
 	if (localSource) {
 		source.validateLocalTransform(skeleton);
 	}
-	Vector<FromProperty *> &properties = data.getProperties();
-	FromProperty **fromItems = properties.buffer();
-	size_t fn = properties.size();
+	FromProperty **fromItems = data._properties.buffer();
+	size_t fn = data._properties.size();
 	int update = skeleton._update;
 	BonePose **bones = _bones.buffer();
 	for (size_t i = 0, n = _bones.size(); i < n; i++) {
@@ -84,7 +83,7 @@ void TransformConstraint::update(Skeleton &skeleton, Physics physics) {
 		}
 		for (size_t f = 0; f < fn; f++) {
 			FromProperty *from = fromItems[f];
-			float value = from->value(source, localSource, offsets) - from->offset;
+			float value = from->value(skeleton, source, localSource, offsets) - from->offset;
 			Vector<ToProperty *> &toProps = from->to;
 			ToProperty **toItems = toProps.buffer();
 			for (size_t t = 0, tn = toProps.size(); t < tn; t++) {
@@ -97,7 +96,7 @@ void TransformConstraint::update(Skeleton &skeleton, Physics physics) {
 						else
 							clamped = MathUtil::clamp(clamped, to->max, to->offset);
 					}
-					to->apply(p, *bone, clamped, localTarget, additive);
+					to->apply(skeleton, p, *bone, clamped, localTarget, additive);
 				}
 			}
 		}
@@ -105,10 +104,10 @@ void TransformConstraint::update(Skeleton &skeleton, Physics physics) {
 }
 
 void TransformConstraint::sort(Skeleton &skeleton) {
-	if (!_data.getLocalSource()) skeleton.sortBone(_source);
+	if (!_data._localSource) skeleton.sortBone(_source);
 	BonePose **bones = _bones.buffer();
 	size_t boneCount = _bones.size();
-	bool worldTarget = !_data.getLocalTarget();
+	bool worldTarget = !_data._localTarget;
 	if (worldTarget) {
 		for (size_t i = 0; i < boneCount; i++)
 			skeleton.sortBone(bones[i]->_bone);
@@ -116,7 +115,7 @@ void TransformConstraint::sort(Skeleton &skeleton) {
 	skeleton._updateCache.add(this);
 	for (size_t i = 0; i < boneCount; i++) {
 		Bone *bone = bones[i]->_bone;
-		skeleton.sortReset(bone->getChildren());
+		skeleton.sortReset(bone->_children);
 		skeleton.constrained(*bone);
 	}
 	for (size_t i = 0; i < boneCount; i++)
@@ -124,7 +123,7 @@ void TransformConstraint::sort(Skeleton &skeleton) {
 }
 
 bool TransformConstraint::isSourceActive() {
-	return _source->isActive();
+	return _source->_active;
 }
 
 /// The bones that will be modified by this transform constraint.

@@ -41,11 +41,13 @@ namespace spine {
 
 		virtual void setupPose() = 0;
 
-		virtual void resetConstrained() = 0;
-
 		virtual void pose() = 0;
 
 		virtual void constrained() = 0;
+
+		virtual void resetConstrained() = 0;
+
+		virtual bool isPoseEqualToApplied() const = 0;
 	};
 
 	template<class D, class P, class A>
@@ -78,6 +80,7 @@ namespace spine {
 		friend class TranslateXTimeline;
 		friend class TranslateYTimeline;
 		friend class InheritTimeline;
+		friend class Skeleton;
 
 	public:
 		PosedGeneric(D &data) : _data(data), _pose(), _constrained(), _applied(&_pose) {
@@ -115,6 +118,10 @@ namespace spine {
 
 		virtual void constrained() override {
 			_applied = &_constrained;
+		}
+
+		virtual bool isPoseEqualToApplied() const override {
+			return _applied == &_pose;
 		}
 
 	protected:

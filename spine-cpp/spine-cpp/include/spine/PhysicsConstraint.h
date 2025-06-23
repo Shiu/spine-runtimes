@@ -66,13 +66,13 @@ namespace spine {
 		bool isSourceActive() override;
 		PhysicsConstraint* copy(Skeleton& skeleton);
 
+		void reset(Skeleton& skeleton);
+
 		/// Translates the physics constraint so next update() forces are applied as if the bone moved an additional amount in world space.
 		void translate(float x, float y);
 
 		/// Rotates the physics constraint so next update() forces are applied as if the bone rotated around the specified point in world space.
 		void rotate(float x, float y, float degrees);
-
-		void reset(Skeleton& skeleton);
 
 		/// The bone constrained by this physics constraint.
 		BonePose& getBone();

@@ -50,6 +50,7 @@ namespace spine {
         friend class ToScaleY;
         friend class FromShearY;
         friend class ToShearY;
+        friend class TransformConstraint;
 
     private:
         float _mixRotate, _mixX, _mixY, _mixScaleX, _mixScaleY, _mixShearY;

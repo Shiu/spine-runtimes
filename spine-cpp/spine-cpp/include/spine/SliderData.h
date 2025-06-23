@@ -45,7 +45,7 @@ namespace spine {
 	/// Stores the setup pose for a PhysicsConstraint.
 	///
 	/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide.
-	class SP_API SliderData : public ConstraintData, public PosedDataGeneric<SliderPose> {
+	class SP_API SliderData : public ConstraintDataGeneric<Slider, SliderPose> {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class Slider;
@@ -76,6 +76,9 @@ namespace spine {
 		float getScale();
 		void setScale(float scale);
 
+		float getOffset();
+		void setOffset(float offset);
+
 		bool getLocal();
 		void setLocal(bool local);
 
@@ -85,6 +88,7 @@ namespace spine {
 		bool _loop;
 		BoneData* _bone;
 		FromProperty* _property;
+		float _offset;
 		float _scale;
 		bool _local;
 	};

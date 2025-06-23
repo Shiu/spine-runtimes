@@ -59,6 +59,7 @@ namespace spine {
         friend class TranslateXTimeline;
         friend class TranslateYTimeline;
         friend class InheritTimeline;
+        friend class Skeleton;
 
     public:
         PosedData(const spine::String& name);

@@ -48,7 +48,7 @@ namespace spine {
 	/// Stores the setup pose for a PathConstraint.
 	///
 	/// See https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User Guide.
-	class SP_API PathConstraintData : public ConstraintData, public PosedDataGeneric<PathConstraintPose> {
+	class SP_API PathConstraintData : public ConstraintDataGeneric<PathConstraint, PathConstraintPose> {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -67,7 +67,7 @@ namespace spine {
 	public:
 
 		explicit PathConstraintData(const String &name);
-		
+
 		virtual Constraint* create(Skeleton& skeleton) override;
 
 

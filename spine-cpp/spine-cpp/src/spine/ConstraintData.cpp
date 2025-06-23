@@ -32,13 +32,3 @@
 using namespace spine;
 
 RTTI_IMPL_NOPARENT(ConstraintData)
-
-ConstraintData::ConstraintData(const String &name) : _name(name) {
-}
-
-ConstraintData::~ConstraintData() {
-}
-
-const String &ConstraintData::getName() const {
-	return _name;
-}

@@ -52,6 +52,7 @@ namespace spine {
 		friend class PathConstraint;
 		friend class PhysicsConstraint;
 		friend class Skeleton;
+		friend class Slider;
 		friend class RegionAttachment;
 		friend class PointAttachment;
 		friend class AttachmentTimeline;
@@ -83,7 +84,11 @@ namespace spine {
 		/// The immediate children of this bone.
 		Vector<Bone*>& getChildren();
 
+		static bool isYDown() { return yDown; }
+		static void setYDown(bool value) { yDown = value; }
+
 	private:
+		static bool yDown;
 		Bone* const _parent;
 		Vector<Bone*> _children;
 		bool _sorted;

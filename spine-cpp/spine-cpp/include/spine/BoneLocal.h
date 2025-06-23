@@ -51,6 +51,21 @@ namespace spine {
 		friend class TranslateTimeline;
 		friend class TranslateXTimeline;
 		friend class TranslateYTimeline;
+		friend class Skeleton;
+		friend class FromProperty;
+		friend class ToProperty;
+		friend class FromRotate;
+		friend class ToRotate;
+		friend class FromX;
+		friend class ToX;
+		friend class FromY;
+		friend class ToY;
+		friend class FromScaleX;
+		friend class ToScaleX;
+		friend class FromScaleY;
+		friend class ToScaleY;
+		friend class FromShearY;
+		friend class ToShearY;
 
 	protected:
 		float _x, _y, _rotation, _scaleX, _scaleY, _shearX, _shearY;

@@ -97,7 +97,7 @@ namespace spine {
 		/// The bone this slot belongs to.
 		Bone &getBone();
 
-		void setupPose();
+		void setupPose() override;
 
 	private:
 		Skeleton &_skeleton;

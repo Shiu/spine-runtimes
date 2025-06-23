@@ -42,7 +42,7 @@ namespace spine {
 	class SP_API Constraint : public Update {
 		RTTI_DECL_NOPARENT
 		friend class Skeleton;
-		
+
 	public:
 		Constraint();
 		virtual ~Constraint();
@@ -54,12 +54,14 @@ namespace spine {
 		virtual bool isSourceActive() {
 			return true;
 		}
-		
+
 		virtual void pose() = 0;
+
+		virtual void setupPose() = 0;
 
 		// Inherited from Update
 		virtual void update(Skeleton &skeleton, Physics physics) override = 0;
-		
+
 	protected:
 		bool _active;
 	};
@@ -74,13 +76,17 @@ namespace spine {
 
 		virtual ~ConstraintGeneric() {
 		}
-		
+
 		virtual ConstraintData &getData() override {
 			return PosedGeneric<D, P, P>::getData();
 		}
-		
+
 		virtual void pose() override {
 			PosedGeneric<D, P, P>::pose();
+		}
+
+		virtual void setupPose() override {
+			PosedGeneric<D, P, P>::setupPose();
 		}
 	};
 }// namespace spine

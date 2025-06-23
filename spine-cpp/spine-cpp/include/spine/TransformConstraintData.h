@@ -55,7 +55,7 @@ namespace spine {
 		virtual ~FromProperty();
 
 		/// Reads this property from the specified bone.
-		virtual float value(BonePose& source, bool local, float* offsets) = 0;
+		virtual float value(Skeleton& skeleton, BonePose& source, bool local, float* offsets) = 0;
 	};
 
 	/// Constrained property for a TransformConstraint.
@@ -78,79 +78,79 @@ namespace spine {
 		virtual float mix(TransformConstraintPose& pose) = 0;
 
 		/// Applies the value to this property.
-		virtual void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) = 0;
+		virtual void apply(Skeleton& skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) = 0;
 	};
 
 	class SP_API FromRotate : public FromProperty {
 	public:
-		float value(BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToRotate : public ToProperty {
 	public:
 		float mix(TransformConstraintPose& pose) override;
-		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromX : public FromProperty {
 	public:
-		float value(BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToX : public ToProperty {
 	public:
 		float mix(TransformConstraintPose& pose) override;
-		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromY : public FromProperty {
 	public:
-		float value(BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToY : public ToProperty {
 	public:
 		float mix(TransformConstraintPose& pose) override;
-		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromScaleX : public FromProperty {
 	public:
-		float value(BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToScaleX : public ToProperty {
 	public:
 		float mix(TransformConstraintPose& pose) override;
-		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromScaleY : public FromProperty {
 	public:
-		float value(BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToScaleY : public ToProperty {
 	public:
 		float mix(TransformConstraintPose& pose) override;
-		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromShearY : public FromProperty {
 	public:
-		float value(BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
 	};
 
 	class SP_API ToShearY : public ToProperty {
 	public:
 		float mix(TransformConstraintPose& pose) override;
-		void apply(TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
 	};
 
 	/// Stores the setup pose for a TransformConstraint.
 	///
 	/// See https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide.
-	class SP_API TransformConstraintData : public ConstraintData, public PosedDataGeneric<TransformConstraintPose> {
+	class SP_API TransformConstraintData : public ConstraintDataGeneric<TransformConstraint, TransformConstraintPose> {
 	public:
 		RTTI_DECL
 		static const int ROTATION = 0, X = 1, Y = 2, SCALEX = 3, SCALEY = 4, SHEARY = 5;
@@ -163,7 +163,7 @@ namespace spine {
 	public:
 		explicit TransformConstraintData(const String &name);
 		~TransformConstraintData();
-		
+
 		virtual Constraint* create(Skeleton& skeleton) override;
 
 		/// The bones that will be modified by this transform constraint.

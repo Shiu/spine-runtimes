@@ -41,22 +41,84 @@ using namespace spine;
 
 RTTI_IMPL(IkConstraint, Constraint)
 
+IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton) : ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>(data),
+																		 _target(skeleton._bones[data._target->getIndex()]) {
+
+	_bones.ensureCapacity(data._bones.size());
+	for (size_t i = 0; i < data._bones.size(); i++) {
+		BoneData *boneData = data._bones[i];
+		_bones.add(&skeleton._bones[boneData->getIndex()]->_constrained);
+	}
+}
+
+IkConstraint *IkConstraint::copy(Skeleton &skeleton) {
+	IkConstraint *copy = new (__FILE__, __LINE__) IkConstraint(_data, skeleton);
+	copy->_pose.set(_pose);
+	return copy;
+}
+
+void IkConstraint::update(Skeleton &skeleton, Physics physics) {
+	IkConstraintPose &p = _pose;
+	if (p._mix == 0) return;
+	BonePose &target = *_target->_applied;
+	switch (_bones.size()) {
+		case 1: {
+			apply(skeleton, *_bones[0], target._worldX, target._worldY, p._compress, p._stretch, _data._uniform, p._mix);
+		} break;
+		case 2: {
+			apply(skeleton, *_bones[0], *_bones[1], target._worldX, target._worldY, p._bendDirection, p._stretch, _data._uniform,
+				  p._softness, p._mix);
+		} break;
+	}
+}
+
+void IkConstraint::sort(Skeleton &skeleton) {
+	skeleton.sortBone(_target);
+	Bone *parent = _bones[0]->_bone;
+	skeleton.sortBone(parent);
+	skeleton._updateCache.add(this);
+	parent->_sorted = false;
+	skeleton.sortReset(parent->_children);
+	skeleton.constrained(*parent);
+	if (_bones.size() > 1) skeleton.constrained(*_bones[1]->_bone);
+}
+
+IkConstraintData &IkConstraint::getData() {
+	return _data;
+}
+
+Vector<BonePose *> &IkConstraint::getBones() {
+	return _bones;
+}
+
+Bone *IkConstraint::getTarget() {
+	return _target;
+}
+
+void IkConstraint::setTarget(Bone *target) {
+	_target = target;
+}
+
+bool IkConstraint::isSourceActive() {
+	return _target->_active;
+}
+
 void IkConstraint::apply(Skeleton &skeleton, BonePose &bone, float targetX, float targetY, bool compress, bool stretch, bool uniform, float mix) {
 	bone.modifyLocal(skeleton);
-	BonePose &p = bone._bone->getParent()->getAppliedPose();
+	BonePose &p = *bone._bone->_parent->_applied;
 	float pa = p._a, pb = p._b, pc = p._c, pd = p._d;
 	float rotationIK = -bone._shearX - bone._rotation, tx, ty;
 	switch (bone._inherit) {
 		case Inherit_OnlyTranslation:
-			tx = (targetX - bone._worldX) * MathUtil::sign(skeleton.getScaleX());
-			ty = (targetY - bone._worldY) * MathUtil::sign(skeleton.getScaleY());
+			tx = (targetX - bone._worldX) * MathUtil::sign(skeleton._scaleX);
+			ty = (targetY - bone._worldY) * MathUtil::sign(skeleton._scaleY);
 			break;
 		case Inherit_NoRotationOrReflection: {
 			float s = MathUtil::abs(pa * pd - pb * pc) / MathUtil::max(0.0001f, pa * pa + pc * pc);
-			float sa = pa / skeleton.getScaleX();
-			float sc = pc / skeleton.getScaleY();
-			pb = -sc * s * skeleton.getScaleX();
-			pd = sa * s * skeleton.getScaleY();
+			float sa = pa / skeleton._scaleX;
+			float sc = pc / skeleton._scaleY;
+			pb = -sc * s * skeleton._scaleX;
+			pd = sa * s * skeleton._scaleY;
 			rotationIK += MathUtil::atan2Deg(sc, sa);
 			// Fall through.
 		}
@@ -88,7 +150,7 @@ void IkConstraint::apply(Skeleton &skeleton, BonePose &bone, float targetX, floa
 			default:
 				break;
 		}
-		float b = bone._bone->getData().getLength() * bone._scaleX;
+		float b = bone._bone->_data.getLength() * bone._scaleX;
 		if (b > 0.0001f) {
 			float dd = tx * tx + ty * ty;
 			if ((compress && dd < b * b) || (stretch && dd > b * b)) {
@@ -134,7 +196,7 @@ void IkConstraint::apply(Skeleton &skeleton, BonePose &parent, BonePose &child, 
 		cwx = a * child._x + b * child._y + parent._worldX;
 		cwy = c * child._x + d * child._y + parent._worldY;
 	}
-	BonePose &pp = parent._bone->getParent()->getAppliedPose();
+	BonePose &pp = *parent._bone->_parent->_applied;
 	a = pp._a;
 	b = pp._b;
 	c = pp._c;
@@ -142,7 +204,7 @@ void IkConstraint::apply(Skeleton &skeleton, BonePose &parent, BonePose &child, 
 	float id = a * d - b * c, x = cwx - pp._worldX, y = cwy - pp._worldY;
 	id = MathUtil::abs(id) <= 0.0001f ? 0 : 1 / id;
 	float dx = (x * d - y * b) * id - px, dy = (y * a - x * c) * id - py;
-	float l1 = MathUtil::sqrt(dx * dx + dy * dy), l2 = child._bone->getData().getLength() * csx, a1, a2;
+	float l1 = MathUtil::sqrt(dx * dx + dy * dy), l2 = child._bone->_data.getLength() * csx, a1, a2;
 	if (l1 < 0.0001f) {
 		apply(skeleton, parent, targetX, targetY, false, stretch, false, mix);
 		child._rotation = 0;
@@ -163,7 +225,7 @@ void IkConstraint::apply(Skeleton &skeleton, BonePose &parent, BonePose &child, 
 			dd = tx * tx + ty * ty;
 		}
 	}
-outer:
+
 	if (u) {
 		l2 *= psx;
 		float cos = (dd - l1 * l1 - l2 * l2) / (2 * l1 * l2);
@@ -249,65 +311,3 @@ outer_break:
 	child._rotation += a2 * mix;
 }
 
-IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton) : ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>(data),
-																		 _target(skeleton.findBone(data.getTarget()->getName())) {
-
-	_bones.ensureCapacity(data.getBones().size());
-	for (size_t i = 0; i < data.getBones().size(); i++) {
-		BoneData *boneData = data.getBones()[i];
-		_bones.add(&skeleton.findBone(boneData->getName())->getAppliedPose());
-	}
-}
-
-void IkConstraint::update(Skeleton &skeleton, Physics physics) {
-	IkConstraintPose &p = *_applied;
-	if (p._mix == 0) return;
-	BonePose &target = _target->getAppliedPose();
-	switch (_bones.size()) {
-		case 1: {
-			apply(skeleton, *_bones[0], target._worldX, target._worldY, p._compress, p._stretch, _data._uniform, p._mix);
-		} break;
-		case 2: {
-			apply(skeleton, *_bones[0], *_bones[1], target._worldX, target._worldY, p._bendDirection, p._stretch, _data._uniform,
-				  p._softness, p._mix);
-		} break;
-	}
-}
-
-
-IkConstraintData &IkConstraint::getData() {
-	return _data;
-}
-
-Vector<BonePose *> &IkConstraint::getBones() {
-	return _bones;
-}
-
-Bone *IkConstraint::getTarget() {
-	return _target;
-}
-
-void IkConstraint::setTarget(Bone *target) {
-	_target = target;
-}
-
-void IkConstraint::sort(Skeleton &skeleton) {
-	skeleton.sortBone(_target);
-	Bone *parent = _bones[0]->_bone;
-	skeleton.sortBone(parent);
-	skeleton._updateCache.add(this);
-	parent->_sorted = false;
-	skeleton.sortReset(parent->_children);
-	skeleton.constrained(*parent);
-	if (_bones.size() > 1) skeleton.constrained(*_bones[1]->_bone);
-}
-
-bool IkConstraint::isSourceActive() {
-	return _target->_active;
-}
-
-IkConstraint *IkConstraint::copy(Skeleton &skeleton) {
-	IkConstraint *copy = new IkConstraint(_data, skeleton);
-	copy->_pose.set(_pose);
-	return copy;
-}

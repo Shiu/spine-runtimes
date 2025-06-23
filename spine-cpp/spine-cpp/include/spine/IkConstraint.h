@@ -49,6 +49,24 @@ namespace spine {
 	RTTI_DECL
 
 	public:
+		IkConstraint(IkConstraintData &data, Skeleton &skeleton);
+
+		virtual IkConstraint* copy(Skeleton& skeleton);
+
+		virtual void update(Skeleton& skeleton, Physics physics) override;
+
+		virtual void sort(Skeleton& skeleton) override;
+
+		virtual bool isSourceActive() override;
+
+		IkConstraintData &getData();
+
+		Vector<BonePose *> &getBones();
+
+		Bone *getTarget();
+
+		void setTarget(Bone *inValue);
+
 		/// Adjusts the bone rotation so the tip is as close to the target position as possible. The target is specified
 		/// in the world coordinate system.
 		static void
@@ -60,24 +78,6 @@ namespace spine {
 		static void
 		apply(Skeleton& skeleton, BonePose& parent, BonePose& child, float targetX, float targetY, int bendDirection, bool stretch, bool uniform,
 			  float softness, float mix);
-
-		IkConstraint(IkConstraintData &data, Skeleton &skeleton);
-
-		virtual void update(Skeleton& skeleton, Physics physics) override;
-
-		virtual void sort(Skeleton& skeleton) override;
-
-		virtual bool isSourceActive() override;
-
-		virtual IkConstraint* copy(Skeleton& skeleton);
-
-		IkConstraintData &getData();
-
-		Vector<BonePose *> &getBones();
-
-		Bone *getTarget();
-
-		void setTarget(Bone *inValue);
 
 	private:
 		Vector<BonePose *> _bones;

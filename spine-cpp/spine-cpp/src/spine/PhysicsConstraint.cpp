@@ -47,33 +47,13 @@ PhysicsConstraint::PhysicsConstraint(PhysicsConstraintData &data, Skeleton &skel
 																						_rotateOffset(0), _rotateLag(0), _rotateVelocity(0), _scaleOffset(0), _scaleLag(0), _scaleVelocity(0),
 																						_remaining(0), _lastTime(0) {
 
-	_bone = &skeleton.getBones()[(size_t) data.getBone()->getIndex()]->getAppliedPose();
+	_bone = &skeleton._bones[(size_t) data._bone->getIndex()]->_constrained;
 }
 
 PhysicsConstraint *PhysicsConstraint::copy(Skeleton &skeleton) {
 	PhysicsConstraint *copy = new (__FILE__, __LINE__) PhysicsConstraint(_data, skeleton);
-	copy->_applied->set(*_applied);
+	copy->_pose.set(_pose);
 	return copy;
-}
-
-void PhysicsConstraint::sort(Skeleton &skeleton) {
-	Bone *bone = _bone->_bone;
-	skeleton.sortBone(bone);
-	skeleton._updateCache.add(this);
-	skeleton.sortReset(bone->_children);
-	skeleton.constrained(*bone);
-}
-
-bool PhysicsConstraint::isSourceActive() {
-	return _bone->_bone->isActive();
-}
-
-BonePose &PhysicsConstraint::getBone() {
-	return *_bone;
-}
-
-void PhysicsConstraint::setBone(BonePose &bone) {
-	_bone = &bone;
 }
 
 void PhysicsConstraint::reset(Skeleton &skeleton) {
@@ -94,14 +74,27 @@ void PhysicsConstraint::reset(Skeleton &skeleton) {
 	_scaleVelocity = 0;
 }
 
+void PhysicsConstraint::translate(float x, float y) {
+	_ux -= x;
+	_uy -= y;
+	_cx -= x;
+	_cy -= y;
+}
+
+void PhysicsConstraint::rotate(float x, float y, float degrees) {
+	float r = degrees * MathUtil::Deg_Rad, cosVal = MathUtil::cos(r), sinVal = MathUtil::sin(r);
+	float dx = _cx - x, dy = _cy - y;
+	translate(dx * cosVal - dy * sinVal - dx, dx * sinVal + dy * cosVal - dy);
+}
+
 void PhysicsConstraint::update(Skeleton &skeleton, Physics physics) {
-	PhysicsConstraintPose &p = *_applied;
-	float mix = p.getMix();
+	PhysicsConstraintPose &p = _pose;
+	float mix = p._mix;
 	if (mix == 0) return;
 
-	bool x = _data.getX() > 0, y = _data.getY() > 0, rotateOrShearX = _data._rotate > 0 || _data._shearX > 0, scaleX = _data.getScaleX() > 0;
+	bool x = _data._x > 0, y = _data._y > 0, rotateOrShearX = _data._rotate > 0 || _data._shearX > 0, scaleX = _data._scaleX > 0;
 	BonePose *bone = _bone;
-	float l = bone->_bone->getData().getLength(), t = _data.getStep(), z = 0;
+	float l = bone->_bone->_data.getLength(), t = _data._step, z = 0;
 
 	switch (physics) {
 		case Physics_None:
@@ -110,9 +103,9 @@ void PhysicsConstraint::update(Skeleton &skeleton, Physics physics) {
 			reset(skeleton);
 			// Fall through.
 		case Physics_Update: {
-			float delta = MathUtil::max(skeleton.getTime() - _lastTime, 0.0f), aa = _remaining;
+			float delta = MathUtil::max(skeleton._time - _lastTime, 0.0f), aa = _remaining;
 			_remaining += delta;
-			_lastTime = skeleton.getTime();
+			_lastTime = skeleton._time;
 
 			float bx = bone->_worldX, by = bone->_worldY;
 			if (_reset) {
@@ -120,9 +113,9 @@ void PhysicsConstraint::update(Skeleton &skeleton, Physics physics) {
 				_ux = bx;
 				_uy = by;
 			} else {
-				float a = _remaining, i = p.getInertia(), f = skeleton.getData()->getReferenceScale(), d = -1, m = 0, e = 0, qx = _data.getLimit() * delta,
-					  qy = qx * MathUtil::abs(skeleton.getScaleY());
-				qx *= MathUtil::abs(skeleton.getScaleX());
+				float a = _remaining, i = p._inertia, f = skeleton._data.getReferenceScale(), d = -1, m = 0, e = 0, ax = 0, ay = 0,
+					  qx = _data._limit * delta, qy = qx * MathUtil::abs(skeleton.getScaleY());
+				qx *= MathUtil::abs(skeleton._scaleX);
 				if (x || y) {
 					if (x) {
 						float u = (_ux - bx) * i;
@@ -141,8 +134,9 @@ void PhysicsConstraint::update(Skeleton &skeleton, Physics physics) {
 						d = MathUtil::pow(p._damping, 60 * t);
 						m = t * p._massInverse;
 						e = p._strength;
-						float w = f * p._wind * skeleton.getScaleX(), g = f * p._gravity * skeleton.getScaleY(),
-							  ax = w * skeleton.getWindX() + g * skeleton.getGravityX(), ay = w * skeleton.getWindY() + g * skeleton.getGravityY();
+						float w = f * p._wind, g = f * p._gravity;
+						ax = (w * skeleton._windX + g * skeleton._gravityX) * skeleton._scaleX;
+						ay = (w * skeleton._windY + g * skeleton._gravityY) * skeleton.getScaleY();
 						do {
 							if (x) {
 								_xVelocity += (ax - _xOffset * e) * m;
@@ -197,10 +191,11 @@ void PhysicsConstraint::update(Skeleton &skeleton, Physics physics) {
 							d = MathUtil::pow(p._damping, 60 * t);
 							m = t * p._massInverse;
 							e = p._strength;
+							float w = f * p._wind, g = f * p._gravity;
+							ax = (w * skeleton._windX + g * skeleton._gravityX) * skeleton._scaleX;
+							ay = (w * skeleton._windY + g * skeleton._gravityY) * skeleton.getScaleY();
 						}
-						float rs = _rotateOffset, ss = _scaleOffset, h = l / f,
-							  ax = p._wind * skeleton.getWindX() + p._gravity * skeleton.getGravityX(),
-							  ay = p._wind * skeleton.getWindY() + p._gravity * skeleton.getGravityY();
+						float rs = _rotateOffset, ss = _scaleOffset, h = l / f;
 						while (true) {
 							a -= t;
 							if (scaleX) {
@@ -277,18 +272,25 @@ void PhysicsConstraint::update(Skeleton &skeleton, Physics physics) {
 		_tx = l * bone->_a;
 		_ty = l * bone->_c;
 	}
-	// bone->modifyWorld(skeleton.getUpdate()); // TODO: Implement getUpdate method in Skeleton
+	bone->modifyWorld(skeleton._update);
 }
 
-void PhysicsConstraint::translate(float x, float y) {
-	_ux -= x;
-	_uy -= y;
-	_cx -= x;
-	_cy -= y;
+void PhysicsConstraint::sort(Skeleton &skeleton) {
+	Bone *bone = _bone->_bone;
+	skeleton.sortBone(bone);
+	skeleton._updateCache.add(this);
+	skeleton.sortReset(bone->_children);
+	skeleton.constrained(*bone);
 }
 
-void PhysicsConstraint::rotate(float x, float y, float degrees) {
-	float r = degrees * MathUtil::Deg_Rad, cosVal = MathUtil::cos(r), sinVal = MathUtil::sin(r);
-	float dx = _cx - x, dy = _cy - y;
-	translate(dx * cosVal - dy * sinVal - dx, dx * sinVal + dy * cosVal - dy);
+bool PhysicsConstraint::isSourceActive() {
+	return _bone->_bone->isActive();
+}
+
+BonePose &PhysicsConstraint::getBone() {
+	return *_bone;
+}
+
+void PhysicsConstraint::setBone(BonePose &bone) {
+	_bone = &bone;
 }

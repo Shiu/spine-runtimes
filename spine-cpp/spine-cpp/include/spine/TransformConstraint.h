@@ -49,7 +49,7 @@ namespace spine {
 	public:
 		TransformConstraint(TransformConstraintData& data, Skeleton& skeleton);
 
-		TransformConstraint copy(Skeleton& skeleton);
+		virtual TransformConstraint* copy(Skeleton& skeleton);
 
 		/// Applies the constraint to the constrained bones.
 		void update(Skeleton& skeleton, Physics physics) override;

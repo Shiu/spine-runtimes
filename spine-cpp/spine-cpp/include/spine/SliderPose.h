@@ -34,8 +34,11 @@
 #include <spine/RTTI.h>
 
 namespace spine {
+    class Slider;
+    
     /// Stores a pose for a slider.
     class SP_API SliderPose : public Pose<SliderPose> {
+        friend class Slider;
     private:
         float _time, _mix;
 

@@ -41,7 +41,7 @@ SkeletonClipping::SkeletonClipping() : _clipAttachment(NULL) {
 	_clippedUVs.ensureCapacity(128);
 }
 
-size_t SkeletonClipping::clipStart(Slot &slot, ClippingAttachment *clip) {
+size_t SkeletonClipping::clipStart(Skeleton &skeleton, Slot &slot, ClippingAttachment *clip) {
 	if (_clipAttachment != NULL) {
 		return 0;
 	}
@@ -49,8 +49,11 @@ size_t SkeletonClipping::clipStart(Slot &slot, ClippingAttachment *clip) {
 	_clipAttachment = clip;
 
 	int n = (int) clip->getWorldVerticesLength();
+	if (n < 6) {
+		return 0;
+	}
 	_clippingPolygon.setSize(n, 0);
-	clip->computeWorldVertices(slot, 0, n, _clippingPolygon, 0, 2);
+	clip->computeWorldVertices(skeleton, slot, 0, n, _clippingPolygon.buffer(), 0, 2);
 	makeClockwise(_clippingPolygon);
 	_clippingPolygons = &_triangulator.decompose(_clippingPolygon, _triangulator.triangulate(_clippingPolygon));
 
@@ -82,7 +85,7 @@ void SkeletonClipping::clipEnd() {
 	_clippingPolygon.clear();
 }
 
-void SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
+bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
 									 size_t trianglesLength) {
 	Vector<float> &clipOutput = _clipOutput;
 	Vector<float> &clippedVertices = _clippedVertices;
@@ -94,11 +97,11 @@ void SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
 	clippedVertices.clear();
 	_clippedUVs.clear();
 	clippedTriangles.clear();
+	bool clipped = false;
 
 	int stride = 2;
-	size_t i = 0;
-continue_outer:
-	for (; i < trianglesLength; i += 3) {
+
+	for (int i = 0; i < trianglesLength; i += 3) {
 		int vertexOffset = triangles[i] * stride;
 		float x1 = vertices[vertexOffset], y1 = vertices[vertexOffset + 1];
 
@@ -113,6 +116,7 @@ continue_outer:
 			if (clip(x1, y1, x2, y2, x3, y3, &(*polygons[p]), &clipOutput)) {
 				size_t clipOutputLength = clipOutput.size();
 				if (clipOutputLength == 0) continue;
+				clipped = true;
 
 				size_t clipOutputCount = clipOutputLength >> 1;
 				clippedVertices.setSize(s + clipOutputCount * 2, 0);
@@ -148,19 +152,19 @@ continue_outer:
 				clippedTriangles[s + 1] = (unsigned short) (index + 1);
 				clippedTriangles[s + 2] = (unsigned short) (index + 2);
 				index += 3;
-				i += 3;
-				goto continue_outer;
+				break;
 			}
 		}
 	}
+	return clipped;
 }
 
-void SkeletonClipping::clipTriangles(Vector<float> &vertices, Vector<unsigned short> &triangles, Vector<float> &uvs,
+bool SkeletonClipping::clipTriangles(Vector<float> &vertices, Vector<unsigned short> &triangles, Vector<float> &uvs,
 									 size_t stride) {
-	clipTriangles(vertices.buffer(), triangles.buffer(), triangles.size(), uvs.buffer(), stride);
+	return clipTriangles(vertices.buffer(), triangles.buffer(), triangles.size(), uvs.buffer(), stride);
 }
 
-void SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
+bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
 									 size_t trianglesLength, float *uvs, size_t stride) {
 	Vector<float> &clipOutput = _clipOutput;
 	Vector<float> &clippedVertices = _clippedVertices;
@@ -172,10 +176,9 @@ void SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
 	clippedVertices.clear();
 	_clippedUVs.clear();
 	clippedTriangles.clear();
+	bool clipped = false;
 
-	size_t i = 0;
-continue_outer:
-	for (; i < trianglesLength; i += 3) {
+	for (int i = 0; i < trianglesLength; i += 3) {
 		int vertexOffset = triangles[i] * (int) stride;
 		float x1 = vertices[vertexOffset], y1 = vertices[vertexOffset + 1];
 		float u1 = uvs[vertexOffset], v1 = uvs[vertexOffset + 1];
@@ -193,6 +196,7 @@ continue_outer:
 			if (clip(x1, y1, x2, y2, x3, y3, &(*polygons[p]), &clipOutput)) {
 				size_t clipOutputLength = clipOutput.size();
 				if (clipOutputLength == 0) continue;
+				clipped = true;
 				float d0 = y2 - y3, d1 = x3 - x2, d2 = x1 - x3, d4 = y3 - y1;
 				float d = 1 / (d0 * d2 + d1 * (y1 - y3));
 
@@ -246,10 +250,11 @@ continue_outer:
 				clippedTriangles[s + 2] = (unsigned short) (index + 2);
 				index += 3;
 				i += 3;
-				goto continue_outer;
+				break;
 			}
 		}
 	}
+	return clipped;
 }
 
 bool SkeletonClipping::isClipping() {

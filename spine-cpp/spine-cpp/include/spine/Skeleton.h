@@ -250,6 +250,8 @@ namespace spine {
 
 		void setColor(Color &color);
 
+		void setColor(float r, float g, float b, float a);
+
 		float getScaleX();
 
 		void setScaleX(float inValue);
