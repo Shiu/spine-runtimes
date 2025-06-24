@@ -180,7 +180,7 @@ public:
 			normal_maps->append(normal_map);
 			renderer_object->normal_map = normal_map;
 		}
-		
+
 		if (ResourceLoader::get_singleton()->exists(specular_map_path)) {
 			import_image_resource(specular_map_path);
 			Ref<Texture> specular_map = get_texture_from_image(specular_map_path, is_resource);
@@ -194,7 +194,7 @@ public:
 			normal_maps->append(normal_map);
 			renderer_object->normal_map = normal_map;
 		}
-		
+
 		if (ResourceLoader::exists(specular_map_path)) {
 			import_image_resource(specular_map_path);
 			Ref<Texture> specular_map = get_texture_from_image(specular_map_path, is_resource);
