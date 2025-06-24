@@ -45,12 +45,16 @@ namespace spine {
 	public:
 		explicit PathConstraintMixTimeline(size_t frameCount, size_t bezierCount, int pathConstraintIndex);
 
+		virtual ~PathConstraintMixTimeline();
+
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose);
 
-		/// Sets the time and mixes of the specified keyframe.
-		void setFrame(int frameIndex, float time, float mixRotate, float mixX, float mixY);
+		/// Sets the time and color for the specified frame.
+		/// @param frame Between 0 and frameCount, inclusive.
+		/// @param time The frame time in seconds.
+		void setFrame(int frame, float time, float mixRotate, float mixX, float mixY);
 
 	private:
 		static const int ENTRIES = 4;

@@ -64,9 +64,12 @@ namespace spine {
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose) override;
 
-		/// Sets the time and value of the specified keyframe.
+		/// Sets the time and attachment name for the specified frame.
+		/// @param frame Between 0 and frameCount, inclusive.
+		/// @param time The frame time in seconds.
 		void setFrame(int frame, float time, const String &attachmentName);
 
+		/// The attachment name for each frame. May contain null values to clear the attachment.
 		Vector<String> &getAttachmentNames();
 
 	protected:

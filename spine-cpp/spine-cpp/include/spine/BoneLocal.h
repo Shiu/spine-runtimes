@@ -42,6 +42,7 @@ namespace spine {
 		friend class BoneTimeline1;
 		friend class BoneTimeline2;
 		friend class RotateTimeline;
+		friend class InheritTimeline;
 		friend class ScaleTimeline;
 		friend class ScaleXTimeline;
 		friend class ScaleYTimeline;

@@ -35,6 +35,7 @@
 #include <spine/Animation.h>
 #include <spine/IkConstraint.h>
 #include <spine/IkConstraintData.h>
+#include <spine/IkConstraintPose.h>
 #include <spine/Property.h>
 #include <spine/Slot.h>
 #include <spine/SlotData.h>
@@ -49,33 +50,34 @@ IkConstraintTimeline::IkConstraintTimeline(size_t frameCount, size_t bezierCount
 	setPropertyIds(ids, 1);
 }
 
+IkConstraintTimeline::~IkConstraintTimeline() {
+}
+
 void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
 								 MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
-	SP_UNUSED(appliedPose);
 
-	IkConstraint *constraintP = (IkConstraint *) skeleton._constraints[_constraintIndex];
-	IkConstraint &constraint = *constraintP;
-	if (!constraint.isActive()) return;
+	IkConstraint *constraint = (IkConstraint *) skeleton._constraints[_constraintIndex];
+	if (!constraint->isActive()) return;
+	IkConstraintPose &pose = appliedPose ? *constraint->_applied : constraint->_pose;
 
 	if (time < _frames[0]) {
+		IkConstraintPose &setup = constraint->_data._setup;
 		switch (blend) {
 			case MixBlend_Setup:
-				constraint.getAppliedPose().setMix(constraint._data.getSetupPose().getMix());
-				constraint.getAppliedPose().setSoftness(constraint._data.getSetupPose().getSoftness());
-				constraint.getAppliedPose().setBendDirection(constraint._data.getSetupPose().getBendDirection());
-				constraint.getAppliedPose().setCompress(constraint._data.getSetupPose().getCompress());
-				constraint.getAppliedPose().setStretch(constraint._data.getSetupPose().getStretch());
+				pose._mix = setup._mix;
+				pose._softness = setup._softness;
+				pose._bendDirection = setup._bendDirection;
+				pose._compress = setup._compress;
+				pose._stretch = setup._stretch;
 				return;
 			case MixBlend_First:
-				constraint.getAppliedPose().setMix(constraint.getAppliedPose().getMix() +
-					(constraint._data.getSetupPose().getMix() - constraint.getAppliedPose().getMix()) * alpha);
-				constraint.getAppliedPose().setSoftness(constraint.getAppliedPose().getSoftness() +
-					(constraint._data.getSetupPose().getSoftness() - constraint.getAppliedPose().getSoftness()) * alpha);
-				constraint.getAppliedPose().setBendDirection(constraint._data.getSetupPose().getBendDirection());
-				constraint.getAppliedPose().setCompress(constraint._data.getSetupPose().getCompress());
-				constraint.getAppliedPose().setStretch(constraint._data.getSetupPose().getStretch());
+				pose._mix += (setup._mix - pose._mix) * alpha;
+				pose._softness += (setup._softness - pose._softness) * alpha;
+				pose._bendDirection = setup._bendDirection;
+				pose._compress = setup._compress;
+				pose._stretch = setup._stretch;
 				return;
 			default:
 				return;
@@ -83,57 +85,59 @@ void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time,
 	}
 
 	float mix = 0, softness = 0;
-	int i = Animation::search(_frames, time, IkConstraintTimeline::ENTRIES);
-	int curveType = (int) _curves[i / IkConstraintTimeline::ENTRIES];
+	int i = Animation::search(_frames, time, ENTRIES);
+	int curveType = (int) _curves[i / ENTRIES];
 	switch (curveType) {
-		case IkConstraintTimeline::LINEAR: {
+		case LINEAR: {
 			float before = _frames[i];
-			mix = _frames[i + IkConstraintTimeline::MIX];
-			softness = _frames[i + IkConstraintTimeline::SOFTNESS];
-			float t = (time - before) / (_frames[i + IkConstraintTimeline::ENTRIES] - before);
-			mix += (_frames[i + IkConstraintTimeline::ENTRIES + IkConstraintTimeline::MIX] - mix) * t;
-			softness += (_frames[i + IkConstraintTimeline::ENTRIES + IkConstraintTimeline::SOFTNESS] - softness) * t;
+			mix = _frames[i + MIX];
+			softness = _frames[i + SOFTNESS];
+			float t = (time - before) / (_frames[i + ENTRIES] - before);
+			mix += (_frames[i + ENTRIES + MIX] - mix) * t;
+			softness += (_frames[i + ENTRIES + SOFTNESS] - softness) * t;
 			break;
 		}
-		case IkConstraintTimeline::STEPPED: {
-			mix = _frames[i + IkConstraintTimeline::MIX];
-			softness = _frames[i + IkConstraintTimeline::SOFTNESS];
+		case STEPPED: {
+			mix = _frames[i + MIX];
+			softness = _frames[i + SOFTNESS];
 			break;
 		}
 		default: {
-			mix = getBezierValue(time, i, IkConstraintTimeline::MIX, curveType - IkConstraintTimeline::BEZIER);
-			softness = getBezierValue(time, i, IkConstraintTimeline::SOFTNESS,
-									  curveType + IkConstraintTimeline::BEZIER_SIZE -
-											  IkConstraintTimeline::BEZIER);
+			mix = getBezierValue(time, i, MIX, curveType - BEZIER);
+			softness = getBezierValue(time, i, SOFTNESS,
+									  curveType + BEZIER_SIZE -
+											  BEZIER);
 		}
 	}
 
-	if (blend == MixBlend_Setup) {
-		constraint.getAppliedPose().setMix(constraint._data.getSetupPose().getMix() +
-			(mix - constraint._data.getSetupPose().getMix()) * alpha);
-		constraint.getAppliedPose().setSoftness(constraint._data.getSetupPose().getSoftness() +
-			(softness - constraint._data.getSetupPose().getSoftness()) * alpha);
-
-		if (direction == MixDirection_Out) {
-			constraint.getAppliedPose().setBendDirection(constraint._data.getSetupPose().getBendDirection());
-			constraint.getAppliedPose().setCompress(constraint._data.getSetupPose().getCompress());
-			constraint.getAppliedPose().setStretch(constraint._data.getSetupPose().getStretch());
-		} else {
-			constraint.getAppliedPose().setBendDirection(_frames[i + IkConstraintTimeline::BEND_DIRECTION]);
-			constraint.getAppliedPose().setCompress(_frames[i + IkConstraintTimeline::COMPRESS] != 0);
-			constraint.getAppliedPose().setStretch(_frames[i + IkConstraintTimeline::STRETCH] != 0);
+	switch (blend) {
+		case MixBlend_Setup: {
+			IkConstraintPose &setup = constraint->_data._setup;
+			pose._mix = setup._mix + (mix - setup._mix) * alpha;
+			pose._softness = setup._softness + (softness - setup._softness) * alpha;
+			if (direction == MixDirection_Out) {
+				pose._bendDirection = setup._bendDirection;
+				pose._compress = setup._compress;
+				pose._stretch = setup._stretch;
+				return;
+			}
+			break;
 		}
-	} else {
-		constraint.getAppliedPose().setMix(constraint.getAppliedPose().getMix() +
-			(mix - constraint.getAppliedPose().getMix()) * alpha);
-		constraint.getAppliedPose().setSoftness(constraint.getAppliedPose().getSoftness() +
-			(softness - constraint.getAppliedPose().getSoftness()) * alpha);
-		if (direction == MixDirection_In) {
-			constraint.getAppliedPose().setBendDirection(_frames[i + IkConstraintTimeline::BEND_DIRECTION]);
-			constraint.getAppliedPose().setCompress(_frames[i + IkConstraintTimeline::COMPRESS] != 0);
-			constraint.getAppliedPose().setStretch(_frames[i + IkConstraintTimeline::STRETCH] != 0);
-		}
+		case MixBlend_First:
+		case MixBlend_Replace:
+			pose._mix += (mix - pose._mix) * alpha;
+			pose._softness += (softness - pose._softness) * alpha;
+			if (direction == MixDirection_Out) return;
+			break;
+		case MixBlend_Add:
+			pose._mix += mix * alpha;
+			pose._softness += softness * alpha;
+			if (direction == MixDirection_Out) return;
+			break;
 	}
+	pose._bendDirection = (int)_frames[i + BEND_DIRECTION];
+	pose._compress = _frames[i + COMPRESS] != 0;
+	pose._stretch = _frames[i + STRETCH] != 0;
 }
 
 void IkConstraintTimeline::setFrame(int frame, float time, float mix, float softness, int bendDirection, bool compress,

@@ -49,6 +49,8 @@ namespace spine {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class Slider;
+		friend class SliderMixTimeline;
+		friend class SliderTimeline;
 
 		RTTI_DECL
 

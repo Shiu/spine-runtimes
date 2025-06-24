@@ -53,6 +53,7 @@ namespace spine {
 		friend class Skeleton;
 		friend class PathConstraintMixTimeline;
 		friend class PathConstraintPositionTimeline;
+		friend class PathConstraintPositionTimeline;
 		friend class PathConstraintSpacingTimeline;
 
 		RTTI_DECL

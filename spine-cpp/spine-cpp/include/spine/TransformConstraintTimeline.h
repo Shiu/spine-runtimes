@@ -45,11 +45,16 @@ namespace spine {
 	public:
 		explicit TransformConstraintTimeline(size_t frameCount, size_t bezierCount, int transformConstraintIndex);
 
+		virtual ~TransformConstraintTimeline();
+
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose);
 
-		void setFrame(size_t frameIndex, float time, float mixRotate, float mixX, float mixY, float mixScaleX,
+		/// Sets the time, rotate mix, translate mix, scale mix, and shear mix for the specified frame.
+		/// @param frame Between 0 and frameCount, inclusive.
+		/// @param time The frame time in seconds.
+		void setFrame(int frame, float time, float mixRotate, float mixX, float mixY, float mixScaleX,
 					  float mixScaleY, float mixShearY);
 
 	private:

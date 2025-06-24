@@ -27,44 +27,27 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/PathConstraintPositionTimeline.h>
+#ifndef Spine_SliderTimeline_h
+#define Spine_SliderTimeline_h
 
-#include <spine/Event.h>
-#include <spine/Skeleton.h>
+#include <spine/ConstraintTimeline1.h>
 
-#include <spine/Animation.h>
-#include <spine/PathConstraint.h>
-#include <spine/PathConstraintData.h>
-#include <spine/Property.h>
-#include <spine/Slot.h>
-#include <spine/SlotData.h>
+namespace spine {
+	class SP_API SliderTimeline : public ConstraintTimeline1 {
+		friend class SkeletonBinary;
+		friend class SkeletonJson;
 
-using namespace spine;
+	RTTI_DECL
 
-RTTI_IMPL(PathConstraintPositionTimeline, ConstraintTimeline1)
+	public:
+		explicit SliderTimeline(size_t frameCount, size_t bezierCount, int sliderIndex);
 
-PathConstraintPositionTimeline::PathConstraintPositionTimeline(size_t frameCount, size_t bezierCount,
-															   int pathConstraintIndex) : ConstraintTimeline1(frameCount,
-																											  bezierCount,
-																											  pathConstraintIndex,
-																											  Property_PathConstraintPosition) {
-	PropertyId ids[] = {((PropertyId) Property_PathConstraintPosition << 32) | pathConstraintIndex};
-	setPropertyIds(ids, 1);
+		virtual ~SliderTimeline();
+
+		virtual void
+		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
+			  MixDirection direction, bool appliedPose);
+	};
 }
 
-PathConstraintPositionTimeline::~PathConstraintPositionTimeline() {
-}
-
-void PathConstraintPositionTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents,
-										   float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
-	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
-	SP_UNUSED(direction);
-
-	PathConstraint *constraint = (PathConstraint *) skeleton._constraints[_constraintIndex];
-	if (constraint->isActive()) {
-		PathConstraintPose &pose = appliedPose ? *constraint->_applied : constraint->_pose;
-		PathConstraintData &data = constraint->_data;
-		pose._position = getAbsoluteValue(time, alpha, blend, pose._position, data._setup._position);
-	}
-}
+#endif /* Spine_SliderTimeline_h */

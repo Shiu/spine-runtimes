@@ -34,6 +34,7 @@
 
 #include <spine/Bone.h>
 #include <spine/BoneData.h>
+#include <spine/BoneLocal.h>
 #include <spine/Slot.h>
 #include <spine/SlotData.h>
 
@@ -53,7 +54,7 @@ InheritTimeline::~InheritTimeline() {
 void InheritTimeline::setFrame(int frame, float time, Inherit inherit) {
 	frame *= ENTRIES;
 	_frames[frame] = time;
-	_frames[frame + INHERIT] = inherit;
+	_frames[frame + INHERIT] = (float)inherit;
 }
 
 
@@ -61,22 +62,21 @@ void InheritTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vect
 							MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
-	SP_UNUSED(direction);
 	SP_UNUSED(alpha);
-	SP_UNUSED(appliedPose);
 
-	Bone *bone = skeleton.getBones()[_boneIndex];
+	Bone *bone = skeleton._bones[_boneIndex];
 	if (!bone->isActive()) return;
+	BoneLocal &pose = appliedPose ? *bone->_applied : bone->_pose;
 
 	if (direction == MixDirection_Out) {
-		if (blend == MixBlend_Setup) bone->_inherit = bone->_data.getInherit();
+		if (blend == MixBlend_Setup) pose._inherit = bone->_data._setup._inherit;
 		return;
 	}
 
 	if (time < _frames[0]) {
-		if (blend == MixBlend_Setup || blend == MixBlend_First) bone->_inherit = bone->_data.getInherit();
-		return;
+		if (blend == MixBlend_Setup || blend == MixBlend_First) pose._inherit = bone->_data._setup._inherit;
+	} else {
+		int idx = Animation::search(_frames, time, ENTRIES) + INHERIT;
+		pose._inherit = static_cast<Inherit>((int)_frames[idx]);
 	}
-	int idx = Animation::search(_frames, time, ENTRIES) + INHERIT;
-	bone->_inherit = static_cast<Inherit>(_frames[idx]);
 }

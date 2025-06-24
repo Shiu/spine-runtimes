@@ -52,13 +52,19 @@ PathConstraintSpacingTimeline::PathConstraintSpacingTimeline(size_t frameCount, 
 	setPropertyIds(ids, 1);
 }
 
+PathConstraintSpacingTimeline::~PathConstraintSpacingTimeline() {
+}
+
 void PathConstraintSpacingTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents,
 										  float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 	SP_UNUSED(direction);
 
-	PathConstraint *constraint = skeleton._pathConstraints[_pathConstraintIndex];
-	if (constraint->_active)
-		constraint->_spacing = getAbsoluteValue(time, alpha, blend, constraint->_spacing, constraint->_data._spacing);
+	PathConstraint *constraint = (PathConstraint *)skeleton._constraints[_constraintIndex];
+	if (constraint->isActive()) {
+		PathConstraintPose &pose = appliedPose ? *constraint->_applied : constraint->_pose;
+		PathConstraintData &data = constraint->_data;
+		pose._spacing = getAbsoluteValue(time, alpha, blend, pose._spacing, data._setup._spacing);
+	}
 }

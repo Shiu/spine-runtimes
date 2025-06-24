@@ -30,9 +30,10 @@
 #ifndef Spine_PathConstraintSpacingTimeline_h
 #define Spine_PathConstraintSpacingTimeline_h
 
-#include <spine/PathConstraintPositionTimeline.h>
+#include <spine/ConstraintTimeline1.h>
 
 namespace spine {
+	/// Changes a path constraint's PathConstraintPose::getSpacing().
 	class SP_API PathConstraintSpacingTimeline : public ConstraintTimeline1 {
 		friend class SkeletonBinary;
 
@@ -42,6 +43,8 @@ namespace spine {
 
 	public:
 		explicit PathConstraintSpacingTimeline(size_t frameCount, size_t bezierCount, int pathConstraintIndex);
+
+		virtual ~PathConstraintSpacingTimeline();
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,

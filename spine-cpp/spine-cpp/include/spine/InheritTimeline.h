@@ -50,6 +50,9 @@ namespace spine {
 
 		virtual ~InheritTimeline();
 
+		/// Sets the inherit transform mode for the specified frame.
+		/// @param frame Between 0 and frameCount, inclusive.
+		/// @param time The frame time in seconds.
         void setFrame(int frame, float time, Inherit inherit);
 
 		virtual void

@@ -94,6 +94,8 @@ namespace spine {
 
 		friend class IkConstraintTimeline;
 
+		friend class InheritTimeline;
+
 		friend class PathConstraint;
 
 		friend class PathConstraintMixTimeline;
@@ -101,6 +103,10 @@ namespace spine {
 		friend class PathConstraintPositionTimeline;
 
 		friend class PathConstraintSpacingTimeline;
+
+		friend class SliderTimeline;
+
+		friend class SliderMixTimeline;
 
 		friend class ScaleTimeline;
 

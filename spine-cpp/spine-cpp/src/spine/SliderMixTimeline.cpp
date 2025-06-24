@@ -27,63 +27,43 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/AttachmentTimeline.h>
+#include <spine/SliderMixTimeline.h>
 
 #include <spine/Event.h>
 #include <spine/Skeleton.h>
 
 #include <spine/Animation.h>
-#include <spine/Bone.h>
+#include <spine/Slider.h>
+#include <spine/SliderData.h>
+#include <spine/SliderPose.h>
 #include <spine/Property.h>
-#include <spine/Slot.h>
-#include <spine/SlotData.h>
-#include <spine/SlotPose.h>
 
 using namespace spine;
 
-RTTI_IMPL_MULTI(AttachmentTimeline, Timeline, SlotTimeline)
+RTTI_IMPL(SliderMixTimeline, ConstraintTimeline1)
 
-AttachmentTimeline::AttachmentTimeline(size_t frameCount, int slotIndex) : Timeline(frameCount, 1),
-																		   SlotTimeline(slotIndex) {
-	PropertyId ids[] = {((PropertyId) Property_Attachment << 32) | slotIndex};
+SliderMixTimeline::SliderMixTimeline(size_t frameCount, size_t bezierCount,
+									 int sliderIndex) : ConstraintTimeline1(frameCount,
+																			bezierCount,
+																			sliderIndex,
+																			Property_SliderMix) {
+	PropertyId ids[] = {((PropertyId) Property_SliderMix << 32) | sliderIndex};
 	setPropertyIds(ids, 1);
-
-	_attachmentNames.ensureCapacity(frameCount);
-	for (size_t i = 0; i < frameCount; ++i) {
-		_attachmentNames.add(String());
-	}
 }
 
-AttachmentTimeline::~AttachmentTimeline() {}
-
-void AttachmentTimeline::setAttachment(Skeleton &skeleton, SlotPose &pose, String *attachmentName) {
-	pose.setAttachment(attachmentName == NULL || attachmentName->isEmpty() ? NULL : skeleton.getAttachment(_slotIndex, *attachmentName));
+SliderMixTimeline::~SliderMixTimeline() {
 }
 
-void AttachmentTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-							   MixBlend blend, MixDirection direction, bool appliedPose) {
+void SliderMixTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents,
+							  float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
-	SP_UNUSED(alpha);
+	SP_UNUSED(direction);
 
-	Slot *slot = skeleton._slots[_slotIndex];
-	if (!slot->_bone.isActive()) return;
-	SlotPose &pose = appliedPose ? *slot->_applied : slot->_pose;
-
-	if (direction == MixDirection_Out) {
-		if (blend == MixBlend_Setup) setAttachment(skeleton, pose, &slot->_data._attachmentName);
-	} else if (time < _frames[0]) {
-		if (blend == MixBlend_Setup || blend == MixBlend_First) setAttachment(skeleton, pose, &slot->_data._attachmentName);
-	} else {
-		setAttachment(skeleton, pose, &_attachmentNames[Animation::search(_frames, time)]);
+	Slider *constraint = (Slider *) skeleton._constraints[_constraintIndex];
+	if (constraint->isActive()) {
+		SliderPose &pose = appliedPose ? *constraint->_applied : constraint->_pose;
+		SliderData &data = constraint->_data;
+		pose._mix = getAbsoluteValue(time, alpha, blend, pose._mix, data._setup._mix);
 	}
-}
-
-void AttachmentTimeline::setFrame(int frame, float time, const String &attachmentName) {
-	_frames[frame] = time;
-	_attachmentNames[frame] = attachmentName;
-}
-
-Vector<String> &AttachmentTimeline::getAttachmentNames() {
-	return _attachmentNames;
 }

@@ -45,11 +45,16 @@ namespace spine {
 	public:
 		explicit IkConstraintTimeline(size_t frameCount, size_t bezierCount, int ikConstraintIndex);
 
+		virtual ~IkConstraintTimeline();
+
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose) override;
 
-		/// Sets the time, mix and bend direction of the specified keyframe.
+		/// Sets the time, mix, softness, bend direction, compress, and stretch for the specified frame.
+		/// @param frame Between 0 and frameCount, inclusive.
+		/// @param time The frame time in seconds.
+		/// @param bendDirection 1 or -1.
 		void setFrame(int frame, float time, float mix, float softness, int bendDirection, bool compress, bool stretch);
 
 	private:

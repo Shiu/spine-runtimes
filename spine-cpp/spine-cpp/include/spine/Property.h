@@ -61,7 +61,9 @@ namespace spine {
         Property_PhysicsConstraintGravity = 1 << 25,
         Property_PhysicsConstraintMix = 1 << 26,
         Property_PhysicsConstraintReset = 1 << 27,
-		Property_Sequence = 1 << 28
+		Property_Sequence = 1 << 28,
+		Property_SliderTime = 1 << 29,
+		Property_SliderMix = 1 << 30
 	};
 }
 
