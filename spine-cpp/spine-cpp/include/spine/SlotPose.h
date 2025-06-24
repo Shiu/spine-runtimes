@@ -49,8 +49,9 @@ namespace spine {
 		friend class AlphaTimeline;
 		friend class RGBA2Timeline;
 		friend class RGB2Timeline;
+		friend class PathConstraint;
 
-	private:
+	protected:
 		Color _color;
 		Color _darkColor;
 		bool _hasDarkColor;
