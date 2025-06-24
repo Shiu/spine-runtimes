@@ -357,7 +357,7 @@ namespace Spine.Unity.Editor {
 
 							foreach (Skin.SkinEntry skinEntry in pair.Value) {
 								Attachment attachment = skinEntry.Attachment;
-								var slotPose = slot.AppliedPose; 
+								var slotPose = slot.AppliedPose;
 								GUI.contentColor = slotPose.Attachment == attachment ? Color.white : Color.grey;
 								EditorGUI.indentLevel = baseIndent + 2;
 								Texture2D icon = Icons.GetAttachmentIcon(attachment);

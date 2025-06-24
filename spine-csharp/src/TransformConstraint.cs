@@ -43,7 +43,7 @@ namespace Spine {
 	public class TransformConstraint : Constraint<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
 		internal readonly ExposedList<BonePose> bones;
 		internal Bone source;
-		
+
 		public TransformConstraint (TransformConstraintData data, Skeleton skeleton)
 			: base(data, new TransformConstraintPose(), new TransformConstraintPose()) {
 			if (skeleton == null) throw new ArgumentNullException("skeleton", "skeleton cannot be null.");

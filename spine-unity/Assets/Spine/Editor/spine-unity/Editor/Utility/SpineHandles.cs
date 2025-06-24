@@ -232,7 +232,7 @@ namespace Spine.Unity.Editor {
 		public static void DrawBone (Transform transform, Bone bone, float boneScale, float skeletonRenderScale = 1f,
 			Vector2? positionOffset = null) {
 			if (UnityEngine.Event.current.type != EventType.Repaint) return;
-			
+
 			var bonePose = bone.AppliedPose;
 			Vector2 offset = positionOffset == null ? Vector2.zero : positionOffset.Value;
 			Vector3 pos = new Vector3(bonePose.WorldX * skeletonRenderScale + offset.x, bonePose.WorldY * skeletonRenderScale + offset.y, 0);

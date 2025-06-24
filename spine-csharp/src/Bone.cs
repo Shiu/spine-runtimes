@@ -44,7 +44,7 @@ namespace Spine {
 
 		internal Bone parent;
 		internal ExposedList<Bone> children = new ExposedList<Bone>(4);
-		
+
 		internal bool sorted;
 
 		public Bone (BoneData data, Bone parent)
@@ -64,6 +64,6 @@ namespace Spine {
 
 		public Bone Parent { get { return parent; } }
 		public ExposedList<Bone> Children { get { return children; } }
-		
+
 	}
 }

@@ -50,7 +50,7 @@ namespace Spine {
 		internal readonly float[] segments = new float[10];
 
 		public PathConstraint (PathConstraintData data, Skeleton skeleton)
-			: base(data, new PathConstraintPose (), new PathConstraintPose ()) {
+			: base(data, new PathConstraintPose(), new PathConstraintPose()) {
 			if (skeleton == null) throw new ArgumentNullException("skeleton", "skeleton cannot be null.");
 
 			bones = new ExposedList<BonePose>(data.Bones.Count);

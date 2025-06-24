@@ -43,7 +43,7 @@ namespace Spine {
 		internal BoneData boneData;
 		internal string attachmentName;
 		internal BlendMode blendMode;
-		
+
 		// Nonessential.
 		// bool visible = true;
 
@@ -57,7 +57,7 @@ namespace Spine {
 
 		/// <summary>The index of the slot in <see cref="Skeleton.Slots"/>.</summary>
 		public int Index { get { return index; } }
-		
+
 		/// <summary>The bone this slot belongs to.</summary>
 		public BoneData BoneData { get { return boneData; } }
 

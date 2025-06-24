@@ -96,7 +96,7 @@ namespace Spine {
 			physics.TrimExcess();
 
 			color = new Color(1, 1, 1, 1);
-			
+
 			UpdateCache();
 		}
 

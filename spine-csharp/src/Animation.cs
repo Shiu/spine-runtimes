@@ -67,7 +67,7 @@ namespace Spine {
 		public void SetTimelines (ExposedList<Timeline> timelines) {
 			if (timelines == null) throw new ArgumentNullException("timelines", "timelines cannot be null.");
 			this.timelines = timelines;
-			
+
 			// Note: avoiding reallocations by adding all hash set entries at
 			// once (EnsureCapacity() is only available in newer .Net versions).
 			int idCount = 0;
