@@ -178,7 +178,7 @@ export class FromRotate extends FromProperty {
 	value (skeleton: Skeleton, source: BonePose, local: boolean, offsets: Array<number>): number {
 		if (local) return source.rotation + offsets[TransformConstraintData.ROTATION];
 		let value = Math.atan2(source.c / skeleton.scaleY, source.a / skeleton.scaleX) * MathUtils.radDeg
-			+ (source.a * source.d - source.b * source.c > 0 ? offsets[TransformConstraintData.ROTATION] : -offsets[TransformConstraintData.ROTATION]);
+			+ (source.a * source.d - source.b * source.c > 0 ? offsets[TransformConstraintData.ROTATION] : -offsets[TransformConstraintData.ROTATION]) * Skeleton.yDir;
 		if (value < 0) value += 360;
 		return value;
 	}
