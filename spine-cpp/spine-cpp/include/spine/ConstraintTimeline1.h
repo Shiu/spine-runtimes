@@ -32,20 +32,16 @@
 
 #include <spine/CurveTimeline.h>
 #include <spine/Property.h>
+#include <spine/ConstraintTimeline.h>
 
 namespace spine {
 	/// Base class for single-value constraint timelines.
-	class SP_API ConstraintTimeline1 : public CurveTimeline1 {
+	class SP_API ConstraintTimeline1 : public CurveTimeline1, public ConstraintTimeline {
 		RTTI_DECL
-
-	private:
-		int _constraintIndex;
 
 	public:
 		ConstraintTimeline1(size_t frameCount, size_t bezierCount, int constraintIndex, Property property);
-
-		/// The index of the constraint in Skeleton::getConstraints() that will be changed when this timeline is applied.
-		int getConstraintIndex();
+		virtual ~ConstraintTimeline1() {}
 	};
 }
 

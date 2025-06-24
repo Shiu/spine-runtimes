@@ -36,7 +36,7 @@
 
 using namespace spine;
 
-RTTI_IMPL(SlotCurveTimeline, CurveTimeline)
+RTTI_IMPL_MULTI(SlotCurveTimeline, CurveTimeline, SlotTimeline)
 
 SlotCurveTimeline::SlotCurveTimeline(size_t frameCount, size_t frameEntries, size_t bezierCount, int slotIndex)
 	: CurveTimeline(frameCount, frameEntries, bezierCount), SlotTimeline(slotIndex) {

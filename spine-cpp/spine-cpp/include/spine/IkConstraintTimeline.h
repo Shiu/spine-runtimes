@@ -31,10 +31,11 @@
 #define Spine_IkConstraintTimeline_h
 
 #include <spine/CurveTimeline.h>
+#include <spine/ConstraintTimeline.h>
 
 namespace spine {
 
-	class SP_API IkConstraintTimeline : public CurveTimeline {
+	class SP_API IkConstraintTimeline : public CurveTimeline, public ConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -51,13 +52,7 @@ namespace spine {
 		/// Sets the time, mix and bend direction of the specified keyframe.
 		void setFrame(int frame, float time, float mix, float softness, int bendDirection, bool compress, bool stretch);
 
-		int getIkConstraintIndex() { return _constraintIndex; }
-
-		void setIkConstraintIndex(int inValue) { _constraintIndex = inValue; }
-
 	private:
-		int _constraintIndex;
-
 		static const int ENTRIES = 6;
 		static const int MIX = 1;
 		static const int SOFTNESS = 2;

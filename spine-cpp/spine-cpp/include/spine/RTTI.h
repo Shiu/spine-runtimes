@@ -39,6 +39,12 @@ namespace spine {
 
 		RTTI(const char *className, const RTTI &baseRTTI);
 
+		// New constructor for multiple interfaces (up to 3)
+		RTTI(const char *className, const RTTI &baseRTTI,
+		     const RTTI* interface1,
+		     const RTTI* interface2 = 0,
+		     const RTTI* interface3 = 0);
+
 		const char *getClassName() const;
 
 		bool isExactly(const RTTI &rtti) const;
@@ -53,6 +59,8 @@ namespace spine {
 
 		const char *_className;
 		const RTTI *_pBaseRTTI;
+		const RTTI *_interfaces[3];  // Support up to 3 interfaces
+		int _interfaceCount;
 	};
 }
 
@@ -72,6 +80,10 @@ const spine::RTTI& name::getRTTI() const { return rtti; }
 
 #define RTTI_IMPL(name, parent) \
 const spine::RTTI name::rtti(#name, parent::rtti); \
+const spine::RTTI& name::getRTTI() const { return rtti; }
+
+#define RTTI_IMPL_MULTI(name, parent, ...) \
+const spine::RTTI name::rtti(#name, parent::rtti, &__VA_ARGS__::rtti); \
 const spine::RTTI& name::getRTTI() const { return rtti; }
 
 #endif /* Spine_RTTI_h */

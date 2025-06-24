@@ -41,7 +41,7 @@
 
 using namespace spine;
 
-RTTI_IMPL(SequenceTimeline, Timeline)
+RTTI_IMPL_MULTI(SequenceTimeline, Timeline, SlotTimeline)
 
 SequenceTimeline::SequenceTimeline(size_t frameCount, int slotIndex, Attachment *attachment) : Timeline(frameCount, ENTRIES), SlotTimeline(slotIndex), _attachment((HasTextureRegion *) attachment) {
 	int sequenceId = 0;

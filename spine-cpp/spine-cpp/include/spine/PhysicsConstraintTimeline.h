@@ -34,10 +34,11 @@
 #include <spine/PhysicsConstraint.h>
 #include <spine/PhysicsConstraintData.h>
 #include <spine/PhysicsConstraintPose.h>
+#include <spine/ConstraintTimeline.h>
 
 namespace spine {
 
-	class SP_API PhysicsConstraintTimeline : public CurveTimeline1 {
+	class SP_API PhysicsConstraintTimeline : public CurveTimeline1, public ConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -50,10 +51,6 @@ namespace spine {
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose) override;
-
-		int getPhysicsConstraintIndex() { return _constraintIndex; }
-
-		void setPhysicsConstraintIndex(int inValue) { _constraintIndex = inValue; }
 
     protected:
         virtual float get(PhysicsConstraintPose &pose) = 0;
@@ -232,7 +229,7 @@ namespace spine {
         }
     };
 
-    class SP_API PhysicsConstraintResetTimeline : public Timeline {
+    class SP_API PhysicsConstraintResetTimeline : public Timeline, public ConstraintTimeline {
         friend class SkeletonBinary;
 
         friend class SkeletonJson;
@@ -240,7 +237,7 @@ namespace spine {
     RTTI_DECL
 
     public:
-        explicit PhysicsConstraintResetTimeline(size_t frameCount, int physicsConstraintIndex): Timeline(frameCount, 1), _constraintIndex(physicsConstraintIndex) {
+        explicit PhysicsConstraintResetTimeline(size_t frameCount, int physicsConstraintIndex): Timeline(frameCount, 1), ConstraintTimeline(physicsConstraintIndex) {
             PropertyId ids[] = {((PropertyId)Property_PhysicsConstraintReset) << 32};
             setPropertyIds(ids, 1);
         }
@@ -248,9 +245,6 @@ namespace spine {
         virtual void
         apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
               MixDirection direction, bool appliedPose) override;
-
-        /// The index of the physics constraint that will be reset when this timeline is applied, or -1 if all physics constraints in the skeleton will be reset.
-        int getConstraintIndex() { return _constraintIndex; }
 
         int getFrameCount() { return (int)_frames.size(); }
 

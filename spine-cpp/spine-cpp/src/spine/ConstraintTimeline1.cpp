@@ -31,14 +31,10 @@
 
 using namespace spine;
 
-RTTI_IMPL(ConstraintTimeline1, CurveTimeline1)
+RTTI_IMPL_MULTI(ConstraintTimeline1, CurveTimeline1, ConstraintTimeline)
 
 ConstraintTimeline1::ConstraintTimeline1(size_t frameCount, size_t bezierCount, int constraintIndex, Property property)
-	: CurveTimeline1(frameCount, bezierCount), _constraintIndex(constraintIndex) {
+	: CurveTimeline1(frameCount, bezierCount), ConstraintTimeline(constraintIndex) {
 	PropertyId ids[] = {((PropertyId) property << 32) | constraintIndex};
 	setPropertyIds(ids, 1);
-}
-
-int ConstraintTimeline1::getConstraintIndex() {
-	return _constraintIndex;
 }

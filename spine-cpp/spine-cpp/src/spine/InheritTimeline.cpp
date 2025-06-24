@@ -39,10 +39,10 @@
 
 using namespace spine;
 
-RTTI_IMPL(InheritTimeline, Timeline)
+RTTI_IMPL_MULTI(InheritTimeline, Timeline, BoneTimeline)
 
 InheritTimeline::InheritTimeline(size_t frameCount, int boneIndex) : Timeline(frameCount, ENTRIES),
-																	 _boneIndex(boneIndex) {
+																		BoneTimeline(boneIndex) {
 	PropertyId ids[] = {((PropertyId) Property_Inherit << 32) | boneIndex};
 	setPropertyIds(ids, 1);
 }

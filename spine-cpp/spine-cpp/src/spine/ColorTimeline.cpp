@@ -205,7 +205,7 @@ void RGBTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, Mix
 	}
 }
 
-RTTI_IMPL(AlphaTimeline, SlotTimeline)
+RTTI_IMPL(AlphaTimeline, SlotCurveTimeline)
 
 AlphaTimeline::AlphaTimeline(size_t frameCount, size_t bezierCount, int slotIndex)
 	: CurveTimeline1(frameCount, bezierCount), SlotTimeline(slotIndex) {

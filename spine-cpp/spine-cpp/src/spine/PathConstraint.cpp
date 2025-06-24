@@ -255,12 +255,10 @@ void PathConstraint::setSlot(Slot *slot) {
 
 Vector<float> &
 PathConstraint::computeWorldPositions(Skeleton &skeleton, PathAttachment &path, int spacesCount, bool tangents) {
-	Slot &slot = *_slot;
 	float position = _applied->_position;
 	float *spaces = _spaces.buffer();
 	_positions.setSize(spacesCount * 3 + 2, 0);
 	Vector<float> &out = _positions;
-	float *outBuffer = out.buffer();
 	Vector<float> &world = _world;
 	bool closed = path.isClosed();
 	int verticesLength = (int) path.getWorldVerticesLength();
@@ -542,7 +540,7 @@ void PathConstraint::sortPathSlot(Skeleton &skeleton, Skin &skin, int slotIndex,
 	Skin::AttachmentMap::Entries entries = skin.getAttachments();
 	while (entries.hasNext()) {
 		Skin::AttachmentMap::Entry &entry = entries.next();
-		if (entry._slotIndex == slotIndex) sortPath(skeleton, entry._attachment, slotBone);
+		if (entry._slotIndex == (size_t)slotIndex) sortPath(skeleton, entry._attachment, slotBone);
 	}
 }
 
@@ -557,7 +555,7 @@ void PathConstraint::sortPath(Skeleton &skeleton, Attachment *attachment, Bone &
 		for (size_t i = 0, n = pathBones.size(); i < n;) {
 			int nn = pathBones[i++];
 			nn += i;
-			while (i < nn)
+			while (i < (size_t)nn)
 				skeleton.sortBone(bones[pathBones[i++]]);
 		}
 	}

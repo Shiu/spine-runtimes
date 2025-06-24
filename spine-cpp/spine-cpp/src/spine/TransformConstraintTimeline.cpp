@@ -41,20 +41,19 @@
 
 using namespace spine;
 
-RTTI_IMPL(TransformConstraintTimeline, CurveTimeline)
+RTTI_IMPL_MULTI(TransformConstraintTimeline, CurveTimeline, ConstraintTimeline)
 
 TransformConstraintTimeline::TransformConstraintTimeline(size_t frameCount, size_t bezierCount,
 														 int transformConstraintIndex) : CurveTimeline(frameCount,
 																									   TransformConstraintTimeline::ENTRIES,
 																									   bezierCount),
-																						 _constraintIndex(
-																								 transformConstraintIndex) {
+																							ConstraintTimeline(transformConstraintIndex) {
 	PropertyId ids[] = {((PropertyId) Property_TransformConstraint << 32) | transformConstraintIndex};
 	setPropertyIds(ids, 1);
 }
 
 void TransformConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents,
-										float alpha, MixBlend blend, MixDirection direction) {
+										float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 	SP_UNUSED(direction);

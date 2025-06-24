@@ -41,7 +41,7 @@
 
 using namespace spine;
 
-RTTI_IMPL(PhysicsConstraintTimeline, CurveTimeline)
+RTTI_IMPL_MULTI(PhysicsConstraintTimeline, CurveTimeline, ConstraintTimeline)
 RTTI_IMPL(PhysicsConstraintInertiaTimeline, PhysicsConstraintTimeline)
 RTTI_IMPL(PhysicsConstraintStrengthTimeline, PhysicsConstraintTimeline)
 RTTI_IMPL(PhysicsConstraintDampingTimeline, PhysicsConstraintTimeline)
@@ -49,11 +49,11 @@ RTTI_IMPL(PhysicsConstraintMassTimeline, PhysicsConstraintTimeline)
 RTTI_IMPL(PhysicsConstraintWindTimeline, PhysicsConstraintTimeline)
 RTTI_IMPL(PhysicsConstraintGravityTimeline, PhysicsConstraintTimeline)
 RTTI_IMPL(PhysicsConstraintMixTimeline, PhysicsConstraintTimeline)
-RTTI_IMPL(PhysicsConstraintResetTimeline, Timeline)
+RTTI_IMPL_MULTI(PhysicsConstraintResetTimeline, Timeline, ConstraintTimeline)
 
 PhysicsConstraintTimeline::PhysicsConstraintTimeline(size_t frameCount, size_t bezierCount,
 													 int constraintIndex, Property property) : CurveTimeline1(frameCount, bezierCount),
-																							   _constraintIndex(constraintIndex) {
+																							   ConstraintTimeline(constraintIndex) {
 	PropertyId ids[] = {((PropertyId) property << 32) | constraintIndex};
 	setPropertyIds(ids, 1);
 }
@@ -66,7 +66,7 @@ void PhysicsConstraintTimeline::apply(Skeleton &skeleton, float, float time, Vec
 		Vector<PhysicsConstraint *> &physicsConstraints = skeleton.getPhysicsConstraints();
 		for (size_t i = 0; i < physicsConstraints.size(); i++) {
 			PhysicsConstraint *constraint = physicsConstraints[i];
-			if (constraint->_active && global(constraint->_data)) {
+			if (constraint->isActive() && global(constraint->_data)) {
 				PhysicsConstraintPose &pose = appliedPose ? *constraint->_applied : constraint->_pose;
 				PhysicsConstraintPose &setupPose = constraint->_data._setup;
 				set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(setupPose), value));
@@ -74,8 +74,8 @@ void PhysicsConstraintTimeline::apply(Skeleton &skeleton, float, float time, Vec
 		}
 	} else {
 		PhysicsConstraint *constraint = skeleton.getPhysicsConstraints()[_constraintIndex];
-		if (constraint->_active) {
-			PhysicsConstraintPose &pose = appliedPose ? constraint->_applied : constraint->_pose;
+		if (constraint->isActive()) {
+			PhysicsConstraintPose &pose = appliedPose ? *constraint->_applied : constraint->_pose;
 			PhysicsConstraintPose &setupPose = constraint->_data._setup;
 			set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(setupPose)));
 		}
@@ -86,7 +86,7 @@ void PhysicsConstraintResetTimeline::apply(Skeleton &skeleton, float lastTime, f
 	PhysicsConstraint *constraint = nullptr;
 	if (_constraintIndex != -1) {
 		constraint = skeleton.getPhysicsConstraints()[_constraintIndex];
-		if (!constraint->_active) return;
+		if (!constraint->isActive()) return;
 	}
 
 	if (lastTime > time) {// Apply after lastTime for looped animations.
@@ -103,7 +103,7 @@ void PhysicsConstraintResetTimeline::apply(Skeleton &skeleton, float lastTime, f
 			Vector<PhysicsConstraint *> &physicsConstraints = skeleton.getPhysicsConstraints();
 			for (size_t i = 0; i < physicsConstraints.size(); i++) {
 				constraint = physicsConstraints[i];
-				if (constraint->_active) constraint->reset(skeleton);
+				if (constraint->isActive()) constraint->reset(skeleton);
 			}
 		}
 	}

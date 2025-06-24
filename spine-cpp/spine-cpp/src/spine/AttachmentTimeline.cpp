@@ -41,7 +41,7 @@
 
 using namespace spine;
 
-RTTI_IMPL(AttachmentTimeline, Timeline)
+RTTI_IMPL_MULTI(AttachmentTimeline, Timeline, SlotTimeline)
 
 AttachmentTimeline::AttachmentTimeline(size_t frameCount, int slotIndex) : Timeline(frameCount, 1),
 																		   SlotTimeline(slotIndex) {

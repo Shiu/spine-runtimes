@@ -31,10 +31,11 @@
 #define Spine_TransformConstraintTimeline_h
 
 #include <spine/CurveTimeline.h>
+#include <spine/ConstraintTimeline.h>
 
 namespace spine {
 
-	class SP_API TransformConstraintTimeline : public CurveTimeline {
+	class SP_API TransformConstraintTimeline : public CurveTimeline, public ConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -46,18 +47,12 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+			  MixDirection direction, bool appliedPose);
 
 		void setFrame(size_t frameIndex, float time, float mixRotate, float mixX, float mixY, float mixScaleX,
 					  float mixScaleY, float mixShearY);
 
-		int getTransformConstraintIndex() { return _constraintIndex; }
-
-		void setTransformConstraintIndex(int inValue) { _constraintIndex = inValue; }
-
 	private:
-		int _constraintIndex;
-
 		static const int ENTRIES = 7;
 		static const int ROTATE = 1;
 		static const int X = 2;

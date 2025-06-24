@@ -41,10 +41,10 @@
 
 using namespace spine;
 
-RTTI_IMPL(IkConstraintTimeline, CurveTimeline)
+RTTI_IMPL_MULTI(IkConstraintTimeline, CurveTimeline, ConstraintTimeline)
 
 IkConstraintTimeline::IkConstraintTimeline(size_t frameCount, size_t bezierCount, int ikConstraintIndex)
-	: CurveTimeline(frameCount, IkConstraintTimeline::ENTRIES, bezierCount), _constraintIndex(ikConstraintIndex) {
+	: CurveTimeline(frameCount, IkConstraintTimeline::ENTRIES, bezierCount), ConstraintTimeline(ikConstraintIndex) {
 	PropertyId ids[] = {((PropertyId) Property_IkConstraint << 32) | ikConstraintIndex};
 	setPropertyIds(ids, 1);
 }
@@ -69,9 +69,9 @@ void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time,
 				constraint.getAppliedPose().setStretch(constraint._data.getSetupPose().getStretch());
 				return;
 			case MixBlend_First:
-				constraint.getAppliedPose().setMix(constraint.getAppliedPose().getMix() + 
+				constraint.getAppliedPose().setMix(constraint.getAppliedPose().getMix() +
 					(constraint._data.getSetupPose().getMix() - constraint.getAppliedPose().getMix()) * alpha);
-				constraint.getAppliedPose().setSoftness(constraint.getAppliedPose().getSoftness() + 
+				constraint.getAppliedPose().setSoftness(constraint.getAppliedPose().getSoftness() +
 					(constraint._data.getSetupPose().getSoftness() - constraint.getAppliedPose().getSoftness()) * alpha);
 				constraint.getAppliedPose().setBendDirection(constraint._data.getSetupPose().getBendDirection());
 				constraint.getAppliedPose().setCompress(constraint._data.getSetupPose().getCompress());
@@ -109,9 +109,9 @@ void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time,
 	}
 
 	if (blend == MixBlend_Setup) {
-		constraint.getAppliedPose().setMix(constraint._data.getSetupPose().getMix() + 
+		constraint.getAppliedPose().setMix(constraint._data.getSetupPose().getMix() +
 			(mix - constraint._data.getSetupPose().getMix()) * alpha);
-		constraint.getAppliedPose().setSoftness(constraint._data.getSetupPose().getSoftness() + 
+		constraint.getAppliedPose().setSoftness(constraint._data.getSetupPose().getSoftness() +
 			(softness - constraint._data.getSetupPose().getSoftness()) * alpha);
 
 		if (direction == MixDirection_Out) {
@@ -124,9 +124,9 @@ void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time,
 			constraint.getAppliedPose().setStretch(_frames[i + IkConstraintTimeline::STRETCH] != 0);
 		}
 	} else {
-		constraint.getAppliedPose().setMix(constraint.getAppliedPose().getMix() + 
+		constraint.getAppliedPose().setMix(constraint.getAppliedPose().getMix() +
 			(mix - constraint.getAppliedPose().getMix()) * alpha);
-		constraint.getAppliedPose().setSoftness(constraint.getAppliedPose().getSoftness() + 
+		constraint.getAppliedPose().setSoftness(constraint.getAppliedPose().getSoftness() +
 			(softness - constraint.getAppliedPose().getSoftness()) * alpha);
 		if (direction == MixDirection_In) {
 			constraint.getAppliedPose().setBendDirection(_frames[i + IkConstraintTimeline::BEND_DIRECTION]);

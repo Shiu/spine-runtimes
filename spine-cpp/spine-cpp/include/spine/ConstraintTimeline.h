@@ -31,16 +31,24 @@
 #define Spine_ConstraintTimeline_h
 
 #include <spine/dll.h>
+#include <spine/RTTI.h>
 
 namespace spine {
     /// An interface for timelines which change the property of a constraint.
     class SP_API ConstraintTimeline {
+        RTTI_DECL_NOPARENT
+
     public:
-        ConstraintTimeline();
-        virtual ~ConstraintTimeline();
-        
+        ConstraintTimeline(int constraintIndex);
+        virtual ~ConstraintTimeline() {}
+
         /// The index of the constraint in Skeleton::getConstraints() that will be changed when this timeline is applied.
-        virtual int getConstraintIndex() = 0;
+        virtual int getConstraintIndex() { return _constraintIndex; }
+
+        virtual void setConstraintIndex(int inValue) { _constraintIndex = inValue; }
+
+    protected:
+        int _constraintIndex;
     };
 }
 

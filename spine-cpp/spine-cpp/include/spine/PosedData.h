@@ -110,6 +110,13 @@ namespace spine {
         friend class TranslateXTimeline;
         friend class TranslateYTimeline;
         friend class InheritTimeline;
+        friend class PhysicsConstraintTimeline;
+        friend class PhysicsConstraintInertiaTimeline;
+        friend class PhysicsConstraintStrengthTimeline;
+        friend class PhysicsConstraintDampingTimeline;
+        friend class PhysicsConstraintMassTimeline;
+        friend class PhysicsConstraintWindTimeline;
+        friend class PhysicsConstraintGravityTimeline;
 
     protected:
         P _setup;

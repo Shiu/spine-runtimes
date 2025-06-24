@@ -40,7 +40,7 @@ using namespace spine;
 
 RTTI_IMPL_NOPARENT(BoneTimeline)
 
-RTTI_IMPL(BoneTimeline1, CurveTimeline1)
+RTTI_IMPL_MULTI(BoneTimeline1, CurveTimeline1, BoneTimeline)
 
 BoneTimeline1::BoneTimeline1(size_t frameCount, size_t bezierCount, int boneIndex, Property property) : CurveTimeline1(frameCount, bezierCount), BoneTimeline(boneIndex) {
 	PropertyId ids[] = {((PropertyId) property << 32) | boneIndex};
@@ -58,7 +58,7 @@ void BoneTimeline1::apply(Skeleton &skeleton, float lastTime, float time, Vector
 	}
 }
 
-RTTI_IMPL(BoneTimeline2, CurveTimeline2)
+RTTI_IMPL_MULTI(BoneTimeline2, CurveTimeline2, BoneTimeline)
 
 BoneTimeline2::BoneTimeline2(size_t frameCount, size_t bezierCount, int boneIndex, Property property1, Property property2) : CurveTimeline2(frameCount, bezierCount), BoneTimeline(boneIndex) {
 	PropertyId ids[] = {((PropertyId) property1 << 32) | boneIndex, ((PropertyId) property2 << 32) | boneIndex};

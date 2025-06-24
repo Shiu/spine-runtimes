@@ -41,19 +41,19 @@
 
 using namespace spine;
 
-RTTI_IMPL(PathConstraintSpacingTimeline, PathConstraintPositionTimeline)
+RTTI_IMPL(PathConstraintSpacingTimeline, ConstraintTimeline1)
 
 PathConstraintSpacingTimeline::PathConstraintSpacingTimeline(size_t frameCount, size_t bezierCount,
-															 int pathConstraintIndex) : CurveTimeline1(frameCount,
-																									   bezierCount),
-																						_pathConstraintIndex(
-																								pathConstraintIndex) {
+															 int pathConstraintIndex) : ConstraintTimeline1(frameCount,
+																									   bezierCount,
+																									   pathConstraintIndex,
+																									   Property_PathConstraintSpacing) {
 	PropertyId ids[] = {((PropertyId) Property_PathConstraintSpacing << 32) | pathConstraintIndex};
 	setPropertyIds(ids, 1);
 }
 
 void PathConstraintSpacingTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents,
-										  float alpha, MixBlend blend, MixDirection direction) {
+										  float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 	SP_UNUSED(direction);

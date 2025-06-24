@@ -30,11 +30,11 @@
 #ifndef Spine_PathConstraintPositionTimeline_h
 #define Spine_PathConstraintPositionTimeline_h
 
-#include <spine/CurveTimeline.h>
+#include <spine/ConstraintTimeline1.h>
 
 namespace spine {
 
-	class SP_API PathConstraintPositionTimeline : public CurveTimeline1 {
+	class SP_API PathConstraintPositionTimeline : public ConstraintTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -50,14 +50,7 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
-
-		int getPathConstraintIndex() { return _constraintIndex; }
-
-		void setPathConstraintIndex(int inValue) { _constraintIndex = inValue; }
-
-	protected:
-		int _constraintIndex;
+			  MixDirection direction, bool appliedPose);
 	};
 }
 

@@ -31,14 +31,14 @@
 #define Spine_InheritTimeline_h
 
 #include <spine/Timeline.h>
-
+#include <spine/BoneTimeline.h>
 #include <spine/Animation.h>
 #include <spine/Property.h>
 #include <spine/Inherit.h>
 
 namespace spine {
 
-	class SP_API InheritTimeline : public Timeline {
+	class SP_API InheritTimeline : public Timeline, public BoneTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -56,13 +56,7 @@ namespace spine {
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose);
 
-		int getBoneIndex() { return _boneIndex; }
-
-		void setBoneIndex(int inValue) { _boneIndex = inValue; }
-
 	private:
-		int _boneIndex;
-
         static const int ENTRIES = 2;
         static const int INHERIT = 1;
 	};

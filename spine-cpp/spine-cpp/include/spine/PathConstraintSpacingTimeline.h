@@ -33,7 +33,7 @@
 #include <spine/PathConstraintPositionTimeline.h>
 
 namespace spine {
-	class SP_API PathConstraintSpacingTimeline : public CurveTimeline1 {
+	class SP_API PathConstraintSpacingTimeline : public ConstraintTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -45,14 +45,7 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
-
-		int getPathConstraintIndex() { return _pathConstraintIndex; }
-
-		void setPathConstraintIndex(int inValue) { _pathConstraintIndex = inValue; }
-
-	protected:
-		int _pathConstraintIndex;
+			  MixDirection direction, bool appliedPose);
 	};
 }
 

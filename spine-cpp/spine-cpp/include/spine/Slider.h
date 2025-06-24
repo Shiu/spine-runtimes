@@ -37,30 +37,31 @@
 namespace spine {
 	class Skeleton;
 	class Bone;
+	class Animation;
 
 	/// Stores the setup pose for a PhysicsConstraint.
 	///
 	/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide.
 	class SP_API Slider : public ConstraintGeneric<Slider, SliderData, SliderPose> {
 		friend class Skeleton;
+		friend class SliderTimeline;
+		friend class SliderMixTimeline;
 
-	public:
 		RTTI_DECL
 
+	public:
 		Slider(SliderData& data, Skeleton& skeleton);
 
-		/// Creates a copy of this slider for the specified skeleton.
 		Slider* copy(Skeleton& skeleton);
 
-		/// Updates the slider constraint.
 		virtual void update(Skeleton& skeleton, Physics physics) override;
 
-		/// Called by Skeleton to sort constraints.
-		void sort(Skeleton& skeleton) override;
+		virtual void sort(Skeleton& skeleton) override;
 
-		bool isSourceActive() override;
+		virtual bool isSourceActive() override;
 
 		Bone* getBone();
+
 		void setBone(Bone* bone);
 
 	private:
