@@ -38,7 +38,6 @@ using Windows.Storage;
 #endif
 
 namespace Spine {
-	using static Spine.TransformConstraintData;
 	using FromProperty = TransformConstraintData.FromProperty;
 	using FromRotate = TransformConstraintData.FromRotate;
 	using FromScaleX = TransformConstraintData.FromScaleX;

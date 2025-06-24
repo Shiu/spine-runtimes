@@ -42,7 +42,6 @@ using Windows.Storage;
 #endif
 
 namespace Spine {
-	using static Spine.TransformConstraintData;
 #if IS_UNITY
 	using Color = UnityEngine.Color;
 #endif
