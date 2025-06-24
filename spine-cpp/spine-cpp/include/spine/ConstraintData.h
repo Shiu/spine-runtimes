@@ -52,7 +52,7 @@ namespace spine {
 
 		virtual const String &getName() const = 0;
 
-		virtual const bool &isSkinRequired() const = 0;
+		virtual bool isSkinRequired() const = 0;
 	};
 
 	/// Base class for all constraint data types.
@@ -66,7 +66,7 @@ namespace spine {
 		
 		// Resolve ambiguity by forwarding to PosedData's implementation
 		virtual const String &getName() const override { return PosedDataGeneric<P>::getName(); }
-		virtual const bool &isSkinRequired() const override { return PosedDataGeneric<P>::isSkinRequired(); }
+		virtual bool isSkinRequired() const override { return PosedDataGeneric<P>::isSkinRequired(); }
 	};
 }
 

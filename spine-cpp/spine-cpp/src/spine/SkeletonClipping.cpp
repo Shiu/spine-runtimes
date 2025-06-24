@@ -101,7 +101,7 @@ bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
 
 	int stride = 2;
 
-	for (int i = 0; i < trianglesLength; i += 3) {
+	for (size_t i = 0; i < trianglesLength; i += 3) {
 		int vertexOffset = triangles[i] * stride;
 		float x1 = vertices[vertexOffset], y1 = vertices[vertexOffset + 1];
 
@@ -178,7 +178,7 @@ bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
 	clippedTriangles.clear();
 	bool clipped = false;
 
-	for (int i = 0; i < trianglesLength; i += 3) {
+	for (size_t i = 0; i < trianglesLength; i += 3) {
 		int vertexOffset = triangles[i] * (int) stride;
 		float x1 = vertices[vertexOffset], y1 = vertices[vertexOffset + 1];
 		float u1 = uvs[vertexOffset], v1 = uvs[vertexOffset + 1];

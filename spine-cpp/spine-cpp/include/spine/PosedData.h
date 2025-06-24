@@ -66,13 +66,13 @@ namespace spine {
         virtual ~PosedData();
 
         /// The constraint's name, which is unique across all constraints in the skeleton of the same type.
-        const spine::String& getName() { return _name; };
+        const spine::String& getName() const { return _name; };
 
         /// When true, Skeleton::updateWorldTransform(Physics) only updates this constraint if the Skeleton::getSkin()
         /// contains this constraint.
         ///
         /// See Skin::getConstraints().
-        bool isSkinRequired() { return _skinRequired; };
+        bool isSkinRequired() const { return _skinRequired; };
         void setSkinRequired(bool skinRequired) { _skinRequired = skinRequired; };
 
         protected:
@@ -120,6 +120,7 @@ namespace spine {
         virtual ~PosedDataGeneric() {};
 
         P& getSetupPose() { return _setup; };
+        const P& getSetupPose() const { return _setup; };
     };
 }
 

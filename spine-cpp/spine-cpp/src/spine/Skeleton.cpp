@@ -81,10 +81,7 @@ Skeleton::Skeleton(SkeletonData &skeletonData) : _data(skeletonData), _skin(NULL
 	_drawOrder.ensureCapacity(_data.getSlots().size());
 	for (size_t i = 0; i < _data.getSlots().size(); ++i) {
 		SlotData *data = _data.getSlots()[i];
-
-		Bone *bone = _bones[data->getBoneData().getIndex()];
 		Slot *slot = new (__FILE__, __LINE__) Slot(*data, *this);
-
 		_slots.add(slot);
 		_drawOrder.add(slot);
 	}
@@ -147,7 +144,7 @@ void Skeleton::updateCache() {
 	for (size_t i = 0; i < n; i++) {
 		Constraint *constraint = constraints[i];
 		constraint->_active = constraint->isSourceActive() &&
-			(!constraint->getData().isSkinRequired()) || (_skin && _skin->_constraints.contains(&constraint->getData()));
+			((!constraint->getData().isSkinRequired()) || (_skin && _skin->_constraints.contains(&constraint->getData())));
 		if (constraint->_active) constraint->sort(*this);
 	}
 
