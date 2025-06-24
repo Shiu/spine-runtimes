@@ -231,7 +231,7 @@ export class SkeletonBinary {
 							if (!to) continue;
 							to.offset = input.readFloat() * scale;
 							to.max = input.readFloat() * scale;
-							to.scale = input.readFloat();
+							to.scale = input.readFloat() * toScale / fromScale;
 							from.to[t] = to;
 						}
 						data.properties[ii] = from;
