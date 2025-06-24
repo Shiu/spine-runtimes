@@ -58,17 +58,18 @@ void InheritTimeline::setFrame(int frame, float time, Inherit inherit) {
 
 
 void InheritTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-							MixBlend blend, MixDirection direction) {
+							MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 	SP_UNUSED(direction);
 	SP_UNUSED(alpha);
+	SP_UNUSED(appliedPose);
 
 	Bone *bone = skeleton.getBones()[_boneIndex];
 	if (!bone->isActive()) return;
 
 	if (direction == MixDirection_Out) {
-		if (blend == MixBlend_Setup) bone->setInherit(bone->_data.getInherit());
+		if (blend == MixBlend_Setup) bone->_inherit = bone->_data.getInherit();
 		return;
 	}
 

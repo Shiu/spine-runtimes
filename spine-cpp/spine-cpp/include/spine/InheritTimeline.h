@@ -54,7 +54,7 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction);
+			  MixDirection direction, bool appliedPose);
 
 		int getBoneIndex() { return _boneIndex; }
 

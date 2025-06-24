@@ -145,6 +145,9 @@ namespace spine {
 		/// The animation's name, which is unique across all animations in the skeleton.
 		const String &getName();
 
+		/// The bone indices affected by this animation.
+		const Vector<int> &getBones();
+
 		/// @param target After the first and before the last entry.
 		static int search(Vector<float> &values, float target);
 

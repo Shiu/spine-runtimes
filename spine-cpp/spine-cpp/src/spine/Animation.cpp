@@ -32,6 +32,8 @@
 #include <spine/Skeleton.h>
 #include <spine/Timeline.h>
 #include <spine/BoneTimeline.h>
+#include <spine/RotateTimeline.h>
+#include <spine/TranslateTimeline.h>
 
 #include <spine/ContainerUtil.h>
 
@@ -76,6 +78,10 @@ const String &Animation::getName() {
 	return _name;
 }
 
+const Vector<int> &Animation::getBones() {
+	return _bones;
+}
+
 Vector<Timeline *> &Animation::getTimelines() {
 	return _timelines;
 }
@@ -113,18 +119,21 @@ void Animation::setTimelines(Vector<Timeline *> &timelines) {
 	HashMap<int, bool> boneSet;
 	for (size_t i = 0; i < n; i++) {
 		Timeline *timeline = timelines[i];
-		Vector<PropertyId> propertyIds = timeline->getPropertyIds();
+		Vector<PropertyId> &propertyIds = timeline->getPropertyIds();
 		for (size_t ii = 0; ii < propertyIds.size(); ii++) {
 			_timelineIds.put(propertyIds[ii], true);
 		}
 
-		BoneTimeline *boneTimeline = timeline->getRTTI().instanceOf(BoneTimeline1::rtti) ? static_cast<BoneTimeline1 *>(timeline) : NULL;
-		if (boneTimeline) {
-			int boneIndex = boneTimeline->getBoneIndex();
-			if (!boneSet.containsKey(boneIndex)) {
-				boneSet.put(boneIndex, true);
-				_bones.add(boneIndex);
-			}
+		int boneIndex = -1;
+		if (timeline->getRTTI().instanceOf(BoneTimeline1::rtti)) {
+			boneIndex = static_cast<BoneTimeline1 *>(timeline)->getBoneIndex();
+		} else if (timeline->getRTTI().instanceOf(BoneTimeline2::rtti)) {
+			boneIndex = static_cast<BoneTimeline2 *>(timeline)->getBoneIndex();
+		}
+
+		if (boneIndex >= 0 && !boneSet.containsKey(boneIndex)) {
+			boneSet.put(boneIndex, true);
+			_bones.add(boneIndex);
 		}
 	}
 }
