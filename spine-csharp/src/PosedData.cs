@@ -31,7 +31,7 @@ using System;
 
 namespace Spine {
 	public interface IPosedData {
-		public bool SkinRequired { get; }
+		bool SkinRequired { get; }
 	}
 
 	/// <summary>

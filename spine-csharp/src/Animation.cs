@@ -54,7 +54,7 @@ namespace Spine {
 			this.name = name;
 			this.duration = duration;
 			int n = timelines.Count << 1;
-			timelineIds = new HashSet<string>(n);
+			// note: not needed: timelineIds = new HashSet<string>(n);
 			bones = new ExposedList<int>(n);
 			SetTimelines(timelines);
 		}
@@ -2106,7 +2106,7 @@ namespace Spine {
 		/// <summary>
 		/// The index of the constraint in <see cref="Skeleton.Constraints"/> that will be changed when this timeline is applied.
 		/// </summary>
-		public int ConstraintIndex { get; }
+		int ConstraintIndex { get; }
 	}
 
 	/// <summary>Changes an IK constraint's <see cref="IkConstraintPose.Mix"/>, <see cref="IkConstraintPose.Softness"/>,

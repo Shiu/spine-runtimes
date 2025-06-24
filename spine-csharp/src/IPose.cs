@@ -31,6 +31,6 @@ using System;
 
 namespace Spine {
 	public interface IPose<P> {
-		public void Set (P pose);
+		void Set (P pose);
 	}
 }

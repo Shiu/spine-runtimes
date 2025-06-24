@@ -33,8 +33,8 @@ using System.Collections.Generic;
 namespace Spine {
 
 	public interface IConstraintData : IPosedData {
-		public string Name { get; }
-		public IConstraint Create (Skeleton skeleton);
+		string Name { get; }
+		IConstraint Create (Skeleton skeleton);
 	}
 
 	public abstract class ConstraintData<T, P> : PosedData<P>, IConstraintData

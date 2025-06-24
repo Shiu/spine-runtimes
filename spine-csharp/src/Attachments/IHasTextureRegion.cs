@@ -51,9 +51,9 @@ namespace Spine {
 		/// </summary>
 		void UpdateRegion ();
 
-		public abstract Color GetColor ();
-		public abstract void SetColor (Color color);
-		public abstract void SetColor (float r, float g, float b, float a);
+		Color GetColor ();
+		void SetColor (Color color);
+		void SetColor (float r, float g, float b, float a);
 
 		Sequence Sequence { get; set; }
 	}
