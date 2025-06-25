@@ -230,8 +230,8 @@ export class ToX extends ToProperty {
 			if (!additive) value -= bone.x;
 			bone.x += value * pose.mixX;
 		} else {
-			if (!additive) value -= bone.worldX;
-			bone.worldX = (bone.worldX + value * pose.mixX) * skeleton.scaleX;
+			if (!additive) value -= bone.worldX / skeleton.scaleX;
+			bone.worldX += value * pose.mixX * skeleton.scaleX;
 		}
 	}
 }
@@ -254,8 +254,8 @@ export class ToY extends ToProperty {
 			if (!additive) value -= bone.y;
 			bone.y += value * pose.mixY;
 		} else {
-			if (!additive) value -= bone.worldY;
-			bone.worldY = (bone.worldY + value * pose.mixY) * skeleton.scaleY;
+			if (!additive) value -= bone.worldY / skeleton.scaleY;
+        	bone.worldY += value * pose.mixY * skeleton.scaleY;
 		}
 	}
 }
