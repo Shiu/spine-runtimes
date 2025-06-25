@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.jsdelivr.net/npm/lil-gui@0.20.0/dist/lil-gui.umd.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/lil-gui@0.20.0/dist/lil-gui.min.css" rel="stylesheet">
+</head>
+<script src="../dist/iife/spine-webgl.js"></script>
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+</style>
+
+<body>
+	<canvas id="canvas" style="position: absolute; width: 100%; height: 100%;"></canvas>
+	<script>
+		class App {
+			constructor() {
+				this.skeleton = null;
+				this.animationState = null;
+			}
+
+			autoUpdate = true;
+
+			loadAssets(canvas) {
+				// Load the skeleton file.
+				canvas.assetManager.loadBinary("/assets/skeleton-scale.skel");
+				// Load the atlas and its pages.
+				canvas.assetManager.loadTextureAtlas("/assets/skeleton-scale.atlas");
+			}
+
+			initialize(canvas) {
+				let assetManager = canvas.assetManager;
+
+				// Create the texture atlas.
+				var atlas = assetManager.require("/assets/skeleton-scale.atlas");
+
+				// Create a AtlasAttachmentLoader that resolves region, mesh, boundingbox and path attachments
+				var atlasLoader = new spine.AtlasAttachmentLoader(atlas);
+
+				// Create a SkeletonBinary instance for parsing the .skel file.
+				var skeletonBinary = new spine.SkeletonBinary(atlasLoader);
+
+				// Set the scale to apply during parsing, parse the file, and create a new skeleton.
+				skeletonBinary.scale = .5;
+				var skeletonData = skeletonBinary.readSkeletonData(assetManager.require("/assets/skeleton-scale.skel"));
+				this.skeleton = new spine.Skeleton(skeletonData);
+				const skeleton = this.skeleton;
+
+				// Create an AnimationState, and set the "run" animation in looping mode.
+				var animationStateData = new spine.AnimationStateData(skeletonData);
+				this.animationState = new spine.AnimationState(animationStateData);
+				const tracks = this.skeleton.data.animations.map((animation, index) => {
+					const track = this.animationState.setAnimation(index, animation.name, true);
+					track.alpha = 0;
+					return track;
+				})
+
+				const myObject = {
+                    sx: 1,
+                    sy: 1,
+                    autoUpdate: this.autoUpdate,
+					track_time: 0,
+					track_scale: 1,
+                };
+
+				const gui = new lil.GUI({});
+
+				gui.add(myObject, 'autoUpdate').name('autoUpdate').onChange(value => {
+					this.autoUpdate = value;
+					this.fakeUpdate();
+				});
+                gui.add(myObject, 'sx').min(-3).max(3).step(0.1).name('sx').onChange(value => {
+					skeleton.scaleX = value;
+					this.fakeUpdate();
+				});
+                gui.add(myObject, 'sy').min(-3).max(3).step(0.1).name('sy').onChange(value => {
+					skeleton.scaleY = value;
+					this.fakeUpdate();
+				});
+
+				for (const constraint of skeleton.constraints) {
+					const name = constraint.data.name.split("-")[2];
+					const folder = gui.addFolder(constraint.data.name);
+					folder.open(false);
+					for (const mixType of Object.keys(constraint.data.setup)) {
+						const guiName = `${name}_${mixType}`;
+						myObject[guiName] = false;
+						folder.add(myObject, guiName).name(guiName).onChange(value => {
+							constraint.applied[mixType] = value ? 1 : 0;
+							this.fakeUpdate();
+						});
+					}
+				}
+
+				const folder = gui.addFolder("animations");
+				for (const track of tracks) {
+					myObject[track.animation.name] = false;
+					folder.add(myObject, track.animation.name).name(track.animation.name).onChange(value => {
+						track.alpha = value ? 1 : 0;
+						this.fakeUpdate();
+					});
+				}
+				folder.add(myObject, 'track_time').min(0).max(60).step(1).name('track_time').onChange(value => {
+					for (const track of tracks) {
+						track.trackTime = value / 30;
+					}
+					this.fakeUpdate();
+				});
+				folder.add(myObject, 'track_scale').min(0).max(2).step(0.1).name('track_scale').onChange(value => {
+					for (const track of tracks) {
+						track.timeScale = value;
+					}
+					this.fakeUpdate();
+				});
+
+
+
+
+
+
+			}
+
+			fakeUpdate() {
+				this.animationState.update(0);
+				this.animationState.apply(this.skeleton);
+				this.skeleton.updateWorldTransform(spine.Physics.update);
+			}
+
+			update(canvas, delta) {
+
+				if (!this.autoUpdate) return;
+
+				// Update the animation state using the delta time.
+				this.animationState.update(delta);
+				// Apply the animation state to the skeleton.
+				this.animationState.apply(this.skeleton);
+				// Let the skeleton update the transforms of its bones.
+				this.skeleton.updateWorldTransform(spine.Physics.update);
+			}
+
+			render(canvas) {
+				let renderer = canvas.renderer;
+				// Resize the viewport to the full canvas.
+				renderer.resize(spine.ResizeMode.Expand);
+
+				// Clear the canvas with a light gray color.
+				canvas.clear(0.2, 0.2, 0.2, 1);
+
+				// Begin rendering.
+				renderer.begin();
+				// Draw the skeleton
+				renderer.drawSkeleton(this.skeleton, true);
+				// Complete rendering.
+				renderer.end();
+			}
+		}
+
+		new spine.SpineCanvas(document.getElementById("canvas"), {
+			app: new App()
+		})
+	</script>
+</body>
+
+</html>`
