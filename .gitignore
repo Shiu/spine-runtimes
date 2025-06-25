@@ -224,6 +224,7 @@ spine-godot/example-v4-extension/MoltenVK.xcframework
 spine-flutter/example/android/app/.cxx
 CLAUDE.md
 .claude
+.claude-trace
 port-plan.md
 port-todo.md
 spine-libgdx/spine-libgdx/.settings/org.eclipse.buildship.core.prefs
@@ -232,4 +233,3 @@ spine-libgdx/spine-libgdx-tests/.settings/org.eclipse.buildship.core.prefs
 spine-libgdx/spine-libgdx-tests/.settings/org.eclipse.jdt.apt.core.prefs
 spine-libgdx/spine-skeletonviewer/.settings/org.eclipse.buildship.core.prefs
 spine-libgdx/spine-skeletonviewer/.settings/org.eclipse.jdt.apt.core.prefs
-.claude-trace
