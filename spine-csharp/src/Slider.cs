@@ -102,10 +102,10 @@ namespace Spine {
 						for (int ii = 0; ii < physicsCount; ii++)
 							skeleton.Constrained(physics[ii]);
 					} else
-						skeleton.Constrained(constraints[timeline.constraintIndex]);
+						skeleton.Constrained((IPosedInternal)constraints[timeline.constraintIndex]);
 				} else if (t as IConstraintTimeline != null) {
 					IConstraintTimeline timeline = (IConstraintTimeline)t;
-					skeleton.Constrained(constraints[timeline.ConstraintIndex]);
+					skeleton.Constrained((IPosedInternal)constraints[timeline.ConstraintIndex]);
 				}
 			}
 		}

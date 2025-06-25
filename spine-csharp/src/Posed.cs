@@ -30,8 +30,7 @@
 using System;
 
 namespace Spine {
-	
-	public interface IPosed {
+	internal interface IPosedInternal {
 		// replaces "object.pose == object.applied" of reference implementation.
 		bool PoseEqualsApplied { get; }
 		// replaces "object.applied = object.pose" of reference implementation.
@@ -40,10 +39,13 @@ namespace Spine {
 		void UseConstrained ();
 		// replaces "object.applied.Set(object.pose)" of reference implementation.
 		void ResetConstrained ();
+	}
+
+	public interface IPosed {
 		void SetupPose ();
 	}
 
-	public class Posed<D, P, A> : IPosed
+	public class Posed<D, P, A> : IPosed, IPosedInternal
 		where D : PosedData<P>
 		where P : IPose<P>
 		where A : P {
@@ -65,19 +67,19 @@ namespace Spine {
 			pose.Set(data.setup);
 		}
 
-		public bool PoseEqualsApplied {
+		bool IPosedInternal.PoseEqualsApplied {
 			get { return (object)pose == (object)applied; }
 		}
 
-		public void UsePose () {
+		void IPosedInternal.UsePose () {
 			applied = pose;
 		}
 
-		public void UseConstrained () {
+		void IPosedInternal.UseConstrained () {
 			applied = constrained;
 		}
 
-		public void ResetConstrained () {
+		void IPosedInternal.ResetConstrained () {
 			applied.Set(pose);
 		}
 

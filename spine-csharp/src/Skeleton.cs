@@ -46,7 +46,7 @@ namespace Spine {
 		internal ExposedList<IConstraint> constraints;
 		internal ExposedList<PhysicsConstraint> physics;
 		internal ExposedList<object> updateCache = new ExposedList<object>();
-		internal ExposedList<IPosed> resetCache = new ExposedList<IPosed>(16);
+		internal ExposedList<IPosedInternal> resetCache = new ExposedList<IPosedInternal>(16);
 		internal Skin skin;
 		// Color is a struct, set to protected to prevent
 		// Color color = slot.color; color.a = 0.5;
@@ -156,7 +156,7 @@ namespace Spine {
 
 			Slot[] slots = this.slots.Items;
 			for (int i = 0, n = this.slots.Count; i < n; i++) {
-				slots[i].UsePose();
+				((IPosedInternal)slots[i]).UsePose();
 			}
 
 			int boneCount = this.bones.Count;
@@ -165,7 +165,7 @@ namespace Spine {
 				Bone bone = bones[i];
 				bone.sorted = bone.data.skinRequired;
 				bone.active = !bone.sorted;
-				bone.UsePose();
+				((IPosedInternal)bone).UsePose();
 			}
 			if (skin != null) {
 				BoneData[] skinBones = skin.bones.Items;
@@ -183,7 +183,7 @@ namespace Spine {
 			{ // scope added to prevent compile error of n already being declared in enclosing scope
 				int n = this.constraints.Count;
 				for (int i = 0; i < n; i++) {
-					constraints[i].UsePose();
+					((IPosedInternal)constraints[i]).UsePose();
 				}
 				for (int i = 0; i < n; i++) {
 					IConstraint constraint = constraints[i];
@@ -204,7 +204,7 @@ namespace Spine {
 			}
 		}
 
-		internal void Constrained (IPosed obj) {
+		internal void Constrained (IPosedInternal obj) {
 			if (obj.PoseEqualsApplied) { // if (obj.pose == obj.applied) {
 				obj.UseConstrained();
 				resetCache.Add(obj);
@@ -239,7 +239,7 @@ namespace Spine {
 		public void UpdateWorldTransform (Physics physics) {
 			update++;
 
-			IPosed[] resetCache = this.resetCache.Items;
+			IPosedInternal[] resetCache = this.resetCache.Items;
 			for (int i = 0, n = this.resetCache.Count; i < n; i++) {
 				resetCache[i].ResetConstrained();
 			}
