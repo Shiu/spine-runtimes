@@ -177,9 +177,9 @@ export abstract class ToProperty {
 export class FromRotate extends FromProperty {
 	value (skeleton: Skeleton, source: BonePose, local: boolean, offsets: Array<number>): number {
 		if (local) return source.rotation + offsets[TransformConstraintData.ROTATION];
-		const a = source.a / skeleton.scaleX,  b = source.b / skeleton.scaleX, c = source.c / skeleton.scaleY, d = source.d / skeleton.scaleY;
+		const sx = skeleton.scaleX, sy = skeleton.scaleY, a = source.a / sx, c = source.c / sy;
 		let value = Math.atan2(c, a) * MathUtils.radDeg
-			+ ((a * d - b * c) > 0 ? offsets[TransformConstraintData.ROTATION] : -offsets[TransformConstraintData.ROTATION]);
+			+ ((a * source.d / sy - source.b * c / sx) > 0 ? offsets[TransformConstraintData.ROTATION] : -offsets[TransformConstraintData.ROTATION]);
 		if (value < 0) value += 360;
 		return value;
 	}
@@ -194,7 +194,8 @@ export class ToRotate extends ToProperty {
 			if (!additive) value -= bone.rotation;
 			bone.rotation += value * pose.mixRotate;
 		} else {
-			const a = bone.a / skeleton.scaleX, b = bone.b / skeleton.scaleX, c = bone.c / skeleton.scaleY, d = bone.d / skeleton.scaleY;
+			const sx = skeleton.scaleX, sy = skeleton.scaleY;
+			const a = bone.a / sx, b = bone.b / sx, c = bone.c / sy, d = bone.d / sy;
 			value *= MathUtils.degRad;
 			if (!additive) value -= Math.atan2(c, a);
 			if (value > MathUtils.PI)
@@ -203,10 +204,10 @@ export class ToRotate extends ToProperty {
 				value += MathUtils.PI2;
 			value *= pose.mixRotate;
 			const cos = Math.cos(value), sin = Math.sin(value);
-			bone.a = (cos * a - sin * c) * skeleton.scaleX;
-			bone.b = (cos * b - sin * d) * skeleton.scaleX;
-			bone.c = (sin * a + cos * c) * skeleton.scaleY;
-			bone.d = (sin * b + cos * d) * skeleton.scaleY;
+			bone.a = (cos * a - sin * c) * sx;
+			bone.b = (cos * b - sin * d) * sx;
+			bone.c = (sin * a + cos * c) * sy;
+			bone.d = (sin * b + cos * d) * sy;
 		}
 	}
 }
@@ -283,8 +284,7 @@ export class ToScaleX extends ToProperty {
 			if (additive)
 				s = 1 + (value - 1) * pose.mixScaleX;
 			else {
-				const a = bone.a / skeleton.scaleX;
-				const c = bone.c / skeleton.scaleY;
+				const a = bone.a / skeleton.scaleX, c = bone.c / skeleton.scaleY;
 				s = Math.sqrt(a * a + c * c);
 				if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleX;
 			}
@@ -318,8 +318,7 @@ export class ToScaleY extends ToProperty {
 			if (additive)
 				s = 1 + (value - 1) * pose.mixScaleY;
 			else {
-				const b = bone.b / skeleton.scaleX;
-				const d = bone.d / skeleton.scaleY;
+				const b = bone.b / skeleton.scaleX, d = bone.d / skeleton.scaleY;
 				s = Math.sqrt(b * b + d * d);
 				if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleY;
 			}
@@ -348,12 +347,12 @@ export class ToShearY extends ToProperty {
 			if (!additive) value -= bone.shearY;
 			bone.shearY += value * pose.mixShearY;
 		} else {
-			const b = bone.b / skeleton.scaleX, d = bone.d / skeleton.scaleY, by = Math.atan2(d, b);
+			const sx = skeleton.scaleX, sy = skeleton.scaleY, b = bone.b / sx, d = bone.d / sy, by = Math.atan2(d, b);
 			value = (value + 90) * MathUtils.degRad;
 			if (additive)
 				value -= MathUtils.PI / 2;
 			else {
-				value -= by - Math.atan2(bone.c / skeleton.scaleY, bone.a / skeleton.scaleX);
+				value -= by - Math.atan2(bone.c / sx, bone.a / sy);
 				if (value > MathUtils.PI)
 					value -= MathUtils.PI2;
 				else if (value < -MathUtils.PI)
@@ -361,8 +360,8 @@ export class ToShearY extends ToProperty {
 			}
 			value = by + value * pose.mixShearY;
 			const s = Math.sqrt(b * b + d * d);
-			bone.b = Math.cos(value) * s * skeleton.scaleX;
-			bone.d = Math.sin(value) * s * skeleton.scaleY;
+			bone.b = Math.cos(value) * s * sy;
+			bone.d = Math.sin(value) * s * sx;
 		}
 	}
 }
