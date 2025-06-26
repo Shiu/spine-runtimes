@@ -94,7 +94,7 @@ namespace Spine {
 								else
 									clamped = MathUtils.Clamp(clamped, to.max, to.offset);
 							}
-							to.Apply(p, bone, clamped, localTarget, additive);
+							to.Apply(skeleton, p, bone, clamped, localTarget, additive);
 						}
 					}
 				}

@@ -114,14 +114,15 @@ namespace Spine {
 			public abstract float Mix (TransformConstraintPose pose);
 
 			/// <summary>Applies the value to this property.</summary>
-			public abstract void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive);
+			public abstract void Apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive);
 		}
 
 		public class FromRotate : FromProperty {
 			public override float Value (Skeleton skeleton, BonePose source, bool local, float[] offsets) {
 				if (local) return source.rotation + offsets[ROTATION];
-				float value = MathUtils.Atan2(source.c / skeleton.ScaleY, source.a / skeleton.scaleX) * MathUtils.RadDeg
-					+ (source.a * source.d - source.b * source.c > 0 ? offsets[ROTATION] : -offsets[ROTATION]);
+				float sx = skeleton.scaleX, sy = skeleton.ScaleY;
+				float value = MathUtils.Atan2(source.c / sy, source.a / sx) * MathUtils.RadDeg
+					+ ((source.a * source.d - source.b * source.c) * sx * sy > 0 ? offsets[ROTATION] : -offsets[ROTATION]);
 				if (value < 0) value += 360;
 				return value;
 			}
@@ -132,12 +133,13 @@ namespace Spine {
 				return pose.mixRotate;
 			}
 
-			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
-				if (local) {
-					if (!additive) value -= bone.rotation;
-					bone.rotation += value * pose.mixRotate;
-				} else {
-					float a = bone.a, b = bone.b, c = bone.c, d = bone.d;
+			public override void Apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, bool local,
+				bool additive) {
+				if (local)
+					bone.rotation += (additive ? value : value - bone.rotation) * pose.mixRotate;
+				else {
+					float sx = skeleton.scaleX, sy = skeleton.ScaleY, ix = 1 / sx, iy = 1 / sy;
+					float a = bone.a * ix, b = bone.b * ix, c = bone.c * iy, d = bone.d * iy;
 					value *= MathUtils.DegRad;
 					if (!additive) value -= MathUtils.Atan2(c, a);
 					if (value > MathUtils.PI)
@@ -146,10 +148,10 @@ namespace Spine {
 						value += MathUtils.PI2;
 					value *= pose.mixRotate;
 					float cos = MathUtils.Cos(value), sin = MathUtils.Sin(value);
-					bone.a = cos * a - sin * c;
-					bone.b = cos * b - sin * d;
-					bone.c = sin * a + cos * c;
-					bone.d = sin * b + cos * d;
+					bone.a = (cos * a - sin * c) * sx;
+					bone.b = (cos * b - sin * d) * sx;
+					bone.c = (sin * a + cos * c) * sy;
+					bone.d = (sin * b + cos * d) * sy;
 				}
 			}
 		}
@@ -165,13 +167,13 @@ namespace Spine {
 				return pose.mixX;
 			}
 
-			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
-				if (local) {
-					if (!additive) value -= bone.x;
-					bone.x += value * pose.mixX;
-				} else {
-					if (!additive) value -= bone.worldX;
-					bone.worldX += value * pose.mixX;
+			public override void Apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, bool local,
+				bool additive) {
+				if (local)
+					bone.x += (additive ? value : value - bone.x) * pose.mixX;
+				else {
+					if (!additive) value -= bone.worldX / skeleton.scaleX;
+					bone.worldX += value * pose.mixX * skeleton.scaleX;
 				}
 			}
 		}
@@ -187,13 +189,14 @@ namespace Spine {
 				return pose.mixY;
 			}
 
-			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
-				if (local) {
-					if (!additive) value -= bone.y;
-					bone.y += value * pose.mixY;
-				} else {
-					if (!additive) value -= bone.worldY;
-					bone.worldY += value * pose.mixY;
+			public override void Apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, bool local,
+				bool additive) {
+				if (local)
+					bone.y += (additive ? value : value - bone.y) * pose.mixY;
+				else {
+					float skeletonScaleY = skeleton.ScaleY;
+					if (!additive) value -= bone.worldY / skeletonScaleY;
+					bone.worldY += value * pose.mixY * skeletonScaleY;
 				}
 			}
 		}
@@ -211,22 +214,24 @@ namespace Spine {
 				return pose.mixScaleX;
 			}
 
-			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
+			public override void Apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, bool local,
+				bool additive) {
 				if (local) {
 					if (additive)
-						bone.scaleX *= 1 + ((value - 1) * pose.mixScaleX);
+						bone.scaleX *= 1 + (value - 1) * pose.mixScaleX;
 					else if (bone.scaleX != 0) //
-						bone.scaleX = 1 + (value / bone.scaleX - 1) * pose.mixScaleX;
-				} else {
-					float s;
-					if (additive)
-						s = 1 + (value - 1) * pose.mixScaleX;
-					else {
-						s = (float)Math.Sqrt(bone.a * bone.a + bone.c * bone.c);
-						if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleX;
-					}
+						bone.scaleX += (value - bone.scaleX) * pose.mixScaleX;
+				} else if (additive) {
+					float s = 1 + (value - 1) * pose.mixScaleX;
 					bone.a *= s;
 					bone.c *= s;
+				} else {
+					float a = bone.a / skeleton.scaleX, c = bone.c / skeleton.ScaleY, s = (float)Math.Sqrt(a * a + c * c);
+					if (s != 0) {
+						s = 1 + (value - s) * pose.mixScaleX / s;
+						bone.a *= s;
+						bone.c *= s;
+					}
 				}
 			}
 		}
@@ -244,22 +249,24 @@ namespace Spine {
 				return pose.mixScaleY;
 			}
 
-			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
+			public override void Apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, bool local,
+				bool additive) {
 				if (local) {
 					if (additive)
-						bone.scaleY *= 1 + ((value - 1) * pose.mixScaleY);
+						bone.scaleY *= 1 + (value - 1) * pose.mixScaleY;
 					else if (bone.scaleY != 0) //
-						bone.scaleY = 1 + (value / bone.scaleY - 1) * pose.mixScaleY;
-				} else {
-					float s;
-					if (additive)
-						s = 1 + (value - 1) * pose.mixScaleY;
-					else {
-						s = (float)Math.Sqrt(bone.b * bone.b + bone.d * bone.d);
-						if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleY;
-					}
+						bone.scaleY += (value - bone.scaleY) * pose.mixScaleY;
+				} else if (additive) {
+					float s = 1 + (value - 1) * pose.mixScaleY;
 					bone.b *= s;
 					bone.d *= s;
+				} else {
+					float b = bone.b / skeleton.scaleX, d = bone.d / skeleton.ScaleY, s = (float)Math.Sqrt(b * b + d * d);
+					if (s != 0) {
+						s = 1 + (value - s) * pose.mixScaleY / s;
+						bone.b *= s;
+						bone.d *= s;
+					}
 				}
 			}
 		}
@@ -267,8 +274,8 @@ namespace Spine {
 		public class FromShearY : FromProperty {
 			public override float Value (Skeleton skeleton, BonePose source, bool local, float[] offsets) {
 				if (local) return source.shearY + offsets[SHEARY];
-				float sx = 1 / skeleton.scaleX, sy = 1 / skeleton.ScaleY;
-				return (MathUtils.Atan2(source.d * sy, source.b * sx) - MathUtils.Atan2(source.c * sy, source.a * sx)) * MathUtils.RadDeg - 90 + offsets[SHEARY];
+				float ix = 1 / skeleton.scaleX, iy = 1 / skeleton.ScaleY;
+				return (MathUtils.Atan2(source.d * iy, source.b * ix) - MathUtils.Atan2(source.c * iy, source.a * ix)) * MathUtils.RadDeg - 90 + offsets[SHEARY];
 			}
 		}
 
@@ -277,17 +284,18 @@ namespace Spine {
 				return pose.mixShearY;
 			}
 
-			public override void Apply (TransformConstraintPose pose, BonePose bone, float value, bool local, bool additive) {
+			public override void Apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, bool local,
+				bool additive) {
 				if (local) {
 					if (!additive) value -= bone.shearY;
 					bone.shearY += value * pose.mixShearY;
 				} else {
-					float b = bone.b, d = bone.d, by = MathUtils.Atan2(d, b);
+					float sx = skeleton.scaleX, sy = skeleton.ScaleY, b = bone.b / sx, d = bone.d / sy, by = MathUtils.Atan2(d, b);
 					value = (value + 90) * MathUtils.DegRad;
 					if (additive)
 						value -= MathUtils.PI / 2;
 					else {
-						value -= by - MathUtils.Atan2(bone.c, bone.a);
+						value -= by - MathUtils.Atan2(bone.c / sy, bone.a / sx);
 						if (value > MathUtils.PI)
 							value -= MathUtils.PI2;
 						else if (value < -MathUtils.PI) //
@@ -295,8 +303,8 @@ namespace Spine {
 					}
 					value = by + value * pose.mixShearY;
 					float s = (float)Math.Sqrt(b * b + d * d);
-					bone.b = MathUtils.Cos(value) * s;
-					bone.d = MathUtils.Sin(value) * s;
+					bone.b = MathUtils.Cos(value) * s * sx;
+					bone.d = MathUtils.Sin(value) * s * sy;
 				}
 			}
 		}
