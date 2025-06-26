@@ -253,7 +253,7 @@ export class ToY extends ToProperty {
 			bone.y += (additive ? value : value - bone.y) * pose.mixY;
 		else {
 			if (!additive) value -= bone.worldY / skeleton.scaleY;
-        	bone.worldY += value * pose.mixY * skeleton.scaleY;
+			bone.worldY += value * pose.mixY * skeleton.scaleY;
 		}
 	}
 }
