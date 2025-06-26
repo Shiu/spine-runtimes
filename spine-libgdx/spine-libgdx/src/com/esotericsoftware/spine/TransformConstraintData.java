@@ -197,8 +197,9 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 	static public class FromRotate extends FromProperty {
 		public float value (Skeleton skeleton, BonePose source, boolean local, float[] offsets) {
 			if (local) return source.rotation + offsets[ROTATION];
-			float value = atan2(source.c / skeleton.scaleY, source.a / skeleton.scaleX) * radDeg
-				+ (source.a * source.d - source.b * source.c > 0 ? offsets[ROTATION] : -offsets[ROTATION]);
+			float sx = skeleton.scaleX, sy = skeleton.scaleY;
+			float value = atan2(source.c / sy, source.a / sx) * radDeg
+				+ ((source.a * source.d - source.b * source.c) * sx * sy > 0 ? offsets[ROTATION] : -offsets[ROTATION]);
 			if (value < 0) value += 360;
 			return value;
 		}
@@ -211,11 +212,11 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 
 		public void apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, boolean local,
 			boolean additive) {
-			if (local) {
-				if (!additive) value -= bone.rotation;
-				bone.rotation += value * pose.mixRotate;
-			} else {
-				float a = bone.a, b = bone.b, c = bone.c, d = bone.d;
+			if (local)
+				bone.rotation += (additive ? value : value - bone.rotation) * pose.mixRotate;
+			else {
+				float sx = skeleton.scaleX, sy = skeleton.scaleY, ix = 1 / sx, iy = 1 / sy;
+				float a = bone.a * ix, b = bone.b * ix, c = bone.c * iy, d = bone.d * iy;
 				value *= degRad;
 				if (!additive) value -= atan2(c, a);
 				if (value > PI)
@@ -224,10 +225,10 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 					value += PI2;
 				value *= pose.mixRotate;
 				float cos = cos(value), sin = sin(value);
-				bone.a = cos * a - sin * c;
-				bone.b = cos * b - sin * d;
-				bone.c = sin * a + cos * c;
-				bone.d = sin * b + cos * d;
+				bone.a = (cos * a - sin * c) * sx;
+				bone.b = (cos * b - sin * d) * sx;
+				bone.c = (sin * a + cos * c) * sy;
+				bone.d = (sin * b + cos * d) * sy;
 			}
 		}
 	}
@@ -245,12 +246,11 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 
 		public void apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, boolean local,
 			boolean additive) {
-			if (local) {
-				if (!additive) value -= bone.x;
-				bone.x += value * pose.mixX;
-			} else {
-				if (!additive) value -= bone.worldX;
-				bone.worldX += value * pose.mixX;
+			if (local)
+				bone.x += (additive ? value : value - bone.x) * pose.mixX;
+			else {
+				if (!additive) value -= bone.worldX / skeleton.scaleX;
+				bone.worldX += value * pose.mixX * skeleton.scaleX;
 			}
 		}
 	}
@@ -268,12 +268,11 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 
 		public void apply (Skeleton skeleton, TransformConstraintPose pose, BonePose bone, float value, boolean local,
 			boolean additive) {
-			if (local) {
-				if (!additive) value -= bone.y;
-				bone.y += value * pose.mixY;
-			} else {
-				if (!additive) value -= bone.worldY;
-				bone.worldY += value * pose.mixY;
+			if (local)
+				bone.y += (additive ? value : value - bone.y) * pose.mixY;
+			else {
+				if (!additive) value -= bone.worldY / skeleton.scaleY;
+				bone.worldY += value * pose.mixY * skeleton.scaleY;
 			}
 		}
 	}
@@ -295,19 +294,20 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 			boolean additive) {
 			if (local) {
 				if (additive)
-					bone.scaleX *= 1 + ((value - 1) * pose.mixScaleX);
+					bone.scaleX *= 1 + (value - 1) * pose.mixScaleX;
 				else if (bone.scaleX != 0) //
-					bone.scaleX = 1 + (value / bone.scaleX - 1) * pose.mixScaleX;
-			} else {
-				float s;
-				if (additive)
-					s = 1 + (value - 1) * pose.mixScaleX;
-				else {
-					s = (float)Math.sqrt(bone.a * bone.a + bone.c * bone.c) / skeleton.scaleX;
-					if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleX;
-				}
+					bone.scaleX += (value - bone.scaleX) * pose.mixScaleX;
+			} else if (additive) {
+				float s = 1 + (value - 1) * pose.mixScaleX;
 				bone.a *= s;
 				bone.c *= s;
+			} else {
+				float a = bone.a / skeleton.scaleX, c = bone.c / skeleton.scaleY, s = (float)Math.sqrt(a * a + c * c);
+				if (s != 0) {
+					s = 1 + (value - s) * pose.mixScaleX / s;
+					bone.a *= s;
+					bone.c *= s;
+				}
 			}
 		}
 	}
@@ -329,19 +329,20 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 			boolean additive) {
 			if (local) {
 				if (additive)
-					bone.scaleY *= 1 + ((value - 1) * pose.mixScaleY);
+					bone.scaleY *= 1 + (value - 1) * pose.mixScaleY;
 				else if (bone.scaleY != 0) //
-					bone.scaleY = 1 + (value / bone.scaleY - 1) * pose.mixScaleY;
-			} else {
-				float s;
-				if (additive)
-					s = 1 + (value - 1) * pose.mixScaleY;
-				else {
-					s = (float)Math.sqrt(bone.b * bone.b + bone.d * bone.d) / skeleton.scaleY;
-					if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleY;
-				}
+					bone.scaleY += (value - bone.scaleY) * pose.mixScaleY;
+			} else if (additive) {
+				float s = 1 + (value - 1) * pose.mixScaleY;
 				bone.b *= s;
 				bone.d *= s;
+			} else {
+				float b = bone.b / skeleton.scaleX, d = bone.d / skeleton.scaleY, s = (float)Math.sqrt(b * b + d * d);
+				if (s != 0) {
+					s = 1 + (value - s) * pose.mixScaleY / s;
+					bone.b *= s;
+					bone.d *= s;
+				}
 			}
 		}
 	}
@@ -349,8 +350,8 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 	static public class FromShearY extends FromProperty {
 		public float value (Skeleton skeleton, BonePose source, boolean local, float[] offsets) {
 			if (local) return source.shearY + offsets[SHEARY];
-			float sx = 1 / skeleton.scaleX, sy = 1 / skeleton.scaleY;
-			return (atan2(source.d * sy, source.b * sx) - atan2(source.c * sy, source.a * sx)) * radDeg - 90 + offsets[SHEARY];
+			float ix = 1 / skeleton.scaleX, iy = 1 / skeleton.scaleY;
+			return (atan2(source.d * iy, source.b * ix) - atan2(source.c * iy, source.a * ix)) * radDeg - 90 + offsets[SHEARY];
 		}
 	}
 
@@ -365,12 +366,12 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 				if (!additive) value -= bone.shearY;
 				bone.shearY += value * pose.mixShearY;
 			} else {
-				float b = bone.b, d = bone.d, by = atan2(d, b);
+				float sx = skeleton.scaleX, sy = skeleton.scaleY, b = bone.b / sx, d = bone.d / sy, by = atan2(d, b);
 				value = (value + 90) * degRad;
 				if (additive)
 					value -= PI / 2;
 				else {
-					value -= by - atan2(bone.c, bone.a);
+					value -= by - atan2(bone.c / sy, bone.a / sx);
 					if (value > PI)
 						value -= PI2;
 					else if (value < -PI) //
@@ -378,8 +379,8 @@ public class TransformConstraintData extends ConstraintData<TransformConstraint,
 				}
 				value = by + value * pose.mixShearY;
 				float s = (float)Math.sqrt(b * b + d * d);
-				bone.b = cos(value) * s;
-				bone.d = sin(value) * s;
+				bone.b = cos(value) * s * sx;
+				bone.d = sin(value) * s * sy;
 			}
 		}
 	}
