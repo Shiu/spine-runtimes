@@ -196,8 +196,9 @@ abstract class ToProperty {
 class FromRotate extends FromProperty {
 	public function value (skeleton:Skeleton, source:BonePose, local:Bool, offsets:Array<Float>):Float {
 		if (local) return source.rotation + offsets[TransformConstraintData.ROTATION];
-		var value = Math.atan2(source.c / skeleton.scaleY, source.a / skeleton.scaleX) * MathUtils.radDeg
-			+ (source.a * source.d - source.b * source.c > 0 ? offsets[TransformConstraintData.ROTATION] : -offsets[TransformConstraintData.ROTATION]);
+		var sx = skeleton.scaleX, sy = skeleton.scaleY;
+		var value = Math.atan2(source.c / sy, source.a / sx) * MathUtils.radDeg
+			+ ((source.a * source.d - source.b * source.c) * sx * sy > 0 ? offsets[TransformConstraintData.ROTATION] : -offsets[TransformConstraintData.ROTATION]);
 		if (value < 0) value += 360;
 		return value;
 	}
@@ -209,23 +210,23 @@ class ToRotate extends ToProperty {
 	}
 
 	public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
-		if (local) {
-			if (!additive) value -= bone.rotation;
-			bone.rotation += value * pose.mixRotate;
-		} else {
-			var a = bone.a, b = bone.b, c = bone.c, d = bone.d;
-			value *= MathUtils.degRad * Bone.yDir;
+		if (local)
+			bone.rotation += (additive ? value : value - bone.rotation) * pose.mixRotate;
+		else {
+			var sx = skeleton.scaleX, sy = skeleton.scaleY, ix = 1 / sx, iy = 1 / sy;
+			var a = bone.a * ix, b = bone.b * ix, c = bone.c * iy, d = bone.d * iy;
+			value *= MathUtils.degRad;
 			if (!additive) value -= Math.atan2(c, a);
-			if (value > Math.PI)
+			if (value > MathUtils.PI)
 				value -= MathUtils.PI2;
-			else if (value < -Math.PI) //
+			else if (value < -MathUtils.PI) //
 				value += MathUtils.PI2;
 			value *= pose.mixRotate;
 			var cos = Math.cos(value), sin = Math.sin(value);
-			bone.a = cos * a - sin * c;
-			bone.b = cos * b - sin * d;
-			bone.c = sin * a + cos * c;
-			bone.d = sin * b + cos * d;
+			bone.a = (cos * a - sin * c) * sx;
+			bone.b = (cos * b - sin * d) * sx;
+			bone.c = (sin * a + cos * c) * sy;
+			bone.d = (sin * b + cos * d) * sy;
 		}
 	}
 }
@@ -244,12 +245,11 @@ class ToX extends ToProperty {
 	}
 
 	public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
-		if (local) {
-			if (!additive) value -= bone.x;
-			bone.x += value * pose.mixX;
-		} else {
-			if (!additive) value -= bone.worldX;
-			bone.worldX += value * pose.mixX;
+		if (local)
+			bone.x += (additive ? value : value - bone.x) * pose.mixX;
+		else {
+			if (!additive) value -= bone.worldX / skeleton.scaleX;
+			bone.worldX += value * pose.mixX * skeleton.scaleX;
 		}
 	}
 }
@@ -268,12 +268,11 @@ class ToY extends ToProperty {
 	}
 
 	public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
-		if (local) {
-			if (!additive) value -= bone.y;
-			bone.y += value * pose.mixY;
-		} else {
-			if (!additive) value -= bone.worldY * Bone.yDir;
-			bone.worldY += value * pose.mixY * Bone.yDir;
+		if (local)
+			bone.y += (additive ? value : value - bone.y) * pose.mixY;
+		else {
+			if (!additive) value -= bone.worldY / skeleton.scaleY;
+			bone.worldY += value * pose.mixY * skeleton.scaleY;
 		}
 	}
 }
@@ -294,19 +293,20 @@ class ToScaleX extends ToProperty {
 	public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
 		if (local) {
 			if (additive)
-				bone.scaleX *= 1 + ((value - 1) * pose.mixScaleX);
+				bone.scaleX *= 1 + (value - 1) * pose.mixScaleX;
 			else if (bone.scaleX != 0) //
-				bone.scaleX = 1 + (value / bone.scaleX - 1) * pose.mixScaleX;
-		} else {
-			var s:Float;
-			if (additive)
-				s = 1 + (value - 1) * pose.mixScaleX;
-			else {
-				s = Math.sqrt(bone.a * bone.a + bone.c * bone.c) / skeleton.scaleX;
-				if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleX;
-			}
+				bone.scaleX += (value - bone.scaleX) * pose.mixScaleX;
+		} else if (additive) {
+			var s = 1 + (value - 1) * pose.mixScaleX;
 			bone.a *= s;
 			bone.c *= s;
+		} else {
+			var a = bone.a / skeleton.scaleX, c = bone.c / skeleton.scaleY, s = Math.sqrt(a * a + c * c);
+			if (s != 0) {
+				s = 1 + (value - s) * pose.mixScaleX / s;
+				bone.a *= s;
+				bone.c *= s;
+			}
 		}
 	}
 }
@@ -327,19 +327,20 @@ class ToScaleY extends ToProperty {
 	public function apply (skeleton:Skeleton, pose:TransformConstraintPose, bone:BonePose, value:Float, local:Bool, additive:Bool):Void {
 		if (local) {
 			if (additive)
-				bone.scaleY *= 1 + ((value - 1) * pose.mixScaleY);
+				bone.scaleY *= 1 + (value - 1) * pose.mixScaleY;
 			else if (bone.scaleY != 0) //
-				bone.scaleY = 1 + (value / bone.scaleY - 1) * pose.mixScaleY;
-		} else {
-			var s:Float;
-			if (additive)
-				s = 1 + (value - 1) * pose.mixScaleY;
-			else {
-				s = Math.sqrt(bone.b * bone.b + bone.d * bone.d) / skeleton.scaleY * Bone.yDir;
-				if (s != 0) s = 1 + (value / s - 1) * pose.mixScaleY;
-			}
+				bone.scaleY += (value - bone.scaleY) * pose.mixScaleY;
+		} else if (additive) {
+			var s = 1 + (value - 1) * pose.mixScaleY;
 			bone.b *= s;
 			bone.d *= s;
+		} else {
+			var b = bone.b / skeleton.scaleX, d = bone.d / skeleton.scaleY, s = Math.sqrt(b * b + d * d);
+			if (s != 0) {
+				s = 1 + (value - s) * pose.mixScaleY / s;
+				bone.b *= s;
+				bone.d *= s;
+			}
 		}
 	}
 }
@@ -363,21 +364,21 @@ class ToShearY extends ToProperty {
 			if (!additive) value -= bone.shearY;
 			bone.shearY += value * pose.mixShearY;
 		} else {
-			var b = bone.b, d = bone.d, by = Math.atan2(d, b);
-			value = (value + 90) * MathUtils.degRad * Bone.yDir;
+			var sx = skeleton.scaleX, sy = skeleton.scaleY, b = bone.b / sx, d = bone.d / sy, by = Math.atan2(d, b);
+			value = (value + 90) * MathUtils.degRad;
 			if (additive)
-				value -= Math.PI / 2;
+				value -= MathUtils.PI / 2;
 			else {
-				value -= by - Math.atan2(bone.c, bone.a);
-				if (value > Math.PI)
+				value -= by - Math.atan2(bone.c / sx, bone.a / sy);
+				if (value > MathUtils.PI)
 					value -= MathUtils.PI2;
-				else if (value < -Math.PI) //
+				else if (value < -MathUtils.PI)
 					value += MathUtils.PI2;
 			}
 			value = by + value * pose.mixShearY;
 			var s = Math.sqrt(b * b + d * d);
-			bone.b = Math.cos(value) * s;
-			bone.d = Math.sin(value) * s;
+			bone.b = Math.cos(value) * s * sy;
+			bone.d = Math.sin(value) * s * sx;
 		}
 	}
 }
