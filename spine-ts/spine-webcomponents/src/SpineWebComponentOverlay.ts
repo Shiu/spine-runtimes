@@ -593,8 +593,8 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 						divOriginX = divOriginX - boundsX;
 						divOriginY = divOriginY - boundsY;
 
-						if (fit !== "none") {
-							// scale the skeleton
+						// scale the skeleton
+						if (fit !== "none" && (skeleton.scaleX !== ratioW || skeleton.scaleY !== ratioH)) {
 							skeleton.scaleX = ratioW;
 							skeleton.scaleY = ratioH;
 							skeleton.updateWorldTransform(Physics.update);
