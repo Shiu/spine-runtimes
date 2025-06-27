@@ -191,6 +191,7 @@ namespace Spine.Unity {
 			if (!valid)
 				return;
 			state = new Spine.AnimationState(skeletonDataAsset.GetAnimationStateData());
+			state.Dispose += OnAnimationDisposed;
 			wasUpdatedAfterInit = false;
 
 			if (!string.IsNullOrEmpty(_animationName)) {
@@ -301,6 +302,14 @@ namespace Spine.Unity {
 				Update(0);
 			if (previousUpdateMode != UpdateMode.FullUpdate)
 				LateUpdate();
+		}
+
+		protected virtual void OnAnimationDisposed (TrackEntry entry) {
+			// when updateMode disables applying animations, still ensure animations are mixed out
+			if (updateMode != UpdateMode.FullUpdate &&
+				updateMode != UpdateMode.EverythingExceptMesh) {
+				entry.Animation.Apply(skeleton, 0, 0, false, null, 0f, MixBlend.Setup, MixDirection.Out);
+			}
 		}
 	}
 
