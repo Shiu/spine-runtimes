@@ -107,9 +107,10 @@ namespace Spine {
 				for (int i = 0, n = bones.Count; i < n; i++) {
 					var bone = bones.Items[i];
 					if (bone.Parent == null) continue;
-					var x = bone.Data.Length * bone.A + bone.WorldX;
-					var y = bone.Data.Length * bone.C + bone.WorldY;
-					renderer.Line(bone.WorldX, bone.WorldY, x, y, z);
+					BonePose bonePose = bone.AppliedPose;
+					var x = bone.Data.Length * bonePose.A + bonePose.WorldX;
+					var y = bone.Data.Length * bonePose.C + bonePose.WorldY;
+					renderer.Line(bonePose.WorldX, bonePose.WorldY, x, y, z);
 				}
 				if (DrawSkeletonXY) renderer.X(skeletonX, skeletonY, 4, z);
 			}
@@ -119,7 +120,7 @@ namespace Spine {
 				var slots = skeleton.Slots;
 				for (int i = 0, n = slots.Count; i < n; i++) {
 					var slot = slots.Items[i];
-					var attachment = slot.Attachment;
+					var attachment = slot.AppliedPose.Attachment;
 					if (attachment is RegionAttachment) {
 						var regionAttachment = (RegionAttachment)attachment;
 						var vertices = this.vertices;
@@ -136,11 +137,11 @@ namespace Spine {
 				var slots = skeleton.Slots;
 				for (int i = 0, n = slots.Count; i < n; i++) {
 					var slot = slots.Items[i];
-					var attachment = slot.Attachment;
+					var attachment = slot.AppliedPose.Attachment;
 					if (!(attachment is MeshAttachment)) continue;
 					var mesh = (MeshAttachment)attachment;
 					var world = vertices = vertices.Length < mesh.WorldVerticesLength ? new float[mesh.WorldVerticesLength] : vertices;
-					mesh.ComputeWorldVertices(slot, 0, mesh.WorldVerticesLength, world, 0, 2);
+					mesh.ComputeWorldVertices(skeleton, slot, 0, mesh.WorldVerticesLength, world, 0, 2);
 					int[] triangles = mesh.Triangles;
 					var hullLength = mesh.HullLength;
 					if (DrawMeshTriangles) {
@@ -184,8 +185,9 @@ namespace Spine {
 			if (DrawBones) {
 				renderer.SetColor(boneOriginColor);
 				for (int i = 0, n = bones.Count; i < n; i++) {
-					var bone = bones.Items[i];
-					renderer.Circle(bone.WorldX, bone.WorldY, 3, z);
+					Bone bone = bones.Items[i];
+					BonePose bonePose = bone.AppliedPose;
+					renderer.Circle(bonePose.WorldX, bonePose.WorldY, 3, z);
 				}
 			}
 
@@ -194,12 +196,12 @@ namespace Spine {
 				renderer.SetColor(clipColor);
 				for (int i = 0, n = slots.Count; i < n; i++) {
 					var slot = slots.Items[i];
-					var attachment = slot.Attachment;
+					var attachment = slot.AppliedPose.Attachment;
 					if (!(attachment is ClippingAttachment)) continue;
 					var clip = (ClippingAttachment)attachment;
 					var nn = clip.WorldVerticesLength;
 					var world = vertices = vertices.Length < nn ? new float[nn] : vertices;
-					clip.ComputeWorldVertices(slot, 0, nn, world, 0, 2);
+					clip.ComputeWorldVertices(skeleton, slot, 0, nn, world, 0, 2);
 					ExposedList<float> clippingPolygon = new ExposedList<float>();
 					for (int ii = 0; ii < nn; ii += 2) {
 						var x = world[ii];

@@ -114,22 +114,24 @@ namespace Spine {
 		public void Draw (Skeleton skeleton) {
 			var drawOrder = skeleton.DrawOrder;
 			var drawOrderItems = skeleton.DrawOrder.Items;
-			float skeletonR = skeleton.R, skeletonG = skeleton.G, skeletonB = skeleton.B, skeletonA = skeleton.A;
-			Color color = new Color();
+			Color32F skeletonColor = skeleton.GetColor();
 
 			if (VertexEffect != null) VertexEffect.Begin(skeleton);
 
 			for (int i = 0, n = drawOrder.Count; i < n; i++) {
 				Slot slot = drawOrderItems[i];
+				SlotPose slotPose = slot.AppliedPose;
 				if (!slot.Bone.Active) {
 					clipper.ClipEnd(slot);
 					continue;
 				}
 
-				Attachment attachment = slot.Attachment;
+				Attachment attachment = slotPose.Attachment;
 				float attachmentZOffset = z + zSpacing * i;
 
-				float attachmentColorR, attachmentColorG, attachmentColorB, attachmentColorA;
+				Color32F attachmentColor;
+				Color32F slotColor = slotPose.GetColor();
+				Color color;
 				object textureObject = null;
 				int verticesCount = 0;
 				float[] vertices = this.vertices;
@@ -139,7 +141,7 @@ namespace Spine {
 
 				if (attachment is RegionAttachment) {
 					RegionAttachment regionAttachment = (RegionAttachment)attachment;
-					attachmentColorR = regionAttachment.R; attachmentColorG = regionAttachment.G; attachmentColorB = regionAttachment.B; attachmentColorA = regionAttachment.A;
+					attachmentColor = regionAttachment.GetColor();
 					regionAttachment.ComputeWorldVertices(slot, vertices, 0, 2);
 					verticesCount = 4;
 					indicesCount = 6;
@@ -149,11 +151,11 @@ namespace Spine {
 					textureObject = region.page.rendererObject;
 				} else if (attachment is MeshAttachment) {
 					MeshAttachment mesh = (MeshAttachment)attachment;
-					attachmentColorR = mesh.R; attachmentColorG = mesh.G; attachmentColorB = mesh.B; attachmentColorA = mesh.A;
+					attachmentColor = mesh.GetColor();
 					int vertexCount = mesh.WorldVerticesLength;
 					if (vertices.Length < vertexCount) this.vertices = vertices = new float[vertexCount];
 					verticesCount = vertexCount >> 1;
-					mesh.ComputeWorldVertices(slot, vertices);
+					mesh.ComputeWorldVertices(skeleton, slot, vertices);
 					indicesCount = mesh.Triangles.Length;
 					indices = mesh.Triangles;
 					uvs = mesh.UVs;
@@ -161,7 +163,7 @@ namespace Spine {
 					textureObject = region.page.rendererObject;
 				} else if (attachment is ClippingAttachment) {
 					ClippingAttachment clip = (ClippingAttachment)attachment;
-					clipper.ClipStart(slot, clip);
+					clipper.ClipStart(skeleton, slot, clip);
 					continue;
 				} else {
 					clipper.ClipEnd(slot);
@@ -187,25 +189,25 @@ namespace Spine {
 				}
 
 				// calculate color
-				float a = skeletonA * slot.A * attachmentColorA;
+				Color32F combinedColor = skeletonColor * slotColor * attachmentColor;
+				float a = combinedColor.a;
 				if (premultipliedAlpha) {
 					color = new Color(
-							skeletonR * slot.R * attachmentColorR * a,
-							skeletonG * slot.G * attachmentColorG * a,
-							skeletonB * slot.B * attachmentColorB * a, a);
+						combinedColor.r * a,
+						combinedColor.g * a,
+						combinedColor.b * a, a);
 				} else {
-					color = new Color(
-							skeletonR * slot.R * attachmentColorR,
-							skeletonG * slot.G * attachmentColorG,
-							skeletonB * slot.B * attachmentColorB, a);
+					color = combinedColor;
 				}
 
 				Color darkColor = new Color();
-				if (slot.HasSecondColor) {
+				Color32F? slotDarkColorOptional = slotPose.GetDarkColor();
+				if (slotDarkColorOptional.HasValue) {
+					Color32F slotDarkColor = slotDarkColorOptional.Value;
 					if (premultipliedAlpha) {
-						darkColor = new Color(slot.R2 * a, slot.G2 * a, slot.B2 * a);
+						darkColor = new Color(slotDarkColor.r * a, slotDarkColor.g * a, slotDarkColor.b * a);
 					} else {
-						darkColor = new Color(slot.R2 * a, slot.G2 * a, slot.B2 * a);
+						darkColor = new Color(slotDarkColor.r * a, slotDarkColor.g * a, slotDarkColor.b * a);
 					}
 				}
 				darkColor.A = premultipliedAlpha ? (byte)255 : (byte)0;

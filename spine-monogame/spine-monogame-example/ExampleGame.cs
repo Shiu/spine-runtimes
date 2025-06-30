@@ -95,7 +95,7 @@ namespace Spine {
 			state.Apply(skeleton);
 
 			// Update the transformations of bones and other parts of the skeleton
-			skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+			skeleton.UpdateWorldTransform(Physics.Update);
 
 			// Clear the screen and setup the projection matrix of the skeleton renderer
 			game.GraphicsDevice.Clear(Color.Black);
@@ -148,7 +148,7 @@ namespace Spine {
 			skeleton.Update(deltaTime);
 			state.Apply(skeleton);
 
-			skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+			skeleton.UpdateWorldTransform(Physics.Update);
 
 			// Clear the screen and setup the projection matrix of the custom effect through the
 			// "Projection" parameter.
@@ -193,7 +193,7 @@ namespace Spine {
 
 			// Set the "walk" animation on track one and let it loop forever
 			state.SetAnimation(0, "walk", true);
-
+			
 			// Queue another animation after 2 seconds to let Spineboy jump
 			state.AddAnimation(0, "jump", false, 2);
 
@@ -206,7 +206,7 @@ namespace Spine {
 			skeleton.Update(deltaTime);
 			state.Apply(skeleton);
 
-			skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+			skeleton.UpdateWorldTransform(Physics.Update);
 
 			game.GraphicsDevice.Clear(Color.Black);
 			((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height, 0, 1, 0);
@@ -267,7 +267,7 @@ namespace Spine {
 			skeleton.Update(deltaTime);
 			state.Apply(skeleton);
 
-			skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+			skeleton.UpdateWorldTransform(Physics.Update);
 
 			game.GraphicsDevice.Clear(Color.Black);
 			((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height, 0, 1, 0);
@@ -323,7 +323,7 @@ namespace Spine {
 			// lastPosition = currentPosition;
 
 			state.Apply(skeleton);
-			skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+			skeleton.UpdateWorldTransform(Physics.Update);
 
 			game.GraphicsDevice.Clear(Color.Black);
 			((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height, 0, 1, 0);
@@ -380,7 +380,7 @@ namespace Spine {
 			// lastPosition = currentPosition;
 
 			state.Apply(skeleton);
-			skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+			skeleton.UpdateWorldTransform(Physics.Update);
 
 			game.GraphicsDevice.Clear(Color.Black);
 			((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height, 0, 1, 0);
