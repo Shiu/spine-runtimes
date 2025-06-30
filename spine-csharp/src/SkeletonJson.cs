@@ -404,9 +404,10 @@ namespace Spine {
 								if (data.bone == null) throw new Exception("Slider bone not found: " + boneName);
 								string property = (string)constraintMap["property"];
 								data.property = FromProperty(property);
-								data.property.offset = GetFloat(constraintMap, "from", 0) * PropertyScale(property, scale);
+								float propertyScale = PropertyScale(property, scale);
+								data.property.offset = GetFloat(constraintMap, "from", 0) * propertyScale;
 								data.offset = GetFloat(constraintMap, "to", 0);
-								data.scale = GetFloat(constraintMap, "scale", 1);
+								data.scale = GetFloat(constraintMap, "scale", 1) / propertyScale;
 								data.local = GetBoolean(constraintMap, "local", false);
 							}
 

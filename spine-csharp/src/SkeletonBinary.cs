@@ -409,15 +409,16 @@ namespace Spine {
 							data.local = (flags & 128) != 0;
 							data.bone = bones[input.ReadInt(true)];
 							float offset = input.ReadFloat();
+							float propertyScale = 1;
 							switch (input.ReadUByte()) {
 							case 0: data.property = new FromRotate(); break;
 							case 1: {
-								offset *= scale;
+								propertyScale = scale;
 								data.property = new FromX();
 								break;
 							}
 							case 2: {
-								offset *= scale;
+								propertyScale = scale;
 								data.property = new FromY();
 								break;
 							}
@@ -426,9 +427,9 @@ namespace Spine {
 							case 5: data.property = new FromShearY(); break;
 							default: data.property = null; break;
 							};
-							data.property.offset = offset;
+							data.property.offset = offset * propertyScale;
 							data.offset = input.ReadFloat();
-							data.scale = input.ReadFloat();
+							data.scale = input.ReadFloat() / propertyScale;
 						}
 						constraints[i] = data;
 						break;
