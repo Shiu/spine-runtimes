@@ -193,7 +193,7 @@ namespace Spine {
 
 			// Set the "walk" animation on track one and let it loop forever
 			state.SetAnimation(0, "walk", true);
-			
+
 			// Queue another animation after 2 seconds to let Spineboy jump
 			state.AddAnimation(0, "jump", false, 2);
 
