@@ -35,7 +35,7 @@ using System;
 
 namespace Spine {
 #if IS_UNITY
-	using Color = UnityEngine.Color;
+	using Color32F = UnityEngine.Color;
 #endif
 
 	/// <summary>Attachment that displays a texture region.</summary>
@@ -52,7 +52,7 @@ namespace Spine {
 		// Color color = slot.color; color.a = 0.5;
 		// modifying just a copy of the struct instead of the original
 		// object as in reference implementation.
-		protected Color color = new Color(1, 1, 1, 1);
+		protected Color32F color = new Color32F(1, 1, 1, 1);
 		internal Sequence sequence;
 
 		public float X { get { return x; } set { x = value; } }
@@ -63,16 +63,16 @@ namespace Spine {
 		public float Width { get { return width; } set { width = value; } }
 		public float Height { get { return height; } set { height = value; } }
 
-		public Color GetColor () {
+		public Color32F GetColor () {
 			return color;
 		}
 
-		public void SetColor (Color color) {
+		public void SetColor (Color32F color) {
 			this.color = color;
 		}
 
 		public void SetColor (float r, float g, float b, float a) {
-			color = new Color(r, g, b, a);
+			color = new Color32F(r, g, b, a);
 		}
 
 		public string Path { get; set; }

@@ -31,36 +31,12 @@
 #define IS_UNITY
 #endif
 
-namespace Spine {
 #if IS_UNITY
-	using Color = UnityEngine.Color;
-#else
-	public struct Color {
-		public float r, g, b, a;
-
-		public Color (float r, float g, float b, float a = 1.0f) {
-			this.r = r;
-			this.g = g;
-			this.b = b;
-			this.a = a;
-		}
-
-		public override string ToString () {
-			return string.Format("RGBA({0}, {1}, {2}, {3})", r, g, b, a);
-		}
-
-		public static Color operator + (Color c1, Color c2) {
-			return new Color(c1.r + c2.r, c1.g + c2.g, c1.b + c2.b, c1.a + c2.a);
-		}
-
-		public static Color operator - (Color c1, Color c2) {
-			return new Color(c1.r - c2.r, c1.g - c2.g, c1.b - c2.b, c1.a - c2.a);
-		}
-	}
-#endif
+namespace Spine {
+	using Color32F = UnityEngine.Color;
 
 	static class ColorExtensions {
-		public static Color Clamp (this Color color) {
+		public static Color32F Clamp (this Color32F color) {
 			color.r = MathUtils.Clamp(color.r, 0, 1);
 			color.g = MathUtils.Clamp(color.g, 0, 1);
 			color.b = MathUtils.Clamp(color.b, 0, 1);
@@ -68,19 +44,20 @@ namespace Spine {
 			return color;
 		}
 
-		public static Color RGBA8888ToColor(this uint rgba8888) {
+		public static Color32F RGBA8888ToColor(this uint rgba8888) {
 			float r = ((rgba8888 & 0xff000000) >> 24) / 255f;
 			float g = ((rgba8888 & 0x00ff0000) >> 16) / 255f;
 			float b = ((rgba8888 & 0x0000ff00) >> 8) / 255f;
 			float a = ((rgba8888 & 0x000000ff)) / 255f;
-			return new Color(r, g, b, a);
+			return new Color32F(r, g, b, a);
 		}
 
-		public static Color XRGB888ToColor (this uint xrgb888) {
+		public static Color32F XRGB888ToColor (this uint xrgb888) {
 			float r = ((xrgb888 & 0x00ff0000) >> 16) / 255f;
 			float g = ((xrgb888 & 0x0000ff00) >> 8) / 255f;
 			float b = ((xrgb888 & 0x000000ff)) / 255f;
-			return new Color(r, g, b);
+			return new Color32F(r, g, b);
 		}
 	}
 }
+#endif

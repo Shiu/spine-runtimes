@@ -31,35 +31,57 @@
 #define IS_UNITY
 #endif
 
-using System;
-
+#if !IS_UNITY
 namespace Spine {
-	public class SlotData : PosedData<SlotPose> {
-		internal int index;
-		internal BoneData boneData;
-		internal string attachmentName;
-		internal BlendMode blendMode;
+	/// <summary>
+	/// 32 bit floating point color to be used with other game toolkits than Unity and XNA/Monogame.
+	/// </summary>
+	public struct Color32F {
+		public float r, g, b, a;
 
-		// Nonessential.
-		// bool visible = true;
-
-		public SlotData (int index, String name, BoneData boneData)
-			: base(name, new SlotPose()) {
-			if (index < 0) throw new ArgumentException("index must be >= 0.", "index");
-			if (boneData == null) throw new ArgumentNullException("boneData", "boneData cannot be null.");
-			this.index = index;
-			this.boneData = boneData;
+		public Color32F (float r, float g, float b, float a = 1.0f) {
+			this.r = r;
+			this.g = g;
+			this.b = b;
+			this.a = a;
 		}
 
-		/// <summary>The index of the slot in <see cref="Skeleton.Slots"/>.</summary>
-		public int Index { get { return index; } }
+		public override string ToString () {
+			return string.Format("RGBA({0}, {1}, {2}, {3})", r, g, b, a);
+		}
 
-		/// <summary>The bone this slot belongs to.</summary>
-		public BoneData BoneData { get { return boneData; } }
+		public static Color32F operator + (Color32F c1, Color32F c2) {
+			return new Color32F(c1.r + c2.r, c1.g + c2.g, c1.b + c2.b, c1.a + c2.a);
+		}
 
-		/// <summary>The name of the attachment that is visible for this slot in the setup pose, or null if no attachment is visible.</summary>
-		public String AttachmentName { get { return attachmentName; } set { attachmentName = value; } }
-		/// <summary>The blend mode for drawing the slot's attachment.</summary>
-		public BlendMode BlendMode { get { return blendMode; } set { blendMode = value; } }
+		public static Color32F operator - (Color32F c1, Color32F c2) {
+			return new Color32F(c1.r - c2.r, c1.g - c2.g, c1.b - c2.b, c1.a - c2.a);
+		}
+	}
+
+	static class ColorExtensions {
+		public static Color32F Clamp (this Color32F color) {
+			color.r = MathUtils.Clamp(color.r, 0, 1);
+			color.g = MathUtils.Clamp(color.g, 0, 1);
+			color.b = MathUtils.Clamp(color.b, 0, 1);
+			color.a = MathUtils.Clamp(color.a, 0, 1);
+			return color;
+		}
+
+		public static Color32F RGBA8888ToColor (this uint rgba8888) {
+			float r = ((rgba8888 & 0xff000000) >> 24) / 255f;
+			float g = ((rgba8888 & 0x00ff0000) >> 16) / 255f;
+			float b = ((rgba8888 & 0x0000ff00) >> 8) / 255f;
+			float a = ((rgba8888 & 0x000000ff)) / 255f;
+			return new Color32F(r, g, b, a);
+		}
+
+		public static Color32F XRGB888ToColor (this uint xrgb888) {
+			float r = ((xrgb888 & 0x00ff0000) >> 16) / 255f;
+			float g = ((xrgb888 & 0x0000ff00) >> 8) / 255f;
+			float b = ((xrgb888 & 0x000000ff)) / 255f;
+			return new Color32F(r, g, b);
+		}
 	}
 }
+#endif

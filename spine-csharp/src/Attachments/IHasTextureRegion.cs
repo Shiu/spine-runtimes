@@ -33,7 +33,7 @@
 
 namespace Spine {
 #if IS_UNITY
-	using Color = UnityEngine.Color;
+	using Color32F = UnityEngine.Color;
 #endif
 
 	public interface IHasTextureRegion {
@@ -51,8 +51,8 @@ namespace Spine {
 		/// </summary>
 		void UpdateRegion ();
 
-		Color GetColor ();
-		void SetColor (Color color);
+		Color32F GetColor ();
+		void SetColor (Color32F color);
 		void SetColor (float r, float g, float b, float a);
 
 		Sequence Sequence { get; set; }

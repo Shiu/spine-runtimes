@@ -35,7 +35,7 @@ using System;
 
 namespace Spine {
 #if IS_UNITY
-	using Color = UnityEngine.Color;
+	using Color32F = UnityEngine.Color;
 #endif
 
 	/// <summary>
@@ -54,8 +54,8 @@ namespace Spine {
 			this.skeleton = skeleton;
 			bone = skeleton.bones.Items[data.boneData.index];
 			if (data.setup.GetDarkColor().HasValue) {
-				pose.SetDarkColor(new Color());
-				constrained.SetDarkColor(new Color());
+				pose.SetDarkColor(new Color32F());
+				constrained.SetDarkColor(new Color32F());
 			}
 			SetupPose();
 		}
@@ -68,8 +68,8 @@ namespace Spine {
 			this.bone = bone;
 			this.skeleton = skeleton;
 			if (data.setup.GetDarkColor().HasValue) {
-				pose.SetDarkColor(new Color());
-				constrained.SetDarkColor(new Color());
+				pose.SetDarkColor(new Color32F());
+				constrained.SetDarkColor(new Color32F());
 			}
 			pose.Set(slot.pose);
 		}

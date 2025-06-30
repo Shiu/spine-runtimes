@@ -43,7 +43,7 @@ using Windows.Storage;
 
 namespace Spine {
 #if IS_UNITY
-	using Color = UnityEngine.Color;
+	using Color32F = UnityEngine.Color;
 #endif
 
 	using FromProperty = TransformConstraintData.FromProperty;
@@ -1558,7 +1558,7 @@ namespace Spine {
 			return Convert.ToInt32(hexString.Substring(colorIndex * 2, 2), 16) / (float)255;
 		}
 
-		static Color ToColor32 (string hexString, int expectedLength = 8) {
+		static Color32F ToColor32 (string hexString, int expectedLength = 8) {
 			if (hexString.Length < expectedLength)
 				throw new ArgumentException("Color hexadecimal length must be " + expectedLength + ", received: " + hexString, "hexString");
 
@@ -1566,17 +1566,17 @@ namespace Spine {
 			float g = Convert.ToInt32(hexString.Substring(2, 2), 16) / (float)255;
 			float b = Convert.ToInt32(hexString.Substring(4, 2), 16) / (float)255;
 			float a = Convert.ToInt32(hexString.Substring(6, 2), 16) / (float)255;
-			return new Color(r, g, b, a);
+			return new Color32F(r, g, b, a);
 		}
 
-		static Color ToColor24 (string hexString, int expectedLength = 6) {
+		static Color32F ToColor24 (string hexString, int expectedLength = 6) {
 			if (hexString.Length < expectedLength)
 				throw new ArgumentException("Color hexadecimal length must be " + expectedLength + ", received: " + hexString, "hexString");
 
 			float r = Convert.ToInt32(hexString.Substring(0, 2), 16) / (float)255;
 			float g = Convert.ToInt32(hexString.Substring(2, 2), 16) / (float)255;
 			float b = Convert.ToInt32(hexString.Substring(4, 2), 16) / (float)255;
-			return new Color(r, g, b);
+			return new Color32F(r, g, b);
 		}
 
 		private class LinkedMesh {

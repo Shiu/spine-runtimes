@@ -35,7 +35,7 @@ using System;
 
 namespace Spine {
 #if IS_UNITY
-	using Color = UnityEngine.Color;
+	using Color32F = UnityEngine.Color;
 #endif
 	public class Skeleton {
 		static private readonly int[] quadTriangles = { 0, 1, 2, 2, 3, 0 };
@@ -49,10 +49,10 @@ namespace Spine {
 		internal ExposedList<IPosedInternal> resetCache = new ExposedList<IPosedInternal>(16);
 		internal Skin skin;
 		// Color is a struct, set to protected to prevent
-		// Color color = slot.color; color.a = 0.5;
+		// Color32F color = slot.color; color.a = 0.5;
 		// modifying just a copy of the struct instead of the original
 		// object as in reference implementation.
-		protected Color color;
+		protected Color32F color;
 		internal float x, y, scaleX = 1, time, windX = 1, windY = 0, gravityX = 0, gravityY = 1;
 		/// <summary>Private to enforce usage of ScaleY getter taking Bone.yDown into account.</summary>
 		private float scaleY = 1;
@@ -95,7 +95,7 @@ namespace Spine {
 			}
 			physics.TrimExcess();
 
-			color = new Color(1, 1, 1, 1);
+			color = new Color32F(1, 1, 1, 1);
 
 			UpdateCache();
 		}
@@ -505,21 +505,21 @@ namespace Spine {
 		}
 
 		/// <returns>A copy of the color to tint all the skeleton's attachments.</returns>
-		public Color GetColor () {
+		public Color32F GetColor () {
 			return color;
 		}
 
 		/// <summary>Sets the color to tint all the skeleton's attachments.</summary>
-		public void SetColor (Color color) {
+		public void SetColor (Color32F color) {
 			this.color = color;
 		}
 
 		/// <summary>
 		/// A convenience method for setting the skeleton color. The color can also be set by
-		/// <see cref="SetColor(Color)"/>
+		/// <see cref="SetColor(Color32F)"/>
 		/// </summary>
 		public void SetColor (float r, float g, float b, float a) {
-			color = new Color(r, g, b, a);
+			color = new Color32F(r, g, b, a);
 		}
 
 		/// <summary><para> Scales the entire skeleton on the X axis.</para>

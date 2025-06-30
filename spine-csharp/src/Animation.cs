@@ -36,7 +36,7 @@ using System.Collections.Generic;
 
 namespace Spine {
 #if IS_UNITY
-	using Color = UnityEngine.Color;
+	using Color32F = UnityEngine.Color;
 #endif
 
 	/// <summary>
@@ -1055,16 +1055,16 @@ namespace Spine {
 
 		override protected void Apply (Slot slot, SlotPose pose, float time, float alpha, MixBlend blend) {
 			float[] frames = this.frames;
-			Color color = pose.GetColor();
+			Color32F color = pose.GetColor();
 			if (time < frames[0]) {
-				Color setup = slot.data.setup.GetColor();
+				Color32F setup = slot.data.setup.GetColor();
 				switch (blend) {
 				case MixBlend.Setup:
 					color = setup;
 					pose.SetColor(color); // required due to Color being a struct
 					return;
 				case MixBlend.First:
-					color += new Color((setup.r - color.r) * alpha, (setup.g - color.g) * alpha, (setup.b - color.b) * alpha,
+					color += new Color32F((setup.r - color.r) * alpha, (setup.g - color.g) * alpha, (setup.b - color.b) * alpha,
 						(setup.a - color.a) * alpha);
 					color.Clamp();
 					pose.SetColor(color); // see above
@@ -1103,10 +1103,10 @@ namespace Spine {
 			}
 
 			if (alpha == 1) {
-				color = new Color(r, g, b, a);
+				color = new Color32F(r, g, b, a);
 			} else {
 				if (blend == MixBlend.Setup) color = slot.data.setup.GetColor();
-				color += new Color((r - color.r) * alpha, (g - color.g) * alpha, (b - color.b) * alpha, (a - color.a) * alpha);
+				color += new Color32F((r - color.r) * alpha, (g - color.g) * alpha, (b - color.b) * alpha, (a - color.a) * alpha);
 			}
 			color.Clamp();
 			pose.SetColor(color); // see above
@@ -1140,9 +1140,9 @@ namespace Spine {
 
 		override protected void Apply (Slot slot, SlotPose pose, float time, float alpha, MixBlend blend) {
 			float[] frames = this.frames;
-			Color color = pose.GetColor();
+			Color32F color = pose.GetColor();
 			if (time < frames[0]) {
-				Color setup = slot.data.setup.GetColor();
+				Color32F setup = slot.data.setup.GetColor();
 				switch (blend) {
 				case MixBlend.Setup:
 					color.r = setup.r;
@@ -1194,7 +1194,7 @@ namespace Spine {
 				pose.SetColor(color); // see above
 			} else {
 				if (blend == MixBlend.Setup) {
-					Color setup = slot.data.setup.GetColor();
+					Color32F setup = slot.data.setup.GetColor();
 					color.r = setup.r;
 					color.g = setup.g;
 					color.b = setup.b;
@@ -1230,11 +1230,11 @@ namespace Spine {
 			if (!slot.bone.active) return;
 
 			SlotPose pose = (appliedPose ? slot.applied : slot.pose);
-			Color color = pose.GetColor();
+			Color32F color = pose.GetColor();
 
 			float[] frames = this.frames;
 			if (time < frames[0]) {
-				Color setup = slot.data.setup.GetColor();
+				Color32F setup = slot.data.setup.GetColor();
 				switch (blend) {
 				case MixBlend.Setup:
 					color.a = setup.a;
@@ -1296,24 +1296,24 @@ namespace Spine {
 
 		override protected void Apply (Slot slot, SlotPose pose, float time, float alpha, MixBlend blend) {
 			float[] frames = this.frames;
-			Color light = pose.GetColor();
-			Color? dark = pose.GetDarkColor();
+			Color32F light = pose.GetColor();
+			Color32F? dark = pose.GetDarkColor();
 			if (time < frames[0]) {
 				SlotPose setup = slot.data.setup;
-				Color setupLight = setup.GetColor();
-				Color? setupDark = setup.GetDarkColor();
+				Color32F setupLight = setup.GetColor();
+				Color32F? setupDark = setup.GetDarkColor();
 				switch (blend) {
 				case MixBlend.Setup:
 					pose.SetColor(setupLight); // required due to Color being a struct
 					pose.SetDarkColor(setupDark);
 					return;
 				case MixBlend.First:
-					light += new Color((setupLight.r - light.r) * alpha, (setupLight.g - light.g) * alpha, (setupLight.b - light.b) * alpha,
+					light += new Color32F((setupLight.r - light.r) * alpha, (setupLight.g - light.g) * alpha, (setupLight.b - light.b) * alpha,
 						(setupLight.a - light.a) * alpha);
 					light.Clamp();
 
-					Color darkValue = dark.Value;
-					Color setupDarkValue = setupDark.Value;
+					Color32F darkValue = dark.Value;
+					Color32F setupDarkValue = setupDark.Value;
 					darkValue.r += (setupDarkValue.r - darkValue.r) * alpha;
 					darkValue.g += (setupDarkValue.g - darkValue.g) * alpha;
 					darkValue.b += (setupDarkValue.b - darkValue.b) * alpha;
@@ -1368,10 +1368,10 @@ namespace Spine {
 			}
 
 			if (alpha == 1) {
-				light = new Color(r, g, b, a);
+				light = new Color32F(r, g, b, a);
 				light.Clamp();
 
-				Color darkValue = dark.Value;
+				Color32F darkValue = dark.Value;
 				darkValue.r = r2;
 				darkValue.g = g2;
 				darkValue.b = b2;
@@ -1380,17 +1380,17 @@ namespace Spine {
 				pose.SetColor(light); // required due to Color being a struct
 				pose.SetDarkColor(darkValue);
 			} else {
-				Color darkValue = dark.Value;
+				Color32F darkValue = dark.Value;
 				if (blend == MixBlend.Setup) {
 					SlotPose setup = slot.data.setup;
 					light = setup.GetColor();
-					Color? setupDark = setup.GetDarkColor();
-					Color setupDarkValue = setupDark.Value;
+					Color32F? setupDark = setup.GetDarkColor();
+					Color32F setupDarkValue = setupDark.Value;
 					darkValue.r = setupDarkValue.r;
 					darkValue.g = setupDarkValue.g;
 					darkValue.b = setupDarkValue.b;
 				}
-				light += new Color((r - light.r) * alpha, (g - light.g) * alpha, (b - light.b) * alpha, (a - light.a) * alpha);
+				light += new Color32F((r - light.r) * alpha, (g - light.g) * alpha, (b - light.b) * alpha, (a - light.a) * alpha);
 				light.Clamp();
 
 				darkValue.r += (r2 - darkValue.r) * alpha;
@@ -1437,14 +1437,14 @@ namespace Spine {
 
 		override protected void Apply (Slot slot, SlotPose pose, float time, float alpha, MixBlend blend) {
 			float[] frames = this.frames;
-			Color light = pose.GetColor();
-			Color? dark = pose.GetDarkColor();
+			Color32F light = pose.GetColor();
+			Color32F? dark = pose.GetDarkColor();
 			if (time < frames[0]) {
 				SlotPose setup = slot.data.setup;
-				Color setupLight = setup.GetColor();
-				Color? setupDark = setup.GetDarkColor();
-				Color darkValue = dark.Value;
-				Color setupDarkValue = setupDark.Value;
+				Color32F setupLight = setup.GetColor();
+				Color32F? setupDark = setup.GetDarkColor();
+				Color32F darkValue = dark.Value;
+				Color32F setupDarkValue = setupDark.Value;
 
 				switch (blend) {
 				case MixBlend.Setup:
@@ -1520,7 +1520,7 @@ namespace Spine {
 				light.b = b;
 				light.Clamp();
 
-				Color darkValue = dark.Value;
+				Color32F darkValue = dark.Value;
 				darkValue.r = r2;
 				darkValue.g = g2;
 				darkValue.b = b2;
@@ -1529,13 +1529,13 @@ namespace Spine {
 				pose.SetColor(light); // required due to Color being a struct
 				pose.SetDarkColor(darkValue);
 			} else {
-				Color darkValue = dark.Value;
+				Color32F darkValue = dark.Value;
 				if (blend == MixBlend.Setup) {
 
 					SlotPose setup = slot.data.setup;
-					Color setupLight = setup.GetColor();
-					Color? setupDark = setup.GetDarkColor();
-					Color setupDarkValue = setupDark.Value;
+					Color32F setupLight = setup.GetColor();
+					Color32F? setupDark = setup.GetDarkColor();
+					Color32F setupDarkValue = setupDark.Value;
 
 					light.r = setupLight.r;
 					light.g = setupLight.g;

@@ -35,7 +35,7 @@ using System;
 
 namespace Spine {
 #if IS_UNITY
-	using Color = UnityEngine.Color;
+	using Color32F = UnityEngine.Color;
 #endif
 
 	/// <summary>
@@ -47,8 +47,8 @@ namespace Spine {
 		// Color is a struct, thus set to protected to prevent
 		// Color color = slot.color; color.a = 0.5; modifying just a copy of the struct instead of the original
 		// object as in reference implementation.
-		protected Color color = new Color(1, 1, 1, 1);
-		protected Color? darkColor = null;
+		protected Color32F color = new Color32F(1, 1, 1, 1);
+		protected Color32F? darkColor = null;
 		internal Attachment attachment; // Not used in setup pose.
 		internal int sequenceIndex;
 		internal readonly ExposedList<float> deform = new ExposedList<float>();
@@ -68,13 +68,13 @@ namespace Spine {
 
 		/// <returns>A copy of the color used to tint the slot's attachment. If <see cref="DarkColor"/> is set, this is used as the light color for two
 		/// color tinting.</returns>
-		public Color GetColor () {
+		public Color32F GetColor () {
 			return color;
 		}
 
 		/// <summary>Sets the color used to tint the slot's attachment. If <see cref="DarkColor"/> is set, this is used as the light color for two
 		/// color tinting.</summary>
-		public void SetColor (Color color) {
+		public void SetColor (Color32F color) {
 			this.color = color;
 		}
 
@@ -85,13 +85,13 @@ namespace Spine {
 
 		/// <returns>A copy of the dark color used to tint the slot's attachment for two color tinting, or null if two color tinting is not used. The dark
 		/// color's alpha is not used.</returns>
-		public Color? GetDarkColor () {
+		public Color32F? GetDarkColor () {
 			return darkColor;
 		}
 
 		/// <summary>Sets the dark color used to tint the slot's attachment for two color tinting, or null if two color tinting is not used. The dark
 		/// color's alpha is not used.</summary>
-		public void SetDarkColor (Color? darkColor) {
+		public void SetDarkColor (Color32F? darkColor) {
 			this.darkColor = darkColor;
 		}
 
