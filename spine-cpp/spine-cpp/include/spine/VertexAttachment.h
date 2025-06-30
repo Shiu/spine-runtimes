@@ -38,7 +38,8 @@ namespace spine {
 	class Slot;
 	class Skeleton;
 
-	/// An attachment with vertices that are transformed by one or more bones and can be deformed by a slot's vertices.
+	/// An attachment with vertices that are transformed by one or more bones and can be deformed by a slot's
+	/// SlotPose::getDeform().
 	class SP_API VertexAttachment : public Attachment {
 		friend class SkeletonBinary;
 
@@ -54,10 +55,14 @@ namespace spine {
 		virtual ~VertexAttachment();
 
 
-		/// Transforms local vertices to world coordinates.
-		/// @param start The index of the first Vertices value to transform. Each vertex has 2 values, x and y.
-		/// @param count The number of world vertex values to output. Must be less than or equal to WorldVerticesLength - start.
-		/// @param worldVertices The output world vertices. Must have a length greater than or equal to offset + count.
+		/// Transforms the attachment's local vertices to world coordinates. If the slot's SlotPose::getDeform()
+		/// is not empty, it is used to deform the vertices.
+		///
+		/// See https://esotericsoftware.com/spine-runtime-skeletons#World-transforms World transforms in the Spine
+		/// Runtimes Guide.
+		/// @param start The index of the first vertices value to transform. Each vertex has 2 values, x and y.
+		/// @param count The number of world vertex values to output. Must be <= WorldVerticesLength - start.
+		/// @param worldVertices The output world vertices. Must have a length >= offset + count * stride / 2.
 		/// @param offset The worldVertices index to begin writing values.
 		/// @param stride The number of worldVertices entries between the value pairs written.
 		virtual void computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
