@@ -54,7 +54,6 @@ namespace Spine {
 			: base(data, pose, constrained) {
 		}
 
-		public D Data { get { return data; } }
 		public IConstraintData IData { get { return data; } }
 		abstract public IConstraint Copy (Skeleton skeleton);
 		abstract public void Sort (Skeleton skeleton);

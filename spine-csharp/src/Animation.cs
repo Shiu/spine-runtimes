@@ -644,8 +644,6 @@ namespace Spine {
 
 	/// <summary>Changes a bone's local <see cref="BoneLocal.Rotation"/>.</summary>
 	public class RotateTimeline : BoneTimeline1, IBoneTimeline {
-		readonly int boneIndex;
-
 		public RotateTimeline (int frameCount, int bezierCount, int boneIndex)
 			: base(frameCount, bezierCount, boneIndex, Property.Rotate) {
 		}
