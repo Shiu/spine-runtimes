@@ -78,6 +78,9 @@ namespace spine {
 		/// @param parent May be NULL.
 		Bone(BoneData& data, Bone* parent);
 
+		/// Copy constructor. Does not copy the children bones.
+		Bone(Bone& bone, Bone* parent);
+
 		/// The parent bone, or null if this is the root bone.
 		Bone* getParent();
 

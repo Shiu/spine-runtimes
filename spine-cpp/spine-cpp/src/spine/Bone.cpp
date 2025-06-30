@@ -47,6 +47,16 @@ Bone::Bone(BoneData &data, Bone *parent) : PosedGeneric<BoneData, BoneLocal, Bon
 	_applied->_bone = this;
 }
 
+Bone::Bone(Bone &bone, Bone *parent) : PosedGeneric<BoneData, BoneLocal, BonePose>(bone._data),
+										PosedActive(),
+										_parent(parent),
+										_children(),
+										_sorted(false) {
+	_constrained._bone = this;
+	_applied->_bone = this;
+	_pose.set(bone._pose);
+}
+
 Bone *Bone::getParent() {
 	return _parent;
 }
