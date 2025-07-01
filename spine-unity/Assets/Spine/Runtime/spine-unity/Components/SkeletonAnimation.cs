@@ -308,7 +308,7 @@ namespace Spine.Unity {
 			// when updateMode disables applying animations, still ensure animations are mixed out
 			if (updateMode != UpdateMode.FullUpdate &&
 				updateMode != UpdateMode.EverythingExceptMesh) {
-				entry.Animation.Apply(skeleton, 0, 0, false, null, 0f, MixBlend.Setup, MixDirection.Out);
+				entry.Animation.Apply(skeleton, 0, 0, false, null, 0f, MixBlend.Setup, MixDirection.Out, false);
 			}
 		}
 	}
