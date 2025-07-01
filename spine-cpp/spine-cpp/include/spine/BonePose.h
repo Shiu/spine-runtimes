@@ -38,6 +38,8 @@ namespace spine {
 	class Bone;
 	class Skeleton;
 
+	/// The applied pose for a bone. This is the Bone pose with constraints applied and the world transform computed by
+	/// Skeleton::updateWorldTransform(Physics).
 	class SP_API BonePose : public BoneLocal, public Update {
 		friend class IkConstraint;
 
