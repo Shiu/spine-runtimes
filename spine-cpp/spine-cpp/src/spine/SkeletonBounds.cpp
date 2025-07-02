@@ -63,7 +63,7 @@ void SkeletonBounds::update(Skeleton &skeleton, bool updateAabb) {
 		Slot *slot = slots[i];
 		if (!slot->getBone().isActive()) continue;
 
-		Attachment *attachment = slot->getAppliedPose().getAttachment();
+		Attachment *attachment = slot->_applied->getAttachment();
 		if (attachment == NULL || !attachment->getRTTI().instanceOf(BoundingBoxAttachment::rtti)) continue;
 		BoundingBoxAttachment *boundingBox = static_cast<BoundingBoxAttachment *>(attachment);
 		_boundingBoxes.add(boundingBox);
@@ -196,6 +196,22 @@ Vector<spine::Polygon *> &SkeletonBounds::getPolygons() {
 
 Vector<BoundingBoxAttachment *> &SkeletonBounds::getBoundingBoxes() {
 	return _boundingBoxes;
+}
+
+float SkeletonBounds::getMinX() {
+	return _minX;
+}
+
+float SkeletonBounds::getMinY() {
+	return _minY;
+}
+
+float SkeletonBounds::getMaxX() {
+	return _maxX;
+}
+
+float SkeletonBounds::getMaxY() {
+	return _maxY;
 }
 
 float SkeletonBounds::getWidth() {

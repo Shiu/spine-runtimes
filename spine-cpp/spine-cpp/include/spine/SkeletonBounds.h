@@ -94,8 +94,22 @@ namespace spine {
         /// Returns all bounding boxes. Requires a call to update() first.
         Vector<BoundingBoxAttachment *> &getBoundingBoxes();
 
+		/// The left edge of the axis aligned bounding box.
+		float getMinX();
+
+		/// The bottom edge of the axis aligned bounding box.
+		float getMinY();
+
+		/// The right edge of the axis aligned bounding box.
+		float getMaxX();
+
+		/// The top edge of the axis aligned bounding box.
+		float getMaxY();
+
+		/// The width of the axis aligned bounding box.
 		float getWidth();
 
+		/// The height of the axis aligned bounding box.
 		float getHeight();
 
 	private:
