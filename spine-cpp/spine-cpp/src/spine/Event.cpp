@@ -33,11 +33,11 @@
 
 spine::Event::Event(float time, const spine::EventData &data) : _data(data),
 																_time(time),
-																_intValue(0),
-																_floatValue(0),
-																_stringValue(),
-																_volume(1),
-																_balance(0) {
+																_intValue(data.getIntValue()),
+																_floatValue(data.getFloatValue()),
+																_stringValue(data.getStringValue()),
+																_volume(data.getVolume()),
+																_balance(data.getBalance()) {
 }
 
 const spine::EventData &spine::Event::getData() {
@@ -48,27 +48,27 @@ float spine::Event::getTime() {
 	return _time;
 }
 
-int spine::Event::getIntValue() {
+int spine::Event::getInt() {
 	return _intValue;
 }
 
-void spine::Event::setIntValue(int inValue) {
+void spine::Event::setInt(int inValue) {
 	_intValue = inValue;
 }
 
-float spine::Event::getFloatValue() {
+float spine::Event::getFloat() {
 	return _floatValue;
 }
 
-void spine::Event::setFloatValue(float inValue) {
+void spine::Event::setFloat(float inValue) {
 	_floatValue = inValue;
 }
 
-const spine::String &spine::Event::getStringValue() {
+const spine::String &spine::Event::getString() {
 	return _stringValue;
 }
 
-void spine::Event::setStringValue(const spine::String &inValue) {
+void spine::Event::setString(const spine::String &inValue) {
 	_stringValue = inValue;
 }
 

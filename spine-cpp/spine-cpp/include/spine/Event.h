@@ -56,17 +56,17 @@ namespace spine {
 		/// The animation time this event was keyed.
 		float getTime();
 
-		int getIntValue();
+		int getInt();
 
-		void setIntValue(int inValue);
+		void setInt(int inValue);
 
-		float getFloatValue();
+		float getFloat();
 
-		void setFloatValue(float inValue);
+		void setFloat(float inValue);
 
-		const String &getStringValue();
+		const String &getString();
 
-		void setStringValue(const String &inValue);
+		void setString(const String &inValue);
 
 		float getVolume();
 
