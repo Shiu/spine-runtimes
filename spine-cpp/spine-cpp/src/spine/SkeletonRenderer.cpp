@@ -195,7 +195,7 @@ RenderCommand *SkeletonRenderer::render(Skeleton &skeleton) {
 			}
 
 			worldVertices->setSize(mesh->getWorldVerticesLength(), 0);
-			mesh->computeWorldVertices(slot, 0, mesh->getWorldVerticesLength(), worldVertices->buffer(), 0, 2);
+			mesh->computeWorldVertices(skeleton, slot, 0, mesh->getWorldVerticesLength(), worldVertices->buffer(), 0, 2);
 			verticesCount = (int32_t) (mesh->getWorldVerticesLength() >> 1);
 			uvs = &mesh->getUVs();
 			indices = &mesh->getTriangles();
