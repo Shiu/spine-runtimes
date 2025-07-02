@@ -33,7 +33,7 @@
 
 using namespace spine;
 
-SlotPose::SlotPose() : _color(1, 1, 1, 1), _darkColor(0, 0, 0, 0), _hasDarkColor(false), _attachment(nullptr), _sequenceIndex(-1) {
+SlotPose::SlotPose() : _color(1, 1, 1, 1), _darkColor(0, 0, 0, 0), _hasDarkColor(false), _attachment(nullptr), _sequenceIndex(0) {
 }
 
 SlotPose::~SlotPose() {
