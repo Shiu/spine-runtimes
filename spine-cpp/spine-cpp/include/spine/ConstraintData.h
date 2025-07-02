@@ -62,7 +62,7 @@ namespace spine {
 		ConstraintDataGeneric(const String &name) : PosedDataGeneric<P>(name), ConstraintData(name) {}
 		virtual ~ConstraintDataGeneric() {}
 
-		virtual Constraint* create(Skeleton& skeleton) = 0;
+		virtual Constraint* create(Skeleton& skeleton) override = 0;
 		
 		// Resolve ambiguity by forwarding to PosedData's implementation
 		virtual const String &getName() const override { return PosedDataGeneric<P>::getName(); }

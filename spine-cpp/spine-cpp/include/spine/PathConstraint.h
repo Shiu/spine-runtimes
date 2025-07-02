@@ -81,7 +81,7 @@ namespace spine {
 
 		void setSlot(Slot *slot);
 
-		PathConstraintData &getData();
+		virtual PathConstraintData &getData() override;
 
 
 

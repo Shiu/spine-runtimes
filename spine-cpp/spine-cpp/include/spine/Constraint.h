@@ -40,7 +40,7 @@ namespace spine {
 	class Skeleton;
 
 	class SP_API Constraint : public Update {
-		RTTI_DECL_NOPARENT
+		RTTI_DECL
 		friend class Skeleton;
 
 	public:
