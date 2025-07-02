@@ -88,7 +88,7 @@ void PhysicsConstraint::rotate(float x, float y, float degrees) {
 }
 
 void PhysicsConstraint::update(Skeleton &skeleton, Physics physics) {
-	PhysicsConstraintPose &p = _pose;
+	PhysicsConstraintPose &p = *_applied;
 	float mix = p._mix;
 	if (mix == 0) return;
 
