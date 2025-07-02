@@ -62,6 +62,7 @@ namespace spine {
 		friend class TransformConstraintTimeline;
 		friend class TranslateTimeline;
 		friend class TwoColorTimeline;
+		friend class Slot;
 
 	public:
 		SlotData(int index, const String& name, BoneData& boneData);

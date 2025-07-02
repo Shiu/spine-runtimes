@@ -33,9 +33,7 @@ import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.TransformConstraintData.FromProperty;
 
-/** Stores the setup pose for a {@link PhysicsConstraint}.
- * <p>
- * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
+/** Stores the setup pose for a {@link Slider}.  */
 public class SliderData extends ConstraintData<Slider, SliderPose> {
 	Animation animation;
 	boolean additive, loop;

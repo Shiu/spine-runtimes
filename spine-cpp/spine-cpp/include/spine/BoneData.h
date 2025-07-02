@@ -64,6 +64,8 @@ namespace spine {
 
 		friend class TranslateYTimeline;
 
+		friend class Slot;
+
 	public:
 		BoneData(int index, const String &name, BoneData *parent = NULL);
 

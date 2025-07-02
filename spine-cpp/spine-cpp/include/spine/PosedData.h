@@ -60,6 +60,7 @@ namespace spine {
         friend class TranslateYTimeline;
         friend class InheritTimeline;
         friend class Skeleton;
+        friend class Slot;
 
     public:
         PosedData(const spine::String& name);
@@ -117,6 +118,7 @@ namespace spine {
         friend class PhysicsConstraintMassTimeline;
         friend class PhysicsConstraintWindTimeline;
         friend class PhysicsConstraintGravityTimeline;
+        friend class Slot;
 
     protected:
         P _setup;
