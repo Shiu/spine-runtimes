@@ -309,7 +309,7 @@ bool SkeletonClipping::clip(float x1, float y1, float x2, float y2, float x3, fl
 			float inputX = inputVertices[ii], inputY = inputVertices[ii + 1];
 			ii += 2;
 			float inputX2 = inputVertices[ii], inputY2 = inputVertices[ii + 1];
-			float s2 = ey * (edgeX - inputX2) > ex * (edgeY - inputY2);
+			bool s2 = ey * (edgeX - inputX2) > ex * (edgeY - inputY2);
 			float s1 = ey * (edgeX - inputX) - ex * (edgeY - inputY);
 			if (s1 > 0) {
 				if (s2) {// v1 inside, v2 inside
