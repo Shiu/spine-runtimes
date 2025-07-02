@@ -144,14 +144,14 @@ RenderCommand *SkeletonRenderer::render(Skeleton &skeleton) {
 
 	for (unsigned i = 0; i < skeleton.getSlots().size(); ++i) {
 		Slot &slot = *skeleton.getDrawOrder()[i];
-		Attachment *attachment = slot.getAttachment();
+		Attachment *attachment = slot.getAppliedPose().getAttachment();
 		if (!attachment) {
 			clipper.clipEnd(slot);
 			continue;
 		}
 
 		// Early out if the slot color is 0 or the bone is not active
-		if ((slot.getColor().a == 0 || !slot.getBone().isActive()) && !attachment->getRTTI().isExactly(ClippingAttachment::rtti)) {
+		if ((slot.getAppliedPose().getColor().a == 0 || !slot.getBone().isActive()) && !attachment->getRTTI().isExactly(ClippingAttachment::rtti)) {
 			clipper.clipEnd(slot);
 			continue;
 		}
@@ -203,20 +203,20 @@ RenderCommand *SkeletonRenderer::render(Skeleton &skeleton) {
 			texture = mesh->getRegion()->rendererObject;
 
 		} else if (attachment->getRTTI().isExactly(ClippingAttachment::rtti)) {
-			ClippingAttachment *clip = (ClippingAttachment *) slot.getAttachment();
-			clipper.clipStart(slot, clip);
+			ClippingAttachment *clip = (ClippingAttachment *) slot.getAppliedPose().getAttachment();
+			clipper.clipStart(skeleton, slot, clip);
 			continue;
 		} else
 			continue;
 
-		uint8_t r = static_cast<uint8_t>(skeleton.getColor().r * slot.getColor().r * attachmentColor->r * 255);
-		uint8_t g = static_cast<uint8_t>(skeleton.getColor().g * slot.getColor().g * attachmentColor->g * 255);
-		uint8_t b = static_cast<uint8_t>(skeleton.getColor().b * slot.getColor().b * attachmentColor->b * 255);
-		uint8_t a = static_cast<uint8_t>(skeleton.getColor().a * slot.getColor().a * attachmentColor->a * 255);
+		uint8_t r = static_cast<uint8_t>(skeleton.getColor().r * slot.getAppliedPose().getColor().r * attachmentColor->r * 255);
+		uint8_t g = static_cast<uint8_t>(skeleton.getColor().g * slot.getAppliedPose().getColor().g * attachmentColor->g * 255);
+		uint8_t b = static_cast<uint8_t>(skeleton.getColor().b * slot.getAppliedPose().getColor().b * attachmentColor->b * 255);
+		uint8_t a = static_cast<uint8_t>(skeleton.getColor().a * slot.getAppliedPose().getColor().a * attachmentColor->a * 255);
 		uint32_t color = (a << 24) | (r << 16) | (g << 8) | b;
 		uint32_t darkColor = 0xff000000;
-		if (slot.hasDarkColor()) {
-			Color &slotDarkColor = slot.getDarkColor();
+		if (slot.getAppliedPose().hasDarkColor()) {
+			Color &slotDarkColor = slot.getAppliedPose().getDarkColor();
 			darkColor = 0xff000000 | (static_cast<uint8_t>(slotDarkColor.r * 255) << 16) | (static_cast<uint8_t>(slotDarkColor.g * 255) << 8) | static_cast<uint8_t>(slotDarkColor.b * 255);
 		}
 
