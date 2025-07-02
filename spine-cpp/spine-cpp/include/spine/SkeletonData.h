@@ -146,10 +146,8 @@ namespace spine {
 			getConstraints(); // Ensure constraints array is populated
 			for (size_t i = 0, n = _constraints.size(); i < n; i++) {
 				ConstraintData *constraint = _constraints[i];
-				if (constraint->getName() == constraintName) {
-					if (constraint->rtti.isExactly(T::rtti)) {
-						return static_cast<T*>(constraint);
-					}
+				if (constraint->getName() == constraintName && constraint->getRTTI().instanceOf(T::rtti)) {
+					return static_cast<T*>(constraint);
 				}
 			}
 			return NULL;
