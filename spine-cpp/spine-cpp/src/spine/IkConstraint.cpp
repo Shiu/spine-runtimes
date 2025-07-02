@@ -58,7 +58,7 @@ IkConstraint *IkConstraint::copy(Skeleton &skeleton) {
 }
 
 void IkConstraint::update(Skeleton &skeleton, Physics physics) {
-	IkConstraintPose &p = _pose;
+	IkConstraintPose &p = *_applied;
 	if (p._mix == 0) return;
 	BonePose &target = *_target->_applied;
 	switch (_bones.size()) {
