@@ -33,7 +33,7 @@
 #include <spine/BoneTimeline.h>
 
 namespace spine {
-	/// Changes a bone's local shear X and Y.
+	/// Changes a bone's local BoneLocal::getShearX() and BoneLocal::getShearY().
 	class SP_API ShearTimeline : public BoneTimeline2 {
 		friend class SkeletonBinary;
 
@@ -49,7 +49,7 @@ namespace spine {
 						   MixDirection direction) override;
 	};
 
-	/// Changes a bone's local shear X.
+	/// Changes a bone's local BoneLocal::getShearX().
 	class SP_API ShearXTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
@@ -65,7 +65,7 @@ namespace spine {
 						   MixDirection direction) override;
 	};
 
-	/// Changes a bone's local shear Y.
+	/// Changes a bone's local BoneLocal::getShearY().
 	class SP_API ShearYTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
