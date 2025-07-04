@@ -33,7 +33,7 @@
 #include <spine/BoneTimeline.h>
 
 namespace spine {
-	/// Changes a bone's local scale X and Y.
+	/// Changes a bone's local BoneLocal::getScaleX() and BoneLocal::getScaleY().
 	class SP_API ScaleTimeline : public BoneTimeline2 {
 		friend class SkeletonBinary;
 

@@ -163,6 +163,7 @@ namespace spine {
         }
     };
 
+    /// Changes a physics constraint's PhysicsConstraintPose::getWind().
     class SP_API PhysicsConstraintWindTimeline : public PhysicsConstraintTimeline {
         friend class SkeletonBinary;
 
