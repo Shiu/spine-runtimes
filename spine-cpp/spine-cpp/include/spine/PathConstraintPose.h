@@ -40,6 +40,7 @@ namespace spine {
         friend class PathConstraintPositionTimeline;
         friend class PathConstraintSpacingTimeline;
         friend class PathConstraintMixTimeline;
+        friend class SkeletonJson;
 
     private:
         float _position;

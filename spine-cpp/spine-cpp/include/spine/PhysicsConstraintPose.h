@@ -38,6 +38,7 @@ namespace spine {
     class SP_API PhysicsConstraintPose : public Pose<PhysicsConstraintPose> {
         friend class PhysicsConstraint;
         friend class PhysicsConstraintTimeline;
+        friend class SkeletonJson;
 
     private:
         float _inertia;

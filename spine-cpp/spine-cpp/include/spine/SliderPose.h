@@ -41,6 +41,7 @@ namespace spine {
         friend class Slider;
         friend class SliderMixTimeline;
         friend class SliderTimeline;
+        friend class SkeletonJson;
     private:
         float _time, _mix;
 

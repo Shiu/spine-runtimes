@@ -50,6 +50,7 @@ namespace spine {
 		friend class RGBA2Timeline;
 		friend class RGB2Timeline;
 		friend class PathConstraint;
+		friend class SkeletonJson;
 
 	protected:
 		Color _color;

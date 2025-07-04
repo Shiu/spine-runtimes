@@ -52,6 +52,7 @@ namespace spine {
         friend class ToShearY;
         friend class TransformConstraint;
         friend class TransformConstraintTimeline;
+        friend class SkeletonJson;
 
     private:
         float _mixRotate, _mixX, _mixY, _mixScaleX, _mixScaleY, _mixShearY;

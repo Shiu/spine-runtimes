@@ -39,6 +39,7 @@ namespace spine {
 	class SP_API IkConstraintPose : public Pose<IkConstraintPose> {
 		friend class IkConstraint;
 		friend class IkConstraintTimeline;
+		friend class SkeletonJson;
 
 	public:
 		IkConstraintPose();
