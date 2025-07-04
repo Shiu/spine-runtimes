@@ -55,19 +55,6 @@ DeformTimeline::DeformTimeline(size_t frameCount, size_t bezierCount, int slotIn
 	}
 }
 
-void DeformTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
-						   MixBlend blend, MixDirection direction, bool appliedPose) {
-	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
-	SP_UNUSED(direction);
-
-	Slot *slotP = skeleton._slots[_slotIndex];
-	Slot &slot = *slotP;
-	if (!slot._bone.isActive()) return;
-	SlotPose &pose = appliedPose ? *slot._applied : slot._pose;
-
-	apply(slot, pose, time, alpha, blend);
-}
 
 void DeformTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
 	Attachment *slotAttachment = pose._attachment;

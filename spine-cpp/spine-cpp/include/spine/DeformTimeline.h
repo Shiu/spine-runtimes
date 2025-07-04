@@ -35,6 +35,7 @@
 namespace spine {
 	class VertexAttachment;
 
+	/// Changes a slot's SlotPose::getDeform() to deform a VertexAttachment.
 	class SP_API DeformTimeline : public SlotCurveTimeline {
 		friend class SkeletonBinary;
 
@@ -44,10 +45,6 @@ namespace spine {
 
 	public:
 		explicit DeformTimeline(size_t frameCount, size_t bezierCount, int slotIndex, VertexAttachment *attachment);
-
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) override;
 
 		/// Sets the time and vertices for the specified frame.
 		void setFrame(int frameIndex, float time, Vector<float> &vertices);
