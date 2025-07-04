@@ -68,16 +68,14 @@ void PhysicsConstraintTimeline::apply(Skeleton &skeleton, float, float time, Vec
 			PhysicsConstraint *constraint = physicsConstraints[i];
 			if (constraint->isActive() && global(constraint->_data)) {
 				PhysicsConstraintPose &pose = appliedPose ? *constraint->_applied : constraint->_pose;
-				PhysicsConstraintPose &setupPose = constraint->_data._setup;
-				set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(setupPose), value));
+				set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(constraint->_data._setup), value));
 			}
 		}
 	} else {
-		PhysicsConstraint *constraint = skeleton.getPhysicsConstraints()[_constraintIndex];
+		PhysicsConstraint *constraint = static_cast<PhysicsConstraint *>(skeleton.getConstraints()[_constraintIndex]);
 		if (constraint->isActive()) {
 			PhysicsConstraintPose &pose = appliedPose ? *constraint->_applied : constraint->_pose;
-			PhysicsConstraintPose &setupPose = constraint->_data._setup;
-			set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(setupPose)));
+			set(pose, getAbsoluteValue(time, alpha, blend, get(pose), get(constraint->_data._setup)));
 		}
 	}
 }
@@ -85,7 +83,7 @@ void PhysicsConstraintTimeline::apply(Skeleton &skeleton, float, float time, Vec
 void PhysicsConstraintResetTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *, float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	PhysicsConstraint *constraint = nullptr;
 	if (_constraintIndex != -1) {
-		constraint = skeleton.getPhysicsConstraints()[_constraintIndex];
+		constraint = static_cast<PhysicsConstraint *>(skeleton.getConstraints()[_constraintIndex]);
 		if (!constraint->isActive()) return;
 	}
 

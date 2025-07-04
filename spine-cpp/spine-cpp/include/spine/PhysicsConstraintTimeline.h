@@ -135,6 +135,7 @@ namespace spine {
         }
     };
 
+    /// Changes a physics constraint's PhysicsConstraintPose::getMassInverse(). The timeline values are not inverted.
     class SP_API PhysicsConstraintMassTimeline : public PhysicsConstraintTimeline {
         friend class SkeletonBinary;
 
@@ -208,6 +209,7 @@ namespace spine {
         }
     };
 
+    /// Changes a physics constraint's PhysicsConstraintPose::getMix().
     class SP_API PhysicsConstraintMixTimeline : public PhysicsConstraintTimeline {
         friend class SkeletonBinary;
 
@@ -232,6 +234,7 @@ namespace spine {
         }
     };
 
+    /// Resets a physics constraint when specific animation times are reached.
     class SP_API PhysicsConstraintResetTimeline : public Timeline, public ConstraintTimeline {
         friend class SkeletonBinary;
 
@@ -240,7 +243,8 @@ namespace spine {
     RTTI_DECL
 
     public:
-        explicit PhysicsConstraintResetTimeline(size_t frameCount, int physicsConstraintIndex): Timeline(frameCount, 1), ConstraintTimeline(physicsConstraintIndex) {
+        /// @param constraintIndex -1 for all physics constraints in the skeleton.
+        explicit PhysicsConstraintResetTimeline(size_t frameCount, int constraintIndex): Timeline(frameCount, 1), ConstraintTimeline(constraintIndex) {
             PropertyId ids[] = {((PropertyId)Property_PhysicsConstraintReset) << 32};
             setPropertyIds(ids, 1);
         }
@@ -250,6 +254,10 @@ namespace spine {
               MixDirection direction, bool appliedPose) override;
 
         int getFrameCount() { return (int)_frames.size(); }
+
+        /// The index of the physics constraint in Skeleton::getConstraints() that will be reset when this timeline is
+        /// applied, or -1 if all physics constraints in the skeleton will be reset.
+        virtual int getConstraintIndex() override { return _constraintIndex; }
 
         /// Sets the time for the specified frame.
         void setFrame(int frame, float time) {
