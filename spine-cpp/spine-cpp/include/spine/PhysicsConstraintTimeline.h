@@ -38,6 +38,7 @@
 
 namespace spine {
 
+	/// The base class for most PhysicsConstraint timelines.
 	class SP_API PhysicsConstraintTimeline : public CurveTimeline1, public ConstraintTimeline {
 		friend class SkeletonBinary;
 
@@ -46,7 +47,8 @@ namespace spine {
 	RTTI_DECL
 
 	public:
-		explicit PhysicsConstraintTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex, Property property);
+		/// @param constraintIndex -1 for all physics constraints in the skeleton.
+		explicit PhysicsConstraintTimeline(size_t frameCount, size_t bezierCount, int constraintIndex, Property property);
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
