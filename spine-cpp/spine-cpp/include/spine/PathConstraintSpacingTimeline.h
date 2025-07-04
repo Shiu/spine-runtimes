@@ -42,7 +42,7 @@ namespace spine {
 	RTTI_DECL
 
 	public:
-		explicit PathConstraintSpacingTimeline(size_t frameCount, size_t bezierCount, int pathConstraintIndex);
+		explicit PathConstraintSpacingTimeline(size_t frameCount, size_t bezierCount, int constraintIndex);
 
 		virtual ~PathConstraintSpacingTimeline();
 

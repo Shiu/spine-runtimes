@@ -34,6 +34,7 @@
 
 namespace spine {
 
+	/// Changes a path constraint's PathConstraintPose::getPosition().
 	class SP_API PathConstraintPositionTimeline : public ConstraintTimeline1 {
 		friend class SkeletonBinary;
 
@@ -44,7 +45,7 @@ namespace spine {
 	public:
 		static const int ENTRIES;
 
-		explicit PathConstraintPositionTimeline(size_t frameCount, size_t bezierCount, int pathConstraintIndex);
+		explicit PathConstraintPositionTimeline(size_t frameCount, size_t bezierCount, int constraintIndex);
 
 		virtual ~PathConstraintPositionTimeline();
 

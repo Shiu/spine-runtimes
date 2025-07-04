@@ -44,12 +44,10 @@ using namespace spine;
 RTTI_IMPL(PathConstraintSpacingTimeline, ConstraintTimeline1)
 
 PathConstraintSpacingTimeline::PathConstraintSpacingTimeline(size_t frameCount, size_t bezierCount,
-															 int pathConstraintIndex) : ConstraintTimeline1(frameCount,
+															 int constraintIndex) : ConstraintTimeline1(frameCount,
 																									   bezierCount,
-																									   pathConstraintIndex,
+																									   constraintIndex,
 																									   Property_PathConstraintSpacing) {
-	PropertyId ids[] = {((PropertyId) Property_PathConstraintSpacing << 32) | pathConstraintIndex};
-	setPropertyIds(ids, 1);
 }
 
 PathConstraintSpacingTimeline::~PathConstraintSpacingTimeline() {
