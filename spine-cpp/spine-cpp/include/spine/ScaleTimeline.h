@@ -49,7 +49,7 @@ namespace spine {
 						   MixDirection direction) override;
 	};
 
-	/// Changes a bone's local scale X.
+	/// Changes a bone's local BoneLocal::getScaleX().
 	class SP_API ScaleXTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
@@ -65,7 +65,7 @@ namespace spine {
 						   MixDirection direction) override;
 	};
 
-	/// Changes a bone's local scale Y.
+	/// Changes a bone's local BoneLocal::getScaleY().
 	class SP_API ScaleYTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
