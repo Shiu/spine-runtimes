@@ -35,6 +35,8 @@
 
 namespace spine {
 
+	/// Changes a path constraint's PathConstraintPose::getMixRotate(), PathConstraintPose::getMixX(), and
+	/// PathConstraintPose::getMixY().
 	class SP_API PathConstraintMixTimeline : public CurveTimeline, public ConstraintTimeline {
 		friend class SkeletonBinary;
 
@@ -43,7 +45,7 @@ namespace spine {
 	RTTI_DECL
 
 	public:
-		explicit PathConstraintMixTimeline(size_t frameCount, size_t bezierCount, int pathConstraintIndex);
+		explicit PathConstraintMixTimeline(size_t frameCount, size_t bezierCount, int constraintIndex);
 
 		virtual ~PathConstraintMixTimeline();
 
