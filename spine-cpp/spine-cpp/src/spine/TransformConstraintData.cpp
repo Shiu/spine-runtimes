@@ -161,8 +161,9 @@ ToProperty::~ToProperty() {
 
 float FromRotate::value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) {
 	if (local) return source._rotation + offsets[TransformConstraintData::ROTATION];
-	float value = MathUtil::atan2(source._c / skeleton.getScaleY(), source._a / skeleton.getScaleX()) * MathUtil::Rad_Deg
-		+ (source._a * source._d - source._b * source._c > 0 ? offsets[TransformConstraintData::ROTATION] : -offsets[TransformConstraintData::ROTATION]);
+	float sx = skeleton.getScaleX(), sy = skeleton.getScaleY();
+	float value = MathUtil::atan2(source._c / sy, source._a / sx) * MathUtil::Rad_Deg
+		+ ((source._a * source._d - source._b * source._c) * sx * sy > 0 ? offsets[TransformConstraintData::ROTATION] : -offsets[TransformConstraintData::ROTATION]);
 	if (value < 0) value += 360;
 	return value;
 }
@@ -173,10 +174,10 @@ float ToRotate::mix(TransformConstraintPose &pose) {
 
 void ToRotate::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) {
 	if (local) {
-		if (!additive) value -= bone._rotation;
-		bone._rotation += value * pose._mixRotate;
+		bone._rotation += (additive ? value : value - bone._rotation) * pose._mixRotate;
 	} else {
-		float a = bone._a, b = bone._b, c = bone._c, d = bone._d;
+		float sx = skeleton.getScaleX(), sy = skeleton.getScaleY(), ix = 1 / sx, iy = 1 / sy;
+		float a = bone._a * ix, b = bone._b * ix, c = bone._c * iy, d = bone._d * iy;
 		value *= MathUtil::Deg_Rad;
 		if (!additive) value -= MathUtil::atan2(c, a);
 		if (value > MathUtil::Pi)
@@ -185,10 +186,10 @@ void ToRotate::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose
 			value += MathUtil::Pi_2;
 		value *= pose._mixRotate;
 		float cosVal = MathUtil::cos(value), sinVal = MathUtil::sin(value);
-		bone._a = cosVal * a - sinVal * c;
-		bone._b = cosVal * b - sinVal * d;
-		bone._c = sinVal * a + cosVal * c;
-		bone._d = sinVal * b + cosVal * d;
+		bone._a = (cosVal * a - sinVal * c) * sx;
+		bone._b = (cosVal * b - sinVal * d) * sx;
+		bone._c = (sinVal * a + cosVal * c) * sy;
+		bone._d = (sinVal * b + cosVal * d) * sy;
 	}
 }
 
@@ -202,11 +203,10 @@ float ToX::mix(TransformConstraintPose &pose) {
 
 void ToX::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) {
 	if (local) {
-		if (!additive) value -= bone._x;
-		bone._x += value * pose._mixX;
+		bone._x += (additive ? value : value - bone._x) * pose._mixX;
 	} else {
-		if (!additive) value -= bone._worldX;
-		bone._worldX += value * pose._mixX;
+		if (!additive) value -= bone._worldX / skeleton.getScaleX();
+		bone._worldX += value * pose._mixX * skeleton.getScaleX();
 	}
 }
 
@@ -220,11 +220,10 @@ float ToY::mix(TransformConstraintPose &pose) {
 
 void ToY::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) {
 	if (local) {
-		if (!additive) value -= bone._y;
-		bone._y += value * pose._mixY;
+		bone._y += (additive ? value : value - bone._y) * pose._mixY;
 	} else {
-		if (!additive) value -= bone._worldY;
-		bone._worldY += value * pose._mixY;
+		if (!additive) value -= bone._worldY / skeleton.getScaleY();
+		bone._worldY += value * pose._mixY * skeleton.getScaleY();
 	}
 }
 
@@ -241,19 +240,20 @@ float ToScaleX::mix(TransformConstraintPose &pose) {
 void ToScaleX::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) {
 	if (local) {
 		if (additive)
-			bone._scaleX *= 1 + ((value - 1) * pose._mixScaleX);
+			bone._scaleX *= 1 + (value - 1) * pose._mixScaleX;
 		else if (bone._scaleX != 0) //
-			bone._scaleX = 1 + (value / bone._scaleX - 1) * pose._mixScaleX;
-	} else {
-		float s;
-		if (additive)
-			s = 1 + (value - 1) * pose._mixScaleX;
-		else {
-			s = MathUtil::sqrt(bone._a * bone._a + bone._c * bone._c) / skeleton.getScaleX();
-			if (s != 0) s = 1 + (value / s - 1) * pose._mixScaleX;
-		}
+			bone._scaleX += (value - bone._scaleX) * pose._mixScaleX;
+	} else if (additive) {
+		float s = 1 + (value - 1) * pose._mixScaleX;
 		bone._a *= s;
 		bone._c *= s;
+	} else {
+		float a = bone._a / skeleton.getScaleX(), c = bone._c / skeleton.getScaleY(), s = MathUtil::sqrt(a * a + c * c);
+		if (s != 0) {
+			s = 1 + (value - s) * pose._mixScaleX / s;
+			bone._a *= s;
+			bone._c *= s;
+		}
 	}
 }
 
@@ -270,26 +270,27 @@ float ToScaleY::mix(TransformConstraintPose &pose) {
 void ToScaleY::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) {
 	if (local) {
 		if (additive)
-			bone._scaleY *= 1 + ((value - 1) * pose._mixScaleY);
+			bone._scaleY *= 1 + (value - 1) * pose._mixScaleY;
 		else if (bone._scaleY != 0) //
-			bone._scaleY = 1 + (value / bone._scaleY - 1) * pose._mixScaleY;
-	} else {
-		float s;
-		if (additive)
-			s = 1 + (value - 1) * pose._mixScaleY;
-		else {
-			s = MathUtil::sqrt(bone._b * bone._b + bone._d * bone._d) / skeleton.getScaleY();
-			if (s != 0) s = 1 + (value / s - 1) * pose._mixScaleY;
-		}
+			bone._scaleY += (value - bone._scaleY) * pose._mixScaleY;
+	} else if (additive) {
+		float s = 1 + (value - 1) * pose._mixScaleY;
 		bone._b *= s;
 		bone._d *= s;
+	} else {
+		float b = bone._b / skeleton.getScaleX(), d = bone._d / skeleton.getScaleY(), s = MathUtil::sqrt(b * b + d * d);
+		if (s != 0) {
+			s = 1 + (value - s) * pose._mixScaleY / s;
+			bone._b *= s;
+			bone._d *= s;
+		}
 	}
 }
 
 float FromShearY::value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) {
 	if (local) return source._shearY + offsets[TransformConstraintData::SHEARY];
-	float sx = 1 / skeleton.getScaleX(), sy = 1 / skeleton.getScaleY();
-	return (MathUtil::atan2(source._d * sy, source._b * sx) - MathUtil::atan2(source._c * sy, source._a * sx)) * MathUtil::Rad_Deg - 90 + offsets[TransformConstraintData::SHEARY];
+	float ix = 1 / skeleton.getScaleX(), iy = 1 / skeleton.getScaleY();
+	return (MathUtil::atan2(source._d * iy, source._b * ix) - MathUtil::atan2(source._c * iy, source._a * ix)) * MathUtil::Rad_Deg - 90 + offsets[TransformConstraintData::SHEARY];
 }
 
 float ToShearY::mix(TransformConstraintPose &pose) {
@@ -301,12 +302,12 @@ void ToShearY::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose
 		if (!additive) value -= bone._shearY;
 		bone._shearY += value * pose._mixShearY;
 	} else {
-		float b = bone._b, d = bone._d, by = MathUtil::atan2(d, b);
+		float sx = skeleton.getScaleX(), sy = skeleton.getScaleY(), b = bone._b / sx, d = bone._d / sy, by = MathUtil::atan2(d, b);
 		value = (value + 90) * MathUtil::Deg_Rad;
 		if (additive)
 			value -= MathUtil::Pi / 2;
 		else {
-			value -= by - MathUtil::atan2(bone._c, bone._a);
+			value -= by - MathUtil::atan2(bone._c / sy, bone._a / sx);
 			if (value > MathUtil::Pi)
 				value -= MathUtil::Pi_2;
 			else if (value < -MathUtil::Pi) //
@@ -314,8 +315,8 @@ void ToShearY::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose
 		}
 		value = by + value * pose._mixShearY;
 		float s = MathUtil::sqrt(b * b + d * d);
-		bone._b = MathUtil::cos(value) * s;
-		bone._d = MathUtil::sin(value) * s;
+		bone._b = MathUtil::cos(value) * s * sx;
+		bone._d = MathUtil::sin(value) * s * sy;
 	}
 }
 
