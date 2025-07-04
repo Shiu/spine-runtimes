@@ -218,7 +218,7 @@ Attachment *MeshAttachment::copy() {
 	copy->_hullLength = _hullLength;
 
 	// Nonessential.
-	copy->_edges.clearAndAddAll(copy->_edges);
+	copy->_edges.clearAndAddAll(_edges);
 	copy->_width = _width;
 	copy->_height = _height;
 	return copy;
