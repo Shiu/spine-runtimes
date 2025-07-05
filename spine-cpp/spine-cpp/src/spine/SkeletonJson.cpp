@@ -346,7 +346,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 
 								to->offset = Json::getFloat(toEntry, "offset", 0) * toScale;
 								to->max = Json::getFloat(toEntry, "max", 1) * toScale;
-								to->scale = Json::getFloat(toEntry, "scale", 0) * toScale / fromScale;
+								to->scale = Json::getFloat(toEntry, "scale", 1) * toScale / fromScale;
 								from->to.add(to);
 							}
 						}
@@ -596,7 +596,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 			const char *type = Json::getString(constraintMap, "type", 0);
 			if (strcmp(type, "slider") == 0) {
 				SliderData *data = skeletonData->findConstraint<SliderData>(Json::getString(constraintMap, "name", NULL));
-				const char *animationName = Json::getString(constraintMap, "animation", 0);
+				const char *animationName = Json::getString(constraintMap, "animation", NULL);
 				if (animationName) {
 					data->_animation = skeletonData->findAnimation(animationName);
 					if (!data->_animation) SKELETON_JSON_ERROR(root, "Slider animation not found: ", animationName);
@@ -806,7 +806,6 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 					timeline->setFrame(frame, time, color.r, color.g, color.b, color.a);
 					Json *nextMap = keyMap->_next;
 					if (!nextMap) {
-						// timeline.shrink(); // BOZO
 						break;
 					}
 					float time2 = Json::getFloat(nextMap, "time", 0);
@@ -839,7 +838,6 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 					timeline->setFrame(frame, time, color.r, color.g, color.b);
 					Json *nextMap = keyMap->_next;
 					if (!nextMap) {
-						// timeline.shrink(); // BOZO
 						break;
 					}
 					float time2 = Json::getFloat(nextMap, "time", 0);
@@ -881,7 +879,6 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 					timeline->setFrame(frame, time, color.r, color.g, color.b, color.a, color2.r, color2.g, color2.b);
 					Json *nextMap = keyMap->_next;
 					if (!nextMap) {
-						// timeline.shrink(); // BOZO
 						break;
 					}
 					float time2 = Json::getFloat(nextMap, "time", 0);
@@ -930,7 +927,6 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 					timeline->setFrame(frame, time, color.r, color.g, color.b, color2.r, color2.g, color2.b);
 					Json *nextMap = keyMap->_next;
 					if (!nextMap) {
-						// timeline.shrink(); // BOZO
 						break;
 					}
 					float time2 = Json::getFloat(nextMap, "time", 0);
@@ -1038,7 +1034,6 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 				Json::getBoolean(keyMap, "compress", false), Json::getBoolean(keyMap, "stretch", false));
 			Json *nextMap = keyMap->_next;
 			if (!nextMap) {
-				// timeline.shrink(); // BOZO
 				break;
 			}
 
@@ -1080,7 +1075,6 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 			timeline->setFrame(frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
 			Json *nextMap = keyMap->_next;
 			if (!nextMap) {
-				// timeline.shrink(); // BOZO
 				break;
 			}
 			float time2 = Json::getFloat(nextMap, "time", 0);
@@ -1148,7 +1142,6 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 					timeline->setFrame(frame, time, mixRotate, mixX, mixY);
 					Json *nextMap = keyMap->_next;
 					if (!nextMap) {
-						// timeline.shrink(); // BOZO
 						break;
 					}
 					float time2 = Json::getFloat(nextMap, "time", 0);
