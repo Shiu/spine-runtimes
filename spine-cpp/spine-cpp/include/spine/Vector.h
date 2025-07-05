@@ -129,8 +129,10 @@ namespace spine {
 		}
 
 		inline void clearAndAddAll(const Vector<T> &inValue) {
-			this->clear();
-			this->addAll(inValue);
+			ensureCapacity(inValue.size());
+			for (size_t i = 0; i < inValue.size(); i++)
+				_buffer[i] = inValue[i];
+			_size = inValue.size();
 		}
 
 		inline void removeAt(size_t inIndex) {

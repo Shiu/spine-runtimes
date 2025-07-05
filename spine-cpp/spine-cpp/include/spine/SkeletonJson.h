@@ -61,6 +61,10 @@ namespace spine {
 
 	class Sequence;
 
+	class Skin;
+
+	class Attachment;
+
 	class SP_API SkeletonJson : public SpineObject {
 	public:
 		explicit SkeletonJson(Atlas *atlas);
@@ -95,13 +99,15 @@ namespace spine {
 		readCurve(Json *curve, CurveTimeline *timeline, int bezier, int frame, int value, float time1, float time2,
 				  float value1, float value2, float scale);
 
-		static Timeline *readTimeline(Json *keyMap, CurveTimeline1 *timeline, float defaultValue, float scale);
+		static void readTimeline(Vector<Timeline *> &timelines, Json *keyMap, CurveTimeline1 *timeline, float defaultValue, float scale);
 
-		static Timeline *
-		readTimeline(Json *keyMap, CurveTimeline2 *timeline, const char *name1, const char *name2, float defaultValue,
+		static void
+		readTimeline(Vector<Timeline *> &timelines, Json *keyMap, CurveTimeline2 *timeline, const char *name1, const char *name2, float defaultValue,
 					 float scale);
 
 		Animation *readAnimation(Json *root, SkeletonData *skeletonData);
+
+		Attachment *readAttachment(Json *map, Skin *skin, int slotIndex, const char *name, SkeletonData *skeletonData);
 
 		void readVertices(Json *attachmentMap, VertexAttachment *attachment, size_t verticesLength);
 

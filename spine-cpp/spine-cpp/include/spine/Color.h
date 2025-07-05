@@ -31,6 +31,8 @@
 #define SPINE_COLOR_H
 
 #include <spine/MathUtil.h>
+#include <string.h>
+#include <stdlib.h>
 
 namespace spine {
 	class SP_API Color : public SpineObject {
@@ -100,6 +102,32 @@ namespace spine {
 			b = MathUtil::clamp(this->b, 0, 1);
 			a = MathUtil::clamp(this->a, 0, 1);
 			return *this;
+		}
+
+		// Parse hex color string like "ff0000ff" (RRGGBBAA) or "ff0000" (RRGGBB)
+		static Color valueOf(const char* hexString) {
+			Color color;
+			valueOf(hexString, color);
+			return color;
+		}
+
+		// Parse hex color string into existing Color object
+		static void valueOf(const char* hexString, Color& color) {
+			size_t len = strlen(hexString);
+			if (len >= 6) {
+				color.r = parseHex(hexString, 0);
+				color.g = parseHex(hexString, 1);
+				color.b = parseHex(hexString, 2);
+				color.a = len >= 8 ? parseHex(hexString, 3) : 1.0f;
+			}
+		}
+		
+		static float parseHex(const char* value, size_t index) {
+			char digits[3];
+			digits[0] = value[index * 2];
+			digits[1] = value[index * 2 + 1];
+			digits[2] = '\0';
+			return strtoul(digits, NULL, 16) / 255.0f;
 		}
 
 		float r, g, b, a;

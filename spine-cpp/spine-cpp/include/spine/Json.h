@@ -51,6 +51,14 @@ namespace spine {
 		static const int JSON_ARRAY;
 		static const int JSON_OBJECT;
 
+		template <typename T>
+		static bool asArray(Json *value, Vector<T> &array) {
+			array.setSize(value->_size, 0);
+			Json *vertex = value->_child;
+			for (int i = 0; vertex; vertex = vertex->_next, i++)
+				array[i] = vertex->_valueInt;
+		}
+
 		/* Get item "string" from object. Case insensitive. */
 		static Json *getItem(Json *object, const char *string);
 
