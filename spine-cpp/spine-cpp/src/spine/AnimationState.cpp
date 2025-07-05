@@ -492,7 +492,7 @@ bool AnimationState::apply(Skeleton &skeleton) {
 					applyAttachmentTimeline(static_cast<AttachmentTimeline *>(timeline), skeleton, applyTime, blend,
 											attachments);
 				else
-					timeline->apply(skeleton, animationLast, applyTime, applyEvents, alpha, blend, MixDirection_In);
+					timeline->apply(skeleton, animationLast, applyTime, applyEvents, alpha, blend, MixDirection_In, false);
 			}
 		} else {
 			Vector<int> &timelineMode = current._timelineMode;
@@ -516,7 +516,7 @@ bool AnimationState::apply(Skeleton &skeleton) {
 											blend, attachments);
 				else
 					timeline->apply(skeleton, animationLast, applyTime, applyEvents, alpha, timelineBlend,
-									MixDirection_In);
+									MixDirection_In, false);
 			}
 		}
 
@@ -530,9 +530,9 @@ bool AnimationState::apply(Skeleton &skeleton) {
 	Vector<Slot *> &slots = skeleton.getSlots();
 	for (int i = 0, n = (int) slots.size(); i < n; i++) {
 		Slot *slot = slots[i];
-		if (slot->getAttachmentState() == setupState) {
+		if (slot->_attachmentState == setupState) {
 			const String &attachmentName = slot->getData().getAttachmentName();
-			slot->setAttachment(attachmentName.isEmpty() ? NULL : skeleton.getAttachment(slot->getData().getIndex(), attachmentName));
+			slot->_pose.setAttachment(attachmentName.isEmpty() ? NULL : skeleton.getAttachment(slot->getData().getIndex(), attachmentName));
 		}
 	}
 	_unkeyedState += 2;
@@ -589,7 +589,7 @@ TrackEntry *AnimationState::setAnimation(size_t trackIndex, Animation *animation
 	bool interrupt = true;
 	TrackEntry *current = expandToIndex(trackIndex);
 	if (current != NULL) {
-		if (current->_nextTrackLast == -1) {
+		if (current->_nextTrackLast == -1 && current->_animation == animation) {
 			// Don't mix from an entry that was never applied.
 			_tracks[trackIndex] = current->_mixingFrom;
 			_queue->interrupt(current);
@@ -740,7 +740,7 @@ void AnimationState::applyAttachmentTimeline(AttachmentTimeline *attachmentTimel
 	}
 
 	/* If an attachment wasn't set (ie before the first frame or attachments is false), set the setup attachment later.*/
-	if (slot->getAttachmentState() <= _unkeyedState) slot->setAttachmentState(_unkeyedState + Setup);
+	if (slot->_attachmentState <= _unkeyedState) slot->_attachmentState = _unkeyedState + Setup;
 }
 
 
@@ -749,27 +749,29 @@ void AnimationState::applyRotateTimeline(RotateTimeline *rotateTimeline, Skeleto
 	if (firstFrame) timelinesRotation[i] = 0;
 
 	if (alpha == 1) {
-		rotateTimeline->apply(skeleton, 0, time, NULL, 1, blend, MixDirection_In);
+		static_cast<Timeline*>(rotateTimeline)->apply(skeleton, 0, time, NULL, 1, blend, MixDirection_In, false);
 		return;
 	}
 
 	Bone *bone = skeleton._bones[rotateTimeline->_boneIndex];
 	if (!bone->isActive()) return;
+	BoneLocal &pose = bone->_pose;
+	BoneLocal &setup = bone->_data._setup;
 	Vector<float> &frames = rotateTimeline->_frames;
 	float r1, r2;
 	if (time < frames[0]) {
 		switch (blend) {
 			case MixBlend_Setup:
-				bone->_rotation = bone->_data._rotation;
+				pose._rotation = setup._rotation;
 			default:
 				return;
 			case MixBlend_First:
-				r1 = bone->_rotation;
-				r2 = bone->_data._rotation;
+				r1 = pose._rotation;
+				r2 = setup._rotation;
 		}
 	} else {
-		r1 = blend == MixBlend_Setup ? bone->_data._rotation : bone->_rotation;
-		r2 = bone->_data._rotation + rotateTimeline->getCurveValue(time);
+		r1 = blend == MixBlend_Setup ? setup._rotation : pose._rotation;
+		r2 = setup._rotation + rotateTimeline->getCurveValue(time);
 	}
 
 	// Mix between rotations using the direction of the shortest route on the first frame while detecting crosses.
@@ -804,7 +806,7 @@ void AnimationState::applyRotateTimeline(RotateTimeline *rotateTimeline, Skeleto
 		timelinesRotation[i] = total;
 	}
 	timelinesRotation[i + 1] = diff;
-	bone->_rotation = r1 + total * alpha;
+	pose._rotation = r1 + total * alpha;
 }
 
 bool AnimationState::updateMixingFrom(TrackEntry *to, float delta) {
@@ -868,7 +870,7 @@ float AnimationState::applyMixingFrom(TrackEntry *to, Skeleton &skeleton, MixBle
 
 	if (blend == MixBlend_Add) {
 		for (size_t i = 0; i < timelineCount; i++)
-			timelines[i]->apply(skeleton, animationLast, applyTime, events, alphaMix, blend, MixDirection_Out);
+			timelines[i]->apply(skeleton, animationLast, applyTime, events, alphaMix, blend, MixDirection_Out, false);
 	} else {
 		Vector<int> &timelineMode = from->_timelineMode;
 		Vector<TrackEntry *> &timelineHoldMix = from->_timelineHoldMix;
@@ -920,7 +922,7 @@ float AnimationState::applyMixingFrom(TrackEntry *to, Skeleton &skeleton, MixBle
 				if (drawOrder && timeline->getRTTI().isExactly(DrawOrderTimeline::rtti) &&
 					timelineBlend == MixBlend_Setup)
 					direction = MixDirection_In;
-				timeline->apply(skeleton, animationLast, applyTime, events, alpha, timelineBlend, direction);
+				timeline->apply(skeleton, animationLast, applyTime, events, alpha, timelineBlend, direction, false);
 			}
 		}
 	}
@@ -937,9 +939,9 @@ float AnimationState::applyMixingFrom(TrackEntry *to, Skeleton &skeleton, MixBle
 }
 
 void AnimationState::setAttachment(Skeleton &skeleton, Slot &slot, const String &attachmentName, bool attachments) {
-	slot.setAttachment(
+	slot._pose.setAttachment(
 			attachmentName.isEmpty() ? NULL : skeleton.getAttachment(slot.getData().getIndex(), attachmentName));
-	if (attachments) slot.setAttachmentState(_unkeyedState + Current);
+	if (attachments) slot._attachmentState = _unkeyedState + Current;
 }
 
 void AnimationState::queueEvents(TrackEntry *entry, float animationTime) {

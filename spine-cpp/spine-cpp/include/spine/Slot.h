@@ -91,6 +91,8 @@ namespace spine {
 
 		friend class TwoColorTimeline;
 
+		friend class AnimationState;
+
 	public:
 		Slot(SlotData &data, Skeleton &skeleton);
 

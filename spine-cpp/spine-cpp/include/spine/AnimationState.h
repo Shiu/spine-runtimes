@@ -401,28 +401,35 @@ namespace spine {
 
 		~AnimationState();
 
-		/// Increments the track entry times, setting queued animations as current if needed
-		/// @param delta delta time
+		/// Increments each track entry TrackEntry::getTrackTime(), setting queued animations as current if needed.
 		void update(float delta);
 
-		/// Poses the skeleton using the track entry animations. There are no side effects other than invoking listeners, so the
-		/// animation state can be applied to multiple skeletons to pose them identically.
+		/// Poses the skeleton using the track entry animations. The animation state is not changed, so can be applied to multiple
+		/// skeletons to pose them identically.
+		/// @return True if any animations were applied.
 		bool apply(Skeleton &skeleton);
 
-		/// Removes all animations from all tracks, leaving skeletons in their previous pose.
-		/// It may be desired to use AnimationState.setEmptyAnimations(float) to mix the skeletons back to the setup pose,
-		/// rather than leaving them in their previous pose.
+		/// Removes all animations from all tracks, leaving skeletons in their current pose.
+		/// 
+		/// It may be desired to use AnimationState::setEmptyAnimations(float) to mix the skeletons back to the setup pose,
+		/// rather than leaving them in their current pose.
 		void clearTracks();
 
-		/// Removes all animations from the tracks, leaving skeletons in their previous pose.
-		/// It may be desired to use AnimationState.setEmptyAnimations(float) to mix the skeletons back to the setup pose,
-		/// rather than leaving them in their previous pose.
+		/// Removes all animations from the track, leaving skeletons in their current pose.
+		/// 
+		/// It may be desired to use AnimationState::setEmptyAnimation(int, float) to mix the skeletons back to the setup pose,
+		/// rather than leaving them in their current pose.
 		void clearTrack(size_t trackIndex);
 
-		/// Sets an animation by name. setAnimation(int, Animation, bool)
+		/// Sets an animation by name.
+		/// 
+		/// See setAnimation(int, Animation, bool).
 		TrackEntry *setAnimation(size_t trackIndex, const String &animationName, bool loop);
 
 		/// Sets the current animation for a track, discarding any queued animations.
+		/// 
+		/// If the formerly current track entry is for the same animation and was never applied to a skeleton, it is replaced (not mixed
+		/// from).
 		/// @param loop If true, the animation will repeat.
 		/// If false, it will not, instead its last frame is applied if played beyond its duration.
 		/// In either case TrackEntry.TrackEnd determines when the track is cleared.
@@ -432,11 +439,12 @@ namespace spine {
 		TrackEntry *setAnimation(size_t trackIndex, Animation *animation, bool loop);
 
 		/// Queues an animation by name.
-		/// addAnimation(int, Animation, bool, float)
+		/// 
+		/// See addAnimation(int, Animation, bool, float).
 		TrackEntry *addAnimation(size_t trackIndex, const String &animationName, bool loop, float delay);
 
 		/// Adds an animation to be played delay seconds after the current or last queued animation
-		/// for a track. If the track is empty, it is equivalent to calling setAnimation.
+		/// for a track. If the track has no entries, this is equivalent to calling setAnimation.
 		/// @param delay
 		/// Seconds to begin this animation after the start of the previous animation. May be &lt;= 0 to use the animation
 		/// duration of the previous track minus any mix duration plus the negative delay.
@@ -445,37 +453,67 @@ namespace spine {
 		/// after AnimationState.Dispose
 		TrackEntry *addAnimation(size_t trackIndex, Animation *animation, bool loop, float delay);
 
-		/// Sets an empty animation for a track, discarding any queued animations, and mixes to it over the specified mix duration.
+		/// Sets an empty animation for a track, discarding any queued animations, and sets the track entry's
+		/// TrackEntry::getMixDuration(). An empty animation has no timelines and serves as a placeholder for mixing in or out.
+		/// 
+		/// Mixing out is done by setting an empty animation with a mix duration using either setEmptyAnimation(int, float),
+		/// setEmptyAnimations(float), or addEmptyAnimation(int, float, float). Mixing to an empty animation causes
+		/// the previous animation to be applied less and less over the mix duration. Properties keyed in the previous animation
+		/// transition to the value from lower tracks or to the setup pose value if no lower tracks key the property. A mix duration of
+		/// 0 still mixes out over one frame.
+		/// 
+		/// Mixing in is done by first setting an empty animation, then adding an animation using
+		/// addAnimation(int, Animation, bool, float) with the desired delay (an empty animation has a duration of 0) and on
+		/// the returned track entry, set the TrackEntry::setMixDuration(float). Mixing from an empty animation causes the new
+		/// animation to be applied more and more over the mix duration. Properties keyed in the new animation transition from the value
+		/// from lower tracks or from the setup pose value if no lower tracks key the property to the value keyed in the new animation.
+		/// 
+		/// See <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+		/// Runtimes Guide.
 		TrackEntry *setEmptyAnimation(size_t trackIndex, float mixDuration);
 
-		/// Adds an empty animation to be played after the current or last queued animation for a track, and mixes to it over the
-		/// specified mix duration.
-		/// @return
-		/// A track entry to allow further customization of animation playback. References to the track entry must not be kept after AnimationState.Dispose.
-		///
-		/// @param trackIndex Track number.
-		/// @param mixDuration Mix duration.
-		/// @param delay Seconds to begin this animation after the start of the previous animation. May be &lt;= 0 to use the animation
-		/// duration of the previous track minus any mix duration plus the negative delay.
+		/// Adds an empty animation to be played after the current or last queued animation for a track, and sets the track entry's
+		/// TrackEntry::getMixDuration(). If the track has no entries, it is equivalent to calling
+		/// setEmptyAnimation(int, float).
+		/// 
+		/// See setEmptyAnimation(int, float) and
+		/// <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+		/// Runtimes Guide.
+		/// @param delay If > 0, sets TrackEntry::getDelay(). If <= 0, the delay set is the duration of the previous track entry
+		/// minus any mix duration plus the specified <code>delay</code> (ie the mix ends at (<code>delay</code> = 0) or
+		/// before (<code>delay</code> < 0) the previous track entry duration). If the previous entry is looping, its next
+		/// loop completion is used instead of its duration.
+		/// @return A track entry to allow further customization of animation playback. References to the track entry must not be kept
+		/// after the AnimationStateListener::dispose(TrackEntry) event occurs.
 		TrackEntry *addEmptyAnimation(size_t trackIndex, float mixDuration, float delay);
 
 		/// Sets an empty animation for every track, discarding any queued animations, and mixes to it over the specified mix duration.
+		/// 
+		/// See <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
+		/// Runtimes Guide.
 		void setEmptyAnimations(float mixDuration);
 
 		/// @return The track entry for the animation currently playing on the track, or NULL if no animation is currently playing.
 		TrackEntry *getCurrent(size_t trackIndex);
 
+		/// The AnimationStateData to look up mix durations.
 		AnimationStateData *getData();
 
-		/// A list of tracks that have animations, which may contain NULLs.
+		/// The list of tracks that have had animations, which may contain null entries for tracks that currently have no animation.
 		Vector<TrackEntry *> &getTracks();
 
+		/// Multiplier for the delta time when the animation state is updated, causing time for all animations and mixes to play slower
+		/// or faster. Defaults to 1.
+		/// 
+		/// See TrackEntry TrackEntry::getTimeScale() for affecting a single animation.
 		float getTimeScale();
 
 		void setTimeScale(float inValue);
 
+		/// Adds a listener to receive events for all track entries.
 		void setListener(AnimationStateListener listener);
 
+		/// Adds a listener to receive events for all track entries.
 		void setListener(AnimationStateListenerObject *listener);
 
 		void disableQueue();
@@ -519,12 +557,18 @@ namespace spine {
 
 		static Animation *getEmptyAnimation();
 
+		/// Applies the rotate timeline, mixing with the current pose while keeping the same rotation direction chosen as the shortest
+		/// the first time the mixing was applied.
 		static void
 		applyRotateTimeline(RotateTimeline *rotateTimeline, Skeleton &skeleton, float time, float alpha, MixBlend pose,
 							Vector<float> &timelinesRotation, size_t i, bool firstFrame);
 
+		/// Applies the attachment timeline and sets Slot::attachmentState.
+		/// @param attachments False when: 1) the attachment timeline is mixing out, 2) mix < attachmentThreshold, and 3) the timeline
+		/// is not the last timeline to set the slot's attachment. In that case the timeline is applied only so subsequent
+		/// timelines see any deform.
 		void applyAttachmentTimeline(AttachmentTimeline *attachmentTimeline, Skeleton &skeleton, float animationTime,
-									 MixBlend pose, bool firstFrame);
+									 MixBlend pose, bool attachments);
 
 		/// Returns true when all mixing from entries are complete.
 		bool updateMixingFrom(TrackEntry *to, float delta);
@@ -536,7 +580,7 @@ namespace spine {
 		/// Sets the active TrackEntry for a given track number.
 		void setCurrent(size_t index, TrackEntry *current, bool interrupt);
 
-		/// Removes the next entry and all entries after it for the specified entry. */
+		/// Removes the TrackEntry::getNext() next entry and all entries after it for the specified entry.
 		void clearNext(TrackEntry *entry);
 
 		TrackEntry *expandToIndex(size_t index);

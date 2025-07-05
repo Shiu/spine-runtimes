@@ -68,6 +68,7 @@ namespace spine {
 		friend class ToScaleY;
 		friend class FromShearY;
 		friend class ToShearY;
+		friend class AnimationState;
 
 	protected:
 		float _x, _y, _rotation, _scaleX, _scaleY, _shearX, _shearY;
