@@ -314,7 +314,7 @@ public class SkeletonJson extends SkeletonLoader {
 							}
 							to.offset = toEntry.getFloat("offset", 0) * toScale;
 							to.max = toEntry.getFloat("max", 1) * toScale;
-							to.scale = toEntry.getFloat("scale") * toScale / fromScale;
+							to.scale = toEntry.getFloat("scale", 1) * toScale / fromScale;
 							from.to.add(to);
 						}
 						if (from.to.notEmpty()) data.properties.add(from);
