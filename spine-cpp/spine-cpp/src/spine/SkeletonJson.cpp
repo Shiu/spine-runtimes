@@ -680,8 +680,8 @@ Attachment *SkeletonJson::readAttachment(Json *map, Skin *skin, int slotIndex, c
 
 			if (Json::getInt(map, "hull", 0)) mesh->setHullLength(Json::getInt(map, "hull", 0) << 1);
 			Vector<unsigned short> edges;
-			if (!Json::asArray(Json::getItem(map, "edges"), edges)) return NULL;
-			mesh->_edges.clearAndAddAll(edges);
+			Json::asArray(Json::getItem(map, "edges"), edges);
+			if (edges.size() > 0) mesh->_edges.clearAndAddAll(edges);
 			return mesh;
 		}
 		case AttachmentType_Path: {

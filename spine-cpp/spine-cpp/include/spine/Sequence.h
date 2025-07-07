@@ -97,7 +97,7 @@ namespace spine {
 		SequenceMode_pingpongReverse = 6
 	};
 
-	SequenceMode SequenceMode_valueOf(const String &value) {
+	inline SequenceMode SequenceMode_valueOf(const String &value) {
 		if (value == "hold") return SequenceMode_hold;
 		if (value == "once") return SequenceMode_once;
 		if (value == "loop") return SequenceMode_loop;

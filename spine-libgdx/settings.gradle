@@ -1,3 +1,5 @@
+rootProject.name = 'spine-libgdx-root'
+
 // includeBuild "../../libgdx"
 include ":spine-libgdx"
 include ":spine-libgdx-tests"

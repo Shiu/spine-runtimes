@@ -32,3 +32,5 @@
 using namespace spine;
 
 RTTI_IMPL_NOPARENT(ConstraintTimeline)
+
+ConstraintTimeline::ConstraintTimeline(int constraintIndex) : _constraintIndex(constraintIndex) {}

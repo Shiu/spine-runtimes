@@ -61,6 +61,10 @@ bool SlotPose::hasDarkColor() {
 	return _hasDarkColor;
 }
 
+void SlotPose::setHasDarkColor(bool hasDarkColor) {
+	_hasDarkColor = hasDarkColor;
+}
+
 Attachment *SlotPose::getAttachment() {
 	return _attachment;
 }

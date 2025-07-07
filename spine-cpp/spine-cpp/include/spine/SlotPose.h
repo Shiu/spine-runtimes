@@ -79,6 +79,8 @@ namespace spine {
 		/// Returns true if this slot has a dark color.
 		bool hasDarkColor();
 
+		void setHasDarkColor(bool hasDarkColor);
+
 		/// The current attachment for the slot, or null if the slot has no attachment.
 		Attachment* getAttachment();
 
