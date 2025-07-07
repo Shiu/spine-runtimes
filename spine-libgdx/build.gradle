@@ -64,7 +64,7 @@ allprojects {
             downloadJavadoc = false
         }
     }
-    
+
     // Clean Eclipse files before compiling
     tasks.compileJava.dependsOn cleanEclipse
     tasks.processResources.dependsOn cleanEclipse
@@ -124,9 +124,9 @@ project("spine-skeletonviewer") {
 	}
 
 	tasks.withType(JavaCompile).configureEach {
-		sourceCompatibility = '16'
-		targetCompatibility = '16'
-		options.release.set(16)
+		sourceCompatibility = '17'
+		targetCompatibility = '17'
+		options.release.set(17)
 	}
 }
 
