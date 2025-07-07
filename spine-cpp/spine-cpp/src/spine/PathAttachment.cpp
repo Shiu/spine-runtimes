@@ -41,6 +41,10 @@ Vector<float> &PathAttachment::getLengths() {
 	return _lengths;
 }
 
+void PathAttachment::setLengths(Vector<float> &inValue) {
+	_lengths.clearAndAddAll(inValue);
+}
+
 bool PathAttachment::isClosed() {
 	return _closed;
 }

@@ -38,9 +38,6 @@ Cocos2dAtlasAttachmentLoader::Cocos2dAtlasAttachmentLoader(Atlas *atlas) : Atlas
 
 Cocos2dAtlasAttachmentLoader::~Cocos2dAtlasAttachmentLoader() {}
 
-void Cocos2dAtlasAttachmentLoader::configureAttachment(Attachment *attachment) {
-}
-
 #if COCOS2D_VERSION >= 0x0040000
 
 backend::SamplerAddressMode wrap(TextureWrap wrap) {

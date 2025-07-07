@@ -74,8 +74,6 @@ namespace spine {
 		virtual PointAttachment *newPointAttachment(Skin &skin, const String &name) = 0;
 
 		virtual ClippingAttachment *newClippingAttachment(Skin &skin, const String &name) = 0;
-
-		virtual void configureAttachment(Attachment *attachment) = 0;
 	};
 }
 

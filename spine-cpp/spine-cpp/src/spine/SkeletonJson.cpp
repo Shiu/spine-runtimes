@@ -554,7 +554,6 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 																			  : linkedMesh->_mesh;
 		linkedMesh->_mesh->setParentMesh(static_cast<MeshAttachment *>(parent));
 		if (linkedMesh->_mesh->_region != NULL) linkedMesh->_mesh->updateRegion();
-		_attachmentLoader->configureAttachment(linkedMesh->_mesh);
 	}
 	ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
 	_linkedMeshes.clear();

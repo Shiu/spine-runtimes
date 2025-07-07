@@ -60,8 +60,6 @@ namespace spine {
 
 		virtual ClippingAttachment *newClippingAttachment(Skin &skin, const String &name);
 
-		virtual void configureAttachment(Attachment *attachment);
-
 		AtlasRegion *findRegion(const String &name);
 
 	private:

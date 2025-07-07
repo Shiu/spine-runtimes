@@ -100,10 +100,6 @@ ClippingAttachment *AtlasAttachmentLoader::newClippingAttachment(Skin &skin, con
 	return new (__FILE__, __LINE__) ClippingAttachment(name);
 }
 
-void AtlasAttachmentLoader::configureAttachment(Attachment *attachment) {
-	SP_UNUSED(attachment);
-}
-
 AtlasRegion *AtlasAttachmentLoader::findRegion(const String &name) {
 	return _atlas->findRegion(name);
 }

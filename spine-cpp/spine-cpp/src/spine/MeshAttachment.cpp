@@ -127,12 +127,20 @@ Vector<float> &MeshAttachment::getRegionUVs() {
 	return _regionUVs;
 }
 
+void MeshAttachment::setRegionUVs(Vector<float> &inValue) {
+	_regionUVs.clearAndAddAll(inValue);
+}
+
 Vector<float> &MeshAttachment::getUVs() {
 	return _uvs;
 }
 
 Vector<unsigned short> &MeshAttachment::getTriangles() {
 	return _triangles;
+}
+
+void MeshAttachment::setTriangles(Vector<unsigned short> &inValue) {
+	_triangles.clearAndAddAll(inValue);
 }
 
 const String &MeshAttachment::getPath() {
@@ -180,6 +188,10 @@ void MeshAttachment::setParentMesh(MeshAttachment *inValue) {
 
 Vector<unsigned short> &MeshAttachment::getEdges() {
 	return _edges;
+}
+
+void MeshAttachment::setEdges(Vector<unsigned short> &inValue) {
+	_edges.clearAndAddAll(inValue);
 }
 
 float MeshAttachment::getWidth() {

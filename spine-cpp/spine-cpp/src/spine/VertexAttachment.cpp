@@ -126,8 +126,16 @@ Vector<int> &VertexAttachment::getBones() {
 	return _bones;
 }
 
+void VertexAttachment::setBones(Vector<int> &bones) {
+	_bones.clearAndAddAll(bones);
+}
+
 Vector<float> &VertexAttachment::getVertices() {
 	return _vertices;
+}
+
+void VertexAttachment::setVertices(Vector<float> &vertices) {
+	_vertices.clearAndAddAll(vertices);
 }
 
 size_t VertexAttachment::getWorldVerticesLength() {

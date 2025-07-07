@@ -140,11 +140,11 @@ namespace spine {
 			}
 
 			inline signed char readByte() {
-				return (signed char)*cursor++;
+				return (signed char) *cursor++;
 			}
 
 			inline unsigned char readUnsignedByte() {
-				return (unsigned char)*cursor++;
+				return (unsigned char) *cursor++;
 			}
 
 			inline bool readBoolean() {
@@ -163,9 +163,9 @@ namespace spine {
 			}
 
 			inline long long readLong() {
-				long long result = (unsigned long long)readInt();
+				long long result = (unsigned long long) readInt();
 				result <<= 32;
-				result |= (unsigned long long)readInt();
+				result |= (unsigned long long) readInt();
 				return result;
 			}
 
@@ -230,12 +230,12 @@ namespace spine {
 
 		void setError(const char *value1, const char *value2);
 
-		Skin *readSkin(DataInput &input, SkeletonData *skeletonData, bool defaultSkin, bool nonessential);
+		Skin *readSkin(DataInput &input, SkeletonData &skeletonData, bool defaultSkin, bool nonessential);
+
+		Attachment *readAttachment(DataInput &input, Skin &skin, int slotIndex, const String &attachmentName,
+								   SkeletonData &skeletonData, bool nonessential);
 
 		Sequence *readSequence(DataInput &input);
-
-		Attachment *readAttachment(DataInput &input, Skin *skin, int slotIndex, const String &attachmentName,
-								   SkeletonData *skeletonData, bool nonessential);
 
 		int readVertices(DataInput &input, Vector<float> &vertices, Vector<int> &bones, bool weighted);
 
@@ -243,15 +243,15 @@ namespace spine {
 
 		void readShortArray(DataInput &input, Vector<unsigned short> &array, int n);
 
-		Animation *readAnimation(DataInput &input, const String &name, SkeletonData *skeletonData);
+		Animation *readAnimation(DataInput &input, const String &name, SkeletonData &skeletonData);
+
+		void readTimeline(DataInput &input, Vector<Timeline *> &timelines, CurveTimeline1 &timeline, float scale);
+
+		void readTimeline(DataInput &input, Vector<Timeline *> &timelines, BoneTimeline2 &timeline, float scale);
 
 		void
-		setBezier(DataInput &input, CurveTimeline *timeline, int bezier, int frame, int value, float time1, float time2,
+		setBezier(DataInput &input, CurveTimeline &timeline, int bezier, int frame, int value, float time1, float time2,
 				  float value1, float value2, float scale);
-
-		void readTimeline(DataInput &input, Vector<Timeline *> &timelines, CurveTimeline1 *timeline, float scale);
-
-		void readTimeline2(DataInput &input, Vector<Timeline *> &timelines, CurveTimeline2 *timeline, float scale);
 	};
 }// namespace spine
 

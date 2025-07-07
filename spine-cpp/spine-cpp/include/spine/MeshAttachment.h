@@ -66,10 +66,14 @@ namespace spine {
 
 		Vector<float> &getRegionUVs();
 
+		void setRegionUVs(Vector<float> &inValue);
+
 		/// The UV pair for each vertex, normalized within the entire texture. See also MeshAttachment::updateRegion
 		Vector<float> &getUVs();
 
 		Vector<unsigned short> &getTriangles();
+
+		void setTriangles(Vector<unsigned short> &inValue);
 
 		Color &getColor();
 
@@ -91,6 +95,8 @@ namespace spine {
 
 		// Nonessential.
 		Vector<unsigned short> &getEdges();
+
+		void setEdges(Vector<unsigned short> &inValue);
 
 		float getWidth();
 

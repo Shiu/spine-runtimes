@@ -445,7 +445,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 		}
 
 		/* Default skin. */
-		Skin *defaultSkin = readSkin(input, skeletonData, true, nonessential);
+		Skin *defaultSkin = readSkin(input, *skeletonData, true, nonessential);
 		if (defaultSkin) {
 			skeletonData->_defaultSkin = defaultSkin;
 			skeletonData->_skins.add(defaultSkin);
@@ -461,7 +461,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 			int i = skeletonData->_skins.size();
 			Vector<Skin *> &skins = skeletonData->_skins.setSize(n = i + input.readInt(true), NULL);
 			for (; i < n; i++) {
-				Skin *skin = readSkin(input, skeletonData, false, nonessential);
+				Skin *skin = readSkin(input, *skeletonData, false, nonessential);
 				if (skin)
 					skins[i] = skin;
 				else {
@@ -486,7 +486,6 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 																				   : linkedMesh->_mesh;
 			linkedMesh->_mesh->setParentMesh(static_cast<MeshAttachment *>(parent));
 			if (linkedMesh->_mesh->getSequence() == NULL) linkedMesh->_mesh->updateRegion();
-			_attachmentLoader->configureAttachment(linkedMesh->_mesh);
 		}
 		ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
 		_linkedMeshes.clear();
@@ -511,12 +510,13 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 		int animationsCount = input.readInt(true);
 		Vector<Animation *> &animations = skeletonData->_animations.setSize(animationsCount, NULL);
 		for (int i = 0; i < animationsCount; ++i) {
-			Animation *animation = readAnimation(input, String(input.readString(), true), skeletonData);
+			Animation *animation = readAnimation(input, String(input.readString(), true), *skeletonData);
 			if (!animation) {
 				delete skeletonData;
+				setError("Error reading animation: ", input.readString());
 				return NULL;
 			}
-			skeletonData->_animations[i] = animation;
+			animations[i] = animation;
 		}
 
 		for (int i = 0; i < constraintCount; i++) {
@@ -539,58 +539,41 @@ void SkeletonBinary::setError(const char *value1, const char *value2) {
 	_error = String(message);
 }
 
-Skin *SkeletonBinary::readSkin(DataInput *input, SkeletonData *skeletonData, bool defaultSkin, bool nonessential) {
+Skin *SkeletonBinary::readSkin(DataInput &input, SkeletonData &skeletonData, bool defaultSkin, bool nonessential) {
 	Skin *skin;
 	int slotCount = 0;
 	if (defaultSkin) {
-		slotCount = readVarint(input, true);
+		slotCount = input.readInt(true);
 		if (slotCount == 0) return NULL;
 		skin = new (__FILE__, __LINE__) Skin("default");
 	} else {
-		skin = new (__FILE__, __LINE__) Skin(String(readString(input), true));
+		skin = new (__FILE__, __LINE__) Skin(String(input.readString(), true));
 
-		if (nonessential) readColor(input, skin->getColor());
+		if (nonessential) Color::rgba8888ToColor(skin->getColor(), input.readInt());
 
-		for (int i = 0, n = readVarint(input, true); i < n; i++) {
-			int boneIndex = readVarint(input, true);
-			if (boneIndex >= (int) skeletonData->_bones.size()) return NULL;
-			skin->getBones().add(skeletonData->_bones[boneIndex]);
-		}
+		int n;
+		Vector<BoneData *> &from = skeletonData._bones;
+		Vector<BoneData *> &bones = skin->getBones().setSize(n = input.readInt(true), NULL);
+		for (int i = 0; i < n; i++)
+			bones[i] = from[input.readInt(true)];
 
-		for (int i = 0, n = readVarint(input, true); i < n; i++) {
-			int ikIndex = readVarint(input, true);
-			if (ikIndex >= (int) skeletonData->_ikConstraints.size()) return NULL;
-			skin->getConstraints().add(skeletonData->_ikConstraints[ikIndex]);
-		}
+		Vector<ConstraintData *> &fromConstraints = skeletonData._constraints;
+		Vector<ConstraintData *> &constraints = skin->getConstraints().setSize(n = input.readInt(true), NULL);
+		for (int i = 0; i < n; i++)
+			constraints[i] = fromConstraints[input.readInt(true)];
 
-		for (int i = 0, n = readVarint(input, true); i < n; i++) {
-			int transformIndex = readVarint(input, true);
-			if (transformIndex >= (int) skeletonData->_transformConstraints.size()) return NULL;
-			skin->getConstraints().add(skeletonData->_transformConstraints[transformIndex]);
-		}
-
-		for (int i = 0, n = readVarint(input, true); i < n; i++) {
-			int pathIndex = readVarint(input, true);
-			if (pathIndex >= (int) skeletonData->_pathConstraints.size()) return NULL;
-			skin->getConstraints().add(skeletonData->_pathConstraints[pathIndex]);
-		}
-
-		for (int i = 0, n = readVarint(input, true); i < n; i++) {
-			int physicsIndex = readVarint(input, true);
-			if (physicsIndex >= (int) skeletonData->_physicsConstraints.size()) return NULL;
-			skin->getConstraints().add(skeletonData->_physicsConstraints[physicsIndex]);
-		}
-		slotCount = readVarint(input, true);
+		slotCount = input.readInt(true);
 	}
 
 	for (int i = 0; i < slotCount; ++i) {
-		int slotIndex = readVarint(input, true);
-		for (int ii = 0, nn = readVarint(input, true); ii < nn; ++ii) {
-			String name(readStringRef(input, skeletonData));
-			Attachment *attachment = readAttachment(input, skin, slotIndex, name, skeletonData, nonessential);
+		int slotIndex = input.readInt(true);
+		for (int ii = 0, nn = input.readInt(true); ii < nn; ++ii) {
+			String name(input.readStringRef());
+			Attachment *attachment = readAttachment(input, *skin, slotIndex, name, skeletonData, nonessential);
 			if (attachment)
-				skin->setAttachment(slotIndex, String(name), attachment);
+				skin->setAttachment(slotIndex, name, attachment);
 			else {
+				setError("Error reading attachment: ", name.buffer());
 				delete skin;
 				return NULL;
 			}
@@ -599,356 +582,269 @@ Skin *SkeletonBinary::readSkin(DataInput *input, SkeletonData *skeletonData, boo
 	return skin;
 }
 
-Sequence *SkeletonBinary::readSequence(DataInput *input) {
-	Sequence *sequence = new (__FILE__, __LINE__) Sequence(readVarint(input, true));
-	sequence->_start = readVarint(input, true);
-	sequence->_digits = readVarint(input, true);
-	sequence->_setupIndex = readVarint(input, true);
-	return sequence;
-}
+Attachment *SkeletonBinary::readAttachment(DataInput &input, Skin &skin, int slotIndex, const String &attachmentName,
+										   SkeletonData &skeletonData, bool nonessential) {
+	float scale = _scale;
 
-Attachment *SkeletonBinary::readAttachment(DataInput *input, Skin *skin, int slotIndex, const String &attachmentName,
-										   SkeletonData *skeletonData, bool nonessential) {
-
-	int flags = readByte(input);
-	String name = (flags & 8) != 0 ? readStringRef(input, skeletonData) : attachmentName;
+	int flags = input.readByte();
+	String name = (flags & 8) != 0 ? input.readStringRef() : attachmentName;
 	AttachmentType type = static_cast<AttachmentType>(flags & 0x7);
 	switch (type) {
 		case AttachmentType_Region: {
-			String path = (flags & 16) != 0 ? readStringRef(input, skeletonData) : name;
-			Color color(1, 1, 1, 1);
-			if ((flags & 32) != 0) readColor(input, color);
+			String path = (flags & 16) != 0 ? input.readStringRef() : name;
+			int color = (flags & 32) != 0 ? input.readInt() : 0xffffffff;
 			Sequence *sequence = (flags & 64) != 0 ? readSequence(input) : nullptr;
-			float rotation = (flags & 128) != 0 ? readFloat(input) : 0;
-			float x = readFloat(input) * _scale;
-			float y = readFloat(input) * _scale;
-			float scaleX = readFloat(input);
-			float scaleY = readFloat(input);
-			float width = readFloat(input) * _scale;
-			float height = readFloat(input) * _scale;
-			RegionAttachment *region = _attachmentLoader->newRegionAttachment(*skin, String(name), String(path), sequence);
-			if (!region) {
-				setError("Error reading attachment: ", name.buffer());
-				return NULL;
-			}
-			region->_path = path;
-			region->_rotation = rotation;
-			region->_x = x;
-			region->_y = y;
-			region->_scaleX = scaleX;
-			region->_scaleY = scaleY;
-			region->_width = width;
-			region->_height = height;
-			region->getColor().set(color);
-			region->_sequence = sequence;
+			float rotation = (flags & 128) != 0 ? input.readFloat() : 0;
+			float x = input.readFloat();
+			float y = input.readFloat();
+			float scaleX = input.readFloat();
+			float scaleY = input.readFloat();
+			float width = input.readFloat();
+			float height = input.readFloat();
+
+			RegionAttachment *region = _attachmentLoader->newRegionAttachment(skin, name, path, sequence);
+			if (!region) return NULL;
+			region->setPath(path);
+			region->setX(x * scale);
+			region->setY(y * scale);
+			region->setScaleX(scaleX);
+			region->setScaleY(scaleY);
+			region->setRotation(rotation);
+			region->setWidth(width * scale);
+			region->setHeight(height * scale);
+			Color::rgba8888ToColor(region->getColor(), color);
+			region->setSequence(sequence);
 			if (sequence == NULL) region->updateRegion();
-			_attachmentLoader->configureAttachment(region);
 			return region;
 		}
 		case AttachmentType_Boundingbox: {
-			BoundingBoxAttachment *box = _attachmentLoader->newBoundingBoxAttachment(*skin, String(name));
-			if (!box) {
-				setError("Error reading attachment: ", name.buffer());
-				return NULL;
-			}
-			int verticesLength = readVertices(input, box->getVertices(), box->getBones(), (flags & 16) != 0);
+			Vector<float> vertices;
+			Vector<int> bones;
+			int verticesLength = readVertices(input, vertices, bones, (flags & 16) != 0);
+			int color = nonessential ? input.readInt() : 0;
+
+			BoundingBoxAttachment *box = _attachmentLoader->newBoundingBoxAttachment(skin, name);
+			if (!box) return NULL;
 			box->setWorldVerticesLength(verticesLength);
-			if (nonessential) {
-				readColor(input, box->getColor());
-			}
-			_attachmentLoader->configureAttachment(box);
+			box->setVertices(vertices);
+			box->setBones(bones);
+			if (nonessential) Color::rgba8888ToColor(box->getColor(), color);
 			return box;
 		}
 		case AttachmentType_Mesh: {
-			Vector<float> uvs;
-			Vector<unsigned short> triangles;
+			String path = (flags & 16) != 0 ? input.readStringRef() : name;
+			int color = (flags & 32) != 0 ? input.readInt() : 0xffffffff;
+			Sequence *sequence = (flags & 64) != 0 ? readSequence(input) : nullptr;
+			int hullLength = input.readInt(true);
 			Vector<float> vertices;
 			Vector<int> bones;
-			int hullLength;
-			float width = 0;
-			float height = 0;
-			Vector<unsigned short> edges;
-
-			String path = (flags & 16) != 0 ? readStringRef(input, skeletonData) : name;
-			Color color(1, 1, 1, 1);
-			if ((flags & 32) != 0) readColor(input, color);
-			Sequence *sequence = (flags & 64) != 0 ? readSequence(input) : nullptr;
-			hullLength = readVarint(input, true);
 			int verticesLength = readVertices(input, vertices, bones, (flags & 128) != 0);
+			Vector<float> uvs;
 			readFloatArray(input, verticesLength, 1, uvs);
+			Vector<unsigned short> triangles;
 			readShortArray(input, triangles, (verticesLength - hullLength - 2) * 3);
 
+			Vector<unsigned short> edges;
+			float width = 0, height = 0;
 			if (nonessential) {
-				readShortArray(input, edges, readVarint(input, true));
-				width = readFloat(input);
-				height = readFloat(input);
+				readShortArray(input, edges, input.readInt(true));
+				width = input.readFloat();
+				height = input.readFloat();
 			}
 
-			MeshAttachment *mesh = _attachmentLoader->newMeshAttachment(*skin, String(name), String(path), sequence);
-			if (!mesh) {
-				setError("Error reading attachment: ", name.buffer());
-				return NULL;
-			}
-			mesh->_path = path;
-			mesh->_color.set(color);
-			mesh->_bones.addAll(bones);
-			mesh->_vertices.addAll(vertices);
+			MeshAttachment *mesh = _attachmentLoader->newMeshAttachment(skin, name, path, sequence);
+			if (!mesh) return NULL;
+			mesh->setPath(path);
+			Color::rgba8888ToColor(mesh->getColor(), color);
+			mesh->setBones(bones);
+			mesh->setVertices(vertices);
 			mesh->setWorldVerticesLength(verticesLength);
-			mesh->_triangles.addAll(triangles);
-			mesh->_regionUVs.addAll(uvs);
+			mesh->setTriangles(triangles);
+			mesh->setRegionUVs(uvs);
 			if (sequence == NULL) mesh->updateRegion();
-			mesh->_hullLength = hullLength;
-			mesh->_sequence = sequence;
+			mesh->setHullLength(hullLength << 1);
+			mesh->setSequence(sequence);
 			if (nonessential) {
-				mesh->_edges.addAll(edges);
-				mesh->_width = width;
-				mesh->_height = height;
+				mesh->setEdges(edges);
+				mesh->setWidth(width * scale);
+				mesh->setHeight(height * scale);
 			}
-			_attachmentLoader->configureAttachment(mesh);
 			return mesh;
 		}
 		case AttachmentType_Linkedmesh: {
-			String path = (flags & 16) != 0 ? readStringRef(input, skeletonData) : name;
-			Color color(1, 1, 1, 1);
-			if ((flags & 32) != 0) readColor(input, color);
+			String path = (flags & 16) != 0 ? input.readStringRef() : name;
+			int color = (flags & 32) != 0 ? input.readInt() : 0xffffffff;
 			Sequence *sequence = (flags & 64) != 0 ? readSequence(input) : nullptr;
 			bool inheritTimelines = (flags & 128) != 0;
-			int skinIndex = readVarint(input, true);
-			String parent(readStringRef(input, skeletonData));
+			int skinIndex = input.readInt(true);
+			String parent = input.readStringRef();
 			float width = 0, height = 0;
 			if (nonessential) {
-				width = readFloat(input) * _scale;
-				height = readFloat(input) * _scale;
+				width = input.readFloat();
+				height = input.readFloat();
 			}
 
-			MeshAttachment *mesh = _attachmentLoader->newMeshAttachment(*skin, String(name), String(path), sequence);
-			if (!mesh) {
-				setError("Error reading attachment: ", name.buffer());
-				return NULL;
-			}
-			mesh->_path = path;
-			mesh->_color.set(color);
-			mesh->_sequence = sequence;
+			MeshAttachment *mesh = _attachmentLoader->newMeshAttachment(skin, name, path, sequence);
+			if (!mesh) return NULL;
+			mesh->setPath(path);
+			Color::rgba8888ToColor(mesh->getColor(), color);
+			mesh->setSequence(sequence);
 			if (nonessential) {
-				mesh->_width = width;
-				mesh->_height = height;
+				mesh->setWidth(width * scale);
+				mesh->setHeight(height * scale);
 			}
-
-			LinkedMesh *linkedMesh = new (__FILE__, __LINE__) LinkedMesh(mesh, skinIndex, slotIndex,
-																		 String(parent), inheritTimelines);
-			_linkedMeshes.add(linkedMesh);
+			_linkedMeshes.add(new (__FILE__, __LINE__) LinkedMesh(mesh, skinIndex, slotIndex, parent, inheritTimelines));
 			return mesh;
 		}
 		case AttachmentType_Path: {
-			PathAttachment *path = _attachmentLoader->newPathAttachment(*skin, String(name));
-			if (!path) {
-				setError("Error reading attachment: ", name.buffer());
-				return NULL;
-			}
-			path->_closed = (flags & 16) != 0;
-			path->_constantSpeed = (flags & 32) != 0;
-			int verticesLength = readVertices(input, path->getVertices(), path->getBones(), (flags & 64) != 0);
+			bool closed = (flags & 16) != 0;
+			bool constantSpeed = (flags & 32) != 0;
+			Vector<float> vertices;
+			Vector<int> bones;
+			int verticesLength = readVertices(input, vertices, bones, (flags & 64) != 0);
+			Vector<float> lengths;
+			lengths.setSize(verticesLength / 6, 0);
+			for (int i = 0, n = lengths.size(); i < n; i++)
+				lengths[i] = input.readFloat() * scale;
+			int color = nonessential ? input.readInt() : 0;
+
+			PathAttachment *path = _attachmentLoader->newPathAttachment(skin, name);
+			if (!path) return NULL;
+			path->setClosed(closed);
+			path->setConstantSpeed(constantSpeed);
 			path->setWorldVerticesLength(verticesLength);
-			int lengthsLength = verticesLength / 6;
-			path->_lengths.setSize(lengthsLength, 0);
-			for (int i = 0; i < lengthsLength; ++i) {
-				path->_lengths[i] = readFloat(input) * _scale;
-			}
-			if (nonessential) {
-				readColor(input, path->getColor());
-			}
-			_attachmentLoader->configureAttachment(path);
+			path->setVertices(vertices);
+			path->setBones(bones);
+			path->setLengths(lengths);
+			if (nonessential) Color::rgba8888ToColor(path->getColor(), color);
 			return path;
 		}
 		case AttachmentType_Point: {
-			PointAttachment *point = _attachmentLoader->newPointAttachment(*skin, String(name));
-			if (!point) {
-				setError("Error reading attachment: ", name.buffer());
-				return NULL;
-			}
-			point->_rotation = readFloat(input);
-			point->_x = readFloat(input) * _scale;
-			point->_y = readFloat(input) * _scale;
+			float rotation = input.readFloat();
+			float x = input.readFloat();
+			float y = input.readFloat();
+			int color = nonessential ? input.readInt() : 0;
 
-			if (nonessential) {
-				readColor(input, point->getColor());
-			}
-			_attachmentLoader->configureAttachment(point);
+			PointAttachment *point = _attachmentLoader->newPointAttachment(skin, name);
+			if (!point) return NULL;
+			point->setX(x * scale);
+			point->setY(y * scale);
+			point->setRotation(rotation);
+			if (nonessential) Color::rgba8888ToColor(point->getColor(), color);
 			return point;
 		}
 		case AttachmentType_Clipping: {
-			int endSlotIndex = readVarint(input, true);
-			ClippingAttachment *clip = _attachmentLoader->newClippingAttachment(*skin, name);
-			if (!clip) {
-				setError("Error reading attachment: ", name.buffer());
-				return NULL;
-			}
-			int verticesLength = readVertices(input, clip->getVertices(), clip->getBones(), (flags & 16) != 0);
+			int endSlotIndex = input.readInt(true);
+			Vector<float> vertices;
+			Vector<int> bones;
+			int verticesLength = readVertices(input, vertices, bones, (flags & 16) != 0);
+			int color = nonessential ? input.readInt() : 0;
+
+			ClippingAttachment *clip = _attachmentLoader->newClippingAttachment(skin, name);
+			if (!clip) return NULL;
+			clip->setEndSlot(skeletonData._slots[endSlotIndex]);
 			clip->setWorldVerticesLength(verticesLength);
-			clip->_endSlot = skeletonData->_slots[endSlotIndex];
-			if (nonessential) {
-				readColor(input, clip->getColor());
-			}
-			_attachmentLoader->configureAttachment(clip);
+			clip->setVertices(vertices);
+			clip->setBones(bones);
+			if (nonessential) Color::rgba8888ToColor(clip->getColor(), color);
 			return clip;
 		}
 	}
 	return NULL;
 }
 
-int SkeletonBinary::readVertices(DataInput *input, Vector<float> &vertices, Vector<int> &bones, bool weighted) {
+Sequence *SkeletonBinary::readSequence(DataInput &input) {
+	Sequence *sequence = new (__FILE__, __LINE__) Sequence(input.readInt(true));
+	sequence->setStart(input.readInt(true));
+	sequence->setDigits(input.readInt(true));
+	sequence->setSetupIndex(input.readInt(true));
+	return sequence;
+}
+
+int SkeletonBinary::readVertices(DataInput &input, Vector<float> &vertices, Vector<int> &bones, bool weighted) {
 	float scale = _scale;
-	int vertexCount = readVarint(input, true);
+	int vertexCount = input.readInt(true);
 	int verticesLength = vertexCount << 1;
 	if (!weighted) {
-		readFloatArray(input, verticesLength, scale, vertices);
+		readFloatArray(input, verticesLength, scale, vertices.setSize(verticesLength, 0));
 		return verticesLength;
 	}
 	vertices.ensureCapacity(verticesLength * 3 * 3);
 	bones.ensureCapacity(verticesLength * 3);
 	for (int i = 0; i < vertexCount; ++i) {
-		int boneCount = readVarint(input, true);
+		int boneCount = input.readInt(true);
 		bones.add(boneCount);
 		for (int ii = 0; ii < boneCount; ++ii) {
-			bones.add(readVarint(input, true));
-			vertices.add(readFloat(input) * scale);
-			vertices.add(readFloat(input) * scale);
-			vertices.add(readFloat(input));
+			bones.add(input.readInt(true));
+			vertices.add(input.readFloat() * scale);
+			vertices.add(input.readFloat() * scale);
+			vertices.add(input.readFloat());
 		}
 	}
 	return verticesLength;
 }
 
-void SkeletonBinary::readFloatArray(DataInput *input, int n, float scale, Vector<float> &array) {
+void SkeletonBinary::readFloatArray(DataInput &input, int n, float scale, Vector<float> &array) {
 	array.setSize(n, 0);
-
 	int i;
 	if (scale == 1) {
 		for (i = 0; i < n; ++i) {
-			array[i] = readFloat(input);
+			array[i] = input.readFloat();
 		}
 	} else {
 		for (i = 0; i < n; ++i) {
-			array[i] = readFloat(input) * scale;
+			array[i] = input.readFloat() * scale;
 		}
 	}
 }
 
-void SkeletonBinary::readShortArray(DataInput *input, Vector<unsigned short> &array, int n) {
+void SkeletonBinary::readShortArray(DataInput &input, Vector<unsigned short> &array, int n) {
 	array.setSize(n, 0);
 	for (int i = 0; i < n; ++i) {
-		array[i] = (short) readVarint(input, true);
+		array[i] = (short) input.readInt(true);
 	}
 }
 
-void SkeletonBinary::setBezier(DataInput *input, CurveTimeline *timeline, int bezier, int frame, int value, float time1,
-							   float time2,
-							   float value1, float value2, float scale) {
-	float cx1 = readFloat(input);
-	float cy1 = readFloat(input);
-	float cx2 = readFloat(input);
-	float cy2 = readFloat(input);
-	timeline->setBezier(bezier, frame, value, time1, value1, cx1, cy1 * scale, cx2, cy2 * scale, time2, value2);
-}
-
-void SkeletonBinary::readTimeline(DataInput *input, Vector<Timeline *> &timelines, CurveTimeline1 *timeline, float scale) {
-	float time = readFloat(input);
-	float value = readFloat(input) * scale;
-	for (int frame = 0, bezier = 0, frameLast = (int) timeline->getFrameCount() - 1;; frame++) {
-		timeline->setFrame(frame, time, value);
-		if (frame == frameLast) break;
-		float time2 = readFloat(input);
-		float value2 = readFloat(input) * scale;
-		switch (readSByte(input)) {
-			case CURVE_STEPPED:
-				timeline->setStepped(frame);
-				break;
-			case CURVE_BEZIER:
-				setBezier(input, timeline, bezier++, frame, 0, time, time2, value, value2, scale);
-		}
-		time = time2;
-		value = value2;
-	}
-	timelines.add(timeline);
-}
-
-void SkeletonBinary::readTimeline2(DataInput *input, Vector<Timeline *> &timelines, CurveTimeline2 *timeline, float scale) {
-	float time = readFloat(input);
-	float value1 = readFloat(input) * scale;
-	float value2 = readFloat(input) * scale;
-	for (int frame = 0, bezier = 0, frameLast = (int) timeline->getFrameCount() - 1;; frame++) {
-		timeline->setFrame(frame, time, value1, value2);
-		if (frame == frameLast) break;
-		float time2 = readFloat(input);
-		float nvalue1 = readFloat(input) * scale;
-		float nvalue2 = readFloat(input) * scale;
-		switch (readSByte(input)) {
-			case CURVE_STEPPED:
-				timeline->setStepped(frame);
-				break;
-			case CURVE_BEZIER:
-				setBezier(input, timeline, bezier++, frame, 0, time, time2, value1, nvalue1, scale);
-				setBezier(input, timeline, bezier++, frame, 1, time, time2, value2, nvalue2, scale);
-		}
-		time = time2;
-		value1 = nvalue1;
-		value2 = nvalue2;
-	}
-	timelines.add(timeline);
-}
-
-Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, SkeletonData *skeletonData) {
+Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, SkeletonData &skeletonData) {
 	Vector<Timeline *> timelines;
+	timelines.ensureCapacity(input.readInt(true));
 	float scale = _scale;
-	int numTimelines = readVarint(input, true);
-	SP_UNUSED(numTimelines);
+
 	// Slot timelines.
-	for (int i = 0, n = readVarint(input, true); i < n; ++i) {
-		int slotIndex = readVarint(input, true);
-		for (int ii = 0, nn = readVarint(input, true); ii < nn; ++ii) {
-			unsigned char timelineType = readByte(input);
-			int frameCount = readVarint(input, true);
-			int frameLast = frameCount - 1;
+	for (int i = 0, n = input.readInt(true); i < n; ++i) {
+		int slotIndex = input.readInt(true);
+		for (int ii = 0, nn = input.readInt(true); ii < nn; ++ii) {
+			int timelineType = input.readByte(), frameCount = input.readInt(true), frameLast = frameCount - 1;
 			switch (timelineType) {
 				case SLOT_ATTACHMENT: {
 					AttachmentTimeline *timeline = new (__FILE__, __LINE__) AttachmentTimeline(frameCount, slotIndex);
-					for (int frame = 0; frame < frameCount; ++frame) {
-						float time = readFloat(input);
-						String attachmentName(readStringRef(input, skeletonData));
-						timeline->setFrame(frame, time, attachmentName);
-					}
+					for (int frame = 0; frame < frameCount; ++frame)
+						timeline->setFrame(frame, input.readFloat(), input.readStringRef());
 					timelines.add(timeline);
 					break;
 				}
 				case SLOT_RGBA: {
-					int bezierCount = readVarint(input, true);
-					RGBATimeline *timeline = new (__FILE__, __LINE__) RGBATimeline(frameCount, bezierCount, slotIndex);
-
-					float time = readFloat(input);
-					float r = readByte(input) / 255.0;
-					float g = readByte(input) / 255.0;
-					float b = readByte(input) / 255.0;
-					float a = readByte(input) / 255.0;
-
+					RGBATimeline *timeline = new (__FILE__, __LINE__) RGBATimeline(frameCount, input.readInt(true), slotIndex);
+					float time = input.readFloat();
+					float r = input.read() / 255.0f, g = input.read() / 255.0f;
+					float b = input.read() / 255.0f, a = input.read() / 255.0f;
 					for (int frame = 0, bezier = 0;; frame++) {
 						timeline->setFrame(frame, time, r, g, b, a);
 						if (frame == frameLast) break;
-
-						float time2 = readFloat(input);
-						float r2 = readByte(input) / 255.0;
-						float g2 = readByte(input) / 255.0;
-						float b2 = readByte(input) / 255.0;
-						float a2 = readByte(input) / 255.0;
-
-						switch (readSByte(input)) {
+						float time2 = input.readFloat();
+						float r2 = input.read() / 255.0f, g2 = input.read() / 255.0f;
+						float b2 = input.read() / 255.0f, a2 = input.read() / 255.0f;
+						int curveType = input.readByte();
+						switch (curveType) {
 							case CURVE_STEPPED:
 								timeline->setStepped(frame);
 								break;
 							case CURVE_BEZIER:
-								setBezier(input, timeline, bezier++, frame, 0, time, time2, r, r2, 1);
-								setBezier(input, timeline, bezier++, frame, 1, time, time2, g, g2, 1);
-								setBezier(input, timeline, bezier++, frame, 2, time, time2, b, b2, 1);
-								setBezier(input, timeline, bezier++, frame, 3, time, time2, a, a2, 1);
+								setBezier(input, *timeline, bezier++, frame, 0, time, time2, r, r2, 1);
+								setBezier(input, *timeline, bezier++, frame, 1, time, time2, g, g2, 1);
+								setBezier(input, *timeline, bezier++, frame, 2, time, time2, b, b2, 1);
+								setBezier(input, *timeline, bezier++, frame, 3, time, time2, a, a2, 1);
+								break;
 						}
 						time = time2;
 						r = r2;
@@ -960,31 +856,25 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 					break;
 				}
 				case SLOT_RGB: {
-					int bezierCount = readVarint(input, true);
-					RGBTimeline *timeline = new (__FILE__, __LINE__) RGBTimeline(frameCount, bezierCount, slotIndex);
-
-					float time = readFloat(input);
-					float r = readByte(input) / 255.0;
-					float g = readByte(input) / 255.0;
-					float b = readByte(input) / 255.0;
+					RGBTimeline *timeline = new (__FILE__, __LINE__) RGBTimeline(frameCount, input.readInt(true), slotIndex);
+					float time = input.readFloat();
+					float r = input.read() / 255.0f, g = input.read() / 255.0f, b = input.read() / 255.0f;
 
 					for (int frame = 0, bezier = 0;; frame++) {
 						timeline->setFrame(frame, time, r, g, b);
 						if (frame == frameLast) break;
-
-						float time2 = readFloat(input);
-						float r2 = readByte(input) / 255.0;
-						float g2 = readByte(input) / 255.0;
-						float b2 = readByte(input) / 255.0;
-
-						switch (readSByte(input)) {
+						float time2 = input.readFloat();
+						float r2 = input.read() / 255.0f, g2 = input.read() / 255.0f, b2 = input.read() / 255.0f;
+						int curveType = input.readByte();
+						switch (curveType) {
 							case CURVE_STEPPED:
 								timeline->setStepped(frame);
 								break;
 							case CURVE_BEZIER:
-								setBezier(input, timeline, bezier++, frame, 0, time, time2, r, r2, 1);
-								setBezier(input, timeline, bezier++, frame, 1, time, time2, g, g2, 1);
-								setBezier(input, timeline, bezier++, frame, 2, time, time2, b, b2, 1);
+								setBezier(input, *timeline, bezier++, frame, 0, time, time2, r, r2, 1);
+								setBezier(input, *timeline, bezier++, frame, 1, time, time2, g, g2, 1);
+								setBezier(input, *timeline, bezier++, frame, 2, time, time2, b, b2, 1);
+								break;
 						}
 						time = time2;
 						r = r2;
@@ -995,42 +885,33 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 					break;
 				}
 				case SLOT_RGBA2: {
-					int bezierCount = readVarint(input, true);
-					RGBA2Timeline *timeline = new (__FILE__, __LINE__) RGBA2Timeline(frameCount, bezierCount, slotIndex);
-
-					float time = readFloat(input);
-					float r = readByte(input) / 255.0;
-					float g = readByte(input) / 255.0;
-					float b = readByte(input) / 255.0;
-					float a = readByte(input) / 255.0;
-					float r2 = readByte(input) / 255.0;
-					float g2 = readByte(input) / 255.0;
-					float b2 = readByte(input) / 255.0;
+					RGBA2Timeline *timeline = new (__FILE__, __LINE__) RGBA2Timeline(frameCount, input.readInt(true), slotIndex);
+					float time = input.readFloat();
+					float r = input.read() / 255.0f, g = input.read() / 255.0f;
+					float b = input.read() / 255.0f, a = input.read() / 255.0f;
+					float r2 = input.read() / 255.0f, g2 = input.read() / 255.0f, b2 = input.read() / 255.0f;
 
 					for (int frame = 0, bezier = 0;; frame++) {
 						timeline->setFrame(frame, time, r, g, b, a, r2, g2, b2);
 						if (frame == frameLast) break;
-						float time2 = readFloat(input);
-						float nr = readByte(input) / 255.0;
-						float ng = readByte(input) / 255.0;
-						float nb = readByte(input) / 255.0;
-						float na = readByte(input) / 255.0;
-						float nr2 = readByte(input) / 255.0;
-						float ng2 = readByte(input) / 255.0;
-						float nb2 = readByte(input) / 255.0;
-
-						switch (readSByte(input)) {
+						float time2 = input.readFloat();
+						float nr = input.read() / 255.0f, ng = input.read() / 255.0f;
+						float nb = input.read() / 255.0f, na = input.read() / 255.0f;
+						float nr2 = input.read() / 255.0f, ng2 = input.read() / 255.0f, nb2 = input.read() / 255.0f;
+						int curveType = input.readByte();
+						switch (curveType) {
 							case CURVE_STEPPED:
 								timeline->setStepped(frame);
 								break;
 							case CURVE_BEZIER:
-								setBezier(input, timeline, bezier++, frame, 0, time, time2, r, nr, 1);
-								setBezier(input, timeline, bezier++, frame, 1, time, time2, g, ng, 1);
-								setBezier(input, timeline, bezier++, frame, 2, time, time2, b, nb, 1);
-								setBezier(input, timeline, bezier++, frame, 3, time, time2, a, na, 1);
-								setBezier(input, timeline, bezier++, frame, 4, time, time2, r2, nr2, 1);
-								setBezier(input, timeline, bezier++, frame, 5, time, time2, g2, ng2, 1);
-								setBezier(input, timeline, bezier++, frame, 6, time, time2, b2, nb2, 1);
+								setBezier(input, *timeline, bezier++, frame, 0, time, time2, r, nr, 1);
+								setBezier(input, *timeline, bezier++, frame, 1, time, time2, g, ng, 1);
+								setBezier(input, *timeline, bezier++, frame, 2, time, time2, b, nb, 1);
+								setBezier(input, *timeline, bezier++, frame, 3, time, time2, a, na, 1);
+								setBezier(input, *timeline, bezier++, frame, 4, time, time2, r2, nr2, 1);
+								setBezier(input, *timeline, bezier++, frame, 5, time, time2, g2, ng2, 1);
+								setBezier(input, *timeline, bezier++, frame, 6, time, time2, b2, nb2, 1);
+								break;
 						}
 						time = time2;
 						r = nr;
@@ -1045,39 +926,30 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 					break;
 				}
 				case SLOT_RGB2: {
-					int bezierCount = readVarint(input, true);
-					RGB2Timeline *timeline = new (__FILE__, __LINE__) RGB2Timeline(frameCount, bezierCount, slotIndex);
-
-					float time = readFloat(input);
-					float r = readByte(input) / 255.0;
-					float g = readByte(input) / 255.0;
-					float b = readByte(input) / 255.0;
-					float r2 = readByte(input) / 255.0;
-					float g2 = readByte(input) / 255.0;
-					float b2 = readByte(input) / 255.0;
+					RGB2Timeline *timeline = new (__FILE__, __LINE__) RGB2Timeline(frameCount, input.readInt(true), slotIndex);
+					float time = input.readFloat();
+					float r = input.read() / 255.0f, g = input.read() / 255.0f, b = input.read() / 255.0f;
+					float r2 = input.read() / 255.0f, g2 = input.read() / 255.0f, b2 = input.read() / 255.0f;
 
 					for (int frame = 0, bezier = 0;; frame++) {
 						timeline->setFrame(frame, time, r, g, b, r2, g2, b2);
 						if (frame == frameLast) break;
-						float time2 = readFloat(input);
-						float nr = readByte(input) / 255.0;
-						float ng = readByte(input) / 255.0;
-						float nb = readByte(input) / 255.0;
-						float nr2 = readByte(input) / 255.0;
-						float ng2 = readByte(input) / 255.0;
-						float nb2 = readByte(input) / 255.0;
-
-						switch (readSByte(input)) {
+						float time2 = input.readFloat();
+						float nr = input.read() / 255.0f, ng = input.read() / 255.0f, nb = input.read() / 255.0f;
+						float nr2 = input.read() / 255.0f, ng2 = input.read() / 255.0f, nb2 = input.read() / 255.0f;
+						int curveType = input.readByte();
+						switch (curveType) {
 							case CURVE_STEPPED:
 								timeline->setStepped(frame);
 								break;
 							case CURVE_BEZIER:
-								setBezier(input, timeline, bezier++, frame, 0, time, time2, r, nr, 1);
-								setBezier(input, timeline, bezier++, frame, 1, time, time2, g, ng, 1);
-								setBezier(input, timeline, bezier++, frame, 2, time, time2, b, nb, 1);
-								setBezier(input, timeline, bezier++, frame, 3, time, time2, r2, nr2, 1);
-								setBezier(input, timeline, bezier++, frame, 4, time, time2, g2, ng2, 1);
-								setBezier(input, timeline, bezier++, frame, 5, time, time2, b2, nb2, 1);
+								setBezier(input, *timeline, bezier++, frame, 0, time, time2, r, nr, 1);
+								setBezier(input, *timeline, bezier++, frame, 1, time, time2, g, ng, 1);
+								setBezier(input, *timeline, bezier++, frame, 2, time, time2, b, nb, 1);
+								setBezier(input, *timeline, bezier++, frame, 3, time, time2, r2, nr2, 1);
+								setBezier(input, *timeline, bezier++, frame, 4, time, time2, g2, ng2, 1);
+								setBezier(input, *timeline, bezier++, frame, 5, time, time2, b2, nb2, 1);
+								break;
 						}
 						time = time2;
 						r = nr;
@@ -1091,21 +963,21 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 					break;
 				}
 				case SLOT_ALPHA: {
-					int bezierCount = readVarint(input, true);
-					AlphaTimeline *timeline = new (__FILE__, __LINE__) AlphaTimeline(frameCount, bezierCount, slotIndex);
-					float time = readFloat(input);
-					float a = readByte(input) / 255.0;
+					AlphaTimeline *timeline = new (__FILE__, __LINE__) AlphaTimeline(frameCount, input.readInt(true), slotIndex);
+					float time = input.readFloat(), a = input.read() / 255.0f;
 					for (int frame = 0, bezier = 0;; frame++) {
 						timeline->setFrame(frame, time, a);
 						if (frame == frameLast) break;
-						float time2 = readFloat(input);
-						float a2 = readByte(input) / 255.0;
-						switch (readSByte(input)) {
+						float time2 = input.readFloat();
+						float a2 = input.read() / 255.0f;
+						int curveType = input.readByte();
+						switch (curveType) {
 							case CURVE_STEPPED:
 								timeline->setStepped(frame);
 								break;
 							case CURVE_BEZIER:
-								setBezier(input, timeline, bezier++, frame, 0, time, time2, a, a2, 1);
+								setBezier(input, *timeline, bezier++, frame, 0, time, time2, a, a2, 1);
+								break;
 						}
 						time = time2;
 						a = a2;
@@ -1115,7 +987,7 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 				}
 				default: {
 					ContainerUtil::cleanUpVectorOfPointers(timelines);
-					setError("Invalid timeline type for a slot: ", skeletonData->_slots[slotIndex]->_name.buffer());
+					setError("Invalid slot timeline type: ", String().append(timelineType).buffer());
 					return NULL;
 				}
 			}
@@ -1123,97 +995,79 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 	}
 
 	// Bone timelines.
-	for (int i = 0, n = readVarint(input, true); i < n; ++i) {
-		int boneIndex = readVarint(input, true);
-		for (int ii = 0, nn = readVarint(input, true); ii < nn; ++ii) {
-			unsigned char timelineType = readByte(input);
-			int frameCount = readVarint(input, true);
+	for (int i = 0, n = input.readInt(true); i < n; ++i) {
+		int boneIndex = input.readInt(true);
+		for (int ii = 0, nn = input.readInt(true); ii < nn; ++ii) {
+			int timelineType = input.readByte(), frameCount = input.readInt(true);
 			if (timelineType == BONE_INHERIT) {
 				InheritTimeline *timeline = new (__FILE__, __LINE__) InheritTimeline(frameCount, boneIndex);
 				for (int frame = 0; frame < frameCount; frame++) {
-					float time = readFloat(input);
-					Inherit inherit = (Inherit) readByte(input);
+					float time = input.readFloat();
+					Inherit inherit = (Inherit) input.readByte();
 					timeline->setFrame(frame, time, inherit);
 				}
 				timelines.add(timeline);
 				continue;
 			}
-			int bezierCount = readVarint(input, true);
+			int bezierCount = input.readInt(true);
 			switch (timelineType) {
 				case BONE_ROTATE:
-					readTimeline(input, timelines,
-								 new (__FILE__, __LINE__) RotateTimeline(frameCount, bezierCount, boneIndex),
-								 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) RotateTimeline(frameCount, bezierCount, boneIndex)), 1);
 					break;
 				case BONE_TRANSLATE:
-					readTimeline2(input, timelines, new (__FILE__, __LINE__) TranslateTimeline(frameCount, bezierCount, boneIndex), scale);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) TranslateTimeline(frameCount, bezierCount, boneIndex)), scale);
 					break;
 				case BONE_TRANSLATEX:
-					readTimeline(input, timelines, new (__FILE__, __LINE__) TranslateXTimeline(frameCount, bezierCount, boneIndex), scale);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) TranslateXTimeline(frameCount, bezierCount, boneIndex)), scale);
 					break;
 				case BONE_TRANSLATEY:
-					readTimeline(input, timelines, new (__FILE__, __LINE__) TranslateYTimeline(frameCount, bezierCount, boneIndex), scale);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) TranslateYTimeline(frameCount, bezierCount, boneIndex)), scale);
 					break;
 				case BONE_SCALE:
-					readTimeline2(input, timelines,
-								  new (__FILE__, __LINE__) ScaleTimeline(frameCount, bezierCount, boneIndex),
-								  1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) ScaleTimeline(frameCount, bezierCount, boneIndex)), 1);
 					break;
 				case BONE_SCALEX:
-					readTimeline(input, timelines,
-								 new (__FILE__, __LINE__) ScaleXTimeline(frameCount, bezierCount, boneIndex),
-								 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) ScaleXTimeline(frameCount, bezierCount, boneIndex)), 1);
 					break;
 				case BONE_SCALEY:
-					readTimeline(input, timelines,
-								 new (__FILE__, __LINE__) ScaleYTimeline(frameCount, bezierCount, boneIndex),
-								 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) ScaleYTimeline(frameCount, bezierCount, boneIndex)), 1);
 					break;
 				case BONE_SHEAR:
-					readTimeline2(input, timelines,
-								  new (__FILE__, __LINE__) ShearTimeline(frameCount, bezierCount, boneIndex),
-								  1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) ShearTimeline(frameCount, bezierCount, boneIndex)), 1);
 					break;
 				case BONE_SHEARX:
-					readTimeline(input, timelines,
-								 new (__FILE__, __LINE__) ShearXTimeline(frameCount, bezierCount, boneIndex),
-								 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) ShearXTimeline(frameCount, bezierCount, boneIndex)), 1);
 					break;
 				case BONE_SHEARY:
-					readTimeline(input, timelines,
-								 new (__FILE__, __LINE__) ShearYTimeline(frameCount, bezierCount, boneIndex),
-								 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) ShearYTimeline(frameCount, bezierCount, boneIndex)), 1);
 					break;
 				default: {
 					ContainerUtil::cleanUpVectorOfPointers(timelines);
-					setError("Invalid timeline type for a bone: ", skeletonData->_bones[boneIndex]->_name.buffer());
+					setError("Invalid bone timeline type: ", String().append(timelineType).buffer());
 					return NULL;
 				}
 			}
 		}
 	}
 
-	// IK timelines.
-	for (int i = 0, n = readVarint(input, true); i < n; ++i) {
-		int index = readVarint(input, true);
-		int frameCount = readVarint(input, true);
-		int frameLast = frameCount - 1;
-		int bezierCount = readVarint(input, true);
-		IkConstraintTimeline *timeline = new (__FILE__, __LINE__) IkConstraintTimeline(frameCount, bezierCount, index);
-		int flags = readByte(input);
-		float time = readFloat(input), mix = (flags & 1) != 0 ? ((flags & 2) != 0 ? readFloat(input) : 1) : 0;
-		float softness = (flags & 4) != 0 ? readFloat(input) * scale : 0;
+	// IK constraint timelines.
+	for (int i = 0, n = input.readInt(true); i < n; i++) {
+		int index = input.readInt(true), frameCount = input.readInt(true), frameLast = frameCount - 1;
+		IkConstraintTimeline *timeline = new (__FILE__, __LINE__) IkConstraintTimeline(frameCount, input.readInt(true), index);
+		int flags = input.read();
+		float time = input.readFloat(), mix = (flags & 1) != 0 ? ((flags & 2) != 0 ? input.readFloat() : 1) : 0;
+		float softness = (flags & 4) != 0 ? input.readFloat() * scale : 0;
 		for (int frame = 0, bezier = 0;; frame++) {
 			timeline->setFrame(frame, time, mix, softness, (flags & 8) != 0 ? 1 : -1, (flags & 16) != 0, (flags & 32) != 0);
 			if (frame == frameLast) break;
-			flags = readByte(input);
-			float time2 = readFloat(input), mix2 = (flags & 1) != 0 ? ((flags & 2) != 0 ? readFloat(input) : 1) : 0;
-			float softness2 = (flags & 4) != 0 ? readFloat(input) * scale : 0;
+			flags = input.read();
+			float time2 = input.readFloat(), mix2 = (flags & 1) != 0 ? ((flags & 2) != 0 ? input.readFloat() : 1) : 0;
+			float softness2 = (flags & 4) != 0 ? input.readFloat() * scale : 0;
 			if ((flags & 64) != 0)
 				timeline->setStepped(frame);
 			else if ((flags & 128) != 0) {
-				setBezier(input, timeline, bezier++, frame, 0, time, time2, mix, mix2, 1);
-				setBezier(input, timeline, bezier++, frame, 1, time, time2, softness, softness2, scale);
+				setBezier(input, *timeline, bezier++, frame, 0, time, time2, mix, mix2, 1);
+				setBezier(input, *timeline, bezier++, frame, 1, time, time2, softness, softness2, scale);
 			}
 			time = time2;
 			mix = mix2;
@@ -1223,40 +1077,29 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 	}
 
 	// Transform constraint timelines.
-	for (int i = 0, n = readVarint(input, true); i < n; ++i) {
-		int index = readVarint(input, true);
-		int frameCount = readVarint(input, true);
-		int frameLast = frameCount - 1;
-		int bezierCount = readVarint(input, true);
-		TransformConstraintTimeline *timeline = new TransformConstraintTimeline(frameCount, bezierCount, index);
-		float time = readFloat(input);
-		float mixRotate = readFloat(input);
-		float mixX = readFloat(input);
-		float mixY = readFloat(input);
-		float mixScaleX = readFloat(input);
-		float mixScaleY = readFloat(input);
-		float mixShearY = readFloat(input);
+	for (int i = 0, n = input.readInt(true); i < n; ++i) {
+		int index = input.readInt(true), frameCount = input.readInt(true), frameLast = frameCount - 1;
+		TransformConstraintTimeline *timeline = new (__FILE__, __LINE__) TransformConstraintTimeline(frameCount, input.readInt(true), index);
+		float time = input.readFloat(), mixRotate = input.readFloat(), mixX = input.readFloat(), mixY = input.readFloat(),
+			mixScaleX = input.readFloat(), mixScaleY = input.readFloat(), mixShearY = input.readFloat();
 		for (int frame = 0, bezier = 0;; frame++) {
 			timeline->setFrame(frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
 			if (frame == frameLast) break;
-			float time2 = readFloat(input);
-			float mixRotate2 = readFloat(input);
-			float mixX2 = readFloat(input);
-			float mixY2 = readFloat(input);
-			float mixScaleX2 = readFloat(input);
-			float mixScaleY2 = readFloat(input);
-			float mixShearY2 = readFloat(input);
-			switch (readSByte(input)) {
+			float time2 = input.readFloat(), mixRotate2 = input.readFloat(), mixX2 = input.readFloat(), mixY2 = input.readFloat(),
+				mixScaleX2 = input.readFloat(), mixScaleY2 = input.readFloat(), mixShearY2 = input.readFloat();
+			int curveType = input.readByte();
+			switch (curveType) {
 				case CURVE_STEPPED:
 					timeline->setStepped(frame);
 					break;
 				case CURVE_BEZIER:
-					setBezier(input, timeline, bezier++, frame, 0, time, time2, mixRotate, mixRotate2, 1);
-					setBezier(input, timeline, bezier++, frame, 1, time, time2, mixX, mixX2, 1);
-					setBezier(input, timeline, bezier++, frame, 2, time, time2, mixY, mixY2, 1);
-					setBezier(input, timeline, bezier++, frame, 3, time, time2, mixScaleX, mixScaleX2, 1);
-					setBezier(input, timeline, bezier++, frame, 4, time, time2, mixScaleY, mixScaleY2, 1);
-					setBezier(input, timeline, bezier++, frame, 5, time, time2, mixShearY, mixShearY2, 1);
+					setBezier(input, *timeline, bezier++, frame, 0, time, time2, mixRotate, mixRotate2, 1);
+					setBezier(input, *timeline, bezier++, frame, 1, time, time2, mixX, mixX2, 1);
+					setBezier(input, *timeline, bezier++, frame, 2, time, time2, mixY, mixY2, 1);
+					setBezier(input, *timeline, bezier++, frame, 3, time, time2, mixScaleX, mixScaleX2, 1);
+					setBezier(input, *timeline, bezier++, frame, 4, time, time2, mixScaleY, mixScaleY2, 1);
+					setBezier(input, *timeline, bezier++, frame, 5, time, time2, mixShearY, mixShearY2, 1);
+					break;
 			}
 			time = time2;
 			mixRotate = mixRotate2;
@@ -1270,51 +1113,44 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 	}
 
 	// Path constraint timelines.
-	for (int i = 0, n = readVarint(input, true); i < n; ++i) {
-		int index = readVarint(input, true);
-		PathConstraintData *data = skeletonData->_pathConstraints[index];
-		for (int ii = 0, nn = readVarint(input, true); ii < nn; ii++) {
-			int type = readByte(input);
-			int frameCount = readVarint(input, true);
-			int bezierCount = readVarint(input, true);
+	for (int i = 0, n = input.readInt(true); i < n; ++i) {
+		int index = input.readInt(true);
+		PathConstraintData *data = static_cast<PathConstraintData*>(skeletonData._constraints[index]);
+		for (int ii = 0, nn = input.readInt(true); ii < nn; ii++) {
+			int type = input.readByte(), frameCount = input.readInt(true), bezierCount = input.readInt(true);
 			switch (type) {
 				case PATH_POSITION: {
-					readTimeline(input, timelines, new PathConstraintPositionTimeline(frameCount, bezierCount, index),
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) PathConstraintPositionTimeline(frameCount, bezierCount, index)),
 								 data->_positionMode == PositionMode_Fixed ? scale : 1);
 					break;
 				}
 				case PATH_SPACING: {
 					readTimeline(input, timelines,
-								 new PathConstraintSpacingTimeline(frameCount,
+								 *(new (__FILE__, __LINE__) PathConstraintSpacingTimeline(frameCount,
 																   bezierCount,
-																   index),
+																   index)),
 								 data->_spacingMode == SpacingMode_Length ||
 												 data->_spacingMode == SpacingMode_Fixed
 										 ? scale
 										 : 1);
 					break;
 				}
-				case PATH_MIX:
-					PathConstraintMixTimeline *timeline = new PathConstraintMixTimeline(frameCount, bezierCount, index);
-					float time = readFloat(input);
-					float mixRotate = readFloat(input);
-					float mixX = readFloat(input);
-					float mixY = readFloat(input);
+				case PATH_MIX: {
+					PathConstraintMixTimeline *timeline = new (__FILE__, __LINE__) PathConstraintMixTimeline(frameCount, bezierCount, index);
+					float time = input.readFloat(), mixRotate = input.readFloat(), mixX = input.readFloat(), mixY = input.readFloat();
 					for (int frame = 0, bezier = 0, frameLast = (int) timeline->getFrameCount() - 1;; frame++) {
 						timeline->setFrame(frame, time, mixRotate, mixX, mixY);
 						if (frame == frameLast) break;
-						float time2 = readFloat(input);
-						float mixRotate2 = readFloat(input);
-						float mixX2 = readFloat(input);
-						float mixY2 = readFloat(input);
-						switch (readSByte(input)) {
+						float time2 = input.readFloat(), mixRotate2 = input.readFloat(), mixX2 = input.readFloat(), mixY2 = input.readFloat();
+						switch (input.readByte()) {
 							case CURVE_STEPPED:
 								timeline->setStepped(frame);
 								break;
 							case CURVE_BEZIER:
-								setBezier(input, timeline, bezier++, frame, 0, time, time2, mixRotate, mixRotate2, 1);
-								setBezier(input, timeline, bezier++, frame, 1, time, time2, mixX, mixX2, 1);
-								setBezier(input, timeline, bezier++, frame, 2, time, time2, mixY, mixY2, 1);
+								setBezier(input, *timeline, bezier++, frame, 0, time, time2, mixRotate, mixRotate2, 1);
+								setBezier(input, *timeline, bezier++, frame, 1, time, time2, mixX, mixX2, 1);
+								setBezier(input, *timeline, bezier++, frame, 2, time, time2, mixY, mixY2, 1);
+								break;
 						}
 						time = time2;
 						mixRotate = mixRotate2;
@@ -1322,116 +1158,144 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 						mixY = mixY2;
 					}
 					timelines.add(timeline);
+					break;
+				}
+				default: {
+					ContainerUtil::cleanUpVectorOfPointers(timelines);
+					setError("Invalid path constraint timeline type: ", String().append(type).buffer());
+					return NULL;
+				}
 			}
 		}
 	}
 
 	// Physics timelines.
-	for (int i = 0, n = readVarint(input, true); i < n; i++) {
-		int index = readVarint(input, true) - 1;
-		for (int ii = 0, nn = readVarint(input, true); ii < nn; ii++) {
-			int type = readByte(input);
-			int frameCount = readVarint(input, true);
+	for (int i = 0, n = input.readInt(true); i < n; i++) {
+		int index = input.readInt(true) - 1;
+		for (int ii = 0, nn = input.readInt(true); ii < nn; ii++) {
+			int type = input.readByte(), frameCount = input.readInt(true);
 			if (type == PHYSICS_RESET) {
 				PhysicsConstraintResetTimeline *timeline = new (__FILE__, __LINE__) PhysicsConstraintResetTimeline(frameCount, index);
 				for (int frame = 0; frame < frameCount; frame++)
-					timeline->setFrame(frame, readFloat(input));
+					timeline->setFrame(frame, input.readFloat());
 				timelines.add(timeline);
 				continue;
 			}
-			int bezierCount = readVarint(input, true);
+			int bezierCount = input.readInt(true);
 			switch (type) {
 				case PHYSICS_INERTIA:
-					readTimeline(input, timelines, new PhysicsConstraintInertiaTimeline(frameCount, bezierCount, index), 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) PhysicsConstraintInertiaTimeline(frameCount, bezierCount, index)), 1);
 					break;
 				case PHYSICS_STRENGTH:
-					readTimeline(input, timelines, new PhysicsConstraintStrengthTimeline(frameCount, bezierCount, index), 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) PhysicsConstraintStrengthTimeline(frameCount, bezierCount, index)), 1);
 					break;
 				case PHYSICS_DAMPING:
-					readTimeline(input, timelines, new PhysicsConstraintDampingTimeline(frameCount, bezierCount, index), 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) PhysicsConstraintDampingTimeline(frameCount, bezierCount, index)), 1);
 					break;
 				case PHYSICS_MASS:
-					readTimeline(input, timelines, new PhysicsConstraintMassTimeline(frameCount, bezierCount, index), 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) PhysicsConstraintMassTimeline(frameCount, bezierCount, index)), 1);
 					break;
 				case PHYSICS_WIND:
-					readTimeline(input, timelines, new PhysicsConstraintWindTimeline(frameCount, bezierCount, index), 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) PhysicsConstraintWindTimeline(frameCount, bezierCount, index)), 1);
 					break;
 				case PHYSICS_GRAVITY:
-					readTimeline(input, timelines, new PhysicsConstraintGravityTimeline(frameCount, bezierCount, index), 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) PhysicsConstraintGravityTimeline(frameCount, bezierCount, index)), 1);
 					break;
 				case PHYSICS_MIX:
-					readTimeline(input, timelines, new PhysicsConstraintMixTimeline(frameCount, bezierCount, index), 1);
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) PhysicsConstraintMixTimeline(frameCount, bezierCount, index)), 1);
+					break;
+				default: {
+					ContainerUtil::cleanUpVectorOfPointers(timelines);
+					setError("Invalid physics constraint timeline type: ", String().append(type).buffer());
+					return NULL;
+				}
+			}
+		}
+	}
+
+	// Slider timelines.
+	for (int i = 0, n = input.readInt(true); i < n; i++) {
+		int index = input.readInt(true);
+		for (int ii = 0, nn = input.readInt(true); ii < nn; ii++) {
+			int type = input.readByte(), frameCount = input.readInt(true), bezierCount = input.readInt(true);
+			switch (type) {
+				case SLIDER_TIME:
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) SliderTimeline(frameCount, bezierCount, index)), 1);
+					break;
+				case SLIDER_MIX:
+					readTimeline(input, timelines, *(new (__FILE__, __LINE__) SliderMixTimeline(frameCount, bezierCount, index)), 1);
+					break;
+				default: {
+					ContainerUtil::cleanUpVectorOfPointers(timelines);
+					setError("Invalid slider timeline type: ", String().append(type).buffer());
+					return NULL;
+				}
 			}
 		}
 	}
 
 	// Attachment timelines.
-	for (int i = 0, n = readVarint(input, true); i < n; ++i) {
-		Skin *skin = skeletonData->_skins[readVarint(input, true)];
-		for (int ii = 0, nn = readVarint(input, true); ii < nn; ++ii) {
-			int slotIndex = readVarint(input, true);
-			for (int iii = 0, nnn = readVarint(input, true); iii < nnn; iii++) {
-				const char *attachmentName = readStringRef(input, skeletonData);
-				Attachment *baseAttachment = skin->getAttachment(slotIndex, String(attachmentName));
-				if (!baseAttachment) {
+	for (int i = 0, n = input.readInt(true); i < n; ++i) {
+		Skin *skin = skeletonData._skins[input.readInt(true)];
+		for (int ii = 0, nn = input.readInt(true); ii < nn; ++ii) {
+			int slotIndex = input.readInt(true);
+			for (int iii = 0, nnn = input.readInt(true); iii < nnn; iii++) {
+				const char *attachmentName = input.readStringRef();
+				Attachment *attachment = skin->getAttachment(slotIndex, String(attachmentName));
+				if (!attachment) {
 					ContainerUtil::cleanUpVectorOfPointers(timelines);
-					setError("Attachment not found: ", attachmentName);
+					setError("Timeline attachment not found: ", attachmentName);
 					return NULL;
 				}
-				unsigned int timelineType = readByte(input);
-				int frameCount = readVarint(input, true);
-				int frameLast = frameCount - 1;
-
+				int timelineType = input.readByte(), frameCount = input.readInt(true), frameLast = frameCount - 1;
 				switch (timelineType) {
 					case ATTACHMENT_DEFORM: {
-						VertexAttachment *attachment = static_cast<VertexAttachment *>(baseAttachment);
-						bool weighted = attachment->_bones.size() > 0;
-						Vector<float> &vertices = attachment->_vertices;
+						VertexAttachment *vertexAttachment = static_cast<VertexAttachment *>(attachment);
+						bool weighted = vertexAttachment->_bones.size() > 0;
+						Vector<float> &vertices = vertexAttachment->_vertices;
 						int deformLength = weighted ? (int) vertices.size() / 3 * 2 : (int) vertices.size();
 
-						int bezierCount = readVarint(input, true);
-						DeformTimeline *timeline = new (__FILE__, __LINE__) DeformTimeline(frameCount, bezierCount, slotIndex,
-																						   attachment);
+						DeformTimeline *timeline = new (__FILE__, __LINE__) DeformTimeline(frameCount, input.readInt(true), slotIndex,
+																						   vertexAttachment);
 
-						float time = readFloat(input);
+						float time = input.readFloat();
 						for (int frame = 0, bezier = 0;; ++frame) {
 							Vector<float> deform;
-							size_t end = (size_t) readVarint(input, true);
+							size_t end = (size_t) input.readInt(true);
 							if (end == 0) {
 								if (weighted) {
 									deform.setSize(deformLength, 0);
-									for (int iiii = 0; iiii < deformLength; ++iiii)
-										deform[iiii] = 0;
+									for (int i = 0; i < deformLength; ++i)
+										deform[i] = 0;
 								} else {
 									deform.clearAndAddAll(vertices);
 								}
 							} else {
 								deform.setSize(deformLength, 0);
-								size_t start = (size_t) readVarint(input, true);
+								size_t start = (size_t) input.readInt(true);
 								end += start;
 								if (scale == 1) {
 									for (size_t v = start; v < end; ++v)
-										deform[v] = readFloat(input);
+										deform[v] = input.readFloat();
 								} else {
 									for (size_t v = start; v < end; ++v)
-										deform[v] = readFloat(input) * scale;
+										deform[v] = input.readFloat() * scale;
 								}
-
 								if (!weighted) {
 									for (size_t v = 0, vn = deform.size(); v < vn; ++v)
 										deform[v] += vertices[v];
 								}
 							}
-
 							timeline->setFrame(frame, time, deform);
 							if (frame == frameLast) break;
-							float time2 = readFloat(input);
-							switch (readSByte(input)) {
+							float time2 = input.readFloat();
+							switch (input.readByte()) {
 								case CURVE_STEPPED:
 									timeline->setStepped(frame);
 									break;
 								case CURVE_BEZIER:
-									setBezier(input, timeline, bezier++, frame, 0, time, time2, 0, 1, 1);
+									setBezier(input, *timeline, bezier++, frame, 0, time, time2, 0, 1, 1);
+									break;
 							}
 							time = time2;
 						}
@@ -1440,15 +1304,20 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 						break;
 					}
 					case ATTACHMENT_SEQUENCE: {
-						SequenceTimeline *timeline = new (__FILE__, __LINE__) SequenceTimeline(frameCount, slotIndex, baseAttachment);
+						SequenceTimeline *timeline = new (__FILE__, __LINE__) SequenceTimeline(frameCount, slotIndex, attachment);
 						for (int frame = 0; frame < frameCount; frame++) {
-							float time = readFloat(input);
-							int modeAndIndex = readInt(input);
-							float delay = readFloat(input);
+							float time = input.readFloat();
+							int modeAndIndex = input.readInt();
+							float delay = input.readFloat();
 							timeline->setFrame(frame, time, (spine::SequenceMode)(modeAndIndex & 0xf), modeAndIndex >> 4, delay);
 						}
 						timelines.add(timeline);
 						break;
+					}
+					default: {
+						ContainerUtil::cleanUpVectorOfPointers(timelines);
+						setError("Invalid attachment timeline type: ", String().append(timelineType).buffer());
+						return NULL;
 					}
 				}
 			}
@@ -1456,69 +1325,59 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 	}
 
 	// Draw order timeline.
-	size_t drawOrderCount = (size_t) readVarint(input, true);
+	size_t drawOrderCount = (size_t) input.readInt(true);
 	if (drawOrderCount > 0) {
 		DrawOrderTimeline *timeline = new (__FILE__, __LINE__) DrawOrderTimeline(drawOrderCount);
-
-		size_t slotCount = skeletonData->_slots.size();
+		size_t slotCount = skeletonData._slots.size();
 		for (size_t i = 0; i < drawOrderCount; ++i) {
-			float time = readFloat(input);
-			size_t offsetCount = (size_t) readVarint(input, true);
-
+			float time = input.readFloat();
+			size_t offsetCount = (size_t) input.readInt(true);
 			Vector<int> drawOrder;
 			drawOrder.setSize(slotCount, 0);
 			for (int ii = (int) slotCount - 1; ii >= 0; --ii)
 				drawOrder[ii] = -1;
-
 			Vector<int> unchanged;
 			unchanged.setSize(slotCount - offsetCount, 0);
 			size_t originalIndex = 0, unchangedIndex = 0;
 			for (size_t ii = 0; ii < offsetCount; ++ii) {
-				size_t slotIndex = (size_t) readVarint(input, true);
+				size_t slotIndex = (size_t) input.readInt(true);
 				// Collect unchanged items.
 				while (originalIndex != slotIndex)
 					unchanged[unchangedIndex++] = (int) originalIndex++;
 				// Set changed items.
 				size_t index = originalIndex;
-				drawOrder[index + (size_t) readVarint(input, true)] = (int) originalIndex++;
+				drawOrder[index + (size_t) input.readInt(true)] = (int) originalIndex++;
 			}
-
 			// Collect remaining unchanged items.
-			while (originalIndex < slotCount) {
+			while (originalIndex < slotCount)
 				unchanged[unchangedIndex++] = (int) originalIndex++;
-			}
-
 			// Fill in unchanged items.
 			for (int ii = (int) slotCount - 1; ii >= 0; --ii)
 				if (drawOrder[ii] == -1) drawOrder[ii] = unchanged[--unchangedIndex];
-			timeline->setFrame(i, time, drawOrder);
+			timeline->setFrame(i, time, &drawOrder);
 		}
 		timelines.add(timeline);
 	}
 
 	// Event timeline.
-	int eventCount = readVarint(input, true);
+	int eventCount = input.readInt(true);
 	if (eventCount > 0) {
 		EventTimeline *timeline = new (__FILE__, __LINE__) EventTimeline(eventCount);
-
 		for (int i = 0; i < eventCount; ++i) {
-			float time = readFloat(input);
-			EventData *eventData = skeletonData->_events[readVarint(input, true)];
+			float time = input.readFloat();
+			EventData *eventData = skeletonData._events[input.readInt(true)];
 			Event *event = new (__FILE__, __LINE__) Event(time, *eventData);
-
-			event->_intValue = readVarint(input, false);
-			event->_floatValue = readFloat(input);
-			const char *event_stringValue = readString(input);
-			if (event_stringValue == nullptr) {
+			event->_intValue = input.readInt(false);
+			event->_floatValue = input.readFloat();
+			const char *stringValue = input.readString();
+			if (stringValue == NULL)
 				event->_stringValue = eventData->_stringValue;
-			} else {
-				event->_stringValue = String(event_stringValue);
-				SpineExtension::free(event_stringValue, __FILE__, __LINE__);
-			}
+			else
+				event->_stringValue.own(stringValue);
 
 			if (!eventData->_audioPath.isEmpty()) {
-				event->_volume = readFloat(input);
-				event->_balance = readFloat(input);
+				event->_volume = input.readFloat();
+				event->_balance = input.readFloat();
 			}
 			timeline->setFrame(i, event);
 		}
@@ -1530,4 +1389,56 @@ Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, S
 		duration = MathUtil::max(duration, (timelines[i])->getDuration());
 	}
 	return new (__FILE__, __LINE__) Animation(String(name), timelines, duration);
+}
+
+void SkeletonBinary::readTimeline(DataInput &input, Vector<Timeline *> &timelines, CurveTimeline1 &timeline, float scale) {
+	float time = input.readFloat(), value = input.readFloat() * scale;
+	for (int frame = 0, bezier = 0, frameLast = (int) timeline.getFrameCount() - 1;; frame++) {
+		timeline.setFrame(frame, time, value);
+		if (frame == frameLast) break;
+		float time2 = input.readFloat(), value2 = input.readFloat() * scale;
+		switch (input.readByte()) {
+			case CURVE_STEPPED:
+				timeline.setStepped(frame);
+				break;
+			case CURVE_BEZIER:
+				setBezier(input, timeline, bezier++, frame, 0, time, time2, value, value2, scale);
+				break;
+		}
+		time = time2;
+		value = value2;
+	}
+	timelines.add(&timeline);
+}
+
+void SkeletonBinary::readTimeline(DataInput &input, Vector<Timeline *> &timelines, BoneTimeline2 &timeline, float scale) {
+	float time = input.readFloat(), value1 = input.readFloat() * scale, value2 = input.readFloat() * scale;
+	for (int frame = 0, bezier = 0, frameLast = (int) timeline.getFrameCount() - 1;; frame++) {
+		timeline.setFrame(frame, time, value1, value2);
+		if (frame == frameLast) break;
+		float time2 = input.readFloat(), nvalue1 = input.readFloat() * scale, nvalue2 = input.readFloat() * scale;
+		switch (input.readByte()) {
+			case CURVE_STEPPED:
+				timeline.setStepped(frame);
+				break;
+			case CURVE_BEZIER:
+				setBezier(input, timeline, bezier++, frame, 0, time, time2, value1, nvalue1, scale);
+				setBezier(input, timeline, bezier++, frame, 1, time, time2, value2, nvalue2, scale);
+				break;
+		}
+		time = time2;
+		value1 = nvalue1;
+		value2 = nvalue2;
+	}
+	timelines.add(&timeline);
+}
+
+void SkeletonBinary::setBezier(DataInput &input, CurveTimeline &timeline, int bezier, int frame, int value, float time1,
+							   float time2,
+							   float value1, float value2, float scale) {
+	float cx1 = input.readFloat();
+	float cy1 = input.readFloat();
+	float cx2 = input.readFloat();
+	float cy2 = input.readFloat();
+	timeline.setBezier(bezier, frame, value, time1, value1, cx1, cy1 * scale, cx2, cy2 * scale, time2, value2);
 }

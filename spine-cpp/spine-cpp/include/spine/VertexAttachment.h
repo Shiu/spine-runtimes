@@ -76,7 +76,11 @@ namespace spine {
 
 		Vector<int> &getBones();
 
+		void setBones(Vector<int> &bones);
+
 		Vector<float> &getVertices();
+
+		void setVertices(Vector<float> &vertices);
 
 		size_t getWorldVerticesLength();
 
