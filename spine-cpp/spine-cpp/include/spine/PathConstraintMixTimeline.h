@@ -51,7 +51,7 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose);
+			  MixDirection direction, bool appliedPose) override;
 
 		/// Sets the time and color for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.

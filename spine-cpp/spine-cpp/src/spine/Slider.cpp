@@ -71,7 +71,7 @@ void Slider::update(Skeleton &skeleton, Physics physics) {
 		if (!_bone->isActive()) return;
 		if (_data._local) _bone->_applied->validateLocalTransform(skeleton);
 		p._time = _data._offset
-			+ (_data._property->value(skeleton, *_bone->_applied, _data._local, _offsets) - _data._property->offset) * _data._scale;
+			+ (_data._property->value(skeleton, *_bone->_applied, _data._local, _offsets) - _data._property->_offset) * _data._scale;
 		if (_data._loop)
 			p._time = animation->getDuration() + MathUtil::fmod(p._time, animation->getDuration());
 		else

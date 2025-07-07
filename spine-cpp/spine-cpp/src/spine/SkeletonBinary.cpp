@@ -183,7 +183,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 
 		/* Bones. */
 		Vector<BoneData *> &bones = skeletonData->_bones.setSize(input.readInt(true), NULL);
-		for (int i = 0; i < bones.size(); ++i) {
+		for (int i = 0; i < (int)bones.size(); ++i) {
 			const char *name = input.readString();
 			BoneData *parent = i == 0 ? 0 : bones[input.readInt(true)];
 			BoneData *data = new (__FILE__, __LINE__) BoneData(i, String(name, true), parent);
@@ -208,7 +208,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 
 		/* Slots. */
 		Vector<SlotData *> &slots = skeletonData->_slots.setSize(input.readInt(true), NULL);
-		for (int i = 0; i < slots.size(); ++i) {
+		for (int i = 0; i < (int)slots.size(); ++i) {
 			String slotName = String(input.readString(), true);
 			BoneData *boneData = bones[input.readInt(true)];
 			SlotData *data = new (__FILE__, __LINE__) SlotData(i, slotName, *boneData);

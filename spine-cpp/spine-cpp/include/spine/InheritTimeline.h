@@ -58,7 +58,7 @@ namespace spine {
 
 		virtual void
 		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose);
+			  MixDirection direction, bool appliedPose) override;
 
 	private:
         static const int ENTRIES = 2;

@@ -31,6 +31,7 @@
 #define Spine_Json_h
 
 #include <spine/SpineObject.h>
+#include <spine/Vector.h>
 
 #ifndef SPINE_JSON_HAVE_PREV
 /* spine doesn't use the "prev" link in the Json sibling lists. */
@@ -53,10 +54,12 @@ namespace spine {
 
 		template <typename T>
 		static bool asArray(Json *value, Vector<T> &array) {
+			if (value == NULL) return false;
 			array.setSize(value->_size, 0);
 			Json *vertex = value->_child;
 			for (int i = 0; vertex; vertex = vertex->_next, i++)
 				array[i] = vertex->_valueInt;
+			return true;
 		}
 
 		/* Get item "string" from object. Case insensitive. */

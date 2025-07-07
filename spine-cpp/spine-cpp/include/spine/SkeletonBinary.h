@@ -35,6 +35,8 @@
 #include <spine/SpineObject.h>
 #include <spine/SpineString.h>
 #include <spine/Color.h>
+#include <spine/BoneTimeline.h>
+#include <spine/SkeletonData.h>
 
 namespace spine {
 	class SkeletonData;

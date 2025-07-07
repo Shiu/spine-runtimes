@@ -83,18 +83,18 @@ void TransformConstraint::update(Skeleton &skeleton, Physics physics) {
 		}
 		for (size_t f = 0; f < fn; f++) {
 			FromProperty *from = fromItems[f];
-			float value = from->value(skeleton, source, localSource, offsets) - from->offset;
-			Vector<ToProperty *> &toProps = from->to;
+			float value = from->value(skeleton, source, localSource, offsets) - from->_offset;
+			Vector<ToProperty *> &toProps = from->_to;
 			ToProperty **toItems = toProps.buffer();
 			for (size_t t = 0, tn = toProps.size(); t < tn; t++) {
 				ToProperty *to = toItems[t];
 				if (to->mix(p) != 0) {
-					float clamped = to->offset + value * to->scale;
+					float clamped = to->_offset + value * to->_scale;
 					if (clamp) {
-						if (to->offset < to->max)
-							clamped = MathUtil::clamp(clamped, to->offset, to->max);
+						if (to->_offset < to->_max)
+							clamped = MathUtil::clamp(clamped, to->_offset, to->_max);
 						else
-							clamped = MathUtil::clamp(clamped, to->max, to->offset);
+							clamped = MathUtil::clamp(clamped, to->_max, to->_offset);
 					}
 					to->apply(skeleton, p, *bone, clamped, localTarget, additive);
 				}

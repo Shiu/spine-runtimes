@@ -59,7 +59,7 @@ namespace spine {
 
 		virtual bool isSourceActive() override;
 
-		IkConstraintData &getData();
+		IkConstraintData &getData() override;
 
 		Vector<BonePose *> &getBones();
 
