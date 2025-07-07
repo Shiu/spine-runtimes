@@ -43,6 +43,7 @@ ext {
 
 allprojects {
 	apply plugin: "java"
+	apply plugin: "eclipse"
 
     group = 'com.esotericsoftware.spine'
     version = project.getProperty('version')
@@ -55,6 +56,18 @@ allprojects {
         maven { url "https://central.sonatype.com/repository/maven-snapshots/" }
         mavenCentral()
     }
+
+    // Configure Eclipse plugin to ignore build directories
+    eclipse {
+        classpath {
+            downloadSources = false
+            downloadJavadoc = false
+        }
+    }
+    
+    // Clean Eclipse files before compiling
+    tasks.compileJava.dependsOn cleanEclipse
+    tasks.processResources.dependsOn cleanEclipse
 
     dependencies {
         annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:0.4.2'
