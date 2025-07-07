@@ -39,6 +39,7 @@ namespace spine {
         friend class PhysicsConstraint;
         friend class PhysicsConstraintTimeline;
         friend class SkeletonJson;
+        friend class SkeletonBinary;
 
     private:
         float _inertia;

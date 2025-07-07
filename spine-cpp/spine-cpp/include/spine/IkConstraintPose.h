@@ -40,6 +40,7 @@ namespace spine {
 		friend class IkConstraint;
 		friend class IkConstraintTimeline;
 		friend class SkeletonJson;
+		friend class SkeletonBinary;
 
 	public:
 		IkConstraintPose();

@@ -147,13 +147,13 @@ Vector<FromProperty *> &TransformConstraintData::getProperties() {
 	return _properties;
 }
 
-FromProperty::FromProperty() : SpineObject(), offset(0) {
+FromProperty::FromProperty() : SpineObject(), _offset(0) {
 }
 
 FromProperty::~FromProperty() {
 }
 
-ToProperty::ToProperty() : offset(0), max(0), scale(1) {
+ToProperty::ToProperty() : SpineObject(), _offset(0), _max(0), _scale(1) {
 }
 
 ToProperty::~ToProperty() {
@@ -326,7 +326,7 @@ TransformConstraintData::~TransformConstraintData() {
 		FromProperty *fromProp = _properties[i];
 		if (fromProp) {
 			// Clean up the ToProperty objects in the FromProperty
-			ContainerUtil::cleanUpVectorOfPointers(fromProp->to);
+			ContainerUtil::cleanUpVectorOfPointers(fromProp->_to);
 			delete fromProp;
 		}
 	}

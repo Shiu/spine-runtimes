@@ -130,6 +130,24 @@ namespace spine {
 			return strtoul(digits, NULL, 16) / 255.0f;
 		}
 
+		// Convert packed RGBA8888 integer to Color
+		static void rgba8888ToColor(Color& color, int value) {
+			unsigned int rgba = (unsigned int)value;
+			color.r = ((rgba & 0xff000000) >> 24) / 255.0f;
+			color.g = ((rgba & 0x00ff0000) >> 16) / 255.0f;
+			color.b = ((rgba & 0x0000ff00) >> 8) / 255.0f;
+			color.a = (rgba & 0x000000ff) / 255.0f;
+		}
+
+		// Convert packed RGB888 integer to Color (no alpha)
+		static void rgb888ToColor(Color& color, int value) {
+			unsigned int rgb = (unsigned int)value;
+			color.r = ((rgb & 0xff0000) >> 16) / 255.0f;
+			color.g = ((rgb & 0x00ff00) >> 8) / 255.0f;
+			color.b = (rgb & 0x0000ff) / 255.0f;
+			color.a = 1.0f;
+		}
+
 		float r, g, b, a;
 	};
 }

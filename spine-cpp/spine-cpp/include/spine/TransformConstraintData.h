@@ -43,13 +43,14 @@ namespace spine {
 
 	/// Source property for a TransformConstraint.
 	class SP_API FromProperty : public SpineObject {
+		friend class SkeletonBinary;
 	public:
 
 		/// The value of this property that corresponds to ToProperty offset.
-		float offset;
+		float _offset;
 
 		/// Constrained properties.
-		Vector<class ToProperty*> to;
+		Vector<class ToProperty*> _to;
 
 		FromProperty();
 		virtual ~FromProperty();
@@ -60,16 +61,17 @@ namespace spine {
 
 	/// Constrained property for a TransformConstraint.
 	class SP_API ToProperty : public SpineObject {
+		friend class SkeletonBinary;
 	public:
 
 		/// The value of this property that corresponds to FromProperty offset.
-		float offset;
+		float _offset;
 
 		/// The maximum value of this property when clamped.
-		float max;
+		float _max;
 
 		/// The scale of the FromProperty value in relation to this property.
-		float scale;
+		float _scale;
 
 		ToProperty();
 		virtual ~ToProperty();

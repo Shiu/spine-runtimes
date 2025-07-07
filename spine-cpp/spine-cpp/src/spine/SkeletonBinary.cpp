@@ -72,13 +72,16 @@
 #include <spine/TransformConstraintTimeline.h>
 #include <spine/TranslateTimeline.h>
 #include <spine/SequenceTimeline.h>
+#include <spine/SliderData.h>
+#include <spine/SliderTimeline.h>
+#include <spine/SliderMixTimeline.h>
 #include <spine/Version.h>
 
 using namespace spine;
 
-SkeletonBinary::SkeletonBinary(Atlas *atlasArray) : _attachmentLoader(
-															new (__FILE__, __LINE__) AtlasAttachmentLoader(atlasArray)),
-													_error(), _scale(1), _ownsLoader(true) {
+SkeletonBinary::SkeletonBinary(Atlas *atlas) : _attachmentLoader(
+													   new(__FILE__, __LINE__) AtlasAttachmentLoader(atlas)),
+											   _error(), _scale(1), _ownsLoader(true) {
 }
 
 SkeletonBinary::SkeletonBinary(AttachmentLoader *attachmentLoader, bool ownsLoader) : _attachmentLoader(
@@ -96,319 +99,434 @@ SkeletonBinary::~SkeletonBinary() {
 	if (_ownsLoader) delete _attachmentLoader;
 }
 
-SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, const int length) {
-	bool nonessential;
-	SkeletonData *skeletonData;
-
-	DataInput *input = new (__FILE__, __LINE__) DataInput();
-	input->cursor = binary;
-	input->end = binary + length;
-
-	_linkedMeshes.clear();
-
-	skeletonData = new (__FILE__, __LINE__) SkeletonData();
-
-	char buffer[16] = {0};
-	int lowHash = readInt(input);
-	int hightHash = readInt(input);
-	String hashString;
-	snprintf(buffer, 16, "%x", hightHash);
-	hashString.append(buffer);
-	snprintf(buffer, 16, "%x", lowHash);
-	hashString.append(buffer);
-	skeletonData->_hash = hashString;
-
-	char *skeletonDataVersion = readString(input);
-	skeletonData->_version.own(skeletonDataVersion);
-
-	if (!skeletonData->_version.startsWith(SPINE_VERSION_STRING)) {
-		char errorMsg[255];
-		snprintf(errorMsg, 255, "Skeleton version %s does not match runtime version %s", skeletonData->_version.buffer(), SPINE_VERSION_STRING);
-		setError(errorMsg, "");
-		delete input;
-		delete skeletonData;
-		return NULL;
-	}
-
-	skeletonData->_x = readFloat(input);
-	skeletonData->_y = readFloat(input);
-	skeletonData->_width = readFloat(input);
-	skeletonData->_height = readFloat(input);
-	skeletonData->_referenceScale = readFloat(input) * this->_scale;
-
-	nonessential = readBoolean(input);
-
-	if (nonessential) {
-		skeletonData->_fps = readFloat(input);
-		skeletonData->_imagesPath.own(readString(input));
-		skeletonData->_audioPath.own(readString(input));
-	}
-
-	int numStrings = readVarint(input, true);
-	for (int i = 0; i < numStrings; i++)
-		skeletonData->_strings.add(readString(input));
-
-	/* Bones. */
-	int numBones = readVarint(input, true);
-	skeletonData->_bones.setSize(numBones, 0);
-	for (int i = 0; i < numBones; ++i) {
-		const char *name = readString(input);
-		BoneData *parent = i == 0 ? 0 : skeletonData->_bones[readVarint(input, true)];
-		BoneData *data = new (__FILE__, __LINE__) BoneData(i, String(name, true), parent);
-		data->_rotation = readFloat(input);
-		data->_x = readFloat(input) * _scale;
-		data->_y = readFloat(input) * _scale;
-		data->_scaleX = readFloat(input);
-		data->_scaleY = readFloat(input);
-		data->_shearX = readFloat(input);
-		data->_shearY = readFloat(input);
-		data->_length = readFloat(input) * _scale;
-		data->_inherit = static_cast<Inherit>(readVarint(input, true));
-		data->_skinRequired = readBoolean(input);
-		if (nonessential) {
-			readColor(input, data->getColor());
-			data->_icon.own(readString(input));
-			data->_visible = readBoolean(input);
-		}
-		skeletonData->_bones[i] = data;
-	}
-
-	/* Slots. */
-	int slotsCount = readVarint(input, true);
-	skeletonData->_slots.setSize(slotsCount, 0);
-	for (int i = 0; i < slotsCount; ++i) {
-		String slotName = String(readString(input), true);
-		BoneData *boneData = skeletonData->_bones[readVarint(input, true)];
-		SlotData *slotData = new (__FILE__, __LINE__) SlotData(i, slotName, *boneData);
-
-		readColor(input, slotData->getColor());
-		unsigned char a = readByte(input);
-		unsigned char r = readByte(input);
-		unsigned char g = readByte(input);
-		unsigned char b = readByte(input);
-		if (!(r == 0xff && g == 0xff && b == 0xff && a == 0xff)) {
-			slotData->getDarkColor().set(r / 255.0f, g / 255.0f, b / 255.0f, 1);
-			slotData->setHasDarkColor(true);
-		}
-		slotData->_attachmentName = readStringRef(input, skeletonData);
-		slotData->_blendMode = static_cast<BlendMode>(readVarint(input, true));
-		if (nonessential) {
-			slotData->_visible = readBoolean(input);
-		}
-		skeletonData->_slots[i] = slotData;
-	}
-
-	/* IK constraints. */
-	int ikConstraintsCount = readVarint(input, true);
-	skeletonData->_ikConstraints.setSize(ikConstraintsCount, 0);
-	for (int i = 0; i < ikConstraintsCount; ++i) {
-		const char *name = readString(input);
-		IkConstraintData *data = new (__FILE__, __LINE__) IkConstraintData(String(name, true));
-		data->setOrder(readVarint(input, true));
-		int bonesCount = readVarint(input, true);
-		data->_bones.setSize(bonesCount, 0);
-		for (int ii = 0; ii < bonesCount; ++ii)
-			data->_bones[ii] = skeletonData->_bones[readVarint(input, true)];
-		data->_target = skeletonData->_bones[readVarint(input, true)];
-		int flags = readByte(input);
-		data->_skinRequired = (flags & 1) != 0;
-		data->_bendDirection = (flags & 2) != 0 ? 1 : -1;
-		data->_compress = (flags & 4) != 0;
-		data->_stretch = (flags & 8) != 0;
-		data->_uniform = (flags & 16) != 0;
-		if ((flags & 32) != 0) data->_mix = (flags & 64) != 0 ? readFloat(input) : 1;
-		if ((flags & 128) != 0) data->_softness = readFloat(input) * _scale;
-
-		skeletonData->_ikConstraints[i] = data;
-	}
-
-	/* Transform constraints. */
-	int transformConstraintsCount = readVarint(input, true);
-	skeletonData->_transformConstraints.setSize(transformConstraintsCount, 0);
-	for (int i = 0; i < transformConstraintsCount; ++i) {
-		const char *name = readString(input);
-		TransformConstraintData *data = new (__FILE__, __LINE__) TransformConstraintData(String(name, true));
-		data->setOrder(readVarint(input, true));
-		int bonesCount = readVarint(input, true);
-		data->_bones.setSize(bonesCount, 0);
-		for (int ii = 0; ii < bonesCount; ++ii)
-			data->_bones[ii] = skeletonData->_bones[readVarint(input, true)];
-		data->_target = skeletonData->_bones[readVarint(input, true)];
-		int flags = readByte(input);
-		data->_skinRequired = (flags & 1) != 0;
-		data->_local = (flags & 2) != 0;
-		data->_relative = (flags & 4) != 0;
-		if ((flags & 8) != 0) data->_offsetRotation = readFloat(input);
-		if ((flags & 16) != 0) data->_offsetX = readFloat(input) * _scale;
-		if ((flags & 32) != 0) data->_offsetY = readFloat(input) * _scale;
-		if ((flags & 64) != 0) data->_offsetScaleX = readFloat(input);
-		if ((flags & 128) != 0) data->_offsetScaleY = readFloat(input);
-		flags = readByte(input);
-		if ((flags & 1) != 0) data->_offsetShearY = readFloat(input);
-		if ((flags & 2) != 0) data->_mixRotate = readFloat(input);
-		if ((flags & 4) != 0) data->_mixX = readFloat(input);
-		if ((flags & 8) != 0) data->_mixY = readFloat(input);
-		if ((flags & 16) != 0) data->_mixScaleX = readFloat(input);
-		if ((flags & 32) != 0) data->_mixScaleY = readFloat(input);
-		if ((flags & 64) != 0) data->_mixShearY = readFloat(input);
-
-		skeletonData->_transformConstraints[i] = data;
-	}
-
-	/* Path constraints */
-	int pathConstraintsCount = readVarint(input, true);
-	skeletonData->_pathConstraints.setSize(pathConstraintsCount, 0);
-	for (int i = 0; i < pathConstraintsCount; ++i) {
-		const char *name = readString(input);
-		PathConstraintData *data = new (__FILE__, __LINE__) PathConstraintData(String(name, true));
-		data->setOrder(readVarint(input, true));
-		data->setSkinRequired(readBoolean(input));
-		int bonesCount = readVarint(input, true);
-		data->_bones.setSize(bonesCount, 0);
-		for (int ii = 0; ii < bonesCount; ++ii)
-			data->_bones[ii] = skeletonData->_bones[readVarint(input, true)];
-		data->_target = skeletonData->_slots[readVarint(input, true)];
-		int flags = readByte(input);
-		data->_positionMode = (PositionMode) (flags & 1);
-		data->_spacingMode = (SpacingMode) ((flags >> 1) & 3);
-		data->_rotateMode = (RotateMode) ((flags >> 3) & 3);
-		if ((flags & 128) != 0) data->_offsetRotation = readFloat(input);
-		data->_position = readFloat(input);
-		if (data->_positionMode == PositionMode_Fixed) data->_position *= _scale;
-		data->_spacing = readFloat(input);
-		if (data->_spacingMode == SpacingMode_Length || data->_spacingMode == SpacingMode_Fixed)
-			data->_spacing *= _scale;
-		data->_mixRotate = readFloat(input);
-		data->_mixX = readFloat(input);
-		data->_mixY = readFloat(input);
-		skeletonData->_pathConstraints[i] = data;
-	}
-
-	// Physics constraints.
-	int physicsConstraintsCount = readVarint(input, true);
-	skeletonData->_physicsConstraints.setSize(physicsConstraintsCount, 0);
-	for (int i = 0; i < physicsConstraintsCount; i++) {
-		const char *name = readString(input);
-		PhysicsConstraintData *data = new (__FILE__, __LINE__) PhysicsConstraintData(String(name, true));
-		data->_order = readVarint(input, true);
-		data->_bone = skeletonData->_bones[readVarint(input, true)];
-		int flags = readByte(input);
-		data->_skinRequired = (flags & 1) != 0;
-		if ((flags & 2) != 0) data->_x = readFloat(input);
-		if ((flags & 4) != 0) data->_y = readFloat(input);
-		if ((flags & 8) != 0) data->_rotate = readFloat(input);
-		if ((flags & 16) != 0) data->_scaleX = readFloat(input);
-		if ((flags & 32) != 0) data->_shearX = readFloat(input);
-		data->_limit = ((flags & 64) != 0 ? readFloat(input) : 5000) * _scale;
-		data->_step = 1.f / readByte(input);
-		data->_inertia = readFloat(input);
-		data->_strength = readFloat(input);
-		data->_damping = readFloat(input);
-		data->_massInverse = (flags & 128) != 0 ? readFloat(input) : 1;
-		data->_wind = readFloat(input);
-		data->_gravity = readFloat(input);
-		flags = readByte(input);
-		if ((flags & 1) != 0) data->_inertiaGlobal = true;
-		if ((flags & 2) != 0) data->_strengthGlobal = true;
-		if ((flags & 4) != 0) data->_dampingGlobal = true;
-		if ((flags & 8) != 0) data->_massGlobal = true;
-		if ((flags & 16) != 0) data->_windGlobal = true;
-		if ((flags & 32) != 0) data->_gravityGlobal = true;
-		if ((flags & 64) != 0) data->_mixGlobal = true;
-		data->_mix = (flags & 128) != 0 ? readFloat(input) : 1;
-		skeletonData->_physicsConstraints[i] = data;
-	}
-
-	/* Default skin. */
-	Skin *defaultSkin = readSkin(input, true, skeletonData, nonessential);
-	if (defaultSkin) {
-		skeletonData->_defaultSkin = defaultSkin;
-		skeletonData->_skins.add(defaultSkin);
-	}
-
-	if (!this->getError().isEmpty()) {
-		delete input;
-		delete skeletonData;
-		return NULL;
-	}
-
-	/* Skins. */
-	for (size_t i = 0, n = (size_t) readVarint(input, true); i < n; ++i) {
-		Skin *skin = readSkin(input, false, skeletonData, nonessential);
-		if (skin)
-			skeletonData->_skins.add(skin);
-		else {
-			delete input;
-			delete skeletonData;
-			return NULL;
-		}
-	}
-
-	/* Linked meshes. */
-	for (int i = 0, n = (int) _linkedMeshes.size(); i < n; ++i) {
-		LinkedMesh *linkedMesh = _linkedMeshes[i];
-		Skin *skin = skeletonData->_skins[linkedMesh->_skinIndex];
-		Attachment *parent = skin->getAttachment(linkedMesh->_slotIndex, linkedMesh->_parent);
-		if (parent == NULL) {
-			delete input;
-			delete skeletonData;
-			setError("Parent mesh not found: ", linkedMesh->_parent.buffer());
-			return NULL;
-		}
-		linkedMesh->_mesh->_timelineAttachment = linkedMesh->_inheritTimelines ? static_cast<VertexAttachment *>(parent)
-																			  : linkedMesh->_mesh;
-		linkedMesh->_mesh->setParentMesh(static_cast<MeshAttachment *>(parent));
-		if (linkedMesh->_mesh->_region) linkedMesh->_mesh->updateRegion();
-		_attachmentLoader->configureAttachment(linkedMesh->_mesh);
-	}
-	ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
-	_linkedMeshes.clear();
-
-	/* Events. */
-	int eventsCount = readVarint(input, true);
-	skeletonData->_events.setSize(eventsCount, 0);
-	for (int i = 0; i < eventsCount; ++i) {
-		const char *name = readString(input);
-		EventData *eventData = new (__FILE__, __LINE__) EventData(String(name, true));
-		eventData->_intValue = readVarint(input, false);
-		eventData->_floatValue = readFloat(input);
-		eventData->_stringValue.own(readString(input));
-		eventData->_audioPath.own(readString(input));
-		if (!eventData->_audioPath.isEmpty()) {
-			eventData->_volume = readFloat(input);
-			eventData->_balance = readFloat(input);
-		}
-		skeletonData->_events[i] = eventData;
-	}
-
-	/* Animations. */
-	int animationsCount = readVarint(input, true);
-	skeletonData->_animations.setSize(animationsCount, 0);
-	for (int i = 0; i < animationsCount; ++i) {
-		String name(readString(input), true);
-		Animation *animation = readAnimation(name, input, skeletonData);
-		if (!animation) {
-			delete input;
-			delete skeletonData;
-			return NULL;
-		}
-		skeletonData->_animations[i] = animation;
-	}
-
-	delete input;
-	return skeletonData;
-}
-
 SkeletonData *SkeletonBinary::readSkeletonDataFile(const String &path) {
 	int length;
-	SkeletonData *skeletonData;
 	const char *binary = SpineExtension::readFile(path.buffer(), &length);
 	if (length == 0 || !binary) {
 		setError("Unable to read skeleton file: ", path.buffer());
 		return NULL;
 	}
-	skeletonData = readSkeletonData((unsigned char *) binary, length);
+
+	SkeletonData *skeletonData = readSkeletonData((unsigned char *) binary, length);
 	SpineExtension::free(binary, __FILE__, __LINE__);
+
+	if (skeletonData) {
+		// Extract filename without extension
+		const char *lastSlash = strrchr(path.buffer(), '/');
+		const char *lastBackslash = strrchr(path.buffer(), '\\');
+		const char *filename = path.buffer();
+		if (lastSlash) filename = lastSlash + 1;
+		if (lastBackslash && lastBackslash > filename) filename = lastBackslash + 1;
+
+		String nameWithoutExtension(filename);
+		const char *lastDot = strrchr(nameWithoutExtension.buffer(), '.');
+		if (lastDot) {
+			int length = lastDot - nameWithoutExtension.buffer();
+			nameWithoutExtension = String(nameWithoutExtension.buffer(), length);
+		}
+		skeletonData->_name = nameWithoutExtension;
+	}
+
+	return skeletonData;
+}
+
+SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, const int length) {
+	if (binary == NULL || length == 0) {
+		setError("Unable to read skeleton file: ", "");
+		return NULL;
+	}
+
+	ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
+	_linkedMeshes.clear();
+
+	SkeletonData *skeletonData = new (__FILE__, __LINE__) SkeletonData();
+	DataInput input(skeletonData, binary, length);
+	String version;
+	{// try block in Java
+		long long hash = input.readLong();
+		if (hash == 0) {
+			skeletonData->_hash = "";
+		} else {
+			char buffer[32];
+			snprintf(buffer, 32, "%llx", hash);
+			skeletonData->_hash = String(buffer);
+		}
+		skeletonData->_version.own(input.readString());
+		if (skeletonData->_version.isEmpty()) skeletonData->_version = "";
+		version = skeletonData->_version;
+		if (!skeletonData->_version.startsWith(SPINE_VERSION_STRING)) {
+			String errorMsg = "Skeleton version ";
+			errorMsg.append(skeletonData->_version);
+			errorMsg.append(" does not match runtime version ");
+			errorMsg.append(SPINE_VERSION_STRING);
+			setError(errorMsg.buffer(), "");
+			delete skeletonData;
+			return NULL;
+		}
+		skeletonData->_x = input.readFloat();
+		skeletonData->_y = input.readFloat();
+		skeletonData->_width = input.readFloat();
+		skeletonData->_height = input.readFloat();
+		skeletonData->_referenceScale = input.readFloat() * this->_scale;
+
+		bool nonessential = input.readBoolean();
+		if (nonessential) {
+			skeletonData->_fps = input.readFloat();
+			skeletonData->_imagesPath.own(input.readString());
+			skeletonData->_audioPath.own(input.readString());
+		}
+
+		int n = input.readInt(true);
+		Vector<char *> &strings = skeletonData->_strings.setSize(n, NULL);
+		for (int i = 0; i < n; i++)
+			strings[i] = input.readString();
+
+		/* Bones. */
+		Vector<BoneData *> &bones = skeletonData->_bones.setSize(input.readInt(true), NULL);
+		for (int i = 0; i < bones.size(); ++i) {
+			const char *name = input.readString();
+			BoneData *parent = i == 0 ? 0 : bones[input.readInt(true)];
+			BoneData *data = new (__FILE__, __LINE__) BoneData(i, String(name, true), parent);
+			BoneLocal &setup = data->_setup;
+			setup._rotation = input.readFloat();
+			setup._x = input.readFloat() * _scale;
+			setup._y = input.readFloat() * _scale;
+			setup._scaleX = input.readFloat();
+			setup._scaleY = input.readFloat();
+			setup._shearX = input.readFloat();
+			setup._shearY = input.readFloat();
+			setup._inherit = static_cast<Inherit>(input.readByte());
+			data->_length = input.readFloat() * _scale;
+			data->_skinRequired = input.readBoolean();
+			if (nonessential) {
+				Color::rgba8888ToColor(data->getColor(), input.readInt());
+				data->_icon.own(input.readString());
+				data->_visible = input.readBoolean();
+			}
+			bones[i] = data;
+		}
+
+		/* Slots. */
+		Vector<SlotData *> &slots = skeletonData->_slots.setSize(input.readInt(true), NULL);
+		for (int i = 0; i < slots.size(); ++i) {
+			String slotName = String(input.readString(), true);
+			BoneData *boneData = bones[input.readInt(true)];
+			SlotData *data = new (__FILE__, __LINE__) SlotData(i, slotName, *boneData);
+			Color::rgba8888ToColor(data->_setup._color, input.readInt());
+
+			int darkColor = input.readInt();
+			if (darkColor != -1) {
+				Color::rgb888ToColor(data->_setup._darkColor, darkColor);
+				data->_setup._hasDarkColor = true;
+			}
+
+			data->_attachmentName = input.readStringRef();
+			data->_blendMode = static_cast<BlendMode>(input.readInt(true));
+			if (nonessential) data->_visible = input.readBoolean();
+			slots[i] = data;
+		}
+
+		/* Constraints. */
+		int constraintCount = input.readInt(true);
+		Vector<ConstraintData *> &constraints = skeletonData->_constraints.setSize(constraintCount, NULL);
+		for (int i = 0; i < constraintCount; i++) {
+			String name(input.readString(), true);
+			int nn;
+			switch (input.readByte()) {
+				case CONSTRAINT_IK: {
+					IkConstraintData *data = new (__FILE__, __LINE__) IkConstraintData(name);
+					Vector<BoneData *> &constraintBones = data->_bones.setSize(nn = input.readInt(true), NULL);
+					for (int ii = 0; ii < nn; ii++)
+						constraintBones[ii] = bones[input.readInt(true)];
+					data->_target = bones[input.readInt(true)];
+					int flags = input.read();
+					data->_skinRequired = (flags & 1) != 0;
+					data->_uniform = (flags & 2) != 0;
+					IkConstraintPose &setup = data->_setup;
+					setup._bendDirection = (flags & 4) != 0 ? 1 : -1;
+					setup._compress = (flags & 8) != 0;
+					setup._stretch = (flags & 16) != 0;
+					if ((flags & 32) != 0) setup._mix = (flags & 64) != 0 ? input.readFloat() : 1;
+					if ((flags & 128) != 0) setup._softness = input.readFloat() * _scale;
+					constraints[i] = data;
+					break;
+				}
+				case CONSTRAINT_TRANSFORM: {
+					TransformConstraintData *data = new (__FILE__, __LINE__) TransformConstraintData(name);
+					Vector<BoneData *> &constraintBones = data->_bones.setSize(nn = input.readInt(true), NULL);
+					for (int ii = 0; ii < nn; ii++)
+						constraintBones[ii] = bones[input.readInt(true)];
+					data->_source = bones[input.readInt(true)];
+					int flags = input.read();
+					data->_skinRequired = (flags & 1) != 0;
+					data->_localSource = (flags & 2) != 0;
+					data->_localTarget = (flags & 4) != 0;
+					data->_additive = (flags & 8) != 0;
+					data->_clamp = (flags & 16) != 0;
+					Vector<FromProperty *> &froms = data->_properties.setSize(nn = flags >> 5, NULL);
+					for (int ii = 0, tn; ii < nn; ii++) {
+						float fromScale = 1;
+						FromProperty *from = NULL;
+						switch (input.readByte()) {
+							case 0:
+								from = new (__FILE__, __LINE__) FromRotate();
+								break;
+							case 1:
+								fromScale = _scale;
+								from = new (__FILE__, __LINE__) FromX();
+								break;
+							case 2:
+								fromScale = _scale;
+								from = new (__FILE__, __LINE__) FromY();
+								break;
+							case 3:
+								from = new (__FILE__, __LINE__) FromScaleX();
+								break;
+							case 4:
+								from = new (__FILE__, __LINE__) FromScaleY();
+								break;
+							case 5:
+								from = new (__FILE__, __LINE__) FromShearY();
+								break;
+						}
+						from->_offset = input.readFloat() * fromScale;
+						Vector<ToProperty *> &tos = from->_to.setSize(tn = input.readByte(), NULL);
+						for (int t = 0; t < tn; t++) {
+							float toScale = 1;
+							ToProperty *to = NULL;
+							switch (input.readByte()) {
+								case 0:
+									to = new (__FILE__, __LINE__) ToRotate();
+									break;
+								case 1:
+									toScale = _scale;
+									to = new (__FILE__, __LINE__) ToX();
+									break;
+								case 2:
+									toScale = _scale;
+									to = new (__FILE__, __LINE__) ToY();
+									break;
+								case 3:
+									to = new (__FILE__, __LINE__) ToScaleX();
+									break;
+								case 4:
+									to = new (__FILE__, __LINE__) ToScaleY();
+									break;
+								case 5:
+									to = new (__FILE__, __LINE__) ToShearY();
+									break;
+							}
+							to->_offset = input.readFloat() * toScale;
+							to->_max = input.readFloat() * toScale;
+							to->_scale = input.readFloat() * toScale / fromScale;
+							tos[t] = to;
+						}
+						froms[ii] = from;
+					}
+					flags = input.read();
+					if ((flags & 1) != 0) data->_offsets[TransformConstraintData::ROTATION] = input.readFloat();
+					if ((flags & 2) != 0) data->_offsets[TransformConstraintData::X] = input.readFloat() * _scale;
+					if ((flags & 4) != 0) data->_offsets[TransformConstraintData::Y] = input.readFloat() * _scale;
+					if ((flags & 8) != 0) data->_offsets[TransformConstraintData::SCALEX] = input.readFloat();
+					if ((flags & 16) != 0) data->_offsets[TransformConstraintData::SCALEY] = input.readFloat();
+					if ((flags & 32) != 0) data->_offsets[TransformConstraintData::SHEARY] = input.readFloat();
+					flags = input.read();
+					TransformConstraintPose &setup = data->_setup;
+					if ((flags & 1) != 0) setup._mixRotate = input.readFloat();
+					if ((flags & 2) != 0) setup._mixX = input.readFloat();
+					if ((flags & 4) != 0) setup._mixY = input.readFloat();
+					if ((flags & 8) != 0) setup._mixScaleX = input.readFloat();
+					if ((flags & 16) != 0) setup._mixScaleY = input.readFloat();
+					if ((flags & 32) != 0) setup._mixShearY = input.readFloat();
+					constraints[i] = data;
+					break;
+				}
+				case CONSTRAINT_PATH: {
+					PathConstraintData *data = new (__FILE__, __LINE__) PathConstraintData(name);
+					Vector<BoneData *> &constraintBones = data->_bones.setSize(nn = input.readInt(true), NULL);
+					for (int ii = 0; ii < nn; ii++)
+						constraintBones[ii] = bones[input.readInt(true)];
+					data->_slot = slots[input.readInt(true)];
+					int flags = input.read();
+					data->_skinRequired = (flags & 1) != 0;
+					data->_positionMode = (PositionMode) ((flags >> 1) & 2);
+					data->_spacingMode = (SpacingMode) ((flags >> 2) & 3);
+					data->_rotateMode = (RotateMode) ((flags >> 4) & 3);
+					if ((flags & 128) != 0) data->_offsetRotation = input.readFloat();
+					PathConstraintPose &setup = data->_setup;
+					setup._position = input.readFloat();
+					if (data->_positionMode == PositionMode_Fixed) setup._position *= _scale;
+					setup._spacing = input.readFloat();
+					if (data->_spacingMode == SpacingMode_Length || data->_spacingMode == SpacingMode_Fixed) setup._spacing *= _scale;
+					setup._mixRotate = input.readFloat();
+					setup._mixX = input.readFloat();
+					setup._mixY = input.readFloat();
+					constraints[i] = data;
+					break;
+				}
+				case CONSTRAINT_PHYSICS: {
+					PhysicsConstraintData *data = new (__FILE__, __LINE__) PhysicsConstraintData(name);
+					data->_bone = bones[input.readInt(true)];
+					int flags = input.read();
+					data->_skinRequired = (flags & 1) != 0;
+					if ((flags & 2) != 0) data->_x = input.readFloat();
+					if ((flags & 4) != 0) data->_y = input.readFloat();
+					if ((flags & 8) != 0) data->_rotate = input.readFloat();
+					if ((flags & 16) != 0) data->_scaleX = input.readFloat();
+					if ((flags & 32) != 0) data->_shearX = input.readFloat();
+					data->_limit = ((flags & 64) != 0 ? input.readFloat() : 5000) * _scale;
+					data->_step = 1.f / input.readUnsignedByte();
+					PhysicsConstraintPose &setup = data->getSetupPose();
+					setup._inertia = input.readFloat();
+					setup._strength = input.readFloat();
+					setup._damping = input.readFloat();
+					setup._massInverse = (flags & 128) != 0 ? input.readFloat() : 1;
+					setup._wind = input.readFloat();
+					setup._gravity = input.readFloat();
+					flags = input.read();
+					if ((flags & 1) != 0) data->_inertiaGlobal = true;
+					if ((flags & 2) != 0) data->_strengthGlobal = true;
+					if ((flags & 4) != 0) data->_dampingGlobal = true;
+					if ((flags & 8) != 0) data->_massGlobal = true;
+					if ((flags & 16) != 0) data->_windGlobal = true;
+					if ((flags & 32) != 0) data->_gravityGlobal = true;
+					if ((flags & 64) != 0) data->_mixGlobal = true;
+					setup._mix = (flags & 128) != 0 ? input.readFloat() : 1;
+					constraints[i] = data;
+					break;
+				}
+				case CONSTRAINT_SLIDER: {
+					SliderData *data = new (__FILE__, __LINE__) SliderData(name);
+					int flags = input.read();
+					data->_skinRequired = (flags & 1) != 0;
+					data->_loop = (flags & 2) != 0;
+					data->_additive = (flags & 4) != 0;
+					SliderPose &setup = data->_setup;
+					if ((flags & 8) != 0) setup._time = input.readFloat();
+					if ((flags & 16) != 0) setup._mix = (flags & 32) != 0 ? input.readFloat() : 1;
+					if ((flags & 64) != 0) {
+						data->_local = (flags & 128) != 0;
+						data->_bone = bones[input.readInt(true)];
+						float offset = input.readFloat();
+						float propertyScale = 1;
+						switch (input.readByte()) {
+							case 0:
+								data->_property = new (__FILE__, __LINE__) FromRotate();
+								break;
+							case 1:
+								propertyScale = _scale;
+								data->_property = new (__FILE__, __LINE__) FromX();
+								break;
+							case 2:
+								propertyScale = _scale;
+								data->_property = new (__FILE__, __LINE__) FromY();
+								break;
+							case 3:
+								data->_property = new (__FILE__, __LINE__) FromScaleX();
+								break;
+							case 4:
+								data->_property = new (__FILE__, __LINE__) FromScaleY();
+								break;
+							case 5:
+								data->_property = new (__FILE__, __LINE__) FromShearY();
+								break;
+							default:
+								data->_property = NULL;
+								break;
+						}
+						if(data->_property) data->_property->_offset = offset * propertyScale;
+						data->_offset = input.readFloat();
+						data->_scale = input.readFloat() / propertyScale;
+					}
+					constraints[i] = data;
+					break;
+				}
+			}
+		}
+
+		/* Default skin. */
+		Skin *defaultSkin = readSkin(input, skeletonData, true, nonessential);
+		if (defaultSkin) {
+			skeletonData->_defaultSkin = defaultSkin;
+			skeletonData->_skins.add(defaultSkin);
+		}
+
+		if (!this->getError().isEmpty()) {
+			delete skeletonData;
+			return NULL;
+		}
+
+		/* Skins. */
+		{
+			int i = skeletonData->_skins.size();
+			Vector<Skin *> &skins = skeletonData->_skins.setSize(n = i + input.readInt(true), NULL);
+			for (; i < n; i++) {
+				Skin *skin = readSkin(input, skeletonData, false, nonessential);
+				if (skin)
+					skins[i] = skin;
+				else {
+					delete skeletonData;
+					return NULL;
+				}
+			}
+		}
+
+		/* Linked meshes. */
+		Vector<LinkedMesh *> &items = _linkedMeshes;
+		for (int i = 0, n = items.size(); i < n; i++) {
+			LinkedMesh *linkedMesh = items[i];
+			Skin *skin = skeletonData->_skins[linkedMesh->_skinIndex];
+			Attachment *parent = skin->getAttachment(linkedMesh->_slotIndex, linkedMesh->_parent);
+			if (parent == NULL) {
+				delete skeletonData;
+				setError("Parent mesh not found: ", linkedMesh->_parent.buffer());
+				return NULL;
+			}
+			linkedMesh->_mesh->_timelineAttachment = linkedMesh->_inheritTimelines ? static_cast<VertexAttachment *>(parent)
+																				   : linkedMesh->_mesh;
+			linkedMesh->_mesh->setParentMesh(static_cast<MeshAttachment *>(parent));
+			if (linkedMesh->_mesh->getSequence() == NULL) linkedMesh->_mesh->updateRegion();
+			_attachmentLoader->configureAttachment(linkedMesh->_mesh);
+		}
+		ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
+		_linkedMeshes.clear();
+
+		/* Events. */
+		int eventsCount = input.readInt(true);
+		Vector<EventData *> &events = skeletonData->_events.setSize(eventsCount, NULL);
+		for (int i = 0; i < eventsCount; ++i) {
+			EventData *eventData = new (__FILE__, __LINE__) EventData(String(input.readString(), true));
+			eventData->_intValue = input.readInt(false);
+			eventData->_floatValue = input.readFloat();
+			eventData->_stringValue.own(input.readString());
+			eventData->_audioPath.own(input.readString());
+			if (!eventData->_audioPath.isEmpty()) {
+				eventData->_volume = input.readFloat();
+				eventData->_balance = input.readFloat();
+			}
+			events[i] = eventData;
+		}
+
+		/* Animations. */
+		int animationsCount = input.readInt(true);
+		Vector<Animation *> &animations = skeletonData->_animations.setSize(animationsCount, NULL);
+		for (int i = 0; i < animationsCount; ++i) {
+			Animation *animation = readAnimation(input, String(input.readString(), true), skeletonData);
+			if (!animation) {
+				delete skeletonData;
+				return NULL;
+			}
+			skeletonData->_animations[i] = animation;
+		}
+
+		for (int i = 0; i < constraintCount; i++) {
+			if (constraints[i]->getRTTI().instanceOf(SliderData::rtti)) {
+				SliderData *data = static_cast<SliderData *>(constraints[i]);
+				data->setAnimation(animations[input.readInt(true)]);
+			}
+		}
+	}
+
 	return skeletonData;
 }
 
@@ -421,82 +539,7 @@ void SkeletonBinary::setError(const char *value1, const char *value2) {
 	_error = String(message);
 }
 
-char *SkeletonBinary::readString(DataInput *input) {
-	int length = readVarint(input, true);
-	char *string;
-	if (length == 0) return NULL;
-	string = SpineExtension::alloc<char>(length, __FILE__, __LINE__);
-	memcpy(string, input->cursor, length - 1);
-	input->cursor += length - 1;
-	string[length - 1] = '\0';
-	return string;
-}
-
-char *SkeletonBinary::readStringRef(DataInput *input, SkeletonData *skeletonData) {
-	int index = readVarint(input, true);
-	return index == 0 ? NULL : skeletonData->_strings[index - 1];
-}
-
-float SkeletonBinary::readFloat(DataInput *input) {
-	union {
-		int intValue;
-		float floatValue;
-	} intToFloat;
-	intToFloat.intValue = readInt(input);
-	return intToFloat.floatValue;
-}
-
-unsigned char SkeletonBinary::readByte(DataInput *input) {
-	return *input->cursor++;
-}
-
-signed char SkeletonBinary::readSByte(DataInput *input) {
-	return (signed char) readByte(input);
-}
-
-bool SkeletonBinary::readBoolean(DataInput *input) {
-	return readByte(input) != 0;
-}
-
-int SkeletonBinary::readInt(DataInput *input) {
-	int result = readByte(input);
-	result <<= 8;
-	result |= readByte(input);
-	result <<= 8;
-	result |= readByte(input);
-	result <<= 8;
-	result |= readByte(input);
-	return result;
-}
-
-void SkeletonBinary::readColor(DataInput *input, Color &color) {
-	color.r = readByte(input) / 255.0f;
-	color.g = readByte(input) / 255.0f;
-	color.b = readByte(input) / 255.0f;
-	color.a = readByte(input) / 255.0f;
-}
-
-int SkeletonBinary::readVarint(DataInput *input, bool optimizePositive) {
-	unsigned char b = readByte(input);
-	int value = b & 0x7F;
-	if (b & 0x80) {
-		b = readByte(input);
-		value |= (b & 0x7F) << 7;
-		if (b & 0x80) {
-			b = readByte(input);
-			value |= (b & 0x7F) << 14;
-			if (b & 0x80) {
-				b = readByte(input);
-				value |= (b & 0x7F) << 21;
-				if (b & 0x80) value |= (readByte(input) & 0x7F) << 28;
-			}
-		}
-	}
-	if (!optimizePositive) value = (((unsigned int) value >> 1) ^ -(value & 1));
-	return value;
-}
-
-Skin *SkeletonBinary::readSkin(DataInput *input, bool defaultSkin, SkeletonData *skeletonData, bool nonessential) {
+Skin *SkeletonBinary::readSkin(DataInput *input, SkeletonData *skeletonData, bool defaultSkin, bool nonessential) {
 	Skin *skin;
 	int slotCount = 0;
 	if (defaultSkin) {
@@ -854,7 +897,7 @@ void SkeletonBinary::readTimeline2(DataInput *input, Vector<Timeline *> &timelin
 	timelines.add(timeline);
 }
 
-Animation *SkeletonBinary::readAnimation(const String &name, DataInput *input, SkeletonData *skeletonData) {
+Animation *SkeletonBinary::readAnimation(DataInput *input, const String &name, SkeletonData *skeletonData) {
 	Vector<Timeline *> timelines;
 	float scale = _scale;
 	int numTimelines = readVarint(input, true);

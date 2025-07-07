@@ -75,7 +75,7 @@ namespace spine {
 			return _size;
 		}
 
-		inline void setSize(size_t newSize, const T &defaultValue) {
+		inline Vector<T> &setSize(size_t newSize, const T &defaultValue) {
 			assert(newSize >= 0);
 			size_t oldSize = _size;
 			_size = newSize;
@@ -97,6 +97,7 @@ namespace spine {
 					destroy(_buffer + i);
 				}
 			}
+			return *this;
 		}
 
 		inline void ensureCapacity(size_t newCapacity = 0) {

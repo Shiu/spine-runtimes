@@ -53,6 +53,7 @@ namespace spine {
 		friend class TranslateXTimeline;
 		friend class TranslateYTimeline;
 		friend class SkeletonJson;
+		friend class SkeletonBinary;
 		friend class Skeleton;
 		friend class FromProperty;
 		friend class ToProperty;
