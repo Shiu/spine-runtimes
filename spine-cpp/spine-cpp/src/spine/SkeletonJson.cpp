@@ -154,7 +154,6 @@ SkeletonData *SkeletonJson::readSkeletonDataFile(const String &path) {
 }
 
 SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
-	int ii;
 	SkeletonData *skeletonData;
 	Json *root, *skeleton, *bones, *constraints, *slots, *skins, *animations, *events;
 
@@ -313,10 +312,10 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 						FromProperty *from = fromProperty(fromEntry->_name);
 						if (!from) SKELETON_JSON_ERROR(root, "Invalid transform constraint from property: ", fromEntry->_name);
 						float fromScale = propertyScale(fromEntry->_name, _scale);
-						from->offset = Json::getFloat(fromEntry, "offset", 0) * fromScale;
+						from->_offset = Json::getFloat(fromEntry, "offset", 0) * fromScale;
 						Json *toEntry = Json::getItem(fromEntry, "to");
 						if (toEntry) {
-							for (Json *toEntry = toEntry->_child; toEntry; toEntry = toEntry->_next) {
+							for (toEntry = toEntry->_child; toEntry; toEntry = toEntry->_next) {
 								ToProperty *to = NULL;
 								float toScale = 1;
 
@@ -344,14 +343,14 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 									SKELETON_JSON_ERROR(root, "Invalid transform constraint to property: ", toEntry->_name);
 								}
 
-								to->offset = Json::getFloat(toEntry, "offset", 0) * toScale;
-								to->max = Json::getFloat(toEntry, "max", 1) * toScale;
-								to->scale = Json::getFloat(toEntry, "scale", 1) * toScale / fromScale;
-								from->to.add(to);
+								to->_offset = Json::getFloat(toEntry, "offset", 0) * toScale;
+								to->_max = Json::getFloat(toEntry, "max", 1) * toScale;
+								to->_scale = Json::getFloat(toEntry, "scale", 1) * toScale / fromScale;
+								from->_to.add(to);
 							}
 						}
 
-						if (from->to.size() > 0) data->_properties.add(from);
+						if (from->_to.size() > 0) data->_properties.add(from);
 						else delete from;
 					}
 				}
@@ -456,7 +455,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 					data->_property = fromProperty(property);
 					if (data->_property) {
 						float propertyScaleValue = propertyScale(property, _scale);
-						data->_property->offset = Json::getFloat(constraintMap, "from", 0) * propertyScaleValue;
+						data->_property->_offset = Json::getFloat(constraintMap, "from", 0) * propertyScaleValue;
 						data->_offset = Json::getFloat(constraintMap, "to", 0);
 						data->_scale = Json::getFloat(constraintMap, "scale", 1) / propertyScaleValue;
 						data->_local = Json::getBoolean(constraintMap, "local", false);
@@ -574,6 +573,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 				eventData->_balance = Json::getFloat(eventMap, "balance", 0);
 			}
 			skeletonData->_events[eventIndex] = eventData;
+			eventIndex++;
 		}
 	}
 
@@ -694,7 +694,7 @@ Attachment *SkeletonJson::readAttachment(Json *map, Skin *skin, int slotIndex, c
 			readVertices(map, path, vertexCount << 1);
 
 			if (!Json::asArray(Json::getItem(map, "lengths"), path->_lengths)) return NULL;
-			for (int i = 0; i < path->_lengths.size(); i++)
+			for (int i = 0; i < (int)path->_lengths.size(); i++)
 				path->_lengths[i] *= scale;
 
 			const char *color = Json::getString(map, "color", NULL);
@@ -749,7 +749,7 @@ void SkeletonJson::readVertices(Json *map, VertexAttachment *attachment, size_t 
 	if (!Json::asArray(Json::getItem(map, "vertices"), vertices)) return;
 	if (verticesLength == vertices.size()) {
 		if (_scale != 1) {
-			for (int i = 0; i < vertices.size(); ++i)
+			for (int i = 0; i < (int)vertices.size(); ++i)
 				vertices[i] *= _scale;
 		}
 		attachment->getVertices().clearAndAddAll(vertices);
@@ -774,7 +774,6 @@ void SkeletonJson::readVertices(Json *map, VertexAttachment *attachment, size_t 
 }
 
 Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
-	float scale = _scale;
 	Vector<Timeline *> timelines;
 
 	// Slot timelines.
@@ -1068,7 +1067,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 		float time = Json::getFloat(keyMap, "time", 0);
 		float mixRotate = Json::getFloat(keyMap, "mixRotate", 1);
 		float mixX = Json::getFloat(keyMap, "mixX", 1), mixY = Json::getFloat(keyMap, "mixY", mixX);
-		float mixScaleX = Json::getFloat(keyMap, "mixScaleX", 1), mixScaleY = Json::getFloat(keyMap, "mixScaleY", mixScaleX);
+		float mixScaleX = Json::getFloat(keyMap, "mixScaleX", 1), mixScaleY = Json::getFloat(keyMap, "mixScaleY", 1);
 		float mixShearY = Json::getFloat(keyMap, "mixShearY", 1);
 		for (int frame = 0, bezier = 0;; frame++) {
 			timeline->setFrame(frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
@@ -1344,7 +1343,8 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 					while (originalIndex != slot->_index)
 						unchanged[unchangedIndex++] = originalIndex++;
 					/* Set changed items. */
-					drawOrder2[originalIndex + Json::getInt(offsetMap, "offset", 0)] = originalIndex++;
+					int index = originalIndex;
+					drawOrder2[index + Json::getInt(offsetMap, "offset", 0)] = originalIndex++;
 				}
 				/* Collect remaining unchanged items. */
 				while (originalIndex < slotCount)
