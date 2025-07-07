@@ -426,7 +426,7 @@ static spAnimation *_spSkeletonJson_readAnimation(spSkeletonJson *self, Json *ro
 				spTimelineArray_add(timelines, SUPER(SUPER(timeline)));
 			} else if (strcmp(timelineMap->name, "rgb2") == 0) {
 				float time;
-				spRGBA2Timeline *timeline = spRGBA2Timeline_create(frames, frames * 6, slotIndex);
+				spRGB2Timeline *timeline = spRGB2Timeline_create(frames, frames * 6, slotIndex);
 				keyMap = timelineMap->child;
 				time = Json_getFloat(keyMap, "time", 0);
 				toColor2(&color, Json_getString(keyMap, "light", 0), 0);
