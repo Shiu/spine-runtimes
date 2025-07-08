@@ -1,6 +1,3 @@
-- We must review any and all code in the spine-c-new codegen
-    - Read README.md in spine-c-new/codegen
-    - find the main entry point, then
 - Generate language bindings from spine-cpp-lite
     - Create a TypeScript-based generator that takes spine-cpp-lite.h and generates:
         - Swift bindings (matching current spine-ios output from spine-cpp-lite-codegen.py)
