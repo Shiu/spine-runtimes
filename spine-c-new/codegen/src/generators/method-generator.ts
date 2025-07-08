@@ -14,7 +14,7 @@ export class MethodGenerator {
         const methods = type.members.filter(m => 
             m.kind === 'method' && 
             !m.isStatic &&
-            !isMethodExcluded(type.name, m.name, this.exclusions, m.returnType)
+            !isMethodExcluded(type.name, m.name, this.exclusions, m)
         );
         
         // Check for const/non-const method pairs

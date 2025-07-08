@@ -40,10 +40,9 @@ function checkConstNonConstConflicts(classes: Type[], exclusions: Exclusion[]): 
             const methodGroups = new Map<string, Member[]>();
             for (const method of allMethods) {
                 // Skip if this specific const/non-const version is excluded
-                if (isMethodExcluded(type.name, method.name, exclusions, method.returnType)) {
+                if (isMethodExcluded(type.name, method.name, exclusions, method)) {
                     if (method.name === 'getSetupPose') {
-                        const isConstMethod = method.returnType && method.returnType.includes('const ') && method.returnType.includes('&');
-                        console.log(`Skipping excluded method: ${type.name}::${method.name}${isConstMethod ? ' const' : ''}`);
+                        console.log(`Skipping excluded method: ${type.name}::${method.name}${method.isConst ? ' const' : ''}`);
                     }
                     continue;
                 }

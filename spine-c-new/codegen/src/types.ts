@@ -41,12 +41,17 @@ export interface SpineTypes {
     [header: string]: Type[];
 }
 
-export interface Exclusion {
-    kind: 'type' | 'method';
-    typeName: string;
-    methodName?: string;
-    isConst?: boolean;  // For excluding specifically const or non-const versions
-}
+export type Exclusion = 
+    | {
+        kind: 'type';
+        typeName: string;
+    }
+    | {
+        kind: 'method';
+        typeName: string;
+        methodName: string;
+        isConst?: boolean;  // Whether the method is const (e.g., void foo() const), NOT whether return type is const
+    };
 
 export function toSnakeCase(name: string): string {
     // Handle acronyms and consecutive capitals
