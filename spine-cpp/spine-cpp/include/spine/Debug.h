@@ -32,8 +32,7 @@
 
 #include <spine/Extension.h>
 #include <spine/Vector.h>
-
-#include <map>
+#include <spine/HashMap.h>
 
 namespace spine {
 
@@ -57,12 +56,14 @@ namespace spine {
 		}
 
 		void reportLeaks() {
-			for (std::map<void *, Allocation>::iterator it = _allocated.begin(); it != _allocated.end(); it++) {
-				printf("\"%s:%i (%zu bytes at %p)\n", it->second.fileName, it->second.line, it->second.size,
-					   it->second.address);
+			HashMap<void *, Allocation>::Entries entries = _allocated.getEntries();
+			while (entries.hasNext()) {
+				HashMap<void *, Allocation>::Pair pair = entries.next();
+				printf("\"%s:%i (%zu bytes at %p)\n", pair.value.fileName, pair.value.line, pair.value.size,
+					   pair.value.address);
 			}
 			printf("allocations: %zu, reallocations: %zu, frees: %zu\n", _allocations, _reallocations, _frees);
-			if (_allocated.empty()) printf("No leaks detected\n");
+			if (_allocated.size() == 0) printf("No leaks detected\n");
 		}
 
 		void clearAllocations() {
@@ -72,7 +73,7 @@ namespace spine {
 
 		virtual void *_alloc(size_t size, const char *file, int line) {
 			void *result = _extension->_alloc(size, file, line);
-			_allocated[result] = Allocation(result, size, file, line);
+			_allocated.put(result, Allocation(result, size, file, line));
 			_allocations++;
 			_usedMemory += size;
 			return result;
@@ -80,28 +81,46 @@ namespace spine {
 
 		virtual void *_calloc(size_t size, const char *file, int line) {
 			void *result = _extension->_calloc(size, file, line);
-			_allocated[result] = Allocation(result, size, file, line);
+			_allocated.put(result, Allocation(result, size, file, line));
 			_allocations++;
 			_usedMemory += size;
 			return result;
 		}
 
 		virtual void *_realloc(void *ptr, size_t size, const char *file, int line) {
-			if (_allocated.count(ptr)) _usedMemory -= _allocated[ptr].size;
-			_allocated.erase(ptr);
+			if (_allocated.containsKey(ptr)) {
+				// Find and store the size before removing
+				HashMap<void *, Allocation>::Entries entries = _allocated.getEntries();
+				while (entries.hasNext()) {
+					HashMap<void *, Allocation>::Pair pair = entries.next();
+					if (pair.key == ptr) {
+						_usedMemory -= pair.value.size;
+						break;
+					}
+				}
+				_allocated.remove(ptr);
+			}
 			void *result = _extension->_realloc(ptr, size, file, line);
 			_reallocations++;
-			_allocated[result] = Allocation(result, size, file, line);
+			_allocated.put(result, Allocation(result, size, file, line));
 			_usedMemory += size;
 			return result;
 		}
 
 		virtual void _free(void *mem, const char *file, int line) {
-			if (_allocated.count(mem)) {
+			if (_allocated.containsKey(mem)) {
 				_extension->_free(mem, file, line);
 				_frees++;
-				_usedMemory -= _allocated[mem].size;
-				_allocated.erase(mem);
+				// Find and store the size before removing
+				HashMap<void *, Allocation>::Entries entries = _allocated.getEntries();
+				while (entries.hasNext()) {
+					HashMap<void *, Allocation>::Pair pair = entries.next();
+					if (pair.key == mem) {
+						_usedMemory -= pair.value.size;
+						break;
+					}
+				}
+				_allocated.remove(mem);
 				return;
 			}
 
@@ -112,8 +131,8 @@ namespace spine {
 		virtual char *_readFile(const String &path, int *length) {
             auto data = _extension->_readFile(path, length);
 
-            if (_allocated.count(data) == 0) {
-                _allocated[data] = Allocation(data, sizeof(char) * (*length), nullptr, 0);
+            if (!_allocated.containsKey(data)) {
+                _allocated.put(data, Allocation(data, sizeof(char) * (*length), nullptr, 0));
                 _allocations++;
                 _usedMemory += sizeof(char) * (*length);
             }
@@ -127,7 +146,7 @@ namespace spine {
 
 	private:
 		SpineExtension *_extension;
-		std::map<void *, Allocation> _allocated;
+		HashMap<void *, Allocation> _allocated;
 		size_t _allocations;
 		size_t _reallocations;
 		size_t _frees;

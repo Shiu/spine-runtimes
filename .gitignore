@@ -236,3 +236,7 @@ spine-libgdx/spine-skeletonviewer/.settings/org.eclipse.jdt.apt.core.prefs
 spine-cpp/.cache
 .build
 spine-libgdx/.settings
+docs/
+out.json
+spine-cpp/extraction.log
+extraction.log

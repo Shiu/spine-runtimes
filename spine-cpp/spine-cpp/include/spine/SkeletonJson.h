@@ -79,7 +79,7 @@ namespace spine {
 
 		void setScale(float scale) { _scale = scale; }
 
-		String &getError() { return _error; }
+		const String &getError() const { return _error; }
 
 	private:
 		AttachmentLoader *_attachmentLoader;

@@ -51,12 +51,7 @@ namespace spine {
 	// Our TextureFilter collides with UE4's TextureFilter in unity builds. We rename
 	// TextureFilter to SpineTextureFilter in UE4.
 #ifdef SPINE_UE4
-	#define TEXTURE_FILTER_ENUM SpineTextureFilter
-#else
-	#define TEXTURE_FILTER_ENUM TextureFilter
-#endif
-
-	enum TEXTURE_FILTER_ENUM {
+	enum SpineTextureFilter {
 		TextureFilter_Unknown,
 		TextureFilter_Nearest,
 		TextureFilter_Linear,
@@ -66,6 +61,18 @@ namespace spine {
 		TextureFilter_MipMapNearestLinear,
 		TextureFilter_MipMapLinearLinear
 	};
+#else
+	enum TextureFilter {
+		TextureFilter_Unknown,
+		TextureFilter_Nearest,
+		TextureFilter_Linear,
+		TextureFilter_MipMap,
+		TextureFilter_MipMapNearestNearest,
+		TextureFilter_MipMapLinearNearest,
+		TextureFilter_MipMapNearestLinear,
+		TextureFilter_MipMapLinearLinear
+	};
+#endif
 
 	enum TextureWrap {
 		TextureWrap_MirroredRepeat,
@@ -78,8 +85,13 @@ namespace spine {
 		String name;
 		String texturePath;
 		Format format;
-		TEXTURE_FILTER_ENUM minFilter;
-		TEXTURE_FILTER_ENUM magFilter;
+#ifdef SPINE_UE4
+		SpineTextureFilter minFilter;
+		SpineTextureFilter magFilter;
+#else
+		TextureFilter minFilter;
+		TextureFilter magFilter;
+#endif
 		TextureWrap uWrap;
 		TextureWrap vWrap;
 		int width, height;
