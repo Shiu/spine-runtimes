@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_vertices)
+#include "types.h"
 
 SPINE_C_EXPORT void spine_vertices_dispose(spine_vertices obj);
 

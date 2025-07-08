@@ -45,7 +45,7 @@ void spine_slider_pose_dispose(spine_slider_pose obj) {
 void spine_slider_pose_set(spine_slider_pose obj, spine_slider_pose value) {
     if (!obj) return;
     SliderPose *_obj = (SliderPose *) obj;
-    _obj->set(value);
+    _obj->set(*((SliderPose*) value));
 }
 
 float spine_slider_pose_get_time(spine_slider_pose obj) {

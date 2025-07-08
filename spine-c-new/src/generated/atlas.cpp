@@ -32,12 +32,12 @@
 
 using namespace spine;
 
-spine_atlas spine_atlas_create(const utf8 * path, spine_texture_loader textureLoader, spine_bool createTexture) {
+spine_atlas spine_atlas_create(const char* path, spine_texture_loader textureLoader, bool createTexture) {
     Atlas *obj = new (__FILE__, __LINE__) Atlas(String(path), (TextureLoader *) textureLoader, createTexture);
     return (spine_atlas) obj;
 }
 
-spine_atlas spine_atlas_create_with_string_int_string_texture_loader_bool(const utf8 * data, int32_t length, const utf8 * dir, spine_texture_loader textureLoader, spine_bool createTexture) {
+spine_atlas spine_atlas_create_with_string_int_string_texture_loader_bool(const char * data, int length, const char * dir, spine_texture_loader textureLoader, bool createTexture) {
     Atlas *obj = new (__FILE__, __LINE__) Atlas((const char *) data, length, (const char *) dir, (TextureLoader *) textureLoader, createTexture);
     return (spine_atlas) obj;
 }
@@ -53,16 +53,10 @@ void spine_atlas_flip_v(spine_atlas obj) {
     _obj->flipV();
 }
 
-spine_atlas_region spine_atlas_find_region(spine_atlas obj, const utf8 * name) {
-    if (!obj) return nullptr;
+spine_atlas_region spine_atlas_find_region(spine_atlas obj, const char* name) {
+    if (!obj) return (spine_atlas_region) 0;
     Atlas *_obj = (Atlas *) obj;
     return (spine_atlas_region) _obj->findRegion(String(name));
-}
-
-void * spine_atlas_get_pages(spine_atlas obj) {
-    if (!obj) return nullptr;
-    Atlas *_obj = (Atlas *) obj;
-    return (void *) _obj->getPages();
 }
 
 int32_t spine_atlas_get_num_pages(spine_atlas obj) {
@@ -75,12 +69,6 @@ spine_atlas_page *spine_atlas_get_pages(spine_atlas obj) {
     if (!obj) return nullptr;
     Atlas *_obj = (Atlas *) obj;
     return (spine_atlas_page *) _obj->getPages().buffer();
-}
-
-void * spine_atlas_get_regions(spine_atlas obj) {
-    if (!obj) return nullptr;
-    Atlas *_obj = (Atlas *) obj;
-    return (void *) _obj->getRegions();
 }
 
 int32_t spine_atlas_get_num_regions(spine_atlas obj) {

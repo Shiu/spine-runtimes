@@ -32,8 +32,8 @@
 
 using namespace spine;
 
-spine_slot_data spine_slot_data_create(int32_t index, const utf8 * name, spine_bone_data boneData) {
-    SlotData *obj = new (__FILE__, __LINE__) SlotData(index, String(name), boneData);
+spine_slot_data spine_slot_data_create(int index, const char* name, spine_bone_data boneData) {
+    SlotData *obj = new (__FILE__, __LINE__) SlotData(index, String(name), *(BoneData*) boneData);
     return (spine_slot_data) obj;
 }
 
@@ -42,79 +42,73 @@ void spine_slot_data_dispose(spine_slot_data obj) {
     delete (SlotData *) obj;
 }
 
-int32_t spine_slot_data_get_index(spine_slot_data obj) {
+int spine_slot_data_get_index(spine_slot_data obj) {
     if (!obj) return 0;
     SlotData *_obj = (SlotData *) obj;
     return _obj->getIndex();
 }
 
 spine_bone_data spine_slot_data_get_bone_data(spine_slot_data obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_bone_data) 0;
     SlotData *_obj = (SlotData *) obj;
-    return _obj->getBoneData();
+    return (spine_bone_data) &_obj->getBoneData();
 }
 
-void spine_slot_data_set_attachment_name(spine_slot_data obj, const utf8 * value) {
+void spine_slot_data_set_attachment_name(spine_slot_data obj, const char* value) {
     if (!obj) return;
     SlotData *_obj = (SlotData *) obj;
     _obj->setAttachmentName(String(value));
 }
 
-const utf8 * spine_slot_data_get_attachment_name(spine_slot_data obj) {
+const char* spine_slot_data_get_attachment_name(spine_slot_data obj) {
     if (!obj) return nullptr;
     SlotData *_obj = (SlotData *) obj;
-    return (const utf8 *) _obj->getAttachmentName().buffer();
+    return (const char *) _obj->getAttachmentName().buffer();
 }
 
 spine_blend_mode spine_slot_data_get_blend_mode(spine_slot_data obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_blend_mode) 0;
     SlotData *_obj = (SlotData *) obj;
-    return _obj->getBlendMode();
+    return (spine_blend_mode) _obj->getBlendMode();
 }
 
 void spine_slot_data_set_blend_mode(spine_slot_data obj, spine_blend_mode value) {
     if (!obj) return;
     SlotData *_obj = (SlotData *) obj;
-    _obj->setBlendMode(value);
+    _obj->setBlendMode((BlendMode) value);
 }
 
-spine_bool spine_slot_data_get_visible(spine_slot_data obj) {
-    if (!obj) return 0;
+bool spine_slot_data_get_visible(spine_slot_data obj) {
+    if (!obj) return false;
     SlotData *_obj = (SlotData *) obj;
     return _obj->getVisible();
 }
 
-void spine_slot_data_set_visible(spine_slot_data obj, spine_bool value) {
+void spine_slot_data_set_visible(spine_slot_data obj, bool value) {
     if (!obj) return;
     SlotData *_obj = (SlotData *) obj;
     _obj->setVisible(value);
 }
 
 spine_slot_pose spine_slot_data_get_setup_pose(spine_slot_data obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_slot_pose) 0;
     SlotData *_obj = (SlotData *) obj;
-    return _obj->getSetupPose();
+    return (spine_slot_pose) &_obj->getSetupPose();
 }
 
-spine_slot_pose spine_slot_data_get_setup_pose(spine_slot_data obj) {
+const char* spine_slot_data_get_name(spine_slot_data obj) {
     if (!obj) return nullptr;
     SlotData *_obj = (SlotData *) obj;
-    return _obj->getSetupPose();
+    return (const char *) _obj->getName().buffer();
 }
 
-spine_spine::string spine_slot_data_get_name(spine_slot_data obj) {
-    if (!obj) return nullptr;
-    SlotData *_obj = (SlotData *) obj;
-    return _obj->getName();
-}
-
-spine_bool spine_slot_data_is_skin_required(spine_slot_data obj) {
-    if (!obj) return 0;
+bool spine_slot_data_is_skin_required(spine_slot_data obj) {
+    if (!obj) return false;
     SlotData *_obj = (SlotData *) obj;
     return _obj->isSkinRequired();
 }
 
-void spine_slot_data_set_skin_required(spine_slot_data obj, spine_bool value) {
+void spine_slot_data_set_skin_required(spine_slot_data obj, bool value) {
     if (!obj) return;
     SlotData *_obj = (SlotData *) obj;
     _obj->setSkinRequired(value);

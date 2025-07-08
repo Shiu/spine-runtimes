@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_translate_timeline spine_translate_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t boneIndex) {
+spine_translate_timeline spine_translate_timeline_create(size_t frameCount, size_t bezierCount, int boneIndex) {
     TranslateTimeline *obj = new (__FILE__, __LINE__) TranslateTimeline(frameCount, bezierCount, boneIndex);
     return (spine_translate_timeline) obj;
 }
@@ -42,19 +42,17 @@ void spine_translate_timeline_dispose(spine_translate_timeline obj) {
     delete (TranslateTimeline *) obj;
 }
 
-spine_rtti spine_translate_timeline_get_rtti(spine_translate_timeline obj) {
-    if (!obj) return nullptr;
-    TranslateTimeline *_obj = (TranslateTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_translate_timeline_get_rtti() {
+    return (spine_rtti) &TranslateTimeline::rtti;
 }
 
-void spine_translate_timeline_apply(spine_translate_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_translate_timeline_apply(spine_translate_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     TranslateTimeline *_obj = (TranslateTimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-void spine_translate_timeline_set_frame(spine_translate_timeline obj, spine_size_t frame, float time, float value1, float value2) {
+void spine_translate_timeline_set_frame(spine_translate_timeline obj, size_t frame, float time, float value1, float value2) {
     if (!obj) return ;
     TranslateTimeline *_obj = (TranslateTimeline *) obj;
     _obj->setFrame(frame, time, value1, value2);
@@ -66,13 +64,13 @@ float spine_translate_timeline_get_curve_value(spine_translate_timeline obj, flo
     return _obj->getCurveValue(time);
 }
 
-int32_t spine_translate_timeline_get_bone_index(spine_translate_timeline obj) {
+int spine_translate_timeline_get_bone_index(spine_translate_timeline obj) {
     if (!obj) return 0;
     TranslateTimeline *_obj = (TranslateTimeline *) obj;
     return _obj->getBoneIndex();
 }
 
-void spine_translate_timeline_set_bone_index(spine_translate_timeline obj, int32_t value) {
+void spine_translate_timeline_set_bone_index(spine_translate_timeline obj, int value) {
     if (!obj) return;
     TranslateTimeline *_obj = (TranslateTimeline *) obj;
     _obj->setBoneIndex(value);

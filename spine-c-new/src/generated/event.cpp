@@ -33,7 +33,7 @@
 using namespace spine;
 
 spine_event spine_event_create(float time, spine_event_data data) {
-    Event *obj = new (__FILE__, __LINE__) Event(time, data);
+    Event *obj = new (__FILE__, __LINE__) Event(time, *(EventData*) data);
     return (spine_event) obj;
 }
 
@@ -43,9 +43,9 @@ void spine_event_dispose(spine_event obj) {
 }
 
 spine_event_data spine_event_get_data(spine_event obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_event_data) 0;
     Event *_obj = (Event *) obj;
-    return _obj->getData();
+    return (spine_event_data) &_obj->getData();
 }
 
 float spine_event_get_time(spine_event obj) {
@@ -54,13 +54,13 @@ float spine_event_get_time(spine_event obj) {
     return _obj->getTime();
 }
 
-int32_t spine_event_get_int(spine_event obj) {
+int spine_event_get_int(spine_event obj) {
     if (!obj) return 0;
     Event *_obj = (Event *) obj;
     return _obj->getInt();
 }
 
-void spine_event_set_int(spine_event obj, int32_t value) {
+void spine_event_set_int(spine_event obj, int value) {
     if (!obj) return;
     Event *_obj = (Event *) obj;
     _obj->setInt(value);
@@ -78,13 +78,13 @@ void spine_event_set_float(spine_event obj, float value) {
     _obj->setFloat(value);
 }
 
-const utf8 * spine_event_get_string(spine_event obj) {
+const char* spine_event_get_string(spine_event obj) {
     if (!obj) return nullptr;
     Event *_obj = (Event *) obj;
-    return (const utf8 *) _obj->getString().buffer();
+    return (const char *) _obj->getString().buffer();
 }
 
-void spine_event_set_string(spine_event obj, const utf8 * value) {
+void spine_event_set_string(spine_event obj, const char* value) {
     if (!obj) return;
     Event *_obj = (Event *) obj;
     _obj->setString(String(value));

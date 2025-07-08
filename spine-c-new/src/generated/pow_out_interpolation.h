@@ -34,11 +34,9 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_pow_out_interpolation)
-
-SPINE_C_EXPORT spine_pow_out_interpolation spine_pow_out_interpolation_create(int32_t power);
+SPINE_C_EXPORT spine_pow_out_interpolation spine_pow_out_interpolation_create(int power);
 SPINE_C_EXPORT void spine_pow_out_interpolation_dispose(spine_pow_out_interpolation obj);
 SPINE_C_EXPORT float spine_pow_out_interpolation_apply(spine_pow_out_interpolation obj, float a);
 SPINE_C_EXPORT float spine_pow_out_interpolation_interpolate(spine_pow_out_interpolation obj, float start, float end, float a);

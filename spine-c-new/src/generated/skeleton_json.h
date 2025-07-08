@@ -34,17 +34,15 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_skeleton_json)
+#include "types.h"
 
 SPINE_C_EXPORT spine_skeleton_json spine_skeleton_json_create(spine_atlas atlas);
-SPINE_C_EXPORT spine_skeleton_json spine_skeleton_json_create_with_attachment_loader_bool(spine_attachment_loader attachmentLoader, spine_bool ownsLoader);
+SPINE_C_EXPORT spine_skeleton_json spine_skeleton_json_create_with_attachment_loader_bool(spine_attachment_loader attachmentLoader, bool ownsLoader);
 SPINE_C_EXPORT void spine_skeleton_json_dispose(spine_skeleton_json obj);
-SPINE_C_EXPORT spine_skeleton_data spine_skeleton_json_read_skeleton_data_file(spine_skeleton_json obj, const utf8 * path);
-SPINE_C_EXPORT spine_skeleton_data spine_skeleton_json_read_skeleton_data(spine_skeleton_json obj, const utf8 * json);
+SPINE_C_EXPORT spine_skeleton_data spine_skeleton_json_read_skeleton_data_file(spine_skeleton_json obj, const char* path);
+SPINE_C_EXPORT spine_skeleton_data spine_skeleton_json_read_skeleton_data(spine_skeleton_json obj, const char * json);
 SPINE_C_EXPORT void spine_skeleton_json_set_scale(spine_skeleton_json obj, float value);
-SPINE_C_EXPORT const utf8 * spine_skeleton_json_get_error(spine_skeleton_json obj);
+SPINE_C_EXPORT const char* spine_skeleton_json_get_error(spine_skeleton_json obj);
 
 #ifdef __cplusplus
 }

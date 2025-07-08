@@ -34,24 +34,20 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_animation)
-
-SPINE_C_EXPORT spine_animation spine_animation_create(const utf8 * name, void * timelines, float duration);
+SPINE_C_EXPORT spine_animation spine_animation_create(const char* name, spine_array_timeline timelines, float duration);
 SPINE_C_EXPORT void spine_animation_dispose(spine_animation obj);
-SPINE_C_EXPORT void * spine_animation_get_timelines(spine_animation obj);
 SPINE_C_EXPORT int32_t spine_animation_get_num_timelines(spine_animation obj);
 SPINE_C_EXPORT spine_timeline *spine_animation_get_timelines(spine_animation obj);
-SPINE_C_EXPORT void spine_animation_set_timelines(spine_animation obj, void * value);
-SPINE_C_EXPORT spine_bool spine_animation_has_timeline(spine_animation obj, void * ids);
+SPINE_C_EXPORT void spine_animation_set_timelines(spine_animation obj, spine_array_timeline value);
+SPINE_C_EXPORT bool spine_animation_has_timeline(spine_animation obj, spine_array_property_id ids);
 SPINE_C_EXPORT float spine_animation_get_duration(spine_animation obj);
 SPINE_C_EXPORT void spine_animation_set_duration(spine_animation obj, float value);
-SPINE_C_EXPORT void spine_animation_apply(spine_animation obj, spine_skeleton skeleton, float lastTime, float time, spine_bool loop, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose);
-SPINE_C_EXPORT const utf8 * spine_animation_get_name(spine_animation obj);
-SPINE_C_EXPORT int32_t * spine_animation_get_bones(spine_animation obj);
+SPINE_C_EXPORT void spine_animation_apply(spine_animation obj, spine_skeleton skeleton, float lastTime, float time, bool loop, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
+SPINE_C_EXPORT const char* spine_animation_get_name(spine_animation obj);
 SPINE_C_EXPORT int32_t spine_animation_get_num_bones(spine_animation obj);
-SPINE_C_EXPORT int32_t *spine_animation_get_bones(spine_animation obj);
+SPINE_C_EXPORT int *spine_animation_get_bones(spine_animation obj);
 
 #ifdef __cplusplus
 }

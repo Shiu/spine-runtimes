@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_path_constraint_spacing_timeline spine_path_constraint_spacing_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t constraintIndex) {
+spine_path_constraint_spacing_timeline spine_path_constraint_spacing_timeline_create(size_t frameCount, size_t bezierCount, int constraintIndex) {
     PathConstraintSpacingTimeline *obj = new (__FILE__, __LINE__) PathConstraintSpacingTimeline(frameCount, bezierCount, constraintIndex);
     return (spine_path_constraint_spacing_timeline) obj;
 }
@@ -42,19 +42,17 @@ void spine_path_constraint_spacing_timeline_dispose(spine_path_constraint_spacin
     delete (PathConstraintSpacingTimeline *) obj;
 }
 
-spine_rtti spine_path_constraint_spacing_timeline_get_rtti(spine_path_constraint_spacing_timeline obj) {
-    if (!obj) return nullptr;
-    PathConstraintSpacingTimeline *_obj = (PathConstraintSpacingTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_path_constraint_spacing_timeline_get_rtti() {
+    return (spine_rtti) &PathConstraintSpacingTimeline::rtti;
 }
 
-void spine_path_constraint_spacing_timeline_apply(spine_path_constraint_spacing_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_path_constraint_spacing_timeline_apply(spine_path_constraint_spacing_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     PathConstraintSpacingTimeline *_obj = (PathConstraintSpacingTimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-void spine_path_constraint_spacing_timeline_set_frame(spine_path_constraint_spacing_timeline obj, spine_size_t frame, float time, float value) {
+void spine_path_constraint_spacing_timeline_set_frame(spine_path_constraint_spacing_timeline obj, size_t frame, float time, float value) {
     if (!obj) return ;
     PathConstraintSpacingTimeline *_obj = (PathConstraintSpacingTimeline *) obj;
     _obj->setFrame(frame, time, value);
@@ -69,34 +67,34 @@ float spine_path_constraint_spacing_timeline_get_curve_value(spine_path_constrai
 float spine_path_constraint_spacing_timeline_get_relative_value(spine_path_constraint_spacing_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
     if (!obj) return 0;
     PathConstraintSpacingTimeline *_obj = (PathConstraintSpacingTimeline *) obj;
-    return _obj->getRelativeValue(time, alpha, blend, current, setup);
+    return _obj->getRelativeValue(time, alpha, (MixBlend) blend, current, setup);
 }
 
 float spine_path_constraint_spacing_timeline_get_absolute_value(spine_path_constraint_spacing_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
     if (!obj) return 0;
     PathConstraintSpacingTimeline *_obj = (PathConstraintSpacingTimeline *) obj;
-    return _obj->getAbsoluteValue(time, alpha, blend, current, setup);
+    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup);
 }
 
-float spine_path_constraint_spacing_timeline_get_absolute_value(spine_path_constraint_spacing_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
+float spine_path_constraint_spacing_timeline_get_absolute_value_6(spine_path_constraint_spacing_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
     if (!obj) return 0;
     PathConstraintSpacingTimeline *_obj = (PathConstraintSpacingTimeline *) obj;
-    return _obj->getAbsoluteValue(time, alpha, blend, current, setup, value);
+    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup, value);
 }
 
 float spine_path_constraint_spacing_timeline_get_scale_value(spine_path_constraint_spacing_timeline obj, float time, float alpha, spine_mix_blend blend, spine_mix_direction direction, float current, float setup) {
     if (!obj) return 0;
     PathConstraintSpacingTimeline *_obj = (PathConstraintSpacingTimeline *) obj;
-    return _obj->getScaleValue(time, alpha, blend, direction, current, setup);
+    return _obj->getScaleValue(time, alpha, (MixBlend) blend, (MixDirection) direction, current, setup);
 }
 
-int32_t spine_path_constraint_spacing_timeline_get_constraint_index(spine_path_constraint_spacing_timeline obj) {
+int spine_path_constraint_spacing_timeline_get_constraint_index(spine_path_constraint_spacing_timeline obj) {
     if (!obj) return 0;
     PathConstraintSpacingTimeline *_obj = (PathConstraintSpacingTimeline *) obj;
     return _obj->getConstraintIndex();
 }
 
-void spine_path_constraint_spacing_timeline_set_constraint_index(spine_path_constraint_spacing_timeline obj, int32_t value) {
+void spine_path_constraint_spacing_timeline_set_constraint_index(spine_path_constraint_spacing_timeline obj, int value) {
     if (!obj) return;
     PathConstraintSpacingTimeline *_obj = (PathConstraintSpacingTimeline *) obj;
     _obj->setConstraintIndex(value);

@@ -34,12 +34,10 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_linked_mesh)
-
-SPINE_C_EXPORT spine_linked_mesh spine_linked_mesh_create(spine_mesh_attachment mesh, spine_const int skinIndex, spine_size_t slotIndex, const utf8 * parent, spine_bool inheritTimelines);
-SPINE_C_EXPORT spine_linked_mesh spine_linked_mesh_create_with_mesh_attachment_string_size_t_string_bool(spine_mesh_attachment mesh, const utf8 * skin, spine_size_t slotIndex, const utf8 * parent, spine_bool inheritTimelines);
+SPINE_C_EXPORT spine_linked_mesh spine_linked_mesh_create(spine_mesh_attachment mesh, const int skinIndex, size_t slotIndex, const char* parent, bool inheritTimelines);
+SPINE_C_EXPORT spine_linked_mesh spine_linked_mesh_create_with_mesh_attachment_string_size_t_string_bool(spine_mesh_attachment mesh, const char* skin, size_t slotIndex, const char* parent, bool inheritTimelines);
 SPINE_C_EXPORT void spine_linked_mesh_dispose(spine_linked_mesh obj);
 
 #ifdef __cplusplus

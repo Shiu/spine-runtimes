@@ -34,18 +34,15 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_path_constraint)
+#include "types.h"
 
 SPINE_C_EXPORT spine_path_constraint spine_path_constraint_create(spine_path_constraint_data data, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_path_constraint_dispose(spine_path_constraint obj);
-SPINE_C_EXPORT spine_rtti spine_path_constraint_get_rtti(spine_path_constraint obj);
+SPINE_C_EXPORT spine_rtti spine_path_constraint_get_rtti();
 SPINE_C_EXPORT spine_path_constraint spine_path_constraint_copy(spine_path_constraint obj, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_path_constraint_update(spine_path_constraint obj, spine_skeleton skeleton, spine_physics physics);
 SPINE_C_EXPORT void spine_path_constraint_sort(spine_path_constraint obj, spine_skeleton skeleton);
-SPINE_C_EXPORT spine_bool spine_path_constraint_is_source_active(spine_path_constraint obj);
-SPINE_C_EXPORT void * spine_path_constraint_get_bones(spine_path_constraint obj);
+SPINE_C_EXPORT bool spine_path_constraint_is_source_active(spine_path_constraint obj);
 SPINE_C_EXPORT int32_t spine_path_constraint_get_num_bones(spine_path_constraint obj);
 SPINE_C_EXPORT spine_bone_pose *spine_path_constraint_get_bones(spine_path_constraint obj);
 SPINE_C_EXPORT spine_slot spine_path_constraint_get_slot(spine_path_constraint obj);
@@ -57,9 +54,9 @@ SPINE_C_EXPORT spine_path_constraint_pose spine_path_constraint_get_pose(spine_p
 SPINE_C_EXPORT spine_path_constraint_pose spine_path_constraint_get_applied_pose(spine_path_constraint obj);
 SPINE_C_EXPORT void spine_path_constraint_reset_constrained(spine_path_constraint obj);
 SPINE_C_EXPORT void spine_path_constraint_constrained(spine_path_constraint obj);
-SPINE_C_EXPORT spine_bool spine_path_constraint_is_pose_equal_to_applied(spine_path_constraint obj);
-SPINE_C_EXPORT spine_bool spine_path_constraint_is_active(spine_path_constraint obj);
-SPINE_C_EXPORT void spine_path_constraint_set_active(spine_path_constraint obj, spine_bool value);
+SPINE_C_EXPORT bool spine_path_constraint_is_pose_equal_to_applied(spine_path_constraint obj);
+SPINE_C_EXPORT bool spine_path_constraint_is_active(spine_path_constraint obj);
+SPINE_C_EXPORT void spine_path_constraint_set_active(spine_path_constraint obj, bool value);
 
 #ifdef __cplusplus
 }

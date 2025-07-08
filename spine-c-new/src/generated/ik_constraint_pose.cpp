@@ -45,7 +45,7 @@ void spine_ik_constraint_pose_dispose(spine_ik_constraint_pose obj) {
 void spine_ik_constraint_pose_set(spine_ik_constraint_pose obj, spine_ik_constraint_pose value) {
     if (!obj) return;
     IkConstraintPose *_obj = (IkConstraintPose *) obj;
-    _obj->set(value);
+    _obj->set(*((IkConstraintPose*) value));
 }
 
 float spine_ik_constraint_pose_get_mix(spine_ik_constraint_pose obj) {
@@ -72,37 +72,37 @@ void spine_ik_constraint_pose_set_softness(spine_ik_constraint_pose obj, float v
     _obj->setSoftness(value);
 }
 
-int32_t spine_ik_constraint_pose_get_bend_direction(spine_ik_constraint_pose obj) {
+int spine_ik_constraint_pose_get_bend_direction(spine_ik_constraint_pose obj) {
     if (!obj) return 0;
     IkConstraintPose *_obj = (IkConstraintPose *) obj;
     return _obj->getBendDirection();
 }
 
-void spine_ik_constraint_pose_set_bend_direction(spine_ik_constraint_pose obj, int32_t value) {
+void spine_ik_constraint_pose_set_bend_direction(spine_ik_constraint_pose obj, int value) {
     if (!obj) return;
     IkConstraintPose *_obj = (IkConstraintPose *) obj;
     _obj->setBendDirection(value);
 }
 
-spine_bool spine_ik_constraint_pose_get_compress(spine_ik_constraint_pose obj) {
-    if (!obj) return 0;
+bool spine_ik_constraint_pose_get_compress(spine_ik_constraint_pose obj) {
+    if (!obj) return false;
     IkConstraintPose *_obj = (IkConstraintPose *) obj;
     return _obj->getCompress();
 }
 
-void spine_ik_constraint_pose_set_compress(spine_ik_constraint_pose obj, spine_bool value) {
+void spine_ik_constraint_pose_set_compress(spine_ik_constraint_pose obj, bool value) {
     if (!obj) return;
     IkConstraintPose *_obj = (IkConstraintPose *) obj;
     _obj->setCompress(value);
 }
 
-spine_bool spine_ik_constraint_pose_get_stretch(spine_ik_constraint_pose obj) {
-    if (!obj) return 0;
+bool spine_ik_constraint_pose_get_stretch(spine_ik_constraint_pose obj) {
+    if (!obj) return false;
     IkConstraintPose *_obj = (IkConstraintPose *) obj;
     return _obj->getStretch();
 }
 
-void spine_ik_constraint_pose_set_stretch(spine_ik_constraint_pose obj, spine_bool value) {
+void spine_ik_constraint_pose_set_stretch(spine_ik_constraint_pose obj, bool value) {
     if (!obj) return;
     IkConstraintPose *_obj = (IkConstraintPose *) obj;
     _obj->setStretch(value);

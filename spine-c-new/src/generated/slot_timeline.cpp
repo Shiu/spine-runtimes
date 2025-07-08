@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_slot_timeline spine_slot_timeline_create(int32_t slotIndex) {
+spine_slot_timeline spine_slot_timeline_create(int slotIndex) {
     SlotTimeline *obj = new (__FILE__, __LINE__) SlotTimeline(slotIndex);
     return (spine_slot_timeline) obj;
 }
@@ -42,19 +42,17 @@ void spine_slot_timeline_dispose(spine_slot_timeline obj) {
     delete (SlotTimeline *) obj;
 }
 
-spine_rtti spine_slot_timeline_get_rtti(spine_slot_timeline obj) {
-    if (!obj) return nullptr;
-    SlotTimeline *_obj = (SlotTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_slot_timeline_get_rtti() {
+    return (spine_rtti) &SlotTimeline::rtti;
 }
 
-int32_t spine_slot_timeline_get_slot_index(spine_slot_timeline obj) {
+int spine_slot_timeline_get_slot_index(spine_slot_timeline obj) {
     if (!obj) return 0;
     SlotTimeline *_obj = (SlotTimeline *) obj;
     return _obj->getSlotIndex();
 }
 
-void spine_slot_timeline_set_slot_index(spine_slot_timeline obj, int32_t value) {
+void spine_slot_timeline_set_slot_index(spine_slot_timeline obj, int value) {
     if (!obj) return;
     SlotTimeline *_obj = (SlotTimeline *) obj;
     _obj->setSlotIndex(value);

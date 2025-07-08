@@ -32,36 +32,29 @@
 
 using namespace spine;
 
-spine_constraint spine_constraint_create(void) {
-    Constraint *obj = new (__FILE__, __LINE__) Constraint();
-    return (spine_constraint) obj;
-}
-
 void spine_constraint_dispose(spine_constraint obj) {
     if (!obj) return;
     delete (Constraint *) obj;
 }
 
-spine_rtti spine_constraint_get_rtti(spine_constraint obj) {
-    if (!obj) return nullptr;
-    Constraint *_obj = (Constraint *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_constraint_get_rtti() {
+    return (spine_rtti) &Constraint::rtti;
 }
 
 spine_constraint_data spine_constraint_get_data(spine_constraint obj) {
     if (!obj) return 0;
     Constraint *_obj = (Constraint *) obj;
-    return _obj->getData();
+    return (spine_constraint_data) &_obj->getData();
 }
 
 void spine_constraint_sort(spine_constraint obj, spine_skeleton skeleton) {
     if (!obj) return ;
     Constraint *_obj = (Constraint *) obj;
-    _obj->sort(skeleton);
+    _obj->sort(*(Skeleton*) skeleton);
 }
 
-spine_bool spine_constraint_is_source_active(spine_constraint obj) {
-    if (!obj) return 0;
+bool spine_constraint_is_source_active(spine_constraint obj) {
+    if (!obj) return false;
     Constraint *_obj = (Constraint *) obj;
     return _obj->isSourceActive();
 }
@@ -81,23 +74,5 @@ void spine_constraint_setup_pose(spine_constraint obj) {
 void spine_constraint_update(spine_constraint obj, spine_skeleton skeleton, spine_physics physics) {
     if (!obj) return ;
     Constraint *_obj = (Constraint *) obj;
-    _obj->update(skeleton, physics);
-}
-
-spine_bool spine_constraint_is_type(spine_constraint obj, spine_constraint_type type) {
-    if (!obj) return 0;
-    Constraint *_obj = (Constraint *) obj;
-    
-    switch (type) {
-        case SPINE_TYPE_CONSTRAINT_CONSTRAINT_GENERIC:
-            return _obj->getRTTI().instanceOf(ConstraintGeneric::rtti);
-    }
-    return 0;
-}
-
-spine_constraint_generic spine_constraint_as_constraint_generic(spine_constraint obj) {
-    if (!obj) return nullptr;
-    Constraint *_obj = (Constraint *) obj;
-    if (!_obj->getRTTI().instanceOf(ConstraintGeneric::rtti)) return nullptr;
-    return (spine_constraint_generic) obj;
+    _obj->update(*(Skeleton*) skeleton, (Physics) physics);
 }

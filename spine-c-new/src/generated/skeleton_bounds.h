@@ -34,26 +34,22 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_skeleton_bounds)
+#include "types.h"
 
 SPINE_C_EXPORT spine_skeleton_bounds spine_skeleton_bounds_create(void);
 SPINE_C_EXPORT void spine_skeleton_bounds_dispose(spine_skeleton_bounds obj);
-SPINE_C_EXPORT void spine_skeleton_bounds_update(spine_skeleton_bounds obj, spine_skeleton skeleton, spine_bool updateAabb);
-SPINE_C_EXPORT spine_bool spine_skeleton_bounds_aabb_contains_point(spine_skeleton_bounds obj, float x, float y);
-SPINE_C_EXPORT spine_bool spine_skeleton_bounds_aabb_intersects_segment(spine_skeleton_bounds obj, float x1, float y1, float x2, float y2);
-SPINE_C_EXPORT spine_bool spine_skeleton_bounds_aabb_intersects_skeleton(spine_skeleton_bounds obj, spine_skeleton_bounds bounds);
-SPINE_C_EXPORT spine_bool spine_skeleton_bounds_contains_point(spine_skeleton_bounds obj, spine_polygon polygon, float x, float y);
-SPINE_C_EXPORT spine_bounding_box_attachment spine_skeleton_bounds_contains_point(spine_skeleton_bounds obj, float x, float y);
+SPINE_C_EXPORT void spine_skeleton_bounds_update(spine_skeleton_bounds obj, spine_skeleton skeleton, bool updateAabb);
+SPINE_C_EXPORT bool spine_skeleton_bounds_aabb_contains_point(spine_skeleton_bounds obj, float x, float y);
+SPINE_C_EXPORT bool spine_skeleton_bounds_aabb_intersects_segment(spine_skeleton_bounds obj, float x1, float y1, float x2, float y2);
+SPINE_C_EXPORT bool spine_skeleton_bounds_aabb_intersects_skeleton(spine_skeleton_bounds obj, spine_skeleton_bounds bounds);
+SPINE_C_EXPORT bool spine_skeleton_bounds_contains_point(spine_skeleton_bounds obj, spine_polygon polygon, float x, float y);
+SPINE_C_EXPORT spine_bounding_box_attachment spine_skeleton_bounds_contains_point_2(spine_skeleton_bounds obj, float x, float y);
 SPINE_C_EXPORT spine_bounding_box_attachment spine_skeleton_bounds_intersects_segment(spine_skeleton_bounds obj, float x1, float y1, float x2, float y2);
-SPINE_C_EXPORT spine_bool spine_skeleton_bounds_intersects_segment(spine_skeleton_bounds obj, spine_polygon polygon, float x1, float y1, float x2, float y2);
+SPINE_C_EXPORT bool spine_skeleton_bounds_intersects_segment_5(spine_skeleton_bounds obj, spine_polygon polygon, float x1, float y1, float x2, float y2);
 SPINE_C_EXPORT spine_polygon spine_skeleton_bounds_get_polygon(spine_skeleton_bounds obj, spine_bounding_box_attachment attachment);
 SPINE_C_EXPORT spine_bounding_box_attachment spine_skeleton_bounds_get_bounding_box(spine_skeleton_bounds obj, spine_polygon polygon);
-SPINE_C_EXPORT void * spine_skeleton_bounds_get_polygons(spine_skeleton_bounds obj);
 SPINE_C_EXPORT int32_t spine_skeleton_bounds_get_num_polygons(spine_skeleton_bounds obj);
 SPINE_C_EXPORT spine_polygon *spine_skeleton_bounds_get_polygons(spine_skeleton_bounds obj);
-SPINE_C_EXPORT void * spine_skeleton_bounds_get_bounding_boxes(spine_skeleton_bounds obj);
 SPINE_C_EXPORT int32_t spine_skeleton_bounds_get_num_bounding_boxes(spine_skeleton_bounds obj);
 SPINE_C_EXPORT spine_bounding_box_attachment *spine_skeleton_bounds_get_bounding_boxes(spine_skeleton_bounds obj);
 SPINE_C_EXPORT float spine_skeleton_bounds_get_min_x(spine_skeleton_bounds obj);

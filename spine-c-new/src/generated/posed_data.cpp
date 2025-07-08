@@ -32,8 +32,8 @@
 
 using namespace spine;
 
-spine_posed_data spine_posed_data_create(spine_spine::string name) {
-    PosedData *obj = new (__FILE__, __LINE__) PosedData(name);
+spine_posed_data spine_posed_data_create(const char* name) {
+    PosedData *obj = new (__FILE__, __LINE__) PosedData(String(name));
     return (spine_posed_data) obj;
 }
 
@@ -42,38 +42,20 @@ void spine_posed_data_dispose(spine_posed_data obj) {
     delete (PosedData *) obj;
 }
 
-spine_spine::string spine_posed_data_get_name(spine_posed_data obj) {
+const char* spine_posed_data_get_name(spine_posed_data obj) {
     if (!obj) return nullptr;
     PosedData *_obj = (PosedData *) obj;
-    return _obj->getName();
+    return (const char *) _obj->getName().buffer();
 }
 
-spine_bool spine_posed_data_is_skin_required(spine_posed_data obj) {
-    if (!obj) return 0;
+bool spine_posed_data_is_skin_required(spine_posed_data obj) {
+    if (!obj) return false;
     PosedData *_obj = (PosedData *) obj;
     return _obj->isSkinRequired();
 }
 
-void spine_posed_data_set_skin_required(spine_posed_data obj, spine_bool value) {
+void spine_posed_data_set_skin_required(spine_posed_data obj, bool value) {
     if (!obj) return;
     PosedData *_obj = (PosedData *) obj;
     _obj->setSkinRequired(value);
-}
-
-spine_bool spine_posed_data_is_type(spine_posed_data obj, spine_posed_data_type type) {
-    if (!obj) return 0;
-    PosedData *_obj = (PosedData *) obj;
-    
-    switch (type) {
-        case SPINE_TYPE_POSED_DATA_POSED_DATA_GENERIC:
-            return _obj->getRTTI().instanceOf(PosedDataGeneric::rtti);
-    }
-    return 0;
-}
-
-spine_posed_data_generic spine_posed_data_as_posed_data_generic(spine_posed_data obj) {
-    if (!obj) return nullptr;
-    PosedData *_obj = (PosedData *) obj;
-    if (!_obj->getRTTI().instanceOf(PosedDataGeneric::rtti)) return nullptr;
-    return (spine_posed_data_generic) obj;
 }

@@ -34,15 +34,13 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_bone_timeline)
-
-SPINE_C_EXPORT spine_bone_timeline spine_bone_timeline_create(int32_t boneIndex);
+SPINE_C_EXPORT spine_bone_timeline spine_bone_timeline_create(int boneIndex);
 SPINE_C_EXPORT void spine_bone_timeline_dispose(spine_bone_timeline obj);
-SPINE_C_EXPORT spine_rtti spine_bone_timeline_get_rtti(spine_bone_timeline obj);
-SPINE_C_EXPORT int32_t spine_bone_timeline_get_bone_index(spine_bone_timeline obj);
-SPINE_C_EXPORT void spine_bone_timeline_set_bone_index(spine_bone_timeline obj, int32_t value);
+SPINE_C_EXPORT spine_rtti spine_bone_timeline_get_rtti();
+SPINE_C_EXPORT int spine_bone_timeline_get_bone_index(spine_bone_timeline obj);
+SPINE_C_EXPORT void spine_bone_timeline_set_bone_index(spine_bone_timeline obj, int value);
 
 #ifdef __cplusplus
 }

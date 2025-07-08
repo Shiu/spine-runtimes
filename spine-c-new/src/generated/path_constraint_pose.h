@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_path_constraint_pose)
+#include "types.h"
 
 SPINE_C_EXPORT spine_path_constraint_pose spine_path_constraint_pose_create(void);
 SPINE_C_EXPORT void spine_path_constraint_pose_dispose(spine_path_constraint_pose obj);

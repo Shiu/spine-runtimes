@@ -34,23 +34,20 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_deform_timeline)
-
-SPINE_C_EXPORT spine_deform_timeline spine_deform_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t slotIndex, spine_vertex_attachment attachment);
+SPINE_C_EXPORT spine_deform_timeline spine_deform_timeline_create(size_t frameCount, size_t bezierCount, int slotIndex, spine_vertex_attachment attachment);
 SPINE_C_EXPORT void spine_deform_timeline_dispose(spine_deform_timeline obj);
-SPINE_C_EXPORT spine_rtti spine_deform_timeline_get_rtti(spine_deform_timeline obj);
-SPINE_C_EXPORT void spine_deform_timeline_set_frame(spine_deform_timeline obj, int32_t frameIndex, float time, void * vertices);
-SPINE_C_EXPORT void * spine_deform_timeline_get_vertices(spine_deform_timeline obj);
+SPINE_C_EXPORT spine_rtti spine_deform_timeline_get_rtti();
+SPINE_C_EXPORT void spine_deform_timeline_set_frame(spine_deform_timeline obj, int frameIndex, float time, spine_array_float vertices);
 SPINE_C_EXPORT int32_t spine_deform_timeline_get_num_vertices(spine_deform_timeline obj);
-SPINE_C_EXPORT spine_vector<float *spine_deform_timeline_get_vertices(spine_deform_timeline obj);
+SPINE_C_EXPORT spine_array<float *spine_deform_timeline_get_vertices(spine_deform_timeline obj);
 SPINE_C_EXPORT spine_vertex_attachment spine_deform_timeline_get_attachment(spine_deform_timeline obj);
 SPINE_C_EXPORT void spine_deform_timeline_set_attachment(spine_deform_timeline obj, spine_vertex_attachment value);
-SPINE_C_EXPORT void spine_deform_timeline_set_bezier(spine_deform_timeline obj, spine_size_t bezier, spine_size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2);
-SPINE_C_EXPORT float spine_deform_timeline_get_curve_percent(spine_deform_timeline obj, float time, int32_t frame);
-SPINE_C_EXPORT spine_size_t spine_deform_timeline_get_frame_count(spine_deform_timeline obj);
-SPINE_C_EXPORT void spine_deform_timeline_apply(spine_deform_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose);
+SPINE_C_EXPORT void spine_deform_timeline_set_bezier(spine_deform_timeline obj, size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2);
+SPINE_C_EXPORT float spine_deform_timeline_get_curve_percent(spine_deform_timeline obj, float time, int frame);
+SPINE_C_EXPORT size_t spine_deform_timeline_get_frame_count(spine_deform_timeline obj);
+SPINE_C_EXPORT void spine_deform_timeline_apply(spine_deform_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
 
 #ifdef __cplusplus
 }

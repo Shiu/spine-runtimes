@@ -34,24 +34,22 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_track_entry)
+#include "types.h"
 
 SPINE_C_EXPORT spine_track_entry spine_track_entry_create(void);
 SPINE_C_EXPORT void spine_track_entry_dispose(spine_track_entry obj);
-SPINE_C_EXPORT int32_t spine_track_entry_get_track_index(spine_track_entry obj);
+SPINE_C_EXPORT int spine_track_entry_get_track_index(spine_track_entry obj);
 SPINE_C_EXPORT spine_animation spine_track_entry_get_animation(spine_track_entry obj);
 SPINE_C_EXPORT void spine_track_entry_set_animation(spine_track_entry obj, spine_animation value);
 SPINE_C_EXPORT spine_track_entry spine_track_entry_get_previous(spine_track_entry obj);
-SPINE_C_EXPORT spine_bool spine_track_entry_get_loop(spine_track_entry obj);
-SPINE_C_EXPORT void spine_track_entry_set_loop(spine_track_entry obj, spine_bool value);
-SPINE_C_EXPORT spine_bool spine_track_entry_get_hold_previous(spine_track_entry obj);
-SPINE_C_EXPORT void spine_track_entry_set_hold_previous(spine_track_entry obj, spine_bool value);
-SPINE_C_EXPORT spine_bool spine_track_entry_get_reverse(spine_track_entry obj);
-SPINE_C_EXPORT void spine_track_entry_set_reverse(spine_track_entry obj, spine_bool value);
-SPINE_C_EXPORT spine_bool spine_track_entry_get_shortest_rotation(spine_track_entry obj);
-SPINE_C_EXPORT void spine_track_entry_set_shortest_rotation(spine_track_entry obj, spine_bool value);
+SPINE_C_EXPORT bool spine_track_entry_get_loop(spine_track_entry obj);
+SPINE_C_EXPORT void spine_track_entry_set_loop(spine_track_entry obj, bool value);
+SPINE_C_EXPORT bool spine_track_entry_get_hold_previous(spine_track_entry obj);
+SPINE_C_EXPORT void spine_track_entry_set_hold_previous(spine_track_entry obj, bool value);
+SPINE_C_EXPORT bool spine_track_entry_get_reverse(spine_track_entry obj);
+SPINE_C_EXPORT void spine_track_entry_set_reverse(spine_track_entry obj, bool value);
+SPINE_C_EXPORT bool spine_track_entry_get_shortest_rotation(spine_track_entry obj);
+SPINE_C_EXPORT void spine_track_entry_set_shortest_rotation(spine_track_entry obj, bool value);
 SPINE_C_EXPORT float spine_track_entry_get_delay(spine_track_entry obj);
 SPINE_C_EXPORT void spine_track_entry_set_delay(spine_track_entry obj, float value);
 SPINE_C_EXPORT float spine_track_entry_get_track_time(spine_track_entry obj);
@@ -78,7 +76,7 @@ SPINE_C_EXPORT void spine_track_entry_set_alpha_attachment_threshold(spine_track
 SPINE_C_EXPORT float spine_track_entry_get_mix_draw_order_threshold(spine_track_entry obj);
 SPINE_C_EXPORT void spine_track_entry_set_mix_draw_order_threshold(spine_track_entry obj, float value);
 SPINE_C_EXPORT spine_track_entry spine_track_entry_get_next(spine_track_entry obj);
-SPINE_C_EXPORT spine_bool spine_track_entry_is_complete(spine_track_entry obj);
+SPINE_C_EXPORT bool spine_track_entry_is_complete(spine_track_entry obj);
 SPINE_C_EXPORT float spine_track_entry_get_mix_time(spine_track_entry obj);
 SPINE_C_EXPORT void spine_track_entry_set_mix_time(spine_track_entry obj, float value);
 SPINE_C_EXPORT float spine_track_entry_get_mix_duration(spine_track_entry obj);
@@ -90,13 +88,10 @@ SPINE_C_EXPORT spine_track_entry spine_track_entry_get_mixing_from(spine_track_e
 SPINE_C_EXPORT spine_track_entry spine_track_entry_get_mixing_to(spine_track_entry obj);
 SPINE_C_EXPORT void spine_track_entry_reset_rotation_directions(spine_track_entry obj);
 SPINE_C_EXPORT float spine_track_entry_get_track_complete(spine_track_entry obj);
-SPINE_C_EXPORT void spine_track_entry_set_listener(spine_track_entry obj, spine_animation_state_listener value);
-SPINE_C_EXPORT void spine_track_entry_set_listener(spine_track_entry obj, spine_animation_state_listener_object value);
-SPINE_C_EXPORT spine_bool spine_track_entry_is_empty_animation(spine_track_entry obj);
-SPINE_C_EXPORT spine_bool spine_track_entry_was_applied(spine_track_entry obj);
-SPINE_C_EXPORT spine_bool spine_track_entry_is_next_ready(spine_track_entry obj);
-SPINE_C_EXPORT spine_void spine_track_entry_get_renderer_object(spine_track_entry obj);
-SPINE_C_EXPORT void spine_track_entry_set_renderer_object(spine_track_entry obj, spine_void rendererObject, spine_dispose_renderer_object dispose);
+SPINE_C_EXPORT bool spine_track_entry_is_empty_animation(spine_track_entry obj);
+SPINE_C_EXPORT bool spine_track_entry_was_applied(spine_track_entry obj);
+SPINE_C_EXPORT bool spine_track_entry_is_next_ready(spine_track_entry obj);
+SPINE_C_EXPORT void * spine_track_entry_get_renderer_object(spine_track_entry obj);
 
 #ifdef __cplusplus
 }

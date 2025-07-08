@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_path_constraint_data spine_path_constraint_data_create(const utf8 * name) {
+spine_path_constraint_data spine_path_constraint_data_create(const char* name) {
     PathConstraintData *obj = new (__FILE__, __LINE__) PathConstraintData(String(name));
     return (spine_path_constraint_data) obj;
 }
@@ -42,22 +42,14 @@ void spine_path_constraint_data_dispose(spine_path_constraint_data obj) {
     delete (PathConstraintData *) obj;
 }
 
-spine_rtti spine_path_constraint_data_get_rtti(spine_path_constraint_data obj) {
-    if (!obj) return nullptr;
-    PathConstraintData *_obj = (PathConstraintData *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_path_constraint_data_get_rtti() {
+    return (spine_rtti) &PathConstraintData::rtti;
 }
 
 spine_constraint spine_path_constraint_data_create(spine_path_constraint_data obj, spine_skeleton skeleton) {
     if (!obj) return 0;
     PathConstraintData *_obj = (PathConstraintData *) obj;
-    return (spine_constraint) _obj->create(skeleton);
-}
-
-void * spine_path_constraint_data_get_bones(spine_path_constraint_data obj) {
-    if (!obj) return nullptr;
-    PathConstraintData *_obj = (PathConstraintData *) obj;
-    return (void *) _obj->getBones();
+    return (spine_constraint) _obj->create(*(Skeleton*) skeleton);
 }
 
 int32_t spine_path_constraint_data_get_num_bones(spine_path_constraint_data obj) {
@@ -73,7 +65,7 @@ spine_bone_data *spine_path_constraint_data_get_bones(spine_path_constraint_data
 }
 
 spine_slot_data spine_path_constraint_data_get_slot(spine_path_constraint_data obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_slot_data) 0;
     PathConstraintData *_obj = (PathConstraintData *) obj;
     return (spine_slot_data) _obj->getSlot();
 }
@@ -85,39 +77,39 @@ void spine_path_constraint_data_set_slot(spine_path_constraint_data obj, spine_s
 }
 
 spine_position_mode spine_path_constraint_data_get_position_mode(spine_path_constraint_data obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_position_mode) 0;
     PathConstraintData *_obj = (PathConstraintData *) obj;
-    return _obj->getPositionMode();
+    return (spine_position_mode) _obj->getPositionMode();
 }
 
 void spine_path_constraint_data_set_position_mode(spine_path_constraint_data obj, spine_position_mode value) {
     if (!obj) return;
     PathConstraintData *_obj = (PathConstraintData *) obj;
-    _obj->setPositionMode(value);
+    _obj->setPositionMode((PositionMode) value);
 }
 
 spine_spacing_mode spine_path_constraint_data_get_spacing_mode(spine_path_constraint_data obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_spacing_mode) 0;
     PathConstraintData *_obj = (PathConstraintData *) obj;
-    return _obj->getSpacingMode();
+    return (spine_spacing_mode) _obj->getSpacingMode();
 }
 
 void spine_path_constraint_data_set_spacing_mode(spine_path_constraint_data obj, spine_spacing_mode value) {
     if (!obj) return;
     PathConstraintData *_obj = (PathConstraintData *) obj;
-    _obj->setSpacingMode(value);
+    _obj->setSpacingMode((SpacingMode) value);
 }
 
 spine_rotate_mode spine_path_constraint_data_get_rotate_mode(spine_path_constraint_data obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_rotate_mode) 0;
     PathConstraintData *_obj = (PathConstraintData *) obj;
-    return _obj->getRotateMode();
+    return (spine_rotate_mode) _obj->getRotateMode();
 }
 
 void spine_path_constraint_data_set_rotate_mode(spine_path_constraint_data obj, spine_rotate_mode value) {
     if (!obj) return;
     PathConstraintData *_obj = (PathConstraintData *) obj;
-    _obj->setRotateMode(value);
+    _obj->setRotateMode((RotateMode) value);
 }
 
 float spine_path_constraint_data_get_offset_rotation(spine_path_constraint_data obj) {
@@ -132,14 +124,14 @@ void spine_path_constraint_data_set_offset_rotation(spine_path_constraint_data o
     _obj->setOffsetRotation(value);
 }
 
-const utf8 * spine_path_constraint_data_get_name(spine_path_constraint_data obj) {
+const char* spine_path_constraint_data_get_name(spine_path_constraint_data obj) {
     if (!obj) return nullptr;
     PathConstraintData *_obj = (PathConstraintData *) obj;
-    return (const utf8 *) _obj->getName().buffer();
+    return (const char *) _obj->getName().buffer();
 }
 
-spine_bool spine_path_constraint_data_is_skin_required(spine_path_constraint_data obj) {
-    if (!obj) return 0;
+bool spine_path_constraint_data_is_skin_required(spine_path_constraint_data obj) {
+    if (!obj) return false;
     PathConstraintData *_obj = (PathConstraintData *) obj;
     return _obj->isSkinRequired();
 }
@@ -147,11 +139,5 @@ spine_bool spine_path_constraint_data_is_skin_required(spine_path_constraint_dat
 spine_path_constraint_pose spine_path_constraint_data_get_setup_pose(spine_path_constraint_data obj) {
     if (!obj) return 0;
     PathConstraintData *_obj = (PathConstraintData *) obj;
-    return _obj->getSetupPose();
-}
-
-spine_path_constraint_pose spine_path_constraint_data_get_setup_pose(spine_path_constraint_data obj) {
-    if (!obj) return 0;
-    PathConstraintData *_obj = (PathConstraintData *) obj;
-    return _obj->getSetupPose();
+    return (spine_path_constraint_pose) &_obj->getSetupPose();
 }

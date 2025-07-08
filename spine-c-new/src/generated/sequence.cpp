@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_sequence spine_sequence_create(int32_t count) {
+spine_sequence spine_sequence_create(int count) {
     Sequence *obj = new (__FILE__, __LINE__) Sequence(count);
     return (spine_sequence) obj;
 }
@@ -43,7 +43,7 @@ void spine_sequence_dispose(spine_sequence obj) {
 }
 
 spine_sequence spine_sequence_copy(spine_sequence obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_sequence) 0;
     Sequence *_obj = (Sequence *) obj;
     return (spine_sequence) _obj->copy();
 }
@@ -54,64 +54,58 @@ void spine_sequence_apply(spine_sequence obj, spine_slot_pose slot, spine_attach
     _obj->apply((SlotPose *) slot, (Attachment *) attachment);
 }
 
-const utf8 * spine_sequence_get_path(spine_sequence obj, const utf8 * basePath, int32_t index) {
+const char* spine_sequence_get_path(spine_sequence obj, const char* basePath, int index) {
     if (!obj) return nullptr;
     Sequence *_obj = (Sequence *) obj;
-    return (const utf8 *) _obj->getPath(String(basePath), index).buffer();
+    return (const char *) _obj->getPath(String(basePath), index).buffer();
 }
 
-int32_t spine_sequence_get_id(spine_sequence obj) {
+int spine_sequence_get_id(spine_sequence obj) {
     if (!obj) return 0;
     Sequence *_obj = (Sequence *) obj;
     return _obj->getId();
 }
 
-void spine_sequence_set_id(spine_sequence obj, int32_t value) {
+void spine_sequence_set_id(spine_sequence obj, int value) {
     if (!obj) return;
     Sequence *_obj = (Sequence *) obj;
     _obj->setId(value);
 }
 
-int32_t spine_sequence_get_start(spine_sequence obj) {
+int spine_sequence_get_start(spine_sequence obj) {
     if (!obj) return 0;
     Sequence *_obj = (Sequence *) obj;
     return _obj->getStart();
 }
 
-void spine_sequence_set_start(spine_sequence obj, int32_t value) {
+void spine_sequence_set_start(spine_sequence obj, int value) {
     if (!obj) return;
     Sequence *_obj = (Sequence *) obj;
     _obj->setStart(value);
 }
 
-int32_t spine_sequence_get_digits(spine_sequence obj) {
+int spine_sequence_get_digits(spine_sequence obj) {
     if (!obj) return 0;
     Sequence *_obj = (Sequence *) obj;
     return _obj->getDigits();
 }
 
-void spine_sequence_set_digits(spine_sequence obj, int32_t value) {
+void spine_sequence_set_digits(spine_sequence obj, int value) {
     if (!obj) return;
     Sequence *_obj = (Sequence *) obj;
     _obj->setDigits(value);
 }
 
-int32_t spine_sequence_get_setup_index(spine_sequence obj) {
+int spine_sequence_get_setup_index(spine_sequence obj) {
     if (!obj) return 0;
     Sequence *_obj = (Sequence *) obj;
     return _obj->getSetupIndex();
 }
 
-void spine_sequence_set_setup_index(spine_sequence obj, int32_t value) {
+void spine_sequence_set_setup_index(spine_sequence obj, int value) {
     if (!obj) return;
     Sequence *_obj = (Sequence *) obj;
     _obj->setSetupIndex(value);
-}
-
-void * spine_sequence_get_regions(spine_sequence obj) {
-    if (!obj) return nullptr;
-    Sequence *_obj = (Sequence *) obj;
-    return (void *) _obj->getRegions();
 }
 
 int32_t spine_sequence_get_num_regions(spine_sequence obj) {

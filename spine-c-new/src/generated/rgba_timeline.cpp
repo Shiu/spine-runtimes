@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_rgba_timeline spine_rgba_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t slotIndex) {
+spine_rgba_timeline spine_rgba_timeline_create(size_t frameCount, size_t bezierCount, int slotIndex) {
     RGBATimeline *obj = new (__FILE__, __LINE__) RGBATimeline(frameCount, bezierCount, slotIndex);
     return (spine_rgba_timeline) obj;
 }
@@ -42,20 +42,18 @@ void spine_rgba_timeline_dispose(spine_rgba_timeline obj) {
     delete (RGBATimeline *) obj;
 }
 
-spine_rtti spine_rgba_timeline_get_rtti(spine_rgba_timeline obj) {
-    if (!obj) return nullptr;
-    RGBATimeline *_obj = (RGBATimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_rgba_timeline_get_rtti() {
+    return (spine_rtti) &RGBATimeline::rtti;
 }
 
-void spine_rgba_timeline_set_frame(spine_rgba_timeline obj, int32_t frame, float time, float r, float g, float b, float a) {
+void spine_rgba_timeline_set_frame(spine_rgba_timeline obj, int frame, float time, float r, float g, float b, float a) {
     if (!obj) return ;
     RGBATimeline *_obj = (RGBATimeline *) obj;
     _obj->setFrame(frame, time, r, g, b, a);
 }
 
-void spine_rgba_timeline_apply(spine_rgba_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_rgba_timeline_apply(spine_rgba_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     RGBATimeline *_obj = (RGBATimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }

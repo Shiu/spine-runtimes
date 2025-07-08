@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_constraint_timeline1 spine_constraint_timeline1_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t constraintIndex, spine_property property) {
+spine_constraint_timeline1 spine_constraint_timeline1_create(size_t frameCount, size_t bezierCount, int constraintIndex, spine_property property) {
     ConstraintTimeline1 *obj = new (__FILE__, __LINE__) ConstraintTimeline1(frameCount, bezierCount, constraintIndex, property);
     return (spine_constraint_timeline1) obj;
 }
@@ -42,13 +42,11 @@ void spine_constraint_timeline1_dispose(spine_constraint_timeline1 obj) {
     delete (ConstraintTimeline1 *) obj;
 }
 
-spine_rtti spine_constraint_timeline1_get_rtti(spine_constraint_timeline1 obj) {
-    if (!obj) return nullptr;
-    ConstraintTimeline1 *_obj = (ConstraintTimeline1 *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_constraint_timeline1_get_rtti() {
+    return (spine_rtti) &ConstraintTimeline1::rtti;
 }
 
-void spine_constraint_timeline1_set_frame(spine_constraint_timeline1 obj, spine_size_t frame, float time, float value) {
+void spine_constraint_timeline1_set_frame(spine_constraint_timeline1 obj, size_t frame, float time, float value) {
     if (!obj) return ;
     ConstraintTimeline1 *_obj = (ConstraintTimeline1 *) obj;
     _obj->setFrame(frame, time, value);
@@ -63,34 +61,34 @@ float spine_constraint_timeline1_get_curve_value(spine_constraint_timeline1 obj,
 float spine_constraint_timeline1_get_relative_value(spine_constraint_timeline1 obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
     if (!obj) return 0;
     ConstraintTimeline1 *_obj = (ConstraintTimeline1 *) obj;
-    return _obj->getRelativeValue(time, alpha, blend, current, setup);
+    return _obj->getRelativeValue(time, alpha, (MixBlend) blend, current, setup);
 }
 
 float spine_constraint_timeline1_get_absolute_value(spine_constraint_timeline1 obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
     if (!obj) return 0;
     ConstraintTimeline1 *_obj = (ConstraintTimeline1 *) obj;
-    return _obj->getAbsoluteValue(time, alpha, blend, current, setup);
+    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup);
 }
 
-float spine_constraint_timeline1_get_absolute_value(spine_constraint_timeline1 obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
+float spine_constraint_timeline1_get_absolute_value_6(spine_constraint_timeline1 obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
     if (!obj) return 0;
     ConstraintTimeline1 *_obj = (ConstraintTimeline1 *) obj;
-    return _obj->getAbsoluteValue(time, alpha, blend, current, setup, value);
+    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup, value);
 }
 
 float spine_constraint_timeline1_get_scale_value(spine_constraint_timeline1 obj, float time, float alpha, spine_mix_blend blend, spine_mix_direction direction, float current, float setup) {
     if (!obj) return 0;
     ConstraintTimeline1 *_obj = (ConstraintTimeline1 *) obj;
-    return _obj->getScaleValue(time, alpha, blend, direction, current, setup);
+    return _obj->getScaleValue(time, alpha, (MixBlend) blend, (MixDirection) direction, current, setup);
 }
 
-int32_t spine_constraint_timeline1_get_constraint_index(spine_constraint_timeline1 obj) {
+int spine_constraint_timeline1_get_constraint_index(spine_constraint_timeline1 obj) {
     if (!obj) return 0;
     ConstraintTimeline1 *_obj = (ConstraintTimeline1 *) obj;
     return _obj->getConstraintIndex();
 }
 
-void spine_constraint_timeline1_set_constraint_index(spine_constraint_timeline1 obj, int32_t value) {
+void spine_constraint_timeline1_set_constraint_index(spine_constraint_timeline1 obj, int value) {
     if (!obj) return;
     ConstraintTimeline1 *_obj = (ConstraintTimeline1 *) obj;
     _obj->setConstraintIndex(value);

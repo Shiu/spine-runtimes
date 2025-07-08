@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_atlas_region)
+#include "types.h"
 
 SPINE_C_EXPORT void spine_atlas_region_dispose(spine_atlas_region obj);
 

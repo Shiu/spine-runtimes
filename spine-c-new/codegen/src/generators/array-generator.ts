@@ -81,13 +81,6 @@ export class ArrayGenerator {
         source.push('}');
         source.push('');
 
-        // Generate create with capacity
-        header.push(`SPINE_C_EXPORT ${spec.cTypeName} ${spec.cTypeName}_create_with_capacity(int32_t capacity);`);
-        source.push(`${spec.cTypeName} ${spec.cTypeName}_create_with_capacity(int32_t capacity) {`);
-        source.push(`    return (${spec.cTypeName}) new (__FILE__, __LINE__) ${spec.cppType}(capacity);`);
-        source.push('}');
-        source.push('');
-
         // Generate dispose
         header.push(`SPINE_C_EXPORT void ${spec.cTypeName}_dispose(${spec.cTypeName} array);`);
         source.push(`void ${spec.cTypeName}_dispose(${spec.cTypeName} array) {`);
@@ -97,16 +90,16 @@ export class ArrayGenerator {
         source.push('');
 
         // Generate hardcoded get/set methods
-        header.push(`SPINE_C_EXPORT ${spec.cElementType} ${spec.cTypeName}_get(${spec.cTypeName} array, int32_t index);`);
-        source.push(`${spec.cElementType} ${spec.cTypeName}_get(${spec.cTypeName} array, int32_t index) {`);
+        header.push(`SPINE_C_EXPORT ${spec.cElementType} ${spec.cTypeName}_get(${spec.cTypeName} array, int index);`);
+        source.push(`${spec.cElementType} ${spec.cTypeName}_get(${spec.cTypeName} array, int index) {`);
         source.push(`    if (!array) return ${this.getDefaultValue(spec)};`);
         source.push(`    ${spec.cppType} *_array = (${spec.cppType}*) array;`);
         source.push(`    return ${this.convertFromCpp(spec, '(*_array)[index]')};`);
         source.push('}');
         source.push('');
 
-        header.push(`SPINE_C_EXPORT void ${spec.cTypeName}_set(${spec.cTypeName} array, int32_t index, ${spec.cElementType} value);`);
-        source.push(`void ${spec.cTypeName}_set(${spec.cTypeName} array, int32_t index, ${spec.cElementType} value) {`);
+        header.push(`SPINE_C_EXPORT void ${spec.cTypeName}_set(${spec.cTypeName} array, int index, ${spec.cElementType} value);`);
+        source.push(`void ${spec.cTypeName}_set(${spec.cTypeName} array, int index, ${spec.cElementType} value) {`);
         source.push(`    if (!array) return;`);
         source.push(`    ${spec.cppType} *_array = (${spec.cppType}*) array;`);
         source.push(`    (*_array)[index] = ${this.convertToCpp(spec, 'value')};`);
@@ -141,7 +134,7 @@ export class ArrayGenerator {
             } else if (method.returnType === 'size_t') {
                 returnType = 'size_t';
             } else if (method.returnType === 'int') {
-                returnType = 'int32_t';
+                returnType = 'int';
             } else if (method.returnType === 'bool') {
                 returnType = 'bool';
             } else if (method.returnType === `${spec.cppType} *`) {
@@ -167,7 +160,7 @@ export class ArrayGenerator {
                     cParams.push(`size_t ${param.name}`);
                     cppArgs.push(param.name);
                 } else if (param.type === 'int') {
-                    cParams.push(`int32_t ${param.name}`);
+                    cParams.push(`int ${param.name}`);
                     cppArgs.push(param.name);
                 } else {
                     // Unknown parameter type - skip this method
@@ -212,7 +205,7 @@ export class ArrayGenerator {
 
     private getDefaultReturn(returnType: string, spec: ArraySpecialization): string {
         if (returnType === 'bool') return 'false';
-        if (returnType === 'size_t' || returnType === 'int32_t') return '0';
+        if (returnType === 'size_t' || returnType === 'int') return '0';
         if (returnType === spec.cElementType) return this.getDefaultValue(spec);
         if (returnType === spec.cTypeName) return 'nullptr';
         return '0';

@@ -32,35 +32,28 @@
 
 using namespace spine;
 
-spine_attachment spine_attachment_create(const utf8 * name) {
-    Attachment *obj = new (__FILE__, __LINE__) Attachment(String(name));
-    return (spine_attachment) obj;
-}
-
 void spine_attachment_dispose(spine_attachment obj) {
     if (!obj) return;
     delete (Attachment *) obj;
 }
 
-spine_rtti spine_attachment_get_rtti(spine_attachment obj) {
-    if (!obj) return nullptr;
-    Attachment *_obj = (Attachment *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_attachment_get_rtti() {
+    return (spine_rtti) &Attachment::rtti;
 }
 
-const utf8 * spine_attachment_get_name(spine_attachment obj) {
+const char* spine_attachment_get_name(spine_attachment obj) {
     if (!obj) return nullptr;
     Attachment *_obj = (Attachment *) obj;
-    return (const utf8 *) _obj->getName().buffer();
+    return (const char *) _obj->getName().buffer();
 }
 
 spine_attachment spine_attachment_copy(spine_attachment obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_attachment) 0;
     Attachment *_obj = (Attachment *) obj;
     return (spine_attachment) _obj->copy();
 }
 
-int32_t spine_attachment_get_ref_count(spine_attachment obj) {
+int spine_attachment_get_ref_count(spine_attachment obj) {
     if (!obj) return 0;
     Attachment *_obj = (Attachment *) obj;
     return _obj->getRefCount();
@@ -76,67 +69,4 @@ void spine_attachment_dereference(spine_attachment obj) {
     if (!obj) return ;
     Attachment *_obj = (Attachment *) obj;
     _obj->dereference();
-}
-
-spine_bool spine_attachment_is_type(spine_attachment obj, spine_attachment_type type) {
-    if (!obj) return 0;
-    Attachment *_obj = (Attachment *) obj;
-    
-    switch (type) {
-        case SPINE_TYPE_ATTACHMENT_POINT_ATTACHMENT:
-            return _obj->getRTTI().instanceOf(PointAttachment::rtti);
-        case SPINE_TYPE_ATTACHMENT_REGION_ATTACHMENT:
-            return _obj->getRTTI().instanceOf(RegionAttachment::rtti);
-        case SPINE_TYPE_ATTACHMENT_BOUNDING_BOX_ATTACHMENT:
-            return _obj->getRTTI().instanceOf(BoundingBoxAttachment::rtti);
-        case SPINE_TYPE_ATTACHMENT_CLIPPING_ATTACHMENT:
-            return _obj->getRTTI().instanceOf(ClippingAttachment::rtti);
-        case SPINE_TYPE_ATTACHMENT_MESH_ATTACHMENT:
-            return _obj->getRTTI().instanceOf(MeshAttachment::rtti);
-        case SPINE_TYPE_ATTACHMENT_PATH_ATTACHMENT:
-            return _obj->getRTTI().instanceOf(PathAttachment::rtti);
-    }
-    return 0;
-}
-
-spine_point_attachment spine_attachment_as_point_attachment(spine_attachment obj) {
-    if (!obj) return nullptr;
-    Attachment *_obj = (Attachment *) obj;
-    if (!_obj->getRTTI().instanceOf(PointAttachment::rtti)) return nullptr;
-    return (spine_point_attachment) obj;
-}
-
-spine_region_attachment spine_attachment_as_region_attachment(spine_attachment obj) {
-    if (!obj) return nullptr;
-    Attachment *_obj = (Attachment *) obj;
-    if (!_obj->getRTTI().instanceOf(RegionAttachment::rtti)) return nullptr;
-    return (spine_region_attachment) obj;
-}
-
-spine_bounding_box_attachment spine_attachment_as_bounding_box_attachment(spine_attachment obj) {
-    if (!obj) return nullptr;
-    Attachment *_obj = (Attachment *) obj;
-    if (!_obj->getRTTI().instanceOf(BoundingBoxAttachment::rtti)) return nullptr;
-    return (spine_bounding_box_attachment) obj;
-}
-
-spine_clipping_attachment spine_attachment_as_clipping_attachment(spine_attachment obj) {
-    if (!obj) return nullptr;
-    Attachment *_obj = (Attachment *) obj;
-    if (!_obj->getRTTI().instanceOf(ClippingAttachment::rtti)) return nullptr;
-    return (spine_clipping_attachment) obj;
-}
-
-spine_mesh_attachment spine_attachment_as_mesh_attachment(spine_attachment obj) {
-    if (!obj) return nullptr;
-    Attachment *_obj = (Attachment *) obj;
-    if (!_obj->getRTTI().instanceOf(MeshAttachment::rtti)) return nullptr;
-    return (spine_mesh_attachment) obj;
-}
-
-spine_path_attachment spine_attachment_as_path_attachment(spine_attachment obj) {
-    if (!obj) return nullptr;
-    Attachment *_obj = (Attachment *) obj;
-    if (!_obj->getRTTI().instanceOf(PathAttachment::rtti)) return nullptr;
-    return (spine_path_attachment) obj;
 }

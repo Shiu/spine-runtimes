@@ -32,18 +32,13 @@
 
 using namespace spine;
 
-spine_from_property spine_from_property_create(void) {
-    FromProperty *obj = new (__FILE__, __LINE__) FromProperty();
-    return (spine_from_property) obj;
-}
-
 void spine_from_property_dispose(spine_from_property obj) {
     if (!obj) return;
     delete (FromProperty *) obj;
 }
 
-float spine_from_property_value(spine_from_property obj, spine_skeleton skeleton, spine_bone_pose source, spine_bool local, spine_float offsets) {
+float spine_from_property_value(spine_from_property obj, spine_skeleton skeleton, spine_bone_pose source, bool local, float * offsets) {
     if (!obj) return 0;
     FromProperty *_obj = (FromProperty *) obj;
-    return _obj->value(skeleton, source, local, (float *) offsets);
+    return _obj->value(*(Skeleton*) skeleton, *(BonePose*) source, local, (float *) offsets);
 }

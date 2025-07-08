@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_alpha_timeline spine_alpha_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t slotIndex) {
+spine_alpha_timeline spine_alpha_timeline_create(size_t frameCount, size_t bezierCount, int slotIndex) {
     AlphaTimeline *obj = new (__FILE__, __LINE__) AlphaTimeline(frameCount, bezierCount, slotIndex);
     return (spine_alpha_timeline) obj;
 }
@@ -42,19 +42,17 @@ void spine_alpha_timeline_dispose(spine_alpha_timeline obj) {
     delete (AlphaTimeline *) obj;
 }
 
-spine_rtti spine_alpha_timeline_get_rtti(spine_alpha_timeline obj) {
-    if (!obj) return nullptr;
-    AlphaTimeline *_obj = (AlphaTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_alpha_timeline_get_rtti() {
+    return (spine_rtti) &AlphaTimeline::rtti;
 }
 
-void spine_alpha_timeline_apply(spine_alpha_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_alpha_timeline_apply(spine_alpha_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     AlphaTimeline *_obj = (AlphaTimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-void spine_alpha_timeline_set_frame(spine_alpha_timeline obj, spine_size_t frame, float time, float value) {
+void spine_alpha_timeline_set_frame(spine_alpha_timeline obj, size_t frame, float time, float value) {
     if (!obj) return ;
     AlphaTimeline *_obj = (AlphaTimeline *) obj;
     _obj->setFrame(frame, time, value);
@@ -69,34 +67,34 @@ float spine_alpha_timeline_get_curve_value(spine_alpha_timeline obj, float time)
 float spine_alpha_timeline_get_relative_value(spine_alpha_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
     if (!obj) return 0;
     AlphaTimeline *_obj = (AlphaTimeline *) obj;
-    return _obj->getRelativeValue(time, alpha, blend, current, setup);
+    return _obj->getRelativeValue(time, alpha, (MixBlend) blend, current, setup);
 }
 
 float spine_alpha_timeline_get_absolute_value(spine_alpha_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
     if (!obj) return 0;
     AlphaTimeline *_obj = (AlphaTimeline *) obj;
-    return _obj->getAbsoluteValue(time, alpha, blend, current, setup);
+    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup);
 }
 
-float spine_alpha_timeline_get_absolute_value(spine_alpha_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
+float spine_alpha_timeline_get_absolute_value_6(spine_alpha_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
     if (!obj) return 0;
     AlphaTimeline *_obj = (AlphaTimeline *) obj;
-    return _obj->getAbsoluteValue(time, alpha, blend, current, setup, value);
+    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup, value);
 }
 
 float spine_alpha_timeline_get_scale_value(spine_alpha_timeline obj, float time, float alpha, spine_mix_blend blend, spine_mix_direction direction, float current, float setup) {
     if (!obj) return 0;
     AlphaTimeline *_obj = (AlphaTimeline *) obj;
-    return _obj->getScaleValue(time, alpha, blend, direction, current, setup);
+    return _obj->getScaleValue(time, alpha, (MixBlend) blend, (MixDirection) direction, current, setup);
 }
 
-int32_t spine_alpha_timeline_get_slot_index(spine_alpha_timeline obj) {
+int spine_alpha_timeline_get_slot_index(spine_alpha_timeline obj) {
     if (!obj) return 0;
     AlphaTimeline *_obj = (AlphaTimeline *) obj;
     return _obj->getSlotIndex();
 }
 
-void spine_alpha_timeline_set_slot_index(spine_alpha_timeline obj, int32_t value) {
+void spine_alpha_timeline_set_slot_index(spine_alpha_timeline obj, int value) {
     if (!obj) return;
     AlphaTimeline *_obj = (AlphaTimeline *) obj;
     _obj->setSlotIndex(value);

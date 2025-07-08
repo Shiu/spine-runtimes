@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_event_data spine_event_data_create(const utf8 * name) {
+spine_event_data spine_event_data_create(const char* name) {
     EventData *obj = new (__FILE__, __LINE__) EventData(String(name));
     return (spine_event_data) obj;
 }
@@ -42,16 +42,22 @@ void spine_event_data_dispose(spine_event_data obj) {
     delete (EventData *) obj;
 }
 
-const utf8 * spine_event_data_get_name(spine_event_data obj) {
+const char* spine_event_data_get_name(spine_event_data obj) {
     if (!obj) return nullptr;
     EventData *_obj = (EventData *) obj;
-    return (const utf8 *) _obj->getName().buffer();
+    return (const char *) _obj->getName().buffer();
 }
 
-int32_t spine_event_data_get_int_value(spine_event_data obj) {
+int spine_event_data_get_int_value(spine_event_data obj) {
     if (!obj) return 0;
     EventData *_obj = (EventData *) obj;
     return _obj->getIntValue();
+}
+
+void spine_event_data_set_int_value(spine_event_data obj, int value) {
+    if (!obj) return;
+    EventData *_obj = (EventData *) obj;
+    _obj->setIntValue(value);
 }
 
 float spine_event_data_get_float_value(spine_event_data obj) {
@@ -60,16 +66,34 @@ float spine_event_data_get_float_value(spine_event_data obj) {
     return _obj->getFloatValue();
 }
 
-const utf8 * spine_event_data_get_string_value(spine_event_data obj) {
-    if (!obj) return nullptr;
+void spine_event_data_set_float_value(spine_event_data obj, float value) {
+    if (!obj) return;
     EventData *_obj = (EventData *) obj;
-    return (const utf8 *) _obj->getStringValue().buffer();
+    _obj->setFloatValue(value);
 }
 
-const utf8 * spine_event_data_get_audio_path(spine_event_data obj) {
+const char* spine_event_data_get_string_value(spine_event_data obj) {
     if (!obj) return nullptr;
     EventData *_obj = (EventData *) obj;
-    return (const utf8 *) _obj->getAudioPath().buffer();
+    return (const char *) _obj->getStringValue().buffer();
+}
+
+void spine_event_data_set_string_value(spine_event_data obj, const char* value) {
+    if (!obj) return;
+    EventData *_obj = (EventData *) obj;
+    _obj->setStringValue(String(value));
+}
+
+const char* spine_event_data_get_audio_path(spine_event_data obj) {
+    if (!obj) return nullptr;
+    EventData *_obj = (EventData *) obj;
+    return (const char *) _obj->getAudioPath().buffer();
+}
+
+void spine_event_data_set_audio_path(spine_event_data obj, const char* value) {
+    if (!obj) return;
+    EventData *_obj = (EventData *) obj;
+    _obj->setAudioPath(String(value));
 }
 
 float spine_event_data_get_volume(spine_event_data obj) {
@@ -78,8 +102,20 @@ float spine_event_data_get_volume(spine_event_data obj) {
     return _obj->getVolume();
 }
 
+void spine_event_data_set_volume(spine_event_data obj, float value) {
+    if (!obj) return;
+    EventData *_obj = (EventData *) obj;
+    _obj->setVolume(value);
+}
+
 float spine_event_data_get_balance(spine_event_data obj) {
     if (!obj) return 0;
     EventData *_obj = (EventData *) obj;
     return _obj->getBalance();
+}
+
+void spine_event_data_set_balance(spine_event_data obj, float value) {
+    if (!obj) return;
+    EventData *_obj = (EventData *) obj;
+    _obj->setBalance(value);
 }

@@ -32,12 +32,12 @@
 
 using namespace spine;
 
-spine_linked_mesh spine_linked_mesh_create(spine_mesh_attachment mesh, spine_const int skinIndex, spine_size_t slotIndex, const utf8 * parent, spine_bool inheritTimelines) {
+spine_linked_mesh spine_linked_mesh_create(spine_mesh_attachment mesh, const int skinIndex, size_t slotIndex, const char* parent, bool inheritTimelines) {
     LinkedMesh *obj = new (__FILE__, __LINE__) LinkedMesh((MeshAttachment *) mesh, skinIndex, slotIndex, String(parent), inheritTimelines);
     return (spine_linked_mesh) obj;
 }
 
-spine_linked_mesh spine_linked_mesh_create_with_mesh_attachment_string_size_t_string_bool(spine_mesh_attachment mesh, const utf8 * skin, spine_size_t slotIndex, const utf8 * parent, spine_bool inheritTimelines) {
+spine_linked_mesh spine_linked_mesh_create_with_mesh_attachment_string_size_t_string_bool(spine_mesh_attachment mesh, const char* skin, size_t slotIndex, const char* parent, bool inheritTimelines) {
     LinkedMesh *obj = new (__FILE__, __LINE__) LinkedMesh((MeshAttachment *) mesh, String(skin), slotIndex, String(parent), inheritTimelines);
     return (spine_linked_mesh) obj;
 }

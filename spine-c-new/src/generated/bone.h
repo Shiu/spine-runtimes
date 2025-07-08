@@ -34,16 +34,13 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_bone)
+#include "types.h"
 
 SPINE_C_EXPORT spine_bone spine_bone_create(spine_bone_data data, spine_bone parent);
 SPINE_C_EXPORT spine_bone spine_bone_create_with_bone_bone(spine_bone bone, spine_bone parent);
 SPINE_C_EXPORT void spine_bone_dispose(spine_bone obj);
-SPINE_C_EXPORT spine_rtti spine_bone_get_rtti(spine_bone obj);
+SPINE_C_EXPORT spine_rtti spine_bone_get_rtti();
 SPINE_C_EXPORT spine_bone spine_bone_get_parent(spine_bone obj);
-SPINE_C_EXPORT void * spine_bone_get_children(spine_bone obj);
 SPINE_C_EXPORT int32_t spine_bone_get_num_children(spine_bone obj);
 SPINE_C_EXPORT spine_bone *spine_bone_get_children(spine_bone obj);
 SPINE_C_EXPORT void spine_bone_setup_pose(spine_bone obj);
@@ -51,11 +48,11 @@ SPINE_C_EXPORT spine_bone_data spine_bone_get_data(spine_bone obj);
 SPINE_C_EXPORT spine_bone_local spine_bone_get_pose(spine_bone obj);
 SPINE_C_EXPORT spine_bone_pose spine_bone_get_applied_pose(spine_bone obj);
 SPINE_C_EXPORT void spine_bone_reset_constrained(spine_bone obj);
-SPINE_C_EXPORT void spine_bone_pose(spine_bone obj);
+SPINE_C_EXPORT void spine_bone_update_pose(spine_bone obj);
 SPINE_C_EXPORT void spine_bone_constrained(spine_bone obj);
-SPINE_C_EXPORT spine_bool spine_bone_is_pose_equal_to_applied(spine_bone obj);
-SPINE_C_EXPORT spine_bool spine_bone_is_active(spine_bone obj);
-SPINE_C_EXPORT void spine_bone_set_active(spine_bone obj, spine_bool value);
+SPINE_C_EXPORT bool spine_bone_is_pose_equal_to_applied(spine_bone obj);
+SPINE_C_EXPORT bool spine_bone_is_active(spine_bone obj);
+SPINE_C_EXPORT void spine_bone_set_active(spine_bone obj, bool value);
 
 #ifdef __cplusplus
 }

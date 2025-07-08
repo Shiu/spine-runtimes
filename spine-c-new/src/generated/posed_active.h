@@ -34,14 +34,12 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_posed_active)
+#include "types.h"
 
 SPINE_C_EXPORT spine_posed_active spine_posed_active_create(void);
 SPINE_C_EXPORT void spine_posed_active_dispose(spine_posed_active obj);
-SPINE_C_EXPORT spine_bool spine_posed_active_is_active(spine_posed_active obj);
-SPINE_C_EXPORT void spine_posed_active_set_active(spine_posed_active obj, spine_bool value);
+SPINE_C_EXPORT bool spine_posed_active_is_active(spine_posed_active obj);
+SPINE_C_EXPORT void spine_posed_active_set_active(spine_posed_active obj, bool value);
 
 #ifdef __cplusplus
 }

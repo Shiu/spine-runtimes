@@ -30,16 +30,16 @@
 #ifndef SPINE_C_ROTATEMODE_H
 #define SPINE_C_ROTATEMODE_H
 
-#include "../../custom.h"
+#include "../base.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef enum spine_rotate_mode {
-    SPINE_ROTATE_MODE_ROTATE_MODE_TANGENT = 0,
-    SPINE_ROTATE_MODE_ROTATE_MODE_CHAIN,
-    SPINE_ROTATE_MODE_ROTATE_MODE_CHAIN_SCALE
+    SPINE_ROTATE_MODE_TANGENT = 0,
+    SPINE_ROTATE_MODE_CHAIN,
+    SPINE_ROTATE_MODE_CHAIN_SCALE
 } spine_rotate_mode;
 
 #ifdef __cplusplus

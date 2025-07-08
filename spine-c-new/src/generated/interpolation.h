@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_interpolation)
+#include "types.h"
 
 SPINE_C_EXPORT void spine_interpolation_dispose(spine_interpolation obj);
 SPINE_C_EXPORT float spine_interpolation_apply(spine_interpolation obj, float a);

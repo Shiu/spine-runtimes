@@ -45,35 +45,35 @@ void spine_slot_pose_dispose(spine_slot_pose obj) {
 void spine_slot_pose_set(spine_slot_pose obj, spine_slot_pose value) {
     if (!obj) return;
     SlotPose *_obj = (SlotPose *) obj;
-    _obj->set(value);
+    _obj->set(*((SlotPose*) value));
 }
 
 spine_color spine_slot_pose_get_color(spine_slot_pose obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_color) 0;
     SlotPose *_obj = (SlotPose *) obj;
     return (spine_color) &_obj->getColor();
 }
 
 spine_color spine_slot_pose_get_dark_color(spine_slot_pose obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_color) 0;
     SlotPose *_obj = (SlotPose *) obj;
     return (spine_color) &_obj->getDarkColor();
 }
 
-spine_bool spine_slot_pose_has_dark_color(spine_slot_pose obj) {
-    if (!obj) return 0;
+bool spine_slot_pose_has_dark_color(spine_slot_pose obj) {
+    if (!obj) return false;
     SlotPose *_obj = (SlotPose *) obj;
     return _obj->hasDarkColor();
 }
 
-void spine_slot_pose_set_has_dark_color(spine_slot_pose obj, spine_bool value) {
+void spine_slot_pose_set_has_dark_color(spine_slot_pose obj, bool value) {
     if (!obj) return;
     SlotPose *_obj = (SlotPose *) obj;
     _obj->setHasDarkColor(value);
 }
 
 spine_attachment spine_slot_pose_get_attachment(spine_slot_pose obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_attachment) 0;
     SlotPose *_obj = (SlotPose *) obj;
     return (spine_attachment) _obj->getAttachment();
 }
@@ -84,22 +84,16 @@ void spine_slot_pose_set_attachment(spine_slot_pose obj, spine_attachment value)
     _obj->setAttachment((Attachment *) value);
 }
 
-int32_t spine_slot_pose_get_sequence_index(spine_slot_pose obj) {
+int spine_slot_pose_get_sequence_index(spine_slot_pose obj) {
     if (!obj) return 0;
     SlotPose *_obj = (SlotPose *) obj;
     return _obj->getSequenceIndex();
 }
 
-void spine_slot_pose_set_sequence_index(spine_slot_pose obj, int32_t value) {
+void spine_slot_pose_set_sequence_index(spine_slot_pose obj, int value) {
     if (!obj) return;
     SlotPose *_obj = (SlotPose *) obj;
     _obj->setSequenceIndex(value);
-}
-
-void * spine_slot_pose_get_deform(spine_slot_pose obj) {
-    if (!obj) return nullptr;
-    SlotPose *_obj = (SlotPose *) obj;
-    return _obj->getDeform();
 }
 
 int32_t spine_slot_pose_get_num_deform(spine_slot_pose obj) {
@@ -108,8 +102,8 @@ int32_t spine_slot_pose_get_num_deform(spine_slot_pose obj) {
     return (int32_t) _obj->getDeform().size();
 }
 
-spine_float *spine_slot_pose_get_deform(spine_slot_pose obj) {
+float *spine_slot_pose_get_deform(spine_slot_pose obj) {
     if (!obj) return nullptr;
     SlotPose *_obj = (SlotPose *) obj;
-    return (spine_float *) _obj->getDeform().buffer();
+    return (float *) _obj->getDeform().buffer();
 }

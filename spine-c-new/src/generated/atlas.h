@@ -34,19 +34,16 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
+#include "../extensions.h"
 
-SPINE_OPAQUE_TYPE(spine_atlas)
-
-SPINE_C_EXPORT spine_atlas spine_atlas_create(const utf8 * path, spine_texture_loader textureLoader, spine_bool createTexture);
-SPINE_C_EXPORT spine_atlas spine_atlas_create_with_string_int_string_texture_loader_bool(const utf8 * data, int32_t length, const utf8 * dir, spine_texture_loader textureLoader, spine_bool createTexture);
+SPINE_C_EXPORT spine_atlas spine_atlas_create(const char* path, spine_texture_loader textureLoader, bool createTexture);
+SPINE_C_EXPORT spine_atlas spine_atlas_create_with_string_int_string_texture_loader_bool(const char * data, int length, const char * dir, spine_texture_loader textureLoader, bool createTexture);
 SPINE_C_EXPORT void spine_atlas_dispose(spine_atlas obj);
 SPINE_C_EXPORT void spine_atlas_flip_v(spine_atlas obj);
-SPINE_C_EXPORT spine_atlas_region spine_atlas_find_region(spine_atlas obj, const utf8 * name);
-SPINE_C_EXPORT void * spine_atlas_get_pages(spine_atlas obj);
+SPINE_C_EXPORT spine_atlas_region spine_atlas_find_region(spine_atlas obj, const char* name);
 SPINE_C_EXPORT int32_t spine_atlas_get_num_pages(spine_atlas obj);
 SPINE_C_EXPORT spine_atlas_page *spine_atlas_get_pages(spine_atlas obj);
-SPINE_C_EXPORT void * spine_atlas_get_regions(spine_atlas obj);
 SPINE_C_EXPORT int32_t spine_atlas_get_num_regions(spine_atlas obj);
 SPINE_C_EXPORT spine_atlas_region *spine_atlas_get_regions(spine_atlas obj);
 

@@ -34,15 +34,13 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_constraint_timeline)
-
-SPINE_C_EXPORT spine_constraint_timeline spine_constraint_timeline_create(int32_t constraintIndex);
+SPINE_C_EXPORT spine_constraint_timeline spine_constraint_timeline_create(int constraintIndex);
 SPINE_C_EXPORT void spine_constraint_timeline_dispose(spine_constraint_timeline obj);
-SPINE_C_EXPORT spine_rtti spine_constraint_timeline_get_rtti(spine_constraint_timeline obj);
-SPINE_C_EXPORT int32_t spine_constraint_timeline_get_constraint_index(spine_constraint_timeline obj);
-SPINE_C_EXPORT void spine_constraint_timeline_set_constraint_index(spine_constraint_timeline obj, int32_t value);
+SPINE_C_EXPORT spine_rtti spine_constraint_timeline_get_rtti();
+SPINE_C_EXPORT int spine_constraint_timeline_get_constraint_index(spine_constraint_timeline obj);
+SPINE_C_EXPORT void spine_constraint_timeline_set_constraint_index(spine_constraint_timeline obj, int value);
 
 #ifdef __cplusplus
 }

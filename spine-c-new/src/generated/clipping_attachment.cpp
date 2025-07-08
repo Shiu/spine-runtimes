@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_clipping_attachment spine_clipping_attachment_create(const utf8 * name) {
+spine_clipping_attachment spine_clipping_attachment_create(const char* name) {
     ClippingAttachment *obj = new (__FILE__, __LINE__) ClippingAttachment(String(name));
     return (spine_clipping_attachment) obj;
 }
@@ -42,14 +42,12 @@ void spine_clipping_attachment_dispose(spine_clipping_attachment obj) {
     delete (ClippingAttachment *) obj;
 }
 
-spine_rtti spine_clipping_attachment_get_rtti(spine_clipping_attachment obj) {
-    if (!obj) return nullptr;
-    ClippingAttachment *_obj = (ClippingAttachment *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_clipping_attachment_get_rtti() {
+    return (spine_rtti) &ClippingAttachment::rtti;
 }
 
 spine_slot_data spine_clipping_attachment_get_end_slot(spine_clipping_attachment obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_slot_data) 0;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
     return (spine_slot_data) _obj->getEndSlot();
 }
@@ -61,39 +59,33 @@ void spine_clipping_attachment_set_end_slot(spine_clipping_attachment obj, spine
 }
 
 spine_color spine_clipping_attachment_get_color(spine_clipping_attachment obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_color) 0;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
     return (spine_color) &_obj->getColor();
 }
 
 spine_attachment spine_clipping_attachment_copy(spine_clipping_attachment obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_attachment) 0;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
     return (spine_attachment) _obj->copy();
 }
 
-void spine_clipping_attachment_compute_world_vertices(spine_clipping_attachment obj, spine_skeleton skeleton, spine_slot slot, spine_size_t start, spine_size_t count, spine_float worldVertices, spine_size_t offset, spine_size_t stride) {
+void spine_clipping_attachment_compute_world_vertices(spine_clipping_attachment obj, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count, float * worldVertices, size_t offset, size_t stride) {
     if (!obj) return ;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
-    _obj->computeWorldVertices(skeleton, slot, start, count, (float *) worldVertices, offset, stride);
+    _obj->computeWorldVertices(*(Skeleton*) skeleton, *(Slot*) slot, start, count, (float *) worldVertices, offset, stride);
 }
 
-void spine_clipping_attachment_compute_world_vertices(spine_clipping_attachment obj, spine_skeleton skeleton, spine_slot slot, spine_size_t start, spine_size_t count, void * worldVertices, spine_size_t offset, spine_size_t stride) {
+void spine_clipping_attachment_compute_world_vertices_7(spine_clipping_attachment obj, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count, spine_array_float worldVertices, size_t offset, size_t stride) {
     if (!obj) return ;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
-    _obj->computeWorldVertices(skeleton, slot, start, count, (Vector<float> &) worldVertices, offset, stride);
+    _obj->computeWorldVertices(*(Skeleton*) skeleton, *(Slot*) slot, start, count, (Array<float> &) worldVertices, offset, stride);
 }
 
-int32_t spine_clipping_attachment_get_id(spine_clipping_attachment obj) {
+int spine_clipping_attachment_get_id(spine_clipping_attachment obj) {
     if (!obj) return 0;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
     return _obj->getId();
-}
-
-int32_t * spine_clipping_attachment_get_bones(spine_clipping_attachment obj) {
-    if (!obj) return 0;
-    ClippingAttachment *_obj = (ClippingAttachment *) obj;
-    return _obj->getBones();
 }
 
 int32_t spine_clipping_attachment_get_num_bones(spine_clipping_attachment obj) {
@@ -102,22 +94,16 @@ int32_t spine_clipping_attachment_get_num_bones(spine_clipping_attachment obj) {
     return (int32_t) _obj->getBones().size();
 }
 
-int32_t *spine_clipping_attachment_get_bones(spine_clipping_attachment obj) {
+int *spine_clipping_attachment_get_bones(spine_clipping_attachment obj) {
     if (!obj) return nullptr;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
-    return (int32_t *) _obj->getBones().buffer();
+    return (int *) _obj->getBones().buffer();
 }
 
-void spine_clipping_attachment_set_bones(spine_clipping_attachment obj, int32_t * value) {
+void spine_clipping_attachment_set_bones(spine_clipping_attachment obj, spine_array_int value) {
     if (!obj) return;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
-    _obj->setBones((Vector<int> &) value);
-}
-
-void * spine_clipping_attachment_get_vertices(spine_clipping_attachment obj) {
-    if (!obj) return nullptr;
-    ClippingAttachment *_obj = (ClippingAttachment *) obj;
-    return _obj->getVertices();
+    _obj->setBones((Array<int> &) value);
 }
 
 int32_t spine_clipping_attachment_get_num_vertices(spine_clipping_attachment obj) {
@@ -126,32 +112,32 @@ int32_t spine_clipping_attachment_get_num_vertices(spine_clipping_attachment obj
     return (int32_t) _obj->getVertices().size();
 }
 
-spine_float *spine_clipping_attachment_get_vertices(spine_clipping_attachment obj) {
+float *spine_clipping_attachment_get_vertices(spine_clipping_attachment obj) {
     if (!obj) return nullptr;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
-    return (spine_float *) _obj->getVertices().buffer();
+    return (float *) _obj->getVertices().buffer();
 }
 
-void spine_clipping_attachment_set_vertices(spine_clipping_attachment obj, void * value) {
+void spine_clipping_attachment_set_vertices(spine_clipping_attachment obj, spine_array_float value) {
     if (!obj) return;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
-    _obj->setVertices((Vector<float> &) value);
+    _obj->setVertices((Array<float> &) value);
 }
 
-spine_size_t spine_clipping_attachment_get_world_vertices_length(spine_clipping_attachment obj) {
-    if (!obj) return nullptr;
+size_t spine_clipping_attachment_get_world_vertices_length(spine_clipping_attachment obj) {
+    if (!obj) return 0;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
     return _obj->getWorldVerticesLength();
 }
 
-void spine_clipping_attachment_set_world_vertices_length(spine_clipping_attachment obj, spine_size_t value) {
+void spine_clipping_attachment_set_world_vertices_length(spine_clipping_attachment obj, size_t value) {
     if (!obj) return;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
     _obj->setWorldVerticesLength(value);
 }
 
 spine_attachment spine_clipping_attachment_get_timeline_attachment(spine_clipping_attachment obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_attachment) 0;
     ClippingAttachment *_obj = (ClippingAttachment *) obj;
     return (spine_attachment) _obj->getTimelineAttachment();
 }

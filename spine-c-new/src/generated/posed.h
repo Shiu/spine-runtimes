@@ -34,26 +34,14 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_posed)
-
-SPINE_C_EXPORT spine_posed spine_posed_create(void);
 SPINE_C_EXPORT void spine_posed_dispose(spine_posed obj);
 SPINE_C_EXPORT void spine_posed_setup_pose(spine_posed obj);
 SPINE_C_EXPORT void spine_posed_pose(spine_posed obj);
 SPINE_C_EXPORT void spine_posed_constrained(spine_posed obj);
 SPINE_C_EXPORT void spine_posed_reset_constrained(spine_posed obj);
-SPINE_C_EXPORT spine_bool spine_posed_is_pose_equal_to_applied(spine_posed obj);
-struct spine_posed_generic_wrapper;
-typedef struct spine_posed_generic_wrapper *spine_posed_generic;
-
-typedef enum spine_posed_type {
-    SPINE_TYPE_POSED_POSED_GENERIC = 0
-} spine_posed_type;
-
-SPINE_C_EXPORT spine_bool spine_posed_is_type(spine_posed obj, spine_posed_type type);
-SPINE_C_EXPORT spine_posed_generic spine_posed_as_posed_generic(spine_posed obj);
+SPINE_C_EXPORT bool spine_posed_is_pose_equal_to_applied(spine_posed obj);
 
 #ifdef __cplusplus
 }

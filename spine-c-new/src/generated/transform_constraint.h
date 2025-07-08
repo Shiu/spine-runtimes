@@ -34,18 +34,15 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_transform_constraint)
+#include "types.h"
 
 SPINE_C_EXPORT spine_transform_constraint spine_transform_constraint_create(spine_transform_constraint_data data, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_transform_constraint_dispose(spine_transform_constraint obj);
-SPINE_C_EXPORT spine_rtti spine_transform_constraint_get_rtti(spine_transform_constraint obj);
+SPINE_C_EXPORT spine_rtti spine_transform_constraint_get_rtti();
 SPINE_C_EXPORT spine_transform_constraint spine_transform_constraint_copy(spine_transform_constraint obj, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_transform_constraint_update(spine_transform_constraint obj, spine_skeleton skeleton, spine_physics physics);
 SPINE_C_EXPORT void spine_transform_constraint_sort(spine_transform_constraint obj, spine_skeleton skeleton);
-SPINE_C_EXPORT spine_bool spine_transform_constraint_is_source_active(spine_transform_constraint obj);
-SPINE_C_EXPORT void * spine_transform_constraint_get_bones(spine_transform_constraint obj);
+SPINE_C_EXPORT bool spine_transform_constraint_is_source_active(spine_transform_constraint obj);
 SPINE_C_EXPORT int32_t spine_transform_constraint_get_num_bones(spine_transform_constraint obj);
 SPINE_C_EXPORT spine_bone_pose *spine_transform_constraint_get_bones(spine_transform_constraint obj);
 SPINE_C_EXPORT spine_bone spine_transform_constraint_get_source(spine_transform_constraint obj);
@@ -57,9 +54,9 @@ SPINE_C_EXPORT spine_transform_constraint_pose spine_transform_constraint_get_po
 SPINE_C_EXPORT spine_transform_constraint_pose spine_transform_constraint_get_applied_pose(spine_transform_constraint obj);
 SPINE_C_EXPORT void spine_transform_constraint_reset_constrained(spine_transform_constraint obj);
 SPINE_C_EXPORT void spine_transform_constraint_constrained(spine_transform_constraint obj);
-SPINE_C_EXPORT spine_bool spine_transform_constraint_is_pose_equal_to_applied(spine_transform_constraint obj);
-SPINE_C_EXPORT spine_bool spine_transform_constraint_is_active(spine_transform_constraint obj);
-SPINE_C_EXPORT void spine_transform_constraint_set_active(spine_transform_constraint obj, spine_bool value);
+SPINE_C_EXPORT bool spine_transform_constraint_is_pose_equal_to_applied(spine_transform_constraint obj);
+SPINE_C_EXPORT bool spine_transform_constraint_is_active(spine_transform_constraint obj);
+SPINE_C_EXPORT void spine_transform_constraint_set_active(spine_transform_constraint obj, bool value);
 
 #ifdef __cplusplus
 }

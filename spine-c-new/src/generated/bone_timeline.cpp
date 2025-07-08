@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_bone_timeline spine_bone_timeline_create(int32_t boneIndex) {
+spine_bone_timeline spine_bone_timeline_create(int boneIndex) {
     BoneTimeline *obj = new (__FILE__, __LINE__) BoneTimeline(boneIndex);
     return (spine_bone_timeline) obj;
 }
@@ -42,19 +42,17 @@ void spine_bone_timeline_dispose(spine_bone_timeline obj) {
     delete (BoneTimeline *) obj;
 }
 
-spine_rtti spine_bone_timeline_get_rtti(spine_bone_timeline obj) {
-    if (!obj) return nullptr;
-    BoneTimeline *_obj = (BoneTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_bone_timeline_get_rtti() {
+    return (spine_rtti) &BoneTimeline::rtti;
 }
 
-int32_t spine_bone_timeline_get_bone_index(spine_bone_timeline obj) {
+int spine_bone_timeline_get_bone_index(spine_bone_timeline obj) {
     if (!obj) return 0;
     BoneTimeline *_obj = (BoneTimeline *) obj;
     return _obj->getBoneIndex();
 }
 
-void spine_bone_timeline_set_bone_index(spine_bone_timeline obj, int32_t value) {
+void spine_bone_timeline_set_bone_index(spine_bone_timeline obj, int value) {
     if (!obj) return;
     BoneTimeline *_obj = (BoneTimeline *) obj;
     _obj->setBoneIndex(value);

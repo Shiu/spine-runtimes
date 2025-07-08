@@ -34,22 +34,19 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_bone_data)
-
-SPINE_C_EXPORT spine_bone_data spine_bone_data_create(int32_t index, const utf8 * name, spine_bone_data parent);
+SPINE_C_EXPORT spine_bone_data spine_bone_data_create(int index, const char* name, spine_bone_data parent);
 SPINE_C_EXPORT void spine_bone_data_dispose(spine_bone_data obj);
-SPINE_C_EXPORT int32_t spine_bone_data_get_index(spine_bone_data obj);
+SPINE_C_EXPORT int spine_bone_data_get_index(spine_bone_data obj);
 SPINE_C_EXPORT spine_bone_data spine_bone_data_get_parent(spine_bone_data obj);
 SPINE_C_EXPORT float spine_bone_data_get_length(spine_bone_data obj);
 SPINE_C_EXPORT void spine_bone_data_set_length(spine_bone_data obj, float value);
 SPINE_C_EXPORT spine_color spine_bone_data_get_color(spine_bone_data obj);
-SPINE_C_EXPORT const utf8 * spine_bone_data_get_icon(spine_bone_data obj);
-SPINE_C_EXPORT void spine_bone_data_set_icon(spine_bone_data obj, const utf8 * value);
-SPINE_C_EXPORT spine_bool spine_bone_data_get_visible(spine_bone_data obj);
-SPINE_C_EXPORT void spine_bone_data_set_visible(spine_bone_data obj, spine_bool value);
-SPINE_C_EXPORT spine_bone_local spine_bone_data_get_setup_pose(spine_bone_data obj);
+SPINE_C_EXPORT const char* spine_bone_data_get_icon(spine_bone_data obj);
+SPINE_C_EXPORT void spine_bone_data_set_icon(spine_bone_data obj, const char* value);
+SPINE_C_EXPORT bool spine_bone_data_get_visible(spine_bone_data obj);
+SPINE_C_EXPORT void spine_bone_data_set_visible(spine_bone_data obj, bool value);
 SPINE_C_EXPORT spine_bone_local spine_bone_data_get_setup_pose(spine_bone_data obj);
 
 #ifdef __cplusplus

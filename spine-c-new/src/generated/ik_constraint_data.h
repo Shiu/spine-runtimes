@@ -34,24 +34,20 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_ik_constraint_data)
-
-SPINE_C_EXPORT spine_ik_constraint_data spine_ik_constraint_data_create(const utf8 * name);
+SPINE_C_EXPORT spine_ik_constraint_data spine_ik_constraint_data_create(const char* name);
 SPINE_C_EXPORT void spine_ik_constraint_data_dispose(spine_ik_constraint_data obj);
-SPINE_C_EXPORT spine_rtti spine_ik_constraint_data_get_rtti(spine_ik_constraint_data obj);
+SPINE_C_EXPORT spine_rtti spine_ik_constraint_data_get_rtti();
 SPINE_C_EXPORT spine_constraint spine_ik_constraint_data_create(spine_ik_constraint_data obj, spine_skeleton skeleton);
-SPINE_C_EXPORT void * spine_ik_constraint_data_get_bones(spine_ik_constraint_data obj);
 SPINE_C_EXPORT int32_t spine_ik_constraint_data_get_num_bones(spine_ik_constraint_data obj);
 SPINE_C_EXPORT spine_bone_data *spine_ik_constraint_data_get_bones(spine_ik_constraint_data obj);
 SPINE_C_EXPORT spine_bone_data spine_ik_constraint_data_get_target(spine_ik_constraint_data obj);
 SPINE_C_EXPORT void spine_ik_constraint_data_set_target(spine_ik_constraint_data obj, spine_bone_data value);
-SPINE_C_EXPORT spine_bool spine_ik_constraint_data_get_uniform(spine_ik_constraint_data obj);
-SPINE_C_EXPORT void spine_ik_constraint_data_set_uniform(spine_ik_constraint_data obj, spine_bool value);
-SPINE_C_EXPORT const utf8 * spine_ik_constraint_data_get_name(spine_ik_constraint_data obj);
-SPINE_C_EXPORT spine_bool spine_ik_constraint_data_is_skin_required(spine_ik_constraint_data obj);
-SPINE_C_EXPORT spine_ik_constraint_pose spine_ik_constraint_data_get_setup_pose(spine_ik_constraint_data obj);
+SPINE_C_EXPORT bool spine_ik_constraint_data_get_uniform(spine_ik_constraint_data obj);
+SPINE_C_EXPORT void spine_ik_constraint_data_set_uniform(spine_ik_constraint_data obj, bool value);
+SPINE_C_EXPORT const char* spine_ik_constraint_data_get_name(spine_ik_constraint_data obj);
+SPINE_C_EXPORT bool spine_ik_constraint_data_is_skin_required(spine_ik_constraint_data obj);
 SPINE_C_EXPORT spine_ik_constraint_pose spine_ik_constraint_data_get_setup_pose(spine_ik_constraint_data obj);
 
 #ifdef __cplusplus

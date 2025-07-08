@@ -45,7 +45,7 @@ void spine_bone_local_dispose(spine_bone_local obj) {
 void spine_bone_local_set(spine_bone_local obj, spine_bone_local value) {
     if (!obj) return;
     BoneLocal *_obj = (BoneLocal *) obj;
-    _obj->set(value);
+    _obj->set(*((BoneLocal*) value));
 }
 
 float spine_bone_local_get_x(spine_bone_local obj) {
@@ -151,13 +151,13 @@ void spine_bone_local_set_shear_y(spine_bone_local obj, float value) {
 }
 
 spine_inherit spine_bone_local_get_inherit(spine_bone_local obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_inherit) 0;
     BoneLocal *_obj = (BoneLocal *) obj;
-    return _obj->getInherit();
+    return (spine_inherit) _obj->getInherit();
 }
 
 void spine_bone_local_set_inherit(spine_bone_local obj, spine_inherit value) {
     if (!obj) return;
     BoneLocal *_obj = (BoneLocal *) obj;
-    _obj->setInherit(value);
+    _obj->setInherit((Inherit) value);
 }

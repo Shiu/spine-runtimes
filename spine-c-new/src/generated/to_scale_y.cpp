@@ -40,11 +40,11 @@ void spine_to_scale_y_dispose(spine_to_scale_y obj) {
 float spine_to_scale_y_mix(spine_to_scale_y obj, spine_transform_constraint_pose pose) {
     if (!obj) return 0;
     ToScaleY *_obj = (ToScaleY *) obj;
-    return _obj->mix(pose);
+    return _obj->mix(*(TransformConstraintPose*) pose);
 }
 
-void spine_to_scale_y_apply(spine_to_scale_y obj, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, spine_bool local, spine_bool additive) {
+void spine_to_scale_y_apply(spine_to_scale_y obj, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, bool local, bool additive) {
     if (!obj) return ;
     ToScaleY *_obj = (ToScaleY *) obj;
-    _obj->apply(skeleton, pose, bone, value, local, additive);
+    _obj->apply(*(Skeleton*) skeleton, *(TransformConstraintPose*) pose, *(BonePose*) bone, value, local, additive);
 }

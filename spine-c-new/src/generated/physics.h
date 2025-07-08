@@ -30,17 +30,17 @@
 #ifndef SPINE_C_PHYSICS_H
 #define SPINE_C_PHYSICS_H
 
-#include "../../custom.h"
+#include "../base.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef enum spine_physics {
-    SPINE_PHYSICS_PHYSICS_NONE,
-    SPINE_PHYSICS_PHYSICS_RESET,
-    SPINE_PHYSICS_PHYSICS_UPDATE,
-    SPINE_PHYSICS_PHYSICS_POSE
+    SPINE_PHYSICS_NONE,
+    SPINE_PHYSICS_RESET,
+    SPINE_PHYSICS_UPDATE,
+    SPINE_PHYSICS_POSE
 } spine_physics;
 
 #ifdef __cplusplus

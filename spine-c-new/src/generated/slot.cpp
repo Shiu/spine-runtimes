@@ -33,7 +33,7 @@
 using namespace spine;
 
 spine_slot spine_slot_create(spine_slot_data data, spine_skeleton skeleton) {
-    Slot *obj = new (__FILE__, __LINE__) Slot(data, skeleton);
+    Slot *obj = new (__FILE__, __LINE__) Slot(*(SlotData*) data, *(Skeleton*) skeleton);
     return (spine_slot) obj;
 }
 
@@ -43,9 +43,9 @@ void spine_slot_dispose(spine_slot obj) {
 }
 
 spine_bone spine_slot_get_bone(spine_slot obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_bone) 0;
     Slot *_obj = (Slot *) obj;
-    return _obj->getBone();
+    return (spine_bone) &_obj->getBone();
 }
 
 void spine_slot_setup_pose(spine_slot obj) {
@@ -55,21 +55,21 @@ void spine_slot_setup_pose(spine_slot obj) {
 }
 
 spine_slot_data spine_slot_get_data(spine_slot obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_slot_data) 0;
     Slot *_obj = (Slot *) obj;
-    return _obj->getData();
+    return (spine_slot_data) &_obj->getData();
 }
 
 spine_slot_pose spine_slot_get_pose(spine_slot obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_slot_pose) 0;
     Slot *_obj = (Slot *) obj;
-    return _obj->getPose();
+    return (spine_slot_pose) &_obj->getPose();
 }
 
 spine_slot_pose spine_slot_get_applied_pose(spine_slot obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_slot_pose) 0;
     Slot *_obj = (Slot *) obj;
-    return _obj->getAppliedPose();
+    return (spine_slot_pose) &_obj->getAppliedPose();
 }
 
 void spine_slot_reset_constrained(spine_slot obj) {
@@ -90,8 +90,8 @@ void spine_slot_constrained(spine_slot obj) {
     _obj->constrained();
 }
 
-spine_bool spine_slot_is_pose_equal_to_applied(spine_slot obj) {
-    if (!obj) return 0;
+bool spine_slot_is_pose_equal_to_applied(spine_slot obj) {
+    if (!obj) return false;
     Slot *_obj = (Slot *) obj;
     return _obj->isPoseEqualToApplied();
 }

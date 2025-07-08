@@ -34,52 +34,41 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_skeleton_data)
+#include "types.h"
 
 SPINE_C_EXPORT spine_skeleton_data spine_skeleton_data_create(void);
 SPINE_C_EXPORT void spine_skeleton_data_dispose(spine_skeleton_data obj);
-SPINE_C_EXPORT spine_bone_data spine_skeleton_data_find_bone(spine_skeleton_data obj, const utf8 * boneName);
-SPINE_C_EXPORT spine_slot_data spine_skeleton_data_find_slot(spine_skeleton_data obj, const utf8 * slotName);
-SPINE_C_EXPORT spine_skin spine_skeleton_data_find_skin(spine_skeleton_data obj, const utf8 * skinName);
-SPINE_C_EXPORT spine_spine::event_data spine_skeleton_data_find_event(spine_skeleton_data obj, const utf8 * eventDataName);
-SPINE_C_EXPORT spine_animation spine_skeleton_data_find_animation(spine_skeleton_data obj, const utf8 * animationName);
-SPINE_C_EXPORT spine_ik_constraint_data spine_skeleton_data_find_ik_constraint(spine_skeleton_data obj, const utf8 * constraintName);
-SPINE_C_EXPORT spine_transform_constraint_data spine_skeleton_data_find_transform_constraint(spine_skeleton_data obj, const utf8 * constraintName);
-SPINE_C_EXPORT spine_path_constraint_data spine_skeleton_data_find_path_constraint(spine_skeleton_data obj, const utf8 * constraintName);
-SPINE_C_EXPORT spine_physics_constraint_data spine_skeleton_data_find_physics_constraint(spine_skeleton_data obj, const utf8 * constraintName);
-SPINE_C_EXPORT const utf8 * spine_skeleton_data_get_name(spine_skeleton_data obj);
-SPINE_C_EXPORT void * spine_skeleton_data_get_bones(spine_skeleton_data obj);
+SPINE_C_EXPORT spine_bone_data spine_skeleton_data_find_bone(spine_skeleton_data obj, const char* boneName);
+SPINE_C_EXPORT spine_slot_data spine_skeleton_data_find_slot(spine_skeleton_data obj, const char* slotName);
+SPINE_C_EXPORT spine_skin spine_skeleton_data_find_skin(spine_skeleton_data obj, const char* skinName);
+SPINE_C_EXPORT spine_event_data spine_skeleton_data_find_event(spine_skeleton_data obj, const char* eventDataName);
+SPINE_C_EXPORT spine_animation spine_skeleton_data_find_animation(spine_skeleton_data obj, const char* animationName);
+SPINE_C_EXPORT spine_ik_constraint_data spine_skeleton_data_find_ik_constraint(spine_skeleton_data obj, const char* constraintName);
+SPINE_C_EXPORT spine_transform_constraint_data spine_skeleton_data_find_transform_constraint(spine_skeleton_data obj, const char* constraintName);
+SPINE_C_EXPORT spine_path_constraint_data spine_skeleton_data_find_path_constraint(spine_skeleton_data obj, const char* constraintName);
+SPINE_C_EXPORT spine_physics_constraint_data spine_skeleton_data_find_physics_constraint(spine_skeleton_data obj, const char* constraintName);
+SPINE_C_EXPORT const char* spine_skeleton_data_get_name(spine_skeleton_data obj);
+SPINE_C_EXPORT void spine_skeleton_data_set_name(spine_skeleton_data obj, const char* value);
 SPINE_C_EXPORT int32_t spine_skeleton_data_get_num_bones(spine_skeleton_data obj);
 SPINE_C_EXPORT spine_bone_data *spine_skeleton_data_get_bones(spine_skeleton_data obj);
-SPINE_C_EXPORT void * spine_skeleton_data_get_slots(spine_skeleton_data obj);
 SPINE_C_EXPORT int32_t spine_skeleton_data_get_num_slots(spine_skeleton_data obj);
 SPINE_C_EXPORT spine_slot_data *spine_skeleton_data_get_slots(spine_skeleton_data obj);
-SPINE_C_EXPORT void * spine_skeleton_data_get_skins(spine_skeleton_data obj);
 SPINE_C_EXPORT int32_t spine_skeleton_data_get_num_skins(spine_skeleton_data obj);
 SPINE_C_EXPORT spine_skin *spine_skeleton_data_get_skins(spine_skeleton_data obj);
 SPINE_C_EXPORT spine_skin spine_skeleton_data_get_default_skin(spine_skeleton_data obj);
 SPINE_C_EXPORT void spine_skeleton_data_set_default_skin(spine_skeleton_data obj, spine_skin value);
-SPINE_C_EXPORT void * spine_skeleton_data_get_events(spine_skeleton_data obj);
 SPINE_C_EXPORT int32_t spine_skeleton_data_get_num_events(spine_skeleton_data obj);
-SPINE_C_EXPORT spine_spine::event_data *spine_skeleton_data_get_events(spine_skeleton_data obj);
-SPINE_C_EXPORT void * spine_skeleton_data_get_animations(spine_skeleton_data obj);
+SPINE_C_EXPORT spine_event_data *spine_skeleton_data_get_events(spine_skeleton_data obj);
 SPINE_C_EXPORT int32_t spine_skeleton_data_get_num_animations(spine_skeleton_data obj);
 SPINE_C_EXPORT spine_animation *spine_skeleton_data_get_animations(spine_skeleton_data obj);
-SPINE_C_EXPORT void * spine_skeleton_data_get_ik_constraints(spine_skeleton_data obj);
 SPINE_C_EXPORT int32_t spine_skeleton_data_get_num_ik_constraints(spine_skeleton_data obj);
 SPINE_C_EXPORT spine_ik_constraint_data *spine_skeleton_data_get_ik_constraints(spine_skeleton_data obj);
-SPINE_C_EXPORT void * spine_skeleton_data_get_transform_constraints(spine_skeleton_data obj);
 SPINE_C_EXPORT int32_t spine_skeleton_data_get_num_transform_constraints(spine_skeleton_data obj);
 SPINE_C_EXPORT spine_transform_constraint_data *spine_skeleton_data_get_transform_constraints(spine_skeleton_data obj);
-SPINE_C_EXPORT void * spine_skeleton_data_get_path_constraints(spine_skeleton_data obj);
 SPINE_C_EXPORT int32_t spine_skeleton_data_get_num_path_constraints(spine_skeleton_data obj);
 SPINE_C_EXPORT spine_path_constraint_data *spine_skeleton_data_get_path_constraints(spine_skeleton_data obj);
-SPINE_C_EXPORT void * spine_skeleton_data_get_physics_constraints(spine_skeleton_data obj);
 SPINE_C_EXPORT int32_t spine_skeleton_data_get_num_physics_constraints(spine_skeleton_data obj);
 SPINE_C_EXPORT spine_physics_constraint_data *spine_skeleton_data_get_physics_constraints(spine_skeleton_data obj);
-SPINE_C_EXPORT void * spine_skeleton_data_get_constraints(spine_skeleton_data obj);
 SPINE_C_EXPORT int32_t spine_skeleton_data_get_num_constraints(spine_skeleton_data obj);
 SPINE_C_EXPORT spine_constraint_data *spine_skeleton_data_get_constraints(spine_skeleton_data obj);
 SPINE_C_EXPORT float spine_skeleton_data_get_x(spine_skeleton_data obj);
@@ -92,11 +81,16 @@ SPINE_C_EXPORT float spine_skeleton_data_get_height(spine_skeleton_data obj);
 SPINE_C_EXPORT void spine_skeleton_data_set_height(spine_skeleton_data obj, float value);
 SPINE_C_EXPORT float spine_skeleton_data_get_reference_scale(spine_skeleton_data obj);
 SPINE_C_EXPORT void spine_skeleton_data_set_reference_scale(spine_skeleton_data obj, float value);
-SPINE_C_EXPORT const utf8 * spine_skeleton_data_get_version(spine_skeleton_data obj);
-SPINE_C_EXPORT const utf8 * spine_skeleton_data_get_hash(spine_skeleton_data obj);
-SPINE_C_EXPORT const utf8 * spine_skeleton_data_get_images_path(spine_skeleton_data obj);
-SPINE_C_EXPORT const utf8 * spine_skeleton_data_get_audio_path(spine_skeleton_data obj);
+SPINE_C_EXPORT const char* spine_skeleton_data_get_version(spine_skeleton_data obj);
+SPINE_C_EXPORT void spine_skeleton_data_set_version(spine_skeleton_data obj, const char* value);
+SPINE_C_EXPORT const char* spine_skeleton_data_get_hash(spine_skeleton_data obj);
+SPINE_C_EXPORT void spine_skeleton_data_set_hash(spine_skeleton_data obj, const char* value);
+SPINE_C_EXPORT const char* spine_skeleton_data_get_images_path(spine_skeleton_data obj);
+SPINE_C_EXPORT void spine_skeleton_data_set_images_path(spine_skeleton_data obj, const char* value);
+SPINE_C_EXPORT const char* spine_skeleton_data_get_audio_path(spine_skeleton_data obj);
+SPINE_C_EXPORT void spine_skeleton_data_set_audio_path(spine_skeleton_data obj, const char* value);
 SPINE_C_EXPORT float spine_skeleton_data_get_fps(spine_skeleton_data obj);
+SPINE_C_EXPORT void spine_skeleton_data_set_fps(spine_skeleton_data obj, float value);
 
 #ifdef __cplusplus
 }

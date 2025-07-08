@@ -33,7 +33,7 @@
 using namespace spine;
 
 spine_transform_constraint spine_transform_constraint_create(spine_transform_constraint_data data, spine_skeleton skeleton) {
-    TransformConstraint *obj = new (__FILE__, __LINE__) TransformConstraint(data, skeleton);
+    TransformConstraint *obj = new (__FILE__, __LINE__) TransformConstraint(*(TransformConstraintData*) data, *(Skeleton*) skeleton);
     return (spine_transform_constraint) obj;
 }
 
@@ -42,40 +42,32 @@ void spine_transform_constraint_dispose(spine_transform_constraint obj) {
     delete (TransformConstraint *) obj;
 }
 
-spine_rtti spine_transform_constraint_get_rtti(spine_transform_constraint obj) {
-    if (!obj) return nullptr;
-    TransformConstraint *_obj = (TransformConstraint *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_transform_constraint_get_rtti() {
+    return (spine_rtti) &TransformConstraint::rtti;
 }
 
 spine_transform_constraint spine_transform_constraint_copy(spine_transform_constraint obj, spine_skeleton skeleton) {
     if (!obj) return 0;
     TransformConstraint *_obj = (TransformConstraint *) obj;
-    return (spine_transform_constraint) _obj->copy(skeleton);
+    return (spine_transform_constraint) _obj->copy(*(Skeleton*) skeleton);
 }
 
 void spine_transform_constraint_update(spine_transform_constraint obj, spine_skeleton skeleton, spine_physics physics) {
     if (!obj) return ;
     TransformConstraint *_obj = (TransformConstraint *) obj;
-    _obj->update(skeleton, physics);
+    _obj->update(*(Skeleton*) skeleton, (Physics) physics);
 }
 
 void spine_transform_constraint_sort(spine_transform_constraint obj, spine_skeleton skeleton) {
     if (!obj) return ;
     TransformConstraint *_obj = (TransformConstraint *) obj;
-    _obj->sort(skeleton);
+    _obj->sort(*(Skeleton*) skeleton);
 }
 
-spine_bool spine_transform_constraint_is_source_active(spine_transform_constraint obj) {
-    if (!obj) return 0;
+bool spine_transform_constraint_is_source_active(spine_transform_constraint obj) {
+    if (!obj) return false;
     TransformConstraint *_obj = (TransformConstraint *) obj;
     return _obj->isSourceActive();
-}
-
-void * spine_transform_constraint_get_bones(spine_transform_constraint obj) {
-    if (!obj) return nullptr;
-    TransformConstraint *_obj = (TransformConstraint *) obj;
-    return (void *) _obj->getBones();
 }
 
 int32_t spine_transform_constraint_get_num_bones(spine_transform_constraint obj) {
@@ -91,7 +83,7 @@ spine_bone_pose *spine_transform_constraint_get_bones(spine_transform_constraint
 }
 
 spine_bone spine_transform_constraint_get_source(spine_transform_constraint obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_bone) 0;
     TransformConstraint *_obj = (TransformConstraint *) obj;
     return (spine_bone) _obj->getSource();
 }
@@ -105,7 +97,7 @@ void spine_transform_constraint_set_source(spine_transform_constraint obj, spine
 spine_constraint_data spine_transform_constraint_get_data(spine_transform_constraint obj) {
     if (!obj) return 0;
     TransformConstraint *_obj = (TransformConstraint *) obj;
-    return _obj->getData();
+    return (spine_constraint_data) &_obj->getData();
 }
 
 void spine_transform_constraint_pose(spine_transform_constraint obj) {
@@ -123,13 +115,13 @@ void spine_transform_constraint_setup_pose(spine_transform_constraint obj) {
 spine_transform_constraint_pose spine_transform_constraint_get_pose(spine_transform_constraint obj) {
     if (!obj) return 0;
     TransformConstraint *_obj = (TransformConstraint *) obj;
-    return _obj->getPose();
+    return (spine_transform_constraint_pose) &_obj->getPose();
 }
 
 spine_transform_constraint_pose spine_transform_constraint_get_applied_pose(spine_transform_constraint obj) {
     if (!obj) return 0;
     TransformConstraint *_obj = (TransformConstraint *) obj;
-    return _obj->getAppliedPose();
+    return (spine_transform_constraint_pose) &_obj->getAppliedPose();
 }
 
 void spine_transform_constraint_reset_constrained(spine_transform_constraint obj) {
@@ -144,19 +136,19 @@ void spine_transform_constraint_constrained(spine_transform_constraint obj) {
     _obj->constrained();
 }
 
-spine_bool spine_transform_constraint_is_pose_equal_to_applied(spine_transform_constraint obj) {
-    if (!obj) return 0;
+bool spine_transform_constraint_is_pose_equal_to_applied(spine_transform_constraint obj) {
+    if (!obj) return false;
     TransformConstraint *_obj = (TransformConstraint *) obj;
     return _obj->isPoseEqualToApplied();
 }
 
-spine_bool spine_transform_constraint_is_active(spine_transform_constraint obj) {
-    if (!obj) return 0;
+bool spine_transform_constraint_is_active(spine_transform_constraint obj) {
+    if (!obj) return false;
     TransformConstraint *_obj = (TransformConstraint *) obj;
     return _obj->isActive();
 }
 
-void spine_transform_constraint_set_active(spine_transform_constraint obj, spine_bool value) {
+void spine_transform_constraint_set_active(spine_transform_constraint obj, bool value) {
     if (!obj) return;
     TransformConstraint *_obj = (TransformConstraint *) obj;
     _obj->setActive(value);

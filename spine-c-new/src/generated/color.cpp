@@ -48,13 +48,13 @@ void spine_color_dispose(spine_color obj) {
 }
 
 spine_color spine_color_set(spine_color obj, float _r, float _g, float _b, float _a) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_color) 0;
     Color *_obj = (Color *) obj;
     return (spine_color) &_obj->set(_r, _g, _b, _a);
 }
 
-spine_color spine_color_set(spine_color obj, float _r, float _g, float _b) {
-    if (!obj) return nullptr;
+spine_color spine_color_set_3(spine_color obj, float _r, float _g, float _b) {
+    if (!obj) return (spine_color) 0;
     Color *_obj = (Color *) obj;
     return (spine_color) &_obj->set(_r, _g, _b);
 }
@@ -66,25 +66,25 @@ void spine_color_set(spine_color obj, spine_color value) {
 }
 
 spine_color spine_color_add(spine_color obj, float _r, float _g, float _b, float _a) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_color) 0;
     Color *_obj = (Color *) obj;
     return (spine_color) &_obj->add(_r, _g, _b, _a);
 }
 
-spine_color spine_color_add(spine_color obj, float _r, float _g, float _b) {
-    if (!obj) return nullptr;
+spine_color spine_color_add_3(spine_color obj, float _r, float _g, float _b) {
+    if (!obj) return (spine_color) 0;
     Color *_obj = (Color *) obj;
     return (spine_color) &_obj->add(_r, _g, _b);
 }
 
-spine_color spine_color_add(spine_color obj, spine_color other) {
-    if (!obj) return nullptr;
+spine_color spine_color_add_1(spine_color obj, spine_color other) {
+    if (!obj) return (spine_color) 0;
     Color *_obj = (Color *) obj;
-    return (spine_color) &_obj->add(other);
+    return (spine_color) &_obj->add(*(Color*) other);
 }
 
 spine_color spine_color_clamp(spine_color obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_color) 0;
     Color *_obj = (Color *) obj;
     return (spine_color) &_obj->clamp();
 }

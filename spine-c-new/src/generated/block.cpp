@@ -37,20 +37,20 @@ void spine_block_dispose(spine_block obj) {
     delete (Block *) obj;
 }
 
-int32_t spine_block_free(spine_block obj) {
+int spine_block_free(spine_block obj) {
     if (!obj) return 0;
     Block *_obj = (Block *) obj;
     return _obj->free();
 }
 
-spine_bool spine_block_can_fit(spine_block obj, int32_t numBytes) {
-    if (!obj) return 0;
+bool spine_block_can_fit(spine_block obj, int numBytes) {
+    if (!obj) return false;
     Block *_obj = (Block *) obj;
     return _obj->canFit(numBytes);
 }
 
-spine_uint8_t spine_block_allocate(spine_block obj, int32_t numBytes) {
+uint8_t * spine_block_allocate(spine_block obj, int numBytes) {
     if (!obj) return 0;
     Block *_obj = (Block *) obj;
-    return (spine_uint8_t) _obj->allocate(numBytes);
+    return (uint8_t *) _obj->allocate(numBytes);
 }

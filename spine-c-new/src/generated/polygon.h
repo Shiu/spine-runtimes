@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_polygon)
+#include "types.h"
 
 SPINE_C_EXPORT spine_polygon spine_polygon_create(void);
 SPINE_C_EXPORT void spine_polygon_dispose(spine_polygon obj);

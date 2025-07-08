@@ -34,15 +34,13 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_rgb_timeline)
-
-SPINE_C_EXPORT spine_rgb_timeline spine_rgb_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t slotIndex);
+SPINE_C_EXPORT spine_rgb_timeline spine_rgb_timeline_create(size_t frameCount, size_t bezierCount, int slotIndex);
 SPINE_C_EXPORT void spine_rgb_timeline_dispose(spine_rgb_timeline obj);
-SPINE_C_EXPORT spine_rtti spine_rgb_timeline_get_rtti(spine_rgb_timeline obj);
-SPINE_C_EXPORT void spine_rgb_timeline_set_frame(spine_rgb_timeline obj, int32_t frame, float time, float r, float g, float b);
-SPINE_C_EXPORT void spine_rgb_timeline_apply(spine_rgb_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose);
+SPINE_C_EXPORT spine_rtti spine_rgb_timeline_get_rtti();
+SPINE_C_EXPORT void spine_rgb_timeline_set_frame(spine_rgb_timeline obj, int frame, float time, float r, float g, float b);
+SPINE_C_EXPORT void spine_rgb_timeline_apply(spine_rgb_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
 
 #ifdef __cplusplus
 }

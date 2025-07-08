@@ -34,19 +34,17 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_color)
+#include "types.h"
 
 SPINE_C_EXPORT spine_color spine_color_create(void);
 SPINE_C_EXPORT spine_color spine_color_create_with_float_float_float_float(float r, float g, float b, float a);
 SPINE_C_EXPORT void spine_color_dispose(spine_color obj);
 SPINE_C_EXPORT spine_color spine_color_set(spine_color obj, float _r, float _g, float _b, float _a);
-SPINE_C_EXPORT spine_color spine_color_set(spine_color obj, float _r, float _g, float _b);
+SPINE_C_EXPORT spine_color spine_color_set_3(spine_color obj, float _r, float _g, float _b);
 SPINE_C_EXPORT void spine_color_set(spine_color obj, spine_color value);
 SPINE_C_EXPORT spine_color spine_color_add(spine_color obj, float _r, float _g, float _b, float _a);
-SPINE_C_EXPORT spine_color spine_color_add(spine_color obj, float _r, float _g, float _b);
-SPINE_C_EXPORT spine_color spine_color_add(spine_color obj, spine_color other);
+SPINE_C_EXPORT spine_color spine_color_add_3(spine_color obj, float _r, float _g, float _b);
+SPINE_C_EXPORT spine_color spine_color_add_1(spine_color obj, spine_color other);
 SPINE_C_EXPORT spine_color spine_color_clamp(spine_color obj);
 
 #ifdef __cplusplus

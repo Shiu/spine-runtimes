@@ -34,17 +34,15 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_rtti)
-
-SPINE_C_EXPORT spine_rtti spine_rtti_create(const utf8 * className);
-SPINE_C_EXPORT spine_rtti spine_rtti_create_with_string_rtti(const utf8 * className, spine_rtti baseRTTI);
-SPINE_C_EXPORT spine_rtti spine_rtti_create_with_string_rtti_rtti_rtti_rtti(const utf8 * className, spine_rtti baseRTTI, spine_const rtti interface1, spine_const rtti interface2, spine_const rtti interface3);
+SPINE_C_EXPORT spine_rtti spine_rtti_create(const char * className);
+SPINE_C_EXPORT spine_rtti spine_rtti_create_with_string_rtti(const char * className, spine_rtti baseRTTI);
+SPINE_C_EXPORT spine_rtti spine_rtti_create_with_string_rtti_rtti_rtti_rtti(const char * className, spine_rtti baseRTTI, spine_const rtti interface1, spine_const rtti interface2, spine_const rtti interface3);
 SPINE_C_EXPORT void spine_rtti_dispose(spine_rtti obj);
-SPINE_C_EXPORT const utf8 * spine_rtti_get_class_name(spine_rtti obj);
-SPINE_C_EXPORT spine_bool spine_rtti_is_exactly(spine_rtti obj, spine_rtti rtti);
-SPINE_C_EXPORT spine_bool spine_rtti_instance_of(spine_rtti obj, spine_rtti rtti);
+SPINE_C_EXPORT const char * spine_rtti_get_class_name(spine_rtti obj);
+SPINE_C_EXPORT bool spine_rtti_is_exactly(spine_rtti obj, spine_rtti rtti);
+SPINE_C_EXPORT bool spine_rtti_instance_of(spine_rtti obj, spine_rtti rtti);
 
 #ifdef __cplusplus
 }

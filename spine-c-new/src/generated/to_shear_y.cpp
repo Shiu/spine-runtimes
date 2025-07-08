@@ -40,11 +40,11 @@ void spine_to_shear_y_dispose(spine_to_shear_y obj) {
 float spine_to_shear_y_mix(spine_to_shear_y obj, spine_transform_constraint_pose pose) {
     if (!obj) return 0;
     ToShearY *_obj = (ToShearY *) obj;
-    return _obj->mix(pose);
+    return _obj->mix(*(TransformConstraintPose*) pose);
 }
 
-void spine_to_shear_y_apply(spine_to_shear_y obj, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, spine_bool local, spine_bool additive) {
+void spine_to_shear_y_apply(spine_to_shear_y obj, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, bool local, bool additive) {
     if (!obj) return ;
     ToShearY *_obj = (ToShearY *) obj;
-    _obj->apply(skeleton, pose, bone, value, local, additive);
+    _obj->apply(*(Skeleton*) skeleton, *(TransformConstraintPose*) pose, *(BonePose*) bone, value, local, additive);
 }

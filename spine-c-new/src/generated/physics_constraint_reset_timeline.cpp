@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_physics_constraint_reset_timeline spine_physics_constraint_reset_timeline_create(spine_size_t frameCount, int32_t constraintIndex) {
+spine_physics_constraint_reset_timeline spine_physics_constraint_reset_timeline_create(size_t frameCount, int constraintIndex) {
     PhysicsConstraintResetTimeline *obj = new (__FILE__, __LINE__) PhysicsConstraintResetTimeline(frameCount, constraintIndex);
     return (spine_physics_constraint_reset_timeline) obj;
 }
@@ -42,46 +42,38 @@ void spine_physics_constraint_reset_timeline_dispose(spine_physics_constraint_re
     delete (PhysicsConstraintResetTimeline *) obj;
 }
 
-spine_rtti spine_physics_constraint_reset_timeline_get_rtti(spine_physics_constraint_reset_timeline obj) {
-    if (!obj) return nullptr;
-    PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_physics_constraint_reset_timeline_get_rtti() {
+    return (spine_rtti) &PhysicsConstraintResetTimeline::rtti;
 }
 
-void spine_physics_constraint_reset_timeline_apply(spine_physics_constraint_reset_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_physics_constraint_reset_timeline_apply(spine_physics_constraint_reset_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-int32_t spine_physics_constraint_reset_timeline_get_frame_count(spine_physics_constraint_reset_timeline obj) {
+int spine_physics_constraint_reset_timeline_get_frame_count(spine_physics_constraint_reset_timeline obj) {
     if (!obj) return 0;
     PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
     return _obj->getFrameCount();
 }
 
-int32_t spine_physics_constraint_reset_timeline_get_constraint_index(spine_physics_constraint_reset_timeline obj) {
+int spine_physics_constraint_reset_timeline_get_constraint_index(spine_physics_constraint_reset_timeline obj) {
     if (!obj) return 0;
     PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
     return _obj->getConstraintIndex();
 }
 
-void spine_physics_constraint_reset_timeline_set_frame(spine_physics_constraint_reset_timeline obj, int32_t frame, float time) {
+void spine_physics_constraint_reset_timeline_set_frame(spine_physics_constraint_reset_timeline obj, int frame, float time) {
     if (!obj) return ;
     PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
     _obj->setFrame(frame, time);
 }
 
-spine_size_t spine_physics_constraint_reset_timeline_get_frame_entries(spine_physics_constraint_reset_timeline obj) {
-    if (!obj) return nullptr;
+size_t spine_physics_constraint_reset_timeline_get_frame_entries(spine_physics_constraint_reset_timeline obj) {
+    if (!obj) return 0;
     PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
     return _obj->getFrameEntries();
-}
-
-void * spine_physics_constraint_reset_timeline_get_frames(spine_physics_constraint_reset_timeline obj) {
-    if (!obj) return nullptr;
-    PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
-    return _obj->getFrames();
 }
 
 int32_t spine_physics_constraint_reset_timeline_get_num_frames(spine_physics_constraint_reset_timeline obj) {
@@ -90,10 +82,10 @@ int32_t spine_physics_constraint_reset_timeline_get_num_frames(spine_physics_con
     return (int32_t) _obj->getFrames().size();
 }
 
-spine_float *spine_physics_constraint_reset_timeline_get_frames(spine_physics_constraint_reset_timeline obj) {
+float *spine_physics_constraint_reset_timeline_get_frames(spine_physics_constraint_reset_timeline obj) {
     if (!obj) return nullptr;
     PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
-    return (spine_float *) _obj->getFrames().buffer();
+    return (float *) _obj->getFrames().buffer();
 }
 
 float spine_physics_constraint_reset_timeline_get_duration(spine_physics_constraint_reset_timeline obj) {
@@ -102,25 +94,19 @@ float spine_physics_constraint_reset_timeline_get_duration(spine_physics_constra
     return _obj->getDuration();
 }
 
-void * spine_physics_constraint_reset_timeline_get_property_ids(spine_physics_constraint_reset_timeline obj) {
-    if (!obj) return nullptr;
-    PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
-    return _obj->getPropertyIds();
-}
-
 int32_t spine_physics_constraint_reset_timeline_get_num_property_ids(spine_physics_constraint_reset_timeline obj) {
     if (!obj) return 0;
     PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
     return (int32_t) _obj->getPropertyIds().size();
 }
 
-spine_property_id *spine_physics_constraint_reset_timeline_get_property_ids(spine_physics_constraint_reset_timeline obj) {
+int64_t *spine_physics_constraint_reset_timeline_get_property_ids(spine_physics_constraint_reset_timeline obj) {
     if (!obj) return nullptr;
     PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
-    return (spine_property_id *) _obj->getPropertyIds().buffer();
+    return (int64_t *) _obj->getPropertyIds().buffer();
 }
 
-void spine_physics_constraint_reset_timeline_set_constraint_index(spine_physics_constraint_reset_timeline obj, int32_t value) {
+void spine_physics_constraint_reset_timeline_set_constraint_index(spine_physics_constraint_reset_timeline obj, int value) {
     if (!obj) return;
     PhysicsConstraintResetTimeline *_obj = (PhysicsConstraintResetTimeline *) obj;
     _obj->setConstraintIndex(value);

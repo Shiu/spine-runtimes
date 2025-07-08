@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_ik_constraint_data spine_ik_constraint_data_create(const utf8 * name) {
+spine_ik_constraint_data spine_ik_constraint_data_create(const char* name) {
     IkConstraintData *obj = new (__FILE__, __LINE__) IkConstraintData(String(name));
     return (spine_ik_constraint_data) obj;
 }
@@ -42,22 +42,14 @@ void spine_ik_constraint_data_dispose(spine_ik_constraint_data obj) {
     delete (IkConstraintData *) obj;
 }
 
-spine_rtti spine_ik_constraint_data_get_rtti(spine_ik_constraint_data obj) {
-    if (!obj) return nullptr;
-    IkConstraintData *_obj = (IkConstraintData *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_ik_constraint_data_get_rtti() {
+    return (spine_rtti) &IkConstraintData::rtti;
 }
 
 spine_constraint spine_ik_constraint_data_create(spine_ik_constraint_data obj, spine_skeleton skeleton) {
     if (!obj) return 0;
     IkConstraintData *_obj = (IkConstraintData *) obj;
-    return (spine_constraint) _obj->create(skeleton);
-}
-
-void * spine_ik_constraint_data_get_bones(spine_ik_constraint_data obj) {
-    if (!obj) return nullptr;
-    IkConstraintData *_obj = (IkConstraintData *) obj;
-    return (void *) _obj->getBones();
+    return (spine_constraint) _obj->create(*(Skeleton*) skeleton);
 }
 
 int32_t spine_ik_constraint_data_get_num_bones(spine_ik_constraint_data obj) {
@@ -73,7 +65,7 @@ spine_bone_data *spine_ik_constraint_data_get_bones(spine_ik_constraint_data obj
 }
 
 spine_bone_data spine_ik_constraint_data_get_target(spine_ik_constraint_data obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_bone_data) 0;
     IkConstraintData *_obj = (IkConstraintData *) obj;
     return (spine_bone_data) _obj->getTarget();
 }
@@ -84,26 +76,26 @@ void spine_ik_constraint_data_set_target(spine_ik_constraint_data obj, spine_bon
     _obj->setTarget((BoneData *) value);
 }
 
-spine_bool spine_ik_constraint_data_get_uniform(spine_ik_constraint_data obj) {
-    if (!obj) return 0;
+bool spine_ik_constraint_data_get_uniform(spine_ik_constraint_data obj) {
+    if (!obj) return false;
     IkConstraintData *_obj = (IkConstraintData *) obj;
     return _obj->getUniform();
 }
 
-void spine_ik_constraint_data_set_uniform(spine_ik_constraint_data obj, spine_bool value) {
+void spine_ik_constraint_data_set_uniform(spine_ik_constraint_data obj, bool value) {
     if (!obj) return;
     IkConstraintData *_obj = (IkConstraintData *) obj;
     _obj->setUniform(value);
 }
 
-const utf8 * spine_ik_constraint_data_get_name(spine_ik_constraint_data obj) {
+const char* spine_ik_constraint_data_get_name(spine_ik_constraint_data obj) {
     if (!obj) return nullptr;
     IkConstraintData *_obj = (IkConstraintData *) obj;
-    return (const utf8 *) _obj->getName().buffer();
+    return (const char *) _obj->getName().buffer();
 }
 
-spine_bool spine_ik_constraint_data_is_skin_required(spine_ik_constraint_data obj) {
-    if (!obj) return 0;
+bool spine_ik_constraint_data_is_skin_required(spine_ik_constraint_data obj) {
+    if (!obj) return false;
     IkConstraintData *_obj = (IkConstraintData *) obj;
     return _obj->isSkinRequired();
 }
@@ -111,11 +103,5 @@ spine_bool spine_ik_constraint_data_is_skin_required(spine_ik_constraint_data ob
 spine_ik_constraint_pose spine_ik_constraint_data_get_setup_pose(spine_ik_constraint_data obj) {
     if (!obj) return 0;
     IkConstraintData *_obj = (IkConstraintData *) obj;
-    return _obj->getSetupPose();
-}
-
-spine_ik_constraint_pose spine_ik_constraint_data_get_setup_pose(spine_ik_constraint_data obj) {
-    if (!obj) return 0;
-    IkConstraintData *_obj = (IkConstraintData *) obj;
-    return _obj->getSetupPose();
+    return (spine_ik_constraint_pose) &_obj->getSetupPose();
 }

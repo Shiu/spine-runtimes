@@ -34,15 +34,12 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_path_constraint_data)
-
-SPINE_C_EXPORT spine_path_constraint_data spine_path_constraint_data_create(const utf8 * name);
+SPINE_C_EXPORT spine_path_constraint_data spine_path_constraint_data_create(const char* name);
 SPINE_C_EXPORT void spine_path_constraint_data_dispose(spine_path_constraint_data obj);
-SPINE_C_EXPORT spine_rtti spine_path_constraint_data_get_rtti(spine_path_constraint_data obj);
+SPINE_C_EXPORT spine_rtti spine_path_constraint_data_get_rtti();
 SPINE_C_EXPORT spine_constraint spine_path_constraint_data_create(spine_path_constraint_data obj, spine_skeleton skeleton);
-SPINE_C_EXPORT void * spine_path_constraint_data_get_bones(spine_path_constraint_data obj);
 SPINE_C_EXPORT int32_t spine_path_constraint_data_get_num_bones(spine_path_constraint_data obj);
 SPINE_C_EXPORT spine_bone_data *spine_path_constraint_data_get_bones(spine_path_constraint_data obj);
 SPINE_C_EXPORT spine_slot_data spine_path_constraint_data_get_slot(spine_path_constraint_data obj);
@@ -55,9 +52,8 @@ SPINE_C_EXPORT spine_rotate_mode spine_path_constraint_data_get_rotate_mode(spin
 SPINE_C_EXPORT void spine_path_constraint_data_set_rotate_mode(spine_path_constraint_data obj, spine_rotate_mode value);
 SPINE_C_EXPORT float spine_path_constraint_data_get_offset_rotation(spine_path_constraint_data obj);
 SPINE_C_EXPORT void spine_path_constraint_data_set_offset_rotation(spine_path_constraint_data obj, float value);
-SPINE_C_EXPORT const utf8 * spine_path_constraint_data_get_name(spine_path_constraint_data obj);
-SPINE_C_EXPORT spine_bool spine_path_constraint_data_is_skin_required(spine_path_constraint_data obj);
-SPINE_C_EXPORT spine_path_constraint_pose spine_path_constraint_data_get_setup_pose(spine_path_constraint_data obj);
+SPINE_C_EXPORT const char* spine_path_constraint_data_get_name(spine_path_constraint_data obj);
+SPINE_C_EXPORT bool spine_path_constraint_data_is_skin_required(spine_path_constraint_data obj);
 SPINE_C_EXPORT spine_path_constraint_pose spine_path_constraint_data_get_setup_pose(spine_path_constraint_data obj);
 
 #ifdef __cplusplus

@@ -32,11 +32,6 @@
 
 using namespace spine;
 
-spine_posed spine_posed_create(void) {
-    Posed *obj = new (__FILE__, __LINE__) Posed();
-    return (spine_posed) obj;
-}
-
 void spine_posed_dispose(spine_posed obj) {
     if (!obj) return;
     delete (Posed *) obj;
@@ -66,26 +61,8 @@ void spine_posed_reset_constrained(spine_posed obj) {
     _obj->resetConstrained();
 }
 
-spine_bool spine_posed_is_pose_equal_to_applied(spine_posed obj) {
-    if (!obj) return 0;
+bool spine_posed_is_pose_equal_to_applied(spine_posed obj) {
+    if (!obj) return false;
     Posed *_obj = (Posed *) obj;
     return _obj->isPoseEqualToApplied();
-}
-
-spine_bool spine_posed_is_type(spine_posed obj, spine_posed_type type) {
-    if (!obj) return 0;
-    Posed *_obj = (Posed *) obj;
-    
-    switch (type) {
-        case SPINE_TYPE_POSED_POSED_GENERIC:
-            return _obj->getRTTI().instanceOf(PosedGeneric::rtti);
-    }
-    return 0;
-}
-
-spine_posed_generic spine_posed_as_posed_generic(spine_posed obj) {
-    if (!obj) return nullptr;
-    Posed *_obj = (Posed *) obj;
-    if (!_obj->getRTTI().instanceOf(PosedGeneric::rtti)) return nullptr;
-    return (spine_posed_generic) obj;
 }

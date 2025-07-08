@@ -33,7 +33,7 @@
 using namespace spine;
 
 spine_slider spine_slider_create(spine_slider_data data, spine_skeleton skeleton) {
-    Slider *obj = new (__FILE__, __LINE__) Slider(data, skeleton);
+    Slider *obj = new (__FILE__, __LINE__) Slider(*(SliderData*) data, *(Skeleton*) skeleton);
     return (spine_slider) obj;
 }
 
@@ -42,38 +42,36 @@ void spine_slider_dispose(spine_slider obj) {
     delete (Slider *) obj;
 }
 
-spine_rtti spine_slider_get_rtti(spine_slider obj) {
-    if (!obj) return nullptr;
-    Slider *_obj = (Slider *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_slider_get_rtti() {
+    return (spine_rtti) &Slider::rtti;
 }
 
 spine_slider spine_slider_copy(spine_slider obj, spine_skeleton skeleton) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_slider) 0;
     Slider *_obj = (Slider *) obj;
-    return (spine_slider) _obj->copy(skeleton);
+    return (spine_slider) _obj->copy(*(Skeleton*) skeleton);
 }
 
 void spine_slider_update(spine_slider obj, spine_skeleton skeleton, spine_physics physics) {
     if (!obj) return ;
     Slider *_obj = (Slider *) obj;
-    _obj->update(skeleton, physics);
+    _obj->update(*(Skeleton*) skeleton, (Physics) physics);
 }
 
 void spine_slider_sort(spine_slider obj, spine_skeleton skeleton) {
     if (!obj) return ;
     Slider *_obj = (Slider *) obj;
-    _obj->sort(skeleton);
+    _obj->sort(*(Skeleton*) skeleton);
 }
 
-spine_bool spine_slider_is_source_active(spine_slider obj) {
-    if (!obj) return 0;
+bool spine_slider_is_source_active(spine_slider obj) {
+    if (!obj) return false;
     Slider *_obj = (Slider *) obj;
     return _obj->isSourceActive();
 }
 
 spine_bone spine_slider_get_bone(spine_slider obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_bone) 0;
     Slider *_obj = (Slider *) obj;
     return (spine_bone) _obj->getBone();
 }
@@ -87,7 +85,7 @@ void spine_slider_set_bone(spine_slider obj, spine_bone value) {
 spine_constraint_data spine_slider_get_data(spine_slider obj) {
     if (!obj) return 0;
     Slider *_obj = (Slider *) obj;
-    return _obj->getData();
+    return (spine_constraint_data) &_obj->getData();
 }
 
 void spine_slider_pose(spine_slider obj) {
@@ -103,15 +101,15 @@ void spine_slider_setup_pose(spine_slider obj) {
 }
 
 spine_slider_pose spine_slider_get_pose(spine_slider obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_slider_pose) 0;
     Slider *_obj = (Slider *) obj;
-    return _obj->getPose();
+    return (spine_slider_pose) &_obj->getPose();
 }
 
 spine_slider_pose spine_slider_get_applied_pose(spine_slider obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_slider_pose) 0;
     Slider *_obj = (Slider *) obj;
-    return _obj->getAppliedPose();
+    return (spine_slider_pose) &_obj->getAppliedPose();
 }
 
 void spine_slider_reset_constrained(spine_slider obj) {
@@ -126,19 +124,19 @@ void spine_slider_constrained(spine_slider obj) {
     _obj->constrained();
 }
 
-spine_bool spine_slider_is_pose_equal_to_applied(spine_slider obj) {
-    if (!obj) return 0;
+bool spine_slider_is_pose_equal_to_applied(spine_slider obj) {
+    if (!obj) return false;
     Slider *_obj = (Slider *) obj;
     return _obj->isPoseEqualToApplied();
 }
 
-spine_bool spine_slider_is_active(spine_slider obj) {
-    if (!obj) return 0;
+bool spine_slider_is_active(spine_slider obj) {
+    if (!obj) return false;
     Slider *_obj = (Slider *) obj;
     return _obj->isActive();
 }
 
-void spine_slider_set_active(spine_slider obj, spine_bool value) {
+void spine_slider_set_active(spine_slider obj, bool value) {
     if (!obj) return;
     Slider *_obj = (Slider *) obj;
     _obj->setActive(value);

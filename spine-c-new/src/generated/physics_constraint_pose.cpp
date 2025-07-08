@@ -45,7 +45,7 @@ void spine_physics_constraint_pose_dispose(spine_physics_constraint_pose obj) {
 void spine_physics_constraint_pose_set(spine_physics_constraint_pose obj, spine_physics_constraint_pose value) {
     if (!obj) return;
     PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    _obj->set(value);
+    _obj->set(*((PhysicsConstraintPose*) value));
 }
 
 float spine_physics_constraint_pose_get_inertia(spine_physics_constraint_pose obj) {

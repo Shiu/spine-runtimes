@@ -34,14 +34,12 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_block)
+#include "types.h"
 
 SPINE_C_EXPORT void spine_block_dispose(spine_block obj);
-SPINE_C_EXPORT int32_t spine_block_free(spine_block obj);
-SPINE_C_EXPORT spine_bool spine_block_can_fit(spine_block obj, int32_t numBytes);
-SPINE_C_EXPORT spine_uint8_t spine_block_allocate(spine_block obj, int32_t numBytes);
+SPINE_C_EXPORT int spine_block_free(spine_block obj);
+SPINE_C_EXPORT bool spine_block_can_fit(spine_block obj, int numBytes);
+SPINE_C_EXPORT uint8_t * spine_block_allocate(spine_block obj, int numBytes);
 
 #ifdef __cplusplus
 }

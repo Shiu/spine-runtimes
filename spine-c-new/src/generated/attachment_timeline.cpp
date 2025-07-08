@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_attachment_timeline spine_attachment_timeline_create(spine_size_t frameCount, int32_t slotIndex) {
+spine_attachment_timeline spine_attachment_timeline_create(size_t frameCount, int slotIndex) {
     AttachmentTimeline *obj = new (__FILE__, __LINE__) AttachmentTimeline(frameCount, slotIndex);
     return (spine_attachment_timeline) obj;
 }
@@ -42,28 +42,20 @@ void spine_attachment_timeline_dispose(spine_attachment_timeline obj) {
     delete (AttachmentTimeline *) obj;
 }
 
-spine_rtti spine_attachment_timeline_get_rtti(spine_attachment_timeline obj) {
-    if (!obj) return nullptr;
-    AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_attachment_timeline_get_rtti() {
+    return (spine_rtti) &AttachmentTimeline::rtti;
 }
 
-void spine_attachment_timeline_apply(spine_attachment_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_attachment_timeline_apply(spine_attachment_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-void spine_attachment_timeline_set_frame(spine_attachment_timeline obj, int32_t frame, float time, const utf8 * attachmentName) {
+void spine_attachment_timeline_set_frame(spine_attachment_timeline obj, int frame, float time, const char* attachmentName) {
     if (!obj) return ;
     AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
     _obj->setFrame(frame, time, String(attachmentName));
-}
-
-void * spine_attachment_timeline_get_attachment_names(spine_attachment_timeline obj) {
-    if (!obj) return nullptr;
-    AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
-    return _obj->getAttachmentNames();
 }
 
 int32_t spine_attachment_timeline_get_num_attachment_names(spine_attachment_timeline obj) {
@@ -72,28 +64,22 @@ int32_t spine_attachment_timeline_get_num_attachment_names(spine_attachment_time
     return (int32_t) _obj->getAttachmentNames().size();
 }
 
-spine_string *spine_attachment_timeline_get_attachment_names(spine_attachment_timeline obj) {
+const char * *spine_attachment_timeline_get_attachment_names(spine_attachment_timeline obj) {
     if (!obj) return nullptr;
     AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
-    return (spine_string *) _obj->getAttachmentNames().buffer();
+    return (const char * *) _obj->getAttachmentNames().buffer();
 }
 
-spine_size_t spine_attachment_timeline_get_frame_entries(spine_attachment_timeline obj) {
-    if (!obj) return nullptr;
+size_t spine_attachment_timeline_get_frame_entries(spine_attachment_timeline obj) {
+    if (!obj) return 0;
     AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
     return _obj->getFrameEntries();
 }
 
-spine_size_t spine_attachment_timeline_get_frame_count(spine_attachment_timeline obj) {
-    if (!obj) return nullptr;
+size_t spine_attachment_timeline_get_frame_count(spine_attachment_timeline obj) {
+    if (!obj) return 0;
     AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
     return _obj->getFrameCount();
-}
-
-void * spine_attachment_timeline_get_frames(spine_attachment_timeline obj) {
-    if (!obj) return nullptr;
-    AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
-    return _obj->getFrames();
 }
 
 int32_t spine_attachment_timeline_get_num_frames(spine_attachment_timeline obj) {
@@ -102,10 +88,10 @@ int32_t spine_attachment_timeline_get_num_frames(spine_attachment_timeline obj) 
     return (int32_t) _obj->getFrames().size();
 }
 
-spine_float *spine_attachment_timeline_get_frames(spine_attachment_timeline obj) {
+float *spine_attachment_timeline_get_frames(spine_attachment_timeline obj) {
     if (!obj) return nullptr;
     AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
-    return (spine_float *) _obj->getFrames().buffer();
+    return (float *) _obj->getFrames().buffer();
 }
 
 float spine_attachment_timeline_get_duration(spine_attachment_timeline obj) {
@@ -114,31 +100,25 @@ float spine_attachment_timeline_get_duration(spine_attachment_timeline obj) {
     return _obj->getDuration();
 }
 
-void * spine_attachment_timeline_get_property_ids(spine_attachment_timeline obj) {
-    if (!obj) return nullptr;
-    AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
-    return _obj->getPropertyIds();
-}
-
 int32_t spine_attachment_timeline_get_num_property_ids(spine_attachment_timeline obj) {
     if (!obj) return 0;
     AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
     return (int32_t) _obj->getPropertyIds().size();
 }
 
-spine_property_id *spine_attachment_timeline_get_property_ids(spine_attachment_timeline obj) {
+int64_t *spine_attachment_timeline_get_property_ids(spine_attachment_timeline obj) {
     if (!obj) return nullptr;
     AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
-    return (spine_property_id *) _obj->getPropertyIds().buffer();
+    return (int64_t *) _obj->getPropertyIds().buffer();
 }
 
-int32_t spine_attachment_timeline_get_slot_index(spine_attachment_timeline obj) {
+int spine_attachment_timeline_get_slot_index(spine_attachment_timeline obj) {
     if (!obj) return 0;
     AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
     return _obj->getSlotIndex();
 }
 
-void spine_attachment_timeline_set_slot_index(spine_attachment_timeline obj, int32_t value) {
+void spine_attachment_timeline_set_slot_index(spine_attachment_timeline obj, int value) {
     if (!obj) return;
     AttachmentTimeline *_obj = (AttachmentTimeline *) obj;
     _obj->setSlotIndex(value);

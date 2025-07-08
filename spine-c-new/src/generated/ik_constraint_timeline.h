@@ -34,33 +34,28 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_ik_constraint_timeline)
-
-SPINE_C_EXPORT spine_ik_constraint_timeline spine_ik_constraint_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t constraintIndex);
+SPINE_C_EXPORT spine_ik_constraint_timeline spine_ik_constraint_timeline_create(size_t frameCount, size_t bezierCount, int constraintIndex);
 SPINE_C_EXPORT void spine_ik_constraint_timeline_dispose(spine_ik_constraint_timeline obj);
-SPINE_C_EXPORT spine_rtti spine_ik_constraint_timeline_get_rtti(spine_ik_constraint_timeline obj);
-SPINE_C_EXPORT void spine_ik_constraint_timeline_apply(spine_ik_constraint_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose);
-SPINE_C_EXPORT void spine_ik_constraint_timeline_set_frame(spine_ik_constraint_timeline obj, int32_t frame, float time, float mix, float softness, int32_t bendDirection, spine_bool compress, spine_bool stretch);
-SPINE_C_EXPORT void spine_ik_constraint_timeline_set_linear(spine_ik_constraint_timeline obj, spine_size_t value);
-SPINE_C_EXPORT void spine_ik_constraint_timeline_set_stepped(spine_ik_constraint_timeline obj, spine_size_t value);
-SPINE_C_EXPORT void spine_ik_constraint_timeline_set_bezier(spine_ik_constraint_timeline obj, spine_size_t bezier, spine_size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2);
-SPINE_C_EXPORT float spine_ik_constraint_timeline_get_bezier_value(spine_ik_constraint_timeline obj, float time, spine_size_t frame, spine_size_t valueOffset, spine_size_t i);
-SPINE_C_EXPORT void * spine_ik_constraint_timeline_get_curves(spine_ik_constraint_timeline obj);
+SPINE_C_EXPORT spine_rtti spine_ik_constraint_timeline_get_rtti();
+SPINE_C_EXPORT void spine_ik_constraint_timeline_apply(spine_ik_constraint_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
+SPINE_C_EXPORT void spine_ik_constraint_timeline_set_frame(spine_ik_constraint_timeline obj, int frame, float time, float mix, float softness, int bendDirection, bool compress, bool stretch);
+SPINE_C_EXPORT void spine_ik_constraint_timeline_set_linear(spine_ik_constraint_timeline obj, size_t value);
+SPINE_C_EXPORT void spine_ik_constraint_timeline_set_stepped(spine_ik_constraint_timeline obj, size_t value);
+SPINE_C_EXPORT void spine_ik_constraint_timeline_set_bezier(spine_ik_constraint_timeline obj, size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2);
+SPINE_C_EXPORT float spine_ik_constraint_timeline_get_bezier_value(spine_ik_constraint_timeline obj, float time, size_t frame, size_t valueOffset, size_t i);
 SPINE_C_EXPORT int32_t spine_ik_constraint_timeline_get_num_curves(spine_ik_constraint_timeline obj);
-SPINE_C_EXPORT spine_float *spine_ik_constraint_timeline_get_curves(spine_ik_constraint_timeline obj);
-SPINE_C_EXPORT spine_size_t spine_ik_constraint_timeline_get_frame_entries(spine_ik_constraint_timeline obj);
-SPINE_C_EXPORT spine_size_t spine_ik_constraint_timeline_get_frame_count(spine_ik_constraint_timeline obj);
-SPINE_C_EXPORT void * spine_ik_constraint_timeline_get_frames(spine_ik_constraint_timeline obj);
+SPINE_C_EXPORT float *spine_ik_constraint_timeline_get_curves(spine_ik_constraint_timeline obj);
+SPINE_C_EXPORT size_t spine_ik_constraint_timeline_get_frame_entries(spine_ik_constraint_timeline obj);
+SPINE_C_EXPORT size_t spine_ik_constraint_timeline_get_frame_count(spine_ik_constraint_timeline obj);
 SPINE_C_EXPORT int32_t spine_ik_constraint_timeline_get_num_frames(spine_ik_constraint_timeline obj);
-SPINE_C_EXPORT spine_float *spine_ik_constraint_timeline_get_frames(spine_ik_constraint_timeline obj);
+SPINE_C_EXPORT float *spine_ik_constraint_timeline_get_frames(spine_ik_constraint_timeline obj);
 SPINE_C_EXPORT float spine_ik_constraint_timeline_get_duration(spine_ik_constraint_timeline obj);
-SPINE_C_EXPORT void * spine_ik_constraint_timeline_get_property_ids(spine_ik_constraint_timeline obj);
 SPINE_C_EXPORT int32_t spine_ik_constraint_timeline_get_num_property_ids(spine_ik_constraint_timeline obj);
-SPINE_C_EXPORT spine_property_id *spine_ik_constraint_timeline_get_property_ids(spine_ik_constraint_timeline obj);
-SPINE_C_EXPORT int32_t spine_ik_constraint_timeline_get_constraint_index(spine_ik_constraint_timeline obj);
-SPINE_C_EXPORT void spine_ik_constraint_timeline_set_constraint_index(spine_ik_constraint_timeline obj, int32_t value);
+SPINE_C_EXPORT int64_t *spine_ik_constraint_timeline_get_property_ids(spine_ik_constraint_timeline obj);
+SPINE_C_EXPORT int spine_ik_constraint_timeline_get_constraint_index(spine_ik_constraint_timeline obj);
+SPINE_C_EXPORT void spine_ik_constraint_timeline_set_constraint_index(spine_ik_constraint_timeline obj, int value);
 
 #ifdef __cplusplus
 }

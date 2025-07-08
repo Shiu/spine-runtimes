@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_skin spine_skin_create(const utf8 * name) {
+spine_skin spine_skin_create(const char* name) {
     Skin *obj = new (__FILE__, __LINE__) Skin(String(name));
     return (spine_skin) obj;
 }
@@ -42,40 +42,40 @@ void spine_skin_dispose(spine_skin obj) {
     delete (Skin *) obj;
 }
 
-void spine_skin_set_attachment(spine_skin obj, spine_size_t slotIndex, const utf8 * name, spine_attachment attachment) {
+void spine_skin_set_attachment(spine_skin obj, size_t slotIndex, const char* name, spine_attachment attachment) {
     if (!obj) return ;
     Skin *_obj = (Skin *) obj;
     _obj->setAttachment(slotIndex, String(name), (Attachment *) attachment);
 }
 
-spine_attachment spine_skin_get_attachment(spine_skin obj, spine_size_t slotIndex, const utf8 * name) {
-    if (!obj) return nullptr;
+spine_attachment spine_skin_get_attachment(spine_skin obj, size_t slotIndex, const char* name) {
+    if (!obj) return (spine_attachment) 0;
     Skin *_obj = (Skin *) obj;
     return (spine_attachment) _obj->getAttachment(slotIndex, String(name));
 }
 
-void spine_skin_remove_attachment(spine_skin obj, spine_size_t slotIndex, const utf8 * name) {
+void spine_skin_remove_attachment(spine_skin obj, size_t slotIndex, const char* name) {
     if (!obj) return ;
     Skin *_obj = (Skin *) obj;
     _obj->removeAttachment(slotIndex, String(name));
 }
 
-void spine_skin_find_names_for_slot(spine_skin obj, spine_size_t slotIndex, void * names) {
+void spine_skin_find_names_for_slot(spine_skin obj, size_t slotIndex, spine_array_string names) {
     if (!obj) return ;
     Skin *_obj = (Skin *) obj;
-    _obj->findNamesForSlot(slotIndex, (Vector<String> &) names);
+    _obj->findNamesForSlot(slotIndex, (Array<String> &) names);
 }
 
-void spine_skin_find_attachments_for_slot(spine_skin obj, spine_size_t slotIndex, void * attachments) {
+void spine_skin_find_attachments_for_slot(spine_skin obj, size_t slotIndex, spine_array_attachment attachments) {
     if (!obj) return ;
     Skin *_obj = (Skin *) obj;
-    _obj->findAttachmentsForSlot(slotIndex, (Vector<Attachment *> &) attachments);
+    _obj->findAttachmentsForSlot(slotIndex, (Array<Attachment *> &) attachments);
 }
 
-const utf8 * spine_skin_get_name(spine_skin obj) {
+const char* spine_skin_get_name(spine_skin obj) {
     if (!obj) return nullptr;
     Skin *_obj = (Skin *) obj;
-    return (const utf8 *) _obj->getName().buffer();
+    return (const char *) _obj->getName().buffer();
 }
 
 void spine_skin_add_skin(spine_skin obj, spine_skin other) {
@@ -90,18 +90,6 @@ void spine_skin_copy_skin(spine_skin obj, spine_skin other) {
     _obj->copySkin((Skin *) other);
 }
 
-spine_attachment_map::entries spine_skin_get_attachments(spine_skin obj) {
-    if (!obj) return nullptr;
-    Skin *_obj = (Skin *) obj;
-    return _obj->getAttachments();
-}
-
-void * spine_skin_get_bones(spine_skin obj) {
-    if (!obj) return nullptr;
-    Skin *_obj = (Skin *) obj;
-    return (void *) _obj->getBones();
-}
-
 int32_t spine_skin_get_num_bones(spine_skin obj) {
     if (!obj) return 0;
     Skin *_obj = (Skin *) obj;
@@ -112,12 +100,6 @@ spine_bone_data *spine_skin_get_bones(spine_skin obj) {
     if (!obj) return nullptr;
     Skin *_obj = (Skin *) obj;
     return (spine_bone_data *) _obj->getBones().buffer();
-}
-
-void * spine_skin_get_constraints(spine_skin obj) {
-    if (!obj) return nullptr;
-    Skin *_obj = (Skin *) obj;
-    return (void *) _obj->getConstraints();
 }
 
 int32_t spine_skin_get_num_constraints(spine_skin obj) {
@@ -133,7 +115,7 @@ spine_constraint_data *spine_skin_get_constraints(spine_skin obj) {
 }
 
 spine_color spine_skin_get_color(spine_skin obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_color) 0;
     Skin *_obj = (Skin *) obj;
     return (spine_color) &_obj->getColor();
 }

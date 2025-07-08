@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_constraint_timeline spine_constraint_timeline_create(int32_t constraintIndex) {
+spine_constraint_timeline spine_constraint_timeline_create(int constraintIndex) {
     ConstraintTimeline *obj = new (__FILE__, __LINE__) ConstraintTimeline(constraintIndex);
     return (spine_constraint_timeline) obj;
 }
@@ -42,19 +42,17 @@ void spine_constraint_timeline_dispose(spine_constraint_timeline obj) {
     delete (ConstraintTimeline *) obj;
 }
 
-spine_rtti spine_constraint_timeline_get_rtti(spine_constraint_timeline obj) {
-    if (!obj) return nullptr;
-    ConstraintTimeline *_obj = (ConstraintTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_constraint_timeline_get_rtti() {
+    return (spine_rtti) &ConstraintTimeline::rtti;
 }
 
-int32_t spine_constraint_timeline_get_constraint_index(spine_constraint_timeline obj) {
+int spine_constraint_timeline_get_constraint_index(spine_constraint_timeline obj) {
     if (!obj) return 0;
     ConstraintTimeline *_obj = (ConstraintTimeline *) obj;
     return _obj->getConstraintIndex();
 }
 
-void spine_constraint_timeline_set_constraint_index(spine_constraint_timeline obj, int32_t value) {
+void spine_constraint_timeline_set_constraint_index(spine_constraint_timeline obj, int value) {
     if (!obj) return;
     ConstraintTimeline *_obj = (ConstraintTimeline *) obj;
     _obj->setConstraintIndex(value);

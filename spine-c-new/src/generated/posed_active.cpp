@@ -42,13 +42,13 @@ void spine_posed_active_dispose(spine_posed_active obj) {
     delete (PosedActive *) obj;
 }
 
-spine_bool spine_posed_active_is_active(spine_posed_active obj) {
-    if (!obj) return 0;
+bool spine_posed_active_is_active(spine_posed_active obj) {
+    if (!obj) return false;
     PosedActive *_obj = (PosedActive *) obj;
     return _obj->isActive();
 }
 
-void spine_posed_active_set_active(spine_posed_active obj, spine_bool value) {
+void spine_posed_active_set_active(spine_posed_active obj, bool value) {
     if (!obj) return;
     PosedActive *_obj = (PosedActive *) obj;
     _obj->setActive(value);

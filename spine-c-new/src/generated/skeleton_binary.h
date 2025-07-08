@@ -34,17 +34,15 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_skeleton_binary)
+#include "types.h"
 
 SPINE_C_EXPORT spine_skeleton_binary spine_skeleton_binary_create(spine_atlas atlas);
-SPINE_C_EXPORT spine_skeleton_binary spine_skeleton_binary_create_with_attachment_loader_bool(spine_attachment_loader attachmentLoader, spine_bool ownsLoader);
+SPINE_C_EXPORT spine_skeleton_binary spine_skeleton_binary_create_with_attachment_loader_bool(spine_attachment_loader attachmentLoader, bool ownsLoader);
 SPINE_C_EXPORT void spine_skeleton_binary_dispose(spine_skeleton_binary obj);
-SPINE_C_EXPORT spine_skeleton_data spine_skeleton_binary_read_skeleton_data(spine_skeleton_binary obj, spine_const unsigned char binary, int32_t length);
-SPINE_C_EXPORT spine_skeleton_data spine_skeleton_binary_read_skeleton_data_file(spine_skeleton_binary obj, const utf8 * path);
+SPINE_C_EXPORT spine_skeleton_data spine_skeleton_binary_read_skeleton_data(spine_skeleton_binary obj, const unsigned char * binary, int length);
+SPINE_C_EXPORT spine_skeleton_data spine_skeleton_binary_read_skeleton_data_file(spine_skeleton_binary obj, const char* path);
 SPINE_C_EXPORT void spine_skeleton_binary_set_scale(spine_skeleton_binary obj, float value);
-SPINE_C_EXPORT const utf8 * spine_skeleton_binary_get_error(spine_skeleton_binary obj);
+SPINE_C_EXPORT const char* spine_skeleton_binary_get_error(spine_skeleton_binary obj);
 
 #ifdef __cplusplus
 }

@@ -27,59 +27,39 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include "hash_map.h"
-#include <spine/spine.h>
+#ifndef SPINE_C_BASE_H
+#define SPINE_C_BASE_H
 
-using namespace spine;
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
 
-spine_hash_map spine_hash_map_create(void) {
-    HashMap *obj = new (__FILE__, __LINE__) HashMap();
-    return (spine_hash_map) obj;
-}
+#ifdef __cplusplus
+#if _WIN32
+#define SPINE_C_EXPORT extern "C" __declspec(dllexport)
+#else
+#ifdef __EMSCRIPTEN__
+#define SPINE_C_EXPORT extern "C" __attribute__((used))
+#else
+#define SPINE_C_EXPORT extern "C"
+#endif
+#endif
+#else
+#if _WIN32
+#define SPINE_C_EXPORT __declspec(dllexport)
+#else
+#ifdef __EMSCRIPTEN__
+#define SPINE_C_EXPORT __attribute__((used))
+#else
+#define SPINE_C_EXPORT
+#endif
+#endif
+#endif
 
-void spine_hash_map_dispose(spine_hash_map obj) {
-    if (!obj) return;
-    delete (HashMap *) obj;
-}
+#define SPINE_OPAQUE_TYPE(name)     \
+    typedef struct name##_wrapper { \
+        char _dummy;                \
+    } name##_wrapper;               \
+    typedef name##_wrapper *name;
 
-void spine_hash_map_clear(spine_hash_map obj) {
-    if (!obj) return ;
-    HashMap *_obj = (HashMap *) obj;
-    _obj->clear();
-}
-
-spine_size_t spine_hash_map_size(spine_hash_map obj) {
-    if (!obj) return nullptr;
-    HashMap *_obj = (HashMap *) obj;
-    return _obj->size();
-}
-
-void spine_hash_map_put(spine_hash_map obj, spine_k key, spine_v value) {
-    if (!obj) return ;
-    HashMap *_obj = (HashMap *) obj;
-    _obj->put(key, value);
-}
-
-spine_bool spine_hash_map_add_all(spine_hash_map obj, void * keys, spine_v value) {
-    if (!obj) return 0;
-    HashMap *_obj = (HashMap *) obj;
-    return _obj->addAll((Vector<K> &) keys, value);
-}
-
-spine_bool spine_hash_map_contains_key(spine_hash_map obj, spine_k key) {
-    if (!obj) return 0;
-    HashMap *_obj = (HashMap *) obj;
-    return _obj->containsKey(key);
-}
-
-spine_bool spine_hash_map_remove(spine_hash_map obj, spine_k key) {
-    if (!obj) return 0;
-    HashMap *_obj = (HashMap *) obj;
-    return _obj->remove(key);
-}
-
-spine_entries spine_hash_map_get_entries(spine_hash_map obj) {
-    if (!obj) return nullptr;
-    HashMap *_obj = (HashMap *) obj;
-    return _obj->getEntries();
-}
+#endif // SPINE_C_BASE_H

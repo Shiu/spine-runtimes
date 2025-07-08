@@ -37,8 +37,8 @@ void spine_from_rotate_dispose(spine_from_rotate obj) {
     delete (FromRotate *) obj;
 }
 
-float spine_from_rotate_value(spine_from_rotate obj, spine_skeleton skeleton, spine_bone_pose source, spine_bool local, spine_float offsets) {
+float spine_from_rotate_value(spine_from_rotate obj, spine_skeleton skeleton, spine_bone_pose source, bool local, float * offsets) {
     if (!obj) return 0;
     FromRotate *_obj = (FromRotate *) obj;
-    return _obj->value(skeleton, source, local, (float *) offsets);
+    return _obj->value(*(Skeleton*) skeleton, *(BonePose*) source, local, (float *) offsets);
 }

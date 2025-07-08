@@ -34,15 +34,13 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_slot_timeline)
-
-SPINE_C_EXPORT spine_slot_timeline spine_slot_timeline_create(int32_t slotIndex);
+SPINE_C_EXPORT spine_slot_timeline spine_slot_timeline_create(int slotIndex);
 SPINE_C_EXPORT void spine_slot_timeline_dispose(spine_slot_timeline obj);
-SPINE_C_EXPORT spine_rtti spine_slot_timeline_get_rtti(spine_slot_timeline obj);
-SPINE_C_EXPORT int32_t spine_slot_timeline_get_slot_index(spine_slot_timeline obj);
-SPINE_C_EXPORT void spine_slot_timeline_set_slot_index(spine_slot_timeline obj, int32_t value);
+SPINE_C_EXPORT spine_rtti spine_slot_timeline_get_rtti();
+SPINE_C_EXPORT int spine_slot_timeline_get_slot_index(spine_slot_timeline obj);
+SPINE_C_EXPORT void spine_slot_timeline_set_slot_index(spine_slot_timeline obj, int value);
 
 #ifdef __cplusplus
 }

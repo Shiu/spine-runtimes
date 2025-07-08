@@ -45,7 +45,7 @@ void spine_transform_constraint_pose_dispose(spine_transform_constraint_pose obj
 void spine_transform_constraint_pose_set(spine_transform_constraint_pose obj, spine_transform_constraint_pose value) {
     if (!obj) return;
     TransformConstraintPose *_obj = (TransformConstraintPose *) obj;
-    _obj->set(value);
+    _obj->set(*((TransformConstraintPose*) value));
 }
 
 float spine_transform_constraint_pose_get_mix_rotate(spine_transform_constraint_pose obj) {

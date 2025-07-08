@@ -32,20 +32,14 @@
 
 using namespace spine;
 
-spine_animation spine_animation_create(const utf8 * name, void * timelines, float duration) {
-    Animation *obj = new (__FILE__, __LINE__) Animation(String(name), (Vector<Timeline *> &) timelines, duration);
+spine_animation spine_animation_create(const char* name, spine_array_timeline timelines, float duration) {
+    Animation *obj = new (__FILE__, __LINE__) Animation(String(name), (Array<Timeline *> &) timelines, duration);
     return (spine_animation) obj;
 }
 
 void spine_animation_dispose(spine_animation obj) {
     if (!obj) return;
     delete (Animation *) obj;
-}
-
-void * spine_animation_get_timelines(spine_animation obj) {
-    if (!obj) return nullptr;
-    Animation *_obj = (Animation *) obj;
-    return (void *) _obj->getTimelines();
 }
 
 int32_t spine_animation_get_num_timelines(spine_animation obj) {
@@ -60,16 +54,16 @@ spine_timeline *spine_animation_get_timelines(spine_animation obj) {
     return (spine_timeline *) _obj->getTimelines().buffer();
 }
 
-void spine_animation_set_timelines(spine_animation obj, void * value) {
+void spine_animation_set_timelines(spine_animation obj, spine_array_timeline value) {
     if (!obj) return;
     Animation *_obj = (Animation *) obj;
-    _obj->setTimelines((Vector<Timeline *> &) value);
+    _obj->setTimelines((Array<Timeline *> &) value);
 }
 
-spine_bool spine_animation_has_timeline(spine_animation obj, void * ids) {
-    if (!obj) return 0;
+bool spine_animation_has_timeline(spine_animation obj, spine_array_property_id ids) {
+    if (!obj) return false;
     Animation *_obj = (Animation *) obj;
-    return _obj->hasTimeline((Vector<PropertyId> &) ids);
+    return _obj->hasTimeline((Array<PropertyId> &) ids);
 }
 
 float spine_animation_get_duration(spine_animation obj) {
@@ -84,22 +78,16 @@ void spine_animation_set_duration(spine_animation obj, float value) {
     _obj->setDuration(value);
 }
 
-void spine_animation_apply(spine_animation obj, spine_skeleton skeleton, float lastTime, float time, spine_bool loop, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_animation_apply(spine_animation obj, spine_skeleton skeleton, float lastTime, float time, bool loop, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     Animation *_obj = (Animation *) obj;
-    _obj->apply(skeleton, lastTime, time, loop, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, loop, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-const utf8 * spine_animation_get_name(spine_animation obj) {
+const char* spine_animation_get_name(spine_animation obj) {
     if (!obj) return nullptr;
     Animation *_obj = (Animation *) obj;
-    return (const utf8 *) _obj->getName().buffer();
-}
-
-int32_t * spine_animation_get_bones(spine_animation obj) {
-    if (!obj) return 0;
-    Animation *_obj = (Animation *) obj;
-    return _obj->getBones();
+    return (const char *) _obj->getName().buffer();
 }
 
 int32_t spine_animation_get_num_bones(spine_animation obj) {
@@ -108,8 +96,10 @@ int32_t spine_animation_get_num_bones(spine_animation obj) {
     return (int32_t) _obj->getBones().size();
 }
 
-int32_t *spine_animation_get_bones(spine_animation obj) {
+int *spine_animation_get_bones(spine_animation obj) {
     if (!obj) return nullptr;
     Animation *_obj = (Animation *) obj;
-    return (int32_t *) _obj->getBones().buffer();
+    auto& vec = _obj->getBones();
+    if (vec.size() == 0) return nullptr;
+    return (int *) &vec[0];
 }

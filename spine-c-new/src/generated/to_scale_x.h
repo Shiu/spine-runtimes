@@ -34,13 +34,11 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_to_scale_x)
+#include "types.h"
 
 SPINE_C_EXPORT void spine_to_scale_x_dispose(spine_to_scale_x obj);
 SPINE_C_EXPORT float spine_to_scale_x_mix(spine_to_scale_x obj, spine_transform_constraint_pose pose);
-SPINE_C_EXPORT void spine_to_scale_x_apply(spine_to_scale_x obj, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, spine_bool local, spine_bool additive);
+SPINE_C_EXPORT void spine_to_scale_x_apply(spine_to_scale_x obj, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, bool local, bool additive);
 
 #ifdef __cplusplus
 }

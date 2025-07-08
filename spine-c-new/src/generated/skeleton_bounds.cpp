@@ -42,70 +42,64 @@ void spine_skeleton_bounds_dispose(spine_skeleton_bounds obj) {
     delete (SkeletonBounds *) obj;
 }
 
-void spine_skeleton_bounds_update(spine_skeleton_bounds obj, spine_skeleton skeleton, spine_bool updateAabb) {
+void spine_skeleton_bounds_update(spine_skeleton_bounds obj, spine_skeleton skeleton, bool updateAabb) {
     if (!obj) return ;
     SkeletonBounds *_obj = (SkeletonBounds *) obj;
-    _obj->update(skeleton, updateAabb);
+    _obj->update(*(Skeleton*) skeleton, updateAabb);
 }
 
-spine_bool spine_skeleton_bounds_aabb_contains_point(spine_skeleton_bounds obj, float x, float y) {
-    if (!obj) return 0;
+bool spine_skeleton_bounds_aabb_contains_point(spine_skeleton_bounds obj, float x, float y) {
+    if (!obj) return false;
     SkeletonBounds *_obj = (SkeletonBounds *) obj;
     return _obj->aabbContainsPoint(x, y);
 }
 
-spine_bool spine_skeleton_bounds_aabb_intersects_segment(spine_skeleton_bounds obj, float x1, float y1, float x2, float y2) {
-    if (!obj) return 0;
+bool spine_skeleton_bounds_aabb_intersects_segment(spine_skeleton_bounds obj, float x1, float y1, float x2, float y2) {
+    if (!obj) return false;
     SkeletonBounds *_obj = (SkeletonBounds *) obj;
     return _obj->aabbIntersectsSegment(x1, y1, x2, y2);
 }
 
-spine_bool spine_skeleton_bounds_aabb_intersects_skeleton(spine_skeleton_bounds obj, spine_skeleton_bounds bounds) {
-    if (!obj) return 0;
+bool spine_skeleton_bounds_aabb_intersects_skeleton(spine_skeleton_bounds obj, spine_skeleton_bounds bounds) {
+    if (!obj) return false;
     SkeletonBounds *_obj = (SkeletonBounds *) obj;
-    return _obj->aabbIntersectsSkeleton(bounds);
+    return _obj->aabbIntersectsSkeleton(*(SkeletonBounds*) bounds);
 }
 
-spine_bool spine_skeleton_bounds_contains_point(spine_skeleton_bounds obj, spine_polygon polygon, float x, float y) {
-    if (!obj) return 0;
+bool spine_skeleton_bounds_contains_point(spine_skeleton_bounds obj, spine_polygon polygon, float x, float y) {
+    if (!obj) return false;
     SkeletonBounds *_obj = (SkeletonBounds *) obj;
     return _obj->containsPoint((Polygon *) polygon, x, y);
 }
 
-spine_bounding_box_attachment spine_skeleton_bounds_contains_point(spine_skeleton_bounds obj, float x, float y) {
-    if (!obj) return nullptr;
+spine_bounding_box_attachment spine_skeleton_bounds_contains_point_2(spine_skeleton_bounds obj, float x, float y) {
+    if (!obj) return (spine_bounding_box_attachment) 0;
     SkeletonBounds *_obj = (SkeletonBounds *) obj;
     return (spine_bounding_box_attachment) _obj->containsPoint(x, y);
 }
 
 spine_bounding_box_attachment spine_skeleton_bounds_intersects_segment(spine_skeleton_bounds obj, float x1, float y1, float x2, float y2) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_bounding_box_attachment) 0;
     SkeletonBounds *_obj = (SkeletonBounds *) obj;
     return (spine_bounding_box_attachment) _obj->intersectsSegment(x1, y1, x2, y2);
 }
 
-spine_bool spine_skeleton_bounds_intersects_segment(spine_skeleton_bounds obj, spine_polygon polygon, float x1, float y1, float x2, float y2) {
-    if (!obj) return 0;
+bool spine_skeleton_bounds_intersects_segment_5(spine_skeleton_bounds obj, spine_polygon polygon, float x1, float y1, float x2, float y2) {
+    if (!obj) return false;
     SkeletonBounds *_obj = (SkeletonBounds *) obj;
     return _obj->intersectsSegment((Polygon *) polygon, x1, y1, x2, y2);
 }
 
 spine_polygon spine_skeleton_bounds_get_polygon(spine_skeleton_bounds obj, spine_bounding_box_attachment attachment) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_polygon) 0;
     SkeletonBounds *_obj = (SkeletonBounds *) obj;
     return (spine_polygon) _obj->getPolygon((BoundingBoxAttachment *) attachment);
 }
 
 spine_bounding_box_attachment spine_skeleton_bounds_get_bounding_box(spine_skeleton_bounds obj, spine_polygon polygon) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_bounding_box_attachment) 0;
     SkeletonBounds *_obj = (SkeletonBounds *) obj;
     return (spine_bounding_box_attachment) _obj->getBoundingBox((Polygon *) polygon);
-}
-
-void * spine_skeleton_bounds_get_polygons(spine_skeleton_bounds obj) {
-    if (!obj) return nullptr;
-    SkeletonBounds *_obj = (SkeletonBounds *) obj;
-    return (void *) _obj->getPolygons();
 }
 
 int32_t spine_skeleton_bounds_get_num_polygons(spine_skeleton_bounds obj) {
@@ -118,12 +112,6 @@ spine_polygon *spine_skeleton_bounds_get_polygons(spine_skeleton_bounds obj) {
     if (!obj) return nullptr;
     SkeletonBounds *_obj = (SkeletonBounds *) obj;
     return (spine_polygon *) _obj->getPolygons().buffer();
-}
-
-void * spine_skeleton_bounds_get_bounding_boxes(spine_skeleton_bounds obj) {
-    if (!obj) return nullptr;
-    SkeletonBounds *_obj = (SkeletonBounds *) obj;
-    return (void *) _obj->getBoundingBoxes();
 }
 
 int32_t spine_skeleton_bounds_get_num_bounding_boxes(spine_skeleton_bounds obj) {

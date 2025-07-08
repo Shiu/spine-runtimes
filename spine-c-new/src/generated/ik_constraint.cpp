@@ -33,7 +33,7 @@
 using namespace spine;
 
 spine_ik_constraint spine_ik_constraint_create(spine_ik_constraint_data data, spine_skeleton skeleton) {
-    IkConstraint *obj = new (__FILE__, __LINE__) IkConstraint(data, skeleton);
+    IkConstraint *obj = new (__FILE__, __LINE__) IkConstraint(*(IkConstraintData*) data, *(Skeleton*) skeleton);
     return (spine_ik_constraint) obj;
 }
 
@@ -42,32 +42,30 @@ void spine_ik_constraint_dispose(spine_ik_constraint obj) {
     delete (IkConstraint *) obj;
 }
 
-spine_rtti spine_ik_constraint_get_rtti(spine_ik_constraint obj) {
-    if (!obj) return nullptr;
-    IkConstraint *_obj = (IkConstraint *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_ik_constraint_get_rtti() {
+    return (spine_rtti) &IkConstraint::rtti;
 }
 
 spine_ik_constraint spine_ik_constraint_copy(spine_ik_constraint obj, spine_skeleton skeleton) {
     if (!obj) return 0;
     IkConstraint *_obj = (IkConstraint *) obj;
-    return (spine_ik_constraint) _obj->copy(skeleton);
+    return (spine_ik_constraint) _obj->copy(*(Skeleton*) skeleton);
 }
 
 void spine_ik_constraint_update(spine_ik_constraint obj, spine_skeleton skeleton, spine_physics physics) {
     if (!obj) return ;
     IkConstraint *_obj = (IkConstraint *) obj;
-    _obj->update(skeleton, physics);
+    _obj->update(*(Skeleton*) skeleton, (Physics) physics);
 }
 
 void spine_ik_constraint_sort(spine_ik_constraint obj, spine_skeleton skeleton) {
     if (!obj) return ;
     IkConstraint *_obj = (IkConstraint *) obj;
-    _obj->sort(skeleton);
+    _obj->sort(*(Skeleton*) skeleton);
 }
 
-spine_bool spine_ik_constraint_is_source_active(spine_ik_constraint obj) {
-    if (!obj) return 0;
+bool spine_ik_constraint_is_source_active(spine_ik_constraint obj) {
+    if (!obj) return false;
     IkConstraint *_obj = (IkConstraint *) obj;
     return _obj->isSourceActive();
 }
@@ -75,13 +73,7 @@ spine_bool spine_ik_constraint_is_source_active(spine_ik_constraint obj) {
 spine_ik_constraint_data spine_ik_constraint_get_data(spine_ik_constraint obj) {
     if (!obj) return 0;
     IkConstraint *_obj = (IkConstraint *) obj;
-    return _obj->getData();
-}
-
-void * spine_ik_constraint_get_bones(spine_ik_constraint obj) {
-    if (!obj) return nullptr;
-    IkConstraint *_obj = (IkConstraint *) obj;
-    return (void *) _obj->getBones();
+    return (spine_ik_constraint_data) &_obj->getData();
 }
 
 int32_t spine_ik_constraint_get_num_bones(spine_ik_constraint obj) {
@@ -97,7 +89,7 @@ spine_bone_pose *spine_ik_constraint_get_bones(spine_ik_constraint obj) {
 }
 
 spine_bone spine_ik_constraint_get_target(spine_ik_constraint obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_bone) 0;
     IkConstraint *_obj = (IkConstraint *) obj;
     return (spine_bone) _obj->getTarget();
 }
@@ -123,13 +115,13 @@ void spine_ik_constraint_setup_pose(spine_ik_constraint obj) {
 spine_ik_constraint_pose spine_ik_constraint_get_pose(spine_ik_constraint obj) {
     if (!obj) return 0;
     IkConstraint *_obj = (IkConstraint *) obj;
-    return _obj->getPose();
+    return (spine_ik_constraint_pose) &_obj->getPose();
 }
 
 spine_ik_constraint_pose spine_ik_constraint_get_applied_pose(spine_ik_constraint obj) {
     if (!obj) return 0;
     IkConstraint *_obj = (IkConstraint *) obj;
-    return _obj->getAppliedPose();
+    return (spine_ik_constraint_pose) &_obj->getAppliedPose();
 }
 
 void spine_ik_constraint_reset_constrained(spine_ik_constraint obj) {
@@ -144,19 +136,19 @@ void spine_ik_constraint_constrained(spine_ik_constraint obj) {
     _obj->constrained();
 }
 
-spine_bool spine_ik_constraint_is_pose_equal_to_applied(spine_ik_constraint obj) {
-    if (!obj) return 0;
+bool spine_ik_constraint_is_pose_equal_to_applied(spine_ik_constraint obj) {
+    if (!obj) return false;
     IkConstraint *_obj = (IkConstraint *) obj;
     return _obj->isPoseEqualToApplied();
 }
 
-spine_bool spine_ik_constraint_is_active(spine_ik_constraint obj) {
-    if (!obj) return 0;
+bool spine_ik_constraint_is_active(spine_ik_constraint obj) {
+    if (!obj) return false;
     IkConstraint *_obj = (IkConstraint *) obj;
     return _obj->isActive();
 }
 
-void spine_ik_constraint_set_active(spine_ik_constraint obj, spine_bool value) {
+void spine_ik_constraint_set_active(spine_ik_constraint obj, bool value) {
     if (!obj) return;
     IkConstraint *_obj = (IkConstraint *) obj;
     _obj->setActive(value);

@@ -34,17 +34,15 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_animation_state_data)
+#include "types.h"
 
 SPINE_C_EXPORT spine_animation_state_data spine_animation_state_data_create(spine_skeleton_data skeletonData);
 SPINE_C_EXPORT void spine_animation_state_data_dispose(spine_animation_state_data obj);
 SPINE_C_EXPORT spine_skeleton_data spine_animation_state_data_get_skeleton_data(spine_animation_state_data obj);
 SPINE_C_EXPORT float spine_animation_state_data_get_default_mix(spine_animation_state_data obj);
 SPINE_C_EXPORT void spine_animation_state_data_set_default_mix(spine_animation_state_data obj, float value);
-SPINE_C_EXPORT void spine_animation_state_data_set_mix(spine_animation_state_data obj, const utf8 * fromName, const utf8 * toName, float duration);
-SPINE_C_EXPORT void spine_animation_state_data_set_mix(spine_animation_state_data obj, spine_animation from, spine_animation to, float duration);
+SPINE_C_EXPORT void spine_animation_state_data_set_mix(spine_animation_state_data obj, const char* fromName, const char* toName, float duration);
+SPINE_C_EXPORT void spine_animation_state_data_set_mix_3(spine_animation_state_data obj, spine_animation from, spine_animation to, float duration);
 SPINE_C_EXPORT float spine_animation_state_data_get_mix(spine_animation_state_data obj, spine_animation from, spine_animation to);
 SPINE_C_EXPORT void spine_animation_state_data_clear(spine_animation_state_data obj);
 

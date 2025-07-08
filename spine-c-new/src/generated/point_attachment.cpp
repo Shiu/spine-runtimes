@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_point_attachment spine_point_attachment_create(const utf8 * name) {
+spine_point_attachment spine_point_attachment_create(const char* name) {
     PointAttachment *obj = new (__FILE__, __LINE__) PointAttachment(String(name));
     return (spine_point_attachment) obj;
 }
@@ -42,10 +42,8 @@ void spine_point_attachment_dispose(spine_point_attachment obj) {
     delete (PointAttachment *) obj;
 }
 
-spine_rtti spine_point_attachment_get_rtti(spine_point_attachment obj) {
-    if (!obj) return nullptr;
-    PointAttachment *_obj = (PointAttachment *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_point_attachment_get_rtti() {
+    return (spine_rtti) &PointAttachment::rtti;
 }
 
 float spine_point_attachment_get_x(spine_point_attachment obj) {
@@ -85,36 +83,36 @@ void spine_point_attachment_set_rotation(spine_point_attachment obj, float value
 }
 
 spine_color spine_point_attachment_get_color(spine_point_attachment obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_color) 0;
     PointAttachment *_obj = (PointAttachment *) obj;
     return (spine_color) &_obj->getColor();
 }
 
-void spine_point_attachment_compute_world_position(spine_point_attachment obj, spine_bone_pose bone, float ox, float oy) {
+void spine_point_attachment_compute_world_position(spine_point_attachment obj, spine_bone_pose bone, float* ox, float* oy) {
     if (!obj) return ;
     PointAttachment *_obj = (PointAttachment *) obj;
-    _obj->computeWorldPosition(bone, ox, oy);
+    _obj->computeWorldPosition(*(BonePose*) bone, *ox, *oy);
 }
 
 float spine_point_attachment_compute_world_rotation(spine_point_attachment obj, spine_bone_pose bone) {
     if (!obj) return 0;
     PointAttachment *_obj = (PointAttachment *) obj;
-    return _obj->computeWorldRotation(bone);
+    return _obj->computeWorldRotation(*(BonePose*) bone);
 }
 
 spine_attachment spine_point_attachment_copy(spine_point_attachment obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_attachment) 0;
     PointAttachment *_obj = (PointAttachment *) obj;
     return (spine_attachment) _obj->copy();
 }
 
-const utf8 * spine_point_attachment_get_name(spine_point_attachment obj) {
+const char* spine_point_attachment_get_name(spine_point_attachment obj) {
     if (!obj) return nullptr;
     PointAttachment *_obj = (PointAttachment *) obj;
-    return (const utf8 *) _obj->getName().buffer();
+    return (const char *) _obj->getName().buffer();
 }
 
-int32_t spine_point_attachment_get_ref_count(spine_point_attachment obj) {
+int spine_point_attachment_get_ref_count(spine_point_attachment obj) {
     if (!obj) return 0;
     PointAttachment *_obj = (PointAttachment *) obj;
     return _obj->getRefCount();

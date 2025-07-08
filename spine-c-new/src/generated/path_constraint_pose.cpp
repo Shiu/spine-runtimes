@@ -45,7 +45,7 @@ void spine_path_constraint_pose_dispose(spine_path_constraint_pose obj) {
 void spine_path_constraint_pose_set(spine_path_constraint_pose obj, spine_path_constraint_pose value) {
     if (!obj) return;
     PathConstraintPose *_obj = (PathConstraintPose *) obj;
-    _obj->set(value);
+    _obj->set(*((PathConstraintPose*) value));
 }
 
 float spine_path_constraint_pose_get_position(spine_path_constraint_pose obj) {

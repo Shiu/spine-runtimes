@@ -30,25 +30,14 @@
 #ifndef SPINE_C_H
 #define SPINE_C_H
 
-// Custom types and functions
-#include "../src/custom.h"
+// Base definitions
+#include "../src/base.h"
 
-// Generated enum types
-#include "../src/generated/event_type.h"
-#include "../src/generated/format.h"
-#include "../src/generated/texture_filter.h"
-#include "../src/generated/texture_wrap.h"
-#include "../src/generated/attachment_type.h"
-#include "../src/generated/blend_mode.h"
-#include "../src/generated/inherit.h"
-#include "../src/generated/mix_blend.h"
-#include "../src/generated/mix_direction.h"
-#include "../src/generated/physics.h"
-#include "../src/generated/position_mode.h"
-#include "../src/generated/property.h"
-#include "../src/generated/rotate_mode.h"
-#include "../src/generated/sequence_mode.h"
-#include "../src/generated/spacing_mode.h"
+// All type declarations and enum includes
+#include "../src/generated/types.h"
+
+// Extension functions
+#include "../src/extensions.h"
 
 // Generated class types
 #include "../src/generated/animation.h"
@@ -80,9 +69,7 @@
 #include "../src/generated/rgba2_timeline.h"
 #include "../src/generated/rgb2_timeline.h"
 #include "../src/generated/constraint.h"
-#include "../src/generated/constraint_generic.h"
 #include "../src/generated/constraint_data.h"
-#include "../src/generated/constraint_data_generic.h"
 #include "../src/generated/constraint_timeline.h"
 #include "../src/generated/constraint_timeline1.h"
 #include "../src/generated/curve_timeline.h"
@@ -93,7 +80,6 @@
 #include "../src/generated/event.h"
 #include "../src/generated/event_data.h"
 #include "../src/generated/event_timeline.h"
-#include "../src/generated/hash_map.h"
 #include "../src/generated/ik_constraint.h"
 #include "../src/generated/ik_constraint_data.h"
 #include "../src/generated/ik_constraint_pose.h"
@@ -124,12 +110,9 @@
 #include "../src/generated/physics_constraint_mix_timeline.h"
 #include "../src/generated/physics_constraint_reset_timeline.h"
 #include "../src/generated/point_attachment.h"
-#include "../src/generated/pose.h"
 #include "../src/generated/posed.h"
-#include "../src/generated/posed_generic.h"
 #include "../src/generated/posed_active.h"
 #include "../src/generated/posed_data.h"
-#include "../src/generated/posed_data_generic.h"
 #include "../src/generated/rtti.h"
 #include "../src/generated/region_attachment.h"
 #include "../src/generated/rotate_timeline.h"

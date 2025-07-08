@@ -34,24 +34,21 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_slot_pose)
+#include "types.h"
 
 SPINE_C_EXPORT spine_slot_pose spine_slot_pose_create(void);
 SPINE_C_EXPORT void spine_slot_pose_dispose(spine_slot_pose obj);
 SPINE_C_EXPORT void spine_slot_pose_set(spine_slot_pose obj, spine_slot_pose value);
 SPINE_C_EXPORT spine_color spine_slot_pose_get_color(spine_slot_pose obj);
 SPINE_C_EXPORT spine_color spine_slot_pose_get_dark_color(spine_slot_pose obj);
-SPINE_C_EXPORT spine_bool spine_slot_pose_has_dark_color(spine_slot_pose obj);
-SPINE_C_EXPORT void spine_slot_pose_set_has_dark_color(spine_slot_pose obj, spine_bool value);
+SPINE_C_EXPORT bool spine_slot_pose_has_dark_color(spine_slot_pose obj);
+SPINE_C_EXPORT void spine_slot_pose_set_has_dark_color(spine_slot_pose obj, bool value);
 SPINE_C_EXPORT spine_attachment spine_slot_pose_get_attachment(spine_slot_pose obj);
 SPINE_C_EXPORT void spine_slot_pose_set_attachment(spine_slot_pose obj, spine_attachment value);
-SPINE_C_EXPORT int32_t spine_slot_pose_get_sequence_index(spine_slot_pose obj);
-SPINE_C_EXPORT void spine_slot_pose_set_sequence_index(spine_slot_pose obj, int32_t value);
-SPINE_C_EXPORT void * spine_slot_pose_get_deform(spine_slot_pose obj);
+SPINE_C_EXPORT int spine_slot_pose_get_sequence_index(spine_slot_pose obj);
+SPINE_C_EXPORT void spine_slot_pose_set_sequence_index(spine_slot_pose obj, int value);
 SPINE_C_EXPORT int32_t spine_slot_pose_get_num_deform(spine_slot_pose obj);
-SPINE_C_EXPORT spine_float *spine_slot_pose_get_deform(spine_slot_pose obj);
+SPINE_C_EXPORT float *spine_slot_pose_get_deform(spine_slot_pose obj);
 
 #ifdef __cplusplus
 }

@@ -34,16 +34,14 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_physics_constraint)
+#include "types.h"
 
 SPINE_C_EXPORT spine_physics_constraint spine_physics_constraint_create(spine_physics_constraint_data data, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_physics_constraint_dispose(spine_physics_constraint obj);
-SPINE_C_EXPORT spine_rtti spine_physics_constraint_get_rtti(spine_physics_constraint obj);
+SPINE_C_EXPORT spine_rtti spine_physics_constraint_get_rtti();
 SPINE_C_EXPORT void spine_physics_constraint_update(spine_physics_constraint obj, spine_skeleton skeleton, spine_physics physics);
 SPINE_C_EXPORT void spine_physics_constraint_sort(spine_physics_constraint obj, spine_skeleton skeleton);
-SPINE_C_EXPORT spine_bool spine_physics_constraint_is_source_active(spine_physics_constraint obj);
+SPINE_C_EXPORT bool spine_physics_constraint_is_source_active(spine_physics_constraint obj);
 SPINE_C_EXPORT spine_physics_constraint spine_physics_constraint_copy(spine_physics_constraint obj, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_physics_constraint_reset(spine_physics_constraint obj, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_physics_constraint_translate(spine_physics_constraint obj, float x, float y);
@@ -57,9 +55,9 @@ SPINE_C_EXPORT spine_physics_constraint_pose spine_physics_constraint_get_pose(s
 SPINE_C_EXPORT spine_physics_constraint_pose spine_physics_constraint_get_applied_pose(spine_physics_constraint obj);
 SPINE_C_EXPORT void spine_physics_constraint_reset_constrained(spine_physics_constraint obj);
 SPINE_C_EXPORT void spine_physics_constraint_constrained(spine_physics_constraint obj);
-SPINE_C_EXPORT spine_bool spine_physics_constraint_is_pose_equal_to_applied(spine_physics_constraint obj);
-SPINE_C_EXPORT spine_bool spine_physics_constraint_is_active(spine_physics_constraint obj);
-SPINE_C_EXPORT void spine_physics_constraint_set_active(spine_physics_constraint obj, spine_bool value);
+SPINE_C_EXPORT bool spine_physics_constraint_is_pose_equal_to_applied(spine_physics_constraint obj);
+SPINE_C_EXPORT bool spine_physics_constraint_is_active(spine_physics_constraint obj);
+SPINE_C_EXPORT void spine_physics_constraint_set_active(spine_physics_constraint obj, bool value);
 
 #ifdef __cplusplus
 }

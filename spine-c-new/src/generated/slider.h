@@ -34,17 +34,15 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_slider)
+#include "types.h"
 
 SPINE_C_EXPORT spine_slider spine_slider_create(spine_slider_data data, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_slider_dispose(spine_slider obj);
-SPINE_C_EXPORT spine_rtti spine_slider_get_rtti(spine_slider obj);
+SPINE_C_EXPORT spine_rtti spine_slider_get_rtti();
 SPINE_C_EXPORT spine_slider spine_slider_copy(spine_slider obj, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_slider_update(spine_slider obj, spine_skeleton skeleton, spine_physics physics);
 SPINE_C_EXPORT void spine_slider_sort(spine_slider obj, spine_skeleton skeleton);
-SPINE_C_EXPORT spine_bool spine_slider_is_source_active(spine_slider obj);
+SPINE_C_EXPORT bool spine_slider_is_source_active(spine_slider obj);
 SPINE_C_EXPORT spine_bone spine_slider_get_bone(spine_slider obj);
 SPINE_C_EXPORT void spine_slider_set_bone(spine_slider obj, spine_bone value);
 SPINE_C_EXPORT spine_constraint_data spine_slider_get_data(spine_slider obj);
@@ -54,9 +52,9 @@ SPINE_C_EXPORT spine_slider_pose spine_slider_get_pose(spine_slider obj);
 SPINE_C_EXPORT spine_slider_pose spine_slider_get_applied_pose(spine_slider obj);
 SPINE_C_EXPORT void spine_slider_reset_constrained(spine_slider obj);
 SPINE_C_EXPORT void spine_slider_constrained(spine_slider obj);
-SPINE_C_EXPORT spine_bool spine_slider_is_pose_equal_to_applied(spine_slider obj);
-SPINE_C_EXPORT spine_bool spine_slider_is_active(spine_slider obj);
-SPINE_C_EXPORT void spine_slider_set_active(spine_slider obj, spine_bool value);
+SPINE_C_EXPORT bool spine_slider_is_pose_equal_to_applied(spine_slider obj);
+SPINE_C_EXPORT bool spine_slider_is_active(spine_slider obj);
+SPINE_C_EXPORT void spine_slider_set_active(spine_slider obj, bool value);
 
 #ifdef __cplusplus
 }

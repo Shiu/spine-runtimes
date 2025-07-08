@@ -37,7 +37,7 @@ spine_skeleton_binary spine_skeleton_binary_create(spine_atlas atlas) {
     return (spine_skeleton_binary) obj;
 }
 
-spine_skeleton_binary spine_skeleton_binary_create_with_attachment_loader_bool(spine_attachment_loader attachmentLoader, spine_bool ownsLoader) {
+spine_skeleton_binary spine_skeleton_binary_create_with_attachment_loader_bool(spine_attachment_loader attachmentLoader, bool ownsLoader) {
     SkeletonBinary *obj = new (__FILE__, __LINE__) SkeletonBinary((AttachmentLoader *) attachmentLoader, ownsLoader);
     return (spine_skeleton_binary) obj;
 }
@@ -47,14 +47,14 @@ void spine_skeleton_binary_dispose(spine_skeleton_binary obj) {
     delete (SkeletonBinary *) obj;
 }
 
-spine_skeleton_data spine_skeleton_binary_read_skeleton_data(spine_skeleton_binary obj, spine_const unsigned char binary, int32_t length) {
-    if (!obj) return nullptr;
+spine_skeleton_data spine_skeleton_binary_read_skeleton_data(spine_skeleton_binary obj, const unsigned char * binary, int length) {
+    if (!obj) return (spine_skeleton_data) 0;
     SkeletonBinary *_obj = (SkeletonBinary *) obj;
     return (spine_skeleton_data) _obj->readSkeletonData((const unsigned char *) binary, length);
 }
 
-spine_skeleton_data spine_skeleton_binary_read_skeleton_data_file(spine_skeleton_binary obj, const utf8 * path) {
-    if (!obj) return nullptr;
+spine_skeleton_data spine_skeleton_binary_read_skeleton_data_file(spine_skeleton_binary obj, const char* path) {
+    if (!obj) return (spine_skeleton_data) 0;
     SkeletonBinary *_obj = (SkeletonBinary *) obj;
     return (spine_skeleton_data) _obj->readSkeletonDataFile(String(path));
 }
@@ -65,8 +65,8 @@ void spine_skeleton_binary_set_scale(spine_skeleton_binary obj, float value) {
     _obj->setScale(value);
 }
 
-const utf8 * spine_skeleton_binary_get_error(spine_skeleton_binary obj) {
+const char* spine_skeleton_binary_get_error(spine_skeleton_binary obj) {
     if (!obj) return nullptr;
     SkeletonBinary *_obj = (SkeletonBinary *) obj;
-    return (const utf8 *) _obj->getError().buffer();
+    return (const char *) _obj->getError().buffer();
 }

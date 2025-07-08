@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_slider_pose)
+#include "types.h"
 
 SPINE_C_EXPORT spine_slider_pose spine_slider_pose_create(void);
 SPINE_C_EXPORT void spine_slider_pose_dispose(spine_slider_pose obj);

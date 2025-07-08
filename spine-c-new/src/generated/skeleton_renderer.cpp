@@ -43,7 +43,7 @@ void spine_skeleton_renderer_dispose(spine_skeleton_renderer obj) {
 }
 
 spine_render_command spine_skeleton_renderer_render(spine_skeleton_renderer obj, spine_skeleton skeleton) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_render_command) 0;
     SkeletonRenderer *_obj = (SkeletonRenderer *) obj;
-    return (spine_render_command) _obj->render(skeleton);
+    return (spine_render_command) _obj->render(*(Skeleton*) skeleton);
 }

@@ -33,7 +33,7 @@
 using namespace spine;
 
 spine_physics_constraint spine_physics_constraint_create(spine_physics_constraint_data data, spine_skeleton skeleton) {
-    PhysicsConstraint *obj = new (__FILE__, __LINE__) PhysicsConstraint(data, skeleton);
+    PhysicsConstraint *obj = new (__FILE__, __LINE__) PhysicsConstraint(*(PhysicsConstraintData*) data, *(Skeleton*) skeleton);
     return (spine_physics_constraint) obj;
 }
 
@@ -42,26 +42,24 @@ void spine_physics_constraint_dispose(spine_physics_constraint obj) {
     delete (PhysicsConstraint *) obj;
 }
 
-spine_rtti spine_physics_constraint_get_rtti(spine_physics_constraint obj) {
-    if (!obj) return nullptr;
-    PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_physics_constraint_get_rtti() {
+    return (spine_rtti) &PhysicsConstraint::rtti;
 }
 
 void spine_physics_constraint_update(spine_physics_constraint obj, spine_skeleton skeleton, spine_physics physics) {
     if (!obj) return ;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
-    _obj->update(skeleton, physics);
+    _obj->update(*(Skeleton*) skeleton, (Physics) physics);
 }
 
 void spine_physics_constraint_sort(spine_physics_constraint obj, spine_skeleton skeleton) {
     if (!obj) return ;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
-    _obj->sort(skeleton);
+    _obj->sort(*(Skeleton*) skeleton);
 }
 
-spine_bool spine_physics_constraint_is_source_active(spine_physics_constraint obj) {
-    if (!obj) return 0;
+bool spine_physics_constraint_is_source_active(spine_physics_constraint obj) {
+    if (!obj) return false;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
     return _obj->isSourceActive();
 }
@@ -69,13 +67,13 @@ spine_bool spine_physics_constraint_is_source_active(spine_physics_constraint ob
 spine_physics_constraint spine_physics_constraint_copy(spine_physics_constraint obj, spine_skeleton skeleton) {
     if (!obj) return 0;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
-    return (spine_physics_constraint) _obj->copy(skeleton);
+    return (spine_physics_constraint) _obj->copy(*(Skeleton*) skeleton);
 }
 
 void spine_physics_constraint_reset(spine_physics_constraint obj, spine_skeleton skeleton) {
     if (!obj) return ;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
-    _obj->reset(skeleton);
+    _obj->reset(*(Skeleton*) skeleton);
 }
 
 void spine_physics_constraint_translate(spine_physics_constraint obj, float x, float y) {
@@ -91,21 +89,21 @@ void spine_physics_constraint_rotate(spine_physics_constraint obj, float x, floa
 }
 
 spine_bone_pose spine_physics_constraint_get_bone(spine_physics_constraint obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_bone_pose) 0;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
-    return _obj->getBone();
+    return (spine_bone_pose) &_obj->getBone();
 }
 
 void spine_physics_constraint_set_bone(spine_physics_constraint obj, spine_bone_pose value) {
     if (!obj) return;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
-    _obj->setBone(value);
+    _obj->setBone(*((BonePose*) value));
 }
 
 spine_constraint_data spine_physics_constraint_get_data(spine_physics_constraint obj) {
     if (!obj) return 0;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
-    return _obj->getData();
+    return (spine_constraint_data) &_obj->getData();
 }
 
 void spine_physics_constraint_pose(spine_physics_constraint obj) {
@@ -123,13 +121,13 @@ void spine_physics_constraint_setup_pose(spine_physics_constraint obj) {
 spine_physics_constraint_pose spine_physics_constraint_get_pose(spine_physics_constraint obj) {
     if (!obj) return 0;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
-    return _obj->getPose();
+    return (spine_physics_constraint_pose) &_obj->getPose();
 }
 
 spine_physics_constraint_pose spine_physics_constraint_get_applied_pose(spine_physics_constraint obj) {
     if (!obj) return 0;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
-    return _obj->getAppliedPose();
+    return (spine_physics_constraint_pose) &_obj->getAppliedPose();
 }
 
 void spine_physics_constraint_reset_constrained(spine_physics_constraint obj) {
@@ -144,19 +142,19 @@ void spine_physics_constraint_constrained(spine_physics_constraint obj) {
     _obj->constrained();
 }
 
-spine_bool spine_physics_constraint_is_pose_equal_to_applied(spine_physics_constraint obj) {
-    if (!obj) return 0;
+bool spine_physics_constraint_is_pose_equal_to_applied(spine_physics_constraint obj) {
+    if (!obj) return false;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
     return _obj->isPoseEqualToApplied();
 }
 
-spine_bool spine_physics_constraint_is_active(spine_physics_constraint obj) {
-    if (!obj) return 0;
+bool spine_physics_constraint_is_active(spine_physics_constraint obj) {
+    if (!obj) return false;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
     return _obj->isActive();
 }
 
-void spine_physics_constraint_set_active(spine_physics_constraint obj, spine_bool value) {
+void spine_physics_constraint_set_active(spine_physics_constraint obj, bool value) {
     if (!obj) return;
     PhysicsConstraint *_obj = (PhysicsConstraint *) obj;
     _obj->setActive(value);

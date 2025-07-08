@@ -24,40 +24,23 @@ type: EventQueue
 type: Json
 type: BaseTimeline
 
-# Excluded methods (specific methods on otherwise included types)
+# We handle those in extensions.cpp through a simpler mechanism
 method: AnimationState::setListener
 method: AnimationState::addListener
 method: AnimationState::removeListener
 method: AnimationState::clearListeners
-method: AnimationState::disableQueue
-method: AnimationState::enableQueue
-method: AnimationState::setManualTrackEntryDisposal
-method: AnimationState::getManualTrackEntryDisposal
-method: Skeleton::updateCache
-method: Skeleton::printUpdateCache
-method: SkeletonData::setName
-method: SkeletonData::setVersion
-method: SkeletonData::setHash
-method: SkeletonData::setImagesPath
-method: SkeletonData::setAudioPath
-method: SkeletonData::setFps
-method: EventData::setIntValue
-method: EventData::setFloatValue
-method: EventData::setStringValue
-method: EventData::setAudioPath
-method: EventData::setVolume
-method: EventData::setBalance
+method: TrackEntry::setListener
+method: TrackEntry::getListener
+
+# Used in UE4, not used anywhere else
+method: AnimationState::setRendererObject
+method: TrackEntry::setRendererObject
 
 # Array<String> methods need special handling
 method: AttachmentTimeline.getAttachmentNames
 
-# BoneLocal/BonePose setScale is overloaded in a confusing way
-method: BoneLocal::setScale
-method: BonePose::setScale
-
-# Color set is overloaded with conflicting signatures
-method: Color::set
-
+# Can not emulate AttachmentMap::Entries, as that's stack allocated
+method: Skin::getAttachments
 
 # Exclude const versions of getSetupPose() - we'll only expose the non-const version
 method: BoneData::getSetupPose const

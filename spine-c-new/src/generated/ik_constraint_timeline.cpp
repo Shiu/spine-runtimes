@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_ik_constraint_timeline spine_ik_constraint_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t constraintIndex) {
+spine_ik_constraint_timeline spine_ik_constraint_timeline_create(size_t frameCount, size_t bezierCount, int constraintIndex) {
     IkConstraintTimeline *obj = new (__FILE__, __LINE__) IkConstraintTimeline(frameCount, bezierCount, constraintIndex);
     return (spine_ik_constraint_timeline) obj;
 }
@@ -42,52 +42,44 @@ void spine_ik_constraint_timeline_dispose(spine_ik_constraint_timeline obj) {
     delete (IkConstraintTimeline *) obj;
 }
 
-spine_rtti spine_ik_constraint_timeline_get_rtti(spine_ik_constraint_timeline obj) {
-    if (!obj) return nullptr;
-    IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_ik_constraint_timeline_get_rtti() {
+    return (spine_rtti) &IkConstraintTimeline::rtti;
 }
 
-void spine_ik_constraint_timeline_apply(spine_ik_constraint_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_ik_constraint_timeline_apply(spine_ik_constraint_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-void spine_ik_constraint_timeline_set_frame(spine_ik_constraint_timeline obj, int32_t frame, float time, float mix, float softness, int32_t bendDirection, spine_bool compress, spine_bool stretch) {
+void spine_ik_constraint_timeline_set_frame(spine_ik_constraint_timeline obj, int frame, float time, float mix, float softness, int bendDirection, bool compress, bool stretch) {
     if (!obj) return ;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
     _obj->setFrame(frame, time, mix, softness, bendDirection, compress, stretch);
 }
 
-void spine_ik_constraint_timeline_set_linear(spine_ik_constraint_timeline obj, spine_size_t value) {
+void spine_ik_constraint_timeline_set_linear(spine_ik_constraint_timeline obj, size_t value) {
     if (!obj) return;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
     _obj->setLinear(value);
 }
 
-void spine_ik_constraint_timeline_set_stepped(spine_ik_constraint_timeline obj, spine_size_t value) {
+void spine_ik_constraint_timeline_set_stepped(spine_ik_constraint_timeline obj, size_t value) {
     if (!obj) return;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
     _obj->setStepped(value);
 }
 
-void spine_ik_constraint_timeline_set_bezier(spine_ik_constraint_timeline obj, spine_size_t bezier, spine_size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2) {
+void spine_ik_constraint_timeline_set_bezier(spine_ik_constraint_timeline obj, size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2) {
     if (!obj) return ;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
     _obj->setBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
 }
 
-float spine_ik_constraint_timeline_get_bezier_value(spine_ik_constraint_timeline obj, float time, spine_size_t frame, spine_size_t valueOffset, spine_size_t i) {
+float spine_ik_constraint_timeline_get_bezier_value(spine_ik_constraint_timeline obj, float time, size_t frame, size_t valueOffset, size_t i) {
     if (!obj) return 0;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
     return _obj->getBezierValue(time, frame, valueOffset, i);
-}
-
-void * spine_ik_constraint_timeline_get_curves(spine_ik_constraint_timeline obj) {
-    if (!obj) return nullptr;
-    IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
-    return _obj->getCurves();
 }
 
 int32_t spine_ik_constraint_timeline_get_num_curves(spine_ik_constraint_timeline obj) {
@@ -96,28 +88,22 @@ int32_t spine_ik_constraint_timeline_get_num_curves(spine_ik_constraint_timeline
     return (int32_t) _obj->getCurves().size();
 }
 
-spine_float *spine_ik_constraint_timeline_get_curves(spine_ik_constraint_timeline obj) {
+float *spine_ik_constraint_timeline_get_curves(spine_ik_constraint_timeline obj) {
     if (!obj) return nullptr;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
-    return (spine_float *) _obj->getCurves().buffer();
+    return (float *) _obj->getCurves().buffer();
 }
 
-spine_size_t spine_ik_constraint_timeline_get_frame_entries(spine_ik_constraint_timeline obj) {
-    if (!obj) return nullptr;
+size_t spine_ik_constraint_timeline_get_frame_entries(spine_ik_constraint_timeline obj) {
+    if (!obj) return 0;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
     return _obj->getFrameEntries();
 }
 
-spine_size_t spine_ik_constraint_timeline_get_frame_count(spine_ik_constraint_timeline obj) {
-    if (!obj) return nullptr;
+size_t spine_ik_constraint_timeline_get_frame_count(spine_ik_constraint_timeline obj) {
+    if (!obj) return 0;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
     return _obj->getFrameCount();
-}
-
-void * spine_ik_constraint_timeline_get_frames(spine_ik_constraint_timeline obj) {
-    if (!obj) return nullptr;
-    IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
-    return _obj->getFrames();
 }
 
 int32_t spine_ik_constraint_timeline_get_num_frames(spine_ik_constraint_timeline obj) {
@@ -126,10 +112,10 @@ int32_t spine_ik_constraint_timeline_get_num_frames(spine_ik_constraint_timeline
     return (int32_t) _obj->getFrames().size();
 }
 
-spine_float *spine_ik_constraint_timeline_get_frames(spine_ik_constraint_timeline obj) {
+float *spine_ik_constraint_timeline_get_frames(spine_ik_constraint_timeline obj) {
     if (!obj) return nullptr;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
-    return (spine_float *) _obj->getFrames().buffer();
+    return (float *) _obj->getFrames().buffer();
 }
 
 float spine_ik_constraint_timeline_get_duration(spine_ik_constraint_timeline obj) {
@@ -138,31 +124,25 @@ float spine_ik_constraint_timeline_get_duration(spine_ik_constraint_timeline obj
     return _obj->getDuration();
 }
 
-void * spine_ik_constraint_timeline_get_property_ids(spine_ik_constraint_timeline obj) {
-    if (!obj) return nullptr;
-    IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
-    return _obj->getPropertyIds();
-}
-
 int32_t spine_ik_constraint_timeline_get_num_property_ids(spine_ik_constraint_timeline obj) {
     if (!obj) return 0;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
     return (int32_t) _obj->getPropertyIds().size();
 }
 
-spine_property_id *spine_ik_constraint_timeline_get_property_ids(spine_ik_constraint_timeline obj) {
+int64_t *spine_ik_constraint_timeline_get_property_ids(spine_ik_constraint_timeline obj) {
     if (!obj) return nullptr;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
-    return (spine_property_id *) _obj->getPropertyIds().buffer();
+    return (int64_t *) _obj->getPropertyIds().buffer();
 }
 
-int32_t spine_ik_constraint_timeline_get_constraint_index(spine_ik_constraint_timeline obj) {
+int spine_ik_constraint_timeline_get_constraint_index(spine_ik_constraint_timeline obj) {
     if (!obj) return 0;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
     return _obj->getConstraintIndex();
 }
 
-void spine_ik_constraint_timeline_set_constraint_index(spine_ik_constraint_timeline obj, int32_t value) {
+void spine_ik_constraint_timeline_set_constraint_index(spine_ik_constraint_timeline obj, int value) {
     if (!obj) return;
     IkConstraintTimeline *_obj = (IkConstraintTimeline *) obj;
     _obj->setConstraintIndex(value);

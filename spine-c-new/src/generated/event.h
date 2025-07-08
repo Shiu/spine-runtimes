@@ -34,20 +34,18 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_event)
+#include "types.h"
 
 SPINE_C_EXPORT spine_event spine_event_create(float time, spine_event_data data);
 SPINE_C_EXPORT void spine_event_dispose(spine_event obj);
 SPINE_C_EXPORT spine_event_data spine_event_get_data(spine_event obj);
 SPINE_C_EXPORT float spine_event_get_time(spine_event obj);
-SPINE_C_EXPORT int32_t spine_event_get_int(spine_event obj);
-SPINE_C_EXPORT void spine_event_set_int(spine_event obj, int32_t value);
+SPINE_C_EXPORT int spine_event_get_int(spine_event obj);
+SPINE_C_EXPORT void spine_event_set_int(spine_event obj, int value);
 SPINE_C_EXPORT float spine_event_get_float(spine_event obj);
 SPINE_C_EXPORT void spine_event_set_float(spine_event obj, float value);
-SPINE_C_EXPORT const utf8 * spine_event_get_string(spine_event obj);
-SPINE_C_EXPORT void spine_event_set_string(spine_event obj, const utf8 * value);
+SPINE_C_EXPORT const char* spine_event_get_string(spine_event obj);
+SPINE_C_EXPORT void spine_event_set_string(spine_event obj, const char* value);
 SPINE_C_EXPORT float spine_event_get_volume(spine_event obj);
 SPINE_C_EXPORT void spine_event_set_volume(spine_event obj, float value);
 SPINE_C_EXPORT float spine_event_get_balance(spine_event obj);

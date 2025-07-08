@@ -34,19 +34,23 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_event_data)
-
-SPINE_C_EXPORT spine_event_data spine_event_data_create(const utf8 * name);
+SPINE_C_EXPORT spine_event_data spine_event_data_create(const char* name);
 SPINE_C_EXPORT void spine_event_data_dispose(spine_event_data obj);
-SPINE_C_EXPORT const utf8 * spine_event_data_get_name(spine_event_data obj);
-SPINE_C_EXPORT int32_t spine_event_data_get_int_value(spine_event_data obj);
+SPINE_C_EXPORT const char* spine_event_data_get_name(spine_event_data obj);
+SPINE_C_EXPORT int spine_event_data_get_int_value(spine_event_data obj);
+SPINE_C_EXPORT void spine_event_data_set_int_value(spine_event_data obj, int value);
 SPINE_C_EXPORT float spine_event_data_get_float_value(spine_event_data obj);
-SPINE_C_EXPORT const utf8 * spine_event_data_get_string_value(spine_event_data obj);
-SPINE_C_EXPORT const utf8 * spine_event_data_get_audio_path(spine_event_data obj);
+SPINE_C_EXPORT void spine_event_data_set_float_value(spine_event_data obj, float value);
+SPINE_C_EXPORT const char* spine_event_data_get_string_value(spine_event_data obj);
+SPINE_C_EXPORT void spine_event_data_set_string_value(spine_event_data obj, const char* value);
+SPINE_C_EXPORT const char* spine_event_data_get_audio_path(spine_event_data obj);
+SPINE_C_EXPORT void spine_event_data_set_audio_path(spine_event_data obj, const char* value);
 SPINE_C_EXPORT float spine_event_data_get_volume(spine_event_data obj);
+SPINE_C_EXPORT void spine_event_data_set_volume(spine_event_data obj, float value);
 SPINE_C_EXPORT float spine_event_data_get_balance(spine_event_data obj);
+SPINE_C_EXPORT void spine_event_data_set_balance(spine_event_data obj, float value);
 
 #ifdef __cplusplus
 }

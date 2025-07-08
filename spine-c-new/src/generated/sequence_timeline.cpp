@@ -32,8 +32,8 @@
 
 using namespace spine;
 
-spine_sequence_timeline spine_sequence_timeline_create(spine_size_t frameCount, int32_t slotIndex, spine_spine::attachment attachment) {
-    SequenceTimeline *obj = new (__FILE__, __LINE__) SequenceTimeline(frameCount, slotIndex, (spine::Attachment *) attachment);
+spine_sequence_timeline spine_sequence_timeline_create(size_t frameCount, int slotIndex, spine_attachment attachment) {
+    SequenceTimeline *obj = new (__FILE__, __LINE__) SequenceTimeline(frameCount, slotIndex, (Attachment *) attachment);
     return (spine_sequence_timeline) obj;
 }
 
@@ -42,46 +42,38 @@ void spine_sequence_timeline_dispose(spine_sequence_timeline obj) {
     delete (SequenceTimeline *) obj;
 }
 
-spine_rtti spine_sequence_timeline_get_rtti(spine_sequence_timeline obj) {
-    if (!obj) return nullptr;
-    SequenceTimeline *_obj = (SequenceTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_sequence_timeline_get_rtti() {
+    return (spine_rtti) &SequenceTimeline::rtti;
 }
 
-void spine_sequence_timeline_apply(spine_sequence_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_sequence_timeline_apply(spine_sequence_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     SequenceTimeline *_obj = (SequenceTimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-void spine_sequence_timeline_set_frame(spine_sequence_timeline obj, int32_t frame, float time, spine_sequence_mode mode, int32_t index, float delay) {
+void spine_sequence_timeline_set_frame(spine_sequence_timeline obj, int frame, float time, spine_sequence_mode mode, int index, float delay) {
     if (!obj) return ;
     SequenceTimeline *_obj = (SequenceTimeline *) obj;
-    _obj->setFrame(frame, time, mode, index, delay);
+    _obj->setFrame(frame, time, (SequenceMode) mode, index, delay);
 }
 
 spine_attachment spine_sequence_timeline_get_attachment(spine_sequence_timeline obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_attachment) 0;
     SequenceTimeline *_obj = (SequenceTimeline *) obj;
     return (spine_attachment) _obj->getAttachment();
 }
 
-spine_size_t spine_sequence_timeline_get_frame_entries(spine_sequence_timeline obj) {
-    if (!obj) return nullptr;
+size_t spine_sequence_timeline_get_frame_entries(spine_sequence_timeline obj) {
+    if (!obj) return 0;
     SequenceTimeline *_obj = (SequenceTimeline *) obj;
     return _obj->getFrameEntries();
 }
 
-spine_size_t spine_sequence_timeline_get_frame_count(spine_sequence_timeline obj) {
-    if (!obj) return nullptr;
+size_t spine_sequence_timeline_get_frame_count(spine_sequence_timeline obj) {
+    if (!obj) return 0;
     SequenceTimeline *_obj = (SequenceTimeline *) obj;
     return _obj->getFrameCount();
-}
-
-void * spine_sequence_timeline_get_frames(spine_sequence_timeline obj) {
-    if (!obj) return nullptr;
-    SequenceTimeline *_obj = (SequenceTimeline *) obj;
-    return _obj->getFrames();
 }
 
 int32_t spine_sequence_timeline_get_num_frames(spine_sequence_timeline obj) {
@@ -90,10 +82,10 @@ int32_t spine_sequence_timeline_get_num_frames(spine_sequence_timeline obj) {
     return (int32_t) _obj->getFrames().size();
 }
 
-spine_float *spine_sequence_timeline_get_frames(spine_sequence_timeline obj) {
+float *spine_sequence_timeline_get_frames(spine_sequence_timeline obj) {
     if (!obj) return nullptr;
     SequenceTimeline *_obj = (SequenceTimeline *) obj;
-    return (spine_float *) _obj->getFrames().buffer();
+    return (float *) _obj->getFrames().buffer();
 }
 
 float spine_sequence_timeline_get_duration(spine_sequence_timeline obj) {
@@ -102,31 +94,25 @@ float spine_sequence_timeline_get_duration(spine_sequence_timeline obj) {
     return _obj->getDuration();
 }
 
-void * spine_sequence_timeline_get_property_ids(spine_sequence_timeline obj) {
-    if (!obj) return nullptr;
-    SequenceTimeline *_obj = (SequenceTimeline *) obj;
-    return _obj->getPropertyIds();
-}
-
 int32_t spine_sequence_timeline_get_num_property_ids(spine_sequence_timeline obj) {
     if (!obj) return 0;
     SequenceTimeline *_obj = (SequenceTimeline *) obj;
     return (int32_t) _obj->getPropertyIds().size();
 }
 
-spine_property_id *spine_sequence_timeline_get_property_ids(spine_sequence_timeline obj) {
+int64_t *spine_sequence_timeline_get_property_ids(spine_sequence_timeline obj) {
     if (!obj) return nullptr;
     SequenceTimeline *_obj = (SequenceTimeline *) obj;
-    return (spine_property_id *) _obj->getPropertyIds().buffer();
+    return (int64_t *) _obj->getPropertyIds().buffer();
 }
 
-int32_t spine_sequence_timeline_get_slot_index(spine_sequence_timeline obj) {
+int spine_sequence_timeline_get_slot_index(spine_sequence_timeline obj) {
     if (!obj) return 0;
     SequenceTimeline *_obj = (SequenceTimeline *) obj;
     return _obj->getSlotIndex();
 }
 
-void spine_sequence_timeline_set_slot_index(spine_sequence_timeline obj, int32_t value) {
+void spine_sequence_timeline_set_slot_index(spine_sequence_timeline obj, int value) {
     if (!obj) return;
     SequenceTimeline *_obj = (SequenceTimeline *) obj;
     _obj->setSlotIndex(value);

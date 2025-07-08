@@ -32,45 +32,29 @@
 
 using namespace spine;
 
-spine_constraint_data spine_constraint_data_create(const utf8 * name) {
-    ConstraintData *obj = new (__FILE__, __LINE__) ConstraintData(String(name));
-    return (spine_constraint_data) obj;
-}
-
 void spine_constraint_data_dispose(spine_constraint_data obj) {
     if (!obj) return;
     delete (ConstraintData *) obj;
 }
 
-spine_rtti spine_constraint_data_get_rtti(spine_constraint_data obj) {
-    if (!obj) return nullptr;
-    ConstraintData *_obj = (ConstraintData *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_constraint_data_get_rtti() {
+    return (spine_rtti) &ConstraintData::rtti;
 }
 
 spine_constraint spine_constraint_data_create(spine_constraint_data obj, spine_skeleton skeleton) {
     if (!obj) return 0;
     ConstraintData *_obj = (ConstraintData *) obj;
-    return (spine_constraint) _obj->create(skeleton);
+    return (spine_constraint) _obj->create(*(Skeleton*) skeleton);
 }
 
-const utf8 * spine_constraint_data_get_name(spine_constraint_data obj) {
+const char* spine_constraint_data_get_name(spine_constraint_data obj) {
     if (!obj) return nullptr;
     ConstraintData *_obj = (ConstraintData *) obj;
-    return (const utf8 *) _obj->getName().buffer();
+    return (const char *) _obj->getName().buffer();
 }
 
-spine_bool spine_constraint_data_is_skin_required(spine_constraint_data obj) {
-    if (!obj) return 0;
+bool spine_constraint_data_is_skin_required(spine_constraint_data obj) {
+    if (!obj) return false;
     ConstraintData *_obj = (ConstraintData *) obj;
     return _obj->isSkinRequired();
-}
-
-spine_bool spine_constraint_data_is_type(spine_constraint_data obj, spine_constraint_data_type type) {
-    if (!obj) return 0;
-    ConstraintData *_obj = (ConstraintData *) obj;
-    
-    switch (type) {
-    }
-    return 0;
 }

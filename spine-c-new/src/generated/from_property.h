@@ -34,13 +34,10 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_from_property)
-
-SPINE_C_EXPORT spine_from_property spine_from_property_create(void);
 SPINE_C_EXPORT void spine_from_property_dispose(spine_from_property obj);
-SPINE_C_EXPORT float spine_from_property_value(spine_from_property obj, spine_skeleton skeleton, spine_bone_pose source, spine_bool local, spine_float offsets);
+SPINE_C_EXPORT float spine_from_property_value(spine_from_property obj, spine_skeleton skeleton, spine_bone_pose source, bool local, float * offsets);
 
 #ifdef __cplusplus
 }

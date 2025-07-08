@@ -32,18 +32,18 @@
 
 using namespace spine;
 
-spine_rtti spine_rtti_create(const utf8 * className) {
+spine_rtti spine_rtti_create(const char * className) {
     RTTI *obj = new (__FILE__, __LINE__) RTTI((const char *) className);
     return (spine_rtti) obj;
 }
 
-spine_rtti spine_rtti_create_with_string_rtti(const utf8 * className, spine_rtti baseRTTI) {
-    RTTI *obj = new (__FILE__, __LINE__) RTTI((const char *) className, baseRTTI);
+spine_rtti spine_rtti_create_with_string_rtti(const char * className, spine_rtti baseRTTI) {
+    RTTI *obj = new (__FILE__, __LINE__) RTTI((const char *) className, *(RTTI*) baseRTTI);
     return (spine_rtti) obj;
 }
 
-spine_rtti spine_rtti_create_with_string_rtti_rtti_rtti_rtti(const utf8 * className, spine_rtti baseRTTI, spine_const rtti interface1, spine_const rtti interface2, spine_const rtti interface3) {
-    RTTI *obj = new (__FILE__, __LINE__) RTTI((const char *) className, baseRTTI, (const RTTI *) interface1, (const RTTI *) interface2, (const RTTI *) interface3);
+spine_rtti spine_rtti_create_with_string_rtti_rtti_rtti_rtti(const char * className, spine_rtti baseRTTI, spine_const rtti interface1, spine_const rtti interface2, spine_const rtti interface3) {
+    RTTI *obj = new (__FILE__, __LINE__) RTTI((const char *) className, *(RTTI*) baseRTTI, (const RTTI *) interface1, (const RTTI *) interface2, (const RTTI *) interface3);
     return (spine_rtti) obj;
 }
 
@@ -52,20 +52,20 @@ void spine_rtti_dispose(spine_rtti obj) {
     delete (RTTI *) obj;
 }
 
-const utf8 * spine_rtti_get_class_name(spine_rtti obj) {
+const char * spine_rtti_get_class_name(spine_rtti obj) {
     if (!obj) return nullptr;
     RTTI *_obj = (RTTI *) obj;
-    return (const utf8 *) _obj->getClassName();
+    return (const char *) _obj->getClassName();
 }
 
-spine_bool spine_rtti_is_exactly(spine_rtti obj, spine_rtti rtti) {
-    if (!obj) return 0;
+bool spine_rtti_is_exactly(spine_rtti obj, spine_rtti rtti) {
+    if (!obj) return false;
     RTTI *_obj = (RTTI *) obj;
-    return _obj->isExactly(rtti);
+    return _obj->isExactly(*(RTTI*) rtti);
 }
 
-spine_bool spine_rtti_instance_of(spine_rtti obj, spine_rtti rtti) {
-    if (!obj) return 0;
+bool spine_rtti_instance_of(spine_rtti obj, spine_rtti rtti) {
+    if (!obj) return false;
     RTTI *_obj = (RTTI *) obj;
-    return _obj->instanceOf(rtti);
+    return _obj->instanceOf(*(RTTI*) rtti);
 }

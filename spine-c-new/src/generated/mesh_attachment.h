@@ -34,59 +34,51 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_mesh_attachment)
-
-SPINE_C_EXPORT spine_mesh_attachment spine_mesh_attachment_create(const utf8 * name);
+SPINE_C_EXPORT spine_mesh_attachment spine_mesh_attachment_create(const char* name);
 SPINE_C_EXPORT void spine_mesh_attachment_dispose(spine_mesh_attachment obj);
-SPINE_C_EXPORT spine_rtti spine_mesh_attachment_get_rtti(spine_mesh_attachment obj);
-SPINE_C_EXPORT void spine_mesh_attachment_compute_world_vertices(spine_mesh_attachment obj, spine_skeleton skeleton, spine_slot slot, spine_size_t start, spine_size_t count, spine_float worldVertices, spine_size_t offset, spine_size_t stride);
+SPINE_C_EXPORT spine_rtti spine_mesh_attachment_get_rtti();
+SPINE_C_EXPORT void spine_mesh_attachment_compute_world_vertices(spine_mesh_attachment obj, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count, float * worldVertices, size_t offset, size_t stride);
 SPINE_C_EXPORT void spine_mesh_attachment_update_region(spine_mesh_attachment obj);
-SPINE_C_EXPORT int32_t spine_mesh_attachment_get_hull_length(spine_mesh_attachment obj);
-SPINE_C_EXPORT void spine_mesh_attachment_set_hull_length(spine_mesh_attachment obj, int32_t value);
-SPINE_C_EXPORT void * spine_mesh_attachment_get_region_u_vs(spine_mesh_attachment obj);
+SPINE_C_EXPORT int spine_mesh_attachment_get_hull_length(spine_mesh_attachment obj);
+SPINE_C_EXPORT void spine_mesh_attachment_set_hull_length(spine_mesh_attachment obj, int value);
 SPINE_C_EXPORT int32_t spine_mesh_attachment_get_num_region_u_vs(spine_mesh_attachment obj);
-SPINE_C_EXPORT spine_float *spine_mesh_attachment_get_region_u_vs(spine_mesh_attachment obj);
-SPINE_C_EXPORT void spine_mesh_attachment_set_region_u_vs(spine_mesh_attachment obj, void * value);
-SPINE_C_EXPORT void * spine_mesh_attachment_get_u_vs(spine_mesh_attachment obj);
+SPINE_C_EXPORT float *spine_mesh_attachment_get_region_u_vs(spine_mesh_attachment obj);
+SPINE_C_EXPORT void spine_mesh_attachment_set_region_u_vs(spine_mesh_attachment obj, spine_array_float value);
 SPINE_C_EXPORT int32_t spine_mesh_attachment_get_num_u_vs(spine_mesh_attachment obj);
-SPINE_C_EXPORT spine_float *spine_mesh_attachment_get_u_vs(spine_mesh_attachment obj);
-SPINE_C_EXPORT void * spine_mesh_attachment_get_triangles(spine_mesh_attachment obj);
+SPINE_C_EXPORT float *spine_mesh_attachment_get_u_vs(spine_mesh_attachment obj);
 SPINE_C_EXPORT int32_t spine_mesh_attachment_get_num_triangles(spine_mesh_attachment obj);
 SPINE_C_EXPORT spine_unsigned short *spine_mesh_attachment_get_triangles(spine_mesh_attachment obj);
-SPINE_C_EXPORT void spine_mesh_attachment_set_triangles(spine_mesh_attachment obj, void * value);
+SPINE_C_EXPORT void spine_mesh_attachment_set_triangles(spine_mesh_attachment obj, spine_array_unsigned_short value);
 SPINE_C_EXPORT spine_color spine_mesh_attachment_get_color(spine_mesh_attachment obj);
-SPINE_C_EXPORT const utf8 * spine_mesh_attachment_get_path(spine_mesh_attachment obj);
-SPINE_C_EXPORT void spine_mesh_attachment_set_path(spine_mesh_attachment obj, const utf8 * value);
+SPINE_C_EXPORT const char* spine_mesh_attachment_get_path(spine_mesh_attachment obj);
+SPINE_C_EXPORT void spine_mesh_attachment_set_path(spine_mesh_attachment obj, const char* value);
 SPINE_C_EXPORT spine_texture_region spine_mesh_attachment_get_region(spine_mesh_attachment obj);
 SPINE_C_EXPORT void spine_mesh_attachment_set_region(spine_mesh_attachment obj, spine_texture_region value);
 SPINE_C_EXPORT spine_sequence spine_mesh_attachment_get_sequence(spine_mesh_attachment obj);
 SPINE_C_EXPORT void spine_mesh_attachment_set_sequence(spine_mesh_attachment obj, spine_sequence value);
 SPINE_C_EXPORT spine_mesh_attachment spine_mesh_attachment_get_parent_mesh(spine_mesh_attachment obj);
 SPINE_C_EXPORT void spine_mesh_attachment_set_parent_mesh(spine_mesh_attachment obj, spine_mesh_attachment value);
-SPINE_C_EXPORT void * spine_mesh_attachment_get_edges(spine_mesh_attachment obj);
 SPINE_C_EXPORT int32_t spine_mesh_attachment_get_num_edges(spine_mesh_attachment obj);
 SPINE_C_EXPORT spine_unsigned short *spine_mesh_attachment_get_edges(spine_mesh_attachment obj);
-SPINE_C_EXPORT void spine_mesh_attachment_set_edges(spine_mesh_attachment obj, void * value);
+SPINE_C_EXPORT void spine_mesh_attachment_set_edges(spine_mesh_attachment obj, spine_array_unsigned_short value);
 SPINE_C_EXPORT float spine_mesh_attachment_get_width(spine_mesh_attachment obj);
 SPINE_C_EXPORT void spine_mesh_attachment_set_width(spine_mesh_attachment obj, float value);
 SPINE_C_EXPORT float spine_mesh_attachment_get_height(spine_mesh_attachment obj);
 SPINE_C_EXPORT void spine_mesh_attachment_set_height(spine_mesh_attachment obj, float value);
 SPINE_C_EXPORT spine_attachment spine_mesh_attachment_copy(spine_mesh_attachment obj);
 SPINE_C_EXPORT spine_mesh_attachment spine_mesh_attachment_new_linked_mesh(spine_mesh_attachment obj);
-SPINE_C_EXPORT void spine_mesh_attachment_compute_world_vertices(spine_mesh_attachment obj, spine_skeleton skeleton, spine_slot slot, spine_size_t start, spine_size_t count, void * worldVertices, spine_size_t offset, spine_size_t stride);
-SPINE_C_EXPORT int32_t spine_mesh_attachment_get_id(spine_mesh_attachment obj);
-SPINE_C_EXPORT int32_t * spine_mesh_attachment_get_bones(spine_mesh_attachment obj);
+SPINE_C_EXPORT void spine_mesh_attachment_compute_world_vertices_7(spine_mesh_attachment obj, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count, spine_array_float worldVertices, size_t offset, size_t stride);
+SPINE_C_EXPORT int spine_mesh_attachment_get_id(spine_mesh_attachment obj);
 SPINE_C_EXPORT int32_t spine_mesh_attachment_get_num_bones(spine_mesh_attachment obj);
-SPINE_C_EXPORT int32_t *spine_mesh_attachment_get_bones(spine_mesh_attachment obj);
-SPINE_C_EXPORT void spine_mesh_attachment_set_bones(spine_mesh_attachment obj, int32_t * value);
-SPINE_C_EXPORT void * spine_mesh_attachment_get_vertices(spine_mesh_attachment obj);
+SPINE_C_EXPORT int *spine_mesh_attachment_get_bones(spine_mesh_attachment obj);
+SPINE_C_EXPORT void spine_mesh_attachment_set_bones(spine_mesh_attachment obj, spine_array_int value);
 SPINE_C_EXPORT int32_t spine_mesh_attachment_get_num_vertices(spine_mesh_attachment obj);
-SPINE_C_EXPORT spine_float *spine_mesh_attachment_get_vertices(spine_mesh_attachment obj);
-SPINE_C_EXPORT void spine_mesh_attachment_set_vertices(spine_mesh_attachment obj, void * value);
-SPINE_C_EXPORT spine_size_t spine_mesh_attachment_get_world_vertices_length(spine_mesh_attachment obj);
-SPINE_C_EXPORT void spine_mesh_attachment_set_world_vertices_length(spine_mesh_attachment obj, spine_size_t value);
+SPINE_C_EXPORT float *spine_mesh_attachment_get_vertices(spine_mesh_attachment obj);
+SPINE_C_EXPORT void spine_mesh_attachment_set_vertices(spine_mesh_attachment obj, spine_array_float value);
+SPINE_C_EXPORT size_t spine_mesh_attachment_get_world_vertices_length(spine_mesh_attachment obj);
+SPINE_C_EXPORT void spine_mesh_attachment_set_world_vertices_length(spine_mesh_attachment obj, size_t value);
 SPINE_C_EXPORT spine_attachment spine_mesh_attachment_get_timeline_attachment(spine_mesh_attachment obj);
 SPINE_C_EXPORT void spine_mesh_attachment_set_timeline_attachment(spine_mesh_attachment obj, spine_attachment value);
 SPINE_C_EXPORT void spine_mesh_attachment_copy_to(spine_mesh_attachment obj, spine_vertex_attachment other);

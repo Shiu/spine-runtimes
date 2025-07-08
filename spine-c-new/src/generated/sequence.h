@@ -34,24 +34,21 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_sequence)
-
-SPINE_C_EXPORT spine_sequence spine_sequence_create(int32_t count);
+SPINE_C_EXPORT spine_sequence spine_sequence_create(int count);
 SPINE_C_EXPORT void spine_sequence_dispose(spine_sequence obj);
 SPINE_C_EXPORT spine_sequence spine_sequence_copy(spine_sequence obj);
 SPINE_C_EXPORT void spine_sequence_apply(spine_sequence obj, spine_slot_pose slot, spine_attachment attachment);
-SPINE_C_EXPORT const utf8 * spine_sequence_get_path(spine_sequence obj, const utf8 * basePath, int32_t index);
-SPINE_C_EXPORT int32_t spine_sequence_get_id(spine_sequence obj);
-SPINE_C_EXPORT void spine_sequence_set_id(spine_sequence obj, int32_t value);
-SPINE_C_EXPORT int32_t spine_sequence_get_start(spine_sequence obj);
-SPINE_C_EXPORT void spine_sequence_set_start(spine_sequence obj, int32_t value);
-SPINE_C_EXPORT int32_t spine_sequence_get_digits(spine_sequence obj);
-SPINE_C_EXPORT void spine_sequence_set_digits(spine_sequence obj, int32_t value);
-SPINE_C_EXPORT int32_t spine_sequence_get_setup_index(spine_sequence obj);
-SPINE_C_EXPORT void spine_sequence_set_setup_index(spine_sequence obj, int32_t value);
-SPINE_C_EXPORT void * spine_sequence_get_regions(spine_sequence obj);
+SPINE_C_EXPORT const char* spine_sequence_get_path(spine_sequence obj, const char* basePath, int index);
+SPINE_C_EXPORT int spine_sequence_get_id(spine_sequence obj);
+SPINE_C_EXPORT void spine_sequence_set_id(spine_sequence obj, int value);
+SPINE_C_EXPORT int spine_sequence_get_start(spine_sequence obj);
+SPINE_C_EXPORT void spine_sequence_set_start(spine_sequence obj, int value);
+SPINE_C_EXPORT int spine_sequence_get_digits(spine_sequence obj);
+SPINE_C_EXPORT void spine_sequence_set_digits(spine_sequence obj, int value);
+SPINE_C_EXPORT int spine_sequence_get_setup_index(spine_sequence obj);
+SPINE_C_EXPORT void spine_sequence_set_setup_index(spine_sequence obj, int value);
 SPINE_C_EXPORT int32_t spine_sequence_get_num_regions(spine_sequence obj);
 SPINE_C_EXPORT spine_texture_region *spine_sequence_get_regions(spine_sequence obj);
 

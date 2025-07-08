@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_bone_timeline2 spine_bone_timeline2_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t boneIndex, spine_property property1, spine_property property2) {
+spine_bone_timeline2 spine_bone_timeline2_create(size_t frameCount, size_t bezierCount, int boneIndex, spine_property property1, spine_property property2) {
     BoneTimeline2 *obj = new (__FILE__, __LINE__) BoneTimeline2(frameCount, bezierCount, boneIndex, property1, property2);
     return (spine_bone_timeline2) obj;
 }
@@ -42,19 +42,17 @@ void spine_bone_timeline2_dispose(spine_bone_timeline2 obj) {
     delete (BoneTimeline2 *) obj;
 }
 
-spine_rtti spine_bone_timeline2_get_rtti(spine_bone_timeline2 obj) {
-    if (!obj) return nullptr;
-    BoneTimeline2 *_obj = (BoneTimeline2 *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_bone_timeline2_get_rtti() {
+    return (spine_rtti) &BoneTimeline2::rtti;
 }
 
-void spine_bone_timeline2_apply(spine_bone_timeline2 obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_bone_timeline2_apply(spine_bone_timeline2 obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     BoneTimeline2 *_obj = (BoneTimeline2 *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-void spine_bone_timeline2_set_frame(spine_bone_timeline2 obj, spine_size_t frame, float time, float value1, float value2) {
+void spine_bone_timeline2_set_frame(spine_bone_timeline2 obj, size_t frame, float time, float value1, float value2) {
     if (!obj) return ;
     BoneTimeline2 *_obj = (BoneTimeline2 *) obj;
     _obj->setFrame(frame, time, value1, value2);
@@ -66,13 +64,13 @@ float spine_bone_timeline2_get_curve_value(spine_bone_timeline2 obj, float time)
     return _obj->getCurveValue(time);
 }
 
-int32_t spine_bone_timeline2_get_bone_index(spine_bone_timeline2 obj) {
+int spine_bone_timeline2_get_bone_index(spine_bone_timeline2 obj) {
     if (!obj) return 0;
     BoneTimeline2 *_obj = (BoneTimeline2 *) obj;
     return _obj->getBoneIndex();
 }
 
-void spine_bone_timeline2_set_bone_index(spine_bone_timeline2 obj, int32_t value) {
+void spine_bone_timeline2_set_bone_index(spine_bone_timeline2 obj, int value) {
     if (!obj) return;
     BoneTimeline2 *_obj = (BoneTimeline2 *) obj;
     _obj->setBoneIndex(value);

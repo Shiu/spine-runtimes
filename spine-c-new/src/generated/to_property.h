@@ -34,14 +34,11 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_to_property)
-
-SPINE_C_EXPORT spine_to_property spine_to_property_create(void);
 SPINE_C_EXPORT void spine_to_property_dispose(spine_to_property obj);
 SPINE_C_EXPORT float spine_to_property_mix(spine_to_property obj, spine_transform_constraint_pose pose);
-SPINE_C_EXPORT void spine_to_property_apply(spine_to_property obj, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, spine_bool local, spine_bool additive);
+SPINE_C_EXPORT void spine_to_property_apply(spine_to_property obj, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, bool local, bool additive);
 
 #ifdef __cplusplus
 }

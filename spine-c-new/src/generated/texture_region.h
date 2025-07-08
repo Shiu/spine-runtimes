@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_texture_region)
+#include "types.h"
 
 SPINE_C_EXPORT spine_texture_region spine_texture_region_create(void);
 SPINE_C_EXPORT void spine_texture_region_dispose(spine_texture_region obj);

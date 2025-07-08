@@ -34,22 +34,20 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_path_constraint_spacing_timeline)
-
-SPINE_C_EXPORT spine_path_constraint_spacing_timeline spine_path_constraint_spacing_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t constraintIndex);
+SPINE_C_EXPORT spine_path_constraint_spacing_timeline spine_path_constraint_spacing_timeline_create(size_t frameCount, size_t bezierCount, int constraintIndex);
 SPINE_C_EXPORT void spine_path_constraint_spacing_timeline_dispose(spine_path_constraint_spacing_timeline obj);
-SPINE_C_EXPORT spine_rtti spine_path_constraint_spacing_timeline_get_rtti(spine_path_constraint_spacing_timeline obj);
-SPINE_C_EXPORT void spine_path_constraint_spacing_timeline_apply(spine_path_constraint_spacing_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose);
-SPINE_C_EXPORT void spine_path_constraint_spacing_timeline_set_frame(spine_path_constraint_spacing_timeline obj, spine_size_t frame, float time, float value);
+SPINE_C_EXPORT spine_rtti spine_path_constraint_spacing_timeline_get_rtti();
+SPINE_C_EXPORT void spine_path_constraint_spacing_timeline_apply(spine_path_constraint_spacing_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
+SPINE_C_EXPORT void spine_path_constraint_spacing_timeline_set_frame(spine_path_constraint_spacing_timeline obj, size_t frame, float time, float value);
 SPINE_C_EXPORT float spine_path_constraint_spacing_timeline_get_curve_value(spine_path_constraint_spacing_timeline obj, float time);
 SPINE_C_EXPORT float spine_path_constraint_spacing_timeline_get_relative_value(spine_path_constraint_spacing_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup);
 SPINE_C_EXPORT float spine_path_constraint_spacing_timeline_get_absolute_value(spine_path_constraint_spacing_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup);
-SPINE_C_EXPORT float spine_path_constraint_spacing_timeline_get_absolute_value(spine_path_constraint_spacing_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value);
+SPINE_C_EXPORT float spine_path_constraint_spacing_timeline_get_absolute_value_6(spine_path_constraint_spacing_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value);
 SPINE_C_EXPORT float spine_path_constraint_spacing_timeline_get_scale_value(spine_path_constraint_spacing_timeline obj, float time, float alpha, spine_mix_blend blend, spine_mix_direction direction, float current, float setup);
-SPINE_C_EXPORT int32_t spine_path_constraint_spacing_timeline_get_constraint_index(spine_path_constraint_spacing_timeline obj);
-SPINE_C_EXPORT void spine_path_constraint_spacing_timeline_set_constraint_index(spine_path_constraint_spacing_timeline obj, int32_t value);
+SPINE_C_EXPORT int spine_path_constraint_spacing_timeline_get_constraint_index(spine_path_constraint_spacing_timeline obj);
+SPINE_C_EXPORT void spine_path_constraint_spacing_timeline_set_constraint_index(spine_path_constraint_spacing_timeline obj, int value);
 
 #ifdef __cplusplus
 }

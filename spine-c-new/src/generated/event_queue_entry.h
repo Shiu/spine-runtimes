@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_event_queue_entry)
+#include "types.h"
 
 SPINE_C_EXPORT spine_event_queue_entry spine_event_queue_entry_create(spine_event_type eventType, spine_track_entry trackEntry, spine_event event);
 SPINE_C_EXPORT void spine_event_queue_entry_dispose(spine_event_queue_entry obj);

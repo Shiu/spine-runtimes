@@ -34,27 +34,23 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_sequence_timeline)
-
-SPINE_C_EXPORT spine_sequence_timeline spine_sequence_timeline_create(spine_size_t frameCount, int32_t slotIndex, spine_spine::attachment attachment);
+SPINE_C_EXPORT spine_sequence_timeline spine_sequence_timeline_create(size_t frameCount, int slotIndex, spine_attachment attachment);
 SPINE_C_EXPORT void spine_sequence_timeline_dispose(spine_sequence_timeline obj);
-SPINE_C_EXPORT spine_rtti spine_sequence_timeline_get_rtti(spine_sequence_timeline obj);
-SPINE_C_EXPORT void spine_sequence_timeline_apply(spine_sequence_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose);
-SPINE_C_EXPORT void spine_sequence_timeline_set_frame(spine_sequence_timeline obj, int32_t frame, float time, spine_sequence_mode mode, int32_t index, float delay);
+SPINE_C_EXPORT spine_rtti spine_sequence_timeline_get_rtti();
+SPINE_C_EXPORT void spine_sequence_timeline_apply(spine_sequence_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
+SPINE_C_EXPORT void spine_sequence_timeline_set_frame(spine_sequence_timeline obj, int frame, float time, spine_sequence_mode mode, int index, float delay);
 SPINE_C_EXPORT spine_attachment spine_sequence_timeline_get_attachment(spine_sequence_timeline obj);
-SPINE_C_EXPORT spine_size_t spine_sequence_timeline_get_frame_entries(spine_sequence_timeline obj);
-SPINE_C_EXPORT spine_size_t spine_sequence_timeline_get_frame_count(spine_sequence_timeline obj);
-SPINE_C_EXPORT void * spine_sequence_timeline_get_frames(spine_sequence_timeline obj);
+SPINE_C_EXPORT size_t spine_sequence_timeline_get_frame_entries(spine_sequence_timeline obj);
+SPINE_C_EXPORT size_t spine_sequence_timeline_get_frame_count(spine_sequence_timeline obj);
 SPINE_C_EXPORT int32_t spine_sequence_timeline_get_num_frames(spine_sequence_timeline obj);
-SPINE_C_EXPORT spine_float *spine_sequence_timeline_get_frames(spine_sequence_timeline obj);
+SPINE_C_EXPORT float *spine_sequence_timeline_get_frames(spine_sequence_timeline obj);
 SPINE_C_EXPORT float spine_sequence_timeline_get_duration(spine_sequence_timeline obj);
-SPINE_C_EXPORT void * spine_sequence_timeline_get_property_ids(spine_sequence_timeline obj);
 SPINE_C_EXPORT int32_t spine_sequence_timeline_get_num_property_ids(spine_sequence_timeline obj);
-SPINE_C_EXPORT spine_property_id *spine_sequence_timeline_get_property_ids(spine_sequence_timeline obj);
-SPINE_C_EXPORT int32_t spine_sequence_timeline_get_slot_index(spine_sequence_timeline obj);
-SPINE_C_EXPORT void spine_sequence_timeline_set_slot_index(spine_sequence_timeline obj, int32_t value);
+SPINE_C_EXPORT int64_t *spine_sequence_timeline_get_property_ids(spine_sequence_timeline obj);
+SPINE_C_EXPORT int spine_sequence_timeline_get_slot_index(spine_sequence_timeline obj);
+SPINE_C_EXPORT void spine_sequence_timeline_set_slot_index(spine_sequence_timeline obj, int value);
 
 #ifdef __cplusplus
 }

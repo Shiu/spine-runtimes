@@ -34,21 +34,19 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_constraint_timeline1)
-
-SPINE_C_EXPORT spine_constraint_timeline1 spine_constraint_timeline1_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t constraintIndex, spine_property property);
+SPINE_C_EXPORT spine_constraint_timeline1 spine_constraint_timeline1_create(size_t frameCount, size_t bezierCount, int constraintIndex, spine_property property);
 SPINE_C_EXPORT void spine_constraint_timeline1_dispose(spine_constraint_timeline1 obj);
-SPINE_C_EXPORT spine_rtti spine_constraint_timeline1_get_rtti(spine_constraint_timeline1 obj);
-SPINE_C_EXPORT void spine_constraint_timeline1_set_frame(spine_constraint_timeline1 obj, spine_size_t frame, float time, float value);
+SPINE_C_EXPORT spine_rtti spine_constraint_timeline1_get_rtti();
+SPINE_C_EXPORT void spine_constraint_timeline1_set_frame(spine_constraint_timeline1 obj, size_t frame, float time, float value);
 SPINE_C_EXPORT float spine_constraint_timeline1_get_curve_value(spine_constraint_timeline1 obj, float time);
 SPINE_C_EXPORT float spine_constraint_timeline1_get_relative_value(spine_constraint_timeline1 obj, float time, float alpha, spine_mix_blend blend, float current, float setup);
 SPINE_C_EXPORT float spine_constraint_timeline1_get_absolute_value(spine_constraint_timeline1 obj, float time, float alpha, spine_mix_blend blend, float current, float setup);
-SPINE_C_EXPORT float spine_constraint_timeline1_get_absolute_value(spine_constraint_timeline1 obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value);
+SPINE_C_EXPORT float spine_constraint_timeline1_get_absolute_value_6(spine_constraint_timeline1 obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value);
 SPINE_C_EXPORT float spine_constraint_timeline1_get_scale_value(spine_constraint_timeline1 obj, float time, float alpha, spine_mix_blend blend, spine_mix_direction direction, float current, float setup);
-SPINE_C_EXPORT int32_t spine_constraint_timeline1_get_constraint_index(spine_constraint_timeline1 obj);
-SPINE_C_EXPORT void spine_constraint_timeline1_set_constraint_index(spine_constraint_timeline1 obj, int32_t value);
+SPINE_C_EXPORT int spine_constraint_timeline1_get_constraint_index(spine_constraint_timeline1 obj);
+SPINE_C_EXPORT void spine_constraint_timeline1_set_constraint_index(spine_constraint_timeline1 obj, int value);
 
 #ifdef __cplusplus
 }

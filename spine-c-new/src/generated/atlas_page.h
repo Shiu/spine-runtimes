@@ -34,11 +34,9 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_atlas_page)
-
-SPINE_C_EXPORT spine_atlas_page spine_atlas_page_create(const utf8 * inName);
+SPINE_C_EXPORT spine_atlas_page spine_atlas_page_create(const char* inName);
 SPINE_C_EXPORT void spine_atlas_page_dispose(spine_atlas_page obj);
 
 #ifdef __cplusplus

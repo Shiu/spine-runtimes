@@ -32,11 +32,6 @@
 
 using namespace spine;
 
-spine_to_property spine_to_property_create(void) {
-    ToProperty *obj = new (__FILE__, __LINE__) ToProperty();
-    return (spine_to_property) obj;
-}
-
 void spine_to_property_dispose(spine_to_property obj) {
     if (!obj) return;
     delete (ToProperty *) obj;
@@ -45,11 +40,11 @@ void spine_to_property_dispose(spine_to_property obj) {
 float spine_to_property_mix(spine_to_property obj, spine_transform_constraint_pose pose) {
     if (!obj) return 0;
     ToProperty *_obj = (ToProperty *) obj;
-    return _obj->mix(pose);
+    return _obj->mix(*(TransformConstraintPose*) pose);
 }
 
-void spine_to_property_apply(spine_to_property obj, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, spine_bool local, spine_bool additive) {
+void spine_to_property_apply(spine_to_property obj, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, bool local, bool additive) {
     if (!obj) return ;
     ToProperty *_obj = (ToProperty *) obj;
-    _obj->apply(skeleton, pose, bone, value, local, additive);
+    _obj->apply(*(Skeleton*) skeleton, *(TransformConstraintPose*) pose, *(BonePose*) bone, value, local, additive);
 }

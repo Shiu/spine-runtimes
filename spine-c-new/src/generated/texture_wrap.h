@@ -30,16 +30,16 @@
 #ifndef SPINE_C_TEXTUREWRAP_H
 #define SPINE_C_TEXTUREWRAP_H
 
-#include "../../custom.h"
+#include "../base.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef enum spine_texture_wrap {
-    SPINE_TEXTURE_WRAP_TEXTURE_WRAP_MIRRORED_REPEAT,
-    SPINE_TEXTURE_WRAP_TEXTURE_WRAP_CLAMP_TO_EDGE,
-    SPINE_TEXTURE_WRAP_TEXTURE_WRAP_REPEAT
+    SPINE_TEXTURE_WRAP_MIRRORED_REPEAT,
+    SPINE_TEXTURE_WRAP_CLAMP_TO_EDGE,
+    SPINE_TEXTURE_WRAP_REPEAT
 } spine_texture_wrap;
 
 #ifdef __cplusplus

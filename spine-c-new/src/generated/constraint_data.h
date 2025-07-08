@@ -34,21 +34,13 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_constraint_data)
-
-SPINE_C_EXPORT spine_constraint_data spine_constraint_data_create(const utf8 * name);
 SPINE_C_EXPORT void spine_constraint_data_dispose(spine_constraint_data obj);
-SPINE_C_EXPORT spine_rtti spine_constraint_data_get_rtti(spine_constraint_data obj);
+SPINE_C_EXPORT spine_rtti spine_constraint_data_get_rtti();
 SPINE_C_EXPORT spine_constraint spine_constraint_data_create(spine_constraint_data obj, spine_skeleton skeleton);
-SPINE_C_EXPORT const utf8 * spine_constraint_data_get_name(spine_constraint_data obj);
-SPINE_C_EXPORT spine_bool spine_constraint_data_is_skin_required(spine_constraint_data obj);
-
-typedef enum spine_constraint_data_type {
-} spine_constraint_data_type;
-
-SPINE_C_EXPORT spine_bool spine_constraint_data_is_type(spine_constraint_data obj, spine_constraint_data_type type);
+SPINE_C_EXPORT const char* spine_constraint_data_get_name(spine_constraint_data obj);
+SPINE_C_EXPORT bool spine_constraint_data_is_skin_required(spine_constraint_data obj);
 
 #ifdef __cplusplus
 }

@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_rotate_timeline spine_rotate_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t boneIndex) {
+spine_rotate_timeline spine_rotate_timeline_create(size_t frameCount, size_t bezierCount, int boneIndex) {
     RotateTimeline *obj = new (__FILE__, __LINE__) RotateTimeline(frameCount, bezierCount, boneIndex);
     return (spine_rotate_timeline) obj;
 }
@@ -42,19 +42,17 @@ void spine_rotate_timeline_dispose(spine_rotate_timeline obj) {
     delete (RotateTimeline *) obj;
 }
 
-spine_rtti spine_rotate_timeline_get_rtti(spine_rotate_timeline obj) {
-    if (!obj) return nullptr;
-    RotateTimeline *_obj = (RotateTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_rotate_timeline_get_rtti() {
+    return (spine_rtti) &RotateTimeline::rtti;
 }
 
-void spine_rotate_timeline_apply(spine_rotate_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_rotate_timeline_apply(spine_rotate_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     RotateTimeline *_obj = (RotateTimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-void spine_rotate_timeline_set_frame(spine_rotate_timeline obj, spine_size_t frame, float time, float value) {
+void spine_rotate_timeline_set_frame(spine_rotate_timeline obj, size_t frame, float time, float value) {
     if (!obj) return ;
     RotateTimeline *_obj = (RotateTimeline *) obj;
     _obj->setFrame(frame, time, value);
@@ -69,34 +67,34 @@ float spine_rotate_timeline_get_curve_value(spine_rotate_timeline obj, float tim
 float spine_rotate_timeline_get_relative_value(spine_rotate_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
     if (!obj) return 0;
     RotateTimeline *_obj = (RotateTimeline *) obj;
-    return _obj->getRelativeValue(time, alpha, blend, current, setup);
+    return _obj->getRelativeValue(time, alpha, (MixBlend) blend, current, setup);
 }
 
 float spine_rotate_timeline_get_absolute_value(spine_rotate_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
     if (!obj) return 0;
     RotateTimeline *_obj = (RotateTimeline *) obj;
-    return _obj->getAbsoluteValue(time, alpha, blend, current, setup);
+    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup);
 }
 
-float spine_rotate_timeline_get_absolute_value(spine_rotate_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
+float spine_rotate_timeline_get_absolute_value_6(spine_rotate_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
     if (!obj) return 0;
     RotateTimeline *_obj = (RotateTimeline *) obj;
-    return _obj->getAbsoluteValue(time, alpha, blend, current, setup, value);
+    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup, value);
 }
 
 float spine_rotate_timeline_get_scale_value(spine_rotate_timeline obj, float time, float alpha, spine_mix_blend blend, spine_mix_direction direction, float current, float setup) {
     if (!obj) return 0;
     RotateTimeline *_obj = (RotateTimeline *) obj;
-    return _obj->getScaleValue(time, alpha, blend, direction, current, setup);
+    return _obj->getScaleValue(time, alpha, (MixBlend) blend, (MixDirection) direction, current, setup);
 }
 
-int32_t spine_rotate_timeline_get_bone_index(spine_rotate_timeline obj) {
+int spine_rotate_timeline_get_bone_index(spine_rotate_timeline obj) {
     if (!obj) return 0;
     RotateTimeline *_obj = (RotateTimeline *) obj;
     return _obj->getBoneIndex();
 }
 
-void spine_rotate_timeline_set_bone_index(spine_rotate_timeline obj, int32_t value) {
+void spine_rotate_timeline_set_bone_index(spine_rotate_timeline obj, int value) {
     if (!obj) return;
     RotateTimeline *_obj = (RotateTimeline *) obj;
     _obj->setBoneIndex(value);

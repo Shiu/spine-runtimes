@@ -3,7 +3,7 @@ import { isMethodExcluded } from '../exclusions';
 import { GeneratorResult } from './constructor-generator';
 
 export class MethodGenerator {
-    constructor(private exclusions: Exclusion[], private validTypes: Set<string>) {}
+    constructor(private exclusions: Exclusion[], private validTypes: Set<string>) { }
 
     generate(type: Type): GeneratorResult {
         const declarations: string[] = [];
@@ -14,7 +14,7 @@ export class MethodGenerator {
         const methods = type.members.filter(m =>
             m.kind === 'method'
         ).filter(m => !isMethodExcluded(type.name, m.name, this.exclusions, m))
-        .filter(m => !m.isStatic);
+            .filter(m => !m.isStatic);
 
         // Check for const/non-const method pairs
         const methodGroups = new Map<string, Method[]>();
@@ -86,105 +86,112 @@ export class MethodGenerator {
         const methodSeenCounts = new Map<string, number>();
 
         for (const method of uniqueMethods) {
-            // Handle getters
-            if (method.name.startsWith('get') && (!method.parameters || method.parameters.length === 0)) {
-                const propName = method.name.substring(3);
+            try {
+                // Handle getters
+                if (method.name.startsWith('get') && (!method.parameters || method.parameters.length === 0)) {
+                    const propName = method.name.substring(3);
 
-                // Check if return type is Array
-                if (method.returnType && method.returnType.includes('Array<')) {
-                    // For Array types, only generate collection accessors
-                    this.generateCollectionAccessors(type, method, propName, declarations, implementations);
-                } else if (method.name === 'getRTTI') {
-                    // Special handling for getRTTI - make it static
-                    const funcName = toCFunctionName(type.name, 'get_rtti');
-                    const returnType = 'spine_rtti';
+                    // Check if return type is Array
+                    if (method.returnType && method.returnType.includes('Array<')) {
+                        // For Array types, only generate collection accessors
+                        this.generateCollectionAccessors(type, method, propName, declarations, implementations);
+                    } else if (method.name === 'getRTTI') {
+                        // Special handling for getRTTI - make it static
+                        const funcName = toCFunctionName(type.name, 'get_rtti');
+                        const returnType = 'spine_rtti';
 
-                    declarations.push(`SPINE_C_EXPORT ${returnType} ${funcName}();`);
+                        declarations.push(`SPINE_C_EXPORT ${returnType} ${funcName}();`);
 
-                    implementations.push(`${returnType} ${funcName}() {`);
-                    implementations.push(`    return (spine_rtti) &${type.name}::rtti;`);
+                        implementations.push(`${returnType} ${funcName}() {`);
+                        implementations.push(`    return (spine_rtti) &${type.name}::rtti;`);
+                        implementations.push(`}`);
+                        implementations.push('');
+                    } else {
+                        // For non-Array types, generate regular getter
+                        const funcName = toCFunctionName(type.name, method.name);
+                        const returnType = toCTypeName(method.returnType || 'void', this.validTypes);
+
+                        declarations.push(`SPINE_C_EXPORT ${returnType} ${funcName}(${cTypeName} obj);`);
+
+                        implementations.push(`${returnType} ${funcName}(${cTypeName} obj) {`);
+                        implementations.push(`    if (!obj) return ${this.getDefaultReturn(returnType)};`);
+                        implementations.push(`    ${type.name} *_obj = (${type.name} *) obj;`);
+
+                        const callExpr = this.generateMethodCall('_obj', method);
+                        implementations.push(`    return ${callExpr};`);
+                        implementations.push(`}`);
+                        implementations.push('');
+                    }
+                }
+                // Handle setters
+                else if (method.name.startsWith('set') && method.parameters && method.parameters.length === 1) {
+                    const funcName = toCFunctionName(type.name, method.name);
+                    const paramType = toCTypeName(method.parameters[0].type, this.validTypes);
+
+                    declarations.push(`SPINE_C_EXPORT void ${funcName}(${cTypeName} obj, ${paramType} value);`);
+
+                    implementations.push(`void ${funcName}(${cTypeName} obj, ${paramType} value) {`);
+                    implementations.push(`    if (!obj) return;`);
+                    implementations.push(`    ${type.name} *_obj = (${type.name} *) obj;`);
+
+                    const callExpr = this.generateSetterCall('_obj', method, 'value');
+                    implementations.push(`    ${callExpr};`);
                     implementations.push(`}`);
                     implementations.push('');
-                } else {
-                    // For non-Array types, generate regular getter
-                    const funcName = toCFunctionName(type.name, method.name);
+                }
+                // Handle other methods
+                else {
+                    // Check if this is an overloaded method
+                    const isOverloaded = (methodCounts.get(method.name) || 0) > 1;
+                    const seenCount = methodSeenCounts.get(method.name) || 0;
+                    methodSeenCounts.set(method.name, seenCount + 1);
+
+                    // Generate function name with suffix for overloads
+                    let funcName = toCFunctionName(type.name, method.name);
+
+                    // Check for naming conflicts with type names
+                    if (method.name === 'pose' && type.name === 'Bone') {
+                        // Rename bone_pose() method to avoid conflict with spine_bone_pose type
+                        funcName = toCFunctionName(type.name, 'update_pose');
+                    }
+
+                    if (isOverloaded && seenCount > 0) {
+                        // Add parameter count suffix for overloaded methods
+                        const paramCount = method.parameters ? method.parameters.length : 0;
+                        funcName = `${funcName}_${paramCount}`;
+                    }
+
                     const returnType = toCTypeName(method.returnType || 'void', this.validTypes);
+                    const params = this.generateMethodParameters(cTypeName, method);
 
-                    declarations.push(`SPINE_C_EXPORT ${returnType} ${funcName}(${cTypeName} obj);`);
+                    declarations.push(`SPINE_C_EXPORT ${returnType} ${funcName}(${params.declaration});`);
 
-                    implementations.push(`${returnType} ${funcName}(${cTypeName} obj) {`);
+                    implementations.push(`${returnType} ${funcName}(${params.declaration}) {`);
                     implementations.push(`    if (!obj) return ${this.getDefaultReturn(returnType)};`);
                     implementations.push(`    ${type.name} *_obj = (${type.name} *) obj;`);
 
-                    const callExpr = this.generateMethodCall('_obj', method);
-                    implementations.push(`    return ${callExpr};`);
+                    const callExpr = this.generateMethodCall('_obj', method, params.call);
+                    if (returnType === 'void') {
+                        implementations.push(`    ${callExpr};`);
+                    } else {
+                        implementations.push(`    return ${callExpr};`);
+                    }
                     implementations.push(`}`);
                     implementations.push('');
                 }
-            }
-            // Handle setters
-            else if (method.name.startsWith('set') && method.parameters && method.parameters.length === 1) {
-                const funcName = toCFunctionName(type.name, method.name);
-                const paramType = toCTypeName(method.parameters[0].type, this.validTypes);
-
-                declarations.push(`SPINE_C_EXPORT void ${funcName}(${cTypeName} obj, ${paramType} value);`);
-
-                implementations.push(`void ${funcName}(${cTypeName} obj, ${paramType} value) {`);
-                implementations.push(`    if (!obj) return;`);
-                implementations.push(`    ${type.name} *_obj = (${type.name} *) obj;`);
-
-                const callExpr = this.generateSetterCall('_obj', method, 'value');
-                implementations.push(`    ${callExpr};`);
-                implementations.push(`}`);
-                implementations.push('');
-            }
-            // Handle other methods
-            else {
-                // Check if this is an overloaded method
-                const isOverloaded = (methodCounts.get(method.name) || 0) > 1;
-                const seenCount = methodSeenCounts.get(method.name) || 0;
-                methodSeenCounts.set(method.name, seenCount + 1);
-
-                // Generate function name with suffix for overloads
-                let funcName = toCFunctionName(type.name, method.name);
-
-                // Check for naming conflicts with type names
-                if (method.name === 'pose' && type.name === 'Bone') {
-                    // Rename bone_pose() method to avoid conflict with spine_bone_pose type
-                    funcName = toCFunctionName(type.name, 'update_pose');
-                }
-
-                if (isOverloaded && seenCount > 0) {
-                    // Add parameter count suffix for overloaded methods
-                    const paramCount = method.parameters ? method.parameters.length : 0;
-                    funcName = `${funcName}_${paramCount}`;
-                }
-
-                const returnType = toCTypeName(method.returnType || 'void', this.validTypes);
-                const params = this.generateMethodParameters(cTypeName, method);
-
-                declarations.push(`SPINE_C_EXPORT ${returnType} ${funcName}(${params.declaration});`);
-
-                implementations.push(`${returnType} ${funcName}(${params.declaration}) {`);
-                implementations.push(`    if (!obj) return ${this.getDefaultReturn(returnType)};`);
-                implementations.push(`    ${type.name} *_obj = (${type.name} *) obj;`);
-
-                const callExpr = this.generateMethodCall('_obj', method, params.call);
-                if (returnType === 'void') {
-                    implementations.push(`    ${callExpr};`);
-                } else {
-                    implementations.push(`    return ${callExpr};`);
-                }
-                implementations.push(`}`);
-                implementations.push('');
+            } catch (error) {
+                console.error(`Error generating method for type ${type.name}::${method.name}:`);
+                console.error(error);
+                throw error;
             }
         }
 
         return { declarations, implementations };
+
     }
 
     private generateCollectionAccessors(type: Type, method: Method, propName: string,
-                                      declarations: string[], implementations: string[]) {
+        declarations: string[], implementations: string[]) {
         const cTypeName = `spine_${toSnakeCase(type.name)}`;
         const propSnake = toSnakeCase(propName);
         const arrayMatch = method.returnType!.match(/Array<(.+?)>/);
@@ -193,15 +200,15 @@ export class MethodGenerator {
         const elementType = arrayMatch[1].trim().replace(/\s*\*$/, '');
         let cElementType: string;
         if (elementType === 'int') {
-            cElementType = 'int32_t';
+            cElementType = 'int';
         } else if (elementType === 'float') {
             cElementType = 'float';
         } else if (elementType === 'uint8_t') {
             cElementType = 'uint8_t';
         } else if (elementType === 'String') {
-            cElementType = 'const utf8 *';
+            cElementType = 'const char *';
         } else if (elementType === 'PropertyId') {
-            cElementType = 'int32_t';  // PropertyId is just an int
+            cElementType = 'int64_t';  // PropertyId is just an int
         } else {
             cElementType = `spine_${toSnakeCase(elementType)}`;
         }
@@ -245,7 +252,7 @@ export class MethodGenerator {
         // Handle return type conversions
         if (method.returnType) {
             if (method.returnType === 'const String &' || method.returnType === 'String') {
-                call = `(const utf8 *) ${call}.buffer()`;
+                call = `(const char *) ${call}.buffer()`;
             } else if (method.returnType === 'const RTTI &' || method.returnType === 'RTTI &') {
                 // RTTI needs special handling - return as opaque pointer
                 call = `(spine_rtti) &${call}`;
@@ -366,6 +373,6 @@ export class MethodGenerator {
 
     private isPrimitiveType(type: string): boolean {
         return ['int', 'float', 'double', 'bool', 'size_t', 'int32_t', 'uint32_t',
-                'int16_t', 'uint16_t', 'uint8_t', 'void'].includes(type);
+            'int16_t', 'uint16_t', 'uint8_t', 'void'].includes(type);
     }
 }

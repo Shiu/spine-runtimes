@@ -34,28 +34,16 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_constraint)
-
-SPINE_C_EXPORT spine_constraint spine_constraint_create(void);
 SPINE_C_EXPORT void spine_constraint_dispose(spine_constraint obj);
-SPINE_C_EXPORT spine_rtti spine_constraint_get_rtti(spine_constraint obj);
+SPINE_C_EXPORT spine_rtti spine_constraint_get_rtti();
 SPINE_C_EXPORT spine_constraint_data spine_constraint_get_data(spine_constraint obj);
 SPINE_C_EXPORT void spine_constraint_sort(spine_constraint obj, spine_skeleton skeleton);
-SPINE_C_EXPORT spine_bool spine_constraint_is_source_active(spine_constraint obj);
+SPINE_C_EXPORT bool spine_constraint_is_source_active(spine_constraint obj);
 SPINE_C_EXPORT void spine_constraint_pose(spine_constraint obj);
 SPINE_C_EXPORT void spine_constraint_setup_pose(spine_constraint obj);
 SPINE_C_EXPORT void spine_constraint_update(spine_constraint obj, spine_skeleton skeleton, spine_physics physics);
-struct spine_constraint_generic_wrapper;
-typedef struct spine_constraint_generic_wrapper *spine_constraint_generic;
-
-typedef enum spine_constraint_type {
-    SPINE_TYPE_CONSTRAINT_CONSTRAINT_GENERIC = 0
-} spine_constraint_type;
-
-SPINE_C_EXPORT spine_bool spine_constraint_is_type(spine_constraint obj, spine_constraint_type type);
-SPINE_C_EXPORT spine_constraint_generic spine_constraint_as_constraint_generic(spine_constraint obj);
 
 #ifdef __cplusplus
 }

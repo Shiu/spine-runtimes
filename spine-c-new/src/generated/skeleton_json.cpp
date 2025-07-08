@@ -37,7 +37,7 @@ spine_skeleton_json spine_skeleton_json_create(spine_atlas atlas) {
     return (spine_skeleton_json) obj;
 }
 
-spine_skeleton_json spine_skeleton_json_create_with_attachment_loader_bool(spine_attachment_loader attachmentLoader, spine_bool ownsLoader) {
+spine_skeleton_json spine_skeleton_json_create_with_attachment_loader_bool(spine_attachment_loader attachmentLoader, bool ownsLoader) {
     SkeletonJson *obj = new (__FILE__, __LINE__) SkeletonJson((AttachmentLoader *) attachmentLoader, ownsLoader);
     return (spine_skeleton_json) obj;
 }
@@ -47,14 +47,14 @@ void spine_skeleton_json_dispose(spine_skeleton_json obj) {
     delete (SkeletonJson *) obj;
 }
 
-spine_skeleton_data spine_skeleton_json_read_skeleton_data_file(spine_skeleton_json obj, const utf8 * path) {
-    if (!obj) return nullptr;
+spine_skeleton_data spine_skeleton_json_read_skeleton_data_file(spine_skeleton_json obj, const char* path) {
+    if (!obj) return (spine_skeleton_data) 0;
     SkeletonJson *_obj = (SkeletonJson *) obj;
     return (spine_skeleton_data) _obj->readSkeletonDataFile(String(path));
 }
 
-spine_skeleton_data spine_skeleton_json_read_skeleton_data(spine_skeleton_json obj, const utf8 * json) {
-    if (!obj) return nullptr;
+spine_skeleton_data spine_skeleton_json_read_skeleton_data(spine_skeleton_json obj, const char * json) {
+    if (!obj) return (spine_skeleton_data) 0;
     SkeletonJson *_obj = (SkeletonJson *) obj;
     return (spine_skeleton_data) _obj->readSkeletonData((const char *) json);
 }
@@ -65,8 +65,8 @@ void spine_skeleton_json_set_scale(spine_skeleton_json obj, float value) {
     _obj->setScale(value);
 }
 
-const utf8 * spine_skeleton_json_get_error(spine_skeleton_json obj) {
+const char* spine_skeleton_json_get_error(spine_skeleton_json obj) {
     if (!obj) return nullptr;
     SkeletonJson *_obj = (SkeletonJson *) obj;
-    return (const utf8 *) _obj->getError().buffer();
+    return (const char *) _obj->getError().buffer();
 }

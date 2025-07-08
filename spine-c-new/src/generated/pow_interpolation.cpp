@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_pow_interpolation spine_pow_interpolation_create(int32_t power) {
+spine_pow_interpolation spine_pow_interpolation_create(int power) {
     PowInterpolation *obj = new (__FILE__, __LINE__) PowInterpolation(power);
     return (spine_pow_interpolation) obj;
 }

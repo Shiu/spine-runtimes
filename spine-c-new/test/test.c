@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <spine-c.h>
 
 int main() {
@@ -10,11 +11,12 @@ int main() {
     // Test debug extension
     spine_enable_debug_extension(1);
     
-    // Test creating bounds
-    spine_bounds bounds = (spine_bounds)malloc(sizeof(struct spine_bounds_wrapper));
-    if (bounds) {
-        printf("Successfully created bounds\n");
-        free(bounds);
+    // Test loading an atlas (will fail but tests the API)
+    spine_atlas atlas = spine_atlas_load("test.atlas");
+    if (!atlas) {
+        printf("Failed to load atlas (expected)\n");
+    } else {
+        spine_atlas_dispose(atlas);
     }
     
     // Report any memory leaks

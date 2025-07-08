@@ -32,48 +32,43 @@
 
 using namespace spine;
 
-spine_attachment_loader spine_attachment_loader_create(void) {
-    AttachmentLoader *obj = new (__FILE__, __LINE__) AttachmentLoader();
-    return (spine_attachment_loader) obj;
-}
-
 void spine_attachment_loader_dispose(spine_attachment_loader obj) {
     if (!obj) return;
     delete (AttachmentLoader *) obj;
 }
 
-spine_region_attachment spine_attachment_loader_new_region_attachment(spine_attachment_loader obj, spine_skin skin, const utf8 * name, const utf8 * path, spine_sequence sequence) {
-    if (!obj) return nullptr;
+spine_region_attachment spine_attachment_loader_new_region_attachment(spine_attachment_loader obj, spine_skin skin, const char* name, const char* path, spine_sequence sequence) {
+    if (!obj) return (spine_region_attachment) 0;
     AttachmentLoader *_obj = (AttachmentLoader *) obj;
-    return (spine_region_attachment) _obj->newRegionAttachment(skin, String(name), String(path), (Sequence *) sequence);
+    return (spine_region_attachment) _obj->newRegionAttachment(*(Skin*) skin, String(name), String(path), (Sequence *) sequence);
 }
 
-spine_mesh_attachment spine_attachment_loader_new_mesh_attachment(spine_attachment_loader obj, spine_skin skin, const utf8 * name, const utf8 * path, spine_sequence sequence) {
-    if (!obj) return nullptr;
+spine_mesh_attachment spine_attachment_loader_new_mesh_attachment(spine_attachment_loader obj, spine_skin skin, const char* name, const char* path, spine_sequence sequence) {
+    if (!obj) return (spine_mesh_attachment) 0;
     AttachmentLoader *_obj = (AttachmentLoader *) obj;
-    return (spine_mesh_attachment) _obj->newMeshAttachment(skin, String(name), String(path), (Sequence *) sequence);
+    return (spine_mesh_attachment) _obj->newMeshAttachment(*(Skin*) skin, String(name), String(path), (Sequence *) sequence);
 }
 
-spine_bounding_box_attachment spine_attachment_loader_new_bounding_box_attachment(spine_attachment_loader obj, spine_skin skin, const utf8 * name) {
-    if (!obj) return nullptr;
+spine_bounding_box_attachment spine_attachment_loader_new_bounding_box_attachment(spine_attachment_loader obj, spine_skin skin, const char* name) {
+    if (!obj) return (spine_bounding_box_attachment) 0;
     AttachmentLoader *_obj = (AttachmentLoader *) obj;
-    return (spine_bounding_box_attachment) _obj->newBoundingBoxAttachment(skin, String(name));
+    return (spine_bounding_box_attachment) _obj->newBoundingBoxAttachment(*(Skin*) skin, String(name));
 }
 
-spine_path_attachment spine_attachment_loader_new_path_attachment(spine_attachment_loader obj, spine_skin skin, const utf8 * name) {
-    if (!obj) return nullptr;
+spine_path_attachment spine_attachment_loader_new_path_attachment(spine_attachment_loader obj, spine_skin skin, const char* name) {
+    if (!obj) return (spine_path_attachment) 0;
     AttachmentLoader *_obj = (AttachmentLoader *) obj;
-    return (spine_path_attachment) _obj->newPathAttachment(skin, String(name));
+    return (spine_path_attachment) _obj->newPathAttachment(*(Skin*) skin, String(name));
 }
 
-spine_point_attachment spine_attachment_loader_new_point_attachment(spine_attachment_loader obj, spine_skin skin, const utf8 * name) {
+spine_point_attachment spine_attachment_loader_new_point_attachment(spine_attachment_loader obj, spine_skin skin, const char* name) {
     if (!obj) return 0;
     AttachmentLoader *_obj = (AttachmentLoader *) obj;
-    return (spine_point_attachment) _obj->newPointAttachment(skin, String(name));
+    return (spine_point_attachment) _obj->newPointAttachment(*(Skin*) skin, String(name));
 }
 
-spine_clipping_attachment spine_attachment_loader_new_clipping_attachment(spine_attachment_loader obj, spine_skin skin, const utf8 * name) {
-    if (!obj) return nullptr;
+spine_clipping_attachment spine_attachment_loader_new_clipping_attachment(spine_attachment_loader obj, spine_skin skin, const char* name) {
+    if (!obj) return (spine_clipping_attachment) 0;
     AttachmentLoader *_obj = (AttachmentLoader *) obj;
-    return (spine_clipping_attachment) _obj->newClippingAttachment(skin, String(name));
+    return (spine_clipping_attachment) _obj->newClippingAttachment(*(Skin*) skin, String(name));
 }

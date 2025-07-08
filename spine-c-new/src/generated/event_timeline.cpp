@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_event_timeline spine_event_timeline_create(spine_size_t frameCount) {
+spine_event_timeline spine_event_timeline_create(size_t frameCount) {
     EventTimeline *obj = new (__FILE__, __LINE__) EventTimeline(frameCount);
     return (spine_event_timeline) obj;
 }
@@ -42,28 +42,20 @@ void spine_event_timeline_dispose(spine_event_timeline obj) {
     delete (EventTimeline *) obj;
 }
 
-spine_rtti spine_event_timeline_get_rtti(spine_event_timeline obj) {
-    if (!obj) return nullptr;
-    EventTimeline *_obj = (EventTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_event_timeline_get_rtti() {
+    return (spine_rtti) &EventTimeline::rtti;
 }
 
-void spine_event_timeline_apply(spine_event_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_event_timeline_apply(spine_event_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     EventTimeline *_obj = (EventTimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-spine_size_t spine_event_timeline_get_frame_count(spine_event_timeline obj) {
-    if (!obj) return nullptr;
+size_t spine_event_timeline_get_frame_count(spine_event_timeline obj) {
+    if (!obj) return 0;
     EventTimeline *_obj = (EventTimeline *) obj;
     return _obj->getFrameCount();
-}
-
-void * spine_event_timeline_get_events(spine_event_timeline obj) {
-    if (!obj) return nullptr;
-    EventTimeline *_obj = (EventTimeline *) obj;
-    return (void *) _obj->getEvents();
 }
 
 int32_t spine_event_timeline_get_num_events(spine_event_timeline obj) {
@@ -78,22 +70,16 @@ spine_event *spine_event_timeline_get_events(spine_event_timeline obj) {
     return (spine_event *) _obj->getEvents().buffer();
 }
 
-void spine_event_timeline_set_frame(spine_event_timeline obj, spine_size_t frame, spine_event event) {
+void spine_event_timeline_set_frame(spine_event_timeline obj, size_t frame, spine_event event) {
     if (!obj) return ;
     EventTimeline *_obj = (EventTimeline *) obj;
     _obj->setFrame(frame, (Event *) event);
 }
 
-spine_size_t spine_event_timeline_get_frame_entries(spine_event_timeline obj) {
-    if (!obj) return nullptr;
+size_t spine_event_timeline_get_frame_entries(spine_event_timeline obj) {
+    if (!obj) return 0;
     EventTimeline *_obj = (EventTimeline *) obj;
     return _obj->getFrameEntries();
-}
-
-void * spine_event_timeline_get_frames(spine_event_timeline obj) {
-    if (!obj) return nullptr;
-    EventTimeline *_obj = (EventTimeline *) obj;
-    return _obj->getFrames();
 }
 
 int32_t spine_event_timeline_get_num_frames(spine_event_timeline obj) {
@@ -102,10 +88,10 @@ int32_t spine_event_timeline_get_num_frames(spine_event_timeline obj) {
     return (int32_t) _obj->getFrames().size();
 }
 
-spine_float *spine_event_timeline_get_frames(spine_event_timeline obj) {
+float *spine_event_timeline_get_frames(spine_event_timeline obj) {
     if (!obj) return nullptr;
     EventTimeline *_obj = (EventTimeline *) obj;
-    return (spine_float *) _obj->getFrames().buffer();
+    return (float *) _obj->getFrames().buffer();
 }
 
 float spine_event_timeline_get_duration(spine_event_timeline obj) {
@@ -114,20 +100,14 @@ float spine_event_timeline_get_duration(spine_event_timeline obj) {
     return _obj->getDuration();
 }
 
-void * spine_event_timeline_get_property_ids(spine_event_timeline obj) {
-    if (!obj) return nullptr;
-    EventTimeline *_obj = (EventTimeline *) obj;
-    return _obj->getPropertyIds();
-}
-
 int32_t spine_event_timeline_get_num_property_ids(spine_event_timeline obj) {
     if (!obj) return 0;
     EventTimeline *_obj = (EventTimeline *) obj;
     return (int32_t) _obj->getPropertyIds().size();
 }
 
-spine_property_id *spine_event_timeline_get_property_ids(spine_event_timeline obj) {
+int64_t *spine_event_timeline_get_property_ids(spine_event_timeline obj) {
     if (!obj) return nullptr;
     EventTimeline *_obj = (EventTimeline *) obj;
-    return (spine_property_id *) _obj->getPropertyIds().buffer();
+    return (int64_t *) _obj->getPropertyIds().buffer();
 }

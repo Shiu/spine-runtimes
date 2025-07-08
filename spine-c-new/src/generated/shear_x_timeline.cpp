@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_shear_x_timeline spine_shear_x_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t boneIndex) {
+spine_shear_x_timeline spine_shear_x_timeline_create(size_t frameCount, size_t bezierCount, int boneIndex) {
     ShearXTimeline *obj = new (__FILE__, __LINE__) ShearXTimeline(frameCount, bezierCount, boneIndex);
     return (spine_shear_x_timeline) obj;
 }
@@ -42,19 +42,17 @@ void spine_shear_x_timeline_dispose(spine_shear_x_timeline obj) {
     delete (ShearXTimeline *) obj;
 }
 
-spine_rtti spine_shear_x_timeline_get_rtti(spine_shear_x_timeline obj) {
-    if (!obj) return nullptr;
-    ShearXTimeline *_obj = (ShearXTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_shear_x_timeline_get_rtti() {
+    return (spine_rtti) &ShearXTimeline::rtti;
 }
 
-void spine_shear_x_timeline_apply(spine_shear_x_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_shear_x_timeline_apply(spine_shear_x_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     ShearXTimeline *_obj = (ShearXTimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-void spine_shear_x_timeline_set_frame(spine_shear_x_timeline obj, spine_size_t frame, float time, float value) {
+void spine_shear_x_timeline_set_frame(spine_shear_x_timeline obj, size_t frame, float time, float value) {
     if (!obj) return ;
     ShearXTimeline *_obj = (ShearXTimeline *) obj;
     _obj->setFrame(frame, time, value);
@@ -69,34 +67,34 @@ float spine_shear_x_timeline_get_curve_value(spine_shear_x_timeline obj, float t
 float spine_shear_x_timeline_get_relative_value(spine_shear_x_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
     if (!obj) return 0;
     ShearXTimeline *_obj = (ShearXTimeline *) obj;
-    return _obj->getRelativeValue(time, alpha, blend, current, setup);
+    return _obj->getRelativeValue(time, alpha, (MixBlend) blend, current, setup);
 }
 
 float spine_shear_x_timeline_get_absolute_value(spine_shear_x_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
     if (!obj) return 0;
     ShearXTimeline *_obj = (ShearXTimeline *) obj;
-    return _obj->getAbsoluteValue(time, alpha, blend, current, setup);
+    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup);
 }
 
-float spine_shear_x_timeline_get_absolute_value(spine_shear_x_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
+float spine_shear_x_timeline_get_absolute_value_6(spine_shear_x_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
     if (!obj) return 0;
     ShearXTimeline *_obj = (ShearXTimeline *) obj;
-    return _obj->getAbsoluteValue(time, alpha, blend, current, setup, value);
+    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup, value);
 }
 
 float spine_shear_x_timeline_get_scale_value(spine_shear_x_timeline obj, float time, float alpha, spine_mix_blend blend, spine_mix_direction direction, float current, float setup) {
     if (!obj) return 0;
     ShearXTimeline *_obj = (ShearXTimeline *) obj;
-    return _obj->getScaleValue(time, alpha, blend, direction, current, setup);
+    return _obj->getScaleValue(time, alpha, (MixBlend) blend, (MixDirection) direction, current, setup);
 }
 
-int32_t spine_shear_x_timeline_get_bone_index(spine_shear_x_timeline obj) {
+int spine_shear_x_timeline_get_bone_index(spine_shear_x_timeline obj) {
     if (!obj) return 0;
     ShearXTimeline *_obj = (ShearXTimeline *) obj;
     return _obj->getBoneIndex();
 }
 
-void spine_shear_x_timeline_set_bone_index(spine_shear_x_timeline obj, int32_t value) {
+void spine_shear_x_timeline_set_bone_index(spine_shear_x_timeline obj, int value) {
     if (!obj) return;
     ShearXTimeline *_obj = (ShearXTimeline *) obj;
     _obj->setBoneIndex(value);

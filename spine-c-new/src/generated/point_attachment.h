@@ -34,13 +34,11 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_point_attachment)
-
-SPINE_C_EXPORT spine_point_attachment spine_point_attachment_create(const utf8 * name);
+SPINE_C_EXPORT spine_point_attachment spine_point_attachment_create(const char* name);
 SPINE_C_EXPORT void spine_point_attachment_dispose(spine_point_attachment obj);
-SPINE_C_EXPORT spine_rtti spine_point_attachment_get_rtti(spine_point_attachment obj);
+SPINE_C_EXPORT spine_rtti spine_point_attachment_get_rtti();
 SPINE_C_EXPORT float spine_point_attachment_get_x(spine_point_attachment obj);
 SPINE_C_EXPORT void spine_point_attachment_set_x(spine_point_attachment obj, float value);
 SPINE_C_EXPORT float spine_point_attachment_get_y(spine_point_attachment obj);
@@ -48,11 +46,11 @@ SPINE_C_EXPORT void spine_point_attachment_set_y(spine_point_attachment obj, flo
 SPINE_C_EXPORT float spine_point_attachment_get_rotation(spine_point_attachment obj);
 SPINE_C_EXPORT void spine_point_attachment_set_rotation(spine_point_attachment obj, float value);
 SPINE_C_EXPORT spine_color spine_point_attachment_get_color(spine_point_attachment obj);
-SPINE_C_EXPORT void spine_point_attachment_compute_world_position(spine_point_attachment obj, spine_bone_pose bone, float ox, float oy);
+SPINE_C_EXPORT void spine_point_attachment_compute_world_position(spine_point_attachment obj, spine_bone_pose bone, float* ox, float* oy);
 SPINE_C_EXPORT float spine_point_attachment_compute_world_rotation(spine_point_attachment obj, spine_bone_pose bone);
 SPINE_C_EXPORT spine_attachment spine_point_attachment_copy(spine_point_attachment obj);
-SPINE_C_EXPORT const utf8 * spine_point_attachment_get_name(spine_point_attachment obj);
-SPINE_C_EXPORT int32_t spine_point_attachment_get_ref_count(spine_point_attachment obj);
+SPINE_C_EXPORT const char* spine_point_attachment_get_name(spine_point_attachment obj);
+SPINE_C_EXPORT int spine_point_attachment_get_ref_count(spine_point_attachment obj);
 SPINE_C_EXPORT void spine_point_attachment_reference(spine_point_attachment obj);
 SPINE_C_EXPORT void spine_point_attachment_dereference(spine_point_attachment obj);
 

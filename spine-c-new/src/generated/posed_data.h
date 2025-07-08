@@ -34,24 +34,13 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_posed_data)
-
-SPINE_C_EXPORT spine_posed_data spine_posed_data_create(spine_spine::string name);
+SPINE_C_EXPORT spine_posed_data spine_posed_data_create(const char* name);
 SPINE_C_EXPORT void spine_posed_data_dispose(spine_posed_data obj);
-SPINE_C_EXPORT spine_spine::string spine_posed_data_get_name(spine_posed_data obj);
-SPINE_C_EXPORT spine_bool spine_posed_data_is_skin_required(spine_posed_data obj);
-SPINE_C_EXPORT void spine_posed_data_set_skin_required(spine_posed_data obj, spine_bool value);
-struct spine_posed_data_generic_wrapper;
-typedef struct spine_posed_data_generic_wrapper *spine_posed_data_generic;
-
-typedef enum spine_posed_data_type {
-    SPINE_TYPE_POSED_DATA_POSED_DATA_GENERIC = 0
-} spine_posed_data_type;
-
-SPINE_C_EXPORT spine_bool spine_posed_data_is_type(spine_posed_data obj, spine_posed_data_type type);
-SPINE_C_EXPORT spine_posed_data_generic spine_posed_data_as_posed_data_generic(spine_posed_data obj);
+SPINE_C_EXPORT const char* spine_posed_data_get_name(spine_posed_data obj);
+SPINE_C_EXPORT bool spine_posed_data_is_skin_required(spine_posed_data obj);
+SPINE_C_EXPORT void spine_posed_data_set_skin_required(spine_posed_data obj, bool value);
 
 #ifdef __cplusplus
 }

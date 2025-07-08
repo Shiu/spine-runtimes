@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_render_command)
+#include "types.h"
 
 SPINE_C_EXPORT void spine_render_command_dispose(spine_render_command obj);
 

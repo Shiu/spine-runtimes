@@ -34,16 +34,14 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_region_attachment)
-
-SPINE_C_EXPORT spine_region_attachment spine_region_attachment_create(const utf8 * name);
+SPINE_C_EXPORT spine_region_attachment spine_region_attachment_create(const char* name);
 SPINE_C_EXPORT void spine_region_attachment_dispose(spine_region_attachment obj);
-SPINE_C_EXPORT spine_rtti spine_region_attachment_get_rtti(spine_region_attachment obj);
+SPINE_C_EXPORT spine_rtti spine_region_attachment_get_rtti();
 SPINE_C_EXPORT void spine_region_attachment_update_region(spine_region_attachment obj);
-SPINE_C_EXPORT void spine_region_attachment_compute_world_vertices(spine_region_attachment obj, spine_slot slot, spine_float worldVertices, spine_size_t offset, spine_size_t stride);
-SPINE_C_EXPORT void spine_region_attachment_compute_world_vertices(spine_region_attachment obj, spine_slot slot, void * worldVertices, spine_size_t offset, spine_size_t stride);
+SPINE_C_EXPORT void spine_region_attachment_compute_world_vertices(spine_region_attachment obj, spine_slot slot, float * worldVertices, size_t offset, size_t stride);
+SPINE_C_EXPORT void spine_region_attachment_compute_world_vertices_4(spine_region_attachment obj, spine_slot slot, spine_array_float worldVertices, size_t offset, size_t stride);
 SPINE_C_EXPORT float spine_region_attachment_get_x(spine_region_attachment obj);
 SPINE_C_EXPORT void spine_region_attachment_set_x(spine_region_attachment obj, float value);
 SPINE_C_EXPORT float spine_region_attachment_get_y(spine_region_attachment obj);
@@ -59,21 +57,19 @@ SPINE_C_EXPORT void spine_region_attachment_set_width(spine_region_attachment ob
 SPINE_C_EXPORT float spine_region_attachment_get_height(spine_region_attachment obj);
 SPINE_C_EXPORT void spine_region_attachment_set_height(spine_region_attachment obj, float value);
 SPINE_C_EXPORT spine_color spine_region_attachment_get_color(spine_region_attachment obj);
-SPINE_C_EXPORT const utf8 * spine_region_attachment_get_path(spine_region_attachment obj);
-SPINE_C_EXPORT void spine_region_attachment_set_path(spine_region_attachment obj, const utf8 * value);
+SPINE_C_EXPORT const char* spine_region_attachment_get_path(spine_region_attachment obj);
+SPINE_C_EXPORT void spine_region_attachment_set_path(spine_region_attachment obj, const char* value);
 SPINE_C_EXPORT spine_texture_region spine_region_attachment_get_region(spine_region_attachment obj);
 SPINE_C_EXPORT void spine_region_attachment_set_region(spine_region_attachment obj, spine_texture_region value);
 SPINE_C_EXPORT spine_sequence spine_region_attachment_get_sequence(spine_region_attachment obj);
 SPINE_C_EXPORT void spine_region_attachment_set_sequence(spine_region_attachment obj, spine_sequence value);
-SPINE_C_EXPORT void * spine_region_attachment_get_offset(spine_region_attachment obj);
 SPINE_C_EXPORT int32_t spine_region_attachment_get_num_offset(spine_region_attachment obj);
-SPINE_C_EXPORT spine_float *spine_region_attachment_get_offset(spine_region_attachment obj);
-SPINE_C_EXPORT void * spine_region_attachment_get_u_vs(spine_region_attachment obj);
+SPINE_C_EXPORT float *spine_region_attachment_get_offset(spine_region_attachment obj);
 SPINE_C_EXPORT int32_t spine_region_attachment_get_num_u_vs(spine_region_attachment obj);
-SPINE_C_EXPORT spine_float *spine_region_attachment_get_u_vs(spine_region_attachment obj);
+SPINE_C_EXPORT float *spine_region_attachment_get_u_vs(spine_region_attachment obj);
 SPINE_C_EXPORT spine_attachment spine_region_attachment_copy(spine_region_attachment obj);
-SPINE_C_EXPORT const utf8 * spine_region_attachment_get_name(spine_region_attachment obj);
-SPINE_C_EXPORT int32_t spine_region_attachment_get_ref_count(spine_region_attachment obj);
+SPINE_C_EXPORT const char* spine_region_attachment_get_name(spine_region_attachment obj);
+SPINE_C_EXPORT int spine_region_attachment_get_ref_count(spine_region_attachment obj);
 SPINE_C_EXPORT void spine_region_attachment_reference(spine_region_attachment obj);
 SPINE_C_EXPORT void spine_region_attachment_dereference(spine_region_attachment obj);
 

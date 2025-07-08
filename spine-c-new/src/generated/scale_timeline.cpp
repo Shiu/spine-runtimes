@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_scale_timeline spine_scale_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t boneIndex) {
+spine_scale_timeline spine_scale_timeline_create(size_t frameCount, size_t bezierCount, int boneIndex) {
     ScaleTimeline *obj = new (__FILE__, __LINE__) ScaleTimeline(frameCount, bezierCount, boneIndex);
     return (spine_scale_timeline) obj;
 }
@@ -42,19 +42,17 @@ void spine_scale_timeline_dispose(spine_scale_timeline obj) {
     delete (ScaleTimeline *) obj;
 }
 
-spine_rtti spine_scale_timeline_get_rtti(spine_scale_timeline obj) {
-    if (!obj) return nullptr;
-    ScaleTimeline *_obj = (ScaleTimeline *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_scale_timeline_get_rtti() {
+    return (spine_rtti) &ScaleTimeline::rtti;
 }
 
-void spine_scale_timeline_apply(spine_scale_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose) {
+void spine_scale_timeline_apply(spine_scale_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
     if (!obj) return ;
     ScaleTimeline *_obj = (ScaleTimeline *) obj;
-    _obj->apply(skeleton, lastTime, time, (Vector<Event *> *) pEvents, alpha, blend, direction, appliedPose);
+    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
-void spine_scale_timeline_set_frame(spine_scale_timeline obj, spine_size_t frame, float time, float value1, float value2) {
+void spine_scale_timeline_set_frame(spine_scale_timeline obj, size_t frame, float time, float value1, float value2) {
     if (!obj) return ;
     ScaleTimeline *_obj = (ScaleTimeline *) obj;
     _obj->setFrame(frame, time, value1, value2);
@@ -66,13 +64,13 @@ float spine_scale_timeline_get_curve_value(spine_scale_timeline obj, float time)
     return _obj->getCurveValue(time);
 }
 
-int32_t spine_scale_timeline_get_bone_index(spine_scale_timeline obj) {
+int spine_scale_timeline_get_bone_index(spine_scale_timeline obj) {
     if (!obj) return 0;
     ScaleTimeline *_obj = (ScaleTimeline *) obj;
     return _obj->getBoneIndex();
 }
 
-void spine_scale_timeline_set_bone_index(spine_scale_timeline obj, int32_t value) {
+void spine_scale_timeline_set_bone_index(spine_scale_timeline obj, int value) {
     if (!obj) return;
     ScaleTimeline *_obj = (ScaleTimeline *) obj;
     _obj->setBoneIndex(value);

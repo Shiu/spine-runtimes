@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_bone_pose)
+#include "types.h"
 
 SPINE_C_EXPORT spine_bone_pose spine_bone_pose_create(void);
 SPINE_C_EXPORT void spine_bone_pose_dispose(spine_bone_pose obj);
@@ -45,8 +43,8 @@ SPINE_C_EXPORT void spine_bone_pose_update_world_transform(spine_bone_pose obj, 
 SPINE_C_EXPORT void spine_bone_pose_update_local_transform(spine_bone_pose obj, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_bone_pose_validate_local_transform(spine_bone_pose obj, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_bone_pose_modify_local(spine_bone_pose obj, spine_skeleton skeleton);
-SPINE_C_EXPORT void spine_bone_pose_modify_world(spine_bone_pose obj, int32_t update);
-SPINE_C_EXPORT void spine_bone_pose_reset_world(spine_bone_pose obj, int32_t update);
+SPINE_C_EXPORT void spine_bone_pose_modify_world(spine_bone_pose obj, int update);
+SPINE_C_EXPORT void spine_bone_pose_reset_world(spine_bone_pose obj, int update);
 SPINE_C_EXPORT float spine_bone_pose_get_a(spine_bone_pose obj);
 SPINE_C_EXPORT void spine_bone_pose_set_a(spine_bone_pose obj, float value);
 SPINE_C_EXPORT float spine_bone_pose_get_b(spine_bone_pose obj);
@@ -63,10 +61,10 @@ SPINE_C_EXPORT float spine_bone_pose_get_world_rotation_x(spine_bone_pose obj);
 SPINE_C_EXPORT float spine_bone_pose_get_world_rotation_y(spine_bone_pose obj);
 SPINE_C_EXPORT float spine_bone_pose_get_world_scale_x(spine_bone_pose obj);
 SPINE_C_EXPORT float spine_bone_pose_get_world_scale_y(spine_bone_pose obj);
-SPINE_C_EXPORT void spine_bone_pose_world_to_local(spine_bone_pose obj, float worldX, float worldY, float outLocalX, float outLocalY);
-SPINE_C_EXPORT void spine_bone_pose_local_to_world(spine_bone_pose obj, float localX, float localY, float outWorldX, float outWorldY);
-SPINE_C_EXPORT void spine_bone_pose_world_to_parent(spine_bone_pose obj, float worldX, float worldY, float outParentX, float outParentY);
-SPINE_C_EXPORT void spine_bone_pose_parent_to_world(spine_bone_pose obj, float parentX, float parentY, float outWorldX, float outWorldY);
+SPINE_C_EXPORT void spine_bone_pose_world_to_local(spine_bone_pose obj, float worldX, float worldY, float* outLocalX, float* outLocalY);
+SPINE_C_EXPORT void spine_bone_pose_local_to_world(spine_bone_pose obj, float localX, float localY, float* outWorldX, float* outWorldY);
+SPINE_C_EXPORT void spine_bone_pose_world_to_parent(spine_bone_pose obj, float worldX, float worldY, float* outParentX, float* outParentY);
+SPINE_C_EXPORT void spine_bone_pose_parent_to_world(spine_bone_pose obj, float parentX, float parentY, float* outWorldX, float* outWorldY);
 SPINE_C_EXPORT float spine_bone_pose_world_to_local_rotation(spine_bone_pose obj, float worldRotation);
 SPINE_C_EXPORT float spine_bone_pose_local_to_world_rotation(spine_bone_pose obj, float localRotation);
 SPINE_C_EXPORT void spine_bone_pose_rotate_world(spine_bone_pose obj, float degrees);
@@ -90,7 +88,7 @@ SPINE_C_EXPORT float spine_bone_pose_get_shear_y(spine_bone_pose obj);
 SPINE_C_EXPORT void spine_bone_pose_set_shear_y(spine_bone_pose obj, float value);
 SPINE_C_EXPORT spine_inherit spine_bone_pose_get_inherit(spine_bone_pose obj);
 SPINE_C_EXPORT void spine_bone_pose_set_inherit(spine_bone_pose obj, spine_inherit value);
-SPINE_C_EXPORT spine_rtti spine_bone_pose_get_rtti(spine_bone_pose obj);
+SPINE_C_EXPORT spine_rtti spine_bone_pose_get_rtti();
 
 #ifdef __cplusplus
 }

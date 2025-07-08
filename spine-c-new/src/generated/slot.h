@@ -34,9 +34,7 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_slot)
+#include "types.h"
 
 SPINE_C_EXPORT spine_slot spine_slot_create(spine_slot_data data, spine_skeleton skeleton);
 SPINE_C_EXPORT void spine_slot_dispose(spine_slot obj);
@@ -48,7 +46,7 @@ SPINE_C_EXPORT spine_slot_pose spine_slot_get_applied_pose(spine_slot obj);
 SPINE_C_EXPORT void spine_slot_reset_constrained(spine_slot obj);
 SPINE_C_EXPORT void spine_slot_pose(spine_slot obj);
 SPINE_C_EXPORT void spine_slot_constrained(spine_slot obj);
-SPINE_C_EXPORT spine_bool spine_slot_is_pose_equal_to_applied(spine_slot obj);
+SPINE_C_EXPORT bool spine_slot_is_pose_equal_to_applied(spine_slot obj);
 
 #ifdef __cplusplus
 }

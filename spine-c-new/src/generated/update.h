@@ -34,13 +34,10 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_update)
-
-SPINE_C_EXPORT spine_update spine_update_create(void);
 SPINE_C_EXPORT void spine_update_dispose(spine_update obj);
-SPINE_C_EXPORT spine_rtti spine_update_get_rtti(spine_update obj);
+SPINE_C_EXPORT spine_rtti spine_update_get_rtti();
 SPINE_C_EXPORT void spine_update_update(spine_update obj, spine_skeleton skeleton, spine_physics physics);
 
 #ifdef __cplusplus

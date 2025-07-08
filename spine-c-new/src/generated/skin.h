@@ -34,25 +34,20 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_skin)
-
-SPINE_C_EXPORT spine_skin spine_skin_create(const utf8 * name);
+SPINE_C_EXPORT spine_skin spine_skin_create(const char* name);
 SPINE_C_EXPORT void spine_skin_dispose(spine_skin obj);
-SPINE_C_EXPORT void spine_skin_set_attachment(spine_skin obj, spine_size_t slotIndex, const utf8 * name, spine_attachment attachment);
-SPINE_C_EXPORT spine_attachment spine_skin_get_attachment(spine_skin obj, spine_size_t slotIndex, const utf8 * name);
-SPINE_C_EXPORT void spine_skin_remove_attachment(spine_skin obj, spine_size_t slotIndex, const utf8 * name);
-SPINE_C_EXPORT void spine_skin_find_names_for_slot(spine_skin obj, spine_size_t slotIndex, void * names);
-SPINE_C_EXPORT void spine_skin_find_attachments_for_slot(spine_skin obj, spine_size_t slotIndex, void * attachments);
-SPINE_C_EXPORT const utf8 * spine_skin_get_name(spine_skin obj);
+SPINE_C_EXPORT void spine_skin_set_attachment(spine_skin obj, size_t slotIndex, const char* name, spine_attachment attachment);
+SPINE_C_EXPORT spine_attachment spine_skin_get_attachment(spine_skin obj, size_t slotIndex, const char* name);
+SPINE_C_EXPORT void spine_skin_remove_attachment(spine_skin obj, size_t slotIndex, const char* name);
+SPINE_C_EXPORT void spine_skin_find_names_for_slot(spine_skin obj, size_t slotIndex, spine_array_string names);
+SPINE_C_EXPORT void spine_skin_find_attachments_for_slot(spine_skin obj, size_t slotIndex, spine_array_attachment attachments);
+SPINE_C_EXPORT const char* spine_skin_get_name(spine_skin obj);
 SPINE_C_EXPORT void spine_skin_add_skin(spine_skin obj, spine_skin other);
 SPINE_C_EXPORT void spine_skin_copy_skin(spine_skin obj, spine_skin other);
-SPINE_C_EXPORT spine_attachment_map::entries spine_skin_get_attachments(spine_skin obj);
-SPINE_C_EXPORT void * spine_skin_get_bones(spine_skin obj);
 SPINE_C_EXPORT int32_t spine_skin_get_num_bones(spine_skin obj);
 SPINE_C_EXPORT spine_bone_data *spine_skin_get_bones(spine_skin obj);
-SPINE_C_EXPORT void * spine_skin_get_constraints(spine_skin obj);
 SPINE_C_EXPORT int32_t spine_skin_get_num_constraints(spine_skin obj);
 SPINE_C_EXPORT spine_constraint_data *spine_skin_get_constraints(spine_skin obj);
 SPINE_C_EXPORT spine_color spine_skin_get_color(spine_skin obj);

@@ -34,19 +34,17 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
-
-SPINE_OPAQUE_TYPE(spine_atlas_attachment_loader)
+#include "types.h"
 
 SPINE_C_EXPORT spine_atlas_attachment_loader spine_atlas_attachment_loader_create(spine_atlas atlas);
 SPINE_C_EXPORT void spine_atlas_attachment_loader_dispose(spine_atlas_attachment_loader obj);
-SPINE_C_EXPORT spine_region_attachment spine_atlas_attachment_loader_new_region_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const utf8 * name, const utf8 * path, spine_sequence sequence);
-SPINE_C_EXPORT spine_mesh_attachment spine_atlas_attachment_loader_new_mesh_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const utf8 * name, const utf8 * path, spine_sequence sequence);
-SPINE_C_EXPORT spine_bounding_box_attachment spine_atlas_attachment_loader_new_bounding_box_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const utf8 * name);
-SPINE_C_EXPORT spine_path_attachment spine_atlas_attachment_loader_new_path_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const utf8 * name);
-SPINE_C_EXPORT spine_point_attachment spine_atlas_attachment_loader_new_point_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const utf8 * name);
-SPINE_C_EXPORT spine_clipping_attachment spine_atlas_attachment_loader_new_clipping_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const utf8 * name);
-SPINE_C_EXPORT spine_atlas_region spine_atlas_attachment_loader_find_region(spine_atlas_attachment_loader obj, const utf8 * name);
+SPINE_C_EXPORT spine_region_attachment spine_atlas_attachment_loader_new_region_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const char* name, const char* path, spine_sequence sequence);
+SPINE_C_EXPORT spine_mesh_attachment spine_atlas_attachment_loader_new_mesh_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const char* name, const char* path, spine_sequence sequence);
+SPINE_C_EXPORT spine_bounding_box_attachment spine_atlas_attachment_loader_new_bounding_box_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const char* name);
+SPINE_C_EXPORT spine_path_attachment spine_atlas_attachment_loader_new_path_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const char* name);
+SPINE_C_EXPORT spine_point_attachment spine_atlas_attachment_loader_new_point_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const char* name);
+SPINE_C_EXPORT spine_clipping_attachment spine_atlas_attachment_loader_new_clipping_attachment(spine_atlas_attachment_loader obj, spine_skin skin, const char* name);
+SPINE_C_EXPORT spine_atlas_region spine_atlas_attachment_loader_find_region(spine_atlas_attachment_loader obj, const char* name);
 
 #ifdef __cplusplus
 }

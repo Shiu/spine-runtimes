@@ -37,8 +37,8 @@ void spine_from_y_dispose(spine_from_y obj) {
     delete (FromY *) obj;
 }
 
-float spine_from_y_value(spine_from_y obj, spine_skeleton skeleton, spine_bone_pose source, spine_bool local, spine_float offsets) {
+float spine_from_y_value(spine_from_y obj, spine_skeleton skeleton, spine_bone_pose source, bool local, float * offsets) {
     if (!obj) return 0;
     FromY *_obj = (FromY *) obj;
-    return _obj->value(skeleton, source, local, (float *) offsets);
+    return _obj->value(*(Skeleton*) skeleton, *(BonePose*) source, local, (float *) offsets);
 }

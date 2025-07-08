@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_transform_constraint_data spine_transform_constraint_data_create(const utf8 * name) {
+spine_transform_constraint_data spine_transform_constraint_data_create(const char* name) {
     TransformConstraintData *obj = new (__FILE__, __LINE__) TransformConstraintData(String(name));
     return (spine_transform_constraint_data) obj;
 }
@@ -42,22 +42,14 @@ void spine_transform_constraint_data_dispose(spine_transform_constraint_data obj
     delete (TransformConstraintData *) obj;
 }
 
-spine_rtti spine_transform_constraint_data_get_rtti(spine_transform_constraint_data obj) {
-    if (!obj) return nullptr;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_transform_constraint_data_get_rtti() {
+    return (spine_rtti) &TransformConstraintData::rtti;
 }
 
 spine_constraint spine_transform_constraint_data_create(spine_transform_constraint_data obj, spine_skeleton skeleton) {
     if (!obj) return 0;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (spine_constraint) _obj->create(skeleton);
-}
-
-void * spine_transform_constraint_data_get_bones(spine_transform_constraint_data obj) {
-    if (!obj) return nullptr;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (void *) _obj->getBones();
+    return (spine_constraint) _obj->create(*(Skeleton*) skeleton);
 }
 
 int32_t spine_transform_constraint_data_get_num_bones(spine_transform_constraint_data obj) {
@@ -73,7 +65,7 @@ spine_bone_data *spine_transform_constraint_data_get_bones(spine_transform_const
 }
 
 spine_bone_data spine_transform_constraint_data_get_source(spine_transform_constraint_data obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_bone_data) 0;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
     return (spine_bone_data) _obj->getSource();
 }
@@ -156,58 +148,52 @@ void spine_transform_constraint_data_set_offset_shear_y(spine_transform_constrai
     _obj->setOffsetShearY(value);
 }
 
-spine_bool spine_transform_constraint_data_get_local_source(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
+bool spine_transform_constraint_data_get_local_source(spine_transform_constraint_data obj) {
+    if (!obj) return false;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
     return _obj->getLocalSource();
 }
 
-void spine_transform_constraint_data_set_local_source(spine_transform_constraint_data obj, spine_bool value) {
+void spine_transform_constraint_data_set_local_source(spine_transform_constraint_data obj, bool value) {
     if (!obj) return;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
     _obj->setLocalSource(value);
 }
 
-spine_bool spine_transform_constraint_data_get_local_target(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
+bool spine_transform_constraint_data_get_local_target(spine_transform_constraint_data obj) {
+    if (!obj) return false;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
     return _obj->getLocalTarget();
 }
 
-void spine_transform_constraint_data_set_local_target(spine_transform_constraint_data obj, spine_bool value) {
+void spine_transform_constraint_data_set_local_target(spine_transform_constraint_data obj, bool value) {
     if (!obj) return;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
     _obj->setLocalTarget(value);
 }
 
-spine_bool spine_transform_constraint_data_get_additive(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
+bool spine_transform_constraint_data_get_additive(spine_transform_constraint_data obj) {
+    if (!obj) return false;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
     return _obj->getAdditive();
 }
 
-void spine_transform_constraint_data_set_additive(spine_transform_constraint_data obj, spine_bool value) {
+void spine_transform_constraint_data_set_additive(spine_transform_constraint_data obj, bool value) {
     if (!obj) return;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
     _obj->setAdditive(value);
 }
 
-spine_bool spine_transform_constraint_data_get_clamp(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
+bool spine_transform_constraint_data_get_clamp(spine_transform_constraint_data obj) {
+    if (!obj) return false;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
     return _obj->getClamp();
 }
 
-void spine_transform_constraint_data_set_clamp(spine_transform_constraint_data obj, spine_bool value) {
+void spine_transform_constraint_data_set_clamp(spine_transform_constraint_data obj, bool value) {
     if (!obj) return;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
     _obj->setClamp(value);
-}
-
-void * spine_transform_constraint_data_get_properties(spine_transform_constraint_data obj) {
-    if (!obj) return nullptr;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (void *) _obj->getProperties();
 }
 
 int32_t spine_transform_constraint_data_get_num_properties(spine_transform_constraint_data obj) {
@@ -222,14 +208,14 @@ spine_class from_property *spine_transform_constraint_data_get_properties(spine_
     return (spine_class from_property *) _obj->getProperties().buffer();
 }
 
-const utf8 * spine_transform_constraint_data_get_name(spine_transform_constraint_data obj) {
+const char* spine_transform_constraint_data_get_name(spine_transform_constraint_data obj) {
     if (!obj) return nullptr;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (const utf8 *) _obj->getName().buffer();
+    return (const char *) _obj->getName().buffer();
 }
 
-spine_bool spine_transform_constraint_data_is_skin_required(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
+bool spine_transform_constraint_data_is_skin_required(spine_transform_constraint_data obj) {
+    if (!obj) return false;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
     return _obj->isSkinRequired();
 }
@@ -237,11 +223,5 @@ spine_bool spine_transform_constraint_data_is_skin_required(spine_transform_cons
 spine_transform_constraint_pose spine_transform_constraint_data_get_setup_pose(spine_transform_constraint_data obj) {
     if (!obj) return 0;
     TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getSetupPose();
-}
-
-spine_transform_constraint_pose spine_transform_constraint_data_get_setup_pose(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getSetupPose();
+    return (spine_transform_constraint_pose) &_obj->getSetupPose();
 }

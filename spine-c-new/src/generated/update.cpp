@@ -32,24 +32,17 @@
 
 using namespace spine;
 
-spine_update spine_update_create(void) {
-    Update *obj = new (__FILE__, __LINE__) Update();
-    return (spine_update) obj;
-}
-
 void spine_update_dispose(spine_update obj) {
     if (!obj) return;
     delete (Update *) obj;
 }
 
-spine_rtti spine_update_get_rtti(spine_update obj) {
-    if (!obj) return nullptr;
-    Update *_obj = (Update *) obj;
-    return (spine_rtti) &_obj->getRTTI();
+spine_rtti spine_update_get_rtti() {
+    return (spine_rtti) &Update::rtti;
 }
 
 void spine_update_update(spine_update obj, spine_skeleton skeleton, spine_physics physics) {
     if (!obj) return ;
     Update *_obj = (Update *) obj;
-    _obj->update(skeleton, physics);
+    _obj->update(*(Skeleton*) skeleton, (Physics) physics);
 }

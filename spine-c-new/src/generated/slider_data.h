@@ -34,20 +34,18 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_slider_data)
-
-SPINE_C_EXPORT spine_slider_data spine_slider_data_create(const utf8 * name);
+SPINE_C_EXPORT spine_slider_data spine_slider_data_create(const char* name);
 SPINE_C_EXPORT void spine_slider_data_dispose(spine_slider_data obj);
-SPINE_C_EXPORT spine_rtti spine_slider_data_get_rtti(spine_slider_data obj);
+SPINE_C_EXPORT spine_rtti spine_slider_data_get_rtti();
 SPINE_C_EXPORT spine_constraint spine_slider_data_create(spine_slider_data obj, spine_skeleton skeleton);
 SPINE_C_EXPORT spine_animation spine_slider_data_get_animation(spine_slider_data obj);
 SPINE_C_EXPORT void spine_slider_data_set_animation(spine_slider_data obj, spine_animation value);
-SPINE_C_EXPORT spine_bool spine_slider_data_get_additive(spine_slider_data obj);
-SPINE_C_EXPORT void spine_slider_data_set_additive(spine_slider_data obj, spine_bool value);
-SPINE_C_EXPORT spine_bool spine_slider_data_get_loop(spine_slider_data obj);
-SPINE_C_EXPORT void spine_slider_data_set_loop(spine_slider_data obj, spine_bool value);
+SPINE_C_EXPORT bool spine_slider_data_get_additive(spine_slider_data obj);
+SPINE_C_EXPORT void spine_slider_data_set_additive(spine_slider_data obj, bool value);
+SPINE_C_EXPORT bool spine_slider_data_get_loop(spine_slider_data obj);
+SPINE_C_EXPORT void spine_slider_data_set_loop(spine_slider_data obj, bool value);
 SPINE_C_EXPORT spine_bone_data spine_slider_data_get_bone(spine_slider_data obj);
 SPINE_C_EXPORT void spine_slider_data_set_bone(spine_slider_data obj, spine_bone_data value);
 SPINE_C_EXPORT spine_from_property spine_slider_data_get_property(spine_slider_data obj);
@@ -56,11 +54,10 @@ SPINE_C_EXPORT float spine_slider_data_get_scale(spine_slider_data obj);
 SPINE_C_EXPORT void spine_slider_data_set_scale(spine_slider_data obj, float value);
 SPINE_C_EXPORT float spine_slider_data_get_offset(spine_slider_data obj);
 SPINE_C_EXPORT void spine_slider_data_set_offset(spine_slider_data obj, float value);
-SPINE_C_EXPORT spine_bool spine_slider_data_get_local(spine_slider_data obj);
-SPINE_C_EXPORT void spine_slider_data_set_local(spine_slider_data obj, spine_bool value);
-SPINE_C_EXPORT const utf8 * spine_slider_data_get_name(spine_slider_data obj);
-SPINE_C_EXPORT spine_bool spine_slider_data_is_skin_required(spine_slider_data obj);
-SPINE_C_EXPORT spine_slider_pose spine_slider_data_get_setup_pose(spine_slider_data obj);
+SPINE_C_EXPORT bool spine_slider_data_get_local(spine_slider_data obj);
+SPINE_C_EXPORT void spine_slider_data_set_local(spine_slider_data obj, bool value);
+SPINE_C_EXPORT const char* spine_slider_data_get_name(spine_slider_data obj);
+SPINE_C_EXPORT bool spine_slider_data_is_skin_required(spine_slider_data obj);
 SPINE_C_EXPORT spine_slider_pose spine_slider_data_get_setup_pose(spine_slider_data obj);
 
 #ifdef __cplusplus

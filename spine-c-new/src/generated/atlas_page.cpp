@@ -32,7 +32,7 @@
 
 using namespace spine;
 
-spine_atlas_page spine_atlas_page_create(const utf8 * inName) {
+spine_atlas_page spine_atlas_page_create(const char* inName) {
     AtlasPage *obj = new (__FILE__, __LINE__) AtlasPage(String(inName));
     return (spine_atlas_page) obj;
 }

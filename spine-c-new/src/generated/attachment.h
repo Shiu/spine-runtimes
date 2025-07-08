@@ -34,47 +34,15 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_attachment)
-
-SPINE_C_EXPORT spine_attachment spine_attachment_create(const utf8 * name);
 SPINE_C_EXPORT void spine_attachment_dispose(spine_attachment obj);
-SPINE_C_EXPORT spine_rtti spine_attachment_get_rtti(spine_attachment obj);
-SPINE_C_EXPORT const utf8 * spine_attachment_get_name(spine_attachment obj);
+SPINE_C_EXPORT spine_rtti spine_attachment_get_rtti();
+SPINE_C_EXPORT const char* spine_attachment_get_name(spine_attachment obj);
 SPINE_C_EXPORT spine_attachment spine_attachment_copy(spine_attachment obj);
-SPINE_C_EXPORT int32_t spine_attachment_get_ref_count(spine_attachment obj);
+SPINE_C_EXPORT int spine_attachment_get_ref_count(spine_attachment obj);
 SPINE_C_EXPORT void spine_attachment_reference(spine_attachment obj);
 SPINE_C_EXPORT void spine_attachment_dereference(spine_attachment obj);
-struct spine_point_attachment_wrapper;
-typedef struct spine_point_attachment_wrapper *spine_point_attachment;
-struct spine_region_attachment_wrapper;
-typedef struct spine_region_attachment_wrapper *spine_region_attachment;
-struct spine_bounding_box_attachment_wrapper;
-typedef struct spine_bounding_box_attachment_wrapper *spine_bounding_box_attachment;
-struct spine_clipping_attachment_wrapper;
-typedef struct spine_clipping_attachment_wrapper *spine_clipping_attachment;
-struct spine_mesh_attachment_wrapper;
-typedef struct spine_mesh_attachment_wrapper *spine_mesh_attachment;
-struct spine_path_attachment_wrapper;
-typedef struct spine_path_attachment_wrapper *spine_path_attachment;
-
-typedef enum spine_attachment_type {
-    SPINE_TYPE_ATTACHMENT_POINT_ATTACHMENT = 0,
-    SPINE_TYPE_ATTACHMENT_REGION_ATTACHMENT = 1,
-    SPINE_TYPE_ATTACHMENT_BOUNDING_BOX_ATTACHMENT = 2,
-    SPINE_TYPE_ATTACHMENT_CLIPPING_ATTACHMENT = 3,
-    SPINE_TYPE_ATTACHMENT_MESH_ATTACHMENT = 4,
-    SPINE_TYPE_ATTACHMENT_PATH_ATTACHMENT = 5
-} spine_attachment_type;
-
-SPINE_C_EXPORT spine_bool spine_attachment_is_type(spine_attachment obj, spine_attachment_type type);
-SPINE_C_EXPORT spine_point_attachment spine_attachment_as_point_attachment(spine_attachment obj);
-SPINE_C_EXPORT spine_region_attachment spine_attachment_as_region_attachment(spine_attachment obj);
-SPINE_C_EXPORT spine_bounding_box_attachment spine_attachment_as_bounding_box_attachment(spine_attachment obj);
-SPINE_C_EXPORT spine_clipping_attachment spine_attachment_as_clipping_attachment(spine_attachment obj);
-SPINE_C_EXPORT spine_mesh_attachment spine_attachment_as_mesh_attachment(spine_attachment obj);
-SPINE_C_EXPORT spine_path_attachment spine_attachment_as_path_attachment(spine_attachment obj);
 
 #ifdef __cplusplus
 }

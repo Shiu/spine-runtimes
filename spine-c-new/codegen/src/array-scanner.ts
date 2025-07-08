@@ -103,8 +103,8 @@ export function scanArraySpecializations(typesJson: SpineTypes, exclusions: any[
         if (isPrimitive) {
             // Map primitive types
             const typeMap: { [key: string]: string } = {
-                'int': 'int32_t',
-                'unsigned short': 'uint16_t',
+                'int': 'int',
+                'unsigned short': 'unsigned short',
                 'float': 'float',
                 'double': 'double',
                 'bool': 'bool',

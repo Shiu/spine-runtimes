@@ -34,25 +34,22 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_slot_data)
-
-SPINE_C_EXPORT spine_slot_data spine_slot_data_create(int32_t index, const utf8 * name, spine_bone_data boneData);
+SPINE_C_EXPORT spine_slot_data spine_slot_data_create(int index, const char* name, spine_bone_data boneData);
 SPINE_C_EXPORT void spine_slot_data_dispose(spine_slot_data obj);
-SPINE_C_EXPORT int32_t spine_slot_data_get_index(spine_slot_data obj);
+SPINE_C_EXPORT int spine_slot_data_get_index(spine_slot_data obj);
 SPINE_C_EXPORT spine_bone_data spine_slot_data_get_bone_data(spine_slot_data obj);
-SPINE_C_EXPORT void spine_slot_data_set_attachment_name(spine_slot_data obj, const utf8 * value);
-SPINE_C_EXPORT const utf8 * spine_slot_data_get_attachment_name(spine_slot_data obj);
+SPINE_C_EXPORT void spine_slot_data_set_attachment_name(spine_slot_data obj, const char* value);
+SPINE_C_EXPORT const char* spine_slot_data_get_attachment_name(spine_slot_data obj);
 SPINE_C_EXPORT spine_blend_mode spine_slot_data_get_blend_mode(spine_slot_data obj);
 SPINE_C_EXPORT void spine_slot_data_set_blend_mode(spine_slot_data obj, spine_blend_mode value);
-SPINE_C_EXPORT spine_bool spine_slot_data_get_visible(spine_slot_data obj);
-SPINE_C_EXPORT void spine_slot_data_set_visible(spine_slot_data obj, spine_bool value);
+SPINE_C_EXPORT bool spine_slot_data_get_visible(spine_slot_data obj);
+SPINE_C_EXPORT void spine_slot_data_set_visible(spine_slot_data obj, bool value);
 SPINE_C_EXPORT spine_slot_pose spine_slot_data_get_setup_pose(spine_slot_data obj);
-SPINE_C_EXPORT spine_slot_pose spine_slot_data_get_setup_pose(spine_slot_data obj);
-SPINE_C_EXPORT spine_spine::string spine_slot_data_get_name(spine_slot_data obj);
-SPINE_C_EXPORT spine_bool spine_slot_data_is_skin_required(spine_slot_data obj);
-SPINE_C_EXPORT void spine_slot_data_set_skin_required(spine_slot_data obj, spine_bool value);
+SPINE_C_EXPORT const char* spine_slot_data_get_name(spine_slot_data obj);
+SPINE_C_EXPORT bool spine_slot_data_is_skin_required(spine_slot_data obj);
+SPINE_C_EXPORT void spine_slot_data_set_skin_required(spine_slot_data obj, bool value);
 
 #ifdef __cplusplus
 }

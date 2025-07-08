@@ -34,22 +34,20 @@
 extern "C" {
 #endif
 
-#include "../custom.h"
+#include "types.h"
 
-SPINE_OPAQUE_TYPE(spine_shear_x_timeline)
-
-SPINE_C_EXPORT spine_shear_x_timeline spine_shear_x_timeline_create(spine_size_t frameCount, spine_size_t bezierCount, int32_t boneIndex);
+SPINE_C_EXPORT spine_shear_x_timeline spine_shear_x_timeline_create(size_t frameCount, size_t bezierCount, int boneIndex);
 SPINE_C_EXPORT void spine_shear_x_timeline_dispose(spine_shear_x_timeline obj);
-SPINE_C_EXPORT spine_rtti spine_shear_x_timeline_get_rtti(spine_shear_x_timeline obj);
-SPINE_C_EXPORT void spine_shear_x_timeline_apply(spine_shear_x_timeline obj, spine_skeleton skeleton, float lastTime, float time, void * pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, spine_bool appliedPose);
-SPINE_C_EXPORT void spine_shear_x_timeline_set_frame(spine_shear_x_timeline obj, spine_size_t frame, float time, float value);
+SPINE_C_EXPORT spine_rtti spine_shear_x_timeline_get_rtti();
+SPINE_C_EXPORT void spine_shear_x_timeline_apply(spine_shear_x_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
+SPINE_C_EXPORT void spine_shear_x_timeline_set_frame(spine_shear_x_timeline obj, size_t frame, float time, float value);
 SPINE_C_EXPORT float spine_shear_x_timeline_get_curve_value(spine_shear_x_timeline obj, float time);
 SPINE_C_EXPORT float spine_shear_x_timeline_get_relative_value(spine_shear_x_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup);
 SPINE_C_EXPORT float spine_shear_x_timeline_get_absolute_value(spine_shear_x_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup);
-SPINE_C_EXPORT float spine_shear_x_timeline_get_absolute_value(spine_shear_x_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value);
+SPINE_C_EXPORT float spine_shear_x_timeline_get_absolute_value_6(spine_shear_x_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value);
 SPINE_C_EXPORT float spine_shear_x_timeline_get_scale_value(spine_shear_x_timeline obj, float time, float alpha, spine_mix_blend blend, spine_mix_direction direction, float current, float setup);
-SPINE_C_EXPORT int32_t spine_shear_x_timeline_get_bone_index(spine_shear_x_timeline obj);
-SPINE_C_EXPORT void spine_shear_x_timeline_set_bone_index(spine_shear_x_timeline obj, int32_t value);
+SPINE_C_EXPORT int spine_shear_x_timeline_get_bone_index(spine_shear_x_timeline obj);
+SPINE_C_EXPORT void spine_shear_x_timeline_set_bone_index(spine_shear_x_timeline obj, int value);
 
 #ifdef __cplusplus
 }

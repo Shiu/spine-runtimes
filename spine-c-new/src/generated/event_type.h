@@ -30,19 +30,19 @@
 #ifndef SPINE_C_EVENTTYPE_H
 #define SPINE_C_EVENTTYPE_H
 
-#include "../../custom.h"
+#include "../base.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef enum spine_event_type {
-    SPINE_EVENT_TYPE_EVENT_TYPE_START = 0,
-    SPINE_EVENT_TYPE_EVENT_TYPE_INTERRUPT,
-    SPINE_EVENT_TYPE_EVENT_TYPE_END,
-    SPINE_EVENT_TYPE_EVENT_TYPE_DISPOSE,
-    SPINE_EVENT_TYPE_EVENT_TYPE_COMPLETE,
-    SPINE_EVENT_TYPE_EVENT_TYPE_EVENT
+    SPINE_EVENT_TYPE_START = 0,
+    SPINE_EVENT_TYPE_INTERRUPT,
+    SPINE_EVENT_TYPE_END,
+    SPINE_EVENT_TYPE_DISPOSE,
+    SPINE_EVENT_TYPE_COMPLETE,
+    SPINE_EVENT_TYPE_EVENT
 } spine_event_type;
 
 #ifdef __cplusplus

@@ -43,7 +43,7 @@ void spine_animation_state_data_dispose(spine_animation_state_data obj) {
 }
 
 spine_skeleton_data spine_animation_state_data_get_skeleton_data(spine_animation_state_data obj) {
-    if (!obj) return nullptr;
+    if (!obj) return (spine_skeleton_data) 0;
     AnimationStateData *_obj = (AnimationStateData *) obj;
     return (spine_skeleton_data) _obj->getSkeletonData();
 }
@@ -60,13 +60,13 @@ void spine_animation_state_data_set_default_mix(spine_animation_state_data obj, 
     _obj->setDefaultMix(value);
 }
 
-void spine_animation_state_data_set_mix(spine_animation_state_data obj, const utf8 * fromName, const utf8 * toName, float duration) {
+void spine_animation_state_data_set_mix(spine_animation_state_data obj, const char* fromName, const char* toName, float duration) {
     if (!obj) return ;
     AnimationStateData *_obj = (AnimationStateData *) obj;
     _obj->setMix(String(fromName), String(toName), duration);
 }
 
-void spine_animation_state_data_set_mix(spine_animation_state_data obj, spine_animation from, spine_animation to, float duration) {
+void spine_animation_state_data_set_mix_3(spine_animation_state_data obj, spine_animation from, spine_animation to, float duration) {
     if (!obj) return ;
     AnimationStateData *_obj = (AnimationStateData *) obj;
     _obj->setMix((Animation *) from, (Animation *) to, duration);
