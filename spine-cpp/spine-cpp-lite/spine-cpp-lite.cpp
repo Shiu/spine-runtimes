@@ -101,7 +101,7 @@ static void initExtensions() {
 	}
 }
 
-spine::SpineExtension *spine::getDefaultExtension() {
+SpineExtension *getDefaultExtension() {
 	initExtensions();
 	return defaultExtension;
 }
@@ -1228,7 +1228,7 @@ void spine_skeleton_update_cache(spine_skeleton skeleton) {
 void spine_skeleton_update_world_transform(spine_skeleton skeleton, spine_physics physics) {
 	if (skeleton == nullptr) return;
 	Skeleton *_skeleton = (Skeleton *) skeleton;
-	_skeleton->updateWorldTransform((spine::Physics) physics);
+	_skeleton->updateWorldTransform((Physics) physics);
 }
 
 void spine_skeleton_update_world_transform_bone(spine_skeleton skeleton, spine_physics physics, spine_bone parent) {
@@ -1236,7 +1236,7 @@ void spine_skeleton_update_world_transform_bone(spine_skeleton skeleton, spine_p
 	if (parent == nullptr) return;
 	Skeleton *_skeleton = (Skeleton *) skeleton;
 	Bone *_bone = (Bone *) parent;
-	_skeleton->updateWorldTransform((spine::Physics) physics, _bone);
+	_skeleton->updateWorldTransform((Physics) physics, _bone);
 }
 
 void spine_skeleton_set_to_setup_pose(spine_skeleton skeleton) {

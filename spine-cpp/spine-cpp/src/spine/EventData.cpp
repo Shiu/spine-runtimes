@@ -31,7 +31,9 @@
 
 #include <assert.h>
 
-spine::EventData::EventData(const spine::String &name) : _name(name),
+using namespace spine;
+
+EventData::EventData(const String &name) : _name(name),
 														 _intValue(0),
 														 _floatValue(0),
 														 _stringValue(),
@@ -42,55 +44,55 @@ spine::EventData::EventData(const spine::String &name) : _name(name),
 }
 
 /// The name of the event, which is unique within the skeleton.
-const spine::String &spine::EventData::getName() const {
+const String &EventData::getName() const {
 	return _name;
 }
 
-int spine::EventData::getIntValue() const {
+int EventData::getIntValue() const {
 	return _intValue;
 }
 
-void spine::EventData::setIntValue(int inValue) {
+void EventData::setIntValue(int inValue) {
 	_intValue = inValue;
 }
 
-float spine::EventData::getFloatValue() const {
+float EventData::getFloatValue() const {
 	return _floatValue;
 }
 
-void spine::EventData::setFloatValue(float inValue) {
+void EventData::setFloatValue(float inValue) {
 	_floatValue = inValue;
 }
 
-const spine::String &spine::EventData::getStringValue() const {
+const String &EventData::getStringValue() const {
 	return _stringValue;
 }
 
-void spine::EventData::setStringValue(const spine::String &inValue) {
+void EventData::setStringValue(const String &inValue) {
 	this->_stringValue = inValue;
 }
 
-const spine::String &spine::EventData::getAudioPath() const {
+const String &EventData::getAudioPath() const {
 	return _audioPath;
 }
 
-void spine::EventData::setAudioPath(const spine::String &inValue) {
+void EventData::setAudioPath(const String &inValue) {
 	_audioPath = inValue;
 }
 
 
-float spine::EventData::getVolume() const {
+float EventData::getVolume() const {
 	return _volume;
 }
 
-void spine::EventData::setVolume(float inValue) {
+void EventData::setVolume(float inValue) {
 	_volume = inValue;
 }
 
-float spine::EventData::getBalance() const {
+float EventData::getBalance() const {
 	return _balance;
 }
 
-void spine::EventData::setBalance(float inValue) {
+void EventData::setBalance(float inValue) {
 	_balance = inValue;
 }

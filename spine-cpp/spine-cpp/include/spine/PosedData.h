@@ -63,11 +63,11 @@ namespace spine {
         friend class Slot;
 
     public:
-        PosedData(const spine::String& name);
+        PosedData(const String& name);
         virtual ~PosedData();
 
         /// The constraint's name, which is unique across all constraints in the skeleton of the same type.
-        const spine::String& getName() const { return _name; };
+        const String& getName() const { return _name; };
 
         /// When true, Skeleton::updateWorldTransform(Physics) only updates this constraint if the Skeleton::getSkin()
         /// contains this constraint.
@@ -77,11 +77,11 @@ namespace spine {
         void setSkinRequired(bool skinRequired) { _skinRequired = skinRequired; };
 
         protected:
-            spine::String _name;
+            String _name;
             bool _skinRequired;
     };
 
-    inline PosedData::PosedData(const spine::String& name) : _name(name), _skinRequired(false) {
+    inline PosedData::PosedData(const String& name) : _name(name), _skinRequired(false) {
     }
 
     inline PosedData::~PosedData() {
@@ -124,7 +124,7 @@ namespace spine {
         P _setup;
 
     public:
-        PosedDataGeneric(const spine::String& name): PosedData(name), _setup() {
+        PosedDataGeneric(const String& name): PosedData(name), _setup() {
     }
         virtual ~PosedDataGeneric() {};
 

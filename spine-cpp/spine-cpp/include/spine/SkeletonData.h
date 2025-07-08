@@ -83,7 +83,7 @@ namespace spine {
 		Skin *findSkin(const String &skinName);
 
 		/// @return May be NULL.
-		spine::EventData *findEvent(const String &eventDataName);
+		EventData *findEvent(const String &eventDataName);
 
 		/// @return May be NULL.
 		Animation *findAnimation(const String &animationName);
@@ -123,7 +123,7 @@ namespace spine {
 		void setDefaultSkin(Skin *inValue);
 
 		/// The skeleton's events.
-		Array<spine::EventData *> &getEvents();
+		Array<EventData *> &getEvents();
 
 		/// The skeleton's animations.
 		Array<Animation *> &getAnimations();

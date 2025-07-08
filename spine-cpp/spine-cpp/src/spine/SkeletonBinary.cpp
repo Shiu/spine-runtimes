@@ -1309,7 +1309,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 							float time = input.readFloat();
 							int modeAndIndex = input.readInt();
 							float delay = input.readFloat();
-							timeline->setFrame(frame, time, (spine::SequenceMode)(modeAndIndex & 0xf), modeAndIndex >> 4, delay);
+							timeline->setFrame(frame, time, (SequenceMode)(modeAndIndex & 0xf), modeAndIndex >> 4, delay);
 						}
 						timelines.add(timeline);
 						break;

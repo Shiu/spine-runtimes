@@ -66,24 +66,24 @@ namespace spine {
 
 #define RTTI_DECL_NOPARENT \
 public: \
-static const spine::RTTI rtti; \
-virtual const spine::RTTI& getRTTI() const;
+static const RTTI rtti; \
+virtual const RTTI& getRTTI() const;
 
 #define RTTI_DECL \
 public: \
-static const spine::RTTI rtti; \
-virtual const spine::RTTI& getRTTI() const override;
+static const RTTI rtti; \
+virtual const RTTI& getRTTI() const override;
 
 #define RTTI_IMPL_NOPARENT(name) \
-const spine::RTTI name::rtti(#name); \
-const spine::RTTI& name::getRTTI() const { return rtti; }
+const RTTI name::rtti(#name); \
+const RTTI& name::getRTTI() const { return rtti; }
 
 #define RTTI_IMPL(name, parent) \
-const spine::RTTI name::rtti(#name, parent::rtti); \
-const spine::RTTI& name::getRTTI() const { return rtti; }
+const RTTI name::rtti(#name, parent::rtti); \
+const RTTI& name::getRTTI() const { return rtti; }
 
 #define RTTI_IMPL_MULTI(name, parent, ...) \
-const spine::RTTI name::rtti(#name, parent::rtti, &__VA_ARGS__::rtti); \
-const spine::RTTI& name::getRTTI() const { return rtti; }
+const RTTI name::rtti(#name, parent::rtti, &__VA_ARGS__::rtti); \
+const RTTI& name::getRTTI() const { return rtti; }
 
 #endif /* Spine_RTTI_h */

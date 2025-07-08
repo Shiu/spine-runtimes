@@ -593,7 +593,7 @@ namespace spine {
 
 		void computeHold(TrackEntry *entry);
 
-		void setAttachment(Skeleton &skeleton, spine::Slot &slot, const String &attachmentName, bool attachments);
+		void setAttachment(Skeleton &skeleton, Slot &slot, const String &attachmentName, bool attachments);
 	};
 }
 

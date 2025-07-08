@@ -90,7 +90,7 @@ int Json::getInt(Json *value, const char *name, int defaultValue) {
 	return value ? value->_valueInt : defaultValue;
 }
 
-bool Json::getBoolean(spine::Json *value, const char *name, bool defaultValue) {
+bool Json::getBoolean(Json *value, const char *name, bool defaultValue) {
 	value = getItem(value, name);
 	if (value) {
 		if (value->_valueString) return strcmp(value->_valueString, "true") == 0;
@@ -127,8 +127,8 @@ Json::Json(const char *value) : _next(NULL),
 }
 
 Json::~Json() {
-	spine::Json *curr = NULL;
-	spine::Json *next = _child;
+	Json *curr = NULL;
+	Json *next = _child;
 	do {
 		curr = next;
 		if (curr) {
