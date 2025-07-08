@@ -31,7 +31,6 @@ import { AssetManagerBase, Downloader } from "@esotericsoftware/spine-core"
 import { ManagedWebGLRenderingContext } from "./WebGL.js";
 import { GLTexture } from "./GLTexture.js";
 
-
 export class AssetManager extends AssetManagerBase {
 	constructor (context: ManagedWebGLRenderingContext | WebGLRenderingContext, pathPrefix: string = "", downloader: Downloader = new Downloader()) {
 		super((image: HTMLImageElement | ImageBitmap) => {
