@@ -27,7 +27,7 @@
  * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { AssetManager, Color, Disposable, Input, LoadingScreen, ManagedWebGLRenderingContext, Physics, SceneRenderer, TimeKeeper, Vector2, Vector3 } from "@esotericsoftware/spine-webgl"
+import { AssetCache, AssetManager, Color, Disposable, Input, LoadingScreen, ManagedWebGLRenderingContext, Physics, SceneRenderer, TimeKeeper, Vector2, Vector3 } from "@esotericsoftware/spine-webgl"
 import { SpineWebComponentSkeleton } from "./SpineWebComponentSkeleton.js"
 import { AttributeTypes, castValue, Point, Rectangle } from "./wcUtils.js"
 
@@ -48,10 +48,11 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 	 * @internal
 	 */
 	static getOrCreateOverlay (overlayId: string | null): SpineWebComponentOverlay {
-		let overlay = SpineWebComponentOverlay.OVERLAY_LIST.get(overlayId || SpineWebComponentOverlay.OVERLAY_ID);
+		const id = overlayId || SpineWebComponentOverlay.OVERLAY_ID;
+		let overlay = SpineWebComponentOverlay.OVERLAY_LIST.get(id);
 		if (!overlay) {
 			overlay = document.createElement('spine-overlay') as SpineWebComponentOverlay;
-			overlay.setAttribute('overlay-id', SpineWebComponentOverlay.OVERLAY_ID);
+			overlay.setAttribute('overlay-id', id);
 			document.body.appendChild(overlay);
 		}
 		return overlay;
@@ -232,6 +233,9 @@ export class SpineWebComponentOverlay extends HTMLElement implements OverlayAttr
 			overlayId = SpineWebComponentOverlay.OVERLAY_ID;
 			this.setAttribute('overlay-id', overlayId);
 		}
+
+		this.assetManager.setCache(AssetCache.getCache(overlayId));
+
 		const existingOverlay = SpineWebComponentOverlay.OVERLAY_LIST.get(overlayId);
 		if (existingOverlay && existingOverlay !== this) {
 			throw new Error(`"SpineWebComponentOverlay - You cannot have two spine-overlay with the same overlay-id: ${overlayId}"`);

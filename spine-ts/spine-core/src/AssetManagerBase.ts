@@ -35,17 +35,16 @@ export class AssetManagerBase implements Disposable {
 	private pathPrefix: string = "";
 	private textureLoader: (image: HTMLImageElement | ImageBitmap) => Texture;
 	private downloader: Downloader;
-	private assets: StringMap<any> = {};
-	private assetsRefCount: StringMap<number> = {};
-	private assetsLoaded: StringMap<Promise<any>> = {};
+	private cache: AssetCache;
 	private errors: StringMap<string> = {};
 	private toLoad = 0;
 	private loaded = 0;
 
-	constructor (textureLoader: (image: HTMLImageElement | ImageBitmap) => Texture, pathPrefix: string = "", downloader: Downloader = new Downloader()) {
+	constructor (textureLoader: (image: HTMLImageElement | ImageBitmap) => Texture, pathPrefix: string = "", downloader = new Downloader(), cache = new AssetCache()) {
 		this.textureLoader = textureLoader;
 		this.pathPrefix = pathPrefix;
 		this.downloader = downloader;
+		this.cache = cache;
 	}
 
 	private start (path: string): string {
@@ -56,8 +55,8 @@ export class AssetManagerBase implements Disposable {
 	private success (callback: (path: string, data: any) => void, path: string, asset: any) {
 		this.toLoad--;
 		this.loaded++;
-		this.assets[path] = asset;
-		this.assetsRefCount[path] = (this.assetsRefCount[path] || 0) + 1;
+		this.cache.assets[path] = asset;
+		this.cache.assetsRefCount[path] = (this.cache.assetsRefCount[path] || 0) + 1;
 		if (callback) callback(path, asset);
 	}
 
@@ -94,7 +93,7 @@ export class AssetManagerBase implements Disposable {
 
 		if (this.reuseAssets(path, success, error)) return;
 
-		this.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
+		this.cache.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
 			this.downloader.downloadBinary(path, (data: Uint8Array): void => {
 				this.success(success, path, data);
 				resolve(data);
@@ -125,7 +124,7 @@ export class AssetManagerBase implements Disposable {
 
 		if (this.reuseAssets(path, success, error)) return;
 
-		this.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
+		this.cache.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
 			this.downloader.downloadJson(path, (data: object): void => {
 				this.success(success, path, data);
 				resolve(data);
@@ -140,11 +139,17 @@ export class AssetManagerBase implements Disposable {
 	reuseAssets (path: string,
 		success: (path: string, data: any) => void = () => { },
 		error: (path: string, message: string) => void = () => { }) {
-		const loadedStatus = this.assetsLoaded[path];
+		const loadedStatus = this.cache.assetsLoaded[path];
 		const alreadyExistsOrLoading = loadedStatus !== undefined;
 		if (alreadyExistsOrLoading) {
 			loadedStatus
-				.then(data => this.success(success, path, data))
+				.then(data => {
+					if (data instanceof Image) {
+						data = this.textureLoader(data);
+						this.cache.assetsLoaded[path] = Promise.resolve(data);
+					}
+					return this.success(success, path, data)
+				})
 				.catch(errorMsg => this.error(error, path, errorMsg));
 		}
 		return alreadyExistsOrLoading;
@@ -158,7 +163,7 @@ export class AssetManagerBase implements Disposable {
 
 		if (this.reuseAssets(path, success, error)) return;
 
-		this.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
+		this.cache.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
 			let isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && window.document);
 			let isWebWorker = !isBrowser; // && typeof importScripts !== 'undefined';
 			if (isWebWorker) {
@@ -171,7 +176,7 @@ export class AssetManagerBase implements Disposable {
 					return blob ? createImageBitmap(blob, { premultiplyAlpha: "none", colorSpaceConversion: "none" }) : null;
 				}).then((bitmap) => {
 					if (bitmap) {
-						const texture = this.textureLoader(bitmap)
+						const texture = this.textureLoader(bitmap);
 						this.success(success, path, texture);
 						resolve(texture);
 					};
@@ -180,7 +185,7 @@ export class AssetManagerBase implements Disposable {
 				let image = new Image();
 				image.crossOrigin = "anonymous";
 				image.onload = () => {
-					const texture = this.textureLoader(image)
+					const texture = this.textureLoader(image);
 					this.success(success, path, texture);
 					resolve(texture);
 				};
@@ -206,7 +211,7 @@ export class AssetManagerBase implements Disposable {
 
 		if (this.reuseAssets(path, success, error)) return;
 
-		this.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
+		this.cache.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
 			this.downloader.downloadText(path, (atlasText: string): void => {
 				try {
 					let atlas = new TextureAtlas(atlasText);
@@ -224,7 +229,7 @@ export class AssetManagerBase implements Disposable {
 							},
 							(imagePath: string, message: string) => {
 								if (!abort) {
-									const errorMsg = `Couldn't load texture atlas ${path} page image: ${imagePath}`;
+									const errorMsg = `Couldn't load texture ${path} page image: ${imagePath}`;
 									this.error(error, path, errorMsg);
 									reject(errorMsg);
 								}
@@ -254,7 +259,7 @@ export class AssetManagerBase implements Disposable {
 
 		if (this.reuseAssets(path, success, error)) return;
 
-		this.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
+		this.cache.assetsLoaded[path] = new Promise<any>((resolve, reject) => {
 			this.downloader.downloadText(path, (atlasText: string): void => {
 				try {
 					const atlas = new TextureAtlas(atlasText);
@@ -319,13 +324,17 @@ export class AssetManagerBase implements Disposable {
 		});
 	}
 
+	setCache (cache: AssetCache) {
+		this.cache = cache;
+	}
+
 	get (path: string) {
-		return this.assets[this.pathPrefix + path];
+		return this.cache.assets[this.pathPrefix + path];
 	}
 
 	require (path: string) {
 		path = this.pathPrefix + path;
-		let asset = this.assets[path];
+		let asset = this.cache.assets[path];
 		if (asset) return asset;
 		let error = this.errors[path];
 		throw Error("Asset not found: " + path + (error ? "\n" + error : ""));
@@ -333,22 +342,22 @@ export class AssetManagerBase implements Disposable {
 
 	remove (path: string) {
 		path = this.pathPrefix + path;
-		let asset = this.assets[path];
+		let asset = this.cache.assets[path];
 		if (asset.dispose) asset.dispose();
-		delete this.assets[path];
-		delete this.assetsRefCount[path];
-		delete this.assetsLoaded[path];
+		delete this.cache.assets[path];
+		delete this.cache.assetsRefCount[path];
+		delete this.cache.assetsLoaded[path];
 		return asset;
 	}
 
 	removeAll () {
-		for (let path in this.assets) {
-			let asset = this.assets[path];
+		for (let path in this.cache.assets) {
+			let asset = this.cache.assets[path];
 			if (asset.dispose) asset.dispose();
 		}
-		this.assets = {};
-		this.assetsLoaded = {};
-		this.assetsRefCount = {};
+		this.cache.assets = {};
+		this.cache.assetsLoaded = {};
+		this.cache.assetsRefCount = {};
 	}
 
 	isLoadingComplete (): boolean {
@@ -369,7 +378,7 @@ export class AssetManagerBase implements Disposable {
 
 	// dispose asset only if it's not used by others
 	disposeAsset (path: string) {
-		if (--this.assetsRefCount[path] === 0) {
+		if (--this.cache.assetsRefCount[path] === 0) {
 			this.remove(path)
 		}
 	}
@@ -380,6 +389,27 @@ export class AssetManagerBase implements Disposable {
 
 	getErrors () {
 		return this.errors;
+	}
+}
+
+export class AssetCache {
+	public assets: StringMap<any> = {};
+	public assetsRefCount: StringMap<number> = {};
+	public assetsLoaded: StringMap<Promise<any>> = {};
+
+	static AVAILABLE_CACHES = new Map<string, AssetCache>();
+	static getCache (id: string) {
+		const cache = AssetCache.AVAILABLE_CACHES.get(id);
+		if (cache) return cache;
+
+		const newCache = new AssetCache();
+		AssetCache.AVAILABLE_CACHES.set(id, newCache);
+		return newCache;
+	}
+
+	async addAsset(path: string, asset: any) {
+		this.assetsLoaded[path] = Promise.resolve(asset);
+		this.assets[path] = await asset;
 	}
 }
 
