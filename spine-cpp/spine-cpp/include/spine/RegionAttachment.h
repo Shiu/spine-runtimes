@@ -31,7 +31,7 @@
 #define Spine_RegionAttachment_h
 
 #include <spine/Attachment.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/Color.h>
 #include <spine/Sequence.h>
 #include <spine/TextureRegion.h>
@@ -68,7 +68,7 @@ namespace spine {
 		/// @param stride The number of worldVertices entries between the value pairs written.
 		void computeWorldVertices(Slot &slot, float *worldVertices, size_t offset, size_t stride = 2);
 
-		void computeWorldVertices(Slot &slot, Vector<float> &worldVertices, size_t offset, size_t stride = 2);
+		void computeWorldVertices(Slot &slot, Array<float> &worldVertices, size_t offset, size_t stride = 2);
 
 		float getX();
 
@@ -112,9 +112,9 @@ namespace spine {
 
 		void setSequence(Sequence *sequence);
 
-		Vector<float> &getOffset();
+		Array<float> &getOffset();
 
-		Vector<float> &getUVs();
+		Array<float> &getUVs();
 
 		virtual Attachment *copy() override;
 
@@ -129,8 +129,8 @@ namespace spine {
 		static const int BRY;
 
 		float _x, _y, _rotation, _scaleX, _scaleY, _width, _height;
-		Vector<float> _vertexOffset;
-		Vector<float> _uvs;
+		Array<float> _vertexOffset;
+		Array<float> _uvs;
 		String _path;
 		Color _color;
 		TextureRegion *_region;

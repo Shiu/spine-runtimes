@@ -30,7 +30,7 @@
 #ifndef Spine_SkeletonBounds_h
 #define Spine_SkeletonBounds_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/Pool.h>
 #include <spine/SpineObject.h>
 
@@ -88,11 +88,11 @@ namespace spine {
         /// Returns the bounding box for the given polygon or null. Requires a call to update() first.
         BoundingBoxAttachment * getBoundingBox(Polygon *polygon);
 
-        /// Returns all polygons or an empty vector. Requires a call to update() first.
-        Vector<Polygon *> &getPolygons();
+        /// Returns all polygons or an empty array. Requires a call to update() first.
+        Array<Polygon *> &getPolygons();
 
         /// Returns all bounding boxes. Requires a call to update() first.
-        Vector<BoundingBoxAttachment *> &getBoundingBoxes();
+        Array<BoundingBoxAttachment *> &getBoundingBoxes();
 
 		/// The left edge of the axis aligned bounding box.
 		float getMinX();
@@ -114,8 +114,8 @@ namespace spine {
 
 	private:
 		Pool <Polygon> _polygonPool;
-		Vector<BoundingBoxAttachment *> _boundingBoxes;
-		Vector<Polygon *> _polygons;
+		Array<BoundingBoxAttachment *> _boundingBoxes;
+		Array<Polygon *> _polygons;
 		float _minX, _minY, _maxX, _maxY;
 
 		void aabbCompute();
@@ -123,7 +123,7 @@ namespace spine {
 
 	class Polygon : public SpineObject {
 	public:
-		Vector<float> _vertices;
+		Array<float> _vertices;
 		int _count;
 
 		Polygon() : _count(0) {

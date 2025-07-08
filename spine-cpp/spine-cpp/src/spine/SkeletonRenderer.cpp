@@ -65,7 +65,7 @@ static RenderCommand *createRenderCommand(BlockAllocator &allocator, int numVert
 	return cmd;
 }
 
-static RenderCommand *batchSubCommands(BlockAllocator &allocator, Vector<RenderCommand *> &commands, int first, int last, int numVertices, int numIndices) {
+static RenderCommand *batchSubCommands(BlockAllocator &allocator, Array<RenderCommand *> &commands, int first, int last, int numVertices, int numIndices) {
 	RenderCommand *batched = createRenderCommand(allocator, numVertices, numIndices, commands[first]->blendMode, commands[first]->texture);
 	float *positions = batched->positions;
 	float *uvs = batched->uvs;
@@ -91,7 +91,7 @@ static RenderCommand *batchSubCommands(BlockAllocator &allocator, Vector<RenderC
 	return batched;
 }
 
-static RenderCommand *batchCommands(BlockAllocator &allocator, Vector<RenderCommand *> &commands) {
+static RenderCommand *batchCommands(BlockAllocator &allocator, Array<RenderCommand *> &commands) {
 	if (commands.size() == 0) return nullptr;
 
 	RenderCommand *root = nullptr;
@@ -156,12 +156,12 @@ RenderCommand *SkeletonRenderer::render(Skeleton &skeleton) {
 			continue;
 		}
 
-		Vector<float> *worldVertices = &_worldVertices;
-		Vector<unsigned short> *quadIndices = &_quadIndices;
-		Vector<float> *vertices = worldVertices;
+		Array<float> *worldVertices = &_worldVertices;
+		Array<unsigned short> *quadIndices = &_quadIndices;
+		Array<float> *vertices = worldVertices;
 		int32_t verticesCount;
-		Vector<float> *uvs;
-		Vector<unsigned short> *indices;
+		Array<float> *uvs;
+		Array<unsigned short> *indices;
 		int32_t indicesCount;
 		Color *attachmentColor;
 		void *texture;

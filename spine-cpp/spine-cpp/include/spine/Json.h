@@ -31,7 +31,7 @@
 #define Spine_Json_h
 
 #include <spine/SpineObject.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 #ifndef SPINE_JSON_HAVE_PREV
 /* spine doesn't use the "prev" link in the Json sibling lists. */
@@ -53,7 +53,7 @@ namespace spine {
 		static const int JSON_OBJECT;
 
 		template <typename T>
-		static bool asArray(Json *value, Vector<T> &array) {
+		static bool asArray(Json *value, Array<T> &array) {
 			if (value == NULL) return false;
 			array.setSize(value->_size, 0);
 			Json *vertex = value->_child;

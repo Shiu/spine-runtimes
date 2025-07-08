@@ -30,7 +30,7 @@
 #ifndef Spine_TextureRegion_h
 #define Spine_TextureRegion_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 namespace spine {
 	class SP_API TextureRegion : public SpineObject {

@@ -30,7 +30,7 @@
 #ifndef Spine_Atlas_h
 #define Spine_Atlas_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/Extension.h>
 #include <spine/SpineObject.h>
 #include <spine/SpineString.h>
@@ -112,10 +112,10 @@ namespace spine {
 		String name;
 		int index;
 		int x, y;
-		Vector<int> splits;
-		Vector<int> pads;
-		Vector <String> names;
-		Vector<float> values;
+		Array<int> splits;
+		Array<int> pads;
+		Array <String> names;
+		Array<float> values;
 	};
 
 	class TextureLoader;
@@ -135,13 +135,13 @@ namespace spine {
 		/// @return The region, or NULL.
 		AtlasRegion *findRegion(const String &name);
 
-		Vector<AtlasPage *> &getPages();
+		Array<AtlasPage *> &getPages();
 
-		Vector<AtlasRegion *> &getRegions();
+		Array<AtlasRegion *> &getRegions();
 
 	private:
-		Vector<AtlasPage *> _pages;
-		Vector<AtlasRegion *> _regions;
+		Array<AtlasPage *> _pages;
+		Array<AtlasRegion *> _regions;
 		TextureLoader *_textureLoader;
 
 		void load(const char *begin, int length, const char *dir, bool createTexture);

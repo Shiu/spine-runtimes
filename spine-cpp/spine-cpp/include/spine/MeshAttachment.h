@@ -33,7 +33,7 @@
 #include <spine/VertexAttachment.h>
 #include <spine/TextureRegion.h>
 #include <spine/Sequence.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/Color.h>
 #include <spine/HasRendererObject.h>
 
@@ -64,16 +64,16 @@ namespace spine {
 
 		void setHullLength(int inValue);
 
-		Vector<float> &getRegionUVs();
+		Array<float> &getRegionUVs();
 
-		void setRegionUVs(Vector<float> &inValue);
+		void setRegionUVs(Array<float> &inValue);
 
 		/// The UV pair for each vertex, normalized within the entire texture. See also MeshAttachment::updateRegion
-		Vector<float> &getUVs();
+		Array<float> &getUVs();
 
-		Vector<unsigned short> &getTriangles();
+		Array<unsigned short> &getTriangles();
 
-		void setTriangles(Vector<unsigned short> &inValue);
+		void setTriangles(Array<unsigned short> &inValue);
 
 		Color &getColor();
 
@@ -94,9 +94,9 @@ namespace spine {
 		void setParentMesh(MeshAttachment *inValue);
 
 		// Nonessential.
-		Vector<unsigned short> &getEdges();
+		Array<unsigned short> &getEdges();
 
-		void setEdges(Vector<unsigned short> &inValue);
+		void setEdges(Array<unsigned short> &inValue);
 
 		float getWidth();
 
@@ -112,10 +112,10 @@ namespace spine {
 
 	private:
 		MeshAttachment *_parentMesh;
-		Vector<float> _uvs;
-		Vector<float> _regionUVs;
-		Vector<unsigned short> _triangles;
-		Vector<unsigned short> _edges;
+		Array<float> _uvs;
+		Array<float> _regionUVs;
+		Array<unsigned short> _triangles;
+		Array<unsigned short> _edges;
 		String _path;
 		Color _color;
 		int _hullLength;

@@ -34,14 +34,14 @@
 using namespace spine;
 
 Triangulator::~Triangulator() {
-	ContainerUtil::cleanUpVectorOfPointers(_convexPolygons);
-	ContainerUtil::cleanUpVectorOfPointers(_convexPolygonsIndices);
+	ArrayUtils::deleteElements(_convexPolygons);
+	ArrayUtils::deleteElements(_convexPolygonsIndices);
 }
 
-Vector<int> &Triangulator::triangulate(Vector<float> &vertices) {
+Array<int> &Triangulator::triangulate(Array<float> &vertices) {
 	size_t vertexCount = vertices.size() >> 1;
 
-	Vector<int> &indices = _indices;
+	Array<int> &indices = _indices;
 	indices.clear();
 	indices.ensureCapacity(vertexCount);
 	indices.setSize(vertexCount, 0);
@@ -49,14 +49,14 @@ Vector<int> &Triangulator::triangulate(Vector<float> &vertices) {
 		indices[i] = i;
 	}
 
-	Vector<bool> &isConcaveArray = _isConcaveArray;
+	Array<bool> &isConcaveArray = _isConcaveArray;
 	isConcaveArray.ensureCapacity(vertexCount);
 	isConcaveArray.setSize(vertexCount, 0);
 	for (int i = 0, n = (int) vertexCount; i < n; ++i) {
 		isConcaveArray[i] = isConcave(i, (int) vertexCount, vertices, indices);
 	}
 
-	Vector<int> &triangles = _triangles;
+	Array<int> &triangles = _triangles;
 	triangles.clear();
 	triangles.ensureCapacity(MathUtil::max((int) 0, (int) vertexCount - 2) << 2);
 
@@ -124,21 +124,21 @@ Vector<int> &Triangulator::triangulate(Vector<float> &vertices) {
 	return triangles;
 }
 
-Vector<Vector<float> *> &Triangulator::decompose(Vector<float> &vertices, Vector<int> &triangles) {
-	Vector<Vector<float> *> &convexPolygons = _convexPolygons;
+Array<Array<float> *> &Triangulator::decompose(Array<float> &vertices, Array<int> &triangles) {
+	Array<Array<float> *> &convexPolygons = _convexPolygons;
 	for (size_t i = 0, n = convexPolygons.size(); i < n; ++i)
 		_polygonPool.free(convexPolygons[i]);
 	convexPolygons.clear();
 
-	Vector<Vector<int> *> &convexPolygonsIndices = _convexPolygonsIndices;
+	Array<Array<int> *> &convexPolygonsIndices = _convexPolygonsIndices;
 	for (size_t i = 0, n = convexPolygonsIndices.size(); i < n; ++i)
 		_polygonIndicesPool.free(convexPolygonsIndices[i]);
 	convexPolygonsIndices.clear();
 
-	Vector<int> *polygonIndices = _polygonIndicesPool.obtain();
+	Array<int> *polygonIndices = _polygonIndicesPool.obtain();
 	polygonIndices->clear();
 
-	Vector<float> *polygon = _polygonPool.obtain();
+	Array<float> *polygon = _polygonPool.obtain();
 	polygon->clear();
 
 	// Merge subsequent triangles if they form a triangle fan.
@@ -153,7 +153,7 @@ Vector<Vector<float> *> &Triangulator::decompose(Vector<float> &vertices, Vector
 		bool merged = false;
 		if (fanBaseIndex == t1) {
 			size_t o = polygon->size() - 4;
-			Vector<float> &p = *polygon;
+			Array<float> &p = *polygon;
 			int winding1 = winding(p[o], p[o + 1], p[o + 2], p[o + 3], x3, y3);
 			int winding2 = winding(x3, y3, p[0], p[1], p[2], p[3]);
 			if (winding1 == lastwinding && winding2 == lastwinding) {
@@ -207,7 +207,7 @@ Vector<Vector<float> *> &Triangulator::decompose(Vector<float> &vertices, Vector
 
 		polygon = convexPolygons[i];
 		size_t o = polygon->size() - 4;
-		Vector<float> &p = *polygon;
+		Array<float> &p = *polygon;
 		float prevPrevX = p[o], prevPrevY = p[o + 1];
 		float prevX = p[o + 2], prevY = p[o + 3];
 		float firstX = p[0], firstY = p[1];
@@ -217,8 +217,8 @@ Vector<Vector<float> *> &Triangulator::decompose(Vector<float> &vertices, Vector
 		for (size_t ii = 0; ii < n; ++ii) {
 			if (ii == i) continue;
 
-			Vector<int> *otherIndicesP = convexPolygonsIndices[ii];
-			Vector<int> &otherIndices = *otherIndicesP;
+			Array<int> *otherIndicesP = convexPolygonsIndices[ii];
+			Array<int> &otherIndices = *otherIndicesP;
 
 			if (otherIndices.size() != 3) continue;
 
@@ -226,8 +226,8 @@ Vector<Vector<float> *> &Triangulator::decompose(Vector<float> &vertices, Vector
 			int otherSecondIndex = otherIndices[1];
 			int otherLastIndex = otherIndices[2];
 
-			Vector<float> *otherPolyP = convexPolygons[ii];
-			Vector<float> &otherPoly = *otherPolyP;
+			Array<float> *otherPolyP = convexPolygons[ii];
+			Array<float> &otherPoly = *otherPolyP;
 
 			float x3 = otherPoly[otherPoly.size() - 2], y3 = otherPoly[otherPoly.size() - 1];
 
@@ -265,7 +265,7 @@ Vector<Vector<float> *> &Triangulator::decompose(Vector<float> &vertices, Vector
 	return convexPolygons;
 }
 
-bool Triangulator::isConcave(int index, int vertexCount, Vector<float> &vertices, Vector<int> &indices) {
+bool Triangulator::isConcave(int index, int vertexCount, Array<float> &vertices, Array<int> &indices) {
 	int previous = indices[(vertexCount + index - 1) % vertexCount] << 1;
 	int current = indices[index] << 1;
 	int next = indices[(index + 1) % vertexCount] << 1;

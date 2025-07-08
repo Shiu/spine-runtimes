@@ -30,7 +30,7 @@
 #ifndef Spine_AnimationState_h
 #define Spine_AnimationState_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/Pool.h>
 #include <spine/Property.h>
 #include <spine/MixBlend.h>
@@ -339,9 +339,9 @@ namespace spine {
 		float _delay, _trackTime, _trackLast, _nextTrackLast, _trackEnd, _timeScale;
 		float _alpha, _mixTime, _mixDuration, _interruptAlpha, _totalAlpha;
 		MixBlend _mixBlend;
-		Vector<int> _timelineMode;
-		Vector<TrackEntry *> _timelineHoldMix;
-		Vector<float> _timelinesRotation;
+		Array<int> _timelineMode;
+		Array<TrackEntry *> _timelineHoldMix;
+		Array<float> _timelinesRotation;
 		AnimationStateListener _listener;
 		AnimationStateListenerObject *_listenerObject;
 
@@ -363,7 +363,7 @@ namespace spine {
 		friend class AnimationState;
 
 	private:
-		Vector<EventQueueEntry> _eventQueueEntries;
+		Array<EventQueueEntry> _eventQueueEntries;
 		AnimationState &_state;
 		bool _drainDisabled;
 
@@ -410,24 +410,24 @@ namespace spine {
 		bool apply(Skeleton &skeleton);
 
 		/// Removes all animations from all tracks, leaving skeletons in their current pose.
-		/// 
+		///
 		/// It may be desired to use AnimationState::setEmptyAnimations(float) to mix the skeletons back to the setup pose,
 		/// rather than leaving them in their current pose.
 		void clearTracks();
 
 		/// Removes all animations from the track, leaving skeletons in their current pose.
-		/// 
+		///
 		/// It may be desired to use AnimationState::setEmptyAnimation(int, float) to mix the skeletons back to the setup pose,
 		/// rather than leaving them in their current pose.
 		void clearTrack(size_t trackIndex);
 
 		/// Sets an animation by name.
-		/// 
+		///
 		/// See setAnimation(int, Animation, bool).
 		TrackEntry *setAnimation(size_t trackIndex, const String &animationName, bool loop);
 
 		/// Sets the current animation for a track, discarding any queued animations.
-		/// 
+		///
 		/// If the formerly current track entry is for the same animation and was never applied to a skeleton, it is replaced (not mixed
 		/// from).
 		/// @param loop If true, the animation will repeat.
@@ -439,7 +439,7 @@ namespace spine {
 		TrackEntry *setAnimation(size_t trackIndex, Animation *animation, bool loop);
 
 		/// Queues an animation by name.
-		/// 
+		///
 		/// See addAnimation(int, Animation, bool, float).
 		TrackEntry *addAnimation(size_t trackIndex, const String &animationName, bool loop, float delay);
 
@@ -455,19 +455,19 @@ namespace spine {
 
 		/// Sets an empty animation for a track, discarding any queued animations, and sets the track entry's
 		/// TrackEntry::getMixDuration(). An empty animation has no timelines and serves as a placeholder for mixing in or out.
-		/// 
+		///
 		/// Mixing out is done by setting an empty animation with a mix duration using either setEmptyAnimation(int, float),
 		/// setEmptyAnimations(float), or addEmptyAnimation(int, float, float). Mixing to an empty animation causes
 		/// the previous animation to be applied less and less over the mix duration. Properties keyed in the previous animation
 		/// transition to the value from lower tracks or to the setup pose value if no lower tracks key the property. A mix duration of
 		/// 0 still mixes out over one frame.
-		/// 
+		///
 		/// Mixing in is done by first setting an empty animation, then adding an animation using
 		/// addAnimation(int, Animation, bool, float) with the desired delay (an empty animation has a duration of 0) and on
 		/// the returned track entry, set the TrackEntry::setMixDuration(float). Mixing from an empty animation causes the new
 		/// animation to be applied more and more over the mix duration. Properties keyed in the new animation transition from the value
 		/// from lower tracks or from the setup pose value if no lower tracks key the property to the value keyed in the new animation.
-		/// 
+		///
 		/// See <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
 		/// Runtimes Guide.
 		TrackEntry *setEmptyAnimation(size_t trackIndex, float mixDuration);
@@ -475,7 +475,7 @@ namespace spine {
 		/// Adds an empty animation to be played after the current or last queued animation for a track, and sets the track entry's
 		/// TrackEntry::getMixDuration(). If the track has no entries, it is equivalent to calling
 		/// setEmptyAnimation(int, float).
-		/// 
+		///
 		/// See setEmptyAnimation(int, float) and
 		/// <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
 		/// Runtimes Guide.
@@ -488,7 +488,7 @@ namespace spine {
 		TrackEntry *addEmptyAnimation(size_t trackIndex, float mixDuration, float delay);
 
 		/// Sets an empty animation for every track, discarding any queued animations, and mixes to it over the specified mix duration.
-		/// 
+		///
 		/// See <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
 		/// Runtimes Guide.
 		void setEmptyAnimations(float mixDuration);
@@ -500,11 +500,11 @@ namespace spine {
 		AnimationStateData *getData();
 
 		/// The list of tracks that have had animations, which may contain null entries for tracks that currently have no animation.
-		Vector<TrackEntry *> &getTracks();
+		Array<TrackEntry *> &getTracks();
 
 		/// Multiplier for the delta time when the animation state is updated, causing time for all animations and mixes to play slower
 		/// or faster. Defaults to 1.
-		/// 
+		///
 		/// See TrackEntry TrackEntry::getTimeScale() for affecting a single animation.
 		float getTimeScale();
 
@@ -539,8 +539,8 @@ namespace spine {
 		AnimationStateData *_data;
 
 		Pool<TrackEntry> _trackEntryPool;
-		Vector<TrackEntry *> _tracks;
-		Vector<Event *> _events;
+		Array<TrackEntry *> _tracks;
+		Array<Event *> _events;
 		EventQueue *_queue;
 
 		HashMap<PropertyId, bool> _propertyIDs;
@@ -561,7 +561,7 @@ namespace spine {
 		/// the first time the mixing was applied.
 		static void
 		applyRotateTimeline(RotateTimeline *rotateTimeline, Skeleton &skeleton, float time, float alpha, MixBlend pose,
-							Vector<float> &timelinesRotation, size_t i, bool firstFrame);
+							Array<float> &timelinesRotation, size_t i, bool firstFrame);
 
 		/// Applies the attachment timeline and sets Slot::attachmentState.
 		/// @param attachments False when: 1) the attachment timeline is mixing out, 2) mix < attachmentThreshold, and 3) the timeline

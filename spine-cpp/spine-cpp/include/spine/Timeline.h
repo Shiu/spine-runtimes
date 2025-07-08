@@ -31,7 +31,7 @@
 #define Spine_Timeline_h
 
 #include <spine/RTTI.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/MixBlend.h>
 #include <spine/MixDirection.h>
 #include <spine/SpineObject.h>
@@ -62,24 +62,24 @@ namespace spine {
 		/// @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions such as DrawOrderTimeline and AttachmentTimeline.
 		/// @param appliedPose True to modify the applied pose.
 		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
+		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose) = 0;
 
 		size_t getFrameEntries();
 
 		size_t getFrameCount();
 
-		Vector<float> &getFrames();
+		Array<float> &getFrames();
 
 		float getDuration();
 
-		virtual Vector <PropertyId> &getPropertyIds();
+		virtual Array <PropertyId> &getPropertyIds();
 
 	protected:
 		void setPropertyIds(PropertyId propertyIds[], size_t propertyIdsCount);
 
-        Vector <PropertyId> _propertyIds;
-		Vector<float> _frames;
+        Array <PropertyId> _propertyIds;
+		Array<float> _frames;
 		size_t _frameEntries;
 	};
 }

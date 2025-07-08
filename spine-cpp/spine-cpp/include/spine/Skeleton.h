@@ -30,7 +30,7 @@
 #ifndef Spine_Skeleton_h
 #define Spine_Skeleton_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/MathUtil.h>
 #include <spine/SpineObject.h>
 #include <spine/SpineString.h>
@@ -165,7 +165,7 @@ namespace spine {
 
 		void sortBone(Bone *bone);
 
-		static void sortReset(Vector<Bone *> &bones);
+		static void sortReset(Array<Bone *> &bones);
 
 		/// Updates the world transform for each bone and applies all constraints.
 		///
@@ -185,21 +185,21 @@ namespace spine {
 
 		SkeletonData *getData();
 
-		Vector<Bone *> &getBones();
+		Array<Bone *> &getBones();
 
-		Vector<Update *> &getUpdateCache();
+		Array<Update *> &getUpdateCache();
 
 		Bone *getRootBone();
 
 		/// @return May be NULL.
 		Bone *findBone(const String &boneName);
 
-		Vector<Slot *> &getSlots();
+		Array<Slot *> &getSlots();
 
 		/// @return May be NULL.
 		Slot *findSlot(const String &slotName);
 
-		Vector<Slot *> &getDrawOrder();
+		Array<Slot *> &getDrawOrder();
 
 		Skin *getSkin();
 
@@ -224,9 +224,9 @@ namespace spine {
 		/// @param attachmentName May be empty.
 		void setAttachment(const String &slotName, const String &attachmentName);
 
-		Vector<Constraint *> &getConstraints();
+		Array<Constraint *> &getConstraints();
 
-		Vector<PhysicsConstraint *> &getPhysicsConstraints();
+		Array<PhysicsConstraint *> &getPhysicsConstraints();
 
 		template<class T>
 		T *findConstraint(const String &constraintName) {
@@ -247,10 +247,10 @@ namespace spine {
 		/// @param outY The vertical distance between the skeleton origin and the bottom side of the AABB.
 		/// @param outWidth The width of the AABB
 		/// @param outHeight The height of the AABB.
-		/// @param outVertexBuffer Reference to hold a Vector of floats. This method will assign it with new floats as needed.
+		/// @param outVertexBuffer Reference to hold an array of floats. This method will assign it with new floats as needed.
 		// @param clipping Pointer to a SkeletonClipping instance or NULL. If a clipper is given, clipping attachments will be taken into account.
-		void getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Vector<float> &outVertexBuffer);
-		void getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Vector<float> &outVertexBuffer, SkeletonClipping *clipper);
+		void getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Array<float> &outVertexBuffer);
+		void getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Array<float> &outVertexBuffer, SkeletonClipping *clipper);
 
 		Color &getColor();
 
@@ -309,13 +309,13 @@ namespace spine {
 
 	protected:
 		SkeletonData &_data;
-		Vector<Bone *> _bones;
-		Vector<Slot *> _slots;
-		Vector<Slot *> _drawOrder;
-		Vector<Constraint *> _constraints;
-		Vector<PhysicsConstraint *> _physics;
-		Vector<Update *> _updateCache;
-		Vector<Posed *> _resetCache;
+		Array<Bone *> _bones;
+		Array<Slot *> _slots;
+		Array<Slot *> _drawOrder;
+		Array<Constraint *> _constraints;
+		Array<PhysicsConstraint *> _physics;
+		Array<Update *> _updateCache;
+		Array<Posed *> _resetCache;
 		Skin *_skin;
 		Color _color;
 		float _x, _y;

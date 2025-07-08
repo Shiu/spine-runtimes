@@ -31,7 +31,7 @@
 #define Spine_AtlasAttachmentLoader_h
 
 #include <spine/AttachmentLoader.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/SpineString.h>
 
 

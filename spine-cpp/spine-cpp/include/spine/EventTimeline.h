@@ -48,20 +48,20 @@ namespace spine {
 
 		/// Fires events for frames > lastTime and <= time.
 		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
+		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose) override;
 
 		size_t getFrameCount();
 
 		/// The event for each frame.
-		Vector<Event *> &getEvents();
+		Array<Event *> &getEvents();
 
 		/// Sets the time and event for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.
 		void setFrame(size_t frame, Event *event);
 
 	private:
-		Vector<Event *> _events;
+		Array<Event *> _events;
 	};
 }
 

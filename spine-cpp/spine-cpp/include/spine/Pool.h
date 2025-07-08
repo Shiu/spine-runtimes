@@ -31,8 +31,8 @@
 #define Spine_Pool_h
 
 #include <spine/Extension.h>
-#include <spine/Vector.h>
-#include <spine/ContainerUtil.h>
+#include <spine/Array.h>
+#include <spine/ArrayUtils.h>
 #include <spine/SpineObject.h>
 
 namespace spine {
@@ -43,7 +43,7 @@ namespace spine {
 		}
 
 		~Pool() {
-			ContainerUtil::cleanUpVectorOfPointers(_objects);
+			ArrayUtils::deleteElements(_objects);
 		}
 
 		T *obtain() {
@@ -67,7 +67,7 @@ namespace spine {
 		}
 
 	private:
-		Vector<T *> _objects;
+		Array<T *> _objects;
 	};
 }
 

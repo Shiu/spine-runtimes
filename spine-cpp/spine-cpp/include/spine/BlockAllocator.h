@@ -34,7 +34,7 @@
 #include <spine/SpineObject.h>
 #include <spine/Extension.h>
 #include <spine/MathUtil.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 namespace spine {
     struct Block {
@@ -59,7 +59,7 @@ namespace spine {
 
     class BlockAllocator : public SpineObject {
         int initialBlockSize;
-        Vector <Block> blocks;
+        Array <Block> blocks;
 
     public:
         BlockAllocator(int initialBlockSize) : initialBlockSize(initialBlockSize) {

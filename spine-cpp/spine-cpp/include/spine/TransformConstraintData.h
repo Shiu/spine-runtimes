@@ -32,7 +32,7 @@
 
 #include <spine/ConstraintData.h>
 #include <spine/PosedData.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/TransformConstraintPose.h>
 
 namespace spine {
@@ -50,7 +50,7 @@ namespace spine {
 		float _offset;
 
 		/// Constrained properties.
-		Vector<class ToProperty*> _to;
+		Array<class ToProperty*> _to;
 
 		FromProperty();
 		virtual ~FromProperty();
@@ -169,7 +169,7 @@ namespace spine {
 		virtual Constraint* create(Skeleton& skeleton) override;
 
 		/// The bones that will be modified by this transform constraint.
-		Vector<BoneData*>& getBones();
+		Array<BoneData*>& getBones();
 
 		/// The bone whose world transform will be copied to the constrained bones.
 		BoneData* getSource();
@@ -216,14 +216,14 @@ namespace spine {
 		void setClamp(bool clamp);
 
 		/// The mapping of transform properties to other transform properties.
-		Vector<class FromProperty*>& getProperties();
+		Array<class FromProperty*>& getProperties();
 
 	private:
-		Vector<BoneData*> _bones;
+		Array<BoneData*> _bones;
 		BoneData* _source;
 		float _offsets[6];  // [rotation, x, y, scaleX, scaleY, shearY]
 		bool _localSource, _localTarget, _additive, _clamp;
-		Vector<class FromProperty*> _properties;
+		Array<class FromProperty*> _properties;
 	};
 }
 

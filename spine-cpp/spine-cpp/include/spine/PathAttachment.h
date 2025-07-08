@@ -45,9 +45,9 @@ namespace spine {
 		explicit PathAttachment(const String &name);
 
 		/// The length in the setup pose from the start of the path to the end of each curve.
-		Vector<float> &getLengths();
+		Array<float> &getLengths();
 
-		void setLengths(Vector<float> &inValue);
+		void setLengths(Array<float> &inValue);
 
 		bool isClosed();
 
@@ -62,7 +62,7 @@ namespace spine {
 		virtual Attachment *copy() override;
 
 	private:
-		Vector<float> _lengths;
+		Array<float> _lengths;
 		bool _closed;
 		bool _constantSpeed;
 		Color _color;

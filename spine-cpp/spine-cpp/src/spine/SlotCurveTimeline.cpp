@@ -45,7 +45,7 @@ SlotCurveTimeline::SlotCurveTimeline(size_t frameCount, size_t frameEntries, siz
 SlotCurveTimeline::~SlotCurveTimeline() {
 }
 
-void SlotCurveTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
+void SlotCurveTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
 							  MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);

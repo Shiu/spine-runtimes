@@ -93,6 +93,6 @@ void SlotPose::setSequenceIndex(int sequenceIndex) {
 	_sequenceIndex = sequenceIndex;
 }
 
-Vector<float> &SlotPose::getDeform() {
+Array<float> &SlotPose::getDeform() {
 	return _deform;
 }

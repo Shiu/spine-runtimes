@@ -59,10 +59,10 @@ namespace spine {
         RenderCommand *render(Skeleton &skeleton);
     private:
         BlockAllocator _allocator;
-        Vector<float> _worldVertices;
-        Vector<unsigned short> _quadIndices;
+        Array<float> _worldVertices;
+        Array<unsigned short> _quadIndices;
         SkeletonClipping _clipping;
-        Vector<RenderCommand *> _renderCommands;
+        Array<RenderCommand *> _renderCommands;
     };
 }
 

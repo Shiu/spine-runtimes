@@ -84,7 +84,7 @@ void TransformConstraint::update(Skeleton &skeleton, Physics physics) {
 		for (size_t f = 0; f < fn; f++) {
 			FromProperty *from = fromItems[f];
 			float value = from->value(skeleton, source, localSource, offsets) - from->_offset;
-			Vector<ToProperty *> &toProps = from->_to;
+			Array<ToProperty *> &toProps = from->_to;
 			ToProperty **toItems = toProps.buffer();
 			for (size_t t = 0, tn = toProps.size(); t < tn; t++) {
 				ToProperty *to = toItems[t];
@@ -127,7 +127,7 @@ bool TransformConstraint::isSourceActive() {
 }
 
 /// The bones that will be modified by this transform constraint.
-Vector<BonePose *> &TransformConstraint::getBones() {
+Array<BonePose *> &TransformConstraint::getBones() {
 	return _bones;
 }
 

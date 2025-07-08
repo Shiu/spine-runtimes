@@ -44,7 +44,7 @@ Timeline::Timeline(size_t frameCount, size_t frameEntries)
 Timeline::~Timeline() {
 }
 
-Vector<PropertyId> &Timeline::getPropertyIds() {
+Array<PropertyId> &Timeline::getPropertyIds() {
 	return _propertyIds;
 }
 
@@ -60,7 +60,7 @@ size_t Timeline::getFrameCount() {
 	return _frames.size() / _frameEntries;
 }
 
-Vector<float> &Timeline::getFrames() {
+Array<float> &Timeline::getFrames() {
 	return _frames;
 }
 

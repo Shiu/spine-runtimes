@@ -58,12 +58,12 @@ PhysicsConstraintTimeline::PhysicsConstraintTimeline(size_t frameCount, size_t b
 	setPropertyIds(ids, 1);
 }
 
-void PhysicsConstraintTimeline::apply(Skeleton &skeleton, float, float time, Vector<Event *> *,
+void PhysicsConstraintTimeline::apply(Skeleton &skeleton, float, float time, Array<Event *> *,
 									  float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	if (_constraintIndex == -1) {
 		float value = time >= _frames[0] ? getCurveValue(time) : 0;
 
-		Vector<PhysicsConstraint *> &physicsConstraints = skeleton.getPhysicsConstraints();
+		Array<PhysicsConstraint *> &physicsConstraints = skeleton.getPhysicsConstraints();
 		for (size_t i = 0; i < physicsConstraints.size(); i++) {
 			PhysicsConstraint *constraint = physicsConstraints[i];
 			if (constraint->isActive() && global(constraint->_data)) {
@@ -80,7 +80,7 @@ void PhysicsConstraintTimeline::apply(Skeleton &skeleton, float, float time, Vec
 	}
 }
 
-void PhysicsConstraintResetTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *, float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
+void PhysicsConstraintResetTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *, float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	PhysicsConstraint *constraint = nullptr;
 	if (_constraintIndex != -1) {
 		constraint = static_cast<PhysicsConstraint *>(skeleton.getConstraints()[_constraintIndex]);
@@ -98,7 +98,7 @@ void PhysicsConstraintResetTimeline::apply(Skeleton &skeleton, float lastTime, f
 		if (constraint != nullptr)
 			constraint->reset(skeleton);
 		else {
-			Vector<PhysicsConstraint *> &physicsConstraints = skeleton.getPhysicsConstraints();
+			Array<PhysicsConstraint *> &physicsConstraints = skeleton.getPhysicsConstraints();
 			for (size_t i = 0; i < physicsConstraints.size(); i++) {
 				constraint = physicsConstraints[i];
 				if (constraint->isActive()) constraint->reset(skeleton);

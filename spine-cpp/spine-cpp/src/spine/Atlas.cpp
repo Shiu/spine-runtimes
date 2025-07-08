@@ -28,7 +28,7 @@
  *****************************************************************************/
 
 #include <spine/Atlas.h>
-#include <spine/ContainerUtil.h>
+#include <spine/ArrayUtils.h>
 #include <spine/TextureLoader.h>
 
 #include <ctype.h>
@@ -72,8 +72,8 @@ Atlas::~Atlas() {
 			_textureLoader->unload(_pages[i]->texture);
 		}
 	}
-	ContainerUtil::cleanUpVectorOfPointers(_pages);
-	ContainerUtil::cleanUpVectorOfPointers(_regions);
+	ArrayUtils::deleteElements(_pages);
+	ArrayUtils::deleteElements(_regions);
 }
 
 void Atlas::flipV() {
@@ -91,11 +91,11 @@ AtlasRegion *Atlas::findRegion(const String &name) {
 	return NULL;
 }
 
-Vector<AtlasPage *> &Atlas::getPages() {
+Array<AtlasPage *> &Atlas::getPages() {
 	return _pages;
 }
 
-Vector<AtlasRegion *> &Atlas::getRegions() {
+Array<AtlasRegion *> &Atlas::getRegions() {
 	return _regions;
 }
 

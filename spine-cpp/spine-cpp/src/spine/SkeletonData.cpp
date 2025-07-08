@@ -40,7 +40,7 @@
 #include <spine/SlotData.h>
 #include <spine/TransformConstraintData.h>
 
-#include <spine/ContainerUtil.h>
+#include <spine/ArrayUtils.h>
 
 using namespace spine;
 
@@ -59,18 +59,18 @@ SkeletonData::SkeletonData() : _name(),
 }
 
 SkeletonData::~SkeletonData() {
-	ContainerUtil::cleanUpVectorOfPointers(_bones);
-	ContainerUtil::cleanUpVectorOfPointers(_slots);
-	ContainerUtil::cleanUpVectorOfPointers(_skins);
+	ArrayUtils::deleteElements(_bones);
+	ArrayUtils::deleteElements(_slots);
+	ArrayUtils::deleteElements(_skins);
 
 	_defaultSkin = NULL;
 
-	ContainerUtil::cleanUpVectorOfPointers(_events);
-	ContainerUtil::cleanUpVectorOfPointers(_animations);
-	ContainerUtil::cleanUpVectorOfPointers(_ikConstraints);
-	ContainerUtil::cleanUpVectorOfPointers(_transformConstraints);
-	ContainerUtil::cleanUpVectorOfPointers(_pathConstraints);
-	ContainerUtil::cleanUpVectorOfPointers(_physicsConstraints);
+	ArrayUtils::deleteElements(_events);
+	ArrayUtils::deleteElements(_animations);
+	ArrayUtils::deleteElements(_ikConstraints);
+	ArrayUtils::deleteElements(_transformConstraints);
+	ArrayUtils::deleteElements(_pathConstraints);
+	ArrayUtils::deleteElements(_physicsConstraints);
 	// Note: _constraints contains pointers to objects already cleaned up above, so just clear
 	_constraints.clear();
 	for (size_t i = 0; i < _strings.size(); i++) {
@@ -79,39 +79,39 @@ SkeletonData::~SkeletonData() {
 }
 
 BoneData *SkeletonData::findBone(const String &boneName) {
-	return ContainerUtil::findWithName(_bones, boneName);
+	return ArrayUtils::findWithName(_bones, boneName);
 }
 
 SlotData *SkeletonData::findSlot(const String &slotName) {
-	return ContainerUtil::findWithName(_slots, slotName);
+	return ArrayUtils::findWithName(_slots, slotName);
 }
 
 Skin *SkeletonData::findSkin(const String &skinName) {
-	return ContainerUtil::findWithName(_skins, skinName);
+	return ArrayUtils::findWithName(_skins, skinName);
 }
 
 spine::EventData *SkeletonData::findEvent(const String &eventDataName) {
-	return ContainerUtil::findWithName(_events, eventDataName);
+	return ArrayUtils::findWithName(_events, eventDataName);
 }
 
 Animation *SkeletonData::findAnimation(const String &animationName) {
-	return ContainerUtil::findWithName(_animations, animationName);
+	return ArrayUtils::findWithName(_animations, animationName);
 }
 
 IkConstraintData *SkeletonData::findIkConstraint(const String &constraintName) {
-	return ContainerUtil::findWithName(_ikConstraints, constraintName);
+	return ArrayUtils::findWithName(_ikConstraints, constraintName);
 }
 
 TransformConstraintData *SkeletonData::findTransformConstraint(const String &constraintName) {
-	return ContainerUtil::findWithName(_transformConstraints, constraintName);
+	return ArrayUtils::findWithName(_transformConstraints, constraintName);
 }
 
 PathConstraintData *SkeletonData::findPathConstraint(const String &constraintName) {
-	return ContainerUtil::findWithName(_pathConstraints, constraintName);
+	return ArrayUtils::findWithName(_pathConstraints, constraintName);
 }
 
 PhysicsConstraintData *SkeletonData::findPhysicsConstraint(const String &constraintName) {
-	return ContainerUtil::findWithName(_physicsConstraints, constraintName);
+	return ArrayUtils::findWithName(_physicsConstraints, constraintName);
 }
 
 const String &SkeletonData::getName() {
@@ -122,15 +122,15 @@ void SkeletonData::setName(const String &inValue) {
 	_name = inValue;
 }
 
-Vector<BoneData *> &SkeletonData::getBones() {
+Array<BoneData *> &SkeletonData::getBones() {
 	return _bones;
 }
 
-Vector<SlotData *> &SkeletonData::getSlots() {
+Array<SlotData *> &SkeletonData::getSlots() {
 	return _slots;
 }
 
-Vector<Skin *> &SkeletonData::getSkins() {
+Array<Skin *> &SkeletonData::getSkins() {
 	return _skins;
 }
 
@@ -142,27 +142,27 @@ void SkeletonData::setDefaultSkin(Skin *inValue) {
 	_defaultSkin = inValue;
 }
 
-Vector<spine::EventData *> &SkeletonData::getEvents() {
+Array<spine::EventData *> &SkeletonData::getEvents() {
 	return _events;
 }
 
-Vector<Animation *> &SkeletonData::getAnimations() {
+Array<Animation *> &SkeletonData::getAnimations() {
 	return _animations;
 }
 
-Vector<IkConstraintData *> &SkeletonData::getIkConstraints() {
+Array<IkConstraintData *> &SkeletonData::getIkConstraints() {
 	return _ikConstraints;
 }
 
-Vector<TransformConstraintData *> &SkeletonData::getTransformConstraints() {
+Array<TransformConstraintData *> &SkeletonData::getTransformConstraints() {
 	return _transformConstraints;
 }
 
-Vector<PathConstraintData *> &SkeletonData::getPathConstraints() {
+Array<PathConstraintData *> &SkeletonData::getPathConstraints() {
 	return _pathConstraints;
 }
 
-Vector<PhysicsConstraintData *> &SkeletonData::getPhysicsConstraints() {
+Array<PhysicsConstraintData *> &SkeletonData::getPhysicsConstraints() {
 	return _physicsConstraints;
 }
 
@@ -247,7 +247,7 @@ void SkeletonData::setFps(float inValue) {
 	_fps = inValue;
 }
 
-Vector<ConstraintData *> &SkeletonData::getConstraints() {
+Array<ConstraintData *> &SkeletonData::getConstraints() {
 	// Build unified constraints array by aggregating all constraint types
 	_constraints.clear();
 	for (size_t i = 0, n = _ikConstraints.size(); i < n; i++) {

@@ -33,7 +33,7 @@
 #include <spine/Constraint.h>
 #include <spine/TransformConstraintData.h>
 #include <spine/TransformConstraintPose.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 namespace spine {
 	class Skeleton;
@@ -59,7 +59,7 @@ namespace spine {
 		bool isSourceActive() override;
 
 		/// The bones that will be modified by this transform constraint.
-		Vector<BonePose*>& getBones();
+		Array<BonePose*>& getBones();
 
 		/// The bone whose world transform will be copied to the constrained bones.
 		Bone* getSource();
@@ -67,7 +67,7 @@ namespace spine {
 		void setSource(Bone* source);
 
 	private:
-		Vector<BonePose*> _bones;
+		Array<BonePose*> _bones;
 		Bone* _source;
 	};
 }

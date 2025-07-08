@@ -31,7 +31,7 @@
 #define Spine_SkeletonBinary_h
 
 #include <spine/Inherit.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/SpineObject.h>
 #include <spine/SpineString.h>
 #include <spine/Color.h>
@@ -225,7 +225,7 @@ namespace spine {
 		};
 
 		AttachmentLoader *_attachmentLoader;
-		Vector<LinkedMesh *> _linkedMeshes;
+		Array<LinkedMesh *> _linkedMeshes;
 		String _error;
 		float _scale;
 		const bool _ownsLoader;
@@ -239,17 +239,17 @@ namespace spine {
 
 		Sequence *readSequence(DataInput &input);
 
-		int readVertices(DataInput &input, Vector<float> &vertices, Vector<int> &bones, bool weighted);
+		int readVertices(DataInput &input, Array<float> &vertices, Array<int> &bones, bool weighted);
 
-		void readFloatArray(DataInput &input, int n, float scale, Vector<float> &array);
+		void readFloatArray(DataInput &input, int n, float scale, Array<float> &array);
 
-		void readShortArray(DataInput &input, Vector<unsigned short> &array, int n);
+		void readShortArray(DataInput &input, Array<unsigned short> &array, int n);
 
 		Animation *readAnimation(DataInput &input, const String &name, SkeletonData &skeletonData);
 
-		void readTimeline(DataInput &input, Vector<Timeline *> &timelines, CurveTimeline1 &timeline, float scale);
+		void readTimeline(DataInput &input, Array<Timeline *> &timelines, CurveTimeline1 &timeline, float scale);
 
-		void readTimeline(DataInput &input, Vector<Timeline *> &timelines, BoneTimeline2 &timeline, float scale);
+		void readTimeline(DataInput &input, Array<Timeline *> &timelines, BoneTimeline2 &timeline, float scale);
 
 		void
 		setBezier(DataInput &input, CurveTimeline &timeline, int bezier, int frame, int value, float time1, float time2,

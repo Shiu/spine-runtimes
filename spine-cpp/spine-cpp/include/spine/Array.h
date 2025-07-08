@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_Vector_h
-#define Spine_Vector_h
+#ifndef Spine_Array_h
+#define Spine_Array_h
 
 #include <spine/Extension.h>
 #include <spine/SpineObject.h>
@@ -37,24 +37,24 @@
 
 namespace spine {
 	template<typename T>
-	class SP_API Vector : public SpineObject {
+	class SP_API Array : public SpineObject {
 	public:
 		using size_type = size_t;
 		using value_type = T;
 
-		Vector() : _size(0), _capacity(0), _buffer(NULL) {
+		Array() : _size(0), _capacity(0), _buffer(NULL) {
 		}
 
-		Vector(const Vector &inVector) : _size(inVector._size), _capacity(inVector._capacity), _buffer(NULL) {
+		Array(const Array &inArray) : _size(inArray._size), _capacity(inArray._capacity), _buffer(NULL) {
 			if (_capacity > 0) {
 				_buffer = allocate(_capacity);
 				for (size_t i = 0; i < _size; ++i) {
-					construct(_buffer + i, inVector._buffer[i]);
+					construct(_buffer + i, inArray._buffer[i]);
 				}
 			}
 		}
 
-		~Vector() {
+		~Array() {
 			clear();
 			deallocate(_buffer);
 		}
@@ -75,7 +75,7 @@ namespace spine {
 			return _size;
 		}
 
-		inline Vector<T> &setSize(size_t newSize, const T &defaultValue) {
+		inline Array<T> &setSize(size_t newSize, const T &defaultValue) {
 			assert(newSize >= 0);
 			size_t oldSize = _size;
 			_size = newSize;
@@ -122,14 +122,14 @@ namespace spine {
 			}
 		}
 
-		inline void addAll(const Vector<T> &inValue) {
+		inline void addAll(const Array<T> &inValue) {
 			ensureCapacity(this->size() + inValue.size());
 			for (size_t i = 0; i < inValue.size(); i++) {
 				add(inValue[i]);
 			}
 		}
 
-		inline void clearAndAddAll(const Vector<T> &inValue) {
+		inline void clearAndAddAll(const Array<T> &inValue) {
 			ensureCapacity(inValue.size());
 			for (size_t i = 0; i < inValue.size(); i++)
 				_buffer[i] = inValue[i];
@@ -184,7 +184,7 @@ namespace spine {
 			return _buffer[inIndex];
 		}
 
-		inline friend bool operator==(Vector<T> &lhs, Vector<T> &rhs) {
+		inline friend bool operator==(Array<T> &lhs, Array<T> &rhs) {
 			if (lhs.size() != rhs.size()) {
 				return false;
 			}
@@ -198,13 +198,13 @@ namespace spine {
 			return true;
 		}
 
-		inline friend bool operator!=(Vector<T> &lhs, Vector<T> &rhs) {
+		inline friend bool operator!=(Array<T> &lhs, Array<T> &rhs) {
 			return !(lhs == rhs);
 		}
 
-		Vector &operator=(const Vector &inVector) {
-			if (this != &inVector) {
-				clearAndAddAll(inVector);
+		Array &operator=(const Array &inArray) {
+			if (this != &inArray) {
+				clearAndAddAll(inArray);
 			}
 			return *this;
 		}
@@ -245,4 +245,4 @@ namespace spine {
 	};
 }
 
-#endif /* Spine_Vector_h */
+#endif /* Spine_Array_h */

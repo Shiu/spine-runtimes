@@ -49,7 +49,7 @@ namespace spine {
 
 		virtual ~SlotCurveTimeline();
 
-		virtual void apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, 
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
 						   MixBlend blend, MixDirection direction, bool appliedPose) override;
 
 	protected:

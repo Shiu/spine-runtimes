@@ -58,8 +58,8 @@ size_t SkeletonClipping::clipStart(Skeleton &skeleton, Slot &slot, ClippingAttac
 	_clippingPolygons = &_triangulator.decompose(_clippingPolygon, _triangulator.triangulate(_clippingPolygon));
 
 	for (size_t i = 0; i < _clippingPolygons->size(); ++i) {
-		Vector<float> *polygonP = (*_clippingPolygons)[i];
-		Vector<float> &polygon = *polygonP;
+		Array<float> *polygonP = (*_clippingPolygons)[i];
+		Array<float> &polygon = *polygonP;
 		makeClockwise(polygon);
 		polygon.add(polygon[0]);
 		polygon.add(polygon[1]);
@@ -87,10 +87,10 @@ void SkeletonClipping::clipEnd() {
 
 bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
 									 size_t trianglesLength) {
-	Vector<float> &clipOutput = _clipOutput;
-	Vector<float> &clippedVertices = _clippedVertices;
-	Vector<unsigned short> &clippedTriangles = _clippedTriangles;
-	Vector<Vector<float> *> &polygons = *_clippingPolygons;
+	Array<float> &clipOutput = _clipOutput;
+	Array<float> &clippedVertices = _clippedVertices;
+	Array<unsigned short> &clippedTriangles = _clippedTriangles;
+	Array<Array<float> *> &polygons = *_clippingPolygons;
 	size_t polygonsCount = (*_clippingPolygons).size();
 
 	size_t index = 0;
@@ -159,17 +159,17 @@ bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
 	return clipped;
 }
 
-bool SkeletonClipping::clipTriangles(Vector<float> &vertices, Vector<unsigned short> &triangles, Vector<float> &uvs,
+bool SkeletonClipping::clipTriangles(Array<float> &vertices, Array<unsigned short> &triangles, Array<float> &uvs,
 									 size_t stride) {
 	return clipTriangles(vertices.buffer(), triangles.buffer(), triangles.size(), uvs.buffer(), stride);
 }
 
 bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
 									 size_t trianglesLength, float *uvs, size_t stride) {
-	Vector<float> &clipOutput = _clipOutput;
-	Vector<float> &clippedVertices = _clippedVertices;
-	Vector<unsigned short> &clippedTriangles = _clippedTriangles;
-	Vector<Vector<float> *> &polygons = *_clippingPolygons;
+	Array<float> &clipOutput = _clipOutput;
+	Array<float> &clippedVertices = _clippedVertices;
+	Array<unsigned short> &clippedTriangles = _clippedTriangles;
+	Array<Array<float> *> &polygons = *_clippingPolygons;
 	size_t polygonsCount = (*_clippingPolygons).size();
 
 	size_t index = 0;
@@ -261,25 +261,25 @@ bool SkeletonClipping::isClipping() {
 	return _clipAttachment != NULL;
 }
 
-Vector<float> &SkeletonClipping::getClippedVertices() {
+Array<float> &SkeletonClipping::getClippedVertices() {
 	return _clippedVertices;
 }
 
-Vector<unsigned short> &SkeletonClipping::getClippedTriangles() {
+Array<unsigned short> &SkeletonClipping::getClippedTriangles() {
 	return _clippedTriangles;
 }
 
-Vector<float> &SkeletonClipping::getClippedUVs() {
+Array<float> &SkeletonClipping::getClippedUVs() {
 	return _clippedUVs;
 }
 
-bool SkeletonClipping::clip(float x1, float y1, float x2, float y2, float x3, float y3, Vector<float> *clippingArea,
-							Vector<float> *output) {
-	Vector<float> *originalOutput = output;
+bool SkeletonClipping::clip(float x1, float y1, float x2, float y2, float x3, float y3, Array<float> *clippingArea,
+							Array<float> *output) {
+	Array<float> *originalOutput = output;
 	bool clipped = false;
 
 	// Avoid copy at the end.
-	Vector<float> *input;
+	Array<float> *input;
 	if (clippingArea->size() % 4 >= 2) {
 		input = output;
 		output = &_scratch;
@@ -298,13 +298,13 @@ bool SkeletonClipping::clip(float x1, float y1, float x2, float y2, float x3, fl
 	output->clear();
 
 	size_t clippingVerticesLast = clippingArea->size() - 4;
-	Vector<float> &clippingVertices = *clippingArea;
+	Array<float> &clippingVertices = *clippingArea;
 	for (size_t i = 0;; i += 2) {
 		float edgeX = clippingVertices[i], edgeY = clippingVertices[i + 1];
 		float ex = edgeX - clippingVertices[i + 2], ey = edgeY - clippingVertices[i + 3];
 
 		size_t outputStart = output->size();
-		Vector<float> &inputVertices = *input;
+		Array<float> &inputVertices = *input;
 		for (size_t ii = 0, nn = input->size() - 2; ii < nn;) {
 			float inputX = inputVertices[ii], inputY = inputVertices[ii + 1];
 			ii += 2;
@@ -355,7 +355,7 @@ bool SkeletonClipping::clip(float x1, float y1, float x2, float y2, float x3, fl
 		if (i == clippingVerticesLast) {
 			break;
 		}
-		Vector<float> *temp = output;
+		Array<float> *temp = output;
 		output = input;
 		output->clear();
 		input = temp;
@@ -375,7 +375,7 @@ bool SkeletonClipping::clip(float x1, float y1, float x2, float y2, float x3, fl
 	return clipped;
 }
 
-void SkeletonClipping::makeClockwise(Vector<float> &polygon) {
+void SkeletonClipping::makeClockwise(Array<float> &polygon) {
 	size_t verticeslength = polygon.size();
 
 	float area = polygon[verticeslength - 2] * polygon[1] - polygon[0] * polygon[verticeslength - 1];

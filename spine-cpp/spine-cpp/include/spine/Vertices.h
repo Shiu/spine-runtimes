@@ -30,13 +30,13 @@
 #ifndef Spine_Vertices_h
 #define Spine_Vertices_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 namespace spine {
 	class SP_API Vertices : public SpineObject {
 	public:
-		Vector <int> _bones;
-		Vector<float> _weights;
+		Array <int> _bones;
+		Array<float> _weights;
 	};
 }
 

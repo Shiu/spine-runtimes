@@ -55,14 +55,14 @@ SequenceTimeline::~SequenceTimeline() {
 }
 
 void SequenceTimeline::setFrame(int frame, float time, SequenceMode mode, int index, float delay) {
-	Vector<float> &frames = this->_frames;
+	Array<float> &frames = this->_frames;
 	frame *= ENTRIES;
 	frames[frame] = time;
 	frames[frame + MODE] = mode | (index << 4);
 	frames[frame + DELAY] = delay;
 }
 
-void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents,
+void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents,
 							 float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(alpha);
 	SP_UNUSED(lastTime);
@@ -86,7 +86,7 @@ void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vec
 		return;
 	}
 
-	Vector<float> &frames = this->_frames;
+	Array<float> &frames = this->_frames;
 	if (time < frames[0]) {
 		if (blend == MixBlend_Setup || blend == MixBlend_First) pose.setSequenceIndex(-1);
 		return;

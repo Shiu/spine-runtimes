@@ -30,7 +30,7 @@
 #ifndef Spine_SkeletonData_h
 #define Spine_SkeletonData_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/SpineString.h>
 #include <spine/ConstraintData.h>
 
@@ -107,13 +107,13 @@ namespace spine {
 		void setName(const String &inValue);
 
 		/// The skeleton's bones, sorted parent first. The root bone is always the first bone.
-		Vector<BoneData *> &getBones();
+		Array<BoneData *> &getBones();
 
 		/// The skeleton's slots in the setup pose draw order.
-		Vector<SlotData *> &getSlots();
+		Array<SlotData *> &getSlots();
 
 		/// All skins, including the default skin.
-		Vector<Skin *> &getSkins();
+		Array<Skin *> &getSkins();
 
 		/// The skeleton's default skin.
 		/// By default this skin contains all attachments that were not in a skin in Spine.
@@ -123,21 +123,21 @@ namespace spine {
 		void setDefaultSkin(Skin *inValue);
 
 		/// The skeleton's events.
-		Vector<spine::EventData *> &getEvents();
+		Array<spine::EventData *> &getEvents();
 
 		/// The skeleton's animations.
-		Vector<Animation *> &getAnimations();
+		Array<Animation *> &getAnimations();
 
-		Vector<IkConstraintData *> &getIkConstraints();
+		Array<IkConstraintData *> &getIkConstraints();
 
-		Vector<TransformConstraintData *> &getTransformConstraints();
+		Array<TransformConstraintData *> &getTransformConstraints();
 
-		Vector<PathConstraintData *> &getPathConstraints();
+		Array<PathConstraintData *> &getPathConstraints();
 
-        Vector<PhysicsConstraintData *> &getPhysicsConstraints();
+        Array<PhysicsConstraintData *> &getPhysicsConstraints();
 
 		/// The skeleton's constraints.
-		Vector<ConstraintData *> &getConstraints();
+		Array<ConstraintData *> &getConstraints();
 
 		/// Finds a constraint by name and type.
 		/// @return May be NULL.
@@ -206,22 +206,22 @@ namespace spine {
 
 	private:
 		String _name;
-		Vector<BoneData *> _bones; // Ordered parents first
-		Vector<SlotData *> _slots; // Setup pose draw order.
-		Vector<Skin *> _skins;
+		Array<BoneData *> _bones; // Ordered parents first
+		Array<SlotData *> _slots; // Setup pose draw order.
+		Array<Skin *> _skins;
 		Skin *_defaultSkin;
-		Vector<EventData *> _events;
-		Vector<Animation *> _animations;
-		Vector<IkConstraintData *> _ikConstraints;
-		Vector<TransformConstraintData *> _transformConstraints;
-		Vector<PathConstraintData *> _pathConstraints;
-        Vector<PhysicsConstraintData *> _physicsConstraints;
-		Vector<ConstraintData *> _constraints;
+		Array<EventData *> _events;
+		Array<Animation *> _animations;
+		Array<IkConstraintData *> _ikConstraints;
+		Array<TransformConstraintData *> _transformConstraints;
+		Array<PathConstraintData *> _pathConstraints;
+        Array<PhysicsConstraintData *> _physicsConstraints;
+		Array<ConstraintData *> _constraints;
 		float _x, _y, _width, _height;
         float _referenceScale;
 		String _version;
 		String _hash;
-		Vector<char *> _strings;
+		Array<char *> _strings;
 
 		// Nonessential.
 		float _fps;

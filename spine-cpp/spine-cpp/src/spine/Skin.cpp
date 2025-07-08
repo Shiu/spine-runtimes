@@ -51,8 +51,8 @@ static void disposeAttachment(Attachment *attachment) {
 
 void Skin::AttachmentMap::put(size_t slotIndex, const String &attachmentName, Attachment *attachment) {
 	if (slotIndex >= _buckets.size())
-		_buckets.setSize(slotIndex + 1, Vector<Entry>());
-	Vector<Entry> &bucket = _buckets[slotIndex];
+		_buckets.setSize(slotIndex + 1, Array<Entry>());
+	Array<Entry> &bucket = _buckets[slotIndex];
 	int existing = findInBucket(bucket, attachmentName);
 	attachment->reference();
 	if (existing >= 0) {
@@ -78,7 +78,7 @@ void Skin::AttachmentMap::remove(size_t slotIndex, const String &attachmentName)
 	}
 }
 
-int Skin::AttachmentMap::findInBucket(Vector<Entry> &bucket, const String &attachmentName) {
+int Skin::AttachmentMap::findInBucket(Array<Entry> &bucket, const String &attachmentName) {
 	for (size_t i = 0; i < bucket.size(); i++)
 		if (bucket[i]._name == attachmentName) return (int) i;
 	return -1;
@@ -113,7 +113,7 @@ void Skin::removeAttachment(size_t slotIndex, const String &name) {
 	_attachments.remove(slotIndex, name);
 }
 
-void Skin::findNamesForSlot(size_t slotIndex, Vector<String> &names) {
+void Skin::findNamesForSlot(size_t slotIndex, Array<String> &names) {
 	Skin::AttachmentMap::Entries entries = _attachments.getEntries();
 	while (entries.hasNext()) {
 		Skin::AttachmentMap::Entry &entry = entries.next();
@@ -123,7 +123,7 @@ void Skin::findNamesForSlot(size_t slotIndex, Vector<String> &names) {
 	}
 }
 
-void Skin::findAttachmentsForSlot(size_t slotIndex, Vector<Attachment *> &attachments) {
+void Skin::findAttachmentsForSlot(size_t slotIndex, Array<Attachment *> &attachments) {
 	Skin::AttachmentMap::Entries entries = _attachments.getEntries();
 	while (entries.hasNext()) {
 		Skin::AttachmentMap::Entry &entry = entries.next();
@@ -140,7 +140,7 @@ Skin::AttachmentMap::Entries Skin::getAttachments() {
 }
 
 void Skin::attachAll(Skeleton &skeleton, Skin &oldSkin) {
-	Vector<Slot *> &slots = skeleton.getSlots();
+	Array<Slot *> &slots = skeleton.getSlots();
 	Skin::AttachmentMap::Entries entries = oldSkin.getAttachments();
 	while (entries.hasNext()) {
 		Skin::AttachmentMap::Entry &entry = entries.next();
@@ -186,10 +186,10 @@ void Skin::copySkin(Skin *other) {
 	}
 }
 
-Vector<ConstraintData *> &Skin::getConstraints() {
+Array<ConstraintData *> &Skin::getConstraints() {
 	return _constraints;
 }
 
-Vector<BoneData *> &Skin::getBones() {
+Array<BoneData *> &Skin::getBones() {
 	return _bones;
 }

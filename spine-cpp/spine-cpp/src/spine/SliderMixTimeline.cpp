@@ -54,7 +54,7 @@ SliderMixTimeline::SliderMixTimeline(size_t frameCount, size_t bezierCount,
 SliderMixTimeline::~SliderMixTimeline() {
 }
 
-void SliderMixTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents,
+void SliderMixTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents,
 							  float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);

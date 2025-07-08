@@ -46,7 +46,7 @@ VertexAttachment::~VertexAttachment() {
 }
 
 
-void VertexAttachment::computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, Vector<float> &worldVertices,
+void VertexAttachment::computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, Array<float> &worldVertices,
 											size_t offset, size_t stride) {
 	computeWorldVertices(skeleton, slot, start, count, worldVertices.buffer(), offset, stride);
 }
@@ -54,9 +54,9 @@ void VertexAttachment::computeWorldVertices(Skeleton &skeleton, Slot &slot, size
 void VertexAttachment::computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
 											size_t stride) {
 	count = offset + (count >> 1) * stride;
-	Vector<float> *deformArray = &slot.getAppliedPose().getDeform();
-	Vector<float> *vertices = &_vertices;
-	Vector<int> &bones = _bones;
+	Array<float> *deformArray = &slot.getAppliedPose().getDeform();
+	Array<float> *vertices = &_vertices;
+	Array<int> &bones = _bones;
 	if (bones.size() == 0) {
 		if (deformArray->size() > 0) vertices = deformArray;
 
@@ -80,7 +80,7 @@ void VertexAttachment::computeWorldVertices(Skeleton &skeleton, Slot &slot, size
 		skip += n;
 	}
 
-	Vector<Bone *> &skeletonBones = skeleton.getBones();
+	Array<Bone *> &skeletonBones = skeleton.getBones();
 	if (deformArray->size() == 0) {
 		for (size_t w = offset, b = skip * 3; w < count; w += stride) {
 			float wx = 0, wy = 0;
@@ -122,19 +122,19 @@ int VertexAttachment::getId() {
 	return _id;
 }
 
-Vector<int> &VertexAttachment::getBones() {
+Array<int> &VertexAttachment::getBones() {
 	return _bones;
 }
 
-void VertexAttachment::setBones(Vector<int> &bones) {
+void VertexAttachment::setBones(Array<int> &bones) {
 	_bones.clearAndAddAll(bones);
 }
 
-Vector<float> &VertexAttachment::getVertices() {
+Array<float> &VertexAttachment::getVertices() {
 	return _vertices;
 }
 
-void VertexAttachment::setVertices(Vector<float> &vertices) {
+void VertexAttachment::setVertices(Array<float> &vertices) {
 	_vertices.clearAndAddAll(vertices);
 }
 

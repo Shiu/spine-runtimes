@@ -37,7 +37,7 @@ THE SOFTWARE.
 #include <spine/Json.h>
 #include <spine/Extension.h>
 #include <spine/SpineString.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 #include <assert.h>
 #include <math.h>

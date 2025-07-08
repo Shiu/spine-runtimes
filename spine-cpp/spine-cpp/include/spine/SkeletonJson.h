@@ -30,7 +30,7 @@
 #ifndef Spine_SkeletonJson_h
 #define Spine_SkeletonJson_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/SpineObject.h>
 #include <spine/SpineString.h>
 
@@ -83,7 +83,7 @@ namespace spine {
 
 	private:
 		AttachmentLoader *_attachmentLoader;
-		Vector<LinkedMesh *> _linkedMeshes;
+		Array<LinkedMesh *> _linkedMeshes;
 		float _scale;
 		const bool _ownsLoader;
 		String _error;
@@ -99,10 +99,10 @@ namespace spine {
 		readCurve(Json *curve, CurveTimeline *timeline, int bezier, int frame, int value, float time1, float time2,
 				  float value1, float value2, float scale);
 
-		static void readTimeline(Vector<Timeline *> &timelines, Json *keyMap, CurveTimeline1 *timeline, float defaultValue, float scale);
+		static void readTimeline(Array<Timeline *> &timelines, Json *keyMap, CurveTimeline1 *timeline, float defaultValue, float scale);
 
 		static void
-		readTimeline(Vector<Timeline *> &timelines, Json *keyMap, CurveTimeline2 *timeline, const char *name1, const char *name2, float defaultValue,
+		readTimeline(Array<Timeline *> &timelines, Json *keyMap, CurveTimeline2 *timeline, const char *name1, const char *name2, float defaultValue,
 					 float scale);
 
 		Animation *readAnimation(Json *root, SkeletonData *skeletonData);
@@ -113,7 +113,7 @@ namespace spine {
 
 		void setError(Json *root, const String &value1, const String &value2);
 
-		int findSlotIndex(SkeletonData *skeletonData, const String &slotName, Vector<Timeline *> timelines);
+		int findSlotIndex(SkeletonData *skeletonData, const String &slotName, Array<Timeline *> timelines);
 	};
 }
 

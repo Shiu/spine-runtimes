@@ -39,19 +39,19 @@ namespace spine {
 
 	SP_API void spDebug_printTimeline(Timeline *timeline);
 
-	SP_API void spDebug_printBoneDatas(Vector<BoneData *> &boneDatas);
+	SP_API void spDebug_printBoneDatas(Array<BoneData *> &boneDatas);
 
 	SP_API void spDebug_printBoneData(BoneData *boneData);
 
 	SP_API void spDebug_printSkeleton(Skeleton *skeleton);
 
-	SP_API void spDebug_printBones(Vector<Bone *> &bones);
+	SP_API void spDebug_printBones(Array<Bone *> &bones);
 
 	SP_API void spDebug_printBone(Bone *bone);
 
 	SP_API void spDebug_printFloats(float *values, int numFloats);
 
-	SP_API void spDebug_printFloats(Vector<float> &values);
+	SP_API void spDebug_printFloats(Array<float> &values);
 }
 
 #endif

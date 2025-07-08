@@ -31,7 +31,7 @@
 #define SPINE_LOG_H
 
 #include <spine/Extension.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/HashMap.h>
 
 namespace spine {

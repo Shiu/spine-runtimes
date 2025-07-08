@@ -34,7 +34,7 @@
 #include <spine/PhysicsConstraintData.h>
 #include <spine/PhysicsConstraintPose.h>
 #include <spine/BonePose.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 namespace spine {
 	class Skeleton;

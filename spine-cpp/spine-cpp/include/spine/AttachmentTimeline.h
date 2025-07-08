@@ -32,7 +32,7 @@
 
 #include <spine/Timeline.h>
 #include <spine/SpineObject.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/MixBlend.h>
 #include <spine/MixDirection.h>
 #include <spine/SpineString.h>
@@ -61,7 +61,7 @@ namespace spine {
 		virtual ~AttachmentTimeline();
 
 		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
+		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose) override;
 
 		/// Sets the time and attachment name for the specified frame.
@@ -70,10 +70,10 @@ namespace spine {
 		void setFrame(int frame, float time, const String &attachmentName);
 
 		/// The attachment name for each frame. May contain null values to clear the attachment.
-		Vector<String> &getAttachmentNames();
+		Array<String> &getAttachmentNames();
 
 	protected:
-		Vector<String> _attachmentNames;
+		Array<String> _attachmentNames;
 
 		void setAttachment(Skeleton &skeleton, SlotPose &pose, String *attachmentName);
 	};

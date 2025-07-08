@@ -152,7 +152,7 @@ void PathConstraint::update(Skeleton &skeleton, Physics physics) {
 		}
 	}
 
-	Vector<float> &positions = computeWorldPositions(skeleton, *pathAttachment, (int) spacesCount, tangents);
+	Array<float> &positions = computeWorldPositions(skeleton, *pathAttachment, (int) spacesCount, tangents);
 	float *positionsBuffer = positions.buffer();
 	float boneX = positionsBuffer[0], boneY = positionsBuffer[1], offsetRotation = data._offsetRotation;
 	bool tip;
@@ -241,7 +241,7 @@ PathConstraintData &PathConstraint::getData() {
 	return _data;
 }
 
-Vector<BonePose *> &PathConstraint::getBones() {
+Array<BonePose *> &PathConstraint::getBones() {
 	return _bones;
 }
 
@@ -253,13 +253,13 @@ void PathConstraint::setSlot(Slot *slot) {
 	_slot = slot;
 }
 
-Vector<float> &
+Array<float> &
 PathConstraint::computeWorldPositions(Skeleton &skeleton, PathAttachment &path, int spacesCount, bool tangents) {
 	float position = _applied->_position;
 	float *spaces = _spaces.buffer();
 	_positions.setSize(spacesCount * 3 + 2, 0);
-	Vector<float> &out = _positions;
-	Vector<float> &world = _world;
+	Array<float> &out = _positions;
+	Array<float> &world = _world;
 	bool closed = path.isClosed();
 	int verticesLength = (int) path.getWorldVerticesLength();
 	int curveCount = verticesLength / 6;
@@ -267,7 +267,7 @@ PathConstraint::computeWorldPositions(Skeleton &skeleton, PathAttachment &path, 
 
 	float pathLength;
 	if (!path.isConstantSpeed()) {
-		Vector<float> &lengths = path.getLengths();
+		Array<float> &lengths = path.getLengths();
 		float *lengthsBuffer = lengths.buffer();
 		curveCount -= closed ? 1 : 2;
 		pathLength = lengthsBuffer[curveCount];
@@ -500,14 +500,14 @@ PathConstraint::computeWorldPositions(Skeleton &skeleton, PathAttachment &path, 
 	return out;
 }
 
-void PathConstraint::addBeforePosition(float p, Vector<float> &temp, int i, Vector<float> &output, int o) {
+void PathConstraint::addBeforePosition(float p, Array<float> &temp, int i, Array<float> &output, int o) {
 	float x1 = temp[i], y1 = temp[i + 1], dx = temp[i + 2] - x1, dy = temp[i + 3] - y1, r = MathUtil::atan2(dy, dx);
 	output[o] = x1 + p * MathUtil::cos(r);
 	output[o + 1] = y1 + p * MathUtil::sin(r);
 	output[o + 2] = r;
 }
 
-void PathConstraint::addAfterPosition(float p, Vector<float> &temp, int i, Vector<float> &output, int o) {
+void PathConstraint::addAfterPosition(float p, Array<float> &temp, int i, Array<float> &output, int o) {
 	float x1 = temp[i + 2], y1 = temp[i + 3], dx = x1 - temp[i], dy = y1 - temp[i + 1], r = MathUtil::atan2(dy, dx);
 	output[o] = x1 + p * MathUtil::cos(r);
 	output[o + 1] = y1 + p * MathUtil::sin(r);
@@ -515,7 +515,7 @@ void PathConstraint::addAfterPosition(float p, Vector<float> &temp, int i, Vecto
 }
 
 void PathConstraint::addCurvePosition(float p, float x1, float y1, float cx1, float cy1, float cx2, float cy2, float x2,
-									  float y2, Vector<float> &output, int o, bool tangents) {
+									  float y2, Array<float> &output, int o, bool tangents) {
 	if (p < epsilon || MathUtil::isNan(p)) {
 		output[o] = x1;
 		output[o + 1] = y1;
@@ -547,11 +547,11 @@ void PathConstraint::sortPathSlot(Skeleton &skeleton, Skin &skin, int slotIndex,
 void PathConstraint::sortPath(Skeleton &skeleton, Attachment *attachment, Bone &slotBone) {
 	if (attachment == NULL || !attachment->getRTTI().instanceOf(PathAttachment::rtti)) return;
 	PathAttachment *pathAttachment = static_cast<PathAttachment *>(attachment);
-	Vector<int> &pathBones = pathAttachment->getBones();
+	Array<int> &pathBones = pathAttachment->getBones();
 	if (pathBones.size() == 0)
 		skeleton.sortBone(&slotBone);
 	else {
-		Vector<Bone *> &bones = skeleton._bones;
+		Array<Bone *> &bones = skeleton._bones;
 		for (size_t i = 0, n = pathBones.size(); i < n;) {
 			int nn = pathBones[i++];
 			nn += i;

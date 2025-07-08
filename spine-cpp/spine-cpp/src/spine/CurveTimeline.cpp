@@ -90,7 +90,7 @@ float CurveTimeline::getBezierValue(float time, size_t frameIndex, size_t valueO
 	return y + (time - x) / (_frames[frameIndex] - x) * (_frames[frameIndex + valueOffset] - y);
 }
 
-Vector<float> &CurveTimeline::getCurves() {
+Array<float> &CurveTimeline::getCurves() {
 	return _curves;
 }
 

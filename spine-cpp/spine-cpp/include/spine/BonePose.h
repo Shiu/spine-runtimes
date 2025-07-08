@@ -42,24 +42,39 @@ namespace spine {
 	/// Skeleton::updateWorldTransform(Physics).
 	class SP_API BonePose : public BoneLocal, public Update {
 		friend class IkConstraint;
+		friend class PathConstraint;
+		friend class PhysicsConstraint;
+		friend class TransformConstraint;
+		friend class TransformConstraintData;
+		friend class FromRotate;
+		friend class ToRotate;
+		friend class FromX;
+		friend class ToX;
+		friend class FromY;
+		friend class ToY;
+		friend class FromScaleX;
+		friend class ToScaleX;
+		friend class FromScaleY;
+		friend class ToScaleY;
+		friend class FromShearX;
+		friend class ToShearX;
+		friend class FromShearY;
+		friend class ToShearY;
+		friend class Skeleton;
+		friend class Bone;
 
 	public:
-		Bone* _bone;
-		float _a, _b, _worldX;
-		float _c, _d, _worldY;
-		int _world, _local;
-
 		BonePose();
 		virtual ~BonePose();
 
 		/// Called by Skeleton::updateCache() to compute the world transform, if needed.
-		virtual void update(Skeleton& skeleton, Physics physics) override;
+		virtual void update(Skeleton &skeleton, Physics physics) override;
 
 		/// Computes the world transform using the parent bone's applied pose and this pose. Child bones are not updated.
 		///
 		/// See <a href="https://esotericsoftware.com/spine-runtime-skeletons#World-transforms">World transforms</a> in the Spine
 		/// Runtimes Guide.
-		void updateWorldTransform(Skeleton& skeleton);
+		void updateWorldTransform(Skeleton &skeleton);
 
 		/// Computes the local transform values from the world transform.
 		///
@@ -69,12 +84,12 @@ namespace spine {
 		///
 		/// Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The local transform after
 		/// calling this method is equivalent to the local transform used to compute the world transform, but may not be identical.
-		void updateLocalTransform(Skeleton& skeleton);
+		void updateLocalTransform(Skeleton &skeleton);
 
 		/// If the world transform has been modified and the local transform no longer matches, updateLocalTransform() is called.
-		void validateLocalTransform(Skeleton& skeleton);
+		void validateLocalTransform(Skeleton &skeleton);
 
-		void modifyLocal(Skeleton& skeleton);
+		void modifyLocal(Skeleton &skeleton);
 		void modifyWorld(int update);
 		void resetWorld(int update);
 
@@ -115,16 +130,16 @@ namespace spine {
 		float getWorldScaleY();
 
 		/// Transforms a point from world coordinates to the bone's local coordinates.
-		void worldToLocal(float worldX, float worldY, float& outLocalX, float& outLocalY);
+		void worldToLocal(float worldX, float worldY, float &outLocalX, float &outLocalY);
 
 		/// Transforms a point from the bone's local coordinates to world coordinates.
-		void localToWorld(float localX, float localY, float& outWorldX, float& outWorldY);
+		void localToWorld(float localX, float localY, float &outWorldX, float &outWorldY);
 
 		/// Transforms a point from world coordinates to the parent bone's local coordinates.
-		void worldToParent(float worldX, float worldY, float& outParentX, float& outParentY);
+		void worldToParent(float worldX, float worldY, float &outParentX, float &outParentY);
 
 		/// Transforms a point from the parent bone's coordinates to world coordinates.
-		void parentToWorld(float parentX, float parentY, float& outWorldX, float& outWorldY);
+		void parentToWorld(float parentX, float parentY, float &outWorldX, float &outWorldY);
 
 		/// Transforms a world rotation to a local rotation.
 		float worldToLocalRotation(float worldRotation);
@@ -137,7 +152,13 @@ namespace spine {
 		/// After changes are made to the world transform, updateLocalTransform() should be called on this bone and any
 		/// child bones, recursively.
 		void rotateWorld(float degrees);
+
+	protected:
+		Bone *_bone;
+		float _a, _b, _worldX;
+		float _c, _d, _worldY;
+		int _world, _local;
 	};
-}
+}// namespace spine
 
 #endif /* SPINE_BONEPOSE_H_ */

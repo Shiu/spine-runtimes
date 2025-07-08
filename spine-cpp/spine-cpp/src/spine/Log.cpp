@@ -75,7 +75,7 @@ void spine::spDebug_printAnimation(Animation *animation) {
 	}
 }
 
-void spine::spDebug_printBoneDatas(Vector<BoneData *> &boneDatas) {
+void spine::spDebug_printBoneDatas(Array<BoneData *> &boneDatas) {
 	int i, n;
 	for (i = 0, n = (int) boneDatas.size(); i < n; i++) {
 		spDebug_printBoneData(boneDatas[i]);
@@ -93,7 +93,7 @@ void spine::spDebug_printSkeleton(Skeleton *skeleton) {
 	spDebug_printBones(skeleton->getBones());
 }
 
-void spine::spDebug_printBones(Vector<Bone *> &bones) {
+void spine::spDebug_printBones(Array<Bone *> &bones) {
 	int i, n;
 	for (i = 0, n = (int) bones.size(); i < n; i++) {
 		spDebug_printBone(bones[i]);
@@ -115,7 +115,7 @@ void spine::spDebug_printFloats(float *values, int numFloats) {
 	printf("]");
 }
 
-void spine::spDebug_printFloats(Vector<float> &values) {
+void spine::spDebug_printFloats(Array<float> &values) {
 	int i, n;
 	printf("(%zu) [", values.size());
 	for (i = 0, n = (int) values.size(); i < n; i++) {

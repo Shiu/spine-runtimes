@@ -35,7 +35,7 @@
 #include <spine/BoneData.h>
 #include <spine/BoneLocal.h>
 #include <spine/BonePose.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 namespace spine {
 	/// The current pose for a bone, before constraints are applied.
@@ -85,7 +85,7 @@ namespace spine {
 		Bone* getParent();
 
 		/// The immediate children of this bone.
-		Vector<Bone*>& getChildren();
+		Array<Bone*>& getChildren();
 
 		static bool isYDown() { return yDown; }
 		static void setYDown(bool value) { yDown = value; }
@@ -93,7 +93,7 @@ namespace spine {
 	private:
 		static bool yDown;
 		Bone* const _parent;
-		Vector<Bone*> _children;
+		Array<Bone*> _children;
 		bool _sorted;
 	};
 }

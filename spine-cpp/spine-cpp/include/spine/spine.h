@@ -52,7 +52,7 @@
 #include <spine/ConstraintData.h>
 #include <spine/ConstraintTimeline.h>
 #include <spine/ConstraintTimeline1.h>
-#include <spine/ContainerUtil.h>
+#include <spine/ArrayUtils.h>
 #include <spine/CurveTimeline.h>
 #include <spine/DeformTimeline.h>
 #include <spine/DrawOrderTimeline.h>
@@ -128,7 +128,7 @@
 #include <spine/TranslateTimeline.h>
 #include <spine/Triangulator.h>
 #include <spine/Update.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/VertexAttachment.h>
 #include <spine/Vertices.h>
 

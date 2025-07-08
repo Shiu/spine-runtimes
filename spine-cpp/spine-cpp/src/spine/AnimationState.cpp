@@ -477,13 +477,13 @@ bool AnimationState::apply(Skeleton &skeleton) {
 		// apply current entry.
 		float animationLast = current._animationLast, animationTime = current.getAnimationTime();
 		float applyTime = animationTime;
-		Vector<Event *> *applyEvents = &_events;
+		Array<Event *> *applyEvents = &_events;
 		if (current._reverse) {
 			applyTime = current._animation->getDuration() - applyTime;
 			applyEvents = NULL;
 		}
 		size_t timelineCount = current._animation->_timelines.size();
-		Vector<Timeline *> &timelines = current._animation->_timelines;
+		Array<Timeline *> &timelines = current._animation->_timelines;
 		if ((i == 0 && alpha == 1) || blend == MixBlend_Add) {
 			if (i == 0) attachments = true;
 			for (size_t ii = 0; ii < timelineCount; ++ii) {
@@ -495,12 +495,12 @@ bool AnimationState::apply(Skeleton &skeleton) {
 					timeline->apply(skeleton, animationLast, applyTime, applyEvents, alpha, blend, MixDirection_In, false);
 			}
 		} else {
-			Vector<int> &timelineMode = current._timelineMode;
+			Array<int> &timelineMode = current._timelineMode;
 
 			bool shortestRotation = current._shortestRotation;
 			bool firstFrame = !shortestRotation && current._timelinesRotation.size() != timelines.size() << 1;
 			if (firstFrame) current._timelinesRotation.setSize(timelines.size() << 1, 0);
-			Vector<float> &timelinesRotation = current._timelinesRotation;
+			Array<float> &timelinesRotation = current._timelinesRotation;
 
 			for (size_t ii = 0; ii < timelineCount; ++ii) {
 				Timeline *timeline = timelines[ii];
@@ -527,7 +527,7 @@ bool AnimationState::apply(Skeleton &skeleton) {
 	}
 
 	int setupState = _unkeyedState + Setup;
-	Vector<Slot *> &slots = skeleton.getSlots();
+	Array<Slot *> &slots = skeleton.getSlots();
 	for (int i = 0, n = (int) slots.size(); i < n; i++) {
 		Slot *slot = slots[i];
 		if (slot->_attachmentState == setupState) {
@@ -676,7 +676,7 @@ AnimationStateData *AnimationState::getData() {
 	return _data;
 }
 
-Vector<TrackEntry *> &AnimationState::getTracks() {
+Array<TrackEntry *> &AnimationState::getTracks() {
 	return _tracks;
 }
 
@@ -720,7 +720,7 @@ void AnimationState::disposeTrackEntry(TrackEntry *entry) {
 }
 
 Animation *AnimationState::getEmptyAnimation() {
-	static Vector<Timeline *> timelines;
+	static Array<Timeline *> timelines;
 	static Animation ret(String("<empty>"), timelines, 0);
 	return &ret;
 }
@@ -730,7 +730,7 @@ void AnimationState::applyAttachmentTimeline(AttachmentTimeline *attachmentTimel
 	Slot *slot = skeleton.getSlots()[attachmentTimeline->getSlotIndex()];
 	if (!slot->getBone().isActive()) return;
 
-	Vector<float> &frames = attachmentTimeline->getFrames();
+	Array<float> &frames = attachmentTimeline->getFrames();
 	if (time < frames[0]) {
 		if (blend == MixBlend_Setup || blend == MixBlend_First)
 			setAttachment(skeleton, *slot, slot->getData().getAttachmentName(), attachments);
@@ -745,7 +745,7 @@ void AnimationState::applyAttachmentTimeline(AttachmentTimeline *attachmentTimel
 
 
 void AnimationState::applyRotateTimeline(RotateTimeline *rotateTimeline, Skeleton &skeleton, float time, float alpha,
-										 MixBlend blend, Vector<float> &timelinesRotation, size_t i, bool firstFrame) {
+										 MixBlend blend, Array<float> &timelinesRotation, size_t i, bool firstFrame) {
 	if (firstFrame) timelinesRotation[i] = 0;
 
 	if (alpha == 1) {
@@ -757,7 +757,7 @@ void AnimationState::applyRotateTimeline(RotateTimeline *rotateTimeline, Skeleto
 	if (!bone->isActive()) return;
 	BoneLocal &pose = bone->_pose;
 	BoneLocal &setup = bone->_data._setup;
-	Vector<float> &frames = rotateTimeline->_frames;
+	Array<float> &frames = rotateTimeline->_frames;
 	float r1, r2;
 	if (time < frames[0]) {
 		switch (blend) {
@@ -856,12 +856,12 @@ float AnimationState::applyMixingFrom(TrackEntry *to, Skeleton &skeleton, MixBle
 	}
 
 	bool attachments = mix < from->_mixAttachmentThreshold, drawOrder = mix < from->_mixDrawOrderThreshold;
-	Vector<Timeline *> &timelines = from->_animation->_timelines;
+	Array<Timeline *> &timelines = from->_animation->_timelines;
 	size_t timelineCount = timelines.size();
 	float alphaHold = from->_alpha * to->_interruptAlpha, alphaMix = alphaHold * (1 - mix);
 	float animationLast = from->_animationLast, animationTime = from->getAnimationTime();
 	float applyTime = animationTime;
-	Vector<Event *> *events = NULL;
+	Array<Event *> *events = NULL;
 	if (from->_reverse) {
 		applyTime = from->_animation->_duration - applyTime;
 	} else {
@@ -872,14 +872,14 @@ float AnimationState::applyMixingFrom(TrackEntry *to, Skeleton &skeleton, MixBle
 		for (size_t i = 0; i < timelineCount; i++)
 			timelines[i]->apply(skeleton, animationLast, applyTime, events, alphaMix, blend, MixDirection_Out, false);
 	} else {
-		Vector<int> &timelineMode = from->_timelineMode;
-		Vector<TrackEntry *> &timelineHoldMix = from->_timelineHoldMix;
+		Array<int> &timelineMode = from->_timelineMode;
+		Array<TrackEntry *> &timelineHoldMix = from->_timelineHoldMix;
 
 		bool shortestRotation = from->_shortestRotation;
 		bool firstFrame = !shortestRotation && from->_timelinesRotation.size() != timelines.size() << 1;
 		if (firstFrame) from->_timelinesRotation.setSize(timelines.size() << 1, 0);
 
-		Vector<float> &timelinesRotation = from->_timelinesRotation;
+		Array<float> &timelinesRotation = from->_timelinesRotation;
 
 		from->_totalAlpha = 0;
 		for (size_t i = 0; i < timelineCount; i++) {
@@ -1079,11 +1079,11 @@ void AnimationState::animationsChanged() {
 
 void AnimationState::computeHold(TrackEntry *entry) {
 	TrackEntry *to = entry->_mixingTo;
-	Vector<Timeline *> &timelines = entry->_animation->_timelines;
+	Array<Timeline *> &timelines = entry->_animation->_timelines;
 	size_t timelinesCount = timelines.size();
-	Vector<int> &timelineMode = entry->_timelineMode;
+	Array<int> &timelineMode = entry->_timelineMode;
 	timelineMode.setSize(timelinesCount, 0);
-	Vector<TrackEntry *> &timelineHoldMix = entry->_timelineHoldMix;
+	Array<TrackEntry *> &timelineHoldMix = entry->_timelineHoldMix;
 	timelineHoldMix.setSize(timelinesCount, 0);
 
 	if (to != NULL && to->_holdPrevious) {
@@ -1098,7 +1098,7 @@ void AnimationState::computeHold(TrackEntry *entry) {
 continue_outer:
 	for (; i < timelinesCount; ++i) {
 		Timeline *timeline = timelines[i];
-		Vector<PropertyId> &ids = timeline->getPropertyIds();
+		Array<PropertyId> &ids = timeline->getPropertyIds();
 		if (!_propertyIDs.addAll(ids, true)) {
 			timelineMode[i] = Subsequent;
 		} else {

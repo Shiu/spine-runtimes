@@ -32,7 +32,7 @@
 
 #include <spine/ConstraintData.h>
 #include <spine/PosedData.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/PathConstraintPose.h>
 #include <spine/dll.h>
 #include <spine/PositionMode.h>
@@ -72,7 +72,7 @@ namespace spine {
 
 
 		/// The bones that will be modified by this path constraint.
-		Vector<BoneData *> &getBones();
+		Array<BoneData *> &getBones();
 
 		/// The slot whose path attachment will be used to constrained the bones.
 		SlotData *getSlot();
@@ -100,7 +100,7 @@ namespace spine {
 		void setOffsetRotation(float offsetRotation);
 
 	private:
-		Vector<BoneData *> _bones;
+		Array<BoneData *> _bones;
 		SlotData *_slot;
 		PositionMode _positionMode;
 		SpacingMode _spacingMode;

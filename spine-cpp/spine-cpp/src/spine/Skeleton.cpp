@@ -52,7 +52,7 @@
 #include <spine/TransformConstraintData.h>
 #include <spine/SkeletonClipping.h>
 
-#include <spine/ContainerUtil.h>
+#include <spine/ArrayUtils.h>
 
 #include <float.h>
 
@@ -101,9 +101,9 @@ Skeleton::Skeleton(SkeletonData &skeletonData) : _data(skeletonData), _skin(NULL
 }
 
 Skeleton::~Skeleton() {
-	ContainerUtil::cleanUpVectorOfPointers(_bones);
-	ContainerUtil::cleanUpVectorOfPointers(_slots);
-	ContainerUtil::cleanUpVectorOfPointers(_constraints);
+	ArrayUtils::deleteElements(_bones);
+	ArrayUtils::deleteElements(_slots);
+	ArrayUtils::deleteElements(_constraints);
 }
 
 void Skeleton::updateCache() {
@@ -125,7 +125,7 @@ void Skeleton::updateCache() {
 	}
 
 	if (_skin) {
-		Vector<BoneData *> &skinBones = _skin->getBones();
+		Array<BoneData *> &skinBones = _skin->getBones();
 		for (size_t i = 0, n = skinBones.size(); i < n; i++) {
 			Bone *bone = _bones[skinBones[i]->getIndex()];
 			do {
@@ -198,7 +198,7 @@ void Skeleton::sortBone(Bone *bone) {
 	_updateCache.add((Update *)bone);
 }
 
-void Skeleton::sortReset(Vector<Bone *> &bones) {
+void Skeleton::sortReset(Array<Bone *> &bones) {
 	Bone **items = bones.buffer();
 	for (size_t i = 0, n = bones.size(); i < n; i++) {
 		Bone *bone = items[i];
@@ -293,11 +293,11 @@ SkeletonData *Skeleton::getData() {
 	return &_data;
 }
 
-Vector<Bone *> &Skeleton::getBones() {
+Array<Bone *> &Skeleton::getBones() {
 	return _bones;
 }
 
-Vector<Update *> &Skeleton::getUpdateCache() {
+Array<Update *> &Skeleton::getUpdateCache() {
 	return _updateCache;
 }
 
@@ -314,7 +314,7 @@ Bone *Skeleton::findBone(const String &boneName) {
 	return NULL;
 }
 
-Vector<Slot *> &Skeleton::getSlots() {
+Array<Slot *> &Skeleton::getSlots() {
 	return _slots;
 }
 
@@ -327,7 +327,7 @@ Slot *Skeleton::findSlot(const String &slotName) {
 	return NULL;
 }
 
-Vector<Slot *> &Skeleton::getDrawOrder() {
+Array<Slot *> &Skeleton::getDrawOrder() {
 	return _drawOrder;
 }
 
@@ -392,19 +392,19 @@ void Skeleton::setAttachment(const String &slotName, const String &attachmentNam
 	slot->_pose.setAttachment(attachment);
 }
 
-Vector<Constraint *> &Skeleton::getConstraints() {
+Array<Constraint *> &Skeleton::getConstraints() {
 	return _constraints;
 }
 
-Vector<PhysicsConstraint *> &Skeleton::getPhysicsConstraints() {
+Array<PhysicsConstraint *> &Skeleton::getPhysicsConstraints() {
 	return _physics;
 }
 
-void Skeleton::getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Vector<float> &outVertexBuffer) {
+void Skeleton::getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Array<float> &outVertexBuffer) {
 	getBounds(outX, outY, outWidth, outHeight, outVertexBuffer, NULL);
 }
 
-void Skeleton::getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Vector<float> &outVertexBuffer, SkeletonClipping *clipper) {
+void Skeleton::getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Array<float> &outVertexBuffer, SkeletonClipping *clipper) {
 	static unsigned short quadIndices[] = {0, 1, 2, 2, 3, 0};
 	float minX = FLT_MAX;
 	float minY = FLT_MAX;

@@ -46,7 +46,7 @@ PathConstraintData::PathConstraintData(const String &name) : ConstraintDataGener
 }
 
 
-Vector<BoneData *> &PathConstraintData::getBones() {
+Array<BoneData *> &PathConstraintData::getBones() {
 	return _bones;
 }
 

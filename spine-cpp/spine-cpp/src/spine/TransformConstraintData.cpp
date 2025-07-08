@@ -33,7 +33,7 @@
 #include <spine/BonePose.h>
 #include <spine/TransformConstraintPose.h>
 #include <spine/MathUtil.h>
-#include <spine/ContainerUtil.h>
+#include <spine/ArrayUtils.h>
 #include <spine/Skeleton.h>
 
 using namespace spine;
@@ -51,7 +51,7 @@ TransformConstraintData::TransformConstraintData(const String &name) : Constrain
 	}
 }
 
-Vector<BoneData *> &TransformConstraintData::getBones() {
+Array<BoneData *> &TransformConstraintData::getBones() {
 	return _bones;
 }
 
@@ -143,7 +143,7 @@ void TransformConstraintData::setClamp(bool clamp) {
 	_clamp = clamp;
 }
 
-Vector<FromProperty *> &TransformConstraintData::getProperties() {
+Array<FromProperty *> &TransformConstraintData::getProperties() {
 	return _properties;
 }
 
@@ -326,7 +326,7 @@ TransformConstraintData::~TransformConstraintData() {
 		FromProperty *fromProp = _properties[i];
 		if (fromProp) {
 			// Clean up the ToProperty objects in the FromProperty
-			ContainerUtil::cleanUpVectorOfPointers(fromProp->_to);
+			ArrayUtils::deleteElements(fromProp->_to);
 			delete fromProp;
 		}
 	}

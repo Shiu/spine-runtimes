@@ -37,11 +37,11 @@ PathAttachment::PathAttachment(const String &name) : VertexAttachment(name), _cl
 													 _color() {
 }
 
-Vector<float> &PathAttachment::getLengths() {
+Array<float> &PathAttachment::getLengths() {
 	return _lengths;
 }
 
-void PathAttachment::setLengths(Vector<float> &inValue) {
+void PathAttachment::setLengths(Array<float> &inValue) {
 	_lengths.clearAndAddAll(inValue);
 }
 

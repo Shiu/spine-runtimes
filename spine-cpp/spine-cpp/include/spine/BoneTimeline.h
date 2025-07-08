@@ -67,7 +67,7 @@ namespace spine {
 		BoneTimeline1(size_t frameCount, size_t bezierCount, int boneIndex, Property property);
 
 		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
+		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose) override;
 
 	protected:
@@ -88,7 +88,7 @@ namespace spine {
 		BoneTimeline2(size_t frameCount, size_t bezierCount, int boneIndex, Property property1, Property property2);
 
 		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha, MixBlend blend,
+		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 			  MixDirection direction, bool appliedPose) override;
 
 	protected:

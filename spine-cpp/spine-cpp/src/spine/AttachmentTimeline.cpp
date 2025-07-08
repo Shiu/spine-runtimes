@@ -60,7 +60,7 @@ void AttachmentTimeline::setAttachment(Skeleton &skeleton, SlotPose &pose, Strin
 	pose.setAttachment(attachmentName == NULL || attachmentName->isEmpty() ? NULL : skeleton.getAttachment(_slotIndex, *attachmentName));
 }
 
-void AttachmentTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
+void AttachmentTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
 							   MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
@@ -84,6 +84,6 @@ void AttachmentTimeline::setFrame(int frame, float time, const String &attachmen
 	_attachmentNames[frame] = attachmentName;
 }
 
-Vector<String> &AttachmentTimeline::getAttachmentNames() {
+Array<String> &AttachmentTimeline::getAttachmentNames() {
 	return _attachmentNames;
 }

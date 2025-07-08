@@ -34,7 +34,7 @@
 #include <spine/ConstraintData.h>
 #include <spine/IkConstraintData.h>
 #include <spine/IkConstraintPose.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 namespace spine {
 	class Skeleton;
@@ -61,7 +61,7 @@ namespace spine {
 
 		IkConstraintData &getData() override;
 
-		Vector<BonePose *> &getBones();
+		Array<BonePose *> &getBones();
 
 		Bone *getTarget();
 
@@ -80,7 +80,7 @@ namespace spine {
 			  float softness, float mix);
 
 	private:
-		Vector<BonePose *> _bones;
+		Array<BonePose *> _bones;
 		Bone *_target;
 	};
 }

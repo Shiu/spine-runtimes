@@ -56,7 +56,7 @@ TransformConstraintTimeline::TransformConstraintTimeline(size_t frameCount, size
 TransformConstraintTimeline::~TransformConstraintTimeline() {
 }
 
-void TransformConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents,
+void TransformConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents,
 										float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);

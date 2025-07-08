@@ -33,7 +33,7 @@
 #include <spine/Skeleton.h>
 
 #include <spine/Animation.h>
-#include <spine/ContainerUtil.h>
+#include <spine/ArrayUtils.h>
 #include <spine/EventData.h>
 #include <spine/Property.h>
 #include <spine/Slot.h>
@@ -52,14 +52,14 @@ EventTimeline::EventTimeline(size_t frameCount) : Timeline(frameCount, 1) {
 }
 
 EventTimeline::~EventTimeline() {
-	ContainerUtil::cleanUpVectorOfPointers(_events);
+	ArrayUtils::deleteElements(_events);
 }
 
-void EventTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents, float alpha,
+void EventTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
 						  MixBlend blend, MixDirection direction, bool appliedPose) {
 	if (pEvents == NULL) return;
 
-	Vector<Event *> &events = *pEvents;
+	Array<Event *> &events = *pEvents;
 
 	size_t frameCount = _frames.size();
 
@@ -100,6 +100,6 @@ size_t EventTimeline::getFrameCount() {
 	return _frames.size();
 }
 
-Vector<Event *> &EventTimeline::getEvents() {
+Array<Event *> &EventTimeline::getEvents() {
 	return _events;
 }

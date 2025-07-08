@@ -123,23 +123,23 @@ void MeshAttachment::setHullLength(int inValue) {
 	_hullLength = inValue;
 }
 
-Vector<float> &MeshAttachment::getRegionUVs() {
+Array<float> &MeshAttachment::getRegionUVs() {
 	return _regionUVs;
 }
 
-void MeshAttachment::setRegionUVs(Vector<float> &inValue) {
+void MeshAttachment::setRegionUVs(Array<float> &inValue) {
 	_regionUVs.clearAndAddAll(inValue);
 }
 
-Vector<float> &MeshAttachment::getUVs() {
+Array<float> &MeshAttachment::getUVs() {
 	return _uvs;
 }
 
-Vector<unsigned short> &MeshAttachment::getTriangles() {
+Array<unsigned short> &MeshAttachment::getTriangles() {
 	return _triangles;
 }
 
-void MeshAttachment::setTriangles(Vector<unsigned short> &inValue) {
+void MeshAttachment::setTriangles(Array<unsigned short> &inValue) {
 	_triangles.clearAndAddAll(inValue);
 }
 
@@ -186,11 +186,11 @@ void MeshAttachment::setParentMesh(MeshAttachment *inValue) {
 	}
 }
 
-Vector<unsigned short> &MeshAttachment::getEdges() {
+Array<unsigned short> &MeshAttachment::getEdges() {
 	return _edges;
 }
 
-void MeshAttachment::setEdges(Vector<unsigned short> &inValue) {
+void MeshAttachment::setEdges(Array<unsigned short> &inValue) {
 	_edges.clearAndAddAll(inValue);
 }
 

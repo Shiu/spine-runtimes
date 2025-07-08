@@ -30,7 +30,7 @@
 #ifndef Spine_Animation_h
 #define Spine_Animation_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/HashMap.h>
 #include <spine/MixBlend.h>
 #include <spine/MixDirection.h>
@@ -101,17 +101,17 @@ namespace spine {
 		friend class Slider;
 
 	public:
-		Animation(const String &name, Vector<Timeline *> &timelines, float duration);
+		Animation(const String &name, Array<Timeline *> &timelines, float duration);
 
 		~Animation();
 
 		/// If the returned array or the timelines it contains are modified, setTimelines() must be called.
-		Vector<Timeline *> &getTimelines();
+		Array<Timeline *> &getTimelines();
 
-		void setTimelines(Vector<Timeline *> &timelines);
+		void setTimelines(Array<Timeline *> &timelines);
 
 		/// Returns true if this animation contains a timeline with any of the specified property IDs.
-		bool hasTimeline(Vector<PropertyId> &ids);
+		bool hasTimeline(Array<PropertyId> &ids);
 
 		/// The duration of the animation in seconds, which is usually the highest time of all frames in the timeline. The duration is
 		/// used to know when it has completed and when it should loop back to the start.
@@ -139,23 +139,23 @@ namespace spine {
 		/// @param blend Controls how mixing is applied when alpha < 1.
 		/// @param direction Indicates whether the timelines are mixing in or out. Used by timelines which perform instant transitions,
 		///           such as DrawOrderTimeline or AttachmentTimeline.
-		void apply(Skeleton &skeleton, float lastTime, float time, bool loop, Vector<Event *> *pEvents, float alpha,
+		void apply(Skeleton &skeleton, float lastTime, float time, bool loop, Array<Event *> *pEvents, float alpha,
 				   MixBlend blend, MixDirection direction, bool appliedPose);
 
 		/// The animation's name, which is unique across all animations in the skeleton.
 		const String &getName();
 
 		/// The bone indices affected by this animation.
-		const Vector<int> &getBones();
+		const Array<int> &getBones();
 
 		/// @param target After the first and before the last entry.
-		static int search(Vector<float> &values, float target);
+		static int search(Array<float> &values, float target);
 
-		static int search(Vector<float> &values, float target, int step);
+		static int search(Array<float> &values, float target, int step);
 	protected:
-		Vector<Timeline *> _timelines;
+		Array<Timeline *> _timelines;
 		HashMap<PropertyId, bool> _timelineIds;
-		Vector<int> _bones;
+		Array<int> _bones;
 		float _duration;
 		String _name;
 	};

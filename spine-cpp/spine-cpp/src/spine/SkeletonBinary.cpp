@@ -45,7 +45,7 @@
 #include <spine/BoundingBoxAttachment.h>
 #include <spine/ClippingAttachment.h>
 #include <spine/ColorTimeline.h>
-#include <spine/ContainerUtil.h>
+#include <spine/ArrayUtils.h>
 #include <spine/DeformTimeline.h>
 #include <spine/DrawOrderTimeline.h>
 #include <spine/Event.h>
@@ -93,7 +93,7 @@ SkeletonBinary::SkeletonBinary(AttachmentLoader *attachmentLoader, bool ownsLoad
 }
 
 SkeletonBinary::~SkeletonBinary() {
-	ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
+	ArrayUtils::deleteElements(_linkedMeshes);
 	_linkedMeshes.clear();
 
 	if (_ownsLoader) delete _attachmentLoader;
@@ -136,7 +136,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 		return NULL;
 	}
 
-	ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
+	ArrayUtils::deleteElements(_linkedMeshes);
 	_linkedMeshes.clear();
 
 	SkeletonData *skeletonData = new (__FILE__, __LINE__) SkeletonData();
@@ -177,12 +177,12 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 		}
 
 		int n = input.readInt(true);
-		Vector<char *> &strings = skeletonData->_strings.setSize(n, NULL);
+		Array<char *> &strings = skeletonData->_strings.setSize(n, NULL);
 		for (int i = 0; i < n; i++)
 			strings[i] = input.readString();
 
 		/* Bones. */
-		Vector<BoneData *> &bones = skeletonData->_bones.setSize(input.readInt(true), NULL);
+		Array<BoneData *> &bones = skeletonData->_bones.setSize(input.readInt(true), NULL);
 		for (int i = 0; i < (int)bones.size(); ++i) {
 			const char *name = input.readString();
 			BoneData *parent = i == 0 ? 0 : bones[input.readInt(true)];
@@ -207,7 +207,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 		}
 
 		/* Slots. */
-		Vector<SlotData *> &slots = skeletonData->_slots.setSize(input.readInt(true), NULL);
+		Array<SlotData *> &slots = skeletonData->_slots.setSize(input.readInt(true), NULL);
 		for (int i = 0; i < (int)slots.size(); ++i) {
 			String slotName = String(input.readString(), true);
 			BoneData *boneData = bones[input.readInt(true)];
@@ -228,14 +228,14 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 
 		/* Constraints. */
 		int constraintCount = input.readInt(true);
-		Vector<ConstraintData *> &constraints = skeletonData->_constraints.setSize(constraintCount, NULL);
+		Array<ConstraintData *> &constraints = skeletonData->_constraints.setSize(constraintCount, NULL);
 		for (int i = 0; i < constraintCount; i++) {
 			String name(input.readString(), true);
 			int nn;
 			switch (input.readByte()) {
 				case CONSTRAINT_IK: {
 					IkConstraintData *data = new (__FILE__, __LINE__) IkConstraintData(name);
-					Vector<BoneData *> &constraintBones = data->_bones.setSize(nn = input.readInt(true), NULL);
+					Array<BoneData *> &constraintBones = data->_bones.setSize(nn = input.readInt(true), NULL);
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
 					data->_target = bones[input.readInt(true)];
@@ -253,7 +253,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 				}
 				case CONSTRAINT_TRANSFORM: {
 					TransformConstraintData *data = new (__FILE__, __LINE__) TransformConstraintData(name);
-					Vector<BoneData *> &constraintBones = data->_bones.setSize(nn = input.readInt(true), NULL);
+					Array<BoneData *> &constraintBones = data->_bones.setSize(nn = input.readInt(true), NULL);
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
 					data->_source = bones[input.readInt(true)];
@@ -263,7 +263,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 					data->_localTarget = (flags & 4) != 0;
 					data->_additive = (flags & 8) != 0;
 					data->_clamp = (flags & 16) != 0;
-					Vector<FromProperty *> &froms = data->_properties.setSize(nn = flags >> 5, NULL);
+					Array<FromProperty *> &froms = data->_properties.setSize(nn = flags >> 5, NULL);
 					for (int ii = 0, tn; ii < nn; ii++) {
 						float fromScale = 1;
 						FromProperty *from = NULL;
@@ -290,7 +290,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 								break;
 						}
 						from->_offset = input.readFloat() * fromScale;
-						Vector<ToProperty *> &tos = from->_to.setSize(tn = input.readByte(), NULL);
+						Array<ToProperty *> &tos = from->_to.setSize(tn = input.readByte(), NULL);
 						for (int t = 0; t < tn; t++) {
 							float toScale = 1;
 							ToProperty *to = NULL;
@@ -343,7 +343,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 				}
 				case CONSTRAINT_PATH: {
 					PathConstraintData *data = new (__FILE__, __LINE__) PathConstraintData(name);
-					Vector<BoneData *> &constraintBones = data->_bones.setSize(nn = input.readInt(true), NULL);
+					Array<BoneData *> &constraintBones = data->_bones.setSize(nn = input.readInt(true), NULL);
 					for (int ii = 0; ii < nn; ii++)
 						constraintBones[ii] = bones[input.readInt(true)];
 					data->_slot = slots[input.readInt(true)];
@@ -459,7 +459,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 		/* Skins. */
 		{
 			int i = skeletonData->_skins.size();
-			Vector<Skin *> &skins = skeletonData->_skins.setSize(n = i + input.readInt(true), NULL);
+			Array<Skin *> &skins = skeletonData->_skins.setSize(n = i + input.readInt(true), NULL);
 			for (; i < n; i++) {
 				Skin *skin = readSkin(input, *skeletonData, false, nonessential);
 				if (skin)
@@ -472,7 +472,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 		}
 
 		/* Linked meshes. */
-		Vector<LinkedMesh *> &items = _linkedMeshes;
+		Array<LinkedMesh *> &items = _linkedMeshes;
 		for (int i = 0, n = items.size(); i < n; i++) {
 			LinkedMesh *linkedMesh = items[i];
 			Skin *skin = skeletonData->_skins[linkedMesh->_skinIndex];
@@ -487,12 +487,12 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 			linkedMesh->_mesh->setParentMesh(static_cast<MeshAttachment *>(parent));
 			if (linkedMesh->_mesh->getSequence() == NULL) linkedMesh->_mesh->updateRegion();
 		}
-		ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
+		ArrayUtils::deleteElements(_linkedMeshes);
 		_linkedMeshes.clear();
 
 		/* Events. */
 		int eventsCount = input.readInt(true);
-		Vector<EventData *> &events = skeletonData->_events.setSize(eventsCount, NULL);
+		Array<EventData *> &events = skeletonData->_events.setSize(eventsCount, NULL);
 		for (int i = 0; i < eventsCount; ++i) {
 			EventData *eventData = new (__FILE__, __LINE__) EventData(String(input.readString(), true));
 			eventData->_intValue = input.readInt(false);
@@ -508,7 +508,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 
 		/* Animations. */
 		int animationsCount = input.readInt(true);
-		Vector<Animation *> &animations = skeletonData->_animations.setSize(animationsCount, NULL);
+		Array<Animation *> &animations = skeletonData->_animations.setSize(animationsCount, NULL);
 		for (int i = 0; i < animationsCount; ++i) {
 			Animation *animation = readAnimation(input, String(input.readString(), true), *skeletonData);
 			if (!animation) {
@@ -552,13 +552,13 @@ Skin *SkeletonBinary::readSkin(DataInput &input, SkeletonData &skeletonData, boo
 		if (nonessential) Color::rgba8888ToColor(skin->getColor(), input.readInt());
 
 		int n;
-		Vector<BoneData *> &from = skeletonData._bones;
-		Vector<BoneData *> &bones = skin->getBones().setSize(n = input.readInt(true), NULL);
+		Array<BoneData *> &from = skeletonData._bones;
+		Array<BoneData *> &bones = skin->getBones().setSize(n = input.readInt(true), NULL);
 		for (int i = 0; i < n; i++)
 			bones[i] = from[input.readInt(true)];
 
-		Vector<ConstraintData *> &fromConstraints = skeletonData._constraints;
-		Vector<ConstraintData *> &constraints = skin->getConstraints().setSize(n = input.readInt(true), NULL);
+		Array<ConstraintData *> &fromConstraints = skeletonData._constraints;
+		Array<ConstraintData *> &constraints = skin->getConstraints().setSize(n = input.readInt(true), NULL);
 		for (int i = 0; i < n; i++)
 			constraints[i] = fromConstraints[input.readInt(true)];
 
@@ -618,8 +618,8 @@ Attachment *SkeletonBinary::readAttachment(DataInput &input, Skin &skin, int slo
 			return region;
 		}
 		case AttachmentType_Boundingbox: {
-			Vector<float> vertices;
-			Vector<int> bones;
+			Array<float> vertices;
+			Array<int> bones;
 			int verticesLength = readVertices(input, vertices, bones, (flags & 16) != 0);
 			int color = nonessential ? input.readInt() : 0;
 
@@ -636,15 +636,15 @@ Attachment *SkeletonBinary::readAttachment(DataInput &input, Skin &skin, int slo
 			int color = (flags & 32) != 0 ? input.readInt() : 0xffffffff;
 			Sequence *sequence = (flags & 64) != 0 ? readSequence(input) : nullptr;
 			int hullLength = input.readInt(true);
-			Vector<float> vertices;
-			Vector<int> bones;
+			Array<float> vertices;
+			Array<int> bones;
 			int verticesLength = readVertices(input, vertices, bones, (flags & 128) != 0);
-			Vector<float> uvs;
+			Array<float> uvs;
 			readFloatArray(input, verticesLength, 1, uvs);
-			Vector<unsigned short> triangles;
+			Array<unsigned short> triangles;
 			readShortArray(input, triangles, (verticesLength - hullLength - 2) * 3);
 
-			Vector<unsigned short> edges;
+			Array<unsigned short> edges;
 			float width = 0, height = 0;
 			if (nonessential) {
 				readShortArray(input, edges, input.readInt(true));
@@ -699,10 +699,10 @@ Attachment *SkeletonBinary::readAttachment(DataInput &input, Skin &skin, int slo
 		case AttachmentType_Path: {
 			bool closed = (flags & 16) != 0;
 			bool constantSpeed = (flags & 32) != 0;
-			Vector<float> vertices;
-			Vector<int> bones;
+			Array<float> vertices;
+			Array<int> bones;
 			int verticesLength = readVertices(input, vertices, bones, (flags & 64) != 0);
-			Vector<float> lengths;
+			Array<float> lengths;
 			lengths.setSize(verticesLength / 6, 0);
 			for (int i = 0, n = lengths.size(); i < n; i++)
 				lengths[i] = input.readFloat() * scale;
@@ -735,8 +735,8 @@ Attachment *SkeletonBinary::readAttachment(DataInput &input, Skin &skin, int slo
 		}
 		case AttachmentType_Clipping: {
 			int endSlotIndex = input.readInt(true);
-			Vector<float> vertices;
-			Vector<int> bones;
+			Array<float> vertices;
+			Array<int> bones;
 			int verticesLength = readVertices(input, vertices, bones, (flags & 16) != 0);
 			int color = nonessential ? input.readInt() : 0;
 
@@ -761,7 +761,7 @@ Sequence *SkeletonBinary::readSequence(DataInput &input) {
 	return sequence;
 }
 
-int SkeletonBinary::readVertices(DataInput &input, Vector<float> &vertices, Vector<int> &bones, bool weighted) {
+int SkeletonBinary::readVertices(DataInput &input, Array<float> &vertices, Array<int> &bones, bool weighted) {
 	float scale = _scale;
 	int vertexCount = input.readInt(true);
 	int verticesLength = vertexCount << 1;
@@ -784,7 +784,7 @@ int SkeletonBinary::readVertices(DataInput &input, Vector<float> &vertices, Vect
 	return verticesLength;
 }
 
-void SkeletonBinary::readFloatArray(DataInput &input, int n, float scale, Vector<float> &array) {
+void SkeletonBinary::readFloatArray(DataInput &input, int n, float scale, Array<float> &array) {
 	array.setSize(n, 0);
 	int i;
 	if (scale == 1) {
@@ -798,7 +798,7 @@ void SkeletonBinary::readFloatArray(DataInput &input, int n, float scale, Vector
 	}
 }
 
-void SkeletonBinary::readShortArray(DataInput &input, Vector<unsigned short> &array, int n) {
+void SkeletonBinary::readShortArray(DataInput &input, Array<unsigned short> &array, int n) {
 	array.setSize(n, 0);
 	for (int i = 0; i < n; ++i) {
 		array[i] = (short) input.readInt(true);
@@ -806,7 +806,7 @@ void SkeletonBinary::readShortArray(DataInput &input, Vector<unsigned short> &ar
 }
 
 Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, SkeletonData &skeletonData) {
-	Vector<Timeline *> timelines;
+	Array<Timeline *> timelines;
 	timelines.ensureCapacity(input.readInt(true));
 	float scale = _scale;
 
@@ -986,7 +986,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 					break;
 				}
 				default: {
-					ContainerUtil::cleanUpVectorOfPointers(timelines);
+					ArrayUtils::deleteElements(timelines);
 					setError("Invalid slot timeline type: ", String().append(timelineType).buffer());
 					return NULL;
 				}
@@ -1042,7 +1042,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 					readTimeline(input, timelines, *(new (__FILE__, __LINE__) ShearYTimeline(frameCount, bezierCount, boneIndex)), 1);
 					break;
 				default: {
-					ContainerUtil::cleanUpVectorOfPointers(timelines);
+					ArrayUtils::deleteElements(timelines);
 					setError("Invalid bone timeline type: ", String().append(timelineType).buffer());
 					return NULL;
 				}
@@ -1161,7 +1161,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 					break;
 				}
 				default: {
-					ContainerUtil::cleanUpVectorOfPointers(timelines);
+					ArrayUtils::deleteElements(timelines);
 					setError("Invalid path constraint timeline type: ", String().append(type).buffer());
 					return NULL;
 				}
@@ -1205,7 +1205,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 					readTimeline(input, timelines, *(new (__FILE__, __LINE__) PhysicsConstraintMixTimeline(frameCount, bezierCount, index)), 1);
 					break;
 				default: {
-					ContainerUtil::cleanUpVectorOfPointers(timelines);
+					ArrayUtils::deleteElements(timelines);
 					setError("Invalid physics constraint timeline type: ", String().append(type).buffer());
 					return NULL;
 				}
@@ -1226,7 +1226,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 					readTimeline(input, timelines, *(new (__FILE__, __LINE__) SliderMixTimeline(frameCount, bezierCount, index)), 1);
 					break;
 				default: {
-					ContainerUtil::cleanUpVectorOfPointers(timelines);
+					ArrayUtils::deleteElements(timelines);
 					setError("Invalid slider timeline type: ", String().append(type).buffer());
 					return NULL;
 				}
@@ -1243,7 +1243,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 				const char *attachmentName = input.readStringRef();
 				Attachment *attachment = skin->getAttachment(slotIndex, String(attachmentName));
 				if (!attachment) {
-					ContainerUtil::cleanUpVectorOfPointers(timelines);
+					ArrayUtils::deleteElements(timelines);
 					setError("Timeline attachment not found: ", attachmentName);
 					return NULL;
 				}
@@ -1252,7 +1252,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 					case ATTACHMENT_DEFORM: {
 						VertexAttachment *vertexAttachment = static_cast<VertexAttachment *>(attachment);
 						bool weighted = vertexAttachment->_bones.size() > 0;
-						Vector<float> &vertices = vertexAttachment->_vertices;
+						Array<float> &vertices = vertexAttachment->_vertices;
 						int deformLength = weighted ? (int) vertices.size() / 3 * 2 : (int) vertices.size();
 
 						DeformTimeline *timeline = new (__FILE__, __LINE__) DeformTimeline(frameCount, input.readInt(true), slotIndex,
@@ -1260,7 +1260,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 
 						float time = input.readFloat();
 						for (int frame = 0, bezier = 0;; ++frame) {
-							Vector<float> deform;
+							Array<float> deform;
 							size_t end = (size_t) input.readInt(true);
 							if (end == 0) {
 								if (weighted) {
@@ -1315,7 +1315,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 						break;
 					}
 					default: {
-						ContainerUtil::cleanUpVectorOfPointers(timelines);
+						ArrayUtils::deleteElements(timelines);
 						setError("Invalid attachment timeline type: ", String().append(timelineType).buffer());
 						return NULL;
 					}
@@ -1332,11 +1332,11 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 		for (size_t i = 0; i < drawOrderCount; ++i) {
 			float time = input.readFloat();
 			size_t offsetCount = (size_t) input.readInt(true);
-			Vector<int> drawOrder;
+			Array<int> drawOrder;
 			drawOrder.setSize(slotCount, 0);
 			for (int ii = (int) slotCount - 1; ii >= 0; --ii)
 				drawOrder[ii] = -1;
-			Vector<int> unchanged;
+			Array<int> unchanged;
 			unchanged.setSize(slotCount - offsetCount, 0);
 			size_t originalIndex = 0, unchangedIndex = 0;
 			for (size_t ii = 0; ii < offsetCount; ++ii) {
@@ -1391,7 +1391,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 	return new (__FILE__, __LINE__) Animation(String(name), timelines, duration);
 }
 
-void SkeletonBinary::readTimeline(DataInput &input, Vector<Timeline *> &timelines, CurveTimeline1 &timeline, float scale) {
+void SkeletonBinary::readTimeline(DataInput &input, Array<Timeline *> &timelines, CurveTimeline1 &timeline, float scale) {
 	float time = input.readFloat(), value = input.readFloat() * scale;
 	for (int frame = 0, bezier = 0, frameLast = (int) timeline.getFrameCount() - 1;; frame++) {
 		timeline.setFrame(frame, time, value);
@@ -1411,7 +1411,7 @@ void SkeletonBinary::readTimeline(DataInput &input, Vector<Timeline *> &timeline
 	timelines.add(&timeline);
 }
 
-void SkeletonBinary::readTimeline(DataInput &input, Vector<Timeline *> &timelines, BoneTimeline2 &timeline, float scale) {
+void SkeletonBinary::readTimeline(DataInput &input, Array<Timeline *> &timelines, BoneTimeline2 &timeline, float scale) {
 	float time = input.readFloat(), value1 = input.readFloat() * scale, value2 = input.readFloat() * scale;
 	for (int frame = 0, bezier = 0, frameLast = (int) timeline.getFrameCount() - 1;; frame++) {
 		timeline.setFrame(frame, time, value1, value2);

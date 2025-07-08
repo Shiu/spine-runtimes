@@ -61,6 +61,6 @@ Bone *Bone::getParent() {
 	return _parent;
 }
 
-Vector<Bone *> &Bone::getChildren() {
+Array<Bone *> &Bone::getChildren() {
 	return _children;
 }

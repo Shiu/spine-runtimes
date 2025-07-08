@@ -32,7 +32,7 @@
 
 #include <spine/Attachment.h>
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 namespace spine {
 	class Slot;
@@ -68,19 +68,19 @@ namespace spine {
 		virtual void computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
 								  size_t stride = 2);
 
-		virtual void computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, Vector<float> &worldVertices, size_t offset,
+		virtual void computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, Array<float> &worldVertices, size_t offset,
 								  size_t stride = 2);
 
 		/// Gets a unique ID for this attachment.
 		int getId();
 
-		Vector<int> &getBones();
+		Array<int> &getBones();
 
-		void setBones(Vector<int> &bones);
+		void setBones(Array<int> &bones);
 
-		Vector<float> &getVertices();
+		Array<float> &getVertices();
 
-		void setVertices(Vector<float> &vertices);
+		void setVertices(Array<float> &vertices);
 
 		size_t getWorldVerticesLength();
 
@@ -93,8 +93,8 @@ namespace spine {
 		void copyTo(VertexAttachment *other);
 
 	protected:
-		Vector <int> _bones;
-		Vector<float> _vertices;
+		Array <int> _bones;
+		Array<float> _vertices;
 		size_t _worldVerticesLength;
 		Attachment *_timelineAttachment;
 

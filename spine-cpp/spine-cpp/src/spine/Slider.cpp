@@ -78,8 +78,8 @@ void Slider::update(Skeleton &skeleton, Physics physics) {
 			p._time = MathUtil::max(0.0f, p._time);
 	}
 
-	Vector<Bone *> &bones = skeleton._bones;
-	const Vector<int> &indices = animation->getBones();
+	Array<Bone *> &bones = skeleton._bones;
+	const Array<int> &indices = animation->getBones();
 	for (size_t i = 0, n = indices.size(); i < n; i++)
 		bones[indices[i]]->_applied->modifyLocal(skeleton);
 
@@ -91,8 +91,8 @@ void Slider::sort(Skeleton &skeleton) {
 	if (_bone != NULL && !_data._local) skeleton.sortBone(_bone);
 	skeleton._updateCache.add(this);
 
-	Vector<Bone *> &bones = skeleton._bones;
-	const Vector<int> &indices = _data._animation->getBones();
+	Array<Bone *> &bones = skeleton._bones;
+	const Array<int> &indices = _data._animation->getBones();
 	for (size_t i = 0, n = indices.size(); i < n; i++) {
 		Bone *bone = bones[indices[i]];
 		bone->_sorted = false;
@@ -100,10 +100,10 @@ void Slider::sort(Skeleton &skeleton) {
 		skeleton.constrained(*bone);
 	}
 
-	Vector<Timeline *> &timelines = _data._animation->getTimelines();
-	Vector<Slot *> &slots = skeleton._slots;
-	Vector<Constraint *> &constraints = skeleton._constraints;
-	Vector<PhysicsConstraint *> &physics = skeleton._physics;
+	Array<Timeline *> &timelines = _data._animation->getTimelines();
+	Array<Slot *> &slots = skeleton._slots;
+	Array<Constraint *> &constraints = skeleton._constraints;
+	Array<PhysicsConstraint *> &physics = skeleton._physics;
 	size_t physicsCount = physics.size();
 	for (size_t i = 0, n = timelines.size(); i < n; i++) {
 		Timeline *t = timelines[i];

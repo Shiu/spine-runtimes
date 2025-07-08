@@ -33,7 +33,7 @@
 #include <spine/Posed.h>
 #include <spine/SlotData.h>
 #include <spine/SlotPose.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/Color.h>
 
 namespace spine {

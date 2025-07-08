@@ -53,7 +53,7 @@ PathConstraintSpacingTimeline::PathConstraintSpacingTimeline(size_t frameCount, 
 PathConstraintSpacingTimeline::~PathConstraintSpacingTimeline() {
 }
 
-void PathConstraintSpacingTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents,
+void PathConstraintSpacingTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents,
 										  float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);

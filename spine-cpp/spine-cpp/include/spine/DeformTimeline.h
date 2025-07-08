@@ -47,10 +47,10 @@ namespace spine {
 		explicit DeformTimeline(size_t frameCount, size_t bezierCount, int slotIndex, VertexAttachment *attachment);
 
 		/// Sets the time and vertices for the specified frame.
-		void setFrame(int frameIndex, float time, Vector<float> &vertices);
+		void setFrame(int frameIndex, float time, Array<float> &vertices);
 
 		/// The vertices for each frame.
-		Vector <Vector<float>> &getVertices();
+		Array <Array<float>> &getVertices();
 
 		/// The attachment that will be deformed.
 		VertexAttachment *getAttachment();
@@ -69,7 +69,7 @@ namespace spine {
 		void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) override;
 
 	private:
-		Vector <Vector<float>> _vertices;
+		Array <Array<float>> _vertices;
 
 		VertexAttachment *_attachment;
 	};

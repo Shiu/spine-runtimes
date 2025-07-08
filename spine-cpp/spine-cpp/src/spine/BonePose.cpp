@@ -257,7 +257,7 @@ void BonePose::modifyWorld(int update) {
 }
 
 void BonePose::resetWorld(int update) {
-	Vector<Bone *> &children = _bone->getChildren();
+	Array<Bone *> &children = _bone->getChildren();
 	for (size_t i = 0, n = children.size(); i < n; i++) {
 		BonePose &child = children[i]->getAppliedPose();
 		if (child._world == update) {

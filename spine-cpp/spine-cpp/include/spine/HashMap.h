@@ -30,7 +30,7 @@
 #ifndef Spine_HashMap_h
 #define Spine_HashMap_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/SpineObject.h>
 
 // Required for new with line number and file name in MSVC
@@ -131,7 +131,7 @@ namespace spine {
 			}
 		}
 
-		bool addAll(Vector <K> &keys, const V &value) {
+		bool addAll(Array <K> &keys, const V &value) {
 			size_t oldSize = _size;
 			for (size_t i = 0; i < keys.size(); i++) {
 				put(keys[i], value);

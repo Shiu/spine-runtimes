@@ -34,7 +34,7 @@
 #include <spine/RTTI.h>
 #include <spine/Pose.h>
 #include <spine/Color.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 namespace spine {
 	class Attachment;
@@ -60,7 +60,7 @@ namespace spine {
 		bool _hasDarkColor;
 		Attachment* _attachment;
 		int _sequenceIndex;
-		Vector<float> _deform;
+		Array<float> _deform;
 
 	public:
 		SlotPose();
@@ -98,7 +98,7 @@ namespace spine {
 		/// weighted mesh, the entries are an offset for each vertex which will be added to the mesh's local vertex positions.
 		///
 		/// See VertexAttachment::computeWorldVertices() and DeformTimeline.
-		Vector<float>& getDeform();
+		Array<float>& getDeform();
 	};
 }
 

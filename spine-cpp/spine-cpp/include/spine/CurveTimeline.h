@@ -31,7 +31,7 @@
 #define Spine_CurveTimeline_h
 
 #include <spine/Timeline.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 namespace spine {
 	/// Base class for frames that use an interpolation bezier curve.
@@ -53,7 +53,7 @@ namespace spine {
 
 		float getBezierValue(float time, size_t frame, size_t valueOffset, size_t i);
 
-		Vector<float> &getCurves();
+		Array<float> &getCurves();
 
 	protected:
 		static const int LINEAR = 0;
@@ -61,7 +61,7 @@ namespace spine {
 		static const int BEZIER = 2;
 		static const int BEZIER_SIZE = 18;
 
-		Vector<float> _curves; // type, x, y, ...
+		Array<float> _curves; // type, x, y, ...
 	};
 
 	/// The base class for a CurveTimeline that sets one property.

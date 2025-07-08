@@ -35,13 +35,13 @@
 #include <spine/RotateTimeline.h>
 #include <spine/TranslateTimeline.h>
 
-#include <spine/ContainerUtil.h>
+#include <spine/ArrayUtils.h>
 
 #include <stdint.h>
 
 using namespace spine;
 
-Animation::Animation(const String &name, Vector<Timeline *> &timelines, float duration) : _timelines(),
+Animation::Animation(const String &name, Array<Timeline *> &timelines, float duration) : _timelines(),
 																						  _timelineIds(),
 																						  _bones(),
 																						  _duration(duration),
@@ -49,7 +49,7 @@ Animation::Animation(const String &name, Vector<Timeline *> &timelines, float du
 	setTimelines(timelines);
 }
 
-bool Animation::hasTimeline(Vector<PropertyId> &ids) {
+bool Animation::hasTimeline(Array<PropertyId> &ids) {
 	for (size_t i = 0; i < ids.size(); i++) {
 		if (_timelineIds.containsKey(ids[i])) return true;
 	}
@@ -57,10 +57,10 @@ bool Animation::hasTimeline(Vector<PropertyId> &ids) {
 }
 
 Animation::~Animation() {
-	ContainerUtil::cleanUpVectorOfPointers(_timelines);
+	ArrayUtils::deleteElements(_timelines);
 }
 
-void Animation::apply(Skeleton &skeleton, float lastTime, float time, bool loop, Vector<Event *> *pEvents, float alpha,
+void Animation::apply(Skeleton &skeleton, float lastTime, float time, bool loop, Array<Event *> *pEvents, float alpha,
 					  MixBlend blend, MixDirection direction, bool appliedPose) {
 	if (loop && _duration != 0) {
 		time = MathUtil::fmod(time, _duration);
@@ -78,11 +78,11 @@ const String &Animation::getName() {
 	return _name;
 }
 
-const Vector<int> &Animation::getBones() {
+const Array<int> &Animation::getBones() {
 	return _bones;
 }
 
-Vector<Timeline *> &Animation::getTimelines() {
+Array<Timeline *> &Animation::getTimelines() {
 	return _timelines;
 }
 
@@ -94,7 +94,7 @@ void Animation::setDuration(float inValue) {
 	_duration = inValue;
 }
 
-int Animation::search(Vector<float> &frames, float target) {
+int Animation::search(Array<float> &frames, float target) {
 	size_t n = (int) frames.size();
 	for (size_t i = 1; i < n; i++) {
 		if (frames[i] > target) return (int) (i - 1);
@@ -102,14 +102,14 @@ int Animation::search(Vector<float> &frames, float target) {
 	return (int) (n - 1);
 }
 
-int Animation::search(Vector<float> &frames, float target, int step) {
+int Animation::search(Array<float> &frames, float target, int step) {
 	size_t n = frames.size();
 	for (size_t i = step; i < n; i += step)
 		if (frames[i] > target) return (int) (i - step);
 	return (int) (n - step);
 }
 
-void Animation::setTimelines(Vector<Timeline *> &timelines) {
+void Animation::setTimelines(Array<Timeline *> &timelines) {
 	_timelines = timelines;
 
 	size_t n = timelines.size();
@@ -119,7 +119,7 @@ void Animation::setTimelines(Vector<Timeline *> &timelines) {
 	HashMap<int, bool> boneSet;
 	for (size_t i = 0; i < n; i++) {
 		Timeline *timeline = timelines[i];
-		Vector<PropertyId> &propertyIds = timeline->getPropertyIds();
+		Array<PropertyId> &propertyIds = timeline->getPropertyIds();
 		for (size_t ii = 0; ii < propertyIds.size(); ii++) {
 			_timelineIds.put(propertyIds[ii], true);
 		}

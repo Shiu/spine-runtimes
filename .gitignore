@@ -240,3 +240,5 @@ docs/
 out.json
 spine-cpp/extraction.log
 extraction.log
+spine-c-new/codegen/dist
+spine-c-new/codegen/all-spine-types.json

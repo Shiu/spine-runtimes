@@ -49,7 +49,7 @@ SkeletonBounds::~SkeletonBounds() {
 }
 
 void SkeletonBounds::update(Skeleton &skeleton, bool updateAabb) {
-	Vector<Slot *> &slots = skeleton.getSlots();
+	Array<Slot *> &slots = skeleton.getSlots();
 	size_t slotCount = slots.size();
 
 	_boundingBoxes.clear();
@@ -123,7 +123,7 @@ bool SkeletonBounds::aabbIntersectsSkeleton(SkeletonBounds &bounds) {
 }
 
 bool SkeletonBounds::containsPoint(spine::Polygon *polygon, float x, float y) {
-	Vector<float> &vertices = polygon->_vertices;
+	Array<float> &vertices = polygon->_vertices;
 	int nn = polygon->_count;
 
 	int prevIndex = nn - 2;
@@ -155,7 +155,7 @@ BoundingBoxAttachment *SkeletonBounds::intersectsSegment(float x1, float y1, flo
 }
 
 bool SkeletonBounds::intersectsSegment(spine::Polygon *polygon, float x1, float y1, float x2, float y2) {
-	Vector<float> &vertices = polygon->_vertices;
+	Array<float> &vertices = polygon->_vertices;
 	size_t nn = polygon->_count;
 
 	float width12 = x1 - x2, height12 = y1 - y2;
@@ -190,11 +190,11 @@ BoundingBoxAttachment *SkeletonBounds::getBoundingBox(Polygon *polygon) {
 	return index == -1 ? NULL : _boundingBoxes[index];
 }
 
-Vector<spine::Polygon *> &SkeletonBounds::getPolygons() {
+Array<spine::Polygon *> &SkeletonBounds::getPolygons() {
 	return _polygons;
 }
 
-Vector<BoundingBoxAttachment *> &SkeletonBounds::getBoundingBoxes() {
+Array<BoundingBoxAttachment *> &SkeletonBounds::getBoundingBoxes() {
 	return _boundingBoxes;
 }
 
@@ -230,7 +230,7 @@ void SkeletonBounds::aabbCompute() {
 
 	for (size_t i = 0, n = _polygons.size(); i < n; ++i) {
 		spine::Polygon *polygon = _polygons[i];
-		Vector<float> &vertices = polygon->_vertices;
+		Array<float> &vertices = polygon->_vertices;
 		for (int ii = 0, nn = polygon->_count; ii < nn; ii += 2) {
 			float x = vertices[ii];
 			float y = vertices[ii + 1];

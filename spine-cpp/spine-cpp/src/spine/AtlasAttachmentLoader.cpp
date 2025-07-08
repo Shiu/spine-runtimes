@@ -44,7 +44,7 @@ AtlasAttachmentLoader::AtlasAttachmentLoader(Atlas *atlas) : AttachmentLoader(),
 }
 
 bool loadSequence(Atlas *atlas, const String &basePath, Sequence *sequence) {
-	Vector<TextureRegion *> &regions = sequence->getRegions();
+	Array<TextureRegion *> &regions = sequence->getRegions();
 	for (int i = 0, n = (int) regions.size(); i < n; i++) {
 		String path = sequence->getPath(basePath, i);
 		regions[i] = atlas->findRegion(path);

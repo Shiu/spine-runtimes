@@ -45,7 +45,7 @@
 #include <spine/BoundingBoxAttachment.h>
 #include <spine/ClippingAttachment.h>
 #include <spine/ColorTimeline.h>
-#include <spine/ContainerUtil.h>
+#include <spine/ArrayUtils.h>
 #include <spine/DeformTimeline.h>
 #include <spine/DrawOrderTimeline.h>
 #include <spine/Event.h>
@@ -117,7 +117,7 @@ SkeletonJson::SkeletonJson(AttachmentLoader *attachmentLoader, bool ownsLoader) 
 }
 
 SkeletonJson::~SkeletonJson() {
-	ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
+	ArrayUtils::deleteElements(_linkedMeshes);
 
 	if (_ownsLoader) delete _attachmentLoader;
 }
@@ -554,7 +554,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 		linkedMesh->_mesh->setParentMesh(static_cast<MeshAttachment *>(parent));
 		if (linkedMesh->_mesh->_region != NULL) linkedMesh->_mesh->updateRegion();
 	}
-	ContainerUtil::cleanUpVectorOfPointers(_linkedMeshes);
+	ArrayUtils::deleteElements(_linkedMeshes);
 	_linkedMeshes.clear();
 
 	/* Events. */
@@ -669,17 +669,17 @@ Attachment *SkeletonJson::readAttachment(Json *map, Skin *skin, int slotIndex, c
 				return mesh;
 			}
 
-			Vector<float> uvs;
+			Array<float> uvs;
 			if (!Json::asArray(Json::getItem(map, "uvs"), uvs)) return NULL;
 			readVertices(map, mesh, uvs.size());
-			Vector<unsigned short> triangles;
+			Array<unsigned short> triangles;
 			if (!Json::asArray(Json::getItem(map, "triangles"), triangles)) return NULL;
 			mesh->_triangles.clearAndAddAll(triangles);
 			mesh->_regionUVs.clearAndAddAll(uvs);
 			if (mesh->_region != NULL) mesh->updateRegion();
 
 			if (Json::getInt(map, "hull", 0)) mesh->setHullLength(Json::getInt(map, "hull", 0) << 1);
-			Vector<unsigned short> edges;
+			Array<unsigned short> edges;
 			Json::asArray(Json::getItem(map, "edges"), edges);
 			if (edges.size() > 0) mesh->_edges.clearAndAddAll(edges);
 			return mesh;
@@ -745,7 +745,7 @@ Sequence *SkeletonJson::readSequence(Json *item) {
 
 void SkeletonJson::readVertices(Json *map, VertexAttachment *attachment, size_t verticesLength) {
 	attachment->setWorldVerticesLength(verticesLength);
-	Vector<float> vertices;
+	Array<float> vertices;
 	if (!Json::asArray(Json::getItem(map, "vertices"), vertices)) return;
 	if (verticesLength == vertices.size()) {
 		if (_scale != 1) {
@@ -774,7 +774,7 @@ void SkeletonJson::readVertices(Json *map, VertexAttachment *attachment, size_t 
 }
 
 Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
-	Vector<Timeline *> timelines;
+	Array<Timeline *> timelines;
 
 	// Slot timelines.
 	for (Json *slotMap = Json::getItem(map, "slots") ? Json::getItem(map, "slots")->_child : NULL; slotMap; slotMap = slotMap->_next) {
@@ -957,7 +957,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 				}
 				timelines.add(timeline);
 			} else {
-				ContainerUtil::cleanUpVectorOfPointers(timelines);
+				ArrayUtils::deleteElements(timelines);
 				return NULL;
 			}
 		}
@@ -965,9 +965,9 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 
 	// Bone timelines.
 	for (Json *boneMap = Json::getItem(map, "bones") ? Json::getItem(map, "bones")->_child : NULL; boneMap; boneMap = boneMap->_next) {
-		int boneIndex = ContainerUtil::findIndexWithName(skeletonData->_bones, boneMap->_name);
+		int boneIndex = ArrayUtils::findIndexWithName(skeletonData->_bones, boneMap->_name);
 		if (boneIndex == -1) {
-			ContainerUtil::cleanUpVectorOfPointers(timelines);
+			ArrayUtils::deleteElements(timelines);
 			return NULL;
 		}
 
@@ -1006,7 +1006,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 				}
 				timelines.add(timeline);
 			} else {
-				ContainerUtil::cleanUpVectorOfPointers(timelines);
+				ArrayUtils::deleteElements(timelines);
 				return NULL;
 			}
 		}
@@ -1018,7 +1018,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 		if (keyMap == NULL) continue;
 		IkConstraintData *constraint = skeletonData->findIkConstraint(timelineMap->_name);
 		if (!constraint) {
-			ContainerUtil::cleanUpVectorOfPointers(timelines);
+			ArrayUtils::deleteElements(timelines);
 			return NULL;
 		}
 		int constraintIndex = skeletonData->_ikConstraints.indexOf(constraint);
@@ -1058,7 +1058,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 		if (keyMap == NULL) continue;
 		TransformConstraintData *constraint = skeletonData->findTransformConstraint(timelineMap->_name);
 		if (!constraint) {
-			ContainerUtil::cleanUpVectorOfPointers(timelines);
+			ArrayUtils::deleteElements(timelines);
 			return NULL;
 		}
 		int constraintIndex = skeletonData->_transformConstraints.indexOf(constraint);
@@ -1107,7 +1107,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 	for (Json *constraintMap = Json::getItem(map, "path") ? Json::getItem(map, "path")->_child : NULL; constraintMap; constraintMap = constraintMap->_next) {
 		PathConstraintData *constraint = skeletonData->findPathConstraint(constraintMap->_name);
 		if (!constraint) {
-			ContainerUtil::cleanUpVectorOfPointers(timelines);
+			ArrayUtils::deleteElements(timelines);
 			return NULL;
 		}
 		int index = skeletonData->_pathConstraints.indexOf(constraint);
@@ -1168,7 +1168,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 		if (constraintMap->_name && strlen(constraintMap->_name) > 0) {
 			PhysicsConstraintData *constraint = skeletonData->findConstraint<PhysicsConstraintData>(constraintMap->_name);
 			if (!constraint) {
-				ContainerUtil::cleanUpVectorOfPointers(timelines);
+				ArrayUtils::deleteElements(timelines);
 				return NULL;
 			}
 			index = skeletonData->_physicsConstraints.indexOf(constraint);
@@ -1215,7 +1215,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 	for (Json *constraintMap = Json::getItem(map, "slider") ? Json::getItem(map, "slider")->_child : NULL; constraintMap; constraintMap = constraintMap->_next) {
 		SliderData *constraint = skeletonData->findConstraint<SliderData>(constraintMap->_name);
 		if (!constraint) {
-			ContainerUtil::cleanUpVectorOfPointers(timelines);
+			ArrayUtils::deleteElements(timelines);
 			return NULL;
 		}
 		int index = skeletonData->_constraints.indexOf(constraint);
@@ -1236,7 +1236,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 	for (Json *attachmentsMap = Json::getItem(map, "attachments") ? Json::getItem(map, "attachments")->_child : NULL; attachmentsMap; attachmentsMap = attachmentsMap->_next) {
 		Skin *skin = skeletonData->findSkin(attachmentsMap->_name);
 		if (!skin) {
-			ContainerUtil::cleanUpVectorOfPointers(timelines);
+			ArrayUtils::deleteElements(timelines);
 			return NULL;
 		}
 		for (Json *slotMap = attachmentsMap->_child; slotMap; slotMap = slotMap->_next) {
@@ -1245,7 +1245,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 			for (Json *attachmentMap = slotMap->_child; attachmentMap; attachmentMap = attachmentMap->_next) {
 				Attachment *attachment = skin->getAttachment(slotIndex, attachmentMap->_name);
 				if (!attachment) {
-					ContainerUtil::cleanUpVectorOfPointers(timelines);
+					ArrayUtils::deleteElements(timelines);
 					return NULL;
 				}
 				for (Json *timelineMap = attachmentMap->_child; timelineMap; timelineMap = timelineMap->_next) {
@@ -1255,14 +1255,14 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 					if (timelineName == "deform") {
 						VertexAttachment *vertexAttachment = static_cast<VertexAttachment *>(attachment);
 						bool weighted = vertexAttachment->_bones.size() != 0;
-						Vector<float> &vertices = vertexAttachment->_vertices;
+						Array<float> &vertices = vertexAttachment->_vertices;
 						int deformLength = weighted ? (int) vertices.size() / 3 * 2 : (int) vertices.size();
 
 						DeformTimeline *timeline = new (__FILE__, __LINE__) DeformTimeline(frames,
 																						   frames, slotIndex, vertexAttachment);
 						float time = Json::getFloat(keyMap, "time", 0);
 						for (int frame = 0, bezier = 0;; frame++) {
-							Vector<float> deform;
+							Array<float> deform;
 							Json *verticesValue = Json::getItem(keyMap, "vertices");
 							if (!verticesValue) {
 								if (weighted) {
@@ -1324,19 +1324,19 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 		int slotCount = skeletonData->_slots.size();
 		int frame = 0;
 		for (Json *keyMap = drawOrder->_child; keyMap; keyMap = keyMap->_next, ++frame) {
-			Vector<int> drawOrder2;
+			Array<int> drawOrder2;
 			Json *offsets = Json::getItem(keyMap, "offsets");
 			if (offsets) {
 				drawOrder2.setSize(slotCount, 0);
 				for (int i = slotCount - 1; i >= 0; i--)
 					drawOrder2[i] = -1;
-				Vector<int> unchanged;
+				Array<int> unchanged;
 				unchanged.setSize(slotCount - offsets->_size, 0);
 				int originalIndex = 0, unchangedIndex = 0;
 				for (Json *offsetMap = offsets->_child; offsetMap; offsetMap = offsetMap->_next) {
 					SlotData *slot = skeletonData->findSlot(Json::getString(offsetMap, "slot", 0));
 					if (!slot) {
-						ContainerUtil::cleanUpVectorOfPointers(timelines);
+						ArrayUtils::deleteElements(timelines);
 						return NULL;
 					}
 					/* Collect unchanged items. */
@@ -1366,7 +1366,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 		for (Json *keyMap = events->_child; keyMap; keyMap = keyMap->_next, ++frame) {
 			EventData *eventData = skeletonData->findEvent(Json::getString(keyMap, "name", 0));
 			if (!eventData) {
-				ContainerUtil::cleanUpVectorOfPointers(timelines);
+				ArrayUtils::deleteElements(timelines);
 				return NULL;
 			}
 			Event *event = new (__FILE__, __LINE__) Event(Json::getFloat(keyMap, "time", 0), *eventData);
@@ -1388,7 +1388,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 	return new (__FILE__, __LINE__) Animation(String(map->_name), timelines, duration);
 }
 
-void SkeletonJson::readTimeline(Vector<Timeline *> &timelines, Json *keyMap, CurveTimeline1 *timeline, float defaultValue, float scale) {
+void SkeletonJson::readTimeline(Array<Timeline *> &timelines, Json *keyMap, CurveTimeline1 *timeline, float defaultValue, float scale) {
 	float time = Json::getFloat(keyMap, "time", 0), value = Json::getFloat(keyMap, "value", defaultValue) * scale;
 	for (int frame = 0, bezier = 0;; frame++) {
 		timeline->setFrame(frame, time, value);
@@ -1407,7 +1407,7 @@ void SkeletonJson::readTimeline(Vector<Timeline *> &timelines, Json *keyMap, Cur
 	}
 }
 
-void SkeletonJson::readTimeline(Vector<Timeline *> &timelines, Json *keyMap, CurveTimeline2 *timeline, const char *name1, const char *name2,
+void SkeletonJson::readTimeline(Array<Timeline *> &timelines, Json *keyMap, CurveTimeline2 *timeline, const char *name1, const char *name2,
 									 float defaultValue, float scale) {
 	float time = Json::getFloat(keyMap, "time", 0);
 	float value1 = Json::getFloat(keyMap, name1, defaultValue) * scale, value2 = Json::getFloat(keyMap, name2, defaultValue) * scale;
@@ -1457,10 +1457,10 @@ void SkeletonJson::setBezier(CurveTimeline *timeline, int frame, int value, int 
 	timeline->setBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
 }
 
-int SkeletonJson::findSlotIndex(SkeletonData *skeletonData, const String &slotName, Vector<Timeline *> timelines) {
-	int slotIndex = ContainerUtil::findIndexWithName(skeletonData->getSlots(), slotName);
+int SkeletonJson::findSlotIndex(SkeletonData *skeletonData, const String &slotName, Array<Timeline *> timelines) {
+	int slotIndex = ArrayUtils::findIndexWithName(skeletonData->getSlots(), slotName);
 	if (slotIndex == -1) {
-		ContainerUtil::cleanUpVectorOfPointers(timelines);
+		ArrayUtils::deleteElements(timelines);
 		setError(NULL, "Slot not found: ", slotName);
 	}
 	return slotIndex;

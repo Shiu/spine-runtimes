@@ -127,7 +127,7 @@ void RegionAttachment::updateRegion() {
 	}
 }
 
-void RegionAttachment::computeWorldVertices(Slot &slot, Vector<float> &worldVertices, size_t offset, size_t stride) {
+void RegionAttachment::computeWorldVertices(Slot &slot, Array<float> &worldVertices, size_t offset, size_t stride) {
 	assert(worldVertices.size() >= (offset + 8));
 	computeWorldVertices(slot, worldVertices.buffer(), offset, stride);
 }
@@ -244,11 +244,11 @@ void RegionAttachment::setSequence(Sequence *sequence) {
 	_sequence = sequence;
 }
 
-Vector<float> &RegionAttachment::getOffset() {
+Array<float> &RegionAttachment::getOffset() {
 	return _vertexOffset;
 }
 
-Vector<float> &RegionAttachment::getUVs() {
+Array<float> &RegionAttachment::getUVs() {
 	return _uvs;
 }
 

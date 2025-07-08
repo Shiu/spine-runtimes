@@ -87,7 +87,7 @@ IkConstraintData &IkConstraint::getData() {
 	return _data;
 }
 
-Vector<BonePose *> &IkConstraint::getBones() {
+Array<BonePose *> &IkConstraint::getBones() {
 	return _bones;
 }
 

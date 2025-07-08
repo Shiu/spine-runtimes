@@ -30,7 +30,7 @@
 #ifndef Spine_Sequence_h
 #define Spine_Sequence_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/SpineString.h>
 #include <spine/TextureRegion.h>
 #include <spine/RTTI.h>
@@ -74,12 +74,12 @@ namespace spine {
 
 		void setSetupIndex(int setupIndex) { _setupIndex = setupIndex; }
 
-		Vector<TextureRegion *> &getRegions() { return _regions; }
+		Array<TextureRegion *> &getRegions() { return _regions; }
 
 	private:
 		static int _nextID;
 		int _id;
-		Vector<TextureRegion *> _regions;
+		Array<TextureRegion *> _regions;
 		int _start;
 		int _digits;
 		int _setupIndex;

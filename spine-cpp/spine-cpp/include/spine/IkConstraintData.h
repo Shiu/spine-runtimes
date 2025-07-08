@@ -30,7 +30,7 @@
 #ifndef Spine_IkConstraintData_h
 #define Spine_IkConstraintData_h
 
-#include <spine/Vector.h>
+#include <spine/Array.h>
 #include <spine/SpineObject.h>
 #include <spine/SpineString.h>
 #include <spine/ConstraintData.h>
@@ -60,7 +60,7 @@ namespace spine {
 		virtual Constraint* create(Skeleton& skeleton) override;
 
 		/// The bones that are constrained by this IK Constraint.
-		Vector<BoneData *> &getBones();
+		Array<BoneData *> &getBones();
 
 		/// The bone that is the IK target.
 		BoneData *getTarget();
@@ -73,7 +73,7 @@ namespace spine {
 		void setUniform(bool uniform);
 
 	private:
-		Vector<BoneData *> _bones;
+		Array<BoneData *> _bones;
 		BoneData *_target;
 		bool _uniform;
 	};

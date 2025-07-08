@@ -53,7 +53,7 @@ PathConstraintPositionTimeline::PathConstraintPositionTimeline(size_t frameCount
 PathConstraintPositionTimeline::~PathConstraintPositionTimeline() {
 }
 
-void PathConstraintPositionTimeline::apply(Skeleton &skeleton, float lastTime, float time, Vector<Event *> *pEvents,
+void PathConstraintPositionTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents,
 										   float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);

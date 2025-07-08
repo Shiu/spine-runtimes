@@ -34,7 +34,7 @@
 #include <spine/ConstraintData.h>
 #include <spine/PathConstraintData.h>
 #include <spine/PathConstraintPose.h>
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 namespace spine {
 	class Skeleton;
@@ -74,7 +74,7 @@ namespace spine {
 		virtual bool isSourceActive() override;
 
 		/// The bones that will be modified by this path constraint.
-		Vector<BonePose *> &getBones();
+		Array<BonePose *> &getBones();
 
 		/// The slot whose path attachment will be used to constrained the bones.
 		Slot *getSlot();
@@ -86,24 +86,24 @@ namespace spine {
 
 
 	private:
-		Vector<BonePose *> _bones;
+		Array<BonePose *> _bones;
 		Slot *_slot;
 
-		Vector<float> _spaces;
-		Vector<float> _positions;
-		Vector<float> _world;
-		Vector<float> _curves;
-		Vector<float> _lengths;
-		Vector<float> _segments;
+		Array<float> _spaces;
+		Array<float> _positions;
+		Array<float> _world;
+		Array<float> _curves;
+		Array<float> _lengths;
+		Array<float> _segments;
 
-		Vector<float> &computeWorldPositions(Skeleton& skeleton, PathAttachment &path, int spacesCount, bool tangents);
+		Array<float> &computeWorldPositions(Skeleton& skeleton, PathAttachment &path, int spacesCount, bool tangents);
 
-		void addBeforePosition(float p, Vector<float> &temp, int i, Vector<float> &output, int o);
+		void addBeforePosition(float p, Array<float> &temp, int i, Array<float> &output, int o);
 
-		void addAfterPosition(float p, Vector<float> &temp, int i, Vector<float> &output, int o);
+		void addAfterPosition(float p, Array<float> &temp, int i, Array<float> &output, int o);
 
 		void addCurvePosition(float p, float x1, float y1, float cx1, float cy1, float cx2, float cy2, float x2, float y2,
-						 Vector<float> &output, int o, bool tangents);
+						 Array<float> &output, int o, bool tangents);
 
 		void sortPathSlot(Skeleton& skeleton, Skin& skin, int slotIndex, Bone& slotBone);
 

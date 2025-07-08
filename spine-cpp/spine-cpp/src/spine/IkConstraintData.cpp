@@ -41,7 +41,7 @@ IkConstraintData::IkConstraintData(const String &name) : ConstraintDataGeneric<I
 														 _uniform(false) {
 }
 
-Vector<BoneData *> &IkConstraintData::getBones() {
+Array<BoneData *> &IkConstraintData::getBones() {
 	return _bones;
 }
 
