@@ -18,18 +18,18 @@ export interface ArraySpecialization {
 export function scanArraySpecializations(typesJson: SpineTypes, exclusions: any[], enumTypes: Set<string>): ArraySpecialization[] {
     const arrayTypes = new Set<string>();
     const warnings: string[] = [];
-    
+
     // Extract Array<T> from a type string
     function extractArrayTypes(typeStr: string | undefined) {
         if (!typeStr) return;
-        
+
         const regex = /Array<([^>]+)>/g;
         let match;
         while ((match = regex.exec(typeStr)) !== null) {
             arrayTypes.add(match[0]);
         }
     }
-    
+
     // Process all types
     for (const header of Object.keys(typesJson)) {
         for (const type of typesJson[header]) {
@@ -37,62 +37,69 @@ export function scanArraySpecializations(typesJson: SpineTypes, exclusions: any[
             if (isTypeExcluded(type.name, exclusions) || type.isTemplate) {
                 continue;
             }
-            
+
             if (!type.members) continue;
-            
+
             for (const member of type.members) {
-                extractArrayTypes(member.returnType);
-                extractArrayTypes(member.type);
-                
-                if (member.parameters) {
-                    for (const param of member.parameters) {
-                        extractArrayTypes(param.type);
-                    }
+                switch (member.kind) {
+                    case 'method':
+                        extractArrayTypes(member.returnType);
+                        if (member.parameters) {
+                            for (const param of member.parameters) {
+                                extractArrayTypes(param.type);
+                            }
+                        }
+                        break;
+                    case 'field':
+                        extractArrayTypes(member.type);
+                        break;
+                    default:
+                        break;
                 }
             }
         }
     }
-    
+
     // Convert to specializations
     const specializations: ArraySpecialization[] = [];
-    
+
     for (const arrayType of arrayTypes) {
         const elementMatch = arrayType.match(/Array<(.+)>$/);
         if (!elementMatch) continue;
-        
+
         const elementType = elementMatch[1].trim();
-        
+
         // Skip template placeholders
         if (elementType === 'T' || elementType === 'K') {
             continue;
         }
-        
+
         // Handle nested arrays - emit warning
         if (elementType.startsWith('Array<')) {
             warnings.push(`Skipping nested array: ${arrayType} - manual handling required`);
             continue;
         }
-        
+
         // Handle String arrays - emit warning
         if (elementType === 'String') {
             warnings.push(`Skipping String array: ${arrayType} - should be fixed in spine-cpp`);
             continue;
         }
-        
+
         // Determine type characteristics
         const isPointer = elementType.endsWith('*');
         let cleanElementType = isPointer ? elementType.slice(0, -1).trim() : elementType;
-        
+
         // Remove "class " or "struct " prefix if present
         cleanElementType = cleanElementType.replace(/^(?:class|struct)\s+/, '');
         const isEnum = enumTypes.has(cleanElementType) || cleanElementType === 'PropertyId';
-        const isPrimitive = !isPointer && !isEnum && 
+        const isPrimitive = !isPointer && !isEnum &&
             ['int', 'float', 'double', 'bool', 'char', 'unsigned short', 'size_t'].includes(cleanElementType);
-        
+
         // Generate C type names
         let cTypeName: string;
         let cElementType: string;
-        
+
         if (isPrimitive) {
             // Map primitive types
             const typeMap: { [key: string]: string } = {
@@ -127,7 +134,7 @@ export function scanArraySpecializations(typesJson: SpineTypes, exclusions: any[
             warnings.push(`Unknown array element type: ${elementType}`);
             continue;
         }
-        
+
         specializations.push({
             cppType: arrayType,
             elementType: elementType,
@@ -138,7 +145,7 @@ export function scanArraySpecializations(typesJson: SpineTypes, exclusions: any[
             isPrimitive: isPrimitive
         });
     }
-    
+
     // Print warnings
     if (warnings.length > 0) {
         console.log('\nArray Generation Warnings:');
@@ -147,9 +154,9 @@ export function scanArraySpecializations(typesJson: SpineTypes, exclusions: any[
         }
         console.log('');
     }
-    
+
     // Sort by C type name for consistent output
     specializations.sort((a, b) => a.cTypeName.localeCompare(b.cTypeName));
-    
+
     return specializations;
 }

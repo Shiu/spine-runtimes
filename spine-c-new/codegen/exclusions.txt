@@ -48,7 +48,7 @@ method: EventData::setAudioPath
 method: EventData::setVolume
 method: EventData::setBalance
 
-# Vector<String> methods need special handling
+# Array<String> methods need special handling
 method: AttachmentTimeline.getAttachmentNames
 
 # BoneLocal/BonePose setScale is overloaded in a confusing way

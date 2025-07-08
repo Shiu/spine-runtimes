@@ -1,21 +1,48 @@
 export interface Parameter {
     name: string;
     type: string;
-    defaultValue?: string;
 }
 
-export interface Member {
-    kind: 'field' | 'method' | 'constructor' | 'destructor';
+export type Field = {
+    kind: 'field';
     name: string;
-    type?: string; // For fields
-    returnType?: string; // For methods
+    type: string;
+    isStatic?: boolean;
+    fromSupertype?: string;
+}
+
+export type Method = {
+    kind: 'method';
+    name: string;
+    returnType: string;
     parameters?: Parameter[];
     isStatic?: boolean;
     isVirtual?: boolean;
     isPure?: boolean;
     isConst?: boolean;
-    fromSupertype?: string; // Indicates this member was inherited
+    fromSupertype?: string;
 }
+
+export type Constructor = {
+    kind: 'constructor';
+    name: string;
+    parameters?: Parameter[];
+    fromSupertype?: string;
+}
+
+export type Destructor = {
+    kind: 'destructor';
+    name: string;
+    isVirtual?: boolean;
+    isPure?: boolean;
+    fromSupertype?: string;
+};
+
+export type Member =
+    | Field
+    | Method
+    | Constructor
+    | Destructor
 
 export interface EnumValue {
     name: string;
@@ -41,7 +68,7 @@ export interface SpineTypes {
     [header: string]: Type[];
 }
 
-export type Exclusion = 
+export type Exclusion =
     | {
         kind: 'type';
         typeName: string;
@@ -53,6 +80,17 @@ export type Exclusion =
         isConst?: boolean;  // Whether the method is const (e.g., void foo() const), NOT whether return type is const
     };
 
+/**
+ * Converts a PascalCase or camelCase name to snake_case.
+ *
+ * @param name The name to convert
+ * @returns The snake_case version
+ *
+ * Examples:
+ * - "AnimationState" → "animation_state"
+ * - "getRTTI" → "get_rtti"
+ * - "IKConstraint" → "ik_constraint"
+ */
 export function toSnakeCase(name: string): string {
     // Handle acronyms and consecutive capitals
     let result = name.replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2');
@@ -61,140 +99,135 @@ export function toSnakeCase(name: string): string {
     return result.toLowerCase();
 }
 
+/**
+ * Generates a C function name from a type and method name.
+ *
+ * @param typeName The C++ class name
+ * @param methodName The method name
+ * @returns The C function name
+ *
+ * Examples:
+ * - ("Skeleton", "updateCache") → "spine_skeleton_update_cache"
+ * - ("AnimationState", "apply") → "spine_animation_state_apply"
+ */
 export function toCFunctionName(typeName: string, methodName: string): string {
     return `spine_${toSnakeCase(typeName)}_${toSnakeCase(methodName)}`;
 }
 
-export function toCTypeName(cppType: string): string {
-    // Remove any spine:: namespace prefix first
-    cppType = cppType.replace(/^spine::/, '');
-    
-    // Category 1: Primitives (including void)
-    const primitiveMap: { [key: string]: string } = {
-        'void': 'void',
-        'bool': 'bool',
-        'char': 'char',
-        'int': 'int32_t',
-        'int32_t': 'int32_t',
-        'unsigned int': 'uint32_t',
-        'uint32_t': 'uint32_t',
-        'short': 'int16_t',
-        'int16_t': 'int16_t',
-        'unsigned short': 'uint16_t',
-        'uint16_t': 'uint16_t',
-        'long long': 'int64_t',
-        'int64_t': 'int64_t',
-        'unsigned long long': 'uint64_t',
-        'uint64_t': 'uint64_t',
-        'float': 'float',
-        'double': 'double',
-        'size_t': 'size_t',
-        'uint8_t': 'uint8_t'
-    };
-    
-    if (primitiveMap[cppType]) {
-        return primitiveMap[cppType];
+/**
+ * Checks if a type is a primitive by tokenizing and checking if ALL tokens start with lowercase.
+ * Examples:
+ * - "int" → true
+ * - "const char*" → true (all tokens: "const", "char*" start lowercase)
+ * - "unsigned int" → true (all tokens start lowercase)
+ * - "Array<float>" → false (starts uppercase)
+ * - "const Array<float>&" → false ("Array" starts uppercase)
+ */
+function isPrimitive(cppType: string): boolean {
+    const tokens = cppType.split(/\s+/);
+    return tokens.every(token => {
+        // Remove any trailing punctuation like *, &
+        const cleanToken = token.replace(/[*&]+$/, '');
+        return cleanToken.length > 0 && /^[a-z]/.test(cleanToken);
+    });
+}
+
+/**
+ * Converts a C++ type to its corresponding C type.
+ *
+ * @param cppType The C++ type to convert
+ * @param validTypes Set of valid type names (classes and enums) from filtered types
+ * @returns The C type
+ * @throws Error if the type is not recognized
+ *
+ * Examples:
+ * - Primitives: "int" → "int", "const float*" → "const float*"
+ * - String types: "String" → "const char*", "const String&" → "const char*"
+ * - Arrays: "Array<float>" → "spine_array_float"
+ * - Class pointers: "Bone*" → "spine_bone"
+ * - Class references: "const Color&" → "spine_color"
+ * - Non-const primitive refs: "float&" → "float*" (output parameter)
+ */
+export function toCTypeName(cppType: string, validTypes: Set<string>): string {
+    // Remove extra spaces and normalize
+    const normalizedType = cppType.replace(/\s+/g, ' ').trim();
+
+    // Primitives - pass through unchanged
+    if (isPrimitive(normalizedType)) {
+        return normalizedType;
     }
-    
-    // Category 2: Special types
-    if (cppType === 'String' || cppType === 'const String' || cppType === 'const char *') {
-        return 'const utf8 *';
+
+    // Special type: String
+    if (normalizedType === 'String' || normalizedType === 'const String' ||
+        normalizedType === 'String&' || normalizedType === 'const String&') {
+        return 'const char*';
     }
-    if (cppType === 'void *') {
-        return 'spine_void';
+
+    // PropertyId is a typedef
+    if (normalizedType === 'PropertyId') {
+        return 'int64_t';
     }
-    if (cppType === 'DisposeRendererObject') {
-        return 'spine_dispose_renderer_object';
-    }
-    if (cppType === 'TextureLoader' || cppType === 'TextureLoader *') {
-        return 'spine_texture_loader';
-    }
-    if (cppType === 'PropertyId') {
-        return 'int64_t'; // PropertyId is typedef'd to long long
-    }
-    
-    // Category 3: Arrays - must check before pointers/references
-    const arrayMatch = cppType.match(/^(?:const\s+)?Array<(.+?)>\s*(?:&|\*)?$/);
+
+    // Arrays - must check before pointers/references
+    const arrayMatch = normalizedType.match(/^(?:const\s+)?Array<(.+?)>\s*(?:&|\*)?$/);
     if (arrayMatch) {
         const elementType = arrayMatch[1].trim();
-        
-        // Map element types to C array type suffixes
-        let typeSuffix: string;
-        
-        // Handle primitives
-        if (elementType === 'float') typeSuffix = 'float';
-        else if (elementType === 'int') typeSuffix = 'int32';
-        else if (elementType === 'unsigned short') typeSuffix = 'uint16';
-        else if (elementType === 'bool') typeSuffix = 'bool';
-        else if (elementType === 'char') typeSuffix = 'char';
-        else if (elementType === 'size_t') typeSuffix = 'size';
-        else if (elementType === 'PropertyId') typeSuffix = 'property_id';
-        // Handle pointer types - remove * and convert
-        else if (elementType.endsWith('*')) {
-            const cleanType = elementType.slice(0, -1).trim();
-            typeSuffix = toSnakeCase(cleanType);
+
+        // For primitive element types, use the type name with spaces replaced by underscores
+        if (isPrimitive(elementType)) {
+            return `spine_array_${elementType.replace(/\s+/g, '_')}`;
         }
-        // Handle everything else (enums, classes)
-        else {
-            typeSuffix = toSnakeCase(elementType);
+
+        // For pointer types, remove the * and convert
+        if (elementType.endsWith('*')) {
+            const baseType = elementType.slice(0, -1).trim();
+            return `spine_array_${toSnakeCase(baseType)}`;
         }
-        
-        return `spine_array_${typeSuffix}`;
+
+        // For class/enum types
+        return `spine_array_${toSnakeCase(elementType)}`;
     }
-    
-    // Category 4: Pointers
-    const pointerMatch = cppType.match(/^(.+?)\s*\*$/);
+
+    // Pointers
+    const pointerMatch = normalizedType.match(/^(.+?)\s*\*$/);
     if (pointerMatch) {
         const baseType = pointerMatch[1].trim();
-        
+
         // Primitive pointers stay as-is
-        if (primitiveMap[baseType]) {
-            const mappedType = primitiveMap[baseType];
-            // For numeric types, use the mapped type
-            return mappedType === 'void' ? 'void *' : `${mappedType} *`;
+        if (isPrimitive(baseType)) {
+            return normalizedType;
         }
-        
-        // char* becomes utf8*
-        if (baseType === 'char' || baseType === 'const char') {
-            return 'utf8 *';
-        }
-        
-        // Class pointers
+
+        // Class pointers become opaque types
         return `spine_${toSnakeCase(baseType)}`;
     }
-    
-    // Category 5: References
-    const refMatch = cppType.match(/^(?:const\s+)?(.+?)\s*&$/);
+
+    // References
+    const refMatch = normalizedType.match(/^((?:const\s+)?(.+?))\s*&$/);
     if (refMatch) {
-        const baseType = refMatch[1].trim();
-        const isConst = cppType.includes('const ');
-        
-        // Special cases
-        if (baseType === 'String') return 'const utf8 *';
-        if (baseType === 'RTTI') return 'spine_rtti';
-        
+        const fullBaseType = refMatch[1].trim();
+        const baseType = refMatch[2].trim();
+        const isConst = fullBaseType.startsWith('const ');
+
         // Non-const references to primitives become pointers (output parameters)
-        if (!isConst && primitiveMap[baseType]) {
-            const mappedType = primitiveMap[baseType];
-            return mappedType === 'void' ? 'void *' : `${mappedType} *`;
+        if (!isConst && isPrimitive(baseType)) {
+            return `${baseType}*`;
         }
-        
+
         // Const references and class references - recurse without the reference
-        return toCTypeName(baseType);
+        return toCTypeName(baseType, validTypes);
     }
-    
-    // Category 6: Known enums
-    const knownEnums = [
-        'MixBlend', 'MixDirection', 'BlendMode', 'AttachmentType', 'EventType',
-        'Format', 'TextureFilter', 'TextureWrap', 'Inherit', 'Physics',
-        'PositionMode', 'Property', 'RotateMode', 'SequenceMode', 'SpacingMode'
-    ];
-    
-    if (knownEnums.includes(cppType)) {
-        return `spine_${toSnakeCase(cppType)}`;
+
+    // Function pointers - for now, just error
+    if (normalizedType.includes('(') && normalizedType.includes(')')) {
+        throw new Error(`Function pointer types not yet supported: ${normalizedType}`);
     }
-    
-    // Category 7: Classes (default case)
-    // Assume any remaining type is a spine class
-    return `spine_${toSnakeCase(cppType)}`;
+
+    // Everything else should be a class or enum type
+    // Check if it's a valid type
+    if (!validTypes.has(normalizedType)) {
+        throw new Error(`Unknown type: ${normalizedType}. Not a primitive and not in the list of valid types.`);
+    }
+
+    return `spine_${toSnakeCase(normalizedType)}`;
 }

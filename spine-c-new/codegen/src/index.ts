@@ -30,20 +30,21 @@ function checkConstNonConstConflicts(classes: Type[], exclusions: Exclusion[]): 
     const conflicts: Array<{ type: string, method: string }> = [];
 
     for (const type of classes) {
+        if (type.members === undefined) {
+            continue;
+        }
+
         // Get all non-static methods first
-        const allMethods = type.members?.filter(m =>
-            m.kind === 'method' &&
-            !m.isStatic
-        );
+        const allMethods = type.members?.filter(m => m.kind === 'method').filter(m => !m.isStatic);
 
         if (allMethods) {
-            const methodGroups = new Map<string, Member[]>();
+            const methodGroups = new Map<string, Array<Member & { kind: 'method' }>>();
             for (const method of allMethods) {
+                if (method.name === 'getSetupPose') {
+                    console.log(`Skipping excluded method: ${type.name}::${method.name}${method.isConst ? ' const' : ''}`);
+                }
                 // Skip if this specific const/non-const version is excluded
                 if (isMethodExcluded(type.name, method.name, exclusions, method)) {
-                    if (method.name === 'getSetupPose') {
-                        console.log(`Skipping excluded method: ${type.name}::${method.name}${method.isConst ? ' const' : ''}`);
-                    }
                     continue;
                 }
                 const key = method.name + '(' + (method.parameters?.map(p => p.type).join(',') || '') + ')';
@@ -133,9 +134,12 @@ async function main() {
     // Check for const/non-const conflicts
     checkConstNonConstConflicts(classes, exclusions);
 
+    // Create a set of valid type names for type checking
+    const validTypes = new Set<string>(includedTypes.map(t => t.name));
+
     // Initialize generators
-    const constructorGen = new ConstructorGenerator();
-    const methodGen = new MethodGenerator(exclusions);
+    const constructorGen = new ConstructorGenerator(validTypes);
+    const methodGen = new MethodGenerator(exclusions, validTypes);
     const enumGen = new EnumGenerator();
     const fileWriter = new FileWriter(path.join(__dirname, '../../src/generated'));
 
