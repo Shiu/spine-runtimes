@@ -12,10 +12,10 @@ type: EventListener
 type: AnimationStateListener
 type: AnimationStateListenerObject
 type: Pool
-type: ContainerUtil
+type: ArrayUtils
 type: BlockAllocator
 type: MathUtil
-type: Vector
+type: Array
 type: PoolObject
 type: HasRendererObject
 type: String
@@ -47,3 +47,25 @@ method: EventData::setStringValue
 method: EventData::setAudioPath
 method: EventData::setVolume
 method: EventData::setBalance
+
+# Vector<String> methods need special handling
+method: AttachmentTimeline.getAttachmentNames
+
+# BoneLocal/BonePose setScale is overloaded in a confusing way
+method: BoneLocal::setScale
+method: BonePose::setScale
+
+# Color set is overloaded with conflicting signatures
+method: Color::set
+
+
+# Exclude const versions of getSetupPose() - we'll only expose the non-const version
+method: BoneData::getSetupPose const
+method: ConstraintDataGeneric::getSetupPose const
+method: IkConstraintData::getSetupPose const
+method: PathConstraintData::getSetupPose const
+method: PhysicsConstraintData::getSetupPose const
+method: PosedDataGeneric::getSetupPose const
+method: SliderData::getSetupPose const
+method: SlotData::getSetupPose const
+method: TransformConstraintData::getSetupPose const

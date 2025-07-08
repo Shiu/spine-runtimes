@@ -55,6 +55,12 @@ export class FileWriter {
         const headerPath = path.join(this.outputDir, `${fileName}.h`);
         const headerGuard = `SPINE_C_${typeName.toUpperCase()}_H`;
         
+        // Check if the header content uses any custom types from extensions.h
+        const headerString = headerContent.join('\n');
+        const needsExtensions = headerString.includes('spine_void') || 
+                               headerString.includes('spine_dispose_renderer_object') ||
+                               headerString.includes('spine_texture_loader');
+        
         const headerLines = [
             LICENSE_HEADER,
             '',
@@ -65,6 +71,16 @@ export class FileWriter {
             'extern "C" {',
             '#endif',
             '',
+            '#include "types.h"',
+        ];
+        
+        // Include extensions.h if needed
+        if (needsExtensions) {
+            headerLines.push('#include "../extensions.h"');
+        }
+        
+        headerLines.push(
+            '',
             ...headerContent,
             '',
             '#ifdef __cplusplus',
@@ -72,7 +88,7 @@ export class FileWriter {
             '#endif',
             '',
             `#endif // ${headerGuard}`
-        ];
+        );
         
         fs.writeFileSync(headerPath, headerLines.join('\n'));
         
@@ -98,7 +114,7 @@ export class FileWriter {
             `#ifndef ${headerGuard}`,
             `#define ${headerGuard}`,
             '',
-            '#include "../../custom.h"',
+            '#include "../base.h"',
             '',
             '#ifdef __cplusplus',
             'extern "C" {',
@@ -131,21 +147,19 @@ export class FileWriter {
             '#ifndef SPINE_C_H',
             '#define SPINE_C_H',
             '',
-            '// Custom types and functions',
-            '#include "../src/custom.h"',
+            '// Base definitions',
+            '#include "../src/base.h"',
             '',
-            '// Generated enum types'
+            '// All type declarations and enum includes',
+            '#include "../src/generated/types.h"',
+            '',
+            '// Extension functions',
+            '#include "../src/extensions.h"',
+            '',
+            '// Generated class types'
         ];
         
-        // Add enum includes
-        for (const enumType of enums) {
-            lines.push(`#include "../src/generated/${toSnakeCase(enumType.name)}.h"`);
-        }
-        
-        lines.push('');
-        lines.push('// Generated class types');
-        
-        // Add class includes
+        // Add class includes (they contain the actual function declarations)
         for (const classType of classes) {
             lines.push(`#include "../src/generated/${toSnakeCase(classType.name)}.h"`);
         }
@@ -154,5 +168,62 @@ export class FileWriter {
         lines.push('#endif // SPINE_C_H');
         
         fs.writeFileSync(mainHeaderPath, lines.join('\n'));
+    }
+    
+    async writeArrays(header: string[], source: string[]): Promise<void> {
+        const headerPath = path.join(this.outputDir, 'arrays.h');
+        const sourcePath = path.join(this.outputDir, 'arrays.cpp');
+        
+        // Add license header to both files
+        const headerLines = [LICENSE_HEADER, '', ...header];
+        const sourceLines = [LICENSE_HEADER, '', ...source];
+        
+        fs.writeFileSync(headerPath, headerLines.join('\n'));
+        fs.writeFileSync(sourcePath, sourceLines.join('\n'));
+    }
+    
+    async writeTypesHeader(classes: Type[], enums: Type[]): Promise<void> {
+        const headerPath = path.join(this.outputDir, 'types.h');
+        const lines: string[] = [
+            LICENSE_HEADER,
+            '',
+            '#ifndef SPINE_C_TYPES_H',
+            '#define SPINE_C_TYPES_H',
+            '',
+            '#ifdef __cplusplus',
+            'extern "C" {',
+            '#endif',
+            '',
+            '#include "../base.h"',
+            '',
+            '// Forward declarations for all non-enum types'
+        ];
+        
+        // Forward declare all class types
+        for (const classType of classes) {
+            const cTypeName = `spine_${toSnakeCase(classType.name)}`;
+            lines.push(`SPINE_OPAQUE_TYPE(${cTypeName})`);
+        }
+        
+        lines.push('');
+        lines.push('// Include all enum types (cannot be forward declared)');
+        
+        // Include all enum headers
+        for (const enumType of enums) {
+            lines.push(`#include "${toSnakeCase(enumType.name)}.h"`);
+        }
+        
+        lines.push('');
+        lines.push('// Array specializations');
+        lines.push('#include "arrays.h"');
+        
+        lines.push('');
+        lines.push('#ifdef __cplusplus');
+        lines.push('}');
+        lines.push('#endif');
+        lines.push('');
+        lines.push('#endif // SPINE_C_TYPES_H');
+        
+        fs.writeFileSync(headerPath, lines.join('\n'));
     }
 }

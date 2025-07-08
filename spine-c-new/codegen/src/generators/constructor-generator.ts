@@ -15,9 +15,11 @@ export class ConstructorGenerator {
         const constructors = type.members.filter(m => m.kind === 'constructor');
         const cTypeName = `spine_${toSnakeCase(type.name)}`;
         
-        // Generate create functions for each constructor
-        let constructorIndex = 0;
-        for (const constructor of constructors) {
+        // Skip constructor generation for abstract types
+        if (!type.isAbstract) {
+            // Generate create functions for each constructor
+            let constructorIndex = 0;
+            for (const constructor of constructors) {
             const funcName = this.getCreateFunctionName(type.name, constructor, constructorIndex);
             const params = this.generateParameters(constructor);
             
@@ -31,7 +33,8 @@ export class ConstructorGenerator {
             implementations.push(`}`);
             implementations.push('');
             
-            constructorIndex++;
+                constructorIndex++;
+            }
         }
         
         // Always generate dispose function
@@ -98,6 +101,10 @@ export class ConstructorGenerator {
                 callExpr = `String(${param.name})`;
             } else if (param.type.includes('*')) {
                 callExpr = `(${param.type}) ${param.name}`;
+            } else if (param.type.includes('&')) {
+                // Handle reference types - need to dereference the pointer
+                const baseType = param.type.replace(/^(?:const\s+)?(.+?)\s*&$/, '$1').trim();
+                callExpr = `*(${baseType}*) ${param.name}`;
             }
             
             callParts.push(callExpr);

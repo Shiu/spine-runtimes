@@ -45,6 +45,7 @@ export interface Exclusion {
     kind: 'type' | 'method';
     typeName: string;
     methodName?: string;
+    isConst?: boolean;  // For excluding specifically const or non-const versions
 }
 
 export function toSnakeCase(name: string): string {
@@ -60,59 +61,135 @@ export function toCFunctionName(typeName: string, methodName: string): string {
 }
 
 export function toCTypeName(cppType: string): string {
-    // Handle basic types
-    if (cppType === 'float') return 'float';
-    if (cppType === 'double') return 'double';
-    if (cppType === 'int' || cppType === 'int32_t') return 'int32_t';
-    if (cppType === 'unsigned int' || cppType === 'uint32_t') return 'uint32_t';
-    if (cppType === 'short' || cppType === 'int16_t') return 'int16_t';
-    if (cppType === 'unsigned short' || cppType === 'uint16_t') return 'uint16_t';
-    if (cppType === 'bool') return 'spine_bool';
-    if (cppType === 'void') return 'void';
-    if (cppType === 'size_t') return 'spine_size_t';
-    if (cppType === 'const char *' || cppType === 'String' || cppType === 'const String &') return 'const utf8 *';
+    // Remove any spine:: namespace prefix first
+    cppType = cppType.replace(/^spine::/, '');
     
-    // Handle RTTI type specially
-    if (cppType === 'const spine::RTTI &' || cppType === 'RTTI &' || cppType === 'const RTTI &') return 'spine_rtti';
+    // Category 1: Primitives (including void)
+    const primitiveMap: { [key: string]: string } = {
+        'void': 'void',
+        'bool': 'bool',
+        'char': 'char',
+        'int': 'int32_t',
+        'int32_t': 'int32_t',
+        'unsigned int': 'uint32_t',
+        'uint32_t': 'uint32_t',
+        'short': 'int16_t',
+        'int16_t': 'int16_t',
+        'unsigned short': 'uint16_t',
+        'uint16_t': 'uint16_t',
+        'long long': 'int64_t',
+        'int64_t': 'int64_t',
+        'unsigned long long': 'uint64_t',
+        'uint64_t': 'uint64_t',
+        'float': 'float',
+        'double': 'double',
+        'size_t': 'size_t',
+        'uint8_t': 'uint8_t'
+    };
     
-    // Handle Vector types FIRST before checking for pointers - these should be converted to void* in C API
-    const vectorMatch = cppType.match(/Vector<(.+?)>/);
-    if (vectorMatch) {
-        const elementType = vectorMatch[1].trim();
-        // Special case for Vector<int> - use int32_t*
-        if (elementType === 'int') {
-            return 'int32_t *';
-        }
-        // For now, use void* for other vector parameters since we can't expose templates
-        return 'void *';
+    if (primitiveMap[cppType]) {
+        return primitiveMap[cppType];
     }
     
-    // Handle pointers
+    // Category 2: Special types
+    if (cppType === 'String' || cppType === 'const String' || cppType === 'const char *') {
+        return 'const utf8 *';
+    }
+    if (cppType === 'void *') {
+        return 'spine_void';
+    }
+    if (cppType === 'DisposeRendererObject') {
+        return 'spine_dispose_renderer_object';
+    }
+    if (cppType === 'TextureLoader' || cppType === 'TextureLoader *') {
+        return 'spine_texture_loader';
+    }
+    if (cppType === 'PropertyId') {
+        return 'int64_t'; // PropertyId is typedef'd to long long
+    }
+    
+    // Category 3: Arrays - must check before pointers/references
+    const arrayMatch = cppType.match(/^(?:const\s+)?Array<(.+?)>\s*(?:&|\*)?$/);
+    if (arrayMatch) {
+        const elementType = arrayMatch[1].trim();
+        
+        // Map element types to C array type suffixes
+        let typeSuffix: string;
+        
+        // Handle primitives
+        if (elementType === 'float') typeSuffix = 'float';
+        else if (elementType === 'int') typeSuffix = 'int32';
+        else if (elementType === 'unsigned short') typeSuffix = 'uint16';
+        else if (elementType === 'bool') typeSuffix = 'bool';
+        else if (elementType === 'char') typeSuffix = 'char';
+        else if (elementType === 'size_t') typeSuffix = 'size';
+        else if (elementType === 'PropertyId') typeSuffix = 'property_id';
+        // Handle pointer types - remove * and convert
+        else if (elementType.endsWith('*')) {
+            const cleanType = elementType.slice(0, -1).trim();
+            typeSuffix = toSnakeCase(cleanType);
+        }
+        // Handle everything else (enums, classes)
+        else {
+            typeSuffix = toSnakeCase(elementType);
+        }
+        
+        return `spine_array_${typeSuffix}`;
+    }
+    
+    // Category 4: Pointers
     const pointerMatch = cppType.match(/^(.+?)\s*\*$/);
     if (pointerMatch) {
         const baseType = pointerMatch[1].trim();
+        
+        // Primitive pointers stay as-is
+        if (primitiveMap[baseType]) {
+            const mappedType = primitiveMap[baseType];
+            // For numeric types, use the mapped type
+            return mappedType === 'void' ? 'void *' : `${mappedType} *`;
+        }
+        
+        // char* becomes utf8*
+        if (baseType === 'char' || baseType === 'const char') {
+            return 'utf8 *';
+        }
+        
+        // Class pointers
         return `spine_${toSnakeCase(baseType)}`;
     }
     
-    // Handle references
+    // Category 5: References
     const refMatch = cppType.match(/^(?:const\s+)?(.+?)\s*&$/);
     if (refMatch) {
         const baseType = refMatch[1].trim();
+        const isConst = cppType.includes('const ');
+        
+        // Special cases
         if (baseType === 'String') return 'const utf8 *';
-        if (baseType === 'RTTI' || baseType === 'spine::RTTI') return 'spine_rtti';
+        if (baseType === 'RTTI') return 'spine_rtti';
+        
+        // Non-const references to primitives become pointers (output parameters)
+        if (!isConst && primitiveMap[baseType]) {
+            const mappedType = primitiveMap[baseType];
+            return mappedType === 'void' ? 'void *' : `${mappedType} *`;
+        }
+        
+        // Const references and class references - recurse without the reference
         return toCTypeName(baseType);
     }
     
-    // Handle enum types from spine namespace
-    const enumTypes = ['MixBlend', 'MixDirection', 'BlendMode', 'AttachmentType', 'EventType', 
-                      'Format', 'TextureFilter', 'TextureWrap', 'Inherit', 'Physics', 
-                      'PositionMode', 'Property', 'RotateMode', 'SequenceMode', 'SpacingMode'];
-    for (const enumType of enumTypes) {
-        if (cppType === enumType || cppType === `spine::${enumType}`) {
-            return `spine_${toSnakeCase(enumType)}`;
-        }
+    // Category 6: Known enums
+    const knownEnums = [
+        'MixBlend', 'MixDirection', 'BlendMode', 'AttachmentType', 'EventType',
+        'Format', 'TextureFilter', 'TextureWrap', 'Inherit', 'Physics',
+        'PositionMode', 'Property', 'RotateMode', 'SequenceMode', 'SpacingMode'
+    ];
+    
+    if (knownEnums.includes(cppType)) {
+        return `spine_${toSnakeCase(cppType)}`;
     }
     
-    // Default: assume it's a spine type
+    // Category 7: Classes (default case)
+    // Assume any remaining type is a spine class
     return `spine_${toSnakeCase(cppType)}`;
 }

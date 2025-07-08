@@ -263,10 +263,8 @@ function extractLocalTypes(headerFile, typeMap = null) {
       }
     }
     
-    // Mark as abstract if it has pure virtual methods
-    if (hasPureVirtual) {
-      info.isAbstract = true;
-    }
+    // Always set isAbstract to a boolean value
+    info.isAbstract = hasPureVirtual;
     
     return info;
   }
@@ -363,7 +361,12 @@ function extractLocalTypes(headerFile, typeMap = null) {
         types.push(typeInfo);
       }
     } else if (node.kind === 'CXXRecordDecl' && node.inner?.length > 0) {
-      types.push(extractTypeInfo(node));
+      const typeInfo = extractTypeInfo(node);
+      // Ensure isTemplate is always set for non-template classes
+      if (typeInfo.isTemplate === undefined) {
+        typeInfo.isTemplate = false;
+      }
+      types.push(typeInfo);
     } else if (node.kind === 'EnumDecl') {
       types.push(extractTypeInfo(node));
     } else if (node.kind === 'TypedefDecl' || node.kind === 'TypeAliasDecl') {
@@ -647,6 +650,17 @@ if (arg) {
     for (const type of allTypes[relPath]) {
       if (type.superTypes && type.members) {
         addInheritedMethods(type, typeMap);
+        
+        // Check if any inherited methods are pure virtual
+        // If so, and the class doesn't override them, it's abstract
+        if (!type.isAbstract) {
+          const hasPureVirtual = type.members.some(m => 
+            m.kind === 'method' && m.isPure === true
+          );
+          if (hasPureVirtual) {
+            type.isAbstract = true;
+          }
+        }
       }
     }
   }
