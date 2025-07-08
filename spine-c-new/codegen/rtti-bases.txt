@@ -1,0 +1,8 @@
+# Base types that need RTTI emulation
+Attachment
+Constraint
+ConstraintData
+Pose
+Posed
+PosedData
+Timeline

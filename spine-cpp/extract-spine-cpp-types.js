@@ -82,9 +82,11 @@ ENUM VALUES:
 INHERITANCE (all-files mode only):
   - Methods inherited from non-template supertypes are included
   - Methods inherited from template supertypes have parameters substituted
+  - Full inheritance hierarchy is preserved (grandparent methods appear via parent)
   - SpineObject methods are excluded (considered noise)
-  - Methods are marked with "fromSupertype" field
+  - Methods are marked with "fromSupertype" field indicating immediate source
   - Template supertypes appear as "TemplateName<Type1, Type2>"
+  - Example: If C inherits B inherits A, C gets all methods from A and B
 
 NOTES:
   - Only public members are extracted

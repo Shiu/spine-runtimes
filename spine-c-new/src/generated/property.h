@@ -1,0 +1,77 @@
+/******************************************************************************
+ * Spine Runtimes License Agreement
+ * Last updated April 5, 2025. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2025, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
+
+#ifndef SPINE_C_PROPERTY_H
+#define SPINE_C_PROPERTY_H
+
+#include "../../custom.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef enum spine_property {
+    SPINE_PROPERTY_PROPERTY_ROTATE = 1 << 0,
+    SPINE_PROPERTY_PROPERTY_X = 1 << 1,
+    SPINE_PROPERTY_PROPERTY_Y = 1 << 2,
+    SPINE_PROPERTY_PROPERTY_SCALE_X = 1 << 3,
+    SPINE_PROPERTY_PROPERTY_SCALE_Y = 1 << 4,
+    SPINE_PROPERTY_PROPERTY_SHEAR_X = 1 << 5,
+    SPINE_PROPERTY_PROPERTY_SHEAR_Y = 1 << 6,
+    SPINE_PROPERTY_PROPERTY_INHERIT = 1 << 7,
+    SPINE_PROPERTY_PROPERTY_RGB = 1 << 8,
+    SPINE_PROPERTY_PROPERTY_ALPHA = 1 << 9,
+    SPINE_PROPERTY_PROPERTY_RGB2 = 1 << 10,
+    SPINE_PROPERTY_PROPERTY_ATTACHMENT = 1 << 11,
+    SPINE_PROPERTY_PROPERTY_DEFORM = 1 << 12,
+    SPINE_PROPERTY_PROPERTY_EVENT = 1 << 13,
+    SPINE_PROPERTY_PROPERTY_DRAW_ORDER = 1 << 14,
+    SPINE_PROPERTY_PROPERTY_IK_CONSTRAINT = 1 << 15,
+    SPINE_PROPERTY_PROPERTY_TRANSFORM_CONSTRAINT = 1 << 16,
+    SPINE_PROPERTY_PROPERTY_PATH_CONSTRAINT_POSITION = 1 << 17,
+    SPINE_PROPERTY_PROPERTY_PATH_CONSTRAINT_SPACING = 1 << 18,
+    SPINE_PROPERTY_PROPERTY_PATH_CONSTRAINT_MIX = 1 << 19,
+    SPINE_PROPERTY_PROPERTY_PHYSICS_CONSTRAINT_INERTIA = 1 << 20,
+    SPINE_PROPERTY_PROPERTY_PHYSICS_CONSTRAINT_STRENGTH = 1 << 21,
+    SPINE_PROPERTY_PROPERTY_PHYSICS_CONSTRAINT_DAMPING = 1 << 22,
+    SPINE_PROPERTY_PROPERTY_PHYSICS_CONSTRAINT_MASS = 1 << 23,
+    SPINE_PROPERTY_PROPERTY_PHYSICS_CONSTRAINT_WIND = 1 << 24,
+    SPINE_PROPERTY_PROPERTY_PHYSICS_CONSTRAINT_GRAVITY = 1 << 25,
+    SPINE_PROPERTY_PROPERTY_PHYSICS_CONSTRAINT_MIX = 1 << 26,
+    SPINE_PROPERTY_PROPERTY_PHYSICS_CONSTRAINT_RESET = 1 << 27,
+    SPINE_PROPERTY_PROPERTY_SEQUENCE = 1 << 28,
+    SPINE_PROPERTY_PROPERTY_SLIDER_TIME = 1 << 29,
+    SPINE_PROPERTY_PROPERTY_SLIDER_MIX = 1 << 30
+} spine_property;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // SPINE_C_PROPERTY_H
