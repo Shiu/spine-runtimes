@@ -45,6 +45,10 @@ namespace spine {
 		Array() : _size(0), _capacity(0), _buffer(NULL) {
 		}
 
+		Array(size_t capacity) : _size(0), _capacity(0), _buffer(NULL) {
+			ensureCapacity(capacity);
+		}
+
 		Array(const Array &inArray) : _size(inArray._size), _capacity(inArray._capacity), _buffer(NULL) {
 			if (_capacity > 0) {
 				_buffer = allocate(_capacity);
