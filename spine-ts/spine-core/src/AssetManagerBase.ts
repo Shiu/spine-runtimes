@@ -142,13 +142,13 @@ export class AssetManagerBase implements Disposable {
 		const loadedStatus = this.cache.assetsLoaded[path];
 		const alreadyExistsOrLoading = loadedStatus !== undefined;
 		if (alreadyExistsOrLoading) {
-			loadedStatus
+			this.cache.assetsLoaded[path] = loadedStatus
 				.then(data => {
-					if (data instanceof Image) {
-						data = this.textureLoader(data);
-						this.cache.assetsLoaded[path] = Promise.resolve(data);
-					}
-					return this.success(success, path, data)
+					// necessary when user preloads an image into the cache.
+					// texture loader is not avaiable in the cache, so we transform in GLTexture at first use
+					data = (data instanceof Image || data instanceof ImageBitmap) ? this.textureLoader(data) : data;
+					this.success(success, path, data);
+					return data;
 				})
 				.catch(errorMsg => this.error(error, path, errorMsg));
 		}
@@ -407,7 +407,7 @@ export class AssetCache {
 		return newCache;
 	}
 
-	async addAsset(path: string, asset: any) {
+	async addAsset (path: string, asset: any) {
 		this.assetsLoaded[path] = Promise.resolve(asset);
 		this.assets[path] = await asset;
 	}
