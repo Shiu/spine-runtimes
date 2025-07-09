@@ -1,13 +1,12 @@
-import { Type, Member, toSnakeCase, Method } from '../types';
-import { ArraySpecialization } from '../array-scanner';
+import { ArraySpecialization, ClassOrStruct, Method, toSnakeCase, Type } from '../types';
 
 export class ArrayGenerator {
-    private arrayType: Type | undefined;
+    private arrayType: ClassOrStruct | undefined;
 
     constructor(private typesJson: any) {
         // Find the Array type definition
         for (const header of Object.keys(typesJson)) {
-            const arrayType = typesJson[header].find((t: Type) => t.name === 'Array');
+            const arrayType = typesJson[header].find((t: Type) => t.kind === 'class' && t.name === 'Array');
             if (arrayType) {
                 this.arrayType = arrayType;
                 break;

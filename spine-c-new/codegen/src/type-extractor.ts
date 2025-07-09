@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
-import { Type, Member, Method, Field, Constructor, Destructor, Parameter, EnumValue, SpineTypes } from './types';
+import { Type, Member, Method, Field, Constructor, Destructor, Parameter, EnumValue, SpineTypes, ClassOrStruct, Enum } from './types';
 
 const SPINE_CPP_PATH = path.join(__dirname, '../../../spine-cpp');
 const SPINE_INCLUDE_DIR = path.join(SPINE_CPP_PATH, 'spine-cpp/include');
@@ -155,9 +155,35 @@ function extractMember(inner: any, parent: any): Member | null {
  * Extracts type information from an AST node
  */
 function extractTypeInfo(node: any, sourceLines: string[]): Type {
-    const info: Type = {
+    // Handle enums separately
+    if (node.kind === 'EnumDecl') {
+        const enumInfo: Enum = {
+            kind: 'enum',
+            name: node.name || '',
+            values: (node.inner || [])
+                .filter((n: any) => n.kind === 'EnumConstantDecl')
+                .map((n: any) => {
+                    const enumValue: EnumValue = { name: n.name || '' };
+                    const sourceValue = extractEnumValueFromSource(n, sourceLines);
+
+                    if (sourceValue === null) {
+                        // Implicit value - no value property
+                    } else if (sourceValue) {
+                        enumValue.value = sourceValue;
+                    } else if (n.inner?.length > 0) {
+                        enumValue.value = "<<extraction failed>>";
+                    }
+
+                    return enumValue;
+                })
+        };
+        return enumInfo;
+    }
+
+    // Handle classes and structs
+    const info: ClassOrStruct = {
         name: node.name || '',
-        kind: node.kind === 'EnumDecl' ? 'enum' : (node.tagUsed || 'class') as 'class' | 'struct' | 'enum',
+        kind: (node.tagUsed || 'class') as 'class' | 'struct',
         loc: {
             line: node.loc?.line || 0,
             col: node.loc?.col || 0
@@ -169,28 +195,7 @@ function extractTypeInfo(node: any, sourceLines: string[]): Type {
         info.superTypes = node.bases.map((b: any) => b.type?.qualType || '').filter(Boolean);
     }
 
-    // For enums, extract the values
-    if (node.kind === 'EnumDecl') {
-        info.values = (node.inner || [])
-            .filter((n: any) => n.kind === 'EnumConstantDecl')
-            .map((n: any) => {
-                const enumValue: EnumValue = { name: n.name || '' };
-                const sourceValue = extractEnumValueFromSource(n, sourceLines);
-
-                if (sourceValue === null) {
-                    // Implicit value - no value property
-                } else if (sourceValue) {
-                    enumValue.value = sourceValue;
-                } else if (n.inner?.length > 0) {
-                    enumValue.value = "<<extraction failed>>";
-                }
-
-                return enumValue;
-            });
-        return info;
-    }
-
-    // For classes/structs, extract public members
+    // Extract public members
     info.members = [];
     let currentAccess = node.tagUsed === 'struct' ? 'public' : 'private';
     let hasPureVirtual = false;
@@ -262,6 +267,9 @@ function processNode(
         const classNode = (node.inner || []).find((n: any) => n.kind === 'CXXRecordDecl');
         if (classNode) {
             const typeInfo = extractTypeInfo(classNode, sourceLines);
+            if (typeInfo.kind === 'enum') {
+                throw new Error(`Template class ${node.name} is an enum, internal error, this should not happen`);
+            }
             typeInfo.isTemplate = true;
 
             // Extract template parameters
@@ -279,6 +287,9 @@ function processNode(
         }
     } else if (node.kind === 'CXXRecordDecl' && node.inner?.length > 0) {
         const typeInfo = extractTypeInfo(node, sourceLines);
+        if (typeInfo.kind === 'enum') {
+            throw new Error(`Class ${node.name} is an enum, which is not supported, internal error, this should not happen`);
+        }
         // Ensure isTemplate is always set for non-template classes
         if (typeInfo.isTemplate === undefined) {
             typeInfo.isTemplate = false;
@@ -318,13 +329,14 @@ function extractLocalTypes(headerFile: string, typeMap: Map<string, Type> | null
 
     // Filter out forward declarations and SpineObject
     const filteredTypes = types
+        .filter(t => t.kind !== 'enum')
         .filter(t => {
             // Skip types with no members (forward declarations)
             if (t.members && t.members.length === 0) return false;
-            
+
             // Skip SpineObject - it's not needed for C wrapper generation
             if (t.name === 'SpineObject') return false;
-            
+
             return true;
         })
         .sort((a, b) => (a.loc?.line || 0) - (b.loc?.line || 0));
@@ -382,8 +394,8 @@ function substituteTemplateParams(typeStr: string, paramMap: Map<string, string>
  * Adds methods inherited from template supertypes
  */
 function addTemplateInheritedMethods(
-    _type: Type,
-    templateType: Type,
+    _type: ClassOrStruct,
+    templateType: ClassOrStruct,
     templateClassName: string,
     templateArgs: string,
     inheritedMethods: Member[],
@@ -414,7 +426,7 @@ function addTemplateInheritedMethods(
 
     // Use the actual template parameters if we have them
     if (templateType.templateParams && templateType.templateParams.length === argsList.length) {
-        templateType.templateParams.forEach((param, i) => {
+        templateType.templateParams.forEach((param: string, i: number) => {
             paramMap.set(param, argsList[i]);
         });
     } else {
@@ -461,7 +473,7 @@ function addTemplateInheritedMethods(
 /**
  * Adds inherited methods to a type
  */
-function addInheritedMethods(type: Type, typeMap: Map<string, Type>): void {
+function addInheritedMethods(type: ClassOrStruct, typeMap: Map<string, Type>): void {
     const inheritedMethods: Member[] = [];
     const ownMethodSignatures = new Set<string>();
 
@@ -488,7 +500,7 @@ function addInheritedMethods(type: Type, typeMap: Map<string, Type>): void {
             const templateArgs = templateMatch[2];
 
             const templateType = typeMap.get(templateClassName);
-            if (templateType && templateType.members) {
+            if (templateType && templateType.kind !== 'enum' && templateType.members) {
                 // Process template inheritance
                 addTemplateInheritedMethods(
                     type, templateType, templateClassName, templateArgs,
@@ -499,7 +511,7 @@ function addInheritedMethods(type: Type, typeMap: Map<string, Type>): void {
             // Non-template supertype
             const superType = typeMap.get(cleanName);
 
-            if (!superType || !superType.members) continue;
+            if (!superType || superType.kind === 'enum' || !superType.members) continue;
 
             // Add non-overridden methods from supertype
             for (const member of superType.members) {
@@ -635,13 +647,13 @@ export function extractTypes(): void {
             process.stderr.write(`\r\x1b[K  Pass 2 - Processing ${++processed}/${Object.keys(allTypes).length}: ${relPath}...`);
 
             for (const type of allTypes[relPath]) {
-                if (type.superTypes && type.members) {
+                if (type.kind !== 'enum' && type.superTypes && type.members) {
                     addInheritedMethods(type, typeMap);
 
                     // Check if any inherited methods are pure virtual
                     // If so, and the class doesn't override them, it's abstract
                     if (!type.isAbstract) {
-                        const hasPureVirtual = type.members.some(m =>
+                        const hasPureVirtual = type.members.some((m: Member) =>
                             m.kind === 'method' && m.isPure === true
                         );
                         if (hasPureVirtual) {

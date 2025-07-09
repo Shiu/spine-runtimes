@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import * as fs from 'fs';
 import * as path from 'path';
-import { Type, Member, SpineTypes, toSnakeCase, Exclusion } from './types';
+import { Type, Member, SpineTypes, toSnakeCase, Exclusion, ClassOrStruct } from './types';
 import { loadExclusions, isTypeExcluded, isMethodExcluded } from './exclusions';
 import { ConstructorGenerator } from './generators/constructor-generator';
 import { MethodGenerator } from './generators/method-generator';
@@ -26,7 +26,7 @@ import { scanArraySpecializations } from './array-scanner';
  * @param exclusions - Exclusion rules to skip specific methods
  * @returns Array of conflicts found, or exits if conflicts exist
  */
-function checkConstNonConstConflicts(classes: Type[], exclusions: Exclusion[]): void {
+function checkConstNonConstConflicts(classes: ClassOrStruct[], exclusions: Exclusion[]): void {
     const conflicts: Array<{ type: string, method: string }> = [];
 
     for (const type of classes) {
@@ -89,19 +89,19 @@ function checkConstNonConstConflicts(classes: Type[], exclusions: Exclusion[]): 
 /**
  * Checks for multi-level pointers in method signatures and errors if found
  */
-function checkMultiLevelPointers(types: Type[]) {
+function checkMultiLevelPointers(types: ClassOrStruct[]) {
     const errors: {type: string, member: string, signature: string}[] = [];
 
     // Helper to check if a type has multi-level pointers
     function hasMultiLevelPointers(typeStr: string): boolean {
         // First check the outer type (after removing template content)
         let outerType = typeStr;
-        
+
         // Extract all template contents for separate checking
         const templateContents: string[] = [];
         let depth = 0;
         let templateStart = -1;
-        
+
         for (let i = 0; i < typeStr.length; i++) {
             if (typeStr[i] === '<') {
                 if (depth === 0) {
@@ -116,22 +116,22 @@ function checkMultiLevelPointers(types: Type[]) {
                 }
             }
         }
-        
+
         // Remove all template content from outer type
         outerType = outerType.replace(/<[^>]+>/g, '<>');
-        
+
         // Check outer type for consecutive pointers
         if (/\*\s*\*/.test(outerType)) {
             return true;
         }
-        
+
         // Recursively check template contents
         for (const content of templateContents) {
             if (hasMultiLevelPointers(content)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -225,7 +225,7 @@ async function main() {
         }
 
         // Only exclude template types
-        if (type.isTemplate === true) {
+        if (type.kind !== 'enum' && type.isTemplate === true) {
             console.log(`Auto-excluding template type: ${type.name}`);
             return false;
         }
@@ -235,7 +235,7 @@ async function main() {
     });
 
     // Separate classes and enums
-    const classes = includedTypes.filter(t => t.kind === 'class' || t.kind === 'struct');
+    const classes = includedTypes.filter(t => t.kind !== "enum");
     const enums = includedTypes.filter(t => t.kind === 'enum');
 
     console.log(`Found ${classes.length} classes/structs and ${enums.length} enums to generate`);
@@ -244,7 +244,7 @@ async function main() {
     checkConstNonConstConflicts(classes, exclusions);
 
     // Check for multi-level pointers
-    checkMultiLevelPointers(includedTypes);
+    checkMultiLevelPointers(classes);
 
     // Create a set of valid type names for type checking
     const validTypes = new Set<string>(includedTypes.map(t => t.name));

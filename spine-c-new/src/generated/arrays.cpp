@@ -33,6 +33,306 @@
 
 using namespace spine;
 
+spine_array_float spine_array_float_create() {
+    return (spine_array_float) new (__FILE__, __LINE__) Array<float>();
+}
+
+void spine_array_float_dispose(spine_array_float array) {
+    if (!array) return;
+    delete (Array<float>*) array;
+}
+
+float spine_array_float_get(spine_array_float array, int index) {
+    if (!array) return 0;
+    Array<float> *_array = (Array<float>*) array;
+    return (*_array)[index];
+}
+
+void spine_array_float_set(spine_array_float array, int index, float value) {
+    if (!array) return;
+    Array<float> *_array = (Array<float>*) array;
+    (*_array)[index] = value;
+}
+
+void spine_array_float_clear(spine_array_float array) {
+    if (!array) return;
+    Array<float> *_array = (Array<float>*) array;
+    _array->clear();
+}
+
+size_t spine_array_float_get_capacity(spine_array_float array) {
+    if (!array) return 0;
+    Array<float> *_array = (Array<float>*) array;
+    return _array->getCapacity();
+}
+
+size_t spine_array_float_size(spine_array_float array) {
+    if (!array) return 0;
+    Array<float> *_array = (Array<float>*) array;
+    return _array->size();
+}
+
+void spine_array_float_ensure_capacity(spine_array_float array, size_t newCapacity) {
+    if (!array) return;
+    Array<float> *_array = (Array<float>*) array;
+    _array->ensureCapacity(newCapacity);
+}
+
+void spine_array_float_add(spine_array_float array, float inValue) {
+    if (!array) return;
+    Array<float> *_array = (Array<float>*) array;
+    _array->add(inValue);
+}
+
+void spine_array_float_remove_at(spine_array_float array, size_t inIndex) {
+    if (!array) return;
+    Array<float> *_array = (Array<float>*) array;
+    _array->removeAt(inIndex);
+}
+
+bool spine_array_float_contains(spine_array_float array, float inValue) {
+    if (!array) return false;
+    Array<float> *_array = (Array<float>*) array;
+    return _array->contains(inValue);
+}
+
+int spine_array_float_index_of(spine_array_float array, float inValue) {
+    if (!array) return 0;
+    Array<float> *_array = (Array<float>*) array;
+    return _array->indexOf(inValue);
+}
+
+float spine_array_float_buffer(spine_array_float array) {
+    if (!array) return 0;
+    Array<float> *_array = (Array<float>*) array;
+    return _array->buffer();
+}
+
+spine_array_int spine_array_int_create() {
+    return (spine_array_int) new (__FILE__, __LINE__) Array<int>();
+}
+
+void spine_array_int_dispose(spine_array_int array) {
+    if (!array) return;
+    delete (Array<int>*) array;
+}
+
+int spine_array_int_get(spine_array_int array, int index) {
+    if (!array) return 0;
+    Array<int> *_array = (Array<int>*) array;
+    return (*_array)[index];
+}
+
+void spine_array_int_set(spine_array_int array, int index, int value) {
+    if (!array) return;
+    Array<int> *_array = (Array<int>*) array;
+    (*_array)[index] = value;
+}
+
+void spine_array_int_clear(spine_array_int array) {
+    if (!array) return;
+    Array<int> *_array = (Array<int>*) array;
+    _array->clear();
+}
+
+size_t spine_array_int_get_capacity(spine_array_int array) {
+    if (!array) return 0;
+    Array<int> *_array = (Array<int>*) array;
+    return _array->getCapacity();
+}
+
+size_t spine_array_int_size(spine_array_int array) {
+    if (!array) return 0;
+    Array<int> *_array = (Array<int>*) array;
+    return _array->size();
+}
+
+void spine_array_int_ensure_capacity(spine_array_int array, size_t newCapacity) {
+    if (!array) return;
+    Array<int> *_array = (Array<int>*) array;
+    _array->ensureCapacity(newCapacity);
+}
+
+void spine_array_int_add(spine_array_int array, int inValue) {
+    if (!array) return;
+    Array<int> *_array = (Array<int>*) array;
+    _array->add(inValue);
+}
+
+void spine_array_int_remove_at(spine_array_int array, size_t inIndex) {
+    if (!array) return;
+    Array<int> *_array = (Array<int>*) array;
+    _array->removeAt(inIndex);
+}
+
+bool spine_array_int_contains(spine_array_int array, int inValue) {
+    if (!array) return false;
+    Array<int> *_array = (Array<int>*) array;
+    return _array->contains(inValue);
+}
+
+int spine_array_int_index_of(spine_array_int array, int inValue) {
+    if (!array) return 0;
+    Array<int> *_array = (Array<int>*) array;
+    return _array->indexOf(inValue);
+}
+
+int spine_array_int_buffer(spine_array_int array) {
+    if (!array) return 0;
+    Array<int> *_array = (Array<int>*) array;
+    return _array->buffer();
+}
+
+spine_array_unsigned_short spine_array_unsigned_short_create() {
+    return (spine_array_unsigned_short) new (__FILE__, __LINE__) Array<unsigned short>();
+}
+
+void spine_array_unsigned_short_dispose(spine_array_unsigned_short array) {
+    if (!array) return;
+    delete (Array<unsigned short>*) array;
+}
+
+unsigned short spine_array_unsigned_short_get(spine_array_unsigned_short array, int index) {
+    if (!array) return 0;
+    Array<unsigned short> *_array = (Array<unsigned short>*) array;
+    return (*_array)[index];
+}
+
+void spine_array_unsigned_short_set(spine_array_unsigned_short array, int index, unsigned short value) {
+    if (!array) return;
+    Array<unsigned short> *_array = (Array<unsigned short>*) array;
+    (*_array)[index] = value;
+}
+
+void spine_array_unsigned_short_clear(spine_array_unsigned_short array) {
+    if (!array) return;
+    Array<unsigned short> *_array = (Array<unsigned short>*) array;
+    _array->clear();
+}
+
+size_t spine_array_unsigned_short_get_capacity(spine_array_unsigned_short array) {
+    if (!array) return 0;
+    Array<unsigned short> *_array = (Array<unsigned short>*) array;
+    return _array->getCapacity();
+}
+
+size_t spine_array_unsigned_short_size(spine_array_unsigned_short array) {
+    if (!array) return 0;
+    Array<unsigned short> *_array = (Array<unsigned short>*) array;
+    return _array->size();
+}
+
+void spine_array_unsigned_short_ensure_capacity(spine_array_unsigned_short array, size_t newCapacity) {
+    if (!array) return;
+    Array<unsigned short> *_array = (Array<unsigned short>*) array;
+    _array->ensureCapacity(newCapacity);
+}
+
+void spine_array_unsigned_short_add(spine_array_unsigned_short array, unsigned short inValue) {
+    if (!array) return;
+    Array<unsigned short> *_array = (Array<unsigned short>*) array;
+    _array->add(inValue);
+}
+
+void spine_array_unsigned_short_remove_at(spine_array_unsigned_short array, size_t inIndex) {
+    if (!array) return;
+    Array<unsigned short> *_array = (Array<unsigned short>*) array;
+    _array->removeAt(inIndex);
+}
+
+bool spine_array_unsigned_short_contains(spine_array_unsigned_short array, unsigned short inValue) {
+    if (!array) return false;
+    Array<unsigned short> *_array = (Array<unsigned short>*) array;
+    return _array->contains(inValue);
+}
+
+int spine_array_unsigned_short_index_of(spine_array_unsigned_short array, unsigned short inValue) {
+    if (!array) return 0;
+    Array<unsigned short> *_array = (Array<unsigned short>*) array;
+    return _array->indexOf(inValue);
+}
+
+unsigned short spine_array_unsigned_short_buffer(spine_array_unsigned_short array) {
+    if (!array) return 0;
+    Array<unsigned short> *_array = (Array<unsigned short>*) array;
+    return _array->buffer();
+}
+
+spine_array_property_id spine_array_property_id_create() {
+    return (spine_array_property_id) new (__FILE__, __LINE__) Array<PropertyId>();
+}
+
+void spine_array_property_id_dispose(spine_array_property_id array) {
+    if (!array) return;
+    delete (Array<PropertyId>*) array;
+}
+
+int64_t spine_array_property_id_get(spine_array_property_id array, int index) {
+    if (!array) return 0;
+    Array<PropertyId> *_array = (Array<PropertyId>*) array;
+    return (*_array)[index];
+}
+
+void spine_array_property_id_set(spine_array_property_id array, int index, int64_t value) {
+    if (!array) return;
+    Array<PropertyId> *_array = (Array<PropertyId>*) array;
+    (*_array)[index] = value;
+}
+
+void spine_array_property_id_clear(spine_array_property_id array) {
+    if (!array) return;
+    Array<PropertyId> *_array = (Array<PropertyId>*) array;
+    _array->clear();
+}
+
+size_t spine_array_property_id_get_capacity(spine_array_property_id array) {
+    if (!array) return 0;
+    Array<PropertyId> *_array = (Array<PropertyId>*) array;
+    return _array->getCapacity();
+}
+
+size_t spine_array_property_id_size(spine_array_property_id array) {
+    if (!array) return 0;
+    Array<PropertyId> *_array = (Array<PropertyId>*) array;
+    return _array->size();
+}
+
+void spine_array_property_id_ensure_capacity(spine_array_property_id array, size_t newCapacity) {
+    if (!array) return;
+    Array<PropertyId> *_array = (Array<PropertyId>*) array;
+    _array->ensureCapacity(newCapacity);
+}
+
+void spine_array_property_id_add(spine_array_property_id array, int64_t inValue) {
+    if (!array) return;
+    Array<PropertyId> *_array = (Array<PropertyId>*) array;
+    _array->add(inValue);
+}
+
+void spine_array_property_id_remove_at(spine_array_property_id array, size_t inIndex) {
+    if (!array) return;
+    Array<PropertyId> *_array = (Array<PropertyId>*) array;
+    _array->removeAt(inIndex);
+}
+
+bool spine_array_property_id_contains(spine_array_property_id array, int64_t inValue) {
+    if (!array) return false;
+    Array<PropertyId> *_array = (Array<PropertyId>*) array;
+    return _array->contains(inValue);
+}
+
+int spine_array_property_id_index_of(spine_array_property_id array, int64_t inValue) {
+    if (!array) return 0;
+    Array<PropertyId> *_array = (Array<PropertyId>*) array;
+    return _array->indexOf(inValue);
+}
+
+int64_t spine_array_property_id_buffer(spine_array_property_id array) {
+    if (!array) return 0;
+    Array<PropertyId> *_array = (Array<PropertyId>*) array;
+    return _array->buffer();
+}
+
 spine_array_animation spine_array_animation_create() {
     return (spine_array_animation) new (__FILE__, __LINE__) Array<Animation *>();
 }
@@ -933,81 +1233,6 @@ spine_event_data spine_array_event_data_buffer(spine_array_event_data array) {
     return (spine_event_data) _array->buffer();
 }
 
-spine_array_float spine_array_float_create() {
-    return (spine_array_float) new (__FILE__, __LINE__) Array<float>();
-}
-
-void spine_array_float_dispose(spine_array_float array) {
-    if (!array) return;
-    delete (Array<float>*) array;
-}
-
-float spine_array_float_get(spine_array_float array, int index) {
-    if (!array) return 0;
-    Array<float> *_array = (Array<float>*) array;
-    return (*_array)[index];
-}
-
-void spine_array_float_set(spine_array_float array, int index, float value) {
-    if (!array) return;
-    Array<float> *_array = (Array<float>*) array;
-    (*_array)[index] = value;
-}
-
-void spine_array_float_clear(spine_array_float array) {
-    if (!array) return;
-    Array<float> *_array = (Array<float>*) array;
-    _array->clear();
-}
-
-size_t spine_array_float_get_capacity(spine_array_float array) {
-    if (!array) return 0;
-    Array<float> *_array = (Array<float>*) array;
-    return _array->getCapacity();
-}
-
-size_t spine_array_float_size(spine_array_float array) {
-    if (!array) return 0;
-    Array<float> *_array = (Array<float>*) array;
-    return _array->size();
-}
-
-void spine_array_float_ensure_capacity(spine_array_float array, size_t newCapacity) {
-    if (!array) return;
-    Array<float> *_array = (Array<float>*) array;
-    _array->ensureCapacity(newCapacity);
-}
-
-void spine_array_float_add(spine_array_float array, float inValue) {
-    if (!array) return;
-    Array<float> *_array = (Array<float>*) array;
-    _array->add(inValue);
-}
-
-void spine_array_float_remove_at(spine_array_float array, size_t inIndex) {
-    if (!array) return;
-    Array<float> *_array = (Array<float>*) array;
-    _array->removeAt(inIndex);
-}
-
-bool spine_array_float_contains(spine_array_float array, float inValue) {
-    if (!array) return false;
-    Array<float> *_array = (Array<float>*) array;
-    return _array->contains(inValue);
-}
-
-int spine_array_float_index_of(spine_array_float array, float inValue) {
-    if (!array) return 0;
-    Array<float> *_array = (Array<float>*) array;
-    return _array->indexOf(inValue);
-}
-
-float *spine_array_float_buffer(spine_array_float array) {
-    if (!array) return nullptr;
-    Array<float> *_array = (Array<float>*) array;
-    return _array->buffer();
-}
-
 spine_array_from_property spine_array_from_property_create() {
     return (spine_array_from_property) new (__FILE__, __LINE__) Array<class FromProperty *>();
 }
@@ -1156,81 +1381,6 @@ spine_ik_constraint_data spine_array_ik_constraint_data_buffer(spine_array_ik_co
     if (!array) return nullptr;
     Array<IkConstraintData *> *_array = (Array<IkConstraintData *>*) array;
     return (spine_ik_constraint_data) _array->buffer();
-}
-
-spine_array_int spine_array_int_create() {
-    return (spine_array_int) new (__FILE__, __LINE__) Array<int>();
-}
-
-void spine_array_int_dispose(spine_array_int array) {
-    if (!array) return;
-    delete (Array<int>*) array;
-}
-
-int spine_array_int_get(spine_array_int array, int index) {
-    if (!array) return 0;
-    Array<int> *_array = (Array<int>*) array;
-    return (*_array)[index];
-}
-
-void spine_array_int_set(spine_array_int array, int index, int value) {
-    if (!array) return;
-    Array<int> *_array = (Array<int>*) array;
-    (*_array)[index] = value;
-}
-
-void spine_array_int_clear(spine_array_int array) {
-    if (!array) return;
-    Array<int> *_array = (Array<int>*) array;
-    _array->clear();
-}
-
-size_t spine_array_int_get_capacity(spine_array_int array) {
-    if (!array) return 0;
-    Array<int> *_array = (Array<int>*) array;
-    return _array->getCapacity();
-}
-
-size_t spine_array_int_size(spine_array_int array) {
-    if (!array) return 0;
-    Array<int> *_array = (Array<int>*) array;
-    return _array->size();
-}
-
-void spine_array_int_ensure_capacity(spine_array_int array, size_t newCapacity) {
-    if (!array) return;
-    Array<int> *_array = (Array<int>*) array;
-    _array->ensureCapacity(newCapacity);
-}
-
-void spine_array_int_add(spine_array_int array, int inValue) {
-    if (!array) return;
-    Array<int> *_array = (Array<int>*) array;
-    _array->add(inValue);
-}
-
-void spine_array_int_remove_at(spine_array_int array, size_t inIndex) {
-    if (!array) return;
-    Array<int> *_array = (Array<int>*) array;
-    _array->removeAt(inIndex);
-}
-
-bool spine_array_int_contains(spine_array_int array, int inValue) {
-    if (!array) return false;
-    Array<int> *_array = (Array<int>*) array;
-    return _array->contains(inValue);
-}
-
-int spine_array_int_index_of(spine_array_int array, int inValue) {
-    if (!array) return 0;
-    Array<int> *_array = (Array<int>*) array;
-    return _array->indexOf(inValue);
-}
-
-int *spine_array_int_buffer(spine_array_int array) {
-    if (!array) return nullptr;
-    Array<int> *_array = (Array<int>*) array;
-    return _array->buffer();
 }
 
 spine_array_path_constraint_data spine_array_path_constraint_data_create() {
@@ -1531,81 +1681,6 @@ spine_polygon spine_array_polygon_buffer(spine_array_polygon array) {
     if (!array) return nullptr;
     Array<Polygon *> *_array = (Array<Polygon *>*) array;
     return (spine_polygon) _array->buffer();
-}
-
-spine_array_property_id spine_array_property_id_create() {
-    return (spine_array_property_id) new (__FILE__, __LINE__) Array<PropertyId>();
-}
-
-void spine_array_property_id_dispose(spine_array_property_id array) {
-    if (!array) return;
-    delete (Array<PropertyId>*) array;
-}
-
-int64_t spine_array_property_id_get(spine_array_property_id array, int index) {
-    if (!array) return 0;
-    Array<PropertyId> *_array = (Array<PropertyId>*) array;
-    return (*_array)[index];
-}
-
-void spine_array_property_id_set(spine_array_property_id array, int index, int64_t value) {
-    if (!array) return;
-    Array<PropertyId> *_array = (Array<PropertyId>*) array;
-    (*_array)[index] = value;
-}
-
-void spine_array_property_id_clear(spine_array_property_id array) {
-    if (!array) return;
-    Array<PropertyId> *_array = (Array<PropertyId>*) array;
-    _array->clear();
-}
-
-size_t spine_array_property_id_get_capacity(spine_array_property_id array) {
-    if (!array) return 0;
-    Array<PropertyId> *_array = (Array<PropertyId>*) array;
-    return _array->getCapacity();
-}
-
-size_t spine_array_property_id_size(spine_array_property_id array) {
-    if (!array) return 0;
-    Array<PropertyId> *_array = (Array<PropertyId>*) array;
-    return _array->size();
-}
-
-void spine_array_property_id_ensure_capacity(spine_array_property_id array, size_t newCapacity) {
-    if (!array) return;
-    Array<PropertyId> *_array = (Array<PropertyId>*) array;
-    _array->ensureCapacity(newCapacity);
-}
-
-void spine_array_property_id_add(spine_array_property_id array, int64_t inValue) {
-    if (!array) return;
-    Array<PropertyId> *_array = (Array<PropertyId>*) array;
-    _array->add(inValue);
-}
-
-void spine_array_property_id_remove_at(spine_array_property_id array, size_t inIndex) {
-    if (!array) return;
-    Array<PropertyId> *_array = (Array<PropertyId>*) array;
-    _array->removeAt(inIndex);
-}
-
-bool spine_array_property_id_contains(spine_array_property_id array, int64_t inValue) {
-    if (!array) return false;
-    Array<PropertyId> *_array = (Array<PropertyId>*) array;
-    return _array->contains(inValue);
-}
-
-int spine_array_property_id_index_of(spine_array_property_id array, int64_t inValue) {
-    if (!array) return 0;
-    Array<PropertyId> *_array = (Array<PropertyId>*) array;
-    return _array->indexOf(inValue);
-}
-
-int64_t *spine_array_property_id_buffer(spine_array_property_id array) {
-    if (!array) return nullptr;
-    Array<PropertyId> *_array = (Array<PropertyId>*) array;
-    return _array->buffer();
 }
 
 spine_array_skin spine_array_skin_create() {
@@ -2206,81 +2281,6 @@ spine_transform_constraint_data spine_array_transform_constraint_data_buffer(spi
     if (!array) return nullptr;
     Array<TransformConstraintData *> *_array = (Array<TransformConstraintData *>*) array;
     return (spine_transform_constraint_data) _array->buffer();
-}
-
-spine_array_unsigned_short spine_array_unsigned_short_create() {
-    return (spine_array_unsigned_short) new (__FILE__, __LINE__) Array<unsigned short>();
-}
-
-void spine_array_unsigned_short_dispose(spine_array_unsigned_short array) {
-    if (!array) return;
-    delete (Array<unsigned short>*) array;
-}
-
-unsigned short spine_array_unsigned_short_get(spine_array_unsigned_short array, int index) {
-    if (!array) return 0;
-    Array<unsigned short> *_array = (Array<unsigned short>*) array;
-    return (*_array)[index];
-}
-
-void spine_array_unsigned_short_set(spine_array_unsigned_short array, int index, unsigned short value) {
-    if (!array) return;
-    Array<unsigned short> *_array = (Array<unsigned short>*) array;
-    (*_array)[index] = value;
-}
-
-void spine_array_unsigned_short_clear(spine_array_unsigned_short array) {
-    if (!array) return;
-    Array<unsigned short> *_array = (Array<unsigned short>*) array;
-    _array->clear();
-}
-
-size_t spine_array_unsigned_short_get_capacity(spine_array_unsigned_short array) {
-    if (!array) return 0;
-    Array<unsigned short> *_array = (Array<unsigned short>*) array;
-    return _array->getCapacity();
-}
-
-size_t spine_array_unsigned_short_size(spine_array_unsigned_short array) {
-    if (!array) return 0;
-    Array<unsigned short> *_array = (Array<unsigned short>*) array;
-    return _array->size();
-}
-
-void spine_array_unsigned_short_ensure_capacity(spine_array_unsigned_short array, size_t newCapacity) {
-    if (!array) return;
-    Array<unsigned short> *_array = (Array<unsigned short>*) array;
-    _array->ensureCapacity(newCapacity);
-}
-
-void spine_array_unsigned_short_add(spine_array_unsigned_short array, unsigned short inValue) {
-    if (!array) return;
-    Array<unsigned short> *_array = (Array<unsigned short>*) array;
-    _array->add(inValue);
-}
-
-void spine_array_unsigned_short_remove_at(spine_array_unsigned_short array, size_t inIndex) {
-    if (!array) return;
-    Array<unsigned short> *_array = (Array<unsigned short>*) array;
-    _array->removeAt(inIndex);
-}
-
-bool spine_array_unsigned_short_contains(spine_array_unsigned_short array, unsigned short inValue) {
-    if (!array) return false;
-    Array<unsigned short> *_array = (Array<unsigned short>*) array;
-    return _array->contains(inValue);
-}
-
-int spine_array_unsigned_short_index_of(spine_array_unsigned_short array, unsigned short inValue) {
-    if (!array) return 0;
-    Array<unsigned short> *_array = (Array<unsigned short>*) array;
-    return _array->indexOf(inValue);
-}
-
-unsigned short *spine_array_unsigned_short_buffer(spine_array_unsigned_short array) {
-    if (!array) return nullptr;
-    Array<unsigned short> *_array = (Array<unsigned short>*) array;
-    return _array->buffer();
 }
 
 spine_array_update spine_array_update_create() {

@@ -44,25 +44,32 @@ export type Member =
     | Constructor
     | Destructor
 
+export type Enum = {
+    kind: 'enum';
+    name: string;
+    values: EnumValue[];
+}
+
 export interface EnumValue {
     name: string;
     value?: string;
 }
 
-export interface Type {
+export interface ClassOrStruct {
     name: string;
-    kind: 'class' | 'struct' | 'enum';
+    kind: 'class' | 'struct';
     loc?: {
         line: number;
         col: number;
     };
     superTypes?: string[];
     members?: Member[];
-    values?: EnumValue[]; // For enums
     isAbstract?: boolean;
     isTemplate?: boolean;
     templateParams?: string[];
 }
+
+export type Type = ClassOrStruct | Enum;
 
 export interface SpineTypes {
     [header: string]: Type[];

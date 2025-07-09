@@ -37,9 +37,9 @@ export function scanArraySpecializations(includedTypes: Type[]): ArraySpecializa
 
     // Process all included types
     for (const type of includedTypes) {
-        if (!type.members) continue;
+        if (type.kind === 'enum') continue;
 
-        for (const member of type.members) {
+        for (const member of type.members || []) {
             switch (member.kind) {
                 case 'method':
                     extractArrayTypes(member.returnType, arrayTypes, type, member);
@@ -73,7 +73,7 @@ export function scanArraySpecializations(includedTypes: Type[]): ArraySpecializa
         // For template types, check if element type is a template parameter
         const firstSource = sources[0];
         const sourceType = firstSource.type;
-        if (sourceType.isTemplate && sourceType.templateParams?.includes(elementType)) {
+        if (sourceType.kind !== "enum" && sourceType.isTemplate && sourceType.templateParams?.includes(elementType)) {
             // Warn about template placeholders like T, K
             warnings.addWarning(arrayType, `Template class uses generic array with template parameter '${elementType}'`, sources);
             continue;

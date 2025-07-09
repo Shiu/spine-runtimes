@@ -37,6 +37,74 @@
 extern "C" {
 #endif
 
+// Array<float>
+SPINE_OPAQUE_TYPE(spine_array_float)
+
+SPINE_C_EXPORT spine_array_float spine_array_float_create();
+SPINE_C_EXPORT void spine_array_float_dispose(spine_array_float array);
+SPINE_C_EXPORT float spine_array_float_get(spine_array_float array, int index);
+SPINE_C_EXPORT void spine_array_float_set(spine_array_float array, int index, float value);
+SPINE_C_EXPORT void spine_array_float_clear(spine_array_float array);
+SPINE_C_EXPORT size_t spine_array_float_get_capacity(spine_array_float array);
+SPINE_C_EXPORT size_t spine_array_float_size(spine_array_float array);
+SPINE_C_EXPORT void spine_array_float_ensure_capacity(spine_array_float array, size_t newCapacity);
+SPINE_C_EXPORT void spine_array_float_add(spine_array_float array, float inValue);
+SPINE_C_EXPORT void spine_array_float_remove_at(spine_array_float array, size_t inIndex);
+SPINE_C_EXPORT bool spine_array_float_contains(spine_array_float array, float inValue);
+SPINE_C_EXPORT int spine_array_float_index_of(spine_array_float array, float inValue);
+SPINE_C_EXPORT float spine_array_float_buffer(spine_array_float array);
+
+// Array<int>
+SPINE_OPAQUE_TYPE(spine_array_int)
+
+SPINE_C_EXPORT spine_array_int spine_array_int_create();
+SPINE_C_EXPORT void spine_array_int_dispose(spine_array_int array);
+SPINE_C_EXPORT int spine_array_int_get(spine_array_int array, int index);
+SPINE_C_EXPORT void spine_array_int_set(spine_array_int array, int index, int value);
+SPINE_C_EXPORT void spine_array_int_clear(spine_array_int array);
+SPINE_C_EXPORT size_t spine_array_int_get_capacity(spine_array_int array);
+SPINE_C_EXPORT size_t spine_array_int_size(spine_array_int array);
+SPINE_C_EXPORT void spine_array_int_ensure_capacity(spine_array_int array, size_t newCapacity);
+SPINE_C_EXPORT void spine_array_int_add(spine_array_int array, int inValue);
+SPINE_C_EXPORT void spine_array_int_remove_at(spine_array_int array, size_t inIndex);
+SPINE_C_EXPORT bool spine_array_int_contains(spine_array_int array, int inValue);
+SPINE_C_EXPORT int spine_array_int_index_of(spine_array_int array, int inValue);
+SPINE_C_EXPORT int spine_array_int_buffer(spine_array_int array);
+
+// Array<unsigned short>
+SPINE_OPAQUE_TYPE(spine_array_unsigned_short)
+
+SPINE_C_EXPORT spine_array_unsigned_short spine_array_unsigned_short_create();
+SPINE_C_EXPORT void spine_array_unsigned_short_dispose(spine_array_unsigned_short array);
+SPINE_C_EXPORT unsigned short spine_array_unsigned_short_get(spine_array_unsigned_short array, int index);
+SPINE_C_EXPORT void spine_array_unsigned_short_set(spine_array_unsigned_short array, int index, unsigned short value);
+SPINE_C_EXPORT void spine_array_unsigned_short_clear(spine_array_unsigned_short array);
+SPINE_C_EXPORT size_t spine_array_unsigned_short_get_capacity(spine_array_unsigned_short array);
+SPINE_C_EXPORT size_t spine_array_unsigned_short_size(spine_array_unsigned_short array);
+SPINE_C_EXPORT void spine_array_unsigned_short_ensure_capacity(spine_array_unsigned_short array, size_t newCapacity);
+SPINE_C_EXPORT void spine_array_unsigned_short_add(spine_array_unsigned_short array, unsigned short inValue);
+SPINE_C_EXPORT void spine_array_unsigned_short_remove_at(spine_array_unsigned_short array, size_t inIndex);
+SPINE_C_EXPORT bool spine_array_unsigned_short_contains(spine_array_unsigned_short array, unsigned short inValue);
+SPINE_C_EXPORT int spine_array_unsigned_short_index_of(spine_array_unsigned_short array, unsigned short inValue);
+SPINE_C_EXPORT unsigned short spine_array_unsigned_short_buffer(spine_array_unsigned_short array);
+
+// Array<PropertyId>
+SPINE_OPAQUE_TYPE(spine_array_property_id)
+
+SPINE_C_EXPORT spine_array_property_id spine_array_property_id_create();
+SPINE_C_EXPORT void spine_array_property_id_dispose(spine_array_property_id array);
+SPINE_C_EXPORT int64_t spine_array_property_id_get(spine_array_property_id array, int index);
+SPINE_C_EXPORT void spine_array_property_id_set(spine_array_property_id array, int index, int64_t value);
+SPINE_C_EXPORT void spine_array_property_id_clear(spine_array_property_id array);
+SPINE_C_EXPORT size_t spine_array_property_id_get_capacity(spine_array_property_id array);
+SPINE_C_EXPORT size_t spine_array_property_id_size(spine_array_property_id array);
+SPINE_C_EXPORT void spine_array_property_id_ensure_capacity(spine_array_property_id array, size_t newCapacity);
+SPINE_C_EXPORT void spine_array_property_id_add(spine_array_property_id array, int64_t inValue);
+SPINE_C_EXPORT void spine_array_property_id_remove_at(spine_array_property_id array, size_t inIndex);
+SPINE_C_EXPORT bool spine_array_property_id_contains(spine_array_property_id array, int64_t inValue);
+SPINE_C_EXPORT int spine_array_property_id_index_of(spine_array_property_id array, int64_t inValue);
+SPINE_C_EXPORT int64_t spine_array_property_id_buffer(spine_array_property_id array);
+
 // Array<Animation *>
 SPINE_OPAQUE_TYPE(spine_array_animation)
 
@@ -241,23 +309,6 @@ SPINE_C_EXPORT bool spine_array_event_data_contains(spine_array_event_data array
 SPINE_C_EXPORT int spine_array_event_data_index_of(spine_array_event_data array, spine_event_data inValue);
 SPINE_C_EXPORT spine_event_data spine_array_event_data_buffer(spine_array_event_data array);
 
-// Array<float>
-SPINE_OPAQUE_TYPE(spine_array_float)
-
-SPINE_C_EXPORT spine_array_float spine_array_float_create();
-SPINE_C_EXPORT void spine_array_float_dispose(spine_array_float array);
-SPINE_C_EXPORT float spine_array_float_get(spine_array_float array, int index);
-SPINE_C_EXPORT void spine_array_float_set(spine_array_float array, int index, float value);
-SPINE_C_EXPORT void spine_array_float_clear(spine_array_float array);
-SPINE_C_EXPORT size_t spine_array_float_get_capacity(spine_array_float array);
-SPINE_C_EXPORT size_t spine_array_float_size(spine_array_float array);
-SPINE_C_EXPORT void spine_array_float_ensure_capacity(spine_array_float array, size_t newCapacity);
-SPINE_C_EXPORT void spine_array_float_add(spine_array_float array, float inValue);
-SPINE_C_EXPORT void spine_array_float_remove_at(spine_array_float array, size_t inIndex);
-SPINE_C_EXPORT bool spine_array_float_contains(spine_array_float array, float inValue);
-SPINE_C_EXPORT int spine_array_float_index_of(spine_array_float array, float inValue);
-SPINE_C_EXPORT float *spine_array_float_buffer(spine_array_float array);
-
 // Array<class FromProperty *>
 SPINE_OPAQUE_TYPE(spine_array_from_property)
 
@@ -291,23 +342,6 @@ SPINE_C_EXPORT void spine_array_ik_constraint_data_remove_at(spine_array_ik_cons
 SPINE_C_EXPORT bool spine_array_ik_constraint_data_contains(spine_array_ik_constraint_data array, spine_ik_constraint_data inValue);
 SPINE_C_EXPORT int spine_array_ik_constraint_data_index_of(spine_array_ik_constraint_data array, spine_ik_constraint_data inValue);
 SPINE_C_EXPORT spine_ik_constraint_data spine_array_ik_constraint_data_buffer(spine_array_ik_constraint_data array);
-
-// Array<int>
-SPINE_OPAQUE_TYPE(spine_array_int)
-
-SPINE_C_EXPORT spine_array_int spine_array_int_create();
-SPINE_C_EXPORT void spine_array_int_dispose(spine_array_int array);
-SPINE_C_EXPORT int spine_array_int_get(spine_array_int array, int index);
-SPINE_C_EXPORT void spine_array_int_set(spine_array_int array, int index, int value);
-SPINE_C_EXPORT void spine_array_int_clear(spine_array_int array);
-SPINE_C_EXPORT size_t spine_array_int_get_capacity(spine_array_int array);
-SPINE_C_EXPORT size_t spine_array_int_size(spine_array_int array);
-SPINE_C_EXPORT void spine_array_int_ensure_capacity(spine_array_int array, size_t newCapacity);
-SPINE_C_EXPORT void spine_array_int_add(spine_array_int array, int inValue);
-SPINE_C_EXPORT void spine_array_int_remove_at(spine_array_int array, size_t inIndex);
-SPINE_C_EXPORT bool spine_array_int_contains(spine_array_int array, int inValue);
-SPINE_C_EXPORT int spine_array_int_index_of(spine_array_int array, int inValue);
-SPINE_C_EXPORT int *spine_array_int_buffer(spine_array_int array);
 
 // Array<PathConstraintData *>
 SPINE_OPAQUE_TYPE(spine_array_path_constraint_data)
@@ -376,23 +410,6 @@ SPINE_C_EXPORT void spine_array_polygon_remove_at(spine_array_polygon array, siz
 SPINE_C_EXPORT bool spine_array_polygon_contains(spine_array_polygon array, spine_polygon inValue);
 SPINE_C_EXPORT int spine_array_polygon_index_of(spine_array_polygon array, spine_polygon inValue);
 SPINE_C_EXPORT spine_polygon spine_array_polygon_buffer(spine_array_polygon array);
-
-// Array<PropertyId>
-SPINE_OPAQUE_TYPE(spine_array_property_id)
-
-SPINE_C_EXPORT spine_array_property_id spine_array_property_id_create();
-SPINE_C_EXPORT void spine_array_property_id_dispose(spine_array_property_id array);
-SPINE_C_EXPORT int64_t spine_array_property_id_get(spine_array_property_id array, int index);
-SPINE_C_EXPORT void spine_array_property_id_set(spine_array_property_id array, int index, int64_t value);
-SPINE_C_EXPORT void spine_array_property_id_clear(spine_array_property_id array);
-SPINE_C_EXPORT size_t spine_array_property_id_get_capacity(spine_array_property_id array);
-SPINE_C_EXPORT size_t spine_array_property_id_size(spine_array_property_id array);
-SPINE_C_EXPORT void spine_array_property_id_ensure_capacity(spine_array_property_id array, size_t newCapacity);
-SPINE_C_EXPORT void spine_array_property_id_add(spine_array_property_id array, int64_t inValue);
-SPINE_C_EXPORT void spine_array_property_id_remove_at(spine_array_property_id array, size_t inIndex);
-SPINE_C_EXPORT bool spine_array_property_id_contains(spine_array_property_id array, int64_t inValue);
-SPINE_C_EXPORT int spine_array_property_id_index_of(spine_array_property_id array, int64_t inValue);
-SPINE_C_EXPORT int64_t *spine_array_property_id_buffer(spine_array_property_id array);
 
 // Array<Skin *>
 SPINE_OPAQUE_TYPE(spine_array_skin)
@@ -529,21 +546,6 @@ SPINE_C_EXPORT void spine_array_transform_constraint_data_remove_at(spine_array_
 SPINE_C_EXPORT bool spine_array_transform_constraint_data_contains(spine_array_transform_constraint_data array, spine_transform_constraint_data inValue);
 SPINE_C_EXPORT int spine_array_transform_constraint_data_index_of(spine_array_transform_constraint_data array, spine_transform_constraint_data inValue);
 SPINE_C_EXPORT spine_transform_constraint_data spine_array_transform_constraint_data_buffer(spine_array_transform_constraint_data array);
-
-// Array<unsigned short>
-SPINE_OPAQUE_TYPE(spine_array_unsigned_short)
-
-SPINE_C_EXPORT spine_array_unsigned_short spine_array_unsigned_short_create();
-SPINE_C_EXPORT void spine_array_unsigned_short_dispose(spine_array_unsigned_short array);
-SPINE_C_EXPORT unsigned short spine_array_unsigned_short_get(spine_array_unsigned_short array, int index);
-SPINE_C_EXPORT void spine_array_unsigned_short_set(spine_array_unsigned_short array, int index, unsigned short value);
-SPINE_C_EXPORT void spine_array_unsigned_short_clear(spine_array_unsigned_short array);
-SPINE_C_EXPORT size_t spine_array_unsigned_short_get_capacity(spine_array_unsigned_short array);
-SPINE_C_EXPORT size_t spine_array_unsigned_short_size(spine_array_unsigned_short array);
-SPINE_C_EXPORT void spine_array_unsigned_short_ensure_capacity(spine_array_unsigned_short array, size_t newCapacity);
-SPINE_C_EXPORT void spine_array_unsigned_short_add(spine_array_unsigned_short array, unsigned short inValue);
-SPINE_C_EXPORT void spine_array_unsigned_short_remove_at(spine_array_unsigned_short array, size_t inIndex);
-SPINE_C_EXPORT unsigned short *spine_array_unsigned_short_buffer(spine_array_unsigned_short array);
 
 // Array<Update *>
 SPINE_OPAQUE_TYPE(spine_array_update)

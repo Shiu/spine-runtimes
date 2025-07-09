@@ -1,4 +1,4 @@
-import { Type, Member, toSnakeCase, toCFunctionName, toCTypeName, Constructor } from '../types';
+import { Type, Member, toSnakeCase, toCFunctionName, toCTypeName, Constructor, ClassOrStruct } from '../types';
 
 export interface GeneratorResult {
     declarations: string[];
@@ -8,7 +8,7 @@ export interface GeneratorResult {
 export class ConstructorGenerator {
     constructor(private validTypes: Set<string>) {}
 
-    generate(type: Type): GeneratorResult {
+    generate(type: ClassOrStruct): GeneratorResult {
         const declarations: string[] = [];
         const implementations: string[] = [];
 

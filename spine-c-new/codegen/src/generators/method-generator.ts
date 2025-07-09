@@ -1,11 +1,11 @@
-import { Type, Member, toSnakeCase, toCFunctionName, toCTypeName, Exclusion, Method } from '../types';
+import { Type, Member, toSnakeCase, toCFunctionName, toCTypeName, Exclusion, Method, ClassOrStruct } from '../types';
 import { isMethodExcluded } from '../exclusions';
 import { GeneratorResult } from './constructor-generator';
 
 export class MethodGenerator {
     constructor(private exclusions: Exclusion[], private validTypes: Set<string>) { }
 
-    generate(type: Type): GeneratorResult {
+    generate(type: ClassOrStruct): GeneratorResult {
         const declarations: string[] = [];
         const implementations: string[] = [];
 
