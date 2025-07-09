@@ -96,8 +96,8 @@ namespace spine {
 		TextureWrap vWrap;
 		int width, height;
 		bool pma;
-        int index;
-        void *texture;
+		int index;
+		void *texture;
 
 		explicit AtlasPage(const String &inName) : name(inName), format(Format_RGBA8888),
 												   minFilter(TextureFilter_Nearest),
@@ -108,13 +108,16 @@ namespace spine {
 
 	class SP_API AtlasRegion : public TextureRegion {
 	public:
+		AtlasRegion() : TextureRegion(), page(nullptr), name(""), index(0), x(0), y(0) {}
+		~AtlasRegion() {}
+
 		AtlasPage *page;
 		String name;
 		int index;
 		int x, y;
 		Array<int> splits;
 		Array<int> pads;
-		Array <String> names;
+		Array<String> names;
 		Array<float> values;
 	};
 
@@ -146,6 +149,6 @@ namespace spine {
 
 		void load(const char *begin, int length, const char *dir, bool createTexture);
 	};
-}
+}// namespace spine
 
 #endif /* Spine_Atlas_h */

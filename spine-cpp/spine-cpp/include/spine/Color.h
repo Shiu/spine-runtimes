@@ -121,7 +121,7 @@ namespace spine {
 				color.a = len >= 8 ? parseHex(hexString, 3) : 1.0f;
 			}
 		}
-		
+
 		static float parseHex(const char* value, size_t index) {
 			char digits[3];
 			digits[0] = value[index * 2];
