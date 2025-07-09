@@ -86,6 +86,115 @@ function checkConstNonConstConflicts(classes: Type[], exclusions: Exclusion[]): 
     }
 }
 
+/**
+ * Checks for multi-level pointers in method signatures and errors if found
+ */
+function checkMultiLevelPointers(types: Type[]) {
+    const errors: {type: string, member: string, signature: string}[] = [];
+
+    // Helper to check if a type has multi-level pointers
+    function hasMultiLevelPointers(typeStr: string): boolean {
+        // First check the outer type (after removing template content)
+        let outerType = typeStr;
+        
+        // Extract all template contents for separate checking
+        const templateContents: string[] = [];
+        let depth = 0;
+        let templateStart = -1;
+        
+        for (let i = 0; i < typeStr.length; i++) {
+            if (typeStr[i] === '<') {
+                if (depth === 0) {
+                    templateStart = i + 1;
+                }
+                depth++;
+            } else if (typeStr[i] === '>') {
+                depth--;
+                if (depth === 0 && templateStart !== -1) {
+                    templateContents.push(typeStr.substring(templateStart, i));
+                    templateStart = -1;
+                }
+            }
+        }
+        
+        // Remove all template content from outer type
+        outerType = outerType.replace(/<[^>]+>/g, '<>');
+        
+        // Check outer type for consecutive pointers
+        if (/\*\s*\*/.test(outerType)) {
+            return true;
+        }
+        
+        // Recursively check template contents
+        for (const content of templateContents) {
+            if (hasMultiLevelPointers(content)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    for (const type of types) {
+        if (!type.members) continue;
+
+        for (const member of type.members) {
+            if (member.kind === 'method') {
+                // Check return type
+                if (hasMultiLevelPointers(member.returnType)) {
+                    errors.push({
+                        type: type.name,
+                        member: member.name,
+                        signature: `return type: ${member.returnType}`
+                    });
+                }
+
+                // Check parameters
+                if (member.parameters) {
+                    for (const param of member.parameters) {
+                        if (hasMultiLevelPointers(param.type)) {
+                            errors.push({
+                                type: type.name,
+                                member: member.name,
+                                signature: `parameter '${param.name}': ${param.type}`
+                            });
+                        }
+                    }
+                }
+            } else if (member.kind === 'field') {
+                // Check field type
+                if (hasMultiLevelPointers(member.type)) {
+                    errors.push({
+                        type: type.name,
+                        member: member.name,
+                        signature: `field type: ${member.type}`
+                    });
+                }
+            }
+        }
+    }
+
+    // If we found multi-level pointers, report them and exit
+    if (errors.length > 0) {
+        console.error("\n" + "=".repeat(80));
+        console.error("MULTI-LEVEL POINTER ERROR");
+        console.error("=".repeat(80));
+        console.error(`\nFound ${errors.length} multi-level pointer usage(s) which are not supported:\n`);
+
+        for (const error of errors) {
+            console.error(`  - ${error.type}::${error.member} - ${error.signature}`);
+        }
+
+        console.error("\nMulti-level pointers (e.g., char**, void***) cannot be represented in the C API.");
+        console.error("You need to either:");
+        console.error("  1. Refactor the C++ code to avoid multi-level pointers");
+        console.error("  2. Exclude these types/methods in exclusions.txt");
+        console.error("=".repeat(80) + "\n");
+
+        process.exit(1);
+    }
+}
+
 async function main() {
     // Extract types if needed
     extractTypes();
@@ -133,6 +242,9 @@ async function main() {
 
     // Check for const/non-const conflicts
     checkConstNonConstConflicts(classes, exclusions);
+
+    // Check for multi-level pointers
+    checkMultiLevelPointers(includedTypes);
 
     // Create a set of valid type names for type checking
     const validTypes = new Set<string>(includedTypes.map(t => t.name));
@@ -187,8 +299,7 @@ async function main() {
 
     // Generate Array specializations
     console.log('\nScanning for Array specializations...');
-    const enumNames = new Set(enums.map(e => e.name));
-    const arraySpecs = scanArraySpecializations(typesJson, exclusions, enumNames);
+    const arraySpecs = scanArraySpecializations(includedTypes);
     console.log(`Found ${arraySpecs.length} array specializations to generate`);
 
     if (arraySpecs.length > 0) {

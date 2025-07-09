@@ -80,6 +80,17 @@ export type Exclusion =
         isConst?: boolean;  // Whether the method is const (e.g., void foo() const), NOT whether return type is const
     };
 
+export interface ArraySpecialization {
+    cppType: string;           // e.g. "Array<float>"
+    elementType: string;       // e.g. "float"
+    cTypeName: string;         // e.g. "spine_array_float"
+    cElementType: string;      // e.g. "float" or "spine_animation"
+    isPointer: boolean;
+    isEnum: boolean;
+    isPrimitive: boolean;
+    sourceMember: Member;
+}
+
 /**
  * Converts a PascalCase or camelCase name to snake_case.
  *
@@ -123,7 +134,7 @@ export function toCFunctionName(typeName: string, methodName: string): string {
  * - "Array<float>" → false (starts uppercase)
  * - "const Array<float>&" → false ("Array" starts uppercase)
  */
-function isPrimitive(cppType: string): boolean {
+export function isPrimitive(cppType: string): boolean {
     const tokens = cppType.split(/\s+/);
     return tokens.every(token => {
         // Remove any trailing punctuation like *, &

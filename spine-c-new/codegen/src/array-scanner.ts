@@ -1,61 +1,59 @@
-import { Type, SpineTypes } from './types';
-import { isTypeExcluded } from './exclusions';
+import { Type, ArraySpecialization, isPrimitive, toSnakeCase, Member } from './types';
+import { WarningsCollector } from './warnings';
 
-export interface ArraySpecialization {
-    cppType: string;           // e.g. "Array<float>"
-    elementType: string;       // e.g. "float"
-    cTypeName: string;         // e.g. "spine_array_float"
-    cElementType: string;      // e.g. "float" or "spine_animation"
-    isPointer: boolean;
-    isEnum: boolean;
-    isPrimitive: boolean;
+// Note: This regex won't correctly parse nested arrays like Array<Array<int>>
+// It will match "Array<Array<int>" instead of the full type.
+// This is actually OK because we handle nested arrays as unsupported anyway.
+const ARRAY_REGEX = /Array<([^>]+)>/g;
+
+/**
+ * Extracts Array<T> types from a type string and adds them to the arrayTypes map
+ */
+function extractArrayTypes(
+    typeStr: string | undefined,
+    arrayTypes: Map<string, {type: Type, member: Member}[]>,
+    type: Type,
+    member: Member
+) {
+    if (!typeStr) return;
+
+    // Reset regex lastIndex to ensure it starts from the beginning
+    ARRAY_REGEX.lastIndex = 0;
+    let match;
+    while ((match = ARRAY_REGEX.exec(typeStr)) !== null) {
+        const arrayType = match[0];
+        const arrayTypeSources = arrayTypes.get(arrayType) || [];
+        arrayTypeSources.push({type, member});
+        arrayTypes.set(arrayType, arrayTypeSources);
+    }
 }
 
 /**
- * Scans all spine-cpp types to find Array<T> specializations
- * Only includes arrays from non-excluded types
+ * Scans included spine-cpp types to find Array<T> specializations
  */
-export function scanArraySpecializations(typesJson: SpineTypes, exclusions: any[], enumTypes: Set<string>): ArraySpecialization[] {
-    const arrayTypes = new Set<string>();
-    const warnings: string[] = [];
+export function scanArraySpecializations(includedTypes: Type[]): ArraySpecialization[] {
+    const arrayTypes = new Map<string, {type: Type, member: Member}[]>();
+    const warnings = new WarningsCollector();
 
-    // Extract Array<T> from a type string
-    function extractArrayTypes(typeStr: string | undefined) {
-        if (!typeStr) return;
+    // Process all included types
+    for (const type of includedTypes) {
+        if (!type.members) continue;
 
-        const regex = /Array<([^>]+)>/g;
-        let match;
-        while ((match = regex.exec(typeStr)) !== null) {
-            arrayTypes.add(match[0]);
-        }
-    }
-
-    // Process all types
-    for (const header of Object.keys(typesJson)) {
-        for (const type of typesJson[header]) {
-            // Skip excluded types and template types
-            if (isTypeExcluded(type.name, exclusions) || type.isTemplate) {
-                continue;
-            }
-
-            if (!type.members) continue;
-
-            for (const member of type.members) {
-                switch (member.kind) {
-                    case 'method':
-                        extractArrayTypes(member.returnType);
-                        if (member.parameters) {
-                            for (const param of member.parameters) {
-                                extractArrayTypes(param.type);
-                            }
+        for (const member of type.members) {
+            switch (member.kind) {
+                case 'method':
+                    extractArrayTypes(member.returnType, arrayTypes, type, member);
+                    if (member.parameters) {
+                        for (const param of member.parameters) {
+                            extractArrayTypes(param.type, arrayTypes, type, member);
                         }
-                        break;
-                    case 'field':
-                        extractArrayTypes(member.type);
-                        break;
-                    default:
-                        break;
-                }
+                    }
+                    break;
+                case 'field':
+                    extractArrayTypes(member.type, arrayTypes, type, member);
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -63,26 +61,34 @@ export function scanArraySpecializations(typesJson: SpineTypes, exclusions: any[
     // Convert to specializations
     const specializations: ArraySpecialization[] = [];
 
-    for (const arrayType of arrayTypes) {
+    // Get all enum names from included types
+    const enumNames = new Set(includedTypes.filter(t => t.kind === 'enum').map(t => t.name));
+
+    for (const [arrayType, sources] of arrayTypes) {
         const elementMatch = arrayType.match(/Array<(.+)>$/);
         if (!elementMatch) continue;
 
         const elementType = elementMatch[1].trim();
 
-        // Skip template placeholders
-        if (elementType === 'T' || elementType === 'K') {
+        // For template types, check if element type is a template parameter
+        const firstSource = sources[0];
+        const sourceType = firstSource.type;
+        if (sourceType.isTemplate && sourceType.templateParams?.includes(elementType)) {
+            // Warn about template placeholders like T, K
+            warnings.addWarning(arrayType, `Template class uses generic array with template parameter '${elementType}'`, sources);
             continue;
         }
 
-        // Handle nested arrays - emit warning
-        if (elementType.startsWith('Array<')) {
-            warnings.push(`Skipping nested array: ${arrayType} - manual handling required`);
+        // Check for const element types (not allowed in arrays)
+        if (elementType.startsWith('const ') || elementType.includes(' const ')) {
+            warnings.addWarning(arrayType, "Arrays should not have const element types", sources);
             continue;
         }
 
-        // Handle String arrays - emit warning
-        if (elementType === 'String') {
-            warnings.push(`Skipping String array: ${arrayType} - should be fixed in spine-cpp`);
+        // Check for multi-level pointers (unsupported, should be caught by checkMultiLevelPointers in index.ts)
+        const pointerCount = (elementType.match(/\*/g) || []).length;
+        if (pointerCount > 1) {
+            warnings.addWarning(arrayType, "Multi-level pointers are not supported", sources);
             continue;
         }
 
@@ -92,27 +98,23 @@ export function scanArraySpecializations(typesJson: SpineTypes, exclusions: any[
 
         // Remove "class " or "struct " prefix if present
         cleanElementType = cleanElementType.replace(/^(?:class|struct)\s+/, '');
-        const isEnum = enumTypes.has(cleanElementType) || cleanElementType === 'PropertyId';
-        const isPrimitive = !isPointer && !isEnum &&
-            ['int', 'float', 'double', 'bool', 'char', 'unsigned short', 'size_t'].includes(cleanElementType);
+        const isEnum = enumNames.has(cleanElementType) || cleanElementType === 'PropertyId';
+        const isPrimPointer = isPointer && isPrimitive(cleanElementType);
+        const isPrim = !isPointer && !isEnum && isPrimitive(cleanElementType);
 
         // Generate C type names
         let cTypeName: string;
         let cElementType: string;
 
-        if (isPrimitive) {
-            // Map primitive types
-            const typeMap: { [key: string]: string } = {
-                'int': 'int',
-                'unsigned short': 'unsigned short',
-                'float': 'float',
-                'double': 'double',
-                'bool': 'bool',
-                'char': 'char',
-                'size_t': 'size_t'
-            };
-            cElementType = typeMap[cleanElementType] || cleanElementType;
-            cTypeName = `spine_array_${cElementType.replace(/_t$/, '')}`;
+        if (isPrim) {
+            cElementType = cleanElementType;
+            // Replace whitespace with underscore for multi-word types like "unsigned short"
+            cTypeName = `spine_array_${cleanElementType.replace(/\s+/g, '_')}`;
+        } else if (isPrimPointer) {
+            // Primitive pointer types: keep the pointer in cElementType
+            cElementType = elementType; // e.g., "float*"
+            // Generate unique name with _ptr suffix
+            cTypeName = `spine_array_${cleanElementType.replace(/\s+/g, '_')}_ptr`;
         } else if (isEnum) {
             // Handle enums
             if (cleanElementType === 'PropertyId') {
@@ -120,19 +122,31 @@ export function scanArraySpecializations(typesJson: SpineTypes, exclusions: any[
                 cTypeName = 'spine_array_property_id';
             } else {
                 // Convert enum name to snake_case
-                const snakeCase = cleanElementType.replace(/([A-Z])/g, '_$1').toLowerCase().replace(/^_/, '');
+                const snakeCase = toSnakeCase(cleanElementType);
                 cElementType = `spine_${snakeCase}`;
                 cTypeName = `spine_array_${snakeCase}`;
             }
         } else if (isPointer) {
-            // Handle pointer types
-            const snakeCase = cleanElementType.replace(/([A-Z])/g, '_$1').toLowerCase().replace(/^_/, '');
+            // Handle non-primitive pointer types (e.g., Bone*)
+            const snakeCase = toSnakeCase(cleanElementType);
             cElementType = `spine_${snakeCase}`;
             cTypeName = `spine_array_${snakeCase}`;
         } else {
-            // Unknown type - skip
-            warnings.push(`Unknown array element type: ${elementType}`);
-            continue;
+            // Check for problematic types
+            if (elementType.startsWith('Array<')) {
+                // C doesn't support nested templates, would need manual Array<Array<T>> implementation
+                warnings.addWarning(arrayType, "C doesn't support nested templates", sources);
+                continue;
+            }
+
+            if (elementType === 'String') {
+                // String arrays should use const char** instead
+                warnings.addWarning(arrayType, "String arrays should use const char** in C API", sources);
+                continue;
+            }
+
+            // Unknown type - throw!
+            throw new Error(`Unsupported array element type: ${elementType} in ${arrayType} at ${firstSource.type.name}::${firstSource.member.name}`);
         }
 
         specializations.push({
@@ -142,21 +156,45 @@ export function scanArraySpecializations(typesJson: SpineTypes, exclusions: any[
             cElementType: cElementType,
             isPointer: isPointer,
             isEnum: isEnum,
-            isPrimitive: isPrimitive
+            isPrimitive: isPrim,
+            sourceMember: firstSource.member // Use first occurrence for debugging
         });
     }
 
     // Print warnings
-    if (warnings.length > 0) {
-        console.log('\nArray Generation Warnings:');
-        for (const warning of warnings) {
-            console.log(`  - ${warning}`);
+    warnings.printWarnings('Array Generation Warnings:');
+
+    // Sort specializations: primitives first, then enums, then pointers
+    specializations.sort((a, b) => {
+        // Sort by type category first
+        const getCategory = (spec: ArraySpecialization) => {
+            if (spec.isPrimitive) return 0;
+            if (spec.isEnum) return 1;
+            if (spec.isPointer) return 2;
+            // This should never happen - every specialization must be one of the above
+            throw new Error(`Invalid ArraySpecialization state for ${spec.cppType}: ` +
+                `isPrimitive=${spec.isPrimitive}, isEnum=${spec.isEnum}, isPointer=${spec.isPointer}`);
+        };
+
+        const categoryA = getCategory(a);
+        const categoryB = getCategory(b);
+
+        if (categoryA !== categoryB) {
+            return categoryA - categoryB;
+        }
+
+        // Within same category, sort by name
+        return a.cTypeName.localeCompare(b.cTypeName);
+    });
+
+    // Log found specializations for debugging
+    if (specializations.length > 0) {
+        console.log('Found array specializations:');
+        for (const spec of specializations) {
+            console.log(`  - ${spec.cppType} → ${spec.cTypeName} (element: ${spec.cElementType})`);
         }
         console.log('');
     }
-
-    // Sort by C type name for consistent output
-    specializations.sort((a, b) => a.cTypeName.localeCompare(b.cTypeName));
 
     return specializations;
 }
