@@ -236,10 +236,10 @@ spine-libgdx/spine-skeletonviewer/.settings/org.eclipse.jdt.apt.core.prefs
 spine-cpp/.cache
 .build
 spine-libgdx/.settings
-docs/
 out.json
 spine-cpp/extraction.log
 extraction.log
 spine-c-new/codegen/dist
 spine-c-new/codegen/all-spine-types.json
 spine-c-new/codegen/spine-cpp-types.json
+docs/spine-runtimes-types.md
