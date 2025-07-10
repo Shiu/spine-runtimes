@@ -188,7 +188,7 @@ spine_atlas spine_atlas_load(const char *atlasData) {
     result->numImagePaths = (int32_t) atlas->getPages().size();
     result->imagePaths = SpineExtension::calloc<const char *>(result->numImagePaths, __FILE__, __LINE__);
     for (int i = 0; i < result->numImagePaths; i++) {
-        result->imagePaths[i] = (const char *) strdup(atlas->getPages()[i]->texturePath.buffer());
+        result->imagePaths[i] = atlas->getPages()[i]->texturePath.buffer();
     }
     return (spine_atlas) result;
 }
@@ -227,7 +227,7 @@ spine_atlas spine_atlas_load_callback(const char *atlasData, const char *atlasDi
     result->numImagePaths = (int32_t) atlas->getPages().size();
     result->imagePaths = SpineExtension::calloc<const char *>(result->numImagePaths, __FILE__, __LINE__);
     for (int i = 0; i < result->numImagePaths; i++) {
-        result->imagePaths[i] = (const char *) strdup(atlas->getPages()[i]->texturePath.buffer());
+        result->imagePaths[i] = atlas->getPages()[i]->texturePath.buffer();
     }
     return (spine_atlas) result;
 }
@@ -266,11 +266,6 @@ void spine_atlas_dispose(spine_atlas atlas) {
         delete (Atlas *) _atlas->atlas;
     }
     if (_atlas->imagePaths) {
-        for (int i = 0; i < _atlas->numImagePaths; i++) {
-            if (_atlas->imagePaths[i]) {
-                SpineExtension::free(_atlas->imagePaths[i], __FILE__, __LINE__);
-            }
-        }
         SpineExtension::free(_atlas->imagePaths, __FILE__, __LINE__);
     }
     if (_atlas->error) {
