@@ -1,113 +1,56 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "inherit_timeline.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_inherit_timeline spine_inherit_timeline_create(size_t frameCount, int boneIndex) {
-    InheritTimeline *obj = new (__FILE__, __LINE__) InheritTimeline(frameCount, boneIndex);
-    return (spine_inherit_timeline) obj;
+    return (spine_inherit_timeline) new (__FILE__, __LINE__) InheritTimeline(frameCount, boneIndex);
 }
 
-void spine_inherit_timeline_dispose(spine_inherit_timeline obj) {
-    if (!obj) return;
-    delete (InheritTimeline *) obj;
+void spine_inherit_timeline_dispose(spine_inherit_timeline self) {
+    delete (InheritTimeline*)self;
 }
 
-spine_rtti spine_inherit_timeline_get_rtti() {
-    return (spine_rtti) &InheritTimeline::rtti;
+spine_rtti spine_inherit_timeline_get_rtti(spine_inherit_timeline self) {
+    return (spine_rtti)&((InheritTimeline*)self)->getRTTI();
 }
 
-void spine_inherit_timeline_set_frame(spine_inherit_timeline obj, int frame, float time, spine_inherit inherit) {
-    if (!obj) return ;
-    InheritTimeline *_obj = (InheritTimeline *) obj;
-    _obj->setFrame(frame, time, (Inherit) inherit);
+void spine_inherit_timeline_set_frame(spine_inherit_timeline self, int frame, float time, spine_inherit inherit) {
+    ((InheritTimeline*)self)->setFrame(frame, time, (Inherit)inherit);
 }
 
-void spine_inherit_timeline_apply(spine_inherit_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
-    if (!obj) return ;
-    InheritTimeline *_obj = (InheritTimeline *) obj;
-    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
+void spine_inherit_timeline_apply(spine_inherit_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
+    ((InheritTimeline*)self)->apply(*((Skeleton*)skeleton), lastTime, time, (Array<Event *> *)pEvents, alpha, (MixBlend)blend, (MixDirection)direction, appliedPose);
 }
 
-size_t spine_inherit_timeline_get_frame_entries(spine_inherit_timeline obj) {
-    if (!obj) return 0;
-    InheritTimeline *_obj = (InheritTimeline *) obj;
-    return _obj->getFrameEntries();
+size_t spine_inherit_timeline_get_frame_entries(spine_inherit_timeline self) {
+    return ((Timeline*)(InheritTimeline*)self)->getFrameEntries();
 }
 
-size_t spine_inherit_timeline_get_frame_count(spine_inherit_timeline obj) {
-    if (!obj) return 0;
-    InheritTimeline *_obj = (InheritTimeline *) obj;
-    return _obj->getFrameCount();
+size_t spine_inherit_timeline_get_frame_count(spine_inherit_timeline self) {
+    return ((Timeline*)(InheritTimeline*)self)->getFrameCount();
 }
 
-int32_t spine_inherit_timeline_get_num_frames(spine_inherit_timeline obj) {
-    if (!obj) return 0;
-    InheritTimeline *_obj = (InheritTimeline *) obj;
-    return (int32_t) _obj->getFrames().size();
+spine_array_float spine_inherit_timeline_get_frames(spine_inherit_timeline self) {
+    return (spine_array_float)&((Timeline*)(InheritTimeline*)self)->getFrames();
 }
 
-float *spine_inherit_timeline_get_frames(spine_inherit_timeline obj) {
-    if (!obj) return nullptr;
-    InheritTimeline *_obj = (InheritTimeline *) obj;
-    return (float *) _obj->getFrames().buffer();
+float spine_inherit_timeline_get_duration(spine_inherit_timeline self) {
+    return ((Timeline*)(InheritTimeline*)self)->getDuration();
 }
 
-float spine_inherit_timeline_get_duration(spine_inherit_timeline obj) {
-    if (!obj) return 0;
-    InheritTimeline *_obj = (InheritTimeline *) obj;
-    return _obj->getDuration();
+spine_array_property_id spine_inherit_timeline_get_property_ids(spine_inherit_timeline self) {
+    return (spine_array_property_id)&((Timeline*)(InheritTimeline*)self)->getPropertyIds();
 }
 
-int32_t spine_inherit_timeline_get_num_property_ids(spine_inherit_timeline obj) {
-    if (!obj) return 0;
-    InheritTimeline *_obj = (InheritTimeline *) obj;
-    return (int32_t) _obj->getPropertyIds().size();
+int spine_inherit_timeline_get_bone_index(spine_inherit_timeline self) {
+    return ((BoneTimeline*)(InheritTimeline*)self)->getBoneIndex();
 }
 
-int64_t *spine_inherit_timeline_get_property_ids(spine_inherit_timeline obj) {
-    if (!obj) return nullptr;
-    InheritTimeline *_obj = (InheritTimeline *) obj;
-    return (int64_t *) _obj->getPropertyIds().buffer();
+void spine_inherit_timeline_set_bone_index(spine_inherit_timeline self, int inValue) {
+    ((BoneTimeline*)(InheritTimeline*)self)->setBoneIndex(inValue);
 }
 
-int spine_inherit_timeline_get_bone_index(spine_inherit_timeline obj) {
-    if (!obj) return 0;
-    InheritTimeline *_obj = (InheritTimeline *) obj;
-    return _obj->getBoneIndex();
-}
-
-void spine_inherit_timeline_set_bone_index(spine_inherit_timeline obj, int value) {
-    if (!obj) return;
-    InheritTimeline *_obj = (InheritTimeline *) obj;
-    _obj->setBoneIndex(value);
+spine_rtti spine_inherit_timeline_rtti(void) {
+    return (spine_rtti)&InheritTimeline::rtti;
 }

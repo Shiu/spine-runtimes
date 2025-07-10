@@ -1,397 +1,228 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "skeleton.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_skeleton spine_skeleton_create(spine_skeleton_data skeletonData) {
-    Skeleton *obj = new (__FILE__, __LINE__) Skeleton(*(SkeletonData*) skeletonData);
-    return (spine_skeleton) obj;
+    return (spine_skeleton) new (__FILE__, __LINE__) Skeleton(*((SkeletonData*)skeletonData));
 }
 
-void spine_skeleton_dispose(spine_skeleton obj) {
-    if (!obj) return;
-    delete (Skeleton *) obj;
+void spine_skeleton_dispose(spine_skeleton self) {
+    delete (Skeleton*)self;
 }
 
-void spine_skeleton_update_cache(spine_skeleton obj) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->updateCache();
+void spine_skeleton_update_cache(spine_skeleton self) {
+    ((Skeleton*)self)->updateCache();
 }
 
-void spine_skeleton_print_update_cache(spine_skeleton obj) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->printUpdateCache();
+void spine_skeleton_print_update_cache(spine_skeleton self) {
+    ((Skeleton*)self)->printUpdateCache();
 }
 
-void spine_skeleton_constrained(spine_skeleton obj, spine_posed object) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->constrained(*(Posed*) object);
+void spine_skeleton_constrained(spine_skeleton self, spine_posed object) {
+    ((Skeleton*)self)->constrained(*((Posed*)object));
 }
 
-void spine_skeleton_sort_bone(spine_skeleton obj, spine_bone bone) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->sortBone((Bone *) bone);
+void spine_skeleton_sort_bone(spine_skeleton self, spine_bone bone) {
+    ((Skeleton*)self)->sortBone((Bone *)bone);
 }
 
-void spine_skeleton_update_world_transform(spine_skeleton obj, spine_physics physics) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->updateWorldTransform((Physics) physics);
+void spine_skeleton_sort_reset(spine_array_bone bones) {
+    Skeleton::sortReset(*((Array<Bone *>*)bones));
 }
 
-void spine_skeleton_update_world_transform_2(spine_skeleton obj, spine_physics physics, spine_bone_pose parent) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->updateWorldTransform((Physics) physics, (BonePose *) parent);
+void spine_skeleton_update_world_transform_1(spine_skeleton self, spine_physics physics) {
+    ((Skeleton*)self)->updateWorldTransform((Physics)physics);
 }
 
-void spine_skeleton_setup_pose(spine_skeleton obj) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setupPose();
+void spine_skeleton_update_world_transform_2(spine_skeleton self, spine_physics physics, spine_bone_pose parent) {
+    ((Skeleton*)self)->updateWorldTransform((Physics)physics, (BonePose *)parent);
 }
 
-void spine_skeleton_setup_pose_bones(spine_skeleton obj) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setupPoseBones();
+void spine_skeleton_setup_pose(spine_skeleton self) {
+    ((Skeleton*)self)->setupPose();
 }
 
-void spine_skeleton_setup_pose_slots(spine_skeleton obj) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setupPoseSlots();
+void spine_skeleton_setup_pose_bones(spine_skeleton self) {
+    ((Skeleton*)self)->setupPoseBones();
 }
 
-spine_skeleton_data spine_skeleton_get_data(spine_skeleton obj) {
-    if (!obj) return (spine_skeleton_data) 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_skeleton_data) _obj->getData();
+void spine_skeleton_setup_pose_slots(spine_skeleton self) {
+    ((Skeleton*)self)->setupPoseSlots();
 }
 
-int32_t spine_skeleton_get_num_bones(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (int32_t) _obj->getBones().size();
+spine_skeleton_data spine_skeleton_get_data(spine_skeleton self) {
+    return (spine_skeleton_data)((Skeleton*)self)->getData();
 }
 
-spine_bone *spine_skeleton_get_bones(spine_skeleton obj) {
-    if (!obj) return nullptr;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_bone *) _obj->getBones().buffer();
+spine_array_bone spine_skeleton_get_bones(spine_skeleton self) {
+    return (spine_array_bone)&((Skeleton*)self)->getBones();
 }
 
-int32_t spine_skeleton_get_num_update_cache(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (int32_t) _obj->getUpdateCache().size();
+spine_array_update spine_skeleton_get_update_cache(spine_skeleton self) {
+    return (spine_array_update)&((Skeleton*)self)->getUpdateCache();
 }
 
-spine_update *spine_skeleton_get_update_cache(spine_skeleton obj) {
-    if (!obj) return nullptr;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_update *) _obj->getUpdateCache().buffer();
+spine_bone spine_skeleton_get_root_bone(spine_skeleton self) {
+    return (spine_bone)((Skeleton*)self)->getRootBone();
 }
 
-spine_bone spine_skeleton_get_root_bone(spine_skeleton obj) {
-    if (!obj) return (spine_bone) 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_bone) _obj->getRootBone();
+spine_bone spine_skeleton_find_bone(spine_skeleton self, const char* boneName) {
+    return (spine_bone)((Skeleton*)self)->findBone(*((const String*)boneName));
 }
 
-spine_bone spine_skeleton_find_bone(spine_skeleton obj, const char* boneName) {
-    if (!obj) return (spine_bone) 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_bone) _obj->findBone(String(boneName));
+spine_array_slot spine_skeleton_get_slots(spine_skeleton self) {
+    return (spine_array_slot)&((Skeleton*)self)->getSlots();
 }
 
-int32_t spine_skeleton_get_num_slots(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (int32_t) _obj->getSlots().size();
+spine_slot spine_skeleton_find_slot(spine_skeleton self, const char* slotName) {
+    return (spine_slot)((Skeleton*)self)->findSlot(*((const String*)slotName));
 }
 
-spine_slot *spine_skeleton_get_slots(spine_skeleton obj) {
-    if (!obj) return nullptr;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_slot *) _obj->getSlots().buffer();
+spine_array_slot spine_skeleton_get_draw_order(spine_skeleton self) {
+    return (spine_array_slot)&((Skeleton*)self)->getDrawOrder();
 }
 
-spine_slot spine_skeleton_find_slot(spine_skeleton obj, const char* slotName) {
-    if (!obj) return (spine_slot) 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_slot) _obj->findSlot(String(slotName));
+spine_skin spine_skeleton_get_skin(spine_skeleton self) {
+    return (spine_skin)((Skeleton*)self)->getSkin();
 }
 
-int32_t spine_skeleton_get_num_draw_order(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (int32_t) _obj->getDrawOrder().size();
+void spine_skeleton_set_skin_1(spine_skeleton self, const char* skinName) {
+    ((Skeleton*)self)->setSkin(*((const String*)skinName));
 }
 
-spine_slot *spine_skeleton_get_draw_order(spine_skeleton obj) {
-    if (!obj) return nullptr;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_slot *) _obj->getDrawOrder().buffer();
+void spine_skeleton_set_skin_2(spine_skeleton self, spine_skin newSkin) {
+    ((Skeleton*)self)->setSkin((Skin *)newSkin);
 }
 
-spine_skin spine_skeleton_get_skin(spine_skeleton obj) {
-    if (!obj) return (spine_skin) 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_skin) _obj->getSkin();
+spine_attachment spine_skeleton_get_attachment_1(spine_skeleton self, const char* slotName, const char* attachmentName) {
+    return (spine_attachment)((Skeleton*)self)->getAttachment(*((const String*)slotName), *((const String*)attachmentName));
 }
 
-void spine_skeleton_set_skin(spine_skeleton obj, const char* value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setSkin(String(value));
+spine_attachment spine_skeleton_get_attachment_2(spine_skeleton self, int slotIndex, const char* attachmentName) {
+    return (spine_attachment)((Skeleton*)self)->getAttachment(slotIndex, *((const String*)attachmentName));
 }
 
-void spine_skeleton_set_skin(spine_skeleton obj, spine_skin value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setSkin((Skin *) value);
+void spine_skeleton_set_attachment(spine_skeleton self, const char* slotName, const char* attachmentName) {
+    ((Skeleton*)self)->setAttachment(*((const String*)slotName), *((const String*)attachmentName));
 }
 
-spine_attachment spine_skeleton_get_attachment(spine_skeleton obj, const char* slotName, const char* attachmentName) {
-    if (!obj) return (spine_attachment) 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_attachment) _obj->getAttachment(String(slotName), String(attachmentName));
+spine_array_constraint spine_skeleton_get_constraints(spine_skeleton self) {
+    return (spine_array_constraint)&((Skeleton*)self)->getConstraints();
 }
 
-spine_attachment spine_skeleton_get_attachment_2(spine_skeleton obj, int slotIndex, const char* attachmentName) {
-    if (!obj) return (spine_attachment) 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_attachment) _obj->getAttachment(slotIndex, String(attachmentName));
+spine_array_physics_constraint spine_skeleton_get_physics_constraints(spine_skeleton self) {
+    return (spine_array_physics_constraint)&((Skeleton*)self)->getPhysicsConstraints();
 }
 
-void spine_skeleton_set_attachment(spine_skeleton obj, const char* slotName, const char* attachmentName) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setAttachment(String(slotName), String(attachmentName));
+void spine_skeleton_get_bounds_1(spine_skeleton self, float* outX, float* outY, float* outWidth, float* outHeight, spine_array_float outVertexBuffer) {
+    ((Skeleton*)self)->getBounds(*outX, *outY, *outWidth, *outHeight, *((Array<float>*)outVertexBuffer));
 }
 
-int32_t spine_skeleton_get_num_constraints(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (int32_t) _obj->getConstraints().size();
+void spine_skeleton_get_bounds_2(spine_skeleton self, float* outX, float* outY, float* outWidth, float* outHeight, spine_array_float outVertexBuffer, spine_skeleton_clipping clipper) {
+    ((Skeleton*)self)->getBounds(*outX, *outY, *outWidth, *outHeight, *((Array<float>*)outVertexBuffer), (SkeletonClipping *)clipper);
 }
 
-spine_constraint *spine_skeleton_get_constraints(spine_skeleton obj) {
-    if (!obj) return nullptr;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_constraint *) _obj->getConstraints().buffer();
+spine_color spine_skeleton_get_color(spine_skeleton self) {
+    return (spine_color)&((Skeleton*)self)->getColor();
 }
 
-int32_t spine_skeleton_get_num_physics_constraints(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (int32_t) _obj->getPhysicsConstraints().size();
+void spine_skeleton_set_color_1(spine_skeleton self, spine_color color) {
+    ((Skeleton*)self)->setColor(*((Color*)color));
 }
 
-spine_physics_constraint *spine_skeleton_get_physics_constraints(spine_skeleton obj) {
-    if (!obj) return nullptr;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_physics_constraint *) _obj->getPhysicsConstraints().buffer();
+void spine_skeleton_set_color_2(spine_skeleton self, float r, float g, float b, float a) {
+    ((Skeleton*)self)->setColor(r, g, b, a);
 }
 
-void spine_skeleton_get_bounds(spine_skeleton obj, float* outX, float* outY, float* outWidth, float* outHeight, spine_array_float outVertexBuffer) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->getBounds(*outX, *outY, *outWidth, *outHeight, (Array<float> &) outVertexBuffer);
+float spine_skeleton_get_scale_x(spine_skeleton self) {
+    return ((Skeleton*)self)->getScaleX();
 }
 
-void spine_skeleton_get_bounds_6(spine_skeleton obj, float* outX, float* outY, float* outWidth, float* outHeight, spine_array_float outVertexBuffer, spine_skeleton_clipping clipper) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->getBounds(*outX, *outY, *outWidth, *outHeight, (Array<float> &) outVertexBuffer, (SkeletonClipping *) clipper);
+void spine_skeleton_set_scale_x(spine_skeleton self, float inValue) {
+    ((Skeleton*)self)->setScaleX(inValue);
 }
 
-spine_color spine_skeleton_get_color(spine_skeleton obj) {
-    if (!obj) return (spine_color) 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return (spine_color) &_obj->getColor();
+float spine_skeleton_get_scale_y(spine_skeleton self) {
+    return ((Skeleton*)self)->getScaleY();
 }
 
-void spine_skeleton_set_color(spine_skeleton obj, spine_color value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setColor(*((Color*) value));
+void spine_skeleton_set_scale_y(spine_skeleton self, float inValue) {
+    ((Skeleton*)self)->setScaleY(inValue);
 }
 
-void spine_skeleton_set_color(spine_skeleton obj, float r, float g, float b, float a) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setColor(r, g, b, a);
+void spine_skeleton_set_scale(spine_skeleton self, float scaleX, float scaleY) {
+    ((Skeleton*)self)->setScale(scaleX, scaleY);
 }
 
-float spine_skeleton_get_scale_x(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return _obj->getScaleX();
+float spine_skeleton_get_x(spine_skeleton self) {
+    return ((Skeleton*)self)->getX();
 }
 
-void spine_skeleton_set_scale_x(spine_skeleton obj, float value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setScaleX(value);
+void spine_skeleton_set_x(spine_skeleton self, float inValue) {
+    ((Skeleton*)self)->setX(inValue);
 }
 
-float spine_skeleton_get_scale_y(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return _obj->getScaleY();
+float spine_skeleton_get_y(spine_skeleton self) {
+    return ((Skeleton*)self)->getY();
 }
 
-void spine_skeleton_set_scale_y(spine_skeleton obj, float value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setScaleY(value);
+void spine_skeleton_set_y(spine_skeleton self, float inValue) {
+    ((Skeleton*)self)->setY(inValue);
 }
 
-void spine_skeleton_set_scale(spine_skeleton obj, float scaleX, float scaleY) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setScale(scaleX, scaleY);
+void spine_skeleton_set_position(spine_skeleton self, float x, float y) {
+    ((Skeleton*)self)->setPosition(x, y);
 }
 
-float spine_skeleton_get_x(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return _obj->getX();
+float spine_skeleton_get_wind_x(spine_skeleton self) {
+    return ((Skeleton*)self)->getWindX();
 }
 
-void spine_skeleton_set_x(spine_skeleton obj, float value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setX(value);
+void spine_skeleton_set_wind_x(spine_skeleton self, float windX) {
+    ((Skeleton*)self)->setWindX(windX);
 }
 
-float spine_skeleton_get_y(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return _obj->getY();
+float spine_skeleton_get_wind_y(spine_skeleton self) {
+    return ((Skeleton*)self)->getWindY();
 }
 
-void spine_skeleton_set_y(spine_skeleton obj, float value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setY(value);
+void spine_skeleton_set_wind_y(spine_skeleton self, float windY) {
+    ((Skeleton*)self)->setWindY(windY);
 }
 
-void spine_skeleton_set_position(spine_skeleton obj, float x, float y) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setPosition(x, y);
+float spine_skeleton_get_gravity_x(spine_skeleton self) {
+    return ((Skeleton*)self)->getGravityX();
 }
 
-float spine_skeleton_get_wind_x(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return _obj->getWindX();
+void spine_skeleton_set_gravity_x(spine_skeleton self, float gravityX) {
+    ((Skeleton*)self)->setGravityX(gravityX);
 }
 
-void spine_skeleton_set_wind_x(spine_skeleton obj, float value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setWindX(value);
+float spine_skeleton_get_gravity_y(spine_skeleton self) {
+    return ((Skeleton*)self)->getGravityY();
 }
 
-float spine_skeleton_get_wind_y(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return _obj->getWindY();
+void spine_skeleton_set_gravity_y(spine_skeleton self, float gravityY) {
+    ((Skeleton*)self)->setGravityY(gravityY);
 }
 
-void spine_skeleton_set_wind_y(spine_skeleton obj, float value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setWindY(value);
+void spine_skeleton_physics_translate(spine_skeleton self, float x, float y) {
+    ((Skeleton*)self)->physicsTranslate(x, y);
 }
 
-float spine_skeleton_get_gravity_x(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return _obj->getGravityX();
+void spine_skeleton_physics_rotate(spine_skeleton self, float x, float y, float degrees) {
+    ((Skeleton*)self)->physicsRotate(x, y, degrees);
 }
 
-void spine_skeleton_set_gravity_x(spine_skeleton obj, float value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setGravityX(value);
+float spine_skeleton_get_time(spine_skeleton self) {
+    return ((Skeleton*)self)->getTime();
 }
 
-float spine_skeleton_get_gravity_y(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return _obj->getGravityY();
+void spine_skeleton_set_time(spine_skeleton self, float time) {
+    ((Skeleton*)self)->setTime(time);
 }
 
-void spine_skeleton_set_gravity_y(spine_skeleton obj, float value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setGravityY(value);
-}
-
-void spine_skeleton_physics_translate(spine_skeleton obj, float x, float y) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->physicsTranslate(x, y);
-}
-
-void spine_skeleton_physics_rotate(spine_skeleton obj, float x, float y, float degrees) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->physicsRotate(x, y, degrees);
-}
-
-float spine_skeleton_get_time(spine_skeleton obj) {
-    if (!obj) return 0;
-    Skeleton *_obj = (Skeleton *) obj;
-    return _obj->getTime();
-}
-
-void spine_skeleton_set_time(spine_skeleton obj, float value) {
-    if (!obj) return;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->setTime(value);
-}
-
-void spine_skeleton_update(spine_skeleton obj, float delta) {
-    if (!obj) return ;
-    Skeleton *_obj = (Skeleton *) obj;
-    _obj->update(delta);
+void spine_skeleton_update(spine_skeleton self, float delta) {
+    ((Skeleton*)self)->update(delta);
 }

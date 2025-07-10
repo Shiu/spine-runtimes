@@ -1,64 +1,36 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+#ifndef SPINE_SPINE_TRANSFORM_CONSTRAINT_TIMELINE_H
+#define SPINE_SPINE_TRANSFORM_CONSTRAINT_TIMELINE_H
 
-#ifndef SPINE_C_TRANSFORMCONSTRAINTTIMELINE_H
-#define SPINE_C_TRANSFORMCONSTRAINTTIMELINE_H
+#include "../base.h"
+#include "types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "types.h"
+SPINE_C_API spine_transform_constraint_timeline spine_transform_constraint_timeline_create(size_t frameCount, size_t bezierCount, int transformConstraintIndex);
 
-SPINE_C_EXPORT spine_transform_constraint_timeline spine_transform_constraint_timeline_create(size_t frameCount, size_t bezierCount, int transformConstraintIndex);
-SPINE_C_EXPORT void spine_transform_constraint_timeline_dispose(spine_transform_constraint_timeline obj);
-SPINE_C_EXPORT spine_rtti spine_transform_constraint_timeline_get_rtti();
-SPINE_C_EXPORT void spine_transform_constraint_timeline_apply(spine_transform_constraint_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
-SPINE_C_EXPORT void spine_transform_constraint_timeline_set_frame(spine_transform_constraint_timeline obj, int frame, float time, float mixRotate, float mixX, float mixY, float mixScaleX, float mixScaleY, float mixShearY);
-SPINE_C_EXPORT void spine_transform_constraint_timeline_set_linear(spine_transform_constraint_timeline obj, size_t value);
-SPINE_C_EXPORT void spine_transform_constraint_timeline_set_stepped(spine_transform_constraint_timeline obj, size_t value);
-SPINE_C_EXPORT void spine_transform_constraint_timeline_set_bezier(spine_transform_constraint_timeline obj, size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2);
-SPINE_C_EXPORT float spine_transform_constraint_timeline_get_bezier_value(spine_transform_constraint_timeline obj, float time, size_t frame, size_t valueOffset, size_t i);
-SPINE_C_EXPORT int32_t spine_transform_constraint_timeline_get_num_curves(spine_transform_constraint_timeline obj);
-SPINE_C_EXPORT float *spine_transform_constraint_timeline_get_curves(spine_transform_constraint_timeline obj);
-SPINE_C_EXPORT size_t spine_transform_constraint_timeline_get_frame_entries(spine_transform_constraint_timeline obj);
-SPINE_C_EXPORT size_t spine_transform_constraint_timeline_get_frame_count(spine_transform_constraint_timeline obj);
-SPINE_C_EXPORT int32_t spine_transform_constraint_timeline_get_num_frames(spine_transform_constraint_timeline obj);
-SPINE_C_EXPORT float *spine_transform_constraint_timeline_get_frames(spine_transform_constraint_timeline obj);
-SPINE_C_EXPORT float spine_transform_constraint_timeline_get_duration(spine_transform_constraint_timeline obj);
-SPINE_C_EXPORT int32_t spine_transform_constraint_timeline_get_num_property_ids(spine_transform_constraint_timeline obj);
-SPINE_C_EXPORT int64_t *spine_transform_constraint_timeline_get_property_ids(spine_transform_constraint_timeline obj);
-SPINE_C_EXPORT int spine_transform_constraint_timeline_get_constraint_index(spine_transform_constraint_timeline obj);
-SPINE_C_EXPORT void spine_transform_constraint_timeline_set_constraint_index(spine_transform_constraint_timeline obj, int value);
+SPINE_C_API void spine_transform_constraint_timeline_dispose(spine_transform_constraint_timeline self);
+
+SPINE_C_API spine_rtti spine_transform_constraint_timeline_get_rtti(spine_transform_constraint_timeline self);
+SPINE_C_API void spine_transform_constraint_timeline_apply(spine_transform_constraint_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
+SPINE_C_API void spine_transform_constraint_timeline_set_frame(spine_transform_constraint_timeline self, int frame, float time, float mixRotate, float mixX, float mixY, float mixScaleX, float mixScaleY, float mixShearY);
+SPINE_C_API void spine_transform_constraint_timeline_set_linear(spine_transform_constraint_timeline self, size_t frame);
+SPINE_C_API void spine_transform_constraint_timeline_set_stepped(spine_transform_constraint_timeline self, size_t frame);
+SPINE_C_API void spine_transform_constraint_timeline_set_bezier(spine_transform_constraint_timeline self, size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2);
+SPINE_C_API float spine_transform_constraint_timeline_get_bezier_value(spine_transform_constraint_timeline self, float time, size_t frame, size_t valueOffset, size_t i);
+SPINE_C_API spine_array_float spine_transform_constraint_timeline_get_curves(spine_transform_constraint_timeline self);
+SPINE_C_API size_t spine_transform_constraint_timeline_get_frame_entries(spine_transform_constraint_timeline self);
+SPINE_C_API size_t spine_transform_constraint_timeline_get_frame_count(spine_transform_constraint_timeline self);
+SPINE_C_API spine_array_float spine_transform_constraint_timeline_get_frames(spine_transform_constraint_timeline self);
+SPINE_C_API float spine_transform_constraint_timeline_get_duration(spine_transform_constraint_timeline self);
+SPINE_C_API spine_array_property_id spine_transform_constraint_timeline_get_property_ids(spine_transform_constraint_timeline self);
+SPINE_C_API int spine_transform_constraint_timeline_get_constraint_index(spine_transform_constraint_timeline self);
+SPINE_C_API void spine_transform_constraint_timeline_set_constraint_index(spine_transform_constraint_timeline self, int inValue);
+SPINE_C_API spine_rtti spine_transform_constraint_timeline_rtti(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // SPINE_C_TRANSFORMCONSTRAINTTIMELINE_H
+#endif /* SPINE_SPINE_TRANSFORM_CONSTRAINT_TIMELINE_H */

@@ -1,149 +1,76 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "transform_constraint_timeline.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_transform_constraint_timeline spine_transform_constraint_timeline_create(size_t frameCount, size_t bezierCount, int transformConstraintIndex) {
-    TransformConstraintTimeline *obj = new (__FILE__, __LINE__) TransformConstraintTimeline(frameCount, bezierCount, transformConstraintIndex);
-    return (spine_transform_constraint_timeline) obj;
+    return (spine_transform_constraint_timeline) new (__FILE__, __LINE__) TransformConstraintTimeline(frameCount, bezierCount, transformConstraintIndex);
 }
 
-void spine_transform_constraint_timeline_dispose(spine_transform_constraint_timeline obj) {
-    if (!obj) return;
-    delete (TransformConstraintTimeline *) obj;
+void spine_transform_constraint_timeline_dispose(spine_transform_constraint_timeline self) {
+    delete (TransformConstraintTimeline*)self;
 }
 
-spine_rtti spine_transform_constraint_timeline_get_rtti() {
-    return (spine_rtti) &TransformConstraintTimeline::rtti;
+spine_rtti spine_transform_constraint_timeline_get_rtti(spine_transform_constraint_timeline self) {
+    return (spine_rtti)&((TransformConstraintTimeline*)self)->getRTTI();
 }
 
-void spine_transform_constraint_timeline_apply(spine_transform_constraint_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
-    if (!obj) return ;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
+void spine_transform_constraint_timeline_apply(spine_transform_constraint_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
+    ((TransformConstraintTimeline*)self)->apply(*((Skeleton*)skeleton), lastTime, time, (Array<Event *> *)pEvents, alpha, (MixBlend)blend, (MixDirection)direction, appliedPose);
 }
 
-void spine_transform_constraint_timeline_set_frame(spine_transform_constraint_timeline obj, int frame, float time, float mixRotate, float mixX, float mixY, float mixScaleX, float mixScaleY, float mixShearY) {
-    if (!obj) return ;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    _obj->setFrame(frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
+void spine_transform_constraint_timeline_set_frame(spine_transform_constraint_timeline self, int frame, float time, float mixRotate, float mixX, float mixY, float mixScaleX, float mixScaleY, float mixShearY) {
+    ((TransformConstraintTimeline*)self)->setFrame(frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
 }
 
-void spine_transform_constraint_timeline_set_linear(spine_transform_constraint_timeline obj, size_t value) {
-    if (!obj) return;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    _obj->setLinear(value);
+void spine_transform_constraint_timeline_set_linear(spine_transform_constraint_timeline self, size_t frame) {
+    ((CurveTimeline*)(TransformConstraintTimeline*)self)->setLinear(frame);
 }
 
-void spine_transform_constraint_timeline_set_stepped(spine_transform_constraint_timeline obj, size_t value) {
-    if (!obj) return;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    _obj->setStepped(value);
+void spine_transform_constraint_timeline_set_stepped(spine_transform_constraint_timeline self, size_t frame) {
+    ((CurveTimeline*)(TransformConstraintTimeline*)self)->setStepped(frame);
 }
 
-void spine_transform_constraint_timeline_set_bezier(spine_transform_constraint_timeline obj, size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2) {
-    if (!obj) return ;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    _obj->setBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
+void spine_transform_constraint_timeline_set_bezier(spine_transform_constraint_timeline self, size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2) {
+    ((CurveTimeline*)(TransformConstraintTimeline*)self)->setBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
 }
 
-float spine_transform_constraint_timeline_get_bezier_value(spine_transform_constraint_timeline obj, float time, size_t frame, size_t valueOffset, size_t i) {
-    if (!obj) return 0;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    return _obj->getBezierValue(time, frame, valueOffset, i);
+float spine_transform_constraint_timeline_get_bezier_value(spine_transform_constraint_timeline self, float time, size_t frame, size_t valueOffset, size_t i) {
+    return ((CurveTimeline*)(TransformConstraintTimeline*)self)->getBezierValue(time, frame, valueOffset, i);
 }
 
-int32_t spine_transform_constraint_timeline_get_num_curves(spine_transform_constraint_timeline obj) {
-    if (!obj) return 0;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    return (int32_t) _obj->getCurves().size();
+spine_array_float spine_transform_constraint_timeline_get_curves(spine_transform_constraint_timeline self) {
+    return (spine_array_float)&((CurveTimeline*)(TransformConstraintTimeline*)self)->getCurves();
 }
 
-float *spine_transform_constraint_timeline_get_curves(spine_transform_constraint_timeline obj) {
-    if (!obj) return nullptr;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    return (float *) _obj->getCurves().buffer();
+size_t spine_transform_constraint_timeline_get_frame_entries(spine_transform_constraint_timeline self) {
+    return ((CurveTimeline*)(TransformConstraintTimeline*)self)->getFrameEntries();
 }
 
-size_t spine_transform_constraint_timeline_get_frame_entries(spine_transform_constraint_timeline obj) {
-    if (!obj) return 0;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    return _obj->getFrameEntries();
+size_t spine_transform_constraint_timeline_get_frame_count(spine_transform_constraint_timeline self) {
+    return ((CurveTimeline*)(TransformConstraintTimeline*)self)->getFrameCount();
 }
 
-size_t spine_transform_constraint_timeline_get_frame_count(spine_transform_constraint_timeline obj) {
-    if (!obj) return 0;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    return _obj->getFrameCount();
+spine_array_float spine_transform_constraint_timeline_get_frames(spine_transform_constraint_timeline self) {
+    return (spine_array_float)&((CurveTimeline*)(TransformConstraintTimeline*)self)->getFrames();
 }
 
-int32_t spine_transform_constraint_timeline_get_num_frames(spine_transform_constraint_timeline obj) {
-    if (!obj) return 0;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    return (int32_t) _obj->getFrames().size();
+float spine_transform_constraint_timeline_get_duration(spine_transform_constraint_timeline self) {
+    return ((CurveTimeline*)(TransformConstraintTimeline*)self)->getDuration();
 }
 
-float *spine_transform_constraint_timeline_get_frames(spine_transform_constraint_timeline obj) {
-    if (!obj) return nullptr;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    return (float *) _obj->getFrames().buffer();
+spine_array_property_id spine_transform_constraint_timeline_get_property_ids(spine_transform_constraint_timeline self) {
+    return (spine_array_property_id)&((CurveTimeline*)(TransformConstraintTimeline*)self)->getPropertyIds();
 }
 
-float spine_transform_constraint_timeline_get_duration(spine_transform_constraint_timeline obj) {
-    if (!obj) return 0;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    return _obj->getDuration();
+int spine_transform_constraint_timeline_get_constraint_index(spine_transform_constraint_timeline self) {
+    return ((ConstraintTimeline*)(TransformConstraintTimeline*)self)->getConstraintIndex();
 }
 
-int32_t spine_transform_constraint_timeline_get_num_property_ids(spine_transform_constraint_timeline obj) {
-    if (!obj) return 0;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    return (int32_t) _obj->getPropertyIds().size();
+void spine_transform_constraint_timeline_set_constraint_index(spine_transform_constraint_timeline self, int inValue) {
+    ((ConstraintTimeline*)(TransformConstraintTimeline*)self)->setConstraintIndex(inValue);
 }
 
-int64_t *spine_transform_constraint_timeline_get_property_ids(spine_transform_constraint_timeline obj) {
-    if (!obj) return nullptr;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    return (int64_t *) _obj->getPropertyIds().buffer();
-}
-
-int spine_transform_constraint_timeline_get_constraint_index(spine_transform_constraint_timeline obj) {
-    if (!obj) return 0;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    return _obj->getConstraintIndex();
-}
-
-void spine_transform_constraint_timeline_set_constraint_index(spine_transform_constraint_timeline obj, int value) {
-    if (!obj) return;
-    TransformConstraintTimeline *_obj = (TransformConstraintTimeline *) obj;
-    _obj->setConstraintIndex(value);
+spine_rtti spine_transform_constraint_timeline_rtti(void) {
+    return (spine_rtti)&TransformConstraintTimeline::rtti;
 }

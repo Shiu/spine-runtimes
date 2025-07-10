@@ -1,4 +1,5 @@
 - clean up logging, use chalk to do colored warnings/errors and make logging look very nice and informative (no emojis)
+- License header should be read from spine-libgdx/spine-libgdx/src/.../Skeleton.java in c-writer and not embedded in the file.
 - it's weird that method generation comes before array specialization. i'd assume method generation should get the specialization and use those to output the correct array type for return types and parameters and error if an array type is not specialized?
 - type extractor should also report typedefs like typedef long long PropertyId; so primitive type to some name, and we need to handle that in the codegen
 - Generate language bindings from spine-cpp-lite

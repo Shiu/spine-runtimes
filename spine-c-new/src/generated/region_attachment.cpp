@@ -1,245 +1,144 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "region_attachment.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_region_attachment spine_region_attachment_create(const char* name) {
-    RegionAttachment *obj = new (__FILE__, __LINE__) RegionAttachment(String(name));
-    return (spine_region_attachment) obj;
+    return (spine_region_attachment) new (__FILE__, __LINE__) RegionAttachment(*((const String*)name));
 }
 
-void spine_region_attachment_dispose(spine_region_attachment obj) {
-    if (!obj) return;
-    delete (RegionAttachment *) obj;
+void spine_region_attachment_dispose(spine_region_attachment self) {
+    delete (RegionAttachment*)self;
 }
 
-spine_rtti spine_region_attachment_get_rtti() {
-    return (spine_rtti) &RegionAttachment::rtti;
+spine_rtti spine_region_attachment_get_rtti(spine_region_attachment self) {
+    return (spine_rtti)&((RegionAttachment*)self)->getRTTI();
 }
 
-void spine_region_attachment_update_region(spine_region_attachment obj) {
-    if (!obj) return ;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->updateRegion();
+void spine_region_attachment_update_region(spine_region_attachment self) {
+    ((RegionAttachment*)self)->updateRegion();
 }
 
-void spine_region_attachment_compute_world_vertices(spine_region_attachment obj, spine_slot slot, float * worldVertices, size_t offset, size_t stride) {
-    if (!obj) return ;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->computeWorldVertices(*(Slot*) slot, (float *) worldVertices, offset, stride);
+void spine_region_attachment_compute_world_vertices_1(spine_region_attachment self, spine_slot slot, float * worldVertices, size_t offset, size_t stride) {
+    ((RegionAttachment*)self)->computeWorldVertices(*((Slot*)slot), worldVertices, offset, stride);
 }
 
-void spine_region_attachment_compute_world_vertices_4(spine_region_attachment obj, spine_slot slot, spine_array_float worldVertices, size_t offset, size_t stride) {
-    if (!obj) return ;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->computeWorldVertices(*(Slot*) slot, (Array<float> &) worldVertices, offset, stride);
+void spine_region_attachment_compute_world_vertices_2(spine_region_attachment self, spine_slot slot, spine_array_float worldVertices, size_t offset, size_t stride) {
+    ((RegionAttachment*)self)->computeWorldVertices(*((Slot*)slot), *((Array<float>*)worldVertices), offset, stride);
 }
 
-float spine_region_attachment_get_x(spine_region_attachment obj) {
-    if (!obj) return 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return _obj->getX();
+float spine_region_attachment_get_x(spine_region_attachment self) {
+    return ((RegionAttachment*)self)->getX();
 }
 
-void spine_region_attachment_set_x(spine_region_attachment obj, float value) {
-    if (!obj) return;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->setX(value);
+void spine_region_attachment_set_x(spine_region_attachment self, float inValue) {
+    ((RegionAttachment*)self)->setX(inValue);
 }
 
-float spine_region_attachment_get_y(spine_region_attachment obj) {
-    if (!obj) return 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return _obj->getY();
+float spine_region_attachment_get_y(spine_region_attachment self) {
+    return ((RegionAttachment*)self)->getY();
 }
 
-void spine_region_attachment_set_y(spine_region_attachment obj, float value) {
-    if (!obj) return;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->setY(value);
+void spine_region_attachment_set_y(spine_region_attachment self, float inValue) {
+    ((RegionAttachment*)self)->setY(inValue);
 }
 
-float spine_region_attachment_get_rotation(spine_region_attachment obj) {
-    if (!obj) return 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return _obj->getRotation();
+float spine_region_attachment_get_rotation(spine_region_attachment self) {
+    return ((RegionAttachment*)self)->getRotation();
 }
 
-void spine_region_attachment_set_rotation(spine_region_attachment obj, float value) {
-    if (!obj) return;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->setRotation(value);
+void spine_region_attachment_set_rotation(spine_region_attachment self, float inValue) {
+    ((RegionAttachment*)self)->setRotation(inValue);
 }
 
-float spine_region_attachment_get_scale_x(spine_region_attachment obj) {
-    if (!obj) return 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return _obj->getScaleX();
+float spine_region_attachment_get_scale_x(spine_region_attachment self) {
+    return ((RegionAttachment*)self)->getScaleX();
 }
 
-void spine_region_attachment_set_scale_x(spine_region_attachment obj, float value) {
-    if (!obj) return;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->setScaleX(value);
+void spine_region_attachment_set_scale_x(spine_region_attachment self, float inValue) {
+    ((RegionAttachment*)self)->setScaleX(inValue);
 }
 
-float spine_region_attachment_get_scale_y(spine_region_attachment obj) {
-    if (!obj) return 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return _obj->getScaleY();
+float spine_region_attachment_get_scale_y(spine_region_attachment self) {
+    return ((RegionAttachment*)self)->getScaleY();
 }
 
-void spine_region_attachment_set_scale_y(spine_region_attachment obj, float value) {
-    if (!obj) return;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->setScaleY(value);
+void spine_region_attachment_set_scale_y(spine_region_attachment self, float inValue) {
+    ((RegionAttachment*)self)->setScaleY(inValue);
 }
 
-float spine_region_attachment_get_width(spine_region_attachment obj) {
-    if (!obj) return 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return _obj->getWidth();
+float spine_region_attachment_get_width(spine_region_attachment self) {
+    return ((RegionAttachment*)self)->getWidth();
 }
 
-void spine_region_attachment_set_width(spine_region_attachment obj, float value) {
-    if (!obj) return;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->setWidth(value);
+void spine_region_attachment_set_width(spine_region_attachment self, float inValue) {
+    ((RegionAttachment*)self)->setWidth(inValue);
 }
 
-float spine_region_attachment_get_height(spine_region_attachment obj) {
-    if (!obj) return 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return _obj->getHeight();
+float spine_region_attachment_get_height(spine_region_attachment self) {
+    return ((RegionAttachment*)self)->getHeight();
 }
 
-void spine_region_attachment_set_height(spine_region_attachment obj, float value) {
-    if (!obj) return;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->setHeight(value);
+void spine_region_attachment_set_height(spine_region_attachment self, float inValue) {
+    ((RegionAttachment*)self)->setHeight(inValue);
 }
 
-spine_color spine_region_attachment_get_color(spine_region_attachment obj) {
-    if (!obj) return (spine_color) 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return (spine_color) &_obj->getColor();
+spine_color spine_region_attachment_get_color(spine_region_attachment self) {
+    return (spine_color)&((RegionAttachment*)self)->getColor();
 }
 
-const char* spine_region_attachment_get_path(spine_region_attachment obj) {
-    if (!obj) return nullptr;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return (const char *) _obj->getPath().buffer();
+const char* spine_region_attachment_get_path(spine_region_attachment self) {
+    return (const char*)&((RegionAttachment*)self)->getPath();
 }
 
-void spine_region_attachment_set_path(spine_region_attachment obj, const char* value) {
-    if (!obj) return;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->setPath(String(value));
+void spine_region_attachment_set_path(spine_region_attachment self, const char* inValue) {
+    ((RegionAttachment*)self)->setPath(*((const String*)inValue));
 }
 
-spine_texture_region spine_region_attachment_get_region(spine_region_attachment obj) {
-    if (!obj) return (spine_texture_region) 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return (spine_texture_region) _obj->getRegion();
+spine_texture_region spine_region_attachment_get_region(spine_region_attachment self) {
+    return (spine_texture_region)((RegionAttachment*)self)->getRegion();
 }
 
-void spine_region_attachment_set_region(spine_region_attachment obj, spine_texture_region value) {
-    if (!obj) return;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->setRegion((TextureRegion *) value);
+void spine_region_attachment_set_region(spine_region_attachment self, spine_texture_region region) {
+    ((RegionAttachment*)self)->setRegion((TextureRegion *)region);
 }
 
-spine_sequence spine_region_attachment_get_sequence(spine_region_attachment obj) {
-    if (!obj) return (spine_sequence) 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return (spine_sequence) _obj->getSequence();
+spine_sequence spine_region_attachment_get_sequence(spine_region_attachment self) {
+    return (spine_sequence)((RegionAttachment*)self)->getSequence();
 }
 
-void spine_region_attachment_set_sequence(spine_region_attachment obj, spine_sequence value) {
-    if (!obj) return;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->setSequence((Sequence *) value);
+void spine_region_attachment_set_sequence(spine_region_attachment self, spine_sequence sequence) {
+    ((RegionAttachment*)self)->setSequence((Sequence *)sequence);
 }
 
-int32_t spine_region_attachment_get_num_offset(spine_region_attachment obj) {
-    if (!obj) return 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return (int32_t) _obj->getOffset().size();
+spine_array_float spine_region_attachment_get_offset(spine_region_attachment self) {
+    return (spine_array_float)&((RegionAttachment*)self)->getOffset();
 }
 
-float *spine_region_attachment_get_offset(spine_region_attachment obj) {
-    if (!obj) return nullptr;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return (float *) _obj->getOffset().buffer();
+spine_array_float spine_region_attachment_get_u_vs(spine_region_attachment self) {
+    return (spine_array_float)&((RegionAttachment*)self)->getUVs();
 }
 
-int32_t spine_region_attachment_get_num_u_vs(spine_region_attachment obj) {
-    if (!obj) return 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return (int32_t) _obj->getUVs().size();
+spine_attachment spine_region_attachment_copy(spine_region_attachment self) {
+    return (spine_attachment)((RegionAttachment*)self)->copy();
 }
 
-float *spine_region_attachment_get_u_vs(spine_region_attachment obj) {
-    if (!obj) return nullptr;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return (float *) _obj->getUVs().buffer();
+const char* spine_region_attachment_get_name(spine_region_attachment self) {
+    return (const char*)&((Attachment*)(RegionAttachment*)self)->getName();
 }
 
-spine_attachment spine_region_attachment_copy(spine_region_attachment obj) {
-    if (!obj) return (spine_attachment) 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return (spine_attachment) _obj->copy();
+int spine_region_attachment_get_ref_count(spine_region_attachment self) {
+    return ((Attachment*)(RegionAttachment*)self)->getRefCount();
 }
 
-const char* spine_region_attachment_get_name(spine_region_attachment obj) {
-    if (!obj) return nullptr;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return (const char *) _obj->getName().buffer();
+void spine_region_attachment_reference(spine_region_attachment self) {
+    ((Attachment*)(RegionAttachment*)self)->reference();
 }
 
-int spine_region_attachment_get_ref_count(spine_region_attachment obj) {
-    if (!obj) return 0;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    return _obj->getRefCount();
+void spine_region_attachment_dereference(spine_region_attachment self) {
+    ((Attachment*)(RegionAttachment*)self)->dereference();
 }
 
-void spine_region_attachment_reference(spine_region_attachment obj) {
-    if (!obj) return ;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->reference();
-}
-
-void spine_region_attachment_dereference(spine_region_attachment obj) {
-    if (!obj) return ;
-    RegionAttachment *_obj = (RegionAttachment *) obj;
-    _obj->dereference();
+spine_rtti spine_region_attachment_rtti(void) {
+    return (spine_rtti)&RegionAttachment::rtti;
 }

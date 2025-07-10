@@ -1,90 +1,88 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "color.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_color spine_color_create(void) {
-    Color *obj = new (__FILE__, __LINE__) Color();
-    return (spine_color) obj;
+    return (spine_color) new (__FILE__, __LINE__) Color();
 }
 
-spine_color spine_color_create_with_float_float_float_float(float r, float g, float b, float a) {
-    Color *obj = new (__FILE__, __LINE__) Color(r, g, b, a);
-    return (spine_color) obj;
+spine_color spine_color_create2(float r, float g, float b, float a) {
+    return (spine_color) new (__FILE__, __LINE__) Color(r, g, b, a);
 }
 
-void spine_color_dispose(spine_color obj) {
-    if (!obj) return;
-    delete (Color *) obj;
+void spine_color_dispose(spine_color self) {
+    delete (Color*)self;
 }
 
-spine_color spine_color_set(spine_color obj, float _r, float _g, float _b, float _a) {
-    if (!obj) return (spine_color) 0;
-    Color *_obj = (Color *) obj;
-    return (spine_color) &_obj->set(_r, _g, _b, _a);
+spine_color spine_color_set_1(spine_color self, float _r, float _g, float _b, float _a) {
+    return (spine_color)&((Color*)self)->set(_r, _g, _b, _a);
 }
 
-spine_color spine_color_set_3(spine_color obj, float _r, float _g, float _b) {
-    if (!obj) return (spine_color) 0;
-    Color *_obj = (Color *) obj;
-    return (spine_color) &_obj->set(_r, _g, _b);
+spine_color spine_color_set_2(spine_color self, float _r, float _g, float _b) {
+    return (spine_color)&((Color*)self)->set(_r, _g, _b);
 }
 
-void spine_color_set(spine_color obj, spine_color value) {
-    if (!obj) return;
-    Color *_obj = (Color *) obj;
-    _obj->set(value);
+spine_color spine_color_set_3(spine_color self, spine_color other) {
+    return (spine_color)&((Color*)self)->set(*((const Color*)other));
 }
 
-spine_color spine_color_add(spine_color obj, float _r, float _g, float _b, float _a) {
-    if (!obj) return (spine_color) 0;
-    Color *_obj = (Color *) obj;
-    return (spine_color) &_obj->add(_r, _g, _b, _a);
+spine_color spine_color_add_1(spine_color self, float _r, float _g, float _b, float _a) {
+    return (spine_color)&((Color*)self)->add(_r, _g, _b, _a);
 }
 
-spine_color spine_color_add_3(spine_color obj, float _r, float _g, float _b) {
-    if (!obj) return (spine_color) 0;
-    Color *_obj = (Color *) obj;
-    return (spine_color) &_obj->add(_r, _g, _b);
+spine_color spine_color_add_2(spine_color self, float _r, float _g, float _b) {
+    return (spine_color)&((Color*)self)->add(_r, _g, _b);
 }
 
-spine_color spine_color_add_1(spine_color obj, spine_color other) {
-    if (!obj) return (spine_color) 0;
-    Color *_obj = (Color *) obj;
-    return (spine_color) &_obj->add(*(Color*) other);
+spine_color spine_color_add_3(spine_color self, spine_color other) {
+    return (spine_color)&((Color*)self)->add(*((const Color*)other));
 }
 
-spine_color spine_color_clamp(spine_color obj) {
-    if (!obj) return (spine_color) 0;
-    Color *_obj = (Color *) obj;
-    return (spine_color) &_obj->clamp();
+spine_color spine_color_clamp(spine_color self) {
+    return (spine_color)&((Color*)self)->clamp();
+}
+
+float spine_color_parse_hex(const char * value, size_t index) {
+    return Color::parseHex(value, index);
+}
+
+void spine_color_rgba8888_to_color(spine_color color, int value) {
+    Color::rgba8888ToColor(*((Color*)color), value);
+}
+
+void spine_color_rgb888_to_color(spine_color color, int value) {
+    Color::rgb888ToColor(*((Color*)color), value);
+}
+
+float spine_color_get_r(spine_color self) {
+    return ((Color*)self)->r;
+}
+
+void spine_color_set_r(spine_color self, float value) {
+    ((Color*)self)->r = value;
+}
+
+float spine_color_get_g(spine_color self) {
+    return ((Color*)self)->g;
+}
+
+void spine_color_set_g(spine_color self, float value) {
+    ((Color*)self)->g = value;
+}
+
+float spine_color_get_b(spine_color self) {
+    return ((Color*)self)->b;
+}
+
+void spine_color_set_b(spine_color self, float value) {
+    ((Color*)self)->b = value;
+}
+
+float spine_color_get_a(spine_color self) {
+    return ((Color*)self)->a;
+}
+
+void spine_color_set_a(spine_color self, float value) {
+    ((Color*)self)->a = value;
 }

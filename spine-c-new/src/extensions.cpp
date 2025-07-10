@@ -136,27 +136,6 @@ void spine_report_leaks() {
     fflush(stdout);
 }
 
-// Color functions
-float spine_color_get_r(spine_color color) {
-    if (!color) return 0;
-    return ((Color *) color)->r;
-}
-
-float spine_color_get_g(spine_color color) {
-    if (!color) return 0;
-    return ((Color *) color)->g;
-}
-
-float spine_color_get_b(spine_color color) {
-    if (!color) return 0;
-    return ((Color *) color)->b;
-}
-
-float spine_color_get_a(spine_color color) {
-    if (!color) return 0;
-    return ((Color *) color)->a;
-}
-
 // Bounds functions
 float spine_bounds_get_x(spine_bounds bounds) {
     if (!bounds) return 0;
@@ -423,64 +402,6 @@ spine_animation_state_data spine_skeleton_drawable_get_animation_state_data(spin
 spine_animation_state_events spine_skeleton_drawable_get_animation_state_events(spine_skeleton_drawable drawable) {
     if (!drawable) return nullptr;
     return ((_spine_skeleton_drawable *) drawable)->animationStateEvents;
-}
-
-// Render command functions
-float *spine_render_command_get_positions(spine_render_command command) {
-    if (!command) return nullptr;
-    return ((RenderCommand *) command)->positions;
-}
-
-float *spine_render_command_get_uvs(spine_render_command command) {
-    if (!command) return nullptr;
-    return ((RenderCommand *) command)->uvs;
-}
-
-int32_t *spine_render_command_get_colors(spine_render_command command) {
-    if (!command) return nullptr;
-    return (int32_t *) ((RenderCommand *) command)->colors;
-}
-
-int32_t *spine_render_command_get_dark_colors(spine_render_command command) {
-    if (!command) return nullptr;
-    return (int32_t *) ((RenderCommand *) command)->darkColors;
-}
-
-int32_t spine_render_command_get_num_vertices(spine_render_command command) {
-    if (!command) return 0;
-    return ((RenderCommand *) command)->numVertices;
-}
-
-uint16_t *spine_render_command_get_indices(spine_render_command command) {
-    if (!command) return nullptr;
-    return ((RenderCommand *) command)->indices;
-}
-
-int32_t spine_render_command_get_num_indices(spine_render_command command) {
-    if (!command) return 0;
-    return ((RenderCommand *) command)->numIndices;
-}
-
-int32_t spine_render_command_get_atlas_page(spine_render_command command) {
-    if (!command) return 0;
-    return (int32_t) (intptr_t) ((RenderCommand *) command)->texture;
-}
-
-spine_blend_mode spine_render_command_get_blend_mode(spine_render_command command) {
-    if (!command) return SPINE_BLEND_MODE_NORMAL;
-    BlendMode mode = ((RenderCommand *) command)->blendMode;
-    switch (mode) {
-        case BlendMode_Normal: return SPINE_BLEND_MODE_NORMAL;
-        case BlendMode_Additive: return SPINE_BLEND_MODE_ADDITIVE;
-        case BlendMode_Multiply: return SPINE_BLEND_MODE_MULTIPLY;
-        case BlendMode_Screen: return SPINE_BLEND_MODE_SCREEN;
-        default: return SPINE_BLEND_MODE_NORMAL;
-    }
-}
-
-spine_render_command spine_render_command_get_next(spine_render_command command) {
-    if (!command) return nullptr;
-    return (spine_render_command) ((RenderCommand *) command)->next;
 }
 
 // Skin entries

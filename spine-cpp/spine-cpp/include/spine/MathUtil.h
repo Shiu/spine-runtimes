@@ -100,40 +100,6 @@ namespace spine {
 
         static float ceil(float v);
 	};
-
-	struct SP_API Interpolation {
-		virtual float apply(float a) = 0;
-
-		virtual float interpolate(float start, float end, float a) {
-			return start + (end - start) * apply(a);
-		}
-
-		virtual ~Interpolation() {};
-	};
-
-	struct SP_API PowInterpolation : public Interpolation {
-		PowInterpolation(int power) : power(power) {
-		}
-
-		float apply(float a) {
-			if (a <= 0.5f) return MathUtil::pow(a * 2.0f, (float) power) / 2.0f;
-			return MathUtil::pow((a - 1.0f) * 2.0f, (float) power) / (power % 2 == 0 ? -2.0f : 2.0f) + 1.0f;
-		}
-
-		int power;
-	};
-
-	struct SP_API PowOutInterpolation : public Interpolation {
-		PowOutInterpolation(int power) : power(power) {
-		}
-
-		float apply(float a) {
-			return MathUtil::pow(a - 1, (float) power) * (power % 2 == 0 ? -1.0f : 1.0f) + 1.0f;
-		}
-
-		int power;
-	};
-
 }
 
 #endif /* Spine_MathUtil_h */

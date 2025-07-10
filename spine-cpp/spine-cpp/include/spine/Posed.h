@@ -39,15 +39,16 @@ namespace spine {
 		Posed() {}
 		virtual ~Posed() {}
 
-		virtual void setupPose() = 0;
-
-		virtual void pose() = 0;
-
 		virtual void constrained() = 0;
 
 		virtual void resetConstrained() = 0;
 
 		virtual bool isPoseEqualToApplied() const = 0;
+
+	protected:
+		virtual void setupPose() = 0;
+
+		virtual void pose() = 0;
 	};
 
 	template<class D, class P, class A>
@@ -89,10 +90,6 @@ namespace spine {
 		virtual ~PosedGeneric() {
 		}
 
-		virtual void setupPose() override {
-			_pose.set(_data.getSetupPose());
-		}
-
 		/// The constraint's setup pose data.
 		D &getData() {
 			return _data;
@@ -112,16 +109,20 @@ namespace spine {
 			_constrained.set(_pose);
 		}
 
-		virtual void pose() override {
-			_applied = &_pose;
-		}
-
 		virtual void constrained() override {
 			_applied = &_constrained;
 		}
 
 		virtual bool isPoseEqualToApplied() const override {
 			return _applied == &_pose;
+		}
+
+	protected:
+		virtual void pose() override {
+			_applied = &_pose;
+		}
+		virtual void setupPose() override {
+			_pose.set(_data.getSetupPose());
 		}
 
 	protected:

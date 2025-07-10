@@ -1,0 +1,34 @@
+import { ClassOrStruct, Enum } from './types';
+
+export interface CParameter {
+    name: string;          // Parameter name in C
+    cType: string;         // C type (e.g., "float*", "spine_bone")  
+    cppType: string;       // Original C++ type (e.g., "float&", "Bone*")
+    isOutput: boolean;     // true for non-const references that become output params
+}
+
+export interface CMethod {
+    name: string;          // Full C function name (e.g., "spine_bone_get_x")
+    returnType: string;    // C return type
+    parameters: CParameter[];
+    body: string;          // The actual implementation code (e.g., "return ((Bone*)self)->getX();")
+}
+
+export interface CClassOrStruct {
+    name: string;          // C type name (e.g., "spine_bone")
+    cppType: ClassOrStruct;  // Original C++ type info
+    constructors: CMethod[];  // All constructors (including default)
+    destructor: CMethod;      // Always present (calls delete)
+    methods: CMethod[];       // All methods
+}
+
+export interface CEnumValue {
+    name: string;          // C enum value name (e.g., "SPINE_BLEND_MODE_NORMAL")
+    value?: string;        // Optional explicit value
+}
+
+export interface CEnum {
+    name: string;          // C type name (e.g., "spine_blend_mode")
+    cppType: Enum;         // Original C++ enum info
+    values: CEnumValue[];  // Converted enum values
+}

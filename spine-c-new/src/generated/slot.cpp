@@ -1,97 +1,44 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "slot.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_slot spine_slot_create(spine_slot_data data, spine_skeleton skeleton) {
-    Slot *obj = new (__FILE__, __LINE__) Slot(*(SlotData*) data, *(Skeleton*) skeleton);
-    return (spine_slot) obj;
+    return (spine_slot) new (__FILE__, __LINE__) Slot(*((SlotData*)data), *((Skeleton*)skeleton));
 }
 
-void spine_slot_dispose(spine_slot obj) {
-    if (!obj) return;
-    delete (Slot *) obj;
+void spine_slot_dispose(spine_slot self) {
+    delete (Slot*)self;
 }
 
-spine_bone spine_slot_get_bone(spine_slot obj) {
-    if (!obj) return (spine_bone) 0;
-    Slot *_obj = (Slot *) obj;
-    return (spine_bone) &_obj->getBone();
+spine_bone spine_slot_get_bone(spine_slot self) {
+    return (spine_bone)&((Slot*)self)->getBone();
 }
 
-void spine_slot_setup_pose(spine_slot obj) {
-    if (!obj) return ;
-    Slot *_obj = (Slot *) obj;
-    _obj->setupPose();
+void spine_slot_setup_pose(spine_slot self) {
+    ((Slot*)self)->setupPose();
 }
 
-spine_slot_data spine_slot_get_data(spine_slot obj) {
-    if (!obj) return (spine_slot_data) 0;
-    Slot *_obj = (Slot *) obj;
-    return (spine_slot_data) &_obj->getData();
+spine_slot_data spine_slot_get_data(spine_slot self) {
+    return (spine_slot_data)&((PosedGeneric<SlotData, SlotPose, SlotPose>*)(Slot*)self)->getData();
 }
 
-spine_slot_pose spine_slot_get_pose(spine_slot obj) {
-    if (!obj) return (spine_slot_pose) 0;
-    Slot *_obj = (Slot *) obj;
-    return (spine_slot_pose) &_obj->getPose();
+spine_slot_pose spine_slot_get_pose(spine_slot self) {
+    return (spine_slot_pose)&((PosedGeneric<SlotData, SlotPose, SlotPose>*)(Slot*)self)->getPose();
 }
 
-spine_slot_pose spine_slot_get_applied_pose(spine_slot obj) {
-    if (!obj) return (spine_slot_pose) 0;
-    Slot *_obj = (Slot *) obj;
-    return (spine_slot_pose) &_obj->getAppliedPose();
+spine_slot_pose spine_slot_get_applied_pose(spine_slot self) {
+    return (spine_slot_pose)&((PosedGeneric<SlotData, SlotPose, SlotPose>*)(Slot*)self)->getAppliedPose();
 }
 
-void spine_slot_reset_constrained(spine_slot obj) {
-    if (!obj) return ;
-    Slot *_obj = (Slot *) obj;
-    _obj->resetConstrained();
+void spine_slot_reset_constrained(spine_slot self) {
+    ((PosedGeneric<SlotData, SlotPose, SlotPose>*)(Slot*)self)->resetConstrained();
 }
 
-void spine_slot_pose(spine_slot obj) {
-    if (!obj) return ;
-    Slot *_obj = (Slot *) obj;
-    _obj->pose();
+void spine_slot_constrained(spine_slot self) {
+    ((PosedGeneric<SlotData, SlotPose, SlotPose>*)(Slot*)self)->constrained();
 }
 
-void spine_slot_constrained(spine_slot obj) {
-    if (!obj) return ;
-    Slot *_obj = (Slot *) obj;
-    _obj->constrained();
-}
-
-bool spine_slot_is_pose_equal_to_applied(spine_slot obj) {
-    if (!obj) return false;
-    Slot *_obj = (Slot *) obj;
-    return _obj->isPoseEqualToApplied();
+bool spine_slot_is_pose_equal_to_applied(spine_slot self) {
+    return ((PosedGeneric<SlotData, SlotPose, SlotPose>*)(Slot*)self)->isPoseEqualToApplied();
 }

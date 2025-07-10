@@ -1,65 +1,39 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+#ifndef SPINE_SPINE_IK_CONSTRAINT_H
+#define SPINE_SPINE_IK_CONSTRAINT_H
 
-#ifndef SPINE_C_IKCONSTRAINT_H
-#define SPINE_C_IKCONSTRAINT_H
+#include "../base.h"
+#include "types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "types.h"
+SPINE_C_API spine_ik_constraint spine_ik_constraint_create(spine_ik_constraint_data data, spine_skeleton skeleton);
 
-SPINE_C_EXPORT spine_ik_constraint spine_ik_constraint_create(spine_ik_constraint_data data, spine_skeleton skeleton);
-SPINE_C_EXPORT void spine_ik_constraint_dispose(spine_ik_constraint obj);
-SPINE_C_EXPORT spine_rtti spine_ik_constraint_get_rtti();
-SPINE_C_EXPORT spine_ik_constraint spine_ik_constraint_copy(spine_ik_constraint obj, spine_skeleton skeleton);
-SPINE_C_EXPORT void spine_ik_constraint_update(spine_ik_constraint obj, spine_skeleton skeleton, spine_physics physics);
-SPINE_C_EXPORT void spine_ik_constraint_sort(spine_ik_constraint obj, spine_skeleton skeleton);
-SPINE_C_EXPORT bool spine_ik_constraint_is_source_active(spine_ik_constraint obj);
-SPINE_C_EXPORT spine_ik_constraint_data spine_ik_constraint_get_data(spine_ik_constraint obj);
-SPINE_C_EXPORT int32_t spine_ik_constraint_get_num_bones(spine_ik_constraint obj);
-SPINE_C_EXPORT spine_bone_pose *spine_ik_constraint_get_bones(spine_ik_constraint obj);
-SPINE_C_EXPORT spine_bone spine_ik_constraint_get_target(spine_ik_constraint obj);
-SPINE_C_EXPORT void spine_ik_constraint_set_target(spine_ik_constraint obj, spine_bone value);
-SPINE_C_EXPORT void spine_ik_constraint_pose(spine_ik_constraint obj);
-SPINE_C_EXPORT void spine_ik_constraint_setup_pose(spine_ik_constraint obj);
-SPINE_C_EXPORT spine_ik_constraint_pose spine_ik_constraint_get_pose(spine_ik_constraint obj);
-SPINE_C_EXPORT spine_ik_constraint_pose spine_ik_constraint_get_applied_pose(spine_ik_constraint obj);
-SPINE_C_EXPORT void spine_ik_constraint_reset_constrained(spine_ik_constraint obj);
-SPINE_C_EXPORT void spine_ik_constraint_constrained(spine_ik_constraint obj);
-SPINE_C_EXPORT bool spine_ik_constraint_is_pose_equal_to_applied(spine_ik_constraint obj);
-SPINE_C_EXPORT bool spine_ik_constraint_is_active(spine_ik_constraint obj);
-SPINE_C_EXPORT void spine_ik_constraint_set_active(spine_ik_constraint obj, bool value);
+SPINE_C_API void spine_ik_constraint_dispose(spine_ik_constraint self);
+
+SPINE_C_API spine_rtti spine_ik_constraint_get_rtti(spine_ik_constraint self);
+SPINE_C_API spine_ik_constraint spine_ik_constraint_copy(spine_ik_constraint self, spine_skeleton skeleton);
+SPINE_C_API void spine_ik_constraint_update(spine_ik_constraint self, spine_skeleton skeleton, spine_physics physics);
+SPINE_C_API void spine_ik_constraint_sort(spine_ik_constraint self, spine_skeleton skeleton);
+SPINE_C_API bool spine_ik_constraint_is_source_active(spine_ik_constraint self);
+SPINE_C_API spine_ik_constraint_data spine_ik_constraint_get_data(spine_ik_constraint self);
+SPINE_C_API spine_array_bone_pose spine_ik_constraint_get_bones(spine_ik_constraint self);
+SPINE_C_API spine_bone spine_ik_constraint_get_target(spine_ik_constraint self);
+SPINE_C_API void spine_ik_constraint_set_target(spine_ik_constraint self, spine_bone inValue);
+SPINE_C_API void spine_ik_constraint_apply_1(spine_skeleton skeleton, spine_bone_pose bone, float targetX, float targetY, bool compress, bool stretch, bool uniform, float mix);
+SPINE_C_API void spine_ik_constraint_apply_2(spine_skeleton skeleton, spine_bone_pose parent, spine_bone_pose child, float targetX, float targetY, int bendDirection, bool stretch, bool uniform, float softness, float mix);
+SPINE_C_API spine_ik_constraint_pose spine_ik_constraint_get_pose(spine_ik_constraint self);
+SPINE_C_API spine_ik_constraint_pose spine_ik_constraint_get_applied_pose(spine_ik_constraint self);
+SPINE_C_API void spine_ik_constraint_reset_constrained(spine_ik_constraint self);
+SPINE_C_API void spine_ik_constraint_constrained(spine_ik_constraint self);
+SPINE_C_API bool spine_ik_constraint_is_pose_equal_to_applied(spine_ik_constraint self);
+SPINE_C_API bool spine_ik_constraint_is_active(spine_ik_constraint self);
+SPINE_C_API void spine_ik_constraint_set_active(spine_ik_constraint self, bool active);
+SPINE_C_API spine_rtti spine_ik_constraint_rtti(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // SPINE_C_IKCONSTRAINT_H
+#endif /* SPINE_SPINE_IK_CONSTRAINT_H */

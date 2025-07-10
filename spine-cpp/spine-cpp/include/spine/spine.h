@@ -99,6 +99,7 @@
 #include <spine/RotateMode.h>
 #include <spine/RotateTimeline.h>
 #include <spine/ScaleTimeline.h>
+#include <spine/SequenceTimeline.h>
 #include <spine/ShearTimeline.h>
 #include <spine/Skeleton.h>
 #include <spine/SkeletonBinary.h>
@@ -111,6 +112,8 @@
 #include <spine/Slider.h>
 #include <spine/SliderData.h>
 #include <spine/SliderPose.h>
+#include <spine/SliderTimeline.h>
+#include <spine/SliderMixTimeline.h>
 #include <spine/Slot.h>
 #include <spine/SlotData.h>
 #include <spine/Sequence.h>
@@ -130,6 +133,5 @@
 #include <spine/Update.h>
 #include <spine/Array.h>
 #include <spine/VertexAttachment.h>
-#include <spine/Vertices.h>
 
 #endif

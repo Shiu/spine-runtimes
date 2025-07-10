@@ -1,133 +1,72 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "physics_constraint_pose.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_physics_constraint_pose spine_physics_constraint_pose_create(void) {
-    PhysicsConstraintPose *obj = new (__FILE__, __LINE__) PhysicsConstraintPose();
-    return (spine_physics_constraint_pose) obj;
+    return (spine_physics_constraint_pose) new (__FILE__, __LINE__) PhysicsConstraintPose();
 }
 
-void spine_physics_constraint_pose_dispose(spine_physics_constraint_pose obj) {
-    if (!obj) return;
-    delete (PhysicsConstraintPose *) obj;
+void spine_physics_constraint_pose_dispose(spine_physics_constraint_pose self) {
+    delete (PhysicsConstraintPose*)self;
 }
 
-void spine_physics_constraint_pose_set(spine_physics_constraint_pose obj, spine_physics_constraint_pose value) {
-    if (!obj) return;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    _obj->set(*((PhysicsConstraintPose*) value));
+void spine_physics_constraint_pose_set(spine_physics_constraint_pose self, spine_physics_constraint_pose pose) {
+    ((PhysicsConstraintPose*)self)->set(*((PhysicsConstraintPose*)pose));
 }
 
-float spine_physics_constraint_pose_get_inertia(spine_physics_constraint_pose obj) {
-    if (!obj) return 0;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    return _obj->getInertia();
+float spine_physics_constraint_pose_get_inertia(spine_physics_constraint_pose self) {
+    return ((PhysicsConstraintPose*)self)->getInertia();
 }
 
-void spine_physics_constraint_pose_set_inertia(spine_physics_constraint_pose obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    _obj->setInertia(value);
+void spine_physics_constraint_pose_set_inertia(spine_physics_constraint_pose self, float inertia) {
+    ((PhysicsConstraintPose*)self)->setInertia(inertia);
 }
 
-float spine_physics_constraint_pose_get_strength(spine_physics_constraint_pose obj) {
-    if (!obj) return 0;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    return _obj->getStrength();
+float spine_physics_constraint_pose_get_strength(spine_physics_constraint_pose self) {
+    return ((PhysicsConstraintPose*)self)->getStrength();
 }
 
-void spine_physics_constraint_pose_set_strength(spine_physics_constraint_pose obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    _obj->setStrength(value);
+void spine_physics_constraint_pose_set_strength(spine_physics_constraint_pose self, float strength) {
+    ((PhysicsConstraintPose*)self)->setStrength(strength);
 }
 
-float spine_physics_constraint_pose_get_damping(spine_physics_constraint_pose obj) {
-    if (!obj) return 0;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    return _obj->getDamping();
+float spine_physics_constraint_pose_get_damping(spine_physics_constraint_pose self) {
+    return ((PhysicsConstraintPose*)self)->getDamping();
 }
 
-void spine_physics_constraint_pose_set_damping(spine_physics_constraint_pose obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    _obj->setDamping(value);
+void spine_physics_constraint_pose_set_damping(spine_physics_constraint_pose self, float damping) {
+    ((PhysicsConstraintPose*)self)->setDamping(damping);
 }
 
-float spine_physics_constraint_pose_get_mass_inverse(spine_physics_constraint_pose obj) {
-    if (!obj) return 0;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    return _obj->getMassInverse();
+float spine_physics_constraint_pose_get_mass_inverse(spine_physics_constraint_pose self) {
+    return ((PhysicsConstraintPose*)self)->getMassInverse();
 }
 
-void spine_physics_constraint_pose_set_mass_inverse(spine_physics_constraint_pose obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    _obj->setMassInverse(value);
+void spine_physics_constraint_pose_set_mass_inverse(spine_physics_constraint_pose self, float massInverse) {
+    ((PhysicsConstraintPose*)self)->setMassInverse(massInverse);
 }
 
-float spine_physics_constraint_pose_get_wind(spine_physics_constraint_pose obj) {
-    if (!obj) return 0;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    return _obj->getWind();
+float spine_physics_constraint_pose_get_wind(spine_physics_constraint_pose self) {
+    return ((PhysicsConstraintPose*)self)->getWind();
 }
 
-void spine_physics_constraint_pose_set_wind(spine_physics_constraint_pose obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    _obj->setWind(value);
+void spine_physics_constraint_pose_set_wind(spine_physics_constraint_pose self, float wind) {
+    ((PhysicsConstraintPose*)self)->setWind(wind);
 }
 
-float spine_physics_constraint_pose_get_gravity(spine_physics_constraint_pose obj) {
-    if (!obj) return 0;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    return _obj->getGravity();
+float spine_physics_constraint_pose_get_gravity(spine_physics_constraint_pose self) {
+    return ((PhysicsConstraintPose*)self)->getGravity();
 }
 
-void spine_physics_constraint_pose_set_gravity(spine_physics_constraint_pose obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    _obj->setGravity(value);
+void spine_physics_constraint_pose_set_gravity(spine_physics_constraint_pose self, float gravity) {
+    ((PhysicsConstraintPose*)self)->setGravity(gravity);
 }
 
-float spine_physics_constraint_pose_get_mix(spine_physics_constraint_pose obj) {
-    if (!obj) return 0;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    return _obj->getMix();
+float spine_physics_constraint_pose_get_mix(spine_physics_constraint_pose self) {
+    return ((PhysicsConstraintPose*)self)->getMix();
 }
 
-void spine_physics_constraint_pose_set_mix(spine_physics_constraint_pose obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintPose *_obj = (PhysicsConstraintPose *) obj;
-    _obj->setMix(value);
+void spine_physics_constraint_pose_set_mix(spine_physics_constraint_pose self, float mix) {
+    ((PhysicsConstraintPose*)self)->setMix(mix);
 }

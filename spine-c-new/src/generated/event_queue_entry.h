@@ -1,46 +1,26 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+#ifndef SPINE_SPINE_EVENT_QUEUE_ENTRY_H
+#define SPINE_SPINE_EVENT_QUEUE_ENTRY_H
 
-#ifndef SPINE_C_EVENTQUEUEENTRY_H
-#define SPINE_C_EVENTQUEUEENTRY_H
+#include "../base.h"
+#include "types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "types.h"
+SPINE_C_API spine_event_queue_entry spine_event_queue_entry_create(spine_event_type eventType, spine_track_entry trackEntry, spine_event event);
 
-SPINE_C_EXPORT spine_event_queue_entry spine_event_queue_entry_create(spine_event_type eventType, spine_track_entry trackEntry, spine_event event);
-SPINE_C_EXPORT void spine_event_queue_entry_dispose(spine_event_queue_entry obj);
+SPINE_C_API void spine_event_queue_entry_dispose(spine_event_queue_entry self);
+
+SPINE_C_API spine_event_type spine_event_queue_entry_get__type(spine_event_queue_entry self);
+SPINE_C_API void spine_event_queue_entry_set__type(spine_event_queue_entry self, spine_event_type value);
+SPINE_C_API spine_track_entry spine_event_queue_entry_get__entry(spine_event_queue_entry self);
+SPINE_C_API void spine_event_queue_entry_set__entry(spine_event_queue_entry self, spine_track_entry value);
+SPINE_C_API spine_event spine_event_queue_entry_get__event(spine_event_queue_entry self);
+SPINE_C_API void spine_event_queue_entry_set__event(spine_event_queue_entry self, spine_event value);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // SPINE_C_EVENTQUEUEENTRY_H
+#endif /* SPINE_SPINE_EVENT_QUEUE_ENTRY_H */

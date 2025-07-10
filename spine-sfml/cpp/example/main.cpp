@@ -276,9 +276,6 @@ void raptor(SkeletonData *skeletonData, Atlas *atlas) {
 	drawable.timeScale = 1;
 	drawable.setUsePremultipliedAlpha(true);
 
-	PowInterpolation pow2(2);
-	PowOutInterpolation powOut2(2);
-
 	Skeleton *skeleton = drawable.skeleton;
 	skeleton->setPosition(320, 590);
 	skeleton->updateWorldTransform(Physics_Update);

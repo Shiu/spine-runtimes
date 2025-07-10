@@ -1,155 +1,80 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "path_constraint.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_path_constraint spine_path_constraint_create(spine_path_constraint_data data, spine_skeleton skeleton) {
-    PathConstraint *obj = new (__FILE__, __LINE__) PathConstraint(*(PathConstraintData*) data, *(Skeleton*) skeleton);
-    return (spine_path_constraint) obj;
+    return (spine_path_constraint) new (__FILE__, __LINE__) PathConstraint(*((PathConstraintData*)data), *((Skeleton*)skeleton));
 }
 
-void spine_path_constraint_dispose(spine_path_constraint obj) {
-    if (!obj) return;
-    delete (PathConstraint *) obj;
+void spine_path_constraint_dispose(spine_path_constraint self) {
+    delete (PathConstraint*)self;
 }
 
-spine_rtti spine_path_constraint_get_rtti() {
-    return (spine_rtti) &PathConstraint::rtti;
+spine_rtti spine_path_constraint_get_rtti(spine_path_constraint self) {
+    return (spine_rtti)&((PathConstraint*)self)->getRTTI();
 }
 
-spine_path_constraint spine_path_constraint_copy(spine_path_constraint obj, spine_skeleton skeleton) {
-    if (!obj) return 0;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    return (spine_path_constraint) _obj->copy(*(Skeleton*) skeleton);
+spine_path_constraint spine_path_constraint_copy(spine_path_constraint self, spine_skeleton skeleton) {
+    return (spine_path_constraint)((PathConstraint*)self)->copy(*((Skeleton*)skeleton));
 }
 
-void spine_path_constraint_update(spine_path_constraint obj, spine_skeleton skeleton, spine_physics physics) {
-    if (!obj) return ;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    _obj->update(*(Skeleton*) skeleton, (Physics) physics);
+void spine_path_constraint_update(spine_path_constraint self, spine_skeleton skeleton, spine_physics physics) {
+    ((PathConstraint*)self)->update(*((Skeleton*)skeleton), (Physics)physics);
 }
 
-void spine_path_constraint_sort(spine_path_constraint obj, spine_skeleton skeleton) {
-    if (!obj) return ;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    _obj->sort(*(Skeleton*) skeleton);
+void spine_path_constraint_sort(spine_path_constraint self, spine_skeleton skeleton) {
+    ((PathConstraint*)self)->sort(*((Skeleton*)skeleton));
 }
 
-bool spine_path_constraint_is_source_active(spine_path_constraint obj) {
-    if (!obj) return false;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    return _obj->isSourceActive();
+bool spine_path_constraint_is_source_active(spine_path_constraint self) {
+    return ((PathConstraint*)self)->isSourceActive();
 }
 
-int32_t spine_path_constraint_get_num_bones(spine_path_constraint obj) {
-    if (!obj) return 0;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    return (int32_t) _obj->getBones().size();
+spine_array_bone_pose spine_path_constraint_get_bones(spine_path_constraint self) {
+    return (spine_array_bone_pose)&((PathConstraint*)self)->getBones();
 }
 
-spine_bone_pose *spine_path_constraint_get_bones(spine_path_constraint obj) {
-    if (!obj) return nullptr;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    return (spine_bone_pose *) _obj->getBones().buffer();
+spine_slot spine_path_constraint_get_slot(spine_path_constraint self) {
+    return (spine_slot)((PathConstraint*)self)->getSlot();
 }
 
-spine_slot spine_path_constraint_get_slot(spine_path_constraint obj) {
-    if (!obj) return (spine_slot) 0;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    return (spine_slot) _obj->getSlot();
+void spine_path_constraint_set_slot(spine_path_constraint self, spine_slot slot) {
+    ((PathConstraint*)self)->setSlot((Slot *)slot);
 }
 
-void spine_path_constraint_set_slot(spine_path_constraint obj, spine_slot value) {
-    if (!obj) return;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    _obj->setSlot((Slot *) value);
+spine_path_constraint_data spine_path_constraint_get_data(spine_path_constraint self) {
+    return (spine_path_constraint_data)&((PathConstraint*)self)->getData();
 }
 
-spine_path_constraint_data spine_path_constraint_get_data(spine_path_constraint obj) {
-    if (!obj) return 0;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    return (spine_path_constraint_data) &_obj->getData();
+spine_path_constraint_pose spine_path_constraint_get_pose(spine_path_constraint self) {
+    return (spine_path_constraint_pose)&((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->getPose();
 }
 
-void spine_path_constraint_pose(spine_path_constraint obj) {
-    if (!obj) return ;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    _obj->pose();
+spine_path_constraint_pose spine_path_constraint_get_applied_pose(spine_path_constraint self) {
+    return (spine_path_constraint_pose)&((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->getAppliedPose();
 }
 
-void spine_path_constraint_setup_pose(spine_path_constraint obj) {
-    if (!obj) return ;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    _obj->setupPose();
+void spine_path_constraint_reset_constrained(spine_path_constraint self) {
+    ((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->resetConstrained();
 }
 
-spine_path_constraint_pose spine_path_constraint_get_pose(spine_path_constraint obj) {
-    if (!obj) return 0;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    return (spine_path_constraint_pose) &_obj->getPose();
+void spine_path_constraint_constrained(spine_path_constraint self) {
+    ((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->constrained();
 }
 
-spine_path_constraint_pose spine_path_constraint_get_applied_pose(spine_path_constraint obj) {
-    if (!obj) return 0;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    return (spine_path_constraint_pose) &_obj->getAppliedPose();
+bool spine_path_constraint_is_pose_equal_to_applied(spine_path_constraint self) {
+    return ((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->isPoseEqualToApplied();
 }
 
-void spine_path_constraint_reset_constrained(spine_path_constraint obj) {
-    if (!obj) return ;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    _obj->resetConstrained();
+bool spine_path_constraint_is_active(spine_path_constraint self) {
+    return ((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->isActive();
 }
 
-void spine_path_constraint_constrained(spine_path_constraint obj) {
-    if (!obj) return ;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    _obj->constrained();
+void spine_path_constraint_set_active(spine_path_constraint self, bool active) {
+    ((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->setActive(active);
 }
 
-bool spine_path_constraint_is_pose_equal_to_applied(spine_path_constraint obj) {
-    if (!obj) return false;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    return _obj->isPoseEqualToApplied();
-}
-
-bool spine_path_constraint_is_active(spine_path_constraint obj) {
-    if (!obj) return false;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    return _obj->isActive();
-}
-
-void spine_path_constraint_set_active(spine_path_constraint obj, bool value) {
-    if (!obj) return;
-    PathConstraint *_obj = (PathConstraint *) obj;
-    _obj->setActive(value);
+spine_rtti spine_path_constraint_rtti(void) {
+    return (spine_rtti)&PathConstraint::rtti;
 }

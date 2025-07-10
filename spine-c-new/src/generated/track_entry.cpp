@@ -1,367 +1,228 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "track_entry.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_track_entry spine_track_entry_create(void) {
-    TrackEntry *obj = new (__FILE__, __LINE__) TrackEntry();
-    return (spine_track_entry) obj;
+    return (spine_track_entry) new (__FILE__, __LINE__) TrackEntry();
 }
 
-void spine_track_entry_dispose(spine_track_entry obj) {
-    if (!obj) return;
-    delete (TrackEntry *) obj;
+void spine_track_entry_dispose(spine_track_entry self) {
+    delete (TrackEntry*)self;
 }
 
-int spine_track_entry_get_track_index(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getTrackIndex();
+int spine_track_entry_get_track_index(spine_track_entry self) {
+    return ((TrackEntry*)self)->getTrackIndex();
 }
 
-spine_animation spine_track_entry_get_animation(spine_track_entry obj) {
-    if (!obj) return (spine_animation) 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return (spine_animation) _obj->getAnimation();
+spine_animation spine_track_entry_get_animation(spine_track_entry self) {
+    return (spine_animation)((TrackEntry*)self)->getAnimation();
 }
 
-void spine_track_entry_set_animation(spine_track_entry obj, spine_animation value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setAnimation((Animation *) value);
+void spine_track_entry_set_animation(spine_track_entry self, spine_animation animation) {
+    ((TrackEntry*)self)->setAnimation((Animation *)animation);
 }
 
-spine_track_entry spine_track_entry_get_previous(spine_track_entry obj) {
-    if (!obj) return (spine_track_entry) 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return (spine_track_entry) _obj->getPrevious();
+spine_track_entry spine_track_entry_get_previous(spine_track_entry self) {
+    return (spine_track_entry)((TrackEntry*)self)->getPrevious();
 }
 
-bool spine_track_entry_get_loop(spine_track_entry obj) {
-    if (!obj) return false;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getLoop();
+bool spine_track_entry_get_loop(spine_track_entry self) {
+    return ((TrackEntry*)self)->getLoop();
 }
 
-void spine_track_entry_set_loop(spine_track_entry obj, bool value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setLoop(value);
+void spine_track_entry_set_loop(spine_track_entry self, bool inValue) {
+    ((TrackEntry*)self)->setLoop(inValue);
 }
 
-bool spine_track_entry_get_hold_previous(spine_track_entry obj) {
-    if (!obj) return false;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getHoldPrevious();
+bool spine_track_entry_get_hold_previous(spine_track_entry self) {
+    return ((TrackEntry*)self)->getHoldPrevious();
 }
 
-void spine_track_entry_set_hold_previous(spine_track_entry obj, bool value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setHoldPrevious(value);
+void spine_track_entry_set_hold_previous(spine_track_entry self, bool inValue) {
+    ((TrackEntry*)self)->setHoldPrevious(inValue);
 }
 
-bool spine_track_entry_get_reverse(spine_track_entry obj) {
-    if (!obj) return false;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getReverse();
+bool spine_track_entry_get_reverse(spine_track_entry self) {
+    return ((TrackEntry*)self)->getReverse();
 }
 
-void spine_track_entry_set_reverse(spine_track_entry obj, bool value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setReverse(value);
+void spine_track_entry_set_reverse(spine_track_entry self, bool inValue) {
+    ((TrackEntry*)self)->setReverse(inValue);
 }
 
-bool spine_track_entry_get_shortest_rotation(spine_track_entry obj) {
-    if (!obj) return false;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getShortestRotation();
+bool spine_track_entry_get_shortest_rotation(spine_track_entry self) {
+    return ((TrackEntry*)self)->getShortestRotation();
 }
 
-void spine_track_entry_set_shortest_rotation(spine_track_entry obj, bool value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setShortestRotation(value);
+void spine_track_entry_set_shortest_rotation(spine_track_entry self, bool inValue) {
+    ((TrackEntry*)self)->setShortestRotation(inValue);
 }
 
-float spine_track_entry_get_delay(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getDelay();
+float spine_track_entry_get_delay(spine_track_entry self) {
+    return ((TrackEntry*)self)->getDelay();
 }
 
-void spine_track_entry_set_delay(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setDelay(value);
+void spine_track_entry_set_delay(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setDelay(inValue);
 }
 
-float spine_track_entry_get_track_time(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getTrackTime();
+float spine_track_entry_get_track_time(spine_track_entry self) {
+    return ((TrackEntry*)self)->getTrackTime();
 }
 
-void spine_track_entry_set_track_time(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setTrackTime(value);
+void spine_track_entry_set_track_time(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setTrackTime(inValue);
 }
 
-float spine_track_entry_get_track_end(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getTrackEnd();
+float spine_track_entry_get_track_end(spine_track_entry self) {
+    return ((TrackEntry*)self)->getTrackEnd();
 }
 
-void spine_track_entry_set_track_end(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setTrackEnd(value);
+void spine_track_entry_set_track_end(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setTrackEnd(inValue);
 }
 
-float spine_track_entry_get_animation_start(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getAnimationStart();
+float spine_track_entry_get_animation_start(spine_track_entry self) {
+    return ((TrackEntry*)self)->getAnimationStart();
 }
 
-void spine_track_entry_set_animation_start(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setAnimationStart(value);
+void spine_track_entry_set_animation_start(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setAnimationStart(inValue);
 }
 
-float spine_track_entry_get_animation_end(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getAnimationEnd();
+float spine_track_entry_get_animation_end(spine_track_entry self) {
+    return ((TrackEntry*)self)->getAnimationEnd();
 }
 
-void spine_track_entry_set_animation_end(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setAnimationEnd(value);
+void spine_track_entry_set_animation_end(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setAnimationEnd(inValue);
 }
 
-float spine_track_entry_get_animation_last(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getAnimationLast();
+float spine_track_entry_get_animation_last(spine_track_entry self) {
+    return ((TrackEntry*)self)->getAnimationLast();
 }
 
-void spine_track_entry_set_animation_last(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setAnimationLast(value);
+void spine_track_entry_set_animation_last(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setAnimationLast(inValue);
 }
 
-float spine_track_entry_get_animation_time(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getAnimationTime();
+float spine_track_entry_get_animation_time(spine_track_entry self) {
+    return ((TrackEntry*)self)->getAnimationTime();
 }
 
-float spine_track_entry_get_time_scale(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getTimeScale();
+float spine_track_entry_get_time_scale(spine_track_entry self) {
+    return ((TrackEntry*)self)->getTimeScale();
 }
 
-void spine_track_entry_set_time_scale(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setTimeScale(value);
+void spine_track_entry_set_time_scale(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setTimeScale(inValue);
 }
 
-float spine_track_entry_get_alpha(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getAlpha();
+float spine_track_entry_get_alpha(spine_track_entry self) {
+    return ((TrackEntry*)self)->getAlpha();
 }
 
-void spine_track_entry_set_alpha(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setAlpha(value);
+void spine_track_entry_set_alpha(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setAlpha(inValue);
 }
 
-float spine_track_entry_get_event_threshold(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getEventThreshold();
+float spine_track_entry_get_event_threshold(spine_track_entry self) {
+    return ((TrackEntry*)self)->getEventThreshold();
 }
 
-void spine_track_entry_set_event_threshold(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setEventThreshold(value);
+void spine_track_entry_set_event_threshold(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setEventThreshold(inValue);
 }
 
-float spine_track_entry_get_mix_attachment_threshold(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getMixAttachmentThreshold();
+float spine_track_entry_get_mix_attachment_threshold(spine_track_entry self) {
+    return ((TrackEntry*)self)->getMixAttachmentThreshold();
 }
 
-void spine_track_entry_set_mix_attachment_threshold(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setMixAttachmentThreshold(value);
+void spine_track_entry_set_mix_attachment_threshold(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setMixAttachmentThreshold(inValue);
 }
 
-float spine_track_entry_get_alpha_attachment_threshold(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getAlphaAttachmentThreshold();
+float spine_track_entry_get_alpha_attachment_threshold(spine_track_entry self) {
+    return ((TrackEntry*)self)->getAlphaAttachmentThreshold();
 }
 
-void spine_track_entry_set_alpha_attachment_threshold(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setAlphaAttachmentThreshold(value);
+void spine_track_entry_set_alpha_attachment_threshold(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setAlphaAttachmentThreshold(inValue);
 }
 
-float spine_track_entry_get_mix_draw_order_threshold(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getMixDrawOrderThreshold();
+float spine_track_entry_get_mix_draw_order_threshold(spine_track_entry self) {
+    return ((TrackEntry*)self)->getMixDrawOrderThreshold();
 }
 
-void spine_track_entry_set_mix_draw_order_threshold(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setMixDrawOrderThreshold(value);
+void spine_track_entry_set_mix_draw_order_threshold(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setMixDrawOrderThreshold(inValue);
 }
 
-spine_track_entry spine_track_entry_get_next(spine_track_entry obj) {
-    if (!obj) return (spine_track_entry) 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return (spine_track_entry) _obj->getNext();
+spine_track_entry spine_track_entry_get_next(spine_track_entry self) {
+    return (spine_track_entry)((TrackEntry*)self)->getNext();
 }
 
-bool spine_track_entry_is_complete(spine_track_entry obj) {
-    if (!obj) return false;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->isComplete();
+bool spine_track_entry_is_complete(spine_track_entry self) {
+    return ((TrackEntry*)self)->isComplete();
 }
 
-float spine_track_entry_get_mix_time(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getMixTime();
+float spine_track_entry_get_mix_time(spine_track_entry self) {
+    return ((TrackEntry*)self)->getMixTime();
 }
 
-void spine_track_entry_set_mix_time(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setMixTime(value);
+void spine_track_entry_set_mix_time(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setMixTime(inValue);
 }
 
-float spine_track_entry_get_mix_duration(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getMixDuration();
+float spine_track_entry_get_mix_duration(spine_track_entry self) {
+    return ((TrackEntry*)self)->getMixDuration();
 }
 
-void spine_track_entry_set_mix_duration(spine_track_entry obj, float value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setMixDuration(value);
+void spine_track_entry_set_mix_duration_1(spine_track_entry self, float inValue) {
+    ((TrackEntry*)self)->setMixDuration(inValue);
 }
 
-void spine_track_entry_set_mix_duration(spine_track_entry obj, float mixDuration, float delay) {
-    if (!obj) return ;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setMixDuration(mixDuration, delay);
+void spine_track_entry_set_mix_duration_2(spine_track_entry self, float mixDuration, float delay) {
+    ((TrackEntry*)self)->setMixDuration(mixDuration, delay);
 }
 
-spine_mix_blend spine_track_entry_get_mix_blend(spine_track_entry obj) {
-    if (!obj) return (spine_mix_blend) 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return (spine_mix_blend) _obj->getMixBlend();
+spine_mix_blend spine_track_entry_get_mix_blend(spine_track_entry self) {
+    return (spine_mix_blend)((TrackEntry*)self)->getMixBlend();
 }
 
-void spine_track_entry_set_mix_blend(spine_track_entry obj, spine_mix_blend value) {
-    if (!obj) return;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->setMixBlend((MixBlend) value);
+void spine_track_entry_set_mix_blend(spine_track_entry self, spine_mix_blend blend) {
+    ((TrackEntry*)self)->setMixBlend((MixBlend)blend);
 }
 
-spine_track_entry spine_track_entry_get_mixing_from(spine_track_entry obj) {
-    if (!obj) return (spine_track_entry) 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return (spine_track_entry) _obj->getMixingFrom();
+spine_track_entry spine_track_entry_get_mixing_from(spine_track_entry self) {
+    return (spine_track_entry)((TrackEntry*)self)->getMixingFrom();
 }
 
-spine_track_entry spine_track_entry_get_mixing_to(spine_track_entry obj) {
-    if (!obj) return (spine_track_entry) 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return (spine_track_entry) _obj->getMixingTo();
+spine_track_entry spine_track_entry_get_mixing_to(spine_track_entry self) {
+    return (spine_track_entry)((TrackEntry*)self)->getMixingTo();
 }
 
-void spine_track_entry_reset_rotation_directions(spine_track_entry obj) {
-    if (!obj) return ;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    _obj->resetRotationDirections();
+void spine_track_entry_reset_rotation_directions(spine_track_entry self) {
+    ((TrackEntry*)self)->resetRotationDirections();
 }
 
-float spine_track_entry_get_track_complete(spine_track_entry obj) {
-    if (!obj) return 0;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->getTrackComplete();
+float spine_track_entry_get_track_complete(spine_track_entry self) {
+    return ((TrackEntry*)self)->getTrackComplete();
 }
 
-bool spine_track_entry_is_empty_animation(spine_track_entry obj) {
-    if (!obj) return false;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->isEmptyAnimation();
+bool spine_track_entry_is_empty_animation(spine_track_entry self) {
+    return ((TrackEntry*)self)->isEmptyAnimation();
 }
 
-bool spine_track_entry_was_applied(spine_track_entry obj) {
-    if (!obj) return false;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->wasApplied();
+bool spine_track_entry_was_applied(spine_track_entry self) {
+    return ((TrackEntry*)self)->wasApplied();
 }
 
-bool spine_track_entry_is_next_ready(spine_track_entry obj) {
-    if (!obj) return false;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return _obj->isNextReady();
+bool spine_track_entry_is_next_ready(spine_track_entry self) {
+    return ((TrackEntry*)self)->isNextReady();
 }
 
-void * spine_track_entry_get_renderer_object(spine_track_entry obj) {
-    if (!obj) return nullptr;
-    TrackEntry *_obj = (TrackEntry *) obj;
-    return (void *) _obj->getRendererObject();
+void * spine_track_entry_get_renderer_object(spine_track_entry self) {
+    return ((HasRendererObject*)(TrackEntry*)self)->getRendererObject();
 }

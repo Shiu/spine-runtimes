@@ -1,38 +1,76 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "atlas_region.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
-void spine_atlas_region_dispose(spine_atlas_region obj) {
-    if (!obj) return;
-    delete (AtlasRegion *) obj;
+spine_atlas_region spine_atlas_region_create(void) {
+    return (spine_atlas_region) new (__FILE__, __LINE__) AtlasRegion();
+}
+
+void spine_atlas_region_dispose(spine_atlas_region self) {
+    delete (AtlasRegion*)self;
+}
+
+spine_atlas_page spine_atlas_region_get_page(spine_atlas_region self) {
+    return (spine_atlas_page)((AtlasRegion*)self)->page;
+}
+
+void spine_atlas_region_set_page(spine_atlas_region self, spine_atlas_page value) {
+    ((AtlasRegion*)self)->page = (AtlasPage*)value;
+}
+
+const char* spine_atlas_region_get_name(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->name.buffer();
+}
+
+void spine_atlas_region_set_name(spine_atlas_region self, const char* value) {
+    ((AtlasRegion*)self)->name = String(value);
+}
+
+int spine_atlas_region_get_index(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->index;
+}
+
+void spine_atlas_region_set_index(spine_atlas_region self, int value) {
+    ((AtlasRegion*)self)->index = value;
+}
+
+int spine_atlas_region_get_x(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->x;
+}
+
+void spine_atlas_region_set_x(spine_atlas_region self, int value) {
+    ((AtlasRegion*)self)->x = value;
+}
+
+int spine_atlas_region_get_y(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->y;
+}
+
+void spine_atlas_region_set_y(spine_atlas_region self, int value) {
+    ((AtlasRegion*)self)->y = value;
+}
+
+spine_array_int spine_atlas_region_get_splits(spine_atlas_region self) {
+    return (spine_array_int)&((AtlasRegion*)self)->splits;
+}
+
+void spine_atlas_region_set_splits(spine_atlas_region self, spine_array_int value) {
+    ((AtlasRegion*)self)->splits = *((Array<int>*)value);
+}
+
+spine_array_int spine_atlas_region_get_pads(spine_atlas_region self) {
+    return (spine_array_int)&((AtlasRegion*)self)->pads;
+}
+
+void spine_atlas_region_set_pads(spine_atlas_region self, spine_array_int value) {
+    ((AtlasRegion*)self)->pads = *((Array<int>*)value);
+}
+
+spine_array_float spine_atlas_region_get_values(spine_atlas_region self) {
+    return (spine_array_float)&((AtlasRegion*)self)->values;
+}
+
+void spine_atlas_region_set_values(spine_atlas_region self, spine_array_float value) {
+    ((AtlasRegion*)self)->values = *((Array<float>*)value);
 }

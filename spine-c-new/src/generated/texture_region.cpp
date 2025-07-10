@@ -1,43 +1,108 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "texture_region.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_texture_region spine_texture_region_create(void) {
-    TextureRegion *obj = new (__FILE__, __LINE__) TextureRegion();
-    return (spine_texture_region) obj;
+    return (spine_texture_region) new (__FILE__, __LINE__) TextureRegion();
 }
 
-void spine_texture_region_dispose(spine_texture_region obj) {
-    if (!obj) return;
-    delete (TextureRegion *) obj;
+void spine_texture_region_dispose(spine_texture_region self) {
+    delete (TextureRegion*)self;
+}
+
+void * spine_texture_region_get_renderer_object(spine_texture_region self) {
+    return ((TextureRegion*)self)->rendererObject;
+}
+
+void spine_texture_region_set_renderer_object(spine_texture_region self, void * value) {
+    ((TextureRegion*)self)->rendererObject = (void*)value;
+}
+
+float spine_texture_region_get_u(spine_texture_region self) {
+    return ((TextureRegion*)self)->u;
+}
+
+void spine_texture_region_set_u(spine_texture_region self, float value) {
+    ((TextureRegion*)self)->u = value;
+}
+
+float spine_texture_region_get_v(spine_texture_region self) {
+    return ((TextureRegion*)self)->v;
+}
+
+void spine_texture_region_set_v(spine_texture_region self, float value) {
+    ((TextureRegion*)self)->v = value;
+}
+
+float spine_texture_region_get_u2(spine_texture_region self) {
+    return ((TextureRegion*)self)->u2;
+}
+
+void spine_texture_region_set_u2(spine_texture_region self, float value) {
+    ((TextureRegion*)self)->u2 = value;
+}
+
+float spine_texture_region_get_v2(spine_texture_region self) {
+    return ((TextureRegion*)self)->v2;
+}
+
+void spine_texture_region_set_v2(spine_texture_region self, float value) {
+    ((TextureRegion*)self)->v2 = value;
+}
+
+int spine_texture_region_get_degrees(spine_texture_region self) {
+    return ((TextureRegion*)self)->degrees;
+}
+
+void spine_texture_region_set_degrees(spine_texture_region self, int value) {
+    ((TextureRegion*)self)->degrees = value;
+}
+
+float spine_texture_region_get_offset_x(spine_texture_region self) {
+    return ((TextureRegion*)self)->offsetX;
+}
+
+void spine_texture_region_set_offset_x(spine_texture_region self, float value) {
+    ((TextureRegion*)self)->offsetX = value;
+}
+
+float spine_texture_region_get_offset_y(spine_texture_region self) {
+    return ((TextureRegion*)self)->offsetY;
+}
+
+void spine_texture_region_set_offset_y(spine_texture_region self, float value) {
+    ((TextureRegion*)self)->offsetY = value;
+}
+
+int spine_texture_region_get_width(spine_texture_region self) {
+    return ((TextureRegion*)self)->width;
+}
+
+void spine_texture_region_set_width(spine_texture_region self, int value) {
+    ((TextureRegion*)self)->width = value;
+}
+
+int spine_texture_region_get_height(spine_texture_region self) {
+    return ((TextureRegion*)self)->height;
+}
+
+void spine_texture_region_set_height(spine_texture_region self, int value) {
+    ((TextureRegion*)self)->height = value;
+}
+
+int spine_texture_region_get_original_width(spine_texture_region self) {
+    return ((TextureRegion*)self)->originalWidth;
+}
+
+void spine_texture_region_set_original_width(spine_texture_region self, int value) {
+    ((TextureRegion*)self)->originalWidth = value;
+}
+
+int spine_texture_region_get_original_height(spine_texture_region self) {
+    return ((TextureRegion*)self)->originalHeight;
+}
+
+void spine_texture_region_set_original_height(spine_texture_region self, int value) {
+    ((TextureRegion*)self)->originalHeight = value;
 }

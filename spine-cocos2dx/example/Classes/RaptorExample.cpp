@@ -34,9 +34,6 @@
 USING_NS_CC;
 using namespace spine;
 
-PowInterpolation pow2(2);
-PowOutInterpolation powOut2(2);
-
 Scene *RaptorExample::scene() {
 	Scene *scene = Scene::create();
 	scene->addChild(RaptorExample::create());

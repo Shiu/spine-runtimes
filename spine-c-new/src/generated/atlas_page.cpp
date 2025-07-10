@@ -1,43 +1,108 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "atlas_page.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_atlas_page spine_atlas_page_create(const char* inName) {
-    AtlasPage *obj = new (__FILE__, __LINE__) AtlasPage(String(inName));
-    return (spine_atlas_page) obj;
+    return (spine_atlas_page) new (__FILE__, __LINE__) AtlasPage(*((const String*)inName));
 }
 
-void spine_atlas_page_dispose(spine_atlas_page obj) {
-    if (!obj) return;
-    delete (AtlasPage *) obj;
+void spine_atlas_page_dispose(spine_atlas_page self) {
+    delete (AtlasPage*)self;
+}
+
+const char* spine_atlas_page_get_name(spine_atlas_page self) {
+    return ((AtlasPage*)self)->name.buffer();
+}
+
+void spine_atlas_page_set_name(spine_atlas_page self, const char* value) {
+    ((AtlasPage*)self)->name = String(value);
+}
+
+const char* spine_atlas_page_get_texture_path(spine_atlas_page self) {
+    return ((AtlasPage*)self)->texturePath.buffer();
+}
+
+void spine_atlas_page_set_texture_path(spine_atlas_page self, const char* value) {
+    ((AtlasPage*)self)->texturePath = String(value);
+}
+
+spine_format spine_atlas_page_get_format(spine_atlas_page self) {
+    return (spine_format)((AtlasPage*)self)->format;
+}
+
+void spine_atlas_page_set_format(spine_atlas_page self, spine_format value) {
+    ((AtlasPage*)self)->format = (Format)value;
+}
+
+spine_texture_filter spine_atlas_page_get_min_filter(spine_atlas_page self) {
+    return (spine_texture_filter)((AtlasPage*)self)->minFilter;
+}
+
+void spine_atlas_page_set_min_filter(spine_atlas_page self, spine_texture_filter value) {
+    ((AtlasPage*)self)->minFilter = (TextureFilter)value;
+}
+
+spine_texture_filter spine_atlas_page_get_mag_filter(spine_atlas_page self) {
+    return (spine_texture_filter)((AtlasPage*)self)->magFilter;
+}
+
+void spine_atlas_page_set_mag_filter(spine_atlas_page self, spine_texture_filter value) {
+    ((AtlasPage*)self)->magFilter = (TextureFilter)value;
+}
+
+spine_texture_wrap spine_atlas_page_get_u_wrap(spine_atlas_page self) {
+    return (spine_texture_wrap)((AtlasPage*)self)->uWrap;
+}
+
+void spine_atlas_page_set_u_wrap(spine_atlas_page self, spine_texture_wrap value) {
+    ((AtlasPage*)self)->uWrap = (TextureWrap)value;
+}
+
+spine_texture_wrap spine_atlas_page_get_v_wrap(spine_atlas_page self) {
+    return (spine_texture_wrap)((AtlasPage*)self)->vWrap;
+}
+
+void spine_atlas_page_set_v_wrap(spine_atlas_page self, spine_texture_wrap value) {
+    ((AtlasPage*)self)->vWrap = (TextureWrap)value;
+}
+
+int spine_atlas_page_get_width(spine_atlas_page self) {
+    return ((AtlasPage*)self)->width;
+}
+
+void spine_atlas_page_set_width(spine_atlas_page self, int value) {
+    ((AtlasPage*)self)->width = value;
+}
+
+int spine_atlas_page_get_height(spine_atlas_page self) {
+    return ((AtlasPage*)self)->height;
+}
+
+void spine_atlas_page_set_height(spine_atlas_page self, int value) {
+    ((AtlasPage*)self)->height = value;
+}
+
+bool spine_atlas_page_get_pma(spine_atlas_page self) {
+    return ((AtlasPage*)self)->pma;
+}
+
+void spine_atlas_page_set_pma(spine_atlas_page self, bool value) {
+    ((AtlasPage*)self)->pma = value;
+}
+
+int spine_atlas_page_get_index(spine_atlas_page self) {
+    return ((AtlasPage*)self)->index;
+}
+
+void spine_atlas_page_set_index(spine_atlas_page self, int value) {
+    ((AtlasPage*)self)->index = value;
+}
+
+void * spine_atlas_page_get_texture(spine_atlas_page self) {
+    return ((AtlasPage*)self)->texture;
+}
+
+void spine_atlas_page_set_texture(spine_atlas_page self, void * value) {
+    ((AtlasPage*)self)->texture = (void*)value;
 }

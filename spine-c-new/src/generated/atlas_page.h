@@ -1,46 +1,44 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+#ifndef SPINE_SPINE_ATLAS_PAGE_H
+#define SPINE_SPINE_ATLAS_PAGE_H
 
-#ifndef SPINE_C_ATLASPAGE_H
-#define SPINE_C_ATLASPAGE_H
+#include "../base.h"
+#include "types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "types.h"
+SPINE_C_API spine_atlas_page spine_atlas_page_create(const char* inName);
 
-SPINE_C_EXPORT spine_atlas_page spine_atlas_page_create(const char* inName);
-SPINE_C_EXPORT void spine_atlas_page_dispose(spine_atlas_page obj);
+SPINE_C_API void spine_atlas_page_dispose(spine_atlas_page self);
+
+SPINE_C_API const char* spine_atlas_page_get_name(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_name(spine_atlas_page self, const char* value);
+SPINE_C_API const char* spine_atlas_page_get_texture_path(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_texture_path(spine_atlas_page self, const char* value);
+SPINE_C_API spine_format spine_atlas_page_get_format(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_format(spine_atlas_page self, spine_format value);
+SPINE_C_API spine_texture_filter spine_atlas_page_get_min_filter(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_min_filter(spine_atlas_page self, spine_texture_filter value);
+SPINE_C_API spine_texture_filter spine_atlas_page_get_mag_filter(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_mag_filter(spine_atlas_page self, spine_texture_filter value);
+SPINE_C_API spine_texture_wrap spine_atlas_page_get_u_wrap(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_u_wrap(spine_atlas_page self, spine_texture_wrap value);
+SPINE_C_API spine_texture_wrap spine_atlas_page_get_v_wrap(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_v_wrap(spine_atlas_page self, spine_texture_wrap value);
+SPINE_C_API int spine_atlas_page_get_width(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_width(spine_atlas_page self, int value);
+SPINE_C_API int spine_atlas_page_get_height(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_height(spine_atlas_page self, int value);
+SPINE_C_API bool spine_atlas_page_get_pma(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_pma(spine_atlas_page self, bool value);
+SPINE_C_API int spine_atlas_page_get_index(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_index(spine_atlas_page self, int value);
+SPINE_C_API void * spine_atlas_page_get_texture(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_texture(spine_atlas_page self, void * value);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // SPINE_C_ATLASPAGE_H
+#endif /* SPINE_SPINE_ATLAS_PAGE_H */

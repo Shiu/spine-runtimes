@@ -2,7 +2,7 @@
 
 **Status:** In Progress
 **Created:** 2025-07-08T22:31:47
-**Agent PID:** 40566
+**Agent PID:** 42523
 
 ## Context for Resumption
 **Read these files in full into your context**
@@ -35,7 +35,10 @@ Interactive review of the spine-c-new code generator with user confirmation at e
 - [x] Remove unused `opaqueTypeGen` variable (line 135)
 - [x] Extract const/non-const conflict checking (lines 141-198) into its own function `checkConstNonConstConflicts` with proper documentation
 
-## exclusions.ts (complete)
+## exclusions.ts
+- [x] Add field exclusion parsing support (field: Type::field)
+- [x] Add granular field accessor exclusions: field-get: Type::field and field-set: Type::field
+- [x] Support excluding all field accessors for a type: field: Type, field-get: Type, field-set: Type
 - [x] Change Exclusion type to be a discriminated union: `{ kind: 'type', typeName: string } | { kind: 'method', typeName: string, methodName: string, isConst?: boolean }`
 - [x] Document in the Exclusion type definition (in types.ts) that `isConst` refers to method const (i.e., `void meh() const`), not return type const
 - [x] Remove unnecessary logging of `isConst` in parseExclusion
@@ -94,12 +97,35 @@ Interactive review of the spine-c-new code generator with user confirmation at e
 ## index.ts (continued)
 - [x] Add function to check all method return and parameter types for multi-level pointers (e.g., **) and error out early
 
-## array-generator.ts
-- [ ] Remove unused typesJson field - it's passed to constructor but never used as a field
-- [ ] Remove spine/Array.h include since spine/spine.h already includes it
-- [ ] Remove Array/~Array constructor/destructor check - Member now has explicit constructor/destructor types
-- [ ] Fix template parameter replacement - Array methods are templated, need to replace T with actual element type
-- [ ] **MAJOR REFACTOR**: Extract common method/constructor generation logic to avoid duplication between generators
+## checks.ts
+- [x] Add checkFieldAccessorConflicts to detect when generated getters/setters would conflict with existing methods
+
+## ir-generator.ts
+- [x] Add static RTTI method for classes that have getRTTI() - generate spine_<type>_rtti() that returns &Type::rtti
+- [x] Handle method overloads with same name but different parameters - use descriptive suffix like constructors (e.g., spine_animation_search, spine_animation_search_with_step)
+- [x] Honor constructor exclusions (e.g., method: Atlas::Atlas) - constructors weren't checking exclusions
+- [x] Add logging with indentation when methods/constructors are excluded due to exclusions
+- [x] Add getters and setters for public fields - generate spine_<type>_get_<field> and spine_<type>_set_<field> methods (type extractor only provides public members)
+- [x] Fix redundant enum value names - remove duplicate enum name prefix from values (e.g., TextureFilter::TextureFilterNearest becomes SPINE_TEXTURE_FILTER_NEAREST)
+- [x] Add field exclusion support (field: Type::field) and check for unsupported types like Array<String> in fields
+- [x] Add checkTypeSupport function to validate types before trying to convert them
+- [x] Fix constructor generation - only generate constructors that are explicitly public, never assume implicit default constructor (could be private)
+- [x] Don't error on missing constructors for abstract classes - they can't be instantiated anyway but are useful to wrap
+- [x] Fix constructor argument handling - cast pointer parameters from opaque C types to C++ types (e.g., spine_skeleton_data to SkeletonData*)
+- [x] Unify argument handling - buildCppArgs now used by constructors, methods, and array methods
+- [x] Unify return statement generation - generateReturnStatement shared between methods and array methods
+
+## array-generator.ts (complete)
+- [x] Remove unused typesJson field - it's passed to constructor but never used as a field
+- [x] Remove spine/Array.h include since spine/spine.h already includes it
+- [x] Remove Array/~Array constructor/destructor check - Member now has explicit constructor/destructor types
+- [x] Fix template parameter replacement - Array methods are templated, need to replace T with actual element type
+- [x] **MAJOR REFACTOR**: Extract common method/constructor generation logic to avoid duplication between generators
+
+## file-writer.ts (merged into c-writer.ts)
+- [x] Remove unused writeType and writeEnum methods (only writeTypeRaw and writeEnumRaw are used)
+- [x] Rename writeTypeRaw/writeEnumRaw to just writeClassOrStruct/writeEnum since the old ones are unused
+- [x] Merged all functionality into c-writer.ts
 
 ## Architecture Refactor - Intermediate Representation
 
@@ -107,7 +133,7 @@ Interactive review of the spine-c-new code generator with user confirmation at e
 ```typescript
 interface CParameter {
   name: string;          // Parameter name in C
-  cType: string;         // C type (e.g., "float*", "spine_bone")  
+  cType: string;         // C type (e.g., "float*", "spine_bone")
   cppType: string;       // Original C++ type (e.g., "float&", "Bone*")
   isOutput: boolean;     // true for non-const references that become output params
 }
@@ -152,33 +178,63 @@ class CWriter {
     // Handle SPINE_C_API macros
     // Format with proper spacing
   }
-  
+
   writeClassSource(type: CClassOrStruct): string {
     // Generate all function implementations
     // Just output the body from each CMethod
   }
-  
+
   writeEnumHeader(enumType: CEnum): string {
     // Generate enum declaration
   }
-  
+
   private writeMethodDeclaration(method: CMethod): string
   private writeMethodImplementation(method: CMethod): string
 ```
 
-### Refactoring Steps:
-- [ ] Create c-types.ts with IR types
-- [ ] Create c-writer.ts with CWriter class
-- [ ] Create ir-generator.ts with functions to convert Type → C types:
-  - [ ] `generateConstructors(type: ClassOrStruct): CMethod[]`
-  - [ ] `generateDestructor(type: ClassOrStruct): CMethod`
-  - [ ] `generateMethods(type: ClassOrStruct): CMethod[]`
-  - [ ] `generateArrayMethods(elementType: string, cTypeName: string, arrayType: ClassOrStruct): CMethod[]`
-  - [ ] `generateEnum(enumType: Enum): CEnum`
-- [ ] Update index.ts to use new architecture:
-  - [ ] Generate CClassOrStruct for each class/struct type
-  - [ ] Generate CEnum for each enum type
-  - [ ] Pass to CWriter to generate code
-  - [ ] For arrays, generate specialized CClassOrStruct with array methods
-- [ ] Delete old generators after verification
-- [ ] Verify output is byte-for-byte identical to current output
+### Refactoring Steps (complete):
+- [x] Create c-types.ts with IR types
+- [x] Create c-writer.ts with CWriter class
+- [x] Create ir-generator.ts with functions to convert Type → C types:
+  - [x] `generateConstructors(type: ClassOrStruct): CMethod[]`
+  - [x] `generateDestructor(type: ClassOrStruct): CMethod`
+  - [x] `generateMethods(type: ClassOrStruct): CMethod[]`
+  - [x] `generateArrayMethods(elementType: string, cTypeName: string, arrayType: ClassOrStruct): CMethod[]`
+  - [x] `generateEnum(enumType: Enum): CEnum`
+- [x] Update index.ts to use new architecture:
+  - [x] Generate CClassOrStruct for each class/struct type
+  - [x] Generate CEnum for each enum type
+  - [x] Pass to CWriter to generate code
+  - [x] For arrays, generate specialized CClassOrStruct with array methods
+- [x] Delete old generators after verification
+- [x] Verify output is working (some minor issues with RTTI and const types to fix later)
+
+## Error Fixes
+- [x] Fix exclusions.txt to use :: instead of . for method separators
+- [x] Add missing exclusions for unsupported array types (Array<String>, Array<Array<T>>)
+- [x] Make unsupported array types a hard error instead of warning
+- [x] Filter out excluded sources before reporting array errors
+- [x] Add isFieldExcluded, isFieldGetterExcluded, isFieldSetterExcluded functions
+- [x] Fix abstract class instantiation (Attachment) - don't generate constructors for abstract classes
+- [x] Fix mixin class constructors (BoneTimeline) - only generate constructors for classes that inherit from SpineObject
+- [x] Fix method name conflicts with type names (spine_bone_pose) - added checkMethodTypeNameConflicts check and excluded Bone::pose
+- [x] Add exclusions for BoneTimeline1 and BoneTimeline2 (have pure virtual methods but not detected as abstract)
+- [x] Fix method overload naming conflicts - include type information in suffix for methods with same names but different parameter types
+- [x] Fix static methods returning value types - Color::valueOf returns Color not Color* - added checkValueReturns and excluded Color::valueOf
+- [x] Enhanced type extractor to extract protected members (with access level) for proper abstract class detection
+- [x] Fixed BoneTimeline1/BoneTimeline2 abstract detection by including protected pure virtual methods
+- [x] Fix checkValueReturns to allow enum return values (enums are just integers in C)
+
+## warnings.ts
+
+## type-extractor.ts
+- [x] Fix inheritance processing order - addInheritedMethods assumes parent types are already processed but extractTypes doesn't guarantee this order
+- [x] Bug: Method name hiding - DeformTimeline has protected apply(5 params) which hides inherited public apply(8 params) from SlotCurveTimeline due to C++ name hiding rules
+- [x] Bug: addInheritedMethods was missing guard check and not setting inheritedMethodsAdded flag, causing duplicate inherited methods
+
+## ir-generator.ts (continued)
+- [x] Fix inherited method calls to use base class cast when fromSupertype is set to avoid C++ name hiding issues
+- [x] Fix naming conflict between methods named "create" and constructors - always add suffix to create methods
+
+## checks.ts (continued)
+- [x] Fix checkConstNonConstConflicts - it was checking for different return types instead of checking for const vs non-const methods

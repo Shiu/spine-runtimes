@@ -55,14 +55,14 @@ namespace spine {
 			return true;
 		}
 
-		virtual void pose() = 0;
-
-		virtual void setupPose() = 0;
-
 		// Inherited from Update
 		virtual void update(Skeleton &skeleton, Physics physics) override = 0;
 
 	protected:
+		virtual void pose() = 0;
+
+		virtual void setupPose() = 0;
+
 		bool _active;
 	};
 
@@ -79,6 +79,7 @@ namespace spine {
 			return PosedGeneric<D, P, P>::getData();
 		}
 
+	protected:
 		virtual void pose() override {
 			PosedGeneric<D, P, P>::pose();
 		}

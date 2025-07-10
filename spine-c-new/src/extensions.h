@@ -55,76 +55,58 @@ typedef void* (*spine_texture_loader_load_func)(const char *path);
 typedef void (*spine_texture_loader_unload_func)(void *texture);
 
 // Version functions
-SPINE_C_EXPORT int32_t spine_major_version();
-SPINE_C_EXPORT int32_t spine_minor_version();
-SPINE_C_EXPORT void spine_enable_debug_extension(bool enable);
-SPINE_C_EXPORT void spine_report_leaks();
-
-// Color functions
-SPINE_C_EXPORT float spine_color_get_r(spine_color color);
-SPINE_C_EXPORT float spine_color_get_g(spine_color color);
-SPINE_C_EXPORT float spine_color_get_b(spine_color color);
-SPINE_C_EXPORT float spine_color_get_a(spine_color color);
+SPINE_C_API int32_t spine_major_version();
+SPINE_C_API int32_t spine_minor_version();
+SPINE_C_API void spine_enable_debug_extension(bool enable);
+SPINE_C_API void spine_report_leaks();
 
 // Bounds functions
-SPINE_C_EXPORT float spine_bounds_get_x(spine_bounds bounds);
-SPINE_C_EXPORT float spine_bounds_get_y(spine_bounds bounds);
-SPINE_C_EXPORT float spine_bounds_get_width(spine_bounds bounds);
-SPINE_C_EXPORT float spine_bounds_get_height(spine_bounds bounds);
+SPINE_C_API float spine_bounds_get_x(spine_bounds bounds);
+SPINE_C_API float spine_bounds_get_y(spine_bounds bounds);
+SPINE_C_API float spine_bounds_get_width(spine_bounds bounds);
+SPINE_C_API float spine_bounds_get_height(spine_bounds bounds);
 
 // Vector functions
-SPINE_C_EXPORT float spine_vector_get_x(spine_vector vector);
-SPINE_C_EXPORT float spine_vector_get_y(spine_vector vector);
+SPINE_C_API float spine_vector_get_x(spine_vector vector);
+SPINE_C_API float spine_vector_get_y(spine_vector vector);
 
 // Atlas functions
-SPINE_C_EXPORT spine_atlas spine_atlas_load(const char *atlasData);
-SPINE_C_EXPORT spine_atlas spine_atlas_load_callback(const char *atlasData, const char *atlasDir,
+SPINE_C_API spine_atlas spine_atlas_load(const char *atlasData);
+SPINE_C_API spine_atlas spine_atlas_load_callback(const char *atlasData, const char *atlasDir,
                                                      spine_texture_loader_load_func load,
                                                      spine_texture_loader_unload_func unload);
-SPINE_C_EXPORT int32_t spine_atlas_get_num_image_paths(spine_atlas atlas);
-SPINE_C_EXPORT const char *spine_atlas_get_image_path(spine_atlas atlas, int32_t index);
-SPINE_C_EXPORT bool spine_atlas_is_pma(spine_atlas atlas);
-SPINE_C_EXPORT const char *spine_atlas_get_error(spine_atlas atlas);
-SPINE_C_EXPORT void spine_atlas_dispose(spine_atlas atlas);
+SPINE_C_API int32_t spine_atlas_get_num_image_paths(spine_atlas atlas);
+SPINE_C_API const char *spine_atlas_get_image_path(spine_atlas atlas, int32_t index);
+SPINE_C_API bool spine_atlas_is_pma(spine_atlas atlas);
+SPINE_C_API const char *spine_atlas_get_error(spine_atlas atlas);
+SPINE_C_API void spine_atlas_dispose(spine_atlas atlas);
 
 // Skeleton data functions
-SPINE_C_EXPORT spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, const char *skeletonData);
-SPINE_C_EXPORT spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, const uint8_t *skeletonData, int32_t length);
-SPINE_C_EXPORT const char *spine_skeleton_data_result_get_error(spine_skeleton_data_result result);
-SPINE_C_EXPORT spine_skeleton_data spine_skeleton_data_result_get_data(spine_skeleton_data_result result);
-SPINE_C_EXPORT void spine_skeleton_data_result_dispose(spine_skeleton_data_result result);
+SPINE_C_API spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, const char *skeletonData);
+SPINE_C_API spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, const uint8_t *skeletonData, int32_t length);
+SPINE_C_API const char *spine_skeleton_data_result_get_error(spine_skeleton_data_result result);
+SPINE_C_API spine_skeleton_data spine_skeleton_data_result_get_data(spine_skeleton_data_result result);
+SPINE_C_API void spine_skeleton_data_result_dispose(spine_skeleton_data_result result);
 
 // Skeleton drawable functions
-SPINE_C_EXPORT spine_skeleton_drawable spine_skeleton_drawable_create(spine_skeleton_data skeletonData);
-SPINE_C_EXPORT spine_render_command spine_skeleton_drawable_render(spine_skeleton_drawable drawable);
-SPINE_C_EXPORT void spine_skeleton_drawable_dispose(spine_skeleton_drawable drawable);
-SPINE_C_EXPORT spine_skeleton spine_skeleton_drawable_get_skeleton(spine_skeleton_drawable drawable);
-SPINE_C_EXPORT spine_animation_state spine_skeleton_drawable_get_animation_state(spine_skeleton_drawable drawable);
-SPINE_C_EXPORT spine_animation_state_data spine_skeleton_drawable_get_animation_state_data(spine_skeleton_drawable drawable);
-SPINE_C_EXPORT spine_animation_state_events spine_skeleton_drawable_get_animation_state_events(spine_skeleton_drawable drawable);
-
-// Render command functions
-SPINE_C_EXPORT float *spine_render_command_get_positions(spine_render_command command);
-SPINE_C_EXPORT float *spine_render_command_get_uvs(spine_render_command command);
-SPINE_C_EXPORT int32_t *spine_render_command_get_colors(spine_render_command command);
-SPINE_C_EXPORT int32_t *spine_render_command_get_dark_colors(spine_render_command command);
-SPINE_C_EXPORT int32_t spine_render_command_get_num_vertices(spine_render_command command);
-SPINE_C_EXPORT uint16_t *spine_render_command_get_indices(spine_render_command command);
-SPINE_C_EXPORT int32_t spine_render_command_get_num_indices(spine_render_command command);
-SPINE_C_EXPORT int32_t spine_render_command_get_atlas_page(spine_render_command command);
-SPINE_C_EXPORT spine_blend_mode spine_render_command_get_blend_mode(spine_render_command command);
-SPINE_C_EXPORT spine_render_command spine_render_command_get_next(spine_render_command command);
+SPINE_C_API spine_skeleton_drawable spine_skeleton_drawable_create(spine_skeleton_data skeletonData);
+SPINE_C_API spine_render_command spine_skeleton_drawable_render(spine_skeleton_drawable drawable);
+SPINE_C_API void spine_skeleton_drawable_dispose(spine_skeleton_drawable drawable);
+SPINE_C_API spine_skeleton spine_skeleton_drawable_get_skeleton(spine_skeleton_drawable drawable);
+SPINE_C_API spine_animation_state spine_skeleton_drawable_get_animation_state(spine_skeleton_drawable drawable);
+SPINE_C_API spine_animation_state_data spine_skeleton_drawable_get_animation_state_data(spine_skeleton_drawable drawable);
+SPINE_C_API spine_animation_state_events spine_skeleton_drawable_get_animation_state_events(spine_skeleton_drawable drawable);
 
 // Skin entries functions
-SPINE_C_EXPORT spine_skin_entries spine_skin_entries_create();
-SPINE_C_EXPORT void spine_skin_entries_dispose(spine_skin_entries entries);
-SPINE_C_EXPORT int32_t spine_skin_entries_get_num_entries(spine_skin_entries entries);
-SPINE_C_EXPORT spine_skin_entry spine_skin_entries_get_entry(spine_skin_entries entries, int32_t index);
+SPINE_C_API spine_skin_entries spine_skin_entries_create();
+SPINE_C_API void spine_skin_entries_dispose(spine_skin_entries entries);
+SPINE_C_API int32_t spine_skin_entries_get_num_entries(spine_skin_entries entries);
+SPINE_C_API spine_skin_entry spine_skin_entries_get_entry(spine_skin_entries entries, int32_t index);
 
 // Skin entry functions
-SPINE_C_EXPORT int32_t spine_skin_entry_get_slot_index(spine_skin_entry entry);
-SPINE_C_EXPORT const char *spine_skin_entry_get_name(spine_skin_entry entry);
-SPINE_C_EXPORT spine_attachment spine_skin_entry_get_attachment(spine_skin_entry entry);
+SPINE_C_API int32_t spine_skin_entry_get_slot_index(spine_skin_entry entry);
+SPINE_C_API const char *spine_skin_entry_get_name(spine_skin_entry entry);
+SPINE_C_API spine_attachment spine_skin_entry_get_attachment(spine_skin_entry entry);
 
 #ifdef __cplusplus
 }

@@ -1,227 +1,136 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "transform_constraint_data.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_transform_constraint_data spine_transform_constraint_data_create(const char* name) {
-    TransformConstraintData *obj = new (__FILE__, __LINE__) TransformConstraintData(String(name));
-    return (spine_transform_constraint_data) obj;
+    return (spine_transform_constraint_data) new (__FILE__, __LINE__) TransformConstraintData(*((const String*)name));
 }
 
-void spine_transform_constraint_data_dispose(spine_transform_constraint_data obj) {
-    if (!obj) return;
-    delete (TransformConstraintData *) obj;
+void spine_transform_constraint_data_dispose(spine_transform_constraint_data self) {
+    delete (TransformConstraintData*)self;
 }
 
-spine_rtti spine_transform_constraint_data_get_rtti() {
-    return (spine_rtti) &TransformConstraintData::rtti;
+spine_rtti spine_transform_constraint_data_get_rtti(spine_transform_constraint_data self) {
+    return (spine_rtti)&((TransformConstraintData*)self)->getRTTI();
 }
 
-spine_constraint spine_transform_constraint_data_create(spine_transform_constraint_data obj, spine_skeleton skeleton) {
-    if (!obj) return 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (spine_constraint) _obj->create(*(Skeleton*) skeleton);
+spine_constraint spine_transform_constraint_data_create_method(spine_transform_constraint_data self, spine_skeleton skeleton) {
+    return (spine_constraint)((TransformConstraintData*)self)->create(*((Skeleton*)skeleton));
 }
 
-int32_t spine_transform_constraint_data_get_num_bones(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (int32_t) _obj->getBones().size();
+spine_array_bone_data spine_transform_constraint_data_get_bones(spine_transform_constraint_data self) {
+    return (spine_array_bone_data)&((TransformConstraintData*)self)->getBones();
 }
 
-spine_bone_data *spine_transform_constraint_data_get_bones(spine_transform_constraint_data obj) {
-    if (!obj) return nullptr;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (spine_bone_data *) _obj->getBones().buffer();
+spine_bone_data spine_transform_constraint_data_get_source(spine_transform_constraint_data self) {
+    return (spine_bone_data)((TransformConstraintData*)self)->getSource();
 }
 
-spine_bone_data spine_transform_constraint_data_get_source(spine_transform_constraint_data obj) {
-    if (!obj) return (spine_bone_data) 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (spine_bone_data) _obj->getSource();
+void spine_transform_constraint_data_set_source(spine_transform_constraint_data self, spine_bone_data source) {
+    ((TransformConstraintData*)self)->setSource((BoneData *)source);
 }
 
-void spine_transform_constraint_data_set_source(spine_transform_constraint_data obj, spine_bone_data value) {
-    if (!obj) return;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    _obj->setSource((BoneData *) value);
+float spine_transform_constraint_data_get_offset_rotation(spine_transform_constraint_data self) {
+    return ((TransformConstraintData*)self)->getOffsetRotation();
 }
 
-float spine_transform_constraint_data_get_offset_rotation(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getOffsetRotation();
+void spine_transform_constraint_data_set_offset_rotation(spine_transform_constraint_data self, float offsetRotation) {
+    ((TransformConstraintData*)self)->setOffsetRotation(offsetRotation);
 }
 
-void spine_transform_constraint_data_set_offset_rotation(spine_transform_constraint_data obj, float value) {
-    if (!obj) return;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    _obj->setOffsetRotation(value);
+float spine_transform_constraint_data_get_offset_x(spine_transform_constraint_data self) {
+    return ((TransformConstraintData*)self)->getOffsetX();
 }
 
-float spine_transform_constraint_data_get_offset_x(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getOffsetX();
+void spine_transform_constraint_data_set_offset_x(spine_transform_constraint_data self, float offsetX) {
+    ((TransformConstraintData*)self)->setOffsetX(offsetX);
 }
 
-void spine_transform_constraint_data_set_offset_x(spine_transform_constraint_data obj, float value) {
-    if (!obj) return;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    _obj->setOffsetX(value);
+float spine_transform_constraint_data_get_offset_y(spine_transform_constraint_data self) {
+    return ((TransformConstraintData*)self)->getOffsetY();
 }
 
-float spine_transform_constraint_data_get_offset_y(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getOffsetY();
+void spine_transform_constraint_data_set_offset_y(spine_transform_constraint_data self, float offsetY) {
+    ((TransformConstraintData*)self)->setOffsetY(offsetY);
 }
 
-void spine_transform_constraint_data_set_offset_y(spine_transform_constraint_data obj, float value) {
-    if (!obj) return;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    _obj->setOffsetY(value);
+float spine_transform_constraint_data_get_offset_scale_x(spine_transform_constraint_data self) {
+    return ((TransformConstraintData*)self)->getOffsetScaleX();
 }
 
-float spine_transform_constraint_data_get_offset_scale_x(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getOffsetScaleX();
+void spine_transform_constraint_data_set_offset_scale_x(spine_transform_constraint_data self, float offsetScaleX) {
+    ((TransformConstraintData*)self)->setOffsetScaleX(offsetScaleX);
 }
 
-void spine_transform_constraint_data_set_offset_scale_x(spine_transform_constraint_data obj, float value) {
-    if (!obj) return;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    _obj->setOffsetScaleX(value);
+float spine_transform_constraint_data_get_offset_scale_y(spine_transform_constraint_data self) {
+    return ((TransformConstraintData*)self)->getOffsetScaleY();
 }
 
-float spine_transform_constraint_data_get_offset_scale_y(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getOffsetScaleY();
+void spine_transform_constraint_data_set_offset_scale_y(spine_transform_constraint_data self, float offsetScaleY) {
+    ((TransformConstraintData*)self)->setOffsetScaleY(offsetScaleY);
 }
 
-void spine_transform_constraint_data_set_offset_scale_y(spine_transform_constraint_data obj, float value) {
-    if (!obj) return;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    _obj->setOffsetScaleY(value);
+float spine_transform_constraint_data_get_offset_shear_y(spine_transform_constraint_data self) {
+    return ((TransformConstraintData*)self)->getOffsetShearY();
 }
 
-float spine_transform_constraint_data_get_offset_shear_y(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getOffsetShearY();
+void spine_transform_constraint_data_set_offset_shear_y(spine_transform_constraint_data self, float offsetShearY) {
+    ((TransformConstraintData*)self)->setOffsetShearY(offsetShearY);
 }
 
-void spine_transform_constraint_data_set_offset_shear_y(spine_transform_constraint_data obj, float value) {
-    if (!obj) return;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    _obj->setOffsetShearY(value);
+bool spine_transform_constraint_data_get_local_source(spine_transform_constraint_data self) {
+    return ((TransformConstraintData*)self)->getLocalSource();
 }
 
-bool spine_transform_constraint_data_get_local_source(spine_transform_constraint_data obj) {
-    if (!obj) return false;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getLocalSource();
+void spine_transform_constraint_data_set_local_source(spine_transform_constraint_data self, bool localSource) {
+    ((TransformConstraintData*)self)->setLocalSource(localSource);
 }
 
-void spine_transform_constraint_data_set_local_source(spine_transform_constraint_data obj, bool value) {
-    if (!obj) return;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    _obj->setLocalSource(value);
+bool spine_transform_constraint_data_get_local_target(spine_transform_constraint_data self) {
+    return ((TransformConstraintData*)self)->getLocalTarget();
 }
 
-bool spine_transform_constraint_data_get_local_target(spine_transform_constraint_data obj) {
-    if (!obj) return false;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getLocalTarget();
+void spine_transform_constraint_data_set_local_target(spine_transform_constraint_data self, bool localTarget) {
+    ((TransformConstraintData*)self)->setLocalTarget(localTarget);
 }
 
-void spine_transform_constraint_data_set_local_target(spine_transform_constraint_data obj, bool value) {
-    if (!obj) return;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    _obj->setLocalTarget(value);
+bool spine_transform_constraint_data_get_additive(spine_transform_constraint_data self) {
+    return ((TransformConstraintData*)self)->getAdditive();
 }
 
-bool spine_transform_constraint_data_get_additive(spine_transform_constraint_data obj) {
-    if (!obj) return false;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getAdditive();
+void spine_transform_constraint_data_set_additive(spine_transform_constraint_data self, bool additive) {
+    ((TransformConstraintData*)self)->setAdditive(additive);
 }
 
-void spine_transform_constraint_data_set_additive(spine_transform_constraint_data obj, bool value) {
-    if (!obj) return;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    _obj->setAdditive(value);
+bool spine_transform_constraint_data_get_clamp(spine_transform_constraint_data self) {
+    return ((TransformConstraintData*)self)->getClamp();
 }
 
-bool spine_transform_constraint_data_get_clamp(spine_transform_constraint_data obj) {
-    if (!obj) return false;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->getClamp();
+void spine_transform_constraint_data_set_clamp(spine_transform_constraint_data self, bool clamp) {
+    ((TransformConstraintData*)self)->setClamp(clamp);
 }
 
-void spine_transform_constraint_data_set_clamp(spine_transform_constraint_data obj, bool value) {
-    if (!obj) return;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    _obj->setClamp(value);
+spine_array_from_property spine_transform_constraint_data_get_properties(spine_transform_constraint_data self) {
+    return (spine_array_from_property)&((TransformConstraintData*)self)->getProperties();
 }
 
-int32_t spine_transform_constraint_data_get_num_properties(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (int32_t) _obj->getProperties().size();
+const char* spine_transform_constraint_data_get_name(spine_transform_constraint_data self) {
+    return (const char*)&((ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>*)(TransformConstraintData*)self)->getName();
 }
 
-spine_class from_property *spine_transform_constraint_data_get_properties(spine_transform_constraint_data obj) {
-    if (!obj) return nullptr;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (spine_class from_property *) _obj->getProperties().buffer();
+bool spine_transform_constraint_data_is_skin_required(spine_transform_constraint_data self) {
+    return ((ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>*)(TransformConstraintData*)self)->isSkinRequired();
 }
 
-const char* spine_transform_constraint_data_get_name(spine_transform_constraint_data obj) {
-    if (!obj) return nullptr;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (const char *) _obj->getName().buffer();
+spine_transform_constraint_pose spine_transform_constraint_data_get_setup_pose(spine_transform_constraint_data self) {
+    return (spine_transform_constraint_pose)&((ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>*)(TransformConstraintData*)self)->getSetupPose();
 }
 
-bool spine_transform_constraint_data_is_skin_required(spine_transform_constraint_data obj) {
-    if (!obj) return false;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return _obj->isSkinRequired();
+void spine_transform_constraint_data_set_skin_required(spine_transform_constraint_data self, bool skinRequired) {
+    ((ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>*)(TransformConstraintData*)self)->setSkinRequired(skinRequired);
 }
 
-spine_transform_constraint_pose spine_transform_constraint_data_get_setup_pose(spine_transform_constraint_data obj) {
-    if (!obj) return 0;
-    TransformConstraintData *_obj = (TransformConstraintData *) obj;
-    return (spine_transform_constraint_pose) &_obj->getSetupPose();
+spine_rtti spine_transform_constraint_data_rtti(void) {
+    return (spine_rtti)&TransformConstraintData::rtti;
 }

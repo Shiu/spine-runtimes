@@ -1,5 +1,7 @@
 import { Type, ArraySpecialization, isPrimitive, toSnakeCase, Member } from './types';
 import { WarningsCollector } from './warnings';
+import { Exclusion } from './types';
+import { isMethodExcluded, isFieldExcluded, isFieldGetterExcluded } from './exclusions';
 
 // Note: This regex won't correctly parse nested arrays like Array<Array<int>>
 // It will match "Array<Array<int>" instead of the full type.
@@ -31,7 +33,7 @@ function extractArrayTypes(
 /**
  * Scans included spine-cpp types to find Array<T> specializations
  */
-export function scanArraySpecializations(includedTypes: Type[]): ArraySpecialization[] {
+export function scanArraySpecializations(includedTypes: Type[], exclusions: Exclusion[]): ArraySpecialization[] {
     const arrayTypes = new Map<string, {type: Type, member: Member}[]>();
     const warnings = new WarningsCollector();
 
@@ -70,25 +72,63 @@ export function scanArraySpecializations(includedTypes: Type[]): ArraySpecializa
 
         const elementType = elementMatch[1].trim();
 
+        // Filter out excluded sources
+        const filteredSources = sources.filter(source => {
+            const typeName = source.type.name;
+            const member = source.member;
+            
+            // Check if the entire type is excluded
+            if (exclusions.some(e => e.kind === 'type' && e.typeName === typeName)) {
+                return false;
+            }
+            
+            // Check based on member kind
+            switch (member.kind) {
+                case 'method':
+                    // Check if method is excluded
+                    return !isMethodExcluded(typeName, member.name, exclusions, member);
+                    
+                case 'field':
+                    // Check if field is excluded (all accessors)
+                    if (isFieldExcluded(typeName, member.name, exclusions)) {
+                        return false;
+                    }
+                    // Check if field getter is excluded
+                    if (isFieldGetterExcluded(typeName, member.name, exclusions)) {
+                        return false;
+                    }
+                    // Field is included if at least setter is not excluded
+                    return true;
+                    
+                default:
+                    return true;
+            }
+        });
+        
+        // Skip if all sources are excluded
+        if (filteredSources.length === 0) {
+            continue;
+        }
+
         // For template types, check if element type is a template parameter
         const firstSource = sources[0];
         const sourceType = firstSource.type;
         if (sourceType.kind !== "enum" && sourceType.isTemplate && sourceType.templateParams?.includes(elementType)) {
             // Warn about template placeholders like T, K
-            warnings.addWarning(arrayType, `Template class uses generic array with template parameter '${elementType}'`, sources);
+            warnings.addWarning(arrayType, `Template class uses generic array with template parameter '${elementType}'`, filteredSources);
             continue;
         }
 
         // Check for const element types (not allowed in arrays)
         if (elementType.startsWith('const ') || elementType.includes(' const ')) {
-            warnings.addWarning(arrayType, "Arrays should not have const element types", sources);
+            warnings.addWarning(arrayType, "Arrays should not have const element types", filteredSources);
             continue;
         }
 
         // Check for multi-level pointers (unsupported, should be caught by checkMultiLevelPointers in index.ts)
         const pointerCount = (elementType.match(/\*/g) || []).length;
         if (pointerCount > 1) {
-            warnings.addWarning(arrayType, "Multi-level pointers are not supported", sources);
+            warnings.addWarning(arrayType, "Multi-level pointers are not supported", filteredSources);
             continue;
         }
 
@@ -135,13 +175,13 @@ export function scanArraySpecializations(includedTypes: Type[]): ArraySpecializa
             // Check for problematic types
             if (elementType.startsWith('Array<')) {
                 // C doesn't support nested templates, would need manual Array<Array<T>> implementation
-                warnings.addWarning(arrayType, "C doesn't support nested templates", sources);
+                warnings.addWarning(arrayType, "C doesn't support nested templates", filteredSources);
                 continue;
             }
 
             if (elementType === 'String') {
                 // String arrays should use const char** instead
-                warnings.addWarning(arrayType, "String arrays should use const char** in C API", sources);
+                warnings.addWarning(arrayType, "String arrays should use const char** in C API", filteredSources);
                 continue;
             }
 
@@ -161,8 +201,21 @@ export function scanArraySpecializations(includedTypes: Type[]): ArraySpecializa
         });
     }
 
-    // Print warnings
-    warnings.printWarnings('Array Generation Warnings:');
+    // Print warnings and exit if there are any unsupported types
+    if (warnings.hasWarnings()) {
+        warnings.printWarnings('Array Generation Errors:');
+        console.error('\nERROR: Found unsupported array types that cannot be wrapped in C.');
+        console.error('You must either:');
+        console.error('  1. Modify the C++ code to avoid these types');
+        console.error('  2. Add method/field exclusions to exclusions.txt');
+        console.error('\nExample exclusions:');
+        console.error('  method: AttachmentTimeline::getAttachmentNames');
+        console.error('  field: AtlasRegion::names');
+        console.error('  method: DeformTimeline::getVertices');
+        console.error('  method: DrawOrderTimeline::getDrawOrders');
+        console.error('  method: Skin::findNamesForSlot');
+        process.exit(1);
+    }
 
     // Sort specializations: primitives first, then enums, then pointers
     specializations.sort((a, b) => {

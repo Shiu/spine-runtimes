@@ -1,101 +1,96 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "shear_y_timeline.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_shear_y_timeline spine_shear_y_timeline_create(size_t frameCount, size_t bezierCount, int boneIndex) {
-    ShearYTimeline *obj = new (__FILE__, __LINE__) ShearYTimeline(frameCount, bezierCount, boneIndex);
-    return (spine_shear_y_timeline) obj;
+    return (spine_shear_y_timeline) new (__FILE__, __LINE__) ShearYTimeline(frameCount, bezierCount, boneIndex);
 }
 
-void spine_shear_y_timeline_dispose(spine_shear_y_timeline obj) {
-    if (!obj) return;
-    delete (ShearYTimeline *) obj;
+void spine_shear_y_timeline_dispose(spine_shear_y_timeline self) {
+    delete (ShearYTimeline*)self;
 }
 
-spine_rtti spine_shear_y_timeline_get_rtti() {
-    return (spine_rtti) &ShearYTimeline::rtti;
+spine_rtti spine_shear_y_timeline_get_rtti(spine_shear_y_timeline self) {
+    return (spine_rtti)&((ShearYTimeline*)self)->getRTTI();
 }
 
-void spine_shear_y_timeline_apply(spine_shear_y_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
-    if (!obj) return ;
-    ShearYTimeline *_obj = (ShearYTimeline *) obj;
-    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
+void spine_shear_y_timeline_apply(spine_shear_y_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
+    ((BoneTimeline1*)(ShearYTimeline*)self)->apply(*((Skeleton*)skeleton), lastTime, time, (Array<Event *> *)pEvents, alpha, (MixBlend)blend, (MixDirection)direction, appliedPose);
 }
 
-void spine_shear_y_timeline_set_frame(spine_shear_y_timeline obj, size_t frame, float time, float value) {
-    if (!obj) return ;
-    ShearYTimeline *_obj = (ShearYTimeline *) obj;
-    _obj->setFrame(frame, time, value);
+void spine_shear_y_timeline_set_frame(spine_shear_y_timeline self, size_t frame, float time, float value) {
+    ((BoneTimeline1*)(ShearYTimeline*)self)->setFrame(frame, time, value);
 }
 
-float spine_shear_y_timeline_get_curve_value(spine_shear_y_timeline obj, float time) {
-    if (!obj) return 0;
-    ShearYTimeline *_obj = (ShearYTimeline *) obj;
-    return _obj->getCurveValue(time);
+float spine_shear_y_timeline_get_curve_value(spine_shear_y_timeline self, float time) {
+    return ((BoneTimeline1*)(ShearYTimeline*)self)->getCurveValue(time);
 }
 
-float spine_shear_y_timeline_get_relative_value(spine_shear_y_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
-    if (!obj) return 0;
-    ShearYTimeline *_obj = (ShearYTimeline *) obj;
-    return _obj->getRelativeValue(time, alpha, (MixBlend) blend, current, setup);
+float spine_shear_y_timeline_get_relative_value(spine_shear_y_timeline self, float time, float alpha, spine_mix_blend blend, float current, float setup) {
+    return ((BoneTimeline1*)(ShearYTimeline*)self)->getRelativeValue(time, alpha, (MixBlend)blend, current, setup);
 }
 
-float spine_shear_y_timeline_get_absolute_value(spine_shear_y_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup) {
-    if (!obj) return 0;
-    ShearYTimeline *_obj = (ShearYTimeline *) obj;
-    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup);
+float spine_shear_y_timeline_get_absolute_value_1(spine_shear_y_timeline self, float time, float alpha, spine_mix_blend blend, float current, float setup) {
+    return ((BoneTimeline1*)(ShearYTimeline*)self)->getAbsoluteValue(time, alpha, (MixBlend)blend, current, setup);
 }
 
-float spine_shear_y_timeline_get_absolute_value_6(spine_shear_y_timeline obj, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
-    if (!obj) return 0;
-    ShearYTimeline *_obj = (ShearYTimeline *) obj;
-    return _obj->getAbsoluteValue(time, alpha, (MixBlend) blend, current, setup, value);
+float spine_shear_y_timeline_get_absolute_value_2(spine_shear_y_timeline self, float time, float alpha, spine_mix_blend blend, float current, float setup, float value) {
+    return ((BoneTimeline1*)(ShearYTimeline*)self)->getAbsoluteValue(time, alpha, (MixBlend)blend, current, setup, value);
 }
 
-float spine_shear_y_timeline_get_scale_value(spine_shear_y_timeline obj, float time, float alpha, spine_mix_blend blend, spine_mix_direction direction, float current, float setup) {
-    if (!obj) return 0;
-    ShearYTimeline *_obj = (ShearYTimeline *) obj;
-    return _obj->getScaleValue(time, alpha, (MixBlend) blend, (MixDirection) direction, current, setup);
+float spine_shear_y_timeline_get_scale_value(spine_shear_y_timeline self, float time, float alpha, spine_mix_blend blend, spine_mix_direction direction, float current, float setup) {
+    return ((BoneTimeline1*)(ShearYTimeline*)self)->getScaleValue(time, alpha, (MixBlend)blend, (MixDirection)direction, current, setup);
 }
 
-int spine_shear_y_timeline_get_bone_index(spine_shear_y_timeline obj) {
-    if (!obj) return 0;
-    ShearYTimeline *_obj = (ShearYTimeline *) obj;
-    return _obj->getBoneIndex();
+void spine_shear_y_timeline_set_linear(spine_shear_y_timeline self, size_t frame) {
+    ((BoneTimeline1*)(ShearYTimeline*)self)->setLinear(frame);
 }
 
-void spine_shear_y_timeline_set_bone_index(spine_shear_y_timeline obj, int value) {
-    if (!obj) return;
-    ShearYTimeline *_obj = (ShearYTimeline *) obj;
-    _obj->setBoneIndex(value);
+void spine_shear_y_timeline_set_stepped(spine_shear_y_timeline self, size_t frame) {
+    ((BoneTimeline1*)(ShearYTimeline*)self)->setStepped(frame);
+}
+
+void spine_shear_y_timeline_set_bezier(spine_shear_y_timeline self, size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2) {
+    ((BoneTimeline1*)(ShearYTimeline*)self)->setBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
+}
+
+float spine_shear_y_timeline_get_bezier_value(spine_shear_y_timeline self, float time, size_t frame, size_t valueOffset, size_t i) {
+    return ((BoneTimeline1*)(ShearYTimeline*)self)->getBezierValue(time, frame, valueOffset, i);
+}
+
+spine_array_float spine_shear_y_timeline_get_curves(spine_shear_y_timeline self) {
+    return (spine_array_float)&((BoneTimeline1*)(ShearYTimeline*)self)->getCurves();
+}
+
+size_t spine_shear_y_timeline_get_frame_entries(spine_shear_y_timeline self) {
+    return ((BoneTimeline1*)(ShearYTimeline*)self)->getFrameEntries();
+}
+
+size_t spine_shear_y_timeline_get_frame_count(spine_shear_y_timeline self) {
+    return ((BoneTimeline1*)(ShearYTimeline*)self)->getFrameCount();
+}
+
+spine_array_float spine_shear_y_timeline_get_frames(spine_shear_y_timeline self) {
+    return (spine_array_float)&((BoneTimeline1*)(ShearYTimeline*)self)->getFrames();
+}
+
+float spine_shear_y_timeline_get_duration(spine_shear_y_timeline self) {
+    return ((BoneTimeline1*)(ShearYTimeline*)self)->getDuration();
+}
+
+spine_array_property_id spine_shear_y_timeline_get_property_ids(spine_shear_y_timeline self) {
+    return (spine_array_property_id)&((BoneTimeline1*)(ShearYTimeline*)self)->getPropertyIds();
+}
+
+int spine_shear_y_timeline_get_bone_index(spine_shear_y_timeline self) {
+    return ((BoneTimeline1*)(ShearYTimeline*)self)->getBoneIndex();
+}
+
+void spine_shear_y_timeline_set_bone_index(spine_shear_y_timeline self, int inValue) {
+    ((BoneTimeline1*)(ShearYTimeline*)self)->setBoneIndex(inValue);
+}
+
+spine_rtti spine_shear_y_timeline_rtti(void) {
+    return (spine_rtti)&ShearYTimeline::rtti;
 }

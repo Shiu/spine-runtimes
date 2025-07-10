@@ -1,59 +1,76 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "rgb2_timeline.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_rgb2_timeline spine_rgb2_timeline_create(size_t frameCount, size_t bezierCount, int slotIndex) {
-    RGB2Timeline *obj = new (__FILE__, __LINE__) RGB2Timeline(frameCount, bezierCount, slotIndex);
-    return (spine_rgb2_timeline) obj;
+    return (spine_rgb2_timeline) new (__FILE__, __LINE__) RGB2Timeline(frameCount, bezierCount, slotIndex);
 }
 
-void spine_rgb2_timeline_dispose(spine_rgb2_timeline obj) {
-    if (!obj) return;
-    delete (RGB2Timeline *) obj;
+void spine_rgb2_timeline_dispose(spine_rgb2_timeline self) {
+    delete (RGB2Timeline*)self;
 }
 
-spine_rtti spine_rgb2_timeline_get_rtti() {
-    return (spine_rtti) &RGB2Timeline::rtti;
+spine_rtti spine_rgb2_timeline_get_rtti(spine_rgb2_timeline self) {
+    return (spine_rtti)&((RGB2Timeline*)self)->getRTTI();
 }
 
-void spine_rgb2_timeline_set_frame(spine_rgb2_timeline obj, int frame, float time, float r, float g, float b, float r2, float g2, float b2) {
-    if (!obj) return ;
-    RGB2Timeline *_obj = (RGB2Timeline *) obj;
-    _obj->setFrame(frame, time, r, g, b, r2, g2, b2);
+void spine_rgb2_timeline_set_frame(spine_rgb2_timeline self, int frame, float time, float r, float g, float b, float r2, float g2, float b2) {
+    ((RGB2Timeline*)self)->setFrame(frame, time, r, g, b, r2, g2, b2);
 }
 
-void spine_rgb2_timeline_apply(spine_rgb2_timeline obj, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
-    if (!obj) return ;
-    RGB2Timeline *_obj = (RGB2Timeline *) obj;
-    _obj->apply(*(Skeleton*) skeleton, lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
+void spine_rgb2_timeline_apply(spine_rgb2_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
+    ((SlotCurveTimeline*)(RGB2Timeline*)self)->apply(*((Skeleton*)skeleton), lastTime, time, (Array<Event *> *)pEvents, alpha, (MixBlend)blend, (MixDirection)direction, appliedPose);
+}
+
+void spine_rgb2_timeline_set_linear(spine_rgb2_timeline self, size_t frame) {
+    ((SlotCurveTimeline*)(RGB2Timeline*)self)->setLinear(frame);
+}
+
+void spine_rgb2_timeline_set_stepped(spine_rgb2_timeline self, size_t frame) {
+    ((SlotCurveTimeline*)(RGB2Timeline*)self)->setStepped(frame);
+}
+
+void spine_rgb2_timeline_set_bezier(spine_rgb2_timeline self, size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2) {
+    ((SlotCurveTimeline*)(RGB2Timeline*)self)->setBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
+}
+
+float spine_rgb2_timeline_get_bezier_value(spine_rgb2_timeline self, float time, size_t frame, size_t valueOffset, size_t i) {
+    return ((SlotCurveTimeline*)(RGB2Timeline*)self)->getBezierValue(time, frame, valueOffset, i);
+}
+
+spine_array_float spine_rgb2_timeline_get_curves(spine_rgb2_timeline self) {
+    return (spine_array_float)&((SlotCurveTimeline*)(RGB2Timeline*)self)->getCurves();
+}
+
+size_t spine_rgb2_timeline_get_frame_entries(spine_rgb2_timeline self) {
+    return ((SlotCurveTimeline*)(RGB2Timeline*)self)->getFrameEntries();
+}
+
+size_t spine_rgb2_timeline_get_frame_count(spine_rgb2_timeline self) {
+    return ((SlotCurveTimeline*)(RGB2Timeline*)self)->getFrameCount();
+}
+
+spine_array_float spine_rgb2_timeline_get_frames(spine_rgb2_timeline self) {
+    return (spine_array_float)&((SlotCurveTimeline*)(RGB2Timeline*)self)->getFrames();
+}
+
+float spine_rgb2_timeline_get_duration(spine_rgb2_timeline self) {
+    return ((SlotCurveTimeline*)(RGB2Timeline*)self)->getDuration();
+}
+
+spine_array_property_id spine_rgb2_timeline_get_property_ids(spine_rgb2_timeline self) {
+    return (spine_array_property_id)&((SlotCurveTimeline*)(RGB2Timeline*)self)->getPropertyIds();
+}
+
+int spine_rgb2_timeline_get_slot_index(spine_rgb2_timeline self) {
+    return ((SlotCurveTimeline*)(RGB2Timeline*)self)->getSlotIndex();
+}
+
+void spine_rgb2_timeline_set_slot_index(spine_rgb2_timeline self, int inValue) {
+    ((SlotCurveTimeline*)(RGB2Timeline*)self)->setSlotIndex(inValue);
+}
+
+spine_rtti spine_rgb2_timeline_rtti(void) {
+    return (spine_rtti)&RGB2Timeline::rtti;
 }

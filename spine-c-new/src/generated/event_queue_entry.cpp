@@ -1,43 +1,36 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "event_queue_entry.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_event_queue_entry spine_event_queue_entry_create(spine_event_type eventType, spine_track_entry trackEntry, spine_event event) {
-    EventQueueEntry *obj = new (__FILE__, __LINE__) EventQueueEntry(eventType, (TrackEntry *) trackEntry, (Event *) event);
-    return (spine_event_queue_entry) obj;
+    return (spine_event_queue_entry) new (__FILE__, __LINE__) EventQueueEntry((EventType)eventType, (TrackEntry *)trackEntry, (Event *)event);
 }
 
-void spine_event_queue_entry_dispose(spine_event_queue_entry obj) {
-    if (!obj) return;
-    delete (EventQueueEntry *) obj;
+void spine_event_queue_entry_dispose(spine_event_queue_entry self) {
+    delete (EventQueueEntry*)self;
+}
+
+spine_event_type spine_event_queue_entry_get__type(spine_event_queue_entry self) {
+    return (spine_event_type)((EventQueueEntry*)self)->_type;
+}
+
+void spine_event_queue_entry_set__type(spine_event_queue_entry self, spine_event_type value) {
+    ((EventQueueEntry*)self)->_type = (EventType)value;
+}
+
+spine_track_entry spine_event_queue_entry_get__entry(spine_event_queue_entry self) {
+    return (spine_track_entry)((EventQueueEntry*)self)->_entry;
+}
+
+void spine_event_queue_entry_set__entry(spine_event_queue_entry self, spine_track_entry value) {
+    ((EventQueueEntry*)self)->_entry = (TrackEntry*)value;
+}
+
+spine_event spine_event_queue_entry_get__event(spine_event_queue_entry self) {
+    return (spine_event)((EventQueueEntry*)self)->_event;
+}
+
+void spine_event_queue_entry_set__event(spine_event_queue_entry self, spine_event value) {
+    ((EventQueueEntry*)self)->_event = (Event*)value;
 }

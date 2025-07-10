@@ -1,84 +1,24 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "atlas.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
-spine_atlas spine_atlas_create(const char* path, spine_texture_loader textureLoader, bool createTexture) {
-    Atlas *obj = new (__FILE__, __LINE__) Atlas(String(path), (TextureLoader *) textureLoader, createTexture);
-    return (spine_atlas) obj;
+void spine_atlas_dispose(spine_atlas self) {
+    delete (Atlas*)self;
 }
 
-spine_atlas spine_atlas_create_with_string_int_string_texture_loader_bool(const char * data, int length, const char * dir, spine_texture_loader textureLoader, bool createTexture) {
-    Atlas *obj = new (__FILE__, __LINE__) Atlas((const char *) data, length, (const char *) dir, (TextureLoader *) textureLoader, createTexture);
-    return (spine_atlas) obj;
+void spine_atlas_flip_v(spine_atlas self) {
+    ((Atlas*)self)->flipV();
 }
 
-void spine_atlas_dispose(spine_atlas obj) {
-    if (!obj) return;
-    delete (Atlas *) obj;
+spine_atlas_region spine_atlas_find_region(spine_atlas self, const char* name) {
+    return (spine_atlas_region)((Atlas*)self)->findRegion(*((const String*)name));
 }
 
-void spine_atlas_flip_v(spine_atlas obj) {
-    if (!obj) return ;
-    Atlas *_obj = (Atlas *) obj;
-    _obj->flipV();
+spine_array_atlas_page spine_atlas_get_pages(spine_atlas self) {
+    return (spine_array_atlas_page)&((Atlas*)self)->getPages();
 }
 
-spine_atlas_region spine_atlas_find_region(spine_atlas obj, const char* name) {
-    if (!obj) return (spine_atlas_region) 0;
-    Atlas *_obj = (Atlas *) obj;
-    return (spine_atlas_region) _obj->findRegion(String(name));
-}
-
-int32_t spine_atlas_get_num_pages(spine_atlas obj) {
-    if (!obj) return 0;
-    Atlas *_obj = (Atlas *) obj;
-    return (int32_t) _obj->getPages().size();
-}
-
-spine_atlas_page *spine_atlas_get_pages(spine_atlas obj) {
-    if (!obj) return nullptr;
-    Atlas *_obj = (Atlas *) obj;
-    return (spine_atlas_page *) _obj->getPages().buffer();
-}
-
-int32_t spine_atlas_get_num_regions(spine_atlas obj) {
-    if (!obj) return 0;
-    Atlas *_obj = (Atlas *) obj;
-    return (int32_t) _obj->getRegions().size();
-}
-
-spine_atlas_region *spine_atlas_get_regions(spine_atlas obj) {
-    if (!obj) return nullptr;
-    Atlas *_obj = (Atlas *) obj;
-    return (spine_atlas_region *) _obj->getRegions().buffer();
+spine_array_atlas_region spine_atlas_get_regions(spine_atlas self) {
+    return (spine_array_atlas_region)&((Atlas*)self)->getRegions();
 }

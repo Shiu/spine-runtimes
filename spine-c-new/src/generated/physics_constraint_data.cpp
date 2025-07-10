@@ -1,251 +1,160 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "physics_constraint_data.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_physics_constraint_data spine_physics_constraint_data_create(const char* name) {
-    PhysicsConstraintData *obj = new (__FILE__, __LINE__) PhysicsConstraintData(String(name));
-    return (spine_physics_constraint_data) obj;
+    return (spine_physics_constraint_data) new (__FILE__, __LINE__) PhysicsConstraintData(*((const String*)name));
 }
 
-void spine_physics_constraint_data_dispose(spine_physics_constraint_data obj) {
-    if (!obj) return;
-    delete (PhysicsConstraintData *) obj;
+void spine_physics_constraint_data_dispose(spine_physics_constraint_data self) {
+    delete (PhysicsConstraintData*)self;
 }
 
-spine_rtti spine_physics_constraint_data_get_rtti() {
-    return (spine_rtti) &PhysicsConstraintData::rtti;
+spine_rtti spine_physics_constraint_data_get_rtti(spine_physics_constraint_data self) {
+    return (spine_rtti)&((PhysicsConstraintData*)self)->getRTTI();
 }
 
-spine_constraint spine_physics_constraint_data_create(spine_physics_constraint_data obj, spine_skeleton skeleton) {
-    if (!obj) return 0;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return (spine_constraint) _obj->create(*(Skeleton*) skeleton);
+spine_constraint spine_physics_constraint_data_create_method(spine_physics_constraint_data self, spine_skeleton skeleton) {
+    return (spine_constraint)((PhysicsConstraintData*)self)->create(*((Skeleton*)skeleton));
 }
 
-spine_bone_data spine_physics_constraint_data_get_bone(spine_physics_constraint_data obj) {
-    if (!obj) return (spine_bone_data) 0;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return (spine_bone_data) _obj->getBone();
+spine_bone_data spine_physics_constraint_data_get_bone(spine_physics_constraint_data self) {
+    return (spine_bone_data)((PhysicsConstraintData*)self)->getBone();
 }
 
-void spine_physics_constraint_data_set_bone(spine_physics_constraint_data obj, spine_bone_data value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setBone((BoneData *) value);
+void spine_physics_constraint_data_set_bone(spine_physics_constraint_data self, spine_bone_data bone) {
+    ((PhysicsConstraintData*)self)->setBone((BoneData *)bone);
 }
 
-float spine_physics_constraint_data_get_step(spine_physics_constraint_data obj) {
-    if (!obj) return 0;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getStep();
+float spine_physics_constraint_data_get_step(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getStep();
 }
 
-void spine_physics_constraint_data_set_step(spine_physics_constraint_data obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setStep(value);
+void spine_physics_constraint_data_set_step(spine_physics_constraint_data self, float step) {
+    ((PhysicsConstraintData*)self)->setStep(step);
 }
 
-float spine_physics_constraint_data_get_x(spine_physics_constraint_data obj) {
-    if (!obj) return 0;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getX();
+float spine_physics_constraint_data_get_x(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getX();
 }
 
-void spine_physics_constraint_data_set_x(spine_physics_constraint_data obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setX(value);
+void spine_physics_constraint_data_set_x(spine_physics_constraint_data self, float x) {
+    ((PhysicsConstraintData*)self)->setX(x);
 }
 
-float spine_physics_constraint_data_get_y(spine_physics_constraint_data obj) {
-    if (!obj) return 0;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getY();
+float spine_physics_constraint_data_get_y(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getY();
 }
 
-void spine_physics_constraint_data_set_y(spine_physics_constraint_data obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setY(value);
+void spine_physics_constraint_data_set_y(spine_physics_constraint_data self, float y) {
+    ((PhysicsConstraintData*)self)->setY(y);
 }
 
-float spine_physics_constraint_data_get_rotate(spine_physics_constraint_data obj) {
-    if (!obj) return 0;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getRotate();
+float spine_physics_constraint_data_get_rotate(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getRotate();
 }
 
-void spine_physics_constraint_data_set_rotate(spine_physics_constraint_data obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setRotate(value);
+void spine_physics_constraint_data_set_rotate(spine_physics_constraint_data self, float rotate) {
+    ((PhysicsConstraintData*)self)->setRotate(rotate);
 }
 
-float spine_physics_constraint_data_get_scale_x(spine_physics_constraint_data obj) {
-    if (!obj) return 0;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getScaleX();
+float spine_physics_constraint_data_get_scale_x(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getScaleX();
 }
 
-void spine_physics_constraint_data_set_scale_x(spine_physics_constraint_data obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setScaleX(value);
+void spine_physics_constraint_data_set_scale_x(spine_physics_constraint_data self, float scaleX) {
+    ((PhysicsConstraintData*)self)->setScaleX(scaleX);
 }
 
-float spine_physics_constraint_data_get_shear_x(spine_physics_constraint_data obj) {
-    if (!obj) return 0;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getShearX();
+float spine_physics_constraint_data_get_shear_x(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getShearX();
 }
 
-void spine_physics_constraint_data_set_shear_x(spine_physics_constraint_data obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setShearX(value);
+void spine_physics_constraint_data_set_shear_x(spine_physics_constraint_data self, float shearX) {
+    ((PhysicsConstraintData*)self)->setShearX(shearX);
 }
 
-float spine_physics_constraint_data_get_limit(spine_physics_constraint_data obj) {
-    if (!obj) return 0;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getLimit();
+float spine_physics_constraint_data_get_limit(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getLimit();
 }
 
-void spine_physics_constraint_data_set_limit(spine_physics_constraint_data obj, float value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setLimit(value);
+void spine_physics_constraint_data_set_limit(spine_physics_constraint_data self, float limit) {
+    ((PhysicsConstraintData*)self)->setLimit(limit);
 }
 
-bool spine_physics_constraint_data_get_inertia_global(spine_physics_constraint_data obj) {
-    if (!obj) return false;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getInertiaGlobal();
+bool spine_physics_constraint_data_get_inertia_global(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getInertiaGlobal();
 }
 
-void spine_physics_constraint_data_set_inertia_global(spine_physics_constraint_data obj, bool value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setInertiaGlobal(value);
+void spine_physics_constraint_data_set_inertia_global(spine_physics_constraint_data self, bool inertiaGlobal) {
+    ((PhysicsConstraintData*)self)->setInertiaGlobal(inertiaGlobal);
 }
 
-bool spine_physics_constraint_data_get_strength_global(spine_physics_constraint_data obj) {
-    if (!obj) return false;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getStrengthGlobal();
+bool spine_physics_constraint_data_get_strength_global(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getStrengthGlobal();
 }
 
-void spine_physics_constraint_data_set_strength_global(spine_physics_constraint_data obj, bool value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setStrengthGlobal(value);
+void spine_physics_constraint_data_set_strength_global(spine_physics_constraint_data self, bool strengthGlobal) {
+    ((PhysicsConstraintData*)self)->setStrengthGlobal(strengthGlobal);
 }
 
-bool spine_physics_constraint_data_get_damping_global(spine_physics_constraint_data obj) {
-    if (!obj) return false;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getDampingGlobal();
+bool spine_physics_constraint_data_get_damping_global(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getDampingGlobal();
 }
 
-void spine_physics_constraint_data_set_damping_global(spine_physics_constraint_data obj, bool value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setDampingGlobal(value);
+void spine_physics_constraint_data_set_damping_global(spine_physics_constraint_data self, bool dampingGlobal) {
+    ((PhysicsConstraintData*)self)->setDampingGlobal(dampingGlobal);
 }
 
-bool spine_physics_constraint_data_get_mass_global(spine_physics_constraint_data obj) {
-    if (!obj) return false;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getMassGlobal();
+bool spine_physics_constraint_data_get_mass_global(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getMassGlobal();
 }
 
-void spine_physics_constraint_data_set_mass_global(spine_physics_constraint_data obj, bool value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setMassGlobal(value);
+void spine_physics_constraint_data_set_mass_global(spine_physics_constraint_data self, bool massGlobal) {
+    ((PhysicsConstraintData*)self)->setMassGlobal(massGlobal);
 }
 
-bool spine_physics_constraint_data_get_wind_global(spine_physics_constraint_data obj) {
-    if (!obj) return false;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getWindGlobal();
+bool spine_physics_constraint_data_get_wind_global(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getWindGlobal();
 }
 
-void spine_physics_constraint_data_set_wind_global(spine_physics_constraint_data obj, bool value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setWindGlobal(value);
+void spine_physics_constraint_data_set_wind_global(spine_physics_constraint_data self, bool windGlobal) {
+    ((PhysicsConstraintData*)self)->setWindGlobal(windGlobal);
 }
 
-bool spine_physics_constraint_data_get_gravity_global(spine_physics_constraint_data obj) {
-    if (!obj) return false;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getGravityGlobal();
+bool spine_physics_constraint_data_get_gravity_global(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getGravityGlobal();
 }
 
-void spine_physics_constraint_data_set_gravity_global(spine_physics_constraint_data obj, bool value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setGravityGlobal(value);
+void spine_physics_constraint_data_set_gravity_global(spine_physics_constraint_data self, bool gravityGlobal) {
+    ((PhysicsConstraintData*)self)->setGravityGlobal(gravityGlobal);
 }
 
-bool spine_physics_constraint_data_get_mix_global(spine_physics_constraint_data obj) {
-    if (!obj) return false;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->getMixGlobal();
+bool spine_physics_constraint_data_get_mix_global(spine_physics_constraint_data self) {
+    return ((PhysicsConstraintData*)self)->getMixGlobal();
 }
 
-void spine_physics_constraint_data_set_mix_global(spine_physics_constraint_data obj, bool value) {
-    if (!obj) return;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    _obj->setMixGlobal(value);
+void spine_physics_constraint_data_set_mix_global(spine_physics_constraint_data self, bool mixGlobal) {
+    ((PhysicsConstraintData*)self)->setMixGlobal(mixGlobal);
 }
 
-const char* spine_physics_constraint_data_get_name(spine_physics_constraint_data obj) {
-    if (!obj) return nullptr;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return (const char *) _obj->getName().buffer();
+const char* spine_physics_constraint_data_get_name(spine_physics_constraint_data self) {
+    return (const char*)&((ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>*)(PhysicsConstraintData*)self)->getName();
 }
 
-bool spine_physics_constraint_data_is_skin_required(spine_physics_constraint_data obj) {
-    if (!obj) return false;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return _obj->isSkinRequired();
+bool spine_physics_constraint_data_is_skin_required(spine_physics_constraint_data self) {
+    return ((ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>*)(PhysicsConstraintData*)self)->isSkinRequired();
 }
 
-spine_physics_constraint_pose spine_physics_constraint_data_get_setup_pose(spine_physics_constraint_data obj) {
-    if (!obj) return 0;
-    PhysicsConstraintData *_obj = (PhysicsConstraintData *) obj;
-    return (spine_physics_constraint_pose) &_obj->getSetupPose();
+spine_physics_constraint_pose spine_physics_constraint_data_get_setup_pose(spine_physics_constraint_data self) {
+    return (spine_physics_constraint_pose)&((ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>*)(PhysicsConstraintData*)self)->getSetupPose();
+}
+
+void spine_physics_constraint_data_set_skin_required(spine_physics_constraint_data self, bool skinRequired) {
+    ((ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>*)(PhysicsConstraintData*)self)->setSkinRequired(skinRequired);
+}
+
+spine_rtti spine_physics_constraint_data_rtti(void) {
+    return (spine_rtti)&PhysicsConstraintData::rtti;
 }

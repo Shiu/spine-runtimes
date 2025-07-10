@@ -1,305 +1,184 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "mesh_attachment.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_mesh_attachment spine_mesh_attachment_create(const char* name) {
-    MeshAttachment *obj = new (__FILE__, __LINE__) MeshAttachment(String(name));
-    return (spine_mesh_attachment) obj;
+    return (spine_mesh_attachment) new (__FILE__, __LINE__) MeshAttachment(*((const String*)name));
 }
 
-void spine_mesh_attachment_dispose(spine_mesh_attachment obj) {
-    if (!obj) return;
-    delete (MeshAttachment *) obj;
+void spine_mesh_attachment_dispose(spine_mesh_attachment self) {
+    delete (MeshAttachment*)self;
 }
 
-spine_rtti spine_mesh_attachment_get_rtti() {
-    return (spine_rtti) &MeshAttachment::rtti;
+spine_rtti spine_mesh_attachment_get_rtti(spine_mesh_attachment self) {
+    return (spine_rtti)&((MeshAttachment*)self)->getRTTI();
 }
 
-void spine_mesh_attachment_compute_world_vertices(spine_mesh_attachment obj, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count, float * worldVertices, size_t offset, size_t stride) {
-    if (!obj) return ;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->computeWorldVertices(*(Skeleton*) skeleton, *(Slot*) slot, start, count, (float *) worldVertices, offset, stride);
+void spine_mesh_attachment_compute_world_vertices_1(spine_mesh_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count, float * worldVertices, size_t offset, size_t stride) {
+    ((MeshAttachment*)self)->computeWorldVertices(*((Skeleton*)skeleton), *((Slot*)slot), start, count, worldVertices, offset, stride);
 }
 
-void spine_mesh_attachment_update_region(spine_mesh_attachment obj) {
-    if (!obj) return ;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->updateRegion();
+void spine_mesh_attachment_compute_world_vertices_2(spine_mesh_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count, spine_array_float worldVertices, size_t offset, size_t stride) {
+    ((VertexAttachment*)(MeshAttachment*)self)->computeWorldVertices(*((Skeleton*)skeleton), *((Slot*)slot), start, count, *((Array<float>*)worldVertices), offset, stride);
 }
 
-int spine_mesh_attachment_get_hull_length(spine_mesh_attachment obj) {
-    if (!obj) return 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return _obj->getHullLength();
+void spine_mesh_attachment_update_region(spine_mesh_attachment self) {
+    ((MeshAttachment*)self)->updateRegion();
 }
 
-void spine_mesh_attachment_set_hull_length(spine_mesh_attachment obj, int value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setHullLength(value);
+int spine_mesh_attachment_get_hull_length(spine_mesh_attachment self) {
+    return ((MeshAttachment*)self)->getHullLength();
 }
 
-int32_t spine_mesh_attachment_get_num_region_u_vs(spine_mesh_attachment obj) {
-    if (!obj) return 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (int32_t) _obj->getRegionUVs().size();
+void spine_mesh_attachment_set_hull_length(spine_mesh_attachment self, int inValue) {
+    ((MeshAttachment*)self)->setHullLength(inValue);
 }
 
-float *spine_mesh_attachment_get_region_u_vs(spine_mesh_attachment obj) {
-    if (!obj) return nullptr;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (float *) _obj->getRegionUVs().buffer();
+spine_array_float spine_mesh_attachment_get_region_u_vs(spine_mesh_attachment self) {
+    return (spine_array_float)&((MeshAttachment*)self)->getRegionUVs();
 }
 
-void spine_mesh_attachment_set_region_u_vs(spine_mesh_attachment obj, spine_array_float value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setRegionUVs((Array<float> &) value);
+void spine_mesh_attachment_set_region_u_vs(spine_mesh_attachment self, spine_array_float inValue) {
+    ((MeshAttachment*)self)->setRegionUVs(*((Array<float>*)inValue));
 }
 
-int32_t spine_mesh_attachment_get_num_u_vs(spine_mesh_attachment obj) {
-    if (!obj) return 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (int32_t) _obj->getUVs().size();
+spine_array_float spine_mesh_attachment_get_u_vs(spine_mesh_attachment self) {
+    return (spine_array_float)&((MeshAttachment*)self)->getUVs();
 }
 
-float *spine_mesh_attachment_get_u_vs(spine_mesh_attachment obj) {
-    if (!obj) return nullptr;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (float *) _obj->getUVs().buffer();
+spine_array_unsigned_short spine_mesh_attachment_get_triangles(spine_mesh_attachment self) {
+    return (spine_array_unsigned_short)&((MeshAttachment*)self)->getTriangles();
 }
 
-int32_t spine_mesh_attachment_get_num_triangles(spine_mesh_attachment obj) {
-    if (!obj) return 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (int32_t) _obj->getTriangles().size();
+void spine_mesh_attachment_set_triangles(spine_mesh_attachment self, spine_array_unsigned_short inValue) {
+    ((MeshAttachment*)self)->setTriangles(*((Array<unsigned short>*)inValue));
 }
 
-spine_unsigned short *spine_mesh_attachment_get_triangles(spine_mesh_attachment obj) {
-    if (!obj) return nullptr;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (spine_unsigned short *) _obj->getTriangles().buffer();
+spine_color spine_mesh_attachment_get_color(spine_mesh_attachment self) {
+    return (spine_color)&((MeshAttachment*)self)->getColor();
 }
 
-void spine_mesh_attachment_set_triangles(spine_mesh_attachment obj, spine_array_unsigned_short value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setTriangles((Array<unsigned short> &) value);
+const char* spine_mesh_attachment_get_path(spine_mesh_attachment self) {
+    return (const char*)&((MeshAttachment*)self)->getPath();
 }
 
-spine_color spine_mesh_attachment_get_color(spine_mesh_attachment obj) {
-    if (!obj) return (spine_color) 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (spine_color) &_obj->getColor();
+void spine_mesh_attachment_set_path(spine_mesh_attachment self, const char* inValue) {
+    ((MeshAttachment*)self)->setPath(*((const String*)inValue));
 }
 
-const char* spine_mesh_attachment_get_path(spine_mesh_attachment obj) {
-    if (!obj) return nullptr;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (const char *) _obj->getPath().buffer();
+spine_texture_region spine_mesh_attachment_get_region(spine_mesh_attachment self) {
+    return (spine_texture_region)((MeshAttachment*)self)->getRegion();
 }
 
-void spine_mesh_attachment_set_path(spine_mesh_attachment obj, const char* value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setPath(String(value));
+void spine_mesh_attachment_set_region(spine_mesh_attachment self, spine_texture_region region) {
+    ((MeshAttachment*)self)->setRegion((TextureRegion *)region);
 }
 
-spine_texture_region spine_mesh_attachment_get_region(spine_mesh_attachment obj) {
-    if (!obj) return (spine_texture_region) 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (spine_texture_region) _obj->getRegion();
+spine_sequence spine_mesh_attachment_get_sequence(spine_mesh_attachment self) {
+    return (spine_sequence)((MeshAttachment*)self)->getSequence();
 }
 
-void spine_mesh_attachment_set_region(spine_mesh_attachment obj, spine_texture_region value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setRegion((TextureRegion *) value);
+void spine_mesh_attachment_set_sequence(spine_mesh_attachment self, spine_sequence sequence) {
+    ((MeshAttachment*)self)->setSequence((Sequence *)sequence);
 }
 
-spine_sequence spine_mesh_attachment_get_sequence(spine_mesh_attachment obj) {
-    if (!obj) return (spine_sequence) 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (spine_sequence) _obj->getSequence();
+spine_mesh_attachment spine_mesh_attachment_get_parent_mesh(spine_mesh_attachment self) {
+    return (spine_mesh_attachment)((MeshAttachment*)self)->getParentMesh();
 }
 
-void spine_mesh_attachment_set_sequence(spine_mesh_attachment obj, spine_sequence value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setSequence((Sequence *) value);
+void spine_mesh_attachment_set_parent_mesh(spine_mesh_attachment self, spine_mesh_attachment inValue) {
+    ((MeshAttachment*)self)->setParentMesh((MeshAttachment *)inValue);
 }
 
-spine_mesh_attachment spine_mesh_attachment_get_parent_mesh(spine_mesh_attachment obj) {
-    if (!obj) return (spine_mesh_attachment) 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (spine_mesh_attachment) _obj->getParentMesh();
+spine_array_unsigned_short spine_mesh_attachment_get_edges(spine_mesh_attachment self) {
+    return (spine_array_unsigned_short)&((MeshAttachment*)self)->getEdges();
 }
 
-void spine_mesh_attachment_set_parent_mesh(spine_mesh_attachment obj, spine_mesh_attachment value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setParentMesh((MeshAttachment *) value);
+void spine_mesh_attachment_set_edges(spine_mesh_attachment self, spine_array_unsigned_short inValue) {
+    ((MeshAttachment*)self)->setEdges(*((Array<unsigned short>*)inValue));
 }
 
-int32_t spine_mesh_attachment_get_num_edges(spine_mesh_attachment obj) {
-    if (!obj) return 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (int32_t) _obj->getEdges().size();
+float spine_mesh_attachment_get_width(spine_mesh_attachment self) {
+    return ((MeshAttachment*)self)->getWidth();
 }
 
-spine_unsigned short *spine_mesh_attachment_get_edges(spine_mesh_attachment obj) {
-    if (!obj) return nullptr;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (spine_unsigned short *) _obj->getEdges().buffer();
+void spine_mesh_attachment_set_width(spine_mesh_attachment self, float inValue) {
+    ((MeshAttachment*)self)->setWidth(inValue);
 }
 
-void spine_mesh_attachment_set_edges(spine_mesh_attachment obj, spine_array_unsigned_short value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setEdges((Array<unsigned short> &) value);
+float spine_mesh_attachment_get_height(spine_mesh_attachment self) {
+    return ((MeshAttachment*)self)->getHeight();
 }
 
-float spine_mesh_attachment_get_width(spine_mesh_attachment obj) {
-    if (!obj) return 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return _obj->getWidth();
+void spine_mesh_attachment_set_height(spine_mesh_attachment self, float inValue) {
+    ((MeshAttachment*)self)->setHeight(inValue);
 }
 
-void spine_mesh_attachment_set_width(spine_mesh_attachment obj, float value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setWidth(value);
+spine_attachment spine_mesh_attachment_copy(spine_mesh_attachment self) {
+    return (spine_attachment)((MeshAttachment*)self)->copy();
 }
 
-float spine_mesh_attachment_get_height(spine_mesh_attachment obj) {
-    if (!obj) return 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return _obj->getHeight();
+spine_mesh_attachment spine_mesh_attachment_new_linked_mesh(spine_mesh_attachment self) {
+    return (spine_mesh_attachment)((MeshAttachment*)self)->newLinkedMesh();
 }
 
-void spine_mesh_attachment_set_height(spine_mesh_attachment obj, float value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setHeight(value);
+int spine_mesh_attachment_get_id(spine_mesh_attachment self) {
+    return ((VertexAttachment*)(MeshAttachment*)self)->getId();
 }
 
-spine_attachment spine_mesh_attachment_copy(spine_mesh_attachment obj) {
-    if (!obj) return (spine_attachment) 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (spine_attachment) _obj->copy();
+spine_array_int spine_mesh_attachment_get_bones(spine_mesh_attachment self) {
+    return (spine_array_int)&((VertexAttachment*)(MeshAttachment*)self)->getBones();
 }
 
-spine_mesh_attachment spine_mesh_attachment_new_linked_mesh(spine_mesh_attachment obj) {
-    if (!obj) return (spine_mesh_attachment) 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (spine_mesh_attachment) _obj->newLinkedMesh();
+void spine_mesh_attachment_set_bones(spine_mesh_attachment self, spine_array_int bones) {
+    ((VertexAttachment*)(MeshAttachment*)self)->setBones(*((Array<int>*)bones));
 }
 
-void spine_mesh_attachment_compute_world_vertices_7(spine_mesh_attachment obj, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count, spine_array_float worldVertices, size_t offset, size_t stride) {
-    if (!obj) return ;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->computeWorldVertices(*(Skeleton*) skeleton, *(Slot*) slot, start, count, (Array<float> &) worldVertices, offset, stride);
+spine_array_float spine_mesh_attachment_get_vertices(spine_mesh_attachment self) {
+    return (spine_array_float)&((VertexAttachment*)(MeshAttachment*)self)->getVertices();
 }
 
-int spine_mesh_attachment_get_id(spine_mesh_attachment obj) {
-    if (!obj) return 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return _obj->getId();
+void spine_mesh_attachment_set_vertices(spine_mesh_attachment self, spine_array_float vertices) {
+    ((VertexAttachment*)(MeshAttachment*)self)->setVertices(*((Array<float>*)vertices));
 }
 
-int32_t spine_mesh_attachment_get_num_bones(spine_mesh_attachment obj) {
-    if (!obj) return 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (int32_t) _obj->getBones().size();
+size_t spine_mesh_attachment_get_world_vertices_length(spine_mesh_attachment self) {
+    return ((VertexAttachment*)(MeshAttachment*)self)->getWorldVerticesLength();
 }
 
-int *spine_mesh_attachment_get_bones(spine_mesh_attachment obj) {
-    if (!obj) return nullptr;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (int *) _obj->getBones().buffer();
+void spine_mesh_attachment_set_world_vertices_length(spine_mesh_attachment self, size_t inValue) {
+    ((VertexAttachment*)(MeshAttachment*)self)->setWorldVerticesLength(inValue);
 }
 
-void spine_mesh_attachment_set_bones(spine_mesh_attachment obj, spine_array_int value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setBones((Array<int> &) value);
+spine_attachment spine_mesh_attachment_get_timeline_attachment(spine_mesh_attachment self) {
+    return (spine_attachment)((VertexAttachment*)(MeshAttachment*)self)->getTimelineAttachment();
 }
 
-int32_t spine_mesh_attachment_get_num_vertices(spine_mesh_attachment obj) {
-    if (!obj) return 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (int32_t) _obj->getVertices().size();
+void spine_mesh_attachment_set_timeline_attachment(spine_mesh_attachment self, spine_attachment attachment) {
+    ((VertexAttachment*)(MeshAttachment*)self)->setTimelineAttachment((Attachment *)attachment);
 }
 
-float *spine_mesh_attachment_get_vertices(spine_mesh_attachment obj) {
-    if (!obj) return nullptr;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (float *) _obj->getVertices().buffer();
+void spine_mesh_attachment_copy_to(spine_mesh_attachment self, spine_vertex_attachment other) {
+    ((VertexAttachment*)(MeshAttachment*)self)->copyTo((VertexAttachment *)other);
 }
 
-void spine_mesh_attachment_set_vertices(spine_mesh_attachment obj, spine_array_float value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setVertices((Array<float> &) value);
+const char* spine_mesh_attachment_get_name(spine_mesh_attachment self) {
+    return (const char*)&((VertexAttachment*)(MeshAttachment*)self)->getName();
 }
 
-size_t spine_mesh_attachment_get_world_vertices_length(spine_mesh_attachment obj) {
-    if (!obj) return 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return _obj->getWorldVerticesLength();
+int spine_mesh_attachment_get_ref_count(spine_mesh_attachment self) {
+    return ((VertexAttachment*)(MeshAttachment*)self)->getRefCount();
 }
 
-void spine_mesh_attachment_set_world_vertices_length(spine_mesh_attachment obj, size_t value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setWorldVerticesLength(value);
+void spine_mesh_attachment_reference(spine_mesh_attachment self) {
+    ((VertexAttachment*)(MeshAttachment*)self)->reference();
 }
 
-spine_attachment spine_mesh_attachment_get_timeline_attachment(spine_mesh_attachment obj) {
-    if (!obj) return (spine_attachment) 0;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    return (spine_attachment) _obj->getTimelineAttachment();
+void spine_mesh_attachment_dereference(spine_mesh_attachment self) {
+    ((VertexAttachment*)(MeshAttachment*)self)->dereference();
 }
 
-void spine_mesh_attachment_set_timeline_attachment(spine_mesh_attachment obj, spine_attachment value) {
-    if (!obj) return;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->setTimelineAttachment((Attachment *) value);
-}
-
-void spine_mesh_attachment_copy_to(spine_mesh_attachment obj, spine_vertex_attachment other) {
-    if (!obj) return ;
-    MeshAttachment *_obj = (MeshAttachment *) obj;
-    _obj->copyTo((VertexAttachment *) other);
+spine_rtti spine_mesh_attachment_rtti(void) {
+    return (spine_rtti)&MeshAttachment::rtti;
 }

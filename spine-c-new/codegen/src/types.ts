@@ -48,6 +48,10 @@ export type Enum = {
     kind: 'enum';
     name: string;
     values: EnumValue[];
+    loc: {
+        line: number;
+        col: number;
+    };
 }
 
 export interface EnumValue {
@@ -58,7 +62,7 @@ export interface EnumValue {
 export interface ClassOrStruct {
     name: string;
     kind: 'class' | 'struct';
-    loc?: {
+    loc: {
         line: number;
         col: number;
     };
@@ -71,10 +75,6 @@ export interface ClassOrStruct {
 
 export type Type = ClassOrStruct | Enum;
 
-export interface SpineTypes {
-    [header: string]: Type[];
-}
-
 export type Exclusion =
     | {
         kind: 'type';
@@ -85,6 +85,21 @@ export type Exclusion =
         typeName: string;
         methodName: string;
         isConst?: boolean;  // Whether the method is const (e.g., void foo() const), NOT whether return type is const
+    }
+    | {
+        kind: 'field';
+        typeName: string;
+        fieldName: string;
+    }
+    | {
+        kind: 'field-get';
+        typeName: string;
+        fieldName: string;
+    }
+    | {
+        kind: 'field-set';
+        typeName: string;
+        fieldName: string;
     };
 
 export interface ArraySpecialization {
@@ -154,7 +169,7 @@ export function isPrimitive(cppType: string): boolean {
  * Converts a C++ type to its corresponding C type.
  *
  * @param cppType The C++ type to convert
- * @param validTypes Set of valid type names (classes and enums) from filtered types
+ * @param knownTypeNames Set of known type names (classes and enums) from filtered types
  * @returns The C type
  * @throws Error if the type is not recognized
  *
@@ -166,7 +181,7 @@ export function isPrimitive(cppType: string): boolean {
  * - Class references: "const Color&" → "spine_color"
  * - Non-const primitive refs: "float&" → "float*" (output parameter)
  */
-export function toCTypeName(cppType: string, validTypes: Set<string>): string {
+export function toCTypeName(cppType: string, knownTypeNames: Set<string>): string {
     // Remove extra spaces and normalize
     const normalizedType = cppType.replace(/\s+/g, ' ').trim();
 
@@ -181,7 +196,7 @@ export function toCTypeName(cppType: string, validTypes: Set<string>): string {
         return 'const char*';
     }
 
-    // PropertyId is a typedef
+    // Special Type: PropertyId is a typedef
     if (normalizedType === 'PropertyId') {
         return 'int64_t';
     }
@@ -204,6 +219,12 @@ export function toCTypeName(cppType: string, validTypes: Set<string>): string {
 
         // For class/enum types
         return `spine_array_${toSnakeCase(elementType)}`;
+    }
+
+    // Handle "Type * const" pattern (const pointer)
+    if (normalizedType.endsWith(' const')) {
+        const baseType = normalizedType.slice(0, -6).trim(); // Remove ' const'
+        return toCTypeName(baseType, knownTypeNames);
     }
 
     // Pointers
@@ -233,7 +254,7 @@ export function toCTypeName(cppType: string, validTypes: Set<string>): string {
         }
 
         // Const references and class references - recurse without the reference
-        return toCTypeName(baseType, validTypes);
+        return toCTypeName(baseType, knownTypeNames);
     }
 
     // Function pointers - for now, just error
@@ -241,11 +262,50 @@ export function toCTypeName(cppType: string, validTypes: Set<string>): string {
         throw new Error(`Function pointer types not yet supported: ${normalizedType}`);
     }
 
+    // Handle const types - strip const and recurse
+    if (normalizedType.startsWith('const ') && !normalizedType.includes('*') && !normalizedType.includes('&')) {
+        const baseType = normalizedType.slice(6).trim(); // Remove 'const '
+        return toCTypeName(baseType, knownTypeNames);
+    }
+
     // Everything else should be a class or enum type
     // Check if it's a valid type
-    if (!validTypes.has(normalizedType)) {
+    if (!knownTypeNames.has(normalizedType)) {
         throw new Error(`Unknown type: ${normalizedType}. Not a primitive and not in the list of valid types.`);
     }
 
     return `spine_${toSnakeCase(normalizedType)}`;
+}
+
+/**
+ * Checks if a C++ type can be represented in the C API.
+ * Returns null if the type can be handled, or an error message if not.
+ */
+export function checkTypeSupport(cppType: string, knownTypeNames: Set<string>): string | null {
+    // Remove extra spaces and normalize
+    const normalizedType = cppType.replace(/\s+/g, ' ').trim();
+
+    // Check for Array<String> which we can't handle
+    const arrayMatch = normalizedType.match(/^(?:const\s+)?Array<(.+?)>\s*(?:&|\*)?$/);
+    if (arrayMatch) {
+        const elementType = arrayMatch[1].trim();
+        if (elementType === 'String') {
+            return "Array<String> is not supported - use const char** instead";
+        }
+        // Check if array type exists
+        const arrayTypeName = `spine_array_${toSnakeCase(elementType)}`;
+        // We can't check if the array was generated, so we'll let toCTypeName handle that
+    }
+
+    // Check for multi-level pointers
+    if (/\*\s*\*/.test(normalizedType)) {
+        return "Multi-level pointers are not supported";
+    }
+
+    // Check for function pointers
+    if (normalizedType.includes('(') && normalizedType.includes(')')) {
+        return "Function pointer types are not supported";
+    }
+
+    return null;
 }

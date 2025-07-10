@@ -1,121 +1,60 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "sequence.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_sequence spine_sequence_create(int count) {
-    Sequence *obj = new (__FILE__, __LINE__) Sequence(count);
-    return (spine_sequence) obj;
+    return (spine_sequence) new (__FILE__, __LINE__) Sequence(count);
 }
 
-void spine_sequence_dispose(spine_sequence obj) {
-    if (!obj) return;
-    delete (Sequence *) obj;
+void spine_sequence_dispose(spine_sequence self) {
+    delete (Sequence*)self;
 }
 
-spine_sequence spine_sequence_copy(spine_sequence obj) {
-    if (!obj) return (spine_sequence) 0;
-    Sequence *_obj = (Sequence *) obj;
-    return (spine_sequence) _obj->copy();
+spine_sequence spine_sequence_copy(spine_sequence self) {
+    return (spine_sequence)((Sequence*)self)->copy();
 }
 
-void spine_sequence_apply(spine_sequence obj, spine_slot_pose slot, spine_attachment attachment) {
-    if (!obj) return ;
-    Sequence *_obj = (Sequence *) obj;
-    _obj->apply((SlotPose *) slot, (Attachment *) attachment);
+void spine_sequence_apply(spine_sequence self, spine_slot_pose slot, spine_attachment attachment) {
+    ((Sequence*)self)->apply((SlotPose *)slot, (Attachment *)attachment);
 }
 
-const char* spine_sequence_get_path(spine_sequence obj, const char* basePath, int index) {
-    if (!obj) return nullptr;
-    Sequence *_obj = (Sequence *) obj;
-    return (const char *) _obj->getPath(String(basePath), index).buffer();
+const char* spine_sequence_get_path(spine_sequence self, const char* basePath, int index) {
+    return ((Sequence*)self)->getPath(*((const String*)basePath), index).buffer();
 }
 
-int spine_sequence_get_id(spine_sequence obj) {
-    if (!obj) return 0;
-    Sequence *_obj = (Sequence *) obj;
-    return _obj->getId();
+int spine_sequence_get_id(spine_sequence self) {
+    return ((Sequence*)self)->getId();
 }
 
-void spine_sequence_set_id(spine_sequence obj, int value) {
-    if (!obj) return;
-    Sequence *_obj = (Sequence *) obj;
-    _obj->setId(value);
+void spine_sequence_set_id(spine_sequence self, int id) {
+    ((Sequence*)self)->setId(id);
 }
 
-int spine_sequence_get_start(spine_sequence obj) {
-    if (!obj) return 0;
-    Sequence *_obj = (Sequence *) obj;
-    return _obj->getStart();
+int spine_sequence_get_start(spine_sequence self) {
+    return ((Sequence*)self)->getStart();
 }
 
-void spine_sequence_set_start(spine_sequence obj, int value) {
-    if (!obj) return;
-    Sequence *_obj = (Sequence *) obj;
-    _obj->setStart(value);
+void spine_sequence_set_start(spine_sequence self, int start) {
+    ((Sequence*)self)->setStart(start);
 }
 
-int spine_sequence_get_digits(spine_sequence obj) {
-    if (!obj) return 0;
-    Sequence *_obj = (Sequence *) obj;
-    return _obj->getDigits();
+int spine_sequence_get_digits(spine_sequence self) {
+    return ((Sequence*)self)->getDigits();
 }
 
-void spine_sequence_set_digits(spine_sequence obj, int value) {
-    if (!obj) return;
-    Sequence *_obj = (Sequence *) obj;
-    _obj->setDigits(value);
+void spine_sequence_set_digits(spine_sequence self, int digits) {
+    ((Sequence*)self)->setDigits(digits);
 }
 
-int spine_sequence_get_setup_index(spine_sequence obj) {
-    if (!obj) return 0;
-    Sequence *_obj = (Sequence *) obj;
-    return _obj->getSetupIndex();
+int spine_sequence_get_setup_index(spine_sequence self) {
+    return ((Sequence*)self)->getSetupIndex();
 }
 
-void spine_sequence_set_setup_index(spine_sequence obj, int value) {
-    if (!obj) return;
-    Sequence *_obj = (Sequence *) obj;
-    _obj->setSetupIndex(value);
+void spine_sequence_set_setup_index(spine_sequence self, int setupIndex) {
+    ((Sequence*)self)->setSetupIndex(setupIndex);
 }
 
-int32_t spine_sequence_get_num_regions(spine_sequence obj) {
-    if (!obj) return 0;
-    Sequence *_obj = (Sequence *) obj;
-    return (int32_t) _obj->getRegions().size();
-}
-
-spine_texture_region *spine_sequence_get_regions(spine_sequence obj) {
-    if (!obj) return nullptr;
-    Sequence *_obj = (Sequence *) obj;
-    return (spine_texture_region *) _obj->getRegions().buffer();
+spine_array_texture_region spine_sequence_get_regions(spine_sequence self) {
+    return (spine_array_texture_region)&((Sequence*)self)->getRegions();
 }

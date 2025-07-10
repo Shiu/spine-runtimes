@@ -1,51 +1,21 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+#ifndef SPINE_SPINE_RTTI_H
+#define SPINE_SPINE_RTTI_H
 
-#ifndef SPINE_C_RTTI_H
-#define SPINE_C_RTTI_H
+#include "../base.h"
+#include "types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "types.h"
+SPINE_C_API void spine_rtti_dispose(spine_rtti self);
 
-SPINE_C_EXPORT spine_rtti spine_rtti_create(const char * className);
-SPINE_C_EXPORT spine_rtti spine_rtti_create_with_string_rtti(const char * className, spine_rtti baseRTTI);
-SPINE_C_EXPORT spine_rtti spine_rtti_create_with_string_rtti_rtti_rtti_rtti(const char * className, spine_rtti baseRTTI, spine_const rtti interface1, spine_const rtti interface2, spine_const rtti interface3);
-SPINE_C_EXPORT void spine_rtti_dispose(spine_rtti obj);
-SPINE_C_EXPORT const char * spine_rtti_get_class_name(spine_rtti obj);
-SPINE_C_EXPORT bool spine_rtti_is_exactly(spine_rtti obj, spine_rtti rtti);
-SPINE_C_EXPORT bool spine_rtti_instance_of(spine_rtti obj, spine_rtti rtti);
+SPINE_C_API const char * spine_rtti_get_class_name(spine_rtti self);
+SPINE_C_API bool spine_rtti_is_exactly(spine_rtti self, spine_rtti rtti);
+SPINE_C_API bool spine_rtti_instance_of(spine_rtti self, spine_rtti rtti);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // SPINE_C_RTTI_H
+#endif /* SPINE_SPINE_RTTI_H */

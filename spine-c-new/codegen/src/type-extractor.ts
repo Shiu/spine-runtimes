@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
-import { Type, Member, Method, Field, Constructor, Destructor, Parameter, EnumValue, SpineTypes, ClassOrStruct, Enum } from './types';
+import { Type, Member, Method, Field, Constructor, Destructor, Parameter, EnumValue, ClassOrStruct, Enum } from './types';
 
 const SPINE_CPP_PATH = path.join(__dirname, '../../../spine-cpp');
 const SPINE_INCLUDE_DIR = path.join(SPINE_CPP_PATH, 'spine-cpp/include');
@@ -98,16 +98,17 @@ function isInTargetFile(node: any, targetPath: string): boolean {
 /**
  * Extracts member information from an AST node
  */
-function extractMember(inner: any, parent: any): Member | null {
+function extractMember(inner: any, parent: any): Member & { access?: 'public' | 'protected' } | null {
     if (inner.isImplicit) return null;
 
     switch (inner.kind) {
         case 'FieldDecl':
-            const field: Field = {
+            const field: Field & { access?: 'public' | 'protected' } = {
                 kind: 'field',
                 name: inner.name || '',
                 type: inner.type?.qualType || '',
-                isStatic: inner.storageClass === 'static'
+                isStatic: inner.storageClass === 'static',
+                access: 'public' // Will be set correctly later
             };
             return field;
 
@@ -116,7 +117,7 @@ function extractMember(inner: any, parent: any): Member | null {
             // Skip operators - not needed for C wrapper generation
             if (inner.name.startsWith('operator')) return null;
 
-            const method: Method = {
+            const method: Method & { access?: 'public' | 'protected' } = {
                 kind: 'method',
                 name: inner.name,
                 returnType: extractReturnType(inner),
@@ -124,25 +125,28 @@ function extractMember(inner: any, parent: any): Member | null {
                 isStatic: inner.storageClass === 'static',
                 isVirtual: inner.virtual || false,
                 isPure: inner.pure || false,
-                isConst: inner.constQualifier || false
+                isConst: inner.constQualifier || false,
+                access: 'public' // Will be set correctly later
             };
             return method;
 
         case 'CXXConstructorDecl':
-            const constructor: Constructor = {
+            const constructor: Constructor & { access?: 'public' | 'protected' } = {
                 kind: 'constructor',
                 name: inner.name || parent.name || '',
-                parameters: extractParameters(inner)
+                parameters: extractParameters(inner),
+                access: 'public' // Will be set correctly later
             };
             return constructor;
 
         case 'CXXDestructorDecl':
             // Include destructors for completeness
-            const destructor: Destructor = {
+            const destructor: Destructor & { access?: 'public' | 'protected' } = {
                 kind: 'destructor',
                 name: inner.name || `~${parent.name}`,
                 isVirtual: inner.virtual || false,
-                isPure: inner.pure || false
+                isPure: inner.pure || false,
+                access: 'public' // Will be set correctly later
             };
             return destructor;
 
@@ -175,7 +179,11 @@ function extractTypeInfo(node: any, sourceLines: string[]): Type {
                     }
 
                     return enumValue;
-                })
+                }),
+            loc: {
+                line: node.loc?.line || 0,
+                col: node.loc?.col || 0
+            }
         };
         return enumInfo;
     }
@@ -206,12 +214,19 @@ function extractTypeInfo(node: any, sourceLines: string[]): Type {
             continue;
         }
 
-        if (inner.kind === 'FriendDecl' || currentAccess !== 'public') continue;
+        if (inner.kind === 'FriendDecl') continue;
 
+        // Skip private members entirely
+        if (currentAccess === 'private') continue;
+
+        // Extract public and protected members
         const member = extractMember(inner, node);
         if (member) {
+            // Always set access level (we only extract public and protected)
+            member.access = currentAccess as 'public' | 'protected';
             info.members.push(member);
-            // Check if this is a pure virtual method
+
+            // Check if this is a pure virtual method (regardless of access level)
             if (member.kind === 'method' && member.isPure) {
                 hasPureVirtual = true;
             }
@@ -220,6 +235,14 @@ function extractTypeInfo(node: any, sourceLines: string[]): Type {
 
     // Always set isAbstract to a boolean value
     info.isAbstract = hasPureVirtual;
+
+    // Filter out protected members - we only needed them to check for abstract classes
+    info.members = info.members.filter(m => (m as any).access === 'public');
+
+    // Remove access field from all members since we only keep public members
+    info.members.forEach(m => {
+        delete (m as any).access;
+    });
 
     return info;
 }
@@ -297,8 +320,6 @@ function processNode(
         types.push(typeInfo);
     } else if (node.kind === 'EnumDecl') {
         types.push(extractTypeInfo(node, sourceLines));
-    } else if (node.kind === 'TypedefDecl' || node.kind === 'TypeAliasDecl') {
-        types.push(extractTypeInfo(node, sourceLines));
     }
 }
 
@@ -329,26 +350,20 @@ function extractLocalTypes(headerFile: string, typeMap: Map<string, Type> | null
 
     // Filter out forward declarations and SpineObject
     const filteredTypes = types
-        .filter(t => t.kind !== 'enum')
         .filter(t => {
-            // Skip types with no members (forward declarations)
-            if (t.members && t.members.length === 0) return false;
+            // Keep all enums
+            if (t.kind === 'enum') return true;
 
             // Skip SpineObject - it's not needed for C wrapper generation
             if (t.name === 'SpineObject') return false;
 
+            // For classes/structs, skip those with no members (forward declarations)
+            const classOrStruct = t as ClassOrStruct;
+            if (classOrStruct.members && classOrStruct.members.length === 0) return false;
+
             return true;
         })
-        .sort((a, b) => (a.loc?.line || 0) - (b.loc?.line || 0));
-
-    // Add inherited methods if we have a type map
-    if (typeMap) {
-        for (const type of filteredTypes) {
-            if (type.superTypes && type.members) {
-                addInheritedMethods(type, typeMap);
-            }
-        }
-    }
+        .sort((a, b) => a.loc.line - b.loc.line);
 
     return filteredTypes;
 }
@@ -473,11 +488,17 @@ function addTemplateInheritedMethods(
 /**
  * Adds inherited methods to a type
  */
-function addInheritedMethods(type: ClassOrStruct, typeMap: Map<string, Type>): void {
+function addInheritedMethods(type: ClassOrStruct & { inheritedMethodsAdded: boolean }, typeMap: Map<string, (ClassOrStruct & { inheritedMethodsAdded: boolean } | Enum)>): void {
+    // Skip if already processed
+    if (type.inheritedMethodsAdded) {
+        return;
+    }
+    
     const inheritedMethods: Member[] = [];
     const ownMethodSignatures = new Set<string>();
 
     // Build a set of method signatures from this type
+    // All members are public at this point (protected/private were filtered out earlier)
     for (const member of type.members || []) {
         if (member.kind === 'method') {
             const sig = getMethodSignature(member as Method);
@@ -501,6 +522,9 @@ function addInheritedMethods(type: ClassOrStruct, typeMap: Map<string, Type>): v
 
             const templateType = typeMap.get(templateClassName);
             if (templateType && templateType.kind !== 'enum' && templateType.members) {
+                if (!templateType.inheritedMethodsAdded) {
+                    addInheritedMethods(templateType, typeMap);
+                }
                 // Process template inheritance
                 addTemplateInheritedMethods(
                     type, templateType, templateClassName, templateArgs,
@@ -512,6 +536,10 @@ function addInheritedMethods(type: ClassOrStruct, typeMap: Map<string, Type>): v
             const superType = typeMap.get(cleanName);
 
             if (!superType || superType.kind === 'enum' || !superType.members) continue;
+
+            if (!superType.inheritedMethodsAdded) {
+                addInheritedMethods(superType, typeMap);
+            }
 
             // Add non-overridden methods from supertype
             for (const member of superType.members) {
@@ -532,6 +560,9 @@ function addInheritedMethods(type: ClassOrStruct, typeMap: Map<string, Type>): v
     if (type.members) {
         type.members.push(...inheritedMethods);
     }
+    
+    // Mark as processed
+    type.inheritedMethodsAdded = true;
 }
 
 /**
@@ -600,29 +631,29 @@ function isExtractionNeeded(): boolean {
 /**
  * Runs the type extraction process and generates the output file
  */
-export function extractTypes(): void {
+export function extractTypes(): Type[] {
     if (!isExtractionNeeded()) {
-        return;
+        return loadTypes();
     }
 
     console.log('Running type extraction...');
 
     try {
         const allHeaders = findAllHeaderFiles();
-        const allTypes: SpineTypes = {};
+        const allTypes: { [header: string]: (ClassOrStruct & { inheritedMethodsAdded: boolean } | Enum)[] } = {};
         let processed = 0, errors = 0;
 
         console.error(`Processing ${allHeaders.length} header files...`);
 
         // First pass: extract all types without inheritance
-        const typeMap = new Map<string, Type>();
+        const typeMap = new Map<string, (ClassOrStruct & { inheritedMethodsAdded: boolean } | Enum)>();
 
         for (const headerFile of allHeaders) {
             const relPath = path.relative(SPINE_INCLUDE_DIR, headerFile);
             process.stderr.write(`\r\x1b[K  Pass 1 - Processing ${++processed}/${allHeaders.length}: ${relPath}...`);
 
             try {
-                const types = extractLocalTypes(headerFile);
+                const types = extractLocalTypes(headerFile).map(type => type as ClassOrStruct & { inheritedMethodsAdded: boolean } | Enum);
                 if (types.length > 0) {
                     allTypes[relPath] = types;
                     // Build type map
@@ -647,17 +678,24 @@ export function extractTypes(): void {
             process.stderr.write(`\r\x1b[K  Pass 2 - Processing ${++processed}/${Object.keys(allTypes).length}: ${relPath}...`);
 
             for (const type of allTypes[relPath]) {
-                if (type.kind !== 'enum' && type.superTypes && type.members) {
-                    addInheritedMethods(type, typeMap);
+                if (type.kind !== 'enum') {
+                    const classOrStruct = type;
+                    if (classOrStruct.superTypes && classOrStruct.members) {
+                        if (classOrStruct.name === "ConstraintTimeline1") {
+                            console.log("ConstraintTimeline1");
+                        }
 
-                    // Check if any inherited methods are pure virtual
-                    // If so, and the class doesn't override them, it's abstract
-                    if (!type.isAbstract) {
-                        const hasPureVirtual = type.members.some((m: Member) =>
-                            m.kind === 'method' && m.isPure === true
-                        );
-                        if (hasPureVirtual) {
-                            type.isAbstract = true;
+                        addInheritedMethods(classOrStruct, typeMap);
+
+                        // Check if any inherited methods (including protected) are pure virtual
+                        // If so, and the class doesn't override them, it's abstract
+                        if (!classOrStruct.isAbstract) {
+                            const hasPureVirtual = classOrStruct.members.some((m: Member) =>
+                                m.kind === 'method' && m.isPure === true
+                            );
+                            if (hasPureVirtual) {
+                                classOrStruct.isAbstract = true;
+                            }
                         }
                     }
                 }
@@ -666,6 +704,12 @@ export function extractTypes(): void {
 
         console.error(`\n  Completed: ${Object.keys(allTypes).length} files processed, ${errors} errors`);
 
+        if (errors > 0) {
+            console.error(`\n  ${errors} errors occurred during type extraction`);
+            console.error(`\n  Run the commands shown for each error and fix the issue in spine-cpp`);
+            process.exit(1);
+        }
+
         // Write to output file
         fs.writeFileSync(OUTPUT_FILE, JSON.stringify(allTypes, null, 2));
         console.log(`Type extraction complete, wrote ${OUTPUT_FILE}`);
@@ -673,15 +717,24 @@ export function extractTypes(): void {
         console.error('Failed to extract types:', error.message);
         throw error;
     }
+
+    return loadTypes();
 }
 
 /**
- * Loads the extracted type information
+ * Loads the extracted type information from spine-c/codegen/spine-cpp-types.json
  */
-export function loadTypes(): SpineTypes {
+export function loadTypes(): Type[] {
     if (!fs.existsSync(OUTPUT_FILE)) {
         throw new Error(`Type information not found at ${OUTPUT_FILE}. Run extraction first.`);
     }
 
-    return JSON.parse(fs.readFileSync(OUTPUT_FILE, 'utf8'));
+    const typesJson = JSON.parse(fs.readFileSync(OUTPUT_FILE, 'utf8'));
+    // Flatten all types from all headers into a single array
+    const types: Type[] = [];
+    for (const header of Object.keys(typesJson)) {
+        types.push(...typesJson[header]);
+    }
+
+    return types;
 }

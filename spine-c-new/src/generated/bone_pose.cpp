@@ -1,347 +1,220 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "bone_pose.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_bone_pose spine_bone_pose_create(void) {
-    BonePose *obj = new (__FILE__, __LINE__) BonePose();
-    return (spine_bone_pose) obj;
+    return (spine_bone_pose) new (__FILE__, __LINE__) BonePose();
 }
 
-void spine_bone_pose_dispose(spine_bone_pose obj) {
-    if (!obj) return;
-    delete (BonePose *) obj;
+void spine_bone_pose_dispose(spine_bone_pose self) {
+    delete (BonePose*)self;
 }
 
-void spine_bone_pose_update(spine_bone_pose obj, spine_skeleton skeleton, spine_physics physics) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->update(*(Skeleton*) skeleton, (Physics) physics);
+void spine_bone_pose_update(spine_bone_pose self, spine_skeleton skeleton, spine_physics physics) {
+    ((BonePose*)self)->update(*((Skeleton*)skeleton), (Physics)physics);
 }
 
-void spine_bone_pose_update_world_transform(spine_bone_pose obj, spine_skeleton skeleton) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->updateWorldTransform(*(Skeleton*) skeleton);
+void spine_bone_pose_update_world_transform(spine_bone_pose self, spine_skeleton skeleton) {
+    ((BonePose*)self)->updateWorldTransform(*((Skeleton*)skeleton));
 }
 
-void spine_bone_pose_update_local_transform(spine_bone_pose obj, spine_skeleton skeleton) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->updateLocalTransform(*(Skeleton*) skeleton);
+void spine_bone_pose_update_local_transform(spine_bone_pose self, spine_skeleton skeleton) {
+    ((BonePose*)self)->updateLocalTransform(*((Skeleton*)skeleton));
 }
 
-void spine_bone_pose_validate_local_transform(spine_bone_pose obj, spine_skeleton skeleton) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->validateLocalTransform(*(Skeleton*) skeleton);
+void spine_bone_pose_validate_local_transform(spine_bone_pose self, spine_skeleton skeleton) {
+    ((BonePose*)self)->validateLocalTransform(*((Skeleton*)skeleton));
 }
 
-void spine_bone_pose_modify_local(spine_bone_pose obj, spine_skeleton skeleton) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->modifyLocal(*(Skeleton*) skeleton);
+void spine_bone_pose_modify_local(spine_bone_pose self, spine_skeleton skeleton) {
+    ((BonePose*)self)->modifyLocal(*((Skeleton*)skeleton));
 }
 
-void spine_bone_pose_modify_world(spine_bone_pose obj, int update) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->modifyWorld(update);
+void spine_bone_pose_modify_world(spine_bone_pose self, int update) {
+    ((BonePose*)self)->modifyWorld(update);
 }
 
-void spine_bone_pose_reset_world(spine_bone_pose obj, int update) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->resetWorld(update);
+void spine_bone_pose_reset_world(spine_bone_pose self, int update) {
+    ((BonePose*)self)->resetWorld(update);
 }
 
-float spine_bone_pose_get_a(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getA();
+float spine_bone_pose_get_a(spine_bone_pose self) {
+    return ((BonePose*)self)->getA();
 }
 
-void spine_bone_pose_set_a(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setA(value);
+void spine_bone_pose_set_a(spine_bone_pose self, float a) {
+    ((BonePose*)self)->setA(a);
 }
 
-float spine_bone_pose_get_b(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getB();
+float spine_bone_pose_get_b(spine_bone_pose self) {
+    return ((BonePose*)self)->getB();
 }
 
-void spine_bone_pose_set_b(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setB(value);
+void spine_bone_pose_set_b(spine_bone_pose self, float b) {
+    ((BonePose*)self)->setB(b);
 }
 
-float spine_bone_pose_get_c(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getC();
+float spine_bone_pose_get_c(spine_bone_pose self) {
+    return ((BonePose*)self)->getC();
 }
 
-void spine_bone_pose_set_c(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setC(value);
+void spine_bone_pose_set_c(spine_bone_pose self, float c) {
+    ((BonePose*)self)->setC(c);
 }
 
-float spine_bone_pose_get_d(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getD();
+float spine_bone_pose_get_d(spine_bone_pose self) {
+    return ((BonePose*)self)->getD();
 }
 
-void spine_bone_pose_set_d(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setD(value);
+void spine_bone_pose_set_d(spine_bone_pose self, float d) {
+    ((BonePose*)self)->setD(d);
 }
 
-float spine_bone_pose_get_world_x(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getWorldX();
+float spine_bone_pose_get_world_x(spine_bone_pose self) {
+    return ((BonePose*)self)->getWorldX();
 }
 
-void spine_bone_pose_set_world_x(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setWorldX(value);
+void spine_bone_pose_set_world_x(spine_bone_pose self, float worldX) {
+    ((BonePose*)self)->setWorldX(worldX);
 }
 
-float spine_bone_pose_get_world_y(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getWorldY();
+float spine_bone_pose_get_world_y(spine_bone_pose self) {
+    return ((BonePose*)self)->getWorldY();
 }
 
-void spine_bone_pose_set_world_y(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setWorldY(value);
+void spine_bone_pose_set_world_y(spine_bone_pose self, float worldY) {
+    ((BonePose*)self)->setWorldY(worldY);
 }
 
-float spine_bone_pose_get_world_rotation_x(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getWorldRotationX();
+float spine_bone_pose_get_world_rotation_x(spine_bone_pose self) {
+    return ((BonePose*)self)->getWorldRotationX();
 }
 
-float spine_bone_pose_get_world_rotation_y(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getWorldRotationY();
+float spine_bone_pose_get_world_rotation_y(spine_bone_pose self) {
+    return ((BonePose*)self)->getWorldRotationY();
 }
 
-float spine_bone_pose_get_world_scale_x(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getWorldScaleX();
+float spine_bone_pose_get_world_scale_x(spine_bone_pose self) {
+    return ((BonePose*)self)->getWorldScaleX();
 }
 
-float spine_bone_pose_get_world_scale_y(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getWorldScaleY();
+float spine_bone_pose_get_world_scale_y(spine_bone_pose self) {
+    return ((BonePose*)self)->getWorldScaleY();
 }
 
-void spine_bone_pose_world_to_local(spine_bone_pose obj, float worldX, float worldY, float* outLocalX, float* outLocalY) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->worldToLocal(worldX, worldY, *outLocalX, *outLocalY);
+void spine_bone_pose_world_to_local(spine_bone_pose self, float worldX, float worldY, float* outLocalX, float* outLocalY) {
+    ((BonePose*)self)->worldToLocal(worldX, worldY, *outLocalX, *outLocalY);
 }
 
-void spine_bone_pose_local_to_world(spine_bone_pose obj, float localX, float localY, float* outWorldX, float* outWorldY) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->localToWorld(localX, localY, *outWorldX, *outWorldY);
+void spine_bone_pose_local_to_world(spine_bone_pose self, float localX, float localY, float* outWorldX, float* outWorldY) {
+    ((BonePose*)self)->localToWorld(localX, localY, *outWorldX, *outWorldY);
 }
 
-void spine_bone_pose_world_to_parent(spine_bone_pose obj, float worldX, float worldY, float* outParentX, float* outParentY) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->worldToParent(worldX, worldY, *outParentX, *outParentY);
+void spine_bone_pose_world_to_parent(spine_bone_pose self, float worldX, float worldY, float* outParentX, float* outParentY) {
+    ((BonePose*)self)->worldToParent(worldX, worldY, *outParentX, *outParentY);
 }
 
-void spine_bone_pose_parent_to_world(spine_bone_pose obj, float parentX, float parentY, float* outWorldX, float* outWorldY) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->parentToWorld(parentX, parentY, *outWorldX, *outWorldY);
+void spine_bone_pose_parent_to_world(spine_bone_pose self, float parentX, float parentY, float* outWorldX, float* outWorldY) {
+    ((BonePose*)self)->parentToWorld(parentX, parentY, *outWorldX, *outWorldY);
 }
 
-float spine_bone_pose_world_to_local_rotation(spine_bone_pose obj, float worldRotation) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->worldToLocalRotation(worldRotation);
+float spine_bone_pose_world_to_local_rotation(spine_bone_pose self, float worldRotation) {
+    return ((BonePose*)self)->worldToLocalRotation(worldRotation);
 }
 
-float spine_bone_pose_local_to_world_rotation(spine_bone_pose obj, float localRotation) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->localToWorldRotation(localRotation);
+float spine_bone_pose_local_to_world_rotation(spine_bone_pose self, float localRotation) {
+    return ((BonePose*)self)->localToWorldRotation(localRotation);
 }
 
-void spine_bone_pose_rotate_world(spine_bone_pose obj, float degrees) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->rotateWorld(degrees);
+void spine_bone_pose_rotate_world(spine_bone_pose self, float degrees) {
+    ((BonePose*)self)->rotateWorld(degrees);
 }
 
-void spine_bone_pose_set(spine_bone_pose obj, spine_bone_local value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->set(*((BoneLocal*) value));
+void spine_bone_pose_set(spine_bone_pose self, spine_bone_local pose) {
+    ((BoneLocal*)(BonePose*)self)->set(*((BoneLocal*)pose));
 }
 
-float spine_bone_pose_get_x(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getX();
+float spine_bone_pose_get_x(spine_bone_pose self) {
+    return ((BoneLocal*)(BonePose*)self)->getX();
 }
 
-void spine_bone_pose_set_x(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setX(value);
+void spine_bone_pose_set_x(spine_bone_pose self, float x) {
+    ((BoneLocal*)(BonePose*)self)->setX(x);
 }
 
-float spine_bone_pose_get_y(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getY();
+float spine_bone_pose_get_y(spine_bone_pose self) {
+    return ((BoneLocal*)(BonePose*)self)->getY();
 }
 
-void spine_bone_pose_set_y(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setY(value);
+void spine_bone_pose_set_y(spine_bone_pose self, float y) {
+    ((BoneLocal*)(BonePose*)self)->setY(y);
 }
 
-void spine_bone_pose_set_position(spine_bone_pose obj, float x, float y) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setPosition(x, y);
+void spine_bone_pose_set_position(spine_bone_pose self, float x, float y) {
+    ((BoneLocal*)(BonePose*)self)->setPosition(x, y);
 }
 
-float spine_bone_pose_get_rotation(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getRotation();
+float spine_bone_pose_get_rotation(spine_bone_pose self) {
+    return ((BoneLocal*)(BonePose*)self)->getRotation();
 }
 
-void spine_bone_pose_set_rotation(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setRotation(value);
+void spine_bone_pose_set_rotation(spine_bone_pose self, float rotation) {
+    ((BoneLocal*)(BonePose*)self)->setRotation(rotation);
 }
 
-float spine_bone_pose_get_scale_x(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getScaleX();
+float spine_bone_pose_get_scale_x(spine_bone_pose self) {
+    return ((BoneLocal*)(BonePose*)self)->getScaleX();
 }
 
-void spine_bone_pose_set_scale_x(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setScaleX(value);
+void spine_bone_pose_set_scale_x(spine_bone_pose self, float scaleX) {
+    ((BoneLocal*)(BonePose*)self)->setScaleX(scaleX);
 }
 
-float spine_bone_pose_get_scale_y(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getScaleY();
+float spine_bone_pose_get_scale_y(spine_bone_pose self) {
+    return ((BoneLocal*)(BonePose*)self)->getScaleY();
 }
 
-void spine_bone_pose_set_scale_y(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setScaleY(value);
+void spine_bone_pose_set_scale_y(spine_bone_pose self, float scaleY) {
+    ((BoneLocal*)(BonePose*)self)->setScaleY(scaleY);
 }
 
-void spine_bone_pose_set_scale(spine_bone_pose obj, float scaleX, float scaleY) {
-    if (!obj) return ;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setScale(scaleX, scaleY);
+void spine_bone_pose_set_scale_1(spine_bone_pose self, float scaleX, float scaleY) {
+    ((BoneLocal*)(BonePose*)self)->setScale(scaleX, scaleY);
 }
 
-void spine_bone_pose_set_scale(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setScale(value);
+void spine_bone_pose_set_scale_2(spine_bone_pose self, float scale) {
+    ((BoneLocal*)(BonePose*)self)->setScale(scale);
 }
 
-float spine_bone_pose_get_shear_x(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getShearX();
+float spine_bone_pose_get_shear_x(spine_bone_pose self) {
+    return ((BoneLocal*)(BonePose*)self)->getShearX();
 }
 
-void spine_bone_pose_set_shear_x(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setShearX(value);
+void spine_bone_pose_set_shear_x(spine_bone_pose self, float shearX) {
+    ((BoneLocal*)(BonePose*)self)->setShearX(shearX);
 }
 
-float spine_bone_pose_get_shear_y(spine_bone_pose obj) {
-    if (!obj) return 0;
-    BonePose *_obj = (BonePose *) obj;
-    return _obj->getShearY();
+float spine_bone_pose_get_shear_y(spine_bone_pose self) {
+    return ((BoneLocal*)(BonePose*)self)->getShearY();
 }
 
-void spine_bone_pose_set_shear_y(spine_bone_pose obj, float value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setShearY(value);
+void spine_bone_pose_set_shear_y(spine_bone_pose self, float shearY) {
+    ((BoneLocal*)(BonePose*)self)->setShearY(shearY);
 }
 
-spine_inherit spine_bone_pose_get_inherit(spine_bone_pose obj) {
-    if (!obj) return (spine_inherit) 0;
-    BonePose *_obj = (BonePose *) obj;
-    return (spine_inherit) _obj->getInherit();
+spine_inherit spine_bone_pose_get_inherit(spine_bone_pose self) {
+    return (spine_inherit)((BoneLocal*)(BonePose*)self)->getInherit();
 }
 
-void spine_bone_pose_set_inherit(spine_bone_pose obj, spine_inherit value) {
-    if (!obj) return;
-    BonePose *_obj = (BonePose *) obj;
-    _obj->setInherit((Inherit) value);
+void spine_bone_pose_set_inherit(spine_bone_pose self, spine_inherit inherit) {
+    ((BoneLocal*)(BonePose*)self)->setInherit((Inherit)inherit);
 }
 
-spine_rtti spine_bone_pose_get_rtti() {
-    return (spine_rtti) &BonePose::rtti;
+spine_rtti spine_bone_pose_get_rtti(spine_bone_pose self) {
+    return (spine_rtti)&((Update*)(BonePose*)self)->getRTTI();
+}
+
+spine_rtti spine_bone_pose_rtti(void) {
+    return (spine_rtti)&BonePose::rtti;
 }

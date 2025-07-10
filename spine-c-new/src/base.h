@@ -36,22 +36,22 @@
 
 #ifdef __cplusplus
 #if _WIN32
-#define SPINE_C_EXPORT extern "C" __declspec(dllexport)
+#define SPINE_C_API extern "C" __declspec(dllexport)
 #else
 #ifdef __EMSCRIPTEN__
-#define SPINE_C_EXPORT extern "C" __attribute__((used))
+#define SPINE_C_API extern "C" __attribute__((used))
 #else
-#define SPINE_C_EXPORT extern "C"
+#define SPINE_C_API extern "C"
 #endif
 #endif
 #else
 #if _WIN32
-#define SPINE_C_EXPORT __declspec(dllexport)
+#define SPINE_C_API __declspec(dllexport)
 #else
 #ifdef __EMSCRIPTEN__
-#define SPINE_C_EXPORT __attribute__((used))
+#define SPINE_C_API __attribute__((used))
 #else
-#define SPINE_C_EXPORT
+#define SPINE_C_API
 #endif
 #endif
 #endif
@@ -61,5 +61,7 @@
         char _dummy;                \
     } name##_wrapper;               \
     typedef name##_wrapper *name;
+
+typedef long long spine_property_id;
 
 #endif // SPINE_C_BASE_H

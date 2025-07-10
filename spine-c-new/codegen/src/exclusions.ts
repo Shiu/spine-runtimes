@@ -9,6 +9,11 @@ import { Exclusion } from './types';
  * - Empty lines are ignored
  * - Type exclusions: "type: TypeName"
  * - Method exclusions: "method: TypeName::methodName [const]"
+ * - Field exclusions: "field: TypeName[::fieldName]"
+ * - Field getter exclusions: "field-get: TypeName[::fieldName]"
+ * - Field setter exclusions: "field-set: TypeName[::fieldName]"
+ *
+ * When fieldName is omitted, applies to all fields of that type.
  *
  * Examples:
  * ```
@@ -22,6 +27,19 @@ import { Exclusion } from './types';
  *
  * # Exclude only const version of a method
  * method: BoneData::getSetupPose const
+ *
+ * # Exclude constructors (allows type but prevents creation)
+ * method: AtlasRegion::AtlasRegion
+ *
+ * # Exclude field accessors
+ * field: AtlasRegion::names          # Exclude both getter and setter
+ * field-get: SecretData::password    # Exclude only getter
+ * field-set: Bone::x                 # Exclude only setter (read-only)
+ *
+ * # Exclude all field accessors for a type
+ * field: RenderCommand               # No field accessors at all
+ * field-get: DebugData               # No getters (write-only fields)
+ * field-set: RenderCommand           # No setters (read-only fields)
  * ```
  */
 export function loadExclusions(filePath: string): Exclusion[] {
@@ -58,7 +76,60 @@ export function loadExclusions(filePath: string): Exclusion[] {
                 methodName: methodName,
                 isConst: isConst || undefined
             });
+            continue;
+        }
 
+        // Parse field exclusion (all accessors)
+        // Format: field: Type::field or field: Type (for all fields)
+        const fieldMatch = trimmed.match(/^field:\s*(.+?)(?:::(.+?))?$/);
+        if (fieldMatch) {
+            const typeName = fieldMatch[1].trim();
+            const fieldName = fieldMatch[2]?.trim();
+            
+            if (fieldName) {
+                // Specific field
+                exclusions.push({
+                    kind: 'field',
+                    typeName,
+                    fieldName
+                });
+            } else {
+                // All fields - add both field-get and field-set for the type
+                exclusions.push({
+                    kind: 'field-get',
+                    typeName,
+                    fieldName: '*'  // Special marker for all fields
+                });
+                exclusions.push({
+                    kind: 'field-set',
+                    typeName,
+                    fieldName: '*'
+                });
+            }
+            continue;
+        }
+
+        // Parse field getter exclusion
+        // Format: field-get: Type::field or field-get: Type (for all fields)
+        const fieldGetMatch = trimmed.match(/^field-get:\s*(.+?)(?:::(.+?))?$/);
+        if (fieldGetMatch) {
+            exclusions.push({
+                kind: 'field-get',
+                typeName: fieldGetMatch[1].trim(),
+                fieldName: fieldGetMatch[2]?.trim() || '*'
+            });
+            continue;
+        }
+
+        // Parse field setter exclusion
+        // Format: field-set: Type::field or field-set: Type (for all fields)
+        const fieldSetMatch = trimmed.match(/^field-set:\s*(.+?)(?:::(.+?))?$/);
+        if (fieldSetMatch) {
+            exclusions.push({
+                kind: 'field-set',
+                typeName: fieldSetMatch[1].trim(),
+                fieldName: fieldSetMatch[2]?.trim() || '*'
+            });
         }
     }
 
@@ -85,4 +156,41 @@ export function isMethodExcluded(typeName: string, methodName: string, exclusion
     });
 
     return result;
+}
+
+export function isFieldExcluded(typeName: string, fieldName: string, exclusions: Exclusion[]): boolean {
+    return exclusions.some(ex => {
+        if (ex.kind === 'field' && ex.typeName === typeName && ex.fieldName === fieldName) {
+            return true;
+        }
+        return false;
+    });
+}
+
+export function isFieldGetterExcluded(typeName: string, fieldName: string, exclusions: Exclusion[]): boolean {
+    return exclusions.some(ex => {
+        if (ex.kind === 'field-get' && ex.typeName === typeName && 
+            (ex.fieldName === fieldName || ex.fieldName === '*')) {
+            return true;
+        }
+        // If the entire field is excluded, getter is also excluded
+        if (ex.kind === 'field' && ex.typeName === typeName && ex.fieldName === fieldName) {
+            return true;
+        }
+        return false;
+    });
+}
+
+export function isFieldSetterExcluded(typeName: string, fieldName: string, exclusions: Exclusion[]): boolean {
+    return exclusions.some(ex => {
+        if (ex.kind === 'field-set' && ex.typeName === typeName && 
+            (ex.fieldName === fieldName || ex.fieldName === '*')) {
+            return true;
+        }
+        // If the entire field is excluded, setter is also excluded
+        if (ex.kind === 'field' && ex.typeName === typeName && ex.fieldName === fieldName) {
+            return true;
+        }
+        return false;
+    });
 }

@@ -1,115 +1,60 @@
-/******************************************************************************
- * Spine Runtimes License Agreement
- * Last updated April 5, 2025. Replaces all prior versions.
- *
- * Copyright (c) 2013-2025, Esoteric Software LLC
- *
- * Integration of the Spine Runtimes into software or otherwise creating
- * derivative works of the Spine Runtimes is permitted under the terms and
- * conditions of Section 2 of the Spine Editor License Agreement:
- * http://esotericsoftware.com/spine-editor-license
- *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software
- * or otherwise create derivative works of the Spine Runtimes (collectively,
- * "Products"), provided that each user of the Products must obtain their own
- * Spine Editor license and redistribution of the Products in any form must
- * include this license and copyright notice.
- *
- * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
- * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
-
 #include "event.h"
 #include <spine/spine.h>
 
 using namespace spine;
 
 spine_event spine_event_create(float time, spine_event_data data) {
-    Event *obj = new (__FILE__, __LINE__) Event(time, *(EventData*) data);
-    return (spine_event) obj;
+    return (spine_event) new (__FILE__, __LINE__) Event(time, *((const EventData*)data));
 }
 
-void spine_event_dispose(spine_event obj) {
-    if (!obj) return;
-    delete (Event *) obj;
+void spine_event_dispose(spine_event self) {
+    delete (Event*)self;
 }
 
-spine_event_data spine_event_get_data(spine_event obj) {
-    if (!obj) return (spine_event_data) 0;
-    Event *_obj = (Event *) obj;
-    return (spine_event_data) &_obj->getData();
+spine_event_data spine_event_get_data(spine_event self) {
+    return (spine_event_data)&((Event*)self)->getData();
 }
 
-float spine_event_get_time(spine_event obj) {
-    if (!obj) return 0;
-    Event *_obj = (Event *) obj;
-    return _obj->getTime();
+float spine_event_get_time(spine_event self) {
+    return ((Event*)self)->getTime();
 }
 
-int spine_event_get_int(spine_event obj) {
-    if (!obj) return 0;
-    Event *_obj = (Event *) obj;
-    return _obj->getInt();
+int spine_event_get_int(spine_event self) {
+    return ((Event*)self)->getInt();
 }
 
-void spine_event_set_int(spine_event obj, int value) {
-    if (!obj) return;
-    Event *_obj = (Event *) obj;
-    _obj->setInt(value);
+void spine_event_set_int(spine_event self, int inValue) {
+    ((Event*)self)->setInt(inValue);
 }
 
-float spine_event_get_float(spine_event obj) {
-    if (!obj) return 0;
-    Event *_obj = (Event *) obj;
-    return _obj->getFloat();
+float spine_event_get_float(spine_event self) {
+    return ((Event*)self)->getFloat();
 }
 
-void spine_event_set_float(spine_event obj, float value) {
-    if (!obj) return;
-    Event *_obj = (Event *) obj;
-    _obj->setFloat(value);
+void spine_event_set_float(spine_event self, float inValue) {
+    ((Event*)self)->setFloat(inValue);
 }
 
-const char* spine_event_get_string(spine_event obj) {
-    if (!obj) return nullptr;
-    Event *_obj = (Event *) obj;
-    return (const char *) _obj->getString().buffer();
+const char* spine_event_get_string(spine_event self) {
+    return (const char*)&((Event*)self)->getString();
 }
 
-void spine_event_set_string(spine_event obj, const char* value) {
-    if (!obj) return;
-    Event *_obj = (Event *) obj;
-    _obj->setString(String(value));
+void spine_event_set_string(spine_event self, const char* inValue) {
+    ((Event*)self)->setString(*((const String*)inValue));
 }
 
-float spine_event_get_volume(spine_event obj) {
-    if (!obj) return 0;
-    Event *_obj = (Event *) obj;
-    return _obj->getVolume();
+float spine_event_get_volume(spine_event self) {
+    return ((Event*)self)->getVolume();
 }
 
-void spine_event_set_volume(spine_event obj, float value) {
-    if (!obj) return;
-    Event *_obj = (Event *) obj;
-    _obj->setVolume(value);
+void spine_event_set_volume(spine_event self, float inValue) {
+    ((Event*)self)->setVolume(inValue);
 }
 
-float spine_event_get_balance(spine_event obj) {
-    if (!obj) return 0;
-    Event *_obj = (Event *) obj;
-    return _obj->getBalance();
+float spine_event_get_balance(spine_event self) {
+    return ((Event*)self)->getBalance();
 }
 
-void spine_event_set_balance(spine_event obj, float value) {
-    if (!obj) return;
-    Event *_obj = (Event *) obj;
-    _obj->setBalance(value);
+void spine_event_set_balance(spine_event self, float inValue) {
+    ((Event*)self)->setBalance(inValue);
 }
