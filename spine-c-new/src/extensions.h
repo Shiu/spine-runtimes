@@ -55,10 +55,10 @@ typedef void* (*spine_texture_loader_load_func)(const char *path);
 typedef void (*spine_texture_loader_unload_func)(void *texture);
 
 // Version functions
-SPINE_C_API int32_t spine_major_version();
-SPINE_C_API int32_t spine_minor_version();
+SPINE_C_API int32_t spine_major_version(void);
+SPINE_C_API int32_t spine_minor_version(void);
 SPINE_C_API void spine_enable_debug_extension(bool enable);
-SPINE_C_API void spine_report_leaks();
+SPINE_C_API void spine_report_leaks(void);
 
 // Bounds functions
 SPINE_C_API float spine_bounds_get_x(spine_bounds bounds);
@@ -98,7 +98,7 @@ SPINE_C_API spine_animation_state_data spine_skeleton_drawable_get_animation_sta
 SPINE_C_API spine_animation_state_events spine_skeleton_drawable_get_animation_state_events(spine_skeleton_drawable drawable);
 
 // Skin entries functions
-SPINE_C_API spine_skin_entries spine_skin_entries_create();
+SPINE_C_API spine_skin_entries spine_skin_entries_create(void);
 SPINE_C_API void spine_skin_entries_dispose(spine_skin_entries entries);
 SPINE_C_API int32_t spine_skin_entries_get_num_entries(spine_skin_entries entries);
 SPINE_C_API spine_skin_entry spine_skin_entries_get_entry(spine_skin_entries entries, int32_t index);

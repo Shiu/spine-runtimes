@@ -238,3 +238,6 @@ class CWriter {
 
 ## checks.ts (continued)
 - [x] Fix checkConstNonConstConflicts - it was checking for different return types instead of checking for const vs non-const methods
+
+## Build fixes
+- [x] Fixed RTTI linking errors by including flags.cmake in spine-c-new CMakeLists.txt to enable -fno-rtti flag

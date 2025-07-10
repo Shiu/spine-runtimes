@@ -60,7 +60,7 @@ namespace spine {
 		public:
 			friend class HashMap;
 
-			explicit Entries(Entry *entry) : _entry(NULL), _hasChecked(false) {
+			explicit Entries(Entry *entry) : _hasChecked(false) {
 				_start.next = entry;
 				_entry = &_start;
 			}

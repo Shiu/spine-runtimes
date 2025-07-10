@@ -4,6 +4,9 @@ project(spine-c-new C CXX)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 11)
 
+# Include the common flags (including -fno-rtti)
+include(${CMAKE_CURRENT_LIST_DIR}/../flags.cmake)
+
 # Include spine-cpp
 add_subdirectory(../spine-cpp ${CMAKE_CURRENT_BINARY_DIR}/spine-cpp)
 

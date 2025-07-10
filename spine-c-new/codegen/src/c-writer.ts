@@ -66,6 +66,7 @@ export class CWriter {
         lines.push('#endif');
         lines.push('');
         lines.push(`#endif /* ${guardName} */`);
+        lines.push('');
 
         return lines.join('\n');
     }
@@ -135,6 +136,7 @@ export class CWriter {
         lines.push('#endif');
         lines.push('');
         lines.push(`#endif /* ${guardName} */`);
+        lines.push('');
 
         return lines.join('\n');
     }
@@ -211,6 +213,7 @@ export class CWriter {
 
         lines.push('');
         lines.push('#endif // SPINE_C_H');
+        lines.push('');
 
         fs.writeFileSync(mainHeaderPath, lines.join('\n'));
     }
@@ -255,6 +258,7 @@ export class CWriter {
             arrayHeaderLines.push('#endif');
             arrayHeaderLines.push('');
             arrayHeaderLines.push('#endif /* SPINE_C_ARRAYS_H */');
+            arrayHeaderLines.push('');
         }
 
         // Generate source
@@ -325,6 +329,7 @@ export class CWriter {
         lines.push('#endif');
         lines.push('');
         lines.push('#endif // SPINE_C_TYPES_H');
+        lines.push('');
 
         fs.writeFileSync(headerPath, lines.join('\n'));
     }

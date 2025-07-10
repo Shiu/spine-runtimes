@@ -32,9 +32,164 @@
 
 #include <spine/Extension.h>
 #include <spine/Array.h>
-#include <spine/HashMap.h>
 
 namespace spine {
+
+	// Need a copy as HashMap extends SpineObject, which would trigger
+	// infinite recursion when used in DebugExtension
+	template<typename K, typename V>
+	class DebugHashMap {
+	private:
+		class DebugEntry;
+
+	public:
+		class SP_API DebugPair {
+		public:
+			explicit DebugPair(K &k, V &v) : key(k), value(v) {}
+
+			K &key;
+			V &value;
+		};
+
+		class SP_API DebugEntries {
+		public:
+			friend class DebugHashMap;
+
+			explicit DebugEntries(DebugEntry *entry) : _hasChecked(false) {
+				_start.next = entry;
+				_entry = &_start;
+			}
+
+			DebugPair next() {
+				assert(_entry);
+				assert(_hasChecked);
+				_entry = _entry->next;
+				DebugPair pair(_entry->_key, _entry->_value);
+				_hasChecked = false;
+				return pair;
+			}
+
+			bool hasNext() {
+				_hasChecked = true;
+				return _entry->next;
+			}
+
+		private:
+			bool _hasChecked;
+			DebugEntry _start;
+			DebugEntry *_entry;
+		};
+
+		DebugHashMap() :
+				_head(NULL),
+				_size(0) {
+		}
+
+		~DebugHashMap() {
+			clear();
+		}
+
+		void clear() {
+			for (DebugEntry *entry = _head; entry != NULL;) {
+				DebugEntry *next = entry->next;
+				delete entry;
+				entry = next;
+			}
+			_head = NULL;
+			_size = 0;
+		}
+
+		size_t size() {
+			return _size;
+		}
+
+		void put(const K &key, const V &value) {
+			DebugEntry *entry = find(key);
+			if (entry) {
+				entry->_key = key;
+				entry->_value = value;
+			} else {
+				entry = new DebugEntry();
+				entry->_key = key;
+				entry->_value = value;
+
+				DebugEntry *oldHead = _head;
+
+				if (oldHead) {
+					_head = entry;
+					oldHead->prev = entry;
+					entry->next = oldHead;
+				} else {
+					_head = entry;
+				}
+				_size++;
+			}
+		}
+
+		bool addAll(Array <K> &keys, const V &value) {
+			size_t oldSize = _size;
+			for (size_t i = 0; i < keys.size(); i++) {
+				put(keys[i], value);
+			}
+			return _size != oldSize;
+		}
+
+		bool containsKey(const K &key) {
+			return find(key) != NULL;
+		}
+
+		bool remove(const K &key) {
+			DebugEntry *entry = find(key);
+			if (!entry) return false;
+
+			DebugEntry *prev = entry->prev;
+			DebugEntry *next = entry->next;
+
+			if (prev) prev->next = next;
+			else _head = next;
+			if (next) next->prev = entry->prev;
+
+			delete entry;
+			_size--;
+
+			return true;
+		}
+
+		V operator[](const K &key) {
+			DebugEntry *entry = find(key);
+			if (entry) return entry->_value;
+			else {
+				assert(false);
+				return 0;
+			}
+		}
+
+		DebugEntries getEntries() const {
+			return DebugEntries(_head);
+		}
+
+	private:
+		DebugEntry *find(const K &key) {
+			for (DebugEntry *entry = _head; entry != NULL; entry = entry->next) {
+				if (entry->_key == key)
+					return entry;
+			}
+			return NULL;
+		}
+
+		class SP_API DebugEntry {
+		public:
+			K _key;
+			V _value;
+			DebugEntry *next;
+			DebugEntry *prev;
+
+			DebugEntry() : next(NULL), prev(NULL) {}
+		};
+
+		DebugEntry *_head;
+		size_t _size;
+	};
 
 	class SP_API DebugExtension : public SpineExtension {
 		struct Allocation {
@@ -56,9 +211,9 @@ namespace spine {
 		}
 
 		void reportLeaks() {
-			HashMap<void *, Allocation>::Entries entries = _allocated.getEntries();
+			DebugHashMap<void *, Allocation>::DebugEntries entries = _allocated.getEntries();
 			while (entries.hasNext()) {
-				HashMap<void *, Allocation>::Pair pair = entries.next();
+				DebugHashMap<void *, Allocation>::DebugPair pair = entries.next();
 				printf("\"%s:%i (%zu bytes at %p)\n", pair.value.fileName, pair.value.line, pair.value.size,
 					   pair.value.address);
 			}
@@ -90,9 +245,9 @@ namespace spine {
 		virtual void *_realloc(void *ptr, size_t size, const char *file, int line) {
 			if (_allocated.containsKey(ptr)) {
 				// Find and store the size before removing
-				HashMap<void *, Allocation>::Entries entries = _allocated.getEntries();
+				DebugHashMap<void *, Allocation>::DebugEntries entries = _allocated.getEntries();
 				while (entries.hasNext()) {
-					HashMap<void *, Allocation>::Pair pair = entries.next();
+					DebugHashMap<void *, Allocation>::DebugPair pair = entries.next();
 					if (pair.key == ptr) {
 						_usedMemory -= pair.value.size;
 						break;
@@ -112,9 +267,9 @@ namespace spine {
 				_extension->_free(mem, file, line);
 				_frees++;
 				// Find and store the size before removing
-				HashMap<void *, Allocation>::Entries entries = _allocated.getEntries();
+				DebugHashMap<void *, Allocation>::DebugEntries entries = _allocated.getEntries();
 				while (entries.hasNext()) {
-					HashMap<void *, Allocation>::Pair pair = entries.next();
+					DebugHashMap<void *, Allocation>::DebugPair pair = entries.next();
 					if (pair.key == mem) {
 						_usedMemory -= pair.value.size;
 						break;
@@ -146,7 +301,7 @@ namespace spine {
 
 	private:
 		SpineExtension *_extension;
-		HashMap<void *, Allocation> _allocated;
+		DebugHashMap<void *, Allocation> _allocated;
 		size_t _allocations;
 		size_t _reallocations;
 		size_t _frees;
