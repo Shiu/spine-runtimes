@@ -45,6 +45,8 @@ import type { AssetExtension, Loader, ResolvedAsset, Texture, UnresolvedAsset } 
 
 type RawAtlas = string;
 
+const loaderName = "spineTextureAtlasLoader";
+
 const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, ISpineAtlasMetadata> = {
 	extension: ExtensionType.Asset,
 
@@ -62,10 +64,11 @@ const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, ISpineAtl
 	},
 
 	loader: {
+		name: loaderName,
 		extension: {
 			type: ExtensionType.LoadParser,
 			priority: LoaderParserPriority.Normal,
-			name: 'spineTextureAtlasLoader',
+			name: loaderName,
 		},
 
 		test (url: string): boolean {
@@ -83,8 +86,9 @@ const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, ISpineAtl
 		testParse (asset: unknown, options: ResolvedAsset): Promise<boolean> {
 			const isExtensionRight = checkExtension(options.src as string, '.atlas');
 			const isString = typeof asset === 'string';
+			const isExplicitLoadParserSet = options.loadParser === loaderName;
 
-			return Promise.resolve(isExtensionRight && isString);
+			return Promise.resolve((isExtensionRight || isExplicitLoadParserSet) && isString);
 		},
 
 		unload (atlas: TextureAtlas) {
@@ -129,7 +133,9 @@ const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, ISpineAtl
 						src: copySearchParams(url, options.src as string),
 						data: {
 							...metadata.imageMetadata,
-							alphaMode: page.pma ? 'premultiplied-alpha' : 'premultiply-alpha-on-upload'
+							// alphaMode: 'premultiplied-alpha'
+							alphaMode: 'premultiply-alpha-on-upload'
+							// alphaMode: 'no-premultiply-alpha'
 						}
 					};
 
