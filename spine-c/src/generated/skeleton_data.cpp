@@ -31,22 +31,6 @@ spine_animation spine_skeleton_data_find_animation(spine_skeleton_data self, con
     return (spine_animation)((SkeletonData*)self)->findAnimation(String(animationName));
 }
 
-spine_ik_constraint_data spine_skeleton_data_find_ik_constraint(spine_skeleton_data self, const char* constraintName) {
-    return (spine_ik_constraint_data)((SkeletonData*)self)->findIkConstraint(String(constraintName));
-}
-
-spine_transform_constraint_data spine_skeleton_data_find_transform_constraint(spine_skeleton_data self, const char* constraintName) {
-    return (spine_transform_constraint_data)((SkeletonData*)self)->findTransformConstraint(String(constraintName));
-}
-
-spine_path_constraint_data spine_skeleton_data_find_path_constraint(spine_skeleton_data self, const char* constraintName) {
-    return (spine_path_constraint_data)((SkeletonData*)self)->findPathConstraint(String(constraintName));
-}
-
-spine_physics_constraint_data spine_skeleton_data_find_physics_constraint(spine_skeleton_data self, const char* constraintName) {
-    return (spine_physics_constraint_data)((SkeletonData*)self)->findPhysicsConstraint(String(constraintName));
-}
-
 const char* spine_skeleton_data_get_name(spine_skeleton_data self) {
     return (const char*)&((SkeletonData*)self)->getName();
 }
@@ -81,22 +65,6 @@ spine_array_event_data spine_skeleton_data_get_events(spine_skeleton_data self) 
 
 spine_array_animation spine_skeleton_data_get_animations(spine_skeleton_data self) {
     return (spine_array_animation)&((SkeletonData*)self)->getAnimations();
-}
-
-spine_array_ik_constraint_data spine_skeleton_data_get_ik_constraints(spine_skeleton_data self) {
-    return (spine_array_ik_constraint_data)&((SkeletonData*)self)->getIkConstraints();
-}
-
-spine_array_transform_constraint_data spine_skeleton_data_get_transform_constraints(spine_skeleton_data self) {
-    return (spine_array_transform_constraint_data)&((SkeletonData*)self)->getTransformConstraints();
-}
-
-spine_array_path_constraint_data spine_skeleton_data_get_path_constraints(spine_skeleton_data self) {
-    return (spine_array_path_constraint_data)&((SkeletonData*)self)->getPathConstraints();
-}
-
-spine_array_physics_constraint_data spine_skeleton_data_get_physics_constraints(spine_skeleton_data self) {
-    return (spine_array_physics_constraint_data)&((SkeletonData*)self)->getPhysicsConstraints();
 }
 
 spine_array_constraint_data spine_skeleton_data_get_constraints(spine_skeleton_data self) {

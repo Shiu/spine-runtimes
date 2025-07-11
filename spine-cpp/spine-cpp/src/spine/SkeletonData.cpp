@@ -67,12 +67,7 @@ SkeletonData::~SkeletonData() {
 
 	ArrayUtils::deleteElements(_events);
 	ArrayUtils::deleteElements(_animations);
-	ArrayUtils::deleteElements(_ikConstraints);
-	ArrayUtils::deleteElements(_transformConstraints);
-	ArrayUtils::deleteElements(_pathConstraints);
-	ArrayUtils::deleteElements(_physicsConstraints);
-	// Note: _constraints contains pointers to objects already cleaned up above, so just clear
-	_constraints.clear();
+	ArrayUtils::deleteElements(_constraints);
 	for (size_t i = 0; i < _strings.size(); i++) {
 		SpineExtension::free(_strings[i], __FILE__, __LINE__);
 	}
@@ -96,22 +91,6 @@ EventData *SkeletonData::findEvent(const String &eventDataName) {
 
 Animation *SkeletonData::findAnimation(const String &animationName) {
 	return ArrayUtils::findWithName(_animations, animationName);
-}
-
-IkConstraintData *SkeletonData::findIkConstraint(const String &constraintName) {
-	return ArrayUtils::findWithName(_ikConstraints, constraintName);
-}
-
-TransformConstraintData *SkeletonData::findTransformConstraint(const String &constraintName) {
-	return ArrayUtils::findWithName(_transformConstraints, constraintName);
-}
-
-PathConstraintData *SkeletonData::findPathConstraint(const String &constraintName) {
-	return ArrayUtils::findWithName(_pathConstraints, constraintName);
-}
-
-PhysicsConstraintData *SkeletonData::findPhysicsConstraint(const String &constraintName) {
-	return ArrayUtils::findWithName(_physicsConstraints, constraintName);
 }
 
 const String &SkeletonData::getName() {
@@ -148,22 +127,6 @@ Array<EventData *> &SkeletonData::getEvents() {
 
 Array<Animation *> &SkeletonData::getAnimations() {
 	return _animations;
-}
-
-Array<IkConstraintData *> &SkeletonData::getIkConstraints() {
-	return _ikConstraints;
-}
-
-Array<TransformConstraintData *> &SkeletonData::getTransformConstraints() {
-	return _transformConstraints;
-}
-
-Array<PathConstraintData *> &SkeletonData::getPathConstraints() {
-	return _pathConstraints;
-}
-
-Array<PhysicsConstraintData *> &SkeletonData::getPhysicsConstraints() {
-	return _physicsConstraints;
 }
 
 float SkeletonData::getX() {
@@ -248,19 +211,5 @@ void SkeletonData::setFps(float inValue) {
 }
 
 Array<ConstraintData *> &SkeletonData::getConstraints() {
-	// Build unified constraints array by aggregating all constraint types
-	_constraints.clear();
-	for (size_t i = 0, n = _ikConstraints.size(); i < n; i++) {
-		_constraints.add(static_cast<ConstraintData *>(_ikConstraints[i]));
-	}
-	for (size_t i = 0, n = _transformConstraints.size(); i < n; i++) {
-		_constraints.add(static_cast<ConstraintData *>(_transformConstraints[i]));
-	}
-	for (size_t i = 0, n = _pathConstraints.size(); i < n; i++) {
-		_constraints.add(static_cast<ConstraintData *>(_pathConstraints[i]));
-	}
-	for (size_t i = 0, n = _physicsConstraints.size(); i < n; i++) {
-		_constraints.add(static_cast<ConstraintData *>(_physicsConstraints[i]));
-	}
 	return _constraints;
 }

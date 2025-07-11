@@ -138,7 +138,7 @@ namespace spine {
 			DataInput(SkeletonData *skeletonData, const unsigned char *data, size_t length) : cursor(data), end(data + length), skeletonData(skeletonData) {}
 
 			inline int read() {
-				return readByte();
+				return readUnsignedByte();
 			}
 
 			inline signed char readByte() {

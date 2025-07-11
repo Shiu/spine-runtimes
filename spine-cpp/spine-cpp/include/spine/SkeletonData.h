@@ -88,18 +88,6 @@ namespace spine {
 		/// @return May be NULL.
 		Animation *findAnimation(const String &animationName);
 
-		/// @return May be NULL.
-		IkConstraintData *findIkConstraint(const String &constraintName);
-
-		/// @return May be NULL.
-		TransformConstraintData *findTransformConstraint(const String &constraintName);
-
-		/// @return May be NULL.
-		PathConstraintData *findPathConstraint(const String &constraintName);
-
-        /// @return May be NULL.
-        PhysicsConstraintData *findPhysicsConstraint(const String &constraintName);
-
 		/// The skeleton's name, which by default is the name of the skeleton data file when possible, or null when a name hasn't been
 		/// set.
 		const String &getName();
@@ -127,14 +115,6 @@ namespace spine {
 
 		/// The skeleton's animations.
 		Array<Animation *> &getAnimations();
-
-		Array<IkConstraintData *> &getIkConstraints();
-
-		Array<TransformConstraintData *> &getTransformConstraints();
-
-		Array<PathConstraintData *> &getPathConstraints();
-
-        Array<PhysicsConstraintData *> &getPhysicsConstraints();
 
 		/// The skeleton's constraints.
 		Array<ConstraintData *> &getConstraints();
@@ -212,10 +192,6 @@ namespace spine {
 		Skin *_defaultSkin;
 		Array<EventData *> _events;
 		Array<Animation *> _animations;
-		Array<IkConstraintData *> _ikConstraints;
-		Array<TransformConstraintData *> _transformConstraints;
-		Array<PathConstraintData *> _pathConstraints;
-        Array<PhysicsConstraintData *> _physicsConstraints;
 		Array<ConstraintData *> _constraints;
 		float _x, _y, _width, _height;
         float _referenceScale;

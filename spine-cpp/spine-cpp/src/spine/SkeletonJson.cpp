@@ -295,7 +295,6 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 				setup._compress = Json::getBoolean(constraintMap, "compress", false);
 				setup._stretch = Json::getBoolean(constraintMap, "stretch", false);
 
-				skeletonData->_ikConstraints.add(data);
 				skeletonData->_constraints.add(data);
 			} else if (strcmp(type, "transform") == 0) {
 				TransformConstraintData *data = new (__FILE__, __LINE__) TransformConstraintData(name);
@@ -384,7 +383,6 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 				if (scaleY) setup._mixScaleY = Json::getFloat(constraintMap, "mixScaleY", setup._mixScaleX);
 				if (shearY) setup._mixShearY = Json::getFloat(constraintMap, "mixShearY", 1);
 
-				skeletonData->_transformConstraints.add(data);
 				skeletonData->_constraints.add(data);
 			} else if (strcmp(type, "path") == 0) {
 				PathConstraintData *data = new (__FILE__, __LINE__) PathConstraintData(name);
@@ -416,7 +414,6 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 				setup._mixX = Json::getFloat(constraintMap, "mixX", 1);
 				setup._mixY = Json::getFloat(constraintMap, "mixY", setup._mixX);
 
-				skeletonData->_pathConstraints.add(data);
 				skeletonData->_constraints.add(data);
 			} else if (strcmp(type, "physics") == 0) {
 				PhysicsConstraintData *data = new (__FILE__, __LINE__) PhysicsConstraintData(name);
@@ -449,7 +446,6 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 				data->_gravityGlobal = Json::getBoolean(constraintMap, "gravityGlobal", false);
 				data->_mixGlobal = Json::getBoolean(constraintMap, "mixGlobal", false);
 
-				skeletonData->_physicsConstraints.add(data);
 				skeletonData->_constraints.add(data);
 			} else if (strcmp(type, "slider") == 0) {
 				SliderData *data = new (__FILE__, __LINE__) SliderData(name);
@@ -1029,12 +1025,12 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 	for (Json *timelineMap = Json::getItem(map, "ik") ? Json::getItem(map, "ik")->_child : NULL; timelineMap; timelineMap = timelineMap->_next) {
 		Json *keyMap = timelineMap->_child;
 		if (keyMap == NULL) continue;
-		IkConstraintData *constraint = skeletonData->findIkConstraint(timelineMap->_name);
+		IkConstraintData *constraint = skeletonData->findConstraint<IkConstraintData>(timelineMap->_name);
 		if (!constraint) {
 			ArrayUtils::deleteElements(timelines);
 			return NULL;
 		}
-		int constraintIndex = skeletonData->_ikConstraints.indexOf(constraint);
+		int constraintIndex = skeletonData->_constraints.indexOf(constraint);
 		IkConstraintTimeline *timeline = new (__FILE__, __LINE__) IkConstraintTimeline(timelineMap->_size,
 																					   timelineMap->_size << 1,
 																					   constraintIndex);
@@ -1069,12 +1065,12 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 	for (Json *timelineMap = Json::getItem(map, "transform") ? Json::getItem(map, "transform")->_child : NULL; timelineMap; timelineMap = timelineMap->_next) {
 		Json *keyMap = timelineMap->_child;
 		if (keyMap == NULL) continue;
-		TransformConstraintData *constraint = skeletonData->findTransformConstraint(timelineMap->_name);
+		TransformConstraintData *constraint = skeletonData->findConstraint<TransformConstraintData>(timelineMap->_name);
 		if (!constraint) {
 			ArrayUtils::deleteElements(timelines);
 			return NULL;
 		}
-		int constraintIndex = skeletonData->_transformConstraints.indexOf(constraint);
+		int constraintIndex = skeletonData->_constraints.indexOf(constraint);
 		TransformConstraintTimeline *timeline = new (__FILE__, __LINE__) TransformConstraintTimeline(
 				timelineMap->_size, timelineMap->_size * 6, constraintIndex);
 		float time = Json::getFloat(keyMap, "time", 0);
@@ -1118,12 +1114,12 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 
 	// Path constraint timelines.
 	for (Json *constraintMap = Json::getItem(map, "path") ? Json::getItem(map, "path")->_child : NULL; constraintMap; constraintMap = constraintMap->_next) {
-		PathConstraintData *constraint = skeletonData->findPathConstraint(constraintMap->_name);
+		PathConstraintData *constraint = skeletonData->findConstraint<PathConstraintData>(constraintMap->_name);
 		if (!constraint) {
 			ArrayUtils::deleteElements(timelines);
 			return NULL;
 		}
-		int index = skeletonData->_pathConstraints.indexOf(constraint);
+		int index = skeletonData->_constraints.indexOf(constraint);
 		for (Json *timelineMap = constraintMap->_child; timelineMap; timelineMap = timelineMap->_next) {
 			Json *keyMap = timelineMap->_child;
 			if (keyMap == NULL) continue;
@@ -1184,7 +1180,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 				ArrayUtils::deleteElements(timelines);
 				return NULL;
 			}
-			index = skeletonData->_physicsConstraints.indexOf(constraint);
+			index = skeletonData->_constraints.indexOf(constraint);
 		}
 		for (Json *timelineMap = constraintMap->_child; timelineMap; timelineMap = timelineMap->_next) {
 			Json *keyMap = timelineMap->_child;

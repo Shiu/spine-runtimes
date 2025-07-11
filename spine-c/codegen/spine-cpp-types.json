@@ -28507,66 +28507,6 @@
         },
         {
           "kind": "method",
-          "name": "findIkConstraint",
-          "returnType": "IkConstraintData *",
-          "parameters": [
-            {
-              "name": "constraintName",
-              "type": "const String &"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "findTransformConstraint",
-          "returnType": "TransformConstraintData *",
-          "parameters": [
-            {
-              "name": "constraintName",
-              "type": "const String &"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "findPathConstraint",
-          "returnType": "PathConstraintData *",
-          "parameters": [
-            {
-              "name": "constraintName",
-              "type": "const String &"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "findPhysicsConstraint",
-          "returnType": "PhysicsConstraintData *",
-          "parameters": [
-            {
-              "name": "constraintName",
-              "type": "const String &"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
           "name": "getName",
           "returnType": "const String &",
           "parameters": [],
@@ -28659,46 +28599,6 @@
           "kind": "method",
           "name": "getAnimations",
           "returnType": "Array<Animation *> &",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "getIkConstraints",
-          "returnType": "Array<IkConstraintData *> &",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "getTransformConstraints",
-          "returnType": "Array<TransformConstraintData *> &",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "getPathConstraints",
-          "returnType": "Array<PathConstraintData *> &",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "getPhysicsConstraints",
-          "returnType": "Array<PhysicsConstraintData *> &",
           "parameters": [],
           "isStatic": false,
           "isVirtual": false,
