@@ -138,8 +138,19 @@ configure(subprojects - project("spine-libgdx")) {
 		implementation "com.badlogicgames.gdx:gdx:$libgdxVersion"
 		implementation "com.badlogicgames.gdx:gdx-platform:$libgdxVersion:natives-desktop"
 		implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$libgdxVersion"
+		implementation "com.badlogicgames.gdx:gdx-backend-headless:$libgdxVersion"
 		implementation "com.badlogicgames.gdx:gdx-box2d:$libgdxVersion"
 		implementation "com.badlogicgames.gdx:gdx-box2d-platform:$libgdxVersion:natives-desktop"
+	}
+}
+
+project("spine-libgdx-tests") {
+	task runDebugPrinter(type: JavaExec) {
+		main = 'com.esotericsoftware.spine.DebugPrinter'
+		classpath = sourceSets.main.runtimeClasspath
+		if (project.hasProperty('args')) {
+			args project.getProperty('args').split(' ')
+		}
 	}
 }
 
