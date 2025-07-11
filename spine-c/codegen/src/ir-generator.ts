@@ -178,7 +178,7 @@ export function generateMethods(type: ClassOrStruct, knownTypeNames: Set<string>
     for (const [methodName, methodOverloads] of methodsByName) {
         // Special handling for methods named "create" to avoid conflicts with constructors
         const isCreateMethod = methodName === 'create';
-        
+
         if (methodOverloads.length === 1 && !isCreateMethod) {
             // No overloads and not a create method, use standard name
             const cMethod = generateMethod(type, methodOverloads[0], cTypeName, cppTypeName, knownTypeNames);
@@ -713,8 +713,13 @@ function generateReturnStatement(returnType: string, methodCall: string, knownTy
         return `${methodCall};`;
     }
 
-    // Handle String returns
-    if (returnType === 'String' || returnType === 'const String' || returnType === 'const String&') {
+    // Handle String returns (with or without space before &)
+    if (returnType === 'String' || returnType === 'const String') {
+        // error!
+        throw new Error(`String return type not supported: ${returnType}`);
+    }
+
+    if(returnType === 'const String&' || returnType === 'const String &') {
         return `return ${methodCall}.buffer();`;
     }
 

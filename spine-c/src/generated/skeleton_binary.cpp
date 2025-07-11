@@ -28,5 +28,5 @@ void spine_skeleton_binary_set_scale(spine_skeleton_binary self, float scale) {
 }
 
 const char* spine_skeleton_binary_get_error(spine_skeleton_binary self) {
-    return (const char*)&((SkeletonBinary*)self)->getError();
+    return ((SkeletonBinary*)self)->getError().buffer();
 }

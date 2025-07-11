@@ -32,7 +32,7 @@ spine_color spine_bone_data_get_color(spine_bone_data self) {
 }
 
 const char* spine_bone_data_get_icon(spine_bone_data self) {
-    return (const char*)&((BoneData*)self)->getIcon();
+    return ((BoneData*)self)->getIcon().buffer();
 }
 
 void spine_bone_data_set_icon(spine_bone_data self, const char* icon) {
@@ -52,7 +52,7 @@ spine_bone_local spine_bone_data_get_setup_pose(spine_bone_data self) {
 }
 
 const char* spine_bone_data_get_name(spine_bone_data self) {
-    return (const char*)&((PosedDataGeneric<BoneLocal>*)(BoneData*)self)->getName();
+    return ((PosedDataGeneric<BoneLocal>*)(BoneData*)self)->getName().buffer();
 }
 
 bool spine_bone_data_is_skin_required(spine_bone_data self) {

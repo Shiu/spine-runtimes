@@ -32,7 +32,7 @@ spine_animation spine_skeleton_data_find_animation(spine_skeleton_data self, con
 }
 
 const char* spine_skeleton_data_get_name(spine_skeleton_data self) {
-    return (const char*)&((SkeletonData*)self)->getName();
+    return ((SkeletonData*)self)->getName().buffer();
 }
 
 void spine_skeleton_data_set_name(spine_skeleton_data self, const char* inValue) {
@@ -112,7 +112,7 @@ void spine_skeleton_data_set_reference_scale(spine_skeleton_data self, float inV
 }
 
 const char* spine_skeleton_data_get_version(spine_skeleton_data self) {
-    return (const char*)&((SkeletonData*)self)->getVersion();
+    return ((SkeletonData*)self)->getVersion().buffer();
 }
 
 void spine_skeleton_data_set_version(spine_skeleton_data self, const char* inValue) {
@@ -120,7 +120,7 @@ void spine_skeleton_data_set_version(spine_skeleton_data self, const char* inVal
 }
 
 const char* spine_skeleton_data_get_hash(spine_skeleton_data self) {
-    return (const char*)&((SkeletonData*)self)->getHash();
+    return ((SkeletonData*)self)->getHash().buffer();
 }
 
 void spine_skeleton_data_set_hash(spine_skeleton_data self, const char* inValue) {
@@ -128,7 +128,7 @@ void spine_skeleton_data_set_hash(spine_skeleton_data self, const char* inValue)
 }
 
 const char* spine_skeleton_data_get_images_path(spine_skeleton_data self) {
-    return (const char*)&((SkeletonData*)self)->getImagesPath();
+    return ((SkeletonData*)self)->getImagesPath().buffer();
 }
 
 void spine_skeleton_data_set_images_path(spine_skeleton_data self, const char* inValue) {
@@ -136,7 +136,7 @@ void spine_skeleton_data_set_images_path(spine_skeleton_data self, const char* i
 }
 
 const char* spine_skeleton_data_get_audio_path(spine_skeleton_data self) {
-    return (const char*)&((SkeletonData*)self)->getAudioPath();
+    return ((SkeletonData*)self)->getAudioPath().buffer();
 }
 
 void spine_skeleton_data_set_audio_path(spine_skeleton_data self, const char* inValue) {

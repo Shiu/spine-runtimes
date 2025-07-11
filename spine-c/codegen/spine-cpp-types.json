@@ -25270,7 +25270,7 @@
         {
           "kind": "method",
           "name": "getPath",
-          "returnType": "String",
+          "returnType": "String &",
           "parameters": [
             {
               "name": "basePath",
@@ -25435,7 +25435,7 @@
         }
       ],
       "loc": {
-        "line": 90,
+        "line": 91,
         "col": 7
       }
     }

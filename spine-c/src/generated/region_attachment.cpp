@@ -88,7 +88,7 @@ spine_color spine_region_attachment_get_color(spine_region_attachment self) {
 }
 
 const char* spine_region_attachment_get_path(spine_region_attachment self) {
-    return (const char*)&((RegionAttachment*)self)->getPath();
+    return ((RegionAttachment*)self)->getPath().buffer();
 }
 
 void spine_region_attachment_set_path(spine_region_attachment self, const char* inValue) {
@@ -124,7 +124,7 @@ spine_attachment spine_region_attachment_copy(spine_region_attachment self) {
 }
 
 const char* spine_region_attachment_get_name(spine_region_attachment self) {
-    return (const char*)&((Attachment*)(RegionAttachment*)self)->getName();
+    return ((Attachment*)(RegionAttachment*)self)->getName().buffer();
 }
 
 int spine_region_attachment_get_ref_count(spine_region_attachment self) {

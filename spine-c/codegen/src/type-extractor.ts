@@ -4,7 +4,7 @@ import { execSync } from 'child_process';
 import { Type, Member, Method, Field, Constructor, Destructor, Parameter, EnumValue, ClassOrStruct, Enum } from './types';
 
 const SPINE_CPP_PATH = path.join(__dirname, '../../../spine-cpp');
-const SPINE_INCLUDE_DIR = path.join(SPINE_CPP_PATH, 'spine-cpp/include');
+const SPINE_INCLUDE_DIR = path.join(SPINE_CPP_PATH, 'include');
 const OUTPUT_FILE = path.join(__dirname, '../spine-cpp-types.json');
 
 /**
@@ -493,7 +493,7 @@ function addInheritedMethods(type: ClassOrStruct & { inheritedMethodsAdded: bool
     if (type.inheritedMethodsAdded) {
         return;
     }
-    
+
     const inheritedMethods: Member[] = [];
     const ownMethodSignatures = new Set<string>();
 
@@ -560,7 +560,7 @@ function addInheritedMethods(type: ClassOrStruct & { inheritedMethodsAdded: bool
     if (type.members) {
         type.members.push(...inheritedMethods);
     }
-    
+
     // Mark as processed
     type.inheritedMethodsAdded = true;
 }

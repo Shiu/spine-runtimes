@@ -28,7 +28,7 @@ void spine_skin_find_attachments_for_slot(spine_skin self, size_t slotIndex, spi
 }
 
 const char* spine_skin_get_name(spine_skin self) {
-    return (const char*)&((Skin*)self)->getName();
+    return ((Skin*)self)->getName().buffer();
 }
 
 void spine_skin_add_skin(spine_skin self, spine_skin other) {

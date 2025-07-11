@@ -28,5 +28,5 @@ void spine_skeleton_json_set_scale(spine_skeleton_json self, float scale) {
 }
 
 const char* spine_skeleton_json_get_error(spine_skeleton_json self) {
-    return (const char*)&((SkeletonJson*)self)->getError();
+    return ((SkeletonJson*)self)->getError().buffer();
 }

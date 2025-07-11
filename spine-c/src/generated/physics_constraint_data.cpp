@@ -140,7 +140,7 @@ void spine_physics_constraint_data_set_mix_global(spine_physics_constraint_data 
 }
 
 const char* spine_physics_constraint_data_get_name(spine_physics_constraint_data self) {
-    return (const char*)&((ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>*)(PhysicsConstraintData*)self)->getName();
+    return ((ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>*)(PhysicsConstraintData*)self)->getName().buffer();
 }
 
 bool spine_physics_constraint_data_is_skin_required(spine_physics_constraint_data self) {

@@ -82,8 +82,8 @@ SPINE_C_API const char *spine_atlas_get_error(spine_atlas atlas);
 SPINE_C_API void spine_atlas_dispose(spine_atlas atlas);
 
 // Skeleton data functions
-SPINE_C_API spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, const char *skeletonData);
-SPINE_C_API spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, const uint8_t *skeletonData, int32_t length);
+SPINE_C_API spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, const char *skeletonData, const char *path);
+SPINE_C_API spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, const uint8_t *skeletonData, int32_t length, const char *path);
 SPINE_C_API const char *spine_skeleton_data_result_get_error(spine_skeleton_data_result result);
 SPINE_C_API spine_skeleton_data spine_skeleton_data_result_get_data(spine_skeleton_data_result result);
 SPINE_C_API void spine_skeleton_data_result_dispose(spine_skeleton_data_result result);

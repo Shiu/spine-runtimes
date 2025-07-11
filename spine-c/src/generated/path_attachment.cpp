@@ -96,7 +96,7 @@ void spine_path_attachment_copy_to(spine_path_attachment self, spine_vertex_atta
 }
 
 const char* spine_path_attachment_get_name(spine_path_attachment self) {
-    return (const char*)&((VertexAttachment*)(PathAttachment*)self)->getName();
+    return ((VertexAttachment*)(PathAttachment*)self)->getName().buffer();
 }
 
 int spine_path_attachment_get_ref_count(spine_path_attachment self) {

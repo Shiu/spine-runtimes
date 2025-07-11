@@ -16,7 +16,7 @@ spine_constraint spine_constraint_data_create_method(spine_constraint_data self,
 }
 
 const char* spine_constraint_data_get_name(spine_constraint_data self) {
-    return (const char*)&((ConstraintData*)self)->getName();
+    return ((ConstraintData*)self)->getName().buffer();
 }
 
 bool spine_constraint_data_is_skin_required(spine_constraint_data self) {

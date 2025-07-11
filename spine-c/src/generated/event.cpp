@@ -36,7 +36,7 @@ void spine_event_set_float(spine_event self, float inValue) {
 }
 
 const char* spine_event_get_string(spine_event self) {
-    return (const char*)&((Event*)self)->getString();
+    return ((Event*)self)->getString().buffer();
 }
 
 void spine_event_set_string(spine_event self, const char* inValue) {

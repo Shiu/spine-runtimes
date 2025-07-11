@@ -12,7 +12,7 @@ void spine_posed_data_dispose(spine_posed_data self) {
 }
 
 const char* spine_posed_data_get_name(spine_posed_data self) {
-    return (const char*)&((PosedData*)self)->getName();
+    return ((PosedData*)self)->getName().buffer();
 }
 
 bool spine_posed_data_is_skin_required(spine_posed_data self) {

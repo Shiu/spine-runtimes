@@ -14,11 +14,8 @@ add_subdirectory(../spine-cpp ${CMAKE_CURRENT_BINARY_DIR}/spine-cpp)
 file(GLOB SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-)
-file(GLOB GENERATED_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/generated/*.cpp"
 )
-list(APPEND SOURCES ${GENERATED_SOURCES})
 
 # Create the library
 add_library(spine-c STATIC ${SOURCES})
@@ -42,7 +39,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Create test executable only if this is the top-level project
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    add_executable(spine-c-test test/test.c)
-    target_link_libraries(spine-c-test spine-c)
-    target_include_directories(spine-c-test PRIVATE include)
+    add_executable(debug-printer ${CMAKE_CURRENT_SOURCE_DIR}/tests/debug-printer.c)
+    target_link_libraries(debug-printer spine-c)
 endif()

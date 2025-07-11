@@ -60,7 +60,7 @@ void spine_vertex_attachment_copy_to(spine_vertex_attachment self, spine_vertex_
 }
 
 const char* spine_vertex_attachment_get_name(spine_vertex_attachment self) {
-    return (const char*)&((Attachment*)(VertexAttachment*)self)->getName();
+    return ((Attachment*)(VertexAttachment*)self)->getName().buffer();
 }
 
 spine_attachment spine_vertex_attachment_copy(spine_vertex_attachment self) {

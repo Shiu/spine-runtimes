@@ -116,7 +116,7 @@ spine_array_from_property spine_transform_constraint_data_get_properties(spine_t
 }
 
 const char* spine_transform_constraint_data_get_name(spine_transform_constraint_data self) {
-    return (const char*)&((ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>*)(TransformConstraintData*)self)->getName();
+    return ((ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>*)(TransformConstraintData*)self)->getName().buffer();
 }
 
 bool spine_transform_constraint_data_is_skin_required(spine_transform_constraint_data self) {

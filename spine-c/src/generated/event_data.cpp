@@ -12,7 +12,7 @@ void spine_event_data_dispose(spine_event_data self) {
 }
 
 const char* spine_event_data_get_name(spine_event_data self) {
-    return (const char*)&((EventData*)self)->getName();
+    return ((EventData*)self)->getName().buffer();
 }
 
 int spine_event_data_get_int_value(spine_event_data self) {
@@ -32,7 +32,7 @@ void spine_event_data_set_float_value(spine_event_data self, float inValue) {
 }
 
 const char* spine_event_data_get_string_value(spine_event_data self) {
-    return (const char*)&((EventData*)self)->getStringValue();
+    return ((EventData*)self)->getStringValue().buffer();
 }
 
 void spine_event_data_set_string_value(spine_event_data self, const char* inValue) {
@@ -40,7 +40,7 @@ void spine_event_data_set_string_value(spine_event_data self, const char* inValu
 }
 
 const char* spine_event_data_get_audio_path(spine_event_data self) {
-    return (const char*)&((EventData*)self)->getAudioPath();
+    return ((EventData*)self)->getAudioPath().buffer();
 }
 
 void spine_event_data_set_audio_path(spine_event_data self, const char* inValue) {

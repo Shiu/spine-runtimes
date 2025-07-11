@@ -72,7 +72,7 @@ void spine_bounding_box_attachment_copy_to(spine_bounding_box_attachment self, s
 }
 
 const char* spine_bounding_box_attachment_get_name(spine_bounding_box_attachment self) {
-    return (const char*)&((VertexAttachment*)(BoundingBoxAttachment*)self)->getName();
+    return ((VertexAttachment*)(BoundingBoxAttachment*)self)->getName().buffer();
 }
 
 int spine_bounding_box_attachment_get_ref_count(spine_bounding_box_attachment self) {

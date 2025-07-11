@@ -40,7 +40,7 @@ void spine_ik_constraint_data_set_uniform(spine_ik_constraint_data self, bool un
 }
 
 const char* spine_ik_constraint_data_get_name(spine_ik_constraint_data self) {
-    return (const char*)&((ConstraintDataGeneric<IkConstraint, IkConstraintPose>*)(IkConstraintData*)self)->getName();
+    return ((ConstraintDataGeneric<IkConstraint, IkConstraintPose>*)(IkConstraintData*)self)->getName().buffer();
 }
 
 bool spine_ik_constraint_data_is_skin_required(spine_ik_constraint_data self) {

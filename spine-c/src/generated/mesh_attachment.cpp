@@ -60,7 +60,7 @@ spine_color spine_mesh_attachment_get_color(spine_mesh_attachment self) {
 }
 
 const char* spine_mesh_attachment_get_path(spine_mesh_attachment self) {
-    return (const char*)&((MeshAttachment*)self)->getPath();
+    return ((MeshAttachment*)self)->getPath().buffer();
 }
 
 void spine_mesh_attachment_set_path(spine_mesh_attachment self, const char* inValue) {
@@ -164,7 +164,7 @@ void spine_mesh_attachment_copy_to(spine_mesh_attachment self, spine_vertex_atta
 }
 
 const char* spine_mesh_attachment_get_name(spine_mesh_attachment self) {
-    return (const char*)&((VertexAttachment*)(MeshAttachment*)self)->getName();
+    return ((VertexAttachment*)(MeshAttachment*)self)->getName().buffer();
 }
 
 int spine_mesh_attachment_get_ref_count(spine_mesh_attachment self) {

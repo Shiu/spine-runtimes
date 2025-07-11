@@ -56,7 +56,7 @@ spine_attachment spine_point_attachment_copy(spine_point_attachment self) {
 }
 
 const char* spine_point_attachment_get_name(spine_point_attachment self) {
-    return (const char*)&((Attachment*)(PointAttachment*)self)->getName();
+    return ((Attachment*)(PointAttachment*)self)->getName().buffer();
 }
 
 int spine_point_attachment_get_ref_count(spine_point_attachment self) {

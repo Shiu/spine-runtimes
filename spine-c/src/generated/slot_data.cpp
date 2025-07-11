@@ -24,7 +24,7 @@ void spine_slot_data_set_attachment_name(spine_slot_data self, const char* attac
 }
 
 const char* spine_slot_data_get_attachment_name(spine_slot_data self) {
-    return (const char*)&((SlotData*)self)->getAttachmentName();
+    return ((SlotData*)self)->getAttachmentName().buffer();
 }
 
 spine_blend_mode spine_slot_data_get_blend_mode(spine_slot_data self) {
@@ -48,7 +48,7 @@ spine_slot_pose spine_slot_data_get_setup_pose(spine_slot_data self) {
 }
 
 const char* spine_slot_data_get_name(spine_slot_data self) {
-    return (const char*)&((PosedDataGeneric<SlotPose>*)(SlotData*)self)->getName();
+    return ((PosedDataGeneric<SlotPose>*)(SlotData*)self)->getName().buffer();
 }
 
 bool spine_slot_data_is_skin_required(spine_slot_data self) {

@@ -36,7 +36,7 @@ void spine_animation_apply(spine_animation self, spine_skeleton skeleton, float 
 }
 
 const char* spine_animation_get_name(spine_animation self) {
-    return (const char*)&((Animation*)self)->getName();
+    return ((Animation*)self)->getName().buffer();
 }
 
 spine_array_int spine_animation_get_bones(spine_animation self) {

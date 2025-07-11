@@ -80,7 +80,7 @@ void spine_clipping_attachment_copy_to(spine_clipping_attachment self, spine_ver
 }
 
 const char* spine_clipping_attachment_get_name(spine_clipping_attachment self) {
-    return (const char*)&((VertexAttachment*)(ClippingAttachment*)self)->getName();
+    return ((VertexAttachment*)(ClippingAttachment*)self)->getName().buffer();
 }
 
 int spine_clipping_attachment_get_ref_count(spine_clipping_attachment self) {

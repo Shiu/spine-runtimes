@@ -64,7 +64,7 @@ void spine_path_constraint_data_set_offset_rotation(spine_path_constraint_data s
 }
 
 const char* spine_path_constraint_data_get_name(spine_path_constraint_data self) {
-    return (const char*)&((ConstraintDataGeneric<PathConstraint, PathConstraintPose>*)(PathConstraintData*)self)->getName();
+    return ((ConstraintDataGeneric<PathConstraint, PathConstraintPose>*)(PathConstraintData*)self)->getName().buffer();
 }
 
 bool spine_path_constraint_data_is_skin_required(spine_path_constraint_data self) {

@@ -3,7 +3,7 @@ import * as path from 'path';
 import { Type, toSnakeCase } from './types';
 import { CClassOrStruct, CEnum, CMethod, CParameter } from './c-types';
 
-const LICENSE_HEADER = fs.readFileSync(path.join(__dirname, '../../../spine-cpp/spine-cpp/src/spine/Skeleton.cpp'), 'utf8').split('\n').slice(0, 28).join('\n');
+const LICENSE_HEADER = fs.readFileSync(path.join(__dirname, '../../../spine-cpp/src/spine/Skeleton.cpp'), 'utf8').split('\n').slice(0, 28).join('\n');
 
 /** Generates strings for CClassOrStruct and CEnum, and writes them to files. */
 export class CWriter {

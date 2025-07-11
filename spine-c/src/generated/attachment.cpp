@@ -12,7 +12,7 @@ spine_rtti spine_attachment_get_rtti(spine_attachment self) {
 }
 
 const char* spine_attachment_get_name(spine_attachment self) {
-    return (const char*)&((Attachment*)self)->getName();
+    return ((Attachment*)self)->getName().buffer();
 }
 
 spine_attachment spine_attachment_copy(spine_attachment self) {

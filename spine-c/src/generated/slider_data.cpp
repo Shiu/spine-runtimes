@@ -84,7 +84,7 @@ void spine_slider_data_set_local(spine_slider_data self, bool local) {
 }
 
 const char* spine_slider_data_get_name(spine_slider_data self) {
-    return (const char*)&((ConstraintDataGeneric<Slider, SliderPose>*)(SliderData*)self)->getName();
+    return ((ConstraintDataGeneric<Slider, SliderPose>*)(SliderData*)self)->getName().buffer();
 }
 
 bool spine_slider_data_is_skin_required(spine_slider_data self) {

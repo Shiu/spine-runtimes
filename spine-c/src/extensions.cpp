@@ -275,7 +275,7 @@ void spine_atlas_dispose(spine_atlas atlas) {
 }
 
 // Skeleton data loading
-spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, const char *skeletonData) {
+spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, const char *skeletonData, const char *path) {
     if (!atlas || !skeletonData) return nullptr;
     _spine_skeleton_data_result *result = SpineExtension::calloc<_spine_skeleton_data_result>(1, __FILE__, __LINE__);
     SkeletonJson json((Atlas *) ((_spine_atlas *) atlas)->atlas);
@@ -287,11 +287,30 @@ spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, cons
         return (spine_skeleton_data_result) result;
     }
 
+    // Set name from path if provided
+    if (path != nullptr) {
+        // Extract filename without extension from path
+        const char *lastSlash = strrchr(path, '/');
+        const char *lastBackslash = strrchr(path, '\\');
+        const char *start = path;
+
+        if (lastSlash != nullptr) start = lastSlash + 1;
+        if (lastBackslash != nullptr && lastBackslash > start) start = lastBackslash + 1;
+
+        const char *lastDot = strrchr(start, '.');
+        if (lastDot != nullptr) {
+            int length = lastDot - start;
+            data->setName(String(start, length));
+        } else {
+            data->setName(String(start));
+        }
+    }
+
     result->skeletonData = (spine_skeleton_data) data;
     return (spine_skeleton_data_result) result;
 }
 
-spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, const uint8_t *skeletonData, int32_t length) {
+spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, const uint8_t *skeletonData, int32_t length, const char *path) {
     if (!atlas || !skeletonData) return nullptr;
     _spine_skeleton_data_result *result = SpineExtension::calloc<_spine_skeleton_data_result>(1, __FILE__, __LINE__);
     SkeletonBinary binary((Atlas *) ((_spine_atlas *) atlas)->atlas);
@@ -301,6 +320,25 @@ spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, co
     if (!data) {
         result->error = (const char *) strdup("Failed to load skeleton data");
         return (spine_skeleton_data_result) result;
+    }
+
+    // Set name from path if provided
+    if (path != nullptr) {
+        // Extract filename without extension from path
+        const char *lastSlash = strrchr(path, '/');
+        const char *lastBackslash = strrchr(path, '\\');
+        const char *start = path;
+
+        if (lastSlash != nullptr) start = lastSlash + 1;
+        if (lastBackslash != nullptr && lastBackslash > start) start = lastBackslash + 1;
+
+        const char *lastDot = strrchr(start, '.');
+        if (lastDot != nullptr) {
+            int length = lastDot - start;
+            data->setName(String(start, length));
+        } else {
+            data->setName(String(start));
+        }
     }
 
     result->skeletonData = (spine_skeleton_data) data;
