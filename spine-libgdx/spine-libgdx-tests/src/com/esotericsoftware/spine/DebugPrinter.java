@@ -39,6 +39,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData;
 
+import java.util.Locale;
+
 public class DebugPrinter implements ApplicationListener {
 	private String skeletonPath;
 	private String atlasPath;
@@ -68,7 +70,7 @@ public class DebugPrinter implements ApplicationListener {
 				print(name + ": \"" + value + "\"");
 			} else if (value instanceof Float) {
 				// Format floats to 6 decimal places to match other runtimes
-				print(name + ": " + String.format("%.6f", value));
+				print(name + ": " + String.format(Locale.US, "%.6f", value));
 			} else {
 				print(name + ": " + value);
 			}
@@ -238,7 +240,6 @@ public class DebugPrinter implements ApplicationListener {
 				state.apply(skeleton);
 			}
 
-			skeleton.update(0.016f);
 			skeleton.updateWorldTransform(Physics.update);
 
 			// Print skeleton state

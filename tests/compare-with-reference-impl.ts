@@ -7,6 +7,36 @@ import { promisify } from 'util';
 
 const writeFile = promisify(fs.writeFile);
 const mkdir = promisify(fs.mkdir);
+const stat = promisify(fs.stat);
+
+// Helper function to get modification time of a file
+async function getMTime(filePath: string): Promise<number> {
+    try {
+        const stats = await stat(filePath);
+        return stats.mtimeMs;
+    } catch {
+        return 0;
+    }
+}
+
+// Helper function to find newest file in a directory pattern
+async function getNewestFileTime(baseDir: string, patterns: string[]): Promise<number> {
+    let newest = 0;
+    
+    for (const pattern of patterns) {
+        const globPattern = path.join(baseDir, pattern);
+        const files = execSync(`find "${baseDir}" -name "${pattern.split('/').pop()}" -type f 2>/dev/null || true`, {
+            encoding: 'utf8'
+        }).trim().split('\n').filter(f => f);
+        
+        for (const file of files) {
+            const mtime = await getMTime(file);
+            if (mtime > newest) newest = mtime;
+        }
+    }
+    
+    return newest;
+}
 
 // Parse command line arguments
 const args = process.argv.slice(2);
@@ -28,7 +58,7 @@ const outputDir = path.join(scriptDir, 'output');
 
 interface RuntimeConfig {
     name: string;
-    buildCheck: () => boolean;
+    buildCheck: () => Promise<boolean>;
     build: () => void;
     run: () => string;
 }
@@ -37,9 +67,18 @@ interface RuntimeConfig {
 const runtimes: RuntimeConfig[] = [
     {
         name: 'java',
-        buildCheck: () => {
+        buildCheck: async () => {
             const classPath = path.join(rootDir, 'spine-libgdx/spine-libgdx-tests/build/classes/java/main/com/esotericsoftware/spine/DebugPrinter.class');
-            return fs.existsSync(classPath);
+            if (!fs.existsSync(classPath)) return false;
+            
+            // Check if any source files are newer than the class file
+            const classTime = await getMTime(classPath);
+            const sourceTime = await getNewestFileTime(
+                path.join(rootDir, 'spine-libgdx'),
+                ['spine-libgdx/src/**/*.java', 'spine-libgdx-tests/src/**/*.java']
+            );
+            
+            return sourceTime <= classTime;
         },
         build: () => {
             console.log('  Building Java runtime...');
@@ -71,9 +110,18 @@ const runtimes: RuntimeConfig[] = [
     },
     {
         name: 'cpp',
-        buildCheck: () => {
+        buildCheck: async () => {
             const execPath = path.join(rootDir, 'spine-cpp/build/debug-printer');
-            return fs.existsSync(execPath);
+            if (!fs.existsSync(execPath)) return false;
+            
+            // Check if any source files are newer than the executable
+            const execTime = await getMTime(execPath);
+            const sourceTime = await getNewestFileTime(
+                path.join(rootDir, 'spine-cpp'),
+                ['spine-cpp/src/**/*.cpp', 'spine-cpp/include/**/*.h', 'tests/DebugPrinter.cpp']
+            );
+            
+            return sourceTime <= execTime;
         },
         build: () => {
             console.log('  Building C++ runtime...');
@@ -84,7 +132,9 @@ const runtimes: RuntimeConfig[] = [
         },
         run: () => {
             return execSync(
-                `./build/debug-printer "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`,
+                animationName 
+                    ? `./build/debug-printer "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`
+                    : `./build/debug-printer "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
                 {
                     cwd: path.join(rootDir, 'spine-cpp'),
                     encoding: 'utf8'
@@ -94,9 +144,18 @@ const runtimes: RuntimeConfig[] = [
     },
     {
         name: 'c',
-        buildCheck: () => {
+        buildCheck: async () => {
             const execPath = path.join(rootDir, 'spine-c/build/debug-printer');
-            return fs.existsSync(execPath);
+            if (!fs.existsSync(execPath)) return false;
+            
+            // Check if any source files are newer than the executable
+            const execTime = await getMTime(execPath);
+            const sourceTime = await getNewestFileTime(
+                path.join(rootDir, 'spine-c'),
+                ['src/**/*.c', 'include/**/*.h', 'tests/debug-printer.c']
+            );
+            
+            return sourceTime <= execTime;
         },
         build: () => {
             console.log('  Building C runtime...');
@@ -107,7 +166,9 @@ const runtimes: RuntimeConfig[] = [
         },
         run: () => {
             return execSync(
-                `./build/debug-printer "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`,
+                animationName 
+                    ? `./build/debug-printer "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`
+                    : `./build/debug-printer "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
                 {
                     cwd: path.join(rootDir, 'spine-c'),
                     encoding: 'utf8'
@@ -117,11 +178,17 @@ const runtimes: RuntimeConfig[] = [
     },
     {
         name: 'ts',
-        buildCheck: () => true, // No build needed
+        buildCheck: async () => {
+            // For TypeScript, just check if the DebugPrinter.ts file exists
+            const debugPrinterPath = path.join(rootDir, 'spine-ts/spine-core/tests/DebugPrinter.ts');
+            return fs.existsSync(debugPrinterPath);
+        },
         build: () => {}, // No build needed
         run: () => {
             return execSync(
-                `npx tsx tests/DebugPrinter.ts "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`,
+                animationName 
+                    ? `npx tsx tests/DebugPrinter.ts "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`
+                    : `npx tsx tests/DebugPrinter.ts "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
                 {
                     cwd: path.join(rootDir, 'spine-ts/spine-core'),
                     encoding: 'utf8'
@@ -149,7 +216,7 @@ async function main() {
 
         try {
             // Build if needed
-            if (!runtime.buildCheck()) {
+            if (!(await runtime.buildCheck())) {
                 runtime.build();
             }
 

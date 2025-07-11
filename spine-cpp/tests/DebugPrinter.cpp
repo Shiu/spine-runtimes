@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <locale.h>
 
 using namespace spine;
 
@@ -129,6 +130,9 @@ public:
 };
 
 int main(int argc, char *argv[]) {
+	// Set locale to ensure consistent number formatting
+	setlocale(LC_ALL, "C");
+
 	if (argc < 3) {
 		fprintf(stderr, "Usage: DebugPrinter <skeleton-path> <atlas-path> [animation-name]\n");
 		return 1;
