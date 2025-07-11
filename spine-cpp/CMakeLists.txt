@@ -22,6 +22,6 @@ export(
 
 # Optional tests
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    add_executable(debug-printer ${CMAKE_CURRENT_SOURCE_DIR}/tests/DebugPrinter.cpp)
-    target_link_libraries(debug-printer spine-cpp)
+    add_executable(headless-test ${CMAKE_CURRENT_SOURCE_DIR}/tests/HeadlessTest.cpp)
+    target_link_libraries(headless-test spine-cpp)
 endif()

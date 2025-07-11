@@ -145,9 +145,10 @@ configure(subprojects - project("spine-libgdx")) {
 }
 
 project("spine-libgdx-tests") {
-	task runDebugPrinter(type: JavaExec) {
-		main = 'com.esotericsoftware.spine.DebugPrinter'
+	task runHeadlessTest(type: JavaExec) {
+		main = 'com.esotericsoftware.spine.HeadlessTest'
 		classpath = sourceSets.main.runtimeClasspath
+		workingDir = rootProject.projectDir
 		if (project.hasProperty('args')) {
 			args project.getProperty('args').split(' ')
 		}

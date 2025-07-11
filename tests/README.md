@@ -10,41 +10,41 @@ Unlike traditional unit tests, this test suite:
 - Compares outputs between runtimes to detect discrepancies
 - Helps maintain consistency when porting changes from the reference implementation
 
-## DebugPrinter Locations
+## HeadlessTest Locations
 
-Each runtime has a DebugPrinter program that outputs skeleton data in a standardized format:
+Each runtime has a HeadlessTest program that outputs skeleton data in a standardized format:
 
-- **Java (Reference)**: `spine-libgdx/spine-libgdx-tests/src/com/esotericsoftware/spine/DebugPrinter.java`
-- **C++**: `spine-cpp/tests/DebugPrinter.cpp`
-- **C**: `spine-c/tests/debug-printer.c`
-- **TypeScript**: `spine-ts/spine-core/tests/DebugPrinter.ts`
+- **Java (Reference)**: `spine-libgdx/spine-libgdx-tests/src/com/esotericsoftware/spine/HeadlessTest.java`
+- **C++**: `spine-cpp/tests/HeadlessTest.cpp`
+- **C**: `spine-c/tests/headless-test.c`
+- **TypeScript**: `spine-ts/spine-core/tests/HeadlessTest.ts`
 
-## Running Individual DebugPrinters
+## Running Individual HeadlessTests
 
 ### Java (spine-libgdx)
 ```bash
 cd spine-libgdx
-./gradlew :spine-libgdx-tests:runDebugPrinter -Pargs="<skeleton-path> <atlas-path> [animation-name]"
+./gradlew :spine-libgdx-tests:runHeadlessTest -Pargs="<skeleton-path> <atlas-path> [animation-name]"
 ```
 
 ### C++ (spine-cpp)
 ```bash
 cd spine-cpp
 ./build.sh  # Build if needed
-./build/debug-printer <skeleton-path> <atlas-path> [animation-name]
+./build/headless-test <skeleton-path> <atlas-path> [animation-name]
 ```
 
 ### C (spine-c)
 ```bash
 cd spine-c
 ./build.sh  # Build if needed
-./build/debug-printer <skeleton-path> <atlas-path> [animation-name]
+./build/headless-test <skeleton-path> <atlas-path> [animation-name]
 ```
 
 ### TypeScript (spine-ts)
 ```bash
 cd spine-ts/spine-core
-npx tsx tests/DebugPrinter.ts <skeleton-path> <atlas-path> [animation-name]
+npx tsx tests/HeadlessTest.ts <skeleton-path> <atlas-path> [animation-name]
 ```
 
 ## Running the Comparison Test
@@ -52,13 +52,13 @@ npx tsx tests/DebugPrinter.ts <skeleton-path> <atlas-path> [animation-name]
 The main test runner compares all runtime outputs automatically:
 
 ```bash
-./tests/compare-with-reference-impl.ts <skeleton-path> <atlas-path> [animation-name]
+./tests/headless-test-runner.ts <skeleton-path> <atlas-path> [animation-name]
 ```
 
 This script will:
-1. Check if each runtime's DebugPrinter needs rebuilding
-2. Build any out-of-date DebugPrinters
-3. Run each DebugPrinter with the same inputs
+1. Check if each runtime's HeadlessTest needs rebuilding
+2. Build any out-of-date HeadlessTests
+3. Run each HeadlessTest with the same inputs
 4. Compare outputs and report any differences
 5. Save individual outputs to `tests/output/` for manual inspection
 
@@ -66,20 +66,20 @@ This script will:
 
 ```bash
 # Test with spineboy walk animation
-./tests/compare-with-reference-impl.ts \
+./tests/headless-test-runner.ts \
     examples/spineboy/export/spineboy-pro.json \
     examples/spineboy/export/spineboy-pma.atlas \
     walk
 
 # Test without animation (setup pose only)
-./tests/compare-with-reference-impl.ts \
+./tests/headless-test-runner.ts \
     examples/spineboy/export/spineboy-pro.json \
     examples/spineboy/export/spineboy-pma.atlas
 ```
 
 ## Output Format
 
-Each DebugPrinter outputs:
+Each HeadlessTest outputs:
 - **SKELETON DATA**: Static setup pose data (bones, slots, skins, animations metadata)
 - **SKELETON STATE**: Runtime state after applying animations
 
@@ -88,3 +88,24 @@ The output uses consistent formatting:
 - Float values formatted to 6 decimal places
 - Strings quoted, nulls explicitly shown
 - Locale-independent number formatting (always uses `.` for decimals)
+
+## Troubleshooting
+
+If outputs differ between runtimes:
+1. Check `tests/output/` for the full outputs from each runtime
+2. Use a diff tool to compare the files
+3. Common issues:
+   - Number formatting differences (should be fixed by locale settings)
+   - Missing or extra fields in data structures
+   - Different default values
+   - Rounding differences
+
+## Future Expansion
+
+The current implementation prints basic skeleton data. Future expansions will include:
+- Full bone and slot hierarchies
+- All attachment types
+- Animation timelines
+- Constraint data
+- Physics settings
+- Complete runtime state after animation

@@ -3,9 +3,9 @@
     "configurations": [
         {
             "type": "java",
-            "name": "debug-printer (java)",
+            "name": "headless test (java)",
             "request": "launch",
-            "mainClass": "com.esotericsoftware.spine.DebugPrinter",
+            "mainClass": "com.esotericsoftware.spine.HeadlessTest",
             "projectName": "spine-libgdx-tests",
             "args": [
                 "${workspaceFolder}/../examples/spineboy/export/spineboy-pro.json",

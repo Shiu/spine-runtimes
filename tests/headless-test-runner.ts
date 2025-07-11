@@ -41,7 +41,7 @@ async function getNewestFileTime(baseDir: string, patterns: string[]): Promise<n
 // Parse command line arguments
 const args = process.argv.slice(2);
 if (args.length < 2) {
-    console.error('Usage: compare-with-reference-impl.ts <skeleton-path> <atlas-path> [animation-name]');
+    console.error('Usage: headless-test-runner.ts <skeleton-path> <atlas-path> [animation-name]');
     process.exit(1);
 }
 
@@ -68,7 +68,7 @@ const runtimes: RuntimeConfig[] = [
     {
         name: 'java',
         buildCheck: async () => {
-            const classPath = path.join(rootDir, 'spine-libgdx/spine-libgdx-tests/build/classes/java/main/com/esotericsoftware/spine/DebugPrinter.class');
+            const classPath = path.join(rootDir, 'spine-libgdx/spine-libgdx-tests/build/classes/java/main/com/esotericsoftware/spine/HeadlessTest.class');
             if (!fs.existsSync(classPath)) return false;
             
             // Check if any source files are newer than the class file
@@ -92,7 +92,7 @@ const runtimes: RuntimeConfig[] = [
                 ? `${absoluteSkeletonPath} ${absoluteAtlasPath} ${animationName}`
                 : `${absoluteSkeletonPath} ${absoluteAtlasPath}`;
             const output = execSync(
-                `./gradlew -q :spine-libgdx-tests:runDebugPrinter -Pargs="${args}"`,
+                `./gradlew -q :spine-libgdx-tests:runHeadlessTest -Pargs="${args}"`,
                 {
                     cwd: path.join(rootDir, 'spine-libgdx'),
                     encoding: 'utf8'
@@ -111,7 +111,7 @@ const runtimes: RuntimeConfig[] = [
     {
         name: 'cpp',
         buildCheck: async () => {
-            const execPath = path.join(rootDir, 'spine-cpp/build/debug-printer');
+            const execPath = path.join(rootDir, 'spine-cpp/build/headless-test');
             if (!fs.existsSync(execPath)) return false;
             
             // Check if any source files are newer than the executable
@@ -133,8 +133,8 @@ const runtimes: RuntimeConfig[] = [
         run: () => {
             return execSync(
                 animationName 
-                    ? `./build/debug-printer "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`
-                    : `./build/debug-printer "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
+                    ? `./build/headless-test "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`
+                    : `./build/headless-test "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
                 {
                     cwd: path.join(rootDir, 'spine-cpp'),
                     encoding: 'utf8'
@@ -145,7 +145,7 @@ const runtimes: RuntimeConfig[] = [
     {
         name: 'c',
         buildCheck: async () => {
-            const execPath = path.join(rootDir, 'spine-c/build/debug-printer');
+            const execPath = path.join(rootDir, 'spine-c/build/headless-test');
             if (!fs.existsSync(execPath)) return false;
             
             // Check if any source files are newer than the executable
@@ -167,8 +167,8 @@ const runtimes: RuntimeConfig[] = [
         run: () => {
             return execSync(
                 animationName 
-                    ? `./build/debug-printer "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`
-                    : `./build/debug-printer "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
+                    ? `./build/headless-test "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`
+                    : `./build/headless-test "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
                 {
                     cwd: path.join(rootDir, 'spine-c'),
                     encoding: 'utf8'
@@ -179,16 +179,16 @@ const runtimes: RuntimeConfig[] = [
     {
         name: 'ts',
         buildCheck: async () => {
-            // For TypeScript, just check if the DebugPrinter.ts file exists
-            const debugPrinterPath = path.join(rootDir, 'spine-ts/spine-core/tests/DebugPrinter.ts');
-            return fs.existsSync(debugPrinterPath);
+            // For TypeScript, just check if the HeadlessTest.ts file exists
+            const headlessTestPath = path.join(rootDir, 'spine-ts/spine-core/tests/HeadlessTest.ts');
+            return fs.existsSync(headlessTestPath);
         },
         build: () => {}, // No build needed
         run: () => {
             return execSync(
                 animationName 
-                    ? `npx tsx tests/DebugPrinter.ts "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`
-                    : `npx tsx tests/DebugPrinter.ts "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
+                    ? `npx tsx tests/HeadlessTest.ts "${absoluteSkeletonPath}" "${absoluteAtlasPath}" "${animationName}"`
+                    : `npx tsx tests/HeadlessTest.ts "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
                 {
                     cwd: path.join(rootDir, 'spine-ts/spine-core'),
                     encoding: 'utf8'
@@ -202,7 +202,7 @@ async function main() {
     // Ensure output directory exists
     await mkdir(outputDir, { recursive: true });
 
-    console.log('Comparing DebugPrinter outputs for:');
+    console.log('Comparing HeadlessTest outputs for:');
     console.log(`  Skeleton: ${absoluteSkeletonPath}`);
     console.log(`  Atlas: ${absoluteAtlasPath}`);
     console.log(`  Animation: ${animationName}`);
@@ -212,7 +212,7 @@ async function main() {
     const outputs: Record<string, string> = {};
 
     for (const runtime of runtimes) {
-        console.log(`Running ${runtime.name.toUpperCase()} DebugPrinter...`);
+        console.log(`Running ${runtime.name.toUpperCase()} HeadlessTest...`);
 
         try {
             // Build if needed

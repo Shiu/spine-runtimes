@@ -41,12 +41,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData;
 
 import java.util.Locale;
 
-public class DebugPrinter implements ApplicationListener {
+public class HeadlessTest implements ApplicationListener {
 	private String skeletonPath;
 	private String atlasPath;
 	private String animationName;
 
-	public DebugPrinter (String skeletonPath, String atlasPath, String animationName) {
+	public HeadlessTest (String skeletonPath, String atlasPath, String animationName) {
 		this.skeletonPath = skeletonPath;
 		this.atlasPath = atlasPath;
 		this.animationName = animationName;
@@ -277,13 +277,13 @@ public class DebugPrinter implements ApplicationListener {
 
 	public static void main (String[] args) {
 		if (args.length < 2) {
-			System.err.println("Usage: DebugPrinter <skeleton-path> <atlas-path> [animation-name]");
+			System.err.println("Usage: HeadlessTest <skeleton-path> <atlas-path> [animation-name]");
 			System.exit(1);
 		}
 
 		HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
 		config.updatesPerSecond = 60;
 		String animationName = args.length >= 3 ? args[2] : null;
-		new HeadlessApplication(new DebugPrinter(args[0], args[1], animationName), config);
+		new HeadlessApplication(new HeadlessTest(args[0], args[1], animationName), config);
 	}
 }

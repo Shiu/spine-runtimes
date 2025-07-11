@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "debug-printer (c)",
+            "name": "headless test (c)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/debug-printer",
+            "program": "${workspaceFolder}/build/headless-test",
             "args": [
                 "${workspaceFolder}/../examples/spineboy/export/spineboy-pro.json",
                 "${workspaceFolder}/../examples/spineboy/export/spineboy-pma.atlas",

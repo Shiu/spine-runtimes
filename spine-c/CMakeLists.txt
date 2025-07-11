@@ -39,6 +39,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Create test executable only if this is the top-level project
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    add_executable(debug-printer ${CMAKE_CURRENT_SOURCE_DIR}/tests/debug-printer.c)
-    target_link_libraries(debug-printer spine-c)
+    add_executable(headless-test ${CMAKE_CURRENT_SOURCE_DIR}/tests/headless-test.c)
+    target_link_libraries(headless-test spine-c)
 endif()
