@@ -54,7 +54,7 @@ namespace spine {
 
 		void apply(SlotPose* slot, Attachment* attachment);
 
-		String getPath(const String &basePath, int index);
+		String &getPath(const String &basePath, int index);
 
 		/// Returns a unique ID for this attachment.
 		int getId() { return _id; }
@@ -83,6 +83,7 @@ namespace spine {
 		int _start;
 		int _digits;
 		int _setupIndex;
+		String _tmpPath;
 
 		static int nextID();
 	};

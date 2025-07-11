@@ -80,7 +80,7 @@
 using namespace spine;
 
 SkeletonBinary::SkeletonBinary(Atlas *atlas) : _attachmentLoader(
-													   new(__FILE__, __LINE__) AtlasAttachmentLoader(atlas)),
+													   new (__FILE__, __LINE__) AtlasAttachmentLoader(atlas)),
 											   _error(), _scale(1), _ownsLoader(true) {
 }
 
@@ -183,7 +183,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 
 		/* Bones. */
 		Array<BoneData *> &bones = skeletonData->_bones.setSize(input.readInt(true), NULL);
-		for (int i = 0; i < (int)bones.size(); ++i) {
+		for (int i = 0; i < (int) bones.size(); ++i) {
 			const char *name = input.readString();
 			BoneData *parent = i == 0 ? 0 : bones[input.readInt(true)];
 			BoneData *data = new (__FILE__, __LINE__) BoneData(i, String(name, true), parent);
@@ -208,7 +208,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 
 		/* Slots. */
 		Array<SlotData *> &slots = skeletonData->_slots.setSize(input.readInt(true), NULL);
-		for (int i = 0; i < (int)slots.size(); ++i) {
+		for (int i = 0; i < (int) slots.size(); ++i) {
 			String slotName = String(input.readString(), true);
 			BoneData *boneData = bones[input.readInt(true)];
 			SlotData *data = new (__FILE__, __LINE__) SlotData(i, slotName, *boneData);
@@ -434,7 +434,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 								data->_property = NULL;
 								break;
 						}
-						if(data->_property) data->_property->_offset = offset * propertyScale;
+						if (data->_property) data->_property->_offset = offset * propertyScale;
 						data->_offset = input.readFloat();
 						data->_scale = input.readFloat() / propertyScale;
 					}
@@ -1081,12 +1081,12 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 		int index = input.readInt(true), frameCount = input.readInt(true), frameLast = frameCount - 1;
 		TransformConstraintTimeline *timeline = new (__FILE__, __LINE__) TransformConstraintTimeline(frameCount, input.readInt(true), index);
 		float time = input.readFloat(), mixRotate = input.readFloat(), mixX = input.readFloat(), mixY = input.readFloat(),
-			mixScaleX = input.readFloat(), mixScaleY = input.readFloat(), mixShearY = input.readFloat();
+			  mixScaleX = input.readFloat(), mixScaleY = input.readFloat(), mixShearY = input.readFloat();
 		for (int frame = 0, bezier = 0;; frame++) {
 			timeline->setFrame(frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
 			if (frame == frameLast) break;
 			float time2 = input.readFloat(), mixRotate2 = input.readFloat(), mixX2 = input.readFloat(), mixY2 = input.readFloat(),
-				mixScaleX2 = input.readFloat(), mixScaleY2 = input.readFloat(), mixShearY2 = input.readFloat();
+				  mixScaleX2 = input.readFloat(), mixScaleY2 = input.readFloat(), mixShearY2 = input.readFloat();
 			int curveType = input.readByte();
 			switch (curveType) {
 				case CURVE_STEPPED:
@@ -1115,7 +1115,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 	// Path constraint timelines.
 	for (int i = 0, n = input.readInt(true); i < n; ++i) {
 		int index = input.readInt(true);
-		PathConstraintData *data = static_cast<PathConstraintData*>(skeletonData._constraints[index]);
+		PathConstraintData *data = static_cast<PathConstraintData *>(skeletonData._constraints[index]);
 		for (int ii = 0, nn = input.readInt(true); ii < nn; ii++) {
 			int type = input.readByte(), frameCount = input.readInt(true), bezierCount = input.readInt(true);
 			switch (type) {
@@ -1127,8 +1127,8 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 				case PATH_SPACING: {
 					readTimeline(input, timelines,
 								 *(new (__FILE__, __LINE__) PathConstraintSpacingTimeline(frameCount,
-																   bezierCount,
-																   index)),
+																						  bezierCount,
+																						  index)),
 								 data->_spacingMode == SpacingMode_Length ||
 												 data->_spacingMode == SpacingMode_Fixed
 										 ? scale
@@ -1309,7 +1309,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 							float time = input.readFloat();
 							int modeAndIndex = input.readInt();
 							float delay = input.readFloat();
-							timeline->setFrame(frame, time, (SequenceMode)(modeAndIndex & 0xf), modeAndIndex >> 4, delay);
+							timeline->setFrame(frame, time, (SequenceMode) (modeAndIndex & 0xf), modeAndIndex >> 4, delay);
 						}
 						timelines.add(timeline);
 						break;

@@ -27,57 +27,56 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/RTTI.h>
-#include <spine/SpineString.h>
+#include <spine/InheritTimeline.h>
+
+#include <spine/Event.h>
+#include <spine/Skeleton.h>
+
+#include <spine/Bone.h>
+#include <spine/BoneData.h>
+#include <spine/BoneLocal.h>
+#include <spine/Slot.h>
+#include <spine/SlotData.h>
 
 using namespace spine;
 
-RTTI::RTTI(const char *className) : _className(className), _pBaseRTTI(NULL), _interfaceCount(0) {
-	_interfaces[0] = NULL;
-	_interfaces[1] = NULL;
-	_interfaces[2] = NULL;
+RTTI_IMPL_MULTI(InheritTimeline, Timeline, BoneTimeline)
+
+InheritTimeline::InheritTimeline(size_t frameCount, int boneIndex) : Timeline(frameCount, ENTRIES),
+																	 BoneTimeline(boneIndex) {
+	PropertyId ids[] = {((PropertyId) Property_Inherit << 32) | boneIndex};
+	setPropertyIds(ids, 1);
 }
 
-RTTI::RTTI(const char *className, const RTTI &baseRTTI) : _className(className), _pBaseRTTI(&baseRTTI), _interfaceCount(0) {
-	_interfaces[0] = NULL;
-	_interfaces[1] = NULL;
-	_interfaces[2] = NULL;
+InheritTimeline::~InheritTimeline() {
 }
 
-RTTI::RTTI(const char *className, const RTTI &baseRTTI, const RTTI* interface1, const RTTI* interface2, const RTTI* interface3)
-	: _className(className), _pBaseRTTI(&baseRTTI), _interfaceCount(0) {
-	_interfaces[0] = interface1;
-	_interfaces[1] = interface2;
-	_interfaces[2] = interface3;
-	
-	if (interface1) _interfaceCount++;
-	if (interface2) _interfaceCount++;
-	if (interface3) _interfaceCount++;
+void InheritTimeline::setFrame(int frame, float time, Inherit inherit) {
+	frame *= ENTRIES;
+	_frames[frame] = time;
+	_frames[frame + INHERIT] = (float) inherit;
 }
 
-const char *RTTI::getClassName() const {
-	return _className;
-}
 
-bool RTTI::isExactly(const RTTI &rtti) const {
-	return !strcmp(this->_className, rtti._className);
-}
+void InheritTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
+							MixBlend blend, MixDirection direction, bool appliedPose) {
+	SP_UNUSED(lastTime);
+	SP_UNUSED(pEvents);
+	SP_UNUSED(alpha);
 
-bool RTTI::instanceOf(const RTTI &rtti) const {
-	// Check the main inheritance chain
-	const RTTI *pCompare = this;
-	while (pCompare) {
-		if (!strcmp(pCompare->_className, rtti._className)) return true;
-		
-		// Check interfaces at this level of the hierarchy
-		for (int i = 0; i < pCompare->_interfaceCount; i++) {
-			if (pCompare->_interfaces[i] && !strcmp(pCompare->_interfaces[i]->_className, rtti._className)) {
-				return true;
-			}
-		}
-		
-		pCompare = pCompare->_pBaseRTTI;
+	Bone *bone = skeleton._bones[_boneIndex];
+	if (!bone->isActive()) return;
+	BoneLocal &pose = appliedPose ? *bone->_applied : bone->_pose;
+
+	if (direction == MixDirection_Out) {
+		if (blend == MixBlend_Setup) pose._inherit = bone->_data._setup._inherit;
+		return;
 	}
-	
-	return false;
+
+	if (time < _frames[0]) {
+		if (blend == MixBlend_Setup || blend == MixBlend_First) pose._inherit = bone->_data._setup._inherit;
+	} else {
+		int idx = Animation::search(_frames, time, ENTRIES) + INHERIT;
+		pose._inherit = static_cast<Inherit>((int) _frames[idx]);
+	}
 }

@@ -27,42 +27,26 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/PathConstraintSpacingTimeline.h>
+#include <spine/LinkedMesh.h>
 
-#include <spine/Event.h>
-#include <spine/Skeleton.h>
-
-#include <spine/Animation.h>
-#include <spine/PathConstraint.h>
-#include <spine/PathConstraintData.h>
-#include <spine/Property.h>
-#include <spine/Slot.h>
-#include <spine/SlotData.h>
+#include <spine/MeshAttachment.h>
 
 using namespace spine;
 
-RTTI_IMPL(PathConstraintSpacingTimeline, ConstraintTimeline1)
-
-PathConstraintSpacingTimeline::PathConstraintSpacingTimeline(size_t frameCount, size_t bezierCount,
-															 int constraintIndex) : ConstraintTimeline1(frameCount,
-																									   bezierCount,
-																									   constraintIndex,
-																									   Property_PathConstraintSpacing) {
+LinkedMesh::LinkedMesh(MeshAttachment *mesh, const int skinIndex, size_t slotIndex, const String &parent,
+					   bool inheritTimelines) : _mesh(mesh),
+												_skinIndex(skinIndex),
+												_skin(""),
+												_slotIndex(slotIndex),
+												_parent(parent),
+												_inheritTimelines(inheritTimelines) {
 }
 
-PathConstraintSpacingTimeline::~PathConstraintSpacingTimeline() {
-}
-
-void PathConstraintSpacingTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents,
-										  float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
-	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
-	SP_UNUSED(direction);
-
-	PathConstraint *constraint = (PathConstraint *)skeleton._constraints[_constraintIndex];
-	if (constraint->isActive()) {
-		PathConstraintPose &pose = appliedPose ? *constraint->_applied : constraint->_pose;
-		PathConstraintData &data = constraint->_data;
-		pose._spacing = getAbsoluteValue(time, alpha, blend, pose._spacing, data._setup._spacing);
-	}
+LinkedMesh::LinkedMesh(MeshAttachment *mesh, const String &skin, size_t slotIndex, const String &parent,
+					   bool inheritTimelines) : _mesh(mesh),
+												_skinIndex(-1),
+												_skin(skin),
+												_slotIndex(slotIndex),
+												_parent(parent),
+												_inheritTimelines(inheritTimelines) {
 }

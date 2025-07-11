@@ -42,10 +42,10 @@
 using namespace spine;
 
 Animation::Animation(const String &name, Array<Timeline *> &timelines, float duration) : _timelines(),
-																						  _timelineIds(),
-																						  _bones(),
-																						  _duration(duration),
-																						  _name(name) {
+																						 _timelineIds(),
+																						 _bones(),
+																						 _duration(duration),
+																						 _name(name) {
 	setTimelines(timelines);
 }
 

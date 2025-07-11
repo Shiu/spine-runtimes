@@ -163,6 +163,6 @@ void PhysicsConstraintData::setMixGlobal(bool mixGlobal) {
 	_mixGlobal = mixGlobal;
 }
 
-Constraint* PhysicsConstraintData::create(Skeleton& skeleton) {
+Constraint *PhysicsConstraintData::create(Skeleton &skeleton) {
 	return new (__FILE__, __LINE__) PhysicsConstraint(*this, skeleton);
 }

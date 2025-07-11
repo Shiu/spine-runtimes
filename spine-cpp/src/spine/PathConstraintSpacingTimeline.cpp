@@ -27,40 +27,42 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/Bone.h>
-#include <spine/BoneData.h>
-#include <spine/BoneLocal.h>
-#include <spine/BonePose.h>
+#include <spine/PathConstraintSpacingTimeline.h>
+
+#include <spine/Event.h>
+#include <spine/Skeleton.h>
+
+#include <spine/Animation.h>
+#include <spine/PathConstraint.h>
+#include <spine/PathConstraintData.h>
+#include <spine/Property.h>
+#include <spine/Slot.h>
+#include <spine/SlotData.h>
 
 using namespace spine;
 
-RTTI_IMPL(Bone, Update)
+RTTI_IMPL(PathConstraintSpacingTimeline, ConstraintTimeline1)
 
-bool Bone::yDown = true;
-
-Bone::Bone(BoneData &data, Bone *parent) : PosedGeneric<BoneData, BoneLocal, BonePose>(data),
-										   PosedActive(),
-										   _parent(parent),
-										   _children(),
-										   _sorted(false) {
-	_constrained._bone = this;
-	_applied->_bone = this;
+PathConstraintSpacingTimeline::PathConstraintSpacingTimeline(size_t frameCount, size_t bezierCount,
+															 int constraintIndex) : ConstraintTimeline1(frameCount,
+																										bezierCount,
+																										constraintIndex,
+																										Property_PathConstraintSpacing) {
 }
 
-Bone::Bone(Bone &bone, Bone *parent) : PosedGeneric<BoneData, BoneLocal, BonePose>(bone._data),
-										PosedActive(),
-										_parent(parent),
-										_children(),
-										_sorted(false) {
-	_constrained._bone = this;
-	_applied->_bone = this;
-	_pose.set(bone._pose);
+PathConstraintSpacingTimeline::~PathConstraintSpacingTimeline() {
 }
 
-Bone *Bone::getParent() {
-	return _parent;
-}
+void PathConstraintSpacingTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents,
+										  float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
+	SP_UNUSED(lastTime);
+	SP_UNUSED(pEvents);
+	SP_UNUSED(direction);
 
-Array<Bone *> &Bone::getChildren() {
-	return _children;
+	PathConstraint *constraint = (PathConstraint *) skeleton._constraints[_constraintIndex];
+	if (constraint->isActive()) {
+		PathConstraintPose &pose = appliedPose ? *constraint->_applied : constraint->_pose;
+		PathConstraintData &data = constraint->_data;
+		pose._spacing = getAbsoluteValue(time, alpha, blend, pose._spacing, data._setup._spacing);
+	}
 }

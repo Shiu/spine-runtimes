@@ -162,8 +162,7 @@ ToProperty::~ToProperty() {
 float FromRotate::value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) {
 	if (local) return source._rotation + offsets[TransformConstraintData::ROTATION];
 	float sx = skeleton.getScaleX(), sy = skeleton.getScaleY();
-	float value = MathUtil::atan2(source._c / sy, source._a / sx) * MathUtil::Rad_Deg
-		+ ((source._a * source._d - source._b * source._c) * sx * sy > 0 ? offsets[TransformConstraintData::ROTATION] : -offsets[TransformConstraintData::ROTATION]);
+	float value = MathUtil::atan2(source._c / sy, source._a / sx) * MathUtil::Rad_Deg + ((source._a * source._d - source._b * source._c) * sx * sy > 0 ? offsets[TransformConstraintData::ROTATION] : -offsets[TransformConstraintData::ROTATION]);
 	if (value < 0) value += 360;
 	return value;
 }
@@ -182,7 +181,7 @@ void ToRotate::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose
 		if (!additive) value -= MathUtil::atan2(c, a);
 		if (value > MathUtil::Pi)
 			value -= MathUtil::Pi_2;
-		else if (value < -MathUtil::Pi) //
+		else if (value < -MathUtil::Pi)//
 			value += MathUtil::Pi_2;
 		value *= pose._mixRotate;
 		float cosVal = MathUtil::cos(value), sinVal = MathUtil::sin(value);
@@ -241,7 +240,7 @@ void ToScaleX::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose
 	if (local) {
 		if (additive)
 			bone._scaleX *= 1 + (value - 1) * pose._mixScaleX;
-		else if (bone._scaleX != 0) //
+		else if (bone._scaleX != 0)//
 			bone._scaleX += (value - bone._scaleX) * pose._mixScaleX;
 	} else if (additive) {
 		float s = 1 + (value - 1) * pose._mixScaleX;
@@ -271,7 +270,7 @@ void ToScaleY::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose
 	if (local) {
 		if (additive)
 			bone._scaleY *= 1 + (value - 1) * pose._mixScaleY;
-		else if (bone._scaleY != 0) //
+		else if (bone._scaleY != 0)//
 			bone._scaleY += (value - bone._scaleY) * pose._mixScaleY;
 	} else if (additive) {
 		float s = 1 + (value - 1) * pose._mixScaleY;
@@ -310,7 +309,7 @@ void ToShearY::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose
 			value -= by - MathUtil::atan2(bone._c / sy, bone._a / sx);
 			if (value > MathUtil::Pi)
 				value -= MathUtil::Pi_2;
-			else if (value < -MathUtil::Pi) //
+			else if (value < -MathUtil::Pi)//
 				value += MathUtil::Pi_2;
 		}
 		value = by + value * pose._mixShearY;
@@ -333,6 +332,6 @@ TransformConstraintData::~TransformConstraintData() {
 	_properties.clear();
 }
 
-Constraint* TransformConstraintData::create(Skeleton& skeleton) {
+Constraint *TransformConstraintData::create(Skeleton &skeleton) {
 	return new (__FILE__, __LINE__) TransformConstraint(*this, skeleton);
 }

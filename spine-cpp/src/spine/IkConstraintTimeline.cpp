@@ -135,7 +135,7 @@ void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time,
 			if (direction == MixDirection_Out) return;
 			break;
 	}
-	pose._bendDirection = (int)_frames[i + BEND_DIRECTION];
+	pose._bendDirection = (int) _frames[i + BEND_DIRECTION];
 	pose._compress = _frames[i + COMPRESS] != 0;
 	pose._stretch = _frames[i + STRETCH] != 0;
 }

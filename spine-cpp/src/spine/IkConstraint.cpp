@@ -310,4 +310,3 @@ outer_break:
 		a2 += 360;
 	child._rotation += a2 * mix;
 }
-

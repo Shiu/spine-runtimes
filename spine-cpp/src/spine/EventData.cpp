@@ -27,66 +27,72 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/Event.h>
-
 #include <spine/EventData.h>
+
+#include <assert.h>
 
 using namespace spine;
 
-Event::Event(float time, const EventData &data) : _data(data),
-																_time(time),
-																_intValue(data.getIntValue()),
-																_floatValue(data.getFloatValue()),
-																_stringValue(data.getStringValue()),
-																_volume(data.getVolume()),
-																_balance(data.getBalance()) {
+EventData::EventData(const String &name) : _name(name),
+										   _intValue(0),
+										   _floatValue(0),
+										   _stringValue(),
+										   _audioPath(),
+										   _volume(1),
+										   _balance(0) {
+	assert(_name.length() > 0);
 }
 
-const EventData &Event::getData() {
-	return _data;
+/// The name of the event, which is unique within the skeleton.
+const String &EventData::getName() const {
+	return _name;
 }
 
-float Event::getTime() {
-	return _time;
-}
-
-int Event::getInt() {
+int EventData::getIntValue() const {
 	return _intValue;
 }
 
-void Event::setInt(int inValue) {
+void EventData::setIntValue(int inValue) {
 	_intValue = inValue;
 }
 
-float Event::getFloat() {
+float EventData::getFloatValue() const {
 	return _floatValue;
 }
 
-void Event::setFloat(float inValue) {
+void EventData::setFloatValue(float inValue) {
 	_floatValue = inValue;
 }
 
-const String &Event::getString() {
+const String &EventData::getStringValue() const {
 	return _stringValue;
 }
 
-void Event::setString(const String &inValue) {
-	_stringValue = inValue;
+void EventData::setStringValue(const String &inValue) {
+	this->_stringValue = inValue;
+}
+
+const String &EventData::getAudioPath() const {
+	return _audioPath;
+}
+
+void EventData::setAudioPath(const String &inValue) {
+	_audioPath = inValue;
 }
 
 
-float Event::getVolume() {
+float EventData::getVolume() const {
 	return _volume;
 }
 
-void Event::setVolume(float inValue) {
+void EventData::setVolume(float inValue) {
 	_volume = inValue;
 }
 
-float Event::getBalance() {
+float EventData::getBalance() const {
 	return _balance;
 }
 
-void Event::setBalance(float inValue) {
+void EventData::setBalance(float inValue) {
 	_balance = inValue;
 }

@@ -90,6 +90,6 @@ void PathConstraintData::setOffsetRotation(float offsetRotation) {
 	_offsetRotation = offsetRotation;
 }
 
-Constraint* PathConstraintData::create(Skeleton& skeleton) {
+Constraint *PathConstraintData::create(Skeleton &skeleton) {
 	return new (__FILE__, __LINE__) PathConstraint(*this, skeleton);
 }

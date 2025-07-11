@@ -45,9 +45,9 @@ RTTI_IMPL(PathConstraintPositionTimeline, ConstraintTimeline1)
 
 PathConstraintPositionTimeline::PathConstraintPositionTimeline(size_t frameCount, size_t bezierCount,
 															   int constraintIndex) : ConstraintTimeline1(frameCount,
-																											  bezierCount,
-																											  constraintIndex,
-																											  Property_PathConstraintPosition) {
+																										  bezierCount,
+																										  constraintIndex,
+																										  Property_PathConstraintPosition) {
 }
 
 PathConstraintPositionTimeline::~PathConstraintPositionTimeline() {

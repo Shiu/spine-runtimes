@@ -60,7 +60,7 @@
 using namespace spine;
 
 Skeleton::Skeleton(SkeletonData &skeletonData) : _data(skeletonData), _skin(NULL), _color(1, 1, 1, 1), _x(0), _y(0),
-	_scaleX(1), _scaleY(1), _windX(1), _windY(0), _gravityX(0), _gravityY(1), _time(0), _update(0) {
+												 _scaleX(1), _scaleY(1), _windX(1), _windY(0), _gravityX(0), _gravityY(1), _time(0), _update(0) {
 
 	_bones.ensureCapacity(_data.getBones().size());
 	for (size_t i = 0; i < _data.getBones().size(); ++i) {
@@ -93,7 +93,7 @@ Skeleton::Skeleton(SkeletonData &skeletonData) : _data(skeletonData), _skin(NULL
 		ConstraintData *constraintData = _data.getConstraints()[i];
 		Constraint *constraint = constraintData->create(*this);
 		if (constraint->getRTTI().instanceOf(PhysicsConstraint::rtti)) {
-			_physics.add(static_cast<PhysicsConstraint*>(constraint));
+			_physics.add(static_cast<PhysicsConstraint *>(constraint));
 		}
 		_constraints.add(constraint);
 	}
@@ -145,7 +145,7 @@ void Skeleton::updateCache() {
 	for (size_t i = 0; i < n; i++) {
 		Constraint *constraint = constraints[i];
 		constraint->_active = constraint->isSourceActive() &&
-			((!constraint->getData().isSkinRequired()) || (_skin && _skin->_constraints.contains(&constraint->getData())));
+							  ((!constraint->getData().isSkinRequired()) || (_skin && _skin->_constraints.contains(&constraint->getData())));
 		if (constraint->_active) constraint->sort(*this);
 	}
 
@@ -158,7 +158,7 @@ void Skeleton::updateCache() {
 	for (size_t i = 0; i < n; i++) {
 		const RTTI &rtti = updateCache[i]->getRTTI();
 		if (rtti.instanceOf(Bone::rtti)) {
-			Bone *bone = (Bone*)(updateCache[i]);
+			Bone *bone = (Bone *) (updateCache[i]);
 			updateCache[i] = bone->_applied;
 		}
 	}
@@ -200,7 +200,7 @@ void Skeleton::sortBone(Bone *bone) {
 	Bone *parent = bone->_parent;
 	if (parent != NULL) sortBone(parent);
 	bone->_sorted = true;
-	_updateCache.add((Update *)bone);
+	_updateCache.add((Update *) bone);
 }
 
 void Skeleton::sortReset(Array<Bone *> &bones) {

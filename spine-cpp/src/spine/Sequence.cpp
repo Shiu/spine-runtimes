@@ -27,56 +27,72 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/InheritTimeline.h>
-
-#include <spine/Event.h>
-#include <spine/Skeleton.h>
-
-#include <spine/Bone.h>
-#include <spine/BoneData.h>
-#include <spine/BoneLocal.h>
+#include <spine/Sequence.h>
 #include <spine/Slot.h>
-#include <spine/SlotData.h>
+#include <spine/SlotPose.h>
+#include <spine/Attachment.h>
+#include <spine/RegionAttachment.h>
+#include <spine/MeshAttachment.h>
 
 using namespace spine;
 
-RTTI_IMPL_MULTI(InheritTimeline, Timeline, BoneTimeline)
+int Sequence::_nextID = 0;
 
-InheritTimeline::InheritTimeline(size_t frameCount, int boneIndex) : Timeline(frameCount, ENTRIES),
-																		BoneTimeline(boneIndex) {
-	PropertyId ids[] = {((PropertyId) Property_Inherit << 32) | boneIndex};
-	setPropertyIds(ids, 1);
+Sequence::Sequence(int count) : _id(nextID()),
+								_regions(),
+								_start(0),
+								_digits(0),
+								_setupIndex(0) {
+	_regions.setSize(count, NULL);
 }
 
-InheritTimeline::~InheritTimeline() {
+Sequence::~Sequence() {
 }
 
-void InheritTimeline::setFrame(int frame, float time, Inherit inherit) {
-	frame *= ENTRIES;
-	_frames[frame] = time;
-	_frames[frame + INHERIT] = (float)inherit;
+Sequence *Sequence::copy() {
+	Sequence *copy = new (__FILE__, __LINE__) Sequence((int) _regions.size());
+	for (size_t i = 0; i < _regions.size(); i++) {
+		copy->_regions[i] = _regions[i];
+	}
+	copy->_start = _start;
+	copy->_digits = _digits;
+	copy->_setupIndex = _setupIndex;
+	return copy;
 }
 
+void Sequence::apply(SlotPose *slot, Attachment *attachment) {
+	int index = slot->getSequenceIndex();
+	if (index == -1) index = _setupIndex;
+	if (index >= (int) _regions.size()) index = (int) _regions.size() - 1;
+	TextureRegion *region = _regions[index];
 
-void InheritTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
-							MixBlend blend, MixDirection direction, bool appliedPose) {
-	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
-	SP_UNUSED(alpha);
-
-	Bone *bone = skeleton._bones[_boneIndex];
-	if (!bone->isActive()) return;
-	BoneLocal &pose = appliedPose ? *bone->_applied : bone->_pose;
-
-	if (direction == MixDirection_Out) {
-		if (blend == MixBlend_Setup) pose._inherit = bone->_data._setup._inherit;
-		return;
+	if (attachment->getRTTI().isExactly(RegionAttachment::rtti)) {
+		RegionAttachment *regionAttachment = static_cast<RegionAttachment *>(attachment);
+		if (regionAttachment->getRegion() != region) {
+			regionAttachment->setRegion(region);
+			regionAttachment->updateRegion();
+		}
 	}
 
-	if (time < _frames[0]) {
-		if (blend == MixBlend_Setup || blend == MixBlend_First) pose._inherit = bone->_data._setup._inherit;
-	} else {
-		int idx = Animation::search(_frames, time, ENTRIES) + INHERIT;
-		pose._inherit = static_cast<Inherit>((int)_frames[idx]);
+	if (attachment->getRTTI().isExactly(MeshAttachment::rtti)) {
+		MeshAttachment *meshAttachment = static_cast<MeshAttachment *>(attachment);
+		if (meshAttachment->getRegion() != region) {
+			meshAttachment->setRegion(region);
+			meshAttachment->updateRegion();
+		}
 	}
+}
+
+String &Sequence::getPath(const String &basePath, int index) {
+	_tmpPath = basePath;
+	String frame;
+	frame.append(_start + index);
+	for (int i = _digits - (int) frame.length(); i > 0; i--)
+		_tmpPath.append("0");
+	_tmpPath.append(frame);
+	return _tmpPath;
+}
+
+int Sequence::nextID() {
+	return _nextID++;
 }

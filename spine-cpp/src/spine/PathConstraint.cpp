@@ -63,8 +63,8 @@ PathConstraint::PathConstraint(PathConstraintData &data, Skeleton &skeleton) : C
 	_segments.setSize(10, 0);
 }
 
-PathConstraint* PathConstraint::copy(Skeleton &skeleton) {
-	PathConstraint* copy = new (__FILE__, __LINE__) PathConstraint(_data, skeleton);
+PathConstraint *PathConstraint::copy(Skeleton &skeleton) {
+	PathConstraint *copy = new (__FILE__, __LINE__) PathConstraint(_data, skeleton);
 	copy->_pose.set(_pose);
 	return copy;
 }
@@ -532,7 +532,7 @@ void PathConstraint::addCurvePosition(float p, float x1, float y1, float cx1, fl
 			output[o + 2] = MathUtil::atan2(cy1 - y1, cx1 - x1);
 		else
 			output[o + 2] = MathUtil::atan2(y - (y1 * uu + cy1 * ut * 2 + cy2 * tt),
-											   x - (x1 * uu + cx1 * ut * 2 + cx2 * tt));
+											x - (x1 * uu + cx1 * ut * 2 + cx2 * tt));
 	}
 }
 
@@ -540,7 +540,7 @@ void PathConstraint::sortPathSlot(Skeleton &skeleton, Skin &skin, int slotIndex,
 	Skin::AttachmentMap::Entries entries = skin.getAttachments();
 	while (entries.hasNext()) {
 		Skin::AttachmentMap::Entry &entry = entries.next();
-		if (entry._slotIndex == (size_t)slotIndex) sortPath(skeleton, entry._attachment, slotBone);
+		if (entry._slotIndex == (size_t) slotIndex) sortPath(skeleton, entry._attachment, slotBone);
 	}
 }
 
@@ -555,7 +555,7 @@ void PathConstraint::sortPath(Skeleton &skeleton, Attachment *attachment, Bone &
 		for (size_t i = 0, n = pathBones.size(); i < n;) {
 			int nn = pathBones[i++];
 			nn += i;
-			while (i < (size_t)nn)
+			while (i < (size_t) nn)
 				skeleton.sortBone(bones[pathBones[i++]]);
 		}
 	}

@@ -27,40 +27,40 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <spine/IkConstraintData.h>
-#include <spine/IkConstraint.h>
+#include <spine/Bone.h>
 #include <spine/BoneData.h>
-#include <spine/Skeleton.h>
+#include <spine/BoneLocal.h>
+#include <spine/BonePose.h>
 
 using namespace spine;
 
-RTTI_IMPL(IkConstraintData, ConstraintData)
+RTTI_IMPL(Bone, Update)
 
-IkConstraintData::IkConstraintData(const String &name) : ConstraintDataGeneric<IkConstraint, IkConstraintPose>(name),
-														 _target(NULL),
-														 _uniform(false) {
+bool Bone::yDown = true;
+
+Bone::Bone(BoneData &data, Bone *parent) : PosedGeneric<BoneData, BoneLocal, BonePose>(data),
+										   PosedActive(),
+										   _parent(parent),
+										   _children(),
+										   _sorted(false) {
+	_constrained._bone = this;
+	_applied->_bone = this;
 }
 
-Array<BoneData *> &IkConstraintData::getBones() {
-	return _bones;
+Bone::Bone(Bone &bone, Bone *parent) : PosedGeneric<BoneData, BoneLocal, BonePose>(bone._data),
+									   PosedActive(),
+									   _parent(parent),
+									   _children(),
+									   _sorted(false) {
+	_constrained._bone = this;
+	_applied->_bone = this;
+	_pose.set(bone._pose);
 }
 
-BoneData *IkConstraintData::getTarget() {
-	return _target;
+Bone *Bone::getParent() {
+	return _parent;
 }
 
-void IkConstraintData::setTarget(BoneData *inValue) {
-	_target = inValue;
-}
-
-bool IkConstraintData::getUniform() {
-	return _uniform;
-}
-
-void IkConstraintData::setUniform(bool uniform) {
-	_uniform = uniform;
-}
-
-Constraint* IkConstraintData::create(Skeleton& skeleton) {
-	return new (__FILE__, __LINE__) IkConstraint(*this, skeleton);
+Array<Bone *> &Bone::getChildren() {
+	return _children;
 }

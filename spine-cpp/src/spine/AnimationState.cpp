@@ -749,7 +749,7 @@ void AnimationState::applyRotateTimeline(RotateTimeline *rotateTimeline, Skeleto
 	if (firstFrame) timelinesRotation[i] = 0;
 
 	if (alpha == 1) {
-		static_cast<Timeline*>(rotateTimeline)->apply(skeleton, 0, time, NULL, 1, blend, MixDirection_In, false);
+		static_cast<Timeline *>(rotateTimeline)->apply(skeleton, 0, time, NULL, 1, blend, MixDirection_In, false);
 		return;
 	}
 
