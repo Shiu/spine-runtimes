@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "debug-printer (c)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/debug-printer",
+            "args": [
+                "${workspaceFolder}/../examples/spineboy/export/spineboy-pro.json",
+                "${workspaceFolder}/../examples/spineboy/export/spineboy-pma.atlas",
+                "run"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "CMake: build"
+        }
+    ]
+}

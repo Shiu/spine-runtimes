@@ -129,14 +129,16 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-	if (argc < 4) {
-		fprintf(stderr, "Usage: DebugPrinter <skeleton-path> <atlas-path> <animation-name>\n");
+	if (argc < 3) {
+		fprintf(stderr, "Usage: DebugPrinter <skeleton-path> <atlas-path> [animation-name]\n");
 		return 1;
 	}
 
+	Bone::setYDown(false);
+
 	const char *skeletonPath = argv[1];
 	const char *atlasPath = argv[2];
-	const char *animationName = argv[3];
+	const char *animationName = argc >= 4 ? argv[3] : nullptr;
 
 	// Load atlas with headless texture loader
 	HeadlessTextureLoader textureLoader;
@@ -171,21 +173,24 @@ int main(int argc, char *argv[]) {
 	AnimationStateData stateData(skeletonData);
 	AnimationState state(&stateData);
 
-	// Find and set animation
-	Animation *animation = skeletonData->findAnimation(animationName);
-	if (!animation) {
-		fprintf(stderr, "Animation not found: %s\n", animationName);
-		delete skeletonData;
-		delete atlas;
-		return 1;
+	skeleton.setupPose();
+
+	// Set animation or setup pose
+	if (animationName != nullptr) {
+		// Find and set animation
+		Animation *animation = skeletonData->findAnimation(animationName);
+		if (!animation) {
+			fprintf(stderr, "Animation not found: %s\n", animationName);
+			delete skeletonData;
+			delete atlas;
+			return 1;
+		}
+		state.setAnimation(0, animation, true);
+		// Update and apply
+		state.update(0.016f);
+		state.apply(skeleton);
 	}
 
-	state.setAnimation(0, animation, true);
-
-	// Update and apply
-	state.update(0.016f);
-	state.apply(skeleton);
-	skeleton.update(0.016f);
 	skeleton.updateWorldTransform(Physics_Update);
 
 	// Print skeleton state

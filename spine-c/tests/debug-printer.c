@@ -128,14 +128,16 @@ uint8_t *read_file(const char *path, int *length) {
 }
 
 int main(int argc, char *argv[]) {
-	if (argc < 4) {
-		fprintf(stderr, "Usage: DebugPrinter <skeleton-path> <atlas-path> <animation-name>\n");
+	if (argc < 3) {
+		fprintf(stderr, "Usage: DebugPrinter <skeleton-path> <atlas-path> [animation-name]\n");
 		return 1;
 	}
 
+	spine_bone_set_y_down(false);
+
 	const char *skeletonPath = argv[1];
 	const char *atlasPath = argv[2];
-	const char *animationName = argv[3];
+	const char *animationName = argc >= 4 ? argv[3] : NULL;
 
 	// Read atlas file
 	int atlasLength = 0;
@@ -210,24 +212,27 @@ int main(int argc, char *argv[]) {
 	spine_animation_state_data stateData = spine_animation_state_data_create(skeletonData);
 	spine_animation_state state = spine_animation_state_create(stateData);
 
-	// Find and set animation
-	spine_animation animation = spine_skeleton_data_find_animation(skeletonData, animationName);
-	if (!animation) {
-		fprintf(stderr, "Animation not found: %s\n", animationName);
-		spine_animation_state_dispose(state);
-		spine_animation_state_data_dispose(stateData);
-		spine_skeleton_dispose(skeleton);
-		spine_skeleton_data_result_dispose(result);
-		spine_atlas_dispose(atlas);
-		return 1;
+	spine_skeleton_setup_pose(skeleton);
+
+	// Set animation or setup pose
+	if (animationName != NULL) {
+		// Find and set animation
+		spine_animation animation = spine_skeleton_data_find_animation(skeletonData, animationName);
+		if (!animation) {
+			fprintf(stderr, "Animation not found: %s\n", animationName);
+			spine_animation_state_dispose(state);
+			spine_animation_state_data_dispose(stateData);
+			spine_skeleton_dispose(skeleton);
+			spine_skeleton_data_result_dispose(result);
+			spine_atlas_dispose(atlas);
+			return 1;
+		}
+		spine_animation_state_set_animation_1(state, 0, animationName, 1);
+		// Update and apply
+		spine_animation_state_update(state, 0.016f);
+		spine_animation_state_apply(state, skeleton);
 	}
 
-	spine_animation_state_set_animation_1(state, 0, animationName, 1);
-
-	// Update and apply
-	spine_animation_state_update(state, 0.016f);
-	spine_animation_state_apply(state, skeleton);
-	spine_skeleton_update(skeleton, 0.016f);
 	spine_skeleton_update_world_transform_1(skeleton, SPINE_PHYSICS_UPDATE);
 
 	// Print skeleton state

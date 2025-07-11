@@ -9,7 +9,8 @@
 		"**/*.ts"
 	],
 	"exclude": [
-		"dist/**/*.d.ts"
+		"dist/**/*.d.ts",
+		"tests/**/*.ts"
 	],
 	"references": []
 }

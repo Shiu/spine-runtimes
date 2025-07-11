@@ -1,0 +1,12 @@
+{
+  "name": "spine-tests",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "compare": "tsx compare-with-reference-impl.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0"
+  }
+}

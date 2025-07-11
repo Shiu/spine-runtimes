@@ -33,7 +33,7 @@ import com.badlogic.gdx.utils.Null;
 
 import com.esotericsoftware.spine.TransformConstraintData.FromProperty;
 
-/** Stores the setup pose for a {@link Slider}.  */
+/** Stores the setup pose for a {@link Slider}. */
 public class SliderData extends ConstraintData<Slider, SliderPose> {
 	Animation animation;
 	boolean additive, loop;

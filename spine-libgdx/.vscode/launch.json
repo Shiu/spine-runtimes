@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "debug-printer (java)",
+            "request": "launch",
+            "mainClass": "com.esotericsoftware.spine.DebugPrinter",
+            "projectName": "spine-libgdx-tests",
+            "args": [
+                "${workspaceFolder}/../examples/spineboy/export/spineboy-pro.json",
+                "${workspaceFolder}/../examples/spineboy/export/spineboy-pma.atlas",
+                "run"
+            ],
+        }
+    ]
+}

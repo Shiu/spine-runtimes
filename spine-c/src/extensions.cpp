@@ -288,21 +288,22 @@ spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, cons
     }
 
     // Set name from path if provided
-    if (path != nullptr) {
+    if (path != nullptr && data != nullptr) {
+        String pathStr(path);
+
         // Extract filename without extension from path
-        const char *lastSlash = strrchr(path, '/');
-        const char *lastBackslash = strrchr(path, '\\');
-        const char *start = path;
+        int lastSlash = pathStr.lastIndexOf('/');
+        int lastBackslash = pathStr.lastIndexOf('\\');
+        int start = 0;
 
-        if (lastSlash != nullptr) start = lastSlash + 1;
-        if (lastBackslash != nullptr && lastBackslash > start) start = lastBackslash + 1;
+        if (lastSlash != -1) start = lastSlash + 1;
+        if (lastBackslash != -1 && lastBackslash > start) start = lastBackslash + 1;
 
-        const char *lastDot = strrchr(start, '.');
-        if (lastDot != nullptr) {
-            int length = lastDot - start;
-            data->setName(String(start, length));
+        int lastDot = pathStr.lastIndexOf('.');
+        if (lastDot != -1 && lastDot > start) {
+            data->setName(pathStr.substring(start, lastDot - start));
         } else {
-            data->setName(String(start));
+            data->setName(pathStr.substring(start));
         }
     }
 
@@ -323,21 +324,22 @@ spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, co
     }
 
     // Set name from path if provided
-    if (path != nullptr) {
+    if (path != nullptr && data != nullptr) {
+        String pathStr(path);
+
         // Extract filename without extension from path
-        const char *lastSlash = strrchr(path, '/');
-        const char *lastBackslash = strrchr(path, '\\');
-        const char *start = path;
+        int lastSlash = pathStr.lastIndexOf('/');
+        int lastBackslash = pathStr.lastIndexOf('\\');
+        int start = 0;
 
-        if (lastSlash != nullptr) start = lastSlash + 1;
-        if (lastBackslash != nullptr && lastBackslash > start) start = lastBackslash + 1;
+        if (lastSlash != -1) start = lastSlash + 1;
+        if (lastBackslash != -1 && lastBackslash > start) start = lastBackslash + 1;
 
-        const char *lastDot = strrchr(start, '.');
-        if (lastDot != nullptr) {
-            int length = lastDot - start;
-            data->setName(String(start, length));
+        int lastDot = pathStr.lastIndexOf('.');
+        if (lastDot != -1 && lastDot > start) {
+            data->setName(pathStr.substring(start, lastDot - start));
         } else {
-            data->setName(String(start));
+            data->setName(pathStr.substring(start));
         }
     }
 

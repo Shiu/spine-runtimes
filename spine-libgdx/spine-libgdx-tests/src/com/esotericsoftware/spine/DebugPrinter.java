@@ -222,18 +222,22 @@ public class DebugPrinter implements ApplicationListener {
 			AnimationStateData stateData = new AnimationStateData(skeletonData);
 			AnimationState state = new AnimationState(stateData);
 
-			// Find and set animation
-			Animation animation = skeletonData.findAnimation(animationName);
-			if (animation == null) {
-				System.err.println("Animation not found: " + animationName);
-				System.exit(1);
+			skeleton.setupPose();
+
+			// Set animation or setup pose
+			if (animationName != null) {
+				// Find and set animation
+				Animation animation = skeletonData.findAnimation(animationName);
+				if (animation == null) {
+					System.err.println("Animation not found: " + animationName);
+					System.exit(1);
+				}
+				state.setAnimation(0, animation, true);
+				// Update and apply
+				state.update(0.016f);
+				state.apply(skeleton);
 			}
 
-			state.setAnimation(0, animation, true);
-
-			// Update and apply
-			state.update(0.016f);
-			state.apply(skeleton);
 			skeleton.update(0.016f);
 			skeleton.updateWorldTransform(Physics.update);
 
@@ -271,13 +275,14 @@ public class DebugPrinter implements ApplicationListener {
 	}
 
 	public static void main (String[] args) {
-		if (args.length < 3) {
-			System.err.println("Usage: DebugPrinter <skeleton-path> <atlas-path> <animation-name>");
+		if (args.length < 2) {
+			System.err.println("Usage: DebugPrinter <skeleton-path> <atlas-path> [animation-name]");
 			System.exit(1);
 		}
 
 		HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
 		config.updatesPerSecond = 60;
-		new HeadlessApplication(new DebugPrinter(args[0], args[1], args[2]), config);
+		String animationName = args.length >= 3 ? args[2] : null;
+		new HeadlessApplication(new DebugPrinter(args[0], args[1], animationName), config);
 	}
 }
