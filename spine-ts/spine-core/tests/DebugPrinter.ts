@@ -120,7 +120,6 @@ class DebugPrinter {
         try {
             // Load atlas
             const atlasData = await fs.readFile(atlasPath, 'utf8');
-            const atlasDir = path.dirname(atlasPath);
             const atlas = new TextureAtlas(atlasData);
 
             // Load skeleton data

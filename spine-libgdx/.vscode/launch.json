@@ -12,6 +12,14 @@
                 "${workspaceFolder}/../examples/spineboy/export/spineboy-pma.atlas",
                 "run"
             ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "sourcePaths": [
+                "${workspaceFolder}/spine-libgdx-tests/src",
+                "${workspaceFolder}/spine-libgdx/src",
+                "${workspaceFolder}/../libgdx/gdx/src"
+
+            ]
         }
     ]
 }
