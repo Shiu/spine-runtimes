@@ -40,7 +40,7 @@ const char* spine_event_get_string(spine_event self) {
 }
 
 void spine_event_set_string(spine_event self, const char* inValue) {
-    ((Event*)self)->setString(*((const String*)inValue));
+    ((Event*)self)->setString(String(inValue));
 }
 
 float spine_event_get_volume(spine_event self) {

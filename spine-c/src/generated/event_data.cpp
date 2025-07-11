@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_event_data spine_event_data_create(const char* name) {
-    return (spine_event_data) new (__FILE__, __LINE__) EventData(*((const String*)name));
+    return (spine_event_data) new (__FILE__, __LINE__) EventData(String(name));
 }
 
 void spine_event_data_dispose(spine_event_data self) {
@@ -36,7 +36,7 @@ const char* spine_event_data_get_string_value(spine_event_data self) {
 }
 
 void spine_event_data_set_string_value(spine_event_data self, const char* inValue) {
-    ((EventData*)self)->setStringValue(*((const String*)inValue));
+    ((EventData*)self)->setStringValue(String(inValue));
 }
 
 const char* spine_event_data_get_audio_path(spine_event_data self) {
@@ -44,7 +44,7 @@ const char* spine_event_data_get_audio_path(spine_event_data self) {
 }
 
 void spine_event_data_set_audio_path(spine_event_data self, const char* inValue) {
-    ((EventData*)self)->setAudioPath(*((const String*)inValue));
+    ((EventData*)self)->setAudioPath(String(inValue));
 }
 
 float spine_event_data_get_volume(spine_event_data self) {

@@ -581,6 +581,11 @@ function convertArgumentToCpp(cppType: string, cParamName: string, isOutput: boo
         return `String(${cParamName})`;
     }
 
+    // Handle const String* parameters
+    if (cppType === 'const String*') {
+        return `(const String*)${cParamName}`;
+    }
+
     // Handle pointer parameters (need to cast from opaque type)
     if (cppType.endsWith('*')) {
         const baseType = cppType.slice(0, -1).trim();
@@ -609,6 +614,11 @@ function convertArgumentToCpp(cppType: string, cParamName: string, isOutput: boo
                 // It's a pointer, just cast and use directly
                 return `(${actualType})${cParamName}`;
             }
+        }
+
+        // Handle String& and const String& in reference context
+        if (baseType === 'String' || baseType === 'const String') {
+            return `String(${cParamName})`;
         }
 
         // Class references need to dereference the pointer

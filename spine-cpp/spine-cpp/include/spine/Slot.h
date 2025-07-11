@@ -35,6 +35,7 @@
 #include <spine/SlotPose.h>
 #include <spine/Array.h>
 #include <spine/Color.h>
+#include <spine/Update.h>
 
 namespace spine {
 	class Bone;

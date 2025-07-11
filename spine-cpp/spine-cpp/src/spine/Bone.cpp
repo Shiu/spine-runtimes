@@ -34,7 +34,7 @@
 
 using namespace spine;
 
-RTTI_IMPL_NOPARENT(Bone)
+RTTI_IMPL(Bone, Update)
 
 bool Bone::yDown = true;
 

@@ -10,10 +10,6 @@ file(GLOB SOURCES "spine-cpp/src/**/*.cpp")
 add_library(spine-cpp STATIC ${SOURCES} ${INCLUDES})
 target_include_directories(spine-cpp PUBLIC spine-cpp/include)
 
-# Commented out spine-cpp-lite build as it's not compatible with 4.3-beta API
-# add_library(spine-cpp-lite STATIC ${SOURCES} ${INCLUDES} spine-cpp-lite/spine-cpp-lite.cpp)
-# target_include_directories(spine-cpp-lite PUBLIC spine-cpp/include spine-cpp-lite)
-
 # Install target
 install(TARGETS spine-cpp EXPORT spine-cpp_TARGETS DESTINATION dist/lib)
 install(FILES ${INCLUDES} DESTINATION dist/include)

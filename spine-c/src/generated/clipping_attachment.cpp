@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_clipping_attachment spine_clipping_attachment_create(const char* name) {
-    return (spine_clipping_attachment) new (__FILE__, __LINE__) ClippingAttachment(*((const String*)name));
+    return (spine_clipping_attachment) new (__FILE__, __LINE__) ClippingAttachment(String(name));
 }
 
 void spine_clipping_attachment_dispose(spine_clipping_attachment self) {

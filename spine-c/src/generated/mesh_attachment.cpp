@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_mesh_attachment spine_mesh_attachment_create(const char* name) {
-    return (spine_mesh_attachment) new (__FILE__, __LINE__) MeshAttachment(*((const String*)name));
+    return (spine_mesh_attachment) new (__FILE__, __LINE__) MeshAttachment(String(name));
 }
 
 void spine_mesh_attachment_dispose(spine_mesh_attachment self) {
@@ -64,7 +64,7 @@ const char* spine_mesh_attachment_get_path(spine_mesh_attachment self) {
 }
 
 void spine_mesh_attachment_set_path(spine_mesh_attachment self, const char* inValue) {
-    ((MeshAttachment*)self)->setPath(*((const String*)inValue));
+    ((MeshAttachment*)self)->setPath(String(inValue));
 }
 
 spine_texture_region spine_mesh_attachment_get_region(spine_mesh_attachment self) {

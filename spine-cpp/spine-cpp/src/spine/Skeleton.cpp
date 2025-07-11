@@ -35,6 +35,7 @@
 #include <spine/IkConstraint.h>
 #include <spine/PathConstraint.h>
 #include <spine/PhysicsConstraint.h>
+#include <spine/Slider.h>
 #include <spine/SkeletonData.h>
 #include <spine/Skin.h>
 #include <spine/Slot.h>
@@ -155,7 +156,8 @@ void Skeleton::updateCache() {
 	Update **updateCache = _updateCache.buffer();
 	n = _updateCache.size();
 	for (size_t i = 0; i < n; i++) {
-		if (updateCache[i]->getRTTI().instanceOf(Bone::rtti)) {
+		const RTTI &rtti = updateCache[i]->getRTTI();
+		if (rtti.instanceOf(Bone::rtti)) {
 			Bone *bone = (Bone*)(updateCache[i]);
 			updateCache[i] = bone->_applied;
 		}
@@ -179,6 +181,9 @@ void Skeleton::printUpdateCache() {
 		} else if (updatable->getRTTI().isExactly(PhysicsConstraint::rtti)) {
 			printf("physics constraint %s\n",
 				   ((PhysicsConstraint *) updatable)->getData().getName().buffer());
+		} else if (updatable->getRTTI().isExactly(Slider::rtti)) {
+			printf("slider %s\n",
+				   ((Slider *) updatable)->getData().getName().buffer());
 		}
 	}
 }

@@ -20,7 +20,7 @@ void spine_sequence_apply(spine_sequence self, spine_slot_pose slot, spine_attac
 }
 
 const char* spine_sequence_get_path(spine_sequence self, const char* basePath, int index) {
-    return ((Sequence*)self)->getPath(*((const String*)basePath), index).buffer();
+    return ((Sequence*)self)->getPath(String(basePath), index).buffer();
 }
 
 int spine_sequence_get_id(spine_sequence self) {

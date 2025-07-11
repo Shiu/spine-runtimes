@@ -69,11 +69,14 @@ int main() {
 	GlTextureLoader textureLoader;
 	Atlas *atlas = new Atlas("data/spineboy-pma.atlas", &textureLoader);
 	SkeletonBinary binary(atlas);
-	SkeletonData *skeletonData = binary.readSkeletonDataFile("data/spineboy-pro.skel");
+	// SkeletonData *skeletonData = binary.readSkeletonDataFile("data/spineboy-pro.skel");
+
+	SkeletonJson json(atlas);
+	SkeletonData *skeletonData = json.readSkeletonDataFile("data/spineboy-pro.json");
 
 	// Create a skeleton from the data, set the skeleton's position to the bottom center of
 	// the screen and scale it to make it smaller.
-	Skeleton skeleton(skeletonData);
+	Skeleton skeleton(*skeletonData);
 	skeleton.setPosition(width / 2, height - 100);
 	skeleton.setScaleX(0.3);
 	skeleton.setScaleY(0.3);

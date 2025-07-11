@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_physics_constraint_data spine_physics_constraint_data_create(const char* name) {
-    return (spine_physics_constraint_data) new (__FILE__, __LINE__) PhysicsConstraintData(*((const String*)name));
+    return (spine_physics_constraint_data) new (__FILE__, __LINE__) PhysicsConstraintData(String(name));
 }
 
 void spine_physics_constraint_data_dispose(spine_physics_constraint_data self) {

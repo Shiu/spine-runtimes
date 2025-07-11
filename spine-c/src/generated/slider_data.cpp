@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_slider_data spine_slider_data_create(const char* name) {
-    return (spine_slider_data) new (__FILE__, __LINE__) SliderData(*((const String*)name));
+    return (spine_slider_data) new (__FILE__, __LINE__) SliderData(String(name));
 }
 
 void spine_slider_data_dispose(spine_slider_data self) {

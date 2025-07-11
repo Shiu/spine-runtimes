@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_bounding_box_attachment spine_bounding_box_attachment_create(const char* name) {
-    return (spine_bounding_box_attachment) new (__FILE__, __LINE__) BoundingBoxAttachment(*((const String*)name));
+    return (spine_bounding_box_attachment) new (__FILE__, __LINE__) BoundingBoxAttachment(String(name));
 }
 
 void spine_bounding_box_attachment_dispose(spine_bounding_box_attachment self) {

@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_bone_data spine_bone_data_create(int index, const char* name, spine_bone_data parent) {
-    return (spine_bone_data) new (__FILE__, __LINE__) BoneData(index, *((const String*)name), (BoneData *)parent);
+    return (spine_bone_data) new (__FILE__, __LINE__) BoneData(index, String(name), (BoneData *)parent);
 }
 
 void spine_bone_data_dispose(spine_bone_data self) {
@@ -36,7 +36,7 @@ const char* spine_bone_data_get_icon(spine_bone_data self) {
 }
 
 void spine_bone_data_set_icon(spine_bone_data self, const char* icon) {
-    ((BoneData*)self)->setIcon(*((const String*)icon));
+    ((BoneData*)self)->setIcon(String(icon));
 }
 
 bool spine_bone_data_get_visible(spine_bone_data self) {

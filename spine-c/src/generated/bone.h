@@ -18,6 +18,7 @@ SPINE_C_API spine_bone spine_bone_get_parent(spine_bone self);
 SPINE_C_API spine_array_bone spine_bone_get_children(spine_bone self);
 SPINE_C_API bool spine_bone_is_y_down(void);
 SPINE_C_API void spine_bone_set_y_down(bool value);
+SPINE_C_API void spine_bone_update(spine_bone self, spine_skeleton skeleton, spine_physics physics);
 SPINE_C_API spine_bone_data spine_bone_get_data(spine_bone self);
 SPINE_C_API spine_bone_local spine_bone_get_pose(spine_bone self);
 SPINE_C_API spine_bone_pose spine_bone_get_applied_pose(spine_bone self);

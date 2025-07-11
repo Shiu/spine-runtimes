@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_point_attachment spine_point_attachment_create(const char* name) {
-    return (spine_point_attachment) new (__FILE__, __LINE__) PointAttachment(*((const String*)name));
+    return (spine_point_attachment) new (__FILE__, __LINE__) PointAttachment(String(name));
 }
 
 void spine_point_attachment_dispose(spine_point_attachment self) {

@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_transform_constraint_data spine_transform_constraint_data_create(const char* name) {
-    return (spine_transform_constraint_data) new (__FILE__, __LINE__) TransformConstraintData(*((const String*)name));
+    return (spine_transform_constraint_data) new (__FILE__, __LINE__) TransformConstraintData(String(name));
 }
 
 void spine_transform_constraint_data_dispose(spine_transform_constraint_data self) {

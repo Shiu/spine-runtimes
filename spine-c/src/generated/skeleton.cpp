@@ -68,7 +68,7 @@ spine_bone spine_skeleton_get_root_bone(spine_skeleton self) {
 }
 
 spine_bone spine_skeleton_find_bone(spine_skeleton self, const char* boneName) {
-    return (spine_bone)((Skeleton*)self)->findBone(*((const String*)boneName));
+    return (spine_bone)((Skeleton*)self)->findBone(String(boneName));
 }
 
 spine_array_slot spine_skeleton_get_slots(spine_skeleton self) {
@@ -76,7 +76,7 @@ spine_array_slot spine_skeleton_get_slots(spine_skeleton self) {
 }
 
 spine_slot spine_skeleton_find_slot(spine_skeleton self, const char* slotName) {
-    return (spine_slot)((Skeleton*)self)->findSlot(*((const String*)slotName));
+    return (spine_slot)((Skeleton*)self)->findSlot(String(slotName));
 }
 
 spine_array_slot spine_skeleton_get_draw_order(spine_skeleton self) {
@@ -88,7 +88,7 @@ spine_skin spine_skeleton_get_skin(spine_skeleton self) {
 }
 
 void spine_skeleton_set_skin_1(spine_skeleton self, const char* skinName) {
-    ((Skeleton*)self)->setSkin(*((const String*)skinName));
+    ((Skeleton*)self)->setSkin(String(skinName));
 }
 
 void spine_skeleton_set_skin_2(spine_skeleton self, spine_skin newSkin) {
@@ -96,15 +96,15 @@ void spine_skeleton_set_skin_2(spine_skeleton self, spine_skin newSkin) {
 }
 
 spine_attachment spine_skeleton_get_attachment_1(spine_skeleton self, const char* slotName, const char* attachmentName) {
-    return (spine_attachment)((Skeleton*)self)->getAttachment(*((const String*)slotName), *((const String*)attachmentName));
+    return (spine_attachment)((Skeleton*)self)->getAttachment(String(slotName), String(attachmentName));
 }
 
 spine_attachment spine_skeleton_get_attachment_2(spine_skeleton self, int slotIndex, const char* attachmentName) {
-    return (spine_attachment)((Skeleton*)self)->getAttachment(slotIndex, *((const String*)attachmentName));
+    return (spine_attachment)((Skeleton*)self)->getAttachment(slotIndex, String(attachmentName));
 }
 
 void spine_skeleton_set_attachment(spine_skeleton self, const char* slotName, const char* attachmentName) {
-    ((Skeleton*)self)->setAttachment(*((const String*)slotName), *((const String*)attachmentName));
+    ((Skeleton*)self)->setAttachment(String(slotName), String(attachmentName));
 }
 
 spine_array_constraint spine_skeleton_get_constraints(spine_skeleton self) {

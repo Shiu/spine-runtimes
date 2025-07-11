@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_skin spine_skin_create(const char* name) {
-    return (spine_skin) new (__FILE__, __LINE__) Skin(*((const String*)name));
+    return (spine_skin) new (__FILE__, __LINE__) Skin(String(name));
 }
 
 void spine_skin_dispose(spine_skin self) {
@@ -12,15 +12,15 @@ void spine_skin_dispose(spine_skin self) {
 }
 
 void spine_skin_set_attachment(spine_skin self, size_t slotIndex, const char* name, spine_attachment attachment) {
-    ((Skin*)self)->setAttachment(slotIndex, *((const String*)name), (Attachment *)attachment);
+    ((Skin*)self)->setAttachment(slotIndex, String(name), (Attachment *)attachment);
 }
 
 spine_attachment spine_skin_get_attachment(spine_skin self, size_t slotIndex, const char* name) {
-    return (spine_attachment)((Skin*)self)->getAttachment(slotIndex, *((const String*)name));
+    return (spine_attachment)((Skin*)self)->getAttachment(slotIndex, String(name));
 }
 
 void spine_skin_remove_attachment(spine_skin self, size_t slotIndex, const char* name) {
-    ((Skin*)self)->removeAttachment(slotIndex, *((const String*)name));
+    ((Skin*)self)->removeAttachment(slotIndex, String(name));
 }
 
 void spine_skin_find_attachments_for_slot(spine_skin self, size_t slotIndex, spine_array_attachment attachments) {

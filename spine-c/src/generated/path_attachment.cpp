@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_path_attachment spine_path_attachment_create(const char* name) {
-    return (spine_path_attachment) new (__FILE__, __LINE__) PathAttachment(*((const String*)name));
+    return (spine_path_attachment) new (__FILE__, __LINE__) PathAttachment(String(name));
 }
 
 void spine_path_attachment_dispose(spine_path_attachment self) {

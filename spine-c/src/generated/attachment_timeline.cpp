@@ -20,7 +20,7 @@ void spine_attachment_timeline_apply(spine_attachment_timeline self, spine_skele
 }
 
 void spine_attachment_timeline_set_frame(spine_attachment_timeline self, int frame, float time, const char* attachmentName) {
-    ((AttachmentTimeline*)self)->setFrame(frame, time, *((const String*)attachmentName));
+    ((AttachmentTimeline*)self)->setFrame(frame, time, String(attachmentName));
 }
 
 size_t spine_attachment_timeline_get_frame_entries(spine_attachment_timeline self) {

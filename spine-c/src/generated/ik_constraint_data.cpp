@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_ik_constraint_data spine_ik_constraint_data_create(const char* name) {
-    return (spine_ik_constraint_data) new (__FILE__, __LINE__) IkConstraintData(*((const String*)name));
+    return (spine_ik_constraint_data) new (__FILE__, __LINE__) IkConstraintData(String(name));
 }
 
 void spine_ik_constraint_data_dispose(spine_ik_constraint_data self) {

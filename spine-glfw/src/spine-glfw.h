@@ -31,7 +31,7 @@
 
 #include <stdint.h>
 #include <spine/spine.h>
-#include <spine-cpp-lite.h>
+#include <spine-c.h>
 
 /// A vertex of a mesh generated from a Spine skeleton
 struct vertex_t {

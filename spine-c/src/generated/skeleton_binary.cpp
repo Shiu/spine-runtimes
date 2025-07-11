@@ -20,7 +20,7 @@ spine_skeleton_data spine_skeleton_binary_read_skeleton_data(spine_skeleton_bina
 }
 
 spine_skeleton_data spine_skeleton_binary_read_skeleton_data_file(spine_skeleton_binary self, const char* path) {
-    return (spine_skeleton_data)((SkeletonBinary*)self)->readSkeletonDataFile(*((const String*)path));
+    return (spine_skeleton_data)((SkeletonBinary*)self)->readSkeletonDataFile(String(path));
 }
 
 void spine_skeleton_binary_set_scale(spine_skeleton_binary self, float scale) {

@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_animation spine_animation_create(const char* name, spine_array_timeline timelines, float duration) {
-    return (spine_animation) new (__FILE__, __LINE__) Animation(*((const String*)name), *((Array<Timeline *>*)timelines), duration);
+    return (spine_animation) new (__FILE__, __LINE__) Animation(String(name), *((Array<Timeline *>*)timelines), duration);
 }
 
 void spine_animation_dispose(spine_animation self) {

@@ -35,6 +35,10 @@ void spine_bone_set_y_down(bool value) {
     Bone::setYDown(value);
 }
 
+void spine_bone_update(spine_bone self, spine_skeleton skeleton, spine_physics physics) {
+    ((Bone*)self)->update(*((Skeleton*)skeleton), (Physics)physics);
+}
+
 spine_bone_data spine_bone_get_data(spine_bone self) {
     return (spine_bone_data)&((PosedGeneric<BoneData, BoneLocal, BonePose>*)(Bone*)self)->getData();
 }

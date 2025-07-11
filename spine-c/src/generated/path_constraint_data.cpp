@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_path_constraint_data spine_path_constraint_data_create(const char* name) {
-    return (spine_path_constraint_data) new (__FILE__, __LINE__) PathConstraintData(*((const String*)name));
+    return (spine_path_constraint_data) new (__FILE__, __LINE__) PathConstraintData(String(name));
 }
 
 void spine_path_constraint_data_dispose(spine_path_constraint_data self) {

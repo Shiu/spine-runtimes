@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_slot_data spine_slot_data_create(int index, const char* name, spine_bone_data boneData) {
-    return (spine_slot_data) new (__FILE__, __LINE__) SlotData(index, *((const String*)name), *((BoneData*)boneData));
+    return (spine_slot_data) new (__FILE__, __LINE__) SlotData(index, String(name), *((BoneData*)boneData));
 }
 
 void spine_slot_data_dispose(spine_slot_data self) {
@@ -20,7 +20,7 @@ spine_bone_data spine_slot_data_get_bone_data(spine_slot_data self) {
 }
 
 void spine_slot_data_set_attachment_name(spine_slot_data self, const char* attachmentName) {
-    ((SlotData*)self)->setAttachmentName(*((const String*)attachmentName));
+    ((SlotData*)self)->setAttachmentName(String(attachmentName));
 }
 
 const char* spine_slot_data_get_attachment_name(spine_slot_data self) {

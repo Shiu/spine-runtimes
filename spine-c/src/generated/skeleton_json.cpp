@@ -16,7 +16,7 @@ void spine_skeleton_json_dispose(spine_skeleton_json self) {
 }
 
 spine_skeleton_data spine_skeleton_json_read_skeleton_data_file(spine_skeleton_json self, const char* path) {
-    return (spine_skeleton_data)((SkeletonJson*)self)->readSkeletonDataFile(*((const String*)path));
+    return (spine_skeleton_data)((SkeletonJson*)self)->readSkeletonDataFile(String(path));
 }
 
 spine_skeleton_data spine_skeleton_json_read_skeleton_data(spine_skeleton_json self, const char * json) {

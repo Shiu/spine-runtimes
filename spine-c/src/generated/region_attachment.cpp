@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_region_attachment spine_region_attachment_create(const char* name) {
-    return (spine_region_attachment) new (__FILE__, __LINE__) RegionAttachment(*((const String*)name));
+    return (spine_region_attachment) new (__FILE__, __LINE__) RegionAttachment(String(name));
 }
 
 void spine_region_attachment_dispose(spine_region_attachment self) {
@@ -92,7 +92,7 @@ const char* spine_region_attachment_get_path(spine_region_attachment self) {
 }
 
 void spine_region_attachment_set_path(spine_region_attachment self, const char* inValue) {
-    ((RegionAttachment*)self)->setPath(*((const String*)inValue));
+    ((RegionAttachment*)self)->setPath(String(inValue));
 }
 
 spine_texture_region spine_region_attachment_get_region(spine_region_attachment self) {

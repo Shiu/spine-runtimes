@@ -277,6 +277,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 
 				Json *entry = Json::getItem(constraintMap, "bones");
 				data->_bones.setSize(entry->_size, 0);
+				entry = entry->_child;
 				for (int boneCount = 0; entry; entry = entry->_next, ++boneCount) {
 					data->_bones[boneCount] = skeletonData->findBone(entry->_valueString);
 					if (!data->_bones[boneCount]) SKELETON_JSON_ERROR(root, "IK bone not found: ", entry->_valueString);
@@ -302,6 +303,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 
 				Json *entry = Json::getItem(constraintMap, "bones");
 				data->_bones.setSize(entry->_size, 0);
+				entry = entry->_child;
 				for (int boneCount = 0; entry; entry = entry->_next, ++boneCount) {
 					data->_bones[boneCount] = skeletonData->findBone(entry->_valueString);
 					if (!data->_bones[boneCount]) SKELETON_JSON_ERROR(root, "Transform constraint bone not found: ", entry->_valueString);
@@ -390,6 +392,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 
 				Json *entry = Json::getItem(constraintMap, "bones");
 				data->_bones.setSize(entry->_size, 0);
+				entry = entry->_child;
 				for (int boneCount = 0; entry; entry = entry->_next, ++boneCount) {
 					data->_bones[boneCount] = skeletonData->findBone(entry->_valueString);
 					if (!data->_bones[boneCount]) SKELETON_JSON_ERROR(root, "Path bone not found: ", entry->_valueString);

@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_atlas_page spine_atlas_page_create(const char* inName) {
-    return (spine_atlas_page) new (__FILE__, __LINE__) AtlasPage(*((const String*)inName));
+    return (spine_atlas_page) new (__FILE__, __LINE__) AtlasPage(String(inName));
 }
 
 void spine_atlas_page_dispose(spine_atlas_page self) {

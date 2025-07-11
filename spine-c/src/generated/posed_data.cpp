@@ -4,7 +4,7 @@
 using namespace spine;
 
 spine_posed_data spine_posed_data_create(const char* name) {
-    return (spine_posed_data) new (__FILE__, __LINE__) PosedData(*((const String*)name));
+    return (spine_posed_data) new (__FILE__, __LINE__) PosedData(String(name));
 }
 
 void spine_posed_data_dispose(spine_posed_data self) {

@@ -91,11 +91,14 @@ int main() {
 	// Load the atlas and the skeleton data
 	int atlas_length = 0;
 	uint8_t *atlas_bytes = read_file("data/spineboy-pma.atlas", &atlas_length);
-	spine_atlas atlas = spine_atlas_load_callback((utf8 *) atlas_bytes, "data/", load_texture, unload_texture);
+	spine_atlas atlas = spine_atlas_load_callback((const char *) atlas_bytes, "data/", load_texture, unload_texture);
 	int skeleton_length = 0;
-	uint8_t *skeleton_bytes = read_file("data/spineboy-pro.skel", &skeleton_length);
-	spine_skeleton_data_result result = spine_skeleton_data_load_binary(atlas, skeleton_bytes, skeleton_length);
-	spine_skeleton_data skeleton_data = spine_skeleton_data_result_get_data(result);
+	// uint8_t *skeleton_bytes = read_file("data/spineboy-pro.skel", &skeleton_length);
+	// spine_skeleton_data_result result = spine_skeleton_data_load_binary(atlas, skeleton_bytes, skeleton_length);
+
+	uint8_t *skeleton_bytes = read_file("data/spineboy-pro.json", &skeleton_length);
+	spine_skeleton_data_result result2 = spine_skeleton_data_load_json(atlas, (const char *) skeleton_bytes);
+	spine_skeleton_data skeleton_data = spine_skeleton_data_result_get_data(result2);
 
 	// Create a skeleton from the data, set the skeleton's position to the bottom center of
 	// the screen and scale it to make it smaller.
@@ -109,8 +112,8 @@ int main() {
 	spine_animation_state animation_state = spine_skeleton_drawable_get_animation_state(drawable);
 	spine_animation_state_data animation_state_data = spine_animation_state_get_data(animation_state);
 	spine_animation_state_data_set_default_mix(animation_state_data, 0.2f);
-	spine_animation_state_set_animation_by_name(animation_state, 0, "portal", true);
-	spine_animation_state_add_animation_by_name(animation_state, 0, "run", true, 0);
+	spine_animation_state_set_animation_1(animation_state, 0, "portal", true);
+	spine_animation_state_add_animation_1(animation_state, 0, "run", true, 0);
 
 	// Create the renderer and set the viewport size to match the window size. This sets up a
 	// pixel perfect orthogonal projection for 2D rendering.
@@ -133,7 +136,7 @@ int main() {
 		spine_skeleton_update(skeleton, delta);
 
 		// Calculate the new pose
-		spine_skeleton_update_world_transform(skeleton, SPINE_PHYSICS_UPDATE);
+		spine_skeleton_update_world_transform_1(skeleton, SPINE_PHYSICS_UPDATE);
 
 		// Clear the screen
 		gl::glClear(gl::GL_COLOR_BUFFER_BIT);

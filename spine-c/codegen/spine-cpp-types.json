@@ -3047,7 +3047,8 @@
       },
       "superTypes": [
         "PosedGeneric<BoneData, BoneLocal, BonePose>",
-        "PosedActive"
+        "PosedActive",
+        "Update"
       ],
       "members": [
         {
@@ -3130,6 +3131,25 @@
           ],
           "isStatic": true,
           "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "update",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "skeleton",
+              "type": "Skeleton &"
+            },
+            {
+              "name": "physics",
+              "type": "Physics"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": true,
           "isPure": false,
           "isConst": false
         },
@@ -8296,7 +8316,7 @@
       "name": "ConstraintGeneric",
       "kind": "class",
       "loc": {
-        "line": 70,
+        "line": 71,
         "col": 15
       },
       "superTypes": [
@@ -10254,10 +10274,135 @@
   ],
   "spine/Debug.h": [
     {
+      "name": "DebugHashMap",
+      "kind": "class",
+      "loc": {
+        "line": 41,
+        "col": 8
+      },
+      "members": [
+        {
+          "kind": "constructor",
+          "name": "DebugHashMap<K, V>",
+          "parameters": []
+        },
+        {
+          "kind": "destructor",
+          "name": "~DebugHashMap<K, V>",
+          "isVirtual": false,
+          "isPure": false
+        },
+        {
+          "kind": "method",
+          "name": "clear",
+          "returnType": "void",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "size",
+          "returnType": "size_t",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "put",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "key",
+              "type": "const K &"
+            },
+            {
+              "name": "value",
+              "type": "const V &"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "addAll",
+          "returnType": "bool",
+          "parameters": [
+            {
+              "name": "keys",
+              "type": "Array<K> &"
+            },
+            {
+              "name": "value",
+              "type": "const V &"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "containsKey",
+          "returnType": "bool",
+          "parameters": [
+            {
+              "name": "key",
+              "type": "const K &"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "remove",
+          "returnType": "bool",
+          "parameters": [
+            {
+              "name": "key",
+              "type": "const K &"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "getEntries",
+          "returnType": "DebugEntries",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        }
+      ],
+      "isAbstract": false,
+      "isTemplate": true,
+      "templateParams": [
+        "K",
+        "V"
+      ]
+    },
+    {
       "name": "DebugExtension",
       "kind": "class",
       "loc": {
-        "line": 39,
+        "line": 194,
         "col": 15
       },
       "superTypes": [
@@ -30838,7 +30983,7 @@
       "name": "Slot",
       "kind": "class",
       "loc": {
-        "line": 47,
+        "line": 48,
         "col": 15
       },
       "superTypes": [

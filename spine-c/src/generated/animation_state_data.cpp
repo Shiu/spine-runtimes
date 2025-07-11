@@ -24,7 +24,7 @@ void spine_animation_state_data_set_default_mix(spine_animation_state_data self,
 }
 
 void spine_animation_state_data_set_mix_1(spine_animation_state_data self, const char* fromName, const char* toName, float duration) {
-    ((AnimationStateData*)self)->setMix(*((const String*)fromName), *((const String*)toName), duration);
+    ((AnimationStateData*)self)->setMix(String(fromName), String(toName), duration);
 }
 
 void spine_animation_state_data_set_mix_2(spine_animation_state_data self, spine_animation from, spine_animation to, float duration) {

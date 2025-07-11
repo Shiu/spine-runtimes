@@ -12,39 +12,39 @@ void spine_skeleton_data_dispose(spine_skeleton_data self) {
 }
 
 spine_bone_data spine_skeleton_data_find_bone(spine_skeleton_data self, const char* boneName) {
-    return (spine_bone_data)((SkeletonData*)self)->findBone(*((const String*)boneName));
+    return (spine_bone_data)((SkeletonData*)self)->findBone(String(boneName));
 }
 
 spine_slot_data spine_skeleton_data_find_slot(spine_skeleton_data self, const char* slotName) {
-    return (spine_slot_data)((SkeletonData*)self)->findSlot(*((const String*)slotName));
+    return (spine_slot_data)((SkeletonData*)self)->findSlot(String(slotName));
 }
 
 spine_skin spine_skeleton_data_find_skin(spine_skeleton_data self, const char* skinName) {
-    return (spine_skin)((SkeletonData*)self)->findSkin(*((const String*)skinName));
+    return (spine_skin)((SkeletonData*)self)->findSkin(String(skinName));
 }
 
 spine_event_data spine_skeleton_data_find_event(spine_skeleton_data self, const char* eventDataName) {
-    return (spine_event_data)((SkeletonData*)self)->findEvent(*((const String*)eventDataName));
+    return (spine_event_data)((SkeletonData*)self)->findEvent(String(eventDataName));
 }
 
 spine_animation spine_skeleton_data_find_animation(spine_skeleton_data self, const char* animationName) {
-    return (spine_animation)((SkeletonData*)self)->findAnimation(*((const String*)animationName));
+    return (spine_animation)((SkeletonData*)self)->findAnimation(String(animationName));
 }
 
 spine_ik_constraint_data spine_skeleton_data_find_ik_constraint(spine_skeleton_data self, const char* constraintName) {
-    return (spine_ik_constraint_data)((SkeletonData*)self)->findIkConstraint(*((const String*)constraintName));
+    return (spine_ik_constraint_data)((SkeletonData*)self)->findIkConstraint(String(constraintName));
 }
 
 spine_transform_constraint_data spine_skeleton_data_find_transform_constraint(spine_skeleton_data self, const char* constraintName) {
-    return (spine_transform_constraint_data)((SkeletonData*)self)->findTransformConstraint(*((const String*)constraintName));
+    return (spine_transform_constraint_data)((SkeletonData*)self)->findTransformConstraint(String(constraintName));
 }
 
 spine_path_constraint_data spine_skeleton_data_find_path_constraint(spine_skeleton_data self, const char* constraintName) {
-    return (spine_path_constraint_data)((SkeletonData*)self)->findPathConstraint(*((const String*)constraintName));
+    return (spine_path_constraint_data)((SkeletonData*)self)->findPathConstraint(String(constraintName));
 }
 
 spine_physics_constraint_data spine_skeleton_data_find_physics_constraint(spine_skeleton_data self, const char* constraintName) {
-    return (spine_physics_constraint_data)((SkeletonData*)self)->findPhysicsConstraint(*((const String*)constraintName));
+    return (spine_physics_constraint_data)((SkeletonData*)self)->findPhysicsConstraint(String(constraintName));
 }
 
 const char* spine_skeleton_data_get_name(spine_skeleton_data self) {
@@ -52,7 +52,7 @@ const char* spine_skeleton_data_get_name(spine_skeleton_data self) {
 }
 
 void spine_skeleton_data_set_name(spine_skeleton_data self, const char* inValue) {
-    ((SkeletonData*)self)->setName(*((const String*)inValue));
+    ((SkeletonData*)self)->setName(String(inValue));
 }
 
 spine_array_bone_data spine_skeleton_data_get_bones(spine_skeleton_data self) {
@@ -148,7 +148,7 @@ const char* spine_skeleton_data_get_version(spine_skeleton_data self) {
 }
 
 void spine_skeleton_data_set_version(spine_skeleton_data self, const char* inValue) {
-    ((SkeletonData*)self)->setVersion(*((const String*)inValue));
+    ((SkeletonData*)self)->setVersion(String(inValue));
 }
 
 const char* spine_skeleton_data_get_hash(spine_skeleton_data self) {
@@ -156,7 +156,7 @@ const char* spine_skeleton_data_get_hash(spine_skeleton_data self) {
 }
 
 void spine_skeleton_data_set_hash(spine_skeleton_data self, const char* inValue) {
-    ((SkeletonData*)self)->setHash(*((const String*)inValue));
+    ((SkeletonData*)self)->setHash(String(inValue));
 }
 
 const char* spine_skeleton_data_get_images_path(spine_skeleton_data self) {
@@ -164,7 +164,7 @@ const char* spine_skeleton_data_get_images_path(spine_skeleton_data self) {
 }
 
 void spine_skeleton_data_set_images_path(spine_skeleton_data self, const char* inValue) {
-    ((SkeletonData*)self)->setImagesPath(*((const String*)inValue));
+    ((SkeletonData*)self)->setImagesPath(String(inValue));
 }
 
 const char* spine_skeleton_data_get_audio_path(spine_skeleton_data self) {
@@ -172,7 +172,7 @@ const char* spine_skeleton_data_get_audio_path(spine_skeleton_data self) {
 }
 
 void spine_skeleton_data_set_audio_path(spine_skeleton_data self, const char* inValue) {
-    ((SkeletonData*)self)->setAudioPath(*((const String*)inValue));
+    ((SkeletonData*)self)->setAudioPath(String(inValue));
 }
 
 float spine_skeleton_data_get_fps(spine_skeleton_data self) {
