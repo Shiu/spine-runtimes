@@ -27,12 +27,14 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import type { AssetExtension } from "@pixi/assets";
+import type { AssetExtension, ResolvedAsset } from "@pixi/assets";
 import { LoaderParserPriority, checkExtension } from "@pixi/assets";
 import { ExtensionType, settings, extensions } from "@pixi/core";
 
 type SkeletonJsonAsset = any;
 type SkeletonBinaryAsset = Uint8Array;
+
+const loaderName = "spineSkeletonLoader";
 
 function isJson(resource: any): resource is SkeletonJsonAsset {
 	return resource.hasOwnProperty("bones");
@@ -46,9 +48,11 @@ const spineLoaderExtension: AssetExtension<SkeletonJsonAsset | SkeletonBinaryAss
 	extension: ExtensionType.Asset,
 
 	loader: {
+		name: loaderName,
 		extension: {
 			type: ExtensionType.LoadParser,
 			priority: LoaderParserPriority.Normal,
+			name: loaderName,
 		},
 
 		test(url) {
@@ -62,11 +66,12 @@ const spineLoaderExtension: AssetExtension<SkeletonJsonAsset | SkeletonBinaryAss
 
 			return buffer;
 		},
-		testParse(asset: unknown, options: {src: string}): Promise<boolean> {
-			const isJsonSpineModel = checkExtension(options.src, ".json") && isJson(asset);
-			const isBinarySpineModel = checkExtension(options.src, ".skel") && isBuffer(asset);
+		testParse(asset: unknown, options: ResolvedAsset): Promise<boolean> {
+			const isJsonSpineModel = checkExtension(options.src!, ".json") && isJson(asset);
+			const isBinarySpineModel = checkExtension(options.src!, ".skel") && isBuffer(asset);
+			const isExplicitLoadParserSet = options.loadParser === loaderName;
 
-			return Promise.resolve(isJsonSpineModel || isBinarySpineModel);
+			return Promise.resolve(isJsonSpineModel || isBinarySpineModel || isExplicitLoadParserSet);
 		},
 	},
 } as AssetExtension<SkeletonJsonAsset | SkeletonBinaryAsset>;

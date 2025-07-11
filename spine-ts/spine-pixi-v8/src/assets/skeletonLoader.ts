@@ -40,6 +40,8 @@ import {
 type SkeletonJsonAsset = any;
 type SkeletonBinaryAsset = Uint8Array;
 
+const loaderName = "spineSkeletonLoader";
+
 function isJson (resource: any): resource is SkeletonJsonAsset {
 	return Object.prototype.hasOwnProperty.call(resource, 'bones');
 }
@@ -52,10 +54,11 @@ const spineLoaderExtension: AssetExtension<SkeletonJsonAsset | SkeletonBinaryAss
 	extension: ExtensionType.Asset,
 
 	loader: {
+		name: loaderName,
 		extension: {
 			type: ExtensionType.LoadParser,
 			priority: LoaderParserPriority.Normal,
-			name: 'spineSkeletonLoader',
+			name: loaderName,
 		},
 
 		test (url) {
@@ -72,8 +75,9 @@ const spineLoaderExtension: AssetExtension<SkeletonJsonAsset | SkeletonBinaryAss
 		testParse (asset: unknown, options: ResolvedAsset): Promise<boolean> {
 			const isJsonSpineModel = checkExtension(options.src!, '.json') && isJson(asset);
 			const isBinarySpineModel = checkExtension(options.src!, '.skel') && isBuffer(asset);
+			const isExplicitLoadParserSet = options.loadParser === loaderName;
 
-			return Promise.resolve(isJsonSpineModel || isBinarySpineModel);
+			return Promise.resolve(isJsonSpineModel || isBinarySpineModel || isExplicitLoadParserSet);
 		},
 	},
 } as AssetExtension<SkeletonJsonAsset | SkeletonBinaryAsset>;
