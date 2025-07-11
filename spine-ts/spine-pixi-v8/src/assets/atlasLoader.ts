@@ -133,9 +133,7 @@ const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, ISpineAtl
 						src: copySearchParams(url, options.src as string),
 						data: {
 							...metadata.imageMetadata,
-							// alphaMode: 'premultiplied-alpha'
-							alphaMode: 'premultiply-alpha-on-upload'
-							// alphaMode: 'no-premultiply-alpha'
+							alphaMode: page.pma ? 'premultiplied-alpha' : 'premultiply-alpha-on-upload'
 						}
 					};
 
