@@ -106,6 +106,10 @@ public class Animation {
 		this.duration = duration;
 	}
 
+	public IntArray getBones() {
+		return bones;
+	}
+
 	/** Applies the animation's timelines to the specified skeleton.
 	 * <p>
 	 * See Timeline {@link Timeline#apply(Skeleton, float, float, Array, float, MixBlend, MixDirection, boolean)}.

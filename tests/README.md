@@ -25,6 +25,9 @@ Each runtime has a HeadlessTest program that outputs skeleton data in a standard
 ```bash
 cd spine-libgdx
 ./gradlew :spine-libgdx-tests:runHeadlessTest -Pargs="<skeleton-path> <atlas-path> [animation-name]"
+
+# Example with spineboy:
+./gradlew :spine-libgdx-tests:runHeadlessTest -Pargs="../examples/spineboy/export/spineboy-pro.json ../examples/spineboy/export/spineboy.atlas walk"
 ```
 
 ### C++ (spine-cpp)
@@ -32,6 +35,9 @@ cd spine-libgdx
 cd spine-cpp
 ./build.sh  # Build if needed
 ./build/headless-test <skeleton-path> <atlas-path> [animation-name]
+
+# Example with spineboy:
+./build/headless-test ../examples/spineboy/export/spineboy-pro.json ../examples/spineboy/export/spineboy.atlas walk
 ```
 
 ### C (spine-c)
@@ -39,12 +45,18 @@ cd spine-cpp
 cd spine-c
 ./build.sh  # Build if needed
 ./build/headless-test <skeleton-path> <atlas-path> [animation-name]
+
+# Example with spineboy:
+./build/headless-test ../examples/spineboy/export/spineboy-pro.json ../examples/spineboy/export/spineboy.atlas walk
 ```
 
 ### TypeScript (spine-ts)
 ```bash
 cd spine-ts/spine-core
 npx tsx tests/HeadlessTest.ts <skeleton-path> <atlas-path> [animation-name]
+
+# Example with spineboy:
+npx tsx tests/HeadlessTest.ts ../../examples/spineboy/export/spineboy-pro.json ../../examples/spineboy/export/spineboy.atlas walk
 ```
 
 ## Running the Comparison Test
@@ -82,12 +94,41 @@ This script will:
 Each HeadlessTest outputs:
 - **SKELETON DATA**: Static setup pose data (bones, slots, skins, animations metadata)
 - **SKELETON STATE**: Runtime state after applying animations
+- **ANIMATION STATE**: Current animation state with tracks and mixing information
 
-The output uses consistent formatting:
+The output uses consistent JSON formatting:
 - Hierarchical structure with 2-space indentation
 - Float values formatted to 6 decimal places
 - Strings quoted, nulls explicitly shown
 - Locale-independent number formatting (always uses `.` for decimals)
+- Circular references marked as `"<circular>"` to prevent infinite recursion
+- Each object includes a `"type"` field for easy identification
+
+## Development Tools
+
+### API Analyzer (Java)
+Analyzes the spine-libgdx API to discover all types and their properties:
+```bash
+cd tests
+npx tsx analyze-java-api.ts
+# Output: output/analysis-result.json
+```
+
+### Serializer Generator (Java)
+Generates SkeletonSerializer.java from the analysis:
+```bash
+cd tests
+npx tsx generate-java-serializer.ts
+# Output: ../spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/utils/SkeletonSerializer.java
+```
+
+### Claude Prompt Generator
+Generates a prompt for Claude to help port the serializer to other runtimes:
+```bash
+cd tests
+npx tsx generate-claude-prompt.ts
+# Output: output/port-serializer-prompt.txt
+```
 
 ## Troubleshooting
 
@@ -99,13 +140,3 @@ If outputs differ between runtimes:
    - Missing or extra fields in data structures
    - Different default values
    - Rounding differences
-
-## Future Expansion
-
-The current implementation prints basic skeleton data. Future expansions will include:
-- Full bone and slot hierarchies
-- All attachment types
-- Animation timelines
-- Constraint data
-- Physics settings
-- Complete runtime state after animation

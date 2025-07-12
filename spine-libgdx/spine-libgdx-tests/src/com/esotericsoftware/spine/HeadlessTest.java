@@ -38,7 +38,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData;
+import com.esotericsoftware.spine.utils.SkeletonSerializer;
 
+import java.io.StringWriter;
 import java.util.Locale;
 
 public class HeadlessTest implements ApplicationListener {
@@ -52,6 +54,8 @@ public class HeadlessTest implements ApplicationListener {
 		this.animationName = animationName;
 	}
 
+	// Removed Printer class - now using SkeletonSerializer
+	/*
 	static class Printer {
 		private int indentLevel = 0;
 		private static final String INDENT = "  ";
@@ -124,6 +128,7 @@ public class HeadlessTest implements ApplicationListener {
 			print("}");
 		}
 	}
+	*/
 
 	// Mock texture that doesn't require OpenGL - similar to AndroidTexture
 	static class MockTexture extends Texture {
@@ -212,10 +217,14 @@ public class HeadlessTest implements ApplicationListener {
 				skeletonData = binary.readSkeletonData(skeletonFile);
 			}
 
-			// Print skeleton data
+			// Create serializer
+			SkeletonSerializer serializer = new SkeletonSerializer();
+
+			// Print skeleton data as JSON
 			System.out.println("=== SKELETON DATA ===");
-			Printer printer = new Printer();
-			printer.printSkeletonData(skeletonData);
+			StringWriter dataWriter = new StringWriter();
+			serializer.serializeSkeletonData(skeletonData, dataWriter);
+			System.out.println(dataWriter.toString());
 
 			// Create skeleton instance
 			Skeleton skeleton = new Skeleton(skeletonData);
@@ -242,9 +251,17 @@ public class HeadlessTest implements ApplicationListener {
 
 			skeleton.updateWorldTransform(Physics.update);
 
-			// Print skeleton state
+			// Print skeleton state as JSON
 			System.out.println("\n=== SKELETON STATE ===");
-			printer.printSkeleton(skeleton);
+			StringWriter skeletonWriter = new StringWriter();
+			serializer.serializeSkeleton(skeleton, skeletonWriter);
+			System.out.println(skeletonWriter.toString());
+
+			// Print animation state as JSON
+			System.out.println("\n=== ANIMATION STATE ===");
+			StringWriter stateWriter = new StringWriter();
+			serializer.serializeAnimationState(state, stateWriter);
+			System.out.println(stateWriter.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();
