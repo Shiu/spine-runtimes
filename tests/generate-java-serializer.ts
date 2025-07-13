@@ -3,303 +3,109 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import type { ClassInfo, PropertyInfo } from './types';
+import type { SerializerIR, PublicMethod, WriteMethod, Property } from './generate-serializer-ir';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-function loadExclusions(): { types: Set<string>, methods: Map<string, Set<string>>, fields: Map<string, Set<string>> } {
-    const exclusionsPath = path.resolve(__dirname, 'java-exclusions.txt');
-    const types = new Set<string>();
-    const methods = new Map<string, Set<string>>();
-    const fields = new Map<string, Set<string>>();
+function generatePropertyCode(property: Property, indent: string): string[] {
+    const lines: string[] = [];
+    const accessor = `obj.${property.getter}`;
     
-    if (!fs.existsSync(exclusionsPath)) {
-        return { types, methods, fields };
-    }
-    
-    const content = fs.readFileSync(exclusionsPath, 'utf-8');
-    const lines = content.split('\n');
-    
-    for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith('#')) continue;
-        
-        const parts = trimmed.split(/\s+/);
-        if (parts.length < 2) continue;
-        
-        const [type, className, property] = parts;
-        
-        switch (type) {
-            case 'type':
-                types.add(className);
-                break;
-            case 'method':
-                if (property) {
-                    if (!methods.has(className)) {
-                        methods.set(className, new Set());
-                    }
-                    methods.get(className)!.add(property);
-                }
-                break;
-            case 'field':
-                if (property) {
-                    if (!fields.has(className)) {
-                        fields.set(className, new Set());
-                    }
-                    fields.get(className)!.add(property);
-                }
-                break;
-        }
-    }
-    
-    return { types, methods, fields };
-}
-
-interface SerializedAnalysisResult {
-    classMap: [string, ClassInfo][];
-    accessibleTypes: string[];
-    abstractTypes: [string, string[]][];
-    allTypesToGenerate: string[];
-    typeProperties: [string, PropertyInfo[]][];
-}
-
-function generateWriteValue(output: string[], expression: string, type: string, indent: string, abstractTypes: Map<string, string[]>, classMap: Map<string, ClassInfo>) {
-    // Handle null annotations
-    const isNullable = type.includes('@Null');
-    type = type.replace(/@Null\s+/g, '').trim();
-
-    // Primitive types
-    if (['String', 'int', 'float', 'boolean', 'short', 'byte', 'double', 'long'].includes(type)) {
-        output.push(`${indent}json.writeValue(${expression});`);
-        return;
-    }
-
-    // Check if it's an enum - need to handle both short and full names
-    let classInfo = classMap.get(type);
-    if (!classInfo && !type.includes('.')) {
-        // Try to find by short name
-        for (const [fullName, info] of classMap) {
-            if (fullName.split('.').pop() === type) {
-                classInfo = info;
-                break;
-            }
-        }
-    }
-
-    if (classInfo?.isEnum) {
-        if (isNullable) {
-            output.push(`${indent}if (${expression} == null) {`);
-            output.push(`${indent}    json.writeNull();`);
-            output.push(`${indent}} else {`);
-            output.push(`${indent}    json.writeValue(${expression}.name());`);
-            output.push(`${indent}}`);
-        } else {
-            output.push(`${indent}json.writeValue(${expression}.name());`);
-        }
-        return;
-    }
-
-    // Arrays
-    if (type.startsWith('Array<')) {
-        const innerType = type.match(/Array<(.+?)>/)![1].trim();
-        if (isNullable) {
-            output.push(`${indent}if (${expression} == null) {`);
-            output.push(`${indent}    json.writeNull();`);
-            output.push(`${indent}} else {`);
-            output.push(`${indent}    json.writeArrayStart();`);
-            output.push(`${indent}    for (${innerType} item : ${expression}) {`);
-            generateWriteValue(output, 'item', innerType, indent + '        ', abstractTypes, classMap);
-            output.push(`${indent}    }`);
-            output.push(`${indent}    json.writeArrayEnd();`);
-            output.push(`${indent}}`);
-        } else {
-            output.push(`${indent}json.writeArrayStart();`);
-            output.push(`${indent}for (${innerType} item : ${expression}) {`);
-            generateWriteValue(output, 'item', innerType, indent + '    ', abstractTypes, classMap);
-            output.push(`${indent}}`);
-            output.push(`${indent}json.writeArrayEnd();`);
-        }
-        return;
-    }
-
-    if (type === 'IntArray' || type === 'FloatArray') {
-        if (isNullable) {
-            output.push(`${indent}if (${expression} == null) {`);
-            output.push(`${indent}    json.writeNull();`);
-            output.push(`${indent}} else {`);
-            output.push(`${indent}    json.writeArrayStart();`);
-            output.push(`${indent}    for (int i = 0; i < ${expression}.size; i++) {`);
-            output.push(`${indent}        json.writeValue(${expression}.get(i));`);
-            output.push(`${indent}    }`);
-            output.push(`${indent}    json.writeArrayEnd();`);
-            output.push(`${indent}}`);
-        } else {
-            output.push(`${indent}json.writeArrayStart();`);
-            output.push(`${indent}for (int i = 0; i < ${expression}.size; i++) {`);
-            output.push(`${indent}    json.writeValue(${expression}.get(i));`);
-            output.push(`${indent}}`);
-            output.push(`${indent}json.writeArrayEnd();`);
-        }
-        return;
-    }
-
-    if (type.endsWith('[]')) {
-        const elemType = type.slice(0, -2);
-        if (isNullable) {
-            output.push(`${indent}if (${expression} == null) {`);
-            output.push(`${indent}    json.writeNull();`);
-            output.push(`${indent}} else {`);
-            output.push(`${indent}    json.writeArrayStart();`);
-            // Handle nested arrays (like float[][])
-            if (elemType.endsWith('[]')) {
-                const nestedType = elemType.slice(0, -2);
-                output.push(`${indent}    for (${elemType} nestedArray : ${expression}) {`);
-                output.push(`${indent}        if (nestedArray == null) {`);
-                output.push(`${indent}            json.writeNull();`);
-                output.push(`${indent}        } else {`);
-                output.push(`${indent}            json.writeArrayStart();`);
-                output.push(`${indent}            for (${nestedType} elem : nestedArray) {`);
-                output.push(`${indent}                json.writeValue(elem);`);
-                output.push(`${indent}            }`);
-                output.push(`${indent}            json.writeArrayEnd();`);
-                output.push(`${indent}        }`);
-                output.push(`${indent}    }`);
+    switch (property.kind) {
+        case "primitive":
+            lines.push(`${indent}json.writeValue(${accessor});`);
+            break;
+            
+        case "object":
+            if (property.isNullable) {
+                lines.push(`${indent}if (${accessor} == null) {`);
+                lines.push(`${indent}    json.writeNull();`);
+                lines.push(`${indent}} else {`);
+                lines.push(`${indent}    ${property.writeMethodCall}(${accessor});`);
+                lines.push(`${indent}}`);
             } else {
-                output.push(`${indent}    for (${elemType} item : ${expression}) {`);
-                generateWriteValue(output, 'item', elemType, indent + '        ', abstractTypes, classMap);
-                output.push(`${indent}    }`);
+                lines.push(`${indent}${property.writeMethodCall}(${accessor});`);
             }
-            output.push(`${indent}    json.writeArrayEnd();`);
-            output.push(`${indent}}`);
-        } else {
-            output.push(`${indent}json.writeArrayStart();`);
-            // Handle nested arrays (like float[][])
-            if (elemType.endsWith('[]')) {
-                const nestedType = elemType.slice(0, -2);
-                output.push(`${indent}for (${elemType} nestedArray : ${expression}) {`);
-                output.push(`${indent}    json.writeArrayStart();`);
-                output.push(`${indent}    for (${nestedType} elem : nestedArray) {`);
-                output.push(`${indent}        json.writeValue(elem);`);
-                output.push(`${indent}    }`);
-                output.push(`${indent}    json.writeArrayEnd();`);
-                output.push(`${indent}}`);
+            break;
+            
+        case "enum":
+            if (property.isNullable) {
+                lines.push(`${indent}if (${accessor} == null) {`);
+                lines.push(`${indent}    json.writeNull();`);
+                lines.push(`${indent}} else {`);
+                lines.push(`${indent}    json.writeValue(${accessor}.name());`);
+                lines.push(`${indent}}`);
             } else {
-                output.push(`${indent}for (${elemType} item : ${expression}) {`);
-                generateWriteValue(output, 'item', elemType, indent + '    ', abstractTypes, classMap);
-                output.push(`${indent}}`);
+                lines.push(`${indent}json.writeValue(${accessor}.name());`);
             }
-            output.push(`${indent}json.writeArrayEnd();`);
-        }
-        return;
-    }
-
-    // Special cases for libGDX types
-    if (type === 'Color') {
-        output.push(`${indent}writeColor(${expression});`);
-        return;
-    }
-
-    if (type === 'TextureRegion') {
-        output.push(`${indent}writeTextureRegion(${expression});`);
-        return;
-    }
-
-    // Handle objects
-    const shortType = type.split('.').pop()!;
-
-    // Check if this type exists in classMap (for abstract types that might not be in generated methods)
-    let foundInClassMap = classMap.has(type);
-    if (!foundInClassMap && !type.includes('.')) {
-        // Try to find by short name
-        for (const [fullName, info] of classMap) {
-            if (fullName.split('.').pop() === type) {
-                foundInClassMap = true;
-                // If it's abstract/interface, we need the instanceof chain
-                if (info.isAbstract || info.isInterface) {
-                    type = fullName; // Use full name for abstract types
+            break;
+            
+        case "array":
+            if (property.isNullable) {
+                lines.push(`${indent}if (${accessor} == null) {`);
+                lines.push(`${indent}    json.writeNull();`);
+                lines.push(`${indent}} else {`);
+                lines.push(`${indent}    json.writeArrayStart();`);
+                lines.push(`${indent}    for (${property.elementType} item : ${accessor}) {`);
+                if (property.elementKind === "primitive") {
+                    lines.push(`${indent}        json.writeValue(item);`);
+                } else {
+                    lines.push(`${indent}        ${property.writeMethodCall}(item);`);
                 }
-                break;
+                lines.push(`${indent}    }`);
+                lines.push(`${indent}    json.writeArrayEnd();`);
+                lines.push(`${indent}}`);
+            } else {
+                lines.push(`${indent}json.writeArrayStart();`);
+                lines.push(`${indent}for (${property.elementType} item : ${accessor}) {`);
+                if (property.elementKind === "primitive") {
+                    lines.push(`${indent}    json.writeValue(item);`);
+                } else {
+                    lines.push(`${indent}    ${property.writeMethodCall}(item);`);
+                }
+                lines.push(`${indent}}`);
+                lines.push(`${indent}json.writeArrayEnd();`);
             }
-        }
+            break;
+            
+        case "nestedArray":
+            if (property.isNullable) {
+                lines.push(`${indent}if (${accessor} == null) {`);
+                lines.push(`${indent}    json.writeNull();`);
+                lines.push(`${indent}} else {`);
+                lines.push(`${indent}    json.writeArrayStart();`);
+                lines.push(`${indent}    for (${property.elementType}[] nestedArray : ${accessor}) {`);
+                lines.push(`${indent}        if (nestedArray == null) {`);
+                lines.push(`${indent}            json.writeNull();`);
+                lines.push(`${indent}        } else {`);
+                lines.push(`${indent}            json.writeArrayStart();`);
+                lines.push(`${indent}            for (${property.elementType} elem : nestedArray) {`);
+                lines.push(`${indent}                json.writeValue(elem);`);
+                lines.push(`${indent}            }`);
+                lines.push(`${indent}            json.writeArrayEnd();`);
+                lines.push(`${indent}        }`);
+                lines.push(`${indent}    }`);
+                lines.push(`${indent}    json.writeArrayEnd();`);
+                lines.push(`${indent}}`);
+            } else {
+                lines.push(`${indent}json.writeArrayStart();`);
+                lines.push(`${indent}for (${property.elementType}[] nestedArray : ${accessor}) {`);
+                lines.push(`${indent}    json.writeArrayStart();`);
+                lines.push(`${indent}    for (${property.elementType} elem : nestedArray) {`);
+                lines.push(`${indent}        json.writeValue(elem);`);
+                lines.push(`${indent}    }`);
+                lines.push(`${indent}    json.writeArrayEnd();`);
+                lines.push(`${indent}}`);
+                lines.push(`${indent}json.writeArrayEnd();`);
+            }
+            break;
     }
-
-    if (isNullable) {
-        output.push(`${indent}if (${expression} == null) {`);
-        output.push(`${indent}    json.writeNull();`);
-        output.push(`${indent}} else {`);
-        output.push(`${indent}    write${shortType}(${expression});`);
-        output.push(`${indent}}`);
-    } else {
-        output.push(`${indent}write${shortType}(${expression});`);
-    }
+    
+    return lines;
 }
 
-function generateJavaSerializer(analysisData: SerializedAnalysisResult): string {
+function generateJavaFromIR(ir: SerializerIR): string {
     const javaOutput: string[] = [];
-
-    // Convert arrays back to Maps
-    const classMap = new Map(analysisData.classMap);
-    const abstractTypes = new Map(analysisData.abstractTypes);
-    const typeProperties = new Map(analysisData.typeProperties);
-
-    // Collect all types that need write methods
-    const typesNeedingMethods = new Set<string>();
-
-    // Add all types from allTypesToGenerate
-    for (const type of analysisData.allTypesToGenerate) {
-        typesNeedingMethods.add(type);
-    }
-
-    // Add all abstract types that are referenced (but not excluded)
-    const exclusions = loadExclusions();
-    for (const [abstractType] of abstractTypes) {
-        if (!exclusions.types.has(abstractType)) {
-            typesNeedingMethods.add(abstractType);
-        }
-    }
-
-    // Add types referenced in properties
-    for (const [typeName, props] of typeProperties) {
-        if (!typesNeedingMethods.has(typeName)) continue;
-
-        for (const prop of props) {
-            let propType = prop.type.replace(/@Null\s+/g, '').trim();
-
-            // Extract type from Array<Type>
-            const arrayMatch = propType.match(/Array<(.+?)>/);
-            if (arrayMatch) {
-                propType = arrayMatch[1].trim();
-            }
-
-            // Extract type from Type[]
-            if (propType.endsWith('[]')) {
-                propType = propType.slice(0, -2);
-            }
-
-            // Skip primitives and special types
-            if (['String', 'int', 'float', 'boolean', 'short', 'byte', 'double', 'long',
-                 'Color', 'TextureRegion', 'IntArray', 'FloatArray'].includes(propType)) {
-                continue;
-            }
-
-            // Add the type if it's a class (but not excluded)
-            if (propType.match(/^[A-Z]/)) {
-                if (!exclusions.types.has(propType)) {
-                    typesNeedingMethods.add(propType);
-                }
-
-                // Also check if it's an abstract type in classMap
-                for (const [fullName, info] of classMap) {
-                    if (fullName === propType || fullName.split('.').pop() === propType) {
-                        if (info.isAbstract || info.isInterface && !exclusions.types.has(fullName)) {
-                            typesNeedingMethods.add(fullName);
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-    }
 
     // Generate Java file header
     javaOutput.push('package com.esotericsoftware.spine.utils;');
@@ -318,7 +124,6 @@ function generateJavaSerializer(analysisData: SerializedAnalysisResult): string 
     javaOutput.push('import com.badlogic.gdx.utils.IntArray;');
     javaOutput.push('import com.badlogic.gdx.utils.FloatArray;');
     javaOutput.push('');
-
     javaOutput.push('import java.util.Locale;');
     javaOutput.push('import java.util.Set;');
     javaOutput.push('import java.util.HashSet;');
@@ -328,90 +133,49 @@ function generateJavaSerializer(analysisData: SerializedAnalysisResult): string 
     javaOutput.push('    private JsonWriter json;');
     javaOutput.push('');
 
-    // Generate main entry methods
-    javaOutput.push('    public String serializeSkeletonData(SkeletonData data) {');
-    javaOutput.push('        visitedObjects.clear();');
-    javaOutput.push('        json = new JsonWriter();');
-    javaOutput.push('        writeSkeletonData(data);');
-    javaOutput.push('        json.close();');
-    javaOutput.push('        return json.getString();');
-    javaOutput.push('    }');
-    javaOutput.push('');
-    javaOutput.push('    public String serializeSkeleton(Skeleton skeleton) {');
-    javaOutput.push('        visitedObjects.clear();');
-    javaOutput.push('        json = new JsonWriter();');
-    javaOutput.push('        writeSkeleton(skeleton);');
-    javaOutput.push('        json.close();');
-    javaOutput.push('        return json.getString();');
-    javaOutput.push('    }');
-    javaOutput.push('');
-    javaOutput.push('    public String serializeAnimationState(AnimationState state) {');
-    javaOutput.push('        visitedObjects.clear();');
-    javaOutput.push('        json = new JsonWriter();');
-    javaOutput.push('        writeAnimationState(state);');
-    javaOutput.push('        json.close();');
-    javaOutput.push('        return json.getString();');
-    javaOutput.push('    }');
-    javaOutput.push('');
+    // Generate public methods
+    for (const method of ir.publicMethods) {
+        javaOutput.push(`    public String ${method.name}(${method.paramType} ${method.paramName}) {`);
+        javaOutput.push('        visitedObjects.clear();');
+        javaOutput.push('        json = new JsonWriter();');
+        javaOutput.push(`        ${method.writeMethodCall}(${method.paramName});`);
+        javaOutput.push('        json.close();');
+        javaOutput.push('        return json.getString();');
+        javaOutput.push('    }');
+        javaOutput.push('');
+    }
 
-    // Generate write methods for all types
-    const generatedMethods = new Set<string>();
-
-    for (const typeName of Array.from(typesNeedingMethods).sort()) {
-        const classInfo = classMap.get(typeName);
-        if (!classInfo) continue;
+    // Generate write methods
+    for (const method of ir.writeMethods) {
+        const shortName = method.paramType.split('.').pop()!;
+        const className = method.paramType.includes('.') ? method.paramType : shortName;
         
-        // Skip enums - they are handled inline with .name() calls
-        if (classInfo.isEnum) continue;
+        javaOutput.push(`    private void ${method.name}(${className} obj) {`);
 
-        const shortName = typeName.split('.').pop()!;
-
-        // Skip if already generated (handle name collisions)
-        if (generatedMethods.has(shortName)) continue;
-        generatedMethods.add(shortName);
-
-        // Use full class name for inner classes
-        const className = typeName.includes('.') ? typeName : shortName;
-
-        javaOutput.push(`    private void write${shortName}(${className} obj) {`);
-
-        if (classInfo.isEnum) {
-            // Handle enums
-            javaOutput.push('        json.writeValue(obj.name());');
-        } else if (classInfo.isAbstract || classInfo.isInterface) {
+        if (method.isAbstractType) {
             // Handle abstract types with instanceof chain
-            const implementations = classInfo.concreteImplementations || [];
-            
-            // Filter out excluded types from implementations
-            const exclusions = loadExclusions();
-            const filteredImplementations = implementations.filter(impl => {
-                return !exclusions.types.has(impl);
-            });
-            
-            if (filteredImplementations.length === 0) {
-                javaOutput.push('        json.writeNull(); // No concrete implementations after filtering exclusions');
-            } else {
+            if (method.subtypeChecks && method.subtypeChecks.length > 0) {
                 let first = true;
-                for (const impl of filteredImplementations) {
-                    const implShortName = impl.split('.').pop()!;
-                    const implClassName = impl.includes('.') ? impl : implShortName;
+                for (const subtype of method.subtypeChecks) {
+                    const subtypeShortName = subtype.typeName.split('.').pop()!;
+                    const subtypeClassName = subtype.typeName.includes('.') ? subtype.typeName : subtypeShortName;
 
                     if (first) {
-                        javaOutput.push(`        if (obj instanceof ${implClassName}) {`);
+                        javaOutput.push(`        if (obj instanceof ${subtypeClassName}) {`);
                         first = false;
                     } else {
-                        javaOutput.push(`        } else if (obj instanceof ${implClassName}) {`);
+                        javaOutput.push(`        } else if (obj instanceof ${subtypeClassName}) {`);
                     }
-                    javaOutput.push(`            write${implShortName}((${implClassName}) obj);`);
+                    javaOutput.push(`            ${subtype.writeMethodCall}((${subtypeClassName}) obj);`);
                 }
                 javaOutput.push('        } else {');
                 javaOutput.push(`            throw new RuntimeException("Unknown ${shortName} type: " + obj.getClass().getName());`);
                 javaOutput.push('        }');
+            } else {
+                javaOutput.push('        json.writeNull(); // No concrete implementations after filtering exclusions');
             }
         } else {
             // Handle concrete types
-            const properties = typeProperties.get(typeName) || [];
-
             // Add cycle detection
             javaOutput.push('        if (visitedObjects.contains(obj)) {');
             javaOutput.push('            json.writeValue("<circular>");');
@@ -426,22 +190,12 @@ function generateJavaSerializer(analysisData: SerializedAnalysisResult): string 
             javaOutput.push('        json.writeName("type");');
             javaOutput.push(`        json.writeValue("${shortName}");`);
 
-            // Write properties (skip excluded ones)
-            for (const prop of properties) {
-                if (prop.excluded) {
-                    javaOutput.push(`        // Skipping excluded property: ${prop.name}`);
-                    continue;
-                }
-                
-                const propName = prop.isGetter ?
-                    prop.name.replace('get', '').replace('()', '').charAt(0).toLowerCase() +
-                    prop.name.replace('get', '').replace('()', '').slice(1) :
-                    prop.name;
-
+            // Write properties
+            for (const property of method.properties) {
                 javaOutput.push('');
-                javaOutput.push(`        json.writeName("${propName}");`);
-                const accessor = prop.isGetter ? `obj.${prop.name}` : `obj.${prop.name}`;
-                generateWriteValue(javaOutput, accessor, prop.type, '        ', abstractTypes, classMap);
+                javaOutput.push(`        json.writeName("${property.name}");`);
+                const propertyLines = generatePropertyCode(property, '        ');
+                javaOutput.push(...propertyLines);
             }
 
             javaOutput.push('');
@@ -452,7 +206,7 @@ function generateJavaSerializer(analysisData: SerializedAnalysisResult): string 
         javaOutput.push('');
     }
 
-    // Add helper methods
+    // Add helper methods for special types
     javaOutput.push('    private void writeColor(Color obj) {');
     javaOutput.push('        if (obj == null) {');
     javaOutput.push('            json.writeNull();');
@@ -491,6 +245,34 @@ function generateJavaSerializer(analysisData: SerializedAnalysisResult): string 
     javaOutput.push('            json.writeObjectEnd();');
     javaOutput.push('        }');
     javaOutput.push('    }');
+
+    // Add IntArray and FloatArray helper methods
+    javaOutput.push('');
+    javaOutput.push('    private void writeIntArray(IntArray obj) {');
+    javaOutput.push('        if (obj == null) {');
+    javaOutput.push('            json.writeNull();');
+    javaOutput.push('        } else {');
+    javaOutput.push('            json.writeArrayStart();');
+    javaOutput.push('            for (int i = 0; i < obj.size; i++) {');
+    javaOutput.push('                json.writeValue(obj.get(i));');
+    javaOutput.push('            }');
+    javaOutput.push('            json.writeArrayEnd();');
+    javaOutput.push('        }');
+    javaOutput.push('    }');
+    javaOutput.push('');
+
+    javaOutput.push('    private void writeFloatArray(FloatArray obj) {');
+    javaOutput.push('        if (obj == null) {');
+    javaOutput.push('            json.writeNull();');
+    javaOutput.push('        } else {');
+    javaOutput.push('            json.writeArrayStart();');
+    javaOutput.push('            for (int i = 0; i < obj.size; i++) {');
+    javaOutput.push('                json.writeValue(obj.get(i));');
+    javaOutput.push('            }');
+    javaOutput.push('            json.writeArrayEnd();');
+    javaOutput.push('        }');
+    javaOutput.push('    }');
+
     javaOutput.push('}');
 
     return javaOutput.join('\n');
@@ -498,17 +280,17 @@ function generateJavaSerializer(analysisData: SerializedAnalysisResult): string 
 
 async function main() {
     try {
-        // Read analysis result
-        const analysisFile = path.resolve(__dirname, '..', 'output', 'analysis-result.json');
-        if (!fs.existsSync(analysisFile)) {
-            console.error('Analysis result not found. Run analyze-java-api.ts first.');
+        // Read the IR file
+        const irFile = path.resolve(__dirname, 'output', 'serializer-ir.json');
+        if (!fs.existsSync(irFile)) {
+            console.error('Serializer IR not found. Run generate-serializer-ir.ts first.');
             process.exit(1);
         }
 
-        const analysisData: SerializedAnalysisResult = JSON.parse(fs.readFileSync(analysisFile, 'utf8'));
+        const ir: SerializerIR = JSON.parse(fs.readFileSync(irFile, 'utf8'));
 
-        // Generate Java serializer
-        const javaCode = generateJavaSerializer(analysisData);
+        // Generate Java serializer from IR
+        const javaCode = generateJavaFromIR(ir);
 
         // Write the Java file
         const javaFile = path.resolve(
@@ -527,10 +309,13 @@ async function main() {
         fs.mkdirSync(path.dirname(javaFile), { recursive: true });
         fs.writeFileSync(javaFile, javaCode);
 
-        console.log(`Generated Java serializer: ${javaFile}`);
+        console.log(`Generated Java serializer from IR: ${javaFile}`);
+        console.log(`- ${ir.publicMethods.length} public methods`);
+        console.log(`- ${ir.writeMethods.length} write methods`);
 
     } catch (error: any) {
         console.error('Error:', error.message);
+        console.error('Stack:', error.stack);
         process.exit(1);
     }
 }
@@ -540,4 +325,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     main();
 }
 
-export { generateJavaSerializer };
+export { generateJavaFromIR };

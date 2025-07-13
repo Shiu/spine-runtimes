@@ -3,7 +3,7 @@
 **Status:** In Progress
 **Created:** 2025-01-11T03:02:54
 **Started:** 2025-01-11T03:11:22
-**Agent PID:** 93834
+**Agent PID:** 15570
 
 **CRITICAL:**
 - NEVER never check a chceckbox and move on to the next checkbox unless the user has confirmed completion of the current checkbox!
@@ -237,17 +237,93 @@ The test programs will print both SkeletonData (setup pose/static data) and Skel
         - Create mechanism in tests/generate-cpp-serializer.ts to replace auto-generated functions with hand-written ones
         - Implement custom writeSkin function that properly handles AttachmentMap::Entries iteration
     - [x] Create regenerate-all.sh script in tests/ that runs all generators in sequence
-    - [ ] Fix C++ JsonWriter output formatting issues (array formatting broken)
-    - [ ] Test with sample skeleton files
-- [ ] TypeScript (spine-ts):
-  - [ ] Follow what we did for spine-cpp wrt to JsonWriter, SkeletonSerializer and the generator
-- [ ] C#
-  - [ ] Figure out how we can add the HeadlessTest and run it without adding it to the assembly itself
-  - [ ] Follow what we did for spine-cpp wrt
-- [ ] C (spine-c):
-  - [ ] Follow what we did for spine-cpp wrt to JsonWriter, SkeletonSerializer and the generator (this one will need some ultrathink and discussion with the user before code changs)
-- [ ] Update tests/README.md to describe the new setup
+    - [x] ~~Fix C++ JsonWriter output formatting issues (array formatting broken)~~
+    - [x] ~~Test with sample skeleton files~~
+- [x] ~~TypeScript (spine-ts):~~
+  - [x] ~~Follow what we did for spine-cpp wrt to JsonWriter, SkeletonSerializer and the generator~~
+- [x] ~~C#~~
+  - [x] ~~Figure out how we can add the HeadlessTest and run it without adding it to the assembly itself~~
+  - [x] ~~Follow what we did for spine-cpp wrt~~
+- [x] ~~C (spine-c):~~
+  - [x] ~~Follow what we did for spine-cpp wrt to JsonWriter, SkeletonSerializer and the generator (this one will need some ultrathink and discussion with the user before code changs)~~
+- [x] ~~Update tests/README.md to describe the new setup~~
 
+
+## Phase 3: Intermediate Representation for Cross-Language Serializer Generation
+
+### Problem
+Current approach requires maintaining separate generator logic for each language (Java, C++, C, TypeScript, C#). The complex analysis, exclusion handling, and serialization logic is duplicated across generators, making maintenance difficult.
+
+### Solution: Language-Agnostic Intermediate Representation (IR)
+Create a single IR generator that captures all serialization logic in a JSON format that language-specific generators can consume without a lot of post-processing. The IR will still
+contain Java specific types and names. Language specific generators then just have to translate.
+
+### IR Structure
+```typescript
+interface SerializerIR {
+  publicMethods: PublicMethod[];
+  writeMethods: WriteMethod[];
+  enumMappings: { [enumName: string]: { [javaValue: string]: string } };
+}
+
+type Property = Primitive | Object | Enum | Array | NestedArray;
+
+interface Primitive {
+  kind: "primitive";
+  name: string; // "duration"
+  getter: string; // "getDuration"
+  valueType: string; // "float", "int", "boolean", "String"
+  isNullable: boolean;
+}
+
+interface Object {
+  kind: "object";
+  name: string; // "color"
+  getter: string; // "getColor"
+  valueType: string; // "Color"
+  writeMethodCall: string; // "writeColor"
+  isNullable: boolean;
+}
+
+interface Enum {
+  kind: "enum";
+  name: string; // "mixBlend"
+  getter: string; // "getMixBlend"
+  enumName: string; // "MixBlend"
+  isNullable: boolean;
+}
+
+interface Array {
+  kind: "array";
+  name: string; // "timelines"
+  getter: string; // "getTimelines"
+  elementType: string; // "Timeline", "int", "String"
+  elementKind: "primitive" | "object";
+  writeMethodCall?: string; // "writeTimeline" (for objects)
+  isNullable: boolean;
+}
+
+interface NestedArray {
+  kind: "nestedArray";
+  name: string; // "vertices"
+  getter: string; // "getVertices"
+  elementType: string; // "float"
+  isNullable: boolean;
+}
+```
+
+### Implementation Plan
+- [x] Create tests/generate-serializer-ir.ts:
+  - [x] Reuse logic from tests/generate-java-serializer.ts (analysis, exclusions, property detection)
+  - [x] Output SerializerIR as JSON to tests/output/serializer-ir.json
+  - [x] All exclusions and filtering pre-applied - no post-processing needed
+- [ ] Update language generators to consume IR:
+  - [x] Replace tests/generate-java-serializer.ts with IR-based version
+  - [ ] Modify tests/generate-cpp-serializer.ts to use IR
+  - [ ] Create tests/generate-ts-serializer.ts using IR
+  - [ ] Create tests/generate-cs-serializer.ts using IR
+  - [ ] Language generators focus purely on syntax transformation
+- [ ] Update tests/regenerate-all.sh to generate IR first, then all languages
 
 ### Misc (added by user while Claude worked, need to be refined!)
 - [ ] HeadlessTest should probably

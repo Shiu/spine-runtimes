@@ -20,32 +20,33 @@ import java.util.HashSet;
 
 public class SkeletonSerializer {
     private final Set<Object> visitedObjects = new HashSet<>();
+    private JsonWriter json;
 
     public String serializeSkeletonData(SkeletonData data) {
         visitedObjects.clear();
-        JsonWriter json = new JsonWriter();
-        writeSkeletonData(json, data);
+        json = new JsonWriter();
+        writeSkeletonData(data);
         json.close();
         return json.getString();
     }
 
     public String serializeSkeleton(Skeleton skeleton) {
         visitedObjects.clear();
-        JsonWriter json = new JsonWriter();
-        writeSkeleton(json, skeleton);
+        json = new JsonWriter();
+        writeSkeleton(skeleton);
         json.close();
         return json.getString();
     }
 
     public String serializeAnimationState(AnimationState state) {
         visitedObjects.clear();
-        JsonWriter json = new JsonWriter();
-        writeAnimationState(json, state);
+        json = new JsonWriter();
+        writeAnimationState(state);
         json.close();
         return json.getString();
     }
 
-    private void writeAnimation(JsonWriter json, Animation obj) {
+    private void writeAnimation(Animation obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -59,7 +60,7 @@ public class SkeletonSerializer {
         json.writeName("timelines");
         json.writeArrayStart();
         for (Timeline item : obj.getTimelines()) {
-            writeTimeline(json, item);
+            writeTimeline(item);
         }
         json.writeArrayEnd();
 
@@ -67,11 +68,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getDuration());
 
         json.writeName("bones");
-        json.writeArrayStart();
-        for (int i = 0; i < obj.getBones().size; i++) {
-            json.writeValue(obj.getBones().get(i));
-        }
-        json.writeArrayEnd();
+        writeIntArray(obj.getBones());
 
         json.writeName("name");
         json.writeValue(obj.getName());
@@ -79,7 +76,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeAlphaTimeline(JsonWriter json, Animation.AlphaTimeline obj) {
+    private void writeAlphaTimeline(Animation.AlphaTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -119,7 +116,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeAttachmentTimeline(JsonWriter json, Animation.AttachmentTimeline obj) {
+    private void writeAttachmentTimeline(Animation.AttachmentTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -166,7 +163,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeDeformTimeline(JsonWriter json, Animation.DeformTimeline obj) {
+    private void writeDeformTimeline(Animation.DeformTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -181,20 +178,16 @@ public class SkeletonSerializer {
         json.writeValue(obj.getFrameCount());
 
         json.writeName("attachment");
-        writeVertexAttachment(json, obj.getAttachment());
+        writeVertexAttachment(obj.getAttachment());
 
         json.writeName("vertices");
         json.writeArrayStart();
         for (float[] nestedArray : obj.getVertices()) {
-            if (nestedArray == null) {
-                json.writeNull();
-            } else {
-                json.writeArrayStart();
-                for (float elem : nestedArray) {
-                    json.writeValue(elem);
-                }
-                json.writeArrayEnd();
+            json.writeArrayStart();
+            for (float elem : nestedArray) {
+                json.writeValue(elem);
             }
+            json.writeArrayEnd();
         }
         json.writeArrayEnd();
 
@@ -224,7 +217,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeDrawOrderTimeline(JsonWriter json, Animation.DrawOrderTimeline obj) {
+    private void writeDrawOrderTimeline(Animation.DrawOrderTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -241,15 +234,11 @@ public class SkeletonSerializer {
         json.writeName("drawOrders");
         json.writeArrayStart();
         for (int[] nestedArray : obj.getDrawOrders()) {
-            if (nestedArray == null) {
-                json.writeNull();
-            } else {
-                json.writeArrayStart();
-                for (int elem : nestedArray) {
-                    json.writeValue(elem);
-                }
-                json.writeArrayEnd();
+            json.writeArrayStart();
+            for (int elem : nestedArray) {
+                json.writeValue(elem);
             }
+            json.writeArrayEnd();
         }
         json.writeArrayEnd();
 
@@ -276,7 +265,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeEventTimeline(JsonWriter json, Animation.EventTimeline obj) {
+    private void writeEventTimeline(Animation.EventTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -293,7 +282,7 @@ public class SkeletonSerializer {
         json.writeName("events");
         json.writeArrayStart();
         for (Event item : obj.getEvents()) {
-            writeEvent(json, item);
+            writeEvent(item);
         }
         json.writeArrayEnd();
 
@@ -320,7 +309,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeIkConstraintTimeline(JsonWriter json, Animation.IkConstraintTimeline obj) {
+    private void writeIkConstraintTimeline(Animation.IkConstraintTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -360,7 +349,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeInheritTimeline(JsonWriter json, Animation.InheritTimeline obj) {
+    private void writeInheritTimeline(Animation.InheritTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -400,7 +389,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePathConstraintMixTimeline(JsonWriter json, Animation.PathConstraintMixTimeline obj) {
+    private void writePathConstraintMixTimeline(Animation.PathConstraintMixTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -440,7 +429,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePathConstraintPositionTimeline(JsonWriter json, Animation.PathConstraintPositionTimeline obj) {
+    private void writePathConstraintPositionTimeline(Animation.PathConstraintPositionTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -480,7 +469,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePathConstraintSpacingTimeline(JsonWriter json, Animation.PathConstraintSpacingTimeline obj) {
+    private void writePathConstraintSpacingTimeline(Animation.PathConstraintSpacingTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -520,7 +509,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePhysicsConstraintDampingTimeline(JsonWriter json, Animation.PhysicsConstraintDampingTimeline obj) {
+    private void writePhysicsConstraintDampingTimeline(Animation.PhysicsConstraintDampingTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -560,7 +549,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePhysicsConstraintGravityTimeline(JsonWriter json, Animation.PhysicsConstraintGravityTimeline obj) {
+    private void writePhysicsConstraintGravityTimeline(Animation.PhysicsConstraintGravityTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -600,7 +589,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePhysicsConstraintInertiaTimeline(JsonWriter json, Animation.PhysicsConstraintInertiaTimeline obj) {
+    private void writePhysicsConstraintInertiaTimeline(Animation.PhysicsConstraintInertiaTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -640,7 +629,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePhysicsConstraintMassTimeline(JsonWriter json, Animation.PhysicsConstraintMassTimeline obj) {
+    private void writePhysicsConstraintMassTimeline(Animation.PhysicsConstraintMassTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -680,7 +669,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePhysicsConstraintMixTimeline(JsonWriter json, Animation.PhysicsConstraintMixTimeline obj) {
+    private void writePhysicsConstraintMixTimeline(Animation.PhysicsConstraintMixTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -720,7 +709,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePhysicsConstraintResetTimeline(JsonWriter json, Animation.PhysicsConstraintResetTimeline obj) {
+    private void writePhysicsConstraintResetTimeline(Animation.PhysicsConstraintResetTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -760,7 +749,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePhysicsConstraintStrengthTimeline(JsonWriter json, Animation.PhysicsConstraintStrengthTimeline obj) {
+    private void writePhysicsConstraintStrengthTimeline(Animation.PhysicsConstraintStrengthTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -800,7 +789,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePhysicsConstraintWindTimeline(JsonWriter json, Animation.PhysicsConstraintWindTimeline obj) {
+    private void writePhysicsConstraintWindTimeline(Animation.PhysicsConstraintWindTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -840,7 +829,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeRGB2Timeline(JsonWriter json, Animation.RGB2Timeline obj) {
+    private void writeRGB2Timeline(Animation.RGB2Timeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -880,7 +869,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeRGBA2Timeline(JsonWriter json, Animation.RGBA2Timeline obj) {
+    private void writeRGBA2Timeline(Animation.RGBA2Timeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -920,7 +909,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeRGBATimeline(JsonWriter json, Animation.RGBATimeline obj) {
+    private void writeRGBATimeline(Animation.RGBATimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -960,7 +949,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeRGBTimeline(JsonWriter json, Animation.RGBTimeline obj) {
+    private void writeRGBTimeline(Animation.RGBTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1000,7 +989,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeRotateTimeline(JsonWriter json, Animation.RotateTimeline obj) {
+    private void writeRotateTimeline(Animation.RotateTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1040,7 +1029,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeScaleTimeline(JsonWriter json, Animation.ScaleTimeline obj) {
+    private void writeScaleTimeline(Animation.ScaleTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1080,7 +1069,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeScaleXTimeline(JsonWriter json, Animation.ScaleXTimeline obj) {
+    private void writeScaleXTimeline(Animation.ScaleXTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1120,7 +1109,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeScaleYTimeline(JsonWriter json, Animation.ScaleYTimeline obj) {
+    private void writeScaleYTimeline(Animation.ScaleYTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1160,7 +1149,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeSequenceTimeline(JsonWriter json, Animation.SequenceTimeline obj) {
+    private void writeSequenceTimeline(Animation.SequenceTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1178,7 +1167,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getSlotIndex());
 
         json.writeName("attachment");
-        writeAttachment(json, obj.getAttachment());
+        writeAttachment(obj.getAttachment());
 
         json.writeName("propertyIds");
         json.writeArrayStart();
@@ -1203,7 +1192,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeShearTimeline(JsonWriter json, Animation.ShearTimeline obj) {
+    private void writeShearTimeline(Animation.ShearTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1243,7 +1232,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeShearXTimeline(JsonWriter json, Animation.ShearXTimeline obj) {
+    private void writeShearXTimeline(Animation.ShearXTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1283,7 +1272,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeShearYTimeline(JsonWriter json, Animation.ShearYTimeline obj) {
+    private void writeShearYTimeline(Animation.ShearYTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1323,7 +1312,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeSliderMixTimeline(JsonWriter json, Animation.SliderMixTimeline obj) {
+    private void writeSliderMixTimeline(Animation.SliderMixTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1363,7 +1352,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeSliderTimeline(JsonWriter json, Animation.SliderTimeline obj) {
+    private void writeSliderTimeline(Animation.SliderTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1403,85 +1392,85 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeTimeline(JsonWriter json, Animation.Timeline obj) {
+    private void writeTimeline(Animation.Timeline obj) {
         if (obj instanceof Animation.AlphaTimeline) {
-            writeAlphaTimeline(json, (Animation.AlphaTimeline) obj);
+            writeAlphaTimeline((Animation.AlphaTimeline) obj);
         } else if (obj instanceof Animation.AttachmentTimeline) {
-            writeAttachmentTimeline(json, (Animation.AttachmentTimeline) obj);
+            writeAttachmentTimeline((Animation.AttachmentTimeline) obj);
         } else if (obj instanceof Animation.DeformTimeline) {
-            writeDeformTimeline(json, (Animation.DeformTimeline) obj);
+            writeDeformTimeline((Animation.DeformTimeline) obj);
         } else if (obj instanceof Animation.DrawOrderTimeline) {
-            writeDrawOrderTimeline(json, (Animation.DrawOrderTimeline) obj);
+            writeDrawOrderTimeline((Animation.DrawOrderTimeline) obj);
         } else if (obj instanceof Animation.EventTimeline) {
-            writeEventTimeline(json, (Animation.EventTimeline) obj);
+            writeEventTimeline((Animation.EventTimeline) obj);
         } else if (obj instanceof Animation.IkConstraintTimeline) {
-            writeIkConstraintTimeline(json, (Animation.IkConstraintTimeline) obj);
+            writeIkConstraintTimeline((Animation.IkConstraintTimeline) obj);
         } else if (obj instanceof Animation.InheritTimeline) {
-            writeInheritTimeline(json, (Animation.InheritTimeline) obj);
+            writeInheritTimeline((Animation.InheritTimeline) obj);
         } else if (obj instanceof Animation.PathConstraintMixTimeline) {
-            writePathConstraintMixTimeline(json, (Animation.PathConstraintMixTimeline) obj);
+            writePathConstraintMixTimeline((Animation.PathConstraintMixTimeline) obj);
         } else if (obj instanceof Animation.PathConstraintPositionTimeline) {
-            writePathConstraintPositionTimeline(json, (Animation.PathConstraintPositionTimeline) obj);
+            writePathConstraintPositionTimeline((Animation.PathConstraintPositionTimeline) obj);
         } else if (obj instanceof Animation.PathConstraintSpacingTimeline) {
-            writePathConstraintSpacingTimeline(json, (Animation.PathConstraintSpacingTimeline) obj);
+            writePathConstraintSpacingTimeline((Animation.PathConstraintSpacingTimeline) obj);
         } else if (obj instanceof Animation.PhysicsConstraintDampingTimeline) {
-            writePhysicsConstraintDampingTimeline(json, (Animation.PhysicsConstraintDampingTimeline) obj);
+            writePhysicsConstraintDampingTimeline((Animation.PhysicsConstraintDampingTimeline) obj);
         } else if (obj instanceof Animation.PhysicsConstraintGravityTimeline) {
-            writePhysicsConstraintGravityTimeline(json, (Animation.PhysicsConstraintGravityTimeline) obj);
+            writePhysicsConstraintGravityTimeline((Animation.PhysicsConstraintGravityTimeline) obj);
         } else if (obj instanceof Animation.PhysicsConstraintInertiaTimeline) {
-            writePhysicsConstraintInertiaTimeline(json, (Animation.PhysicsConstraintInertiaTimeline) obj);
+            writePhysicsConstraintInertiaTimeline((Animation.PhysicsConstraintInertiaTimeline) obj);
         } else if (obj instanceof Animation.PhysicsConstraintMassTimeline) {
-            writePhysicsConstraintMassTimeline(json, (Animation.PhysicsConstraintMassTimeline) obj);
+            writePhysicsConstraintMassTimeline((Animation.PhysicsConstraintMassTimeline) obj);
         } else if (obj instanceof Animation.PhysicsConstraintMixTimeline) {
-            writePhysicsConstraintMixTimeline(json, (Animation.PhysicsConstraintMixTimeline) obj);
+            writePhysicsConstraintMixTimeline((Animation.PhysicsConstraintMixTimeline) obj);
         } else if (obj instanceof Animation.PhysicsConstraintResetTimeline) {
-            writePhysicsConstraintResetTimeline(json, (Animation.PhysicsConstraintResetTimeline) obj);
+            writePhysicsConstraintResetTimeline((Animation.PhysicsConstraintResetTimeline) obj);
         } else if (obj instanceof Animation.PhysicsConstraintStrengthTimeline) {
-            writePhysicsConstraintStrengthTimeline(json, (Animation.PhysicsConstraintStrengthTimeline) obj);
+            writePhysicsConstraintStrengthTimeline((Animation.PhysicsConstraintStrengthTimeline) obj);
         } else if (obj instanceof Animation.PhysicsConstraintWindTimeline) {
-            writePhysicsConstraintWindTimeline(json, (Animation.PhysicsConstraintWindTimeline) obj);
+            writePhysicsConstraintWindTimeline((Animation.PhysicsConstraintWindTimeline) obj);
         } else if (obj instanceof Animation.RGB2Timeline) {
-            writeRGB2Timeline(json, (Animation.RGB2Timeline) obj);
+            writeRGB2Timeline((Animation.RGB2Timeline) obj);
         } else if (obj instanceof Animation.RGBA2Timeline) {
-            writeRGBA2Timeline(json, (Animation.RGBA2Timeline) obj);
+            writeRGBA2Timeline((Animation.RGBA2Timeline) obj);
         } else if (obj instanceof Animation.RGBATimeline) {
-            writeRGBATimeline(json, (Animation.RGBATimeline) obj);
+            writeRGBATimeline((Animation.RGBATimeline) obj);
         } else if (obj instanceof Animation.RGBTimeline) {
-            writeRGBTimeline(json, (Animation.RGBTimeline) obj);
+            writeRGBTimeline((Animation.RGBTimeline) obj);
         } else if (obj instanceof Animation.RotateTimeline) {
-            writeRotateTimeline(json, (Animation.RotateTimeline) obj);
+            writeRotateTimeline((Animation.RotateTimeline) obj);
         } else if (obj instanceof Animation.ScaleTimeline) {
-            writeScaleTimeline(json, (Animation.ScaleTimeline) obj);
+            writeScaleTimeline((Animation.ScaleTimeline) obj);
         } else if (obj instanceof Animation.ScaleXTimeline) {
-            writeScaleXTimeline(json, (Animation.ScaleXTimeline) obj);
+            writeScaleXTimeline((Animation.ScaleXTimeline) obj);
         } else if (obj instanceof Animation.ScaleYTimeline) {
-            writeScaleYTimeline(json, (Animation.ScaleYTimeline) obj);
+            writeScaleYTimeline((Animation.ScaleYTimeline) obj);
         } else if (obj instanceof Animation.SequenceTimeline) {
-            writeSequenceTimeline(json, (Animation.SequenceTimeline) obj);
+            writeSequenceTimeline((Animation.SequenceTimeline) obj);
         } else if (obj instanceof Animation.ShearTimeline) {
-            writeShearTimeline(json, (Animation.ShearTimeline) obj);
+            writeShearTimeline((Animation.ShearTimeline) obj);
         } else if (obj instanceof Animation.ShearXTimeline) {
-            writeShearXTimeline(json, (Animation.ShearXTimeline) obj);
+            writeShearXTimeline((Animation.ShearXTimeline) obj);
         } else if (obj instanceof Animation.ShearYTimeline) {
-            writeShearYTimeline(json, (Animation.ShearYTimeline) obj);
+            writeShearYTimeline((Animation.ShearYTimeline) obj);
         } else if (obj instanceof Animation.SliderMixTimeline) {
-            writeSliderMixTimeline(json, (Animation.SliderMixTimeline) obj);
+            writeSliderMixTimeline((Animation.SliderMixTimeline) obj);
         } else if (obj instanceof Animation.SliderTimeline) {
-            writeSliderTimeline(json, (Animation.SliderTimeline) obj);
+            writeSliderTimeline((Animation.SliderTimeline) obj);
         } else if (obj instanceof Animation.TransformConstraintTimeline) {
-            writeTransformConstraintTimeline(json, (Animation.TransformConstraintTimeline) obj);
+            writeTransformConstraintTimeline((Animation.TransformConstraintTimeline) obj);
         } else if (obj instanceof Animation.TranslateTimeline) {
-            writeTranslateTimeline(json, (Animation.TranslateTimeline) obj);
+            writeTranslateTimeline((Animation.TranslateTimeline) obj);
         } else if (obj instanceof Animation.TranslateXTimeline) {
-            writeTranslateXTimeline(json, (Animation.TranslateXTimeline) obj);
+            writeTranslateXTimeline((Animation.TranslateXTimeline) obj);
         } else if (obj instanceof Animation.TranslateYTimeline) {
-            writeTranslateYTimeline(json, (Animation.TranslateYTimeline) obj);
+            writeTranslateYTimeline((Animation.TranslateYTimeline) obj);
         } else {
             throw new RuntimeException("Unknown Timeline type: " + obj.getClass().getName());
         }
     }
 
-    private void writeTransformConstraintTimeline(JsonWriter json, Animation.TransformConstraintTimeline obj) {
+    private void writeTransformConstraintTimeline(Animation.TransformConstraintTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1521,7 +1510,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeTranslateTimeline(JsonWriter json, Animation.TranslateTimeline obj) {
+    private void writeTranslateTimeline(Animation.TranslateTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1561,7 +1550,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeTranslateXTimeline(JsonWriter json, Animation.TranslateXTimeline obj) {
+    private void writeTranslateXTimeline(Animation.TranslateXTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1601,7 +1590,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeTranslateYTimeline(JsonWriter json, Animation.TranslateYTimeline obj) {
+    private void writeTranslateYTimeline(Animation.TranslateYTimeline obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1641,7 +1630,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeAnimationState(JsonWriter json, AnimationState obj) {
+    private void writeAnimationState(AnimationState obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1656,19 +1645,19 @@ public class SkeletonSerializer {
         json.writeValue(obj.getTimeScale());
 
         json.writeName("data");
-        writeAnimationStateData(json, obj.getData());
+        writeAnimationStateData(obj.getData());
 
         json.writeName("tracks");
         json.writeArrayStart();
         for (TrackEntry item : obj.getTracks()) {
-            writeTrackEntry(json, item);
+            writeTrackEntry(item);
         }
         json.writeArrayEnd();
 
         json.writeObjectEnd();
     }
 
-    private void writeTrackEntry(JsonWriter json, AnimationState.TrackEntry obj) {
+    private void writeTrackEntry(AnimationState.TrackEntry obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1683,7 +1672,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getTrackIndex());
 
         json.writeName("animation");
-        writeAnimation(json, obj.getAnimation());
+        writeAnimation(obj.getAnimation());
 
         json.writeName("loop");
         json.writeValue(obj.getLoop());
@@ -1714,7 +1703,6 @@ public class SkeletonSerializer {
 
         json.writeName("timeScale");
         json.writeValue(obj.getTimeScale());
-        // Skipping excluded property: getListener()
 
         json.writeName("alpha");
         json.writeValue(obj.getAlpha());
@@ -1735,14 +1723,14 @@ public class SkeletonSerializer {
         if (obj.getNext() == null) {
             json.writeNull();
         } else {
-            writeTrackEntry(json, obj.getNext());
+            writeTrackEntry(obj.getNext());
         }
 
         json.writeName("previous");
         if (obj.getPrevious() == null) {
             json.writeNull();
         } else {
-            writeTrackEntry(json, obj.getPrevious());
+            writeTrackEntry(obj.getPrevious());
         }
 
         json.writeName("mixTime");
@@ -1758,14 +1746,14 @@ public class SkeletonSerializer {
         if (obj.getMixingFrom() == null) {
             json.writeNull();
         } else {
-            writeTrackEntry(json, obj.getMixingFrom());
+            writeTrackEntry(obj.getMixingFrom());
         }
 
         json.writeName("mixingTo");
         if (obj.getMixingTo() == null) {
             json.writeNull();
         } else {
-            writeTrackEntry(json, obj.getMixingTo());
+            writeTrackEntry(obj.getMixingTo());
         }
 
         json.writeName("holdPrevious");
@@ -1780,7 +1768,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeAnimationStateData(JsonWriter json, AnimationStateData obj) {
+    private void writeAnimationStateData(AnimationStateData obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1792,7 +1780,7 @@ public class SkeletonSerializer {
         json.writeValue("AnimationStateData");
 
         json.writeName("skeletonData");
-        writeSkeletonData(json, obj.getSkeletonData());
+        writeSkeletonData(obj.getSkeletonData());
 
         json.writeName("defaultMix");
         json.writeValue(obj.getDefaultMix());
@@ -1800,25 +1788,25 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeAttachment(JsonWriter json, Attachment obj) {
+    private void writeAttachment(Attachment obj) {
         if (obj instanceof BoundingBoxAttachment) {
-            writeBoundingBoxAttachment(json, (BoundingBoxAttachment) obj);
+            writeBoundingBoxAttachment((BoundingBoxAttachment) obj);
         } else if (obj instanceof ClippingAttachment) {
-            writeClippingAttachment(json, (ClippingAttachment) obj);
+            writeClippingAttachment((ClippingAttachment) obj);
         } else if (obj instanceof MeshAttachment) {
-            writeMeshAttachment(json, (MeshAttachment) obj);
+            writeMeshAttachment((MeshAttachment) obj);
         } else if (obj instanceof PathAttachment) {
-            writePathAttachment(json, (PathAttachment) obj);
+            writePathAttachment((PathAttachment) obj);
         } else if (obj instanceof PointAttachment) {
-            writePointAttachment(json, (PointAttachment) obj);
+            writePointAttachment((PointAttachment) obj);
         } else if (obj instanceof RegionAttachment) {
-            writeRegionAttachment(json, (RegionAttachment) obj);
+            writeRegionAttachment((RegionAttachment) obj);
         } else {
             throw new RuntimeException("Unknown Attachment type: " + obj.getClass().getName());
         }
     }
 
-    private void writeBone(JsonWriter json, Bone obj) {
+    private void writeBone(Bone obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1833,29 +1821,29 @@ public class SkeletonSerializer {
         if (obj.getParent() == null) {
             json.writeNull();
         } else {
-            writeBone(json, obj.getParent());
+            writeBone(obj.getParent());
         }
 
         json.writeName("children");
         json.writeArrayStart();
         for (Bone item : obj.getChildren()) {
-            writeBone(json, item);
+            writeBone(item);
         }
         json.writeArrayEnd();
 
         json.writeName("data");
-        writeBoneData(json, obj.getData());
+        writeBoneData(obj.getData());
 
         json.writeName("pose");
-        writeBoneLocal(json, obj.getPose());
+        writeBoneLocal(obj.getPose());
 
         json.writeName("appliedPose");
-        writeBonePose(json, obj.getAppliedPose());
+        writeBonePose(obj.getAppliedPose());
 
         json.writeObjectEnd();
     }
 
-    private void writeBoneData(JsonWriter json, BoneData obj) {
+    private void writeBoneData(BoneData obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1873,14 +1861,14 @@ public class SkeletonSerializer {
         if (obj.getParent() == null) {
             json.writeNull();
         } else {
-            writeBoneData(json, obj.getParent());
+            writeBoneData(obj.getParent());
         }
 
         json.writeName("length");
         json.writeValue(obj.getLength());
 
         json.writeName("color");
-        writeColor(json, obj.getColor());
+        writeColor(obj.getColor());
 
         json.writeName("icon");
         json.writeValue(obj.getIcon());
@@ -1892,7 +1880,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getName());
 
         json.writeName("setupPose");
-        writeBoneLocal(json, obj.getSetupPose());
+        writeBoneLocal(obj.getSetupPose());
 
         json.writeName("skinRequired");
         json.writeValue(obj.getSkinRequired());
@@ -1900,7 +1888,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeBoneLocal(JsonWriter json, BoneLocal obj) {
+    private void writeBoneLocal(BoneLocal obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -1938,7 +1926,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeBonePose(JsonWriter json, BonePose obj) {
+    private void writeBonePose(BonePose obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2006,7 +1994,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeBoundingBoxAttachment(JsonWriter json, BoundingBoxAttachment obj) {
+    private void writeBoundingBoxAttachment(BoundingBoxAttachment obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2018,7 +2006,7 @@ public class SkeletonSerializer {
         json.writeValue("BoundingBoxAttachment");
 
         json.writeName("color");
-        writeColor(json, obj.getColor());
+        writeColor(obj.getColor());
 
         json.writeName("bones");
         if (obj.getBones() == null) {
@@ -2045,7 +2033,7 @@ public class SkeletonSerializer {
         if (obj.getTimelineAttachment() == null) {
             json.writeNull();
         } else {
-            writeAttachment(json, obj.getTimelineAttachment());
+            writeAttachment(obj.getTimelineAttachment());
         }
 
         json.writeName("id");
@@ -2057,7 +2045,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeClippingAttachment(JsonWriter json, ClippingAttachment obj) {
+    private void writeClippingAttachment(ClippingAttachment obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2072,11 +2060,11 @@ public class SkeletonSerializer {
         if (obj.getEndSlot() == null) {
             json.writeNull();
         } else {
-            writeSlotData(json, obj.getEndSlot());
+            writeSlotData(obj.getEndSlot());
         }
 
         json.writeName("color");
-        writeColor(json, obj.getColor());
+        writeColor(obj.getColor());
 
         json.writeName("bones");
         if (obj.getBones() == null) {
@@ -2103,7 +2091,7 @@ public class SkeletonSerializer {
         if (obj.getTimelineAttachment() == null) {
             json.writeNull();
         } else {
-            writeAttachment(json, obj.getTimelineAttachment());
+            writeAttachment(obj.getTimelineAttachment());
         }
 
         json.writeName("id");
@@ -2115,39 +2103,39 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeConstraint(JsonWriter json, Constraint obj) {
+    private void writeConstraint(Constraint obj) {
         if (obj instanceof IkConstraint) {
-            writeIkConstraint(json, (IkConstraint) obj);
+            writeIkConstraint((IkConstraint) obj);
         } else if (obj instanceof PathConstraint) {
-            writePathConstraint(json, (PathConstraint) obj);
+            writePathConstraint((PathConstraint) obj);
         } else if (obj instanceof PhysicsConstraint) {
-            writePhysicsConstraint(json, (PhysicsConstraint) obj);
+            writePhysicsConstraint((PhysicsConstraint) obj);
         } else if (obj instanceof Slider) {
-            writeSlider(json, (Slider) obj);
+            writeSlider((Slider) obj);
         } else if (obj instanceof TransformConstraint) {
-            writeTransformConstraint(json, (TransformConstraint) obj);
+            writeTransformConstraint((TransformConstraint) obj);
         } else {
             throw new RuntimeException("Unknown Constraint type: " + obj.getClass().getName());
         }
     }
 
-    private void writeConstraintData(JsonWriter json, ConstraintData obj) {
+    private void writeConstraintData(ConstraintData obj) {
         if (obj instanceof IkConstraintData) {
-            writeIkConstraintData(json, (IkConstraintData) obj);
+            writeIkConstraintData((IkConstraintData) obj);
         } else if (obj instanceof PathConstraintData) {
-            writePathConstraintData(json, (PathConstraintData) obj);
+            writePathConstraintData((PathConstraintData) obj);
         } else if (obj instanceof PhysicsConstraintData) {
-            writePhysicsConstraintData(json, (PhysicsConstraintData) obj);
+            writePhysicsConstraintData((PhysicsConstraintData) obj);
         } else if (obj instanceof SliderData) {
-            writeSliderData(json, (SliderData) obj);
+            writeSliderData((SliderData) obj);
         } else if (obj instanceof TransformConstraintData) {
-            writeTransformConstraintData(json, (TransformConstraintData) obj);
+            writeTransformConstraintData((TransformConstraintData) obj);
         } else {
             throw new RuntimeException("Unknown ConstraintData type: " + obj.getClass().getName());
         }
     }
 
-    private void writeEvent(JsonWriter json, Event obj) {
+    private void writeEvent(Event obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2177,12 +2165,12 @@ public class SkeletonSerializer {
         json.writeValue(obj.getTime());
 
         json.writeName("data");
-        writeEventData(json, obj.getData());
+        writeEventData(obj.getData());
 
         json.writeObjectEnd();
     }
 
-    private void writeEventData(JsonWriter json, EventData obj) {
+    private void writeEventData(EventData obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2217,7 +2205,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeIkConstraint(JsonWriter json, IkConstraint obj) {
+    private void writeIkConstraint(IkConstraint obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2231,26 +2219,26 @@ public class SkeletonSerializer {
         json.writeName("bones");
         json.writeArrayStart();
         for (BonePose item : obj.getBones()) {
-            writeBonePose(json, item);
+            writeBonePose(item);
         }
         json.writeArrayEnd();
 
         json.writeName("target");
-        writeBone(json, obj.getTarget());
+        writeBone(obj.getTarget());
 
         json.writeName("data");
-        writeIkConstraintData(json, obj.getData());
+        writeIkConstraintData(obj.getData());
 
         json.writeName("pose");
-        writeIkConstraintPose(json, obj.getPose());
+        writeIkConstraintPose(obj.getPose());
 
         json.writeName("appliedPose");
-        writeIkConstraintPose(json, obj.getAppliedPose());
+        writeIkConstraintPose(obj.getAppliedPose());
 
         json.writeObjectEnd();
     }
 
-    private void writeIkConstraintData(JsonWriter json, IkConstraintData obj) {
+    private void writeIkConstraintData(IkConstraintData obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2264,12 +2252,12 @@ public class SkeletonSerializer {
         json.writeName("bones");
         json.writeArrayStart();
         for (BoneData item : obj.getBones()) {
-            writeBoneData(json, item);
+            writeBoneData(item);
         }
         json.writeArrayEnd();
 
         json.writeName("target");
-        writeBoneData(json, obj.getTarget());
+        writeBoneData(obj.getTarget());
 
         json.writeName("uniform");
         json.writeValue(obj.getUniform());
@@ -2278,7 +2266,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getName());
 
         json.writeName("setupPose");
-        writeIkConstraintPose(json, obj.getSetupPose());
+        writeIkConstraintPose(obj.getSetupPose());
 
         json.writeName("skinRequired");
         json.writeValue(obj.getSkinRequired());
@@ -2286,7 +2274,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeIkConstraintPose(JsonWriter json, IkConstraintPose obj) {
+    private void writeIkConstraintPose(IkConstraintPose obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2315,7 +2303,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeMeshAttachment(JsonWriter json, MeshAttachment obj) {
+    private void writeMeshAttachment(MeshAttachment obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2327,7 +2315,11 @@ public class SkeletonSerializer {
         json.writeValue("MeshAttachment");
 
         json.writeName("region");
-        writeTextureRegion(json, obj.getRegion());
+        if (obj.getRegion() == null) {
+            json.writeNull();
+        } else {
+            writeTextureRegion(obj.getRegion());
+        }
 
         json.writeName("triangles");
         json.writeArrayStart();
@@ -2351,7 +2343,7 @@ public class SkeletonSerializer {
         json.writeArrayEnd();
 
         json.writeName("color");
-        writeColor(json, obj.getColor());
+        writeColor(obj.getColor());
 
         json.writeName("path");
         json.writeValue(obj.getPath());
@@ -2380,14 +2372,14 @@ public class SkeletonSerializer {
         if (obj.getSequence() == null) {
             json.writeNull();
         } else {
-            writeSequence(json, obj.getSequence());
+            writeSequence(obj.getSequence());
         }
 
         json.writeName("parentMesh");
         if (obj.getParentMesh() == null) {
             json.writeNull();
         } else {
-            writeMeshAttachment(json, obj.getParentMesh());
+            writeMeshAttachment(obj.getParentMesh());
         }
 
         json.writeName("bones");
@@ -2415,7 +2407,7 @@ public class SkeletonSerializer {
         if (obj.getTimelineAttachment() == null) {
             json.writeNull();
         } else {
-            writeAttachment(json, obj.getTimelineAttachment());
+            writeAttachment(obj.getTimelineAttachment());
         }
 
         json.writeName("id");
@@ -2427,7 +2419,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePathAttachment(JsonWriter json, PathAttachment obj) {
+    private void writePathAttachment(PathAttachment obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2452,7 +2444,7 @@ public class SkeletonSerializer {
         json.writeArrayEnd();
 
         json.writeName("color");
-        writeColor(json, obj.getColor());
+        writeColor(obj.getColor());
 
         json.writeName("bones");
         if (obj.getBones() == null) {
@@ -2479,7 +2471,7 @@ public class SkeletonSerializer {
         if (obj.getTimelineAttachment() == null) {
             json.writeNull();
         } else {
-            writeAttachment(json, obj.getTimelineAttachment());
+            writeAttachment(obj.getTimelineAttachment());
         }
 
         json.writeName("id");
@@ -2491,7 +2483,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePathConstraint(JsonWriter json, PathConstraint obj) {
+    private void writePathConstraint(PathConstraint obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2505,26 +2497,26 @@ public class SkeletonSerializer {
         json.writeName("bones");
         json.writeArrayStart();
         for (BonePose item : obj.getBones()) {
-            writeBonePose(json, item);
+            writeBonePose(item);
         }
         json.writeArrayEnd();
 
         json.writeName("slot");
-        writeSlot(json, obj.getSlot());
+        writeSlot(obj.getSlot());
 
         json.writeName("data");
-        writePathConstraintData(json, obj.getData());
+        writePathConstraintData(obj.getData());
 
         json.writeName("pose");
-        writePathConstraintPose(json, obj.getPose());
+        writePathConstraintPose(obj.getPose());
 
         json.writeName("appliedPose");
-        writePathConstraintPose(json, obj.getAppliedPose());
+        writePathConstraintPose(obj.getAppliedPose());
 
         json.writeObjectEnd();
     }
 
-    private void writePathConstraintData(JsonWriter json, PathConstraintData obj) {
+    private void writePathConstraintData(PathConstraintData obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2538,12 +2530,12 @@ public class SkeletonSerializer {
         json.writeName("bones");
         json.writeArrayStart();
         for (BoneData item : obj.getBones()) {
-            writeBoneData(json, item);
+            writeBoneData(item);
         }
         json.writeArrayEnd();
 
         json.writeName("slot");
-        writeSlotData(json, obj.getSlot());
+        writeSlotData(obj.getSlot());
 
         json.writeName("positionMode");
         json.writeValue(obj.getPositionMode().name());
@@ -2561,7 +2553,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getName());
 
         json.writeName("setupPose");
-        writePathConstraintPose(json, obj.getSetupPose());
+        writePathConstraintPose(obj.getSetupPose());
 
         json.writeName("skinRequired");
         json.writeValue(obj.getSkinRequired());
@@ -2569,7 +2561,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePathConstraintPose(JsonWriter json, PathConstraintPose obj) {
+    private void writePathConstraintPose(PathConstraintPose obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2598,7 +2590,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePhysicsConstraint(JsonWriter json, PhysicsConstraint obj) {
+    private void writePhysicsConstraint(PhysicsConstraint obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2610,21 +2602,21 @@ public class SkeletonSerializer {
         json.writeValue("PhysicsConstraint");
 
         json.writeName("bone");
-        writeBonePose(json, obj.getBone());
+        writeBonePose(obj.getBone());
 
         json.writeName("data");
-        writePhysicsConstraintData(json, obj.getData());
+        writePhysicsConstraintData(obj.getData());
 
         json.writeName("pose");
-        writePhysicsConstraintPose(json, obj.getPose());
+        writePhysicsConstraintPose(obj.getPose());
 
         json.writeName("appliedPose");
-        writePhysicsConstraintPose(json, obj.getAppliedPose());
+        writePhysicsConstraintPose(obj.getAppliedPose());
 
         json.writeObjectEnd();
     }
 
-    private void writePhysicsConstraintData(JsonWriter json, PhysicsConstraintData obj) {
+    private void writePhysicsConstraintData(PhysicsConstraintData obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2636,7 +2628,7 @@ public class SkeletonSerializer {
         json.writeValue("PhysicsConstraintData");
 
         json.writeName("bone");
-        writeBoneData(json, obj.getBone());
+        writeBoneData(obj.getBone());
 
         json.writeName("step");
         json.writeValue(obj.getStep());
@@ -2684,7 +2676,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getName());
 
         json.writeName("setupPose");
-        writePhysicsConstraintPose(json, obj.getSetupPose());
+        writePhysicsConstraintPose(obj.getSetupPose());
 
         json.writeName("skinRequired");
         json.writeValue(obj.getSkinRequired());
@@ -2692,7 +2684,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePhysicsConstraintPose(JsonWriter json, PhysicsConstraintPose obj) {
+    private void writePhysicsConstraintPose(PhysicsConstraintPose obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2727,7 +2719,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writePointAttachment(JsonWriter json, PointAttachment obj) {
+    private void writePointAttachment(PointAttachment obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2748,7 +2740,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getRotation());
 
         json.writeName("color");
-        writeColor(json, obj.getColor());
+        writeColor(obj.getColor());
 
         json.writeName("name");
         json.writeValue(obj.getName());
@@ -2756,7 +2748,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeRegionAttachment(JsonWriter json, RegionAttachment obj) {
+    private void writeRegionAttachment(RegionAttachment obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2768,7 +2760,11 @@ public class SkeletonSerializer {
         json.writeValue("RegionAttachment");
 
         json.writeName("region");
-        writeTextureRegion(json, obj.getRegion());
+        if (obj.getRegion() == null) {
+            json.writeNull();
+        } else {
+            writeTextureRegion(obj.getRegion());
+        }
 
         json.writeName("offset");
         json.writeArrayStart();
@@ -2806,7 +2802,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getHeight());
 
         json.writeName("color");
-        writeColor(json, obj.getColor());
+        writeColor(obj.getColor());
 
         json.writeName("path");
         json.writeValue(obj.getPath());
@@ -2815,7 +2811,7 @@ public class SkeletonSerializer {
         if (obj.getSequence() == null) {
             json.writeNull();
         } else {
-            writeSequence(json, obj.getSequence());
+            writeSequence(obj.getSequence());
         }
 
         json.writeName("name");
@@ -2824,7 +2820,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeSequence(JsonWriter json, Sequence obj) {
+    private void writeSequence(Sequence obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2847,7 +2843,7 @@ public class SkeletonSerializer {
         json.writeName("regions");
         json.writeArrayStart();
         for (TextureRegion item : obj.getRegions()) {
-            writeTextureRegion(json, item);
+            writeTextureRegion(item);
         }
         json.writeArrayEnd();
 
@@ -2857,7 +2853,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeSkeleton(JsonWriter json, Skeleton obj) {
+    private void writeSkeleton(Skeleton obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2869,36 +2865,36 @@ public class SkeletonSerializer {
         json.writeValue("Skeleton");
 
         json.writeName("data");
-        writeSkeletonData(json, obj.getData());
+        writeSkeletonData(obj.getData());
 
         json.writeName("bones");
         json.writeArrayStart();
         for (Bone item : obj.getBones()) {
-            writeBone(json, item);
+            writeBone(item);
         }
         json.writeArrayEnd();
 
         json.writeName("updateCache");
         json.writeArrayStart();
         for (Update item : obj.getUpdateCache()) {
-            writeUpdate(json, item);
+            writeUpdate(item);
         }
         json.writeArrayEnd();
 
         json.writeName("rootBone");
-        writeBone(json, obj.getRootBone());
+        writeBone(obj.getRootBone());
 
         json.writeName("slots");
         json.writeArrayStart();
         for (Slot item : obj.getSlots()) {
-            writeSlot(json, item);
+            writeSlot(item);
         }
         json.writeArrayEnd();
 
         json.writeName("drawOrder");
         json.writeArrayStart();
         for (Slot item : obj.getDrawOrder()) {
-            writeSlot(json, item);
+            writeSlot(item);
         }
         json.writeArrayEnd();
 
@@ -2906,25 +2902,25 @@ public class SkeletonSerializer {
         if (obj.getSkin() == null) {
             json.writeNull();
         } else {
-            writeSkin(json, obj.getSkin());
+            writeSkin(obj.getSkin());
         }
 
         json.writeName("constraints");
         json.writeArrayStart();
         for (Constraint item : obj.getConstraints()) {
-            writeConstraint(json, item);
+            writeConstraint(item);
         }
         json.writeArrayEnd();
 
         json.writeName("physicsConstraints");
         json.writeArrayStart();
         for (PhysicsConstraint item : obj.getPhysicsConstraints()) {
-            writePhysicsConstraint(json, item);
+            writePhysicsConstraint(item);
         }
         json.writeArrayEnd();
 
         json.writeName("color");
-        writeColor(json, obj.getColor());
+        writeColor(obj.getColor());
 
         json.writeName("scaleX");
         json.writeValue(obj.getScaleX());
@@ -2956,7 +2952,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeSkeletonData(JsonWriter json, SkeletonData obj) {
+    private void writeSkeletonData(SkeletonData obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -2970,14 +2966,14 @@ public class SkeletonSerializer {
         json.writeName("bones");
         json.writeArrayStart();
         for (BoneData item : obj.getBones()) {
-            writeBoneData(json, item);
+            writeBoneData(item);
         }
         json.writeArrayEnd();
 
         json.writeName("slots");
         json.writeArrayStart();
         for (SlotData item : obj.getSlots()) {
-            writeSlotData(json, item);
+            writeSlotData(item);
         }
         json.writeArrayEnd();
 
@@ -2985,34 +2981,34 @@ public class SkeletonSerializer {
         if (obj.getDefaultSkin() == null) {
             json.writeNull();
         } else {
-            writeSkin(json, obj.getDefaultSkin());
+            writeSkin(obj.getDefaultSkin());
         }
 
         json.writeName("skins");
         json.writeArrayStart();
         for (Skin item : obj.getSkins()) {
-            writeSkin(json, item);
+            writeSkin(item);
         }
         json.writeArrayEnd();
 
         json.writeName("events");
         json.writeArrayStart();
         for (EventData item : obj.getEvents()) {
-            writeEventData(json, item);
+            writeEventData(item);
         }
         json.writeArrayEnd();
 
         json.writeName("animations");
         json.writeArrayStart();
         for (Animation item : obj.getAnimations()) {
-            writeAnimation(json, item);
+            writeAnimation(item);
         }
         json.writeArrayEnd();
 
         json.writeName("constraints");
         json.writeArrayStart();
         for (ConstraintData item : obj.getConstraints()) {
-            writeConstraintData(json, item);
+            writeConstraintData(item);
         }
         json.writeArrayEnd();
 
@@ -3052,7 +3048,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeSkin(JsonWriter json, Skin obj) {
+    private void writeSkin(Skin obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3066,21 +3062,21 @@ public class SkeletonSerializer {
         json.writeName("attachments");
         json.writeArrayStart();
         for (SkinEntry item : obj.getAttachments()) {
-            writeSkinEntry(json, item);
+            writeSkinEntry(item);
         }
         json.writeArrayEnd();
 
         json.writeName("bones");
         json.writeArrayStart();
         for (BoneData item : obj.getBones()) {
-            writeBoneData(json, item);
+            writeBoneData(item);
         }
         json.writeArrayEnd();
 
         json.writeName("constraints");
         json.writeArrayStart();
         for (ConstraintData item : obj.getConstraints()) {
-            writeConstraintData(json, item);
+            writeConstraintData(item);
         }
         json.writeArrayEnd();
 
@@ -3088,12 +3084,12 @@ public class SkeletonSerializer {
         json.writeValue(obj.getName());
 
         json.writeName("color");
-        writeColor(json, obj.getColor());
+        writeColor(obj.getColor());
 
         json.writeObjectEnd();
     }
 
-    private void writeSkinEntry(JsonWriter json, Skin.SkinEntry obj) {
+    private void writeSkinEntry(Skin.SkinEntry obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3111,12 +3107,12 @@ public class SkeletonSerializer {
         json.writeValue(obj.getName());
 
         json.writeName("attachment");
-        writeAttachment(json, obj.getAttachment());
+        writeAttachment(obj.getAttachment());
 
         json.writeObjectEnd();
     }
 
-    private void writeSlider(JsonWriter json, Slider obj) {
+    private void writeSlider(Slider obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3128,21 +3124,21 @@ public class SkeletonSerializer {
         json.writeValue("Slider");
 
         json.writeName("bone");
-        writeBone(json, obj.getBone());
+        writeBone(obj.getBone());
 
         json.writeName("data");
-        writeSliderData(json, obj.getData());
+        writeSliderData(obj.getData());
 
         json.writeName("pose");
-        writeSliderPose(json, obj.getPose());
+        writeSliderPose(obj.getPose());
 
         json.writeName("appliedPose");
-        writeSliderPose(json, obj.getAppliedPose());
+        writeSliderPose(obj.getAppliedPose());
 
         json.writeObjectEnd();
     }
 
-    private void writeSliderData(JsonWriter json, SliderData obj) {
+    private void writeSliderData(SliderData obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3154,7 +3150,7 @@ public class SkeletonSerializer {
         json.writeValue("SliderData");
 
         json.writeName("animation");
-        writeAnimation(json, obj.getAnimation());
+        writeAnimation(obj.getAnimation());
 
         json.writeName("additive");
         json.writeValue(obj.getAdditive());
@@ -3166,14 +3162,14 @@ public class SkeletonSerializer {
         if (obj.getBone() == null) {
             json.writeNull();
         } else {
-            writeBoneData(json, obj.getBone());
+            writeBoneData(obj.getBone());
         }
 
         json.writeName("property");
         if (obj.getProperty() == null) {
             json.writeNull();
         } else {
-            writeFromProperty(json, obj.getProperty());
+            writeFromProperty(obj.getProperty());
         }
 
         json.writeName("offset");
@@ -3189,7 +3185,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getName());
 
         json.writeName("setupPose");
-        writeSliderPose(json, obj.getSetupPose());
+        writeSliderPose(obj.getSetupPose());
 
         json.writeName("skinRequired");
         json.writeValue(obj.getSkinRequired());
@@ -3197,7 +3193,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeSliderPose(JsonWriter json, SliderPose obj) {
+    private void writeSliderPose(SliderPose obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3217,7 +3213,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeSlot(JsonWriter json, Slot obj) {
+    private void writeSlot(Slot obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3229,21 +3225,21 @@ public class SkeletonSerializer {
         json.writeValue("Slot");
 
         json.writeName("bone");
-        writeBone(json, obj.getBone());
+        writeBone(obj.getBone());
 
         json.writeName("data");
-        writeSlotData(json, obj.getData());
+        writeSlotData(obj.getData());
 
         json.writeName("pose");
-        writeSlotPose(json, obj.getPose());
+        writeSlotPose(obj.getPose());
 
         json.writeName("appliedPose");
-        writeSlotPose(json, obj.getAppliedPose());
+        writeSlotPose(obj.getAppliedPose());
 
         json.writeObjectEnd();
     }
 
-    private void writeSlotData(JsonWriter json, SlotData obj) {
+    private void writeSlotData(SlotData obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3258,7 +3254,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getIndex());
 
         json.writeName("boneData");
-        writeBoneData(json, obj.getBoneData());
+        writeBoneData(obj.getBoneData());
 
         json.writeName("attachmentName");
         json.writeValue(obj.getAttachmentName());
@@ -3273,7 +3269,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getName());
 
         json.writeName("setupPose");
-        writeSlotPose(json, obj.getSetupPose());
+        writeSlotPose(obj.getSetupPose());
 
         json.writeName("skinRequired");
         json.writeValue(obj.getSkinRequired());
@@ -3281,7 +3277,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeSlotPose(JsonWriter json, SlotPose obj) {
+    private void writeSlotPose(SlotPose obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3293,32 +3289,32 @@ public class SkeletonSerializer {
         json.writeValue("SlotPose");
 
         json.writeName("color");
-        writeColor(json, obj.getColor());
+        writeColor(obj.getColor());
 
         json.writeName("darkColor");
-        writeColor(json, obj.getDarkColor());
+        if (obj.getDarkColor() == null) {
+            json.writeNull();
+        } else {
+            writeColor(obj.getDarkColor());
+        }
 
         json.writeName("attachment");
         if (obj.getAttachment() == null) {
             json.writeNull();
         } else {
-            writeAttachment(json, obj.getAttachment());
+            writeAttachment(obj.getAttachment());
         }
 
         json.writeName("sequenceIndex");
         json.writeValue(obj.getSequenceIndex());
 
         json.writeName("deform");
-        json.writeArrayStart();
-        for (int i = 0; i < obj.getDeform().size; i++) {
-            json.writeValue(obj.getDeform().get(i));
-        }
-        json.writeArrayEnd();
+        writeFloatArray(obj.getDeform());
 
         json.writeObjectEnd();
     }
 
-    private void writeTransformConstraint(JsonWriter json, TransformConstraint obj) {
+    private void writeTransformConstraint(TransformConstraint obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3332,26 +3328,26 @@ public class SkeletonSerializer {
         json.writeName("bones");
         json.writeArrayStart();
         for (BonePose item : obj.getBones()) {
-            writeBonePose(json, item);
+            writeBonePose(item);
         }
         json.writeArrayEnd();
 
         json.writeName("source");
-        writeBone(json, obj.getSource());
+        writeBone(obj.getSource());
 
         json.writeName("data");
-        writeTransformConstraintData(json, obj.getData());
+        writeTransformConstraintData(obj.getData());
 
         json.writeName("pose");
-        writeTransformConstraintPose(json, obj.getPose());
+        writeTransformConstraintPose(obj.getPose());
 
         json.writeName("appliedPose");
-        writeTransformConstraintPose(json, obj.getAppliedPose());
+        writeTransformConstraintPose(obj.getAppliedPose());
 
         json.writeObjectEnd();
     }
 
-    private void writeTransformConstraintData(JsonWriter json, TransformConstraintData obj) {
+    private void writeTransformConstraintData(TransformConstraintData obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3365,12 +3361,12 @@ public class SkeletonSerializer {
         json.writeName("bones");
         json.writeArrayStart();
         for (BoneData item : obj.getBones()) {
-            writeBoneData(json, item);
+            writeBoneData(item);
         }
         json.writeArrayEnd();
 
         json.writeName("source");
-        writeBoneData(json, obj.getSource());
+        writeBoneData(obj.getSource());
 
         json.writeName("offsetRotation");
         json.writeValue(obj.getOffsetRotation());
@@ -3405,7 +3401,7 @@ public class SkeletonSerializer {
         json.writeName("properties");
         json.writeArrayStart();
         for (FromProperty item : obj.getProperties()) {
-            writeFromProperty(json, item);
+            writeFromProperty(item);
         }
         json.writeArrayEnd();
 
@@ -3413,7 +3409,7 @@ public class SkeletonSerializer {
         json.writeValue(obj.getName());
 
         json.writeName("setupPose");
-        writeTransformConstraintPose(json, obj.getSetupPose());
+        writeTransformConstraintPose(obj.getSetupPose());
 
         json.writeName("skinRequired");
         json.writeValue(obj.getSkinRequired());
@@ -3421,25 +3417,25 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeFromProperty(JsonWriter json, TransformConstraintData.FromProperty obj) {
+    private void writeFromProperty(TransformConstraintData.FromProperty obj) {
         if (obj instanceof TransformConstraintData.FromRotate) {
-            writeFromRotate(json, (TransformConstraintData.FromRotate) obj);
+            writeFromRotate((TransformConstraintData.FromRotate) obj);
         } else if (obj instanceof TransformConstraintData.FromScaleX) {
-            writeFromScaleX(json, (TransformConstraintData.FromScaleX) obj);
+            writeFromScaleX((TransformConstraintData.FromScaleX) obj);
         } else if (obj instanceof TransformConstraintData.FromScaleY) {
-            writeFromScaleY(json, (TransformConstraintData.FromScaleY) obj);
+            writeFromScaleY((TransformConstraintData.FromScaleY) obj);
         } else if (obj instanceof TransformConstraintData.FromShearY) {
-            writeFromShearY(json, (TransformConstraintData.FromShearY) obj);
+            writeFromShearY((TransformConstraintData.FromShearY) obj);
         } else if (obj instanceof TransformConstraintData.FromX) {
-            writeFromX(json, (TransformConstraintData.FromX) obj);
+            writeFromX((TransformConstraintData.FromX) obj);
         } else if (obj instanceof TransformConstraintData.FromY) {
-            writeFromY(json, (TransformConstraintData.FromY) obj);
+            writeFromY((TransformConstraintData.FromY) obj);
         } else {
             throw new RuntimeException("Unknown FromProperty type: " + obj.getClass().getName());
         }
     }
 
-    private void writeFromRotate(JsonWriter json, TransformConstraintData.FromRotate obj) {
+    private void writeFromRotate(TransformConstraintData.FromRotate obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3456,14 +3452,14 @@ public class SkeletonSerializer {
         json.writeName("to");
         json.writeArrayStart();
         for (ToProperty item : obj.to) {
-            writeToProperty(json, item);
+            writeToProperty(item);
         }
         json.writeArrayEnd();
 
         json.writeObjectEnd();
     }
 
-    private void writeFromScaleX(JsonWriter json, TransformConstraintData.FromScaleX obj) {
+    private void writeFromScaleX(TransformConstraintData.FromScaleX obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3480,14 +3476,14 @@ public class SkeletonSerializer {
         json.writeName("to");
         json.writeArrayStart();
         for (ToProperty item : obj.to) {
-            writeToProperty(json, item);
+            writeToProperty(item);
         }
         json.writeArrayEnd();
 
         json.writeObjectEnd();
     }
 
-    private void writeFromScaleY(JsonWriter json, TransformConstraintData.FromScaleY obj) {
+    private void writeFromScaleY(TransformConstraintData.FromScaleY obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3504,14 +3500,14 @@ public class SkeletonSerializer {
         json.writeName("to");
         json.writeArrayStart();
         for (ToProperty item : obj.to) {
-            writeToProperty(json, item);
+            writeToProperty(item);
         }
         json.writeArrayEnd();
 
         json.writeObjectEnd();
     }
 
-    private void writeFromShearY(JsonWriter json, TransformConstraintData.FromShearY obj) {
+    private void writeFromShearY(TransformConstraintData.FromShearY obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3528,14 +3524,14 @@ public class SkeletonSerializer {
         json.writeName("to");
         json.writeArrayStart();
         for (ToProperty item : obj.to) {
-            writeToProperty(json, item);
+            writeToProperty(item);
         }
         json.writeArrayEnd();
 
         json.writeObjectEnd();
     }
 
-    private void writeFromX(JsonWriter json, TransformConstraintData.FromX obj) {
+    private void writeFromX(TransformConstraintData.FromX obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3552,14 +3548,14 @@ public class SkeletonSerializer {
         json.writeName("to");
         json.writeArrayStart();
         for (ToProperty item : obj.to) {
-            writeToProperty(json, item);
+            writeToProperty(item);
         }
         json.writeArrayEnd();
 
         json.writeObjectEnd();
     }
 
-    private void writeFromY(JsonWriter json, TransformConstraintData.FromY obj) {
+    private void writeFromY(TransformConstraintData.FromY obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3576,32 +3572,32 @@ public class SkeletonSerializer {
         json.writeName("to");
         json.writeArrayStart();
         for (ToProperty item : obj.to) {
-            writeToProperty(json, item);
+            writeToProperty(item);
         }
         json.writeArrayEnd();
 
         json.writeObjectEnd();
     }
 
-    private void writeToProperty(JsonWriter json, TransformConstraintData.ToProperty obj) {
+    private void writeToProperty(TransformConstraintData.ToProperty obj) {
         if (obj instanceof TransformConstraintData.ToRotate) {
-            writeToRotate(json, (TransformConstraintData.ToRotate) obj);
+            writeToRotate((TransformConstraintData.ToRotate) obj);
         } else if (obj instanceof TransformConstraintData.ToScaleX) {
-            writeToScaleX(json, (TransformConstraintData.ToScaleX) obj);
+            writeToScaleX((TransformConstraintData.ToScaleX) obj);
         } else if (obj instanceof TransformConstraintData.ToScaleY) {
-            writeToScaleY(json, (TransformConstraintData.ToScaleY) obj);
+            writeToScaleY((TransformConstraintData.ToScaleY) obj);
         } else if (obj instanceof TransformConstraintData.ToShearY) {
-            writeToShearY(json, (TransformConstraintData.ToShearY) obj);
+            writeToShearY((TransformConstraintData.ToShearY) obj);
         } else if (obj instanceof TransformConstraintData.ToX) {
-            writeToX(json, (TransformConstraintData.ToX) obj);
+            writeToX((TransformConstraintData.ToX) obj);
         } else if (obj instanceof TransformConstraintData.ToY) {
-            writeToY(json, (TransformConstraintData.ToY) obj);
+            writeToY((TransformConstraintData.ToY) obj);
         } else {
             throw new RuntimeException("Unknown ToProperty type: " + obj.getClass().getName());
         }
     }
 
-    private void writeToRotate(JsonWriter json, TransformConstraintData.ToRotate obj) {
+    private void writeToRotate(TransformConstraintData.ToRotate obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3624,7 +3620,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeToScaleX(JsonWriter json, TransformConstraintData.ToScaleX obj) {
+    private void writeToScaleX(TransformConstraintData.ToScaleX obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3647,7 +3643,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeToScaleY(JsonWriter json, TransformConstraintData.ToScaleY obj) {
+    private void writeToScaleY(TransformConstraintData.ToScaleY obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3670,7 +3666,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeToShearY(JsonWriter json, TransformConstraintData.ToShearY obj) {
+    private void writeToShearY(TransformConstraintData.ToShearY obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3693,7 +3689,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeToX(JsonWriter json, TransformConstraintData.ToX obj) {
+    private void writeToX(TransformConstraintData.ToX obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3716,7 +3712,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeToY(JsonWriter json, TransformConstraintData.ToY obj) {
+    private void writeToY(TransformConstraintData.ToY obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3739,7 +3735,7 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeTransformConstraintPose(JsonWriter json, TransformConstraintPose obj) {
+    private void writeTransformConstraintPose(TransformConstraintPose obj) {
         if (visitedObjects.contains(obj)) {
             json.writeValue("<circular>");
             return;
@@ -3771,73 +3767,97 @@ public class SkeletonSerializer {
         json.writeObjectEnd();
     }
 
-    private void writeUpdate(JsonWriter json, Update obj) {
+    private void writeUpdate(Update obj) {
         if (obj instanceof BonePose) {
-            writeBonePose(json, (BonePose) obj);
+            writeBonePose((BonePose) obj);
         } else if (obj instanceof IkConstraint) {
-            writeIkConstraint(json, (IkConstraint) obj);
+            writeIkConstraint((IkConstraint) obj);
         } else if (obj instanceof PathConstraint) {
-            writePathConstraint(json, (PathConstraint) obj);
+            writePathConstraint((PathConstraint) obj);
         } else if (obj instanceof PhysicsConstraint) {
-            writePhysicsConstraint(json, (PhysicsConstraint) obj);
+            writePhysicsConstraint((PhysicsConstraint) obj);
         } else if (obj instanceof Slider) {
-            writeSlider(json, (Slider) obj);
+            writeSlider((Slider) obj);
         } else if (obj instanceof TransformConstraint) {
-            writeTransformConstraint(json, (TransformConstraint) obj);
+            writeTransformConstraint((TransformConstraint) obj);
         } else {
             throw new RuntimeException("Unknown Update type: " + obj.getClass().getName());
         }
     }
 
-    private void writeVertexAttachment(JsonWriter json, VertexAttachment obj) {
+    private void writeVertexAttachment(VertexAttachment obj) {
         if (obj instanceof BoundingBoxAttachment) {
-            writeBoundingBoxAttachment(json, (BoundingBoxAttachment) obj);
+            writeBoundingBoxAttachment((BoundingBoxAttachment) obj);
         } else if (obj instanceof ClippingAttachment) {
-            writeClippingAttachment(json, (ClippingAttachment) obj);
+            writeClippingAttachment((ClippingAttachment) obj);
         } else if (obj instanceof MeshAttachment) {
-            writeMeshAttachment(json, (MeshAttachment) obj);
+            writeMeshAttachment((MeshAttachment) obj);
         } else if (obj instanceof PathAttachment) {
-            writePathAttachment(json, (PathAttachment) obj);
+            writePathAttachment((PathAttachment) obj);
         } else {
             throw new RuntimeException("Unknown VertexAttachment type: " + obj.getClass().getName());
         }
     }
 
-    private void writeColor(JsonWriter json, Color color) {
-        if (color == null) {
+    private void writeColor(Color obj) {
+        if (obj == null) {
             json.writeNull();
         } else {
             json.writeObjectStart();
             json.writeName("r");
-            json.writeValue(color.r);
+            json.writeValue(obj.r);
             json.writeName("g");
-            json.writeValue(color.g);
+            json.writeValue(obj.g);
             json.writeName("b");
-            json.writeValue(color.b);
+            json.writeValue(obj.b);
             json.writeName("a");
-            json.writeValue(color.a);
+            json.writeValue(obj.a);
             json.writeObjectEnd();
         }
     }
 
-    private void writeTextureRegion(JsonWriter json, TextureRegion region) {
-        if (region == null) {
+    private void writeTextureRegion(TextureRegion obj) {
+        if (obj == null) {
             json.writeNull();
         } else {
             json.writeObjectStart();
             json.writeName("u");
-            json.writeValue(region.getU());
+            json.writeValue(obj.getU());
             json.writeName("v");
-            json.writeValue(region.getV());
+            json.writeValue(obj.getV());
             json.writeName("u2");
-            json.writeValue(region.getU2());
+            json.writeValue(obj.getU2());
             json.writeName("v2");
-            json.writeValue(region.getV2());
+            json.writeValue(obj.getV2());
             json.writeName("width");
-            json.writeValue(region.getRegionWidth());
+            json.writeValue(obj.getRegionWidth());
             json.writeName("height");
-            json.writeValue(region.getRegionHeight());
+            json.writeValue(obj.getRegionHeight());
             json.writeObjectEnd();
+        }
+    }
+
+    private void writeIntArray(IntArray obj) {
+        if (obj == null) {
+            json.writeNull();
+        } else {
+            json.writeArrayStart();
+            for (int i = 0; i < obj.size; i++) {
+                json.writeValue(obj.get(i));
+            }
+            json.writeArrayEnd();
+        }
+    }
+
+    private void writeFloatArray(FloatArray obj) {
+        if (obj == null) {
+            json.writeNull();
+        } else {
+            json.writeArrayStart();
+            for (int i = 0; i < obj.size; i++) {
+                json.writeValue(obj.get(i));
+            }
+            json.writeArrayEnd();
         }
     }
 }

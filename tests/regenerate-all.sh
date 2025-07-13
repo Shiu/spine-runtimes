@@ -8,6 +8,9 @@ cd "$SCRIPT_DIR/.."
 echo "Analyzing Java API..."
 npx tsx tests/analyze-java-api.ts
 
+echo "Generating serializer IR..."
+npx tsx tests/generate-serializer-ir.ts
+
 echo "Generating Java SkeletonSerializer..."
 npx tsx tests/generate-java-serializer.ts
 
