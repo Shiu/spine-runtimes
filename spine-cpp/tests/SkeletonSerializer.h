@@ -193,8 +193,9 @@ private:
             _json.writeArrayStart();
             for (size_t i = 0; i < nestedArray.size(); i++) {
             float elem = nestedArray[i];
-                _json.writeValue(elem);
-            }
+            _json.writeValue(elem);
+        
+        }
             _json.writeArrayEnd();
         }
         _json.writeArrayEnd();
@@ -248,8 +249,9 @@ private:
             _json.writeArrayStart();
             for (size_t i = 0; i < nestedArray.size(); i++) {
             int elem = nestedArray[i];
-                _json.writeValue(elem);
-            }
+            _json.writeValue(elem);
+        
+        }
             _json.writeArrayEnd();
         }
         _json.writeArrayEnd();
@@ -2120,7 +2122,7 @@ private:
             _json.writeArrayStart();
             for (size_t i = 0; i < obj->getBones().size(); i++) {
             int item = obj->getBones()[i];
-                _json.writeValue(item);
+            _json.writeValue(item);
             
             _json.writeArrayEnd();
         }
@@ -2177,7 +2179,7 @@ private:
             _json.writeArrayStart();
             for (size_t i = 0; i < obj->getBones().size(); i++) {
             int item = obj->getBones()[i];
-                _json.writeValue(item);
+            _json.writeValue(item);
             
             _json.writeArrayEnd();
         }
@@ -2462,7 +2464,7 @@ private:
             _json.writeArrayStart();
             for (size_t i = 0; i < obj->getEdges().size(); i++) {
             short item = obj->getEdges()[i];
-                _json.writeValue(item);
+            _json.writeValue(item);
             
             _json.writeArrayEnd();
         }
@@ -2491,7 +2493,7 @@ private:
             _json.writeArrayStart();
             for (size_t i = 0; i < obj->getBones().size(); i++) {
             int item = obj->getBones()[i];
-                _json.writeValue(item);
+            _json.writeValue(item);
             
             _json.writeArrayEnd();
         }
@@ -2555,7 +2557,7 @@ private:
             _json.writeArrayStart();
             for (size_t i = 0; i < obj->getBones().size(); i++) {
             int item = obj->getBones()[i];
-                _json.writeValue(item);
+            _json.writeValue(item);
             
             _json.writeArrayEnd();
         }

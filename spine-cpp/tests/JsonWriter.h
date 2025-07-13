@@ -61,9 +61,13 @@ public:
 
     void writeValue(const String& value) {
         writeCommaIfNeeded();
-        buffer.append("\"");
-        buffer.append(escapeString(value));
-        buffer.append("\"");
+        if (value.buffer() == nullptr) {
+            buffer.append("null");
+        } else {
+            buffer.append("\"");
+            buffer.append(escapeString(value));
+            buffer.append("\"");
+        }
         needsComma = true;
     }
 
@@ -158,7 +162,7 @@ private:
     }
 
     String escapeString(const String& str) {
-        String result;
+        String result("");
         const char* chars = str.buffer();
         if (chars) {
             for (size_t i = 0; i < str.length(); i++) {

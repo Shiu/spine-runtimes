@@ -52,6 +52,7 @@ RTTI_IMPL(ToScaleX, ToProperty)
 RTTI_IMPL(FromScaleY, FromProperty)
 RTTI_IMPL(ToScaleY, ToProperty)
 RTTI_IMPL(FromShearY, FromProperty)
+RTTI_IMPL(ToShearY, ToProperty)
 
 TransformConstraintData::TransformConstraintData(const String &name) : ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>(name),
 																	   _source(NULL),

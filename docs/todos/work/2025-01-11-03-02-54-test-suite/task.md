@@ -236,6 +236,8 @@ The test programs will print both SkeletonData (setup pose/static data) and Skel
         - Need custom writeSkinEntry function that takes AttachmentMap::Entry* instead of Java SkinEntry
         - Create mechanism in tests/generate-cpp-serializer.ts to replace auto-generated functions with hand-written ones
         - Implement custom writeSkin function that properly handles AttachmentMap::Entries iteration
+    - [x] Create regenerate-all.sh script in tests/ that runs all generators in sequence
+    - [ ] Fix C++ JsonWriter output formatting issues (array formatting broken)
     - [ ] Test with sample skeleton files
 - [ ] TypeScript (spine-ts):
   - [ ] Follow what we did for spine-cpp wrt to JsonWriter, SkeletonSerializer and the generator

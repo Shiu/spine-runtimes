@@ -92,10 +92,11 @@ const runtimes: RuntimeConfig[] = [
                 ? `${absoluteSkeletonPath} ${absoluteAtlasPath} ${animationName}`
                 : `${absoluteSkeletonPath} ${absoluteAtlasPath}`;
             const output = execSync(
-                `./gradlew -q :spine-libgdx-tests:runHeadlessTest -Pargs="${args}"`,
+                `./gradlew -q --no-daemon --max-workers=1 :spine-libgdx-tests:runHeadlessTest -Pargs="${args}"`,
                 {
                     cwd: path.join(rootDir, 'spine-libgdx'),
-                    encoding: 'utf8'
+                    encoding: 'utf8',
+                    maxBuffer: 1024 * 1024 * 10 // 10MB buffer
                 }
             );
             // Find the start of actual output and return everything from there
@@ -199,7 +200,10 @@ const runtimes: RuntimeConfig[] = [
 ];
 
 async function main() {
-    // Ensure output directory exists
+    // Clean and recreate output directory
+    if (fs.existsSync(outputDir)) {
+        fs.rmSync(outputDir, { recursive: true });
+    }
     await mkdir(outputDir, { recursive: true });
 
     console.log('Comparing HeadlessTest outputs for:');
