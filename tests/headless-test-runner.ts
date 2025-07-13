@@ -138,7 +138,8 @@ const runtimes: RuntimeConfig[] = [
                     : `./build/headless-test "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
                 {
                     cwd: path.join(rootDir, 'spine-cpp'),
-                    encoding: 'utf8'
+                    encoding: 'utf8',
+                    maxBuffer: 1024 * 1024 * 10 // 10MB buffer
                 }
             ).trim();
         }
@@ -172,7 +173,8 @@ const runtimes: RuntimeConfig[] = [
                     : `./build/headless-test "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
                 {
                     cwd: path.join(rootDir, 'spine-c'),
-                    encoding: 'utf8'
+                    encoding: 'utf8',
+                    maxBuffer: 1024 * 1024 * 10 // 10MB buffer
                 }
             ).trim();
         }
@@ -192,7 +194,8 @@ const runtimes: RuntimeConfig[] = [
                     : `npx tsx tests/HeadlessTest.ts "${absoluteSkeletonPath}" "${absoluteAtlasPath}"`,
                 {
                     cwd: path.join(rootDir, 'spine-ts/spine-core'),
-                    encoding: 'utf8'
+                    encoding: 'utf8',
+                    maxBuffer: 1024 * 1024 * 10 // 10MB buffer
                 }
             ).trim();
         }

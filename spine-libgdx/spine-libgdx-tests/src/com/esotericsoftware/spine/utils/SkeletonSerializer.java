@@ -3060,8 +3060,10 @@ public class SkeletonSerializer {
         json.writeValue("Skin");
 
         json.writeName("attachments");
+        Array<SkinEntry> sortedAttachments = new Array<>(obj.getAttachments());
+        sortedAttachments.sort((a, b) -> Integer.compare(a.getSlotIndex(), b.getSlotIndex()));
         json.writeArrayStart();
-        for (SkinEntry item : obj.getAttachments()) {
+        for (SkinEntry item : sortedAttachments) {
             writeSkinEntry(item);
         }
         json.writeArrayEnd();

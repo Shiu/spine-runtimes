@@ -7,7 +7,7 @@ import type { SerializerIR, PublicMethod, WriteMethod, Property } from './genera
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-function generatePropertyCode(property: Property, indent: string): string[] {
+function generatePropertyCode(property: Property, indent: string, method?: WriteMethod): string[] {
     const lines: string[] = [];
     const accessor = `obj.${property.getter}`;
     
@@ -41,12 +41,21 @@ function generatePropertyCode(property: Property, indent: string): string[] {
             break;
             
         case "array":
+            // Special handling for Skin attachments - sort by slot index
+            const isSkinAttachments = method?.paramType === 'Skin' && property.name === 'attachments' && property.elementType === 'SkinEntry';
+            const sortedAccessor = isSkinAttachments ? 'sortedAttachments' : accessor;
+            
+            if (isSkinAttachments) {
+                lines.push(`${indent}Array<${property.elementType}> sortedAttachments = new Array<>(${accessor});`);
+                lines.push(`${indent}sortedAttachments.sort((a, b) -> Integer.compare(a.getSlotIndex(), b.getSlotIndex()));`);
+            }
+            
             if (property.isNullable) {
                 lines.push(`${indent}if (${accessor} == null) {`);
                 lines.push(`${indent}    json.writeNull();`);
                 lines.push(`${indent}} else {`);
                 lines.push(`${indent}    json.writeArrayStart();`);
-                lines.push(`${indent}    for (${property.elementType} item : ${accessor}) {`);
+                lines.push(`${indent}    for (${property.elementType} item : ${sortedAccessor}) {`);
                 if (property.elementKind === "primitive") {
                     lines.push(`${indent}        json.writeValue(item);`);
                 } else {
@@ -57,7 +66,7 @@ function generatePropertyCode(property: Property, indent: string): string[] {
                 lines.push(`${indent}}`);
             } else {
                 lines.push(`${indent}json.writeArrayStart();`);
-                lines.push(`${indent}for (${property.elementType} item : ${accessor}) {`);
+                lines.push(`${indent}for (${property.elementType} item : ${sortedAccessor}) {`);
                 if (property.elementKind === "primitive") {
                     lines.push(`${indent}    json.writeValue(item);`);
                 } else {
@@ -194,7 +203,7 @@ function generateJavaFromIR(ir: SerializerIR): string {
             for (const property of method.properties) {
                 javaOutput.push('');
                 javaOutput.push(`        json.writeName("${property.name}");`);
-                const propertyLines = generatePropertyCode(property, '        ');
+                const propertyLines = generatePropertyCode(property, '        ', method);
                 javaOutput.push(...propertyLines);
             }
 

@@ -3,391 +3,433 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import type { ClassInfo } from './types';
+import type { SerializerIR, PublicMethod, WriteMethod, Property } from './generate-serializer-ir';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-function addReferenceVersionsForWriteMethods(cpp: string): string {
-    // Find all writeXXX(XXX* obj) methods
-    const writeMethodRegex = /    void (write\w+)\((\w+)\* obj\) \{/g;
-    const referenceMethods = [];
+function transformType(javaType: string): string {
+    // Remove package prefixes
+    const simpleName = javaType.includes('.') ? javaType.split('.').pop()! : javaType;
 
-    let match;
-    while ((match = writeMethodRegex.exec(cpp)) !== null) {
-        const methodName = match[1];
-        const typeName = match[2];
-        console.log(`Found method: ${methodName}(${typeName}* obj)`);
+    // Handle primitive types
+    if (simpleName === 'String') return 'const String&';
+    if (simpleName === 'int') return 'int';
+    if (simpleName === 'float') return 'float';
+    if (simpleName === 'boolean') return 'bool';
+    if (simpleName === 'short') return 'short';
 
-        // Generate reference version that calls pointer version
-        const refMethod = `    void ${methodName}(const ${typeName}& obj) {
-        ${methodName}(const_cast<${typeName}*>(&obj));
-    }`;
-        referenceMethods.push(refMethod);
+    // Handle arrays
+    if (simpleName.endsWith('[]')) {
+        const baseType = simpleName.slice(0, -2);
+        return `Array<${transformType(baseType)}>`;
     }
 
-    console.log(`Found ${referenceMethods.length} writeXXX methods, adding reference versions`);
-
-    // Insert before }; // class SkeletonSerializer
-    const marker = '}; // class SkeletonSerializer';
-    const insertPos = cpp.lastIndexOf(marker);
-    if (insertPos === -1) {
-        throw new Error('Could not find class end marker');
-    }
-
-    const referenceMethodsText = '\n' + referenceMethods.join('\n\n') + '\n\n';
-    const before = cpp.substring(0, insertPos);
-    const after = cpp.substring(insertPos);
-
-    cpp = before + referenceMethodsText + after;
-
-    return cpp;
+    // Object types become pointers
+    return simpleName;
 }
 
-function transformJavaToCpp(javaCode: string): string {
-    let cpp = javaCode;
-    
-    // Load analysis data to get enum information
-    const analysisFile = path.resolve(__dirname, '..', 'output', 'analysis-result.json');
-    const analysisData = JSON.parse(fs.readFileSync(analysisFile, 'utf8'));
-    const classMap = new Map<string, ClassInfo>(analysisData.classMap);
-    
-    // Build enum mappings: Java enum name -> C++ enum values
-    const enumMappings = new Map<string, Map<string, string>>();
-    
-    for (const [className, classInfo] of classMap) {
-        if (classInfo.isEnum && classInfo.enumValues) {
-            const shortName = className.split('.').pop()!;
-            const valueMap = new Map<string, string>();
-            
-            for (const javaValue of classInfo.enumValues) {
-                // Convert Java enum value to C++ enum value
-                // e.g. "setup" -> "MixBlend_Setup", "first" -> "MixBlend_First"  
-                const cppValue = `${shortName}_${javaValue.charAt(0).toUpperCase() + javaValue.slice(1)}`;
-                valueMap.set(javaValue, cppValue);
-            }
-            
-            enumMappings.set(shortName, valueMap);
-        }
-    }
+function generatePropertyCode(property: Property, indent: string, enumMappings: { [enumName: string]: { [javaValue: string]: string } }): string[] {
+    const lines: string[] = [];
 
-    // Define custom function implementations for C++-specific cases
-    const customFunctions = new Map<string, string>();
-    
-    // Custom writeColor - Color fields are public without _ prefix
-    customFunctions.set('writeColor', `    void writeColor(Color* obj) {
-        if (obj == nullptr) {
-            _json.writeNull();
+    // Transform field access for C++: add _ prefix except for Color fields
+    let accessor = `obj->${property.getter}`;
+    if (!property.getter.includes('()')) {
+        // This is a field access, not a method call
+        const fieldName = property.getter;
+        // Color fields (r, g, b, a) don't get _ prefix, all others do
+        const isColorField = ['r', 'g', 'b', 'a'].includes(fieldName);
+        if (!isColorField) {
+            accessor = `obj->_${fieldName}`;
         } else {
-            _json.writeObjectStart();
-            _json.writeName("r");
-            _json.writeValue(obj->r);
-            _json.writeName("g");
-            _json.writeValue(obj->g);
-            _json.writeName("b");
-            _json.writeValue(obj->b);
-            _json.writeName("a");
-            _json.writeValue(obj->a);
-            _json.writeObjectEnd();
+            accessor = `obj->${fieldName}`;
         }
-    }`);
-    
-    // Custom writeSkinEntry - takes C++ AttachmentMap::Entry instead of Java SkinEntry
-    customFunctions.set('writeSkinEntry', `    void writeSkinEntry(Skin::AttachmentMap::Entry* obj) {
-        _json.writeObjectStart();
-        _json.writeName("type");
-        _json.writeValue("SkinEntry");
-        _json.writeName("slotIndex");
-        _json.writeValue((int)obj->_slotIndex);
-        _json.writeName("name");
-        _json.writeValue(obj->_name);
-        _json.writeName("attachment");
-        writeAttachment(obj->_attachment);
-        _json.writeObjectEnd();
-    }`);
-    
-    // Custom writeSkin - matches Java output exactly
-    customFunctions.set('writeSkin', `    void writeSkin(Skin* obj) {
-        if (_visitedObjects.containsKey(obj)) {
-            _json.writeValue("<circular>");
-            return;
-        }
-        _visitedObjects.put(obj, true);
-
-        _json.writeObjectStart();
-        _json.writeName("type");
-        _json.writeValue("Skin");
-
-        _json.writeName("attachments");
-        _json.writeArrayStart();
-        Skin::AttachmentMap::Entries entries = obj->getAttachments();
-        while (entries.hasNext()) {
-            Skin::AttachmentMap::Entry& entry = entries.next();
-            writeSkinEntry(&entry);
-        }
-        _json.writeArrayEnd();
-
-        _json.writeName("bones");
-        _json.writeArrayStart();
-        for (size_t i = 0; i < obj->getBones().size(); i++) {
-            BoneData* item = obj->getBones()[i];
-            writeBoneData(item);
-        }
-        _json.writeArrayEnd();
-
-        _json.writeName("constraints");
-        _json.writeArrayStart();
-        for (size_t i = 0; i < obj->getConstraints().size(); i++) {
-            ConstraintData* item = obj->getConstraints()[i];
-            writeConstraintData(item);
-        }
-        _json.writeArrayEnd();
-
-        _json.writeName("name");
-        _json.writeValue(obj->getName());
-
-        _json.writeName("color");
-        writeColor(&obj->getColor());
-
-        _json.writeObjectEnd();
-    }`);
-
-    // Remove package declaration and imports
-    cpp = cpp.replace(/^package .*;$/m, '');
-    cpp = cpp.replace(/^import .*;$/gm, '');
-
-    // Add C++ header
-    const header = `#ifndef Spine_SkeletonSerializer_h
-#define Spine_SkeletonSerializer_h
-
-#include <spine/spine.h>
-#include "JsonWriter.h"
-#include <stdio.h>
-#include <stdlib.h>
-
-namespace spine {
-`;
-
-    // Transform class declaration
-    cpp = cpp.replace(/public class SkeletonSerializer \{/, 'class SkeletonSerializer {');
-
-    // Transform field declarations - add JsonWriter as member
-    cpp = cpp.replace(/private final Set<Object> visitedObjects = new HashSet<>\(\);[\s]*private JsonWriter json;/, 'private:\n    HashMap<void*, bool> _visitedObjects;\n    JsonWriter _json;\n\npublic:\n    SkeletonSerializer() {}\n    ~SkeletonSerializer() {}');
-
-    // Transform method signatures - return String not const String&
-    cpp = cpp.replace(/public String serialize(\w+)\((\w+) (\w+)\) \{/g,
-        'String serialize$1($2* $3) {');
-
-    // Update the method bodies to use member JsonWriter
-    cpp = cpp.replace(/visitedObjects\.clear\(\);/g, '_visitedObjects.clear();');
-    cpp = cpp.replace(/json = new JsonWriter\(\);/g, '_json = JsonWriter();');
-    cpp = cpp.replace(/json\.close\(\);/g, '_json.close();');
-    cpp = cpp.replace(/return json\.getString\(\);/g, 'return _json.getString();');
-
-    // Transform private methods - remove dots from type names (Animation.AlphaTimeline -> AlphaTimeline)
-    cpp = cpp.replace(/private void write(\w+)\(([\w.]+) obj\) \{/g, function(match, methodName, typeName) {
-        // Remove namespace/class prefix (e.g., Animation.AlphaTimeline -> AlphaTimeline)
-        const simpleName = typeName.includes('.') ? typeName.split('.').pop() : typeName;
-        return `void write${methodName}(${simpleName}* obj) {`;
-    });
-
-    // Add private: section before first write method
-    cpp = cpp.replace(/(\n)(    void writeAnimation)/, '\nprivate:\n$2');
-
-    // Transform object access
-    cpp = cpp.replace(/visitedObjects\.contains\(obj\)/g, '_visitedObjects.containsKey(obj)');
-    cpp = cpp.replace(/visitedObjects\.add\(obj\)/g, '_visitedObjects.put(obj, true)');
-
-    // Transform method calls
-    cpp = cpp.replace(/obj\.get(\w+)\(\)/g, 'obj->get$1()');
-    cpp = cpp.replace(/json\.write/g, '_json.write');
-
-    // Transform field access from obj.field to obj->field
-    // Match any valid Java identifier (including $ and _) but not method calls
-    cpp = cpp.replace(/obj\.([a-zA-Z_$][a-zA-Z0-9_$]*)\b(?!\()/g, 'obj->$1');
-
-    // Fix C++ field access for underscore-prefixed fields
-    // C++ private fields are prefixed with underscore but Java fields are not
-    // Transform obj->field to obj->_field for ALL field accesses (not method calls)
-    cpp = cpp.replace(/obj->([a-zA-Z][a-zA-Z0-9]*)\b(?!\()/g, 'obj->_$1');
-
-    // Transform null checks and array/collection operations
-    cpp = cpp.replace(/== null/g, '== nullptr');
-    cpp = cpp.replace(/!= null/g, '!= nullptr');
-    cpp = cpp.replace(/\.size/g, '.size()');
-    cpp = cpp.replace(/\.get\((\w+)\)/g, '[$1]');
-
-    // Remove null checks for C++-specific methods that always return references
-    // BoundingBoxAttachment.getBones(), ClippingAttachment.getBones(), 
-    // MeshAttachment.getBones(), MeshAttachment.getEdges()
-    const noNullCheckMethods = ['getBones', 'getEdges'];
-    
-    for (const method of noNullCheckMethods) {
-        // Remove if (obj.getMethod() == null) { json.writeNull(); } else { ... }
-        const nullCheckPattern = new RegExp(
-            `\\s*if \\(obj->${method}\\(\\) == nullptr\\) \\{[^}]*json\\.writeNull\\(\\);[^}]*\\} else \\{([^}]*)\\}`,
-            'gs'
-        );
-        cpp = cpp.replace(nullCheckPattern, '$1');
-        
-        // Also handle the simpler pattern without else
-        const simpleNullPattern = new RegExp(
-            `\\s*if \\(obj->${method}\\(\\) == nullptr\\) \\{[^}]*json\\.writeNull\\(\\);[^}]*\\}`,
-            'gs'
-        );
-        cpp = cpp.replace(simpleNullPattern, '');
     }
 
-    // Transform for-each loops to indexed loops - handle String vs pointer types
-    cpp = cpp.replace(/for \(([\w.]+) (\w+) : obj->get(\w+)\(\)\) \{/g, function(match, typeName, varName, getter) {
-        const simpleName = typeName.includes('.') ? typeName.split('.').pop() : typeName;
-        // Special case for getPropertyIds which returns PropertyId not String
-        if (getter === 'PropertyIds') {
-            return `for (size_t i = 0; i < obj->get${getter}().size(); i++) {\n            PropertyId ${varName} = obj->get${getter}()[i];`;
-        }
-        // lowercase = primitive type (no pointer), uppercase = class type (pointer)
-        const isPointer = simpleName[0] === simpleName[0].toUpperCase();
-        const cppType = isPointer ? `${simpleName}*` : simpleName;
-        const accessor = (simpleName === 'String') ? `const String&` : cppType;
-        return `for (size_t i = 0; i < obj->get${getter}().size(); i++) {\n            ${accessor} ${varName} = obj->get${getter}()[i];`;
-    });
+    // C++-specific: darkColor specifically has hasDarkColor() method
+    const isDarkColor = property.kind === "object" &&
+        property.valueType === "Color" &&
+        property.getter === "getDarkColor()";
 
-    // Transform ALL remaining ranged for loops to indexed loops
-    cpp = cpp.replace(/for \(([\w&*\s]+) (\w+) : ([^)]+)\) {/g, function(match, type, varName, container) {
-        const cleanType = type.trim();
-        // lowercase = primitive type (no pointer), uppercase = class type (pointer)
-        const isPointer = cleanType[0] === cleanType[0].toUpperCase();
-        const cppType = isPointer ? `${cleanType}*` : cleanType;
-        return `for (size_t i = 0; i < ${container}.size(); i++) {\n            ${cppType} ${varName} = ${container}[i];`;
-    });
+    if (isDarkColor) {
+        const colorAccessor = `&${accessor}`;
 
-    // Handle simpler for-each patterns
-    cpp = cpp.replace(/for \(int i = 0; i < ([\w>()-]+)\.size; i\+\+\) {/g,
-        'for (size_t i = 0; i < $1.size(); i++) {');
+        lines.push(`${indent}if (obj->hasDarkColor()) {`);
+        lines.push(`${indent}    ${property.writeMethodCall}(${colorAccessor});`);
+        lines.push(`${indent}} else {`);
+        lines.push(`${indent}    _json.writeNull();`);
+        lines.push(`${indent}}`);
+        return lines;
+    }
 
-    // Special case for DeformTimeline::getVertices() which returns Array<Array<float>>
-    cpp = cpp.replace(/for \(float\[\] (\w+) : obj->getVertices\(\)\) \{/g,
-        'for (size_t i = 0; i < obj->getVertices().size(); i++) {\n            Array<float>& $1 = obj->getVertices()[i];');
+    switch (property.kind) {
+        case "primitive":
+            lines.push(`${indent}_json.writeValue(${accessor});`);
+            break;
 
-    // Also handle the pattern without obj-> prefix
-    cpp = cpp.replace(/for \(float\[\] (\w+) : (\w+)\.getVertices\(\)\) \{/g,
-        'for (size_t i = 0; i < $2->getVertices().size(); i++) {\n            Array<float>& $1 = $2->getVertices()[i];');
-
-    // Special case for other nested arrays like DrawOrderTimeline::getDrawOrders()
-    cpp = cpp.replace(/for \(int\[\] (\w+) : obj->getDrawOrders\(\)\) \{/g,
-        'for (size_t i = 0; i < obj->getDrawOrders().size(); i++) {\n            Array<int>& $1 = obj->getDrawOrders()[i];');
-
-    // Fix remaining array syntax that wasn't caught by the above
-    cpp = cpp.replace(/for \(([\w]+)\[\]/g, 'for (Array<$1>&');
-
-    // Transform instanceof and casts - remove dots from type names
-    cpp = cpp.replace(/obj instanceof ([\w.]+)/g, function(match, typeName) {
-        const simpleName = typeName.includes('.') ? typeName.split('.').pop() : typeName;
-        return `obj->getRTTI().instanceOf(${simpleName}::rtti)`;
-    });
-    cpp = cpp.replace(/\(([\w.]+)\) obj/g, function(match, typeName) {
-        const simpleName = typeName.includes('.') ? typeName.split('.').pop() : typeName;
-        return `(${simpleName}*)obj`;
-    });
-
-    // Transform RuntimeException to fprintf + exit
-    cpp = cpp.replace(/throw new RuntimeException\("([^"]+)"\);/g,
-        'fprintf(stderr, "Error: $1\\n"); exit(1);');
-    cpp = cpp.replace(/throw new RuntimeException\("([^"]*)" \+ obj->getClass\(\)\.getName\(\)\);/g,
-        'fprintf(stderr, "Error: $1\\n"); exit(1);');
-
-    // Remove class prefixes from type references, but not method calls
-    // This handles AnimationState.TrackEntry, TransformConstraintData.FromProperty, etc.
-    // But preserves obj.method() calls
-    cpp = cpp.replace(/\b([A-Z]\w*)\.([A-Z]\w+)\b/g, '$2');
-
-    // Replace enum .name() calls with switch statements
-    cpp = cpp.replace(/obj->get(\w+)\(\)\.name\(\)/g, (match, methodName) => {
-        // Extract enum type from method name (e.g. getMixBlend -> MixBlend)
-        const enumType = methodName.replace(/^get/, '');
-        const enumMap = enumMappings.get(enumType);
-        
-        if (enumMap && enumMap.size > 0) {
-            // Generate switch statement
-            let switchCode = `[&]() -> String {\n`;
-            switchCode += `        switch(obj->get${methodName}()) {\n`;
-            
-            for (const [javaValue, cppValue] of enumMap) {
-                switchCode += `            case ${cppValue}: return "${javaValue}";\n`;
+        case "object":
+            if (property.isNullable) {
+                lines.push(`${indent}if (${accessor} == nullptr) {`);
+                lines.push(`${indent}    _json.writeNull();`);
+                lines.push(`${indent}} else {`);
+                lines.push(`${indent}    ${property.writeMethodCall}(${accessor});`);
+                lines.push(`${indent}}`);
+            } else {
+                lines.push(`${indent}${property.writeMethodCall}(${accessor});`);
             }
-            
-            switchCode += `            default: return "unknown";\n`;
-            switchCode += `        }\n`;
-            switchCode += `    }()`;
-            
-            return switchCode;
-        }
-        
-        // Fallback if we don't have enum mapping
-        return `String::valueOf((int)obj->get${methodName}())`;
-    });
+            break;
 
-    // Fix some common patterns
-    cpp = cpp.replace(/\.length\(\)/g, '.size()');
-    cpp = cpp.replace(/new /g, '');
+        case "enum":
+            const enumName = property.enumName;
+            const enumMap = enumMappings[enumName];
 
-    // Remove any trailing extra braces before adding proper C++ ending
-    cpp = cpp.replace(/\n\s*\}\s*$/, '');
+            if (enumMap && Object.keys(enumMap).length > 0) {
+                // Generate switch statement for enum
+                lines.push(`${indent}_json.writeValue([&]() -> String {`);
+                lines.push(`${indent}    switch(${accessor}) {`);
 
-    // Add proper C++ ending
-    cpp += '\n}; // class SkeletonSerializer\n\n} // namespace spine\n\n#endif\n';
+                for (const [javaValue, cppValue] of Object.entries(enumMap)) {
+                    lines.push(`${indent}        case ${cppValue}: return "${javaValue}";`);
+                }
 
-    // Prepend header
-    cpp = header + cpp;
+                lines.push(`${indent}        default: return "unknown";`);
+                lines.push(`${indent}    }`);
+                lines.push(`${indent}}());`);
+            } else {
+                // Fallback if no enum mapping
+                lines.push(`${indent}_json.writeValue(String::valueOf((int)${accessor}));`);
+            }
+            break;
 
-    // Clean up multiple empty lines
-    cpp = cpp.replace(/\n{3,}/g, '\n\n');
+        case "array":
+            // In C++, arrays are never null - empty arrays (size() == 0) are equivalent to Java null
+            lines.push(`${indent}_json.writeArrayStart();`);
+            lines.push(`${indent}for (size_t i = 0; i < ${accessor}.size(); i++) {`);
+            const elementAccess = `${accessor}[i]`;
+            if (property.elementKind === "primitive") {
+                lines.push(`${indent}    _json.writeValue(${elementAccess});`);
+            } else {
+                lines.push(`${indent}    ${property.writeMethodCall}(${elementAccess});`);
+            }
+            lines.push(`${indent}}`);
+            lines.push(`${indent}_json.writeArrayEnd();`);
+            break;
 
-    // Replace auto-generated functions with custom implementations
-    for (const [functionName, customImpl] of customFunctions) {
-        // Find and replace the auto-generated function
-        const functionPattern = new RegExp(
-            `    void ${functionName}\\([^{]*\\{[\\s\\S]*?^    \\}$`,
-            'gm'
-        );
-        
-        if (cpp.match(functionPattern)) {
-            cpp = cpp.replace(functionPattern, customImpl);
-            console.log(`Replaced auto-generated ${functionName} with custom implementation`);
-        }
+        case "nestedArray":
+            // Nested arrays are always considered non-null in both Java and C++
+            lines.push(`${indent}_json.writeArrayStart();`);
+            lines.push(`${indent}for (size_t i = 0; i < ${accessor}.size(); i++) {`);
+            lines.push(`${indent}    Array<${property.elementType}>& nestedArray = ${accessor}[i];`);
+            lines.push(`${indent}    _json.writeArrayStart();`);
+            lines.push(`${indent}    for (size_t j = 0; j < nestedArray.size(); j++) {`);
+            lines.push(`${indent}        _json.writeValue(nestedArray[j]);`);
+            lines.push(`${indent}    }`);
+            lines.push(`${indent}    _json.writeArrayEnd();`);
+            lines.push(`${indent}}`);
+            lines.push(`${indent}_json.writeArrayEnd();`);
+            break;
     }
 
-    // Post-process: Add reference versions for all write methods
-    cpp = addReferenceVersionsForWriteMethods(cpp);
-
-    return cpp;
+    return lines;
 }
 
-function main() {
-    try {
-        // Read the Java SkeletonSerializer
-        const javaFile = path.resolve(
-            __dirname,
-            '..',
-            'spine-libgdx',
-            'spine-libgdx-tests',
-            'src',
-            'com',
-            'esotericsoftware',
-            'spine',
-            'utils',
-            'SkeletonSerializer.java'
-        );
+function generateCppFromIR(ir: SerializerIR): string {
+    const cppOutput: string[] = [];
 
-        if (!fs.existsSync(javaFile)) {
-            console.error(`Java SkeletonSerializer not found at: ${javaFile}`);
-            console.error('Please run generate-java-serializer.ts first');
+    // Generate C++ file header
+    cppOutput.push('#ifndef Spine_SkeletonSerializer_h');
+    cppOutput.push('#define Spine_SkeletonSerializer_h');
+    cppOutput.push('');
+    cppOutput.push('#include <spine/spine.h>');
+    cppOutput.push('#include "JsonWriter.h"');
+    cppOutput.push('#include <stdio.h>');
+    cppOutput.push('#include <stdlib.h>');
+    cppOutput.push('');
+    cppOutput.push('namespace spine {');
+    cppOutput.push('');
+    cppOutput.push('class SkeletonSerializer {');
+    cppOutput.push('private:');
+    cppOutput.push('    HashMap<void*, bool> _visitedObjects;');
+    cppOutput.push('    JsonWriter _json;');
+    cppOutput.push('');
+    cppOutput.push('public:');
+    cppOutput.push('    SkeletonSerializer() {}');
+    cppOutput.push('    ~SkeletonSerializer() {}');
+    cppOutput.push('');
+
+    // Generate public methods
+    for (const method of ir.publicMethods) {
+        const cppParamType = transformType(method.paramType);
+        cppOutput.push(`    String ${method.name}(${cppParamType}* ${method.paramName}) {`);
+        cppOutput.push('        _visitedObjects.clear();');
+        cppOutput.push('        _json = JsonWriter();');
+        cppOutput.push(`        ${method.writeMethodCall}(${method.paramName});`);
+        cppOutput.push('        return _json.getString();');
+        cppOutput.push('    }');
+        cppOutput.push('');
+    }
+
+    cppOutput.push('private:');
+
+    // Generate write methods
+    for (const method of ir.writeMethods) {
+        const shortName = method.paramType.split('.').pop()!;
+        const cppType = transformType(method.paramType);
+
+        // Custom writeSkin and writeSkinEntry implementations
+        if (method.name === 'writeSkin') {
+            cppOutput.push('    void writeSkin(Skin* obj) {');
+            cppOutput.push('        if (_visitedObjects.containsKey(obj)) {');
+            cppOutput.push('            _json.writeValue("<circular>");');
+            cppOutput.push('            return;');
+            cppOutput.push('        }');
+            cppOutput.push('        _visitedObjects.put(obj, true);');
+            cppOutput.push('');
+            cppOutput.push('        _json.writeObjectStart();');
+            cppOutput.push('        _json.writeName("type");');
+            cppOutput.push('        _json.writeValue("Skin");');
+            cppOutput.push('');
+            cppOutput.push('        _json.writeName("attachments");');
+            cppOutput.push('        _json.writeArrayStart();');
+            cppOutput.push('        Skin::AttachmentMap::Entries entries = obj->getAttachments();');
+            cppOutput.push('        while (entries.hasNext()) {');
+            cppOutput.push('            Skin::AttachmentMap::Entry& entry = entries.next();');
+            cppOutput.push('            writeSkinEntry(&entry);');
+            cppOutput.push('        }');
+            cppOutput.push('        _json.writeArrayEnd();');
+            cppOutput.push('');
+            cppOutput.push('        _json.writeName("bones");');
+            cppOutput.push('        _json.writeArrayStart();');
+            cppOutput.push('        for (size_t i = 0; i < obj->getBones().size(); i++) {');
+            cppOutput.push('            BoneData* item = obj->getBones()[i];');
+            cppOutput.push('            writeBoneData(item);');
+            cppOutput.push('        }');
+            cppOutput.push('        _json.writeArrayEnd();');
+            cppOutput.push('');
+            cppOutput.push('        _json.writeName("constraints");');
+            cppOutput.push('        _json.writeArrayStart();');
+            cppOutput.push('        for (size_t i = 0; i < obj->getConstraints().size(); i++) {');
+            cppOutput.push('            ConstraintData* item = obj->getConstraints()[i];');
+            cppOutput.push('            writeConstraintData(item);');
+            cppOutput.push('        }');
+            cppOutput.push('        _json.writeArrayEnd();');
+            cppOutput.push('');
+            cppOutput.push('        _json.writeName("name");');
+            cppOutput.push('        _json.writeValue(obj->getName());');
+            cppOutput.push('');
+            cppOutput.push('        _json.writeName("color");');
+            cppOutput.push('        writeColor(&obj->getColor());');
+            cppOutput.push('');
+            cppOutput.push('        _json.writeObjectEnd();');
+            cppOutput.push('    }');
+            cppOutput.push('');
+            continue;
+        }
+
+        // Custom writeSkinEntry
+        if (method.name === 'writeSkinEntry') {
+            // Custom writeSkinEntry implementation
+            cppOutput.push('    void writeSkinEntry(Skin::AttachmentMap::Entry* obj) {');
+            cppOutput.push('        _json.writeObjectStart();');
+            cppOutput.push('        _json.writeName("type");');
+            cppOutput.push('        _json.writeValue("SkinEntry");');
+            cppOutput.push('        _json.writeName("slotIndex");');
+            cppOutput.push('        _json.writeValue((int)obj->_slotIndex);');
+            cppOutput.push('        _json.writeName("name");');
+            cppOutput.push('        _json.writeValue(obj->_name);');
+            cppOutput.push('        _json.writeName("attachment");');
+            cppOutput.push('        writeAttachment(obj->_attachment);');
+            cppOutput.push('        _json.writeObjectEnd();');
+            cppOutput.push('    }');
+            cppOutput.push('');
+            continue;
+        }
+
+        cppOutput.push(`    void ${method.name}(${cppType}* obj) {`);
+
+        if (method.isAbstractType) {
+            // Handle abstract types with instanceof chain
+            if (method.subtypeChecks && method.subtypeChecks.length > 0) {
+                let first = true;
+                for (const subtype of method.subtypeChecks) {
+                    const subtypeShortName = subtype.typeName.split('.').pop()!;
+
+                    if (first) {
+                        cppOutput.push(`        if (obj->getRTTI().instanceOf(${subtypeShortName}::rtti)) {`);
+                        first = false;
+                    } else {
+                        cppOutput.push(`        } else if (obj->getRTTI().instanceOf(${subtypeShortName}::rtti)) {`);
+                    }
+                    cppOutput.push(`            ${subtype.writeMethodCall}((${subtypeShortName}*)obj);`);
+                }
+                cppOutput.push('        } else {');
+                cppOutput.push(`            fprintf(stderr, "Error: Unknown ${shortName} type\\n"); exit(1);`);
+                cppOutput.push('        }');
+            } else {
+                cppOutput.push('        _json.writeNull(); // No concrete implementations after filtering exclusions');
+            }
+        } else {
+            // Handle concrete types
+            // Add cycle detection
+            cppOutput.push('        if (_visitedObjects.containsKey(obj)) {');
+            cppOutput.push('            _json.writeValue("<circular>");');
+            cppOutput.push('            return;');
+            cppOutput.push('        }');
+            cppOutput.push('        _visitedObjects.put(obj, true);');
+            cppOutput.push('');
+
+            cppOutput.push('        _json.writeObjectStart();');
+
+            // Write type field
+            cppOutput.push('        _json.writeName("type");');
+            cppOutput.push(`        _json.writeValue("${shortName}");`);
+
+            // Write properties
+            for (const property of method.properties) {
+                cppOutput.push('');
+                cppOutput.push(`        _json.writeName("${property.name}");`);
+                const propertyLines = generatePropertyCode(property, '        ', ir.enumMappings);
+                cppOutput.push(...propertyLines);
+            }
+
+            cppOutput.push('');
+            cppOutput.push('        _json.writeObjectEnd();');
+        }
+
+        cppOutput.push('    }');
+        cppOutput.push('');
+    }
+
+    // Add custom helper methods for special types
+    cppOutput.push('    // Custom helper methods');
+    cppOutput.push('    void writeColor(Color* obj) {');
+    cppOutput.push('        if (obj == nullptr) {');
+    cppOutput.push('            _json.writeNull();');
+    cppOutput.push('        } else {');
+    cppOutput.push('            _json.writeObjectStart();');
+    cppOutput.push('            _json.writeName("r");');
+    cppOutput.push('            _json.writeValue(obj->r);');
+    cppOutput.push('            _json.writeName("g");');
+    cppOutput.push('            _json.writeValue(obj->g);');
+    cppOutput.push('            _json.writeName("b");');
+    cppOutput.push('            _json.writeValue(obj->b);');
+    cppOutput.push('            _json.writeName("a");');
+    cppOutput.push('            _json.writeValue(obj->a);');
+    cppOutput.push('            _json.writeObjectEnd();');
+    cppOutput.push('        }');
+    cppOutput.push('    }');
+    cppOutput.push('');
+
+    cppOutput.push('    void writeColor(const Color& obj) {');
+    cppOutput.push('        _json.writeObjectStart();');
+    cppOutput.push('        _json.writeName("r");');
+    cppOutput.push('        _json.writeValue(obj.r);');
+    cppOutput.push('        _json.writeName("g");');
+    cppOutput.push('        _json.writeValue(obj.g);');
+    cppOutput.push('        _json.writeName("b");');
+    cppOutput.push('        _json.writeValue(obj.b);');
+    cppOutput.push('        _json.writeName("a");');
+    cppOutput.push('        _json.writeValue(obj.a);');
+    cppOutput.push('        _json.writeObjectEnd();');
+    cppOutput.push('    }');
+    cppOutput.push('');
+
+    cppOutput.push('    void writeTextureRegion(TextureRegion* obj) {');
+    cppOutput.push('        if (obj == nullptr) {');
+    cppOutput.push('            _json.writeNull();');
+    cppOutput.push('        } else {');
+    cppOutput.push('            _json.writeObjectStart();');
+    cppOutput.push('            _json.writeName("u");');
+    cppOutput.push('            _json.writeValue(obj->getU());');
+    cppOutput.push('            _json.writeName("v");');
+    cppOutput.push('            _json.writeValue(obj->getV());');
+    cppOutput.push('            _json.writeName("u2");');
+    cppOutput.push('            _json.writeValue(obj->getU2());');
+    cppOutput.push('            _json.writeName("v2");');
+    cppOutput.push('            _json.writeValue(obj->getV2());');
+    cppOutput.push('            _json.writeName("width");');
+    cppOutput.push('            _json.writeValue(obj->getRegionWidth());');
+    cppOutput.push('            _json.writeName("height");');
+    cppOutput.push('            _json.writeValue(obj->getRegionHeight());');
+    cppOutput.push('            _json.writeObjectEnd();');
+    cppOutput.push('        }');
+    cppOutput.push('    }');
+    cppOutput.push('');
+
+    cppOutput.push('    void writeTextureRegion(const TextureRegion& obj) {');
+    cppOutput.push('        _json.writeObjectStart();');
+    cppOutput.push('        _json.writeName("u");');
+    cppOutput.push('        _json.writeValue(obj.getU());');
+    cppOutput.push('        _json.writeName("v");');
+    cppOutput.push('        _json.writeValue(obj.getV());');
+    cppOutput.push('        _json.writeName("u2");');
+    cppOutput.push('        _json.writeValue(obj.getU2());');
+    cppOutput.push('        _json.writeName("v2");');
+    cppOutput.push('        _json.writeValue(obj.getV2());');
+    cppOutput.push('        _json.writeName("width");');
+    cppOutput.push('        _json.writeValue(obj.getRegionWidth());');
+    cppOutput.push('        _json.writeName("height");');
+    cppOutput.push('        _json.writeValue(obj.getRegionHeight());');
+    cppOutput.push('        _json.writeObjectEnd();');
+    cppOutput.push('    }');
+    cppOutput.push('');
+
+    cppOutput.push('    void writeIntArray(const Array<int>& obj) {');
+    cppOutput.push('        _json.writeArrayStart();');
+    cppOutput.push('        for (size_t i = 0; i < obj.size(); i++) {');
+    cppOutput.push('            _json.writeValue(obj[i]);');
+    cppOutput.push('        }');
+    cppOutput.push('        _json.writeArrayEnd();');
+    cppOutput.push('    }');
+    cppOutput.push('');
+
+    cppOutput.push('    void writeFloatArray(const Array<float>& obj) {');
+    cppOutput.push('        _json.writeArrayStart();');
+    cppOutput.push('        for (size_t i = 0; i < obj.size(); i++) {');
+    cppOutput.push('            _json.writeValue(obj[i]);');
+    cppOutput.push('        }');
+    cppOutput.push('        _json.writeArrayEnd();');
+    cppOutput.push('    }');
+    cppOutput.push('');
+
+    // Add reference versions for write methods (excluding custom implementations)
+    cppOutput.push('    // Reference versions of write methods');
+    const writeMethods = ir.writeMethods.filter(m => 
+        !m.isAbstractType && 
+        m.name !== 'writeSkin' && 
+        m.name !== 'writeSkinEntry'
+    );
+    for (const method of writeMethods) {
+        const cppType = transformType(method.paramType);
+        cppOutput.push(`    void ${method.name}(const ${cppType}& obj) {`);
+        cppOutput.push(`        ${method.name}(const_cast<${cppType}*>(&obj));`);
+        cppOutput.push('    }');
+        cppOutput.push('');
+    }
+
+
+    // C++ footer
+    cppOutput.push('};');
+    cppOutput.push('');
+    cppOutput.push('} // namespace spine');
+    cppOutput.push('');
+    cppOutput.push('#endif');
+
+    return cppOutput.join('\n');
+}
+
+async function main() {
+    try {
+        // Read the IR file
+        const irFile = path.resolve(__dirname, 'output', 'serializer-ir.json');
+        if (!fs.existsSync(irFile)) {
+            console.error('Serializer IR not found. Run generate-serializer-ir.ts first.');
             process.exit(1);
         }
 
-        const javaCode = fs.readFileSync(javaFile, 'utf-8');
+        const ir: SerializerIR = JSON.parse(fs.readFileSync(irFile, 'utf8'));
 
-        // Transform to C++
-        const cppCode = transformJavaToCpp(javaCode);
+        // Generate C++ serializer from IR
+        const cppCode = generateCppFromIR(ir);
 
         // Write the C++ file
         const cppFile = path.resolve(
@@ -401,16 +443,21 @@ function main() {
         fs.mkdirSync(path.dirname(cppFile), { recursive: true });
         fs.writeFileSync(cppFile, cppCode);
 
-        console.log(`Generated C++ serializer: ${cppFile}`);
-        console.log('Note: Manual review and fixes will be needed for:');
-        console.log('  - Complex type transformations');
-        console.log('  - Proper handling of nested classes');
-        console.log('  - String operations and formatting');
+        console.log(`Generated C++ serializer from IR: ${cppFile}`);
+        console.log(`- ${ir.publicMethods.length} public methods`);
+        console.log(`- ${ir.writeMethods.length} write methods`);
+        console.log(`- ${Object.keys(ir.enumMappings).length} enum mappings`);
 
     } catch (error: any) {
         console.error('Error:', error.message);
+        console.error('Stack:', error.stack);
         process.exit(1);
     }
 }
 
-main();
+// Allow running as a script or importing the function
+if (import.meta.url === `file://${process.argv[1]}`) {
+    main();
+}
+
+export { generateCppFromIR };

@@ -9,7 +9,7 @@
 namespace spine {
 
 class SkeletonSerializer {
-    private:
+private:
     HashMap<void*, bool> _visitedObjects;
     JsonWriter _json;
 
@@ -21,7 +21,6 @@ public:
         _visitedObjects.clear();
         _json = JsonWriter();
         writeSkeletonData(data);
-        _json.close();
         return _json.getString();
     }
 
@@ -29,7 +28,6 @@ public:
         _visitedObjects.clear();
         _json = JsonWriter();
         writeSkeleton(skeleton);
-        _json.close();
         return _json.getString();
     }
 
@@ -37,7 +35,6 @@ public:
         _visitedObjects.clear();
         _json = JsonWriter();
         writeAnimationState(state);
-        _json.close();
         return _json.getString();
     }
 
@@ -56,8 +53,7 @@ private:
         _json.writeName("timelines");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getTimelines().size(); i++) {
-            Timeline* item = obj->getTimelines()[i];
-            writeTimeline(item);
+            writeTimeline(obj->getTimelines()[i]);
         }
         _json.writeArrayEnd();
 
@@ -65,11 +61,7 @@ private:
         _json.writeValue(obj->getDuration());
 
         _json.writeName("bones");
-        _json.writeArrayStart();
-        for (int i = 0; i < obj->getBones().size(); i++) {
-            _json.writeValue(obj->getBones()[i]);
-        }
-        _json.writeArrayEnd();
+        writeIntArray(obj->getBones());
 
         _json.writeName("name");
         _json.writeValue(obj->getName());
@@ -97,16 +89,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -139,24 +129,21 @@ private:
         _json.writeName("attachmentNames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getAttachmentNames().size(); i++) {
-            const String& item = obj->getAttachmentNames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getAttachmentNames()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -191,11 +178,9 @@ private:
         for (size_t i = 0; i < obj->getVertices().size(); i++) {
             Array<float>& nestedArray = obj->getVertices()[i];
             _json.writeArrayStart();
-            for (size_t i = 0; i < nestedArray.size(); i++) {
-            float elem = nestedArray[i];
-            _json.writeValue(elem);
-        
-        }
+            for (size_t j = 0; j < nestedArray.size(); j++) {
+                _json.writeValue(nestedArray[j]);
+            }
             _json.writeArrayEnd();
         }
         _json.writeArrayEnd();
@@ -206,16 +191,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -247,11 +230,9 @@ private:
         for (size_t i = 0; i < obj->getDrawOrders().size(); i++) {
             Array<int>& nestedArray = obj->getDrawOrders()[i];
             _json.writeArrayStart();
-            for (size_t i = 0; i < nestedArray.size(); i++) {
-            int elem = nestedArray[i];
-            _json.writeValue(elem);
-        
-        }
+            for (size_t j = 0; j < nestedArray.size(); j++) {
+                _json.writeValue(nestedArray[j]);
+            }
             _json.writeArrayEnd();
         }
         _json.writeArrayEnd();
@@ -259,16 +240,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -298,24 +277,21 @@ private:
         _json.writeName("events");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getEvents().size(); i++) {
-            Event* item = obj->getEvents()[i];
-            writeEvent(item);
+            writeEvent(obj->getEvents()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -348,16 +324,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -390,16 +364,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -432,16 +404,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -474,16 +444,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -516,16 +484,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -558,16 +524,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -600,16 +564,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -642,16 +604,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -684,16 +644,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -726,16 +684,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -768,16 +724,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -810,16 +764,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -852,16 +804,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -894,16 +844,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -936,16 +884,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -978,16 +924,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1020,16 +964,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1062,16 +1004,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1104,16 +1044,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1146,16 +1084,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1188,16 +1124,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1233,16 +1167,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1275,16 +1207,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1317,16 +1247,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1359,16 +1287,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1401,16 +1327,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1443,16 +1367,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1539,7 +1461,7 @@ private:
         } else if (obj->getRTTI().instanceOf(TranslateYTimeline::rtti)) {
             writeTranslateYTimeline((TranslateYTimeline*)obj);
         } else {
-            fprintf(stderr, "Error: Unknown Timeline type: \n"); exit(1);
+            fprintf(stderr, "Error: Unknown Timeline type\n"); exit(1);
         }
     }
 
@@ -1563,16 +1485,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1605,16 +1525,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1647,16 +1565,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1689,16 +1605,14 @@ private:
         _json.writeName("propertyIds");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPropertyIds().size(); i++) {
-            PropertyId item = obj->getPropertyIds()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getPropertyIds()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("frames");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getFrames().size(); i++) {
-            float item = obj->getFrames()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getFrames()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1731,8 +1645,7 @@ private:
         _json.writeName("tracks");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getTracks().size(); i++) {
-            TrackEntry* item = obj->getTracks()[i];
-            writeTrackEntry(item);
+            writeTrackEntry(obj->getTracks()[i]);
         }
         _json.writeArrayEnd();
 
@@ -1785,7 +1698,6 @@ private:
 
         _json.writeName("timeScale");
         _json.writeValue(obj->getTimeScale());
-        // Skipping excluded property: getListener()
 
         _json.writeName("alpha");
         _json.writeValue(obj->getAlpha());
@@ -1824,14 +1736,14 @@ private:
 
         _json.writeName("mixBlend");
         _json.writeValue([&]() -> String {
-        switch(obj->getMixBlend()) {
-            case MixBlend_Setup: return "setup";
-            case MixBlend_First: return "first";
-            case MixBlend_Replace: return "replace";
-            case MixBlend_Add: return "add";
-            default: return "unknown";
-        }
-    }());
+            switch(obj->getMixBlend()) {
+                case MixBlend_Setup: return "setup";
+                case MixBlend_First: return "first";
+                case MixBlend_Replace: return "replace";
+                case MixBlend_Add: return "add";
+                default: return "unknown";
+            }
+        }());
 
         _json.writeName("mixingFrom");
         if (obj->getMixingFrom() == nullptr) {
@@ -1893,7 +1805,7 @@ private:
         } else if (obj->getRTTI().instanceOf(RegionAttachment::rtti)) {
             writeRegionAttachment((RegionAttachment*)obj);
         } else {
-            fprintf(stderr, "Error: Unknown Attachment type: \n"); exit(1);
+            fprintf(stderr, "Error: Unknown Attachment type\n"); exit(1);
         }
     }
 
@@ -1918,8 +1830,7 @@ private:
         _json.writeName("children");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getChildren().size(); i++) {
-            Bone* item = obj->getChildren()[i];
-            writeBone(item);
+            writeBone(obj->getChildren()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2014,15 +1925,15 @@ private:
 
         _json.writeName("inherit");
         _json.writeValue([&]() -> String {
-        switch(obj->getInherit()) {
-            case Inherit_Normal: return "normal";
-            case Inherit_OnlyTranslation: return "onlyTranslation";
-            case Inherit_NoRotationOrReflection: return "noRotationOrReflection";
-            case Inherit_NoScale: return "noScale";
-            case Inherit_NoScaleOrReflection: return "noScaleOrReflection";
-            default: return "unknown";
-        }
-    }());
+            switch(obj->getInherit()) {
+                case Inherit_Normal: return "normal";
+                case Inherit_OnlyTranslation: return "onlyTranslation";
+                case Inherit_NoRotationOrReflection: return "noRotationOrReflection";
+                case Inherit_NoScale: return "noScale";
+                case Inherit_NoScaleOrReflection: return "noScaleOrReflection";
+                default: return "unknown";
+            }
+        }());
 
         _json.writeObjectEnd();
     }
@@ -2091,15 +2002,15 @@ private:
 
         _json.writeName("inherit");
         _json.writeValue([&]() -> String {
-        switch(obj->getInherit()) {
-            case Inherit_Normal: return "normal";
-            case Inherit_OnlyTranslation: return "onlyTranslation";
-            case Inherit_NoRotationOrReflection: return "noRotationOrReflection";
-            case Inherit_NoScale: return "noScale";
-            case Inherit_NoScaleOrReflection: return "noScaleOrReflection";
-            default: return "unknown";
-        }
-    }());
+            switch(obj->getInherit()) {
+                case Inherit_Normal: return "normal";
+                case Inherit_OnlyTranslation: return "onlyTranslation";
+                case Inherit_NoRotationOrReflection: return "noRotationOrReflection";
+                case Inherit_NoScale: return "noScale";
+                case Inherit_NoScaleOrReflection: return "noScaleOrReflection";
+                default: return "unknown";
+            }
+        }());
 
         _json.writeObjectEnd();
     }
@@ -2119,19 +2030,16 @@ private:
         writeColor(obj->getColor());
 
         _json.writeName("bones");
-            _json.writeArrayStart();
-            for (size_t i = 0; i < obj->getBones().size(); i++) {
-            int item = obj->getBones()[i];
-            _json.writeValue(item);
-            
-            _json.writeArrayEnd();
+        _json.writeArrayStart();
+        for (size_t i = 0; i < obj->getBones().size(); i++) {
+            _json.writeValue(obj->getBones()[i]);
         }
+        _json.writeArrayEnd();
 
         _json.writeName("vertices");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getVertices().size(); i++) {
-            float item = obj->getVertices()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getVertices()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2176,19 +2084,16 @@ private:
         writeColor(obj->getColor());
 
         _json.writeName("bones");
-            _json.writeArrayStart();
-            for (size_t i = 0; i < obj->getBones().size(); i++) {
-            int item = obj->getBones()[i];
-            _json.writeValue(item);
-            
-            _json.writeArrayEnd();
+        _json.writeArrayStart();
+        for (size_t i = 0; i < obj->getBones().size(); i++) {
+            _json.writeValue(obj->getBones()[i]);
         }
+        _json.writeArrayEnd();
 
         _json.writeName("vertices");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getVertices().size(); i++) {
-            float item = obj->getVertices()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getVertices()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2223,7 +2128,7 @@ private:
         } else if (obj->getRTTI().instanceOf(TransformConstraint::rtti)) {
             writeTransformConstraint((TransformConstraint*)obj);
         } else {
-            fprintf(stderr, "Error: Unknown Constraint type: \n"); exit(1);
+            fprintf(stderr, "Error: Unknown Constraint type\n"); exit(1);
         }
     }
 
@@ -2239,7 +2144,7 @@ private:
         } else if (obj->getRTTI().instanceOf(TransformConstraintData::rtti)) {
             writeTransformConstraintData((TransformConstraintData*)obj);
         } else {
-            fprintf(stderr, "Error: Unknown ConstraintData type: \n"); exit(1);
+            fprintf(stderr, "Error: Unknown ConstraintData type\n"); exit(1);
         }
     }
 
@@ -2327,8 +2232,7 @@ private:
         _json.writeName("bones");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getBones().size(); i++) {
-            BonePose* item = obj->getBones()[i];
-            writeBonePose(item);
+            writeBonePose(obj->getBones()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2361,8 +2265,7 @@ private:
         _json.writeName("bones");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getBones().size(); i++) {
-            BoneData* item = obj->getBones()[i];
-            writeBoneData(item);
+            writeBoneData(obj->getBones()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2425,29 +2328,30 @@ private:
         _json.writeValue("MeshAttachment");
 
         _json.writeName("region");
-        writeTextureRegion(obj->getRegion());
+        if (obj->getRegion() == nullptr) {
+            _json.writeNull();
+        } else {
+            writeTextureRegion(obj->getRegion());
+        }
 
         _json.writeName("triangles");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getTriangles().size(); i++) {
-            short item = obj->getTriangles()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getTriangles()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("regionUVs");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getRegionUVs().size(); i++) {
-            float item = obj->getRegionUVs()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getRegionUVs()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("uVs");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getUVs().size(); i++) {
-            float item = obj->getUVs()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getUVs()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2461,13 +2365,11 @@ private:
         _json.writeValue(obj->getHullLength());
 
         _json.writeName("edges");
-            _json.writeArrayStart();
-            for (size_t i = 0; i < obj->getEdges().size(); i++) {
-            short item = obj->getEdges()[i];
-            _json.writeValue(item);
-            
-            _json.writeArrayEnd();
+        _json.writeArrayStart();
+        for (size_t i = 0; i < obj->getEdges().size(); i++) {
+            _json.writeValue(obj->getEdges()[i]);
         }
+        _json.writeArrayEnd();
 
         _json.writeName("width");
         _json.writeValue(obj->getWidth());
@@ -2490,19 +2392,16 @@ private:
         }
 
         _json.writeName("bones");
-            _json.writeArrayStart();
-            for (size_t i = 0; i < obj->getBones().size(); i++) {
-            int item = obj->getBones()[i];
-            _json.writeValue(item);
-            
-            _json.writeArrayEnd();
+        _json.writeArrayStart();
+        for (size_t i = 0; i < obj->getBones().size(); i++) {
+            _json.writeValue(obj->getBones()[i]);
         }
+        _json.writeArrayEnd();
 
         _json.writeName("vertices");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getVertices().size(); i++) {
-            float item = obj->getVertices()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getVertices()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2545,8 +2444,7 @@ private:
         _json.writeName("lengths");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getLengths().size(); i++) {
-            float item = obj->getLengths()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getLengths()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2554,19 +2452,16 @@ private:
         writeColor(obj->getColor());
 
         _json.writeName("bones");
-            _json.writeArrayStart();
-            for (size_t i = 0; i < obj->getBones().size(); i++) {
-            int item = obj->getBones()[i];
-            _json.writeValue(item);
-            
-            _json.writeArrayEnd();
+        _json.writeArrayStart();
+        for (size_t i = 0; i < obj->getBones().size(); i++) {
+            _json.writeValue(obj->getBones()[i]);
         }
+        _json.writeArrayEnd();
 
         _json.writeName("vertices");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getVertices().size(); i++) {
-            float item = obj->getVertices()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getVertices()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2603,8 +2498,7 @@ private:
         _json.writeName("bones");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getBones().size(); i++) {
-            BonePose* item = obj->getBones()[i];
-            writeBonePose(item);
+            writeBonePose(obj->getBones()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2637,8 +2531,7 @@ private:
         _json.writeName("bones");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getBones().size(); i++) {
-            BoneData* item = obj->getBones()[i];
-            writeBoneData(item);
+            writeBoneData(obj->getBones()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2647,33 +2540,33 @@ private:
 
         _json.writeName("positionMode");
         _json.writeValue([&]() -> String {
-        switch(obj->getPositionMode()) {
-            case PositionMode_Fixed: return "fixed";
-            case PositionMode_Percent: return "percent";
-            default: return "unknown";
-        }
-    }());
+            switch(obj->getPositionMode()) {
+                case PositionMode_Fixed: return "fixed";
+                case PositionMode_Percent: return "percent";
+                default: return "unknown";
+            }
+        }());
 
         _json.writeName("spacingMode");
         _json.writeValue([&]() -> String {
-        switch(obj->getSpacingMode()) {
-            case SpacingMode_Length: return "length";
-            case SpacingMode_Fixed: return "fixed";
-            case SpacingMode_Percent: return "percent";
-            case SpacingMode_Proportional: return "proportional";
-            default: return "unknown";
-        }
-    }());
+            switch(obj->getSpacingMode()) {
+                case SpacingMode_Length: return "length";
+                case SpacingMode_Fixed: return "fixed";
+                case SpacingMode_Percent: return "percent";
+                case SpacingMode_Proportional: return "proportional";
+                default: return "unknown";
+            }
+        }());
 
         _json.writeName("rotateMode");
         _json.writeValue([&]() -> String {
-        switch(obj->getRotateMode()) {
-            case RotateMode_Tangent: return "tangent";
-            case RotateMode_Chain: return "chain";
-            case RotateMode_ChainScale: return "chainScale";
-            default: return "unknown";
-        }
-    }());
+            switch(obj->getRotateMode()) {
+                case RotateMode_Tangent: return "tangent";
+                case RotateMode_Chain: return "chain";
+                case RotateMode_ChainScale: return "chainScale";
+                default: return "unknown";
+            }
+        }());
 
         _json.writeName("offsetRotation");
         _json.writeValue(obj->getOffsetRotation());
@@ -2889,21 +2782,23 @@ private:
         _json.writeValue("RegionAttachment");
 
         _json.writeName("region");
-        writeTextureRegion(obj->getRegion());
+        if (obj->getRegion() == nullptr) {
+            _json.writeNull();
+        } else {
+            writeTextureRegion(obj->getRegion());
+        }
 
         _json.writeName("offset");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getOffset().size(); i++) {
-            float item = obj->getOffset()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getOffset()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("uVs");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getUVs().size(); i++) {
-            float item = obj->getUVs()[i];
-            _json.writeValue(item);
+            _json.writeValue(obj->getUVs()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2970,8 +2865,7 @@ private:
         _json.writeName("regions");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getRegions().size(); i++) {
-            TextureRegion* item = obj->getRegions()[i];
-            writeTextureRegion(item);
+            writeTextureRegion(obj->getRegions()[i]);
         }
         _json.writeArrayEnd();
 
@@ -2998,16 +2892,14 @@ private:
         _json.writeName("bones");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getBones().size(); i++) {
-            Bone* item = obj->getBones()[i];
-            writeBone(item);
+            writeBone(obj->getBones()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("updateCache");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getUpdateCache().size(); i++) {
-            Update* item = obj->getUpdateCache()[i];
-            writeUpdate(item);
+            writeUpdate(obj->getUpdateCache()[i]);
         }
         _json.writeArrayEnd();
 
@@ -3017,16 +2909,14 @@ private:
         _json.writeName("slots");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getSlots().size(); i++) {
-            Slot* item = obj->getSlots()[i];
-            writeSlot(item);
+            writeSlot(obj->getSlots()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("drawOrder");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getDrawOrder().size(); i++) {
-            Slot* item = obj->getDrawOrder()[i];
-            writeSlot(item);
+            writeSlot(obj->getDrawOrder()[i]);
         }
         _json.writeArrayEnd();
 
@@ -3040,16 +2930,14 @@ private:
         _json.writeName("constraints");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getConstraints().size(); i++) {
-            Constraint* item = obj->getConstraints()[i];
-            writeConstraint(item);
+            writeConstraint(obj->getConstraints()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("physicsConstraints");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getPhysicsConstraints().size(); i++) {
-            PhysicsConstraint* item = obj->getPhysicsConstraints()[i];
-            writePhysicsConstraint(item);
+            writePhysicsConstraint(obj->getPhysicsConstraints()[i]);
         }
         _json.writeArrayEnd();
 
@@ -3100,16 +2988,14 @@ private:
         _json.writeName("bones");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getBones().size(); i++) {
-            BoneData* item = obj->getBones()[i];
-            writeBoneData(item);
+            writeBoneData(obj->getBones()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("slots");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getSlots().size(); i++) {
-            SlotData* item = obj->getSlots()[i];
-            writeSlotData(item);
+            writeSlotData(obj->getSlots()[i]);
         }
         _json.writeArrayEnd();
 
@@ -3123,32 +3009,28 @@ private:
         _json.writeName("skins");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getSkins().size(); i++) {
-            Skin* item = obj->getSkins()[i];
-            writeSkin(item);
+            writeSkin(obj->getSkins()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("events");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getEvents().size(); i++) {
-            EventData* item = obj->getEvents()[i];
-            writeEventData(item);
+            writeEventData(obj->getEvents()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("animations");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getAnimations().size(); i++) {
-            Animation* item = obj->getAnimations()[i];
-            writeAnimation(item);
+            writeAnimation(obj->getAnimations()[i]);
         }
         _json.writeArrayEnd();
 
         _json.writeName("constraints");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getConstraints().size(); i++) {
-            ConstraintData* item = obj->getConstraints()[i];
-            writeConstraintData(item);
+            writeConstraintData(obj->getConstraints()[i]);
         }
         _json.writeArrayEnd();
 
@@ -3395,14 +3277,14 @@ private:
 
         _json.writeName("blendMode");
         _json.writeValue([&]() -> String {
-        switch(obj->getBlendMode()) {
-            case BlendMode_Normal: return "normal";
-            case BlendMode_Additive: return "additive";
-            case BlendMode_Multiply: return "multiply";
-            case BlendMode_Screen: return "screen";
-            default: return "unknown";
-        }
-    }());
+            switch(obj->getBlendMode()) {
+                case BlendMode_Normal: return "normal";
+                case BlendMode_Additive: return "additive";
+                case BlendMode_Multiply: return "multiply";
+                case BlendMode_Screen: return "screen";
+                default: return "unknown";
+            }
+        }());
 
         _json.writeName("visible");
         _json.writeValue(obj->getVisible());
@@ -3434,7 +3316,11 @@ private:
         writeColor(obj->getColor());
 
         _json.writeName("darkColor");
-        writeColor(obj->getDarkColor());
+        if (obj->hasDarkColor()) {
+            writeColor(&obj->getDarkColor());
+        } else {
+            _json.writeNull();
+        }
 
         _json.writeName("attachment");
         if (obj->getAttachment() == nullptr) {
@@ -3447,11 +3333,7 @@ private:
         _json.writeValue(obj->getSequenceIndex());
 
         _json.writeName("deform");
-        _json.writeArrayStart();
-        for (int i = 0; i < obj->getDeform().size(); i++) {
-            _json.writeValue(obj->getDeform()[i]);
-        }
-        _json.writeArrayEnd();
+        writeFloatArray(obj->getDeform());
 
         _json.writeObjectEnd();
     }
@@ -3470,8 +3352,7 @@ private:
         _json.writeName("bones");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getBones().size(); i++) {
-            BonePose* item = obj->getBones()[i];
-            writeBonePose(item);
+            writeBonePose(obj->getBones()[i]);
         }
         _json.writeArrayEnd();
 
@@ -3504,8 +3385,7 @@ private:
         _json.writeName("bones");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getBones().size(); i++) {
-            BoneData* item = obj->getBones()[i];
-            writeBoneData(item);
+            writeBoneData(obj->getBones()[i]);
         }
         _json.writeArrayEnd();
 
@@ -3545,8 +3425,7 @@ private:
         _json.writeName("properties");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->getProperties().size(); i++) {
-            FromProperty* item = obj->getProperties()[i];
-            writeFromProperty(item);
+            writeFromProperty(obj->getProperties()[i]);
         }
         _json.writeArrayEnd();
 
@@ -3576,7 +3455,7 @@ private:
         } else if (obj->getRTTI().instanceOf(FromY::rtti)) {
             writeFromY((FromY*)obj);
         } else {
-            fprintf(stderr, "Error: Unknown FromProperty type: \n"); exit(1);
+            fprintf(stderr, "Error: Unknown FromProperty type\n"); exit(1);
         }
     }
 
@@ -3597,8 +3476,7 @@ private:
         _json.writeName("to");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->_to.size(); i++) {
-            ToProperty* item = obj->_to[i];
-            writeToProperty(item);
+            writeToProperty(obj->_to[i]);
         }
         _json.writeArrayEnd();
 
@@ -3622,8 +3500,7 @@ private:
         _json.writeName("to");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->_to.size(); i++) {
-            ToProperty* item = obj->_to[i];
-            writeToProperty(item);
+            writeToProperty(obj->_to[i]);
         }
         _json.writeArrayEnd();
 
@@ -3647,8 +3524,7 @@ private:
         _json.writeName("to");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->_to.size(); i++) {
-            ToProperty* item = obj->_to[i];
-            writeToProperty(item);
+            writeToProperty(obj->_to[i]);
         }
         _json.writeArrayEnd();
 
@@ -3672,8 +3548,7 @@ private:
         _json.writeName("to");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->_to.size(); i++) {
-            ToProperty* item = obj->_to[i];
-            writeToProperty(item);
+            writeToProperty(obj->_to[i]);
         }
         _json.writeArrayEnd();
 
@@ -3697,8 +3572,7 @@ private:
         _json.writeName("to");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->_to.size(); i++) {
-            ToProperty* item = obj->_to[i];
-            writeToProperty(item);
+            writeToProperty(obj->_to[i]);
         }
         _json.writeArrayEnd();
 
@@ -3722,8 +3596,7 @@ private:
         _json.writeName("to");
         _json.writeArrayStart();
         for (size_t i = 0; i < obj->_to.size(); i++) {
-            ToProperty* item = obj->_to[i];
-            writeToProperty(item);
+            writeToProperty(obj->_to[i]);
         }
         _json.writeArrayEnd();
 
@@ -3744,7 +3617,7 @@ private:
         } else if (obj->getRTTI().instanceOf(ToY::rtti)) {
             writeToY((ToY*)obj);
         } else {
-            fprintf(stderr, "Error: Unknown ToProperty type: \n"); exit(1);
+            fprintf(stderr, "Error: Unknown ToProperty type\n"); exit(1);
         }
     }
 
@@ -3932,7 +3805,7 @@ private:
         } else if (obj->getRTTI().instanceOf(TransformConstraint::rtti)) {
             writeTransformConstraint((TransformConstraint*)obj);
         } else {
-            fprintf(stderr, "Error: Unknown Update type: \n"); exit(1);
+            fprintf(stderr, "Error: Unknown Update type\n"); exit(1);
         }
     }
 
@@ -3946,10 +3819,11 @@ private:
         } else if (obj->getRTTI().instanceOf(PathAttachment::rtti)) {
             writePathAttachment((PathAttachment*)obj);
         } else {
-            fprintf(stderr, "Error: Unknown VertexAttachment type: \n"); exit(1);
+            fprintf(stderr, "Error: Unknown VertexAttachment type\n"); exit(1);
         }
     }
 
+    // Custom helper methods
     void writeColor(Color* obj) {
         if (obj == nullptr) {
             _json.writeNull();
@@ -3965,6 +3839,19 @@ private:
             _json.writeValue(obj->a);
             _json.writeObjectEnd();
         }
+    }
+
+    void writeColor(const Color& obj) {
+        _json.writeObjectStart();
+        _json.writeName("r");
+        _json.writeValue(obj.r);
+        _json.writeName("g");
+        _json.writeValue(obj.g);
+        _json.writeName("b");
+        _json.writeValue(obj.b);
+        _json.writeName("a");
+        _json.writeValue(obj.a);
+        _json.writeObjectEnd();
     }
 
     void writeTextureRegion(TextureRegion* obj) {
@@ -3988,6 +3875,40 @@ private:
         }
     }
 
+    void writeTextureRegion(const TextureRegion& obj) {
+        _json.writeObjectStart();
+        _json.writeName("u");
+        _json.writeValue(obj.getU());
+        _json.writeName("v");
+        _json.writeValue(obj.getV());
+        _json.writeName("u2");
+        _json.writeValue(obj.getU2());
+        _json.writeName("v2");
+        _json.writeValue(obj.getV2());
+        _json.writeName("width");
+        _json.writeValue(obj.getRegionWidth());
+        _json.writeName("height");
+        _json.writeValue(obj.getRegionHeight());
+        _json.writeObjectEnd();
+    }
+
+    void writeIntArray(const Array<int>& obj) {
+        _json.writeArrayStart();
+        for (size_t i = 0; i < obj.size(); i++) {
+            _json.writeValue(obj[i]);
+        }
+        _json.writeArrayEnd();
+    }
+
+    void writeFloatArray(const Array<float>& obj) {
+        _json.writeArrayStart();
+        for (size_t i = 0; i < obj.size(); i++) {
+            _json.writeValue(obj[i]);
+        }
+        _json.writeArrayEnd();
+    }
+
+    // Reference versions of write methods
     void writeAnimation(const Animation& obj) {
         writeAnimation(const_cast<Animation*>(&obj));
     }
@@ -4120,10 +4041,6 @@ private:
         writeSliderTimeline(const_cast<SliderTimeline*>(&obj));
     }
 
-    void writeTimeline(const Timeline& obj) {
-        writeTimeline(const_cast<Timeline*>(&obj));
-    }
-
     void writeTransformConstraintTimeline(const TransformConstraintTimeline& obj) {
         writeTransformConstraintTimeline(const_cast<TransformConstraintTimeline*>(&obj));
     }
@@ -4152,10 +4069,6 @@ private:
         writeAnimationStateData(const_cast<AnimationStateData*>(&obj));
     }
 
-    void writeAttachment(const Attachment& obj) {
-        writeAttachment(const_cast<Attachment*>(&obj));
-    }
-
     void writeBone(const Bone& obj) {
         writeBone(const_cast<Bone*>(&obj));
     }
@@ -4178,14 +4091,6 @@ private:
 
     void writeClippingAttachment(const ClippingAttachment& obj) {
         writeClippingAttachment(const_cast<ClippingAttachment*>(&obj));
-    }
-
-    void writeConstraint(const Constraint& obj) {
-        writeConstraint(const_cast<Constraint*>(&obj));
-    }
-
-    void writeConstraintData(const ConstraintData& obj) {
-        writeConstraintData(const_cast<ConstraintData*>(&obj));
     }
 
     void writeEvent(const Event& obj) {
@@ -4260,10 +4165,6 @@ private:
         writeSkeletonData(const_cast<SkeletonData*>(&obj));
     }
 
-    void writeSkin(const Skin& obj) {
-        writeSkin(const_cast<Skin*>(&obj));
-    }
-
     void writeSlider(const Slider& obj) {
         writeSlider(const_cast<Slider*>(&obj));
     }
@@ -4296,10 +4197,6 @@ private:
         writeTransformConstraintData(const_cast<TransformConstraintData*>(&obj));
     }
 
-    void writeFromProperty(const FromProperty& obj) {
-        writeFromProperty(const_cast<FromProperty*>(&obj));
-    }
-
     void writeFromRotate(const FromRotate& obj) {
         writeFromRotate(const_cast<FromRotate*>(&obj));
     }
@@ -4322,10 +4219,6 @@ private:
 
     void writeFromY(const FromY& obj) {
         writeFromY(const_cast<FromY*>(&obj));
-    }
-
-    void writeToProperty(const ToProperty& obj) {
-        writeToProperty(const_cast<ToProperty*>(&obj));
     }
 
     void writeToRotate(const ToRotate& obj) {
@@ -4356,23 +4249,7 @@ private:
         writeTransformConstraintPose(const_cast<TransformConstraintPose*>(&obj));
     }
 
-    void writeUpdate(const Update& obj) {
-        writeUpdate(const_cast<Update*>(&obj));
-    }
-
-    void writeVertexAttachment(const VertexAttachment& obj) {
-        writeVertexAttachment(const_cast<VertexAttachment*>(&obj));
-    }
-
-    void writeColor(const Color& obj) {
-        writeColor(const_cast<Color*>(&obj));
-    }
-
-    void writeTextureRegion(const TextureRegion& obj) {
-        writeTextureRegion(const_cast<TextureRegion*>(&obj));
-    }
-
-}; // class SkeletonSerializer
+};
 
 } // namespace spine
 
