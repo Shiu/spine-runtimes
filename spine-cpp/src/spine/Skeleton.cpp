@@ -120,7 +120,7 @@ void Skeleton::updateCache() {
 	Bone **bones = _bones.buffer();
 	for (size_t i = 0; i < boneCount; i++) {
 		Bone *bone = bones[i];
-		bone->_sorted = bone->_data.isSkinRequired();
+		bone->_sorted = bone->_data.getSkinRequired();
 		bone->_active = !bone->_sorted;
 		bone->pose();
 	}
@@ -145,7 +145,7 @@ void Skeleton::updateCache() {
 	for (size_t i = 0; i < n; i++) {
 		Constraint *constraint = constraints[i];
 		constraint->_active = constraint->isSourceActive() &&
-							  ((!constraint->getData().isSkinRequired()) || (_skin && _skin->_constraints.contains(&constraint->getData())));
+							  ((!constraint->getData().getSkinRequired()) || (_skin && _skin->_constraints.contains(&constraint->getData())));
 		if (constraint->_active) constraint->sort(*this);
 	}
 

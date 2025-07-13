@@ -76,7 +76,7 @@ namespace spine {
 		virtual ~ConstraintGeneric() {
 		}
 
-		virtual ConstraintData &getData() override {
+		virtual D &getData() override {
 			return PosedGeneric<D, P, P>::getData();
 		}
 

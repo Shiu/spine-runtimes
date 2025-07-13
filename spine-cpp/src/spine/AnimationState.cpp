@@ -672,8 +672,8 @@ TrackEntry *AnimationState::getCurrent(size_t trackIndex) {
 	return trackIndex >= _tracks.size() ? NULL : _tracks[trackIndex];
 }
 
-AnimationStateData *AnimationState::getData() {
-	return _data;
+AnimationStateData &AnimationState::getData() {
+	return *_data;
 }
 
 Array<TrackEntry *> &AnimationState::getTracks() {

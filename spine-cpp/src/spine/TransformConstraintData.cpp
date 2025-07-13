@@ -39,6 +39,19 @@
 using namespace spine;
 
 RTTI_IMPL(TransformConstraintData, ConstraintData)
+RTTI_IMPL_NOPARENT(FromProperty)
+RTTI_IMPL_NOPARENT(ToProperty)
+RTTI_IMPL(FromRotate, FromProperty)
+RTTI_IMPL(ToRotate, ToProperty)
+RTTI_IMPL(FromX, FromProperty)
+RTTI_IMPL(ToX, ToProperty)
+RTTI_IMPL(FromY, FromProperty)
+RTTI_IMPL(ToY, ToProperty)
+RTTI_IMPL(FromScaleX, FromProperty)
+RTTI_IMPL(ToScaleX, ToProperty)
+RTTI_IMPL(FromScaleY, FromProperty)
+RTTI_IMPL(ToScaleY, ToProperty)
+RTTI_IMPL(FromShearY, FromProperty)
 
 TransformConstraintData::TransformConstraintData(const String &name) : ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>(name),
 																	   _source(NULL),

@@ -222,9 +222,7 @@ public class HeadlessTest implements ApplicationListener {
 
 			// Print skeleton data as JSON
 			System.out.println("=== SKELETON DATA ===");
-			StringWriter dataWriter = new StringWriter();
-			serializer.serializeSkeletonData(skeletonData, dataWriter);
-			System.out.println(dataWriter.toString());
+			System.out.println(serializer.serializeSkeletonData(skeletonData));
 
 			// Create skeleton instance
 			Skeleton skeleton = new Skeleton(skeletonData);
@@ -253,15 +251,11 @@ public class HeadlessTest implements ApplicationListener {
 
 			// Print skeleton state as JSON
 			System.out.println("\n=== SKELETON STATE ===");
-			StringWriter skeletonWriter = new StringWriter();
-			serializer.serializeSkeleton(skeleton, skeletonWriter);
-			System.out.println(skeletonWriter.toString());
+			System.out.println(serializer.serializeSkeleton(skeleton));
 
 			// Print animation state as JSON
 			System.out.println("\n=== ANIMATION STATE ===");
-			StringWriter stateWriter = new StringWriter();
-			serializer.serializeAnimationState(state, stateWriter);
-			System.out.println(stateWriter.toString());
+			System.out.println(serializer.serializeAnimationState(state));
 
 		} catch (Exception e) {
 			e.printStackTrace();

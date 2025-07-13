@@ -57,6 +57,7 @@ export interface PropertyInfo {
     type: string;
     isGetter: boolean;
     inheritedFrom?: string; // Which class this property was inherited from
+    excluded: boolean; // Whether this property should be excluded from serialization
 }
 
 export interface AnalysisResult {

@@ -3,10 +3,13 @@
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 import type { Symbol, LspOutput, ClassInfo, PropertyInfo, AnalysisResult } from './types';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 function ensureOutputDir(): string {
-    const outputDir = path.join(process.cwd(), 'output');
+    const outputDir = path.resolve(__dirname, '..', 'output');
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
     }
@@ -298,7 +301,67 @@ function findAccessibleTypes(
     return accessible;
 }
 
-function getAllProperties(classMap: Map<string, ClassInfo>, className: string, symbolsFile: string): PropertyInfo[] {
+function loadExclusions(): { types: Set<string>, methods: Map<string, Set<string>>, fields: Map<string, Set<string>> } {
+    const exclusionsPath = path.resolve(__dirname, 'java-exclusions.txt');
+    const types = new Set<string>();
+    const methods = new Map<string, Set<string>>();
+    const fields = new Map<string, Set<string>>();
+    
+    if (!fs.existsSync(exclusionsPath)) {
+        return { types, methods, fields };
+    }
+    
+    const content = fs.readFileSync(exclusionsPath, 'utf-8');
+    const lines = content.split('\n');
+    
+    for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        
+        const parts = trimmed.split(/\s+/);
+        if (parts.length < 2) continue;
+        
+        const [type, className, property] = parts;
+        
+        switch (type) {
+            case 'type':
+                types.add(className);
+                break;
+            case 'method':
+                if (property) {
+                    if (!methods.has(className)) {
+                        methods.set(className, new Set());
+                    }
+                    methods.get(className)!.add(property);
+                }
+                break;
+            case 'field':
+                if (property) {
+                    if (!fields.has(className)) {
+                        fields.set(className, new Set());
+                    }
+                    fields.get(className)!.add(property);
+                }
+                break;
+        }
+    }
+    
+    return { types, methods, fields };
+}
+
+function isTypeExcluded(typeName: string, exclusions: ReturnType<typeof loadExclusions>): boolean {
+    return exclusions.types.has(typeName);
+}
+
+function isPropertyExcluded(className: string, propertyName: string, isGetter: boolean, exclusions: ReturnType<typeof loadExclusions>): boolean {
+    if (isGetter) {
+        return exclusions.methods.get(className)?.has(propertyName) || false;
+    } else {
+        return exclusions.fields.get(className)?.has(propertyName) || false;
+    }
+}
+
+function getAllProperties(classMap: Map<string, ClassInfo>, className: string, symbolsFile: string, exclusions: ReturnType<typeof loadExclusions>): PropertyInfo[] {
     const allProperties: PropertyInfo[] = [];
     const visited = new Set<string>();
     const classInfo = classMap.get(className);
@@ -349,11 +412,13 @@ function getAllProperties(classMap: Map<string, ClassInfo>, className: string, s
 
         // Add this class's getters with resolved types
         for (const getter of classInfo.getters) {
+            const propertyName = getter.methodName + '()';
             allProperties.push({
-                name: getter.methodName + '()',
+                name: propertyName,
                 type: resolveType(getter.returnType, currentTypeMap),
                 isGetter: true,
-                inheritedFrom: inheritanceLevel === 0 ? undefined : currentClass
+                inheritedFrom: inheritanceLevel === 0 ? undefined : currentClass,
+                excluded: isPropertyExcluded(currentClass, propertyName, true, exclusions)
             });
         }
 
@@ -363,7 +428,8 @@ function getAllProperties(classMap: Map<string, ClassInfo>, className: string, s
                 name: field.fieldName,
                 type: resolveType(field.fieldType, currentTypeMap),
                 isGetter: false,
-                inheritedFrom: inheritanceLevel === 0 ? undefined : currentClass
+                inheritedFrom: inheritanceLevel === 0 ? undefined : currentClass,
+                excluded: isPropertyExcluded(currentClass, field.fieldName, false, exclusions)
             });
         }
 
@@ -551,17 +617,35 @@ function analyzeForSerialization(classMap: Map<string, ClassInfo>, symbolsFile: 
         }
     }
 
+    // Load exclusions
+    const exclusions = loadExclusions();
+    
+    // Filter out excluded types from allTypesToGenerate
+    const filteredTypesToGenerate = new Set<string>();
+    for (const typeName of allTypesToGenerate) {
+        if (!isTypeExcluded(typeName, exclusions)) {
+            filteredTypesToGenerate.add(typeName);
+        } else {
+            console.error(`Excluding type: ${typeName}`);
+        }
+    }
+    
+    
+    // Update allTypesToGenerate to the filtered set
+    allTypesToGenerate.clear();
+    filteredTypesToGenerate.forEach(type => allTypesToGenerate.add(type));
+    
     // Collect all properties for each type (including inherited ones)
     const typeProperties = new Map<string, PropertyInfo[]>();
     for (const typeName of allTypesToGenerate) {
-        const props = getAllProperties(classMap, typeName, symbolsFile);
+        const props = getAllProperties(classMap, typeName, symbolsFile, exclusions);
         typeProperties.set(typeName, props);
     }
 
     // Also collect properties for abstract types (so we know what properties their implementations should have)
     for (const abstractType of abstractTypes.keys()) {
-        if (!typeProperties.has(abstractType)) {
-            const props = getAllProperties(classMap, abstractType, symbolsFile);
+        if (!typeProperties.has(abstractType) && !isTypeExcluded(abstractType, exclusions)) {
+            const props = getAllProperties(classMap, abstractType, symbolsFile, exclusions);
             typeProperties.set(abstractType, props);
         }
     }
@@ -589,13 +673,23 @@ function analyzeForSerialization(classMap: Map<string, ClassInfo>, symbolsFile: 
         }
     }
     
-    // Add the additional types
-    additionalTypes.forEach(type => allTypesToGenerate.add(type));
+    // Add the additional types (filtered)
+    additionalTypes.forEach(type => {
+        if (!isTypeExcluded(type, exclusions)) {
+            allTypesToGenerate.add(type);
+        } else {
+            console.error(`Excluding additional type: ${type}`);
+        }
+    });
     
     // Get properties for the additional types too
     for (const typeName of additionalTypes) {
-        const props = getAllProperties(classMap, typeName, symbolsFile);
-        typeProperties.set(typeName, props);
+        if (!isTypeExcluded(typeName, exclusions)) {
+            const props = getAllProperties(classMap, typeName, symbolsFile, exclusions);
+            typeProperties.set(typeName, props);
+        } else {
+            console.error(`Excluding additional type: ${typeName}`);
+        }
     }
 
     return {

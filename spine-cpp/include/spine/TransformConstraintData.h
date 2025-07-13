@@ -48,6 +48,7 @@ namespace spine {
 	class SP_API FromProperty : public SpineObject {
 		friend class SkeletonBinary;
 	public:
+		RTTI_DECL_NOPARENT
 
 		/// The value of this property that corresponds to ToProperty offset.
 		float _offset;
@@ -66,6 +67,7 @@ namespace spine {
 	class SP_API ToProperty : public SpineObject {
 		friend class SkeletonBinary;
 	public:
+		RTTI_DECL_NOPARENT
 
 		/// The value of this property that corresponds to FromProperty offset.
 		float _offset;
@@ -88,6 +90,8 @@ namespace spine {
 
 	class SP_API FromRotate : public FromProperty {
 	public:
+		RTTI_DECL
+
 		FromRotate() : FromProperty() {}
 		~FromRotate() {}
 
@@ -96,6 +100,8 @@ namespace spine {
 
 	class SP_API ToRotate : public ToProperty {
 	public:
+		RTTI_DECL
+
 		ToRotate() : ToProperty() {}
 		~ToRotate() {}
 
@@ -105,6 +111,8 @@ namespace spine {
 
 	class SP_API FromX : public FromProperty {
 	public:
+		RTTI_DECL
+
 		FromX() : FromProperty() {}
 		~FromX() {}
 
@@ -113,6 +121,8 @@ namespace spine {
 
 	class SP_API ToX : public ToProperty {
 	public:
+		RTTI_DECL
+
 		ToX() : ToProperty() {}
 		~ToX() {}
 
@@ -122,6 +132,8 @@ namespace spine {
 
 	class SP_API FromY : public FromProperty {
 	public:
+		RTTI_DECL
+
 		FromY() : FromProperty() {}
 		~FromY() {}
 
@@ -130,6 +142,8 @@ namespace spine {
 
 	class SP_API ToY : public ToProperty {
 	public:
+		RTTI_DECL
+
 		ToY() : ToProperty() {}
 		~ToY() {}
 
@@ -139,6 +153,8 @@ namespace spine {
 
 	class SP_API FromScaleX : public FromProperty {
 	public:
+		RTTI_DECL
+
 		FromScaleX() : FromProperty() {}
 		~FromScaleX() {}
 
@@ -147,6 +163,8 @@ namespace spine {
 
 	class SP_API ToScaleX : public ToProperty {
 	public:
+		RTTI_DECL
+
 		ToScaleX() : ToProperty() {}
 		~ToScaleX() {}
 
@@ -156,6 +174,8 @@ namespace spine {
 
 	class SP_API FromScaleY : public FromProperty {
 	public:
+		RTTI_DECL
+
 		FromScaleY() : FromProperty() {}
 		~FromScaleY() {}
 
@@ -164,6 +184,8 @@ namespace spine {
 
 	class SP_API ToScaleY : public ToProperty {
 	public:
+		RTTI_DECL
+
 		ToScaleY() : ToProperty() {}
 		~ToScaleY() {}
 
@@ -173,6 +195,8 @@ namespace spine {
 
 	class SP_API FromShearY : public FromProperty {
 	public:
+		RTTI_DECL
+
 		FromShearY() : FromProperty() {}
 		~FromShearY() {}
 
@@ -181,6 +205,8 @@ namespace spine {
 
 	class SP_API ToShearY : public ToProperty {
 	public:
+		RTTI_DECL
+
 		ToShearY() : ToProperty() {}
 		~ToShearY() {}
 

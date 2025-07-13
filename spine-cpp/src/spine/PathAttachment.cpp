@@ -45,7 +45,7 @@ void PathAttachment::setLengths(Array<float> &inValue) {
 	_lengths.clearAndAddAll(inValue);
 }
 
-bool PathAttachment::isClosed() {
+bool PathAttachment::getClosed() {
 	return _closed;
 }
 
@@ -53,7 +53,7 @@ void PathAttachment::setClosed(bool inValue) {
 	_closed = inValue;
 }
 
-bool PathAttachment::isConstantSpeed() {
+bool PathAttachment::getConstantSpeed() {
 	return _constantSpeed;
 }
 

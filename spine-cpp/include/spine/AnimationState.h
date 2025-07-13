@@ -497,7 +497,7 @@ namespace spine {
 		TrackEntry *getCurrent(size_t trackIndex);
 
 		/// The AnimationStateData to look up mix durations.
-		AnimationStateData *getData();
+		AnimationStateData &getData();
 
 		/// The list of tracks that have had animations, which may contain null entries for tracks that currently have no animation.
 		Array<TrackEntry *> &getTracks();

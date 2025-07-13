@@ -44,6 +44,18 @@ namespace spine {
 
 		TextureRegion(): rendererObject(NULL), u(0), v(0), u2(0), v2(0), degrees(0), offsetX(0), offsetY(0), width(0), height(0), originalWidth(0), originalHeight(0) {};
 		~TextureRegion() {};
+
+		float getU() { return u; };
+		float getV() { return v; };
+		float getU2() { return u2; };
+		float getV2() { return v2; };
+		int getDegrees() { return degrees; };
+		float getOffsetX() { return offsetX; };
+		float getOffsetY() { return offsetY; };
+		int getRegionWidth() { return width; };
+		int getRegionHeight() { return height; };
+		int getOriginalWidth() { return originalWidth; };
+		int getOriginalHeight() { return originalHeight; };
 	};
 }
 

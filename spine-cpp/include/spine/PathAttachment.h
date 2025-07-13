@@ -49,11 +49,11 @@ namespace spine {
 
 		void setLengths(Array<float> &inValue);
 
-		bool isClosed();
+		bool getClosed();
 
 		void setClosed(bool inValue);
 
-		bool isConstantSpeed();
+		bool getConstantSpeed();
 
 		void setConstantSpeed(bool inValue);
 

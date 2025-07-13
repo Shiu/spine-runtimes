@@ -48,17 +48,17 @@ namespace spine {
 		/// The name of the event, which is unique within the skeleton.
 		const String &getName() const;
 
-		int getIntValue() const;
+		int getInt() const;
 
-		void setIntValue(int inValue);
+		void setInt(int inValue);
 
-		float getFloatValue() const;
+		float getFloat() const;
 
-		void setFloatValue(float inValue);
+		void setFloat(float inValue);
 
-		const String &getStringValue() const;
+		const String &getString() const;
 
-		void setStringValue(const String &inValue);
+		void setString(const String &inValue);
 
 		const String &getAudioPath() const;
 

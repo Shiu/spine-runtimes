@@ -28,6 +28,7 @@
  *****************************************************************************/
 
 #include <spine/spine.h>
+#include "SkeletonSerializer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -65,69 +66,6 @@ public:
 	}
 };
 
-class Printer {
-private:
-	int indentLevel = 0;
-	static constexpr const char *INDENT = "  ";
-
-	void print(const char *format, ...) {
-		for (int i = 0; i < indentLevel; i++) {
-			printf("%s", INDENT);
-		}
-		va_list args;
-		va_start(args, format);
-		vprintf(format, args);
-		va_end(args);
-		printf("\n");
-	}
-
-	void indent() {
-		indentLevel++;
-	}
-
-	void unindent() {
-		indentLevel--;
-	}
-
-public:
-	void printSkeletonData(SkeletonData *data) {
-		print("SkeletonData {");
-		indent();
-
-		print("name: \"%s\"", data->getName().buffer());
-		print("version: \"%s\"", data->getVersion().buffer());
-		print("hash: \"%s\"", data->getHash().buffer());
-		print("x: %.6f", data->getX());
-		print("y: %.6f", data->getY());
-		print("width: %.6f", data->getWidth());
-		print("height: %.6f", data->getHeight());
-		print("referenceScale: %.6f", data->getReferenceScale());
-		print("fps: %.6f", data->getFps());
-		print("imagesPath: \"%s\"", data->getImagesPath().buffer());
-		print("audioPath: \"%s\"", data->getAudioPath().buffer());
-
-		// TODO: Add bones, slots, skins, animations, etc. in future expansion
-
-		unindent();
-		print("}");
-	}
-
-	void printSkeleton(Skeleton *skeleton) {
-		print("Skeleton {");
-		indent();
-
-		print("x: %.6f", skeleton->getX());
-		print("y: %.6f", skeleton->getY());
-		print("scaleX: %.6f", skeleton->getScaleX());
-		print("scaleY: %.6f", skeleton->getScaleY());
-		print("time: %.6f", skeleton->getTime());
-
-		// TODO: Add runtime state (bones, slots, etc.) in future expansion
-
-		unindent();
-		print("}");
-	}
-};
 
 int main(int argc, char *argv[]) {
 	// Set locale to ensure consistent number formatting
@@ -165,11 +103,6 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	// Print skeleton data
-	printf("=== SKELETON DATA ===\n");
-	Printer printer;
-	printer.printSkeletonData(skeletonData);
-
 	// Create skeleton instance
 	Skeleton skeleton(*skeletonData);
 
@@ -197,9 +130,20 @@ int main(int argc, char *argv[]) {
 
 	skeleton.updateWorldTransform(Physics_Update);
 
+	// Use SkeletonSerializer for JSON output
+	SkeletonSerializer serializer;
+	
+	// Print skeleton data
+	printf("=== SKELETON DATA ===\n");
+	printf("%s", serializer.serializeSkeletonData(skeletonData).buffer());
+
 	// Print skeleton state
 	printf("\n=== SKELETON STATE ===\n");
-	printer.printSkeleton(&skeleton);
+	printf("%s", serializer.serializeSkeleton(&skeleton).buffer());
+
+	// Print animation state
+	printf("\n=== ANIMATION STATE ===\n");
+	printf("%s", serializer.serializeAnimationState(&state).buffer());
 
 	// Cleanup
 	delete skeletonData;

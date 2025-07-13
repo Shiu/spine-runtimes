@@ -179,6 +179,15 @@ namespace spine {
 			return *this;
 		}
 
+		String &append(char c) {
+			size_t thisLen = _length;
+			_length = _length + 1;
+			_buffer = SpineExtension::realloc(_buffer, _length + 1, __FILE__, __LINE__);
+			_buffer[thisLen] = c;
+			_buffer[_length] = '\0';
+			return *this;
+		}
+
 		bool startsWith(const String &needle) const {
 			if (needle.length() > length()) return false;
 			for (int i = 0; i < (int)needle.length(); i++) {

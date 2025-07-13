@@ -260,13 +260,13 @@ PathConstraint::computeWorldPositions(Skeleton &skeleton, PathAttachment &path, 
 	_positions.setSize(spacesCount * 3 + 2, 0);
 	Array<float> &out = _positions;
 	Array<float> &world = _world;
-	bool closed = path.isClosed();
+	bool closed = path.getClosed();
 	int verticesLength = (int) path.getWorldVerticesLength();
 	int curveCount = verticesLength / 6;
 	int prevCurve = NONE;
 
 	float pathLength;
-	if (!path.isConstantSpeed()) {
+	if (!path.getConstantSpeed()) {
 		Array<float> &lengths = path.getLengths();
 		float *lengthsBuffer = lengths.buffer();
 		curveCount -= closed ? 1 : 2;

@@ -48,27 +48,27 @@ const String &EventData::getName() const {
 	return _name;
 }
 
-int EventData::getIntValue() const {
+int EventData::getInt() const {
 	return _intValue;
 }
 
-void EventData::setIntValue(int inValue) {
+void EventData::setInt(int inValue) {
 	_intValue = inValue;
 }
 
-float EventData::getFloatValue() const {
+float EventData::getFloat() const {
 	return _floatValue;
 }
 
-void EventData::setFloatValue(float inValue) {
+void EventData::setFloat(float inValue) {
 	_floatValue = inValue;
 }
 
-const String &EventData::getStringValue() const {
+const String &EventData::getString() const {
 	return _stringValue;
 }
 
-void EventData::setStringValue(const String &inValue) {
+void EventData::setString(const String &inValue) {
 	this->_stringValue = inValue;
 }
 
