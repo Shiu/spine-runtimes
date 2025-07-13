@@ -243,7 +243,7 @@ namespace spine {
 
 		void readFloatArray(DataInput &input, int n, float scale, Array<float> &array);
 
-		void readShortArray(DataInput &input, Array<unsigned short> &array, int n);
+		void readUnsignedShortArray(DataInput &input, Array<unsigned short> &array, int n);
 
 		Animation *readAnimation(DataInput &input, const String &name, SkeletonData &skeletonData);
 

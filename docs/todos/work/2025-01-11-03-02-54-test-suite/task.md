@@ -320,7 +320,7 @@ interface NestedArray {
 - [ ] Update language generators to consume IR:
   - [x] Replace tests/generate-java-serializer.ts with IR-based version
     - [x] Sort skin entries by slot index before emission in Java
-  - [ ] Modify tests/generate-cpp-serializer.ts to use IR
+  - [x] Modify tests/generate-cpp-serializer.ts to use IR
   - [ ] Create tests/generate-ts-serializer.ts using IR
   - [ ] Create tests/generate-cs-serializer.ts using IR
   - [ ] Language generators focus purely on syntax transformation

@@ -679,17 +679,17 @@ Attachment *SkeletonJson::readAttachment(Json *map, Skin *skin, int slotIndex, c
 			}
 
 			Array<float> uvs;
-			if (!Json::asArray(Json::getItem(map, "uvs"), uvs)) return NULL;
+			if (!Json::asFloatArray(Json::getItem(map, "uvs"), uvs)) return NULL;
 			readVertices(map, mesh, uvs.size());
 			Array<unsigned short> triangles;
-			if (!Json::asArray(Json::getItem(map, "triangles"), triangles)) return NULL;
+			if (!Json::asUnsignedShortArray(Json::getItem(map, "triangles"), triangles)) return NULL;
 			mesh->_triangles.clearAndAddAll(triangles);
 			mesh->_regionUVs.clearAndAddAll(uvs);
 			if (mesh->_region != NULL) mesh->updateRegion();
 
 			if (Json::getInt(map, "hull", 0)) mesh->setHullLength(Json::getInt(map, "hull", 0) << 1);
 			Array<unsigned short> edges;
-			Json::asArray(Json::getItem(map, "edges"), edges);
+			Json::asUnsignedShortArray(Json::getItem(map, "edges"), edges);
 			if (edges.size() > 0) mesh->_edges.clearAndAddAll(edges);
 			return mesh;
 		}
@@ -702,7 +702,7 @@ Attachment *SkeletonJson::readAttachment(Json *map, Skin *skin, int slotIndex, c
 			int vertexCount = Json::getInt(map, "vertexCount", 0);
 			readVertices(map, path, vertexCount << 1);
 
-			if (!Json::asArray(Json::getItem(map, "lengths"), path->_lengths)) return NULL;
+			if (!Json::asFloatArray(Json::getItem(map, "lengths"), path->_lengths)) return NULL;
 			for (int i = 0; i < (int) path->_lengths.size(); i++)
 				path->_lengths[i] *= scale;
 
@@ -755,7 +755,9 @@ Sequence *SkeletonJson::readSequence(Json *item) {
 void SkeletonJson::readVertices(Json *map, VertexAttachment *attachment, size_t verticesLength) {
 	attachment->setWorldVerticesLength(verticesLength);
 	Array<float> vertices;
-	if (!Json::asArray(Json::getItem(map, "vertices"), vertices)) return;
+	if (!Json::asFloatArray(Json::getItem(map, "vertices"), vertices)) {
+		return;
+	}
 	if (verticesLength == vertices.size()) {
 		if (_scale != 1) {
 			for (int i = 0; i < (int) vertices.size(); ++i)

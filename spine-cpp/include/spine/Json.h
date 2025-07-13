@@ -52,13 +52,30 @@ namespace spine {
 		static const int JSON_ARRAY;
 		static const int JSON_OBJECT;
 
-		template <typename T>
-		static bool asArray(Json *value, Array<T> &array) {
+		static bool asFloatArray(Json *value, Array<float> &array) {
+			if (value == NULL) return false;
+			array.setSize(value->_size, 0);
+			Json *vertex = value->_child;
+			for (int i = 0; vertex; vertex = vertex->_next, i++)
+				array[i] = vertex->_valueFloat;
+			return true;
+		}
+
+		static bool asIntArray(Json *value, Array<int> &array) {
 			if (value == NULL) return false;
 			array.setSize(value->_size, 0);
 			Json *vertex = value->_child;
 			for (int i = 0; vertex; vertex = vertex->_next, i++)
 				array[i] = vertex->_valueInt;
+			return true;
+		}
+
+		static bool asUnsignedShortArray(Json *value, Array<unsigned short> &array) {
+			if (value == NULL) return false;
+			array.setSize(value->_size, 0);
+			Json *vertex = value->_child;
+			for (int i = 0; vertex; vertex = vertex->_next, i++)
+				array[i] = (unsigned short)vertex->_valueInt;
 			return true;
 		}
 

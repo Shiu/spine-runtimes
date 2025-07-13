@@ -642,12 +642,12 @@ Attachment *SkeletonBinary::readAttachment(DataInput &input, Skin &skin, int slo
 			Array<float> uvs;
 			readFloatArray(input, verticesLength, 1, uvs);
 			Array<unsigned short> triangles;
-			readShortArray(input, triangles, (verticesLength - hullLength - 2) * 3);
+			readUnsignedShortArray(input, triangles, (verticesLength - hullLength - 2) * 3);
 
 			Array<unsigned short> edges;
 			float width = 0, height = 0;
 			if (nonessential) {
-				readShortArray(input, edges, input.readInt(true));
+				readUnsignedShortArray(input, edges, input.readInt(true));
 				width = input.readFloat();
 				height = input.readFloat();
 			}
@@ -798,10 +798,10 @@ void SkeletonBinary::readFloatArray(DataInput &input, int n, float scale, Array<
 	}
 }
 
-void SkeletonBinary::readShortArray(DataInput &input, Array<unsigned short> &array, int n) {
+void SkeletonBinary::readUnsignedShortArray(DataInput &input, Array<unsigned short> &array, int n) {
 	array.setSize(n, 0);
 	for (int i = 0; i < n; ++i) {
-		array[i] = (short) input.readInt(true);
+		array[i] = (unsigned short) input.readInt(true);
 	}
 }
 
