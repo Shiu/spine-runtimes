@@ -80,14 +80,14 @@ void Atlas::flipV() {
 	for (size_t i = 0, n = _regions.size(); i < n; ++i) {
 		AtlasRegion *regionP = _regions[i];
 		AtlasRegion &region = *regionP;
-		region.v = 1 - region.v;
-		region.v2 = 1 - region.v2;
+		region._v = 1 - region._v;
+		region._v2 = 1 - region._v2;
 	}
 }
 
 AtlasRegion *Atlas::findRegion(const String &name) {
 	for (size_t i = 0, n = _regions.size(); i < n; ++i)
-		if (_regions[i]->name == name) return _regions[i];
+		if (_regions[i]->_name == name) return _regions[i];
 	return NULL;
 }
 
@@ -291,63 +291,63 @@ void Atlas::load(const char *begin, int length, const char *dir, bool createText
 			_pages.add(page);
 		} else {
 			AtlasRegion *region = new (__FILE__, __LINE__) AtlasRegion();
-			region->page = page;
-			region->rendererObject = page->texture;
-			region->name = String(line->copy(), true);
+			region->_page = page;
+			region->_rendererObject = page->texture;
+			region->_name = String(line->copy(), true);
 			while (true) {
 				line = reader.readLine();
 				int count = reader.readEntry(entry, line);
 				if (count == 0) break;
 				if (entry[0].equals("xy")) {
-					region->x = entry[1].toInt();
-					region->y = entry[2].toInt();
+					region->_x = entry[1].toInt();
+					region->_y = entry[2].toInt();
 				} else if (entry[0].equals("size")) {
-					region->width = entry[1].toInt();
-					region->height = entry[2].toInt();
+					region->_width = entry[1].toInt();
+					region->_height = entry[2].toInt();
 				} else if (entry[0].equals("bounds")) {
-					region->x = entry[1].toInt();
-					region->y = entry[2].toInt();
-					region->width = entry[3].toInt();
-					region->height = entry[4].toInt();
+					region->_x = entry[1].toInt();
+					region->_y = entry[2].toInt();
+					region->_width = entry[3].toInt();
+					region->_height = entry[4].toInt();
 				} else if (entry[0].equals("offset")) {
-					region->offsetX = entry[1].toInt();
-					region->offsetY = entry[2].toInt();
+					region->_offsetX = entry[1].toInt();
+					region->_offsetY = entry[2].toInt();
 				} else if (entry[0].equals("orig")) {
-					region->originalWidth = entry[1].toInt();
-					region->originalHeight = entry[2].toInt();
+					region->_originalWidth = entry[1].toInt();
+					region->_originalHeight = entry[2].toInt();
 				} else if (entry[0].equals("offsets")) {
-					region->offsetX = entry[1].toInt();
-					region->offsetY = entry[2].toInt();
-					region->originalWidth = entry[3].toInt();
-					region->originalHeight = entry[4].toInt();
+					region->_offsetX = entry[1].toInt();
+					region->_offsetY = entry[2].toInt();
+					region->_originalWidth = entry[3].toInt();
+					region->_originalHeight = entry[4].toInt();
 				} else if (entry[0].equals("rotate")) {
 					if (entry[1].equals("true")) {
-						region->degrees = 90;
+						region->_degrees = 90;
 					} else if (!entry[1].equals("false")) {
-						region->degrees = entry[1].toInt();
+						region->_degrees = entry[1].toInt();
 					}
 				} else if (entry[0].equals("index")) {
-					region->index = entry[1].toInt();
+					region->_index = entry[1].toInt();
 				} else {
-					region->names.add(String(entry[0].copy()));
+					region->_names.add(String(entry[0].copy()));
 					for (int i = 0; i < count; i++) {
-						region->values.add(entry[i + 1].toInt());
+						region->_values.add(entry[i + 1].toInt());
 					}
 				}
 			}
-			if (region->originalWidth == 0 && region->originalHeight == 0) {
-				region->originalWidth = region->width;
-				region->originalHeight = region->height;
+			if (region->_originalWidth == 0 && region->_originalHeight == 0) {
+				region->_originalWidth = region->_width;
+				region->_originalHeight = region->_height;
 			}
 
-			region->u = (float) region->x / page->width;
-			region->v = (float) region->y / page->height;
-			if (region->degrees == 90) {
-				region->u2 = (float) (region->x + region->height) / page->width;
-				region->v2 = (float) (region->y + region->width) / page->height;
+			region->_u = (float) region->_x / page->width;
+			region->_v = (float) region->_y / page->height;
+			if (region->_degrees == 90) {
+				region->_u2 = (float) (region->_x + region->_height) / page->width;
+				region->_v2 = (float) (region->_y + region->_width) / page->height;
 			} else {
-				region->u2 = (float) (region->x + region->width) / page->width;
-				region->v2 = (float) (region->y + region->height) / page->height;
+				region->_u2 = (float) (region->_x + region->_width) / page->width;
+				region->_v2 = (float) (region->_y + region->_height) / page->height;
 			}
 			_regions.add(region);
 		}

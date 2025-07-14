@@ -11,6 +11,14 @@ void spine_from_scale_x_dispose(spine_from_scale_x self) {
     delete (FromScaleX*)self;
 }
 
+spine_rtti spine_from_scale_x_get_rtti(spine_from_scale_x self) {
+    return (spine_rtti)&((FromScaleX*)self)->getRTTI();
+}
+
 float spine_from_scale_x_value(spine_from_scale_x self, spine_skeleton skeleton, spine_bone_pose source, bool local, float * offsets) {
     return ((FromScaleX*)self)->value(*((Skeleton*)skeleton), *((BonePose*)source), local, offsets);
+}
+
+spine_rtti spine_from_scale_x_rtti(void) {
+    return (spine_rtti)&FromScaleX::rtti;
 }

@@ -58,16 +58,16 @@ void MeshAttachment::updateRegion() {
 	}
 
 	int i = 0, n = (int) _regionUVs.size();
-	float u = _region->u, v = _region->v;
+	float u = _region->_u, v = _region->_v;
 	float width = 0, height = 0;
-	switch (_region->degrees) {
+	switch (_region->_degrees) {
 		case 90: {
-			float textureWidth = _region->height / (_region->u2 - _region->u);
-			float textureHeight = _region->width / (_region->v2 - _region->v);
-			u -= (_region->originalHeight - _region->offsetY - _region->height) / textureWidth;
-			v -= (_region->originalWidth - _region->offsetX - _region->width) / textureHeight;
-			width = _region->originalHeight / textureWidth;
-			height = _region->originalWidth / textureHeight;
+			float textureWidth = _region->_height / (_region->_u2 - _region->_u);
+			float textureHeight = _region->_width / (_region->_v2 - _region->_v);
+			u -= (_region->_originalHeight - _region->_offsetY - _region->_height) / textureWidth;
+			v -= (_region->_originalWidth - _region->_offsetX - _region->_width) / textureHeight;
+			width = _region->_originalHeight / textureWidth;
+			height = _region->_originalWidth / textureHeight;
 			for (i = 0; i < n; i += 2) {
 				_uvs[i] = u + _regionUVs[i + 1] * width;
 				_uvs[i + 1] = v + (1 - _regionUVs[i]) * height;
@@ -75,12 +75,12 @@ void MeshAttachment::updateRegion() {
 			return;
 		}
 		case 180: {
-			float textureWidth = _region->width / (_region->u2 - _region->u);
-			float textureHeight = _region->height / (_region->v2 - _region->v);
-			u -= (_region->originalWidth - _region->offsetX - _region->width) / textureWidth;
-			v -= _region->offsetY / textureHeight;
-			width = _region->originalWidth / textureWidth;
-			height = _region->originalHeight / textureHeight;
+			float textureWidth = _region->_width / (_region->_u2 - _region->_u);
+			float textureHeight = _region->_height / (_region->_v2 - _region->_v);
+			u -= (_region->_originalWidth - _region->_offsetX - _region->_width) / textureWidth;
+			v -= _region->_offsetY / textureHeight;
+			width = _region->_originalWidth / textureWidth;
+			height = _region->_originalHeight / textureHeight;
 			for (i = 0; i < n; i += 2) {
 				_uvs[i] = u + (1 - _regionUVs[i]) * width;
 				_uvs[i + 1] = v + (1 - _regionUVs[i + 1]) * height;
@@ -88,12 +88,12 @@ void MeshAttachment::updateRegion() {
 			return;
 		}
 		case 270: {
-			float textureHeight = _region->height / (_region->v2 - _region->v);
-			float textureWidth = _region->width / (_region->u2 - _region->u);
-			u -= _region->offsetY / textureWidth;
-			v -= _region->offsetX / textureHeight;
-			width = _region->originalHeight / textureWidth;
-			height = _region->originalWidth / textureHeight;
+			float textureHeight = _region->_height / (_region->_v2 - _region->_v);
+			float textureWidth = _region->_width / (_region->_u2 - _region->_u);
+			u -= _region->_offsetY / textureWidth;
+			v -= _region->_offsetX / textureHeight;
+			width = _region->_originalHeight / textureWidth;
+			height = _region->_originalWidth / textureHeight;
 			for (i = 0; i < n; i += 2) {
 				_uvs[i] = u + (1 - _regionUVs[i + 1]) * width;
 				_uvs[i + 1] = v + _regionUVs[i] * height;
@@ -101,12 +101,12 @@ void MeshAttachment::updateRegion() {
 			return;
 		}
 		default: {
-			float textureWidth = _region->width / (_region->u2 - _region->u);
-			float textureHeight = _region->height / (_region->v2 - _region->v);
-			u -= _region->offsetX / textureWidth;
-			v -= (_region->originalHeight - _region->offsetY - _region->height) / textureHeight;
-			width = _region->originalWidth / textureWidth;
-			height = _region->originalHeight / textureHeight;
+			float textureWidth = _region->_width / (_region->_u2 - _region->_u);
+			float textureHeight = _region->_height / (_region->_v2 - _region->_v);
+			u -= _region->_offsetX / textureWidth;
+			v -= (_region->_originalHeight - _region->_offsetY - _region->_height) / textureHeight;
+			width = _region->_originalWidth / textureWidth;
+			height = _region->_originalHeight / textureHeight;
 			for (i = 0; i < n; i += 2) {
 				_uvs[i] = u + _regionUVs[i] * width;
 				_uvs[i + 1] = v + _regionUVs[i + 1] * height;

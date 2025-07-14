@@ -23,7 +23,7 @@ SPINE_C_API bool spine_bone_data_get_visible(spine_bone_data self);
 SPINE_C_API void spine_bone_data_set_visible(spine_bone_data self, bool inValue);
 SPINE_C_API spine_bone_local spine_bone_data_get_setup_pose(spine_bone_data self);
 SPINE_C_API const char* spine_bone_data_get_name(spine_bone_data self);
-SPINE_C_API bool spine_bone_data_is_skin_required(spine_bone_data self);
+SPINE_C_API bool spine_bone_data_get_skin_required(spine_bone_data self);
 SPINE_C_API void spine_bone_data_set_skin_required(spine_bone_data self, bool skinRequired);
 
 #ifdef __cplusplus

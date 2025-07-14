@@ -11,10 +11,18 @@ void spine_to_shear_y_dispose(spine_to_shear_y self) {
     delete (ToShearY*)self;
 }
 
+spine_rtti spine_to_shear_y_get_rtti(spine_to_shear_y self) {
+    return (spine_rtti)&((ToShearY*)self)->getRTTI();
+}
+
 float spine_to_shear_y_mix(spine_to_shear_y self, spine_transform_constraint_pose pose) {
     return ((ToShearY*)self)->mix(*((TransformConstraintPose*)pose));
 }
 
 void spine_to_shear_y_apply(spine_to_shear_y self, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, bool local, bool additive) {
     ((ToShearY*)self)->apply(*((Skeleton*)skeleton), *((TransformConstraintPose*)pose), *((BonePose*)bone), value, local, additive);
+}
+
+spine_rtti spine_to_shear_y_rtti(void) {
+    return (spine_rtti)&ToShearY::rtti;
 }

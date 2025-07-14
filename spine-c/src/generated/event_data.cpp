@@ -15,28 +15,28 @@ const char* spine_event_data_get_name(spine_event_data self) {
     return ((EventData*)self)->getName().buffer();
 }
 
-int spine_event_data_get_int_value(spine_event_data self) {
-    return ((EventData*)self)->getIntValue();
+int spine_event_data_get_int(spine_event_data self) {
+    return ((EventData*)self)->getInt();
 }
 
-void spine_event_data_set_int_value(spine_event_data self, int inValue) {
-    ((EventData*)self)->setIntValue(inValue);
+void spine_event_data_set_int(spine_event_data self, int inValue) {
+    ((EventData*)self)->setInt(inValue);
 }
 
-float spine_event_data_get_float_value(spine_event_data self) {
-    return ((EventData*)self)->getFloatValue();
+float spine_event_data_get_float(spine_event_data self) {
+    return ((EventData*)self)->getFloat();
 }
 
-void spine_event_data_set_float_value(spine_event_data self, float inValue) {
-    ((EventData*)self)->setFloatValue(inValue);
+void spine_event_data_set_float(spine_event_data self, float inValue) {
+    ((EventData*)self)->setFloat(inValue);
 }
 
-const char* spine_event_data_get_string_value(spine_event_data self) {
-    return ((EventData*)self)->getStringValue().buffer();
+const char* spine_event_data_get_string(spine_event_data self) {
+    return ((EventData*)self)->getString().buffer();
 }
 
-void spine_event_data_set_string_value(spine_event_data self, const char* inValue) {
-    ((EventData*)self)->setStringValue(String(inValue));
+void spine_event_data_set_string(spine_event_data self, const char* inValue) {
+    ((EventData*)self)->setString(String(inValue));
 }
 
 const char* spine_event_data_get_audio_path(spine_event_data self) {

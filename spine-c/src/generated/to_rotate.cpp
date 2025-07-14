@@ -11,10 +11,18 @@ void spine_to_rotate_dispose(spine_to_rotate self) {
     delete (ToRotate*)self;
 }
 
+spine_rtti spine_to_rotate_get_rtti(spine_to_rotate self) {
+    return (spine_rtti)&((ToRotate*)self)->getRTTI();
+}
+
 float spine_to_rotate_mix(spine_to_rotate self, spine_transform_constraint_pose pose) {
     return ((ToRotate*)self)->mix(*((TransformConstraintPose*)pose));
 }
 
 void spine_to_rotate_apply(spine_to_rotate self, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, bool local, bool additive) {
     ((ToRotate*)self)->apply(*((Skeleton*)skeleton), *((TransformConstraintPose*)pose), *((BonePose*)bone), value, local, additive);
+}
+
+spine_rtti spine_to_rotate_rtti(void) {
+    return (spine_rtti)&ToRotate::rtti;
 }

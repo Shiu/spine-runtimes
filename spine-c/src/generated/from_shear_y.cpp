@@ -11,6 +11,14 @@ void spine_from_shear_y_dispose(spine_from_shear_y self) {
     delete (FromShearY*)self;
 }
 
+spine_rtti spine_from_shear_y_get_rtti(spine_from_shear_y self) {
+    return (spine_rtti)&((FromShearY*)self)->getRTTI();
+}
+
 float spine_from_shear_y_value(spine_from_shear_y self, spine_skeleton skeleton, spine_bone_pose source, bool local, float * offsets) {
     return ((FromShearY*)self)->value(*((Skeleton*)skeleton), *((BonePose*)source), local, offsets);
+}
+
+spine_rtti spine_from_shear_y_rtti(void) {
+    return (spine_rtti)&FromShearY::rtti;
 }

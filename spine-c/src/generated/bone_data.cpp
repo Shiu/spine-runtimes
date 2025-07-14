@@ -55,8 +55,8 @@ const char* spine_bone_data_get_name(spine_bone_data self) {
     return ((PosedDataGeneric<BoneLocal>*)(BoneData*)self)->getName().buffer();
 }
 
-bool spine_bone_data_is_skin_required(spine_bone_data self) {
-    return ((PosedDataGeneric<BoneLocal>*)(BoneData*)self)->isSkinRequired();
+bool spine_bone_data_get_skin_required(spine_bone_data self) {
+    return ((PosedDataGeneric<BoneLocal>*)(BoneData*)self)->getSkinRequired();
 }
 
 void spine_bone_data_set_skin_required(spine_bone_data self, bool skinRequired) {

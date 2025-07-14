@@ -7,8 +7,16 @@ void spine_from_property_dispose(spine_from_property self) {
     delete (FromProperty*)self;
 }
 
+spine_rtti spine_from_property_get_rtti(spine_from_property self) {
+    return (spine_rtti)&((FromProperty*)self)->getRTTI();
+}
+
 float spine_from_property_value(spine_from_property self, spine_skeleton skeleton, spine_bone_pose source, bool local, float * offsets) {
     return ((FromProperty*)self)->value(*((Skeleton*)skeleton), *((BonePose*)source), local, offsets);
+}
+
+spine_rtti spine_from_property_rtti(void) {
+    return (spine_rtti)&FromProperty::rtti;
 }
 
 float spine_from_property_get__offset(spine_from_property self) {

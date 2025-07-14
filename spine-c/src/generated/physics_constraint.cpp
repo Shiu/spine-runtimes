@@ -51,8 +51,8 @@ void spine_physics_constraint_set_bone(spine_physics_constraint self, spine_bone
     ((PhysicsConstraint*)self)->setBone(*((BonePose*)bone));
 }
 
-spine_constraint_data spine_physics_constraint_get_data(spine_physics_constraint self) {
-    return (spine_constraint_data)&((ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>*)(PhysicsConstraint*)self)->getData();
+spine_physics_constraint_data spine_physics_constraint_get_data(spine_physics_constraint self) {
+    return (spine_physics_constraint_data)&((ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>*)(PhysicsConstraint*)self)->getData();
 }
 
 spine_physics_constraint_pose spine_physics_constraint_get_pose(spine_physics_constraint self) {

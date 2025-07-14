@@ -23,16 +23,16 @@ void spine_path_attachment_set_lengths(spine_path_attachment self, spine_array_f
     ((PathAttachment*)self)->setLengths(*((Array<float>*)inValue));
 }
 
-bool spine_path_attachment_is_closed(spine_path_attachment self) {
-    return ((PathAttachment*)self)->isClosed();
+bool spine_path_attachment_get_closed(spine_path_attachment self) {
+    return ((PathAttachment*)self)->getClosed();
 }
 
 void spine_path_attachment_set_closed(spine_path_attachment self, bool inValue) {
     ((PathAttachment*)self)->setClosed(inValue);
 }
 
-bool spine_path_attachment_is_constant_speed(spine_path_attachment self) {
-    return ((PathAttachment*)self)->isConstantSpeed();
+bool spine_path_attachment_get_constant_speed(spine_path_attachment self) {
+    return ((PathAttachment*)self)->getConstantSpeed();
 }
 
 void spine_path_attachment_set_constant_speed(spine_path_attachment self, bool inValue) {

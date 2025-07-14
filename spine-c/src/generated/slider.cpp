@@ -39,8 +39,8 @@ void spine_slider_set_bone(spine_slider self, spine_bone bone) {
     ((Slider*)self)->setBone((Bone *)bone);
 }
 
-spine_constraint_data spine_slider_get_data(spine_slider self) {
-    return (spine_constraint_data)&((ConstraintGeneric<Slider, SliderData, SliderPose>*)(Slider*)self)->getData();
+spine_slider_data spine_slider_get_data(spine_slider self) {
+    return (spine_slider_data)&((ConstraintGeneric<Slider, SliderData, SliderPose>*)(Slider*)self)->getData();
 }
 
 spine_slider_pose spine_slider_get_pose(spine_slider self) {

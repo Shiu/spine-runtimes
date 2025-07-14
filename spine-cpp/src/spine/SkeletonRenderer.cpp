@@ -182,7 +182,7 @@ RenderCommand *SkeletonRenderer::render(Skeleton &skeleton) {
 			uvs = &regionAttachment->getUVs();
 			indices = quadIndices;
 			indicesCount = 6;
-			texture = regionAttachment->getRegion()->rendererObject;
+			texture = regionAttachment->getRegion()->_rendererObject;
 
 		} else if (attachment->getRTTI().isExactly(MeshAttachment::rtti)) {
 			MeshAttachment *mesh = (MeshAttachment *) attachment;
@@ -200,7 +200,7 @@ RenderCommand *SkeletonRenderer::render(Skeleton &skeleton) {
 			uvs = &mesh->getUVs();
 			indices = &mesh->getTriangles();
 			indicesCount = (int32_t) indices->size();
-			texture = mesh->getRegion()->rendererObject;
+			texture = mesh->getRegion()->_rendererObject;
 
 		} else if (attachment->getRTTI().isExactly(ClippingAttachment::rtti)) {
 			ClippingAttachment *clip = (ClippingAttachment *) slot.getAppliedPose().getAttachment();

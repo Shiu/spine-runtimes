@@ -40,7 +40,8 @@ method: TrackEntry::setRendererObject
 # Array<String> returning methods and fields not supported
 method: AttachmentTimeline::getAttachmentNames
 method: Skin::findNamesForSlot
-field: AtlasRegion::names
+method: AtlasRegion::getNames
+method: AtlasRegion::setNames
 
 # Array<Array<T>> returning methods not supported
 method: DeformTimeline::getVertices
@@ -69,3 +70,4 @@ method: TransformConstraintData::getSetupPose const
 # Exclude setters and constructor for RenderCommand
 method: RenderCommand::RenderCommand
 field-set: RenderCommand
+

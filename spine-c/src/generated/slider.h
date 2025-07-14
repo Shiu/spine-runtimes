@@ -19,7 +19,7 @@ SPINE_C_API void spine_slider_sort(spine_slider self, spine_skeleton skeleton);
 SPINE_C_API bool spine_slider_is_source_active(spine_slider self);
 SPINE_C_API spine_bone spine_slider_get_bone(spine_slider self);
 SPINE_C_API void spine_slider_set_bone(spine_slider self, spine_bone bone);
-SPINE_C_API spine_constraint_data spine_slider_get_data(spine_slider self);
+SPINE_C_API spine_slider_data spine_slider_get_data(spine_slider self);
 SPINE_C_API spine_slider_pose spine_slider_get_pose(spine_slider self);
 SPINE_C_API spine_slider_pose spine_slider_get_applied_pose(spine_slider self);
 SPINE_C_API void spine_slider_reset_constrained(spine_slider self);

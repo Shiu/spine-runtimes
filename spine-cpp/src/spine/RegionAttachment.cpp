@@ -80,12 +80,12 @@ void RegionAttachment::updateRegion() {
 		return;
 	}
 
-	float regionScaleX = _width / _region->originalWidth * _scaleX;
-	float regionScaleY = _height / _region->originalHeight * _scaleY;
-	float localX = -_width / 2 * _scaleX + _region->offsetX * regionScaleX;
-	float localY = -_height / 2 * _scaleY + _region->offsetY * regionScaleY;
-	float localX2 = localX + _region->width * regionScaleX;
-	float localY2 = localY + _region->height * regionScaleY;
+	float regionScaleX = _width / _region->_originalWidth * _scaleX;
+	float regionScaleY = _height / _region->_originalHeight * _scaleY;
+	float localX = -_width / 2 * _scaleX + _region->_offsetX * regionScaleX;
+	float localY = -_height / 2 * _scaleY + _region->_offsetY * regionScaleY;
+	float localX2 = localX + _region->_width * regionScaleX;
+	float localY2 = localY + _region->_height * regionScaleY;
 	float cos = MathUtil::cosDeg(_rotation);
 	float sin = MathUtil::sinDeg(_rotation);
 	float localXCos = localX * cos + _x;
@@ -106,24 +106,24 @@ void RegionAttachment::updateRegion() {
 	_vertexOffset[BRX] = localX2Cos - localYSin;
 	_vertexOffset[BRY] = localYCos + localX2Sin;
 
-	if (_region->degrees == 90) {
-		_uvs[URX] = _region->u;
-		_uvs[URY] = _region->v2;
-		_uvs[BRX] = _region->u;
-		_uvs[BRY] = _region->v;
-		_uvs[BLX] = _region->u2;
-		_uvs[BLY] = _region->v;
-		_uvs[ULX] = _region->u2;
-		_uvs[ULY] = _region->v2;
+	if (_region->_degrees == 90) {
+		_uvs[URX] = _region->_u;
+		_uvs[URY] = _region->_v2;
+		_uvs[BRX] = _region->_u;
+		_uvs[BRY] = _region->_v;
+		_uvs[BLX] = _region->_u2;
+		_uvs[BLY] = _region->_v;
+		_uvs[ULX] = _region->_u2;
+		_uvs[ULY] = _region->_v2;
 	} else {
-		_uvs[ULX] = _region->u;
-		_uvs[ULY] = _region->v2;
-		_uvs[URX] = _region->u;
-		_uvs[URY] = _region->v;
-		_uvs[BRX] = _region->u2;
-		_uvs[BRY] = _region->v;
-		_uvs[BLX] = _region->u2;
-		_uvs[BLY] = _region->v2;
+		_uvs[ULX] = _region->_u;
+		_uvs[ULY] = _region->_v2;
+		_uvs[URX] = _region->_u;
+		_uvs[URY] = _region->_v;
+		_uvs[BRX] = _region->_u2;
+		_uvs[BRY] = _region->_v;
+		_uvs[BLX] = _region->_u2;
+		_uvs[BLY] = _region->_v2;
 	}
 }
 

@@ -15,8 +15,8 @@ const char* spine_posed_data_get_name(spine_posed_data self) {
     return ((PosedData*)self)->getName().buffer();
 }
 
-bool spine_posed_data_is_skin_required(spine_posed_data self) {
-    return ((PosedData*)self)->isSkinRequired();
+bool spine_posed_data_get_skin_required(spine_posed_data self) {
+    return ((PosedData*)self)->getSkinRequired();
 }
 
 void spine_posed_data_set_skin_required(spine_posed_data self, bool skinRequired) {

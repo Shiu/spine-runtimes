@@ -11,98 +11,90 @@ void spine_texture_region_dispose(spine_texture_region self) {
     delete (TextureRegion*)self;
 }
 
-void * spine_texture_region_get_renderer_object(spine_texture_region self) {
-    return ((TextureRegion*)self)->rendererObject;
-}
-
-void spine_texture_region_set_renderer_object(spine_texture_region self, void * value) {
-    ((TextureRegion*)self)->rendererObject = (void*)value;
-}
-
 float spine_texture_region_get_u(spine_texture_region self) {
-    return ((TextureRegion*)self)->u;
+    return ((TextureRegion*)self)->getU();
 }
 
 void spine_texture_region_set_u(spine_texture_region self, float value) {
-    ((TextureRegion*)self)->u = value;
+    ((TextureRegion*)self)->setU(value);
 }
 
 float spine_texture_region_get_v(spine_texture_region self) {
-    return ((TextureRegion*)self)->v;
+    return ((TextureRegion*)self)->getV();
 }
 
 void spine_texture_region_set_v(spine_texture_region self, float value) {
-    ((TextureRegion*)self)->v = value;
+    ((TextureRegion*)self)->setV(value);
 }
 
 float spine_texture_region_get_u2(spine_texture_region self) {
-    return ((TextureRegion*)self)->u2;
+    return ((TextureRegion*)self)->getU2();
 }
 
 void spine_texture_region_set_u2(spine_texture_region self, float value) {
-    ((TextureRegion*)self)->u2 = value;
+    ((TextureRegion*)self)->setU2(value);
 }
 
 float spine_texture_region_get_v2(spine_texture_region self) {
-    return ((TextureRegion*)self)->v2;
+    return ((TextureRegion*)self)->getV2();
 }
 
 void spine_texture_region_set_v2(spine_texture_region self, float value) {
-    ((TextureRegion*)self)->v2 = value;
+    ((TextureRegion*)self)->setV2(value);
 }
 
 int spine_texture_region_get_degrees(spine_texture_region self) {
-    return ((TextureRegion*)self)->degrees;
+    return ((TextureRegion*)self)->getDegrees();
 }
 
 void spine_texture_region_set_degrees(spine_texture_region self, int value) {
-    ((TextureRegion*)self)->degrees = value;
+    ((TextureRegion*)self)->setDegrees(value);
 }
 
 float spine_texture_region_get_offset_x(spine_texture_region self) {
-    return ((TextureRegion*)self)->offsetX;
+    return ((TextureRegion*)self)->getOffsetX();
 }
 
 void spine_texture_region_set_offset_x(spine_texture_region self, float value) {
-    ((TextureRegion*)self)->offsetX = value;
+    ((TextureRegion*)self)->setOffsetX(value);
 }
 
 float spine_texture_region_get_offset_y(spine_texture_region self) {
-    return ((TextureRegion*)self)->offsetY;
+    return ((TextureRegion*)self)->getOffsetY();
 }
 
 void spine_texture_region_set_offset_y(spine_texture_region self, float value) {
-    ((TextureRegion*)self)->offsetY = value;
+    ((TextureRegion*)self)->setOffsetY(value);
 }
 
-int spine_texture_region_get_width(spine_texture_region self) {
-    return ((TextureRegion*)self)->width;
+int spine_texture_region_get_region_width(spine_texture_region self) {
+    return ((TextureRegion*)self)->getRegionWidth();
 }
 
-void spine_texture_region_set_width(spine_texture_region self, int value) {
-    ((TextureRegion*)self)->width = value;
+void spine_texture_region_set_region_width(spine_texture_region self, int value) {
+    ((TextureRegion*)self)->setRegionWidth(value);
 }
 
-int spine_texture_region_get_height(spine_texture_region self) {
-    return ((TextureRegion*)self)->height;
+int spine_texture_region_get_region_height(spine_texture_region self) {
+    return ((TextureRegion*)self)->getRegionHeight();
 }
 
-void spine_texture_region_set_height(spine_texture_region self, int value) {
-    ((TextureRegion*)self)->height = value;
+void spine_texture_region_set_region_height(spine_texture_region self, int value) {
+    ((TextureRegion*)self)->setRegionHeight(value);
 }
 
 int spine_texture_region_get_original_width(spine_texture_region self) {
-    return ((TextureRegion*)self)->originalWidth;
+    return ((TextureRegion*)self)->getOriginalWidth();
 }
 
 void spine_texture_region_set_original_width(spine_texture_region self, int value) {
-    ((TextureRegion*)self)->originalWidth = value;
+    ((TextureRegion*)self)->setOriginalWidth(value);
 }
 
 int spine_texture_region_get_original_height(spine_texture_region self) {
-    return ((TextureRegion*)self)->originalHeight;
+    return ((TextureRegion*)self)->getOriginalHeight();
 }
 
 void spine_texture_region_set_original_height(spine_texture_region self, int value) {
-    ((TextureRegion*)self)->originalHeight = value;
+    ((TextureRegion*)self)->setOriginalHeight(value);
 }

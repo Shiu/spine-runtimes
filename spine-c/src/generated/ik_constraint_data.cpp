@@ -43,8 +43,8 @@ const char* spine_ik_constraint_data_get_name(spine_ik_constraint_data self) {
     return ((ConstraintDataGeneric<IkConstraint, IkConstraintPose>*)(IkConstraintData*)self)->getName().buffer();
 }
 
-bool spine_ik_constraint_data_is_skin_required(spine_ik_constraint_data self) {
-    return ((ConstraintDataGeneric<IkConstraint, IkConstraintPose>*)(IkConstraintData*)self)->isSkinRequired();
+bool spine_ik_constraint_data_get_skin_required(spine_ik_constraint_data self) {
+    return ((ConstraintDataGeneric<IkConstraint, IkConstraintPose>*)(IkConstraintData*)self)->getSkinRequired();
 }
 
 spine_ik_constraint_pose spine_ik_constraint_data_get_setup_pose(spine_ik_constraint_data self) {

@@ -107,18 +107,38 @@ namespace spine {
 	};
 
 	class SP_API AtlasRegion : public TextureRegion {
-	public:
-		AtlasRegion() : TextureRegion(), page(nullptr), name(""), index(0), x(0), y(0) {}
-		~AtlasRegion() {}
+		friend class Atlas;
 
-		AtlasPage *page;
-		String name;
-		int index;
-		int x, y;
-		Array<int> splits;
-		Array<int> pads;
-		Array<String> names;
-		Array<float> values;
+	public:
+		AtlasRegion() : TextureRegion(), _page(nullptr), _name(""), _index(0), _x(0), _y(0) {}
+		~AtlasRegion() {}
+		AtlasPage *getPage() const { return _page; }
+		String getName() const { return _name; }
+		int getIndex() const { return _index; }
+		int getX() const { return _x; }
+		int getY() const { return _y; }
+		Array<int> &getSplits() { return _splits; }
+		Array<int> &getPads() { return _pads; }
+		Array<String> &getNames() { return _names; }
+		Array<float> &getValues() { return _values; }
+		void setPage(AtlasPage *value) { _page = value; }
+		void setName(const String &value) { _name = value; }
+		void setIndex(int value) { _index = value; }
+		void setX(int value) { _x = value; }
+		void setY(int value) { _y = value; }
+		void setSplits(const Array<int> &value) { _splits = value; }
+		void setPads(const Array<int> &value) { _pads = value; }
+		void setNames(const Array<String> &value) { _names = value; }
+		void setValues(const Array<float> &value) { _values = value; }
+	private:
+		AtlasPage *_page;
+		String _name;
+		int _index;
+		int _x, _y;
+		Array<int> _splits;
+		Array<int> _pads;
+		Array<String> _names;
+		Array<float> _values;
 	};
 
 	class TextureLoader;

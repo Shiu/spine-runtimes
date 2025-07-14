@@ -51,8 +51,8 @@ const char* spine_slot_data_get_name(spine_slot_data self) {
     return ((PosedDataGeneric<SlotPose>*)(SlotData*)self)->getName().buffer();
 }
 
-bool spine_slot_data_is_skin_required(spine_slot_data self) {
-    return ((PosedDataGeneric<SlotPose>*)(SlotData*)self)->isSkinRequired();
+bool spine_slot_data_get_skin_required(spine_slot_data self) {
+    return ((PosedDataGeneric<SlotPose>*)(SlotData*)self)->getSkinRequired();
 }
 
 void spine_slot_data_set_skin_required(spine_slot_data self, bool skinRequired) {

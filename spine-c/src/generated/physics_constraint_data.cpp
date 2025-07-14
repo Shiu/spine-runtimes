@@ -143,8 +143,8 @@ const char* spine_physics_constraint_data_get_name(spine_physics_constraint_data
     return ((ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>*)(PhysicsConstraintData*)self)->getName().buffer();
 }
 
-bool spine_physics_constraint_data_is_skin_required(spine_physics_constraint_data self) {
-    return ((ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>*)(PhysicsConstraintData*)self)->isSkinRequired();
+bool spine_physics_constraint_data_get_skin_required(spine_physics_constraint_data self) {
+    return ((ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>*)(PhysicsConstraintData*)self)->getSkinRequired();
 }
 
 spine_physics_constraint_pose spine_physics_constraint_data_get_setup_pose(spine_physics_constraint_data self) {

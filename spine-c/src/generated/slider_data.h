@@ -31,7 +31,7 @@ SPINE_C_API void spine_slider_data_set_offset(spine_slider_data self, float offs
 SPINE_C_API bool spine_slider_data_get_local(spine_slider_data self);
 SPINE_C_API void spine_slider_data_set_local(spine_slider_data self, bool local);
 SPINE_C_API const char* spine_slider_data_get_name(spine_slider_data self);
-SPINE_C_API bool spine_slider_data_is_skin_required(spine_slider_data self);
+SPINE_C_API bool spine_slider_data_get_skin_required(spine_slider_data self);
 SPINE_C_API spine_slider_pose spine_slider_data_get_setup_pose(spine_slider_data self);
 SPINE_C_API void spine_slider_data_set_skin_required(spine_slider_data self, bool skinRequired);
 SPINE_C_API spine_rtti spine_slider_data_rtti(void);

@@ -43,8 +43,8 @@ void spine_transform_constraint_set_source(spine_transform_constraint self, spin
     ((TransformConstraint*)self)->setSource((Bone *)source);
 }
 
-spine_constraint_data spine_transform_constraint_get_data(spine_transform_constraint self) {
-    return (spine_constraint_data)&((ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose>*)(TransformConstraint*)self)->getData();
+spine_transform_constraint_data spine_transform_constraint_get_data(spine_transform_constraint self) {
+    return (spine_transform_constraint_data)&((ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose>*)(TransformConstraint*)self)->getData();
 }
 
 spine_transform_constraint_pose spine_transform_constraint_get_pose(spine_transform_constraint self) {

@@ -67,8 +67,8 @@ const char* spine_path_constraint_data_get_name(spine_path_constraint_data self)
     return ((ConstraintDataGeneric<PathConstraint, PathConstraintPose>*)(PathConstraintData*)self)->getName().buffer();
 }
 
-bool spine_path_constraint_data_is_skin_required(spine_path_constraint_data self) {
-    return ((ConstraintDataGeneric<PathConstraint, PathConstraintPose>*)(PathConstraintData*)self)->isSkinRequired();
+bool spine_path_constraint_data_get_skin_required(spine_path_constraint_data self) {
+    return ((ConstraintDataGeneric<PathConstraint, PathConstraintPose>*)(PathConstraintData*)self)->getSkinRequired();
 }
 
 spine_path_constraint_pose spine_path_constraint_data_get_setup_pose(spine_path_constraint_data self) {

@@ -19,8 +19,8 @@ const char* spine_constraint_data_get_name(spine_constraint_data self) {
     return ((ConstraintData*)self)->getName().buffer();
 }
 
-bool spine_constraint_data_is_skin_required(spine_constraint_data self) {
-    return ((ConstraintData*)self)->isSkinRequired();
+bool spine_constraint_data_get_skin_required(spine_constraint_data self) {
+    return ((ConstraintData*)self)->getSkinRequired();
 }
 
 spine_rtti spine_constraint_data_rtti(void) {

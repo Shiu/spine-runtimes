@@ -7,12 +7,20 @@ void spine_to_property_dispose(spine_to_property self) {
     delete (ToProperty*)self;
 }
 
+spine_rtti spine_to_property_get_rtti(spine_to_property self) {
+    return (spine_rtti)&((ToProperty*)self)->getRTTI();
+}
+
 float spine_to_property_mix(spine_to_property self, spine_transform_constraint_pose pose) {
     return ((ToProperty*)self)->mix(*((TransformConstraintPose*)pose));
 }
 
 void spine_to_property_apply(spine_to_property self, spine_skeleton skeleton, spine_transform_constraint_pose pose, spine_bone_pose bone, float value, bool local, bool additive) {
     ((ToProperty*)self)->apply(*((Skeleton*)skeleton), *((TransformConstraintPose*)pose), *((BonePose*)bone), value, local, additive);
+}
+
+spine_rtti spine_to_property_rtti(void) {
+    return (spine_rtti)&ToProperty::rtti;
 }
 
 float spine_to_property_get__offset(spine_to_property self) {

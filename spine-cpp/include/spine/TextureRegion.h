@@ -34,28 +34,46 @@
 
 namespace spine {
 	class SP_API TextureRegion : public SpineObject {
-	public:
-		void *rendererObject;
-		float u, v, u2, v2;
-		int degrees;
-		float offsetX, offsetY;
-		int width, height;
-		int originalWidth, originalHeight;
+		friend class MeshAttachment;
+		friend class RegionAttachment;
+		friend class Atlas;
+		friend class AtlasRegion;
+		friend class SkeletonRenderer;
 
-		TextureRegion(): rendererObject(NULL), u(0), v(0), u2(0), v2(0), degrees(0), offsetX(0), offsetY(0), width(0), height(0), originalWidth(0), originalHeight(0) {};
+	public:
+		TextureRegion(): _rendererObject(NULL), _u(0), _v(0), _u2(0), _v2(0), _degrees(0), _offsetX(0), _offsetY(0), _width(0), _height(0), _originalWidth(0), _originalHeight(0) {};
 		~TextureRegion() {};
 
-		float getU() const { return u; };
-		float getV() const { return v; };
-		float getU2() const { return u2; };
-		float getV2() const { return v2; };
-		int getDegrees() const { return degrees; };
-		float getOffsetX() const { return offsetX; };
-		float getOffsetY() const { return offsetY; };
-		int getRegionWidth() const { return width; };
-		int getRegionHeight() const { return height; };
-		int getOriginalWidth() const { return originalWidth; };
-		int getOriginalHeight() const { return originalHeight; };
+		float getU() const { return _u; };
+		void setU(float value) { _u = value; }
+		float getV() const { return _v; }
+		void setV(float value) { _v = value; }
+		float getU2() const { return _u2; }
+		void setU2(float value) { _u2 = value; }
+		float getV2() const { return _v2; }
+		void setV2(float value) { _v2 = value; }
+		int getDegrees() const { return _degrees; }
+		void setDegrees(int value) { _degrees = value; }
+		float getOffsetX() const { return _offsetX; }
+		void setOffsetX(float value) { _offsetX = value; }
+		float getOffsetY() const { return _offsetY; }
+		void setOffsetY(float value) { _offsetY = value; }
+		int getRegionWidth() const { return _width; };
+		void setRegionWidth(int value) { _width = value; }
+		int getRegionHeight() const { return _height; }
+		void setRegionHeight(int value) { _height = value; }
+		int getOriginalWidth() const { return _originalWidth; };
+		void setOriginalWidth(int value) { _originalWidth = value; }
+		int getOriginalHeight() const { return _originalHeight; };
+		void setOriginalHeight(int value) { _originalHeight = value; }
+
+	private:
+		void *_rendererObject;
+		float _u, _v, _u2, _v2;
+		int _degrees;
+		float _offsetX, _offsetY;
+		int _width, _height;
+		int _originalWidth, _originalHeight;
 	};
 }
 

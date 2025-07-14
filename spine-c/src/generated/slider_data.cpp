@@ -87,8 +87,8 @@ const char* spine_slider_data_get_name(spine_slider_data self) {
     return ((ConstraintDataGeneric<Slider, SliderPose>*)(SliderData*)self)->getName().buffer();
 }
 
-bool spine_slider_data_is_skin_required(spine_slider_data self) {
-    return ((ConstraintDataGeneric<Slider, SliderPose>*)(SliderData*)self)->isSkinRequired();
+bool spine_slider_data_get_skin_required(spine_slider_data self) {
+    return ((ConstraintDataGeneric<Slider, SliderPose>*)(SliderData*)self)->getSkinRequired();
 }
 
 spine_slider_pose spine_slider_data_get_setup_pose(spine_slider_data self) {

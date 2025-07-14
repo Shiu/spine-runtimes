@@ -119,8 +119,8 @@ const char* spine_transform_constraint_data_get_name(spine_transform_constraint_
     return ((ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>*)(TransformConstraintData*)self)->getName().buffer();
 }
 
-bool spine_transform_constraint_data_is_skin_required(spine_transform_constraint_data self) {
-    return ((ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>*)(TransformConstraintData*)self)->isSkinRequired();
+bool spine_transform_constraint_data_get_skin_required(spine_transform_constraint_data self) {
+    return ((ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>*)(TransformConstraintData*)self)->getSkinRequired();
 }
 
 spine_transform_constraint_pose spine_transform_constraint_data_get_setup_pose(spine_transform_constraint_data self) {
