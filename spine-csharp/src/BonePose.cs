@@ -128,8 +128,7 @@ namespace Spine {
 			}
 			case Inherit.NoScale:
 			case Inherit.NoScaleOrReflection: {
-				rotation *= MathUtils.DegRad;
-				float cos = (float)Math.Cos(rotation), sin = (float)Math.Sin(rotation);
+				float r = rotation * MathUtils.DegRad, cos = (float)Math.Cos(r), sin = (float)Math.Sin(r);
 				float za = (pa * cos + pb * sin) / skeleton.scaleX;
 				float zc = (pc * cos + pd * sin) / skeleton.ScaleY;
 				float s = (float)Math.Sqrt(za * za + zc * zc);
@@ -138,15 +137,15 @@ namespace Spine {
 				zc *= s;
 				s = (float)Math.Sqrt(za * za + zc * zc);
 				if (inherit == Inherit.NoScale && (pa * pd - pb * pc < 0) != (skeleton.scaleX < 0 != skeleton.ScaleY < 0)) s = -s;
-				rotation = MathUtils.PI / 2 + MathUtils.Atan2(zc, za);
-				float zb = (float)Math.Cos(rotation) * s;
-				float zd = (float)Math.Sin(rotation) * s;
-				shearX *= MathUtils.DegRad;
-				shearY = (90 + shearY) * MathUtils.DegRad;
-				float la = (float)Math.Cos(shearX) * scaleX;
-				float lb = (float)Math.Cos(shearY) * scaleY;
-				float lc = (float)Math.Sin(shearX) * scaleX;
-				float ld = (float)Math.Sin(shearY) * scaleY;
+				r = MathUtils.PI / 2 + MathUtils.Atan2(zc, za);
+				float zb = (float)Math.Cos(r) * s;
+				float zd = (float)Math.Sin(r) * s;
+				float rx = shearX * MathUtils.DegRad;
+				float ry = (90 + shearY) * MathUtils.DegRad;
+				float la = (float)Math.Cos(rx) * scaleX;
+				float lb = (float)Math.Cos(ry) * scaleY;
+				float lc = (float)Math.Sin(rx) * scaleX;
+				float ld = (float)Math.Sin(ry) * scaleY;
 				a = za * la + zb * lc;
 				b = za * lb + zb * ld;
 				c = zc * la + zd * lc;
