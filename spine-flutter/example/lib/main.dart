@@ -120,18 +120,18 @@ class ExampleSelector extends StatelessWidget {
               );
             },
           ),
-              spacer,
-              ElevatedButton(
-                child: const Text('Physics'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (context) => const PhysicsTest(),
-                    ),
-                  );
-                },
-              ),
+          spacer,
+          ElevatedButton(
+            child: const Text('Physics'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const PhysicsTest(),
+                ),
+              );
+            },
+          ),
           spacer,
           ElevatedButton(
             child: const Text('Flame: Simple Example'),

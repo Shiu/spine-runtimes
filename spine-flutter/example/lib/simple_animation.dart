@@ -46,8 +46,7 @@ class SimpleAnimation extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Simple Animation')),
-      body: SpineWidget.fromAsset("assets/spineboy.atlas", "assets/spineboy-pro.skel", controller)
-    );
+        appBar: AppBar(title: const Text('Simple Animation')),
+        body: SpineWidget.fromAsset("assets/spineboy.atlas", "assets/spineboy-pro.skel", controller));
   }
 }

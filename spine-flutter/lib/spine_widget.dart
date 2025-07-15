@@ -75,7 +75,11 @@ class SpineWidgetController {
   /// Constructs a new [SpineWidget] controller. See the class documentation of [SpineWidgetController] for information on
   /// the optional arguments.
   SpineWidgetController(
-      {this.onInitialized, this.onBeforeUpdateWorldTransforms, this.onAfterUpdateWorldTransforms, this.onBeforePaint, this.onAfterPaint});
+      {this.onInitialized,
+      this.onBeforeUpdateWorldTransforms,
+      this.onAfterUpdateWorldTransforms,
+      this.onBeforePaint,
+      this.onAfterPaint});
 
   void _initialize(SkeletonDrawable drawable) {
     var wasInitialized = _drawable != null;
@@ -283,7 +287,12 @@ class SpineWidget extends StatefulWidget {
   ///
   /// The widget can optionally by sized by the bounds provided by the [BoundsProvider] by passing `true` for [sizedByBounds].
   SpineWidget.fromAsset(this._atlasFile, this._skeletonFile, this._controller,
-      {AssetBundle? bundle, BoxFit? fit, Alignment? alignment, BoundsProvider? boundsProvider, bool? sizedByBounds, super.key})
+      {AssetBundle? bundle,
+      BoxFit? fit,
+      Alignment? alignment,
+      BoundsProvider? boundsProvider,
+      bool? sizedByBounds,
+      super.key})
       : _assetType = _AssetType.asset,
         _fit = fit ?? BoxFit.contain,
         _alignment = alignment ?? Alignment.center,
@@ -382,8 +391,7 @@ class _SpineWidgetState extends State<SpineWidget> {
     // loaded.
     bool hasChanged = true;
     if (oldWidget._assetType == widget._assetType) {
-      if (oldWidget._assetType == _AssetType.drawable &&
-          oldWidget._drawable == widget._drawable) {
+      if (oldWidget._assetType == _AssetType.drawable && oldWidget._drawable == widget._drawable) {
         hasChanged = false;
       } else if (oldWidget._skeletonFile == widget._skeletonFile &&
           oldWidget._atlasFile == widget._atlasFile &&
@@ -452,7 +460,8 @@ class _SpineRenderObjectWidget extends LeafRenderObjectWidget {
   final Bounds _bounds;
   final bool _sizedByBounds;
 
-  const _SpineRenderObjectWidget(this._skeletonDrawable, this._controller, this._fit, this._alignment, this._bounds, this._sizedByBounds);
+  const _SpineRenderObjectWidget(
+      this._skeletonDrawable, this._controller, this._fit, this._alignment, this._bounds, this._sizedByBounds);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -481,7 +490,8 @@ class _SpineRenderObject extends RenderBox {
   bool _disposed = false;
   bool _firstUpdated = false;
 
-  _SpineRenderObject(this._skeletonDrawable, this._controller, this._fit, this._alignment, this._bounds, this._sizedByBounds);
+  _SpineRenderObject(
+      this._skeletonDrawable, this._controller, this._fit, this._alignment, this._bounds, this._sizedByBounds);
 
   set skeletonDrawable(SkeletonDrawable skeletonDrawable) {
     if (_skeletonDrawable == skeletonDrawable) return;

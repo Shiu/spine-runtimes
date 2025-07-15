@@ -69,8 +69,7 @@ class RawImageProvider extends ImageProvider<_RawImageKey> {
       debugPrint('ImageDescriptor: ${descriptor.width}x${descriptor.height}');
       return true;
     }());
-    return descriptor.instantiateCodec(
-        targetWidth: targetWidth, targetHeight: targetHeight);
+    return descriptor.instantiateCodec(targetWidth: targetWidth, targetHeight: targetHeight);
   }
 }
 
@@ -114,7 +113,6 @@ class RawImageData {
 
   _RawImageKey? _key;
   _RawImageKey _obtainKey() {
-    return _key ??=
-        _RawImageKey(width, height, pixelFormat.index, md5.convert(pixels));
+    return _key ??= _RawImageKey(width, height, pixelFormat.index, md5.convert(pixels));
   }
 }

@@ -73,7 +73,12 @@ class IkFollowingState extends State<IkFollowing> {
         body: GestureDetector(
           onPanDown: (drag) => _updateBonePosition(drag.localPosition),
           onPanUpdate: (drag) => _updateBonePosition(drag.localPosition),
-          child: SpineWidget.fromAsset("assets/spineboy.atlas", "assets/spineboy-pro.skel", controller, alignment: Alignment.centerLeft,),
+          child: SpineWidget.fromAsset(
+            "assets/spineboy.atlas",
+            "assets/spineboy-pro.skel",
+            controller,
+            alignment: Alignment.centerLeft,
+          ),
         ));
   }
 }
