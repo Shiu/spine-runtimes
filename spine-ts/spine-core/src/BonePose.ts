@@ -152,8 +152,7 @@ export class BonePose extends BoneLocal implements Update {
 			}
 			case Inherit.NoScale:
 			case Inherit.NoScaleOrReflection: {
-				rotation *= MathUtils.degRad;
-				const cos = Math.cos(rotation), sin = Math.sin(rotation);
+				let r = rotation * MathUtils.degRad, cos = Math.cos(r), sin = Math.sin(r);
 				let za = (pa * cos + pb * sin) / skeleton.scaleX;
 				let zc = (pc * cos + pd * sin) / skeleton.scaleY;
 				let s = Math.sqrt(za * za + zc * zc);
@@ -162,15 +161,15 @@ export class BonePose extends BoneLocal implements Update {
 				zc *= s;
 				s = Math.sqrt(za * za + zc * zc);
 				if (this.inherit == Inherit.NoScale && (pa * pd - pb * pc < 0) != (skeleton.scaleX < 0 != skeleton.scaleY < 0)) s = -s;
-				this.rotation = Math.PI / 2 + Math.atan2(zc, za);
-				const zb = Math.cos(this.rotation) * s;
-				const zd = Math.sin(this.rotation) * s;
-				this.shearX *= MathUtils.degRad;
-				this.shearY = (90 + shearY) * MathUtils.degRad;
-				const la = Math.cos(this.shearX) * scaleX;
-				const lb = Math.cos(this.shearY) * scaleY;
-				const lc = Math.sin(this.shearX) * scaleX;
-				const ld = Math.sin(this.shearY) * scaleY;
+				r = Math.PI / 2 + Math.atan2(zc, za);
+				const zb = Math.cos(r) * s;
+				const zd = Math.sin(r) * s;
+				const rx = MathUtils.degRad;
+				const ry = (90 + shearY) * MathUtils.degRad;
+				const la = Math.cos(rx) * scaleX;
+				const lb = Math.cos(ry) * scaleY;
+				const lc = Math.sin(rx) * scaleX;
+				const ld = Math.sin(ry) * scaleY;
 				this.a = za * la + zb * lc;
 				this.b = za * lb + zb * ld;
 				this.c = zc * la + zd * lc;

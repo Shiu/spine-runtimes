@@ -87,19 +87,6 @@ export class RegionAttachment extends Attachment implements HasTextureRegion {
 		if (!this.region) throw new Error("Region not set.");
 		let region = this.region;
 		let uvs = this.uvs;
-
-		if (region == null) {
-			uvs[0] = 0;
-			uvs[1] = 0;
-			uvs[2] = 0;
-			uvs[3] = 1;
-			uvs[4] = 1;
-			uvs[5] = 1;
-			uvs[6] = 1;
-			uvs[7] = 0;
-			return;
-		}
-
 		let regionScaleX = this.width / this.region.originalWidth * this.scaleX;
 		let regionScaleY = this.height / this.region.originalHeight * this.scaleY;
 		let localX = -this.width / 2 * this.scaleX + this.region.offsetX * regionScaleX;
@@ -128,7 +115,16 @@ export class RegionAttachment extends Attachment implements HasTextureRegion {
 		offset[6] = localX2Cos - localYSin;
 		offset[7] = localYCos + localX2Sin;
 
-		if (region.degrees == 90) {
+		if (region == null) {
+			uvs[0] = 0;
+			uvs[1] = 0;
+			uvs[2] = 0;
+			uvs[3] = 1;
+			uvs[4] = 1;
+			uvs[5] = 1;
+			uvs[6] = 1;
+			uvs[7] = 0;
+		} else if (region.degrees == 90) {
 			uvs[0] = region.u2;
 			uvs[1] = region.v2;
 			uvs[2] = region.u;
