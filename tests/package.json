@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "compare": "tsx compare-with-reference-impl.ts",
-    "format": "npx tsfmt -r ./**/*.ts",
+    "format": "npx -y typescript-formatter -r ./**/*.ts",
     "lint": "npx biome lint ."
   },
   "devDependencies": {
