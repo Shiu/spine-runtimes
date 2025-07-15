@@ -9,6 +9,5 @@ if [ "$1" = "clean" ]; then
 fi
 
 # Always build
-mkdir -p build && cd build
-[ -f CMakeCache.txt ] || cmake .. -DCMAKE_BUILD_TYPE=Debug
-make -j$(sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 4)
+cmake --preset=debug .
+cmake --build --preset=debug

@@ -34,8 +34,6 @@ target_include_directories(spine-c PUBLIC
     ../spine-cpp/spine-cpp/include
 )
 
-# Export compile commands for better IDE support
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Create test executable only if this is the top-level project
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
