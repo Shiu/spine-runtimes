@@ -245,3 +245,4 @@ spine-c-new/codegen/spine-cpp-types.json
 docs/spine-runtimes-types.md
 spine-c/codegen/dist
 tests/output
+spine-c/.cache
