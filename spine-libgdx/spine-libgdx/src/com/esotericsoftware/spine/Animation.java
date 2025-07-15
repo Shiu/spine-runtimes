@@ -106,7 +106,7 @@ public class Animation {
 		this.duration = duration;
 	}
 
-	public IntArray getBones() {
+	public IntArray getBones () {
 		return bones;
 	}
 

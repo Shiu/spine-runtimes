@@ -35,6 +35,8 @@
 
 using namespace spine;
 
+RTTI_IMPL(AtlasRegion, TextureRegion)
+
 Atlas::Atlas(const String &path, TextureLoader *textureLoader, bool createTexture) : _textureLoader(textureLoader) {
 	int dirLength;
 	char *dir;
@@ -88,7 +90,7 @@ void Atlas::flipV() {
 AtlasRegion *Atlas::findRegion(const String &name) {
 	for (size_t i = 0, n = _regions.size(); i < n; ++i)
 		if (_regions[i]->_name == name) return _regions[i];
-	return NULL;
+	return nullptr;
 }
 
 Array<AtlasPage *> &Atlas::getPages() {
@@ -197,7 +199,7 @@ struct AtlasInput {
 	}
 
 	static int readEntry(SimpleString entry[5], SimpleString *line) {
-		if (line == NULL) return 0;
+		if (line == nullptr) return 0;
 		line->trim();
 		if (line->length == 0) return 0;
 
@@ -234,24 +236,24 @@ void Atlas::load(const char *begin, int length, const char *dir, bool createText
 	int needsSlash = dirLength > 0 && dir[dirLength - 1] != '/' && dir[dirLength - 1] != '\\';
 	AtlasInput reader(begin, length);
 	SimpleString entry[5];
-	AtlasPage *page = NULL;
+	AtlasPage *page = nullptr;
 
 	SimpleString *line = reader.readLine();
-	while (line != NULL && line->length == 0)
+	while (line != nullptr && line->length == 0)
 		line = reader.readLine();
 
 	while (true) {
-		if (line == NULL || line->length == 0) break;
+		if (line == nullptr || line->length == 0) break;
 		if (reader.readEntry(entry, line) == 0) break;
 		line = reader.readLine();
 	}
 
 	while (true) {
-		if (line == NULL) break;
+		if (line == nullptr) break;
 		if (line->trim().length == 0) {
-			page = NULL;
+			page = nullptr;
 			line = reader.readLine();
-		} else if (page == NULL) {
+		} else if (page == nullptr) {
 			char *name = line->copy();
 			char *path = SpineExtension::calloc<char>(dirLength + needsSlash + strlen(name) + 1, __FILE__, __LINE__);
 			memcpy(path, dir, dirLength);
@@ -302,13 +304,13 @@ void Atlas::load(const char *begin, int length, const char *dir, bool createText
 					region->_x = entry[1].toInt();
 					region->_y = entry[2].toInt();
 				} else if (entry[0].equals("size")) {
-					region->_width = entry[1].toInt();
-					region->_height = entry[2].toInt();
+					region->_packedWidth = entry[1].toInt();
+					region->_packedHeight = entry[2].toInt();
 				} else if (entry[0].equals("bounds")) {
 					region->_x = entry[1].toInt();
 					region->_y = entry[2].toInt();
-					region->_width = entry[3].toInt();
-					region->_height = entry[4].toInt();
+					region->_packedWidth = entry[3].toInt();
+					region->_packedHeight = entry[4].toInt();
 				} else if (entry[0].equals("offset")) {
 					region->_offsetX = entry[1].toInt();
 					region->_offsetY = entry[2].toInt();
@@ -326,6 +328,7 @@ void Atlas::load(const char *begin, int length, const char *dir, bool createText
 					} else if (!entry[1].equals("false")) {
 						region->_degrees = entry[1].toInt();
 					}
+					region->_rotate = region->_degrees == 90;
 				} else if (entry[0].equals("index")) {
 					region->_index = entry[1].toInt();
 				} else {
@@ -336,19 +339,22 @@ void Atlas::load(const char *begin, int length, const char *dir, bool createText
 				}
 			}
 			if (region->_originalWidth == 0 && region->_originalHeight == 0) {
-				region->_originalWidth = region->_width;
-				region->_originalHeight = region->_height;
+				region->_originalWidth = region->_packedWidth;
+				region->_originalHeight = region->_packedHeight;
 			}
 
 			region->_u = (float) region->_x / page->width;
 			region->_v = (float) region->_y / page->height;
 			if (region->_degrees == 90) {
-				region->_u2 = (float) (region->_x + region->_height) / page->width;
-				region->_v2 = (float) (region->_y + region->_width) / page->height;
+				region->_u2 = (float) (region->_x + region->_packedHeight) / page->width;
+				region->_v2 = (float) (region->_y + region->_packedWidth) / page->height;
 			} else {
-				region->_u2 = (float) (region->_x + region->_width) / page->width;
-				region->_v2 = (float) (region->_y + region->_height) / page->height;
+				region->_u2 = (float) (region->_x + region->_packedWidth) / page->width;
+				region->_v2 = (float) (region->_y + region->_packedHeight) / page->height;
 			}
+			// Calculate regionWidth/Height from UV coordinates
+			region->_regionWidth = abs((int) ((region->_u2 - region->_u) * page->width));
+			region->_regionHeight = abs((int) ((region->_v2 - region->_v) * page->height));
 			_regions.add(region);
 		}
 	}

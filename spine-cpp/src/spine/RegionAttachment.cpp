@@ -29,6 +29,7 @@
 
 #include <spine/RegionAttachment.h>
 
+#include <spine/Atlas.h>
 #include <spine/Bone.h>
 #include <spine/Slot.h>
 
@@ -48,19 +49,19 @@ const int RegionAttachment::BRX = 6;
 const int RegionAttachment::BRY = 7;
 
 RegionAttachment::RegionAttachment(const String &name) : Attachment(name),
+														 _region(NULL),
+														 _path(),
 														 _x(0),
 														 _y(0),
-														 _rotation(0),
 														 _scaleX(1),
 														 _scaleY(1),
+														 _rotation(0),
 														 _width(0),
 														 _height(0),
-														 _path(),
 														 _color(1, 1, 1, 1),
-														 _region(NULL),
 														 _sequence(NULL) {
-	_offset.setSize(NUM_UVS, 0);
-	_uvs.setSize(NUM_UVS, 0);
+	_offset.setSize(8, 0);
+	_uvs.setSize(8, 0);
 }
 
 RegionAttachment::~RegionAttachment() {
@@ -68,24 +69,33 @@ RegionAttachment::~RegionAttachment() {
 }
 
 void RegionAttachment::updateRegion() {
-	if (_region == NULL) {
-		_uvs[BLX] = 0;
-		_uvs[BLY] = 0;
-		_uvs[ULX] = 0;
-		_uvs[ULY] = 1;
-		_uvs[URX] = 1;
-		_uvs[URY] = 1;
-		_uvs[BRX] = 1;
-		_uvs[BRY] = 0;
-		return;
+	float width = getWidth(), height = getHeight();
+	float localX2 = width / 2;
+	float localY2 = height / 2;
+	float localX = -localX2;
+	float localY = -localY2;
+	bool rotated = false;
+	AtlasRegion *atlasRegion = NULL;
+	if (_region != NULL) {
+		atlasRegion = _region->rtti.isExactly(AtlasRegion::rtti) ? static_cast<AtlasRegion *>(_region) : NULL;
 	}
-
-	float regionScaleX = _width / _region->_originalWidth * _scaleX;
-	float regionScaleY = _height / _region->_originalHeight * _scaleY;
-	float localX = -_width / 2 * _scaleX + _region->_offsetX * regionScaleX;
-	float localY = -_height / 2 * _scaleY + _region->_offsetY * regionScaleY;
-	float localX2 = localX + _region->_width * regionScaleX;
-	float localY2 = localY + _region->_height * regionScaleY;
+	if (atlasRegion) {
+		localX += atlasRegion->_offsetX / atlasRegion->_originalWidth * width;
+		localY += atlasRegion->_offsetY / atlasRegion->_originalHeight * height;
+		if (atlasRegion->_degrees == 90) {
+			rotated = true;
+			localX2 -= (atlasRegion->_originalWidth - atlasRegion->_offsetX - atlasRegion->_packedHeight) / atlasRegion->_originalWidth * width;
+			localY2 -= (atlasRegion->_originalHeight - atlasRegion->_offsetY - atlasRegion->_packedWidth) / atlasRegion->_originalHeight * height;
+		} else {
+			localX2 -= (atlasRegion->_originalWidth - atlasRegion->_offsetX - atlasRegion->_packedWidth) / atlasRegion->_originalWidth * width;
+			localY2 -= (atlasRegion->_originalHeight - atlasRegion->_offsetY - atlasRegion->_packedHeight) / atlasRegion->_originalHeight * height;
+		}
+	}
+	float scaleX = getScaleX(), scaleY = getScaleY();
+	localX *= scaleX;
+	localY *= scaleY;
+	localX2 *= scaleX;
+	localY2 *= scaleY;
 	float cos = MathUtil::cosDeg(_rotation);
 	float sin = MathUtil::sinDeg(_rotation);
 	float localXCos = localX * cos + _x;
@@ -106,24 +116,33 @@ void RegionAttachment::updateRegion() {
 	_offset[BRX] = localX2Cos - localYSin;
 	_offset[BRY] = localYCos + localX2Sin;
 
-	if (_region->_degrees == 90) {
-		_uvs[URX] = _region->_u;
-		_uvs[URY] = _region->_v2;
-		_uvs[BRX] = _region->_u;
-		_uvs[BRY] = _region->_v;
+	if (_region == NULL) {
+		_uvs[BLX] = 0;
+		_uvs[BLY] = 0;
+		_uvs[ULX] = 0;
+		_uvs[ULY] = 1;
+		_uvs[URX] = 1;
+		_uvs[URY] = 1;
+		_uvs[BRX] = 1;
+		_uvs[BRY] = 0;
+	} else if (rotated) {
 		_uvs[BLX] = _region->_u2;
 		_uvs[BLY] = _region->_v;
 		_uvs[ULX] = _region->_u2;
 		_uvs[ULY] = _region->_v2;
+		_uvs[URX] = _region->_u;
+		_uvs[URY] = _region->_v2;
+		_uvs[BRX] = _region->_u;
+		_uvs[BRY] = _region->_v;
 	} else {
+		_uvs[BLX] = _region->_u2;
+		_uvs[BLY] = _region->_v2;
 		_uvs[ULX] = _region->_u;
 		_uvs[ULY] = _region->_v2;
 		_uvs[URX] = _region->_u;
 		_uvs[URY] = _region->_v;
 		_uvs[BRX] = _region->_u2;
 		_uvs[BRY] = _region->_v;
-		_uvs[BLX] = _region->_u2;
-		_uvs[BLY] = _region->_v2;
 	}
 }
 

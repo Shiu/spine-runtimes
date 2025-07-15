@@ -38,8 +38,6 @@
 
 #include <spine/HasRendererObject.h>
 
-#define NUM_UVS 8
-
 namespace spine {
 	class Bone;
 	class Slot;
@@ -128,12 +126,12 @@ namespace spine {
 		static const int BRX;
 		static const int BRY;
 
-		float _x, _y, _rotation, _scaleX, _scaleY, _width, _height;
-		Array<float> _offset;
-		Array<float> _uvs;
-		String _path;
-		Color _color;
 		TextureRegion *_region;
+		String _path;
+		float _x, _y, _scaleX, _scaleY, _rotation, _width, _height;
+		Array<float> _uvs;
+		Array<float> _offset;
+		Color _color;
 		Sequence *_sequence;
 	};
 }

@@ -28,6 +28,7 @@
  *****************************************************************************/
 
 #include <spine/MeshAttachment.h>
+#include <spine/Atlas.h>
 #include <spine/Slot.h>
 
 using namespace spine;
@@ -35,83 +36,88 @@ using namespace spine;
 RTTI_IMPL(MeshAttachment, VertexAttachment)
 
 MeshAttachment::MeshAttachment(const String &name) : VertexAttachment(name),
-													 _parentMesh(NULL),
+													 _region(NULL),
 													 _path(),
 													 _color(1, 1, 1, 1),
 													 _hullLength(0),
+													 _parentMesh(NULL),
+													 _sequence(NULL),
 													 _width(0),
-													 _height(0),
-													 _region(NULL),
-													 _sequence(NULL) {}
+													 _height(0) {}
 
 MeshAttachment::~MeshAttachment() {
 	if (_sequence) delete _sequence;
 }
 
 void MeshAttachment::updateRegion() {
-	if (_uvs.size() != _regionUVs.size()) {
-		_uvs.setSize(_regionUVs.size(), 0);
-	}
+	if (_uvs.size() != _regionUVs.size()) _uvs.setSize(_regionUVs.size(), 0);
+	int n = (int) _regionUVs.size();
+	float u, v, width, height;
+	if (_region != nullptr && _region->rtti.instanceOf(AtlasRegion::rtti)) {
+		AtlasRegion *atlasRegion = static_cast<AtlasRegion *>(_region);
+		u = _region->_u;
+		v = _region->_v;
 
-	if (_region == nullptr) {
-		return;
-	}
+		float textureWidth = atlasRegion->_packedWidth / (_region->_u2 - _region->_u);
+		float textureHeight = atlasRegion->_packedHeight / (_region->_v2 - _region->_v);
 
-	int i = 0, n = (int) _regionUVs.size();
-	float u = _region->_u, v = _region->_v;
-	float width = 0, height = 0;
-	switch (_region->_degrees) {
-		case 90: {
-			float textureWidth = _region->_height / (_region->_u2 - _region->_u);
-			float textureHeight = _region->_width / (_region->_v2 - _region->_v);
-			u -= (_region->_originalHeight - _region->_offsetY - _region->_height) / textureWidth;
-			v -= (_region->_originalWidth - _region->_offsetX - _region->_width) / textureHeight;
-			width = _region->_originalHeight / textureWidth;
-			height = _region->_originalWidth / textureHeight;
-			for (i = 0; i < n; i += 2) {
-				_uvs[i] = u + _regionUVs[i + 1] * width;
-				_uvs[i + 1] = v + (1 - _regionUVs[i]) * height;
+		switch (atlasRegion->_degrees) {
+			case 90: {
+				textureWidth = atlasRegion->_packedHeight / (_region->_u2 - _region->_u);
+				textureHeight = atlasRegion->_packedWidth / (_region->_v2 - _region->_v);
+				u -= (atlasRegion->_originalHeight - atlasRegion->_offsetY - atlasRegion->_packedHeight) / textureWidth;
+				v -= (atlasRegion->_originalWidth - atlasRegion->_offsetX - atlasRegion->_packedWidth) / textureHeight;
+				width = atlasRegion->_originalHeight / textureWidth;
+				height = atlasRegion->_originalWidth / textureHeight;
+				for (int i = 0; i < n; i += 2) {
+					_uvs[i] = u + _regionUVs[i + 1] * width;
+					_uvs[i + 1] = v + (1 - _regionUVs[i]) * height;
+				}
+				return;
 			}
-			return;
-		}
-		case 180: {
-			float textureWidth = _region->_width / (_region->_u2 - _region->_u);
-			float textureHeight = _region->_height / (_region->_v2 - _region->_v);
-			u -= (_region->_originalWidth - _region->_offsetX - _region->_width) / textureWidth;
-			v -= _region->_offsetY / textureHeight;
-			width = _region->_originalWidth / textureWidth;
-			height = _region->_originalHeight / textureHeight;
-			for (i = 0; i < n; i += 2) {
-				_uvs[i] = u + (1 - _regionUVs[i]) * width;
-				_uvs[i + 1] = v + (1 - _regionUVs[i + 1]) * height;
+			case 180: {
+				u -= (atlasRegion->_originalWidth - atlasRegion->_offsetX - atlasRegion->_packedWidth) / textureWidth;
+				v -= atlasRegion->_offsetY / textureHeight;
+				width = atlasRegion->_originalWidth / textureWidth;
+				height = atlasRegion->_originalHeight / textureHeight;
+				for (int i = 0; i < n; i += 2) {
+					_uvs[i] = u + (1 - _regionUVs[i]) * width;
+					_uvs[i + 1] = v + (1 - _regionUVs[i + 1]) * height;
+				}
+				return;
 			}
-			return;
-		}
-		case 270: {
-			float textureHeight = _region->_height / (_region->_v2 - _region->_v);
-			float textureWidth = _region->_width / (_region->_u2 - _region->_u);
-			u -= _region->_offsetY / textureWidth;
-			v -= _region->_offsetX / textureHeight;
-			width = _region->_originalHeight / textureWidth;
-			height = _region->_originalWidth / textureHeight;
-			for (i = 0; i < n; i += 2) {
-				_uvs[i] = u + (1 - _regionUVs[i + 1]) * width;
-				_uvs[i + 1] = v + _regionUVs[i] * height;
+			case 270: {
+				textureHeight = atlasRegion->_packedHeight / (_region->_v2 - _region->_v);
+				textureWidth = atlasRegion->_packedWidth / (_region->_u2 - _region->_u);
+				u -= atlasRegion->_offsetY / textureWidth;
+				v -= atlasRegion->_offsetX / textureHeight;
+				width = atlasRegion->_originalHeight / textureWidth;
+				height = atlasRegion->_originalWidth / textureHeight;
+				for (int i = 0; i < n; i += 2) {
+					_uvs[i] = u + (1 - _regionUVs[i + 1]) * width;
+					_uvs[i + 1] = v + _regionUVs[i] * height;
+				}
+				return;
 			}
-			return;
-		}
-		default: {
-			float textureWidth = _region->_width / (_region->_u2 - _region->_u);
-			float textureHeight = _region->_height / (_region->_v2 - _region->_v);
-			u -= _region->_offsetX / textureWidth;
-			v -= (_region->_originalHeight - _region->_offsetY - _region->_height) / textureHeight;
-			width = _region->_originalWidth / textureWidth;
-			height = _region->_originalHeight / textureHeight;
-			for (i = 0; i < n; i += 2) {
-				_uvs[i] = u + _regionUVs[i] * width;
-				_uvs[i + 1] = v + _regionUVs[i + 1] * height;
+			default: {
+				u -= atlasRegion->_offsetX / textureWidth;
+				v -= (atlasRegion->_originalHeight - atlasRegion->_offsetY - atlasRegion->_packedHeight) / textureHeight;
+				width = atlasRegion->_originalWidth / textureWidth;
+				height = atlasRegion->_originalHeight / textureHeight;
 			}
 		}
+	} else if (_region == nullptr) {
+		u = v = 0;
+		width = height = 1;
+	} else {
+		u = _region->_u;
+		v = _region->_v;
+		width = _region->_u2 - u;
+		height = _region->_v2 - v;
+	}
+	for (int i = 0; i < n; i += 2) {
+		_uvs[i] = u + _regionUVs[i] * width;
+		_uvs[i + 1] = v + _regionUVs[i + 1] * height;
 	}
 }
 

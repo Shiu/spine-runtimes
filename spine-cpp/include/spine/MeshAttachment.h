@@ -111,17 +111,19 @@ namespace spine {
 		MeshAttachment *newLinkedMesh();
 
 	private:
-		MeshAttachment *_parentMesh;
-		Array<float> _uvs;
-		Array<float> _regionUVs;
-		Array<unsigned short> _triangles;
-		Array<unsigned short> _edges;
+		TextureRegion *_region;
 		String _path;
+		Array<float> _regionUVs;
+		Array<float> _uvs;
+		Array<unsigned short> _triangles;
 		Color _color;
 		int _hullLength;
-		int _width, _height;
-		TextureRegion *_region;
+		MeshAttachment *_parentMesh;
 		Sequence *_sequence;
+
+		// Nonessential.
+		Array<unsigned short> _edges;
+		int _width, _height;
 	};
 }
 
