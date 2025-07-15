@@ -3,7 +3,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import type { SerializerIR, PublicMethod, WriteMethod, Property } from './generate-serializer-ir';
+import type { Property, SerializerIR } from './generate-serializer-ir';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -393,9 +393,9 @@ function generateCppFromIR(ir: SerializerIR): string {
 
     // Add reference versions for write methods (excluding custom implementations)
     cppOutput.push('    // Reference versions of write methods');
-    const writeMethods = ir.writeMethods.filter(m => 
-        !m.isAbstractType && 
-        m.name !== 'writeSkin' && 
+    const writeMethods = ir.writeMethods.filter(m =>
+        !m.isAbstractType &&
+        m.name !== 'writeSkin' &&
         m.name !== 'writeSkinEntry'
     );
     for (const method of writeMethods) {
@@ -420,7 +420,7 @@ function generateCppFromIR(ir: SerializerIR): string {
 async function main() {
     try {
         // Read the IR file
-        const irFile = path.resolve(__dirname, 'output', 'serializer-ir.json');
+        const irFile = path.resolve(__dirname, '../../output/serializer-ir.json');
         if (!fs.existsSync(irFile)) {
             console.error('Serializer IR not found. Run generate-serializer-ir.ts first.');
             process.exit(1);
@@ -434,10 +434,7 @@ async function main() {
         // Write the C++ file
         const cppFile = path.resolve(
             __dirname,
-            '..',
-            'spine-cpp',
-            'tests',
-            'SkeletonSerializer.h'
+            '../../../spine-cpp/tests/SkeletonSerializer.h'
         );
 
         fs.mkdirSync(path.dirname(cppFile), { recursive: true });

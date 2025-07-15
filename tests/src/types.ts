@@ -1,30 +1,6 @@
+import { Symbol, Supertype, LspOutput } from '@mariozechner/lsp-cli';
+
 // Shared types for the Spine serializer generator
-
-// Match lsp-cli's Supertype interface
-export interface Supertype {
-    name: string;
-    typeArguments?: string[];
-}
-
-// Match lsp-cli's SymbolInfo interface (we call it Symbol for backward compatibility)
-export interface Symbol {
-    name: string;
-    kind: string;
-    file: string;
-    preview: string;
-    documentation?: string;
-    typeParameters?: string[];
-    supertypes?: Supertype[];
-    children?: Symbol[];
-    // We don't need range and definition for our use case
-}
-
-export interface LspOutput {
-    language: string;
-    directory: string;
-    symbols: Symbol[];
-}
-
 export interface ClassInfo {
     className: string;
     superTypes: string[]; // Just the names for backward compatibility

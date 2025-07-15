@@ -3,19 +3,19 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import type { SerializerIR, PublicMethod, WriteMethod, Property } from './generate-serializer-ir';
+import type { Property, SerializerIR, WriteMethod } from './generate-serializer-ir';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function generatePropertyCode(property: Property, indent: string, method?: WriteMethod): string[] {
     const lines: string[] = [];
     const accessor = `obj.${property.getter}`;
-    
+
     switch (property.kind) {
         case "primitive":
             lines.push(`${indent}json.writeValue(${accessor});`);
             break;
-            
+
         case "object":
             if (property.isNullable) {
                 lines.push(`${indent}if (${accessor} == null) {`);
@@ -27,7 +27,7 @@ function generatePropertyCode(property: Property, indent: string, method?: Write
                 lines.push(`${indent}${property.writeMethodCall}(${accessor});`);
             }
             break;
-            
+
         case "enum":
             if (property.isNullable) {
                 lines.push(`${indent}if (${accessor} == null) {`);
@@ -39,17 +39,17 @@ function generatePropertyCode(property: Property, indent: string, method?: Write
                 lines.push(`${indent}json.writeValue(${accessor}.name());`);
             }
             break;
-            
+
         case "array":
             // Special handling for Skin attachments - sort by slot index
             const isSkinAttachments = method?.paramType === 'Skin' && property.name === 'attachments' && property.elementType === 'SkinEntry';
             const sortedAccessor = isSkinAttachments ? 'sortedAttachments' : accessor;
-            
+
             if (isSkinAttachments) {
                 lines.push(`${indent}Array<${property.elementType}> sortedAttachments = new Array<>(${accessor});`);
                 lines.push(`${indent}sortedAttachments.sort((a, b) -> Integer.compare(a.getSlotIndex(), b.getSlotIndex()));`);
             }
-            
+
             if (property.isNullable) {
                 lines.push(`${indent}if (${accessor} == null) {`);
                 lines.push(`${indent}    json.writeNull();`);
@@ -76,7 +76,7 @@ function generatePropertyCode(property: Property, indent: string, method?: Write
                 lines.push(`${indent}json.writeArrayEnd();`);
             }
             break;
-            
+
         case "nestedArray":
             if (property.isNullable) {
                 lines.push(`${indent}if (${accessor} == null) {`);
@@ -109,7 +109,7 @@ function generatePropertyCode(property: Property, indent: string, method?: Write
             }
             break;
     }
-    
+
     return lines;
 }
 
@@ -158,7 +158,7 @@ function generateJavaFromIR(ir: SerializerIR): string {
     for (const method of ir.writeMethods) {
         const shortName = method.paramType.split('.').pop()!;
         const className = method.paramType.includes('.') ? method.paramType : shortName;
-        
+
         javaOutput.push(`    private void ${method.name}(${className} obj) {`);
 
         if (method.isAbstractType) {
@@ -290,7 +290,7 @@ function generateJavaFromIR(ir: SerializerIR): string {
 async function main() {
     try {
         // Read the IR file
-        const irFile = path.resolve(__dirname, 'output', 'serializer-ir.json');
+        const irFile = path.resolve(__dirname, '../../output/serializer-ir.json');
         if (!fs.existsSync(irFile)) {
             console.error('Serializer IR not found. Run generate-serializer-ir.ts first.');
             process.exit(1);
@@ -304,15 +304,7 @@ async function main() {
         // Write the Java file
         const javaFile = path.resolve(
             __dirname,
-            '..',
-            'spine-libgdx',
-            'spine-libgdx-tests',
-            'src',
-            'com',
-            'esotericsoftware',
-            'spine',
-            'utils',
-            'SkeletonSerializer.java'
+            '../../../spine-libgdx/spine-libgdx-tests/src/com/esotericsoftware/spine/utils/SkeletonSerializer.java'
         );
 
         fs.mkdirSync(path.dirname(javaFile), { recursive: true });

@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
 
 	// Use SkeletonSerializer for JSON output
 	SkeletonSerializer serializer;
-	
+
 	// Print skeleton data
 	printf("=== SKELETON DATA ===\n");
 	printf("%s", serializer.serializeSkeletonData(skeletonData).buffer());

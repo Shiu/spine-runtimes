@@ -539,7 +539,7 @@ function analyzePropertyWithDetails(prop: PropertyInfo, propName: string, getter
 async function main() {
     try {
         // Read analysis result
-        const analysisFile = path.resolve(__dirname, '..', 'output', 'analysis-result.json');
+        const analysisFile = path.resolve(__dirname, '../../output/analysis-result.json');
         if (!fs.existsSync(analysisFile)) {
             console.error('Analysis result not found. Run analyze-java-api.ts first.');
             process.exit(1);
@@ -551,7 +551,7 @@ async function main() {
         const ir = generateSerializerIR(analysisData);
 
         // Write the IR file
-        const irFile = path.resolve(__dirname, 'output', 'serializer-ir.json');
+        const irFile = path.resolve(__dirname, '../../output/serializer-ir.json');
         fs.mkdirSync(path.dirname(irFile), { recursive: true });
         fs.writeFileSync(irFile, JSON.stringify(ir, null, 2));
 

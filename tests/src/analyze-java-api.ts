@@ -9,7 +9,7 @@ import type { Symbol, LspOutput, ClassInfo, PropertyInfo, AnalysisResult } from 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function ensureOutputDir(): string {
-    const outputDir = path.resolve(__dirname, '..', 'output');
+    const outputDir = path.resolve(__dirname, '../../output');
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
     }
@@ -64,7 +64,7 @@ function analyzeClasses(symbols: Symbol[]): Map<string, ClassInfo> {
 
     function processSymbol(symbol: Symbol, parentName?: string) {
         if (symbol.kind !== 'class' && symbol.kind !== 'enum' && symbol.kind !== 'interface') return;
-        
+
         // Filter: only process symbols in spine-libgdx/src, excluding SkeletonSerializer
         if (!symbol.file.startsWith(srcPath)) return;
         if (symbol.file.endsWith('SkeletonSerializer.java')) return;
@@ -83,24 +83,10 @@ function analyzeClasses(symbols: Symbol[]): Map<string, ClassInfo> {
             isEnum: symbol.kind === 'enum',
             typeParameters: symbol.typeParameters || []
         };
-        
-        // No need to parse superTypes from preview anymore - lsp-cli handles this properly now
 
         // Check if abstract class
         if (symbol.preview && symbol.preview.includes('abstract ')) {
             classInfo.isAbstract = true;
-        }
-
-        // Log type parameter information if available
-        if (symbol.typeParameters && symbol.typeParameters.length > 0) {
-            console.error(`Class ${className} has type parameters: ${symbol.typeParameters.join(', ')}`);
-        }
-        if (symbol.supertypes) {
-            for (const supertype of symbol.supertypes) {
-                if (supertype.typeArguments && supertype.typeArguments.length > 0) {
-                    console.error(`  extends ${supertype.name}<${supertype.typeArguments.join(', ')}>`);
-                }
-            }
         }
 
         // Find all getter methods, public fields, inner classes, and enum values
@@ -217,13 +203,13 @@ function findAccessibleTypes(
         }
 
         const classInfo = classMap.get(typeName)!;
-        
+
         // Add the type itself if it's concrete
         if (!classInfo.isAbstract && !classInfo.isInterface && !classInfo.isEnum) {
             accessible.add(typeName);
             console.error(`Added concrete type: ${typeName}`);
         }
-        
+
         // Find all concrete subclasses of this type
         const concreteClasses = findConcreteSubclasses(typeName);
         concreteClasses.forEach(c => accessible.add(c));
@@ -270,15 +256,6 @@ function findAccessibleTypes(
             const typeMatches = returnType.match(/\b([A-Z]\w+(?:\.[A-Z]\w+)*)\b/g);
             if (typeMatches) {
                 for (const match of typeMatches) {
-                    if (match === 'BoneLocal') {
-                        console.error(`Found BoneLocal in return type of ${typeName}`);
-                    }
-                    if (classMap.has(match) && !visited.has(match)) {
-                        toVisit.push(match);
-                        if (match === 'BoneLocal') {
-                            console.error(`Added BoneLocal to toVisit`);
-                        }
-                    }
                     // For non-qualified names, also try as inner class
                     if (!match.includes('.')) {
                         // Try as inner class of current type and its parents
@@ -306,23 +283,23 @@ function loadExclusions(): { types: Set<string>, methods: Map<string, Set<string
     const types = new Set<string>();
     const methods = new Map<string, Set<string>>();
     const fields = new Map<string, Set<string>>();
-    
+
     if (!fs.existsSync(exclusionsPath)) {
         return { types, methods, fields };
     }
-    
+
     const content = fs.readFileSync(exclusionsPath, 'utf-8');
     const lines = content.split('\n');
-    
+
     for (const line of lines) {
         const trimmed = line.trim();
         if (!trimmed || trimmed.startsWith('#')) continue;
-        
+
         const parts = trimmed.split(/\s+/);
         if (parts.length < 2) continue;
-        
+
         const [type, className, property] = parts;
-        
+
         switch (type) {
             case 'type':
                 types.add(className);
@@ -345,7 +322,7 @@ function loadExclusions(): { types: Set<string>, methods: Map<string, Set<string
                 break;
         }
     }
-    
+
     return { types, methods, fields };
 }
 
@@ -369,13 +346,13 @@ function getAllProperties(classMap: Map<string, ClassInfo>, className: string, s
 
     // Build type parameter mapping based on supertype details
     const typeParamMap = new Map<string, string>();
-    
+
     // Helper to build parameter mappings for a specific supertype
     function buildTypeParamMapping(currentClass: string, targetSupertype: string): Map<string, string> {
         const mapping = new Map<string, string>();
         const currentInfo = classMap.get(currentClass);
         if (!currentInfo || !currentInfo.superTypeDetails) return mapping;
-        
+
         // Find the matching supertype
         for (const supertype of currentInfo.superTypeDetails) {
             if (supertype.name === targetSupertype && supertype.typeArguments) {
@@ -437,13 +414,13 @@ function getAllProperties(classMap: Map<string, ClassInfo>, className: string, s
         for (const superType of classInfo.superTypes) {
             // Build type parameter mapping for this supertype
             const supertypeMapping = buildTypeParamMapping(currentClass, superType);
-            
+
             // Compose mappings - resolve type arguments through current mapping
             const composedMapping = new Map<string, string>();
             for (const [param, arg] of supertypeMapping) {
                 composedMapping.set(param, resolveType(arg, currentTypeMap));
             }
-            
+
             // Try to find the supertype - it might be unqualified
             let superClassInfo = classMap.get(superType);
 
@@ -548,7 +525,7 @@ function analyzeForSerialization(classMap: Map<string, ClassInfo>, symbolsFile: 
             // Get only concrete implementations
             const concreteImplementations = findAllImplementations(classMap, className, true);
             classInfo.concreteImplementations = concreteImplementations;
-            
+
             // Get all implementations (including intermediate abstract types)
             const allImplementations = findAllImplementations(classMap, className, false);
             classInfo.allImplementations = allImplementations;
@@ -619,7 +596,7 @@ function analyzeForSerialization(classMap: Map<string, ClassInfo>, symbolsFile: 
 
     // Load exclusions
     const exclusions = loadExclusions();
-    
+
     // Filter out excluded types from allTypesToGenerate
     const filteredTypesToGenerate = new Set<string>();
     for (const typeName of allTypesToGenerate) {
@@ -629,12 +606,12 @@ function analyzeForSerialization(classMap: Map<string, ClassInfo>, symbolsFile: 
             console.error(`Excluding type: ${typeName}`);
         }
     }
-    
-    
+
+
     // Update allTypesToGenerate to the filtered set
     allTypesToGenerate.clear();
     filteredTypesToGenerate.forEach(type => allTypesToGenerate.add(type));
-    
+
     // Collect all properties for each type (including inherited ones)
     const typeProperties = new Map<string, PropertyInfo[]>();
     for (const typeName of allTypesToGenerate) {
@@ -649,13 +626,13 @@ function analyzeForSerialization(classMap: Map<string, ClassInfo>, symbolsFile: 
             typeProperties.set(abstractType, props);
         }
     }
-    
+
     // Second pass: find additional concrete types referenced in properties
     const additionalTypes = new Set<string>();
     for (const [typeName, props] of typeProperties) {
         for (const prop of props) {
             const propType = prop.type.replace(/@Null\s+/g, '').trim();
-            
+
             // Check if it's a simple type name
             const typeMatch = propType.match(/^([A-Z]\w+)$/);
             if (typeMatch) {
@@ -672,7 +649,7 @@ function analyzeForSerialization(classMap: Map<string, ClassInfo>, symbolsFile: 
             }
         }
     }
-    
+
     // Add the additional types (filtered)
     additionalTypes.forEach(type => {
         if (!isTypeExcluded(type, exclusions)) {
@@ -681,7 +658,7 @@ function analyzeForSerialization(classMap: Map<string, ClassInfo>, symbolsFile: 
             console.error(`Excluding additional type: ${type}`);
         }
     });
-    
+
     // Get properties for the additional types too
     for (const typeName of additionalTypes) {
         if (!isTypeExcluded(typeName, exclusions)) {

@@ -1,142 +1,128 @@
-# Spine Runtimes Test Suite
+# Spine Runtimes Snapshot Testing
 
-This test suite is designed to ensure consistency across all Spine runtime implementations by comparing their outputs against the reference implementation (spine-libgdx).
+This test suite implements snapshot testing to ensure all Spine runtime implementations produce identical outputs to the Java reference implementation (spine-libgdx).
 
-## Purpose
+## Why Snapshot Testing?
 
-Unlike traditional unit tests, this test suite:
-- Loads skeleton data and animations in each runtime
-- Outputs all internal state in a consistent, diffable text format
-- Compares outputs between runtimes to detect discrepancies
-- Helps maintain consistency when porting changes from the reference implementation
+When porting the Spine runtime to different languages, subtle bugs can be introduced - a constraint might be calculated incorrectly, the order of operations might have been ported incorrectly, or a default value might differ. Traditional unit tests can't catch all these discrepancies.
 
-## HeadlessTest Locations
+We use snapshot testing to solve this. Each runtime serializes its entire object graph to a standardized format, allowing byte-for-byte comparison between the reference implementation and ports. If outputs differ, we know exactly where the port diverged from the reference.
 
-Each runtime has a HeadlessTest program that outputs skeleton data in a standardized format:
+## The Challenge: Automatic Serializer Generation
 
-- **Java (Reference)**: `spine-libgdx/spine-libgdx-tests/src/com/esotericsoftware/spine/HeadlessTest.java`
-- **C++**: `spine-cpp/tests/HeadlessTest.cpp`
-- **C**: `spine-c/tests/headless-test.c`
-- **TypeScript**: `spine-ts/spine-core/tests/HeadlessTest.ts`
+To serialize the complete object graph, we need serializers that output every field and getter from every type in the runtime. Writing these by hand is:
+- Tedious and error-prone
+- Likely to miss fields or getters
+- Difficult to maintain as the API evolves
 
-## Running Individual HeadlessTests
+We thus implement **automatic serializer generation** using API analysis and code generation.
 
-### Java (spine-libgdx)
+## How It Works
+
+### 1. API Analysis and core generation
+We use [`lsp-cli`](https://github.com/badlogic/lsp-cli) to analyze the Java reference implementation:
 ```bash
-cd spine-libgdx
-./gradlew :spine-libgdx-tests:runHeadlessTest -Pargs="<skeleton-path> <atlas-path> [animation-name]"
-
-# Example with spineboy:
-./gradlew :spine-libgdx-tests:runHeadlessTest -Pargs="../examples/spineboy/export/spineboy-pro.json ../examples/spineboy/export/spineboy.atlas walk"
+./generate-serializers.sh
 ```
 
-### C++ (spine-cpp)
-```bash
-cd spine-cpp
-./build.sh  # Build if needed
-./build/headless-test <skeleton-path> <atlas-path> [animation-name]
+This process:
+1. **Analyzes Java API** (`analyze-java-api.ts`): Uses Language Server Protocol to discover all types, fields, and getters in spine-libgdx (`tests/output/spine-libgdx-symbols.json`)
+2. **Generates IR** (`generate-serializer-ir.ts`): Creates an enriched Intermediate Representation with all serialization metadata (`tests/output/analysis-result.json`)
+3. **Generates Serializers**: Language-specific generators create serializers from the IR:
+   - `generate-java-serializer.ts` → `spine-libgdx/spine-libgdx-tests/src/com/esotericsoftware/spine/utils/SkeletonSerializer.java`
+   - `generate-cpp-serializer.ts` → `spine-cpp/tests/SkeletonSerializer.h`
+   - C, C#, Dart, Haxe, Swift and TypeScript TBD
 
-# Example with spineboy:
-./build/headless-test ../examples/spineboy/export/spineboy-pro.json ../examples/spineboy/export/spineboy.atlas walk
+The IR contains everything needed to generate identical serializers across languages:
+- Type hierarchies and inheritance chains
+- All properties (fields and getters) per type
+- Enum value mappings
+- Abstract type handling with instanceof chains
+- Property categorization (primitive, object, array, enum)
+
+### 2. Snapshot Testing
+
+Each runtime has a `HeadlessTest` that:
+1. **Loads** a skeleton file and atlas
+2. **Creates** a SkeletonData structure and serializes it
+3. **Constructs** a Skeleton and AnimationState from the SkeletonData
+4. **Applies** an animation (if specified)
+5. **Serializes** the resulting Skeleton and AnimationState
+
+Run tests with:
+```bash
+# Test any runtime
+./test.sh <language> <skeleton-path> <atlas-path> [animation-name]
+
+# Compare Java vs C++ for spineboy's walk animation
+./test.sh java ../examples/spineboy/export/spineboy-pro.skel ../examples/spineboy/export/spineboy-pma.atlas walk > java-output.json
+./test.sh cpp ../examples/spineboy/export/spineboy-pro.skel ../examples/spineboy/export/spineboy-pma.atlas walk > cpp-output.json
+diff java-output.json cpp-output.json
 ```
 
-### C (spine-c)
-```bash
-cd spine-c
-./build.sh  # Build if needed
-./build/headless-test <skeleton-path> <atlas-path> [animation-name]
+Languages: `java`, `cpp`, `c`, `ts`
 
-# Example with spineboy:
-./build/headless-test ../examples/spineboy/export/spineboy-pro.json ../examples/spineboy/export/spineboy.atlas walk
-```
+## Debugging Port Failures
 
-### TypeScript (spine-ts)
-```bash
-cd spine-ts/spine-core
-npx tsx tests/HeadlessTest.ts <skeleton-path> <atlas-path> [animation-name]
+When outputs differ, you can pinpoint the exact issue:
 
-# Example with spineboy:
-npx tsx tests/HeadlessTest.ts ../../examples/spineboy/export/spineboy-pro.json ../../examples/spineboy/export/spineboy.atlas walk
-```
+2. **Value differences**: Different calculations or default values
+3. **Animation differences**: Issues in constraint evaluation or animation mixing
 
-## Running the Comparison Test
-
-The main test runner compares all runtime outputs automatically:
-
-```bash
-./tests/headless-test-runner.ts <skeleton-path> <atlas-path> [animation-name]
-```
-
-This script will:
-1. Check if each runtime's HeadlessTest needs rebuilding
-2. Build any out-of-date HeadlessTests
-3. Run each HeadlessTest with the same inputs
-4. Compare outputs and report any differences
-5. Save individual outputs to `tests/output/` for manual inspection
-
-### Example Usage
-
-```bash
-# Test with spineboy walk animation
-./tests/headless-test-runner.ts \
-    examples/spineboy/export/spineboy-pro.json \
-    examples/spineboy/export/spineboy-pma.atlas \
-    walk
-
-# Test without animation (setup pose only)
-./tests/headless-test-runner.ts \
-    examples/spineboy/export/spineboy-pro.json \
-    examples/spineboy/export/spineboy-pma.atlas
-```
+Example: If a transform constraint is ported incorrectly, the skeleton state after animation will differ, showing exactly which bones have wrong transforms. This is a starting point for debugging.
 
 ## Output Format
 
-Each HeadlessTest outputs:
-- **SKELETON DATA**: Static setup pose data (bones, slots, skins, animations metadata)
-- **SKELETON STATE**: Runtime state after applying animations
-- **ANIMATION STATE**: Current animation state with tracks and mixing information
+The serializers produce consistent JSON with:
+- All object properties in deterministic order
+- Floats formatted to 6 decimal places
+- Enums as strings
+- Circular references marked as `"<circular>"`
+- Type information for every object
 
-The output uses consistent JSON formatting:
-- Hierarchical structure with 2-space indentation
-- Float values formatted to 6 decimal places
-- Strings quoted, nulls explicitly shown
-- Locale-independent number formatting (always uses `.` for decimals)
-- Circular references marked as `"<circular>"` to prevent infinite recursion
-- Each object includes a `"type"` field for easy identification
-
-## Development Tools
-
-### API Analyzer (Java)
-Analyzes the spine-libgdx API to discover all types and their properties:
-```bash
-cd tests
-npx tsx analyze-java-api.ts
-# Output: output/analysis-result.json
+Example output structure:
+```
+=== SKELETON DATA ===
+{
+  "type": "SkeletonData",
+  "bones": [...],
+  "slots": [...],
+  ...
+}
+=== SKELETON STATE ===
+{
+  "type": "Skeleton",
+  "bones": [...],
+  "slots": [...],
+  ...
+}
+=== ANIMATION STATE ===
+{
+  "type": "AnimationState",
+  "tracks": [...],
+  ...
+}
 ```
 
-### Serializer Generator (Java)
-Generates SkeletonSerializer.java from the analysis:
-```bash
-cd tests
-npx tsx generate-java-serializer.ts
-# Output: ../spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/utils/SkeletonSerializer.java
+## Project Structure
+
+```
+tests/
+├── src/                          # TypeScript source files
+│   ├── headless-test-runner.ts   # Main test runner
+│   ├── analyze-java-api.ts       # Java API analyzer
+│   ├── generate-serializer-ir.ts # IR generator
+│   ├── generate-java-serializer.ts # Java serializer generator
+│   ├── generate-cpp-serializer.ts  # C++ serializer generator
+│   └── types.ts                  # Shared TypeScript types
+├── test.sh                       # Main test script
+├── generate-serializers.sh       # Regenerate all serializers
+└── output/                       # Generated files (gitignored)
 ```
 
-### Claude Prompt Generator
-Generates a prompt for Claude to help port the serializer to other runtimes:
-```bash
-cd tests
-npx tsx generate-claude-prompt.ts
-# Output: output/port-serializer-prompt.txt
-```
+## HeadlessTest Locations
 
-## Troubleshooting
-
-If outputs differ between runtimes:
-1. Check `tests/output/` for the full outputs from each runtime
-2. Use a diff tool to compare the files
-3. Common issues:
-   - Number formatting differences (should be fixed by locale settings)
-   - Missing or extra fields in data structures
-   - Different default values
-   - Rounding differences
+- **Java**: `spine-libgdx/spine-libgdx-tests/src/com/esotericsoftware/spine/HeadlessTest.java`
+- **C++**: `spine-cpp/tests/HeadlessTest.cpp`
+- **C**: `spine-c/tests/headless-test.c`
+- **TypeScript**: `spine-ts/spine-core/tests/HeadlessTest.ts`
