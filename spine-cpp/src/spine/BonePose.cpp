@@ -122,25 +122,24 @@ void BonePose::updateWorldTransform(Skeleton &skeleton) {
 		}
 		case Inherit_NoScale:
 		case Inherit_NoScaleOrReflection: {
-			float rot = _rotation * MathUtil::Deg_Rad;
-			float cosRot = MathUtil::cos(rot), sinRot = MathUtil::sin(rot);
-			float za = (pa * cosRot + pb * sinRot) / skeleton.getScaleX();
-			float zc = (pc * cosRot + pd * sinRot) / skeleton.getScaleY();
+			float r = _rotation * MathUtil::Deg_Rad, cosR = MathUtil::cos(r), sinR = MathUtil::sin(r);
+			float za = (pa * cosR + pb * sinR) / skeleton.getScaleX();
+			float zc = (pc * cosR + pd * sinR) / skeleton.getScaleY();
 			float s = MathUtil::sqrt(za * za + zc * zc);
 			if (s > 0.00001f) s = 1 / s;
 			za *= s;
 			zc *= s;
 			s = MathUtil::sqrt(za * za + zc * zc);
 			if (_inherit == Inherit_NoScale && (pa * pd - pb * pc < 0) != (skeleton.getScaleX() < 0 != skeleton.getScaleY() < 0)) s = -s;
-			rot = MathUtil::Pi / 2 + MathUtil::atan2(zc, za);
-			float zb = MathUtil::cos(rot) * s;
-			float zd = MathUtil::sin(rot) * s;
-			float _shearXRad = _shearX * MathUtil::Deg_Rad;
-			float _shearYRad = (90 + _shearY) * MathUtil::Deg_Rad;
-			float la = MathUtil::cos(_shearXRad) * _scaleX;
-			float lb = MathUtil::cos(_shearYRad) * _scaleY;
-			float lc = MathUtil::sin(_shearXRad) * _scaleX;
-			float ld = MathUtil::sin(_shearYRad) * _scaleY;
+			r = MathUtil::Pi / 2 + MathUtil::atan2(zc, za);
+			float zb = MathUtil::cos(r) * s;
+			float zd = MathUtil::sin(r) * s;
+			float rx = _shearX * MathUtil::Deg_Rad;
+			float ry = (90 + _shearY) * MathUtil::Deg_Rad;
+			float la = MathUtil::cos(rx) * _scaleX;
+			float lb = MathUtil::cos(ry) * _scaleY;
+			float lc = MathUtil::sin(rx) * _scaleX;
+			float ld = MathUtil::sin(ry) * _scaleY;
 			_a = za * la + zb * lc;
 			_b = za * lb + zb * ld;
 			_c = zc * la + zd * lc;
