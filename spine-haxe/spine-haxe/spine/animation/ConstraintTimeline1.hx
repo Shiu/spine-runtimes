@@ -25,19 +25,19 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
 abstract class ConstraintTimeline1 extends CurveTimeline1 implements ConstraintTimeline {
 	public final constraintIndex:Int;
 
-	public function new (frameCount:Int, bezierCount:Int, constraintIndex:Int, property:Property) {
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int, property:Property) {
 		super(frameCount, bezierCount, property + "|" + constraintIndex);
 		this.constraintIndex = constraintIndex;
 	}
 
-	public function getConstraintIndex () {
+	public function getConstraintIndex() {
 		return constraintIndex;
 	}
 }

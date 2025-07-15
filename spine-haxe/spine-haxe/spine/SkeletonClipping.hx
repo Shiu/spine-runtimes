@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -48,9 +48,11 @@ class SkeletonClipping {
 	public function new() {}
 
 	public function clipStart(skeleton:Skeleton, slot:Slot, clip:ClippingAttachment):Int {
-		if (clipAttachment != null) return 0;
+		if (clipAttachment != null)
+			return 0;
 		var n = clip.worldVerticesLength;
-		if (n < 6) return 0;
+		if (n < 6)
+			return 0;
 		clipAttachment = clip;
 
 		clippingPolygon.resize(n);
@@ -66,7 +68,8 @@ class SkeletonClipping {
 	}
 
 	public function clipEnd(?slot:Slot):Void {
-		if (clipAttachment == null || (slot != null && clipAttachment.endSlot != slot.data)) return;
+		if (clipAttachment == null || (slot != null && clipAttachment.endSlot != slot.data))
+			return;
 		clipAttachment = null;
 		clippingPolygons = null;
 		clippedVertices.resize(0);
@@ -203,7 +206,8 @@ class SkeletonClipping {
 
 					var ii:Int = 0;
 					while (ii < clipOutputLength) {
-						var x = clipOutputItems[ii], y = clipOutputItems[ii + 1];
+						var x = clipOutputItems[ii],
+							y = clipOutputItems[ii + 1];
 						clippedVerticesItems[s] = x;
 						clippedVerticesItems[s + 1] = y;
 						var c0 = x - x3, c1 = y - y3;

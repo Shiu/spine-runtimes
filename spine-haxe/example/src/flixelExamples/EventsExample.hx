@@ -25,10 +25,9 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package flixelExamples;
-
 
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
@@ -76,9 +75,7 @@ class EventsExample extends FlxState {
 		skeletonSprite.skeleton.setupPoseBones();
 		add(skeletonSprite);
 
-		trackEntry.onEvent.add(
-			(entry, event) -> log('Custom event for ${entry.animation.name}: ${event.data.name}'));
-
+		trackEntry.onEvent.add((entry, event) -> log('Custom event for ${entry.animation.name}: ${event.data.name}'));
 
 		add(textContainer);
 		super.create();
@@ -88,6 +85,7 @@ class EventsExample extends FlxState {
 	private var logs = new Array<FlxText>();
 	private var logsNumber = 0;
 	private var yOffset = 12;
+
 	private function log(text:String) {
 		var length = logs.length;
 		var newLog = new FlxText(250, 30, text);

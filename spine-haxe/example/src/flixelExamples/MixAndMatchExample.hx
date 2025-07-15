@@ -25,10 +25,9 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package flixelExamples;
-
 
 import spine.Skin;
 import flixel.ui.FlxButton;
@@ -43,9 +42,10 @@ import spine.atlas.TextureAtlas;
 
 class MixAndMatchExample extends FlxState {
 	var loadBinary = false;
-	// var loadBinary = true;
 
+	// var loadBinary = true;
 	var skeletonSprite:SkeletonSprite;
+
 	override public function create():Void {
 		FlxG.cameras.bgColor = 0xffa1b2b0;
 
@@ -54,7 +54,8 @@ class MixAndMatchExample extends FlxState {
 		add(button);
 
 		var atlas = new TextureAtlas(Assets.getText("assets/mix-and-match.atlas"), new FlixelTextureLoader("assets/mix-and-match.atlas"));
-		var data = SkeletonData.from(loadBinary ? Assets.getBytes("assets/mix-and-match-pro.skel") : Assets.getText("assets/mix-and-match-pro.json"), atlas, .5);
+		var data = SkeletonData.from(loadBinary ? Assets.getBytes("assets/mix-and-match-pro.skel") : Assets.getText("assets/mix-and-match-pro.json"), atlas,
+			.5);
 		var animationStateData = new AnimationStateData(data);
 		animationStateData.defaultMix = 0.25;
 
@@ -80,5 +81,4 @@ class MixAndMatchExample extends FlxState {
 
 		super.create();
 	}
-
 }

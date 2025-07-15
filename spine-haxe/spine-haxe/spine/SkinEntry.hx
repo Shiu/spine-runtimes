@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -34,8 +34,10 @@ import spine.attachments.Attachment;
 /** Stores an entry in the skin consisting of the slot index and the attachment name. */
 class SkinEntry {
 	public var slotIndex:Int = 0;
+
 	/** The name the attachment is associated with, equivalent to the skin placeholder name in the Spine editor. */
 	public var name:String;
+
 	public var attachment:Attachment;
 
 	public function new(slotIndex:Int, name:String, attachment:Attachment) {

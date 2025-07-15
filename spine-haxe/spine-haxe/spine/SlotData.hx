@@ -25,13 +25,12 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
 /** Stores the setup pose for a spine.Slot. */
 class SlotData extends PosedData<SlotPose> {
-
 	/** The index of the slot in spine.Skeleton.getSlots(). */
 	public final index:Int;
 
@@ -45,13 +44,16 @@ class SlotData extends PosedData<SlotPose> {
 	public var blendMode:BlendMode = BlendMode.normal;
 
 	// Nonessential.
+
 	/** False if the slot was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
 	public var visible:Bool = true;
 
 	public function new(index:Int, name:String, boneData:BoneData) {
 		super(name, new SlotPose());
-		if (index < 0) throw new SpineException("index must be >= 0.");
-		if (boneData == null) throw new SpineException("boneData cannot be null.");
+		if (index < 0)
+			throw new SpineException("index must be >= 0.");
+		if (boneData == null)
+			throw new SpineException("boneData cannot be null.");
 		this.index = index;
 		this.boneData = boneData;
 	}

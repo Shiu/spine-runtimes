@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -45,7 +45,7 @@ class InheritTimeline extends Timeline implements BoneTimeline {
 		this.boneIndex = boneIndex;
 	}
 
-	public function getBoneIndex () {
+	public function getBoneIndex() {
 		return boneIndex;
 	}
 
@@ -56,27 +56,29 @@ class InheritTimeline extends Timeline implements BoneTimeline {
 	/** Sets the transform mode for the specified frame.
 	 * @param frame Between 0 and frameCount, inclusive.
 	 * @param time The frame time in seconds. */
-	public function setFrame(frame:Int, time:Float, inherit: Inherit):Void {
+	public function setFrame(frame:Int, time:Float, inherit:Inherit):Void {
 		frame *= ENTRIES;
 		frames[frame] = time;
 		frames[frame + INHERIT] = inherit.ordinal;
 	}
 
-	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
-		blend:MixBlend, direction:MixDirection, appliedPose:Bool):Void {
-
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+			appliedPose:Bool):Void {
 		var bone:Bone = skeleton.bones[boneIndex];
-		if (!bone.active) return;
+		if (!bone.active)
+			return;
 		var pose = appliedPose ? bone.applied : bone.pose;
 
 		if (direction == MixDirection.mixOut) {
-			if (blend == MixBlend.setup) pose.inherit = bone.data.setup.inherit;
+			if (blend == MixBlend.setup)
+				pose.inherit = bone.data.setup.inherit;
 			return;
 		}
 
 		var frames:Array<Float> = frames;
 		if (time < frames[0]) {
-			if (blend == MixBlend.setup || blend == MixBlend.first) pose.inherit = bone.data.setup.inherit;
+			if (blend == MixBlend.setup || blend == MixBlend.first)
+				pose.inherit = bone.data.setup.inherit;
 		} else
 			pose.inherit = Inherit.values[Std.int(frames[Timeline.search(frames, time, ENTRIES) + INHERIT])];
 	}

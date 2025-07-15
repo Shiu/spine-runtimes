@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -91,6 +91,7 @@ class SkeletonData {
 	public var hash:String;
 
 	// Nonessential.
+
 	/** The dopesheet FPS in Spine, or zero if nonessential data was not exported. */
 	public var fps:Float = 0;
 
@@ -123,9 +124,11 @@ class SkeletonData {
 	 * @param boneName The name of the bone to find.
 	 * @return May be null. */
 	public function findBone(boneName:String):BoneData {
-		if (boneName == null) throw new SpineException("boneName cannot be null.");
+		if (boneName == null)
+			throw new SpineException("boneName cannot be null.");
 		for (bone in bones)
-			if (bone.name == boneName) return bone;
+			if (bone.name == boneName)
+				return bone;
 		return null;
 	}
 
@@ -149,9 +152,11 @@ class SkeletonData {
 	 * @param slotName The name of the slot to find.
 	 * @return May be null. */
 	public function findSlot(slotName:String):SlotData {
-		if (slotName == null) throw new SpineException("slotName cannot be null.");
+		if (slotName == null)
+			throw new SpineException("slotName cannot be null.");
 		for (slot in slots)
-			if (slot.name == slotName) return slot;
+			if (slot.name == slotName)
+				return slot;
 		return null;
 	}
 
@@ -162,9 +167,11 @@ class SkeletonData {
 	 * @param skinName The name of the skin to find.
 	 * @return May be null. */
 	public function findSkin(skinName:String):Skin {
-		if (skinName == null) throw new SpineException("skinName cannot be null.");
+		if (skinName == null)
+			throw new SpineException("skinName cannot be null.");
 		for (skin in skins)
-			if (skin.name == skinName) return skin;
+			if (skin.name == skinName)
+				return skin;
 		return null;
 	}
 
@@ -175,9 +182,11 @@ class SkeletonData {
 	 * @param eventName The name of the event to find.
 	 * @return May be null. */
 	public function findEvent(eventName:String):EventData {
-		if (eventName == null) throw new SpineException("eventName cannot be null.");
+		if (eventName == null)
+			throw new SpineException("eventName cannot be null.");
 		for (eventData in events)
-			if (eventData.name == eventName) return eventData;
+			if (eventData.name == eventName)
+				return eventData;
 		return null;
 	}
 
@@ -188,17 +197,21 @@ class SkeletonData {
 	 * @param animationName The name of the animation to find.
 	 * @return May be null. */
 	public function findAnimation(animationName:String):Animation {
-		if (animationName == null) throw new SpineException("animationName cannot be null.");
+		if (animationName == null)
+			throw new SpineException("animationName cannot be null.");
 		for (animation in animations)
-			if (animation.name == animationName) return animation;
+			if (animation.name == animationName)
+				return animation;
 		return null;
 	}
 
 	// --- Constraints.
 
 	public function findConstraint<T:ConstraintData<Dynamic, Dynamic>>(constraintName:String, type:Class<T>):T {
-		if (constraintName == null) throw new SpineException("constraintName cannot be null.");
-		if (type == null) throw new SpineException("type cannot be null.");
+		if (constraintName == null)
+			throw new SpineException("constraintName cannot be null.");
+		if (type == null)
+			throw new SpineException("type cannot be null.");
 
 		for (constraint in constraints) {
 			if (Std.isOfType(constraint, type) && constraint.name == constraintName)

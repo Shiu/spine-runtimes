@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package starlingExamples;
 
@@ -57,10 +57,9 @@ class SnowglobeExample extends Scene {
 		skeletonSprite.skeleton.updateWorldTransform(Physics.update);
 		var bounds = skeletonSprite.skeleton.getBounds();
 
-
 		skeletonSprite.scale = 0.15;
 		skeletonSprite.x = Starling.current.stage.stageWidth / 2;
-		skeletonSprite.y = Starling.current.stage.stageHeight/ 1.5;
+		skeletonSprite.y = Starling.current.stage.stageHeight / 1.5;
 
 		skeletonSprite.state.setAnimationByName(0, "shake", true);
 

@@ -25,13 +25,12 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
 /** Stores a bone's local pose. */
 class BoneLocal implements Pose<BoneLocal> {
-
 	/** The local x translation. */
 	public var x:Float = 0;
 
@@ -55,17 +54,19 @@ class BoneLocal implements Pose<BoneLocal> {
 
 	/** Determines how parent world transforms affect this bone. */
 	public var inherit(default, set):Inherit;
-	function set_inherit (value:Inherit):Inherit {
-		if (value == null) throw new SpineException("inherit cannot be null.");
+
+	function set_inherit(value:Inherit):Inherit {
+		if (value == null)
+			throw new SpineException("inherit cannot be null.");
 		inherit = value;
 		return value;
 	}
 
-	public function new () {
-	}
+	public function new() {}
 
-	public function set (pose:BoneLocal):Void {
-		if (pose == null) throw new SpineException("pose cannot be null.");
+	public function set(pose:BoneLocal):Void {
+		if (pose == null)
+			throw new SpineException("pose cannot be null.");
 		x = pose.x;
 		y = pose.y;
 		rotation = pose.rotation;
@@ -75,5 +76,4 @@ class BoneLocal implements Pose<BoneLocal> {
 		shearY = pose.shearY;
 		inherit = pose.inherit;
 	}
-
 }

@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -35,7 +35,6 @@ package spine;
  * @see https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide
  */
 class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> {
-
 	/** The bone constrained by this physics constraint. */
 	public var bone:BonePose = null;
 
@@ -62,9 +61,10 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 	public var remaining = 0.;
 	public var lastTime = 0.;
 
-	public function new(data: PhysicsConstraintData, skeleton: Skeleton) {
+	public function new(data:PhysicsConstraintData, skeleton:Skeleton) {
 		super(data, new PhysicsConstraintPose(), new PhysicsConstraintPose());
-		if (skeleton == null) throw new SpineException("skeleton cannot be null.");
+		if (skeleton == null)
+			throw new SpineException("skeleton cannot be null.");
 
 		bone = skeleton.bones[data.bone.index].constrained;
 	}
@@ -75,7 +75,7 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 		return copy;
 	}
 
-	public function reset (skeleton:Skeleton) {
+	public function reset(skeleton:Skeleton) {
 		remaining = 0;
 		lastTime = skeleton.time;
 		_reset = true;
@@ -95,7 +95,7 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 
 	/** Translates the physics constraint so next update(Physics) forces are applied as if the bone moved an additional
 	 * amount in world space. */
-	 public function translate (x:Float, y:Float):Void {
+	public function translate(x:Float, y:Float):Void {
 		ux -= x;
 		uy -= y;
 		cx -= x;
@@ -104,8 +104,10 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 
 	/** Rotates the physics constraint so next update(Physics) forces are applied as if the bone rotated around the
 	 * specified point in world space. */
-	public function rotate (x:Float, y:Float, degrees:Float):Void {
-		var r = degrees * MathUtils.degRad, cos = Math.cos(r), sin = Math.sin(r);
+	public function rotate(x:Float, y:Float, degrees:Float):Void {
+		var r = degrees * MathUtils.degRad,
+			cos = Math.cos(r),
+			sin = Math.sin(r);
 		var dx = cx - x, dy = cy - y;
 		translate(dx * cos - dy * sin - dx, dx * sin + dy * cos - dy);
 	}
@@ -114,16 +116,21 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 	public function update(skeleton:Skeleton, physics:Physics):Void {
 		var p = applied;
 		var mix = p.mix;
-		if (mix == 0) return;
+		if (mix == 0)
+			return;
 
-		var x = data.x > 0, y = data.y > 0, rotateOrShearX = data.rotate > 0 || data.shearX > 0, scaleX = data.scaleX > 0;
+		var x = data.x > 0,
+			y = data.y > 0,
+			rotateOrShearX = data.rotate > 0 || data.shearX > 0,
+			scaleX = data.scaleX > 0;
 		var l = bone.bone.data.length, t = data.step, z = 0.;
 
 		switch (physics) {
 			case Physics.none:
 				return;
 			case Physics.reset, Physics.update:
-				if (physics == Physics.reset) reset(skeleton);
+				if (physics == Physics.reset)
+					reset(skeleton);
 
 				var delta = Math.max(skeleton.time - lastTime, 0), aa = remaining;
 				remaining += delta;
@@ -135,8 +142,8 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 					ux = bx;
 					uy = by;
 				} else {
-					var a = remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1., m = 0., e = 0., ax = 0., ay = 0.,
-						qx = data.limit * delta, qy = qx * Math.abs(skeleton.scaleY);
+					var a = remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1., m = 0., e = 0., ax = 0., ay = 0., qx = data.limit * delta,
+						qy = qx * Math.abs(skeleton.scaleY);
 					qx *= Math.abs(skeleton.scaleX);
 					if (x || y) {
 						if (x) {
@@ -174,8 +181,10 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 							yLag = yOffset - ys;
 						}
 						z = Math.max(0, 1 - a / t);
-						if (x) bone.worldX += (xOffset - xLag * z) * mix * data.x;
-						if (y) bone.worldY += (yOffset - yLag * z) * mix * data.y;
+						if (x)
+							bone.worldX += (xOffset - xLag * z) * mix * data.x;
+						if (y)
+							bone.worldY += (yOffset - yLag * z) * mix * data.y;
 					}
 					if (rotateOrShearX || scaleX) {
 						var ca = Math.atan2(bone.c, bone.a), c = 0., s = 0., mr = 0., dx = cx - bone.worldX, dy = cy - bone.worldY;
@@ -198,20 +207,23 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 							s = Math.sin(r);
 							if (scaleX) {
 								r = l * bone.worldScaleX;
-								if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
+								if (r > 0)
+									scaleOffset += (dx * c + dy * s) * i / r;
 							}
 						} else {
 							c = Math.cos(ca);
 							s = Math.sin(ca);
 							var r = l * bone.worldScaleX - scaleLag * Math.max(0, 1 - aa / t);
-							if (r > 0) scaleOffset += (dx * c + dy * s) * i / r;
+							if (r > 0)
+								scaleOffset += (dx * c + dy * s) * i / r;
 						}
 						if (a >= t) {
 							if (d == -1) {
 								d = Math.pow(p.damping, 60 * t);
 								m = t * p.massInverse;
 								e = p.strength;
-								var w = f * p.wind, g = f * p.gravity * Bone.yDir;
+								var w = f * p.wind,
+									g = f * p.gravity * Bone.yDir;
 								ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
 								ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.scaleY;
 							}
@@ -227,7 +239,8 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 									rotateVelocity -= ((ax * s + ay * c) * h + rotateOffset * e) * m;
 									rotateOffset += rotateVelocity * t;
 									rotateVelocity *= d;
-									if (a < t) break;
+									if (a < t)
+										break;
 									var r:Float = rotateOffset * mr + ca;
 									c = Math.cos(r);
 									s = Math.sin(r);
@@ -245,8 +258,10 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 				cy = bone.worldY;
 			case Physics.pose:
 				z = Math.max(0, 1 - remaining / t);
-				if (x) bone.worldX += (xOffset - xLag * z) * mix * data.x;
-				if (y) bone.worldY += (yOffset - yLag * z) * mix * data.y;
+				if (x)
+					bone.worldX += (xOffset - xLag * z) * mix * data.x;
+				if (y)
+					bone.worldY += (yOffset - yLag * z) * mix * data.y;
 		}
 
 		if (rotateOrShearX) {
@@ -291,7 +306,7 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 		bone.modifyWorld(skeleton._update);
 	}
 
-	public function sort (skeleton: Skeleton) {
+	public function sort(skeleton:Skeleton) {
 		var bone = bone.bone;
 		skeleton.sortBone(bone);
 		skeleton._updateCache.push(this);
@@ -299,7 +314,7 @@ class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsConstraintD
 		skeleton.constrained(bone);
 	}
 
-	override public function isSourceActive () {
+	override public function isSourceActive() {
 		return bone.bone.active;
 	}
 }

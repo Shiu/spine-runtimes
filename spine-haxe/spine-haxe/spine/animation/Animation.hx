@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -36,12 +36,11 @@ import spine.Skeleton;
 
 /** Stores a list of timelines to animate a skeleton's pose over time. */
 class Animation {
-
 	/** The animation's name, which is unique across all animations in the skeleton. */
 	public final name:String;
 
 	/** The duration of the animation in seconds, which is usually the highest time of all frames in the timeline. The duration is
-	* used to know when it has completed and when it should loop back to the start. */
+	 * used to know when it has completed and when it should loop back to the start. */
 	public var duration:Float = 0;
 
 	public var timelines:Array<Timeline>;
@@ -49,7 +48,8 @@ class Animation {
 	public final bones:Array<Int>;
 
 	public function new(name:String, timelines:Array<Timeline>, duration:Float) {
-		if (name == null) throw new SpineException("name cannot be null.");
+		if (name == null)
+			throw new SpineException("name cannot be null.");
 		this.name = name;
 		this.duration = duration;
 		var n = timelines.length << 1;
@@ -59,7 +59,8 @@ class Animation {
 	}
 
 	public function setTimelines(timelines:Array<Timeline>) {
-		if (timelines == null) throw new SpineException("timelines cannot be null.");
+		if (timelines == null)
+			throw new SpineException("timelines cannot be null.");
 		this.timelines = timelines;
 
 		timelineIds.clear();
@@ -67,7 +68,8 @@ class Animation {
 		var boneSet = new IntMap<Bool>();
 		for (timeline in timelines) {
 			var ids:Array<String> = timeline.propertyIds;
-			for (id in ids) timelineIds.set(id, true);
+			for (id in ids)
+				timelineIds.set(id, true);
 			if (Std.isOfType(timeline, BoneTimeline)) {
 				var boneTimeline = cast(timeline, BoneTimeline);
 				var boneIndex = boneTimeline.getBoneIndex();
@@ -108,13 +110,15 @@ class Animation {
 	 * @param blend Controls how mixing is applied when alpha < 1.
 	 * @param direction Indicates whether the timelines are mixing in or out. Used by timelines which perform instant transitions,
 	 *           such as DrawOrderTimeline or AttachmentTimeline. */
-	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, loop:Bool, events:Array<Event>, alpha:Float, blend:MixBlend,
-			direction:MixDirection, appliedPose:Bool):Void {
-		if (skeleton == null) throw new SpineException("skeleton cannot be null.");
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, loop:Bool, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+			appliedPose:Bool):Void {
+		if (skeleton == null)
+			throw new SpineException("skeleton cannot be null.");
 
 		if (loop && duration != 0) {
 			time %= duration;
-			if (lastTime > 0) lastTime %= duration;
+			if (lastTime > 0)
+				lastTime %= duration;
 		}
 
 		for (timeline in timelines) {

@@ -25,14 +25,13 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
 /** The applied pose for a bone. This is the {@link Bone} pose with constraints applied and the world transform computed by
  * Skeleton.updateWorldTransform(Physics). */
 class BonePose extends BoneLocal implements Update {
-
 	public var bone:Bone;
 
 	/** Part of the world transform matrix for the X axis. If changed, updateAppliedTransform() should be called. */
@@ -61,14 +60,15 @@ class BonePose extends BoneLocal implements Update {
 	// }
 
 	/** Called by Skeleton.updateCache() to compute the world transform, if needed. */
-	public function update (skeleton:Skeleton, physics:Physics):Void {
-		if (world != skeleton._update) updateWorldTransform(skeleton);
+	public function update(skeleton:Skeleton, physics:Physics):Void {
+		if (world != skeleton._update)
+			updateWorldTransform(skeleton);
 	}
 
 	/** Computes the world transform using the parent bone's applied pose and this pose. Child bones are not updated.
-	*
-	* @see https://esotericsoftware.com/spine-runtime-skeletons#World-transforms World transforms in the Spine Runtimes Guide
-	*/
+	 *
+	 * @see https://esotericsoftware.com/spine-runtime-skeletons#World-transforms World transforms in the Spine Runtimes Guide
+	 */
 	public function updateWorldTransform(skeleton:Skeleton):Void {
 		if (local == skeleton._update)
 			updateLocalTransform(skeleton);
@@ -139,15 +139,19 @@ class BonePose extends BoneLocal implements Update {
 				c = pc * la + pd * lc;
 				d = pc * lb + pd * ld;
 			case Inherit.noScale, Inherit.noScaleOrReflection:
-				var r = rotation * MathUtils.degRad, cos = Math.cos(r), sin = Math.sin(r);
+				var r = rotation * MathUtils.degRad,
+					cos = Math.cos(r),
+					sin = Math.sin(r);
 				var za = (pa * cos + pb * sin) / skeleton.scaleX;
 				var zc = (pc * cos + pd * sin) / skeleton.scaleY;
 				var s = Math.sqrt(za * za + zc * zc);
-				if (s > 0.00001) s = 1 / s;
+				if (s > 0.00001)
+					s = 1 / s;
 				za *= s;
 				zc *= s;
 				s = Math.sqrt(za * za + zc * zc);
-				if (inherit == Inherit.noScale && ((pa * pd - pb * pc < 0) != ((skeleton.scaleX < 0) != (skeleton.scaleY < 0)))) s = -s;
+				if (inherit == Inherit.noScale && ((pa * pd - pb * pc < 0) != ((skeleton.scaleX < 0) != (skeleton.scaleY < 0))))
+					s = -s;
 				r = Math.PI / 2 + Math.atan2(zc, za);
 				var zb:Float = Math.cos(r) * s;
 				var zd:Float = Math.sin(r) * s;
@@ -169,13 +173,13 @@ class BonePose extends BoneLocal implements Update {
 	}
 
 	/** Computes the applied transform values from the world transform.
-	*
-	* If the world transform is modified (by a constraint, rotateWorld(), etc) then this method should be called so
-	* the applied transform matches the world transform. The applied transform may be needed by other code (eg to apply another
-	* constraint).
-	*
-	* Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The applied transform after
-	* calling this method is equivalent to the local transform used to compute the world transform, but may not be identical. */
+	 *
+	 * If the world transform is modified (by a constraint, rotateWorld(), etc) then this method should be called so
+	 * the applied transform matches the world transform. The applied transform may be needed by other code (eg to apply another
+	 * constraint).
+	 *
+	 * Some information is ambiguous in the world transform, such as -1,-1 scale versus 180 rotation. The applied transform after
+	 * calling this method is equivalent to the local transform used to compute the world transform, but may not be identical. */
 	public function updateLocalTransform(skeleton:Skeleton):Void {
 		local = 0;
 		world = skeleton._update;
@@ -215,15 +219,19 @@ class BonePose extends BoneLocal implements Update {
 					ia = pd * pid;
 					ib = pb * pid;
 				case Inherit.noScale, Inherit.noScaleOrReflection:
-					var r = rotation * MathUtils.degRad, cos = Math.cos(rotation), sin = Math.sin(rotation);
+					var r = rotation * MathUtils.degRad,
+						cos = Math.cos(rotation),
+						sin = Math.sin(rotation);
 					pa = (pa * cos + pb * sin) / skeleton.scaleX;
 					pc = (pc * cos + pd * sin) / skeleton.scaleY;
 					var s = Math.sqrt(pa * pa + pc * pc);
-					if (s > 0.00001) s = 1 / s;
+					if (s > 0.00001)
+						s = 1 / s;
 					pa *= s;
 					pc *= s;
 					s = Math.sqrt(pa * pa + pc * pc);
-					if (inherit == Inherit.noScale && (pid < 0 != ((skeleton.scaleX < 0) != (skeleton.scaleY < 0)))) s = -s;
+					if (inherit == Inherit.noScale && (pid < 0 != ((skeleton.scaleX < 0) != (skeleton.scaleY < 0))))
+						s = -s;
 					r = MathUtils.PI / 2 + Math.atan2(pc, pa);
 					pb = Math.cos(r) * s;
 					pd = Math.sin(r) * s;
@@ -255,24 +263,26 @@ class BonePose extends BoneLocal implements Update {
 	}
 
 	/** If the world transform has been modified and the local transform no longer matches, {@link #updateLocalTransform(Skeleton)}
-	* is called. */
-	public function validateLocalTransform (skeleton: Skeleton) {
-		if (local == skeleton._update) updateLocalTransform(skeleton);
+	 * is called. */
+	public function validateLocalTransform(skeleton:Skeleton) {
+		if (local == skeleton._update)
+			updateLocalTransform(skeleton);
 	}
 
-	public function modifyLocal (skeleton: Skeleton) {
-		if (local == skeleton._update) updateLocalTransform(skeleton);
+	public function modifyLocal(skeleton:Skeleton) {
+		if (local == skeleton._update)
+			updateLocalTransform(skeleton);
 		world = 0;
 		resetWorld(skeleton._update);
 	}
 
-	public function modifyWorld (update:Int) {
+	public function modifyWorld(update:Int) {
 		local = update;
 		world = update;
 		resetWorld(update);
 	}
 
-	public function resetWorld (update:Int) {
+	public function resetWorld(update:Int) {
 		var children = bone.children;
 		for (i in 0...bone.children.length) {
 			var child = children[i].applied;
@@ -331,14 +341,14 @@ class BonePose extends BoneLocal implements Update {
 	}
 
 	/** Transforms a point from world coordinates to the parent bone's local coordinates. */
-	public function worldToParent(world: Array<Float>):Array<Float> {
+	public function worldToParent(world:Array<Float>):Array<Float> {
 		if (world == null)
 			throw new SpineException("world cannot be null.");
 		return bone.parent == null ? world : bone.parent.applied.worldToLocal(world);
 	}
 
 	/** Transforms a point from the parent bone's coordinates to world coordinates. */
-	public function parentToWorld(world: Array<Float>):Array<Float> {
+	public function parentToWorld(world:Array<Float>):Array<Float> {
 		if (world == null)
 			throw new SpineException("world cannot be null.");
 		return bone.parent == null ? world : bone.parent.applied.localToWorld(world);
@@ -373,7 +383,7 @@ class BonePose extends BoneLocal implements Update {
 		d = sin * rb + cos * d;
 	}
 
-	public function toString ():String {
+	public function toString():String {
 		return bone.data.name;
 	}
 }

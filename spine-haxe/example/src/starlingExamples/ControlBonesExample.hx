@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package starlingExamples;
 
@@ -48,11 +48,12 @@ class ControlBonesExample extends Scene {
 	var skeletonSprite:SkeletonSprite;
 	private var movement = new openfl.geom.Point();
 	private var controlBones = [];
-	private	var controls = [];
+	private var controls = [];
 
 	public function load():Void {
 		var atlas = new TextureAtlas(Assets.getText("assets/stretchyman.atlas"), new StarlingTextureLoader("assets/stretchyman.atlas"));
-		var skeletondata = SkeletonData.from(loadBinary ? Assets.getBytes("assets/stretchyman-pro.skel") : Assets.getText("assets/stretchyman-pro.json"), atlas);
+		var skeletondata = SkeletonData.from(loadBinary ? Assets.getBytes("assets/stretchyman-pro.skel") : Assets.getText("assets/stretchyman-pro.json"),
+			atlas);
 		var animationStateData = new AnimationStateData(skeletondata);
 		animationStateData.defaultMix = 0.25;
 
@@ -97,7 +98,7 @@ class ControlBonesExample extends Scene {
 		}
 
 		var point = [.0, .0];
-		skeletonSprite.beforeUpdateWorldTransforms = function (go) {
+		skeletonSprite.beforeUpdateWorldTransforms = function(go) {
 			for (i in 0...controls.length) {
 				var bone = controlBones[i];
 				var control = controls[i];
@@ -106,7 +107,7 @@ class ControlBonesExample extends Scene {
 				go.haxeWorldCoordinatesToBone(point, bone);
 				bone.pose.x = point[0];
 				bone.pose.y = point[1];
-            }
+			}
 		};
 
 		addEventListener(TouchEvent.TOUCH, onTouch);

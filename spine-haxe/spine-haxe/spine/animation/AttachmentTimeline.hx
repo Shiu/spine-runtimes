@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -63,17 +63,19 @@ class AttachmentTimeline extends Timeline implements SlotTimeline {
 		attachmentNames[frame] = attachmentName;
 	}
 
-	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
-		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
-
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+			appliedPose:Bool) {
 		var slot = skeleton.slots[slotIndex];
-		if (!slot.bone.active) return;
+		if (!slot.bone.active)
+			return;
 		var pose = appliedPose ? slot.applied : slot.pose;
 
 		if (direction == MixDirection.mixOut) {
-			if (blend == MixBlend.setup) setAttachment(skeleton, pose, slot.data.attachmentName);
+			if (blend == MixBlend.setup)
+				setAttachment(skeleton, pose, slot.data.attachmentName);
 		} else if (time < frames[0]) {
-			if (blend == MixBlend.setup || blend == MixBlend.first) setAttachment(skeleton, pose, slot.data.attachmentName);
+			if (blend == MixBlend.setup || blend == MixBlend.first)
+				setAttachment(skeleton, pose, slot.data.attachmentName);
 		} else
 			setAttachment(skeleton, pose, attachmentNames[Timeline.search1(frames, time)]);
 	}

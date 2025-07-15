@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -41,28 +41,28 @@ class MixBlend {
 	}
 
 	/** Transitions between the setup and timeline values (the current value is not used). Before the first frame, the setup
-	* value is used.
-	*
-	* `setup` is intended to transition to or from the setup pose, not for animations layered on top of others. */
+	 * value is used.
+	 *
+	 * `setup` is intended to transition to or from the setup pose, not for animations layered on top of others. */
 	public static var setup(default, never):MixBlend = new MixBlend(0);
 
 	/** Transitions between the current and timeline values. Before the first frame, transitions between the current and setup
-	* values. Timelines which perform instant transitions, such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}, use
-	* the setup value before the first frame.
-	*
-	* `first` is intended for the first animations applied, not for animations layered on top of others. */
+	 * values. Timelines which perform instant transitions, such as {@link DrawOrderTimeline} or {@link AttachmentTimeline}, use
+	 * the setup value before the first frame.
+	 *
+	 * `first` is intended for the first animations applied, not for animations layered on top of others. */
 	public static var first(default, never):MixBlend = new MixBlend(1);
 
 	/** Transitions between the current and timeline values. No change is made before the first frame.
-	*
-	* `replace` is intended for animations layered on top of others, not for the first animations applied. */
+	 *
+	 * `replace` is intended for animations layered on top of others, not for the first animations applied. */
 	public static var replace(default, never):MixBlend = new MixBlend(2);
 
 	/** Transitions between the current value and the current plus timeline values. No change is made before the first frame.
-	*
-	* `add` is intended for animations layered on top of others, not for the first animations applied.
-	*
-	* Properties set by additive animations must be set manually or by another animation before applying the additive
-	* animations, else the property values will increase each time the additive animations are applied. */
+	 *
+	 * `add` is intended for animations layered on top of others, not for the first animations applied.
+	 *
+	 * Properties set by additive animations must be set manually or by another animation before applying the additive
+	 * animations, else the property values will increase each time the additive animations are applied. */
 	public static var add(default, never):MixBlend = new MixBlend(3);
 }

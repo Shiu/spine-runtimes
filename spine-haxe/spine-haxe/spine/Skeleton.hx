@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -65,7 +65,7 @@ class Skeleton {
 	/** The list of bones and constraints, sorted in the order they should be updated, as computed by Skeleton.updateCache(). */
 	public final _updateCache = new Array<Dynamic>();
 
-	private final resetCache = new Array<Posed<Dynamic, Dynamic, Dynamic>> ();
+	private final resetCache = new Array<Posed<Dynamic, Dynamic, Dynamic>>();
 
 	/** The skeleton's current skin. */
 	public var skin(default, set):Skin = null;
@@ -84,14 +84,15 @@ class Skeleton {
 	public var y:Float = 0;
 
 	/** Scales the entire skeleton on the X axis.
-	*
-	* Bones that do not inherit scale are still affected by this property. */
+	 *
+	 * Bones that do not inherit scale are still affected by this property. */
 	public var scaleX:Float = 1;
 
 	/** Scales the entire skeleton on the Y axis.
-	*
-	* Bones that do not inherit scale are still affected by this property. */
+	 *
+	 * Bones that do not inherit scale are still affected by this property. */
 	public var scaleY(get, default):Float = 1;
+
 	function get_scaleY() {
 		return scaleY * Bone.yDir;
 	}
@@ -110,7 +111,8 @@ class Skeleton {
 
 	/** Creates a new skeleton with the specified skeleton data. */
 	public function new(data:SkeletonData) {
-		if (data == null) throw new SpineException("data cannot be null.");
+		if (data == null)
+			throw new SpineException("data cannot be null.");
 		this.data = data;
 
 		bones = new Array<Bone>();
@@ -138,7 +140,8 @@ class Skeleton {
 		constraints = new Array<Constraint<Dynamic, Dynamic, Dynamic>>();
 		for (constraintData in data.constraints) {
 			var constraint = constraintData.create(this);
-			if (Std.isOfType(constraint, PhysicsConstraint)) physics.push(cast(constraint, PhysicsConstraint));
+			if (Std.isOfType(constraint, PhysicsConstraint))
+				physics.push(cast(constraint, PhysicsConstraint));
 			constraints.push(constraint);
 		}
 
@@ -180,7 +183,8 @@ class Skeleton {
 			var constraint:Constraint<Dynamic, Dynamic, Dynamic> = c;
 			constraint.active = constraint.isSourceActive()
 				&& (!constraint.data.skinRequired || (skin != null && contains(skin.constraints, constraint.data)));
-			if (constraint.active) constraint.sort(this);
+			if (constraint.active)
+				constraint.sort(this);
 		}
 
 		for (bone in bones)
@@ -201,7 +205,7 @@ class Skeleton {
 		return list.indexOf(element) != -1;
 	}
 
-	public function constrained (object:Posed<Dynamic, Dynamic, Dynamic>) {
+	public function constrained(object:Posed<Dynamic, Dynamic, Dynamic>) {
 		if (object.pose == object.applied) {
 			object.useConstrained();
 			resetCache.push(object);
@@ -209,9 +213,11 @@ class Skeleton {
 	}
 
 	public function sortBone(bone:Bone):Void {
-		if (bone.sorted || !bone.active) return;
+		if (bone.sorted || !bone.active)
+			return;
 		var parent = bone.parent;
-		if (parent != null) sortBone(parent);
+		if (parent != null)
+			sortBone(parent);
 		bone.sorted = true;
 		_updateCache.push(bone);
 	}
@@ -219,7 +225,8 @@ class Skeleton {
 	public function sortReset(bones:Array<Bone>):Void {
 		for (bone in bones) {
 			if (bone.active) {
-				if (bone.sorted) sortReset(bone.children);
+				if (bone.sorted)
+					sortReset(bone.children);
 				bone.sorted = false;
 			}
 		}
@@ -247,8 +254,10 @@ class Skeleton {
 
 	/** Sets the bones and constraints to their setup pose values. */
 	public function setupPoseBones():Void {
-		for (bone in this.bones) bone.setupPose();
-		for (constraint in this.constraints) constraint.setupPose();
+		for (bone in this.bones)
+			bone.setupPose();
+		for (constraint in this.constraints)
+			constraint.setupPose();
 	}
 
 	/** Sets the slots and draw order to their setup pose values. */
@@ -270,18 +279,22 @@ class Skeleton {
 	/** Finds a bone by comparing each bone's name. It is more efficient to cache the results of this method than to call it
 	 * repeatedly. */
 	public function findBone(boneName:String):Bone {
-		if (boneName == null) throw new SpineException("boneName cannot be null.");
+		if (boneName == null)
+			throw new SpineException("boneName cannot be null.");
 		for (bone in bones)
-			if (bone.data.name == boneName) return bone;
+			if (bone.data.name == boneName)
+				return bone;
 		return null;
 	}
 
 	/** @return -1 if the bone was not found. */
 	public function findBoneIndex(boneName:String):Int {
-		if (boneName == null) throw new SpineException("boneName cannot be null.");
+		if (boneName == null)
+			throw new SpineException("boneName cannot be null.");
 		var i:Int = 0;
 		for (bone in bones) {
-			if (bone.data.name == boneName) return i;
+			if (bone.data.name == boneName)
+				return i;
 			i++;
 		}
 		return -1;
@@ -290,9 +303,11 @@ class Skeleton {
 	/** Finds a slot by comparing each slot's name. It is more efficient to cache the results of this method than to call it
 	 * repeatedly. */
 	public function findSlot(slotName:String):Slot {
-		if (slotName == null) throw new SpineException("slotName cannot be null.");
+		if (slotName == null)
+			throw new SpineException("slotName cannot be null.");
 		for (slot in slots)
-			if (slot.data.name == slotName) return slot;
+			if (slot.data.name == slotName)
+				return slot;
 		return null;
 	}
 
@@ -337,7 +352,8 @@ class Skeleton {
 					var name:String = slot.data.attachmentName;
 					if (name != null) {
 						var attachment:Attachment = newSkin.getAttachment(i, name);
-						if (attachment != null) slot.pose.attachment = attachment;
+						if (attachment != null)
+							slot.pose.attachment = attachment;
 					}
 					i++;
 				}
@@ -399,10 +415,13 @@ class Skeleton {
 	}
 
 	public function findConstraint<T:Constraint<Dynamic, Dynamic, Dynamic>>(constraintName:String, type:Class<T>):Null<T> {
-		if (constraintName == null) throw new SpineException("constraintName cannot be null.");
-		if (type == null) throw new SpineException("type cannot be null.");
+		if (constraintName == null)
+			throw new SpineException("constraintName cannot be null.");
+		if (type == null)
+			throw new SpineException("type cannot be null.");
 		for (constraint in constraints)
-			if (Std.isOfType(constraint, type) && constraint.data.name == constraintName) return Std.downcast(constraint, type);
+			if (Std.isOfType(constraint, type) && constraint.data.name == constraintName)
+				return Std.downcast(constraint, type);
 		return null;
 	}
 
@@ -411,7 +430,7 @@ class Skeleton {
 
 	/** Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose. Optionally applies
 	 * clipping. */
-	public function getBounds(clipper: SkeletonClipping = null):Rectangle {
+	public function getBounds(clipper:SkeletonClipping = null):Rectangle {
 		var minX = Math.POSITIVE_INFINITY;
 		var minY = Math.POSITIVE_INFINITY;
 		var maxX = Math.NEGATIVE_INFINITY;
@@ -456,10 +475,12 @@ class Skeleton {
 						ii += 2;
 					}
 				}
-				if (clipper != null) clipper.clipEnd(slot);
+				if (clipper != null)
+					clipper.clipEnd(slot);
 			}
 		}
-		if (clipper != null) clipper.clipEnd();
+		if (clipper != null)
+			clipper.clipEnd();
 		_bounds.x = minX;
 		_bounds.y = minY;
 		_bounds.width = maxX - minX;
@@ -468,18 +489,18 @@ class Skeleton {
 	}
 
 	/** Increments the skeleton's Skeleton.time. */
-	public function update (delta:Float):Void {
+	public function update(delta:Float):Void {
 		time += delta;
 	}
 
 	/** Calls spine.PhysicsConstraint.translate() for each physics constraint. */
-	public function physicsTranslate (x:Float, y:Float):Void {
+	public function physicsTranslate(x:Float, y:Float):Void {
 		for (physicsConstraint in physics)
 			physicsConstraint.translate(x, y);
 	}
 
 	/** Calls spine.PhysicsConstraint.rotate() for each physics constraint. */
-	public function physicsRotate (x:Float, y:Float, degrees:Float):Void {
+	public function physicsRotate(x:Float, y:Float, degrees:Float):Void {
 		for (physicsConstraint in physics)
 			physicsConstraint.rotate(x, y, degrees);
 	}

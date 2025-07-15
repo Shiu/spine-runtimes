@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -35,6 +35,7 @@ package spine;
 class RotateMode {
 	public static var tangent(default, never):RotateMode = new RotateMode("tangent");
 	public static var chain(default, never):RotateMode = new RotateMode("chain");
+
 	/** When chain scale, constrained bones should all have the same parent. That way when the path constraint scales a bone, it
 	 * doesn't affect other constrained bones. */
 	public static var chainScale(default, never):RotateMode = new RotateMode("chainScale");

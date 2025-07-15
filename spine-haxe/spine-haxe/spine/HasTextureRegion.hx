@@ -25,19 +25,23 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
 interface HasTextureRegion {
 	/** The name used to find the region. */
 	public var path:String;
+
 	/** Sets the region used to draw the attachment. After setting the region or if the region's properties are changed,
 	 * updateRegion() must be called. */
 	public var region:TextureRegion;
+
 	/** The color to tint the attachment. */
 	public var color:Color;
+
 	public var sequence:Sequence;
+
 	/** Updates any values the attachment calculates using the region. Must be called after setting the
 	 * region or if the region's properties are changed. */
 	public function updateRegion():Void;

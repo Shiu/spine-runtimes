@@ -25,11 +25,11 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
- package spine.animation;
+package spine.animation;
 
- abstract class BoneTimeline1 extends CurveTimeline1 implements BoneTimeline {
+abstract class BoneTimeline1 extends CurveTimeline1 implements BoneTimeline {
 	public final boneIndex:Int;
 
 	public function new(frameCount:Int, bezierCount:Int, boneIndex:Int, property:Property) {
@@ -37,16 +37,16 @@
 		this.boneIndex = boneIndex;
 	}
 
-	public function getBoneIndex () {
+	public function getBoneIndex() {
 		return boneIndex;
 	}
 
-	public function apply (skeleton: Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend,
-		direction:MixDirection, appliedPose:Bool) {
-
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+			appliedPose:Bool) {
 		var bone = skeleton.bones[boneIndex];
-		if (bone.active) apply1(appliedPose ? bone.applied : bone.pose, bone.data.setup, time, alpha, blend, direction);
+		if (bone.active)
+			apply1(appliedPose ? bone.applied : bone.pose, bone.data.setup, time, alpha, blend, direction);
 	}
 
-	abstract function apply1 (pose:BoneLocal, setup:BoneLocal, time:Float, alpha:Float, blend:MixBlend, direction:MixDirection):Void;
+	abstract function apply1(pose:BoneLocal, setup:BoneLocal, time:Float, alpha:Float, blend:MixBlend, direction:MixDirection):Void;
 }

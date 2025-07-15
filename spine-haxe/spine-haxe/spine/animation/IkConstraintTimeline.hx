@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -52,7 +52,7 @@ class IkConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
 		return ENTRIES;
 	}
 
-	public function getConstraintIndex () {
+	public function getConstraintIndex() {
 		return constraintIndex;
 	}
 
@@ -70,11 +70,11 @@ class IkConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
 		frames[frame + STRETCH] = stretch ? 1 : 0;
 	}
 
-	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
-		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
-
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+			appliedPose:Bool) {
 		var constraint = cast(skeleton.constraints[constraintIndex], IkConstraint);
-		if (!constraint.active) return;
+		if (!constraint.active)
+			return;
 		var pose = appliedPose ? constraint.applied : constraint.pose;
 
 		if (time < frames[0]) {
@@ -129,12 +129,13 @@ class IkConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
 			case MixBlend.first, MixBlend.replace:
 				pose.mix += (mix - pose.mix) * alpha;
 				pose.softness += (softness - pose.softness) * alpha;
-				if (direction == MixDirection.mixOut) return;
+				if (direction == MixDirection.mixOut)
+					return;
 			case MixBlend.add:
 				pose.mix += mix * alpha;
 				pose.softness += softness * alpha;
-				if (direction == MixDirection.mixOut) return;
-
+				if (direction == MixDirection.mixOut)
+					return;
 		}
 		pose.bendDirection = Std.int(frames[i + BEND_DIRECTION]);
 		pose.compress = frames[i + COMPRESS] != 0;

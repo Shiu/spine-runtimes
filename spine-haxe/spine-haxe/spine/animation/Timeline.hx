@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -36,6 +36,7 @@ import spine.Skeleton;
 abstract class Timeline {
 	/** Uniquely encodes both the type of this timeline and the skeleton properties that it affects. */
 	public var propertyIds:Array<String>;
+
 	/** The time in seconds and any other values for each frame. */
 	public var frames:Array<Float>;
 
@@ -83,8 +84,8 @@ abstract class Timeline {
 	 * @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions,
 	 *           such as spine.animation.DrawOrderTimeline or spine.animation.AttachmentTimeline, and others such as spine.animation.ScaleTimeline.
 	 * @param appliedPose True to to modify the applied pose. */
-	abstract public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
-		blend:MixBlend, direction:MixDirection, appliedPose:Bool):Void;
+	abstract public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+		appliedPose:Bool):Void;
 
 	/** Linear search using a stride of 1.
 	 * @param time Must be >= the first value in frames.

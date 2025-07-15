@@ -1,5 +1,3 @@
-
-
 /******************************************************************************
  * Spine Runtimes License Agreement
  * Last updated April 5, 2025. Replaces all prior versions.
@@ -27,16 +25,16 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
- package spine;
+package spine;
 
 import spine.TransformConstraintData.FromProperty;
 import spine.animation.Animation;
 
 /** Stores the setup pose for a PhysicsConstraint.
-*
-* See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
+ *
+ * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
 class SliderData extends ConstraintData<Slider, SliderPose> {
 	public var animation:Animation;
 	public var additive = false;
@@ -47,11 +45,11 @@ class SliderData extends ConstraintData<Slider, SliderPose> {
 	public var offset = 0.;
 	public var local = false;
 
-	public function new (name:String) {
+	public function new(name:String) {
 		super(name, new SliderPose());
 	}
 
-	public function create (skeleton:Skeleton) {
+	public function create(skeleton:Skeleton) {
 		return new Slider(this, skeleton);
 	}
 }

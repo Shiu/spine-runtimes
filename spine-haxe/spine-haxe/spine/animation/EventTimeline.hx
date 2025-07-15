@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -56,9 +56,10 @@ class EventTimeline extends Timeline {
 	}
 
 	/** Fires events for frames > lastTime and <= time. */
-	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, firedEvents:Array<Event>, alpha:Float,
-		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
-		if (firedEvents == null) return;
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, firedEvents:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+			appliedPose:Bool) {
+		if (firedEvents == null)
+			return;
 
 		var frameCount:Int = frames.length;
 
@@ -67,7 +68,8 @@ class EventTimeline extends Timeline {
 			lastTime = -1;
 		} else if (lastTime >= frames[frameCount - 1]) // Last time is after last frame.
 			return;
-		if (time < frames[0]) return;
+		if (time < frames[0])
+			return;
 
 		var frame:Int;
 		var i:Int = 0;

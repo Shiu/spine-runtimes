@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -33,7 +33,6 @@ package spine;
  *
  * @see https://esotericsoftware.com/spine-ik-constraints IK constraints in the Spine User Guide */
 class IkConstraintData extends ConstraintData<IkConstraint, IkConstraintPose> {
-
 	/** The bones that are constrained by this IK constraint. */
 	public final bones:Array<BoneData> = new Array<BoneData>();
 
@@ -44,17 +43,17 @@ class IkConstraintData extends ConstraintData<IkConstraint, IkConstraintPose> {
 	 * on both the X and Y axes. */
 	public var uniform = false;
 
-
 	public function new(name:String) {
 		super(name, new IkConstraintPose());
 	}
 
-	public function create (skeleton:Skeleton):IkConstraint {
+	public function create(skeleton:Skeleton):IkConstraint {
 		return new IkConstraint(this, skeleton);
 	}
 
-	public function set_target (target:BoneData) {
-		if (target == null) throw new SpineException("target cannot be null.");
+	public function set_target(target:BoneData) {
+		if (target == null)
+			throw new SpineException("target cannot be null.");
 		this.target = target;
 		return target;
 	}

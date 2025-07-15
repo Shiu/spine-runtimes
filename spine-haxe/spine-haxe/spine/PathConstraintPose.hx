@@ -25,12 +25,11 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
 class PathConstraintPose implements Pose<PathConstraintPose> {
-
 	/** The position along the path. */
 	public var position = 0.;
 
@@ -46,8 +45,7 @@ class PathConstraintPose implements Pose<PathConstraintPose> {
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
 	public var mixY = 0.;
 
-	public function new () {
-	}
+	public function new() {}
 
 	public function set(pose:PathConstraintPose) {
 		position = pose.position;

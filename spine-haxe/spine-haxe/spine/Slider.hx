@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -36,36 +36,40 @@ import spine.animation.MixDirection;
 import spine.animation.MixBlend;
 
 /** Stores the setup pose for a {@link PhysicsConstraint}.
-* <p>
-* See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
+ * <p>
+ * See <a href="https://esotericsoftware.com/spine-physics-constraints">Physics constraints</a> in the Spine User Guide. */
 class Slider extends Constraint<Slider, SliderData, SliderPose> {
 	static private final offsets:Array<Float> = [for (i in 0...6) .0];
 
 	public var bone:Bone;
 
-	public function new (data:SliderData, skeleton:Skeleton) {
+	public function new(data:SliderData, skeleton:Skeleton) {
 		super(data, new SliderPose(), new SliderPose());
-		if (skeleton == null) throw new SpineException("skeleton cannot be null.");
+		if (skeleton == null)
+			throw new SpineException("skeleton cannot be null.");
 
-		if (data.bone != null) bone = skeleton.bones[data.bone.index];
+		if (data.bone != null)
+			bone = skeleton.bones[data.bone.index];
 	}
 
-	public function copy (skeleton:Skeleton) {
+	public function copy(skeleton:Skeleton) {
 		var copy = new Slider(data, skeleton);
 		copy.pose.set(pose);
 		return copy;
 	}
 
-	public function update (skeleton:Skeleton, physics:Physics) {
+	public function update(skeleton:Skeleton, physics:Physics) {
 		var p = applied;
-		if (p.mix == 0) return;
+		if (p.mix == 0)
+			return;
 
 		var animation = data.animation;
 		if (bone != null) {
-			if (!bone.active) return;
-			if (data.local) bone.applied.validateLocalTransform(skeleton);
-			p.time = data.offset
-				+ (data.property.value(skeleton, bone.applied, data.local, offsets) - data.property.offset) * data.scale;
+			if (!bone.active)
+				return;
+			if (data.local)
+				bone.applied.validateLocalTransform(skeleton);
+			p.time = data.offset + (data.property.value(skeleton, bone.applied, data.local, offsets) - data.property.offset) * data.scale;
 			if (data.loop)
 				p.time = animation.duration + (p.time % animation.duration);
 			else
@@ -78,12 +82,12 @@ class Slider extends Constraint<Slider, SliderData, SliderPose> {
 		while (i < n)
 			bones[indices[i++]].applied.modifyLocal(skeleton);
 
-		animation.apply(skeleton, p.time, p.time, data.loop, null, p.mix, data.additive ? MixBlend.add : MixBlend.replace,
-			MixDirection.mixIn, true);
+		animation.apply(skeleton, p.time, p.time, data.loop, null, p.mix, data.additive ? MixBlend.add : MixBlend.replace, MixDirection.mixIn, true);
 	}
 
-	function sort (skeleton:Skeleton) {
-		if (bone != null && !data.local) skeleton.sortBone(bone);
+	function sort(skeleton:Skeleton) {
+		if (bone != null && !data.local)
+			skeleton.sortBone(bone);
 		skeleton._updateCache.push(this);
 
 		var bones = skeleton.bones;

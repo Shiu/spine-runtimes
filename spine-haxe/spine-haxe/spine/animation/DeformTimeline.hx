@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -139,19 +139,23 @@ class DeformTimeline extends SlotCurveTimeline {
 		return y + (1 - y) * (time - x) / (frames[frame + getFrameEntries()] - x);
 	}
 
-	public function apply1 (slot:Slot, pose:SlotPose, time:Float, alpha:Float, blend:MixBlend) {
-		if (!Std.isOfType(pose.attachment, VertexAttachment)) return;
+	public function apply1(slot:Slot, pose:SlotPose, time:Float, alpha:Float, blend:MixBlend) {
+		if (!Std.isOfType(pose.attachment, VertexAttachment))
+			return;
 		var vertexAttachment = cast(pose.attachment, VertexAttachment);
-		if (vertexAttachment.timelineAttachment != attachment) return;
+		if (vertexAttachment.timelineAttachment != attachment)
+			return;
 
 		var deform = pose.deform;
-		if (deform.length == 0) blend = MixBlend.setup;
+		if (deform.length == 0)
+			blend = MixBlend.setup;
 
 		var vertexCount = vertices[0].length;
 
 		if (time < frames[0]) {
 			switch (blend) {
-				case MixBlend.setup: deform.resize(0);
+				case MixBlend.setup:
+					deform.resize(0);
 				case MixBlend.first:
 					if (alpha == 1) {
 						deform.resize(0);
@@ -253,7 +257,8 @@ class DeformTimeline extends SlotCurveTimeline {
 					if (vertexAttachment.bones == null) { // Unweighted vertex positions, with alpha.
 						var setupVertices = vertexAttachment.vertices;
 						for (i in 0...vertexCount) {
-							var prev = prevVertices[i], setup = setupVertices[i];
+							var prev = prevVertices[i],
+								setup = setupVertices[i];
 							deform[i] = setup + (prev + (nextVertices[i] - prev) * percent - setup) * alpha;
 						}
 					} else { // Weighted deform offsets, with alpha.

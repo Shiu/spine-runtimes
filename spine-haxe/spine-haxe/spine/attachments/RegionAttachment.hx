@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.attachments;
 
@@ -47,18 +47,25 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 
 	/** The local x translation. */
 	public var x:Float = 0;
+
 	/** The local y translation. */
 	public var y:Float = 0;
+
 	/** The local scaleX. */
 	public var scaleX:Float = 1;
+
 	/** The local scaleY. */
 	public var scaleY:Float = 1;
+
 	/** The local rotation. */
 	public var rotation:Float = 0;
+
 	/** The width of the region attachment in Spine. */
 	public var width:Float = 0;
+
 	/** The height of the region attachment in Spine. */
 	public var height:Float = 0;
+
 	public var color:Color = new Color(1, 1, 1, 1);
 	public var path:String;
 	public var rendererObject:Dynamic;
@@ -150,7 +157,8 @@ class RegionAttachment extends Attachment implements HasTextureRegion {
 	 * @param offset The worldVertices index to begin writing values.
 	 * @param stride The number of worldVertices entries between the value pairs written. */
 	public function computeWorldVertices(slot:Slot, worldVertices:Array<Float>, offset:Int, stride:Int):Void {
-		if (sequence != null) sequence.apply(slot.applied, this);
+		if (sequence != null)
+			sequence.apply(slot.applied, this);
 
 		var vertexOffset = this.offset;
 		var bone = slot.bone.applied;

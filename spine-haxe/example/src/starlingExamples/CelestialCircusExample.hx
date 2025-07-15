@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package starlingExamples;
 
@@ -52,7 +52,8 @@ class CelestialCircusExample extends Scene {
 		background.color = 0x333333;
 
 		var atlas = new TextureAtlas(Assets.getText("assets/celestial-circus.atlas"), new StarlingTextureLoader("assets/celestial-circus.atlas"));
-		var skeletondata = SkeletonData.from(loadBinary ? Assets.getBytes("assets/celestial-circus-pro.skel") : Assets.getText("assets/celestial-circus-pro.json"), atlas);
+		var skeletondata = SkeletonData.from(loadBinary ? Assets.getBytes("assets/celestial-circus-pro.skel") : Assets.getText("assets/celestial-circus-pro.json"),
+			atlas);
 
 		var animationStateData = new AnimationStateData(skeletondata);
 		animationStateData.defaultMix = 0.25;
@@ -83,10 +84,7 @@ class CelestialCircusExample extends Scene {
 				skeletonTouch.getMovement(this, movement);
 				skeletonSprite.x += movement.x;
 				skeletonSprite.y += movement.y;
-				skeletonSprite.skeleton.physicsTranslate(
-					movement.x / skeletonSprite.scale,
-					movement.y / skeletonSprite.scale,
-				);
+				skeletonSprite.skeleton.physicsTranslate(movement.x / skeletonSprite.scale, movement.y / skeletonSprite.scale,);
 			}
 		} else {
 			var sceneTouch = e.getTouch(this);
@@ -94,8 +92,5 @@ class CelestialCircusExample extends Scene {
 				SceneManager.getInstance().switchScene(new SnowglobeExample());
 			}
 		}
-
-
 	}
-
 }

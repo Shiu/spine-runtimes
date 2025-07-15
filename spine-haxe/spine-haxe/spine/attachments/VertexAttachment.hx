@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.attachments;
 
@@ -79,7 +79,8 @@ class VertexAttachment extends Attachment {
 		var deform:Array<Float> = slot.applied.deform;
 		var vertices = vertices;
 		if (bones == null) {
-			if (deform.length > 0) vertices = deform;
+			if (deform.length > 0)
+				vertices = deform;
 			var bone = slot.bone.applied;
 			var x = bone.worldX, y = bone.worldY;
 			var a = bone.a, b = bone.b, c = bone.c, d = bone.d;
@@ -109,7 +110,9 @@ class VertexAttachment extends Attachment {
 				n += v;
 				while (v < n) {
 					var bone = skeletonBones[bones[v]].applied;
-					var vx = vertices[b], vy = vertices[b + 1], weight = vertices[b + 2];
+					var vx = vertices[b],
+						vy = vertices[b + 1],
+						weight = vertices[b + 2];
 					wx += (vx * bone.a + vy * bone.b + bone.worldX) * weight;
 					wy += (vx * bone.c + vy * bone.d + bone.worldY) * weight;
 					v++;
@@ -127,7 +130,9 @@ class VertexAttachment extends Attachment {
 				n += v;
 				while (v < n) {
 					var bone = skeletonBones[bones[v]].applied;
-					var vx = vertices[b] + deform[f], vy = vertices[b + 1] + deform[f + 1], weight = vertices[b + 2];
+					var vx = vertices[b] + deform[f],
+						vy = vertices[b + 1] + deform[f + 1],
+						weight = vertices[b + 2];
 					wx += (vx * bone.a + vy * bone.b + bone.worldX) * weight;
 					wy += (vx * bone.c + vy * bone.d + bone.worldY) * weight;
 					v++;

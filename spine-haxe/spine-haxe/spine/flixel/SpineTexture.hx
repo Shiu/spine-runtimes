@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.flixel;
 
@@ -33,13 +33,12 @@ import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import openfl.display.BlendMode;
 
-class SpineTexture extends FlxGraphic
-{
-	public static function from(bitmapData: openfl.display.BitmapData): FlxGraphic {
+class SpineTexture extends FlxGraphic {
+	public static function from(bitmapData:openfl.display.BitmapData):FlxGraphic {
 		return FlxG.bitmap.add(bitmapData);
 	}
 
-	public static function toFlixelBlending (blend: spine.BlendMode): BlendMode {
+	public static function toFlixelBlending(blend:spine.BlendMode):BlendMode {
 		switch (blend) {
 			case spine.BlendMode.normal:
 				return BlendMode.NORMAL;
@@ -55,5 +54,4 @@ class SpineTexture extends FlxGraphic
 		}
 		return BlendMode.NORMAL;
 	}
-
 }

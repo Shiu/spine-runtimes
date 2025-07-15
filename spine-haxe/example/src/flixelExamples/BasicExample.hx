@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package flixelExamples;
 
@@ -43,6 +43,7 @@ class BasicExample extends FlxState {
 	var loadBinary = true;
 
 	var skeletonSprite:SkeletonSprite;
+
 	override public function create():Void {
 		FlxG.cameras.bgColor = 0xffa1b2b0;
 
@@ -66,22 +67,20 @@ class BasicExample extends FlxState {
 		trace("loaded");
 	}
 
-	override public function update(elapsed:Float):Void
-		{
-			if (FlxG.keys.anyPressed([RIGHT])) {
-				skeletonSprite.x += 15;
-			}
-			if (FlxG.keys.anyPressed([LEFT])) {
-				skeletonSprite.x -= 15;
-			}
-			if (FlxG.keys.anyPressed([DOWN])) {
-				skeletonSprite.y += 15;
-			}
-			if (FlxG.keys.anyPressed([UP])) {
-				skeletonSprite.y -= 15;
-			}
-
-			super.update(elapsed);
+	override public function update(elapsed:Float):Void {
+		if (FlxG.keys.anyPressed([RIGHT])) {
+			skeletonSprite.x += 15;
+		}
+		if (FlxG.keys.anyPressed([LEFT])) {
+			skeletonSprite.x -= 15;
+		}
+		if (FlxG.keys.anyPressed([DOWN])) {
+			skeletonSprite.y += 15;
+		}
+		if (FlxG.keys.anyPressed([UP])) {
+			skeletonSprite.y -= 15;
 		}
 
+		super.update(elapsed);
+	}
 }

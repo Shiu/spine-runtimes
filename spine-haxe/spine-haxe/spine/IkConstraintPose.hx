@@ -25,13 +25,12 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
 /** Stores the current pose for an IK constraint. */
 class IkConstraintPose implements Pose<IkConstraintPose> {
-
 	/** For two bone IK, controls the bend direction of the IK bones, either 1 or -1. */
 	public var bendDirection = 0;
 
@@ -39,29 +38,27 @@ class IkConstraintPose implements Pose<IkConstraintPose> {
 	public var compress:Bool = false;
 
 	/** When true and the target is out of range, the parent bone is scaled to reach it.
-	*
-	* For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not applied if softness is
-	* > 0, and 3) if the parent bone has local nonuniform scale, stretch is not applied. */
+	 *
+	 * For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not applied if softness is
+	 * > 0, and 3) if the parent bone has local nonuniform scale, stretch is not applied. */
 	public var stretch:Bool = false;
 
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
-	*
-	* For two bone IK: if the parent bone has local nonuniform scale, the child bone's local Y translation is set to 0. */
+	 *
+	 * For two bone IK: if the parent bone has local nonuniform scale, the child bone's local Y translation is set to 0. */
 	public var mix = 0.;
 
 	/** For two bone IK, the target bone's distance from the maximum reach of the bones where rotation begins to slow. The bones
-	* will not straighten completely until the target is this far out of range. */
+	 * will not straighten completely until the target is this far out of range. */
 	public var softness = 0.;
 
-	public function new () {
-	}
+	public function new() {}
 
-	public function set (pose:IkConstraintPose) {
+	public function set(pose:IkConstraintPose) {
 		mix = pose.mix;
 		softness = pose.softness;
 		bendDirection = pose.bendDirection;
 		compress = pose.compress;
 		stretch = pose.stretch;
 	}
-
 }

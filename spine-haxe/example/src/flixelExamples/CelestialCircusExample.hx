@@ -25,10 +25,9 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package flixelExamples;
-
 
 import flixel.text.FlxText;
 import flixel.math.FlxPoint;
@@ -47,6 +46,7 @@ class CelestialCircusExample extends FlxState {
 	var loadBinary = true;
 
 	var skeletonSprite:SkeletonSprite;
+
 	override public function create():Void {
 		FlxG.cameras.bgColor = 0xffa1b2b0;
 
@@ -55,7 +55,8 @@ class CelestialCircusExample extends FlxState {
 		add(button);
 
 		var atlas = new TextureAtlas(Assets.getText("assets/celestial-circus.atlas"), new FlixelTextureLoader("assets/celestial-circus.atlas"));
-		var data = SkeletonData.from(loadBinary ? Assets.getBytes("assets/celestial-circus-pro.skel") : Assets.getText("assets/celestial-circus-pro.json"), atlas, .15);
+		var data = SkeletonData.from(loadBinary ? Assets.getBytes("assets/celestial-circus-pro.skel") : Assets.getText("assets/celestial-circus-pro.json"),
+			atlas, .15);
 		var animationStateData = new AnimationStateData(data);
 		animationStateData.defaultMix = 0.25;
 
@@ -73,32 +74,27 @@ class CelestialCircusExample extends FlxState {
 	var dragging:Bool = false;
 	var lastX:Float = 0;
 	var lastY:Float = 0;
-	override public function update(elapsed:Float):Void
-	{
+
+	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 
 		mousePosition = FlxG.mouse.getPosition();
 
-		if (FlxG.mouse.justPressed && skeletonSprite.overlapsPoint(mousePosition))
-		{
+		if (FlxG.mouse.justPressed && skeletonSprite.overlapsPoint(mousePosition)) {
 			dragging = true;
 			lastX = mousePosition.x;
-		  	lastY = mousePosition.y;
+			lastY = mousePosition.y;
 		}
 
-		if (FlxG.mouse.justReleased) dragging = false;
+		if (FlxG.mouse.justReleased)
+			dragging = false;
 
-		if (dragging)
-		{
+		if (dragging) {
 			skeletonSprite.x += mousePosition.x - lastX;
 			skeletonSprite.y += mousePosition.y - lastY;
-			skeletonSprite.skeleton.physicsTranslate(
-				mousePosition.x - lastX,
-				mousePosition.y - lastY,
-			);
+			skeletonSprite.skeleton.physicsTranslate(mousePosition.x - lastX, mousePosition.y - lastY,);
 			lastX = mousePosition.x;
-            lastY = mousePosition.y;
+			lastY = mousePosition.y;
 		}
-
 	}
 }

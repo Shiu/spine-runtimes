@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.attachments;
 
@@ -42,6 +42,7 @@ class PointAttachment extends VertexAttachment {
 	public var x:Float = 0;
 	public var y:Float = 0;
 	public var rotation:Float = 0;
+
 	/** The color of the point attachment as it was in Spine, or a default color if nonessential data was not exported. Point
 	 * attachments are not usually rendered at runtime. */
 	public var color:Color = new Color(0.38, 0.94, 0, 1);
@@ -58,7 +59,9 @@ class PointAttachment extends VertexAttachment {
 	}
 
 	public function computeWorldRotation(bone:BonePose):Float {
-		var r:Float = this.rotation * MathUtils.degRad, cos:Float = Math.cos(r), sin:Float = Math.sin(r);
+		var r:Float = this.rotation * MathUtils.degRad,
+			cos:Float = Math.cos(r),
+			sin:Float = Math.sin(r);
 		var x:Float = cos * bone.a + sin * bone.b;
 		var y:Float = cos * bone.c + sin * bone.d;
 		return MathUtils.atan2Deg(y, x);

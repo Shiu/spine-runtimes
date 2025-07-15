@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.attachments;
 
@@ -37,6 +37,7 @@ class ClippingAttachment extends VertexAttachment {
 	/** Clipping is performed between the clipping attachment's slot and the end slot. If null clipping is done until the end of
 	 * the skeleton's rendering. */
 	public var endSlot:SlotData;
+
 	/** The color of the clipping attachment as it was in Spine, or a default color if nonessential data was not exported. Clipping
 	 * attachments are not usually rendered at runtime. */
 	public var color:Color = new Color(0.2275, 0.2275, 0.2275, 1);

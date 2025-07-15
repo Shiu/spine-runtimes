@@ -25,26 +25,25 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
 /** Stores a pose for a physics constraint. */
 class PhysicsConstraintPose implements Pose<PhysicsConstraintPose> {
-
 	public var inertia = 0.;
 	public var strength = 0.;
 	public var damping = 0.;
 	public var massInverse = 0.;
 	public var wind = 0.;
 	public var gravity = 0.;
+
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
 	public var mix = 0.;
 
-	public function new () {
-	}
+	public function new() {}
 
-	public function set (pose:PhysicsConstraintPose) {
+	public function set(pose:PhysicsConstraintPose) {
 		inertia = pose.inertia;
 		strength = pose.strength;
 		damping = pose.damping;

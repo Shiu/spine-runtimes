@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package starlingExamples;
 
@@ -44,8 +44,9 @@ import starling.display.Quad;
 
 class AnimationBoundExample extends Scene {
 	var loadBinary = false;
-	var skeletonSpriteClipping: SkeletonSprite;
-	var skeletonSpriteNoClipping: SkeletonSprite;
+	var skeletonSpriteClipping:SkeletonSprite;
+	var skeletonSpriteNoClipping:SkeletonSprite;
+
 	public function load():Void {
 		background.color = 0x333333;
 		var scale = .2;
@@ -66,8 +67,8 @@ class AnimationBoundExample extends Scene {
 		var animationClipping = skeletonSpriteClipping.state.setAnimationByName(0, "portal", true).animation;
 		var animationBoundClipping = skeletonSpriteClipping.getAnimationBounds(animationClipping, true);
 		var quad:Quad = new Quad(animationBoundClipping.width * scale, animationBoundClipping.height * scale, 0xc70000);
-        quad.x = skeletonSpriteClipping.x + animationBoundClipping.x * scale;
-        quad.y = skeletonSpriteClipping.y + animationBoundClipping.y * scale;
+		quad.x = skeletonSpriteClipping.x + animationBoundClipping.x * scale;
+		quad.y = skeletonSpriteClipping.y + animationBoundClipping.y * scale;
 
 		var animationStateDataNoClipping = new AnimationStateData(skeletondata);
 		animationStateDataNoClipping.defaultMix = 0.25;
@@ -80,8 +81,8 @@ class AnimationBoundExample extends Scene {
 		var animationNoClipping = skeletonSpriteNoClipping.state.setAnimationByName(0, "portal", true).animation;
 		var animationBoundNoClipping = skeletonSpriteNoClipping.getAnimationBounds(animationNoClipping, false);
 		var quadNoClipping:Quad = new Quad(animationBoundNoClipping.width * scale, animationBoundNoClipping.height * scale, 0xc70000);
-        quadNoClipping.x = skeletonSpriteNoClipping.x + animationBoundNoClipping.x * scale;
-        quadNoClipping.y = skeletonSpriteNoClipping.y + animationBoundNoClipping.y * scale;
+		quadNoClipping.x = skeletonSpriteNoClipping.x + animationBoundNoClipping.x * scale;
+		quadNoClipping.y = skeletonSpriteNoClipping.y + animationBoundNoClipping.y * scale;
 
 		addChild(quad);
 		addChild(quadNoClipping);
