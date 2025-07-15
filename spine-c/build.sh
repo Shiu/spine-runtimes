@@ -33,6 +33,9 @@ fi
 # Run codegen if requested
 if [ "$1" = "codegen" ]; then
     npx tsx codegen/src/index.ts
+    # Format the generated C++ files
+    echo "Formatting generated C++ files..."
+    ../formatters/format.sh cpp
     exit 0
 fi
 

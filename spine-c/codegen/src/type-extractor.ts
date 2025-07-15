@@ -16,30 +16,47 @@ function extractEnumValueFromSource(
 ): string | null | undefined {
     if (!enumConstNode.loc) return undefined;
 
-    const line = sourceLines[enumConstNode.loc.line - 1];
-    if (!line) return undefined;
-
-    // Find enum name and check for '='
-    const nameMatch = line.match(new RegExp(`\\b${enumConstNode.name}\\b`));
-    if (!nameMatch) return undefined;
-
-    const afterName = line.substring(nameMatch.index! + enumConstNode.name.length);
-    const equalIndex = afterName.indexOf('=');
-    if (equalIndex === -1) return null; // No explicit value
-
-    // Extract value expression
-    let valueText = afterName.substring(equalIndex + 1);
-
-    // Handle multi-line values
-    let currentLine = enumConstNode.loc.line;
-    while (currentLine < sourceLines.length && !valueText.match(/[,}]/)) {
-        valueText += '\n' + sourceLines[currentLine++];
+    let startLine = enumConstNode.loc.line - 1;
+    
+    // Build a multi-line buffer starting from the enum constant
+    let buffer = '';
+    let foundName = false;
+    
+    // Look for the enum constant name across multiple lines
+    for (let i = startLine; i < sourceLines.length && i < startLine + 5; i++) {
+        const line = sourceLines[i];
+        if (!line) continue;
+        
+        buffer += line + '\n';
+        
+        // Check if we found the enum constant name
+        if (!foundName && line.match(new RegExp(`\\b${enumConstNode.name}\\b`))) {
+            foundName = true;
+        }
+        
+        // If we found a comma or closing brace, we have the complete enum entry
+        if (foundName && (line.includes(',') || line.includes('}'))) {
+            break;
+        }
     }
-
-    // Extract up to comma or brace
-    const endMatch = valueText.match(/^(.*?)([,}])/s);
-    if (endMatch) valueText = endMatch[1];
-
+    
+    if (!foundName) return undefined;
+    
+    // Extract the part after the enum name
+    const nameMatch = buffer.match(new RegExp(`\\b${enumConstNode.name}\\b\\s*([^,}]*)[,}]?`));
+    if (!nameMatch) return undefined;
+    
+    const afterName = nameMatch[1];
+    
+    // Check if there's an assignment
+    if (!afterName.includes('=')) return null; // No explicit value
+    
+    // Extract the value after '='
+    const equalMatch = afterName.match(/=\s*(.+)/);
+    if (!equalMatch) return null;
+    
+    let valueText = equalMatch[1];
+    
     // Clean up
     return valueText
         .replace(/\/\/.*$/gm, '') // Remove single-line comments

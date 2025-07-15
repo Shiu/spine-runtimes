@@ -307,11 +307,13 @@ export function generateFieldAccessors(type: ClassOrStruct, knownTypeNames: Set<
 }
 
 function generateFieldGetterBody(field: Field, cppTypeName: string, knownTypeNames: Set<string>): string {
-    const fieldAccess = `((${cppTypeName}*)self)->${field.name}`;
+    // Use local variable to avoid cast->field line breaks
+    const setup = `${cppTypeName} *_self = (${cppTypeName} *) self;`;
+    const fieldAccess = `_self->${field.name}`;
 
     // Handle String fields
     if (field.type === 'String' || field.type === 'const String' || field.type === 'const String&') {
-        return `return ${fieldAccess}.buffer();`;
+        return `${setup}\n\treturn ${fieldAccess}.buffer();`;
     }
 
     // Handle reference types
@@ -320,10 +322,10 @@ function generateFieldGetterBody(field: Field, cppTypeName: string, knownTypeNam
         const cType = toCTypeName(baseType, knownTypeNames);
 
         if (isPrimitive(baseType)) {
-            return `return ${fieldAccess};`;
+            return `${setup}\n\treturn ${fieldAccess};`;
         }
 
-        return `return (${cType})&${fieldAccess};`;
+        return `${setup}\n\treturn (${cType})&${fieldAccess};`;
     }
 
     // Handle pointer types
@@ -331,35 +333,37 @@ function generateFieldGetterBody(field: Field, cppTypeName: string, knownTypeNam
         const baseType = field.type.slice(0, -1).trim();
 
         if (isPrimitive(baseType)) {
-            return `return ${fieldAccess};`;
+            return `${setup}\n\treturn ${fieldAccess};`;
         }
 
         const cType = toCTypeName(field.type, knownTypeNames);
-        return `return (${cType})${fieldAccess};`;
+        return `${setup}\n\treturn (${cType})${fieldAccess};`;
     }
 
     // Handle enum types
     if (knownTypeNames.has(field.type)) {
         const cType = toCTypeName(field.type, knownTypeNames);
-        return `return (${cType})${fieldAccess};`;
+        return `${setup}\n\treturn (${cType})${fieldAccess};`;
     }
 
     // Handle primitive types
     if (isPrimitive(field.type)) {
-        return `return ${fieldAccess};`;
+        return `${setup}\n\treturn ${fieldAccess};`;
     }
 
     // Handle non-primitive value types (need to return address)
     const cType = toCTypeName(field.type, knownTypeNames);
-    return `return (${cType})&${fieldAccess};`;
+    return `${setup}\n\treturn (${cType})&${fieldAccess};`;
 }
 
 function generateFieldSetterBody(field: Field, cppTypeName: string, knownTypeNames: Set<string>): string {
-    const fieldAccess = `((${cppTypeName}*)self)->${field.name}`;
+    // Use local variable to avoid cast->field line breaks
+    const setup = `${cppTypeName} *_self = (${cppTypeName} *) self;`;
+    const fieldAccess = `_self->${field.name}`;
 
     // Handle String fields
     if (field.type === 'String') {
-        return `${fieldAccess} = String(value);`;
+        return `${setup}\n\t${fieldAccess} = String(value);`;
     }
 
     // Handle Array types
@@ -367,23 +371,23 @@ function generateFieldSetterBody(field: Field, cppTypeName: string, knownTypeNam
         const arrayMatch = field.type.match(/^Array<(.+?)>$/);
         if (arrayMatch) {
             const elementType = arrayMatch[1];
-            return `${fieldAccess} = *((Array<${elementType}>*)value);`;
+            return `${setup}\n\t${fieldAccess} = *((Array<${elementType}>*)value);`;
         }
     }
 
     // Handle enum types
     if (knownTypeNames.has(field.type)) {
-        return `${fieldAccess} = (${field.type})value;`;
+        return `${setup}\n\t${fieldAccess} = (${field.type})value;`;
     }
 
     // Handle pointer types (cast back from opaque type)
     if (field.type.endsWith('*') && !isPrimitive(field.type)) {
         const baseType = field.type.slice(0, -1).trim();
-        return `${fieldAccess} = (${baseType}*)value;`;
+        return `${setup}\n\t${fieldAccess} = (${baseType}*)value;`;
     }
 
     // Handle everything else
-    return `${fieldAccess} = value;`;
+    return `${setup}\n\t${fieldAccess} = value;`;
 }
 
 /**
@@ -677,16 +681,20 @@ function generateMethod(type: ClassOrStruct, method: Method, cTypeName: string, 
 
         // Generate method body
         let methodCall: string;
+        let body: string;
+        
         if (method.isStatic) {
             methodCall = `${cppTypeName}::${method.name}(${buildCppArgs(method.parameters || [], cParams, knownTypeNames)})`;
-        } else if (method.fromSupertype) {
-            // For inherited methods that may be hidden by derived class methods with same name,
-            // explicitly call the base class version
-            methodCall = `((${method.fromSupertype}*)(${cppTypeName}*)self)->${method.name}(${buildCppArgs(method.parameters || [], cParams.slice(1), knownTypeNames)})`;
+            body = generateReturnStatement(method.returnType, methodCall, knownTypeNames);
         } else {
-            methodCall = `((${cppTypeName}*)self)->${method.name}(${buildCppArgs(method.parameters || [], cParams.slice(1), knownTypeNames)})`;
+            // Use local variable to avoid cast->method line breaks
+            const instanceVar = method.fromSupertype ? 
+                `${method.fromSupertype} *_self = (${method.fromSupertype} *) (${cppTypeName} *) self;` :
+                `${cppTypeName} *_self = (${cppTypeName} *) self;`;
+            methodCall = `_self->${method.name}(${buildCppArgs(method.parameters || [], cParams.slice(1), knownTypeNames)})`;
+            const returnStatement = generateReturnStatement(method.returnType, methodCall, knownTypeNames);
+            body = `${instanceVar}\n\t${returnStatement}`;
         }
-        const body = generateReturnStatement(method.returnType, methodCall, knownTypeNames);
 
         return {
             name: cMethodName,
@@ -843,17 +851,19 @@ function generateArrayMethod(cTypeName: string, method: Method, cppElementType: 
 }
 
 function generateArrayMethodBody(method: Method, cppElementType: string, cElementType: string, knownTypeNames: Set<string>): string {
-    const self = `((Array<${cppElementType}>*)array)->`;
+    // Use local variable to avoid cast->method line breaks
+    const setup = `Array<${cppElementType}> *_array = (Array<${cppElementType}> *) array;`;
 
     // Build method call arguments using shared function
     const cppArgs = method.parameters ?
         buildCppArgs(method.parameters, convertParameters(method.parameters, knownTypeNames), knownTypeNames) :
         '';
 
-    const methodCall = `${self}${method.name}(${cppArgs})`;
+    const methodCall = `_array->${method.name}(${cppArgs})`;
 
     // Use shared return value handling
-    return generateReturnStatement(method.returnType, methodCall, knownTypeNames, cppElementType, cElementType);
+    const returnStatement = generateReturnStatement(method.returnType, methodCall, knownTypeNames, cppElementType, cElementType);
+    return `${setup}\n\t${returnStatement}`;
 }
 
 function isMethodExcluded(typeName: string, method: Method, exclusions: Exclusion[]): boolean {
