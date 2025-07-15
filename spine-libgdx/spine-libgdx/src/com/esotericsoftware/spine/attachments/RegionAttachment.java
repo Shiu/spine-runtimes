@@ -81,18 +81,6 @@ public class RegionAttachment extends Attachment implements HasTextureRegion {
 	/** Calculates the {@link #offset} and {@link #uvs} using the region and the attachment's transform. Must be called if the
 	 * region, the region's properties, or the transform are changed. */
 	public void updateRegion () {
-		if (region == null) {
-			uvs[BLX] = 0;
-			uvs[BLY] = 0;
-			uvs[ULX] = 0;
-			uvs[ULY] = 1;
-			uvs[URX] = 1;
-			uvs[URY] = 1;
-			uvs[BRX] = 1;
-			uvs[BRY] = 0;
-			return;
-		}
-
 		float width = getWidth(), height = getHeight();
 		float localX2 = width / 2;
 		float localY2 = height / 2;
@@ -137,7 +125,16 @@ public class RegionAttachment extends Attachment implements HasTextureRegion {
 		offset[BRY] = localYCos + localX2Sin;
 
 		float[] uvs = this.uvs;
-		if (rotated) {
+		if (region == null) {
+			uvs[BLX] = 0;
+			uvs[BLY] = 0;
+			uvs[ULX] = 0;
+			uvs[ULY] = 1;
+			uvs[URX] = 1;
+			uvs[URY] = 1;
+			uvs[BRX] = 1;
+			uvs[BRY] = 0;
+		} else if (rotated) {
 			uvs[BLX] = region.getU2();
 			uvs[BLY] = region.getV();
 			uvs[ULX] = region.getU2();
