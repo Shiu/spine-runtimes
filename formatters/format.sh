@@ -94,200 +94,33 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Stay in formatters directory and use relative paths
-# cd $dir/..
-
-# Format C/C++ files with clang-format
+# Call individual formatter scripts
 if [ "$FORMAT_CPP" = true ]; then
-    echo "Formatting C/C++ files..."
-    if [ ! -f "$dir/.clang-format" ]; then
-        echo "Error: .clang-format not found in formatters directory"
-        exit 1
-    fi
-
-    # Define C/C++ source directories - be specific to avoid engine sources
-    cpp_dirs=(
-        # spine-cpp
-        "../spine-cpp/include/spine"
-        "../spine-cpp/src/spine"
-        "../spine-cpp/spine-cpp-lite"
-        "../spine-cpp/tests"
-        
-        # spine-c
-        "../spine-c/include"
-        "../spine-c/src"
-        "../spine-c/src/generated"
-        "../spine-c/tests"
-        
-        # spine-godot
-        "../spine-godot/spine_godot"
-        
-        # spine-ue
-        "../spine-ue/Source/SpineUE"
-        "../spine-ue/Plugins/SpinePlugin/Source/SpinePlugin/Public"
-        "../spine-ue/Plugins/SpinePlugin/Source/SpinePlugin/Private"
-        "../spine-ue/Plugins/SpinePlugin/Source/SpineEditorPlugin/Public"
-        "../spine-ue/Plugins/SpinePlugin/Source/SpineEditorPlugin/Private"
-        
-        # spine-glfw
-        "../spine-glfw/src"
-        "../spine-glfw/example"
-        
-        # spine-sdl
-        "../spine-sdl/src"
-        "../spine-sdl/example"
-        
-        # spine-sfml
-        "../spine-sfml/c/src/spine"
-        "../spine-sfml/c/example"
-        "../spine-sfml/cpp/src/spine"
-        "../spine-sfml/cpp/example"
-        
-        # spine-cocos2dx
-        "../spine-cocos2dx/spine-cocos2dx/src/spine"
-        "../spine-cocos2dx/example/Classes"
-        
-        # spine-ios
-        "../spine-ios/Sources/SpineCppLite"
-        "../spine-ios/Sources/SpineCppLite/include"
-        "../spine-ios/Sources/SpineShadersStructs"
-        "../spine-ios/Example/Spine iOS Example"
-        
-        # spine-flutter
-        "../spine-flutter/ios/Classes"
-        "../spine-flutter/macos/Classes"
-        "../spine-flutter/src"
-    )
-
-    # Collect all C/C++ files from specified directories
-    files=()
-    for cpp_dir in "${cpp_dirs[@]}"; do
-        if [ -d "$cpp_dir" ]; then
-            while IFS= read -r -d '' file; do
-                files+=("$file")
-            done < <(find "$cpp_dir" \( -name "*.c" -o -name "*.cpp" -o -name "*.h" \) \
-                     -not -path "*/.*" \
-                     -not -path "*/build/*" \
-                     -not -path "*/cmake-build-*/*" \
-                     -not -path "*/third_party/*" \
-                     -not -path "*/external/*" \
-                     -not -type l \
-                     -print0)
-        fi
-    done
-
-    echo "Found ${#files[@]} C/C++ files to format"
-
-    # Format each file with progress
-    count=0
-    errors=0
-    for file in "${files[@]}"; do
-        count=$((count + 1))
-        # Show progress every 10 files or for the last file
-        if [ $((count % 10)) -eq 0 ] || [ $count -eq ${#files[@]} ]; then
-            printf "\r[$count/${#files[@]}] Formatting: %-80s" "$(basename "$file")"
-        fi
-
-        # Format the file and capture any errors
-        if ! clang-format -i -style=file:"$dir/.clang-format" "$file" 2>/dev/null; then
-            printf "\nError formatting: $file\n"
-            errors=$((errors + 1))
-        fi
-    done
-
-    # Clear the progress line and show completion
-    printf "\r%-100s\r" " "
-    
-    if [ $errors -gt 0 ]; then
-        echo "Completed with $errors errors"
-    fi
-
-    echo "C/C++ formatting complete"
+    "$dir/format-cpp.sh"
 fi
 
-# Format Java files with Spotless (keeping this for Eclipse formatter)
 if [ "$FORMAT_JAVA" = true ]; then
-    echo "Formatting Java files..."
-    ./formatters/gradlew -p formatters spotlessJavaApply --quiet
+    "$dir/format-java.sh"
 fi
 
-# Format C# files with dotnet-format
 if [ "$FORMAT_CSHARP" = true ]; then
-    echo "Formatting C# files..."
-    if command -v dotnet-format &> /dev/null; then
-        # Copy .editorconfig to C# directories
-        cp .editorconfig ../spine-csharp/ 2>/dev/null || true
-        cp .editorconfig ../spine-monogame/ 2>/dev/null || true
-        cp .editorconfig ../spine-unity/ 2>/dev/null || true
-
-        dotnet-format ../spine-csharp/spine-csharp.sln || true
-        dotnet-format -f ../spine-monogame || true
-        dotnet-format -f ../spine-unity || true
-
-        # Clean up .editorconfig files
-        rm -f ../spine-csharp/.editorconfig
-        rm -f ../spine-monogame/.editorconfig
-        rm -f ../spine-unity/.editorconfig
-    else
-        echo "Warning: dotnet-format not found. Skipping C# formatting."
-    fi
+    "$dir/format-csharp.sh"
 fi
 
-# Format TypeScript files with Biome
 if [ "$FORMAT_TS" = true ]; then
-    echo "Formatting TypeScript files..."
-    # Check if biome.json files match
-    if ! cmp -s ../spine-ts/biome.json ../tests/biome.json; then
-        echo -e "\033[1;31mERROR: spine-ts/biome.json and tests/biome.json differ!\033[0m"
-        echo -e "\033[1;31mPlease sync them to ensure consistent formatting.\033[0m"
-        exit 1
-    fi
-
-    # Format TypeScript files
-    cd ../spine-ts && npx biome format --write . && cd ../formatters
-    cd ../tests && npx biome format --write --config-path ../spine-ts . && cd ../formatters
+    "$dir/format-ts.sh"
 fi
 
-# Format Dart files
 if [ "$FORMAT_DART" = true ]; then
-    echo "Formatting Dart files..."
-    if command -v dart &> /dev/null; then
-        find .. -name "*.dart" \
-            -not -path "*/.*" \
-            -not -path "*/node_modules/*" \
-            -not -path "*/build/*" \
-            -exec dart format {} +
-    else
-        echo "Warning: dart not found. Skipping Dart formatting."
-    fi
+    "$dir/format-dart.sh"
 fi
 
-# Format Haxe files
 if [ "$FORMAT_HAXE" = true ]; then
-    echo "Formatting Haxe files..."
-    if command -v haxelib &> /dev/null && haxelib list formatter &> /dev/null; then
-        find .. -name "*.hx" \
-            -not -path "*/.*" \
-            -not -path "*/node_modules/*" \
-            -not -path "*/build/*" \
-            | xargs haxelib run formatter -s
-    else
-        echo "Warning: haxe formatter not found. Install with: haxelib install formatter"
-    fi
+    "$dir/format-haxe.sh"
 fi
 
-# Format Swift files
 if [ "$FORMAT_SWIFT" = true ]; then
-    echo "Formatting Swift files..."
-    if command -v swift-format &> /dev/null; then
-        find .. -name "*.swift" \
-            -not -path "*/.*" \
-            -not -path "*/build/*" \
-            -not -path "*/DerivedData/*" \
-            | xargs swift-format -i
-    else
-        echo "Warning: swift-format not found. Install from https://github.com/apple/swift-format"
-    fi
+    "$dir/format-swift.sh"
 fi
 
 echo "Formatting complete!"
