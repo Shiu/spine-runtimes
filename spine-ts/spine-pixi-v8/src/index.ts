@@ -28,13 +28,13 @@
  *****************************************************************************/
 
 import './require-shim.js'; // Side effects add require pixi.js to global scope
-import './assets/atlasLoader.js'; // Side effects install the loaders into pixi
-import './assets/skeletonLoader.js'; // Side effects install the loaders into pixi
+import './assets/Atlas-Loader.js'; // Side effects install the loaders into pixi
+import './assets/Skeleton-Loader.js'; // Side effects install the loaders into pixi
 import './darktint/DarkTintBatcher.js'; // Side effects install the batcher into pixi
 import './SpinePipe.js';
 
-export * from './assets/atlasLoader.js';
-export * from './assets/skeletonLoader.js';
+export * from './assets/Atlas-Loader.js';
+export * from './assets/Skeleton-Loader.js';
 export * from './require-shim.js';
 export * from './Spine.js';
 export * from './SpineDebugRenderer.js';

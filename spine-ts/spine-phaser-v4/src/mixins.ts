@@ -37,13 +37,13 @@ export const Alpha = components.Alpha;
 export interface Type<
 	T,
 	P extends any[] = any[]
-	> extends Function {
+> extends Function {
 	new(...args: P): T;
 }
 
 export type Mixin<GameObjectComponent, GameObjectConstraint extends Phaser.GameObjects.GameObject> = <
 	GameObjectType extends Type<GameObjectConstraint>
-	>(
+>(
 	BaseGameObject: GameObjectType
 ) => GameObjectType & Type<GameObjectComponent>;
 

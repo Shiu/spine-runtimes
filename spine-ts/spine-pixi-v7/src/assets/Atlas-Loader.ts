@@ -62,11 +62,11 @@ const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, ISpineAtl
 			name: loaderName,
 		},
 
-		test(url: string): boolean {
+		test (url: string): boolean {
 			return checkExtension(url, ".atlas");
 		},
 
-		async load(url: string): Promise<RawAtlas> {
+		async load (url: string): Promise<RawAtlas> {
 			const response = await settings.ADAPTER.fetch(url);
 
 			const txt = await response.text();
@@ -74,7 +74,7 @@ const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, ISpineAtl
 			return txt;
 		},
 
-		testParse(asset: unknown, options: ResolvedAsset): Promise<boolean> {
+		testParse (asset: unknown, options: ResolvedAsset): Promise<boolean> {
 			const isExtensionRight = checkExtension(options.src!, ".atlas");
 			const isString = typeof asset === "string";
 			const isExplicitLoadParserSet = options.loadParser === loaderName;
@@ -82,11 +82,11 @@ const spineTextureAtlasLoader: AssetExtension<RawAtlas | TextureAtlas, ISpineAtl
 			return Promise.resolve((isExtensionRight || isExplicitLoadParserSet) && isString);
 		},
 
-		unload(atlas: TextureAtlas) {
+		unload (atlas: TextureAtlas) {
 			atlas.dispose();
 		},
 
-		async parse(asset: RawAtlas, options: {src: string, data: ISpineAtlasMetadata}, loader: Loader): Promise<TextureAtlas> {
+		async parse (asset: RawAtlas, options: { src: string, data: ISpineAtlasMetadata }, loader: Loader): Promise<TextureAtlas> {
 			const metadata: ISpineAtlasMetadata = options.data || {};
 			let basePath = utils.path.dirname(options.src);
 

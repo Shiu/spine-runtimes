@@ -251,3 +251,4 @@ spine-libgdx/.factorypath
 spine-libgdx/.project
 .clang-format
 spine-c/codegen/spine-cpp-types.json
+spine-flutter/example/devtools_options.yaml

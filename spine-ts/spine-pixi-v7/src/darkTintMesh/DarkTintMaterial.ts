@@ -94,7 +94,7 @@ export class DarkTintMaterial extends Shader {
 	private _tintColor: Color;
 	private _darkTintColor: Color;
 
-	constructor(texture?: Texture) {
+	constructor (texture?: Texture) {
 		const uniforms = {
 			uSampler: texture ?? Texture.EMPTY,
 			alpha: 1,
@@ -127,10 +127,10 @@ export class DarkTintMaterial extends Shader {
 		this._colorDirty = true;
 	}
 
-	public get texture(): Texture {
+	public get texture (): Texture {
 		return this.uniforms.uSampler;
 	}
-	public set texture(value: Texture) {
+	public set texture (value: Texture) {
 		if (this.uniforms.uSampler !== value) {
 			if (!this.uniforms.uSampler.baseTexture.alphaMode !== !value.baseTexture.alphaMode) {
 				this._colorDirty = true;
@@ -141,7 +141,7 @@ export class DarkTintMaterial extends Shader {
 		}
 	}
 
-	public set alpha(value: number) {
+	public set alpha (value: number) {
 		if (value === this._alpha) {
 			return;
 		}
@@ -149,11 +149,11 @@ export class DarkTintMaterial extends Shader {
 		this._alpha = value;
 		this._colorDirty = true;
 	}
-	public get alpha(): number {
+	public get alpha (): number {
 		return this._alpha;
 	}
 
-	public set tint(value: ColorSource) {
+	public set tint (value: ColorSource) {
 		if (value === this.tint) {
 			return;
 		}
@@ -162,11 +162,11 @@ export class DarkTintMaterial extends Shader {
 		this._tintRGB = this._tintColor.toLittleEndianNumber();
 		this._colorDirty = true;
 	}
-	public get tint(): ColorSource {
+	public get tint (): ColorSource {
 		return this._tintColor.value!;
 	}
 
-	public set darkTint(value: ColorSource) {
+	public set darkTint (value: ColorSource) {
 		if (value === this.darkTint) {
 			return;
 		}
@@ -175,20 +175,20 @@ export class DarkTintMaterial extends Shader {
 		this._darkTintRGB = this._darkTintColor.toLittleEndianNumber();
 		this._colorDirty = true;
 	}
-	public get darkTint(): ColorSource {
+	public get darkTint (): ColorSource {
 		return this._darkTintColor.value!;
 	}
 
-	public get tintValue(): number {
+	public get tintValue (): number {
 		return this._tintColor.toNumber();
 	}
 
-	public get darkTintValue(): number {
+	public get darkTintValue (): number {
 		return this._darkTintColor.toNumber();
 	}
 
 	/** Gets called automatically by the Mesh. Intended to be overridden for custom {@link PIXI.MeshMaterial} objects. */
-	public update(): void {
+	public update (): void {
 		if (this._colorDirty) {
 			this._colorDirty = false;
 			Color.shared.setValue(this._tintColor).premultiply(this._alpha, true).toArray(this.uniforms.uColor);

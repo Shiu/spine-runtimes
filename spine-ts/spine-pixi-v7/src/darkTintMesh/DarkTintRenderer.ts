@@ -83,7 +83,7 @@ export class DarkTintRenderer extends BatchRenderer {
 		type: ExtensionType.RendererPlugin,
 	};
 
-	constructor(renderer: Renderer) {
+	constructor (renderer: Renderer) {
 		super(renderer);
 		this.shaderGenerator = new BatchShaderGenerator(vertex, fragment);
 		this.geometryClass = DarkTintBatchGeometry;
@@ -91,7 +91,7 @@ export class DarkTintRenderer extends BatchRenderer {
 		this.vertexSize = 7;
 	}
 
-	public override packInterleavedGeometry(element: IDarkTintElement, attributeBuffer: ViewableBuffer, indexBuffer: Uint16Array, aIndex: number, iIndex: number): void {
+	public override packInterleavedGeometry (element: IDarkTintElement, attributeBuffer: ViewableBuffer, indexBuffer: Uint16Array, aIndex: number, iIndex: number): void {
 		const { uint32View, float32View } = attributeBuffer;
 		const packedVertices = aIndex / this.vertexSize;
 		const uvs = element.uvs;

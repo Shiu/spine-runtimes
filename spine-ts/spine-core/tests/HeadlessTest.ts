@@ -32,178 +32,178 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import {
-    AnimationState,
-    AnimationStateData,
-    AtlasAttachmentLoader,
-    Physics,
-    Skeleton,
-    SkeletonBinary,
-    SkeletonData,
-    SkeletonJson,
-    TextureAtlas
+	AnimationState,
+	AnimationStateData,
+	AtlasAttachmentLoader,
+	Physics,
+	Skeleton,
+	SkeletonBinary,
+	SkeletonData,
+	SkeletonJson,
+	TextureAtlas
 } from '../src/index.js';
 
 // Printer class for hierarchical output
 class Printer {
-    private indentLevel = 0;
-    private readonly INDENT = "  ";
+	private indentLevel = 0;
+	private readonly INDENT = "  ";
 
-    print(text: string): void {
-        const indent = this.INDENT.repeat(this.indentLevel);
-        console.log(indent + text);
-    }
+	print (text: string): void {
+		const indent = this.INDENT.repeat(this.indentLevel);
+		console.log(indent + text);
+	}
 
-    indent(): void {
-        this.indentLevel++;
-    }
+	indent (): void {
+		this.indentLevel++;
+	}
 
-    unindent(): void {
-        this.indentLevel--;
-    }
+	unindent (): void {
+		this.indentLevel--;
+	}
 
-    printSkeletonData(data: SkeletonData): void {
-        this.print("SkeletonData {");
-        this.indent();
+	printSkeletonData (data: SkeletonData): void {
+		this.print("SkeletonData {");
+		this.indent();
 
-        this.print(`name: "${data.name || ""}"`);
-        this.print(`version: ${data.version ? `"${data.version}"` : "null"}`);
-        this.print(`hash: ${data.hash ? `"${data.hash}"` : "null"}`);
-        this.print(`x: ${this.formatFloat(data.x)}`);
-        this.print(`y: ${this.formatFloat(data.y)}`);
-        this.print(`width: ${this.formatFloat(data.width)}`);
-        this.print(`height: ${this.formatFloat(data.height)}`);
-        this.print(`referenceScale: ${this.formatFloat(data.referenceScale)}`);
-        this.print(`fps: ${this.formatFloat(data.fps || 0)}`);
-        this.print(`imagesPath: ${data.imagesPath ? `"${data.imagesPath}"` : "null"}`);
-        this.print(`audioPath: ${data.audioPath ? `"${data.audioPath}"` : "null"}`);
+		this.print(`name: "${data.name || ""}"`);
+		this.print(`version: ${data.version ? `"${data.version}"` : "null"}`);
+		this.print(`hash: ${data.hash ? `"${data.hash}"` : "null"}`);
+		this.print(`x: ${this.formatFloat(data.x)}`);
+		this.print(`y: ${this.formatFloat(data.y)}`);
+		this.print(`width: ${this.formatFloat(data.width)}`);
+		this.print(`height: ${this.formatFloat(data.height)}`);
+		this.print(`referenceScale: ${this.formatFloat(data.referenceScale)}`);
+		this.print(`fps: ${this.formatFloat(data.fps || 0)}`);
+		this.print(`imagesPath: ${data.imagesPath ? `"${data.imagesPath}"` : "null"}`);
+		this.print(`audioPath: ${data.audioPath ? `"${data.audioPath}"` : "null"}`);
 
-        // TODO: Add bones, slots, skins, animations, etc. in future expansion
+		// TODO: Add bones, slots, skins, animations, etc. in future expansion
 
-        this.unindent();
-        this.print("}");
-    }
+		this.unindent();
+		this.print("}");
+	}
 
-    printSkeleton(skeleton: Skeleton): void {
-        this.print("Skeleton {");
-        this.indent();
+	printSkeleton (skeleton: Skeleton): void {
+		this.print("Skeleton {");
+		this.indent();
 
-        this.print(`x: ${this.formatFloat(skeleton.x)}`);
-        this.print(`y: ${this.formatFloat(skeleton.y)}`);
-        this.print(`scaleX: ${this.formatFloat(skeleton.scaleX)}`);
-        this.print(`scaleY: ${this.formatFloat(skeleton.scaleY)}`);
-        this.print(`time: ${this.formatFloat(skeleton.time)}`);
+		this.print(`x: ${this.formatFloat(skeleton.x)}`);
+		this.print(`y: ${this.formatFloat(skeleton.y)}`);
+		this.print(`scaleX: ${this.formatFloat(skeleton.scaleX)}`);
+		this.print(`scaleY: ${this.formatFloat(skeleton.scaleY)}`);
+		this.print(`time: ${this.formatFloat(skeleton.time)}`);
 
-        // TODO: Add runtime state (bones, slots, etc.) in future expansion
+		// TODO: Add runtime state (bones, slots, etc.) in future expansion
 
-        this.unindent();
-        this.print("}");
-    }
+		this.unindent();
+		this.print("}");
+	}
 
-    private formatFloat(value: number): string {
-        // Format to 6 decimal places, matching Java/C++ output
-        return value.toFixed(6).replace(',', '.');
-    }
+	private formatFloat (value: number): string {
+		// Format to 6 decimal places, matching Java/C++ output
+		return value.toFixed(6).replace(',', '.');
+	}
 }
 
 // Main DebugPrinter class
 class DebugPrinter {
-    static async main(args: string[]): Promise<void> {
-        if (args.length < 2) {
-            console.error("Usage: DebugPrinter <skeleton-path> <atlas-path> [animation-name]");
-            process.exit(1);
-        }
+	static async main (args: string[]): Promise<void> {
+		if (args.length < 2) {
+			console.error("Usage: DebugPrinter <skeleton-path> <atlas-path> [animation-name]");
+			process.exit(1);
+		}
 
-        const skeletonPath = args[0];
-        const atlasPath = args[1];
-        const animationName = args.length >= 3 ? args[2] : null;
+		const skeletonPath = args[0];
+		const atlasPath = args[1];
+		const animationName = args.length >= 3 ? args[2] : null;
 
-        try {
-            // Load atlas
-            const atlasData = await fs.readFile(atlasPath, 'utf8');
-            const atlas = new TextureAtlas(atlasData);
+		try {
+			// Load atlas
+			const atlasData = await fs.readFile(atlasPath, 'utf8');
+			const atlas = new TextureAtlas(atlasData);
 
-            // Load skeleton data
-            const skeletonData = await this.loadSkeletonData(skeletonPath, atlas);
+			// Load skeleton data
+			const skeletonData = await this.loadSkeletonData(skeletonPath, atlas);
 
-            // Print skeleton data
-            const printer = new Printer();
-            console.log("=== SKELETON DATA ===");
-            printer.printSkeletonData(skeletonData);
+			// Print skeleton data
+			const printer = new Printer();
+			console.log("=== SKELETON DATA ===");
+			printer.printSkeletonData(skeletonData);
 
-            // Create skeleton and animation state
-            const skeleton = new Skeleton(skeletonData);
-            const stateData = new AnimationStateData(skeletonData);
-            const state = new AnimationState(stateData);
+			// Create skeleton and animation state
+			const skeleton = new Skeleton(skeletonData);
+			const stateData = new AnimationStateData(skeletonData);
+			const state = new AnimationState(stateData);
 
-            skeleton.setupPose();
+			skeleton.setupPose();
 
-            // Set animation or setup pose
-            if (animationName) {
-                // Find and set animation
-                const animation = skeletonData.findAnimation(animationName);
-                if (!animation) {
-                    console.error(`Animation not found: ${animationName}`);
-                    process.exit(1);
-                }
-                state.setAnimation(0, animationName, true);
-                // Update and apply
-                state.update(0.016);
-                state.apply(skeleton);
-            }
+			// Set animation or setup pose
+			if (animationName) {
+				// Find and set animation
+				const animation = skeletonData.findAnimation(animationName);
+				if (!animation) {
+					console.error(`Animation not found: ${animationName}`);
+					process.exit(1);
+				}
+				state.setAnimation(0, animationName, true);
+				// Update and apply
+				state.update(0.016);
+				state.apply(skeleton);
+			}
 
-            skeleton.updateWorldTransform(Physics.update);
+			skeleton.updateWorldTransform(Physics.update);
 
-            // Print skeleton state
-            console.log("\n=== SKELETON STATE ===");
-            printer.printSkeleton(skeleton);
+			// Print skeleton state
+			console.log("\n=== SKELETON STATE ===");
+			printer.printSkeleton(skeleton);
 
-        } catch (error) {
-            console.error("Error:", error);
-            process.exit(1);
-        }
-    }
+		} catch (error) {
+			console.error("Error:", error);
+			process.exit(1);
+		}
+	}
 
-    private static async loadSkeletonData(skeletonPath: string, atlas: TextureAtlas): Promise<SkeletonData> {
-        const attachmentLoader = new AtlasAttachmentLoader(atlas);
-        const ext = path.extname(skeletonPath).toLowerCase();
+	private static async loadSkeletonData (skeletonPath: string, atlas: TextureAtlas): Promise<SkeletonData> {
+		const attachmentLoader = new AtlasAttachmentLoader(atlas);
+		const ext = path.extname(skeletonPath).toLowerCase();
 
-        if (ext === '.json') {
-            const jsonData = await fs.readFile(skeletonPath, 'utf8');
-            const json = new SkeletonJson(attachmentLoader);
-            json.scale = 1;
-            const skeletonData = json.readSkeletonData(jsonData);
+		if (ext === '.json') {
+			const jsonData = await fs.readFile(skeletonPath, 'utf8');
+			const json = new SkeletonJson(attachmentLoader);
+			json.scale = 1;
+			const skeletonData = json.readSkeletonData(jsonData);
 
-            // Set name from filename if not already set
-            if (!skeletonData.name) {
-                const basename = path.basename(skeletonPath);
-                const nameWithoutExt = basename.substring(0, basename.lastIndexOf('.')) || basename;
-                skeletonData.name = nameWithoutExt;
-            }
+			// Set name from filename if not already set
+			if (!skeletonData.name) {
+				const basename = path.basename(skeletonPath);
+				const nameWithoutExt = basename.substring(0, basename.lastIndexOf('.')) || basename;
+				skeletonData.name = nameWithoutExt;
+			}
 
-            return skeletonData;
-        } else if (ext === '.skel') {
-            const binaryData = await fs.readFile(skeletonPath);
-            const binary = new SkeletonBinary(attachmentLoader);
-            binary.scale = 1;
-            const skeletonData = binary.readSkeletonData(new Uint8Array(binaryData));
+			return skeletonData;
+		} else if (ext === '.skel') {
+			const binaryData = await fs.readFile(skeletonPath);
+			const binary = new SkeletonBinary(attachmentLoader);
+			binary.scale = 1;
+			const skeletonData = binary.readSkeletonData(new Uint8Array(binaryData));
 
-            // Set name from filename if not already set
-            if (!skeletonData.name) {
-                const basename = path.basename(skeletonPath);
-                const nameWithoutExt = basename.substring(0, basename.lastIndexOf('.')) || basename;
-                skeletonData.name = nameWithoutExt;
-            }
+			// Set name from filename if not already set
+			if (!skeletonData.name) {
+				const basename = path.basename(skeletonPath);
+				const nameWithoutExt = basename.substring(0, basename.lastIndexOf('.')) || basename;
+				skeletonData.name = nameWithoutExt;
+			}
 
-            return skeletonData;
-        } else {
-            throw new Error(`Unsupported skeleton file format: ${ext}`);
-        }
-    }
+			return skeletonData;
+		} else {
+			throw new Error(`Unsupported skeleton file format: ${ext}`);
+		}
+	}
 }
 
 // Run if called directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-    DebugPrinter.main(process.argv.slice(2));
+	DebugPrinter.main(process.argv.slice(2));
 }
 
 export default DebugPrinter;

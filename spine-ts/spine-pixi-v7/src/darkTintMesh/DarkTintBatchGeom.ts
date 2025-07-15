@@ -44,7 +44,7 @@ export class DarkTintBatchGeometry extends Geometry {
 	 * @param {boolean} [_static=false] - Optimization flag, where `false`
 	 *        is updated every frame, `true` doesn't change frame-to-frame.
 	 */
-	constructor(_static = false) {
+	constructor (_static = false) {
 		super();
 
 		this._buffer = new Buffer(undefined, _static, false);

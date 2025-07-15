@@ -51,24 +51,24 @@ export class DarkTintMesh extends Mesh<DarkTintMaterial> {
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	public _darkTintRGB: number = 0;
 
-	constructor(texture?: Texture) {
+	constructor (texture?: Texture) {
 		super(new DarkTintGeometry(), new DarkTintMaterial(texture), undefined, undefined);
 	}
 
-	public get darkTint(): ColorSource | null {
+	public get darkTint (): ColorSource | null {
 		return "darkTint" in this.shader ? (this.shader as unknown as DarkTintMaterial).darkTint : null;
 	}
 
-	public set darkTint(value: ColorSource | null) {
+	public set darkTint (value: ColorSource | null) {
 		(this.shader as unknown as DarkTintMaterial).darkTint = value!;
 	}
 
-	public get darkTintValue(): number {
+	public get darkTintValue (): number {
 		return (this.shader as unknown as DarkTintMaterial).darkTintValue;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/naming-convention
-	protected override _renderToBatch(renderer: Renderer): void {
+	protected override _renderToBatch (renderer: Renderer): void {
 		const geometry = this.geometry;
 		const shader = this.shader;
 
