@@ -1,6 +1,8 @@
-# spine-cpp
+# spine-c
 
-The spine-cpp runtime provides basic functionality to load and manipulate [spine](http://esotericsoftware.com) skeletal animation data using C++. It does not perform rendering but can be extended to enable spine animations for other projects that utilize C++.
+The spine-c runtime provides basic functionality to load and manipulate [spine](http://esotericsoftware.com) skeletal animation data using C. It does not perform rendering but can be extended to enable spine animations for other projects that utilize C.
+
+**Note:** The spine-c code is generated using a code generator. For details on the code generation process, please see the [codegen/README.md](codegen/README.md).
 
 ## Licensing
 
@@ -14,20 +16,20 @@ For the official legal terms governing the Spine Runtimes, please read the [Spin
 
 ## Spine version
 
-spine-cpp works with data exported from spine 4.3.xx.
+spine-c works with data exported from spine 4.3.xx.
 
-spine-cpp supports all spine features.
+spine-c supports all spine features.
 
 ## Setup
 
 ### Manual Copy
 
 1. Download the spine Runtimes source using [git](https://help.github.com/articles/set-up-git) or by downloading it as a zip via the download button above.
-2. Copy the contents of the `spine-cpp/spine-cpp/src` and `spine-cpp/spine-cpp/include` directories into your project. Be sure your header search is configured to find the contents of the `spine-cpp/spine-cpp/include` directory. Note that the includes use `spine/Xxx.h`, so the `spine` directory cannot be omitted when copying the files.
+2. Copy the contents of the `spine-c/src` and `spine-c/include` directories into your project. Be sure your header search is configured to find the contents of the `spine-c/include` directory.
 
 ### CMake
 
-You can use CMake's FetchContent to include spine-cpp in your project:
+You can use CMake's FetchContent to include spine-c in your project:
 
 ```cmake
 include(FetchContent)
@@ -38,17 +40,17 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(spine-runtimes)
 
-add_subdirectory(${spine-runtimes_SOURCE_DIR}/spine-cpp ${spine-runtimes_BINARY_DIR}/spine-cpp)
-target_link_libraries(your_target PRIVATE spine-cpp)
+add_subdirectory(${spine-runtimes_SOURCE_DIR}/spine-c ${spine-runtimes_BINARY_DIR}/spine-c)
+target_link_libraries(your_target PRIVATE spine-c)
 ```
 
 ## Usage
 
-### [Please see the spine-cpp guide for full documentation](http://esotericsoftware.com/spine-cpp)
+### [Please see the spine-c guide for full documentation](http://esotericsoftware.com/spine-c)
 
-## Runtimes extending spine-cpp
-- [spine-glfw](../spine-glfw)
+## Runtimes extending spine-c
+- [spine-ios](../spine-ios)
+- [spine-flutter](../spine-flutter)
+- [spine-sfml/c](../spine-sfml/c)
 - [spine-sdl](../spine-sdl)
-- [spine-sfml](../spine-sfml/cpp)
-- [spine-cocos2dx](../spine-cocos2dx)
-- [spine-ue](../spine-ue)
+- [spine-glfw](../spine-glfw)
