@@ -6,4 +6,11 @@ echo "Formatting Java files..."
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-./formatters/gradlew -p formatters spotlessJavaApply --quiet
+# Store original directory
+pushd "$dir" > /dev/null
+
+# Run gradle from the formatters directory
+./gradlew spotlessJavaApply --quiet
+
+# Return to original directory
+popd > /dev/null

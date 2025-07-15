@@ -42,12 +42,24 @@ jobs:
         distribution: 'zulu'
         java-version: "16"
 
+    - name: Install Haxe
+      uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: '4.3.2'
+    - run: haxelib install formatter
+
+    - name: Install Dart
+      uses: dart-lang/setup-dart@v1
+      with:
+        sdk: 'stable'
+
     - name: Format
       run: |
         export CLANGFORMAT=`pwd`/clang/bin/clang-format
         ./formatters/format-cpp.sh
         ./formatters/format-csharp.sh
         ./formatters/format-dart.sh
+        ./formatters/format-haxe.sh
         ./formatters/format-java.sh
         ./formatters/format-ts.sh
         git diff

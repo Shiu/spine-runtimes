@@ -6,8 +6,12 @@ echo "Formatting C/C++ files..."
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-if [ ! -f "$dir/.clang-format" ]; then
+# Store original directory
+pushd "$dir" > /dev/null
+
+if [ ! -f ".clang-format" ]; then
     echo "Error: .clang-format not found in formatters directory"
+    popd > /dev/null
     exit 1
 fi
 
@@ -95,7 +99,7 @@ for file in "${files[@]}"; do
     fi
 
     # Format the file and capture any errors
-    if ! clang-format -i -style=file:"$dir/.clang-format" "$file" 2>/dev/null; then
+    if ! clang-format -i -style=file:".clang-format" "$file" 2>/dev/null; then
         printf "\nError formatting: $file\n"
         errors=$((errors + 1))
     fi
@@ -109,3 +113,6 @@ if [ $errors -gt 0 ]; then
 fi
 
 echo "C/C++ formatting complete"
+
+# Return to original directory
+popd > /dev/null

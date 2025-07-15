@@ -4,6 +4,11 @@ set -e
 # Format Dart files
 echo "Formatting Dart files..."
 
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+# Store original directory
+pushd "$dir" > /dev/null
+
 if command -v dart &> /dev/null; then
     find .. -name "*.dart" \
         -not -path "*/.*" \
@@ -13,3 +18,6 @@ if command -v dart &> /dev/null; then
 else
     echo "Warning: dart not found. Skipping Dart formatting."
 fi
+
+# Return to original directory
+popd > /dev/null
