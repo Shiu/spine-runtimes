@@ -1,4 +1,4 @@
-import { Symbol, Supertype, LspOutput } from '@mariozechner/lsp-cli';
+import { Supertype } from '@mariozechner/lsp-cli';
 
 // Shared types for the Spine serializer generator
 export interface ClassInfo {

@@ -420,7 +420,7 @@ function generateCppFromIR(ir: SerializerIR): string {
 async function main() {
     try {
         // Read the IR file
-        const irFile = path.resolve(__dirname, '../../output/serializer-ir.json');
+        const irFile = path.resolve(__dirname, '../output/serializer-ir.json');
         if (!fs.existsSync(irFile)) {
             console.error('Serializer IR not found. Run generate-serializer-ir.ts first.');
             process.exit(1);
@@ -434,7 +434,7 @@ async function main() {
         // Write the C++ file
         const cppFile = path.resolve(
             __dirname,
-            '../../../spine-cpp/tests/SkeletonSerializer.h'
+            '../../spine-cpp/tests/SkeletonSerializer.h'
         );
 
         fs.mkdirSync(path.dirname(cppFile), { recursive: true });

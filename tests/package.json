@@ -10,6 +10,6 @@
     "tsx": "^4.0.0"
   },
   "dependencies": {
-    "@mariozechner/lsp-cli": "^0.1.1"
+    "@mariozechner/lsp-cli": "^0.1.3"
   }
 }

@@ -1,4 +1,3 @@
-- lsp-cli should export its types, so we can pull them in as a dependency instead of redefining them ourselves in types.ts
 - clean up logging in spine-c/codegen, use chalk to do colored warnings/errors and make logging look very nice and informative (no emojis)
 - spine-c/codegen type extractor should also report typedefs like typedef long long PropertyId; so primitive type to some name, and we need to handle that in the codegen
 - Generate language bindings in spine-c/codegen

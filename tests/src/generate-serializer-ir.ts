@@ -88,27 +88,27 @@ interface SerializedAnalysisResult {
 }
 
 function loadExclusions(): { types: Set<string>, methods: Map<string, Set<string>>, fields: Map<string, Set<string>> } {
-    const exclusionsPath = path.resolve(__dirname, 'java-exclusions.txt');
+    const exclusionsPath = path.resolve(__dirname, '../java-exclusions.txt');
     const types = new Set<string>();
     const methods = new Map<string, Set<string>>();
     const fields = new Map<string, Set<string>>();
-    
+
     if (!fs.existsSync(exclusionsPath)) {
         return { types, methods, fields };
     }
-    
+
     const content = fs.readFileSync(exclusionsPath, 'utf-8');
     const lines = content.split('\n');
-    
+
     for (const line of lines) {
         const trimmed = line.trim();
         if (!trimmed || trimmed.startsWith('#')) continue;
-        
+
         const parts = trimmed.split(/\s+/);
         if (parts.length < 2) continue;
-        
+
         const [type, className, property] = parts;
-        
+
         switch (type) {
             case 'type':
                 types.add(className);
@@ -131,7 +131,7 @@ function loadExclusions(): { types: Set<string>, methods: Map<string, Set<string
                 break;
         }
     }
-    
+
     return { types, methods, fields };
 }
 
@@ -182,7 +182,7 @@ function analyzePropertyType(propType: string, classMap: Map<string, ClassInfo>)
     if (propType.startsWith('Array<')) {
         const innerType = propType.match(/Array<(.+?)>/)![1].trim();
         const elementKind = ['String', 'int', 'float', 'boolean', 'short', 'byte', 'double', 'long'].includes(innerType) ? "primitive" : "object";
-        
+
         return {
             kind: "array",
             name,
@@ -257,14 +257,14 @@ function generateSerializerIR(analysisData: SerializedAnalysisResult): Serialize
         if (classInfo.isEnum && classInfo.enumValues) {
             const shortName = className.split('.').pop()!;
             const valueMap: { [javaValue: string]: string } = {};
-            
+
             for (const javaValue of classInfo.enumValues) {
                 // Convert Java enum value to C++ enum value
                 // e.g. "setup" -> "MixBlend_Setup", "first" -> "MixBlend_First"
                 const cppValue = `${shortName}_${javaValue.charAt(0).toUpperCase() + javaValue.slice(1)}`;
                 valueMap[javaValue] = cppValue;
             }
-            
+
             enumMappings[shortName] = valueMap;
         }
     }
@@ -356,7 +356,7 @@ function generateSerializerIR(analysisData: SerializedAnalysisResult): Serialize
     for (const typeName of Array.from(typesNeedingMethods).sort()) {
         const classInfo = classMap.get(typeName);
         if (!classInfo) continue;
-        
+
         // Skip enums - they are handled inline with .name() calls
         if (classInfo.isEnum) continue;
 
@@ -376,12 +376,12 @@ function generateSerializerIR(analysisData: SerializedAnalysisResult): Serialize
         if (classInfo.isAbstract || classInfo.isInterface) {
             // Handle abstract types with instanceof chain
             const implementations = classInfo.concreteImplementations || [];
-            
+
             // Filter out excluded types from implementations
             const filteredImplementations = implementations.filter(impl => {
                 return !exclusions.types.has(impl);
             });
-            
+
             if (filteredImplementations.length > 0) {
                 writeMethod.subtypeChecks = filteredImplementations.map(impl => {
                     const implShortName = impl.split('.').pop()!;
@@ -399,7 +399,7 @@ function generateSerializerIR(analysisData: SerializedAnalysisResult): Serialize
                 if (prop.excluded) {
                     continue; // Skip excluded properties
                 }
-                
+
                 const propName = prop.isGetter ?
                     prop.name.replace('get', '').replace('()', '').charAt(0).toLowerCase() +
                     prop.name.replace('get', '').replace('()', '').slice(1) :
@@ -474,7 +474,7 @@ function analyzePropertyWithDetails(prop: PropertyInfo, propName: string, getter
     if (propType.startsWith('Array<')) {
         const innerType = propType.match(/Array<(.+?)>/)![1].trim();
         const elementKind = ['String', 'int', 'float', 'boolean', 'short', 'byte', 'double', 'long'].includes(innerType) ? "primitive" : "object";
-        
+
         return {
             kind: "array",
             name: propName,
@@ -539,7 +539,7 @@ function analyzePropertyWithDetails(prop: PropertyInfo, propName: string, getter
 async function main() {
     try {
         // Read analysis result
-        const analysisFile = path.resolve(__dirname, '../../output/analysis-result.json');
+        const analysisFile = path.resolve(__dirname, '../output/analysis-result.json');
         if (!fs.existsSync(analysisFile)) {
             console.error('Analysis result not found. Run analyze-java-api.ts first.');
             process.exit(1);
@@ -551,7 +551,7 @@ async function main() {
         const ir = generateSerializerIR(analysisData);
 
         // Write the IR file
-        const irFile = path.resolve(__dirname, '../../output/serializer-ir.json');
+        const irFile = path.resolve(__dirname, '../output/serializer-ir.json');
         fs.mkdirSync(path.dirname(irFile), { recursive: true });
         fs.writeFileSync(irFile, JSON.stringify(ir, null, 2));
 

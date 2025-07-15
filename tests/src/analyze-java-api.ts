@@ -4,12 +4,13 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import type { Symbol, LspOutput, ClassInfo, PropertyInfo, AnalysisResult } from './types';
+import type { ClassInfo, PropertyInfo, AnalysisResult } from './types';
+import type { LspCliResult, SymbolInfo } from '@mariozechner/lsp-cli';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function ensureOutputDir(): string {
-    const outputDir = path.resolve(__dirname, '../../output');
+    const outputDir = path.resolve(__dirname, '../output');
     if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
     }
@@ -18,7 +19,7 @@ function ensureOutputDir(): string {
 
 function generateLspData(outputDir: string): string {
     const outputFile = path.join(outputDir, 'spine-libgdx-symbols.json');
-    const projectDir = '/Users/badlogic/workspaces/spine-runtimes/spine-libgdx';
+    const projectDir = path.resolve(__dirname, '../../spine-libgdx');
     const srcDir = path.join(projectDir, 'spine-libgdx/src');
 
     // Check if we need to regenerate
@@ -42,9 +43,8 @@ function generateLspData(outputDir: string): string {
     if (needsRegeneration) {
         console.error('Generating LSP data for spine-libgdx...');
         try {
-            execSync(`npx lsp-cli "${projectDir}" java "${outputFile}"`, {
-                encoding: 'utf8',
-                stdio: ['ignore', 'ignore', 'pipe'] // Hide stdout but show stderr
+            execSync(`node ${path.join(__dirname, '../node_modules/@mariozechner/lsp-cli/dist/index.js')} "${projectDir}" java "${outputFile}"`, {
+                stdio: 'inherit' // Show all output
             });
             console.error('LSP data generated successfully');
         } catch (error: any) {
@@ -58,11 +58,11 @@ function generateLspData(outputDir: string): string {
     return outputFile;
 }
 
-function analyzeClasses(symbols: Symbol[]): Map<string, ClassInfo> {
+function analyzeClasses(symbols: SymbolInfo[]): Map<string, ClassInfo> {
     const classMap = new Map<string, ClassInfo>();
-    const srcPath = '/Users/badlogic/workspaces/spine-runtimes/spine-libgdx/spine-libgdx/src/';
+    const srcPath = path.resolve(__dirname, '../../spine-libgdx/spine-libgdx/src/');
 
-    function processSymbol(symbol: Symbol, parentName?: string) {
+    function processSymbol(symbol: SymbolInfo, parentName?: string) {
         if (symbol.kind !== 'class' && symbol.kind !== 'enum' && symbol.kind !== 'interface') return;
 
         // Filter: only process symbols in spine-libgdx/src, excluding SkeletonSerializer
@@ -256,6 +256,9 @@ function findAccessibleTypes(
             const typeMatches = returnType.match(/\b([A-Z]\w+(?:\.[A-Z]\w+)*)\b/g);
             if (typeMatches) {
                 for (const match of typeMatches) {
+                    if (classMap.has(match) && !visited.has(match)) {
+                        toVisit.push(match);
+                    }
                     // For non-qualified names, also try as inner class
                     if (!match.includes('.')) {
                         // Try as inner class of current type and its parents
@@ -279,7 +282,7 @@ function findAccessibleTypes(
 }
 
 function loadExclusions(): { types: Set<string>, methods: Map<string, Set<string>>, fields: Map<string, Set<string>> } {
-    const exclusionsPath = path.resolve(__dirname, 'java-exclusions.txt');
+    const exclusionsPath = path.resolve(__dirname, '../java-exclusions.txt');
     const types = new Set<string>();
     const methods = new Map<string, Set<string>>();
     const fields = new Map<string, Set<string>>();
@@ -688,7 +691,7 @@ async function main() {
 
         // Read and parse the JSON
         const jsonContent = fs.readFileSync(jsonFile, 'utf8');
-        const lspData: LspOutput = JSON.parse(jsonContent);
+        const lspData: LspCliResult = JSON.parse(jsonContent);
 
         console.error(`Analyzing ${lspData.symbols.length} symbols...`);
 

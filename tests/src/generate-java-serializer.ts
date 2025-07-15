@@ -290,7 +290,7 @@ function generateJavaFromIR(ir: SerializerIR): string {
 async function main() {
     try {
         // Read the IR file
-        const irFile = path.resolve(__dirname, '../../output/serializer-ir.json');
+        const irFile = path.resolve(__dirname, '../output/serializer-ir.json');
         if (!fs.existsSync(irFile)) {
             console.error('Serializer IR not found. Run generate-serializer-ir.ts first.');
             process.exit(1);
@@ -304,7 +304,7 @@ async function main() {
         // Write the Java file
         const javaFile = path.resolve(
             __dirname,
-            '../../../spine-libgdx/spine-libgdx-tests/src/com/esotericsoftware/spine/utils/SkeletonSerializer.java'
+            '../../spine-libgdx/spine-libgdx-tests/src/com/esotericsoftware/spine/utils/SkeletonSerializer.java'
         );
 
         fs.mkdirSync(path.dirname(javaFile), { recursive: true });
