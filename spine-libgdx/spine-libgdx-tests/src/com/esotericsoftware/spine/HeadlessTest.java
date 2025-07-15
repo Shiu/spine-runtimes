@@ -36,12 +36,7 @@ import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData;
 import com.esotericsoftware.spine.utils.SkeletonSerializer;
-
-import java.io.StringWriter;
-import java.util.Locale;
 
 public class HeadlessTest implements ApplicationListener {
 	private String skeletonPath;
@@ -54,83 +49,6 @@ public class HeadlessTest implements ApplicationListener {
 		this.animationName = animationName;
 	}
 
-	// Removed Printer class - now using SkeletonSerializer
-	/*
-	static class Printer {
-		private int indentLevel = 0;
-		private static final String INDENT = "  ";
-
-		private void print (String text) {
-			for (int i = 0; i < indentLevel; i++) {
-				System.out.print(INDENT);
-			}
-			System.out.println(text);
-		}
-
-		private void printValue (String name, Object value) {
-			if (value == null) {
-				print(name + ": null");
-			} else if (value instanceof String) {
-				print(name + ": \"" + value + "\"");
-			} else if (value instanceof Float) {
-				// Format floats to 6 decimal places to match other runtimes
-				print(name + ": " + String.format(Locale.US, "%.6f", value));
-			} else {
-				print(name + ": " + value);
-			}
-		}
-
-		private void indent () {
-			indentLevel++;
-		}
-
-		private void unindent () {
-			indentLevel--;
-		}
-
-		public void printSkeletonData (SkeletonData data) {
-			print("SkeletonData {");
-			indent();
-
-			// Basic properties
-			printValue("name", data.getName());
-			printValue("version", data.getVersion());
-			printValue("hash", data.getHash());
-			printValue("x", data.getX());
-			printValue("y", data.getY());
-			printValue("width", data.getWidth());
-			printValue("height", data.getHeight());
-			printValue("referenceScale", data.getReferenceScale());
-			printValue("fps", data.getFps());
-			printValue("imagesPath", data.getImagesPath());
-			printValue("audioPath", data.getAudioPath());
-
-			// TODO: Add bones, slots, skins, animations, etc. in future expansion
-
-			unindent();
-			print("}");
-		}
-
-		public void printSkeleton (Skeleton skeleton) {
-			print("Skeleton {");
-			indent();
-
-			// Basic properties
-			printValue("x", skeleton.getX());
-			printValue("y", skeleton.getY());
-			printValue("scaleX", skeleton.getScaleX());
-			printValue("scaleY", skeleton.getScaleY());
-			printValue("time", skeleton.getTime());
-
-			// TODO: Add runtime state (bones, slots, etc.) in future expansion
-
-			unindent();
-			print("}");
-		}
-	}
-	*/
-
-	// Mock texture that doesn't require OpenGL - similar to AndroidTexture
 	static class MockTexture extends Texture {
 		private int width, height;
 
@@ -152,33 +70,25 @@ public class HeadlessTest implements ApplicationListener {
 
 		@Override
 		public void bind () {
-			// Do nothing
 		}
 
 		@Override
 		public void bind (int unit) {
-			// Do nothing
 		}
 
 		@Override
 		public void dispose () {
-			// Do nothing
 		}
 	}
 
-	// Custom TextureAtlas that doesn't load actual textures - similar to AndroidTextureAtlas
 	static class HeadlessTextureAtlas extends TextureAtlas {
 		public HeadlessTextureAtlas (FileHandle packFile) {
-			// Load atlas data without creating real textures
 			TextureAtlasData data = new TextureAtlasData(packFile, packFile.parent(), false);
 
-			// Create mock textures for each page
 			for (TextureAtlasData.Page page : data.getPages()) {
-				// Create a mock texture - we use 1024x1024 as a default size
 				page.texture = new MockTexture(1024, 1024);
 			}
 
-			// Create regions from the data
 			for (TextureAtlasData.Region region : data.getRegions()) {
 				AtlasRegion atlasRegion = new AtlasRegion(region.page.texture, region.left, region.top,
 					region.rotate ? region.height : region.width, region.rotate ? region.width : region.height);
