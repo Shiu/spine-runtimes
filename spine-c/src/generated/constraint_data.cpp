@@ -15,7 +15,7 @@ spine_constraint spine_constraint_data_create_method(spine_constraint_data self,
     return (spine_constraint)((ConstraintData*)self)->create(*((Skeleton*)skeleton));
 }
 
-const char* spine_constraint_data_get_name(spine_constraint_data self) {
+const char * spine_constraint_data_get_name(spine_constraint_data self) {
     return ((ConstraintData*)self)->getName().buffer();
 }
 

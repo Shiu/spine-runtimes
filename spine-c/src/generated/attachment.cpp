@@ -11,7 +11,7 @@ spine_rtti spine_attachment_get_rtti(spine_attachment self) {
     return (spine_rtti)&((Attachment*)self)->getRTTI();
 }
 
-const char* spine_attachment_get_name(spine_attachment self) {
+const char * spine_attachment_get_name(spine_attachment self) {
     return ((Attachment*)self)->getName().buffer();
 }
 

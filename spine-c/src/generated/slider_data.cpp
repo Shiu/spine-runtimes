@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_slider_data spine_slider_data_create(const char* name) {
+spine_slider_data spine_slider_data_create(const char * name) {
     return (spine_slider_data) new (__FILE__, __LINE__) SliderData(String(name));
 }
 
@@ -83,7 +83,7 @@ void spine_slider_data_set_local(spine_slider_data self, bool local) {
     ((SliderData*)self)->setLocal(local);
 }
 
-const char* spine_slider_data_get_name(spine_slider_data self) {
+const char * spine_slider_data_get_name(spine_slider_data self) {
     return ((ConstraintDataGeneric<Slider, SliderPose>*)(SliderData*)self)->getName().buffer();
 }
 

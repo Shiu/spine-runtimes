@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_clipping_attachment spine_clipping_attachment_create(const char* name) {
+spine_clipping_attachment spine_clipping_attachment_create(const char * name) {
     return (spine_clipping_attachment) new (__FILE__, __LINE__) ClippingAttachment(String(name));
 }
 
@@ -79,7 +79,7 @@ void spine_clipping_attachment_copy_to(spine_clipping_attachment self, spine_ver
     ((VertexAttachment*)(ClippingAttachment*)self)->copyTo((VertexAttachment *)other);
 }
 
-const char* spine_clipping_attachment_get_name(spine_clipping_attachment self) {
+const char * spine_clipping_attachment_get_name(spine_clipping_attachment self) {
     return ((VertexAttachment*)(ClippingAttachment*)self)->getName().buffer();
 }
 

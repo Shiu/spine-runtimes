@@ -19,7 +19,7 @@ spine_skeleton_data spine_skeleton_binary_read_skeleton_data(spine_skeleton_bina
     return (spine_skeleton_data)((SkeletonBinary*)self)->readSkeletonData(binary, length);
 }
 
-spine_skeleton_data spine_skeleton_binary_read_skeleton_data_file(spine_skeleton_binary self, const char* path) {
+spine_skeleton_data spine_skeleton_binary_read_skeleton_data_file(spine_skeleton_binary self, const char * path) {
     return (spine_skeleton_data)((SkeletonBinary*)self)->readSkeletonDataFile(String(path));
 }
 
@@ -27,6 +27,6 @@ void spine_skeleton_binary_set_scale(spine_skeleton_binary self, float scale) {
     ((SkeletonBinary*)self)->setScale(scale);
 }
 
-const char* spine_skeleton_binary_get_error(spine_skeleton_binary self) {
+const char * spine_skeleton_binary_get_error(spine_skeleton_binary self) {
     return ((SkeletonBinary*)self)->getError().buffer();
 }

@@ -27,7 +27,7 @@ void spine_animation_state_clear_track(spine_animation_state self, size_t trackI
     ((AnimationState*)self)->clearTrack(trackIndex);
 }
 
-spine_track_entry spine_animation_state_set_animation_1(spine_animation_state self, size_t trackIndex, const char* animationName, bool loop) {
+spine_track_entry spine_animation_state_set_animation_1(spine_animation_state self, size_t trackIndex, const char * animationName, bool loop) {
     return (spine_track_entry)((AnimationState*)self)->setAnimation(trackIndex, String(animationName), loop);
 }
 
@@ -35,7 +35,7 @@ spine_track_entry spine_animation_state_set_animation_2(spine_animation_state se
     return (spine_track_entry)((AnimationState*)self)->setAnimation(trackIndex, (Animation *)animation, loop);
 }
 
-spine_track_entry spine_animation_state_add_animation_1(spine_animation_state self, size_t trackIndex, const char* animationName, bool loop, float delay) {
+spine_track_entry spine_animation_state_add_animation_1(spine_animation_state self, size_t trackIndex, const char * animationName, bool loop, float delay) {
     return (spine_track_entry)((AnimationState*)self)->addAnimation(trackIndex, String(animationName), loop, delay);
 }
 

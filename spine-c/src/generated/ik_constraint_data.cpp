@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_ik_constraint_data spine_ik_constraint_data_create(const char* name) {
+spine_ik_constraint_data spine_ik_constraint_data_create(const char * name) {
     return (spine_ik_constraint_data) new (__FILE__, __LINE__) IkConstraintData(String(name));
 }
 
@@ -39,7 +39,7 @@ void spine_ik_constraint_data_set_uniform(spine_ik_constraint_data self, bool un
     ((IkConstraintData*)self)->setUniform(uniform);
 }
 
-const char* spine_ik_constraint_data_get_name(spine_ik_constraint_data self) {
+const char * spine_ik_constraint_data_get_name(spine_ik_constraint_data self) {
     return ((ConstraintDataGeneric<IkConstraint, IkConstraintPose>*)(IkConstraintData*)self)->getName().buffer();
 }
 

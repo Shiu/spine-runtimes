@@ -193,7 +193,7 @@ export function toCTypeName(cppType: string, knownTypeNames: Set<string>): strin
     // Special type: String
     if (normalizedType === 'String' || normalizedType === 'const String' ||
         normalizedType === 'String&' || normalizedType === 'const String&') {
-        return 'const char*';
+        return 'const char *';
     }
 
     // Special Type: PropertyId is a typedef
@@ -232,9 +232,9 @@ export function toCTypeName(cppType: string, knownTypeNames: Set<string>): strin
     if (pointerMatch) {
         const baseType = pointerMatch[1].trim();
 
-        // Primitive pointers stay as-is
+        // Primitive pointers stay as-is, but ensure space before *
         if (isPrimitive(baseType)) {
-            return normalizedType;
+            return `${baseType} *`;
         }
 
         // Class pointers become opaque types
@@ -250,7 +250,7 @@ export function toCTypeName(cppType: string, knownTypeNames: Set<string>): strin
 
         // Non-const references to primitives become pointers (output parameters)
         if (!isConst && isPrimitive(baseType)) {
-            return `${baseType}*`;
+            return `${baseType} *`;
         }
 
         // Const references and class references - recurse without the reference

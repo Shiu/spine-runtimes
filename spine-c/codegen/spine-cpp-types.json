@@ -1884,7 +1884,7 @@
         }
       ],
       "loc": {
-        "line": 41,
+        "line": 43,
         "col": 7
       }
     },
@@ -1918,7 +1918,7 @@
         }
       ],
       "loc": {
-        "line": 65,
+        "line": 67,
         "col": 7
       }
     },
@@ -1937,7 +1937,7 @@
         }
       ],
       "loc": {
-        "line": 77,
+        "line": 79,
         "col": 7
       }
     },
@@ -1945,7 +1945,7 @@
       "name": "AtlasPage",
       "kind": "class",
       "loc": {
-        "line": 83,
+        "line": 85,
         "col": 15
       },
       "superTypes": [
@@ -2043,13 +2043,23 @@
       "name": "AtlasRegion",
       "kind": "class",
       "loc": {
-        "line": 109,
+        "line": 111,
         "col": 15
       },
       "superTypes": [
         "TextureRegion"
       ],
       "members": [
+        {
+          "kind": "method",
+          "name": "getRTTI",
+          "returnType": "const RTTI &",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": true,
+          "isPure": false,
+          "isConst": false
+        },
         {
           "kind": "constructor",
           "name": "AtlasRegion",
@@ -2104,6 +2114,86 @@
         {
           "kind": "method",
           "name": "getY",
+          "returnType": "int",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "getOffsetX",
+          "returnType": "float",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "getOffsetY",
+          "returnType": "float",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "getPackedWidth",
+          "returnType": "int",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "getPackedHeight",
+          "returnType": "int",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "getOriginalWidth",
+          "returnType": "int",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "getOriginalHeight",
+          "returnType": "int",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "getRotate",
+          "returnType": "bool",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "getDegrees",
           "returnType": "int",
           "parameters": [],
           "isStatic": false,
@@ -2214,6 +2304,126 @@
         {
           "kind": "method",
           "name": "setY",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "setOffsetX",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "float"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "setOffsetY",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "float"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "setPackedWidth",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "setPackedHeight",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "setOriginalWidth",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "setOriginalHeight",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "setRotate",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "value",
+              "type": "bool"
+            }
+          ],
+          "isStatic": false,
+          "isVirtual": false,
+          "isPure": false,
+          "isConst": false
+        },
+        {
+          "kind": "method",
+          "name": "setDegrees",
           "returnType": "void",
           "parameters": [
             {
@@ -2396,87 +2606,6 @@
         },
         {
           "kind": "method",
-          "name": "getDegrees",
-          "returnType": "int",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false,
-          "fromSupertype": "TextureRegion"
-        },
-        {
-          "kind": "method",
-          "name": "setDegrees",
-          "returnType": "void",
-          "parameters": [
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false,
-          "fromSupertype": "TextureRegion"
-        },
-        {
-          "kind": "method",
-          "name": "getOffsetX",
-          "returnType": "float",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false,
-          "fromSupertype": "TextureRegion"
-        },
-        {
-          "kind": "method",
-          "name": "setOffsetX",
-          "returnType": "void",
-          "parameters": [
-            {
-              "name": "value",
-              "type": "float"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false,
-          "fromSupertype": "TextureRegion"
-        },
-        {
-          "kind": "method",
-          "name": "getOffsetY",
-          "returnType": "float",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false,
-          "fromSupertype": "TextureRegion"
-        },
-        {
-          "kind": "method",
-          "name": "setOffsetY",
-          "returnType": "void",
-          "parameters": [
-            {
-              "name": "value",
-              "type": "float"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false,
-          "fromSupertype": "TextureRegion"
-        },
-        {
-          "kind": "method",
           "name": "getRegionWidth",
           "returnType": "int",
           "parameters": [],
@@ -2528,60 +2657,6 @@
           "isPure": false,
           "isConst": false,
           "fromSupertype": "TextureRegion"
-        },
-        {
-          "kind": "method",
-          "name": "getOriginalWidth",
-          "returnType": "int",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false,
-          "fromSupertype": "TextureRegion"
-        },
-        {
-          "kind": "method",
-          "name": "setOriginalWidth",
-          "returnType": "void",
-          "parameters": [
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false,
-          "fromSupertype": "TextureRegion"
-        },
-        {
-          "kind": "method",
-          "name": "getOriginalHeight",
-          "returnType": "int",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false,
-          "fromSupertype": "TextureRegion"
-        },
-        {
-          "kind": "method",
-          "name": "setOriginalHeight",
-          "returnType": "void",
-          "parameters": [
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false,
-          "fromSupertype": "TextureRegion"
         }
       ],
       "isAbstract": false,
@@ -2592,7 +2667,7 @@
       "name": "Atlas",
       "kind": "class",
       "loc": {
-        "line": 146,
+        "line": 175,
         "col": 15
       },
       "superTypes": [
@@ -23512,7 +23587,7 @@
       "name": "RegionAttachment",
       "kind": "class",
       "loc": {
-        "line": 48,
+        "line": 46,
         "col": 15
       },
       "superTypes": [
@@ -32584,13 +32659,23 @@
       "name": "TextureRegion",
       "kind": "class",
       "loc": {
-        "line": 36,
+        "line": 37,
         "col": 15
       },
       "superTypes": [
         "SpineObject"
       ],
       "members": [
+        {
+          "kind": "method",
+          "name": "getRTTI",
+          "returnType": "const RTTI &",
+          "parameters": [],
+          "isStatic": false,
+          "isVirtual": true,
+          "isPure": false,
+          "isConst": false
+        },
         {
           "kind": "constructor",
           "name": "TextureRegion",
@@ -32704,81 +32789,6 @@
         },
         {
           "kind": "method",
-          "name": "getDegrees",
-          "returnType": "int",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "setDegrees",
-          "returnType": "void",
-          "parameters": [
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "getOffsetX",
-          "returnType": "float",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "setOffsetX",
-          "returnType": "void",
-          "parameters": [
-            {
-              "name": "value",
-              "type": "float"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "getOffsetY",
-          "returnType": "float",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "setOffsetY",
-          "returnType": "void",
-          "parameters": [
-            {
-              "name": "value",
-              "type": "float"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
           "name": "getRegionWidth",
           "returnType": "int",
           "parameters": [],
@@ -32815,56 +32825,6 @@
         {
           "kind": "method",
           "name": "setRegionHeight",
-          "returnType": "void",
-          "parameters": [
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "getOriginalWidth",
-          "returnType": "int",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "setOriginalWidth",
-          "returnType": "void",
-          "parameters": [
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "getOriginalHeight",
-          "returnType": "int",
-          "parameters": [],
-          "isStatic": false,
-          "isVirtual": false,
-          "isPure": false,
-          "isConst": false
-        },
-        {
-          "kind": "method",
-          "name": "setOriginalHeight",
           "returnType": "void",
           "parameters": [
             {

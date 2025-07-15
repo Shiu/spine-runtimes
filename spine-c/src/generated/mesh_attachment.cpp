@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_mesh_attachment spine_mesh_attachment_create(const char* name) {
+spine_mesh_attachment spine_mesh_attachment_create(const char * name) {
     return (spine_mesh_attachment) new (__FILE__, __LINE__) MeshAttachment(String(name));
 }
 
@@ -59,11 +59,11 @@ spine_color spine_mesh_attachment_get_color(spine_mesh_attachment self) {
     return (spine_color)&((MeshAttachment*)self)->getColor();
 }
 
-const char* spine_mesh_attachment_get_path(spine_mesh_attachment self) {
+const char * spine_mesh_attachment_get_path(spine_mesh_attachment self) {
     return ((MeshAttachment*)self)->getPath().buffer();
 }
 
-void spine_mesh_attachment_set_path(spine_mesh_attachment self, const char* inValue) {
+void spine_mesh_attachment_set_path(spine_mesh_attachment self, const char * inValue) {
     ((MeshAttachment*)self)->setPath(String(inValue));
 }
 
@@ -163,7 +163,7 @@ void spine_mesh_attachment_copy_to(spine_mesh_attachment self, spine_vertex_atta
     ((VertexAttachment*)(MeshAttachment*)self)->copyTo((VertexAttachment *)other);
 }
 
-const char* spine_mesh_attachment_get_name(spine_mesh_attachment self) {
+const char * spine_mesh_attachment_get_name(spine_mesh_attachment self) {
     return ((VertexAttachment*)(MeshAttachment*)self)->getName().buffer();
 }
 

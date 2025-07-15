@@ -11,6 +11,10 @@ void spine_atlas_region_dispose(spine_atlas_region self) {
     delete (AtlasRegion*)self;
 }
 
+spine_rtti spine_atlas_region_get_rtti(spine_atlas_region self) {
+    return (spine_rtti)&((AtlasRegion*)self)->getRTTI();
+}
+
 spine_atlas_page spine_atlas_region_get_page(spine_atlas_region self) {
     return (spine_atlas_page)((AtlasRegion*)self)->getPage();
 }
@@ -25,6 +29,38 @@ int spine_atlas_region_get_x(spine_atlas_region self) {
 
 int spine_atlas_region_get_y(spine_atlas_region self) {
     return ((AtlasRegion*)self)->getY();
+}
+
+float spine_atlas_region_get_offset_x(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->getOffsetX();
+}
+
+float spine_atlas_region_get_offset_y(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->getOffsetY();
+}
+
+int spine_atlas_region_get_packed_width(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->getPackedWidth();
+}
+
+int spine_atlas_region_get_packed_height(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->getPackedHeight();
+}
+
+int spine_atlas_region_get_original_width(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->getOriginalWidth();
+}
+
+int spine_atlas_region_get_original_height(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->getOriginalHeight();
+}
+
+bool spine_atlas_region_get_rotate(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->getRotate();
+}
+
+int spine_atlas_region_get_degrees(spine_atlas_region self) {
+    return ((AtlasRegion*)self)->getDegrees();
 }
 
 spine_array_int spine_atlas_region_get_splits(spine_atlas_region self) {
@@ -43,7 +79,7 @@ void spine_atlas_region_set_page(spine_atlas_region self, spine_atlas_page value
     ((AtlasRegion*)self)->setPage((AtlasPage *)value);
 }
 
-void spine_atlas_region_set_name(spine_atlas_region self, const char* value) {
+void spine_atlas_region_set_name(spine_atlas_region self, const char * value) {
     ((AtlasRegion*)self)->setName(String(value));
 }
 
@@ -57,6 +93,38 @@ void spine_atlas_region_set_x(spine_atlas_region self, int value) {
 
 void spine_atlas_region_set_y(spine_atlas_region self, int value) {
     ((AtlasRegion*)self)->setY(value);
+}
+
+void spine_atlas_region_set_offset_x(spine_atlas_region self, float value) {
+    ((AtlasRegion*)self)->setOffsetX(value);
+}
+
+void spine_atlas_region_set_offset_y(spine_atlas_region self, float value) {
+    ((AtlasRegion*)self)->setOffsetY(value);
+}
+
+void spine_atlas_region_set_packed_width(spine_atlas_region self, int value) {
+    ((AtlasRegion*)self)->setPackedWidth(value);
+}
+
+void spine_atlas_region_set_packed_height(spine_atlas_region self, int value) {
+    ((AtlasRegion*)self)->setPackedHeight(value);
+}
+
+void spine_atlas_region_set_original_width(spine_atlas_region self, int value) {
+    ((AtlasRegion*)self)->setOriginalWidth(value);
+}
+
+void spine_atlas_region_set_original_height(spine_atlas_region self, int value) {
+    ((AtlasRegion*)self)->setOriginalHeight(value);
+}
+
+void spine_atlas_region_set_rotate(spine_atlas_region self, bool value) {
+    ((AtlasRegion*)self)->setRotate(value);
+}
+
+void spine_atlas_region_set_degrees(spine_atlas_region self, int value) {
+    ((AtlasRegion*)self)->setDegrees(value);
 }
 
 void spine_atlas_region_set_splits(spine_atlas_region self, spine_array_int value) {
@@ -103,30 +171,6 @@ void spine_atlas_region_set_v2(spine_atlas_region self, float value) {
     ((TextureRegion*)(AtlasRegion*)self)->setV2(value);
 }
 
-int spine_atlas_region_get_degrees(spine_atlas_region self) {
-    return ((TextureRegion*)(AtlasRegion*)self)->getDegrees();
-}
-
-void spine_atlas_region_set_degrees(spine_atlas_region self, int value) {
-    ((TextureRegion*)(AtlasRegion*)self)->setDegrees(value);
-}
-
-float spine_atlas_region_get_offset_x(spine_atlas_region self) {
-    return ((TextureRegion*)(AtlasRegion*)self)->getOffsetX();
-}
-
-void spine_atlas_region_set_offset_x(spine_atlas_region self, float value) {
-    ((TextureRegion*)(AtlasRegion*)self)->setOffsetX(value);
-}
-
-float spine_atlas_region_get_offset_y(spine_atlas_region self) {
-    return ((TextureRegion*)(AtlasRegion*)self)->getOffsetY();
-}
-
-void spine_atlas_region_set_offset_y(spine_atlas_region self, float value) {
-    ((TextureRegion*)(AtlasRegion*)self)->setOffsetY(value);
-}
-
 int spine_atlas_region_get_region_width(spine_atlas_region self) {
     return ((TextureRegion*)(AtlasRegion*)self)->getRegionWidth();
 }
@@ -143,18 +187,6 @@ void spine_atlas_region_set_region_height(spine_atlas_region self, int value) {
     ((TextureRegion*)(AtlasRegion*)self)->setRegionHeight(value);
 }
 
-int spine_atlas_region_get_original_width(spine_atlas_region self) {
-    return ((TextureRegion*)(AtlasRegion*)self)->getOriginalWidth();
-}
-
-void spine_atlas_region_set_original_width(spine_atlas_region self, int value) {
-    ((TextureRegion*)(AtlasRegion*)self)->setOriginalWidth(value);
-}
-
-int spine_atlas_region_get_original_height(spine_atlas_region self) {
-    return ((TextureRegion*)(AtlasRegion*)self)->getOriginalHeight();
-}
-
-void spine_atlas_region_set_original_height(spine_atlas_region self, int value) {
-    ((TextureRegion*)(AtlasRegion*)self)->setOriginalHeight(value);
+spine_rtti spine_atlas_region_rtti(void) {
+    return (spine_rtti)&AtlasRegion::rtti;
 }

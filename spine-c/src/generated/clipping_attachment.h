@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_clipping_attachment spine_clipping_attachment_create(const char* name);
+SPINE_C_API spine_clipping_attachment spine_clipping_attachment_create(const char * name);
 
 SPINE_C_API void spine_clipping_attachment_dispose(spine_clipping_attachment self);
 
@@ -29,7 +29,7 @@ SPINE_C_API void spine_clipping_attachment_set_world_vertices_length(spine_clipp
 SPINE_C_API spine_attachment spine_clipping_attachment_get_timeline_attachment(spine_clipping_attachment self);
 SPINE_C_API void spine_clipping_attachment_set_timeline_attachment(spine_clipping_attachment self, spine_attachment attachment);
 SPINE_C_API void spine_clipping_attachment_copy_to(spine_clipping_attachment self, spine_vertex_attachment other);
-SPINE_C_API const char* spine_clipping_attachment_get_name(spine_clipping_attachment self);
+SPINE_C_API const char * spine_clipping_attachment_get_name(spine_clipping_attachment self);
 SPINE_C_API int spine_clipping_attachment_get_ref_count(spine_clipping_attachment self);
 SPINE_C_API void spine_clipping_attachment_reference(spine_clipping_attachment self);
 SPINE_C_API void spine_clipping_attachment_dereference(spine_clipping_attachment self);

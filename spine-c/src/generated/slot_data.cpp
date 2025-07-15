@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_slot_data spine_slot_data_create(int index, const char* name, spine_bone_data boneData) {
+spine_slot_data spine_slot_data_create(int index, const char * name, spine_bone_data boneData) {
     return (spine_slot_data) new (__FILE__, __LINE__) SlotData(index, String(name), *((BoneData*)boneData));
 }
 
@@ -19,11 +19,11 @@ spine_bone_data spine_slot_data_get_bone_data(spine_slot_data self) {
     return (spine_bone_data)&((SlotData*)self)->getBoneData();
 }
 
-void spine_slot_data_set_attachment_name(spine_slot_data self, const char* attachmentName) {
+void spine_slot_data_set_attachment_name(spine_slot_data self, const char * attachmentName) {
     ((SlotData*)self)->setAttachmentName(String(attachmentName));
 }
 
-const char* spine_slot_data_get_attachment_name(spine_slot_data self) {
+const char * spine_slot_data_get_attachment_name(spine_slot_data self) {
     return ((SlotData*)self)->getAttachmentName().buffer();
 }
 
@@ -47,7 +47,7 @@ spine_slot_pose spine_slot_data_get_setup_pose(spine_slot_data self) {
     return (spine_slot_pose)&((PosedDataGeneric<SlotPose>*)(SlotData*)self)->getSetupPose();
 }
 
-const char* spine_slot_data_get_name(spine_slot_data self) {
+const char * spine_slot_data_get_name(spine_slot_data self) {
     return ((PosedDataGeneric<SlotPose>*)(SlotData*)self)->getName().buffer();
 }
 

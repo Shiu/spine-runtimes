@@ -23,7 +23,7 @@ void spine_animation_state_data_set_default_mix(spine_animation_state_data self,
     ((AnimationStateData*)self)->setDefaultMix(inValue);
 }
 
-void spine_animation_state_data_set_mix_1(spine_animation_state_data self, const char* fromName, const char* toName, float duration) {
+void spine_animation_state_data_set_mix_1(spine_animation_state_data self, const char * fromName, const char * toName, float duration) {
     ((AnimationStateData*)self)->setMix(String(fromName), String(toName), duration);
 }
 

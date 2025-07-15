@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_point_attachment spine_point_attachment_create(const char* name) {
+spine_point_attachment spine_point_attachment_create(const char * name) {
     return (spine_point_attachment) new (__FILE__, __LINE__) PointAttachment(String(name));
 }
 
@@ -43,7 +43,7 @@ spine_color spine_point_attachment_get_color(spine_point_attachment self) {
     return (spine_color)&((PointAttachment*)self)->getColor();
 }
 
-void spine_point_attachment_compute_world_position(spine_point_attachment self, spine_bone_pose bone, float* ox, float* oy) {
+void spine_point_attachment_compute_world_position(spine_point_attachment self, spine_bone_pose bone, float * ox, float * oy) {
     ((PointAttachment*)self)->computeWorldPosition(*((BonePose*)bone), *ox, *oy);
 }
 
@@ -55,7 +55,7 @@ spine_attachment spine_point_attachment_copy(spine_point_attachment self) {
     return (spine_attachment)((PointAttachment*)self)->copy();
 }
 
-const char* spine_point_attachment_get_name(spine_point_attachment self) {
+const char * spine_point_attachment_get_name(spine_point_attachment self) {
     return ((Attachment*)(PointAttachment*)self)->getName().buffer();
 }
 

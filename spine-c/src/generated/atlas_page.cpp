@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_atlas_page spine_atlas_page_create(const char* inName) {
+spine_atlas_page spine_atlas_page_create(const char * inName) {
     return (spine_atlas_page) new (__FILE__, __LINE__) AtlasPage(String(inName));
 }
 
@@ -11,19 +11,19 @@ void spine_atlas_page_dispose(spine_atlas_page self) {
     delete (AtlasPage*)self;
 }
 
-const char* spine_atlas_page_get_name(spine_atlas_page self) {
+const char * spine_atlas_page_get_name(spine_atlas_page self) {
     return ((AtlasPage*)self)->name.buffer();
 }
 
-void spine_atlas_page_set_name(spine_atlas_page self, const char* value) {
+void spine_atlas_page_set_name(spine_atlas_page self, const char * value) {
     ((AtlasPage*)self)->name = String(value);
 }
 
-const char* spine_atlas_page_get_texture_path(spine_atlas_page self) {
+const char * spine_atlas_page_get_texture_path(spine_atlas_page self) {
     return ((AtlasPage*)self)->texturePath.buffer();
 }
 
-void spine_atlas_page_set_texture_path(spine_atlas_page self, const char* value) {
+void spine_atlas_page_set_texture_path(spine_atlas_page self, const char * value) {
     ((AtlasPage*)self)->texturePath = String(value);
 }
 

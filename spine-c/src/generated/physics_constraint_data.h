@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_physics_constraint_data spine_physics_constraint_data_create(const char* name);
+SPINE_C_API spine_physics_constraint_data spine_physics_constraint_data_create(const char * name);
 
 SPINE_C_API void spine_physics_constraint_data_dispose(spine_physics_constraint_data self);
 
@@ -44,7 +44,7 @@ SPINE_C_API bool spine_physics_constraint_data_get_gravity_global(spine_physics_
 SPINE_C_API void spine_physics_constraint_data_set_gravity_global(spine_physics_constraint_data self, bool gravityGlobal);
 SPINE_C_API bool spine_physics_constraint_data_get_mix_global(spine_physics_constraint_data self);
 SPINE_C_API void spine_physics_constraint_data_set_mix_global(spine_physics_constraint_data self, bool mixGlobal);
-SPINE_C_API const char* spine_physics_constraint_data_get_name(spine_physics_constraint_data self);
+SPINE_C_API const char * spine_physics_constraint_data_get_name(spine_physics_constraint_data self);
 SPINE_C_API bool spine_physics_constraint_data_get_skin_required(spine_physics_constraint_data self);
 SPINE_C_API spine_physics_constraint_pose spine_physics_constraint_data_get_setup_pose(spine_physics_constraint_data self);
 SPINE_C_API void spine_physics_constraint_data_set_skin_required(spine_physics_constraint_data self, bool skinRequired);

@@ -19,7 +19,7 @@ void spine_attachment_timeline_apply(spine_attachment_timeline self, spine_skele
     ((AttachmentTimeline*)self)->apply(*((Skeleton*)skeleton), lastTime, time, (Array<Event *> *)pEvents, alpha, (MixBlend)blend, (MixDirection)direction, appliedPose);
 }
 
-void spine_attachment_timeline_set_frame(spine_attachment_timeline self, int frame, float time, const char* attachmentName) {
+void spine_attachment_timeline_set_frame(spine_attachment_timeline self, int frame, float time, const char * attachmentName) {
     ((AttachmentTimeline*)self)->setFrame(frame, time, String(attachmentName));
 }
 

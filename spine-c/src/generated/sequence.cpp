@@ -19,8 +19,8 @@ void spine_sequence_apply(spine_sequence self, spine_slot_pose slot, spine_attac
     ((Sequence*)self)->apply((SlotPose *)slot, (Attachment *)attachment);
 }
 
-const char* spine_sequence_get_path(spine_sequence self, const char* basePath, int index) {
-    return (const char*)&((Sequence*)self)->getPath(String(basePath), index);
+const char * spine_sequence_get_path(spine_sequence self, const char * basePath, int index) {
+    return (const char *)&((Sequence*)self)->getPath(String(basePath), index);
 }
 
 int spine_sequence_get_id(spine_sequence self) {

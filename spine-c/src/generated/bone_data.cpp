@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_bone_data spine_bone_data_create(int index, const char* name, spine_bone_data parent) {
+spine_bone_data spine_bone_data_create(int index, const char * name, spine_bone_data parent) {
     return (spine_bone_data) new (__FILE__, __LINE__) BoneData(index, String(name), (BoneData *)parent);
 }
 
@@ -31,11 +31,11 @@ spine_color spine_bone_data_get_color(spine_bone_data self) {
     return (spine_color)&((BoneData*)self)->getColor();
 }
 
-const char* spine_bone_data_get_icon(spine_bone_data self) {
+const char * spine_bone_data_get_icon(spine_bone_data self) {
     return ((BoneData*)self)->getIcon().buffer();
 }
 
-void spine_bone_data_set_icon(spine_bone_data self, const char* icon) {
+void spine_bone_data_set_icon(spine_bone_data self, const char * icon) {
     ((BoneData*)self)->setIcon(String(icon));
 }
 
@@ -51,7 +51,7 @@ spine_bone_local spine_bone_data_get_setup_pose(spine_bone_data self) {
     return (spine_bone_local)&((PosedDataGeneric<BoneLocal>*)(BoneData*)self)->getSetupPose();
 }
 
-const char* spine_bone_data_get_name(spine_bone_data self) {
+const char * spine_bone_data_get_name(spine_bone_data self) {
     return ((PosedDataGeneric<BoneLocal>*)(BoneData*)self)->getName().buffer();
 }
 

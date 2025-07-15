@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_animation spine_animation_create(const char* name, spine_array_timeline timelines, float duration) {
+spine_animation spine_animation_create(const char * name, spine_array_timeline timelines, float duration) {
     return (spine_animation) new (__FILE__, __LINE__) Animation(String(name), *((Array<Timeline *>*)timelines), duration);
 }
 
@@ -35,7 +35,7 @@ void spine_animation_apply(spine_animation self, spine_skeleton skeleton, float 
     ((Animation*)self)->apply(*((Skeleton*)skeleton), lastTime, time, loop, (Array<Event *> *)pEvents, alpha, (MixBlend)blend, (MixDirection)direction, appliedPose);
 }
 
-const char* spine_animation_get_name(spine_animation self) {
+const char * spine_animation_get_name(spine_animation self) {
     return ((Animation*)self)->getName().buffer();
 }
 

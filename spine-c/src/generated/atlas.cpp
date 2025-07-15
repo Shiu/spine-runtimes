@@ -11,7 +11,7 @@ void spine_atlas_flip_v(spine_atlas self) {
     ((Atlas*)self)->flipV();
 }
 
-spine_atlas_region spine_atlas_find_region(spine_atlas self, const char* name) {
+spine_atlas_region spine_atlas_find_region(spine_atlas self, const char * name) {
     return (spine_atlas_region)((Atlas*)self)->findRegion(String(name));
 }
 

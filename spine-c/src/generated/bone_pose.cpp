@@ -103,19 +103,19 @@ float spine_bone_pose_get_world_scale_y(spine_bone_pose self) {
     return ((BonePose*)self)->getWorldScaleY();
 }
 
-void spine_bone_pose_world_to_local(spine_bone_pose self, float worldX, float worldY, float* outLocalX, float* outLocalY) {
+void spine_bone_pose_world_to_local(spine_bone_pose self, float worldX, float worldY, float * outLocalX, float * outLocalY) {
     ((BonePose*)self)->worldToLocal(worldX, worldY, *outLocalX, *outLocalY);
 }
 
-void spine_bone_pose_local_to_world(spine_bone_pose self, float localX, float localY, float* outWorldX, float* outWorldY) {
+void spine_bone_pose_local_to_world(spine_bone_pose self, float localX, float localY, float * outWorldX, float * outWorldY) {
     ((BonePose*)self)->localToWorld(localX, localY, *outWorldX, *outWorldY);
 }
 
-void spine_bone_pose_world_to_parent(spine_bone_pose self, float worldX, float worldY, float* outParentX, float* outParentY) {
+void spine_bone_pose_world_to_parent(spine_bone_pose self, float worldX, float worldY, float * outParentX, float * outParentY) {
     ((BonePose*)self)->worldToParent(worldX, worldY, *outParentX, *outParentY);
 }
 
-void spine_bone_pose_parent_to_world(spine_bone_pose self, float parentX, float parentY, float* outWorldX, float* outWorldY) {
+void spine_bone_pose_parent_to_world(spine_bone_pose self, float parentX, float parentY, float * outWorldX, float * outWorldY) {
     ((BonePose*)self)->parentToWorld(parentX, parentY, *outWorldX, *outWorldY);
 }
 

@@ -59,7 +59,7 @@ void spine_vertex_attachment_copy_to(spine_vertex_attachment self, spine_vertex_
     ((VertexAttachment*)self)->copyTo((VertexAttachment *)other);
 }
 
-const char* spine_vertex_attachment_get_name(spine_vertex_attachment self) {
+const char * spine_vertex_attachment_get_name(spine_vertex_attachment self) {
     return ((Attachment*)(VertexAttachment*)self)->getName().buffer();
 }
 

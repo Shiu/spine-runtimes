@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_physics_constraint_data spine_physics_constraint_data_create(const char* name) {
+spine_physics_constraint_data spine_physics_constraint_data_create(const char * name) {
     return (spine_physics_constraint_data) new (__FILE__, __LINE__) PhysicsConstraintData(String(name));
 }
 
@@ -139,7 +139,7 @@ void spine_physics_constraint_data_set_mix_global(spine_physics_constraint_data 
     ((PhysicsConstraintData*)self)->setMixGlobal(mixGlobal);
 }
 
-const char* spine_physics_constraint_data_get_name(spine_physics_constraint_data self) {
+const char * spine_physics_constraint_data_get_name(spine_physics_constraint_data self) {
     return ((ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>*)(PhysicsConstraintData*)self)->getName().buffer();
 }
 

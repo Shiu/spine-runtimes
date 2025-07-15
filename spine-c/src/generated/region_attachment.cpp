@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_region_attachment spine_region_attachment_create(const char* name) {
+spine_region_attachment spine_region_attachment_create(const char * name) {
     return (spine_region_attachment) new (__FILE__, __LINE__) RegionAttachment(String(name));
 }
 
@@ -87,11 +87,11 @@ spine_color spine_region_attachment_get_color(spine_region_attachment self) {
     return (spine_color)&((RegionAttachment*)self)->getColor();
 }
 
-const char* spine_region_attachment_get_path(spine_region_attachment self) {
+const char * spine_region_attachment_get_path(spine_region_attachment self) {
     return ((RegionAttachment*)self)->getPath().buffer();
 }
 
-void spine_region_attachment_set_path(spine_region_attachment self, const char* inValue) {
+void spine_region_attachment_set_path(spine_region_attachment self, const char * inValue) {
     ((RegionAttachment*)self)->setPath(String(inValue));
 }
 
@@ -123,7 +123,7 @@ spine_attachment spine_region_attachment_copy(spine_region_attachment self) {
     return (spine_attachment)((RegionAttachment*)self)->copy();
 }
 
-const char* spine_region_attachment_get_name(spine_region_attachment self) {
+const char * spine_region_attachment_get_name(spine_region_attachment self) {
     return ((Attachment*)(RegionAttachment*)self)->getName().buffer();
 }
 

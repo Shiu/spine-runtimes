@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_transform_constraint_data spine_transform_constraint_data_create(const char* name) {
+spine_transform_constraint_data spine_transform_constraint_data_create(const char * name) {
     return (spine_transform_constraint_data) new (__FILE__, __LINE__) TransformConstraintData(String(name));
 }
 
@@ -115,7 +115,7 @@ spine_array_from_property spine_transform_constraint_data_get_properties(spine_t
     return (spine_array_from_property)&((TransformConstraintData*)self)->getProperties();
 }
 
-const char* spine_transform_constraint_data_get_name(spine_transform_constraint_data self) {
+const char * spine_transform_constraint_data_get_name(spine_transform_constraint_data self) {
     return ((ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>*)(TransformConstraintData*)self)->getName().buffer();
 }
 

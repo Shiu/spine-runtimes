@@ -14,7 +14,7 @@ SPINE_C_API void spine_sequence_dispose(spine_sequence self);
 
 SPINE_C_API spine_sequence spine_sequence_copy(spine_sequence self);
 SPINE_C_API void spine_sequence_apply(spine_sequence self, spine_slot_pose slot, spine_attachment attachment);
-SPINE_C_API const char* spine_sequence_get_path(spine_sequence self, const char* basePath, int index);
+SPINE_C_API const char * spine_sequence_get_path(spine_sequence self, const char * basePath, int index);
 SPINE_C_API int spine_sequence_get_id(spine_sequence self);
 SPINE_C_API void spine_sequence_set_id(spine_sequence self, int id);
 SPINE_C_API int spine_sequence_get_start(spine_sequence self);

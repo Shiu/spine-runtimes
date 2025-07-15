@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_path_attachment spine_path_attachment_create(const char* name) {
+spine_path_attachment spine_path_attachment_create(const char * name) {
     return (spine_path_attachment) new (__FILE__, __LINE__) PathAttachment(String(name));
 }
 
@@ -95,7 +95,7 @@ void spine_path_attachment_copy_to(spine_path_attachment self, spine_vertex_atta
     ((VertexAttachment*)(PathAttachment*)self)->copyTo((VertexAttachment *)other);
 }
 
-const char* spine_path_attachment_get_name(spine_path_attachment self) {
+const char * spine_path_attachment_get_name(spine_path_attachment self) {
     return ((VertexAttachment*)(PathAttachment*)self)->getName().buffer();
 }
 

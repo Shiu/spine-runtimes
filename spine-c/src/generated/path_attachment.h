@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_path_attachment spine_path_attachment_create(const char* name);
+SPINE_C_API spine_path_attachment spine_path_attachment_create(const char * name);
 
 SPINE_C_API void spine_path_attachment_dispose(spine_path_attachment self);
 
@@ -33,7 +33,7 @@ SPINE_C_API void spine_path_attachment_set_world_vertices_length(spine_path_atta
 SPINE_C_API spine_attachment spine_path_attachment_get_timeline_attachment(spine_path_attachment self);
 SPINE_C_API void spine_path_attachment_set_timeline_attachment(spine_path_attachment self, spine_attachment attachment);
 SPINE_C_API void spine_path_attachment_copy_to(spine_path_attachment self, spine_vertex_attachment other);
-SPINE_C_API const char* spine_path_attachment_get_name(spine_path_attachment self);
+SPINE_C_API const char * spine_path_attachment_get_name(spine_path_attachment self);
 SPINE_C_API int spine_path_attachment_get_ref_count(spine_path_attachment self);
 SPINE_C_API void spine_path_attachment_reference(spine_path_attachment self);
 SPINE_C_API void spine_path_attachment_dereference(spine_path_attachment self);

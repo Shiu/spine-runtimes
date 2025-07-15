@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_event_data spine_event_data_create(const char* name) {
+spine_event_data spine_event_data_create(const char * name) {
     return (spine_event_data) new (__FILE__, __LINE__) EventData(String(name));
 }
 
@@ -11,7 +11,7 @@ void spine_event_data_dispose(spine_event_data self) {
     delete (EventData*)self;
 }
 
-const char* spine_event_data_get_name(spine_event_data self) {
+const char * spine_event_data_get_name(spine_event_data self) {
     return ((EventData*)self)->getName().buffer();
 }
 
@@ -31,19 +31,19 @@ void spine_event_data_set_float(spine_event_data self, float inValue) {
     ((EventData*)self)->setFloat(inValue);
 }
 
-const char* spine_event_data_get_string(spine_event_data self) {
+const char * spine_event_data_get_string(spine_event_data self) {
     return ((EventData*)self)->getString().buffer();
 }
 
-void spine_event_data_set_string(spine_event_data self, const char* inValue) {
+void spine_event_data_set_string(spine_event_data self, const char * inValue) {
     ((EventData*)self)->setString(String(inValue));
 }
 
-const char* spine_event_data_get_audio_path(spine_event_data self) {
+const char * spine_event_data_get_audio_path(spine_event_data self) {
     return ((EventData*)self)->getAudioPath().buffer();
 }
 
-void spine_event_data_set_audio_path(spine_event_data self, const char* inValue) {
+void spine_event_data_set_audio_path(spine_event_data self, const char * inValue) {
     ((EventData*)self)->setAudioPath(String(inValue));
 }
 

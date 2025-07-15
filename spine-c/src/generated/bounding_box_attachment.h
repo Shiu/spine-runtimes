@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_bounding_box_attachment spine_bounding_box_attachment_create(const char* name);
+SPINE_C_API spine_bounding_box_attachment spine_bounding_box_attachment_create(const char * name);
 
 SPINE_C_API void spine_bounding_box_attachment_dispose(spine_bounding_box_attachment self);
 
@@ -27,7 +27,7 @@ SPINE_C_API void spine_bounding_box_attachment_set_world_vertices_length(spine_b
 SPINE_C_API spine_attachment spine_bounding_box_attachment_get_timeline_attachment(spine_bounding_box_attachment self);
 SPINE_C_API void spine_bounding_box_attachment_set_timeline_attachment(spine_bounding_box_attachment self, spine_attachment attachment);
 SPINE_C_API void spine_bounding_box_attachment_copy_to(spine_bounding_box_attachment self, spine_vertex_attachment other);
-SPINE_C_API const char* spine_bounding_box_attachment_get_name(spine_bounding_box_attachment self);
+SPINE_C_API const char * spine_bounding_box_attachment_get_name(spine_bounding_box_attachment self);
 SPINE_C_API int spine_bounding_box_attachment_get_ref_count(spine_bounding_box_attachment self);
 SPINE_C_API void spine_bounding_box_attachment_reference(spine_bounding_box_attachment self);
 SPINE_C_API void spine_bounding_box_attachment_dereference(spine_bounding_box_attachment self);

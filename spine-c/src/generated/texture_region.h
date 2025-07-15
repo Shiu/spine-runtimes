@@ -12,6 +12,7 @@ SPINE_C_API spine_texture_region spine_texture_region_create(void);
 
 SPINE_C_API void spine_texture_region_dispose(spine_texture_region self);
 
+SPINE_C_API spine_rtti spine_texture_region_get_rtti(spine_texture_region self);
 SPINE_C_API float spine_texture_region_get_u(spine_texture_region self);
 SPINE_C_API void spine_texture_region_set_u(spine_texture_region self, float value);
 SPINE_C_API float spine_texture_region_get_v(spine_texture_region self);
@@ -20,20 +21,11 @@ SPINE_C_API float spine_texture_region_get_u2(spine_texture_region self);
 SPINE_C_API void spine_texture_region_set_u2(spine_texture_region self, float value);
 SPINE_C_API float spine_texture_region_get_v2(spine_texture_region self);
 SPINE_C_API void spine_texture_region_set_v2(spine_texture_region self, float value);
-SPINE_C_API int spine_texture_region_get_degrees(spine_texture_region self);
-SPINE_C_API void spine_texture_region_set_degrees(spine_texture_region self, int value);
-SPINE_C_API float spine_texture_region_get_offset_x(spine_texture_region self);
-SPINE_C_API void spine_texture_region_set_offset_x(spine_texture_region self, float value);
-SPINE_C_API float spine_texture_region_get_offset_y(spine_texture_region self);
-SPINE_C_API void spine_texture_region_set_offset_y(spine_texture_region self, float value);
 SPINE_C_API int spine_texture_region_get_region_width(spine_texture_region self);
 SPINE_C_API void spine_texture_region_set_region_width(spine_texture_region self, int value);
 SPINE_C_API int spine_texture_region_get_region_height(spine_texture_region self);
 SPINE_C_API void spine_texture_region_set_region_height(spine_texture_region self, int value);
-SPINE_C_API int spine_texture_region_get_original_width(spine_texture_region self);
-SPINE_C_API void spine_texture_region_set_original_width(spine_texture_region self, int value);
-SPINE_C_API int spine_texture_region_get_original_height(spine_texture_region self);
-SPINE_C_API void spine_texture_region_set_original_height(spine_texture_region self, int value);
+SPINE_C_API spine_rtti spine_texture_region_rtti(void);
 
 #ifdef __cplusplus
 }

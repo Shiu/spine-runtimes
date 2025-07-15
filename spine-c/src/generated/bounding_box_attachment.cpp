@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_bounding_box_attachment spine_bounding_box_attachment_create(const char* name) {
+spine_bounding_box_attachment spine_bounding_box_attachment_create(const char * name) {
     return (spine_bounding_box_attachment) new (__FILE__, __LINE__) BoundingBoxAttachment(String(name));
 }
 
@@ -71,7 +71,7 @@ void spine_bounding_box_attachment_copy_to(spine_bounding_box_attachment self, s
     ((VertexAttachment*)(BoundingBoxAttachment*)self)->copyTo((VertexAttachment *)other);
 }
 
-const char* spine_bounding_box_attachment_get_name(spine_bounding_box_attachment self) {
+const char * spine_bounding_box_attachment_get_name(spine_bounding_box_attachment self) {
     return ((VertexAttachment*)(BoundingBoxAttachment*)self)->getName().buffer();
 }
 

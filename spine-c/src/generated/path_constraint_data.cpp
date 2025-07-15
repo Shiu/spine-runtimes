@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_path_constraint_data spine_path_constraint_data_create(const char* name) {
+spine_path_constraint_data spine_path_constraint_data_create(const char * name) {
     return (spine_path_constraint_data) new (__FILE__, __LINE__) PathConstraintData(String(name));
 }
 
@@ -63,7 +63,7 @@ void spine_path_constraint_data_set_offset_rotation(spine_path_constraint_data s
     ((PathConstraintData*)self)->setOffsetRotation(offsetRotation);
 }
 
-const char* spine_path_constraint_data_get_name(spine_path_constraint_data self) {
+const char * spine_path_constraint_data_get_name(spine_path_constraint_data self) {
     return ((ConstraintDataGeneric<PathConstraint, PathConstraintPose>*)(PathConstraintData*)self)->getName().buffer();
 }
 
