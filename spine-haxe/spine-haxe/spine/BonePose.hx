@@ -139,9 +139,7 @@ class BonePose extends BoneLocal implements Update {
 				c = pc * la + pd * lc;
 				d = pc * lb + pd * ld;
 			case Inherit.noScale, Inherit.noScaleOrReflection:
-				rotation *= MathUtils.degRad;
-				var cos = Math.cos(rotation);
-				var sin = Math.sin(rotation);
+				var r = rotation * MathUtils.degRad, cos = Math.cos(r), sin = Math.sin(r);
 				var za = (pa * cos + pb * sin) / skeleton.scaleX;
 				var zc = (pc * cos + pd * sin) / skeleton.scaleY;
 				var s = Math.sqrt(za * za + zc * zc);
@@ -150,15 +148,15 @@ class BonePose extends BoneLocal implements Update {
 				zc *= s;
 				s = Math.sqrt(za * za + zc * zc);
 				if (inherit == Inherit.noScale && ((pa * pd - pb * pc < 0) != ((skeleton.scaleX < 0) != (skeleton.scaleY < 0)))) s = -s;
-				rotation = Math.PI / 2 + Math.atan2(zc, za);
-				var zb:Float = Math.cos(rotation) * s;
-				var zd:Float = Math.sin(rotation) * s;
-				shearX *= MathUtils.degRad;
-				shearY = (90 + shearY) * MathUtils.degRad;
-				var la = Math.cos(shearX) * scaleX;
-				var lb = Math.cos(shearY) * scaleY;
-				var lc = Math.sin(shearX) * scaleX;
-				var ld = Math.sin(shearY) * scaleY;
+				r = Math.PI / 2 + Math.atan2(zc, za);
+				var zb:Float = Math.cos(r) * s;
+				var zd:Float = Math.sin(r) * s;
+				var rx = MathUtils.degRad;
+				var ry = (90 + shearY) * MathUtils.degRad;
+				var la = Math.cos(rx) * scaleX;
+				var lb = Math.cos(ry) * scaleY;
+				var lc = Math.sin(rx) * scaleX;
+				var ld = Math.sin(ry) * scaleY;
 				a = za * la + zb * lc;
 				b = za * lb + zb * ld;
 				c = zc * la + zd * lc;
