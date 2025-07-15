@@ -99,8 +99,7 @@ public class BonePose extends BoneLocal implements Update {
 			d = pc * lb + pd * ld;
 		}
 		case noScale, noScaleOrReflection -> {
-			rotation *= degRad;
-			float cos = cos(rotation), sin = sin(rotation);
+			float r = rotation * degRad, cos = cos(r), sin = sin(r);
 			float za = (pa * cos + pb * sin) / skeleton.scaleX;
 			float zc = (pc * cos + pd * sin) / skeleton.scaleY;
 			float s = (float)Math.sqrt(za * za + zc * zc);
@@ -109,15 +108,15 @@ public class BonePose extends BoneLocal implements Update {
 			zc *= s;
 			s = (float)Math.sqrt(za * za + zc * zc);
 			if (inherit == Inherit.noScale && (pa * pd - pb * pc < 0) != (skeleton.scaleX < 0 != skeleton.scaleY < 0)) s = -s;
-			rotation = PI / 2 + atan2(zc, za);
-			float zb = cos(rotation) * s;
-			float zd = sin(rotation) * s;
-			shearX *= degRad;
-			shearY = (90 + shearY) * degRad;
-			float la = cos(shearX) * scaleX;
-			float lb = cos(shearY) * scaleY;
-			float lc = sin(shearX) * scaleX;
-			float ld = sin(shearY) * scaleY;
+			r = PI / 2 + atan2(zc, za);
+			float zb = cos(r) * s;
+			float zd = sin(r) * s;
+			float rx = shearX * degRad;
+			float ry = (90 + shearY) * degRad;
+			float la = cos(rx) * scaleX;
+			float lb = cos(ry) * scaleY;
+			float lc = sin(rx) * scaleX;
+			float ld = sin(ry) * scaleY;
 			a = za * la + zb * lc;
 			b = za * lb + zb * ld;
 			c = zc * la + zd * lc;
