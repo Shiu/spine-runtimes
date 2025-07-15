@@ -386,7 +386,6 @@ class SkeletonViewerUI {
 
 		reloadButton.addListener(new ChangeListener() {
 			public void changed (ChangeEvent event, Actor actor) {
-				viewer.resetCameraPosition();
 				if (viewer.loadSkeleton(viewer.lastFile)) toast("Reloaded.");
 			}
 		});
