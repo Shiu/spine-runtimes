@@ -41,14 +41,13 @@ namespace spine {
 
 		friend class AnimationState;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit RotateTimeline(size_t frameCount, size_t bezierCount, int boneIndex);
 
 	protected:
-		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-						   MixDirection direction) override;
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) override;
 	};
 }
 

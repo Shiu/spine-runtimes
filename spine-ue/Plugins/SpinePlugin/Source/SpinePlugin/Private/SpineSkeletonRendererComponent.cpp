@@ -130,11 +130,12 @@ void USpineSkeletonRendererComponent::UpdateRenderer(USpineSkeletonComponent *co
 	}
 }
 
-void USpineSkeletonRendererComponent::UpdateMaterial(UTexture2D *Texture, UMaterialInstanceDynamic *&CurrentInstance, UMaterialInterface *ParentMaterial) {
+void USpineSkeletonRendererComponent::UpdateMaterial(UTexture2D *Texture, UMaterialInstanceDynamic *&CurrentInstance,
+													 UMaterialInterface *ParentMaterial) {
 
 	UTexture *oldTexture = nullptr;
-	if (!CurrentInstance || !CurrentInstance->GetTextureParameterValue(TextureParameterName, oldTexture) ||
-		oldTexture != Texture || CurrentInstance->Parent != ParentMaterial) {
+	if (!CurrentInstance || !CurrentInstance->GetTextureParameterValue(TextureParameterName, oldTexture) || oldTexture != Texture ||
+		CurrentInstance->Parent != ParentMaterial) {
 
 		UMaterialInstanceDynamic *material = UMaterialInstanceDynamic::Create(ParentMaterial, this);
 		material->SetTextureParameterValue(TextureParameterName, Texture);
@@ -142,7 +143,8 @@ void USpineSkeletonRendererComponent::UpdateMaterial(UTexture2D *Texture, UMater
 	}
 }
 
-void USpineSkeletonRendererComponent::Flush(int &Idx, TArray<FVector> &Vertices, TArray<int32> &Indices, TArray<FVector> &Normals, TArray<FVector2D> &Uvs, TArray<FColor> &Colors, UMaterialInstanceDynamic *Material) {
+void USpineSkeletonRendererComponent::Flush(int &Idx, TArray<FVector> &Vertices, TArray<int32> &Indices, TArray<FVector> &Normals,
+											TArray<FVector2D> &Uvs, TArray<FColor> &Colors, UMaterialInstanceDynamic *Material) {
 	if (Vertices.Num() == 0) return;
 	SetMaterial(Idx, Material);
 
@@ -206,7 +208,8 @@ void USpineSkeletonRendererComponent::UpdateMesh(USpineSkeletonComponent *compon
 			clipper.clipEnd(*slot);
 			continue;
 		}
-		if (!attachment->getRTTI().isExactly(RegionAttachment::rtti) && !attachment->getRTTI().isExactly(MeshAttachment::rtti) && !attachment->getRTTI().isExactly(ClippingAttachment::rtti)) {
+		if (!attachment->getRTTI().isExactly(RegionAttachment::rtti) && !attachment->getRTTI().isExactly(MeshAttachment::rtti) &&
+			!attachment->getRTTI().isExactly(ClippingAttachment::rtti)) {
 			clipper.clipEnd(*slot);
 			continue;
 		}
@@ -332,10 +335,9 @@ void USpineSkeletonRendererComponent::UpdateMesh(USpineSkeletonComponent *compon
 		int numTriangles = indices.Num() / 3;
 		for (int j = 0; j < numTriangles; j++) {
 			const int triangleIndex = j * 3;
-			if (FVector::CrossProduct(
-						vertices[indices[triangleIndex + 2]] - vertices[indices[triangleIndex]],
-						vertices[indices[triangleIndex + 1]] - vertices[indices[triangleIndex]])
-						.Y < 0.f) {
+			if (FVector::CrossProduct(vertices[indices[triangleIndex + 2]] - vertices[indices[triangleIndex]],
+									  vertices[indices[triangleIndex + 1]] - vertices[indices[triangleIndex]])
+					.Y < 0.f) {
 				const int32 targetVertex = indices[triangleIndex];
 				indices[triangleIndex] = indices[triangleIndex + 2];
 				indices[triangleIndex + 2] = targetVertex;

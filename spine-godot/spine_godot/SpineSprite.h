@@ -96,7 +96,9 @@ protected:
 
 public:
 #if VERSION_MAJOR > 3
-	SpineMesh2D() : renderer_object(nullptr), indices_changed(true), num_vertices(0), num_indices(0), vertex_stride(0), normal_tangent_stride(0), attribute_stride(0){};
+	SpineMesh2D()
+		: renderer_object(nullptr), indices_changed(true), num_vertices(0), num_indices(0), vertex_stride(0), normal_tangent_stride(0),
+		  attribute_stride(0) {};
 	~SpineMesh2D() {
 		if (mesh.is_valid()) {
 #ifdef SPINE_GODOT_EXTENSION
@@ -107,7 +109,7 @@ public:
 		}
 	}
 #else
-	SpineMesh2D() : renderer_object(nullptr), indices_changed(true), num_vertices(0), num_indices(0){};
+	SpineMesh2D() : renderer_object(nullptr), indices_changed(true), num_vertices(0), num_indices(0) {};
 	~SpineMesh2D() {
 		if (mesh.is_valid()) {
 			VS::get_singleton()->free(mesh);
@@ -116,22 +118,15 @@ public:
 #endif
 
 #ifdef SPINE_GODOT_EXTENSION
-	void update_mesh(const PackedVector2Array &vertices,
-					 const PackedVector2Array &uvs,
-					 const PackedColorArray &colors,
-					 const PackedInt32Array &indices,
-					 SpineRendererObject *renderer_object);
+	void update_mesh(const PackedVector2Array &vertices, const PackedVector2Array &uvs, const PackedColorArray &colors,
+					 const PackedInt32Array &indices, SpineRendererObject *renderer_object);
 #else
-	void update_mesh(const Vector<Point2> &vertices,
-					 const Vector<Point2> &uvs,
-					 const Vector<Color> &colors,
-					 const Vector<int> &indices,
+	void update_mesh(const Vector<Point2> &vertices, const Vector<Point2> &uvs, const Vector<Color> &colors, const Vector<int> &indices,
 					 SpineRendererObject *renderer_object);
 #endif
 };
 
-class SpineSprite : public Node2D,
-					public spine::AnimationStateListenerObject {
+class SpineSprite : public Node2D, public spine::AnimationStateListenerObject {
 	GDCLASS(SpineSprite, Node2D)
 
 	friend class SpineBone;
@@ -183,7 +178,9 @@ protected:
 	void remove_meshes();
 	void sort_slot_nodes();
 	void update_meshes(Ref<SpineSkeleton> skeleton_ref);
-	void set_modified_bones() { modified_bones = true; }
+	void set_modified_bones() {
+		modified_bones = true;
+	}
 	void draw();
 	void draw_bone(spine::Bone *bone, const Color &color);
 
@@ -235,65 +232,125 @@ public:
 
 	float get_time_scale();
 
-	bool get_debug_root() { return debug_root; }
+	bool get_debug_root() {
+		return debug_root;
+	}
 
-	void set_debug_root(bool root) { debug_root = root; }
+	void set_debug_root(bool root) {
+		debug_root = root;
+	}
 
-	Color get_debug_root_color() { return debug_root_color; }
+	Color get_debug_root_color() {
+		return debug_root_color;
+	}
 
-	void set_debug_root_color(const Color &color) { debug_root_color = color; }
+	void set_debug_root_color(const Color &color) {
+		debug_root_color = color;
+	}
 
-	bool get_debug_bones() { return debug_bones; }
+	bool get_debug_bones() {
+		return debug_bones;
+	}
 
-	void set_debug_bones(bool bones) { debug_bones = bones; }
+	void set_debug_bones(bool bones) {
+		debug_bones = bones;
+	}
 
-	Color get_debug_bones_color() { return debug_bones_color; }
+	Color get_debug_bones_color() {
+		return debug_bones_color;
+	}
 
-	void set_debug_bones_color(const Color &color) { debug_bones_color = color; }
+	void set_debug_bones_color(const Color &color) {
+		debug_bones_color = color;
+	}
 
-	float get_debug_bones_thickness() { return debug_bones_thickness; }
+	float get_debug_bones_thickness() {
+		return debug_bones_thickness;
+	}
 
-	void set_debug_bones_thickness(float thickness) { debug_bones_thickness = thickness; }
+	void set_debug_bones_thickness(float thickness) {
+		debug_bones_thickness = thickness;
+	}
 
-	bool get_debug_regions() { return debug_regions; }
+	bool get_debug_regions() {
+		return debug_regions;
+	}
 
-	void set_debug_regions(bool regions) { debug_regions = regions; }
+	void set_debug_regions(bool regions) {
+		debug_regions = regions;
+	}
 
-	Color get_debug_regions_color() { return debug_regions_color; }
+	Color get_debug_regions_color() {
+		return debug_regions_color;
+	}
 
-	void set_debug_regions_color(const Color &color) { debug_regions_color = color; }
+	void set_debug_regions_color(const Color &color) {
+		debug_regions_color = color;
+	}
 
-	bool get_debug_meshes() { return debug_meshes; }
+	bool get_debug_meshes() {
+		return debug_meshes;
+	}
 
-	void set_debug_meshes(bool meshes) { debug_meshes = meshes; }
+	void set_debug_meshes(bool meshes) {
+		debug_meshes = meshes;
+	}
 
-	Color get_debug_meshes_color() { return debug_meshes_color; }
+	Color get_debug_meshes_color() {
+		return debug_meshes_color;
+	}
 
-	void set_debug_meshes_color(const Color &color) { debug_meshes_color = color; }
+	void set_debug_meshes_color(const Color &color) {
+		debug_meshes_color = color;
+	}
 
-	bool get_debug_paths() { return debug_paths; }
+	bool get_debug_paths() {
+		return debug_paths;
+	}
 
-	void set_debug_paths(bool paths) { debug_paths = paths; }
+	void set_debug_paths(bool paths) {
+		debug_paths = paths;
+	}
 
-	Color get_debug_paths_color() { return debug_paths_color; }
+	Color get_debug_paths_color() {
+		return debug_paths_color;
+	}
 
-	void set_debug_paths_color(const Color &color) { debug_paths_color = color; }
+	void set_debug_paths_color(const Color &color) {
+		debug_paths_color = color;
+	}
 
-	bool get_debug_bounding_boxes() { return debug_bounding_boxes; }
+	bool get_debug_bounding_boxes() {
+		return debug_bounding_boxes;
+	}
 
-	void set_debug_bounding_boxes(bool paths) { debug_bounding_boxes = paths; }
+	void set_debug_bounding_boxes(bool paths) {
+		debug_bounding_boxes = paths;
+	}
 
-	Color get_debug_bounding_boxes_color() { return debug_bounding_boxes_color; }
+	Color get_debug_bounding_boxes_color() {
+		return debug_bounding_boxes_color;
+	}
 
-	void set_debug_bounding_boxes_color(const Color &color) { debug_bounding_boxes_color = color; }
+	void set_debug_bounding_boxes_color(const Color &color) {
+		debug_bounding_boxes_color = color;
+	}
 
-	bool get_debug_clipping() { return debug_clipping; }
+	bool get_debug_clipping() {
+		return debug_clipping;
+	}
 
-	void set_debug_clipping(bool clipping) { debug_clipping = clipping; }
+	void set_debug_clipping(bool clipping) {
+		debug_clipping = clipping;
+	}
 
-	Color get_debug_clipping_color() { return debug_clipping_color; }
+	Color get_debug_clipping_color() {
+		return debug_clipping_color;
+	}
 
-	void set_debug_clipping_color(const Color &color) { debug_clipping_color = color; }
+	void set_debug_clipping_color(const Color &color) {
+		debug_clipping_color = color;
+	}
 
 #ifndef SPINE_GODOT_EXTENSION
 // FIXME

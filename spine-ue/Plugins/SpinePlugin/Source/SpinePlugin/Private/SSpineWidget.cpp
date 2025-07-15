@@ -50,7 +50,8 @@ struct SpineSlateMaterialBrush : public FSlateBrush {
 	static FCriticalSection NamePoolLock;
 
 	SpineSlateMaterialBrush(class UMaterialInterface &InMaterial, const FVector2D &InImageSize)
-		: FSlateBrush(ESlateBrushDrawType::Image, FName(TEXT("None")), FMargin(0), ESlateBrushTileType::NoTile, ESlateBrushImageType::FullColor, InImageSize, FLinearColor::White, &InMaterial) {
+		: FSlateBrush(ESlateBrushDrawType::Image, FName(TEXT("None")), FMargin(0), ESlateBrushTileType::NoTile, ESlateBrushImageType::FullColor,
+					  InImageSize, FLinearColor::White, &InMaterial) {
 		// Workaround for https://github.com/EsotericSoftware/spine-runtimes/issues/2006
 		FScopeLock Lock(&NamePoolLock);
 
@@ -106,8 +107,8 @@ static void setVertex(FSlateVertex *vertex, float x, float y, float u, float v, 
 	vertex->PixelSize[1] = 1;
 }
 
-int32 SSpineWidget::OnPaint(const FPaintArgs &Args, const FGeometry &AllottedGeometry, const FSlateRect &MyClippingRect, FSlateWindowElementList &OutDrawElements,
-							int32 LayerId, const FWidgetStyle &InWidgetStyle, bool bParentEnabled) const {
+int32 SSpineWidget::OnPaint(const FPaintArgs &Args, const FGeometry &AllottedGeometry, const FSlateRect &MyClippingRect,
+							FSlateWindowElementList &OutDrawElements, int32 LayerId, const FWidgetStyle &InWidgetStyle, bool bParentEnabled) const {
 
 	SSpineWidget *self = (SSpineWidget *) this;
 	UMaterialInstanceDynamic *MatNow = nullptr;
@@ -200,7 +201,9 @@ int32 SSpineWidget::OnPaint(const FPaintArgs &Args, const FGeometry &AllottedGeo
 	return LayerId;
 }
 
-void SSpineWidget::Flush(int32 LayerId, FSlateWindowElementList &OutDrawElements, const FGeometry &AllottedGeometry, int &Idx, TArray<FVector> &Vertices, TArray<int32> &Indices, TArray<FVector2D> &Uvs, TArray<FColor> &Colors, TArray<FVector> &Colors2, UMaterialInstanceDynamic *Material) {
+void SSpineWidget::Flush(int32 LayerId, FSlateWindowElementList &OutDrawElements, const FGeometry &AllottedGeometry, int &Idx,
+						 TArray<FVector> &Vertices, TArray<int32> &Indices, TArray<FVector2D> &Uvs, TArray<FColor> &Colors, TArray<FVector> &Colors2,
+						 UMaterialInstanceDynamic *Material) {
 	if (Vertices.Num() == 0) return;
 	SSpineWidget *self = (SSpineWidget *) this;
 
@@ -209,7 +212,8 @@ void SSpineWidget::Flush(int32 LayerId, FSlateWindowElementList &OutDrawElements
 	const float setupScale = sizeScale.GetMin();
 
 	for (int i = 0; i < Vertices.Num(); i++) {
-		Vertices[i] = (Vertices[i] + FVector(-boundsMin.X - boundsSize.X / 2, boundsMin.Y + boundsSize.Y / 2, 0)) * setupScale + FVector(widgetSize.X / 2, widgetSize.Y / 2, 0);
+		Vertices[i] = (Vertices[i] + FVector(-boundsMin.X - boundsSize.X / 2, boundsMin.Y + boundsSize.Y / 2, 0)) * setupScale +
+			FVector(widgetSize.X / 2, widgetSize.Y / 2, 0);
 	}
 
 	self->renderData.IndexData.SetNumUninitialized(Indices.Num());
@@ -235,7 +239,8 @@ void SSpineWidget::Flush(int32 LayerId, FSlateWindowElementList &OutDrawElements
 	}
 
 	if (renderData.RenderingResourceHandle.IsValid()) {
-		FSlateDrawElement::MakeCustomVerts(OutDrawElements, LayerId, renderData.RenderingResourceHandle, renderData.VertexData, renderData.IndexData, nullptr, 0, 0);
+		FSlateDrawElement::MakeCustomVerts(OutDrawElements, LayerId, renderData.RenderingResourceHandle, renderData.VertexData, renderData.IndexData,
+										   nullptr, 0, 0);
 	}
 
 	Vertices.SetNum(0);
@@ -292,7 +297,8 @@ void SSpineWidget::UpdateMesh(int32 LayerId, FSlateWindowElementList &OutDrawEle
 			clipper.clipEnd(*slot);
 			continue;
 		}
-		if (!attachment->getRTTI().isExactly(RegionAttachment::rtti) && !attachment->getRTTI().isExactly(MeshAttachment::rtti) && !attachment->getRTTI().isExactly(ClippingAttachment::rtti)) {
+		if (!attachment->getRTTI().isExactly(RegionAttachment::rtti) && !attachment->getRTTI().isExactly(MeshAttachment::rtti) &&
+			!attachment->getRTTI().isExactly(ClippingAttachment::rtti)) {
 			clipper.clipEnd(*slot);
 			continue;
 		}

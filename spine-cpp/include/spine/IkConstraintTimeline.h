@@ -42,16 +42,15 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit IkConstraintTimeline(size_t frameCount, size_t bezierCount, int constraintIndex);
 
 		virtual ~IkConstraintTimeline();
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 
 		/// Sets the time, mix, softness, bend direction, compress, and stretch for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.

@@ -161,8 +161,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Load atlas with headless texture loader
-	spine_atlas atlas = spine_atlas_load_callback((const char *) atlasBytes, atlasDir,
-												  headlessTextureLoader, headlessTextureUnloader);
+	spine_atlas atlas = spine_atlas_load_callback((const char *) atlasBytes, atlasDir, headlessTextureLoader, headlessTextureUnloader);
 	free(atlasBytes);
 
 	if (!atlas) {

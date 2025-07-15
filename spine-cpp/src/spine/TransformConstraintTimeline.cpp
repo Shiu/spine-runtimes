@@ -44,11 +44,8 @@ using namespace spine;
 
 RTTI_IMPL_MULTI(TransformConstraintTimeline, CurveTimeline, ConstraintTimeline)
 
-TransformConstraintTimeline::TransformConstraintTimeline(size_t frameCount, size_t bezierCount,
-														 int transformConstraintIndex) : CurveTimeline(frameCount,
-																									   TransformConstraintTimeline::ENTRIES,
-																									   bezierCount),
-																						 ConstraintTimeline(transformConstraintIndex) {
+TransformConstraintTimeline::TransformConstraintTimeline(size_t frameCount, size_t bezierCount, int transformConstraintIndex)
+	: CurveTimeline(frameCount, TransformConstraintTimeline::ENTRIES, bezierCount), ConstraintTimeline(transformConstraintIndex) {
 	PropertyId ids[] = {((PropertyId) Property_TransformConstraint << 32) | transformConstraintIndex};
 	setPropertyIds(ids, 1);
 }
@@ -56,8 +53,8 @@ TransformConstraintTimeline::TransformConstraintTimeline(size_t frameCount, size
 TransformConstraintTimeline::~TransformConstraintTimeline() {
 }
 
-void TransformConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents,
-										float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
+void TransformConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+										MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 	SP_UNUSED(direction);
@@ -161,8 +158,8 @@ void TransformConstraintTimeline::apply(Skeleton &skeleton, float lastTime, floa
 	}
 }
 
-void TransformConstraintTimeline::setFrame(int frame, float time, float mixRotate, float mixX, float mixY,
-										   float mixScaleX, float mixScaleY, float mixShearY) {
+void TransformConstraintTimeline::setFrame(int frame, float time, float mixRotate, float mixX, float mixY, float mixScaleX, float mixScaleY,
+										   float mixShearY) {
 	frame *= ENTRIES;
 	_frames[frame] = time;
 	_frames[frame + ROTATE] = mixRotate;

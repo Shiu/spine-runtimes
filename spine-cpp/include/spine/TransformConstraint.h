@@ -44,31 +44,31 @@ namespace spine {
 		friend class Skeleton;
 		friend class TransformConstraintTimeline;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
-		TransformConstraint(TransformConstraintData& data, Skeleton& skeleton);
+		TransformConstraint(TransformConstraintData &data, Skeleton &skeleton);
 
-		virtual TransformConstraint* copy(Skeleton& skeleton);
+		virtual TransformConstraint *copy(Skeleton &skeleton);
 
 		/// Applies the constraint to the constrained bones.
-		void update(Skeleton& skeleton, Physics physics) override;
+		void update(Skeleton &skeleton, Physics physics) override;
 
-		void sort(Skeleton& skeleton) override;
+		void sort(Skeleton &skeleton) override;
 
 		bool isSourceActive() override;
 
 		/// The bones that will be modified by this transform constraint.
-		Array<BonePose*>& getBones();
+		Array<BonePose *> &getBones();
 
 		/// The bone whose world transform will be copied to the constrained bones.
-		Bone* getSource();
+		Bone *getSource();
 
-		void setSource(Bone* source);
+		void setSource(Bone *source);
 
 	private:
-		Array<BonePose*> _bones;
-		Bone* _source;
+		Array<BonePose *> _bones;
+		Bone *_source;
 	};
 }
 

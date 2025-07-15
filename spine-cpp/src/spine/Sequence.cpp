@@ -38,11 +38,7 @@ using namespace spine;
 
 int Sequence::_nextID = 0;
 
-Sequence::Sequence(int count) : _id(nextID()),
-								_regions(),
-								_start(0),
-								_digits(0),
-								_setupIndex(0) {
+Sequence::Sequence(int count) : _id(nextID()), _regions(), _start(0), _digits(0), _setupIndex(0) {
 	_regions.setSize(count, NULL);
 }
 
@@ -87,8 +83,7 @@ String &Sequence::getPath(const String &basePath, int index) {
 	_tmpPath = basePath;
 	String frame;
 	frame.append(_start + index);
-	for (int i = _digits - (int) frame.length(); i > 0; i--)
-		_tmpPath.append("0");
+	for (int i = _digits - (int) frame.length(); i > 0; i--) _tmpPath.append("0");
 	_tmpPath.append(frame);
 	return _tmpPath;
 }

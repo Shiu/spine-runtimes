@@ -59,14 +59,14 @@ namespace spine {
 	public:
 		RTTI_DECL
 
-		PhysicsConstraint(PhysicsConstraintData& data, Skeleton& skeleton);
+		PhysicsConstraint(PhysicsConstraintData &data, Skeleton &skeleton);
 
-		void update(Skeleton& skeleton, Physics physics) override;
-		void sort(Skeleton& skeleton) override;
+		void update(Skeleton &skeleton, Physics physics) override;
+		void sort(Skeleton &skeleton) override;
 		bool isSourceActive() override;
-		PhysicsConstraint* copy(Skeleton& skeleton);
+		PhysicsConstraint *copy(Skeleton &skeleton);
 
-		void reset(Skeleton& skeleton);
+		void reset(Skeleton &skeleton);
 
 		/// Translates the physics constraint so next update() forces are applied as if the bone moved an additional amount in world space.
 		void translate(float x, float y);
@@ -75,11 +75,11 @@ namespace spine {
 		void rotate(float x, float y, float degrees);
 
 		/// The bone constrained by this physics constraint.
-		BonePose& getBone();
-		void setBone(BonePose& bone);
+		BonePose &getBone();
+		void setBone(BonePose &bone);
 
 	private:
-		BonePose* _bone;
+		BonePose *_bone;
 
 		bool _reset;
 		float _ux, _uy, _cx, _cy, _tx, _ty;

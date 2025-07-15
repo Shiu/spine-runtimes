@@ -33,15 +33,15 @@
 #include <spine/SpineObject.h>
 
 namespace spine {
-    template<class P>
-    class SP_API Pose : public SpineObject {
-    public:
-        Pose() {};
-        virtual ~Pose() {};
+	template<class P>
+	class SP_API Pose : public SpineObject {
+	public:
+		Pose() {};
+		virtual ~Pose() {};
 
-        /// Sets the pose values.
-        virtual void set(P& pose) = 0;
-    };
+		/// Sets the pose values.
+		virtual void set(P &pose) = 0;
+	};
 }
 
 #endif

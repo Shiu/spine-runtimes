@@ -39,19 +39,18 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit DrawOrderTimeline(size_t frameCount);
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 
 		size_t getFrameCount();
 
 		/// The draw order for each frame. See setFrame().
-		Array <Array<int>> &getDrawOrders();
+		Array<Array<int>> &getDrawOrders();
 
 		/// Sets the time and draw order for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.
@@ -60,7 +59,7 @@ namespace spine {
 		void setFrame(size_t frame, float time, Array<int> *drawOrder);
 
 	private:
-		Array <Array<int>> _drawOrders;
+		Array<Array<int>> _drawOrders;
 	};
 }
 

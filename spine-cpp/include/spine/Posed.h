@@ -36,8 +36,10 @@
 namespace spine {
 	class SP_API Posed {
 	public:
-		Posed() {}
-		virtual ~Posed() {}
+		Posed() {
+		}
+		virtual ~Posed() {
+		}
 
 		virtual void constrained() = 0;
 

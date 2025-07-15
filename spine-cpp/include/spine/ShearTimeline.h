@@ -39,14 +39,13 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit ShearTimeline(size_t frameCount, size_t bezierCount, int boneIndex);
 
 	protected:
-		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-						   MixDirection direction) override;
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) override;
 	};
 
 	/// Changes a bone's local BoneLocal::getShearX().
@@ -55,14 +54,13 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit ShearXTimeline(size_t frameCount, size_t bezierCount, int boneIndex);
 
 	protected:
-		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-						   MixDirection direction) override;
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) override;
 	};
 
 	/// Changes a bone's local BoneLocal::getShearY().
@@ -71,14 +69,13 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit ShearYTimeline(size_t frameCount, size_t bezierCount, int boneIndex);
 
 	protected:
-		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-						   MixDirection direction) override;
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) override;
 	};
 }
 

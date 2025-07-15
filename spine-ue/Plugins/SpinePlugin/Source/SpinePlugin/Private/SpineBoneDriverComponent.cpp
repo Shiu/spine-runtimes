@@ -56,7 +56,8 @@ void USpineBoneDriverComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (Target) {
-		USpineSkeletonComponent *skeleton = static_cast<USpineSkeletonComponent *>(Target->GetComponentByClass(USpineSkeletonComponent::StaticClass()));
+		USpineSkeletonComponent *skeleton = static_cast<USpineSkeletonComponent *>(
+			Target->GetComponentByClass(USpineSkeletonComponent::StaticClass()));
 		if (skeleton != lastBoundComponent && skeleton) {
 			// if (lastBoundComponent) lastBoundComponent->BeforeUpdateWorldTransform.RemoveAll(this);
 			if (!skeleton->BeforeUpdateWorldTransform.GetAllObjects().Contains(this))

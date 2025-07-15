@@ -36,7 +36,8 @@ using namespace spine;
 Cocos2dAtlasAttachmentLoader::Cocos2dAtlasAttachmentLoader(Atlas *atlas) : AtlasAttachmentLoader(atlas) {
 }
 
-Cocos2dAtlasAttachmentLoader::~Cocos2dAtlasAttachmentLoader() {}
+Cocos2dAtlasAttachmentLoader::~Cocos2dAtlasAttachmentLoader() {
+}
 
 #if COCOS2D_VERSION >= 0x0040000
 
@@ -96,8 +97,10 @@ GLuint filter(TextureFilter filter) {
 
 #endif
 
-Cocos2dTextureLoader::Cocos2dTextureLoader() : TextureLoader() {}
-Cocos2dTextureLoader::~Cocos2dTextureLoader() {}
+Cocos2dTextureLoader::Cocos2dTextureLoader() : TextureLoader() {
+}
+Cocos2dTextureLoader::~Cocos2dTextureLoader() {
+}
 
 void Cocos2dTextureLoader::load(AtlasPage &page, const spine::String &path) {
 	Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(path.buffer());
@@ -124,9 +127,11 @@ void Cocos2dTextureLoader::unload(void *texture) {
 }
 
 
-Cocos2dExtension::Cocos2dExtension() : DefaultSpineExtension() {}
+Cocos2dExtension::Cocos2dExtension() : DefaultSpineExtension() {
+}
 
-Cocos2dExtension::~Cocos2dExtension() {}
+Cocos2dExtension::~Cocos2dExtension() {
+}
 
 char *Cocos2dExtension::_readFile(const spine::String &path, int *length) {
 	Data data = FileUtils::getInstance()->getDataFromFile(path.buffer());

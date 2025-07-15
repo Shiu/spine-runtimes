@@ -59,7 +59,8 @@ protected:
 	void draw();
 
 public:
-	SpineBoneNode() : bone_mode(SpineConstant::BoneMode_Follow), enabled(true), debug_color(Color::hex(0xff000077)), debug_thickness(5) {}
+	SpineBoneNode() : bone_mode(SpineConstant::BoneMode_Follow), enabled(true), debug_color(Color::hex(0xff000077)), debug_thickness(5) {
+	}
 
 	SpineConstant::BoneMode get_bone_mode();
 

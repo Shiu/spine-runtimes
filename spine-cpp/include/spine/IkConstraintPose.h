@@ -46,7 +46,7 @@ namespace spine {
 		IkConstraintPose();
 		virtual ~IkConstraintPose();
 
-		virtual void set(IkConstraintPose& pose) override;
+		virtual void set(IkConstraintPose &pose) override;
 
 		/// A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
 		///

@@ -48,18 +48,9 @@ const int RegionAttachment::URY = 5;
 const int RegionAttachment::BRX = 6;
 const int RegionAttachment::BRY = 7;
 
-RegionAttachment::RegionAttachment(const String &name) : Attachment(name),
-														 _region(NULL),
-														 _path(),
-														 _x(0),
-														 _y(0),
-														 _scaleX(1),
-														 _scaleY(1),
-														 _rotation(0),
-														 _width(0),
-														 _height(0),
-														 _color(1, 1, 1, 1),
-														 _sequence(NULL) {
+RegionAttachment::RegionAttachment(const String &name)
+	: Attachment(name), _region(NULL), _path(), _x(0), _y(0), _scaleX(1), _scaleY(1), _rotation(0), _width(0), _height(0), _color(1, 1, 1, 1),
+	  _sequence(NULL) {
 	_offset.setSize(8, 0);
 	_uvs.setSize(8, 0);
 }

@@ -44,7 +44,7 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit InheritTimeline(size_t frameCount, int boneIndex);
@@ -54,15 +54,14 @@ namespace spine {
 		/// Sets the inherit transform mode for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.
 		/// @param time The frame time in seconds.
-        void setFrame(int frame, float time, Inherit inherit);
+		void setFrame(int frame, float time, Inherit inherit);
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 
 	private:
-        static const int ENTRIES = 2;
-        static const int INHERIT = 1;
+		static const int ENTRIES = 2;
+		static const int INHERIT = 1;
 	};
 }
 

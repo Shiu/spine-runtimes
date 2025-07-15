@@ -63,7 +63,9 @@ public:
 
 	String get_slot_name();
 
-	int get_slot_index() { return slot_index; }
+	int get_slot_index() {
+		return slot_index;
+	}
 
 	Ref<Material> get_normal_material();
 

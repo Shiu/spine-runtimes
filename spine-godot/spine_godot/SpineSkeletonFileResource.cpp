@@ -200,7 +200,8 @@ Error SpineSkeletonFileResource::copy_from(const Ref<Resource> &p_resource) {
 Variant SpineSkeletonFileResourceFormatLoader::_load(const String &path, const String &original_path, bool use_sub_threads, int32_t cache_mode) {
 #else
 #if VERSION_MAJOR > 3
-RES SpineSkeletonFileResourceFormatLoader::load(const String &path, const String &original_path, Error *error, bool use_sub_threads, float *progress, CacheMode cache_mode) {
+RES SpineSkeletonFileResourceFormatLoader::load(const String &path, const String &original_path, Error *error, bool use_sub_threads, float *progress,
+												CacheMode cache_mode) {
 #else
 #if VERSION_MINOR > 5
 RES SpineSkeletonFileResourceFormatLoader::load(const String &path, const String &original_path, Error *error, bool no_subresource_cache) {
@@ -236,7 +237,9 @@ String SpineSkeletonFileResourceFormatLoader::_get_resource_type(const String &p
 #else
 String SpineSkeletonFileResourceFormatLoader::get_resource_type(const String &path) const {
 #endif
-	return path.ends_with(".spjson") || path.ends_with(".spskel") || path.ends_with(".spine-json") || path.ends_with(".skel") ? "SpineSkeletonFileResource" : "";
+	return path.ends_with(".spjson") || path.ends_with(".spskel") || path.ends_with(".spine-json") || path.ends_with(".skel")
+		? "SpineSkeletonFileResource"
+		: "";
 }
 
 #ifdef SPINE_GODOT_EXTENSION

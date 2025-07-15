@@ -51,46 +51,31 @@ using std::max;
 
 namespace {
 
-	const char *TWO_COLOR_TINT_VERTEX_SHADER = STRINGIFY(
-			uniform mat4 u_PMatrix;
-			attribute vec4 a_position;
-			attribute vec4 a_color;
-			attribute vec4 a_color2;
-			attribute vec2 a_texCoords;
+	const char *TWO_COLOR_TINT_VERTEX_SHADER = STRINGIFY(uniform mat4 u_PMatrix; attribute vec4 a_position; attribute vec4 a_color;
+														 attribute vec4 a_color2; attribute vec2 a_texCoords;
 
-    \n #ifdef GL_ES\n
-					varying lowp vec4 v_light;
-			varying lowp vec4 v_dark;
-			varying mediump vec2 v_texCoord;
-    \n #else \n
-					varying vec4 v_light;
-			varying vec4 v_dark;
-			varying vec2 v_texCoord;
+    \n #ifdef GL_ES\n varying lowp vec4 v_light; varying lowp vec4 v_dark; varying mediump vec2 v_texCoord;
+    \n #else \n varying vec4 v_light; varying vec4 v_dark; varying vec2 v_texCoord;
 
     \n #endif \n
 
-			void main() {
-				v_light = a_color;
-				v_dark = a_color2;
-				v_texCoord = a_texCoords;
-				gl_Position = u_PMatrix * a_position;
-			});
+														 void main() {
+															 v_light = a_color;
+															 v_dark = a_color2;
+															 v_texCoord = a_texCoords;
+															 gl_Position = u_PMatrix * a_position;
+														 });
 
 	const char *TWO_COLOR_TINT_FRAGMENT_SHADER = STRINGIFY(
-        \n #ifdef GL_ES\n
-					precision lowp float;
-    \n #endif \n
-							uniform sampler2D u_texture;
-			varying vec4 v_light;
-			varying vec4 v_dark;
-			varying vec2 v_texCoord;
+        \n #ifdef GL_ES\n precision lowp float;
+    \n #endif \n uniform sampler2D u_texture; varying vec4 v_light; varying vec4 v_dark; varying vec2 v_texCoord;
 
-			void main() {
-				vec4 texColor = texture2D(u_texture, v_texCoord);
-				float alpha = texColor.a * v_light.a;
-				gl_FragColor.a = alpha;
-				gl_FragColor.rgb = ((texColor.a - 1.0) * v_dark.a + 1.0 - texColor.rgb) * v_dark.rgb + texColor.rgb * v_light.rgb;
-			});
+		 void main() {
+			 vec4 texColor = texture2D(u_texture, v_texCoord);
+			 float alpha = texColor.a * v_light.a;
+			 gl_FragColor.a = alpha;
+			 gl_FragColor.rgb = ((texColor.a - 1.0) * v_dark.a + 1.0 - texColor.rgb) * v_dark.rgb + texColor.rgb * v_light.rgb;
+		 });
 
 
 	std::shared_ptr<backend::ProgramState> __twoColorProgramState = nullptr;
@@ -136,7 +121,8 @@ namespace spine {
 		_type = RenderCommand::Type::CUSTOM_COMMAND;
 	}
 
-	void TwoColorTrianglesCommand::init(float globalOrder, cocos2d::Texture2D *texture, cocos2d::backend::ProgramState *programState, BlendFunc blendType, const TwoColorTriangles &triangles, const Mat4 &mv, uint32_t flags) {
+	void TwoColorTrianglesCommand::init(float globalOrder, cocos2d::Texture2D *texture, cocos2d::backend::ProgramState *programState,
+										BlendFunc blendType, const TwoColorTriangles &triangles, const Mat4 &mv, uint32_t flags) {
 
 		updateCommandPipelineDescriptor(programState);
 		const cocos2d::Mat4 &projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
@@ -158,8 +144,8 @@ namespace spine {
 
 		_mv = mv;
 
-		if (_blendType.src != blendType.src || _blendType.dst != blendType.dst ||
-			_texture != texture->getBackendTexture() || _pipelineDescriptor.programState != _programState) {
+		if (_blendType.src != blendType.src || _blendType.dst != blendType.dst || _texture != texture->getBackendTexture() ||
+			_pipelineDescriptor.programState != _programState) {
 			_texture = texture->getBackendTexture();
 			_blendType = blendType;
 
@@ -199,8 +185,7 @@ namespace spine {
 		CCASSERT(_programState, "programState should not be null");
 		pipelinePS = _programState;
 
-		if (needsUpdateStateLayout)
-			updateProgramStateLayout(pipelinePS);
+		if (needsUpdateStateLayout) updateProgramStateLayout(pipelinePS);
 
 		_locPMatrix = __locPMatrix;
 		_locTexture = __locTexture;
@@ -214,8 +199,7 @@ namespace spine {
 		// do not batch if using custom uniforms (since we cannot batch) it
 
 
-		struct
-		{
+		struct {
 			void *texture;
 			void *prog;
 			backend::BlendFactor src;
@@ -239,11 +223,10 @@ namespace spine {
 		SkeletonTwoColorBatch::getInstance()->batch(r, this);
 	}
 
-	void TwoColorTrianglesCommand::updateVertexAndIndexBuffer(Renderer *r, V3F_C4B_C4B_T2F *vertices, int verticesSize, uint16_t *indices, int indicesSize) {
-		if (verticesSize != _vertexCapacity)
-			createVertexBuffer(sizeof(V3F_C4B_C4B_T2F), verticesSize, CustomCommand::BufferUsage::DYNAMIC);
-		if (indicesSize != _indexCapacity)
-			createIndexBuffer(CustomCommand::IndexFormat::U_SHORT, indicesSize, CustomCommand::BufferUsage::DYNAMIC);
+	void TwoColorTrianglesCommand::updateVertexAndIndexBuffer(Renderer *r, V3F_C4B_C4B_T2F *vertices, int verticesSize, uint16_t *indices,
+															  int indicesSize) {
+		if (verticesSize != _vertexCapacity) createVertexBuffer(sizeof(V3F_C4B_C4B_T2F), verticesSize, CustomCommand::BufferUsage::DYNAMIC);
+		if (indicesSize != _indexCapacity) createIndexBuffer(CustomCommand::IndexFormat::U_SHORT, indicesSize, CustomCommand::BufferUsage::DYNAMIC);
 
 		updateVertexBuffer(vertices, sizeof(V3F_C4B_C4B_T2F) * verticesSize);
 		updateIndexBuffer(indices, sizeof(uint16_t) * indicesSize);
@@ -274,9 +257,8 @@ namespace spine {
 
 		// callback after drawing is finished so we can clear out the batch state
 		// for the next frame
-		Director::getInstance()->getEventDispatcher()->addCustomEventListener(EVENT_AFTER_DRAW_RESET_POSITION, [this](EventCustom *eventCustom) {
-			this->update(0);
-		});
+		Director::getInstance()->getEventDispatcher()->addCustomEventListener(EVENT_AFTER_DRAW_RESET_POSITION,
+																			  [this](EventCustom *eventCustom) { this->update(0); });
 	}
 
 	SkeletonTwoColorBatch::~SkeletonTwoColorBatch() {
@@ -321,7 +303,7 @@ namespace spine {
 	unsigned short *SkeletonTwoColorBatch::allocateIndices(uint32_t numIndices) {
 		if (_indices.getCapacity() - _indices.size() < numIndices) {
 			unsigned short *oldData = _indices.buffer();
-			int oldSize = (int)_indices.size();
+			int oldSize = (int) _indices.size();
 			_indices.ensureCapacity(_indices.size() + numIndices);
 			unsigned short *newData = _indices.buffer();
 			for (uint32_t i = 0; i < this->_nextFreeCommand; i++) {
@@ -342,7 +324,9 @@ namespace spine {
 		_indices.setSize(_indices.size() - numIndices, 0);
 	}
 
-	TwoColorTrianglesCommand *SkeletonTwoColorBatch::addCommand(cocos2d::Renderer *renderer, float globalOrder, cocos2d::Texture2D *texture, backend::ProgramState *programState, cocos2d::BlendFunc blendType, const TwoColorTriangles &triangles, const cocos2d::Mat4 &mv, uint32_t flags) {
+	TwoColorTrianglesCommand *SkeletonTwoColorBatch::addCommand(cocos2d::Renderer *renderer, float globalOrder, cocos2d::Texture2D *texture,
+																backend::ProgramState *programState, cocos2d::BlendFunc blendType,
+																const TwoColorTriangles &triangles, const cocos2d::Mat4 &mv, uint32_t flags) {
 		TwoColorTrianglesCommand *command = nextFreeCommand();
 		command->init(globalOrder, texture, programState, blendType, triangles, mv, flags);
 		command->updateVertexAndIndexBuffer(renderer, triangles.verts, triangles.vertCount, triangles.indices, triangles.indexCount);
@@ -351,7 +335,8 @@ namespace spine {
 	}
 
 	void SkeletonTwoColorBatch::batch(cocos2d::Renderer *renderer, TwoColorTrianglesCommand *command) {
-		if (_numVerticesBuffer + command->getTriangles().vertCount >= MAX_VERTICES || _numIndicesBuffer + command->getTriangles().indexCount >= MAX_INDICES) {
+		if (_numVerticesBuffer + command->getTriangles().vertCount >= MAX_VERTICES ||
+			_numIndicesBuffer + command->getTriangles().indexCount >= MAX_INDICES) {
 			flush(renderer, _lastCommand);
 		}
 
@@ -382,8 +367,7 @@ namespace spine {
 	}
 
 	void SkeletonTwoColorBatch::flush(cocos2d::Renderer *renderer, TwoColorTrianglesCommand *materialCommand) {
-		if (!materialCommand)
-			return;
+		if (!materialCommand) return;
 
 		materialCommand->updateVertexAndIndexBuffer(renderer, _vertexBuffer, _numVerticesBuffer, _indexBuffer, _numIndicesBuffer);
 
@@ -406,8 +390,8 @@ namespace spine {
 
 	TwoColorTrianglesCommand *SkeletonTwoColorBatch::nextFreeCommand() {
 		if (_commandsPool.size() <= _nextFreeCommand) {
-			unsigned int newSize = (int)_commandsPool.size() * 2 + 1;
-			for (int i = (int)_commandsPool.size(); i < newSize; i++) {
+			unsigned int newSize = (int) _commandsPool.size() * 2 + 1;
+			for (int i = (int) _commandsPool.size(); i < newSize; i++) {
 				_commandsPool.push_back(new TwoColorTrianglesCommand());
 			}
 		}

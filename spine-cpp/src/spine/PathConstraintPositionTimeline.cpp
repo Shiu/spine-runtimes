@@ -43,18 +43,15 @@ using namespace spine;
 
 RTTI_IMPL(PathConstraintPositionTimeline, ConstraintTimeline1)
 
-PathConstraintPositionTimeline::PathConstraintPositionTimeline(size_t frameCount, size_t bezierCount,
-															   int constraintIndex) : ConstraintTimeline1(frameCount,
-																										  bezierCount,
-																										  constraintIndex,
-																										  Property_PathConstraintPosition) {
+PathConstraintPositionTimeline::PathConstraintPositionTimeline(size_t frameCount, size_t bezierCount, int constraintIndex)
+	: ConstraintTimeline1(frameCount, bezierCount, constraintIndex, Property_PathConstraintPosition) {
 }
 
 PathConstraintPositionTimeline::~PathConstraintPositionTimeline() {
 }
 
-void PathConstraintPositionTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents,
-										   float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
+void PathConstraintPositionTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+										   MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 	SP_UNUSED(direction);

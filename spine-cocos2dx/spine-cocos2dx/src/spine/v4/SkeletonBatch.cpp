@@ -69,9 +69,8 @@ namespace spine {
 		reset();
 		// callback after drawing is finished so we can clear out the batch state
 		// for the next frame
-		Director::getInstance()->getEventDispatcher()->addCustomEventListener(EVENT_AFTER_DRAW_RESET_POSITION, [this](EventCustom *eventCustom) {
-			this->update(0);
-		});
+		Director::getInstance()->getEventDispatcher()->addCustomEventListener(EVENT_AFTER_DRAW_RESET_POSITION,
+																			  [this](EventCustom *eventCustom) { this->update(0); });
 		;
 	}
 
@@ -93,9 +92,11 @@ namespace spine {
 		auto locPosition = programState->getAttributeLocation(backend::ATTRIBUTE_NAME_POSITION);
 		auto locTexcoord = programState->getAttributeLocation(backend::ATTRIBUTE_NAME_TEXCOORD);
 		auto locColor = programState->getAttributeLocation(backend::ATTRIBUTE_NAME_COLOR);
-		vertexLayout->setAttribute(backend::ATTRIBUTE_NAME_POSITION, locPosition, backend::VertexFormat::FLOAT3, offsetof(V3F_C4B_T2F, vertices), false);
+		vertexLayout->setAttribute(backend::ATTRIBUTE_NAME_POSITION, locPosition, backend::VertexFormat::FLOAT3, offsetof(V3F_C4B_T2F, vertices),
+								   false);
 		vertexLayout->setAttribute(backend::ATTRIBUTE_NAME_COLOR, locColor, backend::VertexFormat::UBYTE4, offsetof(V3F_C4B_T2F, colors), true);
-		vertexLayout->setAttribute(backend::ATTRIBUTE_NAME_TEXCOORD, locTexcoord, backend::VertexFormat::FLOAT2, offsetof(V3F_C4B_T2F, texCoords), false);
+		vertexLayout->setAttribute(backend::ATTRIBUTE_NAME_TEXCOORD, locTexcoord, backend::VertexFormat::FLOAT2, offsetof(V3F_C4B_T2F, texCoords),
+								   false);
 		vertexLayout->setLayout(sizeof(_vertices[0]));
 
 
@@ -132,7 +133,7 @@ namespace spine {
 	unsigned short *SkeletonBatch::allocateIndices(uint32_t numIndices) {
 		if (_indices.getCapacity() - _indices.size() < numIndices) {
 			unsigned short *oldData = _indices.buffer();
-			int oldSize = (int)_indices.size();
+			int oldSize = (int) _indices.size();
 			_indices.ensureCapacity(_indices.size() + numIndices);
 			unsigned short *newData = _indices.buffer();
 			for (uint32_t i = 0; i < this->_nextFreeCommand; i++) {
@@ -154,12 +155,14 @@ namespace spine {
 	}
 
 
-	cocos2d::TrianglesCommand *SkeletonBatch::addCommand(cocos2d::Renderer *renderer, float globalOrder, cocos2d::Texture2D *texture, backend::ProgramState *programState, cocos2d::BlendFunc blendType, const cocos2d::TrianglesCommand::Triangles &triangles, const cocos2d::Mat4 &mv, uint32_t flags) {
+	cocos2d::TrianglesCommand *SkeletonBatch::addCommand(cocos2d::Renderer *renderer, float globalOrder, cocos2d::Texture2D *texture,
+														 backend::ProgramState *programState, cocos2d::BlendFunc blendType,
+														 const cocos2d::TrianglesCommand::Triangles &triangles, const cocos2d::Mat4 &mv,
+														 uint32_t flags) {
 		TrianglesCommand *command = nextFreeCommand();
 		const cocos2d::Mat4 &projectionMat = Director::getInstance()->getMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_PROJECTION);
 
-		if (programState == nullptr)
-			programState = _programState;
+		if (programState == nullptr) programState = _programState;
 
 		CCASSERT(programState, "programState should not be null");
 
@@ -187,8 +190,8 @@ namespace spine {
 
 	cocos2d::TrianglesCommand *SkeletonBatch::nextFreeCommand() {
 		if (_commandsPool.size() <= _nextFreeCommand) {
-			unsigned int newSize = (int)_commandsPool.size() * 2 + 1;
-			for (int i = (int)_commandsPool.size(); i < newSize; i++) {
+			unsigned int newSize = (int) _commandsPool.size() * 2 + 1;
+			for (int i = (int) _commandsPool.size(); i < newSize; i++) {
 				_commandsPool.push_back(createNewTrianglesCommand());
 			}
 		}

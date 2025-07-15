@@ -57,7 +57,7 @@ namespace spine {
 	public:
 		explicit IkConstraintData(const String &name);
 
-		virtual Constraint* create(Skeleton& skeleton) override;
+		virtual Constraint *create(Skeleton &skeleton) override;
 
 		/// The bones that are constrained by this IK Constraint.
 		Array<BoneData *> &getBones();

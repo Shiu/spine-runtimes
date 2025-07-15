@@ -8,13 +8,15 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_mesh_attachment spine_mesh_attachment_create(const char * name);
+SPINE_C_API spine_mesh_attachment spine_mesh_attachment_create(const char *name);
 
 SPINE_C_API void spine_mesh_attachment_dispose(spine_mesh_attachment self);
 
 SPINE_C_API spine_rtti spine_mesh_attachment_get_rtti(spine_mesh_attachment self);
-SPINE_C_API void spine_mesh_attachment_compute_world_vertices_1(spine_mesh_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count, float * worldVertices, size_t offset, size_t stride);
-SPINE_C_API void spine_mesh_attachment_compute_world_vertices_2(spine_mesh_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count, spine_array_float worldVertices, size_t offset, size_t stride);
+SPINE_C_API void spine_mesh_attachment_compute_world_vertices_1(spine_mesh_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start,
+																size_t count, float *worldVertices, size_t offset, size_t stride);
+SPINE_C_API void spine_mesh_attachment_compute_world_vertices_2(spine_mesh_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start,
+																size_t count, spine_array_float worldVertices, size_t offset, size_t stride);
 SPINE_C_API void spine_mesh_attachment_update_region(spine_mesh_attachment self);
 SPINE_C_API int spine_mesh_attachment_get_hull_length(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_hull_length(spine_mesh_attachment self, int inValue);
@@ -24,8 +26,8 @@ SPINE_C_API spine_array_float spine_mesh_attachment_get_u_vs(spine_mesh_attachme
 SPINE_C_API spine_array_unsigned_short spine_mesh_attachment_get_triangles(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_triangles(spine_mesh_attachment self, spine_array_unsigned_short inValue);
 SPINE_C_API spine_color spine_mesh_attachment_get_color(spine_mesh_attachment self);
-SPINE_C_API const char * spine_mesh_attachment_get_path(spine_mesh_attachment self);
-SPINE_C_API void spine_mesh_attachment_set_path(spine_mesh_attachment self, const char * inValue);
+SPINE_C_API const char *spine_mesh_attachment_get_path(spine_mesh_attachment self);
+SPINE_C_API void spine_mesh_attachment_set_path(spine_mesh_attachment self, const char *inValue);
 SPINE_C_API spine_texture_region spine_mesh_attachment_get_region(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_region(spine_mesh_attachment self, spine_texture_region region);
 SPINE_C_API spine_sequence spine_mesh_attachment_get_sequence(spine_mesh_attachment self);
@@ -50,7 +52,7 @@ SPINE_C_API void spine_mesh_attachment_set_world_vertices_length(spine_mesh_atta
 SPINE_C_API spine_attachment spine_mesh_attachment_get_timeline_attachment(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_timeline_attachment(spine_mesh_attachment self, spine_attachment attachment);
 SPINE_C_API void spine_mesh_attachment_copy_to(spine_mesh_attachment self, spine_vertex_attachment other);
-SPINE_C_API const char * spine_mesh_attachment_get_name(spine_mesh_attachment self);
+SPINE_C_API const char *spine_mesh_attachment_get_name(spine_mesh_attachment self);
 SPINE_C_API int spine_mesh_attachment_get_ref_count(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_reference(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_dereference(spine_mesh_attachment self);

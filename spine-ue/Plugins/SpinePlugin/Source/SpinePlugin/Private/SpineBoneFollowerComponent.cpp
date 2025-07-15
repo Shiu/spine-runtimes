@@ -45,7 +45,8 @@ void USpineBoneFollowerComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (Target) {
-		USpineSkeletonComponent *skeleton = static_cast<USpineSkeletonComponent *>(Target->GetComponentByClass(USpineSkeletonComponent::StaticClass()));
+		USpineSkeletonComponent *skeleton = static_cast<USpineSkeletonComponent *>(
+			Target->GetComponentByClass(USpineSkeletonComponent::StaticClass()));
 		if (skeleton) {
 			FTransform transform = skeleton->GetBoneWorldTransform(BoneName);
 			if (UseComponentTransform) {

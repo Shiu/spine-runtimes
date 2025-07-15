@@ -57,15 +57,23 @@ protected:
 #endif
 
 public:
-	bool is_binary() { return binary.size() > 0; }
+	bool is_binary() {
+		return binary.size() > 0;
+	}
 
 #ifdef SPINE_GODOT_EXTENSION
-	const PackedByteArray &get_binary() { return binary; }
+	const PackedByteArray &get_binary() {
+		return binary;
+	}
 #else
-	const Vector<uint8_t> &get_binary() { return binary; }
+	const Vector<uint8_t> &get_binary() {
+		return binary;
+	}
 #endif
 
-	const String &get_json() { return json; }
+	const String &get_json() {
+		return json;
+	}
 
 	Error load_from_file(const String &path);
 
@@ -83,7 +91,7 @@ class SpineSkeletonFileResourceFormatLoader : public ResourceFormatLoader {
 
 public:
 #ifdef SPINE_GODOT_EXTENSION
-	static void _bind_methods(){};
+	static void _bind_methods() {};
 
 	PackedStringArray _get_recognized_extensions();
 
@@ -116,7 +124,7 @@ class SpineSkeletonFileResourceFormatSaver : public ResourceFormatSaver {
 
 public:
 #ifdef SPINE_GODOT_EXTENSION
-	static void _bind_methods(){};
+	static void _bind_methods() {};
 
 	Error _save(const Ref<Resource> &resource, const String &path, uint32_t flags) override;
 

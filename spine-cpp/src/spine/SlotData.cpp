@@ -35,12 +35,8 @@
 
 using namespace spine;
 
-SlotData::SlotData(int index, const String &name, BoneData &boneData) : PosedDataGeneric<SlotPose>(name),
-																		_index(index),
-																		_boneData(boneData),
-																		_attachmentName(),
-																		_blendMode(BlendMode_Normal),
-																		_visible(true) {
+SlotData::SlotData(int index, const String &name, BoneData &boneData)
+	: PosedDataGeneric<SlotPose>(name), _index(index), _boneData(boneData), _attachmentName(), _blendMode(BlendMode_Normal), _visible(true) {
 	assert(index >= 0);
 }
 

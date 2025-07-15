@@ -55,10 +55,14 @@ void SpineSlotNode::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_screen_material"), &SpineSlotNode::get_screen_material);
 
 	ADD_GROUP("Materials", "");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "normal_material", PROPERTY_HINT_RESOURCE_TYPE, "Material"), "set_normal_material", "get_normal_material");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "additive_material", PROPERTY_HINT_RESOURCE_TYPE, "Material"), "set_additive_material", "get_additive_material");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "multiply_material", PROPERTY_HINT_RESOURCE_TYPE, "Material"), "set_multiply_material", "get_multiply_material");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "screen_material", PROPERTY_HINT_RESOURCE_TYPE, "Material"), "set_screen_material", "get_screen_material");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "normal_material", PROPERTY_HINT_RESOURCE_TYPE, "Material"), "set_normal_material",
+				 "get_normal_material");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "additive_material", PROPERTY_HINT_RESOURCE_TYPE, "Material"), "set_additive_material",
+				 "get_additive_material");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "multiply_material", PROPERTY_HINT_RESOURCE_TYPE, "Material"), "set_multiply_material",
+				 "get_multiply_material");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "screen_material", PROPERTY_HINT_RESOURCE_TYPE, "Material"), "set_screen_material",
+				 "get_screen_material");
 }
 
 SpineSlotNode::SpineSlotNode() : slot_index(-1) {
@@ -113,7 +117,8 @@ void SpineSlotNode::_get_property_list(List<PropertyInfo> *list) const {
 	Vector<String> slot_names;
 #endif
 	SpineSprite *sprite = cast_to<SpineSprite>(get_parent());
-	if (sprite && sprite->get_skeleton_data_res().is_valid()) sprite->get_skeleton_data_res()->get_slot_names(slot_names);
+	if (sprite && sprite->get_skeleton_data_res().is_valid())
+		sprite->get_skeleton_data_res()->get_slot_names(slot_names);
 	else
 		slot_names.push_back(slot_name);
 	auto element = list->front();

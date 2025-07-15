@@ -46,7 +46,7 @@ namespace spine {
 		virtual ~Update();
 
 		/// @param physics Determines how physics and other non-deterministic updates are applied.
-		virtual void update(Skeleton& skeleton, Physics physics) = 0;
+		virtual void update(Skeleton &skeleton, Physics physics) = 0;
 	};
 }
 

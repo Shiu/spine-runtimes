@@ -50,12 +50,12 @@ namespace spine {
 		RTTI_DECL
 	public:
 		explicit PhysicsConstraintData(const String &name);
-		
-		virtual Constraint* create(Skeleton& skeleton) override;
+
+		virtual Constraint *create(Skeleton &skeleton) override;
 
 		/// The bone constrained by this physics constraint.
-		BoneData* getBone();
-		void setBone(BoneData* bone);
+		BoneData *getBone();
+		void setBone(BoneData *bone);
 
 		float getStep();
 		void setStep(float step);
@@ -100,7 +100,7 @@ namespace spine {
 		void setMixGlobal(bool mixGlobal);
 
 	private:
-		BoneData* _bone;
+		BoneData *_bone;
 		float _x, _y, _rotate, _scaleX, _shearX, _limit, _step;
 		bool _inertiaGlobal, _strengthGlobal, _dampingGlobal, _massGlobal, _windGlobal, _gravityGlobal, _mixGlobal;
 	};

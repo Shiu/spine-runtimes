@@ -43,8 +43,7 @@ SkeletonBounds::SkeletonBounds() : _minX(0), _minY(0), _maxX(0), _maxY(0) {
 }
 
 SkeletonBounds::~SkeletonBounds() {
-	for (size_t i = 0, n = _polygons.size(); i < n; i++)
-		_polygonPool.free(_polygons[i]);
+	for (size_t i = 0, n = _polygons.size(); i < n; i++) _polygonPool.free(_polygons[i]);
 	_polygons.clear();
 }
 
@@ -101,8 +100,7 @@ bool SkeletonBounds::aabbIntersectsSegment(float x1, float y1, float x2, float y
 	float maxX = _maxX;
 	float maxY = _maxY;
 
-	if ((x1 <= minX && x2 <= minX) || (y1 <= minY && y2 <= minY) || (x1 >= maxX && x2 >= maxX) ||
-		(y1 >= maxY && y2 >= maxY)) {
+	if ((x1 <= minX && x2 <= minX) || (y1 <= minY && y2 <= minY) || (x1 >= maxX && x2 >= maxX) || (y1 >= maxY && y2 >= maxY)) {
 		return false;
 	}
 

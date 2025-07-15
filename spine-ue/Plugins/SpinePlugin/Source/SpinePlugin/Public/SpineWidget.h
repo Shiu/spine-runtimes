@@ -235,7 +235,9 @@ public:
 
 	// used in C event callback. Needs to be public as we can't call
 	// protected methods from plain old C function.
-	void GCTrackEntry(UTrackEntry *entry) { trackEntries.Remove(entry); }
+	void GCTrackEntry(UTrackEntry *entry) {
+		trackEntries.Remove(entry);
+	}
 
 protected:
 	friend class SSpineWidget;

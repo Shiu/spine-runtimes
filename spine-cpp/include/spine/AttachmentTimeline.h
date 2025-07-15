@@ -53,16 +53,15 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit AttachmentTimeline(size_t frameCount, int slotIndex);
 
 		virtual ~AttachmentTimeline();
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 
 		/// Sets the time and attachment name for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.

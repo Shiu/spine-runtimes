@@ -34,7 +34,7 @@
 #include <stdlib.h>
 #include <spine/dll.h>
 
-#define SP_UNUSED(x) (void)(x)
+#define SP_UNUSED(x) (void) (x)
 
 namespace spine {
 	class String;
@@ -88,7 +88,9 @@ namespace spine {
 
 		virtual char *_readFile(const String &path, int *length) = 0;
 
-		virtual void _beforeFree(void *ptr) { SP_UNUSED(ptr); }
+		virtual void _beforeFree(void *ptr) {
+			SP_UNUSED(ptr);
+		}
 
 	protected:
 		SpineExtension();
@@ -115,10 +117,10 @@ namespace spine {
 		virtual char *_readFile(const String &path, int *length) override;
 	};
 
-// This function is to be implemented by engine specific runtimes to provide
-// the default extension for that engine. It is called the first time
-// SpineExtension::getInstance() is called, when no instance has been set
-// yet.
+	// This function is to be implemented by engine specific runtimes to provide
+	// the default extension for that engine. It is called the first time
+	// SpineExtension::getInstance() is called, when no instance has been set
+	// yet.
 	extern SpineExtension *getDefaultExtension();
 }
 

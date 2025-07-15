@@ -45,36 +45,55 @@ namespace spine {
 	class SP_API Sequence : public SpineObject {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
+
 	public:
 		Sequence(int count);
 
 		~Sequence();
 
-		Sequence* copy();
+		Sequence *copy();
 
-		void apply(SlotPose* slot, Attachment* attachment);
+		void apply(SlotPose *slot, Attachment *attachment);
 
 		String &getPath(const String &basePath, int index);
 
 		/// Returns a unique ID for this attachment.
-		int getId() { return _id; }
+		int getId() {
+			return _id;
+		}
 
-		void setId(int id) { _id = id; }
+		void setId(int id) {
+			_id = id;
+		}
 
-		int getStart() { return _start; }
+		int getStart() {
+			return _start;
+		}
 
-		void setStart(int start) { _start = start; }
+		void setStart(int start) {
+			_start = start;
+		}
 
-		int getDigits() { return _digits; }
+		int getDigits() {
+			return _digits;
+		}
 
-		void setDigits(int digits) { _digits = digits; }
+		void setDigits(int digits) {
+			_digits = digits;
+		}
 
 		/// The index of the region to show for the setup pose.
-		int getSetupIndex() { return _setupIndex; }
+		int getSetupIndex() {
+			return _setupIndex;
+		}
 
-		void setSetupIndex(int setupIndex) { _setupIndex = setupIndex; }
+		void setSetupIndex(int setupIndex) {
+			_setupIndex = setupIndex;
+		}
 
-		Array<TextureRegion *> &getRegions() { return _regions; }
+		Array<TextureRegion *> &getRegions() {
+			return _regions;
+		}
 
 	private:
 		static int _nextID;

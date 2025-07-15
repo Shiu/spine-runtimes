@@ -38,20 +38,14 @@ RTTI_IMPL(Bone, Update)
 
 bool Bone::yDown = true;
 
-Bone::Bone(BoneData &data, Bone *parent) : PosedGeneric<BoneData, BoneLocal, BonePose>(data),
-										   PosedActive(),
-										   _parent(parent),
-										   _children(),
-										   _sorted(false) {
+Bone::Bone(BoneData &data, Bone *parent)
+	: PosedGeneric<BoneData, BoneLocal, BonePose>(data), PosedActive(), _parent(parent), _children(), _sorted(false) {
 	_constrained._bone = this;
 	_applied->_bone = this;
 }
 
-Bone::Bone(Bone &bone, Bone *parent) : PosedGeneric<BoneData, BoneLocal, BonePose>(bone._data),
-									   PosedActive(),
-									   _parent(parent),
-									   _children(),
-									   _sorted(false) {
+Bone::Bone(Bone &bone, Bone *parent)
+	: PosedGeneric<BoneData, BoneLocal, BonePose>(bone._data), PosedActive(), _parent(parent), _children(), _sorted(false) {
 	_constrained._bone = this;
 	_applied->_bone = this;
 	_pose.set(bone._pose);

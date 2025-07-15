@@ -46,7 +46,7 @@ namespace spine {
 
 		friend class AtlasAttachmentLoader;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit MeshAttachment(const String &name);
@@ -56,7 +56,7 @@ namespace spine {
 		using VertexAttachment::computeWorldVertices;
 
 		virtual void computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
-		size_t stride = 2) override;
+										  size_t stride = 2) override;
 
 		void updateRegion();
 

@@ -13,8 +13,11 @@ SPINE_C_API spine_sequence_timeline spine_sequence_timeline_create(size_t frameC
 SPINE_C_API void spine_sequence_timeline_dispose(spine_sequence_timeline self);
 
 SPINE_C_API spine_rtti spine_sequence_timeline_get_rtti(spine_sequence_timeline self);
-SPINE_C_API void spine_sequence_timeline_apply(spine_sequence_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
-SPINE_C_API void spine_sequence_timeline_set_frame(spine_sequence_timeline self, int frame, float time, spine_sequence_mode mode, int index, float delay);
+SPINE_C_API void spine_sequence_timeline_apply(spine_sequence_timeline self, spine_skeleton skeleton, float lastTime, float time,
+											   spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+											   bool appliedPose);
+SPINE_C_API void spine_sequence_timeline_set_frame(spine_sequence_timeline self, int frame, float time, spine_sequence_mode mode, int index,
+												   float delay);
 SPINE_C_API spine_attachment spine_sequence_timeline_get_attachment(spine_sequence_timeline self);
 SPINE_C_API size_t spine_sequence_timeline_get_frame_entries(spine_sequence_timeline self);
 SPINE_C_API size_t spine_sequence_timeline_get_frame_count(spine_sequence_timeline self);

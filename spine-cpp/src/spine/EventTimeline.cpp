@@ -55,8 +55,8 @@ EventTimeline::~EventTimeline() {
 	ArrayUtils::deleteElements(_events);
 }
 
-void EventTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
-						  MixBlend blend, MixDirection direction, bool appliedPose) {
+void EventTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						  MixDirection direction, bool appliedPose) {
 	if (pEvents == NULL) return;
 
 	Array<Event *> &events = *pEvents;
@@ -87,8 +87,7 @@ void EventTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<
 		}
 	}
 
-	for (; (size_t) i < frameCount && time >= _frames[i]; i++)
-		events.add(_events[i]);
+	for (; (size_t) i < frameCount && time >= _frames[i]; i++) events.add(_events[i]);
 }
 
 void EventTimeline::setFrame(size_t frame, Event *event) {

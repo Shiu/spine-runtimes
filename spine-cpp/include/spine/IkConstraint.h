@@ -46,16 +46,16 @@ namespace spine {
 
 		friend class IkConstraintTimeline;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		IkConstraint(IkConstraintData &data, Skeleton &skeleton);
 
-		virtual IkConstraint* copy(Skeleton& skeleton);
+		virtual IkConstraint *copy(Skeleton &skeleton);
 
-		virtual void update(Skeleton& skeleton, Physics physics) override;
+		virtual void update(Skeleton &skeleton, Physics physics) override;
 
-		virtual void sort(Skeleton& skeleton) override;
+		virtual void sort(Skeleton &skeleton) override;
 
 		virtual bool isSourceActive() override;
 
@@ -69,15 +69,13 @@ namespace spine {
 
 		/// Adjusts the bone rotation so the tip is as close to the target position as possible. The target is specified
 		/// in the world coordinate system.
-		static void
-		apply(Skeleton& skeleton, BonePose& bone, float targetX, float targetY, bool compress, bool stretch, bool uniform, float mix);
+		static void apply(Skeleton &skeleton, BonePose &bone, float targetX, float targetY, bool compress, bool stretch, bool uniform, float mix);
 
 		/// Adjusts the parent and child bone rotations so the tip of the child is as close to the target position as
 		/// possible. The target is specified in the world coordinate system.
 		/// @param child A direct descendant of the parent bone.
-		static void
-		apply(Skeleton& skeleton, BonePose& parent, BonePose& child, float targetX, float targetY, int bendDirection, bool stretch, bool uniform,
-			  float softness, float mix);
+		static void apply(Skeleton &skeleton, BonePose &parent, BonePose &child, float targetX, float targetY, int bendDirection, bool stretch,
+						  bool uniform, float softness, float mix);
 
 	private:
 		Array<BonePose *> _bones;

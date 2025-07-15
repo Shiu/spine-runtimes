@@ -41,8 +41,7 @@ int main() {
 			printf("Error: %s", SDL_GetError());
 			return -1;
 		}
-		SDL_Window *window = SDL_CreateWindow("Spine SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600,
-											  0);
+		SDL_Window *window = SDL_CreateWindow("Spine SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, 0);
 		if (!window) {
 			printf("Error: %s", SDL_GetError());
 			return -1;

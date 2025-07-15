@@ -50,7 +50,7 @@ namespace spine {
 
 		friend class AtlasAttachmentLoader;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit RegionAttachment(const String &name);

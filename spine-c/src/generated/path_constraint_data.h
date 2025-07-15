@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_path_constraint_data spine_path_constraint_data_create(const char * name);
+SPINE_C_API spine_path_constraint_data spine_path_constraint_data_create(const char *name);
 
 SPINE_C_API void spine_path_constraint_data_dispose(spine_path_constraint_data self);
 
@@ -25,7 +25,7 @@ SPINE_C_API spine_rotate_mode spine_path_constraint_data_get_rotate_mode(spine_p
 SPINE_C_API void spine_path_constraint_data_set_rotate_mode(spine_path_constraint_data self, spine_rotate_mode rotateMode);
 SPINE_C_API float spine_path_constraint_data_get_offset_rotation(spine_path_constraint_data self);
 SPINE_C_API void spine_path_constraint_data_set_offset_rotation(spine_path_constraint_data self, float offsetRotation);
-SPINE_C_API const char * spine_path_constraint_data_get_name(spine_path_constraint_data self);
+SPINE_C_API const char *spine_path_constraint_data_get_name(spine_path_constraint_data self);
 SPINE_C_API bool spine_path_constraint_data_get_skin_required(spine_path_constraint_data self);
 SPINE_C_API spine_path_constraint_pose spine_path_constraint_data_get_setup_pose(spine_path_constraint_data self);
 SPINE_C_API void spine_path_constraint_data_set_skin_required(spine_path_constraint_data self, bool skinRequired);

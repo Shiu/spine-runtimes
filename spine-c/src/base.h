@@ -56,12 +56,12 @@
 #endif
 #endif
 
-#define SPINE_OPAQUE_TYPE(name)     \
-    typedef struct name##_wrapper { \
-        char _dummy;                \
-    } name##_wrapper;               \
-    typedef name##_wrapper *name;
+#define SPINE_OPAQUE_TYPE(name)                                                                                                                      \
+	typedef struct name##_wrapper {                                                                                                                  \
+		char _dummy;                                                                                                                                 \
+	} name##_wrapper;                                                                                                                                \
+	typedef name##_wrapper *name;
 
 typedef long long spine_property_id;
 
-#endif // SPINE_C_BASE_H
+#endif// SPINE_C_BASE_H

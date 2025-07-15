@@ -91,7 +91,7 @@ SPINE_C_API bool spine_array_float_contains(spine_array_float array, float inVal
 
 SPINE_C_API int spine_array_float_index_of(spine_array_float array, float inValue);
 
-SPINE_C_API float * spine_array_float_buffer(spine_array_float array);
+SPINE_C_API float *spine_array_float_buffer(spine_array_float array);
 
 SPINE_C_API spine_array_int spine_array_int_create(void);
 
@@ -119,7 +119,7 @@ SPINE_C_API bool spine_array_int_contains(spine_array_int array, int inValue);
 
 SPINE_C_API int spine_array_int_index_of(spine_array_int array, int inValue);
 
-SPINE_C_API int * spine_array_int_buffer(spine_array_int array);
+SPINE_C_API int *spine_array_int_buffer(spine_array_int array);
 
 SPINE_C_API spine_array_unsigned_short spine_array_unsigned_short_create(void);
 
@@ -131,7 +131,8 @@ SPINE_C_API size_t spine_array_unsigned_short_get_capacity(spine_array_unsigned_
 
 SPINE_C_API size_t spine_array_unsigned_short_size(spine_array_unsigned_short array);
 
-SPINE_C_API spine_array_unsigned_short spine_array_unsigned_short_set_size(spine_array_unsigned_short array, size_t newSize, unsigned short defaultValue);
+SPINE_C_API spine_array_unsigned_short spine_array_unsigned_short_set_size(spine_array_unsigned_short array, size_t newSize,
+																		   unsigned short defaultValue);
 
 SPINE_C_API void spine_array_unsigned_short_ensure_capacity(spine_array_unsigned_short array, size_t newCapacity);
 
@@ -147,7 +148,7 @@ SPINE_C_API bool spine_array_unsigned_short_contains(spine_array_unsigned_short 
 
 SPINE_C_API int spine_array_unsigned_short_index_of(spine_array_unsigned_short array, unsigned short inValue);
 
-SPINE_C_API unsigned short * spine_array_unsigned_short_buffer(spine_array_unsigned_short array);
+SPINE_C_API unsigned short *spine_array_unsigned_short_buffer(spine_array_unsigned_short array);
 
 SPINE_C_API spine_array_property_id spine_array_property_id_create(void);
 
@@ -203,7 +204,7 @@ SPINE_C_API bool spine_array_animation_contains(spine_array_animation array, spi
 
 SPINE_C_API int spine_array_animation_index_of(spine_array_animation array, spine_animation inValue);
 
-SPINE_C_API spine_animation * spine_array_animation_buffer(spine_array_animation array);
+SPINE_C_API spine_animation *spine_array_animation_buffer(spine_array_animation array);
 
 SPINE_C_API spine_array_atlas_page spine_array_atlas_page_create(void);
 
@@ -231,7 +232,7 @@ SPINE_C_API bool spine_array_atlas_page_contains(spine_array_atlas_page array, s
 
 SPINE_C_API int spine_array_atlas_page_index_of(spine_array_atlas_page array, spine_atlas_page inValue);
 
-SPINE_C_API spine_atlas_page * spine_array_atlas_page_buffer(spine_array_atlas_page array);
+SPINE_C_API spine_atlas_page *spine_array_atlas_page_buffer(spine_array_atlas_page array);
 
 SPINE_C_API spine_array_atlas_region spine_array_atlas_region_create(void);
 
@@ -243,7 +244,8 @@ SPINE_C_API size_t spine_array_atlas_region_get_capacity(spine_array_atlas_regio
 
 SPINE_C_API size_t spine_array_atlas_region_size(spine_array_atlas_region array);
 
-SPINE_C_API spine_array_atlas_region spine_array_atlas_region_set_size(spine_array_atlas_region array, size_t newSize, spine_atlas_region defaultValue);
+SPINE_C_API spine_array_atlas_region spine_array_atlas_region_set_size(spine_array_atlas_region array, size_t newSize,
+																	   spine_atlas_region defaultValue);
 
 SPINE_C_API void spine_array_atlas_region_ensure_capacity(spine_array_atlas_region array, size_t newCapacity);
 
@@ -259,7 +261,7 @@ SPINE_C_API bool spine_array_atlas_region_contains(spine_array_atlas_region arra
 
 SPINE_C_API int spine_array_atlas_region_index_of(spine_array_atlas_region array, spine_atlas_region inValue);
 
-SPINE_C_API spine_atlas_region * spine_array_atlas_region_buffer(spine_array_atlas_region array);
+SPINE_C_API spine_atlas_region *spine_array_atlas_region_buffer(spine_array_atlas_region array);
 
 SPINE_C_API spine_array_attachment spine_array_attachment_create(void);
 
@@ -287,7 +289,7 @@ SPINE_C_API bool spine_array_attachment_contains(spine_array_attachment array, s
 
 SPINE_C_API int spine_array_attachment_index_of(spine_array_attachment array, spine_attachment inValue);
 
-SPINE_C_API spine_attachment * spine_array_attachment_buffer(spine_array_attachment array);
+SPINE_C_API spine_attachment *spine_array_attachment_buffer(spine_array_attachment array);
 
 SPINE_C_API spine_array_bone spine_array_bone_create(void);
 
@@ -315,7 +317,7 @@ SPINE_C_API bool spine_array_bone_contains(spine_array_bone array, spine_bone in
 
 SPINE_C_API int spine_array_bone_index_of(spine_array_bone array, spine_bone inValue);
 
-SPINE_C_API spine_bone * spine_array_bone_buffer(spine_array_bone array);
+SPINE_C_API spine_bone *spine_array_bone_buffer(spine_array_bone array);
 
 SPINE_C_API spine_array_bone_data spine_array_bone_data_create(void);
 
@@ -343,7 +345,7 @@ SPINE_C_API bool spine_array_bone_data_contains(spine_array_bone_data array, spi
 
 SPINE_C_API int spine_array_bone_data_index_of(spine_array_bone_data array, spine_bone_data inValue);
 
-SPINE_C_API spine_bone_data * spine_array_bone_data_buffer(spine_array_bone_data array);
+SPINE_C_API spine_bone_data *spine_array_bone_data_buffer(spine_array_bone_data array);
 
 SPINE_C_API spine_array_bone_pose spine_array_bone_pose_create(void);
 
@@ -371,7 +373,7 @@ SPINE_C_API bool spine_array_bone_pose_contains(spine_array_bone_pose array, spi
 
 SPINE_C_API int spine_array_bone_pose_index_of(spine_array_bone_pose array, spine_bone_pose inValue);
 
-SPINE_C_API spine_bone_pose * spine_array_bone_pose_buffer(spine_array_bone_pose array);
+SPINE_C_API spine_bone_pose *spine_array_bone_pose_buffer(spine_array_bone_pose array);
 
 SPINE_C_API spine_array_bounding_box_attachment spine_array_bounding_box_attachment_create(void);
 
@@ -383,7 +385,9 @@ SPINE_C_API size_t spine_array_bounding_box_attachment_get_capacity(spine_array_
 
 SPINE_C_API size_t spine_array_bounding_box_attachment_size(spine_array_bounding_box_attachment array);
 
-SPINE_C_API spine_array_bounding_box_attachment spine_array_bounding_box_attachment_set_size(spine_array_bounding_box_attachment array, size_t newSize, spine_bounding_box_attachment defaultValue);
+SPINE_C_API spine_array_bounding_box_attachment spine_array_bounding_box_attachment_set_size(spine_array_bounding_box_attachment array,
+																							 size_t newSize,
+																							 spine_bounding_box_attachment defaultValue);
 
 SPINE_C_API void spine_array_bounding_box_attachment_ensure_capacity(spine_array_bounding_box_attachment array, size_t newCapacity);
 
@@ -391,7 +395,8 @@ SPINE_C_API void spine_array_bounding_box_attachment_add(spine_array_bounding_bo
 
 SPINE_C_API void spine_array_bounding_box_attachment_add_all(spine_array_bounding_box_attachment array, spine_array_bounding_box_attachment inValue);
 
-SPINE_C_API void spine_array_bounding_box_attachment_clear_and_add_all(spine_array_bounding_box_attachment array, spine_array_bounding_box_attachment inValue);
+SPINE_C_API void spine_array_bounding_box_attachment_clear_and_add_all(spine_array_bounding_box_attachment array,
+																	   spine_array_bounding_box_attachment inValue);
 
 SPINE_C_API void spine_array_bounding_box_attachment_remove_at(spine_array_bounding_box_attachment array, size_t inIndex);
 
@@ -399,7 +404,7 @@ SPINE_C_API bool spine_array_bounding_box_attachment_contains(spine_array_boundi
 
 SPINE_C_API int spine_array_bounding_box_attachment_index_of(spine_array_bounding_box_attachment array, spine_bounding_box_attachment inValue);
 
-SPINE_C_API spine_bounding_box_attachment * spine_array_bounding_box_attachment_buffer(spine_array_bounding_box_attachment array);
+SPINE_C_API spine_bounding_box_attachment *spine_array_bounding_box_attachment_buffer(spine_array_bounding_box_attachment array);
 
 SPINE_C_API spine_array_constraint spine_array_constraint_create(void);
 
@@ -427,7 +432,7 @@ SPINE_C_API bool spine_array_constraint_contains(spine_array_constraint array, s
 
 SPINE_C_API int spine_array_constraint_index_of(spine_array_constraint array, spine_constraint inValue);
 
-SPINE_C_API spine_constraint * spine_array_constraint_buffer(spine_array_constraint array);
+SPINE_C_API spine_constraint *spine_array_constraint_buffer(spine_array_constraint array);
 
 SPINE_C_API spine_array_constraint_data spine_array_constraint_data_create(void);
 
@@ -439,7 +444,8 @@ SPINE_C_API size_t spine_array_constraint_data_get_capacity(spine_array_constrai
 
 SPINE_C_API size_t spine_array_constraint_data_size(spine_array_constraint_data array);
 
-SPINE_C_API spine_array_constraint_data spine_array_constraint_data_set_size(spine_array_constraint_data array, size_t newSize, spine_constraint_data defaultValue);
+SPINE_C_API spine_array_constraint_data spine_array_constraint_data_set_size(spine_array_constraint_data array, size_t newSize,
+																			 spine_constraint_data defaultValue);
 
 SPINE_C_API void spine_array_constraint_data_ensure_capacity(spine_array_constraint_data array, size_t newCapacity);
 
@@ -455,7 +461,7 @@ SPINE_C_API bool spine_array_constraint_data_contains(spine_array_constraint_dat
 
 SPINE_C_API int spine_array_constraint_data_index_of(spine_array_constraint_data array, spine_constraint_data inValue);
 
-SPINE_C_API spine_constraint_data * spine_array_constraint_data_buffer(spine_array_constraint_data array);
+SPINE_C_API spine_constraint_data *spine_array_constraint_data_buffer(spine_array_constraint_data array);
 
 SPINE_C_API spine_array_event spine_array_event_create(void);
 
@@ -483,7 +489,7 @@ SPINE_C_API bool spine_array_event_contains(spine_array_event array, spine_event
 
 SPINE_C_API int spine_array_event_index_of(spine_array_event array, spine_event inValue);
 
-SPINE_C_API spine_event * spine_array_event_buffer(spine_array_event array);
+SPINE_C_API spine_event *spine_array_event_buffer(spine_array_event array);
 
 SPINE_C_API spine_array_event_data spine_array_event_data_create(void);
 
@@ -511,7 +517,7 @@ SPINE_C_API bool spine_array_event_data_contains(spine_array_event_data array, s
 
 SPINE_C_API int spine_array_event_data_index_of(spine_array_event_data array, spine_event_data inValue);
 
-SPINE_C_API spine_event_data * spine_array_event_data_buffer(spine_array_event_data array);
+SPINE_C_API spine_event_data *spine_array_event_data_buffer(spine_array_event_data array);
 
 SPINE_C_API spine_array_from_property spine_array_from_property_create(void);
 
@@ -523,7 +529,8 @@ SPINE_C_API size_t spine_array_from_property_get_capacity(spine_array_from_prope
 
 SPINE_C_API size_t spine_array_from_property_size(spine_array_from_property array);
 
-SPINE_C_API spine_array_from_property spine_array_from_property_set_size(spine_array_from_property array, size_t newSize, spine_from_property defaultValue);
+SPINE_C_API spine_array_from_property spine_array_from_property_set_size(spine_array_from_property array, size_t newSize,
+																		 spine_from_property defaultValue);
 
 SPINE_C_API void spine_array_from_property_ensure_capacity(spine_array_from_property array, size_t newCapacity);
 
@@ -539,7 +546,7 @@ SPINE_C_API bool spine_array_from_property_contains(spine_array_from_property ar
 
 SPINE_C_API int spine_array_from_property_index_of(spine_array_from_property array, spine_from_property inValue);
 
-SPINE_C_API spine_from_property * spine_array_from_property_buffer(spine_array_from_property array);
+SPINE_C_API spine_from_property *spine_array_from_property_buffer(spine_array_from_property array);
 
 SPINE_C_API spine_array_physics_constraint spine_array_physics_constraint_create(void);
 
@@ -551,7 +558,8 @@ SPINE_C_API size_t spine_array_physics_constraint_get_capacity(spine_array_physi
 
 SPINE_C_API size_t spine_array_physics_constraint_size(spine_array_physics_constraint array);
 
-SPINE_C_API spine_array_physics_constraint spine_array_physics_constraint_set_size(spine_array_physics_constraint array, size_t newSize, spine_physics_constraint defaultValue);
+SPINE_C_API spine_array_physics_constraint spine_array_physics_constraint_set_size(spine_array_physics_constraint array, size_t newSize,
+																				   spine_physics_constraint defaultValue);
 
 SPINE_C_API void spine_array_physics_constraint_ensure_capacity(spine_array_physics_constraint array, size_t newCapacity);
 
@@ -567,7 +575,7 @@ SPINE_C_API bool spine_array_physics_constraint_contains(spine_array_physics_con
 
 SPINE_C_API int spine_array_physics_constraint_index_of(spine_array_physics_constraint array, spine_physics_constraint inValue);
 
-SPINE_C_API spine_physics_constraint * spine_array_physics_constraint_buffer(spine_array_physics_constraint array);
+SPINE_C_API spine_physics_constraint *spine_array_physics_constraint_buffer(spine_array_physics_constraint array);
 
 SPINE_C_API spine_array_polygon spine_array_polygon_create(void);
 
@@ -595,7 +603,7 @@ SPINE_C_API bool spine_array_polygon_contains(spine_array_polygon array, spine_p
 
 SPINE_C_API int spine_array_polygon_index_of(spine_array_polygon array, spine_polygon inValue);
 
-SPINE_C_API spine_polygon * spine_array_polygon_buffer(spine_array_polygon array);
+SPINE_C_API spine_polygon *spine_array_polygon_buffer(spine_array_polygon array);
 
 SPINE_C_API spine_array_skin spine_array_skin_create(void);
 
@@ -623,7 +631,7 @@ SPINE_C_API bool spine_array_skin_contains(spine_array_skin array, spine_skin in
 
 SPINE_C_API int spine_array_skin_index_of(spine_array_skin array, spine_skin inValue);
 
-SPINE_C_API spine_skin * spine_array_skin_buffer(spine_array_skin array);
+SPINE_C_API spine_skin *spine_array_skin_buffer(spine_array_skin array);
 
 SPINE_C_API spine_array_slot spine_array_slot_create(void);
 
@@ -651,7 +659,7 @@ SPINE_C_API bool spine_array_slot_contains(spine_array_slot array, spine_slot in
 
 SPINE_C_API int spine_array_slot_index_of(spine_array_slot array, spine_slot inValue);
 
-SPINE_C_API spine_slot * spine_array_slot_buffer(spine_array_slot array);
+SPINE_C_API spine_slot *spine_array_slot_buffer(spine_array_slot array);
 
 SPINE_C_API spine_array_slot_data spine_array_slot_data_create(void);
 
@@ -679,7 +687,7 @@ SPINE_C_API bool spine_array_slot_data_contains(spine_array_slot_data array, spi
 
 SPINE_C_API int spine_array_slot_data_index_of(spine_array_slot_data array, spine_slot_data inValue);
 
-SPINE_C_API spine_slot_data * spine_array_slot_data_buffer(spine_array_slot_data array);
+SPINE_C_API spine_slot_data *spine_array_slot_data_buffer(spine_array_slot_data array);
 
 SPINE_C_API spine_array_texture_region spine_array_texture_region_create(void);
 
@@ -691,7 +699,8 @@ SPINE_C_API size_t spine_array_texture_region_get_capacity(spine_array_texture_r
 
 SPINE_C_API size_t spine_array_texture_region_size(spine_array_texture_region array);
 
-SPINE_C_API spine_array_texture_region spine_array_texture_region_set_size(spine_array_texture_region array, size_t newSize, spine_texture_region defaultValue);
+SPINE_C_API spine_array_texture_region spine_array_texture_region_set_size(spine_array_texture_region array, size_t newSize,
+																		   spine_texture_region defaultValue);
 
 SPINE_C_API void spine_array_texture_region_ensure_capacity(spine_array_texture_region array, size_t newCapacity);
 
@@ -707,7 +716,7 @@ SPINE_C_API bool spine_array_texture_region_contains(spine_array_texture_region 
 
 SPINE_C_API int spine_array_texture_region_index_of(spine_array_texture_region array, spine_texture_region inValue);
 
-SPINE_C_API spine_texture_region * spine_array_texture_region_buffer(spine_array_texture_region array);
+SPINE_C_API spine_texture_region *spine_array_texture_region_buffer(spine_array_texture_region array);
 
 SPINE_C_API spine_array_timeline spine_array_timeline_create(void);
 
@@ -735,7 +744,7 @@ SPINE_C_API bool spine_array_timeline_contains(spine_array_timeline array, spine
 
 SPINE_C_API int spine_array_timeline_index_of(spine_array_timeline array, spine_timeline inValue);
 
-SPINE_C_API spine_timeline * spine_array_timeline_buffer(spine_array_timeline array);
+SPINE_C_API spine_timeline *spine_array_timeline_buffer(spine_array_timeline array);
 
 SPINE_C_API spine_array_to_property spine_array_to_property_create(void);
 
@@ -763,7 +772,7 @@ SPINE_C_API bool spine_array_to_property_contains(spine_array_to_property array,
 
 SPINE_C_API int spine_array_to_property_index_of(spine_array_to_property array, spine_to_property inValue);
 
-SPINE_C_API spine_to_property * spine_array_to_property_buffer(spine_array_to_property array);
+SPINE_C_API spine_to_property *spine_array_to_property_buffer(spine_array_to_property array);
 
 SPINE_C_API spine_array_track_entry spine_array_track_entry_create(void);
 
@@ -791,7 +800,7 @@ SPINE_C_API bool spine_array_track_entry_contains(spine_array_track_entry array,
 
 SPINE_C_API int spine_array_track_entry_index_of(spine_array_track_entry array, spine_track_entry inValue);
 
-SPINE_C_API spine_track_entry * spine_array_track_entry_buffer(spine_array_track_entry array);
+SPINE_C_API spine_track_entry *spine_array_track_entry_buffer(spine_array_track_entry array);
 
 SPINE_C_API spine_array_update spine_array_update_create(void);
 
@@ -819,7 +828,7 @@ SPINE_C_API bool spine_array_update_contains(spine_array_update array, spine_upd
 
 SPINE_C_API int spine_array_update_index_of(spine_array_update array, spine_update inValue);
 
-SPINE_C_API spine_update * spine_array_update_buffer(spine_array_update array);
+SPINE_C_API spine_update *spine_array_update_buffer(spine_array_update array);
 
 #ifdef __cplusplus
 }

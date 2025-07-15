@@ -33,25 +33,25 @@
 #include <simd/simd.h>
 
 typedef enum SpineVertexInputIndex {
-    SpineVertexInputIndexVertices     = 0,
-    SpineVertexInputIndexTransform    = 1,
-    SpineVertexInputIndexViewportSize = 2,
+	SpineVertexInputIndexVertices = 0,
+	SpineVertexInputIndexTransform = 1,
+	SpineVertexInputIndexViewportSize = 2,
 } SpineVertexInputIndex;
 
 typedef enum SpineTextureIndex {
-    SpineTextureIndexBaseColor = 0,
+	SpineTextureIndexBaseColor = 0,
 } SpineTextureIndex;
 
 typedef struct {
-    simd_float2 position;
-    simd_float4 color;
-    simd_float2 uv;
+	simd_float2 position;
+	simd_float4 color;
+	simd_float2 uv;
 } SpineVertex;
 
 typedef struct {
-    vector_float2 translation;
-    vector_float2 scale;
-    vector_float2 offset;
+	vector_float2 translation;
+	vector_float2 scale;
+	vector_float2 offset;
 } SpineTransform;
 
 #endif /* SpineShadersStructs_h */

@@ -48,7 +48,9 @@ public:
 	SpineAnimationState();
 	~SpineAnimationState();
 
-	spine::AnimationState *get_spine_object() { return animation_state; }
+	spine::AnimationState *get_spine_object() {
+		return animation_state;
+	}
 
 	void set_spine_sprite(SpineSprite *sprite);
 

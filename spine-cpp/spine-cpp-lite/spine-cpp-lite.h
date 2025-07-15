@@ -54,9 +54,9 @@
 #endif
 #endif
 
-#define SPINE_OPAQUE_TYPE(name)     \
-	typedef struct name##_wrapper { \
-	} name##_wrapper;               \
+#define SPINE_OPAQUE_TYPE(name)                                                                                                                      \
+	typedef struct name##_wrapper {                                                                                                                  \
+	} name##_wrapper;                                                                                                                                \
 	typedef name##_wrapper *name;
 
 // @start: opaque_types
@@ -189,7 +189,7 @@ typedef enum spine_physics {
 
 typedef int32_t spine_bool;
 
-typedef void* (*spine_texture_loader_load_func)(const char *path);
+typedef void *(*spine_texture_loader_load_func)(const char *path);
 
 typedef void (*spine_texture_loader_unload_func)(void *texture);
 
@@ -215,7 +215,8 @@ SPINE_CPP_LITE_EXPORT float spine_vector_get_y(spine_vector vector);
 
 SPINE_CPP_LITE_EXPORT spine_atlas spine_atlas_load(const utf8 *atlasData);
 // @ignore
-SPINE_CPP_LITE_EXPORT spine_atlas spine_atlas_load_callback(const utf8 *atlasData, const utf8 *atlasDir, spine_texture_loader_load_func load, spine_texture_loader_unload_func unload);
+SPINE_CPP_LITE_EXPORT spine_atlas spine_atlas_load_callback(const utf8 *atlasData, const utf8 *atlasDir, spine_texture_loader_load_func load,
+															spine_texture_loader_unload_func unload);
 SPINE_CPP_LITE_EXPORT int32_t spine_atlas_get_num_image_paths(spine_atlas atlas);
 SPINE_CPP_LITE_EXPORT utf8 *spine_atlas_get_image_path(spine_atlas atlas, int32_t index);
 SPINE_CPP_LITE_EXPORT spine_bool spine_atlas_is_pma(spine_atlas atlas);
@@ -318,10 +319,13 @@ SPINE_CPP_LITE_EXPORT float spine_animation_get_duration(spine_animation animati
 SPINE_CPP_LITE_EXPORT spine_skeleton_data spine_animation_state_data_get_skeleton_data(spine_animation_state_data stateData);
 SPINE_CPP_LITE_EXPORT float spine_animation_state_data_get_default_mix(spine_animation_state_data stateData);
 SPINE_CPP_LITE_EXPORT void spine_animation_state_data_set_default_mix(spine_animation_state_data stateData, float defaultMix);
-SPINE_CPP_LITE_EXPORT void spine_animation_state_data_set_mix(spine_animation_state_data stateData, spine_animation from, spine_animation to, float duration);
+SPINE_CPP_LITE_EXPORT void spine_animation_state_data_set_mix(spine_animation_state_data stateData, spine_animation from, spine_animation to,
+															  float duration);
 SPINE_CPP_LITE_EXPORT float spine_animation_state_data_get_mix(spine_animation_state_data stateData, spine_animation from, spine_animation to);
-SPINE_CPP_LITE_EXPORT void spine_animation_state_data_set_mix_by_name(spine_animation_state_data stateData, const utf8 *fromName, const utf8 *toName, float duration);
-SPINE_CPP_LITE_EXPORT float spine_animation_state_data_get_mix_by_name(spine_animation_state_data stateData, const utf8 *fromName, const utf8 *toName);
+SPINE_CPP_LITE_EXPORT void spine_animation_state_data_set_mix_by_name(spine_animation_state_data stateData, const utf8 *fromName, const utf8 *toName,
+																	  float duration);
+SPINE_CPP_LITE_EXPORT float spine_animation_state_data_get_mix_by_name(spine_animation_state_data stateData, const utf8 *fromName,
+																	   const utf8 *toName);
 SPINE_CPP_LITE_EXPORT void spine_animation_state_data_clear(spine_animation_state_data stateData);
 
 SPINE_CPP_LITE_EXPORT void spine_animation_state_update(spine_animation_state state, float delta);
@@ -329,12 +333,17 @@ SPINE_CPP_LITE_EXPORT void spine_animation_state_apply(spine_animation_state sta
 SPINE_CPP_LITE_EXPORT void spine_animation_state_clear_tracks(spine_animation_state state);
 SPINE_CPP_LITE_EXPORT void spine_animation_state_clear_track(spine_animation_state state, int32_t trackIndex);
 SPINE_CPP_LITE_EXPORT int32_t spine_animation_state_get_num_tracks(spine_animation_state state);
-SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_set_animation_by_name(spine_animation_state state, int32_t trackIndex, const utf8 *animationName, spine_bool loop);
-SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_set_animation(spine_animation_state state, int32_t trackIndex, spine_animation animation, spine_bool loop);
-SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_add_animation_by_name(spine_animation_state state, int32_t trackIndex, const utf8 *animationName, spine_bool loop, float delay);
-SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_add_animation(spine_animation_state state, int32_t trackIndex, spine_animation animation, spine_bool loop, float delay);
+SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_set_animation_by_name(spine_animation_state state, int32_t trackIndex,
+																					const utf8 *animationName, spine_bool loop);
+SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_set_animation(spine_animation_state state, int32_t trackIndex,
+																			spine_animation animation, spine_bool loop);
+SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_add_animation_by_name(spine_animation_state state, int32_t trackIndex,
+																					const utf8 *animationName, spine_bool loop, float delay);
+SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_add_animation(spine_animation_state state, int32_t trackIndex,
+																			spine_animation animation, spine_bool loop, float delay);
 SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_set_empty_animation(spine_animation_state state, int32_t trackIndex, float mixDuration);
-SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_add_empty_animation(spine_animation_state state, int32_t trackIndex, float mixDuration, float delay);
+SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_add_empty_animation(spine_animation_state state, int32_t trackIndex, float mixDuration,
+																				  float delay);
 SPINE_CPP_LITE_EXPORT void spine_animation_state_set_empty_animations(spine_animation_state state, float mixDuration);
 // @optional
 SPINE_CPP_LITE_EXPORT spine_track_entry spine_animation_state_get_current(spine_animation_state state, int32_t trackIndex);
@@ -425,7 +434,8 @@ SPINE_CPP_LITE_EXPORT spine_slot spine_skeleton_find_slot(spine_skeleton skeleto
 SPINE_CPP_LITE_EXPORT void spine_skeleton_set_skin_by_name(spine_skeleton skeleton, const utf8 *skinName);
 SPINE_CPP_LITE_EXPORT void spine_skeleton_set_skin(spine_skeleton skeleton, spine_skin skin);
 // @optional
-SPINE_CPP_LITE_EXPORT spine_attachment spine_skeleton_get_attachment_by_name(spine_skeleton skeleton, const utf8 *slotName, const utf8 *attachmentName);
+SPINE_CPP_LITE_EXPORT spine_attachment spine_skeleton_get_attachment_by_name(spine_skeleton skeleton, const utf8 *slotName,
+																			 const utf8 *attachmentName);
 // @optional
 SPINE_CPP_LITE_EXPORT spine_attachment spine_skeleton_get_attachment(spine_skeleton skeleton, int32_t slotIndex, const utf8 *attachmentName);
 SPINE_CPP_LITE_EXPORT void spine_skeleton_set_attachment(spine_skeleton skeleton, const utf8 *slotName, const utf8 *attachmentName);
@@ -565,7 +575,8 @@ SPINE_CPP_LITE_EXPORT void spine_bone_set_is_y_down(spine_bool yDown);
 SPINE_CPP_LITE_EXPORT spine_bool spine_bone_get_is_y_down();
 SPINE_CPP_LITE_EXPORT void spine_bone_update(spine_bone bone);
 SPINE_CPP_LITE_EXPORT void spine_bone_update_world_transform(spine_bone bone);
-SPINE_CPP_LITE_EXPORT void spine_bone_update_world_transform_with(spine_bone bone, float x, float y, float rotation, float scaleX, float scaleY, float shearX, float shearY);
+SPINE_CPP_LITE_EXPORT void spine_bone_update_world_transform_with(spine_bone bone, float x, float y, float rotation, float scaleX, float scaleY,
+																  float shearX, float shearY);
 SPINE_CPP_LITE_EXPORT void spine_bone_update_applied_transform(spine_bone bone);
 SPINE_CPP_LITE_EXPORT void spine_bone_set_to_setup_pose(spine_bone bone);
 SPINE_CPP_LITE_EXPORT spine_vector spine_bone_world_to_local(spine_bone bone, float worldX, float worldY);
@@ -1066,8 +1077,10 @@ SPINE_CPP_LITE_EXPORT spine_bool spine_skeleton_bounds_aabb_intersects_segment(s
 SPINE_CPP_LITE_EXPORT spine_bool spine_skeleton_bounds_aabb_intersects_skeleton(spine_skeleton_bounds bounds, spine_skeleton_bounds otherBounds);
 SPINE_CPP_LITE_EXPORT spine_bool spine_skeleton_bounds_contains_point(spine_skeleton_bounds bounds, spine_polygon polygon, float x, float y);
 SPINE_CPP_LITE_EXPORT spine_bounding_box_attachment spine_skeleton_bounds_contains_point_attachment(spine_skeleton_bounds bounds, float x, float y);
-SPINE_CPP_LITE_EXPORT spine_bounding_box_attachment spine_skeleton_bounds_intersects_segment_attachment(spine_skeleton_bounds bounds, float x1, float y1, float x2, float y2);
-SPINE_CPP_LITE_EXPORT spine_bool spine_skeleton_bounds_intersects_segment(spine_skeleton_bounds bounds, spine_polygon polygon, float x1, float y1, float x2, float y2);
+SPINE_CPP_LITE_EXPORT spine_bounding_box_attachment spine_skeleton_bounds_intersects_segment_attachment(spine_skeleton_bounds bounds, float x1,
+																										float y1, float x2, float y2);
+SPINE_CPP_LITE_EXPORT spine_bool spine_skeleton_bounds_intersects_segment(spine_skeleton_bounds bounds, spine_polygon polygon, float x1, float y1,
+																		  float x2, float y2);
 SPINE_CPP_LITE_EXPORT spine_polygon spine_skeleton_bounds_get_polygon(spine_skeleton_bounds bounds, spine_bounding_box_attachment attachment);
 SPINE_CPP_LITE_EXPORT spine_bounding_box_attachment spine_skeleton_bounds_get_bounding_box(spine_skeleton_bounds bounds, spine_polygon polygon);
 SPINE_CPP_LITE_EXPORT int32_t spine_skeleton_bounds_get_num_polygons(spine_skeleton_bounds bounds);

@@ -34,50 +34,50 @@
 #include <spine/RTTI.h>
 
 namespace spine {
-    /// Stores a pose for a physics constraint.
-    class SP_API PhysicsConstraintPose : public Pose<PhysicsConstraintPose> {
-        friend class PhysicsConstraint;
-        friend class PhysicsConstraintTimeline;
-        friend class SkeletonJson;
-        friend class SkeletonBinary;
+	/// Stores a pose for a physics constraint.
+	class SP_API PhysicsConstraintPose : public Pose<PhysicsConstraintPose> {
+		friend class PhysicsConstraint;
+		friend class PhysicsConstraintTimeline;
+		friend class SkeletonJson;
+		friend class SkeletonBinary;
 
-    private:
-        float _inertia;
-        float _strength;
-        float _damping;
-        float _massInverse;
-        float _wind;
-        float _gravity;
-        float _mix;
+	private:
+		float _inertia;
+		float _strength;
+		float _damping;
+		float _massInverse;
+		float _wind;
+		float _gravity;
+		float _mix;
 
-    public:
-        PhysicsConstraintPose();
-        virtual ~PhysicsConstraintPose();
+	public:
+		PhysicsConstraintPose();
+		virtual ~PhysicsConstraintPose();
 
-        virtual void set(PhysicsConstraintPose& pose) override;
+		virtual void set(PhysicsConstraintPose &pose) override;
 
-        float getInertia();
-        void setInertia(float inertia);
+		float getInertia();
+		void setInertia(float inertia);
 
-        float getStrength();
-        void setStrength(float strength);
+		float getStrength();
+		void setStrength(float strength);
 
-        float getDamping();
-        void setDamping(float damping);
+		float getDamping();
+		void setDamping(float damping);
 
-        float getMassInverse();
-        void setMassInverse(float massInverse);
+		float getMassInverse();
+		void setMassInverse(float massInverse);
 
-        float getWind();
-        void setWind(float wind);
+		float getWind();
+		void setWind(float wind);
 
-        float getGravity();
-        void setGravity(float gravity);
+		float getGravity();
+		void setGravity(float gravity);
 
-        /// A percentage (0-1) that controls the mix between the constrained and unconstrained poses.
-        float getMix();
-        void setMix(float mix);
-    };
+		/// A percentage (0-1) that controls the mix between the constrained and unconstrained poses.
+		float getMix();
+		void setMix(float mix);
+	};
 }
 
 #endif

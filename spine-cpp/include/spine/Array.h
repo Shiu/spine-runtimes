@@ -135,8 +135,7 @@ namespace spine {
 
 		inline void clearAndAddAll(const Array<T> &inValue) {
 			ensureCapacity(inValue.size());
-			for (size_t i = 0; i < inValue.size(); i++)
-				_buffer[i] = inValue[i];
+			for (size_t i = 0; i < inValue.size(); i++) _buffer[i] = inValue[i];
 			_size = inValue.size();
 		}
 
@@ -239,13 +238,12 @@ namespace spine {
 		}
 
 		inline void construct(T *buffer, const T &val) {
-			new(buffer) T(val);
+			new (buffer) T(val);
 		}
 
 		inline void destroy(T *buffer) {
 			buffer->~T();
 		}
-
 	};
 }
 

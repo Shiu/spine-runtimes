@@ -53,7 +53,8 @@ bool USpineAtlasAssetFactory::FactoryCanImport(const FString &Filename) {
 	return true;
 }
 
-UObject *USpineAtlasAssetFactory::FactoryCreateFile(UClass *InClass, UObject *InParent, FName InName, EObjectFlags Flags, const FString &Filename, const TCHAR *Parms, FFeedbackContext *Warn, bool &bOutOperationCanceled) {
+UObject *USpineAtlasAssetFactory::FactoryCreateFile(UClass *InClass, UObject *InParent, FName InName, EObjectFlags Flags, const FString &Filename,
+													const TCHAR *Parms, FFeedbackContext *Warn, bool &bOutOperationCanceled) {
 	FString FileExtension = FPaths::GetExtension(Filename);
 	GEditor->GetEditorSubsystem<UImportSubsystem>()->BroadcastAssetPreImport(this, InClass, InParent, InName, *FileExtension);
 
@@ -79,8 +80,7 @@ bool USpineAtlasAssetFactory::CanReimport(UObject *Obj, TArray<FString> &OutFile
 	if (!asset) return false;
 
 	FString filename = asset->GetAtlasFileName().ToString();
-	if (!filename.IsEmpty())
-		OutFilenames.Add(filename);
+	if (!filename.IsEmpty()) OutFilenames.Add(filename);
 
 	return true;
 }
@@ -88,8 +88,7 @@ bool USpineAtlasAssetFactory::CanReimport(UObject *Obj, TArray<FString> &OutFile
 void USpineAtlasAssetFactory::SetReimportPaths(UObject *Obj, const TArray<FString> &NewReimportPaths) {
 	USpineAtlasAsset *asset = Cast<USpineAtlasAsset>(Obj);
 
-	if (asset && ensure(NewReimportPaths.Num() == 1))
-		asset->SetAtlasFileName(FName(*NewReimportPaths[0]));
+	if (asset && ensure(NewReimportPaths.Num() == 1)) asset->SetAtlasFileName(FName(*NewReimportPaths[0]));
 }
 
 EReimportResult::Type USpineAtlasAssetFactory::Reimport(UObject *Obj) {
@@ -105,7 +104,8 @@ EReimportResult::Type USpineAtlasAssetFactory::Reimport(UObject *Obj) {
 
 	LoadAtlas(asset, currentSourcePath, longPackagePath);
 
-	if (Obj->GetOuter()) Obj->GetOuter()->MarkPackageDirty();
+	if (Obj->GetOuter())
+		Obj->GetOuter()->MarkPackageDirty();
 	else
 		Obj->MarkPackageDirty();
 

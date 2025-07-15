@@ -62,9 +62,7 @@ Atlas::Atlas(const String &path, TextureLoader *textureLoader, bool createTextur
 	SpineExtension::free(dir, __FILE__, __LINE__);
 }
 
-Atlas::Atlas(const char *data, int length, const char *dir, TextureLoader *textureLoader, bool createTexture)
-	: _textureLoader(
-			  textureLoader) {
+Atlas::Atlas(const char *data, int length, const char *dir, TextureLoader *textureLoader, bool createTexture) : _textureLoader(textureLoader) {
 	load(data, length, dir, createTexture);
 }
 
@@ -107,15 +105,13 @@ struct SimpleString {
 	int length;
 
 	SimpleString trim() {
-		while (isspace((unsigned char) *start) && start < end)
-			start++;
+		while (isspace((unsigned char) *start) && start < end) start++;
 		if (start == end) {
 			length = (int) (end - start);
 			return *this;
 		}
 		end--;
-		while (((unsigned char) *end == '\r') && end >= start)
-			end--;
+		while (((unsigned char) *end == '\r') && end >= start) end--;
 		end++;
 		length = (int) (end - start);
 		return *this;
@@ -184,13 +180,13 @@ struct AtlasInput {
 	int length;
 	SimpleString line;
 
-	AtlasInput(const char *data, int length) : start(data), end(data + length), index((char *) data), length(length) {}
+	AtlasInput(const char *data, int length) : start(data), end(data + length), index((char *) data), length(length) {
+	}
 
 	SimpleString *readLine() {
 		if (index >= end) return 0;
 		line.start = index;
-		while (index < end && *index != '\n')
-			index++;
+		while (index < end && *index != '\n') index++;
 		line.end = index;
 		if (index != end) index++;
 		line = line.trim();
@@ -226,11 +222,9 @@ int indexOf(const char **array, int count, SimpleString *str) {
 }
 
 void Atlas::load(const char *begin, int length, const char *dir, bool createTexture) {
-	static const char *formatNames[] = {"", "Alpha", "Intensity", "LuminanceAlpha", "RGB565", "RGBA4444", "RGB888",
-										"RGBA8888"};
-	static const char *textureFilterNames[] = {"", "Nearest", "Linear", "MipMap", "MipMapNearestNearest",
-											   "MipMapLinearNearest",
-											   "MipMapNearestLinear", "MipMapLinearLinear"};
+	static const char *formatNames[] = {"", "Alpha", "Intensity", "LuminanceAlpha", "RGB565", "RGBA4444", "RGB888", "RGBA8888"};
+	static const char *textureFilterNames[] =
+		{"", "Nearest", "Linear", "MipMap", "MipMapNearestNearest", "MipMapLinearNearest", "MipMapNearestLinear", "MipMapLinearLinear"};
 
 	int dirLength = (int) strlen(dir);
 	int needsSlash = dirLength > 0 && dir[dirLength - 1] != '/' && dir[dirLength - 1] != '\\';
@@ -239,8 +233,7 @@ void Atlas::load(const char *begin, int length, const char *dir, bool createText
 	AtlasPage *page = nullptr;
 
 	SimpleString *line = reader.readLine();
-	while (line != nullptr && line->length == 0)
-		line = reader.readLine();
+	while (line != nullptr && line->length == 0) line = reader.readLine();
 
 	while (true) {
 		if (line == nullptr || line->length == 0) break;

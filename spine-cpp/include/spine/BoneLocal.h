@@ -79,7 +79,7 @@ namespace spine {
 		BoneLocal();
 		virtual ~BoneLocal();
 
-		virtual void set(BoneLocal& pose) override;
+		virtual void set(BoneLocal &pose) override;
 
 		/// The local x translation.
 		float getX();

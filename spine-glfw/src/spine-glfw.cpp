@@ -53,11 +53,12 @@ typedef struct {
 
 /// The 4 supported blend modes SPINE_BLEND_MODE_NORMAL, SPINE_BLEND_MODE_ADDITIVE, SPINE_BLEND_MODE_MULTIPLY,
 /// and SPINE_BLEND_MODE_SCREEN, expressed as OpenGL blend functions.
-blend_mode_t blend_modes[] = {
-		{(unsigned int) GL_SRC_ALPHA, (unsigned int) GL_ONE, (unsigned int) GL_ONE_MINUS_SRC_ALPHA, (unsigned int) GL_ONE},
-		{(unsigned int) GL_SRC_ALPHA, (unsigned int) GL_ONE, (unsigned int) GL_ONE, (unsigned int) GL_ONE},
-		{(unsigned int) GL_DST_COLOR, (unsigned int) GL_DST_COLOR, (unsigned int) GL_ONE_MINUS_SRC_ALPHA, (unsigned int) GL_ONE_MINUS_SRC_ALPHA},
-		{(unsigned int) GL_ONE, (unsigned int) GL_ONE, (unsigned int) GL_ONE_MINUS_SRC_COLOR, (unsigned int) GL_ONE_MINUS_SRC_COLOR}};
+blend_mode_t blend_modes[] = {{(unsigned int) GL_SRC_ALPHA, (unsigned int) GL_ONE, (unsigned int) GL_ONE_MINUS_SRC_ALPHA, (unsigned int) GL_ONE},
+							  {(unsigned int) GL_SRC_ALPHA, (unsigned int) GL_ONE, (unsigned int) GL_ONE, (unsigned int) GL_ONE},
+							  {(unsigned int) GL_DST_COLOR, (unsigned int) GL_DST_COLOR, (unsigned int) GL_ONE_MINUS_SRC_ALPHA,
+							   (unsigned int) GL_ONE_MINUS_SRC_ALPHA},
+							  {(unsigned int) GL_ONE, (unsigned int) GL_ONE, (unsigned int) GL_ONE_MINUS_SRC_COLOR,
+							   (unsigned int) GL_ONE_MINUS_SRC_COLOR}};
 
 mesh_t *mesh_create() {
 	GLuint vao, vbo, ibo;
@@ -351,7 +352,8 @@ void renderer_draw(renderer_t *renderer, Skeleton *skeleton, bool premultipliedA
 		mesh_update(renderer->mesh, renderer->vertex_buffer, num_command_vertices, indices, num_command_indices);
 
 		blend_mode_t blend_mode = blend_modes[command->blendMode];
-		glBlendFuncSeparate(premultipliedAlpha ? (GLenum) blend_mode.source_color_pma : (GLenum) blend_mode.source_color, (GLenum) blend_mode.dest_color, (GLenum) blend_mode.source_alpha, (GLenum) blend_mode.dest_color);
+		glBlendFuncSeparate(premultipliedAlpha ? (GLenum) blend_mode.source_color_pma : (GLenum) blend_mode.source_color,
+							(GLenum) blend_mode.dest_color, (GLenum) blend_mode.source_alpha, (GLenum) blend_mode.dest_color);
 
 		auto texture = (texture_t) (uintptr_t) command->texture;
 		texture_use(texture);

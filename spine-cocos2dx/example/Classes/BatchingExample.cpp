@@ -85,9 +85,7 @@ bool BatchingExample::init() {
 		//		if (j == 20) j = 0;
 		// skeletonNode->setTwoColorTint(true);
 
-		skeletonNode->setPosition(Vec2(
-				RandomHelper::random_int(xMin, xMax),
-				RandomHelper::random_int(yMin, yMax)));
+		skeletonNode->setPosition(Vec2(RandomHelper::random_int(xMin, xMax), RandomHelper::random_int(yMin, yMax)));
 		addChild(skeletonNode);
 	}
 

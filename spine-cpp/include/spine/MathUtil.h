@@ -46,15 +46,19 @@ namespace spine {
 	public:
 		static const float Pi;
 		static const float Pi_2;
-        static const float InvPi_2;
+		static const float InvPi_2;
 		static const float Deg_Rad;
 		static const float Rad_Deg;
 
 		template<typename T>
-		static inline T min(T a, T b) { return a < b ? a : b; }
+		static inline T min(T a, T b) {
+			return a < b ? a : b;
+		}
 
 		template<typename T>
-		static inline T max(T a, T b) { return a > b ? a : b; }
+		static inline T max(T a, T b) {
+			return a > b ? a : b;
+		}
 
 		static float sign(float val);
 
@@ -78,7 +82,7 @@ namespace spine {
 		/// degrees), largest error of 0.00488 radians (0.2796 degrees).
 		static float atan2(float y, float x);
 
-        static float atan2Deg(float x, float y);
+		static float atan2Deg(float x, float y);
 
 		static float acos(float v);
 
@@ -88,7 +92,7 @@ namespace spine {
 
 		static bool isNan(float v);
 
-        static float quietNan();
+		static float quietNan();
 
 		static float random();
 
@@ -98,7 +102,7 @@ namespace spine {
 
 		static float pow(float a, float b);
 
-        static float ceil(float v);
+		static float ceil(float v);
 	};
 }
 

@@ -91,13 +91,11 @@ void DeformTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, 
 				if (vertexAttachment->getBones().size() == 0) {
 					// Unweighted vertex positions.
 					Array<float> &setupVertices = vertexAttachment->getVertices();
-					for (size_t i = 0; i < vertexCount; i++)
-						deform[i] += (setupVertices[i] - deform[i]) * alpha;
+					for (size_t i = 0; i < vertexCount; i++) deform[i] += (setupVertices[i] - deform[i]) * alpha;
 				} else {
 					// Weighted deform offsets.
 					alpha = 1 - alpha;
-					for (size_t i = 0; i < vertexCount; i++)
-						deform[i] *= alpha;
+					for (size_t i = 0; i < vertexCount; i++) deform[i] *= alpha;
 				}
 				break;
 			}
@@ -118,12 +116,10 @@ void DeformTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, 
 				if (vertexAttachment->getBones().size() == 0) {
 					// Unweighted vertex positions, no alpha.
 					Array<float> &setupVertices = vertexAttachment->getVertices();
-					for (size_t i = 0; i < vertexCount; i++)
-						deform[i] += lastVertices[i] - setupVertices[i];
+					for (size_t i = 0; i < vertexCount; i++) deform[i] += lastVertices[i] - setupVertices[i];
 				} else {
 					// Weighted deform offsets, no alpha.
-					for (size_t i = 0; i < vertexCount; i++)
-						deform[i] += lastVertices[i];
+					for (size_t i = 0; i < vertexCount; i++) deform[i] += lastVertices[i];
 				}
 			} else {
 				// Vertex positions or deform offsets, no alpha.
@@ -141,27 +137,23 @@ void DeformTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, 
 						}
 					} else {
 						// Weighted deform offsets, with alpha.
-						for (size_t i = 0; i < vertexCount; i++)
-							deform[i] = lastVertices[i] * alpha;
+						for (size_t i = 0; i < vertexCount; i++) deform[i] = lastVertices[i] * alpha;
 					}
 					break;
 				}
 				case MixBlend_First:
 				case MixBlend_Replace:
 					// Vertex positions or deform offsets, with alpha.
-					for (size_t i = 0; i < vertexCount; i++)
-						deform[i] += (lastVertices[i] - deform[i]) * alpha;
+					for (size_t i = 0; i < vertexCount; i++) deform[i] += (lastVertices[i] - deform[i]) * alpha;
 					break;
 				case MixBlend_Add:
 					if (vertexAttachment->getBones().size() == 0) {
 						// Unweighted vertex positions, with alpha.
 						Array<float> &setupVertices = vertexAttachment->getVertices();
-						for (size_t i = 0; i < vertexCount; i++)
-							deform[i] += (lastVertices[i] - setupVertices[i]) * alpha;
+						for (size_t i = 0; i < vertexCount; i++) deform[i] += (lastVertices[i] - setupVertices[i]) * alpha;
 					} else {
 						// Weighted deform offsets, alpha.
-						for (size_t i = 0; i < vertexCount; i++)
-							deform[i] += lastVertices[i] * alpha;
+						for (size_t i = 0; i < vertexCount; i++) deform[i] += lastVertices[i] * alpha;
 					}
 					break;
 			}
@@ -247,8 +239,8 @@ void DeformTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, 
 	}
 }
 
-void DeformTimeline::setBezier(size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1,
-							   float cx2, float cy2, float time2, float value2) {
+void DeformTimeline::setBezier(size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2,
+							   float time2, float value2) {
 	SP_UNUSED(value1);
 	SP_UNUSED(value2);
 	Array<float> &curves = _curves;

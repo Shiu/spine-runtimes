@@ -36,24 +36,22 @@
 using namespace sf;
 using namespace spine;
 
-sf::BlendMode blendModes[] = {
-		sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::OneMinusSrcAlpha),
-		sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One),
-		sf::BlendMode(sf::BlendMode::DstColor, sf::BlendMode::OneMinusSrcAlpha),
-		sf::BlendMode(sf::BlendMode::One, sf::BlendMode::OneMinusSrcColor)};
+sf::BlendMode blendModes[] = {sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::OneMinusSrcAlpha),
+							  sf::BlendMode(sf::BlendMode::SrcAlpha, sf::BlendMode::One),
+							  sf::BlendMode(sf::BlendMode::DstColor, sf::BlendMode::OneMinusSrcAlpha),
+							  sf::BlendMode(sf::BlendMode::One, sf::BlendMode::OneMinusSrcColor)};
 
 sf::BlendMode blendModesPma[] = {
-		sf::BlendMode(sf::BlendMode::One, sf::BlendMode::OneMinusSrcAlpha),
-		sf::BlendMode(sf::BlendMode::One, sf::BlendMode::One),
-		sf::BlendMode(sf::BlendMode::DstColor, sf::BlendMode::OneMinusSrcAlpha),
-		sf::BlendMode(sf::BlendMode::One, sf::BlendMode::OneMinusSrcColor),
+	sf::BlendMode(sf::BlendMode::One, sf::BlendMode::OneMinusSrcAlpha),
+	sf::BlendMode(sf::BlendMode::One, sf::BlendMode::One),
+	sf::BlendMode(sf::BlendMode::DstColor, sf::BlendMode::OneMinusSrcAlpha),
+	sf::BlendMode(sf::BlendMode::One, sf::BlendMode::OneMinusSrcColor),
 };
 
 SkeletonRenderer *skeletonRenderer = nullptr;
 
-SkeletonDrawable::SkeletonDrawable(SkeletonData *skeletonData, AnimationStateData *stateData) : timeScale(1),
-																								usePremultipliedAlpha(false),
-																								vertexArray(new VertexArray(Triangles, skeletonData->getBones().size() * 4)) {
+SkeletonDrawable::SkeletonDrawable(SkeletonData *skeletonData, AnimationStateData *stateData)
+	: timeScale(1), usePremultipliedAlpha(false), vertexArray(new VertexArray(Triangles, skeletonData->getBones().size() * 4)) {
 	Bone::setYDown(true);
 	skeleton = new (__FILE__, __LINE__) Skeleton(skeletonData);
 	ownsAnimationStateData = stateData == 0;

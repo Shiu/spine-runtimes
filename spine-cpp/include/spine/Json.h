@@ -56,8 +56,7 @@ namespace spine {
 			if (value == NULL) return false;
 			array.setSize(value->_size, 0);
 			Json *vertex = value->_child;
-			for (int i = 0; vertex; vertex = vertex->_next, i++)
-				array[i] = vertex->_valueFloat;
+			for (int i = 0; vertex; vertex = vertex->_next, i++) array[i] = vertex->_valueFloat;
 			return true;
 		}
 
@@ -65,8 +64,7 @@ namespace spine {
 			if (value == NULL) return false;
 			array.setSize(value->_size, 0);
 			Json *vertex = value->_child;
-			for (int i = 0; vertex; vertex = vertex->_next, i++)
-				array[i] = vertex->_valueInt;
+			for (int i = 0; vertex; vertex = vertex->_next, i++) array[i] = vertex->_valueInt;
 			return true;
 		}
 
@@ -74,8 +72,7 @@ namespace spine {
 			if (value == NULL) return false;
 			array.setSize(value->_size, 0);
 			Json *vertex = value->_child;
-			for (int i = 0; vertex; vertex = vertex->_next, i++)
-				array[i] = (unsigned short)vertex->_valueInt;
+			for (int i = 0; vertex; vertex = vertex->_next, i++) array[i] = (unsigned short) vertex->_valueInt;
 			return true;
 		}
 
@@ -106,7 +103,7 @@ namespace spine {
 
 		Json *_next;
 #if SPINE_JSON_HAVE_PREV
-		Json* _prev; /* next/prev allow you to walk array/object chains. Alternatively, use getSize/getItem */
+		Json *_prev; /* next/prev allow you to walk array/object chains. Alternatively, use getSize/getItem */
 #endif
 		Json *_child; /* An array or object item will have a child pointer pointing to a chain of the items in the array/object. */
 
@@ -114,8 +111,8 @@ namespace spine {
 		int _size; /* The number of children. */
 
 		const char *_valueString; /* The item's string, if type==JSON_STRING */
-		int _valueInt; /* The item's number, if type==JSON_NUMBER */
-		float _valueFloat; /* The item's number, if type==JSON_NUMBER */
+		int _valueInt;            /* The item's number, if type==JSON_NUMBER */
+		float _valueFloat;        /* The item's number, if type==JSON_NUMBER */
 
 		const char *_name; /* The item's name string, if this item is the child of, or is in the list of subitems of an object. */
 

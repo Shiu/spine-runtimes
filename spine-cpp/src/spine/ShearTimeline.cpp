@@ -42,11 +42,11 @@ using namespace spine;
 
 RTTI_IMPL(ShearTimeline, BoneTimeline2)
 
-ShearTimeline::ShearTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline2(frameCount, bezierCount, boneIndex, Property_ShearX, Property_ShearY) {
+ShearTimeline::ShearTimeline(size_t frameCount, size_t bezierCount, int boneIndex)
+	: BoneTimeline2(frameCount, bezierCount, boneIndex, Property_ShearX, Property_ShearY) {
 }
 
-void ShearTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-						  MixDirection direction) {
+void ShearTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	if (time < _frames[0]) {
 		switch (blend) {
 			case MixBlend_Setup:
@@ -82,8 +82,7 @@ void ShearTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float a
 		}
 		default: {
 			x = getBezierValue(time, i, CurveTimeline2::VALUE1, curveType - CurveTimeline2::BEZIER);
-			y = getBezierValue(time, i, CurveTimeline2::VALUE2,
-							   curveType + CurveTimeline2::BEZIER_SIZE - CurveTimeline2::BEZIER);
+			y = getBezierValue(time, i, CurveTimeline2::VALUE2, curveType + CurveTimeline2::BEZIER_SIZE - CurveTimeline2::BEZIER);
 		}
 	}
 
@@ -105,20 +104,20 @@ void ShearTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float a
 
 RTTI_IMPL(ShearXTimeline, BoneTimeline1)
 
-ShearXTimeline::ShearXTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ShearX) {
+ShearXTimeline::ShearXTimeline(size_t frameCount, size_t bezierCount, int boneIndex)
+	: BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ShearX) {
 }
 
-void ShearXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-						   MixDirection direction) {
+void ShearXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	pose._shearX = getRelativeValue(time, alpha, blend, pose._shearX, setup._shearX);
 }
 
 RTTI_IMPL(ShearYTimeline, BoneTimeline1)
 
-ShearYTimeline::ShearYTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ShearY) {
+ShearYTimeline::ShearYTimeline(size_t frameCount, size_t bezierCount, int boneIndex)
+	: BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ShearY) {
 }
 
-void ShearYTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-						   MixDirection direction) {
+void ShearYTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	pose._shearY = getRelativeValue(time, alpha, blend, pose._shearY, setup._shearY);
 }

@@ -44,8 +44,8 @@ void SpineTimeline::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_type"), &SpineTimeline::get_type);
 }
 
-void SpineTimeline::apply(Ref<SpineSkeleton> skeleton, float last_time, float time, Array events, float alpha,
-						  SpineConstant::MixBlend blend, SpineConstant::MixDirection direction) {
+void SpineTimeline::apply(Ref<SpineSkeleton> skeleton, float last_time, float time, Array events, float alpha, SpineConstant::MixBlend blend,
+						  SpineConstant::MixDirection direction) {
 	SPINE_CHECK(get_spine_object(), )
 	if (!skeleton->get_spine_object()) return;
 	spine::Vector<spine::Event *> spine_events;
@@ -53,7 +53,8 @@ void SpineTimeline::apply(Ref<SpineSkeleton> skeleton, float last_time, float ti
 	for (int i = 0; i < events.size(); ++i) {
 		events[i] = ((Ref<SpineEvent>) spine_events[i])->get_spine_object();
 	}
-	get_spine_object()->apply(*(skeleton->get_spine_object()), last_time, time, &spine_events, alpha, (spine::MixBlend) blend, (spine::MixDirection) direction);
+	get_spine_object()->apply(*(skeleton->get_spine_object()), last_time, time, &spine_events, alpha, (spine::MixBlend) blend,
+							  (spine::MixDirection) direction);
 }
 
 int SpineTimeline::get_frame_entries() {

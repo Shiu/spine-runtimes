@@ -44,232 +44,243 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		/// @param constraintIndex -1 for all physics constraints in the skeleton.
 		explicit PhysicsConstraintTimeline(size_t frameCount, size_t bezierCount, int constraintIndex, Property property);
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 
-    protected:
-        virtual float get(PhysicsConstraintPose &pose) = 0;
-        virtual void set(PhysicsConstraintPose &pose, float value) = 0;
-        virtual bool global(PhysicsConstraintData &constraintData) = 0;
+	protected:
+		virtual float get(PhysicsConstraintPose &pose) = 0;
+		virtual void set(PhysicsConstraintPose &pose, float value) = 0;
+		virtual bool global(PhysicsConstraintData &constraintData) = 0;
 
 	private:
 		int _constraintIndex;
 	};
 
-    /// Changes a physics constraint's PhysicsConstraintPose::getInertia().
-    class SP_API PhysicsConstraintInertiaTimeline : public PhysicsConstraintTimeline {
-        friend class SkeletonBinary;
+	/// Changes a physics constraint's PhysicsConstraintPose::getInertia().
+	class SP_API PhysicsConstraintInertiaTimeline : public PhysicsConstraintTimeline {
+		friend class SkeletonBinary;
 
-        friend class SkeletonJson;
+		friend class SkeletonJson;
 
-    RTTI_DECL
+		RTTI_DECL
 
-    public:
-        explicit PhysicsConstraintInertiaTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintInertia) {};
+	public:
+		explicit PhysicsConstraintInertiaTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex)
+			: PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintInertia) {};
 
-    protected:
-        float get(PhysicsConstraintPose &pose) override {
-            return pose.getInertia();
-        }
+	protected:
+		float get(PhysicsConstraintPose &pose) override {
+			return pose.getInertia();
+		}
 
-        void set(PhysicsConstraintPose &pose, float value) override {
-            pose.setInertia(value);
-        }
+		void set(PhysicsConstraintPose &pose, float value) override {
+			pose.setInertia(value);
+		}
 
-        bool global(PhysicsConstraintData &constraintData) override {
-            return constraintData.getInertiaGlobal();
-        }
-    };
+		bool global(PhysicsConstraintData &constraintData) override {
+			return constraintData.getInertiaGlobal();
+		}
+	};
 
-    /// Changes a physics constraint's PhysicsConstraintPose::getStrength().
-    class SP_API PhysicsConstraintStrengthTimeline : public PhysicsConstraintTimeline {
-        friend class SkeletonBinary;
+	/// Changes a physics constraint's PhysicsConstraintPose::getStrength().
+	class SP_API PhysicsConstraintStrengthTimeline : public PhysicsConstraintTimeline {
+		friend class SkeletonBinary;
 
-        friend class SkeletonJson;
+		friend class SkeletonJson;
 
-    RTTI_DECL
+		RTTI_DECL
 
-    public:
-        explicit PhysicsConstraintStrengthTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintStrength) {};
+	public:
+		explicit PhysicsConstraintStrengthTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex)
+			: PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintStrength) {};
 
-    protected:
-        float get(PhysicsConstraintPose &pose) override {
-            return pose.getStrength();
-        }
+	protected:
+		float get(PhysicsConstraintPose &pose) override {
+			return pose.getStrength();
+		}
 
-        void set(PhysicsConstraintPose &pose, float value) override {
-            pose.setStrength(value);
-        }
+		void set(PhysicsConstraintPose &pose, float value) override {
+			pose.setStrength(value);
+		}
 
-        bool global(PhysicsConstraintData &constraintData) override {
-            return constraintData.getStrengthGlobal();
-        }
-    };
+		bool global(PhysicsConstraintData &constraintData) override {
+			return constraintData.getStrengthGlobal();
+		}
+	};
 
-    /// Changes a physics constraint's PhysicsConstraintPose::getDamping().
-    class SP_API PhysicsConstraintDampingTimeline : public PhysicsConstraintTimeline {
-        friend class SkeletonBinary;
+	/// Changes a physics constraint's PhysicsConstraintPose::getDamping().
+	class SP_API PhysicsConstraintDampingTimeline : public PhysicsConstraintTimeline {
+		friend class SkeletonBinary;
 
-        friend class SkeletonJson;
+		friend class SkeletonJson;
 
-    RTTI_DECL
+		RTTI_DECL
 
-    public:
-        explicit PhysicsConstraintDampingTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintDamping) {};
+	public:
+		explicit PhysicsConstraintDampingTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex)
+			: PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintDamping) {};
 
-    protected:
-        float get(PhysicsConstraintPose &pose) override {
-            return pose.getDamping();
-        }
+	protected:
+		float get(PhysicsConstraintPose &pose) override {
+			return pose.getDamping();
+		}
 
-        void set(PhysicsConstraintPose &pose, float value) override {
-            pose.setDamping(value);
-        }
+		void set(PhysicsConstraintPose &pose, float value) override {
+			pose.setDamping(value);
+		}
 
-        bool global(PhysicsConstraintData &constraintData) override {
-            return constraintData.getDampingGlobal();
-        }
-    };
+		bool global(PhysicsConstraintData &constraintData) override {
+			return constraintData.getDampingGlobal();
+		}
+	};
 
-    /// Changes a physics constraint's PhysicsConstraintPose::getMassInverse(). The timeline values are not inverted.
-    class SP_API PhysicsConstraintMassTimeline : public PhysicsConstraintTimeline {
-        friend class SkeletonBinary;
+	/// Changes a physics constraint's PhysicsConstraintPose::getMassInverse(). The timeline values are not inverted.
+	class SP_API PhysicsConstraintMassTimeline : public PhysicsConstraintTimeline {
+		friend class SkeletonBinary;
 
-        friend class SkeletonJson;
+		friend class SkeletonJson;
 
-    RTTI_DECL
+		RTTI_DECL
 
-    public:
-        explicit PhysicsConstraintMassTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintMass) {};
+	public:
+		explicit PhysicsConstraintMassTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex)
+			: PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintMass) {};
 
-    protected:
-        float get(PhysicsConstraintPose &pose) override {
-            return 1 / pose.getMassInverse();
-        }
+	protected:
+		float get(PhysicsConstraintPose &pose) override {
+			return 1 / pose.getMassInverse();
+		}
 
-        void set(PhysicsConstraintPose &pose, float value) override {
-            pose.setMassInverse(1 / value);
-        }
+		void set(PhysicsConstraintPose &pose, float value) override {
+			pose.setMassInverse(1 / value);
+		}
 
-        bool global(PhysicsConstraintData &constraintData) override {
-            return constraintData.getMassGlobal();
-        }
-    };
+		bool global(PhysicsConstraintData &constraintData) override {
+			return constraintData.getMassGlobal();
+		}
+	};
 
-    /// Changes a physics constraint's PhysicsConstraintPose::getWind().
-    class SP_API PhysicsConstraintWindTimeline : public PhysicsConstraintTimeline {
-        friend class SkeletonBinary;
+	/// Changes a physics constraint's PhysicsConstraintPose::getWind().
+	class SP_API PhysicsConstraintWindTimeline : public PhysicsConstraintTimeline {
+		friend class SkeletonBinary;
 
-        friend class SkeletonJson;
+		friend class SkeletonJson;
 
-    RTTI_DECL
+		RTTI_DECL
 
-    public:
-        explicit PhysicsConstraintWindTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintWind) {};
+	public:
+		explicit PhysicsConstraintWindTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex)
+			: PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintWind) {};
 
-    protected:
-        float get(PhysicsConstraintPose &pose) override {
-            return pose.getWind();
-        }
+	protected:
+		float get(PhysicsConstraintPose &pose) override {
+			return pose.getWind();
+		}
 
-        void set(PhysicsConstraintPose &pose, float value) override {
-            pose.setWind(value);
-        }
+		void set(PhysicsConstraintPose &pose, float value) override {
+			pose.setWind(value);
+		}
 
-        bool global(PhysicsConstraintData &constraintData) override {
-            return constraintData.getWindGlobal();
-        }
-    };
+		bool global(PhysicsConstraintData &constraintData) override {
+			return constraintData.getWindGlobal();
+		}
+	};
 
-    /// Changes a physics constraint's PhysicsConstraintPose::getGravity().
-    class SP_API PhysicsConstraintGravityTimeline : public PhysicsConstraintTimeline {
-        friend class SkeletonBinary;
+	/// Changes a physics constraint's PhysicsConstraintPose::getGravity().
+	class SP_API PhysicsConstraintGravityTimeline : public PhysicsConstraintTimeline {
+		friend class SkeletonBinary;
 
-        friend class SkeletonJson;
+		friend class SkeletonJson;
 
-    RTTI_DECL
+		RTTI_DECL
 
-    public:
-        explicit PhysicsConstraintGravityTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintGravity) {};
+	public:
+		explicit PhysicsConstraintGravityTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex)
+			: PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintGravity) {};
 
-    protected:
-        float get(PhysicsConstraintPose &pose) override {
-            return pose.getGravity();
-        }
+	protected:
+		float get(PhysicsConstraintPose &pose) override {
+			return pose.getGravity();
+		}
 
-        void set(PhysicsConstraintPose &pose, float value) override {
-            pose.setGravity(value);
-        }
+		void set(PhysicsConstraintPose &pose, float value) override {
+			pose.setGravity(value);
+		}
 
-        bool global(PhysicsConstraintData &constraintData) override {
-            return constraintData.getGravityGlobal();
-        }
-    };
+		bool global(PhysicsConstraintData &constraintData) override {
+			return constraintData.getGravityGlobal();
+		}
+	};
 
-    /// Changes a physics constraint's PhysicsConstraintPose::getMix().
-    class SP_API PhysicsConstraintMixTimeline : public PhysicsConstraintTimeline {
-        friend class SkeletonBinary;
+	/// Changes a physics constraint's PhysicsConstraintPose::getMix().
+	class SP_API PhysicsConstraintMixTimeline : public PhysicsConstraintTimeline {
+		friend class SkeletonBinary;
 
-        friend class SkeletonJson;
+		friend class SkeletonJson;
 
-    RTTI_DECL
+		RTTI_DECL
 
-    public:
-        explicit PhysicsConstraintMixTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex): PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintMix) {};
+	public:
+		explicit PhysicsConstraintMixTimeline(size_t frameCount, size_t bezierCount, int physicsConstraintIndex)
+			: PhysicsConstraintTimeline(frameCount, bezierCount, physicsConstraintIndex, Property_PhysicsConstraintMix) {};
 
-    protected:
-        float get(PhysicsConstraintPose &pose) override {
-            return pose.getMix();
-        }
+	protected:
+		float get(PhysicsConstraintPose &pose) override {
+			return pose.getMix();
+		}
 
-        void set(PhysicsConstraintPose &pose, float value) override {
-            pose.setMix(value);
-        }
+		void set(PhysicsConstraintPose &pose, float value) override {
+			pose.setMix(value);
+		}
 
-        bool global(PhysicsConstraintData &constraintData) override {
-            return constraintData.getMixGlobal();
-        }
-    };
+		bool global(PhysicsConstraintData &constraintData) override {
+			return constraintData.getMixGlobal();
+		}
+	};
 
-    /// Resets a physics constraint when specific animation times are reached.
-    class SP_API PhysicsConstraintResetTimeline : public Timeline, public ConstraintTimeline {
-        friend class SkeletonBinary;
+	/// Resets a physics constraint when specific animation times are reached.
+	class SP_API PhysicsConstraintResetTimeline : public Timeline, public ConstraintTimeline {
+		friend class SkeletonBinary;
 
-        friend class SkeletonJson;
+		friend class SkeletonJson;
 
-    RTTI_DECL
+		RTTI_DECL
 
-    public:
-        /// @param constraintIndex -1 for all physics constraints in the skeleton.
-        explicit PhysicsConstraintResetTimeline(size_t frameCount, int constraintIndex): Timeline(frameCount, 1), ConstraintTimeline(constraintIndex) {
-            PropertyId ids[] = {((PropertyId)Property_PhysicsConstraintReset) << 32};
-            setPropertyIds(ids, 1);
-        }
+	public:
+		/// @param constraintIndex -1 for all physics constraints in the skeleton.
+		explicit PhysicsConstraintResetTimeline(size_t frameCount, int constraintIndex)
+			: Timeline(frameCount, 1), ConstraintTimeline(constraintIndex) {
+			PropertyId ids[] = {((PropertyId) Property_PhysicsConstraintReset) << 32};
+			setPropertyIds(ids, 1);
+		}
 
-        virtual void
-        apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-              MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 
-        int getFrameCount() { return (int)_frames.size(); }
+		int getFrameCount() {
+			return (int) _frames.size();
+		}
 
-        /// The index of the physics constraint in Skeleton::getConstraints() that will be reset when this timeline is
-        /// applied, or -1 if all physics constraints in the skeleton will be reset.
-        virtual int getConstraintIndex() override { return _constraintIndex; }
+		/// The index of the physics constraint in Skeleton::getConstraints() that will be reset when this timeline is
+		/// applied, or -1 if all physics constraints in the skeleton will be reset.
+		virtual int getConstraintIndex() override {
+			return _constraintIndex;
+		}
 
-        /// Sets the time for the specified frame.
-        void setFrame(int frame, float time) {
-            _frames[frame] = time;
-        }
-    private:
-        int _constraintIndex;
-    };
+		/// Sets the time for the specified frame.
+		void setFrame(int frame, float time) {
+			_frames[frame] = time;
+		}
+
+	private:
+		int _constraintIndex;
+	};
 }
 
 #endif /* Spine_PhysicsConstraintTimeline_h */

@@ -77,8 +77,12 @@ void SpineAnimationTrack::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("update_animation_state", "spine_sprite"), &SpineAnimationTrack::update_animation_state);
 
-	ADD_PROPERTY(PropertyInfo(Variant::STRING, "animation_name", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_NOEDITOR), "set_animation_name", "get_animation_name");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "loop", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_NOEDITOR), "set_loop", "get_loop");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "animation_name", PROPERTY_HINT_NONE, "",
+							  PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_NOEDITOR),
+				 "set_animation_name", "get_animation_name");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "loop", PROPERTY_HINT_NONE, "",
+							  PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_INTERNAL | PROPERTY_USAGE_NOEDITOR),
+				 "set_loop", "get_loop");
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "track_index", PROPERTY_HINT_RANGE, "0,256,1"), "set_track_index", "get_track_index");
 	ADD_PROPERTY(PropertyInfo(VARIANT_FLOAT, "mix_duration"), "set_mix_duration", "get_mix_duration");
@@ -94,21 +98,10 @@ void SpineAnimationTrack::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "debug"), "set_debug", "get_debug");
 }
 
-SpineAnimationTrack::SpineAnimationTrack() : loop(false),
-											 animation_changed(false),
-											 track_index(-1),
-											 mix_duration(-1),
-											 hold_previous(false),
-											 reverse(false),
-											 shortest_rotation(false),
-											 time_scale(1),
-											 alpha(1),
-											 mix_attachment_threshold(0),
-											 mix_draw_order_threshold(0),
-											 mix_blend(SpineConstant::MixBlend_Replace),
-											 blend_tree_mode(false),
-											 debug(false),
-											 sprite(nullptr) {
+SpineAnimationTrack::SpineAnimationTrack()
+	: loop(false), animation_changed(false), track_index(-1), mix_duration(-1), hold_previous(false), reverse(false), shortest_rotation(false),
+	  time_scale(1), alpha(1), mix_attachment_threshold(0), mix_draw_order_threshold(0), mix_blend(SpineConstant::MixBlend_Replace),
+	  blend_tree_mode(false), debug(false), sprite(nullptr) {
 }
 
 void SpineAnimationTrack::_notification(int what) {
@@ -167,8 +160,7 @@ void SpineAnimationTrack::setup_animation_player() {
 		for (int i = 0; i < sprite->get_child_count(); i++) {
 			auto other_track = cast_to<SpineAnimationTrack>(sprite->get_child(i));
 			if (other_track) {
-				if (other_track->track_index > highest_track_number)
-					highest_track_number = other_track->track_index;
+				if (other_track->track_index > highest_track_number) highest_track_number = other_track->track_index;
 			}
 		}
 		track_index = highest_track_number + 1;
@@ -318,12 +310,20 @@ void SpineAnimationTrack::update_animation_state(const Variant &variant_sprite) 
 					entry->setMixDrawOrderThreshold(mix_draw_order_threshold);
 					entry->setMixBlend((spine::MixBlend) mix_blend);
 
-					if (debug) print_line(String("Setting animation {0} with mix_duration {1} on track {2} on {3}").format(varray(animation_name, mix_duration, track_index, sprite->get_name())).utf8().ptr());
+					if (debug)
+						print_line(String("Setting animation {0} with mix_duration {1} on track {2} on {3}")
+									   .format(varray(animation_name, mix_duration, track_index, sprite->get_name()))
+									   .utf8()
+									   .ptr());
 				} else {
 					if (!current_entry || (String("<empty>") != other_name)) {
 						auto entry = animation_state->setEmptyAnimation(track_index, should_set_mix ? mix_duration : 0);
 						entry->setTrackEnd(FLT_MAX);
-						if (debug) print_line(String("Setting empty animation with mix_duration {0} on track {1} on {2}").format(varray(mix_duration, track_index, sprite->get_name())).utf8().ptr());
+						if (debug)
+							print_line(String("Setting empty animation with mix_duration {0} on track {1} on {2}")
+										   .format(varray(mix_duration, track_index, sprite->get_name()))
+										   .utf8()
+										   .ptr());
 					}
 				}
 			}
@@ -446,12 +446,20 @@ void SpineAnimationTrack::update_animation_state(const Variant &variant_sprite) 
 					entry->setMixDrawOrderThreshold(mix_draw_order_threshold);
 					entry->setMixBlend((spine::MixBlend) mix_blend);
 
-					if (debug) print_line(String("Setting animation {0} with mix_duration {1} on track {2} on {3}").format(varray(animation_name, mix_duration, track_index, sprite->get_name())).utf8().ptr());
+					if (debug)
+						print_line(String("Setting animation {0} with mix_duration {1} on track {2} on {3}")
+									   .format(varray(animation_name, mix_duration, track_index, sprite->get_name()))
+									   .utf8()
+									   .ptr());
 				} else {
 					if (!current_entry || (String("<empty>") != other_name)) {
 						auto entry = animation_state->setEmptyAnimation(track_index, should_set_mix ? mix_duration : 0);
 						entry->setTrackEnd(FLT_MAX);
-						if (debug) print_line(String("Setting empty animation with mix_duration {0} on track {1} on {2}").format(varray(mix_duration, track_index, sprite->get_name())).utf8().ptr());
+						if (debug)
+							print_line(String("Setting empty animation with mix_duration {0} on track {1} on {2}")
+										   .format(varray(mix_duration, track_index, sprite->get_name()))
+										   .utf8()
+										   .ptr());
 					}
 				}
 			}

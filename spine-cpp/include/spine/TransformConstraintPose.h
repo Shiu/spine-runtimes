@@ -34,60 +34,60 @@
 #include <spine/RTTI.h>
 
 namespace spine {
-    /// Stores a pose for a transform constraint.
-    class SP_API TransformConstraintPose : public Pose<TransformConstraintPose> {
-        friend class FromProperty;
-        friend class ToProperty;
-        friend class FromRotate;
-        friend class ToRotate;
-        friend class FromX;
-        friend class ToX;
-        friend class FromY;
-        friend class ToY;
-        friend class FromScaleX;
-        friend class ToScaleX;
-        friend class FromScaleY;
-        friend class ToScaleY;
-        friend class FromShearY;
-        friend class ToShearY;
-        friend class TransformConstraint;
-        friend class TransformConstraintTimeline;
-        friend class SkeletonJson;
-        friend class SkeletonBinary;
+	/// Stores a pose for a transform constraint.
+	class SP_API TransformConstraintPose : public Pose<TransformConstraintPose> {
+		friend class FromProperty;
+		friend class ToProperty;
+		friend class FromRotate;
+		friend class ToRotate;
+		friend class FromX;
+		friend class ToX;
+		friend class FromY;
+		friend class ToY;
+		friend class FromScaleX;
+		friend class ToScaleX;
+		friend class FromScaleY;
+		friend class ToScaleY;
+		friend class FromShearY;
+		friend class ToShearY;
+		friend class TransformConstraint;
+		friend class TransformConstraintTimeline;
+		friend class SkeletonJson;
+		friend class SkeletonBinary;
 
-    private:
-        float _mixRotate, _mixX, _mixY, _mixScaleX, _mixScaleY, _mixShearY;
+	private:
+		float _mixRotate, _mixX, _mixY, _mixScaleX, _mixScaleY, _mixShearY;
 
-    public:
-        TransformConstraintPose();
-        virtual ~TransformConstraintPose();
+	public:
+		TransformConstraintPose();
+		virtual ~TransformConstraintPose();
 
-        virtual void set(TransformConstraintPose& pose) override;
+		virtual void set(TransformConstraintPose &pose) override;
 
-        /// A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
-        float getMixRotate();
-        void setMixRotate(float mixRotate);
+		/// A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
+		float getMixRotate();
+		void setMixRotate(float mixRotate);
 
-        /// A percentage (0-1) that controls the mix between the constrained and unconstrained translation X.
-        float getMixX();
-        void setMixX(float mixX);
+		/// A percentage (0-1) that controls the mix between the constrained and unconstrained translation X.
+		float getMixX();
+		void setMixX(float mixX);
 
-        /// A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y.
-        float getMixY();
-        void setMixY(float mixY);
+		/// A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y.
+		float getMixY();
+		void setMixY(float mixY);
 
-        /// A percentage (0-1) that controls the mix between the constrained and unconstrained scale X.
-        float getMixScaleX();
-        void setMixScaleX(float mixScaleX);
+		/// A percentage (0-1) that controls the mix between the constrained and unconstrained scale X.
+		float getMixScaleX();
+		void setMixScaleX(float mixScaleX);
 
-        /// A percentage (0-1) that controls the mix between the constrained and unconstrained scale Y.
-        float getMixScaleY();
-        void setMixScaleY(float mixScaleY);
+		/// A percentage (0-1) that controls the mix between the constrained and unconstrained scale Y.
+		float getMixScaleY();
+		void setMixScaleY(float mixScaleY);
 
-        /// A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y.
-        float getMixShearY();
-        void setMixShearY(float mixShearY);
-    };
+		/// A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y.
+		float getMixShearY();
+		void setMixShearY(float mixShearY);
+	};
 }
 
 #endif

@@ -43,9 +43,9 @@ namespace spine {
 
 	class ConstraintData;
 
-/// Stores attachments by slot index and attachment name.
-/// See SkeletonData::getDefaultSkin, Skeleton::getSkin, and
-/// http://esotericsoftware.com/spine-runtime-skins in the Spine Runtimes Guide.
+	/// Stores attachments by slot index and attachment name.
+	/// See SkeletonData::getDefaultSkin, Skeleton::getSkin, and
+	/// http://esotericsoftware.com/spine-runtime-skins in the Spine Runtimes Guide.
 	class SP_API Skin : public SpineObject {
 		friend class Skeleton;
 
@@ -59,10 +59,7 @@ namespace spine {
 				String _name;
 				Attachment *_attachment;
 
-				Entry(size_t slotIndex, const String &name, Attachment *attachment) :
-						_slotIndex(slotIndex),
-						_name(name),
-						_attachment(attachment) {
+				Entry(size_t slotIndex, const String &name, Attachment *attachment) : _slotIndex(slotIndex), _name(name), _attachment(attachment) {
 				}
 			};
 
@@ -89,11 +86,11 @@ namespace spine {
 				}
 
 			protected:
-				Entries(Array <Array<Entry>> &buckets) : _buckets(buckets), _slotIndex(0), _bucketIndex(0) {
+				Entries(Array<Array<Entry>> &buckets) : _buckets(buckets), _slotIndex(0), _bucketIndex(0) {
 				}
 
 			private:
-				Array <Array<Entry>> &_buckets;
+				Array<Array<Entry>> &_buckets;
 				size_t _slotIndex;
 				size_t _bucketIndex;
 			};
@@ -110,10 +107,9 @@ namespace spine {
 			AttachmentMap();
 
 		private:
+			int findInBucket(Array<Entry> &, const String &attachmentName);
 
-			int findInBucket(Array <Entry> &, const String &attachmentName);
-
-			Array <Array<Entry>> _buckets;
+			Array<Array<Entry>> _buckets;
 		};
 
 		explicit Skin(const String &name);
@@ -133,7 +129,7 @@ namespace spine {
 		/// Finds the skin keys for a given slot. The results are added to the passed array of names.
 		/// @param slotIndex The target slotIndex. To find the slot index, use SkeletonData::findSlot and SlotData::getIndex.
 		/// @param names Found skin key names will be added to this array.
-		void findNamesForSlot(size_t slotIndex, Array <String> &names);
+		void findNamesForSlot(size_t slotIndex, Array<String> &names);
 
 		/// Finds the attachments for a given slot. The results are added to the passed array of Attachments.
 		/// @param slotIndex The target slotIndex. To find the slot index, use SkeletonData::findSlot and SlotData::getIndex.
@@ -154,14 +150,16 @@ namespace spine {
 
 		Array<ConstraintData *> &getConstraints();
 
-        Color &getColor() { return _color; }
+		Color &getColor() {
+			return _color;
+		}
 
 	private:
 		const String _name;
 		AttachmentMap _attachments;
 		Array<BoneData *> _bones;
 		Array<ConstraintData *> _constraints;
-        Color _color;
+		Color _color;
 
 		/// Attach all attachments from this skin if the corresponding attachment from the old skin is currently attached.
 		void attachAll(Skeleton &skeleton, Skin &oldSkin);

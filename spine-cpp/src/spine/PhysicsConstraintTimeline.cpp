@@ -51,15 +51,14 @@ RTTI_IMPL(PhysicsConstraintGravityTimeline, PhysicsConstraintTimeline)
 RTTI_IMPL(PhysicsConstraintMixTimeline, PhysicsConstraintTimeline)
 RTTI_IMPL_MULTI(PhysicsConstraintResetTimeline, Timeline, ConstraintTimeline)
 
-PhysicsConstraintTimeline::PhysicsConstraintTimeline(size_t frameCount, size_t bezierCount,
-													 int constraintIndex, Property property) : CurveTimeline1(frameCount, bezierCount),
-																							   ConstraintTimeline(constraintIndex) {
+PhysicsConstraintTimeline::PhysicsConstraintTimeline(size_t frameCount, size_t bezierCount, int constraintIndex, Property property)
+	: CurveTimeline1(frameCount, bezierCount), ConstraintTimeline(constraintIndex) {
 	PropertyId ids[] = {((PropertyId) property << 32) | constraintIndex};
 	setPropertyIds(ids, 1);
 }
 
-void PhysicsConstraintTimeline::apply(Skeleton &skeleton, float, float time, Array<Event *> *,
-									  float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
+void PhysicsConstraintTimeline::apply(Skeleton &skeleton, float, float time, Array<Event *> *, float alpha, MixBlend blend, MixDirection direction,
+									  bool appliedPose) {
 	if (_constraintIndex == -1) {
 		float value = time >= _frames[0] ? getCurveValue(time) : 0;
 
@@ -80,7 +79,8 @@ void PhysicsConstraintTimeline::apply(Skeleton &skeleton, float, float time, Arr
 	}
 }
 
-void PhysicsConstraintResetTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *, float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
+void PhysicsConstraintResetTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *, float alpha, MixBlend blend,
+										   MixDirection direction, bool appliedPose) {
 	PhysicsConstraint *constraint = nullptr;
 	if (_constraintIndex != -1) {
 		constraint = static_cast<PhysicsConstraint *>(skeleton.getConstraints()[_constraintIndex]);

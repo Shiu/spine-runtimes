@@ -45,7 +45,8 @@ namespace spine {
 	public:
 		class SP_API DebugPair {
 		public:
-			explicit DebugPair(K &k, V &v) : key(k), value(v) {}
+			explicit DebugPair(K &k, V &v) : key(k), value(v) {
+			}
 
 			K &key;
 			V &value;
@@ -80,9 +81,7 @@ namespace spine {
 			DebugEntry *_entry;
 		};
 
-		DebugHashMap() :
-				_head(NULL),
-				_size(0) {
+		DebugHashMap() : _head(NULL), _size(0) {
 		}
 
 		~DebugHashMap() {
@@ -126,7 +125,7 @@ namespace spine {
 			}
 		}
 
-		bool addAll(Array <K> &keys, const V &value) {
+		bool addAll(Array<K> &keys, const V &value) {
 			size_t oldSize = _size;
 			for (size_t i = 0; i < keys.size(); i++) {
 				put(keys[i], value);
@@ -145,8 +144,10 @@ namespace spine {
 			DebugEntry *prev = entry->prev;
 			DebugEntry *next = entry->next;
 
-			if (prev) prev->next = next;
-			else _head = next;
+			if (prev)
+				prev->next = next;
+			else
+				_head = next;
 			if (next) next->prev = entry->prev;
 
 			delete entry;
@@ -157,7 +158,8 @@ namespace spine {
 
 		V operator[](const K &key) {
 			DebugEntry *entry = find(key);
-			if (entry) return entry->_value;
+			if (entry)
+				return entry->_value;
 			else {
 				assert(false);
 				return 0;
@@ -171,8 +173,7 @@ namespace spine {
 	private:
 		DebugEntry *find(const K &key) {
 			for (DebugEntry *entry = _head; entry != NULL; entry = entry->next) {
-				if (entry->_key == key)
-					return entry;
+				if (entry->_key == key) return entry;
 			}
 			return NULL;
 		}
@@ -184,7 +185,8 @@ namespace spine {
 			DebugEntry *next;
 			DebugEntry *prev;
 
-			DebugEntry() : next(NULL), prev(NULL) {}
+			DebugEntry() : next(NULL), prev(NULL) {
+			}
 		};
 
 		DebugEntry *_head;
@@ -206,16 +208,14 @@ namespace spine {
 		};
 
 	public:
-		DebugExtension(SpineExtension *extension) : _extension(extension), _allocations(0), _reallocations(0),
-													_frees(0) {
+		DebugExtension(SpineExtension *extension) : _extension(extension), _allocations(0), _reallocations(0), _frees(0) {
 		}
 
 		void reportLeaks() {
 			DebugHashMap<void *, Allocation>::DebugEntries entries = _allocated.getEntries();
 			while (entries.hasNext()) {
 				DebugHashMap<void *, Allocation>::DebugPair pair = entries.next();
-				printf("\"%s:%i (%zu bytes at %p)\n", pair.value.fileName, pair.value.line, pair.value.size,
-					   pair.value.address);
+				printf("\"%s:%i (%zu bytes at %p)\n", pair.value.fileName, pair.value.line, pair.value.size, pair.value.address);
 			}
 			printf("allocations: %zu, reallocations: %zu, frees: %zu\n", _allocations, _reallocations, _frees);
 			if (_allocated.size() == 0) printf("No leaks detected\n");
@@ -284,15 +284,15 @@ namespace spine {
 		}
 
 		virtual char *_readFile(const String &path, int *length) {
-            auto data = _extension->_readFile(path, length);
+			auto data = _extension->_readFile(path, length);
 
-            if (!_allocated.containsKey(data)) {
-                _allocated.put(data, Allocation(data, sizeof(char) * (*length), nullptr, 0));
-                _allocations++;
-                _usedMemory += sizeof(char) * (*length);
-            }
+			if (!_allocated.containsKey(data)) {
+				_allocated.put(data, Allocation(data, sizeof(char) * (*length), nullptr, 0));
+				_allocations++;
+				_usedMemory += sizeof(char) * (*length);
+			}
 
-            return data;
+			return data;
 		}
 
 		size_t getUsedMemory() {
@@ -310,4 +310,4 @@ namespace spine {
 }
 
 
-#endif //SPINE_LOG_H
+#endif//SPINE_LOG_H

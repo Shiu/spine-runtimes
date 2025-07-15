@@ -90,8 +90,7 @@ spSkeletonData *readSkeletonBinaryData(const char *filename, spAtlas *atlas, flo
 	return skeletonData;
 }
 
-void testcase(void func(spSkeletonData *skeletonData, spAtlas *atlas),
-			  const char *jsonName, const char *binaryName, const char *atlasName,
+void testcase(void func(spSkeletonData *skeletonData, spAtlas *atlas), const char *jsonName, const char *binaryName, const char *atlasName,
 			  float scale) {
 	spAtlas *atlas = spAtlas_createFromFile(atlasName, 0);
 
@@ -760,7 +759,7 @@ void celestialCircus(spSkeletonData *skeletonData, spAtlas *atlas) {
 	spSkeleton *skeleton = drawable->skeleton;
 	skeleton->x = 320;
 	skeleton->y = 480;
-    skeleton->scaleX = skeleton->scaleY = 0.2f;
+	skeleton->scaleX = skeleton->scaleY = 0.2f;
 	spSkeleton_updateWorldTransform(skeleton, SP_PHYSICS_UPDATE);
 	spAnimationState_setAnimationByName(drawable->state, 0, "swing", true);
 
@@ -785,7 +784,7 @@ void celestialCircus(spSkeletonData *skeletonData, spAtlas *atlas) {
 }
 
 int main() {
-    testcase(celestialCircus, "data/celestial-circus-pro.json", "data/celestial-circus-pro.skel", "data/celestial-circus-pma.atlas", 1);
+	testcase(celestialCircus, "data/celestial-circus-pro.json", "data/celestial-circus-pro.skel", "data/celestial-circus-pma.atlas", 1);
 	testcase(cloudpot, "data/cloud-pot.json", "data/cloud-pot.skel", "data/cloud-pot-pma.atlas", 0.2);
 	testcase(sack, "data/sack-pro.json", "data/sack-pro.skel", "data/sack-pma.atlas", 0.2f);
 	testcase(snowglobe, "data/snowglobe-pro.json", "data/snowglobe-pro.skel", "data/snowglobe-pma.atlas", 0.2f);

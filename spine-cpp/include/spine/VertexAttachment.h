@@ -47,7 +47,7 @@ namespace spine {
 
 		friend class DeformTimeline;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit VertexAttachment(const String &name);
@@ -66,10 +66,10 @@ namespace spine {
 		/// @param offset The worldVertices index to begin writing values.
 		/// @param stride The number of worldVertices entries between the value pairs written.
 		virtual void computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,
-								  size_t stride = 2);
+										  size_t stride = 2);
 
 		virtual void computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, Array<float> &worldVertices, size_t offset,
-								  size_t stride = 2);
+										  size_t stride = 2);
 
 		/// Gets a unique ID for this attachment.
 		int getId();
@@ -86,14 +86,14 @@ namespace spine {
 
 		void setWorldVerticesLength(size_t inValue);
 
-		Attachment * getTimelineAttachment();
+		Attachment *getTimelineAttachment();
 
 		void setTimelineAttachment(Attachment *attachment);
 
 		void copyTo(VertexAttachment *other);
 
 	protected:
-		Array <int> _bones;
+		Array<int> _bones;
 		Array<float> _vertices;
 		size_t _worldVerticesLength;
 		Attachment *_timelineAttachment;

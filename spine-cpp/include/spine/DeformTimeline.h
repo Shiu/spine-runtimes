@@ -41,7 +41,7 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit DeformTimeline(size_t frameCount, size_t bezierCount, int slotIndex, VertexAttachment *attachment);
@@ -50,26 +50,27 @@ namespace spine {
 		void setFrame(int frameIndex, float time, Array<float> &vertices);
 
 		/// The vertices for each frame.
-		Array <Array<float>> &getVertices();
+		Array<Array<float>> &getVertices();
 
 		/// The attachment that will be deformed.
 		VertexAttachment *getAttachment();
 
 		void setAttachment(VertexAttachment *inValue);
 
-		virtual void
-		setBezier(size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2,
-				  float cy2, float time2, float value2) override;
+		virtual void setBezier(size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2,
+							   float time2, float value2) override;
 
 		float getCurvePercent(float time, int frame);
 
-		size_t getFrameCount() { return _frames.size(); }
+		size_t getFrameCount() {
+			return _frames.size();
+		}
 
 	protected:
 		void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) override;
 
 	private:
-		Array <Array<float>> _vertices;
+		Array<Array<float>> _vertices;
 
 		VertexAttachment *_attachment;
 	};

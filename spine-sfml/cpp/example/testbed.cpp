@@ -35,9 +35,11 @@ using namespace spine;
 
 class NullTextureLoader : public TextureLoader {
 public:
-	virtual void load(AtlasPage &, const String &) {}
+	virtual void load(AtlasPage &, const String &) {
+	}
 
-	virtual void unload(void *) {}
+	virtual void unload(void *) {
+	}
 };
 
 class NullAttachmentLoader : public AttachmentLoader {

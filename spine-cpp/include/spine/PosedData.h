@@ -34,103 +34,113 @@
 #include <spine/SpineString.h>
 
 namespace spine {
-    template<class P>
-    class Pose;
+	template<class P>
+	class Pose;
 
-    class SP_API PosedData : public SpineObject {
-        friend class SkeletonBinary;
-        friend class SkeletonJson;
-        friend class BoneTimeline1;
-        friend class BoneTimeline2;
-        friend class RotateTimeline;
-        friend class AttachmentTimeline;
-        friend class RGBATimeline;
-        friend class RGBTimeline;
-        friend class AlphaTimeline;
-        friend class RGBA2Timeline;
-        friend class RGB2Timeline;
-        friend class ScaleTimeline;
-        friend class ScaleXTimeline;
-        friend class ScaleYTimeline;
-        friend class ShearTimeline;
-        friend class ShearXTimeline;
-        friend class ShearYTimeline;
-        friend class TranslateTimeline;
-        friend class TranslateXTimeline;
-        friend class TranslateYTimeline;
-        friend class InheritTimeline;
-        friend class Skeleton;
-        friend class Slot;
+	class SP_API PosedData : public SpineObject {
+		friend class SkeletonBinary;
+		friend class SkeletonJson;
+		friend class BoneTimeline1;
+		friend class BoneTimeline2;
+		friend class RotateTimeline;
+		friend class AttachmentTimeline;
+		friend class RGBATimeline;
+		friend class RGBTimeline;
+		friend class AlphaTimeline;
+		friend class RGBA2Timeline;
+		friend class RGB2Timeline;
+		friend class ScaleTimeline;
+		friend class ScaleXTimeline;
+		friend class ScaleYTimeline;
+		friend class ShearTimeline;
+		friend class ShearXTimeline;
+		friend class ShearYTimeline;
+		friend class TranslateTimeline;
+		friend class TranslateXTimeline;
+		friend class TranslateYTimeline;
+		friend class InheritTimeline;
+		friend class Skeleton;
+		friend class Slot;
 
-    public:
-        PosedData(const String& name);
-        virtual ~PosedData();
+	public:
+		PosedData(const String &name);
+		virtual ~PosedData();
 
-        /// The constraint's name, which is unique across all constraints in the skeleton of the same type.
-        const String& getName() const { return _name; };
+		/// The constraint's name, which is unique across all constraints in the skeleton of the same type.
+		const String &getName() const {
+			return _name;
+		};
 
-        /// When true, Skeleton::updateWorldTransform(Physics) only updates this constraint if the Skeleton::getSkin()
-        /// contains this constraint.
-        ///
-        /// See Skin::getConstraints().
-        bool getSkinRequired() const { return _skinRequired; };
-        void setSkinRequired(bool skinRequired) { _skinRequired = skinRequired; };
+		/// When true, Skeleton::updateWorldTransform(Physics) only updates this constraint if the Skeleton::getSkin()
+		/// contains this constraint.
+		///
+		/// See Skin::getConstraints().
+		bool getSkinRequired() const {
+			return _skinRequired;
+		};
+		void setSkinRequired(bool skinRequired) {
+			_skinRequired = skinRequired;
+		};
 
-        protected:
-            String _name;
-            bool _skinRequired;
-    };
+	protected:
+		String _name;
+		bool _skinRequired;
+	};
 
-    inline PosedData::PosedData(const String& name) : _name(name), _skinRequired(false) {
-    }
+	inline PosedData::PosedData(const String &name) : _name(name), _skinRequired(false) {
+	}
 
-    inline PosedData::~PosedData() {
-    }
+	inline PosedData::~PosedData() {
+	}
 
-    /// The base class for all constrained datas.
-    template<class P>
-    class SP_API PosedDataGeneric : public PosedData {
-        friend class SkeletonBinary;
-        friend class SkeletonJson;
-        friend class BoneTimeline1;
-        friend class BoneTimeline2;
-        friend class RotateTimeline;
-        friend class AttachmentTimeline;
-        friend class RGBATimeline;
-        friend class RGBTimeline;
-        friend class AlphaTimeline;
-        friend class RGBA2Timeline;
-        friend class RGB2Timeline;
-        friend class ScaleTimeline;
-        friend class ScaleXTimeline;
-        friend class ScaleYTimeline;
-        friend class ShearTimeline;
-        friend class ShearXTimeline;
-        friend class ShearYTimeline;
-        friend class TranslateTimeline;
-        friend class TranslateXTimeline;
-        friend class TranslateYTimeline;
-        friend class InheritTimeline;
-        friend class PhysicsConstraintTimeline;
-        friend class PhysicsConstraintInertiaTimeline;
-        friend class PhysicsConstraintStrengthTimeline;
-        friend class PhysicsConstraintDampingTimeline;
-        friend class PhysicsConstraintMassTimeline;
-        friend class PhysicsConstraintWindTimeline;
-        friend class PhysicsConstraintGravityTimeline;
-        friend class Slot;
+	/// The base class for all constrained datas.
+	template<class P>
+	class SP_API PosedDataGeneric : public PosedData {
+		friend class SkeletonBinary;
+		friend class SkeletonJson;
+		friend class BoneTimeline1;
+		friend class BoneTimeline2;
+		friend class RotateTimeline;
+		friend class AttachmentTimeline;
+		friend class RGBATimeline;
+		friend class RGBTimeline;
+		friend class AlphaTimeline;
+		friend class RGBA2Timeline;
+		friend class RGB2Timeline;
+		friend class ScaleTimeline;
+		friend class ScaleXTimeline;
+		friend class ScaleYTimeline;
+		friend class ShearTimeline;
+		friend class ShearXTimeline;
+		friend class ShearYTimeline;
+		friend class TranslateTimeline;
+		friend class TranslateXTimeline;
+		friend class TranslateYTimeline;
+		friend class InheritTimeline;
+		friend class PhysicsConstraintTimeline;
+		friend class PhysicsConstraintInertiaTimeline;
+		friend class PhysicsConstraintStrengthTimeline;
+		friend class PhysicsConstraintDampingTimeline;
+		friend class PhysicsConstraintMassTimeline;
+		friend class PhysicsConstraintWindTimeline;
+		friend class PhysicsConstraintGravityTimeline;
+		friend class Slot;
 
-    protected:
-        P _setup;
+	protected:
+		P _setup;
 
-    public:
-        PosedDataGeneric(const String& name): PosedData(name), _setup() {
-    }
-        virtual ~PosedDataGeneric() {};
+	public:
+		PosedDataGeneric(const String &name) : PosedData(name), _setup() {
+		}
+		virtual ~PosedDataGeneric() {};
 
-        P& getSetupPose() { return _setup; };
-        const P& getSetupPose() const { return _setup; };
-    };
+		P &getSetupPose() {
+			return _setup;
+		};
+		const P &getSetupPose() const {
+			return _setup;
+		};
+	};
 }
 
 #endif

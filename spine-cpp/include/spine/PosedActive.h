@@ -39,11 +39,17 @@ namespace spine {
 		bool _active;
 
 	public:
-		PosedActive() : _active(true) {}
-		virtual ~PosedActive() {}
+		PosedActive() : _active(true) {
+		}
+		virtual ~PosedActive() {
+		}
 
-		bool isActive() const { return _active; }
-		void setActive(bool active) { _active = active; }
+		bool isActive() const {
+			return _active;
+		}
+		void setActive(bool active) {
+			_active = active;
+		}
 	};
 }
 

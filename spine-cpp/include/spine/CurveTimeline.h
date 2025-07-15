@@ -36,7 +36,7 @@
 namespace spine {
 	/// Base class for frames that use an interpolation bezier curve.
 	class SP_API CurveTimeline : public Timeline {
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit CurveTimeline(size_t frameCount, size_t frameEntries, size_t bezierCount);
@@ -47,9 +47,8 @@ namespace spine {
 
 		void setStepped(size_t frame);
 
-		virtual void
-		setBezier(size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2,
-				  float cy2, float time2, float value2);
+		virtual void setBezier(size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2,
+							   float time2, float value2);
 
 		float getBezierValue(float time, size_t frame, size_t valueOffset, size_t i);
 
@@ -61,12 +60,12 @@ namespace spine {
 		static const int BEZIER = 2;
 		static const int BEZIER_SIZE = 18;
 
-		Array<float> _curves; // type, x, y, ...
+		Array<float> _curves;// type, x, y, ...
 	};
 
 	/// The base class for a CurveTimeline that sets one property.
 	class SP_API CurveTimeline1 : public CurveTimeline {
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		/// @param frameCount The number of frames for this timeline.
@@ -83,13 +82,13 @@ namespace spine {
 		/// Returns the interpolated value for the specified time.
 		float getCurveValue(float time);
 
-        float getRelativeValue(float time, float alpha, MixBlend blend, float current, float setup);
+		float getRelativeValue(float time, float alpha, MixBlend blend, float current, float setup);
 
-        float getAbsoluteValue(float time, float alpha, MixBlend blend, float current, float setup);
+		float getAbsoluteValue(float time, float alpha, MixBlend blend, float current, float setup);
 
-        float getAbsoluteValue (float time, float alpha, MixBlend blend, float current, float setup, float value);
+		float getAbsoluteValue(float time, float alpha, MixBlend blend, float current, float setup, float value);
 
-        float getScaleValue (float time, float alpha, MixBlend blend, MixDirection direction, float current, float setup);
+		float getScaleValue(float time, float alpha, MixBlend blend, MixDirection direction, float current, float setup);
 
 	protected:
 		static const int ENTRIES = 2;
@@ -97,7 +96,7 @@ namespace spine {
 	};
 
 	class SP_API CurveTimeline2 : public CurveTimeline {
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit CurveTimeline2(size_t frameCount, size_t bezierCount);

@@ -43,7 +43,7 @@ namespace spine {
 	class Event;
 
 	class SP_API Timeline : public SpineObject {
-	RTTI_DECL_NOPARENT
+		RTTI_DECL_NOPARENT
 
 	public:
 		Timeline(size_t frameCount, size_t frameEntries);
@@ -61,9 +61,8 @@ namespace spine {
 		/// @param blend Controls how mixing is applied when alpha is than 1.
 		/// @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions such as DrawOrderTimeline and AttachmentTimeline.
 		/// @param appliedPose True to modify the applied pose.
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) = 0;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) = 0;
 
 		size_t getFrameEntries();
 
@@ -73,12 +72,12 @@ namespace spine {
 
 		float getDuration();
 
-		virtual Array <PropertyId> &getPropertyIds();
+		virtual Array<PropertyId> &getPropertyIds();
 
 	protected:
 		void setPropertyIds(PropertyId propertyIds[], size_t propertyIdsCount);
 
-        Array <PropertyId> _propertyIds;
+		Array<PropertyId> _propertyIds;
 		Array<float> _frames;
 		size_t _frameEntries;
 	};

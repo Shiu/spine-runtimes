@@ -47,11 +47,11 @@ SPINE_OPAQUE_TYPE(spine_skin_entries)
 SPINE_OPAQUE_TYPE(spine_texture_loader)
 
 // Additional types
-typedef void* spine_void;
-typedef void (*spine_dispose_renderer_object)(void*);
+typedef void *spine_void;
+typedef void (*spine_dispose_renderer_object)(void *);
 
 // Texture loader callbacks
-typedef void* (*spine_texture_loader_load_func)(const char *path);
+typedef void *(*spine_texture_loader_load_func)(const char *path);
 typedef void (*spine_texture_loader_unload_func)(void *texture);
 
 // Version functions
@@ -72,9 +72,8 @@ SPINE_C_API float spine_vector_get_y(spine_vector vector);
 
 // Atlas functions
 SPINE_C_API spine_atlas spine_atlas_load(const char *atlasData);
-SPINE_C_API spine_atlas spine_atlas_load_callback(const char *atlasData, const char *atlasDir,
-                                                     spine_texture_loader_load_func load,
-                                                     spine_texture_loader_unload_func unload);
+SPINE_C_API spine_atlas spine_atlas_load_callback(const char *atlasData, const char *atlasDir, spine_texture_loader_load_func load,
+												  spine_texture_loader_unload_func unload);
 SPINE_C_API int32_t spine_atlas_get_num_image_paths(spine_atlas atlas);
 SPINE_C_API const char *spine_atlas_get_image_path(spine_atlas atlas, int32_t index);
 SPINE_C_API bool spine_atlas_is_pma(spine_atlas atlas);
@@ -83,7 +82,8 @@ SPINE_C_API void spine_atlas_dispose(spine_atlas atlas);
 
 // Skeleton data functions
 SPINE_C_API spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, const char *skeletonData, const char *path);
-SPINE_C_API spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, const uint8_t *skeletonData, int32_t length, const char *path);
+SPINE_C_API spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, const uint8_t *skeletonData, int32_t length,
+																	   const char *path);
 SPINE_C_API const char *spine_skeleton_data_result_get_error(spine_skeleton_data_result result);
 SPINE_C_API spine_skeleton_data spine_skeleton_data_result_get_data(spine_skeleton_data_result result);
 SPINE_C_API void spine_skeleton_data_result_dispose(spine_skeleton_data_result result);
@@ -112,4 +112,4 @@ SPINE_C_API spine_attachment spine_skin_entry_get_attachment(spine_skin_entry en
 }
 #endif
 
-#endif // SPINE_C_EXTENSIONS_H
+#endif// SPINE_C_EXTENSIONS_H

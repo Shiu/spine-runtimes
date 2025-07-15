@@ -42,11 +42,11 @@ using namespace spine;
 
 RTTI_IMPL(TranslateTimeline, BoneTimeline2)
 
-TranslateTimeline::TranslateTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline2(frameCount, bezierCount, boneIndex, Property_X, Property_Y) {
+TranslateTimeline::TranslateTimeline(size_t frameCount, size_t bezierCount, int boneIndex)
+	: BoneTimeline2(frameCount, bezierCount, boneIndex, Property_X, Property_Y) {
 }
 
-void TranslateTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-							  MixDirection direction) {
+void TranslateTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	if (time < _frames[0]) {
 		switch (blend) {
 			case MixBlend_Setup:
@@ -82,8 +82,7 @@ void TranslateTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, flo
 		}
 		default: {
 			x = getBezierValue(time, i, CurveTimeline2::VALUE1, curveType - CurveTimeline2::BEZIER);
-			y = getBezierValue(time, i, CurveTimeline2::VALUE2,
-							   curveType + CurveTimeline2::BEZIER_SIZE - CurveTimeline2::BEZIER);
+			y = getBezierValue(time, i, CurveTimeline2::VALUE2, curveType + CurveTimeline2::BEZIER_SIZE - CurveTimeline2::BEZIER);
 		}
 	}
 
@@ -105,20 +104,20 @@ void TranslateTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, flo
 
 RTTI_IMPL(TranslateXTimeline, BoneTimeline1)
 
-TranslateXTimeline::TranslateXTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline1(frameCount, bezierCount, boneIndex, Property_X) {
+TranslateXTimeline::TranslateXTimeline(size_t frameCount, size_t bezierCount, int boneIndex)
+	: BoneTimeline1(frameCount, bezierCount, boneIndex, Property_X) {
 }
 
-void TranslateXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-							   MixDirection direction) {
+void TranslateXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	pose._x = getRelativeValue(time, alpha, blend, pose._x, setup._x);
 }
 
 RTTI_IMPL(TranslateYTimeline, BoneTimeline1)
 
-TranslateYTimeline::TranslateYTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline1(frameCount, bezierCount, boneIndex, Property_Y) {
+TranslateYTimeline::TranslateYTimeline(size_t frameCount, size_t bezierCount, int boneIndex)
+	: BoneTimeline1(frameCount, bezierCount, boneIndex, Property_Y) {
 }
 
-void TranslateYTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-							   MixDirection direction) {
+void TranslateYTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	pose._y = getRelativeValue(time, alpha, blend, pose._y, setup._y);
 }

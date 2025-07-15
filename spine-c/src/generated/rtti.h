@@ -10,7 +10,7 @@ extern "C" {
 
 SPINE_C_API void spine_rtti_dispose(spine_rtti self);
 
-SPINE_C_API const char * spine_rtti_get_class_name(spine_rtti self);
+SPINE_C_API const char *spine_rtti_get_class_name(spine_rtti self);
 SPINE_C_API bool spine_rtti_is_exactly(spine_rtti self, spine_rtti rtti);
 SPINE_C_API bool spine_rtti_instance_of(spine_rtti self, spine_rtti rtti);
 

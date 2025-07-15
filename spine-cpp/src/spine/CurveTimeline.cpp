@@ -35,8 +35,7 @@ using namespace spine;
 
 RTTI_IMPL(CurveTimeline, Timeline)
 
-CurveTimeline::CurveTimeline(size_t frameCount, size_t frameEntries, size_t bezierCount) : Timeline(frameCount,
-																									frameEntries) {
+CurveTimeline::CurveTimeline(size_t frameCount, size_t frameEntries, size_t bezierCount) : Timeline(frameCount, frameEntries) {
 	_curves.setSize(frameCount + bezierCount * BEZIER_SIZE, 0);
 	_curves[frameCount - 1] = STEPPED;
 }
@@ -52,8 +51,8 @@ void CurveTimeline::setStepped(size_t frame) {
 	_curves[frame] = STEPPED;
 }
 
-void CurveTimeline::setBezier(size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1,
-							  float cx2, float cy2, float time2, float value2) {
+void CurveTimeline::setBezier(size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2,
+							  float time2, float value2) {
 	size_t i = getFrameCount() + bezier * BEZIER_SIZE;
 	if (value == 0) _curves[frame] = BEZIER + i;
 	float tmpx = (time1 - cx1 * 2 + cx2) * 0.03, tmpy = (value1 - cy1 * 2 + cy2) * 0.03;
@@ -96,9 +95,7 @@ Array<float> &CurveTimeline::getCurves() {
 
 RTTI_IMPL(CurveTimeline1, CurveTimeline)
 
-CurveTimeline1::CurveTimeline1(size_t frameCount, size_t bezierCount) : CurveTimeline(frameCount,
-																					  CurveTimeline1::ENTRIES,
-																					  bezierCount) {
+CurveTimeline1::CurveTimeline1(size_t frameCount, size_t bezierCount) : CurveTimeline(frameCount, CurveTimeline1::ENTRIES, bezierCount) {
 }
 
 CurveTimeline1::~CurveTimeline1() {
@@ -123,8 +120,9 @@ float CurveTimeline1::getCurveValue(float time) {
 	switch (curveType) {
 		case CurveTimeline::LINEAR: {
 			float before = _frames[i], value = _frames[i + CurveTimeline1::VALUE];
-			return value + (time - before) / (_frames[i + CurveTimeline1::ENTRIES] - before) *
-								   (_frames[i + CurveTimeline1::ENTRIES + CurveTimeline1::VALUE] - value);
+			return value +
+				(time - before) / (_frames[i + CurveTimeline1::ENTRIES] - before) *
+				(_frames[i + CurveTimeline1::ENTRIES + CurveTimeline1::VALUE] - value);
 		}
 		case CurveTimeline::STEPPED:
 			return _frames[i + CurveTimeline1::VALUE];
@@ -203,8 +201,7 @@ float CurveTimeline1::getAbsoluteValue(float time, float alpha, MixBlend blend, 
 	return current;
 }
 
-float CurveTimeline1::getScaleValue(float time, float alpha, MixBlend blend, MixDirection direction, float current,
-									float setup) {
+float CurveTimeline1::getScaleValue(float time, float alpha, MixBlend blend, MixDirection direction, float current, float setup) {
 	if (time < _frames[0]) {
 		switch (blend) {
 			case MixBlend_Setup:
@@ -251,9 +248,7 @@ float CurveTimeline1::getScaleValue(float time, float alpha, MixBlend blend, Mix
 
 RTTI_IMPL(CurveTimeline2, CurveTimeline)
 
-CurveTimeline2::CurveTimeline2(size_t frameCount, size_t bezierCount) : CurveTimeline(frameCount,
-																					  CurveTimeline2::ENTRIES,
-																					  bezierCount) {
+CurveTimeline2::CurveTimeline2(size_t frameCount, size_t bezierCount) : CurveTimeline(frameCount, CurveTimeline2::ENTRIES, bezierCount) {
 }
 
 CurveTimeline2::~CurveTimeline2() {

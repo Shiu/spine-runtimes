@@ -66,7 +66,10 @@ class GodotSpineTextureLoader : public spine::TextureLoader {
 	String specular_map_prefix;
 
 public:
-	GodotSpineTextureLoader(Array *_textures, Array *_normal_maps, Array *_specular_maps, const String &normal_map_prefix, const String &specular_map_prefix, bool is_importing) : textures(_textures), normal_maps(_normal_maps), specular_maps(_specular_maps), normal_map_prefix(normal_map_prefix), specular_map_prefix(specular_map_prefix) {
+	GodotSpineTextureLoader(Array *_textures, Array *_normal_maps, Array *_specular_maps, const String &normal_map_prefix,
+							const String &specular_map_prefix, bool is_importing)
+		: textures(_textures), normal_maps(_normal_maps), specular_maps(_specular_maps), normal_map_prefix(normal_map_prefix),
+		  specular_map_prefix(specular_map_prefix) {
 	}
 
 	static bool fix_path(String &path) {
@@ -407,7 +410,8 @@ Error SpineAtlasResource::copy_from(const Ref<Resource> &p_resource) {
 Variant SpineAtlasResourceFormatLoader::_load(const String &path, const String &original_path, bool use_sub_threads, int32_t cache_mode) {
 #else
 #if VERSION_MAJOR > 3
-RES SpineAtlasResourceFormatLoader::load(const String &path, const String &original_path, Error *error, bool use_sub_threads, float *progress, CacheMode cache_mode) {
+RES SpineAtlasResourceFormatLoader::load(const String &path, const String &original_path, Error *error, bool use_sub_threads, float *progress,
+										 CacheMode cache_mode) {
 #else
 #if VERSION_MINOR > 5
 RES SpineAtlasResourceFormatLoader::load(const String &path, const String &original_path, Error *error, bool p_no_subresource_cache) {
@@ -434,8 +438,7 @@ PackedStringArray SpineAtlasResourceFormatLoader::_get_recognized_extensions() {
 #else
 void SpineAtlasResourceFormatLoader::get_recognized_extensions(List<String> *extensions) const {
 	const char atlas_ext[] = "spatlas";
-	if (!extensions->find(atlas_ext))
-		extensions->push_back(atlas_ext);
+	if (!extensions->find(atlas_ext)) extensions->push_back(atlas_ext);
 }
 #endif
 
@@ -478,8 +481,7 @@ PackedStringArray SpineAtlasResourceFormatSaver::_get_recognized_extensions(cons
 }
 #else
 void SpineAtlasResourceFormatSaver::get_recognized_extensions(const RES &resource, List<String> *extensions) const {
-	if (Object::cast_to<SpineAtlasResource>(*resource))
-		extensions->push_back("spatlas");
+	if (Object::cast_to<SpineAtlasResource>(*resource)) extensions->push_back("spatlas");
 }
 #endif
 

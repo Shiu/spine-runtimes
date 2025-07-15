@@ -41,7 +41,8 @@ using namespace spine;
 
 RTTI_IMPL(TransformConstraint, Constraint)
 
-TransformConstraint::TransformConstraint(TransformConstraintData &data, Skeleton &skeleton) : ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose>(data) {
+TransformConstraint::TransformConstraint(TransformConstraintData &data, Skeleton &skeleton)
+	: ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose>(data) {
 
 	_bones.ensureCapacity(data.getBones().size());
 	for (size_t i = 0; i < data.getBones().size(); i++) {
@@ -109,8 +110,7 @@ void TransformConstraint::sort(Skeleton &skeleton) {
 	size_t boneCount = _bones.size();
 	bool worldTarget = !_data._localTarget;
 	if (worldTarget) {
-		for (size_t i = 0; i < boneCount; i++)
-			skeleton.sortBone(bones[i]->_bone);
+		for (size_t i = 0; i < boneCount; i++) skeleton.sortBone(bones[i]->_bone);
 	}
 	skeleton._updateCache.add(this);
 	for (size_t i = 0; i < boneCount; i++) {
@@ -118,8 +118,7 @@ void TransformConstraint::sort(Skeleton &skeleton) {
 		skeleton.sortReset(bone->_children);
 		skeleton.constrained(*bone);
 	}
-	for (size_t i = 0; i < boneCount; i++)
-		bones[i]->_bone->_sorted = worldTarget;
+	for (size_t i = 0; i < boneCount; i++) bones[i]->_bone->_sorted = worldTarget;
 }
 
 bool TransformConstraint::isSourceActive() {

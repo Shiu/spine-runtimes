@@ -45,10 +45,12 @@ namespace spine {
 		friend class Constraint;
 
 	public:
-		ConstraintData(const String &name) : SpineObject(name) {}
-		virtual ~ConstraintData() {}
+		ConstraintData(const String &name) : SpineObject(name) {
+		}
+		virtual ~ConstraintData() {
+		}
 
-		virtual Constraint* create(Skeleton& skeleton) = 0;
+		virtual Constraint *create(Skeleton &skeleton) = 0;
 
 		virtual const String &getName() const = 0;
 
@@ -57,16 +59,22 @@ namespace spine {
 
 	/// Base class for all constraint data types.
 	template<class T, class P>
-	class SP_API ConstraintDataGeneric: public PosedDataGeneric<P>, public ConstraintData {
+	class SP_API ConstraintDataGeneric : public PosedDataGeneric<P>, public ConstraintData {
 	public:
-		ConstraintDataGeneric(const String &name) : PosedDataGeneric<P>(name), ConstraintData(name) {}
-		virtual ~ConstraintDataGeneric() {}
+		ConstraintDataGeneric(const String &name) : PosedDataGeneric<P>(name), ConstraintData(name) {
+		}
+		virtual ~ConstraintDataGeneric() {
+		}
 
-		virtual Constraint* create(Skeleton& skeleton) override = 0;
+		virtual Constraint *create(Skeleton &skeleton) override = 0;
 
 		// Resolve ambiguity by forwarding to PosedData's implementation
-		virtual const String &getName() const override { return PosedDataGeneric<P>::getName(); }
-		virtual bool getSkinRequired() const override { return PosedDataGeneric<P>::getSkinRequired(); }
+		virtual const String &getName() const override {
+			return PosedDataGeneric<P>::getName();
+		}
+		virtual bool getSkinRequired() const override {
+			return PosedDataGeneric<P>::getSkinRequired();
+		}
 	};
 }
 

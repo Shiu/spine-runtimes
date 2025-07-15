@@ -13,8 +13,10 @@ SPINE_C_API spine_attachment_timeline spine_attachment_timeline_create(size_t fr
 SPINE_C_API void spine_attachment_timeline_dispose(spine_attachment_timeline self);
 
 SPINE_C_API spine_rtti spine_attachment_timeline_get_rtti(spine_attachment_timeline self);
-SPINE_C_API void spine_attachment_timeline_apply(spine_attachment_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
-SPINE_C_API void spine_attachment_timeline_set_frame(spine_attachment_timeline self, int frame, float time, const char * attachmentName);
+SPINE_C_API void spine_attachment_timeline_apply(spine_attachment_timeline self, spine_skeleton skeleton, float lastTime, float time,
+												 spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+												 bool appliedPose);
+SPINE_C_API void spine_attachment_timeline_set_frame(spine_attachment_timeline self, int frame, float time, const char *attachmentName);
 SPINE_C_API size_t spine_attachment_timeline_get_frame_entries(spine_attachment_timeline self);
 SPINE_C_API size_t spine_attachment_timeline_get_frame_count(spine_attachment_timeline self);
 SPINE_C_API spine_array_float spine_attachment_timeline_get_frames(spine_attachment_timeline self);

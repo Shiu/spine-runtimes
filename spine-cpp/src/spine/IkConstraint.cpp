@@ -41,8 +41,8 @@ using namespace spine;
 
 RTTI_IMPL(IkConstraint, Constraint)
 
-IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton) : ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>(data),
-																		 _target(skeleton._bones[data._target->getIndex()]) {
+IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton)
+	: ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>(data), _target(skeleton._bones[data._target->getIndex()]) {
 
 	_bones.ensureCapacity(data._bones.size());
 	for (size_t i = 0; i < data._bones.size(); i++) {
@@ -66,8 +66,8 @@ void IkConstraint::update(Skeleton &skeleton, Physics physics) {
 			apply(skeleton, *_bones[0], target._worldX, target._worldY, p._compress, p._stretch, _data._uniform, p._mix);
 		} break;
 		case 2: {
-			apply(skeleton, *_bones[0], *_bones[1], target._worldX, target._worldY, p._bendDirection, p._stretch, _data._uniform,
-				  p._softness, p._mix);
+			apply(skeleton, *_bones[0], *_bones[1], target._worldX, target._worldY, p._bendDirection, p._stretch, _data._uniform, p._softness,
+				  p._mix);
 		} break;
 	}
 }
@@ -162,8 +162,8 @@ void IkConstraint::apply(Skeleton &skeleton, BonePose &bone, float targetX, floa
 	}
 }
 
-void IkConstraint::apply(Skeleton &skeleton, BonePose &parent, BonePose &child, float targetX, float targetY, int bendDir,
-						 bool stretch, bool uniform, float softness, float mix) {
+void IkConstraint::apply(Skeleton &skeleton, BonePose &parent, BonePose &child, float targetX, float targetY, int bendDir, bool stretch, bool uniform,
+						 float softness, float mix) {
 	if (parent._inherit != Inherit_Normal || child._inherit != Inherit_Normal) return;
 	parent.modifyLocal(skeleton);
 	child.modifyLocal(skeleton);

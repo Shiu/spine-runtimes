@@ -42,19 +42,19 @@ namespace spine {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		SlotCurveTimeline(size_t frameCount, size_t frameEntries, size_t bezierCount, int slotIndex);
 
 		virtual ~SlotCurveTimeline();
 
-		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
-						   MixBlend blend, MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 
 	protected:
 		/// Applies the timeline to the slot pose.
-		virtual void apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) = 0;
+		virtual void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) = 0;
 	};
 }
 

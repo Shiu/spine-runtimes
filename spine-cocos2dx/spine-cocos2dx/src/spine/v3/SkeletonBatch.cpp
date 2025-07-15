@@ -63,9 +63,8 @@ namespace spine {
 
 		// callback after drawing is finished so we can clear out the batch state
 		// for the next frame
-		Director::getInstance()->getEventDispatcher()->addCustomEventListener(EVENT_AFTER_DRAW_RESET_POSITION, [this](EventCustom *eventCustom) {
-			this->update(0);
-		});
+		Director::getInstance()->getEventDispatcher()->addCustomEventListener(EVENT_AFTER_DRAW_RESET_POSITION,
+																			  [this](EventCustom *eventCustom) { this->update(0); });
 		;
 	}
 
@@ -129,7 +128,10 @@ namespace spine {
 	}
 
 
-	cocos2d::TrianglesCommand *SkeletonBatch::addCommand(cocos2d::Renderer *renderer, float globalOrder, cocos2d::Texture2D *texture, cocos2d::GLProgramState *glProgramState, cocos2d::BlendFunc blendType, const cocos2d::TrianglesCommand::Triangles &triangles, const cocos2d::Mat4 &mv, uint32_t flags) {
+	cocos2d::TrianglesCommand *SkeletonBatch::addCommand(cocos2d::Renderer *renderer, float globalOrder, cocos2d::Texture2D *texture,
+														 cocos2d::GLProgramState *glProgramState, cocos2d::BlendFunc blendType,
+														 const cocos2d::TrianglesCommand::Triangles &triangles, const cocos2d::Mat4 &mv,
+														 uint32_t flags) {
 		TrianglesCommand *command = nextFreeCommand();
 		command->init(globalOrder, texture, glProgramState, blendType, triangles, mv, flags);
 		renderer->addCommand(command);

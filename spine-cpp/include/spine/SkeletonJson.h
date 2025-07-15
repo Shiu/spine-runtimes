@@ -77,9 +77,13 @@ namespace spine {
 
 		SkeletonData *readSkeletonData(const char *json);
 
-		void setScale(float scale) { _scale = scale; }
+		void setScale(float scale) {
+			_scale = scale;
+		}
 
-		const String &getError() const { return _error; }
+		const String &getError() const {
+			return _error;
+		}
 
 	private:
 		AttachmentLoader *_attachmentLoader;
@@ -90,20 +94,16 @@ namespace spine {
 
 		static Sequence *readSequence(Json *sequence);
 
-		static void
-		setBezier(CurveTimeline *timeline, int frame, int value, int bezier, float time1, float value1, float cx1,
-				  float cy1,
-				  float cx2, float cy2, float time2, float value2);
+		static void setBezier(CurveTimeline *timeline, int frame, int value, int bezier, float time1, float value1, float cx1, float cy1, float cx2,
+							  float cy2, float time2, float value2);
 
-		static int
-		readCurve(Json *curve, CurveTimeline *timeline, int bezier, int frame, int value, float time1, float time2,
-				  float value1, float value2, float scale);
+		static int readCurve(Json *curve, CurveTimeline *timeline, int bezier, int frame, int value, float time1, float time2, float value1,
+							 float value2, float scale);
 
 		static void readTimeline(Array<Timeline *> &timelines, Json *keyMap, CurveTimeline1 *timeline, float defaultValue, float scale);
 
-		static void
-		readTimeline(Array<Timeline *> &timelines, Json *keyMap, CurveTimeline2 *timeline, const char *name1, const char *name2, float defaultValue,
-					 float scale);
+		static void readTimeline(Array<Timeline *> &timelines, Json *keyMap, CurveTimeline2 *timeline, const char *name1, const char *name2,
+								 float defaultValue, float scale);
 
 		Animation *readAnimation(Json *root, SkeletonData *skeletonData);
 

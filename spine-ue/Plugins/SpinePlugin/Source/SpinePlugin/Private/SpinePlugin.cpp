@@ -42,13 +42,16 @@ IMPLEMENT_MODULE(FSpinePlugin, SpinePlugin)
 void FSpinePlugin::StartupModule() {
 }
 
-void FSpinePlugin::ShutdownModule() {}
+void FSpinePlugin::ShutdownModule() {
+}
 
 class Ue4Extension : public spine::DefaultSpineExtension {
 public:
-	Ue4Extension() : spine::DefaultSpineExtension() {}
+	Ue4Extension() : spine::DefaultSpineExtension() {
+	}
 
-	virtual ~Ue4Extension() {}
+	virtual ~Ue4Extension() {
+	}
 
 	virtual void *_alloc(size_t size, const char *file, int line) {
 		return FMemory::Malloc(size);

@@ -41,7 +41,8 @@ namespace spine {
 
 	public:
 		ConstraintTimeline1(size_t frameCount, size_t bezierCount, int constraintIndex, Property property);
-		virtual ~ConstraintTimeline1() {}
+		virtual ~ConstraintTimeline1() {
+		}
 	};
 }
 

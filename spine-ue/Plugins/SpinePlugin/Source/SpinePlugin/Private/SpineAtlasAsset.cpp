@@ -44,13 +44,11 @@ void USpineAtlasAsset::SetAtlasFileName(const FName &AtlasFileName) {
 	importData->UpdateFilenameOnly(AtlasFileName.ToString());
 	TArray<FString> files;
 	importData->ExtractFilenames(files);
-	if (files.Num() > 0)
-		atlasFileName = FName(*files[0]);
+	if (files.Num() > 0) atlasFileName = FName(*files[0]);
 }
 
 void USpineAtlasAsset::PostInitProperties() {
-	if (!HasAnyFlags(RF_ClassDefaultObject))
-		importData = NewObject<UAssetImportData>(this, TEXT("AssetImportData"));
+	if (!HasAnyFlags(RF_ClassDefaultObject)) importData = NewObject<UAssetImportData>(this, TEXT("AssetImportData"));
 	Super::PostInitProperties();
 }
 
@@ -69,8 +67,7 @@ void USpineAtlasAsset::Serialize(FArchive &Ar) {
 FName USpineAtlasAsset::GetAtlasFileName() const {
 #if WITH_EDITORONLY_DATA
 	TArray<FString> files;
-	if (importData)
-		importData->ExtractFilenames(files);
+	if (importData) importData->ExtractFilenames(files);
 	if (files.Num() > 0)
 		return FName(*files[0]);
 	else
@@ -115,8 +112,7 @@ Atlas *USpineAtlasAsset::GetAtlas() {
 		}
 		std::string t = TCHAR_TO_UTF8(*rawData);
 
-		atlas = new (__FILE__, __LINE__)
-				Atlas(t.c_str(), strlen(t.c_str()), "", &_spineUETextureLoader);
+		atlas = new (__FILE__, __LINE__) Atlas(t.c_str(), strlen(t.c_str()), "", &_spineUETextureLoader);
 	}
 	return this->atlas;
 }

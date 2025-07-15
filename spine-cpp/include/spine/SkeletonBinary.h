@@ -125,9 +125,13 @@ namespace spine {
 
 		SkeletonData *readSkeletonDataFile(const String &path);
 
-		void setScale(float scale) { _scale = scale; }
+		void setScale(float scale) {
+			_scale = scale;
+		}
 
-		const String &getError() const { return _error; }
+		const String &getError() const {
+			return _error;
+		}
 
 	private:
 		struct DataInput : public SpineObject {
@@ -135,7 +139,9 @@ namespace spine {
 			const unsigned char *end;
 			SkeletonData *skeletonData;
 
-			DataInput(SkeletonData *skeletonData, const unsigned char *data, size_t length) : cursor(data), end(data + length), skeletonData(skeletonData) {}
+			DataInput(SkeletonData *skeletonData, const unsigned char *data, size_t length)
+				: cursor(data), end(data + length), skeletonData(skeletonData) {
+			}
 
 			inline int read() {
 				return readUnsignedByte();
@@ -234,8 +240,8 @@ namespace spine {
 
 		Skin *readSkin(DataInput &input, SkeletonData &skeletonData, bool defaultSkin, bool nonessential);
 
-		Attachment *readAttachment(DataInput &input, Skin &skin, int slotIndex, const String &attachmentName,
-								   SkeletonData &skeletonData, bool nonessential);
+		Attachment *readAttachment(DataInput &input, Skin &skin, int slotIndex, const String &attachmentName, SkeletonData &skeletonData,
+								   bool nonessential);
 
 		Sequence *readSequence(DataInput &input);
 
@@ -251,9 +257,8 @@ namespace spine {
 
 		void readTimeline(DataInput &input, Array<Timeline *> &timelines, BoneTimeline2 &timeline, float scale);
 
-		void
-		setBezier(DataInput &input, CurveTimeline &timeline, int bezier, int frame, int value, float time1, float time2,
-				  float value1, float value2, float scale);
+		void setBezier(DataInput &input, CurveTimeline &timeline, int bezier, int frame, int value, float time1, float time2, float value1,
+					   float value2, float scale);
 	};
 }// namespace spine
 

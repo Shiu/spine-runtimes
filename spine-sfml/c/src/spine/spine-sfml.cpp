@@ -56,7 +56,9 @@ void spColorArray_dispose(spColorArray *self) {
 	_spFree((void *) self->items);
 	_spFree((void *) self);
 }
-void spColorArray_clear(spColorArray *self) { self->size = 0; }
+void spColorArray_clear(spColorArray *self) {
+	self->size = 0;
+}
 spColorArray *spColorArray_setSize(spColorArray *self, int newSize) {
 	self->size = newSize;
 	if (self->capacity < newSize) {
@@ -79,11 +81,15 @@ void spColorArray_add(spColorArray *self, spColor value) {
 }
 void spColorArray_addAll(spColorArray *self, spColorArray *other) {
 	int i = 0;
-	for (; i < other->size; i++) { spColorArray_add(self, other->items[i]); }
+	for (; i < other->size; i++) {
+		spColorArray_add(self, other->items[i]);
+	}
 }
 void spColorArray_addAllValues(spColorArray *self, spColor *values, int offset, int count) {
 	int i = offset, n = offset + count;
-	for (; i < n; i++) { spColorArray_add(self, values[i]); }
+	for (; i < n; i++) {
+		spColorArray_add(self, values[i]);
+	}
 }
 void spColorArray_removeAt(spColorArray *self, int index) {
 	self->size--;
@@ -94,7 +100,9 @@ spColor spColorArray_pop(spColorArray *self) {
 	spColor item = self->items[--self->size];
 	return item;
 }
-spColor spColorArray_peek(spColorArray *self) { return self->items[self->size - 1]; }
+spColor spColorArray_peek(spColorArray *self) {
+	return self->items[self->size - 1];
+}
 
 void _spAtlasPage_createTexture(spAtlasPage *self, const char *path) {
 	Texture *texture = new Texture();
@@ -121,9 +129,8 @@ char *_spUtil_readFile(const char *path, int *length) {
 
 namespace spine {
 
-	SkeletonDrawable::SkeletonDrawable(spSkeletonData *skeletonData, spAnimationStateData *stateData) : timeScale(1),
-																										vertexArray(new VertexArray(Triangles, skeletonData->bonesCount * 4)),
-																										worldVertices(0), clipper(0) {
+	SkeletonDrawable::SkeletonDrawable(spSkeletonData *skeletonData, spAnimationStateData *stateData)
+		: timeScale(1), vertexArray(new VertexArray(Triangles, skeletonData->bonesCount * 4)), worldVertices(0), clipper(0) {
 		spBone_setYDown(true);
 		worldVertices = MALLOC(float, SPINE_MESH_VERTEX_COUNT_MAX);
 		skeleton = spSkeleton_create(skeletonData);

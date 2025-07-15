@@ -56,8 +56,12 @@ namespace spine {
 
 		virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
-		void setUsePremultipliedAlpha(bool usePMA) { usePremultipliedAlpha = usePMA; };
-		bool getUsePremultipliedAlpha() { return usePremultipliedAlpha; };
+		void setUsePremultipliedAlpha(bool usePMA) {
+			usePremultipliedAlpha = usePMA;
+		};
+		bool getUsePremultipliedAlpha() {
+			return usePremultipliedAlpha;
+		};
 
 	private:
 		bool ownsAnimationStateData;

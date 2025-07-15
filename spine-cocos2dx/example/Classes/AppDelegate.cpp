@@ -83,15 +83,18 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	if (frameSize.height > mediumResource.size.height) {
 		// if the frame's height is larger than the height of medium resource size, select large resource.
 		searchPath.push_back(largeResource.directory);
-		director->setContentScaleFactor(MIN(largeResource.size.height / designResolutionSize.height, largeResource.size.width / designResolutionSize.width));
+		director->setContentScaleFactor(
+			MIN(largeResource.size.height / designResolutionSize.height, largeResource.size.width / designResolutionSize.width));
 	} else if (frameSize.height > smallResource.size.height) {
 		// if the frame's height is larger than the height of small resource size, select medium resource.
 		searchPath.push_back(mediumResource.directory);
-		director->setContentScaleFactor(MIN(mediumResource.size.height / designResolutionSize.height, mediumResource.size.width / designResolutionSize.width));
+		director->setContentScaleFactor(
+			MIN(mediumResource.size.height / designResolutionSize.height, mediumResource.size.width / designResolutionSize.width));
 	} else {
 		// if the frame's height is smaller than the height of medium resource size, select small resource.
 		searchPath.push_back(smallResource.directory);
-		director->setContentScaleFactor(MIN(smallResource.size.height / designResolutionSize.height, smallResource.size.width / designResolutionSize.width));
+		director->setContentScaleFactor(
+			MIN(smallResource.size.height / designResolutionSize.height, smallResource.size.width / designResolutionSize.width));
 	}
 
 	searchPath.push_back("common");

@@ -18,8 +18,10 @@ SPINE_C_API bool spine_skeleton_bounds_aabb_intersects_segment(spine_skeleton_bo
 SPINE_C_API bool spine_skeleton_bounds_aabb_intersects_skeleton(spine_skeleton_bounds self, spine_skeleton_bounds bounds);
 SPINE_C_API bool spine_skeleton_bounds_contains_point_1(spine_skeleton_bounds self, spine_polygon polygon, float x, float y);
 SPINE_C_API spine_bounding_box_attachment spine_skeleton_bounds_contains_point_2(spine_skeleton_bounds self, float x, float y);
-SPINE_C_API spine_bounding_box_attachment spine_skeleton_bounds_intersects_segment_1(spine_skeleton_bounds self, float x1, float y1, float x2, float y2);
-SPINE_C_API bool spine_skeleton_bounds_intersects_segment_2(spine_skeleton_bounds self, spine_polygon polygon, float x1, float y1, float x2, float y2);
+SPINE_C_API spine_bounding_box_attachment spine_skeleton_bounds_intersects_segment_1(spine_skeleton_bounds self, float x1, float y1, float x2,
+																					 float y2);
+SPINE_C_API bool spine_skeleton_bounds_intersects_segment_2(spine_skeleton_bounds self, spine_polygon polygon, float x1, float y1, float x2,
+															float y2);
 SPINE_C_API spine_polygon spine_skeleton_bounds_get_polygon(spine_skeleton_bounds self, spine_bounding_box_attachment attachment);
 SPINE_C_API spine_bounding_box_attachment spine_skeleton_bounds_get_bounding_box(spine_skeleton_bounds self, spine_polygon polygon);
 SPINE_C_API spine_array_polygon spine_skeleton_bounds_get_polygons(spine_skeleton_bounds self);

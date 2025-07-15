@@ -36,8 +36,7 @@ using namespace spine;
 
 RTTI_IMPL_NOPARENT(Timeline)
 
-Timeline::Timeline(size_t frameCount, size_t frameEntries)
-	: _propertyIds(), _frames(), _frameEntries(frameEntries) {
+Timeline::Timeline(size_t frameCount, size_t frameEntries) : _propertyIds(), _frames(), _frameEntries(frameEntries) {
 	_frames.setSize(frameCount * frameEntries, 0);
 }
 

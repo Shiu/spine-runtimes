@@ -39,7 +39,7 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit EventTimeline(size_t frameCount);
@@ -47,9 +47,8 @@ namespace spine {
 		~EventTimeline();
 
 		/// Fires events for frames > lastTime and <= time.
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 
 		size_t getFrameCount();
 

@@ -51,14 +51,14 @@ namespace spine {
 
 	class PathConstraintData;
 
-    class PhysicsConstraintData;
+	class PhysicsConstraintData;
 
 	class ConstraintData;
 
-/// Stores the setup pose and all of the stateless data for a skeleton.
-///
-/// See <a href="https://esotericsoftware.com/spine-runtime-architecture#Data-objects">Data objects</a> in the Spine Runtimes
-/// Guide.
+	/// Stores the setup pose and all of the stateless data for a skeleton.
+	///
+	/// See <a href="https://esotericsoftware.com/spine-runtime-architecture#Data-objects">Data objects</a> in the Spine Runtimes
+	/// Guide.
 	class SP_API SkeletonData : public SpineObject {
 		friend class SkeletonBinary;
 
@@ -123,11 +123,11 @@ namespace spine {
 		/// @return May be NULL.
 		template<class T>
 		T *findConstraint(const String &constraintName) {
-			getConstraints(); // Ensure constraints array is populated
+			getConstraints();// Ensure constraints array is populated
 			for (size_t i = 0, n = _constraints.size(); i < n; i++) {
 				ConstraintData *constraint = _constraints[i];
 				if (constraint->getName() == constraintName && constraint->getRTTI().instanceOf(T::rtti)) {
-					return static_cast<T*>(constraint);
+					return static_cast<T *>(constraint);
 				}
 			}
 			return NULL;
@@ -153,11 +153,11 @@ namespace spine {
 
 		void setHeight(float inValue);
 
-        /// Baseline scale factor for applying physics and other effects based on distance to non-scalable properties, such as angle or
-        /// scale. Default is 100.
-        float getReferenceScale();
+		/// Baseline scale factor for applying physics and other effects based on distance to non-scalable properties, such as angle or
+		/// scale. Default is 100.
+		float getReferenceScale();
 
-        void setReferenceScale(float inValue);
+		void setReferenceScale(float inValue);
 
 		/// The Spine version used to export this data, or NULL.
 		const String &getVersion();
@@ -186,15 +186,15 @@ namespace spine {
 
 	private:
 		String _name;
-		Array<BoneData *> _bones; // Ordered parents first
-		Array<SlotData *> _slots; // Setup pose draw order.
+		Array<BoneData *> _bones;// Ordered parents first
+		Array<SlotData *> _slots;// Setup pose draw order.
 		Array<Skin *> _skins;
 		Skin *_defaultSkin;
 		Array<EventData *> _events;
 		Array<Animation *> _animations;
 		Array<ConstraintData *> _constraints;
 		float _x, _y, _width, _height;
-        float _referenceScale;
+		float _referenceScale;
 		String _version;
 		String _hash;
 		Array<char *> _strings;

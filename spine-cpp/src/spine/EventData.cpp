@@ -33,13 +33,7 @@
 
 using namespace spine;
 
-EventData::EventData(const String &name) : _name(name),
-										   _intValue(0),
-										   _floatValue(0),
-										   _stringValue(),
-										   _audioPath(),
-										   _volume(1),
-										   _balance(0) {
+EventData::EventData(const String &name) : _name(name), _intValue(0), _floatValue(0), _stringValue(), _audioPath(), _volume(1), _balance(0) {
 	assert(_name.length() > 0);
 }
 

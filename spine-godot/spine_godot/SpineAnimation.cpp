@@ -62,12 +62,12 @@ void SpineAnimation::set_duration(float duration) {
 	get_spine_object()->setDuration(duration);
 }
 
-void SpineAnimation::apply(Ref<SpineSkeleton> skeleton, float last_time, float time, bool loop,
-						   Array events, float alpha, SpineConstant::MixBlend blend,
-						   SpineConstant::MixDirection direction) {
+void SpineAnimation::apply(Ref<SpineSkeleton> skeleton, float last_time, float time, bool loop, Array events, float alpha,
+						   SpineConstant::MixBlend blend, SpineConstant::MixDirection direction) {
 	SPINE_CHECK(get_spine_object(), )
 	spine::Vector<spine::Event *> spineEvents;
-	get_spine_object()->apply(*(skeleton->get_spine_object()), last_time, time, loop, &spineEvents, alpha, (spine::MixBlend) blend, (spine::MixDirection) direction);
+	get_spine_object()->apply(*(skeleton->get_spine_object()), last_time, time, loop, &spineEvents, alpha, (spine::MixBlend) blend,
+							  (spine::MixDirection) direction);
 	for (int i = 0; i < (int) spineEvents.size(); ++i) {
 		auto event_ref = memnew(SpineEvent);
 		event_ref->set_spine_object(skeleton->get_spine_owner(), spineEvents[i]);

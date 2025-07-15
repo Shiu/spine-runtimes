@@ -65,7 +65,7 @@ SPINE_C_API float spine_track_entry_get_track_complete(spine_track_entry self);
 SPINE_C_API bool spine_track_entry_is_empty_animation(spine_track_entry self);
 SPINE_C_API bool spine_track_entry_was_applied(spine_track_entry self);
 SPINE_C_API bool spine_track_entry_is_next_ready(spine_track_entry self);
-SPINE_C_API void * spine_track_entry_get_renderer_object(spine_track_entry self);
+SPINE_C_API void *spine_track_entry_get_renderer_object(spine_track_entry self);
 
 #ifdef __cplusplus
 }

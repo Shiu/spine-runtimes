@@ -65,7 +65,8 @@ static RenderCommand *createRenderCommand(BlockAllocator &allocator, int numVert
 	return cmd;
 }
 
-static RenderCommand *batchSubCommands(BlockAllocator &allocator, Array<RenderCommand *> &commands, int first, int last, int numVertices, int numIndices) {
+static RenderCommand *batchSubCommands(BlockAllocator &allocator, Array<RenderCommand *> &commands, int first, int last, int numVertices,
+									   int numIndices) {
 	RenderCommand *batched = createRenderCommand(allocator, numVertices, numIndices, commands[first]->blendMode, commands[first]->texture);
 	float *positions = batched->positions;
 	float *uvs = batched->uvs;
@@ -79,8 +80,7 @@ static RenderCommand *batchSubCommands(BlockAllocator &allocator, Array<RenderCo
 		memcpy(uvs, cmd->uvs, sizeof(float) * 2 * cmd->numVertices);
 		memcpy(colors, cmd->colors, sizeof(int32_t) * cmd->numVertices);
 		memcpy(darkColors, cmd->darkColors, sizeof(int32_t) * cmd->numVertices);
-		for (int ii = 0; ii < cmd->numIndices; ii++)
-			indices[ii] = cmd->indices[ii] + indicesOffset;
+		for (int ii = 0; ii < cmd->numIndices; ii++) indices[ii] = cmd->indices[ii] + indicesOffset;
 		indicesOffset += cmd->numVertices;
 		positions += 2 * cmd->numVertices;
 		uvs += 2 * cmd->numVertices;
@@ -110,11 +110,8 @@ static RenderCommand *batchCommands(BlockAllocator &allocator, Array<RenderComma
 			continue;
 		}
 
-		if (cmd != nullptr && cmd->texture == first->texture &&
-			cmd->blendMode == first->blendMode &&
-			cmd->colors[0] == first->colors[0] &&
-			cmd->darkColors[0] == first->darkColors[0] &&
-			numIndices + cmd->numIndices < 0xffff) {
+		if (cmd != nullptr && cmd->texture == first->texture && cmd->blendMode == first->blendMode && cmd->colors[0] == first->colors[0] &&
+			cmd->darkColors[0] == first->darkColors[0] && numIndices + cmd->numIndices < 0xffff) {
 			numVertices += cmd->numVertices;
 			numIndices += cmd->numIndices;
 		} else {
@@ -217,7 +214,8 @@ RenderCommand *SkeletonRenderer::render(Skeleton &skeleton) {
 		uint32_t darkColor = 0xff000000;
 		if (slot.getAppliedPose().hasDarkColor()) {
 			Color &slotDarkColor = slot.getAppliedPose().getDarkColor();
-			darkColor = 0xff000000 | (static_cast<uint8_t>(slotDarkColor.r * 255) << 16) | (static_cast<uint8_t>(slotDarkColor.g * 255) << 8) | static_cast<uint8_t>(slotDarkColor.b * 255);
+			darkColor = 0xff000000 | (static_cast<uint8_t>(slotDarkColor.r * 255) << 16) | (static_cast<uint8_t>(slotDarkColor.g * 255) << 8) |
+				static_cast<uint8_t>(slotDarkColor.b * 255);
 		}
 
 		if (clipper.isClipping()) {

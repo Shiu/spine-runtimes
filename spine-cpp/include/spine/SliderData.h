@@ -56,10 +56,10 @@ namespace spine {
 		explicit SliderData(const String &name);
 
 		/// Creates a slider instance.
-		virtual Constraint* create(Skeleton& skeleton) override;
+		virtual Constraint *create(Skeleton &skeleton) override;
 
-		Animation* getAnimation();
-		void setAnimation(Animation* animation);
+		Animation *getAnimation();
+		void setAnimation(Animation *animation);
 
 		bool getAdditive();
 		void setAdditive(bool additive);
@@ -67,11 +67,11 @@ namespace spine {
 		bool getLoop();
 		void setLoop(bool loop);
 
-		BoneData* getBone();
-		void setBone(BoneData* bone);
+		BoneData *getBone();
+		void setBone(BoneData *bone);
 
-		FromProperty* getProperty();
-		void setProperty(FromProperty* property);
+		FromProperty *getProperty();
+		void setProperty(FromProperty *property);
 
 		float getScale();
 		void setScale(float scale);
@@ -83,11 +83,11 @@ namespace spine {
 		void setLocal(bool local);
 
 	private:
-		Animation* _animation;
+		Animation *_animation;
 		bool _additive;
 		bool _loop;
-		BoneData* _bone;
-		FromProperty* _property;
+		BoneData *_bone;
+		FromProperty *_property;
 		float _offset;
 		float _scale;
 		bool _local;

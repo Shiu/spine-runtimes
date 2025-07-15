@@ -70,7 +70,8 @@ void Slider::update(Skeleton &skeleton, Physics physics) {
 	if (_bone != NULL) {
 		if (!_bone->isActive()) return;
 		if (_data._local) _bone->_applied->validateLocalTransform(skeleton);
-		p._time = _data._offset + (_data._property->value(skeleton, *_bone->_applied, _data._local, _offsets) - _data._property->_offset) * _data._scale;
+		p._time = _data._offset +
+			(_data._property->value(skeleton, *_bone->_applied, _data._local, _offsets) - _data._property->_offset) * _data._scale;
 		if (_data._loop)
 			p._time = animation->getDuration() + MathUtil::fmod(p._time, animation->getDuration());
 		else
@@ -79,11 +80,9 @@ void Slider::update(Skeleton &skeleton, Physics physics) {
 
 	Array<Bone *> &bones = skeleton._bones;
 	const Array<int> &indices = animation->getBones();
-	for (size_t i = 0, n = indices.size(); i < n; i++)
-		bones[indices[i]]->_applied->modifyLocal(skeleton);
+	for (size_t i = 0, n = indices.size(); i < n; i++) bones[indices[i]]->_applied->modifyLocal(skeleton);
 
-	animation->apply(skeleton, p._time, p._time, _data._loop, NULL, p._mix, _data._additive ? MixBlend_Add : MixBlend_Replace,
-					 MixDirection_In, true);
+	animation->apply(skeleton, p._time, p._time, _data._loop, NULL, p._mix, _data._additive ? MixBlend_Add : MixBlend_Replace, MixDirection_In, true);
 }
 
 void Slider::sort(Skeleton &skeleton) {
@@ -113,8 +112,7 @@ void Slider::sort(Skeleton &skeleton) {
 		} else if (t->getRTTI().instanceOf(PhysicsConstraintTimeline::rtti)) {
 			PhysicsConstraintTimeline *timeline = (PhysicsConstraintTimeline *) t;
 			if (timeline->getConstraintIndex() == -1) {
-				for (size_t ii = 0; ii < physicsCount; ii++)
-					skeleton.constrained(*physics[ii]);
+				for (size_t ii = 0; ii < physicsCount; ii++) skeleton.constrained(*physics[ii]);
 			} else
 				skeleton.constrained((Posed &) *constraints[timeline->getConstraintIndex()]);
 		} else if (t->getRTTI().instanceOf(ConstraintTimeline::rtti)) {

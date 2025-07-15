@@ -126,13 +126,11 @@ Array<int> &Triangulator::triangulate(Array<float> &vertices) {
 
 Array<Array<float> *> &Triangulator::decompose(Array<float> &vertices, Array<int> &triangles) {
 	Array<Array<float> *> &convexPolygons = _convexPolygons;
-	for (size_t i = 0, n = convexPolygons.size(); i < n; ++i)
-		_polygonPool.free(convexPolygons[i]);
+	for (size_t i = 0, n = convexPolygons.size(); i < n; ++i) _polygonPool.free(convexPolygons[i]);
 	convexPolygons.clear();
 
 	Array<Array<int> *> &convexPolygonsIndices = _convexPolygonsIndices;
-	for (size_t i = 0, n = convexPolygonsIndices.size(); i < n; ++i)
-		_polygonIndicesPool.free(convexPolygonsIndices[i]);
+	for (size_t i = 0, n = convexPolygonsIndices.size(); i < n; ++i) _polygonIndicesPool.free(convexPolygonsIndices[i]);
 	convexPolygonsIndices.clear();
 
 	Array<int> *polygonIndices = _polygonIndicesPool.obtain();
@@ -270,9 +268,7 @@ bool Triangulator::isConcave(int index, int vertexCount, Array<float> &vertices,
 	int current = indices[index] << 1;
 	int next = indices[(index + 1) % vertexCount] << 1;
 
-	return !positiveArea(vertices[previous], vertices[previous + 1],
-						 vertices[current], vertices[current + 1],
-						 vertices[next], vertices[next + 1]);
+	return !positiveArea(vertices[previous], vertices[previous + 1], vertices[current], vertices[current + 1], vertices[next], vertices[next + 1]);
 }
 
 bool Triangulator::positiveArea(float p1x, float p1y, float p2x, float p2y, float p3x, float p3y) {

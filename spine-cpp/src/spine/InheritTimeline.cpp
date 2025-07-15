@@ -42,8 +42,7 @@ using namespace spine;
 
 RTTI_IMPL_MULTI(InheritTimeline, Timeline, BoneTimeline)
 
-InheritTimeline::InheritTimeline(size_t frameCount, int boneIndex) : Timeline(frameCount, ENTRIES),
-																	 BoneTimeline(boneIndex) {
+InheritTimeline::InheritTimeline(size_t frameCount, int boneIndex) : Timeline(frameCount, ENTRIES), BoneTimeline(boneIndex) {
 	PropertyId ids[] = {((PropertyId) Property_Inherit << 32) | boneIndex};
 	setPropertyIds(ids, 1);
 }
@@ -58,8 +57,8 @@ void InheritTimeline::setFrame(int frame, float time, Inherit inherit) {
 }
 
 
-void InheritTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
-							MixBlend blend, MixDirection direction, bool appliedPose) {
+void InheritTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+							MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 	SP_UNUSED(alpha);

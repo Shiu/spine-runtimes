@@ -43,8 +43,7 @@ using namespace spine;
 
 RTTI_IMPL_MULTI(AttachmentTimeline, Timeline, SlotTimeline)
 
-AttachmentTimeline::AttachmentTimeline(size_t frameCount, int slotIndex) : Timeline(frameCount, 1),
-																		   SlotTimeline(slotIndex) {
+AttachmentTimeline::AttachmentTimeline(size_t frameCount, int slotIndex) : Timeline(frameCount, 1), SlotTimeline(slotIndex) {
 	PropertyId ids[] = {((PropertyId) Property_Attachment << 32) | slotIndex};
 	setPropertyIds(ids, 1);
 
@@ -54,14 +53,15 @@ AttachmentTimeline::AttachmentTimeline(size_t frameCount, int slotIndex) : Timel
 	}
 }
 
-AttachmentTimeline::~AttachmentTimeline() {}
+AttachmentTimeline::~AttachmentTimeline() {
+}
 
 void AttachmentTimeline::setAttachment(Skeleton &skeleton, SlotPose &pose, String *attachmentName) {
 	pose.setAttachment(attachmentName == NULL || attachmentName->isEmpty() ? NULL : skeleton.getAttachment(_slotIndex, *attachmentName));
 }
 
-void AttachmentTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
-							   MixBlend blend, MixDirection direction, bool appliedPose) {
+void AttachmentTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+							   MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 	SP_UNUSED(alpha);

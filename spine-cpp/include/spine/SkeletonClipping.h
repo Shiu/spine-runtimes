@@ -48,14 +48,11 @@ namespace spine {
 
 		void clipEnd();
 
-        bool
-        clipTriangles(float *vertices, unsigned short *triangles, size_t trianglesLength);
+		bool clipTriangles(float *vertices, unsigned short *triangles, size_t trianglesLength);
 
-		bool
-		clipTriangles(float *vertices, unsigned short *triangles, size_t trianglesLength, float *uvs, size_t stride);
+		bool clipTriangles(float *vertices, unsigned short *triangles, size_t trianglesLength, float *uvs, size_t stride);
 
-		bool
-		clipTriangles(Array<float> &vertices, Array<unsigned short> &triangles, Array<float> &uvs, size_t stride);
+		bool clipTriangles(Array<float> &vertices, Array<unsigned short> &triangles, Array<float> &uvs, size_t stride);
 
 		bool isClipping();
 
@@ -78,8 +75,7 @@ namespace spine {
 
 		/** Clips the input triangle against the convex, clockwise clipping area. If the triangle lies entirely within the clipping
 		  * area, false is returned. The clipping area must duplicate the first vertex at the end of the vertices list. */
-		bool clip(float x1, float y1, float x2, float y2, float x3, float y3, Array<float> *clippingArea,
-				  Array<float> *output);
+		bool clip(float x1, float y1, float x2, float y2, float x3, float y3, Array<float> *clippingArea, Array<float> *output);
 
 		static void makeClockwise(Array<float> &polygon);
 	};

@@ -3,62 +3,75 @@
 
 using namespace spine;
 
-spine_bone_data spine_bone_data_create(int index, const char * name, spine_bone_data parent) {
-    return (spine_bone_data) new (__FILE__, __LINE__) BoneData(index, String(name), (BoneData *)parent);
+spine_bone_data spine_bone_data_create(int index, const char *name, spine_bone_data parent) {
+	return (spine_bone_data) new (__FILE__, __LINE__) BoneData(index, String(name), (BoneData *) parent);
 }
 
 void spine_bone_data_dispose(spine_bone_data self) {
-    delete (BoneData*)self;
+	delete (BoneData *) self;
 }
 
 int spine_bone_data_get_index(spine_bone_data self) {
-    return ((BoneData*)self)->getIndex();
+	BoneData *_self = (BoneData *) self;
+	return _self->getIndex();
 }
 
 spine_bone_data spine_bone_data_get_parent(spine_bone_data self) {
-    return (spine_bone_data)((BoneData*)self)->getParent();
+	BoneData *_self = (BoneData *) self;
+	return (spine_bone_data) _self->getParent();
 }
 
 float spine_bone_data_get_length(spine_bone_data self) {
-    return ((BoneData*)self)->getLength();
+	BoneData *_self = (BoneData *) self;
+	return _self->getLength();
 }
 
 void spine_bone_data_set_length(spine_bone_data self, float inValue) {
-    ((BoneData*)self)->setLength(inValue);
+	BoneData *_self = (BoneData *) self;
+	_self->setLength(inValue);
 }
 
 spine_color spine_bone_data_get_color(spine_bone_data self) {
-    return (spine_color)&((BoneData*)self)->getColor();
+	BoneData *_self = (BoneData *) self;
+	return (spine_color) &_self->getColor();
 }
 
-const char * spine_bone_data_get_icon(spine_bone_data self) {
-    return ((BoneData*)self)->getIcon().buffer();
+const char *spine_bone_data_get_icon(spine_bone_data self) {
+	BoneData *_self = (BoneData *) self;
+	return _self->getIcon().buffer();
 }
 
-void spine_bone_data_set_icon(spine_bone_data self, const char * icon) {
-    ((BoneData*)self)->setIcon(String(icon));
+void spine_bone_data_set_icon(spine_bone_data self, const char *icon) {
+	BoneData *_self = (BoneData *) self;
+	_self->setIcon(String(icon));
 }
 
 bool spine_bone_data_get_visible(spine_bone_data self) {
-    return ((BoneData*)self)->getVisible();
+	BoneData *_self = (BoneData *) self;
+	return _self->getVisible();
 }
 
 void spine_bone_data_set_visible(spine_bone_data self, bool inValue) {
-    ((BoneData*)self)->setVisible(inValue);
+	BoneData *_self = (BoneData *) self;
+	_self->setVisible(inValue);
 }
 
 spine_bone_local spine_bone_data_get_setup_pose(spine_bone_data self) {
-    return (spine_bone_local)&((PosedDataGeneric<BoneLocal>*)(BoneData*)self)->getSetupPose();
+	PosedDataGeneric<BoneLocal> *_self = (PosedDataGeneric<BoneLocal> *) (BoneData *) self;
+	return (spine_bone_local) &_self->getSetupPose();
 }
 
-const char * spine_bone_data_get_name(spine_bone_data self) {
-    return ((PosedDataGeneric<BoneLocal>*)(BoneData*)self)->getName().buffer();
+const char *spine_bone_data_get_name(spine_bone_data self) {
+	PosedDataGeneric<BoneLocal> *_self = (PosedDataGeneric<BoneLocal> *) (BoneData *) self;
+	return _self->getName().buffer();
 }
 
 bool spine_bone_data_get_skin_required(spine_bone_data self) {
-    return ((PosedDataGeneric<BoneLocal>*)(BoneData*)self)->getSkinRequired();
+	PosedDataGeneric<BoneLocal> *_self = (PosedDataGeneric<BoneLocal> *) (BoneData *) self;
+	return _self->getSkinRequired();
 }
 
 void spine_bone_data_set_skin_required(spine_bone_data self, bool skinRequired) {
-    ((PosedDataGeneric<BoneLocal>*)(BoneData*)self)->setSkinRequired(skinRequired);
+	PosedDataGeneric<BoneLocal> *_self = (PosedDataGeneric<BoneLocal> *) (BoneData *) self;
+	_self->setSkinRequired(skinRequired);
 }

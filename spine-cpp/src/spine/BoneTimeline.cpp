@@ -42,13 +42,14 @@ RTTI_IMPL_NOPARENT(BoneTimeline)
 
 RTTI_IMPL_MULTI(BoneTimeline1, CurveTimeline1, BoneTimeline)
 
-BoneTimeline1::BoneTimeline1(size_t frameCount, size_t bezierCount, int boneIndex, Property property) : CurveTimeline1(frameCount, bezierCount), BoneTimeline(boneIndex) {
+BoneTimeline1::BoneTimeline1(size_t frameCount, size_t bezierCount, int boneIndex, Property property)
+	: CurveTimeline1(frameCount, bezierCount), BoneTimeline(boneIndex) {
 	PropertyId ids[] = {((PropertyId) property << 32) | boneIndex};
 	setPropertyIds(ids, 1);
 }
 
-void BoneTimeline1::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
-						  MixBlend blend, MixDirection direction, bool appliedPose) {
+void BoneTimeline1::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						  MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 
@@ -60,13 +61,14 @@ void BoneTimeline1::apply(Skeleton &skeleton, float lastTime, float time, Array<
 
 RTTI_IMPL_MULTI(BoneTimeline2, CurveTimeline2, BoneTimeline)
 
-BoneTimeline2::BoneTimeline2(size_t frameCount, size_t bezierCount, int boneIndex, Property property1, Property property2) : CurveTimeline2(frameCount, bezierCount), BoneTimeline(boneIndex) {
+BoneTimeline2::BoneTimeline2(size_t frameCount, size_t bezierCount, int boneIndex, Property property1, Property property2)
+	: CurveTimeline2(frameCount, bezierCount), BoneTimeline(boneIndex) {
 	PropertyId ids[] = {((PropertyId) property1 << 32) | boneIndex, ((PropertyId) property2 << 32) | boneIndex};
 	setPropertyIds(ids, 2);
 }
 
-void BoneTimeline2::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
-						  MixBlend blend, MixDirection direction, bool appliedPose) {
+void BoneTimeline2::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						  MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 

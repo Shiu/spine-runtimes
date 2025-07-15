@@ -70,7 +70,7 @@ namespace spine {
 	class AttachmentTimeline;
 
 #ifdef SPINE_USE_STD_FUNCTION
-	typedef std::function<void (AnimationState* state, EventType type, TrackEntry* entry, Event* event)> AnimationStateListener;
+	typedef std::function<void(AnimationState *state, EventType type, TrackEntry *entry, Event *event)> AnimationStateListener;
 #else
 
 	typedef void (*AnimationStateListener)(AnimationState *state, EventType type, TrackEntry *entry, Event *event);
@@ -83,6 +83,7 @@ namespace spine {
 		AnimationStateListenerObject() {};
 
 		virtual ~AnimationStateListenerObject() {};
+
 	public:
 		/// The callback function to be called
 		virtual void callback(AnimationState *state, EventType type, TrackEntry *entry, Event *event) = 0;
@@ -106,7 +107,7 @@ namespace spine {
 		Animation *getAnimation();
 
 		/// Sets the animation for this track entry.
-		void setAnimation(Animation* animation);
+		void setAnimation(Animation *animation);
 
 		TrackEntry *getPrevious();
 
@@ -240,11 +241,11 @@ namespace spine {
 
 		void setMixAttachmentThreshold(float inValue);
 
-        /// When getAlpha() is greater than alphaAttachmentThreshold, attachment timelines are applied.
-	    /// Defaults to 0, so attachment timelines are always applied. */
-        float getAlphaAttachmentThreshold();
+		/// When getAlpha() is greater than alphaAttachmentThreshold, attachment timelines are applied.
+		/// Defaults to 0, so attachment timelines are always applied. */
+		float getAlphaAttachmentThreshold();
 
-        void setAlphaAttachmentThreshold(float inValue);
+		void setAlphaAttachmentThreshold(float inValue);
 
 		/// When the mix percentage (mix time / mix duration) is less than the draw order threshold, draw order timelines for the
 		/// animation being mixed out will be applied. Defaults to 0, so draw order timelines are not applied for an animation being
@@ -277,12 +278,12 @@ namespace spine {
 
 		void setMixDuration(float inValue);
 
-        /// Sets both getMixDuration() and getDelay().
-        /// @param delay If > 0, sets TrackEntry::getDelay(). If <= 0, the delay set is the duration of the previous track
-        ///           entry minus the specified mix duration plus the specified delay (ie the mix ends at
-        ///           (delay = 0) or before (delay < 0) the previous track entry duration). If the previous
-        ///           entry is looping, its next loop completion is used instead of its duration.
-        void setMixDuration(float mixDuration, float delay);
+		/// Sets both getMixDuration() and getDelay().
+		/// @param delay If > 0, sets TrackEntry::getDelay(). If <= 0, the delay set is the duration of the previous track
+		///           entry minus the specified mix duration plus the specified delay (ie the mix ends at
+		///           (delay = 0) or before (delay < 0) the previous track entry duration). If the previous
+		///           entry is looping, its next loop completion is used instead of its duration.
+		void setMixDuration(float mixDuration, float delay);
 
 		MixBlend getMixBlend();
 
@@ -314,16 +315,16 @@ namespace spine {
 		/// Returns true if this entry is for the empty animation.
 		bool isEmptyAnimation();
 
-        /// Returns true if this track entry has been applied at least once.
-        ///
-        /// See AnimationState::apply(Skeleton).
-        bool wasApplied();
+		/// Returns true if this track entry has been applied at least once.
+		///
+		/// See AnimationState::apply(Skeleton).
+		bool wasApplied();
 
-        /// Returns true if there is a getNext() track entry that is ready to become the current track entry during the
-        /// next AnimationState::update(float)}
-        bool isNextReady () {
-            return _next != NULL && _nextTrackLast - _next->_delay >= 0;
-        }
+		/// Returns true if there is a getNext() track entry that is ready to become the current track entry during the
+		/// next AnimationState::update(float)}
+		bool isNextReady() {
+			return _next != NULL && _nextTrackLast - _next->_delay >= 0;
+		}
 
 	private:
 		Animation *_animation;
@@ -522,7 +523,7 @@ namespace spine {
 
 		void setManualTrackEntryDisposal(bool inValue);
 
-        bool getManualTrackEntryDisposal();
+		bool getManualTrackEntryDisposal();
 
 		void disposeTrackEntry(TrackEntry *entry);
 
@@ -559,16 +560,15 @@ namespace spine {
 
 		/// Applies the rotate timeline, mixing with the current pose while keeping the same rotation direction chosen as the shortest
 		/// the first time the mixing was applied.
-		static void
-		applyRotateTimeline(RotateTimeline *rotateTimeline, Skeleton &skeleton, float time, float alpha, MixBlend pose,
-							Array<float> &timelinesRotation, size_t i, bool firstFrame);
+		static void applyRotateTimeline(RotateTimeline *rotateTimeline, Skeleton &skeleton, float time, float alpha, MixBlend pose,
+										Array<float> &timelinesRotation, size_t i, bool firstFrame);
 
 		/// Applies the attachment timeline and sets Slot::attachmentState.
 		/// @param attachments False when: 1) the attachment timeline is mixing out, 2) mix < attachmentThreshold, and 3) the timeline
 		/// is not the last timeline to set the slot's attachment. In that case the timeline is applied only so subsequent
 		/// timelines see any deform.
-		void applyAttachmentTimeline(AttachmentTimeline *attachmentTimeline, Skeleton &skeleton, float animationTime,
-									 MixBlend pose, bool attachments);
+		void applyAttachmentTimeline(AttachmentTimeline *attachmentTimeline, Skeleton &skeleton, float animationTime, MixBlend pose,
+									 bool attachments);
 
 		/// Returns true when all mixing from entries are complete.
 		bool updateMixingFrom(TrackEntry *to, float delta);

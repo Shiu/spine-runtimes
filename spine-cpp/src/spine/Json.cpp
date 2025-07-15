@@ -108,17 +108,12 @@ const char *Json::getError() {
 	return _error;
 }
 
-Json::Json(const char *value) : _next(NULL),
+Json::Json(const char *value)
+	: _next(NULL),
 #if SPINE_JSON_HAVE_PREV
-								_prev(NULL),
+	  _prev(NULL),
 #endif
-								_child(NULL),
-								_type(0),
-								_size(0),
-								_valueString(NULL),
-								_valueInt(0),
-								_valueFloat(0),
-								_name(NULL) {
+	  _child(NULL), _type(0), _size(0), _valueString(NULL), _valueInt(0), _valueFloat(0), _name(NULL) {
 	if (value) {
 		value = parseValue(this, skip(value));
 

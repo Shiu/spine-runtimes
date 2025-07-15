@@ -6,8 +6,8 @@ extern "C" {
 #endif
 
 typedef enum spine_mix_direction {
-    SPINE_MIX_DIRECTION_IN = 0,
-    SPINE_MIX_DIRECTION_OUT
+	SPINE_MIX_DIRECTION_IN = 0,
+	SPINE_MIX_DIRECTION_OUT
 } spine_mix_direction;
 
 #ifdef __cplusplus

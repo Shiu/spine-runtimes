@@ -57,35 +57,60 @@ namespace spine {
 
 		~TwoColorTrianglesCommand();
 
-		void init(float globalOrder, GLuint textureID, cocos2d::GLProgramState *glProgramState, cocos2d::BlendFunc blendType, const TwoColorTriangles &triangles, const cocos2d::Mat4 &mv, uint32_t flags);
+		void init(float globalOrder, GLuint textureID, cocos2d::GLProgramState *glProgramState, cocos2d::BlendFunc blendType,
+				  const TwoColorTriangles &triangles, const cocos2d::Mat4 &mv, uint32_t flags);
 
 		void useMaterial() const;
 
-		inline uint32_t getMaterialID() const { return _materialID; }
+		inline uint32_t getMaterialID() const {
+			return _materialID;
+		}
 
-		inline GLuint getTextureID() const { return _textureID; }
+		inline GLuint getTextureID() const {
+			return _textureID;
+		}
 
-		inline const TwoColorTriangles &getTriangles() const { return _triangles; }
+		inline const TwoColorTriangles &getTriangles() const {
+			return _triangles;
+		}
 
-		inline ssize_t getVertexCount() const { return _triangles.vertCount; }
+		inline ssize_t getVertexCount() const {
+			return _triangles.vertCount;
+		}
 
-		inline ssize_t getIndexCount() const { return _triangles.indexCount; }
+		inline ssize_t getIndexCount() const {
+			return _triangles.indexCount;
+		}
 
-		inline const V3F_C4B_C4B_T2F *getVertices() const { return _triangles.verts; }
+		inline const V3F_C4B_C4B_T2F *getVertices() const {
+			return _triangles.verts;
+		}
 
-		inline const unsigned short *getIndices() const { return _triangles.indices; }
+		inline const unsigned short *getIndices() const {
+			return _triangles.indices;
+		}
 
-		inline cocos2d::GLProgramState *getGLProgramState() const { return _glProgramState; }
+		inline cocos2d::GLProgramState *getGLProgramState() const {
+			return _glProgramState;
+		}
 
-		inline cocos2d::BlendFunc getBlendType() const { return _blendType; }
+		inline cocos2d::BlendFunc getBlendType() const {
+			return _blendType;
+		}
 
-		inline const cocos2d::Mat4 &getModelView() const { return _mv; }
+		inline const cocos2d::Mat4 &getModelView() const {
+			return _mv;
+		}
 
 		void draw();
 
-		void setForceFlush(bool forceFlush) { _forceFlush = forceFlush; }
+		void setForceFlush(bool forceFlush) {
+			_forceFlush = forceFlush;
+		}
 
-		bool isForceFlush() { return _forceFlush; };
+		bool isForceFlush() {
+			return _forceFlush;
+		};
 
 	protected:
 		void generateMaterialID();
@@ -114,15 +139,21 @@ namespace spine {
 		unsigned short *allocateIndices(uint32_t numIndices);
 		void deallocateIndices(uint32_t numIndices);
 
-		TwoColorTrianglesCommand *addCommand(cocos2d::Renderer *renderer, float globalOrder, GLuint textureID, cocos2d::GLProgramState *glProgramState, cocos2d::BlendFunc blendType, const TwoColorTriangles &triangles, const cocos2d::Mat4 &mv, uint32_t flags);
+		TwoColorTrianglesCommand *addCommand(cocos2d::Renderer *renderer, float globalOrder, GLuint textureID,
+											 cocos2d::GLProgramState *glProgramState, cocos2d::BlendFunc blendType,
+											 const TwoColorTriangles &triangles, const cocos2d::Mat4 &mv, uint32_t flags);
 
-		cocos2d::GLProgramState *getTwoColorTintProgramState() { return _twoColorTintShaderState; }
+		cocos2d::GLProgramState *getTwoColorTintProgramState() {
+			return _twoColorTintShaderState;
+		}
 
 		void batch(TwoColorTrianglesCommand *command);
 
 		void flush(TwoColorTrianglesCommand *materialCommand);
 
-		uint32_t getNumBatches() { return _numBatches; };
+		uint32_t getNumBatches() {
+			return _numBatches;
+		};
 
 	protected:
 		SkeletonTwoColorBatch();

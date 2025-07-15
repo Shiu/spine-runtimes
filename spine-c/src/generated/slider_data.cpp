@@ -3,102 +3,124 @@
 
 using namespace spine;
 
-spine_slider_data spine_slider_data_create(const char * name) {
-    return (spine_slider_data) new (__FILE__, __LINE__) SliderData(String(name));
+spine_slider_data spine_slider_data_create(const char *name) {
+	return (spine_slider_data) new (__FILE__, __LINE__) SliderData(String(name));
 }
 
 void spine_slider_data_dispose(spine_slider_data self) {
-    delete (SliderData*)self;
+	delete (SliderData *) self;
 }
 
 spine_rtti spine_slider_data_get_rtti(spine_slider_data self) {
-    return (spine_rtti)&((SliderData*)self)->getRTTI();
+	SliderData *_self = (SliderData *) self;
+	return (spine_rtti) &_self->getRTTI();
 }
 
 spine_constraint spine_slider_data_create_method(spine_slider_data self, spine_skeleton skeleton) {
-    return (spine_constraint)((SliderData*)self)->create(*((Skeleton*)skeleton));
+	SliderData *_self = (SliderData *) self;
+	return (spine_constraint) _self->create(*((Skeleton *) skeleton));
 }
 
 spine_animation spine_slider_data_get_animation(spine_slider_data self) {
-    return (spine_animation)((SliderData*)self)->getAnimation();
+	SliderData *_self = (SliderData *) self;
+	return (spine_animation) _self->getAnimation();
 }
 
 void spine_slider_data_set_animation(spine_slider_data self, spine_animation animation) {
-    ((SliderData*)self)->setAnimation((Animation *)animation);
+	SliderData *_self = (SliderData *) self;
+	_self->setAnimation((Animation *) animation);
 }
 
 bool spine_slider_data_get_additive(spine_slider_data self) {
-    return ((SliderData*)self)->getAdditive();
+	SliderData *_self = (SliderData *) self;
+	return _self->getAdditive();
 }
 
 void spine_slider_data_set_additive(spine_slider_data self, bool additive) {
-    ((SliderData*)self)->setAdditive(additive);
+	SliderData *_self = (SliderData *) self;
+	_self->setAdditive(additive);
 }
 
 bool spine_slider_data_get_loop(spine_slider_data self) {
-    return ((SliderData*)self)->getLoop();
+	SliderData *_self = (SliderData *) self;
+	return _self->getLoop();
 }
 
 void spine_slider_data_set_loop(spine_slider_data self, bool loop) {
-    ((SliderData*)self)->setLoop(loop);
+	SliderData *_self = (SliderData *) self;
+	_self->setLoop(loop);
 }
 
 spine_bone_data spine_slider_data_get_bone(spine_slider_data self) {
-    return (spine_bone_data)((SliderData*)self)->getBone();
+	SliderData *_self = (SliderData *) self;
+	return (spine_bone_data) _self->getBone();
 }
 
 void spine_slider_data_set_bone(spine_slider_data self, spine_bone_data bone) {
-    ((SliderData*)self)->setBone((BoneData *)bone);
+	SliderData *_self = (SliderData *) self;
+	_self->setBone((BoneData *) bone);
 }
 
 spine_from_property spine_slider_data_get_property(spine_slider_data self) {
-    return (spine_from_property)((SliderData*)self)->getProperty();
+	SliderData *_self = (SliderData *) self;
+	return (spine_from_property) _self->getProperty();
 }
 
 void spine_slider_data_set_property(spine_slider_data self, spine_from_property property) {
-    ((SliderData*)self)->setProperty((FromProperty *)property);
+	SliderData *_self = (SliderData *) self;
+	_self->setProperty((FromProperty *) property);
 }
 
 float spine_slider_data_get_scale(spine_slider_data self) {
-    return ((SliderData*)self)->getScale();
+	SliderData *_self = (SliderData *) self;
+	return _self->getScale();
 }
 
 void spine_slider_data_set_scale(spine_slider_data self, float scale) {
-    ((SliderData*)self)->setScale(scale);
+	SliderData *_self = (SliderData *) self;
+	_self->setScale(scale);
 }
 
 float spine_slider_data_get_offset(spine_slider_data self) {
-    return ((SliderData*)self)->getOffset();
+	SliderData *_self = (SliderData *) self;
+	return _self->getOffset();
 }
 
 void spine_slider_data_set_offset(spine_slider_data self, float offset) {
-    ((SliderData*)self)->setOffset(offset);
+	SliderData *_self = (SliderData *) self;
+	_self->setOffset(offset);
 }
 
 bool spine_slider_data_get_local(spine_slider_data self) {
-    return ((SliderData*)self)->getLocal();
+	SliderData *_self = (SliderData *) self;
+	return _self->getLocal();
 }
 
 void spine_slider_data_set_local(spine_slider_data self, bool local) {
-    ((SliderData*)self)->setLocal(local);
+	SliderData *_self = (SliderData *) self;
+	_self->setLocal(local);
 }
 
-const char * spine_slider_data_get_name(spine_slider_data self) {
-    return ((ConstraintDataGeneric<Slider, SliderPose>*)(SliderData*)self)->getName().buffer();
+const char *spine_slider_data_get_name(spine_slider_data self) {
+	ConstraintDataGeneric<Slider, SliderPose> *_self = (ConstraintDataGeneric<Slider, SliderPose> *) (SliderData *) self;
+	return _self->getName().buffer();
 }
 
 bool spine_slider_data_get_skin_required(spine_slider_data self) {
-    return ((ConstraintDataGeneric<Slider, SliderPose>*)(SliderData*)self)->getSkinRequired();
+	ConstraintDataGeneric<Slider, SliderPose> *_self = (ConstraintDataGeneric<Slider, SliderPose> *) (SliderData *) self;
+	return _self->getSkinRequired();
 }
 
 spine_slider_pose spine_slider_data_get_setup_pose(spine_slider_data self) {
-    return (spine_slider_pose)&((ConstraintDataGeneric<Slider, SliderPose>*)(SliderData*)self)->getSetupPose();
+	ConstraintDataGeneric<Slider, SliderPose> *_self = (ConstraintDataGeneric<Slider, SliderPose> *) (SliderData *) self;
+	return (spine_slider_pose) &_self->getSetupPose();
 }
 
 void spine_slider_data_set_skin_required(spine_slider_data self, bool skinRequired) {
-    ((ConstraintDataGeneric<Slider, SliderPose>*)(SliderData*)self)->setSkinRequired(skinRequired);
+	ConstraintDataGeneric<Slider, SliderPose> *_self = (ConstraintDataGeneric<Slider, SliderPose> *) (SliderData *) self;
+	_self->setSkinRequired(skinRequired);
 }
 
 spine_rtti spine_slider_data_rtti(void) {
-    return (spine_rtti)&SliderData::rtti;
+	return (spine_rtti) &SliderData::rtti;
 }

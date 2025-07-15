@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_transform_constraint_data spine_transform_constraint_data_create(const char * name);
+SPINE_C_API spine_transform_constraint_data spine_transform_constraint_data_create(const char *name);
 
 SPINE_C_API void spine_transform_constraint_data_dispose(spine_transform_constraint_data self);
 
@@ -38,7 +38,7 @@ SPINE_C_API void spine_transform_constraint_data_set_additive(spine_transform_co
 SPINE_C_API bool spine_transform_constraint_data_get_clamp(spine_transform_constraint_data self);
 SPINE_C_API void spine_transform_constraint_data_set_clamp(spine_transform_constraint_data self, bool clamp);
 SPINE_C_API spine_array_from_property spine_transform_constraint_data_get_properties(spine_transform_constraint_data self);
-SPINE_C_API const char * spine_transform_constraint_data_get_name(spine_transform_constraint_data self);
+SPINE_C_API const char *spine_transform_constraint_data_get_name(spine_transform_constraint_data self);
 SPINE_C_API bool spine_transform_constraint_data_get_skin_required(spine_transform_constraint_data self);
 SPINE_C_API spine_transform_constraint_pose spine_transform_constraint_data_get_setup_pose(spine_transform_constraint_data self);
 SPINE_C_API void spine_transform_constraint_data_set_skin_required(spine_transform_constraint_data self, bool skinRequired);

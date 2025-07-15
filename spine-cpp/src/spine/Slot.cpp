@@ -37,10 +37,8 @@
 
 using namespace spine;
 
-Slot::Slot(SlotData &data, Skeleton &skeleton) : PosedGeneric<SlotData, SlotPose, SlotPose>(data),
-												 _skeleton(skeleton),
-												 _bone(*skeleton.getBones()[data._boneData._index]),
-												 _attachmentState(0) {
+Slot::Slot(SlotData &data, Skeleton &skeleton)
+	: PosedGeneric<SlotData, SlotPose, SlotPose>(data), _skeleton(skeleton), _bone(*skeleton.getBones()[data._boneData._index]), _attachmentState(0) {
 
 	if (data.getSetupPose().hasDarkColor()) {
 		_pose._hasDarkColor = true;

@@ -43,7 +43,8 @@ using namespace spine;
 
 RTTI_IMPL_MULTI(SequenceTimeline, Timeline, SlotTimeline)
 
-SequenceTimeline::SequenceTimeline(size_t frameCount, int slotIndex, Attachment *attachment) : Timeline(frameCount, ENTRIES), SlotTimeline(slotIndex), _attachment((HasTextureRegion *) attachment) {
+SequenceTimeline::SequenceTimeline(size_t frameCount, int slotIndex, Attachment *attachment)
+	: Timeline(frameCount, ENTRIES), SlotTimeline(slotIndex), _attachment((HasTextureRegion *) attachment) {
 	int sequenceId = 0;
 	if (attachment->getRTTI().instanceOf(RegionAttachment::rtti)) sequenceId = ((RegionAttachment *) attachment)->getSequence()->getId();
 	if (attachment->getRTTI().instanceOf(MeshAttachment::rtti)) sequenceId = ((MeshAttachment *) attachment)->getSequence()->getId();
@@ -62,8 +63,8 @@ void SequenceTimeline::setFrame(int frame, float time, SequenceMode mode, int in
 	frames[frame + DELAY] = delay;
 }
 
-void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents,
-							 float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
+void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+							 MixDirection direction, bool appliedPose) {
 	SP_UNUSED(alpha);
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
@@ -74,7 +75,9 @@ void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Arr
 
 	Attachment *slotAttachment = pose.getAttachment();
 	if (slotAttachment != (Attachment *) _attachment) {
-		if (slotAttachment == NULL || !slotAttachment->getRTTI().instanceOf(VertexAttachment::rtti) || ((VertexAttachment *) slotAttachment)->getTimelineAttachment() != (Attachment *) _attachment) return;
+		if (slotAttachment == NULL || !slotAttachment->getRTTI().instanceOf(VertexAttachment::rtti) ||
+			((VertexAttachment *) slotAttachment)->getTimelineAttachment() != (Attachment *) _attachment)
+			return;
 	}
 	Sequence *sequence = NULL;
 	if (((Attachment *) _attachment)->getRTTI().instanceOf(RegionAttachment::rtti)) sequence = ((RegionAttachment *) _attachment)->getSequence();

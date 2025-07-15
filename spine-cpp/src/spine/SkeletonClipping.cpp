@@ -85,8 +85,7 @@ void SkeletonClipping::clipEnd() {
 	_clippingPolygon.clear();
 }
 
-bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
-									 size_t trianglesLength) {
+bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles, size_t trianglesLength) {
 	Array<float> &clipOutput = _clipOutput;
 	Array<float> &clippedVertices = _clippedVertices;
 	Array<unsigned short> &clippedTriangles = _clippedTriangles;
@@ -159,13 +158,11 @@ bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
 	return clipped;
 }
 
-bool SkeletonClipping::clipTriangles(Array<float> &vertices, Array<unsigned short> &triangles, Array<float> &uvs,
-									 size_t stride) {
+bool SkeletonClipping::clipTriangles(Array<float> &vertices, Array<unsigned short> &triangles, Array<float> &uvs, size_t stride) {
 	return clipTriangles(vertices.buffer(), triangles.buffer(), triangles.size(), uvs.buffer(), stride);
 }
 
-bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
-									 size_t trianglesLength, float *uvs, size_t stride) {
+bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles, size_t trianglesLength, float *uvs, size_t stride) {
 	Array<float> &clipOutput = _clipOutput;
 	Array<float> &clippedVertices = _clippedVertices;
 	Array<unsigned short> &clippedTriangles = _clippedTriangles;
@@ -273,8 +270,7 @@ Array<float> &SkeletonClipping::getClippedUVs() {
 	return _clippedUVs;
 }
 
-bool SkeletonClipping::clip(float x1, float y1, float x2, float y2, float x3, float y3, Array<float> *clippingArea,
-							Array<float> *output) {
+bool SkeletonClipping::clip(float x1, float y1, float x2, float y2, float x3, float y3, Array<float> *clippingArea, Array<float> *output) {
 	Array<float> *originalOutput = output;
 	bool clipped = false;
 
@@ -363,8 +359,7 @@ bool SkeletonClipping::clip(float x1, float y1, float x2, float y2, float x3, fl
 
 	if (originalOutput != output) {
 		originalOutput->clear();
-		for (size_t i = 0, n = output->size() - 2; i < n; ++i)
-			originalOutput->add((*output)[i]);
+		for (size_t i = 0, n = output->size() - 2; i < n; ++i) originalOutput->add((*output)[i]);
 	} else
 		originalOutput->setSize(originalOutput->size() - 2, 0);
 

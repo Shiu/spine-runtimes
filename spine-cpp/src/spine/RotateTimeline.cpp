@@ -35,11 +35,11 @@ using namespace spine;
 
 RTTI_IMPL(RotateTimeline, BoneTimeline1)
 
-RotateTimeline::RotateTimeline(size_t frameCount, size_t bezierCount, int boneIndex) : BoneTimeline1(frameCount, bezierCount, boneIndex, Property_Rotate) {
+RotateTimeline::RotateTimeline(size_t frameCount, size_t bezierCount, int boneIndex)
+	: BoneTimeline1(frameCount, bezierCount, boneIndex, Property_Rotate) {
 }
 
-void RotateTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-						   MixDirection direction) {
+void RotateTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	SP_UNUSED(direction);
 	pose._rotation = getRelativeValue(time, alpha, blend, pose._rotation, setup._rotation);
 }

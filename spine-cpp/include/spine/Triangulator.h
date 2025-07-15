@@ -40,24 +40,18 @@ namespace spine {
 
 		Array<int> &triangulate(Array<float> &vertices);
 
-		Array<Array < float>* > &
-		decompose(Array<float>
-		&vertices,
-		Array<int> &triangles
-		);
+		Array<Array<float> *> &decompose(Array<float> &vertices, Array<int> &triangles);
 
 	private:
-		Array<Array < float>* >
-		_convexPolygons;
-		Array<Array < int>* >
-		_convexPolygonsIndices;
+		Array<Array<float> *> _convexPolygons;
+		Array<Array<int> *> _convexPolygonsIndices;
 
 		Array<int> _indices;
 		Array<bool> _isConcaveArray;
 		Array<int> _triangles;
 
-		Pool <Array<float>> _polygonPool;
-		Pool <Array<int>> _polygonIndicesPool;
+		Pool<Array<float>> _polygonPool;
+		Pool<Array<int>> _polygonIndicesPool;
 
 		static bool isConcave(int index, int vertexCount, Array<float> &vertices, Array<int> &indices);
 

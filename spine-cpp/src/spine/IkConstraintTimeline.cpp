@@ -53,8 +53,8 @@ IkConstraintTimeline::IkConstraintTimeline(size_t frameCount, size_t bezierCount
 IkConstraintTimeline::~IkConstraintTimeline() {
 }
 
-void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
-								 MixBlend blend, MixDirection direction, bool appliedPose) {
+void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+								 MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 
@@ -104,9 +104,7 @@ void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time,
 		}
 		default: {
 			mix = getBezierValue(time, i, MIX, curveType - BEZIER);
-			softness = getBezierValue(time, i, SOFTNESS,
-									  curveType + BEZIER_SIZE -
-											  BEZIER);
+			softness = getBezierValue(time, i, SOFTNESS, curveType + BEZIER_SIZE - BEZIER);
 		}
 	}
 
@@ -140,8 +138,7 @@ void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time,
 	pose._stretch = _frames[i + STRETCH] != 0;
 }
 
-void IkConstraintTimeline::setFrame(int frame, float time, float mix, float softness, int bendDirection, bool compress,
-									bool stretch) {
+void IkConstraintTimeline::setFrame(int frame, float time, float mix, float softness, int bendDirection, bool compress, bool stretch) {
 	frame *= ENTRIES;
 	_frames[frame] = time;
 	_frames[frame + MIX] = mix;

@@ -119,8 +119,10 @@ FTransform USpineSkeletonComponent::GetBoneWorldTransform(const FString &BoneNam
 		FTransform baseTransform;
 		AActor *owner = GetOwner();
 		if (owner) {
-			USpineSkeletonRendererComponent *rendererComponent = static_cast<USpineSkeletonRendererComponent *>(owner->GetComponentByClass(USpineSkeletonRendererComponent::StaticClass()));
-			if (rendererComponent) baseTransform = rendererComponent->GetComponentTransform();
+			USpineSkeletonRendererComponent *rendererComponent = static_cast<USpineSkeletonRendererComponent *>(
+				owner->GetComponentByClass(USpineSkeletonRendererComponent::StaticClass()));
+			if (rendererComponent)
+				baseTransform = rendererComponent->GetComponentTransform();
 			else
 				baseTransform = owner->GetActorTransform();
 		}
@@ -152,8 +154,10 @@ void USpineSkeletonComponent::SetBoneWorldPosition(const FString &BoneName, cons
 		FTransform baseTransform;
 		AActor *owner = GetOwner();
 		if (owner) {
-			USpineSkeletonRendererComponent *rendererComponent = static_cast<USpineSkeletonRendererComponent *>(owner->GetComponentByClass(USpineSkeletonRendererComponent::StaticClass()));
-			if (rendererComponent) baseTransform = rendererComponent->GetComponentTransform();
+			USpineSkeletonRendererComponent *rendererComponent = static_cast<USpineSkeletonRendererComponent *>(
+				owner->GetComponentByClass(USpineSkeletonRendererComponent::StaticClass()));
+			if (rendererComponent)
+				baseTransform = rendererComponent->GetComponentTransform();
 			else
 				baseTransform = owner->GetActorTransform();
 		}
@@ -280,7 +284,8 @@ float USpineSkeletonComponent::GetAnimationDuration(FString AnimationName) {
 	CheckState();
 	if (skeleton) {
 		Animation *animation = skeleton->getData()->findAnimation(TCHAR_TO_UTF8(*AnimationName));
-		if (animation == nullptr) return 0;
+		if (animation == nullptr)
+			return 0;
 		else
 			return animation->getDuration();
 	}

@@ -41,7 +41,8 @@ struct SPINEPLUGIN_API FSpineEvent {
 	GENERATED_BODY();
 
 public:
-	FSpineEvent() : IntValue(0), FloatValue(0.0f), Time(0.0f) {}
+	FSpineEvent() : IntValue(0), FloatValue(0.0f), Time(0.0f) {
+	}
 
 	void SetEvent(spine::Event *event) {
 		Name = FString(UTF8_TO_TCHAR(event->getData().getName().buffer()));
@@ -81,127 +82,168 @@ class SPINEPLUGIN_API UTrackEntry : public UObject {
 	GENERATED_BODY()
 
 public:
-	UTrackEntry() {}
+	UTrackEntry() {
+	}
 
 	void SetTrackEntry(spine::TrackEntry *trackEntry);
-	spine::TrackEntry *GetTrackEntry() { return entry; }
+	spine::TrackEntry *GetTrackEntry() {
+		return entry;
+	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	int GetTrackIndex() { return entry ? entry->getTrackIndex() : 0; }
+	int GetTrackIndex() {
+		return entry ? entry->getTrackIndex() : 0;
+	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	bool GetLoop() { return entry ? entry->getLoop() : false; }
+	bool GetLoop() {
+		return entry ? entry->getLoop() : false;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetLoop(bool loop) {
 		if (entry) entry->setLoop(loop);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetEventThreshold() { return entry ? entry->getEventThreshold() : 0; }
+	float GetEventThreshold() {
+		return entry ? entry->getEventThreshold() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetEventThreshold(float eventThreshold) {
 		if (entry) entry->setEventThreshold(eventThreshold);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetAlphaAttachmentThreshold() { return entry ? entry->getAlphaAttachmentThreshold() : 0; }
+	float GetAlphaAttachmentThreshold() {
+		return entry ? entry->getAlphaAttachmentThreshold() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetAlphaAttachmentThreshold(float attachmentThreshold) {
 		if (entry) entry->setAlphaAttachmentThreshold(attachmentThreshold);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetMixDrawOrderThreshold() { return entry ? entry->getMixDrawOrderThreshold() : 0; }
+	float GetMixDrawOrderThreshold() {
+		return entry ? entry->getMixDrawOrderThreshold() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetMixDrawOrderThreshold(float drawOrderThreshold) {
 		if (entry) entry->setMixDrawOrderThreshold(drawOrderThreshold);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetMixAttachmentThreshold() { return entry ? entry->getMixAttachmentThreshold() : 0; }
+	float GetMixAttachmentThreshold() {
+		return entry ? entry->getMixAttachmentThreshold() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetMixAttachmentThreshold(float drawOrderThreshold) {
 		if (entry) entry->setMixAttachmentThreshold(drawOrderThreshold);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetAnimationStart() { return entry ? entry->getAnimationStart() : 0; }
+	float GetAnimationStart() {
+		return entry ? entry->getAnimationStart() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetAnimationStart(float animationStart) {
 		if (entry) entry->setAnimationStart(animationStart);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetAnimationEnd() { return entry ? entry->getAnimationEnd() : 0; }
+	float GetAnimationEnd() {
+		return entry ? entry->getAnimationEnd() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetAnimationEnd(float animationEnd) {
 		if (entry) entry->setAnimationEnd(animationEnd);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetAnimationLast() { return entry ? entry->getAnimationLast() : 0; }
+	float GetAnimationLast() {
+		return entry ? entry->getAnimationLast() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetAnimationLast(float animationLast) {
 		if (entry) entry->setAnimationLast(animationLast);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetDelay() { return entry ? entry->getDelay() : 0; }
+	float GetDelay() {
+		return entry ? entry->getDelay() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetDelay(float delay) {
 		if (entry) entry->setDelay(delay);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetTrackTime() { return entry ? entry->getTrackTime() : 0; }
+	float GetTrackTime() {
+		return entry ? entry->getTrackTime() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetTrackTime(float trackTime) {
 		if (entry) entry->setTrackTime(trackTime);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetTrackEnd() { return entry ? entry->getTrackEnd() : 0; }
+	float GetTrackEnd() {
+		return entry ? entry->getTrackEnd() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetTrackEnd(float trackEnd) {
 		if (entry) entry->setTrackEnd(trackEnd);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetTimeScale() { return entry ? entry->getTimeScale() : 0; }
+	float GetTimeScale() {
+		return entry ? entry->getTimeScale() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetTimeScale(float timeScale) {
 		if (entry) entry->setTimeScale(timeScale);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetAlpha() { return entry ? entry->getAlpha() : 0; }
+	float GetAlpha() {
+		return entry ? entry->getAlpha() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetAlpha(float alpha) {
 		if (entry) entry->setAlpha(alpha);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetMixTime() { return entry ? entry->getMixTime() : 0; }
+	float GetMixTime() {
+		return entry ? entry->getMixTime() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetMixTime(float mixTime) {
 		if (entry) entry->setMixTime(mixTime);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float GetMixDuration() { return entry ? entry->getMixDuration() : 0; }
+	float GetMixDuration() {
+		return entry ? entry->getMixDuration() : 0;
+	}
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	void SetMixDuration(float mixDuration) {
 		if (entry) entry->setMixDuration(mixDuration);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	FString getAnimationName() { return entry ? entry->getAnimation()->getName().buffer() : ""; }
+	FString getAnimationName() {
+		return entry ? entry->getAnimation()->getName().buffer() : "";
+	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	float getAnimationDuration() { return entry ? entry->getAnimation()->getDuration() : 0; }
+	float getAnimationDuration() {
+		return entry ? entry->getAnimation()->getDuration() : 0;
+	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
-	bool isValidAnimation() { return entry != nullptr; }
+	bool isValidAnimation() {
+		return entry != nullptr;
+	}
 
 	UPROPERTY(BlueprintAssignable, Category = "Components|Spine|TrackEntry")
 	FSpineAnimationStartDelegate AnimationStart;
@@ -233,7 +275,9 @@ class SPINEPLUGIN_API USpineSkeletonAnimationComponent : public USpineSkeletonCo
 	GENERATED_BODY()
 
 public:
-	spine::AnimationState *GetAnimationState() { return state; };
+	spine::AnimationState *GetAnimationState() {
+		return state;
+	};
 
 	USpineSkeletonAnimationComponent();
 
@@ -313,7 +357,9 @@ public:
 
 	// used in C event callback. Needs to be public as we can't call
 	// protected methods from plain old C function.
-	void GCTrackEntry(UTrackEntry *entry) { trackEntries.Remove(entry); }
+	void GCTrackEntry(UTrackEntry *entry) {
+		trackEntries.Remove(entry);
+	}
 
 protected:
 	virtual void CheckState() override;

@@ -87,8 +87,7 @@ void SkeletonDrawable::draw(SDL_Renderer *renderer) {
 		}
 		sdlIndices.clear();
 		uint16_t *indices = command->indices;
-		for (int ii = 0; ii < command->numIndices; ii++)
-			sdlIndices.add(indices[ii]);
+		for (int ii = 0; ii < command->numIndices; ii++) sdlIndices.add(indices[ii]);
 
 		BlendMode blendMode = command->blendMode;
 		SDL_Texture *texture = (SDL_Texture *) command->texture;
@@ -111,25 +110,27 @@ void SkeletonDrawable::draw(SDL_Renderer *renderer) {
 			SDL_BlendMode target;
 			switch (blendMode) {
 				case BlendMode_Normal:
-					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
+					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD,
+														SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
 					SDL_SetTextureBlendMode(texture, target);
 					break;
 				case BlendMode_Multiply:
 					SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_MOD);
 					break;
 				case BlendMode_Additive:
-					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD);
+					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ONE,
+														SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD);
 					SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_ADD);
 					break;
 				case BlendMode_Screen:
-					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
+					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD,
+														SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
 					SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 					break;
 			}
 		}
 
-		SDL_RenderGeometry(renderer, texture, sdlVertices.buffer(), sdlVertices.size(), sdlIndices.buffer(),
-						   command->numIndices);
+		SDL_RenderGeometry(renderer, texture, sdlVertices.buffer(), sdlVertices.size(), sdlIndices.buffer(), command->numIndices);
 		command = command->next;
 	}
 }
@@ -138,8 +139,7 @@ SDL_Texture *loadTexture(SDL_Renderer *renderer, const String &path) {
 	int width, height, components;
 	stbi_uc *imageData = stbi_load(path.buffer(), &width, &height, &components, 4);
 	if (!imageData) return nullptr;
-	SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC, width,
-											 height);
+	SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STATIC, width, height);
 	if (!texture) {
 		stbi_image_free(imageData);
 		return nullptr;

@@ -4,77 +4,100 @@
 using namespace spine;
 
 spine_path_constraint spine_path_constraint_create(spine_path_constraint_data data, spine_skeleton skeleton) {
-    return (spine_path_constraint) new (__FILE__, __LINE__) PathConstraint(*((PathConstraintData*)data), *((Skeleton*)skeleton));
+	return (spine_path_constraint) new (__FILE__, __LINE__) PathConstraint(*((PathConstraintData *) data), *((Skeleton *) skeleton));
 }
 
 void spine_path_constraint_dispose(spine_path_constraint self) {
-    delete (PathConstraint*)self;
+	delete (PathConstraint *) self;
 }
 
 spine_rtti spine_path_constraint_get_rtti(spine_path_constraint self) {
-    return (spine_rtti)&((PathConstraint*)self)->getRTTI();
+	PathConstraint *_self = (PathConstraint *) self;
+	return (spine_rtti) &_self->getRTTI();
 }
 
 spine_path_constraint spine_path_constraint_copy(spine_path_constraint self, spine_skeleton skeleton) {
-    return (spine_path_constraint)((PathConstraint*)self)->copy(*((Skeleton*)skeleton));
+	PathConstraint *_self = (PathConstraint *) self;
+	return (spine_path_constraint) _self->copy(*((Skeleton *) skeleton));
 }
 
 void spine_path_constraint_update(spine_path_constraint self, spine_skeleton skeleton, spine_physics physics) {
-    ((PathConstraint*)self)->update(*((Skeleton*)skeleton), (Physics)physics);
+	PathConstraint *_self = (PathConstraint *) self;
+	_self->update(*((Skeleton *) skeleton), (Physics) physics);
 }
 
 void spine_path_constraint_sort(spine_path_constraint self, spine_skeleton skeleton) {
-    ((PathConstraint*)self)->sort(*((Skeleton*)skeleton));
+	PathConstraint *_self = (PathConstraint *) self;
+	_self->sort(*((Skeleton *) skeleton));
 }
 
 bool spine_path_constraint_is_source_active(spine_path_constraint self) {
-    return ((PathConstraint*)self)->isSourceActive();
+	PathConstraint *_self = (PathConstraint *) self;
+	return _self->isSourceActive();
 }
 
 spine_array_bone_pose spine_path_constraint_get_bones(spine_path_constraint self) {
-    return (spine_array_bone_pose)&((PathConstraint*)self)->getBones();
+	PathConstraint *_self = (PathConstraint *) self;
+	return (spine_array_bone_pose) &_self->getBones();
 }
 
 spine_slot spine_path_constraint_get_slot(spine_path_constraint self) {
-    return (spine_slot)((PathConstraint*)self)->getSlot();
+	PathConstraint *_self = (PathConstraint *) self;
+	return (spine_slot) _self->getSlot();
 }
 
 void spine_path_constraint_set_slot(spine_path_constraint self, spine_slot slot) {
-    ((PathConstraint*)self)->setSlot((Slot *)slot);
+	PathConstraint *_self = (PathConstraint *) self;
+	_self->setSlot((Slot *) slot);
 }
 
 spine_path_constraint_data spine_path_constraint_get_data(spine_path_constraint self) {
-    return (spine_path_constraint_data)&((PathConstraint*)self)->getData();
+	PathConstraint *_self = (PathConstraint *) self;
+	return (spine_path_constraint_data) &_self->getData();
 }
 
 spine_path_constraint_pose spine_path_constraint_get_pose(spine_path_constraint self) {
-    return (spine_path_constraint_pose)&((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->getPose();
+	ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>
+		*_self = (ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose> *) (PathConstraint *) self;
+	return (spine_path_constraint_pose) &_self->getPose();
 }
 
 spine_path_constraint_pose spine_path_constraint_get_applied_pose(spine_path_constraint self) {
-    return (spine_path_constraint_pose)&((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->getAppliedPose();
+	ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>
+		*_self = (ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose> *) (PathConstraint *) self;
+	return (spine_path_constraint_pose) &_self->getAppliedPose();
 }
 
 void spine_path_constraint_reset_constrained(spine_path_constraint self) {
-    ((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->resetConstrained();
+	ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>
+		*_self = (ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose> *) (PathConstraint *) self;
+	_self->resetConstrained();
 }
 
 void spine_path_constraint_constrained(spine_path_constraint self) {
-    ((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->constrained();
+	ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>
+		*_self = (ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose> *) (PathConstraint *) self;
+	_self->constrained();
 }
 
 bool spine_path_constraint_is_pose_equal_to_applied(spine_path_constraint self) {
-    return ((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->isPoseEqualToApplied();
+	ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>
+		*_self = (ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose> *) (PathConstraint *) self;
+	return _self->isPoseEqualToApplied();
 }
 
 bool spine_path_constraint_is_active(spine_path_constraint self) {
-    return ((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->isActive();
+	ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>
+		*_self = (ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose> *) (PathConstraint *) self;
+	return _self->isActive();
 }
 
 void spine_path_constraint_set_active(spine_path_constraint self, bool active) {
-    ((ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>*)(PathConstraint*)self)->setActive(active);
+	ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>
+		*_self = (ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose> *) (PathConstraint *) self;
+	_self->setActive(active);
 }
 
 spine_rtti spine_path_constraint_rtti(void) {
-    return (spine_rtti)&PathConstraint::rtti;
+	return (spine_rtti) &PathConstraint::rtti;
 }

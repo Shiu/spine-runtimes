@@ -50,8 +50,7 @@ static void disposeAttachment(Attachment *attachment) {
 }
 
 void Skin::AttachmentMap::put(size_t slotIndex, const String &attachmentName, Attachment *attachment) {
-	if (slotIndex >= _buckets.size())
-		_buckets.setSize(slotIndex + 1, Array<Entry>());
+	if (slotIndex >= _buckets.size()) _buckets.setSize(slotIndex + 1, Array<Entry>());
 	Array<Entry> &bucket = _buckets[slotIndex];
 	int existing = findInBucket(bucket, attachmentName);
 	attachment->reference();
@@ -179,8 +178,7 @@ void Skin::copySkin(Skin *other) {
 	while (entries.hasNext()) {
 		AttachmentMap::Entry &entry = entries.next();
 		if (entry._attachment->getRTTI().isExactly(MeshAttachment::rtti))
-			setAttachment(entry._slotIndex, entry._name,
-						  static_cast<MeshAttachment *>(entry._attachment)->newLinkedMesh());
+			setAttachment(entry._slotIndex, entry._name, static_cast<MeshAttachment *>(entry._attachment)->newLinkedMesh());
 		else
 			setAttachment(entry._slotIndex, entry._name, entry._attachment->copy());
 	}

@@ -63,8 +63,8 @@ void callback(AnimationState *state, EventType type, TrackEntry *entry, Event *e
 			printf("%d dispose: %s\n", entry->getTrackIndex(), animationName.buffer());
 			break;
 		case EventType_Event:
-			printf("%d event: %s, %s: %d, %f, %s %f %f\n", entry->getTrackIndex(), animationName.buffer(), event->getData().getName().buffer(), event->getIntValue(), event->getFloatValue(),
-				   event->getStringValue().buffer(), event->getVolume(), event->getBalance());
+			printf("%d event: %s, %s: %d, %f, %s %f %f\n", entry->getTrackIndex(), animationName.buffer(), event->getData().getName().buffer(),
+				   event->getIntValue(), event->getFloatValue(), event->getStringValue().buffer(), event->getVolume(), event->getBalance());
 			break;
 	}
 	fflush(stdout);
@@ -92,9 +92,7 @@ shared_ptr<SkeletonData> readSkeletonBinaryData(const char *filename, Atlas *atl
 	return shared_ptr<SkeletonData>(skeletonData);
 }
 
-void testcase(void func(SkeletonData *skeletonData, Atlas *atlas),
-			  const char *jsonName, const char *binaryName, const char *atlasName,
-			  float scale) {
+void testcase(void func(SkeletonData *skeletonData, Atlas *atlas), const char *jsonName, const char *binaryName, const char *atlasName, float scale) {
 	SP_UNUSED(jsonName);
 	SFMLTextureLoader textureLoader;
 	auto atlas = make_unique_test<Atlas>(atlasName, &textureLoader);
@@ -623,8 +621,8 @@ void celestialCircus(SkeletonData *skeletonData, Atlas *atlas) {
 
 	Skeleton *skeleton = drawable.skeleton;
 	skeleton->setPosition(320, 480);
-    skeleton->setScaleX(0.2);
-    skeleton->setScaleY(0.2);
+	skeleton->setScaleX(0.2);
+	skeleton->setScaleY(0.2);
 	skeleton->updateWorldTransform(Physics_Update);
 
 	drawable.state->setAnimation(0, "swing", true);
@@ -777,7 +775,7 @@ extern spine::SkeletonRenderer *skeletonRenderer;
 int main() {
 	SpineExtension::setInstance(&dbgExtension);
 
-    testcase(celestialCircus, "data/celestial-circus-pro.json", "data/celestial-circus-pro.skel", "data/celestial-circus-pma.atlas", 1);
+	testcase(celestialCircus, "data/celestial-circus-pro.json", "data/celestial-circus-pro.skel", "data/celestial-circus-pma.atlas", 1);
 	testcase(mixAndMatch, "data/mix-and-match-pro.json", "data/mix-and-match-pro.skel", "data/mix-and-match-pma.atlas", 0.5f);
 	testcase(cloudpot, "data/cloud-pot.json", "data/cloud-pot.skel", "data/cloud-pot-pma.atlas", 0.2);
 	testcase(sack, "data/sack-pro.json", "data/sack-pro.skel", "data/sack-pma.atlas", 0.2f);
@@ -793,7 +791,7 @@ int main() {
 	testcase(goblins, "data/goblins-pro.json", "data/goblins-pro.skel", "data/goblins-pma.atlas", 1.4f);
 	testcase(stretchyman, "data/stretchyman-pro.json", "data/stretchyman-pro.skel", "data/stretchyman-pma.atlas", 0.6f);
 
-    delete skeletonRenderer;
+	delete skeletonRenderer;
 	dbgExtension.reportLeaks();
 	return 0;
 }

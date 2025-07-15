@@ -47,6 +47,7 @@ namespace spine {
 	/// Source property for a TransformConstraint.
 	class SP_API FromProperty : public SpineObject {
 		friend class SkeletonBinary;
+
 	public:
 		RTTI_DECL_NOPARENT
 
@@ -54,18 +55,19 @@ namespace spine {
 		float _offset;
 
 		/// Constrained properties.
-		Array<ToProperty*> _to;
+		Array<ToProperty *> _to;
 
 		FromProperty();
 		virtual ~FromProperty();
 
 		/// Reads this property from the specified bone.
-		virtual float value(Skeleton& skeleton, BonePose& source, bool local, float* offsets) = 0;
+		virtual float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) = 0;
 	};
 
 	/// Constrained property for a TransformConstraint.
 	class SP_API ToProperty : public SpineObject {
 		friend class SkeletonBinary;
+
 	public:
 		RTTI_DECL_NOPARENT
 
@@ -82,136 +84,160 @@ namespace spine {
 		virtual ~ToProperty();
 
 		/// Reads the mix for this property from the specified pose.
-		virtual float mix(TransformConstraintPose& pose) = 0;
+		virtual float mix(TransformConstraintPose &pose) = 0;
 
 		/// Applies the value to this property.
-		virtual void apply(Skeleton& skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) = 0;
+		virtual void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) = 0;
 	};
 
 	class SP_API FromRotate : public FromProperty {
 	public:
 		RTTI_DECL
 
-		FromRotate() : FromProperty() {}
-		~FromRotate() {}
+		FromRotate() : FromProperty() {
+		}
+		~FromRotate() {
+		}
 
-		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
 	class SP_API ToRotate : public ToProperty {
 	public:
 		RTTI_DECL
 
-		ToRotate() : ToProperty() {}
-		~ToRotate() {}
+		ToRotate() : ToProperty() {
+		}
+		~ToRotate() {
+		}
 
-		float mix(TransformConstraintPose& pose) override;
-		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		float mix(TransformConstraintPose &pose) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromX : public FromProperty {
 	public:
 		RTTI_DECL
 
-		FromX() : FromProperty() {}
-		~FromX() {}
+		FromX() : FromProperty() {
+		}
+		~FromX() {
+		}
 
-		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
 	class SP_API ToX : public ToProperty {
 	public:
 		RTTI_DECL
 
-		ToX() : ToProperty() {}
-		~ToX() {}
+		ToX() : ToProperty() {
+		}
+		~ToX() {
+		}
 
-		float mix(TransformConstraintPose& pose) override;
-		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		float mix(TransformConstraintPose &pose) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromY : public FromProperty {
 	public:
 		RTTI_DECL
 
-		FromY() : FromProperty() {}
-		~FromY() {}
+		FromY() : FromProperty() {
+		}
+		~FromY() {
+		}
 
-		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
 	class SP_API ToY : public ToProperty {
 	public:
 		RTTI_DECL
 
-		ToY() : ToProperty() {}
-		~ToY() {}
+		ToY() : ToProperty() {
+		}
+		~ToY() {
+		}
 
-		float mix(TransformConstraintPose& pose) override;
-		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		float mix(TransformConstraintPose &pose) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromScaleX : public FromProperty {
 	public:
 		RTTI_DECL
 
-		FromScaleX() : FromProperty() {}
-		~FromScaleX() {}
+		FromScaleX() : FromProperty() {
+		}
+		~FromScaleX() {
+		}
 
-		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
 	class SP_API ToScaleX : public ToProperty {
 	public:
 		RTTI_DECL
 
-		ToScaleX() : ToProperty() {}
-		~ToScaleX() {}
+		ToScaleX() : ToProperty() {
+		}
+		~ToScaleX() {
+		}
 
-		float mix(TransformConstraintPose& pose) override;
-		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		float mix(TransformConstraintPose &pose) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromScaleY : public FromProperty {
 	public:
 		RTTI_DECL
 
-		FromScaleY() : FromProperty() {}
-		~FromScaleY() {}
+		FromScaleY() : FromProperty() {
+		}
+		~FromScaleY() {
+		}
 
-		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
 	class SP_API ToScaleY : public ToProperty {
 	public:
 		RTTI_DECL
 
-		ToScaleY() : ToProperty() {}
-		~ToScaleY() {}
+		ToScaleY() : ToProperty() {
+		}
+		~ToScaleY() {
+		}
 
-		float mix(TransformConstraintPose& pose) override;
-		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		float mix(TransformConstraintPose &pose) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) override;
 	};
 
 	class SP_API FromShearY : public FromProperty {
 	public:
 		RTTI_DECL
 
-		FromShearY() : FromProperty() {}
-		~FromShearY() {}
+		FromShearY() : FromProperty() {
+		}
+		~FromShearY() {
+		}
 
-		float value(Skeleton &skeleton, BonePose& source, bool local, float* offsets) override;
+		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
 	class SP_API ToShearY : public ToProperty {
 	public:
 		RTTI_DECL
 
-		ToShearY() : ToProperty() {}
-		~ToShearY() {}
+		ToShearY() : ToProperty() {
+		}
+		~ToShearY() {
+		}
 
-		float mix(TransformConstraintPose& pose) override;
-		void apply(Skeleton &skeleton, TransformConstraintPose& pose, BonePose& bone, float value, bool local, bool additive) override;
+		float mix(TransformConstraintPose &pose) override;
+		void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) override;
 	};
 
 	/// Stores the setup pose for a TransformConstraint.
@@ -231,14 +257,14 @@ namespace spine {
 		explicit TransformConstraintData(const String &name);
 		~TransformConstraintData();
 
-		virtual Constraint* create(Skeleton& skeleton) override;
+		virtual Constraint *create(Skeleton &skeleton) override;
 
 		/// The bones that will be modified by this transform constraint.
-		Array<BoneData*>& getBones();
+		Array<BoneData *> &getBones();
 
 		/// The bone whose world transform will be copied to the constrained bones.
-		BoneData* getSource();
-		void setSource(BoneData* source);
+		BoneData *getSource();
+		void setSource(BoneData *source);
 
 		/// An offset added to the constrained bone rotation.
 		float getOffsetRotation();
@@ -281,14 +307,14 @@ namespace spine {
 		void setClamp(bool clamp);
 
 		/// The mapping of transform properties to other transform properties.
-		Array<FromProperty*>& getProperties();
+		Array<FromProperty *> &getProperties();
 
 	private:
-		Array<BoneData*> _bones;
-		BoneData* _source;
-		float _offsets[6];  // [rotation, x, y, scaleX, scaleY, shearY]
+		Array<BoneData *> _bones;
+		BoneData *_source;
+		float _offsets[6];// [rotation, x, y, scaleX, scaleY, shearY]
 		bool _localSource, _localTarget, _additive, _clamp;
-		Array<FromProperty*> _properties;
+		Array<FromProperty *> _properties;
 	};
 }
 

@@ -34,7 +34,7 @@ namespace spine {
 
 	/// Indicates whether a timeline's alpha is mixing out over time toward 0 (the setup or current pose value) or
 	/// mixing in toward 1 (the timeline's value). Some timelines use this to decide how values are applied.
-	/// 
+	///
 	/// See Timeline::apply().
 	enum MixDirection {
 		MixDirection_In = 0,

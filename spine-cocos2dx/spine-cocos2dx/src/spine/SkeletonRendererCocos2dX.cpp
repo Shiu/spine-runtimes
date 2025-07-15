@@ -52,13 +52,13 @@ namespace spine {
 // C Variable length array
 #ifdef _MSC_VER
 // VLA not supported, use _malloca
-#define VLA(type, arr, count) \
-	type *arr = static_cast<type *>(_malloca(sizeof(type) * count))
-#define VLA_FREE(arr) \
-	do { _freea(arr); } while (false)
+#define VLA(type, arr, count) type *arr = static_cast<type *>(_malloca(sizeof(type) * count))
+#define VLA_FREE(arr)                                                                                                                                \
+	do {                                                                                                                                             \
+		_freea(arr);                                                                                                                                 \
+	} while (false)
 #else
-#define VLA(type, arr, count) \
-	type arr[count]
+#define VLA(type, arr, count) type arr[count]
 #define VLA_FREE(arr)
 #endif
 
@@ -80,7 +80,8 @@ namespace spine {
 		return node;
 	}
 
-	SkeletonRendererCocos2dX *SkeletonRendererCocos2dX::createWithFile(const std::string &skeletonDataFile, const std::string &atlasFile, float scale) {
+	SkeletonRendererCocos2dX *SkeletonRendererCocos2dX::createWithFile(const std::string &skeletonDataFile, const std::string &atlasFile,
+																	   float scale) {
 		SkeletonRendererCocos2dX *node = new SkeletonRendererCocos2dX(skeletonDataFile, atlasFile, scale);
 		node->autorelease();
 		return node;
@@ -115,26 +116,31 @@ namespace spine {
 	}
 
 	SkeletonRendererCocos2dX::SkeletonRendererCocos2dX()
-		: _atlas(nullptr), _attachmentLoader(nullptr), _timeScale(1), _debugSlots(false), _debugBones(false), _debugMeshes(false), _debugBoundingRect(false), _startSlotIndex(0), _endSlotIndex(std::numeric_limits<int>::max()) {
+		: _atlas(nullptr), _attachmentLoader(nullptr), _timeScale(1), _debugSlots(false), _debugBones(false), _debugMeshes(false),
+		  _debugBoundingRect(false), _startSlotIndex(0), _endSlotIndex(std::numeric_limits<int>::max()) {
 	}
 
 	SkeletonRendererCocos2dX::SkeletonRendererCocos2dX(Skeleton *skeleton, bool ownsSkeleton, bool ownsSkeletonData, bool ownsAtlas)
-		: _atlas(nullptr), _attachmentLoader(nullptr), _timeScale(1), _debugSlots(false), _debugBones(false), _debugMeshes(false), _debugBoundingRect(false), _startSlotIndex(0), _endSlotIndex(std::numeric_limits<int>::max()) {
+		: _atlas(nullptr), _attachmentLoader(nullptr), _timeScale(1), _debugSlots(false), _debugBones(false), _debugMeshes(false),
+		  _debugBoundingRect(false), _startSlotIndex(0), _endSlotIndex(std::numeric_limits<int>::max()) {
 		initWithSkeleton(skeleton, ownsSkeleton, ownsSkeletonData, ownsAtlas);
 	}
 
 	SkeletonRendererCocos2dX::SkeletonRendererCocos2dX(SkeletonData *skeletonData, bool ownsSkeletonData)
-		: _atlas(nullptr), _attachmentLoader(nullptr), _timeScale(1), _debugSlots(false), _debugBones(false), _debugMeshes(false), _debugBoundingRect(false), _startSlotIndex(0), _endSlotIndex(std::numeric_limits<int>::max()) {
+		: _atlas(nullptr), _attachmentLoader(nullptr), _timeScale(1), _debugSlots(false), _debugBones(false), _debugMeshes(false),
+		  _debugBoundingRect(false), _startSlotIndex(0), _endSlotIndex(std::numeric_limits<int>::max()) {
 		initWithData(skeletonData, ownsSkeletonData);
 	}
 
 	SkeletonRendererCocos2dX::SkeletonRendererCocos2dX(const std::string &skeletonDataFile, Atlas *atlas, float scale)
-		: _atlas(nullptr), _attachmentLoader(nullptr), _timeScale(1), _debugSlots(false), _debugBones(false), _debugMeshes(false), _debugBoundingRect(false), _startSlotIndex(0), _endSlotIndex(std::numeric_limits<int>::max()) {
+		: _atlas(nullptr), _attachmentLoader(nullptr), _timeScale(1), _debugSlots(false), _debugBones(false), _debugMeshes(false),
+		  _debugBoundingRect(false), _startSlotIndex(0), _endSlotIndex(std::numeric_limits<int>::max()) {
 		initWithJsonFile(skeletonDataFile, atlas, scale);
 	}
 
 	SkeletonRendererCocos2dX::SkeletonRendererCocos2dX(const std::string &skeletonDataFile, const std::string &atlasFile, float scale)
-		: _atlas(nullptr), _attachmentLoader(nullptr), _timeScale(1), _debugSlots(false), _debugBones(false), _debugMeshes(false), _debugBoundingRect(false), _startSlotIndex(0), _endSlotIndex(std::numeric_limits<int>::max()) {
+		: _atlas(nullptr), _attachmentLoader(nullptr), _timeScale(1), _debugSlots(false), _debugBones(false), _debugMeshes(false),
+		  _debugBoundingRect(false), _startSlotIndex(0), _endSlotIndex(std::numeric_limits<int>::max()) {
 		initWithJsonFile(skeletonDataFile, atlasFile, scale);
 	}
 
@@ -269,7 +275,7 @@ namespace spine {
 		Color darkColor;
 		const float darkPremultipliedAlpha = _premultipliedAlpha ? 1.f : 0;
 		TwoColorTrianglesCommand *lastTwoColorTrianglesCommand = nullptr;
-		for (int i = 0, n = (int)_skeleton->getSlots().size(); i < n; ++i) {
+		for (int i = 0, n = (int) _skeleton->getSlots().size(); i < n; ++i) {
 			Slot *slot = _skeleton->getDrawOrder()[i];
 
 			if (nothingToDraw(*slot, _startSlotIndex, _endSlotIndex)) {
@@ -279,12 +285,12 @@ namespace spine {
 
 			cocos2d::TrianglesCommand::Triangles triangles;
 			TwoColorTriangles trianglesTwoColor;
-            static unsigned short quadIndices[6] = {0, 1, 2, 2, 3, 0};
-            Texture2D *texture = nullptr;
+			static unsigned short quadIndices[6] = {0, 1, 2, 2, 3, 0};
+			Texture2D *texture = nullptr;
 
 			if (slot->getAttachment()->getRTTI().isExactly(RegionAttachment::rtti)) {
 				RegionAttachment *attachment = static_cast<RegionAttachment *>(slot->getAttachment());
-				texture = (Texture2D*)((AtlasRegion*)attachment->getRegion())->page->texture;
+				texture = (Texture2D *) ((AtlasRegion *) attachment->getRegion())->page->texture;
 
 				float *dstTriangleVertices = nullptr;
 				int dstStride = 0;// in floats
@@ -294,11 +300,11 @@ namespace spine {
 					triangles.verts = batch->allocateVertices(4);
 					triangles.vertCount = 4;
 					assert(triangles.vertCount == 4);
-                    for (int v = 0, i = 0; v < triangles.vertCount; v++, i += 2) {
-                        auto &texCoords = triangles.verts[v].texCoords;
-                        texCoords.u = attachment->getUVs()[i];
-                        texCoords.v = attachment->getUVs()[i + 1];
-                    }
+					for (int v = 0, i = 0; v < triangles.vertCount; v++, i += 2) {
+						auto &texCoords = triangles.verts[v].texCoords;
+						texCoords.u = attachment->getUVs()[i];
+						texCoords.v = attachment->getUVs()[i + 1];
+					}
 					dstStride = sizeof(V3F_C4B_T2F) / sizeof(float);
 					dstTriangleVertices = reinterpret_cast<float *>(triangles.verts);
 				} else {
@@ -307,11 +313,11 @@ namespace spine {
 					trianglesTwoColor.verts = twoColorBatch->allocateVertices(4);
 					trianglesTwoColor.vertCount = 4;
 					assert(trianglesTwoColor.vertCount == 4);
-                    for (int v = 0, i = 0; v < trianglesTwoColor.vertCount; v++, i += 2) {
-                        auto &texCoords = trianglesTwoColor.verts[v].texCoords;
-                        texCoords.u = attachment->getUVs()[i];
-                        texCoords.v = attachment->getUVs()[i + 1];
-                    }
+					for (int v = 0, i = 0; v < trianglesTwoColor.vertCount; v++, i += 2) {
+						auto &texCoords = trianglesTwoColor.verts[v].texCoords;
+						texCoords.u = attachment->getUVs()[i];
+						texCoords.v = attachment->getUVs()[i + 1];
+					}
 					dstTriangleVertices = reinterpret_cast<float *>(trianglesTwoColor.verts);
 					dstStride = sizeof(V3F_C4B_C4B_T2F) / sizeof(float);
 				}
@@ -322,34 +328,34 @@ namespace spine {
 				color = attachment->getColor();
 			} else if (slot->getAttachment()->getRTTI().isExactly(MeshAttachment::rtti)) {
 				MeshAttachment *attachment = (MeshAttachment *) slot->getAttachment();
-				texture = (Texture2D*)((AtlasRegion*)attachment->getRegion())->page->texture;
+				texture = (Texture2D *) ((AtlasRegion *) attachment->getRegion())->page->texture;
 
 				float *dstTriangleVertices = nullptr;
 				int dstStride = 0;// in floats
 				int dstVertexCount = 0;
 				if (hasSingleTint) {
 					triangles.indices = attachment->getTriangles().buffer();
-					triangles.indexCount = (unsigned short)attachment->getTriangles().size();
-					triangles.verts = batch->allocateVertices((int)attachment->getWorldVerticesLength() / 2);
-					triangles.vertCount = (int)attachment->getWorldVerticesLength() / 2;
-                    for (int v = 0, i = 0; v < triangles.vertCount; v++, i += 2) {
-                        auto &texCoords = triangles.verts[v].texCoords;
-                        texCoords.u = attachment->getUVs()[i];
-                        texCoords.v = attachment->getUVs()[i + 1];
-                    }
+					triangles.indexCount = (unsigned short) attachment->getTriangles().size();
+					triangles.verts = batch->allocateVertices((int) attachment->getWorldVerticesLength() / 2);
+					triangles.vertCount = (int) attachment->getWorldVerticesLength() / 2;
+					for (int v = 0, i = 0; v < triangles.vertCount; v++, i += 2) {
+						auto &texCoords = triangles.verts[v].texCoords;
+						texCoords.u = attachment->getUVs()[i];
+						texCoords.v = attachment->getUVs()[i + 1];
+					}
 					dstTriangleVertices = (float *) triangles.verts;
 					dstStride = sizeof(V3F_C4B_T2F) / sizeof(float);
 					dstVertexCount = triangles.vertCount;
 				} else {
 					trianglesTwoColor.indices = attachment->getTriangles().buffer();
-					trianglesTwoColor.indexCount = (unsigned short)attachment->getTriangles().size();
-					trianglesTwoColor.verts = twoColorBatch->allocateVertices((int)attachment->getWorldVerticesLength() / 2);
-					trianglesTwoColor.vertCount = (int)attachment->getWorldVerticesLength() / 2;
-                    for (int v = 0, i = 0; v < trianglesTwoColor.vertCount; v++, i += 2) {
-                        auto &texCoords = trianglesTwoColor.verts[v].texCoords;
-                        texCoords.u = attachment->getUVs()[i];
-                        texCoords.v = attachment->getUVs()[i + 1];
-                    }
+					trianglesTwoColor.indexCount = (unsigned short) attachment->getTriangles().size();
+					trianglesTwoColor.verts = twoColorBatch->allocateVertices((int) attachment->getWorldVerticesLength() / 2);
+					trianglesTwoColor.vertCount = (int) attachment->getWorldVerticesLength() / 2;
+					for (int v = 0, i = 0; v < trianglesTwoColor.vertCount; v++, i += 2) {
+						auto &texCoords = trianglesTwoColor.verts[v].texCoords;
+						texCoords.u = attachment->getUVs()[i];
+						texCoords.v = attachment->getUVs()[i + 1];
+					}
 					dstTriangleVertices = (float *) trianglesTwoColor.verts;
 					dstStride = sizeof(V3F_C4B_C4B_T2F) / sizeof(float);
 					dstVertexCount = trianglesTwoColor.vertCount;
@@ -400,7 +406,8 @@ namespace spine {
 
 			if (hasSingleTint) {
 				if (_clipper->isClipping()) {
-					_clipper->clipTriangles((float *) &triangles.verts[0].vertices, triangles.indices, triangles.indexCount, (float *) &triangles.verts[0].texCoords, sizeof(cocos2d::V3F_C4B_T2F) / 4);
+					_clipper->clipTriangles((float *) &triangles.verts[0].vertices, triangles.indices, triangles.indexCount,
+											(float *) &triangles.verts[0].texCoords, sizeof(cocos2d::V3F_C4B_T2F) / 4);
 					batch->deallocateVertices(triangles.vertCount);
 
 					if (_clipper->getClippedTriangles().size() == 0) {
@@ -408,45 +415,51 @@ namespace spine {
 						continue;
 					}
 
-					triangles.vertCount = (int)_clipper->getClippedVertices().size() / 2;
+					triangles.vertCount = (int) _clipper->getClippedVertices().size() / 2;
 					triangles.verts = batch->allocateVertices(triangles.vertCount);
-					triangles.indexCount = (int)_clipper->getClippedTriangles().size();
+					triangles.indexCount = (int) _clipper->getClippedTriangles().size();
 					triangles.indices = batch->allocateIndices(triangles.indexCount);
-					memcpy(triangles.indices, _clipper->getClippedTriangles().buffer(), sizeof(unsigned short) * _clipper->getClippedTriangles().size());
+					memcpy(triangles.indices, _clipper->getClippedTriangles().buffer(),
+						   sizeof(unsigned short) * _clipper->getClippedTriangles().size());
 
 #if COCOS2D_VERSION < 0x00040000
-					cocos2d::TrianglesCommand *batchedTriangles = batch->addCommand(renderer, _globalZOrder, texture, _glProgramState, blendFunc, triangles, transform, transformFlags);
+					cocos2d::TrianglesCommand *batchedTriangles = batch->addCommand(renderer, _globalZOrder, texture, _glProgramState, blendFunc,
+																					triangles, transform, transformFlags);
 #else
-					cocos2d::TrianglesCommand *batchedTriangles = batch->addCommand(renderer, _globalZOrder, texture, _programState, blendFunc, triangles, transform, transformFlags);
+					cocos2d::TrianglesCommand *batchedTriangles = batch->addCommand(renderer, _globalZOrder, texture, _programState, blendFunc,
+																					triangles, transform, transformFlags);
 #endif
 
 					const float *verts = _clipper->getClippedVertices().buffer();
 					const float *uvs = _clipper->getClippedUVs().buffer();
-                    V3F_C4B_T2F *vertex = batchedTriangles->getTriangles().verts;
-                    for (int v = 0, vn = batchedTriangles->getTriangles().vertCount, vv = 0; v < vn; ++v, vv += 2, ++vertex) {
-                        vertex->vertices.x = verts[vv];
-                        vertex->vertices.y = verts[vv + 1];
-                        vertex->texCoords.u = uvs[vv];
-                        vertex->texCoords.v = uvs[vv + 1];
-                        vertex->colors = color4B;
-                    }
+					V3F_C4B_T2F *vertex = batchedTriangles->getTriangles().verts;
+					for (int v = 0, vn = batchedTriangles->getTriangles().vertCount, vv = 0; v < vn; ++v, vv += 2, ++vertex) {
+						vertex->vertices.x = verts[vv];
+						vertex->vertices.y = verts[vv + 1];
+						vertex->texCoords.u = uvs[vv];
+						vertex->texCoords.v = uvs[vv + 1];
+						vertex->colors = color4B;
+					}
 				} else {
 					// Not clipping.
 #if COCOS2D_VERSION < 0x00040000
-					cocos2d::TrianglesCommand *batchedTriangles = batch->addCommand(renderer, _globalZOrder, texture, _glProgramState, blendFunc, triangles, transform, transformFlags);
+					cocos2d::TrianglesCommand *batchedTriangles = batch->addCommand(renderer, _globalZOrder, texture, _glProgramState, blendFunc,
+																					triangles, transform, transformFlags);
 #else
-					cocos2d::TrianglesCommand *batchedTriangles = batch->addCommand(renderer, _globalZOrder, texture, _programState, blendFunc, triangles, transform, transformFlags);
+					cocos2d::TrianglesCommand *batchedTriangles = batch->addCommand(renderer, _globalZOrder, texture, _programState, blendFunc,
+																					triangles, transform, transformFlags);
 #endif
-                    V3F_C4B_T2F *vertex = batchedTriangles->getTriangles().verts;
-                    for (int v = 0, vn = batchedTriangles->getTriangles().vertCount; v < vn; ++v, ++vertex) {
-                        vertex->colors = color4B;
-                    }
+					V3F_C4B_T2F *vertex = batchedTriangles->getTriangles().verts;
+					for (int v = 0, vn = batchedTriangles->getTriangles().vertCount; v < vn; ++v, ++vertex) {
+						vertex->colors = color4B;
+					}
 				}
 			} else {
 				// Two color tinting.
 
 				if (_clipper->isClipping()) {
-					_clipper->clipTriangles((float *) &trianglesTwoColor.verts[0].position, trianglesTwoColor.indices, trianglesTwoColor.indexCount, (float *) &trianglesTwoColor.verts[0].texCoords, sizeof(V3F_C4B_C4B_T2F) / 4);
+					_clipper->clipTriangles((float *) &trianglesTwoColor.verts[0].position, trianglesTwoColor.indices, trianglesTwoColor.indexCount,
+											(float *) &trianglesTwoColor.verts[0].texCoords, sizeof(V3F_C4B_C4B_T2F) / 4);
 					twoColorBatch->deallocateVertices(trianglesTwoColor.vertCount);
 
 					if (_clipper->getClippedTriangles().size() == 0) {
@@ -454,41 +467,48 @@ namespace spine {
 						continue;
 					}
 
-					trianglesTwoColor.vertCount = (int)_clipper->getClippedVertices().size() / 2;
+					trianglesTwoColor.vertCount = (int) _clipper->getClippedVertices().size() / 2;
 					trianglesTwoColor.verts = twoColorBatch->allocateVertices(trianglesTwoColor.vertCount);
-					trianglesTwoColor.indexCount = (int)_clipper->getClippedTriangles().size();
+					trianglesTwoColor.indexCount = (int) _clipper->getClippedTriangles().size();
 					trianglesTwoColor.indices = twoColorBatch->allocateIndices(trianglesTwoColor.indexCount);
-					memcpy(trianglesTwoColor.indices, _clipper->getClippedTriangles().buffer(), sizeof(unsigned short) * _clipper->getClippedTriangles().size());
+					memcpy(trianglesTwoColor.indices, _clipper->getClippedTriangles().buffer(),
+						   sizeof(unsigned short) * _clipper->getClippedTriangles().size());
 
 					const float *verts = _clipper->getClippedVertices().buffer();
 					const float *uvs = _clipper->getClippedUVs().buffer();
 
-                    V3F_C4B_C4B_T2F *vertex = trianglesTwoColor.verts;
-                    for (int v = 0, vn = trianglesTwoColor.vertCount, vv = 0; v < vn; ++v, vv += 2, ++vertex) {
-                        vertex->position.x = verts[vv];
-                        vertex->position.y = verts[vv + 1];
-                        vertex->texCoords.u = uvs[vv];
-                        vertex->texCoords.v = uvs[vv + 1];
-                        vertex->color = color4B;
-                        vertex->color2 = darkColor4B;
-                    }
+					V3F_C4B_C4B_T2F *vertex = trianglesTwoColor.verts;
+					for (int v = 0, vn = trianglesTwoColor.vertCount, vv = 0; v < vn; ++v, vv += 2, ++vertex) {
+						vertex->position.x = verts[vv];
+						vertex->position.y = verts[vv + 1];
+						vertex->texCoords.u = uvs[vv];
+						vertex->texCoords.v = uvs[vv + 1];
+						vertex->color = color4B;
+						vertex->color2 = darkColor4B;
+					}
 
 #if COCOS2D_VERSION < 0x00040000
-                    TwoColorTrianglesCommand *batchedTriangles = lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder, texture->getName(), _glProgramState, blendFunc, trianglesTwoColor, transform, transformFlags);
+					TwoColorTrianglesCommand *batchedTriangles = lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder,
+																														  texture->getName(),
+																														  _glProgramState, blendFunc,
+																														  trianglesTwoColor,
+																														  transform, transformFlags);
 #else
-                    lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder, texture, _programState, blendFunc, trianglesTwoColor, transform, transformFlags);
+					lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder, texture, _programState, blendFunc,
+																			 trianglesTwoColor, transform, transformFlags);
 #endif
 				} else {
-                    V3F_C4B_C4B_T2F* vertex = trianglesTwoColor.verts;
-                    for (int v = 0, vn = trianglesTwoColor.vertCount; v < vn; ++v, ++vertex)
-                    {
-                        vertex->color  = color4B;
-                        vertex->color2 = darkColor4B;
-                    }
+					V3F_C4B_C4B_T2F *vertex = trianglesTwoColor.verts;
+					for (int v = 0, vn = trianglesTwoColor.vertCount; v < vn; ++v, ++vertex) {
+						vertex->color = color4B;
+						vertex->color2 = darkColor4B;
+					}
 #if COCOS2D_VERSION < 0x00040000
-                    lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder, texture->getName(), _glProgramState, blendFunc, trianglesTwoColor, transform, transformFlags);
+					lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder, texture->getName(), _glProgramState, blendFunc,
+																			 trianglesTwoColor, transform, transformFlags);
 #else
-                    lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder, texture, _programState, blendFunc, trianglesTwoColor, transform, transformFlags);
+					lastTwoColorTrianglesCommand = twoColorBatch->addCommand(renderer, _globalZOrder, texture, _programState, blendFunc,
+																			 trianglesTwoColor, transform, transformFlags);
 #endif
 				}
 			}
@@ -520,10 +540,11 @@ namespace spine {
 					lastTwoColorTrianglesCommand->setForceFlush(true);
 				} else {
 					SkeletonRendererCocos2dX *siblingSkeleton = dynamic_cast<SkeletonRendererCocos2dX *>(sibling);
-					if (!siblingSkeleton ||                                               // flush is next sibling isn't a SkeletonRenderer
-						!siblingSkeleton->isTwoColorTint() ||                             // flush if next sibling isn't two color tinted
-						!siblingSkeleton->isVisible() ||                                  // flush if next sibling is two color tinted but not visible
-						(siblingSkeleton->getGlobalZOrder() != this->getGlobalZOrder())) {// flush if next sibling is two color tinted but z-order differs
+					if (!siblingSkeleton ||                  // flush is next sibling isn't a SkeletonRenderer
+						!siblingSkeleton->isTwoColorTint() ||// flush if next sibling isn't two color tinted
+						!siblingSkeleton->isVisible() ||     // flush if next sibling is two color tinted but not visible
+						(siblingSkeleton->getGlobalZOrder() !=
+						 this->getGlobalZOrder())) {// flush if next sibling is two color tinted but z-order differs
 						lastTwoColorTrianglesCommand->setForceFlush(true);
 					}
 				}
@@ -557,12 +578,10 @@ namespace spine {
 			drawNode->setLineWidth(2.0f);
 #endif
 			const cocos2d::Rect brect = getBoundingBox();
-			const Vec2 points[4] =
-					{
-							brect.origin,
-							{brect.origin.x + brect.size.width, brect.origin.y},
-							{brect.origin.x + brect.size.width, brect.origin.y + brect.size.height},
-							{brect.origin.x, brect.origin.y + brect.size.height}};
+			const Vec2 points[4] = {brect.origin,
+									{brect.origin.x + brect.size.width, brect.origin.y},
+									{brect.origin.x + brect.size.width, brect.origin.y + brect.size.height},
+									{brect.origin.x, brect.origin.y + brect.size.height}};
 			drawNode->drawPoly(points, 4, true, Color4F::GREEN);
 		}
 
@@ -575,7 +594,7 @@ namespace spine {
 			drawNode->setLineWidth(2.0f);
 #endif
 			V3F_C4B_T2F_Quad quad;
-			for (int i = 0, n = (int)_skeleton->getSlots().size(); i < n; i++) {
+			for (int i = 0, n = (int) _skeleton->getSlots().size(); i < n; i++) {
 				Slot *slot = _skeleton->getDrawOrder()[i];
 
 				if (!slot->getBone().isActive()) continue;
@@ -588,12 +607,10 @@ namespace spine {
 				RegionAttachment *attachment = (RegionAttachment *) slot->getAttachment();
 				float worldVertices[8];
 				attachment->computeWorldVertices(*slot, worldVertices, 0, 2);
-				const Vec2 points[4] =
-						{
-								{worldVertices[0], worldVertices[1]},
-								{worldVertices[2], worldVertices[3]},
-								{worldVertices[4], worldVertices[5]},
-								{worldVertices[6], worldVertices[7]}};
+				const Vec2 points[4] = {{worldVertices[0], worldVertices[1]},
+										{worldVertices[2], worldVertices[3]},
+										{worldVertices[4], worldVertices[5]},
+										{worldVertices[6], worldVertices[7]}};
 				drawNode->drawPoly(points, 4, true, Color4F::BLUE);
 			}
 		}
@@ -605,7 +622,7 @@ namespace spine {
 #else
 			drawNode->setLineWidth(2.0f);
 #endif
-			for (int i = 0, n = (int)_skeleton->getBones().size(); i < n; i++) {
+			for (int i = 0, n = (int) _skeleton->getBones().size(); i < n; i++) {
 				Bone *bone = _skeleton->getBones()[i];
 				if (!bone->isActive()) continue;
 				float x = bone->getData().getLength() * bone->getA() + bone->getWorldX();
@@ -614,7 +631,7 @@ namespace spine {
 			}
 			// Bone origins.
 			auto color = Color4F::BLUE;// Root bone is blue.
-			for (int i = 0, n = (int)_skeleton->getBones().size(); i < n; i++) {
+			for (int i = 0, n = (int) _skeleton->getBones().size(); i < n; i++) {
 				Bone *bone = _skeleton->getBones()[i];
 				if (!bone->isActive()) continue;
 				drawNode->drawPoint(Vec2(bone->getWorldX(), bone->getWorldY()), 4, color);
@@ -629,7 +646,7 @@ namespace spine {
 #else
 			drawNode->setLineWidth(2.0f);
 #endif
-			for (int i = 0, n = (int)_skeleton->getSlots().size(); i < n; ++i) {
+			for (int i = 0, n = (int) _skeleton->getSlots().size(); i < n; ++i) {
 				Slot *slot = _skeleton->getDrawOrder()[i];
 				if (!slot->getBone().isActive()) continue;
 				if (!slot->getAttachment() || !slot->getAttachment()->getRTTI().isExactly(MeshAttachment::rtti)) continue;
@@ -641,11 +658,7 @@ namespace spine {
 					const int idx0 = mesh->getTriangles()[t + 0];
 					const int idx1 = mesh->getTriangles()[t + 1];
 					const int idx2 = mesh->getTriangles()[t + 2];
-					const Vec2 v[3] =
-							{
-									worldCoord + (idx0 * 2),
-									worldCoord + (idx1 * 2),
-									worldCoord + (idx2 * 2)};
+					const Vec2 v[3] = {worldCoord + (idx0 * 2), worldCoord + (idx1 * 2), worldCoord + (idx2 * 2)};
 					drawNode->drawPoly(v, 3, true, Color4F::YELLOW);
 				}
 				VLA_FREE(worldCoord);
@@ -836,21 +849,14 @@ namespace spine {
 
 		bool nothingToDraw(Slot &slot, int startSlotIndex, int endSlotIndex) {
 			Attachment *attachment = slot.getAttachment();
-			if (!attachment ||
-				slotIsOutRange(slot, startSlotIndex, endSlotIndex) ||
-				!slot.getBone().isActive())
-				return true;
+			if (!attachment || slotIsOutRange(slot, startSlotIndex, endSlotIndex) || !slot.getBone().isActive()) return true;
 			const auto &attachmentRTTI = attachment->getRTTI();
-			if (attachmentRTTI.isExactly(ClippingAttachment::rtti))
-				return false;
-			if (slot.getColor().a == 0)
-				return true;
+			if (attachmentRTTI.isExactly(ClippingAttachment::rtti)) return false;
+			if (slot.getColor().a == 0) return true;
 			if (attachmentRTTI.isExactly(RegionAttachment::rtti)) {
-				if (static_cast<RegionAttachment *>(attachment)->getColor().a == 0)
-					return true;
+				if (static_cast<RegionAttachment *>(attachment)->getColor().a == 0) return true;
 			} else if (attachmentRTTI.isExactly(MeshAttachment::rtti)) {
-				if (static_cast<MeshAttachment *>(attachment)->getColor().a == 0)
-					return true;
+				if (static_cast<MeshAttachment *>(attachment)->getColor().a == 0) return true;
 			}
 			return false;
 		}
@@ -959,14 +965,12 @@ namespace spine {
 
 
 		bool cullRectangle(Renderer *renderer, const Mat4 &transform, const cocos2d::Rect &rect) {
-			if (Camera::getVisitingCamera() == nullptr)
-				return false;
+			if (Camera::getVisitingCamera() == nullptr) return false;
 
 			auto director = Director::getInstance();
 			auto scene = director->getRunningScene();
 
-			if (!scene || (scene && Camera::getDefaultCamera() != Camera::getVisitingCamera()))
-				return false;
+			if (!scene || (scene && Camera::getDefaultCamera() != Camera::getVisitingCamera())) return false;
 
 			Rect visibleRect(director->getVisibleOrigin(), director->getVisibleSize());
 

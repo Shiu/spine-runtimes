@@ -74,7 +74,8 @@ Ref<SpineSkin> SpineSkin::init(const String &name, SpineSprite *sprite) {
 
 void SpineSkin::set_attachment(int slot_index, const String &name, Ref<SpineAttachment> attachment) {
 	SPINE_CHECK(get_spine_object(), )
-	get_spine_object()->setAttachment(slot_index, SPINE_STRING(name), attachment.is_valid() && attachment->get_spine_owner() ? attachment->get_spine_object() : nullptr);
+	get_spine_object()->setAttachment(slot_index, SPINE_STRING(name),
+									  attachment.is_valid() && attachment->get_spine_owner() ? attachment->get_spine_object() : nullptr);
 }
 
 Ref<SpineAttachment> SpineSkin::get_attachment(int slot_index, const String &name) {

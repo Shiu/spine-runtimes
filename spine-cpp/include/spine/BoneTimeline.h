@@ -38,22 +38,28 @@ namespace spine {
 	class Event;
 	class BoneLocal;
 
-    /// An interface for timelines which change the property of a bone.
-    class SP_API BoneTimeline {
+	/// An interface for timelines which change the property of a bone.
+	class SP_API BoneTimeline {
 		RTTI_DECL_NOPARENT
 
-    public:
-        BoneTimeline(int boneIndex) : _boneIndex(boneIndex) {}
-        virtual ~BoneTimeline() {}
+	public:
+		BoneTimeline(int boneIndex) : _boneIndex(boneIndex) {
+		}
+		virtual ~BoneTimeline() {
+		}
 
-        /// The index of the bone in Skeleton::getBones() that will be changed when this timeline is applied.
-		virtual int getBoneIndex() { return _boneIndex; }
+		/// The index of the bone in Skeleton::getBones() that will be changed when this timeline is applied.
+		virtual int getBoneIndex() {
+			return _boneIndex;
+		}
 
-		virtual void setBoneIndex(int inValue) { _boneIndex = inValue; }
+		virtual void setBoneIndex(int inValue) {
+			_boneIndex = inValue;
+		}
 
 	protected:
 		int _boneIndex;
-    };
+	};
 
 	/// Base class for timelines that animate a single bone property.
 	class SP_API BoneTimeline1 : public CurveTimeline1, public BoneTimeline {
@@ -61,19 +67,17 @@ namespace spine {
 		friend class SkeletonJson;
 		friend class AnimationState;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		BoneTimeline1(size_t frameCount, size_t bezierCount, int boneIndex, Property property);
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 
 	protected:
 		/// Applies changes to the pose based on the timeline values.
-		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-						   MixDirection direction) = 0;
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) = 0;
 	};
 
 	/// Base class for timelines that animate two bone properties.
@@ -82,20 +86,17 @@ namespace spine {
 		friend class SkeletonJson;
 		friend class AnimationState;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		BoneTimeline2(size_t frameCount, size_t bezierCount, int boneIndex, Property property1, Property property2);
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 
 	protected:
 		/// Applies changes to the pose based on the timeline values.
-		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend,
-						   MixDirection direction) = 0;
-
+		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) = 0;
 	};
 }
 

@@ -219,7 +219,8 @@ void unregister_spine_godot_types() {
 
 
 #ifdef SPINE_GODOT_EXTENSION
-extern "C" GDExtensionBool GDE_EXPORT spine_godot_library_init(GDExtensionInterfaceGetProcAddress p_get_proc_address, GDExtensionClassLibraryPtr p_library, GDExtensionInitialization *r_initialization) {
+extern "C" GDExtensionBool GDE_EXPORT spine_godot_library_init(GDExtensionInterfaceGetProcAddress p_get_proc_address,
+															   GDExtensionClassLibraryPtr p_library, GDExtensionInitialization *r_initialization) {
 	GDExtensionBinding::InitObject init_obj(p_get_proc_address, p_library, r_initialization);
 	init_obj.register_initializer(initialize_spine_godot_module);
 	init_obj.register_terminator(uninitialize_spine_godot_module);

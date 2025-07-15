@@ -65,18 +65,18 @@ namespace spine {
 		friend class Slot;
 
 	public:
-		SlotData(int index, const String& name, BoneData& boneData);
+		SlotData(int index, const String &name, BoneData &boneData);
 
 		/// The index of the slot in Skeleton::getSlots().
 		int getIndex();
 
 		/// The bone this slot belongs to.
-		BoneData& getBoneData();
+		BoneData &getBoneData();
 
-		void setAttachmentName(const String& attachmentName);
+		void setAttachmentName(const String &attachmentName);
 
 		/// The name of the attachment that is visible for this slot in the setup pose, or empty if no attachment is visible.
-		const String& getAttachmentName();
+		const String &getAttachmentName();
 
 		/// The blend mode for drawing the slot's attachment.
 		BlendMode getBlendMode();
@@ -88,7 +88,7 @@ namespace spine {
 
 	private:
 		const int _index;
-		BoneData& _boneData;
+		BoneData &_boneData;
 		String _attachmentName;
 		BlendMode _blendMode;
 		bool _visible;

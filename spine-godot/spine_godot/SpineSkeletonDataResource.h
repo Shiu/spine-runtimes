@@ -85,11 +85,9 @@ private:
 	void update_skeleton_data();
 
 #ifdef SPINE_GODOT_EXTENSION
-	void load_resources(spine::Atlas *atlas, const String &json,
-						const PackedByteArray &binary);
+	void load_resources(spine::Atlas *atlas, const String &json, const PackedByteArray &binary);
 #else
-	void load_resources(spine::Atlas *atlas, const String &json,
-						const Vector<uint8_t> &binary);
+	void load_resources(spine::Atlas *atlas, const String &json, const Vector<uint8_t> &binary);
 #endif
 
 public:
@@ -101,11 +99,12 @@ public:
 	void set_atlas_res(const Ref<SpineAtlasResource> &atlas);
 	Ref<SpineAtlasResource> get_atlas_res();
 
-	void
-	set_skeleton_file_res(const Ref<SpineSkeletonFileResource> &skeleton_file);
+	void set_skeleton_file_res(const Ref<SpineSkeletonFileResource> &skeleton_file);
 	Ref<SpineSkeletonFileResource> get_skeleton_file_res();
 
-	spine::SkeletonData *get_skeleton_data() const { return skeleton_data; }
+	spine::SkeletonData *get_skeleton_data() const {
+		return skeleton_data;
+	}
 
 	spine::AnimationStateData *get_animation_state_data() const {
 		return animation_state_data;
@@ -152,17 +151,13 @@ public:
 
 	Ref<SpineAnimation> find_animation(const String &animation_name) const;
 
-	Ref<SpineIkConstraintData>
-	find_ik_constraint(const String &constraint_name) const;
+	Ref<SpineIkConstraintData> find_ik_constraint(const String &constraint_name) const;
 
-	Ref<SpineTransformConstraintData>
-	find_transform_constraint(const String &constraint_name) const;
+	Ref<SpineTransformConstraintData> find_transform_constraint(const String &constraint_name) const;
 
-	Ref<SpinePathConstraintData>
-	find_path_constraint(const String &constraint_name) const;
+	Ref<SpinePathConstraintData> find_path_constraint(const String &constraint_name) const;
 
-	Ref<SpinePhysicsConstraintData>
-	find_physics_constraint(const String &constraint_name) const;
+	Ref<SpinePhysicsConstraintData> find_physics_constraint(const String &constraint_name) const;
 
 	String get_skeleton_name() const;
 

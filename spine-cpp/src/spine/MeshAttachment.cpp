@@ -35,15 +35,9 @@ using namespace spine;
 
 RTTI_IMPL(MeshAttachment, VertexAttachment)
 
-MeshAttachment::MeshAttachment(const String &name) : VertexAttachment(name),
-													 _region(NULL),
-													 _path(),
-													 _color(1, 1, 1, 1),
-													 _hullLength(0),
-													 _parentMesh(NULL),
-													 _sequence(NULL),
-													 _width(0),
-													 _height(0) {}
+MeshAttachment::MeshAttachment(const String &name)
+	: VertexAttachment(name), _region(NULL), _path(), _color(1, 1, 1, 1), _hullLength(0), _parentMesh(NULL), _sequence(NULL), _width(0), _height(0) {
+}
 
 MeshAttachment::~MeshAttachment() {
 	if (_sequence) delete _sequence;

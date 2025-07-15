@@ -58,7 +58,7 @@ namespace spine {
 		Color _color;
 		Color _darkColor;
 		bool _hasDarkColor;
-		Attachment* _attachment;
+		Attachment *_attachment;
 		int _sequenceIndex;
 		Array<float> _deform;
 
@@ -66,15 +66,15 @@ namespace spine {
 		SlotPose();
 		virtual ~SlotPose();
 
-		virtual void set(SlotPose& pose) override;
+		virtual void set(SlotPose &pose) override;
 
 		/// The color used to tint the slot's attachment. If getDarkColor() is set, this is used as the light color for two
 		/// color tinting.
-		Color& getColor();
+		Color &getColor();
 
 		/// The dark color used to tint the slot's attachment for two color tinting. The dark
 		/// color's alpha is not used.
-		Color& getDarkColor();
+		Color &getDarkColor();
 
 		/// Returns true if this slot has a dark color.
 		bool hasDarkColor();
@@ -82,12 +82,12 @@ namespace spine {
 		void setHasDarkColor(bool hasDarkColor);
 
 		/// The current attachment for the slot, or null if the slot has no attachment.
-		Attachment* getAttachment();
+		Attachment *getAttachment();
 
 		/// Sets the slot's attachment and, if the attachment changed, resets sequenceIndex and clears the deform.
 		/// The deform is not cleared if the old attachment has the same VertexAttachment::getTimelineAttachment() as the
 		/// specified attachment.
-		void setAttachment(Attachment* attachment);
+		void setAttachment(Attachment *attachment);
 
 		/// The index of the texture region to display when the slot's attachment has a Sequence. -1 represents the
 		/// Sequence::getSetupIndex().
@@ -98,7 +98,7 @@ namespace spine {
 		/// weighted mesh, the entries are an offset for each vertex which will be added to the mesh's local vertex positions.
 		///
 		/// See VertexAttachment::computeWorldVertices() and DeformTimeline.
-		Array<float>& getDeform();
+		Array<float> &getDeform();
 	};
 }
 

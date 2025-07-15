@@ -42,11 +42,8 @@ using namespace spine;
 
 RTTI_IMPL(SliderMixTimeline, ConstraintTimeline1)
 
-SliderMixTimeline::SliderMixTimeline(size_t frameCount, size_t bezierCount,
-									 int sliderIndex) : ConstraintTimeline1(frameCount,
-																			bezierCount,
-																			sliderIndex,
-																			Property_SliderMix) {
+SliderMixTimeline::SliderMixTimeline(size_t frameCount, size_t bezierCount, int sliderIndex)
+	: ConstraintTimeline1(frameCount, bezierCount, sliderIndex, Property_SliderMix) {
 	PropertyId ids[] = {((PropertyId) Property_SliderMix << 32) | sliderIndex};
 	setPropertyIds(ids, 1);
 }
@@ -54,8 +51,8 @@ SliderMixTimeline::SliderMixTimeline(size_t frameCount, size_t bezierCount,
 SliderMixTimeline::~SliderMixTimeline() {
 }
 
-void SliderMixTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents,
-							  float alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
+void SliderMixTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+							  MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
 	SP_UNUSED(direction);

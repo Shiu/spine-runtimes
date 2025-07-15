@@ -64,12 +64,12 @@ namespace spine {
 
 		PathConstraint(PathConstraintData &data, Skeleton &skeleton);
 
-		PathConstraint* copy(Skeleton &skeleton);
+		PathConstraint *copy(Skeleton &skeleton);
 
 		/// Applies the constraint to the constrained bones.
-		virtual void update(Skeleton& skeleton, Physics physics) override;
+		virtual void update(Skeleton &skeleton, Physics physics) override;
 
-		virtual void sort(Skeleton& skeleton) override;
+		virtual void sort(Skeleton &skeleton) override;
 
 		virtual bool isSourceActive() override;
 
@@ -84,7 +84,6 @@ namespace spine {
 		virtual PathConstraintData &getData() override;
 
 
-
 	private:
 		Array<BonePose *> _bones;
 		Slot *_slot;
@@ -96,18 +95,18 @@ namespace spine {
 		Array<float> _lengths;
 		Array<float> _segments;
 
-		Array<float> &computeWorldPositions(Skeleton& skeleton, PathAttachment &path, int spacesCount, bool tangents);
+		Array<float> &computeWorldPositions(Skeleton &skeleton, PathAttachment &path, int spacesCount, bool tangents);
 
 		void addBeforePosition(float p, Array<float> &temp, int i, Array<float> &output, int o);
 
 		void addAfterPosition(float p, Array<float> &temp, int i, Array<float> &output, int o);
 
-		void addCurvePosition(float p, float x1, float y1, float cx1, float cy1, float cx2, float cy2, float x2, float y2,
-						 Array<float> &output, int o, bool tangents);
+		void addCurvePosition(float p, float x1, float y1, float cx1, float cy1, float cx2, float cy2, float x2, float y2, Array<float> &output,
+							  int o, bool tangents);
 
-		void sortPathSlot(Skeleton& skeleton, Skin& skin, int slotIndex, Bone& slotBone);
+		void sortPathSlot(Skeleton &skeleton, Skin &skin, int slotIndex, Bone &slotBone);
 
-		void sortPath(Skeleton& skeleton, Attachment* attachment, Bone& slotBone);
+		void sortPath(Skeleton &skeleton, Attachment *attachment, Bone &slotBone);
 	};
 }
 

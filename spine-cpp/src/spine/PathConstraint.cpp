@@ -51,7 +51,8 @@ const int PathConstraint::NONE = -1;
 const int PathConstraint::BEFORE = -2;
 const int PathConstraint::AFTER = -3;
 
-PathConstraint::PathConstraint(PathConstraintData &data, Skeleton &skeleton) : ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>(data) {
+PathConstraint::PathConstraint(PathConstraintData &data, Skeleton &skeleton)
+	: ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>(data) {
 
 	_bones.ensureCapacity(data.getBones().size());
 	for (size_t i = 0; i < data.getBones().size(); i++) {
@@ -227,10 +228,8 @@ void PathConstraint::sort(Skeleton &skeleton) {
 		skeleton.constrained(*bone);
 	}
 	skeleton._updateCache.add(this);
-	for (size_t i = 0; i < boneCount; i++)
-		skeleton.sortReset(bones[i]->_bone->getChildren());
-	for (size_t i = 0; i < boneCount; i++)
-		bones[i]->_bone->_sorted = true;
+	for (size_t i = 0; i < boneCount; i++) skeleton.sortReset(bones[i]->_bone->getChildren());
+	for (size_t i = 0; i < boneCount; i++) bones[i]->_bone->_sorted = true;
 }
 
 bool PathConstraint::isSourceActive() {
@@ -253,8 +252,7 @@ void PathConstraint::setSlot(Slot *slot) {
 	_slot = slot;
 }
 
-Array<float> &
-PathConstraint::computeWorldPositions(Skeleton &skeleton, PathAttachment &path, int spacesCount, bool tangents) {
+Array<float> &PathConstraint::computeWorldPositions(Skeleton &skeleton, PathAttachment &path, int spacesCount, bool tangents) {
 	float position = _applied->_position;
 	float *spaces = _spaces.buffer();
 	_positions.setSize(spacesCount * 3 + 2, 0);
@@ -332,8 +330,8 @@ PathConstraint::computeWorldPositions(Skeleton &skeleton, PathAttachment &path, 
 				} else
 					path.computeWorldVertices(skeleton, *_slot, curve * 6 + 2, 8, world, 0, 2);
 			}
-			addCurvePosition(p, worldBuffer[0], worldBuffer[1], worldBuffer[2], worldBuffer[3], worldBuffer[4], worldBuffer[5], worldBuffer[6], worldBuffer[7],
-							 out, o, tangents || (i > 0 && space < epsilon));
+			addCurvePosition(p, worldBuffer[0], worldBuffer[1], worldBuffer[2], worldBuffer[3], worldBuffer[4], worldBuffer[5], worldBuffer[6],
+							 worldBuffer[7], out, o, tangents || (i > 0 && space < epsilon));
 		}
 		return out;
 	}
@@ -493,8 +491,7 @@ PathConstraint::computeWorldPositions(Skeleton &skeleton, PathAttachment &path, 
 			}
 			break;
 		}
-		addCurvePosition(p * 0.1f, x1, y1, cx1, cy1, cx2, cy2, x2, y2, out, o,
-						 tangents || (i > 0 && space < epsilon));
+		addCurvePosition(p * 0.1f, x1, y1, cx1, cy1, cx2, cy2, x2, y2, out, o, tangents || (i > 0 && space < epsilon));
 	}
 
 	return out;
@@ -514,8 +511,8 @@ void PathConstraint::addAfterPosition(float p, Array<float> &temp, int i, Array<
 	output[o + 2] = r;
 }
 
-void PathConstraint::addCurvePosition(float p, float x1, float y1, float cx1, float cy1, float cx2, float cy2, float x2,
-									  float y2, Array<float> &output, int o, bool tangents) {
+void PathConstraint::addCurvePosition(float p, float x1, float y1, float cx1, float cy1, float cx2, float cy2, float x2, float y2,
+									  Array<float> &output, int o, bool tangents) {
 	if (p < epsilon || MathUtil::isNan(p)) {
 		output[o] = x1;
 		output[o + 1] = y1;
@@ -531,8 +528,7 @@ void PathConstraint::addCurvePosition(float p, float x1, float y1, float cx1, fl
 		if (p < 0.001f)
 			output[o + 2] = MathUtil::atan2(cy1 - y1, cx1 - x1);
 		else
-			output[o + 2] = MathUtil::atan2(y - (y1 * uu + cy1 * ut * 2 + cy2 * tt),
-											x - (x1 * uu + cx1 * ut * 2 + cx2 * tt));
+			output[o + 2] = MathUtil::atan2(y - (y1 * uu + cy1 * ut * 2 + cy2 * tt), x - (x1 * uu + cx1 * ut * 2 + cx2 * tt));
 	}
 }
 
@@ -555,8 +551,7 @@ void PathConstraint::sortPath(Skeleton &skeleton, Attachment *attachment, Bone &
 		for (size_t i = 0, n = pathBones.size(); i < n;) {
 			int nn = pathBones[i++];
 			nn += i;
-			while (i < (size_t) nn)
-				skeleton.sortBone(bones[pathBones[i++]]);
+			while (i < (size_t) nn) skeleton.sortBone(bones[pathBones[i++]]);
 		}
 	}
 }

@@ -52,8 +52,8 @@ DrawOrderTimeline::DrawOrderTimeline(size_t frameCount) : Timeline(frameCount, 1
 	}
 }
 
-void DrawOrderTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha,
-							  MixBlend blend, MixDirection direction, bool appliedPose) {
+void DrawOrderTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+							  MixDirection direction, bool appliedPose) {
 	SP_UNUSED(appliedPose);
 	SP_UNUSED(lastTime);
 	SP_UNUSED(pEvents);
@@ -65,8 +65,7 @@ void DrawOrderTimeline::apply(Skeleton &skeleton, float lastTime, float time, Ar
 		if (blend == MixBlend_Setup) {
 			drawOrder.clear();
 			drawOrder.ensureCapacity(slots.size());
-			for (size_t i = 0, n = slots.size(); i < n; ++i)
-				drawOrder.add(slots[i]);
+			for (size_t i = 0, n = slots.size(); i < n; ++i) drawOrder.add(slots[i]);
 		}
 		return;
 	}
@@ -75,8 +74,7 @@ void DrawOrderTimeline::apply(Skeleton &skeleton, float lastTime, float time, Ar
 		if (blend == MixBlend_Setup || blend == MixBlend_First) {
 			drawOrder.clear();
 			drawOrder.ensureCapacity(slots.size());
-			for (size_t i = 0, n = slots.size(); i < n; ++i)
-				drawOrder.add(slots[i]);
+			for (size_t i = 0, n = slots.size(); i < n; ++i) drawOrder.add(slots[i]);
 		}
 		return;
 	}
@@ -85,13 +83,11 @@ void DrawOrderTimeline::apply(Skeleton &skeleton, float lastTime, float time, Ar
 	if (drawOrderToSetupIndex.size() == 0) {
 		drawOrder.clear();
 		drawOrder.ensureCapacity(slots.size());
-		for (size_t i = 0, n = slots.size(); i < n; ++i)
-			drawOrder.add(slots[i]);
+		for (size_t i = 0, n = slots.size(); i < n; ++i) drawOrder.add(slots[i]);
 	} else {
 		drawOrder.clear();
 		drawOrder.ensureCapacity(drawOrderToSetupIndex.size());
-		for (size_t i = 0, n = drawOrderToSetupIndex.size(); i < n; ++i)
-			drawOrder.add(slots[drawOrderToSetupIndex[i]]);
+		for (size_t i = 0, n = drawOrderToSetupIndex.size(); i < n; ++i) drawOrder.add(slots[drawOrderToSetupIndex[i]]);
 	}
 }
 

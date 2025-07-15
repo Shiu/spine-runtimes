@@ -105,14 +105,14 @@ namespace spine {
 		}
 
 		// Parse hex color string like "ff0000ff" (RRGGBBAA) or "ff0000" (RRGGBB)
-		static Color valueOf(const char* hexString) {
+		static Color valueOf(const char *hexString) {
 			Color color;
 			valueOf(hexString, color);
 			return color;
 		}
 
 		// Parse hex color string into existing Color object
-		static void valueOf(const char* hexString, Color& color) {
+		static void valueOf(const char *hexString, Color &color) {
 			size_t len = strlen(hexString);
 			if (len >= 6) {
 				color.r = parseHex(hexString, 0);
@@ -122,7 +122,7 @@ namespace spine {
 			}
 		}
 
-		static float parseHex(const char* value, size_t index) {
+		static float parseHex(const char *value, size_t index) {
 			char digits[3];
 			digits[0] = value[index * 2];
 			digits[1] = value[index * 2 + 1];
@@ -131,8 +131,8 @@ namespace spine {
 		}
 
 		// Convert packed RGBA8888 integer to Color
-		static void rgba8888ToColor(Color& color, int value) {
-			unsigned int rgba = (unsigned int)value;
+		static void rgba8888ToColor(Color &color, int value) {
+			unsigned int rgba = (unsigned int) value;
 			color.r = ((rgba & 0xff000000) >> 24) / 255.0f;
 			color.g = ((rgba & 0x00ff0000) >> 16) / 255.0f;
 			color.b = ((rgba & 0x0000ff00) >> 8) / 255.0f;
@@ -140,8 +140,8 @@ namespace spine {
 		}
 
 		// Convert packed RGB888 integer to Color (no alpha)
-		static void rgb888ToColor(Color& color, int value) {
-			unsigned int rgb = (unsigned int)value;
+		static void rgb888ToColor(Color &color, int value) {
+			unsigned int rgb = (unsigned int) value;
 			color.r = ((rgb & 0xff0000) >> 16) / 255.0f;
 			color.g = ((rgb & 0x00ff00) >> 8) / 255.0f;
 			color.b = (rgb & 0x0000ff) / 255.0f;
@@ -153,4 +153,4 @@ namespace spine {
 }
 
 
-#endif //SPINE_COLOR_H
+#endif//SPINE_COLOR_H

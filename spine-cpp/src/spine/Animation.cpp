@@ -41,11 +41,8 @@
 
 using namespace spine;
 
-Animation::Animation(const String &name, Array<Timeline *> &timelines, float duration) : _timelines(),
-																						 _timelineIds(),
-																						 _bones(),
-																						 _duration(duration),
-																						 _name(name) {
+Animation::Animation(const String &name, Array<Timeline *> &timelines, float duration)
+	: _timelines(), _timelineIds(), _bones(), _duration(duration), _name(name) {
 	setTimelines(timelines);
 }
 
@@ -60,8 +57,8 @@ Animation::~Animation() {
 	ArrayUtils::deleteElements(_timelines);
 }
 
-void Animation::apply(Skeleton &skeleton, float lastTime, float time, bool loop, Array<Event *> *pEvents, float alpha,
-					  MixBlend blend, MixDirection direction, bool appliedPose) {
+void Animation::apply(Skeleton &skeleton, float lastTime, float time, bool loop, Array<Event *> *pEvents, float alpha, MixBlend blend,
+					  MixDirection direction, bool appliedPose) {
 	if (loop && _duration != 0) {
 		time = MathUtil::fmod(time, _duration);
 		if (lastTime > 0) {

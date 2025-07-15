@@ -113,7 +113,8 @@ void SpineBoneNode::_get_property_list(List<PropertyInfo> *list) const {
 	Vector<String> bone_names;
 #endif
 	SpineSprite *sprite = find_parent_sprite();
-	if (sprite) sprite->get_skeleton_data_res()->get_bone_names(bone_names);
+	if (sprite)
+		sprite->get_skeleton_data_res()->get_bone_names(bone_names);
 	else
 		bone_names.push_back(bone_name);
 	auto element = list->front();

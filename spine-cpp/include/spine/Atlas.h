@@ -101,10 +101,9 @@ namespace spine {
 		int index;
 		void *texture;
 
-		explicit AtlasPage(const String &inName) : name(inName), format(Format_RGBA8888),
-												   minFilter(TextureFilter_Nearest),
-												   magFilter(TextureFilter_Nearest), uWrap(TextureWrap_ClampToEdge),
-												   vWrap(TextureWrap_ClampToEdge), width(0), height(0), pma(false), index(0), texture(nullptr) {
+		explicit AtlasPage(const String &inName)
+			: name(inName), format(Format_RGBA8888), minFilter(TextureFilter_Nearest), magFilter(TextureFilter_Nearest),
+			  uWrap(TextureWrap_ClampToEdge), vWrap(TextureWrap_ClampToEdge), width(0), height(0), pma(false), index(0), texture(nullptr) {
 		}
 	};
 
@@ -113,47 +112,118 @@ namespace spine {
 		friend class RegionAttachment;
 		friend class MeshAttachment;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
-		AtlasRegion() : TextureRegion(), _page(nullptr), _name(""), _index(0), _x(0), _y(0),
-			_offsetX(0), _offsetY(0), _packedWidth(0), _packedHeight(0),
-			_originalWidth(0), _originalHeight(0), _rotate(false), _degrees(0) {}
-		~AtlasRegion() {}
-		AtlasPage *getPage() const { return _page; }
-		String getName() const { return _name; }
-		int getIndex() const { return _index; }
-		int getX() const { return _x; }
-		int getY() const { return _y; }
-		float getOffsetX() const { return _offsetX; }
-		float getOffsetY() const { return _offsetY; }
-		int getPackedWidth() const { return _packedWidth; }
-		int getPackedHeight() const { return _packedHeight; }
-		int getOriginalWidth() const { return _originalWidth; }
-		int getOriginalHeight() const { return _originalHeight; }
-		bool getRotate() const { return _rotate; }
-		int getDegrees() const { return _degrees; }
-		Array<int> &getSplits() { return _splits; }
-		Array<int> &getPads() { return _pads; }
-		Array<String> &getNames() { return _names; }
-		Array<float> &getValues() { return _values; }
-		void setPage(AtlasPage *value) { _page = value; }
-		void setName(const String &value) { _name = value; }
-		void setIndex(int value) { _index = value; }
-		void setX(int value) { _x = value; }
-		void setY(int value) { _y = value; }
-		void setOffsetX(float value) { _offsetX = value; }
-		void setOffsetY(float value) { _offsetY = value; }
-		void setPackedWidth(int value) { _packedWidth = value; }
-		void setPackedHeight(int value) { _packedHeight = value; }
-		void setOriginalWidth(int value) { _originalWidth = value; }
-		void setOriginalHeight(int value) { _originalHeight = value; }
-		void setRotate(bool value) { _rotate = value; }
-		void setDegrees(int value) { _degrees = value; }
-		void setSplits(const Array<int> &value) { _splits = value; }
-		void setPads(const Array<int> &value) { _pads = value; }
-		void setNames(const Array<String> &value) { _names = value; }
-		void setValues(const Array<float> &value) { _values = value; }
+		AtlasRegion()
+			: TextureRegion(), _page(nullptr), _name(""), _index(0), _x(0), _y(0), _offsetX(0), _offsetY(0), _packedWidth(0), _packedHeight(0),
+			  _originalWidth(0), _originalHeight(0), _rotate(false), _degrees(0) {
+		}
+		~AtlasRegion() {
+		}
+		AtlasPage *getPage() const {
+			return _page;
+		}
+		String getName() const {
+			return _name;
+		}
+		int getIndex() const {
+			return _index;
+		}
+		int getX() const {
+			return _x;
+		}
+		int getY() const {
+			return _y;
+		}
+		float getOffsetX() const {
+			return _offsetX;
+		}
+		float getOffsetY() const {
+			return _offsetY;
+		}
+		int getPackedWidth() const {
+			return _packedWidth;
+		}
+		int getPackedHeight() const {
+			return _packedHeight;
+		}
+		int getOriginalWidth() const {
+			return _originalWidth;
+		}
+		int getOriginalHeight() const {
+			return _originalHeight;
+		}
+		bool getRotate() const {
+			return _rotate;
+		}
+		int getDegrees() const {
+			return _degrees;
+		}
+		Array<int> &getSplits() {
+			return _splits;
+		}
+		Array<int> &getPads() {
+			return _pads;
+		}
+		Array<String> &getNames() {
+			return _names;
+		}
+		Array<float> &getValues() {
+			return _values;
+		}
+		void setPage(AtlasPage *value) {
+			_page = value;
+		}
+		void setName(const String &value) {
+			_name = value;
+		}
+		void setIndex(int value) {
+			_index = value;
+		}
+		void setX(int value) {
+			_x = value;
+		}
+		void setY(int value) {
+			_y = value;
+		}
+		void setOffsetX(float value) {
+			_offsetX = value;
+		}
+		void setOffsetY(float value) {
+			_offsetY = value;
+		}
+		void setPackedWidth(int value) {
+			_packedWidth = value;
+		}
+		void setPackedHeight(int value) {
+			_packedHeight = value;
+		}
+		void setOriginalWidth(int value) {
+			_originalWidth = value;
+		}
+		void setOriginalHeight(int value) {
+			_originalHeight = value;
+		}
+		void setRotate(bool value) {
+			_rotate = value;
+		}
+		void setDegrees(int value) {
+			_degrees = value;
+		}
+		void setSplits(const Array<int> &value) {
+			_splits = value;
+		}
+		void setPads(const Array<int> &value) {
+			_pads = value;
+		}
+		void setNames(const Array<String> &value) {
+			_names = value;
+		}
+		void setValues(const Array<float> &value) {
+			_values = value;
+		}
+
 	private:
 		AtlasPage *_page;
 		String _name;

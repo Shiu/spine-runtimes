@@ -50,22 +50,22 @@ namespace spine {
 		RTTI_DECL
 
 	public:
-		Slider(SliderData& data, Skeleton& skeleton);
+		Slider(SliderData &data, Skeleton &skeleton);
 
-		Slider* copy(Skeleton& skeleton);
+		Slider *copy(Skeleton &skeleton);
 
-		virtual void update(Skeleton& skeleton, Physics physics) override;
+		virtual void update(Skeleton &skeleton, Physics physics) override;
 
-		virtual void sort(Skeleton& skeleton) override;
+		virtual void sort(Skeleton &skeleton) override;
 
 		virtual bool isSourceActive() override;
 
-		Bone* getBone();
+		Bone *getBone();
 
-		void setBone(Bone* bone);
+		void setBone(Bone *bone);
 
 	private:
-		Bone* _bone;
+		Bone *_bone;
 		static float _offsets[6];
 	};
 }

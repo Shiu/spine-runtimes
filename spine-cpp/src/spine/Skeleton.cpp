@@ -59,8 +59,9 @@
 
 using namespace spine;
 
-Skeleton::Skeleton(SkeletonData &skeletonData) : _data(skeletonData), _skin(NULL), _color(1, 1, 1, 1), _x(0), _y(0),
-												 _scaleX(1), _scaleY(1), _windX(1), _windY(0), _gravityX(0), _gravityY(1), _time(0), _update(0) {
+Skeleton::Skeleton(SkeletonData &skeletonData)
+	: _data(skeletonData), _skin(NULL), _color(1, 1, 1, 1), _x(0), _y(0), _scaleX(1), _scaleY(1), _windX(1), _windY(0), _gravityX(0), _gravityY(1),
+	  _time(0), _update(0) {
 
 	_bones.ensureCapacity(_data.getBones().size());
 	for (size_t i = 0; i < _data.getBones().size(); ++i) {
@@ -145,7 +146,7 @@ void Skeleton::updateCache() {
 	for (size_t i = 0; i < n; i++) {
 		Constraint *constraint = constraints[i];
 		constraint->_active = constraint->isSourceActive() &&
-							  ((!constraint->getData().getSkinRequired()) || (_skin && _skin->_constraints.contains(&constraint->getData())));
+			((!constraint->getData().getSkinRequired()) || (_skin && _skin->_constraints.contains(&constraint->getData())));
 		if (constraint->_active) constraint->sort(*this);
 	}
 
@@ -170,20 +171,15 @@ void Skeleton::printUpdateCache() {
 		if (updatable->getRTTI().isExactly(Bone::rtti)) {
 			printf("bone %s\n", ((Bone *) updatable)->getData().getName().buffer());
 		} else if (updatable->getRTTI().isExactly(TransformConstraint::rtti)) {
-			printf("transform constraint %s\n",
-				   ((TransformConstraint *) updatable)->getData().getName().buffer());
+			printf("transform constraint %s\n", ((TransformConstraint *) updatable)->getData().getName().buffer());
 		} else if (updatable->getRTTI().isExactly(IkConstraint::rtti)) {
-			printf("ik constraint %s\n",
-				   ((IkConstraint *) updatable)->getData().getName().buffer());
+			printf("ik constraint %s\n", ((IkConstraint *) updatable)->getData().getName().buffer());
 		} else if (updatable->getRTTI().isExactly(PathConstraint::rtti)) {
-			printf("path constraint %s\n",
-				   ((PathConstraint *) updatable)->getData().getName().buffer());
+			printf("path constraint %s\n", ((PathConstraint *) updatable)->getData().getName().buffer());
 		} else if (updatable->getRTTI().isExactly(PhysicsConstraint::rtti)) {
-			printf("physics constraint %s\n",
-				   ((PhysicsConstraint *) updatable)->getData().getName().buffer());
+			printf("physics constraint %s\n", ((PhysicsConstraint *) updatable)->getData().getName().buffer());
 		} else if (updatable->getRTTI().isExactly(Slider::rtti)) {
-			printf("slider %s\n",
-				   ((Slider *) updatable)->getData().getName().buffer());
+			printf("slider %s\n", ((Slider *) updatable)->getData().getName().buffer());
 		}
 	}
 }

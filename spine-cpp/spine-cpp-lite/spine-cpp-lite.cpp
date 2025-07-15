@@ -38,7 +38,7 @@ struct AnimationStateEvent {
 	EventType type;
 	TrackEntry *entry;
 	Event *event;
-	AnimationStateEvent(EventType type, TrackEntry *entry, Event *event) : type(type), entry(entry), event(event){};
+	AnimationStateEvent(EventType type, TrackEntry *entry, Event *event) : type(type), entry(entry), event(event) {};
 };
 
 struct EventListener : public AnimationStateListenerObject {
@@ -211,7 +211,8 @@ class CallbackTextureLoad : public TextureLoader {
 	spine_texture_loader_unload_func unloadCb;
 
 public:
-	CallbackTextureLoad() : loadCb(nullptr), unloadCb(nullptr) {}
+	CallbackTextureLoad() : loadCb(nullptr), unloadCb(nullptr) {
+	}
 
 	void setCallbacks(spine_texture_loader_load_func load, spine_texture_loader_unload_func unload) {
 		loadCb = load;
@@ -229,7 +230,8 @@ public:
 
 CallbackTextureLoad callbackLoader;
 
-spine_atlas spine_atlas_load_callback(const utf8 *atlasData, const utf8 *atlasDir, spine_texture_loader_load_func load, spine_texture_loader_unload_func unload) {
+spine_atlas spine_atlas_load_callback(const utf8 *atlasData, const utf8 *atlasDir, spine_texture_loader_load_func load,
+									  spine_texture_loader_unload_func unload) {
 	if (!atlasData) return nullptr;
 	int32_t length = (int32_t) strlen(atlasData);
 	callbackLoader.setCallbacks(load, unload);
@@ -815,7 +817,8 @@ void spine_animation_state_clear_track(spine_animation_state state, int32_t trac
 	_state->clearTrack(trackIndex);
 }
 
-spine_track_entry spine_animation_state_set_animation_by_name(spine_animation_state state, int32_t trackIndex, const utf8 *animationName, spine_bool loop) {
+spine_track_entry spine_animation_state_set_animation_by_name(spine_animation_state state, int32_t trackIndex, const utf8 *animationName,
+															  spine_bool loop) {
 	if (state == nullptr) return nullptr;
 	AnimationState *_state = (AnimationState *) state;
 	return (spine_track_entry) _state->setAnimation(trackIndex, animationName, loop);
@@ -827,13 +830,15 @@ spine_track_entry spine_animation_state_set_animation(spine_animation_state stat
 	return (spine_track_entry) _state->setAnimation(trackIndex, (Animation *) animation, loop);
 }
 
-spine_track_entry spine_animation_state_add_animation_by_name(spine_animation_state state, int32_t trackIndex, const utf8 *animationName, spine_bool loop, float delay) {
+spine_track_entry spine_animation_state_add_animation_by_name(spine_animation_state state, int32_t trackIndex, const utf8 *animationName,
+															  spine_bool loop, float delay) {
 	if (state == nullptr) return nullptr;
 	AnimationState *_state = (AnimationState *) state;
 	return (spine_track_entry) _state->addAnimation(trackIndex, animationName, loop, delay);
 }
 
-spine_track_entry spine_animation_state_add_animation(spine_animation_state state, int32_t trackIndex, spine_animation animation, spine_bool loop, float delay) {
+spine_track_entry spine_animation_state_add_animation(spine_animation_state state, int32_t trackIndex, spine_animation animation, spine_bool loop,
+													  float delay) {
 	if (state == nullptr) return nullptr;
 	AnimationState *_state = (AnimationState *) state;
 	return (spine_track_entry) _state->addAnimation(trackIndex, (Animation *) animation, loop, delay);
@@ -2030,7 +2035,8 @@ void spine_bone_update_world_transform(spine_bone bone) {
 	_bone->updateWorldTransform();
 }
 
-void spine_bone_update_world_transform_with(spine_bone bone, float x, float y, float rotation, float scaleX, float scaleY, float shearX, float shearY) {
+void spine_bone_update_world_transform_with(spine_bone bone, float x, float y, float rotation, float scaleX, float scaleY, float shearX,
+											float shearY) {
 	if (bone == nullptr) return;
 	Bone *_bone = (Bone *) bone;
 	_bone->updateWorldTransform(x, y, rotation, scaleX, scaleY, shearX, shearY);
@@ -4779,7 +4785,8 @@ spine_bounding_box_attachment spine_skeleton_bounds_contains_point_attachment(sp
 	return (spine_bounding_box_attachment) ((SkeletonBounds *) bounds)->containsPoint(x, y);
 }
 
-spine_bounding_box_attachment spine_skeleton_bounds_intersects_segment_attachment(spine_skeleton_bounds bounds, float x1, float y1, float x2, float y2) {
+spine_bounding_box_attachment spine_skeleton_bounds_intersects_segment_attachment(spine_skeleton_bounds bounds, float x1, float y1, float x2,
+																				  float y2) {
 	if (bounds == nullptr) return nullptr;
 	return (spine_bounding_box_attachment) ((SkeletonBounds *) bounds)->intersectsSegment(x1, y1, x2, y2);
 }

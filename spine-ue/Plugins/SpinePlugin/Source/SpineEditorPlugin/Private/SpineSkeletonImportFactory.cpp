@@ -75,7 +75,8 @@ void LoadAtlas(const FString &Filename, const FString &TargetPath) {
 	AssetToolsModule.Get().ImportAssets(fileNames, TargetPath);
 }
 
-UObject *USpineSkeletonAssetFactory::FactoryCreateFile(UClass *InClass, UObject *InParent, FName InName, EObjectFlags Flags, const FString &Filename, const TCHAR *Parms, FFeedbackContext *Warn, bool &bOutOperationCanceled) {
+UObject *USpineSkeletonAssetFactory::FactoryCreateFile(UClass *InClass, UObject *InParent, FName InName, EObjectFlags Flags, const FString &Filename,
+													   const TCHAR *Parms, FFeedbackContext *Warn, bool &bOutOperationCanceled) {
 	USpineSkeletonDataAsset *asset = NewObject<USpineSkeletonDataAsset>(InParent, InClass, InName, Flags);
 	TArray<uint8> rawData;
 	if (!FFileHelper::LoadFileToArray(rawData, *Filename, 0)) {
@@ -94,8 +95,7 @@ bool USpineSkeletonAssetFactory::CanReimport(UObject *Obj, TArray<FString> &OutF
 	if (!asset) return false;
 
 	FString filename = asset->GetSkeletonDataFileName().ToString();
-	if (!filename.IsEmpty())
-		OutFilenames.Add(filename);
+	if (!filename.IsEmpty()) OutFilenames.Add(filename);
 
 	return true;
 }
@@ -103,8 +103,7 @@ bool USpineSkeletonAssetFactory::CanReimport(UObject *Obj, TArray<FString> &OutF
 void USpineSkeletonAssetFactory::SetReimportPaths(UObject *Obj, const TArray<FString> &NewReimportPaths) {
 	USpineSkeletonDataAsset *asset = Cast<USpineSkeletonDataAsset>(Obj);
 
-	if (asset && ensure(NewReimportPaths.Num() == 1))
-		asset->SetSkeletonDataFileName(FName(*NewReimportPaths[0]));
+	if (asset && ensure(NewReimportPaths.Num() == 1)) asset->SetSkeletonDataFileName(FName(*NewReimportPaths[0]));
 }
 
 EReimportResult::Type USpineSkeletonAssetFactory::Reimport(UObject *Obj) {
@@ -116,7 +115,8 @@ EReimportResult::Type USpineSkeletonAssetFactory::Reimport(UObject *Obj) {
 	const FString longPackagePath = FPackageName::GetLongPackagePath(asset->GetOutermost()->GetPathName());
 	LoadAtlas(*asset->GetSkeletonDataFileName().ToString(), longPackagePath);
 
-	if (Obj->GetOuter()) Obj->GetOuter()->MarkPackageDirty();
+	if (Obj->GetOuter())
+		Obj->GetOuter()->MarkPackageDirty();
 	else
 		Obj->MarkPackageDirty();
 

@@ -37,12 +37,9 @@ using namespace spine;
 
 RTTI_IMPL(PathConstraintData, ConstraintData)
 
-PathConstraintData::PathConstraintData(const String &name) : ConstraintDataGeneric<PathConstraint, PathConstraintPose>(name),
-															 _slot(NULL),
-															 _positionMode(PositionMode_Fixed),
-															 _spacingMode(SpacingMode_Length),
-															 _rotateMode(RotateMode_Tangent),
-															 _offsetRotation(0) {
+PathConstraintData::PathConstraintData(const String &name)
+	: ConstraintDataGeneric<PathConstraint, PathConstraintPose>(name), _slot(NULL), _positionMode(PositionMode_Fixed),
+	  _spacingMode(SpacingMode_Length), _rotateMode(RotateMode_Tangent), _offsetRotation(0) {
 }
 
 

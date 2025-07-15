@@ -65,10 +65,9 @@ namespace spine {
 
 		RTTI_DECL
 	public:
-
 		explicit PathConstraintData(const String &name);
 
-		virtual Constraint* create(Skeleton& skeleton) override;
+		virtual Constraint *create(Skeleton &skeleton) override;
 
 
 		/// The bones that will be modified by this path constraint.

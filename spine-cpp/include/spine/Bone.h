@@ -76,29 +76,33 @@ namespace spine {
 
 	public:
 		/// @param parent May be NULL.
-		Bone(BoneData& data, Bone* parent);
+		Bone(BoneData &data, Bone *parent);
 
 		/// Copy constructor. Does not copy the children bones.
-		Bone(Bone& bone, Bone* parent);
+		Bone(Bone &bone, Bone *parent);
 
 		/// The parent bone, or null if this is the root bone.
-		Bone* getParent();
+		Bone *getParent();
 
 		/// The immediate children of this bone.
-		Array<Bone*>& getChildren();
+		Array<Bone *> &getChildren();
 
-		static bool isYDown() { return yDown; }
-		static void setYDown(bool value) { yDown = value; }
+		static bool isYDown() {
+			return yDown;
+		}
+		static void setYDown(bool value) {
+			yDown = value;
+		}
 
-		virtual void update(Skeleton& skeleton, Physics physics) override {
+		virtual void update(Skeleton &skeleton, Physics physics) override {
 			// No-op, need to extend Update so we can stuff Bone into Skeleton.updateCache temporarily.
 			// See Skeleton::updateCache().
 		}
 
 	private:
 		static bool yDown;
-		Bone* const _parent;
-		Array<Bone*> _children;
+		Bone *const _parent;
+		Array<Bone *> _children;
 		bool _sorted;
 	};
 }

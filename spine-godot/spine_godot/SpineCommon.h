@@ -85,15 +85,19 @@ using namespace godot;
 #define GDREGISTER_CLASS(x) ClassDB::register_class<x>()
 #define GEOMETRY2D Geometry
 #ifndef SNAME
-#define SNAME(m_arg) ([]() -> const StringName & { static StringName sname = _scs_create(m_arg); return sname; })()
+#define SNAME(m_arg)                                                                                                                                 \
+	([]() -> const StringName & {                                                                                                                    \
+		static StringName sname = _scs_create(m_arg);                                                                                                \
+		return sname;                                                                                                                                \
+	})()
 #endif
 #endif
 #endif
 
-#define SPINE_CHECK(obj, ret)                      \
-	if (!(obj)) {                                  \
-		ERR_PRINT("Native Spine object not set."); \
-		return ret;                                \
+#define SPINE_CHECK(obj, ret)                                                                                                                        \
+	if (!(obj)) {                                                                                                                                    \
+		ERR_PRINT("Native Spine object not set.");                                                                                                   \
+		return ret;                                                                                                                                  \
 	}
 
 #define SPINE_STRING(x) spine::String((x).utf8())
@@ -147,8 +151,12 @@ protected:
 #endif
 	}
 
-	void *_get_spine_object_internal() { return spine_object; }
-	void *_get_spine_owner_internal() { return spine_owner; }
+	void *_get_spine_object_internal() {
+		return spine_object;
+	}
+	void *_get_spine_owner_internal() {
+		return spine_owner;
+	}
 };
 
 class SpineSprite;

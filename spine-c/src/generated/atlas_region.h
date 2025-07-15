@@ -29,7 +29,7 @@ SPINE_C_API spine_array_int spine_atlas_region_get_splits(spine_atlas_region sel
 SPINE_C_API spine_array_int spine_atlas_region_get_pads(spine_atlas_region self);
 SPINE_C_API spine_array_float spine_atlas_region_get_values(spine_atlas_region self);
 SPINE_C_API void spine_atlas_region_set_page(spine_atlas_region self, spine_atlas_page value);
-SPINE_C_API void spine_atlas_region_set_name(spine_atlas_region self, const char * value);
+SPINE_C_API void spine_atlas_region_set_name(spine_atlas_region self, const char *value);
 SPINE_C_API void spine_atlas_region_set_index(spine_atlas_region self, int value);
 SPINE_C_API void spine_atlas_region_set_x(spine_atlas_region self, int value);
 SPINE_C_API void spine_atlas_region_set_y(spine_atlas_region self, int value);

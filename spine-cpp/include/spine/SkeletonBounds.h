@@ -81,18 +81,18 @@ namespace spine {
 		/// Returns true if the polygon contains any part of the line segment.
 		bool intersectsSegment(Polygon *polygon, float x1, float y1, float x2, float y2);
 
-        /// Returns the polygon for the given bounding box attachment or null if no
-        /// polygon can be found for the attachment. Requires a call to update() first.
+		/// Returns the polygon for the given bounding box attachment or null if no
+		/// polygon can be found for the attachment. Requires a call to update() first.
 		Polygon *getPolygon(BoundingBoxAttachment *attachment);
 
-        /// Returns the bounding box for the given polygon or null. Requires a call to update() first.
-        BoundingBoxAttachment * getBoundingBox(Polygon *polygon);
+		/// Returns the bounding box for the given polygon or null. Requires a call to update() first.
+		BoundingBoxAttachment *getBoundingBox(Polygon *polygon);
 
-        /// Returns all polygons or an empty array. Requires a call to update() first.
-        Array<Polygon *> &getPolygons();
+		/// Returns all polygons or an empty array. Requires a call to update() first.
+		Array<Polygon *> &getPolygons();
 
-        /// Returns all bounding boxes. Requires a call to update() first.
-        Array<BoundingBoxAttachment *> &getBoundingBoxes();
+		/// Returns all bounding boxes. Requires a call to update() first.
+		Array<BoundingBoxAttachment *> &getBoundingBoxes();
 
 		/// The left edge of the axis aligned bounding box.
 		float getMinX();
@@ -113,7 +113,7 @@ namespace spine {
 		float getHeight();
 
 	private:
-		Pool <Polygon> _polygonPool;
+		Pool<Polygon> _polygonPool;
 		Array<BoundingBoxAttachment *> _boundingBoxes;
 		Array<Polygon *> _polygons;
 		float _minX, _minY, _maxX, _maxY;

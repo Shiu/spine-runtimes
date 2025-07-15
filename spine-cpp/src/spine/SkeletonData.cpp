@@ -44,18 +44,9 @@
 
 using namespace spine;
 
-SkeletonData::SkeletonData() : _name(),
-							   _defaultSkin(NULL),
-							   _x(0),
-							   _y(0),
-							   _width(0),
-							   _height(0),
-							   _referenceScale(100),
-							   _version(),
-							   _hash(),
-							   _fps(30),
-							   _imagesPath(),
-							   _audioPath() {
+SkeletonData::SkeletonData()
+	: _name(), _defaultSkin(NULL), _x(0), _y(0), _width(0), _height(0), _referenceScale(100), _version(), _hash(), _fps(30), _imagesPath(),
+	  _audioPath() {
 }
 
 SkeletonData::~SkeletonData() {

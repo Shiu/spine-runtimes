@@ -405,7 +405,8 @@ float USpineWidget::GetAnimationDuration(FString AnimationName) {
 	CheckState();
 	if (skeleton) {
 		spine::Animation *animation = skeleton->getData()->findAnimation(TCHAR_TO_UTF8(*AnimationName));
-		if (animation == nullptr) return 0;
+		if (animation == nullptr)
+			return 0;
 		else
 			return animation->getDuration();
 	}

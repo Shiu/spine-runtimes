@@ -40,7 +40,7 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit RGBATimeline(size_t frameCount, size_t bezierCount, int slotIndex);
@@ -53,7 +53,7 @@ namespace spine {
 		void setFrame(int frame, float time, float r, float g, float b, float a);
 
 	protected:
-		virtual void apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) override;
+		virtual void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) override;
 
 		static const int ENTRIES = 5;
 		static const int R = 1;
@@ -68,7 +68,7 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit RGBTimeline(size_t frameCount, size_t bezierCount, int slotIndex);
@@ -81,7 +81,7 @@ namespace spine {
 		void setFrame(int frame, float time, float r, float g, float b);
 
 	protected:
-		virtual void apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) override;
+		virtual void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) override;
 
 		static const int ENTRIES = 4;
 		static const int R = 1;
@@ -94,16 +94,15 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit AlphaTimeline(size_t frameCount, size_t bezierCount, int slotIndex);
 
 		virtual ~AlphaTimeline();
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 	};
 
 	/// Changes a slot's SlotPose::getColor() and SlotPose::getDarkColor() for two color tinting.
@@ -112,7 +111,7 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit RGBA2Timeline(size_t frameCount, size_t bezierCount, int slotIndex);
@@ -125,7 +124,7 @@ namespace spine {
 		void setFrame(int frame, float time, float r, float g, float b, float a, float r2, float g2, float b2);
 
 	protected:
-		virtual void apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) override;
+		virtual void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) override;
 
 		static const int ENTRIES = 8;
 		static const int R = 1;
@@ -143,7 +142,7 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit RGB2Timeline(size_t frameCount, size_t bezierCount, int slotIndex);
@@ -156,7 +155,7 @@ namespace spine {
 		void setFrame(int frame, float time, float r, float g, float b, float r2, float g2, float b2);
 
 	protected:
-		virtual void apply(Slot& slot, SlotPose& pose, float time, float alpha, MixBlend blend) override;
+		virtual void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) override;
 
 		static const int ENTRIES = 7;
 		static const int R = 1;

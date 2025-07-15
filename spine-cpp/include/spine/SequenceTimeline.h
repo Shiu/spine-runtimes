@@ -44,23 +44,24 @@ namespace spine {
 
 		friend class SkeletonJson;
 
-	RTTI_DECL
+		RTTI_DECL
 
 	public:
 		explicit SequenceTimeline(size_t frameCount, int slotIndex, Attachment *attachment);
 
 		virtual ~SequenceTimeline();
 
-		virtual void
-		apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-			  MixDirection direction, bool appliedPose) override;
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+						   MixDirection direction, bool appliedPose) override;
 
 		/// Sets the time, mode, index, and frame time for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.
 		/// @param delay Seconds between frames.
 		void setFrame(int frame, float time, SequenceMode mode, int index, float delay);
 
-		Attachment *getAttachment() { return (Attachment*)_attachment; }
+		Attachment *getAttachment() {
+			return (Attachment *) _attachment;
+		}
 
 	protected:
 		HasTextureRegion *_attachment;

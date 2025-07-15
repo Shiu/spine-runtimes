@@ -54,12 +54,9 @@ RTTI_IMPL(ToScaleY, ToProperty)
 RTTI_IMPL(FromShearY, FromProperty)
 RTTI_IMPL(ToShearY, ToProperty)
 
-TransformConstraintData::TransformConstraintData(const String &name) : ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>(name),
-																	   _source(NULL),
-																	   _localSource(false),
-																	   _localTarget(false),
-																	   _additive(false),
-																	   _clamp(false) {
+TransformConstraintData::TransformConstraintData(const String &name)
+	: ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>(name), _source(NULL), _localSource(false), _localTarget(false),
+	  _additive(false), _clamp(false) {
 	for (int i = 0; i < 6; i++) {
 		_offsets[i] = 0;
 	}
@@ -176,7 +173,9 @@ ToProperty::~ToProperty() {
 float FromRotate::value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) {
 	if (local) return source._rotation + offsets[TransformConstraintData::ROTATION];
 	float sx = skeleton.getScaleX(), sy = skeleton.getScaleY();
-	float value = MathUtil::atan2(source._c / sy, source._a / sx) * MathUtil::Rad_Deg + ((source._a * source._d - source._b * source._c) * sx * sy > 0 ? offsets[TransformConstraintData::ROTATION] : -offsets[TransformConstraintData::ROTATION]);
+	float value = MathUtil::atan2(source._c / sy, source._a / sx) * MathUtil::Rad_Deg +
+		((source._a * source._d - source._b * source._c) * sx * sy > 0 ? offsets[TransformConstraintData::ROTATION]
+																	   : -offsets[TransformConstraintData::ROTATION]);
 	if (value < 0) value += 360;
 	return value;
 }
@@ -207,7 +206,9 @@ void ToRotate::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose
 }
 
 float FromX::value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) {
-	return local ? source._x + offsets[TransformConstraintData::X] : (offsets[TransformConstraintData::X] * source._a + offsets[TransformConstraintData::Y] * source._b + source._worldX) / skeleton.getScaleX();
+	return local
+		? source._x + offsets[TransformConstraintData::X]
+		: (offsets[TransformConstraintData::X] * source._a + offsets[TransformConstraintData::Y] * source._b + source._worldX) / skeleton.getScaleX();
 }
 
 float ToX::mix(TransformConstraintPose &pose) {
@@ -224,7 +225,9 @@ void ToX::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bon
 }
 
 float FromY::value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) {
-	return local ? source._y + offsets[TransformConstraintData::Y] : (offsets[TransformConstraintData::X] * source._c + offsets[TransformConstraintData::Y] * source._d + source._worldY) / skeleton.getScaleY();
+	return local
+		? source._y + offsets[TransformConstraintData::Y]
+		: (offsets[TransformConstraintData::X] * source._c + offsets[TransformConstraintData::Y] * source._d + source._worldY) / skeleton.getScaleY();
 }
 
 float ToY::mix(TransformConstraintPose &pose) {
@@ -303,7 +306,8 @@ void ToScaleY::apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose
 float FromShearY::value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) {
 	if (local) return source._shearY + offsets[TransformConstraintData::SHEARY];
 	float ix = 1 / skeleton.getScaleX(), iy = 1 / skeleton.getScaleY();
-	return (MathUtil::atan2(source._d * iy, source._b * ix) - MathUtil::atan2(source._c * iy, source._a * ix)) * MathUtil::Rad_Deg - 90 + offsets[TransformConstraintData::SHEARY];
+	return (MathUtil::atan2(source._d * iy, source._b * ix) - MathUtil::atan2(source._c * iy, source._a * ix)) * MathUtil::Rad_Deg - 90 +
+		offsets[TransformConstraintData::SHEARY];
 }
 
 float ToShearY::mix(TransformConstraintPose &pose) {
