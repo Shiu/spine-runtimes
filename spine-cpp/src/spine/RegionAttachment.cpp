@@ -59,7 +59,7 @@ RegionAttachment::RegionAttachment(const String &name) : Attachment(name),
 														 _color(1, 1, 1, 1),
 														 _region(NULL),
 														 _sequence(NULL) {
-	_vertexOffset.setSize(NUM_UVS, 0);
+	_offset.setSize(NUM_UVS, 0);
 	_uvs.setSize(NUM_UVS, 0);
 }
 
@@ -97,14 +97,14 @@ void RegionAttachment::updateRegion() {
 	float localY2Cos = localY2 * cos + _y;
 	float localY2Sin = localY2 * sin;
 
-	_vertexOffset[BLX] = localXCos - localYSin;
-	_vertexOffset[BLY] = localYCos + localXSin;
-	_vertexOffset[ULX] = localXCos - localY2Sin;
-	_vertexOffset[ULY] = localY2Cos + localXSin;
-	_vertexOffset[URX] = localX2Cos - localY2Sin;
-	_vertexOffset[URY] = localY2Cos + localX2Sin;
-	_vertexOffset[BRX] = localX2Cos - localYSin;
-	_vertexOffset[BRY] = localYCos + localX2Sin;
+	_offset[BLX] = localXCos - localYSin;
+	_offset[BLY] = localYCos + localXSin;
+	_offset[ULX] = localXCos - localY2Sin;
+	_offset[ULY] = localY2Cos + localXSin;
+	_offset[URX] = localX2Cos - localY2Sin;
+	_offset[URY] = localY2Cos + localX2Sin;
+	_offset[BRX] = localX2Cos - localYSin;
+	_offset[BRY] = localYCos + localX2Sin;
 
 	if (_region->_degrees == 90) {
 		_uvs[URX] = _region->_u;
@@ -140,26 +140,26 @@ void RegionAttachment::computeWorldVertices(Slot &slot, float *worldVertices, si
 	float a = bone.getA(), b = bone.getB(), c = bone.getC(), d = bone.getD();
 	float offsetX, offsetY;
 
-	offsetX = _vertexOffset[BRX];
-	offsetY = _vertexOffset[BRY];
+	offsetX = _offset[BRX];
+	offsetY = _offset[BRY];
 	worldVertices[offset] = offsetX * a + offsetY * b + x;// br
 	worldVertices[offset + 1] = offsetX * c + offsetY * d + y;
 	offset += stride;
 
-	offsetX = _vertexOffset[BLX];
-	offsetY = _vertexOffset[BLY];
+	offsetX = _offset[BLX];
+	offsetY = _offset[BLY];
 	worldVertices[offset] = offsetX * a + offsetY * b + x;// bl
 	worldVertices[offset + 1] = offsetX * c + offsetY * d + y;
 	offset += stride;
 
-	offsetX = _vertexOffset[ULX];
-	offsetY = _vertexOffset[ULY];
+	offsetX = _offset[ULX];
+	offsetY = _offset[ULY];
 	worldVertices[offset] = offsetX * a + offsetY * b + x;// ul
 	worldVertices[offset + 1] = offsetX * c + offsetY * d + y;
 	offset += stride;
 
-	offsetX = _vertexOffset[URX];
-	offsetY = _vertexOffset[URY];
+	offsetX = _offset[URX];
+	offsetY = _offset[URY];
 	worldVertices[offset] = offsetX * a + offsetY * b + x;// ur
 	worldVertices[offset + 1] = offsetX * c + offsetY * d + y;
 }
@@ -245,7 +245,7 @@ void RegionAttachment::setSequence(Sequence *sequence) {
 }
 
 Array<float> &RegionAttachment::getOffset() {
-	return _vertexOffset;
+	return _offset;
 }
 
 Array<float> &RegionAttachment::getUVs() {
@@ -268,7 +268,7 @@ Attachment *RegionAttachment::copy() {
 	copy->_width = _width;
 	copy->_height = _height;
 	copy->_uvs.clearAndAddAll(_uvs);
-	copy->_vertexOffset.clearAndAddAll(_vertexOffset);
+	copy->_offset.clearAndAddAll(_offset);
 	copy->_color.set(_color);
 	copy->_sequence = _sequence != NULL ? _sequence->copy() : NULL;
 	return copy;

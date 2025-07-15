@@ -129,7 +129,7 @@ namespace spine {
 		static const int BRY;
 
 		float _x, _y, _rotation, _scaleX, _scaleY, _width, _height;
-		Array<float> _vertexOffset;
+		Array<float> _offset;
 		Array<float> _uvs;
 		String _path;
 		Color _color;
