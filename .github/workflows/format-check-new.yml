@@ -1,0 +1,65 @@
+name: Formatting
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Cache Clang
+      id: cache-clang
+      uses: actions/cache@v3
+      with:
+        path: clang
+        key: ${{ runner.os }}-clang-13-0-1
+
+    - name: Install Clang
+      if: steps.cache-clang.outputs.cache-hit != 'true'
+      run: |
+        curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz --output clang.tar.xz
+        tar -xf clang.tar.xz
+        mv clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04 clang
+
+    - name: Install dotnet
+      uses: actions/setup-dotnet@v3
+      with:
+          dotnet-version: "6.0.x"
+
+    - name: Install Node and dependencies
+      uses: actions/setup-node@v3
+      with:
+        node-version: "24"
+    # NOTE: typescript-formatter is installed by npm in spine-ts
+
+    - name: Install JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: "16"
+
+    - name: Format
+      run: |
+        export CLANGFORMAT=`pwd`/clang/bin/clang-format
+        ./formatters/format-cpp.sh
+        ./formatters/format-csharp.sh
+        ./formatters/format-dart.sh
+        ./formatters/format-java.sh
+        ./formatters/format-ts.sh
+        git diff
+        git diff > format-diff.txt
+
+    - name: Archive formatting result
+      uses: actions/upload-artifact@v4
+      with:
+        name: format-diff
+        path: format-diff.txt
+
+    - name: Fail on format changes
+      run: |
+        git ls-files -m
+        if [[ `git ls-files -m` ]]; then echo "Detected formatting errors!" & exit 1; fi
