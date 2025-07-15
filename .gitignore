@@ -246,3 +246,8 @@ docs/spine-runtimes-types.md
 spine-c/codegen/dist
 tests/output
 spine-c/.cache
+spine-libgdx/.classpath
+spine-libgdx/.factorypath
+spine-libgdx/.project
+.clang-format
+spine-c/codegen/spine-cpp-types.json
