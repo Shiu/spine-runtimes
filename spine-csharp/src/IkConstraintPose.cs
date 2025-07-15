@@ -36,7 +36,7 @@ namespace Spine {
 		internal int bendDirection;
 		internal bool compress, stretch;
 		internal float mix, softness;
-		
+
 		public void Set (IkConstraintPose pose) {
 			mix = pose.mix;
 			softness = pose.softness;
