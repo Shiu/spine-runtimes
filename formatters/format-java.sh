@@ -13,7 +13,7 @@ pushd "$dir" > /dev/null
 if [ ! -f "eclipse-formatter/target/eclipse-formatter-1.0.0-jar-with-dependencies.jar" ]; then
     echo "Building Eclipse formatter..."
     pushd eclipse-formatter > /dev/null
-    mvn clean package
+    mvn -q clean package
     popd > /dev/null
 fi
 
