@@ -6,24 +6,27 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
 
     - uses: actions/checkout@v3
 
-    - name: Cache Clang
-      id: cache-clang
-      uses: actions/cache@v3
-      with:
-        path: clang
-        key: ${{ runner.os }}-clang-18-1-8
-
-    - name: Install Clang
-      if: steps.cache-clang.outputs.cache-hit != 'true'
+    - name: Check pre-installed versions
       run: |
-        curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-22.04.tar.xz --output clang.tar.xz
-        tar -xf clang.tar.xz
-        mv clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-22.04 clang
+        echo "=== Pre-installed tool versions ==="
+        echo "clang-format versions available:"
+        apt list clang-format* 2>/dev/null | grep clang-format || true
+        echo ""
+        echo "Default clang-format:"
+        which clang-format || echo "Not found"
+        clang-format --version || echo "Not installed"
+        echo ""
+        echo "Dart:"
+        which dart || echo "Not found"
+        dart --version || echo "Not installed"
+
+    # clang-format-18 is already pre-installed on Ubuntu 24.04
+    # No need to install it
 
     - name: Install dotnet
       uses: actions/setup-dotnet@v3
@@ -57,22 +60,42 @@ jobs:
       run: |
         echo "=== Tool versions ==="
         echo "clang-format version:"
-        `pwd`/clang/bin/clang-format --version
+        clang-format --version
+        echo "clang-format-18 version:"
+        clang-format-18 --version
+        echo "clang-format path:"
+        which clang-format
+        which clang-format-18
+        echo ""
         echo "dart version:"
         dart --version
         echo "dart format help:"
         dart format --help | grep -A2 -B2 "page-width" || true
-        
+        echo ""
+        echo "Testing clang-format behavior:"
+        echo 'class Test { Test() {}; };' | clang-format --style=file:formatters/.clang-format
+        echo 'class Test { Test() {}; };' | clang-format-18 --style=file:formatters/.clang-format
+        echo ""
+        echo "Testing dart format behavior:"
+        echo 'final x = SpineWidgetController(onInitialized: (c) {print("test");});' | dart format --page-width 120
+
     - name: Format
       run: |
-        export CLANGFORMAT=`pwd`/clang/bin/clang-format
+        echo "=== Running formatters ==="
+        echo "Running format-cpp.sh..."
         ./formatters/format-cpp.sh
+        echo "Running format-csharp.sh..."
         ./formatters/format-csharp.sh
+        echo "Running format-dart.sh..."
         ./formatters/format-dart.sh
+        echo "Running format-haxe.sh..."
         ./formatters/format-haxe.sh
+        echo "Running format-java.sh..."
         ./formatters/format-java.sh
+        echo "Running format-ts.sh..."
         ./formatters/format-ts.sh
-        git diff
+        echo "=== Checking differences ==="
+        git diff --stat
         git diff > format-diff.txt
 
     - name: Archive formatting result
