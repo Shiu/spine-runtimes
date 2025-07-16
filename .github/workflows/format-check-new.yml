@@ -13,19 +13,15 @@ jobs:
 
     - name: Setup clang-format
       run: |
-        # Install libtinfo5 (required by the Ubuntu 18.04 binary)
-        # Create a symlink since Ubuntu 24.04 has libtinfo6
-        sudo apt-get update
-        sudo apt-get install -y libtinfo6
-        sudo ln -sf /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
+        # Pull the Docker image with clang-format 18
+        docker pull silkeh/clang:18
         
-        # Download clang-format 18.1.8 binary directly
-        wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang%2Bllvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-        tar -xf clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-        
-        # Install clang-format binary to /usr/bin where it will be found first
-        sudo cp clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04/bin/clang-format /usr/bin/clang-format
-        sudo chmod +x /usr/bin/clang-format
+        # Create a wrapper script that runs clang-format in Docker
+        sudo tee /usr/local/bin/clang-format > /dev/null <<'EOF'
+#!/bin/bash
+exec docker run --rm -i -v "$PWD:$PWD" -w "$PWD" silkeh/clang:18 clang-format "$@"
+EOF
+        sudo chmod +x /usr/local/bin/clang-format
         
         # Verify version and location
         which clang-format
