@@ -31,7 +31,7 @@ show_help() {
     echo "Multiple language flags can be combined, e.g.: ./format.sh java ts"
     echo ""
     echo "Tools used:"
-    echo "  Java:       Spotless with Eclipse formatter"
+    echo "  Java:       Eclipse formatter (via eclipse-formatter.xml)"
     echo "  TypeScript: tsfmt (typescript-formatter)"
     echo "  C/C++:      clang-format"
     echo "  C#:         dotnet format"
