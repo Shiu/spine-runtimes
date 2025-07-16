@@ -17,12 +17,12 @@ if command -v dotnet &> /dev/null; then
 
     # Format spine-csharp
     pushd ../spine-csharp > /dev/null
-    dotnet format spine-csharp.csproj || echo "Warning: Some issues with spine-csharp formatting"
+    dotnet format spine-csharp.csproj --no-restore --verbosity quiet 2>/dev/null || echo "Warning: Some issues with spine-csharp formatting"
     popd > /dev/null
     
     # Format spine-monogame
     pushd ../spine-monogame > /dev/null
-    dotnet format --no-restore || echo "Warning: Some issues with spine-monogame formatting"
+    dotnet format --no-restore --verbosity quiet 2>/dev/null || echo "Warning: Some issues with spine-monogame formatting"
     popd > /dev/null
     
     # Format spine-unity - look for .cs files directly
