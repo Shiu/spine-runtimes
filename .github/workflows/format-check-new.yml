@@ -11,17 +11,18 @@ jobs:
 
     - uses: actions/checkout@v3
 
-    - name: Install clang-format 18
+    - name: Setup clang-format
       run: |
-        # Install clang-format-18 from LLVM apt repository
-        wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
-        echo "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main" | sudo tee /etc/apt/sources.list.d/llvm.list
+        # Ubuntu 24.04 has clang-format-18 in its default repos
         sudo apt-get update
         sudo apt-get install -y clang-format-18
-        # Create symlink
+        # Make clang-format-18 the default clang-format
         sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-18 100
-        # Verify version
+        # Verify we're using the right version
+        which clang-format
         clang-format --version
+        # Double check the actual path
+        ls -la /usr/bin/clang-format*
 
     - name: Install dotnet
       uses: actions/setup-dotnet@v3

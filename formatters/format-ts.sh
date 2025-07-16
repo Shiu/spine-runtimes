@@ -23,7 +23,7 @@ npm run format
 popd > /dev/null
 
 pushd ../tests > /dev/null
-npm run format -r
+npm run format
 popd > /dev/null
 
 # Return to original directory
