@@ -99,7 +99,7 @@ for file in "${files[@]}"; do
     fi
 
     # Format the file and capture any errors
-    if ! clang-format -i -style=file:".clang-format" "$file" 2>/dev/null; then
+    if ! clang-format -i -style=file:".clang-format" "$file" 2>&1; then
         printf "\nError formatting: $file\n"
         errors=$((errors + 1))
     fi
