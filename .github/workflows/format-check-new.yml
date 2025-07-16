@@ -13,16 +13,16 @@ jobs:
 
     - name: Setup clang-format
       run: |
-        # Ubuntu 24.04 has clang-format-18 in its default repos
-        sudo apt-get update
-        sudo apt-get install -y clang-format-18
-        # Make clang-format-18 the default clang-format
-        sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-18 100
-        # Verify we're using the right version
+        # Download clang-format 18.1.8 binary directly
+        wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang%2Bllvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+        tar -xf clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+        # Install only clang-format binary
+        sudo cp clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04/bin/clang-format /usr/local/bin/clang-format
+        # Ensure it's first in PATH
+        export PATH=/usr/local/bin:$PATH
+        # Verify version
         which clang-format
         clang-format --version
-        # Double check the actual path
-        ls -la /usr/bin/clang-format*
 
     - name: Install dotnet
       uses: actions/setup-dotnet@v3
