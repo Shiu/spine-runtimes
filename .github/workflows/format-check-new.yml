@@ -16,19 +16,19 @@ jobs:
       uses: actions/cache@v3
       with:
         path: clang
-        key: ${{ runner.os }}-clang-13-0-1
+        key: ${{ runner.os }}-clang-18-1-8
 
     - name: Install Clang
       if: steps.cache-clang.outputs.cache-hit != 'true'
       run: |
-        curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz --output clang.tar.xz
+        curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-22.04.tar.xz --output clang.tar.xz
         tar -xf clang.tar.xz
-        mv clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04 clang
+        mv clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-22.04 clang
 
     - name: Install dotnet
       uses: actions/setup-dotnet@v3
       with:
-          dotnet-version: "6.0.x"
+          dotnet-version: "8.0.x"
 
     - name: Install Node and dependencies
       uses: actions/setup-node@v3
@@ -53,6 +53,16 @@ jobs:
       with:
         sdk: '3.7.2'
 
+    - name: Debug formatter versions
+      run: |
+        echo "=== Tool versions ==="
+        echo "clang-format version:"
+        `pwd`/clang/bin/clang-format --version
+        echo "dart version:"
+        dart --version
+        echo "dart format help:"
+        dart format --help | grep -A2 -B2 "page-width" || true
+        
     - name: Format
       run: |
         export CLANGFORMAT=`pwd`/clang/bin/clang-format
