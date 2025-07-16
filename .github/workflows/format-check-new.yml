@@ -51,7 +51,7 @@ jobs:
     - name: Install Dart
       uses: dart-lang/setup-dart@v1
       with:
-        sdk: 'stable'
+        sdk: '3.7.2'
 
     - name: Format
       run: |
