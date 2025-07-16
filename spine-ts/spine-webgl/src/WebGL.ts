@@ -27,30 +27,38 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Restorable } from "@esotericsoftware/spine-core";
+import type { Disposable, Restorable } from "@esotericsoftware/spine-core";
 
-export class ManagedWebGLRenderingContext {
+export class ManagedWebGLRenderingContext implements Disposable {
 	public canvas: HTMLCanvasElement | OffscreenCanvas;
 	public gl: WebGLRenderingContext;
-	private restorables = new Array<Restorable>();
+	private restorables = [] as Restorable[];
 
-	constructor (canvasOrContext: HTMLCanvasElement | WebGLRenderingContext, contextConfig: any = { alpha: "true" }) {
+	constructor (canvasOrContext: HTMLCanvasElement | WebGLRenderingContext, contextConfig: WebGLContextAttributes = { alpha: true }) {
 		if (!((canvasOrContext instanceof WebGLRenderingContext) || (typeof WebGL2RenderingContext !== 'undefined' && canvasOrContext instanceof WebGL2RenderingContext))) {
-			let canvas: HTMLCanvasElement = canvasOrContext;
+			const canvas: HTMLCanvasElement = canvasOrContext;
 			this.gl = <WebGLRenderingContext>(canvas.getContext("webgl2", contextConfig) || canvas.getContext("webgl", contextConfig));
 			this.canvas = canvas;
-			canvas.addEventListener("webglcontextlost", (e: any) => {
-				let event = <WebGLContextEvent>e;
-				if (e) e.preventDefault();
-			});
-			canvas.addEventListener("webglcontextrestored", (e: any) => {
-				for (let i = 0, n = this.restorables.length; i < n; i++)
-					this.restorables[i].restore();
-			});
+			canvas.addEventListener("webglcontextlost", this.contextLostHandler);
+			canvas.addEventListener("webglcontextrestored", this.contextRestoredHandler);
 		} else {
 			this.gl = canvasOrContext;
 			this.canvas = this.gl.canvas;
 		}
+	}
+
+	private contextLostHandler (e: Event) {
+		if (e) e.preventDefault();
+	}
+
+	private contextRestoredHandler () {
+		for (let i = 0, n = this.restorables.length; i < n; i++)
+			this.restorables[i].restore();
+	}
+
+	dispose (): void {
+		this.canvas.removeEventListener("webglcontextlost", this.contextLostHandler);
+		this.canvas.removeEventListener("webglcontextrestored", this.contextRestoredHandler);
 	}
 
 	addRestorable (restorable: Restorable) {
@@ -58,7 +66,8 @@ export class ManagedWebGLRenderingContext {
 	}
 
 	removeRestorable (restorable: Restorable) {
-		let index = this.restorables.indexOf(restorable);
+		const index = this.restorables.indexOf(restorable);
 		if (index > -1) this.restorables.splice(index, 1);
 	}
+
 }

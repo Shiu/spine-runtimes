@@ -286,11 +286,16 @@ export class SpinePlayer implements Disposable {
 		this.sceneRenderer?.dispose();
 		this.loadingScreen?.dispose();
 		this.assetManager?.dispose();
+		this.context?.dispose();
 		for (var i = 0; i < this.eventListeners.length; i++) {
 			var eventListener = this.eventListeners[i];
 			eventListener.target.removeEventListener(eventListener.event, eventListener.func);
 		}
 		this.input?.dispose();
+		if (this.canvas) {
+			this.canvas.width = 0;
+			this.canvas.height = 0;
+		}
 		this.parent.removeChild(this.dom);
 		this.disposed = true;
 	}
