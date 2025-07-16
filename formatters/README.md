@@ -97,6 +97,7 @@ cd formatters
 ./format-haxe.sh    # Format Haxe files
 ./format-java.sh    # Format Java files
 ./format-ts.sh      # Format TypeScript files
+./format.sh         # Format everything
 ```
 
 Ensure you have the required tools installed for each formatter you want to run.

@@ -253,3 +253,4 @@ spine-libgdx/.project
 spine-c/codegen/spine-cpp-types.json
 spine-flutter/example/devtools_options.yaml
 spine-glfw/.cache
+formatters/eclipse-formatter/format-diff.txt
