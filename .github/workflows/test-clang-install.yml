@@ -1,0 +1,55 @@
+name: Test Clang Format Install
+
+on:
+  push:
+    branches: [test-clang-format-install]
+  workflow_dispatch:
+
+jobs:
+  test-ubuntu-2204:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Install clang-format 18.1.8
+      run: |
+        echo "=== System info ==="
+        lsb_release -a
+        echo ""
+        echo "=== Installing dependencies ==="
+        sudo apt-get update
+        sudo apt-get install -y libtinfo5
+        echo ""
+        echo "=== Downloading clang-format 18.1.8 ==="
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang%2Bllvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+        echo ""
+        echo "=== Extracting ==="
+        tar -xf clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+        echo ""
+        echo "=== Testing clang-format ==="
+        ./clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04/bin/clang-format --version
+        echo ""
+        echo "=== Testing formatting ==="
+        echo 'class Test { Test() {}; };' | ./clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04/bin/clang-format
+
+  test-ubuntu-2404:
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Install clang-format 18.1.8
+      run: |
+        echo "=== System info ==="
+        lsb_release -a
+        echo ""
+        echo "=== Installing dependencies ==="
+        sudo apt-get update
+        sudo apt-get install -y libtinfo5
+        echo ""
+        echo "=== Downloading clang-format 18.1.8 ==="
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang%2Bllvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+        echo ""
+        echo "=== Extracting ==="
+        tar -xf clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+        echo ""
+        echo "=== Testing clang-format ==="
+        ./clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04/bin/clang-format --version
+        echo ""
+        echo "=== Testing formatting ==="
+        echo 'class Test { Test() {}; };' | ./clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04/bin/clang-format
