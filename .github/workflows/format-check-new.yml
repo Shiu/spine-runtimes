@@ -11,6 +11,18 @@ jobs:
 
     - uses: actions/checkout@v3
 
+    - name: Install clang-format 18.1.8
+      run: |
+        # Install dependencies
+        sudo apt-get update
+        sudo apt-get install -y libtinfo5
+        # Download clang-format 18.1.8
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang%2Bllvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+        tar -xf clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+        # Use only clang-format from the package
+        sudo cp clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04/bin/clang-format /usr/local/bin/clang-format
+        sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/local/bin/clang-format 100
+
     - name: Install dotnet
       uses: actions/setup-dotnet@v3
       with:
