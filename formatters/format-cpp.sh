@@ -88,34 +88,13 @@ done
 
 echo "Found ${#files[@]} C/C++ files to format"
 
-# Check if we're using Docker (if clang-format is a script containing 'docker')
-if file $(which clang-format) | grep -q "shell script"; then
-    echo "Using Docker clang-format - batching files for performance..."
-    # Format all files in one call when using Docker
-    if ! clang-format -i -style=file:".clang-format" "${files[@]}" 2>&1; then
-        echo "Error: clang-format failed"
-        errors=1
-    fi
+# Format all files in one call - works for both Docker and native
+echo "Formatting ${#files[@]} files..."
+if ! clang-format -i -style=file:".clang-format" "${files[@]}" 2>&1; then
+    echo "Error: clang-format failed"
+    errors=1
 else
-    # Format each file individually for native clang-format (shows progress)
-    count=0
     errors=0
-    for file in "${files[@]}"; do
-        count=$((count + 1))
-        # Show progress every 10 files or for the last file
-        if [ $((count % 10)) -eq 0 ] || [ $count -eq ${#files[@]} ]; then
-            printf "\r[$count/${#files[@]}] Formatting: %-80s" "$(basename "$file")"
-        fi
-
-        # Format the file and capture any errors
-        if ! clang-format -i -style=file:".clang-format" "$file" 2>&1; then
-            printf "\nError formatting: $file\n"
-            errors=$((errors + 1))
-        fi
-    done
-    
-    # Clear the progress line
-    printf "\r%-100s\r" " "
 fi
 
 if [ $errors -gt 0 ]; then
