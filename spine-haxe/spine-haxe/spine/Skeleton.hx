@@ -102,7 +102,7 @@ class Skeleton {
 	 * See Skeleton.update(). */
 	public var time:Float = 0;
 
-	public var windX:Float = 1  ;
+	public var windX:Float = 1;
 	public var windY:Float = 0;
 	public var gravityX:Float = 0;
 	public var gravityY:Float = 1;
