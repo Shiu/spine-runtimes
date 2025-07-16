@@ -23,12 +23,13 @@ jobs:
         wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang%2Bllvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
         tar -xf clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
         
-        # Install only clang-format binary
-        sudo cp clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04/bin/clang-format /usr/local/bin/clang-format
-        sudo chmod +x /usr/local/bin/clang-format
+        # Install clang-format binary to /usr/bin where it will be found first
+        sudo cp clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04/bin/clang-format /usr/bin/clang-format
+        sudo chmod +x /usr/bin/clang-format
         
-        # Verify version
-        /usr/local/bin/clang-format --version
+        # Verify version and location
+        which clang-format
+        clang-format --version
 
     - name: Install dotnet
       uses: actions/setup-dotnet@v3
