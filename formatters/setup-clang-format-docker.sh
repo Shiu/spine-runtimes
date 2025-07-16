@@ -11,7 +11,34 @@ docker pull silkeh/clang:18
 echo "Creating wrapper script..."
 cat > /tmp/clang-format-wrapper <<'EOF'
 #!/bin/bash
-exec docker run --rm -i -v "$PWD:$PWD" -w "$PWD" silkeh/clang:18 clang-format "$@"
+# Get the absolute path of the file being formatted
+args=()
+for arg in "$@"; do
+    if [[ -f "$arg" ]]; then
+        # Convert to absolute path
+        args+=("$(realpath "$arg")")
+    else
+        args+=("$arg")
+    fi
+done
+
+# Find the project root (where .github directory is)
+current_dir="$PWD"
+while [[ "$current_dir" != "/" ]]; do
+    if [[ -d "$current_dir/.github" ]]; then
+        project_root="$current_dir"
+        break
+    fi
+    current_dir="$(dirname "$current_dir")"
+done
+
+# If we didn't find project root, use current directory's parent
+if [[ -z "$project_root" ]]; then
+    project_root="$(dirname "$PWD")"
+fi
+
+# Run docker with the project root mounted
+exec docker run --rm -i -v "$project_root:$project_root" -w "$PWD" silkeh/clang:18 clang-format "${args[@]}"
 EOF
 
 # Install the wrapper
