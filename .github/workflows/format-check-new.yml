@@ -13,16 +13,22 @@ jobs:
 
     - name: Setup clang-format
       run: |
+        # Install libtinfo5 (required by the Ubuntu 18.04 binary)
+        # Create a symlink since Ubuntu 24.04 has libtinfo6
+        sudo apt-get update
+        sudo apt-get install -y libtinfo6
+        sudo ln -sf /usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/lib/x86_64-linux-gnu/libtinfo.so.5
+        
         # Download clang-format 18.1.8 binary directly
         wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang%2Bllvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
         tar -xf clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+        
         # Install only clang-format binary
         sudo cp clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04/bin/clang-format /usr/local/bin/clang-format
-        # Ensure it's first in PATH
-        export PATH=/usr/local/bin:$PATH
+        sudo chmod +x /usr/local/bin/clang-format
+        
         # Verify version
-        which clang-format
-        clang-format --version
+        /usr/local/bin/clang-format --version
 
     - name: Install dotnet
       uses: actions/setup-dotnet@v3
