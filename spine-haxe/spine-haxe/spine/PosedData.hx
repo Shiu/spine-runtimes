@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -37,18 +37,19 @@ abstract class PosedData<P:Pose<Any>> {
 	public final setup:P;
 
 	/** When true, `Skeleton.updateWorldTransform(Physics)` only updates this constraint if the `Skeleton.getSkin()`
-	* contains this constraint.
-	*
-	* See `Skin.getConstraints()`. */
+	 * contains this constraint.
+	 *
+	 * See `Skin.getConstraints()`. */
 	public var skinRequired:Bool;
 
-	public function new (name:String, setup:P) {
-		if (name == null) throw new SpineException("name cannot be null.");
+	public function new(name:String, setup:P) {
+		if (name == null)
+			throw new SpineException("name cannot be null.");
 		this.name = name;
 		this.setup = setup;
 	}
 
-	public function toString ():String {
+	public function toString():String {
 		return name;
 	}
 }

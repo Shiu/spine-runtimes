@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -55,7 +55,7 @@ class RGBTimeline extends SlotCurveTimeline {
 		frames[frame + B] = b;
 	}
 
-	public function apply1 (slot:Slot, pose:SlotPose, time:Float, alpha:Float, blend:MixBlend) {
+	public function apply1(slot:Slot, pose:SlotPose, time:Float, alpha:Float, blend:MixBlend) {
 		var color = pose.color;
 		if (time < frames[0]) {
 			var setup = slot.data.setup.color;

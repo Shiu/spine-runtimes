@@ -20,4 +20,4 @@ if [ ! -d "node_modules" ]; then
 fi
 
 # Run the TypeScript headless test runner with all arguments
-npx tsx src/headless-test-runner.ts "$@"
+npx -y tsx src/headless-test-runner.ts "$@"

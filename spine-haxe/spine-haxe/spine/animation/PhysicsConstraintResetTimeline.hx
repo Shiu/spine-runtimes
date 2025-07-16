@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -43,7 +43,7 @@ class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimel
 		this.constraintIndex = constraintIndex;
 	}
 
-	public function getConstraintIndex () {
+	public function getConstraintIndex() {
 		return constraintIndex;
 	}
 
@@ -58,13 +58,13 @@ class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimel
 	}
 
 	/** Resets the physics constraint when frames > lastTime and <= time. */
-	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
-		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
-
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+			appliedPose:Bool) {
 		var constraint:PhysicsConstraint = null;
 		if (constraintIndex != -1) {
 			constraint = cast(skeleton.constraints[constraintIndex], PhysicsConstraint);
-			if (!constraint.active) return;
+			if (!constraint.active)
+				return;
 		}
 
 		var frames:Array<Float> = this.frames;
@@ -74,14 +74,16 @@ class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimel
 			lastTime = -1;
 		} else if (lastTime >= frames[frames.length - 1]) // Last time is after last frame.
 			return;
-		if (time < frames[0]) return;
+		if (time < frames[0])
+			return;
 
 		if (lastTime < frames[0] || time >= frames[Timeline.search1(frames, lastTime) + 1]) {
 			if (constraint != null)
 				constraint.reset(skeleton);
 			else {
 				for (constraint in skeleton.physics) {
-					if (constraint.active) constraint.reset(skeleton);
+					if (constraint.active)
+						constraint.reset(skeleton);
 				}
 			}
 		}

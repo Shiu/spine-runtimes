@@ -25,35 +25,33 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
 /** Stores a pose for a transform constraint. */
 class TransformConstraintPose implements Pose<TransformConstraintPose> {
-
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained rotation. */
 	public var mixRotate = 0.;
+
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation X. */
-
 	public var mixX = 0.;
+
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained translation Y. */
-
 	public var mixY = 0.;
+
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale X. */
-
 	public var mixScaleX = 0.;
+
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained scale Y. */
-
 	public var mixScaleY = 0.;
-	/** A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y. */
 
+	/** A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y. */
 	public var mixShearY = 0.;
 
-	public function new () {
-	}
+	public function new() {}
 
-	public function set (pose:TransformConstraintPose) {
+	public function set(pose:TransformConstraintPose) {
 		mixRotate = pose.mixRotate;
 		mixX = pose.mixX;
 		mixY = pose.mixY;
@@ -61,5 +59,4 @@ class TransformConstraintPose implements Pose<TransformConstraintPose> {
 		mixScaleY = pose.mixScaleY;
 		mixShearY = pose.mixShearY;
 	}
-
 }

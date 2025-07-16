@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -33,10 +33,13 @@ package spine;
 class Physics {
 	/** Physics are not updated or applied. */
 	public static var none(default, never):Physics = new Physics("none");
+
 	/** Physics are reset to the current pose. */
 	public static var reset(default, never):Physics = new Physics("reset");
+
 	/** Physics are updated and the pose from physics is applied. */
 	public static var update(default, never):Physics = new Physics("update");
+
 	/** Physics are not updated but the pose from physics is applied. */
 	public static var pose(default, never):Physics = new Physics("pose");
 

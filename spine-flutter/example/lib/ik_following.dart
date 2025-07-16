@@ -45,19 +45,22 @@ class IkFollowingState extends State<IkFollowing> {
   void initState() {
     super.initState();
 
-    controller = SpineWidgetController(onInitialized: (controller) {
-      // Set the walk animation on track 0, let it loop
-      controller.animationState.setAnimationByName(0, "walk", true);
-      controller.animationState.setAnimationByName(1, "aim", true);
-    }, onAfterUpdateWorldTransforms: (controller) {
-      final worldPosition = crossHairPosition;
-      if (worldPosition == null) return;
-      final bone = controller.skeleton.findBone("crosshair")!;
-      final parent = bone.getParent()!;
-      final position = parent.worldToLocal(worldPosition.dx, worldPosition.dy);
-      bone.setX(position.x);
-      bone.setY(position.y);
-    });
+    controller = SpineWidgetController(
+      onInitialized: (controller) {
+        // Set the walk animation on track 0, let it loop
+        controller.animationState.setAnimationByName(0, "walk", true);
+        controller.animationState.setAnimationByName(1, "aim", true);
+      },
+      onAfterUpdateWorldTransforms: (controller) {
+        final worldPosition = crossHairPosition;
+        if (worldPosition == null) return;
+        final bone = controller.skeleton.findBone("crosshair")!;
+        final parent = bone.getParent()!;
+        final position = parent.worldToLocal(worldPosition.dx, worldPosition.dy);
+        bone.setX(position.x);
+        bone.setY(position.y);
+      },
+    );
   }
 
   void _updateBonePosition(Offset position) {
@@ -69,11 +72,17 @@ class IkFollowingState extends State<IkFollowing> {
     reportLeaks();
 
     return Scaffold(
-        appBar: AppBar(title: const Text('IK Following')),
-        body: GestureDetector(
-          onPanDown: (drag) => _updateBonePosition(drag.localPosition),
-          onPanUpdate: (drag) => _updateBonePosition(drag.localPosition),
-          child: SpineWidget.fromAsset("assets/spineboy.atlas", "assets/spineboy-pro.skel", controller, alignment: Alignment.centerLeft,),
-        ));
+      appBar: AppBar(title: const Text('IK Following')),
+      body: GestureDetector(
+        onPanDown: (drag) => _updateBonePosition(drag.localPosition),
+        onPanUpdate: (drag) => _updateBonePosition(drag.localPosition),
+        child: SpineWidget.fromAsset(
+          "assets/spineboy.atlas",
+          "assets/spineboy-pro.skel",
+          controller,
+          alignment: Alignment.centerLeft,
+        ),
+      ),
+    );
   }
 }

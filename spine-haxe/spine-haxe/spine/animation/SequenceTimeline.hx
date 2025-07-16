@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -42,8 +42,7 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
 	var attachment:HasTextureRegion;
 
 	public function new(frameCount:Int, slotIndex:Int, attachment:HasTextureRegion) {
-		super(frameCount,
-			Std.string(Property.sequence) + "|" + Std.string(slotIndex) + "|" + Std.string(attachment.sequence.id));
+		super(frameCount, Std.string(Property.sequence) + "|" + Std.string(slotIndex) + "|" + Std.string(attachment.sequence.id));
 		this.slotIndex = slotIndex;
 		this.attachment = attachment;
 	}
@@ -70,11 +69,11 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
 		frames[frame + SequenceTimeline.DELAY] = delay;
 	}
 
-	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
-		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
-
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+			appliedPose:Bool) {
 		var slot = skeleton.slots[this.slotIndex];
-		if (!slot.bone.active) return;
+		if (!slot.bone.active)
+			return;
 		var pose = appliedPose ? slot.applied : slot.pose;
 
 		var slotAttachment = pose.attachment;
@@ -85,12 +84,14 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
 		}
 
 		if (direction == MixDirection.mixOut) {
-			if (blend == MixBlend.setup) pose.sequenceIndex = -1;
+			if (blend == MixBlend.setup)
+				pose.sequenceIndex = -1;
 			return;
 		}
 
 		if (time < frames[0]) {
-			if (blend == MixBlend.setup || blend == MixBlend.first) pose.sequenceIndex = -1;
+			if (blend == MixBlend.setup || blend == MixBlend.first)
+				pose.sequenceIndex = -1;
 			return;
 		}
 

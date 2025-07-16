@@ -25,13 +25,12 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
 /** The setup pose for a bone. */
 class BoneData extends PosedData<BoneLocal> {
-
 	/** The index of the bone in spine.Skeleton.getBones(). */
 	public final index:Int;
 
@@ -41,6 +40,7 @@ class BoneData extends PosedData<BoneLocal> {
 	public var length = 0.;
 
 	// Nonessential.
+
 	/** The color of the bone as it was in Spine, or a default color if nonessential data was not exported. Bones are not usually
 	 * rendered at runtime. */
 	public var color = new Color(0, 0, 0, 0);
@@ -51,10 +51,12 @@ class BoneData extends PosedData<BoneLocal> {
 	/** False if the bone was hidden in Spine and nonessential data was exported. Does not affect runtime rendering. */
 	public var visible = false;
 
-	public function new (index:Int, name:String, parent:BoneData) {
+	public function new(index:Int, name:String, parent:BoneData) {
 		super(name, new BoneLocal());
-		if (index < 0) throw new SpineException("index must be >= 0.");
-		if (name == null) throw new SpineException("name cannot be null.");
+		if (index < 0)
+			throw new SpineException("index must be >= 0.");
+		if (name == null)
+			throw new SpineException("name cannot be null.");
 		this.index = index;
 		this.parent = parent;
 	}

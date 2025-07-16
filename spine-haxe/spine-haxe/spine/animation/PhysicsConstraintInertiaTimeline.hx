@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -35,16 +35,15 @@ class PhysicsConstraintInertiaTimeline extends PhysicsConstraintTimeline {
 		super(frameCount, bezierCount, constraintIndex, Property.physicsConstraintInertia);
 	}
 
-	public function get (pose: PhysicsConstraintPose):Float {
+	public function get(pose:PhysicsConstraintPose):Float {
 		return pose.inertia;
 	}
 
-	public function set (pose: PhysicsConstraintPose, value:Float):Void {
+	public function set(pose:PhysicsConstraintPose, value:Float):Void {
 		pose.inertia = value;
 	}
 
-	public function global (constraint: PhysicsConstraintData):Bool {
+	public function global(constraint:PhysicsConstraintData):Bool {
 		return constraint.inertiaGlobal;
 	}
-
 }

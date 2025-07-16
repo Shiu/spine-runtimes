@@ -133,7 +133,7 @@ Generated files are output to `../src/generated/`:
 # Install dependencies
 npm install
 
-npx tsx src/index.ts
+npx -y tsx src/index.ts
 # The generated files will be in ../src/generated/
 ```
 

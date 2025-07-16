@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -47,12 +47,14 @@ class AnimationState {
 	 * Result: Mix from the current pose to the timeline pose.
 	 */
 	public static inline var SUBSEQUENT:Int = 0;
+
 	/**
 	 * 1) This is the first timeline to set this property.
 	 * 2) The next track entry applied after this one does not have a timeline to set this property.
 	 * Result: Mix from the setup pose to the timeline pose.
 	 */
 	public static inline var FIRST:Int = 1;
+
 	/**
 	 * 1) A previously applied timeline has set this property.
 	 * 2) The next track entry to be applied does have a timeline to set this property.
@@ -61,6 +63,7 @@ class AnimationState {
 	 * animations that key the same property. A subsequent timeline will set this property using a mix.
 	 */
 	public static inline var HOLD_SUBSEQUENT:Int = 2;
+
 	/**
 	 * 1) This is the first timeline to set this property.
 	 * 2) The next track entry to be applied does have a timeline to set this property.
@@ -69,6 +72,7 @@ class AnimationState {
 	 * that key the same property. A subsequent timeline will set this property using a mix.
 	 */
 	public static inline var HOLD_FIRST:Int = 3;
+
 	/**
 	 * 1) This is the first timeline to set this property.
 	 * 2) The next track entry to be applied does have a timeline to set this property.
@@ -82,6 +86,7 @@ class AnimationState {
 	 * out position.
 	 */
 	public static inline var HOLD_MIX:Int = 4;
+
 	public static inline var SETUP:Int = 1;
 	public static inline var CURRENT:Int = 2;
 
@@ -203,7 +208,8 @@ class AnimationState {
 			// Mixing is complete for all entries before the from entry or the mix is instantaneous.
 			if (from.totalAlpha == 0 || to.mixDuration == 0) {
 				to.mixingFrom = from.mixingFrom;
-				if (from.mixingFrom != null) from.mixingFrom.mixingTo = to;
+				if (from.mixingFrom != null)
+					from.mixingFrom.mixingTo = to;
 				to.interruptAlpha = from.interruptAlpha;
 				queue.end(from);
 			}
@@ -256,7 +262,8 @@ class AnimationState {
 			var timelineCount:Int = timelines.length;
 			var timeline:Timeline;
 			if ((i == 0 && alpha == 1) || blend == MixBlend.add) {
-				if (i == 0) attachments = true;
+				if (i == 0)
+					attachments = true;
 				for (timeline in timelines) {
 					if (Std.isOfType(timeline, AttachmentTimeline)) {
 						applyAttachmentTimeline(cast(timeline, AttachmentTimeline), skeleton, applyTime, blend, attachments);
@@ -276,8 +283,8 @@ class AnimationState {
 					var timeline:Timeline = timelines[ii];
 					var timelineBlend:MixBlend = timelineMode[ii] == SUBSEQUENT ? blend : MixBlend.setup;
 					if (!shortestRotation && Std.isOfType(timeline, RotateTimeline)) {
-						this.applyRotateTimeline(cast(timeline, RotateTimeline), skeleton, applyTime, alpha, timelineBlend, current.timelinesRotation, ii << 1,
-							firstFrame);
+						this.applyRotateTimeline(cast(timeline, RotateTimeline), skeleton, applyTime, alpha, timelineBlend, current.timelinesRotation,
+							ii << 1, firstFrame);
 					} else if (Std.isOfType(timeline, AttachmentTimeline)) {
 						this.applyAttachmentTimeline(cast(timeline, AttachmentTimeline), skeleton, applyTime, blend, attachments);
 					} else {
@@ -387,7 +394,8 @@ class AnimationState {
 				if (!shortestRotation && Std.isOfType(timeline, RotateTimeline)) {
 					applyRotateTimeline(cast(timeline, RotateTimeline), skeleton, applyTime, alpha, timelineBlend, from.timelinesRotation, i << 1, firstFrame);
 				} else if (Std.isOfType(timeline, AttachmentTimeline)) {
-					applyAttachmentTimeline(cast(timeline, AttachmentTimeline), skeleton, applyTime, timelineBlend, attachments && alpha >= from.alphaAttachmentThreshold);
+					applyAttachmentTimeline(cast(timeline, AttachmentTimeline), skeleton, applyTime,
+						timelineBlend, attachments && alpha >= from.alphaAttachmentThreshold);
 				} else {
 					if (drawOrder && Std.isOfType(timeline, DrawOrderTimeline) && timelineBlend == MixBlend.setup)
 						direction = MixDirection.mixIn;
@@ -534,7 +542,8 @@ class AnimationState {
 			}
 		} else
 			complete = animationTime >= animationEnd && entry.animationLast < animationEnd;
-		if (complete) queue.complete(entry);
+		if (complete)
+			queue.complete(entry);
 
 		// Queue events after complete.
 		while (i < n) {
@@ -699,11 +708,13 @@ class AnimationState {
 		if (last == null) {
 			setCurrent(trackIndex, entry, true);
 			queue.drain();
-			if (delay < 0) delay = 0;
+			if (delay < 0)
+				delay = 0;
 		} else {
 			last.next = entry;
 			entry.previous = last;
-			if (delay <= 0) delay = Math.max(delay + last.getTrackComplete() - entry.mixDuration, 0);
+			if (delay <= 0)
+				delay = Math.max(delay + last.getTrackComplete() - entry.mixDuration, 0);
 		}
 
 		entry.delay = delay;
@@ -753,7 +764,8 @@ class AnimationState {
 	 */
 	public function addEmptyAnimation(trackIndex:Int, mixDuration:Float, delay:Float):TrackEntry {
 		var entry:TrackEntry = addAnimation(trackIndex, emptyAnimation, false, delay);
-		if (delay <= 0) entry.delay = Math.max(entry.delay + entry.mixDuration - mixDuration, 0);
+		if (delay <= 0)
+			entry.delay = Math.max(entry.delay + entry.mixDuration - mixDuration, 0);
 		entry.mixDuration = mixDuration;
 		entry.trackEnd = mixDuration;
 		return entry;

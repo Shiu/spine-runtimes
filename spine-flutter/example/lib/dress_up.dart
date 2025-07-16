@@ -84,23 +84,26 @@ class DressUpState extends State<DressUp> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = SpineWidgetController(onInitialized: (controller) {
-      controller.animationState.setAnimationByName(0, "dance", true);
-    });
+    final controller = SpineWidgetController(
+      onInitialized: (controller) {
+        controller.animationState.setAnimationByName(0, "dance", true);
+      },
+    );
 
     return Scaffold(
-        appBar: AppBar(title: const Text('Dress Up')),
-        body: _skinImages.isEmpty
-            ? const SizedBox()
-            : Row(children: [
+      appBar: AppBar(title: const Text('Dress Up')),
+      body: _skinImages.isEmpty
+          ? const SizedBox()
+          : Row(
+              children: [
                 SizedBox(
                   width: thumbnailSize,
                   child: ListView(
-                      children: _skinImages.keys.map((skinName) {
-                    var rawImageData = _skinImages[skinName]!;
-                    var image = Image(image: RawImageProvider(rawImageData));
-                    var box = SizedBox(width: 200, height: 200, child: image);
-                    return GestureDetector(
+                    children: _skinImages.keys.map((skinName) {
+                      var rawImageData = _skinImages[skinName]!;
+                      var image = Image(image: RawImageProvider(rawImageData));
+                      var box = SizedBox(width: 200, height: 200, child: image);
+                      return GestureDetector(
                         onTap: () {
                           _toggleSkin(skinName);
                           setState(() {});
@@ -114,16 +117,22 @@ class DressUpState extends State<DressUp> {
                                   color: Colors.grey,
                                   backgroundBlendMode: painting.BlendMode.saturation,
                                 ),
-                                child: box));
-                  }).toList()),
+                                child: box,
+                              ),
+                      );
+                    }).toList(),
+                  ),
                 ),
                 Expanded(
-                    child: SpineWidget.fromDrawable(
-                  _drawable,
-                  controller,
-                  boundsProvider: SkinAndAnimationBounds(skins: ["full-skins/girl"]),
-                ))
-              ]));
+                  child: SpineWidget.fromDrawable(
+                    _drawable,
+                    controller,
+                    boundsProvider: SkinAndAnimationBounds(skins: ["full-skins/girl"]),
+                  ),
+                ),
+              ],
+            ),
+    );
   }
 
   @override

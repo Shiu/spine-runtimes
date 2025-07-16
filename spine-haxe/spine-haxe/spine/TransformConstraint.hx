@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -34,7 +34,6 @@ package spine;
  *
  * @see https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide */
 class TransformConstraint extends Constraint<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
-
 	/** The bones that will be modified by this transform constraint. */
 	public final bones:Array<BonePose>;
 
@@ -43,7 +42,8 @@ class TransformConstraint extends Constraint<TransformConstraint, TransformConst
 
 	public function new(data:TransformConstraintData, skeleton:Skeleton) {
 		super(data, new TransformConstraintPose(), new TransformConstraintPose());
-		if (skeleton == null) throw new SpineException("skeleton cannot be null.");
+		if (skeleton == null)
+			throw new SpineException("skeleton cannot be null.");
 
 		bones = new Array<BonePose>();
 		for (boneData in data.bones)
@@ -60,12 +60,17 @@ class TransformConstraint extends Constraint<TransformConstraint, TransformConst
 	/** Applies the constraint to the constrained bones. */
 	public function update(skeleton:Skeleton, physics:Physics):Void {
 		var p = applied;
-		if (p.mixRotate == 0 && p.mixX == 0 && p.mixY == 0 && p.mixScaleX == 0 && p.mixScaleY == 0 && p.mixShearY == 0) return;
+		if (p.mixRotate == 0 && p.mixX == 0 && p.mixY == 0 && p.mixScaleX == 0 && p.mixScaleY == 0 && p.mixShearY == 0)
+			return;
 
-		var localSource = data.localSource, localTarget = data.localTarget, additive = data.additive, clamp = data.clamp;
+		var localSource = data.localSource,
+			localTarget = data.localTarget,
+			additive = data.additive,
+			clamp = data.clamp;
 		var offsets = data.offsets;
 		var source = this.source.applied;
-		if (localSource) source.validateLocalTransform(skeleton);
+		if (localSource)
+			source.validateLocalTransform(skeleton);
 		var fromItems = data.properties;
 		var fn = data.properties.length, update = skeleton.update;
 		var bones = this.bones;
@@ -103,8 +108,9 @@ class TransformConstraint extends Constraint<TransformConstraint, TransformConst
 		}
 	}
 
-	public function sort (skeleton:Skeleton) {
-		if (!data.localSource) skeleton.sortBone(source);
+	public function sort(skeleton:Skeleton) {
+		if (!data.localSource)
+			skeleton.sortBone(source);
 		var bones = this.bones;
 		var boneCount = this.bones.length;
 		var worldTarget = !data.localTarget;
@@ -122,7 +128,7 @@ class TransformConstraint extends Constraint<TransformConstraint, TransformConst
 			bones[i].bone.sorted = worldTarget;
 	}
 
-	override public function isSourceActive () {
+	override public function isSourceActive() {
 		return source.active;
 	}
 }

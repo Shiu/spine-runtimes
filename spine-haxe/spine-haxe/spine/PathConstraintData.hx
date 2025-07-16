@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -51,34 +51,38 @@ class PathConstraintData extends ConstraintData<PathConstraint, PathConstraintPo
 	/** An offset added to the constrained bone rotation. */
 	public var offsetRotation:Float = 0;
 
-	public function new (name:String) {
+	public function new(name:String) {
 		super(name, new PathConstraintPose());
 	}
 
-	public function create (skeleton:Skeleton) {
+	public function create(skeleton:Skeleton) {
 		return new PathConstraint(this, skeleton);
 	}
 
-	public function set_slot (slot:SlotData):SlotData {
-		if (slot == null) throw new SpineException("slot cannot be null.");
+	public function set_slot(slot:SlotData):SlotData {
+		if (slot == null)
+			throw new SpineException("slot cannot be null.");
 		this.slot = slot;
 		return slot;
 	}
 
-	public function set_positionMode (positionMode:PositionMode):PositionMode {
-		if (positionMode == null) throw new SpineException("positionMode cannot be null.");
+	public function set_positionMode(positionMode:PositionMode):PositionMode {
+		if (positionMode == null)
+			throw new SpineException("positionMode cannot be null.");
 		this.positionMode = positionMode;
 		return positionMode;
 	}
 
-	public function set_spacingMode (spacingMode:SpacingMode):SpacingMode {
-		if (spacingMode == null) throw new SpineException("spacingMode cannot be null.");
+	public function set_spacingMode(spacingMode:SpacingMode):SpacingMode {
+		if (spacingMode == null)
+			throw new SpineException("spacingMode cannot be null.");
 		this.spacingMode = spacingMode;
 		return spacingMode;
 	}
 
-	public function set_rotateMode (rotateMode:RotateMode):RotateMode {
-		if (rotateMode == null) throw new SpineException("rotateMode cannot be null.");
+	public function set_rotateMode(rotateMode:RotateMode):RotateMode {
+		if (rotateMode == null)
+			throw new SpineException("rotateMode cannot be null.");
 		this.rotateMode = rotateMode;
 		return rotateMode;
 	}

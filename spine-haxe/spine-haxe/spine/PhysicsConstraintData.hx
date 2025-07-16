@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -33,7 +33,6 @@ package spine;
  *
  * @see https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide */
 class PhysicsConstraintData extends ConstraintData<PhysicsConstraint, PhysicsConstraintPose> {
-
 	/** The bone constrained by this physics constraint. */
 	public var bone:BoneData;
 
@@ -44,8 +43,10 @@ class PhysicsConstraintData extends ConstraintData<PhysicsConstraint, PhysicsCon
 	public var shearX = 0.;
 	public var limit = 0.;
 	public var step = 0.;
+
 	/** A percentage (0-1) that controls the mix between the constrained and unconstrained poses. */
 	public var mix = 0.;
+
 	public var inertiaGlobal = false;
 	public var strengthGlobal = false;
 	public var dampingGlobal = false;
@@ -58,8 +59,7 @@ class PhysicsConstraintData extends ConstraintData<PhysicsConstraint, PhysicsCon
 		super(name, new PhysicsConstraintPose());
 	}
 
-	public function create (skeleton:Skeleton) {
+	public function create(skeleton:Skeleton) {
 		return new PhysicsConstraint(this, skeleton);
 	}
-
 }

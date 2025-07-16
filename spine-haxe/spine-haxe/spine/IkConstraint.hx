@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -34,7 +34,6 @@ package spine;
  *
  * @see https://esotericsoftware.com/spine-ik-constraints IK constraints in the Spine User Guide */
 class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkConstraintPose> {
-
 	/** The 1 or 2 bones that will be modified by this IK constraint. */
 	public final bones:Array<BonePose>;
 
@@ -43,7 +42,8 @@ class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkConstrai
 
 	public function new(data:IkConstraintData, skeleton:Skeleton) {
 		super(data, new IkConstraintPose(), new IkConstraintPose());
-		if (skeleton == null) throw new SpineException("skeleton cannot be null.");
+		if (skeleton == null)
+			throw new SpineException("skeleton cannot be null.");
 
 		bones = new Array<BonePose>();
 		for (boneData in data.bones)
@@ -51,24 +51,27 @@ class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkConstrai
 		target = skeleton.bones[data.target.index];
 	}
 
-	public function copy (skeleton:Skeleton) {
+	public function copy(skeleton:Skeleton) {
 		var copy = new IkConstraint(data, skeleton);
 		copy.pose.set(pose);
 		return copy;
 	}
 
 	/** Applies the constraint to the constrained bones. */
-	public function update (skeleton:Skeleton, physics:Physics):Void {
+	public function update(skeleton:Skeleton, physics:Physics):Void {
 		var p = applied;
-		if (p.mix == 0) return;
+		if (p.mix == 0)
+			return;
 		var target = target.applied;
 		switch (bones.length) {
-			case 1: apply1(skeleton, bones[0], target.worldX, target.worldY, p.compress, p.stretch, data.uniform, p.mix);
-			case 2: apply2(skeleton, bones[0], bones[1], target.worldX, target.worldY, p.bendDirection, p.stretch, data.uniform, p.softness, p.mix);
+			case 1:
+				apply1(skeleton, bones[0], target.worldX, target.worldY, p.compress, p.stretch, data.uniform, p.mix);
+			case 2:
+				apply2(skeleton, bones[0], bones[1], target.worldX, target.worldY, p.bendDirection, p.stretch, data.uniform, p.softness, p.mix);
 		}
 	}
 
-	public function sort (skeleton:Skeleton) {
+	public function sort(skeleton:Skeleton) {
 		skeleton.sortBone(target);
 		var parent = bones[0].bone;
 		skeleton.sortBone(parent);
@@ -76,24 +79,25 @@ class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkConstrai
 		parent.sorted = false;
 		skeleton.sortReset(parent.children);
 		skeleton.constrained(parent);
-		if (bones.length > 1) skeleton.constrained(bones[1].bone);
+		if (bones.length > 1)
+			skeleton.constrained(bones[1].bone);
 	}
 
-	override public function isSourceActive () {
+	override public function isSourceActive() {
 		return target.active;
 	}
 
-	public function set_target (target:Bone):Bone {
-		if (target == null) throw new SpineException("target cannot be null.");
+	public function set_target(target:Bone):Bone {
+		if (target == null)
+			throw new SpineException("target cannot be null.");
 		this.target = target;
 		return target;
 	}
 
 	/** Applies 1 bone IK. The target is specified in the world coordinate system. */
-	static public function apply1(skeleton:Skeleton, bone:BonePose, targetX:Float, targetY:Float, compress:Bool, stretch:Bool,
-		uniform:Bool, mix:Float) {
-
-		if (bone == null) throw new SpineException("bone cannot be null.");
+	static public function apply1(skeleton:Skeleton, bone:BonePose, targetX:Float, targetY:Float, compress:Bool, stretch:Bool, uniform:Bool, mix:Float) {
+		if (bone == null)
+			throw new SpineException("bone cannot be null.");
 		bone.modifyLocal(skeleton);
 		var p = bone.bone.parent.applied;
 		var pa = p.a, pb = p.b, pc = p.c, pd = p.d;
@@ -127,7 +131,8 @@ class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkConstrai
 				switchDefault();
 		}
 		rotationIK += MathUtils.atan2Deg(ty, tx);
-		if (bone.scaleX < 0) rotationIK += 180;
+		if (bone.scaleX < 0)
+			rotationIK += 180;
 		if (rotationIK > 180)
 			rotationIK -= 360;
 		else if (rotationIK < -180) //
@@ -139,13 +144,14 @@ class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkConstrai
 					tx = targetX - bone.worldX;
 					ty = targetY - bone.worldY;
 			}
-			var  b = bone.bone.data.length * bone.scaleX;
+			var b = bone.bone.data.length * bone.scaleX;
 			if (b > 0.0001) {
-				var	dd = tx * tx + ty * ty;
+				var dd = tx * tx + ty * ty;
 				if ((compress && dd < b * b) || (stretch && dd > b * b)) {
 					var s = (Math.sqrt(dd) / b - 1) * mix + 1;
 					bone.scaleX *= s;
-					if (uniform) bone.scaleY *= s;
+					if (uniform)
+						bone.scaleY *= s;
 				}
 			}
 		}
@@ -153,12 +159,14 @@ class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkConstrai
 
 	/** Applies 2 bone IK. The target is specified in the world coordinate system.
 	 * @param child A direct descendant of the parent bone. */
-	static public function apply2(skeleton:Skeleton, parent:BonePose, child:BonePose, targetX:Float, targetY:Float, bendDir:Int,
-		stretch:Bool, uniform:Bool, softness:Float, mix:Float):Void {
-
-		if (parent == null) throw new SpineException("parent cannot be null.");
-		if (child == null) throw new SpineException("child cannot be null.");
-		if (parent.inherit != Inherit.normal || child.inherit != Inherit.normal) return;
+	static public function apply2(skeleton:Skeleton, parent:BonePose, child:BonePose, targetX:Float, targetY:Float, bendDir:Int, stretch:Bool, uniform:Bool,
+			softness:Float, mix:Float):Void {
+		if (parent == null)
+			throw new SpineException("parent cannot be null.");
+		if (child == null)
+			throw new SpineException("child cannot be null.");
+		if (parent.inherit != Inherit.normal || child.inherit != Inherit.normal)
+			return;
 		parent.modifyLocal(skeleton);
 		child.modifyLocal(skeleton);
 		var px = parent.x, py = parent.y, psx = parent.scaleX, psy = parent.scaleY, csx = child.scaleX;
@@ -232,8 +240,9 @@ class IkConstraint extends Constraint<IkConstraint, IkConstraintData, IkConstrai
 				cos = 1;
 				if (stretch) {
 					a = (Math.sqrt(dd) / (l1 + l2) - 1) * mix + 1;
-					parent.scaleX  *= a;
-					if (uniform) parent.scaleY *= a;
+					parent.scaleX *= a;
+					if (uniform)
+						parent.scaleY *= a;
 				}
 			}
 			a2 = Math.acos(cos) * bendDir;

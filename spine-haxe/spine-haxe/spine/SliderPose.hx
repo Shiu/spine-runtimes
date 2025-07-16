@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -34,10 +34,9 @@ class SliderPose implements Pose<SliderPose> {
 	public var time = 0.;
 	public var mix = 0.;
 
-	public function new () {
-	}
+	public function new() {}
 
-	public function set (pose:SliderPose) {
+	public function set(pose:SliderPose) {
 		time = pose.time;
 		mix = pose.mix;
 	}

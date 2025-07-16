@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package starlingExamples;
 
@@ -66,8 +66,7 @@ class EventsExample extends Scene {
 		// add callback to the TrackEntry
 		skeletonSprite.state.setAnimationByName(0, "walk", true);
 		var trackEntry = skeletonSprite.state.addAnimationByName(0, "run", true, 3);
-		trackEntry.onEvent.add(
-			(entry, event) -> log('Custom event for ${entry.animation.name}: ${event.data.name}'));
+		trackEntry.onEvent.add((entry, event) -> log('Custom event for ${entry.animation.name}: ${event.data.name}'));
 
 		addChild(skeletonSprite);
 		juggler.add(skeletonSprite);
@@ -83,6 +82,7 @@ class EventsExample extends Scene {
 	private var logs = new Array<TextField>();
 	private var logsNumber = 0;
 	private var yOffset = 12;
+
 	private function log(text:String) {
 		var length = logs.length;
 		var newLog = new TextField(250, 30, text);

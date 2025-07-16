@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -36,17 +36,17 @@ import spine.attachments.VertexAttachment;
  * state for an attachment. State cannot be stored in an attachment itself because attachments are stateless and may be shared
  * across multiple skeletons. */
 class Slot extends Posed<SlotData, SlotPose, SlotPose> {
-
 	public var skeleton:Skeleton;
 
 	/** The bone this slot belongs to. */
 	public var bone:Bone;
 
-	public var attachmentState:Int ;
+	public var attachmentState:Int;
 
 	public function new(data:SlotData, skeleton:Skeleton) {
 		super(data, new SlotPose(), new SlotPose());
-		if (skeleton == null) throw new SpineException("skeleton cannot be null.");
+		if (skeleton == null)
+			throw new SpineException("skeleton cannot be null.");
 		this.skeleton = skeleton;
 		bone = skeleton.bones[data.boneData.index];
 		if (data.setup.darkColor != null) {
@@ -59,8 +59,10 @@ class Slot extends Posed<SlotData, SlotPose, SlotPose> {
 	/** Copy method. */
 	public function copy(slot:Slot, bone:Bone, skeleton:Skeleton):Slot {
 		var copy = new Slot(slot.data, skeleton);
-		if (bone == null) throw new SpineException("bone cannot be null.");
-		if (skeleton == null) throw new SpineException("skeleton cannot be null.");
+		if (bone == null)
+			throw new SpineException("bone cannot be null.");
+		if (skeleton == null)
+			throw new SpineException("skeleton cannot be null.");
 		this.bone = bone;
 		if (data.setup.darkColor != null) {
 			pose.darkColor = new Color(1, 1, 1, 1);
@@ -73,7 +75,8 @@ class Slot extends Posed<SlotData, SlotPose, SlotPose> {
 	/** Sets this slot to the setup pose. */
 	override public function setupPose():Void {
 		pose.color.setFromColor(data.setup.color);
-		if (pose.darkColor != null) pose.darkColor.setFromColor(data.setup.darkColor);
+		if (pose.darkColor != null)
+			pose.darkColor.setFromColor(data.setup.darkColor);
 		pose.sequenceIndex = data.setup.sequenceIndex;
 		if (data.attachmentName == null) {
 			pose.attachment = null;

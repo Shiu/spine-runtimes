@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -33,15 +33,16 @@ abstract class Posed< //
 	D:PosedData<P>, //
 	P:Pose<Any>, //
 	A:P> {
-
 	/** The constraint's setup pose data. */
 	public final data:D;
+
 	public final pose:A;
 	public final constrained:A;
 	public var applied:A;
 
-	public function new (data:D, pose:A, constrained:A) {
-		if (data == null) throw new SpineException("data cannot be null.");
+	public function new(data:D, pose:A, constrained:A) {
+		if (data == null)
+			throw new SpineException("data cannot be null.");
 		this.data = data;
 		this.pose = pose;
 		this.constrained = constrained;
@@ -49,35 +50,35 @@ abstract class Posed< //
 	}
 
 	/** The constraint's setup pose data. */
-	public function getData ():D {
+	public function getData():D {
 		return data;
 	}
 
-	public function getPose ():P {
+	public function getPose():P {
 		return pose;
 	}
 
-	public function getAppliedPose ():A {
+	public function getAppliedPose():A {
 		return applied;
 	}
 
-	public function setupPose ():Void {
+	public function setupPose():Void {
 		pose.set(data.setup);
 	}
 
-	public function usePose ():Void { // Port: usePose - reference runtime: pose()
+	public function usePose():Void { // Port: usePose - reference runtime: pose()
 		applied = pose;
 	}
 
-	public function useConstrained ():Void { // Port: useConstrained - reference runtime: constrained()
+	public function useConstrained():Void { // Port: useConstrained - reference runtime: constrained()
 		applied = constrained;
 	}
 
-	public function resetConstrained ():Void { // Port: resetConstrained - reference runtime: reset()
+	public function resetConstrained():Void { // Port: resetConstrained - reference runtime: reset()
 		constrained.set(pose);
 	}
 
-	public function toString ():String {
+	public function toString():String {
 		return data.name;
 	}
 }

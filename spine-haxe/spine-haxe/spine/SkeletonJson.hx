@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -140,7 +140,8 @@ class SkeletonJson {
 			data.skinRequired = Reflect.hasField(boneMap, "skin") ? cast(Reflect.getProperty(boneMap, "skin"), Bool) : false;
 
 			var color:String = Reflect.getProperty(boneMap, "color");
-			if (color != null) data.color.setFromString(color);
+			if (color != null)
+				data.color.setFromString(color);
 
 			skeletonData.bones.push(data);
 		}
@@ -150,15 +151,18 @@ class SkeletonJson {
 			var slotName:String = Reflect.getProperty(slotMap, "name");
 			var boneName:String = Reflect.getProperty(slotMap, "bone");
 			var boneData = skeletonData.findBone(boneName);
-			if (boneData == null) throw new SpineException("Slot bone not found: " + boneName);
+			if (boneData == null)
+				throw new SpineException("Slot bone not found: " + boneName);
 
 			var data = new SlotData(skeletonData.slots.length, slotName, boneData);
 
 			var color:String = Reflect.getProperty(slotMap, "color");
-			if (color != null) data.setup.color.setFromString(color);
+			if (color != null)
+				data.setup.color.setFromString(color);
 
 			var dark:String = Reflect.getProperty(slotMap, "dark");
-			if (dark != null) data.setup.darkColor = new Color(0, 0, 0).setFromString(dark);
+			if (dark != null)
+				data.setup.darkColor = new Color(0, 0, 0).setFromString(dark);
 
 			data.attachmentName = Reflect.getProperty(slotMap, "attachment");
 			data.blendMode = Reflect.hasField(slotMap, "blend") ? BlendMode.fromName(Reflect.getProperty(slotMap, "blend")) : BlendMode.normal;
@@ -179,20 +183,26 @@ class SkeletonJson {
 
 						for (boneName in cast(Reflect.getProperty(constraintMap, "bones"), Array<Dynamic>)) {
 							var bone = skeletonData.findBone(boneName);
-							if (bone == null) throw new SpineException("IK constraint bone not found: " + boneName);
+							if (bone == null)
+								throw new SpineException("IK constraint bone not found: " + boneName);
 							data.bones.push(bone);
 						}
 
 						data.target = skeletonData.findBone(Reflect.getProperty(constraintMap, "target"));
-						if (data.target == null) throw new SpineException("Target bone not found: " + Reflect.getProperty(constraintMap, "target"));
+						if (data.target == null)
+							throw new SpineException("Target bone not found: " + Reflect.getProperty(constraintMap, "target"));
 
-						data.uniform = (Reflect.hasField(constraintMap, "uniform") && cast(Reflect.getProperty(constraintMap, "uniform"), Bool));
+						data.uniform = (Reflect.hasField(constraintMap, "uniform")
+							&& cast(Reflect.getProperty(constraintMap, "uniform"), Bool));
 						var setup = data.setup;
 						setup.mix = getFloat(constraintMap, "mix", 1);
 						setup.softness = getFloat(constraintMap, "softness", 0) * scale;
-						setup.bendDirection = (!Reflect.hasField(constraintMap, "bendPositive") || cast(Reflect.getProperty(constraintMap, "bendPositive"), Bool)) ? 1 : -1;
-						setup.compress = (Reflect.hasField(constraintMap, "compress") && cast(Reflect.getProperty(constraintMap, "compress"), Bool));
-						setup.stretch = (Reflect.hasField(constraintMap, "stretch") && cast(Reflect.getProperty(constraintMap, "stretch"), Bool));
+						setup.bendDirection = (!Reflect.hasField(constraintMap, "bendPositive")
+							|| cast(Reflect.getProperty(constraintMap, "bendPositive"), Bool)) ? 1 : -1;
+						setup.compress = (Reflect.hasField(constraintMap, "compress")
+							&& cast(Reflect.getProperty(constraintMap, "compress"), Bool));
+						setup.stretch = (Reflect.hasField(constraintMap, "stretch")
+							&& cast(Reflect.getProperty(constraintMap, "stretch"), Bool));
 
 						skeletonData.constraints.push(data);
 					case "transform":
@@ -201,15 +211,19 @@ class SkeletonJson {
 
 						for (boneName in cast(Reflect.getProperty(constraintMap, "bones"), Array<Dynamic>)) {
 							var bone = skeletonData.findBone(boneName);
-							if (bone == null) throw new SpineException("Transform constraint bone not found: " + boneName);
+							if (bone == null)
+								throw new SpineException("Transform constraint bone not found: " + boneName);
 							data.bones.push(bone);
 						}
 
 						data.source = skeletonData.findBone(Reflect.getProperty(constraintMap, "source"));
-						if (data.source == null) throw new SpineException("Transform constraint source bone not found: " + Reflect.getProperty(constraintMap, "source"));
+						if (data.source == null)
+							throw new SpineException("Transform constraint source bone not found: " + Reflect.getProperty(constraintMap, "source"));
 
-						data.localSource = Reflect.hasField(constraintMap, "localSource") ? cast(Reflect.getProperty(constraintMap, "localSource"), Bool) : false;
-						data.localTarget = Reflect.hasField(constraintMap, "localTarget") ? cast(Reflect.getProperty(constraintMap, "localTarget"), Bool) : false;
+						data.localSource = Reflect.hasField(constraintMap,
+							"localSource") ? cast(Reflect.getProperty(constraintMap, "localSource"), Bool) : false;
+						data.localTarget = Reflect.hasField(constraintMap,
+							"localTarget") ? cast(Reflect.getProperty(constraintMap, "localTarget"), Bool) : false;
 						data.additive = Reflect.hasField(constraintMap, "additive") ? cast(Reflect.getProperty(constraintMap, "additive"), Bool) : false;
 						data.clamp = Reflect.hasField(constraintMap, "clamp") ? cast(Reflect.getProperty(constraintMap, "clamp"), Bool) : false;
 
@@ -227,31 +241,31 @@ class SkeletonJson {
 								var to:ToProperty;
 								switch (name) {
 									case "rotate": {
-										rotate = true;
-										to = new ToRotate();
-									}
+											rotate = true;
+											to = new ToRotate();
+										}
 									case "x": {
-										x = true;
-										to = new ToX();
-										toScale = scale;
-									}
+											x = true;
+											to = new ToX();
+											toScale = scale;
+										}
 									case "y": {
-										y = true;
-										to = new ToY();
-										toScale = scale;
-									}
+											y = true;
+											to = new ToY();
+											toScale = scale;
+										}
 									case "scaleX": {
-										scaleX = true;
-										to = new ToScaleX();
-									}
+											scaleX = true;
+											to = new ToScaleX();
+										}
 									case "scaleY": {
-										scaleY = true;
-										to = new ToScaleY();
-									}
+											scaleY = true;
+											to = new ToScaleY();
+										}
 									case "shearY": {
-										shearY = true;
-										to = new ToShearY();
-									}
+											shearY = true;
+											to = new ToShearY();
+										}
 									default: throw new SpineException("Invalid transform constraint to property: " + toEntry.name);
 								}
 								to.offset = getFloat(toEntry, "offset", 0) * toScale;
@@ -259,7 +273,8 @@ class SkeletonJson {
 								to.scale = getFloat(toEntry, "scale") * toScale / fromScale;
 								from.to.push(to);
 							}
-							if (from.to.length > 0) data.properties.push(from);
+							if (from.to.length > 0)
+								data.properties.push(from);
 						}
 
 						data.offsets[TransformConstraintData.ROTATION] = getFloat(constraintMap, "rotation", 0);
@@ -270,12 +285,18 @@ class SkeletonJson {
 						data.offsets[TransformConstraintData.SHEARY] = getFloat(constraintMap, "shearY", 0);
 
 						var setup = data.setup;
-						if (rotate) setup.mixRotate = getFloat(constraintMap, "mixRotate", 1);
-						if (x) setup.mixX = getFloat(constraintMap, "mixX", 1);
-						if (y) setup.mixY = getFloat(constraintMap, "mixY", setup.mixX);
-						if (scaleX) setup.mixScaleX = getFloat(constraintMap, "mixScaleX", 1);
-						if (scaleY) setup.mixScaleY = getFloat(constraintMap, "mixScaleY", setup.mixScaleX);
-						if (shearY) setup.mixShearY = getFloat(constraintMap, "mixShearY", 1);
+						if (rotate)
+							setup.mixRotate = getFloat(constraintMap, "mixRotate", 1);
+						if (x)
+							setup.mixX = getFloat(constraintMap, "mixX", 1);
+						if (y)
+							setup.mixY = getFloat(constraintMap, "mixY", setup.mixX);
+						if (scaleX)
+							setup.mixScaleX = getFloat(constraintMap, "mixScaleX", 1);
+						if (scaleY)
+							setup.mixScaleY = getFloat(constraintMap, "mixScaleY", setup.mixScaleX);
+						if (shearY)
+							setup.mixShearY = getFloat(constraintMap, "mixShearY", 1);
 
 						skeletonData.constraints.push(data);
 					case "path":
@@ -284,23 +305,30 @@ class SkeletonJson {
 
 						for (boneName in cast(Reflect.getProperty(constraintMap, "bones"), Array<Dynamic>)) {
 							var bone = skeletonData.findBone(boneName);
-							if (bone == null) throw new SpineException("Path bone not found: " + boneName);
+							if (bone == null)
+								throw new SpineException("Path bone not found: " + boneName);
 							data.bones.push(bone);
 						}
 
 						var slotName = getString(constraintMap, "slot", "");
 						data.slot = skeletonData.findSlot(slotName);
-						if (data.slot == null) throw new SpineException("Path slot not found: " + slotName);
+						if (data.slot == null)
+							throw new SpineException("Path slot not found: " + slotName);
 
-						data.positionMode = Reflect.hasField(constraintMap, "positionMode") ? PositionMode.fromName(Reflect.getProperty(constraintMap, "positionMode")) : PositionMode.percent;
-						data.spacingMode = Reflect.hasField(constraintMap, "spacingMode") ? SpacingMode.fromName(Reflect.getProperty(constraintMap, "spacingMode")) : SpacingMode.length;
-						data.rotateMode = Reflect.hasField(constraintMap, "rotateMode") ? RotateMode.fromName(Reflect.getProperty(constraintMap, "rotateMode")) : RotateMode.tangent;
+						data.positionMode = Reflect.hasField(constraintMap,
+							"positionMode") ? PositionMode.fromName(Reflect.getProperty(constraintMap, "positionMode")) : PositionMode.percent;
+						data.spacingMode = Reflect.hasField(constraintMap,
+							"spacingMode") ? SpacingMode.fromName(Reflect.getProperty(constraintMap, "spacingMode")) : SpacingMode.length;
+						data.rotateMode = Reflect.hasField(constraintMap,
+							"rotateMode") ? RotateMode.fromName(Reflect.getProperty(constraintMap, "rotateMode")) : RotateMode.tangent;
 						data.offsetRotation = getFloat(constraintMap, "rotation", 0);
 						var setup = data.setup;
 						setup.position = getFloat(constraintMap, "position", 0);
-						if (data.positionMode == PositionMode.fixed) setup.position *= scale;
+						if (data.positionMode == PositionMode.fixed)
+							setup.position *= scale;
 						setup.spacing = getFloat(constraintMap, "spacing", 0);
-						if (data.spacingMode == SpacingMode.length || data.spacingMode == SpacingMode.fixed) setup.spacing *= scale;
+						if (data.spacingMode == SpacingMode.length || data.spacingMode == SpacingMode.fixed)
+							setup.spacing *= scale;
 						setup.mixRotate = getFloat(constraintMap, "mixRotate", 1);
 						setup.mixX = getFloat(constraintMap, "mixX", 1);
 						setup.mixY = getFloat(constraintMap, "mixY", setup.mixX);
@@ -312,7 +340,8 @@ class SkeletonJson {
 
 						var boneName:String = getString(constraintMap, "bone");
 						data.bone = skeletonData.findBone(boneName);
-						if (data.bone == null) throw new SpineException("Physics bone not found: " + boneName);
+						if (data.bone == null)
+							throw new SpineException("Physics bone not found: " + boneName);
 
 						data.x = getFloat(constraintMap, "x");
 						data.y = getFloat(constraintMap, "y");
@@ -329,12 +358,17 @@ class SkeletonJson {
 						setup.wind = getFloat(constraintMap, "wind", 0);
 						setup.gravity = getFloat(constraintMap, "gravity", 0);
 						setup.mix = getValue(constraintMap, "mix", 1);
-						data.inertiaGlobal = Reflect.hasField(constraintMap, "inertiaGlobal") ? cast(Reflect.getProperty(constraintMap, "inertiaGlobal"), Bool) : false;
-						data.strengthGlobal = Reflect.hasField(constraintMap, "strengthGlobal") ? cast(Reflect.getProperty(constraintMap, "strengthGlobal"), Bool) : false;
-						data.dampingGlobal = Reflect.hasField(constraintMap, "dampingGlobal") ? cast(Reflect.getProperty(constraintMap, "dampingGlobal"), Bool) : false;
-						data.dampingGlobal = Reflect.hasField(constraintMap, "dampingGlobal") ? cast(Reflect.getProperty(constraintMap, "dampingGlobal"), Bool) : false;
+						data.inertiaGlobal = Reflect.hasField(constraintMap,
+							"inertiaGlobal") ? cast(Reflect.getProperty(constraintMap, "inertiaGlobal"), Bool) : false;
+						data.strengthGlobal = Reflect.hasField(constraintMap,
+							"strengthGlobal") ? cast(Reflect.getProperty(constraintMap, "strengthGlobal"), Bool) : false;
+						data.dampingGlobal = Reflect.hasField(constraintMap,
+							"dampingGlobal") ? cast(Reflect.getProperty(constraintMap, "dampingGlobal"), Bool) : false;
+						data.dampingGlobal = Reflect.hasField(constraintMap,
+							"dampingGlobal") ? cast(Reflect.getProperty(constraintMap, "dampingGlobal"), Bool) : false;
 						data.windGlobal = Reflect.hasField(constraintMap, "windGlobal") ? cast(Reflect.getProperty(constraintMap, "windGlobal"), Bool) : false;
-						data.gravityGlobal = Reflect.hasField(constraintMap, "gravityGlobal") ? cast(Reflect.getProperty(constraintMap, "gravityGlobal"), Bool) : false;
+						data.gravityGlobal = Reflect.hasField(constraintMap,
+							"gravityGlobal") ? cast(Reflect.getProperty(constraintMap, "gravityGlobal"), Bool) : false;
 						data.mixGlobal = Reflect.hasField(constraintMap, "mixGlobal") ? cast(Reflect.getProperty(constraintMap, "mixGlobal"), Bool) : false;
 
 						skeletonData.constraints.push(data);
@@ -349,7 +383,8 @@ class SkeletonJson {
 						var boneName = getString(constraintMap, "bone", null);
 						if (boneName != null) {
 							data.bone = skeletonData.findBone(boneName);
-							if (data.bone == null) throw new SpineException("Slider bone not found: " + boneName);
+							if (data.bone == null)
+								throw new SpineException("Slider bone not found: " + boneName);
 							var property = getString(constraintMap, "property");
 							data.property = fromProperty(property);
 							var propertyScale = propertyScale(property, scale);
@@ -363,7 +398,6 @@ class SkeletonJson {
 				}
 			}
 		}
-
 
 		// Skins.
 		if (Reflect.hasField(root, "skins")) {
@@ -424,7 +458,8 @@ class SkeletonJson {
 					var slider = cast(Reflect.getProperty(skinMap, "slider"), Array<Dynamic>);
 					for (ii in 0...slider.length) {
 						var constraint = skeletonData.findConstraint(slider[ii], SliderData);
-						if (constraint == null) throw new SpineException("Skin slider constraint not found: " + slider[ii]);
+						if (constraint == null)
+							throw new SpineException("Skin slider constraint not found: " + slider[ii]);
 						skin.constraints.push(constraint);
 					}
 				}
@@ -495,7 +530,8 @@ class SkeletonJson {
 					var data = skeletonData.findConstraint(getString(constraintMap, "name"), SliderData);
 					var animationName = getString(constraintMap, "animation", "");
 					data.animation = skeletonData.findAnimation(animationName);
-					if (data.animation == null) throw new SpineException("Slider animation not found: " + animationName);
+					if (data.animation == null)
+						throw new SpineException("Slider animation not found: " + animationName);
 				}
 			}
 		}
@@ -503,25 +539,34 @@ class SkeletonJson {
 		return skeletonData;
 	}
 
-	private function fromProperty (type:String): FromProperty {
+	private function fromProperty(type:String):FromProperty {
 		var property:FromProperty;
 		switch (type) {
-			case "rotate": property = new FromRotate();
-			case "x": property = new FromX();
-			case "y": property = new FromY();
-			case "scaleX": property = new FromScaleX();
-			case "scaleY": property = new FromScaleY();
-			case "shearY": property = new FromShearY();
-			default: throw new SpineException("Invalid from property: " + type);
+			case "rotate":
+				property = new FromRotate();
+			case "x":
+				property = new FromX();
+			case "y":
+				property = new FromY();
+			case "scaleX":
+				property = new FromScaleX();
+			case "scaleY":
+				property = new FromScaleY();
+			case "shearY":
+				property = new FromShearY();
+			default:
+				throw new SpineException("Invalid from property: " + type);
 		};
 		return property;
 	}
 
-	private function propertyScale (type:String, scale:Float):Float {
+	private function propertyScale(type:String, scale:Float):Float {
 		var scaleValue:Float;
 		switch (type) {
-			case "x", "y": scaleValue = scale;
-			default: scaleValue = 1;
+			case "x", "y":
+				scaleValue = scale;
+			default:
+				scaleValue = 1;
 		};
 		return scaleValue;
 	}
@@ -709,7 +754,8 @@ class SkeletonJson {
 			slotIndex = skeletonData.findSlot(slotName).index;
 			for (timelineName in Reflect.fields(slotMap)) {
 				timelineMap = Reflect.field(slotMap, timelineName);
-				if (timelineMap == null) continue;
+				if (timelineMap == null)
+					continue;
 
 				switch (timelineName) {
 					case "attachment":
@@ -782,7 +828,8 @@ class SkeletonJson {
 						}
 
 						timelines.push(rgbTimeline);
-					case "alpha": readTimeline(timelines, timelineMap, new AlphaTimeline(timelineMap.length, timelineMap.length, slotIndex), 0, 1);
+					case "alpha":
+						readTimeline(timelines, timelineMap, new AlphaTimeline(timelineMap.length, timelineMap.length, slotIndex), 0, 1);
 					case "rgba2":
 						var rgba2Timeline = new RGBA2Timeline(timelineMap.length, timelineMap.length * 7, slotIndex);
 
@@ -862,7 +909,8 @@ class SkeletonJson {
 						}
 
 						timelines.push(rgb2Timeline);
-					default: throw new SpineException("Invalid timeline type for a slot: " + timelineName + " (" + slotName + ")");
+					default:
+						throw new SpineException("Invalid timeline type for a slot: " + timelineName + " (" + slotName + ")");
 				}
 			}
 		}
@@ -871,24 +919,36 @@ class SkeletonJson {
 		var bones = Reflect.getProperty(map, "bones");
 		for (boneName in Reflect.fields(bones)) {
 			var boneIndex:Int = skeletonData.findBoneIndex(boneName);
-			if (boneIndex == -1) throw new SpineException("Bone not found: " + boneName);
+			if (boneIndex == -1)
+				throw new SpineException("Bone not found: " + boneName);
 			var boneMap:Dynamic = Reflect.field(bones, boneName);
 			for (timelineName in Reflect.fields(boneMap)) {
 				timelineMap = Reflect.field(boneMap, timelineName);
 				var frames = timelineMap.length;
-				if (frames == 0) continue;
+				if (frames == 0)
+					continue;
 
 				switch (timelineName) {
-					case "rotate": readTimeline(timelines, timelineMap, new RotateTimeline(frames, frames, boneIndex), 0, 1);
-					case "translate": readTimeline2(timelines, timelineMap, new TranslateTimeline(frames, frames << 1, boneIndex), "x", "y", 0, scale);
-					case "translatex": readTimeline(timelines, timelineMap, new TranslateXTimeline(frames, frames, boneIndex), 0, scale);
-					case "translatey": readTimeline(timelines, timelineMap, new TranslateYTimeline(frames, frames, boneIndex), 0, scale);
-					case "scale": readTimeline2(timelines, timelineMap, new ScaleTimeline(frames, frames << 1, boneIndex), "x", "y", 1, 1);
-					case "scalex": readTimeline(timelines, timelineMap, new ScaleXTimeline(frames, frames, boneIndex), 1, 1);
-					case "scaley": readTimeline(timelines, timelineMap, new ScaleYTimeline(frames, frames, boneIndex), 1, 1);
-					case "shear": readTimeline2(timelines, timelineMap, new ShearTimeline(frames, frames << 1, boneIndex), "x", "y", 0, 1);
-					case "shearx": readTimeline(timelines, timelineMap, new ShearXTimeline(frames, frames, boneIndex), 0, 1);
-					case "sheary": readTimeline(timelines, timelineMap, new ShearYTimeline(frames, frames, boneIndex), 0, 1);
+					case "rotate":
+						readTimeline(timelines, timelineMap, new RotateTimeline(frames, frames, boneIndex), 0, 1);
+					case "translate":
+						readTimeline2(timelines, timelineMap, new TranslateTimeline(frames, frames << 1, boneIndex), "x", "y", 0, scale);
+					case "translatex":
+						readTimeline(timelines, timelineMap, new TranslateXTimeline(frames, frames, boneIndex), 0, scale);
+					case "translatey":
+						readTimeline(timelines, timelineMap, new TranslateYTimeline(frames, frames, boneIndex), 0, scale);
+					case "scale":
+						readTimeline2(timelines, timelineMap, new ScaleTimeline(frames, frames << 1, boneIndex), "x", "y", 1, 1);
+					case "scalex":
+						readTimeline(timelines, timelineMap, new ScaleXTimeline(frames, frames, boneIndex), 1, 1);
+					case "scaley":
+						readTimeline(timelines, timelineMap, new ScaleYTimeline(frames, frames, boneIndex), 1, 1);
+					case "shear":
+						readTimeline2(timelines, timelineMap, new ShearTimeline(frames, frames << 1, boneIndex), "x", "y", 0, 1);
+					case "shearx":
+						readTimeline(timelines, timelineMap, new ShearXTimeline(frames, frames, boneIndex), 0, 1);
+					case "sheary":
+						readTimeline(timelines, timelineMap, new ShearYTimeline(frames, frames, boneIndex), 0, 1);
 					case "inherit":
 						var timeline = new InheritTimeline(frames, boneIndex);
 						for (frame in 0...frames) {
@@ -896,7 +956,8 @@ class SkeletonJson {
 							timeline.setFrame(frame, getFloat(aFrame, "time"), Inherit.fromName(getValue(aFrame, "inherit", "Normal")));
 						}
 						timelines.push(timeline);
-					default: throw new SpineException("Invalid timeline type for a bone: " + timelineName + " (" + boneName + ")");
+					default:
+						throw new SpineException("Invalid timeline type for a bone: " + timelineName + " (" + boneName + ")");
 				}
 			}
 		}
@@ -906,12 +967,13 @@ class SkeletonJson {
 		for (ikConstraintName in Reflect.fields(iks)) {
 			timelineMap = Reflect.field(iks, ikConstraintName);
 			keyMap = timelineMap[0];
-			if (keyMap == null) continue;
+			if (keyMap == null)
+				continue;
 
 			var constraint = skeletonData.findConstraint(ikConstraintName, IkConstraintData);
-			if (constraint == null) throw new SpineException("IK constraint not found: " + ikConstraintName);
-			var timeline = new IkConstraintTimeline(timelineMap.length, timelineMap.length << 1,
-				skeletonData.constraints.indexOf(constraint));
+			if (constraint == null)
+				throw new SpineException("IK constraint not found: " + ikConstraintName);
+			var timeline = new IkConstraintTimeline(timelineMap.length, timelineMap.length << 1, skeletonData.constraints.indexOf(constraint));
 
 			time = getFloat(keyMap, "time");
 			var mix:Float = getFloat(keyMap, "mix", 1);
@@ -955,15 +1017,18 @@ class SkeletonJson {
 		for (transformName in Reflect.fields(transforms)) {
 			timelineMap = Reflect.field(transforms, transformName);
 			keyMap = timelineMap[0];
-			if (keyMap == null) continue;
+			if (keyMap == null)
+				continue;
 			var constraint = skeletonData.findConstraint(transformName, TransformConstraintData);
-			if (constraint == null) throw new SpineException("Transform constraint not found: " + transformName);
-			var timeline = new TransformConstraintTimeline(timelineMap.length, timelineMap.length * 6,
-				skeletonData.constraints.indexOf(constraint));
+			if (constraint == null)
+				throw new SpineException("Transform constraint not found: " + transformName);
+			var timeline = new TransformConstraintTimeline(timelineMap.length, timelineMap.length * 6, skeletonData.constraints.indexOf(constraint));
 			var time = getFloat(keyMap, "time", 0);
 			var mixRotate = getFloat(keyMap, "mixRotate", 1);
-			var mixX = getFloat(keyMap, "mixX", 1), mixY = getFloat(keyMap, "mixY", mixX);
-			var mixScaleX:Float = getFloat(keyMap, "mixScaleX", 1), mixScaleY:Float = getFloat(keyMap, "mixScaleY", 1);
+			var mixX = getFloat(keyMap, "mixX", 1),
+				mixY = getFloat(keyMap, "mixY", mixX);
+			var mixScaleX:Float = getFloat(keyMap, "mixScaleX", 1),
+				mixScaleY:Float = getFloat(keyMap, "mixScaleY", 1);
 			var mixShearY:Float = getFloat(keyMap, "mixShearY", 1);
 
 			frame = 0;
@@ -978,8 +1043,10 @@ class SkeletonJson {
 
 				var time2 = getFloat(nextMap, "time", 0);
 				var mixRotate2 = getFloat(nextMap, "mixRotate", 1);
-				var mixX2 = getFloat(nextMap, "mixX", 1), mixY2 = getFloat(nextMap, "mixY", mixX2);
-				var mixScaleX2:Float = getFloat(nextMap, "mixScaleX", 1), mixScaleY2:Float = getFloat(nextMap, "mixScaleY", 1);
+				var mixX2 = getFloat(nextMap, "mixX", 1),
+					mixY2 = getFloat(nextMap, "mixY", mixX2);
+				var mixScaleX2:Float = getFloat(nextMap, "mixScaleX", 1),
+					mixScaleY2:Float = getFloat(nextMap, "mixScaleY", 1);
 				var mixShearY2:Float = getFloat(nextMap, "mixShearY", 1);
 				var curve = keyMap.curve;
 				if (curve != null) {
@@ -1009,14 +1076,16 @@ class SkeletonJson {
 		var paths:Dynamic = Reflect.getProperty(map, "path");
 		for (pathName in Reflect.fields(paths)) {
 			var constraint = skeletonData.findConstraint(pathName, PathConstraintData);
-			if (constraint == null) throw new SpineException("Path constraint not found: " + pathName);
+			if (constraint == null)
+				throw new SpineException("Path constraint not found: " + pathName);
 			var index = skeletonData.constraints.indexOf(constraint);
 
 			var pathMap:Dynamic = Reflect.field(paths, pathName);
 			for (timelineName in Reflect.fields(pathMap)) {
 				timelineMap = Reflect.field(pathMap, timelineName);
 				keyMap = timelineMap[0];
-				if (keyMap == null) continue;
+				if (keyMap == null)
+					continue;
 
 				switch (timelineName) {
 					case "position":
@@ -1024,8 +1093,8 @@ class SkeletonJson {
 						readTimeline(timelines, timelineMap, timeline, 0, constraint.positionMode == PositionMode.fixed ? scale : 1);
 					case "spacing":
 						var timeline = new PathConstraintSpacingTimeline(timelineMap.length, timelineMap.length, index);
-						readTimeline(timelines, timelineMap, timeline, 0,
-							constraint.spacingMode == SpacingMode.length || constraint.spacingMode == SpacingMode.fixed ? scale : 1);
+						readTimeline(timelines, timelineMap, timeline,
+							0, constraint.spacingMode == SpacingMode.length || constraint.spacingMode == SpacingMode.fixed ? scale : 1);
 					case "mix":
 						var timeline = new PathConstraintMixTimeline(timelineMap.length, timelineMap.length * 3, index);
 						var time = getFloat(keyMap, "time");
@@ -1072,18 +1141,20 @@ class SkeletonJson {
 			var index = -1;
 			if (physicsName.length > 0) {
 				var constraint = skeletonData.findConstraint(physicsName, PhysicsConstraintData);
-				if (constraint == null) throw new SpineException("Physics constraint not found: " + physicsName);
+				if (constraint == null)
+					throw new SpineException("Physics constraint not found: " + physicsName);
 				index = skeletonData.constraints.indexOf(constraint);
 			}
 			var physicsMap:Dynamic = Reflect.field(physics, physicsName);
 			for (timelineName in Reflect.fields(physicsMap)) {
 				timelineMap = Reflect.field(physicsMap, timelineName);
 				keyMap = timelineMap[0];
-				if (keyMap == null) continue;
+				if (keyMap == null)
+					continue;
 
 				var frames = timelineMap.length;
 
-				var timeline: CurveTimeline1;
+				var timeline:CurveTimeline1;
 				var defaultValue = 0.;
 				switch (timelineName) {
 					case "reset":
@@ -1092,17 +1163,25 @@ class SkeletonJson {
 							resetTimeline.setFrame(frame, getFloat(keyMap, "time"));
 						timelines.push(resetTimeline);
 						continue;
-					case "inertia": timeline = new PhysicsConstraintInertiaTimeline(frames, frames, index);
-					case "strength": timeline = new PhysicsConstraintStrengthTimeline(frames, frames, index);
-					case "damping": timeline = new PhysicsConstraintDampingTimeline(frames, frames, index);
-					case "mass": timeline = new PhysicsConstraintMassTimeline(frames, frames, index);
-					case "wind": timeline = new PhysicsConstraintWindTimeline(frames, frames, index);
-					case "gravity": timeline = new PhysicsConstraintGravityTimeline(frames, frames, index);
-					case "mix": {
-						defaultValue = 1;
-						timeline = new PhysicsConstraintMixTimeline(frames, frames, index);
-					}
-					default: continue;
+					case "inertia":
+						timeline = new PhysicsConstraintInertiaTimeline(frames, frames, index);
+					case "strength":
+						timeline = new PhysicsConstraintStrengthTimeline(frames, frames, index);
+					case "damping":
+						timeline = new PhysicsConstraintDampingTimeline(frames, frames, index);
+					case "mass":
+						timeline = new PhysicsConstraintMassTimeline(frames, frames, index);
+					case "wind":
+						timeline = new PhysicsConstraintWindTimeline(frames, frames, index);
+					case "gravity":
+						timeline = new PhysicsConstraintGravityTimeline(frames, frames, index);
+					case "mix":
+						{
+							defaultValue = 1;
+							timeline = new PhysicsConstraintMixTimeline(frames, frames, index);
+						}
+					default:
+						continue;
 				}
 				readTimeline(timelines, timelineMap, timeline, defaultValue, 1);
 			}
@@ -1112,18 +1191,22 @@ class SkeletonJson {
 		var sliders:Dynamic = Reflect.getProperty(map, "slider");
 		for (sliderName in Reflect.fields(sliders)) {
 			var constraint = skeletonData.findConstraint(sliderName, SliderData);
-			if (constraint == null) throw new SpineException("Slider not found: " + sliderName);
+			if (constraint == null)
+				throw new SpineException("Slider not found: " + sliderName);
 			var index = skeletonData.constraints.indexOf(constraint);
 			var timelineMap:Dynamic = Reflect.field(sliders, sliderName);
 			for (timelineName in Reflect.fields(timelineMap)) {
 				timelineMap = Reflect.field(timelineMap, timelineName);
 				keyMap = timelineMap[0];
-				if (keyMap == null) continue;
+				if (keyMap == null)
+					continue;
 
 				var frames = timelineMap.length;
 				switch (timelineName) {
-					case "time": readTimeline(timelines, keyMap, new SliderTimeline(frames, frames, index), 1, 1);
-					case "mix": readTimeline(timelines, keyMap, new SliderMixTimeline(frames, frames, index), 1, 1);
+					case "time":
+						readTimeline(timelines, keyMap, new SliderTimeline(frames, frames, index), 1, 1);
+					case "mix":
+						readTimeline(timelines, keyMap, new SliderMixTimeline(frames, frames, index), 1, 1);
 				}
 			}
 		}
@@ -1344,8 +1427,8 @@ class SkeletonJson {
 		}
 	}
 
-	static private function readTimeline2(timelines:Array<Timeline>, keys:Array<Dynamic>, timeline:BoneTimeline2, name1:String, name2:String, defaultValue:Float,
-			scale:Float) {
+	static private function readTimeline2(timelines:Array<Timeline>, keys:Array<Dynamic>, timeline:BoneTimeline2, name1:String, name2:String,
+			defaultValue:Float, scale:Float) {
 		var keyMap:Dynamic = keys[0];
 		var time:Float = getFloat(keyMap, "time");
 		var value1:Float = getFloat(keyMap, name1, defaultValue) * scale;

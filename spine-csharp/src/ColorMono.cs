@@ -51,7 +51,7 @@ namespace Spine {
 		}
 
 		public static implicit operator Color32F (Microsoft.Xna.Framework.Color xnaColor) {
-		   return new Color32F(xnaColor);
+			return new Color32F(xnaColor);
 		}
 
 		public static implicit operator Microsoft.Xna.Framework.Color (Color32F c) {

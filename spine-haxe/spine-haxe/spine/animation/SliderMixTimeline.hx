@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -33,13 +33,12 @@ import haxe.macro.Type.VarAccess;
 
 /** Changes a slider's spine.SliderPose.mix. */
 class SliderMixTimeline extends ConstraintTimeline1 {
-	public function new (frameCount:Int, bezierCount:Int, constraintIndex:Int) {
+	public function new(frameCount:Int, bezierCount:Int, constraintIndex:Int) {
 		super(frameCount, bezierCount, constraintIndex, Property.sliderMix);
 	}
 
-	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
-		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
-
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+			appliedPose:Bool) {
 		var constraint = cast(skeleton.constraints[constraintIndex], Slider);
 		if (constraint.active) {
 			var pose = appliedPose ? constraint.applied : constraint.pose;

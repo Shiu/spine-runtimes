@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.attachments;
 
@@ -39,11 +39,14 @@ import spine.Color;
 class PathAttachment extends VertexAttachment {
 	/** The lengths along the path in the setup pose from the start of the path to the end of each Bezier curve. */
 	public var lengths:Array<Float>;
+
 	/** If true, the start and end knots are connected. */
 	public var closed:Bool = false;
+
 	/** If true, additional calculations are performed to make computing positions along the path more accurate and movement along
 	 * the path have a constant speed. */
 	public var constantSpeed:Bool = false;
+
 	/** The color of the path as it was in Spine, or a default color if nonessential data was not exported. Paths are not usually
 	 * rendered at runtime. */
 	public var color:Color = new Color(0, 0, 0, 0);

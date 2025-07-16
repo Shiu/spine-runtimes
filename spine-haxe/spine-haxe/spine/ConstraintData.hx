@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -33,11 +33,10 @@ package spine;
 abstract class ConstraintData< //
 	T:Constraint<Dynamic, Dynamic, Dynamic>, //
 	P:Pose<Any>> //
-	extends PosedData<P> {
-
+extends PosedData<P> {
 	function new(name:String, setup:P) {
 		super(name, setup);
 	}
 
-	public abstract function create (skeleton:Skeleton):T;
+	public abstract function create(skeleton:Skeleton):T;
 }

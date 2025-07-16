@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -37,7 +37,8 @@ package spine;
 class Bone extends PosedActive<BoneData, BoneLocal, BonePose> {
 	static public var yDown:Bool = false;
 	static public var yDir(get, never):Int;
-	static private function get_yDir(): Int {
+
+	static private function get_yDir():Int {
 		return Bone.yDown ? -1 : 1;
 	}
 
@@ -49,7 +50,7 @@ class Bone extends PosedActive<BoneData, BoneLocal, BonePose> {
 
 	public var sorted = false;
 
-	public function new (data:BoneData, parent:Bone) {
+	public function new(data:BoneData, parent:Bone) {
 		super(data, new BonePose(), new BonePose());
 		this.parent = parent;
 		applied.bone = this;

@@ -25,10 +25,9 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package flixelExamples;
-
 
 import flixel.util.FlxSave;
 import flixel.math.FlxPoint;
@@ -49,7 +48,8 @@ class ControlBonesExample extends FlxState {
 	var loadBinary = true;
 
 	private var controlBones = [];
-	private	var controls:Array<FlxSprite> = [];
+	private var controls:Array<FlxSprite> = [];
+
 	override public function create():Void {
 		FlxG.cameras.bgColor = 0xffa1b2b0;
 
@@ -92,7 +92,7 @@ class ControlBonesExample extends FlxState {
 		}
 
 		var point = [.0, .0];
-		skeletonSprite.beforeUpdateWorldTransforms = function (go) {
+		skeletonSprite.beforeUpdateWorldTransforms = function(go) {
 			for (i in 0...controls.length) {
 				var bone = controlBones[i];
 				var control = controls[i];
@@ -101,7 +101,7 @@ class ControlBonesExample extends FlxState {
 				go.haxeWorldCoordinatesToBone(point, bone);
 				bone.pose.x = point[0];
 				bone.pose.y = point[1];
-            }
+			}
 		};
 
 		super.create();
@@ -111,25 +111,24 @@ class ControlBonesExample extends FlxState {
 	var offsetX:Float = 0;
 	var offsetY:Float = 0;
 	var sprite:FlxSprite;
-	override public function update(elapsed:Float):Void
-	{
+
+	override public function update(elapsed:Float):Void {
 		super.update(elapsed);
 
 		mousePosition = FlxG.mouse.getPosition();
 
 		for (control in controls) {
-			if (FlxG.mouse.justPressed && control.overlapsPoint(mousePosition))
-			{
+			if (FlxG.mouse.justPressed && control.overlapsPoint(mousePosition)) {
 				sprite = control;
 				offsetX = mousePosition.x - sprite.x;
 				offsetY = mousePosition.y - sprite.y;
 			}
 		}
 
-		if (FlxG.mouse.justReleased) sprite = null;
+		if (FlxG.mouse.justReleased)
+			sprite = null;
 
-		if (sprite != null)
-		{
+		if (sprite != null) {
 			sprite.x = mousePosition.x - offsetX;
 			sprite.y = mousePosition.y - offsetY;
 		}

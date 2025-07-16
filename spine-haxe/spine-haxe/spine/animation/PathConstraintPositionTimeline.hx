@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -35,14 +35,12 @@ class PathConstraintPositionTimeline extends ConstraintTimeline1 {
 		super(frameCount, bezierCount, constraintIndex, Property.pathConstraintPosition);
 	}
 
-	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
-		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
-
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+			appliedPose:Bool) {
 		var constraint = cast(skeleton.constraints[constraintIndex], PathConstraint);
 		if (constraint.active) {
 			var pose = appliedPose ? constraint.applied : constraint.pose;
 			pose.position = getAbsoluteValue(time, alpha, blend, pose.position, constraint.data.setup.position);
 		}
-
 	}
 }

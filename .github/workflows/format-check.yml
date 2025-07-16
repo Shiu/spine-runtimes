@@ -1,48 +1,28 @@
-name: Check format
+name: Check Formatting
 
 on:
   push:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  check:
+    runs-on: ubuntu-24.04
     steps:
-
-    - name: Install OS dependencies (needed for act on ubuntu-latest)
-      run: |
-        sudo apt update
-        sudo apt install -y --force-yes curl xz-utils libicu-dev git dos2unix
-        wget http://security.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
-        sudo apt install ./libtinfo5_6.3-2ubuntu0.1_amd64.deb
 
     - uses: actions/checkout@v3
 
-    - name: Cache Clang
-      id: cache-clang
-      uses: actions/cache@v3
-      with:
-        path: clang
-        key: ${{ runner.os }}-clang-13-0-1
-
-    - name: Install Clang
-      if: steps.cache-clang.outputs.cache-hit != 'true'
-      run: |
-        curl -L https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz --output clang.tar.xz
-        tar -xf clang.tar.xz
-        mv clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04 clang
+    - name: Setup clang-format
+      run: ./formatters/setup-clang-format-docker.sh
 
     - name: Install dotnet
       uses: actions/setup-dotnet@v3
       with:
-          dotnet-version: "6.0.x"
-    - run: dotnet tool install -g dotnet-format
+          dotnet-version: "8.0.x"
 
-    - name: Install Node and dependenceis
+    - name: Install Node and dependencies
       uses: actions/setup-node@v3
       with:
-        node-version: "16"
-    - run: npm install -g typescript typescript-formatter
+        node-version: "24"
 
     - name: Install JDK
       uses: actions/setup-java@v3
@@ -50,14 +30,29 @@ jobs:
         distribution: 'zulu'
         java-version: "16"
 
+    - name: Install Haxe
+      uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: '4.3.2'
+    - run: haxelib install formatter
+
+    - name: Install Dart
+      uses: dart-lang/setup-dart@v1
+      with:
+        sdk: '3.8.1'
+
+    - name: Check dart format version
+      run: |
+        dart format --version
+
     - name: Format
       run: |
-        export CLANGFORMAT=`pwd`/clang/bin/clang-format
-        export PATH="$PATH:/root/.dotnet/tools"
-        dotnet-format --version
-        ./formatters/format.sh
-        find . -type f -name '*.cs' -exec perl -pi -e 's/\r\n/\n/g' '{}' +
-        git diff
+        ./formatters/format-cpp.sh
+        ./formatters/format-csharp.sh
+        ./formatters/format-dart.sh
+        ./formatters/format-haxe.sh
+        ./formatters/format-java.sh
+        ./formatters/format-ts.sh
         git diff > format-diff.txt
 
     - name: Archive formatting result

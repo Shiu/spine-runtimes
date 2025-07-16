@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -42,9 +42,8 @@ abstract class PhysicsConstraintTimeline extends ConstraintTimeline1 {
 		super(frameCount, bezierCount, constraintIndex, property);
 	}
 
-	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float,
-		blend:MixBlend, direction:MixDirection, appliedPose:Bool) {
-
+	public function apply(skeleton:Skeleton, lastTime:Float, time:Float, events:Array<Event>, alpha:Float, blend:MixBlend, direction:MixDirection,
+			appliedPose:Bool) {
 		if (constraintIndex == -1) {
 			var value:Float = time >= frames[0] ? getCurveValue(time) : 0;
 			for (constraint in skeleton.physics) {
@@ -62,9 +61,9 @@ abstract class PhysicsConstraintTimeline extends ConstraintTimeline1 {
 		}
 	}
 
-	abstract public function get (pose: PhysicsConstraintPose):Float;
+	abstract public function get(pose:PhysicsConstraintPose):Float;
 
-	abstract public function set (pose: PhysicsConstraintPose, value:Float):Void;
+	abstract public function set(pose:PhysicsConstraintPose, value:Float):Void;
 
-	abstract public function global (constraint: PhysicsConstraintData):Bool;
+	abstract public function global(constraint:PhysicsConstraintData):Bool;
 }

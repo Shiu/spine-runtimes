@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.flixel;
 
@@ -36,8 +36,7 @@ import spine.atlas.TextureAtlasRegion;
 import spine.atlas.TextureLoader;
 import spine.flixel.SpineTexture;
 
-class FlixelTextureLoader implements TextureLoader
-{
+class FlixelTextureLoader implements TextureLoader {
 	private var basePath:String;
 
 	public function new(prefix:String) {
@@ -48,8 +47,7 @@ class FlixelTextureLoader implements TextureLoader
 		}
 	}
 
-	public function loadPage(page:TextureAtlasPage, path:String):Void
-	{
+	public function loadPage(page:TextureAtlasPage, path:String):Void {
 		var bitmapData = openfl.utils.Assets.getBitmapData(basePath + "/" + path);
 		if (bitmapData == null) {
 			throw new SpineException("Could not load atlas page texture " + basePath + "/" + path);
@@ -65,8 +63,7 @@ class FlixelTextureLoader implements TextureLoader
 		region.texture = region.page.texture;
 	}
 
-	public function unloadPage(page:TextureAtlasPage):Void
-	{
+	public function unloadPage(page:TextureAtlasPage):Void {
 		FlxG.bitmap.remove(cast page.texture);
 	}
 }

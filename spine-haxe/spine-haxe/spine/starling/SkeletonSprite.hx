@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.starling;
 
@@ -76,8 +76,8 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 	private var tempLight:spine.Color = new spine.Color(0, 0, 0);
 	private var tempDark:spine.Color = new spine.Color(0, 0, 0);
 
-	public var beforeUpdateWorldTransforms: SkeletonSprite -> Void = function(_) {};
-	public var afterUpdateWorldTransforms: SkeletonSprite -> Void = function(_) {};
+	public var beforeUpdateWorldTransforms:SkeletonSprite->Void = function(_) {};
+	public var afterUpdateWorldTransforms:SkeletonSprite->Void = function(_) {};
 
 	/** Creates an uninitialized SkeletonSprite. The skeleton and animation state must be set before use. */
 	public function new(skeletonData:SkeletonData, animationStateData:AnimationStateData = null) {
@@ -324,17 +324,20 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 		return resultRect;
 	}
 
-	public function getAnimationBounds(animation:Animation, clip:Bool = true): Rectangle {
+	public function getAnimationBounds(animation:Animation, clip:Bool = true):Rectangle {
 		var clipper = clip ? SkeletonSprite.clipper : null;
 		_skeleton.setupPose();
 
 		var steps = 100, time = 0.;
 		var stepTime = animation.duration != 0 ? animation.duration / steps : 0;
-		var minX = 100000000., maxX = -100000000., minY = 100000000., maxY = -100000000.;
+		var minX = 100000000.,
+			maxX = -100000000.,
+			minY = 100000000.,
+			maxY = -100000000.;
 
 		var bound:lime.math.Rectangle;
 		for (i in 0...steps) {
-			animation.apply(_skeleton, time , time, false, [], 1, MixBlend.setup, MixDirection.mixIn, false);
+			animation.apply(_skeleton, time, time, false, [], 1, MixBlend.setup, MixDirection.mixIn, false);
 			_skeleton.updateWorldTransform(Physics.update);
 			bound = _skeleton.getBounds(clipper);
 
@@ -392,10 +395,10 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 			d = transform.d,
 			tx = transform.tx,
 			ty = transform.ty;
-			var x = point[0];
-			var y = point[1];
-			point[0] = x * a + y * c + tx;
-			point[1] = x * b + y * d + ty;
+		var x = point[0];
+		var y = point[1];
+		point[0] = x * a + y * c + tx;
+		point[1] = x * b + y * d + ty;
 	}
 
 	public function haxeWorldCoordinatesToSkeleton(point:Array<Float>):Void {
@@ -412,7 +415,7 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 		point[1] = x * b + y * d + ty;
 	}
 
-	public function haxeWorldCoordinatesToBone(point:Array<Float>, bone: Bone):Void {
+	public function haxeWorldCoordinatesToBone(point:Array<Float>, bone:Bone):Void {
 		this.haxeWorldCoordinatesToSkeleton(point);
 		var parentBone = bone.parent;
 		if (parentBone != null) {
@@ -427,7 +430,8 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 			_state.clearListeners();
 			_state = null;
 		}
-		if (_skeleton != null) _skeleton = null;
+		if (_skeleton != null)
+			_skeleton = null;
 		dispatchEventWith(starling.events.Event.REMOVE_FROM_JUGGLER);
 		removeFromParent();
 

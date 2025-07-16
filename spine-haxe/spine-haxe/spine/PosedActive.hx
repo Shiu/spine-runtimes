@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -33,11 +33,10 @@ abstract class PosedActive< //
 	D:PosedData<P>, //
 	P:Pose<Any>, //
 	A:P> //
-	extends Posed<D, P, A> {
-
+extends Posed<D, P, A> {
 	public var active:Bool;
 
-	public function new (data:D, pose:A, constrained:A) {
+	public function new(data:D, pose:A, constrained:A) {
 		super(data, pose, constrained);
 		setupPose();
 	}
@@ -49,7 +48,7 @@ abstract class PosedActive< //
 	 * @see Skin.getConstraints()
 	 * @see PosedData.getSkinRequired()
 	 * @see Skeleton.updateCache() */
-	public function isActive ():Bool {
+	public function isActive():Bool {
 		return active;
 	}
 }

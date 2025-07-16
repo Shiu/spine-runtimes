@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -63,7 +63,7 @@ class MathUtils {
 	 * @param x The x-coordinate.
 	 * @return The arc tangent in degrees.
 	 */
-	static public function atan2Deg (y:Float, x:Float):Float {
+	static public function atan2Deg(y:Float, x:Float):Float {
 		return Math.atan2(y, x) * MathUtils.radDeg;
 	}
 

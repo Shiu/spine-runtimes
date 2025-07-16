@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.animation;
 
@@ -78,64 +78,86 @@ abstract class CurveTimeline1 extends CurveTimeline {
 		}
 	}
 
-	public function getRelativeValue (time:Float, alpha:Float, blend: MixBlend, current:Float, setup:Float):Float {
+	public function getRelativeValue(time:Float, alpha:Float, blend:MixBlend, current:Float, setup:Float):Float {
 		if (time < frames[0]) {
 			switch (blend) {
-				case MixBlend.setup: return setup;
-				case MixBlend.first: return current + (setup - current) * alpha;
-				default: return current;
+				case MixBlend.setup:
+					return setup;
+				case MixBlend.first:
+					return current + (setup - current) * alpha;
+				default:
+					return current;
 			}
 		}
 		var value:Float = getCurveValue(time);
 		switch (blend) {
-			case MixBlend.setup: return setup + value * alpha;
-			case MixBlend.first, MixBlend.replace: return current + (value + setup - current) * alpha;
-			default: return current + value * alpha; // MixBlend.add
+			case MixBlend.setup:
+				return setup + value * alpha;
+			case MixBlend.first, MixBlend.replace:
+				return current + (value + setup - current) * alpha;
+			default:
+				return current + value * alpha; // MixBlend.add
 		}
 	}
 
-	public function getAbsoluteValue (time:Float, alpha:Float, blend: MixBlend, current:Float, setup:Float):Float {
+	public function getAbsoluteValue(time:Float, alpha:Float, blend:MixBlend, current:Float, setup:Float):Float {
 		if (time < frames[0]) {
 			switch (blend) {
-				case MixBlend.setup: return setup;
-				case MixBlend.first: return current + (setup - current) * alpha;
-				default: return current;
+				case MixBlend.setup:
+					return setup;
+				case MixBlend.first:
+					return current + (setup - current) * alpha;
+				default:
+					return current;
 			}
 		}
 		var value:Float = getCurveValue(time);
 		switch (blend) {
-			case MixBlend.setup: return setup + (value - setup) * alpha;
-			case MixBlend.first, MixBlend.replace: return current + (value - current) * alpha;
-			default: return current + value * alpha; // MixBlend.add
+			case MixBlend.setup:
+				return setup + (value - setup) * alpha;
+			case MixBlend.first, MixBlend.replace:
+				return current + (value - current) * alpha;
+			default:
+				return current + value * alpha; // MixBlend.add
 		}
 	}
 
-	public function getAbsoluteValue2 (time:Float, alpha:Float, blend: MixBlend, current:Float, setup:Float, value:Float):Float {
+	public function getAbsoluteValue2(time:Float, alpha:Float, blend:MixBlend, current:Float, setup:Float, value:Float):Float {
 		if (time < frames[0]) {
 			switch (blend) {
-				case MixBlend.setup: return setup;
-				case MixBlend.first: return current + (setup - current) * alpha;
-				default: current;
+				case MixBlend.setup:
+					return setup;
+				case MixBlend.first:
+					return current + (setup - current) * alpha;
+				default:
+					current;
 			}
 		}
 		switch (blend) {
-			case MixBlend.setup: return setup + (value - setup) * alpha;
-			case MixBlend.first, MixBlend.replace: return current + (value - current) * alpha;
-			default: return current + value * alpha; // MixBlend.add
+			case MixBlend.setup:
+				return setup + (value - setup) * alpha;
+			case MixBlend.first, MixBlend.replace:
+				return current + (value - current) * alpha;
+			default:
+				return current + value * alpha; // MixBlend.add
 		}
 	}
 
-	public function getScaleValue (time:Float, alpha:Float, blend: MixBlend, direction: MixDirection, current:Float, setup:Float):Float {
+	public function getScaleValue(time:Float, alpha:Float, blend:MixBlend, direction:MixDirection, current:Float, setup:Float):Float {
 		var frames:Array<Float> = frames;
 		if (time < frames[0]) {
 			switch (blend) {
-				case MixBlend.setup: return setup;
-				case MixBlend.first: return current + (setup - current) * alpha;
-				default: return current;
+				case MixBlend.setup:
+					return setup;
+				case MixBlend.first:
+					return current + (setup - current) * alpha;
+				default:
+					return current;
 			}
 		}
 		var value:Float = getCurveValue(time) * setup;
-		if (alpha == 1) return blend == MixBlend.add ? current + value - setup : value;
+		if (alpha == 1)
+			return blend == MixBlend.add ? current + value - setup : value;
 		// Mixing out uses sign of setup or current pose, else use sign of key.
 		if (direction == MixDirection.mixOut) {
 			switch (blend) {

@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine.attachments;
 
@@ -40,23 +40,32 @@ import spine.atlas.TextureAtlasPage;
 class MeshAttachment extends VertexAttachment implements HasTextureRegion {
 	public var region:TextureRegion;
 	public var path:String;
+
 	/** The UV pair for each vertex, normalized within the texture region. */
 	public var regionUVs = new Array<Float>();
+
 	/** The UV pair for each vertex, normalized within the entire texture.
 	 * See #updateRegion(). */
 	public var uvs = new Array<Float>();
+
 	/** Triplets of vertex indices which describe the mesh's triangulation. */
 	public var triangles = new Array<Int>();
+
 	public var color:Color = new Color(1, 1, 1, 1);
+
 	/** The width of the mesh's image, or zero if nonessential data was not exported. */
 	public var width:Float = 0;
+
 	/** The height of the mesh's image, or zero if nonessential data was not exported. */
 	public var height:Float = 0;
+
 	/** The number of entries at the beginning of #vertices that make up the mesh hull. */
 	public var hullLength:Int = 0;
+
 	/** Vertex index pairs describing edges for controlling triangulation, or null if nonessential data was not exported. Mesh
 	 * triangles will never cross edges. Triangulation is not performed at runtime. */
 	public var edges = new Array<Int>();
+
 	public var rendererObject:Dynamic;
 	public var sequence:Sequence;
 
@@ -86,7 +95,8 @@ class MeshAttachment extends VertexAttachment implements HasTextureRegion {
 		var n = uvs.length;
 		var u = region.u, v = region.v, width:Float = 0, height:Float = 0;
 		if (Std.isOfType(region, TextureAtlasRegion)) {
-			var atlasRegion:TextureAtlasRegion = cast(region, TextureAtlasRegion), page:TextureAtlasPage = atlasRegion.page;
+			var atlasRegion:TextureAtlasRegion = cast(region, TextureAtlasRegion),
+				page:TextureAtlasPage = atlasRegion.page;
 			var textureWidth = page.width, textureHeight = page.height;
 			switch (atlasRegion.degrees) {
 				case 90:

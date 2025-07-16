@@ -25,7 +25,7 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+*****************************************************************************/
 
 package spine;
 
@@ -51,13 +51,15 @@ class Skin {
 	public final color:Color = new Color(0.99607843, 0.61960787, 0.30980393, 1); // fe9e4fff
 
 	public function new(name:String) {
-		if (name == null) throw new SpineException("name cannot be null.");
+		if (name == null)
+			throw new SpineException("name cannot be null.");
 		this.name = name;
 	}
 
 	/** Adds an attachment to the skin for the specified slot index and name. */
 	public function setAttachment(slotIndex:Int, name:String, attachment:Attachment):Void {
-		if (attachment == null) throw new SpineException("attachment cannot be null.");
+		if (attachment == null)
+			throw new SpineException("attachment cannot be null.");
 		if (slotIndex >= attachments.length)
 			attachments.resize(slotIndex + 1);
 		if (attachments[slotIndex] == null)
@@ -218,7 +220,8 @@ class Skin {
 						var skinAttachment:Attachment = dictionary.get(name);
 						if (slotAttachment == skinAttachment) {
 							var attachment:Attachment = getAttachment(slotIndex, name);
-							if (attachment != null) slot.attachment = attachment;
+							if (attachment != null)
+								slot.attachment = attachment;
 							break;
 						}
 					}
