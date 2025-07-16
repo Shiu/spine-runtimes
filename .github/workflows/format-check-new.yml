@@ -14,11 +14,11 @@ jobs:
     - name: Setup clang-format Docker alias
       run: |
         # Create a wrapper script for clang-format that uses Docker
-        sudo tee /usr/local/bin/clang-format <<'EOF'
+        cat << 'SCRIPT' | sudo tee /usr/local/bin/clang-format
 #!/bin/bash
 # Use Docker to run clang-format 18.1.8
 docker run --rm -i -v "$PWD":"$PWD" -w "$PWD" silkeh/clang:18 clang-format "$@"
-EOF
+SCRIPT
         sudo chmod +x /usr/local/bin/clang-format
         # Verify version
         clang-format --version
