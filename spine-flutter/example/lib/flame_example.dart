@@ -50,8 +50,8 @@ class SpineComponent extends PositionComponent {
     Anchor super.anchor = Anchor.topLeft,
     super.children,
     super.priority,
-  })  : _ownsDrawable = ownsDrawable,
-        _boundsProvider = boundsProvider {
+  }) : _ownsDrawable = ownsDrawable,
+       _boundsProvider = boundsProvider {
     _drawable.update(0);
     _bounds = _boundsProvider.computeBounds(_drawable);
     size = Vector2(_bounds.width, _bounds.height);
@@ -69,15 +69,17 @@ class SpineComponent extends PositionComponent {
     Iterable<Component>? children,
     int? priority,
   }) async {
-    return SpineComponent(await SkeletonDrawable.fromAsset(atlasFile, skeletonFile, bundle: bundle),
-        ownsDrawable: true,
-        boundsProvider: boundsProvider,
-        position: position,
-        scale: scale,
-        angle: angle,
-        anchor: anchor,
-        children: children,
-        priority: priority);
+    return SpineComponent(
+      await SkeletonDrawable.fromAsset(atlasFile, skeletonFile, bundle: bundle),
+      ownsDrawable: true,
+      boundsProvider: boundsProvider,
+      position: position,
+      scale: scale,
+      angle: angle,
+      anchor: anchor,
+      children: children,
+      priority: priority,
+    );
   }
 
   void dispose() {
@@ -114,8 +116,13 @@ class SimpleFlameExample extends FlameGame {
     // Load the Spineboy atlas and skeleton data from asset files
     // and create a SpineComponent from them, scaled down and
     // centered on the screen
-    spineboy = await SpineComponent.fromAssets("assets/spineboy.atlas", "assets/spineboy-pro.json",
-        scale: Vector2(0.4, 0.4), anchor: Anchor.center, position: Vector2(size.x / 2, size.y / 2));
+    spineboy = await SpineComponent.fromAssets(
+      "assets/spineboy.atlas",
+      "assets/spineboy-pro.json",
+      scale: Vector2(0.4, 0.4),
+      anchor: Anchor.center,
+      position: Vector2(size.x / 2, size.y / 2),
+    );
 
     // Set the "walk" animation on track 0 in looping mode
     spineboy.animationState.setAnimationByName(0, "walk", true);
@@ -205,6 +212,9 @@ class SpineFlameGameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: const Text('Flame Integration')), body: GameWidget(game: game));
+    return Scaffold(
+      appBar: AppBar(title: const Text('Flame Integration')),
+      body: GameWidget(game: game),
+    );
   }
 }

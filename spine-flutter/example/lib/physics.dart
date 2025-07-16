@@ -46,26 +46,29 @@ class PhysicsState extends State<PhysicsTest> {
   void initState() {
     super.initState();
 
-    controller = SpineWidgetController(onInitialized: (controller) {
-      controller.animationState.setAnimationByName(0, "eyeblink-long", true);
-      controller.animationState.setAnimationByName(1, "wings-and-feet", true);
-    }, onAfterUpdateWorldTransforms: (controller) {
-      if (lastMousePosition == null) {
-        lastMousePosition = mousePosition;
-        return;
-      }
-      if (mousePosition == null) {
-        return;
-      }
+    controller = SpineWidgetController(
+      onInitialized: (controller) {
+        controller.animationState.setAnimationByName(0, "eyeblink-long", true);
+        controller.animationState.setAnimationByName(1, "wings-and-feet", true);
+      },
+      onAfterUpdateWorldTransforms: (controller) {
+        if (lastMousePosition == null) {
+          lastMousePosition = mousePosition;
+          return;
+        }
+        if (mousePosition == null) {
+          return;
+        }
 
-      final dx = mousePosition!.dx - lastMousePosition!.dx;
-      final dy = mousePosition!.dy - lastMousePosition!.dy;
-      final position = controller.skeleton.getPosition();
-      position.x += dx;
-      position.y += dy;
-      controller.skeleton.setPosition(position.x, position.y);
-      lastMousePosition = mousePosition;
-    });
+        final dx = mousePosition!.dx - lastMousePosition!.dx;
+        final dy = mousePosition!.dy - lastMousePosition!.dy;
+        final position = controller.skeleton.getPosition();
+        position.x += dx;
+        position.y += dy;
+        controller.skeleton.setPosition(position.x, position.y);
+        lastMousePosition = mousePosition;
+      },
+    );
   }
 
   void _updateBonePosition(Offset position) {
@@ -77,11 +80,12 @@ class PhysicsState extends State<PhysicsTest> {
     reportLeaks();
 
     return Scaffold(
-        appBar: AppBar(title: const Text('Physics (drag anywhere)')),
-        body: GestureDetector(
-          onPanDown: (drag) => _updateBonePosition(drag.localPosition),
-          onPanUpdate: (drag) => _updateBonePosition(drag.localPosition),
-          child: SpineWidget.fromAsset("assets/celestial-circus.atlas", "assets/celestial-circus-pro.skel", controller),
-        ));
+      appBar: AppBar(title: const Text('Physics (drag anywhere)')),
+      body: GestureDetector(
+        onPanDown: (drag) => _updateBonePosition(drag.localPosition),
+        onPanUpdate: (drag) => _updateBonePosition(drag.localPosition),
+        child: SpineWidget.fromAsset("assets/celestial-circus.atlas", "assets/celestial-circus-pro.skel", controller),
+      ),
+    );
   }
 }
