@@ -14,8 +14,25 @@ jobs:
     - name: Setup clang-format Docker alias
       run: |
         # Create a wrapper script for clang-format that uses Docker
-        echo '#!/bin/bash' | sudo tee /usr/local/bin/clang-format
-        echo 'docker run --rm -i -v "$PWD":"$PWD" -w "$PWD" silkeh/clang:18 clang-format "$@"' | sudo tee -a /usr/local/bin/clang-format
+        cat > /tmp/clang-format-wrapper << 'EOF'
+        #!/bin/bash
+        # Convert relative paths to absolute paths and run clang-format in Docker
+        args=()
+        for arg in "$@"; do
+          if [[ "$arg" == /* ]] || [[ "$arg" == -* ]]; then
+            # Absolute path or option, use as-is
+            args+=("$arg")
+          elif [[ -e "$arg" ]]; then
+            # Relative path that exists, convert to absolute
+            args+=("$(realpath "$arg")")
+          else
+            # Not a file path, use as-is
+            args+=("$arg")
+          fi
+        done
+        docker run --rm -i -v "$PWD":"$PWD" -w "$PWD" silkeh/clang:18 clang-format "${args[@]}"
+        EOF
+        sudo mv /tmp/clang-format-wrapper /usr/local/bin/clang-format
         sudo chmod +x /usr/local/bin/clang-format
         # Verify version
         clang-format --version
