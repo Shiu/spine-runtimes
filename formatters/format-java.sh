@@ -10,7 +10,10 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 pushd "$dir" > /dev/null
 
 # Build the Eclipse formatter if needed
-if [ ! -f "eclipse-formatter/target/eclipse-formatter-1.0.0-jar-with-dependencies.jar" ]; then
+jar_file="eclipse-formatter/target/eclipse-formatter-1.0.0-jar-with-dependencies.jar"
+src_file="eclipse-formatter/src/main/java/com/esotericsoftware/spine/formatter/EclipseFormatter.java"
+
+if [ ! -f "$jar_file" ] || [ "$src_file" -nt "$jar_file" ]; then
     echo "Building Eclipse formatter..."
     pushd eclipse-formatter > /dev/null
     mvn -q clean package

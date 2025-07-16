@@ -53,7 +53,7 @@ public class Bone extends PosedActive<BoneData, BoneLocal, BonePose> {
 	/** Copy constructor. Does not copy the {@link #getChildren()} bones. */
 	public Bone (Bone bone, @Null Bone parent) {
 		this(bone.data, parent);
-		pose.set(bone.pose);
+		pose.set(bone.pose)   ;
 	}
 
 	/** The parent bone, or null if this is the root bone. */

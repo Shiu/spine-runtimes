@@ -52,7 +52,7 @@ Bone::Bone(Bone &bone, Bone *parent)
 }
 
 Bone *Bone::getParent() {
-	return _parent;
+	return _parent  ;
 }
 
 Array<Bone *> &Bone::getChildren() {

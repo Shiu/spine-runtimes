@@ -19,10 +19,18 @@ fi
 
 # Format TypeScript files
 pushd ../spine-ts > /dev/null
+if [ ! -d "node_modules" ]; then
+    echo "Installing spine-ts dependencies..."
+    npm install
+fi
 npm run format
 popd > /dev/null
 
 pushd ../tests > /dev/null
+if [ ! -d "node_modules" ]; then
+    echo "Installing tests dependencies..."
+    npm install
+fi
 npm run format
 popd > /dev/null
 

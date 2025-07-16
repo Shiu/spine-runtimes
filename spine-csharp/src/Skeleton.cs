@@ -73,7 +73,7 @@ namespace Spine {
 					bone = new Bone(boneData, parent);
 					parent.children.Add(bone);
 				}
-				this.bones.Add(bone);
+				this.bones.Add(bone)  ;
 			}
 
 			slots = new ExposedList<Slot>(data.slots.Count);

@@ -27,20 +27,21 @@ public class EclipseFormatter {
         CodeFormatter formatter = new DefaultCodeFormatter(options);
         
         // Format each file
-        int successCount = 0;
+        int changedCount = 0;
         int errorCount = 0;
         
         for (int i = 1; i < args.length; i++) {
             try {
-                formatFile(formatter, args[i]);
-                successCount++;
+                if (formatFile(formatter, args[i])) {
+                    changedCount++;
+                }
             } catch (Exception e) {
                 System.err.println("Error formatting " + args[i] + ": " + e.getMessage());
                 errorCount++;
             }
         }
         
-        System.out.println("Formatting complete: " + successCount + " files formatted, " + errorCount + " errors");
+        System.out.println("Formatting complete: " + changedCount + " files changed, " + errorCount + " errors");
         
         if (errorCount > 0) {
             System.exit(1);
@@ -83,12 +84,12 @@ public class EclipseFormatter {
             }
         }
         
-        System.out.println("Loaded " + settings.size() + " formatter settings from " + xmlPath);
+        // Removed verbose output
         
         return settings;
     }
     
-    private static void formatFile(CodeFormatter formatter, String filePath) throws Exception {
+    private static boolean formatFile(CodeFormatter formatter, String filePath) throws Exception {
         Path path = Paths.get(filePath);
         
         if (!Files.exists(path)) {
@@ -119,8 +120,10 @@ public class EclipseFormatter {
         if (!content.equals(formatted)) {
             Files.writeString(path, formatted);
             System.out.println("Formatted: " + filePath);
+            return true;
         } else {
-            System.out.println("No changes: " + filePath);
+            // Silent when no changes
+            return false;
         }
     }
 }

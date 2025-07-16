@@ -57,7 +57,7 @@ export class Bone extends PosedActive<BoneData, BoneLocal, BonePose> {
 	copy (parent: Bone | null): Bone {
 		const copy = new Bone(this.data, parent);
 		copy.pose.set(this.pose);
-		return copy;
+		return copy  ;
 	}
 
 }
