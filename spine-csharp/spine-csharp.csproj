@@ -9,12 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="src\**\*.cs" />
+    <Compile Include="src\**\*.cs" Exclude="src\ColorUnity.cs;src\ColorMono.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="src\ColorUnity.cs.meta" />
-    <None Remove="src\ColorMono.cs.meta" />
+    <None Remove="src\ColorUnity.cs" />
+    <None Remove="src\ColorMono.cs" />
+    <None Remove="**\*.meta" />
+    <None Remove="**\*.asmdef" />
+    <None Remove="**\package.json" />
   </ItemGroup>
-
 </Project>
