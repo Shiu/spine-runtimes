@@ -29,7 +29,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: "24"
-    # NOTE: typescript-formatter is installed by npm in spine-ts
 
     - name: Install JDK
       uses: actions/setup-java@v3
