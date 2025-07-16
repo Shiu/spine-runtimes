@@ -57,6 +57,10 @@ namespace Spine {
 		public static Color32F operator - (Color32F c1, Color32F c2) {
 			return new Color32F(c1.r - c2.r, c1.g - c2.g, c1.b - c2.b, c1.a - c2.a);
 		}
+
+		public static Color32F operator * (Color32F c1, Color32F c2) {
+			return new Color32F(c1.r * c2.r, c1.g * c2.g, c1.b * c2.b, c1.a * c2.a);
+		}
 	}
 
 	static class ColorExtensions {
