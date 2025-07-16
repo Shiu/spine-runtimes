@@ -38,7 +38,7 @@ import {
 	Physics,
 	Skeleton,
 	SkeletonBinary,
-	SkeletonData,
+	type SkeletonData,
 	SkeletonJson,
 	TextureAtlas
 } from '../src/index.js';
@@ -105,105 +105,100 @@ class Printer {
 	}
 }
 
-// Main DebugPrinter class
-class DebugPrinter {
-	static async main (args: string[]): Promise<void> {
-		if (args.length < 2) {
-			console.error("Usage: DebugPrinter <skeleton-path> <atlas-path> [animation-name]");
-			process.exit(1);
-		}
-
-		const skeletonPath = args[0];
-		const atlasPath = args[1];
-		const animationName = args.length >= 3 ? args[2] : null;
-
-		try {
-			// Load atlas
-			const atlasData = await fs.readFile(atlasPath, 'utf8');
-			const atlas = new TextureAtlas(atlasData);
-
-			// Load skeleton data
-			const skeletonData = await this.loadSkeletonData(skeletonPath, atlas);
-
-			// Print skeleton data
-			const printer = new Printer();
-			console.log("=== SKELETON DATA ===");
-			printer.printSkeletonData(skeletonData);
-
-			// Create skeleton and animation state
-			const skeleton = new Skeleton(skeletonData);
-			const stateData = new AnimationStateData(skeletonData);
-			const state = new AnimationState(stateData);
-
-			skeleton.setupPose();
-
-			// Set animation or setup pose
-			if (animationName) {
-				// Find and set animation
-				const animation = skeletonData.findAnimation(animationName);
-				if (!animation) {
-					console.error(`Animation not found: ${animationName}`);
-					process.exit(1);
-				}
-				state.setAnimation(0, animationName, true);
-				// Update and apply
-				state.update(0.016);
-				state.apply(skeleton);
-			}
-
-			skeleton.updateWorldTransform(Physics.update);
-
-			// Print skeleton state
-			console.log("\n=== SKELETON STATE ===");
-			printer.printSkeleton(skeleton);
-
-		} catch (error) {
-			console.error("Error:", error);
-			process.exit(1);
-		}
+async function main (args: string[]): Promise<void> {
+	if (args.length < 2) {
+		console.error("Usage: DebugPrinter <skeleton-path> <atlas-path> [animation-name]");
+		process.exit(1);
 	}
 
-	private static async loadSkeletonData (skeletonPath: string, atlas: TextureAtlas): Promise<SkeletonData> {
-		const attachmentLoader = new AtlasAttachmentLoader(atlas);
-		const ext = path.extname(skeletonPath).toLowerCase();
+	const skeletonPath = args[0];
+	const atlasPath = args[1];
+	const animationName = args.length >= 3 ? args[2] : null;
 
-		if (ext === '.json') {
-			const jsonData = await fs.readFile(skeletonPath, 'utf8');
-			const json = new SkeletonJson(attachmentLoader);
-			json.scale = 1;
-			const skeletonData = json.readSkeletonData(jsonData);
+	try {
+		// Load atlas
+		const atlasData = await fs.readFile(atlasPath, 'utf8');
+		const atlas = new TextureAtlas(atlasData);
 
-			// Set name from filename if not already set
-			if (!skeletonData.name) {
-				const basename = path.basename(skeletonPath);
-				const nameWithoutExt = basename.substring(0, basename.lastIndexOf('.')) || basename;
-				skeletonData.name = nameWithoutExt;
+		// Load skeleton data
+		const skeletonData = await loadSkeletonData(skeletonPath, atlas);
+
+		// Print skeleton data
+		const printer = new Printer();
+		console.log("=== SKELETON DATA ===");
+		printer.printSkeletonData(skeletonData);
+
+		// Create skeleton and animation state
+		const skeleton = new Skeleton(skeletonData);
+		const stateData = new AnimationStateData(skeletonData);
+		const state = new AnimationState(stateData);
+
+		skeleton.setupPose();
+
+		// Set animation or setup pose
+		if (animationName) {
+			// Find and set animation
+			const animation = skeletonData.findAnimation(animationName);
+			if (!animation) {
+				console.error(`Animation not found: ${animationName}`);
+				process.exit(1);
 			}
-
-			return skeletonData;
-		} else if (ext === '.skel') {
-			const binaryData = await fs.readFile(skeletonPath);
-			const binary = new SkeletonBinary(attachmentLoader);
-			binary.scale = 1;
-			const skeletonData = binary.readSkeletonData(new Uint8Array(binaryData));
-
-			// Set name from filename if not already set
-			if (!skeletonData.name) {
-				const basename = path.basename(skeletonPath);
-				const nameWithoutExt = basename.substring(0, basename.lastIndexOf('.')) || basename;
-				skeletonData.name = nameWithoutExt;
-			}
-
-			return skeletonData;
-		} else {
-			throw new Error(`Unsupported skeleton file format: ${ext}`);
+			state.setAnimation(0, animationName, true);
+			// Update and apply
+			state.update(0.016);
+			state.apply(skeleton);
 		}
+
+		skeleton.updateWorldTransform(Physics.update);
+
+		// Print skeleton state
+		console.log("\n=== SKELETON STATE ===");
+		printer.printSkeleton(skeleton);
+
+	} catch (error) {
+		console.error("Error:", error);
+		process.exit(1);
+	}
+}
+
+async function loadSkeletonData (skeletonPath: string, atlas: TextureAtlas): Promise<SkeletonData> {
+	const attachmentLoader = new AtlasAttachmentLoader(atlas);
+	const ext = path.extname(skeletonPath).toLowerCase();
+
+	if (ext === '.json') {
+		const jsonData = await fs.readFile(skeletonPath, 'utf8');
+		const json = new SkeletonJson(attachmentLoader);
+		json.scale = 1;
+		const skeletonData = json.readSkeletonData(jsonData);
+
+		// Set name from filename if not already set
+		if (!skeletonData.name) {
+			const basename = path.basename(skeletonPath);
+			const nameWithoutExt = basename.substring(0, basename.lastIndexOf('.')) || basename;
+			skeletonData.name = nameWithoutExt;
+		}
+
+		return skeletonData;
+	} else if (ext === '.skel') {
+		const binaryData = await fs.readFile(skeletonPath);
+		const binary = new SkeletonBinary(attachmentLoader);
+		binary.scale = 1;
+		const skeletonData = binary.readSkeletonData(new Uint8Array(binaryData));
+
+		// Set name from filename if not already set
+		if (!skeletonData.name) {
+			const basename = path.basename(skeletonPath);
+			const nameWithoutExt = basename.substring(0, basename.lastIndexOf('.')) || basename;
+			skeletonData.name = nameWithoutExt;
+		}
+
+		return skeletonData;
+	} else {
+		throw new Error(`Unsupported skeleton file format: ${ext}`);
 	}
 }
 
 // Run if called directly
 if (import.meta.url === `file://${process.argv[1]}`) {
-	DebugPrinter.main(process.argv.slice(2));
+	main(process.argv.slice(2));
 }
-
-export default DebugPrinter;
