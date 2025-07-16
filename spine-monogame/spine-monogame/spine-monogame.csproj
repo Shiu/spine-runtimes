@@ -29,7 +29,6 @@
     <Compile Include="..\..\spine-csharp\src\BoneLocal.cs"><Link>spine-csharp\BoneLocal.cs</Link></Compile>
     <Compile Include="..\..\spine-csharp\src\BonePose.cs"><Link>spine-csharp\BonePose.cs</Link></Compile>
     <Compile Include="..\..\spine-csharp\src\ColorMono.cs"><Link>spine-csharp\ColorMono.cs</Link></Compile>
-    <Compile Include="..\..\spine-csharp\src\ColorUnity.cs"><Link>spine-csharp\ColorUnity.cs</Link></Compile>
     <Compile Include="..\..\spine-csharp\src\Constraint.cs"><Link>spine-csharp\Constraint.cs</Link></Compile>
     <Compile Include="..\..\spine-csharp\src\ConstraintData.cs"><Link>spine-csharp\ConstraintData.cs</Link></Compile>
     <Compile Include="..\..\spine-csharp\src\Event.cs"><Link>spine-csharp\Event.cs</Link></Compile>
