@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import CanvasKitInit from "canvaskit-wasm";
 import UPNG from "@pdf-lib/upng"
-import {loadTextureAtlas, SkeletonRenderer, Skeleton, SkeletonBinary, AnimationState, AnimationStateData, AtlasAttachmentLoader, Physics, loadSkeletonData, SkeletonDrawable} from "../dist/index.js"
+import {loadTextureAtlas, SkeletonRenderer, loadSkeletonData, SkeletonDrawable} from "../dist/index.js"
 
 // Get the current directory
 const __filename = fileURLToPath(import.meta.url);
@@ -19,10 +19,10 @@ async function main() {
     if (!surface) throw new Error();
 
     // Load atlas
-    const atlas = await loadTextureAtlas(ck, __dirname + "/assets/spineboy.atlas", async (path) => fs.readFileSync(path));
+    const atlas = await loadTextureAtlas(ck, __dirname + "/../../assets/spineboy.atlas", async (path) => fs.readFileSync(path));
 
     // Load the skeleton data
-    const skeletonData = await loadSkeletonData(__dirname + "/assets/spineboy-pro.skel", atlas, async (path) => fs.readFileSync(path));
+    const skeletonData = await loadSkeletonData(__dirname + "/../../assets/spineboy-pro.skel", atlas, async (path) => fs.readFileSync(path));
 
     // Create a SkeletonDrawable
     const drawable = new SkeletonDrawable(skeletonData);
