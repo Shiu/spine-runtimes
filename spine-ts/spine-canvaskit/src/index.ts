@@ -53,12 +53,10 @@ import {
 } from "@esotericsoftware/spine-core";
 import {
 	Canvas,
-	Surface,
 	CanvasKit,
 	Image,
 	Paint,
 	Shader,
-	BlendMode as CanvasKitBlendMode,
 } from "canvaskit-wasm";
 
 Skeleton.yDown = true;
@@ -275,7 +273,7 @@ export class SkeletonRenderer {
 			let numVertices = 0;
 			if (attachment instanceof RegionAttachment) {
 				let region = attachment as RegionAttachment;
-				positions = positions.length < 8 ? Utils.newFloatArray(8) : positions;
+				if (positions.length < 8) this.scratchPositions = positions = Utils.newFloatArray(8);
 				numVertices = 4;
 				region.computeWorldVertices(slot, positions, 0, 2);
 				triangles = SkeletonRenderer.QUAD_TRIANGLES;
@@ -284,10 +282,8 @@ export class SkeletonRenderer {
 				attachmentColor = region.color;
 			} else if (attachment instanceof MeshAttachment) {
 				let mesh = attachment as MeshAttachment;
-				positions =
-					positions.length < mesh.worldVerticesLength
-						? Utils.newFloatArray(mesh.worldVerticesLength)
-						: positions;
+				if (positions.length < mesh.worldVerticesLength)
+					this.scratchPositions = positions = Utils.newFloatArray(mesh.worldVerticesLength);
 				numVertices = mesh.worldVerticesLength >> 1;
 				mesh.computeWorldVertices(
 					slot,
@@ -318,9 +314,23 @@ export class SkeletonRenderer {
 						triangles.length,
 						uvs
 					);
-					positions = clipper.clippedVertices;
-					uvs = clipper.clippedUVs;
-					triangles = clipper.clippedTriangles;
+
+					if (clipper.clippedVertices.length > 0) {
+						// clipping eventually "erases" clippedVertices array (set length to 0 at next clip)
+						// it's necessary to keep the array alive until canvaskit paints,
+						// otherwise a memory access occurs
+						if (positions.length < clipper.clippedVertices.length)
+							this.scratchPositions = positions = Utils.newFloatArray(clipper.clippedVertices.length);
+						numVertices = clipper.clippedVertices.length / 2;
+						for (let i = 0; i < clipper.clippedVertices.length; i++)
+							positions[i] = clipper.clippedVertices[i];
+
+						uvs = clipper.clippedUVs;
+						triangles = clipper.clippedTriangles;
+					} else {
+						clipper.clipEndWithSlot(slot);
+						continue;
+					}
 				}
 
 				let slotColor = slot.color;
@@ -331,7 +341,7 @@ export class SkeletonRenderer {
 				finalColor.a = skeletonColor.a * slotColor.a * attachmentColor.a;
 
 				if (colors.length / 4 < numVertices)
-					colors = Utils.newFloatArray(numVertices * 4);
+					this.scratchColors = colors = Utils.newFloatArray(numVertices * 4);
 				for (let i = 0, n = numVertices * 4; i < n; i += 4) {
 					colors[i] = finalColor.r;
 					colors[i + 1] = finalColor.g;
@@ -339,10 +349,9 @@ export class SkeletonRenderer {
 					colors[i + 3] = finalColor.a;
 				}
 
-				const scaledUvs =
-					this.scratchUVs.length < uvs.length
-						? Utils.newFloatArray(uvs.length)
-						: this.scratchUVs;
+				const scaledUvs = this.scratchUVs.length < uvs.length
+					? (this.scratchUVs = Utils.newFloatArray(uvs.length))
+					: this.scratchUVs;
 				const width = texture.getImage().image.width();
 				const height = texture.getImage().image.height();
 				for (let i = 0; i < uvs.length; i += 2) {
