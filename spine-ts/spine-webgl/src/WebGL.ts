@@ -47,16 +47,16 @@ export class ManagedWebGLRenderingContext implements Disposable {
 		}
 	}
 
-	private contextLostHandler(e: Event) {
+	private contextLostHandler (e: Event) {
 		if (e) e.preventDefault();
 	}
 
-	private contextRestoredHandler(e: Event) {
+	private contextRestoredHandler (e: Event) {
 		for (let i = 0, n = this.restorables.length; i < n; i++)
 			this.restorables[i].restore();
 	}
 
-	dispose(): void {
+	dispose (): void {
 		this.canvas.removeEventListener("webglcontextlost", this.contextLostHandler);
 		this.canvas.removeEventListener("webglcontextrestored", this.contextRestoredHandler);
 	}
