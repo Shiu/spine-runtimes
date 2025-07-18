@@ -19,10 +19,10 @@ async function main() {
     if (!surface) throw new Error();
 
     // Load atlas
-    const atlas = await loadTextureAtlas(ck, __dirname + "/assets/spineboy.atlas", async (path) => fs.readFileSync(path));
+    const atlas = await loadTextureAtlas(ck, __dirname + "/../../assets/spineboy.atlas", async (path) => fs.readFileSync(path));
 
     // Load the skeleton data
-    const skeletonData = await loadSkeletonData(__dirname + "/assets/spineboy-pro.skel", atlas, async (path) => fs.readFileSync(path));
+    const skeletonData = await loadSkeletonData(__dirname + "/../../assets/spineboy-pro.skel", atlas, async (path) => fs.readFileSync(path));
 
     // Create a SkeletonDrawable
     const drawable = new SkeletonDrawable(skeletonData);
