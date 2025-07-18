@@ -27,13 +27,13 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { isConstraintTimeline, isSlotTimeline, MixBlend, MixDirection, PhysicsConstraintTimeline } from "./Animation";
-import { Bone } from "./Bone";
-import { Constraint } from "./Constraint";
-import { Physics } from "./Physics";
-import { Skeleton } from "./Skeleton";
-import { SliderData } from "./SliderData";
-import { SliderPose } from "./SliderPose";
+import { isConstraintTimeline, isSlotTimeline, MixBlend, MixDirection, PhysicsConstraintTimeline } from "./Animation.js";
+import { Bone } from "./Bone.js";
+import { Constraint } from "./Constraint.js";
+import { Physics } from "./Physics.js";
+import { Skeleton } from "./Skeleton.js";
+import { SliderData } from "./SliderData.js";
+import { SliderPose } from "./SliderPose.js";
 
 /** Stores the setup pose for a {@link PhysicsConstraint}.
  *

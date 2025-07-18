@@ -27,13 +27,13 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Bone } from "./Bone";
-import { Inherit } from "./BoneData";
-import { BoneLocal } from "./BoneLocal";
-import { Physics } from "./Physics";
-import { Skeleton } from "./Skeleton";
-import { Update } from "./Update";
-import { MathUtils, Vector2 } from "./Utils";
+import { Bone } from "./Bone.js";
+import { Inherit } from "./BoneData.js";
+import { BoneLocal } from "./BoneLocal.js";
+import { Physics } from "./Physics.js";
+import { Skeleton } from "./Skeleton.js";
+import { Update } from "./Update.js";
+import { MathUtils, Vector2 } from "./Utils.js";
 
 /** The applied pose for a bone. This is the {@link Bone} pose with constraints applied and the world transform computed by
  * {@link Skeleton#updateWorldTransform()}. */

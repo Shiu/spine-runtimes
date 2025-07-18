@@ -27,7 +27,7 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Pose } from "./Pose";
+import { Pose } from "./Pose.js";
 
 /** Stores a pose for a slider. */
 export class SliderPose implements Pose<SliderPose> {

@@ -27,10 +27,10 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Constraint } from "./Constraint";
-import { Pose } from "./Pose";
-import { PosedData } from "./PosedData";
-import { Skeleton } from "./Skeleton";
+import { Constraint } from "./Constraint.js";
+import { Pose } from "./Pose.js";
+import { PosedData } from "./PosedData.js";
+import { Skeleton } from "./Skeleton.js";
 
 /** The base class for all constraint datas. */
 export abstract class ConstraintData<

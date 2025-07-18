@@ -27,9 +27,9 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Pose } from "./Pose";
-import { Posed } from "./Posed";
-import { PosedData } from "./PosedData";
+import { Pose } from "./Pose.js";
+import { Posed } from "./Posed.js";
+import { PosedData } from "./PosedData.js";
 
 import type { Skeleton } from "./Skeleton";
 

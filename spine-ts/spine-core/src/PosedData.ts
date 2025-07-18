@@ -27,7 +27,7 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Pose } from "./Pose";
+import { Pose } from "./Pose.js";
 
 /** The base class for all constrained datas. */
 export abstract class PosedData<P extends Pose<any>> {

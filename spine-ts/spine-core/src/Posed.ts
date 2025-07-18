@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Pose } from "./Pose";
-import { PosedData } from "./PosedData";
+import { Pose } from "./Pose.js";
+import { PosedData } from "./PosedData.js";
 
 export abstract class Posed<
 	D extends PosedData<P>,

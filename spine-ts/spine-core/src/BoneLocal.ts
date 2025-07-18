@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { Inherit } from "./BoneData";
-import { Pose } from "./Pose"
+import { Inherit } from "./BoneData.js";
+import { Pose } from "./Pose.js"
 
 /** Stores a bone's local pose. */
 export class BoneLocal implements Pose<BoneLocal> {
