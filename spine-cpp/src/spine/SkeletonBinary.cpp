@@ -118,7 +118,7 @@ SkeletonData *SkeletonBinary::readSkeletonDataFile(const String &path) {
 		const char *lastDot = strrchr(nameWithoutExtension.buffer(), '.');
 		if (lastDot) {
 			int length = lastDot - nameWithoutExtension.buffer();
-			nameWithoutExtension = String(nameWithoutExtension.buffer(), length);
+			nameWithoutExtension = nameWithoutExtension.substring(0, length);
 		}
 		skeletonData->_name = nameWithoutExtension;
 	}

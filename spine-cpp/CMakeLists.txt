@@ -7,7 +7,11 @@ option(SPINE_NO_FILE_IO "Disable file I/O operations" OFF)
 
 include_directories(include)
 file(GLOB INCLUDES "include/**/*.h")
-file(GLOB SOURCES "src/**/*.cpp")
+file(GLOB ALL_SOURCES "src/**/*.cpp")
+
+# Exclude nostdcpp.cpp from regular build
+list(FILTER ALL_SOURCES EXCLUDE REGEX "src/nostdcpp\\.cpp$")
+set(SOURCES ${ALL_SOURCES})
 
 add_library(spine-cpp STATIC ${SOURCES} ${INCLUDES})
 target_include_directories(spine-cpp PUBLIC include)
@@ -17,7 +21,7 @@ if(SPINE_NO_FILE_IO)
 endif()
 
 # nostdcpp variant (no C++ standard library)
-file(GLOB NOSTDCPP_SOURCES ${SOURCES} "src/nostdlib.cpp")
+set(NOSTDCPP_SOURCES ${SOURCES} "src/nostdcpp.cpp")
 add_library(spine-cpp-nostdcpp STATIC ${NOSTDCPP_SOURCES} ${INCLUDES})
 target_include_directories(spine-cpp-nostdcpp PUBLIC include)
 
@@ -35,28 +39,39 @@ export(
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     add_executable(headless-test ${CMAKE_CURRENT_SOURCE_DIR}/tests/HeadlessTest.cpp)
     target_link_libraries(headless-test spine-cpp)
-    
+
     if(SPINE_NO_FILE_IO)
         target_compile_definitions(headless-test PRIVATE SPINE_NO_FILE_IO)
     endif()
-    
-    # nostdcpp test executable (no C++ stdlib)
+
+    # Configure nostdcpp linking for different platforms
     add_executable(headless-test-nostdcpp ${CMAKE_CURRENT_SOURCE_DIR}/tests/HeadlessTest.cpp)
-    
+    target_link_libraries(headless-test-nostdcpp spine-cpp-nostdcpp)
+
     if(MSVC)
-        # On Windows/MSVC, disable default libraries but keep C runtime
-        target_link_libraries(headless-test-nostdcpp spine-cpp-nostdcpp)
         target_link_options(headless-test-nostdcpp PRIVATE /NODEFAULTLIB)
         target_link_libraries(headless-test-nostdcpp msvcrt kernel32)
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        target_link_options(headless-test-nostdcpp PRIVATE -nostdlib++ -lc)
     else()
-        # Unix/Linux: avoid linking libstdc++ automatically
-        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            target_link_libraries(headless-test-nostdcpp spine-cpp-nostdcpp)
-            target_link_options(headless-test-nostdcpp PRIVATE -nostdlib++ -lc)
-        else()
-            # GCC: use -nodefaultlibs and link minimal libraries including libgcc for operator new/delete
-            target_link_options(headless-test-nostdcpp PRIVATE -nodefaultlibs)
-            target_link_libraries(headless-test-nostdcpp spine-cpp-nostdcpp -lm -lc -lgcc)
+        target_link_options(headless-test-nostdcpp PRIVATE -nodefaultlibs)
+        target_link_libraries(headless-test-nostdcpp -lm -lc -lgcc)
+    endif()
+
+    # Static variants (Linux only)
+    if(UNIX AND NOT APPLE)
+        add_executable(headless-test-static ${CMAKE_CURRENT_SOURCE_DIR}/tests/HeadlessTest.cpp)
+        target_link_libraries(headless-test-static spine-cpp)
+        target_link_options(headless-test-static PRIVATE -static)
+
+        add_executable(headless-test-nostdcpp-static ${CMAKE_CURRENT_SOURCE_DIR}/tests/HeadlessTest.cpp)
+        target_link_libraries(headless-test-nostdcpp-static spine-cpp-nostdcpp)
+        target_link_options(headless-test-nostdcpp-static PRIVATE -static -static-libgcc -Wl,--exclude-libs,libstdc++.a)
+        target_link_libraries(headless-test-nostdcpp-static -lm -lc)
+
+        if(SPINE_NO_FILE_IO)
+            target_compile_definitions(headless-test-static PRIVATE SPINE_NO_FILE_IO)
+            target_compile_definitions(headless-test-nostdcpp-static PRIVATE SPINE_NO_FILE_IO)
         endif()
     endif()
 endif()

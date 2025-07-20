@@ -254,3 +254,6 @@ spine-c/codegen/spine-cpp-types.json
 spine-flutter/example/devtools_options.yaml
 spine-glfw/.cache
 formatters/eclipse-formatter/format-diff.txt
+spine-cpp/build-debug
+spine-cpp/build-linux
+spine-cpp/build-release-debug
