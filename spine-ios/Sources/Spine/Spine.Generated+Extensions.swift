@@ -28,8 +28,8 @@
  *****************************************************************************/
 
 import Foundation
-import SwiftUI
 import SpineCppLite
+import SwiftUI
 
 public var version: String {
     return "\(majorVersion).\(minorVersion)"
@@ -49,22 +49,22 @@ public var minorVersion: Int {
 ///
 /// Use the static methods ``Atlas/fromBundle(_:bundle:)``, ``Atlas/fromFile(_:)``, and ``Atlas/fromHttp(_:)`` to load an atlas. Call ``Atlas/dispose()`
 /// when the atlas is no longer in use to release its resources.
-public extension Atlas {
-    
+extension Atlas {
+
     /// Loads an ``Atlas`` from the file with name `atlasFileName` in the `main` bundle or the optionally provided [bundle].
     ///
     /// Throws an `Error` in case the atlas could not be loaded.
-    static func fromBundle(_ atlasFileName: String, bundle: Bundle = .main) async throws -> (Atlas, [UIImage]) {
+    public static func fromBundle(_ atlasFileName: String, bundle: Bundle = .main) async throws -> (Atlas, [UIImage]) {
         let data = try await FileSource.bundle(fileName: atlasFileName, bundle: bundle).load()
         return try await Self.fromData(data: data) { name in
             return try await FileSource.bundle(fileName: name, bundle: bundle).load()
         }
     }
-    
+
     /// Loads an ``Atlas`` from the file URL `atlasFile`.
     ///
     /// Throws an `Error` in case the atlas could not be loaded.
-    static func fromFile(_ atlasFile: URL) async throws -> (Atlas, [UIImage]) {
+    public static func fromFile(_ atlasFile: URL) async throws -> (Atlas, [UIImage]) {
         let data = try await FileSource.file(atlasFile).load()
         return try await Self.fromData(data: data) { name in
             let dir = atlasFile.deletingLastPathComponent()
@@ -72,11 +72,11 @@ public extension Atlas {
             return try await FileSource.file(file).load()
         }
     }
-        
+
     /// Loads an ``Atlas`` from the http URL `atlasURL`.
     ///
     /// Throws an `Error` in case the atlas could not be loaded.
-    static func fromHttp(_ atlasURL: URL) async throws -> (Atlas, [UIImage]) {
+    public static func fromHttp(_ atlasURL: URL) async throws -> (Atlas, [UIImage]) {
         let data = try await FileSource.http(atlasURL).load()
         return try await Self.fromData(data: data) { name in
             let dir = atlasURL.deletingLastPathComponent()
@@ -84,7 +84,7 @@ public extension Atlas {
             return try await FileSource.http(file).load()
         }
     }
-    
+
     private static func fromData(data: Data, loadFile: (_ name: String) async throws -> Data) async throws -> (Atlas, [UIImage]) {
         guard let atlasData = String(data: data, encoding: .utf8) else {
             throw SpineError("Couldn't read atlas bytes as utf8 string")
@@ -100,10 +100,10 @@ public extension Atlas {
             spine_atlas_dispose(atlas)
             throw SpineError("Couldn't load atlas: \(message)")
         }
-        
+
         var atlasPages = [UIImage]()
-        let numImagePaths = spine_atlas_get_num_image_paths(atlas);
-        
+        let numImagePaths = spine_atlas_get_num_image_paths(atlas)
+
         for i in 0..<numImagePaths {
             guard let atlasPageFilePointer = spine_atlas_get_image_path(atlas, i) else {
                 continue
@@ -115,52 +115,52 @@ public extension Atlas {
             }
             atlasPages.append(image)
         }
-        
+
         return (Atlas(atlas), atlasPages)
     }
 }
 
-public extension SkeletonData {
-    
+extension SkeletonData {
+
     /// Loads a ``SkeletonData`` from the file with name `skeletonFileName` in the main bundle or the optionally provided `bundle`.
     /// Uses the provided ``Atlas`` to resolve attachment images.
     ///
     /// Throws an `Error` in case the skeleton data could not be loaded.
-    static func fromBundle(atlas: Atlas, skeletonFileName: String, bundle: Bundle = .main) async throws -> SkeletonData {
+    public static func fromBundle(atlas: Atlas, skeletonFileName: String, bundle: Bundle = .main) async throws -> SkeletonData {
         return try fromData(
             atlas: atlas,
             data: try await FileSource.bundle(fileName: skeletonFileName, bundle: bundle).load(),
             isJson: skeletonFileName.hasSuffix(".json")
         )
     }
-    
+
     /// Loads a ``SkeletonData`` from the file URL `skeletonFile`. Uses the provided ``Atlas`` to resolve attachment images.
     ///
     /// Throws an `Error` in case the skeleton data could not be loaded.
-    static func fromFile(atlas: Atlas, skeletonFile: URL) async throws -> SkeletonData {
+    public static func fromFile(atlas: Atlas, skeletonFile: URL) async throws -> SkeletonData {
         return try fromData(
             atlas: atlas,
             data: try await FileSource.file(skeletonFile).load(),
             isJson: skeletonFile.absoluteString.hasSuffix(".json")
         )
     }
-    
+
     /// Loads a ``SkeletonData`` from the http URL `skeletonFile`. Uses the provided ``Atlas`` to resolve attachment images.
     ///
     /// Throws an `Error` in case the skeleton data could not be loaded.
-    static func fromHttp(atlas: Atlas, skeletonURL: URL) async throws -> SkeletonData {
+    public static func fromHttp(atlas: Atlas, skeletonURL: URL) async throws -> SkeletonData {
         return try fromData(
             atlas: atlas,
             data: try await FileSource.http(skeletonURL).load(),
             isJson: skeletonURL.absoluteString.hasSuffix(".json")
         )
     }
-    
+
     /// Loads a ``SkeletonData`` from the ``binary`` skeleton `Data`, using the provided ``Atlas`` to resolve attachment images.
     ///
     /// Throws an `Error` in case the skeleton data could not be loaded.
-    static func fromData(atlas: Atlas, data: Data) throws -> SkeletonData {
-        let result = try data.withUnsafeBytes{
+    public static func fromData(atlas: Atlas, data: Data) throws -> SkeletonData {
+        let result = try data.withUnsafeBytes {
             try $0.withMemoryRebound(to: UInt8.self) { buffer in
                 guard let ptr = buffer.baseAddress else {
                     throw SpineError("Couldn't read atlas binary")
@@ -187,16 +187,17 @@ public extension SkeletonData {
         }
         return SkeletonData(data)
     }
-    
+
     /// Loads a ``SkeletonData`` from the `json` string, using the provided ``Atlas`` to resolve attachment
     /// images.
     ///
     /// Throws an `Error` in case the atlas could not be loaded.
-    static func fromJson(atlas: Atlas, json: String) throws -> SkeletonData {
+    public static func fromJson(atlas: Atlas, json: String) throws -> SkeletonData {
         let result = try json.utf8CString.withUnsafeBufferPointer { buffer in
             guard
                 let basePtr = buffer.baseAddress,
-                let result = spine_skeleton_data_load_json(atlas.wrappee, basePtr) else {
+                let result = spine_skeleton_data_load_json(atlas.wrappee, basePtr)
+            else {
                 throw SpineError("Couldn't load skeleton data json")
             }
             return result
@@ -213,7 +214,7 @@ public extension SkeletonData {
         }
         return SkeletonData(data)
     }
-    
+
     private static func fromData(atlas: Atlas, data: Data, isJson: Bool) throws -> SkeletonData {
         if isJson {
             guard let json = String(data: data, encoding: .utf8) else {
@@ -226,12 +227,12 @@ public extension SkeletonData {
     }
 }
 
-internal extension SkeletonDrawable {
-    
+extension SkeletonDrawable {
+
     func render() -> [RenderCommand] {
         var commands = [RenderCommand]()
         if disposed { return commands }
-        
+
         var nativeCmd = spine_skeleton_drawable_render(wrappee)
         repeat {
             if let ncmd = nativeCmd {
@@ -240,18 +241,18 @@ internal extension SkeletonDrawable {
             } else {
                 nativeCmd = nil
             }
-        } while (nativeCmd != nil)
-        
+        } while nativeCmd != nil
+
         return commands
     }
 }
 
-internal extension RenderCommand {
-    
+extension RenderCommand {
+
     var numVertices: Int {
         Int(spine_render_command_get_num_vertices(wrappee))
     }
-    
+
     func positions(numVertices: Int) -> [Float] {
         let num = numVertices * 2
         let ptr = spine_render_command_get_positions(wrappee)
@@ -259,7 +260,7 @@ internal extension RenderCommand {
         let buffer = UnsafeBufferPointer(start: validPtr, count: num)
         return Array(buffer)
     }
-    
+
     func uvs(numVertices: Int) -> [Float] {
         let num = numVertices * 2
         let ptr = spine_render_command_get_uvs(wrappee)
@@ -267,8 +268,8 @@ internal extension RenderCommand {
         let buffer = UnsafeBufferPointer(start: validPtr, count: num)
         return Array(buffer)
     }
-    
-    func colors(numVertices: Int) ->[Int32] {
+
+    func colors(numVertices: Int) -> [Int32] {
         let num = numVertices
         let ptr = spine_render_command_get_colors(wrappee)
         guard let validPtr = ptr else { return [] }
@@ -277,21 +278,21 @@ internal extension RenderCommand {
     }
 }
 
-public extension Skin {
-    
+extension Skin {
+
     /// Constructs a new empty ``Skin`` using the given `name`. Skins constructed this way must be manually disposed via the `dispose` method
     /// if they are no longer used.
-    static func create(name: String) -> Skin {
+    public static func create(name: String) -> Skin {
         return Skin(spine_skin_create(name))
     }
 }
 
 // Helper
 
-public extension CGRect {
-    
+extension CGRect {
+
     /// Construct a `CGRect` from ``Bounds``
-    init(bounds: Bounds) {
+    public init(bounds: Bounds) {
         self = CGRect(
             x: CGFloat(bounds.x),
             y: CGFloat(bounds.y),
@@ -305,7 +306,7 @@ internal enum FileSource {
     case bundle(fileName: String, bundle: Bundle = .main)
     case file(URL)
     case http(URL)
-    
+
     internal func load() async throws -> Data {
         switch self {
         case .bundle(let fileName, let bundle):
@@ -314,7 +315,7 @@ internal enum FileSource {
                 throw SpineError("Provide both file name and file extension")
             }
             let name = components.dropLast(1).joined(separator: ".")
-            
+
             guard let fileUrl = bundle.url(forResource: name, withExtension: String(ext)) else {
                 throw SpineError("Could not load file with name \(name) from bundle")
             }
@@ -331,9 +332,9 @@ internal enum FileSource {
             } else {
                 let lock = NSRecursiveLock()
                 nonisolated(unsafe)
-                var isCancelled = false
+                    var isCancelled = false
                 nonisolated(unsafe)
-                var taskHolder:URLSessionDownloadTask? = nil
+                    var taskHolder: URLSessionDownloadTask? = nil
                 return try await withTaskCancellationHandler {
                     try await withCheckedThrowingContinuation { continuation in
                         let task = URLSession.shared.downloadTask(with: url) { temp, response, error in
@@ -380,25 +381,25 @@ internal enum FileSource {
 }
 
 public struct SpineError: Error, CustomStringConvertible {
-    
+
     public let description: String
-    
+
     internal init(_ description: String) {
         self.description = description
     }
-    
+
 }
 
-public extension SkeletonBounds {
-    static func create() -> SkeletonBounds {
+extension SkeletonBounds {
+    public static func create() -> SkeletonBounds {
         return SkeletonBounds(spine_skeleton_bounds_create())
     }
 }
 
-@objc public extension Atlas {
-    
-    var imagePathCount:Int32 {
+@objc extension Atlas {
+
+    public var imagePathCount: Int32 {
         spine_atlas_get_num_image_paths(wrappee)
     }
-    
+
 }

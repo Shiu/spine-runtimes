@@ -34,34 +34,30 @@ fi
 
 # Run codegen if requested
 if [ "$1" = "codegen" ]; then
-    log_title "Spine-C Code Generation"
-    
-    log_section "Generate"
+    log_title "spine-c code generation"
+
     log_action "Generating C bindings"
     if CODEGEN_OUTPUT=$(npx -y tsx codegen/src/index.ts 2>&1); then
-        log_ok "Code generation completed"
+        log_ok
     else
-        log_fail "Code generation failed"
-        log_detail "$CODEGEN_OUTPUT"
+        log_fail
+        log_error_output "$CODEGEN_OUTPUT"
         exit 1
     fi
-    
-    log_section "Format"
-    log_action "Formatting generated C++ files"
+
     ../formatters/format.sh cpp
-    
+
     log_summary "✓ Code generation successful"
     exit 0
 fi
 
-log_title "Spine-C Build"
+log_title "spine-c build"
 
 # Clean only if explicitly requested
 if [ "$1" = "clean" ]; then
-    log_section "Clean"
-    log_action "Removing build directory"
+    log_action "Cleaning build directory"
     rm -rf build
-    log_ok "Cleaned"
+    log_ok
 fi
 
 # Determine build type
@@ -71,23 +67,21 @@ if [ "$1" = "release" ]; then
 fi
 
 # Configure and build
-log_section "Configure"
 log_action "Configuring $BUILD_TYPE build"
 if CMAKE_OUTPUT=$(cmake --preset=$BUILD_TYPE . 2>&1); then
-    log_ok "Configured"
+    log_ok
 else
-    log_fail "Configuration failed"
-    log_detail "$CMAKE_OUTPUT"
+    log_fail
+    log_error_output "$CMAKE_OUTPUT"
     exit 1
 fi
 
-log_section "Build"
 log_action "Building"
 if BUILD_OUTPUT=$(cmake --build --preset=$BUILD_TYPE 2>&1); then
-    log_ok "Build completed"
+    log_ok
 else
-    log_fail "Build failed"
-    log_detail "$BUILD_OUTPUT"
+    log_fail
+    log_error_output "$BUILD_OUTPUT"
     exit 1
 fi
 

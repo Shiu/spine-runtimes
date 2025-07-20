@@ -18,48 +18,51 @@ This guide defines the terminal output style for all bash scripts in the Spine R
 - **Usage**: Once at the beginning of script execution
 
 ```bash
-log_title "Spine-C++ Test"
+log_title "Spine-C++ Build"
 ```
 
-### 2. Section (`log_section`)
-- **Purpose**: Major phases or groups of operations
-- **Style**: Bold blue text, no extra spacing
-- **Usage**: Build, Test, Deploy, etc.
-
-```bash
-log_section "Build"
-log_section "Test"
-```
-
-### 3. Action (`log_action`)
-- **Purpose**: Individual operations in progress
-- **Style**: Indented, followed by "..."
-- **Usage**: Before starting an operation
+### 2. Action + Result (inline format)
+- **Purpose**: Individual operations with immediate result
+- **Style**: Action on same line as result for density
+- **Usage**: `log_action` followed immediately by `log_ok/fail/warn/skip`
 
 ```bash
 log_action "Building all variants"
-log_action "Testing headless-test"
+log_ok                           # Green ✓ on same line
+
+log_action "Testing headless-test"  
+log_fail                         # Red ✗ on same line
 ```
 
-### 4. Results
-- **Purpose**: Outcome of operations
-- **Style**: Indented with colored symbols
+**Results**:
+- `log_ok` - Green ✓ (success)
+- `log_fail` - Red ✗ (failure) 
+- `log_warn` - Yellow ! (warning)
+- `log_skip` - Gray - (skipped)
+
+### 4. Error Output (`log_error_output`)
+- **Purpose**: Full error output when operations fail
+- **Style**: Normal text (not grayed), prominent
+- **Usage**: Show command output after failures
 
 ```bash
-log_ok "Build completed"          # Green ✓
-log_fail "Build failed"           # Red ✗  
-log_warn "Deprecated feature"     # Yellow !
-log_skip "Not supported on macOS" # Gray -
+log_action "Building"
+if BUILD_OUTPUT=$(command 2>&1); then
+    log_ok
+else
+    log_fail
+    log_error_output "$BUILD_OUTPUT"
+fi
 ```
 
 ### 5. Detail (`log_detail`)
-- **Purpose**: Secondary information, error output, debug info
+- **Purpose**: Secondary information, debug info (not errors)
 - **Style**: Gray text, indented
-- **Usage**: Additional context, error messages
+- **Usage**: Additional context, platform info
 
 ```bash
 log_detail "Platform: Darwin"
-log_detail "$ERROR_OUTPUT"
+log_detail "Branch: main"
 ```
 
 ### 6. Summary (`log_summary`)
@@ -78,58 +81,90 @@ log_summary "✗ Tests failed (3/5)"
 #!/bin/bash
 source ../formatters/logging/logging.sh
 
-log_title "Spine-C++ Test"
+log_title "Spine-C++ Build"
 log_detail "Platform: $(uname)"
 
-log_section "Build"
-log_action "Building all variants"
-if BUILD_OUTPUT=$(./build.sh clean release 2>&1); then
-    log_ok "Build completed"
+log_action "Configuring debug build"
+if CMAKE_OUTPUT=$(cmake --preset=debug . 2>&1); then
+    log_ok
 else
-    log_fail "Build failed"
-    log_detail "$BUILD_OUTPUT"
+    log_fail
+    log_error_output "$CMAKE_OUTPUT"
     exit 1
 fi
 
-log_section "Test"
-log_action "Testing headless-test"
-if test_result; then
-    log_ok "headless-test"
+log_action "Building"
+if BUILD_OUTPUT=$(cmake --build --preset=debug 2>&1); then
+    log_ok
 else
-    log_fail "headless-test - execution failed"
-    log_detail "$error_output"
+    log_fail
+    log_error_output "$BUILD_OUTPUT"
+    exit 1
 fi
 
-log_summary "✓ All tests passed (2/2)"
+log_summary "✓ Build successful"
 ```
 
 ## Output Preview
 
+**Success case:**
 ```
-Spine-C++ Test
-
+Spine-C++ Build
 Platform: Darwin
 
-Build
-  Building all variants...
-  ✓ Build completed
+  Configuring debug build... ✓
+  Building... ✓
 
-Test
-  Testing headless-test...
-  ✓ headless-test
-  Testing headless-test-nostdcpp...
-  ✓ headless-test-nostdcpp
+✓ Build successful
+```
 
-✓ All tests passed (2/2)
+**Failure case:**
+```
+Spine-C++ Build
+Platform: Darwin
+
+  Configuring debug build... ✗
+CMake Error: Could not find cmake file...
+(full error output shown prominently)
 ```
 
 ## Error Handling Best Practices
 
 1. **Capture output**: Use `OUTPUT=$(command 2>&1)` to capture both stdout and stderr
-2. **Check exit codes**: Always check if critical operations succeeded
-3. **Show details on failure**: Use `log_detail` to show error output
+2. **Check exit codes**: Always check if critical operations succeeded  
+3. **Show errors prominently**: Use `log_error_output` for command failures (not grayed)
 4. **Fail fast**: Exit immediately on critical failures
-5. **Clear error messages**: Make failure reasons obvious
+5. **Use inline results**: `log_action` + `log_ok/fail` for dense, scannable output
+
+## Calling Other Scripts
+
+When calling other bash scripts that have their own logging:
+
+1. **Trust their logging**: Don't wrap calls in redundant log actions
+2. **Capture output for errors**: Use `OUTPUT=$(script.sh 2>&1)` to capture output and only show on failure
+3. **Let them handle success**: Avoid "script completed" messages when the script shows its own status
+
+**Good**:
+```bash
+# Let the script handle its own logging
+../formatters/format.sh cpp
+
+# Or capture output and only show on error
+if output=$(./setup.sh 2>&1); then
+    log_ok "Setup completed"
+else
+    log_fail "Setup failed"
+    log_detail "$output"
+fi
+```
+
+**Avoid**:
+```bash
+# This creates duplicate logging
+log_action "Formatting C++ files"
+../formatters/format.sh cpp
+log_ok "C++ formatting completed"
+```
 
 ```bash
 if BUILD_OUTPUT=$(./build.sh clean release 2>&1); then

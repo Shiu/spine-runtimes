@@ -6,9 +6,9 @@
 //
 
 
-#if canImport(Spine)
-@_exported import Spine
-#endif
-
 @_exported import SpineCppLite
 @_exported import SpineShadersStructs
+
+#if canImport(Spine)
+    @_exported import Spine
+#endif

@@ -3,7 +3,7 @@
 #
 # Tests all spine-cpp build variants with spineboy example data:
 # - headless-test (regular dynamic)
-# - headless-test-nostdcpp (nostdcpp dynamic)  
+# - headless-test-nostdcpp (nostdcpp dynamic)
 # - headless-test-static (regular static, Linux only)
 # - headless-test-nostdcpp-static (nostdcpp static, Linux only)
 
@@ -35,7 +35,6 @@ EXPECTED_OUTPUT="=== SKELETON DATA ===
 log_title "Spine-C++ Test"
 log_detail "Platform: $(uname)"
 
-log_section "Build"
 log_action "Building all variants"
 if BUILD_OUTPUT=$(./build.sh clean release 2>&1); then
     log_ok "Build completed"
@@ -45,8 +44,6 @@ else
     exit 1
 fi
 
-log_section "Test"
-
 test_count=0
 pass_count=0
 
@@ -54,12 +51,12 @@ for exe in build/headless-test*; do
     if [ -f "$exe" ] && [ -x "$exe" ]; then
         exe_name=$(basename "$exe")
         log_action "Testing $exe_name"
-        
+
         test_count=$((test_count + 1))
-        
+
         if OUTPUT=$("$exe" $SPINEBOY_SKEL $SPINEBOY_ATLAS $SPINEBOY_ANIM 2>&1); then
             actual_output=$(echo "$OUTPUT" | head -10)
-            
+
             if [ "$actual_output" = "$EXPECTED_OUTPUT" ]; then
                 log_ok "$exe_name"
                 pass_count=$((pass_count + 1))

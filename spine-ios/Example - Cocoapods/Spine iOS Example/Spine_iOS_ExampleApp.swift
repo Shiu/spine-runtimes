@@ -5,8 +5,8 @@
 //  Created by Denis Andrašec on 29.05.24.
 //
 
-import SwiftUI
 import SpineCppLite
+import SwiftUI
 
 @main
 struct Spine_iOS_ExampleApp: App {

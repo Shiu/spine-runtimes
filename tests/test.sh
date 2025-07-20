@@ -16,18 +16,16 @@ fi
 
 # Install dependencies if node_modules doesn't exist
 if [ ! -d "node_modules" ]; then
-    log_section "Setup"
     log_action "Installing dependencies"
     if npm install > /tmp/npm-install.log 2>&1; then
-        log_ok "Dependencies installed"
+        log_ok
     else
-        log_fail "npm install failed"
+        log_fail
         log_detail "$(cat /tmp/npm-install.log)"
         exit 1
     fi
 fi
 
-log_section "Test"
 log_action "Running TypeScript test runner"
 
 # Run the TypeScript headless test runner with all arguments

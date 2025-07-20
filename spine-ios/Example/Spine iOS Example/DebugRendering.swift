@@ -27,14 +27,14 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import SwiftUI
 import Spine
+import SwiftUI
 
 struct DebugRendering: View {
-    
+
     @StateObject
     var model = DebugRenderingModel()
-    
+
     var body: some View {
         ZStack {
             Color.red.ignoresSafeArea()
@@ -61,13 +61,13 @@ struct DebugRendering: View {
 }
 
 final class DebugRenderingModel: ObservableObject {
-    
+
     @Published
     var controller: SpineController!
-    
+
     @Published
     var boneRects = [BoneRect]()
-    
+
     init() {
         controller = SpineController(
             onInitialized: { controller in
@@ -77,8 +77,9 @@ final class DebugRenderingModel: ObservableObject {
                     loop: true
                 )
             },
-            onAfterPaint: { 
-                [weak self] controller in guard let self else { return }
+            onAfterPaint: {
+                [weak self] controller in
+                guard let self else { return }
                 boneRects = controller.drawable.skeleton.bones.map { bone in
                     let position = controller.fromSkeletonCoordinates(
                         position: CGPointMake(CGFloat(bone.worldX), CGFloat(bone.worldY))

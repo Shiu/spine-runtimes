@@ -38,7 +38,7 @@ import SwiftUI
 ///
 /// This is a ``UIViewRepresentable`` of `SpineUIView`.
 public struct SpineView: UIViewRepresentable {
-    
+
     public typealias UIViewType = SpineUIView
 
     private let source: SpineViewSource
@@ -46,11 +46,11 @@ public struct SpineView: UIViewRepresentable {
     private let mode: Spine.ContentMode
     private let alignment: Spine.Alignment
     private let boundsProvider: BoundsProvider
-    private let backgroundColor: UIColor // Not using `SwiftUI.Color`, as briging to `UIColor` prior iOS 14 might not always work.
-    
+    private let backgroundColor: UIColor  // Not using `SwiftUI.Color`, as briging to `UIColor` prior iOS 14 might not always work.
+
     @Binding
     private var isRendering: Bool?
-    
+
     /// An initializer that constructs a new ``SpineView`` from a ``SpineViewSource``.
     ///
     /// After initialization is complete, the provided `controller` is invoked as per the ``SpineController`` semantics, to allow
@@ -85,7 +85,7 @@ public struct SpineView: UIViewRepresentable {
         self.backgroundColor = backgroundColor
         _isRendering = isRendering
     }
-    
+
     public func makeUIView(context: Context) -> SpineUIView {
         return SpineUIView(
             from: source,
@@ -96,7 +96,7 @@ public struct SpineView: UIViewRepresentable {
             backgroundColor: backgroundColor
         )
     }
-    
+
     public func updateUIView(_ uiView: SpineUIView, context: Context) {
         if let isRendering {
             uiView.isRendering = isRendering

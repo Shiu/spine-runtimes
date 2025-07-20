@@ -1,16 +1,21 @@
 #!/bin/bash
 set -e
 
-# Format C/C++ files with clang-format
-echo "Formatting C/C++ files..."
-
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+# Source logging utilities
+source "$dir/logging/logging.sh"
+
+log_title "C/C++ Formatting"
 
 # Store original directory
 pushd "$dir" > /dev/null
 
-if [ ! -f ".clang-format" ]; then
-    echo "Error: .clang-format not found in formatters directory"
+log_action "Checking for formatters/.clang-format"
+if [ -f ".clang-format" ]; then
+    log_ok
+else
+    log_fail
     popd > /dev/null
     exit 1
 fi
@@ -22,47 +27,47 @@ cpp_dirs=(
     "../spine-cpp/src/spine"
     "../spine-cpp/spine-cpp-lite"
     "../spine-cpp/tests"
-    
+
     # spine-c
     "../spine-c/include"
     "../spine-c/src"
     "../spine-c/src/generated"
     "../spine-c/tests"
-    
+
     # spine-godot
     "../spine-godot/spine_godot"
-    
+
     # spine-ue
     "../spine-ue/Source/SpineUE"
     "../spine-ue/Plugins/SpinePlugin/Source/SpinePlugin/Public"
     "../spine-ue/Plugins/SpinePlugin/Source/SpinePlugin/Private"
     "../spine-ue/Plugins/SpinePlugin/Source/SpineEditorPlugin/Public"
     "../spine-ue/Plugins/SpinePlugin/Source/SpineEditorPlugin/Private"
-    
+
     # spine-glfw
     "../spine-glfw/src"
     "../spine-glfw/example"
-    
+
     # spine-sdl
     "../spine-sdl/src"
     "../spine-sdl/example"
-    
+
     # spine-sfml
     "../spine-sfml/c/src/spine"
     "../spine-sfml/c/example"
     "../spine-sfml/cpp/src/spine"
     "../spine-sfml/cpp/example"
-    
+
     # spine-cocos2dx
     "../spine-cocos2dx/spine-cocos2dx/src/spine"
     "../spine-cocos2dx/example/Classes"
-    
+
     # spine-ios
     "../spine-ios/Sources/SpineCppLite"
     "../spine-ios/Sources/SpineCppLite/include"
     "../spine-ios/Sources/SpineShadersStructs"
     "../spine-ios/Example/Spine iOS Example"
-    
+
     # spine-flutter
     "../spine-flutter/ios/Classes"
     "../spine-flutter/macos/Classes"
@@ -86,22 +91,16 @@ for cpp_dir in "${cpp_dirs[@]}"; do
     fi
 done
 
-echo "Found ${#files[@]} C/C++ files to format"
 
-# Format all files in one call - works for both Docker and native
-echo "Formatting ${#files[@]} files..."
-if ! clang-format -i -style=file:".clang-format" "${files[@]}" 2>&1; then
-    echo "Error: clang-format failed"
-    errors=1
+log_action "Formatting ${#files[@]} C/C++ files"
+if FORMAT_OUTPUT=$(clang-format -i -style=file:".clang-format" "${files[@]}" 2>&1); then
+    log_ok
 else
-    errors=0
+    log_fail
+    log_error_output "$FORMAT_OUTPUT"
+    popd > /dev/null
+    exit 1
 fi
-
-if [ $errors -gt 0 ]; then
-    echo "Completed with $errors errors"
-fi
-
-echo "C/C++ formatting complete"
 
 # Return to original directory
 popd > /dev/null

@@ -26,18 +26,24 @@ if echo "$COMMIT_MSG" | grep -qE '^\[haxe\] Release [0-9]+\.[0-9]+\.[0-9]+$'; th
     if [ ! -z "$HAXE_UPDATE_URL" ] && [ ! -z "$BRANCH" ]; then
         log_section "Deploy"
         log_action "Creating release package"
-        zip -r "spine-haxe-$VERSION.zip" \
+        if ZIP_OUTPUT=$(zip -r "spine-haxe-$VERSION.zip" \
             haxelib.json \
             LICENSE \
             README.md \
-            spine-haxe > /dev/null 2>&1
-        log_ok "Package created"
+            spine-haxe 2>&1); then
+            log_ok
+        else
+            log_fail
+            log_error_output "$ZIP_OUTPUT"
+            exit 1
+        fi
         
         log_action "Uploading to $HAXE_UPDATE_URL$BRANCH"
-        if curl -f -F "file=@spine-haxe-$VERSION.zip" "$HAXE_UPDATE_URL$BRANCH" > /dev/null 2>&1; then
-            log_ok "Package deployed"
+        if CURL_OUTPUT=$(curl -f -F "file=@spine-haxe-$VERSION.zip" "$HAXE_UPDATE_URL$BRANCH" 2>&1); then
+            log_ok
         else
-            log_fail "Upload failed"
+            log_fail
+            log_error_output "$CURL_OUTPUT"
             exit 1
         fi
         

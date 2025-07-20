@@ -89,7 +89,8 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         *)
-            log_fail "Unknown option: $1"
+            log_fail
+            log_error_output "Unknown option: $1"
             log_detail "Use --help for usage information"
             exit 1
             ;;
@@ -98,54 +99,33 @@ done
 
 log_title "Code Formatting"
 
-# Call individual formatter scripts
+# Call individual formatter scripts (they handle their own logging)
 if [ "$FORMAT_CPP" = true ]; then
-    log_section "C/C++"
-    log_action "Formatting C/C++ files"
     "$dir/format-cpp.sh"
-    log_ok "C/C++ formatting completed"
 fi
 
 if [ "$FORMAT_JAVA" = true ]; then
-    log_section "Java"
-    log_action "Formatting Java files"
     "$dir/format-java.sh"
-    log_ok "Java formatting completed"
 fi
 
 if [ "$FORMAT_CSHARP" = true ]; then
-    log_section "C#"
-    log_action "Formatting C# files"
     "$dir/format-csharp.sh"
-    log_ok "C# formatting completed"
 fi
 
 if [ "$FORMAT_TS" = true ]; then
-    log_section "TypeScript"
-    log_action "Formatting TypeScript files"
     "$dir/format-ts.sh"
-    log_ok "TypeScript formatting completed"
 fi
 
 if [ "$FORMAT_DART" = true ]; then
-    log_section "Dart"
-    log_action "Formatting Dart files"
     "$dir/format-dart.sh"
-    log_ok "Dart formatting completed"
 fi
 
 if [ "$FORMAT_HAXE" = true ]; then
-    log_section "Haxe"
-    log_action "Formatting Haxe files"
     "$dir/format-haxe.sh"
-    log_ok "Haxe formatting completed"
 fi
 
 if [ "$FORMAT_SWIFT" = true ]; then
-    log_section "Swift"
-    log_action "Formatting Swift files"
     "$dir/format-swift.sh"
-    log_ok "Swift formatting completed"
 fi
 
 log_summary "✓ All formatting completed"

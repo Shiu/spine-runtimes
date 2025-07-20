@@ -27,12 +27,12 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import SwiftUI
 import Spine
+import SwiftUI
 
 @main
 struct SpineExampleApp: App {
-    
+
     var body: some Scene {
         WindowGroup {
             NavigationView {

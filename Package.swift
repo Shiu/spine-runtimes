@@ -27,7 +27,7 @@ let package = Package(
                 .byName(
                     name: "Spine",
                     condition: .when(platforms: [
-                        .iOS,
+                        .iOS
                     ])
                 ),
                 "SpineCppLite",
@@ -38,7 +38,7 @@ let package = Package(
         .target(
             name: "Spine",
             dependencies: [
-                "SpineCppLite", "SpineShadersStructs"
+                "SpineCppLite", "SpineShadersStructs",
             ],
             path: "spine-ios/Sources/Spine"
         ),
@@ -46,13 +46,13 @@ let package = Package(
             name: "SpineCppLite",
             path: "spine-ios/Sources/SpineCppLite",
             linkerSettings: [
-                .linkedLibrary("c++"),
+                .linkedLibrary("c++")
             ]
         ),
         .systemLibrary(
             name: "SpineShadersStructs",
             path: "spine-ios/Sources/SpineShadersStructs"
-        )
+        ),
     ],
     cxxLanguageStandard: .cxx11
 )

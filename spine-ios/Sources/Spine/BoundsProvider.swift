@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import Foundation
 import CoreGraphics
+import Foundation
 
 /// Base class for bounds providers. A bounds provider calculates the axis aligned bounding box
 /// used to scale and fit a skeleton inside the bounds of a ``SpineUIView``.
@@ -42,7 +42,7 @@ public protocol BoundsProvider {
 @objc(SpineSetupPoseBounds)
 @objcMembers
 public final class SetupPoseBounds: NSObject, BoundsProvider {
-    
+
     public override init() {
         super.init()
     }
@@ -79,10 +79,10 @@ public final class RawBounds: NSObject, BoundsProvider {
 @objc(SpineSkinAndAnimationBounds)
 @objcMembers
 public final class SkinAndAnimationBounds: NSObject, BoundsProvider {
-    
+
     private let animation: String?
     private let skins: [String]
-    private let stepTime: TimeInterval;
+    private let stepTime: TimeInterval
 
     /// Constructs a new provider that will use the given `skins` and `animation` to calculate
     /// the bounding box of the skeleton. If no skins are given, the default skin is used.
@@ -98,7 +98,7 @@ public final class SkinAndAnimationBounds: NSObject, BoundsProvider {
         self.stepTime = stepTime
         super.init()
     }
-    
+
     public func computeBounds(for drawable: SkeletonDrawableWrapper) -> CGRect {
         let data = drawable.skeletonData
         let oldSkin: Skin? = drawable.skeleton.skin
@@ -110,7 +110,7 @@ public final class SkinAndAnimationBounds: NSObject, BoundsProvider {
             }
         }
         drawable.skeleton.skin = customSkin
-        drawable.skeleton.setToSetupPose();
+        drawable.skeleton.setToSetupPose()
 
         let animation = animation.flatMap { data.findAnimation(name: $0) }
         var minX = Float.Magnitude.greatestFiniteMagnitude
@@ -122,14 +122,14 @@ public final class SkinAndAnimationBounds: NSObject, BoundsProvider {
             let steps = Int(max(Double(animation.duration) / stepTime, 1.0))
             for i in 0..<steps {
                 drawable.update(delta: i > 0 ? Float(stepTime) : 0.0)
-                let bounds = drawable.skeleton.bounds;
+                let bounds = drawable.skeleton.bounds
                 minX = min(minX, bounds.x)
                 minY = min(minY, bounds.y)
                 maxX = max(maxX, minX + bounds.width)
                 maxY = max(maxY, minY + bounds.height)
             }
         } else {
-            let bounds = drawable.skeleton.bounds;
+            let bounds = drawable.skeleton.bounds
             minX = bounds.x
             minY = bounds.y
             maxX = minX + bounds.width
@@ -137,7 +137,7 @@ public final class SkinAndAnimationBounds: NSObject, BoundsProvider {
         }
         drawable.skeleton.setSkinByName(skinName: "default")
         drawable.animationState.clearTracks()
-        
+
         if let oldSkin {
             drawable.skeleton.skin = oldSkin
         }
@@ -145,14 +145,15 @@ public final class SkinAndAnimationBounds: NSObject, BoundsProvider {
         drawable.update(delta: 0)
         customSkin.dispose()
         return CGRectMake(CGFloat(minX), CGFloat(minY), CGFloat(maxX - minX), CGFloat(maxY - minY))
-      }
+    }
 }
 
 /// How a view should be inscribed into another view.
 @objc
 public enum ContentMode: Int {
-    case fit /// As large as possible while still containing the source view entirely within the target view.
-    case fill /// Fill the target view by distorting the source's aspect ratio.
+    case fit
+    /// As large as possible while still containing the source view entirely within the target view.
+    case fill/// Fill the target view by distorting the source's aspect ratio.
 }
 
 /// How a view should aligned withing another view.
@@ -167,7 +168,7 @@ public enum Alignment: Int {
     case bottomLeft
     case bottomCenter
     case bottomRight
-    
+
     internal var x: CGFloat {
         switch self {
         case .topLeft, .centerLeft, .bottomLeft: return -1.0
@@ -175,7 +176,7 @@ public enum Alignment: Int {
         case .topRight, .centerRight, .bottomRight: return 1.0
         }
     }
-    
+
     internal var y: CGFloat {
         switch self {
         case .topLeft, .topCenter, .topRight: return -1.0

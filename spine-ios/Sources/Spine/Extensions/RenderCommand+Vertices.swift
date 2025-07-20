@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import SpineShadersStructs
 import Foundation
+import SpineShadersStructs
 import simd
 
 extension RenderCommand {
@@ -55,7 +55,7 @@ extension RenderCommand {
             )
             vertices.append(vertex)
         }
-        
+
         return vertices
     }
 

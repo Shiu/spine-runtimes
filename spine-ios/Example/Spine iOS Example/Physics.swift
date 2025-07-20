@@ -27,28 +27,28 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import SwiftUI
 import Spine
+import SwiftUI
 
 struct Physics: View {
-    
+
     @StateObject
     var model = PhysicsModel()
-    
+
     var body: some View {
-		ZStack {
-			Color(red: 51 / 255, green: 51 / 255, blue: 51 / 255).ignoresSafeArea()
-			SpineView(
-				from: .bundle(atlasFileName: "celestial-circus-pma.atlas", skeletonFileName: "celestial-circus-pro.skel"),
-				controller: model.controller
-			)
-			.gesture(
-				DragGesture(minimumDistance: 0)
-					.onChanged { gesture in
-						model.updateBonePosition(position: gesture.location)
-					}
-			)
-		}
+        ZStack {
+            Color(red: 51 / 255, green: 51 / 255, blue: 51 / 255).ignoresSafeArea()
+            SpineView(
+                from: .bundle(atlasFileName: "celestial-circus-pma.atlas", skeletonFileName: "celestial-circus-pro.skel"),
+                controller: model.controller
+            )
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { gesture in
+                        model.updateBonePosition(position: gesture.location)
+                    }
+            )
+        }
         .navigationTitle("Physics (drag anywhere)")
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -59,16 +59,16 @@ struct Physics: View {
 }
 
 final class PhysicsModel: ObservableObject {
-    
+
     @Published
     var controller: SpineController!
-    
+
     @Published
     var mousePosition: CGPoint?
-    
+
     @Published
     var lastMousePosition: CGPoint?
-    
+
     init() {
         controller = SpineController(
             onInitialized: { controller in
@@ -84,8 +84,9 @@ final class PhysicsModel: ObservableObject {
                 )
             },
             onAfterUpdateWorldTransforms: {
-                [weak self] controller in guard let self else { return }
-                
+                [weak self] controller in
+                guard let self else { return }
+
                 guard let lastMousePosition else {
                     self.lastMousePosition = mousePosition
                     return
@@ -102,7 +103,7 @@ final class PhysicsModel: ObservableObject {
             }
         )
     }
-    
+
     func updateBonePosition(position: CGPoint) {
         mousePosition = controller.toSkeletonCoordinates(position: position)
     }

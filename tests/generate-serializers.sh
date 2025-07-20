@@ -17,7 +17,6 @@ fi
 
 # Install dependencies if node_modules doesn't exist
 if [ ! -d "node_modules" ]; then
-    log_section "Setup"
     log_action "Installing dependencies"
     if npm install > /tmp/npm-install.log 2>&1; then
         log_ok "Dependencies installed"
@@ -28,51 +27,42 @@ if [ ! -d "node_modules" ]; then
     fi
 fi
 
-log_section "Analyzing API"
 log_action "Analyzing Java API"
 if output=$(npx -y tsx src/analyze-java-api.ts 2>&1); then
-    log_ok "Java API analysis completed"
+    log_ok
 else
-    log_fail "Failed to analyze Java API"
+    log_fail
     log_detail "$output"
     exit 1
 fi
 
-log_section "Generating Serializer IR"
 log_action "Generating intermediate representation"
 if output=$(npx -y tsx src/generate-serializer-ir.ts 2>&1); then
-    log_ok "Serializer IR generated successfully"
+    log_ok
 else
-    log_fail "Failed to generate serializer IR"
+    log_fail
     log_detail "$output"
     exit 1
 fi
 
-log_section "Generating Language-Specific Serializers"
 log_action "Generating Java SkeletonSerializer"
 if output=$(npx -y tsx src/generate-java-serializer.ts 2>&1); then
-    log_ok "Java serializer generated successfully"
-    
-    log_action "Formatting Java code"
-    ../formatters/format.sh java
-    log_ok "Java code formatted"
+    log_ok
 else
     log_fail "Failed to generate Java serializer"
     log_detail "$output"
     exit 1
 fi
+../formatters/format-java.sh
 
 log_action "Generating C++ SkeletonSerializer"
 if output=$(npx -y tsx src/generate-cpp-serializer.ts 2>&1); then
     log_ok "C++ serializer generated successfully"
-    
-    log_action "Formatting C++ code"
-    ../formatters/format.sh cpp
-    log_ok "C++ code formatted"
 else
     log_fail "Failed to generate C++ serializer"
     log_detail "$output"
     exit 1
 fi
+../formatters/format-cpp.sh
 
-log_summary "✓ Serializer generation and formatting completed successfully"
+log_summary "✓ Serializer generation completed successfully"

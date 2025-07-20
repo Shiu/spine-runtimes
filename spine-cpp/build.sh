@@ -33,34 +33,31 @@ for arg in "$@"; do
     esac
 done
 
-log_title "Spine-C++ Build"
+log_title "spine-cpp build"
 
 # Clean if requested
 if [ "$CLEAN" = "true" ]; then
-    log_section "Clean"
-    log_action "Removing build directory"
+    log_action "Cleaning build directory"
     rm -rf build
-    log_ok "Cleaned"
+    log_ok
 fi
 
 # Configure and build
-log_section "Configure"
 log_action "Configuring $BUILD_TYPE build"
 if CMAKE_OUTPUT=$(cmake --preset=$BUILD_TYPE $NOFILEIO . 2>&1); then
-    log_ok "Configured"
+    log_ok
 else
-    log_fail "Configuration failed"
-    log_detail "$CMAKE_OUTPUT"
+    log_fail
+    log_error_output "$CMAKE_OUTPUT"
     exit 1
 fi
 
-log_section "Build"
 log_action "Building"
 if BUILD_OUTPUT=$(cmake --build --preset=$BUILD_TYPE 2>&1); then
-    log_ok "Build completed"
+    log_ok
 else
-    log_fail "Build failed"
-    log_detail "$BUILD_OUTPUT"
+    log_fail
+    log_error_output "$BUILD_OUTPUT"
     exit 1
 fi
 

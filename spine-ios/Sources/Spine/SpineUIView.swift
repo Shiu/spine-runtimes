@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import UIKit
 import MetalKit
+import UIKit
 
 /// A ``UIView`` to display a Spine skeleton. The skeleton can be loaded from a bundle, local files, http, or a pre-loaded ``SkeletonDrawableWrapper``.
 ///
@@ -40,15 +40,15 @@ import MetalKit
 /// This is a direct subclass of ``MTKView`` and is using `Metal` to render the skeleton.
 @objc
 public final class SpineUIView: MTKView {
-    
+
     let controller: SpineController
     let mode: Spine.ContentMode
     let alignment: Spine.Alignment
     let boundsProvider: BoundsProvider
-    
+
     internal var computedBounds: CGRect = .zero
     internal var renderer: SpineRenderer?
-    
+
     @objc internal init(
         controller: SpineController = SpineController(),
         mode: Spine.ContentMode = .fit,
@@ -60,12 +60,12 @@ public final class SpineUIView: MTKView {
         self.mode = mode
         self.alignment = alignment
         self.boundsProvider = boundsProvider
-        
+
         super.init(frame: .zero, device: SpineObjects.shared.device)
         clearColor = MTLClearColor(backgroundColor)
         isOpaque = backgroundColor != .clear
     }
-    
+
     /// An initializer that constructs a new ``SpineUIView`` from a ``SpineViewSource``.
     ///
     /// After initialization is complete, the provided `controller` is invoked as per the ``SpineController`` semantics, to allow
@@ -98,7 +98,7 @@ public final class SpineUIView: MTKView {
             }
         }
     }
-    
+
     /// A convenience initializer that constructs a new ``SpineUIView`` from bundled files.
     ///
     /// After initialization is complete, the provided `controller` is invoked as per the ``SpineController`` semantics, to allow
@@ -125,9 +125,11 @@ public final class SpineUIView: MTKView {
         boundsProvider: BoundsProvider = SetupPoseBounds(),
         backgroundColor: UIColor = .clear
     ) {
-        self.init(from: .bundle(atlasFileName: atlasFileName, skeletonFileName: skeletonFileName, bundle: bundle), controller: controller, mode: mode, alignment: alignment, boundsProvider: boundsProvider, backgroundColor: backgroundColor)
+        self.init(
+            from: .bundle(atlasFileName: atlasFileName, skeletonFileName: skeletonFileName, bundle: bundle), controller: controller, mode: mode,
+            alignment: alignment, boundsProvider: boundsProvider, backgroundColor: backgroundColor)
     }
-    
+
     /// A convenience initializer that constructs a new ``SpineUIView`` from file URLs.
     ///
     /// After initialization is complete, the provided `controller` is invoked as per the ``SpineController`` semantics, to allow
@@ -152,9 +154,11 @@ public final class SpineUIView: MTKView {
         boundsProvider: BoundsProvider = SetupPoseBounds(),
         backgroundColor: UIColor = .clear
     ) {
-        self.init(from: .file(atlasFile: atlasFile, skeletonFile: skeletonFile), controller: controller, mode: mode, alignment: alignment, boundsProvider: boundsProvider, backgroundColor: backgroundColor)
+        self.init(
+            from: .file(atlasFile: atlasFile, skeletonFile: skeletonFile), controller: controller, mode: mode, alignment: alignment,
+            boundsProvider: boundsProvider, backgroundColor: backgroundColor)
     }
-    
+
     /// A convenience initializer that constructs a new ``SpineUIView`` from HTTP.
     ///
     /// After initialization is complete, the provided `controller` is invoked as per the ``SpineController`` semantics, to allow
@@ -179,9 +183,11 @@ public final class SpineUIView: MTKView {
         boundsProvider: BoundsProvider = SetupPoseBounds(),
         backgroundColor: UIColor = .clear
     ) {
-        self.init(from: .http(atlasURL: atlasURL, skeletonURL: skeletonURL), controller: controller, mode: mode, alignment: alignment, boundsProvider: boundsProvider, backgroundColor: backgroundColor)
+        self.init(
+            from: .http(atlasURL: atlasURL, skeletonURL: skeletonURL), controller: controller, mode: mode, alignment: alignment,
+            boundsProvider: boundsProvider, backgroundColor: backgroundColor)
     }
-    
+
     /// A convenience initializer that constructs a new ``SpineUIView`` with a ``SkeletonDrawableWrapper``.
     ///
     /// After initialization is complete, the provided `controller` is invoked as per the ``SpineController`` semantics, to allow
@@ -203,17 +209,19 @@ public final class SpineUIView: MTKView {
         boundsProvider: BoundsProvider = SetupPoseBounds(),
         backgroundColor: UIColor = .clear
     ) {
-        self.init(from: .drawable(drawable), controller: controller, mode: mode, alignment: alignment, boundsProvider: boundsProvider, backgroundColor: backgroundColor)
+        self.init(
+            from: .drawable(drawable), controller: controller, mode: mode, alignment: alignment, boundsProvider: boundsProvider,
+            backgroundColor: backgroundColor)
     }
-    
+
     internal override init(frame frameRect: CGRect, device: MTLDevice?) {
         fatalError("init(frame: device:) has not been implemented. Use init() instead.")
     }
-    
+
     internal required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented. Use init() instead.")
     }
-    
+
     /// Disable or enable rendering. Disable it when the spine view is out of bounds and you want to preserve CPU/GPU resources.
     public var isRendering: Bool {
         get { !super.isPaused }
@@ -227,7 +235,7 @@ public final class SpineUIView: MTKView {
 }
 
 extension SpineUIView {
-    
+
     internal func load(drawable: SkeletonDrawableWrapper) throws {
         controller.drawable = drawable
         computedBounds = boundsProvider.computeBounds(for: drawable)
@@ -236,7 +244,7 @@ extension SpineUIView {
         )
         controller.initialize()
     }
-    
+
     private func initRenderer(atlasPages: [UIImage]) throws {
         renderer = try SpineRenderer(
             device: SpineObjects.shared.device,
@@ -265,7 +273,7 @@ public enum SpineViewSource {
     case file(atlasFile: URL, skeletonFile: URL)
     case http(atlasURL: URL, skeletonURL: URL)
     case drawable(SkeletonDrawableWrapper)
-    
+
     internal func loadDrawable() async throws -> SkeletonDrawableWrapper {
         switch self {
         case .bundle(let atlasFileName, let skeletonFileName, let bundle):

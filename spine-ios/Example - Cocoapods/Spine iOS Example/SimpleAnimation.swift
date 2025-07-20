@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import SwiftUI
 import Spine
+import SwiftUI
 
 struct SimpleAnimation: View {
 
@@ -46,10 +46,10 @@ struct SimpleAnimation: View {
     var body: some View {
         SpineView(
             from: .bundle(atlasFileName: "spineboy-pma.atlas", skeletonFileName: "spineboy-pro.skel"),
-//            from: .http(
-//                atlasURL: URL(string: "https://github.com/esotericsoftware/spine-runtimes/raw/spine-ios/spine-ios/Example/Spine%20iOS%20Example/Assets/spineboy/spineboy.atlas")!,
-//                skeletonURL:  URL(string: "https://github.com/esotericsoftware/spine-runtimes/raw/spine-ios/spine-ios/Example/Spine%20iOS%20Example/Assets/spineboy/spineboy-pro.skel")!
-//            ),
+            //            from: .http(
+            //                atlasURL: URL(string: "https://github.com/esotericsoftware/spine-runtimes/raw/spine-ios/spine-ios/Example/Spine%20iOS%20Example/Assets/spineboy/spineboy.atlas")!,
+            //                skeletonURL:  URL(string: "https://github.com/esotericsoftware/spine-runtimes/raw/spine-ios/spine-ios/Example/Spine%20iOS%20Example/Assets/spineboy/spineboy-pro.skel")!
+            //            ),
             controller: controller,
             mode: .fit,
             alignment: .center

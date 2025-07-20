@@ -43,42 +43,41 @@ NC='\033[0m' # No Color
 
 # Design principles:
 # 1. Minimal visual noise - use color sparingly for emphasis
-# 2. Clear hierarchy - different levels of information have different treatments  
+# 2. Clear hierarchy - different levels of information have different treatments
 # 3. Consistent spacing - clean vertical rhythm
 # 4. Accessible - readable without colors
 
 # Main header for script/tool name
 log_title() {
-    echo ""
-    echo -e "${BOLD}$1${NC}"
-    echo ""
+    echo -e "${GREEN}${BOLD}$1${NC}"
 }
 
-# Section headers for major phases
-log_section() {
-    echo -e "${BOLD}${BLUE}$1${NC}"
-}
 
-# Individual actions/steps
+# Individual actions/steps - inline result format
 log_action() {
-    echo -e "  $1..."
+    echo -n "  $1... "
 }
 
-# Results - success/failure/info
+# Results - success/failure/info (on same line)
 log_ok() {
-    echo -e "  ${GREEN}✓${NC} $1"
+    echo -e "${GREEN}✓${NC}"
 }
 
 log_fail() {
-    echo -e "  ${RED}✗${NC} $1"
+    echo -e "${RED}✗${NC}"
 }
 
 log_warn() {
-    echo -e "  ${YELLOW}!${NC} $1"
+    echo -e "${YELLOW}!${NC}"
 }
 
 log_skip() {
-    echo -e "  ${GRAY}-${NC} $1"
+    echo -e "${GRAY}-${NC}"
+}
+
+# For errors, show full output prominently (not grayed)
+log_error_output() {
+    echo "$1"
 }
 
 # Final summary

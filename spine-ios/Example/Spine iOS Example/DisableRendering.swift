@@ -27,11 +27,11 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import SwiftUI
 import Spine
+import SwiftUI
 
 struct DisableRendering: View {
-    
+
     @StateObject
     var controller = SpineController(
         onInitialized: { controller in
@@ -42,10 +42,10 @@ struct DisableRendering: View {
             )
         }
     )
-    
+
     @State
     var isRendering: Bool?
-    
+
     var body: some View {
         VStack {
             List {
@@ -54,7 +54,7 @@ struct DisableRendering: View {
                     Text("Rendering is disabled when the spine view moves out of the viewport, preserving CPU/GPU resources.")
                         .foregroundColor(.secondary)
                 }
-                
+
                 SpineView(
                     from: .bundle(atlasFileName: "spineboy-pma.atlas", skeletonFileName: "spineboy-pro.skel"),
                     controller: controller,
@@ -69,13 +69,13 @@ struct DisableRendering: View {
                     isRendering = false
                     print("rendering disabled")
                 }
-                
+
                 Text("Foo")
                     .frame(minHeight: 400)
-                
+
                 Text("Bar")
                     .frame(minHeight: 400)
-                
+
                 Text("Baz")
                     .frame(minHeight: 400)
             }

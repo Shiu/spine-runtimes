@@ -1,10 +1,12 @@
 #!/bin/bash
 set -e
 
-# Format Java files with Eclipse formatter
-echo "Formatting Java files..."
-
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+# Source logging utilities
+source "$dir/logging/logging.sh"
+
+log_title "Java Formatting"
 
 # Store original directory
 pushd "$dir" > /dev/null
@@ -14,9 +16,17 @@ jar_file="eclipse-formatter/target/eclipse-formatter-1.0.0-jar-with-dependencies
 src_file="eclipse-formatter/src/main/java/com/esotericsoftware/spine/formatter/EclipseFormatter.java"
 
 if [ ! -f "$jar_file" ] || [ "$src_file" -nt "$jar_file" ]; then
-    echo "Building Eclipse formatter..."
+    log_action "Building Eclipse formatter"
     pushd eclipse-formatter > /dev/null
-    mvn -q clean package
+    if MVN_OUTPUT=$(mvn -q clean package 2>&1); then
+        log_ok
+    else
+        log_fail
+        log_error_output "$MVN_OUTPUT"
+        popd > /dev/null
+        popd > /dev/null
+        exit 1
+    fi
     popd > /dev/null
 fi
 
@@ -30,13 +40,22 @@ java_files=$(find ../spine-libgdx ../spine-android -name "*.java" -type f \
 
 # Run the formatter
 if [ -n "$java_files" ]; then
-    echo "Running Eclipse formatter on Java files..."
-    java -jar eclipse-formatter/target/eclipse-formatter-1.0.0-jar-with-dependencies.jar \
+    java_count=$(echo "$java_files" | wc -l | tr -d ' ')
+    log_action "Formatting $java_count Java files"
+    if FORMATTER_OUTPUT=$(java -jar eclipse-formatter/target/eclipse-formatter-1.0.0-jar-with-dependencies.jar \
         eclipse-formatter.xml \
-        $java_files
+        $java_files 2>&1); then
+        log_ok
+    else
+        log_fail
+        log_error_output "$FORMATTER_OUTPUT"
+        popd > /dev/null
+        exit 1
+    fi
+else
+    log_action "Formatting Java files"
+    log_skip
 fi
-
-echo "Java formatting complete"
 
 # Return to original directory
 popd > /dev/null

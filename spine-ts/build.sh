@@ -16,21 +16,19 @@ fi
 log_title "Spine-TS Build"
 log_detail "Branch: $BRANCH"
 
-log_section "Setup"
 log_action "Installing dependencies"
 if npm install > /tmp/npm-install.log 2>&1; then
-	log_ok "Dependencies installed"
+	log_ok
 else
-	log_fail "npm install failed"
-	log_detail "$(cat /tmp/npm-install.log)"
+	log_fail
+	log_error_output "$(cat /tmp/npm-install.log)"
 	exit 1
 fi
 
 if ! [ -z "$TS_UPDATE_URL" ] && ! [ -z "$BRANCH" ];
 then
-	log_section "Deploy"
 	log_action "Creating artifacts zip"
-	zip -j spine-ts.zip \
+	if ZIP_OUTPUT=$(zip -j spine-ts.zip \
 		spine-core/dist/iife/* \
 		spine-canvas/dist/iife/* \
 		spine-webgl/dist/iife/* \
@@ -51,13 +49,20 @@ then
 		spine-phaser-v3/dist/esm/* \
 		spine-phaser-v4/dist/esm/* \
 		spine-webcomponents/dist/esm/* \
-		spine-player/css/spine-player.css > /dev/null 2>&1
+		spine-player/css/spine-player.css 2>&1); then
+		log_ok
+	else
+		log_fail
+		log_error_output "$ZIP_OUTPUT"
+		exit 1
+	fi
 	
 	log_action "Uploading to $TS_UPDATE_URL$BRANCH"
-	if curl -f -F "file=@spine-ts.zip" "$TS_UPDATE_URL$BRANCH" > /dev/null 2>&1; then
-		log_ok "Artifacts deployed"
+	if CURL_OUTPUT=$(curl -f -F "file=@spine-ts.zip" "$TS_UPDATE_URL$BRANCH" 2>&1); then
+		log_ok
 	else
-		log_fail "Upload failed"
+		log_fail
+		log_error_output "$CURL_OUTPUT"
 		exit 1
 	fi
 	

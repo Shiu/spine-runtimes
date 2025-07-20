@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import Foundation
 import CoreGraphics
+import Foundation
 import QuartzCore
 import UIKit
 
@@ -63,27 +63,27 @@ public typealias SpineControllerCallback = (_ controller: SpineController) -> Vo
 /// Per default, ``SkeletonDrawableWrapper`` is disposed when ``SpineController`` is deinitialized. You can disable this behaviour with the ``disposeDrawableOnDeInit`` contructor parameter.
 @objcMembers
 public final class SpineController: NSObject, ObservableObject {
-    
+
     public internal(set) var drawable: SkeletonDrawableWrapper!
-    
+
     private let onInitialized: SpineControllerCallback?
     private let onBeforeUpdateWorldTransforms: SpineControllerCallback?
     private let onAfterUpdateWorldTransforms: SpineControllerCallback?
     private let onBeforePaint: SpineControllerCallback?
     private let onAfterPaint: SpineControllerCallback?
     private let disposeDrawableOnDeInit: Bool
-    
+
     private var scaleX: CGFloat = 1
     private var scaleY: CGFloat = 1
     private var offsetX: CGFloat = 0
     private var offsetY: CGFloat = 0
-    
+
     @Published
     public private(set) var isPlaying: Bool = true
-    
+
     @Published
     public private(set) var viewSize: CGSize = .zero
-    
+
     /// Constructs a new ``SpineUIview`` controller. See the class documentation of ``SpineWidgetController`` for information on
     /// the optional arguments.
     public init(
@@ -100,80 +100,80 @@ public final class SpineController: NSObject, ObservableObject {
         self.onBeforePaint = onBeforePaint
         self.onAfterPaint = onAfterPaint
         self.disposeDrawableOnDeInit = disposeDrawableOnDeInit
-        
+
         super.init()
     }
-    
+
     deinit {
         if disposeDrawableOnDeInit {
-            drawable?.dispose() // TODO move drawable out of view?
+            drawable?.dispose()  // TODO move drawable out of view?
         }
     }
-    
+
     /// The ``Atlas`` from which images to render the skeleton are sourced.
     public var atlas: Atlas {
         drawable.atlas
     }
-    
+
     /// The setup-pose data used by the skeleton.
     public var skeletonData: SkeletonData {
         drawable.skeletonData
     }
-    
+
     /// The ``Skeleton``
     public var skeleton: Skeleton {
         drawable.skeleton
     }
-    
+
     /// The mixing information used by the ``AnimationState``
     public var animationStateData: AnimationStateData {
         drawable.animationStateData
     }
-    
+
     /// The ``AnimationState`` used to manage animations that are being applied to the
     /// skeleton.
     public var animationState: AnimationState {
         drawable.animationState
     }
-    
+
     /// The ``AnimationStateWrapper`` used to hold ``AnimationState``, register ``AnimationStateListener`` and call ``AnimationStateWrapper/update(delta:)``
     public var animationStateWrapper: AnimationStateWrapper {
         drawable.animationStateWrapper
     }
-    
+
     /// Transforms the coordinates given in the ``SpineUIView`` coordinate system in `position` to
     /// the skeleton coordinate system. See the `IKFollowing.swift` example how to use this
     /// to move a bone based on user touch input.
     public func toSkeletonCoordinates(position: CGPoint) -> CGPoint {
-        let x = position.x;
-        let y = position.y;
+        let x = position.x
+        let y = position.y
         return CGPoint(
             x: (x - viewSize.width / 2) / scaleX - offsetX,
             y: (y - viewSize.height / 2) / scaleY - offsetY
         )
     }
-    
+
     /// Transforms the coordinates given in skeleton coordinate system to
     /// the the ``SpineUIView`` coordinates. See the `DebugRendering.swift` example hot to use this to draw rectangles over skeleton bones for debugging purposes.
     public func fromSkeletonCoordinates(position: CGPoint) -> CGPoint {
-        let x = position.x;
-        let y = position.y;
+        let x = position.x
+        let y = position.y
         return CGPoint(
             x: (x + offsetX) * scaleX,
             y: (y + offsetY) * scaleY
         )
     }
-    
+
     /// Pauses updating and rendering the skeleton.
     public func pause() {
         isPlaying = false
     }
-    
+
     /// Resumes updating and rendering the skeleton.
     public func resume() {
         isPlaying = true
     }
-    
+
     internal func load(atlasFile: String, skeletonFile: String, bundle: Bundle = .main) async throws {
         let atlasAndPages = try await Atlas.fromBundle(atlasFile, bundle: bundle)
         let skeletonData = try await SkeletonData.fromBundle(
@@ -190,23 +190,23 @@ public final class SpineController: NSObject, ObservableObject {
             self.drawable = skeletonDrawableWrapper
         }
     }
-    
+
     internal func initialize() {
         onInitialized?(self)
     }
-    
+
 }
 
 extension SpineController: SpineRendererDelegate {
-    
+
     func spineRendererWillDraw(_ spineRenderer: SpineRenderer) {
         onBeforePaint?(self)
     }
-    
+
     func spineRendererDidDraw(_ spineRenderer: SpineRenderer) {
         onAfterPaint?(self)
     }
-    
+
     func spineRendererDidUpdate(_ spineRenderer: SpineRenderer, scaleX: CGFloat, scaleY: CGFloat, offsetX: CGFloat, offsetY: CGFloat, size: CGSize) {
         self.scaleX = scaleX
         self.scaleY = scaleY
@@ -217,27 +217,27 @@ extension SpineController: SpineRendererDelegate {
 }
 
 extension SpineController: SpineRendererDataSource {
-    
+
     func spineRendererWillUpdate(_ spineRenderer: SpineRenderer) {
         onBeforeUpdateWorldTransforms?(self)
     }
-    
+
     func spineRendererDidUpdate(_ spineRenderer: SpineRenderer) {
         onAfterUpdateWorldTransforms?(self)
     }
-    
+
     func spineRenderer(_ spineRenderer: SpineRenderer, needsUpdate delta: TimeInterval) {
         drawable?.update(delta: Float(delta))
     }
-    
+
     func isPlaying(_ spineRenderer: SpineRenderer) -> Bool {
         return isPlaying
     }
-    
+
     func skeletonDrawable(_ spineRenderer: SpineRenderer) -> SkeletonDrawableWrapper {
         return drawable
     }
-    
+
     func renderCommands(_ spineRenderer: SpineRenderer) -> [RenderCommand] {
         return drawable?.skeletonDrawable.render() ?? []
     }

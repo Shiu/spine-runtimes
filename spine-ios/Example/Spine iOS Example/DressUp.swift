@@ -27,15 +27,15 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import SwiftUI
 import Spine
 import SpineCppLite
+import SwiftUI
 
 struct DressUp: View {
-    
+
     @StateObject
     var model = DressUpModel()
-    
+
     var body: some View {
         HStack(spacing: 0) {
             List {
@@ -51,9 +51,9 @@ struct DressUp: View {
                 }
             }
             .listStyle(.plain)
-            
+
             Divider()
-            
+
             if let drawable = model.drawable {
                 SpineView(
                     from: .drawable(drawable),
@@ -74,23 +74,23 @@ struct DressUp: View {
 }
 
 final class DressUpModel: ObservableObject {
-    
+
     let thumbnailSize = CGSize(width: 200, height: 200)
-    
+
     @Published
     var controller: SpineController
-    
+
     @Published
     var drawable: SkeletonDrawableWrapper?
-    
+
     @Published
     var skinImages = [String: CGImage]()
-    
+
     @Published
     var selectedSkins = [String: Bool]()
-    
+
     private var customSkin: Skin?
-    
+
     init() {
         controller = SpineController(
             onInitialized: { controller in
@@ -129,28 +129,28 @@ final class DressUpModel: ObservableObject {
             }
         }
     }
-    
+
     deinit {
         drawable?.dispose()
         customSkin?.dispose()
     }
-    
+
     func toggleSkin(skinName: String) {
         if let drawable {
             toggleSkin(skinName: skinName, drawable: drawable)
         }
     }
-    
+
     func toggleSkin(skinName: String, drawable: SkeletonDrawableWrapper) {
         selectedSkins[skinName] = !(selectedSkins[skinName] ?? false)
         customSkin?.dispose()
         customSkin = Skin.create(name: "custom-skin")
         for skinName in selectedSkins.keys {
-          if selectedSkins[skinName] == true {
-              if let skin = drawable.skeletonData.findSkin(name: skinName) {
-                  customSkin?.addSkin(other: skin)
-              }
-          }
+            if selectedSkins[skinName] == true {
+                if let skin = drawable.skeletonData.findSkin(name: skinName) {
+                    customSkin?.addSkin(other: skin)
+                }
+            }
         }
         drawable.skeleton.skin = customSkin
         drawable.skeleton.setToSetupPose()

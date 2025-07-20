@@ -1,22 +1,44 @@
 #!/bin/bash
 set -e
 
-# Format Dart files
-echo "Formatting Dart files..."
-
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+# Source logging utilities
+source "$dir/logging/logging.sh"
+
+log_title "Dart Formatting"
 
 # Store original directory
 pushd "$dir" > /dev/null
 
 if command -v dart &> /dev/null; then
-    find .. -name "*.dart" \
+    dart_files=$(find .. -name "*.dart" \
         -not -path "*/.*" \
         -not -path "*/node_modules/*" \
-        -not -path "*/build/*" \
-        -exec dart format --page-width 120 {} +
+        -not -path "*/build/*" | wc -l | tr -d ' ')
+
+    if [ "$dart_files" -gt 0 ]; then
+        log_action "Formatting $dart_files Dart files"
+        if DART_OUTPUT=$(find .. -name "*.dart" \
+            -not -path "*/.*" \
+            -not -path "*/node_modules/*" \
+            -not -path "*/build/*" \
+            -exec dart format --page-width 120 {} + 2>&1); then
+            log_ok
+        else
+            log_fail
+            log_error_output "$DART_OUTPUT"
+            popd > /dev/null
+            exit 1
+        fi
+    else
+        log_action "Formatting Dart files"
+        log_skip
+    fi
 else
-    echo "Warning: dart not found. Skipping Dart formatting."
+    log_fail
+    log_error_output "dart not found. Please install Dart SDK to format Dart files."
+    exit 1
 fi
 
 # Return to original directory
