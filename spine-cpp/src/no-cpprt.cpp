@@ -27,7 +27,14 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include <cstddef>
+// Avoid including any standard headers for maximum portability
+#ifdef __cplusplus
+extern "C" {
+#endif
+typedef __SIZE_TYPE__ size_t;
+#ifdef __cplusplus
+}
+#endif
 
 // Stubs for C++ stdlib functions spine-cpp depends on. Used for nostdcpp builds.
 // These are weak symbols to allow overriding in custom builds, e.g. headless-test-nostdcpp

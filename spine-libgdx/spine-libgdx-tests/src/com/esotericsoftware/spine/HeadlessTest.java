@@ -137,14 +137,15 @@ public class HeadlessTest implements ApplicationListener {
 			// Create skeleton instance
 			Skeleton skeleton = new Skeleton(skeletonData);
 
-			// Create animation state
-			AnimationStateData stateData = new AnimationStateData(skeletonData);
-			AnimationState state = new AnimationState(stateData);
-
 			skeleton.setupPose();
 
-			// Set animation or setup pose
+			// Set animation if provided
+			AnimationState state = null;
 			if (animationName != null) {
+				// Create animation state only when needed
+				AnimationStateData stateData = new AnimationStateData(skeletonData);
+				state = new AnimationState(stateData);
+				
 				// Find and set animation
 				Animation animation = skeletonData.findAnimation(animationName);
 				if (animation == null) {
@@ -163,9 +164,11 @@ public class HeadlessTest implements ApplicationListener {
 			System.out.println("\n=== SKELETON STATE ===");
 			System.out.println(serializer.serializeSkeleton(skeleton));
 
-			// Print animation state as JSON
-			System.out.println("\n=== ANIMATION STATE ===");
-			System.out.println(serializer.serializeAnimationState(state));
+			// Print animation state as JSON only if animation was loaded
+			if (state != null) {
+				System.out.println("\n=== ANIMATION STATE ===");
+				System.out.println(serializer.serializeAnimationState(state));
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

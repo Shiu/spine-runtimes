@@ -106,14 +106,16 @@ int main(int argc, char *argv[]) {
 	// Create skeleton instance
 	Skeleton skeleton(*skeletonData);
 
-	// Create animation state
-	AnimationStateData stateData(skeletonData);
-	AnimationState state(&stateData);
-
 	skeleton.setupPose();
 
-	// Set animation or setup pose
+	// Set animation if provided
+	AnimationState *state = nullptr;
+	AnimationStateData *stateData = nullptr;
 	if (animationName != nullptr) {
+		// Create animation state only when needed
+		stateData = new AnimationStateData(skeletonData);
+		state = new AnimationState(stateData);
+
 		// Find and set animation
 		Animation *animation = skeletonData->findAnimation(animationName);
 		if (!animation) {
@@ -122,10 +124,10 @@ int main(int argc, char *argv[]) {
 			delete atlas;
 			return 1;
 		}
-		state.setAnimation(0, animation, true);
+		state->setAnimation(0, animation, true);
 		// Update and apply
-		state.update(0.016f);
-		state.apply(skeleton);
+		state->update(0.016f);
+		state->apply(skeleton);
 	}
 
 	skeleton.updateWorldTransform(Physics_Update);
@@ -141,11 +143,19 @@ int main(int argc, char *argv[]) {
 	printf("\n=== SKELETON STATE ===\n");
 	printf("%s", serializer.serializeSkeleton(&skeleton).buffer());
 
-	// Print animation state
-	printf("\n=== ANIMATION STATE ===\n");
-	printf("%s", serializer.serializeAnimationState(&state).buffer());
+	// Print animation state only if animation was loaded
+	if (state != nullptr) {
+		printf("\n=== ANIMATION STATE ===\n");
+		printf("%s", serializer.serializeAnimationState(state).buffer());
+	}
 
 	// Cleanup
+	if (state != nullptr) {
+		delete state;
+	}
+	if (stateData != nullptr) {
+		delete stateData;
+	}
 	delete skeletonData;
 	delete atlas;
 
