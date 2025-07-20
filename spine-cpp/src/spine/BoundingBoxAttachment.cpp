@@ -33,7 +33,7 @@ using namespace spine;
 
 RTTI_IMPL(BoundingBoxAttachment, VertexAttachment)
 
-BoundingBoxAttachment::BoundingBoxAttachment(const String &name) : VertexAttachment(name), _color() {
+BoundingBoxAttachment::BoundingBoxAttachment(const String &name) : VertexAttachment(name), _color(0.38f, 0.94f, 0.0f, 1.0f) {
 }
 
 Color &BoundingBoxAttachment::getColor() {
