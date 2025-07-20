@@ -33,6 +33,9 @@ method: TrackEntry::setListener
 method: TrackEntry::getListener
 method: Atlas::Atlas
 
+# Exclude Atlas destructor - we handle atlas disposal in extensions.cpp
+method: Atlas::~Atlas
+
 # Used in UE4/cocos2dx, not used anywhere else
 method: AnimationState::setRendererObject
 method: TrackEntry::setRendererObject

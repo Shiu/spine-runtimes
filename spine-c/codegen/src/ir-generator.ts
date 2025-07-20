@@ -128,7 +128,20 @@ export function generateConstructors(type: ClassOrStruct, knownTypeNames: Set<st
     return constructors;
 }
 
-export function generateDestructor(type: ClassOrStruct): CMethod {
+
+export function generateDestructor(type: ClassOrStruct, exclusions: Exclusion[]): CMethod | null {
+    // Check if destructor is excluded
+    const isDestructorExcluded = exclusions.some(e =>
+        e.kind === 'method' &&
+        e.typeName === type.name &&
+        e.methodName === `~${type.name}`
+    );
+    
+    if (isDestructorExcluded) {
+        console.log(`  Excluding destructor: ${type.name}::~${type.name}`);
+        return null;
+    }
+
     const cTypeName = `spine_${toSnakeCase(type.name)}`;
     const cppTypeName = type.name;
 
@@ -893,7 +906,7 @@ export async function generateTypes(types: Type[], exclusions: Exclusion[], allE
 
         // Generate IR
         const constructors = generateConstructors(type, knownTypeNames, exclusions, allTypesMap);
-        const destructor = generateDestructor(type);
+        const destructor = generateDestructor(type, exclusions);
         const methods = generateMethods(type, knownTypeNames, exclusions);
         const fieldAccessors = generateFieldAccessors(type, knownTypeNames, exclusions);
 

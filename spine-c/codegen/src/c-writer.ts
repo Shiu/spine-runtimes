@@ -52,8 +52,10 @@ export class CWriter {
             lines.push('');
         }
 
-        lines.push(this.writeMethodDeclaration(type.destructor));
-        lines.push('');
+        if (type.destructor) {
+            lines.push(this.writeMethodDeclaration(type.destructor));
+            lines.push('');
+        }
 
         for (const method of type.methods) {
             lines.push(this.writeMethodDeclaration(method));
@@ -87,8 +89,10 @@ export class CWriter {
             lines.push('');
         }
 
-        lines.push(this.writeMethodImplementation(type.destructor));
-        lines.push('');
+        if (type.destructor) {
+            lines.push(this.writeMethodImplementation(type.destructor));
+            lines.push('');
+        }
 
         for (const method of type.methods) {
             lines.push(this.writeMethodImplementation(method));
@@ -247,7 +251,9 @@ export class CWriter {
             // Add all method declarations
             for (const arrayType of cArrayTypes) {
                 arrayHeaderLines.push(arrayType.constructors.map(c => this.writeMethodDeclaration(c)).join('\n\n'));
-                arrayHeaderLines.push(this.writeMethodDeclaration(arrayType.destructor));
+                if (arrayType.destructor) {
+                    arrayHeaderLines.push(this.writeMethodDeclaration(arrayType.destructor));
+                }
                 arrayHeaderLines.push(arrayType.methods.map(c => this.writeMethodDeclaration(c)).join('\n\n'));
                 arrayHeaderLines.push('');
             }
@@ -275,7 +281,9 @@ export class CWriter {
             // Add all method implementations
             for (const arrayType of cArrayTypes) {
                 arraySourceLines.push(arrayType.constructors.map(c => this.writeMethodImplementation(c)).join('\n\n'));
-                arraySourceLines.push(this.writeMethodImplementation(arrayType.destructor));
+                if (arrayType.destructor) {
+                    arraySourceLines.push(this.writeMethodImplementation(arrayType.destructor));
+                }
                 arraySourceLines.push(arrayType.methods.map(c => this.writeMethodImplementation(c)).join('\n\n'));
                 arraySourceLines.push('');
             }

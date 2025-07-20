@@ -18,7 +18,7 @@ export interface CClassOrStruct {
     name: string;          // C type name (e.g., "spine_bone")
     cppType: ClassOrStruct;  // Original C++ type info
     constructors: CMethod[];  // All constructors (including default)
-    destructor: CMethod;      // Always present (calls delete)
+    destructor: CMethod | null;      // Present unless excluded (calls delete)
     methods: CMethod[];       // All methods
 }
 
