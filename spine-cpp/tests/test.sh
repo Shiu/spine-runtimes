@@ -3,9 +3,9 @@
 #
 # Tests all spine-cpp build variants with spineboy example data:
 # - headless-test (regular dynamic)
-# - headless-test-nostdcpp (nostdcpp dynamic)
+# - headless-test-no-cpprt (no-cpprt dynamic)
 # - headless-test-static (regular static, Linux only)
-# - headless-test-nostdcpp-static (nostdcpp static, Linux only)
+# - headless-test-no-cpprt-static (no-cpprt static, Linux only)
 
 set -e
 

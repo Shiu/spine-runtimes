@@ -18,6 +18,10 @@ spine-cpp works with data exported from spine 4.3.xx.
 
 spine-cpp supports all spine features.
 
+## Usage
+
+### [Please see the spine-cpp guide for full documentation](http://esotericsoftware.com/spine-cpp)
+
 ## Setup
 
 ### Manual Copy
@@ -41,10 +45,6 @@ FetchContent_MakeAvailable(spine-runtimes)
 add_subdirectory(${spine-runtimes_SOURCE_DIR}/spine-cpp ${spine-runtimes_BINARY_DIR}/spine-cpp)
 target_link_libraries(your_target PRIVATE spine-cpp)
 ```
-
-## Usage
-
-### [Please see the spine-cpp guide for full documentation](http://esotericsoftware.com/spine-cpp)
 
 ## Runtimes extending spine-cpp
 - [spine-glfw](../spine-glfw)
