@@ -37,7 +37,7 @@ log_detail "Platform: $(uname)"
 
 log_action "Building all variants"
 if BUILD_OUTPUT=$(./build.sh clean release 2>&1); then
-    log_ok "Build completed"
+    log_ok
 else
     log_fail "Build failed"
     log_detail "$BUILD_OUTPUT"
@@ -58,7 +58,7 @@ for exe in build/headless-test*; do
             actual_output=$(echo "$OUTPUT" | head -10)
 
             if [ "$actual_output" = "$EXPECTED_OUTPUT" ]; then
-                log_ok "$exe_name"
+                log_ok
                 pass_count=$((pass_count + 1))
             else
                 log_fail "$exe_name - output mismatch"

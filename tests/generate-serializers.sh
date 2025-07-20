@@ -19,9 +19,8 @@ fi
 if [ ! -d "node_modules" ]; then
     log_action "Installing dependencies"
     if npm install > /tmp/npm-install.log 2>&1; then
-        log_ok "Dependencies installed"
+        log_ok
     else
-        log_fail "npm install failed"
         log_detail "$(cat /tmp/npm-install.log)"
         exit 1
     fi
@@ -57,7 +56,7 @@ fi
 
 log_action "Generating C++ SkeletonSerializer"
 if output=$(npx -y tsx src/generate-cpp-serializer.ts 2>&1); then
-    log_ok "C++ serializer generated successfully"
+    log_ok
 else
     log_fail "Failed to generate C++ serializer"
     log_detail "$output"

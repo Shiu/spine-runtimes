@@ -97,8 +97,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-log_title "Code Formatting"
-
 # Call individual formatter scripts (they handle their own logging)
 if [ "$FORMAT_CPP" = true ]; then
     "$dir/format-cpp.sh"
