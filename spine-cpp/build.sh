@@ -3,11 +3,38 @@ set -e
 
 cd "$(dirname "$0")"
 
-# Clean only if explicitly requested
-if [ "$1" = "clean" ]; then
+# Parse arguments
+BUILD_TYPE="debug"
+NOFILEIO=""
+CLEAN=""
+
+for arg in "$@"; do
+    case $arg in
+        clean)
+            CLEAN="true"
+            ;;
+        release)
+            BUILD_TYPE="release"
+            ;;
+        debug)
+            BUILD_TYPE="debug"
+            ;;
+        nofileio)
+            NOFILEIO="-DSPINE_NO_FILE_IO=ON"
+            ;;
+        *)
+            echo "Unknown argument: $arg"
+            echo "Usage: $0 [clean] [release|debug] [nofileio]"
+            exit 1
+            ;;
+    esac
+done
+
+# Clean if requested
+if [ "$CLEAN" = "true" ]; then
     rm -rf build
 fi
 
-# Always build
-cmake --preset=debug .
-cmake --build --preset=debug
+# Configure and build
+cmake --preset=$BUILD_TYPE $NOFILEIO .
+cmake --build --preset=$BUILD_TYPE
