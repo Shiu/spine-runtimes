@@ -1,5 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 set -e
+
+cd "$(dirname "$0")"
+
+# Source logging utilities
+source ../formatters/logging/logging.sh
 
 if [ -z "$GITHUB_REF" ]; then
     BRANCH=$(git symbolic-ref --short -q HEAD)
@@ -10,23 +15,39 @@ fi
 # Get the latest commit message
 COMMIT_MSG=$(git log -1 --pretty=%B)
 
+log_title "Spine-Haxe Build"
+log_detail "Branch: $BRANCH"
+
 # Public only if the commit message is in the correct format
 if echo "$COMMIT_MSG" | grep -qE '^\[haxe\] Release [0-9]+\.[0-9]+\.[0-9]+$'; then
     VERSION=$(echo "$COMMIT_MSG" | sed -E 's/^\[haxe\] Release ([0-9]+\.[0-9]+\.[0-9]+)$/\1/')
-    echo "Building spine-haxe $BRANCH artifacts (version $VERSION)"
+    log_detail "Version: $VERSION"
 
     if [ ! -z "$HAXE_UPDATE_URL" ] && [ ! -z "$BRANCH" ]; then
-        echo "Deploying spine-haxe $BRANCH artifacts (version $VERSION)"
+        log_section "Deploy"
+        log_action "Creating release package"
         zip -r "spine-haxe-$VERSION.zip" \
             haxelib.json \
             LICENSE \
             README.md \
-            spine-haxe
-        curl -f -F "file=@spine-haxe-$VERSION.zip" "$HAXE_UPDATE_URL$BRANCH"
+            spine-haxe > /dev/null 2>&1
+        log_ok "Package created"
+        
+        log_action "Uploading to $HAXE_UPDATE_URL$BRANCH"
+        if curl -f -F "file=@spine-haxe-$VERSION.zip" "$HAXE_UPDATE_URL$BRANCH" > /dev/null 2>&1; then
+            log_ok "Package deployed"
+        else
+            log_fail "Upload failed"
+            exit 1
+        fi
+        
+        log_summary "✓ Build and deployment successful"
     else
-        echo "Not deploying artifacts. HAXE_UPDATE_URL and/or BRANCH not set."
+        log_skip "Deployment skipped (HAXE_UPDATE_URL and/or BRANCH not set)"
+        log_summary "✓ Build successful"
     fi
 else
-    echo "The commit is not a release - do not publish."
-	echo "To release the commit has to be in the for: \"[haxe] Release x.y.z\""
+    log_warn "Commit is not a release - skipping publish"
+    log_detail "To release, commit message must be: \"[haxe] Release x.y.z\""
+    log_summary "Build skipped"
 fi

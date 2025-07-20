@@ -76,7 +76,7 @@ log_summary "✗ Tests failed (3/5)"
 
 ```bash
 #!/bin/bash
-source ../formatters/bash-colors.sh
+source ../formatters/logging/logging.sh
 
 log_title "Spine-C++ Test"
 log_detail "Platform: $(uname)"
@@ -145,7 +145,7 @@ fi
 
 1. Source the utilities in your script:
 ```bash
-source ../formatters/logging/bash-colors.sh
+source ../formatters/logging/logging.sh
 ```
 
 2. Follow the hierarchy patterns shown above

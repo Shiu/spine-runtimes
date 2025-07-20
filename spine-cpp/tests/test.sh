@@ -13,7 +13,7 @@ set -e
 cd "$(dirname "$0")/.."
 
 # Source logging utilities
-source ../formatters/logging/bash-colors.sh
+source ../formatters/logging/logging.sh
 
 # Test configuration - spineboy example files and animation
 SPINEBOY_SKEL="../examples/spineboy/export/spineboy-pro.skel"
