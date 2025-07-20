@@ -7,19 +7,19 @@ source ../formatters/logging/logging.sh
 
 log_title "Spine Unreal Engine Setup"
 
-log_section "Updating Spine C++ Sources"
 log_action "Removing existing spine-cpp directory"
-if rm -rf Plugins/SpinePlugin/Source/SpinePlugin/Public/spine-cpp 2>/dev/null; then
-    log_ok "Existing spine-cpp directory removed"
+if RM_OUTPUT=$(rm -rf Plugins/SpinePlugin/Source/SpinePlugin/Public/spine-cpp 2>&1); then
+    log_ok
 else
-    log_warn "No existing spine-cpp directory found"
+    log_warn
 fi
 
 log_action "Copying updated spine-cpp sources"
-if cp -r ../spine-cpp/spine-cpp Plugins/SpinePlugin/Source/SpinePlugin/Public/spine-cpp 2>/dev/null; then
-    log_ok "spine-cpp sources copied successfully"
-    log_summary "Unreal Engine setup completed successfully"
+if CP_OUTPUT=$(cp -r ../spine-cpp/spine-cpp Plugins/SpinePlugin/Source/SpinePlugin/Public/spine-cpp 2>&1); then
+    log_ok
+    log_summary "✓ Unreal Engine setup completed successfully"
 else
-    log_fail "Failed to copy spine-cpp sources"
+    log_fail
+    log_error_output "$CP_OUTPUT"
     exit 1
 fi

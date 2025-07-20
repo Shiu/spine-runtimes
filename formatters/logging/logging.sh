@@ -68,7 +68,7 @@ log_fail() {
 }
 
 log_warn() {
-    echo -e "${YELLOW}!${NC}"
+    echo -e "  ${YELLOW}!${NC} ${YELLOW}$1${NC}"
 }
 
 log_skip() {
@@ -82,11 +82,10 @@ log_error_output() {
 
 # Final summary
 log_summary() {
-    echo ""
     echo -e "${BOLD}$1${NC}"
 }
 
 # Detailed output (errors, etc.)
 log_detail() {
-    echo -e "${GRAY}$1${NC}"
+    echo -e "  ${GRAY}$1${NC}"
 }

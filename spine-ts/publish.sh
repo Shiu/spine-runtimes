@@ -15,11 +15,8 @@ patch=$(echo "$currentVersion" | cut -d. -f3)
 newPatch=$((patch + 1))
 newVersion="$major.$minor.$newPatch"
 
-log_section "Version Management"
 log_detail "Current version: $currentVersion"
 log_detail "New version: $newVersion"
-
-log_section "Updating Package Versions"
 packages=(
     "package.json"
     "spine-canvas/package.json"
@@ -37,46 +34,44 @@ packages=(
 
 for package in "${packages[@]}"; do
     log_action "Updating $package"
-    if sed -i '' "s/$currentVersion/$newVersion/" "$package" 2>/dev/null; then
-        log_ok "Updated $package"
+    if SED_OUTPUT=$(sed -i '' "s/$currentVersion/$newVersion/" "$package" 2>&1); then
+        log_ok
     else
-        log_fail "Failed to update $package"
+        log_fail
+        log_error_output "$SED_OUTPUT"
         exit 1
     fi
 done
 
-log_section "Preparing for Publish"
 log_action "Removing package-lock.json"
-if rm package-lock.json 2>/dev/null; then
-    log_ok "Removed package-lock.json"
+if RM_OUTPUT=$(rm package-lock.json 2>&1); then
+    log_ok
 else
-    log_warn "package-lock.json not found or already removed"
+    log_warn
 fi
 
 log_action "Cleaning @esotericsoftware modules"
-if rm -rf node_modules/@esotericsoftware 2>/dev/null; then
-    log_ok "Cleaned @esotericsoftware modules"
+if RM_OUTPUT=$(rm -rf node_modules/@esotericsoftware 2>&1); then
+    log_ok
 else
-    log_warn "@esotericsoftware modules not found or already removed"
+    log_warn
 fi
 
-log_section "Installing Dependencies"
 log_action "Installing workspace dependencies"
-if output=$(npm install --workspaces 2>&1); then
-    log_ok "Dependencies installed successfully"
+if NPM_OUTPUT=$(npm install --workspaces 2>&1); then
+    log_ok
 else
-    log_fail "Failed to install dependencies"
-    log_detail "$output"
+    log_fail
+    log_error_output "$NPM_OUTPUT"
     exit 1
 fi
 
-log_section "Publishing to NPM"
 log_action "Publishing all workspaces"
-if output=$(npm publish --access public --workspaces 2>&1); then
-    log_ok "Successfully published all packages to NPM"
-    log_summary "TypeScript packages published successfully with version $newVersion"
+if NPM_OUTPUT=$(npm publish --access public --workspaces 2>&1); then
+    log_ok
+    log_summary "✓ TypeScript packages published successfully with version $newVersion"
 else
-    log_fail "Failed to publish packages"
-    log_detail "$output"
+    log_fail
+    log_error_output "$NPM_OUTPUT"
     exit 1
 fi

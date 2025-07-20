@@ -7,30 +7,30 @@ source ../formatters/logging/logging.sh
 
 log_title "Spine Flutter WASM Compiler"
 
-log_section "Preparing Build Environment"
 log_action "Creating assets directory"
-if mkdir -p lib/assets/; then
-    log_ok "Assets directory created"
+if MKDIR_OUTPUT=$(mkdir -p lib/assets/ 2>&1); then
+    log_ok
 else
-    log_fail "Failed to create assets directory"
+    log_fail
+    log_error_output "$MKDIR_OUTPUT"
     exit 1
 fi
 
 log_action "Creating pre.js module file"
-if echo "const module = {};" > pre.js; then
-    log_ok "pre.js created successfully"
+if ECHO_OUTPUT=$(echo "const module = {};" > pre.js 2>&1); then
+    log_ok
 else
-    log_fail "Failed to create pre.js"
+    log_fail
+    log_error_output "$ECHO_OUTPUT"
     exit 1
 fi
 
-log_section "Compiling WASM"
 log_detail "Using -O2 optimization to preserve function names"
 log_detail "The Closure compiler in -O3 would scramble native function names"
 log_action "Compiling spine-cpp to WASM"
 
 # Build the emscripten command
-if output=$(em++ \
+if EMCC_OUTPUT=$(em++ \
     -Isrc/spine-cpp/include \
     -O2 --closure 1 -fno-rtti -fno-exceptions \
     -s STRICT=1 \
@@ -47,27 +47,29 @@ if output=$(em++ \
     -s EXPORT_NAME=libspine_flutter \
     src/spine-cpp-lite/spine-cpp-lite.cpp $(find src/spine-cpp/src -type f) \
     -o lib/assets/libspine_flutter.js 2>&1); then
-    log_ok "WASM compilation completed successfully"
+    log_ok
 else
-    log_fail "WASM compilation failed"
-    log_detail "$output"
+    log_fail
+    log_error_output "$EMCC_OUTPUT"
     rm -f pre.js
     exit 1
 fi
 
-log_section "Build Results"
 log_action "Listing generated assets"
-if ls -lah lib/assets; then
-    log_ok "Assets generated successfully"
+if LS_OUTPUT=$(ls -lah lib/assets 2>&1); then
+    log_ok
+    log_detail "$LS_OUTPUT"
 else
-    log_warn "Could not list assets directory"
+    log_warn
+    log_detail "$LS_OUTPUT"
 fi
 
 log_action "Cleaning up temporary files"
-if rm pre.js; then
-    log_ok "Cleaned up pre.js"
+if RM_OUTPUT=$(rm pre.js 2>&1); then
+    log_ok
 else
-    log_warn "Could not remove pre.js"
+    log_warn
+    log_detail "$RM_OUTPUT"
 fi
 
-log_summary "WASM compilation completed successfully"
+log_summary "✓ WASM compilation completed successfully"

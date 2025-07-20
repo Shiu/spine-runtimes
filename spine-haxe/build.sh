@@ -24,7 +24,6 @@ if echo "$COMMIT_MSG" | grep -qE '^\[haxe\] Release [0-9]+\.[0-9]+\.[0-9]+$'; th
     log_detail "Version: $VERSION"
 
     if [ ! -z "$HAXE_UPDATE_URL" ] && [ ! -z "$BRANCH" ]; then
-        log_section "Deploy"
         log_action "Creating release package"
         if ZIP_OUTPUT=$(zip -r "spine-haxe-$VERSION.zip" \
             haxelib.json \
@@ -37,7 +36,7 @@ if echo "$COMMIT_MSG" | grep -qE '^\[haxe\] Release [0-9]+\.[0-9]+\.[0-9]+$'; th
             log_error_output "$ZIP_OUTPUT"
             exit 1
         fi
-        
+
         log_action "Uploading to $HAXE_UPDATE_URL$BRANCH"
         if CURL_OUTPUT=$(curl -f -F "file=@spine-haxe-$VERSION.zip" "$HAXE_UPDATE_URL$BRANCH" 2>&1); then
             log_ok
@@ -46,7 +45,7 @@ if echo "$COMMIT_MSG" | grep -qE '^\[haxe\] Release [0-9]+\.[0-9]+\.[0-9]+$'; th
             log_error_output "$CURL_OUTPUT"
             exit 1
         fi
-        
+
         log_summary "✓ Build and deployment successful"
     else
         log_skip "Deployment skipped (HAXE_UPDATE_URL and/or BRANCH not set)"
