@@ -76,9 +76,25 @@ fn main() {
 
     cpp_build.compile("spine");
 
+    // Generate bindings with bindgen
+    let bindings = bindgen::Builder::default()
+        .header("../../include/spine-c.h")
+        .clang_arg("-I../../include")
+        .clang_arg("-I../../../spine-cpp/include")
+        .clang_arg("-I../../src")
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
+        .generate()
+        .expect("Unable to generate bindings");
+
+    let out_path = std::path::PathBuf::from(env::var("OUT_DIR").unwrap());
+    bindings
+        .write_to_file(out_path.join("bindings.rs"))
+        .expect("Couldn't write bindings!");
+
     // Link libraries - no C++ stdlib since we're using no-cpprt variant
     // The no-cpprt.cpp provides minimal runtime stubs
 
     println!("cargo:rerun-if-changed=../../spine-cpp/src");
     println!("cargo:rerun-if-changed=../../src");
+    println!("cargo:rerun-if-changed=../../include/spine-c.h");
 }
