@@ -55,3 +55,24 @@ Spine-C++ Build
 - Use inline results: `log_action` + `log_ok/fail`
 - Let sub-scripts handle their own logging, e.g. do not log "Building Spine-C++" when calling `spine-cpp/build.sh`
 - Do not capture output of sub-scripts like you do for "normal" commands. That would swallow their logging.
+
+## Automatic Indentation
+
+The logging system automatically detects when scripts call other scripts and indents the child script output to show the hierarchy:
+
+- **Main script**: No extra indentation
+- **Child scripts**: Automatically indented based on nesting level
+- **Child script actions**: Further indented to show they're sub-operations
+
+Example:
+```
+Spine Runtimes Code Formatter
+  C/C++ Formatting
+    Checking for formatters/.clang-format... ✓
+    Formatting 908 C/C++ files... ✓
+  Java Formatting  
+    Formatting 122 Java files... ✓
+✓ All formatting completed
+```
+
+This happens automatically - no changes needed in your scripts. Each script detects its nesting level when `logging.sh` is sourced.

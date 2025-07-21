@@ -5,6 +5,8 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 # Source logging utilities
 source "$dir/logging/logging.sh"
 
+log_title "Spine Runtimes Code Formatter"
+
 # Default: format all languages
 FORMAT_JAVA=true
 FORMAT_TS=true
