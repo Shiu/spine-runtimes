@@ -35,6 +35,10 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
         restore-keys: ${{ runner.os }}-gradle
 
+    - name: Build spine-libgdx dependency
+      working-directory: spine-libgdx
+      run: ./gradlew build
+
     - name: Run C++ vs Java compatibility test
       working-directory: tests
       run: ./test.sh cpp -s spineboy -f
