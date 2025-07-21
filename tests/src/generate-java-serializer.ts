@@ -193,7 +193,7 @@ function generateJavaFromIR (ir: SerializerIR): string {
 			javaOutput.push('            json.writeValue(visitedObjects.get(obj));');
 			javaOutput.push('            return;');
 			javaOutput.push('        }');
-			
+
 			// Generate reference string for this object (only when first encountered)
 			// Only use name if there's a proper getName() method returning String
 			const nameGetter = method.properties.find(p =>

@@ -137,8 +137,6 @@ public class HeadlessTest implements ApplicationListener {
 			// Create skeleton instance
 			Skeleton skeleton = new Skeleton(skeletonData);
 
-			skeleton.setupPose();
-
 			// Set animation if provided
 			AnimationState state = null;
 			if (animationName != null) {

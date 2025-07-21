@@ -80,14 +80,16 @@ int main() {
 	skeleton.setPosition(width / 2, height - 100);
 	skeleton.setScaleX(0.3);
 	skeleton.setScaleY(0.3);
+	skeleton.setupPose();
 
 	// Create an AnimationState to drive animations on the skeleton. Set the "portal" animation
 	// on track with index 0.
 	AnimationStateData animationStateData(skeletonData);
 	animationStateData.setDefaultMix(0.2f);
 	AnimationState animationState(&animationStateData);
-	animationState.setAnimation(0, "portal", true);
-	animationState.addAnimation(0, "run", true, 0);
+	// animationState.setAnimation(0, "portal", true);
+	// animationState.addAnimation(0, "run", true, 0);
+	animationState.setAnimation(0, "idle", true);
 
 	// Create the renderer and set the viewport size to match the window size. This sets up a
 	// pixel perfect orthogonal projection for 2D rendering.

@@ -97,7 +97,7 @@ int main() {
 	// spine_skeleton_data_result result = spine_skeleton_data_load_binary(atlas, skeleton_bytes, skeleton_length);
 
 	uint8_t *skeleton_bytes = read_file("data/spineboy-pro.json", &skeleton_length);
-	spine_skeleton_data_result result2 = spine_skeleton_data_load_json(atlas, (const char *) skeleton_bytes);
+	spine_skeleton_data_result result2 = spine_skeleton_data_load_json(atlas, (const char *) skeleton_bytes, "data/");
 	spine_skeleton_data skeleton_data = spine_skeleton_data_result_get_data(result2);
 
 	// Create a skeleton from the data, set the skeleton's position to the bottom center of

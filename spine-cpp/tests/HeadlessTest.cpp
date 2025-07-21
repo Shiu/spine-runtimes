@@ -106,8 +106,6 @@ int main(int argc, char *argv[]) {
 	// Create skeleton instance
 	Skeleton skeleton(*skeletonData);
 
-	skeleton.setupPose();
-
 	// Set animation if provided
 	AnimationState *state = nullptr;
 	AnimationStateData *stateData = nullptr;
