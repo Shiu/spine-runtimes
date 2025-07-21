@@ -68,7 +68,7 @@ void RegionAttachment::updateRegion() {
 	bool rotated = false;
 	AtlasRegion *atlasRegion = NULL;
 	if (_region != NULL) {
-		atlasRegion = _region->rtti.isExactly(AtlasRegion::rtti) ? static_cast<AtlasRegion *>(_region) : NULL;
+		atlasRegion = _region->getRTTI().isExactly(AtlasRegion::rtti) ? static_cast<AtlasRegion *>(_region) : NULL;
 	}
 	if (atlasRegion) {
 		localX += atlasRegion->_offsetX / atlasRegion->_originalWidth * width;

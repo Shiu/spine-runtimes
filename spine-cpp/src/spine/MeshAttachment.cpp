@@ -47,7 +47,7 @@ void MeshAttachment::updateRegion() {
 	if (_uvs.size() != _regionUVs.size()) _uvs.setSize(_regionUVs.size(), 0);
 	int n = (int) _regionUVs.size();
 	float u, v, width, height;
-	if (_region != nullptr && _region->rtti.instanceOf(AtlasRegion::rtti)) {
+	if (_region != nullptr && _region->getRTTI().instanceOf(AtlasRegion::rtti)) {
 		AtlasRegion *atlasRegion = static_cast<AtlasRegion *>(_region);
 		u = _region->_u;
 		v = _region->_v;
@@ -57,10 +57,12 @@ void MeshAttachment::updateRegion() {
 
 		switch (atlasRegion->_degrees) {
 			case 90: {
-				textureWidth = atlasRegion->_packedHeight / (_region->_u2 - _region->_u);
-				textureHeight = atlasRegion->_packedWidth / (_region->_v2 - _region->_v);
-				u -= (atlasRegion->_originalHeight - atlasRegion->_offsetY - atlasRegion->_packedHeight) / textureWidth;
-				v -= (atlasRegion->_originalWidth - atlasRegion->_offsetX - atlasRegion->_packedWidth) / textureHeight;
+				// Note: packed dimensions are swapped in Atlas.cpp for 90-degree regions
+				// So we need to un-swap them here to get the original atlas dimensions
+				textureWidth = atlasRegion->_packedWidth / (_region->_u2 - _region->_u);
+				textureHeight = atlasRegion->_packedHeight / (_region->_v2 - _region->_v);
+				u -= (atlasRegion->_originalHeight - atlasRegion->_offsetY - atlasRegion->_packedWidth) / textureWidth;
+				v -= (atlasRegion->_originalWidth - atlasRegion->_offsetX - atlasRegion->_packedHeight) / textureHeight;
 				width = atlasRegion->_originalHeight / textureWidth;
 				height = atlasRegion->_originalWidth / textureHeight;
 				for (int i = 0; i < n; i += 2) {

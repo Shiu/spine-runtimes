@@ -1375,8 +1375,8 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 			event->_floatValue = Json::getFloat(keyMap, "float", eventData->_floatValue);
 			event->_stringValue = Json::getString(keyMap, "string", eventData->_stringValue.buffer());
 			if (!eventData->_audioPath.isEmpty()) {
-				event->_volume = Json::getFloat(keyMap, "volume", 1);
-				event->_balance = Json::getFloat(keyMap, "balance", 0);
+				event->_volume = Json::getFloat(keyMap, "volume", eventData->_volume);
+				event->_balance = Json::getFloat(keyMap, "balance", eventData->_balance);
 			}
 			timeline->setFrame(frame, event);
 		}
