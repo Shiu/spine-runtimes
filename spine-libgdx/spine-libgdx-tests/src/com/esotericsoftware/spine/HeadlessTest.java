@@ -145,7 +145,7 @@ public class HeadlessTest implements ApplicationListener {
 				// Create animation state only when needed
 				AnimationStateData stateData = new AnimationStateData(skeletonData);
 				state = new AnimationState(stateData);
-				
+
 				// Find and set animation
 				Animation animation = skeletonData.findAnimation(animationName);
 				if (animation == null) {

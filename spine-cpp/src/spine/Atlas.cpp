@@ -348,13 +348,13 @@ void Atlas::load(const char *begin, int length, const char *dir, bool createText
 			// Calculate regionWidth/Height from UV coordinates
 			region->_regionWidth = abs((int) ((region->_u2 - region->_u) * page->width));
 			region->_regionHeight = abs((int) ((region->_v2 - region->_v) * page->height));
-			
+
 			if (region->_degrees == 90) {
 				int temp = region->_packedWidth;
 				region->_packedWidth = region->_packedHeight;
 				region->_packedHeight = temp;
 			}
-			
+
 			_regions.add(region);
 		}
 	}
