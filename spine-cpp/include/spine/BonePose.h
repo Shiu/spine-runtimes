@@ -63,6 +63,8 @@ namespace spine {
 		friend class Skeleton;
 		friend class Bone;
 
+		RTTI_DECL
+
 	public:
 		BonePose();
 		virtual ~BonePose();

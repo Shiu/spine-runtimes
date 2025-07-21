@@ -31,7 +31,6 @@
 #define Spine_Posed_h
 
 #include <spine/SpineObject.h>
-#include <type_traits>
 
 namespace spine {
 	class SP_API Posed {
@@ -87,6 +86,7 @@ namespace spine {
 
 	public:
 		PosedGeneric(D &data) : _data(data), _pose(), _constrained(), _applied(&_pose) {
+			setupPose();
 		}
 
 		virtual ~PosedGeneric() {
