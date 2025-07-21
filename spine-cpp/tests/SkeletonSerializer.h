@@ -10,7 +10,8 @@ namespace spine {
 
 	class SkeletonSerializer {
 	private:
-		HashMap<void *, bool> _visitedObjects;
+		HashMap<void *, String> _visitedObjects;
+		int _nextId;
 		JsonWriter _json;
 
 	public:
@@ -21,6 +22,7 @@ namespace spine {
 
 		String serializeSkeletonData(SkeletonData *data) {
 			_visitedObjects.clear();
+			_nextId = 1;
 			_json = JsonWriter();
 			writeSkeletonData(data);
 			return _json.getString();
@@ -28,6 +30,7 @@ namespace spine {
 
 		String serializeSkeleton(Skeleton *skeleton) {
 			_visitedObjects.clear();
+			_nextId = 1;
 			_json = JsonWriter();
 			writeSkeleton(skeleton);
 			return _json.getString();
@@ -35,6 +38,7 @@ namespace spine {
 
 		String serializeAnimationState(AnimationState *state) {
 			_visitedObjects.clear();
+			_nextId = 1;
 			_json = JsonWriter();
 			writeAnimationState(state);
 			return _json.getString();
@@ -43,12 +47,21 @@ namespace spine {
 	private:
 		void writeAnimation(Animation *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<Animation-").append(name).append(">");
+			} else {
+				refString.append("<Animation-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("Animation");
 
@@ -73,12 +86,15 @@ namespace spine {
 
 		void writeAlphaTimeline(AlphaTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<AlphaTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("AlphaTimeline");
 
@@ -113,12 +129,15 @@ namespace spine {
 
 		void writeAttachmentTimeline(AttachmentTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<AttachmentTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("AttachmentTimeline");
 
@@ -160,12 +179,15 @@ namespace spine {
 
 		void writeDeformTimeline(DeformTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<DeformTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("DeformTimeline");
 
@@ -215,12 +237,15 @@ namespace spine {
 
 		void writeDrawOrderTimeline(DrawOrderTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<DrawOrderTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("DrawOrderTimeline");
 
@@ -264,12 +289,15 @@ namespace spine {
 
 		void writeEventTimeline(EventTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<EventTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("EventTimeline");
 
@@ -308,12 +336,15 @@ namespace spine {
 
 		void writeIkConstraintTimeline(IkConstraintTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<IkConstraintTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("IkConstraintTimeline");
 
@@ -348,12 +379,15 @@ namespace spine {
 
 		void writeInheritTimeline(InheritTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<InheritTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("InheritTimeline");
 
@@ -388,12 +422,15 @@ namespace spine {
 
 		void writePathConstraintMixTimeline(PathConstraintMixTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PathConstraintMixTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PathConstraintMixTimeline");
 
@@ -428,12 +465,15 @@ namespace spine {
 
 		void writePathConstraintPositionTimeline(PathConstraintPositionTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PathConstraintPositionTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PathConstraintPositionTimeline");
 
@@ -468,12 +508,15 @@ namespace spine {
 
 		void writePathConstraintSpacingTimeline(PathConstraintSpacingTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PathConstraintSpacingTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PathConstraintSpacingTimeline");
 
@@ -508,12 +551,15 @@ namespace spine {
 
 		void writePhysicsConstraintDampingTimeline(PhysicsConstraintDampingTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PhysicsConstraintDampingTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PhysicsConstraintDampingTimeline");
 
@@ -548,12 +594,15 @@ namespace spine {
 
 		void writePhysicsConstraintGravityTimeline(PhysicsConstraintGravityTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PhysicsConstraintGravityTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PhysicsConstraintGravityTimeline");
 
@@ -588,12 +637,15 @@ namespace spine {
 
 		void writePhysicsConstraintInertiaTimeline(PhysicsConstraintInertiaTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PhysicsConstraintInertiaTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PhysicsConstraintInertiaTimeline");
 
@@ -628,12 +680,15 @@ namespace spine {
 
 		void writePhysicsConstraintMassTimeline(PhysicsConstraintMassTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PhysicsConstraintMassTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PhysicsConstraintMassTimeline");
 
@@ -668,12 +723,15 @@ namespace spine {
 
 		void writePhysicsConstraintMixTimeline(PhysicsConstraintMixTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PhysicsConstraintMixTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PhysicsConstraintMixTimeline");
 
@@ -708,12 +766,15 @@ namespace spine {
 
 		void writePhysicsConstraintResetTimeline(PhysicsConstraintResetTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PhysicsConstraintResetTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PhysicsConstraintResetTimeline");
 
@@ -748,12 +809,15 @@ namespace spine {
 
 		void writePhysicsConstraintStrengthTimeline(PhysicsConstraintStrengthTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PhysicsConstraintStrengthTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PhysicsConstraintStrengthTimeline");
 
@@ -788,12 +852,15 @@ namespace spine {
 
 		void writePhysicsConstraintWindTimeline(PhysicsConstraintWindTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PhysicsConstraintWindTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PhysicsConstraintWindTimeline");
 
@@ -828,12 +895,15 @@ namespace spine {
 
 		void writeRGB2Timeline(RGB2Timeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<RGB2Timeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("RGB2Timeline");
 
@@ -868,12 +938,15 @@ namespace spine {
 
 		void writeRGBA2Timeline(RGBA2Timeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<RGBA2Timeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("RGBA2Timeline");
 
@@ -908,12 +981,15 @@ namespace spine {
 
 		void writeRGBATimeline(RGBATimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<RGBATimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("RGBATimeline");
 
@@ -948,12 +1024,15 @@ namespace spine {
 
 		void writeRGBTimeline(RGBTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<RGBTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("RGBTimeline");
 
@@ -988,12 +1067,15 @@ namespace spine {
 
 		void writeRotateTimeline(RotateTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<RotateTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("RotateTimeline");
 
@@ -1028,12 +1110,15 @@ namespace spine {
 
 		void writeScaleTimeline(ScaleTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ScaleTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ScaleTimeline");
 
@@ -1068,12 +1153,15 @@ namespace spine {
 
 		void writeScaleXTimeline(ScaleXTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ScaleXTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ScaleXTimeline");
 
@@ -1108,12 +1196,15 @@ namespace spine {
 
 		void writeScaleYTimeline(ScaleYTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ScaleYTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ScaleYTimeline");
 
@@ -1148,12 +1239,15 @@ namespace spine {
 
 		void writeSequenceTimeline(SequenceTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<SequenceTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("SequenceTimeline");
 
@@ -1191,12 +1285,15 @@ namespace spine {
 
 		void writeShearTimeline(ShearTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ShearTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ShearTimeline");
 
@@ -1231,12 +1328,15 @@ namespace spine {
 
 		void writeShearXTimeline(ShearXTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ShearXTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ShearXTimeline");
 
@@ -1271,12 +1371,15 @@ namespace spine {
 
 		void writeShearYTimeline(ShearYTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ShearYTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ShearYTimeline");
 
@@ -1311,12 +1414,15 @@ namespace spine {
 
 		void writeSliderMixTimeline(SliderMixTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<SliderMixTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("SliderMixTimeline");
 
@@ -1351,12 +1457,15 @@ namespace spine {
 
 		void writeSliderTimeline(SliderTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<SliderTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("SliderTimeline");
 
@@ -1470,12 +1579,15 @@ namespace spine {
 
 		void writeTransformConstraintTimeline(TransformConstraintTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<TransformConstraintTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("TransformConstraintTimeline");
 
@@ -1510,12 +1622,15 @@ namespace spine {
 
 		void writeTranslateTimeline(TranslateTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<TranslateTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("TranslateTimeline");
 
@@ -1550,12 +1665,15 @@ namespace spine {
 
 		void writeTranslateXTimeline(TranslateXTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<TranslateXTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("TranslateXTimeline");
 
@@ -1590,12 +1708,15 @@ namespace spine {
 
 		void writeTranslateYTimeline(TranslateYTimeline *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<TranslateYTimeline-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("TranslateYTimeline");
 
@@ -1630,12 +1751,15 @@ namespace spine {
 
 		void writeAnimationState(AnimationState *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<AnimationState-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("AnimationState");
 
@@ -1657,12 +1781,15 @@ namespace spine {
 
 		void writeTrackEntry(TrackEntry *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<TrackEntry-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("TrackEntry");
 
@@ -1781,12 +1908,15 @@ namespace spine {
 
 		void writeAnimationStateData(AnimationStateData *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<AnimationStateData-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("AnimationStateData");
 
@@ -1820,12 +1950,15 @@ namespace spine {
 
 		void writeBone(Bone *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<Bone-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("Bone");
 
@@ -1857,12 +1990,21 @@ namespace spine {
 
 		void writeBoneData(BoneData *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<BoneData-").append(name).append(">");
+			} else {
+				refString.append("<BoneData-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("BoneData");
 
@@ -1902,12 +2044,15 @@ namespace spine {
 
 		void writeBoneLocal(BoneLocal *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<BoneLocal-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("BoneLocal");
 
@@ -1955,12 +2100,15 @@ namespace spine {
 
 		void writeBonePose(BonePose *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<BonePose-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("BonePose");
 
@@ -2038,12 +2186,21 @@ namespace spine {
 
 		void writeBoundingBoxAttachment(BoundingBoxAttachment *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<BoundingBoxAttachment-").append(name).append(">");
+			} else {
+				refString.append("<BoundingBoxAttachment-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("BoundingBoxAttachment");
 
@@ -2085,12 +2242,21 @@ namespace spine {
 
 		void writeClippingAttachment(ClippingAttachment *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<ClippingAttachment-").append(name).append(">");
+			} else {
+				refString.append("<ClippingAttachment-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ClippingAttachment");
 
@@ -2173,12 +2339,15 @@ namespace spine {
 
 		void writeEvent(Event *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<Event-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("Event");
 
@@ -2208,12 +2377,21 @@ namespace spine {
 
 		void writeEventData(EventData *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<EventData-").append(name).append(">");
+			} else {
+				refString.append("<EventData-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("EventData");
 
@@ -2243,12 +2421,15 @@ namespace spine {
 
 		void writeIkConstraint(IkConstraint *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<IkConstraint-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("IkConstraint");
 
@@ -2276,12 +2457,21 @@ namespace spine {
 
 		void writeIkConstraintData(IkConstraintData *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<IkConstraintData-").append(name).append(">");
+			} else {
+				refString.append("<IkConstraintData-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("IkConstraintData");
 
@@ -2312,12 +2502,15 @@ namespace spine {
 
 		void writeIkConstraintPose(IkConstraintPose *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<IkConstraintPose-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("IkConstraintPose");
 
@@ -2341,12 +2534,21 @@ namespace spine {
 
 		void writeMeshAttachment(MeshAttachment *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<MeshAttachment-").append(name).append(">");
+			} else {
+				refString.append("<MeshAttachment-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("MeshAttachment");
 
@@ -2449,12 +2651,21 @@ namespace spine {
 
 		void writePathAttachment(PathAttachment *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<PathAttachment-").append(name).append(">");
+			} else {
+				refString.append("<PathAttachment-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PathAttachment");
 
@@ -2509,12 +2720,15 @@ namespace spine {
 
 		void writePathConstraint(PathConstraint *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PathConstraint-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PathConstraint");
 
@@ -2542,12 +2756,21 @@ namespace spine {
 
 		void writePathConstraintData(PathConstraintData *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<PathConstraintData-").append(name).append(">");
+			} else {
+				refString.append("<PathConstraintData-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PathConstraintData");
 
@@ -2620,12 +2843,15 @@ namespace spine {
 
 		void writePathConstraintPose(PathConstraintPose *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PathConstraintPose-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PathConstraintPose");
 
@@ -2649,12 +2875,15 @@ namespace spine {
 
 		void writePhysicsConstraint(PhysicsConstraint *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PhysicsConstraint-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PhysicsConstraint");
 
@@ -2675,12 +2904,21 @@ namespace spine {
 
 		void writePhysicsConstraintData(PhysicsConstraintData *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<PhysicsConstraintData-").append(name).append(">");
+			} else {
+				refString.append("<PhysicsConstraintData-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PhysicsConstraintData");
 
@@ -2743,12 +2981,15 @@ namespace spine {
 
 		void writePhysicsConstraintPose(PhysicsConstraintPose *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<PhysicsConstraintPose-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PhysicsConstraintPose");
 
@@ -2778,12 +3019,21 @@ namespace spine {
 
 		void writePointAttachment(PointAttachment *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<PointAttachment-").append(name).append(">");
+			} else {
+				refString.append("<PointAttachment-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("PointAttachment");
 
@@ -2807,12 +3057,21 @@ namespace spine {
 
 		void writeRegionAttachment(RegionAttachment *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<RegionAttachment-").append(name).append(">");
+			} else {
+				refString.append("<RegionAttachment-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("RegionAttachment");
 
@@ -2879,12 +3138,15 @@ namespace spine {
 
 		void writeSequence(Sequence *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<Sequence-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("Sequence");
 
@@ -2912,12 +3174,15 @@ namespace spine {
 
 		void writeSkeleton(Skeleton *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<Skeleton-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("Skeleton");
 
@@ -3011,12 +3276,21 @@ namespace spine {
 
 		void writeSkeletonData(SkeletonData *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<SkeletonData-").append(name).append(">");
+			} else {
+				refString.append("<SkeletonData-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("SkeletonData");
 
@@ -3107,12 +3381,22 @@ namespace spine {
 
 		void writeSkin(Skin *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<Skin-").append(name).append(">");
+			} else {
+				refString.append("<Skin-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
+
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("Skin");
 
@@ -3152,6 +3436,15 @@ namespace spine {
 
 		void writeSkinEntry(Skin::AttachmentMap::Entry *obj) {
 			_json.writeObjectStart();
+			String name = obj->_name;
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<SkinEntry-").append(name).append(">");
+			} else {
+				refString.append("<SkinEntry-").append(_nextId++).append(">");
+			}
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("SkinEntry");
 			_json.writeName("slotIndex");
@@ -3165,12 +3458,15 @@ namespace spine {
 
 		void writeSlider(Slider *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<Slider-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("Slider");
 
@@ -3191,12 +3487,21 @@ namespace spine {
 
 		void writeSliderData(SliderData *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<SliderData-").append(name).append(">");
+			} else {
+				refString.append("<SliderData-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("SliderData");
 
@@ -3246,12 +3551,15 @@ namespace spine {
 
 		void writeSliderPose(SliderPose *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<SliderPose-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("SliderPose");
 
@@ -3266,12 +3574,15 @@ namespace spine {
 
 		void writeSlot(Slot *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<Slot-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("Slot");
 
@@ -3292,12 +3603,21 @@ namespace spine {
 
 		void writeSlotData(SlotData *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<SlotData-").append(name).append(">");
+			} else {
+				refString.append("<SlotData-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("SlotData");
 
@@ -3343,12 +3663,15 @@ namespace spine {
 
 		void writeSlotPose(SlotPose *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<SlotPose-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("SlotPose");
 
@@ -3380,12 +3703,15 @@ namespace spine {
 
 		void writeTransformConstraint(TransformConstraint *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<TransformConstraint-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("TransformConstraint");
 
@@ -3413,12 +3739,21 @@ namespace spine {
 
 		void writeTransformConstraintData(TransformConstraintData *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String name = obj->getName();
+			String refString;
+			if (!name.isEmpty()) {
+				refString.append("<TransformConstraintData-").append(name).append(">");
+			} else {
+				refString.append("<TransformConstraintData-").append(_nextId++).append(">");
+			}
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("TransformConstraintData");
 
@@ -3502,12 +3837,15 @@ namespace spine {
 
 		void writeFromRotate(FromRotate *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<FromRotate-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("FromRotate");
 
@@ -3526,12 +3864,15 @@ namespace spine {
 
 		void writeFromScaleX(FromScaleX *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<FromScaleX-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("FromScaleX");
 
@@ -3550,12 +3891,15 @@ namespace spine {
 
 		void writeFromScaleY(FromScaleY *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<FromScaleY-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("FromScaleY");
 
@@ -3574,12 +3918,15 @@ namespace spine {
 
 		void writeFromShearY(FromShearY *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<FromShearY-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("FromShearY");
 
@@ -3598,12 +3945,15 @@ namespace spine {
 
 		void writeFromX(FromX *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<FromX-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("FromX");
 
@@ -3622,12 +3972,15 @@ namespace spine {
 
 		void writeFromY(FromY *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<FromY-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("FromY");
 
@@ -3665,12 +4018,15 @@ namespace spine {
 
 		void writeToRotate(ToRotate *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ToRotate-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ToRotate");
 
@@ -3688,12 +4044,15 @@ namespace spine {
 
 		void writeToScaleX(ToScaleX *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ToScaleX-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ToScaleX");
 
@@ -3711,12 +4070,15 @@ namespace spine {
 
 		void writeToScaleY(ToScaleY *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ToScaleY-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ToScaleY");
 
@@ -3734,12 +4096,15 @@ namespace spine {
 
 		void writeToShearY(ToShearY *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ToShearY-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ToShearY");
 
@@ -3757,12 +4122,15 @@ namespace spine {
 
 		void writeToX(ToX *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ToX-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ToX");
 
@@ -3780,12 +4148,15 @@ namespace spine {
 
 		void writeToY(ToY *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<ToY-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("ToY");
 
@@ -3803,12 +4174,15 @@ namespace spine {
 
 		void writeTransformConstraintPose(TransformConstraintPose *obj) {
 			if (_visitedObjects.containsKey(obj)) {
-				_json.writeValue("<circular>");
+				_json.writeValue(_visitedObjects[obj]);
 				return;
 			}
-			_visitedObjects.put(obj, true);
+			String refString = String("<TransformConstraintPose-").append(_nextId++).append(">");
+			_visitedObjects.put(obj, refString);
 
 			_json.writeObjectStart();
+			_json.writeName("refString");
+			_json.writeValue(refString);
 			_json.writeName("type");
 			_json.writeValue("TransformConstraintPose");
 

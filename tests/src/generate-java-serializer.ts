@@ -40,7 +40,7 @@ function generatePropertyCode (property: Property, indent: string, method?: Writ
 			}
 			break;
 
-		case "array":
+		case "array": {
 			// Special handling for Skin attachments - sort by slot index
 			const isSkinAttachments = method?.paramType === 'Skin' && property.name === 'attachments' && property.elementType === 'SkinEntry';
 			const sortedAccessor = isSkinAttachments ? 'sortedAttachments' : accessor;
@@ -76,8 +76,8 @@ function generatePropertyCode (property: Property, indent: string, method?: Writ
 				lines.push(`${indent}json.writeArrayEnd();`);
 			}
 			break;
-
-		case "nestedArray":
+		}
+		case "nestedArray": {
 			if (property.isNullable) {
 				lines.push(`${indent}if (${accessor} == null) {`);
 				lines.push(`${indent}    json.writeNull();`);
@@ -108,6 +108,7 @@ function generatePropertyCode (property: Property, indent: string, method?: Writ
 				lines.push(`${indent}json.writeArrayEnd();`);
 			}
 			break;
+		}
 	}
 
 	return lines;
@@ -134,11 +135,12 @@ function generateJavaFromIR (ir: SerializerIR): string {
 	javaOutput.push('import com.badlogic.gdx.utils.FloatArray;');
 	javaOutput.push('');
 	javaOutput.push('import java.util.Locale;');
-	javaOutput.push('import java.util.Set;');
-	javaOutput.push('import java.util.HashSet;');
+	javaOutput.push('import java.util.Map;');
+	javaOutput.push('import java.util.HashMap;');
 	javaOutput.push('');
 	javaOutput.push('public class SkeletonSerializer {');
-	javaOutput.push('    private final Set<Object> visitedObjects = new HashSet<>();');
+	javaOutput.push('    private final Map<Object, String> visitedObjects = new HashMap<>();');
+	javaOutput.push('    private int nextId = 1;');
 	javaOutput.push('    private JsonWriter json;');
 	javaOutput.push('');
 
@@ -146,6 +148,7 @@ function generateJavaFromIR (ir: SerializerIR): string {
 	for (const method of ir.publicMethods) {
 		javaOutput.push(`    public String ${method.name}(${method.paramType} ${method.paramName}) {`);
 		javaOutput.push('        visitedObjects.clear();');
+		javaOutput.push('        nextId = 1;');
 		javaOutput.push('        json = new JsonWriter();');
 		javaOutput.push(`        ${method.writeMethodCall}(${method.paramName});`);
 		javaOutput.push('        json.close();');
@@ -156,7 +159,7 @@ function generateJavaFromIR (ir: SerializerIR): string {
 
 	// Generate write methods
 	for (const method of ir.writeMethods) {
-		const shortName = method.paramType.split('.').pop()!;
+		const shortName = method.paramType.split('.').pop();
 		const className = method.paramType.includes('.') ? method.paramType : shortName;
 
 		javaOutput.push(`    private void ${method.name}(${className} obj) {`);
@@ -166,7 +169,7 @@ function generateJavaFromIR (ir: SerializerIR): string {
 			if (method.subtypeChecks && method.subtypeChecks.length > 0) {
 				let first = true;
 				for (const subtype of method.subtypeChecks) {
-					const subtypeShortName = subtype.typeName.split('.').pop()!;
+					const subtypeShortName = subtype.typeName.split('.').pop();
 					const subtypeClassName = subtype.typeName.includes('.') ? subtype.typeName : subtypeShortName;
 
 					if (first) {
@@ -186,14 +189,34 @@ function generateJavaFromIR (ir: SerializerIR): string {
 		} else {
 			// Handle concrete types
 			// Add cycle detection
-			javaOutput.push('        if (visitedObjects.contains(obj)) {');
-			javaOutput.push('            json.writeValue("<circular>");');
+			javaOutput.push('        if (visitedObjects.containsKey(obj)) {');
+			javaOutput.push('            json.writeValue(visitedObjects.get(obj));');
 			javaOutput.push('            return;');
 			javaOutput.push('        }');
-			javaOutput.push('        visitedObjects.add(obj);');
+			
+			// Generate reference string for this object (only when first encountered)
+			// Only use name if there's a proper getName() method returning String
+			const nameGetter = method.properties.find(p =>
+				(p.kind === 'object' || p.kind === "primitive") &&
+				p.getter === 'getName()' &&
+				p.valueType === 'String'
+			);
+
+			if (nameGetter) {
+				// Use getName() if available and returns String
+				javaOutput.push(`        String refString = obj.getName() != null ? "<${shortName}-" + obj.getName() + ">" : "<${shortName}-" + (nextId++) + ">";`);
+			} else {
+				// No suitable name getter - use numbered ID
+				javaOutput.push(`        String refString = "<${shortName}-" + (nextId++) + ">";`);
+			}
+			javaOutput.push('        visitedObjects.put(obj, refString);');
 			javaOutput.push('');
 
 			javaOutput.push('        json.writeObjectStart();');
+
+			// Write reference string as first field for navigation
+			javaOutput.push('        json.writeName("refString");');
+			javaOutput.push('        json.writeValue(refString);');
 
 			// Write type field
 			javaOutput.push('        json.writeName("type");');

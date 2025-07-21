@@ -16,15 +16,17 @@ import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.FloatArray;
 
 import java.util.Locale;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 public class SkeletonSerializer {
-	private final Set<Object> visitedObjects = new HashSet<>();
+	private final Map<Object, String> visitedObjects = new HashMap<>();
+	private int nextId = 1;
 	private JsonWriter json;
 
 	public String serializeSkeletonData (SkeletonData data) {
 		visitedObjects.clear();
+		nextId = 1;
 		json = new JsonWriter();
 		writeSkeletonData(data);
 		json.close();
@@ -33,6 +35,7 @@ public class SkeletonSerializer {
 
 	public String serializeSkeleton (Skeleton skeleton) {
 		visitedObjects.clear();
+		nextId = 1;
 		json = new JsonWriter();
 		writeSkeleton(skeleton);
 		json.close();
@@ -41,6 +44,7 @@ public class SkeletonSerializer {
 
 	public String serializeAnimationState (AnimationState state) {
 		visitedObjects.clear();
+		nextId = 1;
 		json = new JsonWriter();
 		writeAnimationState(state);
 		json.close();
@@ -48,13 +52,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeAnimation (Animation obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<Animation-" + obj.getName() + ">" : "<Animation-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("Animation");
 
@@ -78,13 +85,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeAlphaTimeline (Animation.AlphaTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<AlphaTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("AlphaTimeline");
 
@@ -118,13 +128,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeAttachmentTimeline (Animation.AttachmentTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<AttachmentTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("AttachmentTimeline");
 
@@ -165,13 +178,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeDeformTimeline (Animation.DeformTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<DeformTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("DeformTimeline");
 
@@ -219,13 +235,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeDrawOrderTimeline (Animation.DrawOrderTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<DrawOrderTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("DrawOrderTimeline");
 
@@ -267,13 +286,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeEventTimeline (Animation.EventTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<EventTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("EventTimeline");
 
@@ -311,13 +333,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeIkConstraintTimeline (Animation.IkConstraintTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<IkConstraintTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("IkConstraintTimeline");
 
@@ -351,13 +376,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeInheritTimeline (Animation.InheritTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<InheritTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("InheritTimeline");
 
@@ -391,13 +419,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePathConstraintMixTimeline (Animation.PathConstraintMixTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PathConstraintMixTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PathConstraintMixTimeline");
 
@@ -431,13 +462,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePathConstraintPositionTimeline (Animation.PathConstraintPositionTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PathConstraintPositionTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PathConstraintPositionTimeline");
 
@@ -471,13 +505,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePathConstraintSpacingTimeline (Animation.PathConstraintSpacingTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PathConstraintSpacingTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PathConstraintSpacingTimeline");
 
@@ -511,13 +548,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePhysicsConstraintDampingTimeline (Animation.PhysicsConstraintDampingTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PhysicsConstraintDampingTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PhysicsConstraintDampingTimeline");
 
@@ -551,13 +591,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePhysicsConstraintGravityTimeline (Animation.PhysicsConstraintGravityTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PhysicsConstraintGravityTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PhysicsConstraintGravityTimeline");
 
@@ -591,13 +634,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePhysicsConstraintInertiaTimeline (Animation.PhysicsConstraintInertiaTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PhysicsConstraintInertiaTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PhysicsConstraintInertiaTimeline");
 
@@ -631,13 +677,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePhysicsConstraintMassTimeline (Animation.PhysicsConstraintMassTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PhysicsConstraintMassTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PhysicsConstraintMassTimeline");
 
@@ -671,13 +720,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePhysicsConstraintMixTimeline (Animation.PhysicsConstraintMixTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PhysicsConstraintMixTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PhysicsConstraintMixTimeline");
 
@@ -711,13 +763,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePhysicsConstraintResetTimeline (Animation.PhysicsConstraintResetTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PhysicsConstraintResetTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PhysicsConstraintResetTimeline");
 
@@ -751,13 +806,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePhysicsConstraintStrengthTimeline (Animation.PhysicsConstraintStrengthTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PhysicsConstraintStrengthTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PhysicsConstraintStrengthTimeline");
 
@@ -791,13 +849,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePhysicsConstraintWindTimeline (Animation.PhysicsConstraintWindTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PhysicsConstraintWindTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PhysicsConstraintWindTimeline");
 
@@ -831,13 +892,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeRGB2Timeline (Animation.RGB2Timeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<RGB2Timeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("RGB2Timeline");
 
@@ -871,13 +935,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeRGBA2Timeline (Animation.RGBA2Timeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<RGBA2Timeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("RGBA2Timeline");
 
@@ -911,13 +978,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeRGBATimeline (Animation.RGBATimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<RGBATimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("RGBATimeline");
 
@@ -951,13 +1021,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeRGBTimeline (Animation.RGBTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<RGBTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("RGBTimeline");
 
@@ -991,13 +1064,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeRotateTimeline (Animation.RotateTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<RotateTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("RotateTimeline");
 
@@ -1031,13 +1107,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeScaleTimeline (Animation.ScaleTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ScaleTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ScaleTimeline");
 
@@ -1071,13 +1150,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeScaleXTimeline (Animation.ScaleXTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ScaleXTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ScaleXTimeline");
 
@@ -1111,13 +1193,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeScaleYTimeline (Animation.ScaleYTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ScaleYTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ScaleYTimeline");
 
@@ -1151,13 +1236,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSequenceTimeline (Animation.SequenceTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<SequenceTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("SequenceTimeline");
 
@@ -1194,13 +1282,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeShearTimeline (Animation.ShearTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ShearTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ShearTimeline");
 
@@ -1234,13 +1325,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeShearXTimeline (Animation.ShearXTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ShearXTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ShearXTimeline");
 
@@ -1274,13 +1368,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeShearYTimeline (Animation.ShearYTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ShearYTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ShearYTimeline");
 
@@ -1314,13 +1411,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSliderMixTimeline (Animation.SliderMixTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<SliderMixTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("SliderMixTimeline");
 
@@ -1354,13 +1454,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSliderTimeline (Animation.SliderTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<SliderTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("SliderTimeline");
 
@@ -1472,13 +1575,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeTransformConstraintTimeline (Animation.TransformConstraintTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<TransformConstraintTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("TransformConstraintTimeline");
 
@@ -1512,13 +1618,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeTranslateTimeline (Animation.TranslateTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<TranslateTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("TranslateTimeline");
 
@@ -1552,13 +1661,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeTranslateXTimeline (Animation.TranslateXTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<TranslateXTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("TranslateXTimeline");
 
@@ -1592,13 +1704,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeTranslateYTimeline (Animation.TranslateYTimeline obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<TranslateYTimeline-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("TranslateYTimeline");
 
@@ -1632,13 +1747,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeAnimationState (AnimationState obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<AnimationState-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("AnimationState");
 
@@ -1659,13 +1777,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeTrackEntry (AnimationState.TrackEntry obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<TrackEntry-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("TrackEntry");
 
@@ -1770,13 +1891,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeAnimationStateData (AnimationStateData obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<AnimationStateData-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("AnimationStateData");
 
@@ -1808,13 +1932,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeBone (Bone obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<Bone-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("Bone");
 
@@ -1845,13 +1972,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeBoneData (BoneData obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<BoneData-" + obj.getName() + ">" : "<BoneData-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("BoneData");
 
@@ -1890,13 +2020,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeBoneLocal (BoneLocal obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<BoneLocal-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("BoneLocal");
 
@@ -1928,13 +2061,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeBonePose (BonePose obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<BonePose-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("BonePose");
 
@@ -1996,13 +2132,17 @@ public class SkeletonSerializer {
 	}
 
 	private void writeBoundingBoxAttachment (BoundingBoxAttachment obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<BoundingBoxAttachment-" + obj.getName() + ">"
+			: "<BoundingBoxAttachment-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("BoundingBoxAttachment");
 
@@ -2047,13 +2187,17 @@ public class SkeletonSerializer {
 	}
 
 	private void writeClippingAttachment (ClippingAttachment obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<ClippingAttachment-" + obj.getName() + ">"
+			: "<ClippingAttachment-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ClippingAttachment");
 
@@ -2137,13 +2281,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeEvent (Event obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<Event-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("Event");
 
@@ -2172,13 +2319,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeEventData (EventData obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<EventData-" + obj.getName() + ">" : "<EventData-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("EventData");
 
@@ -2207,13 +2357,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeIkConstraint (IkConstraint obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<IkConstraint-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("IkConstraint");
 
@@ -2240,13 +2393,17 @@ public class SkeletonSerializer {
 	}
 
 	private void writeIkConstraintData (IkConstraintData obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<IkConstraintData-" + obj.getName() + ">"
+			: "<IkConstraintData-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("IkConstraintData");
 
@@ -2276,13 +2433,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeIkConstraintPose (IkConstraintPose obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<IkConstraintPose-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("IkConstraintPose");
 
@@ -2305,13 +2465,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeMeshAttachment (MeshAttachment obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<MeshAttachment-" + obj.getName() + ">" : "<MeshAttachment-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("MeshAttachment");
 
@@ -2421,13 +2584,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePathAttachment (PathAttachment obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<PathAttachment-" + obj.getName() + ">" : "<PathAttachment-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PathAttachment");
 
@@ -2485,13 +2651,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePathConstraint (PathConstraint obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PathConstraint-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PathConstraint");
 
@@ -2518,13 +2687,17 @@ public class SkeletonSerializer {
 	}
 
 	private void writePathConstraintData (PathConstraintData obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<PathConstraintData-" + obj.getName() + ">"
+			: "<PathConstraintData-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PathConstraintData");
 
@@ -2563,13 +2736,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePathConstraintPose (PathConstraintPose obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PathConstraintPose-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PathConstraintPose");
 
@@ -2592,13 +2768,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePhysicsConstraint (PhysicsConstraint obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PhysicsConstraint-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PhysicsConstraint");
 
@@ -2618,13 +2797,17 @@ public class SkeletonSerializer {
 	}
 
 	private void writePhysicsConstraintData (PhysicsConstraintData obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<PhysicsConstraintData-" + obj.getName() + ">"
+			: "<PhysicsConstraintData-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PhysicsConstraintData");
 
@@ -2686,13 +2869,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writePhysicsConstraintPose (PhysicsConstraintPose obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<PhysicsConstraintPose-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PhysicsConstraintPose");
 
@@ -2721,13 +2907,17 @@ public class SkeletonSerializer {
 	}
 
 	private void writePointAttachment (PointAttachment obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<PointAttachment-" + obj.getName() + ">"
+			: "<PointAttachment-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("PointAttachment");
 
@@ -2750,13 +2940,17 @@ public class SkeletonSerializer {
 	}
 
 	private void writeRegionAttachment (RegionAttachment obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<RegionAttachment-" + obj.getName() + ">"
+			: "<RegionAttachment-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("RegionAttachment");
 
@@ -2822,13 +3016,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSequence (Sequence obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<Sequence-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("Sequence");
 
@@ -2855,13 +3052,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSkeleton (Skeleton obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<Skeleton-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("Skeleton");
 
@@ -2954,13 +3154,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSkeletonData (SkeletonData obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<SkeletonData-" + obj.getName() + ">" : "<SkeletonData-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("SkeletonData");
 
@@ -3050,13 +3253,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSkin (Skin obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<Skin-" + obj.getName() + ">" : "<Skin-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("Skin");
 
@@ -3093,13 +3299,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSkinEntry (Skin.SkinEntry obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<SkinEntry-" + obj.getName() + ">" : "<SkinEntry-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("SkinEntry");
 
@@ -3116,13 +3325,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSlider (Slider obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<Slider-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("Slider");
 
@@ -3142,13 +3354,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSliderData (SliderData obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<SliderData-" + obj.getName() + ">" : "<SliderData-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("SliderData");
 
@@ -3197,13 +3412,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSliderPose (SliderPose obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<SliderPose-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("SliderPose");
 
@@ -3217,13 +3435,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSlot (Slot obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<Slot-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("Slot");
 
@@ -3243,13 +3464,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSlotData (SlotData obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<SlotData-" + obj.getName() + ">" : "<SlotData-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("SlotData");
 
@@ -3281,13 +3505,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeSlotPose (SlotPose obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<SlotPose-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("SlotPose");
 
@@ -3318,13 +3545,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeTransformConstraint (TransformConstraint obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<TransformConstraint-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("TransformConstraint");
 
@@ -3351,13 +3581,17 @@ public class SkeletonSerializer {
 	}
 
 	private void writeTransformConstraintData (TransformConstraintData obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = obj.getName() != null ? "<TransformConstraintData-" + obj.getName() + ">"
+			: "<TransformConstraintData-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("TransformConstraintData");
 
@@ -3439,13 +3673,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeFromRotate (TransformConstraintData.FromRotate obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<FromRotate-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("FromRotate");
 
@@ -3463,13 +3700,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeFromScaleX (TransformConstraintData.FromScaleX obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<FromScaleX-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("FromScaleX");
 
@@ -3487,13 +3727,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeFromScaleY (TransformConstraintData.FromScaleY obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<FromScaleY-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("FromScaleY");
 
@@ -3511,13 +3754,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeFromShearY (TransformConstraintData.FromShearY obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<FromShearY-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("FromShearY");
 
@@ -3535,13 +3781,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeFromX (TransformConstraintData.FromX obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<FromX-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("FromX");
 
@@ -3559,13 +3808,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeFromY (TransformConstraintData.FromY obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<FromY-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("FromY");
 
@@ -3601,13 +3853,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeToRotate (TransformConstraintData.ToRotate obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ToRotate-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ToRotate");
 
@@ -3624,13 +3879,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeToScaleX (TransformConstraintData.ToScaleX obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ToScaleX-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ToScaleX");
 
@@ -3647,13 +3905,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeToScaleY (TransformConstraintData.ToScaleY obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ToScaleY-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ToScaleY");
 
@@ -3670,13 +3931,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeToShearY (TransformConstraintData.ToShearY obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ToShearY-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ToShearY");
 
@@ -3693,13 +3957,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeToX (TransformConstraintData.ToX obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ToX-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ToX");
 
@@ -3716,13 +3983,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeToY (TransformConstraintData.ToY obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<ToY-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("ToY");
 
@@ -3739,13 +4009,16 @@ public class SkeletonSerializer {
 	}
 
 	private void writeTransformConstraintPose (TransformConstraintPose obj) {
-		if (visitedObjects.contains(obj)) {
-			json.writeValue("<circular>");
+		if (visitedObjects.containsKey(obj)) {
+			json.writeValue(visitedObjects.get(obj));
 			return;
 		}
-		visitedObjects.add(obj);
+		String refString = "<TransformConstraintPose-" + (nextId++) + ">";
+		visitedObjects.put(obj, refString);
 
 		json.writeObjectStart();
+		json.writeName("refString");
+		json.writeValue(refString);
 		json.writeName("type");
 		json.writeValue("TransformConstraintPose");
 

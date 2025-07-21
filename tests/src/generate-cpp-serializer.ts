@@ -78,7 +78,7 @@ function generatePropertyCode (property: Property, indent: string, enumMappings:
 			}
 			break;
 
-		case "enum":
+		case "enum": {
 			const enumName = property.enumName;
 			const enumMap = enumMappings[enumName];
 
@@ -99,8 +99,8 @@ function generatePropertyCode (property: Property, indent: string, enumMappings:
 				lines.push(`${indent}_json.writeValue(String::valueOf((int)${accessor}));`);
 			}
 			break;
-
-		case "array":
+		}
+		case "array": {
 			// In C++, arrays are never null - empty arrays (size() == 0) are equivalent to Java null
 			lines.push(`${indent}_json.writeArrayStart();`);
 			lines.push(`${indent}for (size_t i = 0; i < ${accessor}.size(); i++) {`);
@@ -113,7 +113,7 @@ function generatePropertyCode (property: Property, indent: string, enumMappings:
 			lines.push(`${indent}}`);
 			lines.push(`${indent}_json.writeArrayEnd();`);
 			break;
-
+		}
 		case "nestedArray":
 			// Nested arrays are always considered non-null in both Java and C++
 			lines.push(`${indent}_json.writeArrayStart();`);
@@ -148,7 +148,8 @@ function generateCppFromIR (ir: SerializerIR): string {
 	cppOutput.push('');
 	cppOutput.push('class SkeletonSerializer {');
 	cppOutput.push('private:');
-	cppOutput.push('    HashMap<void*, bool> _visitedObjects;');
+	cppOutput.push('    HashMap<void*, String> _visitedObjects;');
+	cppOutput.push('    int _nextId;');
 	cppOutput.push('    JsonWriter _json;');
 	cppOutput.push('');
 	cppOutput.push('public:');
@@ -161,6 +162,7 @@ function generateCppFromIR (ir: SerializerIR): string {
 		const cppParamType = transformType(method.paramType);
 		cppOutput.push(`    String ${method.name}(${cppParamType}* ${method.paramName}) {`);
 		cppOutput.push('        _visitedObjects.clear();');
+		cppOutput.push('        _nextId = 1;');
 		cppOutput.push('        _json = JsonWriter();');
 		cppOutput.push(`        ${method.writeMethodCall}(${method.paramName});`);
 		cppOutput.push('        return _json.getString();');
@@ -172,19 +174,46 @@ function generateCppFromIR (ir: SerializerIR): string {
 
 	// Generate write methods
 	for (const method of ir.writeMethods) {
-		const shortName = method.paramType.split('.').pop()!;
+		const shortName = method.paramType.split('.').pop();
 		const cppType = transformType(method.paramType);
 
 		// Custom writeSkin and writeSkinEntry implementations
 		if (method.name === 'writeSkin') {
 			cppOutput.push('    void writeSkin(Skin* obj) {');
 			cppOutput.push('        if (_visitedObjects.containsKey(obj)) {');
-			cppOutput.push('            _json.writeValue("<circular>");');
+			cppOutput.push('            _json.writeValue(_visitedObjects[obj]);');
 			cppOutput.push('            return;');
 			cppOutput.push('        }');
-			cppOutput.push('        _visitedObjects.put(obj, true);');
+
+			// Generate reference string for this object (only when first encountered)
+			// Only use name if there's a proper getName() method returning String
+			const nameGetter = method.properties.find(p =>
+				(p.kind === 'object' || p.kind === "primitive") &&
+				p.getter === 'getName()' &&
+				p.valueType === 'String'
+			);
+
+			if (nameGetter) {
+				// Use getName() if available and returns String
+				cppOutput.push('        String name = obj->getName();');
+				cppOutput.push('        String refString;');
+				cppOutput.push('        if (!name.isEmpty()) {');
+				cppOutput.push(`            refString.append("<${shortName}-").append(name).append(">");`);
+				cppOutput.push('        } else {');
+				cppOutput.push(`            refString.append("<${shortName}-").append(_nextId++).append(">");`);
+				cppOutput.push('        }');
+			} else {
+				// No suitable name getter - use numbered ID
+				cppOutput.push(`        String refString = String("<${shortName}-").append(_nextId++).append(">");`);
+			}
+			cppOutput.push('        _visitedObjects.put(obj, refString);');
+			cppOutput.push('');
 			cppOutput.push('');
 			cppOutput.push('        _json.writeObjectStart();');
+
+			cppOutput.push('        _json.writeName("refString");');
+			cppOutput.push('        _json.writeValue(refString);');
+
 			cppOutput.push('        _json.writeName("type");');
 			cppOutput.push('        _json.writeValue("Skin");');
 			cppOutput.push('');
@@ -230,6 +259,18 @@ function generateCppFromIR (ir: SerializerIR): string {
 			// Custom writeSkinEntry implementation
 			cppOutput.push('    void writeSkinEntry(Skin::AttachmentMap::Entry* obj) {');
 			cppOutput.push('        _json.writeObjectStart();');
+
+			// Generate refString using the name field if available
+			cppOutput.push('        String name = obj->_name;');
+			cppOutput.push('        String refString;');
+			cppOutput.push('        if (!name.isEmpty()) {');
+			cppOutput.push(`            refString.append("<${shortName}-").append(name).append(">");`);
+			cppOutput.push('        } else {');
+			cppOutput.push(`            refString.append("<${shortName}-").append(_nextId++).append(">");`);
+			cppOutput.push('        }');
+			cppOutput.push('        _json.writeName("refString");');
+			cppOutput.push('        _json.writeValue(refString);');
+
 			cppOutput.push('        _json.writeName("type");');
 			cppOutput.push('        _json.writeValue("SkinEntry");');
 			cppOutput.push('        _json.writeName("slotIndex");');
@@ -251,7 +292,7 @@ function generateCppFromIR (ir: SerializerIR): string {
 			if (method.subtypeChecks && method.subtypeChecks.length > 0) {
 				let first = true;
 				for (const subtype of method.subtypeChecks) {
-					const subtypeShortName = subtype.typeName.split('.').pop()!;
+					const subtypeShortName = subtype.typeName.split('.').pop();
 
 					if (first) {
 						cppOutput.push(`        if (obj->getRTTI().instanceOf(${subtypeShortName}::rtti)) {`);
@@ -271,13 +312,39 @@ function generateCppFromIR (ir: SerializerIR): string {
 			// Handle concrete types
 			// Add cycle detection
 			cppOutput.push('        if (_visitedObjects.containsKey(obj)) {');
-			cppOutput.push('            _json.writeValue("<circular>");');
+			cppOutput.push('            _json.writeValue(_visitedObjects[obj]);');
 			cppOutput.push('            return;');
 			cppOutput.push('        }');
-			cppOutput.push('        _visitedObjects.put(obj, true);');
+
+			// Generate reference string for this object (only when first encountered)
+			// Only use name if there's a proper getName() method returning String
+			const nameGetter = method.properties.find(p =>
+				(p.kind === 'object' || p.kind === "primitive") &&
+				p.getter === 'getName()' &&
+				p.valueType === 'String'
+			);
+
+			if (nameGetter) {
+				// Use getName() if available and returns String
+				cppOutput.push('        String name = obj->getName();');
+				cppOutput.push('        String refString;');
+				cppOutput.push('        if (!name.isEmpty()) {');
+				cppOutput.push(`            refString.append("<${shortName}-").append(name).append(">");`);
+				cppOutput.push('        } else {');
+				cppOutput.push(`            refString.append("<${shortName}-").append(_nextId++).append(">");`);
+				cppOutput.push('        }');
+			} else {
+				// No suitable name getter - use numbered ID
+				cppOutput.push(`        String refString = String("<${shortName}-").append(_nextId++).append(">");`);
+			}
+			cppOutput.push('        _visitedObjects.put(obj, refString);');
 			cppOutput.push('');
 
 			cppOutput.push('        _json.writeObjectStart();');
+
+			// Write reference string as first field for navigation
+			cppOutput.push('        _json.writeName("refString");');
+			cppOutput.push('        _json.writeValue(refString);');
 
 			// Write type field
 			cppOutput.push('        _json.writeName("type");');

@@ -332,7 +332,7 @@ function executeCpp (args: TestArgs): string {
 		// Build using build.sh
 		log_action('Building C++ tests');
 		try {
-			execSync('./build.sh clean release', {
+			execSync('./build.sh clean debug', {
 				cwd: cppDir,
 				stdio: ['inherit', 'pipe', 'inherit']
 			});
@@ -593,7 +593,8 @@ function main (): void {
 	log_title('Spine Runtime Test');
 
 	// Clean output directory first
-	cleanOutputDirectory();
+	// TODO annoying during development of generators as it also smokes generator outputs
+	// cleanOutputDirectory();
 
 	if (args.files) {
 		// Auto-discovery mode: run tests for both JSON and binary files
