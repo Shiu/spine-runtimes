@@ -212,12 +212,8 @@ public class SkeletonBinary extends SkeletonLoader {
 			boolean nonessential = input.readBoolean();
 			if (nonessential) {
 				skeletonData.fps = input.readFloat();
-
 				skeletonData.imagesPath = input.readString();
-				if (skeletonData.imagesPath.isEmpty()) skeletonData.imagesPath = null;
-
 				skeletonData.audioPath = input.readString();
-				if (skeletonData.audioPath.isEmpty()) skeletonData.audioPath = null;
 			}
 
 			int n;
@@ -1293,7 +1289,7 @@ public class SkeletonBinary extends SkeletonLoader {
 			return index == 0 ? null : strings[index - 1];
 		}
 
-		public String readString () throws IOException {
+		public @Null String readString () throws IOException {
 			int byteCount = readInt(true);
 			switch (byteCount) {
 			case 0:
