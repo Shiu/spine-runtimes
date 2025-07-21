@@ -27,6 +27,7 @@
  * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
+#include "spine/RTTI.h"
 #include <spine/BonePose.h>
 #include <spine/Bone.h>
 #include <spine/BoneData.h>
@@ -35,6 +36,8 @@
 #include <spine/MathUtil.h>
 
 using namespace spine;
+
+RTTI_IMPL(BonePose, Update);
 
 BonePose::BonePose() : BoneLocal(), _bone(nullptr), _a(0), _b(0), _worldX(0), _c(0), _d(0), _worldY(0), _world(0), _local(0) {
 }
