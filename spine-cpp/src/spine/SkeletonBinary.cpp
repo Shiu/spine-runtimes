@@ -144,7 +144,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 			skeletonData->_hash = "";
 		} else {
 			char buffer[32];
-			snprintf(buffer, 32, "%llx", hash);
+			snprintf(buffer, 32, "%lld", hash);
 			skeletonData->_hash = String(buffer);
 		}
 		skeletonData->_version.own(input.readString());
