@@ -15,18 +15,21 @@ This test:
 ## Build Process
 
 The build script compiles:
-- spine-cpp with `-DSPINE_NO_CPPRT` (eliminates C++ standard library)
+- spine-cpp with no-cpprt variant (eliminates C++ standard library)
 - spine-c wrapper (provides C-compatible FFI)
+- Generates complete Rust FFI bindings via bindgen from spine-c.h
 - Links everything into a single Rust executable/library
 
-spine-c/spine-cpp only rely on libc for `malloc`, `free` and various math function, which can be easily stubbed on any target platform.
+**Full API Coverage**: Bindgen automatically generates Rust bindings for the entire spine-c API, exposing all public functions without manual FFI maintenance.
+
+spine-c/spine-cpp only rely on libc for `malloc`, `free` and various math functions, which can be easily stubbed on any target platform.
 
 This proves Rust projects can use Spine without C++ stdlib dependencies, enabling WASM compilation via Rust toolchain instead of Emscripten.
 
 ## Files
 
-- `src/lib.rs` - Rust FFI test calling spine-c functions
-- `build.rs` - Compiles spine-cpp-no-cpprt + spine-c via cc crate
+- `src/lib.rs` - Rust FFI test calling spine-c functions via bindgen-generated bindings
+- `build.rs` - Compiles spine-cpp-no-cpprt + spine-c via cc crate, generates FFI bindings with bindgen
 - Test data: `../../../examples/spineboy/export/spineboy-*` (atlas, skeleton, texture)
 
 ## Usage
