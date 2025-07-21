@@ -25,6 +25,10 @@ fn main() {
     // Always avoid C++ runtime (consistent with no-cpprt approach)
     cpp_build.flag("-nostdlib++");
     
+    // Tell cc crate linker to not link libc++
+    cpp_build.flag_if_supported("-Wl,-undefined,dynamic_lookup");
+    cpp_build.cpp_link_stdlib(None);
+    
     if is_wasm {
         // For WASM, we may need additional setup, but let's first try without extra flags
         // The target is already handled by cc-rs when building for wasm32-unknown-unknown
@@ -66,6 +70,9 @@ fn main() {
 
     // Add spine-c extensions
     cpp_build.file(spine_c_dir.join("src/extensions.cpp"));
+
+    // Add no-cpprt.cpp for C++ runtime stubs
+    cpp_build.file(spine_cpp_dir.join("src/no-cpprt.cpp"));
 
     cpp_build.compile("spine");
 
