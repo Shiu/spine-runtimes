@@ -74,12 +74,12 @@ function needsJavaBuild(): boolean {
     const buildDir = join(testDir, 'build', 'libs');
     
     try {
-        // Check if jar exists
-        const jarFiles = execSync(`ls ${buildDir}/*.jar 2>/dev/null || true`, { encoding: 'utf8' }).trim();
-        if (!jarFiles) return true;
+        // Check if fat jar exists (specifically look for the headless test jar)
+        const fatJarFiles = execSync(`ls ${buildDir}/spine-headless-test-*.jar 2>/dev/null || true`, { encoding: 'utf8' }).trim();
+        if (!fatJarFiles) return true;
         
         // Get jar modification time
-        const jarTime = statSync(jarFiles.split('\n')[0]).mtime.getTime();
+        const jarTime = statSync(fatJarFiles.split('\n')[0]).mtime.getTime();
         
         // Check Java source files
         const javaSourceTime = getNewestFileTime(join(SPINE_ROOT, 'spine-libgdx'), '*.java');
@@ -286,16 +286,16 @@ function executeJava(args: TestArgs): string {
         }
     }
 
-    // Find the jar file
+    // Find the fat jar file
     const buildDir = join(testDir, 'build', 'libs');
-    const jarFiles = execSync(`ls ${buildDir}/*.jar`, { encoding: 'utf8' }).trim().split('\n');
+    const fatJarFiles = execSync(`ls ${buildDir}/spine-headless-test-*.jar`, { encoding: 'utf8' }).trim().split('\n');
     
-    if (jarFiles.length === 0) {
-        log_detail('No jar files found in build/libs directory');
+    if (fatJarFiles.length === 0) {
+        log_detail('No fat jar files found in build/libs directory');
         process.exit(1);
     }
     
-    const jarFile = jarFiles[0]; // Use the first jar file found
+    const jarFile = fatJarFiles[0]; // Use the first fat jar file found
     
     // Run the HeadlessTest from jar
     const testArgs = [args.skeletonPath, args.atlasPath];
@@ -533,6 +533,69 @@ function runTestsForFiles(language: string, skeletonPath: string, atlasPath: str
     saveJsonFiles(testArgs, targetParsed, javaParsed, fixFloats);
 }
 
+function verifyOutputsMatch(): void {
+    const outputDir = join(SPINE_ROOT, 'tests', 'output');
+    const outputFiles = [
+        'skeleton-data-java-json.json',
+        'skeleton-data-cpp-json.json', 
+        'skeleton-state-java-json.json',
+        'skeleton-state-cpp-json.json',
+        'skeleton-data-java-skel.json',
+        'skeleton-data-cpp-skel.json',
+        'skeleton-state-java-skel.json',
+        'skeleton-state-cpp-skel.json'
+    ];
+
+    // Check if all files exist
+    const missingFiles = outputFiles.filter(file => !existsSync(join(outputDir, file)));
+    if (missingFiles.length > 0) {
+        log_detail(`Skipping diff check - missing files: ${missingFiles.join(', ')}`);
+        return;
+    }
+
+    log_action('Verifying Java and C++ outputs match');
+    
+    const comparisons = [
+        ['skeleton-data-java-json.json', 'skeleton-data-cpp-json.json'],
+        ['skeleton-data-java-skel.json', 'skeleton-data-cpp-skel.json']
+    ];
+
+    let allMatch = true;
+    
+    for (const [javaFile, cppFile] of comparisons) {
+        try {
+            const javaContent = execSync(`cat "${join(outputDir, javaFile)}"`, { encoding: 'utf8' });
+            const cppContent = execSync(`cat "${join(outputDir, cppFile)}"`, { encoding: 'utf8' });
+            
+            if (javaContent !== cppContent) {
+                allMatch = false;
+                console.error(`\n❌ Files differ: ${javaFile} vs ${cppFile}`);
+                
+                // Show diff using system diff command
+                try {
+                    execSync(`diff "${join(outputDir, javaFile)}" "${join(outputDir, cppFile)}"`, {
+                        stdio: 'inherit',
+                        cwd: outputDir
+                    });
+                } catch {
+                    // diff exits with code 1 when files differ, which is expected
+                }
+            }
+        } catch (error: any) {
+            allMatch = false;
+            console.error(`\n❌ Error comparing ${javaFile} vs ${cppFile}: ${error.message}`);
+        }
+    }
+
+    if (allMatch) {
+        log_ok();
+    } else {
+        log_fail();
+        console.error('\n❌ Java and C++ outputs do not match');
+        process.exit(1);
+    }
+}
+
 function main(): void {
     const args = validateArgs();
     
@@ -559,6 +622,11 @@ function main(): void {
         runTestsForFiles(args.language, args.skeletonPath!, args.atlasPath!, args.animationName, args.fixFloats);
         log_summary('✓ Test completed');
         log_detail(`JSON files saved to: ${join(SPINE_ROOT, 'tests', 'output')}`);
+    }
+
+    // Verify outputs match if we're testing C++
+    if (args.language === 'cpp') {
+        verifyOutputsMatch();
     }
 }
 
