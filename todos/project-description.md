@@ -1,137 +1,153 @@
 # Project: Spine Runtimes
 
-Multi-language runtime libraries for Spine 2D skeletal animations. The project provides core runtimes for different programming languages and integrations for various game engines and frameworks.
+Multi-language runtime libraries for Spine 2D skeletal animations. Provides core runtimes for different programming languages and integrations for game engines and frameworks, supporting advanced skeletal animation with physics, constraints, and dynamic content.
 
-## Core Runtimes (Language-specific implementations)
+## Features
 
-### spine-libgdx (Java) - Reference Implementation
-- **Build**: `./gradlew build`
-- **Publish**: `./gradlew publishToMavenLocal`
-- All other runtimes are ports of this reference implementation
+### Core Animation Features
+- **Skeletal Animation**: Hierarchical bone-based animation system
+- **Inverse Kinematics (IK)**: 1-2 bone IK constraints for natural positioning
+- **Path Constraints**: Bones follow Bezier curve paths for complex motion
+- **Transform Constraints**: Copy/mix transformations between bones
+- **Physics Constraints**: Real-time physics simulation (4.2+)
+- **Animation Mixing/Crossfading**: Smooth transitions with configurable durations
+- **Animation Layering**: Multiple animations on different tracks
 
-### spine-cpp (C++)
-- **Build**: `cmake -B build && cmake --build build`
-- Port of spine-libgdx
-- Uses custom RTTI (no C++ exceptions/RTTI)
+### Visual System
+- **Attachments**: Regions, meshes, clipping, bounding boxes, paths, points, nested skeletons
+- **Skins System**: Dynamic attachment swapping and layering
+- **Blend Modes**: Normal, additive, multiply, screen rendering
+- **Two-Color Tinting**: Advanced color effect
+- **Sequences**: Frame-by-frame texture animation within skeletal structure
+- **Events System**: Timeline-based event triggering for game logic
 
-### spine-csharp (C#)
-- **Build**: `msbuild spine-csharp.csproj` or `dotnet build`
-- Port of spine-libgdx
-- Targets .NET Framework 4.8
+## Tech Stack
 
-### spine-ts (TypeScript/JavaScript)
-- **Build**: `npm install && npm run build`
-- **Dev**: `npm run dev`
-- Port of spine-libgdx
-- Core module at spine-ts/spine-core/
+### Languages
+- **Java** (spine-libgdx) - Reference implementation
+- **C++** (spine-cpp) - C++11 with custom RTTI
+- **C#** (spine-csharp) - .NET Framework 4.8, Unity 2018.3+
+- **TypeScript/JavaScript** (spine-ts) - ES2015+ with ESM modules
+- **C** (spine-c) - Standalone implementation with codegen
+- **Haxe** (spine-haxe) - Cross-platform runtime
+- **Swift** (spine-ios) - iOS native (5.0+)
+- **Dart** (spine-flutter) - Flutter runtime (>=3.16.0)
 
-### spine-haxe (Haxe)
-- **Build**: `./build.sh`
-- Port of spine-libgdx
-- Uses Haxelib package manager
+### Build Systems
+- **Gradle** (Kotlin DSL) - Java/Android projects
+- **CMake** - C/C++ projects with presets
+- **npm/esbuild** - TypeScript ecosystem
+- **MSBuild/.NET CLI** - C# projects
+- **Swift Package Manager** - iOS packages
+- **SCons** - Godot extension builds
+- **Flutter pub** - Dart package management
 
-### spine-c (C)
-- **Build**: `cmake -B build && cmake --build build`
-- Actively maintained C implementation
-- Different structure from other runtimes due to C language constraints
+### Frameworks & Engines
+- **Game Engines**: Unity, Unreal Engine (4.27-5.5), Godot, Cocos2d-x, libGDX
+- **Web**: Phaser.js (v3/v4), PixiJS (v7/v8), Three.js, HTML5 Canvas, WebGL
+- **Mobile/Desktop**: Flutter, MonoGame, SDL, SFML, GLFW
+- **Graphics**: OpenGL/ES, WebGL, Metal, DirectX (UE)
 
-## Integration Runtimes (Engine/Framework-specific)
+## Structure
 
-### Using spine-cpp:
-- **spine-cocos2dx** - Cocos2d-x engine
-- **spine-flutter** - Flutter (via spine-cpp-lite C wrapper + Dart FFI)
-- **spine-glfw** - GLFW/OpenGL example
-- **spine-godot** - Godot Engine
-- **spine-ios** - iOS native (via spine-cpp-lite C wrapper + Swift codegen)
-- **spine-sdl** - SDL (optional, can use spine-c)
-- **spine-sfml/cpp** - SFML C++ version
-- **spine-ue** - Unreal Engine 4.27-5.4
+### Core Runtimes (Language-specific)
+- **spine-libgdx** (Java) - Reference implementation
+- **spine-cpp** (C++) - Complete port with spine-cpp-lite FFI wrapper
+- **spine-csharp** (C#) - .NET implementation
+- **spine-ts** (TypeScript) - Modular web ecosystem
+- **spine-c** (C) - Auto-generated from spine-cpp
+- **spine-haxe** (Haxe) - Cross-platform port
 
-### Using spine-csharp:
-- **spine-unity** - Unity game engine
-- **spine-monogame** - MonoGame framework
-- **spine-xna** - XNA Framework (legacy)
+### Integration Runtimes (Engine-specific)
+**Using spine-cpp:**
+- spine-cocos2dx, spine-flutter, spine-glfw, spine-godot, spine-ios, spine-sdl, spine-sfml, spine-ue
 
-### Using spine-libgdx:
-- **spine-android** - Android native
+**Using spine-csharp:**
+- spine-unity, spine-monogame, spine-xna
 
-### Using spine-c:
-- **spine-sdl** - SDL (optional, can use spine-cpp)
-- **spine-sfml/c** - SFML C version
+**Using spine-ts:**
+- spine-canvas, spine-webgl, spine-phaser, spine-pixi, spine-threejs, spine-player, spine-canvaskit, spine-webcomponents
 
-### Using spine-core (TypeScript):
-- **spine-canvas** - HTML5 Canvas
-- **spine-webgl** - Direct WebGL
-- **spine-phaser** - Phaser.js (v3 & v4)
-- **spine-pixi** - PixiJS (v7 & v8)
-- **spine-threejs** - Three.js
-- **spine-player** - Embeddable web player
-- **spine-canvaskit** - Skia CanvasKit
-- **spine-webcomponents** - Web Components
+**Using spine-libgdx:**
+- spine-android
 
-## Special Cases
+### Special Components
+- **spine-cpp-lite**: C FFI wrapper enabling Dart/Swift bindings
+- **formatters/**: Universal code formatting for all languages
+- **tests/**: Cross-runtime serialization validation
+- **examples/**: Rich animation examples and educational content
 
-### spine-cpp-lite
-- C wrapper around spine-cpp for FFI-friendly bindings
-- Located in spine-cpp/spine-cpp-lite/
-- Provides simplified C API consumed by:
-  - spine-flutter (via Dart FFI)
-  - spine-ios (via Swift code generation)
+## Architecture
 
-## Commands Summary
-- **Check spine-cpp**: `cd spine-cpp && cmake -B build && cmake --build build`
-- **Check spine-ts**: `cd spine-ts && npm install && npm run build`
-- **Check spine-libgdx**: `cd spine-libgdx && ./gradlew build`
-- **Check spine-csharp**: `cd spine-csharp && msbuild spine-csharp.csproj`
-- **Check spine-c**: `cd spine-c && cmake -B build && cmake --build build`
+### Reference Implementation Pattern
+- **spine-libgdx** serves as authoritative reference
+- All other core runtimes are systematic ports maintaining API compatibility
+- Changes originate in spine-libgdx and are ported to other languages
+
+### Data/Instance Separation
+- **Data Classes** (`SkeletonData`, `BoneData`): Immutable setup pose
+- **Instance Classes** (`Skeleton`, `Bone`): Mutable runtime state
+- **Pose Classes**: Applied transformations and constraints (4.3+)
+
+### Update Pipeline
+1. Animation update (`AnimationState.update()`)
+2. Apply animation to skeleton (`AnimationState.apply()`)
+3. Skeleton update with physics (`Skeleton.update()`)
+4. World transform update (`Skeleton.updateWorldTransform(Physics)`)
+
+## Commands
+
+### Build Commands
+- **spine-libgdx**: `./gradlew build`
+- **spine-cpp**: `./build.sh [release|clean|nofileio]`
+- **spine-c**: `./build.sh [release|clean|codegen]`
+- **spine-ts**: `npm install && npm run build`
+- **spine-csharp**: `dotnet build`
+- **spine-flutter**: `./setup.sh && flutter build`
+- **spine-godot**: `scons [platform=linux|windows|macos]`
+- **spine-haxe**: `./build.sh`
+- **spine-ios**: `swift build`
+
+### Test Commands
+- **Cross-runtime**: `./tests/test.sh`
+- **spine-cpp**: `./tests/test.sh`
+- **spine-libgdx**: `./gradlew test`
+- **spine-ts**: `npx tsx src/headless-test-runner.ts`
+- **spine-flutter**: `flutter test`
+
+### Utility Commands
+- **Format all**: `./formatters/format.sh`
+- **Format specific**: `./formatters/format.sh [java|ts|cpp|csharp|dart|haxe|swift]`
+
+## Testing
+
+### Cross-Runtime Validation
+- Serialization consistency tests between Java, C++, C, and TypeScript
+- Headless test runners for automated validation
+- Output comparison for JSON/binary format validation
+
+### Language-Specific Testing
+- **Java**: JUnit tests via Gradle
+- **C++**: Custom headless tests with multiple build variants
+- **TypeScript**: Custom test runner with tsx
+- **Flutter**: Flutter test framework
+- **C#**: .NET test framework
+
+### CI/CD Testing
+- GitHub Actions workflows for all runtimes
+- Automated formatting validation
+- Cross-platform compatibility testing
+- Automated publishing pipelines
 
 ## Development Workflow
-- All changes start in spine-libgdx (reference implementation)
-- Port changes to other core runtimes using git diffs
-- Integration runtimes automatically inherit changes from their core runtime
 
-## Type System Documentation
-For a complete reference of all types in the Spine runtime, see [spine-runtimes-types.md](spine-runtimes-types.md).
-To regenerate this documentation, run: `node docs/generate-type-hierarchy.js`
+1. **Changes begin in spine-libgdx** (reference implementation)
+2. **Port to core runtimes** using git diffs and systematic translation
+3. **Integration runtimes inherit** changes from their core runtime
+4. **Validate with cross-runtime tests** to ensure consistency
+5. **Format code** using universal formatting tools
+6. **Publish** to appropriate package repositories (Maven, NPM, NuGet, etc.)
 
-## Spine Type System Overview (from spine-libgdx)
-
-### Core Types
-- **Skeleton** - Stores the current pose for a skeleton
-- **SkeletonData** - Stores setup pose and stateless data
-- **Bone/BoneData** - Current pose and setup data for bones
-- **Slot/SlotData** - Manages attachments and drawing order
-- **Skin** - Collection of attachments keyed by slot and name
-
-### Animation System
-- **Animation** - List of timelines to animate skeleton pose
-- **AnimationState** - Applies animations, handles mixing and layering
-- **AnimationStateData** - Stores mix (crossfade) durations
-
-### Attachment Types (Visual Elements)
-- **Attachment** - Base class for all attachments
-- **RegionAttachment** - Textured quadrilateral
-- **MeshAttachment** - Textured mesh with vertices
-- **BoundingBoxAttachment** - Polygon for hit detection
-- **ClippingAttachment** - Polygon for clipping rendering
-- **PathAttachment** - Composite Bezier curve
-- **PointAttachment** - Single point with rotation
-- **SkeletonAttachment** - Nested skeleton
-
-### Constraint Types
-- **IkConstraint** - Inverse kinematics (1-2 bones)
-- **TransformConstraint** - Copy/mix transform from target
-- **PathConstraint** - Follow path attachment
-- **PhysicsConstraint** - Apply physics simulation
-
-### Pose System (new in 4.2+)
-- **Pose** - Interface for pose data
-- **BoneLocal/BonePose** - Local and world bone transforms
-- **Update** - Interface for updateable elements
-- **PosedActive/PosedData** - Base classes for runtime/setup data
-
-### Other Core Types
-- **Event/EventData** - Animation events system
-- **Sequence** - Frame-by-frame texture sequences
-- **SkeletonBounds** - Hit detection utilities
-- **SkeletonLoader** - Base for JSON/Binary loaders
+## Version Management
+- **Current**: 4.3-beta (development branch)
+- **Stable**: 4.2 (main branch for PRs)
