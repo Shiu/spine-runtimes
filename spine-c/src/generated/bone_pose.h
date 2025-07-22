@@ -12,6 +12,7 @@ SPINE_C_API spine_bone_pose spine_bone_pose_create(void);
 
 SPINE_C_API void spine_bone_pose_dispose(spine_bone_pose self);
 
+SPINE_C_API spine_rtti spine_bone_pose_get_rtti(spine_bone_pose self);
 SPINE_C_API void spine_bone_pose_update(spine_bone_pose self, spine_skeleton skeleton, spine_physics physics);
 SPINE_C_API void spine_bone_pose_update_world_transform(spine_bone_pose self, spine_skeleton skeleton);
 SPINE_C_API void spine_bone_pose_update_local_transform(spine_bone_pose self, spine_skeleton skeleton);
@@ -62,7 +63,6 @@ SPINE_C_API float spine_bone_pose_get_shear_y(spine_bone_pose self);
 SPINE_C_API void spine_bone_pose_set_shear_y(spine_bone_pose self, float shearY);
 SPINE_C_API spine_inherit spine_bone_pose_get_inherit(spine_bone_pose self);
 SPINE_C_API void spine_bone_pose_set_inherit(spine_bone_pose self, spine_inherit inherit);
-SPINE_C_API spine_rtti spine_bone_pose_get_rtti(spine_bone_pose self);
 SPINE_C_API spine_rtti spine_bone_pose_rtti(void);
 
 #ifdef __cplusplus

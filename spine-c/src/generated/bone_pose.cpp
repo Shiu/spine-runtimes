@@ -11,6 +11,11 @@ void spine_bone_pose_dispose(spine_bone_pose self) {
 	delete (BonePose *) self;
 }
 
+spine_rtti spine_bone_pose_get_rtti(spine_bone_pose self) {
+	BonePose *_self = (BonePose *) self;
+	return (spine_rtti) &_self->getRTTI();
+}
+
 void spine_bone_pose_update(spine_bone_pose self, spine_skeleton skeleton, spine_physics physics) {
 	BonePose *_self = (BonePose *) self;
 	_self->update(*((Skeleton *) skeleton), (Physics) physics);
@@ -259,11 +264,6 @@ spine_inherit spine_bone_pose_get_inherit(spine_bone_pose self) {
 void spine_bone_pose_set_inherit(spine_bone_pose self, spine_inherit inherit) {
 	BoneLocal *_self = (BoneLocal *) (BonePose *) self;
 	_self->setInherit((Inherit) inherit);
-}
-
-spine_rtti spine_bone_pose_get_rtti(spine_bone_pose self) {
-	Update *_self = (Update *) (BonePose *) self;
-	return (spine_rtti) &_self->getRTTI();
 }
 
 spine_rtti spine_bone_pose_rtti(void) {
