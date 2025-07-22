@@ -87,9 +87,8 @@ int main() {
 	AnimationStateData animationStateData(skeletonData);
 	animationStateData.setDefaultMix(0.2f);
 	AnimationState animationState(&animationStateData);
-	// animationState.setAnimation(0, "portal", true);
-	// animationState.addAnimation(0, "run", true, 0);
-	animationState.setAnimation(0, "idle", true);
+	animationState.setAnimation(0, "portal", true);
+	animationState.addAnimation(0, "run", true, 0);
 
 	// Create the renderer and set the viewport size to match the window size. This sets up a
 	// pixel perfect orthogonal projection for 2D rendering.

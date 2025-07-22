@@ -246,7 +246,6 @@ bool SkeletonClipping::clipTriangles(float *vertices, unsigned short *triangles,
 				clippedTriangles[s + 1] = (unsigned short) (index + 1);
 				clippedTriangles[s + 2] = (unsigned short) (index + 2);
 				index += 3;
-				i += 3;
 				break;
 			}
 		}
@@ -321,6 +320,7 @@ bool SkeletonClipping::clip(float x1, float y1, float x2, float y2, float x3, fl
 				} else {
 					output->add(inputX2);
 					output->add(inputY2);
+					continue;
 				}
 			} else if (s2) {// v1 outside, v2 inside
 				float ix = inputX2 - inputX, iy = inputY2 - inputY, t = s1 / (ix * ey - iy * ex);
