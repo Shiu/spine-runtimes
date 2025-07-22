@@ -1,3 +1,32 @@
+/******************************************************************************
+ * Spine Runtimes License Agreement
+ * Last updated July 28, 2023. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2023, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software or
+ * otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
+ * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *****************************************************************************/
+
 export * from "@esotericsoftware/spine-core";
 
 import {
@@ -8,28 +37,20 @@ import {
 	ClippingAttachment,
 	Color,
 	MeshAttachment,
-	NumberArrayLike,
+	type NumberArrayLike,
 	Physics,
 	RegionAttachment,
 	Skeleton,
 	SkeletonBinary,
 	SkeletonClipping,
-	SkeletonData,
+	type SkeletonData,
 	SkeletonJson,
 	Texture,
 	TextureAtlas,
-	TextureFilter,
-	TextureWrap,
 	Utils,
 } from "@esotericsoftware/spine-core";
-import {
-	Canvas,
-	CanvasKit,
-	Image,
-	Paint,
-	Shader,
-	BlendMode as CanvasKitBlendMode,
-} from "canvaskit-wasm";
+
+import type { Canvas, CanvasKit, Image, Paint, Shader } from "canvaskit-wasm";
 
 Skeleton.yDown = true;
 
@@ -55,7 +76,7 @@ function toCkBlendMode (ck: CanvasKit, blendMode: BlendMode) {
 	}
 }
 
-function bufferToUtf8String (buffer: any) {
+function bufferToUtf8String (buffer: ArrayBuffer | Buffer) {
 	if (typeof Buffer !== "undefined") {
 		return buffer.toString("utf-8");
 	} else if (typeof TextDecoder !== "undefined") {
@@ -70,9 +91,9 @@ class CanvasKitTexture extends Texture {
 		return this._image;
 	}
 
-	setFilters (minFilter: TextureFilter, magFilter: TextureFilter): void { }
+	setFilters (): void { }
 
-	setWraps (uWrap: TextureWrap, vWrap: TextureWrap): void { }
+	setWraps (): void { }
 
 	dispose (): void {
 		const data: CanvasKitImage = this._image;
@@ -89,7 +110,7 @@ class CanvasKitTexture extends Texture {
 	static async fromFile (
 		ck: CanvasKit,
 		path: string,
-		readFile: (path: string) => Promise<any>
+		readFile: (path: string) => Promise<ArrayBuffer | Buffer>
 	): Promise<CanvasKitTexture> {
 		const imgData = await readFile(path);
 		if (!imgData) throw new Error(`Could not load image ${path}`);
@@ -126,7 +147,7 @@ class CanvasKitTexture extends Texture {
 export async function loadTextureAtlas (
 	ck: CanvasKit,
 	atlasFile: string,
-	readFile: (path: string) => Promise<Buffer>
+	readFile: (path: string) => Promise<ArrayBuffer | Buffer>
 ): Promise<TextureAtlas> {
 	const atlas = new TextureAtlas(bufferToUtf8String(await readFile(atlasFile)));
 	const slashIndex = atlasFile.lastIndexOf("/");
@@ -150,7 +171,7 @@ export async function loadTextureAtlas (
 export async function loadSkeletonData (
 	skeletonFile: string,
 	atlas: TextureAtlas,
-	readFile: (path: string) => Promise<Buffer>,
+	readFile: (path: string) => Promise<ArrayBuffer | Buffer>,
 	scale = 1
 ): Promise<SkeletonData> {
 	const attachmentLoader = new AtlasAttachmentLoader(atlas);
@@ -158,12 +179,11 @@ export async function loadSkeletonData (
 		? new SkeletonJson(attachmentLoader)
 		: new SkeletonBinary(attachmentLoader);
 	loader.scale = scale;
-	let data = await readFile(skeletonFile);
-	if (skeletonFile.endsWith(".json")) {
-		data = bufferToUtf8String(data);
+	const data = await readFile(skeletonFile);
+	if (loader instanceof SkeletonJson) {
+		return loader.readSkeletonData(bufferToUtf8String(data))
 	}
-	const skeletonData = loader.readSkeletonData(data);
-	return skeletonData;
+	return loader.readSkeletonData(data);
 }
 
 /**
@@ -224,12 +244,12 @@ export class SkeletonRenderer {
 	 */
 	render (canvas: Canvas, skeleton: Skeleton | SkeletonDrawable) {
 		if (skeleton instanceof SkeletonDrawable) skeleton = skeleton.skeleton;
-		let clipper = this.clipper;
-		let drawOrder = skeleton.drawOrder;
-		let skeletonColor = skeleton.color;
+		const clipper = this.clipper;
+		const drawOrder = skeleton.drawOrder;
+		const skeletonColor = skeleton.color;
 
 		for (let i = 0, n = drawOrder.length; i < n; i++) {
-			let slot = drawOrder[i];
+			const slot = drawOrder[i];
 			if (!slot.bone.active) {
 				clipper.clipEnd(slot);
 				continue;
@@ -245,20 +265,19 @@ export class SkeletonRenderer {
 			let attachmentColor: Color;
 			let numVertices = 0;
 			if (attachment instanceof RegionAttachment) {
-				let region = attachment as RegionAttachment;
-				positions = positions.length < 8 ? Utils.newFloatArray(8) : positions;
+				const region = attachment;
 				numVertices = 4;
 				region.computeWorldVertices(slot, positions, 0, 2);
 				triangles = SkeletonRenderer.QUAD_TRIANGLES;
 				uvs = region.uvs as Float32Array;
-				texture = region.region?.texture as CanvasKitTexture;
+				texture = region.region ?.texture as CanvasKitTexture;
 				attachmentColor = region.color;
 			} else if (attachment instanceof MeshAttachment) {
-				let mesh = attachment as MeshAttachment;
-				positions =
-					positions.length < mesh.worldVerticesLength
-						? Utils.newFloatArray(mesh.worldVerticesLength)
-						: positions;
+				const mesh = attachment as MeshAttachment;
+				if (positions.length < mesh.worldVerticesLength) {
+					this.scratchPositions = Utils.newFloatArray(mesh.worldVerticesLength);
+					positions = this.scratchPositions;
+				}
 				numVertices = mesh.worldVerticesLength >> 1;
 				mesh.computeWorldVertices(
 					skeleton,
@@ -270,7 +289,7 @@ export class SkeletonRenderer {
 					2
 				);
 				triangles = mesh.triangles;
-				texture = mesh.region?.texture as CanvasKitTexture;
+				texture = mesh.region ?.texture as CanvasKitTexture;
 				uvs = mesh.uvs as Float32Array;
 				attachmentColor = mesh.color;
 			} else if (attachment instanceof ClippingAttachment) {
@@ -283,27 +302,47 @@ export class SkeletonRenderer {
 			}
 
 			if (texture) {
+				let scaledUvs: NumberArrayLike;
 				if (clipper.isClipping()) {
-					clipper.clipTrianglesUnpacked(
-						positions,
-						triangles,
-						triangles.length,
-						uvs
-					);
+					clipper.clipTrianglesUnpacked(positions, triangles, triangles.length, uvs);
+					if (clipper.clippedVertices.length <= 0) {
+						clipper.clipEnd(slot);
+						continue;
+					}
 					positions = clipper.clippedVertices;
 					uvs = clipper.clippedUVs;
+					scaledUvs = clipper.clippedUVs;
 					triangles = clipper.clippedTriangles;
+					numVertices = clipper.clippedVertices.length / 2;
+					colors = Utils.newFloatArray(numVertices * 4);
+				} else {
+					scaledUvs = this.scratchUVs;
+					if (this.scratchUVs.length < uvs.length) {
+						this.scratchUVs = Utils.newFloatArray(uvs.length);
+						scaledUvs = this.scratchUVs;
+					}
+					if (colors.length / 4 < numVertices) {
+						this.scratchColors = Utils.newFloatArray(numVertices * 4);
+						colors = this.scratchColors;
+					}
 				}
 
-				let slotColor = pose.color;
-				let finalColor = this.tempColor;
+				const ckImage = texture.getImage();
+				const image = ckImage.image;
+				const width = image.width();
+				const height = image.height();
+				for (let i = 0; i < uvs.length; i += 2) {
+					scaledUvs[i] = uvs[i] * width;
+					scaledUvs[i + 1] = uvs[i + 1] * height;
+				}
+
+				const slotColor = pose.color;
+				const finalColor = this.tempColor;
 				finalColor.r = skeletonColor.r * slotColor.r * attachmentColor.r;
 				finalColor.g = skeletonColor.g * slotColor.g * attachmentColor.g;
 				finalColor.b = skeletonColor.b * slotColor.b * attachmentColor.b;
 				finalColor.a = skeletonColor.a * slotColor.a * attachmentColor.a;
 
-				if (colors.length / 4 < numVertices)
-					colors = Utils.newFloatArray(numVertices * 4);
 				for (let i = 0, n = numVertices * 4; i < n; i += 4) {
 					colors[i] = finalColor.r;
 					colors[i + 1] = finalColor.g;
@@ -311,18 +350,6 @@ export class SkeletonRenderer {
 					colors[i + 3] = finalColor.a;
 				}
 
-				const scaledUvs =
-					this.scratchUVs.length < uvs.length
-						? Utils.newFloatArray(uvs.length)
-						: this.scratchUVs;
-				const width = texture.getImage().image.width();
-				const height = texture.getImage().image.height();
-				for (let i = 0; i < uvs.length; i += 2) {
-					scaledUvs[i] = uvs[i] * width;
-					scaledUvs[i + 1] = uvs[i + 1] * height;
-				}
-
-				const blendMode = slot.data.blendMode;
 				const vertices = this.ck.MakeVertices(
 					this.ck.VertexMode.Triangles,
 					positions,
@@ -331,11 +358,8 @@ export class SkeletonRenderer {
 					triangles,
 					false
 				);
-				canvas.drawVertices(
-					vertices,
-					this.ck.BlendMode.Modulate,
-					texture.getImage().paintPerBlendMode.get(blendMode)!
-				);
+				const ckPaint = ckImage.paintPerBlendMode.get(slot.data.blendMode);
+				if (ckPaint) canvas.drawVertices(vertices, this.ck.BlendMode.Modulate, ckPaint);
 				vertices.delete();
 			}
 
