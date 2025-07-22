@@ -194,9 +194,9 @@ export class SkeletonDrawable {
 	public readonly skeleton: Skeleton;
 	public readonly animationState: AnimationState;
 
-    /**
-     * Constructs a new drawble from the skeleton data.
-     */
+	/**
+	 * Constructs a new drawble from the skeleton data.
+	 */
 	constructor (skeletonData: SkeletonData) {
 		this.skeleton = new Skeleton(skeletonData);
 		this.animationState = new AnimationState(
@@ -204,13 +204,13 @@ export class SkeletonDrawable {
 		);
 	}
 
-    /**
-     * Updates the animation state and skeleton time by the delta time. Applies the
-     * animations to the skeleton and calculates the final pose of the skeleton.
-     *
-     * @param deltaTime the time since the last update in seconds
-     * @param physicsUpdate optional {@link Physics} update mode.
-     */
+	/**
+	 * Updates the animation state and skeleton time by the delta time. Applies the
+	 * animations to the skeleton and calculates the final pose of the skeleton.
+	 *
+	 * @param deltaTime the time since the last update in seconds
+	 * @param physicsUpdate optional {@link Physics} update mode.
+	 */
 	update (deltaTime: number, physicsUpdate: Physics = Physics.update) {
 		this.animationState.update(deltaTime);
 		this.skeleton.update(deltaTime);
@@ -229,17 +229,17 @@ export class SkeletonRenderer {
 	private scratchUVs = Utils.newFloatArray(100);
 	private scratchColors = new Uint32Array(100 / 4);
 
-    /**
-     * Creates a new skeleton renderer.
-     * @param ck the {@link CanvasKit} instance returned by `CanvasKitInit()`.
-     */
+	/**
+	 * Creates a new skeleton renderer.
+	 * @param ck the {@link CanvasKit} instance returned by `CanvasKitInit()`.
+	 */
 	constructor (private ck: CanvasKit) { }
 
-    /**
-     * Renders a skeleton or skeleton drawable in its current pose to the canvas.
-     * @param canvas the canvas to render to.
-     * @param skeleton the skeleton or drawable to render.
-     */
+	/**
+	 * Renders a skeleton or skeleton drawable in its current pose to the canvas.
+	 * @param canvas the canvas to render to.
+	 * @param skeleton the skeleton or drawable to render.
+	 */
 	render (canvas: Canvas, skeleton: Skeleton | SkeletonDrawable) {
 		if (skeleton instanceof SkeletonDrawable) skeleton = skeleton.skeleton;
 		const clipper = this.clipper;
@@ -286,7 +286,7 @@ export class SkeletonRenderer {
 				continue;
 			}
 
-			const texture = attachment.region ?.texture as CanvasKitTexture;
+			const texture = attachment.region?.texture as CanvasKitTexture;
 			if (texture) {
 				let uvs = attachment.uvs;
 				let scaledUvs: NumberArrayLike;
