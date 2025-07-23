@@ -346,6 +346,8 @@ export class DartWriter {
         lines.push('// Export all generated types');
         lines.push('');
 
+        lines.push(`export 'native_array.dart';`);
+        lines.push('');
 
         // Export enums
         if (cEnums.length > 0) {
