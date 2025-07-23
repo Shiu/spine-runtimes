@@ -1,8 +1,10 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { Type, toSnakeCase } from './types';
-import { CClassOrStruct, CEnum, CMethod, CParameter } from './c-types';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import type { CClassOrStruct, CEnum, CMethod, CParameter } from './c-types';
+import { toSnakeCase } from './types';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const LICENSE_HEADER = fs.readFileSync(path.join(__dirname, '../../../spine-cpp/src/spine/Skeleton.cpp'), 'utf8').split('\n').slice(0, 28).join('\n');
 
 /** Generates strings for CClassOrStruct and CEnum, and writes them to files. */
@@ -35,6 +37,7 @@ export class CWriter {
         // Add includes
         lines.push('#include "../base.h"');
         lines.push('#include "types.h"');
+        lines.push('#include "arrays.h"');
         lines.push('');
 
         // Add extern C
@@ -44,8 +47,8 @@ export class CWriter {
         lines.push('');
 
         // Add all method declarations
-        for (const constructor of type.constructors) {
-            lines.push(this.writeMethodDeclaration(constructor));
+        for (const constr of type.constructors) {
+            lines.push(this.writeMethodDeclaration(constr));
         }
 
         if (type.constructors.length > 0) {
@@ -84,8 +87,8 @@ export class CWriter {
         lines.push('');
 
         // Add all method implementations
-        for (const constructor of type.constructors) {
-            lines.push(this.writeMethodImplementation(constructor));
+        for (const constr of type.constructors) {
+            lines.push(this.writeMethodImplementation(constr));
             lines.push('');
         }
 
@@ -99,7 +102,7 @@ export class CWriter {
             lines.push('');
         }
 
-        return lines.join('\n').trim() + '\n';
+        return `${lines.join('\n').trim()}\n`;
     }
 
     writeEnumHeader(enumType: CEnum): string {
@@ -227,67 +230,67 @@ export class CWriter {
 
         // Generate header
         const arrayHeaderLines: string[] = [];
-        {
-            arrayHeaderLines.push(LICENSE_HEADER);
-            arrayHeaderLines.push('');
-            arrayHeaderLines.push('#ifndef SPINE_C_ARRAYS_H');
-            arrayHeaderLines.push('#define SPINE_C_ARRAYS_H');
-            arrayHeaderLines.push('');
-            arrayHeaderLines.push('#include "../base.h"');
-            arrayHeaderLines.push('#include "types.h"');
-            arrayHeaderLines.push('');
-            arrayHeaderLines.push('#ifdef __cplusplus');
-            arrayHeaderLines.push('extern "C" {');
-            arrayHeaderLines.push('#endif');
-            arrayHeaderLines.push('');
 
-            // Add opaque type declarations
-            for (const arrayType of cArrayTypes) {
-                arrayHeaderLines.push(`SPINE_OPAQUE_TYPE(${arrayType.name})`);
+        arrayHeaderLines.push(LICENSE_HEADER);
+        arrayHeaderLines.push('');
+        arrayHeaderLines.push('#ifndef SPINE_C_ARRAYS_H');
+        arrayHeaderLines.push('#define SPINE_C_ARRAYS_H');
+        arrayHeaderLines.push('');
+        arrayHeaderLines.push('#include "../base.h"');
+        arrayHeaderLines.push('#include "types.h"');
+        arrayHeaderLines.push('');
+        arrayHeaderLines.push('#ifdef __cplusplus');
+        arrayHeaderLines.push('extern "C" {');
+        arrayHeaderLines.push('#endif');
+        arrayHeaderLines.push('');
+
+        // Add opaque type declarations
+        for (const arrayType of cArrayTypes) {
+            arrayHeaderLines.push(`SPINE_OPAQUE_TYPE(${arrayType.name})`);
+        }
+
+        arrayHeaderLines.push('');
+
+        // Add all method declarations
+        for (const arrayType of cArrayTypes) {
+            arrayHeaderLines.push(arrayType.constructors.map(c => this.writeMethodDeclaration(c)).join('\n\n'));
+            if (arrayType.destructor) {
+                arrayHeaderLines.push(this.writeMethodDeclaration(arrayType.destructor));
             }
-
-            arrayHeaderLines.push('');
-
-            // Add all method declarations
-            for (const arrayType of cArrayTypes) {
-                arrayHeaderLines.push(arrayType.constructors.map(c => this.writeMethodDeclaration(c)).join('\n\n'));
-                if (arrayType.destructor) {
-                    arrayHeaderLines.push(this.writeMethodDeclaration(arrayType.destructor));
-                }
-                arrayHeaderLines.push(arrayType.methods.map(c => this.writeMethodDeclaration(c)).join('\n\n'));
-                arrayHeaderLines.push('');
-            }
-
-            // Close extern C
-            arrayHeaderLines.push('#ifdef __cplusplus');
-            arrayHeaderLines.push('}');
-            arrayHeaderLines.push('#endif');
-            arrayHeaderLines.push('');
-            arrayHeaderLines.push('#endif /* SPINE_C_ARRAYS_H */');
+            arrayHeaderLines.push(arrayType.methods.map(c => this.writeMethodDeclaration(c)).join('\n\n'));
             arrayHeaderLines.push('');
         }
+
+        // Close extern C
+        arrayHeaderLines.push('#ifdef __cplusplus');
+        arrayHeaderLines.push('}');
+        arrayHeaderLines.push('#endif');
+        arrayHeaderLines.push('');
+        arrayHeaderLines.push('#endif /* SPINE_C_ARRAYS_H */');
+        arrayHeaderLines.push('');
+
 
         // Generate source
         const arraySourceLines: string[] = [];
-        {
-            arraySourceLines.push(LICENSE_HEADER);
-            arraySourceLines.push('');
-            arraySourceLines.push('#include "arrays.h"');
-            arraySourceLines.push('#include <spine/spine.h>');
-            arraySourceLines.push('');
-            arraySourceLines.push('using namespace spine;');
-            arraySourceLines.push('');
 
-            // Add all method implementations
-            for (const arrayType of cArrayTypes) {
-                arraySourceLines.push(arrayType.constructors.map(c => this.writeMethodImplementation(c)).join('\n\n'));
-                if (arrayType.destructor) {
-                    arraySourceLines.push(this.writeMethodImplementation(arrayType.destructor));
-                }
-                arraySourceLines.push(arrayType.methods.map(c => this.writeMethodImplementation(c)).join('\n\n'));
-                arraySourceLines.push('');
+        arraySourceLines.push(LICENSE_HEADER);
+        arraySourceLines.push('');
+        arraySourceLines.push('#include "arrays.h"');
+        arraySourceLines.push('#include <spine/spine.h>');
+        arraySourceLines.push('');
+        arraySourceLines.push('using namespace spine;');
+        arraySourceLines.push('');
+
+        // Add all method implementations
+        for (const arrayType of cArrayTypes) {
+            arraySourceLines.push(arrayType.constructors.map(c => this.writeMethodImplementation(c)).join('\n\n'));
+            if (arrayType.destructor) {
+                arraySourceLines.push(this.writeMethodImplementation(arrayType.destructor));
             }
+            arraySourceLines.push(arrayType.methods.map(c => this.writeMethodImplementation(c)).join('\n\n'));
+            arraySourceLines.push('');
         }
+
 
         const headerPath = path.join(this.outputDir, 'arrays.h');
         const sourcePath = path.join(this.outputDir, 'arrays.cpp');
@@ -326,10 +329,6 @@ export class CWriter {
         for (const enumType of cEnums) {
             lines.push(`#include "${enumType.name.replace("spine_", "")}.h"`);
         }
-
-        lines.push('');
-        lines.push('// Array specializations');
-        lines.push('#include "arrays.h"');
 
         lines.push('');
         lines.push('#ifdef __cplusplus');

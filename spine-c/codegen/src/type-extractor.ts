@@ -1,8 +1,10 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { execSync } from 'child_process';
-import { Type, Member, Method, Field, Constructor, Destructor, Parameter, EnumValue, ClassOrStruct, Enum } from './types';
+import { execSync } from 'node:child_process';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import type { ClassOrStruct, Constructor, Destructor, Enum, EnumValue, Field, Member, Method, Parameter, Type } from './types';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SPINE_CPP_PATH = path.join(__dirname, '../../../spine-cpp');
 const SPINE_INCLUDE_DIR = path.join(SPINE_CPP_PATH, 'include');
 const OUTPUT_FILE = path.join(__dirname, '../spine-cpp-types.json');
@@ -11,52 +13,52 @@ const OUTPUT_FILE = path.join(__dirname, '../spine-cpp-types.json');
  * Extracts the value of an enum constant from source code
  */
 function extractEnumValueFromSource(
-    enumConstNode: any,
+    enumConstNode: { name: string, loc?: { line: number } | undefined },
     sourceLines: string[]
 ): string | null | undefined {
     if (!enumConstNode.loc) return undefined;
 
-    let startLine = enumConstNode.loc.line - 1;
-    
+    const startLine = enumConstNode.loc.line - 1;
+
     // Build a multi-line buffer starting from the enum constant
     let buffer = '';
     let foundName = false;
-    
+
     // Look for the enum constant name across multiple lines
     for (let i = startLine; i < sourceLines.length && i < startLine + 5; i++) {
         const line = sourceLines[i];
         if (!line) continue;
-        
-        buffer += line + '\n';
-        
+
+        buffer += `${line}\n`;
+
         // Check if we found the enum constant name
         if (!foundName && line.match(new RegExp(`\\b${enumConstNode.name}\\b`))) {
             foundName = true;
         }
-        
+
         // If we found a comma or closing brace, we have the complete enum entry
         if (foundName && (line.includes(',') || line.includes('}'))) {
             break;
         }
     }
-    
+
     if (!foundName) return undefined;
-    
+
     // Extract the part after the enum name
     const nameMatch = buffer.match(new RegExp(`\\b${enumConstNode.name}\\b\\s*([^,}]*)[,}]?`));
     if (!nameMatch) return undefined;
-    
+
     const afterName = nameMatch[1];
-    
+
     // Check if there's an assignment
     if (!afterName.includes('=')) return null; // No explicit value
-    
+
     // Extract the value after '='
     const equalMatch = afterName.match(/=\s*(.+)/);
     if (!equalMatch) return null;
-    
-    let valueText = equalMatch[1];
-    
+
+    const valueText = equalMatch[1];
+
     // Clean up
     return valueText
         .replace(/\/\/.*$/gm, '') // Remove single-line comments
@@ -68,7 +70,7 @@ function extractEnumValueFromSource(
 /**
  * Extracts return type from a method node
  */
-function extractReturnType(methodNode: any): string {
+function extractReturnType(methodNode: { type?: { qualType: string }}): string {
     const fullType = methodNode.type?.qualType || '';
     const match = fullType.match(/^(.+?)\s*\(/);
     return match ? match[1].trim() : 'void';
@@ -119,7 +121,7 @@ function extractMember(inner: any, parent: any): Member & { access?: 'public' | 
     if (inner.isImplicit) return null;
 
     switch (inner.kind) {
-        case 'FieldDecl':
+        case 'FieldDecl': {
             const field: Field & { access?: 'public' | 'protected' } = {
                 kind: 'field',
                 name: inner.name || '',
@@ -128,8 +130,8 @@ function extractMember(inner: any, parent: any): Member & { access?: 'public' | 
                 access: 'public' // Will be set correctly later
             };
             return field;
-
-        case 'CXXMethodDecl':
+        }
+        case 'CXXMethodDecl': {
             if (!inner.name) return null;
             // Skip operators - not needed for C wrapper generation
             if (inner.name.startsWith('operator')) return null;
@@ -146,17 +148,17 @@ function extractMember(inner: any, parent: any): Member & { access?: 'public' | 
                 access: 'public' // Will be set correctly later
             };
             return method;
-
-        case 'CXXConstructorDecl':
-            const constructor: Constructor & { access?: 'public' | 'protected' } = {
+        }
+        case 'CXXConstructorDecl': {
+            const constr: Constructor & { access?: 'public' | 'protected' } = {
                 kind: 'constructor',
                 name: inner.name || parent.name || '',
                 parameters: extractParameters(inner),
                 access: 'public' // Will be set correctly later
             };
-            return constructor;
-
-        case 'CXXDestructorDecl':
+            return constr;
+        }
+        case 'CXXDestructorDecl': {
             // Include destructors for completeness
             const destructor: Destructor & { access?: 'public' | 'protected' } = {
                 kind: 'destructor',
@@ -166,7 +168,7 @@ function extractMember(inner: any, parent: any): Member & { access?: 'public' | 
                 access: 'public' // Will be set correctly later
             };
             return destructor;
-
+        }
         default:
             return null;
     }
@@ -391,7 +393,7 @@ function extractLocalTypes(headerFile: string, typeMap: Map<string, Type> | null
 function getMethodSignature(method: Method): string {
     let sig = method.name;
     if (method.parameters && method.parameters.length > 0) {
-        sig += '(' + method.parameters.map(p => p.type).join(',') + ')';
+        sig += `(${method.parameters.map(p => p.type).join(',')})`;
     } else {
         sig += '()';
     }

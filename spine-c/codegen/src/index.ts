@@ -1,13 +1,16 @@
 #!/usr/bin/env node
-import * as path from 'path';
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { CWriter } from './c-writer';
-import { checkConstNonConstConflicts, checkMultiLevelPointers, checkFieldAccessorConflicts, checkMethodTypeNameConflicts, checkValueReturns } from './checks';
+import { checkConstNonConstConflicts, checkFieldAccessorConflicts, checkMethodTypeNameConflicts, checkMultiLevelPointers, checkValueReturns } from './checks';
 import { isTypeExcluded, loadExclusions } from './exclusions';
 import { generateArrays, generateTypes } from './ir-generator';
 import { extractTypes } from './type-extractor';
-import { ClassOrStruct } from './types';
+import type { ClassOrStruct } from './types';
 
-async function main() {
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+export async function generate() {
     // Load all exclusions
     const exclusions = loadExclusions(path.join(__dirname, '../exclusions.txt'));
 
@@ -66,6 +69,12 @@ async function main() {
     // Generate C intermediate representation for classes, enums and arrays
     const { cTypes, cEnums } = await generateTypes(types, exclusions, allExtractedTypes);
     const cArrayTypes = await generateArrays(types, arrayType, exclusions);
+    return { cTypes, cEnums, cArrayTypes };
+}
+
+async function main() {
+    // Generate C types and enums
+    const { cTypes, cEnums, cArrayTypes } = await generate();
 
     // Write all files to disk
     const cWriter = new CWriter(path.join(__dirname, '../../src/generated'));

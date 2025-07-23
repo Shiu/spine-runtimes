@@ -307,9 +307,9 @@ int spine_array_property_id_index_of(spine_array_property_id array, int64_t inVa
 	return _array->indexOf(*((const PropertyId *) inValue));
 }
 
-spine_property_id spine_array_property_id_buffer(spine_array_property_id array) {
+int64_t *spine_array_property_id_buffer(spine_array_property_id array) {
 	Array<PropertyId> *_array = (Array<PropertyId> *) array;
-	return (spine_property_id) _array->buffer();
+	return (int64_t *) _array->buffer();
 }
 
 spine_array_animation spine_array_animation_create(void) {

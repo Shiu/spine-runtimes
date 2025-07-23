@@ -180,9 +180,6 @@ SPINE_OPAQUE_TYPE(spine_vertex_attachment)
 #include "texture_filter.h"
 #include "texture_wrap.h"
 
-// Array specializations
-#include "arrays.h"
-
 #ifdef __cplusplus
 }
 #endif

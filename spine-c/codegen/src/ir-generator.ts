@@ -1,10 +1,8 @@
-import { ClassOrStruct, Enum, Member, Constructor, Method, Field, Destructor, Parameter, Type } from './types';
-import { CClassOrStruct, CEnum, CMethod, CParameter, CEnumValue } from './c-types';
-import { toSnakeCase, toCFunctionName, toCTypeName, isPrimitive, checkTypeSupport } from './types';
-import { Exclusion } from './types';
-import { ArraySpecialization } from './types';
 import { scanArraySpecializations } from './array-scanner';
+import type { CClassOrStruct, CEnum, CEnumValue, CMethod, CParameter } from './c-types';
 import { isFieldExcluded, isFieldGetterExcluded, isFieldSetterExcluded } from './exclusions';
+import type { ArraySpecialization, Exclusion } from './types';
+import { type ClassOrStruct, type Constructor, checkTypeSupport, type Enum, type Field, isPrimitive, type Method, type Parameter, type Type, toCFunctionName, toCTypeName, toSnakeCase } from './types';
 
 /**
  * Checks if a type inherits from SpineObject (directly or indirectly)
@@ -110,7 +108,7 @@ export function generateConstructors(type: ClassOrStruct, knownTypeNames: Set<st
         } else {
             // Parameterized constructor
             const cParams = convertParameters(ctor.parameters, knownTypeNames);
-            const suffix = i == 1 ? "": i;
+            const suffix = i === 1 ? "": i;
 
             // Build the C++ constructor call
             const cppArgs = buildCppArgs(ctor.parameters, cParams, knownTypeNames);
@@ -136,7 +134,7 @@ export function generateDestructor(type: ClassOrStruct, exclusions: Exclusion[])
         e.typeName === type.name &&
         e.methodName === `~${type.name}`
     );
-    
+
     if (isDestructorExcluded) {
         console.log(`  Excluding destructor: ${type.name}::~${type.name}`);
         return null;
@@ -251,7 +249,7 @@ export function generateFieldAccessors(type: ClassOrStruct, knownTypeNames: Set<
         }
 
         // Check if field type is supported
-        const typeError = checkTypeSupport(field.type, knownTypeNames);
+        const typeError = checkTypeSupport(field.type);
         if (typeError) {
             console.warn(`  Skipping field ${type.name}::${field.name}: ${typeError}`);
             continue;
@@ -557,37 +555,6 @@ function isOutputParameter(cppType: string): boolean {
     return false;
 }
 
-function generateParameterSuffix(params: CParameter[]): string {
-    if (params.length === 0) return '';
-    return params.map(p => toSnakeCase(p.name)).join('_');
-}
-
-/**
- * Generates a parameter suffix that includes type information for overloaded methods.
- * This ensures unique function names when methods have the same parameter names but different types.
- */
-function generateParameterSuffixWithTypes(params: CParameter[], knownTypeNames: Set<string>): string {
-    if (params.length === 0) return '';
-
-    return params.map(p => {
-        const paramName = toSnakeCase(p.name);
-
-        // For pointer types that differ (e.g., float* vs spine_array_float), include type info
-        if (p.cType.includes('spine_array_')) {
-            // Extract the array element type
-            const arrayType = p.cType.replace('spine_array_', 'array_');
-            return `${paramName}_${arrayType}`;
-        } else if (p.cType.endsWith('*') && isPrimitive(p.cType.slice(0, -1).trim())) {
-            // For primitive pointers like float*, int*
-            const baseType = p.cType.slice(0, -1).trim();
-            return `${paramName}_${baseType}_ptr`;
-        }
-
-        // For other parameters, just use the name
-        return paramName;
-    }).join('_');
-}
-
 /**
  * Converts a C parameter to its C++ argument form for function calls.
  * Handles type conversions, casts, and dereferencing as needed.
@@ -695,13 +662,13 @@ function generateMethod(type: ClassOrStruct, method: Method, cTypeName: string, 
         // Generate method body
         let methodCall: string;
         let body: string;
-        
+
         if (method.isStatic) {
             methodCall = `${cppTypeName}::${method.name}(${buildCppArgs(method.parameters || [], cParams, knownTypeNames)})`;
             body = generateReturnStatement(method.returnType, methodCall, knownTypeNames);
         } else {
             // Use local variable to avoid cast->method line breaks
-            const instanceVar = method.fromSupertype ? 
+            const instanceVar = method.fromSupertype ?
                 `${method.fromSupertype} *_self = (${method.fromSupertype} *) (${cppTypeName} *) self;` :
                 `${cppTypeName} *_self = (${cppTypeName} *) self;`;
             methodCall = `_self->${method.name}(${buildCppArgs(method.parameters || [], cParams.slice(1), knownTypeNames)})`;

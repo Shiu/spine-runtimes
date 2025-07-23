@@ -176,7 +176,7 @@ SPINE_C_API bool spine_array_property_id_contains(spine_array_property_id array,
 
 SPINE_C_API int spine_array_property_id_index_of(spine_array_property_id array, int64_t inValue);
 
-SPINE_C_API spine_property_id spine_array_property_id_buffer(spine_array_property_id array);
+SPINE_C_API int64_t *spine_array_property_id_buffer(spine_array_property_id array);
 
 SPINE_C_API spine_array_animation spine_array_animation_create(void);
 

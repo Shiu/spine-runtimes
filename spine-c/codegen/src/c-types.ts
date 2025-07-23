@@ -1,8 +1,8 @@
-import { ClassOrStruct, Enum } from './types';
+import type { ClassOrStruct, Enum } from './types';
 
 export interface CParameter {
     name: string;          // Parameter name in C
-    cType: string;         // C type (e.g., "float*", "spine_bone")  
+    cType: string;         // C type (e.g., "float*", "spine_bone")
     cppType: string;       // Original C++ type (e.g., "float&", "Bone*")
     isOutput: boolean;     // true for non-const references that become output params
 }

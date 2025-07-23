@@ -1,5 +1,5 @@
-import * as fs from 'fs';
-import { Exclusion } from './types';
+import * as fs from 'node:fs';
+import type { Exclusion } from './types';
 
 /**
  * Loads exclusions from a text file.
@@ -85,7 +85,7 @@ export function loadExclusions(filePath: string): Exclusion[] {
         if (fieldMatch) {
             const typeName = fieldMatch[1].trim();
             const fieldName = fieldMatch[2]?.trim();
-            
+
             if (fieldName) {
                 // Specific field
                 exclusions.push({
@@ -169,7 +169,7 @@ export function isFieldExcluded(typeName: string, fieldName: string, exclusions:
 
 export function isFieldGetterExcluded(typeName: string, fieldName: string, exclusions: Exclusion[]): boolean {
     return exclusions.some(ex => {
-        if (ex.kind === 'field-get' && ex.typeName === typeName && 
+        if (ex.kind === 'field-get' && ex.typeName === typeName &&
             (ex.fieldName === fieldName || ex.fieldName === '*')) {
             return true;
         }
@@ -183,7 +183,7 @@ export function isFieldGetterExcluded(typeName: string, fieldName: string, exclu
 
 export function isFieldSetterExcluded(typeName: string, fieldName: string, exclusions: Exclusion[]): boolean {
     return exclusions.some(ex => {
-        if (ex.kind === 'field-set' && ex.typeName === typeName && 
+        if (ex.kind === 'field-set' && ex.typeName === typeName &&
             (ex.fieldName === fieldName || ex.fieldName === '*')) {
             return true;
         }

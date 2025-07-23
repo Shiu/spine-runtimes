@@ -1,6 +1,5 @@
 import { isMethodExcluded } from "./exclusions";
-import { Exclusion, Method, Field, Type } from "./types";
-import { ClassOrStruct, toSnakeCase, isPrimitive } from "./types";
+import { type ClassOrStruct, type Exclusion, type Field, isPrimitive, type Method, type Type, toSnakeCase } from "./types";
 
 /**
  * Checks for methods that have both const and non-const versions with different return types.
@@ -50,7 +49,7 @@ export function checkConstNonConstConflicts(classes: ClassOrStruct[], exclusions
                     // Check if we have both const and non-const versions
                     const hasConst = group.some(m => m.isConst === true);
                     const hasNonConst = group.some(m => m.isConst === false);
-                    
+
                     if (hasConst && hasNonConst) {
                         conflicts.push({ type: type.name, method: group[0].name });
                     }

@@ -237,6 +237,11 @@ export function toCTypeName(cppType: string, knownTypeNames: Set<string>): strin
             return `${baseType} *`;
         }
 
+        // Speical case for PropertyId
+        if (baseType === 'PropertyId') {
+            return 'int64_t *'; // PropertyId is a typedef for int64_t
+        }
+
         // Class pointers become opaque types
         return `spine_${toSnakeCase(baseType)}`;
     }
@@ -281,7 +286,7 @@ export function toCTypeName(cppType: string, knownTypeNames: Set<string>): strin
  * Checks if a C++ type can be represented in the C API.
  * Returns null if the type can be handled, or an error message if not.
  */
-export function checkTypeSupport(cppType: string, knownTypeNames: Set<string>): string | null {
+export function checkTypeSupport(cppType: string): string | null {
     // Remove extra spaces and normalize
     const normalizedType = cppType.replace(/\s+/g, ' ').trim();
 
@@ -292,9 +297,6 @@ export function checkTypeSupport(cppType: string, knownTypeNames: Set<string>): 
         if (elementType === 'String') {
             return "Array<String> is not supported - use const char** instead";
         }
-        // Check if array type exists
-        const arrayTypeName = `spine_array_${toSnakeCase(elementType)}`;
-        // We can't check if the array was generated, so we'll let toCTypeName handle that
     }
 
     // Check for multi-level pointers

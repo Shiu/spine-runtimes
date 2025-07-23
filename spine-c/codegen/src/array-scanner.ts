@@ -1,7 +1,6 @@
-import { Type, ArraySpecialization, isPrimitive, toSnakeCase, Member } from './types';
+import { isFieldExcluded, isFieldGetterExcluded, isMethodExcluded } from './exclusions';
+import { type ArraySpecialization, type Exclusion, isPrimitive, type Member, type Type, toSnakeCase } from './types';
 import { WarningsCollector } from './warnings';
-import { Exclusion } from './types';
-import { isMethodExcluded, isFieldExcluded, isFieldGetterExcluded } from './exclusions';
 
 // Note: This regex won't correctly parse nested arrays like Array<Array<int>>
 // It will match "Array<Array<int>" instead of the full type.
@@ -21,7 +20,8 @@ function extractArrayTypes(
 
     // Reset regex lastIndex to ensure it starts from the beginning
     ARRAY_REGEX.lastIndex = 0;
-    let match;
+    let match: RegExpExecArray | null;
+    // biome-ignore lint/suspicious/noAssignInExpressions: it's fine
     while ((match = ARRAY_REGEX.exec(typeStr)) !== null) {
         const arrayType = match[0];
         const arrayTypeSources = arrayTypes.get(arrayType) || [];
@@ -76,18 +76,18 @@ export function scanArraySpecializations(includedTypes: Type[], exclusions: Excl
         const filteredSources = sources.filter(source => {
             const typeName = source.type.name;
             const member = source.member;
-            
+
             // Check if the entire type is excluded
             if (exclusions.some(e => e.kind === 'type' && e.typeName === typeName)) {
                 return false;
             }
-            
+
             // Check based on member kind
             switch (member.kind) {
                 case 'method':
                     // Check if method is excluded
                     return !isMethodExcluded(typeName, member.name, exclusions, member);
-                    
+
                 case 'field':
                     // Check if field is excluded (all accessors)
                     if (isFieldExcluded(typeName, member.name, exclusions)) {
@@ -99,12 +99,12 @@ export function scanArraySpecializations(includedTypes: Type[], exclusions: Excl
                     }
                     // Field is included if at least setter is not excluded
                     return true;
-                    
+
                 default:
                     return true;
             }
         });
-        
+
         // Skip if all sources are excluded
         if (filteredSources.length === 0) {
             continue;

@@ -45,7 +45,7 @@ if [ "$1" = "codegen" ]; then
         exit 1
     fi
 
-    ../formatters/format.sh cpp
+    ../formatters/format-cpp.sh
 
     log_summary "✓ Code generation successful"
     exit 0
