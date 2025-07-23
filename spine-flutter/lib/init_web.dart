@@ -33,7 +33,7 @@ import 'package:inject_js/inject_js.dart' as js;
 import 'package:web_ffi_fork/web_ffi.dart';
 import 'package:web_ffi_fork/web_ffi_modules.dart';
 
-import 'spine_flutter_bindings_generated.dart';
+import 'generated/spine_flutter_bindings_generated.dart';
 
 Module? _module;
 

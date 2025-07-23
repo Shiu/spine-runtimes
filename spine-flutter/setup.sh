@@ -11,7 +11,7 @@ log_detail "CocoaPods requires all source files to be under the same folder hier
 log_detail "as the podspec file resides in. Copying spine-cpp sources to platform folders."
 
 log_action "Copying spine-cpp to iOS Classes"
-if CP_OUTPUT=$(cp -r ../spine-cpp/spine-cpp ios/Classes 2>&1); then
+if CP_OUTPUT=$(rsync -r --exclude='.cache' --exclude='build' ../spine-cpp ../spine-c ios/Classes 2>&1); then
     log_ok
 else
     log_fail
@@ -20,7 +20,7 @@ else
 fi
 
 log_action "Copying spine-cpp to macOS Classes"
-if CP_OUTPUT=$(cp -r ../spine-cpp/spine-cpp macos/Classes 2>&1); then
+if CP_OUTPUT=$(rsync -r --exclude='.cache' --exclude='build' ../spine-cpp ../spine-c macos/Classes 2>&1); then
     log_ok
 else
     log_fail
@@ -29,16 +29,7 @@ else
 fi
 
 log_action "Copying spine-cpp to src directory"
-if CP_OUTPUT=$(cp -r ../spine-cpp/spine-cpp src 2>&1); then
-    log_ok
-else
-    log_fail
-    log_error_output "$CP_OUTPUT"
-    exit 1
-fi
-
-log_action "Copying spine-cpp-lite to src directory"
-if CP_OUTPUT=$(cp -r ../spine-cpp/spine-cpp-lite src 2>&1); then
+if CP_OUTPUT=$(rsync -r --exclude='.cache' --exclude='build' ../spine-cpp ../spine-c src 2>&1); then
     log_ok
 else
     log_fail
