@@ -83,7 +83,10 @@ async function main() {
     console.log('Code generation complete!');
 }
 
-main().catch(error => {
-    console.error('Error:', error);
-    process.exit(1);
-});
+if (import.meta.url === `file://${process.argv[1]}`) {
+    // Run the main function if this file is executed directly
+    main().catch(error => {
+        console.error('Error during code generation:', error);
+        process.exit(1);
+    });
+}
