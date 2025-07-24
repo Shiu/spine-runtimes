@@ -14,8 +14,9 @@ SPINE_C_API void spine_bone_timeline2_dispose(spine_bone_timeline2 self);
 SPINE_C_API spine_rtti spine_bone_timeline2_get_rtti(spine_bone_timeline2 self);
 SPINE_C_API void spine_bone_timeline2_apply(spine_bone_timeline2 self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
 											float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
+SPINE_C_API int spine_bone_timeline2_get_bone_index(spine_bone_timeline2 self);
+SPINE_C_API void spine_bone_timeline2_set_bone_index(spine_bone_timeline2 self, int inValue);
 SPINE_C_API void spine_bone_timeline2_set_frame(spine_bone_timeline2 self, size_t frame, float time, float value1, float value2);
-SPINE_C_API float spine_bone_timeline2_get_curve_value(spine_bone_timeline2 self, float time);
 SPINE_C_API void spine_bone_timeline2_set_linear(spine_bone_timeline2 self, size_t frame);
 SPINE_C_API void spine_bone_timeline2_set_stepped(spine_bone_timeline2 self, size_t frame);
 SPINE_C_API void spine_bone_timeline2_set_bezier(spine_bone_timeline2 self, size_t bezier, size_t frame, float value, float time1, float value1,
@@ -27,8 +28,6 @@ SPINE_C_API size_t spine_bone_timeline2_get_frame_count(spine_bone_timeline2 sel
 SPINE_C_API spine_array_float spine_bone_timeline2_get_frames(spine_bone_timeline2 self);
 SPINE_C_API float spine_bone_timeline2_get_duration(spine_bone_timeline2 self);
 SPINE_C_API spine_array_property_id spine_bone_timeline2_get_property_ids(spine_bone_timeline2 self);
-SPINE_C_API int spine_bone_timeline2_get_bone_index(spine_bone_timeline2 self);
-SPINE_C_API void spine_bone_timeline2_set_bone_index(spine_bone_timeline2 self, int inValue);
 SPINE_C_API spine_rtti spine_bone_timeline2_rtti(void);
 
 #ifdef __cplusplus

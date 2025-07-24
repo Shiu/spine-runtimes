@@ -31,6 +31,16 @@ void spine_transform_constraint_timeline_set_frame(spine_transform_constraint_ti
 	_self->setFrame(frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
 }
 
+int spine_transform_constraint_timeline_get_constraint_index(spine_transform_constraint_timeline self) {
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
+	return _self->getConstraintIndex();
+}
+
+void spine_transform_constraint_timeline_set_constraint_index(spine_transform_constraint_timeline self, int inValue) {
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
+	_self->setConstraintIndex(inValue);
+}
+
 void spine_transform_constraint_timeline_set_linear(spine_transform_constraint_timeline self, size_t frame) {
 	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
 	_self->setLinear(frame);
@@ -81,16 +91,6 @@ float spine_transform_constraint_timeline_get_duration(spine_transform_constrain
 spine_array_property_id spine_transform_constraint_timeline_get_property_ids(spine_transform_constraint_timeline self) {
 	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_transform_constraint_timeline_get_constraint_index(spine_transform_constraint_timeline self) {
-	ConstraintTimeline *_self = (ConstraintTimeline *) (TransformConstraintTimeline *) self;
-	return _self->getConstraintIndex();
-}
-
-void spine_transform_constraint_timeline_set_constraint_index(spine_transform_constraint_timeline self, int inValue) {
-	ConstraintTimeline *_self = (ConstraintTimeline *) (TransformConstraintTimeline *) self;
-	_self->setConstraintIndex(inValue);
 }
 
 spine_rtti spine_transform_constraint_timeline_rtti(void) {

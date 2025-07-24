@@ -28,6 +28,16 @@ void spine_inherit_timeline_apply(spine_inherit_timeline self, spine_skeleton sk
 				 appliedPose);
 }
 
+int spine_inherit_timeline_get_bone_index(spine_inherit_timeline self) {
+	InheritTimeline *_self = (InheritTimeline *) self;
+	return _self->getBoneIndex();
+}
+
+void spine_inherit_timeline_set_bone_index(spine_inherit_timeline self, int inValue) {
+	InheritTimeline *_self = (InheritTimeline *) self;
+	_self->setBoneIndex(inValue);
+}
+
 size_t spine_inherit_timeline_get_frame_entries(spine_inherit_timeline self) {
 	Timeline *_self = (Timeline *) (InheritTimeline *) self;
 	return _self->getFrameEntries();
@@ -51,16 +61,6 @@ float spine_inherit_timeline_get_duration(spine_inherit_timeline self) {
 spine_array_property_id spine_inherit_timeline_get_property_ids(spine_inherit_timeline self) {
 	Timeline *_self = (Timeline *) (InheritTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_inherit_timeline_get_bone_index(spine_inherit_timeline self) {
-	BoneTimeline *_self = (BoneTimeline *) (InheritTimeline *) self;
-	return _self->getBoneIndex();
-}
-
-void spine_inherit_timeline_set_bone_index(spine_inherit_timeline self, int inValue) {
-	BoneTimeline *_self = (BoneTimeline *) (InheritTimeline *) self;
-	_self->setBoneIndex(inValue);
 }
 
 spine_rtti spine_inherit_timeline_rtti(void) {

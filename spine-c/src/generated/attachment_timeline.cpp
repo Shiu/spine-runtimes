@@ -28,6 +28,16 @@ void spine_attachment_timeline_set_frame(spine_attachment_timeline self, int fra
 	_self->setFrame(frame, time, String(attachmentName));
 }
 
+int spine_attachment_timeline_get_slot_index(spine_attachment_timeline self) {
+	AttachmentTimeline *_self = (AttachmentTimeline *) self;
+	return _self->getSlotIndex();
+}
+
+void spine_attachment_timeline_set_slot_index(spine_attachment_timeline self, int inValue) {
+	AttachmentTimeline *_self = (AttachmentTimeline *) self;
+	_self->setSlotIndex(inValue);
+}
+
 size_t spine_attachment_timeline_get_frame_entries(spine_attachment_timeline self) {
 	Timeline *_self = (Timeline *) (AttachmentTimeline *) self;
 	return _self->getFrameEntries();
@@ -51,16 +61,6 @@ float spine_attachment_timeline_get_duration(spine_attachment_timeline self) {
 spine_array_property_id spine_attachment_timeline_get_property_ids(spine_attachment_timeline self) {
 	Timeline *_self = (Timeline *) (AttachmentTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_attachment_timeline_get_slot_index(spine_attachment_timeline self) {
-	SlotTimeline *_self = (SlotTimeline *) (AttachmentTimeline *) self;
-	return _self->getSlotIndex();
-}
-
-void spine_attachment_timeline_set_slot_index(spine_attachment_timeline self, int inValue) {
-	SlotTimeline *_self = (SlotTimeline *) (AttachmentTimeline *) self;
-	_self->setSlotIndex(inValue);
 }
 
 spine_rtti spine_attachment_timeline_rtti(void) {

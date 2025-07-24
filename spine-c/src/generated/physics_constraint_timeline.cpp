@@ -20,6 +20,16 @@ void spine_physics_constraint_timeline_apply(spine_physics_constraint_timeline s
 				 appliedPose);
 }
 
+int spine_physics_constraint_timeline_get_constraint_index(spine_physics_constraint_timeline self) {
+	PhysicsConstraintTimeline *_self = (PhysicsConstraintTimeline *) self;
+	return _self->getConstraintIndex();
+}
+
+void spine_physics_constraint_timeline_set_constraint_index(spine_physics_constraint_timeline self, int inValue) {
+	PhysicsConstraintTimeline *_self = (PhysicsConstraintTimeline *) self;
+	_self->setConstraintIndex(inValue);
+}
+
 void spine_physics_constraint_timeline_set_frame(spine_physics_constraint_timeline self, size_t frame, float time, float value) {
 	CurveTimeline1 *_self = (CurveTimeline1 *) (PhysicsConstraintTimeline *) self;
 	_self->setFrame(frame, time, value);
@@ -104,16 +114,6 @@ float spine_physics_constraint_timeline_get_duration(spine_physics_constraint_ti
 spine_array_property_id spine_physics_constraint_timeline_get_property_ids(spine_physics_constraint_timeline self) {
 	CurveTimeline1 *_self = (CurveTimeline1 *) (PhysicsConstraintTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_physics_constraint_timeline_get_constraint_index(spine_physics_constraint_timeline self) {
-	ConstraintTimeline *_self = (ConstraintTimeline *) (PhysicsConstraintTimeline *) self;
-	return _self->getConstraintIndex();
-}
-
-void spine_physics_constraint_timeline_set_constraint_index(spine_physics_constraint_timeline self, int inValue) {
-	ConstraintTimeline *_self = (ConstraintTimeline *) (PhysicsConstraintTimeline *) self;
-	_self->setConstraintIndex(inValue);
 }
 
 spine_rtti spine_physics_constraint_timeline_rtti(void) {

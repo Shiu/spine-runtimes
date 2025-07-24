@@ -24,6 +24,16 @@ void spine_path_constraint_spacing_timeline_apply(spine_path_constraint_spacing_
 				 appliedPose);
 }
 
+int spine_path_constraint_spacing_timeline_get_constraint_index(spine_path_constraint_spacing_timeline self) {
+	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (PathConstraintSpacingTimeline *) self;
+	return _self->getConstraintIndex();
+}
+
+void spine_path_constraint_spacing_timeline_set_constraint_index(spine_path_constraint_spacing_timeline self, int inValue) {
+	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (PathConstraintSpacingTimeline *) self;
+	_self->setConstraintIndex(inValue);
+}
+
 void spine_path_constraint_spacing_timeline_set_frame(spine_path_constraint_spacing_timeline self, size_t frame, float time, float value) {
 	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (PathConstraintSpacingTimeline *) self;
 	_self->setFrame(frame, time, value);
@@ -109,16 +119,6 @@ float spine_path_constraint_spacing_timeline_get_duration(spine_path_constraint_
 spine_array_property_id spine_path_constraint_spacing_timeline_get_property_ids(spine_path_constraint_spacing_timeline self) {
 	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (PathConstraintSpacingTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_path_constraint_spacing_timeline_get_constraint_index(spine_path_constraint_spacing_timeline self) {
-	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (PathConstraintSpacingTimeline *) self;
-	return _self->getConstraintIndex();
-}
-
-void spine_path_constraint_spacing_timeline_set_constraint_index(spine_path_constraint_spacing_timeline self, int inValue) {
-	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (PathConstraintSpacingTimeline *) self;
-	_self->setConstraintIndex(inValue);
 }
 
 spine_rtti spine_path_constraint_spacing_timeline_rtti(void) {

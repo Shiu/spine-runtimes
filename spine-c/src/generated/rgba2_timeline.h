@@ -18,6 +18,8 @@ SPINE_C_API void spine_rgba2_timeline_set_frame(spine_rgba2_timeline self, int f
 												float g2, float b2);
 SPINE_C_API void spine_rgba2_timeline_apply(spine_rgba2_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
 											float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
+SPINE_C_API int spine_rgba2_timeline_get_slot_index(spine_rgba2_timeline self);
+SPINE_C_API void spine_rgba2_timeline_set_slot_index(spine_rgba2_timeline self, int inValue);
 SPINE_C_API void spine_rgba2_timeline_set_linear(spine_rgba2_timeline self, size_t frame);
 SPINE_C_API void spine_rgba2_timeline_set_stepped(spine_rgba2_timeline self, size_t frame);
 SPINE_C_API void spine_rgba2_timeline_set_bezier(spine_rgba2_timeline self, size_t bezier, size_t frame, float value, float time1, float value1,
@@ -29,8 +31,6 @@ SPINE_C_API size_t spine_rgba2_timeline_get_frame_count(spine_rgba2_timeline sel
 SPINE_C_API spine_array_float spine_rgba2_timeline_get_frames(spine_rgba2_timeline self);
 SPINE_C_API float spine_rgba2_timeline_get_duration(spine_rgba2_timeline self);
 SPINE_C_API spine_array_property_id spine_rgba2_timeline_get_property_ids(spine_rgba2_timeline self);
-SPINE_C_API int spine_rgba2_timeline_get_slot_index(spine_rgba2_timeline self);
-SPINE_C_API void spine_rgba2_timeline_set_slot_index(spine_rgba2_timeline self, int inValue);
 SPINE_C_API spine_rtti spine_rgba2_timeline_rtti(void);
 
 #ifdef __cplusplus

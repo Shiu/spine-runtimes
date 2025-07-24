@@ -16,6 +16,8 @@ SPINE_C_API void spine_alpha_timeline_dispose(spine_alpha_timeline self);
 SPINE_C_API spine_rtti spine_alpha_timeline_get_rtti(spine_alpha_timeline self);
 SPINE_C_API void spine_alpha_timeline_apply(spine_alpha_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
 											float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
+SPINE_C_API int spine_alpha_timeline_get_slot_index(spine_alpha_timeline self);
+SPINE_C_API void spine_alpha_timeline_set_slot_index(spine_alpha_timeline self, int inValue);
 SPINE_C_API void spine_alpha_timeline_set_frame(spine_alpha_timeline self, size_t frame, float time, float value);
 SPINE_C_API float spine_alpha_timeline_get_curve_value(spine_alpha_timeline self, float time);
 SPINE_C_API float spine_alpha_timeline_get_relative_value(spine_alpha_timeline self, float time, float alpha, spine_mix_blend blend, float current,
@@ -37,8 +39,6 @@ SPINE_C_API size_t spine_alpha_timeline_get_frame_count(spine_alpha_timeline sel
 SPINE_C_API spine_array_float spine_alpha_timeline_get_frames(spine_alpha_timeline self);
 SPINE_C_API float spine_alpha_timeline_get_duration(spine_alpha_timeline self);
 SPINE_C_API spine_array_property_id spine_alpha_timeline_get_property_ids(spine_alpha_timeline self);
-SPINE_C_API int spine_alpha_timeline_get_slot_index(spine_alpha_timeline self);
-SPINE_C_API void spine_alpha_timeline_set_slot_index(spine_alpha_timeline self, int inValue);
 SPINE_C_API spine_rtti spine_alpha_timeline_rtti(void);
 
 #ifdef __cplusplus

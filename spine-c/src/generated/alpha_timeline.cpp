@@ -23,6 +23,16 @@ void spine_alpha_timeline_apply(spine_alpha_timeline self, spine_skeleton skelet
 				 appliedPose);
 }
 
+int spine_alpha_timeline_get_slot_index(spine_alpha_timeline self) {
+	AlphaTimeline *_self = (AlphaTimeline *) self;
+	return _self->getSlotIndex();
+}
+
+void spine_alpha_timeline_set_slot_index(spine_alpha_timeline self, int inValue) {
+	AlphaTimeline *_self = (AlphaTimeline *) self;
+	_self->setSlotIndex(inValue);
+}
+
 void spine_alpha_timeline_set_frame(spine_alpha_timeline self, size_t frame, float time, float value) {
 	CurveTimeline1 *_self = (CurveTimeline1 *) (AlphaTimeline *) self;
 	_self->setFrame(frame, time, value);
@@ -105,16 +115,6 @@ float spine_alpha_timeline_get_duration(spine_alpha_timeline self) {
 spine_array_property_id spine_alpha_timeline_get_property_ids(spine_alpha_timeline self) {
 	CurveTimeline1 *_self = (CurveTimeline1 *) (AlphaTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_alpha_timeline_get_slot_index(spine_alpha_timeline self) {
-	SlotTimeline *_self = (SlotTimeline *) (AlphaTimeline *) self;
-	return _self->getSlotIndex();
-}
-
-void spine_alpha_timeline_set_slot_index(spine_alpha_timeline self, int inValue) {
-	SlotTimeline *_self = (SlotTimeline *) (AlphaTimeline *) self;
-	_self->setSlotIndex(inValue);
 }
 
 spine_rtti spine_alpha_timeline_rtti(void) {

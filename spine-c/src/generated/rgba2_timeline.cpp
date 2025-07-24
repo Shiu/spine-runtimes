@@ -29,6 +29,16 @@ void spine_rgba2_timeline_apply(spine_rgba2_timeline self, spine_skeleton skelet
 				 appliedPose);
 }
 
+int spine_rgba2_timeline_get_slot_index(spine_rgba2_timeline self) {
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	return _self->getSlotIndex();
+}
+
+void spine_rgba2_timeline_set_slot_index(spine_rgba2_timeline self, int inValue) {
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	_self->setSlotIndex(inValue);
+}
+
 void spine_rgba2_timeline_set_linear(spine_rgba2_timeline self, size_t frame) {
 	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
 	_self->setLinear(frame);
@@ -78,16 +88,6 @@ float spine_rgba2_timeline_get_duration(spine_rgba2_timeline self) {
 spine_array_property_id spine_rgba2_timeline_get_property_ids(spine_rgba2_timeline self) {
 	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_rgba2_timeline_get_slot_index(spine_rgba2_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
-	return _self->getSlotIndex();
-}
-
-void spine_rgba2_timeline_set_slot_index(spine_rgba2_timeline self, int inValue) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
-	_self->setSlotIndex(inValue);
 }
 
 spine_rtti spine_rgba2_timeline_rtti(void) {

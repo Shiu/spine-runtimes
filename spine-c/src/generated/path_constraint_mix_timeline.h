@@ -19,6 +19,8 @@ SPINE_C_API void spine_path_constraint_mix_timeline_apply(spine_path_constraint_
 														  spine_mix_direction direction, bool appliedPose);
 SPINE_C_API void spine_path_constraint_mix_timeline_set_frame(spine_path_constraint_mix_timeline self, int frame, float time, float mixRotate,
 															  float mixX, float mixY);
+SPINE_C_API int spine_path_constraint_mix_timeline_get_constraint_index(spine_path_constraint_mix_timeline self);
+SPINE_C_API void spine_path_constraint_mix_timeline_set_constraint_index(spine_path_constraint_mix_timeline self, int inValue);
 SPINE_C_API void spine_path_constraint_mix_timeline_set_linear(spine_path_constraint_mix_timeline self, size_t frame);
 SPINE_C_API void spine_path_constraint_mix_timeline_set_stepped(spine_path_constraint_mix_timeline self, size_t frame);
 SPINE_C_API void spine_path_constraint_mix_timeline_set_bezier(spine_path_constraint_mix_timeline self, size_t bezier, size_t frame, float value,
@@ -32,8 +34,6 @@ SPINE_C_API size_t spine_path_constraint_mix_timeline_get_frame_count(spine_path
 SPINE_C_API spine_array_float spine_path_constraint_mix_timeline_get_frames(spine_path_constraint_mix_timeline self);
 SPINE_C_API float spine_path_constraint_mix_timeline_get_duration(spine_path_constraint_mix_timeline self);
 SPINE_C_API spine_array_property_id spine_path_constraint_mix_timeline_get_property_ids(spine_path_constraint_mix_timeline self);
-SPINE_C_API int spine_path_constraint_mix_timeline_get_constraint_index(spine_path_constraint_mix_timeline self);
-SPINE_C_API void spine_path_constraint_mix_timeline_set_constraint_index(spine_path_constraint_mix_timeline self, int inValue);
 SPINE_C_API spine_rtti spine_path_constraint_mix_timeline_rtti(void);
 
 #ifdef __cplusplus

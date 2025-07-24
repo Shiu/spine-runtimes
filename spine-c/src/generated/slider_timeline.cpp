@@ -23,6 +23,16 @@ void spine_slider_timeline_apply(spine_slider_timeline self, spine_skeleton skel
 				 appliedPose);
 }
 
+int spine_slider_timeline_get_constraint_index(spine_slider_timeline self) {
+	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (SliderTimeline *) self;
+	return _self->getConstraintIndex();
+}
+
+void spine_slider_timeline_set_constraint_index(spine_slider_timeline self, int inValue) {
+	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (SliderTimeline *) self;
+	_self->setConstraintIndex(inValue);
+}
+
 void spine_slider_timeline_set_frame(spine_slider_timeline self, size_t frame, float time, float value) {
 	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (SliderTimeline *) self;
 	_self->setFrame(frame, time, value);
@@ -106,16 +116,6 @@ float spine_slider_timeline_get_duration(spine_slider_timeline self) {
 spine_array_property_id spine_slider_timeline_get_property_ids(spine_slider_timeline self) {
 	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (SliderTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_slider_timeline_get_constraint_index(spine_slider_timeline self) {
-	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (SliderTimeline *) self;
-	return _self->getConstraintIndex();
-}
-
-void spine_slider_timeline_set_constraint_index(spine_slider_timeline self, int inValue) {
-	ConstraintTimeline1 *_self = (ConstraintTimeline1 *) (SliderTimeline *) self;
-	_self->setConstraintIndex(inValue);
 }
 
 spine_rtti spine_slider_timeline_rtti(void) {

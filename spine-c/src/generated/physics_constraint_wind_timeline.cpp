@@ -26,6 +26,16 @@ void spine_physics_constraint_wind_timeline_apply(spine_physics_constraint_wind_
 				 appliedPose);
 }
 
+int spine_physics_constraint_wind_timeline_get_constraint_index(spine_physics_constraint_wind_timeline self) {
+	PhysicsConstraintTimeline *_self = (PhysicsConstraintTimeline *) (PhysicsConstraintWindTimeline *) self;
+	return _self->getConstraintIndex();
+}
+
+void spine_physics_constraint_wind_timeline_set_constraint_index(spine_physics_constraint_wind_timeline self, int inValue) {
+	PhysicsConstraintTimeline *_self = (PhysicsConstraintTimeline *) (PhysicsConstraintWindTimeline *) self;
+	_self->setConstraintIndex(inValue);
+}
+
 void spine_physics_constraint_wind_timeline_set_frame(spine_physics_constraint_wind_timeline self, size_t frame, float time, float value) {
 	PhysicsConstraintTimeline *_self = (PhysicsConstraintTimeline *) (PhysicsConstraintWindTimeline *) self;
 	_self->setFrame(frame, time, value);
@@ -111,16 +121,6 @@ float spine_physics_constraint_wind_timeline_get_duration(spine_physics_constrai
 spine_array_property_id spine_physics_constraint_wind_timeline_get_property_ids(spine_physics_constraint_wind_timeline self) {
 	PhysicsConstraintTimeline *_self = (PhysicsConstraintTimeline *) (PhysicsConstraintWindTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_physics_constraint_wind_timeline_get_constraint_index(spine_physics_constraint_wind_timeline self) {
-	PhysicsConstraintTimeline *_self = (PhysicsConstraintTimeline *) (PhysicsConstraintWindTimeline *) self;
-	return _self->getConstraintIndex();
-}
-
-void spine_physics_constraint_wind_timeline_set_constraint_index(spine_physics_constraint_wind_timeline self, int inValue) {
-	PhysicsConstraintTimeline *_self = (PhysicsConstraintTimeline *) (PhysicsConstraintWindTimeline *) self;
-	_self->setConstraintIndex(inValue);
 }
 
 spine_rtti spine_physics_constraint_wind_timeline_rtti(void) {

@@ -12,6 +12,8 @@ extern "C" {
 SPINE_C_API void spine_constraint_timeline1_dispose(spine_constraint_timeline1 self);
 
 SPINE_C_API spine_rtti spine_constraint_timeline1_get_rtti(spine_constraint_timeline1 self);
+SPINE_C_API int spine_constraint_timeline1_get_constraint_index(spine_constraint_timeline1 self);
+SPINE_C_API void spine_constraint_timeline1_set_constraint_index(spine_constraint_timeline1 self, int inValue);
 SPINE_C_API void spine_constraint_timeline1_set_frame(spine_constraint_timeline1 self, size_t frame, float time, float value);
 SPINE_C_API float spine_constraint_timeline1_get_curve_value(spine_constraint_timeline1 self, float time);
 SPINE_C_API float spine_constraint_timeline1_get_relative_value(spine_constraint_timeline1 self, float time, float alpha, spine_mix_blend blend,
@@ -37,8 +39,6 @@ SPINE_C_API size_t spine_constraint_timeline1_get_frame_count(spine_constraint_t
 SPINE_C_API spine_array_float spine_constraint_timeline1_get_frames(spine_constraint_timeline1 self);
 SPINE_C_API float spine_constraint_timeline1_get_duration(spine_constraint_timeline1 self);
 SPINE_C_API spine_array_property_id spine_constraint_timeline1_get_property_ids(spine_constraint_timeline1 self);
-SPINE_C_API int spine_constraint_timeline1_get_constraint_index(spine_constraint_timeline1 self);
-SPINE_C_API void spine_constraint_timeline1_set_constraint_index(spine_constraint_timeline1 self, int inValue);
 SPINE_C_API spine_rtti spine_constraint_timeline1_rtti(void);
 
 #ifdef __cplusplus

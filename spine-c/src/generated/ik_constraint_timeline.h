@@ -19,6 +19,8 @@ SPINE_C_API void spine_ik_constraint_timeline_apply(spine_ik_constraint_timeline
 													bool appliedPose);
 SPINE_C_API void spine_ik_constraint_timeline_set_frame(spine_ik_constraint_timeline self, int frame, float time, float mix, float softness,
 														int bendDirection, bool compress, bool stretch);
+SPINE_C_API int spine_ik_constraint_timeline_get_constraint_index(spine_ik_constraint_timeline self);
+SPINE_C_API void spine_ik_constraint_timeline_set_constraint_index(spine_ik_constraint_timeline self, int inValue);
 SPINE_C_API void spine_ik_constraint_timeline_set_linear(spine_ik_constraint_timeline self, size_t frame);
 SPINE_C_API void spine_ik_constraint_timeline_set_stepped(spine_ik_constraint_timeline self, size_t frame);
 SPINE_C_API void spine_ik_constraint_timeline_set_bezier(spine_ik_constraint_timeline self, size_t bezier, size_t frame, float value, float time1,
@@ -31,8 +33,6 @@ SPINE_C_API size_t spine_ik_constraint_timeline_get_frame_count(spine_ik_constra
 SPINE_C_API spine_array_float spine_ik_constraint_timeline_get_frames(spine_ik_constraint_timeline self);
 SPINE_C_API float spine_ik_constraint_timeline_get_duration(spine_ik_constraint_timeline self);
 SPINE_C_API spine_array_property_id spine_ik_constraint_timeline_get_property_ids(spine_ik_constraint_timeline self);
-SPINE_C_API int spine_ik_constraint_timeline_get_constraint_index(spine_ik_constraint_timeline self);
-SPINE_C_API void spine_ik_constraint_timeline_set_constraint_index(spine_ik_constraint_timeline self, int inValue);
 SPINE_C_API spine_rtti spine_ik_constraint_timeline_rtti(void);
 
 #ifdef __cplusplus

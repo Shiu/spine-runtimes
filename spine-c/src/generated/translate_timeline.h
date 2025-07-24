@@ -17,8 +17,9 @@ SPINE_C_API spine_rtti spine_translate_timeline_get_rtti(spine_translate_timelin
 SPINE_C_API void spine_translate_timeline_apply(spine_translate_timeline self, spine_skeleton skeleton, float lastTime, float time,
 												spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
 												bool appliedPose);
+SPINE_C_API int spine_translate_timeline_get_bone_index(spine_translate_timeline self);
+SPINE_C_API void spine_translate_timeline_set_bone_index(spine_translate_timeline self, int inValue);
 SPINE_C_API void spine_translate_timeline_set_frame(spine_translate_timeline self, size_t frame, float time, float value1, float value2);
-SPINE_C_API float spine_translate_timeline_get_curve_value(spine_translate_timeline self, float time);
 SPINE_C_API void spine_translate_timeline_set_linear(spine_translate_timeline self, size_t frame);
 SPINE_C_API void spine_translate_timeline_set_stepped(spine_translate_timeline self, size_t frame);
 SPINE_C_API void spine_translate_timeline_set_bezier(spine_translate_timeline self, size_t bezier, size_t frame, float value, float time1,
@@ -30,8 +31,6 @@ SPINE_C_API size_t spine_translate_timeline_get_frame_count(spine_translate_time
 SPINE_C_API spine_array_float spine_translate_timeline_get_frames(spine_translate_timeline self);
 SPINE_C_API float spine_translate_timeline_get_duration(spine_translate_timeline self);
 SPINE_C_API spine_array_property_id spine_translate_timeline_get_property_ids(spine_translate_timeline self);
-SPINE_C_API int spine_translate_timeline_get_bone_index(spine_translate_timeline self);
-SPINE_C_API void spine_translate_timeline_set_bone_index(spine_translate_timeline self, int inValue);
 SPINE_C_API spine_rtti spine_translate_timeline_rtti(void);
 
 #ifdef __cplusplus

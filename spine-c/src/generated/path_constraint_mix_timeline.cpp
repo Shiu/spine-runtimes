@@ -30,6 +30,16 @@ void spine_path_constraint_mix_timeline_set_frame(spine_path_constraint_mix_time
 	_self->setFrame(frame, time, mixRotate, mixX, mixY);
 }
 
+int spine_path_constraint_mix_timeline_get_constraint_index(spine_path_constraint_mix_timeline self) {
+	PathConstraintMixTimeline *_self = (PathConstraintMixTimeline *) self;
+	return _self->getConstraintIndex();
+}
+
+void spine_path_constraint_mix_timeline_set_constraint_index(spine_path_constraint_mix_timeline self, int inValue) {
+	PathConstraintMixTimeline *_self = (PathConstraintMixTimeline *) self;
+	_self->setConstraintIndex(inValue);
+}
+
 void spine_path_constraint_mix_timeline_set_linear(spine_path_constraint_mix_timeline self, size_t frame) {
 	CurveTimeline *_self = (CurveTimeline *) (PathConstraintMixTimeline *) self;
 	_self->setLinear(frame);
@@ -80,16 +90,6 @@ float spine_path_constraint_mix_timeline_get_duration(spine_path_constraint_mix_
 spine_array_property_id spine_path_constraint_mix_timeline_get_property_ids(spine_path_constraint_mix_timeline self) {
 	CurveTimeline *_self = (CurveTimeline *) (PathConstraintMixTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_path_constraint_mix_timeline_get_constraint_index(spine_path_constraint_mix_timeline self) {
-	ConstraintTimeline *_self = (ConstraintTimeline *) (PathConstraintMixTimeline *) self;
-	return _self->getConstraintIndex();
-}
-
-void spine_path_constraint_mix_timeline_set_constraint_index(spine_path_constraint_mix_timeline self, int inValue) {
-	ConstraintTimeline *_self = (ConstraintTimeline *) (PathConstraintMixTimeline *) self;
-	_self->setConstraintIndex(inValue);
 }
 
 spine_rtti spine_path_constraint_mix_timeline_rtti(void) {

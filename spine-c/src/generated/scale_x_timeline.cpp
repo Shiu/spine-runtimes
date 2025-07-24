@@ -23,6 +23,16 @@ void spine_scale_x_timeline_apply(spine_scale_x_timeline self, spine_skeleton sk
 				 appliedPose);
 }
 
+int spine_scale_x_timeline_get_bone_index(spine_scale_x_timeline self) {
+	BoneTimeline1 *_self = (BoneTimeline1 *) (ScaleXTimeline *) self;
+	return _self->getBoneIndex();
+}
+
+void spine_scale_x_timeline_set_bone_index(spine_scale_x_timeline self, int inValue) {
+	BoneTimeline1 *_self = (BoneTimeline1 *) (ScaleXTimeline *) self;
+	_self->setBoneIndex(inValue);
+}
+
 void spine_scale_x_timeline_set_frame(spine_scale_x_timeline self, size_t frame, float time, float value) {
 	BoneTimeline1 *_self = (BoneTimeline1 *) (ScaleXTimeline *) self;
 	_self->setFrame(frame, time, value);
@@ -106,16 +116,6 @@ float spine_scale_x_timeline_get_duration(spine_scale_x_timeline self) {
 spine_array_property_id spine_scale_x_timeline_get_property_ids(spine_scale_x_timeline self) {
 	BoneTimeline1 *_self = (BoneTimeline1 *) (ScaleXTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_scale_x_timeline_get_bone_index(spine_scale_x_timeline self) {
-	BoneTimeline1 *_self = (BoneTimeline1 *) (ScaleXTimeline *) self;
-	return _self->getBoneIndex();
-}
-
-void spine_scale_x_timeline_set_bone_index(spine_scale_x_timeline self, int inValue) {
-	BoneTimeline1 *_self = (BoneTimeline1 *) (ScaleXTimeline *) self;
-	_self->setBoneIndex(inValue);
 }
 
 spine_rtti spine_scale_x_timeline_rtti(void) {

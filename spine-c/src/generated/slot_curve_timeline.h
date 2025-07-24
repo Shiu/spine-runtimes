@@ -15,6 +15,8 @@ SPINE_C_API spine_rtti spine_slot_curve_timeline_get_rtti(spine_slot_curve_timel
 SPINE_C_API void spine_slot_curve_timeline_apply(spine_slot_curve_timeline self, spine_skeleton skeleton, float lastTime, float time,
 												 spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
 												 bool appliedPose);
+SPINE_C_API int spine_slot_curve_timeline_get_slot_index(spine_slot_curve_timeline self);
+SPINE_C_API void spine_slot_curve_timeline_set_slot_index(spine_slot_curve_timeline self, int inValue);
 SPINE_C_API void spine_slot_curve_timeline_set_linear(spine_slot_curve_timeline self, size_t frame);
 SPINE_C_API void spine_slot_curve_timeline_set_stepped(spine_slot_curve_timeline self, size_t frame);
 SPINE_C_API void spine_slot_curve_timeline_set_bezier(spine_slot_curve_timeline self, size_t bezier, size_t frame, float value, float time1,
@@ -26,8 +28,6 @@ SPINE_C_API size_t spine_slot_curve_timeline_get_frame_count(spine_slot_curve_ti
 SPINE_C_API spine_array_float spine_slot_curve_timeline_get_frames(spine_slot_curve_timeline self);
 SPINE_C_API float spine_slot_curve_timeline_get_duration(spine_slot_curve_timeline self);
 SPINE_C_API spine_array_property_id spine_slot_curve_timeline_get_property_ids(spine_slot_curve_timeline self);
-SPINE_C_API int spine_slot_curve_timeline_get_slot_index(spine_slot_curve_timeline self);
-SPINE_C_API void spine_slot_curve_timeline_set_slot_index(spine_slot_curve_timeline self, int inValue);
 SPINE_C_API spine_rtti spine_slot_curve_timeline_rtti(void);
 
 #ifdef __cplusplus

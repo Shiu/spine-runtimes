@@ -34,6 +34,11 @@ int spine_physics_constraint_reset_timeline_get_constraint_index(spine_physics_c
 	return _self->getConstraintIndex();
 }
 
+void spine_physics_constraint_reset_timeline_set_constraint_index(spine_physics_constraint_reset_timeline self, int inValue) {
+	PhysicsConstraintResetTimeline *_self = (PhysicsConstraintResetTimeline *) self;
+	_self->setConstraintIndex(inValue);
+}
+
 void spine_physics_constraint_reset_timeline_set_frame(spine_physics_constraint_reset_timeline self, int frame, float time) {
 	PhysicsConstraintResetTimeline *_self = (PhysicsConstraintResetTimeline *) self;
 	_self->setFrame(frame, time);
@@ -57,11 +62,6 @@ float spine_physics_constraint_reset_timeline_get_duration(spine_physics_constra
 spine_array_property_id spine_physics_constraint_reset_timeline_get_property_ids(spine_physics_constraint_reset_timeline self) {
 	Timeline *_self = (Timeline *) (PhysicsConstraintResetTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-void spine_physics_constraint_reset_timeline_set_constraint_index(spine_physics_constraint_reset_timeline self, int inValue) {
-	ConstraintTimeline *_self = (ConstraintTimeline *) (PhysicsConstraintResetTimeline *) self;
-	_self->setConstraintIndex(inValue);
 }
 
 spine_rtti spine_physics_constraint_reset_timeline_rtti(void) {

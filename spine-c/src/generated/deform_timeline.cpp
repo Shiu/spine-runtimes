@@ -54,6 +54,16 @@ void spine_deform_timeline_apply(spine_deform_timeline self, spine_skeleton skel
 				 appliedPose);
 }
 
+int spine_deform_timeline_get_slot_index(spine_deform_timeline self) {
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	return _self->getSlotIndex();
+}
+
+void spine_deform_timeline_set_slot_index(spine_deform_timeline self, int inValue) {
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	_self->setSlotIndex(inValue);
+}
+
 void spine_deform_timeline_set_linear(spine_deform_timeline self, size_t frame) {
 	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
 	_self->setLinear(frame);
@@ -92,16 +102,6 @@ float spine_deform_timeline_get_duration(spine_deform_timeline self) {
 spine_array_property_id spine_deform_timeline_get_property_ids(spine_deform_timeline self) {
 	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_deform_timeline_get_slot_index(spine_deform_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
-	return _self->getSlotIndex();
-}
-
-void spine_deform_timeline_set_slot_index(spine_deform_timeline self, int inValue) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
-	_self->setSlotIndex(inValue);
 }
 
 spine_rtti spine_deform_timeline_rtti(void) {

@@ -30,6 +30,16 @@ void spine_ik_constraint_timeline_set_frame(spine_ik_constraint_timeline self, i
 	_self->setFrame(frame, time, mix, softness, bendDirection, compress, stretch);
 }
 
+int spine_ik_constraint_timeline_get_constraint_index(spine_ik_constraint_timeline self) {
+	IkConstraintTimeline *_self = (IkConstraintTimeline *) self;
+	return _self->getConstraintIndex();
+}
+
+void spine_ik_constraint_timeline_set_constraint_index(spine_ik_constraint_timeline self, int inValue) {
+	IkConstraintTimeline *_self = (IkConstraintTimeline *) self;
+	_self->setConstraintIndex(inValue);
+}
+
 void spine_ik_constraint_timeline_set_linear(spine_ik_constraint_timeline self, size_t frame) {
 	CurveTimeline *_self = (CurveTimeline *) (IkConstraintTimeline *) self;
 	_self->setLinear(frame);
@@ -79,16 +89,6 @@ float spine_ik_constraint_timeline_get_duration(spine_ik_constraint_timeline sel
 spine_array_property_id spine_ik_constraint_timeline_get_property_ids(spine_ik_constraint_timeline self) {
 	CurveTimeline *_self = (CurveTimeline *) (IkConstraintTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
-}
-
-int spine_ik_constraint_timeline_get_constraint_index(spine_ik_constraint_timeline self) {
-	ConstraintTimeline *_self = (ConstraintTimeline *) (IkConstraintTimeline *) self;
-	return _self->getConstraintIndex();
-}
-
-void spine_ik_constraint_timeline_set_constraint_index(spine_ik_constraint_timeline self, int inValue) {
-	ConstraintTimeline *_self = (ConstraintTimeline *) (IkConstraintTimeline *) self;
-	_self->setConstraintIndex(inValue);
 }
 
 spine_rtti spine_ik_constraint_timeline_rtti(void) {
