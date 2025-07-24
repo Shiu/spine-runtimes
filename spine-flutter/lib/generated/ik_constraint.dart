@@ -60,6 +60,11 @@ class IkConstraint extends PosedActive implements Posed, Constraint {
   }
 
   @override
+  void dispose() {
+    SpineBindings.bindings.spine_ik_constraint_dispose(_ptr);
+  }
+
+  @override
   Rtti get rtti {
     final result = SpineBindings.bindings.spine_ik_constraint_get_rtti(_ptr);
     return Rtti.fromPointer(result);

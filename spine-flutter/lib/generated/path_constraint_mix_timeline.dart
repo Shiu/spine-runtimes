@@ -51,6 +51,10 @@ class PathConstraintMixTimeline extends CurveTimeline implements ConstraintTimel
     return PathConstraintMixTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_path_constraint_mix_timeline_dispose(_ptr);
+  }
+
   void setFrame(int frame, double time, double mixRotate, double mixX, double mixY) {
     SpineBindings.bindings.spine_path_constraint_mix_timeline_set_frame(_ptr, frame, time, mixRotate, mixX, mixY);
   }

@@ -51,7 +51,7 @@ import 'skin.dart';
 import 'slot.dart';
 
 /// Skeleton wrapper
-class Skeleton implements Finalizable {
+class Skeleton {
   final Pointer<spine_skeleton_wrapper> _ptr;
 
   Skeleton.fromPointer(this._ptr);
@@ -62,6 +62,10 @@ class Skeleton implements Finalizable {
   factory Skeleton(SkeletonData skeletonData) {
     final ptr = SpineBindings.bindings.spine_skeleton_create(skeletonData.nativePtr.cast());
     return Skeleton.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_skeleton_dispose(_ptr);
   }
 
   void updateCache() {

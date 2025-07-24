@@ -50,6 +50,10 @@ class IkConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
     return IkConstraintTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_ik_constraint_timeline_dispose(_ptr);
+  }
+
   void setFrame(int frame, double time, double mix, double softness, int bendDirection, bool compress, bool stretch) {
     SpineBindings.bindings
         .spine_ik_constraint_timeline_set_frame(_ptr, frame, time, mix, softness, bendDirection, compress, stretch);

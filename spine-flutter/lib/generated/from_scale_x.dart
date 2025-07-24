@@ -48,4 +48,8 @@ class FromScaleX extends FromProperty {
     final ptr = SpineBindings.bindings.spine_from_scale_x_create();
     return FromScaleX.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_from_scale_x_dispose(_ptr);
+  }
 }

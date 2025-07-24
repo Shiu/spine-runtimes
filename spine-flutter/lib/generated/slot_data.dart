@@ -54,6 +54,11 @@ class SlotData extends PosedData {
     return SlotData.fromPointer(ptr);
   }
 
+  @override
+  void dispose() {
+    SpineBindings.bindings.spine_slot_data_dispose(_ptr);
+  }
+
   int get index {
     final result = SpineBindings.bindings.spine_slot_data_get_index(_ptr);
     return result;

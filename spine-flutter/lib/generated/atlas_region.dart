@@ -52,6 +52,11 @@ class AtlasRegion extends TextureRegion {
     return AtlasRegion.fromPointer(ptr);
   }
 
+  @override
+  void dispose() {
+    SpineBindings.bindings.spine_atlas_region_dispose(_ptr);
+  }
+
   AtlasPage get page {
     final result = SpineBindings.bindings.spine_atlas_region_get_page(_ptr);
     return AtlasPage.fromPointer(result);

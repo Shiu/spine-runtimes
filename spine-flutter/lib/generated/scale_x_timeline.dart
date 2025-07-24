@@ -48,4 +48,8 @@ class ScaleXTimeline extends BoneTimeline1 {
     final ptr = SpineBindings.bindings.spine_scale_x_timeline_create(frameCount, bezierCount, boneIndex);
     return ScaleXTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_scale_x_timeline_dispose(_ptr);
+  }
 }

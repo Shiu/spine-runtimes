@@ -246,6 +246,11 @@ export class DartWriter {
 			}
 		}
 
+		// Add destructor as dispose method for concrete classes
+		if (classType === 'concrete' && cType.destructor) {
+			members.push(this.createDisposeMethod(cType.destructor, cType));
+		}
+
 		// Process methods with unified logic - Apply SAME logic for ALL class types
 		const validMethods = cType.methods.filter(method => {
 			if (this.hasRawPointerParameters(method)) {
@@ -337,6 +342,20 @@ export class DartWriter {
 		}
 
 		return overloadedSetters;
+	}
+
+	private createDisposeMethod (destructor: CMethod, cType: CClassOrStruct): DartMember {
+		const implementation = `SpineBindings.bindings.${destructor.name}(_ptr);`;
+
+		return {
+			type: 'method',
+			name: 'dispose',
+			dartReturnType: 'void',
+			parameters: [],
+			isOverride: false,
+			implementation,
+			cMethodName: destructor.name
+		};
 	}
 
 	private createConstructor (constr: CMethod, cType: CClassOrStruct): DartMember {
@@ -530,15 +549,10 @@ export class DartWriter {
 			declaration += ` extends ${dartClass.inheritance.extends}`;
 		}
 
-		// Implements clause - combine Finalizable with other interfaces
+		// Implements clause
 		const implementsClasses: string[] = [];
 
-		// Add Finalizable for non-interface classes that don't extend another class
-		if (dartClass.type !== 'interface' && !dartClass.inheritance.extends) {
-			implementsClasses.push('Finalizable');
-		}
-
-		// Add other interfaces
+		// Add interfaces
 		implementsClasses.push(...dartClass.inheritance.implements);
 
 		if (implementsClasses.length > 0) {
@@ -1305,6 +1319,12 @@ ${declaration} {`;
 		}
 
 		const methodSuffix = this.getMethodSuffix(method.name, cType.name);
+		
+		// Don't consider dispose methods as inherited - they're type-specific
+		if (methodSuffix === 'dispose') {
+			return false;
+		}
+		
 		const parentMethodName = `${parentName}_${methodSuffix}`;
 
 		const hasInParent = parent.methods.some(m => m.name === parentMethodName);

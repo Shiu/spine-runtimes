@@ -48,4 +48,8 @@ class TranslateXTimeline extends BoneTimeline1 {
     final ptr = SpineBindings.bindings.spine_translate_x_timeline_create(frameCount, bezierCount, boneIndex);
     return TranslateXTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_translate_x_timeline_dispose(_ptr);
+  }
 }

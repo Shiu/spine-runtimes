@@ -48,4 +48,8 @@ class SliderTimeline extends ConstraintTimeline1 {
     final ptr = SpineBindings.bindings.spine_slider_timeline_create(frameCount, bezierCount, sliderIndex);
     return SliderTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_slider_timeline_dispose(_ptr);
+  }
 }

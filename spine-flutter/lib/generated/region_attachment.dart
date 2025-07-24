@@ -55,6 +55,10 @@ class RegionAttachment extends Attachment {
     return RegionAttachment.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_region_attachment_dispose(_ptr);
+  }
+
   void updateRegion() {
     SpineBindings.bindings.spine_region_attachment_update_region(_ptr);
   }

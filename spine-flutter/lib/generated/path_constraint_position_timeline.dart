@@ -49,4 +49,8 @@ class PathConstraintPositionTimeline extends ConstraintTimeline1 {
         SpineBindings.bindings.spine_path_constraint_position_timeline_create(frameCount, bezierCount, constraintIndex);
     return PathConstraintPositionTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_path_constraint_position_timeline_dispose(_ptr);
+  }
 }

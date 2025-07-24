@@ -35,7 +35,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// EventData wrapper
-class EventData implements Finalizable {
+class EventData {
   final Pointer<spine_event_data_wrapper> _ptr;
 
   EventData.fromPointer(this._ptr);
@@ -46,6 +46,10 @@ class EventData implements Finalizable {
   factory EventData(String name) {
     final ptr = SpineBindings.bindings.spine_event_data_create(name.toNativeUtf8().cast<Char>());
     return EventData.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_event_data_dispose(_ptr);
   }
 
   String get name {

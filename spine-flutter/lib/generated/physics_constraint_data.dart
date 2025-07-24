@@ -62,6 +62,11 @@ class PhysicsConstraintData extends PosedData implements ConstraintData {
   }
 
   @override
+  void dispose() {
+    SpineBindings.bindings.spine_physics_constraint_data_dispose(_ptr);
+  }
+
+  @override
   Rtti get rtti {
     final result = SpineBindings.bindings.spine_physics_constraint_data_get_rtti(_ptr);
     return Rtti.fromPointer(result);

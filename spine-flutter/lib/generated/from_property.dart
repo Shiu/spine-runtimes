@@ -36,7 +36,7 @@ import 'rtti.dart';
 import 'arrays.dart';
 
 /// FromProperty wrapper
-abstract class FromProperty implements Finalizable {
+abstract class FromProperty {
   final Pointer<spine_from_property_wrapper> _ptr;
 
   FromProperty.fromPointer(this._ptr);

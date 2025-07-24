@@ -60,6 +60,10 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
     return SequenceTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_sequence_timeline_dispose(_ptr);
+  }
+
   void setFrame(int frame, double time, SequenceMode mode, int index, double delay) {
     SpineBindings.bindings.spine_sequence_timeline_set_frame(_ptr, frame, time, mode.value, index, delay);
   }

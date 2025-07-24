@@ -38,7 +38,7 @@ import 'skeleton.dart';
 import 'slot.dart';
 
 /// SkeletonClipping wrapper
-class SkeletonClipping implements Finalizable {
+class SkeletonClipping {
   final Pointer<spine_skeleton_clipping_wrapper> _ptr;
 
   SkeletonClipping.fromPointer(this._ptr);
@@ -49,6 +49,10 @@ class SkeletonClipping implements Finalizable {
   factory SkeletonClipping() {
     final ptr = SpineBindings.bindings.spine_skeleton_clipping_create();
     return SkeletonClipping.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_skeleton_clipping_dispose(_ptr);
   }
 
   int clipStart(Skeleton skeleton, Slot slot, ClippingAttachment clip) {

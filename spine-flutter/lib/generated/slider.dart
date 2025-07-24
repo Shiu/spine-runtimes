@@ -58,6 +58,11 @@ class Slider extends PosedActive implements Posed, Constraint {
   }
 
   @override
+  void dispose() {
+    SpineBindings.bindings.spine_slider_dispose(_ptr);
+  }
+
+  @override
   Rtti get rtti {
     final result = SpineBindings.bindings.spine_slider_get_rtti(_ptr);
     return Rtti.fromPointer(result);

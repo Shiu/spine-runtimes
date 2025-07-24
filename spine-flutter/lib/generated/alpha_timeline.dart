@@ -50,6 +50,10 @@ class AlphaTimeline extends CurveTimeline1 implements SlotTimeline {
     return AlphaTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_alpha_timeline_dispose(_ptr);
+  }
+
   @override
   int get slotIndex {
     final result = SpineBindings.bindings.spine_alpha_timeline_get_slot_index(_ptr);

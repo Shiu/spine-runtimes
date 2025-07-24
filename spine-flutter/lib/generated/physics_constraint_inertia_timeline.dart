@@ -49,4 +49,8 @@ class PhysicsConstraintInertiaTimeline extends PhysicsConstraintTimeline {
         .spine_physics_constraint_inertia_timeline_create(frameCount, bezierCount, physicsConstraintIndex);
     return PhysicsConstraintInertiaTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_physics_constraint_inertia_timeline_dispose(_ptr);
+  }
 }

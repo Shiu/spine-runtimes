@@ -39,7 +39,7 @@ import 'mix_direction.dart';
 import 'skeleton.dart';
 
 /// Animation wrapper
-class Animation implements Finalizable {
+class Animation {
   final Pointer<spine_animation_wrapper> _ptr;
 
   Animation.fromPointer(this._ptr);
@@ -51,6 +51,10 @@ class Animation implements Finalizable {
     final ptr = SpineBindings.bindings
         .spine_animation_create(name.toNativeUtf8().cast<Char>(), timelines.nativePtr.cast(), duration);
     return Animation.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_animation_dispose(_ptr);
   }
 
   ArrayTimeline get timelines {

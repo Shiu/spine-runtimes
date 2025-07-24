@@ -37,7 +37,7 @@ import 'arrays.dart';
 import 'atlas_region.dart';
 
 /// Atlas wrapper
-class Atlas implements Finalizable {
+class Atlas {
   final Pointer<spine_atlas_wrapper> _ptr;
 
   Atlas.fromPointer(this._ptr);

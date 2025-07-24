@@ -155,7 +155,7 @@ async function main() {
 
     if (justGenerateYaml) {
         console.log('Generating ffigen.yaml only...\n');
-        
+
         // Generate FFI bindings YAML config only
         const spineCDir = path.join(__dirname, '../../src/spine-c');
         await generateFFigenYamlOnly(spineCDir);
@@ -197,9 +197,9 @@ async function main() {
                 stdio: 'inherit'
             });
 
-            // Run dart format to format the code
+            // Run custom dart format script
             console.log('Running dart format...');
-            execSync('dart format lib/generated/', {
+            execSync(path.join(__dirname, '../../../formatters/format-dart.sh lib/generated/'), {
                 cwd: projectRoot,
                 stdio: 'inherit'
             });

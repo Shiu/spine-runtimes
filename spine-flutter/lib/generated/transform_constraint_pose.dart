@@ -34,7 +34,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// TransformConstraintPose wrapper
-class TransformConstraintPose implements Finalizable {
+class TransformConstraintPose {
   final Pointer<spine_transform_constraint_pose_wrapper> _ptr;
 
   TransformConstraintPose.fromPointer(this._ptr);
@@ -45,6 +45,10 @@ class TransformConstraintPose implements Finalizable {
   factory TransformConstraintPose() {
     final ptr = SpineBindings.bindings.spine_transform_constraint_pose_create();
     return TransformConstraintPose.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_transform_constraint_pose_dispose(_ptr);
   }
 
   void set(TransformConstraintPose pose) {

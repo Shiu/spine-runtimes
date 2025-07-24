@@ -44,7 +44,7 @@ import 'point_attachment.dart';
 import 'region_attachment.dart';
 
 /// Skin wrapper
-class Skin implements Finalizable {
+class Skin {
   final Pointer<spine_skin_wrapper> _ptr;
 
   Skin.fromPointer(this._ptr);
@@ -55,6 +55,10 @@ class Skin implements Finalizable {
   factory Skin(String name) {
     final ptr = SpineBindings.bindings.spine_skin_create(name.toNativeUtf8().cast<Char>());
     return Skin.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_skin_dispose(_ptr);
   }
 
   void setAttachment(int slotIndex, String name, Attachment attachment) {

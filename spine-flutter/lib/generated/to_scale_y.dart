@@ -48,4 +48,8 @@ class ToScaleY extends ToProperty {
     final ptr = SpineBindings.bindings.spine_to_scale_y_create();
     return ToScaleY.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_to_scale_y_dispose(_ptr);
+  }
 }

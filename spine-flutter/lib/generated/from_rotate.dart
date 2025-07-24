@@ -48,4 +48,8 @@ class FromRotate extends FromProperty {
     final ptr = SpineBindings.bindings.spine_from_rotate_create();
     return FromRotate.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_from_rotate_dispose(_ptr);
+  }
 }

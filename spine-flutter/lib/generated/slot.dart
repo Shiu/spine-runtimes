@@ -39,7 +39,7 @@ import 'slot_data.dart';
 import 'slot_pose.dart';
 
 /// Slot wrapper
-class Slot implements Finalizable, Posed {
+class Slot implements Posed {
   final Pointer<spine_slot_wrapper> _ptr;
 
   Slot.fromPointer(this._ptr);
@@ -51,6 +51,10 @@ class Slot implements Finalizable, Posed {
   factory Slot(SlotData data, Skeleton skeleton) {
     final ptr = SpineBindings.bindings.spine_slot_create(data.nativePtr.cast(), skeleton.nativePtr.cast());
     return Slot.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_slot_dispose(_ptr);
   }
 
   Bone get bone {

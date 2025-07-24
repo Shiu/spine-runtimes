@@ -54,6 +54,11 @@ class BonePose extends BoneLocal implements Update {
   }
 
   @override
+  void dispose() {
+    SpineBindings.bindings.spine_bone_pose_dispose(_ptr);
+  }
+
+  @override
   Rtti get rtti {
     final result = SpineBindings.bindings.spine_bone_pose_get_rtti(_ptr);
     return Rtti.fromPointer(result);

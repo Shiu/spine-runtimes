@@ -52,6 +52,10 @@ class ClippingAttachment extends VertexAttachment {
     return ClippingAttachment.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_clipping_attachment_dispose(_ptr);
+  }
+
   SlotData get endSlot {
     final result = SpineBindings.bindings.spine_clipping_attachment_get_end_slot(_ptr);
     return SlotData.fromPointer(result);

@@ -48,4 +48,8 @@ class ScaleYTimeline extends BoneTimeline1 {
     final ptr = SpineBindings.bindings.spine_scale_y_timeline_create(frameCount, bezierCount, boneIndex);
     return ScaleYTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_scale_y_timeline_dispose(_ptr);
+  }
 }

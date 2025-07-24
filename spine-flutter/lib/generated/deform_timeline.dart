@@ -57,6 +57,10 @@ class DeformTimeline extends SlotCurveTimeline {
     return DeformTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_deform_timeline_dispose(_ptr);
+  }
+
   void setFrame(int frameIndex, double time, ArrayFloat vertices) {
     SpineBindings.bindings.spine_deform_timeline_set_frame(_ptr, frameIndex, time, vertices.nativePtr.cast());
   }

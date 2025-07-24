@@ -35,13 +35,17 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// Rtti wrapper
-class Rtti implements Finalizable {
+class Rtti {
   final Pointer<spine_rtti_wrapper> _ptr;
 
   Rtti.fromPointer(this._ptr);
 
   /// Get the native pointer for FFI calls
   Pointer get nativePtr => _ptr;
+
+  void dispose() {
+    SpineBindings.bindings.spine_rtti_dispose(_ptr);
+  }
 
   String get className {
     final result = SpineBindings.bindings.spine_rtti_get_class_name(_ptr);

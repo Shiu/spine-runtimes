@@ -49,4 +49,8 @@ class PhysicsConstraintGravityTimeline extends PhysicsConstraintTimeline {
         .spine_physics_constraint_gravity_timeline_create(frameCount, bezierCount, physicsConstraintIndex);
     return PhysicsConstraintGravityTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_physics_constraint_gravity_timeline_dispose(_ptr);
+  }
 }

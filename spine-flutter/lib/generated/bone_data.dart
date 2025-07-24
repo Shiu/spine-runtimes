@@ -53,6 +53,11 @@ class BoneData extends PosedData {
     return BoneData.fromPointer(ptr);
   }
 
+  @override
+  void dispose() {
+    SpineBindings.bindings.spine_bone_data_dispose(_ptr);
+  }
+
   int get index {
     final result = SpineBindings.bindings.spine_bone_data_get_index(_ptr);
     return result;

@@ -35,7 +35,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// PosedData wrapper
-class PosedData implements Finalizable {
+class PosedData {
   final Pointer<spine_posed_data_wrapper> _ptr;
 
   PosedData.fromPointer(this._ptr);
@@ -46,6 +46,10 @@ class PosedData implements Finalizable {
   factory PosedData(String name) {
     final ptr = SpineBindings.bindings.spine_posed_data_create(name.toNativeUtf8().cast<Char>());
     return PosedData.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_posed_data_dispose(_ptr);
   }
 
   String get name {

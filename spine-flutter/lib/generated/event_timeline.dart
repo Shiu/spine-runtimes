@@ -51,6 +51,10 @@ class EventTimeline extends Timeline {
     return EventTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_event_timeline_dispose(_ptr);
+  }
+
   ArrayEvent get events {
     final result = SpineBindings.bindings.spine_event_timeline_get_events(_ptr);
     return ArrayEvent.fromPointer(result);

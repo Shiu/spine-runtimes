@@ -36,7 +36,7 @@ import 'render_command.dart';
 import 'skeleton.dart';
 
 /// SkeletonRenderer wrapper
-class SkeletonRenderer implements Finalizable {
+class SkeletonRenderer {
   final Pointer<spine_skeleton_renderer_wrapper> _ptr;
 
   SkeletonRenderer.fromPointer(this._ptr);
@@ -47,6 +47,10 @@ class SkeletonRenderer implements Finalizable {
   factory SkeletonRenderer() {
     final ptr = SpineBindings.bindings.spine_skeleton_renderer_create();
     return SkeletonRenderer.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_skeleton_renderer_dispose(_ptr);
   }
 
   RenderCommand render(Skeleton skeleton) {

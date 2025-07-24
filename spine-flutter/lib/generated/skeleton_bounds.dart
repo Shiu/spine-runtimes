@@ -38,7 +38,7 @@ import 'polygon.dart';
 import 'skeleton.dart';
 
 /// SkeletonBounds wrapper
-class SkeletonBounds implements Finalizable {
+class SkeletonBounds {
   final Pointer<spine_skeleton_bounds_wrapper> _ptr;
 
   SkeletonBounds.fromPointer(this._ptr);
@@ -49,6 +49,10 @@ class SkeletonBounds implements Finalizable {
   factory SkeletonBounds() {
     final ptr = SpineBindings.bindings.spine_skeleton_bounds_create();
     return SkeletonBounds.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_skeleton_bounds_dispose(_ptr);
   }
 
   void update(Skeleton skeleton, bool updateAabb) {

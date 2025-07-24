@@ -52,6 +52,10 @@ class PathAttachment extends VertexAttachment {
     return PathAttachment.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_path_attachment_dispose(_ptr);
+  }
+
   ArrayFloat get lengths {
     final result = SpineBindings.bindings.spine_path_attachment_get_lengths(_ptr);
     return ArrayFloat.fromPointer(result);

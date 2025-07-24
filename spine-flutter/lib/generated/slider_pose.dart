@@ -34,7 +34,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// SliderPose wrapper
-class SliderPose implements Finalizable {
+class SliderPose {
   final Pointer<spine_slider_pose_wrapper> _ptr;
 
   SliderPose.fromPointer(this._ptr);
@@ -45,6 +45,10 @@ class SliderPose implements Finalizable {
   factory SliderPose() {
     final ptr = SpineBindings.bindings.spine_slider_pose_create();
     return SliderPose.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_slider_pose_dispose(_ptr);
   }
 
   void set(SliderPose pose) {

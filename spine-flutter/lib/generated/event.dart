@@ -36,7 +36,7 @@ import '../spine_bindings.dart';
 import 'event_data.dart';
 
 /// Event wrapper
-class Event implements Finalizable {
+class Event {
   final Pointer<spine_event_wrapper> _ptr;
 
   Event.fromPointer(this._ptr);
@@ -47,6 +47,10 @@ class Event implements Finalizable {
   factory Event(double time, EventData data) {
     final ptr = SpineBindings.bindings.spine_event_create(time, data.nativePtr.cast());
     return Event.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_event_dispose(_ptr);
   }
 
   EventData get data {

@@ -41,7 +41,7 @@ import 'skin.dart';
 import 'slot_data.dart';
 
 /// SkeletonData wrapper
-class SkeletonData implements Finalizable {
+class SkeletonData {
   final Pointer<spine_skeleton_data_wrapper> _ptr;
 
   SkeletonData.fromPointer(this._ptr);
@@ -52,6 +52,10 @@ class SkeletonData implements Finalizable {
   factory SkeletonData() {
     final ptr = SpineBindings.bindings.spine_skeleton_data_create();
     return SkeletonData.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_skeleton_data_dispose(_ptr);
   }
 
   BoneData findBone(String boneName) {

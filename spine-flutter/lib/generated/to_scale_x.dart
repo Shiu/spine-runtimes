@@ -48,4 +48,8 @@ class ToScaleX extends ToProperty {
     final ptr = SpineBindings.bindings.spine_to_scale_x_create();
     return ToScaleX.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_to_scale_x_dispose(_ptr);
+  }
 }

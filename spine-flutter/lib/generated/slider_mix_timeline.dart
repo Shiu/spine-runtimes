@@ -48,4 +48,8 @@ class SliderMixTimeline extends ConstraintTimeline1 {
     final ptr = SpineBindings.bindings.spine_slider_mix_timeline_create(frameCount, bezierCount, sliderIndex);
     return SliderMixTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_slider_mix_timeline_dispose(_ptr);
+  }
 }

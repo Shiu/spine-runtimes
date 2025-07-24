@@ -42,7 +42,7 @@ import 'point_attachment.dart';
 import 'region_attachment.dart';
 
 /// Attachment wrapper
-abstract class Attachment implements Finalizable {
+abstract class Attachment {
   final Pointer<spine_attachment_wrapper> _ptr;
 
   Attachment.fromPointer(this._ptr);

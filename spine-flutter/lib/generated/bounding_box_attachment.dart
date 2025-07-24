@@ -51,6 +51,10 @@ class BoundingBoxAttachment extends VertexAttachment {
     return BoundingBoxAttachment.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_bounding_box_attachment_dispose(_ptr);
+  }
+
   Color get color {
     final result = SpineBindings.bindings.spine_bounding_box_attachment_get_color(_ptr);
     return Color.fromPointer(result);

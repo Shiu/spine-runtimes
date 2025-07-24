@@ -48,4 +48,8 @@ class RotateTimeline extends BoneTimeline1 {
     final ptr = SpineBindings.bindings.spine_rotate_timeline_create(frameCount, bezierCount, boneIndex);
     return RotateTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_rotate_timeline_dispose(_ptr);
+  }
 }

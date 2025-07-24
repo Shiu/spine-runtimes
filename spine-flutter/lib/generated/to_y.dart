@@ -48,4 +48,8 @@ class ToY extends ToProperty {
     final ptr = SpineBindings.bindings.spine_to_y_create();
     return ToY.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_to_y_dispose(_ptr);
+  }
 }

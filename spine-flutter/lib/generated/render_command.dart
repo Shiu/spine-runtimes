@@ -35,13 +35,17 @@ import '../spine_bindings.dart';
 import 'blend_mode.dart';
 
 /// RenderCommand wrapper
-class RenderCommand implements Finalizable {
+class RenderCommand {
   final Pointer<spine_render_command_wrapper> _ptr;
 
   RenderCommand.fromPointer(this._ptr);
 
   /// Get the native pointer for FFI calls
   Pointer get nativePtr => _ptr;
+
+  void dispose() {
+    SpineBindings.bindings.spine_render_command_dispose(_ptr);
+  }
 
   Pointer<Float> get positions {
     final result = SpineBindings.bindings.spine_render_command_get_positions(_ptr);

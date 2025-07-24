@@ -49,4 +49,8 @@ class PhysicsConstraintStrengthTimeline extends PhysicsConstraintTimeline {
         .spine_physics_constraint_strength_timeline_create(frameCount, bezierCount, physicsConstraintIndex);
     return PhysicsConstraintStrengthTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_physics_constraint_strength_timeline_dispose(_ptr);
+  }
 }

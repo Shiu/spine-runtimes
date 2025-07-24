@@ -37,7 +37,7 @@ import 'event_type.dart';
 import 'track_entry.dart';
 
 /// EventQueueEntry wrapper
-class EventQueueEntry implements Finalizable {
+class EventQueueEntry {
   final Pointer<spine_event_queue_entry_wrapper> _ptr;
 
   EventQueueEntry.fromPointer(this._ptr);
@@ -49,6 +49,10 @@ class EventQueueEntry implements Finalizable {
     final ptr = SpineBindings.bindings
         .spine_event_queue_entry_create(eventType.value, trackEntry.nativePtr.cast(), event.nativePtr.cast());
     return EventQueueEntry.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_event_queue_entry_dispose(_ptr);
   }
 
   EventType get type {

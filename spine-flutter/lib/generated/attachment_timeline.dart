@@ -51,6 +51,10 @@ class AttachmentTimeline extends Timeline implements SlotTimeline {
     return AttachmentTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_attachment_timeline_dispose(_ptr);
+  }
+
   void setFrame(int frame, double time, String attachmentName) {
     SpineBindings.bindings
         .spine_attachment_timeline_set_frame(_ptr, frame, time, attachmentName.toNativeUtf8().cast<Char>());

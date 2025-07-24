@@ -48,4 +48,8 @@ class ToX extends ToProperty {
     final ptr = SpineBindings.bindings.spine_to_x_create();
     return ToX.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_to_x_dispose(_ptr);
+  }
 }

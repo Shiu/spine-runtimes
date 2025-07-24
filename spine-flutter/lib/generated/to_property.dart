@@ -38,7 +38,7 @@ import 'skeleton.dart';
 import 'transform_constraint_pose.dart';
 
 /// ToProperty wrapper
-abstract class ToProperty implements Finalizable {
+abstract class ToProperty {
   final Pointer<spine_to_property_wrapper> _ptr;
 
   ToProperty.fromPointer(this._ptr);

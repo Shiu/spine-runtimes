@@ -35,7 +35,7 @@ import '../spine_bindings.dart';
 import 'rtti.dart';
 
 /// TextureRegion wrapper
-class TextureRegion implements Finalizable {
+class TextureRegion {
   final Pointer<spine_texture_region_wrapper> _ptr;
 
   TextureRegion.fromPointer(this._ptr);
@@ -46,6 +46,10 @@ class TextureRegion implements Finalizable {
   factory TextureRegion() {
     final ptr = SpineBindings.bindings.spine_texture_region_create();
     return TextureRegion.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_texture_region_dispose(_ptr);
   }
 
   Rtti get rtti {

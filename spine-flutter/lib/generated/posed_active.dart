@@ -34,13 +34,17 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// PosedActive wrapper
-class PosedActive implements Finalizable {
+class PosedActive {
   final Pointer<spine_posed_active_wrapper> _ptr;
 
   PosedActive.fromPointer(this._ptr);
 
   /// Get the native pointer for FFI calls
   Pointer get nativePtr => _ptr;
+
+  void dispose() {
+    SpineBindings.bindings.spine_posed_active_dispose(_ptr);
+  }
 
   bool get isActive {
     final result = SpineBindings.bindings.spine_posed_active_is_active(_ptr);

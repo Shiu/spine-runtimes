@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "headless-test (dart)",
+            "type": "dart",
+            "request": "launch",
+            "program": "headless_test.dart",
+            "cwd": "${workspaceFolder}/test"
+        },
+        {
             "name": "spine-flutter",
             "request": "launch",
             "type": "dart"
@@ -40,13 +47,6 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
-        },
-        {
-            "name": "headless-test (dart)",
-            "cwd": "test",
-            "request": "launch",
-            "type": "dart",
-            "program": "bin/headless_test.dart"
         }
     ]
 }

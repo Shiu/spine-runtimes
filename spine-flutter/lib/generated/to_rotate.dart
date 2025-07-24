@@ -48,4 +48,8 @@ class ToRotate extends ToProperty {
     final ptr = SpineBindings.bindings.spine_to_rotate_create();
     return ToRotate.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_to_rotate_dispose(_ptr);
+  }
 }

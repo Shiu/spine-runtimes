@@ -51,6 +51,10 @@ class TransformConstraintTimeline extends CurveTimeline implements ConstraintTim
     return TransformConstraintTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_transform_constraint_timeline_dispose(_ptr);
+  }
+
   void setFrame(int frame, double time, double mixRotate, double mixX, double mixY, double mixScaleX, double mixScaleY,
       double mixShearY) {
     SpineBindings.bindings.spine_transform_constraint_timeline_set_frame(

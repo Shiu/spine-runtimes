@@ -38,7 +38,7 @@ import 'attachment_loader.dart';
 import 'skeleton_data.dart';
 
 /// SkeletonJson wrapper
-class SkeletonJson implements Finalizable {
+class SkeletonJson {
   final Pointer<spine_skeleton_json_wrapper> _ptr;
 
   SkeletonJson.fromPointer(this._ptr);
@@ -54,6 +54,10 @@ class SkeletonJson implements Finalizable {
   factory SkeletonJson.variant2(AttachmentLoader attachmentLoader, bool ownsLoader) {
     final ptr = SpineBindings.bindings.spine_skeleton_json_create2(attachmentLoader.nativePtr.cast(), ownsLoader);
     return SkeletonJson.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_skeleton_json_dispose(_ptr);
   }
 
   SkeletonData readSkeletonDataFile(String path) {

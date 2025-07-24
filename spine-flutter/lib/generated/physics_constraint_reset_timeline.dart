@@ -50,6 +50,10 @@ class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimel
     return PhysicsConstraintResetTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_physics_constraint_reset_timeline_dispose(_ptr);
+  }
+
   @override
   int get constraintIndex {
     final result = SpineBindings.bindings.spine_physics_constraint_reset_timeline_get_constraint_index(_ptr);

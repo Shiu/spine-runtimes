@@ -49,4 +49,8 @@ class PhysicsConstraintWindTimeline extends PhysicsConstraintTimeline {
         .spine_physics_constraint_wind_timeline_create(frameCount, bezierCount, physicsConstraintIndex);
     return PhysicsConstraintWindTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_physics_constraint_wind_timeline_dispose(_ptr);
+  }
 }

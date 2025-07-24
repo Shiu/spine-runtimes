@@ -48,4 +48,8 @@ class TranslateYTimeline extends BoneTimeline1 {
     final ptr = SpineBindings.bindings.spine_translate_y_timeline_create(frameCount, bezierCount, boneIndex);
     return TranslateYTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_translate_y_timeline_dispose(_ptr);
+  }
 }

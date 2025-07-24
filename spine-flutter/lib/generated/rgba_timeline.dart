@@ -49,6 +49,10 @@ class RgbaTimeline extends SlotCurveTimeline {
     return RgbaTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_rgba_timeline_dispose(_ptr);
+  }
+
   void setFrame(int frame, double time, double r, double g, double b, double a) {
     SpineBindings.bindings.spine_rgba_timeline_set_frame(_ptr, frame, time, r, g, b, a);
   }

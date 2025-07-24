@@ -49,4 +49,8 @@ class PhysicsConstraintMassTimeline extends PhysicsConstraintTimeline {
         .spine_physics_constraint_mass_timeline_create(frameCount, bezierCount, physicsConstraintIndex);
     return PhysicsConstraintMassTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_physics_constraint_mass_timeline_dispose(_ptr);
+  }
 }

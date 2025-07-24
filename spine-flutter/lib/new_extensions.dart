@@ -38,7 +38,7 @@ class SkeletonDataResult {
 // Skeleton Data Extensions
 extension SkeletonDataExtensions on SkeletonData {
   /// Load skeleton data from JSON string
-  static SkeletonDataResult fromJson(Atlas atlas, String jsonData, {String? path}) {
+  static SkeletonData fromJson(Atlas atlas, String jsonData, {String? path}) {
     final jsonDataNative = jsonData.toNativeUtf8();
     final pathNative = (path ?? '').toNativeUtf8();
 
@@ -52,13 +52,14 @@ extension SkeletonDataExtensions on SkeletonData {
     final errorPtr = SpineBindings.bindings.spine_skeleton_data_result_get_error(resultPtr.cast());
     if (errorPtr != nullptr) {
       final error = errorPtr.cast<Utf8>().toDartString();
-      return SkeletonDataResult._(error, null, resultPtr);
+      SpineBindings.bindings.spine_skeleton_data_result_dispose(resultPtr.cast());
+      throw Exception("Couldn't load skeleton data: $error");
     }
 
     // Get skeleton data
     final skeletonDataPtr = SpineBindings.bindings.spine_skeleton_data_result_get_data(resultPtr.cast());
     final skeletonData = SkeletonData.fromPointer(skeletonDataPtr);
-
-    return SkeletonDataResult._(null, skeletonData, resultPtr);
+    SpineBindings.bindings.spine_skeleton_data_result_dispose(resultPtr.cast());
+    return skeletonData;
   }
 }

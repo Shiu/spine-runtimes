@@ -64,6 +64,11 @@ class Bone extends PosedActive implements Posed, Update {
   }
 
   @override
+  void dispose() {
+    SpineBindings.bindings.spine_bone_dispose(_ptr);
+  }
+
+  @override
   Rtti get rtti {
     final result = SpineBindings.bindings.spine_bone_get_rtti(_ptr);
     return Rtti.fromPointer(result);

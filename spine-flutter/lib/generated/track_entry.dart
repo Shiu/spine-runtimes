@@ -36,7 +36,7 @@ import 'animation.dart';
 import 'mix_blend.dart';
 
 /// TrackEntry wrapper
-class TrackEntry implements Finalizable {
+class TrackEntry {
   final Pointer<spine_track_entry_wrapper> _ptr;
 
   TrackEntry.fromPointer(this._ptr);
@@ -47,6 +47,10 @@ class TrackEntry implements Finalizable {
   factory TrackEntry() {
     final ptr = SpineBindings.bindings.spine_track_entry_create();
     return TrackEntry.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_track_entry_dispose(_ptr);
   }
 
   int get trackIndex {

@@ -49,4 +49,8 @@ class PathConstraintSpacingTimeline extends ConstraintTimeline1 {
         SpineBindings.bindings.spine_path_constraint_spacing_timeline_create(frameCount, bezierCount, constraintIndex);
     return PathConstraintSpacingTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_path_constraint_spacing_timeline_dispose(_ptr);
+  }
 }

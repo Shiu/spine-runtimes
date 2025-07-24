@@ -35,7 +35,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// Color wrapper
-class Color implements Finalizable {
+class Color {
   final Pointer<spine_color_wrapper> _ptr;
 
   Color.fromPointer(this._ptr);
@@ -51,6 +51,10 @@ class Color implements Finalizable {
   factory Color.fromRGBA(double r, double g, double b, double a) {
     final ptr = SpineBindings.bindings.spine_color_create2(r, g, b, a);
     return Color.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_color_dispose(_ptr);
   }
 
   Color clamp() {

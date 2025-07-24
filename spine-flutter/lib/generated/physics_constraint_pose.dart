@@ -34,7 +34,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// PhysicsConstraintPose wrapper
-class PhysicsConstraintPose implements Finalizable {
+class PhysicsConstraintPose {
   final Pointer<spine_physics_constraint_pose_wrapper> _ptr;
 
   PhysicsConstraintPose.fromPointer(this._ptr);
@@ -45,6 +45,10 @@ class PhysicsConstraintPose implements Finalizable {
   factory PhysicsConstraintPose() {
     final ptr = SpineBindings.bindings.spine_physics_constraint_pose_create();
     return PhysicsConstraintPose.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_physics_constraint_pose_dispose(_ptr);
   }
 
   void set(PhysicsConstraintPose pose) {

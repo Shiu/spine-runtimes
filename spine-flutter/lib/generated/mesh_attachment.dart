@@ -54,6 +54,10 @@ class MeshAttachment extends VertexAttachment {
     return MeshAttachment.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_mesh_attachment_dispose(_ptr);
+  }
+
   void updateRegion() {
     SpineBindings.bindings.spine_mesh_attachment_update_region(_ptr);
   }

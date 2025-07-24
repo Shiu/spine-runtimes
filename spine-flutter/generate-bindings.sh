@@ -20,4 +20,9 @@ fi
 # Run the codegen
 npx tsx codegen/src/index.ts
 
+# Build test spine_flutter shared library
+pushd ../spine_flutter/test > /dev/null
+./build.sh
+popd
+
 popd > /dev/null

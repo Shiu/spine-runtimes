@@ -38,7 +38,7 @@ import 'attachment_loader.dart';
 import 'skeleton_data.dart';
 
 /// SkeletonBinary wrapper
-class SkeletonBinary implements Finalizable {
+class SkeletonBinary {
   final Pointer<spine_skeleton_binary_wrapper> _ptr;
 
   SkeletonBinary.fromPointer(this._ptr);
@@ -54,6 +54,10 @@ class SkeletonBinary implements Finalizable {
   factory SkeletonBinary.variant2(AttachmentLoader attachmentLoader, bool ownsLoader) {
     final ptr = SpineBindings.bindings.spine_skeleton_binary_create2(attachmentLoader.nativePtr.cast(), ownsLoader);
     return SkeletonBinary.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_skeleton_binary_dispose(_ptr);
   }
 
   SkeletonData readSkeletonDataFile(String path) {

@@ -48,4 +48,8 @@ class FromShearY extends FromProperty {
     final ptr = SpineBindings.bindings.spine_from_shear_y_create();
     return FromShearY.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_from_shear_y_dispose(_ptr);
+  }
 }

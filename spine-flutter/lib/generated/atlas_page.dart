@@ -38,7 +38,7 @@ import 'texture_filter.dart';
 import 'texture_wrap.dart';
 
 /// AtlasPage wrapper
-class AtlasPage implements Finalizable {
+class AtlasPage {
   final Pointer<spine_atlas_page_wrapper> _ptr;
 
   AtlasPage.fromPointer(this._ptr);
@@ -49,6 +49,10 @@ class AtlasPage implements Finalizable {
   factory AtlasPage(String inName) {
     final ptr = SpineBindings.bindings.spine_atlas_page_create(inName.toNativeUtf8().cast<Char>());
     return AtlasPage.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_atlas_page_dispose(_ptr);
   }
 
   String get name {

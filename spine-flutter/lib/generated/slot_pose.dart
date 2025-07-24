@@ -44,7 +44,7 @@ import 'point_attachment.dart';
 import 'region_attachment.dart';
 
 /// SlotPose wrapper
-class SlotPose implements Finalizable {
+class SlotPose {
   final Pointer<spine_slot_pose_wrapper> _ptr;
 
   SlotPose.fromPointer(this._ptr);
@@ -55,6 +55,10 @@ class SlotPose implements Finalizable {
   factory SlotPose() {
     final ptr = SpineBindings.bindings.spine_slot_pose_create();
     return SlotPose.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_slot_pose_dispose(_ptr);
   }
 
   void set(SlotPose pose) {

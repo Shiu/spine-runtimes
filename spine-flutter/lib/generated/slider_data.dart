@@ -70,6 +70,11 @@ class SliderData extends PosedData implements ConstraintData {
   }
 
   @override
+  void dispose() {
+    SpineBindings.bindings.spine_slider_data_dispose(_ptr);
+  }
+
+  @override
   Rtti get rtti {
     final result = SpineBindings.bindings.spine_slider_data_get_rtti(_ptr);
     return Rtti.fromPointer(result);

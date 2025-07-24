@@ -48,4 +48,8 @@ class ShearTimeline extends BoneTimeline2 {
     final ptr = SpineBindings.bindings.spine_shear_timeline_create(frameCount, bezierCount, boneIndex);
     return ShearTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_shear_timeline_dispose(_ptr);
+  }
 }

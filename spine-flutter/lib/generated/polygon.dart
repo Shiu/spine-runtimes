@@ -35,7 +35,7 @@ import '../spine_bindings.dart';
 import 'arrays.dart';
 
 /// Polygon wrapper
-class Polygon implements Finalizable {
+class Polygon {
   final Pointer<spine_polygon_wrapper> _ptr;
 
   Polygon.fromPointer(this._ptr);
@@ -46,6 +46,10 @@ class Polygon implements Finalizable {
   factory Polygon() {
     final ptr = SpineBindings.bindings.spine_polygon_create();
     return Polygon.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_polygon_dispose(_ptr);
   }
 
   ArrayFloat get vertices {

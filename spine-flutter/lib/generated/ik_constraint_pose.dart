@@ -34,7 +34,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// IkConstraintPose wrapper
-class IkConstraintPose implements Finalizable {
+class IkConstraintPose {
   final Pointer<spine_ik_constraint_pose_wrapper> _ptr;
 
   IkConstraintPose.fromPointer(this._ptr);
@@ -45,6 +45,10 @@ class IkConstraintPose implements Finalizable {
   factory IkConstraintPose() {
     final ptr = SpineBindings.bindings.spine_ik_constraint_pose_create();
     return IkConstraintPose.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_ik_constraint_pose_dispose(_ptr);
   }
 
   void set(IkConstraintPose pose) {

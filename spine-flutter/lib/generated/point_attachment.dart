@@ -52,6 +52,10 @@ class PointAttachment extends Attachment {
     return PointAttachment.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_point_attachment_dispose(_ptr);
+  }
+
   double get x {
     final result = SpineBindings.bindings.spine_point_attachment_get_x(_ptr);
     return result;

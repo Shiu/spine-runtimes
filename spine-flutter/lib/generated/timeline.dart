@@ -39,7 +39,7 @@ import 'mix_direction.dart';
 import 'skeleton.dart';
 
 /// Timeline wrapper
-abstract class Timeline implements Finalizable {
+abstract class Timeline {
   final Pointer<spine_timeline_wrapper> _ptr;
 
   Timeline.fromPointer(this._ptr);

@@ -35,7 +35,7 @@ import '../spine_bindings.dart';
 import 'inherit.dart';
 
 /// BoneLocal wrapper
-class BoneLocal implements Finalizable {
+class BoneLocal {
   final Pointer<spine_bone_local_wrapper> _ptr;
 
   BoneLocal.fromPointer(this._ptr);
@@ -46,6 +46,10 @@ class BoneLocal implements Finalizable {
   factory BoneLocal() {
     final ptr = SpineBindings.bindings.spine_bone_local_create();
     return BoneLocal.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_bone_local_dispose(_ptr);
   }
 
   void set(BoneLocal pose) {

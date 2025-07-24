@@ -48,4 +48,8 @@ class ShearYTimeline extends BoneTimeline1 {
     final ptr = SpineBindings.bindings.spine_shear_y_timeline_create(frameCount, bezierCount, boneIndex);
     return ShearYTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_shear_y_timeline_dispose(_ptr);
+  }
 }

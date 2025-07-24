@@ -49,6 +49,10 @@ class RgbTimeline extends SlotCurveTimeline {
     return RgbTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_rgb_timeline_dispose(_ptr);
+  }
+
   void setFrame(int frame, double time, double r, double g, double b) {
     SpineBindings.bindings.spine_rgb_timeline_set_frame(_ptr, frame, time, r, g, b);
   }

@@ -46,7 +46,7 @@ import 'sequence.dart';
 import 'skin.dart';
 
 /// AtlasAttachmentLoader wrapper
-class AtlasAttachmentLoader implements Finalizable, AttachmentLoader {
+class AtlasAttachmentLoader implements AttachmentLoader {
   final Pointer<spine_atlas_attachment_loader_wrapper> _ptr;
 
   AtlasAttachmentLoader.fromPointer(this._ptr);
@@ -58,6 +58,10 @@ class AtlasAttachmentLoader implements Finalizable, AttachmentLoader {
   factory AtlasAttachmentLoader(Atlas atlas) {
     final ptr = SpineBindings.bindings.spine_atlas_attachment_loader_create(atlas.nativePtr.cast());
     return AtlasAttachmentLoader.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_atlas_attachment_loader_dispose(_ptr);
   }
 
   @override

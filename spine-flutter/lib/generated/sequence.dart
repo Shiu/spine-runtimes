@@ -38,7 +38,7 @@ import 'attachment.dart';
 import 'slot_pose.dart';
 
 /// Sequence wrapper
-class Sequence implements Finalizable {
+class Sequence {
   final Pointer<spine_sequence_wrapper> _ptr;
 
   Sequence.fromPointer(this._ptr);
@@ -49,6 +49,10 @@ class Sequence implements Finalizable {
   factory Sequence(int count) {
     final ptr = SpineBindings.bindings.spine_sequence_create(count);
     return Sequence.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_sequence_dispose(_ptr);
   }
 
   Sequence copy() {

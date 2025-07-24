@@ -49,4 +49,8 @@ class PhysicsConstraintDampingTimeline extends PhysicsConstraintTimeline {
         .spine_physics_constraint_damping_timeline_create(frameCount, bezierCount, physicsConstraintIndex);
     return PhysicsConstraintDampingTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_physics_constraint_damping_timeline_dispose(_ptr);
+  }
 }

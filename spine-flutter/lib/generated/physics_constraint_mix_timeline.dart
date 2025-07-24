@@ -49,4 +49,8 @@ class PhysicsConstraintMixTimeline extends PhysicsConstraintTimeline {
         .spine_physics_constraint_mix_timeline_create(frameCount, bezierCount, physicsConstraintIndex);
     return PhysicsConstraintMixTimeline.fromPointer(ptr);
   }
+
+  void dispose() {
+    SpineBindings.bindings.spine_physics_constraint_mix_timeline_dispose(_ptr);
+  }
 }

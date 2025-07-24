@@ -40,7 +40,7 @@ import 'skeleton.dart';
 import 'track_entry.dart';
 
 /// AnimationState wrapper
-class AnimationState implements Finalizable {
+class AnimationState {
   final Pointer<spine_animation_state_wrapper> _ptr;
 
   AnimationState.fromPointer(this._ptr);
@@ -51,6 +51,10 @@ class AnimationState implements Finalizable {
   factory AnimationState(AnimationStateData data) {
     final ptr = SpineBindings.bindings.spine_animation_state_create(data.nativePtr.cast());
     return AnimationState.fromPointer(ptr);
+  }
+
+  void dispose() {
+    SpineBindings.bindings.spine_animation_state_dispose(_ptr);
   }
 
   void update(double delta) {

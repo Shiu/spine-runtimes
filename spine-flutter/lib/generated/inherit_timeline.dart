@@ -51,6 +51,10 @@ class InheritTimeline extends Timeline implements BoneTimeline {
     return InheritTimeline.fromPointer(ptr);
   }
 
+  void dispose() {
+    SpineBindings.bindings.spine_inherit_timeline_dispose(_ptr);
+  }
+
   void setFrame(int frame, double time, Inherit inherit) {
     SpineBindings.bindings.spine_inherit_timeline_set_frame(_ptr, frame, time, inherit.value);
   }
