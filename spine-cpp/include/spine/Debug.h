@@ -33,8 +33,13 @@
 #include <spine/Extension.h>
 #include <spine/Array.h>
 
+#ifndef SPINE_NO_CPP_RT
+#include <unordered_map>
+#endif
+
 namespace spine {
 
+#ifdef SPINE_NO_CPP_RT
 	// Need a copy as HashMap extends SpineObject, which would trigger
 	// infinite recursion when used in DebugExtension
 	template<typename K, typename V>
@@ -192,6 +197,7 @@ namespace spine {
 		DebugEntry *_head;
 		size_t _size;
 	};
+#endif // SPINE_NO_CPP_RT
 
 	class SP_API DebugExtension : public SpineExtension {
 		struct Allocation {
@@ -212,11 +218,17 @@ namespace spine {
 		}
 
 		void reportLeaks() {
+#ifdef SPINE_NO_CPP_RT
 			DebugHashMap<void *, Allocation>::DebugEntries entries = _allocated.getEntries();
 			while (entries.hasNext()) {
 				DebugHashMap<void *, Allocation>::DebugPair pair = entries.next();
 				printf("\"%s:%i (%zu bytes at %p)\n", pair.value.fileName, pair.value.line, pair.value.size, pair.value.address);
 			}
+#else
+			for (const auto& pair : _allocated) {
+				printf("\"%s:%i (%zu bytes at %p)\n", pair.second.fileName, pair.second.line, pair.second.size, pair.second.address);
+			}
+#endif
 			printf("allocations: %zu, reallocations: %zu, frees: %zu\n", _allocations, _reallocations, _frees);
 			if (_allocated.size() == 0) printf("No leaks detected\n");
 		}
@@ -228,7 +240,11 @@ namespace spine {
 
 		virtual void *_alloc(size_t size, const char *file, int line) {
 			void *result = _extension->_alloc(size, file, line);
+#ifdef SPINE_NO_CPP_RT
 			_allocated.put(result, Allocation(result, size, file, line));
+#else
+			_allocated[result] = Allocation(result, size, file, line);
+#endif
 			_allocations++;
 			_usedMemory += size;
 			return result;
@@ -236,13 +252,18 @@ namespace spine {
 
 		virtual void *_calloc(size_t size, const char *file, int line) {
 			void *result = _extension->_calloc(size, file, line);
+#ifdef SPINE_NO_CPP_RT
 			_allocated.put(result, Allocation(result, size, file, line));
+#else
+			_allocated[result] = Allocation(result, size, file, line);
+#endif
 			_allocations++;
 			_usedMemory += size;
 			return result;
 		}
 
 		virtual void *_realloc(void *ptr, size_t size, const char *file, int line) {
+#ifdef SPINE_NO_CPP_RT
 			if (_allocated.containsKey(ptr)) {
 				// Find and store the size before removing
 				DebugHashMap<void *, Allocation>::DebugEntries entries = _allocated.getEntries();
@@ -255,14 +276,26 @@ namespace spine {
 				}
 				_allocated.remove(ptr);
 			}
+#else
+			auto it = _allocated.find(ptr);
+			if (it != _allocated.end()) {
+				_usedMemory -= it->second.size;
+				_allocated.erase(it);
+			}
+#endif
 			void *result = _extension->_realloc(ptr, size, file, line);
 			_reallocations++;
+#ifdef SPINE_NO_CPP_RT
 			_allocated.put(result, Allocation(result, size, file, line));
+#else
+			_allocated[result] = Allocation(result, size, file, line);
+#endif
 			_usedMemory += size;
 			return result;
 		}
 
 		virtual void _free(void *mem, const char *file, int line) {
+#ifdef SPINE_NO_CPP_RT
 			if (_allocated.containsKey(mem)) {
 				_extension->_free(mem, file, line);
 				_frees++;
@@ -278,6 +311,16 @@ namespace spine {
 				_allocated.remove(mem);
 				return;
 			}
+#else
+			auto it = _allocated.find(mem);
+			if (it != _allocated.end()) {
+				_extension->_free(mem, file, line);
+				_frees++;
+				_usedMemory -= it->second.size;
+				_allocated.erase(it);
+				return;
+			}
+#endif
 
 			printf("%s:%i (address %p): Double free or not allocated through SpineExtension\n", file, line, mem);
 			_extension->_free(mem, file, line);
@@ -286,11 +329,19 @@ namespace spine {
 		virtual char *_readFile(const String &path, int *length) {
 			auto data = _extension->_readFile(path, length);
 
+#ifdef SPINE_NO_CPP_RT
 			if (!_allocated.containsKey(data)) {
 				_allocated.put(data, Allocation(data, sizeof(char) * (*length), nullptr, 0));
 				_allocations++;
 				_usedMemory += sizeof(char) * (*length);
 			}
+#else
+			if (_allocated.find(data) == _allocated.end()) {
+				_allocated[data] = Allocation(data, sizeof(char) * (*length), nullptr, 0);
+				_allocations++;
+				_usedMemory += sizeof(char) * (*length);
+			}
+#endif
 
 			return data;
 		}
@@ -301,7 +352,11 @@ namespace spine {
 
 	private:
 		SpineExtension *_extension;
+#ifdef SPINE_NO_CPP_RT
 		DebugHashMap<void *, Allocation> _allocated;
+#else
+		std::unordered_map<void *, Allocation> _allocated;
+#endif
 		size_t _allocations;
 		size_t _reallocations;
 		size_t _frees;

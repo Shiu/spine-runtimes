@@ -24,6 +24,7 @@ endif()
 set(NO_CPPRT_SOURCES ${SOURCES} "src/no-cpprt.cpp")
 add_library(spine-cpp-no-cpprt STATIC ${NO_CPPRT_SOURCES} ${INCLUDES})
 target_include_directories(spine-cpp-no-cpprt PUBLIC include)
+target_compile_definitions(spine-cpp-no-cpprt PRIVATE SPINE_NO_CPP_RT)
 
 # Install target
 install(TARGETS spine-cpp EXPORT spine-cpp_TARGETS DESTINATION dist/lib)
@@ -47,6 +48,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     # Configure no-cpprt linking for different platforms
     add_executable(headless-test-no-cpprt ${CMAKE_CURRENT_SOURCE_DIR}/tests/HeadlessTest.cpp)
     target_link_libraries(headless-test-no-cpprt spine-cpp-no-cpprt)
+    target_compile_definitions(headless-test-no-cpprt PRIVATE SPINE_NO_CPP_RT)
 
     if(MSVC)
         target_link_options(headless-test-no-cpprt PRIVATE /NODEFAULTLIB)
@@ -66,6 +68,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 
         add_executable(headless-test-no-cpprt-static ${CMAKE_CURRENT_SOURCE_DIR}/tests/HeadlessTest.cpp)
         target_link_libraries(headless-test-no-cpprt-static spine-cpp-no-cpprt)
+        target_compile_definitions(headless-test-no-cpprt-static PRIVATE SPINE_NO_CPP_RT)
         target_link_options(headless-test-no-cpprt-static PRIVATE -static -static-libgcc -Wl,--exclude-libs,libstdc++.a)
         target_link_libraries(headless-test-no-cpprt-static -lm -lc)
 
