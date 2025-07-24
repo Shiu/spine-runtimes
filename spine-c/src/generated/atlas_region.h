@@ -15,6 +15,7 @@ SPINE_C_API void spine_atlas_region_dispose(spine_atlas_region self);
 
 SPINE_C_API spine_rtti spine_atlas_region_get_rtti(spine_atlas_region self);
 SPINE_C_API spine_atlas_page spine_atlas_region_get_page(spine_atlas_region self);
+SPINE_C_API const char *spine_atlas_region_get_name(spine_atlas_region self);
 SPINE_C_API int spine_atlas_region_get_index(spine_atlas_region self);
 SPINE_C_API int spine_atlas_region_get_x(spine_atlas_region self);
 SPINE_C_API int spine_atlas_region_get_y(spine_atlas_region self);

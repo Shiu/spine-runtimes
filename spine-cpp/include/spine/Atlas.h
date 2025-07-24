@@ -124,7 +124,7 @@ namespace spine {
 		AtlasPage *getPage() const {
 			return _page;
 		}
-		String getName() const {
+		const String &getName() const {
 			return _name;
 		}
 		int getIndex() const {

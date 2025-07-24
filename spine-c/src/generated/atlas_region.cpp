@@ -21,6 +21,11 @@ spine_atlas_page spine_atlas_region_get_page(spine_atlas_region self) {
 	return (spine_atlas_page) _self->getPage();
 }
 
+const char *spine_atlas_region_get_name(spine_atlas_region self) {
+	AtlasRegion *_self = (AtlasRegion *) self;
+	return _self->getName().buffer();
+}
+
 int spine_atlas_region_get_index(spine_atlas_region self) {
 	AtlasRegion *_self = (AtlasRegion *) self;
 	return _self->getIndex();
