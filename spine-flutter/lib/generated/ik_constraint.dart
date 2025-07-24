@@ -55,8 +55,7 @@ class IkConstraint extends PosedActive implements Posed, Constraint {
   Pointer get nativePtr => _ptr;
 
   factory IkConstraint(IkConstraintData data, Skeleton skeleton) {
-    final ptr = SpineBindings.bindings.spine_ik_constraint_create(
-        data.nativePtr.cast(), skeleton.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_ik_constraint_create(data.nativePtr.cast(), skeleton.nativePtr.cast());
     return IkConstraint.fromPointer(ptr);
   }
 
@@ -67,27 +66,23 @@ class IkConstraint extends PosedActive implements Posed, Constraint {
   }
 
   IkConstraint copy(Skeleton skeleton) {
-    final result = SpineBindings.bindings
-        .spine_ik_constraint_copy(_ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_ik_constraint_copy(_ptr, skeleton.nativePtr.cast());
     return IkConstraint.fromPointer(result);
   }
 
   @override
   void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings.spine_ik_constraint_update(
-        _ptr, skeleton.nativePtr.cast(), physics.value);
+    SpineBindings.bindings.spine_ik_constraint_update(_ptr, skeleton.nativePtr.cast(), physics.value);
   }
 
   @override
   void sort(Skeleton skeleton) {
-    SpineBindings.bindings
-        .spine_ik_constraint_sort(_ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings.spine_ik_constraint_sort(_ptr, skeleton.nativePtr.cast());
   }
 
   @override
   bool get isSourceActive {
-    final result =
-        SpineBindings.bindings.spine_ik_constraint_is_source_active(_ptr);
+    final result = SpineBindings.bindings.spine_ik_constraint_is_source_active(_ptr);
     return result;
   }
 
@@ -108,8 +103,7 @@ class IkConstraint extends PosedActive implements Posed, Constraint {
   }
 
   set target(Bone value) {
-    SpineBindings.bindings
-        .spine_ik_constraint_set_target(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_ik_constraint_set_target(_ptr, value.nativePtr.cast());
   }
 
   IkConstraintPose get pose {
@@ -118,8 +112,7 @@ class IkConstraint extends PosedActive implements Posed, Constraint {
   }
 
   IkConstraintPose get appliedPose {
-    final result =
-        SpineBindings.bindings.spine_ik_constraint_get_applied_pose(_ptr);
+    final result = SpineBindings.bindings.spine_ik_constraint_get_applied_pose(_ptr);
     return IkConstraintPose.fromPointer(result);
   }
 
@@ -135,8 +128,7 @@ class IkConstraint extends PosedActive implements Posed, Constraint {
 
   @override
   bool get isPoseEqualToApplied {
-    final result = SpineBindings.bindings
-        .spine_ik_constraint_is_pose_equal_to_applied(_ptr);
+    final result = SpineBindings.bindings.spine_ik_constraint_is_pose_equal_to_applied(_ptr);
     return result;
   }
 
@@ -145,40 +137,15 @@ class IkConstraint extends PosedActive implements Posed, Constraint {
     return Rtti.fromPointer(result);
   }
 
-  static void apply(Skeleton skeleton, BonePose bone, double targetX,
-      double targetY, bool compress, bool stretch, bool uniform, double mix) {
+  static void apply(Skeleton skeleton, BonePose bone, double targetX, double targetY, bool compress, bool stretch,
+      bool uniform, double mix) {
     SpineBindings.bindings.spine_ik_constraint_apply_1(
-        skeleton.nativePtr.cast(),
-        bone.nativePtr.cast(),
-        targetX,
-        targetY,
-        compress,
-        stretch,
-        uniform,
-        mix);
+        skeleton.nativePtr.cast(), bone.nativePtr.cast(), targetX, targetY, compress, stretch, uniform, mix);
   }
 
-  static void apply2(
-      Skeleton skeleton,
-      BonePose parent,
-      BonePose child,
-      double targetX,
-      double targetY,
-      int bendDirection,
-      bool stretch,
-      bool uniform,
-      double softness,
-      double mix) {
-    SpineBindings.bindings.spine_ik_constraint_apply_2(
-        skeleton.nativePtr.cast(),
-        parent.nativePtr.cast(),
-        child.nativePtr.cast(),
-        targetX,
-        targetY,
-        bendDirection,
-        stretch,
-        uniform,
-        softness,
-        mix);
+  static void apply2(Skeleton skeleton, BonePose parent, BonePose child, double targetX, double targetY,
+      int bendDirection, bool stretch, bool uniform, double softness, double mix) {
+    SpineBindings.bindings.spine_ik_constraint_apply_2(skeleton.nativePtr.cast(), parent.nativePtr.cast(),
+        child.nativePtr.cast(), targetX, targetY, bendDirection, stretch, uniform, softness, mix);
   }
 }

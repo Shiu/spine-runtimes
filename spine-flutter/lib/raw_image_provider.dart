@@ -78,11 +78,7 @@ class RawImageKey {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is RawImageKey &&
-        other.w == w &&
-        other.h == h &&
-        other.format == format &&
-        other.dataHash == dataHash;
+    return other is RawImageKey && other.w == w && other.h == h && other.format == format && other.dataHash == dataHash;
   }
 
   @override

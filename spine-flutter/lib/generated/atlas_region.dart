@@ -88,26 +88,22 @@ class AtlasRegion extends TextureRegion {
   }
 
   int get packedWidth {
-    final result =
-        SpineBindings.bindings.spine_atlas_region_get_packed_width(_ptr);
+    final result = SpineBindings.bindings.spine_atlas_region_get_packed_width(_ptr);
     return result;
   }
 
   int get packedHeight {
-    final result =
-        SpineBindings.bindings.spine_atlas_region_get_packed_height(_ptr);
+    final result = SpineBindings.bindings.spine_atlas_region_get_packed_height(_ptr);
     return result;
   }
 
   int get originalWidth {
-    final result =
-        SpineBindings.bindings.spine_atlas_region_get_original_width(_ptr);
+    final result = SpineBindings.bindings.spine_atlas_region_get_original_width(_ptr);
     return result;
   }
 
   int get originalHeight {
-    final result =
-        SpineBindings.bindings.spine_atlas_region_get_original_height(_ptr);
+    final result = SpineBindings.bindings.spine_atlas_region_get_original_height(_ptr);
     return result;
   }
 
@@ -137,13 +133,11 @@ class AtlasRegion extends TextureRegion {
   }
 
   set page(AtlasPage value) {
-    SpineBindings.bindings
-        .spine_atlas_region_set_page(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_atlas_region_set_page(_ptr, value.nativePtr.cast());
   }
 
   set name(String value) {
-    SpineBindings.bindings
-        .spine_atlas_region_set_name(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_atlas_region_set_name(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   set index(int value) {
@@ -191,17 +185,14 @@ class AtlasRegion extends TextureRegion {
   }
 
   set splits(ArrayInt value) {
-    SpineBindings.bindings
-        .spine_atlas_region_set_splits(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_atlas_region_set_splits(_ptr, value.nativePtr.cast());
   }
 
   set pads(ArrayInt value) {
-    SpineBindings.bindings
-        .spine_atlas_region_set_pads(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_atlas_region_set_pads(_ptr, value.nativePtr.cast());
   }
 
   set values(ArrayFloat value) {
-    SpineBindings.bindings
-        .spine_atlas_region_set_values(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_atlas_region_set_values(_ptr, value.nativePtr.cast());
   }
 }

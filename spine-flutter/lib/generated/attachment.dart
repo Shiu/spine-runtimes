@@ -63,10 +63,7 @@ abstract class Attachment implements Finalizable {
   Attachment copy() {
     final result = SpineBindings.bindings.spine_attachment_copy(_ptr);
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
@@ -81,8 +78,7 @@ abstract class Attachment implements Finalizable {
       case 'spine_region_attachment':
         return RegionAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
     }
   }
 

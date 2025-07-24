@@ -48,13 +48,11 @@ class PathConstraintPose implements Finalizable {
   }
 
   void set(PathConstraintPose pose) {
-    SpineBindings.bindings
-        .spine_path_constraint_pose_set(_ptr, pose.nativePtr.cast());
+    SpineBindings.bindings.spine_path_constraint_pose_set(_ptr, pose.nativePtr.cast());
   }
 
   double get position {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_pose_get_position(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_pose_get_position(_ptr);
     return result;
   }
 
@@ -63,8 +61,7 @@ class PathConstraintPose implements Finalizable {
   }
 
   double get spacing {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_pose_get_spacing(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_pose_get_spacing(_ptr);
     return result;
   }
 
@@ -73,19 +70,16 @@ class PathConstraintPose implements Finalizable {
   }
 
   double get mixRotate {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_pose_get_mix_rotate(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_pose_get_mix_rotate(_ptr);
     return result;
   }
 
   set mixRotate(double value) {
-    SpineBindings.bindings
-        .spine_path_constraint_pose_set_mix_rotate(_ptr, value);
+    SpineBindings.bindings.spine_path_constraint_pose_set_mix_rotate(_ptr, value);
   }
 
   double get mixX {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_pose_get_mix_x(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_pose_get_mix_x(_ptr);
     return result;
   }
 
@@ -94,8 +88,7 @@ class PathConstraintPose implements Finalizable {
   }
 
   double get mixY {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_pose_get_mix_y(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_pose_get_mix_y(_ptr);
     return result;
   }
 

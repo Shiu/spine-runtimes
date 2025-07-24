@@ -45,8 +45,7 @@ class RotateTimeline extends BoneTimeline1 {
   Pointer get nativePtr => _ptr;
 
   factory RotateTimeline(int frameCount, int bezierCount, int boneIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_rotate_timeline_create(frameCount, bezierCount, boneIndex);
+    final ptr = SpineBindings.bindings.spine_rotate_timeline_create(frameCount, bezierCount, boneIndex);
     return RotateTimeline.fromPointer(ptr);
   }
 }

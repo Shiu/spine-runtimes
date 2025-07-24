@@ -60,8 +60,7 @@ class Skeleton implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory Skeleton(SkeletonData skeletonData) {
-    final ptr = SpineBindings.bindings
-        .spine_skeleton_create(skeletonData.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_skeleton_create(skeletonData.nativePtr.cast());
     return Skeleton.fromPointer(ptr);
   }
 
@@ -74,13 +73,11 @@ class Skeleton implements Finalizable {
   }
 
   void constrained(Posed object) {
-    SpineBindings.bindings
-        .spine_skeleton_constrained(_ptr, object.nativePtr.cast());
+    SpineBindings.bindings.spine_skeleton_constrained(_ptr, object.nativePtr.cast());
   }
 
   void sortBone(Bone bone) {
-    SpineBindings.bindings
-        .spine_skeleton_sort_bone(_ptr, bone.nativePtr.cast());
+    SpineBindings.bindings.spine_skeleton_sort_bone(_ptr, bone.nativePtr.cast());
   }
 
   static void sortReset(ArrayBone bones) {
@@ -120,8 +117,7 @@ class Skeleton implements Finalizable {
   }
 
   Bone findBone(String boneName) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_find_bone(_ptr, boneName.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings.spine_skeleton_find_bone(_ptr, boneName.toNativeUtf8().cast<Char>());
     return Bone.fromPointer(result);
   }
 
@@ -131,8 +127,7 @@ class Skeleton implements Finalizable {
   }
 
   Slot findSlot(String slotName) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_find_slot(_ptr, slotName.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings.spine_skeleton_find_slot(_ptr, slotName.toNativeUtf8().cast<Char>());
     return Slot.fromPointer(result);
   }
 
@@ -148,9 +143,7 @@ class Skeleton implements Finalizable {
 
   void setAttachment(String slotName, String attachmentName) {
     SpineBindings.bindings.spine_skeleton_set_attachment(
-        _ptr,
-        slotName.toNativeUtf8().cast<Char>(),
-        attachmentName.toNativeUtf8().cast<Char>());
+        _ptr, slotName.toNativeUtf8().cast<Char>(), attachmentName.toNativeUtf8().cast<Char>());
   }
 
   ArrayConstraint get constraints {
@@ -159,8 +152,7 @@ class Skeleton implements Finalizable {
   }
 
   ArrayPhysicsConstraint get physicsConstraints {
-    final result =
-        SpineBindings.bindings.spine_skeleton_get_physics_constraints(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_get_physics_constraints(_ptr);
     return ArrayPhysicsConstraint.fromPointer(result);
   }
 
@@ -271,35 +263,26 @@ class Skeleton implements Finalizable {
   }
 
   void updateWorldTransform(Physics physics) {
-    SpineBindings.bindings
-        .spine_skeleton_update_world_transform_1(_ptr, physics.value);
+    SpineBindings.bindings.spine_skeleton_update_world_transform_1(_ptr, physics.value);
   }
 
   void updateWorldTransform2(Physics physics, BonePose parent) {
-    SpineBindings.bindings.spine_skeleton_update_world_transform_2(
-        _ptr, physics.value, parent.nativePtr.cast());
+    SpineBindings.bindings.spine_skeleton_update_world_transform_2(_ptr, physics.value, parent.nativePtr.cast());
   }
 
   void setSkin(String skinName) {
-    SpineBindings.bindings
-        .spine_skeleton_set_skin_1(_ptr, skinName.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_skeleton_set_skin_1(_ptr, skinName.toNativeUtf8().cast<Char>());
   }
 
   void setSkin2(Skin newSkin) {
-    SpineBindings.bindings
-        .spine_skeleton_set_skin_2(_ptr, newSkin.nativePtr.cast());
+    SpineBindings.bindings.spine_skeleton_set_skin_2(_ptr, newSkin.nativePtr.cast());
   }
 
   Attachment getAttachment(String slotName, String attachmentName) {
     final result = SpineBindings.bindings.spine_skeleton_get_attachment_1(
-        _ptr,
-        slotName.toNativeUtf8().cast<Char>(),
-        attachmentName.toNativeUtf8().cast<Char>());
+        _ptr, slotName.toNativeUtf8().cast<Char>(), attachmentName.toNativeUtf8().cast<Char>());
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
@@ -314,19 +297,15 @@ class Skeleton implements Finalizable {
       case 'spine_region_attachment':
         return RegionAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
     }
   }
 
   Attachment getAttachment2(int slotIndex, String attachmentName) {
-    final result = SpineBindings.bindings.spine_skeleton_get_attachment_2(
-        _ptr, slotIndex, attachmentName.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings
+        .spine_skeleton_get_attachment_2(_ptr, slotIndex, attachmentName.toNativeUtf8().cast<Char>());
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
@@ -341,14 +320,12 @@ class Skeleton implements Finalizable {
       case 'spine_region_attachment':
         return RegionAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
     }
   }
 
   set setColor(Color value) {
-    SpineBindings.bindings
-        .spine_skeleton_set_color_1(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_skeleton_set_color_1(_ptr, value.nativePtr.cast());
   }
 
   void setColor2(double r, double g, double b, double a) {

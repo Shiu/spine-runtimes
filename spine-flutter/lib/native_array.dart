@@ -31,28 +31,28 @@ import 'dart:ffi';
 import 'dart:collection';
 
 /// Base class for native spine arrays.
-/// 
+///
 /// Provides a Dart List-like interface over native spine arrays.
 /// The native memory is managed by the spine runtime and should not
 /// be freed directly from Dart.
 abstract class NativeArray<T> extends ListBase<T> {
   final Pointer _nativeArray;
-  
+
   NativeArray(this._nativeArray);
-  
+
   /// Get the native pointer for FFI calls
   Pointer get nativePtr => _nativeArray;
-  
+
   /// The number of elements in this array.
   /// Must be implemented by subclasses to call the appropriate spine_array_*_get_size
   @override
   int get length;
-  
+
   /// Get the element at the given index.
   /// Must be implemented by subclasses to call the appropriate spine_array_*_get
   @override
   T operator [](int index);
-  
+
   /// Set the element at the given index.
   /// For read-only arrays, this will throw an UnsupportedError.
   /// Must be implemented by subclasses.
@@ -60,7 +60,7 @@ abstract class NativeArray<T> extends ListBase<T> {
   void operator []=(int index, T value) {
     throw UnsupportedError('This array is read-only');
   }
-  
+
   /// Sets the length of the list.
   /// For read-only arrays, this will throw an UnsupportedError.
   /// Must be implemented by subclasses.

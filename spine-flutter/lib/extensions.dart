@@ -240,7 +240,8 @@ class SkeletonData {
     final Pointer<Uint8> binaryNative = _allocator.allocate(binary.lengthInBytes);
     binaryNative.asTypedList(binary.lengthInBytes).setAll(0, binary);
     final path = "".toNativeUtf8(allocator: _allocator);
-    final result = _bindings.spine_skeleton_data_load_binary(atlas._atlas, binaryNative.cast(), binary.lengthInBytes, path.cast());
+    final result =
+        _bindings.spine_skeleton_data_load_binary(atlas._atlas, binaryNative.cast(), binary.lengthInBytes, path.cast());
     _allocator.free(binaryNative);
     if (_bindings.spine_skeleton_data_result_get_error(result).address != nullptr.address) {
       final Pointer<Utf8> error = _bindings.spine_skeleton_data_result_get_error(result).cast();
@@ -4184,9 +4185,12 @@ class SkeletonDrawable {
   Future<RawImageData> renderToRawImageData(double width, double height, int bgColor) async {
     final recorder = renderToPictureRecorder(width, height, bgColor);
     var rawImageData = (await (await recorder.endRecording().toImage(
-      width.toInt(),
-      height.toInt(),
-    )).toByteData(format: ImageByteFormat.rawRgba))!.buffer.asUint8List();
+                  width.toInt(),
+                  height.toInt(),
+                ))
+            .toByteData(format: ImageByteFormat.rawRgba))!
+        .buffer
+        .asUint8List();
     return RawImageData(rawImageData, width.toInt(), height.toInt());
   }
 

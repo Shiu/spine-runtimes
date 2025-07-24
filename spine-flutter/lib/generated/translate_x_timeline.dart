@@ -45,8 +45,7 @@ class TranslateXTimeline extends BoneTimeline1 {
   Pointer get nativePtr => _ptr;
 
   factory TranslateXTimeline(int frameCount, int bezierCount, int boneIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_translate_x_timeline_create(frameCount, bezierCount, boneIndex);
+    final ptr = SpineBindings.bindings.spine_translate_x_timeline_create(frameCount, bezierCount, boneIndex);
     return TranslateXTimeline.fromPointer(ptr);
   }
 }

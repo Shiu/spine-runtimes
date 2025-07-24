@@ -53,25 +53,14 @@ abstract class CurveTimeline extends Timeline {
     SpineBindings.bindings.spine_curve_timeline_set_stepped(_ptr, value);
   }
 
-  void setBezier(
-      int bezier,
-      int frame,
-      double value,
-      double time1,
-      double value1,
-      double cx1,
-      double cy1,
-      double cx2,
-      double cy2,
-      double time2,
-      double value2) {
-    SpineBindings.bindings.spine_curve_timeline_set_bezier(_ptr, bezier, frame,
-        value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
+  void setBezier(int bezier, int frame, double value, double time1, double value1, double cx1, double cy1, double cx2,
+      double cy2, double time2, double value2) {
+    SpineBindings.bindings
+        .spine_curve_timeline_set_bezier(_ptr, bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
   }
 
   double getBezierValue(double time, int frame, int valueOffset, int i) {
-    final result = SpineBindings.bindings.spine_curve_timeline_get_bezier_value(
-        _ptr, time, frame, valueOffset, i);
+    final result = SpineBindings.bindings.spine_curve_timeline_get_bezier_value(_ptr, time, frame, valueOffset, i);
     return result;
   }
 

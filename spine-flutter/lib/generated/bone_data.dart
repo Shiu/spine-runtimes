@@ -48,8 +48,8 @@ class BoneData extends PosedData {
   Pointer get nativePtr => _ptr;
 
   factory BoneData(int index, String name, BoneData parent) {
-    final ptr = SpineBindings.bindings.spine_bone_data_create(
-        index, name.toNativeUtf8().cast<Char>(), parent.nativePtr.cast());
+    final ptr =
+        SpineBindings.bindings.spine_bone_data_create(index, name.toNativeUtf8().cast<Char>(), parent.nativePtr.cast());
     return BoneData.fromPointer(ptr);
   }
 
@@ -83,8 +83,7 @@ class BoneData extends PosedData {
   }
 
   set icon(String value) {
-    SpineBindings.bindings
-        .spine_bone_data_set_icon(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_bone_data_set_icon(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   bool get visible {

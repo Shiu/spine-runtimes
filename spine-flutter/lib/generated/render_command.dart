@@ -44,8 +44,7 @@ class RenderCommand implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   Pointer<Float> get positions {
-    final result =
-        SpineBindings.bindings.spine_render_command_get_positions(_ptr);
+    final result = SpineBindings.bindings.spine_render_command_get_positions(_ptr);
     return result;
   }
 
@@ -60,38 +59,32 @@ class RenderCommand implements Finalizable {
   }
 
   Pointer<Uint32> get darkColors {
-    final result =
-        SpineBindings.bindings.spine_render_command_get_dark_colors(_ptr);
+    final result = SpineBindings.bindings.spine_render_command_get_dark_colors(_ptr);
     return result;
   }
 
   int get numVertices {
-    final result =
-        SpineBindings.bindings.spine_render_command_get_num_vertices(_ptr);
+    final result = SpineBindings.bindings.spine_render_command_get_num_vertices(_ptr);
     return result;
   }
 
   Pointer<Uint16> get indices {
-    final result =
-        SpineBindings.bindings.spine_render_command_get_indices(_ptr);
+    final result = SpineBindings.bindings.spine_render_command_get_indices(_ptr);
     return result;
   }
 
   int get numIndices {
-    final result =
-        SpineBindings.bindings.spine_render_command_get_num_indices(_ptr);
+    final result = SpineBindings.bindings.spine_render_command_get_num_indices(_ptr);
     return result;
   }
 
   BlendMode get blendMode {
-    final result =
-        SpineBindings.bindings.spine_render_command_get_blend_mode(_ptr);
+    final result = SpineBindings.bindings.spine_render_command_get_blend_mode(_ptr);
     return BlendMode.fromValue(result);
   }
 
   Pointer<Void> get texture {
-    final result =
-        SpineBindings.bindings.spine_render_command_get_texture(_ptr);
+    final result = SpineBindings.bindings.spine_render_command_get_texture(_ptr);
     return result;
   }
 

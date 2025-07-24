@@ -45,8 +45,7 @@ class ScaleXTimeline extends BoneTimeline1 {
   Pointer get nativePtr => _ptr;
 
   factory ScaleXTimeline(int frameCount, int bezierCount, int boneIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_scale_x_timeline_create(frameCount, bezierCount, boneIndex);
+    final ptr = SpineBindings.bindings.spine_scale_x_timeline_create(frameCount, bezierCount, boneIndex);
     return ScaleXTimeline.fromPointer(ptr);
   }
 }

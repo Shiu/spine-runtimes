@@ -45,8 +45,7 @@ class SliderTimeline extends ConstraintTimeline1 {
   Pointer get nativePtr => _ptr;
 
   factory SliderTimeline(int frameCount, int bezierCount, int sliderIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_slider_timeline_create(frameCount, bezierCount, sliderIndex);
+    final ptr = SpineBindings.bindings.spine_slider_timeline_create(frameCount, bezierCount, sliderIndex);
     return SliderTimeline.fromPointer(ptr);
   }
 }

@@ -38,18 +38,15 @@ import 'physics_constraint_timeline.dart';
 class PhysicsConstraintMassTimeline extends PhysicsConstraintTimeline {
   final Pointer<spine_physics_constraint_mass_timeline_wrapper> _ptr;
 
-  PhysicsConstraintMassTimeline.fromPointer(this._ptr)
-      : super.fromPointer(_ptr.cast());
+  PhysicsConstraintMassTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
   @override
   Pointer get nativePtr => _ptr;
 
-  factory PhysicsConstraintMassTimeline(
-      int frameCount, int bezierCount, int physicsConstraintIndex) {
+  factory PhysicsConstraintMassTimeline(int frameCount, int bezierCount, int physicsConstraintIndex) {
     final ptr = SpineBindings.bindings
-        .spine_physics_constraint_mass_timeline_create(
-            frameCount, bezierCount, physicsConstraintIndex);
+        .spine_physics_constraint_mass_timeline_create(frameCount, bezierCount, physicsConstraintIndex);
     return PhysicsConstraintMassTimeline.fromPointer(ptr);
   }
 }

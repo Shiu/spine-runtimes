@@ -53,55 +53,41 @@ class SkeletonClipping implements Finalizable {
 
   int clipStart(Skeleton skeleton, Slot slot, ClippingAttachment clip) {
     final result = SpineBindings.bindings.spine_skeleton_clipping_clip_start(
-        _ptr,
-        skeleton.nativePtr.cast(),
-        slot.nativePtr.cast(),
-        clip.nativePtr.cast());
+        _ptr, skeleton.nativePtr.cast(), slot.nativePtr.cast(), clip.nativePtr.cast());
     return result;
   }
 
   bool get isClipping {
-    final result =
-        SpineBindings.bindings.spine_skeleton_clipping_is_clipping(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_clipping_is_clipping(_ptr);
     return result;
   }
 
   ArrayFloat get clippedVertices {
-    final result = SpineBindings.bindings
-        .spine_skeleton_clipping_get_clipped_vertices(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_clipping_get_clipped_vertices(_ptr);
     return ArrayFloat.fromPointer(result);
   }
 
   ArrayUnsignedShort get clippedTriangles {
-    final result = SpineBindings.bindings
-        .spine_skeleton_clipping_get_clipped_triangles(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_clipping_get_clipped_triangles(_ptr);
     return ArrayUnsignedShort.fromPointer(result);
   }
 
   ArrayFloat get clippedUVs {
-    final result =
-        SpineBindings.bindings.spine_skeleton_clipping_get_clipped_u_vs(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_clipping_get_clipped_u_vs(_ptr);
     return ArrayFloat.fromPointer(result);
   }
 
   void clipEnd(Slot slot) {
-    SpineBindings.bindings
-        .spine_skeleton_clipping_clip_end_1(_ptr, slot.nativePtr.cast());
+    SpineBindings.bindings.spine_skeleton_clipping_clip_end_1(_ptr, slot.nativePtr.cast());
   }
 
   void clipEnd2() {
     SpineBindings.bindings.spine_skeleton_clipping_clip_end_2(_ptr);
   }
 
-  bool clipTriangles(ArrayFloat vertices, ArrayUnsignedShort triangles,
-      ArrayFloat uvs, int stride) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_clipping_clip_triangles_3(
-            _ptr,
-            vertices.nativePtr.cast(),
-            triangles.nativePtr.cast(),
-            uvs.nativePtr.cast(),
-            stride);
+  bool clipTriangles(ArrayFloat vertices, ArrayUnsignedShort triangles, ArrayFloat uvs, int stride) {
+    final result = SpineBindings.bindings.spine_skeleton_clipping_clip_triangles_3(
+        _ptr, vertices.nativePtr.cast(), triangles.nativePtr.cast(), uvs.nativePtr.cast(), stride);
     return result;
   }
 }

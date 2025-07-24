@@ -48,8 +48,8 @@ class Animation implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory Animation(String name, ArrayTimeline timelines, double duration) {
-    final ptr = SpineBindings.bindings.spine_animation_create(
-        name.toNativeUtf8().cast<Char>(), timelines.nativePtr.cast(), duration);
+    final ptr = SpineBindings.bindings
+        .spine_animation_create(name.toNativeUtf8().cast<Char>(), timelines.nativePtr.cast(), duration);
     return Animation.fromPointer(ptr);
   }
 
@@ -59,13 +59,11 @@ class Animation implements Finalizable {
   }
 
   set timelines(ArrayTimeline value) {
-    SpineBindings.bindings
-        .spine_animation_set_timelines(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_animation_set_timelines(_ptr, value.nativePtr.cast());
   }
 
   bool hasTimeline(ArrayPropertyId ids) {
-    final result = SpineBindings.bindings
-        .spine_animation_has_timeline(_ptr, ids.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_animation_has_timeline(_ptr, ids.nativePtr.cast());
     return result;
   }
 
@@ -78,27 +76,10 @@ class Animation implements Finalizable {
     SpineBindings.bindings.spine_animation_set_duration(_ptr, value);
   }
 
-  void apply(
-      Skeleton skeleton,
-      double lastTime,
-      double time,
-      bool loop,
-      ArrayEvent pEvents,
-      double alpha,
-      MixBlend blend,
-      MixDirection direction,
-      bool appliedPose) {
-    SpineBindings.bindings.spine_animation_apply(
-        _ptr,
-        skeleton.nativePtr.cast(),
-        lastTime,
-        time,
-        loop,
-        pEvents.nativePtr.cast(),
-        alpha,
-        blend.value,
-        direction.value,
-        appliedPose);
+  void apply(Skeleton skeleton, double lastTime, double time, bool loop, ArrayEvent pEvents, double alpha,
+      MixBlend blend, MixDirection direction, bool appliedPose) {
+    SpineBindings.bindings.spine_animation_apply(_ptr, skeleton.nativePtr.cast(), lastTime, time, loop,
+        pEvents.nativePtr.cast(), alpha, blend.value, direction.value, appliedPose);
   }
 
   String get name {
@@ -112,14 +93,12 @@ class Animation implements Finalizable {
   }
 
   static int search(ArrayFloat values, double target) {
-    final result = SpineBindings.bindings
-        .spine_animation_search_1(values.nativePtr.cast(), target);
+    final result = SpineBindings.bindings.spine_animation_search_1(values.nativePtr.cast(), target);
     return result;
   }
 
   static int search2(ArrayFloat values, double target, int step) {
-    final result = SpineBindings.bindings
-        .spine_animation_search_2(values.nativePtr.cast(), target, step);
+    final result = SpineBindings.bindings.spine_animation_search_2(values.nativePtr.cast(), target, step);
     return result;
   }
 }

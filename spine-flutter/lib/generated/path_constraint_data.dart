@@ -61,28 +61,21 @@ class PathConstraintData extends PosedData implements ConstraintData {
   Pointer get nativePtr => _ptr;
 
   factory PathConstraintData(String name) {
-    final ptr = SpineBindings.bindings
-        .spine_path_constraint_data_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings.spine_path_constraint_data_create(name.toNativeUtf8().cast<Char>());
     return PathConstraintData.fromPointer(ptr);
   }
 
   @override
   Rtti get rtti {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_data_get_rtti(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_data_get_rtti(_ptr);
     return Rtti.fromPointer(result);
   }
 
   @override
   Constraint createMethod(Skeleton skeleton) {
-    final result = SpineBindings.bindings
-        .spine_path_constraint_data_create_method(
-            _ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_path_constraint_data_create_method(_ptr, skeleton.nativePtr.cast());
     final rtti = SpineBindings.bindings.spine_constraint_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_ik_constraint':
         return IkConstraint.fromPointer(result.cast());
@@ -95,75 +88,62 @@ class PathConstraintData extends PosedData implements ConstraintData {
       case 'spine_transform_constraint':
         return TransformConstraint.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class Constraint');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Constraint');
     }
   }
 
   ArrayBoneData get bones {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_data_get_bones(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_data_get_bones(_ptr);
     return ArrayBoneData.fromPointer(result);
   }
 
   SlotData get slot {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_data_get_slot(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_data_get_slot(_ptr);
     return SlotData.fromPointer(result);
   }
 
   set slot(SlotData value) {
-    SpineBindings.bindings
-        .spine_path_constraint_data_set_slot(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_path_constraint_data_set_slot(_ptr, value.nativePtr.cast());
   }
 
   PositionMode get positionMode {
-    final result = SpineBindings.bindings
-        .spine_path_constraint_data_get_position_mode(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_data_get_position_mode(_ptr);
     return PositionMode.fromValue(result);
   }
 
   set positionMode(PositionMode value) {
-    SpineBindings.bindings
-        .spine_path_constraint_data_set_position_mode(_ptr, value.value);
+    SpineBindings.bindings.spine_path_constraint_data_set_position_mode(_ptr, value.value);
   }
 
   SpacingMode get spacingMode {
-    final result = SpineBindings.bindings
-        .spine_path_constraint_data_get_spacing_mode(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_data_get_spacing_mode(_ptr);
     return SpacingMode.fromValue(result);
   }
 
   set spacingMode(SpacingMode value) {
-    SpineBindings.bindings
-        .spine_path_constraint_data_set_spacing_mode(_ptr, value.value);
+    SpineBindings.bindings.spine_path_constraint_data_set_spacing_mode(_ptr, value.value);
   }
 
   RotateMode get rotateMode {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_data_get_rotate_mode(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_data_get_rotate_mode(_ptr);
     return RotateMode.fromValue(result);
   }
 
   set rotateMode(RotateMode value) {
-    SpineBindings.bindings
-        .spine_path_constraint_data_set_rotate_mode(_ptr, value.value);
+    SpineBindings.bindings.spine_path_constraint_data_set_rotate_mode(_ptr, value.value);
   }
 
   double get offsetRotation {
-    final result = SpineBindings.bindings
-        .spine_path_constraint_data_get_offset_rotation(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_data_get_offset_rotation(_ptr);
     return result;
   }
 
   set offsetRotation(double value) {
-    SpineBindings.bindings
-        .spine_path_constraint_data_set_offset_rotation(_ptr, value);
+    SpineBindings.bindings.spine_path_constraint_data_set_offset_rotation(_ptr, value);
   }
 
   PathConstraintPose get setupPose {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_data_get_setup_pose(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_data_get_setup_pose(_ptr);
     return PathConstraintPose.fromPointer(result);
   }
 

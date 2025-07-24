@@ -58,28 +58,21 @@ class IkConstraintData extends PosedData implements ConstraintData {
   Pointer get nativePtr => _ptr;
 
   factory IkConstraintData(String name) {
-    final ptr = SpineBindings.bindings
-        .spine_ik_constraint_data_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings.spine_ik_constraint_data_create(name.toNativeUtf8().cast<Char>());
     return IkConstraintData.fromPointer(ptr);
   }
 
   @override
   Rtti get rtti {
-    final result =
-        SpineBindings.bindings.spine_ik_constraint_data_get_rtti(_ptr);
+    final result = SpineBindings.bindings.spine_ik_constraint_data_get_rtti(_ptr);
     return Rtti.fromPointer(result);
   }
 
   @override
   Constraint createMethod(Skeleton skeleton) {
-    final result = SpineBindings.bindings
-        .spine_ik_constraint_data_create_method(
-            _ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_ik_constraint_data_create_method(_ptr, skeleton.nativePtr.cast());
     final rtti = SpineBindings.bindings.spine_constraint_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_ik_constraint':
         return IkConstraint.fromPointer(result.cast());
@@ -92,31 +85,26 @@ class IkConstraintData extends PosedData implements ConstraintData {
       case 'spine_transform_constraint':
         return TransformConstraint.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class Constraint');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Constraint');
     }
   }
 
   ArrayBoneData get bones {
-    final result =
-        SpineBindings.bindings.spine_ik_constraint_data_get_bones(_ptr);
+    final result = SpineBindings.bindings.spine_ik_constraint_data_get_bones(_ptr);
     return ArrayBoneData.fromPointer(result);
   }
 
   BoneData get target {
-    final result =
-        SpineBindings.bindings.spine_ik_constraint_data_get_target(_ptr);
+    final result = SpineBindings.bindings.spine_ik_constraint_data_get_target(_ptr);
     return BoneData.fromPointer(result);
   }
 
   set target(BoneData value) {
-    SpineBindings.bindings
-        .spine_ik_constraint_data_set_target(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_ik_constraint_data_set_target(_ptr, value.nativePtr.cast());
   }
 
   bool get uniform {
-    final result =
-        SpineBindings.bindings.spine_ik_constraint_data_get_uniform(_ptr);
+    final result = SpineBindings.bindings.spine_ik_constraint_data_get_uniform(_ptr);
     return result;
   }
 
@@ -125,8 +113,7 @@ class IkConstraintData extends PosedData implements ConstraintData {
   }
 
   IkConstraintPose get setupPose {
-    final result =
-        SpineBindings.bindings.spine_ik_constraint_data_get_setup_pose(_ptr);
+    final result = SpineBindings.bindings.spine_ik_constraint_data_get_setup_pose(_ptr);
     return IkConstraintPose.fromPointer(result);
   }
 

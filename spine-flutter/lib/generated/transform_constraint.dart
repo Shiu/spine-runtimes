@@ -54,76 +54,65 @@ class TransformConstraint extends PosedActive implements Posed, Constraint {
   Pointer get nativePtr => _ptr;
 
   factory TransformConstraint(TransformConstraintData data, Skeleton skeleton) {
-    final ptr = SpineBindings.bindings.spine_transform_constraint_create(
-        data.nativePtr.cast(), skeleton.nativePtr.cast());
+    final ptr =
+        SpineBindings.bindings.spine_transform_constraint_create(data.nativePtr.cast(), skeleton.nativePtr.cast());
     return TransformConstraint.fromPointer(ptr);
   }
 
   @override
   Rtti get rtti {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_get_rtti(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_get_rtti(_ptr);
     return Rtti.fromPointer(result);
   }
 
   TransformConstraint copy(Skeleton skeleton) {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_copy(_ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_transform_constraint_copy(_ptr, skeleton.nativePtr.cast());
     return TransformConstraint.fromPointer(result);
   }
 
   @override
   void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings.spine_transform_constraint_update(
-        _ptr, skeleton.nativePtr.cast(), physics.value);
+    SpineBindings.bindings.spine_transform_constraint_update(_ptr, skeleton.nativePtr.cast(), physics.value);
   }
 
   @override
   void sort(Skeleton skeleton) {
-    SpineBindings.bindings
-        .spine_transform_constraint_sort(_ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings.spine_transform_constraint_sort(_ptr, skeleton.nativePtr.cast());
   }
 
   @override
   bool get isSourceActive {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_is_source_active(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_is_source_active(_ptr);
     return result;
   }
 
   ArrayBonePose get bones {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_get_bones(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_get_bones(_ptr);
     return ArrayBonePose.fromPointer(result);
   }
 
   Bone get source {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_get_source(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_get_source(_ptr);
     return Bone.fromPointer(result);
   }
 
   set source(Bone value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_set_source(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_transform_constraint_set_source(_ptr, value.nativePtr.cast());
   }
 
   @override
   TransformConstraintData get data {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_get_data(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_get_data(_ptr);
     return TransformConstraintData.fromPointer(result);
   }
 
   TransformConstraintPose get pose {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_get_pose(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_get_pose(_ptr);
     return TransformConstraintPose.fromPointer(result);
   }
 
   TransformConstraintPose get appliedPose {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_get_applied_pose(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_get_applied_pose(_ptr);
     return TransformConstraintPose.fromPointer(result);
   }
 
@@ -139,8 +128,7 @@ class TransformConstraint extends PosedActive implements Posed, Constraint {
 
   @override
   bool get isPoseEqualToApplied {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_is_pose_equal_to_applied(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_is_pose_equal_to_applied(_ptr);
     return result;
   }
 

@@ -45,8 +45,7 @@ class ShearXTimeline extends BoneTimeline1 {
   Pointer get nativePtr => _ptr;
 
   factory ShearXTimeline(int frameCount, int bezierCount, int boneIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_shear_x_timeline_create(frameCount, bezierCount, boneIndex);
+    final ptr = SpineBindings.bindings.spine_shear_x_timeline_create(frameCount, bezierCount, boneIndex);
     return ShearXTimeline.fromPointer(ptr);
   }
 }

@@ -50,8 +50,7 @@ class Atlas implements Finalizable {
   }
 
   AtlasRegion findRegion(String name) {
-    final result = SpineBindings.bindings
-        .spine_atlas_find_region(_ptr, name.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings.spine_atlas_find_region(_ptr, name.toNativeUtf8().cast<Char>());
     return AtlasRegion.fromPointer(result);
   }
 

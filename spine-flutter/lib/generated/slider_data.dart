@@ -65,8 +65,7 @@ class SliderData extends PosedData implements ConstraintData {
   Pointer get nativePtr => _ptr;
 
   factory SliderData(String name) {
-    final ptr = SpineBindings.bindings
-        .spine_slider_data_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings.spine_slider_data_create(name.toNativeUtf8().cast<Char>());
     return SliderData.fromPointer(ptr);
   }
 
@@ -78,13 +77,9 @@ class SliderData extends PosedData implements ConstraintData {
 
   @override
   Constraint createMethod(Skeleton skeleton) {
-    final result = SpineBindings.bindings
-        .spine_slider_data_create_method(_ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_slider_data_create_method(_ptr, skeleton.nativePtr.cast());
     final rtti = SpineBindings.bindings.spine_constraint_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_ik_constraint':
         return IkConstraint.fromPointer(result.cast());
@@ -97,8 +92,7 @@ class SliderData extends PosedData implements ConstraintData {
       case 'spine_transform_constraint':
         return TransformConstraint.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class Constraint');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Constraint');
     }
   }
 
@@ -108,8 +102,7 @@ class SliderData extends PosedData implements ConstraintData {
   }
 
   set animation(Animation value) {
-    SpineBindings.bindings
-        .spine_slider_data_set_animation(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_slider_data_set_animation(_ptr, value.nativePtr.cast());
   }
 
   bool get additive {
@@ -136,17 +129,13 @@ class SliderData extends PosedData implements ConstraintData {
   }
 
   set bone(BoneData value) {
-    SpineBindings.bindings
-        .spine_slider_data_set_bone(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_slider_data_set_bone(_ptr, value.nativePtr.cast());
   }
 
   FromProperty get property {
     final result = SpineBindings.bindings.spine_slider_data_get_property(_ptr);
     final rtti = SpineBindings.bindings.spine_from_property_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_from_rotate':
         return FromRotate.fromPointer(result.cast());
@@ -161,14 +150,12 @@ class SliderData extends PosedData implements ConstraintData {
       case 'spine_from_y':
         return FromY.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class FromProperty');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class FromProperty');
     }
   }
 
   set property(FromProperty value) {
-    SpineBindings.bindings
-        .spine_slider_data_set_property(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_slider_data_set_property(_ptr, value.nativePtr.cast());
   }
 
   double get scale {
@@ -199,8 +186,7 @@ class SliderData extends PosedData implements ConstraintData {
   }
 
   SliderPose get setupPose {
-    final result =
-        SpineBindings.bindings.spine_slider_data_get_setup_pose(_ptr);
+    final result = SpineBindings.bindings.spine_slider_data_get_setup_pose(_ptr);
     return SliderPose.fromPointer(result);
   }
 

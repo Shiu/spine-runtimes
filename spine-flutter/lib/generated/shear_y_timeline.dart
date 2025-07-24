@@ -45,8 +45,7 @@ class ShearYTimeline extends BoneTimeline1 {
   Pointer get nativePtr => _ptr;
 
   factory ShearYTimeline(int frameCount, int bezierCount, int boneIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_shear_y_timeline_create(frameCount, bezierCount, boneIndex);
+    final ptr = SpineBindings.bindings.spine_shear_y_timeline_create(frameCount, bezierCount, boneIndex);
     return ShearYTimeline.fromPointer(ptr);
   }
 }

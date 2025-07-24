@@ -52,30 +52,14 @@ abstract class Timeline implements Finalizable {
     return Rtti.fromPointer(result);
   }
 
-  void apply(
-      Skeleton skeleton,
-      double lastTime,
-      double time,
-      ArrayEvent pEvents,
-      double alpha,
-      MixBlend blend,
-      MixDirection direction,
-      bool appliedPose) {
-    SpineBindings.bindings.spine_timeline_apply(
-        _ptr,
-        skeleton.nativePtr.cast(),
-        lastTime,
-        time,
-        pEvents.nativePtr.cast(),
-        alpha,
-        blend.value,
-        direction.value,
-        appliedPose);
+  void apply(Skeleton skeleton, double lastTime, double time, ArrayEvent pEvents, double alpha, MixBlend blend,
+      MixDirection direction, bool appliedPose) {
+    SpineBindings.bindings.spine_timeline_apply(_ptr, skeleton.nativePtr.cast(), lastTime, time,
+        pEvents.nativePtr.cast(), alpha, blend.value, direction.value, appliedPose);
   }
 
   int get frameEntries {
-    final result =
-        SpineBindings.bindings.spine_timeline_get_frame_entries(_ptr);
+    final result = SpineBindings.bindings.spine_timeline_get_frame_entries(_ptr);
     return result;
   }
 

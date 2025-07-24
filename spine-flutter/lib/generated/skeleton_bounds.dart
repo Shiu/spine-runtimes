@@ -52,50 +52,41 @@ class SkeletonBounds implements Finalizable {
   }
 
   void update(Skeleton skeleton, bool updateAabb) {
-    SpineBindings.bindings.spine_skeleton_bounds_update(
-        _ptr, skeleton.nativePtr.cast(), updateAabb);
+    SpineBindings.bindings.spine_skeleton_bounds_update(_ptr, skeleton.nativePtr.cast(), updateAabb);
   }
 
   bool aabbContainsPoint(double x, double y) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_bounds_aabb_contains_point(_ptr, x, y);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_aabb_contains_point(_ptr, x, y);
     return result;
   }
 
   bool aabbIntersectsSegment(double x1, double y1, double x2, double y2) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_bounds_aabb_intersects_segment(_ptr, x1, y1, x2, y2);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_aabb_intersects_segment(_ptr, x1, y1, x2, y2);
     return result;
   }
 
   bool aabbIntersectsSkeleton(SkeletonBounds bounds) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_bounds_aabb_intersects_skeleton(
-            _ptr, bounds.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_skeleton_bounds_aabb_intersects_skeleton(_ptr, bounds.nativePtr.cast());
     return result;
   }
 
   Polygon getPolygon(BoundingBoxAttachment attachment) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_bounds_get_polygon(_ptr, attachment.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_polygon(_ptr, attachment.nativePtr.cast());
     return Polygon.fromPointer(result);
   }
 
   BoundingBoxAttachment getBoundingBox(Polygon polygon) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_bounds_get_bounding_box(_ptr, polygon.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_bounding_box(_ptr, polygon.nativePtr.cast());
     return BoundingBoxAttachment.fromPointer(result);
   }
 
   ArrayPolygon get polygons {
-    final result =
-        SpineBindings.bindings.spine_skeleton_bounds_get_polygons(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_polygons(_ptr);
     return ArrayPolygon.fromPointer(result);
   }
 
   ArrayBoundingBoxAttachment get boundingBoxes {
-    final result =
-        SpineBindings.bindings.spine_skeleton_bounds_get_bounding_boxes(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_bounding_boxes(_ptr);
     return ArrayBoundingBoxAttachment.fromPointer(result);
   }
 
@@ -125,36 +116,28 @@ class SkeletonBounds implements Finalizable {
   }
 
   double get height {
-    final result =
-        SpineBindings.bindings.spine_skeleton_bounds_get_height(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_height(_ptr);
     return result;
   }
 
   bool containsPoint(Polygon polygon, double x, double y) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_bounds_contains_point_1(
-            _ptr, polygon.nativePtr.cast(), x, y);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_contains_point_1(_ptr, polygon.nativePtr.cast(), x, y);
     return result;
   }
 
   BoundingBoxAttachment containsPoint2(double x, double y) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_bounds_contains_point_2(_ptr, x, y);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_contains_point_2(_ptr, x, y);
     return BoundingBoxAttachment.fromPointer(result);
   }
 
-  BoundingBoxAttachment intersectsSegment(
-      double x1, double y1, double x2, double y2) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_bounds_intersects_segment_1(_ptr, x1, y1, x2, y2);
+  BoundingBoxAttachment intersectsSegment(double x1, double y1, double x2, double y2) {
+    final result = SpineBindings.bindings.spine_skeleton_bounds_intersects_segment_1(_ptr, x1, y1, x2, y2);
     return BoundingBoxAttachment.fromPointer(result);
   }
 
-  bool intersectsSegment2(
-      Polygon polygon, double x1, double y1, double x2, double y2) {
+  bool intersectsSegment2(Polygon polygon, double x1, double y1, double x2, double y2) {
     final result = SpineBindings.bindings
-        .spine_skeleton_bounds_intersects_segment_2(
-            _ptr, polygon.nativePtr.cast(), x1, y1, x2, y2);
+        .spine_skeleton_bounds_intersects_segment_2(_ptr, polygon.nativePtr.cast(), x1, y1, x2, y2);
     return result;
   }
 }

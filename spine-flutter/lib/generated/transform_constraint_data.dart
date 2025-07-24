@@ -51,36 +51,29 @@ import 'transform_constraint_pose.dart';
 class TransformConstraintData extends PosedData implements ConstraintData {
   final Pointer<spine_transform_constraint_data_wrapper> _ptr;
 
-  TransformConstraintData.fromPointer(this._ptr)
-      : super.fromPointer(_ptr.cast());
+  TransformConstraintData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
   @override
   Pointer get nativePtr => _ptr;
 
   factory TransformConstraintData(String name) {
-    final ptr = SpineBindings.bindings.spine_transform_constraint_data_create(
-        name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings.spine_transform_constraint_data_create(name.toNativeUtf8().cast<Char>());
     return TransformConstraintData.fromPointer(ptr);
   }
 
   @override
   Rtti get rtti {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_data_get_rtti(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_rtti(_ptr);
     return Rtti.fromPointer(result);
   }
 
   @override
   Constraint createMethod(Skeleton skeleton) {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_create_method(
-            _ptr, skeleton.nativePtr.cast());
+    final result =
+        SpineBindings.bindings.spine_transform_constraint_data_create_method(_ptr, skeleton.nativePtr.cast());
     final rtti = SpineBindings.bindings.spine_constraint_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_ik_constraint':
         return IkConstraint.fromPointer(result.cast());
@@ -93,153 +86,126 @@ class TransformConstraintData extends PosedData implements ConstraintData {
       case 'spine_transform_constraint':
         return TransformConstraint.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class Constraint');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Constraint');
     }
   }
 
   ArrayBoneData get bones {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_data_get_bones(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_bones(_ptr);
     return ArrayBoneData.fromPointer(result);
   }
 
   BoneData get source {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_data_get_source(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_source(_ptr);
     return BoneData.fromPointer(result);
   }
 
   set source(BoneData value) {
-    SpineBindings.bindings.spine_transform_constraint_data_set_source(
-        _ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_transform_constraint_data_set_source(_ptr, value.nativePtr.cast());
   }
 
   double get offsetRotation {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_get_offset_rotation(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_rotation(_ptr);
     return result;
   }
 
   set offsetRotation(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_data_set_offset_rotation(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_data_set_offset_rotation(_ptr, value);
   }
 
   double get offsetX {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_get_offset_x(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_x(_ptr);
     return result;
   }
 
   set offsetX(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_data_set_offset_x(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_data_set_offset_x(_ptr, value);
   }
 
   double get offsetY {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_get_offset_y(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_y(_ptr);
     return result;
   }
 
   set offsetY(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_data_set_offset_y(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_data_set_offset_y(_ptr, value);
   }
 
   double get offsetScaleX {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_get_offset_scale_x(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_scale_x(_ptr);
     return result;
   }
 
   set offsetScaleX(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_data_set_offset_scale_x(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_data_set_offset_scale_x(_ptr, value);
   }
 
   double get offsetScaleY {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_get_offset_scale_y(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_scale_y(_ptr);
     return result;
   }
 
   set offsetScaleY(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_data_set_offset_scale_y(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_data_set_offset_scale_y(_ptr, value);
   }
 
   double get offsetShearY {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_get_offset_shear_y(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_shear_y(_ptr);
     return result;
   }
 
   set offsetShearY(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_data_set_offset_shear_y(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_data_set_offset_shear_y(_ptr, value);
   }
 
   bool get localSource {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_get_local_source(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_local_source(_ptr);
     return result;
   }
 
   set localSource(bool value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_data_set_local_source(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_data_set_local_source(_ptr, value);
   }
 
   bool get localTarget {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_get_local_target(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_local_target(_ptr);
     return result;
   }
 
   set localTarget(bool value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_data_set_local_target(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_data_set_local_target(_ptr, value);
   }
 
   bool get additive {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_get_additive(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_additive(_ptr);
     return result;
   }
 
   set additive(bool value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_data_set_additive(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_data_set_additive(_ptr, value);
   }
 
   bool get clamp {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_data_get_clamp(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_clamp(_ptr);
     return result;
   }
 
   set clamp(bool value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_data_set_clamp(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_data_set_clamp(_ptr, value);
   }
 
   ArrayFromProperty get properties {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_get_properties(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_properties(_ptr);
     return ArrayFromProperty.fromPointer(result);
   }
 
   TransformConstraintPose get setupPose {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_data_get_setup_pose(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_data_get_setup_pose(_ptr);
     return TransformConstraintPose.fromPointer(result);
   }
 
   static Rtti rttiStatic() {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_data_rtti();
+    final result = SpineBindings.bindings.spine_transform_constraint_data_rtti();
     return Rtti.fromPointer(result);
   }
 }

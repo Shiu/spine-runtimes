@@ -53,8 +53,7 @@ class Slider extends PosedActive implements Posed, Constraint {
   Pointer get nativePtr => _ptr;
 
   factory Slider(SliderData data, Skeleton skeleton) {
-    final ptr = SpineBindings.bindings
-        .spine_slider_create(data.nativePtr.cast(), skeleton.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_slider_create(data.nativePtr.cast(), skeleton.nativePtr.cast());
     return Slider.fromPointer(ptr);
   }
 
@@ -65,15 +64,13 @@ class Slider extends PosedActive implements Posed, Constraint {
   }
 
   Slider copy(Skeleton skeleton) {
-    final result = SpineBindings.bindings
-        .spine_slider_copy(_ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_slider_copy(_ptr, skeleton.nativePtr.cast());
     return Slider.fromPointer(result);
   }
 
   @override
   void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings
-        .spine_slider_update(_ptr, skeleton.nativePtr.cast(), physics.value);
+    SpineBindings.bindings.spine_slider_update(_ptr, skeleton.nativePtr.cast(), physics.value);
   }
 
   @override
@@ -124,8 +121,7 @@ class Slider extends PosedActive implements Posed, Constraint {
 
   @override
   bool get isPoseEqualToApplied {
-    final result =
-        SpineBindings.bindings.spine_slider_is_pose_equal_to_applied(_ptr);
+    final result = SpineBindings.bindings.spine_slider_is_pose_equal_to_applied(_ptr);
     return result;
   }
 

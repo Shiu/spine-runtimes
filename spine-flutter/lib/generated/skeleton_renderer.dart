@@ -50,8 +50,7 @@ class SkeletonRenderer implements Finalizable {
   }
 
   RenderCommand render(Skeleton skeleton) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_renderer_render(_ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_skeleton_renderer_render(_ptr, skeleton.nativePtr.cast());
     return RenderCommand.fromPointer(result);
   }
 }

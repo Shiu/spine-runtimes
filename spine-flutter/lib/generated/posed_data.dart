@@ -44,8 +44,7 @@ class PosedData implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory PosedData(String name) {
-    final ptr = SpineBindings.bindings
-        .spine_posed_data_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings.spine_posed_data_create(name.toNativeUtf8().cast<Char>());
     return PosedData.fromPointer(ptr);
   }
 
@@ -55,8 +54,7 @@ class PosedData implements Finalizable {
   }
 
   bool get skinRequired {
-    final result =
-        SpineBindings.bindings.spine_posed_data_get_skin_required(_ptr);
+    final result = SpineBindings.bindings.spine_posed_data_get_skin_required(_ptr);
     return result;
   }
 

@@ -54,8 +54,7 @@ class PathConstraint extends PosedActive implements Posed, Constraint {
   Pointer get nativePtr => _ptr;
 
   factory PathConstraint(PathConstraintData data, Skeleton skeleton) {
-    final ptr = SpineBindings.bindings.spine_path_constraint_create(
-        data.nativePtr.cast(), skeleton.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_path_constraint_create(data.nativePtr.cast(), skeleton.nativePtr.cast());
     return PathConstraint.fromPointer(ptr);
   }
 
@@ -66,27 +65,23 @@ class PathConstraint extends PosedActive implements Posed, Constraint {
   }
 
   PathConstraint copy(Skeleton skeleton) {
-    final result = SpineBindings.bindings
-        .spine_path_constraint_copy(_ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_path_constraint_copy(_ptr, skeleton.nativePtr.cast());
     return PathConstraint.fromPointer(result);
   }
 
   @override
   void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings.spine_path_constraint_update(
-        _ptr, skeleton.nativePtr.cast(), physics.value);
+    SpineBindings.bindings.spine_path_constraint_update(_ptr, skeleton.nativePtr.cast(), physics.value);
   }
 
   @override
   void sort(Skeleton skeleton) {
-    SpineBindings.bindings
-        .spine_path_constraint_sort(_ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings.spine_path_constraint_sort(_ptr, skeleton.nativePtr.cast());
   }
 
   @override
   bool get isSourceActive {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_is_source_active(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_is_source_active(_ptr);
     return result;
   }
 
@@ -101,8 +96,7 @@ class PathConstraint extends PosedActive implements Posed, Constraint {
   }
 
   set slot(Slot value) {
-    SpineBindings.bindings
-        .spine_path_constraint_set_slot(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_path_constraint_set_slot(_ptr, value.nativePtr.cast());
   }
 
   @override
@@ -117,8 +111,7 @@ class PathConstraint extends PosedActive implements Posed, Constraint {
   }
 
   PathConstraintPose get appliedPose {
-    final result =
-        SpineBindings.bindings.spine_path_constraint_get_applied_pose(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_get_applied_pose(_ptr);
     return PathConstraintPose.fromPointer(result);
   }
 
@@ -134,8 +127,7 @@ class PathConstraint extends PosedActive implements Posed, Constraint {
 
   @override
   bool get isPoseEqualToApplied {
-    final result = SpineBindings.bindings
-        .spine_path_constraint_is_pose_equal_to_applied(_ptr);
+    final result = SpineBindings.bindings.spine_path_constraint_is_pose_equal_to_applied(_ptr);
     return result;
   }
 

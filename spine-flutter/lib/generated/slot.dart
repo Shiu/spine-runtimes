@@ -49,8 +49,7 @@ class Slot implements Finalizable, Posed {
   Pointer get nativePtr => _ptr;
 
   factory Slot(SlotData data, Skeleton skeleton) {
-    final ptr = SpineBindings.bindings
-        .spine_slot_create(data.nativePtr.cast(), skeleton.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_slot_create(data.nativePtr.cast(), skeleton.nativePtr.cast());
     return Slot.fromPointer(ptr);
   }
 
@@ -90,8 +89,7 @@ class Slot implements Finalizable, Posed {
 
   @override
   bool get isPoseEqualToApplied {
-    final result =
-        SpineBindings.bindings.spine_slot_is_pose_equal_to_applied(_ptr);
+    final result = SpineBindings.bindings.spine_slot_is_pose_equal_to_applied(_ptr);
     return result;
   }
 }

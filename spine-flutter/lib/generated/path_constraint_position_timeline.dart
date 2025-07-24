@@ -38,18 +38,15 @@ import 'constraint_timeline1.dart';
 class PathConstraintPositionTimeline extends ConstraintTimeline1 {
   final Pointer<spine_path_constraint_position_timeline_wrapper> _ptr;
 
-  PathConstraintPositionTimeline.fromPointer(this._ptr)
-      : super.fromPointer(_ptr.cast());
+  PathConstraintPositionTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
   @override
   Pointer get nativePtr => _ptr;
 
-  factory PathConstraintPositionTimeline(
-      int frameCount, int bezierCount, int constraintIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_path_constraint_position_timeline_create(
-            frameCount, bezierCount, constraintIndex);
+  factory PathConstraintPositionTimeline(int frameCount, int bezierCount, int constraintIndex) {
+    final ptr =
+        SpineBindings.bindings.spine_path_constraint_position_timeline_create(frameCount, bezierCount, constraintIndex);
     return PathConstraintPositionTimeline.fromPointer(ptr);
   }
 }

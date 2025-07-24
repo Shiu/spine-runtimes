@@ -83,10 +83,7 @@ class SlotPose implements Finalizable {
   Attachment get attachment {
     final result = SpineBindings.bindings.spine_slot_pose_get_attachment(_ptr);
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
@@ -101,19 +98,16 @@ class SlotPose implements Finalizable {
       case 'spine_region_attachment':
         return RegionAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
     }
   }
 
   set attachment(Attachment value) {
-    SpineBindings.bindings
-        .spine_slot_pose_set_attachment(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_slot_pose_set_attachment(_ptr, value.nativePtr.cast());
   }
 
   int get sequenceIndex {
-    final result =
-        SpineBindings.bindings.spine_slot_pose_get_sequence_index(_ptr);
+    final result = SpineBindings.bindings.spine_slot_pose_get_sequence_index(_ptr);
     return result;
   }
 

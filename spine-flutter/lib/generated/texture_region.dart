@@ -90,8 +90,7 @@ class TextureRegion implements Finalizable {
   }
 
   int get regionWidth {
-    final result =
-        SpineBindings.bindings.spine_texture_region_get_region_width(_ptr);
+    final result = SpineBindings.bindings.spine_texture_region_get_region_width(_ptr);
     return result;
   }
 
@@ -100,8 +99,7 @@ class TextureRegion implements Finalizable {
   }
 
   int get regionHeight {
-    final result =
-        SpineBindings.bindings.spine_texture_region_get_region_height(_ptr);
+    final result = SpineBindings.bindings.spine_texture_region_get_region_height(_ptr);
     return result;
   }
 

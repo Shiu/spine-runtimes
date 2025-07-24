@@ -54,14 +54,12 @@ class Bone extends PosedActive implements Posed, Update {
   Pointer get nativePtr => _ptr;
 
   factory Bone(BoneData data, Bone parent) {
-    final ptr = SpineBindings.bindings
-        .spine_bone_create(data.nativePtr.cast(), parent.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_bone_create(data.nativePtr.cast(), parent.nativePtr.cast());
     return Bone.fromPointer(ptr);
   }
 
   factory Bone.from(Bone bone, Bone parent) {
-    final ptr = SpineBindings.bindings
-        .spine_bone_create2(bone.nativePtr.cast(), parent.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_bone_create2(bone.nativePtr.cast(), parent.nativePtr.cast());
     return Bone.fromPointer(ptr);
   }
 
@@ -92,8 +90,7 @@ class Bone extends PosedActive implements Posed, Update {
 
   @override
   void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings
-        .spine_bone_update(_ptr, skeleton.nativePtr.cast(), physics.value);
+    SpineBindings.bindings.spine_bone_update(_ptr, skeleton.nativePtr.cast(), physics.value);
   }
 
   BoneData get data {
@@ -123,8 +120,7 @@ class Bone extends PosedActive implements Posed, Update {
 
   @override
   bool get isPoseEqualToApplied {
-    final result =
-        SpineBindings.bindings.spine_bone_is_pose_equal_to_applied(_ptr);
+    final result = SpineBindings.bindings.spine_bone_is_pose_equal_to_applied(_ptr);
     return result;
   }
 

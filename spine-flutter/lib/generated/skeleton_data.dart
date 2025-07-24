@@ -55,32 +55,29 @@ class SkeletonData implements Finalizable {
   }
 
   BoneData findBone(String boneName) {
-    final result = SpineBindings.bindings.spine_skeleton_data_find_bone(
-        _ptr, boneName.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings.spine_skeleton_data_find_bone(_ptr, boneName.toNativeUtf8().cast<Char>());
     return BoneData.fromPointer(result);
   }
 
   SlotData findSlot(String slotName) {
-    final result = SpineBindings.bindings.spine_skeleton_data_find_slot(
-        _ptr, slotName.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings.spine_skeleton_data_find_slot(_ptr, slotName.toNativeUtf8().cast<Char>());
     return SlotData.fromPointer(result);
   }
 
   Skin findSkin(String skinName) {
-    final result = SpineBindings.bindings.spine_skeleton_data_find_skin(
-        _ptr, skinName.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings.spine_skeleton_data_find_skin(_ptr, skinName.toNativeUtf8().cast<Char>());
     return Skin.fromPointer(result);
   }
 
   EventData findEvent(String eventDataName) {
-    final result = SpineBindings.bindings.spine_skeleton_data_find_event(
-        _ptr, eventDataName.toNativeUtf8().cast<Char>());
+    final result =
+        SpineBindings.bindings.spine_skeleton_data_find_event(_ptr, eventDataName.toNativeUtf8().cast<Char>());
     return EventData.fromPointer(result);
   }
 
   Animation findAnimation(String animationName) {
-    final result = SpineBindings.bindings.spine_skeleton_data_find_animation(
-        _ptr, animationName.toNativeUtf8().cast<Char>());
+    final result =
+        SpineBindings.bindings.spine_skeleton_data_find_animation(_ptr, animationName.toNativeUtf8().cast<Char>());
     return Animation.fromPointer(result);
   }
 
@@ -90,8 +87,7 @@ class SkeletonData implements Finalizable {
   }
 
   set name(String value) {
-    SpineBindings.bindings
-        .spine_skeleton_data_set_name(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_skeleton_data_set_name(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   ArrayBoneData get bones {
@@ -110,14 +106,12 @@ class SkeletonData implements Finalizable {
   }
 
   Skin get defaultSkin {
-    final result =
-        SpineBindings.bindings.spine_skeleton_data_get_default_skin(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_data_get_default_skin(_ptr);
     return Skin.fromPointer(result);
   }
 
   set defaultSkin(Skin value) {
-    SpineBindings.bindings
-        .spine_skeleton_data_set_default_skin(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_skeleton_data_set_default_skin(_ptr, value.nativePtr.cast());
   }
 
   ArrayEventData get events {
@@ -126,14 +120,12 @@ class SkeletonData implements Finalizable {
   }
 
   ArrayAnimation get animations {
-    final result =
-        SpineBindings.bindings.spine_skeleton_data_get_animations(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_data_get_animations(_ptr);
     return ArrayAnimation.fromPointer(result);
   }
 
   ArrayConstraintData get constraints {
-    final result =
-        SpineBindings.bindings.spine_skeleton_data_get_constraints(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_data_get_constraints(_ptr);
     return ArrayConstraintData.fromPointer(result);
   }
 
@@ -174,8 +166,7 @@ class SkeletonData implements Finalizable {
   }
 
   double get referenceScale {
-    final result =
-        SpineBindings.bindings.spine_skeleton_data_get_reference_scale(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_data_get_reference_scale(_ptr);
     return result;
   }
 
@@ -189,8 +180,7 @@ class SkeletonData implements Finalizable {
   }
 
   set version(String value) {
-    SpineBindings.bindings.spine_skeleton_data_set_version(
-        _ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_skeleton_data_set_version(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   String get hash {
@@ -199,30 +189,25 @@ class SkeletonData implements Finalizable {
   }
 
   set hash(String value) {
-    SpineBindings.bindings
-        .spine_skeleton_data_set_hash(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_skeleton_data_set_hash(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   String get imagesPath {
-    final result =
-        SpineBindings.bindings.spine_skeleton_data_get_images_path(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_data_get_images_path(_ptr);
     return result.cast<Utf8>().toDartString();
   }
 
   set imagesPath(String value) {
-    SpineBindings.bindings.spine_skeleton_data_set_images_path(
-        _ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_skeleton_data_set_images_path(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   String get audioPath {
-    final result =
-        SpineBindings.bindings.spine_skeleton_data_get_audio_path(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_data_get_audio_path(_ptr);
     return result.cast<Utf8>().toDartString();
   }
 
   set audioPath(String value) {
-    SpineBindings.bindings.spine_skeleton_data_set_audio_path(
-        _ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_skeleton_data_set_audio_path(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   double get fps {

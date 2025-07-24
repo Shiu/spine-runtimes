@@ -69,7 +69,6 @@ abstract class FromProperty implements Finalizable {
   }
 
   set to(ArrayToProperty value) {
-    SpineBindings.bindings
-        .spine_from_property_set__to(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_from_property_set__to(_ptr, value.nativePtr.cast());
   }
 }

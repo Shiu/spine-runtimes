@@ -41,27 +41,24 @@ extension SkeletonDataExtensions on SkeletonData {
   static SkeletonDataResult fromJson(Atlas atlas, String jsonData, {String? path}) {
     final jsonDataNative = jsonData.toNativeUtf8();
     final pathNative = (path ?? '').toNativeUtf8();
-    
-    final resultPtr = SpineBindings.bindings.spine_skeleton_data_load_json(
-      atlas.nativePtr.cast(), 
-      jsonDataNative.cast<Char>(), 
-      pathNative.cast<Char>()
-    );
-    
+
+    final resultPtr = SpineBindings.bindings
+        .spine_skeleton_data_load_json(atlas.nativePtr.cast(), jsonDataNative.cast<Char>(), pathNative.cast<Char>());
+
     malloc.free(jsonDataNative);
     malloc.free(pathNative);
-    
+
     // Check for error
     final errorPtr = SpineBindings.bindings.spine_skeleton_data_result_get_error(resultPtr.cast());
     if (errorPtr != nullptr) {
       final error = errorPtr.cast<Utf8>().toDartString();
       return SkeletonDataResult._(error, null, resultPtr);
     }
-    
+
     // Get skeleton data
     final skeletonDataPtr = SpineBindings.bindings.spine_skeleton_data_result_get_data(resultPtr.cast());
     final skeletonData = SkeletonData.fromPointer(skeletonDataPtr);
-    
+
     return SkeletonDataResult._(null, skeletonData, resultPtr);
   }
 }

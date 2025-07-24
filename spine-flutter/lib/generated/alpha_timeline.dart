@@ -46,15 +46,13 @@ class AlphaTimeline extends CurveTimeline1 implements SlotTimeline {
   Pointer get nativePtr => _ptr;
 
   factory AlphaTimeline(int frameCount, int bezierCount, int slotIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_alpha_timeline_create(frameCount, bezierCount, slotIndex);
+    final ptr = SpineBindings.bindings.spine_alpha_timeline_create(frameCount, bezierCount, slotIndex);
     return AlphaTimeline.fromPointer(ptr);
   }
 
   @override
   int get slotIndex {
-    final result =
-        SpineBindings.bindings.spine_alpha_timeline_get_slot_index(_ptr);
+    final result = SpineBindings.bindings.spine_alpha_timeline_get_slot_index(_ptr);
     return result;
   }
 

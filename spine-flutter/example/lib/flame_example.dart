@@ -50,8 +50,8 @@ class SpineComponent extends PositionComponent {
     Anchor super.anchor = Anchor.topLeft,
     super.children,
     super.priority,
-  }) : _ownsDrawable = ownsDrawable,
-       _boundsProvider = boundsProvider {
+  })  : _ownsDrawable = ownsDrawable,
+        _boundsProvider = boundsProvider {
     _drawable.update(0);
     _bounds = _boundsProvider.computeBounds(_drawable);
     size = Vector2(_bounds.width, _bounds.height);

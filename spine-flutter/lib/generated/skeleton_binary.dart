@@ -47,22 +47,18 @@ class SkeletonBinary implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory SkeletonBinary(Atlas atlas) {
-    final ptr = SpineBindings.bindings
-        .spine_skeleton_binary_create(atlas.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_skeleton_binary_create(atlas.nativePtr.cast());
     return SkeletonBinary.fromPointer(ptr);
   }
 
-  factory SkeletonBinary.variant2(
-      AttachmentLoader attachmentLoader, bool ownsLoader) {
-    final ptr = SpineBindings.bindings.spine_skeleton_binary_create2(
-        attachmentLoader.nativePtr.cast(), ownsLoader);
+  factory SkeletonBinary.variant2(AttachmentLoader attachmentLoader, bool ownsLoader) {
+    final ptr = SpineBindings.bindings.spine_skeleton_binary_create2(attachmentLoader.nativePtr.cast(), ownsLoader);
     return SkeletonBinary.fromPointer(ptr);
   }
 
   SkeletonData readSkeletonDataFile(String path) {
-    final result = SpineBindings.bindings
-        .spine_skeleton_binary_read_skeleton_data_file(
-            _ptr, path.toNativeUtf8().cast<Char>());
+    final result =
+        SpineBindings.bindings.spine_skeleton_binary_read_skeleton_data_file(_ptr, path.toNativeUtf8().cast<Char>());
     return SkeletonData.fromPointer(result);
   }
 

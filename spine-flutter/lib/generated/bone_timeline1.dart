@@ -47,8 +47,7 @@ abstract class BoneTimeline1 extends CurveTimeline1 implements BoneTimeline {
 
   @override
   int get boneIndex {
-    final result =
-        SpineBindings.bindings.spine_bone_timeline1_get_bone_index(_ptr);
+    final result = SpineBindings.bindings.spine_bone_timeline1_get_bone_index(_ptr);
     return result;
   }
 

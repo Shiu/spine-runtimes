@@ -53,24 +53,19 @@ class Skin implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory Skin(String name) {
-    final ptr = SpineBindings.bindings
-        .spine_skin_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings.spine_skin_create(name.toNativeUtf8().cast<Char>());
     return Skin.fromPointer(ptr);
   }
 
   void setAttachment(int slotIndex, String name, Attachment attachment) {
-    SpineBindings.bindings.spine_skin_set_attachment(_ptr, slotIndex,
-        name.toNativeUtf8().cast<Char>(), attachment.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_skin_set_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>(), attachment.nativePtr.cast());
   }
 
   Attachment getAttachment(int slotIndex, String name) {
-    final result = SpineBindings.bindings.spine_skin_get_attachment(
-        _ptr, slotIndex, name.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings.spine_skin_get_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>());
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
@@ -85,19 +80,16 @@ class Skin implements Finalizable {
       case 'spine_region_attachment':
         return RegionAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
     }
   }
 
   void removeAttachment(int slotIndex, String name) {
-    SpineBindings.bindings.spine_skin_remove_attachment(
-        _ptr, slotIndex, name.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_skin_remove_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>());
   }
 
   void findAttachmentsForSlot(int slotIndex, ArrayAttachment attachments) {
-    SpineBindings.bindings.spine_skin_find_attachments_for_slot(
-        _ptr, slotIndex, attachments.nativePtr.cast());
+    SpineBindings.bindings.spine_skin_find_attachments_for_slot(_ptr, slotIndex, attachments.nativePtr.cast());
   }
 
   String get name {

@@ -61,28 +61,23 @@ class BonePose extends BoneLocal implements Update {
 
   @override
   void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings
-        .spine_bone_pose_update(_ptr, skeleton.nativePtr.cast(), physics.value);
+    SpineBindings.bindings.spine_bone_pose_update(_ptr, skeleton.nativePtr.cast(), physics.value);
   }
 
   void updateWorldTransform(Skeleton skeleton) {
-    SpineBindings.bindings.spine_bone_pose_update_world_transform(
-        _ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings.spine_bone_pose_update_world_transform(_ptr, skeleton.nativePtr.cast());
   }
 
   void updateLocalTransform(Skeleton skeleton) {
-    SpineBindings.bindings.spine_bone_pose_update_local_transform(
-        _ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings.spine_bone_pose_update_local_transform(_ptr, skeleton.nativePtr.cast());
   }
 
   void validateLocalTransform(Skeleton skeleton) {
-    SpineBindings.bindings.spine_bone_pose_validate_local_transform(
-        _ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings.spine_bone_pose_validate_local_transform(_ptr, skeleton.nativePtr.cast());
   }
 
   void modifyLocal(Skeleton skeleton) {
-    SpineBindings.bindings
-        .spine_bone_pose_modify_local(_ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings.spine_bone_pose_modify_local(_ptr, skeleton.nativePtr.cast());
   }
 
   void modifyWorld(int update) {
@@ -148,38 +143,32 @@ class BonePose extends BoneLocal implements Update {
   }
 
   double get worldRotationX {
-    final result =
-        SpineBindings.bindings.spine_bone_pose_get_world_rotation_x(_ptr);
+    final result = SpineBindings.bindings.spine_bone_pose_get_world_rotation_x(_ptr);
     return result;
   }
 
   double get worldRotationY {
-    final result =
-        SpineBindings.bindings.spine_bone_pose_get_world_rotation_y(_ptr);
+    final result = SpineBindings.bindings.spine_bone_pose_get_world_rotation_y(_ptr);
     return result;
   }
 
   double get worldScaleX {
-    final result =
-        SpineBindings.bindings.spine_bone_pose_get_world_scale_x(_ptr);
+    final result = SpineBindings.bindings.spine_bone_pose_get_world_scale_x(_ptr);
     return result;
   }
 
   double get worldScaleY {
-    final result =
-        SpineBindings.bindings.spine_bone_pose_get_world_scale_y(_ptr);
+    final result = SpineBindings.bindings.spine_bone_pose_get_world_scale_y(_ptr);
     return result;
   }
 
   double worldToLocalRotation(double worldRotation) {
-    final result = SpineBindings.bindings
-        .spine_bone_pose_world_to_local_rotation(_ptr, worldRotation);
+    final result = SpineBindings.bindings.spine_bone_pose_world_to_local_rotation(_ptr, worldRotation);
     return result;
   }
 
   double localToWorldRotation(double localRotation) {
-    final result = SpineBindings.bindings
-        .spine_bone_pose_local_to_world_rotation(_ptr, localRotation);
+    final result = SpineBindings.bindings.spine_bone_pose_local_to_world_rotation(_ptr, localRotation);
     return result;
   }
 

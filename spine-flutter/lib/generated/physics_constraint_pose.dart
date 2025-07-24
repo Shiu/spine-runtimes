@@ -48,57 +48,47 @@ class PhysicsConstraintPose implements Finalizable {
   }
 
   void set(PhysicsConstraintPose pose) {
-    SpineBindings.bindings
-        .spine_physics_constraint_pose_set(_ptr, pose.nativePtr.cast());
+    SpineBindings.bindings.spine_physics_constraint_pose_set(_ptr, pose.nativePtr.cast());
   }
 
   double get inertia {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_pose_get_inertia(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_pose_get_inertia(_ptr);
     return result;
   }
 
   set inertia(double value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_pose_set_inertia(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_pose_set_inertia(_ptr, value);
   }
 
   double get strength {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_pose_get_strength(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_pose_get_strength(_ptr);
     return result;
   }
 
   set strength(double value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_pose_set_strength(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_pose_set_strength(_ptr, value);
   }
 
   double get damping {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_pose_get_damping(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_pose_get_damping(_ptr);
     return result;
   }
 
   set damping(double value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_pose_set_damping(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_pose_set_damping(_ptr, value);
   }
 
   double get massInverse {
-    final result = SpineBindings.bindings
-        .spine_physics_constraint_pose_get_mass_inverse(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_pose_get_mass_inverse(_ptr);
     return result;
   }
 
   set massInverse(double value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_pose_set_mass_inverse(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_pose_set_mass_inverse(_ptr, value);
   }
 
   double get wind {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_pose_get_wind(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_pose_get_wind(_ptr);
     return result;
   }
 
@@ -107,19 +97,16 @@ class PhysicsConstraintPose implements Finalizable {
   }
 
   double get gravity {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_pose_get_gravity(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_pose_get_gravity(_ptr);
     return result;
   }
 
   set gravity(double value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_pose_set_gravity(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_pose_set_gravity(_ptr, value);
   }
 
   double get mix {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_pose_get_mix(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_pose_get_mix(_ptr);
     return result;
   }
 

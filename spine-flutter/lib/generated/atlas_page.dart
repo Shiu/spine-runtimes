@@ -47,8 +47,7 @@ class AtlasPage implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory AtlasPage(String inName) {
-    final ptr = SpineBindings.bindings
-        .spine_atlas_page_create(inName.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings.spine_atlas_page_create(inName.toNativeUtf8().cast<Char>());
     return AtlasPage.fromPointer(ptr);
   }
 
@@ -58,19 +57,16 @@ class AtlasPage implements Finalizable {
   }
 
   set name(String value) {
-    SpineBindings.bindings
-        .spine_atlas_page_set_name(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_atlas_page_set_name(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   String get texturePath {
-    final result =
-        SpineBindings.bindings.spine_atlas_page_get_texture_path(_ptr);
+    final result = SpineBindings.bindings.spine_atlas_page_get_texture_path(_ptr);
     return result.cast<Utf8>().toDartString();
   }
 
   set texturePath(String value) {
-    SpineBindings.bindings.spine_atlas_page_set_texture_path(
-        _ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_atlas_page_set_texture_path(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   Format get format {

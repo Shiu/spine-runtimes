@@ -45,29 +45,24 @@ class IkConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
   @override
   Pointer get nativePtr => _ptr;
 
-  factory IkConstraintTimeline(
-      int frameCount, int bezierCount, int constraintIndex) {
-    final ptr = SpineBindings.bindings.spine_ik_constraint_timeline_create(
-        frameCount, bezierCount, constraintIndex);
+  factory IkConstraintTimeline(int frameCount, int bezierCount, int constraintIndex) {
+    final ptr = SpineBindings.bindings.spine_ik_constraint_timeline_create(frameCount, bezierCount, constraintIndex);
     return IkConstraintTimeline.fromPointer(ptr);
   }
 
-  void setFrame(int frame, double time, double mix, double softness,
-      int bendDirection, bool compress, bool stretch) {
-    SpineBindings.bindings.spine_ik_constraint_timeline_set_frame(
-        _ptr, frame, time, mix, softness, bendDirection, compress, stretch);
+  void setFrame(int frame, double time, double mix, double softness, int bendDirection, bool compress, bool stretch) {
+    SpineBindings.bindings
+        .spine_ik_constraint_timeline_set_frame(_ptr, frame, time, mix, softness, bendDirection, compress, stretch);
   }
 
   @override
   int get constraintIndex {
-    final result = SpineBindings.bindings
-        .spine_ik_constraint_timeline_get_constraint_index(_ptr);
+    final result = SpineBindings.bindings.spine_ik_constraint_timeline_get_constraint_index(_ptr);
     return result;
   }
 
   @override
   set constraintIndex(int value) {
-    SpineBindings.bindings
-        .spine_ik_constraint_timeline_set_constraint_index(_ptr, value);
+    SpineBindings.bindings.spine_ik_constraint_timeline_set_constraint_index(_ptr, value);
   }
 }

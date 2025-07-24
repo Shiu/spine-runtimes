@@ -48,73 +48,60 @@ class TransformConstraintPose implements Finalizable {
   }
 
   void set(TransformConstraintPose pose) {
-    SpineBindings.bindings
-        .spine_transform_constraint_pose_set(_ptr, pose.nativePtr.cast());
+    SpineBindings.bindings.spine_transform_constraint_pose_set(_ptr, pose.nativePtr.cast());
   }
 
   double get mixRotate {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_pose_get_mix_rotate(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_rotate(_ptr);
     return result;
   }
 
   set mixRotate(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_pose_set_mix_rotate(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_pose_set_mix_rotate(_ptr, value);
   }
 
   double get mixX {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_pose_get_mix_x(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_x(_ptr);
     return result;
   }
 
   set mixX(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_pose_set_mix_x(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_pose_set_mix_x(_ptr, value);
   }
 
   double get mixY {
-    final result =
-        SpineBindings.bindings.spine_transform_constraint_pose_get_mix_y(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_y(_ptr);
     return result;
   }
 
   set mixY(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_pose_set_mix_y(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_pose_set_mix_y(_ptr, value);
   }
 
   double get mixScaleX {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_pose_get_mix_scale_x(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_scale_x(_ptr);
     return result;
   }
 
   set mixScaleX(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_pose_set_mix_scale_x(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_pose_set_mix_scale_x(_ptr, value);
   }
 
   double get mixScaleY {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_pose_get_mix_scale_y(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_scale_y(_ptr);
     return result;
   }
 
   set mixScaleY(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_pose_set_mix_scale_y(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_pose_set_mix_scale_y(_ptr, value);
   }
 
   double get mixShearY {
-    final result = SpineBindings.bindings
-        .spine_transform_constraint_pose_get_mix_shear_y(_ptr);
+    final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_shear_y(_ptr);
     return result;
   }
 
   set mixShearY(double value) {
-    SpineBindings.bindings
-        .spine_transform_constraint_pose_set_mix_shear_y(_ptr, value);
+    SpineBindings.bindings.spine_transform_constraint_pose_set_mix_shear_y(_ptr, value);
   }
 }

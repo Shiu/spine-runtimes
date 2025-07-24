@@ -47,14 +47,12 @@ class BoundingBoxAttachment extends VertexAttachment {
   Pointer get nativePtr => _ptr;
 
   factory BoundingBoxAttachment(String name) {
-    final ptr = SpineBindings.bindings
-        .spine_bounding_box_attachment_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings.spine_bounding_box_attachment_create(name.toNativeUtf8().cast<Char>());
     return BoundingBoxAttachment.fromPointer(ptr);
   }
 
   Color get color {
-    final result =
-        SpineBindings.bindings.spine_bounding_box_attachment_get_color(_ptr);
+    final result = SpineBindings.bindings.spine_bounding_box_attachment_get_color(_ptr);
     return Color.fromPointer(result);
   }
 }

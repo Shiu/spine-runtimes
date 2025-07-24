@@ -51,27 +51,20 @@ class DeformTimeline extends SlotCurveTimeline {
   @override
   Pointer get nativePtr => _ptr;
 
-  factory DeformTimeline(int frameCount, int bezierCount, int slotIndex,
-      VertexAttachment attachment) {
-    final ptr = SpineBindings.bindings.spine_deform_timeline_create(
-        frameCount, bezierCount, slotIndex, attachment.nativePtr.cast());
+  factory DeformTimeline(int frameCount, int bezierCount, int slotIndex, VertexAttachment attachment) {
+    final ptr = SpineBindings.bindings
+        .spine_deform_timeline_create(frameCount, bezierCount, slotIndex, attachment.nativePtr.cast());
     return DeformTimeline.fromPointer(ptr);
   }
 
   void setFrame(int frameIndex, double time, ArrayFloat vertices) {
-    SpineBindings.bindings.spine_deform_timeline_set_frame(
-        _ptr, frameIndex, time, vertices.nativePtr.cast());
+    SpineBindings.bindings.spine_deform_timeline_set_frame(_ptr, frameIndex, time, vertices.nativePtr.cast());
   }
 
   VertexAttachment get attachment {
-    final result =
-        SpineBindings.bindings.spine_deform_timeline_get_attachment(_ptr);
-    final rtti =
-        SpineBindings.bindings.spine_vertex_attachment_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final result = SpineBindings.bindings.spine_deform_timeline_get_attachment(_ptr);
+    final rtti = SpineBindings.bindings.spine_vertex_attachment_get_rtti(result);
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
@@ -82,19 +75,16 @@ class DeformTimeline extends SlotCurveTimeline {
       case 'spine_path_attachment':
         return PathAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class VertexAttachment');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class VertexAttachment');
     }
   }
 
   set attachment(VertexAttachment value) {
-    SpineBindings.bindings
-        .spine_deform_timeline_set_attachment(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_deform_timeline_set_attachment(_ptr, value.nativePtr.cast());
   }
 
   double getCurvePercent(double time, int frame) {
-    final result = SpineBindings.bindings
-        .spine_deform_timeline_get_curve_percent(_ptr, time, frame);
+    final result = SpineBindings.bindings.spine_deform_timeline_get_curve_percent(_ptr, time, frame);
     return result;
   }
 }

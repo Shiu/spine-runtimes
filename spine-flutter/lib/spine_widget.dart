@@ -208,7 +208,7 @@ class SkinAndAnimationBounds extends BoundsProvider {
   /// The [stepTime], given in seconds, defines at what interval the bounds should be sampled
   /// across the entire animation.
   SkinAndAnimationBounds({List<String>? skins, this.animation, this.stepTime = 0.1})
-    : skins = skins == null || skins.isEmpty ? ["default"] : skins;
+      : skins = skins == null || skins.isEmpty ? ["default"] : skins;
 
   @override
   Bounds computeBounds(SkeletonDrawable drawable) {
@@ -297,13 +297,13 @@ class SpineWidget extends StatefulWidget {
     BoundsProvider? boundsProvider,
     bool? sizedByBounds,
     super.key,
-  }) : _assetType = _AssetType.asset,
-       _fit = fit ?? BoxFit.contain,
-       _alignment = alignment ?? Alignment.center,
-       _boundsProvider = boundsProvider ?? const SetupPoseBounds(),
-       _sizedByBounds = sizedByBounds ?? false,
-       _drawable = null,
-       _bundle = bundle ?? rootBundle;
+  })  : _assetType = _AssetType.asset,
+        _fit = fit ?? BoxFit.contain,
+        _alignment = alignment ?? Alignment.center,
+        _boundsProvider = boundsProvider ?? const SetupPoseBounds(),
+        _sizedByBounds = sizedByBounds ?? false,
+        _drawable = null,
+        _bundle = bundle ?? rootBundle;
 
   /// Constructs a new [SpineWidget] from files. The [_atlasFile] specifies the `.atlas` file to be loaded for the images used to render
   /// the skeleton. The [_skeletonFile] specifies either a Skeleton `.json` or `.skel` file containing the skeleton data.
@@ -325,13 +325,13 @@ class SpineWidget extends StatefulWidget {
     BoundsProvider? boundsProvider,
     bool? sizedByBounds,
     super.key,
-  }) : _assetType = _AssetType.file,
-       _bundle = null,
-       _fit = fit ?? BoxFit.contain,
-       _alignment = alignment ?? Alignment.center,
-       _boundsProvider = boundsProvider ?? const SetupPoseBounds(),
-       _sizedByBounds = sizedByBounds ?? false,
-       _drawable = null;
+  })  : _assetType = _AssetType.file,
+        _bundle = null,
+        _fit = fit ?? BoxFit.contain,
+        _alignment = alignment ?? Alignment.center,
+        _boundsProvider = boundsProvider ?? const SetupPoseBounds(),
+        _sizedByBounds = sizedByBounds ?? false,
+        _drawable = null;
 
   /// Constructs a new [SpineWidget] from HTTP URLs. The [_atlasFile] specifies the `.atlas` file to be loaded for the images used to render
   /// the skeleton. The [_skeletonFile] specifies either a Skeleton `.json` or `.skel` file containing the skeleton data.
@@ -353,13 +353,13 @@ class SpineWidget extends StatefulWidget {
     BoundsProvider? boundsProvider,
     bool? sizedByBounds,
     super.key,
-  }) : _assetType = _AssetType.http,
-       _bundle = null,
-       _fit = fit ?? BoxFit.contain,
-       _alignment = alignment ?? Alignment.center,
-       _boundsProvider = boundsProvider ?? const SetupPoseBounds(),
-       _sizedByBounds = sizedByBounds ?? false,
-       _drawable = null;
+  })  : _assetType = _AssetType.http,
+        _bundle = null,
+        _fit = fit ?? BoxFit.contain,
+        _alignment = alignment ?? Alignment.center,
+        _boundsProvider = boundsProvider ?? const SetupPoseBounds(),
+        _sizedByBounds = sizedByBounds ?? false,
+        _drawable = null;
 
   /// Constructs a new [SpineWidget] from a [SkeletonDrawable].
   ///
@@ -379,14 +379,14 @@ class SpineWidget extends StatefulWidget {
     BoundsProvider? boundsProvider,
     bool? sizedByBounds,
     super.key,
-  }) : _assetType = _AssetType.drawable,
-       _bundle = null,
-       _fit = fit ?? BoxFit.contain,
-       _alignment = alignment ?? Alignment.center,
-       _boundsProvider = boundsProvider ?? const SetupPoseBounds(),
-       _sizedByBounds = sizedByBounds ?? false,
-       _skeletonFile = null,
-       _atlasFile = null;
+  })  : _assetType = _AssetType.drawable,
+        _bundle = null,
+        _fit = fit ?? BoxFit.contain,
+        _alignment = alignment ?? Alignment.center,
+        _boundsProvider = boundsProvider ?? const SetupPoseBounds(),
+        _sizedByBounds = sizedByBounds ?? false,
+        _skeletonFile = null,
+        _atlasFile = null;
 
   @override
   State<SpineWidget> createState() => _SpineWidgetState();

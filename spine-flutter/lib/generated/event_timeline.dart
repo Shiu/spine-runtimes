@@ -57,7 +57,6 @@ class EventTimeline extends Timeline {
   }
 
   void setFrame(int frame, Event event) {
-    SpineBindings.bindings
-        .spine_event_timeline_set_frame(_ptr, frame, event.nativePtr.cast());
+    SpineBindings.bindings.spine_event_timeline_set_frame(_ptr, frame, event.nativePtr.cast());
   }
 }

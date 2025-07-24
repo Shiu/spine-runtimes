@@ -65,4 +65,3 @@ Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {
     return SpineDartFFI(_dylib, malloc);
   }
 }
-

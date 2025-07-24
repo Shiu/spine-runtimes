@@ -57,28 +57,21 @@ class PhysicsConstraintData extends PosedData implements ConstraintData {
   Pointer get nativePtr => _ptr;
 
   factory PhysicsConstraintData(String name) {
-    final ptr = SpineBindings.bindings
-        .spine_physics_constraint_data_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings.spine_physics_constraint_data_create(name.toNativeUtf8().cast<Char>());
     return PhysicsConstraintData.fromPointer(ptr);
   }
 
   @override
   Rtti get rtti {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_data_get_rtti(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_rtti(_ptr);
     return Rtti.fromPointer(result);
   }
 
   @override
   Constraint createMethod(Skeleton skeleton) {
-    final result = SpineBindings.bindings
-        .spine_physics_constraint_data_create_method(
-            _ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_physics_constraint_data_create_method(_ptr, skeleton.nativePtr.cast());
     final rtti = SpineBindings.bindings.spine_constraint_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_ik_constraint':
         return IkConstraint.fromPointer(result.cast());
@@ -91,25 +84,21 @@ class PhysicsConstraintData extends PosedData implements ConstraintData {
       case 'spine_transform_constraint':
         return TransformConstraint.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class Constraint');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Constraint');
     }
   }
 
   BoneData get bone {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_data_get_bone(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_bone(_ptr);
     return BoneData.fromPointer(result);
   }
 
   set bone(BoneData value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_data_set_bone(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_physics_constraint_data_set_bone(_ptr, value.nativePtr.cast());
   }
 
   double get step {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_data_get_step(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_step(_ptr);
     return result;
   }
 
@@ -118,8 +107,7 @@ class PhysicsConstraintData extends PosedData implements ConstraintData {
   }
 
   double get x {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_data_get_x(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_x(_ptr);
     return result;
   }
 
@@ -128,8 +116,7 @@ class PhysicsConstraintData extends PosedData implements ConstraintData {
   }
 
   double get y {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_data_get_y(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_y(_ptr);
     return result;
   }
 
@@ -138,41 +125,34 @@ class PhysicsConstraintData extends PosedData implements ConstraintData {
   }
 
   double get rotate {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_data_get_rotate(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_rotate(_ptr);
     return result;
   }
 
   set rotate(double value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_data_set_rotate(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_data_set_rotate(_ptr, value);
   }
 
   double get scaleX {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_data_get_scale_x(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_scale_x(_ptr);
     return result;
   }
 
   set scaleX(double value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_data_set_scale_x(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_data_set_scale_x(_ptr, value);
   }
 
   double get shearX {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_data_get_shear_x(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_shear_x(_ptr);
     return result;
   }
 
   set shearX(double value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_data_set_shear_x(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_data_set_shear_x(_ptr, value);
   }
 
   double get limit {
-    final result =
-        SpineBindings.bindings.spine_physics_constraint_data_get_limit(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_limit(_ptr);
     return result;
   }
 
@@ -181,85 +161,70 @@ class PhysicsConstraintData extends PosedData implements ConstraintData {
   }
 
   bool get inertiaGlobal {
-    final result = SpineBindings.bindings
-        .spine_physics_constraint_data_get_inertia_global(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_inertia_global(_ptr);
     return result;
   }
 
   set inertiaGlobal(bool value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_data_set_inertia_global(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_data_set_inertia_global(_ptr, value);
   }
 
   bool get strengthGlobal {
-    final result = SpineBindings.bindings
-        .spine_physics_constraint_data_get_strength_global(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_strength_global(_ptr);
     return result;
   }
 
   set strengthGlobal(bool value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_data_set_strength_global(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_data_set_strength_global(_ptr, value);
   }
 
   bool get dampingGlobal {
-    final result = SpineBindings.bindings
-        .spine_physics_constraint_data_get_damping_global(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_damping_global(_ptr);
     return result;
   }
 
   set dampingGlobal(bool value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_data_set_damping_global(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_data_set_damping_global(_ptr, value);
   }
 
   bool get massGlobal {
-    final result = SpineBindings.bindings
-        .spine_physics_constraint_data_get_mass_global(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_mass_global(_ptr);
     return result;
   }
 
   set massGlobal(bool value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_data_set_mass_global(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_data_set_mass_global(_ptr, value);
   }
 
   bool get windGlobal {
-    final result = SpineBindings.bindings
-        .spine_physics_constraint_data_get_wind_global(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_wind_global(_ptr);
     return result;
   }
 
   set windGlobal(bool value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_data_set_wind_global(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_data_set_wind_global(_ptr, value);
   }
 
   bool get gravityGlobal {
-    final result = SpineBindings.bindings
-        .spine_physics_constraint_data_get_gravity_global(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_gravity_global(_ptr);
     return result;
   }
 
   set gravityGlobal(bool value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_data_set_gravity_global(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_data_set_gravity_global(_ptr, value);
   }
 
   bool get mixGlobal {
-    final result = SpineBindings.bindings
-        .spine_physics_constraint_data_get_mix_global(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_mix_global(_ptr);
     return result;
   }
 
   set mixGlobal(bool value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_data_set_mix_global(_ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_data_set_mix_global(_ptr, value);
   }
 
   PhysicsConstraintPose get setupPose {
-    final result = SpineBindings.bindings
-        .spine_physics_constraint_data_get_setup_pose(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_data_get_setup_pose(_ptr);
     return PhysicsConstraintPose.fromPointer(result);
   }
 

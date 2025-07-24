@@ -46,13 +46,11 @@ class DrawOrderTimeline extends Timeline {
   Pointer get nativePtr => _ptr;
 
   factory DrawOrderTimeline(int frameCount) {
-    final ptr =
-        SpineBindings.bindings.spine_draw_order_timeline_create(frameCount);
+    final ptr = SpineBindings.bindings.spine_draw_order_timeline_create(frameCount);
     return DrawOrderTimeline.fromPointer(ptr);
   }
 
   void setFrame(int frame, double time, ArrayInt drawOrder) {
-    SpineBindings.bindings.spine_draw_order_timeline_set_frame(
-        _ptr, frame, time, drawOrder.nativePtr.cast());
+    SpineBindings.bindings.spine_draw_order_timeline_set_frame(_ptr, frame, time, drawOrder.nativePtr.cast());
   }
 }

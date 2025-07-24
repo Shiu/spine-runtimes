@@ -45,13 +45,11 @@ class RgbTimeline extends SlotCurveTimeline {
   Pointer get nativePtr => _ptr;
 
   factory RgbTimeline(int frameCount, int bezierCount, int slotIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_rgb_timeline_create(frameCount, bezierCount, slotIndex);
+    final ptr = SpineBindings.bindings.spine_rgb_timeline_create(frameCount, bezierCount, slotIndex);
     return RgbTimeline.fromPointer(ptr);
   }
 
   void setFrame(int frame, double time, double r, double g, double b) {
-    SpineBindings.bindings
-        .spine_rgb_timeline_set_frame(_ptr, frame, time, r, g, b);
+    SpineBindings.bindings.spine_rgb_timeline_set_frame(_ptr, frame, time, r, g, b);
   }
 }

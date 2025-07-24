@@ -59,8 +59,7 @@ class Color implements Finalizable {
   }
 
   static double parseHex(String value, int index) {
-    final result = SpineBindings.bindings
-        .spine_color_parse_hex(value.toNativeUtf8().cast<Char>(), index);
+    final result = SpineBindings.bindings.spine_color_parse_hex(value.toNativeUtf8().cast<Char>(), index);
     return result;
   }
 
@@ -119,8 +118,7 @@ class Color implements Finalizable {
   }
 
   Color set3(Color other) {
-    final result =
-        SpineBindings.bindings.spine_color_set_3(_ptr, other.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_color_set_3(_ptr, other.nativePtr.cast());
     return Color.fromPointer(result);
   }
 
@@ -135,8 +133,7 @@ class Color implements Finalizable {
   }
 
   Color add3(Color other) {
-    final result =
-        SpineBindings.bindings.spine_color_add_3(_ptr, other.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_color_add_3(_ptr, other.nativePtr.cast());
     return Color.fromPointer(result);
   }
 }

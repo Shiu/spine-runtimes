@@ -47,26 +47,23 @@ class AttachmentTimeline extends Timeline implements SlotTimeline {
   Pointer get nativePtr => _ptr;
 
   factory AttachmentTimeline(int frameCount, int slotIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_attachment_timeline_create(frameCount, slotIndex);
+    final ptr = SpineBindings.bindings.spine_attachment_timeline_create(frameCount, slotIndex);
     return AttachmentTimeline.fromPointer(ptr);
   }
 
   void setFrame(int frame, double time, String attachmentName) {
-    SpineBindings.bindings.spine_attachment_timeline_set_frame(
-        _ptr, frame, time, attachmentName.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings
+        .spine_attachment_timeline_set_frame(_ptr, frame, time, attachmentName.toNativeUtf8().cast<Char>());
   }
 
   @override
   int get slotIndex {
-    final result =
-        SpineBindings.bindings.spine_attachment_timeline_get_slot_index(_ptr);
+    final result = SpineBindings.bindings.spine_attachment_timeline_get_slot_index(_ptr);
     return result;
   }
 
   @override
   set slotIndex(int value) {
-    SpineBindings.bindings
-        .spine_attachment_timeline_set_slot_index(_ptr, value);
+    SpineBindings.bindings.spine_attachment_timeline_set_slot_index(_ptr, value);
   }
 }

@@ -57,13 +57,11 @@ class Sequence implements Finalizable {
   }
 
   void apply(SlotPose slot, Attachment attachment) {
-    SpineBindings.bindings.spine_sequence_apply(
-        _ptr, slot.nativePtr.cast(), attachment.nativePtr.cast());
+    SpineBindings.bindings.spine_sequence_apply(_ptr, slot.nativePtr.cast(), attachment.nativePtr.cast());
   }
 
   String getPath(String basePath, int index) {
-    final result = SpineBindings.bindings.spine_sequence_get_path(
-        _ptr, basePath.toNativeUtf8().cast<Char>(), index);
+    final result = SpineBindings.bindings.spine_sequence_get_path(_ptr, basePath.toNativeUtf8().cast<Char>(), index);
     return result.cast<Utf8>().toDartString();
   }
 

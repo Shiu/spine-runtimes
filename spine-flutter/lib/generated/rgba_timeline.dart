@@ -45,14 +45,11 @@ class RgbaTimeline extends SlotCurveTimeline {
   Pointer get nativePtr => _ptr;
 
   factory RgbaTimeline(int frameCount, int bezierCount, int slotIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_rgba_timeline_create(frameCount, bezierCount, slotIndex);
+    final ptr = SpineBindings.bindings.spine_rgba_timeline_create(frameCount, bezierCount, slotIndex);
     return RgbaTimeline.fromPointer(ptr);
   }
 
-  void setFrame(
-      int frame, double time, double r, double g, double b, double a) {
-    SpineBindings.bindings
-        .spine_rgba_timeline_set_frame(_ptr, frame, time, r, g, b, a);
+  void setFrame(int frame, double time, double r, double g, double b, double a) {
+    SpineBindings.bindings.spine_rgba_timeline_set_frame(_ptr, frame, time, r, g, b, a);
   }
 }

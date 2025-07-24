@@ -36,8 +36,7 @@ import 'constraint_timeline.dart';
 import 'curve_timeline1.dart';
 
 /// ConstraintTimeline1 wrapper
-abstract class ConstraintTimeline1 extends CurveTimeline1
-    implements ConstraintTimeline {
+abstract class ConstraintTimeline1 extends CurveTimeline1 implements ConstraintTimeline {
   final Pointer<spine_constraint_timeline1_wrapper> _ptr;
 
   ConstraintTimeline1.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
@@ -48,14 +47,12 @@ abstract class ConstraintTimeline1 extends CurveTimeline1
 
   @override
   int get constraintIndex {
-    final result = SpineBindings.bindings
-        .spine_constraint_timeline1_get_constraint_index(_ptr);
+    final result = SpineBindings.bindings.spine_constraint_timeline1_get_constraint_index(_ptr);
     return result;
   }
 
   @override
   set constraintIndex(int value) {
-    SpineBindings.bindings
-        .spine_constraint_timeline1_set_constraint_index(_ptr, value);
+    SpineBindings.bindings.spine_constraint_timeline1_set_constraint_index(_ptr, value);
   }
 }

@@ -38,18 +38,15 @@ import 'physics_constraint_timeline.dart';
 class PhysicsConstraintWindTimeline extends PhysicsConstraintTimeline {
   final Pointer<spine_physics_constraint_wind_timeline_wrapper> _ptr;
 
-  PhysicsConstraintWindTimeline.fromPointer(this._ptr)
-      : super.fromPointer(_ptr.cast());
+  PhysicsConstraintWindTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
   @override
   Pointer get nativePtr => _ptr;
 
-  factory PhysicsConstraintWindTimeline(
-      int frameCount, int bezierCount, int physicsConstraintIndex) {
+  factory PhysicsConstraintWindTimeline(int frameCount, int bezierCount, int physicsConstraintIndex) {
     final ptr = SpineBindings.bindings
-        .spine_physics_constraint_wind_timeline_create(
-            frameCount, bezierCount, physicsConstraintIndex);
+        .spine_physics_constraint_wind_timeline_create(frameCount, bezierCount, physicsConstraintIndex);
     return PhysicsConstraintWindTimeline.fromPointer(ptr);
   }
 }

@@ -47,14 +47,12 @@ abstract class SlotCurveTimeline extends CurveTimeline implements SlotTimeline {
 
   @override
   int get slotIndex {
-    final result =
-        SpineBindings.bindings.spine_slot_curve_timeline_get_slot_index(_ptr);
+    final result = SpineBindings.bindings.spine_slot_curve_timeline_get_slot_index(_ptr);
     return result;
   }
 
   @override
   set slotIndex(int value) {
-    SpineBindings.bindings
-        .spine_slot_curve_timeline_set_slot_index(_ptr, value);
+    SpineBindings.bindings.spine_slot_curve_timeline_set_slot_index(_ptr, value);
   }
 }

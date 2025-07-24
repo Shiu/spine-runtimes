@@ -42,10 +42,8 @@ import 'skin.dart';
 /// AttachmentLoader wrapper
 abstract class AttachmentLoader {
   Pointer get nativePtr;
-  RegionAttachment newRegionAttachment(
-      Skin skin, String name, String path, Sequence sequence);
-  MeshAttachment newMeshAttachment(
-      Skin skin, String name, String path, Sequence sequence);
+  RegionAttachment newRegionAttachment(Skin skin, String name, String path, Sequence sequence);
+  MeshAttachment newMeshAttachment(Skin skin, String name, String path, Sequence sequence);
   BoundingBoxAttachment newBoundingBoxAttachment(Skin skin, String name);
   PathAttachment newPathAttachment(Skin skin, String name);
   PointAttachment newPointAttachment(Skin skin, String name);

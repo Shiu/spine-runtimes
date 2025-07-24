@@ -45,8 +45,7 @@ class SliderMixTimeline extends ConstraintTimeline1 {
   Pointer get nativePtr => _ptr;
 
   factory SliderMixTimeline(int frameCount, int bezierCount, int sliderIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_slider_mix_timeline_create(frameCount, bezierCount, sliderIndex);
+    final ptr = SpineBindings.bindings.spine_slider_mix_timeline_create(frameCount, bezierCount, sliderIndex);
     return SliderMixTimeline.fromPointer(ptr);
   }
 }

@@ -49,8 +49,8 @@ class SlotData extends PosedData {
   Pointer get nativePtr => _ptr;
 
   factory SlotData(int index, String name, BoneData boneData) {
-    final ptr = SpineBindings.bindings.spine_slot_data_create(
-        index, name.toNativeUtf8().cast<Char>(), boneData.nativePtr.cast());
+    final ptr = SpineBindings.bindings
+        .spine_slot_data_create(index, name.toNativeUtf8().cast<Char>(), boneData.nativePtr.cast());
     return SlotData.fromPointer(ptr);
   }
 
@@ -65,13 +65,11 @@ class SlotData extends PosedData {
   }
 
   set attachmentName(String value) {
-    SpineBindings.bindings.spine_slot_data_set_attachment_name(
-        _ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_slot_data_set_attachment_name(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   String get attachmentName {
-    final result =
-        SpineBindings.bindings.spine_slot_data_get_attachment_name(_ptr);
+    final result = SpineBindings.bindings.spine_slot_data_get_attachment_name(_ptr);
     return result.cast<Utf8>().toDartString();
   }
 

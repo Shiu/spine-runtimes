@@ -54,27 +54,20 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
   @override
   Pointer get nativePtr => _ptr;
 
-  factory SequenceTimeline(
-      int frameCount, int slotIndex, Attachment attachment) {
-    final ptr = SpineBindings.bindings.spine_sequence_timeline_create(
-        frameCount, slotIndex, attachment.nativePtr.cast());
+  factory SequenceTimeline(int frameCount, int slotIndex, Attachment attachment) {
+    final ptr =
+        SpineBindings.bindings.spine_sequence_timeline_create(frameCount, slotIndex, attachment.nativePtr.cast());
     return SequenceTimeline.fromPointer(ptr);
   }
 
-  void setFrame(
-      int frame, double time, SequenceMode mode, int index, double delay) {
-    SpineBindings.bindings.spine_sequence_timeline_set_frame(
-        _ptr, frame, time, mode.value, index, delay);
+  void setFrame(int frame, double time, SequenceMode mode, int index, double delay) {
+    SpineBindings.bindings.spine_sequence_timeline_set_frame(_ptr, frame, time, mode.value, index, delay);
   }
 
   Attachment get attachment {
-    final result =
-        SpineBindings.bindings.spine_sequence_timeline_get_attachment(_ptr);
+    final result = SpineBindings.bindings.spine_sequence_timeline_get_attachment(_ptr);
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
-    final className = SpineBindings.bindings
-        .spine_rtti_get_class_name(rtti)
-        .cast<Utf8>()
-        .toDartString();
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
@@ -89,15 +82,13 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
       case 'spine_region_attachment':
         return RegionAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError(
-            'Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
     }
   }
 
   @override
   int get slotIndex {
-    final result =
-        SpineBindings.bindings.spine_sequence_timeline_get_slot_index(_ptr);
+    final result = SpineBindings.bindings.spine_sequence_timeline_get_slot_index(_ptr);
     return result;
   }
 

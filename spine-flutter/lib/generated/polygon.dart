@@ -54,8 +54,7 @@ class Polygon implements Finalizable {
   }
 
   set vertices(ArrayFloat value) {
-    SpineBindings.bindings
-        .spine_polygon_set__vertices(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_polygon_set__vertices(_ptr, value.nativePtr.cast());
   }
 
   int get count {

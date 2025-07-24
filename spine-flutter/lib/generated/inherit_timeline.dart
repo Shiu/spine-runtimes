@@ -47,20 +47,17 @@ class InheritTimeline extends Timeline implements BoneTimeline {
   Pointer get nativePtr => _ptr;
 
   factory InheritTimeline(int frameCount, int boneIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_inherit_timeline_create(frameCount, boneIndex);
+    final ptr = SpineBindings.bindings.spine_inherit_timeline_create(frameCount, boneIndex);
     return InheritTimeline.fromPointer(ptr);
   }
 
   void setFrame(int frame, double time, Inherit inherit) {
-    SpineBindings.bindings
-        .spine_inherit_timeline_set_frame(_ptr, frame, time, inherit.value);
+    SpineBindings.bindings.spine_inherit_timeline_set_frame(_ptr, frame, time, inherit.value);
   }
 
   @override
   int get boneIndex {
-    final result =
-        SpineBindings.bindings.spine_inherit_timeline_get_bone_index(_ptr);
+    final result = SpineBindings.bindings.spine_inherit_timeline_get_bone_index(_ptr);
     return result;
   }
 

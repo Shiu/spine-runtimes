@@ -44,8 +44,7 @@ class EventData implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory EventData(String name) {
-    final ptr = SpineBindings.bindings
-        .spine_event_data_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings.spine_event_data_create(name.toNativeUtf8().cast<Char>());
     return EventData.fromPointer(ptr);
   }
 
@@ -78,8 +77,7 @@ class EventData implements Finalizable {
   }
 
   set stringValue(String value) {
-    SpineBindings.bindings
-        .spine_event_data_set_string(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_event_data_set_string(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   String get audioPath {
@@ -88,8 +86,7 @@ class EventData implements Finalizable {
   }
 
   set audioPath(String value) {
-    SpineBindings.bindings.spine_event_data_set_audio_path(
-        _ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_event_data_set_audio_path(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   double get volume {

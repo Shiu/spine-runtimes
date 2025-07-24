@@ -49,14 +49,12 @@ class Rtti implements Finalizable {
   }
 
   bool isExactly(Rtti rtti) {
-    final result = SpineBindings.bindings
-        .spine_rtti_is_exactly(_ptr, rtti.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_rtti_is_exactly(_ptr, rtti.nativePtr.cast());
     return result;
   }
 
   bool instanceOf(Rtti rtti) {
-    final result = SpineBindings.bindings
-        .spine_rtti_instance_of(_ptr, rtti.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_rtti_instance_of(_ptr, rtti.nativePtr.cast());
     return result;
   }
 }

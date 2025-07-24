@@ -36,40 +36,32 @@ import 'constraint_timeline.dart';
 import 'timeline.dart';
 
 /// PhysicsConstraintResetTimeline wrapper
-class PhysicsConstraintResetTimeline extends Timeline
-    implements ConstraintTimeline {
+class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimeline {
   final Pointer<spine_physics_constraint_reset_timeline_wrapper> _ptr;
 
-  PhysicsConstraintResetTimeline.fromPointer(this._ptr)
-      : super.fromPointer(_ptr.cast());
+  PhysicsConstraintResetTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
   @override
   Pointer get nativePtr => _ptr;
 
   factory PhysicsConstraintResetTimeline(int frameCount, int constraintIndex) {
-    final ptr = SpineBindings.bindings
-        .spine_physics_constraint_reset_timeline_create(
-            frameCount, constraintIndex);
+    final ptr = SpineBindings.bindings.spine_physics_constraint_reset_timeline_create(frameCount, constraintIndex);
     return PhysicsConstraintResetTimeline.fromPointer(ptr);
   }
 
   @override
   int get constraintIndex {
-    final result = SpineBindings.bindings
-        .spine_physics_constraint_reset_timeline_get_constraint_index(_ptr);
+    final result = SpineBindings.bindings.spine_physics_constraint_reset_timeline_get_constraint_index(_ptr);
     return result;
   }
 
   @override
   set constraintIndex(int value) {
-    SpineBindings.bindings
-        .spine_physics_constraint_reset_timeline_set_constraint_index(
-            _ptr, value);
+    SpineBindings.bindings.spine_physics_constraint_reset_timeline_set_constraint_index(_ptr, value);
   }
 
   void setFrame(int frame, double time) {
-    SpineBindings.bindings
-        .spine_physics_constraint_reset_timeline_set_frame(_ptr, frame, time);
+    SpineBindings.bindings.spine_physics_constraint_reset_timeline_set_frame(_ptr, frame, time);
   }
 }
