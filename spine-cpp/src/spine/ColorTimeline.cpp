@@ -203,12 +203,20 @@ void RGBTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, Mix
 RTTI_IMPL(AlphaTimeline, SlotCurveTimeline)
 
 AlphaTimeline::AlphaTimeline(size_t frameCount, size_t bezierCount, int slotIndex)
-	: CurveTimeline1(frameCount, bezierCount), SlotTimeline(slotIndex) {
+	: CurveTimeline1(frameCount, bezierCount), SlotTimeline(), _slotIndex(slotIndex) {
 	PropertyId ids[] = {((PropertyId) Property_Alpha << 32) | slotIndex};
 	setPropertyIds(ids, 1);
 }
 
 AlphaTimeline::~AlphaTimeline() {
+}
+
+int AlphaTimeline::getSlotIndex() {
+	return _slotIndex;
+}
+
+void AlphaTimeline::setSlotIndex(int inValue) {
+	_slotIndex = inValue;
 }
 
 void AlphaTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,

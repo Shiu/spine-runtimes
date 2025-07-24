@@ -52,9 +52,15 @@ namespace spine {
 		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
+		virtual int getSlotIndex() override;
+
+		virtual void setSlotIndex(int inValue) override;
+
 	protected:
 		/// Applies the timeline to the slot pose.
 		virtual void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) = 0;
+
+		int _slotIndex;
 	};
 }
 

@@ -30,11 +30,11 @@
 #ifndef Spine_PhysicsConstraintTimeline_h
 #define Spine_PhysicsConstraintTimeline_h
 
+#include <spine/ConstraintTimeline.h>
 #include <spine/CurveTimeline.h>
 #include <spine/PhysicsConstraint.h>
 #include <spine/PhysicsConstraintData.h>
 #include <spine/PhysicsConstraintPose.h>
-#include <spine/ConstraintTimeline.h>
 
 namespace spine {
 
@@ -53,12 +53,19 @@ namespace spine {
 		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
+						   		virtual int getConstraintIndex() const override {
+			return _constraintIndex;
+		}
+
+		virtual void setConstraintIndex(int inValue) override {
+			_constraintIndex = inValue;
+		}
+
 	protected:
 		virtual float get(PhysicsConstraintPose &pose) = 0;
 		virtual void set(PhysicsConstraintPose &pose, float value) = 0;
 		virtual bool global(PhysicsConstraintData &constraintData) = 0;
 
-	private:
 		int _constraintIndex;
 	};
 
@@ -140,7 +147,8 @@ namespace spine {
 		}
 	};
 
-	/// Changes a physics constraint's PhysicsConstraintPose::getMassInverse(). The timeline values are not inverted.
+	/// Changes a physics constraint's PhysicsConstraintPose::getMassInverse(). The
+	/// timeline values are not inverted.
 	class SP_API PhysicsConstraintMassTimeline : public PhysicsConstraintTimeline {
 		friend class SkeletonBinary;
 
@@ -255,7 +263,7 @@ namespace spine {
 	public:
 		/// @param constraintIndex -1 for all physics constraints in the skeleton.
 		explicit PhysicsConstraintResetTimeline(size_t frameCount, int constraintIndex)
-			: Timeline(frameCount, 1), ConstraintTimeline(constraintIndex) {
+			: Timeline(frameCount, 1), ConstraintTimeline(), _constraintIndex(constraintIndex) {
 			PropertyId ids[] = {((PropertyId) Property_PhysicsConstraintReset) << 32};
 			setPropertyIds(ids, 1);
 		}
@@ -267,10 +275,12 @@ namespace spine {
 			return (int) _frames.size();
 		}
 
-		/// The index of the physics constraint in Skeleton::getConstraints() that will be reset when this timeline is
-		/// applied, or -1 if all physics constraints in the skeleton will be reset.
-		virtual int getConstraintIndex() override {
+		virtual int getConstraintIndex() const override {
 			return _constraintIndex;
+		}
+
+		virtual void setConstraintIndex(int inValue) override {
+			_constraintIndex = inValue;
 		}
 
 		/// Sets the time for the specified frame.
@@ -281,6 +291,6 @@ namespace spine {
 	private:
 		int _constraintIndex;
 	};
-}
+}// namespace spine
 
 #endif /* Spine_PhysicsConstraintTimeline_h */

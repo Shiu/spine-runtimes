@@ -103,6 +103,13 @@ namespace spine {
 
 		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
+
+		virtual int getSlotIndex() override;
+
+		virtual void setSlotIndex(int inValue) override;
+
+	protected:
+		int _slotIndex;
 	};
 
 	/// Changes a slot's SlotPose::getColor() and SlotPose::getDarkColor() for two color tinting.

@@ -45,16 +45,13 @@ namespace spine {
 		friend class SlotCurveTimeline;
 
 	public:
-		SlotTimeline(int slotIndex);
+		SlotTimeline();
 		virtual ~SlotTimeline();
 
 		/// The index of the slot in Skeleton::getSlots() that will be changed when this timeline is applied.
-		virtual int getSlotIndex();
+		virtual int getSlotIndex() = 0;
 
-		virtual void setSlotIndex(int inValue);
-
-	protected:
-		int _slotIndex;
+		virtual void setSlotIndex(int inValue) = 0;
 	};
 }
 

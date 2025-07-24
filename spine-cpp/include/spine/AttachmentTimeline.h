@@ -71,7 +71,16 @@ namespace spine {
 		/// The attachment name for each frame. May contain null values to clear the attachment.
 		Array<String> &getAttachmentNames();
 
+		virtual int getSlotIndex() override {
+			return _slotIndex;
+		}
+
+		virtual void setSlotIndex(int inValue) override {
+			_slotIndex = inValue;
+		}
+
 	protected:
+		int _slotIndex;
 		Array<String> _attachmentNames;
 
 		void setAttachment(Skeleton &skeleton, SlotPose &pose, String *attachmentName);

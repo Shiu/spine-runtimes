@@ -63,7 +63,12 @@ namespace spine {
 			return (Attachment *) _attachment;
 		}
 
+		virtual int getSlotIndex() override;
+
+		virtual void setSlotIndex(int inValue) override;
+
 	protected:
+		int _slotIndex;
 		HasTextureRegion *_attachment;
 
 		static const int ENTRIES = 3;

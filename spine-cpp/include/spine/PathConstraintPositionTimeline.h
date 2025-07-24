@@ -52,6 +52,6 @@ namespace spine {
 		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 	};
-}
+}// namespace spine
 
 #endif /* Spine_PathConstraintPositionTimeline_h */

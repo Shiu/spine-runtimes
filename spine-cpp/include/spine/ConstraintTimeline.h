@@ -39,21 +39,13 @@ namespace spine {
 		RTTI_DECL_NOPARENT
 
 	public:
-		ConstraintTimeline(int constraintIndex);
-		virtual ~ConstraintTimeline() {
-		}
+		ConstraintTimeline();
+		virtual ~ConstraintTimeline();
 
 		/// The index of the constraint in Skeleton::getConstraints() that will be changed when this timeline is applied.
-		virtual int getConstraintIndex() {
-			return _constraintIndex;
-		}
+		virtual int getConstraintIndex() const = 0;
 
-		virtual void setConstraintIndex(int inValue) {
-			_constraintIndex = inValue;
-		}
-
-	protected:
-		int _constraintIndex;
+		virtual void setConstraintIndex(int inValue) = 0;
 	};
 }
 

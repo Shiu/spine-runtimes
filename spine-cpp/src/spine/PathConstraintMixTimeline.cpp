@@ -45,7 +45,7 @@ using namespace spine;
 RTTI_IMPL_MULTI(PathConstraintMixTimeline, CurveTimeline, ConstraintTimeline)
 
 PathConstraintMixTimeline::PathConstraintMixTimeline(size_t frameCount, size_t bezierCount, int constraintIndex)
-	: CurveTimeline(frameCount, PathConstraintMixTimeline::ENTRIES, bezierCount), ConstraintTimeline(constraintIndex) {
+	: CurveTimeline(frameCount, PathConstraintMixTimeline::ENTRIES, bezierCount), ConstraintTimeline(), _constraintIndex(constraintIndex) {
 	PropertyId ids[] = {((PropertyId) Property_PathConstraintMix << 32) | constraintIndex};
 	setPropertyIds(ids, 1);
 }

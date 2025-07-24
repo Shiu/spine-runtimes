@@ -45,7 +45,7 @@ using namespace spine;
 RTTI_IMPL_MULTI(IkConstraintTimeline, CurveTimeline, ConstraintTimeline)
 
 IkConstraintTimeline::IkConstraintTimeline(size_t frameCount, size_t bezierCount, int constraintIndex)
-	: CurveTimeline(frameCount, IkConstraintTimeline::ENTRIES, bezierCount), ConstraintTimeline(constraintIndex) {
+	: CurveTimeline(frameCount, IkConstraintTimeline::ENTRIES, bezierCount), ConstraintTimeline(), _constraintIndex(constraintIndex) {
 	PropertyId ids[] = {((PropertyId) Property_IkConstraint << 32) | constraintIndex};
 	setPropertyIds(ids, 1);
 }

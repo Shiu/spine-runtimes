@@ -43,7 +43,7 @@ using namespace spine;
 
 RTTI_IMPL_MULTI(AttachmentTimeline, Timeline, SlotTimeline)
 
-AttachmentTimeline::AttachmentTimeline(size_t frameCount, int slotIndex) : Timeline(frameCount, 1), SlotTimeline(slotIndex) {
+AttachmentTimeline::AttachmentTimeline(size_t frameCount, int slotIndex) : Timeline(frameCount, 1), SlotTimeline(), _slotIndex(slotIndex) {
 	PropertyId ids[] = {((PropertyId) Property_Attachment << 32) | slotIndex};
 	setPropertyIds(ids, 1);
 

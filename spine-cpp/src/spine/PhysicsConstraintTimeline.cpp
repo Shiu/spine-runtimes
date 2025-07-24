@@ -52,7 +52,7 @@ RTTI_IMPL(PhysicsConstraintMixTimeline, PhysicsConstraintTimeline)
 RTTI_IMPL_MULTI(PhysicsConstraintResetTimeline, Timeline, ConstraintTimeline)
 
 PhysicsConstraintTimeline::PhysicsConstraintTimeline(size_t frameCount, size_t bezierCount, int constraintIndex, Property property)
-	: CurveTimeline1(frameCount, bezierCount), ConstraintTimeline(constraintIndex) {
+	: CurveTimeline1(frameCount, bezierCount), ConstraintTimeline(), _constraintIndex(constraintIndex) {
 	PropertyId ids[] = {((PropertyId) property << 32) | constraintIndex};
 	setPropertyIds(ids, 1);
 }

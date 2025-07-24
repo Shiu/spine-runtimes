@@ -45,7 +45,7 @@ using namespace spine;
 RTTI_IMPL_MULTI(TransformConstraintTimeline, CurveTimeline, ConstraintTimeline)
 
 TransformConstraintTimeline::TransformConstraintTimeline(size_t frameCount, size_t bezierCount, int transformConstraintIndex)
-	: CurveTimeline(frameCount, TransformConstraintTimeline::ENTRIES, bezierCount), ConstraintTimeline(transformConstraintIndex) {
+	: CurveTimeline(frameCount, TransformConstraintTimeline::ENTRIES, bezierCount), ConstraintTimeline(), _constraintIndex(transformConstraintIndex) {
 	PropertyId ids[] = {((PropertyId) Property_TransformConstraint << 32) | transformConstraintIndex};
 	setPropertyIds(ids, 1);
 }

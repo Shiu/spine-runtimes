@@ -33,16 +33,8 @@ using namespace spine;
 
 RTTI_IMPL_NOPARENT(SlotTimeline)
 
-SlotTimeline::SlotTimeline(int slotIndex) : _slotIndex(slotIndex) {
+SlotTimeline::SlotTimeline() {
 }
 
 SlotTimeline::~SlotTimeline() {
-}
-
-int SlotTimeline::getSlotIndex() {
-	return _slotIndex;
-}
-
-void SlotTimeline::setSlotIndex(int inValue) {
-	_slotIndex = inValue;
 }

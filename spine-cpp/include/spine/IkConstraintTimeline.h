@@ -58,7 +58,16 @@ namespace spine {
 		/// @param bendDirection 1 or -1.
 		void setFrame(int frame, float time, float mix, float softness, int bendDirection, bool compress, bool stretch);
 
+		virtual int getConstraintIndex() const override {
+			return _constraintIndex;
+		}
+
+		virtual void setConstraintIndex(int inValue) override {
+			_constraintIndex = inValue;
+		}
 	private:
+		int _constraintIndex;
+
 		static const int ENTRIES = 6;
 		static const int MIX = 1;
 		static const int SOFTNESS = 2;
