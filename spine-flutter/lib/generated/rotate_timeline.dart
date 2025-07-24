@@ -1,16 +1,16 @@
-// ******************************************************************************
-// Spine Runtimes License Agreement
-// Last updated July 28, 2023. Replaces all prior versions.
 //
-// Copyright (c) 2013-2023, Esoteric Software LLC
+// Spine Runtimes License Agreement
+// Last updated April 5, 2025. Replaces all prior versions.
+//
+// Copyright (c) 2013-2025, Esoteric Software LLC
 //
 // Integration of the Spine Runtimes into software or otherwise creating
 // derivative works of the Spine Runtimes is permitted under the terms and
 // conditions of Section 2 of the Spine Editor License Agreement:
 // http://esotericsoftware.com/spine-editor-license
 //
-// Otherwise, it is permitted to integrate the Spine Runtimes into software or
-// otherwise create derivative works of the Spine Runtimes (collectively,
+// Otherwise, it is permitted to integrate the Spine Runtimes into software
+// or otherwise create derivative works of the Spine Runtimes (collectively,
 // "Products"), provided that each user of the Products must obtain their own
 // Spine Editor license and redistribution of the Products in any form must
 // include this license and copyright notice.
@@ -23,140 +23,34 @@
 // (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
 // BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
-// SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// *****************************************************************************/
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+// THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
 import 'spine_flutter_bindings_generated.dart';
-import 'rtti.dart';
-import 'skeleton.dart';
-import 'mix_blend.dart';
-import 'mix_direction.dart';
-import 'arrays.dart';
+import '../spine_bindings.dart';
+import 'bone_timeline1.dart';
 
 /// RotateTimeline wrapper
-class RotateTimeline implements Finalizable {
-  static late SpineFlutterBindings _bindings;
+class RotateTimeline extends BoneTimeline1 {
   final Pointer<spine_rotate_timeline_wrapper> _ptr;
 
-  /// Initialize the bindings for all spine-flutter classes
-  static void init(SpineFlutterBindings bindings) {
-    _bindings = bindings;
-  }
-
-  RotateTimeline.fromPointer(this._ptr);
+  RotateTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory RotateTimeline(int frameCount, int bezierCount, int boneIndex) {
-    final ptr = _bindings.spine_rotate_timeline_create(frameCount, bezierCount, boneIndex);
+    final ptr = SpineBindings.bindings.spine_rotate_timeline_create(frameCount, bezierCount, boneIndex);
     return RotateTimeline.fromPointer(ptr);
   }
 
-  Rtti get rtti {
-    final result = _bindings.spine_rotate_timeline_get_rtti(_ptr);
-    return Rtti.fromPointer(result);
-  }
-
-  void apply(Skeleton skeleton, double lastTime, double time, ArrayEvent pEvents, double alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
-    _bindings.spine_rotate_timeline_apply(_ptr, skeleton.nativePtr.cast(), lastTime, time, pEvents.nativePtr.cast(), alpha, blend.value, direction.value, appliedPose);
-  }
-
-  void setFrame(int frame, double time, double value) {
-    _bindings.spine_rotate_timeline_set_frame(_ptr, frame, time, value);
-  }
-
-  double getCurveValue(double time) {
-    final result = _bindings.spine_rotate_timeline_get_curve_value(_ptr, time);
-    return result;
-  }
-
-  double getRelativeValue(double time, double alpha, MixBlend blend, double current, double setup) {
-    final result = _bindings.spine_rotate_timeline_get_relative_value(_ptr, time, alpha, blend.value, current, setup);
-    return result;
-  }
-
-  double getScaleValue(double time, double alpha, MixBlend blend, MixDirection direction, double current, double setup) {
-    final result = _bindings.spine_rotate_timeline_get_scale_value(_ptr, time, alpha, blend.value, direction.value, current, setup);
-    return result;
-  }
-
-  set linear(int value) {
-    _bindings.spine_rotate_timeline_set_linear(_ptr, value);
-  }
-
-  set stepped(int value) {
-    _bindings.spine_rotate_timeline_set_stepped(_ptr, value);
-  }
-
-  void setBezier(int bezier, int frame, double value, double time1, double value1, double cx1, double cy1, double cx2, double cy2, double time2, double value2) {
-    _bindings.spine_rotate_timeline_set_bezier(_ptr, bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
-  }
-
-  double getBezierValue(double time, int frame, int valueOffset, int i) {
-    final result = _bindings.spine_rotate_timeline_get_bezier_value(_ptr, time, frame, valueOffset, i);
-    return result;
-  }
-
-  ArrayFloat get curves {
-    final result = _bindings.spine_rotate_timeline_get_curves(_ptr);
-    return ArrayFloat.fromPointer(result);
-  }
-
-  int get frameEntries {
-    final result = _bindings.spine_rotate_timeline_get_frame_entries(_ptr);
-    return result;
-  }
-
-  int get frameCount {
-    final result = _bindings.spine_rotate_timeline_get_frame_count(_ptr);
-    return result;
-  }
-
-  ArrayFloat get frames {
-    final result = _bindings.spine_rotate_timeline_get_frames(_ptr);
-    return ArrayFloat.fromPointer(result);
-  }
-
-  double get duration {
-    final result = _bindings.spine_rotate_timeline_get_duration(_ptr);
-    return result;
-  }
-
-  ArrayPropertyId get propertyIds {
-    final result = _bindings.spine_rotate_timeline_get_property_ids(_ptr);
-    return ArrayPropertyId.fromPointer(result);
-  }
-
-  int get boneIndex {
-    final result = _bindings.spine_rotate_timeline_get_bone_index(_ptr);
-    return result;
-  }
-
-  set boneIndex(int value) {
-    _bindings.spine_rotate_timeline_set_bone_index(_ptr, value);
-  }
-
-  static Rtti rttiStatic() {
-    final result = _bindings.spine_rotate_timeline_rtti();
-    return Rtti.fromPointer(result);
-  }
-
-  double getAbsoluteValue1(double time, double alpha, MixBlend blend, double current, double setup) {
-    final result = _bindings.spine_rotate_timeline_get_absolute_value_1(_ptr, time, alpha, blend.value, current, setup);
-    return result;
-  }
-
-  double getAbsoluteValue2(double time, double alpha, MixBlend blend, double current, double setup, double value) {
-    final result = _bindings.spine_rotate_timeline_get_absolute_value_2(_ptr, time, alpha, blend.value, current, setup, value);
-    return result;
-  }
-
+  @override
   void dispose() {
-    _bindings.spine_rotate_timeline_dispose(_ptr);
+    SpineBindings.bindings.spine_rotate_timeline_dispose(_ptr);
   }
 }

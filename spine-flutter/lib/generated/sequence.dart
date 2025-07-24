@@ -1,16 +1,16 @@
-// ******************************************************************************
-// Spine Runtimes License Agreement
-// Last updated July 28, 2023. Replaces all prior versions.
 //
-// Copyright (c) 2013-2023, Esoteric Software LLC
+// Spine Runtimes License Agreement
+// Last updated April 5, 2025. Replaces all prior versions.
+//
+// Copyright (c) 2013-2025, Esoteric Software LLC
 //
 // Integration of the Spine Runtimes into software or otherwise creating
 // derivative works of the Spine Runtimes is permitted under the terms and
 // conditions of Section 2 of the Spine Editor License Agreement:
 // http://esotericsoftware.com/spine-editor-license
 //
-// Otherwise, it is permitted to integrate the Spine Runtimes into software or
-// otherwise create derivative works of the Spine Runtimes (collectively,
+// Otherwise, it is permitted to integrate the Spine Runtimes into software
+// or otherwise create derivative works of the Spine Runtimes (collectively,
 // "Products"), provided that each user of the Products must obtain their own
 // Spine Editor license and redistribution of the Products in any form must
 // include this license and copyright notice.
@@ -23,28 +23,23 @@
 // (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
 // BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
-// SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// *****************************************************************************/
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+// THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'spine_flutter_bindings_generated.dart';
+import '../spine_bindings.dart';
 import 'slot_pose.dart';
 import 'attachment.dart';
 import 'arrays.dart';
 
 /// Sequence wrapper
 class Sequence implements Finalizable {
-  static late SpineFlutterBindings _bindings;
   final Pointer<spine_sequence_wrapper> _ptr;
-
-  /// Initialize the bindings for all spine-flutter classes
-  static void init(SpineFlutterBindings bindings) {
-    _bindings = bindings;
-  }
 
   Sequence.fromPointer(this._ptr);
 
@@ -52,66 +47,66 @@ class Sequence implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory Sequence(int count) {
-    final ptr = _bindings.spine_sequence_create(count);
+    final ptr = SpineBindings.bindings.spine_sequence_create(count);
     return Sequence.fromPointer(ptr);
   }
 
   Sequence copy() {
-    final result = _bindings.spine_sequence_copy(_ptr);
+    final result = SpineBindings.bindings.spine_sequence_copy(_ptr);
     return Sequence.fromPointer(result);
   }
 
   void apply(SlotPose slot, Attachment attachment) {
-    _bindings.spine_sequence_apply(_ptr, slot.nativePtr.cast(), attachment.nativePtr.cast());
+    SpineBindings.bindings.spine_sequence_apply(_ptr, slot.nativePtr.cast(), attachment.nativePtr.cast());
   }
 
   String getPath(String basePath, int index) {
-    final result = _bindings.spine_sequence_get_path(_ptr, basePath.toNativeUtf8().cast<Char>(), index);
+    final result = SpineBindings.bindings.spine_sequence_get_path(_ptr, basePath.toNativeUtf8().cast<Char>(), index);
     return result.cast<Utf8>().toDartString();
   }
 
   int get id {
-    final result = _bindings.spine_sequence_get_id(_ptr);
+    final result = SpineBindings.bindings.spine_sequence_get_id(_ptr);
     return result;
   }
 
   set id(int value) {
-    _bindings.spine_sequence_set_id(_ptr, value);
+    SpineBindings.bindings.spine_sequence_set_id(_ptr, value);
   }
 
   int get start {
-    final result = _bindings.spine_sequence_get_start(_ptr);
+    final result = SpineBindings.bindings.spine_sequence_get_start(_ptr);
     return result;
   }
 
   set start(int value) {
-    _bindings.spine_sequence_set_start(_ptr, value);
+    SpineBindings.bindings.spine_sequence_set_start(_ptr, value);
   }
 
   int get digits {
-    final result = _bindings.spine_sequence_get_digits(_ptr);
+    final result = SpineBindings.bindings.spine_sequence_get_digits(_ptr);
     return result;
   }
 
   set digits(int value) {
-    _bindings.spine_sequence_set_digits(_ptr, value);
+    SpineBindings.bindings.spine_sequence_set_digits(_ptr, value);
   }
 
   int get setupIndex {
-    final result = _bindings.spine_sequence_get_setup_index(_ptr);
+    final result = SpineBindings.bindings.spine_sequence_get_setup_index(_ptr);
     return result;
   }
 
   set setupIndex(int value) {
-    _bindings.spine_sequence_set_setup_index(_ptr, value);
+    SpineBindings.bindings.spine_sequence_set_setup_index(_ptr, value);
   }
 
   ArrayTextureRegion get regions {
-    final result = _bindings.spine_sequence_get_regions(_ptr);
+    final result = SpineBindings.bindings.spine_sequence_get_regions(_ptr);
     return ArrayTextureRegion.fromPointer(result);
   }
 
   void dispose() {
-    _bindings.spine_sequence_dispose(_ptr);
+    SpineBindings.bindings.spine_sequence_dispose(_ptr);
   }
 }

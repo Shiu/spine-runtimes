@@ -1,16 +1,16 @@
-// ******************************************************************************
-// Spine Runtimes License Agreement
-// Last updated July 28, 2023. Replaces all prior versions.
 //
-// Copyright (c) 2013-2023, Esoteric Software LLC
+// Spine Runtimes License Agreement
+// Last updated April 5, 2025. Replaces all prior versions.
+//
+// Copyright (c) 2013-2025, Esoteric Software LLC
 //
 // Integration of the Spine Runtimes into software or otherwise creating
 // derivative works of the Spine Runtimes is permitted under the terms and
 // conditions of Section 2 of the Spine Editor License Agreement:
 // http://esotericsoftware.com/spine-editor-license
 //
-// Otherwise, it is permitted to integrate the Spine Runtimes into software or
-// otherwise create derivative works of the Spine Runtimes (collectively,
+// Otherwise, it is permitted to integrate the Spine Runtimes into software
+// or otherwise create derivative works of the Spine Runtimes (collectively,
 // "Products"), provided that each user of the Products must obtain their own
 // Spine Editor license and redistribution of the Products in any form must
 // include this license and copyright notice.
@@ -23,14 +23,15 @@
 // (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
 // BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
-// SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// *****************************************************************************/
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+// THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
 import 'spine_flutter_bindings_generated.dart';
+import '../spine_bindings.dart';
 import 'skeleton.dart';
 import 'polygon.dart';
 import 'bounding_box_attachment.dart';
@@ -38,13 +39,7 @@ import 'arrays.dart';
 
 /// SkeletonBounds wrapper
 class SkeletonBounds implements Finalizable {
-  static late SpineFlutterBindings _bindings;
   final Pointer<spine_skeleton_bounds_wrapper> _ptr;
-
-  /// Initialize the bindings for all spine-flutter classes
-  static void init(SpineFlutterBindings bindings) {
-    _bindings = bindings;
-  }
 
   SkeletonBounds.fromPointer(this._ptr);
 
@@ -52,100 +47,100 @@ class SkeletonBounds implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory SkeletonBounds() {
-    final ptr = _bindings.spine_skeleton_bounds_create();
+    final ptr = SpineBindings.bindings.spine_skeleton_bounds_create();
     return SkeletonBounds.fromPointer(ptr);
   }
 
   void update(Skeleton skeleton, bool updateAabb) {
-    _bindings.spine_skeleton_bounds_update(_ptr, skeleton.nativePtr.cast(), updateAabb);
+    SpineBindings.bindings.spine_skeleton_bounds_update(_ptr, skeleton.nativePtr.cast(), updateAabb);
   }
 
   bool aabbContainsPoint(double x, double y) {
-    final result = _bindings.spine_skeleton_bounds_aabb_contains_point(_ptr, x, y);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_aabb_contains_point(_ptr, x, y);
     return result;
   }
 
   bool aabbIntersectsSegment(double x1, double y1, double x2, double y2) {
-    final result = _bindings.spine_skeleton_bounds_aabb_intersects_segment(_ptr, x1, y1, x2, y2);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_aabb_intersects_segment(_ptr, x1, y1, x2, y2);
     return result;
   }
 
   bool aabbIntersectsSkeleton(SkeletonBounds bounds) {
-    final result = _bindings.spine_skeleton_bounds_aabb_intersects_skeleton(_ptr, bounds.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_skeleton_bounds_aabb_intersects_skeleton(_ptr, bounds.nativePtr.cast());
     return result;
   }
 
   Polygon getPolygon(BoundingBoxAttachment attachment) {
-    final result = _bindings.spine_skeleton_bounds_get_polygon(_ptr, attachment.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_polygon(_ptr, attachment.nativePtr.cast());
     return Polygon.fromPointer(result);
   }
 
   BoundingBoxAttachment getBoundingBox(Polygon polygon) {
-    final result = _bindings.spine_skeleton_bounds_get_bounding_box(_ptr, polygon.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_bounding_box(_ptr, polygon.nativePtr.cast());
     return BoundingBoxAttachment.fromPointer(result);
   }
 
   ArrayPolygon get polygons {
-    final result = _bindings.spine_skeleton_bounds_get_polygons(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_polygons(_ptr);
     return ArrayPolygon.fromPointer(result);
   }
 
   ArrayBoundingBoxAttachment get boundingBoxes {
-    final result = _bindings.spine_skeleton_bounds_get_bounding_boxes(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_bounding_boxes(_ptr);
     return ArrayBoundingBoxAttachment.fromPointer(result);
   }
 
   double get minX {
-    final result = _bindings.spine_skeleton_bounds_get_min_x(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_min_x(_ptr);
     return result;
   }
 
   double get minY {
-    final result = _bindings.spine_skeleton_bounds_get_min_y(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_min_y(_ptr);
     return result;
   }
 
   double get maxX {
-    final result = _bindings.spine_skeleton_bounds_get_max_x(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_max_x(_ptr);
     return result;
   }
 
   double get maxY {
-    final result = _bindings.spine_skeleton_bounds_get_max_y(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_max_y(_ptr);
     return result;
   }
 
   double get width {
-    final result = _bindings.spine_skeleton_bounds_get_width(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_width(_ptr);
     return result;
   }
 
   double get height {
-    final result = _bindings.spine_skeleton_bounds_get_height(_ptr);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_get_height(_ptr);
     return result;
   }
 
   bool containsPoint1(Polygon polygon, double x, double y) {
-    final result = _bindings.spine_skeleton_bounds_contains_point_1(_ptr, polygon.nativePtr.cast(), x, y);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_contains_point_1(_ptr, polygon.nativePtr.cast(), x, y);
     return result;
   }
 
   BoundingBoxAttachment containsPoint2(double x, double y) {
-    final result = _bindings.spine_skeleton_bounds_contains_point_2(_ptr, x, y);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_contains_point_2(_ptr, x, y);
     return BoundingBoxAttachment.fromPointer(result);
   }
 
   BoundingBoxAttachment intersectsSegment1(double x1, double y1, double x2, double y2) {
-    final result = _bindings.spine_skeleton_bounds_intersects_segment_1(_ptr, x1, y1, x2, y2);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_intersects_segment_1(_ptr, x1, y1, x2, y2);
     return BoundingBoxAttachment.fromPointer(result);
   }
 
   bool intersectsSegment2(Polygon polygon, double x1, double y1, double x2, double y2) {
-    final result = _bindings.spine_skeleton_bounds_intersects_segment_2(_ptr, polygon.nativePtr.cast(), x1, y1, x2, y2);
+    final result = SpineBindings.bindings.spine_skeleton_bounds_intersects_segment_2(_ptr, polygon.nativePtr.cast(), x1, y1, x2, y2);
     return result;
   }
 
   void dispose() {
-    _bindings.spine_skeleton_bounds_dispose(_ptr);
+    SpineBindings.bindings.spine_skeleton_bounds_dispose(_ptr);
   }
 }

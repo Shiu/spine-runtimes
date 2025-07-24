@@ -1,16 +1,16 @@
-//
+// ******************************************************************************
 // Spine Runtimes License Agreement
-// Last updated April 5, 2025. Replaces all prior versions.
+// Last updated July 28, 2023. Replaces all prior versions.
 //
-// Copyright (c) 2013-2025, Esoteric Software LLC
+// Copyright (c) 2013-2023, Esoteric Software LLC
 //
 // Integration of the Spine Runtimes into software or otherwise creating
 // derivative works of the Spine Runtimes is permitted under the terms and
 // conditions of Section 2 of the Spine Editor License Agreement:
 // http://esotericsoftware.com/spine-editor-license
 //
-// Otherwise, it is permitted to integrate the Spine Runtimes into software
-// or otherwise create derivative works of the Spine Runtimes (collectively,
+// Otherwise, it is permitted to integrate the Spine Runtimes into software or
+// otherwise create derivative works of the Spine Runtimes (collectively,
 // "Products"), provided that each user of the Products must obtain their own
 // Spine Editor license and redistribution of the Products in any form must
 // include this license and copyright notice.
@@ -23,35 +23,21 @@
 // (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
 // BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-// THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
+// SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// *****************************************************************************/
 
-// AUTO GENERATED FILE, DO NOT EDIT.
+import 'generated/spine_flutter_bindings_generated.dart';
 
-import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
-import '../spine_bindings.dart';
+/// Global bindings instance for all spine-flutter classes
+class SpineBindings {
+  static late SpineFlutterBindings _bindings;
 
-/// PosedActive wrapper
-class PosedActive implements Finalizable {
-  final Pointer<spine_posed_active_wrapper> _ptr;
-
-  PosedActive.fromPointer(this._ptr);
-
-  /// Get the native pointer for FFI calls
-  Pointer get nativePtr => _ptr;
-
-  bool get isActive {
-    final result = SpineBindings.bindings.spine_posed_active_is_active(_ptr);
-    return result;
+  /// Initialize the global bindings
+  static void init(SpineFlutterBindings bindings) {
+    _bindings = bindings;
   }
 
-  set active(bool value) {
-    SpineBindings.bindings.spine_posed_active_set_active(_ptr, value);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_posed_active_dispose(_ptr);
-  }
+  /// Get the global bindings instance
+  static SpineFlutterBindings get bindings => _bindings;
 }

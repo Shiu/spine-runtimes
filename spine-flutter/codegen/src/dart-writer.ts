@@ -1,40 +1,38 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { CClassOrStruct, CEnum, CMethod, CParameter } from '../../../spine-c/codegen/src/c-types.js';
 import { toSnakeCase } from '../../../spine-c/codegen/src/types.js';
 
-const LICENSE_HEADER = `// ******************************************************************************
-// Spine Runtimes License Agreement
-// Last updated July 28, 2023. Replaces all prior versions.
-//
-// Copyright (c) 2013-2023, Esoteric Software LLC
-//
-// Integration of the Spine Runtimes into software or otherwise creating
-// derivative works of the Spine Runtimes is permitted under the terms and
-// conditions of Section 2 of the Spine Editor License Agreement:
-// http://esotericsoftware.com/spine-editor-license
-//
-// Otherwise, it is permitted to integrate the Spine Runtimes into software or
-// otherwise create derivative works of the Spine Runtimes (collectively,
-// "Products"), provided that each user of the Products must obtain their own
-// Spine Editor license and redistribution of the Products in any form must
-// include this license and copyright notice.
-//
-// THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
-// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
-// BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
-// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
-// SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// *****************************************************************************/`;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const LICENSE_HEADER = fs.readFileSync(path.join(__dirname, '../../../spine-cpp/src/spine/Skeleton.cpp'), 'utf8')
+    .split('\n')
+    .slice(0, 28)
+    .map((line, index, array) => {
+        // Convert C++ block comment format to Dart line comment format
+        if (index === 0 && line.startsWith('/****')) {
+            // First line: remove asterisks
+            return '//' + line.substring(4).replace(/\*+/g, '');
+        } else if (index === array.length - 1 && (line.startsWith(' ****') || line.trim() === '*/')) {
+            // Last line: remove asterisks, use // not ///
+            return '//' + line.substring(line.indexOf('*') + 1).replace(/\*+/g, '').replace(/\//g, '');
+        } else if (line.startsWith(' ****') || line.trim() === '*/') {
+            return '// ' + line.substring(4);
+        } else if (line.startsWith(' * ')) {
+            return '// ' + line.substring(3);
+        } else if (line.startsWith(' *')) {
+            return '//' + line.substring(2);
+        } else {
+            return line;
+        }
+    })
+    .join('\n');
 
 /** Generates Dart wrapper files from C intermediate representation */
 export class DartWriter {
     private enumNames = new Set<string>();
+    private inheritanceMap = new Map<string, string>(); // child -> parent
+    private classMap = new Map<string, CClassOrStruct>(); // name -> class
 
     constructor(private outputDir: string) {
         this.cleanOutputDirectory();
@@ -48,19 +46,143 @@ export class DartWriter {
         fs.mkdirSync(this.outputDir, { recursive: true });
     }
 
+    /** Build inheritance relationships and class mapping */
+    private buildInheritanceInfo(cTypes: CClassOrStruct[]): void {
+        // Build class map
+        for (const cType of cTypes) {
+            this.classMap.set(cType.name, cType);
+        }
+
+        // Build inheritance map (child -> immediate parent)
+        for (const cType of cTypes) {
+            if (cType.cppType.superTypes && cType.cppType.superTypes.length > 0) {
+                // Find the immediate parent (most specific supertype)
+                let immediateParent: string | null = null;
+                
+                for (const superType of cType.cppType.superTypes) {
+                    const parentCName = `spine_${toSnakeCase(superType)}`;
+                    // Check if this parent exists in our class list
+                    if (this.classMap.has(parentCName)) {
+                        // Use the first valid supertype as immediate parent
+                        // (In most cases there's only one direct parent)
+                        if (!immediateParent) {
+                            immediateParent = parentCName;
+                        }
+                    }
+                }
+                
+                if (immediateParent) {
+                    this.inheritanceMap.set(cType.name, immediateParent);
+                }
+            }
+        }
+    }
+
+    /** Sort classes by inheritance dependency (base classes first) */
+    private sortByInheritance(cTypes: CClassOrStruct[]): CClassOrStruct[] {
+        const sorted: CClassOrStruct[] = [];
+        const processed = new Set<string>();
+        
+        const processClass = (cType: CClassOrStruct) => {
+            if (processed.has(cType.name)) {
+                return;
+            }
+            
+            // Process parent first
+            const parentName = this.inheritanceMap.get(cType.name);
+            if (parentName) {
+                const parent = this.classMap.get(parentName);
+                if (parent) {
+                    processClass(parent);
+                }
+            }
+            
+            // Then process this class
+            sorted.push(cType);
+            processed.add(cType.name);
+        };
+        
+        // Process all classes
+        for (const cType of cTypes) {
+            processClass(cType);
+        }
+        
+        return sorted;
+    }
+
+    /** Check if a class is abstract */
+    private isAbstract(cType: CClassOrStruct): boolean {
+        return cType.cppType.isAbstract === true;
+    }
+
+    /** Get parent class name for inheritance */
+    private getParentClass(cType: CClassOrStruct): string | null {
+        return this.inheritanceMap.get(cType.name) || null;
+    }
+
+    /** Get root parent class name (for accessing static bindings) */
+    private getRootParent(cType: CClassOrStruct): string {
+        let current = cType.name;
+        while (this.inheritanceMap.has(current)) {
+            current = this.inheritanceMap.get(current)!;
+        }
+        return current;
+    }
+
+    /** Check if a method is inherited from a parent class */
+    private isMethodInherited(method: CMethod, cType: CClassOrStruct): boolean {
+        // Find if this method exists in any parent class
+        const parentName = this.getParentClass(cType);
+        if (!parentName) {
+            return false;
+        }
+        
+        const parent = this.classMap.get(parentName);
+        if (!parent) {
+            return false;
+        }
+        
+        // Check if parent has this method (by looking at the method name pattern)
+        const methodSuffix = this.getMethodSuffix(method.name, cType.name);
+        const parentMethodName = `${parentName}_${methodSuffix}`;
+        
+        const hasInParent = parent.methods.some(m => m.name === parentMethodName);
+        if (hasInParent) {
+            return true;
+        }
+        
+        // Recursively check parent's parents
+        return this.isMethodInherited(method, parent);
+    }
+
+    /** Extract method suffix from full method name */
+    private getMethodSuffix(methodName: string, typeName: string): string {
+        const prefix = `${typeName}_`;
+        if (methodName.startsWith(prefix)) {
+            return methodName.slice(prefix.length);
+        }
+        return methodName;
+    }
+
     async writeAll(cTypes: CClassOrStruct[], cEnums: CEnum[], cArrayTypes: CClassOrStruct[]): Promise<void> {
         // Collect enum names first
         for (const cEnum of cEnums) {
             this.enumNames.add(cEnum.name);
         }
 
+        // Build inheritance information
+        this.buildInheritanceInfo(cTypes);
+
+        // Sort classes by inheritance dependency (base classes first)
+        const sortedTypes = this.sortByInheritance(cTypes);
+
         // Write enums
         for (const cEnum of cEnums) {
             await this.writeEnum(cEnum);
         }
 
-        // Write wrapper classes
-        for (const cType of cTypes) {
+        // Write wrapper classes in dependency order
+        for (const cType of sortedTypes) {
             await this.writeClass(cType);
         }
 
@@ -69,6 +191,9 @@ export class DartWriter {
 
         // Write main export file
         await this.writeExportFile(cTypes, cEnums, cArrayTypes);
+
+        // Run dart fix to clean up generated code
+        await this.runDartFix();
     }
 
 
@@ -130,11 +255,19 @@ export class DartWriter {
         }
         
         lines.push("import 'spine_flutter_bindings_generated.dart';");
+        lines.push("import '../spine_bindings.dart';");
 
         // Check if this class has an rtti method
         const hasRttiMethod = cType.methods.some(m => m.name === `${cType.name}_rtti` && m.parameters.length === 0);
         if (hasRttiMethod) {
             lines.push("import 'rtti.dart';");
+        }
+
+        // Add parent class import if needed
+        const parentName = this.getParentClass(cType);
+        if (parentName) {
+            const parentDartName = this.toDartTypeName(parentName);
+            lines.push(`import '${toSnakeCase(parentDartName)}.dart';`);
         }
 
         // Collect all imports needed (arrays, enums, and other types)
@@ -144,38 +277,68 @@ export class DartWriter {
             if (importFile === 'rtti.dart' && hasRttiMethod) {
                 continue;
             }
+            // Skip parent class import if we already added it above
+            if (parentName) {
+                const parentDartName = this.toDartTypeName(parentName);
+                if (importFile === `${toSnakeCase(parentDartName)}.dart`) {
+                    continue;
+                }
+            }
             lines.push(`import '${importFile}';`);
         }
 
         lines.push('');
         lines.push(`/// ${dartClassName} wrapper`);
-        lines.push(`class ${dartClassName} implements Finalizable {`);
-        lines.push('  static late SpineFlutterBindings _bindings;');
+        
+        // Build class declaration with inheritance
+        let classDeclaration = `class ${dartClassName}`;
+        if (this.isAbstract(cType)) {
+            classDeclaration = `abstract ${classDeclaration}`;
+        }
+        
+        if (parentName) {
+            const parentDartName = this.toDartTypeName(parentName);
+            classDeclaration += ` extends ${parentDartName}`;
+        } else {
+            classDeclaration += ` implements Finalizable`;
+        }
+        
+        lines.push(`${classDeclaration} {`);
+        
+        // Every class has its own typed pointer field
         lines.push(`  final Pointer<${cType.name}_wrapper> _ptr;`);
-        lines.push('');
-        lines.push('  /// Initialize the bindings for all spine-flutter classes');
-        lines.push('  static void init(SpineFlutterBindings bindings) {');
-        lines.push('    _bindings = bindings;');
-        lines.push('  }');
         lines.push('');
 
         // Constructor from pointer
-        lines.push(`  ${dartClassName}.fromPointer(this._ptr);`);
+        if (parentName) {
+            // Derived class - initialize own pointer and call super constructor with cast
+            lines.push(`  ${dartClassName}.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());`);
+        } else {
+            // Base class - set the pointer directly  
+            lines.push(`  ${dartClassName}.fromPointer(this._ptr);`);
+        }
+        
         lines.push('');
         lines.push('  /// Get the native pointer for FFI calls');
-        lines.push('  Pointer get nativePtr => _ptr;');
+        lines.push(`  Pointer get nativePtr => _ptr;`);
         lines.push('');
 
-        // Write constructors
-        for (const constr of cType.constructors) {
-            lines.push(this.writeConstructor(dartClassName, constr, cType));
-            lines.push('');
+        // Write constructors (only for concrete classes)
+        if (!this.isAbstract(cType)) {
+            for (const constr of cType.constructors) {
+                lines.push(this.writeConstructor(dartClassName, constr, cType));
+                lines.push('');
+            }
         }
 
-        // Filter out methods with raw pointer parameters
+        // Filter out methods with raw pointer parameters and inherited methods
         const validMethods = cType.methods.filter(method => {
             if (this.hasRawPointerParameters(method)) {
                 console.log(`  Skipping method ${cType.name}::${method.name}: has raw pointer parameters`);
+                return false;
+            }
+            if (this.isMethodInherited(method, cType)) {
+                console.log(`  Skipping method ${cType.name}::${method.name}: inherited from parent`);
                 return false;
             }
             return true;
@@ -204,7 +367,7 @@ export class DartWriter {
         // Write dispose method if destructor exists
         if (cType.destructor) {
             lines.push('  void dispose() {');
-            lines.push(`    _bindings.${cType.destructor.name}(_ptr);`);
+            lines.push(`    SpineBindings.bindings.${cType.destructor.name}(_ptr);`);
             lines.push('  }');
         }
 
@@ -223,7 +386,9 @@ export class DartWriter {
         lines.push('// AUTO GENERATED FILE, DO NOT EDIT.');
         lines.push('');
         lines.push("import 'dart:ffi';");
+        lines.push("import 'package:ffi/ffi.dart';");
         lines.push("import 'spine_flutter_bindings_generated.dart';");
+        lines.push("import '../spine_bindings.dart';");
         lines.push("import '../native_array.dart';");
         
         // Collect all imports needed for all array types
@@ -232,6 +397,17 @@ export class DartWriter {
             const elementType = this.extractArrayElementType(arrayType.name);
             if (!this.isPrimitive(elementType) && !['int', 'float', 'bool', 'unsigned_short', 'property_id'].includes(elementType.toLowerCase())) {
                 imports.add(`import '${toSnakeCase(elementType)}.dart';`);
+                
+                // If this element type is abstract, we need to import all its concrete subclasses too
+                const cElementType = `spine_${toSnakeCase(elementType)}`;
+                const cClass = this.classMap.get(cElementType);
+                if (cClass && this.isAbstract(cClass)) {
+                    const concreteSubclasses = this.getConcreteSubclasses(cElementType);
+                    for (const subclass of concreteSubclasses) {
+                        const dartSubclass = this.toDartTypeName(subclass);
+                        imports.add(`import '${toSnakeCase(dartSubclass)}.dart';`);
+                    }
+                }
             }
         }
         
@@ -258,13 +434,6 @@ export class DartWriter {
 
         lines.push(`/// Array of ${elementType} elements`);
         lines.push(`class ${dartClassName} extends NativeArray<${this.toDartElementType(elementType)}> {`);
-        lines.push('  static late SpineFlutterBindings _bindings;');
-        lines.push('');
-        lines.push('  /// Initialize the bindings for all spine-flutter classes');
-        lines.push('  static void init(SpineFlutterBindings bindings) {');
-        lines.push('    _bindings = bindings;');
-        lines.push('  }');
-        lines.push('');
         // Generate typed constructor - arrays use the array wrapper type
         const arrayWrapperType = `${arrayType.name}_wrapper`;
         lines.push(`  ${dartClassName}.fromPointer(Pointer<${arrayWrapperType}> super.ptr);`);
@@ -278,7 +447,7 @@ export class DartWriter {
         if (sizeMethod) {
             lines.push('  @override');
             lines.push('  int get length {');
-            lines.push(`    return _bindings.${sizeMethod.name}(nativePtr.cast());`);
+            lines.push(`    return SpineBindings.bindings.${sizeMethod.name}(nativePtr.cast());`);
             lines.push('  }');
             lines.push('');
         }
@@ -290,7 +459,7 @@ export class DartWriter {
             lines.push('      throw RangeError.index(index, this, \'index\');');
             lines.push('    }');
             
-            lines.push(`    final buffer = _bindings.${bufferMethod.name}(nativePtr.cast());`);
+            lines.push(`    final buffer = SpineBindings.bindings.${bufferMethod.name}(nativePtr.cast());`);
 
             // Handle different element types
             if (elementType === 'int') {
@@ -309,7 +478,16 @@ export class DartWriter {
             } else {
                 // For object types, the buffer contains pointers
                 const dartElementType = this.toDartTypeName(`spine_${toSnakeCase(elementType)}`);
-                lines.push(`    return ${dartElementType}.fromPointer(buffer[index]);`);
+                const cElementType = `spine_${toSnakeCase(elementType)}`;
+                const cClass = this.classMap.get(cElementType);
+                
+                if (cClass && this.isAbstract(cClass)) {
+                    // Use RTTI to determine concrete type for abstract classes
+                    const rttiCode = this.generateRttiBasedInstantiation(dartElementType, 'buffer[index]', cClass);
+                    lines.push(`    ${rttiCode}`);
+                } else {
+                    lines.push(`    return ${dartElementType}.fromPointer(buffer[index]);`);
+                }
             }
 
             lines.push('  }');
@@ -327,7 +505,7 @@ export class DartWriter {
             // Convert value to C type
             const param = setMethod.parameters[2]; // The value parameter
             const convertedValue = this.convertDartToC('value', param);
-            lines.push(`    _bindings.${setMethod.name}(nativePtr.cast(), index, ${convertedValue});`);
+            lines.push(`    SpineBindings.bindings.${setMethod.name}(nativePtr.cast(), index, ${convertedValue});`);
             lines.push('  }');
         }
 
@@ -427,7 +605,7 @@ export class DartWriter {
         const factoryName = constructorName ? `.${constructorName}` : '';
 
         lines.push(`  factory ${dartClassName}${factoryName}(${params}) {`);
-        lines.push(`    final ptr = _bindings.${constr.name}(${args});`);
+        lines.push(`    final ptr = SpineBindings.bindings.${constr.name}(${args});`);
         lines.push(`    return ${dartClassName}.fromPointer(ptr);`);
         lines.push('  }');
 
@@ -472,14 +650,14 @@ export class DartWriter {
 
         lines.push(`${methodSignature}(${params}) {`);
 
-        // Always use the static _bindings
-        const bindingsRef = '_bindings';
+        // Always use the global bindings
+        const bindingsRef = 'SpineBindings.bindings';
 
         if (method.returnType === 'void') {
             lines.push(`    ${bindingsRef}.${method.name}(${args});`);
         } else {
             lines.push(`    final result = ${bindingsRef}.${method.name}(${args});`);
-            lines.push(`    ${this.generateReturnConversion(method.returnType, 'result', bindingsRef)}`);
+            lines.push(`    ${this.generateReturnConversion(method.returnType, 'result')}`);
         }
 
         lines.push('  }');
@@ -491,10 +669,9 @@ export class DartWriter {
         const lines: string[] = [];
         const propertyName = renamedMethod || this.extractPropertyName(method.name, cType.name);
         const dartReturnType = this.toDartReturnType(method.returnType);
-
         lines.push(`  ${dartReturnType} get ${propertyName} {`);
-        lines.push(`    final result = _bindings.${method.name}(_ptr);`);
-        lines.push(`    ${this.generateReturnConversion(method.returnType, 'result', '_bindings')}`);
+        lines.push(`    final result = SpineBindings.bindings.${method.name}(_ptr);`);
+        lines.push(`    ${this.generateReturnConversion(method.returnType, 'result')}`);
         lines.push('  }');
 
         return lines.join('\n');
@@ -517,7 +694,7 @@ export class DartWriter {
         }
 
         lines.push(`  set ${propertyName}(${dartType} value) {`);
-        lines.push(`    _bindings.${method.name}(_ptr, ${this.convertDartToC('value', param)});`);
+        lines.push(`    SpineBindings.bindings.${method.name}(_ptr, ${this.convertDartToC('value', param)});`);
         lines.push('  }');
 
         return lines.join('\n');
@@ -730,7 +907,7 @@ export class DartWriter {
         return dartValue;
     }
 
-    private generateReturnConversion(cReturnType: string, resultVar: string, bindingsRef: string = '_bindings'): string {
+    private generateReturnConversion(cReturnType: string, resultVar: string): string {
         // Handle char* with or without spaces
         if (cReturnType === 'char*' || cReturnType === 'char *' || cReturnType === 'const char*' || cReturnType === 'const char *') {
             return `return ${resultVar}.cast<Utf8>().toDartString();`;
@@ -749,10 +926,61 @@ export class DartWriter {
 
         if (cReturnType.startsWith('spine_')) {
             const dartType = this.toDartTypeName(cReturnType);
+            const cClass = this.classMap.get(cReturnType);
+            if (cClass && this.isAbstract(cClass)) {
+                // Use RTTI to determine concrete type and instantiate correctly
+                return this.generateRttiBasedInstantiation(dartType, resultVar, cClass);
+            }
             return `return ${dartType}.fromPointer(${resultVar});`;
         }
 
         return `return ${resultVar};`;
+    }
+
+    private generateRttiBasedInstantiation(abstractType: string, resultVar: string, abstractClass: CClassOrStruct): string {
+        const lines: string[] = [];
+        
+        // Get concrete subclasses for this abstract class
+        const concreteSubclasses = this.getConcreteSubclasses(abstractClass.name);
+        
+        if (concreteSubclasses.length === 0) {
+            return `throw UnsupportedError('Cannot instantiate abstract class ${abstractType} from pointer - no concrete subclasses found');`;
+        }
+        
+        lines.push(`final rtti = SpineBindings.bindings.${abstractClass.name}_get_rtti(${resultVar});`);
+        lines.push(`final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();`);
+        lines.push(`switch (className) {`);
+        
+        for (const subclass of concreteSubclasses) {
+            const dartSubclass = this.toDartTypeName(subclass);
+            lines.push(`  case '${subclass}':`);
+            lines.push(`    return ${dartSubclass}.fromPointer(${resultVar}.cast());`);
+        }
+        
+        lines.push(`  default:`);
+        lines.push(`    throw UnsupportedError('Unknown concrete type: \$className for abstract class ${abstractType}');`);
+        lines.push(`}`);
+        
+        return lines.join('\n    ');
+    }
+
+    private getConcreteSubclasses(abstractClassName: string): string[] {
+        const concreteSubclasses: string[] = [];
+        
+        // Find all classes that inherit from this abstract class
+        for (const [childName, parentName] of this.inheritanceMap.entries()) {
+            if (parentName === abstractClassName) {
+                const childClass = this.classMap.get(childName);
+                if (childClass && !this.isAbstract(childClass)) {
+                    concreteSubclasses.push(childName);
+                } else {
+                    // Recursively check for concrete subclasses
+                    concreteSubclasses.push(...this.getConcreteSubclasses(childName));
+                }
+            }
+        }
+        
+        return concreteSubclasses;
     }
 
     private collectAllImports(cType: CClassOrStruct): Set<string> {
@@ -781,6 +1009,19 @@ export class DartWriter {
                     // Skip self-imports
                     if (fileName !== currentFileName) {
                         imports.add(fileName);
+                    }
+                    
+                    // If this return type is abstract, we need to import all its concrete subclasses too
+                    const returnClass = this.classMap.get(cleanType);
+                    if (returnClass && this.isAbstract(returnClass)) {
+                        const concreteSubclasses = this.getConcreteSubclasses(cleanType);
+                        for (const subclass of concreteSubclasses) {
+                            const dartSubclass = this.toDartTypeName(subclass);
+                            const subclassFileName = `${toSnakeCase(dartSubclass)}.dart`;
+                            if (subclassFileName !== currentFileName) {
+                                imports.add(subclassFileName);
+                            }
+                        }
                     }
                 }
             }
@@ -983,6 +1224,15 @@ export class DartWriter {
                     return true;
                 }
             }
+            
+            // Check if method returns abstract types (which use RTTI and need Utf8)
+            if (method.returnType.startsWith('spine_')) {
+                const cleanType = method.returnType.replace('*', '').trim();
+                const returnClass = this.classMap.get(cleanType);
+                if (returnClass && this.isAbstract(returnClass)) {
+                    return true; // RTTI switch uses Utf8 conversion
+                }
+            }
         }
 
         // Check constructors
@@ -996,5 +1246,32 @@ export class DartWriter {
         }
 
         return false;
+    }
+
+    private async runDartFix(): Promise<void> {
+        const { spawn } = await import('node:child_process');
+        
+        return new Promise((resolve, reject) => {
+            console.log('Running dart fix --apply on generated code...');
+            
+            const dartFix = spawn('dart', ['fix', '--apply', this.outputDir], {
+                stdio: 'inherit'
+            });
+            
+            dartFix.on('close', (code) => {
+                if (code === 0) {
+                    console.log('✓ Dart fix completed successfully');
+                    resolve();
+                } else {
+                    console.warn(`⚠ Dart fix exited with code ${code}`);
+                    resolve(); // Don't fail the build if dart fix fails
+                }
+            });
+            
+            dartFix.on('error', (error) => {
+                console.warn(`⚠ Failed to run dart fix: ${error.message}`);
+                resolve(); // Don't fail the build if dart fix fails
+            });
+        });
     }
 }

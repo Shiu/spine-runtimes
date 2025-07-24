@@ -1,16 +1,16 @@
-// ******************************************************************************
-// Spine Runtimes License Agreement
-// Last updated July 28, 2023. Replaces all prior versions.
 //
-// Copyright (c) 2013-2023, Esoteric Software LLC
+// Spine Runtimes License Agreement
+// Last updated April 5, 2025. Replaces all prior versions.
+//
+// Copyright (c) 2013-2025, Esoteric Software LLC
 //
 // Integration of the Spine Runtimes into software or otherwise creating
 // derivative works of the Spine Runtimes is permitted under the terms and
 // conditions of Section 2 of the Spine Editor License Agreement:
 // http://esotericsoftware.com/spine-editor-license
 //
-// Otherwise, it is permitted to integrate the Spine Runtimes into software or
-// otherwise create derivative works of the Spine Runtimes (collectively,
+// Otherwise, it is permitted to integrate the Spine Runtimes into software
+// or otherwise create derivative works of the Spine Runtimes (collectively,
 // "Products"), provided that each user of the Products must obtain their own
 // Spine Editor license and redistribution of the Products in any form must
 // include this license and copyright notice.
@@ -23,100 +23,78 @@
 // (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
 // BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
-// SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// *****************************************************************************/
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+// THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
+import 'package:ffi/ffi.dart';
 import 'spine_flutter_bindings_generated.dart';
-import 'rtti.dart';
-import 'skeleton.dart';
-import 'mix_blend.dart';
-import 'mix_direction.dart';
+import '../spine_bindings.dart';
+import 'timeline.dart';
 import 'sequence_mode.dart';
 import 'attachment.dart';
-import 'arrays.dart';
+import 'point_attachment.dart';
+import 'region_attachment.dart';
+import 'bounding_box_attachment.dart';
+import 'clipping_attachment.dart';
+import 'mesh_attachment.dart';
+import 'path_attachment.dart';
 
 /// SequenceTimeline wrapper
-class SequenceTimeline implements Finalizable {
-  static late SpineFlutterBindings _bindings;
+class SequenceTimeline extends Timeline {
   final Pointer<spine_sequence_timeline_wrapper> _ptr;
 
-  /// Initialize the bindings for all spine-flutter classes
-  static void init(SpineFlutterBindings bindings) {
-    _bindings = bindings;
-  }
-
-  SequenceTimeline.fromPointer(this._ptr);
+  SequenceTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory SequenceTimeline(int frameCount, int slotIndex, Attachment attachment) {
-    final ptr = _bindings.spine_sequence_timeline_create(frameCount, slotIndex, attachment.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_sequence_timeline_create(frameCount, slotIndex, attachment.nativePtr.cast());
     return SequenceTimeline.fromPointer(ptr);
   }
 
-  Rtti get rtti {
-    final result = _bindings.spine_sequence_timeline_get_rtti(_ptr);
-    return Rtti.fromPointer(result);
-  }
-
-  void apply(Skeleton skeleton, double lastTime, double time, ArrayEvent pEvents, double alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
-    _bindings.spine_sequence_timeline_apply(_ptr, skeleton.nativePtr.cast(), lastTime, time, pEvents.nativePtr.cast(), alpha, blend.value, direction.value, appliedPose);
-  }
-
   void setFrame(int frame, double time, SequenceMode mode, int index, double delay) {
-    _bindings.spine_sequence_timeline_set_frame(_ptr, frame, time, mode.value, index, delay);
+    SpineBindings.bindings.spine_sequence_timeline_set_frame(_ptr, frame, time, mode.value, index, delay);
   }
 
   Attachment get attachment {
-    final result = _bindings.spine_sequence_timeline_get_attachment(_ptr);
-    return Attachment.fromPointer(result);
-  }
-
-  int get frameEntries {
-    final result = _bindings.spine_sequence_timeline_get_frame_entries(_ptr);
-    return result;
-  }
-
-  int get frameCount {
-    final result = _bindings.spine_sequence_timeline_get_frame_count(_ptr);
-    return result;
-  }
-
-  ArrayFloat get frames {
-    final result = _bindings.spine_sequence_timeline_get_frames(_ptr);
-    return ArrayFloat.fromPointer(result);
-  }
-
-  double get duration {
-    final result = _bindings.spine_sequence_timeline_get_duration(_ptr);
-    return result;
-  }
-
-  ArrayPropertyId get propertyIds {
-    final result = _bindings.spine_sequence_timeline_get_property_ids(_ptr);
-    return ArrayPropertyId.fromPointer(result);
+    final result = SpineBindings.bindings.spine_sequence_timeline_get_attachment(_ptr);
+    final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
+    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
+    switch (className) {
+      case 'spine_point_attachment':
+        return PointAttachment.fromPointer(result.cast());
+      case 'spine_region_attachment':
+        return RegionAttachment.fromPointer(result.cast());
+      case 'spine_bounding_box_attachment':
+        return BoundingBoxAttachment.fromPointer(result.cast());
+      case 'spine_clipping_attachment':
+        return ClippingAttachment.fromPointer(result.cast());
+      case 'spine_mesh_attachment':
+        return MeshAttachment.fromPointer(result.cast());
+      case 'spine_path_attachment':
+        return PathAttachment.fromPointer(result.cast());
+      default:
+        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
+    }
   }
 
   int get slotIndex {
-    final result = _bindings.spine_sequence_timeline_get_slot_index(_ptr);
+    final result = SpineBindings.bindings.spine_sequence_timeline_get_slot_index(_ptr);
     return result;
   }
 
   set slotIndex(int value) {
-    _bindings.spine_sequence_timeline_set_slot_index(_ptr, value);
+    SpineBindings.bindings.spine_sequence_timeline_set_slot_index(_ptr, value);
   }
 
-  static Rtti rttiStatic() {
-    final result = _bindings.spine_sequence_timeline_rtti();
-    return Rtti.fromPointer(result);
-  }
-
+  @override
   void dispose() {
-    _bindings.spine_sequence_timeline_dispose(_ptr);
+    SpineBindings.bindings.spine_sequence_timeline_dispose(_ptr);
   }
 }
