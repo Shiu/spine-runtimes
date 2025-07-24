@@ -44,7 +44,7 @@ namespace spine {
 
 		virtual void resetConstrained() = 0;
 
-		virtual bool isPoseEqualToApplied() const = 0;
+		virtual bool isPoseEqualToApplied() = 0;
 
 	protected:
 		virtual void setupPose() = 0;
@@ -115,7 +115,7 @@ namespace spine {
 			_applied = &_constrained;
 		}
 
-		virtual bool isPoseEqualToApplied() const override {
+		virtual bool isPoseEqualToApplied() override {
 			return _applied == &_pose;
 		}
 

@@ -52,9 +52,7 @@ namespace spine {
 
 		virtual void sort(Skeleton &skeleton) = 0;
 
-		virtual bool isSourceActive() {
-			return true;
-		}
+		virtual bool isSourceActive() = 0;
 
 		// Inherited from Update
 		virtual void update(Skeleton &skeleton, Physics physics) override = 0;
@@ -78,6 +76,10 @@ namespace spine {
 
 		virtual D &getData() override {
 			return PosedGeneric<D, P, P>::getData();
+		}
+
+		virtual bool isSourceActive() override {
+			return true;
 		}
 
 	protected:
