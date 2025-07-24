@@ -53,7 +53,7 @@ namespace spine {
 		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
-						   		virtual int getConstraintIndex() const override {
+		virtual int getConstraintIndex() const override {
 			return _constraintIndex;
 		}
 

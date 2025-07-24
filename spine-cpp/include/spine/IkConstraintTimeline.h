@@ -65,6 +65,7 @@ namespace spine {
 		virtual void setConstraintIndex(int inValue) override {
 			_constraintIndex = inValue;
 		}
+
 	private:
 		int _constraintIndex;
 

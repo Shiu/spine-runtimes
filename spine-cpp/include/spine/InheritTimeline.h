@@ -59,7 +59,18 @@ namespace spine {
 		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
+
+		virtual int getBoneIndex() const override {
+			return _boneIndex;
+		}
+
+		void setBoneIndex(int inValue) override {
+			_boneIndex = inValue;
+		}
+
 	private:
+		int _boneIndex;
+
 		static const int ENTRIES = 2;
 		static const int INHERIT = 1;
 	};

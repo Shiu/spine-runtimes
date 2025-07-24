@@ -43,22 +43,15 @@ namespace spine {
 		RTTI_DECL_NOPARENT
 
 	public:
-		BoneTimeline(int boneIndex) : _boneIndex(boneIndex) {
+		BoneTimeline(int boneIndex) {
 		}
 		virtual ~BoneTimeline() {
 		}
 
 		/// The index of the bone in Skeleton::getBones() that will be changed when this timeline is applied.
-		virtual int getBoneIndex() {
-			return _boneIndex;
-		}
+		virtual int getBoneIndex() const = 0;
 
-		virtual void setBoneIndex(int inValue) {
-			_boneIndex = inValue;
-		}
-
-	protected:
-		int _boneIndex;
+		virtual void setBoneIndex(int inValue) = 0;
 	};
 
 	/// Base class for timelines that animate a single bone property.
@@ -75,9 +68,19 @@ namespace spine {
 		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
+		virtual int getBoneIndex() const override {
+			return _boneIndex;
+		}
+
+		virtual void setBoneIndex(int inValue) override {
+			_boneIndex = inValue;
+		}
+
 	protected:
 		/// Applies changes to the pose based on the timeline values.
 		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) = 0;
+
+		int _boneIndex;
 	};
 
 	/// Base class for timelines that animate two bone properties.
@@ -94,9 +97,19 @@ namespace spine {
 		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
+		virtual int getBoneIndex() const override {
+			return _boneIndex;
+		}
+
+		virtual void setBoneIndex(int inValue) override {
+			_boneIndex = inValue;
+		}
+
 	protected:
 		/// Applies changes to the pose based on the timeline values.
 		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) = 0;
+
+		int _boneIndex;
 	};
 }
 
