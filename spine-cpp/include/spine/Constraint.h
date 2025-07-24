@@ -78,10 +78,6 @@ namespace spine {
 			return PosedGeneric<D, P, P>::getData();
 		}
 
-		virtual bool isSourceActive() override {
-			return true;
-		}
-
 	protected:
 		virtual void pose() override {
 			PosedGeneric<D, P, P>::pose();

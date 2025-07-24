@@ -1,5 +1,8 @@
-- spine-c/codegen type extractor should also report typedefs like typedef long long PropertyId; so primitive type to some name, and we need to handle that in the codegen
+- Port C++ SkeletonRenderer and RenderCommands to all runtimes
+    - Will be used to snapshottesting via HeadlessTest, see also tests/
+    - Can go into main package in all core runtimes, except for spine-libgdx, where it must go next to SkeletonSerializer in spine-libgdx-tests
 - Generate language bindings in spine-c/codegen
     - Use CClassOrStruct, CEnum that get generated from spine-cpp-types.json and generate
         - Swift
         - Dart
+- spine-c/codegen type extractor should also report typedefs like typedef long long PropertyId; so primitive type to some name, and we need to handle that in the codegen
