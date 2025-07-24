@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'curve_timeline.dart';
 import 'mix_blend.dart';
@@ -47,36 +47,44 @@ abstract class CurveTimeline1 extends CurveTimeline {
   Pointer get nativePtr => _ptr;
 
   void setFrame(int frame, double time, double value) {
-    SpineBindings.bindings.spine_curve_timeline1_set_frame(_ptr, frame, time, value);
+    SpineBindings.bindings
+        .spine_curve_timeline1_set_frame(_ptr, frame, time, value);
   }
 
   double getCurveValue(double time) {
-    final result = SpineBindings.bindings.spine_curve_timeline1_get_curve_value(_ptr, time);
+    final result = SpineBindings.bindings
+        .spine_curve_timeline1_get_curve_value(_ptr, time);
     return result;
   }
 
-  double getRelativeValue(double time, double alpha, MixBlend blend, double current, double setup) {
-    final result = SpineBindings.bindings.spine_curve_timeline1_get_relative_value(_ptr, time, alpha, blend.value, current, setup);
+  double getRelativeValue(
+      double time, double alpha, MixBlend blend, double current, double setup) {
+    final result = SpineBindings.bindings
+        .spine_curve_timeline1_get_relative_value(
+            _ptr, time, alpha, blend.value, current, setup);
     return result;
   }
 
-  double getScaleValue(double time, double alpha, MixBlend blend, MixDirection direction, double current, double setup) {
-    final result = SpineBindings.bindings.spine_curve_timeline1_get_scale_value(_ptr, time, alpha, blend.value, direction.value, current, setup);
+  double getScaleValue(double time, double alpha, MixBlend blend,
+      MixDirection direction, double current, double setup) {
+    final result = SpineBindings.bindings.spine_curve_timeline1_get_scale_value(
+        _ptr, time, alpha, blend.value, direction.value, current, setup);
     return result;
   }
 
-  double getAbsoluteValue1(double time, double alpha, MixBlend blend, double current, double setup) {
-    final result = SpineBindings.bindings.spine_curve_timeline1_get_absolute_value_1(_ptr, time, alpha, blend.value, current, setup);
+  double getAbsoluteValue(
+      double time, double alpha, MixBlend blend, double current, double setup) {
+    final result = SpineBindings.bindings
+        .spine_curve_timeline1_get_absolute_value_1(
+            _ptr, time, alpha, blend.value, current, setup);
     return result;
   }
 
-  double getAbsoluteValue2(double time, double alpha, MixBlend blend, double current, double setup, double value) {
-    final result = SpineBindings.bindings.spine_curve_timeline1_get_absolute_value_2(_ptr, time, alpha, blend.value, current, setup, value);
+  double getAbsoluteValue2(double time, double alpha, MixBlend blend,
+      double current, double setup, double value) {
+    final result = SpineBindings.bindings
+        .spine_curve_timeline1_get_absolute_value_2(
+            _ptr, time, alpha, blend.value, current, setup, value);
     return result;
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_curve_timeline1_dispose(_ptr);
   }
 }

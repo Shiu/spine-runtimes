@@ -30,38 +30,26 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'update.dart';
+import 'rtti.dart';
 import 'constraint_data.dart';
+import 'physics.dart';
 import 'skeleton.dart';
+import 'update.dart';
 
 /// Constraint wrapper
-abstract class Constraint extends Update {
-  final Pointer<spine_constraint_wrapper> _ptr;
-
-  Constraint.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
-
-  /// Get the native pointer for FFI calls
+abstract class Constraint implements Update {
   @override
-  Pointer get nativePtr => _ptr;
-
-  ConstraintData get data {
-    final result = SpineBindings.bindings.spine_constraint_get_data(_ptr);
-    throw UnsupportedError('Cannot instantiate abstract class ConstraintData from pointer - no concrete subclasses found');
-  }
-
-  void sort(Skeleton skeleton) {
-    SpineBindings.bindings.spine_constraint_sort(_ptr, skeleton.nativePtr.cast());
-  }
-
-  bool get isSourceActive {
-    final result = SpineBindings.bindings.spine_constraint_is_source_active(_ptr);
-    return result;
-  }
-
+  Pointer get nativePtr;
   @override
-  void dispose() {
-    SpineBindings.bindings.spine_constraint_dispose(_ptr);
+  Rtti get rtti;
+  ConstraintData get data;
+  void sort(Skeleton skeleton);
+  bool get isSourceActive;
+  @override
+  void update(Skeleton skeleton, Physics physics);
+  static Rtti rttiStatic() {
+    final result = SpineBindings.bindings.spine_constraint_rtti();
+    return Rtti.fromPointer(result);
   }
 }

@@ -40,8 +40,8 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 
 import 'ffi_proxy.dart';
-import 'init.dart' if (dart.library.html) 'init_web.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_init.dart' if (dart.library.html) 'spine_flutter_init_web.dart';
+import 'spine_flutter.dart';
 import 'raw_image_provider.dart';
 
 export 'spine_widget.dart';
@@ -54,6 +54,10 @@ Future<void> initSpineFlutter({bool useStaticLinkage = false, bool enableMemoryD
   _bindings = SpineFlutterBindings(ffi.dylib);
   _allocator = ffi.allocator;
   if (enableMemoryDebugging) _bindings.spine_enable_debug_extension(true);
+
+  // Initialize the global bindings for generated code
+  initializeSpineFlutter(_bindings);
+
   return;
 }
 

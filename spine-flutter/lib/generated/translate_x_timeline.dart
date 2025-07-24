@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'bone_timeline1.dart';
 
@@ -45,12 +45,8 @@ class TranslateXTimeline extends BoneTimeline1 {
   Pointer get nativePtr => _ptr;
 
   factory TranslateXTimeline(int frameCount, int bezierCount, int boneIndex) {
-    final ptr = SpineBindings.bindings.spine_translate_x_timeline_create(frameCount, bezierCount, boneIndex);
+    final ptr = SpineBindings.bindings
+        .spine_translate_x_timeline_create(frameCount, bezierCount, boneIndex);
     return TranslateXTimeline.fromPointer(ptr);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_translate_x_timeline_dispose(_ptr);
   }
 }

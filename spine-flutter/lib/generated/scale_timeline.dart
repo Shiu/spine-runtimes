@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'bone_timeline2.dart';
 
@@ -45,12 +45,8 @@ class ScaleTimeline extends BoneTimeline2 {
   Pointer get nativePtr => _ptr;
 
   factory ScaleTimeline(int frameCount, int bezierCount, int boneIndex) {
-    final ptr = SpineBindings.bindings.spine_scale_timeline_create(frameCount, bezierCount, boneIndex);
+    final ptr = SpineBindings.bindings
+        .spine_scale_timeline_create(frameCount, bezierCount, boneIndex);
     return ScaleTimeline.fromPointer(ptr);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_scale_timeline_dispose(_ptr);
   }
 }

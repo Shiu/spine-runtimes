@@ -32,7 +32,7 @@
 /// PositionMode enum
 enum PositionMode {
   fixed(0),
-  percent(1);
+  percent(0);
 
   const PositionMode(this.value);
   final int value;

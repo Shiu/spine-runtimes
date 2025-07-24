@@ -63,7 +63,7 @@ Otherwise you can run the example like this:
 2. Clone this repository `git clone https://github.com/esotericsoftware/spine-runtimes`
 3. Run `setup.sh` in the `spine-flutter/` folder. On Windows, you can use [Git Bash](https://gitforwindows.org/) included in Git for Window to run the `setup.sh` Bash script.
 
-You can then open `spine-flutter` in an IDE or editor of your choice that supports Flutter, like [IntelliJ IDEA/Android Studio](https://docs.flutter.dev/get-started/editor?tab=androidstudio) or [Visual Studio Code](https://docs.flutter.dev/get-started/editor?tab=vscode) to inspect and run the example. 
+You can then open `spine-flutter` in an IDE or editor of your choice that supports Flutter, like [IntelliJ IDEA/Android Studio](https://docs.flutter.dev/get-started/editor?tab=androidstudio) or [Visual Studio Code](https://docs.flutter.dev/get-started/editor?tab=vscode) to inspect and run the example.
 
 Alternatively, you can run the example from the [command line](https://docs.flutter.dev/get-started/test-drive?tab=terminal).
 
@@ -72,6 +72,6 @@ If all you modify are the Dart sources of the plugin, then the development setup
 
 If you need to work on the `dart:ffi` bindings for `spine-cpp`, you will also need to install [Emscripten](https://emscripten.org/docs/getting_started/downloads.html).
 
-To generate the bindings based on the `src/spine_flutter.h` header, run `dart run ffigen --config ffigen.yaml`. After the bindings have been generated, you must replace the line `import 'dart:ffi' as ffi;` with `import 'ffi_proxy.dart' as ffi;` in the file `src/spine_flutter_bindings_generated.dart`. Otherwise the bindings will not compile for the web.
+To generate the bindings based on the `src/spine_flutter.h` header, run `dart run ffigen --config ffigen.yaml`. After the bindings have been generated, you must replace the line `import 'dart:ffi' as ffi;` with `import 'ffi_proxy.dart' as ffi;` in the file `src/generated/spine_dart_bindings_generated.dart`. Otherwise the bindings will not compile for the web.
 
-If you made changes to `spine-cpp` or the source files in `src/`, you must run `compile-wasm.sh`. This will compile `spine-cpp` and the bindings for the Web and place updated versions of `libspine_flutter.js` and `libspine_flutter.wasm` in the `lib/assets/` folder. For web builds, the `initSpineFlutterFFI()` function in `lib/init_web.dart` will load these files from the package's asset bundle.
+If you made changes to `spine-cpp` or the source files in `src/`, you must run `compile-wasm.sh`. This will compile `spine-cpp` and the bindings for the Web and place updated versions of `libspine_flutter.js` and `libspine_flutter.wasm` in the `lib/assets/` folder. For web builds, the `initSpineDartFFI()` function in `lib/spine_dart_init_web.dart` will load these files from the package's asset bundle.

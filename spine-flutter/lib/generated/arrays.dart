@@ -31,7 +31,7 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import '../native_array.dart';
 import 'alpha_timeline.dart';
@@ -59,15 +59,20 @@ import 'from_scale_y.dart';
 import 'from_shear_y.dart';
 import 'from_x.dart';
 import 'from_y.dart';
+import 'ik_constraint.dart';
+import 'ik_constraint_data.dart';
 import 'ik_constraint_timeline.dart';
 import 'inherit_timeline.dart';
 import 'mesh_attachment.dart';
 import 'path_attachment.dart';
+import 'path_constraint.dart';
+import 'path_constraint_data.dart';
 import 'path_constraint_mix_timeline.dart';
 import 'path_constraint_position_timeline.dart';
 import 'path_constraint_spacing_timeline.dart';
 import 'physics_constraint.dart';
 import 'physics_constraint_damping_timeline.dart';
+import 'physics_constraint_data.dart';
 import 'physics_constraint_gravity_timeline.dart';
 import 'physics_constraint_inertia_timeline.dart';
 import 'physics_constraint_mass_timeline.dart';
@@ -91,6 +96,8 @@ import 'shear_timeline.dart';
 import 'shear_x_timeline.dart';
 import 'shear_y_timeline.dart';
 import 'skin.dart';
+import 'slider.dart';
+import 'slider_data.dart';
 import 'slider_mix_timeline.dart';
 import 'slider_timeline.dart';
 import 'slot.dart';
@@ -105,13 +112,15 @@ import 'to_shear_y.dart';
 import 'to_x.dart';
 import 'to_y.dart';
 import 'track_entry.dart';
+import 'transform_constraint.dart';
+import 'transform_constraint_data.dart';
 import 'transform_constraint_timeline.dart';
 import 'translate_timeline.dart';
 import 'translate_x_timeline.dart';
 import 'translate_y_timeline.dart';
 import 'update.dart';
 
-/// Array of float elements
+/// ArrayFloat wrapper
 class ArrayFloat extends NativeArray<double> {
   ArrayFloat.fromPointer(Pointer<spine_array_float_wrapper> super.ptr);
 
@@ -125,13 +134,13 @@ class ArrayFloat extends NativeArray<double> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_float_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_float_buffer(nativePtr.cast());
     return buffer.cast<Float>()[index];
   }
-
 }
 
-/// Array of int elements
+/// ArrayInt wrapper
 class ArrayInt extends NativeArray<int> {
   ArrayInt.fromPointer(Pointer<spine_array_int_wrapper> super.ptr);
 
@@ -145,19 +154,21 @@ class ArrayInt extends NativeArray<int> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_int_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_int_buffer(nativePtr.cast());
     return buffer.cast<Int32>()[index];
   }
-
 }
 
-/// Array of unsigned_short elements
+/// ArrayUnsignedShort wrapper
 class ArrayUnsignedShort extends NativeArray<int> {
-  ArrayUnsignedShort.fromPointer(Pointer<spine_array_unsigned_short_wrapper> super.ptr);
+  ArrayUnsignedShort.fromPointer(
+      Pointer<spine_array_unsigned_short_wrapper> super.ptr);
 
   @override
   int get length {
-    return SpineBindings.bindings.spine_array_unsigned_short_size(nativePtr.cast());
+    return SpineBindings.bindings
+        .spine_array_unsigned_short_size(nativePtr.cast());
   }
 
   @override
@@ -165,19 +176,21 @@ class ArrayUnsignedShort extends NativeArray<int> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_unsigned_short_buffer(nativePtr.cast());
+    final buffer = SpineBindings.bindings
+        .spine_array_unsigned_short_buffer(nativePtr.cast());
     return buffer.cast<Uint16>()[index];
   }
-
 }
 
-/// Array of property_id elements
+/// ArrayPropertyId wrapper
 class ArrayPropertyId extends NativeArray<int> {
-  ArrayPropertyId.fromPointer(Pointer<spine_array_property_id_wrapper> super.ptr);
+  ArrayPropertyId.fromPointer(
+      Pointer<spine_array_property_id_wrapper> super.ptr);
 
   @override
   int get length {
-    return SpineBindings.bindings.spine_array_property_id_size(nativePtr.cast());
+    return SpineBindings.bindings
+        .spine_array_property_id_size(nativePtr.cast());
   }
 
   @override
@@ -185,14 +198,14 @@ class ArrayPropertyId extends NativeArray<int> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_property_id_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_property_id_buffer(nativePtr.cast());
     // NOTE: This will not compile due to C API bug - buffer() returns int instead of Pointer
     return buffer.cast<Int64>()[index];
   }
-
 }
 
-/// Array of Animation elements
+/// ArrayAnimation wrapper
 class ArrayAnimation extends NativeArray<Animation> {
   ArrayAnimation.fromPointer(Pointer<spine_array_animation_wrapper> super.ptr);
 
@@ -206,13 +219,13 @@ class ArrayAnimation extends NativeArray<Animation> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_animation_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_animation_buffer(nativePtr.cast());
     return Animation.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of AtlasPage elements
+/// ArrayAtlasPage wrapper
 class ArrayAtlasPage extends NativeArray<AtlasPage> {
   ArrayAtlasPage.fromPointer(Pointer<spine_array_atlas_page_wrapper> super.ptr);
 
@@ -226,19 +239,21 @@ class ArrayAtlasPage extends NativeArray<AtlasPage> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_atlas_page_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_atlas_page_buffer(nativePtr.cast());
     return AtlasPage.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of AtlasRegion elements
+/// ArrayAtlasRegion wrapper
 class ArrayAtlasRegion extends NativeArray<AtlasRegion> {
-  ArrayAtlasRegion.fromPointer(Pointer<spine_array_atlas_region_wrapper> super.ptr);
+  ArrayAtlasRegion.fromPointer(
+      Pointer<spine_array_atlas_region_wrapper> super.ptr);
 
   @override
   int get length {
-    return SpineBindings.bindings.spine_array_atlas_region_size(nativePtr.cast());
+    return SpineBindings.bindings
+        .spine_array_atlas_region_size(nativePtr.cast());
   }
 
   @override
@@ -246,15 +261,16 @@ class ArrayAtlasRegion extends NativeArray<AtlasRegion> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_atlas_region_buffer(nativePtr.cast());
+    final buffer = SpineBindings.bindings
+        .spine_array_atlas_region_buffer(nativePtr.cast());
     return AtlasRegion.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of Attachment elements
+/// ArrayAttachment wrapper
 class ArrayAttachment extends NativeArray<Attachment> {
-  ArrayAttachment.fromPointer(Pointer<spine_array_attachment_wrapper> super.ptr);
+  ArrayAttachment.fromPointer(
+      Pointer<spine_array_attachment_wrapper> super.ptr);
 
   @override
   int get length {
@@ -266,14 +282,15 @@ class ArrayAttachment extends NativeArray<Attachment> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_attachment_buffer(nativePtr.cast());
-    final rtti = SpineBindings.bindings.spine_attachment_get_rtti(buffer[index]);
-    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
+    final buffer =
+        SpineBindings.bindings.spine_array_attachment_buffer(nativePtr.cast());
+    final rtti =
+        SpineBindings.bindings.spine_attachment_get_rtti(buffer[index]);
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
     switch (className) {
-      case 'spine_point_attachment':
-        return PointAttachment.fromPointer(buffer[index].cast());
-      case 'spine_region_attachment':
-        return RegionAttachment.fromPointer(buffer[index].cast());
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(buffer[index].cast());
       case 'spine_clipping_attachment':
@@ -282,14 +299,18 @@ class ArrayAttachment extends NativeArray<Attachment> {
         return MeshAttachment.fromPointer(buffer[index].cast());
       case 'spine_path_attachment':
         return PathAttachment.fromPointer(buffer[index].cast());
+      case 'spine_point_attachment':
+        return PointAttachment.fromPointer(buffer[index].cast());
+      case 'spine_region_attachment':
+        return RegionAttachment.fromPointer(buffer[index].cast());
       default:
-        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class Attachment');
     }
   }
-
 }
 
-/// Array of Bone elements
+/// ArrayBone wrapper
 class ArrayBone extends NativeArray<Bone> {
   ArrayBone.fromPointer(Pointer<spine_array_bone_wrapper> super.ptr);
 
@@ -303,13 +324,13 @@ class ArrayBone extends NativeArray<Bone> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_bone_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_bone_buffer(nativePtr.cast());
     return Bone.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of BoneData elements
+/// ArrayBoneData wrapper
 class ArrayBoneData extends NativeArray<BoneData> {
   ArrayBoneData.fromPointer(Pointer<spine_array_bone_data_wrapper> super.ptr);
 
@@ -323,13 +344,13 @@ class ArrayBoneData extends NativeArray<BoneData> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_bone_data_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_bone_data_buffer(nativePtr.cast());
     return BoneData.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of BonePose elements
+/// ArrayBonePose wrapper
 class ArrayBonePose extends NativeArray<BonePose> {
   ArrayBonePose.fromPointer(Pointer<spine_array_bone_pose_wrapper> super.ptr);
 
@@ -343,19 +364,21 @@ class ArrayBonePose extends NativeArray<BonePose> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_bone_pose_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_bone_pose_buffer(nativePtr.cast());
     return BonePose.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of BoundingBoxAttachment elements
+/// ArrayBoundingBoxAttachment wrapper
 class ArrayBoundingBoxAttachment extends NativeArray<BoundingBoxAttachment> {
-  ArrayBoundingBoxAttachment.fromPointer(Pointer<spine_array_bounding_box_attachment_wrapper> super.ptr);
+  ArrayBoundingBoxAttachment.fromPointer(
+      Pointer<spine_array_bounding_box_attachment_wrapper> super.ptr);
 
   @override
   int get length {
-    return SpineBindings.bindings.spine_array_bounding_box_attachment_size(nativePtr.cast());
+    return SpineBindings.bindings
+        .spine_array_bounding_box_attachment_size(nativePtr.cast());
   }
 
   @override
@@ -363,15 +386,16 @@ class ArrayBoundingBoxAttachment extends NativeArray<BoundingBoxAttachment> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_bounding_box_attachment_buffer(nativePtr.cast());
+    final buffer = SpineBindings.bindings
+        .spine_array_bounding_box_attachment_buffer(nativePtr.cast());
     return BoundingBoxAttachment.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of Constraint elements
+/// ArrayConstraint wrapper
 class ArrayConstraint extends NativeArray<Constraint> {
-  ArrayConstraint.fromPointer(Pointer<spine_array_constraint_wrapper> super.ptr);
+  ArrayConstraint.fromPointer(
+      Pointer<spine_array_constraint_wrapper> super.ptr);
 
   @override
   int get length {
@@ -383,19 +407,41 @@ class ArrayConstraint extends NativeArray<Constraint> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_constraint_buffer(nativePtr.cast());
-    throw UnsupportedError('Cannot instantiate abstract class Constraint from pointer - no concrete subclasses found');
+    final buffer =
+        SpineBindings.bindings.spine_array_constraint_buffer(nativePtr.cast());
+    final rtti =
+        SpineBindings.bindings.spine_constraint_get_rtti(buffer[index]);
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
+    switch (className) {
+      case 'spine_ik_constraint':
+        return IkConstraint.fromPointer(buffer[index].cast());
+      case 'spine_path_constraint':
+        return PathConstraint.fromPointer(buffer[index].cast());
+      case 'spine_physics_constraint':
+        return PhysicsConstraint.fromPointer(buffer[index].cast());
+      case 'spine_slider':
+        return Slider.fromPointer(buffer[index].cast());
+      case 'spine_transform_constraint':
+        return TransformConstraint.fromPointer(buffer[index].cast());
+      default:
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class Constraint');
+    }
   }
-
 }
 
-/// Array of ConstraintData elements
+/// ArrayConstraintData wrapper
 class ArrayConstraintData extends NativeArray<ConstraintData> {
-  ArrayConstraintData.fromPointer(Pointer<spine_array_constraint_data_wrapper> super.ptr);
+  ArrayConstraintData.fromPointer(
+      Pointer<spine_array_constraint_data_wrapper> super.ptr);
 
   @override
   int get length {
-    return SpineBindings.bindings.spine_array_constraint_data_size(nativePtr.cast());
+    return SpineBindings.bindings
+        .spine_array_constraint_data_size(nativePtr.cast());
   }
 
   @override
@@ -403,13 +449,33 @@ class ArrayConstraintData extends NativeArray<ConstraintData> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_constraint_data_buffer(nativePtr.cast());
-    throw UnsupportedError('Cannot instantiate abstract class ConstraintData from pointer - no concrete subclasses found');
+    final buffer = SpineBindings.bindings
+        .spine_array_constraint_data_buffer(nativePtr.cast());
+    final rtti =
+        SpineBindings.bindings.spine_constraint_data_get_rtti(buffer[index]);
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
+    switch (className) {
+      case 'spine_ik_constraint_data':
+        return IkConstraintData.fromPointer(buffer[index].cast());
+      case 'spine_path_constraint_data':
+        return PathConstraintData.fromPointer(buffer[index].cast());
+      case 'spine_physics_constraint_data':
+        return PhysicsConstraintData.fromPointer(buffer[index].cast());
+      case 'spine_slider_data':
+        return SliderData.fromPointer(buffer[index].cast());
+      case 'spine_transform_constraint_data':
+        return TransformConstraintData.fromPointer(buffer[index].cast());
+      default:
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class ConstraintData');
+    }
   }
-
 }
 
-/// Array of Event elements
+/// ArrayEvent wrapper
 class ArrayEvent extends NativeArray<Event> {
   ArrayEvent.fromPointer(Pointer<spine_array_event_wrapper> super.ptr);
 
@@ -423,13 +489,13 @@ class ArrayEvent extends NativeArray<Event> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_event_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_event_buffer(nativePtr.cast());
     return Event.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of EventData elements
+/// ArrayEventData wrapper
 class ArrayEventData extends NativeArray<EventData> {
   ArrayEventData.fromPointer(Pointer<spine_array_event_data_wrapper> super.ptr);
 
@@ -443,19 +509,21 @@ class ArrayEventData extends NativeArray<EventData> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_event_data_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_event_data_buffer(nativePtr.cast());
     return EventData.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of FromProperty elements
+/// ArrayFromProperty wrapper
 class ArrayFromProperty extends NativeArray<FromProperty> {
-  ArrayFromProperty.fromPointer(Pointer<spine_array_from_property_wrapper> super.ptr);
+  ArrayFromProperty.fromPointer(
+      Pointer<spine_array_from_property_wrapper> super.ptr);
 
   @override
   int get length {
-    return SpineBindings.bindings.spine_array_from_property_size(nativePtr.cast());
+    return SpineBindings.bindings
+        .spine_array_from_property_size(nativePtr.cast());
   }
 
   @override
@@ -463,9 +531,14 @@ class ArrayFromProperty extends NativeArray<FromProperty> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_from_property_buffer(nativePtr.cast());
-    final rtti = SpineBindings.bindings.spine_from_property_get_rtti(buffer[index]);
-    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
+    final buffer = SpineBindings.bindings
+        .spine_array_from_property_buffer(nativePtr.cast());
+    final rtti =
+        SpineBindings.bindings.spine_from_property_get_rtti(buffer[index]);
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
     switch (className) {
       case 'spine_from_rotate':
         return FromRotate.fromPointer(buffer[index].cast());
@@ -480,19 +553,21 @@ class ArrayFromProperty extends NativeArray<FromProperty> {
       case 'spine_from_y':
         return FromY.fromPointer(buffer[index].cast());
       default:
-        throw UnsupportedError('Unknown concrete type: $className for abstract class FromProperty');
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class FromProperty');
     }
   }
-
 }
 
-/// Array of PhysicsConstraint elements
+/// ArrayPhysicsConstraint wrapper
 class ArrayPhysicsConstraint extends NativeArray<PhysicsConstraint> {
-  ArrayPhysicsConstraint.fromPointer(Pointer<spine_array_physics_constraint_wrapper> super.ptr);
+  ArrayPhysicsConstraint.fromPointer(
+      Pointer<spine_array_physics_constraint_wrapper> super.ptr);
 
   @override
   int get length {
-    return SpineBindings.bindings.spine_array_physics_constraint_size(nativePtr.cast());
+    return SpineBindings.bindings
+        .spine_array_physics_constraint_size(nativePtr.cast());
   }
 
   @override
@@ -500,13 +575,13 @@ class ArrayPhysicsConstraint extends NativeArray<PhysicsConstraint> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_physics_constraint_buffer(nativePtr.cast());
+    final buffer = SpineBindings.bindings
+        .spine_array_physics_constraint_buffer(nativePtr.cast());
     return PhysicsConstraint.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of Polygon elements
+/// ArrayPolygon wrapper
 class ArrayPolygon extends NativeArray<Polygon> {
   ArrayPolygon.fromPointer(Pointer<spine_array_polygon_wrapper> super.ptr);
 
@@ -520,13 +595,13 @@ class ArrayPolygon extends NativeArray<Polygon> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_polygon_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_polygon_buffer(nativePtr.cast());
     return Polygon.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of Skin elements
+/// ArraySkin wrapper
 class ArraySkin extends NativeArray<Skin> {
   ArraySkin.fromPointer(Pointer<spine_array_skin_wrapper> super.ptr);
 
@@ -540,13 +615,13 @@ class ArraySkin extends NativeArray<Skin> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_skin_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_skin_buffer(nativePtr.cast());
     return Skin.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of Slot elements
+/// ArraySlot wrapper
 class ArraySlot extends NativeArray<Slot> {
   ArraySlot.fromPointer(Pointer<spine_array_slot_wrapper> super.ptr);
 
@@ -560,13 +635,13 @@ class ArraySlot extends NativeArray<Slot> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_slot_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_slot_buffer(nativePtr.cast());
     return Slot.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of SlotData elements
+/// ArraySlotData wrapper
 class ArraySlotData extends NativeArray<SlotData> {
   ArraySlotData.fromPointer(Pointer<spine_array_slot_data_wrapper> super.ptr);
 
@@ -580,19 +655,21 @@ class ArraySlotData extends NativeArray<SlotData> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_slot_data_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_slot_data_buffer(nativePtr.cast());
     return SlotData.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of TextureRegion elements
+/// ArrayTextureRegion wrapper
 class ArrayTextureRegion extends NativeArray<TextureRegion> {
-  ArrayTextureRegion.fromPointer(Pointer<spine_array_texture_region_wrapper> super.ptr);
+  ArrayTextureRegion.fromPointer(
+      Pointer<spine_array_texture_region_wrapper> super.ptr);
 
   @override
   int get length {
-    return SpineBindings.bindings.spine_array_texture_region_size(nativePtr.cast());
+    return SpineBindings.bindings
+        .spine_array_texture_region_size(nativePtr.cast());
   }
 
   @override
@@ -600,13 +677,13 @@ class ArrayTextureRegion extends NativeArray<TextureRegion> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_texture_region_buffer(nativePtr.cast());
+    final buffer = SpineBindings.bindings
+        .spine_array_texture_region_buffer(nativePtr.cast());
     return TextureRegion.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of Timeline elements
+/// ArrayTimeline wrapper
 class ArrayTimeline extends NativeArray<Timeline> {
   ArrayTimeline.fromPointer(Pointer<spine_array_timeline_wrapper> super.ptr);
 
@@ -620,62 +697,54 @@ class ArrayTimeline extends NativeArray<Timeline> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_timeline_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_timeline_buffer(nativePtr.cast());
     final rtti = SpineBindings.bindings.spine_timeline_get_rtti(buffer[index]);
-    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
     switch (className) {
-      case 'spine_attachment_timeline':
-        return AttachmentTimeline.fromPointer(buffer[index].cast());
       case 'spine_alpha_timeline':
         return AlphaTimeline.fromPointer(buffer[index].cast());
-      case 'spine_rotate_timeline':
-        return RotateTimeline.fromPointer(buffer[index].cast());
-      case 'spine_scale_x_timeline':
-        return ScaleXTimeline.fromPointer(buffer[index].cast());
-      case 'spine_scale_y_timeline':
-        return ScaleYTimeline.fromPointer(buffer[index].cast());
-      case 'spine_shear_x_timeline':
-        return ShearXTimeline.fromPointer(buffer[index].cast());
-      case 'spine_shear_y_timeline':
-        return ShearYTimeline.fromPointer(buffer[index].cast());
-      case 'spine_translate_x_timeline':
-        return TranslateXTimeline.fromPointer(buffer[index].cast());
-      case 'spine_translate_y_timeline':
-        return TranslateYTimeline.fromPointer(buffer[index].cast());
+      case 'spine_attachment_timeline':
+        return AttachmentTimeline.fromPointer(buffer[index].cast());
+      case 'spine_deform_timeline':
+        return DeformTimeline.fromPointer(buffer[index].cast());
+      case 'spine_draw_order_timeline':
+        return DrawOrderTimeline.fromPointer(buffer[index].cast());
+      case 'spine_event_timeline':
+        return EventTimeline.fromPointer(buffer[index].cast());
+      case 'spine_ik_constraint_timeline':
+        return IkConstraintTimeline.fromPointer(buffer[index].cast());
+      case 'spine_inherit_timeline':
+        return InheritTimeline.fromPointer(buffer[index].cast());
+      case 'spine_path_constraint_mix_timeline':
+        return PathConstraintMixTimeline.fromPointer(buffer[index].cast());
       case 'spine_path_constraint_position_timeline':
         return PathConstraintPositionTimeline.fromPointer(buffer[index].cast());
       case 'spine_path_constraint_spacing_timeline':
         return PathConstraintSpacingTimeline.fromPointer(buffer[index].cast());
-      case 'spine_slider_mix_timeline':
-        return SliderMixTimeline.fromPointer(buffer[index].cast());
-      case 'spine_slider_timeline':
-        return SliderTimeline.fromPointer(buffer[index].cast());
       case 'spine_physics_constraint_damping_timeline':
-        return PhysicsConstraintDampingTimeline.fromPointer(buffer[index].cast());
+        return PhysicsConstraintDampingTimeline.fromPointer(
+            buffer[index].cast());
       case 'spine_physics_constraint_gravity_timeline':
-        return PhysicsConstraintGravityTimeline.fromPointer(buffer[index].cast());
+        return PhysicsConstraintGravityTimeline.fromPointer(
+            buffer[index].cast());
       case 'spine_physics_constraint_inertia_timeline':
-        return PhysicsConstraintInertiaTimeline.fromPointer(buffer[index].cast());
+        return PhysicsConstraintInertiaTimeline.fromPointer(
+            buffer[index].cast());
       case 'spine_physics_constraint_mass_timeline':
         return PhysicsConstraintMassTimeline.fromPointer(buffer[index].cast());
       case 'spine_physics_constraint_mix_timeline':
         return PhysicsConstraintMixTimeline.fromPointer(buffer[index].cast());
+      case 'spine_physics_constraint_reset_timeline':
+        return PhysicsConstraintResetTimeline.fromPointer(buffer[index].cast());
       case 'spine_physics_constraint_strength_timeline':
-        return PhysicsConstraintStrengthTimeline.fromPointer(buffer[index].cast());
+        return PhysicsConstraintStrengthTimeline.fromPointer(
+            buffer[index].cast());
       case 'spine_physics_constraint_wind_timeline':
         return PhysicsConstraintWindTimeline.fromPointer(buffer[index].cast());
-      case 'spine_scale_timeline':
-        return ScaleTimeline.fromPointer(buffer[index].cast());
-      case 'spine_shear_timeline':
-        return ShearTimeline.fromPointer(buffer[index].cast());
-      case 'spine_translate_timeline':
-        return TranslateTimeline.fromPointer(buffer[index].cast());
-      case 'spine_ik_constraint_timeline':
-        return IkConstraintTimeline.fromPointer(buffer[index].cast());
-      case 'spine_path_constraint_mix_timeline':
-        return PathConstraintMixTimeline.fromPointer(buffer[index].cast());
-      case 'spine_deform_timeline':
-        return DeformTimeline.fromPointer(buffer[index].cast());
       case 'spine_rgb2_timeline':
         return Rgb2Timeline.fromPointer(buffer[index].cast());
       case 'spine_rgba2_timeline':
@@ -684,32 +753,50 @@ class ArrayTimeline extends NativeArray<Timeline> {
         return RgbaTimeline.fromPointer(buffer[index].cast());
       case 'spine_rgb_timeline':
         return RgbTimeline.fromPointer(buffer[index].cast());
-      case 'spine_transform_constraint_timeline':
-        return TransformConstraintTimeline.fromPointer(buffer[index].cast());
-      case 'spine_draw_order_timeline':
-        return DrawOrderTimeline.fromPointer(buffer[index].cast());
-      case 'spine_event_timeline':
-        return EventTimeline.fromPointer(buffer[index].cast());
-      case 'spine_inherit_timeline':
-        return InheritTimeline.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint_reset_timeline':
-        return PhysicsConstraintResetTimeline.fromPointer(buffer[index].cast());
+      case 'spine_rotate_timeline':
+        return RotateTimeline.fromPointer(buffer[index].cast());
+      case 'spine_scale_timeline':
+        return ScaleTimeline.fromPointer(buffer[index].cast());
+      case 'spine_scale_x_timeline':
+        return ScaleXTimeline.fromPointer(buffer[index].cast());
+      case 'spine_scale_y_timeline':
+        return ScaleYTimeline.fromPointer(buffer[index].cast());
       case 'spine_sequence_timeline':
         return SequenceTimeline.fromPointer(buffer[index].cast());
+      case 'spine_shear_timeline':
+        return ShearTimeline.fromPointer(buffer[index].cast());
+      case 'spine_shear_x_timeline':
+        return ShearXTimeline.fromPointer(buffer[index].cast());
+      case 'spine_shear_y_timeline':
+        return ShearYTimeline.fromPointer(buffer[index].cast());
+      case 'spine_slider_mix_timeline':
+        return SliderMixTimeline.fromPointer(buffer[index].cast());
+      case 'spine_slider_timeline':
+        return SliderTimeline.fromPointer(buffer[index].cast());
+      case 'spine_transform_constraint_timeline':
+        return TransformConstraintTimeline.fromPointer(buffer[index].cast());
+      case 'spine_translate_timeline':
+        return TranslateTimeline.fromPointer(buffer[index].cast());
+      case 'spine_translate_x_timeline':
+        return TranslateXTimeline.fromPointer(buffer[index].cast());
+      case 'spine_translate_y_timeline':
+        return TranslateYTimeline.fromPointer(buffer[index].cast());
       default:
-        throw UnsupportedError('Unknown concrete type: $className for abstract class Timeline');
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class Timeline');
     }
   }
-
 }
 
-/// Array of ToProperty elements
+/// ArrayToProperty wrapper
 class ArrayToProperty extends NativeArray<ToProperty> {
-  ArrayToProperty.fromPointer(Pointer<spine_array_to_property_wrapper> super.ptr);
+  ArrayToProperty.fromPointer(
+      Pointer<spine_array_to_property_wrapper> super.ptr);
 
   @override
   int get length {
-    return SpineBindings.bindings.spine_array_to_property_size(nativePtr.cast());
+    return SpineBindings.bindings
+        .spine_array_to_property_size(nativePtr.cast());
   }
 
   @override
@@ -717,9 +804,14 @@ class ArrayToProperty extends NativeArray<ToProperty> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_to_property_buffer(nativePtr.cast());
-    final rtti = SpineBindings.bindings.spine_to_property_get_rtti(buffer[index]);
-    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
+    final buffer =
+        SpineBindings.bindings.spine_array_to_property_buffer(nativePtr.cast());
+    final rtti =
+        SpineBindings.bindings.spine_to_property_get_rtti(buffer[index]);
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
     switch (className) {
       case 'spine_to_rotate':
         return ToRotate.fromPointer(buffer[index].cast());
@@ -734,19 +826,21 @@ class ArrayToProperty extends NativeArray<ToProperty> {
       case 'spine_to_y':
         return ToY.fromPointer(buffer[index].cast());
       default:
-        throw UnsupportedError('Unknown concrete type: $className for abstract class ToProperty');
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class ToProperty');
     }
   }
-
 }
 
-/// Array of TrackEntry elements
+/// ArrayTrackEntry wrapper
 class ArrayTrackEntry extends NativeArray<TrackEntry> {
-  ArrayTrackEntry.fromPointer(Pointer<spine_array_track_entry_wrapper> super.ptr);
+  ArrayTrackEntry.fromPointer(
+      Pointer<spine_array_track_entry_wrapper> super.ptr);
 
   @override
   int get length {
-    return SpineBindings.bindings.spine_array_track_entry_size(nativePtr.cast());
+    return SpineBindings.bindings
+        .spine_array_track_entry_size(nativePtr.cast());
   }
 
   @override
@@ -754,13 +848,13 @@ class ArrayTrackEntry extends NativeArray<TrackEntry> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_track_entry_buffer(nativePtr.cast());
+    final buffer =
+        SpineBindings.bindings.spine_array_track_entry_buffer(nativePtr.cast());
     return TrackEntry.fromPointer(buffer[index]);
   }
-
 }
 
-/// Array of Update elements
+/// ArrayUpdate wrapper
 class ArrayUpdate extends NativeArray<Update> {
   ArrayUpdate.fromPointer(Pointer<spine_array_update_wrapper> super.ptr);
 
@@ -774,8 +868,31 @@ class ArrayUpdate extends NativeArray<Update> {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
-    final buffer = SpineBindings.bindings.spine_array_update_buffer(nativePtr.cast());
-    throw UnsupportedError('Cannot instantiate abstract class Update from pointer - no concrete subclasses found');
+    final buffer =
+        SpineBindings.bindings.spine_array_update_buffer(nativePtr.cast());
+    final rtti = SpineBindings.bindings.spine_update_get_rtti(buffer[index]);
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
+    switch (className) {
+      case 'spine_bone':
+        return Bone.fromPointer(buffer[index].cast());
+      case 'spine_bone_pose':
+        return BonePose.fromPointer(buffer[index].cast());
+      case 'spine_ik_constraint':
+        return IkConstraint.fromPointer(buffer[index].cast());
+      case 'spine_path_constraint':
+        return PathConstraint.fromPointer(buffer[index].cast());
+      case 'spine_physics_constraint':
+        return PhysicsConstraint.fromPointer(buffer[index].cast());
+      case 'spine_slider':
+        return Slider.fromPointer(buffer[index].cast());
+      case 'spine_transform_constraint':
+        return TransformConstraint.fromPointer(buffer[index].cast());
+      default:
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class Update');
+    }
   }
-
 }

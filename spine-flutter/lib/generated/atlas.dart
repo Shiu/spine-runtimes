@@ -31,10 +31,10 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'atlas_region.dart';
 import 'arrays.dart';
+import 'atlas_region.dart';
 
 /// Atlas wrapper
 class Atlas implements Finalizable {
@@ -50,7 +50,8 @@ class Atlas implements Finalizable {
   }
 
   AtlasRegion findRegion(String name) {
-    final result = SpineBindings.bindings.spine_atlas_find_region(_ptr, name.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings
+        .spine_atlas_find_region(_ptr, name.toNativeUtf8().cast<Char>());
     return AtlasRegion.fromPointer(result);
   }
 
@@ -63,5 +64,4 @@ class Atlas implements Finalizable {
     final result = SpineBindings.bindings.spine_atlas_get_regions(_ptr);
     return ArrayAtlasRegion.fromPointer(result);
   }
-
 }

@@ -30,40 +30,47 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
+import 'constraint_timeline.dart';
 import 'curve_timeline.dart';
 
 /// TransformConstraintTimeline wrapper
-class TransformConstraintTimeline extends CurveTimeline {
+class TransformConstraintTimeline extends CurveTimeline
+    implements ConstraintTimeline {
   final Pointer<spine_transform_constraint_timeline_wrapper> _ptr;
 
-  TransformConstraintTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  TransformConstraintTimeline.fromPointer(this._ptr)
+      : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
   @override
   Pointer get nativePtr => _ptr;
 
-  factory TransformConstraintTimeline(int frameCount, int bezierCount, int transformConstraintIndex) {
-    final ptr = SpineBindings.bindings.spine_transform_constraint_timeline_create(frameCount, bezierCount, transformConstraintIndex);
+  factory TransformConstraintTimeline(
+      int frameCount, int bezierCount, int transformConstraintIndex) {
+    final ptr = SpineBindings.bindings
+        .spine_transform_constraint_timeline_create(
+            frameCount, bezierCount, transformConstraintIndex);
     return TransformConstraintTimeline.fromPointer(ptr);
   }
 
-  void setFrame(int frame, double time, double mixRotate, double mixX, double mixY, double mixScaleX, double mixScaleY, double mixShearY) {
-    SpineBindings.bindings.spine_transform_constraint_timeline_set_frame(_ptr, frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
-  }
-
-  int get constraintIndex {
-    final result = SpineBindings.bindings.spine_transform_constraint_timeline_get_constraint_index(_ptr);
-    return result;
-  }
-
-  set constraintIndex(int value) {
-    SpineBindings.bindings.spine_transform_constraint_timeline_set_constraint_index(_ptr, value);
+  void setFrame(int frame, double time, double mixRotate, double mixX,
+      double mixY, double mixScaleX, double mixScaleY, double mixShearY) {
+    SpineBindings.bindings.spine_transform_constraint_timeline_set_frame(_ptr,
+        frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY);
   }
 
   @override
-  void dispose() {
-    SpineBindings.bindings.spine_transform_constraint_timeline_dispose(_ptr);
+  int get constraintIndex {
+    final result = SpineBindings.bindings
+        .spine_transform_constraint_timeline_get_constraint_index(_ptr);
+    return result;
+  }
+
+  @override
+  set constraintIndex(int value) {
+    SpineBindings.bindings
+        .spine_transform_constraint_timeline_set_constraint_index(_ptr, value);
   }
 }

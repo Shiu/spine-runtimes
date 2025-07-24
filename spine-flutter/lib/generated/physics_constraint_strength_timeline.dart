@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'physics_constraint_timeline.dart';
 
@@ -38,19 +38,18 @@ import 'physics_constraint_timeline.dart';
 class PhysicsConstraintStrengthTimeline extends PhysicsConstraintTimeline {
   final Pointer<spine_physics_constraint_strength_timeline_wrapper> _ptr;
 
-  PhysicsConstraintStrengthTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  PhysicsConstraintStrengthTimeline.fromPointer(this._ptr)
+      : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
   @override
   Pointer get nativePtr => _ptr;
 
-  factory PhysicsConstraintStrengthTimeline(int frameCount, int bezierCount, int physicsConstraintIndex) {
-    final ptr = SpineBindings.bindings.spine_physics_constraint_strength_timeline_create(frameCount, bezierCount, physicsConstraintIndex);
+  factory PhysicsConstraintStrengthTimeline(
+      int frameCount, int bezierCount, int physicsConstraintIndex) {
+    final ptr = SpineBindings.bindings
+        .spine_physics_constraint_strength_timeline_create(
+            frameCount, bezierCount, physicsConstraintIndex);
     return PhysicsConstraintStrengthTimeline.fromPointer(ptr);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_physics_constraint_strength_timeline_dispose(_ptr);
   }
 }

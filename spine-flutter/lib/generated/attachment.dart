@@ -31,15 +31,15 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
-import 'point_attachment.dart';
-import 'region_attachment.dart';
 import 'bounding_box_attachment.dart';
 import 'clipping_attachment.dart';
 import 'mesh_attachment.dart';
 import 'path_attachment.dart';
+import 'point_attachment.dart';
+import 'region_attachment.dart';
 
 /// Attachment wrapper
 abstract class Attachment implements Finalizable {
@@ -63,12 +63,11 @@ abstract class Attachment implements Finalizable {
   Attachment copy() {
     final result = SpineBindings.bindings.spine_attachment_copy(_ptr);
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
-    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
     switch (className) {
-      case 'spine_point_attachment':
-        return PointAttachment.fromPointer(result.cast());
-      case 'spine_region_attachment':
-        return RegionAttachment.fromPointer(result.cast());
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
       case 'spine_clipping_attachment':
@@ -77,8 +76,13 @@ abstract class Attachment implements Finalizable {
         return MeshAttachment.fromPointer(result.cast());
       case 'spine_path_attachment':
         return PathAttachment.fromPointer(result.cast());
+      case 'spine_point_attachment':
+        return PointAttachment.fromPointer(result.cast());
+      case 'spine_region_attachment':
+        return RegionAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class Attachment');
     }
   }
 
@@ -98,9 +102,5 @@ abstract class Attachment implements Finalizable {
   static Rtti rttiStatic() {
     final result = SpineBindings.bindings.spine_attachment_rtti();
     return Rtti.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_attachment_dispose(_ptr);
   }
 }

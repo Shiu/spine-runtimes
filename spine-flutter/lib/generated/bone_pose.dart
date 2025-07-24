@@ -30,15 +30,16 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
 import 'bone_local.dart';
-import 'skeleton.dart';
 import 'physics.dart';
+import 'skeleton.dart';
+import 'update.dart';
 
 /// BonePose wrapper
-class BonePose extends BoneLocal {
+class BonePose extends BoneLocal implements Update {
   final Pointer<spine_bone_pose_wrapper> _ptr;
 
   BonePose.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
@@ -52,29 +53,36 @@ class BonePose extends BoneLocal {
     return BonePose.fromPointer(ptr);
   }
 
+  @override
   Rtti get rtti {
     final result = SpineBindings.bindings.spine_bone_pose_get_rtti(_ptr);
     return Rtti.fromPointer(result);
   }
 
+  @override
   void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings.spine_bone_pose_update(_ptr, skeleton.nativePtr.cast(), physics.value);
+    SpineBindings.bindings
+        .spine_bone_pose_update(_ptr, skeleton.nativePtr.cast(), physics.value);
   }
 
   void updateWorldTransform(Skeleton skeleton) {
-    SpineBindings.bindings.spine_bone_pose_update_world_transform(_ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings.spine_bone_pose_update_world_transform(
+        _ptr, skeleton.nativePtr.cast());
   }
 
   void updateLocalTransform(Skeleton skeleton) {
-    SpineBindings.bindings.spine_bone_pose_update_local_transform(_ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings.spine_bone_pose_update_local_transform(
+        _ptr, skeleton.nativePtr.cast());
   }
 
   void validateLocalTransform(Skeleton skeleton) {
-    SpineBindings.bindings.spine_bone_pose_validate_local_transform(_ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings.spine_bone_pose_validate_local_transform(
+        _ptr, skeleton.nativePtr.cast());
   }
 
   void modifyLocal(Skeleton skeleton) {
-    SpineBindings.bindings.spine_bone_pose_modify_local(_ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_bone_pose_modify_local(_ptr, skeleton.nativePtr.cast());
   }
 
   void modifyWorld(int update) {
@@ -140,32 +148,38 @@ class BonePose extends BoneLocal {
   }
 
   double get worldRotationX {
-    final result = SpineBindings.bindings.spine_bone_pose_get_world_rotation_x(_ptr);
+    final result =
+        SpineBindings.bindings.spine_bone_pose_get_world_rotation_x(_ptr);
     return result;
   }
 
   double get worldRotationY {
-    final result = SpineBindings.bindings.spine_bone_pose_get_world_rotation_y(_ptr);
+    final result =
+        SpineBindings.bindings.spine_bone_pose_get_world_rotation_y(_ptr);
     return result;
   }
 
   double get worldScaleX {
-    final result = SpineBindings.bindings.spine_bone_pose_get_world_scale_x(_ptr);
+    final result =
+        SpineBindings.bindings.spine_bone_pose_get_world_scale_x(_ptr);
     return result;
   }
 
   double get worldScaleY {
-    final result = SpineBindings.bindings.spine_bone_pose_get_world_scale_y(_ptr);
+    final result =
+        SpineBindings.bindings.spine_bone_pose_get_world_scale_y(_ptr);
     return result;
   }
 
   double worldToLocalRotation(double worldRotation) {
-    final result = SpineBindings.bindings.spine_bone_pose_world_to_local_rotation(_ptr, worldRotation);
+    final result = SpineBindings.bindings
+        .spine_bone_pose_world_to_local_rotation(_ptr, worldRotation);
     return result;
   }
 
   double localToWorldRotation(double localRotation) {
-    final result = SpineBindings.bindings.spine_bone_pose_local_to_world_rotation(_ptr, localRotation);
+    final result = SpineBindings.bindings
+        .spine_bone_pose_local_to_world_rotation(_ptr, localRotation);
     return result;
   }
 
@@ -176,10 +190,5 @@ class BonePose extends BoneLocal {
   static Rtti rttiStatic() {
     final result = SpineBindings.bindings.spine_bone_pose_rtti();
     return Rtti.fromPointer(result);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_bone_pose_dispose(_ptr);
   }
 }

@@ -30,32 +30,11 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
-import '../spine_bindings.dart';
 
 /// Posed wrapper
-abstract class Posed implements Finalizable {
-  final Pointer<spine_posed_wrapper> _ptr;
-
-  Posed.fromPointer(this._ptr);
-
-  /// Get the native pointer for FFI calls
-  Pointer get nativePtr => _ptr;
-
-  void constrained() {
-    SpineBindings.bindings.spine_posed_constrained(_ptr);
-  }
-
-  void resetConstrained() {
-    SpineBindings.bindings.spine_posed_reset_constrained(_ptr);
-  }
-
-  bool get isPoseEqualToApplied {
-    final result = SpineBindings.bindings.spine_posed_is_pose_equal_to_applied(_ptr);
-    return result;
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_posed_dispose(_ptr);
-  }
+abstract class Posed {
+  Pointer get nativePtr;
+  void constrained();
+  void resetConstrained();
+  bool get isPoseEqualToApplied;
 }

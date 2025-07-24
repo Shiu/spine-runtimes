@@ -30,12 +30,14 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
+import 'constraint_timeline.dart';
 import 'curve_timeline1.dart';
 
 /// ConstraintTimeline1 wrapper
-abstract class ConstraintTimeline1 extends CurveTimeline1 {
+abstract class ConstraintTimeline1 extends CurveTimeline1
+    implements ConstraintTimeline {
   final Pointer<spine_constraint_timeline1_wrapper> _ptr;
 
   ConstraintTimeline1.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
@@ -44,17 +46,16 @@ abstract class ConstraintTimeline1 extends CurveTimeline1 {
   @override
   Pointer get nativePtr => _ptr;
 
+  @override
   int get constraintIndex {
-    final result = SpineBindings.bindings.spine_constraint_timeline1_get_constraint_index(_ptr);
+    final result = SpineBindings.bindings
+        .spine_constraint_timeline1_get_constraint_index(_ptr);
     return result;
   }
 
-  set constraintIndex(int value) {
-    SpineBindings.bindings.spine_constraint_timeline1_set_constraint_index(_ptr, value);
-  }
-
   @override
-  void dispose() {
-    SpineBindings.bindings.spine_constraint_timeline1_dispose(_ptr);
+  set constraintIndex(int value) {
+    SpineBindings.bindings
+        .spine_constraint_timeline1_set_constraint_index(_ptr, value);
   }
 }

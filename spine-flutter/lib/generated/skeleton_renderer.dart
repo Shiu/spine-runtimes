@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'render_command.dart';
 import 'skeleton.dart';
@@ -50,11 +50,8 @@ class SkeletonRenderer implements Finalizable {
   }
 
   RenderCommand render(Skeleton skeleton) {
-    final result = SpineBindings.bindings.spine_skeleton_renderer_render(_ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings
+        .spine_skeleton_renderer_render(_ptr, skeleton.nativePtr.cast());
     return RenderCommand.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_skeleton_renderer_dispose(_ptr);
   }
 }

@@ -30,12 +30,13 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
+import 'constraint_timeline.dart';
 import 'curve_timeline.dart';
 
 /// IkConstraintTimeline wrapper
-class IkConstraintTimeline extends CurveTimeline {
+class IkConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
   final Pointer<spine_ik_constraint_timeline_wrapper> _ptr;
 
   IkConstraintTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
@@ -44,26 +45,29 @@ class IkConstraintTimeline extends CurveTimeline {
   @override
   Pointer get nativePtr => _ptr;
 
-  factory IkConstraintTimeline(int frameCount, int bezierCount, int constraintIndex) {
-    final ptr = SpineBindings.bindings.spine_ik_constraint_timeline_create(frameCount, bezierCount, constraintIndex);
+  factory IkConstraintTimeline(
+      int frameCount, int bezierCount, int constraintIndex) {
+    final ptr = SpineBindings.bindings.spine_ik_constraint_timeline_create(
+        frameCount, bezierCount, constraintIndex);
     return IkConstraintTimeline.fromPointer(ptr);
   }
 
-  void setFrame(int frame, double time, double mix, double softness, int bendDirection, bool compress, bool stretch) {
-    SpineBindings.bindings.spine_ik_constraint_timeline_set_frame(_ptr, frame, time, mix, softness, bendDirection, compress, stretch);
-  }
-
-  int get constraintIndex {
-    final result = SpineBindings.bindings.spine_ik_constraint_timeline_get_constraint_index(_ptr);
-    return result;
-  }
-
-  set constraintIndex(int value) {
-    SpineBindings.bindings.spine_ik_constraint_timeline_set_constraint_index(_ptr, value);
+  void setFrame(int frame, double time, double mix, double softness,
+      int bendDirection, bool compress, bool stretch) {
+    SpineBindings.bindings.spine_ik_constraint_timeline_set_frame(
+        _ptr, frame, time, mix, softness, bendDirection, compress, stretch);
   }
 
   @override
-  void dispose() {
-    SpineBindings.bindings.spine_ik_constraint_timeline_dispose(_ptr);
+  int get constraintIndex {
+    final result = SpineBindings.bindings
+        .spine_ik_constraint_timeline_get_constraint_index(_ptr);
+    return result;
+  }
+
+  @override
+  set constraintIndex(int value) {
+    SpineBindings.bindings
+        .spine_ik_constraint_timeline_set_constraint_index(_ptr, value);
   }
 }

@@ -27,17 +27,17 @@
 // SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // *****************************************************************************/
 
-import 'generated/spine_flutter_bindings_generated.dart';
+import 'generated/spine_dart_bindings_generated.dart';
 
 /// Global bindings instance for all spine-flutter classes
 class SpineBindings {
-  static late SpineFlutterBindings _bindings;
+  static late SpineDartBindings _bindings;
 
   /// Initialize the global bindings
-  static void init(SpineFlutterBindings bindings) {
+  static void init(SpineDartBindings bindings) {
     _bindings = bindings;
   }
 
   /// Get the global bindings instance
-  static SpineFlutterBindings get bindings => _bindings;
+  static SpineDartBindings get bindings => _bindings;
 }

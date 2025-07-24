@@ -14,6 +14,9 @@ if [ ! -d "codegen/node_modules" ]; then
     popd > /dev/null
 fi
 
+# Copy spine-c and spine-cpp sources
+./setup.sh
+
 # Run the codegen
 npx tsx codegen/src/index.ts
 

@@ -30,11 +30,11 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'timeline.dart';
-import 'event.dart';
 import 'arrays.dart';
+import 'event.dart';
+import 'timeline.dart';
 
 /// EventTimeline wrapper
 class EventTimeline extends Timeline {
@@ -57,11 +57,7 @@ class EventTimeline extends Timeline {
   }
 
   void setFrame(int frame, Event event) {
-    SpineBindings.bindings.spine_event_timeline_set_frame(_ptr, frame, event.nativePtr.cast());
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_event_timeline_dispose(_ptr);
+    SpineBindings.bindings
+        .spine_event_timeline_set_frame(_ptr, frame, event.nativePtr.cast());
   }
 }

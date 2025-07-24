@@ -30,12 +30,13 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'curve_timeline2.dart';
+import 'bone_timeline.dart';
+import 'curve_timeline.dart';
 
 /// BoneTimeline2 wrapper
-abstract class BoneTimeline2 extends CurveTimeline2 {
+abstract class BoneTimeline2 extends CurveTimeline implements BoneTimeline {
   final Pointer<spine_bone_timeline2_wrapper> _ptr;
 
   BoneTimeline2.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
@@ -44,17 +45,20 @@ abstract class BoneTimeline2 extends CurveTimeline2 {
   @override
   Pointer get nativePtr => _ptr;
 
+  @override
   int get boneIndex {
-    final result = SpineBindings.bindings.spine_bone_timeline2_get_bone_index(_ptr);
+    final result =
+        SpineBindings.bindings.spine_bone_timeline2_get_bone_index(_ptr);
     return result;
   }
 
+  @override
   set boneIndex(int value) {
     SpineBindings.bindings.spine_bone_timeline2_set_bone_index(_ptr, value);
   }
 
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_bone_timeline2_dispose(_ptr);
+  void setFrame(int frame, double time, double value1, double value2) {
+    SpineBindings.bindings
+        .spine_bone_timeline2_set_frame(_ptr, frame, time, value1, value2);
   }
 }

@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
 
@@ -90,7 +90,8 @@ class TextureRegion implements Finalizable {
   }
 
   int get regionWidth {
-    final result = SpineBindings.bindings.spine_texture_region_get_region_width(_ptr);
+    final result =
+        SpineBindings.bindings.spine_texture_region_get_region_width(_ptr);
     return result;
   }
 
@@ -99,7 +100,8 @@ class TextureRegion implements Finalizable {
   }
 
   int get regionHeight {
-    final result = SpineBindings.bindings.spine_texture_region_get_region_height(_ptr);
+    final result =
+        SpineBindings.bindings.spine_texture_region_get_region_height(_ptr);
     return result;
   }
 
@@ -110,9 +112,5 @@ class TextureRegion implements Finalizable {
   static Rtti rttiStatic() {
     final result = SpineBindings.bindings.spine_texture_region_rtti();
     return Rtti.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_texture_region_dispose(_ptr);
   }
 }

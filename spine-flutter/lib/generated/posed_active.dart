@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// PosedActive wrapper
@@ -49,9 +49,5 @@ class PosedActive implements Finalizable {
 
   set active(bool value) {
     SpineBindings.bindings.spine_posed_active_set_active(_ptr, value);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_posed_active_dispose(_ptr);
   }
 }

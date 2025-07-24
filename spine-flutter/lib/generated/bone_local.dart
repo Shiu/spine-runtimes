@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'inherit.dart';
 
@@ -128,15 +128,11 @@ class BoneLocal implements Finalizable {
     SpineBindings.bindings.spine_bone_local_set_inherit(_ptr, value.value);
   }
 
-  void setScale1(double scaleX, double scaleY) {
+  void setScale(double scaleX, double scaleY) {
     SpineBindings.bindings.spine_bone_local_set_scale_1(_ptr, scaleX, scaleY);
   }
 
   set scale2(double value) {
     SpineBindings.bindings.spine_bone_local_set_scale_2(_ptr, value);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_bone_local_dispose(_ptr);
   }
 }

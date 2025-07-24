@@ -31,17 +31,17 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'color.dart';
+import 'arrays.dart';
 import 'attachment.dart';
-import 'point_attachment.dart';
-import 'region_attachment.dart';
 import 'bounding_box_attachment.dart';
 import 'clipping_attachment.dart';
+import 'color.dart';
 import 'mesh_attachment.dart';
 import 'path_attachment.dart';
-import 'arrays.dart';
+import 'point_attachment.dart';
+import 'region_attachment.dart';
 
 /// SlotPose wrapper
 class SlotPose implements Finalizable {
@@ -83,12 +83,11 @@ class SlotPose implements Finalizable {
   Attachment get attachment {
     final result = SpineBindings.bindings.spine_slot_pose_get_attachment(_ptr);
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
-    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
     switch (className) {
-      case 'spine_point_attachment':
-        return PointAttachment.fromPointer(result.cast());
-      case 'spine_region_attachment':
-        return RegionAttachment.fromPointer(result.cast());
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
       case 'spine_clipping_attachment':
@@ -97,17 +96,24 @@ class SlotPose implements Finalizable {
         return MeshAttachment.fromPointer(result.cast());
       case 'spine_path_attachment':
         return PathAttachment.fromPointer(result.cast());
+      case 'spine_point_attachment':
+        return PointAttachment.fromPointer(result.cast());
+      case 'spine_region_attachment':
+        return RegionAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class Attachment');
     }
   }
 
   set attachment(Attachment value) {
-    SpineBindings.bindings.spine_slot_pose_set_attachment(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_slot_pose_set_attachment(_ptr, value.nativePtr.cast());
   }
 
   int get sequenceIndex {
-    final result = SpineBindings.bindings.spine_slot_pose_get_sequence_index(_ptr);
+    final result =
+        SpineBindings.bindings.spine_slot_pose_get_sequence_index(_ptr);
     return result;
   }
 
@@ -118,9 +124,5 @@ class SlotPose implements Finalizable {
   ArrayFloat get deform {
     final result = SpineBindings.bindings.spine_slot_pose_get_deform(_ptr);
     return ArrayFloat.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_slot_pose_dispose(_ptr);
   }
 }

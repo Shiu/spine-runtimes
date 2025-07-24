@@ -31,20 +31,21 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'timeline.dart';
-import 'sequence_mode.dart';
 import 'attachment.dart';
-import 'point_attachment.dart';
-import 'region_attachment.dart';
 import 'bounding_box_attachment.dart';
 import 'clipping_attachment.dart';
 import 'mesh_attachment.dart';
 import 'path_attachment.dart';
+import 'point_attachment.dart';
+import 'region_attachment.dart';
+import 'sequence_mode.dart';
+import 'slot_timeline.dart';
+import 'timeline.dart';
 
 /// SequenceTimeline wrapper
-class SequenceTimeline extends Timeline {
+class SequenceTimeline extends Timeline implements SlotTimeline {
   final Pointer<spine_sequence_timeline_wrapper> _ptr;
 
   SequenceTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
@@ -53,24 +54,28 @@ class SequenceTimeline extends Timeline {
   @override
   Pointer get nativePtr => _ptr;
 
-  factory SequenceTimeline(int frameCount, int slotIndex, Attachment attachment) {
-    final ptr = SpineBindings.bindings.spine_sequence_timeline_create(frameCount, slotIndex, attachment.nativePtr.cast());
+  factory SequenceTimeline(
+      int frameCount, int slotIndex, Attachment attachment) {
+    final ptr = SpineBindings.bindings.spine_sequence_timeline_create(
+        frameCount, slotIndex, attachment.nativePtr.cast());
     return SequenceTimeline.fromPointer(ptr);
   }
 
-  void setFrame(int frame, double time, SequenceMode mode, int index, double delay) {
-    SpineBindings.bindings.spine_sequence_timeline_set_frame(_ptr, frame, time, mode.value, index, delay);
+  void setFrame(
+      int frame, double time, SequenceMode mode, int index, double delay) {
+    SpineBindings.bindings.spine_sequence_timeline_set_frame(
+        _ptr, frame, time, mode.value, index, delay);
   }
 
   Attachment get attachment {
-    final result = SpineBindings.bindings.spine_sequence_timeline_get_attachment(_ptr);
+    final result =
+        SpineBindings.bindings.spine_sequence_timeline_get_attachment(_ptr);
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
-    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
     switch (className) {
-      case 'spine_point_attachment':
-        return PointAttachment.fromPointer(result.cast());
-      case 'spine_region_attachment':
-        return RegionAttachment.fromPointer(result.cast());
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
       case 'spine_clipping_attachment':
@@ -79,22 +84,25 @@ class SequenceTimeline extends Timeline {
         return MeshAttachment.fromPointer(result.cast());
       case 'spine_path_attachment':
         return PathAttachment.fromPointer(result.cast());
+      case 'spine_point_attachment':
+        return PointAttachment.fromPointer(result.cast());
+      case 'spine_region_attachment':
+        return RegionAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class Attachment');
     }
   }
 
+  @override
   int get slotIndex {
-    final result = SpineBindings.bindings.spine_sequence_timeline_get_slot_index(_ptr);
+    final result =
+        SpineBindings.bindings.spine_sequence_timeline_get_slot_index(_ptr);
     return result;
   }
 
+  @override
   set slotIndex(int value) {
     SpineBindings.bindings.spine_sequence_timeline_set_slot_index(_ptr, value);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_sequence_timeline_dispose(_ptr);
   }
 }

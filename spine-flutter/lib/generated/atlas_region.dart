@@ -31,11 +31,11 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'texture_region.dart';
-import 'atlas_page.dart';
 import 'arrays.dart';
+import 'atlas_page.dart';
+import 'texture_region.dart';
 
 /// AtlasRegion wrapper
 class AtlasRegion extends TextureRegion {
@@ -55,6 +55,11 @@ class AtlasRegion extends TextureRegion {
   AtlasPage get page {
     final result = SpineBindings.bindings.spine_atlas_region_get_page(_ptr);
     return AtlasPage.fromPointer(result);
+  }
+
+  String get name {
+    final result = SpineBindings.bindings.spine_atlas_region_get_name(_ptr);
+    return result.cast<Utf8>().toDartString();
   }
 
   int get index {
@@ -83,22 +88,26 @@ class AtlasRegion extends TextureRegion {
   }
 
   int get packedWidth {
-    final result = SpineBindings.bindings.spine_atlas_region_get_packed_width(_ptr);
+    final result =
+        SpineBindings.bindings.spine_atlas_region_get_packed_width(_ptr);
     return result;
   }
 
   int get packedHeight {
-    final result = SpineBindings.bindings.spine_atlas_region_get_packed_height(_ptr);
+    final result =
+        SpineBindings.bindings.spine_atlas_region_get_packed_height(_ptr);
     return result;
   }
 
   int get originalWidth {
-    final result = SpineBindings.bindings.spine_atlas_region_get_original_width(_ptr);
+    final result =
+        SpineBindings.bindings.spine_atlas_region_get_original_width(_ptr);
     return result;
   }
 
   int get originalHeight {
-    final result = SpineBindings.bindings.spine_atlas_region_get_original_height(_ptr);
+    final result =
+        SpineBindings.bindings.spine_atlas_region_get_original_height(_ptr);
     return result;
   }
 
@@ -128,11 +137,13 @@ class AtlasRegion extends TextureRegion {
   }
 
   set page(AtlasPage value) {
-    SpineBindings.bindings.spine_atlas_region_set_page(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_atlas_region_set_page(_ptr, value.nativePtr.cast());
   }
 
   set name(String value) {
-    SpineBindings.bindings.spine_atlas_region_set_name(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings
+        .spine_atlas_region_set_name(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   set index(int value) {
@@ -180,19 +191,17 @@ class AtlasRegion extends TextureRegion {
   }
 
   set splits(ArrayInt value) {
-    SpineBindings.bindings.spine_atlas_region_set_splits(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_atlas_region_set_splits(_ptr, value.nativePtr.cast());
   }
 
   set pads(ArrayInt value) {
-    SpineBindings.bindings.spine_atlas_region_set_pads(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_atlas_region_set_pads(_ptr, value.nativePtr.cast());
   }
 
   set values(ArrayFloat value) {
-    SpineBindings.bindings.spine_atlas_region_set_values(_ptr, value.nativePtr.cast());
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_atlas_region_dispose(_ptr);
+    SpineBindings.bindings
+        .spine_atlas_region_set_values(_ptr, value.nativePtr.cast());
   }
 }

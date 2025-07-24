@@ -33,18 +33,18 @@ import 'package:inject_js/inject_js.dart' as js;
 import 'package:web_ffi_fork/web_ffi.dart';
 import 'package:web_ffi_fork/web_ffi_modules.dart';
 
-import 'generated/spine_flutter_bindings_generated.dart';
+import 'generated/spine_dart_bindings_generated.dart';
 
 Module? _module;
 
-class SpineFlutterFFI {
+class SpineDartFFI {
   final DynamicLibrary dylib;
   final Allocator allocator;
 
-  SpineFlutterFFI(this.dylib, this.allocator);
+  SpineDartFFI(this.dylib, this.allocator);
 }
 
-Future<SpineFlutterFFI> initSpineFlutterFFI(bool useStaticLinkage) async {
+Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {
   if (_module == null) {
     Memory.init();
 
@@ -90,16 +90,19 @@ Future<SpineFlutterFFI> initSpineFlutterFFI(bool useStaticLinkage) async {
     registerOpaqueType<spine_skin_entry_wrapper>();
     registerOpaqueType<spine_skin_entries_wrapper>();
 
-    await js.importLibrary('assets/packages/spine_flutter/lib/assets/libspine_flutter.js');
+    await js.importLibrary(
+        'assets/packages/spine_flutter/lib/assets/libspine_flutter.js');
     Uint8List wasmBinaries = (await rootBundle.load(
       'packages/spine_flutter/lib/assets/libspine_flutter.wasm',
-    )).buffer.asUint8List();
+    ))
+        .buffer
+        .asUint8List();
     _module = await EmscriptenModule.compile(wasmBinaries, 'libspine_flutter');
   }
   Module? m = _module;
   if (m != null) {
     final dylib = DynamicLibrary.fromModule(m);
-    return SpineFlutterFFI(dylib, dylib.boundMemory);
+    return SpineDartFFI(dylib, dylib.boundMemory);
   } else {
     throw Exception("Couldn't load libspine-flutter.js/.wasm");
   }

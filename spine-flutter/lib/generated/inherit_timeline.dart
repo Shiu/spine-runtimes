@@ -30,13 +30,14 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'timeline.dart';
+import 'bone_timeline.dart';
 import 'inherit.dart';
+import 'timeline.dart';
 
 /// InheritTimeline wrapper
-class InheritTimeline extends Timeline {
+class InheritTimeline extends Timeline implements BoneTimeline {
   final Pointer<spine_inherit_timeline_wrapper> _ptr;
 
   InheritTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
@@ -46,25 +47,25 @@ class InheritTimeline extends Timeline {
   Pointer get nativePtr => _ptr;
 
   factory InheritTimeline(int frameCount, int boneIndex) {
-    final ptr = SpineBindings.bindings.spine_inherit_timeline_create(frameCount, boneIndex);
+    final ptr = SpineBindings.bindings
+        .spine_inherit_timeline_create(frameCount, boneIndex);
     return InheritTimeline.fromPointer(ptr);
   }
 
   void setFrame(int frame, double time, Inherit inherit) {
-    SpineBindings.bindings.spine_inherit_timeline_set_frame(_ptr, frame, time, inherit.value);
-  }
-
-  int get boneIndex {
-    final result = SpineBindings.bindings.spine_inherit_timeline_get_bone_index(_ptr);
-    return result;
-  }
-
-  set boneIndex(int value) {
-    SpineBindings.bindings.spine_inherit_timeline_set_bone_index(_ptr, value);
+    SpineBindings.bindings
+        .spine_inherit_timeline_set_frame(_ptr, frame, time, inherit.value);
   }
 
   @override
-  void dispose() {
-    SpineBindings.bindings.spine_inherit_timeline_dispose(_ptr);
+  int get boneIndex {
+    final result =
+        SpineBindings.bindings.spine_inherit_timeline_get_bone_index(_ptr);
+    return result;
+  }
+
+  @override
+  set boneIndex(int value) {
+    SpineBindings.bindings.spine_inherit_timeline_set_bone_index(_ptr, value);
   }
 }

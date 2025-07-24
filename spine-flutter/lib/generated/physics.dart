@@ -32,9 +32,9 @@
 /// Physics enum
 enum Physics {
   none(0),
-  reset(1),
-  update(2),
-  pose(3);
+  reset(0),
+  update(0),
+  pose(0);
 
   const Physics(this.value);
   final int value;

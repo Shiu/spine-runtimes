@@ -32,9 +32,9 @@
 /// MixBlend enum
 enum MixBlend {
   setup(0),
-  first(1),
-  replace(2),
-  add(3);
+  first(0),
+  replace(0),
+  add(0);
 
   const MixBlend(this.value);
   final int value;

@@ -31,10 +31,10 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'skeleton_data.dart';
 import 'animation.dart';
+import 'skeleton_data.dart';
 
 /// AnimationStateData wrapper
 class AnimationStateData implements Finalizable {
@@ -46,26 +46,31 @@ class AnimationStateData implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory AnimationStateData(SkeletonData skeletonData) {
-    final ptr = SpineBindings.bindings.spine_animation_state_data_create(skeletonData.nativePtr.cast());
+    final ptr = SpineBindings.bindings
+        .spine_animation_state_data_create(skeletonData.nativePtr.cast());
     return AnimationStateData.fromPointer(ptr);
   }
 
   SkeletonData get skeletonData {
-    final result = SpineBindings.bindings.spine_animation_state_data_get_skeleton_data(_ptr);
+    final result = SpineBindings.bindings
+        .spine_animation_state_data_get_skeleton_data(_ptr);
     return SkeletonData.fromPointer(result);
   }
 
   double get defaultMix {
-    final result = SpineBindings.bindings.spine_animation_state_data_get_default_mix(_ptr);
+    final result =
+        SpineBindings.bindings.spine_animation_state_data_get_default_mix(_ptr);
     return result;
   }
 
   set defaultMix(double value) {
-    SpineBindings.bindings.spine_animation_state_data_set_default_mix(_ptr, value);
+    SpineBindings.bindings
+        .spine_animation_state_data_set_default_mix(_ptr, value);
   }
 
   double getMix(Animation from, Animation to) {
-    final result = SpineBindings.bindings.spine_animation_state_data_get_mix(_ptr, from.nativePtr.cast(), to.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_animation_state_data_get_mix(
+        _ptr, from.nativePtr.cast(), to.nativePtr.cast());
     return result;
   }
 
@@ -73,15 +78,16 @@ class AnimationStateData implements Finalizable {
     SpineBindings.bindings.spine_animation_state_data_clear(_ptr);
   }
 
-  void setMix1(String fromName, String toName, double duration) {
-    SpineBindings.bindings.spine_animation_state_data_set_mix_1(_ptr, fromName.toNativeUtf8().cast<Char>(), toName.toNativeUtf8().cast<Char>(), duration);
+  void setMix(String fromName, String toName, double duration) {
+    SpineBindings.bindings.spine_animation_state_data_set_mix_1(
+        _ptr,
+        fromName.toNativeUtf8().cast<Char>(),
+        toName.toNativeUtf8().cast<Char>(),
+        duration);
   }
 
   void setMix2(Animation from, Animation to, double duration) {
-    SpineBindings.bindings.spine_animation_state_data_set_mix_2(_ptr, from.nativePtr.cast(), to.nativePtr.cast(), duration);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_animation_state_data_dispose(_ptr);
+    SpineBindings.bindings.spine_animation_state_data_set_mix_2(
+        _ptr, from.nativePtr.cast(), to.nativePtr.cast(), duration);
   }
 }

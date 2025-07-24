@@ -31,13 +31,13 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'skeleton.dart';
-import 'track_entry.dart';
 import 'animation.dart';
 import 'animation_state_data.dart';
 import 'arrays.dart';
+import 'skeleton.dart';
+import 'track_entry.dart';
 
 /// AnimationState wrapper
 class AnimationState implements Finalizable {
@@ -49,7 +49,8 @@ class AnimationState implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory AnimationState(AnimationStateData data) {
-    final ptr = SpineBindings.bindings.spine_animation_state_create(data.nativePtr.cast());
+    final ptr = SpineBindings.bindings
+        .spine_animation_state_create(data.nativePtr.cast());
     return AnimationState.fromPointer(ptr);
   }
 
@@ -58,7 +59,8 @@ class AnimationState implements Finalizable {
   }
 
   bool apply(Skeleton skeleton) {
-    final result = SpineBindings.bindings.spine_animation_state_apply(_ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings
+        .spine_animation_state_apply(_ptr, skeleton.nativePtr.cast());
     return result;
   }
 
@@ -71,21 +73,28 @@ class AnimationState implements Finalizable {
   }
 
   TrackEntry setEmptyAnimation(int trackIndex, double mixDuration) {
-    final result = SpineBindings.bindings.spine_animation_state_set_empty_animation(_ptr, trackIndex, mixDuration);
+    final result = SpineBindings.bindings
+        .spine_animation_state_set_empty_animation(
+            _ptr, trackIndex, mixDuration);
     return TrackEntry.fromPointer(result);
   }
 
-  TrackEntry addEmptyAnimation(int trackIndex, double mixDuration, double delay) {
-    final result = SpineBindings.bindings.spine_animation_state_add_empty_animation(_ptr, trackIndex, mixDuration, delay);
+  TrackEntry addEmptyAnimation(
+      int trackIndex, double mixDuration, double delay) {
+    final result = SpineBindings.bindings
+        .spine_animation_state_add_empty_animation(
+            _ptr, trackIndex, mixDuration, delay);
     return TrackEntry.fromPointer(result);
   }
 
   set emptyAnimations(double value) {
-    SpineBindings.bindings.spine_animation_state_set_empty_animations(_ptr, value);
+    SpineBindings.bindings
+        .spine_animation_state_set_empty_animations(_ptr, value);
   }
 
   TrackEntry getCurrent(int trackIndex) {
-    final result = SpineBindings.bindings.spine_animation_state_get_current(_ptr, trackIndex);
+    final result = SpineBindings.bindings
+        .spine_animation_state_get_current(_ptr, trackIndex);
     return TrackEntry.fromPointer(result);
   }
 
@@ -95,12 +104,14 @@ class AnimationState implements Finalizable {
   }
 
   ArrayTrackEntry get tracks {
-    final result = SpineBindings.bindings.spine_animation_state_get_tracks(_ptr);
+    final result =
+        SpineBindings.bindings.spine_animation_state_get_tracks(_ptr);
     return ArrayTrackEntry.fromPointer(result);
   }
 
   double get timeScale {
-    final result = SpineBindings.bindings.spine_animation_state_get_time_scale(_ptr);
+    final result =
+        SpineBindings.bindings.spine_animation_state_get_time_scale(_ptr);
     return result;
   }
 
@@ -117,39 +128,54 @@ class AnimationState implements Finalizable {
   }
 
   set manualTrackEntryDisposal(bool value) {
-    SpineBindings.bindings.spine_animation_state_set_manual_track_entry_disposal(_ptr, value);
+    SpineBindings.bindings
+        .spine_animation_state_set_manual_track_entry_disposal(_ptr, value);
   }
 
   bool get manualTrackEntryDisposal {
-    final result = SpineBindings.bindings.spine_animation_state_get_manual_track_entry_disposal(_ptr);
+    final result = SpineBindings.bindings
+        .spine_animation_state_get_manual_track_entry_disposal(_ptr);
     return result;
   }
 
   void disposeTrackEntry(TrackEntry entry) {
-    SpineBindings.bindings.spine_animation_state_dispose_track_entry(_ptr, entry.nativePtr.cast());
+    SpineBindings.bindings.spine_animation_state_dispose_track_entry(
+        _ptr, entry.nativePtr.cast());
   }
 
-  TrackEntry setAnimation1(int trackIndex, String animationName, bool loop) {
-    final result = SpineBindings.bindings.spine_animation_state_set_animation_1(_ptr, trackIndex, animationName.toNativeUtf8().cast<Char>(), loop);
+  Pointer<Void> get rendererObject {
+    final result =
+        SpineBindings.bindings.spine_animation_state_get_renderer_object(_ptr);
+    return result;
+  }
+
+  TrackEntry setAnimation(int trackIndex, String animationName, bool loop) {
+    final result = SpineBindings.bindings.spine_animation_state_set_animation_1(
+        _ptr, trackIndex, animationName.toNativeUtf8().cast<Char>(), loop);
     return TrackEntry.fromPointer(result);
   }
 
   TrackEntry setAnimation2(int trackIndex, Animation animation, bool loop) {
-    final result = SpineBindings.bindings.spine_animation_state_set_animation_2(_ptr, trackIndex, animation.nativePtr.cast(), loop);
+    final result = SpineBindings.bindings.spine_animation_state_set_animation_2(
+        _ptr, trackIndex, animation.nativePtr.cast(), loop);
     return TrackEntry.fromPointer(result);
   }
 
-  TrackEntry addAnimation1(int trackIndex, String animationName, bool loop, double delay) {
-    final result = SpineBindings.bindings.spine_animation_state_add_animation_1(_ptr, trackIndex, animationName.toNativeUtf8().cast<Char>(), loop, delay);
+  TrackEntry addAnimation(
+      int trackIndex, String animationName, bool loop, double delay) {
+    final result = SpineBindings.bindings.spine_animation_state_add_animation_1(
+        _ptr,
+        trackIndex,
+        animationName.toNativeUtf8().cast<Char>(),
+        loop,
+        delay);
     return TrackEntry.fromPointer(result);
   }
 
-  TrackEntry addAnimation2(int trackIndex, Animation animation, bool loop, double delay) {
-    final result = SpineBindings.bindings.spine_animation_state_add_animation_2(_ptr, trackIndex, animation.nativePtr.cast(), loop, delay);
+  TrackEntry addAnimation2(
+      int trackIndex, Animation animation, bool loop, double delay) {
+    final result = SpineBindings.bindings.spine_animation_state_add_animation_2(
+        _ptr, trackIndex, animation.nativePtr.cast(), loop, delay);
     return TrackEntry.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_animation_state_dispose(_ptr);
   }
 }

@@ -30,39 +30,17 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
 
 /// BoneTimeline wrapper
-class BoneTimeline implements Finalizable {
-  final Pointer<spine_bone_timeline_wrapper> _ptr;
-
-  BoneTimeline.fromPointer(this._ptr);
-
-  /// Get the native pointer for FFI calls
-  Pointer get nativePtr => _ptr;
-
-  Rtti get rtti {
-    final result = SpineBindings.bindings.spine_bone_timeline_get_rtti(_ptr);
-    return Rtti.fromPointer(result);
-  }
-
-  int get boneIndex {
-    final result = SpineBindings.bindings.spine_bone_timeline_get_bone_index(_ptr);
-    return result;
-  }
-
-  set boneIndex(int value) {
-    SpineBindings.bindings.spine_bone_timeline_set_bone_index(_ptr, value);
-  }
-
+abstract class BoneTimeline {
+  Pointer get nativePtr;
+  Rtti get rtti;
+  int get boneIndex;
+  set boneIndex(int value);
   static Rtti rttiStatic() {
     final result = SpineBindings.bindings.spine_bone_timeline_rtti();
     return Rtti.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_bone_timeline_dispose(_ptr);
   }
 }

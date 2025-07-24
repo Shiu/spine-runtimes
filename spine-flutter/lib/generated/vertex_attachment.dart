@@ -31,18 +31,18 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
+import 'arrays.dart';
 import 'attachment.dart';
-import 'skeleton.dart';
-import 'slot.dart';
-import 'point_attachment.dart';
-import 'region_attachment.dart';
 import 'bounding_box_attachment.dart';
 import 'clipping_attachment.dart';
 import 'mesh_attachment.dart';
 import 'path_attachment.dart';
-import 'arrays.dart';
+import 'point_attachment.dart';
+import 'region_attachment.dart';
+import 'skeleton.dart';
+import 'slot.dart';
 
 /// VertexAttachment wrapper
 abstract class VertexAttachment extends Attachment {
@@ -60,41 +60,47 @@ abstract class VertexAttachment extends Attachment {
   }
 
   ArrayInt get bones {
-    final result = SpineBindings.bindings.spine_vertex_attachment_get_bones(_ptr);
+    final result =
+        SpineBindings.bindings.spine_vertex_attachment_get_bones(_ptr);
     return ArrayInt.fromPointer(result);
   }
 
   set bones(ArrayInt value) {
-    SpineBindings.bindings.spine_vertex_attachment_set_bones(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_vertex_attachment_set_bones(_ptr, value.nativePtr.cast());
   }
 
   ArrayFloat get vertices {
-    final result = SpineBindings.bindings.spine_vertex_attachment_get_vertices(_ptr);
+    final result =
+        SpineBindings.bindings.spine_vertex_attachment_get_vertices(_ptr);
     return ArrayFloat.fromPointer(result);
   }
 
   set vertices(ArrayFloat value) {
-    SpineBindings.bindings.spine_vertex_attachment_set_vertices(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_vertex_attachment_set_vertices(_ptr, value.nativePtr.cast());
   }
 
   int get worldVerticesLength {
-    final result = SpineBindings.bindings.spine_vertex_attachment_get_world_vertices_length(_ptr);
+    final result = SpineBindings.bindings
+        .spine_vertex_attachment_get_world_vertices_length(_ptr);
     return result;
   }
 
   set worldVerticesLength(int value) {
-    SpineBindings.bindings.spine_vertex_attachment_set_world_vertices_length(_ptr, value);
+    SpineBindings.bindings
+        .spine_vertex_attachment_set_world_vertices_length(_ptr, value);
   }
 
   Attachment get timelineAttachment {
-    final result = SpineBindings.bindings.spine_vertex_attachment_get_timeline_attachment(_ptr);
+    final result = SpineBindings.bindings
+        .spine_vertex_attachment_get_timeline_attachment(_ptr);
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
-    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
     switch (className) {
-      case 'spine_point_attachment':
-        return PointAttachment.fromPointer(result.cast());
-      case 'spine_region_attachment':
-        return RegionAttachment.fromPointer(result.cast());
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
       case 'spine_clipping_attachment':
@@ -103,25 +109,36 @@ abstract class VertexAttachment extends Attachment {
         return MeshAttachment.fromPointer(result.cast());
       case 'spine_path_attachment':
         return PathAttachment.fromPointer(result.cast());
+      case 'spine_point_attachment':
+        return PointAttachment.fromPointer(result.cast());
+      case 'spine_region_attachment':
+        return RegionAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class Attachment');
     }
   }
 
   set timelineAttachment(Attachment value) {
-    SpineBindings.bindings.spine_vertex_attachment_set_timeline_attachment(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings.spine_vertex_attachment_set_timeline_attachment(
+        _ptr, value.nativePtr.cast());
   }
 
   void copyTo(VertexAttachment other) {
-    SpineBindings.bindings.spine_vertex_attachment_copy_to(_ptr, other.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_vertex_attachment_copy_to(_ptr, other.nativePtr.cast());
   }
 
-  void computeWorldVertices(Skeleton skeleton, Slot slot, int start, int count, ArrayFloat worldVertices, int offset, int stride) {
-    SpineBindings.bindings.spine_vertex_attachment_compute_world_vertices_2(_ptr, skeleton.nativePtr.cast(), slot.nativePtr.cast(), start, count, worldVertices.nativePtr.cast(), offset, stride);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_vertex_attachment_dispose(_ptr);
+  void computeWorldVertices(Skeleton skeleton, Slot slot, int start, int count,
+      ArrayFloat worldVertices, int offset, int stride) {
+    SpineBindings.bindings.spine_vertex_attachment_compute_world_vertices_2(
+        _ptr,
+        skeleton.nativePtr.cast(),
+        slot.nativePtr.cast(),
+        start,
+        count,
+        worldVertices.nativePtr.cast(),
+        offset,
+        stride);
   }
 }

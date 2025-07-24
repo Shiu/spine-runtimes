@@ -30,12 +30,12 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
+import 'arrays.dart';
+import 'clipping_attachment.dart';
 import 'skeleton.dart';
 import 'slot.dart';
-import 'clipping_attachment.dart';
-import 'arrays.dart';
 
 /// SkeletonClipping wrapper
 class SkeletonClipping implements Finalizable {
@@ -52,44 +52,56 @@ class SkeletonClipping implements Finalizable {
   }
 
   int clipStart(Skeleton skeleton, Slot slot, ClippingAttachment clip) {
-    final result = SpineBindings.bindings.spine_skeleton_clipping_clip_start(_ptr, skeleton.nativePtr.cast(), slot.nativePtr.cast(), clip.nativePtr.cast());
+    final result = SpineBindings.bindings.spine_skeleton_clipping_clip_start(
+        _ptr,
+        skeleton.nativePtr.cast(),
+        slot.nativePtr.cast(),
+        clip.nativePtr.cast());
     return result;
   }
 
   bool get isClipping {
-    final result = SpineBindings.bindings.spine_skeleton_clipping_is_clipping(_ptr);
+    final result =
+        SpineBindings.bindings.spine_skeleton_clipping_is_clipping(_ptr);
     return result;
   }
 
   ArrayFloat get clippedVertices {
-    final result = SpineBindings.bindings.spine_skeleton_clipping_get_clipped_vertices(_ptr);
+    final result = SpineBindings.bindings
+        .spine_skeleton_clipping_get_clipped_vertices(_ptr);
     return ArrayFloat.fromPointer(result);
   }
 
   ArrayUnsignedShort get clippedTriangles {
-    final result = SpineBindings.bindings.spine_skeleton_clipping_get_clipped_triangles(_ptr);
+    final result = SpineBindings.bindings
+        .spine_skeleton_clipping_get_clipped_triangles(_ptr);
     return ArrayUnsignedShort.fromPointer(result);
   }
 
   ArrayFloat get clippedUVs {
-    final result = SpineBindings.bindings.spine_skeleton_clipping_get_clipped_u_vs(_ptr);
+    final result =
+        SpineBindings.bindings.spine_skeleton_clipping_get_clipped_u_vs(_ptr);
     return ArrayFloat.fromPointer(result);
   }
 
-  void clipEnd1(Slot slot) {
-    SpineBindings.bindings.spine_skeleton_clipping_clip_end_1(_ptr, slot.nativePtr.cast());
+  void clipEnd(Slot slot) {
+    SpineBindings.bindings
+        .spine_skeleton_clipping_clip_end_1(_ptr, slot.nativePtr.cast());
   }
 
   void clipEnd2() {
     SpineBindings.bindings.spine_skeleton_clipping_clip_end_2(_ptr);
   }
 
-  bool clipTriangles(ArrayFloat vertices, ArrayUnsignedShort triangles, ArrayFloat uvs, int stride) {
-    final result = SpineBindings.bindings.spine_skeleton_clipping_clip_triangles_3(_ptr, vertices.nativePtr.cast(), triangles.nativePtr.cast(), uvs.nativePtr.cast(), stride);
+  bool clipTriangles(ArrayFloat vertices, ArrayUnsignedShort triangles,
+      ArrayFloat uvs, int stride) {
+    final result = SpineBindings.bindings
+        .spine_skeleton_clipping_clip_triangles_3(
+            _ptr,
+            vertices.nativePtr.cast(),
+            triangles.nativePtr.cast(),
+            uvs.nativePtr.cast(),
+            stride);
     return result;
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_skeleton_clipping_dispose(_ptr);
   }
 }

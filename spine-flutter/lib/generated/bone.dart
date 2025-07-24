@@ -30,19 +30,21 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
-import 'posed_active.dart';
-import 'skeleton.dart';
-import 'physics.dart';
+import 'arrays.dart';
 import 'bone_data.dart';
 import 'bone_local.dart';
 import 'bone_pose.dart';
-import 'arrays.dart';
+import 'physics.dart';
+import 'posed.dart';
+import 'posed_active.dart';
+import 'skeleton.dart';
+import 'update.dart';
 
 /// Bone wrapper
-class Bone extends PosedActive {
+class Bone extends PosedActive implements Posed, Update {
   final Pointer<spine_bone_wrapper> _ptr;
 
   Bone.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
@@ -52,15 +54,18 @@ class Bone extends PosedActive {
   Pointer get nativePtr => _ptr;
 
   factory Bone(BoneData data, Bone parent) {
-    final ptr = SpineBindings.bindings.spine_bone_create(data.nativePtr.cast(), parent.nativePtr.cast());
+    final ptr = SpineBindings.bindings
+        .spine_bone_create(data.nativePtr.cast(), parent.nativePtr.cast());
     return Bone.fromPointer(ptr);
   }
 
   factory Bone.from(Bone bone, Bone parent) {
-    final ptr = SpineBindings.bindings.spine_bone_create2(bone.nativePtr.cast(), parent.nativePtr.cast());
+    final ptr = SpineBindings.bindings
+        .spine_bone_create2(bone.nativePtr.cast(), parent.nativePtr.cast());
     return Bone.fromPointer(ptr);
   }
 
+  @override
   Rtti get rtti {
     final result = SpineBindings.bindings.spine_bone_get_rtti(_ptr);
     return Rtti.fromPointer(result);
@@ -85,8 +90,10 @@ class Bone extends PosedActive {
     SpineBindings.bindings.spine_bone_set_y_down(value);
   }
 
+  @override
   void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings.spine_bone_update(_ptr, skeleton.nativePtr.cast(), physics.value);
+    SpineBindings.bindings
+        .spine_bone_update(_ptr, skeleton.nativePtr.cast(), physics.value);
   }
 
   BoneData get data {
@@ -104,26 +111,25 @@ class Bone extends PosedActive {
     return BonePose.fromPointer(result);
   }
 
+  @override
   void resetConstrained() {
     SpineBindings.bindings.spine_bone_reset_constrained(_ptr);
   }
 
+  @override
   void constrained() {
     SpineBindings.bindings.spine_bone_constrained(_ptr);
   }
 
+  @override
   bool get isPoseEqualToApplied {
-    final result = SpineBindings.bindings.spine_bone_is_pose_equal_to_applied(_ptr);
+    final result =
+        SpineBindings.bindings.spine_bone_is_pose_equal_to_applied(_ptr);
     return result;
   }
 
   static Rtti rttiStatic() {
     final result = SpineBindings.bindings.spine_bone_rtti();
     return Rtti.fromPointer(result);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_bone_dispose(_ptr);
   }
 }

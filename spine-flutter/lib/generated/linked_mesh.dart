@@ -30,31 +30,8 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
-import '../spine_bindings.dart';
-import 'mesh_attachment.dart';
 
 /// LinkedMesh wrapper
-class LinkedMesh implements Finalizable {
-  final Pointer<spine_linked_mesh_wrapper> _ptr;
-
-  LinkedMesh.fromPointer(this._ptr);
-
-  /// Get the native pointer for FFI calls
-  Pointer get nativePtr => _ptr;
-
-  factory LinkedMesh(MeshAttachment mesh, dynamic skinIndex, int slotIndex, String parent, bool inheritTimelines) {
-    final ptr = SpineBindings.bindings.spine_linked_mesh_create(mesh.nativePtr.cast(), skinIndex, slotIndex, parent.toNativeUtf8().cast<Char>(), inheritTimelines);
-    return LinkedMesh.fromPointer(ptr);
-  }
-
-  factory LinkedMesh.variant2(MeshAttachment mesh, String skin, int slotIndex, String parent, bool inheritTimelines) {
-    final ptr = SpineBindings.bindings.spine_linked_mesh_create2(mesh.nativePtr.cast(), skin.toNativeUtf8().cast<Char>(), slotIndex, parent.toNativeUtf8().cast<Char>(), inheritTimelines);
-    return LinkedMesh.fromPointer(ptr);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_linked_mesh_dispose(_ptr);
-  }
+abstract class LinkedMesh {
+  Pointer get nativePtr;
 }

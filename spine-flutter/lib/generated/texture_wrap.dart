@@ -32,8 +32,8 @@
 /// TextureWrap enum
 enum TextureWrap {
   mirroredRepeat(0),
-  clampToEdge(1),
-  repeat(2);
+  clampToEdge(0),
+  repeat(0);
 
   const TextureWrap(this.value);
   final int value;

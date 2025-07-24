@@ -31,11 +31,11 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'skeleton_data.dart';
 import 'atlas.dart';
 import 'attachment_loader.dart';
+import 'skeleton_data.dart';
 
 /// SkeletonBinary wrapper
 class SkeletonBinary implements Finalizable {
@@ -47,17 +47,22 @@ class SkeletonBinary implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory SkeletonBinary(Atlas atlas) {
-    final ptr = SpineBindings.bindings.spine_skeleton_binary_create(atlas.nativePtr.cast());
+    final ptr = SpineBindings.bindings
+        .spine_skeleton_binary_create(atlas.nativePtr.cast());
     return SkeletonBinary.fromPointer(ptr);
   }
 
-  factory SkeletonBinary.variant2(AttachmentLoader attachmentLoader, bool ownsLoader) {
-    final ptr = SpineBindings.bindings.spine_skeleton_binary_create2(attachmentLoader.nativePtr.cast(), ownsLoader);
+  factory SkeletonBinary.variant2(
+      AttachmentLoader attachmentLoader, bool ownsLoader) {
+    final ptr = SpineBindings.bindings.spine_skeleton_binary_create2(
+        attachmentLoader.nativePtr.cast(), ownsLoader);
     return SkeletonBinary.fromPointer(ptr);
   }
 
   SkeletonData readSkeletonDataFile(String path) {
-    final result = SpineBindings.bindings.spine_skeleton_binary_read_skeleton_data_file(_ptr, path.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings
+        .spine_skeleton_binary_read_skeleton_data_file(
+            _ptr, path.toNativeUtf8().cast<Char>());
     return SkeletonData.fromPointer(result);
   }
 
@@ -68,9 +73,5 @@ class SkeletonBinary implements Finalizable {
   String get error {
     final result = SpineBindings.bindings.spine_skeleton_binary_get_error(_ptr);
     return result.cast<Utf8>().toDartString();
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_skeleton_binary_dispose(_ptr);
   }
 }

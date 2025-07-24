@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'to_property.dart';
 
@@ -47,10 +47,5 @@ class ToY extends ToProperty {
   factory ToY() {
     final ptr = SpineBindings.bindings.spine_to_y_create();
     return ToY.fromPointer(ptr);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_to_y_dispose(_ptr);
   }
 }

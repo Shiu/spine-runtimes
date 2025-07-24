@@ -31,55 +31,92 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
-import 'constraint.dart';
-import 'skeleton.dart';
-import 'bone_data.dart';
-import 'ik_constraint_pose.dart';
 import 'arrays.dart';
+import 'bone_data.dart';
+import 'constraint.dart';
+import 'constraint_data.dart';
+import 'ik_constraint.dart';
+import 'ik_constraint_pose.dart';
+import 'path_constraint.dart';
+import 'physics_constraint.dart';
+import 'posed_data.dart';
+import 'skeleton.dart';
+import 'slider.dart';
+import 'transform_constraint.dart';
 
 /// IkConstraintData wrapper
-class IkConstraintData implements Finalizable {
+class IkConstraintData extends PosedData implements ConstraintData {
   final Pointer<spine_ik_constraint_data_wrapper> _ptr;
 
-  IkConstraintData.fromPointer(this._ptr);
+  IkConstraintData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory IkConstraintData(String name) {
-    final ptr = SpineBindings.bindings.spine_ik_constraint_data_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings
+        .spine_ik_constraint_data_create(name.toNativeUtf8().cast<Char>());
     return IkConstraintData.fromPointer(ptr);
   }
 
+  @override
   Rtti get rtti {
-    final result = SpineBindings.bindings.spine_ik_constraint_data_get_rtti(_ptr);
+    final result =
+        SpineBindings.bindings.spine_ik_constraint_data_get_rtti(_ptr);
     return Rtti.fromPointer(result);
   }
 
+  @override
   Constraint createMethod(Skeleton skeleton) {
-    final result = SpineBindings.bindings.spine_ik_constraint_data_create_method(_ptr, skeleton.nativePtr.cast());
-    throw UnsupportedError('Cannot instantiate abstract class Constraint from pointer - no concrete subclasses found');
+    final result = SpineBindings.bindings
+        .spine_ik_constraint_data_create_method(
+            _ptr, skeleton.nativePtr.cast());
+    final rtti = SpineBindings.bindings.spine_constraint_get_rtti(result);
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
+    switch (className) {
+      case 'spine_ik_constraint':
+        return IkConstraint.fromPointer(result.cast());
+      case 'spine_path_constraint':
+        return PathConstraint.fromPointer(result.cast());
+      case 'spine_physics_constraint':
+        return PhysicsConstraint.fromPointer(result.cast());
+      case 'spine_slider':
+        return Slider.fromPointer(result.cast());
+      case 'spine_transform_constraint':
+        return TransformConstraint.fromPointer(result.cast());
+      default:
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class Constraint');
+    }
   }
 
   ArrayBoneData get bones {
-    final result = SpineBindings.bindings.spine_ik_constraint_data_get_bones(_ptr);
+    final result =
+        SpineBindings.bindings.spine_ik_constraint_data_get_bones(_ptr);
     return ArrayBoneData.fromPointer(result);
   }
 
   BoneData get target {
-    final result = SpineBindings.bindings.spine_ik_constraint_data_get_target(_ptr);
+    final result =
+        SpineBindings.bindings.spine_ik_constraint_data_get_target(_ptr);
     return BoneData.fromPointer(result);
   }
 
   set target(BoneData value) {
-    SpineBindings.bindings.spine_ik_constraint_data_set_target(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_ik_constraint_data_set_target(_ptr, value.nativePtr.cast());
   }
 
   bool get uniform {
-    final result = SpineBindings.bindings.spine_ik_constraint_data_get_uniform(_ptr);
+    final result =
+        SpineBindings.bindings.spine_ik_constraint_data_get_uniform(_ptr);
     return result;
   }
 
@@ -87,31 +124,14 @@ class IkConstraintData implements Finalizable {
     SpineBindings.bindings.spine_ik_constraint_data_set_uniform(_ptr, value);
   }
 
-  String get name {
-    final result = SpineBindings.bindings.spine_ik_constraint_data_get_name(_ptr);
-    return result.cast<Utf8>().toDartString();
-  }
-
-  bool get skinRequired {
-    final result = SpineBindings.bindings.spine_ik_constraint_data_get_skin_required(_ptr);
-    return result;
-  }
-
   IkConstraintPose get setupPose {
-    final result = SpineBindings.bindings.spine_ik_constraint_data_get_setup_pose(_ptr);
+    final result =
+        SpineBindings.bindings.spine_ik_constraint_data_get_setup_pose(_ptr);
     return IkConstraintPose.fromPointer(result);
-  }
-
-  set skinRequired(bool value) {
-    SpineBindings.bindings.spine_ik_constraint_data_set_skin_required(_ptr, value);
   }
 
   static Rtti rttiStatic() {
     final result = SpineBindings.bindings.spine_ik_constraint_data_rtti();
     return Rtti.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_ik_constraint_data_dispose(_ptr);
   }
 }

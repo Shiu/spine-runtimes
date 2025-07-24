@@ -30,54 +30,68 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
-import 'skeleton.dart';
-import 'physics.dart';
-import 'ik_constraint_data.dart';
+import 'arrays.dart';
 import 'bone.dart';
 import 'bone_pose.dart';
+import 'constraint.dart';
+import 'ik_constraint_data.dart';
 import 'ik_constraint_pose.dart';
-import 'arrays.dart';
+import 'physics.dart';
+import 'posed.dart';
+import 'posed_active.dart';
+import 'skeleton.dart';
 
 /// IkConstraint wrapper
-class IkConstraint implements Finalizable {
+class IkConstraint extends PosedActive implements Posed, Constraint {
   final Pointer<spine_ik_constraint_wrapper> _ptr;
 
-  IkConstraint.fromPointer(this._ptr);
+  IkConstraint.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory IkConstraint(IkConstraintData data, Skeleton skeleton) {
-    final ptr = SpineBindings.bindings.spine_ik_constraint_create(data.nativePtr.cast(), skeleton.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_ik_constraint_create(
+        data.nativePtr.cast(), skeleton.nativePtr.cast());
     return IkConstraint.fromPointer(ptr);
   }
 
+  @override
   Rtti get rtti {
     final result = SpineBindings.bindings.spine_ik_constraint_get_rtti(_ptr);
     return Rtti.fromPointer(result);
   }
 
   IkConstraint copy(Skeleton skeleton) {
-    final result = SpineBindings.bindings.spine_ik_constraint_copy(_ptr, skeleton.nativePtr.cast());
+    final result = SpineBindings.bindings
+        .spine_ik_constraint_copy(_ptr, skeleton.nativePtr.cast());
     return IkConstraint.fromPointer(result);
   }
 
+  @override
   void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings.spine_ik_constraint_update(_ptr, skeleton.nativePtr.cast(), physics.value);
+    SpineBindings.bindings.spine_ik_constraint_update(
+        _ptr, skeleton.nativePtr.cast(), physics.value);
   }
 
+  @override
   void sort(Skeleton skeleton) {
-    SpineBindings.bindings.spine_ik_constraint_sort(_ptr, skeleton.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_ik_constraint_sort(_ptr, skeleton.nativePtr.cast());
   }
 
+  @override
   bool get isSourceActive {
-    final result = SpineBindings.bindings.spine_ik_constraint_is_source_active(_ptr);
+    final result =
+        SpineBindings.bindings.spine_ik_constraint_is_source_active(_ptr);
     return result;
   }
 
+  @override
   IkConstraintData get data {
     final result = SpineBindings.bindings.spine_ik_constraint_get_data(_ptr);
     return IkConstraintData.fromPointer(result);
@@ -94,7 +108,8 @@ class IkConstraint implements Finalizable {
   }
 
   set target(Bone value) {
-    SpineBindings.bindings.spine_ik_constraint_set_target(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_ik_constraint_set_target(_ptr, value.nativePtr.cast());
   }
 
   IkConstraintPose get pose {
@@ -103,30 +118,26 @@ class IkConstraint implements Finalizable {
   }
 
   IkConstraintPose get appliedPose {
-    final result = SpineBindings.bindings.spine_ik_constraint_get_applied_pose(_ptr);
+    final result =
+        SpineBindings.bindings.spine_ik_constraint_get_applied_pose(_ptr);
     return IkConstraintPose.fromPointer(result);
   }
 
+  @override
   void resetConstrained() {
     SpineBindings.bindings.spine_ik_constraint_reset_constrained(_ptr);
   }
 
+  @override
   void constrained() {
     SpineBindings.bindings.spine_ik_constraint_constrained(_ptr);
   }
 
+  @override
   bool get isPoseEqualToApplied {
-    final result = SpineBindings.bindings.spine_ik_constraint_is_pose_equal_to_applied(_ptr);
+    final result = SpineBindings.bindings
+        .spine_ik_constraint_is_pose_equal_to_applied(_ptr);
     return result;
-  }
-
-  bool get isActive {
-    final result = SpineBindings.bindings.spine_ik_constraint_is_active(_ptr);
-    return result;
-  }
-
-  set active(bool value) {
-    SpineBindings.bindings.spine_ik_constraint_set_active(_ptr, value);
   }
 
   static Rtti rttiStatic() {
@@ -134,15 +145,40 @@ class IkConstraint implements Finalizable {
     return Rtti.fromPointer(result);
   }
 
-  static void apply1(Skeleton skeleton, BonePose bone, double targetX, double targetY, bool compress, bool stretch, bool uniform, double mix) {
-    SpineBindings.bindings.spine_ik_constraint_apply_1(skeleton.nativePtr.cast(), bone.nativePtr.cast(), targetX, targetY, compress, stretch, uniform, mix);
+  static void apply(Skeleton skeleton, BonePose bone, double targetX,
+      double targetY, bool compress, bool stretch, bool uniform, double mix) {
+    SpineBindings.bindings.spine_ik_constraint_apply_1(
+        skeleton.nativePtr.cast(),
+        bone.nativePtr.cast(),
+        targetX,
+        targetY,
+        compress,
+        stretch,
+        uniform,
+        mix);
   }
 
-  static void apply2(Skeleton skeleton, BonePose parent, BonePose child, double targetX, double targetY, int bendDirection, bool stretch, bool uniform, double softness, double mix) {
-    SpineBindings.bindings.spine_ik_constraint_apply_2(skeleton.nativePtr.cast(), parent.nativePtr.cast(), child.nativePtr.cast(), targetX, targetY, bendDirection, stretch, uniform, softness, mix);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_ik_constraint_dispose(_ptr);
+  static void apply2(
+      Skeleton skeleton,
+      BonePose parent,
+      BonePose child,
+      double targetX,
+      double targetY,
+      int bendDirection,
+      bool stretch,
+      bool uniform,
+      double softness,
+      double mix) {
+    SpineBindings.bindings.spine_ik_constraint_apply_2(
+        skeleton.nativePtr.cast(),
+        parent.nativePtr.cast(),
+        child.nativePtr.cast(),
+        targetX,
+        targetY,
+        bendDirection,
+        stretch,
+        uniform,
+        softness,
+        mix);
   }
 }

@@ -32,9 +32,9 @@
 /// BlendMode enum
 enum BlendMode {
   normal(0),
-  additive(1),
-  multiply(2),
-  screen(3);
+  additive(0),
+  multiply(0),
+  screen(0);
 
   const BlendMode(this.value);
   final int value;

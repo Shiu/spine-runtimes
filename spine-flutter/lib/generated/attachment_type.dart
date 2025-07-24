@@ -32,12 +32,12 @@
 /// AttachmentType enum
 enum AttachmentType {
   region(0),
-  boundingbox(1),
-  mesh(2),
-  linkedmesh(3),
-  path(4),
-  point(5),
-  clipping(6);
+  boundingbox(0),
+  mesh(0),
+  linkedmesh(0),
+  path(0),
+  point(0),
+  clipping(0);
 
   const AttachmentType(this.value);
   final int value;

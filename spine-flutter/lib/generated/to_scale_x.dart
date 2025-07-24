@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'to_property.dart';
 
@@ -47,10 +47,5 @@ class ToScaleX extends ToProperty {
   factory ToScaleX() {
     final ptr = SpineBindings.bindings.spine_to_scale_x_create();
     return ToScaleX.fromPointer(ptr);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_to_scale_x_dispose(_ptr);
   }
 }

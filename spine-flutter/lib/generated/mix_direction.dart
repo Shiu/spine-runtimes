@@ -32,7 +32,7 @@
 /// MixDirection enum
 enum MixDirection {
   directionIn(0),
-  directionOut(1);
+  directionOut(0);
 
   const MixDirection(this.value);
   final int value;

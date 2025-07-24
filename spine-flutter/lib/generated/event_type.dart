@@ -32,11 +32,11 @@
 /// EventType enum
 enum EventType {
   start(0),
-  interrupt(1),
-  end(2),
-  dispose(3),
-  complete(4),
-  event(5);
+  interrupt(0),
+  end(0),
+  dispose(0),
+  complete(0),
+  event(0);
 
   const EventType(this.value);
   final int value;

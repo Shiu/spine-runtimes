@@ -30,39 +30,17 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
 
 /// ConstraintTimeline wrapper
-class ConstraintTimeline implements Finalizable {
-  final Pointer<spine_constraint_timeline_wrapper> _ptr;
-
-  ConstraintTimeline.fromPointer(this._ptr);
-
-  /// Get the native pointer for FFI calls
-  Pointer get nativePtr => _ptr;
-
-  Rtti get rtti {
-    final result = SpineBindings.bindings.spine_constraint_timeline_get_rtti(_ptr);
-    return Rtti.fromPointer(result);
-  }
-
-  int get constraintIndex {
-    final result = SpineBindings.bindings.spine_constraint_timeline_get_constraint_index(_ptr);
-    return result;
-  }
-
-  set constraintIndex(int value) {
-    SpineBindings.bindings.spine_constraint_timeline_set_constraint_index(_ptr, value);
-  }
-
+abstract class ConstraintTimeline {
+  Pointer get nativePtr;
+  Rtti get rtti;
+  int get constraintIndex;
+  set constraintIndex(int value);
   static Rtti rttiStatic() {
     final result = SpineBindings.bindings.spine_constraint_timeline_rtti();
     return Rtti.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_constraint_timeline_dispose(_ptr);
   }
 }

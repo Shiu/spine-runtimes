@@ -30,31 +30,33 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
+import 'constraint_timeline.dart';
 import 'curve_timeline1.dart';
 
 /// PhysicsConstraintTimeline wrapper
-abstract class PhysicsConstraintTimeline extends CurveTimeline1 {
+abstract class PhysicsConstraintTimeline extends CurveTimeline1
+    implements ConstraintTimeline {
   final Pointer<spine_physics_constraint_timeline_wrapper> _ptr;
 
-  PhysicsConstraintTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  PhysicsConstraintTimeline.fromPointer(this._ptr)
+      : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
   @override
   Pointer get nativePtr => _ptr;
 
+  @override
   int get constraintIndex {
-    final result = SpineBindings.bindings.spine_physics_constraint_timeline_get_constraint_index(_ptr);
+    final result = SpineBindings.bindings
+        .spine_physics_constraint_timeline_get_constraint_index(_ptr);
     return result;
   }
 
-  set constraintIndex(int value) {
-    SpineBindings.bindings.spine_physics_constraint_timeline_set_constraint_index(_ptr, value);
-  }
-
   @override
-  void dispose() {
-    SpineBindings.bindings.spine_physics_constraint_timeline_dispose(_ptr);
+  set constraintIndex(int value) {
+    SpineBindings.bindings
+        .spine_physics_constraint_timeline_set_constraint_index(_ptr, value);
   }
 }

@@ -35,7 +35,12 @@ import 'package:ffi/ffi.dart';
 const String _libName = 'spine_flutter';
 final DynamicLibrary _dylib = () {
   if (Platform.isMacOS || Platform.isIOS) {
-    return DynamicLibrary.open('$_libName.framework/$_libName');
+    try {
+      return DynamicLibrary.open('$_libName.framework/$_libName');
+    } catch (e) {
+      // Fallback for macOS where the library might not be in a framework
+      return DynamicLibrary.open('$_libName.dylib');
+    }
   }
   if (Platform.isAndroid || Platform.isLinux) {
     return DynamicLibrary.open('lib$_libName.so');
@@ -46,17 +51,18 @@ final DynamicLibrary _dylib = () {
   throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
 }();
 
-class SpineFlutterFFI {
+class SpineDartFFI {
   DynamicLibrary dylib;
   Allocator allocator;
 
-  SpineFlutterFFI(this.dylib, this.allocator);
+  SpineDartFFI(this.dylib, this.allocator);
 }
 
-Future<SpineFlutterFFI> initSpineFlutterFFI(bool useStaticLinkage) async {
+Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {
   if (useStaticLinkage) {
-    return SpineFlutterFFI(DynamicLibrary.process(), malloc);
+    return SpineDartFFI(DynamicLibrary.process(), malloc);
   } else {
-    return SpineFlutterFFI(_dylib, malloc);
+    return SpineDartFFI(_dylib, malloc);
   }
 }
+

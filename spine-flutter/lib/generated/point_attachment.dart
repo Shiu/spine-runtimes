@@ -31,11 +31,11 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'attachment.dart';
-import 'color.dart';
 import 'bone_pose.dart';
+import 'color.dart';
 
 /// PointAttachment wrapper
 class PointAttachment extends Attachment {
@@ -48,7 +48,8 @@ class PointAttachment extends Attachment {
   Pointer get nativePtr => _ptr;
 
   factory PointAttachment(String name) {
-    final ptr = SpineBindings.bindings.spine_point_attachment_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings
+        .spine_point_attachment_create(name.toNativeUtf8().cast<Char>());
     return PointAttachment.fromPointer(ptr);
   }
 
@@ -71,7 +72,8 @@ class PointAttachment extends Attachment {
   }
 
   double get rotation {
-    final result = SpineBindings.bindings.spine_point_attachment_get_rotation(_ptr);
+    final result =
+        SpineBindings.bindings.spine_point_attachment_get_rotation(_ptr);
     return result;
   }
 
@@ -80,17 +82,15 @@ class PointAttachment extends Attachment {
   }
 
   Color get color {
-    final result = SpineBindings.bindings.spine_point_attachment_get_color(_ptr);
+    final result =
+        SpineBindings.bindings.spine_point_attachment_get_color(_ptr);
     return Color.fromPointer(result);
   }
 
   double computeWorldRotation(BonePose bone) {
-    final result = SpineBindings.bindings.spine_point_attachment_compute_world_rotation(_ptr, bone.nativePtr.cast());
+    final result = SpineBindings.bindings
+        .spine_point_attachment_compute_world_rotation(
+            _ptr, bone.nativePtr.cast());
     return result;
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_point_attachment_dispose(_ptr);
   }
 }

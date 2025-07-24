@@ -31,7 +31,7 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// Rtti wrapper
@@ -49,16 +49,14 @@ class Rtti implements Finalizable {
   }
 
   bool isExactly(Rtti rtti) {
-    final result = SpineBindings.bindings.spine_rtti_is_exactly(_ptr, rtti.nativePtr.cast());
+    final result = SpineBindings.bindings
+        .spine_rtti_is_exactly(_ptr, rtti.nativePtr.cast());
     return result;
   }
 
   bool instanceOf(Rtti rtti) {
-    final result = SpineBindings.bindings.spine_rtti_instance_of(_ptr, rtti.nativePtr.cast());
+    final result = SpineBindings.bindings
+        .spine_rtti_instance_of(_ptr, rtti.nativePtr.cast());
     return result;
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_rtti_dispose(_ptr);
   }
 }

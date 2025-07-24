@@ -31,11 +31,11 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'slot_pose.dart';
-import 'attachment.dart';
 import 'arrays.dart';
+import 'attachment.dart';
+import 'slot_pose.dart';
 
 /// Sequence wrapper
 class Sequence implements Finalizable {
@@ -57,11 +57,13 @@ class Sequence implements Finalizable {
   }
 
   void apply(SlotPose slot, Attachment attachment) {
-    SpineBindings.bindings.spine_sequence_apply(_ptr, slot.nativePtr.cast(), attachment.nativePtr.cast());
+    SpineBindings.bindings.spine_sequence_apply(
+        _ptr, slot.nativePtr.cast(), attachment.nativePtr.cast());
   }
 
   String getPath(String basePath, int index) {
-    final result = SpineBindings.bindings.spine_sequence_get_path(_ptr, basePath.toNativeUtf8().cast<Char>(), index);
+    final result = SpineBindings.bindings.spine_sequence_get_path(
+        _ptr, basePath.toNativeUtf8().cast<Char>(), index);
     return result.cast<Utf8>().toDartString();
   }
 
@@ -104,9 +106,5 @@ class Sequence implements Finalizable {
   ArrayTextureRegion get regions {
     final result = SpineBindings.bindings.spine_sequence_get_regions(_ptr);
     return ArrayTextureRegion.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_sequence_dispose(_ptr);
   }
 }

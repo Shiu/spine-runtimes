@@ -30,40 +30,47 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
+import 'constraint_timeline.dart';
 import 'curve_timeline.dart';
 
 /// PathConstraintMixTimeline wrapper
-class PathConstraintMixTimeline extends CurveTimeline {
+class PathConstraintMixTimeline extends CurveTimeline
+    implements ConstraintTimeline {
   final Pointer<spine_path_constraint_mix_timeline_wrapper> _ptr;
 
-  PathConstraintMixTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  PathConstraintMixTimeline.fromPointer(this._ptr)
+      : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
   @override
   Pointer get nativePtr => _ptr;
 
-  factory PathConstraintMixTimeline(int frameCount, int bezierCount, int constraintIndex) {
-    final ptr = SpineBindings.bindings.spine_path_constraint_mix_timeline_create(frameCount, bezierCount, constraintIndex);
+  factory PathConstraintMixTimeline(
+      int frameCount, int bezierCount, int constraintIndex) {
+    final ptr = SpineBindings.bindings
+        .spine_path_constraint_mix_timeline_create(
+            frameCount, bezierCount, constraintIndex);
     return PathConstraintMixTimeline.fromPointer(ptr);
   }
 
-  void setFrame(int frame, double time, double mixRotate, double mixX, double mixY) {
-    SpineBindings.bindings.spine_path_constraint_mix_timeline_set_frame(_ptr, frame, time, mixRotate, mixX, mixY);
-  }
-
-  int get constraintIndex {
-    final result = SpineBindings.bindings.spine_path_constraint_mix_timeline_get_constraint_index(_ptr);
-    return result;
-  }
-
-  set constraintIndex(int value) {
-    SpineBindings.bindings.spine_path_constraint_mix_timeline_set_constraint_index(_ptr, value);
+  void setFrame(
+      int frame, double time, double mixRotate, double mixX, double mixY) {
+    SpineBindings.bindings.spine_path_constraint_mix_timeline_set_frame(
+        _ptr, frame, time, mixRotate, mixX, mixY);
   }
 
   @override
-  void dispose() {
-    SpineBindings.bindings.spine_path_constraint_mix_timeline_dispose(_ptr);
+  int get constraintIndex {
+    final result = SpineBindings.bindings
+        .spine_path_constraint_mix_timeline_get_constraint_index(_ptr);
+    return result;
+  }
+
+  @override
+  set constraintIndex(int value) {
+    SpineBindings.bindings
+        .spine_path_constraint_mix_timeline_set_constraint_index(_ptr, value);
   }
 }

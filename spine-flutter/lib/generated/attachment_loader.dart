@@ -30,58 +30,24 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
-import '../spine_bindings.dart';
-import 'region_attachment.dart';
-import 'skin.dart';
-import 'sequence.dart';
-import 'mesh_attachment.dart';
 import 'bounding_box_attachment.dart';
+import 'clipping_attachment.dart';
+import 'mesh_attachment.dart';
 import 'path_attachment.dart';
 import 'point_attachment.dart';
-import 'clipping_attachment.dart';
+import 'region_attachment.dart';
+import 'sequence.dart';
+import 'skin.dart';
 
 /// AttachmentLoader wrapper
-abstract class AttachmentLoader implements Finalizable {
-  final Pointer<spine_attachment_loader_wrapper> _ptr;
-
-  AttachmentLoader.fromPointer(this._ptr);
-
-  /// Get the native pointer for FFI calls
-  Pointer get nativePtr => _ptr;
-
-  RegionAttachment newRegionAttachment(Skin skin, String name, String path, Sequence sequence) {
-    final result = SpineBindings.bindings.spine_attachment_loader_new_region_attachment(_ptr, skin.nativePtr.cast(), name.toNativeUtf8().cast<Char>(), path.toNativeUtf8().cast<Char>(), sequence.nativePtr.cast());
-    return RegionAttachment.fromPointer(result);
-  }
-
-  MeshAttachment newMeshAttachment(Skin skin, String name, String path, Sequence sequence) {
-    final result = SpineBindings.bindings.spine_attachment_loader_new_mesh_attachment(_ptr, skin.nativePtr.cast(), name.toNativeUtf8().cast<Char>(), path.toNativeUtf8().cast<Char>(), sequence.nativePtr.cast());
-    return MeshAttachment.fromPointer(result);
-  }
-
-  BoundingBoxAttachment newBoundingBoxAttachment(Skin skin, String name) {
-    final result = SpineBindings.bindings.spine_attachment_loader_new_bounding_box_attachment(_ptr, skin.nativePtr.cast(), name.toNativeUtf8().cast<Char>());
-    return BoundingBoxAttachment.fromPointer(result);
-  }
-
-  PathAttachment newPathAttachment(Skin skin, String name) {
-    final result = SpineBindings.bindings.spine_attachment_loader_new_path_attachment(_ptr, skin.nativePtr.cast(), name.toNativeUtf8().cast<Char>());
-    return PathAttachment.fromPointer(result);
-  }
-
-  PointAttachment newPointAttachment(Skin skin, String name) {
-    final result = SpineBindings.bindings.spine_attachment_loader_new_point_attachment(_ptr, skin.nativePtr.cast(), name.toNativeUtf8().cast<Char>());
-    return PointAttachment.fromPointer(result);
-  }
-
-  ClippingAttachment newClippingAttachment(Skin skin, String name) {
-    final result = SpineBindings.bindings.spine_attachment_loader_new_clipping_attachment(_ptr, skin.nativePtr.cast(), name.toNativeUtf8().cast<Char>());
-    return ClippingAttachment.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_attachment_loader_dispose(_ptr);
-  }
+abstract class AttachmentLoader {
+  Pointer get nativePtr;
+  RegionAttachment newRegionAttachment(
+      Skin skin, String name, String path, Sequence sequence);
+  MeshAttachment newMeshAttachment(
+      Skin skin, String name, String path, Sequence sequence);
+  BoundingBoxAttachment newBoundingBoxAttachment(Skin skin, String name);
+  PathAttachment newPathAttachment(Skin skin, String name);
+  PointAttachment newPointAttachment(Skin skin, String name);
+  ClippingAttachment newClippingAttachment(Skin skin, String name);
 }

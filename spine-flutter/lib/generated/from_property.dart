@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
 import 'arrays.dart';
@@ -69,10 +69,7 @@ abstract class FromProperty implements Finalizable {
   }
 
   set to(ArrayToProperty value) {
-    SpineBindings.bindings.spine_from_property_set__to(_ptr, value.nativePtr.cast());
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_from_property_dispose(_ptr);
+    SpineBindings.bindings
+        .spine_from_property_set__to(_ptr, value.nativePtr.cast());
   }
 }

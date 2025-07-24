@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'slot_curve_timeline.dart';
 
@@ -45,16 +45,14 @@ class Rgb2Timeline extends SlotCurveTimeline {
   Pointer get nativePtr => _ptr;
 
   factory Rgb2Timeline(int frameCount, int bezierCount, int slotIndex) {
-    final ptr = SpineBindings.bindings.spine_rgb2_timeline_create(frameCount, bezierCount, slotIndex);
+    final ptr = SpineBindings.bindings
+        .spine_rgb2_timeline_create(frameCount, bezierCount, slotIndex);
     return Rgb2Timeline.fromPointer(ptr);
   }
 
-  void setFrame(int frame, double time, double r, double g, double b, double r2, double g2, double b2) {
-    SpineBindings.bindings.spine_rgb2_timeline_set_frame(_ptr, frame, time, r, g, b, r2, g2, b2);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_rgb2_timeline_dispose(_ptr);
+  void setFrame(int frame, double time, double r, double g, double b, double r2,
+      double g2, double b2) {
+    SpineBindings.bindings
+        .spine_rgb2_timeline_set_frame(_ptr, frame, time, r, g, b, r2, g2, b2);
   }
 }

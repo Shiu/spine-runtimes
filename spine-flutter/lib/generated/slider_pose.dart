@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// SliderPose wrapper
@@ -67,9 +67,5 @@ class SliderPose implements Finalizable {
 
   set mix(double value) {
     SpineBindings.bindings.spine_slider_pose_set_mix(_ptr, value);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_slider_pose_dispose(_ptr);
   }
 }

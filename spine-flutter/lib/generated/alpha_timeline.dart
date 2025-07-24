@@ -30,12 +30,13 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'curve_timeline1.dart';
+import 'slot_timeline.dart';
 
 /// AlphaTimeline wrapper
-class AlphaTimeline extends CurveTimeline1 {
+class AlphaTimeline extends CurveTimeline1 implements SlotTimeline {
   final Pointer<spine_alpha_timeline_wrapper> _ptr;
 
   AlphaTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
@@ -45,21 +46,20 @@ class AlphaTimeline extends CurveTimeline1 {
   Pointer get nativePtr => _ptr;
 
   factory AlphaTimeline(int frameCount, int bezierCount, int slotIndex) {
-    final ptr = SpineBindings.bindings.spine_alpha_timeline_create(frameCount, bezierCount, slotIndex);
+    final ptr = SpineBindings.bindings
+        .spine_alpha_timeline_create(frameCount, bezierCount, slotIndex);
     return AlphaTimeline.fromPointer(ptr);
   }
 
+  @override
   int get slotIndex {
-    final result = SpineBindings.bindings.spine_alpha_timeline_get_slot_index(_ptr);
+    final result =
+        SpineBindings.bindings.spine_alpha_timeline_get_slot_index(_ptr);
     return result;
   }
 
+  @override
   set slotIndex(int value) {
     SpineBindings.bindings.spine_alpha_timeline_set_slot_index(_ptr, value);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_alpha_timeline_dispose(_ptr);
   }
 }

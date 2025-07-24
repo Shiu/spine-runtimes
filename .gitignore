@@ -257,3 +257,4 @@ formatters/eclipse-formatter/format-diff.txt
 spine-cpp/build-debug
 spine-cpp/build-linux
 spine-cpp/build-release-debug
+spine-flutter/test/spine_flutter.dylib

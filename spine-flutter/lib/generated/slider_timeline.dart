@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'constraint_timeline1.dart';
 
@@ -45,12 +45,8 @@ class SliderTimeline extends ConstraintTimeline1 {
   Pointer get nativePtr => _ptr;
 
   factory SliderTimeline(int frameCount, int bezierCount, int sliderIndex) {
-    final ptr = SpineBindings.bindings.spine_slider_timeline_create(frameCount, bezierCount, sliderIndex);
+    final ptr = SpineBindings.bindings
+        .spine_slider_timeline_create(frameCount, bezierCount, sliderIndex);
     return SliderTimeline.fromPointer(ptr);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_slider_timeline_dispose(_ptr);
   }
 }

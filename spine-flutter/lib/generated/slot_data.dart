@@ -31,23 +31,26 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'bone_data.dart';
 import 'blend_mode.dart';
+import 'bone_data.dart';
+import 'posed_data.dart';
 import 'slot_pose.dart';
 
 /// SlotData wrapper
-class SlotData implements Finalizable {
+class SlotData extends PosedData {
   final Pointer<spine_slot_data_wrapper> _ptr;
 
-  SlotData.fromPointer(this._ptr);
+  SlotData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory SlotData(int index, String name, BoneData boneData) {
-    final ptr = SpineBindings.bindings.spine_slot_data_create(index, name.toNativeUtf8().cast<Char>(), boneData.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_slot_data_create(
+        index, name.toNativeUtf8().cast<Char>(), boneData.nativePtr.cast());
     return SlotData.fromPointer(ptr);
   }
 
@@ -62,11 +65,13 @@ class SlotData implements Finalizable {
   }
 
   set attachmentName(String value) {
-    SpineBindings.bindings.spine_slot_data_set_attachment_name(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_slot_data_set_attachment_name(
+        _ptr, value.toNativeUtf8().cast<Char>());
   }
 
   String get attachmentName {
-    final result = SpineBindings.bindings.spine_slot_data_get_attachment_name(_ptr);
+    final result =
+        SpineBindings.bindings.spine_slot_data_get_attachment_name(_ptr);
     return result.cast<Utf8>().toDartString();
   }
 
@@ -91,23 +96,5 @@ class SlotData implements Finalizable {
   SlotPose get setupPose {
     final result = SpineBindings.bindings.spine_slot_data_get_setup_pose(_ptr);
     return SlotPose.fromPointer(result);
-  }
-
-  String get name {
-    final result = SpineBindings.bindings.spine_slot_data_get_name(_ptr);
-    return result.cast<Utf8>().toDartString();
-  }
-
-  bool get skinRequired {
-    final result = SpineBindings.bindings.spine_slot_data_get_skin_required(_ptr);
-    return result;
-  }
-
-  set skinRequired(bool value) {
-    SpineBindings.bindings.spine_slot_data_set_skin_required(_ptr, value);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_slot_data_dispose(_ptr);
   }
 }

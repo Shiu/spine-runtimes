@@ -31,11 +31,11 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'skeleton_data.dart';
 import 'atlas.dart';
 import 'attachment_loader.dart';
+import 'skeleton_data.dart';
 
 /// SkeletonJson wrapper
 class SkeletonJson implements Finalizable {
@@ -47,22 +47,29 @@ class SkeletonJson implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory SkeletonJson(Atlas atlas) {
-    final ptr = SpineBindings.bindings.spine_skeleton_json_create(atlas.nativePtr.cast());
+    final ptr = SpineBindings.bindings
+        .spine_skeleton_json_create(atlas.nativePtr.cast());
     return SkeletonJson.fromPointer(ptr);
   }
 
-  factory SkeletonJson.variant2(AttachmentLoader attachmentLoader, bool ownsLoader) {
-    final ptr = SpineBindings.bindings.spine_skeleton_json_create2(attachmentLoader.nativePtr.cast(), ownsLoader);
+  factory SkeletonJson.variant2(
+      AttachmentLoader attachmentLoader, bool ownsLoader) {
+    final ptr = SpineBindings.bindings.spine_skeleton_json_create2(
+        attachmentLoader.nativePtr.cast(), ownsLoader);
     return SkeletonJson.fromPointer(ptr);
   }
 
   SkeletonData readSkeletonDataFile(String path) {
-    final result = SpineBindings.bindings.spine_skeleton_json_read_skeleton_data_file(_ptr, path.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings
+        .spine_skeleton_json_read_skeleton_data_file(
+            _ptr, path.toNativeUtf8().cast<Char>());
     return SkeletonData.fromPointer(result);
   }
 
   SkeletonData readSkeletonData(String json) {
-    final result = SpineBindings.bindings.spine_skeleton_json_read_skeleton_data(_ptr, json.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings
+        .spine_skeleton_json_read_skeleton_data(
+            _ptr, json.toNativeUtf8().cast<Char>());
     return SkeletonData.fromPointer(result);
   }
 
@@ -73,9 +80,5 @@ class SkeletonJson implements Finalizable {
   String get error {
     final result = SpineBindings.bindings.spine_skeleton_json_get_error(_ptr);
     return result.cast<Utf8>().toDartString();
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_skeleton_json_dispose(_ptr);
   }
 }

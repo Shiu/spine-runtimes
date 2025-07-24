@@ -31,7 +31,7 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'event_data.dart';
 
@@ -45,7 +45,8 @@ class Event implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory Event(double time, EventData data) {
-    final ptr = SpineBindings.bindings.spine_event_create(time, data.nativePtr.cast());
+    final ptr =
+        SpineBindings.bindings.spine_event_create(time, data.nativePtr.cast());
     return Event.fromPointer(ptr);
   }
 
@@ -83,7 +84,8 @@ class Event implements Finalizable {
   }
 
   set stringValue(String value) {
-    SpineBindings.bindings.spine_event_set_string(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings
+        .spine_event_set_string(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   double get volume {
@@ -102,9 +104,5 @@ class Event implements Finalizable {
 
   set balance(double value) {
     SpineBindings.bindings.spine_event_set_balance(_ptr, value);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_event_dispose(_ptr);
   }
 }

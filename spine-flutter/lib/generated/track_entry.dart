@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'animation.dart';
 import 'mix_blend.dart';
@@ -50,7 +50,8 @@ class TrackEntry implements Finalizable {
   }
 
   int get trackIndex {
-    final result = SpineBindings.bindings.spine_track_entry_get_track_index(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_track_index(_ptr);
     return result;
   }
 
@@ -60,7 +61,8 @@ class TrackEntry implements Finalizable {
   }
 
   set animation(Animation value) {
-    SpineBindings.bindings.spine_track_entry_set_animation(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_track_entry_set_animation(_ptr, value.nativePtr.cast());
   }
 
   TrackEntry get previous {
@@ -78,7 +80,8 @@ class TrackEntry implements Finalizable {
   }
 
   bool get holdPrevious {
-    final result = SpineBindings.bindings.spine_track_entry_get_hold_previous(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_hold_previous(_ptr);
     return result;
   }
 
@@ -96,7 +99,8 @@ class TrackEntry implements Finalizable {
   }
 
   bool get shortestRotation {
-    final result = SpineBindings.bindings.spine_track_entry_get_shortest_rotation(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_shortest_rotation(_ptr);
     return result;
   }
 
@@ -114,7 +118,8 @@ class TrackEntry implements Finalizable {
   }
 
   double get trackTime {
-    final result = SpineBindings.bindings.spine_track_entry_get_track_time(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_track_time(_ptr);
     return result;
   }
 
@@ -132,7 +137,8 @@ class TrackEntry implements Finalizable {
   }
 
   double get animationStart {
-    final result = SpineBindings.bindings.spine_track_entry_get_animation_start(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_animation_start(_ptr);
     return result;
   }
 
@@ -141,7 +147,8 @@ class TrackEntry implements Finalizable {
   }
 
   double get animationEnd {
-    final result = SpineBindings.bindings.spine_track_entry_get_animation_end(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_animation_end(_ptr);
     return result;
   }
 
@@ -150,7 +157,8 @@ class TrackEntry implements Finalizable {
   }
 
   double get animationLast {
-    final result = SpineBindings.bindings.spine_track_entry_get_animation_last(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_animation_last(_ptr);
     return result;
   }
 
@@ -159,12 +167,14 @@ class TrackEntry implements Finalizable {
   }
 
   double get animationTime {
-    final result = SpineBindings.bindings.spine_track_entry_get_animation_time(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_animation_time(_ptr);
     return result;
   }
 
   double get timeScale {
-    final result = SpineBindings.bindings.spine_track_entry_get_time_scale(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_time_scale(_ptr);
     return result;
   }
 
@@ -182,7 +192,8 @@ class TrackEntry implements Finalizable {
   }
 
   double get eventThreshold {
-    final result = SpineBindings.bindings.spine_track_entry_get_event_threshold(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_event_threshold(_ptr);
     return result;
   }
 
@@ -191,30 +202,36 @@ class TrackEntry implements Finalizable {
   }
 
   double get mixAttachmentThreshold {
-    final result = SpineBindings.bindings.spine_track_entry_get_mix_attachment_threshold(_ptr);
+    final result = SpineBindings.bindings
+        .spine_track_entry_get_mix_attachment_threshold(_ptr);
     return result;
   }
 
   set mixAttachmentThreshold(double value) {
-    SpineBindings.bindings.spine_track_entry_set_mix_attachment_threshold(_ptr, value);
+    SpineBindings.bindings
+        .spine_track_entry_set_mix_attachment_threshold(_ptr, value);
   }
 
   double get alphaAttachmentThreshold {
-    final result = SpineBindings.bindings.spine_track_entry_get_alpha_attachment_threshold(_ptr);
+    final result = SpineBindings.bindings
+        .spine_track_entry_get_alpha_attachment_threshold(_ptr);
     return result;
   }
 
   set alphaAttachmentThreshold(double value) {
-    SpineBindings.bindings.spine_track_entry_set_alpha_attachment_threshold(_ptr, value);
+    SpineBindings.bindings
+        .spine_track_entry_set_alpha_attachment_threshold(_ptr, value);
   }
 
   double get mixDrawOrderThreshold {
-    final result = SpineBindings.bindings.spine_track_entry_get_mix_draw_order_threshold(_ptr);
+    final result = SpineBindings.bindings
+        .spine_track_entry_get_mix_draw_order_threshold(_ptr);
     return result;
   }
 
   set mixDrawOrderThreshold(double value) {
-    SpineBindings.bindings.spine_track_entry_set_mix_draw_order_threshold(_ptr, value);
+    SpineBindings.bindings
+        .spine_track_entry_set_mix_draw_order_threshold(_ptr, value);
   }
 
   TrackEntry get next {
@@ -237,7 +254,8 @@ class TrackEntry implements Finalizable {
   }
 
   double get mixDuration {
-    final result = SpineBindings.bindings.spine_track_entry_get_mix_duration(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_mix_duration(_ptr);
     return result;
   }
 
@@ -251,7 +269,8 @@ class TrackEntry implements Finalizable {
   }
 
   TrackEntry get mixingFrom {
-    final result = SpineBindings.bindings.spine_track_entry_get_mixing_from(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_mixing_from(_ptr);
     return TrackEntry.fromPointer(result);
   }
 
@@ -265,16 +284,18 @@ class TrackEntry implements Finalizable {
   }
 
   double get trackComplete {
-    final result = SpineBindings.bindings.spine_track_entry_get_track_complete(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_track_complete(_ptr);
     return result;
   }
 
   bool get isEmptyAnimation {
-    final result = SpineBindings.bindings.spine_track_entry_is_empty_animation(_ptr);
+    final result =
+        SpineBindings.bindings.spine_track_entry_is_empty_animation(_ptr);
     return result;
   }
 
-  bool wasApplied() {
+  bool get wasApplied {
     final result = SpineBindings.bindings.spine_track_entry_was_applied(_ptr);
     return result;
   }
@@ -284,15 +305,18 @@ class TrackEntry implements Finalizable {
     return result;
   }
 
-  set mixDuration1(double value) {
+  Pointer<Void> get rendererObject {
+    final result =
+        SpineBindings.bindings.spine_track_entry_get_renderer_object(_ptr);
+    return result;
+  }
+
+  set setMixDuration(double value) {
     SpineBindings.bindings.spine_track_entry_set_mix_duration_1(_ptr, value);
   }
 
   void setMixDuration2(double mixDuration, double delay) {
-    SpineBindings.bindings.spine_track_entry_set_mix_duration_2(_ptr, mixDuration, delay);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_track_entry_dispose(_ptr);
+    SpineBindings.bindings
+        .spine_track_entry_set_mix_duration_2(_ptr, mixDuration, delay);
   }
 }

@@ -32,12 +32,12 @@
 /// Format enum
 enum Format {
   alpha(0),
-  intensity(1),
-  luminanceAlpha(2),
-  rgb565(3),
-  rgba4444(4),
-  rgb888(5),
-  rgba8888(6);
+  intensity(0),
+  luminanceAlpha(0),
+  rgb565(0),
+  rgba4444(0),
+  rgb888(0),
+  rgba8888(0);
 
   const Format(this.value);
   final int value;

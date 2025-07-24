@@ -30,12 +30,13 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'curve_timeline.dart';
+import 'slot_timeline.dart';
 
 /// SlotCurveTimeline wrapper
-abstract class SlotCurveTimeline extends CurveTimeline {
+abstract class SlotCurveTimeline extends CurveTimeline implements SlotTimeline {
   final Pointer<spine_slot_curve_timeline_wrapper> _ptr;
 
   SlotCurveTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
@@ -44,17 +45,16 @@ abstract class SlotCurveTimeline extends CurveTimeline {
   @override
   Pointer get nativePtr => _ptr;
 
+  @override
   int get slotIndex {
-    final result = SpineBindings.bindings.spine_slot_curve_timeline_get_slot_index(_ptr);
+    final result =
+        SpineBindings.bindings.spine_slot_curve_timeline_get_slot_index(_ptr);
     return result;
   }
 
-  set slotIndex(int value) {
-    SpineBindings.bindings.spine_slot_curve_timeline_set_slot_index(_ptr, value);
-  }
-
   @override
-  void dispose() {
-    SpineBindings.bindings.spine_slot_curve_timeline_dispose(_ptr);
+  set slotIndex(int value) {
+    SpineBindings.bindings
+        .spine_slot_curve_timeline_set_slot_index(_ptr, value);
   }
 }

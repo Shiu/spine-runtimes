@@ -30,10 +30,10 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'timeline.dart';
 import 'arrays.dart';
+import 'timeline.dart';
 
 /// DrawOrderTimeline wrapper
 class DrawOrderTimeline extends Timeline {
@@ -46,16 +46,13 @@ class DrawOrderTimeline extends Timeline {
   Pointer get nativePtr => _ptr;
 
   factory DrawOrderTimeline(int frameCount) {
-    final ptr = SpineBindings.bindings.spine_draw_order_timeline_create(frameCount);
+    final ptr =
+        SpineBindings.bindings.spine_draw_order_timeline_create(frameCount);
     return DrawOrderTimeline.fromPointer(ptr);
   }
 
   void setFrame(int frame, double time, ArrayInt drawOrder) {
-    SpineBindings.bindings.spine_draw_order_timeline_set_frame(_ptr, frame, time, drawOrder.nativePtr.cast());
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_draw_order_timeline_dispose(_ptr);
+    SpineBindings.bindings.spine_draw_order_timeline_set_frame(
+        _ptr, frame, time, drawOrder.nativePtr.cast());
   }
 }

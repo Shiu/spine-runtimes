@@ -31,14 +31,14 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'attachment.dart';
-import 'slot.dart';
-import 'color.dart';
-import 'texture_region.dart';
-import 'sequence.dart';
 import 'arrays.dart';
+import 'attachment.dart';
+import 'color.dart';
+import 'sequence.dart';
+import 'slot.dart';
+import 'texture_region.dart';
 
 /// RegionAttachment wrapper
 class RegionAttachment extends Attachment {
@@ -51,7 +51,8 @@ class RegionAttachment extends Attachment {
   Pointer get nativePtr => _ptr;
 
   factory RegionAttachment(String name) {
-    final ptr = SpineBindings.bindings.spine_region_attachment_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings
+        .spine_region_attachment_create(name.toNativeUtf8().cast<Char>());
     return RegionAttachment.fromPointer(ptr);
   }
 
@@ -78,7 +79,8 @@ class RegionAttachment extends Attachment {
   }
 
   double get rotation {
-    final result = SpineBindings.bindings.spine_region_attachment_get_rotation(_ptr);
+    final result =
+        SpineBindings.bindings.spine_region_attachment_get_rotation(_ptr);
     return result;
   }
 
@@ -87,7 +89,8 @@ class RegionAttachment extends Attachment {
   }
 
   double get scaleX {
-    final result = SpineBindings.bindings.spine_region_attachment_get_scale_x(_ptr);
+    final result =
+        SpineBindings.bindings.spine_region_attachment_get_scale_x(_ptr);
     return result;
   }
 
@@ -96,7 +99,8 @@ class RegionAttachment extends Attachment {
   }
 
   double get scaleY {
-    final result = SpineBindings.bindings.spine_region_attachment_get_scale_y(_ptr);
+    final result =
+        SpineBindings.bindings.spine_region_attachment_get_scale_y(_ptr);
     return result;
   }
 
@@ -105,7 +109,8 @@ class RegionAttachment extends Attachment {
   }
 
   double get width {
-    final result = SpineBindings.bindings.spine_region_attachment_get_width(_ptr);
+    final result =
+        SpineBindings.bindings.spine_region_attachment_get_width(_ptr);
     return result;
   }
 
@@ -114,7 +119,8 @@ class RegionAttachment extends Attachment {
   }
 
   double get height {
-    final result = SpineBindings.bindings.spine_region_attachment_get_height(_ptr);
+    final result =
+        SpineBindings.bindings.spine_region_attachment_get_height(_ptr);
     return result;
   }
 
@@ -123,53 +129,63 @@ class RegionAttachment extends Attachment {
   }
 
   Color get color {
-    final result = SpineBindings.bindings.spine_region_attachment_get_color(_ptr);
+    final result =
+        SpineBindings.bindings.spine_region_attachment_get_color(_ptr);
     return Color.fromPointer(result);
   }
 
   String get path {
-    final result = SpineBindings.bindings.spine_region_attachment_get_path(_ptr);
+    final result =
+        SpineBindings.bindings.spine_region_attachment_get_path(_ptr);
     return result.cast<Utf8>().toDartString();
   }
 
   set path(String value) {
-    SpineBindings.bindings.spine_region_attachment_set_path(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_region_attachment_set_path(
+        _ptr, value.toNativeUtf8().cast<Char>());
   }
 
   TextureRegion get region {
-    final result = SpineBindings.bindings.spine_region_attachment_get_region(_ptr);
+    final result =
+        SpineBindings.bindings.spine_region_attachment_get_region(_ptr);
     return TextureRegion.fromPointer(result);
   }
 
   set region(TextureRegion value) {
-    SpineBindings.bindings.spine_region_attachment_set_region(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_region_attachment_set_region(_ptr, value.nativePtr.cast());
   }
 
   Sequence get sequence {
-    final result = SpineBindings.bindings.spine_region_attachment_get_sequence(_ptr);
+    final result =
+        SpineBindings.bindings.spine_region_attachment_get_sequence(_ptr);
     return Sequence.fromPointer(result);
   }
 
   set sequence(Sequence value) {
-    SpineBindings.bindings.spine_region_attachment_set_sequence(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_region_attachment_set_sequence(_ptr, value.nativePtr.cast());
   }
 
   ArrayFloat get offset {
-    final result = SpineBindings.bindings.spine_region_attachment_get_offset(_ptr);
+    final result =
+        SpineBindings.bindings.spine_region_attachment_get_offset(_ptr);
     return ArrayFloat.fromPointer(result);
   }
 
   ArrayFloat get uVs {
-    final result = SpineBindings.bindings.spine_region_attachment_get_u_vs(_ptr);
+    final result =
+        SpineBindings.bindings.spine_region_attachment_get_u_vs(_ptr);
     return ArrayFloat.fromPointer(result);
   }
 
-  void computeWorldVertices(Slot slot, ArrayFloat worldVertices, int offset, int stride) {
-    SpineBindings.bindings.spine_region_attachment_compute_world_vertices_2(_ptr, slot.nativePtr.cast(), worldVertices.nativePtr.cast(), offset, stride);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_region_attachment_dispose(_ptr);
+  void computeWorldVertices(
+      Slot slot, ArrayFloat worldVertices, int offset, int stride) {
+    SpineBindings.bindings.spine_region_attachment_compute_world_vertices_2(
+        _ptr,
+        slot.nativePtr.cast(),
+        worldVertices.nativePtr.cast(),
+        offset,
+        stride);
   }
 }

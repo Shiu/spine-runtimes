@@ -31,11 +31,11 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'vertex_attachment.dart';
-import 'slot_data.dart';
 import 'color.dart';
+import 'slot_data.dart';
+import 'vertex_attachment.dart';
 
 /// ClippingAttachment wrapper
 class ClippingAttachment extends VertexAttachment {
@@ -48,26 +48,25 @@ class ClippingAttachment extends VertexAttachment {
   Pointer get nativePtr => _ptr;
 
   factory ClippingAttachment(String name) {
-    final ptr = SpineBindings.bindings.spine_clipping_attachment_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings
+        .spine_clipping_attachment_create(name.toNativeUtf8().cast<Char>());
     return ClippingAttachment.fromPointer(ptr);
   }
 
   SlotData get endSlot {
-    final result = SpineBindings.bindings.spine_clipping_attachment_get_end_slot(_ptr);
+    final result =
+        SpineBindings.bindings.spine_clipping_attachment_get_end_slot(_ptr);
     return SlotData.fromPointer(result);
   }
 
   set endSlot(SlotData value) {
-    SpineBindings.bindings.spine_clipping_attachment_set_end_slot(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_clipping_attachment_set_end_slot(_ptr, value.nativePtr.cast());
   }
 
   Color get color {
-    final result = SpineBindings.bindings.spine_clipping_attachment_get_color(_ptr);
+    final result =
+        SpineBindings.bindings.spine_clipping_attachment_get_color(_ptr);
     return Color.fromPointer(result);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_clipping_attachment_dispose(_ptr);
   }
 }

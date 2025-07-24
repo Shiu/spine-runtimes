@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// IkConstraintPose wrapper
@@ -48,11 +48,13 @@ class IkConstraintPose implements Finalizable {
   }
 
   void set(IkConstraintPose pose) {
-    SpineBindings.bindings.spine_ik_constraint_pose_set(_ptr, pose.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_ik_constraint_pose_set(_ptr, pose.nativePtr.cast());
   }
 
   double get mix {
-    final result = SpineBindings.bindings.spine_ik_constraint_pose_get_mix(_ptr);
+    final result =
+        SpineBindings.bindings.spine_ik_constraint_pose_get_mix(_ptr);
     return result;
   }
 
@@ -61,7 +63,8 @@ class IkConstraintPose implements Finalizable {
   }
 
   double get softness {
-    final result = SpineBindings.bindings.spine_ik_constraint_pose_get_softness(_ptr);
+    final result =
+        SpineBindings.bindings.spine_ik_constraint_pose_get_softness(_ptr);
     return result;
   }
 
@@ -70,16 +73,19 @@ class IkConstraintPose implements Finalizable {
   }
 
   int get bendDirection {
-    final result = SpineBindings.bindings.spine_ik_constraint_pose_get_bend_direction(_ptr);
+    final result = SpineBindings.bindings
+        .spine_ik_constraint_pose_get_bend_direction(_ptr);
     return result;
   }
 
   set bendDirection(int value) {
-    SpineBindings.bindings.spine_ik_constraint_pose_set_bend_direction(_ptr, value);
+    SpineBindings.bindings
+        .spine_ik_constraint_pose_set_bend_direction(_ptr, value);
   }
 
   bool get compress {
-    final result = SpineBindings.bindings.spine_ik_constraint_pose_get_compress(_ptr);
+    final result =
+        SpineBindings.bindings.spine_ik_constraint_pose_get_compress(_ptr);
     return result;
   }
 
@@ -88,15 +94,12 @@ class IkConstraintPose implements Finalizable {
   }
 
   bool get stretch {
-    final result = SpineBindings.bindings.spine_ik_constraint_pose_get_stretch(_ptr);
+    final result =
+        SpineBindings.bindings.spine_ik_constraint_pose_get_stretch(_ptr);
     return result;
   }
 
   set stretch(bool value) {
     SpineBindings.bindings.spine_ik_constraint_pose_set_stretch(_ptr, value);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_ik_constraint_pose_dispose(_ptr);
   }
 }

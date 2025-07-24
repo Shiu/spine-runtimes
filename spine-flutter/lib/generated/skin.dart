@@ -31,17 +31,17 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
+import 'arrays.dart';
 import 'attachment.dart';
-import 'point_attachment.dart';
-import 'region_attachment.dart';
 import 'bounding_box_attachment.dart';
 import 'clipping_attachment.dart';
+import 'color.dart';
 import 'mesh_attachment.dart';
 import 'path_attachment.dart';
-import 'color.dart';
-import 'arrays.dart';
+import 'point_attachment.dart';
+import 'region_attachment.dart';
 
 /// Skin wrapper
 class Skin implements Finalizable {
@@ -53,23 +53,25 @@ class Skin implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory Skin(String name) {
-    final ptr = SpineBindings.bindings.spine_skin_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings
+        .spine_skin_create(name.toNativeUtf8().cast<Char>());
     return Skin.fromPointer(ptr);
   }
 
   void setAttachment(int slotIndex, String name, Attachment attachment) {
-    SpineBindings.bindings.spine_skin_set_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>(), attachment.nativePtr.cast());
+    SpineBindings.bindings.spine_skin_set_attachment(_ptr, slotIndex,
+        name.toNativeUtf8().cast<Char>(), attachment.nativePtr.cast());
   }
 
   Attachment getAttachment(int slotIndex, String name) {
-    final result = SpineBindings.bindings.spine_skin_get_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>());
+    final result = SpineBindings.bindings.spine_skin_get_attachment(
+        _ptr, slotIndex, name.toNativeUtf8().cast<Char>());
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
-    final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
+    final className = SpineBindings.bindings
+        .spine_rtti_get_class_name(rtti)
+        .cast<Utf8>()
+        .toDartString();
     switch (className) {
-      case 'spine_point_attachment':
-        return PointAttachment.fromPointer(result.cast());
-      case 'spine_region_attachment':
-        return RegionAttachment.fromPointer(result.cast());
       case 'spine_bounding_box_attachment':
         return BoundingBoxAttachment.fromPointer(result.cast());
       case 'spine_clipping_attachment':
@@ -78,17 +80,24 @@ class Skin implements Finalizable {
         return MeshAttachment.fromPointer(result.cast());
       case 'spine_path_attachment':
         return PathAttachment.fromPointer(result.cast());
+      case 'spine_point_attachment':
+        return PointAttachment.fromPointer(result.cast());
+      case 'spine_region_attachment':
+        return RegionAttachment.fromPointer(result.cast());
       default:
-        throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
+        throw UnsupportedError(
+            'Unknown concrete type: $className for abstract class Attachment');
     }
   }
 
   void removeAttachment(int slotIndex, String name) {
-    SpineBindings.bindings.spine_skin_remove_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_skin_remove_attachment(
+        _ptr, slotIndex, name.toNativeUtf8().cast<Char>());
   }
 
   void findAttachmentsForSlot(int slotIndex, ArrayAttachment attachments) {
-    SpineBindings.bindings.spine_skin_find_attachments_for_slot(_ptr, slotIndex, attachments.nativePtr.cast());
+    SpineBindings.bindings.spine_skin_find_attachments_for_slot(
+        _ptr, slotIndex, attachments.nativePtr.cast());
   }
 
   String get name {
@@ -117,9 +126,5 @@ class Skin implements Finalizable {
   Color get color {
     final result = SpineBindings.bindings.spine_skin_get_color(_ptr);
     return Color.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_skin_dispose(_ptr);
   }
 }

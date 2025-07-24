@@ -31,12 +31,13 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
+import 'slot_timeline.dart';
 import 'timeline.dart';
 
 /// AttachmentTimeline wrapper
-class AttachmentTimeline extends Timeline {
+class AttachmentTimeline extends Timeline implements SlotTimeline {
   final Pointer<spine_attachment_timeline_wrapper> _ptr;
 
   AttachmentTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
@@ -46,25 +47,26 @@ class AttachmentTimeline extends Timeline {
   Pointer get nativePtr => _ptr;
 
   factory AttachmentTimeline(int frameCount, int slotIndex) {
-    final ptr = SpineBindings.bindings.spine_attachment_timeline_create(frameCount, slotIndex);
+    final ptr = SpineBindings.bindings
+        .spine_attachment_timeline_create(frameCount, slotIndex);
     return AttachmentTimeline.fromPointer(ptr);
   }
 
   void setFrame(int frame, double time, String attachmentName) {
-    SpineBindings.bindings.spine_attachment_timeline_set_frame(_ptr, frame, time, attachmentName.toNativeUtf8().cast<Char>());
-  }
-
-  int get slotIndex {
-    final result = SpineBindings.bindings.spine_attachment_timeline_get_slot_index(_ptr);
-    return result;
-  }
-
-  set slotIndex(int value) {
-    SpineBindings.bindings.spine_attachment_timeline_set_slot_index(_ptr, value);
+    SpineBindings.bindings.spine_attachment_timeline_set_frame(
+        _ptr, frame, time, attachmentName.toNativeUtf8().cast<Char>());
   }
 
   @override
-  void dispose() {
-    SpineBindings.bindings.spine_attachment_timeline_dispose(_ptr);
+  int get slotIndex {
+    final result =
+        SpineBindings.bindings.spine_attachment_timeline_get_slot_index(_ptr);
+    return result;
+  }
+
+  @override
+  set slotIndex(int value) {
+    SpineBindings.bindings
+        .spine_attachment_timeline_set_slot_index(_ptr, value);
   }
 }

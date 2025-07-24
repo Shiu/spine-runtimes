@@ -30,13 +30,13 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
-import 'skeleton.dart';
+import 'arrays.dart';
 import 'mix_blend.dart';
 import 'mix_direction.dart';
-import 'arrays.dart';
+import 'skeleton.dart';
 
 /// Timeline wrapper
 abstract class Timeline implements Finalizable {
@@ -52,12 +52,30 @@ abstract class Timeline implements Finalizable {
     return Rtti.fromPointer(result);
   }
 
-  void apply(Skeleton skeleton, double lastTime, double time, ArrayEvent pEvents, double alpha, MixBlend blend, MixDirection direction, bool appliedPose) {
-    SpineBindings.bindings.spine_timeline_apply(_ptr, skeleton.nativePtr.cast(), lastTime, time, pEvents.nativePtr.cast(), alpha, blend.value, direction.value, appliedPose);
+  void apply(
+      Skeleton skeleton,
+      double lastTime,
+      double time,
+      ArrayEvent pEvents,
+      double alpha,
+      MixBlend blend,
+      MixDirection direction,
+      bool appliedPose) {
+    SpineBindings.bindings.spine_timeline_apply(
+        _ptr,
+        skeleton.nativePtr.cast(),
+        lastTime,
+        time,
+        pEvents.nativePtr.cast(),
+        alpha,
+        blend.value,
+        direction.value,
+        appliedPose);
   }
 
   int get frameEntries {
-    final result = SpineBindings.bindings.spine_timeline_get_frame_entries(_ptr);
+    final result =
+        SpineBindings.bindings.spine_timeline_get_frame_entries(_ptr);
     return result;
   }
 
@@ -84,9 +102,5 @@ abstract class Timeline implements Finalizable {
   static Rtti rttiStatic() {
     final result = SpineBindings.bindings.spine_timeline_rtti();
     return Rtti.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_timeline_dispose(_ptr);
   }
 }

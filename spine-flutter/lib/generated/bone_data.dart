@@ -31,22 +31,25 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'color.dart';
 import 'bone_local.dart';
+import 'color.dart';
+import 'posed_data.dart';
 
 /// BoneData wrapper
-class BoneData implements Finalizable {
+class BoneData extends PosedData {
   final Pointer<spine_bone_data_wrapper> _ptr;
 
-  BoneData.fromPointer(this._ptr);
+  BoneData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory BoneData(int index, String name, BoneData parent) {
-    final ptr = SpineBindings.bindings.spine_bone_data_create(index, name.toNativeUtf8().cast<Char>(), parent.nativePtr.cast());
+    final ptr = SpineBindings.bindings.spine_bone_data_create(
+        index, name.toNativeUtf8().cast<Char>(), parent.nativePtr.cast());
     return BoneData.fromPointer(ptr);
   }
 
@@ -80,7 +83,8 @@ class BoneData implements Finalizable {
   }
 
   set icon(String value) {
-    SpineBindings.bindings.spine_bone_data_set_icon(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings
+        .spine_bone_data_set_icon(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   bool get visible {
@@ -95,23 +99,5 @@ class BoneData implements Finalizable {
   BoneLocal get setupPose {
     final result = SpineBindings.bindings.spine_bone_data_get_setup_pose(_ptr);
     return BoneLocal.fromPointer(result);
-  }
-
-  String get name {
-    final result = SpineBindings.bindings.spine_bone_data_get_name(_ptr);
-    return result.cast<Utf8>().toDartString();
-  }
-
-  bool get skinRequired {
-    final result = SpineBindings.bindings.spine_bone_data_get_skin_required(_ptr);
-    return result;
-  }
-
-  set skinRequired(bool value) {
-    SpineBindings.bindings.spine_bone_data_set_skin_required(_ptr, value);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_bone_data_dispose(_ptr);
   }
 }

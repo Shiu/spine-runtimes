@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'physics_constraint_timeline.dart';
 
@@ -38,19 +38,18 @@ import 'physics_constraint_timeline.dart';
 class PhysicsConstraintDampingTimeline extends PhysicsConstraintTimeline {
   final Pointer<spine_physics_constraint_damping_timeline_wrapper> _ptr;
 
-  PhysicsConstraintDampingTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  PhysicsConstraintDampingTimeline.fromPointer(this._ptr)
+      : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
   @override
   Pointer get nativePtr => _ptr;
 
-  factory PhysicsConstraintDampingTimeline(int frameCount, int bezierCount, int physicsConstraintIndex) {
-    final ptr = SpineBindings.bindings.spine_physics_constraint_damping_timeline_create(frameCount, bezierCount, physicsConstraintIndex);
+  factory PhysicsConstraintDampingTimeline(
+      int frameCount, int bezierCount, int physicsConstraintIndex) {
+    final ptr = SpineBindings.bindings
+        .spine_physics_constraint_damping_timeline_create(
+            frameCount, bezierCount, physicsConstraintIndex);
     return PhysicsConstraintDampingTimeline.fromPointer(ptr);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_physics_constraint_damping_timeline_dispose(_ptr);
   }
 }

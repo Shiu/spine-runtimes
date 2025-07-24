@@ -31,11 +31,11 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'vertex_attachment.dart';
-import 'color.dart';
 import 'arrays.dart';
+import 'color.dart';
+import 'vertex_attachment.dart';
 
 /// PathAttachment wrapper
 class PathAttachment extends VertexAttachment {
@@ -48,21 +48,25 @@ class PathAttachment extends VertexAttachment {
   Pointer get nativePtr => _ptr;
 
   factory PathAttachment(String name) {
-    final ptr = SpineBindings.bindings.spine_path_attachment_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings
+        .spine_path_attachment_create(name.toNativeUtf8().cast<Char>());
     return PathAttachment.fromPointer(ptr);
   }
 
   ArrayFloat get lengths {
-    final result = SpineBindings.bindings.spine_path_attachment_get_lengths(_ptr);
+    final result =
+        SpineBindings.bindings.spine_path_attachment_get_lengths(_ptr);
     return ArrayFloat.fromPointer(result);
   }
 
   set lengths(ArrayFloat value) {
-    SpineBindings.bindings.spine_path_attachment_set_lengths(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_path_attachment_set_lengths(_ptr, value.nativePtr.cast());
   }
 
   bool get closed {
-    final result = SpineBindings.bindings.spine_path_attachment_get_closed(_ptr);
+    final result =
+        SpineBindings.bindings.spine_path_attachment_get_closed(_ptr);
     return result;
   }
 
@@ -71,21 +75,18 @@ class PathAttachment extends VertexAttachment {
   }
 
   bool get constantSpeed {
-    final result = SpineBindings.bindings.spine_path_attachment_get_constant_speed(_ptr);
+    final result =
+        SpineBindings.bindings.spine_path_attachment_get_constant_speed(_ptr);
     return result;
   }
 
   set constantSpeed(bool value) {
-    SpineBindings.bindings.spine_path_attachment_set_constant_speed(_ptr, value);
+    SpineBindings.bindings
+        .spine_path_attachment_set_constant_speed(_ptr, value);
   }
 
   Color get color {
     final result = SpineBindings.bindings.spine_path_attachment_get_color(_ptr);
     return Color.fromPointer(result);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_path_attachment_dispose(_ptr);
   }
 }

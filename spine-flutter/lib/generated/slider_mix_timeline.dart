@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'constraint_timeline1.dart';
 
@@ -45,12 +45,8 @@ class SliderMixTimeline extends ConstraintTimeline1 {
   Pointer get nativePtr => _ptr;
 
   factory SliderMixTimeline(int frameCount, int bezierCount, int sliderIndex) {
-    final ptr = SpineBindings.bindings.spine_slider_mix_timeline_create(frameCount, bezierCount, sliderIndex);
+    final ptr = SpineBindings.bindings
+        .spine_slider_mix_timeline_create(frameCount, bezierCount, sliderIndex);
     return SliderMixTimeline.fromPointer(ptr);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_slider_mix_timeline_dispose(_ptr);
   }
 }

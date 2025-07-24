@@ -31,7 +31,7 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'format.dart';
 import 'texture_filter.dart';
@@ -47,7 +47,8 @@ class AtlasPage implements Finalizable {
   Pointer get nativePtr => _ptr;
 
   factory AtlasPage(String inName) {
-    final ptr = SpineBindings.bindings.spine_atlas_page_create(inName.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings
+        .spine_atlas_page_create(inName.toNativeUtf8().cast<Char>());
     return AtlasPage.fromPointer(ptr);
   }
 
@@ -57,16 +58,19 @@ class AtlasPage implements Finalizable {
   }
 
   set name(String value) {
-    SpineBindings.bindings.spine_atlas_page_set_name(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings
+        .spine_atlas_page_set_name(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
   String get texturePath {
-    final result = SpineBindings.bindings.spine_atlas_page_get_texture_path(_ptr);
+    final result =
+        SpineBindings.bindings.spine_atlas_page_get_texture_path(_ptr);
     return result.cast<Utf8>().toDartString();
   }
 
   set texturePath(String value) {
-    SpineBindings.bindings.spine_atlas_page_set_texture_path(_ptr, value.toNativeUtf8().cast<Char>());
+    SpineBindings.bindings.spine_atlas_page_set_texture_path(
+        _ptr, value.toNativeUtf8().cast<Char>());
   }
 
   Format get format {
@@ -150,7 +154,8 @@ class AtlasPage implements Finalizable {
     SpineBindings.bindings.spine_atlas_page_set_index(_ptr, value);
   }
 
-  void dispose() {
-    SpineBindings.bindings.spine_atlas_page_dispose(_ptr);
+  Pointer<Void> get texture {
+    final result = SpineBindings.bindings.spine_atlas_page_get_texture(_ptr);
+    return result;
   }
 }

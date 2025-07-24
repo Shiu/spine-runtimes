@@ -30,12 +30,12 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
-import 'transform_constraint_pose.dart';
-import 'skeleton.dart';
 import 'bone_pose.dart';
+import 'skeleton.dart';
+import 'transform_constraint_pose.dart';
 
 /// ToProperty wrapper
 abstract class ToProperty implements Finalizable {
@@ -52,12 +52,21 @@ abstract class ToProperty implements Finalizable {
   }
 
   double mix(TransformConstraintPose pose) {
-    final result = SpineBindings.bindings.spine_to_property_mix(_ptr, pose.nativePtr.cast());
+    final result = SpineBindings.bindings
+        .spine_to_property_mix(_ptr, pose.nativePtr.cast());
     return result;
   }
 
-  void apply(Skeleton skeleton, TransformConstraintPose pose, BonePose bone, double value, bool local, bool additive) {
-    SpineBindings.bindings.spine_to_property_apply(_ptr, skeleton.nativePtr.cast(), pose.nativePtr.cast(), bone.nativePtr.cast(), value, local, additive);
+  void apply(Skeleton skeleton, TransformConstraintPose pose, BonePose bone,
+      double value, bool local, bool additive) {
+    SpineBindings.bindings.spine_to_property_apply(
+        _ptr,
+        skeleton.nativePtr.cast(),
+        pose.nativePtr.cast(),
+        bone.nativePtr.cast(),
+        value,
+        local,
+        additive);
   }
 
   static Rtti rttiStatic() {
@@ -90,9 +99,5 @@ abstract class ToProperty implements Finalizable {
 
   set scale(double value) {
     SpineBindings.bindings.spine_to_property_set__scale(_ptr, value);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_to_property_dispose(_ptr);
   }
 }

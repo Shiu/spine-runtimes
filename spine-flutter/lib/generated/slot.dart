@@ -30,24 +30,27 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'bone.dart';
+import 'posed.dart';
+import 'skeleton.dart';
 import 'slot_data.dart';
 import 'slot_pose.dart';
-import 'skeleton.dart';
 
 /// Slot wrapper
-class Slot implements Finalizable {
+class Slot implements Finalizable, Posed {
   final Pointer<spine_slot_wrapper> _ptr;
 
   Slot.fromPointer(this._ptr);
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory Slot(SlotData data, Skeleton skeleton) {
-    final ptr = SpineBindings.bindings.spine_slot_create(data.nativePtr.cast(), skeleton.nativePtr.cast());
+    final ptr = SpineBindings.bindings
+        .spine_slot_create(data.nativePtr.cast(), skeleton.nativePtr.cast());
     return Slot.fromPointer(ptr);
   }
 
@@ -75,20 +78,20 @@ class Slot implements Finalizable {
     return SlotPose.fromPointer(result);
   }
 
+  @override
   void resetConstrained() {
     SpineBindings.bindings.spine_slot_reset_constrained(_ptr);
   }
 
+  @override
   void constrained() {
     SpineBindings.bindings.spine_slot_constrained(_ptr);
   }
 
+  @override
   bool get isPoseEqualToApplied {
-    final result = SpineBindings.bindings.spine_slot_is_pose_equal_to_applied(_ptr);
+    final result =
+        SpineBindings.bindings.spine_slot_is_pose_equal_to_applied(_ptr);
     return result;
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_slot_dispose(_ptr);
   }
 }

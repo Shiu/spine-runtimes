@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'arrays.dart';
 
@@ -54,7 +54,8 @@ class Polygon implements Finalizable {
   }
 
   set vertices(ArrayFloat value) {
-    SpineBindings.bindings.spine_polygon_set__vertices(_ptr, value.nativePtr.cast());
+    SpineBindings.bindings
+        .spine_polygon_set__vertices(_ptr, value.nativePtr.cast());
   }
 
   int get count {
@@ -64,9 +65,5 @@ class Polygon implements Finalizable {
 
   set count(int value) {
     SpineBindings.bindings.spine_polygon_set__count(_ptr, value);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_polygon_dispose(_ptr);
   }
 }

@@ -31,10 +31,10 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'vertex_attachment.dart';
 import 'color.dart';
+import 'vertex_attachment.dart';
 
 /// BoundingBoxAttachment wrapper
 class BoundingBoxAttachment extends VertexAttachment {
@@ -47,17 +47,14 @@ class BoundingBoxAttachment extends VertexAttachment {
   Pointer get nativePtr => _ptr;
 
   factory BoundingBoxAttachment(String name) {
-    final ptr = SpineBindings.bindings.spine_bounding_box_attachment_create(name.toNativeUtf8().cast<Char>());
+    final ptr = SpineBindings.bindings
+        .spine_bounding_box_attachment_create(name.toNativeUtf8().cast<Char>());
     return BoundingBoxAttachment.fromPointer(ptr);
   }
 
   Color get color {
-    final result = SpineBindings.bindings.spine_bounding_box_attachment_get_color(_ptr);
+    final result =
+        SpineBindings.bindings.spine_bounding_box_attachment_get_color(_ptr);
     return Color.fromPointer(result);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_bounding_box_attachment_dispose(_ptr);
   }
 }

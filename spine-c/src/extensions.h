@@ -35,6 +35,8 @@ extern "C" {
 #endif
 
 #include "base.h"
+#include "generated/atlas.h"
+#include "generated/skeleton_data.h"
 
 // Custom types for spine-c-new (not generated)
 SPINE_OPAQUE_TYPE(spine_skeleton_data_result)

@@ -31,7 +31,7 @@
 
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
 /// Color wrapper
@@ -59,7 +59,8 @@ class Color implements Finalizable {
   }
 
   static double parseHex(String value, int index) {
-    final result = SpineBindings.bindings.spine_color_parse_hex(value.toNativeUtf8().cast<Char>(), index);
+    final result = SpineBindings.bindings
+        .spine_color_parse_hex(value.toNativeUtf8().cast<Char>(), index);
     return result;
   }
 
@@ -107,7 +108,7 @@ class Color implements Finalizable {
     SpineBindings.bindings.spine_color_set_a(_ptr, value);
   }
 
-  Color set1(double r, double g, double b, double a) {
+  Color set(double r, double g, double b, double a) {
     final result = SpineBindings.bindings.spine_color_set_1(_ptr, r, g, b, a);
     return Color.fromPointer(result);
   }
@@ -118,11 +119,12 @@ class Color implements Finalizable {
   }
 
   Color set3(Color other) {
-    final result = SpineBindings.bindings.spine_color_set_3(_ptr, other.nativePtr.cast());
+    final result =
+        SpineBindings.bindings.spine_color_set_3(_ptr, other.nativePtr.cast());
     return Color.fromPointer(result);
   }
 
-  Color add1(double r, double g, double b, double a) {
+  Color add(double r, double g, double b, double a) {
     final result = SpineBindings.bindings.spine_color_add_1(_ptr, r, g, b, a);
     return Color.fromPointer(result);
   }
@@ -133,11 +135,8 @@ class Color implements Finalizable {
   }
 
   Color add3(Color other) {
-    final result = SpineBindings.bindings.spine_color_add_3(_ptr, other.nativePtr.cast());
+    final result =
+        SpineBindings.bindings.spine_color_add_3(_ptr, other.nativePtr.cast());
     return Color.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_color_dispose(_ptr);
   }
 }

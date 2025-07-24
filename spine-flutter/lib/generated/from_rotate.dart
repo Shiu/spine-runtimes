@@ -30,7 +30,7 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'from_property.dart';
 
@@ -47,10 +47,5 @@ class FromRotate extends FromProperty {
   factory FromRotate() {
     final ptr = SpineBindings.bindings.spine_from_rotate_create();
     return FromRotate.fromPointer(ptr);
-  }
-
-  @override
-  void dispose() {
-    SpineBindings.bindings.spine_from_rotate_dispose(_ptr);
   }
 }

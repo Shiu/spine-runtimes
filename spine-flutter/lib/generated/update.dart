@@ -30,36 +30,18 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_flutter_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
-import 'skeleton.dart';
 import 'physics.dart';
+import 'skeleton.dart';
 
 /// Update wrapper
-abstract class Update implements Finalizable {
-  final Pointer<spine_update_wrapper> _ptr;
-
-  Update.fromPointer(this._ptr);
-
-  /// Get the native pointer for FFI calls
-  Pointer get nativePtr => _ptr;
-
-  Rtti get rtti {
-    final result = SpineBindings.bindings.spine_update_get_rtti(_ptr);
-    return Rtti.fromPointer(result);
-  }
-
-  void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings.spine_update_update(_ptr, skeleton.nativePtr.cast(), physics.value);
-  }
-
+abstract class Update {
+  Pointer get nativePtr;
+  Rtti get rtti;
+  void update(Skeleton skeleton, Physics physics);
   static Rtti rttiStatic() {
     final result = SpineBindings.bindings.spine_update_rtti();
     return Rtti.fromPointer(result);
-  }
-
-  void dispose() {
-    SpineBindings.bindings.spine_update_dispose(_ptr);
   }
 }
