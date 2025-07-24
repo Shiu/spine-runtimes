@@ -59,10 +59,10 @@ void BoneTimeline1::apply(Skeleton &skeleton, float lastTime, float time, Array<
 	}
 }
 
-RTTI_IMPL_MULTI(BoneTimeline2, CurveTimeline2, BoneTimeline)
+RTTI_IMPL_MULTI(BoneTimeline2, CurveTimeline, BoneTimeline)
 
 BoneTimeline2::BoneTimeline2(size_t frameCount, size_t bezierCount, int boneIndex, Property property1, Property property2)
-	: CurveTimeline2(frameCount, bezierCount), BoneTimeline(boneIndex), _boneIndex(boneIndex) {
+	: CurveTimeline(frameCount, BoneTimeline2::ENTRIES, bezierCount), BoneTimeline(boneIndex), _boneIndex(boneIndex) {
 	PropertyId ids[] = {((PropertyId) property1 << 32) | boneIndex, ((PropertyId) property2 << 32) | boneIndex};
 	setPropertyIds(ids, 2);
 }
@@ -76,4 +76,11 @@ void BoneTimeline2::apply(Skeleton &skeleton, float lastTime, float time, Array<
 	if (bone->isActive()) {
 		apply(appliedPose ? *bone->_applied : bone->_pose, bone->_data._setup, time, alpha, blend, direction);
 	}
+}
+
+void BoneTimeline2::setFrame(size_t frame, float time, float value1, float value2) {
+	frame *= ENTRIES;
+	_frames[frame] = time;
+	_frames[frame + VALUE1] = value1;
+	_frames[frame + VALUE2] = value2;
 }

@@ -63,26 +63,26 @@ void TranslateTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, flo
 	}
 
 	float x, y;
-	int i = Animation::search(_frames, time, CurveTimeline2::ENTRIES);
-	int curveType = (int) _curves[i / CurveTimeline2::ENTRIES];
+	int i = Animation::search(_frames, time, BoneTimeline2::ENTRIES);
+	int curveType = (int) _curves[i / BoneTimeline2::ENTRIES];
 	switch (curveType) {
 		case CurveTimeline::LINEAR: {
 			float before = _frames[i];
-			x = _frames[i + CurveTimeline2::VALUE1];
-			y = _frames[i + CurveTimeline2::VALUE2];
-			float t = (time - before) / (_frames[i + CurveTimeline2::ENTRIES] - before);
-			x += (_frames[i + CurveTimeline2::ENTRIES + CurveTimeline2::VALUE1] - x) * t;
-			y += (_frames[i + CurveTimeline2::ENTRIES + CurveTimeline2::VALUE2] - y) * t;
+			x = _frames[i + BoneTimeline2::VALUE1];
+			y = _frames[i + BoneTimeline2::VALUE2];
+			float t = (time - before) / (_frames[i + BoneTimeline2::ENTRIES] - before);
+			x += (_frames[i + BoneTimeline2::ENTRIES + BoneTimeline2::VALUE1] - x) * t;
+			y += (_frames[i + BoneTimeline2::ENTRIES + BoneTimeline2::VALUE2] - y) * t;
 			break;
 		}
 		case CurveTimeline::STEPPED: {
-			x = _frames[i + CurveTimeline2::VALUE1];
-			y = _frames[i + CurveTimeline2::VALUE2];
+			x = _frames[i + BoneTimeline2::VALUE1];
+			y = _frames[i + BoneTimeline2::VALUE2];
 			break;
 		}
 		default: {
-			x = getBezierValue(time, i, CurveTimeline2::VALUE1, curveType - CurveTimeline2::BEZIER);
-			y = getBezierValue(time, i, CurveTimeline2::VALUE2, curveType + CurveTimeline2::BEZIER_SIZE - CurveTimeline2::BEZIER);
+			x = getBezierValue(time, i, BoneTimeline2::VALUE1, curveType - BoneTimeline2::BEZIER);
+			y = getBezierValue(time, i, BoneTimeline2::VALUE2, curveType + BoneTimeline2::BEZIER_SIZE - BoneTimeline2::BEZIER);
 		}
 	}
 

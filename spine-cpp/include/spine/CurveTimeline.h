@@ -94,24 +94,6 @@ namespace spine {
 		static const int ENTRIES = 2;
 		static const int VALUE = 1;
 	};
-
-	class SP_API CurveTimeline2 : public CurveTimeline {
-		RTTI_DECL
-
-	public:
-		explicit CurveTimeline2(size_t frameCount, size_t bezierCount);
-
-		virtual ~CurveTimeline2();
-
-		void setFrame(size_t frame, float time, float value1, float value2);
-
-		float getCurveValue(float time);
-
-	protected:
-		static const int ENTRIES = 3;
-		static const int VALUE1 = 1;
-		static const int VALUE2 = 2;
-	};
 }
 
 #endif /* Spine_CurveTimeline_h */

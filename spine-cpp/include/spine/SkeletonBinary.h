@@ -61,7 +61,7 @@ namespace spine {
 
 	class CurveTimeline1;
 
-	class CurveTimeline2;
+	class BoneTimeline2;
 
 	class Sequence;
 

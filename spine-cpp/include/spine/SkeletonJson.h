@@ -41,7 +41,7 @@ namespace spine {
 
 	class CurveTimeline1;
 
-	class CurveTimeline2;
+	class BoneTimeline2;
 
 	class VertexAttachment;
 
@@ -102,7 +102,7 @@ namespace spine {
 
 		static void readTimeline(Array<Timeline *> &timelines, Json *keyMap, CurveTimeline1 *timeline, float defaultValue, float scale);
 
-		static void readTimeline(Array<Timeline *> &timelines, Json *keyMap, CurveTimeline2 *timeline, const char *name1, const char *name2,
+		static void readTimeline(Array<Timeline *> &timelines, Json *keyMap, BoneTimeline2 *timeline, const char *name1, const char *name2,
 								 float defaultValue, float scale);
 
 		Animation *readAnimation(Json *root, SkeletonData *skeletonData);

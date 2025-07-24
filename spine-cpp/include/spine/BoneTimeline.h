@@ -30,6 +30,7 @@
 #ifndef Spine_BoneTimeline_h
 #define Spine_BoneTimeline_h
 
+#include <cstddef>
 #include <spine/dll.h>
 #include <spine/CurveTimeline.h>
 
@@ -84,7 +85,7 @@ namespace spine {
 	};
 
 	/// Base class for timelines that animate two bone properties.
-	class SP_API BoneTimeline2 : public CurveTimeline2, public BoneTimeline {
+	class SP_API BoneTimeline2 : public CurveTimeline, public BoneTimeline {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class AnimationState;
@@ -105,11 +106,16 @@ namespace spine {
 			_boneIndex = inValue;
 		}
 
+		virtual void setFrame(size_t frame, float time, float value1, float value2);
+
 	protected:
 		/// Applies changes to the pose based on the timeline values.
 		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) = 0;
 
 		int _boneIndex;
+
+		static const int ENTRIES = 3;
+		static const int VALUE1 = 1, VALUE2 = 2;
 	};
 }
 

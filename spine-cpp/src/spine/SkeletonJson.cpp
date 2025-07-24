@@ -1407,7 +1407,7 @@ void SkeletonJson::readTimeline(Array<Timeline *> &timelines, Json *keyMap, Curv
 	}
 }
 
-void SkeletonJson::readTimeline(Array<Timeline *> &timelines, Json *keyMap, CurveTimeline2 *timeline, const char *name1, const char *name2,
+void SkeletonJson::readTimeline(Array<Timeline *> &timelines, Json *keyMap, BoneTimeline2 *timeline, const char *name1, const char *name2,
 								float defaultValue, float scale) {
 	float time = Json::getFloat(keyMap, "time", 0);
 	float value1 = Json::getFloat(keyMap, name1, defaultValue) * scale, value2 = Json::getFloat(keyMap, name2, defaultValue) * scale;

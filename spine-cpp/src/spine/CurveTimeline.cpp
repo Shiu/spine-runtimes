@@ -244,19 +244,3 @@ float CurveTimeline1::getScaleValue(float time, float alpha, MixBlend blend, Mix
 	}
 	return current + (value - setup) * alpha;
 }
-
-
-RTTI_IMPL(CurveTimeline2, CurveTimeline)
-
-CurveTimeline2::CurveTimeline2(size_t frameCount, size_t bezierCount) : CurveTimeline(frameCount, CurveTimeline2::ENTRIES, bezierCount) {
-}
-
-CurveTimeline2::~CurveTimeline2() {
-}
-
-void CurveTimeline2::setFrame(size_t frame, float time, float value1, float value2) {
-	frame *= CurveTimeline2::ENTRIES;
-	_frames[frame] = time;
-	_frames[frame + CurveTimeline2::VALUE1] = value1;
-	_frames[frame + CurveTimeline2::VALUE2] = value2;
-}
