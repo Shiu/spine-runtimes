@@ -4,6 +4,9 @@
   "scripts": {
     "format": "npx -y typescript-formatter -r **/*.ts"
   },
+  "dependencies": {
+    "@mariozechner/lsp-cli": "^0.1.3"
+  },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "tsx": "^4.0.0",

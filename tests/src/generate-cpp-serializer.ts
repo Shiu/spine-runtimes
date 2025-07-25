@@ -473,6 +473,17 @@ function generateCppFromIR (ir: SerializerIR): string {
 		cppOutput.push('');
 	}
 
+	// Add reference versions for abstract type write methods
+	cppOutput.push('    // Reference versions of abstract type write methods');
+	const abstractWriteMethods = ir.writeMethods.filter(m => m.isAbstractType);
+	for (const method of abstractWriteMethods) {
+		const cppType = transformType(method.paramType);
+		cppOutput.push(`    void ${method.name}(const ${cppType}& obj) {`);
+		cppOutput.push(`        ${method.name}(const_cast<${cppType}*>(&obj));`);
+		cppOutput.push('    }');
+		cppOutput.push('');
+	}
+
 
 	// C++ footer
 	cppOutput.push('};');
