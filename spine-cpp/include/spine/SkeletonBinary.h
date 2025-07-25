@@ -171,10 +171,10 @@ namespace spine {
 			}
 
 			inline long long readLong() {
-				long long result = (unsigned long long) readInt();
+				unsigned long long result = (unsigned long long) readInt();
 				result <<= 32;
 				result |= (unsigned long long) readInt();
-				return result;
+				return (long long) result;
 			}
 
 			inline float readFloat() {
