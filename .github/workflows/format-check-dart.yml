@@ -1,0 +1,28 @@
+name: Check Dart Formatting
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  check-dart:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install Dart
+      uses: dart-lang/setup-dart@v1
+      with:
+        sdk: '3.8.1'
+
+    - name: Check dart format version
+      run: |
+        dart format --version
+
+    - name: Format Dart
+      run: ./formatters/format-dart.sh
+
+    - name: Check for changes
+      run: |
+        git ls-files -m
+        if [[ `git ls-files -m` ]]; then echo "Detected Dart formatting errors!" & exit 1; fi

@@ -1,4 +1,4 @@
-name: Check Formatting
+name: Check All Formatting (Combined)
 
 on:
   push:
