@@ -236,7 +236,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 					data->_skinRequired = (flags & 1) != 0;
 					data->_uniform = (flags & 2) != 0;
 					IkConstraintPose &setup = data->_setup;
-					setup._bendDirection = (flags & 4) != 0 ? 1 : -1;
+					setup._bendDirection = (flags & 4) != 0 ? -1 : 1;
 					setup._compress = (flags & 8) != 0;
 					setup._stretch = (flags & 16) != 0;
 					if ((flags & 32) != 0) setup._mix = (flags & 64) != 0 ? input.readFloat() : 1;
