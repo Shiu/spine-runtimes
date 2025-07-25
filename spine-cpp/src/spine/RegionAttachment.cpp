@@ -242,8 +242,8 @@ TextureRegion *RegionAttachment::getRegion() {
 	return _region;
 }
 
-void RegionAttachment::setRegion(TextureRegion *region) {
-	_region = region;
+void RegionAttachment::setRegion(TextureRegion &region) {
+	_region = &region;
 }
 
 Sequence *RegionAttachment::getSequence() {
@@ -266,7 +266,7 @@ Color &RegionAttachment::getColor() {
 	return _color;
 }
 
-Attachment *RegionAttachment::copy() {
+Attachment &RegionAttachment::copy() {
 	RegionAttachment *copy = new (__FILE__, __LINE__) RegionAttachment(getName());
 	copy->_region = _region;
 	copy->_path = _path;
@@ -280,6 +280,6 @@ Attachment *RegionAttachment::copy() {
 	copy->_uvs.clearAndAddAll(_uvs);
 	copy->_offset.clearAndAddAll(_offset);
 	copy->_color.set(_color);
-	copy->_sequence = _sequence != NULL ? _sequence->copy() : NULL;
-	return copy;
+	copy->_sequence = _sequence != NULL ? &_sequence->copy() : NULL;
+	return *copy;
 }

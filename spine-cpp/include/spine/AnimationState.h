@@ -104,10 +104,10 @@ namespace spine {
 		int getTrackIndex();
 
 		/// The animation to apply for this track entry.
-		Animation *getAnimation();
+		Animation &getAnimation();
 
 		/// Sets the animation for this track entry.
-		void setAnimation(Animation *animation);
+		void setAnimation(Animation &animation);
 
 		TrackEntry *getPrevious();
 
@@ -425,7 +425,7 @@ namespace spine {
 		/// Sets an animation by name.
 		///
 		/// See setAnimation(int, Animation, bool).
-		TrackEntry *setAnimation(size_t trackIndex, const String &animationName, bool loop);
+		TrackEntry &setAnimation(size_t trackIndex, const String &animationName, bool loop);
 
 		/// Sets the current animation for a track, discarding any queued animations.
 		///
@@ -437,12 +437,12 @@ namespace spine {
 		/// @return
 		/// A track entry to allow further customization of animation playback. References to the track entry must not be kept
 		/// after AnimationState.Dispose.
-		TrackEntry *setAnimation(size_t trackIndex, Animation *animation, bool loop);
+		TrackEntry &setAnimation(size_t trackIndex, Animation *animation, bool loop);
 
 		/// Queues an animation by name.
 		///
 		/// See addAnimation(int, Animation, bool, float).
-		TrackEntry *addAnimation(size_t trackIndex, const String &animationName, bool loop, float delay);
+		TrackEntry &addAnimation(size_t trackIndex, const String &animationName, bool loop, float delay);
 
 		/// Adds an animation to be played delay seconds after the current or last queued animation
 		/// for a track. If the track has no entries, this is equivalent to calling setAnimation.
@@ -452,7 +452,7 @@ namespace spine {
 		///
 		/// @return A track entry to allow further customization of animation playback. References to the track entry must not be kept
 		/// after AnimationState.Dispose
-		TrackEntry *addAnimation(size_t trackIndex, Animation *animation, bool loop, float delay);
+		TrackEntry &addAnimation(size_t trackIndex, Animation *animation, bool loop, float delay);
 
 		/// Sets an empty animation for a track, discarding any queued animations, and sets the track entry's
 		/// TrackEntry::getMixDuration(). An empty animation has no timelines and serves as a placeholder for mixing in or out.
@@ -471,7 +471,7 @@ namespace spine {
 		///
 		/// See <a href='https://esotericsoftware.com/spine-applying-animations/#Empty-animations'>Empty animations</a> in the Spine
 		/// Runtimes Guide.
-		TrackEntry *setEmptyAnimation(size_t trackIndex, float mixDuration);
+		TrackEntry &setEmptyAnimation(size_t trackIndex, float mixDuration);
 
 		/// Adds an empty animation to be played after the current or last queued animation for a track, and sets the track entry's
 		/// TrackEntry::getMixDuration(). If the track has no entries, it is equivalent to calling
@@ -486,7 +486,7 @@ namespace spine {
 		/// loop completion is used instead of its duration.
 		/// @return A track entry to allow further customization of animation playback. References to the track entry must not be kept
 		/// after the AnimationStateListener::dispose(TrackEntry) event occurs.
-		TrackEntry *addEmptyAnimation(size_t trackIndex, float mixDuration, float delay);
+		TrackEntry &addEmptyAnimation(size_t trackIndex, float mixDuration, float delay);
 
 		/// Sets an empty animation for every track, discarding any queued animations, and mixes to it over the specified mix duration.
 		///

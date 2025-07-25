@@ -18,17 +18,17 @@ spine_rtti spine_physics_constraint_data_get_rtti(spine_physics_constraint_data 
 
 spine_constraint spine_physics_constraint_data_create_method(spine_physics_constraint_data self, spine_skeleton skeleton) {
 	PhysicsConstraintData *_self = (PhysicsConstraintData *) self;
-	return (spine_constraint) _self->create(*((Skeleton *) skeleton));
+	return (spine_constraint) &_self->create(*((Skeleton *) skeleton));
 }
 
 spine_bone_data spine_physics_constraint_data_get_bone(spine_physics_constraint_data self) {
 	PhysicsConstraintData *_self = (PhysicsConstraintData *) self;
-	return (spine_bone_data) _self->getBone();
+	return (spine_bone_data) &_self->getBone();
 }
 
 void spine_physics_constraint_data_set_bone(spine_physics_constraint_data self, spine_bone_data bone) {
 	PhysicsConstraintData *_self = (PhysicsConstraintData *) self;
-	_self->setBone((BoneData *) bone);
+	_self->setBone(*((BoneData *) bone));
 }
 
 float spine_physics_constraint_data_get_step(spine_physics_constraint_data self) {

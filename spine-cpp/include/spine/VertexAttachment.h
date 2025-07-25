@@ -90,7 +90,7 @@ namespace spine {
 
 		void setTimelineAttachment(Attachment *attachment);
 
-		void copyTo(VertexAttachment *other);
+		void copyTo(VertexAttachment &other);
 
 	protected:
 		Array<int> _bones;

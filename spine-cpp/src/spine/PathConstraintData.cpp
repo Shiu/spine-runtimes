@@ -47,12 +47,12 @@ Array<BoneData *> &PathConstraintData::getBones() {
 	return _bones;
 }
 
-SlotData *PathConstraintData::getSlot() {
-	return _slot;
+SlotData &PathConstraintData::getSlot() {
+	return *_slot;
 }
 
-void PathConstraintData::setSlot(SlotData *slot) {
-	_slot = slot;
+void PathConstraintData::setSlot(SlotData &slot) {
+	_slot = &slot;
 }
 
 PositionMode PathConstraintData::getPositionMode() {
@@ -87,6 +87,6 @@ void PathConstraintData::setOffsetRotation(float offsetRotation) {
 	_offsetRotation = offsetRotation;
 }
 
-Constraint *PathConstraintData::create(Skeleton &skeleton) {
-	return new (__FILE__, __LINE__) PathConstraint(*this, skeleton);
+Constraint &PathConstraintData::create(Skeleton &skeleton) {
+	return *(new (__FILE__, __LINE__) PathConstraint(*this, skeleton));
 }

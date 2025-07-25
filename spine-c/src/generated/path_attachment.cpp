@@ -53,7 +53,7 @@ spine_color spine_path_attachment_get_color(spine_path_attachment self) {
 
 spine_attachment spine_path_attachment_copy(spine_path_attachment self) {
 	PathAttachment *_self = (PathAttachment *) self;
-	return (spine_attachment) _self->copy();
+	return (spine_attachment) &_self->copy();
 }
 
 void spine_path_attachment_compute_world_vertices_1(spine_path_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count,
@@ -115,7 +115,7 @@ void spine_path_attachment_set_timeline_attachment(spine_path_attachment self, s
 
 void spine_path_attachment_copy_to(spine_path_attachment self, spine_vertex_attachment other) {
 	VertexAttachment *_self = (VertexAttachment *) (PathAttachment *) self;
-	_self->copyTo((VertexAttachment *) other);
+	_self->copyTo(*((VertexAttachment *) other));
 }
 
 const char *spine_path_attachment_get_name(spine_path_attachment self) {

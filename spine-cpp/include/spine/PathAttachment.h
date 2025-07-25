@@ -59,7 +59,7 @@ namespace spine {
 
 		Color &getColor();
 
-		virtual Attachment *copy() override;
+		virtual Attachment &copy() override;
 
 	private:
 		Array<float> _lengths;

@@ -33,7 +33,7 @@ bool spine_physics_constraint_is_source_active(spine_physics_constraint self) {
 
 spine_physics_constraint spine_physics_constraint_copy(spine_physics_constraint self, spine_skeleton skeleton) {
 	PhysicsConstraint *_self = (PhysicsConstraint *) self;
-	return (spine_physics_constraint) _self->copy(*((Skeleton *) skeleton));
+	return (spine_physics_constraint) &_self->copy(*((Skeleton *) skeleton));
 }
 
 void spine_physics_constraint_reset(spine_physics_constraint self, spine_skeleton skeleton) {

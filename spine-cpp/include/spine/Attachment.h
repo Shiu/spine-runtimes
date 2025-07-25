@@ -45,7 +45,7 @@ namespace spine {
 
 		const String &getName() const;
 
-		virtual Attachment *copy() = 0;
+		virtual Attachment &copy() = 0;
 
 		int getRefCount();
 

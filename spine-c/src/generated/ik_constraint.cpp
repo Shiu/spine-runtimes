@@ -18,7 +18,7 @@ spine_rtti spine_ik_constraint_get_rtti(spine_ik_constraint self) {
 
 spine_ik_constraint spine_ik_constraint_copy(spine_ik_constraint self, spine_skeleton skeleton) {
 	IkConstraint *_self = (IkConstraint *) self;
-	return (spine_ik_constraint) _self->copy(*((Skeleton *) skeleton));
+	return (spine_ik_constraint) &_self->copy(*((Skeleton *) skeleton));
 }
 
 void spine_ik_constraint_update(spine_ik_constraint self, spine_skeleton skeleton, spine_physics physics) {
@@ -48,12 +48,12 @@ spine_array_bone_pose spine_ik_constraint_get_bones(spine_ik_constraint self) {
 
 spine_bone spine_ik_constraint_get_target(spine_ik_constraint self) {
 	IkConstraint *_self = (IkConstraint *) self;
-	return (spine_bone) _self->getTarget();
+	return (spine_bone) &_self->getTarget();
 }
 
 void spine_ik_constraint_set_target(spine_ik_constraint self, spine_bone inValue) {
 	IkConstraint *_self = (IkConstraint *) self;
-	_self->setTarget((Bone *) inValue);
+	_self->setTarget(*((Bone *) inValue));
 }
 
 void spine_ik_constraint_apply_1(spine_skeleton skeleton, spine_bone_pose bone, float targetX, float targetY, bool compress, bool stretch,

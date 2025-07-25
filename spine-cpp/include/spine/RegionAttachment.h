@@ -104,7 +104,7 @@ namespace spine {
 
 		TextureRegion *getRegion();
 
-		void setRegion(TextureRegion *region);
+		void setRegion(TextureRegion &region);
 
 		Sequence *getSequence();
 
@@ -114,7 +114,7 @@ namespace spine {
 
 		Array<float> &getUVs();
 
-		virtual Attachment *copy() override;
+		virtual Attachment &copy() override;
 
 	private:
 		static const int BLX;

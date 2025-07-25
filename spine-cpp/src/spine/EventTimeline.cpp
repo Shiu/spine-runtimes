@@ -90,9 +90,9 @@ void EventTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<
 	for (; (size_t) i < frameCount && time >= _frames[i]; i++) events.add(_events[i]);
 }
 
-void EventTimeline::setFrame(size_t frame, Event *event) {
-	_frames[frame] = event->getTime();
-	_events[frame] = event;
+void EventTimeline::setFrame(size_t frame, Event &event) {
+	_frames[frame] = event.getTime();
+	_events[frame] = &event;
 }
 
 size_t EventTimeline::getFrameCount() {

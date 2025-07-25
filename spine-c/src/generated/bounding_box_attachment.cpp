@@ -23,7 +23,7 @@ spine_color spine_bounding_box_attachment_get_color(spine_bounding_box_attachmen
 
 spine_attachment spine_bounding_box_attachment_copy(spine_bounding_box_attachment self) {
 	BoundingBoxAttachment *_self = (BoundingBoxAttachment *) self;
-	return (spine_attachment) _self->copy();
+	return (spine_attachment) &_self->copy();
 }
 
 void spine_bounding_box_attachment_compute_world_vertices_1(spine_bounding_box_attachment self, spine_skeleton skeleton, spine_slot slot,
@@ -86,7 +86,7 @@ void spine_bounding_box_attachment_set_timeline_attachment(spine_bounding_box_at
 
 void spine_bounding_box_attachment_copy_to(spine_bounding_box_attachment self, spine_vertex_attachment other) {
 	VertexAttachment *_self = (VertexAttachment *) (BoundingBoxAttachment *) self;
-	_self->copyTo((VertexAttachment *) other);
+	_self->copyTo(*((VertexAttachment *) other));
 }
 
 const char *spine_bounding_box_attachment_get_name(spine_bounding_box_attachment self) {

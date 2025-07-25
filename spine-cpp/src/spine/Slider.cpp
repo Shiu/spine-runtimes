@@ -56,10 +56,10 @@ Slider::Slider(SliderData &data, Skeleton &skeleton) : ConstraintGeneric<Slider,
 	}
 }
 
-Slider *Slider::copy(Skeleton &skeleton) {
+Slider &Slider::copy(Skeleton &skeleton) {
 	Slider *copy = new (__FILE__, __LINE__) Slider(_data, skeleton);
 	copy->_pose.set(_pose);
-	return copy;
+	return *copy;
 }
 
 void Slider::update(Skeleton &skeleton, Physics physics) {
@@ -126,10 +126,10 @@ bool Slider::isSourceActive() {
 	return _bone == NULL || _bone->isActive();
 }
 
-Bone *Slider::getBone() {
-	return _bone;
+Bone &Slider::getBone() {
+	return *_bone;
 }
 
-void Slider::setBone(Bone *bone) {
-	_bone = bone;
+void Slider::setBone(Bone &bone) {
+	_bone = &bone;
 }

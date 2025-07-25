@@ -13,7 +13,7 @@ void spine_skin_dispose(spine_skin self) {
 
 void spine_skin_set_attachment(spine_skin self, size_t slotIndex, const char *name, spine_attachment attachment) {
 	Skin *_self = (Skin *) self;
-	_self->setAttachment(slotIndex, String(name), (Attachment *) attachment);
+	_self->setAttachment(slotIndex, String(name), *((Attachment *) attachment));
 }
 
 spine_attachment spine_skin_get_attachment(spine_skin self, size_t slotIndex, const char *name) {
@@ -38,12 +38,12 @@ const char *spine_skin_get_name(spine_skin self) {
 
 void spine_skin_add_skin(spine_skin self, spine_skin other) {
 	Skin *_self = (Skin *) self;
-	_self->addSkin((Skin *) other);
+	_self->addSkin(*((Skin *) other));
 }
 
 void spine_skin_copy_skin(spine_skin self, spine_skin other) {
 	Skin *_self = (Skin *) self;
-	_self->copySkin((Skin *) other);
+	_self->copySkin(*((Skin *) other));
 }
 
 spine_array_bone_data spine_skin_get_bones(spine_skin self) {

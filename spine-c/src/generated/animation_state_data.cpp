@@ -13,7 +13,7 @@ void spine_animation_state_data_dispose(spine_animation_state_data self) {
 
 spine_skeleton_data spine_animation_state_data_get_skeleton_data(spine_animation_state_data self) {
 	AnimationStateData *_self = (AnimationStateData *) self;
-	return (spine_skeleton_data) _self->getSkeletonData();
+	return (spine_skeleton_data) &_self->getSkeletonData();
 }
 
 float spine_animation_state_data_get_default_mix(spine_animation_state_data self) {
@@ -33,12 +33,12 @@ void spine_animation_state_data_set_mix_1(spine_animation_state_data self, const
 
 void spine_animation_state_data_set_mix_2(spine_animation_state_data self, spine_animation from, spine_animation to, float duration) {
 	AnimationStateData *_self = (AnimationStateData *) self;
-	_self->setMix((Animation *) from, (Animation *) to, duration);
+	_self->setMix(*((Animation *) from), *((Animation *) to), duration);
 }
 
 float spine_animation_state_data_get_mix(spine_animation_state_data self, spine_animation from, spine_animation to) {
 	AnimationStateData *_self = (AnimationStateData *) self;
-	return _self->getMix((Animation *) from, (Animation *) to);
+	return _self->getMix(*((Animation *) from), *((Animation *) to));
 }
 
 void spine_animation_state_data_clear(spine_animation_state_data self) {

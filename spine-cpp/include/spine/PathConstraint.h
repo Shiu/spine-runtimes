@@ -64,7 +64,7 @@ namespace spine {
 
 		PathConstraint(PathConstraintData &data, Skeleton &skeleton);
 
-		PathConstraint *copy(Skeleton &skeleton);
+		PathConstraint &copy(Skeleton &skeleton);
 
 		/// Applies the constraint to the constrained bones.
 		virtual void update(Skeleton &skeleton, Physics physics) override;
@@ -77,9 +77,9 @@ namespace spine {
 		Array<BonePose *> &getBones();
 
 		/// The slot whose path attachment will be used to constrained the bones.
-		Slot *getSlot();
+		Slot &getSlot();
 
-		void setSlot(Slot *slot);
+		void setSlot(Slot &slot);
 
 		virtual PathConstraintData &getData() override;
 

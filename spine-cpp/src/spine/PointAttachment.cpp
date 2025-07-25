@@ -80,11 +80,11 @@ float PointAttachment::computeWorldRotation(BonePose &bone) {
 	return MathUtil::atan2Deg(y, x);
 }
 
-Attachment *PointAttachment::copy() {
+Attachment &PointAttachment::copy() {
 	PointAttachment *copy = new (__FILE__, __LINE__) PointAttachment(getName());
 	copy->_x = _x;
 	copy->_y = _y;
 	copy->_rotation = _rotation;
 	copy->_color.set(_color);
-	return copy;
+	return *copy;
 }

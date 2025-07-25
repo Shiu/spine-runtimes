@@ -49,7 +49,7 @@ namespace spine {
 		explicit AnimationStateData(SkeletonData *skeletonData);
 
 		/// The SkeletonData to look up animations when they are specified by name.
-		SkeletonData *getSkeletonData();
+		SkeletonData &getSkeletonData();
 
 		/// The mix duration to use when no mix duration has been specifically defined between two animations.
 		float getDefaultMix();
@@ -61,11 +61,11 @@ namespace spine {
 
 		/// Sets a mix duration when changing from the specified animation to the other.
 		/// See TrackEntry.MixDuration.
-		void setMix(Animation *from, Animation *to, float duration);
+		void setMix(Animation &from, Animation &to, float duration);
 
 		/// The mix duration to use when changing from the specified animation to the other,
 		/// or the DefaultMix if no mix duration has been set.
-		float getMix(Animation *from, Animation *to);
+		float getMix(Animation &from, Animation &to);
 
 		/// Removes all mixes and sets the default mix to 0.
 		void clear();

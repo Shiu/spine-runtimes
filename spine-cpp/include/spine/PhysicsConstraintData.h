@@ -51,11 +51,11 @@ namespace spine {
 	public:
 		explicit PhysicsConstraintData(const String &name);
 
-		virtual Constraint *create(Skeleton &skeleton) override;
+		virtual Constraint &create(Skeleton &skeleton) override;
 
 		/// The bone constrained by this physics constraint.
-		BoneData *getBone();
-		void setBone(BoneData *bone);
+		BoneData &getBone();
+		void setBone(BoneData &bone);
 
 		float getStep();
 		void setStep(float step);

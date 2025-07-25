@@ -4666,6 +4666,39 @@ namespace spine {
 		void writeTransformConstraintPose(const TransformConstraintPose &obj) {
 			writeTransformConstraintPose(const_cast<TransformConstraintPose *>(&obj));
 		}
+
+		// Reference versions of abstract type write methods
+		void writeTimeline(const Timeline &obj) {
+			writeTimeline(const_cast<Timeline *>(&obj));
+		}
+
+		void writeAttachment(const Attachment &obj) {
+			writeAttachment(const_cast<Attachment *>(&obj));
+		}
+
+		void writeConstraint(const Constraint &obj) {
+			writeConstraint(const_cast<Constraint *>(&obj));
+		}
+
+		void writeConstraintData(const ConstraintData &obj) {
+			writeConstraintData(const_cast<ConstraintData *>(&obj));
+		}
+
+		void writeFromProperty(const FromProperty &obj) {
+			writeFromProperty(const_cast<FromProperty *>(&obj));
+		}
+
+		void writeToProperty(const ToProperty &obj) {
+			writeToProperty(const_cast<ToProperty *>(&obj));
+		}
+
+		void writeUpdate(const Update &obj) {
+			writeUpdate(const_cast<Update *>(&obj));
+		}
+
+		void writeVertexAttachment(const VertexAttachment &obj) {
+			writeVertexAttachment(const_cast<VertexAttachment *>(&obj));
+		}
 	};
 
 }// namespace spine

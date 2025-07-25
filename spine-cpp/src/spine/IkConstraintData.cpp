@@ -43,12 +43,12 @@ Array<BoneData *> &IkConstraintData::getBones() {
 	return _bones;
 }
 
-BoneData *IkConstraintData::getTarget() {
-	return _target;
+BoneData &IkConstraintData::getTarget() {
+	return *_target;
 }
 
-void IkConstraintData::setTarget(BoneData *inValue) {
-	_target = inValue;
+void IkConstraintData::setTarget(BoneData &inValue) {
+	_target = &inValue;
 }
 
 bool IkConstraintData::getUniform() {
@@ -59,6 +59,6 @@ void IkConstraintData::setUniform(bool uniform) {
 	_uniform = uniform;
 }
 
-Constraint *IkConstraintData::create(Skeleton &skeleton) {
-	return new (__FILE__, __LINE__) IkConstraint(*this, skeleton);
+Constraint &IkConstraintData::create(Skeleton &skeleton) {
+	return *(new (__FILE__, __LINE__) IkConstraint(*this, skeleton));
 }

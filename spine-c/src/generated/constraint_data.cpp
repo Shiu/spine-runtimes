@@ -14,7 +14,7 @@ spine_rtti spine_constraint_data_get_rtti(spine_constraint_data self) {
 
 spine_constraint spine_constraint_data_create_method(spine_constraint_data self, spine_skeleton skeleton) {
 	ConstraintData *_self = (ConstraintData *) self;
-	return (spine_constraint) _self->create(*((Skeleton *) skeleton));
+	return (spine_constraint) &_self->create(*((Skeleton *) skeleton));
 }
 
 const char *spine_constraint_data_get_name(spine_constraint_data self) {

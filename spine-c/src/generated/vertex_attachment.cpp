@@ -71,7 +71,7 @@ void spine_vertex_attachment_set_timeline_attachment(spine_vertex_attachment sel
 
 void spine_vertex_attachment_copy_to(spine_vertex_attachment self, spine_vertex_attachment other) {
 	VertexAttachment *_self = (VertexAttachment *) self;
-	_self->copyTo((VertexAttachment *) other);
+	_self->copyTo(*((VertexAttachment *) other));
 }
 
 const char *spine_vertex_attachment_get_name(spine_vertex_attachment self) {
@@ -81,7 +81,7 @@ const char *spine_vertex_attachment_get_name(spine_vertex_attachment self) {
 
 spine_attachment spine_vertex_attachment_copy(spine_vertex_attachment self) {
 	Attachment *_self = (Attachment *) (VertexAttachment *) self;
-	return (spine_attachment) _self->copy();
+	return (spine_attachment) &_self->copy();
 }
 
 int spine_vertex_attachment_get_ref_count(spine_vertex_attachment self) {

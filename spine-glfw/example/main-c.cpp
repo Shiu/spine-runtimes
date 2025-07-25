@@ -137,7 +137,7 @@ int main() {
 		spine_skeleton_update(skeleton, delta);
 
 		// Calculate the new pose
-		spine_skeleton_update_world_transform_1(skeleton, SPINE_PHYSICS_UPDATE);
+		spine_skeleton_update_world_transform(skeleton, SPINE_PHYSICS_UPDATE);
 
 		// Clear the screen
 		gl::glClear(gl::GL_COLOR_BUFFER_BIT);

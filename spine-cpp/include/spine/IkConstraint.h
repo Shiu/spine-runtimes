@@ -51,7 +51,7 @@ namespace spine {
 	public:
 		IkConstraint(IkConstraintData &data, Skeleton &skeleton);
 
-		virtual IkConstraint *copy(Skeleton &skeleton);
+		virtual IkConstraint &copy(Skeleton &skeleton);
 
 		virtual void update(Skeleton &skeleton, Physics physics) override;
 
@@ -63,9 +63,9 @@ namespace spine {
 
 		Array<BonePose *> &getBones();
 
-		Bone *getTarget();
+		Bone &getTarget();
 
-		void setTarget(Bone *inValue);
+		void setTarget(Bone &inValue);
 
 		/// Adjusts the bone rotation so the tip is as close to the target position as possible. The target is specified
 		/// in the world coordinate system.

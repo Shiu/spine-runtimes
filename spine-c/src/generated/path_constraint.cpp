@@ -18,7 +18,7 @@ spine_rtti spine_path_constraint_get_rtti(spine_path_constraint self) {
 
 spine_path_constraint spine_path_constraint_copy(spine_path_constraint self, spine_skeleton skeleton) {
 	PathConstraint *_self = (PathConstraint *) self;
-	return (spine_path_constraint) _self->copy(*((Skeleton *) skeleton));
+	return (spine_path_constraint) &_self->copy(*((Skeleton *) skeleton));
 }
 
 void spine_path_constraint_update(spine_path_constraint self, spine_skeleton skeleton, spine_physics physics) {
@@ -43,12 +43,12 @@ spine_array_bone_pose spine_path_constraint_get_bones(spine_path_constraint self
 
 spine_slot spine_path_constraint_get_slot(spine_path_constraint self) {
 	PathConstraint *_self = (PathConstraint *) self;
-	return (spine_slot) _self->getSlot();
+	return (spine_slot) &_self->getSlot();
 }
 
 void spine_path_constraint_set_slot(spine_path_constraint self, spine_slot slot) {
 	PathConstraint *_self = (PathConstraint *) self;
-	_self->setSlot((Slot *) slot);
+	_self->setSlot(*((Slot *) slot));
 }
 
 spine_path_constraint_data spine_path_constraint_get_data(spine_path_constraint self) {

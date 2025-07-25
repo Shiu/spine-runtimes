@@ -3272,13 +3272,13 @@ spine_bone *spine_ik_constraint_get_bones(spine_ik_constraint constraint) {
 spine_bone spine_ik_constraint_get_target(spine_ik_constraint constraint) {
 	if (constraint == nullptr) return nullptr;
 	IkConstraint *_constraint = (IkConstraint *) constraint;
-	return (spine_bone) _constraint->getTarget();
+	return (spine_bone) &_constraint->getTarget();
 }
 
 void spine_ik_constraint_set_target(spine_ik_constraint constraint, spine_bone target) {
 	if (constraint == nullptr) return;
 	IkConstraint *_constraint = (IkConstraint *) constraint;
-	_constraint->setTarget((Bone *) target);
+	_constraint->setTarget(*(Bone *) target);
 }
 
 int32_t spine_ik_constraint_get_bend_direction(spine_ik_constraint constraint) {

@@ -52,7 +52,7 @@ namespace spine {
 	public:
 		Slider(SliderData &data, Skeleton &skeleton);
 
-		Slider *copy(Skeleton &skeleton);
+		Slider &copy(Skeleton &skeleton);
 
 		virtual void update(Skeleton &skeleton, Physics physics) override;
 
@@ -60,9 +60,9 @@ namespace spine {
 
 		virtual bool isSourceActive() override;
 
-		Bone *getBone();
+		Bone &getBone();
 
-		void setBone(Bone *bone);
+		void setBone(Bone &bone);
 
 	private:
 		Bone *_bone;

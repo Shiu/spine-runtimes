@@ -99,9 +99,8 @@ Skin::~Skin() {
 	}
 }
 
-void Skin::setAttachment(size_t slotIndex, const String &name, Attachment *attachment) {
-	assert(attachment);
-	_attachments.put(slotIndex, name, attachment);
+void Skin::setAttachment(size_t slotIndex, const String &name, Attachment &attachment) {
+	_attachments.put(slotIndex, name, &attachment);
 }
 
 Attachment *Skin::getAttachment(size_t slotIndex, const String &name) {
@@ -153,28 +152,28 @@ void Skin::attachAll(Skeleton &skeleton, Skin &oldSkin) {
 	}
 }
 
-void Skin::addSkin(Skin *other) {
-	for (size_t i = 0; i < other->getBones().size(); i++)
-		if (!_bones.contains(other->getBones()[i])) _bones.add(other->getBones()[i]);
+void Skin::addSkin(Skin &other) {
+	for (size_t i = 0; i < other.getBones().size(); i++)
+		if (!_bones.contains(other.getBones()[i])) _bones.add(other.getBones()[i]);
 
-	for (size_t i = 0; i < other->getConstraints().size(); i++)
-		if (!_constraints.contains(other->getConstraints()[i])) _constraints.add(other->getConstraints()[i]);
+	for (size_t i = 0; i < other.getConstraints().size(); i++)
+		if (!_constraints.contains(other.getConstraints()[i])) _constraints.add(other.getConstraints()[i]);
 
-	AttachmentMap::Entries entries = other->getAttachments();
+	AttachmentMap::Entries entries = other.getAttachments();
 	while (entries.hasNext()) {
 		AttachmentMap::Entry &entry = entries.next();
-		setAttachment(entry._slotIndex, entry._name, entry._attachment);
+		setAttachment(entry._slotIndex, entry._name, *entry._attachment);
 	}
 }
 
-void Skin::copySkin(Skin *other) {
-	for (size_t i = 0; i < other->getBones().size(); i++)
-		if (!_bones.contains(other->getBones()[i])) _bones.add(other->getBones()[i]);
+void Skin::copySkin(Skin &other) {
+	for (size_t i = 0; i < other.getBones().size(); i++)
+		if (!_bones.contains(other.getBones()[i])) _bones.add(other.getBones()[i]);
 
-	for (size_t i = 0; i < other->getConstraints().size(); i++)
-		if (!_constraints.contains(other->getConstraints()[i])) _constraints.add(other->getConstraints()[i]);
+	for (size_t i = 0; i < other.getConstraints().size(); i++)
+		if (!_constraints.contains(other.getConstraints()[i])) _constraints.add(other.getConstraints()[i]);
 
-	AttachmentMap::Entries entries = other->getAttachments();
+	AttachmentMap::Entries entries = other.getAttachments();
 	while (entries.hasNext()) {
 		AttachmentMap::Entry &entry = entries.next();
 		if (entry._attachment->getRTTI().isExactly(MeshAttachment::rtti))

@@ -23,12 +23,12 @@ void spine_deform_timeline_set_frame(spine_deform_timeline self, int frameIndex,
 
 spine_vertex_attachment spine_deform_timeline_get_attachment(spine_deform_timeline self) {
 	DeformTimeline *_self = (DeformTimeline *) self;
-	return (spine_vertex_attachment) _self->getAttachment();
+	return (spine_vertex_attachment) &_self->getAttachment();
 }
 
 void spine_deform_timeline_set_attachment(spine_deform_timeline self, spine_vertex_attachment inValue) {
 	DeformTimeline *_self = (DeformTimeline *) self;
-	_self->setAttachment((VertexAttachment *) inValue);
+	_self->setAttachment(*((VertexAttachment *) inValue));
 }
 
 void spine_deform_timeline_set_bezier(spine_deform_timeline self, size_t bezier, size_t frame, float value, float time1, float value1, float cx1,

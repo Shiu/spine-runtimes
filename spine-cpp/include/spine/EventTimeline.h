@@ -57,7 +57,7 @@ namespace spine {
 
 		/// Sets the time and event for the specified frame.
 		/// @param frame Between 0 and frameCount, inclusive.
-		void setFrame(size_t frame, Event *event);
+		void setFrame(size_t frame, Event &event);
 
 	private:
 		Array<Event *> _events;

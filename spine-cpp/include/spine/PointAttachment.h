@@ -71,7 +71,7 @@ namespace spine {
 
 		float computeWorldRotation(BonePose &bone);
 
-		virtual Attachment *copy() override;
+		virtual Attachment &copy() override;
 
 	private:
 		float _x, _y, _rotation;

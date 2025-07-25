@@ -19,7 +19,7 @@ const char *spine_attachment_get_name(spine_attachment self) {
 
 spine_attachment spine_attachment_copy(spine_attachment self) {
 	Attachment *_self = (Attachment *) self;
-	return (spine_attachment) _self->copy();
+	return (spine_attachment) &_self->copy();
 }
 
 int spine_attachment_get_ref_count(spine_attachment self) {

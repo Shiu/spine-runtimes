@@ -64,10 +64,10 @@ PathConstraint::PathConstraint(PathConstraintData &data, Skeleton &skeleton)
 	_segments.setSize(10, 0);
 }
 
-PathConstraint *PathConstraint::copy(Skeleton &skeleton) {
+PathConstraint &PathConstraint::copy(Skeleton &skeleton) {
 	PathConstraint *copy = new (__FILE__, __LINE__) PathConstraint(_data, skeleton);
 	copy->_pose.set(_pose);
-	return copy;
+	return *copy;
 }
 
 void PathConstraint::update(Skeleton &skeleton, Physics physics) {
@@ -217,8 +217,8 @@ void PathConstraint::sort(Skeleton &skeleton) {
 	int slotIndex = _slot->getData().getIndex();
 	Bone &slotBone = _slot->getBone();
 	if (skeleton.getSkin() != NULL) sortPathSlot(skeleton, *skeleton.getSkin(), slotIndex, slotBone);
-	if (skeleton.getData()->getDefaultSkin() != NULL && skeleton.getData()->getDefaultSkin() != skeleton.getSkin())
-		sortPathSlot(skeleton, *skeleton.getData()->getDefaultSkin(), slotIndex, slotBone);
+	if (skeleton.getData().getDefaultSkin() != NULL && skeleton.getData().getDefaultSkin() != skeleton.getSkin())
+		sortPathSlot(skeleton, *skeleton.getData().getDefaultSkin(), slotIndex, slotBone);
 	sortPath(skeleton, _slot->_pose._attachment, slotBone);
 	BonePose **bones = _bones.buffer();
 	size_t boneCount = _bones.size();
@@ -244,12 +244,12 @@ Array<BonePose *> &PathConstraint::getBones() {
 	return _bones;
 }
 
-Slot *PathConstraint::getSlot() {
-	return _slot;
+Slot &PathConstraint::getSlot() {
+	return *_slot;
 }
 
-void PathConstraint::setSlot(Slot *slot) {
-	_slot = slot;
+void PathConstraint::setSlot(Slot &slot) {
+	_slot = &slot;
 }
 
 Array<float> &PathConstraint::computeWorldPositions(Skeleton &skeleton, PathAttachment &path, int spacesCount, bool tangents) {

@@ -120,9 +120,9 @@ bool SkeletonBounds::aabbIntersectsSkeleton(SkeletonBounds &bounds) {
 	return _minX < bounds._maxX && _maxX > bounds._minX && _minY < bounds._maxY && _maxY > bounds._minY;
 }
 
-bool SkeletonBounds::containsPoint(Polygon *polygon, float x, float y) {
-	Array<float> &vertices = polygon->_vertices;
-	int nn = polygon->_count;
+bool SkeletonBounds::containsPoint(Polygon &polygon, float x, float y) {
+	Array<float> &vertices = polygon._vertices;
+	int nn = polygon._count;
 
 	int prevIndex = nn - 2;
 	bool inside = false;
@@ -142,19 +142,19 @@ bool SkeletonBounds::containsPoint(Polygon *polygon, float x, float y) {
 
 BoundingBoxAttachment *SkeletonBounds::containsPoint(float x, float y) {
 	for (size_t i = 0, n = _polygons.size(); i < n; ++i)
-		if (containsPoint(_polygons[i], x, y)) return _boundingBoxes[i];
+		if (containsPoint(*_polygons[i], x, y)) return _boundingBoxes[i];
 	return NULL;
 }
 
 BoundingBoxAttachment *SkeletonBounds::intersectsSegment(float x1, float y1, float x2, float y2) {
 	for (size_t i = 0, n = _polygons.size(); i < n; ++i)
-		if (intersectsSegment(_polygons[i], x1, y1, x2, y2)) return _boundingBoxes[i];
+		if (intersectsSegment(*_polygons[i], x1, y1, x2, y2)) return _boundingBoxes[i];
 	return NULL;
 }
 
-bool SkeletonBounds::intersectsSegment(Polygon *polygon, float x1, float y1, float x2, float y2) {
-	Array<float> &vertices = polygon->_vertices;
-	size_t nn = polygon->_count;
+bool SkeletonBounds::intersectsSegment(Polygon &polygon, float x1, float y1, float x2, float y2) {
+	Array<float> &vertices = polygon._vertices;
+	size_t nn = polygon._count;
 
 	float width12 = x1 - x2, height12 = y1 - y2;
 	float det1 = x1 * y2 - y1 * x2;

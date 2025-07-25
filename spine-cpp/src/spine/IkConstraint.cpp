@@ -51,10 +51,10 @@ IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton)
 	}
 }
 
-IkConstraint *IkConstraint::copy(Skeleton &skeleton) {
+IkConstraint &IkConstraint::copy(Skeleton &skeleton) {
 	IkConstraint *copy = new (__FILE__, __LINE__) IkConstraint(_data, skeleton);
 	copy->_pose.set(_pose);
-	return copy;
+	return *copy;
 }
 
 void IkConstraint::update(Skeleton &skeleton, Physics physics) {
@@ -91,12 +91,12 @@ Array<BonePose *> &IkConstraint::getBones() {
 	return _bones;
 }
 
-Bone *IkConstraint::getTarget() {
-	return _target;
+Bone &IkConstraint::getTarget() {
+	return *_target;
 }
 
-void IkConstraint::setTarget(Bone *target) {
-	_target = target;
+void IkConstraint::setTarget(Bone &target) {
+	_target = &target;
 }
 
 bool IkConstraint::isSourceActive() {

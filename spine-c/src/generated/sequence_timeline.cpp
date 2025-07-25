@@ -30,7 +30,7 @@ void spine_sequence_timeline_set_frame(spine_sequence_timeline self, int frame, 
 
 spine_attachment spine_sequence_timeline_get_attachment(spine_sequence_timeline self) {
 	SequenceTimeline *_self = (SequenceTimeline *) self;
-	return (spine_attachment) _self->getAttachment();
+	return (spine_attachment) &_self->getAttachment();
 }
 
 int spine_sequence_timeline_get_slot_index(spine_sequence_timeline self) {

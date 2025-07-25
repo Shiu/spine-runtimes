@@ -301,10 +301,10 @@ Array<Array<float>> &DeformTimeline::getVertices() {
 	return _vertices;
 }
 
-VertexAttachment *DeformTimeline::getAttachment() {
-	return _attachment;
+VertexAttachment &DeformTimeline::getAttachment() {
+	return *_attachment;
 }
 
-void DeformTimeline::setAttachment(VertexAttachment *inValue) {
-	_attachment = inValue;
+void DeformTimeline::setAttachment(VertexAttachment &inValue) {
+	_attachment = &inValue;
 }

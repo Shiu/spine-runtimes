@@ -33,7 +33,7 @@ bool spine_skeleton_bounds_aabb_intersects_skeleton(spine_skeleton_bounds self, 
 
 bool spine_skeleton_bounds_contains_point_1(spine_skeleton_bounds self, spine_polygon polygon, float x, float y) {
 	SkeletonBounds *_self = (SkeletonBounds *) self;
-	return _self->containsPoint((Polygon *) polygon, x, y);
+	return _self->containsPoint(*((Polygon *) polygon), x, y);
 }
 
 spine_bounding_box_attachment spine_skeleton_bounds_contains_point_2(spine_skeleton_bounds self, float x, float y) {
@@ -48,7 +48,7 @@ spine_bounding_box_attachment spine_skeleton_bounds_intersects_segment_1(spine_s
 
 bool spine_skeleton_bounds_intersects_segment_2(spine_skeleton_bounds self, spine_polygon polygon, float x1, float y1, float x2, float y2) {
 	SkeletonBounds *_self = (SkeletonBounds *) self;
-	return _self->intersectsSegment((Polygon *) polygon, x1, y1, x2, y2);
+	return _self->intersectsSegment(*((Polygon *) polygon), x1, y1, x2, y2);
 }
 
 spine_polygon spine_skeleton_bounds_get_polygon(spine_skeleton_bounds self, spine_bounding_box_attachment attachment) {

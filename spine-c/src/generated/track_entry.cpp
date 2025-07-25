@@ -18,12 +18,12 @@ int spine_track_entry_get_track_index(spine_track_entry self) {
 
 spine_animation spine_track_entry_get_animation(spine_track_entry self) {
 	TrackEntry *_self = (TrackEntry *) self;
-	return (spine_animation) _self->getAnimation();
+	return (spine_animation) &_self->getAnimation();
 }
 
 void spine_track_entry_set_animation(spine_track_entry self, spine_animation animation) {
 	TrackEntry *_self = (TrackEntry *) self;
-	_self->setAnimation((Animation *) animation);
+	_self->setAnimation(*((Animation *) animation));
 }
 
 spine_track_entry spine_track_entry_get_previous(spine_track_entry self) {

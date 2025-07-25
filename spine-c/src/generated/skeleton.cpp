@@ -35,14 +35,9 @@ void spine_skeleton_sort_reset(spine_array_bone bones) {
 	Skeleton::sortReset(*((Array<Bone *> *) bones));
 }
 
-void spine_skeleton_update_world_transform_1(spine_skeleton self, spine_physics physics) {
+void spine_skeleton_update_world_transform(spine_skeleton self, spine_physics physics) {
 	Skeleton *_self = (Skeleton *) self;
 	_self->updateWorldTransform((Physics) physics);
-}
-
-void spine_skeleton_update_world_transform_2(spine_skeleton self, spine_physics physics, spine_bone_pose parent) {
-	Skeleton *_self = (Skeleton *) self;
-	_self->updateWorldTransform((Physics) physics, (BonePose *) parent);
 }
 
 void spine_skeleton_setup_pose(spine_skeleton self) {
@@ -62,7 +57,7 @@ void spine_skeleton_setup_pose_slots(spine_skeleton self) {
 
 spine_skeleton_data spine_skeleton_get_data(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
-	return (spine_skeleton_data) _self->getData();
+	return (spine_skeleton_data) &_self->getData();
 }
 
 spine_array_bone spine_skeleton_get_bones(spine_skeleton self) {

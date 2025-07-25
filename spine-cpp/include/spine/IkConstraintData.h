@@ -57,15 +57,15 @@ namespace spine {
 	public:
 		explicit IkConstraintData(const String &name);
 
-		virtual Constraint *create(Skeleton &skeleton) override;
+		virtual Constraint &create(Skeleton &skeleton) override;
 
 		/// The bones that are constrained by this IK Constraint.
 		Array<BoneData *> &getBones();
 
 		/// The bone that is the IK target.
-		BoneData *getTarget();
+		BoneData &getTarget();
 
-		void setTarget(BoneData *inValue);
+		void setTarget(BoneData &inValue);
 
 		/// When true and IkConstraintPose compress or stretch is used, the bone is scaled on both the X and Y axes.
 		bool getUniform();

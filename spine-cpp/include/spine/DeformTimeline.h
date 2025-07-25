@@ -53,9 +53,9 @@ namespace spine {
 		Array<Array<float>> &getVertices();
 
 		/// The attachment that will be deformed.
-		VertexAttachment *getAttachment();
+		VertexAttachment &getAttachment();
 
-		void setAttachment(VertexAttachment *inValue);
+		void setAttachment(VertexAttachment &inValue);
 
 		virtual void setBezier(size_t bezier, size_t frame, float value, float time1, float value1, float cx1, float cy1, float cx2, float cy2,
 							   float time2, float value2) override;

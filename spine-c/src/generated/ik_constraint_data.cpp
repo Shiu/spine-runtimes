@@ -18,7 +18,7 @@ spine_rtti spine_ik_constraint_data_get_rtti(spine_ik_constraint_data self) {
 
 spine_constraint spine_ik_constraint_data_create_method(spine_ik_constraint_data self, spine_skeleton skeleton) {
 	IkConstraintData *_self = (IkConstraintData *) self;
-	return (spine_constraint) _self->create(*((Skeleton *) skeleton));
+	return (spine_constraint) &_self->create(*((Skeleton *) skeleton));
 }
 
 spine_array_bone_data spine_ik_constraint_data_get_bones(spine_ik_constraint_data self) {
@@ -28,12 +28,12 @@ spine_array_bone_data spine_ik_constraint_data_get_bones(spine_ik_constraint_dat
 
 spine_bone_data spine_ik_constraint_data_get_target(spine_ik_constraint_data self) {
 	IkConstraintData *_self = (IkConstraintData *) self;
-	return (spine_bone_data) _self->getTarget();
+	return (spine_bone_data) &_self->getTarget();
 }
 
 void spine_ik_constraint_data_set_target(spine_ik_constraint_data self, spine_bone_data inValue) {
 	IkConstraintData *_self = (IkConstraintData *) self;
-	_self->setTarget((BoneData *) inValue);
+	_self->setTarget(*((BoneData *) inValue));
 }
 
 bool spine_ik_constraint_data_get_uniform(spine_ik_constraint_data self) {

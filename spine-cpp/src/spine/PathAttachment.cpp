@@ -64,11 +64,11 @@ Color &PathAttachment::getColor() {
 	return _color;
 }
 
-Attachment *PathAttachment::copy() {
+Attachment &PathAttachment::copy() {
 	PathAttachment *copy = new (__FILE__, __LINE__) PathAttachment(getName());
-	copyTo(copy);
+	copyTo(*copy);
 	copy->_lengths.clearAndAddAll(_lengths);
 	copy->_closed = _closed;
 	copy->_constantSpeed = _constantSpeed;
-	return copy;
+	return *copy;
 }

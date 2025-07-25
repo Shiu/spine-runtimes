@@ -40,16 +40,16 @@ SliderData::SliderData(const String &name)
 	  _scale(0.0f), _local(false) {
 }
 
-Constraint *SliderData::create(Skeleton &skeleton) {
-	return new (__FILE__, __LINE__) Slider(*this, skeleton);
+Constraint &SliderData::create(Skeleton &skeleton) {
+	return *(new (__FILE__, __LINE__) Slider(*this, skeleton));
 }
 
-Animation *SliderData::getAnimation() {
-	return _animation;
+Animation &SliderData::getAnimation() {
+	return *_animation;
 }
 
-void SliderData::setAnimation(Animation *animation) {
-	_animation = animation;
+void SliderData::setAnimation(Animation &animation) {
+	_animation = &animation;
 }
 
 bool SliderData::getAdditive() {

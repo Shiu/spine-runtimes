@@ -158,9 +158,9 @@ int VertexAttachment::getNextID() {
 	return nextID++;
 }
 
-void VertexAttachment::copyTo(VertexAttachment *other) {
-	other->_bones.clearAndAddAll(this->_bones);
-	other->_vertices.clearAndAddAll(this->_vertices);
-	other->_worldVerticesLength = this->_worldVerticesLength;
-	other->_timelineAttachment = this->_timelineAttachment;
+void VertexAttachment::copyTo(VertexAttachment &other) {
+	other._bones.clearAndAddAll(this->_bones);
+	other._vertices.clearAndAddAll(this->_vertices);
+	other._worldVerticesLength = this->_worldVerticesLength;
+	other._timelineAttachment = this->_timelineAttachment;
 }

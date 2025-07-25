@@ -68,15 +68,12 @@ int TrackEntry::getTrackIndex() {
 	return _trackIndex;
 }
 
-Animation *TrackEntry::getAnimation() {
-	return _animation;
+Animation &TrackEntry::getAnimation() {
+	return *_animation;
 }
 
-void TrackEntry::setAnimation(Animation *animation) {
-	if (animation == NULL) {
-		return;
-	}
-	_animation = animation;
+void TrackEntry::setAnimation(Animation &animation) {
+	_animation = &animation;
 }
 
 TrackEntry *TrackEntry::getPrevious() {
@@ -652,13 +649,13 @@ void AnimationState::clearTrack(size_t trackIndex) {
 	_queue->drain();
 }
 
-TrackEntry *AnimationState::setAnimation(size_t trackIndex, const String &animationName, bool loop) {
+TrackEntry &AnimationState::setAnimation(size_t trackIndex, const String &animationName, bool loop) {
 	Animation *animation = _data->_skeletonData->findAnimation(animationName);
 	assert(animation != NULL);
 	return setAnimation(trackIndex, animation, loop);
 }
 
-TrackEntry *AnimationState::setAnimation(size_t trackIndex, Animation *animation, bool loop) {
+TrackEntry &AnimationState::setAnimation(size_t trackIndex, Animation *animation, bool loop) {
 	assert(animation != NULL);
 
 	bool interrupt = true;
@@ -681,16 +678,16 @@ TrackEntry *AnimationState::setAnimation(size_t trackIndex, Animation *animation
 	setCurrent(trackIndex, entry, interrupt);
 	_queue->drain();
 
-	return entry;
+	return *entry;
 }
 
-TrackEntry *AnimationState::addAnimation(size_t trackIndex, const String &animationName, bool loop, float delay) {
+TrackEntry &AnimationState::addAnimation(size_t trackIndex, const String &animationName, bool loop, float delay) {
 	Animation *animation = _data->_skeletonData->findAnimation(animationName);
 	assert(animation != NULL);
 	return addAnimation(trackIndex, animation, loop, delay);
 }
 
-TrackEntry *AnimationState::addAnimation(size_t trackIndex, Animation *animation, bool loop, float delay) {
+TrackEntry &AnimationState::addAnimation(size_t trackIndex, Animation *animation, bool loop, float delay) {
 	assert(animation != NULL);
 
 	TrackEntry *last = expandToIndex(trackIndex);
@@ -711,21 +708,21 @@ TrackEntry *AnimationState::addAnimation(size_t trackIndex, Animation *animation
 	}
 
 	entry->_delay = delay;
+	return *entry;
+}
+
+TrackEntry &AnimationState::setEmptyAnimation(size_t trackIndex, float mixDuration) {
+	TrackEntry &entry = setAnimation(trackIndex, AnimationState::getEmptyAnimation(), false);
+	entry._mixDuration = mixDuration;
+	entry._trackEnd = mixDuration;
 	return entry;
 }
 
-TrackEntry *AnimationState::setEmptyAnimation(size_t trackIndex, float mixDuration) {
-	TrackEntry *entry = setAnimation(trackIndex, AnimationState::getEmptyAnimation(), false);
-	entry->_mixDuration = mixDuration;
-	entry->_trackEnd = mixDuration;
-	return entry;
-}
-
-TrackEntry *AnimationState::addEmptyAnimation(size_t trackIndex, float mixDuration, float delay) {
-	TrackEntry *entry = addAnimation(trackIndex, AnimationState::getEmptyAnimation(), false, delay);
-	if (delay <= 0) entry->_delay = MathUtil::max(entry->_delay + entry->_mixDuration - mixDuration, 0.0f);
-	entry->_mixDuration = mixDuration;
-	entry->_trackEnd = mixDuration;
+TrackEntry &AnimationState::addEmptyAnimation(size_t trackIndex, float mixDuration, float delay) {
+	TrackEntry &entry = addAnimation(trackIndex, AnimationState::getEmptyAnimation(), false, delay);
+	if (delay <= 0) entry._delay = MathUtil::max(entry._delay + entry._mixDuration - mixDuration, 0.0f);
+	entry._mixDuration = mixDuration;
+	entry._trackEnd = mixDuration;
 	return entry;
 }
 
@@ -1109,7 +1106,7 @@ TrackEntry *AnimationState::newTrackEntry(size_t trackIndex, Animation *animatio
 
 	entry._alpha = 1;
 	entry._mixTime = 0;
-	entry._mixDuration = (last == NULL) ? 0 : _data->getMix(last->_animation, animation);
+	entry._mixDuration = (last == NULL) ? 0 : _data->getMix(*last->_animation, *animation);
 	entry._interruptAlpha = 1;
 	entry._totalAlpha = 0;
 	entry._mixBlend = MixBlend_Replace;

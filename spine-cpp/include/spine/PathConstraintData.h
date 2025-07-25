@@ -67,16 +67,16 @@ namespace spine {
 	public:
 		explicit PathConstraintData(const String &name);
 
-		virtual Constraint *create(Skeleton &skeleton) override;
+		virtual Constraint &create(Skeleton &skeleton) override;
 
 
 		/// The bones that will be modified by this path constraint.
 		Array<BoneData *> &getBones();
 
 		/// The slot whose path attachment will be used to constrained the bones.
-		SlotData *getSlot();
+		SlotData &getSlot();
 
-		void setSlot(SlotData *slot);
+		void setSlot(SlotData &slot);
 
 		/// The mode for positioning the first bone on the path.
 		PositionMode getPositionMode();

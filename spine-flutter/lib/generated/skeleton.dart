@@ -36,7 +36,6 @@ import '../spine_bindings.dart';
 import 'arrays.dart';
 import 'attachment.dart';
 import 'bone.dart';
-import 'bone_pose.dart';
 import 'bounding_box_attachment.dart';
 import 'clipping_attachment.dart';
 import 'color.dart';
@@ -86,6 +85,10 @@ class Skeleton {
 
   static void sortReset(ArrayBone bones) {
     SpineBindings.bindings.spine_skeleton_sort_reset(bones.nativePtr.cast());
+  }
+
+  void updateWorldTransform(Physics physics) {
+    SpineBindings.bindings.spine_skeleton_update_world_transform(_ptr, physics.value);
   }
 
   void setupPose() {
@@ -264,14 +267,6 @@ class Skeleton {
 
   void update(double delta) {
     SpineBindings.bindings.spine_skeleton_update(_ptr, delta);
-  }
-
-  void updateWorldTransform(Physics physics) {
-    SpineBindings.bindings.spine_skeleton_update_world_transform_1(_ptr, physics.value);
-  }
-
-  void updateWorldTransform2(Physics physics, BonePose parent) {
-    SpineBindings.bindings.spine_skeleton_update_world_transform_2(_ptr, physics.value, parent.nativePtr.cast());
   }
 
   void setSkin(String skinName) {

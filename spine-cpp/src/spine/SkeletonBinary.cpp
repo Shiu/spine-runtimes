@@ -513,7 +513,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 		for (int i = 0; i < constraintCount; i++) {
 			if (constraints[i]->getRTTI().instanceOf(SliderData::rtti)) {
 				SliderData *data = static_cast<SliderData *>(constraints[i]);
-				data->setAnimation(animations[input.readInt(true)]);
+				data->setAnimation(*animations[input.readInt(true)]);
 			}
 		}
 	}
@@ -560,7 +560,7 @@ Skin *SkeletonBinary::readSkin(DataInput &input, SkeletonData &skeletonData, boo
 			String name(input.readStringRef());
 			Attachment *attachment = readAttachment(input, *skin, slotIndex, name, skeletonData, nonessential);
 			if (attachment)
-				skin->setAttachment(slotIndex, name, attachment);
+				skin->setAttachment(slotIndex, name, *attachment);
 			else {
 				setError("Error reading attachment: ", name.buffer());
 				delete skin;
@@ -1352,7 +1352,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 				event->_volume = input.readFloat();
 				event->_balance = input.readFloat();
 			}
-			timeline->setFrame(i, event);
+			timeline->setFrame(i, *event);
 		}
 		timelines.add(timeline);
 	}

@@ -35,7 +35,7 @@ spine_array_event spine_event_timeline_get_events(spine_event_timeline self) {
 
 void spine_event_timeline_set_frame(spine_event_timeline self, size_t frame, spine_event event) {
 	EventTimeline *_self = (EventTimeline *) self;
-	_self->setFrame(frame, (Event *) event);
+	_self->setFrame(frame, *((Event *) event));
 }
 
 size_t spine_event_timeline_get_frame_entries(spine_event_timeline self) {

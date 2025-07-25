@@ -83,7 +83,7 @@ namespace spine {
 
 		TextureRegion *getRegion();
 
-		void setRegion(TextureRegion *region);
+		void setRegion(TextureRegion &region);
 
 		Sequence *getSequence();
 
@@ -106,9 +106,9 @@ namespace spine {
 
 		void setHeight(float inValue);
 
-		virtual Attachment *copy() override;
+		virtual Attachment &copy() override;
 
-		MeshAttachment *newLinkedMesh();
+		MeshAttachment &newLinkedMesh();
 
 	private:
 		TextureRegion *_region;

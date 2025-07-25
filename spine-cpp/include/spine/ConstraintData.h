@@ -50,7 +50,7 @@ namespace spine {
 		virtual ~ConstraintData() {
 		}
 
-		virtual Constraint *create(Skeleton &skeleton) = 0;
+		virtual Constraint &create(Skeleton &skeleton) = 0;
 
 		virtual const String &getName() const = 0;
 
@@ -66,7 +66,7 @@ namespace spine {
 		virtual ~ConstraintDataGeneric() {
 		}
 
-		virtual Constraint *create(Skeleton &skeleton) override = 0;
+		virtual Constraint &create(Skeleton &skeleton) override = 0;
 
 		// Resolve ambiguity by forwarding to PosedData's implementation
 		virtual const String &getName() const override {

@@ -56,10 +56,10 @@ namespace spine {
 		explicit SliderData(const String &name);
 
 		/// Creates a slider instance.
-		virtual Constraint *create(Skeleton &skeleton) override;
+		virtual Constraint &create(Skeleton &skeleton) override;
 
-		Animation *getAnimation();
-		void setAnimation(Animation *animation);
+		Animation &getAnimation();
+		void setAnimation(Animation &animation);
 
 		bool getAdditive();
 		void setAdditive(bool additive);

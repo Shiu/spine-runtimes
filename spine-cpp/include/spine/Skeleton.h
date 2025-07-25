@@ -173,7 +173,6 @@ namespace spine {
 		/// Runtimes Guide.
 		void updateWorldTransform(Physics physics);
 
-		void updateWorldTransform(Physics physics, BonePose *parent);
 
 		/// Sets the bones, constraints, and slots to their setup pose values.
 		void setupPose();
@@ -183,7 +182,7 @@ namespace spine {
 
 		void setupPoseSlots();
 
-		SkeletonData *getData();
+		SkeletonData &getData();
 
 		Array<Bone *> &getBones();
 

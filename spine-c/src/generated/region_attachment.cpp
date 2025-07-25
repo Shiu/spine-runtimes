@@ -125,7 +125,7 @@ spine_texture_region spine_region_attachment_get_region(spine_region_attachment 
 
 void spine_region_attachment_set_region(spine_region_attachment self, spine_texture_region region) {
 	RegionAttachment *_self = (RegionAttachment *) self;
-	_self->setRegion((TextureRegion *) region);
+	_self->setRegion(*((TextureRegion *) region));
 }
 
 spine_sequence spine_region_attachment_get_sequence(spine_region_attachment self) {
@@ -150,7 +150,7 @@ spine_array_float spine_region_attachment_get_u_vs(spine_region_attachment self)
 
 spine_attachment spine_region_attachment_copy(spine_region_attachment self) {
 	RegionAttachment *_self = (RegionAttachment *) self;
-	return (spine_attachment) _self->copy();
+	return (spine_attachment) &_self->copy();
 }
 
 const char *spine_region_attachment_get_name(spine_region_attachment self) {

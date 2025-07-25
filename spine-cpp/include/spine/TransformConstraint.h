@@ -49,7 +49,7 @@ namespace spine {
 	public:
 		TransformConstraint(TransformConstraintData &data, Skeleton &skeleton);
 
-		virtual TransformConstraint *copy(Skeleton &skeleton);
+		virtual TransformConstraint &copy(Skeleton &skeleton);
 
 		/// Applies the constraint to the constrained bones.
 		void update(Skeleton &skeleton, Physics physics) override;
@@ -62,9 +62,9 @@ namespace spine {
 		Array<BonePose *> &getBones();
 
 		/// The bone whose world transform will be copied to the constrained bones.
-		Bone *getSource();
+		Bone &getSource();
 
-		void setSource(Bone *source);
+		void setSource(Bone &source);
 
 	private:
 		Array<BonePose *> _bones;

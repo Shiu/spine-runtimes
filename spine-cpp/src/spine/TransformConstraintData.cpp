@@ -66,12 +66,12 @@ Array<BoneData *> &TransformConstraintData::getBones() {
 	return _bones;
 }
 
-BoneData *TransformConstraintData::getSource() {
-	return _source;
+BoneData &TransformConstraintData::getSource() {
+	return *_source;
 }
 
-void TransformConstraintData::setSource(BoneData *source) {
-	_source = source;
+void TransformConstraintData::setSource(BoneData &source) {
+	_source = &source;
 }
 
 float TransformConstraintData::getOffsetRotation() {
@@ -350,6 +350,6 @@ TransformConstraintData::~TransformConstraintData() {
 	_properties.clear();
 }
 
-Constraint *TransformConstraintData::create(Skeleton &skeleton) {
-	return new (__FILE__, __LINE__) TransformConstraint(*this, skeleton);
+Constraint &TransformConstraintData::create(Skeleton &skeleton) {
+	return *(new (__FILE__, __LINE__) TransformConstraint(*this, skeleton));
 }

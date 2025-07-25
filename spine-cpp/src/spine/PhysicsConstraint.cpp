@@ -49,10 +49,10 @@ PhysicsConstraint::PhysicsConstraint(PhysicsConstraintData &data, Skeleton &skel
 	_bone = &skeleton._bones[(size_t) data._bone->getIndex()]->_constrained;
 }
 
-PhysicsConstraint *PhysicsConstraint::copy(Skeleton &skeleton) {
+PhysicsConstraint &PhysicsConstraint::copy(Skeleton &skeleton) {
 	PhysicsConstraint *copy = new (__FILE__, __LINE__) PhysicsConstraint(_data, skeleton);
 	copy->_pose.set(_pose);
-	return copy;
+	return *copy;
 }
 
 void PhysicsConstraint::reset(Skeleton &skeleton) {

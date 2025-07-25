@@ -538,7 +538,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 					for (Json *entry = slotEntry->_child; entry; entry = entry->_next) {
 						Attachment *attachment = readAttachment(entry, skin, slot->getIndex(), entry->_name, skeletonData);
 						if (attachment)
-							skin->setAttachment(slot->getIndex(), entry->_name, attachment);
+							skin->setAttachment(slot->getIndex(), entry->_name, *attachment);
 						else
 							SKELETON_JSON_ERROR(root, "Error reading attachment: ", entry->_name);
 					}
@@ -1378,7 +1378,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 				event->_volume = Json::getFloat(keyMap, "volume", eventData->_volume);
 				event->_balance = Json::getFloat(keyMap, "balance", eventData->_balance);
 			}
-			timeline->setFrame(frame, event);
+			timeline->setFrame(frame, *event);
 		}
 		timelines.add(timeline);
 	}

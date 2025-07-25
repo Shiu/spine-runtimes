@@ -31140,39 +31140,21 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_array_bone)>>('spine_skeleton_sort_reset');
   late final _spine_skeleton_sort_reset = _spine_skeleton_sort_resetPtr.asFunction<void Function(spine_array_bone)>();
 
-  void spine_skeleton_update_world_transform_1(
+  void spine_skeleton_update_world_transform(
     spine_skeleton self,
     int physics,
   ) {
-    return _spine_skeleton_update_world_transform_1(
+    return _spine_skeleton_update_world_transform(
       self,
       physics,
     );
   }
 
-  late final _spine_skeleton_update_world_transform_1Ptr =
+  late final _spine_skeleton_update_world_transformPtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_skeleton, ffi.Int32)>>(
-          'spine_skeleton_update_world_transform_1');
-  late final _spine_skeleton_update_world_transform_1 =
-      _spine_skeleton_update_world_transform_1Ptr.asFunction<void Function(spine_skeleton, int)>();
-
-  void spine_skeleton_update_world_transform_2(
-    spine_skeleton self,
-    int physics,
-    spine_bone_pose parent,
-  ) {
-    return _spine_skeleton_update_world_transform_2(
-      self,
-      physics,
-      parent,
-    );
-  }
-
-  late final _spine_skeleton_update_world_transform_2Ptr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_skeleton, ffi.Int32, spine_bone_pose)>>(
-          'spine_skeleton_update_world_transform_2');
-  late final _spine_skeleton_update_world_transform_2 =
-      _spine_skeleton_update_world_transform_2Ptr.asFunction<void Function(spine_skeleton, int, spine_bone_pose)>();
+          'spine_skeleton_update_world_transform');
+  late final _spine_skeleton_update_world_transform =
+      _spine_skeleton_update_world_transformPtr.asFunction<void Function(spine_skeleton, int)>();
 
   void spine_skeleton_setup_pose(
     spine_skeleton self,

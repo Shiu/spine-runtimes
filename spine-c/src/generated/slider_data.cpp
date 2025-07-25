@@ -18,17 +18,17 @@ spine_rtti spine_slider_data_get_rtti(spine_slider_data self) {
 
 spine_constraint spine_slider_data_create_method(spine_slider_data self, spine_skeleton skeleton) {
 	SliderData *_self = (SliderData *) self;
-	return (spine_constraint) _self->create(*((Skeleton *) skeleton));
+	return (spine_constraint) &_self->create(*((Skeleton *) skeleton));
 }
 
 spine_animation spine_slider_data_get_animation(spine_slider_data self) {
 	SliderData *_self = (SliderData *) self;
-	return (spine_animation) _self->getAnimation();
+	return (spine_animation) &_self->getAnimation();
 }
 
 void spine_slider_data_set_animation(spine_slider_data self, spine_animation animation) {
 	SliderData *_self = (SliderData *) self;
-	_self->setAnimation((Animation *) animation);
+	_self->setAnimation(*((Animation *) animation));
 }
 
 bool spine_slider_data_get_additive(spine_slider_data self) {

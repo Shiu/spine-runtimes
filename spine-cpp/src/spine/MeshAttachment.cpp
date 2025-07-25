@@ -157,8 +157,8 @@ TextureRegion *MeshAttachment::getRegion() {
 	return _region;
 }
 
-void MeshAttachment::setRegion(TextureRegion *region) {
-	_region = region;
+void MeshAttachment::setRegion(TextureRegion &region) {
+	_region = &region;
 }
 
 Sequence *MeshAttachment::getSequence() {
@@ -216,16 +216,16 @@ Color &MeshAttachment::getColor() {
 	return _color;
 }
 
-Attachment *MeshAttachment::copy() {
+Attachment &MeshAttachment::copy() {
 	if (_parentMesh) return newLinkedMesh();
 
 	MeshAttachment *copy = new (__FILE__, __LINE__) MeshAttachment(getName());
-	copy->setRegion(_region);
-	copy->setSequence(_sequence != NULL ? _sequence->copy() : NULL);
+	copy->setRegion(*_region);
+	copy->setSequence(_sequence != NULL ? &_sequence->copy() : NULL);
 	copy->_path = _path;
 	copy->_color.set(_color);
 
-	copyTo(copy);
+	copyTo(*copy);
 	copy->_regionUVs.clearAndAddAll(_regionUVs);
 	copy->_uvs.clearAndAddAll(_uvs);
 	copy->_triangles.clearAndAddAll(_triangles);
@@ -235,18 +235,18 @@ Attachment *MeshAttachment::copy() {
 	copy->_edges.clearAndAddAll(_edges);
 	copy->_width = _width;
 	copy->_height = _height;
-	return copy;
+	return *copy;
 }
 
-MeshAttachment *MeshAttachment::newLinkedMesh() {
+MeshAttachment &MeshAttachment::newLinkedMesh() {
 	MeshAttachment *copy = new (__FILE__, __LINE__) MeshAttachment(getName());
-	copy->setRegion(_region);
+	copy->setRegion(*_region);
 	copy->_path = _path;
 	copy->_color.set(_color);
 	copy->_timelineAttachment = this->_timelineAttachment;
 	copy->setParentMesh(_parentMesh ? _parentMesh : this);
 	if (copy->_region) copy->updateRegion();
-	return copy;
+	return *copy;
 }
 
 void MeshAttachment::computeWorldVertices(Skeleton &skeleton, Slot &slot, size_t start, size_t count, float *worldVertices, size_t offset,

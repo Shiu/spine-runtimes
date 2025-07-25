@@ -53,10 +53,10 @@ TransformConstraint::TransformConstraint(TransformConstraintData &data, Skeleton
 	_source = skeleton._bones[data._source->getIndex()];
 }
 
-TransformConstraint *TransformConstraint::copy(Skeleton &skeleton) {
+TransformConstraint &TransformConstraint::copy(Skeleton &skeleton) {
 	TransformConstraint *copy = new (__FILE__, __LINE__) TransformConstraint(_data, skeleton);
 	copy->_pose.set(_pose);
-	return copy;
+	return *copy;
 }
 
 /// Applies the constraint to the constrained bones.
@@ -131,10 +131,10 @@ Array<BonePose *> &TransformConstraint::getBones() {
 }
 
 /// The bone whose world transform will be copied to the constrained bones.
-Bone *TransformConstraint::getSource() {
-	return _source;
+Bone &TransformConstraint::getSource() {
+	return *_source;
 }
 
-void TransformConstraint::setSource(Bone *source) {
-	_source = source;
+void TransformConstraint::setSource(Bone &source) {
+	_source = &source;
 }

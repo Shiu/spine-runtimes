@@ -50,9 +50,9 @@ Color &ClippingAttachment::getColor() {
 	return _color;
 }
 
-Attachment *ClippingAttachment::copy() {
+Attachment &ClippingAttachment::copy() {
 	ClippingAttachment *copy = new (__FILE__, __LINE__) ClippingAttachment(getName());
-	copyTo(copy);
+	copyTo(*copy);
 	copy->_endSlot = _endSlot;
-	return copy;
+	return *copy;
 }

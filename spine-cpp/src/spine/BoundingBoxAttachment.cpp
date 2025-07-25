@@ -40,8 +40,8 @@ Color &BoundingBoxAttachment::getColor() {
 	return _color;
 }
 
-Attachment *BoundingBoxAttachment::copy() {
+Attachment &BoundingBoxAttachment::copy() {
 	BoundingBoxAttachment *copy = new (__FILE__, __LINE__) BoundingBoxAttachment(getName());
-	copyTo(copy);
-	return copy;
+	copyTo(*copy);
+	return *copy;
 }

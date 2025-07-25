@@ -257,14 +257,14 @@ namespace spine {
 		explicit TransformConstraintData(const String &name);
 		~TransformConstraintData();
 
-		virtual Constraint *create(Skeleton &skeleton) override;
+		virtual Constraint &create(Skeleton &skeleton) override;
 
 		/// The bones that will be modified by this transform constraint.
 		Array<BoneData *> &getBones();
 
 		/// The bone whose world transform will be copied to the constrained bones.
-		BoneData *getSource();
-		void setSource(BoneData *source);
+		BoneData &getSource();
+		void setSource(BoneData &source);
 
 		/// An offset added to the constrained bone rotation.
 		float getOffsetRotation();

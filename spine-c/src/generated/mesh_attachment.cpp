@@ -90,7 +90,7 @@ spine_texture_region spine_mesh_attachment_get_region(spine_mesh_attachment self
 
 void spine_mesh_attachment_set_region(spine_mesh_attachment self, spine_texture_region region) {
 	MeshAttachment *_self = (MeshAttachment *) self;
-	_self->setRegion((TextureRegion *) region);
+	_self->setRegion(*((TextureRegion *) region));
 }
 
 spine_sequence spine_mesh_attachment_get_sequence(spine_mesh_attachment self) {
@@ -145,12 +145,12 @@ void spine_mesh_attachment_set_height(spine_mesh_attachment self, float inValue)
 
 spine_attachment spine_mesh_attachment_copy(spine_mesh_attachment self) {
 	MeshAttachment *_self = (MeshAttachment *) self;
-	return (spine_attachment) _self->copy();
+	return (spine_attachment) &_self->copy();
 }
 
 spine_mesh_attachment spine_mesh_attachment_new_linked_mesh(spine_mesh_attachment self) {
 	MeshAttachment *_self = (MeshAttachment *) self;
-	return (spine_mesh_attachment) _self->newLinkedMesh();
+	return (spine_mesh_attachment) &_self->newLinkedMesh();
 }
 
 int spine_mesh_attachment_get_id(spine_mesh_attachment self) {
@@ -200,7 +200,7 @@ void spine_mesh_attachment_set_timeline_attachment(spine_mesh_attachment self, s
 
 void spine_mesh_attachment_copy_to(spine_mesh_attachment self, spine_vertex_attachment other) {
 	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
-	_self->copyTo((VertexAttachment *) other);
+	_self->copyTo(*((VertexAttachment *) other));
 }
 
 const char *spine_mesh_attachment_get_name(spine_mesh_attachment self) {

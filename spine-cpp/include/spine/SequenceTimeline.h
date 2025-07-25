@@ -59,8 +59,8 @@ namespace spine {
 		/// @param delay Seconds between frames.
 		void setFrame(int frame, float time, SequenceMode mode, int index, float delay);
 
-		Attachment *getAttachment() {
-			return (Attachment *) _attachment;
+		Attachment &getAttachment() {
+			return *(Attachment *) _attachment;
 		}
 
 		virtual int getSlotIndex() override;

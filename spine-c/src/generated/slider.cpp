@@ -18,7 +18,7 @@ spine_rtti spine_slider_get_rtti(spine_slider self) {
 
 spine_slider spine_slider_copy(spine_slider self, spine_skeleton skeleton) {
 	Slider *_self = (Slider *) self;
-	return (spine_slider) _self->copy(*((Skeleton *) skeleton));
+	return (spine_slider) &_self->copy(*((Skeleton *) skeleton));
 }
 
 void spine_slider_update(spine_slider self, spine_skeleton skeleton, spine_physics physics) {
@@ -38,12 +38,12 @@ bool spine_slider_is_source_active(spine_slider self) {
 
 spine_bone spine_slider_get_bone(spine_slider self) {
 	Slider *_self = (Slider *) self;
-	return (spine_bone) _self->getBone();
+	return (spine_bone) &_self->getBone();
 }
 
 void spine_slider_set_bone(spine_slider self, spine_bone bone) {
 	Slider *_self = (Slider *) self;
-	_self->setBone((Bone *) bone);
+	_self->setBone(*((Bone *) bone));
 }
 
 spine_slider_data spine_slider_get_data(spine_slider self) {

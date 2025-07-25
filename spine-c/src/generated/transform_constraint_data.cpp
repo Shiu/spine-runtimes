@@ -18,7 +18,7 @@ spine_rtti spine_transform_constraint_data_get_rtti(spine_transform_constraint_d
 
 spine_constraint spine_transform_constraint_data_create_method(spine_transform_constraint_data self, spine_skeleton skeleton) {
 	TransformConstraintData *_self = (TransformConstraintData *) self;
-	return (spine_constraint) _self->create(*((Skeleton *) skeleton));
+	return (spine_constraint) &_self->create(*((Skeleton *) skeleton));
 }
 
 spine_array_bone_data spine_transform_constraint_data_get_bones(spine_transform_constraint_data self) {
@@ -28,12 +28,12 @@ spine_array_bone_data spine_transform_constraint_data_get_bones(spine_transform_
 
 spine_bone_data spine_transform_constraint_data_get_source(spine_transform_constraint_data self) {
 	TransformConstraintData *_self = (TransformConstraintData *) self;
-	return (spine_bone_data) _self->getSource();
+	return (spine_bone_data) &_self->getSource();
 }
 
 void spine_transform_constraint_data_set_source(spine_transform_constraint_data self, spine_bone_data source) {
 	TransformConstraintData *_self = (TransformConstraintData *) self;
-	_self->setSource((BoneData *) source);
+	_self->setSource(*((BoneData *) source));
 }
 
 float spine_transform_constraint_data_get_offset_rotation(spine_transform_constraint_data self) {

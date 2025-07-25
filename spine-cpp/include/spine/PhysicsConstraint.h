@@ -64,7 +64,7 @@ namespace spine {
 		void update(Skeleton &skeleton, Physics physics) override;
 		void sort(Skeleton &skeleton) override;
 		bool isSourceActive() override;
-		PhysicsConstraint *copy(Skeleton &skeleton);
+		PhysicsConstraint &copy(Skeleton &skeleton);
 
 		void reset(Skeleton &skeleton);
 

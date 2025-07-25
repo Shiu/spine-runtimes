@@ -63,7 +63,7 @@ float spine_point_attachment_compute_world_rotation(spine_point_attachment self,
 
 spine_attachment spine_point_attachment_copy(spine_point_attachment self) {
 	PointAttachment *_self = (PointAttachment *) self;
-	return (spine_attachment) _self->copy();
+	return (spine_attachment) &_self->copy();
 }
 
 const char *spine_point_attachment_get_name(spine_point_attachment self) {

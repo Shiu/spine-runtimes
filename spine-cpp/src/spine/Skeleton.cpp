@@ -92,7 +92,7 @@ Skeleton::Skeleton(SkeletonData &skeletonData)
 	_constraints.ensureCapacity(_data.getConstraints().size());
 	for (size_t i = 0; i < _data.getConstraints().size(); ++i) {
 		ConstraintData *constraintData = _data.getConstraints()[i];
-		Constraint *constraint = constraintData->create(*this);
+		Constraint *constraint = &constraintData->create(*this);
 		if (constraint->getRTTI().instanceOf(PhysicsConstraint::rtti)) {
 			_physics.add(static_cast<PhysicsConstraint *>(constraint));
 		}
@@ -224,40 +224,6 @@ void Skeleton::updateWorldTransform(Physics physics) {
 	}
 }
 
-void Skeleton::updateWorldTransform(Physics physics, BonePose *parent) {
-	if (parent == NULL) return;
-
-	_update++;
-
-	Posed **resetCache = _resetCache.buffer();
-	for (size_t i = 0, n = _resetCache.size(); i < n; i++) {
-		resetCache[i]->resetConstrained();
-	}
-
-	// Apply the parent bone transform to the root bone. The root bone always inherits scale, rotation and reflection.
-	BonePose *rootBone = getRootBone()->_applied;
-	float pa = parent->_a, pb = parent->_b, pc = parent->_c, pd = parent->_d;
-	rootBone->_worldX = pa * _x + pb * _y + parent->_worldX;
-	rootBone->_worldY = pc * _x + pd * _y + parent->_worldY;
-
-	float rx = (rootBone->_rotation + rootBone->_shearX) * MathUtil::Deg_Rad;
-	float ry = (rootBone->_rotation + 90 + rootBone->_shearY) * MathUtil::Deg_Rad;
-	float la = MathUtil::cos(rx) * rootBone->_scaleX;
-	float lb = MathUtil::cos(ry) * rootBone->_scaleY;
-	float lc = MathUtil::sin(rx) * rootBone->_scaleX;
-	float ld = MathUtil::sin(ry) * rootBone->_scaleY;
-	rootBone->_a = (pa * la + pb * lc) * _scaleX;
-	rootBone->_b = (pa * lb + pb * ld) * _scaleX;
-	rootBone->_c = (pc * la + pd * lc) * _scaleY;
-	rootBone->_d = (pc * lb + pd * ld) * _scaleY;
-
-	// Update everything except root bone.
-	Update **updateCache = _updateCache.buffer();
-	for (size_t i = 0, n = _updateCache.size(); i < n; i++) {
-		Update *updatable = updateCache[i];
-		if (updatable != rootBone) updatable->update(*this, physics);
-	}
-}
 
 void Skeleton::setupPose() {
 	setupPoseBones();
@@ -290,8 +256,8 @@ void Skeleton::setupPoseSlots() {
 	}
 }
 
-SkeletonData *Skeleton::getData() {
-	return &_data;
+SkeletonData &Skeleton::getData() {
+	return _data;
 }
 
 Array<Bone *> &Skeleton::getBones() {

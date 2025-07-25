@@ -51,7 +51,7 @@ namespace spine {
 
 		~Sequence();
 
-		Sequence *copy();
+		Sequence &copy();
 
 		void apply(SlotPose *slot, Attachment *attachment);
 

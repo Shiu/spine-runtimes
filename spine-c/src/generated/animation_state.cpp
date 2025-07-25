@@ -33,34 +33,34 @@ void spine_animation_state_clear_track(spine_animation_state self, size_t trackI
 
 spine_track_entry spine_animation_state_set_animation_1(spine_animation_state self, size_t trackIndex, const char *animationName, bool loop) {
 	AnimationState *_self = (AnimationState *) self;
-	return (spine_track_entry) _self->setAnimation(trackIndex, String(animationName), loop);
+	return (spine_track_entry) &_self->setAnimation(trackIndex, String(animationName), loop);
 }
 
 spine_track_entry spine_animation_state_set_animation_2(spine_animation_state self, size_t trackIndex, spine_animation animation, bool loop) {
 	AnimationState *_self = (AnimationState *) self;
-	return (spine_track_entry) _self->setAnimation(trackIndex, (Animation *) animation, loop);
+	return (spine_track_entry) &_self->setAnimation(trackIndex, (Animation *) animation, loop);
 }
 
 spine_track_entry spine_animation_state_add_animation_1(spine_animation_state self, size_t trackIndex, const char *animationName, bool loop,
 														float delay) {
 	AnimationState *_self = (AnimationState *) self;
-	return (spine_track_entry) _self->addAnimation(trackIndex, String(animationName), loop, delay);
+	return (spine_track_entry) &_self->addAnimation(trackIndex, String(animationName), loop, delay);
 }
 
 spine_track_entry spine_animation_state_add_animation_2(spine_animation_state self, size_t trackIndex, spine_animation animation, bool loop,
 														float delay) {
 	AnimationState *_self = (AnimationState *) self;
-	return (spine_track_entry) _self->addAnimation(trackIndex, (Animation *) animation, loop, delay);
+	return (spine_track_entry) &_self->addAnimation(trackIndex, (Animation *) animation, loop, delay);
 }
 
 spine_track_entry spine_animation_state_set_empty_animation(spine_animation_state self, size_t trackIndex, float mixDuration) {
 	AnimationState *_self = (AnimationState *) self;
-	return (spine_track_entry) _self->setEmptyAnimation(trackIndex, mixDuration);
+	return (spine_track_entry) &_self->setEmptyAnimation(trackIndex, mixDuration);
 }
 
 spine_track_entry spine_animation_state_add_empty_animation(spine_animation_state self, size_t trackIndex, float mixDuration, float delay) {
 	AnimationState *_self = (AnimationState *) self;
-	return (spine_track_entry) _self->addEmptyAnimation(trackIndex, mixDuration, delay);
+	return (spine_track_entry) &_self->addEmptyAnimation(trackIndex, mixDuration, delay);
 }
 
 void spine_animation_state_set_empty_animations(spine_animation_state self, float mixDuration) {

@@ -42,12 +42,12 @@ PhysicsConstraintData::PhysicsConstraintData(const String &name)
 	  _mixGlobal(false) {
 }
 
-BoneData *PhysicsConstraintData::getBone() {
-	return _bone;
+BoneData &PhysicsConstraintData::getBone() {
+	return *_bone;
 }
 
-void PhysicsConstraintData::setBone(BoneData *bone) {
-	_bone = bone;
+void PhysicsConstraintData::setBone(BoneData &bone) {
+	_bone = &bone;
 }
 
 float PhysicsConstraintData::getStep() {
@@ -162,6 +162,6 @@ void PhysicsConstraintData::setMixGlobal(bool mixGlobal) {
 	_mixGlobal = mixGlobal;
 }
 
-Constraint *PhysicsConstraintData::create(Skeleton &skeleton) {
-	return new (__FILE__, __LINE__) PhysicsConstraint(*this, skeleton);
+Constraint &PhysicsConstraintData::create(Skeleton &skeleton) {
+	return *(new (__FILE__, __LINE__) PhysicsConstraint(*this, skeleton));
 }

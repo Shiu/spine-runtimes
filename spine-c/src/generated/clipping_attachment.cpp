@@ -33,7 +33,7 @@ spine_color spine_clipping_attachment_get_color(spine_clipping_attachment self) 
 
 spine_attachment spine_clipping_attachment_copy(spine_clipping_attachment self) {
 	ClippingAttachment *_self = (ClippingAttachment *) self;
-	return (spine_attachment) _self->copy();
+	return (spine_attachment) &_self->copy();
 }
 
 void spine_clipping_attachment_compute_world_vertices_1(spine_clipping_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start,
@@ -95,7 +95,7 @@ void spine_clipping_attachment_set_timeline_attachment(spine_clipping_attachment
 
 void spine_clipping_attachment_copy_to(spine_clipping_attachment self, spine_vertex_attachment other) {
 	VertexAttachment *_self = (VertexAttachment *) (ClippingAttachment *) self;
-	_self->copyTo((VertexAttachment *) other);
+	_self->copyTo(*((VertexAttachment *) other));
 }
 
 const char *spine_clipping_attachment_get_name(spine_clipping_attachment self) {
