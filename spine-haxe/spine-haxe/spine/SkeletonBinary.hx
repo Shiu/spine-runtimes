@@ -247,7 +247,7 @@ class SkeletonBinary {
 					data.skinRequired = (flags & 1) != 0;
 					data.uniform = (flags & 2) != 0;
 					var setup = data.setup;
-					setup.bendDirection = (flags & 4) != 0 ? 1 : -1;
+					setup.bendDirection = (flags & 4) != 0 ? -1 : 1;
 					setup.compress = (flags & 8) != 0;
 					setup.stretch = (flags & 16) != 0;
 					if ((flags & 32) != 0)
