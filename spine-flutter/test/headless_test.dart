@@ -5,7 +5,7 @@ void main() async {
   print('Testing atlas and skeleton data loading...');
 
   // Initialize with debug extension enabled
-  await initSpineFlutter(enableMemoryDebugging: true);
+  await initSpineDart(enableMemoryDebugging: true);
 
   // Load atlas
   final atlasData = File('../example/assets/spineboy.atlas').readAsStringSync();
