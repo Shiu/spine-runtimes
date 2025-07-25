@@ -34,7 +34,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import 'spine_flutter.dart';
+import 'spine_dart.dart';
 
 /// Controls how the skeleton of a [SpineWidget] is animated and rendered.
 ///

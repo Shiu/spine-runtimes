@@ -41,7 +41,7 @@ import 'package:path/path.dart' as path;
 
 import 'ffi_proxy.dart';
 import 'spine_dart_init.dart' if (dart.library.html) 'spine_flutter_init_web.dart';
-import 'spine_flutter.dart';
+import 'spine_dart.dart';
 import 'raw_image_provider.dart';
 
 export 'spine_widget.dart';

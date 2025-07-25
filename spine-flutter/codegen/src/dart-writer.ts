@@ -1319,12 +1319,12 @@ ${declaration} {`;
 		}
 
 		const methodSuffix = this.getMethodSuffix(method.name, cType.name);
-		
+
 		// Don't consider dispose methods as inherited - they're type-specific
 		if (methodSuffix === 'dispose') {
 			return false;
 		}
-		
+
 		const parentMethodName = `${parentName}_${methodSuffix}`;
 
 		const hasInParent = parent.methods.some(m => m.name === parentMethodName);
@@ -1455,7 +1455,7 @@ ${declaration} {`;
 		lines.push('// Arrays');
 		lines.push(`export 'arrays.dart';`);
 
-		const filePath = path.join(path.dirname(path.dirname(this.outputDir)), 'lib/generated/spine_dart.dart');
+		const filePath = path.join(path.dirname(path.dirname(this.outputDir)), 'lib/generated/api.dart');
 		fs.writeFileSync(filePath, lines.join('\n'));
 	}
 
