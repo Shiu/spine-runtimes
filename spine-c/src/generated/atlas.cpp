@@ -3,6 +3,10 @@
 
 using namespace spine;
 
+void spine_atlas_dispose(spine_atlas self) {
+	delete (Atlas *) self;
+}
+
 void spine_atlas_flip_v(spine_atlas self) {
 	Atlas *_self = (Atlas *) self;
 	_self->flipV();

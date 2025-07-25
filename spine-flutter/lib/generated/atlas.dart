@@ -45,6 +45,10 @@ class Atlas {
   /// Get the native pointer for FFI calls
   Pointer get nativePtr => _ptr;
 
+  void dispose() {
+    SpineBindings.bindings.spine_atlas_dispose(_ptr);
+  }
+
   void flipV() {
     SpineBindings.bindings.spine_atlas_flip_v(_ptr);
   }

@@ -76,7 +76,7 @@ SPINE_C_API float spine_vector_get_y(spine_vector vector);
 // Atlas functions
 SPINE_C_API spine_atlas_result spine_atlas_load(const char *atlasData);
 SPINE_C_API spine_atlas_result spine_atlas_load_callback(const char *atlasData, const char *atlasDir, spine_texture_loader_load_func load,
-												  spine_texture_loader_unload_func unload);
+														 spine_texture_loader_unload_func unload);
 SPINE_C_API const char *spine_atlas_result_get_error(spine_atlas_result result);
 SPINE_C_API spine_atlas spine_atlas_result_get_atlas(spine_atlas_result result);
 SPINE_C_API void spine_atlas_result_dispose(spine_atlas_result result);

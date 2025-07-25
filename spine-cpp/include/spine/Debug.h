@@ -197,7 +197,7 @@ namespace spine {
 		DebugEntry *_head;
 		size_t _size;
 	};
-#endif // SPINE_NO_CPP_RT
+#endif// SPINE_NO_CPP_RT
 
 	class SP_API DebugExtension : public SpineExtension {
 		struct Allocation {
@@ -225,7 +225,7 @@ namespace spine {
 				printf("\"%s:%i (%zu bytes at %p)\n", pair.value.fileName, pair.value.line, pair.value.size, pair.value.address);
 			}
 #else
-			for (const auto& pair : _allocated) {
+			for (const auto &pair : _allocated) {
 				printf("\"%s:%i (%zu bytes at %p)\n", pair.second.fileName, pair.second.line, pair.second.size, pair.second.address);
 			}
 #endif

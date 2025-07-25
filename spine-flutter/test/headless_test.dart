@@ -5,18 +5,18 @@ void main() async {
   print('Testing atlas and skeleton data loading...');
 
   // Initialize with debug extension enabled
-  await initSpineFlutter(enableMemoryDebugging: false);
+  await initSpineFlutter(enableMemoryDebugging: true);
 
   // Load atlas
   final atlasData = File('../example/assets/spineboy.atlas').readAsStringSync();
-  final atlas = AtlasExtensions.fromString(atlasData);
+  final atlas = loadAtlas(atlasData);
 
   print('Atlas loaded successfully');
   print('Number of regions: ${atlas.regions.length}');
 
   // Load skeleton data
   final skeletonJson = File('../example/assets/spineboy-pro.json').readAsStringSync();
-  final skeletonData = SkeletonDataExtensions.fromJson(atlas, skeletonJson);
+  final skeletonData = loadSkeletonDataJson(atlas, skeletonJson);
 
   print('Skeleton data loaded successfully');
   print('Number of bones: ${skeletonData.bones.length}');

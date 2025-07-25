@@ -214,7 +214,7 @@ public:
 static CallbackTextureLoad callbackLoader;
 
 spine_atlas_result spine_atlas_load_callback(const char *atlasData, const char *atlasDir, spine_texture_loader_load_func load,
-									  spine_texture_loader_unload_func unload) {
+											 spine_texture_loader_unload_func unload) {
 	if (!atlasData) return nullptr;
 	_spine_atlas_result *result = SpineExtension::calloc<_spine_atlas_result>(1, __FILE__, __LINE__);
 	int32_t length = (int32_t) strlen(atlasData);

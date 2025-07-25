@@ -29,12 +29,14 @@ library;
 import 'generated/spine_dart_bindings_generated.dart';
 import 'spine_bindings.dart';
 import 'spine_dart_init.dart' if (dart.library.html) 'spine_flutter_init_web.dart';
+import 'dart:ffi';
+import 'dart:typed_data';
+import 'package:ffi/ffi.dart';
+import 'generated/atlas.dart';
+import 'generated/skeleton_data.dart';
 
 // Export generated classes
 export 'generated/spine_dart.dart';
-
-// Export extensions
-export 'new_extensions.dart';
 
 Future<void> initSpineFlutter({bool useStaticLinkage = false, bool enableMemoryDebugging = false}) async {
   final ffi = await initSpineDartFFI(useStaticLinkage);
@@ -52,3 +54,77 @@ int majorVersion() => SpineBindings.bindings.spine_major_version();
 int minorVersion() => SpineBindings.bindings.spine_minor_version();
 
 void reportLeaks() => SpineBindings.bindings.spine_report_leaks();
+
+/// Load an Atlas from atlas data string
+Atlas loadAtlas(String atlasData) {
+  final atlasDataNative = atlasData.toNativeUtf8();
+  final resultPtr = SpineBindings.bindings.spine_atlas_load(atlasDataNative.cast<Char>());
+  malloc.free(atlasDataNative);
+
+  // Check for error
+  final errorPtr = SpineBindings.bindings.spine_atlas_result_get_error(resultPtr.cast());
+  if (errorPtr != nullptr) {
+    final error = errorPtr.cast<Utf8>().toDartString();
+    SpineBindings.bindings.spine_atlas_result_dispose(resultPtr.cast());
+    throw Exception("Couldn't load atlas: $error");
+  }
+
+  // Get atlas
+  final atlasPtr = SpineBindings.bindings.spine_atlas_result_get_atlas(resultPtr.cast());
+  final atlas = Atlas.fromPointer(atlasPtr);
+  SpineBindings.bindings.spine_atlas_result_dispose(resultPtr.cast());
+  return atlas;
+}
+
+/// Load skeleton data from JSON string
+SkeletonData loadSkeletonDataJson(Atlas atlas, String jsonData, {String? path}) {
+  final jsonDataNative = jsonData.toNativeUtf8();
+  final pathNative = (path ?? '').toNativeUtf8();
+
+  final resultPtr = SpineBindings.bindings
+      .spine_skeleton_data_load_json(atlas.nativePtr.cast(), jsonDataNative.cast<Char>(), pathNative.cast<Char>());
+
+  malloc.free(jsonDataNative);
+  malloc.free(pathNative);
+
+  // Check for error
+  final errorPtr = SpineBindings.bindings.spine_skeleton_data_result_get_error(resultPtr.cast());
+  if (errorPtr != nullptr) {
+    final error = errorPtr.cast<Utf8>().toDartString();
+    SpineBindings.bindings.spine_skeleton_data_result_dispose(resultPtr.cast());
+    throw Exception("Couldn't load skeleton data: $error");
+  }
+
+  // Get skeleton data
+  final skeletonDataPtr = SpineBindings.bindings.spine_skeleton_data_result_get_data(resultPtr.cast());
+  final skeletonData = SkeletonData.fromPointer(skeletonDataPtr);
+  SpineBindings.bindings.spine_skeleton_data_result_dispose(resultPtr.cast());
+  return skeletonData;
+}
+
+/// Load skeleton data from binary data
+SkeletonData loadSkeletonDataBinary(Atlas atlas, Uint8List binaryData, {String? path}) {
+  final Pointer<Uint8> binaryNative = malloc.allocate(binaryData.lengthInBytes);
+  binaryNative.asTypedList(binaryData.lengthInBytes).setAll(0, binaryData);
+  final pathNative = (path ?? '').toNativeUtf8();
+
+  final resultPtr = SpineBindings.bindings.spine_skeleton_data_load_binary(
+      atlas.nativePtr.cast(), binaryNative.cast(), binaryData.lengthInBytes, pathNative.cast<Char>());
+
+  malloc.free(binaryNative);
+  malloc.free(pathNative);
+
+  // Check for error
+  final errorPtr = SpineBindings.bindings.spine_skeleton_data_result_get_error(resultPtr.cast());
+  if (errorPtr != nullptr) {
+    final error = errorPtr.cast<Utf8>().toDartString();
+    SpineBindings.bindings.spine_skeleton_data_result_dispose(resultPtr.cast());
+    throw Exception("Couldn't load skeleton data: $error");
+  }
+
+  // Get skeleton data
+  final skeletonDataPtr = SpineBindings.bindings.spine_skeleton_data_result_get_data(resultPtr.cast());
+  final skeletonData = SkeletonData.fromPointer(skeletonDataPtr);
+  SpineBindings.bindings.spine_skeleton_data_result_dispose(resultPtr.cast());
+  return skeletonData;
+}

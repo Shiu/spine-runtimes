@@ -5867,6 +5867,18 @@ class SpineDartBindings {
   late final _spine_array_update_buffer =
       _spine_array_update_bufferPtr.asFunction<ffi.Pointer<spine_update> Function(spine_array_update)>();
 
+  void spine_atlas_dispose(
+    spine_atlas self,
+  ) {
+    return _spine_atlas_dispose(
+      self,
+    );
+  }
+
+  late final _spine_atlas_disposePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_atlas)>>('spine_atlas_dispose');
+  late final _spine_atlas_dispose = _spine_atlas_disposePtr.asFunction<void Function(spine_atlas)>();
+
   void spine_atlas_flip_v(
     spine_atlas self,
   ) {
@@ -6557,7 +6569,7 @@ class SpineDartBindings {
   late final _spine_vector_get_y = _spine_vector_get_yPtr.asFunction<double Function(spine_vector)>();
 
   /// Atlas functions
-  spine_atlas spine_atlas_load(
+  spine_atlas_result spine_atlas_load(
     ffi.Pointer<ffi.Char> atlasData,
   ) {
     return _spine_atlas_load(
@@ -6566,10 +6578,10 @@ class SpineDartBindings {
   }
 
   late final _spine_atlas_loadPtr =
-      _lookup<ffi.NativeFunction<spine_atlas Function(ffi.Pointer<ffi.Char>)>>('spine_atlas_load');
-  late final _spine_atlas_load = _spine_atlas_loadPtr.asFunction<spine_atlas Function(ffi.Pointer<ffi.Char>)>();
+      _lookup<ffi.NativeFunction<spine_atlas_result Function(ffi.Pointer<ffi.Char>)>>('spine_atlas_load');
+  late final _spine_atlas_load = _spine_atlas_loadPtr.asFunction<spine_atlas_result Function(ffi.Pointer<ffi.Char>)>();
 
-  spine_atlas spine_atlas_load_callback(
+  spine_atlas_result spine_atlas_load_callback(
     ffi.Pointer<ffi.Char> atlasData,
     ffi.Pointer<ffi.Char> atlasDir,
     spine_texture_loader_load_func load,
@@ -6585,75 +6597,50 @@ class SpineDartBindings {
 
   late final _spine_atlas_load_callbackPtr = _lookup<
       ffi.NativeFunction<
-          spine_atlas Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, spine_texture_loader_load_func,
+          spine_atlas_result Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, spine_texture_loader_load_func,
               spine_texture_loader_unload_func)>>('spine_atlas_load_callback');
   late final _spine_atlas_load_callback = _spine_atlas_load_callbackPtr.asFunction<
-      spine_atlas Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, spine_texture_loader_load_func,
+      spine_atlas_result Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, spine_texture_loader_load_func,
           spine_texture_loader_unload_func)>();
 
-  int spine_atlas_get_num_image_paths(
-    spine_atlas atlas,
+  ffi.Pointer<ffi.Char> spine_atlas_result_get_error(
+    spine_atlas_result result,
   ) {
-    return _spine_atlas_get_num_image_paths(
-      atlas,
+    return _spine_atlas_result_get_error(
+      result,
     );
   }
 
-  late final _spine_atlas_get_num_image_pathsPtr =
-      _lookup<ffi.NativeFunction<ffi.Int32 Function(spine_atlas)>>('spine_atlas_get_num_image_paths');
-  late final _spine_atlas_get_num_image_paths =
-      _spine_atlas_get_num_image_pathsPtr.asFunction<int Function(spine_atlas)>();
+  late final _spine_atlas_result_get_errorPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function(spine_atlas_result)>>('spine_atlas_result_get_error');
+  late final _spine_atlas_result_get_error =
+      _spine_atlas_result_get_errorPtr.asFunction<ffi.Pointer<ffi.Char> Function(spine_atlas_result)>();
 
-  ffi.Pointer<ffi.Char> spine_atlas_get_image_path(
-    spine_atlas atlas,
-    int index,
+  spine_atlas spine_atlas_result_get_atlas(
+    spine_atlas_result result,
   ) {
-    return _spine_atlas_get_image_path(
-      atlas,
-      index,
+    return _spine_atlas_result_get_atlas(
+      result,
     );
   }
 
-  late final _spine_atlas_get_image_pathPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function(spine_atlas, ffi.Int32)>>('spine_atlas_get_image_path');
-  late final _spine_atlas_get_image_path =
-      _spine_atlas_get_image_pathPtr.asFunction<ffi.Pointer<ffi.Char> Function(spine_atlas, int)>();
+  late final _spine_atlas_result_get_atlasPtr =
+      _lookup<ffi.NativeFunction<spine_atlas Function(spine_atlas_result)>>('spine_atlas_result_get_atlas');
+  late final _spine_atlas_result_get_atlas =
+      _spine_atlas_result_get_atlasPtr.asFunction<spine_atlas Function(spine_atlas_result)>();
 
-  bool spine_atlas_is_pma(
-    spine_atlas atlas,
+  void spine_atlas_result_dispose(
+    spine_atlas_result result,
   ) {
-    return _spine_atlas_is_pma(
-      atlas,
+    return _spine_atlas_result_dispose(
+      result,
     );
   }
 
-  late final _spine_atlas_is_pmaPtr = _lookup<ffi.NativeFunction<ffi.Bool Function(spine_atlas)>>('spine_atlas_is_pma');
-  late final _spine_atlas_is_pma = _spine_atlas_is_pmaPtr.asFunction<bool Function(spine_atlas)>();
-
-  ffi.Pointer<ffi.Char> spine_atlas_get_error(
-    spine_atlas atlas,
-  ) {
-    return _spine_atlas_get_error(
-      atlas,
-    );
-  }
-
-  late final _spine_atlas_get_errorPtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function(spine_atlas)>>('spine_atlas_get_error');
-  late final _spine_atlas_get_error =
-      _spine_atlas_get_errorPtr.asFunction<ffi.Pointer<ffi.Char> Function(spine_atlas)>();
-
-  void spine_atlas_dispose(
-    spine_atlas atlas,
-  ) {
-    return _spine_atlas_dispose(
-      atlas,
-    );
-  }
-
-  late final _spine_atlas_disposePtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_atlas)>>('spine_atlas_dispose');
-  late final _spine_atlas_dispose = _spine_atlas_disposePtr.asFunction<void Function(spine_atlas)>();
+  late final _spine_atlas_result_disposePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_atlas_result)>>('spine_atlas_result_dispose');
+  late final _spine_atlas_result_dispose =
+      _spine_atlas_result_disposePtr.asFunction<void Function(spine_atlas_result)>();
 
   /// Skeleton data functions
   spine_skeleton_data_result spine_skeleton_data_load_json(
@@ -40773,6 +40760,11 @@ typedef spine_update = ffi.Pointer<spine_update_wrapper>;
 typedef spine_atlas = ffi.Pointer<spine_atlas_wrapper>;
 typedef spine_skeleton_data = ffi.Pointer<spine_skeleton_data_wrapper>;
 
+final class spine_atlas_result_wrapper extends ffi.Struct {
+  @ffi.Char()
+  external int _dummy;
+}
+
 final class spine_skeleton_data_result_wrapper extends ffi.Struct {
   @ffi.Char()
   external int _dummy;
@@ -40815,6 +40807,7 @@ final class spine_texture_loader_wrapper extends ffi.Struct {
 
 typedef spine_bounds = ffi.Pointer<spine_bounds_wrapper>;
 typedef spine_vector = ffi.Pointer<spine_vector_wrapper>;
+typedef spine_atlas_result = ffi.Pointer<spine_atlas_result_wrapper>;
 
 /// Texture loader callbacks
 typedef spine_texture_loader_load_func = ffi.Pointer<ffi.NativeFunction<spine_texture_loader_load_funcFunction>>;
