@@ -30,7 +30,7 @@ SPINE_C_API spine_color spine_mesh_attachment_get_color(spine_mesh_attachment se
 SPINE_C_API const char *spine_mesh_attachment_get_path(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_path(spine_mesh_attachment self, const char *inValue);
 SPINE_C_API /*@null*/ spine_texture_region spine_mesh_attachment_get_region(spine_mesh_attachment self);
-SPINE_C_API void spine_mesh_attachment_set_region(spine_mesh_attachment self, spine_texture_region region);
+SPINE_C_API void spine_mesh_attachment_set_region(spine_mesh_attachment self, /*@null*/ spine_texture_region region);
 SPINE_C_API /*@null*/ spine_sequence spine_mesh_attachment_get_sequence(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_sequence(spine_mesh_attachment self, /*@null*/ spine_sequence sequence);
 SPINE_C_API /*@null*/ spine_mesh_attachment spine_mesh_attachment_get_parent_mesh(spine_mesh_attachment self);

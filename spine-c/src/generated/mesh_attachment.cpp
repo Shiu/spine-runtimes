@@ -88,9 +88,9 @@ void spine_mesh_attachment_set_path(spine_mesh_attachment self, const char *inVa
 	return (spine_texture_region) _self->getRegion();
 }
 
-void spine_mesh_attachment_set_region(spine_mesh_attachment self, spine_texture_region region) {
+void spine_mesh_attachment_set_region(spine_mesh_attachment self, /*@null*/ spine_texture_region region) {
 	MeshAttachment *_self = (MeshAttachment *) self;
-	_self->setRegion(*((TextureRegion *) region));
+	_self->setRegion((TextureRegion *) region);
 }
 
 /*@null*/ spine_sequence spine_mesh_attachment_get_sequence(spine_mesh_attachment self) {

@@ -104,7 +104,7 @@ namespace spine {
 
 		TextureRegion *getRegion();
 
-		void setRegion(TextureRegion &region);
+		void setRegion(TextureRegion *region);
 
 		Sequence *getSequence();
 

@@ -65,7 +65,7 @@ void Sequence::apply(SlotPose *slot, Attachment *attachment) {
 	if (attachment->getRTTI().isExactly(RegionAttachment::rtti)) {
 		RegionAttachment *regionAttachment = static_cast<RegionAttachment *>(attachment);
 		if (regionAttachment->getRegion() != region) {
-			regionAttachment->setRegion(*region);
+			regionAttachment->setRegion(region);
 			regionAttachment->updateRegion();
 		}
 	}
@@ -73,7 +73,7 @@ void Sequence::apply(SlotPose *slot, Attachment *attachment) {
 	if (attachment->getRTTI().isExactly(MeshAttachment::rtti)) {
 		MeshAttachment *meshAttachment = static_cast<MeshAttachment *>(attachment);
 		if (meshAttachment->getRegion() != region) {
-			meshAttachment->setRegion(*region);
+			meshAttachment->setRegion(region);
 			meshAttachment->updateRegion();
 		}
 	}

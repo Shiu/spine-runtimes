@@ -157,8 +157,8 @@ TextureRegion *MeshAttachment::getRegion() {
 	return _region;
 }
 
-void MeshAttachment::setRegion(TextureRegion &region) {
-	_region = &region;
+void MeshAttachment::setRegion(TextureRegion *region) {
+	_region = region;
 }
 
 Sequence *MeshAttachment::getSequence() {
@@ -220,7 +220,7 @@ Attachment &MeshAttachment::copy() {
 	if (_parentMesh) return newLinkedMesh();
 
 	MeshAttachment *copy = new (__FILE__, __LINE__) MeshAttachment(getName());
-	copy->setRegion(*_region);
+	copy->setRegion(_region);
 	copy->setSequence(_sequence != NULL ? &_sequence->copy() : NULL);
 	copy->_path = _path;
 	copy->_color.set(_color);
@@ -240,7 +240,7 @@ Attachment &MeshAttachment::copy() {
 
 MeshAttachment &MeshAttachment::newLinkedMesh() {
 	MeshAttachment *copy = new (__FILE__, __LINE__) MeshAttachment(getName());
-	copy->setRegion(*_region);
+	copy->setRegion(_region);
 	copy->_path = _path;
 	copy->_color.set(_color);
 	copy->_timelineAttachment = this->_timelineAttachment;

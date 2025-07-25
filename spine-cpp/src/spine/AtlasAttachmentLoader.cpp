@@ -61,7 +61,7 @@ RegionAttachment *AtlasAttachmentLoader::newRegionAttachment(Skin &skin, const S
 	} else {
 		AtlasRegion *region = findRegion(path);
 		if (!region) return NULL;
-		attachment->setRegion(*region);
+		attachment->setRegion(region);
 	}
 	return attachment;
 }
@@ -75,7 +75,7 @@ MeshAttachment *AtlasAttachmentLoader::newMeshAttachment(Skin &skin, const Strin
 	} else {
 		AtlasRegion *region = findRegion(path);
 		if (!region) return NULL;
-		attachment->setRegion(*region);
+		attachment->setRegion(region);
 	}
 	return attachment;
 }

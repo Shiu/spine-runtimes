@@ -37,7 +37,7 @@ SPINE_C_API spine_color spine_region_attachment_get_color(spine_region_attachmen
 SPINE_C_API const char *spine_region_attachment_get_path(spine_region_attachment self);
 SPINE_C_API void spine_region_attachment_set_path(spine_region_attachment self, const char *inValue);
 SPINE_C_API /*@null*/ spine_texture_region spine_region_attachment_get_region(spine_region_attachment self);
-SPINE_C_API void spine_region_attachment_set_region(spine_region_attachment self, spine_texture_region region);
+SPINE_C_API void spine_region_attachment_set_region(spine_region_attachment self, /*@null*/ spine_texture_region region);
 SPINE_C_API /*@null*/ spine_sequence spine_region_attachment_get_sequence(spine_region_attachment self);
 SPINE_C_API void spine_region_attachment_set_sequence(spine_region_attachment self, /*@null*/ spine_sequence sequence);
 SPINE_C_API spine_array_float spine_region_attachment_get_offset(spine_region_attachment self);

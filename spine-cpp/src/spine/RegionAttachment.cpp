@@ -242,8 +242,8 @@ TextureRegion *RegionAttachment::getRegion() {
 	return _region;
 }
 
-void RegionAttachment::setRegion(TextureRegion &region) {
-	_region = &region;
+void RegionAttachment::setRegion(TextureRegion *region) {
+	_region = region;
 }
 
 Sequence *RegionAttachment::getSequence() {

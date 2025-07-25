@@ -123,9 +123,9 @@ void spine_region_attachment_set_path(spine_region_attachment self, const char *
 	return (spine_texture_region) _self->getRegion();
 }
 
-void spine_region_attachment_set_region(spine_region_attachment self, spine_texture_region region) {
+void spine_region_attachment_set_region(spine_region_attachment self, /*@null*/ spine_texture_region region) {
 	RegionAttachment *_self = (RegionAttachment *) self;
-	_self->setRegion(*((TextureRegion *) region));
+	_self->setRegion((TextureRegion *) region);
 }
 
 /*@null*/ spine_sequence spine_region_attachment_get_sequence(spine_region_attachment self) {
