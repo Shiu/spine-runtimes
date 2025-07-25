@@ -258,3 +258,4 @@ spine-cpp/build-debug
 spine-cpp/build-linux
 spine-cpp/build-release-debug
 spine-flutter/test/spine_flutter.dylib
+spine-c/codegen/nullable.md
