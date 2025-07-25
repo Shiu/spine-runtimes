@@ -44,6 +44,7 @@ class BoneData extends PosedData {
   BoneData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory BoneData(int index, String name, BoneData? parent) {
@@ -52,6 +53,7 @@ class BoneData extends PosedData {
     return BoneData.fromPointer(ptr);
   }
 
+  @override
   void dispose() {
     SpineBindings.bindings.spine_bone_data_dispose(_ptr);
   }

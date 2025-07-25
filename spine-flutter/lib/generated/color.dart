@@ -111,13 +111,13 @@ class Color {
     SpineBindings.bindings.spine_color_set_a(_ptr, value);
   }
 
-  Color set(double _r, double _g, double _b, double _a) {
-    final result = SpineBindings.bindings.spine_color_set_1(_ptr, _r, _g, _b, _a);
+  Color set(double r, double g, double b, double a) {
+    final result = SpineBindings.bindings.spine_color_set_1(_ptr, r, g, b, a);
     return Color.fromPointer(result);
   }
 
-  Color set2(double _r, double _g, double _b) {
-    final result = SpineBindings.bindings.spine_color_set_2(_ptr, _r, _g, _b);
+  Color set2(double r, double g, double b) {
+    final result = SpineBindings.bindings.spine_color_set_2(_ptr, r, g, b);
     return Color.fromPointer(result);
   }
 
@@ -126,13 +126,13 @@ class Color {
     return Color.fromPointer(result);
   }
 
-  Color add(double _r, double _g, double _b, double _a) {
-    final result = SpineBindings.bindings.spine_color_add_1(_ptr, _r, _g, _b, _a);
+  Color add(double r, double g, double b, double a) {
+    final result = SpineBindings.bindings.spine_color_add_1(_ptr, r, g, b, a);
     return Color.fromPointer(result);
   }
 
-  Color add2(double _r, double _g, double _b) {
-    final result = SpineBindings.bindings.spine_color_add_2(_ptr, _r, _g, _b);
+  Color add2(double r, double g, double b) {
+    final result = SpineBindings.bindings.spine_color_add_2(_ptr, r, g, b);
     return Color.fromPointer(result);
   }
 

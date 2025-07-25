@@ -30,9 +30,6 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'package:ffi/ffi.dart';
-import 'spine_dart_bindings_generated.dart';
-import '../spine_bindings.dart';
 import 'bounding_box_attachment.dart';
 import 'clipping_attachment.dart';
 import 'mesh_attachment.dart';

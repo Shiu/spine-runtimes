@@ -32,12 +32,7 @@
 import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
-import 'arrays.dart';
 import 'constraint_timeline1.dart';
-import 'mix_blend.dart';
-import 'mix_direction.dart';
-import 'skeleton.dart';
 
 /// SliderMixTimeline wrapper
 class SliderMixTimeline extends ConstraintTimeline1 {
@@ -46,6 +41,7 @@ class SliderMixTimeline extends ConstraintTimeline1 {
   SliderMixTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory SliderMixTimeline(int frameCount, int bezierCount, int sliderIndex) {

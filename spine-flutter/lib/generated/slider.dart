@@ -49,6 +49,7 @@ class Slider extends PosedActive implements Posed, Constraint {
   Slider.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory Slider(SliderData data, Skeleton skeleton) {
@@ -56,6 +57,7 @@ class Slider extends PosedActive implements Posed, Constraint {
     return Slider.fromPointer(ptr);
   }
 
+  @override
   void dispose() {
     SpineBindings.bindings.spine_slider_dispose(_ptr);
   }

@@ -33,7 +33,6 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
 import 'arrays.dart';
 import 'atlas_page.dart';
 import 'texture_region.dart';
@@ -45,6 +44,7 @@ class AtlasRegion extends TextureRegion {
   AtlasRegion.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory AtlasRegion() {
@@ -52,6 +52,7 @@ class AtlasRegion extends TextureRegion {
     return AtlasRegion.fromPointer(ptr);
   }
 
+  @override
   void dispose() {
     SpineBindings.bindings.spine_atlas_region_dispose(_ptr);
   }

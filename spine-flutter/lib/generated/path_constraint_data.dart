@@ -57,6 +57,7 @@ class PathConstraintData extends PosedData implements ConstraintData {
   PathConstraintData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory PathConstraintData(String name) {
@@ -64,6 +65,7 @@ class PathConstraintData extends PosedData implements ConstraintData {
     return PathConstraintData.fromPointer(ptr);
   }
 
+  @override
   void dispose() {
     SpineBindings.bindings.spine_path_constraint_data_dispose(_ptr);
   }

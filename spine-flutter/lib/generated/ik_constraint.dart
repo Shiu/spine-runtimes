@@ -51,6 +51,7 @@ class IkConstraint extends PosedActive implements Posed, Constraint {
   IkConstraint.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory IkConstraint(IkConstraintData data, Skeleton skeleton) {
@@ -58,6 +59,7 @@ class IkConstraint extends PosedActive implements Posed, Constraint {
     return IkConstraint.fromPointer(ptr);
   }
 
+  @override
   void dispose() {
     SpineBindings.bindings.spine_ik_constraint_dispose(_ptr);
   }

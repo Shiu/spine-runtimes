@@ -32,12 +32,7 @@
 import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
-import 'arrays.dart';
-import 'mix_blend.dart';
-import 'mix_direction.dart';
 import 'physics_constraint_timeline.dart';
-import 'skeleton.dart';
 
 /// PhysicsConstraintMixTimeline wrapper
 class PhysicsConstraintMixTimeline extends PhysicsConstraintTimeline {
@@ -46,6 +41,7 @@ class PhysicsConstraintMixTimeline extends PhysicsConstraintTimeline {
   PhysicsConstraintMixTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory PhysicsConstraintMixTimeline(int frameCount, int bezierCount, int physicsConstraintIndex) {

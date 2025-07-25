@@ -34,7 +34,6 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
 import 'bone_local.dart';
-import 'inherit.dart';
 import 'physics.dart';
 import 'skeleton.dart';
 import 'update.dart';
@@ -46,6 +45,7 @@ class BonePose extends BoneLocal implements Update {
   BonePose.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory BonePose() {
@@ -53,6 +53,7 @@ class BonePose extends BoneLocal implements Update {
     return BonePose.fromPointer(ptr);
   }
 
+  @override
   void dispose() {
     SpineBindings.bindings.spine_bone_pose_dispose(_ptr);
   }

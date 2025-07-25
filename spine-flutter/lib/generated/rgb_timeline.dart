@@ -32,11 +32,6 @@
 import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
-import 'arrays.dart';
-import 'mix_blend.dart';
-import 'mix_direction.dart';
-import 'skeleton.dart';
 import 'slot_curve_timeline.dart';
 
 /// RgbTimeline wrapper
@@ -46,6 +41,7 @@ class RgbTimeline extends SlotCurveTimeline {
   RgbTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory RgbTimeline(int frameCount, int bezierCount, int slotIndex) {

@@ -32,12 +32,7 @@
 import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
-import 'arrays.dart';
 import 'curve_timeline1.dart';
-import 'mix_blend.dart';
-import 'mix_direction.dart';
-import 'skeleton.dart';
 import 'slot_timeline.dart';
 
 /// AlphaTimeline wrapper
@@ -47,6 +42,7 @@ class AlphaTimeline extends CurveTimeline1 implements SlotTimeline {
   AlphaTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory AlphaTimeline(int frameCount, int bezierCount, int slotIndex) {

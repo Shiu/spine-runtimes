@@ -50,6 +50,7 @@ class Bone extends PosedActive implements Posed, Update {
   Bone.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory Bone(BoneData data, Bone? parent) {
@@ -64,6 +65,7 @@ class Bone extends PosedActive implements Posed, Update {
     return Bone.fromPointer(ptr);
   }
 
+  @override
   void dispose() {
     SpineBindings.bindings.spine_bone_dispose(_ptr);
   }

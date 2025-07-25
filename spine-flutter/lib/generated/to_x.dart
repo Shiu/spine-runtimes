@@ -32,11 +32,7 @@
 import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
-import 'bone_pose.dart';
-import 'skeleton.dart';
 import 'to_property.dart';
-import 'transform_constraint_pose.dart';
 
 /// ToX wrapper
 class ToX extends ToProperty {
@@ -45,6 +41,7 @@ class ToX extends ToProperty {
   ToX.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory ToX() {

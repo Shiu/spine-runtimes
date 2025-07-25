@@ -32,12 +32,7 @@
 import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
-import 'arrays.dart';
 import 'bone_timeline1.dart';
-import 'mix_blend.dart';
-import 'mix_direction.dart';
-import 'skeleton.dart';
 
 /// TranslateXTimeline wrapper
 class TranslateXTimeline extends BoneTimeline1 {
@@ -46,6 +41,7 @@ class TranslateXTimeline extends BoneTimeline1 {
   TranslateXTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory TranslateXTimeline(int frameCount, int bezierCount, int boneIndex) {

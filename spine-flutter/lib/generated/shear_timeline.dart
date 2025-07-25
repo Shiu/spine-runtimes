@@ -32,12 +32,7 @@
 import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
-import 'arrays.dart';
 import 'bone_timeline2.dart';
-import 'mix_blend.dart';
-import 'mix_direction.dart';
-import 'skeleton.dart';
 
 /// ShearTimeline wrapper
 class ShearTimeline extends BoneTimeline2 {
@@ -46,6 +41,7 @@ class ShearTimeline extends BoneTimeline2 {
   ShearTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory ShearTimeline(int frameCount, int bezierCount, int boneIndex) {

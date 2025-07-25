@@ -30,27 +30,23 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'package:ffi/ffi.dart';
-import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
 import 'constraint_data.dart';
-import 'ik_constraint_data.dart';
-import 'path_constraint_data.dart';
 import 'physics.dart';
-import 'physics_constraint_data.dart';
 import 'skeleton.dart';
-import 'slider_data.dart';
-import 'transform_constraint_data.dart';
 import 'update.dart';
 
 /// Constraint wrapper
 abstract class Constraint implements Update {
+  @override
   Pointer get nativePtr;
+  @override
   Rtti get rtti;
   ConstraintData get data;
   void sort(Skeleton skeleton);
   bool get isSourceActive;
+  @override
   void update(Skeleton skeleton, Physics physics);
   static Rtti rttiStatic() {
     final result = SpineBindings.bindings.spine_constraint_rtti();

@@ -61,6 +61,7 @@ class SliderData extends PosedData implements ConstraintData {
   SliderData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory SliderData(String name) {
@@ -68,6 +69,7 @@ class SliderData extends PosedData implements ConstraintData {
     return SliderData.fromPointer(ptr);
   }
 
+  @override
   void dispose() {
     SpineBindings.bindings.spine_slider_data_dispose(_ptr);
   }

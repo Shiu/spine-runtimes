@@ -54,6 +54,7 @@ class TransformConstraintData extends PosedData implements ConstraintData {
   TransformConstraintData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory TransformConstraintData(String name) {
@@ -61,6 +62,7 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     return TransformConstraintData.fromPointer(ptr);
   }
 
+  @override
   void dispose() {
     SpineBindings.bindings.spine_transform_constraint_data_dispose(_ptr);
   }

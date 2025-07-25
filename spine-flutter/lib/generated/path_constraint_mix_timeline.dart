@@ -32,13 +32,8 @@
 import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
-import 'arrays.dart';
 import 'constraint_timeline.dart';
 import 'curve_timeline.dart';
-import 'mix_blend.dart';
-import 'mix_direction.dart';
-import 'skeleton.dart';
 
 /// PathConstraintMixTimeline wrapper
 class PathConstraintMixTimeline extends CurveTimeline implements ConstraintTimeline {
@@ -47,6 +42,7 @@ class PathConstraintMixTimeline extends CurveTimeline implements ConstraintTimel
   PathConstraintMixTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory PathConstraintMixTimeline(int frameCount, int bezierCount, int constraintIndex) {

@@ -30,8 +30,6 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
-import 'spine_dart_bindings_generated.dart';
-import '../spine_bindings.dart';
 
 /// Posed wrapper
 abstract class Posed {

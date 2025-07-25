@@ -32,12 +32,7 @@
 import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
-import 'arrays.dart';
 import 'constraint_timeline.dart';
-import 'mix_blend.dart';
-import 'mix_direction.dart';
-import 'skeleton.dart';
 import 'timeline.dart';
 
 /// PhysicsConstraintResetTimeline wrapper
@@ -47,6 +42,7 @@ class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimel
   PhysicsConstraintResetTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory PhysicsConstraintResetTimeline(int frameCount, int constraintIndex) {

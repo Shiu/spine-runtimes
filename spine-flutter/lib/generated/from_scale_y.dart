@@ -32,7 +32,6 @@
 import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
 import 'from_property.dart';
 
 /// FromScaleY wrapper
@@ -42,6 +41,7 @@ class FromScaleY extends FromProperty {
   FromScaleY.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
+  @override
   Pointer get nativePtr => _ptr;
 
   factory FromScaleY() {
