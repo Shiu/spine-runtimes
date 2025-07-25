@@ -332,7 +332,7 @@ function executeCpp (args: TestArgs): string {
 		// Build using build.sh
 		log_action('Building C++ tests');
 		try {
-			execSync('./build.sh clean debug', {
+			execSync('./build.sh clean debug sanitize', {
 				cwd: cppDir,
 				stdio: ['inherit', 'pipe', 'inherit']
 			});

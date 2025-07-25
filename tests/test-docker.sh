@@ -13,17 +13,16 @@ if ! docker images | grep -q "$IMAGE_NAME" || [ Dockerfile -nt .docker-built ]; 
     touch .docker-built
 fi
 
-# Clean any existing node_modules and C++ build to avoid platform conflicts
+# Clean C++ build directory to avoid platform conflicts
+if [ -d "../spine-cpp/build" ]; then
+    echo "Cleaning C++ build directory to avoid platform conflicts..."
+    rm -rf ../spine-cpp/build
+fi
+
+# Clean node_modules to avoid platform conflicts
 if [ -d "node_modules" ]; then
     echo "Cleaning node_modules to avoid platform conflicts..."
     rm -rf node_modules package-lock.json
-fi
-
-if [ -f "../spine-cpp/build/headless-test" ]; then
-    if ! ../spine-cpp/build/headless-test --help >/dev/null 2>&1; then
-        echo "Cleaning C++ build directory (wrong platform)..."
-        rm -rf ../spine-cpp/build
-    fi
 fi
 
 # Run the test in Docker

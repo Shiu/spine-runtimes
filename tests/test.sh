@@ -14,25 +14,28 @@ if ! command -v npm &> /dev/null; then
     exit 1
 fi
 
-# Clean C++ build directory if executable exists but is wrong platform
-if [ -f "../spine-cpp/build/headless-test" ]; then
-    if ! ../spine-cpp/build/headless-test --help >/dev/null 2>&1; then
-        log_action "Cleaning C++ build directory (wrong platform)"
-        rm -rf ../spine-cpp/build
-        log_ok
-    fi
+# Clean C++ build directory to avoid platform conflicts
+if [ -d "../spine-cpp/build" ]; then
+    log_action "Cleaning C++ build directory"
+    rm -rf ../spine-cpp/build
+    log_ok
 fi
 
-# Install dependencies if node_modules doesn't exist
-if [ ! -d "node_modules" ]; then
-    log_action "Installing dependencies"
-    if npm install > /tmp/npm-install.log 2>&1; then
-        log_ok
-    else
-        log_fail
-        log_detail "$(cat /tmp/npm-install.log)"
-        exit 1
-    fi
+# Clean node_modules to avoid platform conflicts
+if [ -d "node_modules" ]; then
+    log_action "Cleaning node_modules"
+    rm -rf node_modules package-lock.json
+    log_ok
+fi
+
+# Install dependencies
+log_action "Installing dependencies"
+if npm install > /tmp/npm-install.log 2>&1; then
+    log_ok
+else
+    log_fail
+    log_detail "$(cat /tmp/npm-install.log)"
+    exit 1
 fi
 
 log_action "Running TypeScript test runner"
