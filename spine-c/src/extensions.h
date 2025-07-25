@@ -39,6 +39,7 @@ extern "C" {
 #include "generated/skeleton_data.h"
 
 // Custom types for spine-c-new (not generated)
+SPINE_OPAQUE_TYPE(spine_atlas_result)
 SPINE_OPAQUE_TYPE(spine_skeleton_data_result)
 SPINE_OPAQUE_TYPE(spine_bounds)
 SPINE_OPAQUE_TYPE(spine_vector)
@@ -73,14 +74,12 @@ SPINE_C_API float spine_vector_get_x(spine_vector vector);
 SPINE_C_API float spine_vector_get_y(spine_vector vector);
 
 // Atlas functions
-SPINE_C_API spine_atlas spine_atlas_load(const char *atlasData);
-SPINE_C_API spine_atlas spine_atlas_load_callback(const char *atlasData, const char *atlasDir, spine_texture_loader_load_func load,
+SPINE_C_API spine_atlas_result spine_atlas_load(const char *atlasData);
+SPINE_C_API spine_atlas_result spine_atlas_load_callback(const char *atlasData, const char *atlasDir, spine_texture_loader_load_func load,
 												  spine_texture_loader_unload_func unload);
-SPINE_C_API int32_t spine_atlas_get_num_image_paths(spine_atlas atlas);
-SPINE_C_API const char *spine_atlas_get_image_path(spine_atlas atlas, int32_t index);
-SPINE_C_API bool spine_atlas_is_pma(spine_atlas atlas);
-SPINE_C_API const char *spine_atlas_get_error(spine_atlas atlas);
-SPINE_C_API void spine_atlas_dispose(spine_atlas atlas);
+SPINE_C_API const char *spine_atlas_result_get_error(spine_atlas_result result);
+SPINE_C_API spine_atlas spine_atlas_result_get_atlas(spine_atlas_result result);
+SPINE_C_API void spine_atlas_result_dispose(spine_atlas_result result);
 
 // Skeleton data functions
 SPINE_C_API spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, const char *skeletonData, const char *path);

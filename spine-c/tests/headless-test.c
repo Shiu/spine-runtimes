@@ -161,13 +161,17 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Load atlas with headless texture loader
-	spine_atlas atlas = spine_atlas_load_callback((const char *) atlasBytes, atlasDir, headlessTextureLoader, headlessTextureUnloader);
+	spine_atlas_result atlasResult = spine_atlas_load_callback((const char *) atlasBytes, atlasDir, headlessTextureLoader, headlessTextureUnloader);
 	free(atlasBytes);
 
-	if (!atlas) {
-		fprintf(stderr, "Failed to load atlas\n");
+	const char *atlasError = spine_atlas_result_get_error(atlasResult);
+	if (atlasError) {
+		fprintf(stderr, "Failed to load atlas: %s\n", atlasError);
+		spine_atlas_result_dispose(atlasResult);
 		return 1;
 	}
+
+	spine_atlas atlas = spine_atlas_result_get_atlas(atlasResult);
 
 	// Load skeleton data
 	spine_skeleton_data_result result = {0};
@@ -178,7 +182,7 @@ int main(int argc, char *argv[]) {
 		uint8_t *skeletonBytes = read_file(skeletonPath, &skeletonLength);
 		if (!skeletonBytes) {
 			fprintf(stderr, "Failed to read skeleton file\n");
-			spine_atlas_dispose(atlas);
+			spine_atlas_result_dispose(atlasResult);
 			return 1;
 		}
 		result = spine_skeleton_data_load_json(atlas, (const char *) skeletonBytes, skeletonPath);
@@ -188,7 +192,7 @@ int main(int argc, char *argv[]) {
 		uint8_t *skeletonBytes = read_file(skeletonPath, &skeletonLength);
 		if (!skeletonBytes) {
 			fprintf(stderr, "Failed to read skeleton file\n");
-			spine_atlas_dispose(atlas);
+			spine_atlas_result_dispose(atlasResult);
 			return 1;
 		}
 		result = spine_skeleton_data_load_binary(atlas, skeletonBytes, skeletonLength, skeletonPath);
@@ -200,7 +204,7 @@ int main(int argc, char *argv[]) {
 		const char *error = spine_skeleton_data_result_get_error(result);
 		fprintf(stderr, "Failed to load skeleton data: %s\n", error ? error : "Unknown error");
 		spine_skeleton_data_result_dispose(result);
-		spine_atlas_dispose(atlas);
+		spine_atlas_result_dispose(atlasResult);
 		return 1;
 	}
 
@@ -227,7 +231,7 @@ int main(int argc, char *argv[]) {
 			spine_animation_state_data_dispose(stateData);
 			spine_skeleton_dispose(skeleton);
 			spine_skeleton_data_result_dispose(result);
-			spine_atlas_dispose(atlas);
+			spine_atlas_result_dispose(atlasResult);
 			return 1;
 		}
 		spine_animation_state_set_animation_1(state, 0, animationName, 1);
@@ -247,7 +251,7 @@ int main(int argc, char *argv[]) {
 	spine_animation_state_data_dispose(stateData);
 	spine_skeleton_dispose(skeleton);
 	spine_skeleton_data_result_dispose(result);
-	spine_atlas_dispose(atlas);
+	spine_atlas_result_dispose(atlasResult);
 
 	return 0;
 }

@@ -40,10 +40,8 @@
 using namespace spine;
 
 // Internal structures
-struct _spine_atlas {
-	void *atlas;
-	const char **imagePaths;
-	int32_t numImagePaths;
+struct _spine_atlas_result {
+	spine_atlas atlas;
 	const char *error;
 };
 
@@ -169,7 +167,7 @@ float spine_vector_get_y(spine_vector vector) {
 }
 
 // Atlas functions
-class LiteTextureLoad : public TextureLoader {
+class SpineCTextureLoader : public TextureLoader {
 	void load(AtlasPage &page, const String &path) {
 		page.texture = (void *) (intptr_t) page.index;
 	}
@@ -177,20 +175,19 @@ class LiteTextureLoad : public TextureLoader {
 	void unload(void *texture) {
 	}
 };
-static LiteTextureLoad liteLoader;
+static SpineCTextureLoader textureLoader;
 
-spine_atlas spine_atlas_load(const char *atlasData) {
+spine_atlas_result spine_atlas_load(const char *atlasData) {
 	if (!atlasData) return nullptr;
+	_spine_atlas_result *result = SpineExtension::calloc<_spine_atlas_result>(1, __FILE__, __LINE__);
 	int32_t length = (int32_t) strlen(atlasData);
-	auto atlas = new (__FILE__, __LINE__) Atlas(atlasData, length, "", &liteLoader, true);
-	_spine_atlas *result = SpineExtension::calloc<_spine_atlas>(1, __FILE__, __LINE__);
-	result->atlas = atlas;
-	result->numImagePaths = (int32_t) atlas->getPages().size();
-	result->imagePaths = SpineExtension::calloc<const char *>(result->numImagePaths, __FILE__, __LINE__);
-	for (int i = 0; i < result->numImagePaths; i++) {
-		result->imagePaths[i] = atlas->getPages()[i]->texturePath.buffer();
+	auto atlas = new (__FILE__, __LINE__) Atlas(atlasData, length, "", &textureLoader, true);
+	if (!atlas) {
+		result->error = (const char *) strdup("Failed to load atlas");
+		return (spine_atlas_result) result;
 	}
-	return (spine_atlas) result;
+	result->atlas = (spine_atlas) atlas;
+	return (spine_atlas_result) result;
 }
 
 class CallbackTextureLoad : public TextureLoader {
@@ -216,69 +213,45 @@ public:
 };
 static CallbackTextureLoad callbackLoader;
 
-spine_atlas spine_atlas_load_callback(const char *atlasData, const char *atlasDir, spine_texture_loader_load_func load,
+spine_atlas_result spine_atlas_load_callback(const char *atlasData, const char *atlasDir, spine_texture_loader_load_func load,
 									  spine_texture_loader_unload_func unload) {
 	if (!atlasData) return nullptr;
+	_spine_atlas_result *result = SpineExtension::calloc<_spine_atlas_result>(1, __FILE__, __LINE__);
 	int32_t length = (int32_t) strlen(atlasData);
 	callbackLoader.setCallbacks(load, unload);
 	auto atlas = new (__FILE__, __LINE__) Atlas(atlasData, length, (const char *) atlasDir, &callbackLoader, true);
-	_spine_atlas *result = SpineExtension::calloc<_spine_atlas>(1, __FILE__, __LINE__);
-	result->atlas = atlas;
-	result->numImagePaths = (int32_t) atlas->getPages().size();
-	result->imagePaths = SpineExtension::calloc<const char *>(result->numImagePaths, __FILE__, __LINE__);
-	for (int i = 0; i < result->numImagePaths; i++) {
-		result->imagePaths[i] = atlas->getPages()[i]->texturePath.buffer();
+	if (!atlas) {
+		result->error = (const char *) strdup("Failed to load atlas");
+		return (spine_atlas_result) result;
 	}
-	return (spine_atlas) result;
+	result->atlas = (spine_atlas) atlas;
+	return (spine_atlas_result) result;
 }
 
-int32_t spine_atlas_get_num_image_paths(spine_atlas atlas) {
-	if (!atlas) return 0;
-	return ((_spine_atlas *) atlas)->numImagePaths;
+const char *spine_atlas_result_get_error(spine_atlas_result result) {
+	if (!result) return nullptr;
+	return ((_spine_atlas_result *) result)->error;
 }
 
-const char *spine_atlas_get_image_path(spine_atlas atlas, int32_t index) {
-	if (!atlas) return nullptr;
-	_spine_atlas *_atlas = (_spine_atlas *) atlas;
-	if (index < 0 || index >= _atlas->numImagePaths) return nullptr;
-	return _atlas->imagePaths[index];
+spine_atlas spine_atlas_result_get_atlas(spine_atlas_result result) {
+	if (!result) return nullptr;
+	return ((_spine_atlas_result *) result)->atlas;
 }
 
-bool spine_atlas_is_pma(spine_atlas atlas) {
-	if (!atlas) return false;
-	Atlas *_atlas = (Atlas *) ((_spine_atlas *) atlas)->atlas;
-	for (size_t i = 0; i < _atlas->getPages().size(); i++) {
-		AtlasPage *page = _atlas->getPages()[i];
-		if (page->pma) return true;
+void spine_atlas_result_dispose(spine_atlas_result result) {
+	if (!result) return;
+	_spine_atlas_result *_result = (_spine_atlas_result *) result;
+	if (_result->error) {
+		SpineExtension::free(_result->error, __FILE__, __LINE__);
 	}
-	return false;
-}
-
-const char *spine_atlas_get_error(spine_atlas atlas) {
-	if (!atlas) return nullptr;
-	return ((_spine_atlas *) atlas)->error;
-}
-
-void spine_atlas_dispose(spine_atlas atlas) {
-	if (!atlas) return;
-	_spine_atlas *_atlas = (_spine_atlas *) atlas;
-	if (_atlas->atlas) {
-		delete (Atlas *) _atlas->atlas;
-	}
-	if (_atlas->imagePaths) {
-		SpineExtension::free(_atlas->imagePaths, __FILE__, __LINE__);
-	}
-	if (_atlas->error) {
-		SpineExtension::free(_atlas->error, __FILE__, __LINE__);
-	}
-	SpineExtension::free(_atlas, __FILE__, __LINE__);
+	SpineExtension::free(_result, __FILE__, __LINE__);
 }
 
 // Skeleton data loading
 spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, const char *skeletonData, const char *path) {
 	if (!atlas || !skeletonData) return nullptr;
 	_spine_skeleton_data_result *result = SpineExtension::calloc<_spine_skeleton_data_result>(1, __FILE__, __LINE__);
-	SkeletonJson json((Atlas *) ((_spine_atlas *) atlas)->atlas);
+	SkeletonJson json((Atlas *) atlas);
 	json.setScale(1);
 
 	SkeletonData *data = json.readSkeletonData(skeletonData);
@@ -314,7 +287,7 @@ spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, cons
 spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, const uint8_t *skeletonData, int32_t length, const char *path) {
 	if (!atlas || !skeletonData) return nullptr;
 	_spine_skeleton_data_result *result = SpineExtension::calloc<_spine_skeleton_data_result>(1, __FILE__, __LINE__);
-	SkeletonBinary binary((Atlas *) ((_spine_atlas *) atlas)->atlas);
+	SkeletonBinary binary((Atlas *) atlas);
 	binary.setScale(1);
 
 	SkeletonData *data = binary.readSkeletonData((const unsigned char *) skeletonData, length);

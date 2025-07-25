@@ -91,11 +91,12 @@ int main() {
 	// Load the atlas and the skeleton data
 	int atlas_length = 0;
 	uint8_t *atlas_bytes = read_file("data/spineboy-pma.atlas", &atlas_length);
-	spine_atlas atlas = spine_atlas_load_callback((const char *) atlas_bytes, "data/", load_texture, unload_texture);
+	spine_atlas_result result = spine_atlas_load_callback((const char *) atlas_bytes, "data/", load_texture, unload_texture);
+	spine_atlas atlas = spine_atlas_result_get_atlas(result);
+
 	int skeleton_length = 0;
 	// uint8_t *skeleton_bytes = read_file("data/spineboy-pro.skel", &skeleton_length);
 	// spine_skeleton_data_result result = spine_skeleton_data_load_binary(atlas, skeleton_bytes, skeleton_length);
-
 	uint8_t *skeleton_bytes = read_file("data/spineboy-pro.json", &skeleton_length);
 	spine_skeleton_data_result result2 = spine_skeleton_data_load_json(atlas, (const char *) skeleton_bytes, "data/");
 	spine_skeleton_data skeleton_data = spine_skeleton_data_result_get_data(result2);
