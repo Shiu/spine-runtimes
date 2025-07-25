@@ -163,7 +163,7 @@ export class SkeletonBinary {
 					data.skinRequired = (flags & 1) != 0;
 					data.uniform = (flags & 2) != 0;
 					const setup = data.setup;
-					setup.bendDirection = (flags & 4) != 0 ? 1 : -1;
+					setup.bendDirection = (flags & 4) != 0 ? -1 : 1;
 					setup.compress = (flags & 8) != 0;
 					setup.stretch = (flags & 16) != 0;
 					if ((flags & 32) != 0) setup.mix = (flags & 64) != 0 ? input.readFloat() : 1;
