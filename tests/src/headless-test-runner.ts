@@ -533,17 +533,17 @@ function runTestsForFiles (language: string, skeletonPath: string, atlasPath: st
 	saveJsonFiles(testArgs, targetParsed, javaParsed, fixFloats);
 }
 
-function verifyOutputsMatch (): void {
+function verifyOutputsMatch (targetLanguage: string): void {
 	const outputDir = join(SPINE_ROOT, 'tests', 'output');
 	const outputFiles = [
-		'skeleton-data-java-json.json',
-		'skeleton-data-cpp-json.json',
-		'skeleton-state-java-json.json',
-		'skeleton-state-cpp-json.json',
-		'skeleton-data-java-skel.json',
-		'skeleton-data-cpp-skel.json',
-		'skeleton-state-java-skel.json',
-		'skeleton-state-cpp-skel.json'
+		`skeleton-data-java-json.json`,
+		`skeleton-data-${targetLanguage}-json.json`,
+		`skeleton-state-java-json.json`,
+		`skeleton-state-${targetLanguage}-json.json`,
+		`skeleton-data-java-skel.json`,
+		`skeleton-data-${targetLanguage}-skel.json`,
+		`skeleton-state-java-skel.json`,
+		`skeleton-state-${targetLanguage}-skel.json`
 	];
 
 	// Check if all files exist
@@ -553,28 +553,29 @@ function verifyOutputsMatch (): void {
 		return;
 	}
 
-	log_action('Verifying Java and C++ outputs match');
+	log_action(`Verifying Java and ${targetLanguage} outputs match`);
 
 	const comparisons = [
-		['skeleton-data-java-json.json', 'skeleton-data-cpp-json.json']
-		// TODO: Add binary file comparison once C++ binary parsing is fixed
-		// ['skeleton-data-java-skel.json', 'skeleton-data-cpp-skel.json']
+		[`skeleton-data-java-json.json`, `skeleton-data-${targetLanguage}-json.json`],
+		[`skeleton-state-java-json.json`, `skeleton-state-${targetLanguage}-json.json`],
+		[`skeleton-data-java-skel.json`, `skeleton-data-${targetLanguage}-skel.json`],
+		[`skeleton-state-java-skel.json`, `skeleton-state-${targetLanguage}-skel.json`]
 	];
 
 	let allMatch = true;
 
-	for (const [javaFile, cppFile] of comparisons) {
+	for (const [javaFile, targetFile] of comparisons) {
 		try {
 			const javaContent = execSync(`cat "${join(outputDir, javaFile)}"`, { encoding: 'utf8' });
-			const cppContent = execSync(`cat "${join(outputDir, cppFile)}"`, { encoding: 'utf8' });
+			const targetContent = execSync(`cat "${join(outputDir, targetFile)}"`, { encoding: 'utf8' });
 
-			if (javaContent !== cppContent) {
+			if (javaContent !== targetContent) {
 				allMatch = false;
-				console.error(`\n❌ Files differ: ${javaFile} vs ${cppFile}`);
+				console.error(`\n❌ Files differ: ${javaFile} vs ${targetFile}`);
 			}
 		} catch (error: any) {
 			allMatch = false;
-			console.error(`\n❌ Error comparing ${javaFile} vs ${cppFile}: ${error.message}`);
+			console.error(`\n❌ Error comparing ${javaFile} vs ${targetFile}: ${error.message}`);
 		}
 	}
 
@@ -582,7 +583,7 @@ function verifyOutputsMatch (): void {
 		log_ok();
 	} else {
 		log_fail();
-		console.error('\n❌ Java and C++ outputs do not match');
+		console.error(`\n❌ Java and ${targetLanguage} outputs do not match`);
 		process.exit(1);
 	}
 }
@@ -616,10 +617,8 @@ function main (): void {
 		log_detail(`JSON files saved to: ${join(SPINE_ROOT, 'tests', 'output')}`);
 	}
 
-	// Verify outputs match if we're testing C++
-	if (args.language === 'cpp') {
-		verifyOutputsMatch();
-	}
+	// Verify outputs match
+	verifyOutputsMatch(args.language);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
