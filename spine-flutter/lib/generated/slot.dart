@@ -45,7 +45,6 @@ class Slot implements Posed {
   Slot.fromPointer(this._ptr);
 
   /// Get the native pointer for FFI calls
-  @override
   Pointer get nativePtr => _ptr;
 
   factory Slot(SlotData data, Skeleton skeleton) {

@@ -33,8 +33,17 @@ import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
+import 'rtti.dart';
 import 'arrays.dart';
+import 'attachment.dart';
+import 'bounding_box_attachment.dart';
+import 'clipping_attachment.dart';
 import 'color.dart';
+import 'mesh_attachment.dart';
+import 'point_attachment.dart';
+import 'region_attachment.dart';
+import 'skeleton.dart';
+import 'slot.dart';
 import 'vertex_attachment.dart';
 
 /// PathAttachment wrapper
@@ -44,7 +53,6 @@ class PathAttachment extends VertexAttachment {
   PathAttachment.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
-  @override
   Pointer get nativePtr => _ptr;
 
   factory PathAttachment(String name) {

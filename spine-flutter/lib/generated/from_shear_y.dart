@@ -32,6 +32,7 @@
 import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
+import 'rtti.dart';
 import 'from_property.dart';
 
 /// FromShearY wrapper
@@ -41,7 +42,6 @@ class FromShearY extends FromProperty {
   FromShearY.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
-  @override
   Pointer get nativePtr => _ptr;
 
   factory FromShearY() {

@@ -53,7 +53,6 @@ class PhysicsConstraintData extends PosedData implements ConstraintData {
   PhysicsConstraintData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
-  @override
   Pointer get nativePtr => _ptr;
 
   factory PhysicsConstraintData(String name) {
@@ -61,7 +60,6 @@ class PhysicsConstraintData extends PosedData implements ConstraintData {
     return PhysicsConstraintData.fromPointer(ptr);
   }
 
-  @override
   void dispose() {
     SpineBindings.bindings.spine_physics_constraint_data_dispose(_ptr);
   }

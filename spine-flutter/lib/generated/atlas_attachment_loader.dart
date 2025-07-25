@@ -52,7 +52,6 @@ class AtlasAttachmentLoader implements AttachmentLoader {
   AtlasAttachmentLoader.fromPointer(this._ptr);
 
   /// Get the native pointer for FFI calls
-  @override
   Pointer get nativePtr => _ptr;
 
   factory AtlasAttachmentLoader(Atlas atlas) {

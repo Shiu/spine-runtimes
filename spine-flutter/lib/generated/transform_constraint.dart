@@ -50,7 +50,6 @@ class TransformConstraint extends PosedActive implements Posed, Constraint {
   TransformConstraint.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
-  @override
   Pointer get nativePtr => _ptr;
 
   factory TransformConstraint(TransformConstraintData data, Skeleton skeleton) {
@@ -59,7 +58,6 @@ class TransformConstraint extends PosedActive implements Posed, Constraint {
     return TransformConstraint.fromPointer(ptr);
   }
 
-  @override
   void dispose() {
     SpineBindings.bindings.spine_transform_constraint_dispose(_ptr);
   }

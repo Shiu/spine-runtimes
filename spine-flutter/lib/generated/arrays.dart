@@ -34,6 +34,7 @@ import 'package:ffi/ffi.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import '../native_array.dart';
+import 'rtti.dart';
 import 'alpha_timeline.dart';
 import 'animation.dart';
 import 'atlas_page.dart';
@@ -122,7 +123,7 @@ import 'update.dart';
 
 /// ArrayFloat wrapper
 class ArrayFloat extends NativeArray<double> {
-  ArrayFloat.fromPointer(Pointer<spine_array_float_wrapper> super.ptr);
+  ArrayFloat.fromPointer(Pointer<spine_array_float_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -141,7 +142,7 @@ class ArrayFloat extends NativeArray<double> {
 
 /// ArrayInt wrapper
 class ArrayInt extends NativeArray<int> {
-  ArrayInt.fromPointer(Pointer<spine_array_int_wrapper> super.ptr);
+  ArrayInt.fromPointer(Pointer<spine_array_int_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -160,7 +161,7 @@ class ArrayInt extends NativeArray<int> {
 
 /// ArrayUnsignedShort wrapper
 class ArrayUnsignedShort extends NativeArray<int> {
-  ArrayUnsignedShort.fromPointer(Pointer<spine_array_unsigned_short_wrapper> super.ptr);
+  ArrayUnsignedShort.fromPointer(Pointer<spine_array_unsigned_short_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -179,7 +180,7 @@ class ArrayUnsignedShort extends NativeArray<int> {
 
 /// ArrayPropertyId wrapper
 class ArrayPropertyId extends NativeArray<int> {
-  ArrayPropertyId.fromPointer(Pointer<spine_array_property_id_wrapper> super.ptr);
+  ArrayPropertyId.fromPointer(Pointer<spine_array_property_id_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -199,7 +200,7 @@ class ArrayPropertyId extends NativeArray<int> {
 
 /// ArrayAnimation wrapper
 class ArrayAnimation extends NativeArray<Animation?> {
-  ArrayAnimation.fromPointer(Pointer<spine_array_animation_wrapper> super.ptr);
+  ArrayAnimation.fromPointer(Pointer<spine_array_animation_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -218,7 +219,7 @@ class ArrayAnimation extends NativeArray<Animation?> {
 
 /// ArrayAtlasPage wrapper
 class ArrayAtlasPage extends NativeArray<AtlasPage?> {
-  ArrayAtlasPage.fromPointer(Pointer<spine_array_atlas_page_wrapper> super.ptr);
+  ArrayAtlasPage.fromPointer(Pointer<spine_array_atlas_page_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -237,7 +238,7 @@ class ArrayAtlasPage extends NativeArray<AtlasPage?> {
 
 /// ArrayAtlasRegion wrapper
 class ArrayAtlasRegion extends NativeArray<AtlasRegion?> {
-  ArrayAtlasRegion.fromPointer(Pointer<spine_array_atlas_region_wrapper> super.ptr);
+  ArrayAtlasRegion.fromPointer(Pointer<spine_array_atlas_region_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -256,7 +257,7 @@ class ArrayAtlasRegion extends NativeArray<AtlasRegion?> {
 
 /// ArrayAttachment wrapper
 class ArrayAttachment extends NativeArray<Attachment?> {
-  ArrayAttachment.fromPointer(Pointer<spine_array_attachment_wrapper> super.ptr);
+  ArrayAttachment.fromPointer(Pointer<spine_array_attachment_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -293,7 +294,7 @@ class ArrayAttachment extends NativeArray<Attachment?> {
 
 /// ArrayBone wrapper
 class ArrayBone extends NativeArray<Bone?> {
-  ArrayBone.fromPointer(Pointer<spine_array_bone_wrapper> super.ptr);
+  ArrayBone.fromPointer(Pointer<spine_array_bone_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -312,7 +313,7 @@ class ArrayBone extends NativeArray<Bone?> {
 
 /// ArrayBoneData wrapper
 class ArrayBoneData extends NativeArray<BoneData?> {
-  ArrayBoneData.fromPointer(Pointer<spine_array_bone_data_wrapper> super.ptr);
+  ArrayBoneData.fromPointer(Pointer<spine_array_bone_data_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -331,7 +332,7 @@ class ArrayBoneData extends NativeArray<BoneData?> {
 
 /// ArrayBonePose wrapper
 class ArrayBonePose extends NativeArray<BonePose?> {
-  ArrayBonePose.fromPointer(Pointer<spine_array_bone_pose_wrapper> super.ptr);
+  ArrayBonePose.fromPointer(Pointer<spine_array_bone_pose_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -350,7 +351,7 @@ class ArrayBonePose extends NativeArray<BonePose?> {
 
 /// ArrayBoundingBoxAttachment wrapper
 class ArrayBoundingBoxAttachment extends NativeArray<BoundingBoxAttachment?> {
-  ArrayBoundingBoxAttachment.fromPointer(Pointer<spine_array_bounding_box_attachment_wrapper> super.ptr);
+  ArrayBoundingBoxAttachment.fromPointer(Pointer<spine_array_bounding_box_attachment_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -369,7 +370,7 @@ class ArrayBoundingBoxAttachment extends NativeArray<BoundingBoxAttachment?> {
 
 /// ArrayConstraint wrapper
 class ArrayConstraint extends NativeArray<Constraint?> {
-  ArrayConstraint.fromPointer(Pointer<spine_array_constraint_wrapper> super.ptr);
+  ArrayConstraint.fromPointer(Pointer<spine_array_constraint_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -404,7 +405,7 @@ class ArrayConstraint extends NativeArray<Constraint?> {
 
 /// ArrayConstraintData wrapper
 class ArrayConstraintData extends NativeArray<ConstraintData?> {
-  ArrayConstraintData.fromPointer(Pointer<spine_array_constraint_data_wrapper> super.ptr);
+  ArrayConstraintData.fromPointer(Pointer<spine_array_constraint_data_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -439,7 +440,7 @@ class ArrayConstraintData extends NativeArray<ConstraintData?> {
 
 /// ArrayEvent wrapper
 class ArrayEvent extends NativeArray<Event?> {
-  ArrayEvent.fromPointer(Pointer<spine_array_event_wrapper> super.ptr);
+  ArrayEvent.fromPointer(Pointer<spine_array_event_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -458,7 +459,7 @@ class ArrayEvent extends NativeArray<Event?> {
 
 /// ArrayEventData wrapper
 class ArrayEventData extends NativeArray<EventData?> {
-  ArrayEventData.fromPointer(Pointer<spine_array_event_data_wrapper> super.ptr);
+  ArrayEventData.fromPointer(Pointer<spine_array_event_data_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -477,7 +478,7 @@ class ArrayEventData extends NativeArray<EventData?> {
 
 /// ArrayFromProperty wrapper
 class ArrayFromProperty extends NativeArray<FromProperty?> {
-  ArrayFromProperty.fromPointer(Pointer<spine_array_from_property_wrapper> super.ptr);
+  ArrayFromProperty.fromPointer(Pointer<spine_array_from_property_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -514,7 +515,7 @@ class ArrayFromProperty extends NativeArray<FromProperty?> {
 
 /// ArrayPhysicsConstraint wrapper
 class ArrayPhysicsConstraint extends NativeArray<PhysicsConstraint?> {
-  ArrayPhysicsConstraint.fromPointer(Pointer<spine_array_physics_constraint_wrapper> super.ptr);
+  ArrayPhysicsConstraint.fromPointer(Pointer<spine_array_physics_constraint_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -533,7 +534,7 @@ class ArrayPhysicsConstraint extends NativeArray<PhysicsConstraint?> {
 
 /// ArrayPolygon wrapper
 class ArrayPolygon extends NativeArray<Polygon?> {
-  ArrayPolygon.fromPointer(Pointer<spine_array_polygon_wrapper> super.ptr);
+  ArrayPolygon.fromPointer(Pointer<spine_array_polygon_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -552,7 +553,7 @@ class ArrayPolygon extends NativeArray<Polygon?> {
 
 /// ArraySkin wrapper
 class ArraySkin extends NativeArray<Skin?> {
-  ArraySkin.fromPointer(Pointer<spine_array_skin_wrapper> super.ptr);
+  ArraySkin.fromPointer(Pointer<spine_array_skin_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -571,7 +572,7 @@ class ArraySkin extends NativeArray<Skin?> {
 
 /// ArraySlot wrapper
 class ArraySlot extends NativeArray<Slot?> {
-  ArraySlot.fromPointer(Pointer<spine_array_slot_wrapper> super.ptr);
+  ArraySlot.fromPointer(Pointer<spine_array_slot_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -590,7 +591,7 @@ class ArraySlot extends NativeArray<Slot?> {
 
 /// ArraySlotData wrapper
 class ArraySlotData extends NativeArray<SlotData?> {
-  ArraySlotData.fromPointer(Pointer<spine_array_slot_data_wrapper> super.ptr);
+  ArraySlotData.fromPointer(Pointer<spine_array_slot_data_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -609,7 +610,7 @@ class ArraySlotData extends NativeArray<SlotData?> {
 
 /// ArrayTextureRegion wrapper
 class ArrayTextureRegion extends NativeArray<TextureRegion?> {
-  ArrayTextureRegion.fromPointer(Pointer<spine_array_texture_region_wrapper> super.ptr);
+  ArrayTextureRegion.fromPointer(Pointer<spine_array_texture_region_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -628,7 +629,7 @@ class ArrayTextureRegion extends NativeArray<TextureRegion?> {
 
 /// ArrayTimeline wrapper
 class ArrayTimeline extends NativeArray<Timeline?> {
-  ArrayTimeline.fromPointer(Pointer<spine_array_timeline_wrapper> super.ptr);
+  ArrayTimeline.fromPointer(Pointer<spine_array_timeline_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -725,7 +726,7 @@ class ArrayTimeline extends NativeArray<Timeline?> {
 
 /// ArrayToProperty wrapper
 class ArrayToProperty extends NativeArray<ToProperty?> {
-  ArrayToProperty.fromPointer(Pointer<spine_array_to_property_wrapper> super.ptr);
+  ArrayToProperty.fromPointer(Pointer<spine_array_to_property_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -762,7 +763,7 @@ class ArrayToProperty extends NativeArray<ToProperty?> {
 
 /// ArrayTrackEntry wrapper
 class ArrayTrackEntry extends NativeArray<TrackEntry?> {
-  ArrayTrackEntry.fromPointer(Pointer<spine_array_track_entry_wrapper> super.ptr);
+  ArrayTrackEntry.fromPointer(Pointer<spine_array_track_entry_wrapper> ptr) : super(ptr);
 
   @override
   int get length {
@@ -781,7 +782,7 @@ class ArrayTrackEntry extends NativeArray<TrackEntry?> {
 
 /// ArrayUpdate wrapper
 class ArrayUpdate extends NativeArray<Update?> {
-  ArrayUpdate.fromPointer(Pointer<spine_array_update_wrapper> super.ptr);
+  ArrayUpdate.fromPointer(Pointer<spine_array_update_wrapper> ptr) : super(ptr);
 
   @override
   int get length {

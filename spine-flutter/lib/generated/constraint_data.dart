@@ -30,10 +30,17 @@
 // AUTO GENERATED FILE, DO NOT EDIT.
 
 import 'dart:ffi';
+import 'package:ffi/ffi.dart';
+import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
 import 'constraint.dart';
+import 'ik_constraint.dart';
+import 'path_constraint.dart';
+import 'physics_constraint.dart';
 import 'skeleton.dart';
+import 'slider.dart';
+import 'transform_constraint.dart';
 
 /// ConstraintData wrapper
 abstract class ConstraintData {

@@ -49,7 +49,6 @@ class PhysicsConstraint extends PosedActive implements Posed, Constraint {
   PhysicsConstraint.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
 
   /// Get the native pointer for FFI calls
-  @override
   Pointer get nativePtr => _ptr;
 
   factory PhysicsConstraint(PhysicsConstraintData data, Skeleton skeleton) {
@@ -58,7 +57,6 @@ class PhysicsConstraint extends PosedActive implements Posed, Constraint {
     return PhysicsConstraint.fromPointer(ptr);
   }
 
-  @override
   void dispose() {
     SpineBindings.bindings.spine_physics_constraint_dispose(_ptr);
   }
