@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:spine_flutter/spine_flutter.dart';
+import 'package:spine_flutter/spine_dart.dart';
 
 void main() async {
   print('Testing atlas and skeleton data loading...');
