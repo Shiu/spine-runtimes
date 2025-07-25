@@ -53,8 +53,8 @@ class SkeletonRenderer {
     SpineBindings.bindings.spine_skeleton_renderer_dispose(_ptr);
   }
 
-  RenderCommand render(Skeleton skeleton) {
+  RenderCommand? render(Skeleton skeleton) {
     final result = SpineBindings.bindings.spine_skeleton_renderer_render(_ptr, skeleton.nativePtr.cast());
-    return RenderCommand.fromPointer(result);
+    return result.address == 0 ? null : RenderCommand.fromPointer(result);
   }
 }

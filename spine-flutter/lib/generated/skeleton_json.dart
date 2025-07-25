@@ -60,16 +60,16 @@ class SkeletonJson {
     SpineBindings.bindings.spine_skeleton_json_dispose(_ptr);
   }
 
-  SkeletonData readSkeletonDataFile(String path) {
+  SkeletonData? readSkeletonDataFile(String path) {
     final result =
         SpineBindings.bindings.spine_skeleton_json_read_skeleton_data_file(_ptr, path.toNativeUtf8().cast<Char>());
-    return SkeletonData.fromPointer(result);
+    return result.address == 0 ? null : SkeletonData.fromPointer(result);
   }
 
-  SkeletonData readSkeletonData(String json) {
+  SkeletonData? readSkeletonData(String json) {
     final result =
         SpineBindings.bindings.spine_skeleton_json_read_skeleton_data(_ptr, json.toNativeUtf8().cast<Char>());
-    return SkeletonData.fromPointer(result);
+    return result.address == 0 ? null : SkeletonData.fromPointer(result);
   }
 
   set scale(double value) {

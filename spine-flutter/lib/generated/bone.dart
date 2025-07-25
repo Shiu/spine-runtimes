@@ -53,13 +53,15 @@ class Bone extends PosedActive implements Posed, Update {
   @override
   Pointer get nativePtr => _ptr;
 
-  factory Bone(BoneData data, Bone parent) {
-    final ptr = SpineBindings.bindings.spine_bone_create(data.nativePtr.cast(), parent.nativePtr.cast());
+  factory Bone(BoneData data, Bone? parent) {
+    final ptr = SpineBindings.bindings
+        .spine_bone_create(data.nativePtr.cast(), parent?.nativePtr.cast() ?? Pointer.fromAddress(0));
     return Bone.fromPointer(ptr);
   }
 
-  factory Bone.from(Bone bone, Bone parent) {
-    final ptr = SpineBindings.bindings.spine_bone_create2(bone.nativePtr.cast(), parent.nativePtr.cast());
+  factory Bone.from(Bone bone, Bone? parent) {
+    final ptr = SpineBindings.bindings
+        .spine_bone_create2(bone.nativePtr.cast(), parent?.nativePtr.cast() ?? Pointer.fromAddress(0));
     return Bone.fromPointer(ptr);
   }
 
@@ -74,9 +76,9 @@ class Bone extends PosedActive implements Posed, Update {
     return Rtti.fromPointer(result);
   }
 
-  Bone get parent {
+  Bone? get parent {
     final result = SpineBindings.bindings.spine_bone_get_parent(_ptr);
-    return Bone.fromPointer(result);
+    return result.address == 0 ? null : Bone.fromPointer(result);
   }
 
   ArrayBone get children {

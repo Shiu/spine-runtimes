@@ -57,9 +57,9 @@ class AtlasRegion extends TextureRegion {
     SpineBindings.bindings.spine_atlas_region_dispose(_ptr);
   }
 
-  AtlasPage get page {
+  AtlasPage? get page {
     final result = SpineBindings.bindings.spine_atlas_region_get_page(_ptr);
-    return AtlasPage.fromPointer(result);
+    return result.address == 0 ? null : AtlasPage.fromPointer(result);
   }
 
   String get name {
@@ -137,8 +137,8 @@ class AtlasRegion extends TextureRegion {
     return ArrayFloat.fromPointer(result);
   }
 
-  set page(AtlasPage value) {
-    SpineBindings.bindings.spine_atlas_region_set_page(_ptr, value.nativePtr.cast());
+  set page(AtlasPage? value) {
+    SpineBindings.bindings.spine_atlas_region_set_page(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
   set name(String value) {

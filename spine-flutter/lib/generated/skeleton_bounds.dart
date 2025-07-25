@@ -74,14 +74,16 @@ class SkeletonBounds {
     return result;
   }
 
-  Polygon getPolygon(BoundingBoxAttachment attachment) {
-    final result = SpineBindings.bindings.spine_skeleton_bounds_get_polygon(_ptr, attachment.nativePtr.cast());
-    return Polygon.fromPointer(result);
+  Polygon? getPolygon(BoundingBoxAttachment? attachment) {
+    final result = SpineBindings.bindings
+        .spine_skeleton_bounds_get_polygon(_ptr, attachment?.nativePtr.cast() ?? Pointer.fromAddress(0));
+    return result.address == 0 ? null : Polygon.fromPointer(result);
   }
 
-  BoundingBoxAttachment getBoundingBox(Polygon polygon) {
-    final result = SpineBindings.bindings.spine_skeleton_bounds_get_bounding_box(_ptr, polygon.nativePtr.cast());
-    return BoundingBoxAttachment.fromPointer(result);
+  BoundingBoxAttachment? getBoundingBox(Polygon? polygon) {
+    final result = SpineBindings.bindings
+        .spine_skeleton_bounds_get_bounding_box(_ptr, polygon?.nativePtr.cast() ?? Pointer.fromAddress(0));
+    return result.address == 0 ? null : BoundingBoxAttachment.fromPointer(result);
   }
 
   ArrayPolygon get polygons {
@@ -129,14 +131,14 @@ class SkeletonBounds {
     return result;
   }
 
-  BoundingBoxAttachment containsPoint2(double x, double y) {
+  BoundingBoxAttachment? containsPoint2(double x, double y) {
     final result = SpineBindings.bindings.spine_skeleton_bounds_contains_point_2(_ptr, x, y);
-    return BoundingBoxAttachment.fromPointer(result);
+    return result.address == 0 ? null : BoundingBoxAttachment.fromPointer(result);
   }
 
-  BoundingBoxAttachment intersectsSegment(double x1, double y1, double x2, double y2) {
+  BoundingBoxAttachment? intersectsSegment(double x1, double y1, double x2, double y2) {
     final result = SpineBindings.bindings.spine_skeleton_bounds_intersects_segment_1(_ptr, x1, y1, x2, y2);
-    return BoundingBoxAttachment.fromPointer(result);
+    return result.address == 0 ? null : BoundingBoxAttachment.fromPointer(result);
   }
 
   bool intersectsSegment2(Polygon polygon, double x1, double y1, double x2, double y2) {

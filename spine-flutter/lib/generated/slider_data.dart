@@ -128,17 +128,18 @@ class SliderData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_slider_data_set_loop(_ptr, value);
   }
 
-  BoneData get bone {
+  BoneData? get bone {
     final result = SpineBindings.bindings.spine_slider_data_get_bone(_ptr);
-    return BoneData.fromPointer(result);
+    return result.address == 0 ? null : BoneData.fromPointer(result);
   }
 
-  set bone(BoneData value) {
-    SpineBindings.bindings.spine_slider_data_set_bone(_ptr, value.nativePtr.cast());
+  set bone(BoneData? value) {
+    SpineBindings.bindings.spine_slider_data_set_bone(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
-  FromProperty get property {
+  FromProperty? get property {
     final result = SpineBindings.bindings.spine_slider_data_get_property(_ptr);
+    if (result.address == 0) return null;
     final rtti = SpineBindings.bindings.spine_from_property_get_rtti(result);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
@@ -159,8 +160,8 @@ class SliderData extends PosedData implements ConstraintData {
     }
   }
 
-  set property(FromProperty value) {
-    SpineBindings.bindings.spine_slider_data_set_property(_ptr, value.nativePtr.cast());
+  set property(FromProperty? value) {
+    SpineBindings.bindings.spine_slider_data_set_property(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
   double get scale {

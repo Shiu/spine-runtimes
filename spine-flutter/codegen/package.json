@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "format": "npx -y typescript-formatter -r **/*.ts",
-    "generate": "npx tsx src/index.ts"
+    "generate": "npx tsx src/index.ts",
+    "check": "npx biome check src && npx tsc --noEmit"
   },
   "dependencies": {
     "spine-c-codegen": "file:../../spine-c/codegen"

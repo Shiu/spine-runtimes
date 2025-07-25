@@ -84,8 +84,9 @@ class SlotPose {
     SpineBindings.bindings.spine_slot_pose_set_has_dark_color(_ptr, value);
   }
 
-  Attachment get attachment {
+  Attachment? get attachment {
     final result = SpineBindings.bindings.spine_slot_pose_get_attachment(_ptr);
+    if (result.address == 0) return null;
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
@@ -106,8 +107,8 @@ class SlotPose {
     }
   }
 
-  set attachment(Attachment value) {
-    SpineBindings.bindings.spine_slot_pose_set_attachment(_ptr, value.nativePtr.cast());
+  set attachment(Attachment? value) {
+    SpineBindings.bindings.spine_slot_pose_set_attachment(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
   int get sequenceIndex {

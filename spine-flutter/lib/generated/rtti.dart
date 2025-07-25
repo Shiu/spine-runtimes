@@ -47,9 +47,9 @@ class Rtti {
     SpineBindings.bindings.spine_rtti_dispose(_ptr);
   }
 
-  String get className {
+  String? get className {
     final result = SpineBindings.bindings.spine_rtti_get_class_name(_ptr);
-    return result.cast<Utf8>().toDartString();
+    return result.address == 0 ? null : result.cast<Utf8>().toDartString();
   }
 
   bool isExactly(Rtti rtti) {

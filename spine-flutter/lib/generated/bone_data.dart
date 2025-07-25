@@ -47,9 +47,9 @@ class BoneData extends PosedData {
   @override
   Pointer get nativePtr => _ptr;
 
-  factory BoneData(int index, String name, BoneData parent) {
-    final ptr =
-        SpineBindings.bindings.spine_bone_data_create(index, name.toNativeUtf8().cast<Char>(), parent.nativePtr.cast());
+  factory BoneData(int index, String name, BoneData? parent) {
+    final ptr = SpineBindings.bindings.spine_bone_data_create(
+        index, name.toNativeUtf8().cast<Char>(), parent?.nativePtr.cast() ?? Pointer.fromAddress(0));
     return BoneData.fromPointer(ptr);
   }
 
@@ -63,9 +63,9 @@ class BoneData extends PosedData {
     return result;
   }
 
-  BoneData get parent {
+  BoneData? get parent {
     final result = SpineBindings.bindings.spine_bone_data_get_parent(_ptr);
-    return BoneData.fromPointer(result);
+    return result.address == 0 ? null : BoneData.fromPointer(result);
   }
 
   double get length {

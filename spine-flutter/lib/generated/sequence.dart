@@ -60,8 +60,9 @@ class Sequence {
     return Sequence.fromPointer(result);
   }
 
-  void apply(SlotPose slot, Attachment attachment) {
-    SpineBindings.bindings.spine_sequence_apply(_ptr, slot.nativePtr.cast(), attachment.nativePtr.cast());
+  void apply(SlotPose? slot, Attachment? attachment) {
+    SpineBindings.bindings.spine_sequence_apply(
+        _ptr, slot?.nativePtr.cast() ?? Pointer.fromAddress(0), attachment?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
   String getPath(String basePath, int index) {

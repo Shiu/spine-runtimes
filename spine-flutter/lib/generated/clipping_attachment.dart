@@ -56,13 +56,14 @@ class ClippingAttachment extends VertexAttachment {
     SpineBindings.bindings.spine_clipping_attachment_dispose(_ptr);
   }
 
-  SlotData get endSlot {
+  SlotData? get endSlot {
     final result = SpineBindings.bindings.spine_clipping_attachment_get_end_slot(_ptr);
-    return SlotData.fromPointer(result);
+    return result.address == 0 ? null : SlotData.fromPointer(result);
   }
 
-  set endSlot(SlotData value) {
-    SpineBindings.bindings.spine_clipping_attachment_set_end_slot(_ptr, value.nativePtr.cast());
+  set endSlot(SlotData? value) {
+    SpineBindings.bindings
+        .spine_clipping_attachment_set_end_slot(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
   Color get color {

@@ -52,10 +52,10 @@ abstract class Timeline {
     return Rtti.fromPointer(result);
   }
 
-  void apply(Skeleton skeleton, double lastTime, double time, ArrayEvent pEvents, double alpha, MixBlend blend,
+  void apply(Skeleton skeleton, double lastTime, double time, ArrayEvent? pEvents, double alpha, MixBlend blend,
       MixDirection direction, bool appliedPose) {
     SpineBindings.bindings.spine_timeline_apply(_ptr, skeleton.nativePtr.cast(), lastTime, time,
-        pEvents.nativePtr.cast(), alpha, blend.value, direction.value, appliedPose);
+        pEvents?.nativePtr.cast() ?? Pointer.fromAddress(0), alpha, blend.value, direction.value, appliedPose);
   }
 
   int get frameEntries {

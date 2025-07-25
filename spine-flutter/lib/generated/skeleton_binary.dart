@@ -60,10 +60,10 @@ class SkeletonBinary {
     SpineBindings.bindings.spine_skeleton_binary_dispose(_ptr);
   }
 
-  SkeletonData readSkeletonDataFile(String path) {
+  SkeletonData? readSkeletonDataFile(String path) {
     final result =
         SpineBindings.bindings.spine_skeleton_binary_read_skeleton_data_file(_ptr, path.toNativeUtf8().cast<Char>());
-    return SkeletonData.fromPointer(result);
+    return result.address == 0 ? null : SkeletonData.fromPointer(result);
   }
 
   set scale(double value) {

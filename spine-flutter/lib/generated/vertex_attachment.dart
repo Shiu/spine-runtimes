@@ -86,8 +86,9 @@ abstract class VertexAttachment extends Attachment {
     SpineBindings.bindings.spine_vertex_attachment_set_world_vertices_length(_ptr, value);
   }
 
-  Attachment get timelineAttachment {
+  Attachment? get timelineAttachment {
     final result = SpineBindings.bindings.spine_vertex_attachment_get_timeline_attachment(_ptr);
+    if (result.address == 0) return null;
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
@@ -108,8 +109,9 @@ abstract class VertexAttachment extends Attachment {
     }
   }
 
-  set timelineAttachment(Attachment value) {
-    SpineBindings.bindings.spine_vertex_attachment_set_timeline_attachment(_ptr, value.nativePtr.cast());
+  set timelineAttachment(Attachment? value) {
+    SpineBindings.bindings
+        .spine_vertex_attachment_set_timeline_attachment(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
   void copyTo(VertexAttachment other) {

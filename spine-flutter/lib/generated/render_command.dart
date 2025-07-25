@@ -47,22 +47,22 @@ class RenderCommand {
     SpineBindings.bindings.spine_render_command_dispose(_ptr);
   }
 
-  Pointer<Float> get positions {
+  Pointer<Float>? get positions {
     final result = SpineBindings.bindings.spine_render_command_get_positions(_ptr);
     return result;
   }
 
-  Pointer<Float> get uvs {
+  Pointer<Float>? get uvs {
     final result = SpineBindings.bindings.spine_render_command_get_uvs(_ptr);
     return result;
   }
 
-  Pointer<Uint32> get colors {
+  Pointer<Uint32>? get colors {
     final result = SpineBindings.bindings.spine_render_command_get_colors(_ptr);
     return result;
   }
 
-  Pointer<Uint32> get darkColors {
+  Pointer<Uint32>? get darkColors {
     final result = SpineBindings.bindings.spine_render_command_get_dark_colors(_ptr);
     return result;
   }
@@ -72,7 +72,7 @@ class RenderCommand {
     return result;
   }
 
-  Pointer<Uint16> get indices {
+  Pointer<Uint16>? get indices {
     final result = SpineBindings.bindings.spine_render_command_get_indices(_ptr);
     return result;
   }
@@ -87,13 +87,13 @@ class RenderCommand {
     return BlendMode.fromValue(result);
   }
 
-  Pointer<Void> get texture {
+  Pointer<Void>? get texture {
     final result = SpineBindings.bindings.spine_render_command_get_texture(_ptr);
     return result;
   }
 
-  RenderCommand get next {
+  RenderCommand? get next {
     final result = SpineBindings.bindings.spine_render_command_get_next(_ptr);
-    return RenderCommand.fromPointer(result);
+    return result.address == 0 ? null : RenderCommand.fromPointer(result);
   }
 }

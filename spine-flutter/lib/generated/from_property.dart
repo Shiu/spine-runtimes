@@ -63,12 +63,12 @@ abstract class FromProperty {
     SpineBindings.bindings.spine_from_property_set__offset(_ptr, value);
   }
 
-  ArrayToProperty get to {
+  ArrayToProperty? get to {
     final result = SpineBindings.bindings.spine_from_property_get__to(_ptr);
-    return ArrayToProperty.fromPointer(result);
+    return result.address == 0 ? null : ArrayToProperty.fromPointer(result);
   }
 
-  set to(ArrayToProperty value) {
-    SpineBindings.bindings.spine_from_property_set__to(_ptr, value.nativePtr.cast());
+  set to(ArrayToProperty? value) {
+    SpineBindings.bindings.spine_from_property_set__to(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 }

@@ -55,9 +55,9 @@ class SkeletonClipping {
     SpineBindings.bindings.spine_skeleton_clipping_dispose(_ptr);
   }
 
-  int clipStart(Skeleton skeleton, Slot slot, ClippingAttachment clip) {
+  int clipStart(Skeleton skeleton, Slot slot, ClippingAttachment? clip) {
     final result = SpineBindings.bindings.spine_skeleton_clipping_clip_start(
-        _ptr, skeleton.nativePtr.cast(), slot.nativePtr.cast(), clip.nativePtr.cast());
+        _ptr, skeleton.nativePtr.cast(), slot.nativePtr.cast(), clip?.nativePtr.cast() ?? Pointer.fromAddress(0));
     return result;
   }
 

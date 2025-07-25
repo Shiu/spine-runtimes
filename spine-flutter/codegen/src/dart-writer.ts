@@ -383,13 +383,13 @@ export class DartWriter {
 
 	private createGetter (method: CMethod, cType: CClassOrStruct, classType: 'concrete' | 'abstract' | 'interface', renamedMethod?: string): DartMember {
 		const propertyName = renamedMethod || this.extractPropertyName(method.name, cType.name);
-		const dartReturnType = this.toDartReturnType(method.returnType);
+		const dartReturnType = this.toDartReturnType(method.returnType, method.returnTypeNullable);
 
 		// Interface methods have no implementation (from spec)
 		let implementation = '';
 		if (classType !== 'interface') {
 			implementation = `final result = SpineBindings.bindings.${method.name}(_ptr);
-    ${this.generateReturnConversion(method.returnType, 'result')}`;
+    ${this.generateReturnConversion(method.returnType, 'result', method.returnTypeNullable)}`;
 		}
 
 		// Check if this is an override
@@ -446,7 +446,7 @@ export class DartWriter {
 
 	private createMethod (method: CMethod, cType: CClassOrStruct, classType: 'concrete' | 'abstract' | 'interface', renamedMethod?: string): DartMember {
 		let methodName = renamedMethod || this.toDartMethodName(method.name, cType.name);
-		const dartReturnType = this.toDartReturnType(method.returnType);
+		const dartReturnType = this.toDartReturnType(method.returnType, method.returnTypeNullable);
 
 		// Check if this is a static method
 		const isStatic = method.parameters.length === 0 ||
@@ -479,7 +479,7 @@ export class DartWriter {
 				implementation = `SpineBindings.bindings.${method.name}(${args});`;
 			} else {
 				implementation = `final result = SpineBindings.bindings.${method.name}(${args});
-    ${this.generateReturnConversion(method.returnType, 'result')}`;
+    ${this.generateReturnConversion(method.returnType, 'result', method.returnTypeNullable)}`;
 			}
 		}
 
@@ -824,11 +824,13 @@ ${declaration} {`;
 				const cClass = this.classMap.get(cElementType);
 
 				if (cClass && this.isAbstract(cClass)) {
-					// Use RTTI to determine concrete type for abstract classes
+					// Use RTTI to determine concrete type for abstract classes - handle null case
+					lines.push(`    if (buffer[index].address == 0) return null;`);
 					const rttiCode = this.generateRttiBasedInstantiation(dartElementType, 'buffer[index]', cClass);
 					lines.push(`    ${rttiCode}`);
 				} else {
-					lines.push(`    return ${dartElementType}.fromPointer(buffer[index]);`);
+					// For array elements, check if the pointer is null
+					lines.push(`    return buffer[index].address == 0 ? null : ${dartElementType}.fromPointer(buffer[index]);`);
 				}
 			}
 
@@ -846,7 +848,9 @@ ${declaration} {`;
 
 			// Convert value to C type
 			const param = setMethod.parameters[2]; // The value parameter
-			const convertedValue = this.convertDartToC('value', param);
+			// Create a copy of the parameter with nullable flag for proper conversion
+			const nullableParam = { ...param, isNullable: !this.isPrimitiveArrayType(elementType) };
+			const convertedValue = this.convertDartToC('value', nullableParam);
 			lines.push(`    SpineBindings.bindings.${setMethod.name}(nativePtr.cast(), index, ${convertedValue});`);
 			lines.push('  }');
 		}
@@ -876,7 +880,7 @@ ${declaration} {`;
 		// Handle pointer types
 		if (elementType.endsWith('*')) {
 			const baseType = elementType.slice(0, -1).trim();
-			return this.toDartTypeName(`spine_${toSnakeCase(baseType)}`);
+			return `${this.toDartTypeName(`spine_${toSnakeCase(baseType)}`)}?`;
 		}
 
 		// For primitive types, return the Dart type directly
@@ -896,8 +900,8 @@ ${declaration} {`;
 			return 'bool';
 		}
 
-		// For object types, convert to PascalCase
-		return this.toPascalCase(elementType);
+		// For object types, convert to PascalCase and make nullable since arrays can contain null pointers
+		return `${this.toPascalCase(elementType)}?`;
 	}
 
 	private isPrimitiveArrayType (elementType: string): boolean {
@@ -1120,19 +1124,22 @@ ${declaration} {`;
 		return enumValue;
 	}
 
-	private toDartReturnType (cType: string): string {
+	private toDartReturnType (cType: string, nullable?: boolean): string {
+		let baseType: string;
 		if (cType === 'void') return 'void';
-		if (cType === 'char*' || cType === 'char *' || cType === 'const char*' || cType === 'const char *') return 'String';
-		if (cType === 'float' || cType === 'double') return 'double';
-		if (cType === 'int' || cType === 'size_t' || cType === 'int32_t' || cType === 'uint32_t') return 'int';
-		if (cType === 'bool') return 'bool';
+		if (cType === 'char*' || cType === 'char *' || cType === 'const char*' || cType === 'const char *') baseType = 'String';
+		else if (cType === 'float' || cType === 'double') baseType = 'double';
+		else if (cType === 'int' || cType === 'size_t' || cType === 'int32_t' || cType === 'uint32_t') baseType = 'int';
+		else if (cType === 'bool') baseType = 'bool';
 		// Handle primitive pointer types
-		if (cType === 'void*' || cType === 'void *') return 'Pointer<Void>';
-		if (cType === 'float*' || cType === 'float *') return 'Pointer<Float>';
-		if (cType === 'uint32_t*' || cType === 'uint32_t *') return 'Pointer<Uint32>';
-		if (cType === 'uint16_t*' || cType === 'uint16_t *') return 'Pointer<Uint16>';
-		if (cType === 'int*' || cType === 'int *') return 'Pointer<Int32>';
-		return this.toDartTypeName(cType);
+		else if (cType === 'void*' || cType === 'void *') baseType = 'Pointer<Void>';
+		else if (cType === 'float*' || cType === 'float *') baseType = 'Pointer<Float>';
+		else if (cType === 'uint32_t*' || cType === 'uint32_t *') baseType = 'Pointer<Uint32>';
+		else if (cType === 'uint16_t*' || cType === 'uint16_t *') baseType = 'Pointer<Uint16>';
+		else if (cType === 'int*' || cType === 'int *') baseType = 'Pointer<Int32>';
+		else baseType = this.toDartTypeName(cType);
+		
+		return nullable ? `${baseType}?` : baseType;
 	}
 
 	private toDartParameterType (param: CParameter): string {
@@ -1143,7 +1150,7 @@ ${declaration} {`;
 		if (param.cType === 'void*' || param.cType === 'void *') {
 			return 'Pointer<Void>';
 		}
-		return this.toDartReturnType(param.cType);
+		return this.toDartReturnType(param.cType, param.isNullable);
 	}
 
 	private convertDartToC (dartValue: string, param: CParameter): string {
@@ -1152,38 +1159,62 @@ ${declaration} {`;
 		}
 
 		if (this.enumNames.has(param.cType)) {
+			if (param.isNullable) {
+				return `${dartValue}?.value ?? 0`;
+			}
 			return `${dartValue}.value`;
 		}
 
 		if (param.cType.startsWith('spine_')) {
+			if (param.isNullable) {
+				return `${dartValue}?.nativePtr.cast() ?? Pointer.fromAddress(0)`;
+			}
 			return `${dartValue}.nativePtr.cast()`;
 		}
 
 		return dartValue;
 	}
 
-	private generateReturnConversion (cReturnType: string, resultVar: string): string {
+	private generateReturnConversion (cReturnType: string, resultVar: string, nullable?: boolean): string {
 		if (cReturnType === 'char*' || cReturnType === 'char *' || cReturnType === 'const char*' || cReturnType === 'const char *') {
+			if (nullable) {
+				return `return ${resultVar}.address == 0 ? null : ${resultVar}.cast<Utf8>().toDartString();`;
+			}
 			return `return ${resultVar}.cast<Utf8>().toDartString();`;
 		}
 
 		if (this.enumNames.has(cReturnType)) {
 			const dartType = this.toDartTypeName(cReturnType);
+			if (nullable) {
+				return `return ${resultVar} == 0 ? null : ${dartType}.fromValue(${resultVar});`;
+			}
 			return `return ${dartType}.fromValue(${resultVar});`;
 		}
 
 		if (cReturnType.startsWith('spine_array_')) {
 			const dartType = this.toDartTypeName(cReturnType);
+			if (nullable) {
+				return `return ${resultVar}.address == 0 ? null : ${dartType}.fromPointer(${resultVar});`;
+			}
 			return `return ${dartType}.fromPointer(${resultVar});`;
 		}
 
 		if (cReturnType.startsWith('spine_')) {
 			const dartType = this.toDartTypeName(cReturnType);
 			const cClass = this.classMap.get(cReturnType);
-			if (cClass && this.isAbstract(cClass)) {
-				return this.generateRttiBasedInstantiation(dartType, resultVar, cClass);
+			
+			if (nullable) {
+				if (cClass && this.isAbstract(cClass)) {
+					return `if (${resultVar}.address == 0) return null;
+    ${this.generateRttiBasedInstantiation(dartType, resultVar, cClass)}`;
+				}
+				return `return ${resultVar}.address == 0 ? null : ${dartType}.fromPointer(${resultVar});`;
+			} else {
+				if (cClass && this.isAbstract(cClass)) {
+					return this.generateRttiBasedInstantiation(dartType, resultVar, cClass);
+				}
+				return `return ${dartType}.fromPointer(${resultVar});`;
 			}
-			return `return ${dartType}.fromPointer(${resultVar});`;
 		}
 
 		return `return ${resultVar};`;

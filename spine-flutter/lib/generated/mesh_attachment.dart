@@ -108,31 +108,32 @@ class MeshAttachment extends VertexAttachment {
     SpineBindings.bindings.spine_mesh_attachment_set_path(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
-  TextureRegion get region {
+  TextureRegion? get region {
     final result = SpineBindings.bindings.spine_mesh_attachment_get_region(_ptr);
-    return TextureRegion.fromPointer(result);
+    return result.address == 0 ? null : TextureRegion.fromPointer(result);
   }
 
-  set region(TextureRegion value) {
-    SpineBindings.bindings.spine_mesh_attachment_set_region(_ptr, value.nativePtr.cast());
+  set region(TextureRegion? value) {
+    SpineBindings.bindings.spine_mesh_attachment_set_region(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
-  Sequence get sequence {
+  Sequence? get sequence {
     final result = SpineBindings.bindings.spine_mesh_attachment_get_sequence(_ptr);
-    return Sequence.fromPointer(result);
+    return result.address == 0 ? null : Sequence.fromPointer(result);
   }
 
-  set sequence(Sequence value) {
-    SpineBindings.bindings.spine_mesh_attachment_set_sequence(_ptr, value.nativePtr.cast());
+  set sequence(Sequence? value) {
+    SpineBindings.bindings.spine_mesh_attachment_set_sequence(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
-  MeshAttachment get parentMesh {
+  MeshAttachment? get parentMesh {
     final result = SpineBindings.bindings.spine_mesh_attachment_get_parent_mesh(_ptr);
-    return MeshAttachment.fromPointer(result);
+    return result.address == 0 ? null : MeshAttachment.fromPointer(result);
   }
 
-  set parentMesh(MeshAttachment value) {
-    SpineBindings.bindings.spine_mesh_attachment_set_parent_mesh(_ptr, value.nativePtr.cast());
+  set parentMesh(MeshAttachment? value) {
+    SpineBindings.bindings
+        .spine_mesh_attachment_set_parent_mesh(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
   ArrayUnsignedShort get edges {

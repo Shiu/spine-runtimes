@@ -45,9 +45,9 @@ class EventQueueEntry {
   /// Get the native pointer for FFI calls
   Pointer get nativePtr => _ptr;
 
-  factory EventQueueEntry(EventType eventType, TrackEntry trackEntry, Event event) {
-    final ptr = SpineBindings.bindings
-        .spine_event_queue_entry_create(eventType.value, trackEntry.nativePtr.cast(), event.nativePtr.cast());
+  factory EventQueueEntry(EventType eventType, TrackEntry? trackEntry, Event? event) {
+    final ptr = SpineBindings.bindings.spine_event_queue_entry_create(eventType.value,
+        trackEntry?.nativePtr.cast() ?? Pointer.fromAddress(0), event?.nativePtr.cast() ?? Pointer.fromAddress(0));
     return EventQueueEntry.fromPointer(ptr);
   }
 
@@ -64,21 +64,21 @@ class EventQueueEntry {
     SpineBindings.bindings.spine_event_queue_entry_set__type(_ptr, value.value);
   }
 
-  TrackEntry get entry {
+  TrackEntry? get entry {
     final result = SpineBindings.bindings.spine_event_queue_entry_get__entry(_ptr);
-    return TrackEntry.fromPointer(result);
+    return result.address == 0 ? null : TrackEntry.fromPointer(result);
   }
 
-  set entry(TrackEntry value) {
-    SpineBindings.bindings.spine_event_queue_entry_set__entry(_ptr, value.nativePtr.cast());
+  set entry(TrackEntry? value) {
+    SpineBindings.bindings.spine_event_queue_entry_set__entry(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
-  Event get event {
+  Event? get event {
     final result = SpineBindings.bindings.spine_event_queue_entry_get__event(_ptr);
-    return Event.fromPointer(result);
+    return result.address == 0 ? null : Event.fromPointer(result);
   }
 
-  set event(Event value) {
-    SpineBindings.bindings.spine_event_queue_entry_set__event(_ptr, value.nativePtr.cast());
+  set event(Event? value) {
+    SpineBindings.bindings.spine_event_queue_entry_set__event(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 }

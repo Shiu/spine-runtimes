@@ -154,7 +154,7 @@ class AtlasPage {
     SpineBindings.bindings.spine_atlas_page_set_index(_ptr, value);
   }
 
-  Pointer<Void> get texture {
+  Pointer<Void>? get texture {
     final result = SpineBindings.bindings.spine_atlas_page_get_texture(_ptr);
     return result;
   }

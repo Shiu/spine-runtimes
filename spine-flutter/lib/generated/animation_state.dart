@@ -89,9 +89,9 @@ class AnimationState {
     SpineBindings.bindings.spine_animation_state_set_empty_animations(_ptr, value);
   }
 
-  TrackEntry getCurrent(int trackIndex) {
+  TrackEntry? getCurrent(int trackIndex) {
     final result = SpineBindings.bindings.spine_animation_state_get_current(_ptr, trackIndex);
-    return TrackEntry.fromPointer(result);
+    return result.address == 0 ? null : TrackEntry.fromPointer(result);
   }
 
   AnimationStateData get data {
@@ -130,11 +130,12 @@ class AnimationState {
     return result;
   }
 
-  void disposeTrackEntry(TrackEntry entry) {
-    SpineBindings.bindings.spine_animation_state_dispose_track_entry(_ptr, entry.nativePtr.cast());
+  void disposeTrackEntry(TrackEntry? entry) {
+    SpineBindings.bindings
+        .spine_animation_state_dispose_track_entry(_ptr, entry?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
-  Pointer<Void> get rendererObject {
+  Pointer<Void>? get rendererObject {
     final result = SpineBindings.bindings.spine_animation_state_get_renderer_object(_ptr);
     return result;
   }

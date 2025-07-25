@@ -53,9 +53,9 @@ class Atlas {
     SpineBindings.bindings.spine_atlas_flip_v(_ptr);
   }
 
-  AtlasRegion findRegion(String name) {
+  AtlasRegion? findRegion(String name) {
     final result = SpineBindings.bindings.spine_atlas_find_region(_ptr, name.toNativeUtf8().cast<Char>());
-    return AtlasRegion.fromPointer(result);
+    return result.address == 0 ? null : AtlasRegion.fromPointer(result);
   }
 
   ArrayAtlasPage get pages {

@@ -65,54 +65,58 @@ class AtlasAttachmentLoader implements AttachmentLoader {
   }
 
   @override
-  RegionAttachment newRegionAttachment(Skin skin, String name, String path, Sequence sequence) {
+  RegionAttachment? newRegionAttachment(Skin skin, String name, String path, Sequence? sequence) {
     final result = SpineBindings.bindings.spine_atlas_attachment_loader_new_region_attachment(
         _ptr,
         skin.nativePtr.cast(),
         name.toNativeUtf8().cast<Char>(),
         path.toNativeUtf8().cast<Char>(),
-        sequence.nativePtr.cast());
-    return RegionAttachment.fromPointer(result);
+        sequence?.nativePtr.cast() ?? Pointer.fromAddress(0));
+    return result.address == 0 ? null : RegionAttachment.fromPointer(result);
   }
 
   @override
-  MeshAttachment newMeshAttachment(Skin skin, String name, String path, Sequence sequence) {
-    final result = SpineBindings.bindings.spine_atlas_attachment_loader_new_mesh_attachment(_ptr, skin.nativePtr.cast(),
-        name.toNativeUtf8().cast<Char>(), path.toNativeUtf8().cast<Char>(), sequence.nativePtr.cast());
-    return MeshAttachment.fromPointer(result);
+  MeshAttachment? newMeshAttachment(Skin skin, String name, String path, Sequence? sequence) {
+    final result = SpineBindings.bindings.spine_atlas_attachment_loader_new_mesh_attachment(
+        _ptr,
+        skin.nativePtr.cast(),
+        name.toNativeUtf8().cast<Char>(),
+        path.toNativeUtf8().cast<Char>(),
+        sequence?.nativePtr.cast() ?? Pointer.fromAddress(0));
+    return result.address == 0 ? null : MeshAttachment.fromPointer(result);
   }
 
   @override
-  BoundingBoxAttachment newBoundingBoxAttachment(Skin skin, String name) {
+  BoundingBoxAttachment? newBoundingBoxAttachment(Skin skin, String name) {
     final result = SpineBindings.bindings.spine_atlas_attachment_loader_new_bounding_box_attachment(
         _ptr, skin.nativePtr.cast(), name.toNativeUtf8().cast<Char>());
-    return BoundingBoxAttachment.fromPointer(result);
+    return result.address == 0 ? null : BoundingBoxAttachment.fromPointer(result);
   }
 
   @override
-  PathAttachment newPathAttachment(Skin skin, String name) {
+  PathAttachment? newPathAttachment(Skin skin, String name) {
     final result = SpineBindings.bindings.spine_atlas_attachment_loader_new_path_attachment(
         _ptr, skin.nativePtr.cast(), name.toNativeUtf8().cast<Char>());
-    return PathAttachment.fromPointer(result);
+    return result.address == 0 ? null : PathAttachment.fromPointer(result);
   }
 
   @override
-  PointAttachment newPointAttachment(Skin skin, String name) {
+  PointAttachment? newPointAttachment(Skin skin, String name) {
     final result = SpineBindings.bindings.spine_atlas_attachment_loader_new_point_attachment(
         _ptr, skin.nativePtr.cast(), name.toNativeUtf8().cast<Char>());
-    return PointAttachment.fromPointer(result);
+    return result.address == 0 ? null : PointAttachment.fromPointer(result);
   }
 
   @override
-  ClippingAttachment newClippingAttachment(Skin skin, String name) {
+  ClippingAttachment? newClippingAttachment(Skin skin, String name) {
     final result = SpineBindings.bindings.spine_atlas_attachment_loader_new_clipping_attachment(
         _ptr, skin.nativePtr.cast(), name.toNativeUtf8().cast<Char>());
-    return ClippingAttachment.fromPointer(result);
+    return result.address == 0 ? null : ClippingAttachment.fromPointer(result);
   }
 
-  AtlasRegion findRegion(String name) {
+  AtlasRegion? findRegion(String name) {
     final result =
         SpineBindings.bindings.spine_atlas_attachment_loader_find_region(_ptr, name.toNativeUtf8().cast<Char>());
-    return AtlasRegion.fromPointer(result);
+    return result.address == 0 ? null : AtlasRegion.fromPointer(result);
   }
 }

@@ -79,8 +79,8 @@ class Skeleton {
     SpineBindings.bindings.spine_skeleton_constrained(_ptr, object.nativePtr.cast());
   }
 
-  void sortBone(Bone bone) {
-    SpineBindings.bindings.spine_skeleton_sort_bone(_ptr, bone.nativePtr.cast());
+  void sortBone(Bone? bone) {
+    SpineBindings.bindings.spine_skeleton_sort_bone(_ptr, bone?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
   static void sortReset(ArrayBone bones) {
@@ -118,14 +118,14 @@ class Skeleton {
     return ArrayUpdate.fromPointer(result);
   }
 
-  Bone get rootBone {
+  Bone? get rootBone {
     final result = SpineBindings.bindings.spine_skeleton_get_root_bone(_ptr);
-    return Bone.fromPointer(result);
+    return result.address == 0 ? null : Bone.fromPointer(result);
   }
 
-  Bone findBone(String boneName) {
+  Bone? findBone(String boneName) {
     final result = SpineBindings.bindings.spine_skeleton_find_bone(_ptr, boneName.toNativeUtf8().cast<Char>());
-    return Bone.fromPointer(result);
+    return result.address == 0 ? null : Bone.fromPointer(result);
   }
 
   ArraySlot get slots {
@@ -133,9 +133,9 @@ class Skeleton {
     return ArraySlot.fromPointer(result);
   }
 
-  Slot findSlot(String slotName) {
+  Slot? findSlot(String slotName) {
     final result = SpineBindings.bindings.spine_skeleton_find_slot(_ptr, slotName.toNativeUtf8().cast<Char>());
-    return Slot.fromPointer(result);
+    return result.address == 0 ? null : Slot.fromPointer(result);
   }
 
   ArraySlot get drawOrder {
@@ -143,9 +143,9 @@ class Skeleton {
     return ArraySlot.fromPointer(result);
   }
 
-  Skin get skin {
+  Skin? get skin {
     final result = SpineBindings.bindings.spine_skeleton_get_skin(_ptr);
-    return Skin.fromPointer(result);
+    return result.address == 0 ? null : Skin.fromPointer(result);
   }
 
   void setAttachment(String slotName, String attachmentName) {
@@ -273,13 +273,14 @@ class Skeleton {
     SpineBindings.bindings.spine_skeleton_set_skin_1(_ptr, skinName.toNativeUtf8().cast<Char>());
   }
 
-  void setSkin2(Skin newSkin) {
-    SpineBindings.bindings.spine_skeleton_set_skin_2(_ptr, newSkin.nativePtr.cast());
+  void setSkin2(Skin? newSkin) {
+    SpineBindings.bindings.spine_skeleton_set_skin_2(_ptr, newSkin?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
-  Attachment getAttachment(String slotName, String attachmentName) {
+  Attachment? getAttachment(String slotName, String attachmentName) {
     final result = SpineBindings.bindings.spine_skeleton_get_attachment_1(
         _ptr, slotName.toNativeUtf8().cast<Char>(), attachmentName.toNativeUtf8().cast<Char>());
+    if (result.address == 0) return null;
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
@@ -300,9 +301,10 @@ class Skeleton {
     }
   }
 
-  Attachment getAttachment2(int slotIndex, String attachmentName) {
+  Attachment? getAttachment2(int slotIndex, String attachmentName) {
     final result = SpineBindings.bindings
         .spine_skeleton_get_attachment_2(_ptr, slotIndex, attachmentName.toNativeUtf8().cast<Char>());
+    if (result.address == 0) return null;
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {

@@ -66,8 +66,9 @@ class Skin {
         .spine_skin_set_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>(), attachment.nativePtr.cast());
   }
 
-  Attachment getAttachment(int slotIndex, String name) {
+  Attachment? getAttachment(int slotIndex, String name) {
     final result = SpineBindings.bindings.spine_skin_get_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>());
+    if (result.address == 0) return null;
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {

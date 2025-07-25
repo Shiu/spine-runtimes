@@ -67,9 +67,9 @@ class TrackEntry {
     SpineBindings.bindings.spine_track_entry_set_animation(_ptr, value.nativePtr.cast());
   }
 
-  TrackEntry get previous {
+  TrackEntry? get previous {
     final result = SpineBindings.bindings.spine_track_entry_get_previous(_ptr);
-    return TrackEntry.fromPointer(result);
+    return result.address == 0 ? null : TrackEntry.fromPointer(result);
   }
 
   bool get loop {
@@ -221,9 +221,9 @@ class TrackEntry {
     SpineBindings.bindings.spine_track_entry_set_mix_draw_order_threshold(_ptr, value);
   }
 
-  TrackEntry get next {
+  TrackEntry? get next {
     final result = SpineBindings.bindings.spine_track_entry_get_next(_ptr);
-    return TrackEntry.fromPointer(result);
+    return result.address == 0 ? null : TrackEntry.fromPointer(result);
   }
 
   bool get isComplete {
@@ -254,14 +254,14 @@ class TrackEntry {
     SpineBindings.bindings.spine_track_entry_set_mix_blend(_ptr, value.value);
   }
 
-  TrackEntry get mixingFrom {
+  TrackEntry? get mixingFrom {
     final result = SpineBindings.bindings.spine_track_entry_get_mixing_from(_ptr);
-    return TrackEntry.fromPointer(result);
+    return result.address == 0 ? null : TrackEntry.fromPointer(result);
   }
 
-  TrackEntry get mixingTo {
+  TrackEntry? get mixingTo {
     final result = SpineBindings.bindings.spine_track_entry_get_mixing_to(_ptr);
-    return TrackEntry.fromPointer(result);
+    return result.address == 0 ? null : TrackEntry.fromPointer(result);
   }
 
   void resetRotationDirections() {
@@ -288,7 +288,7 @@ class TrackEntry {
     return result;
   }
 
-  Pointer<Void> get rendererObject {
+  Pointer<Void>? get rendererObject {
     final result = SpineBindings.bindings.spine_track_entry_get_renderer_object(_ptr);
     return result;
   }

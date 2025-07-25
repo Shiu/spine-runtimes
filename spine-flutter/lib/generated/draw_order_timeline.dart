@@ -54,7 +54,8 @@ class DrawOrderTimeline extends Timeline {
     SpineBindings.bindings.spine_draw_order_timeline_dispose(_ptr);
   }
 
-  void setFrame(int frame, double time, ArrayInt drawOrder) {
-    SpineBindings.bindings.spine_draw_order_timeline_set_frame(_ptr, frame, time, drawOrder.nativePtr.cast());
+  void setFrame(int frame, double time, ArrayInt? drawOrder) {
+    SpineBindings.bindings
+        .spine_draw_order_timeline_set_frame(_ptr, frame, time, drawOrder?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 }

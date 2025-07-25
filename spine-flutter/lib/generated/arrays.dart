@@ -198,7 +198,7 @@ class ArrayPropertyId extends NativeArray<int> {
 }
 
 /// ArrayAnimation wrapper
-class ArrayAnimation extends NativeArray<Animation> {
+class ArrayAnimation extends NativeArray<Animation?> {
   ArrayAnimation.fromPointer(Pointer<spine_array_animation_wrapper> super.ptr);
 
   @override
@@ -207,17 +207,17 @@ class ArrayAnimation extends NativeArray<Animation> {
   }
 
   @override
-  Animation operator [](int index) {
+  Animation? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_animation_buffer(nativePtr.cast());
-    return Animation.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : Animation.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayAtlasPage wrapper
-class ArrayAtlasPage extends NativeArray<AtlasPage> {
+class ArrayAtlasPage extends NativeArray<AtlasPage?> {
   ArrayAtlasPage.fromPointer(Pointer<spine_array_atlas_page_wrapper> super.ptr);
 
   @override
@@ -226,17 +226,17 @@ class ArrayAtlasPage extends NativeArray<AtlasPage> {
   }
 
   @override
-  AtlasPage operator [](int index) {
+  AtlasPage? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_atlas_page_buffer(nativePtr.cast());
-    return AtlasPage.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : AtlasPage.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayAtlasRegion wrapper
-class ArrayAtlasRegion extends NativeArray<AtlasRegion> {
+class ArrayAtlasRegion extends NativeArray<AtlasRegion?> {
   ArrayAtlasRegion.fromPointer(Pointer<spine_array_atlas_region_wrapper> super.ptr);
 
   @override
@@ -245,17 +245,17 @@ class ArrayAtlasRegion extends NativeArray<AtlasRegion> {
   }
 
   @override
-  AtlasRegion operator [](int index) {
+  AtlasRegion? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_atlas_region_buffer(nativePtr.cast());
-    return AtlasRegion.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : AtlasRegion.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayAttachment wrapper
-class ArrayAttachment extends NativeArray<Attachment> {
+class ArrayAttachment extends NativeArray<Attachment?> {
   ArrayAttachment.fromPointer(Pointer<spine_array_attachment_wrapper> super.ptr);
 
   @override
@@ -264,11 +264,12 @@ class ArrayAttachment extends NativeArray<Attachment> {
   }
 
   @override
-  Attachment operator [](int index) {
+  Attachment? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_attachment_buffer(nativePtr.cast());
+    if (buffer[index].address == 0) return null;
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
@@ -291,7 +292,7 @@ class ArrayAttachment extends NativeArray<Attachment> {
 }
 
 /// ArrayBone wrapper
-class ArrayBone extends NativeArray<Bone> {
+class ArrayBone extends NativeArray<Bone?> {
   ArrayBone.fromPointer(Pointer<spine_array_bone_wrapper> super.ptr);
 
   @override
@@ -300,17 +301,17 @@ class ArrayBone extends NativeArray<Bone> {
   }
 
   @override
-  Bone operator [](int index) {
+  Bone? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_bone_buffer(nativePtr.cast());
-    return Bone.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : Bone.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayBoneData wrapper
-class ArrayBoneData extends NativeArray<BoneData> {
+class ArrayBoneData extends NativeArray<BoneData?> {
   ArrayBoneData.fromPointer(Pointer<spine_array_bone_data_wrapper> super.ptr);
 
   @override
@@ -319,17 +320,17 @@ class ArrayBoneData extends NativeArray<BoneData> {
   }
 
   @override
-  BoneData operator [](int index) {
+  BoneData? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_bone_data_buffer(nativePtr.cast());
-    return BoneData.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : BoneData.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayBonePose wrapper
-class ArrayBonePose extends NativeArray<BonePose> {
+class ArrayBonePose extends NativeArray<BonePose?> {
   ArrayBonePose.fromPointer(Pointer<spine_array_bone_pose_wrapper> super.ptr);
 
   @override
@@ -338,17 +339,17 @@ class ArrayBonePose extends NativeArray<BonePose> {
   }
 
   @override
-  BonePose operator [](int index) {
+  BonePose? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_bone_pose_buffer(nativePtr.cast());
-    return BonePose.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : BonePose.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayBoundingBoxAttachment wrapper
-class ArrayBoundingBoxAttachment extends NativeArray<BoundingBoxAttachment> {
+class ArrayBoundingBoxAttachment extends NativeArray<BoundingBoxAttachment?> {
   ArrayBoundingBoxAttachment.fromPointer(Pointer<spine_array_bounding_box_attachment_wrapper> super.ptr);
 
   @override
@@ -357,17 +358,17 @@ class ArrayBoundingBoxAttachment extends NativeArray<BoundingBoxAttachment> {
   }
 
   @override
-  BoundingBoxAttachment operator [](int index) {
+  BoundingBoxAttachment? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_bounding_box_attachment_buffer(nativePtr.cast());
-    return BoundingBoxAttachment.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : BoundingBoxAttachment.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayConstraint wrapper
-class ArrayConstraint extends NativeArray<Constraint> {
+class ArrayConstraint extends NativeArray<Constraint?> {
   ArrayConstraint.fromPointer(Pointer<spine_array_constraint_wrapper> super.ptr);
 
   @override
@@ -376,11 +377,12 @@ class ArrayConstraint extends NativeArray<Constraint> {
   }
 
   @override
-  Constraint operator [](int index) {
+  Constraint? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_constraint_buffer(nativePtr.cast());
+    if (buffer[index].address == 0) return null;
     final rtti = SpineBindings.bindings.spine_constraint_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
@@ -401,7 +403,7 @@ class ArrayConstraint extends NativeArray<Constraint> {
 }
 
 /// ArrayConstraintData wrapper
-class ArrayConstraintData extends NativeArray<ConstraintData> {
+class ArrayConstraintData extends NativeArray<ConstraintData?> {
   ArrayConstraintData.fromPointer(Pointer<spine_array_constraint_data_wrapper> super.ptr);
 
   @override
@@ -410,11 +412,12 @@ class ArrayConstraintData extends NativeArray<ConstraintData> {
   }
 
   @override
-  ConstraintData operator [](int index) {
+  ConstraintData? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_constraint_data_buffer(nativePtr.cast());
+    if (buffer[index].address == 0) return null;
     final rtti = SpineBindings.bindings.spine_constraint_data_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
@@ -435,7 +438,7 @@ class ArrayConstraintData extends NativeArray<ConstraintData> {
 }
 
 /// ArrayEvent wrapper
-class ArrayEvent extends NativeArray<Event> {
+class ArrayEvent extends NativeArray<Event?> {
   ArrayEvent.fromPointer(Pointer<spine_array_event_wrapper> super.ptr);
 
   @override
@@ -444,17 +447,17 @@ class ArrayEvent extends NativeArray<Event> {
   }
 
   @override
-  Event operator [](int index) {
+  Event? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_event_buffer(nativePtr.cast());
-    return Event.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : Event.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayEventData wrapper
-class ArrayEventData extends NativeArray<EventData> {
+class ArrayEventData extends NativeArray<EventData?> {
   ArrayEventData.fromPointer(Pointer<spine_array_event_data_wrapper> super.ptr);
 
   @override
@@ -463,17 +466,17 @@ class ArrayEventData extends NativeArray<EventData> {
   }
 
   @override
-  EventData operator [](int index) {
+  EventData? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_event_data_buffer(nativePtr.cast());
-    return EventData.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : EventData.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayFromProperty wrapper
-class ArrayFromProperty extends NativeArray<FromProperty> {
+class ArrayFromProperty extends NativeArray<FromProperty?> {
   ArrayFromProperty.fromPointer(Pointer<spine_array_from_property_wrapper> super.ptr);
 
   @override
@@ -482,11 +485,12 @@ class ArrayFromProperty extends NativeArray<FromProperty> {
   }
 
   @override
-  FromProperty operator [](int index) {
+  FromProperty? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_from_property_buffer(nativePtr.cast());
+    if (buffer[index].address == 0) return null;
     final rtti = SpineBindings.bindings.spine_from_property_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
@@ -509,7 +513,7 @@ class ArrayFromProperty extends NativeArray<FromProperty> {
 }
 
 /// ArrayPhysicsConstraint wrapper
-class ArrayPhysicsConstraint extends NativeArray<PhysicsConstraint> {
+class ArrayPhysicsConstraint extends NativeArray<PhysicsConstraint?> {
   ArrayPhysicsConstraint.fromPointer(Pointer<spine_array_physics_constraint_wrapper> super.ptr);
 
   @override
@@ -518,17 +522,17 @@ class ArrayPhysicsConstraint extends NativeArray<PhysicsConstraint> {
   }
 
   @override
-  PhysicsConstraint operator [](int index) {
+  PhysicsConstraint? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_physics_constraint_buffer(nativePtr.cast());
-    return PhysicsConstraint.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : PhysicsConstraint.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayPolygon wrapper
-class ArrayPolygon extends NativeArray<Polygon> {
+class ArrayPolygon extends NativeArray<Polygon?> {
   ArrayPolygon.fromPointer(Pointer<spine_array_polygon_wrapper> super.ptr);
 
   @override
@@ -537,17 +541,17 @@ class ArrayPolygon extends NativeArray<Polygon> {
   }
 
   @override
-  Polygon operator [](int index) {
+  Polygon? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_polygon_buffer(nativePtr.cast());
-    return Polygon.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : Polygon.fromPointer(buffer[index]);
   }
 }
 
 /// ArraySkin wrapper
-class ArraySkin extends NativeArray<Skin> {
+class ArraySkin extends NativeArray<Skin?> {
   ArraySkin.fromPointer(Pointer<spine_array_skin_wrapper> super.ptr);
 
   @override
@@ -556,17 +560,17 @@ class ArraySkin extends NativeArray<Skin> {
   }
 
   @override
-  Skin operator [](int index) {
+  Skin? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_skin_buffer(nativePtr.cast());
-    return Skin.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : Skin.fromPointer(buffer[index]);
   }
 }
 
 /// ArraySlot wrapper
-class ArraySlot extends NativeArray<Slot> {
+class ArraySlot extends NativeArray<Slot?> {
   ArraySlot.fromPointer(Pointer<spine_array_slot_wrapper> super.ptr);
 
   @override
@@ -575,17 +579,17 @@ class ArraySlot extends NativeArray<Slot> {
   }
 
   @override
-  Slot operator [](int index) {
+  Slot? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_slot_buffer(nativePtr.cast());
-    return Slot.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : Slot.fromPointer(buffer[index]);
   }
 }
 
 /// ArraySlotData wrapper
-class ArraySlotData extends NativeArray<SlotData> {
+class ArraySlotData extends NativeArray<SlotData?> {
   ArraySlotData.fromPointer(Pointer<spine_array_slot_data_wrapper> super.ptr);
 
   @override
@@ -594,17 +598,17 @@ class ArraySlotData extends NativeArray<SlotData> {
   }
 
   @override
-  SlotData operator [](int index) {
+  SlotData? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_slot_data_buffer(nativePtr.cast());
-    return SlotData.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : SlotData.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayTextureRegion wrapper
-class ArrayTextureRegion extends NativeArray<TextureRegion> {
+class ArrayTextureRegion extends NativeArray<TextureRegion?> {
   ArrayTextureRegion.fromPointer(Pointer<spine_array_texture_region_wrapper> super.ptr);
 
   @override
@@ -613,17 +617,17 @@ class ArrayTextureRegion extends NativeArray<TextureRegion> {
   }
 
   @override
-  TextureRegion operator [](int index) {
+  TextureRegion? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_texture_region_buffer(nativePtr.cast());
-    return TextureRegion.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : TextureRegion.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayTimeline wrapper
-class ArrayTimeline extends NativeArray<Timeline> {
+class ArrayTimeline extends NativeArray<Timeline?> {
   ArrayTimeline.fromPointer(Pointer<spine_array_timeline_wrapper> super.ptr);
 
   @override
@@ -632,11 +636,12 @@ class ArrayTimeline extends NativeArray<Timeline> {
   }
 
   @override
-  Timeline operator [](int index) {
+  Timeline? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_timeline_buffer(nativePtr.cast());
+    if (buffer[index].address == 0) return null;
     final rtti = SpineBindings.bindings.spine_timeline_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
@@ -719,7 +724,7 @@ class ArrayTimeline extends NativeArray<Timeline> {
 }
 
 /// ArrayToProperty wrapper
-class ArrayToProperty extends NativeArray<ToProperty> {
+class ArrayToProperty extends NativeArray<ToProperty?> {
   ArrayToProperty.fromPointer(Pointer<spine_array_to_property_wrapper> super.ptr);
 
   @override
@@ -728,11 +733,12 @@ class ArrayToProperty extends NativeArray<ToProperty> {
   }
 
   @override
-  ToProperty operator [](int index) {
+  ToProperty? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_to_property_buffer(nativePtr.cast());
+    if (buffer[index].address == 0) return null;
     final rtti = SpineBindings.bindings.spine_to_property_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
@@ -755,7 +761,7 @@ class ArrayToProperty extends NativeArray<ToProperty> {
 }
 
 /// ArrayTrackEntry wrapper
-class ArrayTrackEntry extends NativeArray<TrackEntry> {
+class ArrayTrackEntry extends NativeArray<TrackEntry?> {
   ArrayTrackEntry.fromPointer(Pointer<spine_array_track_entry_wrapper> super.ptr);
 
   @override
@@ -764,17 +770,17 @@ class ArrayTrackEntry extends NativeArray<TrackEntry> {
   }
 
   @override
-  TrackEntry operator [](int index) {
+  TrackEntry? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_track_entry_buffer(nativePtr.cast());
-    return TrackEntry.fromPointer(buffer[index]);
+    return buffer[index].address == 0 ? null : TrackEntry.fromPointer(buffer[index]);
   }
 }
 
 /// ArrayUpdate wrapper
-class ArrayUpdate extends NativeArray<Update> {
+class ArrayUpdate extends NativeArray<Update?> {
   ArrayUpdate.fromPointer(Pointer<spine_array_update_wrapper> super.ptr);
 
   @override
@@ -783,11 +789,12 @@ class ArrayUpdate extends NativeArray<Update> {
   }
 
   @override
-  Update operator [](int index) {
+  Update? operator [](int index) {
     if (index < 0 || index >= length) {
       throw RangeError.index(index, this, 'index');
     }
     final buffer = SpineBindings.bindings.spine_array_update_buffer(nativePtr.cast());
+    if (buffer[index].address == 0) return null;
     final rtti = SpineBindings.bindings.spine_update_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
