@@ -79,13 +79,12 @@
 
 using namespace spine;
 
-SkeletonBinary::SkeletonBinary(Atlas *atlas)
+SkeletonBinary::SkeletonBinary(Atlas &atlas)
 	: _attachmentLoader(new(__FILE__, __LINE__) AtlasAttachmentLoader(atlas)), _error(), _scale(1), _ownsLoader(true) {
 }
 
-SkeletonBinary::SkeletonBinary(AttachmentLoader *attachmentLoader, bool ownsLoader)
-	: _attachmentLoader(attachmentLoader), _error(), _scale(1), _ownsLoader(ownsLoader) {
-	assert(_attachmentLoader != NULL);
+SkeletonBinary::SkeletonBinary(AttachmentLoader &attachmentLoader, bool ownsLoader)
+	: _attachmentLoader(&attachmentLoader), _error(), _scale(1), _ownsLoader(ownsLoader) {
 }
 
 SkeletonBinary::~SkeletonBinary() {
@@ -682,7 +681,7 @@ Attachment *SkeletonBinary::readAttachment(DataInput &input, Skin &skin, int slo
 				mesh->setWidth(width * scale);
 				mesh->setHeight(height * scale);
 			}
-			_linkedMeshes.add(new (__FILE__, __LINE__) LinkedMesh(mesh, skinIndex, slotIndex, parent, inheritTimelines));
+			_linkedMeshes.add(new (__FILE__, __LINE__) LinkedMesh(*mesh, skinIndex, slotIndex, parent, inheritTimelines));
 			return mesh;
 		}
 		case AttachmentType_Path: {
@@ -1236,7 +1235,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 						int deformLength = weighted ? (int) vertices.size() / 3 * 2 : (int) vertices.size();
 
 						DeformTimeline *timeline = new (__FILE__, __LINE__)
-							DeformTimeline(frameCount, input.readInt(true), slotIndex, vertexAttachment);
+							DeformTimeline(frameCount, input.readInt(true), slotIndex, *vertexAttachment);
 
 						float time = input.readFloat();
 						for (int frame = 0, bezier = 0;; ++frame) {
@@ -1280,7 +1279,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 						break;
 					}
 					case ATTACHMENT_SEQUENCE: {
-						SequenceTimeline *timeline = new (__FILE__, __LINE__) SequenceTimeline(frameCount, slotIndex, attachment);
+						SequenceTimeline *timeline = new (__FILE__, __LINE__) SequenceTimeline(frameCount, slotIndex, *attachment);
 						for (int frame = 0; frame < frameCount; frame++) {
 							float time = input.readFloat();
 							int modeAndIndex = input.readInt();

@@ -610,7 +610,7 @@ spine_skeleton_drawable spine_skeleton_drawable_create(spine_skeleton_data skele
 	drawable->skeleton = (spine_skeleton) new (__FILE__, __LINE__) Skeleton((SkeletonData *) skeletonData);
 	AnimationStateData *stateData = new (__FILE__, __LINE__) AnimationStateData((SkeletonData *) skeletonData);
 	drawable->animationStateData = (spine_animation_state_data) stateData;
-	AnimationState *state = new (__FILE__, __LINE__) AnimationState(stateData);
+	AnimationState *state = new (__FILE__, __LINE__) AnimationState(*stateData);
 	drawable->animationState = (spine_animation_state) state;
 	state->setManualTrackEntryDisposal(true);
 	EventListener *listener = new EventListener();

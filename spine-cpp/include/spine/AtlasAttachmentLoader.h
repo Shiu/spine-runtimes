@@ -46,7 +46,7 @@ namespace spine {
 	/// Spine Runtimes Guide.
 	class SP_API AtlasAttachmentLoader : public AttachmentLoader {
 	public:
-		explicit AtlasAttachmentLoader(Atlas *atlas);
+		explicit AtlasAttachmentLoader(Atlas &atlas);
 
 		virtual RegionAttachment *newRegionAttachment(Skin &skin, const String &name, const String &path, Sequence *sequence);
 

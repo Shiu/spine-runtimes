@@ -115,9 +115,9 @@ namespace spine {
 		static const int CURVE_STEPPED = 1;
 		static const int CURVE_BEZIER = 2;
 
-		explicit SkeletonBinary(Atlas *atlas);
+		explicit SkeletonBinary(Atlas &atlas);
 
-		explicit SkeletonBinary(AttachmentLoader *attachmentLoader, bool ownsLoader = false);
+		explicit SkeletonBinary(AttachmentLoader &attachmentLoader, bool ownsLoader = false);
 
 		~SkeletonBinary();
 

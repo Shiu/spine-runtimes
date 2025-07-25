@@ -33,7 +33,7 @@
 
 using namespace spine;
 
-AnimationStateData::AnimationStateData(SkeletonData *skeletonData) : _skeletonData(skeletonData), _defaultMix(0) {
+AnimationStateData::AnimationStateData(SkeletonData &skeletonData) : _skeletonData(&skeletonData), _defaultMix(0) {
 }
 
 void AnimationStateData::setMix(const String &fromName, const String &toName, float duration) {

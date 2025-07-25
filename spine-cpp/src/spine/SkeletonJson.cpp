@@ -121,12 +121,11 @@ static float propertyScale(const char *type, float scale) {
 		return 1;
 }
 
-SkeletonJson::SkeletonJson(Atlas *atlas) : _attachmentLoader(new(__FILE__, __LINE__) AtlasAttachmentLoader(atlas)), _scale(1), _ownsLoader(true) {
+SkeletonJson::SkeletonJson(Atlas &atlas) : _attachmentLoader(new(__FILE__, __LINE__) AtlasAttachmentLoader(atlas)), _scale(1), _ownsLoader(true) {
 }
 
-SkeletonJson::SkeletonJson(AttachmentLoader *attachmentLoader, bool ownsLoader)
-	: _attachmentLoader(attachmentLoader), _scale(1), _ownsLoader(ownsLoader) {
-	assert(_attachmentLoader != NULL);
+SkeletonJson::SkeletonJson(AttachmentLoader &attachmentLoader, bool ownsLoader)
+	: _attachmentLoader(&attachmentLoader), _scale(1), _ownsLoader(ownsLoader) {
 }
 
 SkeletonJson::~SkeletonJson() {
@@ -675,7 +674,7 @@ Attachment *SkeletonJson::readAttachment(Json *map, Skin *skin, int slotIndex, c
 			const char *parent = Json::getString(map, "parent", NULL);
 			if (parent) {
 				LinkedMesh *linkedMesh = new (__FILE__, __LINE__)
-					LinkedMesh(mesh, Json::getString(map, "skin", NULL), slotIndex, parent, Json::getBoolean(map, "timelines", true));
+					LinkedMesh(*mesh, Json::getString(map, "skin", NULL), slotIndex, parent, Json::getBoolean(map, "timelines", true));
 				_linkedMeshes.add(linkedMesh);
 				return mesh;
 			}
@@ -1262,7 +1261,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 						Array<float> &vertices = vertexAttachment->_vertices;
 						int deformLength = weighted ? (int) vertices.size() / 3 * 2 : (int) vertices.size();
 
-						DeformTimeline *timeline = new (__FILE__, __LINE__) DeformTimeline(frames, frames, slotIndex, vertexAttachment);
+						DeformTimeline *timeline = new (__FILE__, __LINE__) DeformTimeline(frames, frames, slotIndex, *vertexAttachment);
 						float time = Json::getFloat(keyMap, "time", 0);
 						for (int frame = 0, bezier = 0;; frame++) {
 							Array<float> deform;
@@ -1305,7 +1304,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 						}
 						timelines.add(timeline);
 					} else if (timelineName == "sequence") {
-						SequenceTimeline *timeline = new (__FILE__, __LINE__) SequenceTimeline(frames, slotIndex, attachment);
+						SequenceTimeline *timeline = new (__FILE__, __LINE__) SequenceTimeline(frames, slotIndex, *attachment);
 						float lastDelay = 0;
 						for (int frame = 0; keyMap != NULL; keyMap = keyMap->_next, frame++) {
 							float delay = Json::getFloat(keyMap, "delay", lastDelay);

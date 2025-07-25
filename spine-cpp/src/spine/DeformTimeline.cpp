@@ -43,9 +43,9 @@ using namespace spine;
 
 RTTI_IMPL(DeformTimeline, CurveTimeline)
 
-DeformTimeline::DeformTimeline(size_t frameCount, size_t bezierCount, int slotIndex, VertexAttachment *attachment)
-	: SlotCurveTimeline(frameCount, 1, bezierCount, slotIndex), _attachment(attachment) {
-	PropertyId ids[] = {((PropertyId) Property_Deform << 32) | ((slotIndex << 16 | attachment->_id) & 0xffffffff)};
+DeformTimeline::DeformTimeline(size_t frameCount, size_t bezierCount, int slotIndex, VertexAttachment &attachment)
+	: SlotCurveTimeline(frameCount, 1, bezierCount, slotIndex), _attachment(&attachment) {
+	PropertyId ids[] = {((PropertyId) Property_Deform << 32) | ((slotIndex << 16 | attachment._id) & 0xffffffff)};
 	setPropertyIds(ids, 1);
 
 	_vertices.ensureCapacity(frameCount);

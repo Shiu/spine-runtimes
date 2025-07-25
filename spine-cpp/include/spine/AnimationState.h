@@ -398,7 +398,7 @@ namespace spine {
 		friend class EventQueue;
 
 	public:
-		explicit AnimationState(AnimationStateData *data);
+		explicit AnimationState(AnimationStateData &data);
 
 		~AnimationState();
 
@@ -437,7 +437,7 @@ namespace spine {
 		/// @return
 		/// A track entry to allow further customization of animation playback. References to the track entry must not be kept
 		/// after AnimationState.Dispose.
-		TrackEntry &setAnimation(size_t trackIndex, Animation *animation, bool loop);
+		TrackEntry &setAnimation(size_t trackIndex, Animation &animation, bool loop);
 
 		/// Queues an animation by name.
 		///
@@ -452,7 +452,7 @@ namespace spine {
 		///
 		/// @return A track entry to allow further customization of animation playback. References to the track entry must not be kept
 		/// after AnimationState.Dispose
-		TrackEntry &addAnimation(size_t trackIndex, Animation *animation, bool loop, float delay);
+		TrackEntry &addAnimation(size_t trackIndex, Animation &animation, bool loop, float delay);
 
 		/// Sets an empty animation for a track, discarding any queued animations, and sets the track entry's
 		/// TrackEntry::getMixDuration(). An empty animation has no timelines and serves as a placeholder for mixing in or out.

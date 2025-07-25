@@ -431,8 +431,8 @@ void EventQueue::drain() {
 	_drainDisabled = false;
 }
 
-AnimationState::AnimationState(AnimationStateData *data)
-	: _data(data), _queue(EventQueue::newEventQueue(*this)), _animationsChanged(false), _listener(dummyOnAnimationEventFunc), _listenerObject(NULL),
+AnimationState::AnimationState(AnimationStateData &data)
+	: _data(&data), _queue(EventQueue::newEventQueue(*this)), _animationsChanged(false), _listener(dummyOnAnimationEventFunc), _listenerObject(NULL),
 	  _unkeyedState(0), _timeScale(1), _manualTrackEntryDisposal(false) {
 }
 
@@ -652,16 +652,14 @@ void AnimationState::clearTrack(size_t trackIndex) {
 TrackEntry &AnimationState::setAnimation(size_t trackIndex, const String &animationName, bool loop) {
 	Animation *animation = _data->_skeletonData->findAnimation(animationName);
 	assert(animation != NULL);
-	return setAnimation(trackIndex, animation, loop);
+	return setAnimation(trackIndex, *animation, loop);
 }
 
-TrackEntry &AnimationState::setAnimation(size_t trackIndex, Animation *animation, bool loop) {
-	assert(animation != NULL);
-
+TrackEntry &AnimationState::setAnimation(size_t trackIndex, Animation &animation, bool loop) {
 	bool interrupt = true;
 	TrackEntry *current = expandToIndex(trackIndex);
 	if (current != NULL) {
-		if (current->_nextTrackLast == -1 && current->_animation == animation) {
+		if (current->_nextTrackLast == -1 && current->_animation == &animation) {
 			// Don't mix from an entry that was never applied.
 			_tracks[trackIndex] = current->_mixingFrom;
 			_queue->interrupt(current);
@@ -674,7 +672,7 @@ TrackEntry &AnimationState::setAnimation(size_t trackIndex, Animation *animation
 		}
 	}
 
-	TrackEntry *entry = newTrackEntry(trackIndex, animation, loop, current);
+	TrackEntry *entry = newTrackEntry(trackIndex, &animation, loop, current);
 	setCurrent(trackIndex, entry, interrupt);
 	_queue->drain();
 
@@ -684,18 +682,16 @@ TrackEntry &AnimationState::setAnimation(size_t trackIndex, Animation *animation
 TrackEntry &AnimationState::addAnimation(size_t trackIndex, const String &animationName, bool loop, float delay) {
 	Animation *animation = _data->_skeletonData->findAnimation(animationName);
 	assert(animation != NULL);
-	return addAnimation(trackIndex, animation, loop, delay);
+	return addAnimation(trackIndex, *animation, loop, delay);
 }
 
-TrackEntry &AnimationState::addAnimation(size_t trackIndex, Animation *animation, bool loop, float delay) {
-	assert(animation != NULL);
-
+TrackEntry &AnimationState::addAnimation(size_t trackIndex, Animation &animation, bool loop, float delay) {
 	TrackEntry *last = expandToIndex(trackIndex);
 	if (last != NULL) {
 		while (last->_next != NULL) last = last->_next;
 	}
 
-	TrackEntry *entry = newTrackEntry(trackIndex, animation, loop, last);
+	TrackEntry *entry = newTrackEntry(trackIndex, &animation, loop, last);
 
 	if (last == NULL) {
 		setCurrent(trackIndex, entry, true);
@@ -712,14 +708,14 @@ TrackEntry &AnimationState::addAnimation(size_t trackIndex, Animation *animation
 }
 
 TrackEntry &AnimationState::setEmptyAnimation(size_t trackIndex, float mixDuration) {
-	TrackEntry &entry = setAnimation(trackIndex, AnimationState::getEmptyAnimation(), false);
+	TrackEntry &entry = setAnimation(trackIndex, *AnimationState::getEmptyAnimation(), false);
 	entry._mixDuration = mixDuration;
 	entry._trackEnd = mixDuration;
 	return entry;
 }
 
 TrackEntry &AnimationState::addEmptyAnimation(size_t trackIndex, float mixDuration, float delay) {
-	TrackEntry &entry = addAnimation(trackIndex, AnimationState::getEmptyAnimation(), false, delay);
+	TrackEntry &entry = addAnimation(trackIndex, *AnimationState::getEmptyAnimation(), false, delay);
 	if (delay <= 0) entry._delay = MathUtil::max(entry._delay + entry._mixDuration - mixDuration, 0.0f);
 	entry._mixDuration = mixDuration;
 	entry._trackEnd = mixDuration;

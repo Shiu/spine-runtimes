@@ -40,7 +40,7 @@
 
 using namespace spine;
 
-AtlasAttachmentLoader::AtlasAttachmentLoader(Atlas *atlas) : AttachmentLoader(), _atlas(atlas) {
+AtlasAttachmentLoader::AtlasAttachmentLoader(Atlas &atlas) : AttachmentLoader(), _atlas(&atlas) {
 }
 
 bool loadSequence(Atlas *atlas, const String &basePath, Sequence *sequence) {

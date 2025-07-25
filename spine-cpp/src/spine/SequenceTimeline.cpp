@@ -43,11 +43,11 @@ using namespace spine;
 
 RTTI_IMPL_MULTI(SequenceTimeline, Timeline, SlotTimeline)
 
-SequenceTimeline::SequenceTimeline(size_t frameCount, int slotIndex, Attachment *attachment)
-	: Timeline(frameCount, ENTRIES), SlotTimeline(), _slotIndex(slotIndex), _attachment((HasTextureRegion *) attachment) {
+SequenceTimeline::SequenceTimeline(size_t frameCount, int slotIndex, Attachment &attachment)
+	: Timeline(frameCount, ENTRIES), SlotTimeline(), _slotIndex(slotIndex), _attachment((HasTextureRegion *) &attachment) {
 	int sequenceId = 0;
-	if (attachment->getRTTI().instanceOf(RegionAttachment::rtti)) sequenceId = ((RegionAttachment *) attachment)->getSequence()->getId();
-	if (attachment->getRTTI().instanceOf(MeshAttachment::rtti)) sequenceId = ((MeshAttachment *) attachment)->getSequence()->getId();
+	if (attachment.getRTTI().instanceOf(RegionAttachment::rtti)) sequenceId = ((RegionAttachment *) &attachment)->getSequence()->getId();
+	if (attachment.getRTTI().instanceOf(MeshAttachment::rtti)) sequenceId = ((MeshAttachment *) &attachment)->getSequence()->getId();
 	PropertyId ids[] = {((PropertyId) Property_Sequence << 32) | ((slotIndex << 16 | sequenceId) & 0xffffffff)};
 	setPropertyIds(ids, 1);
 }

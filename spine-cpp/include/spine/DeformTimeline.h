@@ -44,7 +44,7 @@ namespace spine {
 		RTTI_DECL
 
 	public:
-		explicit DeformTimeline(size_t frameCount, size_t bezierCount, int slotIndex, VertexAttachment *attachment);
+		explicit DeformTimeline(size_t frameCount, size_t bezierCount, int slotIndex, VertexAttachment &attachment);
 
 		/// Sets the time and vertices for the specified frame.
 		void setFrame(int frameIndex, float time, Array<float> &vertices);

@@ -90,10 +90,10 @@ int main(int argc, char *argv[]) {
 	SkeletonData *skeletonData = nullptr;
 
 	if (strstr(skeletonPath, ".json") != nullptr) {
-		SkeletonJson json(atlas);
+		SkeletonJson json(*atlas);
 		skeletonData = json.readSkeletonDataFile(skeletonPath);
 	} else {
-		SkeletonBinary binary(atlas);
+		SkeletonBinary binary(*atlas);
 		skeletonData = binary.readSkeletonDataFile(skeletonPath);
 	}
 
@@ -111,8 +111,8 @@ int main(int argc, char *argv[]) {
 	AnimationStateData *stateData = nullptr;
 	if (animationName != nullptr) {
 		// Create animation state only when needed
-		stateData = new AnimationStateData(skeletonData);
-		state = new AnimationState(stateData);
+		stateData = new AnimationStateData(*skeletonData);
+		state = new AnimationState(*stateData);
 
 		// Find and set animation
 		Animation *animation = skeletonData->findAnimation(animationName);
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 			delete atlas;
 			return 1;
 		}
-		state->setAnimation(0, animation, true);
+		state->setAnimation(0, *animation, true);
 		// Update and apply
 		state->update(0.016f);
 		state->apply(skeleton);

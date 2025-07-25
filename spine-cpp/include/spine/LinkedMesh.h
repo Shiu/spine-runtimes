@@ -42,9 +42,9 @@ namespace spine {
 		friend class SkeletonJson;
 
 	public:
-		LinkedMesh(MeshAttachment *mesh, const int skinIndex, size_t slotIndex, const String &parent, bool inheritTimelines);
+		LinkedMesh(MeshAttachment &mesh, const int skinIndex, size_t slotIndex, const String &parent, bool inheritTimelines);
 
-		LinkedMesh(MeshAttachment *mesh, const String &skin, size_t slotIndex, const String &parent, bool inheritTimelines);
+		LinkedMesh(MeshAttachment &mesh, const String &skin, size_t slotIndex, const String &parent, bool inheritTimelines);
 
 	private:
 		MeshAttachment *_mesh;

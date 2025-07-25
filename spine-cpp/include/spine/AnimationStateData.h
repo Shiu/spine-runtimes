@@ -46,7 +46,7 @@ namespace spine {
 		friend class AnimationState;
 
 	public:
-		explicit AnimationStateData(SkeletonData *skeletonData);
+		explicit AnimationStateData(SkeletonData &skeletonData);
 
 		/// The SkeletonData to look up animations when they are specified by name.
 		SkeletonData &getSkeletonData();

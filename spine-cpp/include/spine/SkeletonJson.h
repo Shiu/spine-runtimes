@@ -67,9 +67,9 @@ namespace spine {
 
 	class SP_API SkeletonJson : public SpineObject {
 	public:
-		explicit SkeletonJson(Atlas *atlas);
+		explicit SkeletonJson(Atlas &atlas);
 
-		explicit SkeletonJson(AttachmentLoader *attachmentLoader, bool ownsLoader = false);
+		explicit SkeletonJson(AttachmentLoader &attachmentLoader, bool ownsLoader = false);
 
 		~SkeletonJson();
 

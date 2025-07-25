@@ -47,7 +47,7 @@ namespace spine {
 		RTTI_DECL
 
 	public:
-		explicit SequenceTimeline(size_t frameCount, int slotIndex, Attachment *attachment);
+		explicit SequenceTimeline(size_t frameCount, int slotIndex, Attachment &attachment);
 
 		virtual ~SequenceTimeline();
 

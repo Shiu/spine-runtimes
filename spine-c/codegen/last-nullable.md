@@ -2852,6 +2852,173 @@ For each unchecked checkbox (now with implementations inlined):
   84:	public void setAttachment (@Null Attachment attachment) {
   85-		if (this.attachment == attachment) return;
   86-		if (!(attachment instanceof VertexAttachment newAttachment) || !(this.attachment instanceof VertexAttachment oldAttachment)
+  87-			|| newAttachment.getTimelineAttachment() != oldAttachment.getTimelineAttachment()) deform.clear();
+  88-		this.attachment = attachment;
+  89-		sequenceIndex = -1;
+  90-	}
+  91-
+  92-	public IntArray getDeform () {
+  93-		return deform;
+  94-	}
+  ```
+- [x] [../../spine-cpp/include/spine/RTTI.h:43](../../spine-cpp/include/spine/RTTI.h#L43) RTTI::RTTI(const char * className, const RTTI & baseRTTI, const RTTI * interface1, const RTTI * interface2, const RTTI * interface3) // takes nullable parameter 'interface1': const RTTI *; takes nullable parameter 'interface2': const RTTI *; takes nullable parameter 'interface3': const RTTI *
+  ```cpp
+  ../../spine-cpp/src/spine/RTTI.cpp:35
+  35:RTTI::RTTI(const char *className) : _className(className), _pBaseRTTI(NULL), _interfaceCount(0) {
+  36-	_interfaces[0] = NULL;
+  37-	_interfaces[1] = NULL;
+  38-	_interfaces[2] = NULL;
+  39-}
+  40-
+  41:RTTI::RTTI(const char *className, const RTTI &baseRTTI) : _className(className), _pBaseRTTI(&baseRTTI), _interfaceCount(0) {
+  42-	_interfaces[0] = NULL;
+  43-	_interfaces[1] = NULL;
+  44-	_interfaces[2] = NULL;
+  ```
+  ```java
+  NOT FOUND - searched for class "RTTI" (from C++ "RTTI") and method "RTTI" across all Java files
+  ```
+- [x] [../../spine-cpp/include/spine/SequenceTimeline.h:50](../../spine-cpp/include/spine/SequenceTimeline.h#L50) SequenceTimeline::SequenceTimeline(size_t frameCount, int slotIndex, Attachment * attachment) // takes nullable parameter 'attachment': Attachment *
+  ```cpp
+  ../../spine-cpp/src/spine/SequenceTimeline.cpp:46
+  46:SequenceTimeline::SequenceTimeline(size_t frameCount, int slotIndex, Attachment *attachment)
+  47-	: Timeline(frameCount, ENTRIES), SlotTimeline(), _slotIndex(slotIndex), _attachment((HasTextureRegion *) attachment) {
+  48-	int sequenceId = 0;
+  49-	if (attachment->getRTTI().instanceOf(RegionAttachment::rtti)) sequenceId = ((RegionAttachment *) attachment)->getSequence()->getId();
+  50-	if (attachment->getRTTI().instanceOf(MeshAttachment::rtti)) sequenceId = ((MeshAttachment *) attachment)->getSequence()->getId();
+  51-	PropertyId ids[] = {((PropertyId) Property_Sequence << 32) | ((slotIndex << 16 | sequenceId) & 0xffffffff)};
+  52-	setPropertyIds(ids, 1);
+  53-}
+  54-
+  55-SequenceTimeline::~SequenceTimeline() {
+  ```
+  ```java
+  ../../spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/Animation.java:1705
+  1705:		public SequenceTimeline (int frameCount, int slotIndex, Attachment attachment) {
+  1706-			super(frameCount,
+  1707-				Property.sequence.ordinal() + "|" + slotIndex + "|" + ((HasTextureRegion)attachment).getSequence().getId());
+  1708-			this.slotIndex = slotIndex;
+  1709-			this.attachment = (HasTextureRegion)attachment;
+  1710-		}
+  1711-
+  1712-		public int getFrameEntries () {
+  1713-			return ENTRIES;
+  1714-		}
+  ```
+- [x] [../../spine-cpp/include/spine/SkeletonBinary.h:118](../../spine-cpp/include/spine/SkeletonBinary.h#L118) SkeletonBinary::SkeletonBinary(Atlas * atlas) // takes nullable parameter 'atlas': Atlas *
+  ```cpp
+  ../../spine-cpp/src/spine/SkeletonBinary.cpp:82
+  82:SkeletonBinary::SkeletonBinary(Atlas *atlas)
+  83-	: _attachmentLoader(new(__FILE__, __LINE__) AtlasAttachmentLoader(atlas)), _error(), _scale(1), _ownsLoader(true) {
+  84-}
+  85-
+  86:SkeletonBinary::SkeletonBinary(AttachmentLoader *attachmentLoader, bool ownsLoader)
+  87-	: _attachmentLoader(attachmentLoader), _error(), _scale(1), _ownsLoader(ownsLoader) {
+  88-	assert(_attachmentLoader != NULL);
+  89-}
+  90-
+  91-SkeletonBinary::~SkeletonBinary() {
+  ```
+  ```java
+  ../../spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonBinary.java:173
+  173:	public SkeletonBinary (AttachmentLoader attachmentLoader) {
+  174-		super(attachmentLoader);
+  175-	}
+  176-
+  177:	public SkeletonBinary (TextureAtlas atlas) {
+  178-		super(atlas);
+  179-	}
+  180-
+  181-	public SkeletonData readSkeletonData (FileHandle file) {
+  182-		if (file == null) throw new IllegalArgumentException("file cannot be null.");
+  ```
+- [x] [../../spine-cpp/include/spine/SkeletonBinary.h:120](../../spine-cpp/include/spine/SkeletonBinary.h#L120) SkeletonBinary::SkeletonBinary(AttachmentLoader * attachmentLoader, bool ownsLoader) // takes nullable parameter 'attachmentLoader': AttachmentLoader *
+  ```cpp
+  ../../spine-cpp/src/spine/SkeletonBinary.cpp:82
+  82:SkeletonBinary::SkeletonBinary(Atlas *atlas)
+  83-	: _attachmentLoader(new(__FILE__, __LINE__) AtlasAttachmentLoader(atlas)), _error(), _scale(1), _ownsLoader(true) {
+  84-}
+  85-
+  86:SkeletonBinary::SkeletonBinary(AttachmentLoader *attachmentLoader, bool ownsLoader)
+  87-	: _attachmentLoader(attachmentLoader), _error(), _scale(1), _ownsLoader(ownsLoader) {
+  88-	assert(_attachmentLoader != NULL);
+  89-}
+  90-
+  91-SkeletonBinary::~SkeletonBinary() {
+  ```
+  ```java
+  ../../spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonBinary.java:173
+  173:	public SkeletonBinary (AttachmentLoader attachmentLoader) {
+  174-		super(attachmentLoader);
+  175-	}
+  176-
+  177:	public SkeletonBinary (TextureAtlas atlas) {
+  178-		super(atlas);
+  179-	}
+  180-
+  181-	public SkeletonData readSkeletonData (FileHandle file) {
+  182-		if (file == null) throw new IllegalArgumentException("file cannot be null.");
+  ```
+- [x] [../../spine-cpp/include/spine/SkeletonJson.h:70](../../spine-cpp/include/spine/SkeletonJson.h#L70) SkeletonJson::SkeletonJson(Atlas * atlas) // takes nullable parameter 'atlas': Atlas *
+  ```cpp
+  ../../spine-cpp/src/spine/SkeletonJson.cpp:124
+  124:SkeletonJson::SkeletonJson(Atlas *atlas) : _attachmentLoader(new(__FILE__, __LINE__) AtlasAttachmentLoader(atlas)), _scale(1), _ownsLoader(true) {
+  125-}
+  126-
+  127:SkeletonJson::SkeletonJson(AttachmentLoader *attachmentLoader, bool ownsLoader)
+  128-	: _attachmentLoader(attachmentLoader), _scale(1), _ownsLoader(ownsLoader) {
+  129-	assert(_attachmentLoader != NULL);
+  130-}
+  131-
+  132-SkeletonJson::~SkeletonJson() {
+  133-	ArrayUtils::deleteElements(_linkedMeshes);
+  ```
+  ```java
+  ../../spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonJson.java:128
+  128:	public SkeletonJson (AttachmentLoader attachmentLoader) {
+  129-		super(attachmentLoader);
+  130-	}
+  131-
+  132:	public SkeletonJson (TextureAtlas atlas) {
+  133-		super(atlas);
+  134-	}
+  135-
+  136-	public SkeletonData readSkeletonData (FileHandle file) {
+  137-		if (file == null) throw new IllegalArgumentException("file cannot be null.");
+  ```
+- [x] [../../spine-cpp/include/spine/SkeletonJson.h:72](../../spine-cpp/include/spine/SkeletonJson.h#L72) SkeletonJson::SkeletonJson(AttachmentLoader * attachmentLoader, bool ownsLoader) // takes nullable parameter 'attachmentLoader': AttachmentLoader *
+  ```cpp
+  ../../spine-cpp/src/spine/SkeletonJson.cpp:124
+  124:SkeletonJson::SkeletonJson(Atlas *atlas) : _attachmentLoader(new(__FILE__, __LINE__) AtlasAttachmentLoader(atlas)), _scale(1), _ownsLoader(true) {
+  125-}
+  126-
+  127:SkeletonJson::SkeletonJson(AttachmentLoader *attachmentLoader, bool ownsLoader)
+  128-	: _attachmentLoader(attachmentLoader), _scale(1), _ownsLoader(ownsLoader) {
+  129-	assert(_attachmentLoader != NULL);
+  130-}
+  131-
+  132-SkeletonJson::~SkeletonJson() {
+  133-	ArrayUtils::deleteElements(_linkedMeshes);
+  ```
+  ```java
+  ../../spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SkeletonJson.java:128
+  128:	public SkeletonJson (AttachmentLoader attachmentLoader) {
+  129-		super(attachmentLoader);
+  130-	}
+  131-
+  132:	public SkeletonJson (TextureAtlas atlas) {
+  133-		super(atlas);
+  134-	}
+  135-
+  136-	public SkeletonData readSkeletonData (FileHandle file) {
+  137-		if (file == null) throw new IllegalArgumentException("file cannot be null.");
+  ```
+  ```
+  ```java
+  ../../spine-libgdx/spine-libgdx/src/com/esotericsoftware/spine/SlotPose.java:84
+  84:	public void setAttachment (@Null Attachment attachment) {
+  85-		if (this.attachment == attachment) return;
+  86-		if (!(attachment instanceof VertexAttachment newAttachment) || !(this.attachment instanceof VertexAttachment oldAttachment)
   87-			|| newAttachment.getTimelineAttachment() != oldAttachment.getTimelineAttachment()) {
   88-			deform.clear();
   89-		}
