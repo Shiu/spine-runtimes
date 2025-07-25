@@ -9,13 +9,14 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_skeleton_binary spine_skeleton_binary_create(spine_atlas atlas);
-SPINE_C_API spine_skeleton_binary spine_skeleton_binary_create2(spine_attachment_loader attachmentLoader, bool ownsLoader);
+SPINE_C_API spine_skeleton_binary spine_skeleton_binary_create(/*@null*/ spine_atlas atlas);
+SPINE_C_API spine_skeleton_binary spine_skeleton_binary_create2(/*@null*/ spine_attachment_loader attachmentLoader, bool ownsLoader);
 
 SPINE_C_API void spine_skeleton_binary_dispose(spine_skeleton_binary self);
 
-SPINE_C_API spine_skeleton_data spine_skeleton_binary_read_skeleton_data(spine_skeleton_binary self, const unsigned char *binary, int length);
-SPINE_C_API spine_skeleton_data spine_skeleton_binary_read_skeleton_data_file(spine_skeleton_binary self, const char *path);
+SPINE_C_API /*@null*/ spine_skeleton_data spine_skeleton_binary_read_skeleton_data(spine_skeleton_binary self, /*@null*/ const unsigned char *binary,
+																				   int length);
+SPINE_C_API /*@null*/ spine_skeleton_data spine_skeleton_binary_read_skeleton_data_file(spine_skeleton_binary self, const char *path);
 SPINE_C_API void spine_skeleton_binary_set_scale(spine_skeleton_binary self, float scale);
 SPINE_C_API const char *spine_skeleton_binary_get_error(spine_skeleton_binary self);
 

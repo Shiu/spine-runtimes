@@ -21,8 +21,9 @@ void spine_inherit_timeline_set_frame(spine_inherit_timeline self, int frame, fl
 	_self->setFrame(frame, time, (Inherit) inherit);
 }
 
-void spine_inherit_timeline_apply(spine_inherit_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
-								  float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
+void spine_inherit_timeline_apply(spine_inherit_timeline self, spine_skeleton skeleton, float lastTime, float time,
+								  /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+								  bool appliedPose) {
 	InheritTimeline *_self = (InheritTimeline *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
 				 appliedPose);

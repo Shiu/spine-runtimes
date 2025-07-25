@@ -23,7 +23,7 @@ SPINE_C_API void spine_path_attachment_set_constant_speed(spine_path_attachment 
 SPINE_C_API spine_color spine_path_attachment_get_color(spine_path_attachment self);
 SPINE_C_API spine_attachment spine_path_attachment_copy(spine_path_attachment self);
 SPINE_C_API void spine_path_attachment_compute_world_vertices_1(spine_path_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start,
-																size_t count, float *worldVertices, size_t offset, size_t stride);
+																size_t count, /*@null*/ float *worldVertices, size_t offset, size_t stride);
 SPINE_C_API void spine_path_attachment_compute_world_vertices_2(spine_path_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start,
 																size_t count, spine_array_float worldVertices, size_t offset, size_t stride);
 SPINE_C_API int spine_path_attachment_get_id(spine_path_attachment self);
@@ -33,8 +33,8 @@ SPINE_C_API spine_array_float spine_path_attachment_get_vertices(spine_path_atta
 SPINE_C_API void spine_path_attachment_set_vertices(spine_path_attachment self, spine_array_float vertices);
 SPINE_C_API size_t spine_path_attachment_get_world_vertices_length(spine_path_attachment self);
 SPINE_C_API void spine_path_attachment_set_world_vertices_length(spine_path_attachment self, size_t inValue);
-SPINE_C_API spine_attachment spine_path_attachment_get_timeline_attachment(spine_path_attachment self);
-SPINE_C_API void spine_path_attachment_set_timeline_attachment(spine_path_attachment self, spine_attachment attachment);
+SPINE_C_API /*@null*/ spine_attachment spine_path_attachment_get_timeline_attachment(spine_path_attachment self);
+SPINE_C_API void spine_path_attachment_set_timeline_attachment(spine_path_attachment self, /*@null*/ spine_attachment attachment);
 SPINE_C_API void spine_path_attachment_copy_to(spine_path_attachment self, spine_vertex_attachment other);
 SPINE_C_API const char *spine_path_attachment_get_name(spine_path_attachment self);
 SPINE_C_API int spine_path_attachment_get_ref_count(spine_path_attachment self);

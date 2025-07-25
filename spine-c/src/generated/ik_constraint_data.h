@@ -15,7 +15,7 @@ SPINE_C_API void spine_ik_constraint_data_dispose(spine_ik_constraint_data self)
 
 SPINE_C_API spine_rtti spine_ik_constraint_data_get_rtti(spine_ik_constraint_data self);
 SPINE_C_API spine_constraint spine_ik_constraint_data_create_method(spine_ik_constraint_data self, spine_skeleton skeleton);
-SPINE_C_API spine_array_bone_data spine_ik_constraint_data_get_bones(spine_ik_constraint_data self);
+SPINE_C_API /*@null*/ spine_array_bone_data spine_ik_constraint_data_get_bones(spine_ik_constraint_data self);
 SPINE_C_API spine_bone_data spine_ik_constraint_data_get_target(spine_ik_constraint_data self);
 SPINE_C_API void spine_ik_constraint_data_set_target(spine_ik_constraint_data self, spine_bone_data inValue);
 SPINE_C_API bool spine_ik_constraint_data_get_uniform(spine_ik_constraint_data self);

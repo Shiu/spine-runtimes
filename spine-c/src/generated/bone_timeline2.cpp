@@ -12,7 +12,7 @@ spine_rtti spine_bone_timeline2_get_rtti(spine_bone_timeline2 self) {
 	return (spine_rtti) &_self->getRTTI();
 }
 
-void spine_bone_timeline2_apply(spine_bone_timeline2 self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
+void spine_bone_timeline2_apply(spine_bone_timeline2 self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event pEvents,
 								float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
 	BoneTimeline2 *_self = (BoneTimeline2 *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,

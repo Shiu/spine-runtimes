@@ -15,8 +15,8 @@ SPINE_C_API void spine_ik_constraint_timeline_dispose(spine_ik_constraint_timeli
 
 SPINE_C_API spine_rtti spine_ik_constraint_timeline_get_rtti(spine_ik_constraint_timeline self);
 SPINE_C_API void spine_ik_constraint_timeline_apply(spine_ik_constraint_timeline self, spine_skeleton skeleton, float lastTime, float time,
-													spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
-													bool appliedPose);
+													/*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend,
+													spine_mix_direction direction, bool appliedPose);
 SPINE_C_API void spine_ik_constraint_timeline_set_frame(spine_ik_constraint_timeline self, int frame, float time, float mix, float softness,
 														int bendDirection, bool compress, bool stretch);
 SPINE_C_API int spine_ik_constraint_timeline_get_constraint_index(spine_ik_constraint_timeline self);

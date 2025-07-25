@@ -36,12 +36,12 @@ void spine_slot_pose_set_has_dark_color(spine_slot_pose self, bool hasDarkColor)
 	_self->setHasDarkColor(hasDarkColor);
 }
 
-spine_attachment spine_slot_pose_get_attachment(spine_slot_pose self) {
+/*@null*/ spine_attachment spine_slot_pose_get_attachment(spine_slot_pose self) {
 	SlotPose *_self = (SlotPose *) self;
 	return (spine_attachment) _self->getAttachment();
 }
 
-void spine_slot_pose_set_attachment(spine_slot_pose self, spine_attachment attachment) {
+void spine_slot_pose_set_attachment(spine_slot_pose self, /*@null*/ spine_attachment attachment) {
 	SlotPose *_self = (SlotPose *) self;
 	_self->setAttachment((Attachment *) attachment);
 }

@@ -18,7 +18,7 @@ SPINE_C_API spine_path_constraint spine_path_constraint_copy(spine_path_constrai
 SPINE_C_API void spine_path_constraint_update(spine_path_constraint self, spine_skeleton skeleton, spine_physics physics);
 SPINE_C_API void spine_path_constraint_sort(spine_path_constraint self, spine_skeleton skeleton);
 SPINE_C_API bool spine_path_constraint_is_source_active(spine_path_constraint self);
-SPINE_C_API spine_array_bone_pose spine_path_constraint_get_bones(spine_path_constraint self);
+SPINE_C_API /*@null*/ spine_array_bone_pose spine_path_constraint_get_bones(spine_path_constraint self);
 SPINE_C_API spine_slot spine_path_constraint_get_slot(spine_path_constraint self);
 SPINE_C_API void spine_path_constraint_set_slot(spine_path_constraint self, spine_slot slot);
 SPINE_C_API spine_path_constraint_data spine_path_constraint_get_data(spine_path_constraint self);

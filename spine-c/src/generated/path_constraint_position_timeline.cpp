@@ -18,8 +18,8 @@ spine_rtti spine_path_constraint_position_timeline_get_rtti(spine_path_constrain
 }
 
 void spine_path_constraint_position_timeline_apply(spine_path_constraint_position_timeline self, spine_skeleton skeleton, float lastTime, float time,
-												   spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
-												   bool appliedPose) {
+												   /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend,
+												   spine_mix_direction direction, bool appliedPose) {
 	PathConstraintPositionTimeline *_self = (PathConstraintPositionTimeline *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
 				 appliedPose);

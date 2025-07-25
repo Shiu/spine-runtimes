@@ -16,7 +16,7 @@ spine_rtti spine_atlas_region_get_rtti(spine_atlas_region self) {
 	return (spine_rtti) &_self->getRTTI();
 }
 
-spine_atlas_page spine_atlas_region_get_page(spine_atlas_region self) {
+/*@null*/ spine_atlas_page spine_atlas_region_get_page(spine_atlas_region self) {
 	AtlasRegion *_self = (AtlasRegion *) self;
 	return (spine_atlas_page) _self->getPage();
 }
@@ -96,7 +96,7 @@ spine_array_float spine_atlas_region_get_values(spine_atlas_region self) {
 	return (spine_array_float) &_self->getValues();
 }
 
-void spine_atlas_region_set_page(spine_atlas_region self, spine_atlas_page value) {
+void spine_atlas_region_set_page(spine_atlas_region self, /*@null*/ spine_atlas_page value) {
 	AtlasRegion *_self = (AtlasRegion *) self;
 	_self->setPage((AtlasPage *) value);
 }

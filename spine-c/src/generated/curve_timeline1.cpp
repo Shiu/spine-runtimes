@@ -72,7 +72,7 @@ spine_array_float spine_curve_timeline1_get_curves(spine_curve_timeline1 self) {
 	return (spine_array_float) &_self->getCurves();
 }
 
-void spine_curve_timeline1_apply(spine_curve_timeline1 self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
+void spine_curve_timeline1_apply(spine_curve_timeline1 self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event pEvents,
 								 float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
 	CurveTimeline *_self = (CurveTimeline *) (CurveTimeline1 *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,

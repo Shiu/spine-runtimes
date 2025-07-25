@@ -14,8 +14,9 @@ SPINE_C_API spine_shear_timeline spine_shear_timeline_create(size_t frameCount, 
 SPINE_C_API void spine_shear_timeline_dispose(spine_shear_timeline self);
 
 SPINE_C_API spine_rtti spine_shear_timeline_get_rtti(spine_shear_timeline self);
-SPINE_C_API void spine_shear_timeline_apply(spine_shear_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
-											float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
+SPINE_C_API void spine_shear_timeline_apply(spine_shear_timeline self, spine_skeleton skeleton, float lastTime, float time,
+											/*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+											bool appliedPose);
 SPINE_C_API int spine_shear_timeline_get_bone_index(spine_shear_timeline self);
 SPINE_C_API void spine_shear_timeline_set_bone_index(spine_shear_timeline self, int inValue);
 SPINE_C_API void spine_shear_timeline_set_frame(spine_shear_timeline self, size_t frame, float time, float value1, float value2);

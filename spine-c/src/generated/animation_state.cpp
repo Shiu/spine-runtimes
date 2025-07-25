@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_animation_state spine_animation_state_create(spine_animation_state_data data) {
+spine_animation_state spine_animation_state_create(/*@null*/ spine_animation_state_data data) {
 	return (spine_animation_state) new (__FILE__, __LINE__) AnimationState((AnimationStateData *) data);
 }
 
@@ -36,7 +36,8 @@ spine_track_entry spine_animation_state_set_animation_1(spine_animation_state se
 	return (spine_track_entry) &_self->setAnimation(trackIndex, String(animationName), loop);
 }
 
-spine_track_entry spine_animation_state_set_animation_2(spine_animation_state self, size_t trackIndex, spine_animation animation, bool loop) {
+spine_track_entry spine_animation_state_set_animation_2(spine_animation_state self, size_t trackIndex, /*@null*/ spine_animation animation,
+														bool loop) {
 	AnimationState *_self = (AnimationState *) self;
 	return (spine_track_entry) &_self->setAnimation(trackIndex, (Animation *) animation, loop);
 }
@@ -47,7 +48,7 @@ spine_track_entry spine_animation_state_add_animation_1(spine_animation_state se
 	return (spine_track_entry) &_self->addAnimation(trackIndex, String(animationName), loop, delay);
 }
 
-spine_track_entry spine_animation_state_add_animation_2(spine_animation_state self, size_t trackIndex, spine_animation animation, bool loop,
+spine_track_entry spine_animation_state_add_animation_2(spine_animation_state self, size_t trackIndex, /*@null*/ spine_animation animation, bool loop,
 														float delay) {
 	AnimationState *_self = (AnimationState *) self;
 	return (spine_track_entry) &_self->addAnimation(trackIndex, (Animation *) animation, loop, delay);
@@ -68,7 +69,7 @@ void spine_animation_state_set_empty_animations(spine_animation_state self, floa
 	_self->setEmptyAnimations(mixDuration);
 }
 
-spine_track_entry spine_animation_state_get_current(spine_animation_state self, size_t trackIndex) {
+/*@null*/ spine_track_entry spine_animation_state_get_current(spine_animation_state self, size_t trackIndex) {
 	AnimationState *_self = (AnimationState *) self;
 	return (spine_track_entry) _self->getCurrent(trackIndex);
 }
@@ -78,7 +79,7 @@ spine_animation_state_data spine_animation_state_get_data(spine_animation_state 
 	return (spine_animation_state_data) &_self->getData();
 }
 
-spine_array_track_entry spine_animation_state_get_tracks(spine_animation_state self) {
+/*@null*/ spine_array_track_entry spine_animation_state_get_tracks(spine_animation_state self) {
 	AnimationState *_self = (AnimationState *) self;
 	return (spine_array_track_entry) &_self->getTracks();
 }
@@ -113,12 +114,12 @@ bool spine_animation_state_get_manual_track_entry_disposal(spine_animation_state
 	return _self->getManualTrackEntryDisposal();
 }
 
-void spine_animation_state_dispose_track_entry(spine_animation_state self, spine_track_entry entry) {
+void spine_animation_state_dispose_track_entry(spine_animation_state self, /*@null*/ spine_track_entry entry) {
 	AnimationState *_self = (AnimationState *) self;
 	_self->disposeTrackEntry((TrackEntry *) entry);
 }
 
-void *spine_animation_state_get_renderer_object(spine_animation_state self) {
+/*@null*/ void *spine_animation_state_get_renderer_object(spine_animation_state self) {
 	HasRendererObject *_self = (HasRendererObject *) (AnimationState *) self;
 	return _self->getRendererObject();
 }

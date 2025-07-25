@@ -16,7 +16,7 @@ void spine_skin_set_attachment(spine_skin self, size_t slotIndex, const char *na
 	_self->setAttachment(slotIndex, String(name), *((Attachment *) attachment));
 }
 
-spine_attachment spine_skin_get_attachment(spine_skin self, size_t slotIndex, const char *name) {
+/*@null*/ spine_attachment spine_skin_get_attachment(spine_skin self, size_t slotIndex, const char *name) {
 	Skin *_self = (Skin *) self;
 	return (spine_attachment) _self->getAttachment(slotIndex, String(name));
 }
@@ -26,7 +26,7 @@ void spine_skin_remove_attachment(spine_skin self, size_t slotIndex, const char 
 	_self->removeAttachment(slotIndex, String(name));
 }
 
-void spine_skin_find_attachments_for_slot(spine_skin self, size_t slotIndex, spine_array_attachment attachments) {
+void spine_skin_find_attachments_for_slot(spine_skin self, size_t slotIndex, /*@null*/ spine_array_attachment attachments) {
 	Skin *_self = (Skin *) self;
 	_self->findAttachmentsForSlot(slotIndex, *((Array<Attachment *> *) attachments));
 }
@@ -46,12 +46,12 @@ void spine_skin_copy_skin(spine_skin self, spine_skin other) {
 	_self->copySkin(*((Skin *) other));
 }
 
-spine_array_bone_data spine_skin_get_bones(spine_skin self) {
+/*@null*/ spine_array_bone_data spine_skin_get_bones(spine_skin self) {
 	Skin *_self = (Skin *) self;
 	return (spine_array_bone_data) &_self->getBones();
 }
 
-spine_array_constraint_data spine_skin_get_constraints(spine_skin self) {
+/*@null*/ spine_array_constraint_data spine_skin_get_constraints(spine_skin self) {
 	Skin *_self = (Skin *) self;
 	return (spine_array_constraint_data) &_self->getConstraints();
 }

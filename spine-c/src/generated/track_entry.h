@@ -16,7 +16,7 @@ SPINE_C_API void spine_track_entry_dispose(spine_track_entry self);
 SPINE_C_API int spine_track_entry_get_track_index(spine_track_entry self);
 SPINE_C_API spine_animation spine_track_entry_get_animation(spine_track_entry self);
 SPINE_C_API void spine_track_entry_set_animation(spine_track_entry self, spine_animation animation);
-SPINE_C_API spine_track_entry spine_track_entry_get_previous(spine_track_entry self);
+SPINE_C_API /*@null*/ spine_track_entry spine_track_entry_get_previous(spine_track_entry self);
 SPINE_C_API bool spine_track_entry_get_loop(spine_track_entry self);
 SPINE_C_API void spine_track_entry_set_loop(spine_track_entry self, bool inValue);
 SPINE_C_API bool spine_track_entry_get_hold_previous(spine_track_entry self);
@@ -50,7 +50,7 @@ SPINE_C_API float spine_track_entry_get_alpha_attachment_threshold(spine_track_e
 SPINE_C_API void spine_track_entry_set_alpha_attachment_threshold(spine_track_entry self, float inValue);
 SPINE_C_API float spine_track_entry_get_mix_draw_order_threshold(spine_track_entry self);
 SPINE_C_API void spine_track_entry_set_mix_draw_order_threshold(spine_track_entry self, float inValue);
-SPINE_C_API spine_track_entry spine_track_entry_get_next(spine_track_entry self);
+SPINE_C_API /*@null*/ spine_track_entry spine_track_entry_get_next(spine_track_entry self);
 SPINE_C_API bool spine_track_entry_is_complete(spine_track_entry self);
 SPINE_C_API float spine_track_entry_get_mix_time(spine_track_entry self);
 SPINE_C_API void spine_track_entry_set_mix_time(spine_track_entry self, float inValue);
@@ -59,14 +59,14 @@ SPINE_C_API void spine_track_entry_set_mix_duration_1(spine_track_entry self, fl
 SPINE_C_API void spine_track_entry_set_mix_duration_2(spine_track_entry self, float mixDuration, float delay);
 SPINE_C_API spine_mix_blend spine_track_entry_get_mix_blend(spine_track_entry self);
 SPINE_C_API void spine_track_entry_set_mix_blend(spine_track_entry self, spine_mix_blend blend);
-SPINE_C_API spine_track_entry spine_track_entry_get_mixing_from(spine_track_entry self);
-SPINE_C_API spine_track_entry spine_track_entry_get_mixing_to(spine_track_entry self);
+SPINE_C_API /*@null*/ spine_track_entry spine_track_entry_get_mixing_from(spine_track_entry self);
+SPINE_C_API /*@null*/ spine_track_entry spine_track_entry_get_mixing_to(spine_track_entry self);
 SPINE_C_API void spine_track_entry_reset_rotation_directions(spine_track_entry self);
 SPINE_C_API float spine_track_entry_get_track_complete(spine_track_entry self);
 SPINE_C_API bool spine_track_entry_is_empty_animation(spine_track_entry self);
 SPINE_C_API bool spine_track_entry_was_applied(spine_track_entry self);
 SPINE_C_API bool spine_track_entry_is_next_ready(spine_track_entry self);
-SPINE_C_API void *spine_track_entry_get_renderer_object(spine_track_entry self);
+SPINE_C_API /*@null*/ void *spine_track_entry_get_renderer_object(spine_track_entry self);
 
 #ifdef __cplusplus
 }

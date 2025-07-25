@@ -27,7 +27,8 @@ spine_attachment spine_bounding_box_attachment_copy(spine_bounding_box_attachmen
 }
 
 void spine_bounding_box_attachment_compute_world_vertices_1(spine_bounding_box_attachment self, spine_skeleton skeleton, spine_slot slot,
-															size_t start, size_t count, float *worldVertices, size_t offset, size_t stride) {
+															size_t start, size_t count, /*@null*/ float *worldVertices, size_t offset,
+															size_t stride) {
 	VertexAttachment *_self = (VertexAttachment *) (BoundingBoxAttachment *) self;
 	_self->computeWorldVertices(*((Skeleton *) skeleton), *((Slot *) slot), start, count, worldVertices, offset, stride);
 }
@@ -74,12 +75,12 @@ void spine_bounding_box_attachment_set_world_vertices_length(spine_bounding_box_
 	_self->setWorldVerticesLength(inValue);
 }
 
-spine_attachment spine_bounding_box_attachment_get_timeline_attachment(spine_bounding_box_attachment self) {
+/*@null*/ spine_attachment spine_bounding_box_attachment_get_timeline_attachment(spine_bounding_box_attachment self) {
 	VertexAttachment *_self = (VertexAttachment *) (BoundingBoxAttachment *) self;
 	return (spine_attachment) _self->getTimelineAttachment();
 }
 
-void spine_bounding_box_attachment_set_timeline_attachment(spine_bounding_box_attachment self, spine_attachment attachment) {
+void spine_bounding_box_attachment_set_timeline_attachment(spine_bounding_box_attachment self, /*@null*/ spine_attachment attachment) {
 	VertexAttachment *_self = (VertexAttachment *) (BoundingBoxAttachment *) self;
 	_self->setTimelineAttachment((Attachment *) attachment);
 }

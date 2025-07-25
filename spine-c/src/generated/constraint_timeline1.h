@@ -32,8 +32,8 @@ SPINE_C_API float spine_constraint_timeline1_get_bezier_value(spine_constraint_t
 															  size_t i);
 SPINE_C_API spine_array_float spine_constraint_timeline1_get_curves(spine_constraint_timeline1 self);
 SPINE_C_API void spine_constraint_timeline1_apply(spine_constraint_timeline1 self, spine_skeleton skeleton, float lastTime, float time,
-												  spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
-												  bool appliedPose);
+												  /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend,
+												  spine_mix_direction direction, bool appliedPose);
 SPINE_C_API size_t spine_constraint_timeline1_get_frame_entries(spine_constraint_timeline1 self);
 SPINE_C_API size_t spine_constraint_timeline1_get_frame_count(spine_constraint_timeline1 self);
 SPINE_C_API spine_array_float spine_constraint_timeline1_get_frames(spine_constraint_timeline1 self);

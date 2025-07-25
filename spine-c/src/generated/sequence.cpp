@@ -16,7 +16,7 @@ spine_sequence spine_sequence_copy(spine_sequence self) {
 	return (spine_sequence) &_self->copy();
 }
 
-void spine_sequence_apply(spine_sequence self, spine_slot_pose slot, spine_attachment attachment) {
+void spine_sequence_apply(spine_sequence self, /*@null*/ spine_slot_pose slot, /*@null*/ spine_attachment attachment) {
 	Sequence *_self = (Sequence *) self;
 	_self->apply((SlotPose *) slot, (Attachment *) attachment);
 }
@@ -66,7 +66,7 @@ void spine_sequence_set_setup_index(spine_sequence self, int setupIndex) {
 	_self->setSetupIndex(setupIndex);
 }
 
-spine_array_texture_region spine_sequence_get_regions(spine_sequence self) {
+/*@null*/ spine_array_texture_region spine_sequence_get_regions(spine_sequence self) {
 	Sequence *_self = (Sequence *) self;
 	return (spine_array_texture_region) &_self->getRegions();
 }

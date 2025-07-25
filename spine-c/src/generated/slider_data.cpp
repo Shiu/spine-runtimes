@@ -51,22 +51,22 @@ void spine_slider_data_set_loop(spine_slider_data self, bool loop) {
 	_self->setLoop(loop);
 }
 
-spine_bone_data spine_slider_data_get_bone(spine_slider_data self) {
+/*@null*/ spine_bone_data spine_slider_data_get_bone(spine_slider_data self) {
 	SliderData *_self = (SliderData *) self;
 	return (spine_bone_data) _self->getBone();
 }
 
-void spine_slider_data_set_bone(spine_slider_data self, spine_bone_data bone) {
+void spine_slider_data_set_bone(spine_slider_data self, /*@null*/ spine_bone_data bone) {
 	SliderData *_self = (SliderData *) self;
 	_self->setBone((BoneData *) bone);
 }
 
-spine_from_property spine_slider_data_get_property(spine_slider_data self) {
+/*@null*/ spine_from_property spine_slider_data_get_property(spine_slider_data self) {
 	SliderData *_self = (SliderData *) self;
 	return (spine_from_property) _self->getProperty();
 }
 
-void spine_slider_data_set_property(spine_slider_data self, spine_from_property property) {
+void spine_slider_data_set_property(spine_slider_data self, /*@null*/ spine_from_property property) {
 	SliderData *_self = (SliderData *) self;
 	_self->setProperty((FromProperty *) property);
 }

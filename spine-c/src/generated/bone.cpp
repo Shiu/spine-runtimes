@@ -3,11 +3,11 @@
 
 using namespace spine;
 
-spine_bone spine_bone_create(spine_bone_data data, spine_bone parent) {
+spine_bone spine_bone_create(spine_bone_data data, /*@null*/ spine_bone parent) {
 	return (spine_bone) new (__FILE__, __LINE__) Bone(*((BoneData *) data), (Bone *) parent);
 }
 
-spine_bone spine_bone_create2(spine_bone bone, spine_bone parent) {
+spine_bone spine_bone_create2(spine_bone bone, /*@null*/ spine_bone parent) {
 	return (spine_bone) new (__FILE__, __LINE__) Bone(*((Bone *) bone), (Bone *) parent);
 }
 
@@ -20,12 +20,12 @@ spine_rtti spine_bone_get_rtti(spine_bone self) {
 	return (spine_rtti) &_self->getRTTI();
 }
 
-spine_bone spine_bone_get_parent(spine_bone self) {
+/*@null*/ spine_bone spine_bone_get_parent(spine_bone self) {
 	Bone *_self = (Bone *) self;
 	return (spine_bone) _self->getParent();
 }
 
-spine_array_bone spine_bone_get_children(spine_bone self) {
+/*@null*/ spine_array_bone spine_bone_get_children(spine_bone self) {
 	Bone *_self = (Bone *) self;
 	return (spine_array_bone) &_self->getChildren();
 }

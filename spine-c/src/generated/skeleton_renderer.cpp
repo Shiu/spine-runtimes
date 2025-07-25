@@ -11,7 +11,7 @@ void spine_skeleton_renderer_dispose(spine_skeleton_renderer self) {
 	delete (SkeletonRenderer *) self;
 }
 
-spine_render_command spine_skeleton_renderer_render(spine_skeleton_renderer self, spine_skeleton skeleton) {
+/*@null*/ spine_render_command spine_skeleton_renderer_render(spine_skeleton_renderer self, spine_skeleton skeleton) {
 	SkeletonRenderer *_self = (SkeletonRenderer *) self;
 	return (spine_render_command) _self->render(*((Skeleton *) skeleton));
 }

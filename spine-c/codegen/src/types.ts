@@ -299,6 +299,38 @@ export function toCTypeName(cppType: string, knownTypeNames: Set<string>): strin
 }
 
 /**
+ * Determines if a C++ type represents a nullable value (pointer types).
+ * Based on spine-cpp convention: pointers are nullable, references are not.
+ *
+ * @param cppType The C++ type to check
+ * @returns true if the type can be null (pointer types), false otherwise
+ *
+ * Examples:
+ * - "Bone*" → true (pointer, can be null)
+ * - "const Bone*" → true (pointer, can be null)
+ * - "Bone&" → false (reference, cannot be null)
+ * - "const Bone&" → false (reference, cannot be null)
+ * - "int" → false (value type, cannot be null)
+ * - "float*" → true (pointer to primitive, can be null)
+ */
+export function isNullable(cppType: string): boolean {
+    const normalizedType = cppType.replace(/\s+/g, ' ').trim();
+    
+    // Pointer types are nullable
+    if (normalizedType.includes('*')) {
+        return true;
+    }
+    
+    // Reference types are NOT nullable
+    if (normalizedType.includes('&')) {
+        return false;
+    }
+    
+    // Value types and primitives are NOT nullable
+    return false;
+}
+
+/**
  * Checks if a C++ type can be represented in the C API.
  * Returns null if the type can be handled, or an error message if not.
  */

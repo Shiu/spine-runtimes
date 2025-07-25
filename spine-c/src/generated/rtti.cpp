@@ -7,7 +7,7 @@ void spine_rtti_dispose(spine_rtti self) {
 	delete (RTTI *) self;
 }
 
-const char *spine_rtti_get_class_name(spine_rtti self) {
+/*@null*/ const char *spine_rtti_get_class_name(spine_rtti self) {
 	RTTI *_self = (RTTI *) self;
 	return _self->getClassName();
 }

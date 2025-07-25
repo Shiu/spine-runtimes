@@ -16,12 +16,12 @@ spine_rtti spine_clipping_attachment_get_rtti(spine_clipping_attachment self) {
 	return (spine_rtti) &_self->getRTTI();
 }
 
-spine_slot_data spine_clipping_attachment_get_end_slot(spine_clipping_attachment self) {
+/*@null*/ spine_slot_data spine_clipping_attachment_get_end_slot(spine_clipping_attachment self) {
 	ClippingAttachment *_self = (ClippingAttachment *) self;
 	return (spine_slot_data) _self->getEndSlot();
 }
 
-void spine_clipping_attachment_set_end_slot(spine_clipping_attachment self, spine_slot_data inValue) {
+void spine_clipping_attachment_set_end_slot(spine_clipping_attachment self, /*@null*/ spine_slot_data inValue) {
 	ClippingAttachment *_self = (ClippingAttachment *) self;
 	_self->setEndSlot((SlotData *) inValue);
 }
@@ -37,7 +37,7 @@ spine_attachment spine_clipping_attachment_copy(spine_clipping_attachment self) 
 }
 
 void spine_clipping_attachment_compute_world_vertices_1(spine_clipping_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start,
-														size_t count, float *worldVertices, size_t offset, size_t stride) {
+														size_t count, /*@null*/ float *worldVertices, size_t offset, size_t stride) {
 	VertexAttachment *_self = (VertexAttachment *) (ClippingAttachment *) self;
 	_self->computeWorldVertices(*((Skeleton *) skeleton), *((Slot *) slot), start, count, worldVertices, offset, stride);
 }
@@ -83,12 +83,12 @@ void spine_clipping_attachment_set_world_vertices_length(spine_clipping_attachme
 	_self->setWorldVerticesLength(inValue);
 }
 
-spine_attachment spine_clipping_attachment_get_timeline_attachment(spine_clipping_attachment self) {
+/*@null*/ spine_attachment spine_clipping_attachment_get_timeline_attachment(spine_clipping_attachment self) {
 	VertexAttachment *_self = (VertexAttachment *) (ClippingAttachment *) self;
 	return (spine_attachment) _self->getTimelineAttachment();
 }
 
-void spine_clipping_attachment_set_timeline_attachment(spine_clipping_attachment self, spine_attachment attachment) {
+void spine_clipping_attachment_set_timeline_attachment(spine_clipping_attachment self, /*@null*/ spine_attachment attachment) {
 	VertexAttachment *_self = (VertexAttachment *) (ClippingAttachment *) self;
 	_self->setTimelineAttachment((Attachment *) attachment);
 }

@@ -16,7 +16,7 @@ spine_rtti spine_from_y_get_rtti(spine_from_y self) {
 	return (spine_rtti) &_self->getRTTI();
 }
 
-float spine_from_y_value(spine_from_y self, spine_skeleton skeleton, spine_bone_pose source, bool local, float *offsets) {
+float spine_from_y_value(spine_from_y self, spine_skeleton skeleton, spine_bone_pose source, bool local, /*@null*/ float *offsets) {
 	FromY *_self = (FromY *) self;
 	return _self->value(*((Skeleton *) skeleton), *((BonePose *) source), local, offsets);
 }

@@ -22,7 +22,7 @@ void spine_rgba2_timeline_set_frame(spine_rgba2_timeline self, int frame, float 
 	_self->setFrame(frame, time, r, g, b, a, r2, g2, b2);
 }
 
-void spine_rgba2_timeline_apply(spine_rgba2_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
+void spine_rgba2_timeline_apply(spine_rgba2_timeline self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event pEvents,
 								float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
 	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,

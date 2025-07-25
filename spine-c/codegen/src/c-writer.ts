@@ -150,12 +150,14 @@ export class CWriter {
 
     private writeMethodDeclaration(method: CMethod): string {
         const params = this.formatParameters(method.parameters);
-        return `SPINE_C_API ${method.returnType} ${method.name}(${params});`;
+        const returnTypeWithAnnotation = method.returnTypeNullable ? `/*@null*/ ${method.returnType}` : method.returnType;
+        return `SPINE_C_API ${returnTypeWithAnnotation} ${method.name}(${params});`;
     }
 
     private writeMethodImplementation(method: CMethod): string {
         const params = this.formatParameters(method.parameters);
-        const signature = `${method.returnType} ${method.name}(${params})`;
+        const returnTypeWithAnnotation = method.returnTypeNullable ? `/*@null*/ ${method.returnType}` : method.returnType;
+        const signature = `${returnTypeWithAnnotation} ${method.name}(${params})`;
 
         return `${signature} {
     ${method.body}
@@ -168,7 +170,10 @@ export class CWriter {
         }
 
         return parameters
-            .map(p => `${p.cType} ${p.name}`)
+            .map(p => {
+                const typeWithAnnotation = p.isNullable ? `/*@null*/ ${p.cType}` : p.cType;
+                return `${typeWithAnnotation} ${p.name}`;
+            })
             .join(', ');
     }
 

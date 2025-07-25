@@ -3,7 +3,8 @@
 
 using namespace spine;
 
-spine_deform_timeline spine_deform_timeline_create(size_t frameCount, size_t bezierCount, int slotIndex, spine_vertex_attachment attachment) {
+spine_deform_timeline spine_deform_timeline_create(size_t frameCount, size_t bezierCount, int slotIndex,
+												   /*@null*/ spine_vertex_attachment attachment) {
 	return (spine_deform_timeline) new (__FILE__, __LINE__) DeformTimeline(frameCount, bezierCount, slotIndex, (VertexAttachment *) attachment);
 }
 
@@ -47,7 +48,7 @@ size_t spine_deform_timeline_get_frame_count(spine_deform_timeline self) {
 	return _self->getFrameCount();
 }
 
-void spine_deform_timeline_apply(spine_deform_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
+void spine_deform_timeline_apply(spine_deform_timeline self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event pEvents,
 								 float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
 	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,

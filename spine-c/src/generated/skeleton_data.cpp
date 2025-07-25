@@ -11,27 +11,27 @@ void spine_skeleton_data_dispose(spine_skeleton_data self) {
 	delete (SkeletonData *) self;
 }
 
-spine_bone_data spine_skeleton_data_find_bone(spine_skeleton_data self, const char *boneName) {
+/*@null*/ spine_bone_data spine_skeleton_data_find_bone(spine_skeleton_data self, const char *boneName) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_bone_data) _self->findBone(String(boneName));
 }
 
-spine_slot_data spine_skeleton_data_find_slot(spine_skeleton_data self, const char *slotName) {
+/*@null*/ spine_slot_data spine_skeleton_data_find_slot(spine_skeleton_data self, const char *slotName) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_slot_data) _self->findSlot(String(slotName));
 }
 
-spine_skin spine_skeleton_data_find_skin(spine_skeleton_data self, const char *skinName) {
+/*@null*/ spine_skin spine_skeleton_data_find_skin(spine_skeleton_data self, const char *skinName) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_skin) _self->findSkin(String(skinName));
 }
 
-spine_event_data spine_skeleton_data_find_event(spine_skeleton_data self, const char *eventDataName) {
+/*@null*/ spine_event_data spine_skeleton_data_find_event(spine_skeleton_data self, const char *eventDataName) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_event_data) _self->findEvent(String(eventDataName));
 }
 
-spine_animation spine_skeleton_data_find_animation(spine_skeleton_data self, const char *animationName) {
+/*@null*/ spine_animation spine_skeleton_data_find_animation(spine_skeleton_data self, const char *animationName) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_animation) _self->findAnimation(String(animationName));
 }
@@ -46,42 +46,42 @@ void spine_skeleton_data_set_name(spine_skeleton_data self, const char *inValue)
 	_self->setName(String(inValue));
 }
 
-spine_array_bone_data spine_skeleton_data_get_bones(spine_skeleton_data self) {
+/*@null*/ spine_array_bone_data spine_skeleton_data_get_bones(spine_skeleton_data self) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_array_bone_data) &_self->getBones();
 }
 
-spine_array_slot_data spine_skeleton_data_get_slots(spine_skeleton_data self) {
+/*@null*/ spine_array_slot_data spine_skeleton_data_get_slots(spine_skeleton_data self) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_array_slot_data) &_self->getSlots();
 }
 
-spine_array_skin spine_skeleton_data_get_skins(spine_skeleton_data self) {
+/*@null*/ spine_array_skin spine_skeleton_data_get_skins(spine_skeleton_data self) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_array_skin) &_self->getSkins();
 }
 
-spine_skin spine_skeleton_data_get_default_skin(spine_skeleton_data self) {
+/*@null*/ spine_skin spine_skeleton_data_get_default_skin(spine_skeleton_data self) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_skin) _self->getDefaultSkin();
 }
 
-void spine_skeleton_data_set_default_skin(spine_skeleton_data self, spine_skin inValue) {
+void spine_skeleton_data_set_default_skin(spine_skeleton_data self, /*@null*/ spine_skin inValue) {
 	SkeletonData *_self = (SkeletonData *) self;
 	_self->setDefaultSkin((Skin *) inValue);
 }
 
-spine_array_event_data spine_skeleton_data_get_events(spine_skeleton_data self) {
+/*@null*/ spine_array_event_data spine_skeleton_data_get_events(spine_skeleton_data self) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_array_event_data) &_self->getEvents();
 }
 
-spine_array_animation spine_skeleton_data_get_animations(spine_skeleton_data self) {
+/*@null*/ spine_array_animation spine_skeleton_data_get_animations(spine_skeleton_data self) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_array_animation) &_self->getAnimations();
 }
 
-spine_array_constraint_data spine_skeleton_data_get_constraints(spine_skeleton_data self) {
+/*@null*/ spine_array_constraint_data spine_skeleton_data_get_constraints(spine_skeleton_data self) {
 	SkeletonData *_self = (SkeletonData *) self;
 	return (spine_array_constraint_data) &_self->getConstraints();
 }

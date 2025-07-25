@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_bone_data spine_bone_data_create(int index, const char *name, spine_bone_data parent) {
+spine_bone_data spine_bone_data_create(int index, const char *name, /*@null*/ spine_bone_data parent) {
 	return (spine_bone_data) new (__FILE__, __LINE__) BoneData(index, String(name), (BoneData *) parent);
 }
 
@@ -16,7 +16,7 @@ int spine_bone_data_get_index(spine_bone_data self) {
 	return _self->getIndex();
 }
 
-spine_bone_data spine_bone_data_get_parent(spine_bone_data self) {
+/*@null*/ spine_bone_data spine_bone_data_get_parent(spine_bone_data self) {
 	BoneData *_self = (BoneData *) self;
 	return (spine_bone_data) _self->getParent();
 }

@@ -17,7 +17,7 @@ spine_rtti spine_mesh_attachment_get_rtti(spine_mesh_attachment self) {
 }
 
 void spine_mesh_attachment_compute_world_vertices_1(spine_mesh_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count,
-													float *worldVertices, size_t offset, size_t stride) {
+													/*@null*/ float *worldVertices, size_t offset, size_t stride) {
 	MeshAttachment *_self = (MeshAttachment *) self;
 	_self->computeWorldVertices(*((Skeleton *) skeleton), *((Slot *) slot), start, count, worldVertices, offset, stride);
 }
@@ -83,7 +83,7 @@ void spine_mesh_attachment_set_path(spine_mesh_attachment self, const char *inVa
 	_self->setPath(String(inValue));
 }
 
-spine_texture_region spine_mesh_attachment_get_region(spine_mesh_attachment self) {
+/*@null*/ spine_texture_region spine_mesh_attachment_get_region(spine_mesh_attachment self) {
 	MeshAttachment *_self = (MeshAttachment *) self;
 	return (spine_texture_region) _self->getRegion();
 }
@@ -93,22 +93,22 @@ void spine_mesh_attachment_set_region(spine_mesh_attachment self, spine_texture_
 	_self->setRegion(*((TextureRegion *) region));
 }
 
-spine_sequence spine_mesh_attachment_get_sequence(spine_mesh_attachment self) {
+/*@null*/ spine_sequence spine_mesh_attachment_get_sequence(spine_mesh_attachment self) {
 	MeshAttachment *_self = (MeshAttachment *) self;
 	return (spine_sequence) _self->getSequence();
 }
 
-void spine_mesh_attachment_set_sequence(spine_mesh_attachment self, spine_sequence sequence) {
+void spine_mesh_attachment_set_sequence(spine_mesh_attachment self, /*@null*/ spine_sequence sequence) {
 	MeshAttachment *_self = (MeshAttachment *) self;
 	_self->setSequence((Sequence *) sequence);
 }
 
-spine_mesh_attachment spine_mesh_attachment_get_parent_mesh(spine_mesh_attachment self) {
+/*@null*/ spine_mesh_attachment spine_mesh_attachment_get_parent_mesh(spine_mesh_attachment self) {
 	MeshAttachment *_self = (MeshAttachment *) self;
 	return (spine_mesh_attachment) _self->getParentMesh();
 }
 
-void spine_mesh_attachment_set_parent_mesh(spine_mesh_attachment self, spine_mesh_attachment inValue) {
+void spine_mesh_attachment_set_parent_mesh(spine_mesh_attachment self, /*@null*/ spine_mesh_attachment inValue) {
 	MeshAttachment *_self = (MeshAttachment *) self;
 	_self->setParentMesh((MeshAttachment *) inValue);
 }
@@ -188,12 +188,12 @@ void spine_mesh_attachment_set_world_vertices_length(spine_mesh_attachment self,
 	_self->setWorldVerticesLength(inValue);
 }
 
-spine_attachment spine_mesh_attachment_get_timeline_attachment(spine_mesh_attachment self) {
+/*@null*/ spine_attachment spine_mesh_attachment_get_timeline_attachment(spine_mesh_attachment self) {
 	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
 	return (spine_attachment) _self->getTimelineAttachment();
 }
 
-void spine_mesh_attachment_set_timeline_attachment(spine_mesh_attachment self, spine_attachment attachment) {
+void spine_mesh_attachment_set_timeline_attachment(spine_mesh_attachment self, /*@null*/ spine_attachment attachment) {
 	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
 	_self->setTimelineAttachment((Attachment *) attachment);
 }

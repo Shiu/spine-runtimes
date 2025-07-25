@@ -15,8 +15,8 @@ SPINE_C_API void spine_slider_mix_timeline_dispose(spine_slider_mix_timeline sel
 
 SPINE_C_API spine_rtti spine_slider_mix_timeline_get_rtti(spine_slider_mix_timeline self);
 SPINE_C_API void spine_slider_mix_timeline_apply(spine_slider_mix_timeline self, spine_skeleton skeleton, float lastTime, float time,
-												 spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
-												 bool appliedPose);
+												 /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend,
+												 spine_mix_direction direction, bool appliedPose);
 SPINE_C_API int spine_slider_mix_timeline_get_constraint_index(spine_slider_mix_timeline self);
 SPINE_C_API void spine_slider_mix_timeline_set_constraint_index(spine_slider_mix_timeline self, int inValue);
 SPINE_C_API void spine_slider_mix_timeline_set_frame(spine_slider_mix_timeline self, size_t frame, float time, float value);

@@ -121,12 +121,12 @@ void spine_atlas_page_set_index(spine_atlas_page self, int value) {
 	_self->index = value;
 }
 
-void *spine_atlas_page_get_texture(spine_atlas_page self) {
+/*@null*/ void *spine_atlas_page_get_texture(spine_atlas_page self) {
 	AtlasPage *_self = (AtlasPage *) self;
 	return _self->texture;
 }
 
-void spine_atlas_page_set_texture(spine_atlas_page self, void *value) {
+void spine_atlas_page_set_texture(spine_atlas_page self, /*@null*/ void *value) {
 	AtlasPage *_self = (AtlasPage *) self;
 	_self->texture = (void *) value;
 }

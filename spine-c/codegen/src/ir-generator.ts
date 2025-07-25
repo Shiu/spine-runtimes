@@ -2,7 +2,7 @@ import { scanArraySpecializations } from './array-scanner';
 import type { CClassOrStruct, CEnum, CEnumValue, CMethod, CParameter } from './c-types';
 import { isFieldExcluded, isFieldGetterExcluded, isFieldSetterExcluded } from './exclusions';
 import type { ArraySpecialization, Exclusion } from './types';
-import { type ClassOrStruct, type Constructor, checkTypeSupport, type Enum, type Field, isPrimitive, type Method, type Parameter, type Type, toCFunctionName, toCTypeName, toSnakeCase } from './types';
+import { type ClassOrStruct, type Constructor, checkTypeSupport, type Enum, type Field, isPrimitive, isNullable, type Method, type Parameter, type Type, toCFunctionName, toCTypeName, toSnakeCase } from './types';
 
 /**
  * Checks if a type inherits from SpineObject (directly or indirectly)
@@ -103,7 +103,8 @@ export function generateConstructors(type: ClassOrStruct, knownTypeNames: Set<st
                 name: `${cTypeName}_create`,
                 returnType: cTypeName,
                 parameters: [],
-                body: `return (${cTypeName}) new (__FILE__, __LINE__) ${cppTypeName}();`
+                body: `return (${cTypeName}) new (__FILE__, __LINE__) ${cppTypeName}();`,
+                returnTypeNullable: false  // Constructors never return null on success
             });
         } else {
             // Parameterized constructor
@@ -117,7 +118,8 @@ export function generateConstructors(type: ClassOrStruct, knownTypeNames: Set<st
                 name: `${cTypeName}_create${suffix}`,
                 returnType: cTypeName,
                 parameters: cParams,
-                body: `return (${cTypeName}) new (__FILE__, __LINE__) ${cppTypeName}(${cppArgs});`
+                body: `return (${cTypeName}) new (__FILE__, __LINE__) ${cppTypeName}(${cppArgs});`,
+                returnTypeNullable: false  // Constructors never return null on success
             });
         }
         i++;
@@ -150,9 +152,11 @@ export function generateDestructor(type: ClassOrStruct, exclusions: Exclusion[])
             name: 'self',
             cType: cTypeName,
             cppType: `${cppTypeName}*`,
-            isOutput: false
+            isOutput: false,
+            isNullable: false  // Self parameter must never be null (would crash)
         }],
-        body: `delete (${cppTypeName}*)self;`
+        body: `delete (${cppTypeName}*)self;`,
+        returnTypeNullable: false  // void return type cannot be null
     };
 }
 
@@ -222,7 +226,8 @@ export function generateMethods(type: ClassOrStruct, knownTypeNames: Set<string>
             name: `${cTypeName}_rtti`,
             returnType: 'spine_rtti',
             parameters: [],
-            body: `return (spine_rtti)&${cppTypeName}::rtti;`
+            body: `return (spine_rtti)&${cppTypeName}::rtti;`,
+            returnTypeNullable: false  // RTTI method returns a reference address, never null
         });
     }
 
@@ -270,9 +275,11 @@ export function generateFieldAccessors(type: ClassOrStruct, knownTypeNames: Set<
                         name: 'self',
                         cType: cTypeName,
                         cppType: `${cppTypeName}*`,
-                        isOutput: false
+                        isOutput: false,
+                        isNullable: false  // Self parameter must never be null (would crash)
                     }],
-                    body: generateFieldGetterBody(field, cppTypeName, knownTypeNames)
+                    body: generateFieldGetterBody(field, cppTypeName, knownTypeNames),
+                    returnTypeNullable: isNullable(field.type)  // Field return type nullability depends on field type
                 });
             } catch (e) {
                 console.warn(`  Skipping getter for field ${type.name}::${field.name}: ${e}`);
@@ -295,16 +302,19 @@ export function generateFieldAccessors(type: ClassOrStruct, knownTypeNames: Set<
                             name: 'self',
                             cType: cTypeName,
                             cppType: `${cppTypeName}*`,
-                            isOutput: false
+                            isOutput: false,
+                            isNullable: false  // Self parameter must never be null (would crash)
                         },
                         {
                             name: 'value',
                             cType: cParamType,
                             cppType: field.type,
-                            isOutput: false
+                            isOutput: false,
+                            isNullable: isNullable(field.type)  // Value parameter nullability depends on field type
                         }
                     ],
-                    body: generateFieldSetterBody(field, cppTypeName, knownTypeNames)
+                    body: generateFieldSetterBody(field, cppTypeName, knownTypeNames),
+                    returnTypeNullable: false  // void return type cannot be null
                 });
             } catch (e) {
                 console.warn(`  Skipping setter for field ${type.name}::${field.name}: ${e}`);
@@ -413,7 +423,8 @@ export function generateArrayType(spec: ArraySpecialization, arrayType: ClassOrS
             name: `${cTypeName}_create`,
             returnType: cTypeName,
             parameters: [],
-            body: `return (${cTypeName}) new (__FILE__, __LINE__) Array<${spec.elementType}>();`
+            body: `return (${cTypeName}) new (__FILE__, __LINE__) Array<${spec.elementType}>();`,
+            returnTypeNullable: false  // Array constructors never return null on success
         },
         {
             name: `${cTypeName}_create_with_capacity`,
@@ -422,9 +433,11 @@ export function generateArrayType(spec: ArraySpecialization, arrayType: ClassOrS
                 name: 'initialCapacity',
                 cType: 'size_t',
                 cppType: 'size_t',
-                isOutput: false
+                isOutput: false,
+                isNullable: false  // size_t cannot be null
             }],
-            body: `return (${cTypeName}) new (__FILE__, __LINE__) Array<${spec.elementType}>(initialCapacity);`
+            body: `return (${cTypeName}) new (__FILE__, __LINE__) Array<${spec.elementType}>(initialCapacity);`,
+            returnTypeNullable: false  // Array constructors never return null on success
         }
     ];
 
@@ -436,9 +449,11 @@ export function generateArrayType(spec: ArraySpecialization, arrayType: ClassOrS
             name: 'array',
             cType: cTypeName,
             cppType: `Array<${spec.elementType}>*`,
-            isOutput: false
+            isOutput: false,
+            isNullable: false  // Array parameter must never be null (would crash)
         }],
-        body: `delete (Array<${spec.elementType}>*)array;`
+        body: `delete (Array<${spec.elementType}>*)array;`,
+        returnTypeNullable: false  // void return type cannot be null
     };
 
     // Generate array methods
@@ -529,12 +544,14 @@ function convertParameters(params: Parameter[], knownTypeNames: Set<string>): CP
     for (const param of params) {
         const cType = toCTypeName(param.type, knownTypeNames);
         const isOutput = isOutputParameter(param.type);
+        const paramIsNullable = isNullable(param.type);
 
         cParams.push({
             name: param.name,
             cType,
             cppType: param.type,
-            isOutput
+            isOutput,
+            isNullable: paramIsNullable
         });
     }
 
@@ -650,7 +667,8 @@ function generateMethod(type: ClassOrStruct, method: Method, cTypeName: string, 
                 name: 'self',
                 cType: cTypeName,
                 cppType: `${cppTypeName}*`,
-                isOutput: false
+                isOutput: false,
+                isNullable: false  // Self parameter must never be null (would crash)
             });
         }
 
@@ -680,7 +698,8 @@ function generateMethod(type: ClassOrStruct, method: Method, cTypeName: string, 
             name: cMethodName,
             returnType: cReturnType,
             parameters: cParams,
-            body
+            body,
+            returnTypeNullable: isNullable(method.returnType)
         };
     } catch (e) {
         console.warn(`Skipping method ${type.name}::${method.name}: ${e}`);
@@ -807,7 +826,8 @@ function generateArrayMethod(cTypeName: string, method: Method, cppElementType: 
             name: 'array',
             cType: cTypeName,
             cppType: `Array<${cppElementType}>*`,
-            isOutput: false
+            isOutput: false,
+            isNullable: false  // Array parameter must never be null (would crash)
         });
 
         // Add method parameters
@@ -822,7 +842,8 @@ function generateArrayMethod(cTypeName: string, method: Method, cppElementType: 
             name: cMethodName,
             returnType: cReturnType,
             parameters: cParams,
-            body
+            body,
+            returnTypeNullable: isNullable(method.returnType)
         };
     } catch (e) {
         console.warn(`Skipping array method ${method.name}: ${e}`);

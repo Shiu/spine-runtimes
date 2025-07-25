@@ -17,8 +17,8 @@ spine_rtti spine_physics_constraint_reset_timeline_get_rtti(spine_physics_constr
 }
 
 void spine_physics_constraint_reset_timeline_apply(spine_physics_constraint_reset_timeline self, spine_skeleton skeleton, float lastTime, float time,
-												   spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
-												   bool appliedPose) {
+												   /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend,
+												   spine_mix_direction direction, bool appliedPose) {
 	PhysicsConstraintResetTimeline *_self = (PhysicsConstraintResetTimeline *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
 				 appliedPose);

@@ -16,7 +16,7 @@ SPINE_C_API void spine_transform_constraint_timeline_dispose(spine_transform_con
 
 SPINE_C_API spine_rtti spine_transform_constraint_timeline_get_rtti(spine_transform_constraint_timeline self);
 SPINE_C_API void spine_transform_constraint_timeline_apply(spine_transform_constraint_timeline self, spine_skeleton skeleton, float lastTime,
-														   float time, spine_array_event pEvents, float alpha, spine_mix_blend blend,
+														   float time, /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend,
 														   spine_mix_direction direction, bool appliedPose);
 SPINE_C_API void spine_transform_constraint_timeline_set_frame(spine_transform_constraint_timeline self, int frame, float time, float mixRotate,
 															   float mixX, float mixY, float mixScaleX, float mixScaleY, float mixShearY);

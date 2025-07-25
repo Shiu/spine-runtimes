@@ -15,8 +15,8 @@ SPINE_C_API void spine_translate_y_timeline_dispose(spine_translate_y_timeline s
 
 SPINE_C_API spine_rtti spine_translate_y_timeline_get_rtti(spine_translate_y_timeline self);
 SPINE_C_API void spine_translate_y_timeline_apply(spine_translate_y_timeline self, spine_skeleton skeleton, float lastTime, float time,
-												  spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
-												  bool appliedPose);
+												  /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend,
+												  spine_mix_direction direction, bool appliedPose);
 SPINE_C_API int spine_translate_y_timeline_get_bone_index(spine_translate_y_timeline self);
 SPINE_C_API void spine_translate_y_timeline_set_bone_index(spine_translate_y_timeline self, int inValue);
 SPINE_C_API void spine_translate_y_timeline_set_frame(spine_translate_y_timeline self, size_t frame, float time, float value);

@@ -9,14 +9,14 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_bone spine_bone_create(spine_bone_data data, spine_bone parent);
-SPINE_C_API spine_bone spine_bone_create2(spine_bone bone, spine_bone parent);
+SPINE_C_API spine_bone spine_bone_create(spine_bone_data data, /*@null*/ spine_bone parent);
+SPINE_C_API spine_bone spine_bone_create2(spine_bone bone, /*@null*/ spine_bone parent);
 
 SPINE_C_API void spine_bone_dispose(spine_bone self);
 
 SPINE_C_API spine_rtti spine_bone_get_rtti(spine_bone self);
-SPINE_C_API spine_bone spine_bone_get_parent(spine_bone self);
-SPINE_C_API spine_array_bone spine_bone_get_children(spine_bone self);
+SPINE_C_API /*@null*/ spine_bone spine_bone_get_parent(spine_bone self);
+SPINE_C_API /*@null*/ spine_array_bone spine_bone_get_children(spine_bone self);
 SPINE_C_API bool spine_bone_is_y_down(void);
 SPINE_C_API void spine_bone_set_y_down(bool value);
 SPINE_C_API void spine_bone_update(spine_bone self, spine_skeleton skeleton, spine_physics physics);

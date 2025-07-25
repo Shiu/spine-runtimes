@@ -240,7 +240,7 @@ int main(int argc, char *argv[]) {
 		spine_animation_state_apply(state, skeleton);
 	}
 
-	spine_skeleton_update_world_transform_1(skeleton, SPINE_PHYSICS_UPDATE);
+	spine_skeleton_update_world_transform(skeleton, SPINE_PHYSICS_UPDATE);
 
 	// Print skeleton state
 	printf("\n=== SKELETON STATE ===\n");

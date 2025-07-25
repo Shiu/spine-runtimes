@@ -50,7 +50,7 @@ spine_color spine_color_clamp(spine_color self) {
 	return (spine_color) &_self->clamp();
 }
 
-float spine_color_parse_hex(const char *value, size_t index) {
+float spine_color_parse_hex(/*@null*/ const char *value, size_t index) {
 	return Color::parseHex(value, index);
 }
 

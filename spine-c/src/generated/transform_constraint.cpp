@@ -36,7 +36,7 @@ bool spine_transform_constraint_is_source_active(spine_transform_constraint self
 	return _self->isSourceActive();
 }
 
-spine_array_bone_pose spine_transform_constraint_get_bones(spine_transform_constraint self) {
+/*@null*/ spine_array_bone_pose spine_transform_constraint_get_bones(spine_transform_constraint self) {
 	TransformConstraint *_self = (TransformConstraint *) self;
 	return (spine_array_bone_pose) &_self->getBones();
 }

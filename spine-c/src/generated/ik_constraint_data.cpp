@@ -21,7 +21,7 @@ spine_constraint spine_ik_constraint_data_create_method(spine_ik_constraint_data
 	return (spine_constraint) &_self->create(*((Skeleton *) skeleton));
 }
 
-spine_array_bone_data spine_ik_constraint_data_get_bones(spine_ik_constraint_data self) {
+/*@null*/ spine_array_bone_data spine_ik_constraint_data_get_bones(spine_ik_constraint_data self) {
 	IkConstraintData *_self = (IkConstraintData *) self;
 	return (spine_array_bone_data) &_self->getBones();
 }

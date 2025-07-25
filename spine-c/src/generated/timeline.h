@@ -12,7 +12,7 @@ extern "C" {
 SPINE_C_API void spine_timeline_dispose(spine_timeline self);
 
 SPINE_C_API spine_rtti spine_timeline_get_rtti(spine_timeline self);
-SPINE_C_API void spine_timeline_apply(spine_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
+SPINE_C_API void spine_timeline_apply(spine_timeline self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event pEvents,
 									  float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
 SPINE_C_API size_t spine_timeline_get_frame_entries(spine_timeline self);
 SPINE_C_API size_t spine_timeline_get_frame_count(spine_timeline self);

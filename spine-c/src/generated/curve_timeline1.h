@@ -29,7 +29,7 @@ SPINE_C_API void spine_curve_timeline1_set_bezier(spine_curve_timeline1 self, si
 SPINE_C_API float spine_curve_timeline1_get_bezier_value(spine_curve_timeline1 self, float time, size_t frame, size_t valueOffset, size_t i);
 SPINE_C_API spine_array_float spine_curve_timeline1_get_curves(spine_curve_timeline1 self);
 SPINE_C_API void spine_curve_timeline1_apply(spine_curve_timeline1 self, spine_skeleton skeleton, float lastTime, float time,
-											 spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+											 /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
 											 bool appliedPose);
 SPINE_C_API size_t spine_curve_timeline1_get_frame_entries(spine_curve_timeline1 self);
 SPINE_C_API size_t spine_curve_timeline1_get_frame_count(spine_curve_timeline1 self);

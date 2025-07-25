@@ -26,7 +26,7 @@ void spine_track_entry_set_animation(spine_track_entry self, spine_animation ani
 	_self->setAnimation(*((Animation *) animation));
 }
 
-spine_track_entry spine_track_entry_get_previous(spine_track_entry self) {
+/*@null*/ spine_track_entry spine_track_entry_get_previous(spine_track_entry self) {
 	TrackEntry *_self = (TrackEntry *) self;
 	return (spine_track_entry) _self->getPrevious();
 }
@@ -196,7 +196,7 @@ void spine_track_entry_set_mix_draw_order_threshold(spine_track_entry self, floa
 	_self->setMixDrawOrderThreshold(inValue);
 }
 
-spine_track_entry spine_track_entry_get_next(spine_track_entry self) {
+/*@null*/ spine_track_entry spine_track_entry_get_next(spine_track_entry self) {
 	TrackEntry *_self = (TrackEntry *) self;
 	return (spine_track_entry) _self->getNext();
 }
@@ -241,12 +241,12 @@ void spine_track_entry_set_mix_blend(spine_track_entry self, spine_mix_blend ble
 	_self->setMixBlend((MixBlend) blend);
 }
 
-spine_track_entry spine_track_entry_get_mixing_from(spine_track_entry self) {
+/*@null*/ spine_track_entry spine_track_entry_get_mixing_from(spine_track_entry self) {
 	TrackEntry *_self = (TrackEntry *) self;
 	return (spine_track_entry) _self->getMixingFrom();
 }
 
-spine_track_entry spine_track_entry_get_mixing_to(spine_track_entry self) {
+/*@null*/ spine_track_entry spine_track_entry_get_mixing_to(spine_track_entry self) {
 	TrackEntry *_self = (TrackEntry *) self;
 	return (spine_track_entry) _self->getMixingTo();
 }
@@ -276,7 +276,7 @@ bool spine_track_entry_is_next_ready(spine_track_entry self) {
 	return _self->isNextReady();
 }
 
-void *spine_track_entry_get_renderer_object(spine_track_entry self) {
+/*@null*/ void *spine_track_entry_get_renderer_object(spine_track_entry self) {
 	HasRendererObject *_self = (HasRendererObject *) (TrackEntry *) self;
 	return _self->getRendererObject();
 }

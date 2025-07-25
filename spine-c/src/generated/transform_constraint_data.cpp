@@ -21,7 +21,7 @@ spine_constraint spine_transform_constraint_data_create_method(spine_transform_c
 	return (spine_constraint) &_self->create(*((Skeleton *) skeleton));
 }
 
-spine_array_bone_data spine_transform_constraint_data_get_bones(spine_transform_constraint_data self) {
+/*@null*/ spine_array_bone_data spine_transform_constraint_data_get_bones(spine_transform_constraint_data self) {
 	TransformConstraintData *_self = (TransformConstraintData *) self;
 	return (spine_array_bone_data) &_self->getBones();
 }
@@ -136,7 +136,7 @@ void spine_transform_constraint_data_set_clamp(spine_transform_constraint_data s
 	_self->setClamp(clamp);
 }
 
-spine_array_from_property spine_transform_constraint_data_get_properties(spine_transform_constraint_data self) {
+/*@null*/ spine_array_from_property spine_transform_constraint_data_get_properties(spine_transform_constraint_data self) {
 	TransformConstraintData *_self = (TransformConstraintData *) self;
 	return (spine_array_from_property) &_self->getProperties();
 }

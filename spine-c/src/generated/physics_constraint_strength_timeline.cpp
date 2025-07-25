@@ -19,7 +19,7 @@ spine_rtti spine_physics_constraint_strength_timeline_get_rtti(spine_physics_con
 }
 
 void spine_physics_constraint_strength_timeline_apply(spine_physics_constraint_strength_timeline self, spine_skeleton skeleton, float lastTime,
-													  float time, spine_array_event pEvents, float alpha, spine_mix_blend blend,
+													  float time, /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend,
 													  spine_mix_direction direction, bool appliedPose) {
 	PhysicsConstraintTimeline *_self = (PhysicsConstraintTimeline *) (PhysicsConstraintStrengthTimeline *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,

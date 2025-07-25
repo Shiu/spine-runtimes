@@ -14,7 +14,7 @@ SPINE_C_API spine_sequence spine_sequence_create(int count);
 SPINE_C_API void spine_sequence_dispose(spine_sequence self);
 
 SPINE_C_API spine_sequence spine_sequence_copy(spine_sequence self);
-SPINE_C_API void spine_sequence_apply(spine_sequence self, spine_slot_pose slot, spine_attachment attachment);
+SPINE_C_API void spine_sequence_apply(spine_sequence self, /*@null*/ spine_slot_pose slot, /*@null*/ spine_attachment attachment);
 SPINE_C_API const char *spine_sequence_get_path(spine_sequence self, const char *basePath, int index);
 SPINE_C_API int spine_sequence_get_id(spine_sequence self);
 SPINE_C_API void spine_sequence_set_id(spine_sequence self, int id);
@@ -24,7 +24,7 @@ SPINE_C_API int spine_sequence_get_digits(spine_sequence self);
 SPINE_C_API void spine_sequence_set_digits(spine_sequence self, int digits);
 SPINE_C_API int spine_sequence_get_setup_index(spine_sequence self);
 SPINE_C_API void spine_sequence_set_setup_index(spine_sequence self, int setupIndex);
-SPINE_C_API spine_array_texture_region spine_sequence_get_regions(spine_sequence self);
+SPINE_C_API /*@null*/ spine_array_texture_region spine_sequence_get_regions(spine_sequence self);
 
 #ifdef __cplusplus
 }

@@ -26,12 +26,12 @@ void spine_skeleton_constrained(spine_skeleton self, spine_posed object) {
 	_self->constrained(*((Posed *) object));
 }
 
-void spine_skeleton_sort_bone(spine_skeleton self, spine_bone bone) {
+void spine_skeleton_sort_bone(spine_skeleton self, /*@null*/ spine_bone bone) {
 	Skeleton *_self = (Skeleton *) self;
 	_self->sortBone((Bone *) bone);
 }
 
-void spine_skeleton_sort_reset(spine_array_bone bones) {
+void spine_skeleton_sort_reset(/*@null*/ spine_array_bone bones) {
 	Skeleton::sortReset(*((Array<Bone *> *) bones));
 }
 
@@ -60,42 +60,42 @@ spine_skeleton_data spine_skeleton_get_data(spine_skeleton self) {
 	return (spine_skeleton_data) &_self->getData();
 }
 
-spine_array_bone spine_skeleton_get_bones(spine_skeleton self) {
+/*@null*/ spine_array_bone spine_skeleton_get_bones(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_bone) &_self->getBones();
 }
 
-spine_array_update spine_skeleton_get_update_cache(spine_skeleton self) {
+/*@null*/ spine_array_update spine_skeleton_get_update_cache(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_update) &_self->getUpdateCache();
 }
 
-spine_bone spine_skeleton_get_root_bone(spine_skeleton self) {
+/*@null*/ spine_bone spine_skeleton_get_root_bone(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_bone) _self->getRootBone();
 }
 
-spine_bone spine_skeleton_find_bone(spine_skeleton self, const char *boneName) {
+/*@null*/ spine_bone spine_skeleton_find_bone(spine_skeleton self, const char *boneName) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_bone) _self->findBone(String(boneName));
 }
 
-spine_array_slot spine_skeleton_get_slots(spine_skeleton self) {
+/*@null*/ spine_array_slot spine_skeleton_get_slots(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_slot) &_self->getSlots();
 }
 
-spine_slot spine_skeleton_find_slot(spine_skeleton self, const char *slotName) {
+/*@null*/ spine_slot spine_skeleton_find_slot(spine_skeleton self, const char *slotName) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_slot) _self->findSlot(String(slotName));
 }
 
-spine_array_slot spine_skeleton_get_draw_order(spine_skeleton self) {
+/*@null*/ spine_array_slot spine_skeleton_get_draw_order(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_slot) &_self->getDrawOrder();
 }
 
-spine_skin spine_skeleton_get_skin(spine_skeleton self) {
+/*@null*/ spine_skin spine_skeleton_get_skin(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_skin) _self->getSkin();
 }
@@ -105,17 +105,17 @@ void spine_skeleton_set_skin_1(spine_skeleton self, const char *skinName) {
 	_self->setSkin(String(skinName));
 }
 
-void spine_skeleton_set_skin_2(spine_skeleton self, spine_skin newSkin) {
+void spine_skeleton_set_skin_2(spine_skeleton self, /*@null*/ spine_skin newSkin) {
 	Skeleton *_self = (Skeleton *) self;
 	_self->setSkin((Skin *) newSkin);
 }
 
-spine_attachment spine_skeleton_get_attachment_1(spine_skeleton self, const char *slotName, const char *attachmentName) {
+/*@null*/ spine_attachment spine_skeleton_get_attachment_1(spine_skeleton self, const char *slotName, const char *attachmentName) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_attachment) _self->getAttachment(String(slotName), String(attachmentName));
 }
 
-spine_attachment spine_skeleton_get_attachment_2(spine_skeleton self, int slotIndex, const char *attachmentName) {
+/*@null*/ spine_attachment spine_skeleton_get_attachment_2(spine_skeleton self, int slotIndex, const char *attachmentName) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_attachment) _self->getAttachment(slotIndex, String(attachmentName));
 }
@@ -125,12 +125,12 @@ void spine_skeleton_set_attachment(spine_skeleton self, const char *slotName, co
 	_self->setAttachment(String(slotName), String(attachmentName));
 }
 
-spine_array_constraint spine_skeleton_get_constraints(spine_skeleton self) {
+/*@null*/ spine_array_constraint spine_skeleton_get_constraints(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_constraint) &_self->getConstraints();
 }
 
-spine_array_physics_constraint spine_skeleton_get_physics_constraints(spine_skeleton self) {
+/*@null*/ spine_array_physics_constraint spine_skeleton_get_physics_constraints(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_physics_constraint) &_self->getPhysicsConstraints();
 }
@@ -142,7 +142,7 @@ void spine_skeleton_get_bounds_1(spine_skeleton self, float *outX, float *outY, 
 }
 
 void spine_skeleton_get_bounds_2(spine_skeleton self, float *outX, float *outY, float *outWidth, float *outHeight, spine_array_float outVertexBuffer,
-								 spine_skeleton_clipping clipper) {
+								 /*@null*/ spine_skeleton_clipping clipper) {
 	Skeleton *_self = (Skeleton *) self;
 	_self->getBounds(*outX, *outY, *outWidth, *outHeight, *((Array<float> *) outVertexBuffer), (SkeletonClipping *) clipper);
 }

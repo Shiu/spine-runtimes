@@ -11,7 +11,8 @@ void spine_skeleton_clipping_dispose(spine_skeleton_clipping self) {
 	delete (SkeletonClipping *) self;
 }
 
-size_t spine_skeleton_clipping_clip_start(spine_skeleton_clipping self, spine_skeleton skeleton, spine_slot slot, spine_clipping_attachment clip) {
+size_t spine_skeleton_clipping_clip_start(spine_skeleton_clipping self, spine_skeleton skeleton, spine_slot slot,
+										  /*@null*/ spine_clipping_attachment clip) {
 	SkeletonClipping *_self = (SkeletonClipping *) self;
 	return _self->clipStart(*((Skeleton *) skeleton), *((Slot *) slot), (ClippingAttachment *) clip);
 }
@@ -26,13 +27,14 @@ void spine_skeleton_clipping_clip_end_2(spine_skeleton_clipping self) {
 	_self->clipEnd();
 }
 
-bool spine_skeleton_clipping_clip_triangles_1(spine_skeleton_clipping self, float *vertices, unsigned short *triangles, size_t trianglesLength) {
+bool spine_skeleton_clipping_clip_triangles_1(spine_skeleton_clipping self, /*@null*/ float *vertices, /*@null*/ unsigned short *triangles,
+											  size_t trianglesLength) {
 	SkeletonClipping *_self = (SkeletonClipping *) self;
 	return _self->clipTriangles(vertices, triangles, trianglesLength);
 }
 
-bool spine_skeleton_clipping_clip_triangles_2(spine_skeleton_clipping self, float *vertices, unsigned short *triangles, size_t trianglesLength,
-											  float *uvs, size_t stride) {
+bool spine_skeleton_clipping_clip_triangles_2(spine_skeleton_clipping self, /*@null*/ float *vertices, /*@null*/ unsigned short *triangles,
+											  size_t trianglesLength, /*@null*/ float *uvs, size_t stride) {
 	SkeletonClipping *_self = (SkeletonClipping *) self;
 	return _self->clipTriangles(vertices, triangles, trianglesLength, uvs, stride);
 }

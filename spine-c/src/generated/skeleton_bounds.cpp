@@ -36,12 +36,13 @@ bool spine_skeleton_bounds_contains_point_1(spine_skeleton_bounds self, spine_po
 	return _self->containsPoint(*((Polygon *) polygon), x, y);
 }
 
-spine_bounding_box_attachment spine_skeleton_bounds_contains_point_2(spine_skeleton_bounds self, float x, float y) {
+/*@null*/ spine_bounding_box_attachment spine_skeleton_bounds_contains_point_2(spine_skeleton_bounds self, float x, float y) {
 	SkeletonBounds *_self = (SkeletonBounds *) self;
 	return (spine_bounding_box_attachment) _self->containsPoint(x, y);
 }
 
-spine_bounding_box_attachment spine_skeleton_bounds_intersects_segment_1(spine_skeleton_bounds self, float x1, float y1, float x2, float y2) {
+/*@null*/ spine_bounding_box_attachment spine_skeleton_bounds_intersects_segment_1(spine_skeleton_bounds self, float x1, float y1, float x2,
+																				   float y2) {
 	SkeletonBounds *_self = (SkeletonBounds *) self;
 	return (spine_bounding_box_attachment) _self->intersectsSegment(x1, y1, x2, y2);
 }
@@ -51,22 +52,22 @@ bool spine_skeleton_bounds_intersects_segment_2(spine_skeleton_bounds self, spin
 	return _self->intersectsSegment(*((Polygon *) polygon), x1, y1, x2, y2);
 }
 
-spine_polygon spine_skeleton_bounds_get_polygon(spine_skeleton_bounds self, spine_bounding_box_attachment attachment) {
+/*@null*/ spine_polygon spine_skeleton_bounds_get_polygon(spine_skeleton_bounds self, /*@null*/ spine_bounding_box_attachment attachment) {
 	SkeletonBounds *_self = (SkeletonBounds *) self;
 	return (spine_polygon) _self->getPolygon((BoundingBoxAttachment *) attachment);
 }
 
-spine_bounding_box_attachment spine_skeleton_bounds_get_bounding_box(spine_skeleton_bounds self, spine_polygon polygon) {
+/*@null*/ spine_bounding_box_attachment spine_skeleton_bounds_get_bounding_box(spine_skeleton_bounds self, /*@null*/ spine_polygon polygon) {
 	SkeletonBounds *_self = (SkeletonBounds *) self;
 	return (spine_bounding_box_attachment) _self->getBoundingBox((Polygon *) polygon);
 }
 
-spine_array_polygon spine_skeleton_bounds_get_polygons(spine_skeleton_bounds self) {
+/*@null*/ spine_array_polygon spine_skeleton_bounds_get_polygons(spine_skeleton_bounds self) {
 	SkeletonBounds *_self = (SkeletonBounds *) self;
 	return (spine_array_polygon) &_self->getPolygons();
 }
 
-spine_array_bounding_box_attachment spine_skeleton_bounds_get_bounding_boxes(spine_skeleton_bounds self) {
+/*@null*/ spine_array_bounding_box_attachment spine_skeleton_bounds_get_bounding_boxes(spine_skeleton_bounds self) {
 	SkeletonBounds *_self = (SkeletonBounds *) self;
 	return (spine_array_bounding_box_attachment) &_self->getBoundingBoxes();
 }

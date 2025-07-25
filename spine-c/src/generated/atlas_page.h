@@ -35,8 +35,8 @@ SPINE_C_API bool spine_atlas_page_get_pma(spine_atlas_page self);
 SPINE_C_API void spine_atlas_page_set_pma(spine_atlas_page self, bool value);
 SPINE_C_API int spine_atlas_page_get_index(spine_atlas_page self);
 SPINE_C_API void spine_atlas_page_set_index(spine_atlas_page self, int value);
-SPINE_C_API void *spine_atlas_page_get_texture(spine_atlas_page self);
-SPINE_C_API void spine_atlas_page_set_texture(spine_atlas_page self, void *value);
+SPINE_C_API /*@null*/ void *spine_atlas_page_get_texture(spine_atlas_page self);
+SPINE_C_API void spine_atlas_page_set_texture(spine_atlas_page self, /*@null*/ void *value);
 
 #ifdef __cplusplus
 }

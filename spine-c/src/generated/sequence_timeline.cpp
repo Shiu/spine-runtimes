@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_sequence_timeline spine_sequence_timeline_create(size_t frameCount, int slotIndex, spine_attachment attachment) {
+spine_sequence_timeline spine_sequence_timeline_create(size_t frameCount, int slotIndex, /*@null*/ spine_attachment attachment) {
 	return (spine_sequence_timeline) new (__FILE__, __LINE__) SequenceTimeline(frameCount, slotIndex, (Attachment *) attachment);
 }
 
@@ -16,8 +16,9 @@ spine_rtti spine_sequence_timeline_get_rtti(spine_sequence_timeline self) {
 	return (spine_rtti) &_self->getRTTI();
 }
 
-void spine_sequence_timeline_apply(spine_sequence_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
-								   float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
+void spine_sequence_timeline_apply(spine_sequence_timeline self, spine_skeleton skeleton, float lastTime, float time,
+								   /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+								   bool appliedPose) {
 	SequenceTimeline *_self = (SequenceTimeline *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
 				 appliedPose);

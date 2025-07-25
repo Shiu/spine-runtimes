@@ -16,7 +16,7 @@ spine_rtti spine_event_timeline_get_rtti(spine_event_timeline self) {
 	return (spine_rtti) &_self->getRTTI();
 }
 
-void spine_event_timeline_apply(spine_event_timeline self, spine_skeleton skeleton, float lastTime, float time, spine_array_event pEvents,
+void spine_event_timeline_apply(spine_event_timeline self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event pEvents,
 								float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
 	EventTimeline *_self = (EventTimeline *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
@@ -28,7 +28,7 @@ size_t spine_event_timeline_get_frame_count(spine_event_timeline self) {
 	return _self->getFrameCount();
 }
 
-spine_array_event spine_event_timeline_get_events(spine_event_timeline self) {
+/*@null*/ spine_array_event spine_event_timeline_get_events(spine_event_timeline self) {
 	EventTimeline *_self = (EventTimeline *) self;
 	return (spine_array_event) &_self->getEvents();
 }

@@ -57,7 +57,7 @@ spine_attachment spine_path_attachment_copy(spine_path_attachment self) {
 }
 
 void spine_path_attachment_compute_world_vertices_1(spine_path_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count,
-													float *worldVertices, size_t offset, size_t stride) {
+													/*@null*/ float *worldVertices, size_t offset, size_t stride) {
 	VertexAttachment *_self = (VertexAttachment *) (PathAttachment *) self;
 	_self->computeWorldVertices(*((Skeleton *) skeleton), *((Slot *) slot), start, count, worldVertices, offset, stride);
 }
@@ -103,12 +103,12 @@ void spine_path_attachment_set_world_vertices_length(spine_path_attachment self,
 	_self->setWorldVerticesLength(inValue);
 }
 
-spine_attachment spine_path_attachment_get_timeline_attachment(spine_path_attachment self) {
+/*@null*/ spine_attachment spine_path_attachment_get_timeline_attachment(spine_path_attachment self) {
 	VertexAttachment *_self = (VertexAttachment *) (PathAttachment *) self;
 	return (spine_attachment) _self->getTimelineAttachment();
 }
 
-void spine_path_attachment_set_timeline_attachment(spine_path_attachment self, spine_attachment attachment) {
+void spine_path_attachment_set_timeline_attachment(spine_path_attachment self, /*@null*/ spine_attachment attachment) {
 	VertexAttachment *_self = (VertexAttachment *) (PathAttachment *) self;
 	_self->setTimelineAttachment((Attachment *) attachment);
 }

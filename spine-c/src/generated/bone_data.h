@@ -9,12 +9,12 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_bone_data spine_bone_data_create(int index, const char *name, spine_bone_data parent);
+SPINE_C_API spine_bone_data spine_bone_data_create(int index, const char *name, /*@null*/ spine_bone_data parent);
 
 SPINE_C_API void spine_bone_data_dispose(spine_bone_data self);
 
 SPINE_C_API int spine_bone_data_get_index(spine_bone_data self);
-SPINE_C_API spine_bone_data spine_bone_data_get_parent(spine_bone_data self);
+SPINE_C_API /*@null*/ spine_bone_data spine_bone_data_get_parent(spine_bone_data self);
 SPINE_C_API float spine_bone_data_get_length(spine_bone_data self);
 SPINE_C_API void spine_bone_data_set_length(spine_bone_data self, float inValue);
 SPINE_C_API spine_color spine_bone_data_get_color(spine_bone_data self);

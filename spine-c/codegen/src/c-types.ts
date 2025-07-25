@@ -5,6 +5,7 @@ export interface CParameter {
     cType: string;         // C type (e.g., "float*", "spine_bone")
     cppType: string;       // Original C++ type (e.g., "float&", "Bone*")
     isOutput: boolean;     // true for non-const references that become output params
+    isNullable: boolean;   // true for pointer types (can be null), false for references/values
 }
 
 export interface CMethod {
@@ -12,6 +13,7 @@ export interface CMethod {
     returnType: string;    // C return type
     parameters: CParameter[];
     body: string;          // The actual implementation code (e.g., "return ((Bone*)self)->getX();")
+    returnTypeNullable: boolean;  // true if return type can be null (pointer types)
 }
 
 export interface CClassOrStruct {

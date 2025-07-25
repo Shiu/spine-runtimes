@@ -3,11 +3,11 @@
 
 using namespace spine;
 
-spine_skeleton_binary spine_skeleton_binary_create(spine_atlas atlas) {
+spine_skeleton_binary spine_skeleton_binary_create(/*@null*/ spine_atlas atlas) {
 	return (spine_skeleton_binary) new (__FILE__, __LINE__) SkeletonBinary((Atlas *) atlas);
 }
 
-spine_skeleton_binary spine_skeleton_binary_create2(spine_attachment_loader attachmentLoader, bool ownsLoader) {
+spine_skeleton_binary spine_skeleton_binary_create2(/*@null*/ spine_attachment_loader attachmentLoader, bool ownsLoader) {
 	return (spine_skeleton_binary) new (__FILE__, __LINE__) SkeletonBinary((AttachmentLoader *) attachmentLoader, ownsLoader);
 }
 
@@ -15,12 +15,13 @@ void spine_skeleton_binary_dispose(spine_skeleton_binary self) {
 	delete (SkeletonBinary *) self;
 }
 
-spine_skeleton_data spine_skeleton_binary_read_skeleton_data(spine_skeleton_binary self, const unsigned char *binary, int length) {
+/*@null*/ spine_skeleton_data spine_skeleton_binary_read_skeleton_data(spine_skeleton_binary self, /*@null*/ const unsigned char *binary,
+																	   int length) {
 	SkeletonBinary *_self = (SkeletonBinary *) self;
 	return (spine_skeleton_data) _self->readSkeletonData(binary, length);
 }
 
-spine_skeleton_data spine_skeleton_binary_read_skeleton_data_file(spine_skeleton_binary self, const char *path) {
+/*@null*/ spine_skeleton_data spine_skeleton_binary_read_skeleton_data_file(spine_skeleton_binary self, const char *path) {
 	SkeletonBinary *_self = (SkeletonBinary *) self;
 	return (spine_skeleton_data) _self->readSkeletonDataFile(String(path));
 }

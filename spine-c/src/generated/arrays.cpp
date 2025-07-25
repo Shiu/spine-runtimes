@@ -97,7 +97,7 @@ int spine_array_float_index_of(spine_array_float array, float inValue) {
 	return _array->indexOf(inValue);
 }
 
-float *spine_array_float_buffer(spine_array_float array) {
+/*@null*/ float *spine_array_float_buffer(spine_array_float array) {
 	Array<float> *_array = (Array<float> *) array;
 	return _array->buffer();
 }
@@ -167,7 +167,7 @@ int spine_array_int_index_of(spine_array_int array, int inValue) {
 	return _array->indexOf(inValue);
 }
 
-int *spine_array_int_buffer(spine_array_int array) {
+/*@null*/ int *spine_array_int_buffer(spine_array_int array) {
 	Array<int> *_array = (Array<int> *) array;
 	return _array->buffer();
 }
@@ -237,7 +237,7 @@ int spine_array_unsigned_short_index_of(spine_array_unsigned_short array, unsign
 	return _array->indexOf(inValue);
 }
 
-unsigned short *spine_array_unsigned_short_buffer(spine_array_unsigned_short array) {
+/*@null*/ unsigned short *spine_array_unsigned_short_buffer(spine_array_unsigned_short array) {
 	Array<unsigned short> *_array = (Array<unsigned short> *) array;
 	return _array->buffer();
 }
@@ -307,7 +307,7 @@ int spine_array_property_id_index_of(spine_array_property_id array, int64_t inVa
 	return _array->indexOf(*((const PropertyId *) inValue));
 }
 
-int64_t *spine_array_property_id_buffer(spine_array_property_id array) {
+/*@null*/ int64_t *spine_array_property_id_buffer(spine_array_property_id array) {
 	Array<PropertyId> *_array = (Array<PropertyId> *) array;
 	return (int64_t *) _array->buffer();
 }
@@ -337,7 +337,7 @@ size_t spine_array_animation_size(spine_array_animation array) {
 	return _array->size();
 }
 
-spine_array_animation spine_array_animation_set_size(spine_array_animation array, size_t newSize, spine_animation defaultValue) {
+/*@null*/ spine_array_animation spine_array_animation_set_size(spine_array_animation array, size_t newSize, /*@null*/ spine_animation defaultValue) {
 	Array<Animation *> *_array = (Array<Animation *> *) array;
 	return (spine_array_animation) &_array->setSize(newSize, (Animation *) defaultValue);
 }
@@ -347,17 +347,17 @@ void spine_array_animation_ensure_capacity(spine_array_animation array, size_t n
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_animation_add(spine_array_animation array, spine_animation inValue) {
+void spine_array_animation_add(spine_array_animation array, /*@null*/ spine_animation inValue) {
 	Array<Animation *> *_array = (Array<Animation *> *) array;
 	_array->add((Animation *) inValue);
 }
 
-void spine_array_animation_add_all(spine_array_animation array, spine_array_animation inValue) {
+void spine_array_animation_add_all(spine_array_animation array, /*@null*/ spine_array_animation inValue) {
 	Array<Animation *> *_array = (Array<Animation *> *) array;
 	_array->addAll(*((const Array<Animation *> *) inValue));
 }
 
-void spine_array_animation_clear_and_add_all(spine_array_animation array, spine_array_animation inValue) {
+void spine_array_animation_clear_and_add_all(spine_array_animation array, /*@null*/ spine_array_animation inValue) {
 	Array<Animation *> *_array = (Array<Animation *> *) array;
 	_array->clearAndAddAll(*((const Array<Animation *> *) inValue));
 }
@@ -367,17 +367,17 @@ void spine_array_animation_remove_at(spine_array_animation array, size_t inIndex
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_animation_contains(spine_array_animation array, spine_animation inValue) {
+bool spine_array_animation_contains(spine_array_animation array, /*@null*/ spine_animation inValue) {
 	Array<Animation *> *_array = (Array<Animation *> *) array;
 	return _array->contains((Animation *) inValue);
 }
 
-int spine_array_animation_index_of(spine_array_animation array, spine_animation inValue) {
+int spine_array_animation_index_of(spine_array_animation array, /*@null*/ spine_animation inValue) {
 	Array<Animation *> *_array = (Array<Animation *> *) array;
 	return _array->indexOf((Animation *) inValue);
 }
 
-spine_animation *spine_array_animation_buffer(spine_array_animation array) {
+/*@null*/ spine_animation *spine_array_animation_buffer(spine_array_animation array) {
 	Array<Animation *> *_array = (Array<Animation *> *) array;
 	return (spine_animation *) _array->buffer();
 }
@@ -407,7 +407,8 @@ size_t spine_array_atlas_page_size(spine_array_atlas_page array) {
 	return _array->size();
 }
 
-spine_array_atlas_page spine_array_atlas_page_set_size(spine_array_atlas_page array, size_t newSize, spine_atlas_page defaultValue) {
+/*@null*/ spine_array_atlas_page spine_array_atlas_page_set_size(spine_array_atlas_page array, size_t newSize,
+																 /*@null*/ spine_atlas_page defaultValue) {
 	Array<AtlasPage *> *_array = (Array<AtlasPage *> *) array;
 	return (spine_array_atlas_page) &_array->setSize(newSize, (AtlasPage *) defaultValue);
 }
@@ -417,17 +418,17 @@ void spine_array_atlas_page_ensure_capacity(spine_array_atlas_page array, size_t
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_atlas_page_add(spine_array_atlas_page array, spine_atlas_page inValue) {
+void spine_array_atlas_page_add(spine_array_atlas_page array, /*@null*/ spine_atlas_page inValue) {
 	Array<AtlasPage *> *_array = (Array<AtlasPage *> *) array;
 	_array->add((AtlasPage *) inValue);
 }
 
-void spine_array_atlas_page_add_all(spine_array_atlas_page array, spine_array_atlas_page inValue) {
+void spine_array_atlas_page_add_all(spine_array_atlas_page array, /*@null*/ spine_array_atlas_page inValue) {
 	Array<AtlasPage *> *_array = (Array<AtlasPage *> *) array;
 	_array->addAll(*((const Array<AtlasPage *> *) inValue));
 }
 
-void spine_array_atlas_page_clear_and_add_all(spine_array_atlas_page array, spine_array_atlas_page inValue) {
+void spine_array_atlas_page_clear_and_add_all(spine_array_atlas_page array, /*@null*/ spine_array_atlas_page inValue) {
 	Array<AtlasPage *> *_array = (Array<AtlasPage *> *) array;
 	_array->clearAndAddAll(*((const Array<AtlasPage *> *) inValue));
 }
@@ -437,17 +438,17 @@ void spine_array_atlas_page_remove_at(spine_array_atlas_page array, size_t inInd
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_atlas_page_contains(spine_array_atlas_page array, spine_atlas_page inValue) {
+bool spine_array_atlas_page_contains(spine_array_atlas_page array, /*@null*/ spine_atlas_page inValue) {
 	Array<AtlasPage *> *_array = (Array<AtlasPage *> *) array;
 	return _array->contains((AtlasPage *) inValue);
 }
 
-int spine_array_atlas_page_index_of(spine_array_atlas_page array, spine_atlas_page inValue) {
+int spine_array_atlas_page_index_of(spine_array_atlas_page array, /*@null*/ spine_atlas_page inValue) {
 	Array<AtlasPage *> *_array = (Array<AtlasPage *> *) array;
 	return _array->indexOf((AtlasPage *) inValue);
 }
 
-spine_atlas_page *spine_array_atlas_page_buffer(spine_array_atlas_page array) {
+/*@null*/ spine_atlas_page *spine_array_atlas_page_buffer(spine_array_atlas_page array) {
 	Array<AtlasPage *> *_array = (Array<AtlasPage *> *) array;
 	return (spine_atlas_page *) _array->buffer();
 }
@@ -477,7 +478,8 @@ size_t spine_array_atlas_region_size(spine_array_atlas_region array) {
 	return _array->size();
 }
 
-spine_array_atlas_region spine_array_atlas_region_set_size(spine_array_atlas_region array, size_t newSize, spine_atlas_region defaultValue) {
+/*@null*/ spine_array_atlas_region spine_array_atlas_region_set_size(spine_array_atlas_region array, size_t newSize,
+																	 /*@null*/ spine_atlas_region defaultValue) {
 	Array<AtlasRegion *> *_array = (Array<AtlasRegion *> *) array;
 	return (spine_array_atlas_region) &_array->setSize(newSize, (AtlasRegion *) defaultValue);
 }
@@ -487,17 +489,17 @@ void spine_array_atlas_region_ensure_capacity(spine_array_atlas_region array, si
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_atlas_region_add(spine_array_atlas_region array, spine_atlas_region inValue) {
+void spine_array_atlas_region_add(spine_array_atlas_region array, /*@null*/ spine_atlas_region inValue) {
 	Array<AtlasRegion *> *_array = (Array<AtlasRegion *> *) array;
 	_array->add((AtlasRegion *) inValue);
 }
 
-void spine_array_atlas_region_add_all(spine_array_atlas_region array, spine_array_atlas_region inValue) {
+void spine_array_atlas_region_add_all(spine_array_atlas_region array, /*@null*/ spine_array_atlas_region inValue) {
 	Array<AtlasRegion *> *_array = (Array<AtlasRegion *> *) array;
 	_array->addAll(*((const Array<AtlasRegion *> *) inValue));
 }
 
-void spine_array_atlas_region_clear_and_add_all(spine_array_atlas_region array, spine_array_atlas_region inValue) {
+void spine_array_atlas_region_clear_and_add_all(spine_array_atlas_region array, /*@null*/ spine_array_atlas_region inValue) {
 	Array<AtlasRegion *> *_array = (Array<AtlasRegion *> *) array;
 	_array->clearAndAddAll(*((const Array<AtlasRegion *> *) inValue));
 }
@@ -507,17 +509,17 @@ void spine_array_atlas_region_remove_at(spine_array_atlas_region array, size_t i
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_atlas_region_contains(spine_array_atlas_region array, spine_atlas_region inValue) {
+bool spine_array_atlas_region_contains(spine_array_atlas_region array, /*@null*/ spine_atlas_region inValue) {
 	Array<AtlasRegion *> *_array = (Array<AtlasRegion *> *) array;
 	return _array->contains((AtlasRegion *) inValue);
 }
 
-int spine_array_atlas_region_index_of(spine_array_atlas_region array, spine_atlas_region inValue) {
+int spine_array_atlas_region_index_of(spine_array_atlas_region array, /*@null*/ spine_atlas_region inValue) {
 	Array<AtlasRegion *> *_array = (Array<AtlasRegion *> *) array;
 	return _array->indexOf((AtlasRegion *) inValue);
 }
 
-spine_atlas_region *spine_array_atlas_region_buffer(spine_array_atlas_region array) {
+/*@null*/ spine_atlas_region *spine_array_atlas_region_buffer(spine_array_atlas_region array) {
 	Array<AtlasRegion *> *_array = (Array<AtlasRegion *> *) array;
 	return (spine_atlas_region *) _array->buffer();
 }
@@ -547,7 +549,8 @@ size_t spine_array_attachment_size(spine_array_attachment array) {
 	return _array->size();
 }
 
-spine_array_attachment spine_array_attachment_set_size(spine_array_attachment array, size_t newSize, spine_attachment defaultValue) {
+/*@null*/ spine_array_attachment spine_array_attachment_set_size(spine_array_attachment array, size_t newSize,
+																 /*@null*/ spine_attachment defaultValue) {
 	Array<Attachment *> *_array = (Array<Attachment *> *) array;
 	return (spine_array_attachment) &_array->setSize(newSize, (Attachment *) defaultValue);
 }
@@ -557,17 +560,17 @@ void spine_array_attachment_ensure_capacity(spine_array_attachment array, size_t
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_attachment_add(spine_array_attachment array, spine_attachment inValue) {
+void spine_array_attachment_add(spine_array_attachment array, /*@null*/ spine_attachment inValue) {
 	Array<Attachment *> *_array = (Array<Attachment *> *) array;
 	_array->add((Attachment *) inValue);
 }
 
-void spine_array_attachment_add_all(spine_array_attachment array, spine_array_attachment inValue) {
+void spine_array_attachment_add_all(spine_array_attachment array, /*@null*/ spine_array_attachment inValue) {
 	Array<Attachment *> *_array = (Array<Attachment *> *) array;
 	_array->addAll(*((const Array<Attachment *> *) inValue));
 }
 
-void spine_array_attachment_clear_and_add_all(spine_array_attachment array, spine_array_attachment inValue) {
+void spine_array_attachment_clear_and_add_all(spine_array_attachment array, /*@null*/ spine_array_attachment inValue) {
 	Array<Attachment *> *_array = (Array<Attachment *> *) array;
 	_array->clearAndAddAll(*((const Array<Attachment *> *) inValue));
 }
@@ -577,17 +580,17 @@ void spine_array_attachment_remove_at(spine_array_attachment array, size_t inInd
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_attachment_contains(spine_array_attachment array, spine_attachment inValue) {
+bool spine_array_attachment_contains(spine_array_attachment array, /*@null*/ spine_attachment inValue) {
 	Array<Attachment *> *_array = (Array<Attachment *> *) array;
 	return _array->contains((Attachment *) inValue);
 }
 
-int spine_array_attachment_index_of(spine_array_attachment array, spine_attachment inValue) {
+int spine_array_attachment_index_of(spine_array_attachment array, /*@null*/ spine_attachment inValue) {
 	Array<Attachment *> *_array = (Array<Attachment *> *) array;
 	return _array->indexOf((Attachment *) inValue);
 }
 
-spine_attachment *spine_array_attachment_buffer(spine_array_attachment array) {
+/*@null*/ spine_attachment *spine_array_attachment_buffer(spine_array_attachment array) {
 	Array<Attachment *> *_array = (Array<Attachment *> *) array;
 	return (spine_attachment *) _array->buffer();
 }
@@ -617,7 +620,7 @@ size_t spine_array_bone_size(spine_array_bone array) {
 	return _array->size();
 }
 
-spine_array_bone spine_array_bone_set_size(spine_array_bone array, size_t newSize, spine_bone defaultValue) {
+/*@null*/ spine_array_bone spine_array_bone_set_size(spine_array_bone array, size_t newSize, /*@null*/ spine_bone defaultValue) {
 	Array<Bone *> *_array = (Array<Bone *> *) array;
 	return (spine_array_bone) &_array->setSize(newSize, (Bone *) defaultValue);
 }
@@ -627,17 +630,17 @@ void spine_array_bone_ensure_capacity(spine_array_bone array, size_t newCapacity
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_bone_add(spine_array_bone array, spine_bone inValue) {
+void spine_array_bone_add(spine_array_bone array, /*@null*/ spine_bone inValue) {
 	Array<Bone *> *_array = (Array<Bone *> *) array;
 	_array->add((Bone *) inValue);
 }
 
-void spine_array_bone_add_all(spine_array_bone array, spine_array_bone inValue) {
+void spine_array_bone_add_all(spine_array_bone array, /*@null*/ spine_array_bone inValue) {
 	Array<Bone *> *_array = (Array<Bone *> *) array;
 	_array->addAll(*((const Array<Bone *> *) inValue));
 }
 
-void spine_array_bone_clear_and_add_all(spine_array_bone array, spine_array_bone inValue) {
+void spine_array_bone_clear_and_add_all(spine_array_bone array, /*@null*/ spine_array_bone inValue) {
 	Array<Bone *> *_array = (Array<Bone *> *) array;
 	_array->clearAndAddAll(*((const Array<Bone *> *) inValue));
 }
@@ -647,17 +650,17 @@ void spine_array_bone_remove_at(spine_array_bone array, size_t inIndex) {
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_bone_contains(spine_array_bone array, spine_bone inValue) {
+bool spine_array_bone_contains(spine_array_bone array, /*@null*/ spine_bone inValue) {
 	Array<Bone *> *_array = (Array<Bone *> *) array;
 	return _array->contains((Bone *) inValue);
 }
 
-int spine_array_bone_index_of(spine_array_bone array, spine_bone inValue) {
+int spine_array_bone_index_of(spine_array_bone array, /*@null*/ spine_bone inValue) {
 	Array<Bone *> *_array = (Array<Bone *> *) array;
 	return _array->indexOf((Bone *) inValue);
 }
 
-spine_bone *spine_array_bone_buffer(spine_array_bone array) {
+/*@null*/ spine_bone *spine_array_bone_buffer(spine_array_bone array) {
 	Array<Bone *> *_array = (Array<Bone *> *) array;
 	return (spine_bone *) _array->buffer();
 }
@@ -687,7 +690,7 @@ size_t spine_array_bone_data_size(spine_array_bone_data array) {
 	return _array->size();
 }
 
-spine_array_bone_data spine_array_bone_data_set_size(spine_array_bone_data array, size_t newSize, spine_bone_data defaultValue) {
+/*@null*/ spine_array_bone_data spine_array_bone_data_set_size(spine_array_bone_data array, size_t newSize, /*@null*/ spine_bone_data defaultValue) {
 	Array<BoneData *> *_array = (Array<BoneData *> *) array;
 	return (spine_array_bone_data) &_array->setSize(newSize, (BoneData *) defaultValue);
 }
@@ -697,17 +700,17 @@ void spine_array_bone_data_ensure_capacity(spine_array_bone_data array, size_t n
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_bone_data_add(spine_array_bone_data array, spine_bone_data inValue) {
+void spine_array_bone_data_add(spine_array_bone_data array, /*@null*/ spine_bone_data inValue) {
 	Array<BoneData *> *_array = (Array<BoneData *> *) array;
 	_array->add((BoneData *) inValue);
 }
 
-void spine_array_bone_data_add_all(spine_array_bone_data array, spine_array_bone_data inValue) {
+void spine_array_bone_data_add_all(spine_array_bone_data array, /*@null*/ spine_array_bone_data inValue) {
 	Array<BoneData *> *_array = (Array<BoneData *> *) array;
 	_array->addAll(*((const Array<BoneData *> *) inValue));
 }
 
-void spine_array_bone_data_clear_and_add_all(spine_array_bone_data array, spine_array_bone_data inValue) {
+void spine_array_bone_data_clear_and_add_all(spine_array_bone_data array, /*@null*/ spine_array_bone_data inValue) {
 	Array<BoneData *> *_array = (Array<BoneData *> *) array;
 	_array->clearAndAddAll(*((const Array<BoneData *> *) inValue));
 }
@@ -717,17 +720,17 @@ void spine_array_bone_data_remove_at(spine_array_bone_data array, size_t inIndex
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_bone_data_contains(spine_array_bone_data array, spine_bone_data inValue) {
+bool spine_array_bone_data_contains(spine_array_bone_data array, /*@null*/ spine_bone_data inValue) {
 	Array<BoneData *> *_array = (Array<BoneData *> *) array;
 	return _array->contains((BoneData *) inValue);
 }
 
-int spine_array_bone_data_index_of(spine_array_bone_data array, spine_bone_data inValue) {
+int spine_array_bone_data_index_of(spine_array_bone_data array, /*@null*/ spine_bone_data inValue) {
 	Array<BoneData *> *_array = (Array<BoneData *> *) array;
 	return _array->indexOf((BoneData *) inValue);
 }
 
-spine_bone_data *spine_array_bone_data_buffer(spine_array_bone_data array) {
+/*@null*/ spine_bone_data *spine_array_bone_data_buffer(spine_array_bone_data array) {
 	Array<BoneData *> *_array = (Array<BoneData *> *) array;
 	return (spine_bone_data *) _array->buffer();
 }
@@ -757,7 +760,7 @@ size_t spine_array_bone_pose_size(spine_array_bone_pose array) {
 	return _array->size();
 }
 
-spine_array_bone_pose spine_array_bone_pose_set_size(spine_array_bone_pose array, size_t newSize, spine_bone_pose defaultValue) {
+/*@null*/ spine_array_bone_pose spine_array_bone_pose_set_size(spine_array_bone_pose array, size_t newSize, /*@null*/ spine_bone_pose defaultValue) {
 	Array<BonePose *> *_array = (Array<BonePose *> *) array;
 	return (spine_array_bone_pose) &_array->setSize(newSize, (BonePose *) defaultValue);
 }
@@ -767,17 +770,17 @@ void spine_array_bone_pose_ensure_capacity(spine_array_bone_pose array, size_t n
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_bone_pose_add(spine_array_bone_pose array, spine_bone_pose inValue) {
+void spine_array_bone_pose_add(spine_array_bone_pose array, /*@null*/ spine_bone_pose inValue) {
 	Array<BonePose *> *_array = (Array<BonePose *> *) array;
 	_array->add((BonePose *) inValue);
 }
 
-void spine_array_bone_pose_add_all(spine_array_bone_pose array, spine_array_bone_pose inValue) {
+void spine_array_bone_pose_add_all(spine_array_bone_pose array, /*@null*/ spine_array_bone_pose inValue) {
 	Array<BonePose *> *_array = (Array<BonePose *> *) array;
 	_array->addAll(*((const Array<BonePose *> *) inValue));
 }
 
-void spine_array_bone_pose_clear_and_add_all(spine_array_bone_pose array, spine_array_bone_pose inValue) {
+void spine_array_bone_pose_clear_and_add_all(spine_array_bone_pose array, /*@null*/ spine_array_bone_pose inValue) {
 	Array<BonePose *> *_array = (Array<BonePose *> *) array;
 	_array->clearAndAddAll(*((const Array<BonePose *> *) inValue));
 }
@@ -787,17 +790,17 @@ void spine_array_bone_pose_remove_at(spine_array_bone_pose array, size_t inIndex
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_bone_pose_contains(spine_array_bone_pose array, spine_bone_pose inValue) {
+bool spine_array_bone_pose_contains(spine_array_bone_pose array, /*@null*/ spine_bone_pose inValue) {
 	Array<BonePose *> *_array = (Array<BonePose *> *) array;
 	return _array->contains((BonePose *) inValue);
 }
 
-int spine_array_bone_pose_index_of(spine_array_bone_pose array, spine_bone_pose inValue) {
+int spine_array_bone_pose_index_of(spine_array_bone_pose array, /*@null*/ spine_bone_pose inValue) {
 	Array<BonePose *> *_array = (Array<BonePose *> *) array;
 	return _array->indexOf((BonePose *) inValue);
 }
 
-spine_bone_pose *spine_array_bone_pose_buffer(spine_array_bone_pose array) {
+/*@null*/ spine_bone_pose *spine_array_bone_pose_buffer(spine_array_bone_pose array) {
 	Array<BonePose *> *_array = (Array<BonePose *> *) array;
 	return (spine_bone_pose *) _array->buffer();
 }
@@ -827,8 +830,8 @@ size_t spine_array_bounding_box_attachment_size(spine_array_bounding_box_attachm
 	return _array->size();
 }
 
-spine_array_bounding_box_attachment spine_array_bounding_box_attachment_set_size(spine_array_bounding_box_attachment array, size_t newSize,
-																				 spine_bounding_box_attachment defaultValue) {
+/*@null*/ spine_array_bounding_box_attachment spine_array_bounding_box_attachment_set_size(spine_array_bounding_box_attachment array, size_t newSize,
+																						   /*@null*/ spine_bounding_box_attachment defaultValue) {
 	Array<BoundingBoxAttachment *> *_array = (Array<BoundingBoxAttachment *> *) array;
 	return (spine_array_bounding_box_attachment) &_array->setSize(newSize, (BoundingBoxAttachment *) defaultValue);
 }
@@ -838,17 +841,18 @@ void spine_array_bounding_box_attachment_ensure_capacity(spine_array_bounding_bo
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_bounding_box_attachment_add(spine_array_bounding_box_attachment array, spine_bounding_box_attachment inValue) {
+void spine_array_bounding_box_attachment_add(spine_array_bounding_box_attachment array, /*@null*/ spine_bounding_box_attachment inValue) {
 	Array<BoundingBoxAttachment *> *_array = (Array<BoundingBoxAttachment *> *) array;
 	_array->add((BoundingBoxAttachment *) inValue);
 }
 
-void spine_array_bounding_box_attachment_add_all(spine_array_bounding_box_attachment array, spine_array_bounding_box_attachment inValue) {
+void spine_array_bounding_box_attachment_add_all(spine_array_bounding_box_attachment array, /*@null*/ spine_array_bounding_box_attachment inValue) {
 	Array<BoundingBoxAttachment *> *_array = (Array<BoundingBoxAttachment *> *) array;
 	_array->addAll(*((const Array<BoundingBoxAttachment *> *) inValue));
 }
 
-void spine_array_bounding_box_attachment_clear_and_add_all(spine_array_bounding_box_attachment array, spine_array_bounding_box_attachment inValue) {
+void spine_array_bounding_box_attachment_clear_and_add_all(spine_array_bounding_box_attachment array,
+														   /*@null*/ spine_array_bounding_box_attachment inValue) {
 	Array<BoundingBoxAttachment *> *_array = (Array<BoundingBoxAttachment *> *) array;
 	_array->clearAndAddAll(*((const Array<BoundingBoxAttachment *> *) inValue));
 }
@@ -858,17 +862,17 @@ void spine_array_bounding_box_attachment_remove_at(spine_array_bounding_box_atta
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_bounding_box_attachment_contains(spine_array_bounding_box_attachment array, spine_bounding_box_attachment inValue) {
+bool spine_array_bounding_box_attachment_contains(spine_array_bounding_box_attachment array, /*@null*/ spine_bounding_box_attachment inValue) {
 	Array<BoundingBoxAttachment *> *_array = (Array<BoundingBoxAttachment *> *) array;
 	return _array->contains((BoundingBoxAttachment *) inValue);
 }
 
-int spine_array_bounding_box_attachment_index_of(spine_array_bounding_box_attachment array, spine_bounding_box_attachment inValue) {
+int spine_array_bounding_box_attachment_index_of(spine_array_bounding_box_attachment array, /*@null*/ spine_bounding_box_attachment inValue) {
 	Array<BoundingBoxAttachment *> *_array = (Array<BoundingBoxAttachment *> *) array;
 	return _array->indexOf((BoundingBoxAttachment *) inValue);
 }
 
-spine_bounding_box_attachment *spine_array_bounding_box_attachment_buffer(spine_array_bounding_box_attachment array) {
+/*@null*/ spine_bounding_box_attachment *spine_array_bounding_box_attachment_buffer(spine_array_bounding_box_attachment array) {
 	Array<BoundingBoxAttachment *> *_array = (Array<BoundingBoxAttachment *> *) array;
 	return (spine_bounding_box_attachment *) _array->buffer();
 }
@@ -898,7 +902,8 @@ size_t spine_array_constraint_size(spine_array_constraint array) {
 	return _array->size();
 }
 
-spine_array_constraint spine_array_constraint_set_size(spine_array_constraint array, size_t newSize, spine_constraint defaultValue) {
+/*@null*/ spine_array_constraint spine_array_constraint_set_size(spine_array_constraint array, size_t newSize,
+																 /*@null*/ spine_constraint defaultValue) {
 	Array<Constraint *> *_array = (Array<Constraint *> *) array;
 	return (spine_array_constraint) &_array->setSize(newSize, (Constraint *) defaultValue);
 }
@@ -908,17 +913,17 @@ void spine_array_constraint_ensure_capacity(spine_array_constraint array, size_t
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_constraint_add(spine_array_constraint array, spine_constraint inValue) {
+void spine_array_constraint_add(spine_array_constraint array, /*@null*/ spine_constraint inValue) {
 	Array<Constraint *> *_array = (Array<Constraint *> *) array;
 	_array->add((Constraint *) inValue);
 }
 
-void spine_array_constraint_add_all(spine_array_constraint array, spine_array_constraint inValue) {
+void spine_array_constraint_add_all(spine_array_constraint array, /*@null*/ spine_array_constraint inValue) {
 	Array<Constraint *> *_array = (Array<Constraint *> *) array;
 	_array->addAll(*((const Array<Constraint *> *) inValue));
 }
 
-void spine_array_constraint_clear_and_add_all(spine_array_constraint array, spine_array_constraint inValue) {
+void spine_array_constraint_clear_and_add_all(spine_array_constraint array, /*@null*/ spine_array_constraint inValue) {
 	Array<Constraint *> *_array = (Array<Constraint *> *) array;
 	_array->clearAndAddAll(*((const Array<Constraint *> *) inValue));
 }
@@ -928,17 +933,17 @@ void spine_array_constraint_remove_at(spine_array_constraint array, size_t inInd
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_constraint_contains(spine_array_constraint array, spine_constraint inValue) {
+bool spine_array_constraint_contains(spine_array_constraint array, /*@null*/ spine_constraint inValue) {
 	Array<Constraint *> *_array = (Array<Constraint *> *) array;
 	return _array->contains((Constraint *) inValue);
 }
 
-int spine_array_constraint_index_of(spine_array_constraint array, spine_constraint inValue) {
+int spine_array_constraint_index_of(spine_array_constraint array, /*@null*/ spine_constraint inValue) {
 	Array<Constraint *> *_array = (Array<Constraint *> *) array;
 	return _array->indexOf((Constraint *) inValue);
 }
 
-spine_constraint *spine_array_constraint_buffer(spine_array_constraint array) {
+/*@null*/ spine_constraint *spine_array_constraint_buffer(spine_array_constraint array) {
 	Array<Constraint *> *_array = (Array<Constraint *> *) array;
 	return (spine_constraint *) _array->buffer();
 }
@@ -968,8 +973,8 @@ size_t spine_array_constraint_data_size(spine_array_constraint_data array) {
 	return _array->size();
 }
 
-spine_array_constraint_data spine_array_constraint_data_set_size(spine_array_constraint_data array, size_t newSize,
-																 spine_constraint_data defaultValue) {
+/*@null*/ spine_array_constraint_data spine_array_constraint_data_set_size(spine_array_constraint_data array, size_t newSize,
+																		   /*@null*/ spine_constraint_data defaultValue) {
 	Array<ConstraintData *> *_array = (Array<ConstraintData *> *) array;
 	return (spine_array_constraint_data) &_array->setSize(newSize, (ConstraintData *) defaultValue);
 }
@@ -979,17 +984,17 @@ void spine_array_constraint_data_ensure_capacity(spine_array_constraint_data arr
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_constraint_data_add(spine_array_constraint_data array, spine_constraint_data inValue) {
+void spine_array_constraint_data_add(spine_array_constraint_data array, /*@null*/ spine_constraint_data inValue) {
 	Array<ConstraintData *> *_array = (Array<ConstraintData *> *) array;
 	_array->add((ConstraintData *) inValue);
 }
 
-void spine_array_constraint_data_add_all(spine_array_constraint_data array, spine_array_constraint_data inValue) {
+void spine_array_constraint_data_add_all(spine_array_constraint_data array, /*@null*/ spine_array_constraint_data inValue) {
 	Array<ConstraintData *> *_array = (Array<ConstraintData *> *) array;
 	_array->addAll(*((const Array<ConstraintData *> *) inValue));
 }
 
-void spine_array_constraint_data_clear_and_add_all(spine_array_constraint_data array, spine_array_constraint_data inValue) {
+void spine_array_constraint_data_clear_and_add_all(spine_array_constraint_data array, /*@null*/ spine_array_constraint_data inValue) {
 	Array<ConstraintData *> *_array = (Array<ConstraintData *> *) array;
 	_array->clearAndAddAll(*((const Array<ConstraintData *> *) inValue));
 }
@@ -999,17 +1004,17 @@ void spine_array_constraint_data_remove_at(spine_array_constraint_data array, si
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_constraint_data_contains(spine_array_constraint_data array, spine_constraint_data inValue) {
+bool spine_array_constraint_data_contains(spine_array_constraint_data array, /*@null*/ spine_constraint_data inValue) {
 	Array<ConstraintData *> *_array = (Array<ConstraintData *> *) array;
 	return _array->contains((ConstraintData *) inValue);
 }
 
-int spine_array_constraint_data_index_of(spine_array_constraint_data array, spine_constraint_data inValue) {
+int spine_array_constraint_data_index_of(spine_array_constraint_data array, /*@null*/ spine_constraint_data inValue) {
 	Array<ConstraintData *> *_array = (Array<ConstraintData *> *) array;
 	return _array->indexOf((ConstraintData *) inValue);
 }
 
-spine_constraint_data *spine_array_constraint_data_buffer(spine_array_constraint_data array) {
+/*@null*/ spine_constraint_data *spine_array_constraint_data_buffer(spine_array_constraint_data array) {
 	Array<ConstraintData *> *_array = (Array<ConstraintData *> *) array;
 	return (spine_constraint_data *) _array->buffer();
 }
@@ -1039,7 +1044,7 @@ size_t spine_array_event_size(spine_array_event array) {
 	return _array->size();
 }
 
-spine_array_event spine_array_event_set_size(spine_array_event array, size_t newSize, spine_event defaultValue) {
+/*@null*/ spine_array_event spine_array_event_set_size(spine_array_event array, size_t newSize, /*@null*/ spine_event defaultValue) {
 	Array<Event *> *_array = (Array<Event *> *) array;
 	return (spine_array_event) &_array->setSize(newSize, (Event *) defaultValue);
 }
@@ -1049,17 +1054,17 @@ void spine_array_event_ensure_capacity(spine_array_event array, size_t newCapaci
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_event_add(spine_array_event array, spine_event inValue) {
+void spine_array_event_add(spine_array_event array, /*@null*/ spine_event inValue) {
 	Array<Event *> *_array = (Array<Event *> *) array;
 	_array->add((Event *) inValue);
 }
 
-void spine_array_event_add_all(spine_array_event array, spine_array_event inValue) {
+void spine_array_event_add_all(spine_array_event array, /*@null*/ spine_array_event inValue) {
 	Array<Event *> *_array = (Array<Event *> *) array;
 	_array->addAll(*((const Array<Event *> *) inValue));
 }
 
-void spine_array_event_clear_and_add_all(spine_array_event array, spine_array_event inValue) {
+void spine_array_event_clear_and_add_all(spine_array_event array, /*@null*/ spine_array_event inValue) {
 	Array<Event *> *_array = (Array<Event *> *) array;
 	_array->clearAndAddAll(*((const Array<Event *> *) inValue));
 }
@@ -1069,17 +1074,17 @@ void spine_array_event_remove_at(spine_array_event array, size_t inIndex) {
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_event_contains(spine_array_event array, spine_event inValue) {
+bool spine_array_event_contains(spine_array_event array, /*@null*/ spine_event inValue) {
 	Array<Event *> *_array = (Array<Event *> *) array;
 	return _array->contains((Event *) inValue);
 }
 
-int spine_array_event_index_of(spine_array_event array, spine_event inValue) {
+int spine_array_event_index_of(spine_array_event array, /*@null*/ spine_event inValue) {
 	Array<Event *> *_array = (Array<Event *> *) array;
 	return _array->indexOf((Event *) inValue);
 }
 
-spine_event *spine_array_event_buffer(spine_array_event array) {
+/*@null*/ spine_event *spine_array_event_buffer(spine_array_event array) {
 	Array<Event *> *_array = (Array<Event *> *) array;
 	return (spine_event *) _array->buffer();
 }
@@ -1109,7 +1114,8 @@ size_t spine_array_event_data_size(spine_array_event_data array) {
 	return _array->size();
 }
 
-spine_array_event_data spine_array_event_data_set_size(spine_array_event_data array, size_t newSize, spine_event_data defaultValue) {
+/*@null*/ spine_array_event_data spine_array_event_data_set_size(spine_array_event_data array, size_t newSize,
+																 /*@null*/ spine_event_data defaultValue) {
 	Array<EventData *> *_array = (Array<EventData *> *) array;
 	return (spine_array_event_data) &_array->setSize(newSize, (EventData *) defaultValue);
 }
@@ -1119,17 +1125,17 @@ void spine_array_event_data_ensure_capacity(spine_array_event_data array, size_t
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_event_data_add(spine_array_event_data array, spine_event_data inValue) {
+void spine_array_event_data_add(spine_array_event_data array, /*@null*/ spine_event_data inValue) {
 	Array<EventData *> *_array = (Array<EventData *> *) array;
 	_array->add((EventData *) inValue);
 }
 
-void spine_array_event_data_add_all(spine_array_event_data array, spine_array_event_data inValue) {
+void spine_array_event_data_add_all(spine_array_event_data array, /*@null*/ spine_array_event_data inValue) {
 	Array<EventData *> *_array = (Array<EventData *> *) array;
 	_array->addAll(*((const Array<EventData *> *) inValue));
 }
 
-void spine_array_event_data_clear_and_add_all(spine_array_event_data array, spine_array_event_data inValue) {
+void spine_array_event_data_clear_and_add_all(spine_array_event_data array, /*@null*/ spine_array_event_data inValue) {
 	Array<EventData *> *_array = (Array<EventData *> *) array;
 	_array->clearAndAddAll(*((const Array<EventData *> *) inValue));
 }
@@ -1139,17 +1145,17 @@ void spine_array_event_data_remove_at(spine_array_event_data array, size_t inInd
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_event_data_contains(spine_array_event_data array, spine_event_data inValue) {
+bool spine_array_event_data_contains(spine_array_event_data array, /*@null*/ spine_event_data inValue) {
 	Array<EventData *> *_array = (Array<EventData *> *) array;
 	return _array->contains((EventData *) inValue);
 }
 
-int spine_array_event_data_index_of(spine_array_event_data array, spine_event_data inValue) {
+int spine_array_event_data_index_of(spine_array_event_data array, /*@null*/ spine_event_data inValue) {
 	Array<EventData *> *_array = (Array<EventData *> *) array;
 	return _array->indexOf((EventData *) inValue);
 }
 
-spine_event_data *spine_array_event_data_buffer(spine_array_event_data array) {
+/*@null*/ spine_event_data *spine_array_event_data_buffer(spine_array_event_data array) {
 	Array<EventData *> *_array = (Array<EventData *> *) array;
 	return (spine_event_data *) _array->buffer();
 }
@@ -1179,7 +1185,8 @@ size_t spine_array_from_property_size(spine_array_from_property array) {
 	return _array->size();
 }
 
-spine_array_from_property spine_array_from_property_set_size(spine_array_from_property array, size_t newSize, spine_from_property defaultValue) {
+/*@null*/ spine_array_from_property spine_array_from_property_set_size(spine_array_from_property array, size_t newSize,
+																	   /*@null*/ spine_from_property defaultValue) {
 	Array<FromProperty *> *_array = (Array<FromProperty *> *) array;
 	return (spine_array_from_property) &_array->setSize(newSize, (FromProperty *) defaultValue);
 }
@@ -1189,17 +1196,17 @@ void spine_array_from_property_ensure_capacity(spine_array_from_property array, 
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_from_property_add(spine_array_from_property array, spine_from_property inValue) {
+void spine_array_from_property_add(spine_array_from_property array, /*@null*/ spine_from_property inValue) {
 	Array<FromProperty *> *_array = (Array<FromProperty *> *) array;
 	_array->add((FromProperty *) inValue);
 }
 
-void spine_array_from_property_add_all(spine_array_from_property array, spine_array_from_property inValue) {
+void spine_array_from_property_add_all(spine_array_from_property array, /*@null*/ spine_array_from_property inValue) {
 	Array<FromProperty *> *_array = (Array<FromProperty *> *) array;
 	_array->addAll(*((const Array<FromProperty *> *) inValue));
 }
 
-void spine_array_from_property_clear_and_add_all(spine_array_from_property array, spine_array_from_property inValue) {
+void spine_array_from_property_clear_and_add_all(spine_array_from_property array, /*@null*/ spine_array_from_property inValue) {
 	Array<FromProperty *> *_array = (Array<FromProperty *> *) array;
 	_array->clearAndAddAll(*((const Array<FromProperty *> *) inValue));
 }
@@ -1209,17 +1216,17 @@ void spine_array_from_property_remove_at(spine_array_from_property array, size_t
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_from_property_contains(spine_array_from_property array, spine_from_property inValue) {
+bool spine_array_from_property_contains(spine_array_from_property array, /*@null*/ spine_from_property inValue) {
 	Array<FromProperty *> *_array = (Array<FromProperty *> *) array;
 	return _array->contains((FromProperty *) inValue);
 }
 
-int spine_array_from_property_index_of(spine_array_from_property array, spine_from_property inValue) {
+int spine_array_from_property_index_of(spine_array_from_property array, /*@null*/ spine_from_property inValue) {
 	Array<FromProperty *> *_array = (Array<FromProperty *> *) array;
 	return _array->indexOf((FromProperty *) inValue);
 }
 
-spine_from_property *spine_array_from_property_buffer(spine_array_from_property array) {
+/*@null*/ spine_from_property *spine_array_from_property_buffer(spine_array_from_property array) {
 	Array<FromProperty *> *_array = (Array<FromProperty *> *) array;
 	return (spine_from_property *) _array->buffer();
 }
@@ -1249,8 +1256,8 @@ size_t spine_array_physics_constraint_size(spine_array_physics_constraint array)
 	return _array->size();
 }
 
-spine_array_physics_constraint spine_array_physics_constraint_set_size(spine_array_physics_constraint array, size_t newSize,
-																	   spine_physics_constraint defaultValue) {
+/*@null*/ spine_array_physics_constraint spine_array_physics_constraint_set_size(spine_array_physics_constraint array, size_t newSize,
+																				 /*@null*/ spine_physics_constraint defaultValue) {
 	Array<PhysicsConstraint *> *_array = (Array<PhysicsConstraint *> *) array;
 	return (spine_array_physics_constraint) &_array->setSize(newSize, (PhysicsConstraint *) defaultValue);
 }
@@ -1260,17 +1267,17 @@ void spine_array_physics_constraint_ensure_capacity(spine_array_physics_constrai
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_physics_constraint_add(spine_array_physics_constraint array, spine_physics_constraint inValue) {
+void spine_array_physics_constraint_add(spine_array_physics_constraint array, /*@null*/ spine_physics_constraint inValue) {
 	Array<PhysicsConstraint *> *_array = (Array<PhysicsConstraint *> *) array;
 	_array->add((PhysicsConstraint *) inValue);
 }
 
-void spine_array_physics_constraint_add_all(spine_array_physics_constraint array, spine_array_physics_constraint inValue) {
+void spine_array_physics_constraint_add_all(spine_array_physics_constraint array, /*@null*/ spine_array_physics_constraint inValue) {
 	Array<PhysicsConstraint *> *_array = (Array<PhysicsConstraint *> *) array;
 	_array->addAll(*((const Array<PhysicsConstraint *> *) inValue));
 }
 
-void spine_array_physics_constraint_clear_and_add_all(spine_array_physics_constraint array, spine_array_physics_constraint inValue) {
+void spine_array_physics_constraint_clear_and_add_all(spine_array_physics_constraint array, /*@null*/ spine_array_physics_constraint inValue) {
 	Array<PhysicsConstraint *> *_array = (Array<PhysicsConstraint *> *) array;
 	_array->clearAndAddAll(*((const Array<PhysicsConstraint *> *) inValue));
 }
@@ -1280,17 +1287,17 @@ void spine_array_physics_constraint_remove_at(spine_array_physics_constraint arr
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_physics_constraint_contains(spine_array_physics_constraint array, spine_physics_constraint inValue) {
+bool spine_array_physics_constraint_contains(spine_array_physics_constraint array, /*@null*/ spine_physics_constraint inValue) {
 	Array<PhysicsConstraint *> *_array = (Array<PhysicsConstraint *> *) array;
 	return _array->contains((PhysicsConstraint *) inValue);
 }
 
-int spine_array_physics_constraint_index_of(spine_array_physics_constraint array, spine_physics_constraint inValue) {
+int spine_array_physics_constraint_index_of(spine_array_physics_constraint array, /*@null*/ spine_physics_constraint inValue) {
 	Array<PhysicsConstraint *> *_array = (Array<PhysicsConstraint *> *) array;
 	return _array->indexOf((PhysicsConstraint *) inValue);
 }
 
-spine_physics_constraint *spine_array_physics_constraint_buffer(spine_array_physics_constraint array) {
+/*@null*/ spine_physics_constraint *spine_array_physics_constraint_buffer(spine_array_physics_constraint array) {
 	Array<PhysicsConstraint *> *_array = (Array<PhysicsConstraint *> *) array;
 	return (spine_physics_constraint *) _array->buffer();
 }
@@ -1320,7 +1327,7 @@ size_t spine_array_polygon_size(spine_array_polygon array) {
 	return _array->size();
 }
 
-spine_array_polygon spine_array_polygon_set_size(spine_array_polygon array, size_t newSize, spine_polygon defaultValue) {
+/*@null*/ spine_array_polygon spine_array_polygon_set_size(spine_array_polygon array, size_t newSize, /*@null*/ spine_polygon defaultValue) {
 	Array<Polygon *> *_array = (Array<Polygon *> *) array;
 	return (spine_array_polygon) &_array->setSize(newSize, (Polygon *) defaultValue);
 }
@@ -1330,17 +1337,17 @@ void spine_array_polygon_ensure_capacity(spine_array_polygon array, size_t newCa
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_polygon_add(spine_array_polygon array, spine_polygon inValue) {
+void spine_array_polygon_add(spine_array_polygon array, /*@null*/ spine_polygon inValue) {
 	Array<Polygon *> *_array = (Array<Polygon *> *) array;
 	_array->add((Polygon *) inValue);
 }
 
-void spine_array_polygon_add_all(spine_array_polygon array, spine_array_polygon inValue) {
+void spine_array_polygon_add_all(spine_array_polygon array, /*@null*/ spine_array_polygon inValue) {
 	Array<Polygon *> *_array = (Array<Polygon *> *) array;
 	_array->addAll(*((const Array<Polygon *> *) inValue));
 }
 
-void spine_array_polygon_clear_and_add_all(spine_array_polygon array, spine_array_polygon inValue) {
+void spine_array_polygon_clear_and_add_all(spine_array_polygon array, /*@null*/ spine_array_polygon inValue) {
 	Array<Polygon *> *_array = (Array<Polygon *> *) array;
 	_array->clearAndAddAll(*((const Array<Polygon *> *) inValue));
 }
@@ -1350,17 +1357,17 @@ void spine_array_polygon_remove_at(spine_array_polygon array, size_t inIndex) {
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_polygon_contains(spine_array_polygon array, spine_polygon inValue) {
+bool spine_array_polygon_contains(spine_array_polygon array, /*@null*/ spine_polygon inValue) {
 	Array<Polygon *> *_array = (Array<Polygon *> *) array;
 	return _array->contains((Polygon *) inValue);
 }
 
-int spine_array_polygon_index_of(spine_array_polygon array, spine_polygon inValue) {
+int spine_array_polygon_index_of(spine_array_polygon array, /*@null*/ spine_polygon inValue) {
 	Array<Polygon *> *_array = (Array<Polygon *> *) array;
 	return _array->indexOf((Polygon *) inValue);
 }
 
-spine_polygon *spine_array_polygon_buffer(spine_array_polygon array) {
+/*@null*/ spine_polygon *spine_array_polygon_buffer(spine_array_polygon array) {
 	Array<Polygon *> *_array = (Array<Polygon *> *) array;
 	return (spine_polygon *) _array->buffer();
 }
@@ -1390,7 +1397,7 @@ size_t spine_array_skin_size(spine_array_skin array) {
 	return _array->size();
 }
 
-spine_array_skin spine_array_skin_set_size(spine_array_skin array, size_t newSize, spine_skin defaultValue) {
+/*@null*/ spine_array_skin spine_array_skin_set_size(spine_array_skin array, size_t newSize, /*@null*/ spine_skin defaultValue) {
 	Array<Skin *> *_array = (Array<Skin *> *) array;
 	return (spine_array_skin) &_array->setSize(newSize, (Skin *) defaultValue);
 }
@@ -1400,17 +1407,17 @@ void spine_array_skin_ensure_capacity(spine_array_skin array, size_t newCapacity
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_skin_add(spine_array_skin array, spine_skin inValue) {
+void spine_array_skin_add(spine_array_skin array, /*@null*/ spine_skin inValue) {
 	Array<Skin *> *_array = (Array<Skin *> *) array;
 	_array->add((Skin *) inValue);
 }
 
-void spine_array_skin_add_all(spine_array_skin array, spine_array_skin inValue) {
+void spine_array_skin_add_all(spine_array_skin array, /*@null*/ spine_array_skin inValue) {
 	Array<Skin *> *_array = (Array<Skin *> *) array;
 	_array->addAll(*((const Array<Skin *> *) inValue));
 }
 
-void spine_array_skin_clear_and_add_all(spine_array_skin array, spine_array_skin inValue) {
+void spine_array_skin_clear_and_add_all(spine_array_skin array, /*@null*/ spine_array_skin inValue) {
 	Array<Skin *> *_array = (Array<Skin *> *) array;
 	_array->clearAndAddAll(*((const Array<Skin *> *) inValue));
 }
@@ -1420,17 +1427,17 @@ void spine_array_skin_remove_at(spine_array_skin array, size_t inIndex) {
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_skin_contains(spine_array_skin array, spine_skin inValue) {
+bool spine_array_skin_contains(spine_array_skin array, /*@null*/ spine_skin inValue) {
 	Array<Skin *> *_array = (Array<Skin *> *) array;
 	return _array->contains((Skin *) inValue);
 }
 
-int spine_array_skin_index_of(spine_array_skin array, spine_skin inValue) {
+int spine_array_skin_index_of(spine_array_skin array, /*@null*/ spine_skin inValue) {
 	Array<Skin *> *_array = (Array<Skin *> *) array;
 	return _array->indexOf((Skin *) inValue);
 }
 
-spine_skin *spine_array_skin_buffer(spine_array_skin array) {
+/*@null*/ spine_skin *spine_array_skin_buffer(spine_array_skin array) {
 	Array<Skin *> *_array = (Array<Skin *> *) array;
 	return (spine_skin *) _array->buffer();
 }
@@ -1460,7 +1467,7 @@ size_t spine_array_slot_size(spine_array_slot array) {
 	return _array->size();
 }
 
-spine_array_slot spine_array_slot_set_size(spine_array_slot array, size_t newSize, spine_slot defaultValue) {
+/*@null*/ spine_array_slot spine_array_slot_set_size(spine_array_slot array, size_t newSize, /*@null*/ spine_slot defaultValue) {
 	Array<Slot *> *_array = (Array<Slot *> *) array;
 	return (spine_array_slot) &_array->setSize(newSize, (Slot *) defaultValue);
 }
@@ -1470,17 +1477,17 @@ void spine_array_slot_ensure_capacity(spine_array_slot array, size_t newCapacity
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_slot_add(spine_array_slot array, spine_slot inValue) {
+void spine_array_slot_add(spine_array_slot array, /*@null*/ spine_slot inValue) {
 	Array<Slot *> *_array = (Array<Slot *> *) array;
 	_array->add((Slot *) inValue);
 }
 
-void spine_array_slot_add_all(spine_array_slot array, spine_array_slot inValue) {
+void spine_array_slot_add_all(spine_array_slot array, /*@null*/ spine_array_slot inValue) {
 	Array<Slot *> *_array = (Array<Slot *> *) array;
 	_array->addAll(*((const Array<Slot *> *) inValue));
 }
 
-void spine_array_slot_clear_and_add_all(spine_array_slot array, spine_array_slot inValue) {
+void spine_array_slot_clear_and_add_all(spine_array_slot array, /*@null*/ spine_array_slot inValue) {
 	Array<Slot *> *_array = (Array<Slot *> *) array;
 	_array->clearAndAddAll(*((const Array<Slot *> *) inValue));
 }
@@ -1490,17 +1497,17 @@ void spine_array_slot_remove_at(spine_array_slot array, size_t inIndex) {
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_slot_contains(spine_array_slot array, spine_slot inValue) {
+bool spine_array_slot_contains(spine_array_slot array, /*@null*/ spine_slot inValue) {
 	Array<Slot *> *_array = (Array<Slot *> *) array;
 	return _array->contains((Slot *) inValue);
 }
 
-int spine_array_slot_index_of(spine_array_slot array, spine_slot inValue) {
+int spine_array_slot_index_of(spine_array_slot array, /*@null*/ spine_slot inValue) {
 	Array<Slot *> *_array = (Array<Slot *> *) array;
 	return _array->indexOf((Slot *) inValue);
 }
 
-spine_slot *spine_array_slot_buffer(spine_array_slot array) {
+/*@null*/ spine_slot *spine_array_slot_buffer(spine_array_slot array) {
 	Array<Slot *> *_array = (Array<Slot *> *) array;
 	return (spine_slot *) _array->buffer();
 }
@@ -1530,7 +1537,7 @@ size_t spine_array_slot_data_size(spine_array_slot_data array) {
 	return _array->size();
 }
 
-spine_array_slot_data spine_array_slot_data_set_size(spine_array_slot_data array, size_t newSize, spine_slot_data defaultValue) {
+/*@null*/ spine_array_slot_data spine_array_slot_data_set_size(spine_array_slot_data array, size_t newSize, /*@null*/ spine_slot_data defaultValue) {
 	Array<SlotData *> *_array = (Array<SlotData *> *) array;
 	return (spine_array_slot_data) &_array->setSize(newSize, (SlotData *) defaultValue);
 }
@@ -1540,17 +1547,17 @@ void spine_array_slot_data_ensure_capacity(spine_array_slot_data array, size_t n
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_slot_data_add(spine_array_slot_data array, spine_slot_data inValue) {
+void spine_array_slot_data_add(spine_array_slot_data array, /*@null*/ spine_slot_data inValue) {
 	Array<SlotData *> *_array = (Array<SlotData *> *) array;
 	_array->add((SlotData *) inValue);
 }
 
-void spine_array_slot_data_add_all(spine_array_slot_data array, spine_array_slot_data inValue) {
+void spine_array_slot_data_add_all(spine_array_slot_data array, /*@null*/ spine_array_slot_data inValue) {
 	Array<SlotData *> *_array = (Array<SlotData *> *) array;
 	_array->addAll(*((const Array<SlotData *> *) inValue));
 }
 
-void spine_array_slot_data_clear_and_add_all(spine_array_slot_data array, spine_array_slot_data inValue) {
+void spine_array_slot_data_clear_and_add_all(spine_array_slot_data array, /*@null*/ spine_array_slot_data inValue) {
 	Array<SlotData *> *_array = (Array<SlotData *> *) array;
 	_array->clearAndAddAll(*((const Array<SlotData *> *) inValue));
 }
@@ -1560,17 +1567,17 @@ void spine_array_slot_data_remove_at(spine_array_slot_data array, size_t inIndex
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_slot_data_contains(spine_array_slot_data array, spine_slot_data inValue) {
+bool spine_array_slot_data_contains(spine_array_slot_data array, /*@null*/ spine_slot_data inValue) {
 	Array<SlotData *> *_array = (Array<SlotData *> *) array;
 	return _array->contains((SlotData *) inValue);
 }
 
-int spine_array_slot_data_index_of(spine_array_slot_data array, spine_slot_data inValue) {
+int spine_array_slot_data_index_of(spine_array_slot_data array, /*@null*/ spine_slot_data inValue) {
 	Array<SlotData *> *_array = (Array<SlotData *> *) array;
 	return _array->indexOf((SlotData *) inValue);
 }
 
-spine_slot_data *spine_array_slot_data_buffer(spine_array_slot_data array) {
+/*@null*/ spine_slot_data *spine_array_slot_data_buffer(spine_array_slot_data array) {
 	Array<SlotData *> *_array = (Array<SlotData *> *) array;
 	return (spine_slot_data *) _array->buffer();
 }
@@ -1600,7 +1607,8 @@ size_t spine_array_texture_region_size(spine_array_texture_region array) {
 	return _array->size();
 }
 
-spine_array_texture_region spine_array_texture_region_set_size(spine_array_texture_region array, size_t newSize, spine_texture_region defaultValue) {
+/*@null*/ spine_array_texture_region spine_array_texture_region_set_size(spine_array_texture_region array, size_t newSize,
+																		 /*@null*/ spine_texture_region defaultValue) {
 	Array<TextureRegion *> *_array = (Array<TextureRegion *> *) array;
 	return (spine_array_texture_region) &_array->setSize(newSize, (TextureRegion *) defaultValue);
 }
@@ -1610,17 +1618,17 @@ void spine_array_texture_region_ensure_capacity(spine_array_texture_region array
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_texture_region_add(spine_array_texture_region array, spine_texture_region inValue) {
+void spine_array_texture_region_add(spine_array_texture_region array, /*@null*/ spine_texture_region inValue) {
 	Array<TextureRegion *> *_array = (Array<TextureRegion *> *) array;
 	_array->add((TextureRegion *) inValue);
 }
 
-void spine_array_texture_region_add_all(spine_array_texture_region array, spine_array_texture_region inValue) {
+void spine_array_texture_region_add_all(spine_array_texture_region array, /*@null*/ spine_array_texture_region inValue) {
 	Array<TextureRegion *> *_array = (Array<TextureRegion *> *) array;
 	_array->addAll(*((const Array<TextureRegion *> *) inValue));
 }
 
-void spine_array_texture_region_clear_and_add_all(spine_array_texture_region array, spine_array_texture_region inValue) {
+void spine_array_texture_region_clear_and_add_all(spine_array_texture_region array, /*@null*/ spine_array_texture_region inValue) {
 	Array<TextureRegion *> *_array = (Array<TextureRegion *> *) array;
 	_array->clearAndAddAll(*((const Array<TextureRegion *> *) inValue));
 }
@@ -1630,17 +1638,17 @@ void spine_array_texture_region_remove_at(spine_array_texture_region array, size
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_texture_region_contains(spine_array_texture_region array, spine_texture_region inValue) {
+bool spine_array_texture_region_contains(spine_array_texture_region array, /*@null*/ spine_texture_region inValue) {
 	Array<TextureRegion *> *_array = (Array<TextureRegion *> *) array;
 	return _array->contains((TextureRegion *) inValue);
 }
 
-int spine_array_texture_region_index_of(spine_array_texture_region array, spine_texture_region inValue) {
+int spine_array_texture_region_index_of(spine_array_texture_region array, /*@null*/ spine_texture_region inValue) {
 	Array<TextureRegion *> *_array = (Array<TextureRegion *> *) array;
 	return _array->indexOf((TextureRegion *) inValue);
 }
 
-spine_texture_region *spine_array_texture_region_buffer(spine_array_texture_region array) {
+/*@null*/ spine_texture_region *spine_array_texture_region_buffer(spine_array_texture_region array) {
 	Array<TextureRegion *> *_array = (Array<TextureRegion *> *) array;
 	return (spine_texture_region *) _array->buffer();
 }
@@ -1670,7 +1678,7 @@ size_t spine_array_timeline_size(spine_array_timeline array) {
 	return _array->size();
 }
 
-spine_array_timeline spine_array_timeline_set_size(spine_array_timeline array, size_t newSize, spine_timeline defaultValue) {
+/*@null*/ spine_array_timeline spine_array_timeline_set_size(spine_array_timeline array, size_t newSize, /*@null*/ spine_timeline defaultValue) {
 	Array<Timeline *> *_array = (Array<Timeline *> *) array;
 	return (spine_array_timeline) &_array->setSize(newSize, (Timeline *) defaultValue);
 }
@@ -1680,17 +1688,17 @@ void spine_array_timeline_ensure_capacity(spine_array_timeline array, size_t new
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_timeline_add(spine_array_timeline array, spine_timeline inValue) {
+void spine_array_timeline_add(spine_array_timeline array, /*@null*/ spine_timeline inValue) {
 	Array<Timeline *> *_array = (Array<Timeline *> *) array;
 	_array->add((Timeline *) inValue);
 }
 
-void spine_array_timeline_add_all(spine_array_timeline array, spine_array_timeline inValue) {
+void spine_array_timeline_add_all(spine_array_timeline array, /*@null*/ spine_array_timeline inValue) {
 	Array<Timeline *> *_array = (Array<Timeline *> *) array;
 	_array->addAll(*((const Array<Timeline *> *) inValue));
 }
 
-void spine_array_timeline_clear_and_add_all(spine_array_timeline array, spine_array_timeline inValue) {
+void spine_array_timeline_clear_and_add_all(spine_array_timeline array, /*@null*/ spine_array_timeline inValue) {
 	Array<Timeline *> *_array = (Array<Timeline *> *) array;
 	_array->clearAndAddAll(*((const Array<Timeline *> *) inValue));
 }
@@ -1700,17 +1708,17 @@ void spine_array_timeline_remove_at(spine_array_timeline array, size_t inIndex) 
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_timeline_contains(spine_array_timeline array, spine_timeline inValue) {
+bool spine_array_timeline_contains(spine_array_timeline array, /*@null*/ spine_timeline inValue) {
 	Array<Timeline *> *_array = (Array<Timeline *> *) array;
 	return _array->contains((Timeline *) inValue);
 }
 
-int spine_array_timeline_index_of(spine_array_timeline array, spine_timeline inValue) {
+int spine_array_timeline_index_of(spine_array_timeline array, /*@null*/ spine_timeline inValue) {
 	Array<Timeline *> *_array = (Array<Timeline *> *) array;
 	return _array->indexOf((Timeline *) inValue);
 }
 
-spine_timeline *spine_array_timeline_buffer(spine_array_timeline array) {
+/*@null*/ spine_timeline *spine_array_timeline_buffer(spine_array_timeline array) {
 	Array<Timeline *> *_array = (Array<Timeline *> *) array;
 	return (spine_timeline *) _array->buffer();
 }
@@ -1740,7 +1748,8 @@ size_t spine_array_to_property_size(spine_array_to_property array) {
 	return _array->size();
 }
 
-spine_array_to_property spine_array_to_property_set_size(spine_array_to_property array, size_t newSize, spine_to_property defaultValue) {
+/*@null*/ spine_array_to_property spine_array_to_property_set_size(spine_array_to_property array, size_t newSize,
+																   /*@null*/ spine_to_property defaultValue) {
 	Array<ToProperty *> *_array = (Array<ToProperty *> *) array;
 	return (spine_array_to_property) &_array->setSize(newSize, (ToProperty *) defaultValue);
 }
@@ -1750,17 +1759,17 @@ void spine_array_to_property_ensure_capacity(spine_array_to_property array, size
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_to_property_add(spine_array_to_property array, spine_to_property inValue) {
+void spine_array_to_property_add(spine_array_to_property array, /*@null*/ spine_to_property inValue) {
 	Array<ToProperty *> *_array = (Array<ToProperty *> *) array;
 	_array->add((ToProperty *) inValue);
 }
 
-void spine_array_to_property_add_all(spine_array_to_property array, spine_array_to_property inValue) {
+void spine_array_to_property_add_all(spine_array_to_property array, /*@null*/ spine_array_to_property inValue) {
 	Array<ToProperty *> *_array = (Array<ToProperty *> *) array;
 	_array->addAll(*((const Array<ToProperty *> *) inValue));
 }
 
-void spine_array_to_property_clear_and_add_all(spine_array_to_property array, spine_array_to_property inValue) {
+void spine_array_to_property_clear_and_add_all(spine_array_to_property array, /*@null*/ spine_array_to_property inValue) {
 	Array<ToProperty *> *_array = (Array<ToProperty *> *) array;
 	_array->clearAndAddAll(*((const Array<ToProperty *> *) inValue));
 }
@@ -1770,17 +1779,17 @@ void spine_array_to_property_remove_at(spine_array_to_property array, size_t inI
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_to_property_contains(spine_array_to_property array, spine_to_property inValue) {
+bool spine_array_to_property_contains(spine_array_to_property array, /*@null*/ spine_to_property inValue) {
 	Array<ToProperty *> *_array = (Array<ToProperty *> *) array;
 	return _array->contains((ToProperty *) inValue);
 }
 
-int spine_array_to_property_index_of(spine_array_to_property array, spine_to_property inValue) {
+int spine_array_to_property_index_of(spine_array_to_property array, /*@null*/ spine_to_property inValue) {
 	Array<ToProperty *> *_array = (Array<ToProperty *> *) array;
 	return _array->indexOf((ToProperty *) inValue);
 }
 
-spine_to_property *spine_array_to_property_buffer(spine_array_to_property array) {
+/*@null*/ spine_to_property *spine_array_to_property_buffer(spine_array_to_property array) {
 	Array<ToProperty *> *_array = (Array<ToProperty *> *) array;
 	return (spine_to_property *) _array->buffer();
 }
@@ -1810,7 +1819,8 @@ size_t spine_array_track_entry_size(spine_array_track_entry array) {
 	return _array->size();
 }
 
-spine_array_track_entry spine_array_track_entry_set_size(spine_array_track_entry array, size_t newSize, spine_track_entry defaultValue) {
+/*@null*/ spine_array_track_entry spine_array_track_entry_set_size(spine_array_track_entry array, size_t newSize,
+																   /*@null*/ spine_track_entry defaultValue) {
 	Array<TrackEntry *> *_array = (Array<TrackEntry *> *) array;
 	return (spine_array_track_entry) &_array->setSize(newSize, (TrackEntry *) defaultValue);
 }
@@ -1820,17 +1830,17 @@ void spine_array_track_entry_ensure_capacity(spine_array_track_entry array, size
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_track_entry_add(spine_array_track_entry array, spine_track_entry inValue) {
+void spine_array_track_entry_add(spine_array_track_entry array, /*@null*/ spine_track_entry inValue) {
 	Array<TrackEntry *> *_array = (Array<TrackEntry *> *) array;
 	_array->add((TrackEntry *) inValue);
 }
 
-void spine_array_track_entry_add_all(spine_array_track_entry array, spine_array_track_entry inValue) {
+void spine_array_track_entry_add_all(spine_array_track_entry array, /*@null*/ spine_array_track_entry inValue) {
 	Array<TrackEntry *> *_array = (Array<TrackEntry *> *) array;
 	_array->addAll(*((const Array<TrackEntry *> *) inValue));
 }
 
-void spine_array_track_entry_clear_and_add_all(spine_array_track_entry array, spine_array_track_entry inValue) {
+void spine_array_track_entry_clear_and_add_all(spine_array_track_entry array, /*@null*/ spine_array_track_entry inValue) {
 	Array<TrackEntry *> *_array = (Array<TrackEntry *> *) array;
 	_array->clearAndAddAll(*((const Array<TrackEntry *> *) inValue));
 }
@@ -1840,17 +1850,17 @@ void spine_array_track_entry_remove_at(spine_array_track_entry array, size_t inI
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_track_entry_contains(spine_array_track_entry array, spine_track_entry inValue) {
+bool spine_array_track_entry_contains(spine_array_track_entry array, /*@null*/ spine_track_entry inValue) {
 	Array<TrackEntry *> *_array = (Array<TrackEntry *> *) array;
 	return _array->contains((TrackEntry *) inValue);
 }
 
-int spine_array_track_entry_index_of(spine_array_track_entry array, spine_track_entry inValue) {
+int spine_array_track_entry_index_of(spine_array_track_entry array, /*@null*/ spine_track_entry inValue) {
 	Array<TrackEntry *> *_array = (Array<TrackEntry *> *) array;
 	return _array->indexOf((TrackEntry *) inValue);
 }
 
-spine_track_entry *spine_array_track_entry_buffer(spine_array_track_entry array) {
+/*@null*/ spine_track_entry *spine_array_track_entry_buffer(spine_array_track_entry array) {
 	Array<TrackEntry *> *_array = (Array<TrackEntry *> *) array;
 	return (spine_track_entry *) _array->buffer();
 }
@@ -1880,7 +1890,7 @@ size_t spine_array_update_size(spine_array_update array) {
 	return _array->size();
 }
 
-spine_array_update spine_array_update_set_size(spine_array_update array, size_t newSize, spine_update defaultValue) {
+/*@null*/ spine_array_update spine_array_update_set_size(spine_array_update array, size_t newSize, /*@null*/ spine_update defaultValue) {
 	Array<Update *> *_array = (Array<Update *> *) array;
 	return (spine_array_update) &_array->setSize(newSize, (Update *) defaultValue);
 }
@@ -1890,17 +1900,17 @@ void spine_array_update_ensure_capacity(spine_array_update array, size_t newCapa
 	_array->ensureCapacity(newCapacity);
 }
 
-void spine_array_update_add(spine_array_update array, spine_update inValue) {
+void spine_array_update_add(spine_array_update array, /*@null*/ spine_update inValue) {
 	Array<Update *> *_array = (Array<Update *> *) array;
 	_array->add((Update *) inValue);
 }
 
-void spine_array_update_add_all(spine_array_update array, spine_array_update inValue) {
+void spine_array_update_add_all(spine_array_update array, /*@null*/ spine_array_update inValue) {
 	Array<Update *> *_array = (Array<Update *> *) array;
 	_array->addAll(*((const Array<Update *> *) inValue));
 }
 
-void spine_array_update_clear_and_add_all(spine_array_update array, spine_array_update inValue) {
+void spine_array_update_clear_and_add_all(spine_array_update array, /*@null*/ spine_array_update inValue) {
 	Array<Update *> *_array = (Array<Update *> *) array;
 	_array->clearAndAddAll(*((const Array<Update *> *) inValue));
 }
@@ -1910,17 +1920,17 @@ void spine_array_update_remove_at(spine_array_update array, size_t inIndex) {
 	_array->removeAt(inIndex);
 }
 
-bool spine_array_update_contains(spine_array_update array, spine_update inValue) {
+bool spine_array_update_contains(spine_array_update array, /*@null*/ spine_update inValue) {
 	Array<Update *> *_array = (Array<Update *> *) array;
 	return _array->contains((Update *) inValue);
 }
 
-int spine_array_update_index_of(spine_array_update array, spine_update inValue) {
+int spine_array_update_index_of(spine_array_update array, /*@null*/ spine_update inValue) {
 	Array<Update *> *_array = (Array<Update *> *) array;
 	return _array->indexOf((Update *) inValue);
 }
 
-spine_update *spine_array_update_buffer(spine_array_update array) {
+/*@null*/ spine_update *spine_array_update_buffer(spine_array_update array) {
 	Array<Update *> *_array = (Array<Update *> *) array;
 	return (spine_update *) _array->buffer();
 }
