@@ -68,10 +68,10 @@ int main() {
 	// Load the atlas and the skeleton data
 	GlTextureLoader textureLoader;
 	Atlas *atlas = new Atlas("data/spineboy-pma.atlas", &textureLoader);
-	SkeletonBinary binary(atlas);
+	SkeletonBinary binary(*atlas);
 	// SkeletonData *skeletonData = binary.readSkeletonDataFile("data/spineboy-pro.skel");
 
-	SkeletonJson json(atlas);
+	SkeletonJson json(*atlas);
 	SkeletonData *skeletonData = json.readSkeletonDataFile("data/spineboy-pro.json");
 
 	// Create a skeleton from the data, set the skeleton's position to the bottom center of
@@ -84,9 +84,9 @@ int main() {
 
 	// Create an AnimationState to drive animations on the skeleton. Set the "portal" animation
 	// on track with index 0.
-	AnimationStateData animationStateData(skeletonData);
+	AnimationStateData animationStateData(*skeletonData);
 	animationStateData.setDefaultMix(0.2f);
-	AnimationState animationState(&animationStateData);
+	AnimationState animationState(animationStateData);
 	animationState.setAnimation(0, "portal", true);
 	animationState.addAnimation(0, "run", true, 0);
 
