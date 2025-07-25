@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
 import { extractTypes } from './type-extractor';
 import { loadExclusions, isTypeExcluded, isMethodExcluded } from './exclusions';
-import type { ClassOrStruct, Method, Type } from './types';
+import type { ClassOrStruct, Constructor, Method, Type } from './types';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -83,13 +83,13 @@ function analyzeNullableMethods(): void {
         // Get the source file name relative to the nullable file location
         const filename = `../../spine-cpp/include/spine/${classType.name}.h`;
         
-        // Process each method
+        // Process each method and constructor
         for (const member of classType.members) {
-            if (member.kind !== 'method') continue;
+            if (member.kind !== 'method' && member.kind !== 'constructor') continue;
             
-            const method = member as Method;
+            const method = member as Method | Constructor;
             
-            // Skip inherited methods - we only want methods declared in this class
+            // Skip inherited methods/constructors - we only want those declared in this class
             if (method.fromSupertype) continue;
             
             // Skip excluded methods
@@ -101,11 +101,11 @@ function analyzeNullableMethods(): void {
             
             const reasons: string[] = [];
             
-            // Check return type - if it returns a pointer to a class
-            if (method.returnType) {
-                const cleanReturnType = method.returnType.replace(/\bconst\b/g, '').trim();
+            // Check return type - if it returns a pointer to a class (constructors don't have return types)
+            if (method.kind === 'method' && (method as Method).returnType) {
+                const cleanReturnType = (method as Method).returnType!.replace(/\bconst\b/g, '').trim();
                 if (isPointerToClass(cleanReturnType, allTypes)) {
-                    reasons.push(`returns nullable pointer: ${method.returnType}`);
+                    reasons.push(`returns nullable pointer: ${(method as Method).returnType}`);
                 }
             }
             
@@ -155,16 +155,19 @@ function analyzeNullableMethods(): void {
 
 **Review and Update Process**
 For each unchecked checkbox (now with implementations inlined):
-1. **Present both implementations** from the checkbox
-2. **Ask if we need to change the C++ signature** based on Java nullability patterns (y/n)
-3. **Make changes if needed**
+1. **Check if already completed** - First check if the item exists in \`last-nullable.md\` and was already marked as completed [x]. If so, mark it as completed and move to the next item.
+2. **Present both implementations** from the checkbox
+3. **Ask if we need to change the C++ signature** based on Java nullability patterns (y/n)
+4. **Make changes if needed**
    - Change the signature in the header file
    - Update the implementation in the corresponding .cpp file
+   - Update any calls in test files (tests/HeadlessTest.cpp) to dereference pointers
+   - **Note: Skip cpp-lite files** - ignore build errors from spine-cpp-lite/spine-cpp-lite.cpp
    - Run \`../../spine-cpp/build.sh\` to confirm the changes compile successfully
-4. **Confirm changes**
+5. **Confirm changes**
    - Summarize what was changed
    - Ask for confirmation that the changes are correct (y/n)
-   - If yes, check the checkbox and move to the next unchecked item
+   - If yes, check the checkbox and move to the next item
 
 ## Methods to Review
 
@@ -225,12 +228,18 @@ For each unchecked checkbox (now with implementations inlined):
 }
 
 /**
- * Builds a method signature string
+ * Builds a method or constructor signature string
  */
-function buildMethodSignature(className: string, method: Method): string {
+function buildMethodSignature(className: string, method: Method | Constructor): string {
     const params = method.parameters?.map(p => `${p.type} ${p.name}`).join(', ') || '';
-    const constStr = method.isConst ? ' const' : '';
-    return `${method.returnType || 'void'} ${className}::${method.name}(${params})${constStr}`;
+    
+    if (method.kind === 'constructor') {
+        return `${className}::${method.name}(${params})`;
+    } else {
+        const methodType = method as Method;
+        const constStr = methodType.isConst ? ' const' : '';
+        return `${methodType.returnType || 'void'} ${className}::${method.name}(${params})${constStr}`;
+    }
 }
 
 /**
