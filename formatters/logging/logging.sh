@@ -51,13 +51,13 @@ NC='\033[0m' # No Color
 # This runs once when logging.sh is sourced
 detect_nesting_level() {
     local nesting=0
-    
+
     # Check parent process for script execution
     if [ -n "$PPID" ]; then
         local parent_info=$(ps -p $PPID -o comm,args 2>/dev/null | tail -1)
         local parent_comm=$(echo "$parent_info" | awk '{print $1}')
         local parent_args=$(echo "$parent_info" | awk '{for(i=2;i<=NF;i++) printf "%s ", $i}')
-        
+
         case "$parent_comm" in
             *bash|*sh|bash|sh)
                 if echo "$parent_args" | grep -q '\.sh\|\.bash' && ! echo "$parent_args" | grep -q 'claude\|snapshot\|/tmp/\|eval'; then
@@ -66,7 +66,7 @@ detect_nesting_level() {
                 ;;
         esac
     fi
-    
+
     # Fallback to SHLVL-based detection if no parent script found
     if [ $nesting -eq 0 ] && [ $((SHLVL - 1)) -gt 0 ]; then
         # Check if non-interactive (likely scripted)
@@ -74,7 +74,7 @@ detect_nesting_level() {
             nesting=$((SHLVL - 1))
         fi
     fi
-    
+
     echo $nesting
 }
 
@@ -127,4 +127,9 @@ log_summary() {
 # Detailed output (errors, etc.)
 log_detail() {
     echo -e "${SPINE_LOG_INDENT_SPACES}  ${GRAY}$1${NC}"
+}
+
+# Log a simple info string at the current nesting level
+log_info() {
+    echo -e "${SPINE_LOG_INDENT_SPACES}${CYAN}$1${NC}"
 }

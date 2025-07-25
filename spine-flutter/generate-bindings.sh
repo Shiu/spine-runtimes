@@ -3,26 +3,49 @@
 set -e
 
 # Get to the script's directory
-pushd "$(dirname "$0")" > /dev/null
+cd "$(dirname "$0")"
 
-#./setup.sh
+# Source logging utilities
+source ../formatters/logging/logging.sh
+
+log_title "spine-dart bindings generation"
 
 # Install dependencies if needed
 if [ ! -d "codegen/node_modules" ]; then
-    pushd codegen > /dev/null
-    npm install
-    popd > /dev/null
+    log_action "Installing codegen dependencies"
+    if (cd codegen && npm install > /dev/null 2>&1); then
+        log_ok
+    else
+        log_fail
+        exit 1
+    fi
 fi
 
 # Copy spine-c and spine-cpp sources
-./setup.sh
+log_action "Setting up source files"
+if ./setup.sh > /dev/null 2>&1; then
+    log_ok
+else
+    log_fail
+    exit 1
+fi
 
 # Run the codegen
-npx tsx codegen/src/index.ts
+log_action "Generating Dart bindings"
+if npx tsx codegen/src/index.ts > /dev/null 2>&1; then
+    log_ok
+else
+    log_fail
+    exit 1
+fi
 
 # Build test spine_flutter shared library
-pushd test > /dev/null
-./build.sh
-popd
+log_action "Building test library"
+if (cd test && ./build.sh > /dev/null 2>&1); then
+    log_ok
+else
+    log_fail
+    exit 1
+fi
 
-popd > /dev/null
+log_summary "✓ Dart bindings generated successfully"
