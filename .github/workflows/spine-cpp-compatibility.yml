@@ -53,6 +53,47 @@ jobs:
       working-directory: tests
       run: ./test.sh cpp -s spineboy -f
 
+    - name: Show diff on failure
+      if: failure()
+      working-directory: tests
+      run: |
+        echo "=== Available output files ==="
+        ls -la output/ || echo "No output directory"
+        echo ""
+        
+        # Compare all JSON vs JSON pairs
+        echo "=== DIFF: skeleton-data-java-json.json vs skeleton-data-cpp-json.json ==="
+        if [ -f output/skeleton-data-java-json.json ] && [ -f output/skeleton-data-cpp-json.json ]; then
+          diff -u output/skeleton-data-java-json.json output/skeleton-data-cpp-json.json || true
+        else
+          echo "Missing JSON skeleton-data files for comparison"
+        fi
+        echo ""
+        
+        echo "=== DIFF: skeleton-state-java-json.json vs skeleton-state-cpp-json.json ==="
+        if [ -f output/skeleton-state-java-json.json ] && [ -f output/skeleton-state-cpp-json.json ]; then
+          diff -u output/skeleton-state-java-json.json output/skeleton-state-cpp-json.json || true
+        else
+          echo "Missing JSON skeleton-state files for comparison"
+        fi
+        echo ""
+        
+        # Compare all SKEL vs SKEL pairs
+        echo "=== DIFF: skeleton-data-java-skel.json vs skeleton-data-cpp-skel.json ==="
+        if [ -f output/skeleton-data-java-skel.json ] && [ -f output/skeleton-data-cpp-skel.json ]; then
+          diff -u output/skeleton-data-java-skel.json output/skeleton-data-cpp-skel.json || true
+        else
+          echo "Missing SKEL skeleton-data files for comparison"
+        fi
+        echo ""
+        
+        echo "=== DIFF: skeleton-state-java-skel.json vs skeleton-state-cpp-skel.json ==="
+        if [ -f output/skeleton-state-java-skel.json ] && [ -f output/skeleton-state-cpp-skel.json ]; then
+          diff -u output/skeleton-state-java-skel.json output/skeleton-state-cpp-skel.json || true
+        else
+          echo "Missing SKEL skeleton-state files for comparison"
+        fi
+
     - name: Upload test artifacts on failure
       if: failure()
       uses: actions/upload-artifact@v4
