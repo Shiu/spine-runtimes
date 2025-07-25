@@ -122,12 +122,19 @@ function extractMember(inner: any, parent: any): Member & { access?: 'public' | 
 
     switch (inner.kind) {
         case 'FieldDecl': {
+            if (!inner.loc) {
+                throw new Error(`Failed to extract location for field '${inner.name || 'unknown'}' in ${parent.name || 'unknown'}`);
+            }
             const field: Field & { access?: 'public' | 'protected' } = {
                 kind: 'field',
                 name: inner.name || '',
                 type: inner.type?.qualType || '',
                 isStatic: inner.storageClass === 'static',
-                access: 'public' // Will be set correctly later
+                access: 'public', // Will be set correctly later
+                loc: {
+                    line: inner.loc.line || 0,
+                    col: inner.loc.col || 0
+                }
             };
             return field;
         }
@@ -136,6 +143,9 @@ function extractMember(inner: any, parent: any): Member & { access?: 'public' | 
             // Skip operators - not needed for C wrapper generation
             if (inner.name.startsWith('operator')) return null;
 
+            if (!inner.loc) {
+                throw new Error(`Failed to extract location for method '${inner.name}' in ${parent.name || 'unknown'}`);
+            }
             const method: Method & { access?: 'public' | 'protected' } = {
                 kind: 'method',
                 name: inner.name,
@@ -145,27 +155,45 @@ function extractMember(inner: any, parent: any): Member & { access?: 'public' | 
                 isVirtual: inner.virtual || false,
                 isPure: inner.pure || false,
                 isConst: inner.constQualifier || false,
-                access: 'public' // Will be set correctly later
+                access: 'public', // Will be set correctly later
+                loc: {
+                    line: inner.loc.line || 0,
+                    col: inner.loc.col || 0
+                }
             };
             return method;
         }
         case 'CXXConstructorDecl': {
+            if (!inner.loc) {
+                throw new Error(`Failed to extract location for constructor '${inner.name || parent.name || 'unknown'}' in ${parent.name || 'unknown'}`);
+            }
             const constr: Constructor & { access?: 'public' | 'protected' } = {
                 kind: 'constructor',
                 name: inner.name || parent.name || '',
                 parameters: extractParameters(inner),
-                access: 'public' // Will be set correctly later
+                access: 'public', // Will be set correctly later
+                loc: {
+                    line: inner.loc.line || 0,
+                    col: inner.loc.col || 0
+                }
             };
             return constr;
         }
         case 'CXXDestructorDecl': {
             // Include destructors for completeness
+            if (!inner.loc) {
+                throw new Error(`Failed to extract location for destructor '${inner.name || `~${parent.name}`}' in ${parent.name || 'unknown'}`);
+            }
             const destructor: Destructor & { access?: 'public' | 'protected' } = {
                 kind: 'destructor',
                 name: inner.name || `~${parent.name}`,
                 isVirtual: inner.virtual || false,
                 isPure: inner.pure || false,
-                access: 'public' // Will be set correctly later
+                access: 'public', // Will be set correctly later
+                loc: {
+                    line: inner.loc.line || 0,
+                    col: inner.loc.col || 0
+                }
             };
             return destructor;
         }

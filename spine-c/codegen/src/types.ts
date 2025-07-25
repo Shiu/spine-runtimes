@@ -9,6 +9,10 @@ export type Field = {
     type: string;
     isStatic?: boolean;
     fromSupertype?: string;
+    loc: {
+        line: number;
+        col: number;
+    };
 }
 
 export type Method = {
@@ -21,6 +25,10 @@ export type Method = {
     isPure?: boolean;
     isConst?: boolean;
     fromSupertype?: string;
+    loc: {
+        line: number;
+        col: number;
+    };
 }
 
 export type Constructor = {
@@ -28,6 +36,10 @@ export type Constructor = {
     name: string;
     parameters?: Parameter[];
     fromSupertype?: string;
+    loc: {
+        line: number;
+        col: number;
+    };
 }
 
 export type Destructor = {
@@ -36,6 +48,10 @@ export type Destructor = {
     isVirtual?: boolean;
     isPure?: boolean;
     fromSupertype?: string;
+    loc: {
+        line: number;
+        col: number;
+    };
 };
 
 export type Member =

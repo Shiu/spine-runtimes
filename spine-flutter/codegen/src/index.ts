@@ -9,58 +9,7 @@ import { DartWriter } from './dart-writer.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function generateFFIBindings(spineCDir: string): Promise<void> {
-    console.log('Finding all header files...');
-    const generatedDir = path.join(spineCDir, 'src/generated');
-    const headerFiles = fs.readdirSync(generatedDir)
-        .filter(f => f.endsWith('.h'))
-        .map(f => path.join('src/spine-c/src/generated', f))
-        .sort();
-
-    console.log(`Found ${headerFiles.length} header files`);
-
-    // Generate ffigen.yaml configuration
-    console.log('Generating ffigen.yaml configuration...');
-    const ffigenConfig = `# Run with \`dart run ffigen --config ffigen.yaml\`.
-name: SpineDartBindings
-description: |
-  Bindings for Spine C headers.
-
-  Regenerate bindings with \`dart run ffigen --config ffigen.yaml\`.
-output: 'lib/generated/spine_dart_bindings_generated.dart'
-llvm-path:
-    - '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/'
-headers:
-  entry-points:
-    - 'src/spine-c/include/spine-c.h'
-compiler-opts:
-  - '-Isrc/spine-c/include'
-  - '-Isrc/spine-c/src'
-  - '-Isrc/spine-c/src/generated'
-  - '-xc'
-  - '-std=c99'
-functions:
-  include:
-    - 'spine_.*'
-structs:
-  include:
-    - 'spine_.*'
-enums:
-  include:
-    - 'spine_.*'
-typedefs:
-  include:
-    - 'spine_.*'
-preamble: |
-  // ignore_for_file: always_specify_types, constant_identifier_names
-  // ignore_for_file: camel_case_types
-  // ignore_for_file: non_constant_identifier_names
-comments:
-  style: any
-  length: full
-`;
-
-    const ffigenPath = path.join(__dirname, '../../ffigen.yaml');
-    fs.writeFileSync(ffigenPath, ffigenConfig);
+    const ffigenPath = await generateFFigenYaml(spineCDir);
 
     // Run ffigen to generate bindings
     console.log('Running ffigen...');
@@ -93,7 +42,7 @@ comments:
     console.log('✅ FFI bindings generated successfully!');
 }
 
-async function generateFFigenYamlOnly(spineCDir: string): Promise<void> {
+async function generateFFigenYaml(spineCDir: string): Promise<string> {
     console.log('Finding all header files...');
     const generatedDir = path.join(spineCDir, 'src/generated');
     const headerFiles = fs.readdirSync(generatedDir)
@@ -147,6 +96,7 @@ comments:
     const ffigenPath = path.join(__dirname, '../../ffigen.yaml');
     fs.writeFileSync(ffigenPath, ffigenConfig);
     console.log(`FFigen config written to: ${ffigenPath}`);
+    return ffigenPath;
 }
 
 async function main() {
@@ -158,7 +108,7 @@ async function main() {
 
         // Generate FFI bindings YAML config only
         const spineCDir = path.join(__dirname, '../../src/spine-c');
-        await generateFFigenYamlOnly(spineCDir);
+        await generateFFigenYaml(spineCDir);
         console.log('✅ ffigen.yaml generated successfully!');
         return;
     }

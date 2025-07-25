@@ -1,6 +1,6 @@
 # Spine C API Code Generator
 
-This TypeScript-based code generator automatically creates a C wrapper API for the Spine C++ runtime. It parses the spine-cpp headers using Clang's AST and generates a complete C API with opaque types, following systematic type conversion rules.
+This TypeScript-based code generator automatically creates a C wrapper API for the Spine C++ runtime. It parses the spine-cpp headers using Clang's AST and generates a complete C API with opaque types, following systematic type conversion rules. The generator also builds inheritance maps and interface information for multi-language binding generation.
 
 ## Table of Contents
 
@@ -15,7 +15,8 @@ This TypeScript-based code generator automatically creates a C wrapper API for t
 9. [Array Specializations](#array-specializations)
 10. [Generated Code Examples](#generated-code-examples)
 11. [Implementation Details](#implementation-details)
-12. [Troubleshooting](#troubleshooting)
+12. [Development Tools](#development-tools)
+13. [Troubleshooting](#troubleshooting)
 
 ## Overview
 
@@ -28,6 +29,7 @@ The code generator performs static analysis on the spine-cpp headers to automati
 - Array specializations for different element types
 - Field accessors (getters/setters) for public fields
 - Automatic validation and conflict detection
+- Inheritance analysis and interface detection for multi-language bindings
 
 ## Architecture
 
@@ -67,7 +69,13 @@ The generator follows a multi-stage pipeline:
    - Writes header files with C function declarations
    - Writes implementation files with C++ wrapper code
    - Generates array specialization files
-   - Creates main include files (`types.h`, `spine-c.h`)
+   - Creates main include files (`types.h`)
+
+7. **Inheritance Analysis**
+   - Builds inheritance maps for single-inheritance languages (Dart, Swift, Java)
+   - Identifies pure interfaces vs concrete classes
+   - Detects multiple concrete inheritance (not supported)
+   - Generates inheritance information for language binding generators
 
 ## Type System
 
@@ -106,6 +114,7 @@ codegen/
 ├── src/
 │   ├── index.ts           # Main entry point and orchestration
 │   ├── type-extractor.ts  # Clang AST parsing
+│   ├── cpp-check.ts       # C++ nullability analysis tool
 │   ├── types.ts           # Type definitions and conversion logic
 │   ├── c-types.ts         # C IR type definitions
 │   ├── array-scanner.ts   # Array specialization detection
@@ -114,18 +123,22 @@ codegen/
 │   ├── ir-generator.ts    # C++ to C IR conversion
 │   ├── c-writer.ts        # File generation
 │   └── warnings.ts        # Warning collection
+├── dist/                  # TypeScript compilation output
 ├── exclusions.txt         # Type/method exclusions
 ├── spine-cpp-types.json   # Extracted type information
+├── nullable.md            # C++ nullability analysis results
+├── out.json              # Debug output file
 ├── package.json           # Node.js configuration
 ├── tsconfig.json          # TypeScript configuration
-└── generated/             # Output directory (temporary)
+├── tsfmt.json            # TypeScript formatter configuration
+├── biome.json            # Biome linter configuration
+└── node_modules/         # Dependencies
 ```
 
 Generated files are output to `../src/generated/`:
 - Individual files per type (e.g., `skeleton.h`, `skeleton.cpp`)
 - `types.h` - Forward declarations for all types
 - `arrays.h/cpp` - Array specializations
-- `spine-c.h` - Main include file
 
 ## Usage
 
@@ -133,14 +146,36 @@ Generated files are output to `../src/generated/`:
 # Install dependencies
 npm install
 
-npx -y tsx src/index.ts
+# Run the code generator
+npx tsx src/index.ts
+
+# Or export JSON for debugging
+npx tsx src/index.ts --export-json
+
 # The generated files will be in ../src/generated/
 ```
+
+### C++ Nullability Analysis Tool
+
+The codegen includes a tool to analyze spine-cpp for nullability patterns:
+
+```bash
+# Generate nullable.md with clickable links to methods with nullable inputs/outputs
+npm run cpp-check
+```
+
+This tool identifies all methods that either:
+- Return pointer types (nullable return values)
+- Take pointer parameters (nullable inputs)
+
+The output `nullable.md` contains clickable markdown links for easy navigation in VS Code. This is useful for cleaning up the spine-cpp API to use references vs pointers appropriately to signal nullability.
 
 The generator automatically:
 - Detects when spine-cpp headers have changed
 - Regenerates only when necessary
 - Reports warnings and errors during generation
+- Formats the generated C++ code using the project's formatter
+- Builds inheritance maps for multi-language binding generation
 
 ## Type Conversion Rules
 
@@ -320,14 +355,14 @@ Array<PropertyId> → spine_array_property_id
 // Header: skeleton.h
 typedef struct spine_skeleton* spine_skeleton;
 
-spine_skeleton spine_skeleton_new(spine_skeleton_data data);
+spine_skeleton spine_skeleton_create(spine_skeleton_data data);
 void spine_skeleton_dispose(spine_skeleton self);
 void spine_skeleton_update_cache(spine_skeleton self);
 float spine_skeleton_get_x(const spine_skeleton self);
 void spine_skeleton_set_x(spine_skeleton self, float value);
 
 // Implementation: skeleton.cpp
-spine_skeleton spine_skeleton_new(spine_skeleton_data data) {
+spine_skeleton spine_skeleton_create(spine_skeleton_data data) {
     return (spine_skeleton) new (__FILE__, __LINE__) Skeleton((SkeletonData*)data);
 }
 
@@ -339,45 +374,82 @@ void spine_skeleton_update_cache(spine_skeleton self) {
 ### Enum Wrapper
 ```c
 // Header: blend_mode.h
+#ifndef SPINE_SPINE_BLEND_MODE_H
+#define SPINE_SPINE_BLEND_MODE_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum spine_blend_mode {
     SPINE_BLEND_MODE_NORMAL = 0,
-    SPINE_BLEND_MODE_ADDITIVE = 1,
-    SPINE_BLEND_MODE_MULTIPLY = 2,
-    SPINE_BLEND_MODE_SCREEN = 3
+    SPINE_BLEND_MODE_ADDITIVE,
+    SPINE_BLEND_MODE_MULTIPLY,
+    SPINE_BLEND_MODE_SCREEN
 } spine_blend_mode;
 
-// Implementation: blend_mode.cpp
-spine_blend_mode spine_blend_mode_from_cpp(BlendMode value) {
-    return (spine_blend_mode)value;
+#ifdef __cplusplus
 }
+#endif
 
-BlendMode spine_blend_mode_to_cpp(spine_blend_mode value) {
-    return (BlendMode)value;
-}
+#endif /* SPINE_SPINE_BLEND_MODE_H */
 ```
 
 ### Array Specialization
+Arrays are generated as opaque types with complete CRUD operations. All arrays are consolidated into `arrays.h` and `arrays.cpp`.
+
 ```c
-// Header: array_float.h
-typedef struct spine_array_float* spine_array_float;
+// Header: arrays.h
+SPINE_OPAQUE_TYPE(spine_array_float)
 
-spine_array_float spine_array_float_new(int32_t capacity);
-void spine_array_float_dispose(spine_array_float self);
-int32_t spine_array_float_get_size(const spine_array_float self);
-float spine_array_float_get(const spine_array_float self, int32_t index);
-void spine_array_float_set(spine_array_float self, int32_t index, float value);
+// Creation functions
+spine_array_float spine_array_float_create(void);
+spine_array_float spine_array_float_create_with_capacity(size_t initialCapacity);
 
-// Implementation: array_float.cpp
-struct spine_array_float {
-    Array<float> data;
-};
+// Memory management
+void spine_array_float_dispose(spine_array_float array);
+void spine_array_float_clear(spine_array_float array);
 
-spine_array_float spine_array_float_new(int32_t capacity) {
-    auto* arr = new (__FILE__, __LINE__) spine_array_float();
-    arr->data.setCapacity(capacity);
-    return arr;
+// Size and capacity operations
+size_t spine_array_float_get_capacity(spine_array_float array);
+size_t spine_array_float_size(spine_array_float array);
+spine_array_float spine_array_float_set_size(spine_array_float array, size_t newSize, float defaultValue);
+void spine_array_float_ensure_capacity(spine_array_float array, size_t newCapacity);
+
+// Element operations
+void spine_array_float_add(spine_array_float array, float inValue);
+void spine_array_float_add_all(spine_array_float array, spine_array_float inValue);
+void spine_array_float_clear_and_add_all(spine_array_float array, spine_array_float inValue);
+void spine_array_float_remove_at(spine_array_float array, size_t inIndex);
+
+// Search operations
+bool spine_array_float_contains(spine_array_float array, float inValue);
+int spine_array_float_index_of(spine_array_float array, float inValue);
+
+// Direct buffer access
+float *spine_array_float_buffer(spine_array_float array);
+
+// Implementation: arrays.cpp
+spine_array_float spine_array_float_create(void) {
+    return (spine_array_float) new (__FILE__, __LINE__) Array<float>();
+}
+
+void spine_array_float_dispose(spine_array_float array) {
+    delete (Array<float> *) array;
+}
+
+void spine_array_float_add(spine_array_float array, float inValue) {
+    Array<float> *_array = (Array<float> *) array;
+    _array->add(inValue);
+}
+
+float *spine_array_float_buffer(spine_array_float array) {
+    Array<float> *_array = (Array<float> *) array;
+    return _array->buffer();
 }
 ```
+
+Arrays are generated for all basic types (`float`, `int`, `unsigned_short`, `property_id`) and all object types used in collections throughout the API. The implementation directly casts the opaque handle to the underlying `Array<T>*` type.
 
 ## Implementation Details
 
@@ -391,7 +463,7 @@ spine_array_float spine_array_float_new(int32_t capacity) {
 - Only generates constructors for non-abstract classes
 - Only generates constructors for classes inheriting from `SpineObject`
 - Requires at least one public constructor or explicit exclusion
-- Constructor overloads are numbered: `_new`, `_new2`, `_new3`
+- Constructor overloads are numbered: `_create`, `_create2`, `_create3`
 
 ### Field Accessor Generation
 - Generates getters for all non-static public fields
@@ -400,8 +472,9 @@ spine_array_float spine_array_float_new(int32_t capacity) {
 - Handles nested field access (e.g., `obj.field.x`)
 
 ### Method Overloading
-- Constructor overloads are numbered: `_new`, `_new2`, `_new3`
-- Other overloads must be excluded (C doesn't support overloading)
+- Constructor overloads are numbered: `_create`, `_create2`, `_create3`, etc.
+- Method overloads are numbered with suffixes: `_1`, `_2`, `_3`, etc.
+- Methods named "create" get `_method` suffix to avoid constructor conflicts
 - Const/non-const conflicts are detected and reported
 
 ### RTTI Handling
@@ -410,9 +483,20 @@ spine_array_float spine_array_float_new(int32_t capacity) {
 - RTTI checks are performed in generated code where needed
 
 ### Warning System
-- Collects non-fatal issues during generation
+- Collects non-fatal issues during generation using `WarningsCollector`
 - Reports abstract classes, missing constructors, etc.
+- Groups warnings by pattern to avoid repetition
 - Warnings don't stop generation but are reported at the end
+
+### Interface Detection
+- Automatically identifies pure interfaces (classes with only pure virtual methods)
+- Distinguishes between concrete classes and interfaces for inheritance mapping
+- Used to determine extends vs implements relationships for target languages
+
+### Multiple Inheritance Handling
+- Detects multiple concrete inheritance scenarios
+- Fails generation with clear error messages when unsupported patterns are found
+- Provides guidance on converting concrete classes to interfaces
 
 ## Troubleshooting
 
@@ -438,6 +522,11 @@ spine_array_float spine_array_float_new(int32_t capacity) {
    - Generated function name collides with a type name
    - Solution: Rename method or exclude
 
+6. **"Multiple concrete inheritance detected"**
+   - A class inherits from multiple concrete (non-interface) classes
+   - Solution: Convert one of the parent classes to a pure interface
+   - Check the error message for specific guidance on which classes to modify
+
 ### Debugging Tips
 
 1. Check `spine-cpp-types.json` for extracted type information
@@ -445,6 +534,9 @@ spine_array_float spine_array_float_new(int32_t capacity) {
 3. Verify inheritance with "inherits from SpineObject" messages
 4. Array specializations are listed with element type mapping
 5. Check warnings at the end of generation for issues
+6. Use `--export-json` flag to export inheritance and type information as JSON
+7. Check `out.json` for debug output when troubleshooting
+8. Review console output for inheritance mapping information (extends/mixins)
 
 ### Adding New Types
 
@@ -461,3 +553,33 @@ spine_array_float spine_array_float_new(int32_t capacity) {
 - Array scanning happens after type filtering for efficiency
 - Validation checks run before generation to fail fast
 - Incremental generation avoids regenerating unchanged files
+
+## Development Tools
+
+The codegen project includes several development tools and configurations:
+
+### Biome Configuration (`biome.json`)
+- Linting enabled with recommended rules
+- Formatting disabled (uses external formatter)
+- Helps maintain code quality during development
+
+### TypeScript Formatter (`tsfmt.json`)
+- Comprehensive formatting rules for TypeScript code
+- Configures indentation, spacing, and code style
+- Used for consistent code formatting across the project
+
+### Build Output (`dist/`)
+- Contains compiled TypeScript files
+- Generated JavaScript and declaration files
+- Source maps for debugging
+
+### Debug Output (`out.json`)
+- Contains debug information from the generation process
+- Useful for troubleshooting and understanding the generated data structure
+
+### Dependencies
+The project uses minimal dependencies for maximum compatibility:
+- `@types/node` - Node.js type definitions
+- `tsx` - TypeScript execution engine
+- `typescript-formatter` - Code formatting
+- `@biomejs/biome` - Fast linter for code quality
