@@ -14,6 +14,15 @@ if ! command -v npm &> /dev/null; then
     exit 1
 fi
 
+# Clean C++ build directory if executable exists but is wrong platform
+if [ -f "../spine-cpp/build/headless-test" ]; then
+    if ! ../spine-cpp/build/headless-test --help >/dev/null 2>&1; then
+        log_action "Cleaning C++ build directory (wrong platform)"
+        rm -rf ../spine-cpp/build
+        log_ok
+    fi
+fi
+
 # Install dependencies if node_modules doesn't exist
 if [ ! -d "node_modules" ]; then
     log_action "Installing dependencies"
