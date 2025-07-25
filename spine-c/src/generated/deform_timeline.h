@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 SPINE_C_API spine_deform_timeline spine_deform_timeline_create(size_t frameCount, size_t bezierCount, int slotIndex,
-															   /*@null*/ spine_vertex_attachment attachment);
+															   spine_vertex_attachment attachment);
 
 SPINE_C_API void spine_deform_timeline_dispose(spine_deform_timeline self);
 

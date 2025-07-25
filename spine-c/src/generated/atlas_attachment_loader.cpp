@@ -3,8 +3,8 @@
 
 using namespace spine;
 
-spine_atlas_attachment_loader spine_atlas_attachment_loader_create(/*@null*/ spine_atlas atlas) {
-	return (spine_atlas_attachment_loader) new (__FILE__, __LINE__) AtlasAttachmentLoader((Atlas *) atlas);
+spine_atlas_attachment_loader spine_atlas_attachment_loader_create(spine_atlas atlas) {
+	return (spine_atlas_attachment_loader) new (__FILE__, __LINE__) AtlasAttachmentLoader(*((Atlas *) atlas));
 }
 
 void spine_atlas_attachment_loader_dispose(spine_atlas_attachment_loader self) {

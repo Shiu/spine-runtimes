@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_atlas_attachment_loader spine_atlas_attachment_loader_create(/*@null*/ spine_atlas atlas);
+SPINE_C_API spine_atlas_attachment_loader spine_atlas_attachment_loader_create(spine_atlas atlas);
 
 SPINE_C_API void spine_atlas_attachment_loader_dispose(spine_atlas_attachment_loader self);
 

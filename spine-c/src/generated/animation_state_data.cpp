@@ -3,8 +3,8 @@
 
 using namespace spine;
 
-spine_animation_state_data spine_animation_state_data_create(/*@null*/ spine_skeleton_data skeletonData) {
-	return (spine_animation_state_data) new (__FILE__, __LINE__) AnimationStateData((SkeletonData *) skeletonData);
+spine_animation_state_data spine_animation_state_data_create(spine_skeleton_data skeletonData) {
+	return (spine_animation_state_data) new (__FILE__, __LINE__) AnimationStateData(*((SkeletonData *) skeletonData));
 }
 
 void spine_animation_state_data_dispose(spine_animation_state_data self) {

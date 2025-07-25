@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_sequence_timeline spine_sequence_timeline_create(size_t frameCount, int slotIndex, /*@null*/ spine_attachment attachment);
+SPINE_C_API spine_sequence_timeline spine_sequence_timeline_create(size_t frameCount, int slotIndex, spine_attachment attachment);
 
 SPINE_C_API void spine_sequence_timeline_dispose(spine_sequence_timeline self);
 

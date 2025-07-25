@@ -3,12 +3,12 @@
 
 using namespace spine;
 
-spine_skeleton_json spine_skeleton_json_create(/*@null*/ spine_atlas atlas) {
-	return (spine_skeleton_json) new (__FILE__, __LINE__) SkeletonJson((Atlas *) atlas);
+spine_skeleton_json spine_skeleton_json_create(spine_atlas atlas) {
+	return (spine_skeleton_json) new (__FILE__, __LINE__) SkeletonJson(*((Atlas *) atlas));
 }
 
-spine_skeleton_json spine_skeleton_json_create2(/*@null*/ spine_attachment_loader attachmentLoader, bool ownsLoader) {
-	return (spine_skeleton_json) new (__FILE__, __LINE__) SkeletonJson((AttachmentLoader *) attachmentLoader, ownsLoader);
+spine_skeleton_json spine_skeleton_json_create2(spine_attachment_loader attachmentLoader, bool ownsLoader) {
+	return (spine_skeleton_json) new (__FILE__, __LINE__) SkeletonJson(*((AttachmentLoader *) attachmentLoader), ownsLoader);
 }
 
 void spine_skeleton_json_dispose(spine_skeleton_json self) {

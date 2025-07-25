@@ -3,9 +3,8 @@
 
 using namespace spine;
 
-spine_deform_timeline spine_deform_timeline_create(size_t frameCount, size_t bezierCount, int slotIndex,
-												   /*@null*/ spine_vertex_attachment attachment) {
-	return (spine_deform_timeline) new (__FILE__, __LINE__) DeformTimeline(frameCount, bezierCount, slotIndex, (VertexAttachment *) attachment);
+spine_deform_timeline spine_deform_timeline_create(size_t frameCount, size_t bezierCount, int slotIndex, spine_vertex_attachment attachment) {
+	return (spine_deform_timeline) new (__FILE__, __LINE__) DeformTimeline(frameCount, bezierCount, slotIndex, *((VertexAttachment *) attachment));
 }
 
 void spine_deform_timeline_dispose(spine_deform_timeline self) {

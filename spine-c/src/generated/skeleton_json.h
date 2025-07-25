@@ -9,8 +9,8 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_skeleton_json spine_skeleton_json_create(/*@null*/ spine_atlas atlas);
-SPINE_C_API spine_skeleton_json spine_skeleton_json_create2(/*@null*/ spine_attachment_loader attachmentLoader, bool ownsLoader);
+SPINE_C_API spine_skeleton_json spine_skeleton_json_create(spine_atlas atlas);
+SPINE_C_API spine_skeleton_json spine_skeleton_json_create2(spine_attachment_loader attachmentLoader, bool ownsLoader);
 
 SPINE_C_API void spine_skeleton_json_dispose(spine_skeleton_json self);
 

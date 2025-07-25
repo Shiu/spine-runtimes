@@ -3,8 +3,8 @@
 
 using namespace spine;
 
-spine_animation_state spine_animation_state_create(/*@null*/ spine_animation_state_data data) {
-	return (spine_animation_state) new (__FILE__, __LINE__) AnimationState((AnimationStateData *) data);
+spine_animation_state spine_animation_state_create(spine_animation_state_data data) {
+	return (spine_animation_state) new (__FILE__, __LINE__) AnimationState(*((AnimationStateData *) data));
 }
 
 void spine_animation_state_dispose(spine_animation_state self) {
@@ -36,10 +36,9 @@ spine_track_entry spine_animation_state_set_animation_1(spine_animation_state se
 	return (spine_track_entry) &_self->setAnimation(trackIndex, String(animationName), loop);
 }
 
-spine_track_entry spine_animation_state_set_animation_2(spine_animation_state self, size_t trackIndex, /*@null*/ spine_animation animation,
-														bool loop) {
+spine_track_entry spine_animation_state_set_animation_2(spine_animation_state self, size_t trackIndex, spine_animation animation, bool loop) {
 	AnimationState *_self = (AnimationState *) self;
-	return (spine_track_entry) &_self->setAnimation(trackIndex, (Animation *) animation, loop);
+	return (spine_track_entry) &_self->setAnimation(trackIndex, *((Animation *) animation), loop);
 }
 
 spine_track_entry spine_animation_state_add_animation_1(spine_animation_state self, size_t trackIndex, const char *animationName, bool loop,
@@ -48,10 +47,10 @@ spine_track_entry spine_animation_state_add_animation_1(spine_animation_state se
 	return (spine_track_entry) &_self->addAnimation(trackIndex, String(animationName), loop, delay);
 }
 
-spine_track_entry spine_animation_state_add_animation_2(spine_animation_state self, size_t trackIndex, /*@null*/ spine_animation animation, bool loop,
+spine_track_entry spine_animation_state_add_animation_2(spine_animation_state self, size_t trackIndex, spine_animation animation, bool loop,
 														float delay) {
 	AnimationState *_self = (AnimationState *) self;
-	return (spine_track_entry) &_self->addAnimation(trackIndex, (Animation *) animation, loop, delay);
+	return (spine_track_entry) &_self->addAnimation(trackIndex, *((Animation *) animation), loop, delay);
 }
 
 spine_track_entry spine_animation_state_set_empty_animation(spine_animation_state self, size_t trackIndex, float mixDuration) {

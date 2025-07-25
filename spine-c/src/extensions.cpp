@@ -251,7 +251,7 @@ void spine_atlas_result_dispose(spine_atlas_result result) {
 spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, const char *skeletonData, const char *path) {
 	if (!atlas || !skeletonData) return nullptr;
 	_spine_skeleton_data_result *result = SpineExtension::calloc<_spine_skeleton_data_result>(1, __FILE__, __LINE__);
-	SkeletonJson json((Atlas *) atlas);
+	SkeletonJson json(*(Atlas *) atlas);
 	json.setScale(1);
 
 	SkeletonData *data = json.readSkeletonData(skeletonData);
@@ -287,7 +287,7 @@ spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, cons
 spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, const uint8_t *skeletonData, int32_t length, const char *path) {
 	if (!atlas || !skeletonData) return nullptr;
 	_spine_skeleton_data_result *result = SpineExtension::calloc<_spine_skeleton_data_result>(1, __FILE__, __LINE__);
-	SkeletonBinary binary((Atlas *) atlas);
+	SkeletonBinary binary(*(Atlas *) atlas);
 	binary.setScale(1);
 
 	SkeletonData *data = binary.readSkeletonData((const unsigned char *) skeletonData, length);
@@ -345,8 +345,8 @@ spine_skeleton_drawable spine_skeleton_drawable_create(spine_skeleton_data skele
 	_spine_skeleton_drawable *drawable = new (__FILE__, __LINE__) _spine_skeleton_drawable();
 
 	Skeleton *skeleton = new (__FILE__, __LINE__) Skeleton(*((SkeletonData *) skeletonData));
-	AnimationStateData *stateData = new (__FILE__, __LINE__) AnimationStateData((SkeletonData *) skeletonData);
-	AnimationState *state = new (__FILE__, __LINE__) AnimationState(stateData);
+	AnimationStateData *stateData = new (__FILE__, __LINE__) AnimationStateData(*(SkeletonData *) skeletonData);
+	AnimationState *state = new (__FILE__, __LINE__) AnimationState(*stateData);
 	EventListener *listener = new (__FILE__, __LINE__) EventListener();
 	state->setListener(listener);
 

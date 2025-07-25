@@ -3,8 +3,8 @@
 
 using namespace spine;
 
-spine_sequence_timeline spine_sequence_timeline_create(size_t frameCount, int slotIndex, /*@null*/ spine_attachment attachment) {
-	return (spine_sequence_timeline) new (__FILE__, __LINE__) SequenceTimeline(frameCount, slotIndex, (Attachment *) attachment);
+spine_sequence_timeline spine_sequence_timeline_create(size_t frameCount, int slotIndex, spine_attachment attachment) {
+	return (spine_sequence_timeline) new (__FILE__, __LINE__) SequenceTimeline(frameCount, slotIndex, *((Attachment *) attachment));
 }
 
 void spine_sequence_timeline_dispose(spine_sequence_timeline self) {

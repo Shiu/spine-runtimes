@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-SPINE_C_API spine_animation_state_data spine_animation_state_data_create(/*@null*/ spine_skeleton_data skeletonData);
+SPINE_C_API spine_animation_state_data spine_animation_state_data_create(spine_skeleton_data skeletonData);
 
 SPINE_C_API void spine_animation_state_data_dispose(spine_animation_state_data self);
 
