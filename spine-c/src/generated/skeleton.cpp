@@ -31,7 +31,7 @@ void spine_skeleton_sort_bone(spine_skeleton self, /*@null*/ spine_bone bone) {
 	_self->sortBone((Bone *) bone);
 }
 
-void spine_skeleton_sort_reset(/*@null*/ spine_array_bone bones) {
+void spine_skeleton_sort_reset(spine_array_bone bones) {
 	Skeleton::sortReset(*((Array<Bone *> *) bones));
 }
 
@@ -60,12 +60,12 @@ spine_skeleton_data spine_skeleton_get_data(spine_skeleton self) {
 	return (spine_skeleton_data) &_self->getData();
 }
 
-/*@null*/ spine_array_bone spine_skeleton_get_bones(spine_skeleton self) {
+spine_array_bone spine_skeleton_get_bones(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_bone) &_self->getBones();
 }
 
-/*@null*/ spine_array_update spine_skeleton_get_update_cache(spine_skeleton self) {
+spine_array_update spine_skeleton_get_update_cache(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_update) &_self->getUpdateCache();
 }
@@ -80,7 +80,7 @@ spine_skeleton_data spine_skeleton_get_data(spine_skeleton self) {
 	return (spine_bone) _self->findBone(String(boneName));
 }
 
-/*@null*/ spine_array_slot spine_skeleton_get_slots(spine_skeleton self) {
+spine_array_slot spine_skeleton_get_slots(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_slot) &_self->getSlots();
 }
@@ -90,7 +90,7 @@ spine_skeleton_data spine_skeleton_get_data(spine_skeleton self) {
 	return (spine_slot) _self->findSlot(String(slotName));
 }
 
-/*@null*/ spine_array_slot spine_skeleton_get_draw_order(spine_skeleton self) {
+spine_array_slot spine_skeleton_get_draw_order(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_slot) &_self->getDrawOrder();
 }
@@ -125,12 +125,12 @@ void spine_skeleton_set_attachment(spine_skeleton self, const char *slotName, co
 	_self->setAttachment(String(slotName), String(attachmentName));
 }
 
-/*@null*/ spine_array_constraint spine_skeleton_get_constraints(spine_skeleton self) {
+spine_array_constraint spine_skeleton_get_constraints(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_constraint) &_self->getConstraints();
 }
 
-/*@null*/ spine_array_physics_constraint spine_skeleton_get_physics_constraints(spine_skeleton self) {
+spine_array_physics_constraint spine_skeleton_get_physics_constraints(spine_skeleton self) {
 	Skeleton *_self = (Skeleton *) self;
 	return (spine_array_physics_constraint) &_self->getPhysicsConstraints();
 }

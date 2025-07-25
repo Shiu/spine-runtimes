@@ -24,7 +24,7 @@ SPINE_C_API int spine_sequence_get_digits(spine_sequence self);
 SPINE_C_API void spine_sequence_set_digits(spine_sequence self, int digits);
 SPINE_C_API int spine_sequence_get_setup_index(spine_sequence self);
 SPINE_C_API void spine_sequence_set_setup_index(spine_sequence self, int setupIndex);
-SPINE_C_API /*@null*/ spine_array_texture_region spine_sequence_get_regions(spine_sequence self);
+SPINE_C_API spine_array_texture_region spine_sequence_get_regions(spine_sequence self);
 
 #ifdef __cplusplus
 }

@@ -31,7 +31,7 @@ SPINE_C_API spine_track_entry spine_animation_state_add_empty_animation(spine_an
 SPINE_C_API void spine_animation_state_set_empty_animations(spine_animation_state self, float mixDuration);
 SPINE_C_API /*@null*/ spine_track_entry spine_animation_state_get_current(spine_animation_state self, size_t trackIndex);
 SPINE_C_API spine_animation_state_data spine_animation_state_get_data(spine_animation_state self);
-SPINE_C_API /*@null*/ spine_array_track_entry spine_animation_state_get_tracks(spine_animation_state self);
+SPINE_C_API spine_array_track_entry spine_animation_state_get_tracks(spine_animation_state self);
 SPINE_C_API float spine_animation_state_get_time_scale(spine_animation_state self);
 SPINE_C_API void spine_animation_state_set_time_scale(spine_animation_state self, float inValue);
 SPINE_C_API void spine_animation_state_disable_queue(spine_animation_state self);

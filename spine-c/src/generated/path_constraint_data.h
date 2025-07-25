@@ -15,7 +15,7 @@ SPINE_C_API void spine_path_constraint_data_dispose(spine_path_constraint_data s
 
 SPINE_C_API spine_rtti spine_path_constraint_data_get_rtti(spine_path_constraint_data self);
 SPINE_C_API spine_constraint spine_path_constraint_data_create_method(spine_path_constraint_data self, spine_skeleton skeleton);
-SPINE_C_API /*@null*/ spine_array_bone_data spine_path_constraint_data_get_bones(spine_path_constraint_data self);
+SPINE_C_API spine_array_bone_data spine_path_constraint_data_get_bones(spine_path_constraint_data self);
 SPINE_C_API spine_slot_data spine_path_constraint_data_get_slot(spine_path_constraint_data self);
 SPINE_C_API void spine_path_constraint_data_set_slot(spine_path_constraint_data self, spine_slot_data slot);
 SPINE_C_API spine_position_mode spine_path_constraint_data_get_position_mode(spine_path_constraint_data self);

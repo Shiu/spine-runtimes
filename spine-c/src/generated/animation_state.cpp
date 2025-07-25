@@ -78,7 +78,7 @@ spine_animation_state_data spine_animation_state_get_data(spine_animation_state 
 	return (spine_animation_state_data) &_self->getData();
 }
 
-/*@null*/ spine_array_track_entry spine_animation_state_get_tracks(spine_animation_state self) {
+spine_array_track_entry spine_animation_state_get_tracks(spine_animation_state self) {
 	AnimationState *_self = (AnimationState *) self;
 	return (spine_array_track_entry) &_self->getTracks();
 }

@@ -17,12 +17,12 @@ void spine_atlas_flip_v(spine_atlas self) {
 	return (spine_atlas_region) _self->findRegion(String(name));
 }
 
-/*@null*/ spine_array_atlas_page spine_atlas_get_pages(spine_atlas self) {
+spine_array_atlas_page spine_atlas_get_pages(spine_atlas self) {
 	Atlas *_self = (Atlas *) self;
 	return (spine_array_atlas_page) &_self->getPages();
 }
 
-/*@null*/ spine_array_atlas_region spine_atlas_get_regions(spine_atlas self) {
+spine_array_atlas_region spine_atlas_get_regions(spine_atlas self) {
 	Atlas *_self = (Atlas *) self;
 	return (spine_array_atlas_region) &_self->getRegions();
 }

@@ -26,8 +26,8 @@ SPINE_C_API bool spine_skeleton_bounds_intersects_segment_2(spine_skeleton_bound
 SPINE_C_API /*@null*/ spine_polygon spine_skeleton_bounds_get_polygon(spine_skeleton_bounds self, /*@null*/ spine_bounding_box_attachment attachment);
 SPINE_C_API /*@null*/ spine_bounding_box_attachment spine_skeleton_bounds_get_bounding_box(spine_skeleton_bounds self,
 																						   /*@null*/ spine_polygon polygon);
-SPINE_C_API /*@null*/ spine_array_polygon spine_skeleton_bounds_get_polygons(spine_skeleton_bounds self);
-SPINE_C_API /*@null*/ spine_array_bounding_box_attachment spine_skeleton_bounds_get_bounding_boxes(spine_skeleton_bounds self);
+SPINE_C_API spine_array_polygon spine_skeleton_bounds_get_polygons(spine_skeleton_bounds self);
+SPINE_C_API spine_array_bounding_box_attachment spine_skeleton_bounds_get_bounding_boxes(spine_skeleton_bounds self);
 SPINE_C_API float spine_skeleton_bounds_get_min_x(spine_skeleton_bounds self);
 SPINE_C_API float spine_skeleton_bounds_get_min_y(spine_skeleton_bounds self);
 SPINE_C_API float spine_skeleton_bounds_get_max_x(spine_skeleton_bounds self);

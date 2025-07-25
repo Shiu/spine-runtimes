@@ -19,7 +19,7 @@ SPINE_C_API void spine_ik_constraint_update(spine_ik_constraint self, spine_skel
 SPINE_C_API void spine_ik_constraint_sort(spine_ik_constraint self, spine_skeleton skeleton);
 SPINE_C_API bool spine_ik_constraint_is_source_active(spine_ik_constraint self);
 SPINE_C_API spine_ik_constraint_data spine_ik_constraint_get_data(spine_ik_constraint self);
-SPINE_C_API /*@null*/ spine_array_bone_pose spine_ik_constraint_get_bones(spine_ik_constraint self);
+SPINE_C_API spine_array_bone_pose spine_ik_constraint_get_bones(spine_ik_constraint self);
 SPINE_C_API spine_bone spine_ik_constraint_get_target(spine_ik_constraint self);
 SPINE_C_API void spine_ik_constraint_set_target(spine_ik_constraint self, spine_bone inValue);
 SPINE_C_API void spine_ik_constraint_apply_1(spine_skeleton skeleton, spine_bone_pose bone, float targetX, float targetY, bool compress, bool stretch,

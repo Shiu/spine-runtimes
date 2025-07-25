@@ -316,14 +316,14 @@ export function toCTypeName(cppType: string, knownTypeNames: Set<string>): strin
 export function isNullable(cppType: string): boolean {
     const normalizedType = cppType.replace(/\s+/g, ' ').trim();
     
-    // Pointer types are nullable
-    if (normalizedType.includes('*')) {
-        return true;
-    }
-    
-    // Reference types are NOT nullable
+    // Reference types are NOT nullable (even if they contain pointers inside templates)
     if (normalizedType.includes('&')) {
         return false;
+    }
+    
+    // Pointer types are nullable (only if not a reference)
+    if (normalizedType.includes('*')) {
+        return true;
     }
     
     // Value types and primitives are NOT nullable

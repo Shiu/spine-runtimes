@@ -62,12 +62,12 @@ bool spine_skeleton_bounds_intersects_segment_2(spine_skeleton_bounds self, spin
 	return (spine_bounding_box_attachment) _self->getBoundingBox((Polygon *) polygon);
 }
 
-/*@null*/ spine_array_polygon spine_skeleton_bounds_get_polygons(spine_skeleton_bounds self) {
+spine_array_polygon spine_skeleton_bounds_get_polygons(spine_skeleton_bounds self) {
 	SkeletonBounds *_self = (SkeletonBounds *) self;
 	return (spine_array_polygon) &_self->getPolygons();
 }
 
-/*@null*/ spine_array_bounding_box_attachment spine_skeleton_bounds_get_bounding_boxes(spine_skeleton_bounds self) {
+spine_array_bounding_box_attachment spine_skeleton_bounds_get_bounding_boxes(spine_skeleton_bounds self) {
 	SkeletonBounds *_self = (SkeletonBounds *) self;
 	return (spine_array_bounding_box_attachment) &_self->getBoundingBoxes();
 }

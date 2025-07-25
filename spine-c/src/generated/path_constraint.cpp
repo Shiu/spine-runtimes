@@ -36,7 +36,7 @@ bool spine_path_constraint_is_source_active(spine_path_constraint self) {
 	return _self->isSourceActive();
 }
 
-/*@null*/ spine_array_bone_pose spine_path_constraint_get_bones(spine_path_constraint self) {
+spine_array_bone_pose spine_path_constraint_get_bones(spine_path_constraint self) {
 	PathConstraint *_self = (PathConstraint *) self;
 	return (spine_array_bone_pose) &_self->getBones();
 }

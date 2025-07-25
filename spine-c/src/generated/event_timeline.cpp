@@ -28,7 +28,7 @@ size_t spine_event_timeline_get_frame_count(spine_event_timeline self) {
 	return _self->getFrameCount();
 }
 
-/*@null*/ spine_array_event spine_event_timeline_get_events(spine_event_timeline self) {
+spine_array_event spine_event_timeline_get_events(spine_event_timeline self) {
 	EventTimeline *_self = (EventTimeline *) self;
 	return (spine_array_event) &_self->getEvents();
 }

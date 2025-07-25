@@ -3,7 +3,7 @@
 
 using namespace spine;
 
-spine_animation spine_animation_create(const char *name, /*@null*/ spine_array_timeline timelines, float duration) {
+spine_animation spine_animation_create(const char *name, spine_array_timeline timelines, float duration) {
 	return (spine_animation) new (__FILE__, __LINE__) Animation(String(name), *((Array<Timeline *> *) timelines), duration);
 }
 
@@ -11,12 +11,12 @@ void spine_animation_dispose(spine_animation self) {
 	delete (Animation *) self;
 }
 
-/*@null*/ spine_array_timeline spine_animation_get_timelines(spine_animation self) {
+spine_array_timeline spine_animation_get_timelines(spine_animation self) {
 	Animation *_self = (Animation *) self;
 	return (spine_array_timeline) &_self->getTimelines();
 }
 
-void spine_animation_set_timelines(spine_animation self, /*@null*/ spine_array_timeline timelines) {
+void spine_animation_set_timelines(spine_animation self, spine_array_timeline timelines) {
 	Animation *_self = (Animation *) self;
 	_self->setTimelines(*((Array<Timeline *> *) timelines));
 }

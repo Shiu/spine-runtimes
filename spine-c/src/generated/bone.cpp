@@ -25,7 +25,7 @@ spine_rtti spine_bone_get_rtti(spine_bone self) {
 	return (spine_bone) _self->getParent();
 }
 
-/*@null*/ spine_array_bone spine_bone_get_children(spine_bone self) {
+spine_array_bone spine_bone_get_children(spine_bone self) {
 	Bone *_self = (Bone *) self;
 	return (spine_array_bone) &_self->getChildren();
 }

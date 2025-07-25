@@ -18,7 +18,7 @@ SPINE_C_API void spine_event_timeline_apply(spine_event_timeline self, spine_ske
 											/*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
 											bool appliedPose);
 SPINE_C_API size_t spine_event_timeline_get_frame_count(spine_event_timeline self);
-SPINE_C_API /*@null*/ spine_array_event spine_event_timeline_get_events(spine_event_timeline self);
+SPINE_C_API spine_array_event spine_event_timeline_get_events(spine_event_timeline self);
 SPINE_C_API void spine_event_timeline_set_frame(spine_event_timeline self, size_t frame, spine_event event);
 SPINE_C_API size_t spine_event_timeline_get_frame_entries(spine_event_timeline self);
 SPINE_C_API spine_array_float spine_event_timeline_get_frames(spine_event_timeline self);

@@ -66,7 +66,7 @@ void spine_sequence_set_setup_index(spine_sequence self, int setupIndex) {
 	_self->setSetupIndex(setupIndex);
 }
 
-/*@null*/ spine_array_texture_region spine_sequence_get_regions(spine_sequence self) {
+spine_array_texture_region spine_sequence_get_regions(spine_sequence self) {
 	Sequence *_self = (Sequence *) self;
 	return (spine_array_texture_region) &_self->getRegions();
 }

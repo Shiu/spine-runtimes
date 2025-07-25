@@ -21,7 +21,7 @@ spine_constraint spine_path_constraint_data_create_method(spine_path_constraint_
 	return (spine_constraint) &_self->create(*((Skeleton *) skeleton));
 }
 
-/*@null*/ spine_array_bone_data spine_path_constraint_data_get_bones(spine_path_constraint_data self) {
+spine_array_bone_data spine_path_constraint_data_get_bones(spine_path_constraint_data self) {
 	PathConstraintData *_self = (PathConstraintData *) self;
 	return (spine_array_bone_data) &_self->getBones();
 }
