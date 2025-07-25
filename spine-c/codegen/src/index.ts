@@ -2,7 +2,7 @@
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CWriter } from './c-writer';
-import { checkConstNonConstConflicts, checkFieldAccessorConflicts, checkMethodTypeNameConflicts, checkMultiLevelPointers, checkValueReturns } from './checks';
+import { checkConstNonConstConflicts, checkFieldAccessorConflicts, checkGetterSetterNullabilityMismatch, checkMethodTypeNameConflicts, checkMultiLevelPointers, checkValueReturns } from './checks';
 import { isTypeExcluded, loadExclusions } from './exclusions';
 import { generateArrays, generateTypes } from './ir-generator';
 import { extractTypes } from './type-extractor';
@@ -70,6 +70,9 @@ export async function generate() {
     // Generate C intermediate representation for classes, enums and arrays
     const { cTypes, cEnums } = await generateTypes(types, exclusions, allExtractedTypes);
     const cArrayTypes = await generateArrays(types, arrayType, exclusions);
+
+    // Check for getter/setter nullability mismatches
+    checkGetterSetterNullabilityMismatch(cTypes);
 
     // Build interface/pure type information first
     const isInterface = buildInterfaceMap(allExtractedTypes.filter(t => t.kind !== 'enum') as ClassOrStruct[]);

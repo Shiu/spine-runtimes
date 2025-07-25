@@ -1,5 +1,6 @@
 import { isMethodExcluded } from "./exclusions";
 import { type ClassOrStruct, type Exclusion, type Field, isPrimitive, type Method, type Type, toSnakeCase } from "./types";
+import type { CClassOrStruct, CMethod } from "./c-types";
 
 /**
  * Checks for methods that have both const and non-const versions with different return types.
@@ -335,6 +336,105 @@ export function checkMethodTypeNameConflicts(classes: ClassOrStruct[], allTypes:
         console.error("  1. Rename the method or type in C++");
         console.error("  2. Exclude the method in exclusions.txt");
         console.error("  3. Exclude the conflicting type in exclusions.txt");
+        console.error("=".repeat(80) + "\n");
+
+        process.exit(1);
+    }
+}
+
+/**
+ * Checks for getter/setter pairs where the return type nullability of the getter
+ * doesn't match the parameter nullability of the setter. This creates inconsistent
+ * APIs in target languages (e.g., Dart) where such mismatches are forbidden.
+ * 
+ * @param cTypes - Array of generated C types with their methods
+ */
+export function checkGetterSetterNullabilityMismatch(cTypes: CClassOrStruct[]): void {
+    const mismatches: Array<{ 
+        typeName: string, 
+        fieldName: string, 
+        getterNullable: boolean, 
+        setterNullable: boolean 
+    }> = [];
+
+    for (const cType of cTypes) {
+        if (!cType.methods) continue;
+
+        // Group methods by field name (extract from method names like spine_type_get_field, spine_type_set_field)
+        const fieldAccessors = new Map<string, { getter?: CMethod, setter?: CMethod }>();
+
+        for (const method of cType.methods) {
+            // Check if this is a getter method (ends with _get_<field_name> AND has exactly 1 parameter)
+            const getterMatch = method.name.match(/^(.+)_get_(.+)$/);
+            if (getterMatch && method.parameters?.length === 1) {
+                const fieldName = getterMatch[2];
+                if (!fieldAccessors.has(fieldName)) {
+                    fieldAccessors.set(fieldName, {});
+                }
+                fieldAccessors.get(fieldName)!.getter = method;
+                continue;
+            }
+
+            // Check if this is a setter method (ends with _set_<field_name> AND has exactly 2 parameters)
+            const setterMatch = method.name.match(/^(.+)_set_(.+)$/);
+            if (setterMatch && method.parameters?.length === 2) {
+                const fieldName = setterMatch[2];
+                if (!fieldAccessors.has(fieldName)) {
+                    fieldAccessors.set(fieldName, {});
+                }
+                fieldAccessors.get(fieldName)!.setter = method;
+            }
+        }
+
+        // Check each getter/setter pair for nullability mismatches
+        for (const [fieldName, accessors] of fieldAccessors) {
+            const { getter, setter } = accessors;
+
+            // Skip if we don't have both getter and setter
+            if (!getter || !setter) continue;
+
+            // Extract nullability information
+            const getterNullable = getter.returnTypeNullable || false;
+            
+            // For setters, find the parameter that's not 'self' (should be the value parameter)
+            const valueParam = setter.parameters?.find(p => p.name !== 'self');
+            if (!valueParam) continue;
+            
+            const setterNullable = valueParam.isNullable || false;
+
+            // Check for mismatch
+            if (getterNullable !== setterNullable) {
+                mismatches.push({
+                    typeName: cType.name,
+                    fieldName,
+                    getterNullable,
+                    setterNullable
+                });
+            }
+        }
+    }
+
+    // Report mismatches
+    if (mismatches.length > 0) {
+        console.error("\n" + "=".repeat(80));
+        console.error("GETTER/SETTER NULLABILITY MISMATCHES");
+        console.error("=".repeat(80));
+        console.error(`\nFound ${mismatches.length} getter/setter pairs with mismatched nullability:\n`);
+
+        for (const mismatch of mismatches) {
+            const getterType = mismatch.getterNullable ? "nullable" : "non-nullable";
+            const setterType = mismatch.setterNullable ? "nullable" : "non-nullable";
+            console.error(`  - ${mismatch.typeName}::${mismatch.fieldName}`);
+            console.error(`    Getter returns: ${getterType}`);  
+            console.error(`    Setter expects: ${setterType}`);
+        }
+
+        console.error("\nThese nullability mismatches cause compilation errors in some target");
+        console.error("languages (e.g., Dart). The getter and setter must have consistent nullability.");
+        console.error("You should either:");
+        console.error("  1. Ensure the C++ field type has consistent nullability semantics");
+        console.error("  2. Exclude problematic field getters or setters in exclusions.txt");
+        console.error("  3. Override nullability analysis for specific field types");
         console.error("=".repeat(80) + "\n");
 
         process.exit(1);
