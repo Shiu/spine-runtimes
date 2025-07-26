@@ -805,7 +805,11 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 			switch (timelineType) {
 				case SLOT_ATTACHMENT: {
 					AttachmentTimeline *timeline = new (__FILE__, __LINE__) AttachmentTimeline(frameCount, slotIndex);
-					for (int frame = 0; frame < frameCount; ++frame) timeline->setFrame(frame, input.readFloat(), input.readStringRef());
+					for (int frame = 0; frame < frameCount; ++frame) {
+						float time = input.readFloat();
+						char *attachmentName = input.readStringRef();
+						timeline->setFrame(frame, time, attachmentName);
+					}
 					timelines.add(timeline);
 					break;
 				}
