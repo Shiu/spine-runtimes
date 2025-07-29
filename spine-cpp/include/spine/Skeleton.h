@@ -246,9 +246,15 @@ namespace spine {
 		/// @param outY The vertical distance between the skeleton origin and the bottom side of the AABB.
 		/// @param outWidth The width of the AABB
 		/// @param outHeight The height of the AABB.
+		void getBounds(float &outX, float &outY, float &outWidth, float &outHeight);
+
+		/// Returns the axis aligned bounding box (AABB) of the region and mesh attachments for the current pose.
+		/// @param outX The horizontal distance between the skeleton origin and the left side of the AABB.
+		/// @param outY The vertical distance between the skeleton origin and the bottom side of the AABB.
+		/// @param outWidth The width of the AABB
+		/// @param outHeight The height of the AABB.
 		/// @param outVertexBuffer Reference to hold an array of floats. This method will assign it with new floats as needed.
-		// @param clipping Pointer to a SkeletonClipping instance or NULL. If a clipper is given, clipping attachments will be taken into account.
-		void getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Array<float> &outVertexBuffer);
+		/// @param clipping Pointer to a SkeletonClipping instance or NULL. If a clipper is given, clipping attachments will be taken into account.
 		void getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Array<float> &outVertexBuffer, SkeletonClipping *clipper);
 
 		Color &getColor();

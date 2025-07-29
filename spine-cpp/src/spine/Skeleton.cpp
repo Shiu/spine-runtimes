@@ -367,7 +367,8 @@ Array<PhysicsConstraint *> &Skeleton::getPhysicsConstraints() {
 	return _physics;
 }
 
-void Skeleton::getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Array<float> &outVertexBuffer) {
+void Skeleton::getBounds(float &outX, float &outY, float &outWidth, float &outHeight) {
+	Array<float> outVertexBuffer;
 	getBounds(outX, outY, outWidth, outHeight, outVertexBuffer, NULL);
 }
 
