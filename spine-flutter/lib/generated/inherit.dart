@@ -32,10 +32,10 @@
 /// Inherit enum
 enum Inherit {
   normal(0),
-  onlyTranslation(0),
-  noRotationOrReflection(0),
-  noScale(0),
-  noScaleOrReflection(0);
+  onlyTranslation(1),
+  noRotationOrReflection(2),
+  noScale(3),
+  noScaleOrReflection(4);
 
   const Inherit(this.value);
   final int value;

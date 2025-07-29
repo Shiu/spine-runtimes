@@ -32,8 +32,8 @@
 /// RotateMode enum
 enum RotateMode {
   tangent(0),
-  chain(0),
-  chainScale(0);
+  chain(1),
+  chainScale(2);
 
   const RotateMode(this.value);
   final int value;

@@ -212,9 +212,10 @@ export class DartWriter {
 	private transformEnum (cEnum: CEnum): DartEnum {
 		return {
 			name: this.toDartTypeName(cEnum.name),
-			values: cEnum.values.map((value) => ({
+			values: cEnum.values.map((value, index) => ({
 				name: this.toDartEnumValueName(value.name, cEnum.name),
-				value: Number.parseInt(value.value ?? "0")
+				// C enums without explicit values are implicitly numbered 0, 1, 2, etc.
+				value: value.value !== undefined ? Number.parseInt(value.value) : index
 			}))
 		};
 	}

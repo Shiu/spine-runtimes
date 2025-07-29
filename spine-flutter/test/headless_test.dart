@@ -33,7 +33,7 @@ void main() async {
   if (defaultSkin != null) {
     final entries = defaultSkin.getEntries();
     print('Default skin has ${entries.length} entries');
-    
+
     // Print first few entries
     for (int i = 0; i < 5 && i < entries.length; i++) {
       final entry = entries[i];

@@ -32,9 +32,9 @@
 /// SpacingMode enum
 enum SpacingMode {
   length(0),
-  fixed(0),
-  percent(0),
-  proportional(0);
+  fixed(1),
+  percent(2),
+  proportional(3);
 
   const SpacingMode(this.value);
   final int value;

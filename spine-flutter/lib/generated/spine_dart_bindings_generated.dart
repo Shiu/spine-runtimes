@@ -6749,6 +6749,83 @@ class SpineDartBindings {
       _spine_skeleton_drawable_get_animation_state_eventsPtr
           .asFunction<spine_animation_state_events Function(spine_skeleton_drawable)>();
 
+  /// Animation state events functions
+  int spine_animation_state_events_get_num_events(
+    spine_animation_state_events events,
+  ) {
+    return _spine_animation_state_events_get_num_events(
+      events,
+    );
+  }
+
+  late final _spine_animation_state_events_get_num_eventsPtr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(spine_animation_state_events)>>(
+          'spine_animation_state_events_get_num_events');
+  late final _spine_animation_state_events_get_num_events =
+      _spine_animation_state_events_get_num_eventsPtr.asFunction<int Function(spine_animation_state_events)>();
+
+  int spine_animation_state_events_get_event_type(
+    spine_animation_state_events events,
+    int index,
+  ) {
+    return _spine_animation_state_events_get_event_type(
+      events,
+      index,
+    );
+  }
+
+  late final _spine_animation_state_events_get_event_typePtr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(spine_animation_state_events, ffi.Int32)>>(
+          'spine_animation_state_events_get_event_type');
+  late final _spine_animation_state_events_get_event_type =
+      _spine_animation_state_events_get_event_typePtr.asFunction<int Function(spine_animation_state_events, int)>();
+
+  spine_track_entry spine_animation_state_events_get_track_entry(
+    spine_animation_state_events events,
+    int index,
+  ) {
+    return _spine_animation_state_events_get_track_entry(
+      events,
+      index,
+    );
+  }
+
+  late final _spine_animation_state_events_get_track_entryPtr =
+      _lookup<ffi.NativeFunction<spine_track_entry Function(spine_animation_state_events, ffi.Int32)>>(
+          'spine_animation_state_events_get_track_entry');
+  late final _spine_animation_state_events_get_track_entry = _spine_animation_state_events_get_track_entryPtr
+      .asFunction<spine_track_entry Function(spine_animation_state_events, int)>();
+
+  spine_event spine_animation_state_events_get_event(
+    spine_animation_state_events events,
+    int index,
+  ) {
+    return _spine_animation_state_events_get_event(
+      events,
+      index,
+    );
+  }
+
+  late final _spine_animation_state_events_get_eventPtr =
+      _lookup<ffi.NativeFunction<spine_event Function(spine_animation_state_events, ffi.Int32)>>(
+          'spine_animation_state_events_get_event');
+  late final _spine_animation_state_events_get_event =
+      _spine_animation_state_events_get_eventPtr.asFunction<spine_event Function(spine_animation_state_events, int)>();
+
+  void spine_animation_state_events_reset(
+    spine_animation_state_events events,
+  ) {
+    return _spine_animation_state_events_reset(
+      events,
+    );
+  }
+
+  late final _spine_animation_state_events_resetPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_animation_state_events)>>(
+          'spine_animation_state_events_reset');
+  late final _spine_animation_state_events_reset =
+      _spine_animation_state_events_resetPtr.asFunction<void Function(spine_animation_state_events)>();
+
   /// Skin functions
   spine_skin_entries spine_skin_get_entries(
     spine_skin skin,

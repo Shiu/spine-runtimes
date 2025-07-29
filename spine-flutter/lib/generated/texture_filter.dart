@@ -32,13 +32,13 @@
 /// TextureFilter enum
 enum TextureFilter {
   unknown(0),
-  nearest(0),
-  linear(0),
-  mipMap(0),
-  mipMapNearestNearest(0),
-  mipMapLinearNearest(0),
-  mipMapNearestLinear(0),
-  mipMapLinearLinear(0);
+  nearest(1),
+  linear(2),
+  mipMap(3),
+  mipMapNearestNearest(4),
+  mipMapLinearNearest(5),
+  mipMapNearestLinear(6),
+  mipMapLinearLinear(7);
 
   const TextureFilter(this.value);
   final int value;

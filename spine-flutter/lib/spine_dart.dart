@@ -43,6 +43,12 @@ import 'generated/clipping_attachment.dart';
 import 'generated/path_attachment.dart';
 import 'generated/point_attachment.dart';
 import 'generated/rtti.dart';
+import 'generated/skeleton.dart';
+import 'generated/animation_state.dart';
+import 'generated/animation_state_data.dart';
+import 'generated/track_entry.dart';
+import 'generated/event.dart';
+import 'generated/event_type.dart';
 
 // Export generated classes
 export 'generated/api.dart';
@@ -166,14 +172,14 @@ extension SkinExtensions on Skin {
           final slotIndex = SpineBindings.bindings.spine_skin_entry_get_slot_index(entryPtr.cast());
           final namePtr = SpineBindings.bindings.spine_skin_entry_get_name(entryPtr.cast());
           final name = namePtr.cast<Utf8>().toDartString();
-          
+
           final attachmentPtr = SpineBindings.bindings.spine_skin_entry_get_attachment(entryPtr.cast());
           Attachment? attachment;
           if (attachmentPtr.address != 0) {
             // Use RTTI to determine the concrete attachment type
             final rtti = SpineBindings.bindings.spine_attachment_get_rtti(attachmentPtr);
             final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
-            
+
             switch (className) {
               case 'spine_region_attachment':
                 attachment = RegionAttachment.fromPointer(attachmentPtr.cast());
@@ -211,5 +217,110 @@ extension SkinExtensions on Skin {
     } finally {
       SpineBindings.bindings.spine_skin_entries_dispose(entriesPtr.cast());
     }
+  }
+}
+
+/// Event listener callback for animation state events
+typedef AnimationStateListener = void Function(EventType type, TrackEntry entry, Event? event);
+
+/// Convenient drawable that combines skeleton, animation state, and rendering
+class SkeletonDrawable {
+  final Pointer<spine_skeleton_drawable_wrapper> _drawable;
+  final Map<TrackEntry, AnimationStateListener> _trackEntryListeners = {};
+  AnimationStateListener? _stateListener;
+
+  late final Skeleton skeleton;
+  late final AnimationState animationState;
+  late final AnimationStateData animationStateData;
+
+  SkeletonDrawable(SkeletonData skeletonData)
+      : _drawable = SpineBindings.bindings.spine_skeleton_drawable_create(skeletonData.nativePtr.cast()) {
+    if (_drawable == nullptr) {
+      throw Exception("Failed to create skeleton drawable");
+    }
+
+    // Get references to the skeleton and animation state
+    final skeletonPtr = SpineBindings.bindings.spine_skeleton_drawable_get_skeleton(_drawable.cast());
+    skeleton = Skeleton.fromPointer(skeletonPtr);
+
+    final animationStatePtr = SpineBindings.bindings.spine_skeleton_drawable_get_animation_state(_drawable.cast());
+    animationState = AnimationState.fromPointer(animationStatePtr);
+
+    final animationStateDataPtr =
+        SpineBindings.bindings.spine_skeleton_drawable_get_animation_state_data(_drawable.cast());
+    animationStateData = AnimationStateData.fromPointer(animationStateDataPtr);
+  }
+
+  /// Update the animation state and process events
+  void update(double delta) {
+    // Update animation state
+    animationState.update(delta);
+
+    // Process events
+    final eventsPtr = SpineBindings.bindings.spine_skeleton_drawable_get_animation_state_events(_drawable.cast());
+    if (eventsPtr != nullptr) {
+      final numEvents = SpineBindings.bindings.spine_animation_state_events_get_num_events(eventsPtr.cast());
+
+      for (int i = 0; i < numEvents; i++) {
+        // Get event type
+        final eventTypeValue = SpineBindings.bindings.spine_animation_state_events_get_event_type(eventsPtr.cast(), i);
+        final type = EventType.fromValue(eventTypeValue);
+
+        // Get track entry
+        final trackEntryPtr = SpineBindings.bindings.spine_animation_state_events_get_track_entry(eventsPtr.cast(), i);
+        final trackEntry = TrackEntry.fromPointer(trackEntryPtr);
+
+        // Get event (may be null)
+        final eventPtr = SpineBindings.bindings.spine_animation_state_events_get_event(eventsPtr.cast(), i);
+        final event = eventPtr.address == 0 ? null : Event.fromPointer(eventPtr);
+
+        // Call track entry listener if registered
+        if (_trackEntryListeners.containsKey(trackEntry)) {
+          _trackEntryListeners[trackEntry]?.call(type, trackEntry, event);
+        }
+
+        // Call global state listener
+        _stateListener?.call(type, trackEntry, event);
+
+        // Remove listener if track entry is being disposed
+        if (type == EventType.dispose) {
+          _trackEntryListeners.remove(trackEntry);
+        }
+      }
+
+      // Reset events for next frame
+      SpineBindings.bindings.spine_animation_state_events_reset(eventsPtr.cast());
+    }
+
+    // Apply animation state to skeleton
+    animationState.apply(skeleton);
+  }
+
+  /// Set a listener for all animation state events
+  void setListener(AnimationStateListener? listener) {
+    _stateListener = listener;
+  }
+
+  /// Internal method to set a listener for a specific track entry
+  void _setTrackEntryListener(TrackEntry entry, AnimationStateListener? listener) {
+    if (listener == null) {
+      _trackEntryListeners.remove(entry);
+    } else {
+      _trackEntryListeners[entry] = listener;
+    }
+  }
+
+  void dispose() {
+    _trackEntryListeners.clear();
+    _stateListener = null;
+    SpineBindings.bindings.spine_skeleton_drawable_dispose(_drawable.cast());
+  }
+}
+
+/// Extension to add setListener to TrackEntry
+extension TrackEntryExtensions on TrackEntry {
+  /// Set a listener for events from this track entry
+  void setListener(SkeletonDrawable drawable, AnimationStateListener? listener) {
+    drawable._setTrackEntryListener(this, listener);
   }
 }
