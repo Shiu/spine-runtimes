@@ -49,6 +49,7 @@ import 'generated/track_entry.dart';
 import 'generated/event.dart';
 import 'generated/event_type.dart';
 import 'generated/render_command.dart';
+import 'generated/physics.dart';
 
 // Export generated classes
 export 'generated/api.dart';
@@ -418,6 +419,10 @@ class SkeletonDrawable {
 
     // Apply animation state to skeleton
     animationState.apply(skeleton);
+    
+    // Update skeleton physics and world transforms
+    skeleton.update(delta);
+    skeleton.updateWorldTransform(Physics.update);
   }
 
   /// Render the skeleton and get render commands
