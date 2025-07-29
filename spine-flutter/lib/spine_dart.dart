@@ -42,13 +42,13 @@ import 'generated/bounding_box_attachment.dart';
 import 'generated/clipping_attachment.dart';
 import 'generated/path_attachment.dart';
 import 'generated/point_attachment.dart';
-import 'generated/rtti.dart';
 import 'generated/skeleton.dart';
 import 'generated/animation_state.dart';
 import 'generated/animation_state_data.dart';
 import 'generated/track_entry.dart';
 import 'generated/event.dart';
 import 'generated/event_type.dart';
+import 'generated/render_command.dart';
 
 // Export generated classes
 export 'generated/api.dart';
@@ -223,11 +223,136 @@ extension SkinExtensions on Skin {
 /// Event listener callback for animation state events
 typedef AnimationStateListener = void Function(EventType type, TrackEntry entry, Event? event);
 
+/// Manager for animation state event listeners
+class AnimationStateEventManager {
+  // Use pointer addresses as keys since Dart wrapper objects might be recreated
+  final Map<int, AnimationStateListener?> _stateListeners = {};
+  final Map<int, Map<int, AnimationStateListener>> _trackEntryListeners = {};
+
+  static final instance = AnimationStateEventManager._();
+  AnimationStateEventManager._();
+
+  void setStateListener(AnimationState state, AnimationStateListener? listener) {
+    final key = state.nativePtr.address;
+    if (listener == null) {
+      _stateListeners.remove(key);
+    } else {
+      _stateListeners[key] = listener;
+    }
+  }
+
+  AnimationStateListener? getStateListener(AnimationState state) {
+    final key = state.nativePtr.address;
+    return _stateListeners[key];
+  }
+
+  void setTrackEntryListener(TrackEntry entry, AnimationStateListener? listener) {
+    // Get the animation state from the track entry itself!
+    final state = entry.animationState;
+    if (state == null) {
+      throw StateError('TrackEntry does not have an associated AnimationState');
+    }
+
+    final stateKey = state.nativePtr.address;
+    final entryKey = entry.nativePtr.address;
+    final listeners = _trackEntryListeners.putIfAbsent(stateKey, () => {});
+    if (listener == null) {
+      listeners.remove(entryKey);
+    } else {
+      listeners[entryKey] = listener;
+      print('DEBUG: Registered listener for TrackEntry at address: $entryKey for AnimationState at address: $stateKey');
+    }
+  }
+
+  AnimationStateListener? getTrackEntryListener(AnimationState state, TrackEntry entry) {
+    final stateKey = state.nativePtr.address;
+    final entryKey = entry.nativePtr.address;
+    final listener = _trackEntryListeners[stateKey]?[entryKey];
+    if (listener == null) {
+      print('DEBUG: No listener found for TrackEntry at address: $entryKey in AnimationState at address: $stateKey');
+      print('DEBUG: Available state keys: ${_trackEntryListeners.keys.toList()}');
+      print('DEBUG: Available entry keys for state $stateKey: ${_trackEntryListeners[stateKey]?.keys.toList()}');
+    }
+    return listener;
+  }
+
+  void removeTrackEntry(AnimationState state, TrackEntry entry) {
+    final stateKey = state.nativePtr.address;
+    final entryKey = entry.nativePtr.address;
+    _trackEntryListeners[stateKey]?.remove(entryKey);
+  }
+
+  void clearState(AnimationState state) {
+    final key = state.nativePtr.address;
+    _stateListeners.remove(key);
+    _trackEntryListeners.remove(key);
+  }
+
+  /// Debug method to inspect current state of the manager
+  void debugPrint() {
+    print('\nAnimationStateEventManager contents:');
+    print('  State listeners: ${_stateListeners.keys.toList()} (${_stateListeners.length} total)');
+    print('  Track entry listeners by state:');
+    for (final entry in _trackEntryListeners.entries) {
+      print('    State ${entry.key}: ${entry.value.keys.toList()} (${entry.value.length} entries)');
+    }
+  }
+}
+
+/// Extension to manage event listeners on AnimationState
+extension AnimationStateListeners on AnimationState {
+  /// Set a listener for all animation state events
+  void setListener(AnimationStateListener? listener) {
+    AnimationStateEventManager.instance.setStateListener(this, listener);
+  }
+
+  /// Get the current state listener
+  AnimationStateListener? get listener => AnimationStateEventManager.instance.getStateListener(this);
+}
+
+/// Extension to add setListener to TrackEntry
+extension TrackEntryExtensions on TrackEntry {
+  /// Set a listener for events from this track entry
+  void setListener(AnimationStateListener? listener) {
+    AnimationStateEventManager.instance.setTrackEntryListener(this, listener);
+  }
+}
+
+/// Represents a bounding box with position and dimensions
+class Bounds {
+  final double x;
+  final double y;
+  final double width;
+  final double height;
+  
+  const Bounds({
+    required this.x,
+    required this.y,
+    required this.width,
+    required this.height,
+  });
+  
+  @override
+  String toString() => 'Bounds(x: $x, y: $y, width: $width, height: $height)';
+}
+
+/// Extension to add bounds property to Skeleton
+extension SkeletonExtensions on Skeleton {
+  /// Get the axis-aligned bounding box (AABB) containing all world vertices of the skeleton
+  Bounds get bounds {
+    final spineBounds = SpineBindings.bindings.spine_skeleton_get_bounds(nativePtr.cast());
+    return Bounds(
+      x: spineBounds.x,
+      y: spineBounds.y,
+      width: spineBounds.width,
+      height: spineBounds.height,
+    );
+  }
+}
+
 /// Convenient drawable that combines skeleton, animation state, and rendering
 class SkeletonDrawable {
   final Pointer<spine_skeleton_drawable_wrapper> _drawable;
-  final Map<TrackEntry, AnimationStateListener> _trackEntryListeners = {};
-  AnimationStateListener? _stateListener;
 
   late final Skeleton skeleton;
   late final AnimationState animationState;
@@ -275,16 +400,15 @@ class SkeletonDrawable {
         final event = eventPtr.address == 0 ? null : Event.fromPointer(eventPtr);
 
         // Call track entry listener if registered
-        if (_trackEntryListeners.containsKey(trackEntry)) {
-          _trackEntryListeners[trackEntry]?.call(type, trackEntry, event);
-        }
+        final trackListener = AnimationStateEventManager.instance.getTrackEntryListener(animationState, trackEntry);
+        trackListener?.call(type, trackEntry, event);
 
         // Call global state listener
-        _stateListener?.call(type, trackEntry, event);
+        animationState.listener?.call(type, trackEntry, event);
 
         // Remove listener if track entry is being disposed
         if (type == EventType.dispose) {
-          _trackEntryListeners.remove(trackEntry);
+          AnimationStateEventManager.instance.removeTrackEntry(animationState, trackEntry);
         }
       }
 
@@ -296,31 +420,14 @@ class SkeletonDrawable {
     animationState.apply(skeleton);
   }
 
-  /// Set a listener for all animation state events
-  void setListener(AnimationStateListener? listener) {
-    _stateListener = listener;
-  }
-
-  /// Internal method to set a listener for a specific track entry
-  void _setTrackEntryListener(TrackEntry entry, AnimationStateListener? listener) {
-    if (listener == null) {
-      _trackEntryListeners.remove(entry);
-    } else {
-      _trackEntryListeners[entry] = listener;
-    }
+  /// Render the skeleton and get render commands
+  RenderCommand? render() {
+    final renderCommand = SpineBindings.bindings.spine_skeleton_drawable_render(_drawable.cast());
+    return renderCommand.address == 0 ? null : RenderCommand.fromPointer(renderCommand);
   }
 
   void dispose() {
-    _trackEntryListeners.clear();
-    _stateListener = null;
+    AnimationStateEventManager.instance.clearState(animationState);
     SpineBindings.bindings.spine_skeleton_drawable_dispose(_drawable.cast());
-  }
-}
-
-/// Extension to add setListener to TrackEntry
-extension TrackEntryExtensions on TrackEntry {
-  /// Set a listener for events from this track entry
-  void setListener(SkeletonDrawable drawable, AnimationStateListener? listener) {
-    drawable._setTrackEntryListener(this, listener);
   }
 }

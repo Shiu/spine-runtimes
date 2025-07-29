@@ -5,7 +5,7 @@ void main() async {
   print('Testing SkeletonDrawable and event listeners...');
 
   // Initialize with debug extension enabled
-  await initSpineDart(enableMemoryDebugging: true);
+  await initSpineDart(enableMemoryDebugging: false);
 
   // Load atlas and skeleton data
   final atlasData = File('../example/assets/spineboy.atlas').readAsStringSync();
@@ -16,12 +16,23 @@ void main() async {
   // Create skeleton drawable
   final drawable = SkeletonDrawable(skeletonData);
   print('SkeletonDrawable created successfully');
+  
+  // Test skeleton bounds
+  print('\nTesting skeleton bounds:');
+  final bounds = drawable.skeleton.bounds;
+  print('  Initial bounds: $bounds');
+  
+  // Set skeleton to pose and update bounds
+  drawable.skeleton.setupPose();
+  drawable.skeleton.updateWorldTransform(Physics.none);
+  final boundsAfterPose = drawable.skeleton.bounds;
+  print('  Bounds after setupPose: $boundsAfterPose');
 
   // Track events
   final events = <String>[];
 
   // Set global animation state listener
-  drawable.setListener((type, entry, event) {
+  drawable.animationState.setListener((type, entry, event) {
     final eventName = event?.data.name ?? 'null';
     events.add('State: $type, event: $eventName');
   });
@@ -30,11 +41,14 @@ void main() async {
   final trackEntry = drawable.animationState.setAnimation(0, 'walk', true);
   print('Set animation: walk');
 
-  // Set track entry specific listener
-  trackEntry.setListener(drawable, (type, entry, event) {
+  // Set track entry specific listener (no drawable needed!)
+  print('TrackEntry.animationState: ${trackEntry.animationState}');
+  trackEntry.setListener((type, entry, event) {
     final eventName = event?.data.name ?? 'null';
     events.add('TrackEntry: $type, event: $eventName');
   });
+
+  print('TrackEntry listener set for: ${trackEntry.hashCode}');
 
   // Update several times to trigger events
   print('\nUpdating animation state...');
@@ -62,11 +76,33 @@ void main() async {
   for (final event in events) {
     print('  $event');
   }
+  
+  // Test bounds after animation updates
+  print('\nTesting bounds after animation:');
+  drawable.skeleton.updateWorldTransform(Physics.none);
+  final boundsAfterAnimation = drawable.skeleton.bounds;
+  print('  Bounds after animation: $boundsAfterAnimation');
+  
+  // Test with different animations that might have different bounds
+  print('\nTesting bounds with jump animation:');
+  drawable.animationState.setAnimation(0, 'jump', false);
+  drawable.update(0.5); // Update to middle of jump
+  drawable.skeleton.updateWorldTransform(Physics.none);
+  final boundsInJump = drawable.skeleton.bounds;
+  print('  Bounds during jump: $boundsInJump');
+
+  // Check manager state before cleanup
+  print('\nBefore cleanup:');
+  AnimationStateEventManager.instance.debugPrint();
 
   // Cleanup
   drawable.dispose();
   skeletonData.dispose();
   atlas.dispose();
+
+  // Check manager state after cleanup
+  print('\nAfter cleanup:');
+  AnimationStateEventManager.instance.debugPrint();
 
   // Report memory leaks
   reportLeaks();

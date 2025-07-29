@@ -6922,6 +6922,20 @@ class SpineDartBindings {
   late final _spine_skin_entry_get_attachment =
       _spine_skin_entry_get_attachmentPtr.asFunction<spine_attachment Function(spine_skin_entry)>();
 
+  /// Skeleton bounds function
+  spine_bounds spine_skeleton_get_bounds(
+    spine_skeleton skeleton,
+  ) {
+    return _spine_skeleton_get_bounds(
+      skeleton,
+    );
+  }
+
+  late final _spine_skeleton_get_boundsPtr =
+      _lookup<ffi.NativeFunction<spine_bounds Function(spine_skeleton)>>('spine_skeleton_get_bounds');
+  late final _spine_skeleton_get_bounds =
+      _spine_skeleton_get_boundsPtr.asFunction<spine_bounds Function(spine_skeleton)>();
+
   spine_alpha_timeline spine_alpha_timeline_create(
     int frameCount,
     int bezierCount,
@@ -31442,7 +31456,6 @@ class SpineDartBindings {
     ffi.Pointer<ffi.Float> outY,
     ffi.Pointer<ffi.Float> outWidth,
     ffi.Pointer<ffi.Float> outHeight,
-    spine_array_float outVertexBuffer,
   ) {
     return _spine_skeleton_get_bounds_1(
       self,
@@ -31450,17 +31463,16 @@ class SpineDartBindings {
       outY,
       outWidth,
       outHeight,
-      outVertexBuffer,
     );
   }
 
   late final _spine_skeleton_get_bounds_1Ptr = _lookup<
       ffi.NativeFunction<
           ffi.Void Function(spine_skeleton, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>,
-              ffi.Pointer<ffi.Float>, spine_array_float)>>('spine_skeleton_get_bounds_1');
+              ffi.Pointer<ffi.Float>)>>('spine_skeleton_get_bounds_1');
   late final _spine_skeleton_get_bounds_1 = _spine_skeleton_get_bounds_1Ptr.asFunction<
       void Function(spine_skeleton, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>,
-          ffi.Pointer<ffi.Float>, spine_array_float)>();
+          ffi.Pointer<ffi.Float>)>();
 
   void spine_skeleton_get_bounds_2(
     spine_skeleton self,
@@ -36906,6 +36918,36 @@ class SpineDartBindings {
   late final _spine_track_entry_is_next_ready =
       _spine_track_entry_is_next_readyPtr.asFunction<bool Function(spine_track_entry)>();
 
+  spine_animation_state spine_track_entry_get_animation_state(
+    spine_track_entry self,
+  ) {
+    return _spine_track_entry_get_animation_state(
+      self,
+    );
+  }
+
+  late final _spine_track_entry_get_animation_statePtr =
+      _lookup<ffi.NativeFunction<spine_animation_state Function(spine_track_entry)>>(
+          'spine_track_entry_get_animation_state');
+  late final _spine_track_entry_get_animation_state =
+      _spine_track_entry_get_animation_statePtr.asFunction<spine_animation_state Function(spine_track_entry)>();
+
+  void spine_track_entry_set_animation_state(
+    spine_track_entry self,
+    spine_animation_state state,
+  ) {
+    return _spine_track_entry_set_animation_state(
+      self,
+      state,
+    );
+  }
+
+  late final _spine_track_entry_set_animation_statePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_track_entry, spine_animation_state)>>(
+          'spine_track_entry_set_animation_state');
+  late final _spine_track_entry_set_animation_state =
+      _spine_track_entry_set_animation_statePtr.asFunction<void Function(spine_track_entry, spine_animation_state)>();
+
   ffi.Pointer<ffi.Void> spine_track_entry_get_renderer_object(
     spine_track_entry self,
   ) {
@@ -40802,6 +40844,22 @@ typedef spine_animation_state_data = ffi.Pointer<spine_animation_state_data_wrap
 typedef spine_animation_state_events = ffi.Pointer<spine_animation_state_events_wrapper>;
 typedef spine_skin_entries = ffi.Pointer<spine_skin_entries_wrapper>;
 typedef spine_skin_entry = ffi.Pointer<spine_skin_entry_wrapper>;
+
+/// Bounds struct
+final class spine_bounds extends ffi.Struct {
+  @ffi.Float()
+  external double x;
+
+  @ffi.Float()
+  external double y;
+
+  @ffi.Float()
+  external double width;
+
+  @ffi.Float()
+  external double height;
+}
+
 typedef spine_alpha_timeline = ffi.Pointer<spine_alpha_timeline_wrapper>;
 typedef spine_rtti = ffi.Pointer<spine_rtti_wrapper>;
 typedef spine_atlas_attachment_loader = ffi.Pointer<spine_atlas_attachment_loader_wrapper>;

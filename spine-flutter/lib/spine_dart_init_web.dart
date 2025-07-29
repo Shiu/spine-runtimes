@@ -83,9 +83,7 @@ Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {
     registerOpaqueType<spine_atlas_wrapper>();
     registerOpaqueType<spine_skeleton_data_result_wrapper>();
     registerOpaqueType<spine_render_command_wrapper>();
-    registerOpaqueType<spine_bounds_wrapper>();
     registerOpaqueType<spine_color_wrapper>();
-    registerOpaqueType<spine_vector_wrapper>();
     registerOpaqueType<spine_skeleton_drawable_wrapper>();
     registerOpaqueType<spine_skin_entry_wrapper>();
     registerOpaqueType<spine_skin_entries_wrapper>();

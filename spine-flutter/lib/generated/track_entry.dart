@@ -33,6 +33,7 @@ import 'dart:ffi';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'animation.dart';
+import 'animation_state.dart';
 import 'mix_blend.dart';
 
 /// TrackEntry wrapper
@@ -286,6 +287,16 @@ class TrackEntry {
   bool get isNextReady {
     final result = SpineBindings.bindings.spine_track_entry_is_next_ready(_ptr);
     return result;
+  }
+
+  AnimationState? get animationState {
+    final result = SpineBindings.bindings.spine_track_entry_get_animation_state(_ptr);
+    return result.address == 0 ? null : AnimationState.fromPointer(result);
+  }
+
+  set animationState(AnimationState? value) {
+    SpineBindings.bindings
+        .spine_track_entry_set_animation_state(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
   Pointer<Void>? get rendererObject {
