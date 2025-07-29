@@ -493,3 +493,13 @@ spine_skin_entries spine_skin_get_entries(spine_skin skin) {
 
 	return (spine_skin_entries) result;
 }
+
+// Skeleton bounds function
+spine_bounds spine_skeleton_get_bounds(spine_skeleton skeleton) {
+    spine_bounds bounds = {0, 0, 0, 0};
+    if (!skeleton) return bounds;
+    
+    Skeleton *_skeleton = (Skeleton *) skeleton;
+    _skeleton->getBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+    return bounds;
+}

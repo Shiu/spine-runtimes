@@ -38,8 +38,7 @@ SPINE_C_API /*@null*/ spine_attachment spine_skeleton_get_attachment_2(spine_ske
 SPINE_C_API void spine_skeleton_set_attachment(spine_skeleton self, const char *slotName, const char *attachmentName);
 SPINE_C_API spine_array_constraint spine_skeleton_get_constraints(spine_skeleton self);
 SPINE_C_API spine_array_physics_constraint spine_skeleton_get_physics_constraints(spine_skeleton self);
-SPINE_C_API void spine_skeleton_get_bounds_1(spine_skeleton self, float *outX, float *outY, float *outWidth, float *outHeight,
-											 spine_array_float outVertexBuffer);
+SPINE_C_API void spine_skeleton_get_bounds_1(spine_skeleton self, float *outX, float *outY, float *outWidth, float *outHeight);
 SPINE_C_API void spine_skeleton_get_bounds_2(spine_skeleton self, float *outX, float *outY, float *outWidth, float *outHeight,
 											 spine_array_float outVertexBuffer, /*@null*/ spine_skeleton_clipping clipper);
 SPINE_C_API spine_color spine_skeleton_get_color(spine_skeleton self);

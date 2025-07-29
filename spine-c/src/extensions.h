@@ -106,6 +106,17 @@ SPINE_C_API int32_t spine_skin_entry_get_slot_index(spine_skin_entry entry);
 SPINE_C_API const char *spine_skin_entry_get_name(spine_skin_entry entry);
 SPINE_C_API spine_attachment spine_skin_entry_get_attachment(spine_skin_entry entry);
 
+// Bounds struct
+typedef struct spine_bounds {
+    float x;
+    float y;
+    float width;
+    float height;
+} spine_bounds;
+
+// Skeleton bounds function
+SPINE_C_API spine_bounds spine_skeleton_get_bounds(spine_skeleton skeleton);
+
 #ifdef __cplusplus
 }
 #endif

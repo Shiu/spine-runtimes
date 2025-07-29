@@ -135,10 +135,9 @@ spine_array_physics_constraint spine_skeleton_get_physics_constraints(spine_skel
 	return (spine_array_physics_constraint) &_self->getPhysicsConstraints();
 }
 
-void spine_skeleton_get_bounds_1(spine_skeleton self, float *outX, float *outY, float *outWidth, float *outHeight,
-								 spine_array_float outVertexBuffer) {
+void spine_skeleton_get_bounds_1(spine_skeleton self, float *outX, float *outY, float *outWidth, float *outHeight) {
 	Skeleton *_self = (Skeleton *) self;
-	_self->getBounds(*outX, *outY, *outWidth, *outHeight, *((Array<float> *) outVertexBuffer));
+	_self->getBounds(*outX, *outY, *outWidth, *outHeight);
 }
 
 void spine_skeleton_get_bounds_2(spine_skeleton self, float *outX, float *outY, float *outWidth, float *outHeight, spine_array_float outVertexBuffer,
