@@ -6494,80 +6494,6 @@ class SpineDartBindings {
   late final _spine_report_leaksPtr = _lookup<ffi.NativeFunction<ffi.Void Function()>>('spine_report_leaks');
   late final _spine_report_leaks = _spine_report_leaksPtr.asFunction<void Function()>();
 
-  /// Bounds functions
-  double spine_bounds_get_x(
-    spine_bounds bounds,
-  ) {
-    return _spine_bounds_get_x(
-      bounds,
-    );
-  }
-
-  late final _spine_bounds_get_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bounds)>>('spine_bounds_get_x');
-  late final _spine_bounds_get_x = _spine_bounds_get_xPtr.asFunction<double Function(spine_bounds)>();
-
-  double spine_bounds_get_y(
-    spine_bounds bounds,
-  ) {
-    return _spine_bounds_get_y(
-      bounds,
-    );
-  }
-
-  late final _spine_bounds_get_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bounds)>>('spine_bounds_get_y');
-  late final _spine_bounds_get_y = _spine_bounds_get_yPtr.asFunction<double Function(spine_bounds)>();
-
-  double spine_bounds_get_width(
-    spine_bounds bounds,
-  ) {
-    return _spine_bounds_get_width(
-      bounds,
-    );
-  }
-
-  late final _spine_bounds_get_widthPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bounds)>>('spine_bounds_get_width');
-  late final _spine_bounds_get_width = _spine_bounds_get_widthPtr.asFunction<double Function(spine_bounds)>();
-
-  double spine_bounds_get_height(
-    spine_bounds bounds,
-  ) {
-    return _spine_bounds_get_height(
-      bounds,
-    );
-  }
-
-  late final _spine_bounds_get_heightPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bounds)>>('spine_bounds_get_height');
-  late final _spine_bounds_get_height = _spine_bounds_get_heightPtr.asFunction<double Function(spine_bounds)>();
-
-  /// Vector functions
-  double spine_vector_get_x(
-    spine_vector vector,
-  ) {
-    return _spine_vector_get_x(
-      vector,
-    );
-  }
-
-  late final _spine_vector_get_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_vector)>>('spine_vector_get_x');
-  late final _spine_vector_get_x = _spine_vector_get_xPtr.asFunction<double Function(spine_vector)>();
-
-  double spine_vector_get_y(
-    spine_vector vector,
-  ) {
-    return _spine_vector_get_y(
-      vector,
-    );
-  }
-
-  late final _spine_vector_get_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_vector)>>('spine_vector_get_y');
-  late final _spine_vector_get_y = _spine_vector_get_yPtr.asFunction<double Function(spine_vector)>();
-
   /// Atlas functions
   spine_atlas_result spine_atlas_load(
     ffi.Pointer<ffi.Char> atlasData,
@@ -6724,7 +6650,7 @@ class SpineDartBindings {
   late final _spine_skeleton_data_result_dispose =
       _spine_skeleton_data_result_disposePtr.asFunction<void Function(spine_skeleton_data_result)>();
 
-  /// Skeleton drawable functions
+  /// Skeleton drawable functionsp
   spine_skeleton_drawable spine_skeleton_drawable_create(
     spine_skeleton_data skeletonData,
   ) {
@@ -6823,15 +6749,20 @@ class SpineDartBindings {
       _spine_skeleton_drawable_get_animation_state_eventsPtr
           .asFunction<spine_animation_state_events Function(spine_skeleton_drawable)>();
 
-  /// Skin entries functions
-  spine_skin_entries spine_skin_entries_create() {
-    return _spine_skin_entries_create();
+  /// Skin functions
+  spine_skin_entries spine_skin_get_entries(
+    spine_skin skin,
+  ) {
+    return _spine_skin_get_entries(
+      skin,
+    );
   }
 
-  late final _spine_skin_entries_createPtr =
-      _lookup<ffi.NativeFunction<spine_skin_entries Function()>>('spine_skin_entries_create');
-  late final _spine_skin_entries_create = _spine_skin_entries_createPtr.asFunction<spine_skin_entries Function()>();
+  late final _spine_skin_get_entriesPtr =
+      _lookup<ffi.NativeFunction<spine_skin_entries Function(spine_skin)>>('spine_skin_get_entries');
+  late final _spine_skin_get_entries = _spine_skin_get_entriesPtr.asFunction<spine_skin_entries Function(spine_skin)>();
 
+  /// Skin entries functions
   void spine_skin_entries_dispose(
     spine_skin_entries entries,
   ) {
@@ -40752,16 +40683,6 @@ final class spine_skeleton_data_result_wrapper extends ffi.Struct {
   external int _dummy;
 }
 
-final class spine_bounds_wrapper extends ffi.Struct {
-  @ffi.Char()
-  external int _dummy;
-}
-
-final class spine_vector_wrapper extends ffi.Struct {
-  @ffi.Char()
-  external int _dummy;
-}
-
 final class spine_skeleton_drawable_wrapper extends ffi.Struct {
   @ffi.Char()
   external int _dummy;
@@ -40787,8 +40708,6 @@ final class spine_texture_loader_wrapper extends ffi.Struct {
   external int _dummy;
 }
 
-typedef spine_bounds = ffi.Pointer<spine_bounds_wrapper>;
-typedef spine_vector = ffi.Pointer<spine_vector_wrapper>;
 typedef spine_atlas_result = ffi.Pointer<spine_atlas_result_wrapper>;
 
 /// Texture loader callbacks

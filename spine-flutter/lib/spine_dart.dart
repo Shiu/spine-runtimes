@@ -34,6 +34,15 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'generated/atlas.dart';
 import 'generated/skeleton_data.dart';
+import 'generated/skin.dart';
+import 'generated/attachment.dart';
+import 'generated/region_attachment.dart';
+import 'generated/mesh_attachment.dart';
+import 'generated/bounding_box_attachment.dart';
+import 'generated/clipping_attachment.dart';
+import 'generated/path_attachment.dart';
+import 'generated/point_attachment.dart';
+import 'generated/rtti.dart';
 
 // Export generated classes
 export 'generated/api.dart';
@@ -129,4 +138,78 @@ SkeletonData loadSkeletonDataBinary(Atlas atlas, Uint8List binaryData, {String? 
   final skeletonData = SkeletonData.fromPointer(skeletonDataPtr);
   SpineBindings.bindings.spine_skeleton_data_result_dispose(resultPtr.cast());
   return skeletonData;
+}
+
+/// Represents an entry in a skin
+class SkinEntry {
+  final int slotIndex;
+  final String name;
+  final Attachment? attachment;
+
+  SkinEntry._({required this.slotIndex, required this.name, required this.attachment});
+}
+
+/// Extension method for Skin to get all entries
+extension SkinExtensions on Skin {
+  /// Get all entries (slot/attachment pairs) in this skin
+  List<SkinEntry> getEntries() {
+    final entriesPtr = SpineBindings.bindings.spine_skin_get_entries(nativePtr.cast());
+    if (entriesPtr == nullptr) return [];
+
+    try {
+      final numEntries = SpineBindings.bindings.spine_skin_entries_get_num_entries(entriesPtr.cast());
+      final entries = <SkinEntry>[];
+
+      for (int i = 0; i < numEntries; i++) {
+        final entryPtr = SpineBindings.bindings.spine_skin_entries_get_entry(entriesPtr.cast(), i);
+        if (entryPtr != nullptr) {
+          final slotIndex = SpineBindings.bindings.spine_skin_entry_get_slot_index(entryPtr.cast());
+          final namePtr = SpineBindings.bindings.spine_skin_entry_get_name(entryPtr.cast());
+          final name = namePtr.cast<Utf8>().toDartString();
+          
+          final attachmentPtr = SpineBindings.bindings.spine_skin_entry_get_attachment(entryPtr.cast());
+          Attachment? attachment;
+          if (attachmentPtr.address != 0) {
+            // Use RTTI to determine the concrete attachment type
+            final rtti = SpineBindings.bindings.spine_attachment_get_rtti(attachmentPtr);
+            final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
+            
+            switch (className) {
+              case 'spine_region_attachment':
+                attachment = RegionAttachment.fromPointer(attachmentPtr.cast());
+                break;
+              case 'spine_mesh_attachment':
+                attachment = MeshAttachment.fromPointer(attachmentPtr.cast());
+                break;
+              case 'spine_bounding_box_attachment':
+                attachment = BoundingBoxAttachment.fromPointer(attachmentPtr.cast());
+                break;
+              case 'spine_clipping_attachment':
+                attachment = ClippingAttachment.fromPointer(attachmentPtr.cast());
+                break;
+              case 'spine_path_attachment':
+                attachment = PathAttachment.fromPointer(attachmentPtr.cast());
+                break;
+              case 'spine_point_attachment':
+                attachment = PointAttachment.fromPointer(attachmentPtr.cast());
+                break;
+              default:
+                // Unknown attachment type, treat as generic Attachment
+                attachment = null;
+            }
+          }
+
+          entries.add(SkinEntry._(
+            slotIndex: slotIndex,
+            name: name,
+            attachment: attachment,
+          ));
+        }
+      }
+
+      return entries;
+    } finally {
+      SpineBindings.bindings.spine_skin_entries_dispose(entriesPtr.cast());
+    }
+  }
 }

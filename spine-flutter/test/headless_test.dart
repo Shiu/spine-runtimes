@@ -27,6 +27,30 @@ void main() async {
   print('Skeleton created successfully');
   print('Skeleton has ${skeleton.slots.length} slots and ${skeleton.bones.length} bones');
 
+  // Test skin entries
+  print('\nTesting skin entries...');
+  final defaultSkin = skeletonData.defaultSkin;
+  if (defaultSkin != null) {
+    final entries = defaultSkin.getEntries();
+    print('Default skin has ${entries.length} entries');
+    
+    // Print first few entries
+    for (int i = 0; i < 5 && i < entries.length; i++) {
+      final entry = entries[i];
+      print('  Entry $i: slot=${entry.slotIndex}, name="${entry.name}", attachment=${entry.attachment?.runtimeType}');
+    }
+  }
+
+  // Test named skins
+  print('\nChecking named skins...');
+  for (int i = 0; i < skeletonData.skins.length; i++) {
+    final skin = skeletonData.skins[i];
+    if (skin != null) {
+      final entries = skin.getEntries();
+      print('Skin "${skin.name}" has ${entries.length} entries');
+    }
+  }
+
   // Cleanup
   skeleton.dispose();
   skeletonData.dispose();
