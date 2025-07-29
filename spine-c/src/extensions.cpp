@@ -391,21 +391,21 @@ int32_t spine_animation_state_events_get_num_events(spine_animation_state_events
 int32_t spine_animation_state_events_get_event_type(spine_animation_state_events events, int32_t index) {
 	if (!events) return 0;
 	EventListener *listener = (EventListener *) events;
-	if (index < 0 || index >= (int32_t)listener->events.size()) return 0;
+	if (index < 0 || index >= (int32_t) listener->events.size()) return 0;
 	return (int32_t) listener->events[index].type;
 }
 
 spine_track_entry spine_animation_state_events_get_track_entry(spine_animation_state_events events, int32_t index) {
 	if (!events) return nullptr;
 	EventListener *listener = (EventListener *) events;
-	if (index < 0 || index >= (int32_t)listener->events.size()) return nullptr;
+	if (index < 0 || index >= (int32_t) listener->events.size()) return nullptr;
 	return (spine_track_entry) listener->events[index].entry;
 }
 
 spine_event spine_animation_state_events_get_event(spine_animation_state_events events, int32_t index) {
 	if (!events) return nullptr;
 	EventListener *listener = (EventListener *) events;
-	if (index < 0 || index >= (int32_t)listener->events.size()) return nullptr;
+	if (index < 0 || index >= (int32_t) listener->events.size()) return nullptr;
 	return (spine_event) listener->events[index].event;
 }
 
