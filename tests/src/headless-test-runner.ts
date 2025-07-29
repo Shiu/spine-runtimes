@@ -118,6 +118,31 @@ function needsCppBuild (): boolean {
 	}
 }
 
+function needsHaxeBuild (): boolean {
+	const haxeDir = join(SPINE_ROOT, 'spine-haxe');
+	const buildDir = join(haxeDir, 'build');
+	const headlessTest = join(buildDir, 'headless-test', 'HeadlessTest');
+
+	try {
+		// Check if executable exists
+		if (!existsSync(headlessTest)) return true;
+
+		// Get executable modification time
+		const execTime = statSync(headlessTest).mtime.getTime();
+
+		// Check Haxe source files
+		const haxeSourceTime = getNewestFileTime(join(haxeDir, 'spine-haxe'), '*.hx');
+		const testSourceTime = getNewestFileTime(join(haxeDir, 'tests'), '*.hx');
+		const buildScriptTime = getNewestFileTime(haxeDir, 'build-headless-test.sh');
+
+		const newestSourceTime = Math.max(haxeSourceTime, testSourceTime, buildScriptTime);
+
+		return newestSourceTime > execTime;
+	} catch {
+		return true;
+	}
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const SPINE_ROOT = resolve(__dirname, '../..');
@@ -204,8 +229,8 @@ function validateArgs (): { language: string; files?: SkeletonFiles; skeletonPat
 
 	const [language, ...restArgs] = filteredArgs;
 
-	if (!['cpp'].includes(language)) {
-		log_detail(`Invalid target language: ${language}. Must be cpp`);
+	if (!['cpp', 'haxe'].includes(language)) {
+		log_detail(`Invalid target language: ${language}. Must be cpp or haxe`);
 		process.exit(1);
 	}
 
@@ -373,6 +398,60 @@ function executeCpp (args: TestArgs): string {
 	}
 }
 
+function executeHaxe (args: TestArgs): string {
+	const haxeDir = join(SPINE_ROOT, 'spine-haxe');
+	const testsDir = join(haxeDir, 'tests');
+
+	if (!existsSync(testsDir)) {
+		log_detail(`Haxe tests directory not found: ${testsDir}`);
+		process.exit(1);
+	}
+
+	// Check if we need to build
+	if (needsHaxeBuild()) {
+		log_action('Building Haxe HeadlessTest');
+		try {
+			execSync('./build-headless-test.sh', {
+				cwd: haxeDir,
+				stdio: ['inherit', 'pipe', 'inherit']
+			});
+			log_ok();
+		} catch (error: any) {
+			log_fail();
+			log_detail(`Haxe build failed: ${error.message}`);
+			process.exit(1);
+		}
+	}
+
+	// Run the headless test
+	const testArgs = [args.skeletonPath, args.atlasPath];
+	if (args.animationName) {
+		testArgs.push(args.animationName);
+	}
+
+	const buildDir = join(haxeDir, 'build');
+	const headlessTest = join(buildDir, 'headless-test', 'HeadlessTest');
+
+	if (!existsSync(headlessTest)) {
+		log_detail(`Haxe headless-test executable not found: ${headlessTest}`);
+		process.exit(1);
+	}
+
+	log_action('Running Haxe HeadlessTest');
+	try {
+		const output = execSync(`${headlessTest} ${testArgs.join(' ')}`, {
+			encoding: 'utf8',
+			maxBuffer: 50 * 1024 * 1024 // 50MB buffer for large output
+		});
+		log_ok();
+		return output;
+	} catch (error: any) {
+		log_fail();
+		log_detail(`Haxe execution failed: ${error.message}`);
+		process.exit(1);
+	}
+}
+
 function parseOutput (output: string): { skeletonData: any, skeletonState: any, animationState?: any } {
 	// Split output into sections
 	const sections = output.split(/=== [A-Z ]+? ===/);
@@ -524,6 +603,8 @@ function runTestsForFiles (language: string, skeletonPath: string, atlasPath: st
 	let targetOutput: string;
 	if (language === 'cpp') {
 		targetOutput = executeCpp(testArgs);
+	} else if (language === 'haxe') {
+		targetOutput = executeHaxe(testArgs);
 	} else {
 		log_detail(`Unsupported target language: ${language}`);
 		process.exit(1);

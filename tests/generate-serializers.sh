@@ -64,4 +64,22 @@ else
 fi
 ../formatters/format-cpp.sh
 
+log_action "Generating Haxe SkeletonSerializer"
+if output=$(npx -y tsx src/generate-haxe-serializer.ts 2>&1); then
+    log_ok
+else
+    log_fail "Failed to generate Haxe serializer"
+    log_detail "$output"
+    exit 1
+fi
+
+log_action "Type checking Haxe serializer"
+if output=$(cd ../spine-haxe && haxe -cp spine-haxe --no-output -main spine.utils.SkeletonSerializer 2>&1); then
+    log_ok
+else
+    log_fail "Haxe serializer type check failed"
+    log_detail "$output"
+    exit 1
+fi
+
 log_summary "✓ Serializer generation completed successfully"
