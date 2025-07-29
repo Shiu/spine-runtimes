@@ -9,7 +9,6 @@
     - if none are given, should execute a set of (regression) tests and output individual test snapshots one after the other as jsonl
     - All headless tests must have the same test suite
     - test runner must know how to deal with this mode
-- Add serializer generator for Haxe (see tests/plan-haxe.md for a full plan)
 - Add serializer generator for C#
 - Add serializer generator for TypeScript
 - spine-c/codegen type extractor should also report typedefs like typedef long long PropertyId; so primitive type to some name, and we need to handle that in the codegen

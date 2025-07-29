@@ -10,15 +10,15 @@ class AnimationStateEvents extends StatelessWidget {
     reportLeaks();
     final controller = SpineWidgetController(
       onInitialized: (controller) {
-        controller.skeleton.setScaleX(0.5);
-        controller.skeleton.setScaleY(0.5);
-        controller.skeleton.findSlot("gun")?.setColor(Color(1, 0, 0, 1));
-        controller.animationStateData.setDefaultMix(0.2);
-        controller.animationState.setAnimationByName(0, "walk", true).setListener((type, trackEntry, event) {
+        controller.skeleton.scaleX = 0.5;
+        controller.skeleton.scaleY = 0.5;
+        controller.skeleton.findSlot("gun")?.pose.color.set(1, 0, 0, 1);
+        controller.animationStateData.defaultMix = 0.2;
+        controller.animationState.setAnimation(0, "walk", true).setListener((type, trackEntry, event) {
           print("Walk animation event $type");
         });
-        controller.animationState.addAnimationByName(0, "jump", false, 2);
-        controller.animationState.addAnimationByName(0, "run", true, 0).setListener((type, trackEntry, event) {
+        controller.animationState.addAnimation(0, "jump", false, 2);
+        controller.animationState.addAnimation(0, "run", true, 0).setListener((type, trackEntry, event) {
           print("Run animation event $type");
         });
         controller.animationState.setListener((type, trackEntry, event) {
@@ -28,7 +28,7 @@ class AnimationStateEvents extends StatelessWidget {
             );
           }
         });
-        print("Current: ${controller.animationState.getCurrent(0)?.getAnimation().getName()}");
+        print("Current: ${controller.animationState.getCurrent(0)?.animation.name}");
       },
     );
 

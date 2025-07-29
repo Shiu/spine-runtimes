@@ -38,9 +38,9 @@ class AnimatedLogin extends StatelessWidget {
     reportLeaks();
     final controller = SpineWidgetController(
       onInitialized: (controller) {
-        controller.skeleton.setSkinByName("nate");
-        controller.skeleton.setToSetupPose();
-        controller.animationState.setAnimationByName(0, "login/look-left-down", true);
+        controller.skeleton.setSkin("nate");
+        controller.skeleton.setupPose();
+        controller.animationState.setAnimation(0, "login/look-left-down", true);
       },
     );
 

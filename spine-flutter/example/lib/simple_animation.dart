@@ -39,11 +39,11 @@ class SimpleAnimation extends StatelessWidget {
     final controller = SpineWidgetController(
       onInitialized: (controller) {
         // Set the default mixing time between animations
-        controller.animationState.getData().setDefaultMix(0.2);
+        controller.animationState.data.defaultMix = 0.2;
         // Set the portal animation on track 0
-        controller.animationState.setAnimationByName(0, "portal", true);
+        controller.animationState.setAnimation(0, "portal", true);
         // Queue the run animation after the portal animation
-        controller.animationState.addAnimationByName(0, "run", true, 0);
+        controller.animationState.addAnimation(0, "run", true, 0);
       },
     );
 

@@ -37,6 +37,8 @@ import 'generated/skeleton_data.dart';
 
 // Export generated classes
 export 'generated/api.dart';
+export 'generated/spine_dart_bindings_generated.dart';
+export 'spine_bindings.dart';
 
 Future<void> initSpineDart({bool useStaticLinkage = false, bool enableMemoryDebugging = false}) async {
   final ffi = await initSpineDartFFI(useStaticLinkage);
