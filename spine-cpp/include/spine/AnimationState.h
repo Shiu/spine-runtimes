@@ -326,6 +326,15 @@ namespace spine {
 			return _next != NULL && _nextTrackLast - _next->_delay >= 0;
 		}
 
+		// The AnimationState this track entry belongs to. May be NULL if TrackEntry is directly instantiated.
+		AnimationState *getAnimationState() {
+			return _state;
+		}
+
+		void setAnimationState(AnimationState *state) {
+			_state = state;
+		}
+
 	private:
 		Animation *_animation;
 		TrackEntry *_previous;
@@ -345,6 +354,7 @@ namespace spine {
 		Array<float> _timelinesRotation;
 		AnimationStateListener _listener;
 		AnimationStateListenerObject *_listenerObject;
+		AnimationState *_state;
 
 		void reset();
 	};

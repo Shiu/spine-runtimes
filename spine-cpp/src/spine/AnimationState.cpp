@@ -58,7 +58,7 @@ TrackEntry::TrackEntry()
 	  _reverse(false), _shortestRotation(false), _eventThreshold(0), _mixAttachmentThreshold(0), _alphaAttachmentThreshold(0),
 	  _mixDrawOrderThreshold(0), _animationStart(0), _animationEnd(0), _animationLast(0), _nextAnimationLast(0), _delay(0), _trackTime(0),
 	  _trackLast(0), _nextTrackLast(0), _trackEnd(0), _timeScale(1.0f), _alpha(0), _mixTime(0), _mixDuration(0), _interruptAlpha(0), _totalAlpha(0),
-	  _mixBlend(MixBlend_Replace), _listener(dummyOnAnimationEventFunc), _listenerObject(NULL) {
+	  _mixBlend(MixBlend_Replace), _listener(dummyOnAnimationEventFunc), _listenerObject(NULL), _state(NULL) {
 }
 
 TrackEntry::~TrackEntry() {
@@ -1074,6 +1074,7 @@ TrackEntry *AnimationState::expandToIndex(size_t index) {
 TrackEntry *AnimationState::newTrackEntry(size_t trackIndex, Animation *animation, bool loop, TrackEntry *last) {
 	TrackEntry *entryP = _trackEntryPool.obtain();// Pooling
 	TrackEntry &entry = *entryP;
+	entry.setAnimationState(this);
 
 	entry._trackIndex = (int) trackIndex;
 	entry._animation = animation;
