@@ -51,6 +51,7 @@ import flixel.util.FlxColor;
 import openfl.Vector;
 import openfl.display.BlendMode;
 import spine.Bone;
+import spine.Rectangle;
 import spine.Skeleton;
 import spine.SkeletonData;
 import spine.Slot;
@@ -114,7 +115,7 @@ class SkeletonSprite extends FlxObject {
 		}
 	}
 
-	public function getAnimationBounds(animation:Animation, clip:Bool = true):lime.math.Rectangle {
+	public function getAnimationBounds(animation:Animation, clip:Bool = true):Rectangle {
 		var clipper = clip ? SkeletonSprite.clipper : null;
 		skeleton.setupPose();
 
@@ -125,22 +126,23 @@ class SkeletonSprite extends FlxObject {
 			minY = 100000000.,
 			maxY = -100000000.;
 
-		var bounds = new lime.math.Rectangle();
 		for (i in 0...steps) {
 			animation.apply(skeleton, time, time, false, [], 1, MixBlend.setup, MixDirection.mixIn, false);
 			skeleton.updateWorldTransform(Physics.update);
-			bounds = skeleton.getBounds(clipper);
+			var boundsSkel = skeleton.getBounds(clipper);
 
-			if (!Math.isNaN(bounds.x) && !Math.isNaN(bounds.y) && !Math.isNaN(bounds.width) && !Math.isNaN(bounds.height)) {
-				minX = Math.min(bounds.x, minX);
-				minY = Math.min(bounds.y, minY);
-				maxX = Math.max(bounds.right, maxX);
-				maxY = Math.max(bounds.bottom, maxY);
+			if (!Math.isNaN(boundsSkel.x) && !Math.isNaN(boundsSkel.y) && !Math.isNaN(boundsSkel.width) && !Math.isNaN(boundsSkel.height)) {
+				minX = Math.min(boundsSkel.x, minX);
+				minY = Math.min(boundsSkel.y, minY);
+				maxX = Math.max(boundsSkel.x + boundsSkel.width, maxX);
+				maxY = Math.max(boundsSkel.y + boundsSkel.height, maxY);
 			} else
-				trace("ERROR");
+				throw new SpineException("Animation bounds are invalid: " + animation.name);
 
 			time += stepTime;
 		}
+
+		var bounds = new Rectangle();
 		bounds.x = minX;
 		bounds.y = minY;
 		bounds.width = maxX - minX;

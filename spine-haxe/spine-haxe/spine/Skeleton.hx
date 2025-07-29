@@ -29,12 +29,10 @@
 
 package spine;
 
-import lime.math.Rectangle;
-import haxe.ds.StringMap;
+import spine.Rectangle;
 import spine.attachments.Attachment;
 import spine.attachments.ClippingAttachment;
 import spine.attachments.MeshAttachment;
-import spine.attachments.PathAttachment;
 import spine.attachments.RegionAttachment;
 
 /** Stores the current pose for a skeleton.

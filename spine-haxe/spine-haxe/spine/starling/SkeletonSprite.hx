@@ -33,8 +33,9 @@ import spine.animation.Animation;
 import starling.animation.IAnimatable;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
-import openfl.geom.Rectangle;
+import openfl.geom.Rectangle as OpenFlRectangle;
 import spine.Bone;
+import spine.Rectangle;
 import spine.Skeleton;
 import spine.SkeletonClipping;
 import spine.SkeletonData;
@@ -43,7 +44,6 @@ import spine.animation.AnimationState;
 import spine.animation.AnimationStateData;
 import spine.animation.MixBlend;
 import spine.animation.MixDirection;
-import spine.attachments.Attachment;
 import spine.attachments.ClippingAttachment;
 import spine.attachments.MeshAttachment;
 import spine.attachments.RegionAttachment;
@@ -308,9 +308,9 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 		return null;
 	}
 
-	override public function getBounds(targetSpace:DisplayObject, resultRect:Rectangle = null):Rectangle {
+	override public function getBounds(targetSpace:DisplayObject, resultRect:OpenFlRectangle = null):OpenFlRectangle {
 		if (resultRect == null) {
-			resultRect = new Rectangle();
+			resultRect = new OpenFlRectangle();
 		}
 		if (targetSpace == this) {
 			resultRect.setTo(0, 0, 0, 0);
@@ -335,23 +335,28 @@ class SkeletonSprite extends DisplayObject implements IAnimatable {
 			minY = 100000000.,
 			maxY = -100000000.;
 
-		var bound:lime.math.Rectangle;
 		for (i in 0...steps) {
 			animation.apply(_skeleton, time, time, false, [], 1, MixBlend.setup, MixDirection.mixIn, false);
 			_skeleton.updateWorldTransform(Physics.update);
-			bound = _skeleton.getBounds(clipper);
+			var boundsSkel = _skeleton.getBounds(clipper);
 
-			if (!Math.isNaN(bound.x) && !Math.isNaN(bound.y) && !Math.isNaN(bound.width) && !Math.isNaN(bound.height)) {
-				minX = Math.min(bound.x, minX);
-				minY = Math.min(bound.y, minY);
-				maxX = Math.max(bound.right, maxX);
-				maxY = Math.max(bound.bottom, maxY);
+			if (!Math.isNaN(boundsSkel.x) && !Math.isNaN(boundsSkel.y) && !Math.isNaN(boundsSkel.width) && !Math.isNaN(boundsSkel.height)) {
+				minX = Math.min(boundsSkel.x, minX);
+				minY = Math.min(boundsSkel.y, minY);
+				maxX = Math.max(boundsSkel.x + boundsSkel.width, maxX);
+				maxY = Math.max(boundsSkel.y + boundsSkel.height, maxY);
 			} else
-				trace("ERROR");
+				throw new SpineException("Animation bounds are invalid: " + animation.name);
 
 			time += stepTime;
 		}
-		return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+
+		var bounds = new Rectangle();
+		bounds.x = minX;
+		bounds.y = minY;
+		bounds.width = maxX - minX;
+		bounds.height = maxY - minY;
+		return bounds;
 	}
 
 	public var skeleton(get, never):Skeleton;
