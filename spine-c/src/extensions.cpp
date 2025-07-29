@@ -381,6 +381,40 @@ spine_animation_state_events spine_skeleton_drawable_get_animation_state_events(
 }
 
 
+// Animation state events functions
+int32_t spine_animation_state_events_get_num_events(spine_animation_state_events events) {
+	if (!events) return 0;
+	EventListener *listener = (EventListener *) events;
+	return listener->events.size();
+}
+
+int32_t spine_animation_state_events_get_event_type(spine_animation_state_events events, int32_t index) {
+	if (!events) return 0;
+	EventListener *listener = (EventListener *) events;
+	if (index < 0 || index >= (int32_t)listener->events.size()) return 0;
+	return (int32_t) listener->events[index].type;
+}
+
+spine_track_entry spine_animation_state_events_get_track_entry(spine_animation_state_events events, int32_t index) {
+	if (!events) return nullptr;
+	EventListener *listener = (EventListener *) events;
+	if (index < 0 || index >= (int32_t)listener->events.size()) return nullptr;
+	return (spine_track_entry) listener->events[index].entry;
+}
+
+spine_event spine_animation_state_events_get_event(spine_animation_state_events events, int32_t index) {
+	if (!events) return nullptr;
+	EventListener *listener = (EventListener *) events;
+	if (index < 0 || index >= (int32_t)listener->events.size()) return nullptr;
+	return (spine_event) listener->events[index].event;
+}
+
+void spine_animation_state_events_reset(spine_animation_state_events events) {
+	if (!events) return;
+	EventListener *listener = (EventListener *) events;
+	listener->events.clear();
+}
+
 // Skin entries functions
 
 void spine_skin_entries_dispose(spine_skin_entries entries) {

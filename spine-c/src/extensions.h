@@ -86,6 +86,13 @@ SPINE_C_API spine_animation_state spine_skeleton_drawable_get_animation_state(sp
 SPINE_C_API spine_animation_state_data spine_skeleton_drawable_get_animation_state_data(spine_skeleton_drawable drawable);
 SPINE_C_API spine_animation_state_events spine_skeleton_drawable_get_animation_state_events(spine_skeleton_drawable drawable);
 
+// Animation state events functions
+SPINE_C_API int32_t spine_animation_state_events_get_num_events(spine_animation_state_events events);
+SPINE_C_API int32_t spine_animation_state_events_get_event_type(spine_animation_state_events events, int32_t index);
+SPINE_C_API spine_track_entry spine_animation_state_events_get_track_entry(spine_animation_state_events events, int32_t index);
+SPINE_C_API spine_event spine_animation_state_events_get_event(spine_animation_state_events events, int32_t index);
+SPINE_C_API void spine_animation_state_events_reset(spine_animation_state_events events);
+
 // Skin functions
 SPINE_C_API spine_skin_entries spine_skin_get_entries(spine_skin skin);
 
