@@ -134,38 +134,6 @@ void spine_report_leaks() {
 	fflush(stdout);
 }
 
-// Bounds functions
-float spine_bounds_get_x(spine_bounds bounds) {
-	if (!bounds) return 0;
-	return ((_spine_bounds *) bounds)->x;
-}
-
-float spine_bounds_get_y(spine_bounds bounds) {
-	if (!bounds) return 0;
-	return ((_spine_bounds *) bounds)->y;
-}
-
-float spine_bounds_get_width(spine_bounds bounds) {
-	if (!bounds) return 0;
-	return ((_spine_bounds *) bounds)->width;
-}
-
-float spine_bounds_get_height(spine_bounds bounds) {
-	if (!bounds) return 0;
-	return ((_spine_bounds *) bounds)->height;
-}
-
-// Vector functions
-float spine_vector_get_x(spine_vector vector) {
-	if (!vector) return 0;
-	return ((_spine_vector *) vector)->x;
-}
-
-float spine_vector_get_y(spine_vector vector) {
-	if (!vector) return 0;
-	return ((_spine_vector *) vector)->y;
-}
-
 // Atlas functions
 class SpineCTextureLoader : public TextureLoader {
 	void load(AtlasPage &page, const String &path) {
@@ -256,7 +224,7 @@ spine_skeleton_data_result spine_skeleton_data_load_json(spine_atlas atlas, cons
 
 	SkeletonData *data = json.readSkeletonData(skeletonData);
 	if (!data) {
-		result->error = (const char *) strdup("Failed to load skeleton data");
+		result->error = SpineExtension::strdup("Failed to load skeleton data", __FILE__, __LINE__);
 		return (spine_skeleton_data_result) result;
 	}
 
@@ -292,7 +260,7 @@ spine_skeleton_data_result spine_skeleton_data_load_binary(spine_atlas atlas, co
 
 	SkeletonData *data = binary.readSkeletonData((const unsigned char *) skeletonData, length);
 	if (!data) {
-		result->error = (const char *) strdup("Failed to load skeleton data");
+		result->error = SpineExtension::strdup("Failed to load skeleton data", __FILE__, __LINE__);
 		return (spine_skeleton_data_result) result;
 	}
 
@@ -412,11 +380,8 @@ spine_animation_state_events spine_skeleton_drawable_get_animation_state_events(
 	return ((_spine_skeleton_drawable *) drawable)->animationStateEvents;
 }
 
-// Skin entries
-spine_skin_entries spine_skin_entries_create() {
-	_spine_skin_entries *entries = SpineExtension::calloc<_spine_skin_entries>(1, __FILE__, __LINE__);
-	return (spine_skin_entries) entries;
-}
+
+// Skin entries functions
 
 void spine_skin_entries_dispose(spine_skin_entries entries) {
 	if (!entries) return;
@@ -457,4 +422,40 @@ const char *spine_skin_entry_get_name(spine_skin_entry entry) {
 spine_attachment spine_skin_entry_get_attachment(spine_skin_entry entry) {
 	if (!entry) return nullptr;
 	return ((_spine_skin_entry *) entry)->attachment;
+}
+
+// Skin functions
+spine_skin_entries spine_skin_get_entries(spine_skin skin) {
+	if (!skin) return nullptr;
+
+	Skin *_skin = (Skin *) skin;
+	_spine_skin_entries *result = SpineExtension::calloc<_spine_skin_entries>(1, __FILE__, __LINE__);
+
+	// First pass: count the entries
+	{
+		Skin::AttachmentMap::Entries entries = _skin->getAttachments();
+		int count = 0;
+		while (entries.hasNext()) {
+			entries.next();
+			count++;
+		}
+		result->numEntries = count;
+	}
+
+	// Second pass: populate the entries
+	if (result->numEntries > 0) {
+		result->entries = SpineExtension::calloc<_spine_skin_entry>(result->numEntries, __FILE__, __LINE__);
+
+		Skin::AttachmentMap::Entries entries = _skin->getAttachments();
+		int index = 0;
+		while (entries.hasNext()) {
+			Skin::AttachmentMap::Entry &entry = entries.next();
+			result->entries[index].slotIndex = entry._slotIndex;
+			result->entries[index].name = SpineExtension::strdup(entry._name.buffer(), __FILE__, __LINE__);
+			result->entries[index].attachment = (spine_attachment) entry._attachment;
+			index++;
+		}
+	}
+
+	return (spine_skin_entries) result;
 }

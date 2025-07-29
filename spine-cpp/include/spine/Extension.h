@@ -32,6 +32,7 @@
 
 
 #include <stdlib.h>
+#include <string.h>
 #include <spine/dll.h>
 
 #define SP_UNUSED(x) (void) (x)
@@ -68,6 +69,14 @@ namespace spine {
 
 		static char *readFile(const String &path, int *length) {
 			return getInstance()->_readFile(path, length);
+		}
+
+		static char *strdup(const char *str, const char *file, int line) {
+			if (!str) return nullptr;
+			size_t len = strlen(str) + 1;
+			char *copy = (char *) getInstance()->_alloc(len, file, line);
+			memcpy(copy, str, len);
+			return copy;
 		}
 
 		static void setInstance(SpineExtension *inSpineExtension);

@@ -41,8 +41,6 @@ extern "C" {
 // Custom types for spine-c-new (not generated)
 SPINE_OPAQUE_TYPE(spine_atlas_result)
 SPINE_OPAQUE_TYPE(spine_skeleton_data_result)
-SPINE_OPAQUE_TYPE(spine_bounds)
-SPINE_OPAQUE_TYPE(spine_vector)
 SPINE_OPAQUE_TYPE(spine_skeleton_drawable)
 SPINE_OPAQUE_TYPE(spine_animation_state_events)
 SPINE_OPAQUE_TYPE(spine_skin_entry)
@@ -63,16 +61,6 @@ SPINE_C_API int32_t spine_minor_version(void);
 SPINE_C_API void spine_enable_debug_extension(bool enable);
 SPINE_C_API void spine_report_leaks(void);
 
-// Bounds functions
-SPINE_C_API float spine_bounds_get_x(spine_bounds bounds);
-SPINE_C_API float spine_bounds_get_y(spine_bounds bounds);
-SPINE_C_API float spine_bounds_get_width(spine_bounds bounds);
-SPINE_C_API float spine_bounds_get_height(spine_bounds bounds);
-
-// Vector functions
-SPINE_C_API float spine_vector_get_x(spine_vector vector);
-SPINE_C_API float spine_vector_get_y(spine_vector vector);
-
 // Atlas functions
 SPINE_C_API spine_atlas_result spine_atlas_load(const char *atlasData);
 SPINE_C_API spine_atlas_result spine_atlas_load_callback(const char *atlasData, const char *atlasDir, spine_texture_loader_load_func load,
@@ -89,7 +77,7 @@ SPINE_C_API const char *spine_skeleton_data_result_get_error(spine_skeleton_data
 SPINE_C_API spine_skeleton_data spine_skeleton_data_result_get_data(spine_skeleton_data_result result);
 SPINE_C_API void spine_skeleton_data_result_dispose(spine_skeleton_data_result result);
 
-// Skeleton drawable functions
+// Skeleton drawable functionsp
 SPINE_C_API spine_skeleton_drawable spine_skeleton_drawable_create(spine_skeleton_data skeletonData);
 SPINE_C_API spine_render_command spine_skeleton_drawable_render(spine_skeleton_drawable drawable);
 SPINE_C_API void spine_skeleton_drawable_dispose(spine_skeleton_drawable drawable);
@@ -98,8 +86,10 @@ SPINE_C_API spine_animation_state spine_skeleton_drawable_get_animation_state(sp
 SPINE_C_API spine_animation_state_data spine_skeleton_drawable_get_animation_state_data(spine_skeleton_drawable drawable);
 SPINE_C_API spine_animation_state_events spine_skeleton_drawable_get_animation_state_events(spine_skeleton_drawable drawable);
 
+// Skin functions
+SPINE_C_API spine_skin_entries spine_skin_get_entries(spine_skin skin);
+
 // Skin entries functions
-SPINE_C_API spine_skin_entries spine_skin_entries_create(void);
 SPINE_C_API void spine_skin_entries_dispose(spine_skin_entries entries);
 SPINE_C_API int32_t spine_skin_entries_get_num_entries(spine_skin_entries entries);
 SPINE_C_API spine_skin_entry spine_skin_entries_get_entry(spine_skin_entries entries, int32_t index);
