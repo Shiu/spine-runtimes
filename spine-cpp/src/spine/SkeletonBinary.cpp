@@ -116,7 +116,7 @@ SkeletonData *SkeletonBinary::readSkeletonDataFile(const String &path) {
 		String nameWithoutExtension(filename);
 		const char *lastDot = strrchr(nameWithoutExtension.buffer(), '.');
 		if (lastDot) {
-			int length = lastDot - nameWithoutExtension.buffer();
+			int length = (int) (lastDot - nameWithoutExtension.buffer());
 			nameWithoutExtension = nameWithoutExtension.substring(0, length);
 		}
 		skeletonData->_name = nameWithoutExtension;
@@ -449,7 +449,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 
 		/* Skins. */
 		{
-			int i = skeletonData->_skins.size();
+			int i = (int) skeletonData->_skins.size();
 			Array<Skin *> &skins = skeletonData->_skins.setSize(n = i + input.readInt(true), NULL);
 			for (; i < n; i++) {
 				Skin *skin = readSkin(input, *skeletonData, false, nonessential);
@@ -464,7 +464,7 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 
 		/* Linked meshes. */
 		Array<LinkedMesh *> &items = _linkedMeshes;
-		for (int i = 0, n = items.size(); i < n; i++) {
+		for (int i = 0, n = (int) items.size(); i < n; i++) {
 			LinkedMesh *linkedMesh = items[i];
 			Skin *skin = skeletonData->_skins[linkedMesh->_skinIndex];
 			Attachment *parent = skin->getAttachment(linkedMesh->_slotIndex, linkedMesh->_parent);
@@ -692,7 +692,7 @@ Attachment *SkeletonBinary::readAttachment(DataInput &input, Skin &skin, int slo
 			int verticesLength = readVertices(input, vertices, bones, (flags & 64) != 0);
 			Array<float> lengths;
 			lengths.setSize(verticesLength / 6, 0);
-			for (int i = 0, n = lengths.size(); i < n; i++) lengths[i] = input.readFloat() * scale;
+			for (int i = 0, n = (int) lengths.size(); i < n; i++) lengths[i] = input.readFloat() * scale;
 			int color = nonessential ? input.readInt() : 0;
 
 			PathAttachment *path = _attachmentLoader->newPathAttachment(skin, name);

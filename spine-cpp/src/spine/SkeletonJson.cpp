@@ -769,7 +769,7 @@ void SkeletonJson::readVertices(Json *map, VertexAttachment *attachment, size_t 
 	Vertices bonesAndWeights;
 	bonesAndWeights._weights.ensureCapacity(verticesLength * 3 * 3);
 	bonesAndWeights._bones.ensureCapacity(verticesLength * 3);
-	for (int i = 0, n = vertices.size(); i < n;) {
+	for (int i = 0, n = (int) vertices.size(); i < n;) {
 		int boneCount = (int) vertices[i++];
 		bonesAndWeights._bones.add(boneCount);
 		for (int nn = i + (boneCount << 2); i < nn; i += 4) {
@@ -1324,7 +1324,7 @@ Animation *SkeletonJson::readAnimation(Json *map, SkeletonData *skeletonData) {
 	Json *drawOrder = Json::getItem(map, "drawOrder");
 	if (drawOrder) {
 		DrawOrderTimeline *timeline = new (__FILE__, __LINE__) DrawOrderTimeline(drawOrder->_size);
-		int slotCount = skeletonData->_slots.size();
+		int slotCount = (int) skeletonData->_slots.size();
 		int frame = 0;
 		for (Json *keyMap = drawOrder->_child; keyMap; keyMap = keyMap->_next, ++frame) {
 			Array<int> drawOrder2;

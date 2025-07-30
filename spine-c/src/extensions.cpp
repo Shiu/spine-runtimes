@@ -385,7 +385,7 @@ spine_animation_state_events spine_skeleton_drawable_get_animation_state_events(
 int32_t spine_animation_state_events_get_num_events(spine_animation_state_events events) {
 	if (!events) return 0;
 	EventListener *listener = (EventListener *) events;
-	return listener->events.size();
+	return (int32_t) listener->events.size();
 }
 
 int32_t spine_animation_state_events_get_event_type(spine_animation_state_events events, int32_t index) {
@@ -484,7 +484,7 @@ spine_skin_entries spine_skin_get_entries(spine_skin skin) {
 		int index = 0;
 		while (entries.hasNext()) {
 			Skin::AttachmentMap::Entry &entry = entries.next();
-			result->entries[index].slotIndex = entry._slotIndex;
+			result->entries[index].slotIndex = (int32_t) entry._slotIndex;
 			result->entries[index].name = SpineExtension::strdup(entry._name.buffer(), __FILE__, __LINE__);
 			result->entries[index].attachment = (spine_attachment) entry._attachment;
 			index++;

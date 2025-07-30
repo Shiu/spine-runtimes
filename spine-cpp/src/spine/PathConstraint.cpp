@@ -208,7 +208,7 @@ void PathConstraint::update(Skeleton &skeleton, Physics physics) {
 			bone->_c = sin * a + cos * c;
 			bone->_d = sin * b + cos * d;
 		}
-		bone->modifyWorld(u);
+		bone->modifyWorld((int) u);
 	}
 }
 
