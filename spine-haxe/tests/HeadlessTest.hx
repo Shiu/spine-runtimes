@@ -95,7 +95,13 @@ class HeadlessTest {
 
 			// Print skeleton state
 			Sys.println("\n=== SKELETON STATE ===");
-			Sys.println(serializer.serializeSkeleton(skeleton));
+			try {
+				Sys.println(serializer.serializeSkeleton(skeleton));
+			} catch (e:Dynamic) {
+				Sys.stderr().writeString('Error serializing skeleton: $e\n');
+				Sys.stderr().writeString(haxe.CallStack.toString(haxe.CallStack.exceptionStack()) + '\n');
+				throw e;
+			}
 
 			// Print animation state if present
 			if (state != null) {

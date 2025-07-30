@@ -132,7 +132,7 @@ export class DartWriter {
 		lines.push(this.generateHeader());
 
 		// Imports (unified logic)
-		lines.push(...this.generateImports(dartClass.imports, dartClass.needsPackageFfi, dartClass.hasRtti));
+		lines.push(...this.generateImports(dartClass.imports, dartClass.hasRtti));
 
 		// Class declaration (unified)
 		lines.push(this.generateClassDeclaration(dartClass));
@@ -242,7 +242,7 @@ export class DartWriter {
 
 		// Add destructor as dispose method for concrete classes
 		if (classType === 'concrete' && cType.destructor) {
-			members.push(this.createDisposeMethod(cType.destructor, cType));
+			members.push(this.createDisposeMethod(cType.destructor));
 		}
 
 		// Process methods with unified logic - Apply SAME logic for ALL class types
@@ -338,7 +338,7 @@ export class DartWriter {
 		return overloadedSetters;
 	}
 
-	private createDisposeMethod (destructor: CMethod, cType: CClassOrStruct): DartMember {
+	private createDisposeMethod (destructor: CMethod): DartMember {
 		const implementation = `SpineBindings.bindings.${destructor.name}(_ptr);`;
 
 		return {
@@ -498,7 +498,7 @@ export class DartWriter {
 // AUTO GENERATED FILE, DO NOT EDIT.`;
 	}
 
-	private generateImports (imports: string[], needsPackageFfi: boolean, hasRtti: boolean): string[] {
+	private generateImports (imports: string[], hasRtti: boolean): string[] {
 		const lines: string[] = [];
 
 		lines.push('');

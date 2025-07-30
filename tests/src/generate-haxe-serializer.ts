@@ -52,7 +52,7 @@ function transformType (javaType: string): string {
 
 	// Handle TransformConstraintData inner classes
 	if (['FromProperty', 'FromRotate', 'FromScaleX', 'FromScaleY', 'FromShearY', 'FromX', 'FromY',
-	     'ToProperty', 'ToRotate', 'ToScaleX', 'ToScaleY', 'ToShearY', 'ToX', 'ToY'].includes(simpleName)) {
+		'ToProperty', 'ToRotate', 'ToScaleX', 'ToScaleY', 'ToShearY', 'ToX', 'ToY'].includes(simpleName)) {
 		return 'spine.TransformConstraintData.' + simpleName;
 	}
 

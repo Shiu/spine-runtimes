@@ -638,7 +638,7 @@ class SkeletonJson {
 				var box:BoundingBoxAttachment = attachmentLoader.newBoundingBoxAttachment(skin, name);
 				if (box == null)
 					return null;
-				readVertices(map, box, Std.parseInt(Reflect.field(map, "vertexCount")) << 1);
+				readVertices(map, box, getInt(map, "vertexCount", 0) << 1);
 				return box;
 			case AttachmentType.path:
 				var path:PathAttachment = attachmentLoader.newPathAttachment(skin, name);
@@ -646,7 +646,7 @@ class SkeletonJson {
 					return null;
 				path.closed = Reflect.hasField(map, "closed") ? cast(Reflect.field(map, "closed"), Bool) : false;
 				path.constantSpeed = Reflect.hasField(map, "constantSpeed") ? cast(Reflect.field(map, "constantSpeed"), Bool) : true;
-				var vertexCount:Int = Std.parseInt(Reflect.field(map, "vertexCount"));
+				var vertexCount:Int = getInt(map, "vertexCount", 0);
 				readVertices(map, path, vertexCount << 1);
 				var lengths:Array<Float> = new Array<Float>();
 				for (curves in cast(Reflect.field(map, "lengths"), Array<Dynamic>)) {
