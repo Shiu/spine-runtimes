@@ -36,12 +36,75 @@ class SkeletonSerializer {
         return json.getString();
     }
 
-    private function writeAnimation(obj:Animation):Void {
+    // Core reflection helpers
+    private function extractPropertyName(javaGetter:String):String {
+        var getter = javaGetter;
+        if (getter.indexOf("()") != -1) getter = getter.substr(0, getter.length - 2);
+        
+        if (getter.substr(0, 3) == "get") {
+            var prop = getter.substr(3);
+            return prop.charAt(0).toLowerCase() + prop.substr(1);
+        }
+        if (getter.substr(0, 2) == "is") {
+            var prop = getter.substr(2);
+            return prop.charAt(0).toLowerCase() + prop.substr(1);
+        }
+        return getter;
+    }
+
+    private function getSpecialFieldNames(javaGetter:String):Array<String> {
+        return switch(javaGetter) {
+            case "getInt()": ["intValue"];
+            case "getFloat()": ["floatValue"];
+            case "getString()": ["stringValue"];
+            case "getPhysicsConstraints()": ["physics"];
+            case "getUpdateCache()": ["_updateCache"];
+            case "getSetupPose()": ["setup"];
+            case "getAppliedPose()": ["applied"];
+            default: [];
+        }
+    }
+
+    private function getPropertyValue(obj:Dynamic, javaGetter:String):Dynamic {
+        var propName = extractPropertyName(javaGetter);
+        
+        // Try direct field access first
+        if (Reflect.hasField(obj, propName)) {
+            return Reflect.field(obj, propName);
+        }
+        
+        // Try special field variations
+        var specialNames = getSpecialFieldNames(javaGetter);
+        for (name in specialNames) {
+            if (Reflect.hasField(obj, name)) {
+                return Reflect.field(obj, name);
+            }
+        }
+        
+        // Try method access (remove parentheses)
+        var methodName = javaGetter;
+        if (methodName.indexOf("()") != -1) {
+            methodName = methodName.substr(0, methodName.length - 2);
+        }
+        if (Reflect.hasField(obj, methodName)) {
+            var method = Reflect.field(obj, methodName);
+            if (Reflect.isFunction(method)) {
+                return Reflect.callMethod(obj, method, []);
+            }
+        }
+        
+        // Last resort: return null and let the caller handle it
+        return null;
+    }
+
+    private function writeAnimation(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<Animation-" + obj.name + ">" : "<Animation-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<Animation-" + nameValue + ">" : "<Animation-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -51,30 +114,27 @@ class SkeletonSerializer {
         json.writeValue("Animation");
 
         json.writeName("timelines");
-        json.writeArrayStart();
-        for (item in obj.timelines) {
-            writeTimeline(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getTimelines()", {"kind":"array","name":"timelines","getter":"getTimelines()","elementType":"Timeline","elementKind":"object","writeMethodCall":"writeTimeline","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.duration);
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeName("bones");
-        writeIntArray(obj.bones);
+        writeProperty(obj, "getBones()", {"kind":"object","name":"bones","getter":"getBones()","valueType":"IntArray","writeMethodCall":"writeIntArray","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeAlphaTimeline(obj:AlphaTimeline):Void {
+    private function writeAlphaTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<AlphaTimeline-" + (nextId++) + ">";
+
+        var refString = "<AlphaTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -84,40 +144,33 @@ class SkeletonSerializer {
         json.writeValue("AlphaTimeline");
 
         json.writeName("slotIndex");
-        json.writeValue(obj.getSlotIndex());
+        writeProperty(obj, "getSlotIndex()", {"kind":"primitive","name":"slotIndex","getter":"getSlotIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeAttachmentTimeline(obj:AttachmentTimeline):Void {
+    private function writeAttachmentTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<AttachmentTimeline-" + (nextId++) + ">";
+
+        var refString = "<AttachmentTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -127,47 +180,36 @@ class SkeletonSerializer {
         json.writeValue("AttachmentTimeline");
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("slotIndex");
-        json.writeValue(obj.getSlotIndex());
+        writeProperty(obj, "getSlotIndex()", {"kind":"primitive","name":"slotIndex","getter":"getSlotIndex()","valueType":"int","isNullable":false});
 
         json.writeName("attachmentNames");
-        json.writeArrayStart();
-        for (item in obj.attachmentNames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getAttachmentNames()", {"kind":"array","name":"attachmentNames","getter":"getAttachmentNames()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeDeformTimeline(obj:DeformTimeline):Void {
+    private function writeDeformTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<DeformTimeline-" + (nextId++) + ">";
+
+        var refString = "<DeformTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -177,58 +219,39 @@ class SkeletonSerializer {
         json.writeValue("DeformTimeline");
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("attachment");
-        writeVertexAttachment(obj.attachment);
+        writeProperty(obj, "getAttachment()", {"kind":"object","name":"attachment","getter":"getAttachment()","valueType":"VertexAttachment","writeMethodCall":"writeVertexAttachment","isNullable":false});
 
         json.writeName("vertices");
-        json.writeArrayStart();
-        for (nestedArray in obj.vertices) {
-            if (nestedArray == null) {
-                json.writeNull();
-            } else {
-                json.writeArrayStart();
-                for (elem in nestedArray) {
-                    json.writeValue(elem);
-                }
-                json.writeArrayEnd();
-            }
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getVertices()", {"kind":"nestedArray","name":"vertices","getter":"getVertices()","elementType":"float","isNullable":false});
 
         json.writeName("slotIndex");
-        json.writeValue(obj.getSlotIndex());
+        writeProperty(obj, "getSlotIndex()", {"kind":"primitive","name":"slotIndex","getter":"getSlotIndex()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeDrawOrderTimeline(obj:DrawOrderTimeline):Void {
+    private function writeDrawOrderTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<DrawOrderTimeline-" + (nextId++) + ">";
+
+        var refString = "<DrawOrderTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -238,52 +261,33 @@ class SkeletonSerializer {
         json.writeValue("DrawOrderTimeline");
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("drawOrders");
-        json.writeArrayStart();
-        for (nestedArray in obj.drawOrders) {
-            if (nestedArray == null) {
-                json.writeNull();
-            } else {
-                json.writeArrayStart();
-                for (elem in nestedArray) {
-                    json.writeValue(elem);
-                }
-                json.writeArrayEnd();
-            }
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getDrawOrders()", {"kind":"nestedArray","name":"drawOrders","getter":"getDrawOrders()","elementType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeEventTimeline(obj:EventTimeline):Void {
+    private function writeEventTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<EventTimeline-" + (nextId++) + ">";
+
+        var refString = "<EventTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -293,44 +297,33 @@ class SkeletonSerializer {
         json.writeValue("EventTimeline");
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("events");
-        json.writeArrayStart();
-        for (item in obj.events) {
-            writeEvent(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getEvents()", {"kind":"array","name":"events","getter":"getEvents()","elementType":"Event","elementKind":"object","writeMethodCall":"writeEvent","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeIkConstraintTimeline(obj:IkConstraintTimeline):Void {
+    private function writeIkConstraintTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<IkConstraintTimeline-" + (nextId++) + ">";
+
+        var refString = "<IkConstraintTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -340,40 +333,33 @@ class SkeletonSerializer {
         json.writeValue("IkConstraintTimeline");
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeInheritTimeline(obj:InheritTimeline):Void {
+    private function writeInheritTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<InheritTimeline-" + (nextId++) + ">";
+
+        var refString = "<InheritTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -383,40 +369,33 @@ class SkeletonSerializer {
         json.writeValue("InheritTimeline");
 
         json.writeName("boneIndex");
-        json.writeValue(obj.getBoneIndex());
+        writeProperty(obj, "getBoneIndex()", {"kind":"primitive","name":"boneIndex","getter":"getBoneIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePathConstraintMixTimeline(obj:PathConstraintMixTimeline):Void {
+    private function writePathConstraintMixTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PathConstraintMixTimeline-" + (nextId++) + ">";
+
+        var refString = "<PathConstraintMixTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -426,40 +405,33 @@ class SkeletonSerializer {
         json.writeValue("PathConstraintMixTimeline");
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePathConstraintPositionTimeline(obj:PathConstraintPositionTimeline):Void {
+    private function writePathConstraintPositionTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PathConstraintPositionTimeline-" + (nextId++) + ">";
+
+        var refString = "<PathConstraintPositionTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -469,40 +441,33 @@ class SkeletonSerializer {
         json.writeValue("PathConstraintPositionTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePathConstraintSpacingTimeline(obj:PathConstraintSpacingTimeline):Void {
+    private function writePathConstraintSpacingTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PathConstraintSpacingTimeline-" + (nextId++) + ">";
+
+        var refString = "<PathConstraintSpacingTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -512,40 +477,33 @@ class SkeletonSerializer {
         json.writeValue("PathConstraintSpacingTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePhysicsConstraintDampingTimeline(obj:PhysicsConstraintDampingTimeline):Void {
+    private function writePhysicsConstraintDampingTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PhysicsConstraintDampingTimeline-" + (nextId++) + ">";
+
+        var refString = "<PhysicsConstraintDampingTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -555,40 +513,33 @@ class SkeletonSerializer {
         json.writeValue("PhysicsConstraintDampingTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePhysicsConstraintGravityTimeline(obj:PhysicsConstraintGravityTimeline):Void {
+    private function writePhysicsConstraintGravityTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PhysicsConstraintGravityTimeline-" + (nextId++) + ">";
+
+        var refString = "<PhysicsConstraintGravityTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -598,40 +549,33 @@ class SkeletonSerializer {
         json.writeValue("PhysicsConstraintGravityTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePhysicsConstraintInertiaTimeline(obj:PhysicsConstraintInertiaTimeline):Void {
+    private function writePhysicsConstraintInertiaTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PhysicsConstraintInertiaTimeline-" + (nextId++) + ">";
+
+        var refString = "<PhysicsConstraintInertiaTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -641,40 +585,33 @@ class SkeletonSerializer {
         json.writeValue("PhysicsConstraintInertiaTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePhysicsConstraintMassTimeline(obj:PhysicsConstraintMassTimeline):Void {
+    private function writePhysicsConstraintMassTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PhysicsConstraintMassTimeline-" + (nextId++) + ">";
+
+        var refString = "<PhysicsConstraintMassTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -684,40 +621,33 @@ class SkeletonSerializer {
         json.writeValue("PhysicsConstraintMassTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePhysicsConstraintMixTimeline(obj:PhysicsConstraintMixTimeline):Void {
+    private function writePhysicsConstraintMixTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PhysicsConstraintMixTimeline-" + (nextId++) + ">";
+
+        var refString = "<PhysicsConstraintMixTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -727,40 +657,33 @@ class SkeletonSerializer {
         json.writeValue("PhysicsConstraintMixTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePhysicsConstraintResetTimeline(obj:PhysicsConstraintResetTimeline):Void {
+    private function writePhysicsConstraintResetTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PhysicsConstraintResetTimeline-" + (nextId++) + ">";
+
+        var refString = "<PhysicsConstraintResetTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -770,40 +693,33 @@ class SkeletonSerializer {
         json.writeValue("PhysicsConstraintResetTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePhysicsConstraintStrengthTimeline(obj:PhysicsConstraintStrengthTimeline):Void {
+    private function writePhysicsConstraintStrengthTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PhysicsConstraintStrengthTimeline-" + (nextId++) + ">";
+
+        var refString = "<PhysicsConstraintStrengthTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -813,40 +729,33 @@ class SkeletonSerializer {
         json.writeValue("PhysicsConstraintStrengthTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePhysicsConstraintWindTimeline(obj:PhysicsConstraintWindTimeline):Void {
+    private function writePhysicsConstraintWindTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PhysicsConstraintWindTimeline-" + (nextId++) + ">";
+
+        var refString = "<PhysicsConstraintWindTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -856,40 +765,33 @@ class SkeletonSerializer {
         json.writeValue("PhysicsConstraintWindTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeRGB2Timeline(obj:RGB2Timeline):Void {
+    private function writeRGB2Timeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<RGB2Timeline-" + (nextId++) + ">";
+
+        var refString = "<RGB2Timeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -899,40 +801,33 @@ class SkeletonSerializer {
         json.writeValue("RGB2Timeline");
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("slotIndex");
-        json.writeValue(obj.getSlotIndex());
+        writeProperty(obj, "getSlotIndex()", {"kind":"primitive","name":"slotIndex","getter":"getSlotIndex()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeRGBA2Timeline(obj:RGBA2Timeline):Void {
+    private function writeRGBA2Timeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<RGBA2Timeline-" + (nextId++) + ">";
+
+        var refString = "<RGBA2Timeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -942,40 +837,33 @@ class SkeletonSerializer {
         json.writeValue("RGBA2Timeline");
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("slotIndex");
-        json.writeValue(obj.getSlotIndex());
+        writeProperty(obj, "getSlotIndex()", {"kind":"primitive","name":"slotIndex","getter":"getSlotIndex()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeRGBATimeline(obj:RGBATimeline):Void {
+    private function writeRGBATimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<RGBATimeline-" + (nextId++) + ">";
+
+        var refString = "<RGBATimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -985,40 +873,33 @@ class SkeletonSerializer {
         json.writeValue("RGBATimeline");
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("slotIndex");
-        json.writeValue(obj.getSlotIndex());
+        writeProperty(obj, "getSlotIndex()", {"kind":"primitive","name":"slotIndex","getter":"getSlotIndex()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeRGBTimeline(obj:RGBTimeline):Void {
+    private function writeRGBTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<RGBTimeline-" + (nextId++) + ">";
+
+        var refString = "<RGBTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1028,40 +909,33 @@ class SkeletonSerializer {
         json.writeValue("RGBTimeline");
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("slotIndex");
-        json.writeValue(obj.getSlotIndex());
+        writeProperty(obj, "getSlotIndex()", {"kind":"primitive","name":"slotIndex","getter":"getSlotIndex()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeRotateTimeline(obj:RotateTimeline):Void {
+    private function writeRotateTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<RotateTimeline-" + (nextId++) + ">";
+
+        var refString = "<RotateTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1071,40 +945,33 @@ class SkeletonSerializer {
         json.writeValue("RotateTimeline");
 
         json.writeName("boneIndex");
-        json.writeValue(obj.getBoneIndex());
+        writeProperty(obj, "getBoneIndex()", {"kind":"primitive","name":"boneIndex","getter":"getBoneIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeScaleTimeline(obj:ScaleTimeline):Void {
+    private function writeScaleTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ScaleTimeline-" + (nextId++) + ">";
+
+        var refString = "<ScaleTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1114,40 +981,33 @@ class SkeletonSerializer {
         json.writeValue("ScaleTimeline");
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("boneIndex");
-        json.writeValue(obj.getBoneIndex());
+        writeProperty(obj, "getBoneIndex()", {"kind":"primitive","name":"boneIndex","getter":"getBoneIndex()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeScaleXTimeline(obj:ScaleXTimeline):Void {
+    private function writeScaleXTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ScaleXTimeline-" + (nextId++) + ">";
+
+        var refString = "<ScaleXTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1157,40 +1017,33 @@ class SkeletonSerializer {
         json.writeValue("ScaleXTimeline");
 
         json.writeName("boneIndex");
-        json.writeValue(obj.getBoneIndex());
+        writeProperty(obj, "getBoneIndex()", {"kind":"primitive","name":"boneIndex","getter":"getBoneIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeScaleYTimeline(obj:ScaleYTimeline):Void {
+    private function writeScaleYTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ScaleYTimeline-" + (nextId++) + ">";
+
+        var refString = "<ScaleYTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1200,40 +1053,33 @@ class SkeletonSerializer {
         json.writeValue("ScaleYTimeline");
 
         json.writeName("boneIndex");
-        json.writeValue(obj.getBoneIndex());
+        writeProperty(obj, "getBoneIndex()", {"kind":"primitive","name":"boneIndex","getter":"getBoneIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSequenceTimeline(obj:SequenceTimeline):Void {
+    private function writeSequenceTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<SequenceTimeline-" + (nextId++) + ">";
+
+        var refString = "<SequenceTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1243,43 +1089,36 @@ class SkeletonSerializer {
         json.writeValue("SequenceTimeline");
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("slotIndex");
-        json.writeValue(obj.getSlotIndex());
+        writeProperty(obj, "getSlotIndex()", {"kind":"primitive","name":"slotIndex","getter":"getSlotIndex()","valueType":"int","isNullable":false});
 
         json.writeName("attachment");
-        writeAttachment(obj.attachment);
+        writeProperty(obj, "getAttachment()", {"kind":"object","name":"attachment","getter":"getAttachment()","valueType":"Attachment","writeMethodCall":"writeAttachment","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeShearTimeline(obj:ShearTimeline):Void {
+    private function writeShearTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ShearTimeline-" + (nextId++) + ">";
+
+        var refString = "<ShearTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1289,40 +1128,33 @@ class SkeletonSerializer {
         json.writeValue("ShearTimeline");
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("boneIndex");
-        json.writeValue(obj.getBoneIndex());
+        writeProperty(obj, "getBoneIndex()", {"kind":"primitive","name":"boneIndex","getter":"getBoneIndex()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeShearXTimeline(obj:ShearXTimeline):Void {
+    private function writeShearXTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ShearXTimeline-" + (nextId++) + ">";
+
+        var refString = "<ShearXTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1332,40 +1164,33 @@ class SkeletonSerializer {
         json.writeValue("ShearXTimeline");
 
         json.writeName("boneIndex");
-        json.writeValue(obj.getBoneIndex());
+        writeProperty(obj, "getBoneIndex()", {"kind":"primitive","name":"boneIndex","getter":"getBoneIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeShearYTimeline(obj:ShearYTimeline):Void {
+    private function writeShearYTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ShearYTimeline-" + (nextId++) + ">";
+
+        var refString = "<ShearYTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1375,40 +1200,33 @@ class SkeletonSerializer {
         json.writeValue("ShearYTimeline");
 
         json.writeName("boneIndex");
-        json.writeValue(obj.getBoneIndex());
+        writeProperty(obj, "getBoneIndex()", {"kind":"primitive","name":"boneIndex","getter":"getBoneIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSliderMixTimeline(obj:SliderMixTimeline):Void {
+    private function writeSliderMixTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<SliderMixTimeline-" + (nextId++) + ">";
+
+        var refString = "<SliderMixTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1418,40 +1236,33 @@ class SkeletonSerializer {
         json.writeValue("SliderMixTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSliderTimeline(obj:SliderTimeline):Void {
+    private function writeSliderTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<SliderTimeline-" + (nextId++) + ">";
+
+        var refString = "<SliderTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1461,118 +1272,111 @@ class SkeletonSerializer {
         json.writeValue("SliderTimeline");
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeTimeline(obj:Timeline):Void {
+    private function writeTimeline(obj:Dynamic):Void {
         if (Std.isOfType(obj, AlphaTimeline)) {
-            writeAlphaTimeline(cast(obj, AlphaTimeline));
+            writeAlphaTimeline(obj);
         } else if (Std.isOfType(obj, AttachmentTimeline)) {
-            writeAttachmentTimeline(cast(obj, AttachmentTimeline));
+            writeAttachmentTimeline(obj);
         } else if (Std.isOfType(obj, DeformTimeline)) {
-            writeDeformTimeline(cast(obj, DeformTimeline));
+            writeDeformTimeline(obj);
         } else if (Std.isOfType(obj, DrawOrderTimeline)) {
-            writeDrawOrderTimeline(cast(obj, DrawOrderTimeline));
+            writeDrawOrderTimeline(obj);
         } else if (Std.isOfType(obj, EventTimeline)) {
-            writeEventTimeline(cast(obj, EventTimeline));
+            writeEventTimeline(obj);
         } else if (Std.isOfType(obj, IkConstraintTimeline)) {
-            writeIkConstraintTimeline(cast(obj, IkConstraintTimeline));
+            writeIkConstraintTimeline(obj);
         } else if (Std.isOfType(obj, InheritTimeline)) {
-            writeInheritTimeline(cast(obj, InheritTimeline));
+            writeInheritTimeline(obj);
         } else if (Std.isOfType(obj, PathConstraintMixTimeline)) {
-            writePathConstraintMixTimeline(cast(obj, PathConstraintMixTimeline));
+            writePathConstraintMixTimeline(obj);
         } else if (Std.isOfType(obj, PathConstraintPositionTimeline)) {
-            writePathConstraintPositionTimeline(cast(obj, PathConstraintPositionTimeline));
+            writePathConstraintPositionTimeline(obj);
         } else if (Std.isOfType(obj, PathConstraintSpacingTimeline)) {
-            writePathConstraintSpacingTimeline(cast(obj, PathConstraintSpacingTimeline));
+            writePathConstraintSpacingTimeline(obj);
         } else if (Std.isOfType(obj, PhysicsConstraintDampingTimeline)) {
-            writePhysicsConstraintDampingTimeline(cast(obj, PhysicsConstraintDampingTimeline));
+            writePhysicsConstraintDampingTimeline(obj);
         } else if (Std.isOfType(obj, PhysicsConstraintGravityTimeline)) {
-            writePhysicsConstraintGravityTimeline(cast(obj, PhysicsConstraintGravityTimeline));
+            writePhysicsConstraintGravityTimeline(obj);
         } else if (Std.isOfType(obj, PhysicsConstraintInertiaTimeline)) {
-            writePhysicsConstraintInertiaTimeline(cast(obj, PhysicsConstraintInertiaTimeline));
+            writePhysicsConstraintInertiaTimeline(obj);
         } else if (Std.isOfType(obj, PhysicsConstraintMassTimeline)) {
-            writePhysicsConstraintMassTimeline(cast(obj, PhysicsConstraintMassTimeline));
+            writePhysicsConstraintMassTimeline(obj);
         } else if (Std.isOfType(obj, PhysicsConstraintMixTimeline)) {
-            writePhysicsConstraintMixTimeline(cast(obj, PhysicsConstraintMixTimeline));
+            writePhysicsConstraintMixTimeline(obj);
         } else if (Std.isOfType(obj, PhysicsConstraintResetTimeline)) {
-            writePhysicsConstraintResetTimeline(cast(obj, PhysicsConstraintResetTimeline));
+            writePhysicsConstraintResetTimeline(obj);
         } else if (Std.isOfType(obj, PhysicsConstraintStrengthTimeline)) {
-            writePhysicsConstraintStrengthTimeline(cast(obj, PhysicsConstraintStrengthTimeline));
+            writePhysicsConstraintStrengthTimeline(obj);
         } else if (Std.isOfType(obj, PhysicsConstraintWindTimeline)) {
-            writePhysicsConstraintWindTimeline(cast(obj, PhysicsConstraintWindTimeline));
+            writePhysicsConstraintWindTimeline(obj);
         } else if (Std.isOfType(obj, RGB2Timeline)) {
-            writeRGB2Timeline(cast(obj, RGB2Timeline));
+            writeRGB2Timeline(obj);
         } else if (Std.isOfType(obj, RGBA2Timeline)) {
-            writeRGBA2Timeline(cast(obj, RGBA2Timeline));
+            writeRGBA2Timeline(obj);
         } else if (Std.isOfType(obj, RGBATimeline)) {
-            writeRGBATimeline(cast(obj, RGBATimeline));
+            writeRGBATimeline(obj);
         } else if (Std.isOfType(obj, RGBTimeline)) {
-            writeRGBTimeline(cast(obj, RGBTimeline));
+            writeRGBTimeline(obj);
         } else if (Std.isOfType(obj, RotateTimeline)) {
-            writeRotateTimeline(cast(obj, RotateTimeline));
+            writeRotateTimeline(obj);
         } else if (Std.isOfType(obj, ScaleTimeline)) {
-            writeScaleTimeline(cast(obj, ScaleTimeline));
+            writeScaleTimeline(obj);
         } else if (Std.isOfType(obj, ScaleXTimeline)) {
-            writeScaleXTimeline(cast(obj, ScaleXTimeline));
+            writeScaleXTimeline(obj);
         } else if (Std.isOfType(obj, ScaleYTimeline)) {
-            writeScaleYTimeline(cast(obj, ScaleYTimeline));
+            writeScaleYTimeline(obj);
         } else if (Std.isOfType(obj, SequenceTimeline)) {
-            writeSequenceTimeline(cast(obj, SequenceTimeline));
+            writeSequenceTimeline(obj);
         } else if (Std.isOfType(obj, ShearTimeline)) {
-            writeShearTimeline(cast(obj, ShearTimeline));
+            writeShearTimeline(obj);
         } else if (Std.isOfType(obj, ShearXTimeline)) {
-            writeShearXTimeline(cast(obj, ShearXTimeline));
+            writeShearXTimeline(obj);
         } else if (Std.isOfType(obj, ShearYTimeline)) {
-            writeShearYTimeline(cast(obj, ShearYTimeline));
+            writeShearYTimeline(obj);
         } else if (Std.isOfType(obj, SliderMixTimeline)) {
-            writeSliderMixTimeline(cast(obj, SliderMixTimeline));
+            writeSliderMixTimeline(obj);
         } else if (Std.isOfType(obj, SliderTimeline)) {
-            writeSliderTimeline(cast(obj, SliderTimeline));
+            writeSliderTimeline(obj);
         } else if (Std.isOfType(obj, TransformConstraintTimeline)) {
-            writeTransformConstraintTimeline(cast(obj, TransformConstraintTimeline));
+            writeTransformConstraintTimeline(obj);
         } else if (Std.isOfType(obj, TranslateTimeline)) {
-            writeTranslateTimeline(cast(obj, TranslateTimeline));
+            writeTranslateTimeline(obj);
         } else if (Std.isOfType(obj, TranslateXTimeline)) {
-            writeTranslateXTimeline(cast(obj, TranslateXTimeline));
+            writeTranslateXTimeline(obj);
         } else if (Std.isOfType(obj, TranslateYTimeline)) {
-            writeTranslateYTimeline(cast(obj, TranslateYTimeline));
+            writeTranslateYTimeline(obj);
         } else {
             throw new spine.SpineException("Unknown Timeline type");
         }
     }
 
-    private function writeTransformConstraintTimeline(obj:TransformConstraintTimeline):Void {
+    private function writeTransformConstraintTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<TransformConstraintTimeline-" + (nextId++) + ">";
+
+        var refString = "<TransformConstraintTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1582,40 +1386,33 @@ class SkeletonSerializer {
         json.writeValue("TransformConstraintTimeline");
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("constraintIndex");
-        json.writeValue(obj.constraintIndex);
+        writeProperty(obj, "getConstraintIndex()", {"kind":"primitive","name":"constraintIndex","getter":"getConstraintIndex()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeTranslateTimeline(obj:TranslateTimeline):Void {
+    private function writeTranslateTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<TranslateTimeline-" + (nextId++) + ">";
+
+        var refString = "<TranslateTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1625,40 +1422,33 @@ class SkeletonSerializer {
         json.writeValue("TranslateTimeline");
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("boneIndex");
-        json.writeValue(obj.getBoneIndex());
+        writeProperty(obj, "getBoneIndex()", {"kind":"primitive","name":"boneIndex","getter":"getBoneIndex()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeTranslateXTimeline(obj:TranslateXTimeline):Void {
+    private function writeTranslateXTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<TranslateXTimeline-" + (nextId++) + ">";
+
+        var refString = "<TranslateXTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1668,40 +1458,33 @@ class SkeletonSerializer {
         json.writeValue("TranslateXTimeline");
 
         json.writeName("boneIndex");
-        json.writeValue(obj.getBoneIndex());
+        writeProperty(obj, "getBoneIndex()", {"kind":"primitive","name":"boneIndex","getter":"getBoneIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeTranslateYTimeline(obj:TranslateYTimeline):Void {
+    private function writeTranslateYTimeline(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<TranslateYTimeline-" + (nextId++) + ">";
+
+        var refString = "<TranslateYTimeline-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1711,40 +1494,33 @@ class SkeletonSerializer {
         json.writeValue("TranslateYTimeline");
 
         json.writeName("boneIndex");
-        json.writeValue(obj.getBoneIndex());
+        writeProperty(obj, "getBoneIndex()", {"kind":"primitive","name":"boneIndex","getter":"getBoneIndex()","valueType":"int","isNullable":false});
 
         json.writeName("frameEntries");
-        json.writeValue(obj.getFrameEntries());
+        writeProperty(obj, "getFrameEntries()", {"kind":"primitive","name":"frameEntries","getter":"getFrameEntries()","valueType":"int","isNullable":false});
 
         json.writeName("propertyIds");
-        json.writeArrayStart();
-        for (item in obj.propertyIds) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPropertyIds()", {"kind":"array","name":"propertyIds","getter":"getPropertyIds()","elementType":"String","elementKind":"primitive","isNullable":false});
 
         json.writeName("frames");
-        json.writeArrayStart();
-        for (item in obj.frames) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getFrames()", {"kind":"array","name":"frames","getter":"getFrames()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("frameCount");
-        json.writeValue(obj.getFrameCount());
+        writeProperty(obj, "getFrameCount()", {"kind":"primitive","name":"frameCount","getter":"getFrameCount()","valueType":"int","isNullable":false});
 
         json.writeName("duration");
-        json.writeValue(obj.getDuration());
+        writeProperty(obj, "getDuration()", {"kind":"primitive","name":"duration","getter":"getDuration()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeAnimationState(obj:AnimationState):Void {
+    private function writeAnimationState(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<AnimationState-" + (nextId++) + ">";
+
+        var refString = "<AnimationState-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1754,27 +1530,24 @@ class SkeletonSerializer {
         json.writeValue("AnimationState");
 
         json.writeName("timeScale");
-        json.writeValue(obj.timeScale);
+        writeProperty(obj, "getTimeScale()", {"kind":"primitive","name":"timeScale","getter":"getTimeScale()","valueType":"float","isNullable":false});
 
         json.writeName("data");
-        writeAnimationStateData(obj.data);
+        writeProperty(obj, "getData()", {"kind":"object","name":"data","getter":"getData()","valueType":"AnimationStateData","writeMethodCall":"writeAnimationStateData","isNullable":false});
 
         json.writeName("tracks");
-        json.writeArrayStart();
-        for (item in obj.tracks) {
-            writeTrackEntry(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getTracks()", {"kind":"array","name":"tracks","getter":"getTracks()","elementType":"TrackEntry","elementKind":"object","writeMethodCall":"writeTrackEntry","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeTrackEntry(obj:TrackEntry):Void {
+    private function writeTrackEntry(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<TrackEntry-" + (nextId++) + ">";
+
+        var refString = "<TrackEntry-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1784,117 +1557,96 @@ class SkeletonSerializer {
         json.writeValue("TrackEntry");
 
         json.writeName("trackIndex");
-        json.writeValue(obj.trackIndex);
+        writeProperty(obj, "getTrackIndex()", {"kind":"primitive","name":"trackIndex","getter":"getTrackIndex()","valueType":"int","isNullable":false});
 
         json.writeName("animation");
-        writeAnimation(obj.animation);
+        writeProperty(obj, "getAnimation()", {"kind":"object","name":"animation","getter":"getAnimation()","valueType":"Animation","writeMethodCall":"writeAnimation","isNullable":false});
 
         json.writeName("loop");
-        json.writeValue(obj.loop);
+        writeProperty(obj, "getLoop()", {"kind":"primitive","name":"loop","getter":"getLoop()","valueType":"boolean","isNullable":false});
 
         json.writeName("delay");
-        json.writeValue(obj.delay);
+        writeProperty(obj, "getDelay()", {"kind":"primitive","name":"delay","getter":"getDelay()","valueType":"float","isNullable":false});
 
         json.writeName("trackTime");
-        json.writeValue(obj.trackTime);
+        writeProperty(obj, "getTrackTime()", {"kind":"primitive","name":"trackTime","getter":"getTrackTime()","valueType":"float","isNullable":false});
 
         json.writeName("trackEnd");
-        json.writeValue(obj.trackEnd);
+        writeProperty(obj, "getTrackEnd()", {"kind":"primitive","name":"trackEnd","getter":"getTrackEnd()","valueType":"float","isNullable":false});
 
         json.writeName("trackComplete");
-        json.writeValue(obj.getTrackComplete());
+        writeProperty(obj, "getTrackComplete()", {"kind":"primitive","name":"trackComplete","getter":"getTrackComplete()","valueType":"float","isNullable":false});
 
         json.writeName("animationStart");
-        json.writeValue(obj.animationStart);
+        writeProperty(obj, "getAnimationStart()", {"kind":"primitive","name":"animationStart","getter":"getAnimationStart()","valueType":"float","isNullable":false});
 
         json.writeName("animationEnd");
-        json.writeValue(obj.animationEnd);
+        writeProperty(obj, "getAnimationEnd()", {"kind":"primitive","name":"animationEnd","getter":"getAnimationEnd()","valueType":"float","isNullable":false});
 
         json.writeName("animationLast");
-        json.writeValue(obj.animationLast);
+        writeProperty(obj, "getAnimationLast()", {"kind":"primitive","name":"animationLast","getter":"getAnimationLast()","valueType":"float","isNullable":false});
 
         json.writeName("animationTime");
-        json.writeValue(obj.getAnimationTime());
+        writeProperty(obj, "getAnimationTime()", {"kind":"primitive","name":"animationTime","getter":"getAnimationTime()","valueType":"float","isNullable":false});
 
         json.writeName("timeScale");
-        json.writeValue(obj.timeScale);
+        writeProperty(obj, "getTimeScale()", {"kind":"primitive","name":"timeScale","getter":"getTimeScale()","valueType":"float","isNullable":false});
 
         json.writeName("alpha");
-        json.writeValue(obj.alpha);
+        writeProperty(obj, "getAlpha()", {"kind":"primitive","name":"alpha","getter":"getAlpha()","valueType":"float","isNullable":false});
 
         json.writeName("eventThreshold");
-        json.writeValue(obj.eventThreshold);
+        writeProperty(obj, "getEventThreshold()", {"kind":"primitive","name":"eventThreshold","getter":"getEventThreshold()","valueType":"float","isNullable":false});
 
         json.writeName("alphaAttachmentThreshold");
-        json.writeValue(obj.alphaAttachmentThreshold);
+        writeProperty(obj, "getAlphaAttachmentThreshold()", {"kind":"primitive","name":"alphaAttachmentThreshold","getter":"getAlphaAttachmentThreshold()","valueType":"float","isNullable":false});
 
         json.writeName("mixAttachmentThreshold");
-        json.writeValue(obj.mixAttachmentThreshold);
+        writeProperty(obj, "getMixAttachmentThreshold()", {"kind":"primitive","name":"mixAttachmentThreshold","getter":"getMixAttachmentThreshold()","valueType":"float","isNullable":false});
 
         json.writeName("mixDrawOrderThreshold");
-        json.writeValue(obj.mixDrawOrderThreshold);
+        writeProperty(obj, "getMixDrawOrderThreshold()", {"kind":"primitive","name":"mixDrawOrderThreshold","getter":"getMixDrawOrderThreshold()","valueType":"float","isNullable":false});
 
         json.writeName("next");
-        if (obj.next == null) {
-            json.writeNull();
-        } else {
-            writeTrackEntry(obj.next);
-        }
+        writeProperty(obj, "getNext()", {"kind":"object","name":"next","getter":"getNext()","valueType":"AnimationState.TrackEntry","writeMethodCall":"writeTrackEntry","isNullable":true});
 
         json.writeName("previous");
-        if (obj.previous == null) {
-            json.writeNull();
-        } else {
-            writeTrackEntry(obj.previous);
-        }
+        writeProperty(obj, "getPrevious()", {"kind":"object","name":"previous","getter":"getPrevious()","valueType":"AnimationState.TrackEntry","writeMethodCall":"writeTrackEntry","isNullable":true});
 
         json.writeName("mixTime");
-        json.writeValue(obj.mixTime);
+        writeProperty(obj, "getMixTime()", {"kind":"primitive","name":"mixTime","getter":"getMixTime()","valueType":"float","isNullable":false});
 
         json.writeName("mixDuration");
-        json.writeValue(obj.mixDuration);
+        writeProperty(obj, "getMixDuration()", {"kind":"primitive","name":"mixDuration","getter":"getMixDuration()","valueType":"float","isNullable":false});
 
         json.writeName("mixBlend");
-        switch (obj.mixBlend) {
-            case MixBlend.setup: json.writeValue("setup");
-            case MixBlend.first: json.writeValue("first");
-            case MixBlend.replace: json.writeValue("replace");
-            case MixBlend.add: json.writeValue("add");
-            default: json.writeValue("unknown");
-        }
+        writeProperty(obj, "getMixBlend()", {"kind":"enum","name":"mixBlend","getter":"getMixBlend()","enumName":"MixBlend","isNullable":false});
 
         json.writeName("mixingFrom");
-        if (obj.mixingFrom == null) {
-            json.writeNull();
-        } else {
-            writeTrackEntry(obj.mixingFrom);
-        }
+        writeProperty(obj, "getMixingFrom()", {"kind":"object","name":"mixingFrom","getter":"getMixingFrom()","valueType":"AnimationState.TrackEntry","writeMethodCall":"writeTrackEntry","isNullable":true});
 
         json.writeName("mixingTo");
-        if (obj.mixingTo == null) {
-            json.writeNull();
-        } else {
-            writeTrackEntry(obj.mixingTo);
-        }
+        writeProperty(obj, "getMixingTo()", {"kind":"object","name":"mixingTo","getter":"getMixingTo()","valueType":"AnimationState.TrackEntry","writeMethodCall":"writeTrackEntry","isNullable":true});
 
         json.writeName("holdPrevious");
-        json.writeValue(obj.holdPrevious);
+        writeProperty(obj, "getHoldPrevious()", {"kind":"primitive","name":"holdPrevious","getter":"getHoldPrevious()","valueType":"boolean","isNullable":false});
 
         json.writeName("shortestRotation");
-        json.writeValue(obj.shortestRotation);
+        writeProperty(obj, "getShortestRotation()", {"kind":"primitive","name":"shortestRotation","getter":"getShortestRotation()","valueType":"boolean","isNullable":false});
 
         json.writeName("reverse");
-        json.writeValue(obj.reverse);
+        writeProperty(obj, "getReverse()", {"kind":"primitive","name":"reverse","getter":"getReverse()","valueType":"boolean","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeAnimationStateData(obj:AnimationStateData):Void {
+    private function writeAnimationStateData(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<AnimationStateData-" + (nextId++) + ">";
+
+        var refString = "<AnimationStateData-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1904,38 +1656,39 @@ class SkeletonSerializer {
         json.writeValue("AnimationStateData");
 
         json.writeName("skeletonData");
-        writeSkeletonData(obj.skeletonData);
+        writeProperty(obj, "getSkeletonData()", {"kind":"object","name":"skeletonData","getter":"getSkeletonData()","valueType":"SkeletonData","writeMethodCall":"writeSkeletonData","isNullable":false});
 
         json.writeName("defaultMix");
-        json.writeValue(obj.defaultMix);
+        writeProperty(obj, "getDefaultMix()", {"kind":"primitive","name":"defaultMix","getter":"getDefaultMix()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeAttachment(obj:Attachment):Void {
+    private function writeAttachment(obj:Dynamic):Void {
         if (Std.isOfType(obj, BoundingBoxAttachment)) {
-            writeBoundingBoxAttachment(cast(obj, BoundingBoxAttachment));
+            writeBoundingBoxAttachment(obj);
         } else if (Std.isOfType(obj, ClippingAttachment)) {
-            writeClippingAttachment(cast(obj, ClippingAttachment));
+            writeClippingAttachment(obj);
         } else if (Std.isOfType(obj, MeshAttachment)) {
-            writeMeshAttachment(cast(obj, MeshAttachment));
+            writeMeshAttachment(obj);
         } else if (Std.isOfType(obj, PathAttachment)) {
-            writePathAttachment(cast(obj, PathAttachment));
+            writePathAttachment(obj);
         } else if (Std.isOfType(obj, PointAttachment)) {
-            writePointAttachment(cast(obj, PointAttachment));
+            writePointAttachment(obj);
         } else if (Std.isOfType(obj, RegionAttachment)) {
-            writeRegionAttachment(cast(obj, RegionAttachment));
+            writeRegionAttachment(obj);
         } else {
             throw new spine.SpineException("Unknown Attachment type");
         }
     }
 
-    private function writeBone(obj:Bone):Void {
+    private function writeBone(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<Bone-" + (nextId++) + ">";
+
+        var refString = "<Bone-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1945,37 +1698,31 @@ class SkeletonSerializer {
         json.writeValue("Bone");
 
         json.writeName("parent");
-        if (obj.parent == null) {
-            json.writeNull();
-        } else {
-            writeBone(obj.parent);
-        }
+        writeProperty(obj, "getParent()", {"kind":"object","name":"parent","getter":"getParent()","valueType":"Bone","writeMethodCall":"writeBone","isNullable":true});
 
         json.writeName("children");
-        json.writeArrayStart();
-        for (item in obj.children) {
-            writeBone(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getChildren()", {"kind":"array","name":"children","getter":"getChildren()","elementType":"Bone","elementKind":"object","writeMethodCall":"writeBone","isNullable":false});
 
         json.writeName("data");
-        writeBoneData(obj.data);
+        writeProperty(obj, "getData()", {"kind":"object","name":"data","getter":"getData()","valueType":"BoneData","writeMethodCall":"writeBoneData","isNullable":false});
 
         json.writeName("pose");
-        writeBoneLocal(obj.pose);
+        writeProperty(obj, "getPose()", {"kind":"object","name":"pose","getter":"getPose()","valueType":"BoneLocal","writeMethodCall":"writeBoneLocal","isNullable":false});
 
         json.writeName("appliedPose");
-        writeBonePose(obj.applied);
+        writeProperty(obj, "getAppliedPose()", {"kind":"object","name":"appliedPose","getter":"getAppliedPose()","valueType":"BonePose","writeMethodCall":"writeBonePose","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeBoneData(obj:BoneData):Void {
+    private function writeBoneData(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<BoneData-" + obj.name + ">" : "<BoneData-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<BoneData-" + nameValue + ">" : "<BoneData-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -1985,45 +1732,42 @@ class SkeletonSerializer {
         json.writeValue("BoneData");
 
         json.writeName("index");
-        json.writeValue(obj.index);
+        writeProperty(obj, "getIndex()", {"kind":"primitive","name":"index","getter":"getIndex()","valueType":"int","isNullable":false});
 
         json.writeName("parent");
-        if (obj.parent == null) {
-            json.writeNull();
-        } else {
-            writeBoneData(obj.parent);
-        }
+        writeProperty(obj, "getParent()", {"kind":"object","name":"parent","getter":"getParent()","valueType":"BoneData","writeMethodCall":"writeBoneData","isNullable":true});
 
         json.writeName("length");
-        json.writeValue(obj.length);
+        writeProperty(obj, "getLength()", {"kind":"primitive","name":"length","getter":"getLength()","valueType":"float","isNullable":false});
 
         json.writeName("color");
-        writeColor(obj.color);
+        writeProperty(obj, "getColor()", {"kind":"object","name":"color","getter":"getColor()","valueType":"Color","writeMethodCall":"writeColor","isNullable":false});
 
         json.writeName("icon");
-        json.writeValue(obj.icon);
+        writeProperty(obj, "getIcon()", {"kind":"primitive","name":"icon","getter":"getIcon()","valueType":"String","isNullable":true});
 
         json.writeName("visible");
-        json.writeValue(obj.visible);
+        writeProperty(obj, "getVisible()", {"kind":"primitive","name":"visible","getter":"getVisible()","valueType":"boolean","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeName("setupPose");
-        writeBoneLocal(obj.setup);
+        writeProperty(obj, "getSetupPose()", {"kind":"object","name":"setupPose","getter":"getSetupPose()","valueType":"BoneLocal","writeMethodCall":"writeBoneLocal","isNullable":false});
 
         json.writeName("skinRequired");
-        json.writeValue(obj.skinRequired);
+        writeProperty(obj, "getSkinRequired()", {"kind":"primitive","name":"skinRequired","getter":"getSkinRequired()","valueType":"boolean","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeBoneLocal(obj:BoneLocal):Void {
+    private function writeBoneLocal(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<BoneLocal-" + (nextId++) + ">";
+
+        var refString = "<BoneLocal-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2033,45 +1777,39 @@ class SkeletonSerializer {
         json.writeValue("BoneLocal");
 
         json.writeName("x");
-        json.writeValue(obj.x);
+        writeProperty(obj, "getX()", {"kind":"primitive","name":"x","getter":"getX()","valueType":"float","isNullable":false});
 
         json.writeName("y");
-        json.writeValue(obj.y);
+        writeProperty(obj, "getY()", {"kind":"primitive","name":"y","getter":"getY()","valueType":"float","isNullable":false});
 
         json.writeName("rotation");
-        json.writeValue(obj.rotation);
+        writeProperty(obj, "getRotation()", {"kind":"primitive","name":"rotation","getter":"getRotation()","valueType":"float","isNullable":false});
 
         json.writeName("scaleX");
-        json.writeValue(obj.scaleX);
+        writeProperty(obj, "getScaleX()", {"kind":"primitive","name":"scaleX","getter":"getScaleX()","valueType":"float","isNullable":false});
 
         json.writeName("scaleY");
-        json.writeValue(obj.scaleY);
+        writeProperty(obj, "getScaleY()", {"kind":"primitive","name":"scaleY","getter":"getScaleY()","valueType":"float","isNullable":false});
 
         json.writeName("shearX");
-        json.writeValue(obj.shearX);
+        writeProperty(obj, "getShearX()", {"kind":"primitive","name":"shearX","getter":"getShearX()","valueType":"float","isNullable":false});
 
         json.writeName("shearY");
-        json.writeValue(obj.shearY);
+        writeProperty(obj, "getShearY()", {"kind":"primitive","name":"shearY","getter":"getShearY()","valueType":"float","isNullable":false});
 
         json.writeName("inherit");
-        switch (obj.inherit) {
-            case Inherit.normal: json.writeValue("normal");
-            case Inherit.onlyTranslation: json.writeValue("onlyTranslation");
-            case Inherit.noRotationOrReflection: json.writeValue("noRotationOrReflection");
-            case Inherit.noScale: json.writeValue("noScale");
-            case Inherit.noScaleOrReflection: json.writeValue("noScaleOrReflection");
-            default: json.writeValue("unknown");
-        }
+        writeProperty(obj, "getInherit()", {"kind":"enum","name":"inherit","getter":"getInherit()","enumName":"Inherit","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeBonePose(obj:BonePose):Void {
+    private function writeBonePose(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<BonePose-" + (nextId++) + ">";
+
+        var refString = "<BonePose-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2081,75 +1819,70 @@ class SkeletonSerializer {
         json.writeValue("BonePose");
 
         json.writeName("a");
-        json.writeValue(obj.a);
+        writeProperty(obj, "getA()", {"kind":"primitive","name":"a","getter":"getA()","valueType":"float","isNullable":false});
 
         json.writeName("b");
-        json.writeValue(obj.b);
+        writeProperty(obj, "getB()", {"kind":"primitive","name":"b","getter":"getB()","valueType":"float","isNullable":false});
 
         json.writeName("c");
-        json.writeValue(obj.c);
+        writeProperty(obj, "getC()", {"kind":"primitive","name":"c","getter":"getC()","valueType":"float","isNullable":false});
 
         json.writeName("d");
-        json.writeValue(obj.d);
+        writeProperty(obj, "getD()", {"kind":"primitive","name":"d","getter":"getD()","valueType":"float","isNullable":false});
 
         json.writeName("worldX");
-        json.writeValue(obj.worldX);
+        writeProperty(obj, "getWorldX()", {"kind":"primitive","name":"worldX","getter":"getWorldX()","valueType":"float","isNullable":false});
 
         json.writeName("worldY");
-        json.writeValue(obj.worldY);
+        writeProperty(obj, "getWorldY()", {"kind":"primitive","name":"worldY","getter":"getWorldY()","valueType":"float","isNullable":false});
 
         json.writeName("worldRotationX");
-        json.writeValue(obj.worldRotationX);
+        writeProperty(obj, "getWorldRotationX()", {"kind":"primitive","name":"worldRotationX","getter":"getWorldRotationX()","valueType":"float","isNullable":false});
 
         json.writeName("worldRotationY");
-        json.writeValue(obj.worldRotationY);
+        writeProperty(obj, "getWorldRotationY()", {"kind":"primitive","name":"worldRotationY","getter":"getWorldRotationY()","valueType":"float","isNullable":false});
 
         json.writeName("worldScaleX");
-        json.writeValue(obj.worldScaleX);
+        writeProperty(obj, "getWorldScaleX()", {"kind":"primitive","name":"worldScaleX","getter":"getWorldScaleX()","valueType":"float","isNullable":false});
 
         json.writeName("worldScaleY");
-        json.writeValue(obj.worldScaleY);
+        writeProperty(obj, "getWorldScaleY()", {"kind":"primitive","name":"worldScaleY","getter":"getWorldScaleY()","valueType":"float","isNullable":false});
 
         json.writeName("x");
-        json.writeValue(obj.x);
+        writeProperty(obj, "getX()", {"kind":"primitive","name":"x","getter":"getX()","valueType":"float","isNullable":false});
 
         json.writeName("y");
-        json.writeValue(obj.y);
+        writeProperty(obj, "getY()", {"kind":"primitive","name":"y","getter":"getY()","valueType":"float","isNullable":false});
 
         json.writeName("rotation");
-        json.writeValue(obj.rotation);
+        writeProperty(obj, "getRotation()", {"kind":"primitive","name":"rotation","getter":"getRotation()","valueType":"float","isNullable":false});
 
         json.writeName("scaleX");
-        json.writeValue(obj.scaleX);
+        writeProperty(obj, "getScaleX()", {"kind":"primitive","name":"scaleX","getter":"getScaleX()","valueType":"float","isNullable":false});
 
         json.writeName("scaleY");
-        json.writeValue(obj.scaleY);
+        writeProperty(obj, "getScaleY()", {"kind":"primitive","name":"scaleY","getter":"getScaleY()","valueType":"float","isNullable":false});
 
         json.writeName("shearX");
-        json.writeValue(obj.shearX);
+        writeProperty(obj, "getShearX()", {"kind":"primitive","name":"shearX","getter":"getShearX()","valueType":"float","isNullable":false});
 
         json.writeName("shearY");
-        json.writeValue(obj.shearY);
+        writeProperty(obj, "getShearY()", {"kind":"primitive","name":"shearY","getter":"getShearY()","valueType":"float","isNullable":false});
 
         json.writeName("inherit");
-        switch (obj.inherit) {
-            case Inherit.normal: json.writeValue("normal");
-            case Inherit.onlyTranslation: json.writeValue("onlyTranslation");
-            case Inherit.noRotationOrReflection: json.writeValue("noRotationOrReflection");
-            case Inherit.noScale: json.writeValue("noScale");
-            case Inherit.noScaleOrReflection: json.writeValue("noScaleOrReflection");
-            default: json.writeValue("unknown");
-        }
+        writeProperty(obj, "getInherit()", {"kind":"enum","name":"inherit","getter":"getInherit()","enumName":"Inherit","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeBoundingBoxAttachment(obj:BoundingBoxAttachment):Void {
+    private function writeBoundingBoxAttachment(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<BoundingBoxAttachment-" + obj.name + ">" : "<BoundingBoxAttachment-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<BoundingBoxAttachment-" + nameValue + ">" : "<BoundingBoxAttachment-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2159,51 +1892,37 @@ class SkeletonSerializer {
         json.writeValue("BoundingBoxAttachment");
 
         json.writeName("color");
-        writeColor(obj.color);
+        writeProperty(obj, "getColor()", {"kind":"object","name":"color","getter":"getColor()","valueType":"Color","writeMethodCall":"writeColor","isNullable":false});
 
         json.writeName("bones");
-        if (obj.bones == null) {
-            json.writeNull();
-        } else {
-            json.writeArrayStart();
-            for (item in obj.bones) {
-                json.writeValue(item);
-            }
-            json.writeArrayEnd();
-        }
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"int","elementKind":"primitive","isNullable":true});
 
         json.writeName("vertices");
-        json.writeArrayStart();
-        for (item in obj.vertices) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getVertices()", {"kind":"array","name":"vertices","getter":"getVertices()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("worldVerticesLength");
-        json.writeValue(obj.worldVerticesLength);
+        writeProperty(obj, "getWorldVerticesLength()", {"kind":"primitive","name":"worldVerticesLength","getter":"getWorldVerticesLength()","valueType":"int","isNullable":false});
 
         json.writeName("timelineAttachment");
-        if (obj.timelineAttachment == null) {
-            json.writeNull();
-        } else {
-            writeAttachment(obj.timelineAttachment);
-        }
+        writeProperty(obj, "getTimelineAttachment()", {"kind":"object","name":"timelineAttachment","getter":"getTimelineAttachment()","valueType":"Attachment","writeMethodCall":"writeAttachment","isNullable":true});
 
         json.writeName("id");
-        json.writeValue(obj.id);
+        writeProperty(obj, "getId()", {"kind":"primitive","name":"id","getter":"getId()","valueType":"int","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeClippingAttachment(obj:ClippingAttachment):Void {
+    private function writeClippingAttachment(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<ClippingAttachment-" + obj.name + ">" : "<ClippingAttachment-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<ClippingAttachment-" + nameValue + ">" : "<ClippingAttachment-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2213,90 +1932,71 @@ class SkeletonSerializer {
         json.writeValue("ClippingAttachment");
 
         json.writeName("endSlot");
-        if (obj.endSlot == null) {
-            json.writeNull();
-        } else {
-            writeSlotData(obj.endSlot);
-        }
+        writeProperty(obj, "getEndSlot()", {"kind":"object","name":"endSlot","getter":"getEndSlot()","valueType":"SlotData","writeMethodCall":"writeSlotData","isNullable":true});
 
         json.writeName("color");
-        writeColor(obj.color);
+        writeProperty(obj, "getColor()", {"kind":"object","name":"color","getter":"getColor()","valueType":"Color","writeMethodCall":"writeColor","isNullable":false});
 
         json.writeName("bones");
-        if (obj.bones == null) {
-            json.writeNull();
-        } else {
-            json.writeArrayStart();
-            for (item in obj.bones) {
-                json.writeValue(item);
-            }
-            json.writeArrayEnd();
-        }
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"int","elementKind":"primitive","isNullable":true});
 
         json.writeName("vertices");
-        json.writeArrayStart();
-        for (item in obj.vertices) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getVertices()", {"kind":"array","name":"vertices","getter":"getVertices()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("worldVerticesLength");
-        json.writeValue(obj.worldVerticesLength);
+        writeProperty(obj, "getWorldVerticesLength()", {"kind":"primitive","name":"worldVerticesLength","getter":"getWorldVerticesLength()","valueType":"int","isNullable":false});
 
         json.writeName("timelineAttachment");
-        if (obj.timelineAttachment == null) {
-            json.writeNull();
-        } else {
-            writeAttachment(obj.timelineAttachment);
-        }
+        writeProperty(obj, "getTimelineAttachment()", {"kind":"object","name":"timelineAttachment","getter":"getTimelineAttachment()","valueType":"Attachment","writeMethodCall":"writeAttachment","isNullable":true});
 
         json.writeName("id");
-        json.writeValue(obj.id);
+        writeProperty(obj, "getId()", {"kind":"primitive","name":"id","getter":"getId()","valueType":"int","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeConstraint(obj:Constraint<Dynamic, Dynamic, Dynamic>):Void {
+    private function writeConstraint(obj:Dynamic):Void {
         if (Std.isOfType(obj, IkConstraint)) {
-            writeIkConstraint(cast(obj, IkConstraint));
+            writeIkConstraint(obj);
         } else if (Std.isOfType(obj, PathConstraint)) {
-            writePathConstraint(cast(obj, PathConstraint));
+            writePathConstraint(obj);
         } else if (Std.isOfType(obj, PhysicsConstraint)) {
-            writePhysicsConstraint(cast(obj, PhysicsConstraint));
+            writePhysicsConstraint(obj);
         } else if (Std.isOfType(obj, Slider)) {
-            writeSlider(cast(obj, Slider));
+            writeSlider(obj);
         } else if (Std.isOfType(obj, TransformConstraint)) {
-            writeTransformConstraint(cast(obj, TransformConstraint));
+            writeTransformConstraint(obj);
         } else {
             throw new spine.SpineException("Unknown Constraint type");
         }
     }
 
-    private function writeConstraintData(obj:ConstraintData<Dynamic, Dynamic>):Void {
+    private function writeConstraintData(obj:Dynamic):Void {
         if (Std.isOfType(obj, IkConstraintData)) {
-            writeIkConstraintData(cast(obj, IkConstraintData));
+            writeIkConstraintData(obj);
         } else if (Std.isOfType(obj, PathConstraintData)) {
-            writePathConstraintData(cast(obj, PathConstraintData));
+            writePathConstraintData(obj);
         } else if (Std.isOfType(obj, PhysicsConstraintData)) {
-            writePhysicsConstraintData(cast(obj, PhysicsConstraintData));
+            writePhysicsConstraintData(obj);
         } else if (Std.isOfType(obj, SliderData)) {
-            writeSliderData(cast(obj, SliderData));
+            writeSliderData(obj);
         } else if (Std.isOfType(obj, TransformConstraintData)) {
-            writeTransformConstraintData(cast(obj, TransformConstraintData));
+            writeTransformConstraintData(obj);
         } else {
             throw new spine.SpineException("Unknown ConstraintData type");
         }
     }
 
-    private function writeEvent(obj:Event):Void {
+    private function writeEvent(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<Event-" + (nextId++) + ">";
+
+        var refString = "<Event-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2306,35 +2006,37 @@ class SkeletonSerializer {
         json.writeValue("Event");
 
         json.writeName("int");
-        json.writeValue(obj.intValue);
+        writeProperty(obj, "getInt()", {"kind":"primitive","name":"int","getter":"getInt()","valueType":"int","isNullable":false});
 
         json.writeName("float");
-        json.writeValue(obj.floatValue);
+        writeProperty(obj, "getFloat()", {"kind":"primitive","name":"float","getter":"getFloat()","valueType":"float","isNullable":false});
 
         json.writeName("string");
-        json.writeValue(obj.stringValue);
+        writeProperty(obj, "getString()", {"kind":"primitive","name":"string","getter":"getString()","valueType":"String","isNullable":false});
 
         json.writeName("volume");
-        json.writeValue(obj.volume);
+        writeProperty(obj, "getVolume()", {"kind":"primitive","name":"volume","getter":"getVolume()","valueType":"float","isNullable":false});
 
         json.writeName("balance");
-        json.writeValue(obj.balance);
+        writeProperty(obj, "getBalance()", {"kind":"primitive","name":"balance","getter":"getBalance()","valueType":"float","isNullable":false});
 
         json.writeName("time");
-        json.writeValue(obj.time);
+        writeProperty(obj, "getTime()", {"kind":"primitive","name":"time","getter":"getTime()","valueType":"float","isNullable":false});
 
         json.writeName("data");
-        writeEventData(obj.data);
+        writeProperty(obj, "getData()", {"kind":"object","name":"data","getter":"getData()","valueType":"EventData","writeMethodCall":"writeEventData","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeEventData(obj:EventData):Void {
+    private function writeEventData(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<EventData-" + obj.name + ">" : "<EventData-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<EventData-" + nameValue + ">" : "<EventData-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2344,35 +2046,36 @@ class SkeletonSerializer {
         json.writeValue("EventData");
 
         json.writeName("int");
-        json.writeValue(obj.intValue);
+        writeProperty(obj, "getInt()", {"kind":"primitive","name":"int","getter":"getInt()","valueType":"int","isNullable":false});
 
         json.writeName("float");
-        json.writeValue(obj.floatValue);
+        writeProperty(obj, "getFloat()", {"kind":"primitive","name":"float","getter":"getFloat()","valueType":"float","isNullable":false});
 
         json.writeName("string");
-        json.writeValue(obj.stringValue);
+        writeProperty(obj, "getString()", {"kind":"primitive","name":"string","getter":"getString()","valueType":"String","isNullable":false});
 
         json.writeName("audioPath");
-        json.writeValue(obj.audioPath);
+        writeProperty(obj, "getAudioPath()", {"kind":"primitive","name":"audioPath","getter":"getAudioPath()","valueType":"String","isNullable":false});
 
         json.writeName("volume");
-        json.writeValue(obj.volume);
+        writeProperty(obj, "getVolume()", {"kind":"primitive","name":"volume","getter":"getVolume()","valueType":"float","isNullable":false});
 
         json.writeName("balance");
-        json.writeValue(obj.balance);
+        writeProperty(obj, "getBalance()", {"kind":"primitive","name":"balance","getter":"getBalance()","valueType":"float","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeIkConstraint(obj:IkConstraint):Void {
+    private function writeIkConstraint(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<IkConstraint-" + (nextId++) + ">";
+
+        var refString = "<IkConstraint-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2382,33 +2085,31 @@ class SkeletonSerializer {
         json.writeValue("IkConstraint");
 
         json.writeName("bones");
-        json.writeArrayStart();
-        for (item in obj.bones) {
-            writeBonePose(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"BonePose","elementKind":"object","writeMethodCall":"writeBonePose","isNullable":false});
 
         json.writeName("target");
-        writeBone(obj.target);
+        writeProperty(obj, "getTarget()", {"kind":"object","name":"target","getter":"getTarget()","valueType":"Bone","writeMethodCall":"writeBone","isNullable":false});
 
         json.writeName("data");
-        writeIkConstraintData(obj.data);
+        writeProperty(obj, "getData()", {"kind":"object","name":"data","getter":"getData()","valueType":"IkConstraintData","writeMethodCall":"writeIkConstraintData","isNullable":false});
 
         json.writeName("pose");
-        writeIkConstraintPose(obj.pose);
+        writeProperty(obj, "getPose()", {"kind":"object","name":"pose","getter":"getPose()","valueType":"IkConstraintPose","writeMethodCall":"writeIkConstraintPose","isNullable":false});
 
         json.writeName("appliedPose");
-        writeIkConstraintPose(obj.applied);
+        writeProperty(obj, "getAppliedPose()", {"kind":"object","name":"appliedPose","getter":"getAppliedPose()","valueType":"IkConstraintPose","writeMethodCall":"writeIkConstraintPose","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeIkConstraintData(obj:IkConstraintData):Void {
+    private function writeIkConstraintData(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<IkConstraintData-" + obj.name + ">" : "<IkConstraintData-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<IkConstraintData-" + nameValue + ">" : "<IkConstraintData-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2418,36 +2119,33 @@ class SkeletonSerializer {
         json.writeValue("IkConstraintData");
 
         json.writeName("bones");
-        json.writeArrayStart();
-        for (item in obj.bones) {
-            writeBoneData(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"BoneData","elementKind":"object","writeMethodCall":"writeBoneData","isNullable":false});
 
         json.writeName("target");
-        writeBoneData(obj.target);
+        writeProperty(obj, "getTarget()", {"kind":"object","name":"target","getter":"getTarget()","valueType":"BoneData","writeMethodCall":"writeBoneData","isNullable":false});
 
         json.writeName("uniform");
-        json.writeValue(obj.uniform);
+        writeProperty(obj, "getUniform()", {"kind":"primitive","name":"uniform","getter":"getUniform()","valueType":"boolean","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeName("setupPose");
-        writeIkConstraintPose(obj.setup);
+        writeProperty(obj, "getSetupPose()", {"kind":"object","name":"setupPose","getter":"getSetupPose()","valueType":"IkConstraintPose","writeMethodCall":"writeIkConstraintPose","isNullable":false});
 
         json.writeName("skinRequired");
-        json.writeValue(obj.skinRequired);
+        writeProperty(obj, "getSkinRequired()", {"kind":"primitive","name":"skinRequired","getter":"getSkinRequired()","valueType":"boolean","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeIkConstraintPose(obj:IkConstraintPose):Void {
+    private function writeIkConstraintPose(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<IkConstraintPose-" + (nextId++) + ">";
+
+        var refString = "<IkConstraintPose-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2457,29 +2155,31 @@ class SkeletonSerializer {
         json.writeValue("IkConstraintPose");
 
         json.writeName("mix");
-        json.writeValue(obj.mix);
+        writeProperty(obj, "getMix()", {"kind":"primitive","name":"mix","getter":"getMix()","valueType":"float","isNullable":false});
 
         json.writeName("softness");
-        json.writeValue(obj.softness);
+        writeProperty(obj, "getSoftness()", {"kind":"primitive","name":"softness","getter":"getSoftness()","valueType":"float","isNullable":false});
 
         json.writeName("bendDirection");
-        json.writeValue(obj.bendDirection);
+        writeProperty(obj, "getBendDirection()", {"kind":"primitive","name":"bendDirection","getter":"getBendDirection()","valueType":"int","isNullable":false});
 
         json.writeName("compress");
-        json.writeValue(obj.compress);
+        writeProperty(obj, "getCompress()", {"kind":"primitive","name":"compress","getter":"getCompress()","valueType":"boolean","isNullable":false});
 
         json.writeName("stretch");
-        json.writeValue(obj.stretch);
+        writeProperty(obj, "getStretch()", {"kind":"primitive","name":"stretch","getter":"getStretch()","valueType":"boolean","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeMeshAttachment(obj:MeshAttachment):Void {
+    private function writeMeshAttachment(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<MeshAttachment-" + obj.name + ">" : "<MeshAttachment-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<MeshAttachment-" + nameValue + ">" : "<MeshAttachment-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2489,116 +2189,70 @@ class SkeletonSerializer {
         json.writeValue("MeshAttachment");
 
         json.writeName("region");
-        if (obj.region == null) {
-            json.writeNull();
-        } else {
-            writeTextureRegion(obj.region);
-        }
+        writeProperty(obj, "getRegion()", {"kind":"object","name":"region","getter":"getRegion()","valueType":"TextureRegion","writeMethodCall":"writeTextureRegion","isNullable":true});
 
         json.writeName("triangles");
-        json.writeArrayStart();
-        for (item in obj.triangles) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getTriangles()", {"kind":"array","name":"triangles","getter":"getTriangles()","elementType":"short","elementKind":"primitive","isNullable":false});
 
         json.writeName("regionUVs");
-        json.writeArrayStart();
-        for (item in obj.regionUVs) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getRegionUVs()", {"kind":"array","name":"regionUVs","getter":"getRegionUVs()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("uVs");
-        json.writeArrayStart();
-        for (item in obj.uvs) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getUVs()", {"kind":"array","name":"uVs","getter":"getUVs()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("color");
-        writeColor(obj.color);
+        writeProperty(obj, "getColor()", {"kind":"object","name":"color","getter":"getColor()","valueType":"Color","writeMethodCall":"writeColor","isNullable":false});
 
         json.writeName("path");
-        json.writeValue(obj.path);
+        writeProperty(obj, "getPath()", {"kind":"primitive","name":"path","getter":"getPath()","valueType":"String","isNullable":false});
 
         json.writeName("hullLength");
-        json.writeValue(obj.hullLength);
+        writeProperty(obj, "getHullLength()", {"kind":"primitive","name":"hullLength","getter":"getHullLength()","valueType":"int","isNullable":false});
 
         json.writeName("edges");
-        if (obj.edges == null) {
-            json.writeNull();
-        } else {
-            json.writeArrayStart();
-            for (item in obj.edges) {
-                json.writeValue(item);
-            }
-            json.writeArrayEnd();
-        }
+        writeProperty(obj, "getEdges()", {"kind":"array","name":"edges","getter":"getEdges()","elementType":"short","elementKind":"primitive","isNullable":true});
 
         json.writeName("width");
-        json.writeValue(obj.width);
+        writeProperty(obj, "getWidth()", {"kind":"primitive","name":"width","getter":"getWidth()","valueType":"float","isNullable":false});
 
         json.writeName("height");
-        json.writeValue(obj.height);
+        writeProperty(obj, "getHeight()", {"kind":"primitive","name":"height","getter":"getHeight()","valueType":"float","isNullable":false});
 
         json.writeName("sequence");
-        if (obj.sequence == null) {
-            json.writeNull();
-        } else {
-            writeSequence(obj.sequence);
-        }
+        writeProperty(obj, "getSequence()", {"kind":"object","name":"sequence","getter":"getSequence()","valueType":"Sequence","writeMethodCall":"writeSequence","isNullable":true});
 
         json.writeName("parentMesh");
-        if (obj.parentMesh == null) {
-            json.writeNull();
-        } else {
-            writeMeshAttachment(obj.parentMesh);
-        }
+        writeProperty(obj, "getParentMesh()", {"kind":"object","name":"parentMesh","getter":"getParentMesh()","valueType":"MeshAttachment","writeMethodCall":"writeMeshAttachment","isNullable":true});
 
         json.writeName("bones");
-        if (obj.bones == null) {
-            json.writeNull();
-        } else {
-            json.writeArrayStart();
-            for (item in obj.bones) {
-                json.writeValue(item);
-            }
-            json.writeArrayEnd();
-        }
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"int","elementKind":"primitive","isNullable":true});
 
         json.writeName("vertices");
-        json.writeArrayStart();
-        for (item in obj.vertices) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getVertices()", {"kind":"array","name":"vertices","getter":"getVertices()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("worldVerticesLength");
-        json.writeValue(obj.worldVerticesLength);
+        writeProperty(obj, "getWorldVerticesLength()", {"kind":"primitive","name":"worldVerticesLength","getter":"getWorldVerticesLength()","valueType":"int","isNullable":false});
 
         json.writeName("timelineAttachment");
-        if (obj.timelineAttachment == null) {
-            json.writeNull();
-        } else {
-            writeAttachment(obj.timelineAttachment);
-        }
+        writeProperty(obj, "getTimelineAttachment()", {"kind":"object","name":"timelineAttachment","getter":"getTimelineAttachment()","valueType":"Attachment","writeMethodCall":"writeAttachment","isNullable":true});
 
         json.writeName("id");
-        json.writeValue(obj.id);
+        writeProperty(obj, "getId()", {"kind":"primitive","name":"id","getter":"getId()","valueType":"int","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePathAttachment(obj:PathAttachment):Void {
+    private function writePathAttachment(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<PathAttachment-" + obj.name + ">" : "<PathAttachment-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<PathAttachment-" + nameValue + ">" : "<PathAttachment-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2608,64 +2262,45 @@ class SkeletonSerializer {
         json.writeValue("PathAttachment");
 
         json.writeName("closed");
-        json.writeValue(obj.closed);
+        writeProperty(obj, "getClosed()", {"kind":"primitive","name":"closed","getter":"getClosed()","valueType":"boolean","isNullable":false});
 
         json.writeName("constantSpeed");
-        json.writeValue(obj.constantSpeed);
+        writeProperty(obj, "getConstantSpeed()", {"kind":"primitive","name":"constantSpeed","getter":"getConstantSpeed()","valueType":"boolean","isNullable":false});
 
         json.writeName("lengths");
-        json.writeArrayStart();
-        for (item in obj.lengths) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getLengths()", {"kind":"array","name":"lengths","getter":"getLengths()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("color");
-        writeColor(obj.color);
+        writeProperty(obj, "getColor()", {"kind":"object","name":"color","getter":"getColor()","valueType":"Color","writeMethodCall":"writeColor","isNullable":false});
 
         json.writeName("bones");
-        if (obj.bones == null) {
-            json.writeNull();
-        } else {
-            json.writeArrayStart();
-            for (item in obj.bones) {
-                json.writeValue(item);
-            }
-            json.writeArrayEnd();
-        }
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"int","elementKind":"primitive","isNullable":true});
 
         json.writeName("vertices");
-        json.writeArrayStart();
-        for (item in obj.vertices) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getVertices()", {"kind":"array","name":"vertices","getter":"getVertices()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("worldVerticesLength");
-        json.writeValue(obj.worldVerticesLength);
+        writeProperty(obj, "getWorldVerticesLength()", {"kind":"primitive","name":"worldVerticesLength","getter":"getWorldVerticesLength()","valueType":"int","isNullable":false});
 
         json.writeName("timelineAttachment");
-        if (obj.timelineAttachment == null) {
-            json.writeNull();
-        } else {
-            writeAttachment(obj.timelineAttachment);
-        }
+        writeProperty(obj, "getTimelineAttachment()", {"kind":"object","name":"timelineAttachment","getter":"getTimelineAttachment()","valueType":"Attachment","writeMethodCall":"writeAttachment","isNullable":true});
 
         json.writeName("id");
-        json.writeValue(obj.id);
+        writeProperty(obj, "getId()", {"kind":"primitive","name":"id","getter":"getId()","valueType":"int","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePathConstraint(obj:PathConstraint):Void {
+    private function writePathConstraint(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PathConstraint-" + (nextId++) + ">";
+
+        var refString = "<PathConstraint-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2675,33 +2310,31 @@ class SkeletonSerializer {
         json.writeValue("PathConstraint");
 
         json.writeName("bones");
-        json.writeArrayStart();
-        for (item in obj.bones) {
-            writeBonePose(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"BonePose","elementKind":"object","writeMethodCall":"writeBonePose","isNullable":false});
 
         json.writeName("slot");
-        writeSlot(obj.slot);
+        writeProperty(obj, "getSlot()", {"kind":"object","name":"slot","getter":"getSlot()","valueType":"Slot","writeMethodCall":"writeSlot","isNullable":false});
 
         json.writeName("data");
-        writePathConstraintData(obj.data);
+        writeProperty(obj, "getData()", {"kind":"object","name":"data","getter":"getData()","valueType":"PathConstraintData","writeMethodCall":"writePathConstraintData","isNullable":false});
 
         json.writeName("pose");
-        writePathConstraintPose(obj.pose);
+        writeProperty(obj, "getPose()", {"kind":"object","name":"pose","getter":"getPose()","valueType":"PathConstraintPose","writeMethodCall":"writePathConstraintPose","isNullable":false});
 
         json.writeName("appliedPose");
-        writePathConstraintPose(obj.applied);
+        writeProperty(obj, "getAppliedPose()", {"kind":"object","name":"appliedPose","getter":"getAppliedPose()","valueType":"PathConstraintPose","writeMethodCall":"writePathConstraintPose","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePathConstraintData(obj:PathConstraintData):Void {
+    private function writePathConstraintData(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<PathConstraintData-" + obj.name + ">" : "<PathConstraintData-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<PathConstraintData-" + nameValue + ">" : "<PathConstraintData-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2711,60 +2344,42 @@ class SkeletonSerializer {
         json.writeValue("PathConstraintData");
 
         json.writeName("bones");
-        json.writeArrayStart();
-        for (item in obj.bones) {
-            writeBoneData(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"BoneData","elementKind":"object","writeMethodCall":"writeBoneData","isNullable":false});
 
         json.writeName("slot");
-        writeSlotData(obj.slot);
+        writeProperty(obj, "getSlot()", {"kind":"object","name":"slot","getter":"getSlot()","valueType":"SlotData","writeMethodCall":"writeSlotData","isNullable":false});
 
         json.writeName("positionMode");
-        switch (obj.positionMode) {
-            case PositionMode.fixed: json.writeValue("fixed");
-            case PositionMode.percent: json.writeValue("percent");
-            default: json.writeValue("unknown");
-        }
+        writeProperty(obj, "getPositionMode()", {"kind":"enum","name":"positionMode","getter":"getPositionMode()","enumName":"PositionMode","isNullable":false});
 
         json.writeName("spacingMode");
-        switch (obj.spacingMode) {
-            case SpacingMode.length: json.writeValue("length");
-            case SpacingMode.fixed: json.writeValue("fixed");
-            case SpacingMode.percent: json.writeValue("percent");
-            case SpacingMode.proportional: json.writeValue("proportional");
-            default: json.writeValue("unknown");
-        }
+        writeProperty(obj, "getSpacingMode()", {"kind":"enum","name":"spacingMode","getter":"getSpacingMode()","enumName":"SpacingMode","isNullable":false});
 
         json.writeName("rotateMode");
-        switch (obj.rotateMode) {
-            case RotateMode.tangent: json.writeValue("tangent");
-            case RotateMode.chain: json.writeValue("chain");
-            case RotateMode.chainScale: json.writeValue("chainScale");
-            default: json.writeValue("unknown");
-        }
+        writeProperty(obj, "getRotateMode()", {"kind":"enum","name":"rotateMode","getter":"getRotateMode()","enumName":"RotateMode","isNullable":false});
 
         json.writeName("offsetRotation");
-        json.writeValue(obj.offsetRotation);
+        writeProperty(obj, "getOffsetRotation()", {"kind":"primitive","name":"offsetRotation","getter":"getOffsetRotation()","valueType":"float","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeName("setupPose");
-        writePathConstraintPose(obj.setup);
+        writeProperty(obj, "getSetupPose()", {"kind":"object","name":"setupPose","getter":"getSetupPose()","valueType":"PathConstraintPose","writeMethodCall":"writePathConstraintPose","isNullable":false});
 
         json.writeName("skinRequired");
-        json.writeValue(obj.skinRequired);
+        writeProperty(obj, "getSkinRequired()", {"kind":"primitive","name":"skinRequired","getter":"getSkinRequired()","valueType":"boolean","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePathConstraintPose(obj:PathConstraintPose):Void {
+    private function writePathConstraintPose(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PathConstraintPose-" + (nextId++) + ">";
+
+        var refString = "<PathConstraintPose-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2774,29 +2389,30 @@ class SkeletonSerializer {
         json.writeValue("PathConstraintPose");
 
         json.writeName("position");
-        json.writeValue(obj.position);
+        writeProperty(obj, "getPosition()", {"kind":"primitive","name":"position","getter":"getPosition()","valueType":"float","isNullable":false});
 
         json.writeName("spacing");
-        json.writeValue(obj.spacing);
+        writeProperty(obj, "getSpacing()", {"kind":"primitive","name":"spacing","getter":"getSpacing()","valueType":"float","isNullable":false});
 
         json.writeName("mixRotate");
-        json.writeValue(obj.mixRotate);
+        writeProperty(obj, "getMixRotate()", {"kind":"primitive","name":"mixRotate","getter":"getMixRotate()","valueType":"float","isNullable":false});
 
         json.writeName("mixX");
-        json.writeValue(obj.mixX);
+        writeProperty(obj, "getMixX()", {"kind":"primitive","name":"mixX","getter":"getMixX()","valueType":"float","isNullable":false});
 
         json.writeName("mixY");
-        json.writeValue(obj.mixY);
+        writeProperty(obj, "getMixY()", {"kind":"primitive","name":"mixY","getter":"getMixY()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePhysicsConstraint(obj:PhysicsConstraint):Void {
+    private function writePhysicsConstraint(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PhysicsConstraint-" + (nextId++) + ">";
+
+        var refString = "<PhysicsConstraint-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2806,26 +2422,28 @@ class SkeletonSerializer {
         json.writeValue("PhysicsConstraint");
 
         json.writeName("bone");
-        writeBonePose(obj.bone);
+        writeProperty(obj, "getBone()", {"kind":"object","name":"bone","getter":"getBone()","valueType":"BonePose","writeMethodCall":"writeBonePose","isNullable":false});
 
         json.writeName("data");
-        writePhysicsConstraintData(obj.data);
+        writeProperty(obj, "getData()", {"kind":"object","name":"data","getter":"getData()","valueType":"PhysicsConstraintData","writeMethodCall":"writePhysicsConstraintData","isNullable":false});
 
         json.writeName("pose");
-        writePhysicsConstraintPose(obj.pose);
+        writeProperty(obj, "getPose()", {"kind":"object","name":"pose","getter":"getPose()","valueType":"PhysicsConstraintPose","writeMethodCall":"writePhysicsConstraintPose","isNullable":false});
 
         json.writeName("appliedPose");
-        writePhysicsConstraintPose(obj.applied);
+        writeProperty(obj, "getAppliedPose()", {"kind":"object","name":"appliedPose","getter":"getAppliedPose()","valueType":"PhysicsConstraintPose","writeMethodCall":"writePhysicsConstraintPose","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePhysicsConstraintData(obj:PhysicsConstraintData):Void {
+    private function writePhysicsConstraintData(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<PhysicsConstraintData-" + obj.name + ">" : "<PhysicsConstraintData-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<PhysicsConstraintData-" + nameValue + ">" : "<PhysicsConstraintData-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2835,68 +2453,69 @@ class SkeletonSerializer {
         json.writeValue("PhysicsConstraintData");
 
         json.writeName("bone");
-        writeBoneData(obj.bone);
+        writeProperty(obj, "getBone()", {"kind":"object","name":"bone","getter":"getBone()","valueType":"BoneData","writeMethodCall":"writeBoneData","isNullable":false});
 
         json.writeName("step");
-        json.writeValue(obj.step);
+        writeProperty(obj, "getStep()", {"kind":"primitive","name":"step","getter":"getStep()","valueType":"float","isNullable":false});
 
         json.writeName("x");
-        json.writeValue(obj.x);
+        writeProperty(obj, "getX()", {"kind":"primitive","name":"x","getter":"getX()","valueType":"float","isNullable":false});
 
         json.writeName("y");
-        json.writeValue(obj.y);
+        writeProperty(obj, "getY()", {"kind":"primitive","name":"y","getter":"getY()","valueType":"float","isNullable":false});
 
         json.writeName("rotate");
-        json.writeValue(obj.rotate);
+        writeProperty(obj, "getRotate()", {"kind":"primitive","name":"rotate","getter":"getRotate()","valueType":"float","isNullable":false});
 
         json.writeName("scaleX");
-        json.writeValue(obj.scaleX);
+        writeProperty(obj, "getScaleX()", {"kind":"primitive","name":"scaleX","getter":"getScaleX()","valueType":"float","isNullable":false});
 
         json.writeName("shearX");
-        json.writeValue(obj.shearX);
+        writeProperty(obj, "getShearX()", {"kind":"primitive","name":"shearX","getter":"getShearX()","valueType":"float","isNullable":false});
 
         json.writeName("limit");
-        json.writeValue(obj.limit);
+        writeProperty(obj, "getLimit()", {"kind":"primitive","name":"limit","getter":"getLimit()","valueType":"float","isNullable":false});
 
         json.writeName("inertiaGlobal");
-        json.writeValue(obj.inertiaGlobal);
+        writeProperty(obj, "getInertiaGlobal()", {"kind":"primitive","name":"inertiaGlobal","getter":"getInertiaGlobal()","valueType":"boolean","isNullable":false});
 
         json.writeName("strengthGlobal");
-        json.writeValue(obj.strengthGlobal);
+        writeProperty(obj, "getStrengthGlobal()", {"kind":"primitive","name":"strengthGlobal","getter":"getStrengthGlobal()","valueType":"boolean","isNullable":false});
 
         json.writeName("dampingGlobal");
-        json.writeValue(obj.dampingGlobal);
+        writeProperty(obj, "getDampingGlobal()", {"kind":"primitive","name":"dampingGlobal","getter":"getDampingGlobal()","valueType":"boolean","isNullable":false});
 
         json.writeName("massGlobal");
-        json.writeValue(obj.massGlobal);
+        writeProperty(obj, "getMassGlobal()", {"kind":"primitive","name":"massGlobal","getter":"getMassGlobal()","valueType":"boolean","isNullable":false});
 
         json.writeName("windGlobal");
-        json.writeValue(obj.windGlobal);
+        writeProperty(obj, "getWindGlobal()", {"kind":"primitive","name":"windGlobal","getter":"getWindGlobal()","valueType":"boolean","isNullable":false});
 
         json.writeName("gravityGlobal");
-        json.writeValue(obj.gravityGlobal);
+        writeProperty(obj, "getGravityGlobal()", {"kind":"primitive","name":"gravityGlobal","getter":"getGravityGlobal()","valueType":"boolean","isNullable":false});
 
         json.writeName("mixGlobal");
-        json.writeValue(obj.mixGlobal);
+        writeProperty(obj, "getMixGlobal()", {"kind":"primitive","name":"mixGlobal","getter":"getMixGlobal()","valueType":"boolean","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeName("setupPose");
-        writePhysicsConstraintPose(obj.setup);
+        writeProperty(obj, "getSetupPose()", {"kind":"object","name":"setupPose","getter":"getSetupPose()","valueType":"PhysicsConstraintPose","writeMethodCall":"writePhysicsConstraintPose","isNullable":false});
 
         json.writeName("skinRequired");
-        json.writeValue(obj.skinRequired);
+        writeProperty(obj, "getSkinRequired()", {"kind":"primitive","name":"skinRequired","getter":"getSkinRequired()","valueType":"boolean","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePhysicsConstraintPose(obj:PhysicsConstraintPose):Void {
+    private function writePhysicsConstraintPose(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<PhysicsConstraintPose-" + (nextId++) + ">";
+
+        var refString = "<PhysicsConstraintPose-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2906,35 +2525,37 @@ class SkeletonSerializer {
         json.writeValue("PhysicsConstraintPose");
 
         json.writeName("inertia");
-        json.writeValue(obj.inertia);
+        writeProperty(obj, "getInertia()", {"kind":"primitive","name":"inertia","getter":"getInertia()","valueType":"float","isNullable":false});
 
         json.writeName("strength");
-        json.writeValue(obj.strength);
+        writeProperty(obj, "getStrength()", {"kind":"primitive","name":"strength","getter":"getStrength()","valueType":"float","isNullable":false});
 
         json.writeName("damping");
-        json.writeValue(obj.damping);
+        writeProperty(obj, "getDamping()", {"kind":"primitive","name":"damping","getter":"getDamping()","valueType":"float","isNullable":false});
 
         json.writeName("massInverse");
-        json.writeValue(obj.massInverse);
+        writeProperty(obj, "getMassInverse()", {"kind":"primitive","name":"massInverse","getter":"getMassInverse()","valueType":"float","isNullable":false});
 
         json.writeName("wind");
-        json.writeValue(obj.wind);
+        writeProperty(obj, "getWind()", {"kind":"primitive","name":"wind","getter":"getWind()","valueType":"float","isNullable":false});
 
         json.writeName("gravity");
-        json.writeValue(obj.gravity);
+        writeProperty(obj, "getGravity()", {"kind":"primitive","name":"gravity","getter":"getGravity()","valueType":"float","isNullable":false});
 
         json.writeName("mix");
-        json.writeValue(obj.mix);
+        writeProperty(obj, "getMix()", {"kind":"primitive","name":"mix","getter":"getMix()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writePointAttachment(obj:PointAttachment):Void {
+    private function writePointAttachment(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<PointAttachment-" + obj.name + ">" : "<PointAttachment-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<PointAttachment-" + nameValue + ">" : "<PointAttachment-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2944,29 +2565,31 @@ class SkeletonSerializer {
         json.writeValue("PointAttachment");
 
         json.writeName("x");
-        json.writeValue(obj.x);
+        writeProperty(obj, "getX()", {"kind":"primitive","name":"x","getter":"getX()","valueType":"float","isNullable":false});
 
         json.writeName("y");
-        json.writeValue(obj.y);
+        writeProperty(obj, "getY()", {"kind":"primitive","name":"y","getter":"getY()","valueType":"float","isNullable":false});
 
         json.writeName("rotation");
-        json.writeValue(obj.rotation);
+        writeProperty(obj, "getRotation()", {"kind":"primitive","name":"rotation","getter":"getRotation()","valueType":"float","isNullable":false});
 
         json.writeName("color");
-        writeColor(obj.color);
+        writeProperty(obj, "getColor()", {"kind":"object","name":"color","getter":"getColor()","valueType":"Color","writeMethodCall":"writeColor","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeRegionAttachment(obj:RegionAttachment):Void {
+    private function writeRegionAttachment(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<RegionAttachment-" + obj.name + ">" : "<RegionAttachment-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<RegionAttachment-" + nameValue + ">" : "<RegionAttachment-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -2976,65 +2599,57 @@ class SkeletonSerializer {
         json.writeValue("RegionAttachment");
 
         json.writeName("region");
-        if (obj.region == null) {
-            json.writeNull();
-        } else {
-            writeTextureRegion(obj.region);
-        }
+        writeProperty(obj, "getRegion()", {"kind":"object","name":"region","getter":"getRegion()","valueType":"TextureRegion","writeMethodCall":"writeTextureRegion","isNullable":true});
+
+        json.writeName("offset");
+        writeProperty(obj, "getOffset()", {"kind":"array","name":"offset","getter":"getOffset()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("uVs");
-        json.writeArrayStart();
-        for (item in obj.uvs) {
-            json.writeValue(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getUVs()", {"kind":"array","name":"uVs","getter":"getUVs()","elementType":"float","elementKind":"primitive","isNullable":false});
 
         json.writeName("x");
-        json.writeValue(obj.x);
+        writeProperty(obj, "getX()", {"kind":"primitive","name":"x","getter":"getX()","valueType":"float","isNullable":false});
 
         json.writeName("y");
-        json.writeValue(obj.y);
+        writeProperty(obj, "getY()", {"kind":"primitive","name":"y","getter":"getY()","valueType":"float","isNullable":false});
 
         json.writeName("scaleX");
-        json.writeValue(obj.scaleX);
+        writeProperty(obj, "getScaleX()", {"kind":"primitive","name":"scaleX","getter":"getScaleX()","valueType":"float","isNullable":false});
 
         json.writeName("scaleY");
-        json.writeValue(obj.scaleY);
+        writeProperty(obj, "getScaleY()", {"kind":"primitive","name":"scaleY","getter":"getScaleY()","valueType":"float","isNullable":false});
 
         json.writeName("rotation");
-        json.writeValue(obj.rotation);
+        writeProperty(obj, "getRotation()", {"kind":"primitive","name":"rotation","getter":"getRotation()","valueType":"float","isNullable":false});
 
         json.writeName("width");
-        json.writeValue(obj.width);
+        writeProperty(obj, "getWidth()", {"kind":"primitive","name":"width","getter":"getWidth()","valueType":"float","isNullable":false});
 
         json.writeName("height");
-        json.writeValue(obj.height);
+        writeProperty(obj, "getHeight()", {"kind":"primitive","name":"height","getter":"getHeight()","valueType":"float","isNullable":false});
 
         json.writeName("color");
-        writeColor(obj.color);
+        writeProperty(obj, "getColor()", {"kind":"object","name":"color","getter":"getColor()","valueType":"Color","writeMethodCall":"writeColor","isNullable":false});
 
         json.writeName("path");
-        json.writeValue(obj.path);
+        writeProperty(obj, "getPath()", {"kind":"primitive","name":"path","getter":"getPath()","valueType":"String","isNullable":false});
 
         json.writeName("sequence");
-        if (obj.sequence == null) {
-            json.writeNull();
-        } else {
-            writeSequence(obj.sequence);
-        }
+        writeProperty(obj, "getSequence()", {"kind":"object","name":"sequence","getter":"getSequence()","valueType":"Sequence","writeMethodCall":"writeSequence","isNullable":true});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSequence(obj:Sequence):Void {
+    private function writeSequence(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<Sequence-" + (nextId++) + ">";
+
+        var refString = "<Sequence-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3044,33 +2659,30 @@ class SkeletonSerializer {
         json.writeValue("Sequence");
 
         json.writeName("start");
-        json.writeValue(obj.start);
+        writeProperty(obj, "getStart()", {"kind":"primitive","name":"start","getter":"getStart()","valueType":"int","isNullable":false});
 
         json.writeName("digits");
-        json.writeValue(obj.digits);
+        writeProperty(obj, "getDigits()", {"kind":"primitive","name":"digits","getter":"getDigits()","valueType":"int","isNullable":false});
 
         json.writeName("setupIndex");
-        json.writeValue(obj.setupIndex);
+        writeProperty(obj, "getSetupIndex()", {"kind":"primitive","name":"setupIndex","getter":"getSetupIndex()","valueType":"int","isNullable":false});
 
         json.writeName("regions");
-        json.writeArrayStart();
-        for (item in obj.regions) {
-            writeTextureRegion(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getRegions()", {"kind":"array","name":"regions","getter":"getRegions()","elementType":"TextureRegion","elementKind":"object","writeMethodCall":"writeTextureRegion","isNullable":false});
 
         json.writeName("id");
-        json.writeValue(obj.id);
+        writeProperty(obj, "getId()", {"kind":"primitive","name":"id","getter":"getId()","valueType":"int","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSkeleton(obj:Skeleton):Void {
+    private function writeSkeleton(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<Skeleton-" + (nextId++) + ">";
+
+        var refString = "<Skeleton-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3080,99 +2692,73 @@ class SkeletonSerializer {
         json.writeValue("Skeleton");
 
         json.writeName("data");
-        writeSkeletonData(obj.data);
+        writeProperty(obj, "getData()", {"kind":"object","name":"data","getter":"getData()","valueType":"SkeletonData","writeMethodCall":"writeSkeletonData","isNullable":false});
 
         json.writeName("bones");
-        json.writeArrayStart();
-        for (item in obj.bones) {
-            writeBone(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"Bone","elementKind":"object","writeMethodCall":"writeBone","isNullable":false});
 
         json.writeName("updateCache");
-        json.writeArrayStart();
-        for (item in obj.updateCache) {
-            writeUpdate(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getUpdateCache()", {"kind":"array","name":"updateCache","getter":"getUpdateCache()","elementType":"Update","elementKind":"object","writeMethodCall":"writeUpdate","isNullable":false});
 
         json.writeName("rootBone");
-        writeBone(obj.rootBone);
+        writeProperty(obj, "getRootBone()", {"kind":"object","name":"rootBone","getter":"getRootBone()","valueType":"Bone","writeMethodCall":"writeBone","isNullable":false});
 
         json.writeName("slots");
-        json.writeArrayStart();
-        for (item in obj.slots) {
-            writeSlot(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getSlots()", {"kind":"array","name":"slots","getter":"getSlots()","elementType":"Slot","elementKind":"object","writeMethodCall":"writeSlot","isNullable":false});
 
         json.writeName("drawOrder");
-        json.writeArrayStart();
-        for (item in obj.drawOrder) {
-            writeSlot(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getDrawOrder()", {"kind":"array","name":"drawOrder","getter":"getDrawOrder()","elementType":"Slot","elementKind":"object","writeMethodCall":"writeSlot","isNullable":false});
 
         json.writeName("skin");
-        if (obj.skin == null) {
-            json.writeNull();
-        } else {
-            writeSkin(obj.skin);
-        }
+        writeProperty(obj, "getSkin()", {"kind":"object","name":"skin","getter":"getSkin()","valueType":"Skin","writeMethodCall":"writeSkin","isNullable":true});
 
         json.writeName("constraints");
-        json.writeArrayStart();
-        for (item in obj.constraints) {
-            writeConstraint(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getConstraints()", {"kind":"array","name":"constraints","getter":"getConstraints()","elementType":"Constraint","elementKind":"object","writeMethodCall":"writeConstraint","isNullable":false});
 
         json.writeName("physicsConstraints");
-        json.writeArrayStart();
-        for (item in obj.physics) {
-            writePhysicsConstraint(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getPhysicsConstraints()", {"kind":"array","name":"physicsConstraints","getter":"getPhysicsConstraints()","elementType":"PhysicsConstraint","elementKind":"object","writeMethodCall":"writePhysicsConstraint","isNullable":false});
 
         json.writeName("color");
-        writeColor(obj.color);
+        writeProperty(obj, "getColor()", {"kind":"object","name":"color","getter":"getColor()","valueType":"Color","writeMethodCall":"writeColor","isNullable":false});
 
         json.writeName("scaleX");
-        json.writeValue(obj.scaleX);
+        writeProperty(obj, "getScaleX()", {"kind":"primitive","name":"scaleX","getter":"getScaleX()","valueType":"float","isNullable":false});
 
         json.writeName("scaleY");
-        json.writeValue(obj.scaleY);
+        writeProperty(obj, "getScaleY()", {"kind":"primitive","name":"scaleY","getter":"getScaleY()","valueType":"float","isNullable":false});
 
         json.writeName("x");
-        json.writeValue(obj.x);
+        writeProperty(obj, "getX()", {"kind":"primitive","name":"x","getter":"getX()","valueType":"float","isNullable":false});
 
         json.writeName("y");
-        json.writeValue(obj.y);
+        writeProperty(obj, "getY()", {"kind":"primitive","name":"y","getter":"getY()","valueType":"float","isNullable":false});
 
         json.writeName("windX");
-        json.writeValue(obj.windX);
+        writeProperty(obj, "getWindX()", {"kind":"primitive","name":"windX","getter":"getWindX()","valueType":"float","isNullable":false});
 
         json.writeName("windY");
-        json.writeValue(obj.windY);
+        writeProperty(obj, "getWindY()", {"kind":"primitive","name":"windY","getter":"getWindY()","valueType":"float","isNullable":false});
 
         json.writeName("gravityX");
-        json.writeValue(obj.gravityX);
+        writeProperty(obj, "getGravityX()", {"kind":"primitive","name":"gravityX","getter":"getGravityX()","valueType":"float","isNullable":false});
 
         json.writeName("gravityY");
-        json.writeValue(obj.gravityY);
+        writeProperty(obj, "getGravityY()", {"kind":"primitive","name":"gravityY","getter":"getGravityY()","valueType":"float","isNullable":false});
 
         json.writeName("time");
-        json.writeValue(obj.time);
+        writeProperty(obj, "getTime()", {"kind":"primitive","name":"time","getter":"getTime()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSkeletonData(obj:SkeletonData):Void {
+    private function writeSkeletonData(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<SkeletonData-" + obj.name + ">" : "<SkeletonData-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<SkeletonData-" + nameValue + ">" : "<SkeletonData-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3182,96 +2768,70 @@ class SkeletonSerializer {
         json.writeValue("SkeletonData");
 
         json.writeName("bones");
-        json.writeArrayStart();
-        for (item in obj.bones) {
-            writeBoneData(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"BoneData","elementKind":"object","writeMethodCall":"writeBoneData","isNullable":false});
 
         json.writeName("slots");
-        json.writeArrayStart();
-        for (item in obj.slots) {
-            writeSlotData(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getSlots()", {"kind":"array","name":"slots","getter":"getSlots()","elementType":"SlotData","elementKind":"object","writeMethodCall":"writeSlotData","isNullable":false});
 
         json.writeName("defaultSkin");
-        if (obj.defaultSkin == null) {
-            json.writeNull();
-        } else {
-            writeSkin(obj.defaultSkin);
-        }
+        writeProperty(obj, "getDefaultSkin()", {"kind":"object","name":"defaultSkin","getter":"getDefaultSkin()","valueType":"Skin","writeMethodCall":"writeSkin","isNullable":true});
 
         json.writeName("skins");
-        json.writeArrayStart();
-        for (item in obj.skins) {
-            writeSkin(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getSkins()", {"kind":"array","name":"skins","getter":"getSkins()","elementType":"Skin","elementKind":"object","writeMethodCall":"writeSkin","isNullable":false});
 
         json.writeName("events");
-        json.writeArrayStart();
-        for (item in obj.events) {
-            writeEventData(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getEvents()", {"kind":"array","name":"events","getter":"getEvents()","elementType":"EventData","elementKind":"object","writeMethodCall":"writeEventData","isNullable":false});
 
         json.writeName("animations");
-        json.writeArrayStart();
-        for (item in obj.animations) {
-            writeAnimation(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getAnimations()", {"kind":"array","name":"animations","getter":"getAnimations()","elementType":"Animation","elementKind":"object","writeMethodCall":"writeAnimation","isNullable":false});
 
         json.writeName("constraints");
-        json.writeArrayStart();
-        for (item in obj.constraints) {
-            writeConstraintData(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getConstraints()", {"kind":"array","name":"constraints","getter":"getConstraints()","elementType":"ConstraintData","elementKind":"object","writeMethodCall":"writeConstraintData","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":true});
 
         json.writeName("x");
-        json.writeValue(obj.x);
+        writeProperty(obj, "getX()", {"kind":"primitive","name":"x","getter":"getX()","valueType":"float","isNullable":false});
 
         json.writeName("y");
-        json.writeValue(obj.y);
+        writeProperty(obj, "getY()", {"kind":"primitive","name":"y","getter":"getY()","valueType":"float","isNullable":false});
 
         json.writeName("width");
-        json.writeValue(obj.width);
+        writeProperty(obj, "getWidth()", {"kind":"primitive","name":"width","getter":"getWidth()","valueType":"float","isNullable":false});
 
         json.writeName("height");
-        json.writeValue(obj.height);
+        writeProperty(obj, "getHeight()", {"kind":"primitive","name":"height","getter":"getHeight()","valueType":"float","isNullable":false});
 
         json.writeName("referenceScale");
-        json.writeValue(obj.referenceScale);
+        writeProperty(obj, "getReferenceScale()", {"kind":"primitive","name":"referenceScale","getter":"getReferenceScale()","valueType":"float","isNullable":false});
 
         json.writeName("version");
-        json.writeValue(obj.version);
+        writeProperty(obj, "getVersion()", {"kind":"primitive","name":"version","getter":"getVersion()","valueType":"String","isNullable":true});
 
         json.writeName("hash");
-        json.writeValue(obj.hash);
+        writeProperty(obj, "getHash()", {"kind":"primitive","name":"hash","getter":"getHash()","valueType":"String","isNullable":true});
 
         json.writeName("imagesPath");
-        json.writeValue(obj.imagesPath);
+        writeProperty(obj, "getImagesPath()", {"kind":"primitive","name":"imagesPath","getter":"getImagesPath()","valueType":"String","isNullable":true});
 
         json.writeName("audioPath");
-        json.writeValue(obj.audioPath);
+        writeProperty(obj, "getAudioPath()", {"kind":"primitive","name":"audioPath","getter":"getAudioPath()","valueType":"String","isNullable":true});
 
         json.writeName("fps");
-        json.writeValue(obj.fps);
+        writeProperty(obj, "getFps()", {"kind":"primitive","name":"fps","getter":"getFps()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSkin(obj:Skin):Void {
+    private function writeSkin(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<Skin-" + obj.name + ">" : "<Skin-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<Skin-" + nameValue + ">" : "<Skin-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3280,63 +2840,59 @@ class SkeletonSerializer {
         json.writeName("type");
         json.writeValue("Skin");
 
-        json.writeName("name");
-        json.writeValue(obj.name);
-
         json.writeName("attachments");
-        json.writeArrayStart();
-        var skinEntries = obj.getAttachments();
-        for (entry in skinEntries) {
-            writeSkinEntry(entry);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getAttachments()", {"kind":"array","name":"attachments","getter":"getAttachments()","elementType":"SkinEntry","elementKind":"object","writeMethodCall":"writeSkinEntry","isNullable":false});
 
         json.writeName("bones");
-        json.writeArrayStart();
-        for (item in obj.bones) {
-            writeBoneData(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"BoneData","elementKind":"object","writeMethodCall":"writeBoneData","isNullable":false});
 
         json.writeName("constraints");
-        json.writeArrayStart();
-        for (item in obj.constraints) {
-            writeConstraintData(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getConstraints()", {"kind":"array","name":"constraints","getter":"getConstraints()","elementType":"ConstraintData","elementKind":"object","writeMethodCall":"writeConstraintData","isNullable":false});
+
+        json.writeName("name");
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeName("color");
-        writeColor(obj.color);
+        writeProperty(obj, "getColor()", {"kind":"object","name":"color","getter":"getColor()","valueType":"Color","writeMethodCall":"writeColor","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSkinEntry(obj:SkinEntry):Void {
-        json.writeObjectStart();
-        var refString = "<SkinEntry-" + (nextId++) + ">";
-        json.writeName("refString");
-        json.writeValue(refString);
-        json.writeName("type");
-        json.writeValue("SkinEntry");
-        json.writeName("slotIndex");
-        json.writeValue(obj.slotIndex);
-        json.writeName("name");
-        json.writeValue(obj.name);
-        json.writeName("attachment");
-        if (obj.attachment == null) {
-            json.writeNull();
-        } else {
-            writeAttachment(obj.attachment);
-        }
-        json.writeObjectEnd();
-    }
-
-    private function writeSlider(obj:Slider):Void {
+    private function writeSkinEntry(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<Slider-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<SkinEntry-" + nameValue + ">" : "<SkinEntry-" + nextId++ + ">";
+        visitedObjects.set(obj, refString);
+
+        json.writeObjectStart();
+        json.writeName("refString");
+        json.writeValue(refString);
+        json.writeName("type");
+        json.writeValue("SkinEntry");
+
+        json.writeName("slotIndex");
+        writeProperty(obj, "getSlotIndex()", {"kind":"primitive","name":"slotIndex","getter":"getSlotIndex()","valueType":"int","isNullable":false});
+
+        json.writeName("name");
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
+
+        json.writeName("attachment");
+        writeProperty(obj, "getAttachment()", {"kind":"object","name":"attachment","getter":"getAttachment()","valueType":"Attachment","writeMethodCall":"writeAttachment","isNullable":false});
+
+        json.writeObjectEnd();
+    }
+
+    private function writeSlider(obj:Dynamic):Void {
+        if (visitedObjects.exists(obj)) {
+            json.writeValue(visitedObjects.get(obj));
+            return;
+        }
+
+        var refString = "<Slider-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3346,26 +2902,28 @@ class SkeletonSerializer {
         json.writeValue("Slider");
 
         json.writeName("bone");
-        writeBone(obj.bone);
+        writeProperty(obj, "getBone()", {"kind":"object","name":"bone","getter":"getBone()","valueType":"Bone","writeMethodCall":"writeBone","isNullable":false});
 
         json.writeName("data");
-        writeSliderData(obj.data);
+        writeProperty(obj, "getData()", {"kind":"object","name":"data","getter":"getData()","valueType":"SliderData","writeMethodCall":"writeSliderData","isNullable":false});
 
         json.writeName("pose");
-        writeSliderPose(obj.pose);
+        writeProperty(obj, "getPose()", {"kind":"object","name":"pose","getter":"getPose()","valueType":"SliderPose","writeMethodCall":"writeSliderPose","isNullable":false});
 
         json.writeName("appliedPose");
-        writeSliderPose(obj.applied);
+        writeProperty(obj, "getAppliedPose()", {"kind":"object","name":"appliedPose","getter":"getAppliedPose()","valueType":"SliderPose","writeMethodCall":"writeSliderPose","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSliderData(obj:SliderData):Void {
+    private function writeSliderData(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<SliderData-" + obj.name + ">" : "<SliderData-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<SliderData-" + nameValue + ">" : "<SliderData-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3375,55 +2933,48 @@ class SkeletonSerializer {
         json.writeValue("SliderData");
 
         json.writeName("animation");
-        writeAnimation(obj.animation);
+        writeProperty(obj, "getAnimation()", {"kind":"object","name":"animation","getter":"getAnimation()","valueType":"Animation","writeMethodCall":"writeAnimation","isNullable":false});
 
         json.writeName("additive");
-        json.writeValue(obj.additive);
+        writeProperty(obj, "getAdditive()", {"kind":"primitive","name":"additive","getter":"getAdditive()","valueType":"boolean","isNullable":false});
 
         json.writeName("loop");
-        json.writeValue(obj.loop);
+        writeProperty(obj, "getLoop()", {"kind":"primitive","name":"loop","getter":"getLoop()","valueType":"boolean","isNullable":false});
 
         json.writeName("bone");
-        if (obj.bone == null) {
-            json.writeNull();
-        } else {
-            writeBoneData(obj.bone);
-        }
+        writeProperty(obj, "getBone()", {"kind":"object","name":"bone","getter":"getBone()","valueType":"BoneData","writeMethodCall":"writeBoneData","isNullable":true});
 
         json.writeName("property");
-        if (obj.property == null) {
-            json.writeNull();
-        } else {
-            writeFromProperty(obj.property);
-        }
+        writeProperty(obj, "getProperty()", {"kind":"object","name":"property","getter":"getProperty()","valueType":"TransformConstraintData.FromProperty","writeMethodCall":"writeFromProperty","isNullable":true});
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "getOffset()", {"kind":"primitive","name":"offset","getter":"getOffset()","valueType":"float","isNullable":false});
 
         json.writeName("scale");
-        json.writeValue(obj.scale);
+        writeProperty(obj, "getScale()", {"kind":"primitive","name":"scale","getter":"getScale()","valueType":"float","isNullable":false});
 
         json.writeName("local");
-        json.writeValue(obj.local);
+        writeProperty(obj, "getLocal()", {"kind":"primitive","name":"local","getter":"getLocal()","valueType":"boolean","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeName("setupPose");
-        writeSliderPose(obj.setup);
+        writeProperty(obj, "getSetupPose()", {"kind":"object","name":"setupPose","getter":"getSetupPose()","valueType":"SliderPose","writeMethodCall":"writeSliderPose","isNullable":false});
 
         json.writeName("skinRequired");
-        json.writeValue(obj.skinRequired);
+        writeProperty(obj, "getSkinRequired()", {"kind":"primitive","name":"skinRequired","getter":"getSkinRequired()","valueType":"boolean","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSliderPose(obj:SliderPose):Void {
+    private function writeSliderPose(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<SliderPose-" + (nextId++) + ">";
+
+        var refString = "<SliderPose-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3433,20 +2984,21 @@ class SkeletonSerializer {
         json.writeValue("SliderPose");
 
         json.writeName("time");
-        json.writeValue(obj.time);
+        writeProperty(obj, "getTime()", {"kind":"primitive","name":"time","getter":"getTime()","valueType":"float","isNullable":false});
 
         json.writeName("mix");
-        json.writeValue(obj.mix);
+        writeProperty(obj, "getMix()", {"kind":"primitive","name":"mix","getter":"getMix()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSlot(obj:Slot):Void {
+    private function writeSlot(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<Slot-" + (nextId++) + ">";
+
+        var refString = "<Slot-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3456,26 +3008,28 @@ class SkeletonSerializer {
         json.writeValue("Slot");
 
         json.writeName("bone");
-        writeBone(obj.bone);
+        writeProperty(obj, "getBone()", {"kind":"object","name":"bone","getter":"getBone()","valueType":"Bone","writeMethodCall":"writeBone","isNullable":false});
 
         json.writeName("data");
-        writeSlotData(obj.data);
+        writeProperty(obj, "getData()", {"kind":"object","name":"data","getter":"getData()","valueType":"SlotData","writeMethodCall":"writeSlotData","isNullable":false});
 
         json.writeName("pose");
-        writeSlotPose(obj.pose);
+        writeProperty(obj, "getPose()", {"kind":"object","name":"pose","getter":"getPose()","valueType":"SlotPose","writeMethodCall":"writeSlotPose","isNullable":false});
 
         json.writeName("appliedPose");
-        writeSlotPose(obj.applied);
+        writeProperty(obj, "getAppliedPose()", {"kind":"object","name":"appliedPose","getter":"getAppliedPose()","valueType":"SlotPose","writeMethodCall":"writeSlotPose","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSlotData(obj:SlotData):Void {
+    private function writeSlotData(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<SlotData-" + obj.name + ">" : "<SlotData-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<SlotData-" + nameValue + ">" : "<SlotData-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3485,44 +3039,39 @@ class SkeletonSerializer {
         json.writeValue("SlotData");
 
         json.writeName("index");
-        json.writeValue(obj.index);
+        writeProperty(obj, "getIndex()", {"kind":"primitive","name":"index","getter":"getIndex()","valueType":"int","isNullable":false});
 
         json.writeName("boneData");
-        writeBoneData(obj.boneData);
+        writeProperty(obj, "getBoneData()", {"kind":"object","name":"boneData","getter":"getBoneData()","valueType":"BoneData","writeMethodCall":"writeBoneData","isNullable":false});
 
         json.writeName("attachmentName");
-        json.writeValue(obj.attachmentName);
+        writeProperty(obj, "getAttachmentName()", {"kind":"primitive","name":"attachmentName","getter":"getAttachmentName()","valueType":"String","isNullable":true});
 
         json.writeName("blendMode");
-        switch (obj.blendMode) {
-            case BlendMode.normal: json.writeValue("normal");
-            case BlendMode.additive: json.writeValue("additive");
-            case BlendMode.multiply: json.writeValue("multiply");
-            case BlendMode.screen: json.writeValue("screen");
-            default: json.writeValue("unknown");
-        }
+        writeProperty(obj, "getBlendMode()", {"kind":"enum","name":"blendMode","getter":"getBlendMode()","enumName":"BlendMode","isNullable":false});
 
         json.writeName("visible");
-        json.writeValue(obj.visible);
+        writeProperty(obj, "getVisible()", {"kind":"primitive","name":"visible","getter":"getVisible()","valueType":"boolean","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeName("setupPose");
-        writeSlotPose(obj.setup);
+        writeProperty(obj, "getSetupPose()", {"kind":"object","name":"setupPose","getter":"getSetupPose()","valueType":"SlotPose","writeMethodCall":"writeSlotPose","isNullable":false});
 
         json.writeName("skinRequired");
-        json.writeValue(obj.skinRequired);
+        writeProperty(obj, "getSkinRequired()", {"kind":"primitive","name":"skinRequired","getter":"getSkinRequired()","valueType":"boolean","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeSlotPose(obj:SlotPose):Void {
+    private function writeSlotPose(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<SlotPose-" + (nextId++) + ">";
+
+        var refString = "<SlotPose-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3532,37 +3081,30 @@ class SkeletonSerializer {
         json.writeValue("SlotPose");
 
         json.writeName("color");
-        writeColor(obj.color);
+        writeProperty(obj, "getColor()", {"kind":"object","name":"color","getter":"getColor()","valueType":"Color","writeMethodCall":"writeColor","isNullable":false});
 
         json.writeName("darkColor");
-        if (obj.darkColor == null) {
-            json.writeNull();
-        } else {
-            writeColor(obj.darkColor);
-        }
+        writeProperty(obj, "getDarkColor()", {"kind":"object","name":"darkColor","getter":"getDarkColor()","valueType":"Color","writeMethodCall":"writeColor","isNullable":true});
 
         json.writeName("attachment");
-        if (obj.attachment == null) {
-            json.writeNull();
-        } else {
-            writeAttachment(obj.attachment);
-        }
+        writeProperty(obj, "getAttachment()", {"kind":"object","name":"attachment","getter":"getAttachment()","valueType":"Attachment","writeMethodCall":"writeAttachment","isNullable":true});
 
         json.writeName("sequenceIndex");
-        json.writeValue(obj.sequenceIndex);
+        writeProperty(obj, "getSequenceIndex()", {"kind":"primitive","name":"sequenceIndex","getter":"getSequenceIndex()","valueType":"int","isNullable":false});
 
         json.writeName("deform");
-        writeFloatArray(obj.deform);
+        writeProperty(obj, "getDeform()", {"kind":"object","name":"deform","getter":"getDeform()","valueType":"FloatArray","writeMethodCall":"writeFloatArray","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeTransformConstraint(obj:TransformConstraint):Void {
+    private function writeTransformConstraint(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<TransformConstraint-" + (nextId++) + ">";
+
+        var refString = "<TransformConstraint-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3572,33 +3114,31 @@ class SkeletonSerializer {
         json.writeValue("TransformConstraint");
 
         json.writeName("bones");
-        json.writeArrayStart();
-        for (item in obj.bones) {
-            writeBonePose(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"BonePose","elementKind":"object","writeMethodCall":"writeBonePose","isNullable":false});
 
         json.writeName("source");
-        writeBone(obj.source);
+        writeProperty(obj, "getSource()", {"kind":"object","name":"source","getter":"getSource()","valueType":"Bone","writeMethodCall":"writeBone","isNullable":false});
 
         json.writeName("data");
-        writeTransformConstraintData(obj.data);
+        writeProperty(obj, "getData()", {"kind":"object","name":"data","getter":"getData()","valueType":"TransformConstraintData","writeMethodCall":"writeTransformConstraintData","isNullable":false});
 
         json.writeName("pose");
-        writeTransformConstraintPose(obj.pose);
+        writeProperty(obj, "getPose()", {"kind":"object","name":"pose","getter":"getPose()","valueType":"TransformConstraintPose","writeMethodCall":"writeTransformConstraintPose","isNullable":false});
 
         json.writeName("appliedPose");
-        writeTransformConstraintPose(obj.applied);
+        writeProperty(obj, "getAppliedPose()", {"kind":"object","name":"appliedPose","getter":"getAppliedPose()","valueType":"TransformConstraintPose","writeMethodCall":"writeTransformConstraintPose","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeTransformConstraintData(obj:TransformConstraintData):Void {
+    private function writeTransformConstraintData(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = obj.name != null ? "<TransformConstraintData-" + obj.name + ">" : "<TransformConstraintData-" + (nextId++) + ">";
+
+        var nameValue = getPropertyValue(obj, "getName()");
+        var refString = nameValue != null ? "<TransformConstraintData-" + nameValue + ">" : "<TransformConstraintData-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3608,88 +3148,81 @@ class SkeletonSerializer {
         json.writeValue("TransformConstraintData");
 
         json.writeName("bones");
-        json.writeArrayStart();
-        for (item in obj.bones) {
-            writeBoneData(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getBones()", {"kind":"array","name":"bones","getter":"getBones()","elementType":"BoneData","elementKind":"object","writeMethodCall":"writeBoneData","isNullable":false});
 
         json.writeName("source");
-        writeBoneData(obj.source);
+        writeProperty(obj, "getSource()", {"kind":"object","name":"source","getter":"getSource()","valueType":"BoneData","writeMethodCall":"writeBoneData","isNullable":false});
 
         json.writeName("offsetRotation");
-        json.writeValue(obj.offsetRotation);
+        writeProperty(obj, "getOffsetRotation()", {"kind":"primitive","name":"offsetRotation","getter":"getOffsetRotation()","valueType":"float","isNullable":false});
 
         json.writeName("offsetX");
-        json.writeValue(obj.offsetX);
+        writeProperty(obj, "getOffsetX()", {"kind":"primitive","name":"offsetX","getter":"getOffsetX()","valueType":"float","isNullable":false});
 
         json.writeName("offsetY");
-        json.writeValue(obj.offsetY);
+        writeProperty(obj, "getOffsetY()", {"kind":"primitive","name":"offsetY","getter":"getOffsetY()","valueType":"float","isNullable":false});
 
         json.writeName("offsetScaleX");
-        json.writeValue(obj.offsetScaleX);
+        writeProperty(obj, "getOffsetScaleX()", {"kind":"primitive","name":"offsetScaleX","getter":"getOffsetScaleX()","valueType":"float","isNullable":false});
 
         json.writeName("offsetScaleY");
-        json.writeValue(obj.offsetScaleY);
+        writeProperty(obj, "getOffsetScaleY()", {"kind":"primitive","name":"offsetScaleY","getter":"getOffsetScaleY()","valueType":"float","isNullable":false});
 
         json.writeName("offsetShearY");
-        json.writeValue(obj.offsetShearY);
+        writeProperty(obj, "getOffsetShearY()", {"kind":"primitive","name":"offsetShearY","getter":"getOffsetShearY()","valueType":"float","isNullable":false});
 
         json.writeName("localSource");
-        json.writeValue(obj.localSource);
+        writeProperty(obj, "getLocalSource()", {"kind":"primitive","name":"localSource","getter":"getLocalSource()","valueType":"boolean","isNullable":false});
 
         json.writeName("localTarget");
-        json.writeValue(obj.localTarget);
+        writeProperty(obj, "getLocalTarget()", {"kind":"primitive","name":"localTarget","getter":"getLocalTarget()","valueType":"boolean","isNullable":false});
 
         json.writeName("additive");
-        json.writeValue(obj.additive);
+        writeProperty(obj, "getAdditive()", {"kind":"primitive","name":"additive","getter":"getAdditive()","valueType":"boolean","isNullable":false});
 
         json.writeName("clamp");
-        json.writeValue(obj.clamp);
+        writeProperty(obj, "getClamp()", {"kind":"primitive","name":"clamp","getter":"getClamp()","valueType":"boolean","isNullable":false});
 
         json.writeName("properties");
-        json.writeArrayStart();
-        for (item in obj.properties) {
-            writeFromProperty(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "getProperties()", {"kind":"array","name":"properties","getter":"getProperties()","elementType":"FromProperty","elementKind":"object","writeMethodCall":"writeFromProperty","isNullable":false});
 
         json.writeName("name");
-        json.writeValue(obj.name);
+        writeProperty(obj, "getName()", {"kind":"primitive","name":"name","getter":"getName()","valueType":"String","isNullable":false});
 
         json.writeName("setupPose");
-        writeTransformConstraintPose(obj.setup);
+        writeProperty(obj, "getSetupPose()", {"kind":"object","name":"setupPose","getter":"getSetupPose()","valueType":"TransformConstraintPose","writeMethodCall":"writeTransformConstraintPose","isNullable":false});
 
         json.writeName("skinRequired");
-        json.writeValue(obj.skinRequired);
+        writeProperty(obj, "getSkinRequired()", {"kind":"primitive","name":"skinRequired","getter":"getSkinRequired()","valueType":"boolean","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeFromProperty(obj:TransformConstraintData.FromProperty):Void {
-        if (Std.isOfType(obj, TransformConstraintData.FromRotate)) {
-            writeFromRotate(cast(obj, TransformConstraintData.FromRotate));
-        } else if (Std.isOfType(obj, TransformConstraintData.FromScaleX)) {
-            writeFromScaleX(cast(obj, TransformConstraintData.FromScaleX));
-        } else if (Std.isOfType(obj, TransformConstraintData.FromScaleY)) {
-            writeFromScaleY(cast(obj, TransformConstraintData.FromScaleY));
-        } else if (Std.isOfType(obj, TransformConstraintData.FromShearY)) {
-            writeFromShearY(cast(obj, TransformConstraintData.FromShearY));
-        } else if (Std.isOfType(obj, TransformConstraintData.FromX)) {
-            writeFromX(cast(obj, TransformConstraintData.FromX));
-        } else if (Std.isOfType(obj, TransformConstraintData.FromY)) {
-            writeFromY(cast(obj, TransformConstraintData.FromY));
+    private function writeFromProperty(obj:Dynamic):Void {
+        if (Std.isOfType(obj, spine.TransformConstraintData.FromRotate)) {
+            writeFromRotate(obj);
+        } else if (Std.isOfType(obj, spine.TransformConstraintData.FromScaleX)) {
+            writeFromScaleX(obj);
+        } else if (Std.isOfType(obj, spine.TransformConstraintData.FromScaleY)) {
+            writeFromScaleY(obj);
+        } else if (Std.isOfType(obj, spine.TransformConstraintData.FromShearY)) {
+            writeFromShearY(obj);
+        } else if (Std.isOfType(obj, spine.TransformConstraintData.FromX)) {
+            writeFromX(obj);
+        } else if (Std.isOfType(obj, spine.TransformConstraintData.FromY)) {
+            writeFromY(obj);
         } else {
             throw new spine.SpineException("Unknown FromProperty type");
         }
     }
 
-    private function writeFromRotate(obj:TransformConstraintData.FromRotate):Void {
+    private function writeFromRotate(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<FromRotate-" + (nextId++) + ">";
+
+        var refString = "<FromRotate-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3699,24 +3232,21 @@ class SkeletonSerializer {
         json.writeValue("FromRotate");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("to");
-        json.writeArrayStart();
-        for (item in obj.to) {
-            writeToProperty(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "to", {"kind":"array","name":"to","getter":"to","elementType":"ToProperty","elementKind":"object","writeMethodCall":"writeToProperty","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeFromScaleX(obj:TransformConstraintData.FromScaleX):Void {
+    private function writeFromScaleX(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<FromScaleX-" + (nextId++) + ">";
+
+        var refString = "<FromScaleX-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3726,24 +3256,21 @@ class SkeletonSerializer {
         json.writeValue("FromScaleX");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("to");
-        json.writeArrayStart();
-        for (item in obj.to) {
-            writeToProperty(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "to", {"kind":"array","name":"to","getter":"to","elementType":"ToProperty","elementKind":"object","writeMethodCall":"writeToProperty","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeFromScaleY(obj:TransformConstraintData.FromScaleY):Void {
+    private function writeFromScaleY(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<FromScaleY-" + (nextId++) + ">";
+
+        var refString = "<FromScaleY-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3753,24 +3280,21 @@ class SkeletonSerializer {
         json.writeValue("FromScaleY");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("to");
-        json.writeArrayStart();
-        for (item in obj.to) {
-            writeToProperty(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "to", {"kind":"array","name":"to","getter":"to","elementType":"ToProperty","elementKind":"object","writeMethodCall":"writeToProperty","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeFromShearY(obj:TransformConstraintData.FromShearY):Void {
+    private function writeFromShearY(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<FromShearY-" + (nextId++) + ">";
+
+        var refString = "<FromShearY-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3780,24 +3304,21 @@ class SkeletonSerializer {
         json.writeValue("FromShearY");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("to");
-        json.writeArrayStart();
-        for (item in obj.to) {
-            writeToProperty(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "to", {"kind":"array","name":"to","getter":"to","elementType":"ToProperty","elementKind":"object","writeMethodCall":"writeToProperty","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeFromX(obj:TransformConstraintData.FromX):Void {
+    private function writeFromX(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<FromX-" + (nextId++) + ">";
+
+        var refString = "<FromX-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3807,24 +3328,21 @@ class SkeletonSerializer {
         json.writeValue("FromX");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("to");
-        json.writeArrayStart();
-        for (item in obj.to) {
-            writeToProperty(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "to", {"kind":"array","name":"to","getter":"to","elementType":"ToProperty","elementKind":"object","writeMethodCall":"writeToProperty","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeFromY(obj:TransformConstraintData.FromY):Void {
+    private function writeFromY(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<FromY-" + (nextId++) + ">";
+
+        var refString = "<FromY-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3834,42 +3352,39 @@ class SkeletonSerializer {
         json.writeValue("FromY");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("to");
-        json.writeArrayStart();
-        for (item in obj.to) {
-            writeToProperty(item);
-        }
-        json.writeArrayEnd();
+        writeProperty(obj, "to", {"kind":"array","name":"to","getter":"to","elementType":"ToProperty","elementKind":"object","writeMethodCall":"writeToProperty","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeToProperty(obj:TransformConstraintData.ToProperty):Void {
-        if (Std.isOfType(obj, TransformConstraintData.ToRotate)) {
-            writeToRotate(cast(obj, TransformConstraintData.ToRotate));
-        } else if (Std.isOfType(obj, TransformConstraintData.ToScaleX)) {
-            writeToScaleX(cast(obj, TransformConstraintData.ToScaleX));
-        } else if (Std.isOfType(obj, TransformConstraintData.ToScaleY)) {
-            writeToScaleY(cast(obj, TransformConstraintData.ToScaleY));
-        } else if (Std.isOfType(obj, TransformConstraintData.ToShearY)) {
-            writeToShearY(cast(obj, TransformConstraintData.ToShearY));
-        } else if (Std.isOfType(obj, TransformConstraintData.ToX)) {
-            writeToX(cast(obj, TransformConstraintData.ToX));
-        } else if (Std.isOfType(obj, TransformConstraintData.ToY)) {
-            writeToY(cast(obj, TransformConstraintData.ToY));
+    private function writeToProperty(obj:Dynamic):Void {
+        if (Std.isOfType(obj, spine.TransformConstraintData.ToRotate)) {
+            writeToRotate(obj);
+        } else if (Std.isOfType(obj, spine.TransformConstraintData.ToScaleX)) {
+            writeToScaleX(obj);
+        } else if (Std.isOfType(obj, spine.TransformConstraintData.ToScaleY)) {
+            writeToScaleY(obj);
+        } else if (Std.isOfType(obj, spine.TransformConstraintData.ToShearY)) {
+            writeToShearY(obj);
+        } else if (Std.isOfType(obj, spine.TransformConstraintData.ToX)) {
+            writeToX(obj);
+        } else if (Std.isOfType(obj, spine.TransformConstraintData.ToY)) {
+            writeToY(obj);
         } else {
             throw new spine.SpineException("Unknown ToProperty type");
         }
     }
 
-    private function writeToRotate(obj:TransformConstraintData.ToRotate):Void {
+    private function writeToRotate(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ToRotate-" + (nextId++) + ">";
+
+        var refString = "<ToRotate-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3879,23 +3394,24 @@ class SkeletonSerializer {
         json.writeValue("ToRotate");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("max");
-        json.writeValue(obj.max);
+        writeProperty(obj, "max", {"kind":"primitive","name":"max","getter":"max","valueType":"float","isNullable":false});
 
         json.writeName("scale");
-        json.writeValue(obj.scale);
+        writeProperty(obj, "scale", {"kind":"primitive","name":"scale","getter":"scale","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeToScaleX(obj:TransformConstraintData.ToScaleX):Void {
+    private function writeToScaleX(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ToScaleX-" + (nextId++) + ">";
+
+        var refString = "<ToScaleX-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3905,23 +3421,24 @@ class SkeletonSerializer {
         json.writeValue("ToScaleX");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("max");
-        json.writeValue(obj.max);
+        writeProperty(obj, "max", {"kind":"primitive","name":"max","getter":"max","valueType":"float","isNullable":false});
 
         json.writeName("scale");
-        json.writeValue(obj.scale);
+        writeProperty(obj, "scale", {"kind":"primitive","name":"scale","getter":"scale","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeToScaleY(obj:TransformConstraintData.ToScaleY):Void {
+    private function writeToScaleY(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ToScaleY-" + (nextId++) + ">";
+
+        var refString = "<ToScaleY-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3931,23 +3448,24 @@ class SkeletonSerializer {
         json.writeValue("ToScaleY");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("max");
-        json.writeValue(obj.max);
+        writeProperty(obj, "max", {"kind":"primitive","name":"max","getter":"max","valueType":"float","isNullable":false});
 
         json.writeName("scale");
-        json.writeValue(obj.scale);
+        writeProperty(obj, "scale", {"kind":"primitive","name":"scale","getter":"scale","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeToShearY(obj:TransformConstraintData.ToShearY):Void {
+    private function writeToShearY(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ToShearY-" + (nextId++) + ">";
+
+        var refString = "<ToShearY-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3957,23 +3475,24 @@ class SkeletonSerializer {
         json.writeValue("ToShearY");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("max");
-        json.writeValue(obj.max);
+        writeProperty(obj, "max", {"kind":"primitive","name":"max","getter":"max","valueType":"float","isNullable":false});
 
         json.writeName("scale");
-        json.writeValue(obj.scale);
+        writeProperty(obj, "scale", {"kind":"primitive","name":"scale","getter":"scale","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeToX(obj:TransformConstraintData.ToX):Void {
+    private function writeToX(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ToX-" + (nextId++) + ">";
+
+        var refString = "<ToX-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -3983,23 +3502,24 @@ class SkeletonSerializer {
         json.writeValue("ToX");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("max");
-        json.writeValue(obj.max);
+        writeProperty(obj, "max", {"kind":"primitive","name":"max","getter":"max","valueType":"float","isNullable":false});
 
         json.writeName("scale");
-        json.writeValue(obj.scale);
+        writeProperty(obj, "scale", {"kind":"primitive","name":"scale","getter":"scale","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeToY(obj:TransformConstraintData.ToY):Void {
+    private function writeToY(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<ToY-" + (nextId++) + ">";
+
+        var refString = "<ToY-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -4009,23 +3529,24 @@ class SkeletonSerializer {
         json.writeValue("ToY");
 
         json.writeName("offset");
-        json.writeValue(obj.offset);
+        writeProperty(obj, "offset", {"kind":"primitive","name":"offset","getter":"offset","valueType":"float","isNullable":false});
 
         json.writeName("max");
-        json.writeValue(obj.max);
+        writeProperty(obj, "max", {"kind":"primitive","name":"max","getter":"max","valueType":"float","isNullable":false});
 
         json.writeName("scale");
-        json.writeValue(obj.scale);
+        writeProperty(obj, "scale", {"kind":"primitive","name":"scale","getter":"scale","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeTransformConstraintPose(obj:TransformConstraintPose):Void {
+    private function writeTransformConstraintPose(obj:Dynamic):Void {
         if (visitedObjects.exists(obj)) {
             json.writeValue(visitedObjects.get(obj));
             return;
         }
-        var refString = "<TransformConstraintPose-" + (nextId++) + ">";
+
+        var refString = "<TransformConstraintPose-" + nextId++ + ">";
         visitedObjects.set(obj, refString);
 
         json.writeObjectStart();
@@ -4035,103 +3556,190 @@ class SkeletonSerializer {
         json.writeValue("TransformConstraintPose");
 
         json.writeName("mixRotate");
-        json.writeValue(obj.mixRotate);
+        writeProperty(obj, "getMixRotate()", {"kind":"primitive","name":"mixRotate","getter":"getMixRotate()","valueType":"float","isNullable":false});
 
         json.writeName("mixX");
-        json.writeValue(obj.mixX);
+        writeProperty(obj, "getMixX()", {"kind":"primitive","name":"mixX","getter":"getMixX()","valueType":"float","isNullable":false});
 
         json.writeName("mixY");
-        json.writeValue(obj.mixY);
+        writeProperty(obj, "getMixY()", {"kind":"primitive","name":"mixY","getter":"getMixY()","valueType":"float","isNullable":false});
 
         json.writeName("mixScaleX");
-        json.writeValue(obj.mixScaleX);
+        writeProperty(obj, "getMixScaleX()", {"kind":"primitive","name":"mixScaleX","getter":"getMixScaleX()","valueType":"float","isNullable":false});
 
         json.writeName("mixScaleY");
-        json.writeValue(obj.mixScaleY);
+        writeProperty(obj, "getMixScaleY()", {"kind":"primitive","name":"mixScaleY","getter":"getMixScaleY()","valueType":"float","isNullable":false});
 
         json.writeName("mixShearY");
-        json.writeValue(obj.mixShearY);
+        writeProperty(obj, "getMixShearY()", {"kind":"primitive","name":"mixShearY","getter":"getMixShearY()","valueType":"float","isNullable":false});
 
         json.writeObjectEnd();
     }
 
-    private function writeUpdate(obj:Update):Void {
+    private function writeUpdate(obj:Dynamic):Void {
         if (Std.isOfType(obj, BonePose)) {
-            writeBonePose(cast(obj, BonePose));
+            writeBonePose(obj);
         } else if (Std.isOfType(obj, IkConstraint)) {
-            writeIkConstraint(cast(obj, IkConstraint));
+            writeIkConstraint(obj);
         } else if (Std.isOfType(obj, PathConstraint)) {
-            writePathConstraint(cast(obj, PathConstraint));
+            writePathConstraint(obj);
         } else if (Std.isOfType(obj, PhysicsConstraint)) {
-            writePhysicsConstraint(cast(obj, PhysicsConstraint));
+            writePhysicsConstraint(obj);
         } else if (Std.isOfType(obj, Slider)) {
-            writeSlider(cast(obj, Slider));
+            writeSlider(obj);
         } else if (Std.isOfType(obj, TransformConstraint)) {
-            writeTransformConstraint(cast(obj, TransformConstraint));
+            writeTransformConstraint(obj);
         } else {
             throw new spine.SpineException("Unknown Update type");
         }
     }
 
-    private function writeVertexAttachment(obj:VertexAttachment):Void {
+    private function writeVertexAttachment(obj:Dynamic):Void {
         if (Std.isOfType(obj, BoundingBoxAttachment)) {
-            writeBoundingBoxAttachment(cast(obj, BoundingBoxAttachment));
+            writeBoundingBoxAttachment(obj);
         } else if (Std.isOfType(obj, ClippingAttachment)) {
-            writeClippingAttachment(cast(obj, ClippingAttachment));
+            writeClippingAttachment(obj);
         } else if (Std.isOfType(obj, MeshAttachment)) {
-            writeMeshAttachment(cast(obj, MeshAttachment));
+            writeMeshAttachment(obj);
         } else if (Std.isOfType(obj, PathAttachment)) {
-            writePathAttachment(cast(obj, PathAttachment));
+            writePathAttachment(obj);
         } else {
             throw new spine.SpineException("Unknown VertexAttachment type");
         }
     }
 
+    private function writeProperty(obj:Dynamic, javaGetter:String, propertyInfo:Dynamic):Void {
+        var value = getPropertyValue(obj, javaGetter);
+        
+        if (value == null) {
+            json.writeNull();
+            return;
+        }
+        
+        switch (propertyInfo.kind) {
+            case "primitive":
+                json.writeValue(value);
+                
+            case "object":
+                var writeMethod = Reflect.field(this, propertyInfo.writeMethodCall);
+                if (writeMethod != null) {
+                    Reflect.callMethod(this, writeMethod, [value]);
+                } else {
+                    json.writeValue("<" + propertyInfo.valueType + ">");
+                }
+                
+            case "enum":
+                // Handle enum-like classes with name property
+                if (Reflect.hasField(value, "name")) {
+                    json.writeValue(Reflect.field(value, "name"));
+                } else {
+                    // Fallback for actual Haxe enums
+                    var enumValue = Type.enumConstructor(value);
+                    json.writeValue(enumValue != null ? enumValue : "unknown");
+                }
+                
+            case "array":
+                writeArray(value, propertyInfo);
+                
+            case "nestedArray":
+                writeNestedArray(value);
+        }
+    }
+
+    private function writeArray(arr:Dynamic, propertyInfo:Dynamic):Void {
+        if (arr == null) {
+            json.writeNull();
+            return;
+        }
+        
+        json.writeArrayStart();
+        for (item in cast(arr, Array<Dynamic>)) {
+            if (propertyInfo.elementKind == "primitive") {
+                json.writeValue(item);
+            } else if (propertyInfo.writeMethodCall != null) {
+                var writeMethod = Reflect.field(this, propertyInfo.writeMethodCall);
+                if (writeMethod != null) {
+                    Reflect.callMethod(this, writeMethod, [item]);
+                } else {
+                    json.writeValue(item);
+                }
+            } else {
+                json.writeValue(item);
+            }
+        }
+        json.writeArrayEnd();
+    }
+
+    private function writeNestedArray(arr:Dynamic):Void {
+        if (arr == null) {
+            json.writeNull();
+            return;
+        }
+        
+        json.writeArrayStart();
+        for (nestedArray in cast(arr, Array<Dynamic>)) {
+            if (nestedArray == null) {
+                json.writeNull();
+            } else {
+                json.writeArrayStart();
+                for (elem in cast(nestedArray, Array<Dynamic>)) {
+                    json.writeValue(elem);
+                }
+                json.writeArrayEnd();
+            }
+        }
+        json.writeArrayEnd();
+    }
+
     // Helper methods for special types
-    private function writeColor(obj:spine.Color):Void {
+    private function writeColor(obj:Dynamic):Void {
         if (obj == null) {
             json.writeNull();
-        } else {
-            json.writeObjectStart();
-            json.writeName("r");
-            json.writeValue(obj.r);
-            json.writeName("g");
-            json.writeValue(obj.g);
-            json.writeName("b");
-            json.writeValue(obj.b);
-            json.writeName("a");
-            json.writeValue(obj.a);
-            json.writeObjectEnd();
+            return;
         }
+        json.writeObjectStart();
+        json.writeName("r");
+        json.writeValue(Reflect.field(obj, "r"));
+        json.writeName("g");
+        json.writeValue(Reflect.field(obj, "g"));
+        json.writeName("b");
+        json.writeValue(Reflect.field(obj, "b"));
+        json.writeName("a");
+        json.writeValue(Reflect.field(obj, "a"));
+        json.writeObjectEnd();
     }
 
     private function writeTextureRegion(obj:Dynamic):Void {
-        // TextureRegion serialization not implemented
         json.writeValue("<TextureRegion>");
     }
 
-    private function writeFloatArray(arr:Array<Float>):Void {
-        if (arr == null) {
+    private function writeIntArray(obj:Dynamic):Void {
+        if (obj == null) {
             json.writeNull();
+            return;
+        }
+        // IntArray in Java might be a custom type, try to get its array data
+        var items = getPropertyValue(obj, "getItems()");
+        if (items != null) {
+            writeArray(items, {elementKind: "primitive"});
         } else {
-            json.writeArrayStart();
-            for (val in arr) {
-                json.writeValue(val);
-            }
-            json.writeArrayEnd();
+            // Fallback: assume it's already an array
+            writeArray(obj, {elementKind: "primitive"});
         }
     }
 
-    private function writeIntArray(arr:Array<Int>):Void {
-        if (arr == null) {
+    private function writeFloatArray(obj:Dynamic):Void {
+        if (obj == null) {
             json.writeNull();
+            return;
+        }
+        // FloatArray in Java might be a custom type, try to get its array data
+        var items = getPropertyValue(obj, "getItems()");
+        if (items != null) {
+            writeArray(items, {elementKind: "primitive"});
         } else {
-            json.writeArrayStart();
-            for (val in arr) {
-                json.writeValue(val);
-            }
-            json.writeArrayEnd();
+            // Fallback: assume it's already an array
+            writeArray(obj, {elementKind: "primitive"});
         }
     }
-
 }

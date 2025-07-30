@@ -13,7 +13,7 @@ interface TypeLocation {
 	line: number;
 }
 
-function findTypeInJava(typeName: string): TypeLocation | null {
+function findTypeInJava (typeName: string): TypeLocation | null {
 	try {
 		// Search for class, interface, or enum definitions
 		const result = execSync(
@@ -34,7 +34,7 @@ function findTypeInJava(typeName: string): TypeLocation | null {
 	return null;
 }
 
-function findTypeInHaxe(typeName: string): TypeLocation | null {
+function findTypeInHaxe (typeName: string): TypeLocation | null {
 	try {
 		// Search for class, interface, enum, typedef, or abstract definitions
 		const result = execSync(
@@ -55,7 +55,7 @@ function findTypeInHaxe(typeName: string): TypeLocation | null {
 	return null;
 }
 
-async function main(): Promise<void> {
+async function main (): Promise<void> {
 	// Read the IR file
 	const irFile = path.resolve(__dirname, '../output/serializer-ir.json');
 	if (!fs.existsSync(irFile)) {

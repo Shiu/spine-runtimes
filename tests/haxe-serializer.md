@@ -212,125 +212,122 @@ When implementing the Haxe serializer generator, these patterns should be applie
 
 ---
 
-# Haxe Serializer Generator Implementation Plan
+# Revised Implementation Plan: Reflection-Based Haxe Serializer
 
-Based on the comprehensive pattern analysis above, here's the implementation plan for a new Haxe serializer generator:
+## Key Insight
 
-## Architecture Overview
+Instead of maintaining complex mapping tables, we can leverage Haxe's dynamic reflection capabilities to automatically resolve field vs method access at runtime.
 
-The new generator will use a **rule-based transformation system** with the following components:
+## Simplified Architecture
 
-1. **Mapping Database**: Load java-haxe-diff.md mappings into a structured lookup table
-2. **Context-Aware Transformer**: Apply transformations based on class context
-3. **Type System**: Handle Java-to-Haxe type conversions
-4. **Code Generator**: Produce clean, idiomatic Haxe code
+### Core Approach: Runtime Property Resolution
+
+```haxe
+private function getPropertyValue(obj:Dynamic, javaGetter:String):Dynamic {
+    // Extract property name from Java getter
+    var propName = extractPropertyName(javaGetter); // getName() → "name"
+    
+    // 1. Try direct field access first (most common case)
+    if (Reflect.hasField(obj, propName)) {
+        return Reflect.field(obj, propName);
+    }
+    
+    // 2. Try special field variations
+    var specialNames = getSpecialFieldNames(javaGetter, propName);
+    for (name in specialNames) {
+        if (Reflect.hasField(obj, name)) {
+            return Reflect.field(obj, name);
+        }
+    }
+    
+    // 3. Try method access (for computed properties)
+    if (Reflect.hasField(obj, javaGetter.replace("()", ""))) {
+        return Reflect.callMethod(obj, Reflect.field(obj, javaGetter.replace("()", "")), []);
+    }
+    
+    // 4. Handle property syntax (get, never)
+    // This would need special handling or we just access the underlying getter
+    
+    throw 'Property ${javaGetter} not found on object';
+}
+```
+
+### Special Name Mappings
+
+Based on the pattern analysis, we only need to handle these special cases:
+
+```haxe
+private function getSpecialFieldNames(javaGetter:String, defaultName:String):Array<String> {
+    return switch(javaGetter) {
+        case "getInt()": ["intValue"];
+        case "getFloat()": ["floatValue"];
+        case "getString()": ["stringValue"];
+        case "getPhysicsConstraints()": ["physics"];
+        case "getUpdateCache()": ["_updateCache"];
+        case "getSetupPose()": ["setup"];
+        case "getAppliedPose()": ["applied"];
+        default: [];
+    }
+}
+```
 
 ## Implementation Steps
 
-### Phase 1: Build Mapping Infrastructure
+### Phase 1: Core Reflection System
+1. Implement `getPropertyValue` with fallback chain
+2. Handle special field name mappings
+3. Test with known edge cases
 
-1. **Parse java-haxe-diff.md**
-   - Extract all type mappings into a structured format
-   - Create lookup table: `Map<ClassName, Map<JavaGetter, HaxeMapping>>`
-   - Store mapping type (field, method, property) and Haxe type info
-
-2. **Create Transformation Rules Engine**
-   - Rule priority system (specific → general)
-   - Context-aware lookups (class + getter combination)
-   - Fallback to general patterns
-
-### Phase 2: Implement Core Transformations
-
-1. **Getter-to-Field Transformer**
-   - Check mapping database first
-   - Apply general pattern: `getX()` → `x`
-   - Handle special cases (getInt → intValue, etc.)
-
-2. **Type Transformer**
-   - Java primitives → Haxe types
-   - Array handling (including nested arrays)
-   - Generic type resolution
-
-3. **Access Pattern Resolver**
-   - Determine if result is field access or method call
-   - Handle property syntax `name(get, never)`
-   - Preserve method calls where needed
+### Phase 2: Type Handling
+1. Keep existing Java → Haxe type transformations
+2. Use `Dynamic` for runtime resolution
+3. Cast results when needed for type safety
 
 ### Phase 3: Code Generation
+1. Generate simpler code using reflection helpers
+2. No need for complex getter-to-field mappings
+3. Handle enums with runtime type checking
 
-1. **Property Code Generator**
-   - Generate correct Haxe syntax based on mapping type
-   - Handle nullable types properly
-   - Generate enum switch statements with correct Haxe enum syntax
+## Advantages
 
-2. **Method Generator**
-   - Handle abstract types with `Std.isOfType`
-   - Generate proper casting syntax
-   - Implement special methods (writeSkin, writeSkinEntry)
+1. **Simplicity**: No need to parse mapping files or maintain lookup tables
+2. **Robustness**: Automatically handles API changes
+3. **Correctness**: Runtime resolution ensures we get the right value
+4. **Maintainability**: Minimal special cases to maintain
 
-### Phase 4: Validation and Testing
+## Trade-offs
 
-1. **Compile-time Validation**
-   - Generate code and attempt Haxe compilation
-   - Report type errors with context
+1. **Performance**: Reflection is slower than direct access (acceptable for serialization)
+2. **Type Safety**: Less compile-time checking (mitigated by runtime tests)
+3. **Debugging**: Harder to trace field access (can add logging)
 
-2. **Runtime Testing**
-   - Compare serialization output with Java reference
-   - Ensure all fields are properly serialized
+## Example Generated Code
 
-## Key Design Decisions
-
-1. **Data-Driven Approach**: Use the mapping file as the source of truth rather than hardcoded rules
-2. **Explicit Over Implicit**: When in doubt, use the exact mapping from java-haxe-diff.md
-3. **Fail-Fast**: If a mapping is missing or ambiguous, fail with a clear error message
-4. **Type Safety**: Leverage Haxe's type system to catch errors at compile time
-
-## Implementation Details
-
-### Mapping Database Structure
-```typescript
-interface HaxeMapping {
-  kind: 'field' | 'method' | 'property';
-  haxeName: string;
-  haxeType: string;
-  propertyGetter?: string; // for (get, never) syntax
+```haxe
+private function writeAnimation(obj:Animation):Void {
+    // ... cycle detection ...
+    
+    json.writeObjectStart();
+    json.writeName("type");
+    json.writeValue("Animation");
+    
+    // Use reflection for all properties
+    json.writeName("timelines");
+    writeArray(getPropertyValue(obj, "getTimelines()"), writeTimeline);
+    
+    json.writeName("duration");
+    json.writeValue(getPropertyValue(obj, "getDuration()"));
+    
+    json.writeName("bones");
+    writeIntArray(getPropertyValue(obj, "getBones()"));
+    
+    json.writeName("name");
+    json.writeValue(getPropertyValue(obj, "getName()"));
+    
+    json.writeObjectEnd();
 }
-
-interface ClassMappings {
-  className: string;
-  getters: Map<string, HaxeMapping>;
-}
 ```
 
-### Transformation Algorithm
-```
-1. Load all mappings from java-haxe-diff.md
-2. For each property in IR:
-   a. Look up exact class + getter combination
-   b. If not found, check for class-level patterns
-   c. If not found, apply general transformation rules
-   d. Transform type from Java to Haxe
-   e. Generate appropriate access code
-```
+## Summary
 
-### Special Handling
-
-1. **Timeline Classes**: All timeline getters follow consistent patterns
-2. **Constraint Classes**: Handle getData/getPose/getAppliedPose consistently
-3. **Array Properties**: Detect 1D vs 2D arrays based on context
-4. **Enum Values**: Generate proper Haxe enum access syntax
-5. **Circular References**: Maintain visitedObjects tracking
-
-## Error Handling
-
-1. **Missing Mappings**: Log unmapped getters with class context
-2. **Type Mismatches**: Detect and report Java/Haxe type incompatibilities
-3. **Compilation Errors**: Capture and display Haxe compiler output
-
-## Testing Strategy
-
-1. **Unit Tests**: Test individual transformation rules
-2. **Integration Tests**: Generate full serializer and compile
-3. **Snapshot Tests**: Compare output with reference implementation
-
-This approach ensures accuracy, maintainability, and extensibility while leveraging the comprehensive mapping data we've collected.
+This reflection-based approach eliminates the complexity of maintaining mapping tables while preserving correctness. The patterns we analyzed show that most getters follow predictable conventions, with only a handful of special cases that can be handled with a simple switch statement.
