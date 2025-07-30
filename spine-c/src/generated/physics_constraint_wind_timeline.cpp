@@ -19,11 +19,10 @@ spine_rtti spine_physics_constraint_wind_timeline_get_rtti(spine_physics_constra
 }
 
 void spine_physics_constraint_wind_timeline_apply(spine_physics_constraint_wind_timeline self, spine_skeleton skeleton, float lastTime, float time,
-												  /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend,
+												  /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend,
 												  spine_mix_direction direction, bool appliedPose) {
 	PhysicsConstraintTimeline *_self = (PhysicsConstraintTimeline *) (PhysicsConstraintWindTimeline *) self;
-	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
-				 appliedPose);
+	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) events, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
 int spine_physics_constraint_wind_timeline_get_constraint_index(spine_physics_constraint_wind_timeline self) {

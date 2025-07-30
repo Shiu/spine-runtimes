@@ -16,7 +16,7 @@ SPINE_C_API void spine_physics_constraint_damping_timeline_dispose(spine_physics
 
 SPINE_C_API spine_rtti spine_physics_constraint_damping_timeline_get_rtti(spine_physics_constraint_damping_timeline self);
 SPINE_C_API void spine_physics_constraint_damping_timeline_apply(spine_physics_constraint_damping_timeline self, spine_skeleton skeleton,
-																 float lastTime, float time, /*@null*/ spine_array_event pEvents, float alpha,
+																 float lastTime, float time, /*@null*/ spine_array_event events, float alpha,
 																 spine_mix_blend blend, spine_mix_direction direction, bool appliedPose);
 SPINE_C_API int spine_physics_constraint_damping_timeline_get_constraint_index(spine_physics_constraint_damping_timeline self);
 SPINE_C_API void spine_physics_constraint_damping_timeline_set_constraint_index(spine_physics_constraint_damping_timeline self, int inValue);

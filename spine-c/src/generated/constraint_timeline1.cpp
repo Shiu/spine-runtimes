@@ -83,11 +83,10 @@ spine_array_float spine_constraint_timeline1_get_curves(spine_constraint_timelin
 }
 
 void spine_constraint_timeline1_apply(spine_constraint_timeline1 self, spine_skeleton skeleton, float lastTime, float time,
-									  /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+									  /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend, spine_mix_direction direction,
 									  bool appliedPose) {
 	CurveTimeline1 *_self = (CurveTimeline1 *) (ConstraintTimeline1 *) self;
-	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
-				 appliedPose);
+	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) events, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
 size_t spine_constraint_timeline1_get_frame_entries(spine_constraint_timeline1 self) {

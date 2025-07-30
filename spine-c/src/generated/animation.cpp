@@ -36,10 +36,10 @@ void spine_animation_set_duration(spine_animation self, float inValue) {
 	_self->setDuration(inValue);
 }
 
-void spine_animation_apply(spine_animation self, spine_skeleton skeleton, float lastTime, float time, bool loop, /*@null*/ spine_array_event pEvents,
+void spine_animation_apply(spine_animation self, spine_skeleton skeleton, float lastTime, float time, bool loop, /*@null*/ spine_array_event events,
 						   float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
 	Animation *_self = (Animation *) self;
-	_self->apply(*((Skeleton *) skeleton), lastTime, time, loop, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
+	_self->apply(*((Skeleton *) skeleton), lastTime, time, loop, (Array<Event *> *) events, alpha, (MixBlend) blend, (MixDirection) direction,
 				 appliedPose);
 }
 

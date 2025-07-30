@@ -21,11 +21,10 @@ void spine_rgba_timeline_set_frame(spine_rgba_timeline self, int frame, float ti
 	_self->setFrame(frame, time, r, g, b, a);
 }
 
-void spine_rgba_timeline_apply(spine_rgba_timeline self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event pEvents,
+void spine_rgba_timeline_apply(spine_rgba_timeline self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event events,
 							   float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
 	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBATimeline *) self;
-	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
-				 appliedPose);
+	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) events, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
 int spine_rgba_timeline_get_slot_index(spine_rgba_timeline self) {

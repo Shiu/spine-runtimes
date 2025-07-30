@@ -15,7 +15,7 @@ SPINE_C_API void spine_alpha_timeline_dispose(spine_alpha_timeline self);
 
 SPINE_C_API spine_rtti spine_alpha_timeline_get_rtti(spine_alpha_timeline self);
 SPINE_C_API void spine_alpha_timeline_apply(spine_alpha_timeline self, spine_skeleton skeleton, float lastTime, float time,
-											/*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+											/*@null*/ spine_array_event events, float alpha, spine_mix_blend blend, spine_mix_direction direction,
 											bool appliedPose);
 SPINE_C_API int spine_alpha_timeline_get_slot_index(spine_alpha_timeline self);
 SPINE_C_API void spine_alpha_timeline_set_slot_index(spine_alpha_timeline self, int inValue);

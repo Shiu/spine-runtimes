@@ -15,7 +15,7 @@ SPINE_C_API void spine_sequence_timeline_dispose(spine_sequence_timeline self);
 
 SPINE_C_API spine_rtti spine_sequence_timeline_get_rtti(spine_sequence_timeline self);
 SPINE_C_API void spine_sequence_timeline_apply(spine_sequence_timeline self, spine_skeleton skeleton, float lastTime, float time,
-											   /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+											   /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend, spine_mix_direction direction,
 											   bool appliedPose);
 SPINE_C_API void spine_sequence_timeline_set_frame(spine_sequence_timeline self, int frame, float time, spine_sequence_mode mode, int index,
 												   float delay);

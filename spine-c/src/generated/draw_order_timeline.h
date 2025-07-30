@@ -15,7 +15,7 @@ SPINE_C_API void spine_draw_order_timeline_dispose(spine_draw_order_timeline sel
 
 SPINE_C_API spine_rtti spine_draw_order_timeline_get_rtti(spine_draw_order_timeline self);
 SPINE_C_API void spine_draw_order_timeline_apply(spine_draw_order_timeline self, spine_skeleton skeleton, float lastTime, float time,
-												 /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend,
+												 /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend,
 												 spine_mix_direction direction, bool appliedPose);
 SPINE_C_API size_t spine_draw_order_timeline_get_frame_count(spine_draw_order_timeline self);
 SPINE_C_API void spine_draw_order_timeline_set_frame(spine_draw_order_timeline self, size_t frame, float time, /*@null*/ spine_array_int drawOrder);

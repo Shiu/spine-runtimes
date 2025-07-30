@@ -47,11 +47,10 @@ size_t spine_deform_timeline_get_frame_count(spine_deform_timeline self) {
 	return _self->getFrameCount();
 }
 
-void spine_deform_timeline_apply(spine_deform_timeline self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event pEvents,
+void spine_deform_timeline_apply(spine_deform_timeline self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event events,
 								 float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
 	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
-	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
-				 appliedPose);
+	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) events, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
 int spine_deform_timeline_get_slot_index(spine_deform_timeline self) {

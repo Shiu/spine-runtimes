@@ -30,6 +30,7 @@
 #ifndef SPINE_C_EXTENSIONS_H
 #define SPINE_C_EXTENSIONS_H
 
+#include "generated/bone_pose.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -46,6 +47,20 @@ SPINE_OPAQUE_TYPE(spine_animation_state_events)
 SPINE_OPAQUE_TYPE(spine_skin_entry)
 SPINE_OPAQUE_TYPE(spine_skin_entries)
 SPINE_OPAQUE_TYPE(spine_texture_loader)
+
+// Bounds struct
+typedef struct spine_bounds {
+	float x;
+	float y;
+	float width;
+	float height;
+} spine_bounds;
+
+// Vector struct
+typedef struct spine_vector {
+	float x;
+	float y;
+} spine_vector;
 
 // Additional types
 typedef void *spine_void;
@@ -106,16 +121,15 @@ SPINE_C_API int32_t spine_skin_entry_get_slot_index(spine_skin_entry entry);
 SPINE_C_API const char *spine_skin_entry_get_name(spine_skin_entry entry);
 SPINE_C_API spine_attachment spine_skin_entry_get_attachment(spine_skin_entry entry);
 
-// Bounds struct
-typedef struct spine_bounds {
-    float x;
-    float y;
-    float width;
-    float height;
-} spine_bounds;
-
-// Skeleton bounds function
+// Skeleton functions
 SPINE_C_API spine_bounds spine_skeleton_get_bounds(spine_skeleton skeleton);
+SPINE_C_API spine_vector spine_skeleton_get_position_v(spine_skeleton skeleton);
+
+// BonePose functions
+SPINE_C_API spine_vector spine_bone_pose_world_to_local_v(spine_bone_pose self, float world_x, float world_y);
+SPINE_C_API spine_vector spine_bone_pose_local_to_world_v(spine_bone_pose self, float local_x, float local_y);
+SPINE_C_API spine_vector spine_bone_pose_world_to_parent_v(spine_bone_pose self, float world_x, float world_y);
+SPINE_C_API spine_vector spine_bone_pose_parent_to_world_v(spine_bone_pose self, float parent_x, float parent_y);
 
 #ifdef __cplusplus
 }

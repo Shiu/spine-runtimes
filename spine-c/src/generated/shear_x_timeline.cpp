@@ -17,11 +17,10 @@ spine_rtti spine_shear_x_timeline_get_rtti(spine_shear_x_timeline self) {
 }
 
 void spine_shear_x_timeline_apply(spine_shear_x_timeline self, spine_skeleton skeleton, float lastTime, float time,
-								  /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+								  /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend, spine_mix_direction direction,
 								  bool appliedPose) {
 	BoneTimeline1 *_self = (BoneTimeline1 *) (ShearXTimeline *) self;
-	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
-				 appliedPose);
+	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) events, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
 int spine_shear_x_timeline_get_bone_index(spine_shear_x_timeline self) {

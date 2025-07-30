@@ -496,10 +496,50 @@ spine_skin_entries spine_skin_get_entries(spine_skin skin) {
 
 // Skeleton bounds function
 spine_bounds spine_skeleton_get_bounds(spine_skeleton skeleton) {
-    spine_bounds bounds = {0, 0, 0, 0};
-    if (!skeleton) return bounds;
-    
-    Skeleton *_skeleton = (Skeleton *) skeleton;
-    _skeleton->getBounds(bounds.x, bounds.y, bounds.width, bounds.height);
-    return bounds;
+	spine_bounds bounds = {0, 0, 0, 0};
+	if (!skeleton) return bounds;
+
+	Skeleton *_skeleton = (Skeleton *) skeleton;
+	_skeleton->getBounds(bounds.x, bounds.y, bounds.width, bounds.height);
+	return bounds;
+}
+
+spine_vector spine_skeleton_get_position_v(spine_skeleton skeleton) {
+	if (!skeleton) return {0, 0};
+	Skeleton *_skeleton = (Skeleton *) skeleton;
+	float x, y;
+	_skeleton->getPosition(x, y);
+	return {x, y};
+}
+
+spine_vector spine_bone_pose_world_to_local_v(spine_bone_pose self, float world_x, float world_y) {
+	if (!self) return {0, 0};
+	BonePose *_self = (BonePose *) self;
+	float localX, localY;
+	_self->worldToLocal(world_x, world_y, localX, localY);
+	return {localX, localY};
+}
+
+spine_vector spine_bone_pose_local_to_world_v(spine_bone_pose self, float local_x, float local_y) {
+	if (!self) return {0, 0};
+	BonePose *_self = (BonePose *) self;
+	float worldX, worldY;
+	_self->localToWorld(local_x, local_y, worldX, worldY);
+	return {worldX, worldY};
+}
+
+spine_vector spine_bone_pose_world_to_parent_v(spine_bone_pose self, float world_x, float world_y) {
+	if (!self) return {0, 0};
+	BonePose *_self = (BonePose *) self;
+	float parentX, parentY;
+	_self->worldToParent(world_x, world_y, parentX, parentY);
+	return {parentX, parentY};
+}
+
+spine_vector spine_bone_pose_parent_to_world_v(spine_bone_pose self, float parent_x, float parent_y) {
+	if (!self) return {0, 0};
+	BonePose *_self = (BonePose *) self;
+	float worldX, worldY;
+	_self->parentToWorld(parent_x, parent_y, worldX, worldY);
+	return {worldX, worldY};
 }

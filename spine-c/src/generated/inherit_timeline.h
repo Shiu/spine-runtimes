@@ -16,7 +16,7 @@ SPINE_C_API void spine_inherit_timeline_dispose(spine_inherit_timeline self);
 SPINE_C_API spine_rtti spine_inherit_timeline_get_rtti(spine_inherit_timeline self);
 SPINE_C_API void spine_inherit_timeline_set_frame(spine_inherit_timeline self, int frame, float time, spine_inherit inherit);
 SPINE_C_API void spine_inherit_timeline_apply(spine_inherit_timeline self, spine_skeleton skeleton, float lastTime, float time,
-											  /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+											  /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend, spine_mix_direction direction,
 											  bool appliedPose);
 SPINE_C_API int spine_inherit_timeline_get_bone_index(spine_inherit_timeline self);
 SPINE_C_API void spine_inherit_timeline_set_bone_index(spine_inherit_timeline self, int inValue);

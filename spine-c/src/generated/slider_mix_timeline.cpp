@@ -17,11 +17,10 @@ spine_rtti spine_slider_mix_timeline_get_rtti(spine_slider_mix_timeline self) {
 }
 
 void spine_slider_mix_timeline_apply(spine_slider_mix_timeline self, spine_skeleton skeleton, float lastTime, float time,
-									 /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+									 /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend, spine_mix_direction direction,
 									 bool appliedPose) {
 	SliderMixTimeline *_self = (SliderMixTimeline *) self;
-	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) pEvents, alpha, (MixBlend) blend, (MixDirection) direction,
-				 appliedPose);
+	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) events, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
 int spine_slider_mix_timeline_get_constraint_index(spine_slider_mix_timeline self) {

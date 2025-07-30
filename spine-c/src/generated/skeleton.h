@@ -40,7 +40,7 @@ SPINE_C_API spine_array_constraint spine_skeleton_get_constraints(spine_skeleton
 SPINE_C_API spine_array_physics_constraint spine_skeleton_get_physics_constraints(spine_skeleton self);
 SPINE_C_API void spine_skeleton_get_bounds_1(spine_skeleton self, float *outX, float *outY, float *outWidth, float *outHeight);
 SPINE_C_API void spine_skeleton_get_bounds_2(spine_skeleton self, float *outX, float *outY, float *outWidth, float *outHeight,
-											 spine_array_float outVertexBuffer, /*@null*/ spine_skeleton_clipping clipper);
+											 spine_array_float outVertexBuffer, /*@null*/ spine_skeleton_clipping clipping);
 SPINE_C_API spine_color spine_skeleton_get_color(spine_skeleton self);
 SPINE_C_API void spine_skeleton_set_color_1(spine_skeleton self, spine_color color);
 SPINE_C_API void spine_skeleton_set_color_2(spine_skeleton self, float r, float g, float b, float a);
@@ -54,6 +54,7 @@ SPINE_C_API void spine_skeleton_set_x(spine_skeleton self, float inValue);
 SPINE_C_API float spine_skeleton_get_y(spine_skeleton self);
 SPINE_C_API void spine_skeleton_set_y(spine_skeleton self, float inValue);
 SPINE_C_API void spine_skeleton_set_position(spine_skeleton self, float x, float y);
+SPINE_C_API void spine_skeleton_get_position(spine_skeleton self, float *x, float *y);
 SPINE_C_API float spine_skeleton_get_wind_x(spine_skeleton self);
 SPINE_C_API void spine_skeleton_set_wind_x(spine_skeleton self, float windX);
 SPINE_C_API float spine_skeleton_get_wind_y(spine_skeleton self);

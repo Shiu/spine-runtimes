@@ -23,7 +23,7 @@ SPINE_C_API void spine_deform_timeline_set_bezier(spine_deform_timeline self, si
 SPINE_C_API float spine_deform_timeline_get_curve_percent(spine_deform_timeline self, float time, int frame);
 SPINE_C_API size_t spine_deform_timeline_get_frame_count(spine_deform_timeline self);
 SPINE_C_API void spine_deform_timeline_apply(spine_deform_timeline self, spine_skeleton skeleton, float lastTime, float time,
-											 /*@null*/ spine_array_event pEvents, float alpha, spine_mix_blend blend, spine_mix_direction direction,
+											 /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend, spine_mix_direction direction,
 											 bool appliedPose);
 SPINE_C_API int spine_deform_timeline_get_slot_index(spine_deform_timeline self);
 SPINE_C_API void spine_deform_timeline_set_slot_index(spine_deform_timeline self, int inValue);

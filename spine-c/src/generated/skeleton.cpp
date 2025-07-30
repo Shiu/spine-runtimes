@@ -141,9 +141,9 @@ void spine_skeleton_get_bounds_1(spine_skeleton self, float *outX, float *outY, 
 }
 
 void spine_skeleton_get_bounds_2(spine_skeleton self, float *outX, float *outY, float *outWidth, float *outHeight, spine_array_float outVertexBuffer,
-								 /*@null*/ spine_skeleton_clipping clipper) {
+								 /*@null*/ spine_skeleton_clipping clipping) {
 	Skeleton *_self = (Skeleton *) self;
-	_self->getBounds(*outX, *outY, *outWidth, *outHeight, *((Array<float> *) outVertexBuffer), (SkeletonClipping *) clipper);
+	_self->getBounds(*outX, *outY, *outWidth, *outHeight, *((Array<float> *) outVertexBuffer), (SkeletonClipping *) clipping);
 }
 
 spine_color spine_skeleton_get_color(spine_skeleton self) {
@@ -209,6 +209,11 @@ void spine_skeleton_set_y(spine_skeleton self, float inValue) {
 void spine_skeleton_set_position(spine_skeleton self, float x, float y) {
 	Skeleton *_self = (Skeleton *) self;
 	_self->setPosition(x, y);
+}
+
+void spine_skeleton_get_position(spine_skeleton self, float *x, float *y) {
+	Skeleton *_self = (Skeleton *) self;
+	_self->getPosition(*x, *y);
 }
 
 float spine_skeleton_get_wind_x(spine_skeleton self) {
