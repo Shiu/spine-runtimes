@@ -13,7 +13,7 @@ log_detail "as the podspec file resides in. Copying spine-cpp sources to platfor
 # Clean destination directories
 log_action "Cleaning destination directories"
 rm -rf ios/Classes/spine-c ios/Classes/spine-cpp
-rm -rf macos/Classes/spine-c macos/Classes/spine-cpp  
+rm -rf macos/Classes/spine-c macos/Classes/spine-cpp
 rm -rf src/spine-c src/spine-cpp
 log_ok
 
@@ -36,6 +36,7 @@ else
     log_error_output "$CP_OUTPUT"
     exit 1
 fi
+rm -f ios/Classes/spine-cpp/src/no-cpprt.cpp
 
 log_action "Copying spine-c to macOS Classes"
 mkdir -p macos/Classes/spine-c
@@ -56,6 +57,7 @@ else
     log_error_output "$CP_OUTPUT"
     exit 1
 fi
+rm -f macos/Classes/spine-cpp/src/no-cpprt.cpp
 
 log_action "Copying spine-c to src directory"
 mkdir -p src/spine-c
@@ -76,5 +78,6 @@ else
     log_error_output "$CP_OUTPUT"
     exit 1
 fi
+rm -f src/spine-cpp/src/no-cpprt.cpp
 
 log_summary "✓ Flutter setup completed successfully"

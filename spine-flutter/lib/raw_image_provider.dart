@@ -59,10 +59,6 @@ class RawImageProvider extends ImageProvider<RawImageKey> {
       height: image.height,
       pixelFormat: image.pixelFormat,
     );
-    assert(() {
-      debugPrint('ImageDescriptor: ${descriptor.width}x${descriptor.height}');
-      return true;
-    }());
     return descriptor.instantiateCodec(targetWidth: targetWidth, targetHeight: targetHeight);
   }
 }
