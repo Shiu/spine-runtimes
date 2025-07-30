@@ -48,20 +48,6 @@ SPINE_OPAQUE_TYPE(spine_skin_entry)
 SPINE_OPAQUE_TYPE(spine_skin_entries)
 SPINE_OPAQUE_TYPE(spine_texture_loader)
 
-// Bounds struct
-typedef struct spine_bounds {
-	float x;
-	float y;
-	float width;
-	float height;
-} spine_bounds;
-
-// Vector struct
-typedef struct spine_vector {
-	float x;
-	float y;
-} spine_vector;
-
 // Additional types
 typedef void *spine_void;
 typedef void (*spine_dispose_renderer_object)(void *);
@@ -122,14 +108,14 @@ SPINE_C_API const char *spine_skin_entry_get_name(spine_skin_entry entry);
 SPINE_C_API spine_attachment spine_skin_entry_get_attachment(spine_skin_entry entry);
 
 // Skeleton functions
-SPINE_C_API spine_bounds spine_skeleton_get_bounds(spine_skeleton skeleton);
-SPINE_C_API spine_vector spine_skeleton_get_position_v(spine_skeleton skeleton);
+SPINE_C_API void spine_skeleton_get_bounds(spine_skeleton skeleton, spine_array_float output);
+SPINE_C_API void spine_skeleton_get_position_v(spine_skeleton skeleton, spine_array_float output);
 
 // BonePose functions
-SPINE_C_API spine_vector spine_bone_pose_world_to_local_v(spine_bone_pose self, float world_x, float world_y);
-SPINE_C_API spine_vector spine_bone_pose_local_to_world_v(spine_bone_pose self, float local_x, float local_y);
-SPINE_C_API spine_vector spine_bone_pose_world_to_parent_v(spine_bone_pose self, float world_x, float world_y);
-SPINE_C_API spine_vector spine_bone_pose_parent_to_world_v(spine_bone_pose self, float parent_x, float parent_y);
+SPINE_C_API void spine_bone_pose_world_to_local_v(spine_bone_pose self, float world_x, float world_y, spine_array_float output);
+SPINE_C_API void spine_bone_pose_local_to_world_v(spine_bone_pose self, float local_x, float local_y, spine_array_float output);
+SPINE_C_API void spine_bone_pose_world_to_parent_v(spine_bone_pose self, float world_x, float world_y, spine_array_float output);
+SPINE_C_API void spine_bone_pose_parent_to_world_v(spine_bone_pose self, float parent_x, float parent_y, spine_array_float output);
 
 #ifdef __cplusplus
 }

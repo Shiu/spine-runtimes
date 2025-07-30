@@ -495,51 +495,70 @@ spine_skin_entries spine_skin_get_entries(spine_skin skin) {
 }
 
 // Skeleton bounds function
-spine_bounds spine_skeleton_get_bounds(spine_skeleton skeleton) {
-	spine_bounds bounds = {0, 0, 0, 0};
-	if (!skeleton) return bounds;
+void spine_skeleton_get_bounds(spine_skeleton self, spine_array_float output) {
+	spine_array_float_clear(output);
+	if (!self) return;
 
-	Skeleton *_skeleton = (Skeleton *) skeleton;
-	_skeleton->getBounds(bounds.x, bounds.y, bounds.width, bounds.height);
-	return bounds;
+	Skeleton *_skeleton = (Skeleton *) self;
+	float x, y, width, height;
+	_skeleton->getBounds(x, y, width, height);
+	spine_array_float_add(output, x);
+	spine_array_float_add(output, y);
+	spine_array_float_add(output, width);
+	spine_array_float_add(output, height);
 }
 
-spine_vector spine_skeleton_get_position_v(spine_skeleton skeleton) {
-	if (!skeleton) return {0, 0};
-	Skeleton *_skeleton = (Skeleton *) skeleton;
+void spine_skeleton_get_position_v(spine_skeleton self, spine_array_float output) {
+	spine_array_float_clear(output);
+	if (!self) return;
+
+	Skeleton *_skeleton = (Skeleton *) self;
 	float x, y;
 	_skeleton->getPosition(x, y);
-	return {x, y};
+	spine_array_float_add(output, x);
+	spine_array_float_add(output, y);
 }
 
-spine_vector spine_bone_pose_world_to_local_v(spine_bone_pose self, float world_x, float world_y) {
-	if (!self) return {0, 0};
+void spine_bone_pose_world_to_local_v(spine_bone_pose self, float world_x, float world_y, spine_array_float output) {
+	spine_array_float_clear(output);
+	if (!self) return;
+
 	BonePose *_self = (BonePose *) self;
 	float localX, localY;
 	_self->worldToLocal(world_x, world_y, localX, localY);
-	return {localX, localY};
+	spine_array_float_add(output, localX);
+	spine_array_float_add(output, localY);
 }
 
-spine_vector spine_bone_pose_local_to_world_v(spine_bone_pose self, float local_x, float local_y) {
-	if (!self) return {0, 0};
+void spine_bone_pose_local_to_world_v(spine_bone_pose self, float local_x, float local_y, spine_array_float output) {
+	spine_array_float_clear(output);
+	if (!self) return;
+
 	BonePose *_self = (BonePose *) self;
 	float worldX, worldY;
 	_self->localToWorld(local_x, local_y, worldX, worldY);
-	return {worldX, worldY};
+	spine_array_float_add(output, worldX);
+	spine_array_float_add(output, worldY);
 }
 
-spine_vector spine_bone_pose_world_to_parent_v(spine_bone_pose self, float world_x, float world_y) {
-	if (!self) return {0, 0};
+void spine_bone_pose_world_to_parent_v(spine_bone_pose self, float world_x, float world_y, spine_array_float output) {
+	spine_array_float_clear(output);
+	if (!self) return;
+
 	BonePose *_self = (BonePose *) self;
 	float parentX, parentY;
 	_self->worldToParent(world_x, world_y, parentX, parentY);
-	return {parentX, parentY};
+	spine_array_float_add(output, parentX);
+	spine_array_float_add(output, parentY);
 }
 
-spine_vector spine_bone_pose_parent_to_world_v(spine_bone_pose self, float parent_x, float parent_y) {
-	if (!self) return {0, 0};
+void spine_bone_pose_parent_to_world_v(spine_bone_pose self, float parent_x, float parent_y, spine_array_float output) {
+	spine_array_float_clear(output);
+	if (!self) return;
+
 	BonePose *_self = (BonePose *) self;
 	float worldX, worldY;
 	_self->parentToWorld(parent_x, parent_y, worldX, worldY);
-	return {worldX, worldY};
+	spine_array_float_add(output, worldX);
+	spine_array_float_add(output, worldY);
 }
