@@ -27,29 +27,12 @@
 /// THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
 
-import 'dart:ffi';
 import 'dart:io';
 
-import 'package:ffi/ffi.dart';
+import 'package:universal_ffi/ffi.dart';
+import 'package:universal_ffi/ffi_utils.dart';
 
 const String _libName = 'spine_flutter';
-final DynamicLibrary _dylib = () {
-  if (Platform.isMacOS || Platform.isIOS) {
-    try {
-      return DynamicLibrary.open('$_libName.framework/$_libName');
-    } catch (e) {
-      // Fallback for macOS where the library might not be in a framework
-      return DynamicLibrary.open('$_libName.dylib');
-    }
-  }
-  if (Platform.isAndroid || Platform.isLinux) {
-    return DynamicLibrary.open('lib$_libName.so');
-  }
-  if (Platform.isWindows) {
-    return DynamicLibrary.open('$_libName.dll');
-  }
-  throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
-}();
 
 class SpineDartFFI {
   DynamicLibrary dylib;
@@ -58,10 +41,27 @@ class SpineDartFFI {
   SpineDartFFI(this.dylib, this.allocator);
 }
 
+Future<DynamicLibrary> initDynamicLibrary() async {
+  if (Platform.isMacOS || Platform.isIOS) {
+    try {
+      return await DynamicLibrary.open('$_libName.framework/$_libName');
+    } catch (e) {
+      // Fallback for macOS where the library might not be in a framework
+      return await DynamicLibrary.open('$_libName.dylib');
+    }
+  } else if (Platform.isAndroid || Platform.isLinux) {
+    return await DynamicLibrary.open('lib$_libName.so');
+  } else if (Platform.isWindows) {
+    return await DynamicLibrary.open('$_libName.dll');
+  } else {
+    throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
+  }
+}
+
 Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {
   if (useStaticLinkage) {
     return SpineDartFFI(DynamicLibrary.process(), malloc);
   } else {
-    return SpineDartFFI(_dylib, malloc);
+    return SpineDartFFI(await initDynamicLibrary(), malloc);
   }
 }

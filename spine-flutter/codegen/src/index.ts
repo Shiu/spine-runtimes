@@ -29,10 +29,10 @@ async function generateFFIBindings(spineCDir: string): Promise<void> {
         throw new Error('Failed to generate bindings');
     }
 
-    // Replace dart:ffi import with ffi_proxy.dart
-    console.log('Replacing dart:ffi import with ffi_proxy.dart...');
+    // Replace dart:ffi import with universal_ffi
+    console.log('Replacing dart:ffi import with universal_ffi...');
     let content = fs.readFileSync(bindingsPath, 'utf8');
-    content = content.replace("import 'dart:ffi' as ffi;", "import '../ffi_proxy.dart' as ffi;");
+    content = content.replace("import 'dart:ffi' as ffi;", "import 'package:universal_ffi/ffi.dart' as ffi;");
 
     // For web_ffi compatibility, we need to convert wrapper structs to Opaque
     console.log('Converting wrapper structs to Opaque for web_ffi compatibility...');

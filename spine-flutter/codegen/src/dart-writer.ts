@@ -502,7 +502,8 @@ export class DartWriter {
 		const lines: string[] = [];
 
 		lines.push('');
-		lines.push("import '../ffi_proxy.dart';");
+		lines.push("import 'package:universal_ffi/ffi.dart';");
+		lines.push(`import 'package:universal_ffi/ffi_utils.dart';`);
 
 		lines.push("import 'spine_dart_bindings_generated.dart';");
 		lines.push("import '../spine_bindings.dart';");
@@ -703,7 +704,8 @@ ${declaration} {`;
 
 		lines.push(this.generateHeader());
 		lines.push('');
-		lines.push("import '../ffi_proxy.dart';");
+		lines.push(`import 'package:universal_ffi/ffi.dart';`);
+		lines.push(`import 'package:universal_ffi/ffi_utils.dart';`);
 		lines.push("import 'spine_dart_bindings_generated.dart';");
 		lines.push("import '../spine_bindings.dart';");
 		lines.push("import '../native_array.dart';");
@@ -1608,13 +1610,10 @@ ${declaration} {`;
 		lines.push('');
 		lines.push('// AUTO GENERATED FILE, DO NOT EDIT.');
 		lines.push('');
-		lines.push('// ignore_for_file: type_argument_not_matching_bounds');
-		lines.push(`import 'package:flutter/services.dart';`);
-		lines.push(`import 'package:wasm_ffi/ffi.dart';`);
+		lines.push(`import 'package:universal_ffi/ffi.dart';`);
 		lines.push('');
 		lines.push(`import 'generated/spine_dart_bindings_generated.dart';`);
 		lines.push('');
-		lines.push('// Export this so malloc_web.dart can access it');
 		lines.push('DynamicLibrary? dylibInstance;');
 		lines.push('');
 		lines.push('class SpineDartFFI {');
@@ -1655,7 +1654,7 @@ ${declaration} {`;
 		lines.push(`    dylibInstance = await DynamicLibrary.open('assets/packages/spine_flutter/lib/assets/libspine_flutter.js');`);
 		lines.push('');
 		lines.push('    // Now register all the opaque types');
-		
+
 		// Sort and write all registerOpaqueType calls
 		const sortedTypes = Array.from(wrapperTypes).sort();
 		for (const type of sortedTypes) {

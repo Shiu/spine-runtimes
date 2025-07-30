@@ -5,10 +5,11 @@ export 'spine_widget.dart';
 export 'raw_image_provider.dart';
 
 import 'dart:convert' as convert;
-import 'ffi_proxy.dart';
 import 'dart:io' if (dart.library.html) 'io_stub.dart';
 import 'dart:typed_data';
 import 'dart:ui';
+
+import "package:universal_ffi/ffi.dart";
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart' as material;

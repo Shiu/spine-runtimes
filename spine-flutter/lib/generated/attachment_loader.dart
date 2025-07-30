@@ -29,7 +29,7 @@
 
 // AUTO GENERATED FILE, DO NOT EDIT.
 
-import '../ffi_proxy.dart';
+import 'package:universal_ffi/ffi.dart';
 import 'bounding_box_attachment.dart';
 import 'clipping_attachment.dart';
 import 'mesh_attachment.dart';

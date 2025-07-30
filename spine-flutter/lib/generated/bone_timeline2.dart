@@ -29,7 +29,7 @@
 
 // AUTO GENERATED FILE, DO NOT EDIT.
 
-import '../ffi_proxy.dart';
+import 'package:universal_ffi/ffi.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'bone_timeline.dart';

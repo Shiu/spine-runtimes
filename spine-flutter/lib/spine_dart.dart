@@ -26,32 +26,34 @@
 /// THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 library;
 
-import 'package:spine_flutter/generated/arrays.dart';
-
-import 'generated/spine_dart_bindings_generated.dart';
-import 'spine_bindings.dart';
-import 'spine_dart_init.dart' if (dart.library.html) 'spine_dart_init_web.dart';
-import 'ffi_proxy.dart';
 import 'dart:typed_data';
-import 'generated/atlas.dart';
-import 'generated/skeleton_data.dart';
-import 'generated/skin.dart';
-import 'generated/attachment.dart';
-import 'generated/region_attachment.dart';
-import 'generated/mesh_attachment.dart';
-import 'generated/bounding_box_attachment.dart';
-import 'generated/clipping_attachment.dart';
-import 'generated/path_attachment.dart';
-import 'generated/point_attachment.dart';
-import 'generated/skeleton.dart';
+
+import 'package:spine_flutter/generated/arrays.dart';
+import 'package:universal_ffi/ffi.dart';
+import 'package:universal_ffi/ffi_utils.dart';
+
 import 'generated/animation_state.dart';
 import 'generated/animation_state_data.dart';
-import 'generated/track_entry.dart';
+import 'generated/atlas.dart';
+import 'generated/attachment.dart';
+import 'generated/bone_pose.dart';
+import 'generated/bounding_box_attachment.dart';
+import 'generated/clipping_attachment.dart';
 import 'generated/event.dart';
 import 'generated/event_type.dart';
-import 'generated/render_command.dart';
+import 'generated/mesh_attachment.dart';
+import 'generated/path_attachment.dart';
 import 'generated/physics.dart';
-import 'generated/bone_pose.dart';
+import 'generated/point_attachment.dart';
+import 'generated/region_attachment.dart';
+import 'generated/render_command.dart';
+import 'generated/skeleton.dart';
+import 'generated/skeleton_data.dart';
+import 'generated/skin.dart';
+import 'generated/spine_dart_bindings_generated.dart';
+import 'generated/track_entry.dart';
+import 'spine_bindings.dart';
+import 'spine_dart_init.dart' if (dart.library.html) 'spine_dart_init_web.dart';
 
 // Export generated classes
 export 'generated/api.dart';

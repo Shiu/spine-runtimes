@@ -27,7 +27,8 @@
 // SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // *****************************************************************************/
 
-import 'ffi_proxy.dart';
+import 'package:universal_ffi/ffi.dart';
+import 'package:universal_ffi/ffi_utils.dart';
 import 'dart:collection';
 
 /// Base class for native spine arrays.

@@ -29,13 +29,10 @@
 
 // AUTO GENERATED FILE, DO NOT EDIT.
 
-// ignore_for_file: type_argument_not_matching_bounds
-import 'package:flutter/services.dart';
-import 'package:wasm_ffi/ffi.dart';
+import 'package:universal_ffi/ffi.dart';
 
 import 'generated/spine_dart_bindings_generated.dart';
 
-// Export this so malloc_web.dart can access it
 DynamicLibrary? dylibInstance;
 
 class SpineDartFFI {
