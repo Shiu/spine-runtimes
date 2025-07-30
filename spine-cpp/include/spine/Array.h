@@ -80,7 +80,6 @@ namespace spine {
 		}
 
 		inline Array<T> &setSize(size_t newSize, const T &defaultValue) {
-			assert(newSize >= 0);
 			size_t oldSize = _size;
 			_size = newSize;
 			if (_capacity < newSize) {

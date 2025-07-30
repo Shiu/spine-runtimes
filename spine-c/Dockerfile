@@ -1,0 +1,15 @@
+FROM ubuntu:24.04
+
+# Install build dependencies for spine-c
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    ninja-build \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /workspace
+
+# Default command
+CMD ["bash"]

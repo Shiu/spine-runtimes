@@ -56,11 +56,32 @@
 #endif
 #endif
 
-#define SPINE_OPAQUE_TYPE(name)                                                                                                                      \
-	typedef struct name##_wrapper {                                                                                                                  \
-		char _dummy;                                                                                                                                 \
-	} name##_wrapper;                                                                                                                                \
+#if defined(__clang__)
+/* Clang needs to suppress both pedantic and C/C++ compatibility warnings */
+#define SPINE_OPAQUE_TYPE(name) \
+	_Pragma("clang diagnostic push") \
+	_Pragma("clang diagnostic ignored \"-Wpedantic\"") \
+	_Pragma("clang diagnostic ignored \"-Wextern-c-compat\"") \
+	typedef struct name##_wrapper { \
+	} name##_wrapper; \
+	_Pragma("clang diagnostic pop") \
 	typedef name##_wrapper *name;
+#elif defined(__GNUC__)
+/* GCC only needs to suppress pedantic warning */
+#define SPINE_OPAQUE_TYPE(name) \
+	_Pragma("GCC diagnostic push") \
+	_Pragma("GCC diagnostic ignored \"-Wpedantic\"") \
+	typedef struct name##_wrapper { \
+	} name##_wrapper; \
+	_Pragma("GCC diagnostic pop") \
+	typedef name##_wrapper *name;
+#else
+/* Other compilers - generic version */
+#define SPINE_OPAQUE_TYPE(name) \
+	typedef struct name##_wrapper { \
+	} name##_wrapper; \
+	typedef name##_wrapper *name;
+#endif
 
 typedef long long spine_property_id;
 

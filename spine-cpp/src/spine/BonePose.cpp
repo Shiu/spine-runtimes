@@ -133,7 +133,7 @@ void BonePose::updateWorldTransform(Skeleton &skeleton) {
 			za *= s;
 			zc *= s;
 			s = MathUtil::sqrt(za * za + zc * zc);
-			if (_inherit == Inherit_NoScale && (pa * pd - pb * pc < 0) != (skeleton.getScaleX() < 0 != skeleton.getScaleY() < 0)) s = -s;
+			if (_inherit == Inherit_NoScale && (pa * pd - pb * pc < 0) != ((skeleton.getScaleX() < 0) != (skeleton.getScaleY() < 0))) s = -s;
 			r = MathUtil::Pi / 2 + MathUtil::atan2(zc, za);
 			float zb = MathUtil::cos(r) * s;
 			float zd = MathUtil::sin(r) * s;
@@ -207,7 +207,7 @@ void BonePose::updateLocalTransform(Skeleton &skeleton) {
 				pa *= s;
 				pc *= s;
 				s = MathUtil::sqrt(pa * pa + pc * pc);
-				if (_inherit == Inherit_NoScale && pid < 0 != (skeleton.getScaleX() < 0 != skeleton.getScaleY() < 0)) s = -s;
+				if (_inherit == Inherit_NoScale && (pid < 0) != ((skeleton.getScaleX() < 0) != (skeleton.getScaleY() < 0))) s = -s;
 				r = MathUtil::Pi / 2 + MathUtil::atan2(pc, pa);
 				pb = MathUtil::cos(r) * s;
 				pd = MathUtil::sin(r) * s;
