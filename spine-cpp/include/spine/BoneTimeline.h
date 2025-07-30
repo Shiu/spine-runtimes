@@ -66,7 +66,7 @@ namespace spine {
 	public:
 		BoneTimeline1(size_t frameCount, size_t bezierCount, int boneIndex, Property property);
 
-		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
 		virtual int getBoneIndex() const override {
@@ -95,7 +95,7 @@ namespace spine {
 	public:
 		BoneTimeline2(size_t frameCount, size_t bezierCount, int boneIndex, Property property1, Property property2);
 
-		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
 		virtual int getBoneIndex() const override {

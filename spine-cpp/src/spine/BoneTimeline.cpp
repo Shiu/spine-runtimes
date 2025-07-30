@@ -48,10 +48,10 @@ BoneTimeline1::BoneTimeline1(size_t frameCount, size_t bezierCount, int boneInde
 	setPropertyIds(ids, 1);
 }
 
-void BoneTimeline1::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-						  MixDirection direction, bool appliedPose) {
+void BoneTimeline1::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend, MixDirection direction,
+						  bool appliedPose) {
 	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
+	SP_UNUSED(events);
 
 	Bone *bone = skeleton._bones[_boneIndex];
 	if (bone->isActive()) {
@@ -67,10 +67,10 @@ BoneTimeline2::BoneTimeline2(size_t frameCount, size_t bezierCount, int boneInde
 	setPropertyIds(ids, 2);
 }
 
-void BoneTimeline2::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-						  MixDirection direction, bool appliedPose) {
+void BoneTimeline2::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend, MixDirection direction,
+						  bool appliedPose) {
 	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
+	SP_UNUSED(events);
 
 	Bone *bone = skeleton._bones[_boneIndex];
 	if (bone->isActive()) {

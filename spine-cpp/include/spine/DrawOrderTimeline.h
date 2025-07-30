@@ -44,7 +44,7 @@ namespace spine {
 	public:
 		explicit DrawOrderTimeline(size_t frameCount);
 
-		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
 		size_t getFrameCount();

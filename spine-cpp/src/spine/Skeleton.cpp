@@ -35,23 +35,23 @@
 #include <spine/IkConstraint.h>
 #include <spine/PathConstraint.h>
 #include <spine/PhysicsConstraint.h>
-#include <spine/Slider.h>
 #include <spine/SkeletonData.h>
 #include <spine/Skin.h>
+#include <spine/Slider.h>
 #include <spine/Slot.h>
 #include <spine/TransformConstraint.h>
 
 #include <spine/BoneData.h>
-#include <spine/IkConstraintData.h>
 #include <spine/ClippingAttachment.h>
+#include <spine/IkConstraintData.h>
 #include <spine/MeshAttachment.h>
 #include <spine/PathAttachment.h>
 #include <spine/PathConstraintData.h>
 #include <spine/PhysicsConstraintData.h>
 #include <spine/RegionAttachment.h>
+#include <spine/SkeletonClipping.h>
 #include <spine/SlotData.h>
 #include <spine/TransformConstraintData.h>
-#include <spine/SkeletonClipping.h>
 
 #include <spine/ArrayUtils.h>
 
@@ -223,7 +223,6 @@ void Skeleton::updateWorldTransform(Physics physics) {
 		updateCache[i]->update(*this, physics);
 	}
 }
-
 
 void Skeleton::setupPose() {
 	setupPoseBones();
@@ -488,6 +487,11 @@ void Skeleton::setY(float inValue) {
 void Skeleton::setPosition(float x, float y) {
 	_x = x;
 	_y = y;
+}
+
+void Skeleton::getPosition(float &x, float &y) {
+	x = _x;
+	y = _y;
 }
 
 float Skeleton::getWindX() {

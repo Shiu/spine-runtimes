@@ -57,10 +57,10 @@ void InheritTimeline::setFrame(int frame, float time, Inherit inherit) {
 }
 
 
-void InheritTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+void InheritTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 							MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
+	SP_UNUSED(events);
 	SP_UNUSED(alpha);
 
 	Bone *bone = skeleton._bones[_boneIndex];

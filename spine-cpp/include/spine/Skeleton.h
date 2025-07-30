@@ -255,7 +255,7 @@ namespace spine {
 		/// @param outHeight The height of the AABB.
 		/// @param outVertexBuffer Reference to hold an array of floats. This method will assign it with new floats as needed.
 		/// @param clipping Pointer to a SkeletonClipping instance or NULL. If a clipper is given, clipping attachments will be taken into account.
-		void getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Array<float> &outVertexBuffer, SkeletonClipping *clipper);
+		void getBounds(float &outX, float &outY, float &outWidth, float &outHeight, Array<float> &outVertexBuffer, SkeletonClipping *clipping);
 
 		Color &getColor();
 
@@ -282,6 +282,8 @@ namespace spine {
 		void setY(float inValue);
 
 		void setPosition(float x, float y);
+
+		void getPosition(float &x, float &y);
 
 		float getWindX();
 

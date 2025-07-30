@@ -219,10 +219,10 @@ void AlphaTimeline::setSlotIndex(int inValue) {
 	_slotIndex = inValue;
 }
 
-void AlphaTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
-						  MixDirection direction, bool appliedPose) {
+void AlphaTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend, MixDirection direction,
+						  bool appliedPose) {
 	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
+	SP_UNUSED(events);
 	SP_UNUSED(direction);
 
 	Slot *slot = skeleton._slots[_slotIndex];

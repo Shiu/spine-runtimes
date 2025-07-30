@@ -60,10 +60,10 @@ void AttachmentTimeline::setAttachment(Skeleton &skeleton, SlotPose &pose, Strin
 	pose.setAttachment(attachmentName == NULL || attachmentName->isEmpty() ? NULL : skeleton.getAttachment(_slotIndex, *attachmentName));
 }
 
-void AttachmentTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+void AttachmentTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 							   MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
+	SP_UNUSED(events);
 	SP_UNUSED(alpha);
 
 	Slot *slot = skeleton._slots[_slotIndex];

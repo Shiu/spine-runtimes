@@ -53,10 +53,10 @@ PathConstraintMixTimeline::PathConstraintMixTimeline(size_t frameCount, size_t b
 PathConstraintMixTimeline::~PathConstraintMixTimeline() {
 }
 
-void PathConstraintMixTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+void PathConstraintMixTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 									  MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
+	SP_UNUSED(events);
 	SP_UNUSED(direction);
 
 	PathConstraint *constraint = (PathConstraint *) skeleton._constraints[_constraintIndex];

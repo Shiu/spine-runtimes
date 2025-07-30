@@ -51,10 +51,10 @@ SliderTimeline::SliderTimeline(size_t frameCount, size_t bezierCount, int slider
 SliderTimeline::~SliderTimeline() {
 }
 
-void SliderTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+void SliderTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
+	SP_UNUSED(events);
 	SP_UNUSED(direction);
 
 	Slider *constraint = (Slider *) skeleton._constraints[_constraintIndex];

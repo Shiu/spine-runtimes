@@ -71,11 +71,11 @@ void SequenceTimeline::setSlotIndex(int inValue) {
 	_slotIndex = inValue;
 }
 
-void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+void SequenceTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 							 MixDirection direction, bool appliedPose) {
 	SP_UNUSED(alpha);
 	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
+	SP_UNUSED(events);
 
 	Slot *slot = skeleton.getSlots()[getSlotIndex()];
 	if (!slot->getBone().isActive()) return;

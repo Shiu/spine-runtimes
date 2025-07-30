@@ -139,7 +139,7 @@ namespace spine {
 		/// @param blend Controls how mixing is applied when alpha < 1.
 		/// @param direction Indicates whether the timelines are mixing in or out. Used by timelines which perform instant transitions,
 		///           such as DrawOrderTimeline or AttachmentTimeline.
-		void apply(Skeleton &skeleton, float lastTime, float time, bool loop, Array<Event *> *pEvents, float alpha, MixBlend blend,
+		void apply(Skeleton &skeleton, float lastTime, float time, bool loop, Array<Event *> *events, float alpha, MixBlend blend,
 				   MixDirection direction, bool appliedPose);
 
 		/// The animation's name, which is unique across all animations in the skeleton.

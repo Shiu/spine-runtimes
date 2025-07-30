@@ -53,10 +53,10 @@ IkConstraintTimeline::IkConstraintTimeline(size_t frameCount, size_t bezierCount
 IkConstraintTimeline::~IkConstraintTimeline() {
 }
 
-void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+void IkConstraintTimeline::apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 								 MixDirection direction, bool appliedPose) {
 	SP_UNUSED(lastTime);
-	SP_UNUSED(pEvents);
+	SP_UNUSED(events);
 
 	IkConstraint *constraint = (IkConstraint *) skeleton._constraints[_constraintIndex];
 	if (!constraint->isActive()) return;

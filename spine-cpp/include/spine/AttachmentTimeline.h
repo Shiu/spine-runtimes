@@ -60,7 +60,7 @@ namespace spine {
 
 		virtual ~AttachmentTimeline();
 
-		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
 		/// Sets the time and attachment name for the specified frame.

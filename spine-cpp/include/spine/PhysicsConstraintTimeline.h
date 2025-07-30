@@ -50,7 +50,7 @@ namespace spine {
 		/// @param constraintIndex -1 for all physics constraints in the skeleton.
 		explicit PhysicsConstraintTimeline(size_t frameCount, size_t bezierCount, int constraintIndex, Property property);
 
-		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
 		virtual int getConstraintIndex() const override {
@@ -268,7 +268,7 @@ namespace spine {
 			setPropertyIds(ids, 1);
 		}
 
-		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *pEvents, float alpha, MixBlend blend,
+		virtual void apply(Skeleton &skeleton, float lastTime, float time, Array<Event *> *events, float alpha, MixBlend blend,
 						   MixDirection direction, bool appliedPose) override;
 
 		int getFrameCount() {

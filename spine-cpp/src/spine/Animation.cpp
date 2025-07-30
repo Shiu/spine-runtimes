@@ -57,7 +57,7 @@ Animation::~Animation() {
 	ArrayUtils::deleteElements(_timelines);
 }
 
-void Animation::apply(Skeleton &skeleton, float lastTime, float time, bool loop, Array<Event *> *pEvents, float alpha, MixBlend blend,
+void Animation::apply(Skeleton &skeleton, float lastTime, float time, bool loop, Array<Event *> *events, float alpha, MixBlend blend,
 					  MixDirection direction, bool appliedPose) {
 	if (loop && _duration != 0) {
 		time = MathUtil::fmod(time, _duration);
@@ -67,7 +67,7 @@ void Animation::apply(Skeleton &skeleton, float lastTime, float time, bool loop,
 	}
 
 	for (size_t i = 0, n = _timelines.size(); i < n; ++i) {
-		_timelines[i]->apply(skeleton, lastTime, time, pEvents, alpha, blend, direction, appliedPose);
+		_timelines[i]->apply(skeleton, lastTime, time, events, alpha, blend, direction, appliedPose);
 	}
 }
 
