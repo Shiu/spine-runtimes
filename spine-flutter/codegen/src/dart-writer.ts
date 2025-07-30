@@ -80,7 +80,6 @@ export class DartWriter {
 
 	private cleanOutputDirectory (): void {
 		if (fs.existsSync(this.outputDir)) {
-			console.log(`[NEW] Cleaning ${this.outputDir}...`);
 			fs.rmSync(this.outputDir, { recursive: true, force: true });
 		}
 		fs.mkdirSync(this.outputDir, { recursive: true });
@@ -107,8 +106,6 @@ export class DartWriter {
 		for (const cEnum of cEnums) {
 			this.enumNames.add(cEnum.name);
 		}
-
-		console.log('[NEW] Transforming to Dart model...');
 
 		const dartClasses: DartClass[] = [];
 		const dartEnums: DartEnum[] = [];
@@ -161,13 +158,10 @@ export class DartWriter {
 		isInterface: Record<string, boolean> = {},
 		supertypes: Record<string, string[]> = {}
 	): Promise<void> {
-		console.log('[NEW] Starting new Dart writer...');
-
 		// Step 1: Transform to clean model
 		const { classes, enums } = this.transformToDartModel(cTypes, cEnums, inheritance, isInterface, supertypes);
 
 		// Step 2 & 3: Generate and write files
-		console.log('[NEW] Writing enum files...');
 		for (const dartEnum of enums) {
 			const content = this.generateEnumCode(dartEnum);
 			const fileName = `${toSnakeCase(dartEnum.name)}.dart`;
@@ -175,7 +169,6 @@ export class DartWriter {
 			fs.writeFileSync(filePath, content);
 		}
 
-		console.log('[NEW] Writing class files...');
 		for (const dartClass of classes) {
 			const content = this.generateDartCode(dartClass);
 			const fileName = `${toSnakeCase(dartClass.name)}.dart`;
@@ -184,13 +177,13 @@ export class DartWriter {
 		}
 
 		// Generate arrays.dart (crucial - this was missing!)
-		console.log('[NEW] Writing arrays.dart...');
 		await this.writeArraysFile(cArrayTypes);
+
+		// Generate web init file with all opaque types
+		await this.writeWebInitFile(cTypes, cArrayTypes);
 
 		// Write main export file
 		await this.writeExportFile(classes, enums);
-
-		console.log('[NEW] New dart writer completed!');
 	}
 
 	// Class type resolution (from spec)
@@ -509,11 +502,7 @@ export class DartWriter {
 		const lines: string[] = [];
 
 		lines.push('');
-		lines.push("import 'dart:ffi';");
-
-		if (needsPackageFfi) {
-			lines.push("import 'package:ffi/ffi.dart';");
-		}
+		lines.push("import '../ffi_proxy.dart';");
 
 		lines.push("import 'spine_dart_bindings_generated.dart';");
 		lines.push("import '../spine_bindings.dart';");
@@ -714,8 +703,7 @@ ${declaration} {`;
 
 		lines.push(this.generateHeader());
 		lines.push('');
-		lines.push("import 'dart:ffi';");
-		lines.push("import 'package:ffi/ffi.dart';");
+		lines.push("import '../ffi_proxy.dart';");
 		lines.push("import 'spine_dart_bindings_generated.dart';");
 		lines.push("import '../spine_bindings.dart';");
 		lines.push("import '../native_array.dart';");
@@ -777,16 +765,47 @@ ${declaration} {`;
 
 		lines.push(`/// ${dartClassName} wrapper`);
 		lines.push(`class ${dartClassName} extends NativeArray<${this.toDartElementType(elementType)}> {`);
+		lines.push('  final bool _ownsMemory;');
+		lines.push('');
 
 		// Generate typed constructor - arrays use the array wrapper type
 		const arrayWrapperType = `${arrayType.name}_wrapper`;
-		lines.push(`  ${dartClassName}.fromPointer(Pointer<${arrayWrapperType}> ptr) : super(ptr);`);
+		lines.push(`  ${dartClassName}.fromPointer(Pointer<${arrayWrapperType}> ptr, {bool ownsMemory = false}) : _ownsMemory = ownsMemory, super(ptr);`);
 		lines.push('');
+
+		// Find create methods for constructors
+		const createMethod = arrayType.constructors?.find(m => m.name === `${arrayType.name}_create`);
+		const createWithCapacityMethod = arrayType.constructors?.find(m => m.name === `${arrayType.name}_create_with_capacity`);
+
+		// Add default constructor
+		if (createMethod) {
+			lines.push('  /// Create a new empty array');
+			lines.push(`  factory ${dartClassName}() {`);
+			lines.push(`    final ptr = SpineBindings.bindings.${createMethod.name}();`);
+			lines.push(`    return ${dartClassName}.fromPointer(ptr.cast(), ownsMemory: true);`);
+			lines.push('  }');
+			lines.push('');
+		}
+
+		// Add constructor with initial capacity
+		if (createWithCapacityMethod) {
+			lines.push('  /// Create a new array with the specified initial capacity');
+			lines.push(`  factory ${dartClassName}.withCapacity(int initialCapacity) {`);
+			lines.push(`    final ptr = SpineBindings.bindings.${createWithCapacityMethod.name}(initialCapacity);`);
+			lines.push(`    return ${dartClassName}.fromPointer(ptr.cast(), ownsMemory: true);`);
+			lines.push('  }');
+			lines.push('');
+		}
 
 		// Find size and buffer methods
 		const sizeMethod = arrayType.methods.find(m => m.name.endsWith('_size') && !m.name.endsWith('_set_size'));
 		const bufferMethod = arrayType.methods.find(m => m.name.endsWith('_buffer'));
 		const setMethod = arrayType.methods.find(m => m.name.endsWith('_set') && m.parameters.length === 3); // self, index, value
+		const setSizeMethod = arrayType.methods.find(m => m.name.endsWith('_set_size'));
+		const addMethod = arrayType.methods.find(m => m.name.endsWith('_add') && !m.name.endsWith('_add_all'));
+		const clearMethod = arrayType.methods.find(m => m.name.endsWith('_clear') && !m.name.endsWith('_clear_and_add_all'));
+		const removeAtMethod = arrayType.methods.find(m => m.name.endsWith('_remove_at'));
+		const ensureCapacityMethod = arrayType.methods.find(m => m.name.endsWith('_ensure_capacity'));
 
 		if (sizeMethod) {
 			lines.push('  @override');
@@ -853,6 +872,86 @@ ${declaration} {`;
 			const nullableParam = { ...param, isNullable: !this.isPrimitiveArrayType(elementType) };
 			const convertedValue = this.convertDartToC('value', nullableParam);
 			lines.push(`    SpineBindings.bindings.${setMethod.name}(nativePtr.cast(), index, ${convertedValue});`);
+			lines.push('  }');
+			lines.push('');
+		}
+
+		// Override set length if there's a set_size method
+		if (setSizeMethod) {
+			lines.push('  @override');
+			lines.push('  set length(int newLength) {');
+
+			// For primitive types, set_size takes a default value
+			if (this.isPrimitiveArrayType(elementType)) {
+				let defaultValue = '0';
+				if (elementType === 'float') defaultValue = '0.0';
+				else if (elementType === 'bool') defaultValue = 'false';
+				lines.push(`    SpineBindings.bindings.${setSizeMethod.name}(nativePtr.cast(), newLength, ${defaultValue});`);
+			} else {
+				// For object types, set_size takes null
+				lines.push(`    SpineBindings.bindings.${setSizeMethod.name}(nativePtr.cast(), newLength, Pointer.fromAddress(0));`);
+			}
+			lines.push('  }');
+			lines.push('');
+		}
+
+		// Add method if available
+		if (addMethod) {
+			lines.push('  /// Adds a value to the end of this array.');
+			lines.push(`  void add(${this.toDartElementType(elementType)} value) {`);
+
+			// Convert value to C type
+			const param = addMethod.parameters[1]; // The value parameter
+			const nullableParam = { ...param, isNullable: !this.isPrimitiveArrayType(elementType) };
+			const convertedValue = this.convertDartToC('value', nullableParam);
+			lines.push(`    SpineBindings.bindings.${addMethod.name}(nativePtr.cast(), ${convertedValue});`);
+			lines.push('  }');
+			lines.push('');
+		}
+
+		// Clear method if available
+		if (clearMethod) {
+			lines.push('  /// Removes all elements from this array.');
+			lines.push('  @override');
+			lines.push('  void clear() {');
+			lines.push(`    SpineBindings.bindings.${clearMethod.name}(nativePtr.cast());`);
+			lines.push('  }');
+			lines.push('');
+		}
+
+		// RemoveAt method if available
+		if (removeAtMethod) {
+			lines.push('  /// Removes the element at the given index.');
+			lines.push('  @override');
+			lines.push(`  ${this.toDartElementType(elementType)} removeAt(int index) {`);
+			lines.push('    if (index < 0 || index >= length) {');
+			lines.push('      throw RangeError.index(index, this, \'index\');');
+			lines.push('    }');
+			lines.push(`    final value = this[index];`);
+			lines.push(`    SpineBindings.bindings.${removeAtMethod.name}(nativePtr.cast(), index);`);
+			lines.push('    return value;');
+			lines.push('  }');
+			lines.push('');
+		}
+
+		// EnsureCapacity method if available
+		if (ensureCapacityMethod) {
+			lines.push('  /// Ensures this array has at least the given capacity.');
+			lines.push('  void ensureCapacity(int capacity) {');
+			lines.push(`    SpineBindings.bindings.${ensureCapacityMethod.name}(nativePtr.cast(), capacity);`);
+			lines.push('  }');
+			lines.push('');
+		}
+
+		// Find dispose method for arrays - check in destructor
+		if (arrayType.destructor) {
+			lines.push('  /// Dispose of the native array');
+			lines.push('  /// Throws an error if the array was not created by this class (i.e., it was obtained from C)');
+			lines.push('  void dispose() {');
+			lines.push('    if (!_ownsMemory) {');
+			lines.push(`      throw StateError('Cannot dispose ${dartClassName} that was created from C. Only arrays created via factory constructors can be disposed.');`);
+			lines.push('    }');
+			lines.push(`    SpineBindings.bindings.${arrayType.destructor.name}(nativePtr.cast());`);
 			lines.push('  }');
 		}
 
@@ -1139,7 +1238,7 @@ ${declaration} {`;
 		else if (cType === 'uint16_t*' || cType === 'uint16_t *') baseType = 'Pointer<Uint16>';
 		else if (cType === 'int*' || cType === 'int *') baseType = 'Pointer<Int32>';
 		else baseType = this.toDartTypeName(cType);
-		
+
 		return nullable ? `${baseType}?` : baseType;
 	}
 
@@ -1203,7 +1302,7 @@ ${declaration} {`;
 		if (cReturnType.startsWith('spine_')) {
 			const dartType = this.toDartTypeName(cReturnType);
 			const cClass = this.classMap.get(cReturnType);
-			
+
 			if (nullable) {
 				if (cClass && this.isAbstract(cClass)) {
 					return `if (${resultVar}.address == 0) return null;
@@ -1500,5 +1599,84 @@ ${declaration} {`;
 	private toCamelCase (str: string): string {
 		const pascal = this.toPascalCase(str);
 		return pascal.charAt(0).toLowerCase() + pascal.slice(1);
+	}
+
+	private async writeWebInitFile(cTypes: CClassOrStruct[], cArrayTypes: CClassOrStruct[]): Promise<void> {
+		const lines: string[] = [];
+
+		lines.push(LICENSE_HEADER);
+		lines.push('');
+		lines.push('// AUTO GENERATED FILE, DO NOT EDIT.');
+		lines.push('');
+		lines.push('// ignore_for_file: type_argument_not_matching_bounds');
+		lines.push(`import 'package:flutter/services.dart';`);
+		lines.push(`import 'package:inject_js/inject_js.dart' as js;`);
+		lines.push(`import 'package:web_ffi_fork/web_ffi.dart';`);
+		lines.push(`import 'package:web_ffi_fork/web_ffi_modules.dart';`);
+		lines.push('');
+		lines.push(`import 'generated/spine_dart_bindings_generated.dart';`);
+		lines.push('');
+		lines.push('Module? _module;');
+		lines.push('');
+		lines.push('class SpineDartFFI {');
+		lines.push('  final DynamicLibrary dylib;');
+		lines.push('  final Allocator allocator;');
+		lines.push('');
+		lines.push('  SpineDartFFI(this.dylib, this.allocator);');
+		lines.push('}');
+		lines.push('');
+		lines.push('Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {');
+		lines.push('  if (_module == null) {');
+		lines.push('    Memory.init();');
+		lines.push('');
+
+		// Collect all wrapper types
+		const wrapperTypes = new Set<string>();
+
+		// Add regular types
+		for (const cType of cTypes) {
+			wrapperTypes.add(`${cType.name}_wrapper`);
+		}
+
+		// Add array types
+		for (const arrayType of cArrayTypes) {
+			wrapperTypes.add(`${arrayType.name}_wrapper`);
+		}
+
+		// Add special types that might not be in the regular types list
+		wrapperTypes.add('spine_atlas_result_wrapper');
+		wrapperTypes.add('spine_skeleton_data_result_wrapper');
+		wrapperTypes.add('spine_skeleton_drawable_wrapper');
+		wrapperTypes.add('spine_animation_state_events_wrapper');
+		wrapperTypes.add('spine_skin_entry_wrapper');
+		wrapperTypes.add('spine_skin_entries_wrapper');
+		wrapperTypes.add('spine_texture_loader_wrapper');
+
+		// Sort and write all registerOpaqueType calls
+		const sortedTypes = Array.from(wrapperTypes).sort();
+		for (const type of sortedTypes) {
+			lines.push(`    registerOpaqueType<${type}>();`);
+		}
+
+		lines.push('');
+		lines.push(`    await js.importLibrary('assets/packages/spine_flutter/lib/assets/libspine_flutter.js');`);
+		lines.push(`    Uint8List wasmBinaries = (await rootBundle.load(`);
+		lines.push(`      'packages/spine_flutter/lib/assets/libspine_flutter.wasm',`);
+		lines.push(`    ))`);
+		lines.push(`        .buffer`);
+		lines.push(`        .asUint8List();`);
+		lines.push(`    _module = await EmscriptenModule.compile(wasmBinaries, 'libspine_flutter');`);
+		lines.push('  }');
+		lines.push('  Module? m = _module;');
+		lines.push('  if (m != null) {');
+		lines.push('    final dylib = DynamicLibrary.fromModule(m);');
+		lines.push('    return SpineDartFFI(dylib, dylib.boundMemory);');
+		lines.push('  } else {');
+		lines.push(`    throw Exception("Couldn't load libspine-flutter.js/.wasm");`);
+		lines.push('  }');
+		lines.push('}');
+
+		const filePath = path.join(path.dirname(this.outputDir), 'spine_dart_init_web.dart');
+		fs.writeFileSync(filePath, lines.join('\n'));
 	}
 }

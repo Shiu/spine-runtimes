@@ -32,6 +32,7 @@ log_action "Compiling spine-cpp to WASM"
 # Build the emscripten command
 if EMCC_OUTPUT=$(em++ \
     -Isrc/spine-cpp/include \
+    -Isrc/spine-c/include \
     -O2 --closure 1 -fno-rtti -fno-exceptions \
     -s STRICT=1 \
     -s EXPORTED_RUNTIME_METHODS=wasmExports \
@@ -45,7 +46,7 @@ if EMCC_OUTPUT=$(em++ \
     --no-entry \
     --extern-pre-js pre.js \
     -s EXPORT_NAME=libspine_flutter \
-    src/spine-cpp-lite/spine-cpp-lite.cpp $(find src/spine-cpp/src -type f) \
+    src/spine-c/src/extensions.cpp $(find src/spine-c/src/generated -name "*.cpp") $(find src/spine-cpp/src -name "*.cpp") \
     -o lib/assets/libspine_flutter.js 2>&1); then
     log_ok
 else

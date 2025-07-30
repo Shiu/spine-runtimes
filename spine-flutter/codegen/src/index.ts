@@ -32,7 +32,24 @@ async function generateFFIBindings(spineCDir: string): Promise<void> {
     // Replace dart:ffi import with ffi_proxy.dart
     console.log('Replacing dart:ffi import with ffi_proxy.dart...');
     let content = fs.readFileSync(bindingsPath, 'utf8');
-    content = content.replace("import 'dart:ffi' as ffi;", "import '../../ffi_proxy.dart' as ffi;");
+    content = content.replace("import 'dart:ffi' as ffi;", "import '../ffi_proxy.dart' as ffi;");
+
+    // For web_ffi compatibility, we need to convert wrapper structs to Opaque
+    console.log('Converting wrapper structs to Opaque for web_ffi compatibility...');
+    const wrapperMatches = content.match(/final class \w+_wrapper extends ffi\.Struct \{[^}]+\}/g) || [];
+    console.log(`Found ${wrapperMatches.length} wrapper structs to convert`);
+    content = content.replace(/final class (\w+_wrapper) extends ffi\.Struct \{[^}]+\}/g,
+        'final class $1 extends ffi.Opaque {}');
+
+    // Also remove __mbstate_t and other system types
+    console.log('Removing system types like __mbstate_t...');
+    content = content.replace(/final class __mbstate_t extends ffi\.Union \{[^}]*\}/gs, '');
+    content = content.replace(/final class __\w+ extends ffi\.\w+ \{[^}]*\}/gs, '');
+
+    // Remove structs with external fields (spine_rect and spine_vector2)
+    console.log('Removing structs with external fields...');
+    content = content.replace(/final class (spine_rect|spine_vector2) extends ffi\.Struct \{[\s\S]*?\n\}/gm, '');
+
     fs.writeFileSync(bindingsPath, content);
 
     // Clean up ffigen.yaml
@@ -78,12 +95,17 @@ functions:
 structs:
   include:
     - 'spine_.*'
+  exclude:
+    - '__.*'  # Exclude all structs starting with __
+  dependency-only: opaque
 enums:
   include:
     - 'spine_.*'
 typedefs:
   include:
     - 'spine_.*'
+  exclude:
+    - '__.*'  # Exclude system typedefs like __mbstate_t
 preamble: |
   // ignore_for_file: always_specify_types, constant_identifier_names
   // ignore_for_file: camel_case_types
