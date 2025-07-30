@@ -262,7 +262,7 @@ class AnimationStateEventManager {
       listeners.remove(entryKey);
     } else {
       listeners[entryKey] = listener;
-      print('DEBUG: Registered listener for TrackEntry at address: $entryKey for AnimationState at address: $stateKey');
+      // print('DEBUG: Registered listener for TrackEntry at address: $entryKey for AnimationState at address: $stateKey');
     }
   }
 
@@ -271,9 +271,9 @@ class AnimationStateEventManager {
     final entryKey = entry.nativePtr.address;
     final listener = _trackEntryListeners[stateKey]?[entryKey];
     if (listener == null) {
-      print('DEBUG: No listener found for TrackEntry at address: $entryKey in AnimationState at address: $stateKey');
-      print('DEBUG: Available state keys: ${_trackEntryListeners.keys.toList()}');
-      print('DEBUG: Available entry keys for state $stateKey: ${_trackEntryListeners[stateKey]?.keys.toList()}');
+      // print('DEBUG: No listener found for TrackEntry at address: $entryKey in AnimationState at address: $stateKey');
+      // print('DEBUG: Available state keys: ${_trackEntryListeners.keys.toList()}');
+      // print('DEBUG: Available entry keys for state $stateKey: ${_trackEntryListeners[stateKey]?.keys.toList()}');
     }
     return listener;
   }

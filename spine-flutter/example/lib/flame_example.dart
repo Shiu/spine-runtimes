@@ -125,7 +125,7 @@ class SimpleFlameExample extends FlameGame {
     );
 
     // Set the "walk" animation on track 0 in looping mode
-    spineboy.animationState.setAnimationByName(0, "walk", true);
+    spineboy.animationState.setAnimation(0, "walk", true);
     await add(spineboy);
   }
 
@@ -150,10 +150,10 @@ class DragonExample extends FlameGame {
       drawable,
       scale: Vector2(0.4, 0.4),
       anchor: Anchor.center,
-      position: Vector2(size.x / 2, size.y / 2 - 150),
+      position: Vector2(size.x / 2, size.y / 2),
     );
     // Set the "walk" animation on track 0 in looping mode
-    dragon.animationState.setAnimationByName(0, "flying", true);
+    dragon.animationState.setAnimation(0, "flying", true);
     await add(dragon);
   }
 
@@ -186,7 +186,7 @@ class PreloadAndShareSpineDataExample extends FlameGame {
       final scale = 0.1 + rng.nextDouble() * 0.2;
       final position = Vector2(rng.nextDouble() * size.x, rng.nextDouble() * size.y);
       final spineboy = SpineComponent(drawable, scale: Vector2(scale, scale), position: position);
-      spineboy.animationState.setAnimationByName(0, "walk", true);
+      spineboy.animationState.setAnimation(0, "walk", true);
       spineboys.add(spineboy);
       await add(spineboy);
     }
