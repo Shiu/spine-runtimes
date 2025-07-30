@@ -27,7 +27,7 @@
 // SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // *****************************************************************************/
 
-import 'dart:ffi';
+import 'ffi_proxy.dart';
 import 'dart:collection';
 
 /// Base class for native spine arrays.
@@ -55,7 +55,7 @@ abstract class NativeArray<T> extends ListBase<T> {
 
   /// Set the element at the given index.
   /// For read-only arrays, this will throw an UnsupportedError.
-  /// Must be implemented by subclasses.
+  /// Must be implemented by subclasses that support modification.
   @override
   void operator []=(int index, T value) {
     throw UnsupportedError('This array is read-only');
@@ -63,7 +63,7 @@ abstract class NativeArray<T> extends ListBase<T> {
 
   /// Sets the length of the list.
   /// For read-only arrays, this will throw an UnsupportedError.
-  /// Must be implemented by subclasses.
+  /// Must be implemented by subclasses that support modification.
   @override
   set length(int newLength) {
     throw UnsupportedError('This array is read-only');

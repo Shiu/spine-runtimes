@@ -5,8 +5,8 @@ export 'spine_widget.dart';
 export 'raw_image_provider.dart';
 
 import 'dart:convert' as convert;
-import 'dart:ffi';
-import 'dart:io';
+import 'ffi_proxy.dart';
+import 'dart:io' if (dart.library.html) 'io_stub.dart';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -87,6 +87,9 @@ class AtlasFlutter extends Atlas {
 
   /// Loads an [AtlasFlutter] from the file [atlasFileName].
   static Future<AtlasFlutter> fromFile(String atlasFileName) async {
+    if (kIsWeb) {
+      throw UnsupportedError('File operations are not supported on web. Use fromAsset or fromHttp instead.');
+    }
     return _load(atlasFileName, (file) => File(file).readAsBytes());
   }
 
@@ -139,6 +142,9 @@ class SkeletonDataFlutter extends SkeletonData {
   ///
   /// Throws an [Exception] in case the skeleton data could not be loaded.
   static Future<SkeletonDataFlutter> fromFile(AtlasFlutter atlasFlutter, String skeletonFile) async {
+    if (kIsWeb) {
+      throw UnsupportedError('File operations are not supported on web. Use fromAsset or fromHttp instead.');
+    }
     if (skeletonFile.endsWith(".json")) {
       final jsonData = await File(skeletonFile).readAsString();
       final skeletonData = loadSkeletonDataJson(atlasFlutter, jsonData, path: skeletonFile);
@@ -320,6 +326,9 @@ class SkeletonDrawableFlutter extends SkeletonDrawable {
   ///
   /// Throws an exception in case the data could not be loaded.
   static Future<SkeletonDrawableFlutter> fromFile(String atlasFile, String skeletonFile) async {
+    if (kIsWeb) {
+      throw UnsupportedError('File operations are not supported on web. Use fromAsset or fromHttp instead.');
+    }
     final atlasFlutter = await AtlasFlutter.fromFile(atlasFile);
     final skeletonDataFlutter = await SkeletonDataFlutter.fromFile(atlasFlutter, skeletonFile);
     return SkeletonDrawableFlutter(atlasFlutter, skeletonDataFlutter, true);

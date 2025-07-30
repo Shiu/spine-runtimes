@@ -26,12 +26,13 @@
 /// THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 library;
 
+import 'package:spine_flutter/generated/arrays.dart';
+
 import 'generated/spine_dart_bindings_generated.dart';
 import 'spine_bindings.dart';
-import 'spine_dart_init.dart' if (dart.library.html) 'spine_flutter_init_web.dart';
-import 'dart:ffi';
+import 'spine_dart_init.dart' if (dart.library.html) 'spine_dart_init_web.dart';
+import 'ffi_proxy.dart';
 import 'dart:typed_data';
-import 'package:ffi/ffi.dart';
 import 'generated/atlas.dart';
 import 'generated/skeleton_data.dart';
 import 'generated/skin.dart';
@@ -346,40 +347,59 @@ class Vector {
 extension SkeletonExtensions on Skeleton {
   /// Get the axis-aligned bounding box (AABB) containing all world vertices of the skeleton
   Bounds get bounds {
-    final spineBounds = SpineBindings.bindings.spine_skeleton_get_bounds(nativePtr.cast());
-    return Bounds(
-      x: spineBounds.x,
-      y: spineBounds.y,
-      width: spineBounds.width,
-      height: spineBounds.height,
+    final output = ArrayFloat();
+    SpineBindings.bindings.spine_skeleton_get_bounds(nativePtr.cast(), output.nativePtr.cast());
+    final bounds = Bounds(
+      x: output[0],
+      y: output[1],
+      width: output[2],
+      height: output[3],
     );
+    output.dispose();
+    return bounds;
   }
 
   Vector getPosition() {
-    final position = SpineBindings.bindings.spine_skeleton_get_position_v(nativePtr.cast());
-    return Vector(x: position.x, y: position.y);
+    final output = ArrayFloat.withCapacity(2);
+    SpineBindings.bindings.spine_skeleton_get_position_v(nativePtr.cast(), output.nativePtr.cast());
+    final position = Vector(x: output[0], y: output[1]);
+    output.dispose();
+    return position;
   }
 }
 
 extension BonePoseExtensions on BonePose {
   Vector worldToLocal(double worldX, double worldY) {
-    final result = SpineBindings.bindings.spine_bone_pose_world_to_local_v(nativePtr.cast(), worldX, worldY);
-    return Vector(x: result.x, y: result.y);
+    final output = ArrayFloat.withCapacity(2);
+    SpineBindings.bindings.spine_bone_pose_world_to_local_v(nativePtr.cast(), worldX, worldY, output.nativePtr.cast());
+    final vector = Vector(x: output[0], y: output[1]);
+    output.dispose();
+    return vector;
   }
 
   Vector localToWorld(double localX, double localY) {
-    final result = SpineBindings.bindings.spine_bone_pose_local_to_world_v(nativePtr.cast(), localX, localY);
-    return Vector(x: result.x, y: result.y);
+    final output = ArrayFloat.withCapacity(2);
+    SpineBindings.bindings.spine_bone_pose_local_to_world_v(nativePtr.cast(), localX, localY, output.nativePtr.cast());
+    final vector = Vector(x: output[0], y: output[1]);
+    output.dispose();
+    return vector;
   }
 
   Vector worldToParent(double worldX, double worldY) {
-    final result = SpineBindings.bindings.spine_bone_pose_world_to_parent_v(nativePtr.cast(), worldX, worldY);
-    return Vector(x: result.x, y: result.y);
+    final output = ArrayFloat.withCapacity(2);
+    SpineBindings.bindings.spine_bone_pose_world_to_parent_v(nativePtr.cast(), worldX, worldY, output.nativePtr.cast());
+    final vector = Vector(x: output[0], y: output[1]);
+    output.dispose();
+    return vector;
   }
 
   Vector parentToWorld(double parentX, double parentY) {
-    final result = SpineBindings.bindings.spine_bone_pose_parent_to_world_v(nativePtr.cast(), parentX, parentY);
-    return Vector(x: result.x, y: result.y);
+    final output = ArrayFloat.withCapacity(2);
+    SpineBindings.bindings
+        .spine_bone_pose_parent_to_world_v(nativePtr.cast(), parentX, parentY, output.nativePtr.cast());
+    final vector = Vector(x: output[0], y: output[1]);
+    output.dispose();
+    return vector;
   }
 }
 

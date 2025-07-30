@@ -27,6 +27,7 @@
 /// THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
 
-export 'dart:ffi' if (dart.library.html) 'package:web_ffi_fork/web_ffi.dart';
+export 'dart:ffi' if (dart.library.html) 'web_ffi/web_ffi.dart';
 
-export 'package:ffi/ffi.dart' if (dart.library.html) 'package:web_ffi_fork/src/ffi/utf8.dart';
+export 'package:ffi/ffi.dart' if (dart.library.html) 'web_ffi/ffi/utf8.dart';
+export 'malloc_native.dart' if (dart.library.html) 'malloc_web.dart';

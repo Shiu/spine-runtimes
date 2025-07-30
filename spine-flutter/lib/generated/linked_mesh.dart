@@ -29,7 +29,7 @@
 
 // AUTO GENERATED FILE, DO NOT EDIT.
 
-import 'dart:ffi';
+import '../ffi_proxy.dart';
 
 /// LinkedMesh wrapper
 abstract class LinkedMesh {
