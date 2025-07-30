@@ -1610,13 +1610,12 @@ ${declaration} {`;
 		lines.push('');
 		lines.push('// ignore_for_file: type_argument_not_matching_bounds');
 		lines.push(`import 'package:flutter/services.dart';`);
-		lines.push(`import 'package:inject_js/inject_js.dart' as js;`);
-		lines.push(`import 'web_ffi/web_ffi.dart';`);
-		lines.push(`import 'web_ffi/web_ffi_modules.dart';`);
+		lines.push(`import 'package:wasm_ffi/ffi.dart';`);
 		lines.push('');
 		lines.push(`import 'generated/spine_dart_bindings_generated.dart';`);
 		lines.push('');
-		lines.push('Module? _module;');
+		lines.push('// Export this so malloc_web.dart can access it');
+		lines.push('DynamicLibrary? dylibInstance;');
 		lines.push('');
 		lines.push('class SpineDartFFI {');
 		lines.push('  final DynamicLibrary dylib;');
@@ -1626,8 +1625,7 @@ ${declaration} {`;
 		lines.push('}');
 		lines.push('');
 		lines.push('Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {');
-		lines.push('  if (_module == null) {');
-		lines.push('    Memory.init();');
+		lines.push('  if (dylibInstance == null) {');
 		lines.push('');
 
 		// Collect all wrapper types
@@ -1652,25 +1650,21 @@ ${declaration} {`;
 		wrapperTypes.add('spine_skin_entries_wrapper');
 		wrapperTypes.add('spine_texture_loader_wrapper');
 
+		lines.push('');
+		lines.push(`    // Load the wasm module first - this calls initTypes()`);
+		lines.push(`    dylibInstance = await DynamicLibrary.open('assets/packages/spine_flutter/lib/assets/libspine_flutter.js');`);
+		lines.push('');
+		lines.push('    // Now register all the opaque types');
+		
 		// Sort and write all registerOpaqueType calls
 		const sortedTypes = Array.from(wrapperTypes).sort();
 		for (const type of sortedTypes) {
 			lines.push(`    registerOpaqueType<${type}>();`);
 		}
-
-		lines.push('');
-		lines.push(`    await js.importLibrary('assets/packages/spine_flutter/lib/assets/libspine_flutter.js');`);
-		lines.push(`    Uint8List wasmBinaries = (await rootBundle.load(`);
-		lines.push(`      'packages/spine_flutter/lib/assets/libspine_flutter.wasm',`);
-		lines.push(`    ))`);
-		lines.push(`        .buffer`);
-		lines.push(`        .asUint8List();`);
-		lines.push(`    _module = await EmscriptenModule.compile(wasmBinaries, 'libspine_flutter');`);
 		lines.push('  }');
-		lines.push('  Module? m = _module;');
-		lines.push('  if (m != null) {');
-		lines.push('    final dylib = DynamicLibrary.fromModule(m);');
-		lines.push('    return SpineDartFFI(dylib, dylib.boundMemory);');
+		lines.push('  ');
+		lines.push('  if (dylibInstance != null) {');
+		lines.push('    return SpineDartFFI(dylibInstance!, dylibInstance!.allocator);');
 		lines.push('  } else {');
 		lines.push(`    throw Exception("Couldn't load libspine-flutter.js/.wasm");`);
 		lines.push('  }');

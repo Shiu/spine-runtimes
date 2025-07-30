@@ -1,11 +1,13 @@
-import 'web_ffi/web_ffi.dart';
-import 'web_ffi/web_ffi_modules.dart';
+import 'package:wasm_ffi/ffi.dart';
+import 'spine_dart_init_web.dart';
 
-/// Web implementation of malloc that uses the Memory allocator
-/// Memory.global will be set when the DynamicLibrary is loaded
+/// Web implementation of malloc that uses the DynamicLibrary's allocator
+/// The allocator will be available after spine is initialized
 Allocator get malloc {
-  if (Memory.global == null) {
-    throw StateError('Memory.global is not initialized. Make sure spine is initialized before using malloc.');
+  // Get the allocator from the current dylib
+  final dylib = dylibInstance;
+  if (dylib == null) {
+    throw StateError('DynamicLibrary is not initialized. Make sure spine is initialized before using malloc.');
   }
-  return Memory.global!;
+  return dylib.allocator;
 }

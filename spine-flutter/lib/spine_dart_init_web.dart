@@ -31,13 +31,12 @@
 
 // ignore_for_file: type_argument_not_matching_bounds
 import 'package:flutter/services.dart';
-import 'package:inject_js/inject_js.dart' as js;
-import 'web_ffi/web_ffi.dart';
-import 'web_ffi/web_ffi_modules.dart';
+import 'package:wasm_ffi/ffi.dart';
 
 import 'generated/spine_dart_bindings_generated.dart';
 
-Module? _module;
+// Export this so malloc_web.dart can access it
+DynamicLibrary? dylibInstance;
 
 class SpineDartFFI {
   final DynamicLibrary dylib;
@@ -47,9 +46,11 @@ class SpineDartFFI {
 }
 
 Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {
-  if (_module == null) {
-    Memory.init();
+  if (dylibInstance == null) {
+    // Load the wasm module first - this calls initTypes()
+    dylibInstance = await DynamicLibrary.open('assets/packages/spine_flutter/lib/assets/libspine_flutter.js');
 
+    // Now register all the opaque types
     registerOpaqueType<spine_alpha_timeline_wrapper>();
     registerOpaqueType<spine_animation_state_data_wrapper>();
     registerOpaqueType<spine_animation_state_events_wrapper>();
@@ -208,19 +209,10 @@ Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {
     registerOpaqueType<spine_translate_y_timeline_wrapper>();
     registerOpaqueType<spine_update_wrapper>();
     registerOpaqueType<spine_vertex_attachment_wrapper>();
-
-    await js.importLibrary('assets/packages/spine_flutter/lib/assets/libspine_flutter.js');
-    Uint8List wasmBinaries = (await rootBundle.load(
-      'packages/spine_flutter/lib/assets/libspine_flutter.wasm',
-    ))
-        .buffer
-        .asUint8List();
-    _module = await EmscriptenModule.compile(wasmBinaries, 'libspine_flutter');
   }
-  Module? m = _module;
-  if (m != null) {
-    final dylib = DynamicLibrary.fromModule(m);
-    return SpineDartFFI(dylib, dylib.boundMemory);
+
+  if (dylibInstance != null) {
+    return SpineDartFFI(dylibInstance!, dylibInstance!.allocator);
   } else {
     throw Exception("Couldn't load libspine-flutter.js/.wasm");
   }
