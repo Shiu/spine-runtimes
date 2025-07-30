@@ -50,6 +50,7 @@ import 'generated/event.dart';
 import 'generated/event_type.dart';
 import 'generated/render_command.dart';
 import 'generated/physics.dart';
+import 'generated/bone_pose.dart';
 
 // Export generated classes
 export 'generated/api.dart';
@@ -321,20 +322,24 @@ extension TrackEntryExtensions on TrackEntry {
 
 /// Represents a bounding box with position and dimensions
 class Bounds {
-  final double x;
-  final double y;
-  final double width;
-  final double height;
-  
-  const Bounds({
+  double x;
+  double y;
+  double width;
+  double height;
+
+  Bounds({
     required this.x,
     required this.y,
     required this.width,
     required this.height,
   });
-  
-  @override
-  String toString() => 'Bounds(x: $x, y: $y, width: $width, height: $height)';
+}
+
+class Vector {
+  double x;
+  double y;
+
+  Vector({required this.x, required this.y});
 }
 
 /// Extension to add bounds property to Skeleton
@@ -348,6 +353,33 @@ extension SkeletonExtensions on Skeleton {
       width: spineBounds.width,
       height: spineBounds.height,
     );
+  }
+
+  Vector getPosition() {
+    final position = SpineBindings.bindings.spine_skeleton_get_position_v(nativePtr.cast());
+    return Vector(x: position.x, y: position.y);
+  }
+}
+
+extension BonePoseExtensions on BonePose {
+  Vector worldToLocal(double worldX, double worldY) {
+    final result = SpineBindings.bindings.spine_bone_pose_world_to_local_v(nativePtr.cast(), worldX, worldY);
+    return Vector(x: result.x, y: result.y);
+  }
+
+  Vector localToWorld(double localX, double localY) {
+    final result = SpineBindings.bindings.spine_bone_pose_local_to_world_v(nativePtr.cast(), localX, localY);
+    return Vector(x: result.x, y: result.y);
+  }
+
+  Vector worldToParent(double worldX, double worldY) {
+    final result = SpineBindings.bindings.spine_bone_pose_world_to_parent_v(nativePtr.cast(), worldX, worldY);
+    return Vector(x: result.x, y: result.y);
+  }
+
+  Vector parentToWorld(double parentX, double parentY) {
+    final result = SpineBindings.bindings.spine_bone_pose_parent_to_world_v(nativePtr.cast(), parentX, parentY);
+    return Vector(x: result.x, y: result.y);
   }
 }
 
@@ -419,7 +451,7 @@ class SkeletonDrawable {
 
     // Apply animation state to skeleton
     animationState.apply(skeleton);
-    
+
     // Update skeleton physics and world transforms
     skeleton.update(delta);
     skeleton.updateWorldTransform(Physics.update);

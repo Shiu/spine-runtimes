@@ -48,17 +48,19 @@ class IkFollowingState extends State<IkFollowing> {
     controller = SpineWidgetController(
       onInitialized: (controller) {
         // Set the walk animation on track 0, let it loop
-        controller.animationState.setAnimationByName(0, "walk", true);
-        controller.animationState.setAnimationByName(1, "aim", true);
+        controller.animationState.setAnimation(0, "walk", true);
+        controller.animationState.setAnimation(1, "aim", true);
       },
       onAfterUpdateWorldTransforms: (controller) {
         final worldPosition = crossHairPosition;
         if (worldPosition == null) return;
         final bone = controller.skeleton.findBone("crosshair")!;
-        final parent = bone.getParent()!;
-        final position = parent.worldToLocal(worldPosition.dx, worldPosition.dy);
-        bone.setX(position.x);
-        bone.setY(position.y);
+        final parent = bone.parent;
+        if (parent != null) {
+          final position = parent.appliedPose.worldToLocal(worldPosition.dx, worldPosition.dy);
+          bone.appliedPose.x = position.x;
+          bone.appliedPose.y = position.y;
+        }
       },
     );
   }

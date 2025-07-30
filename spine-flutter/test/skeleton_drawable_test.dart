@@ -16,12 +16,12 @@ void main() async {
   // Create skeleton drawable
   final drawable = SkeletonDrawable(skeletonData);
   print('SkeletonDrawable created successfully');
-  
+
   // Test skeleton bounds
   print('\nTesting skeleton bounds:');
   final bounds = drawable.skeleton.bounds;
   print('  Initial bounds: $bounds');
-  
+
   // Set skeleton to pose and update bounds
   drawable.skeleton.setupPose();
   drawable.skeleton.updateWorldTransform(Physics.none);
@@ -76,13 +76,13 @@ void main() async {
   for (final event in events) {
     print('  $event');
   }
-  
+
   // Test bounds after animation updates
   print('\nTesting bounds after animation:');
   drawable.skeleton.updateWorldTransform(Physics.none);
   final boundsAfterAnimation = drawable.skeleton.bounds;
   print('  Bounds after animation: $boundsAfterAnimation');
-  
+
   // Test with different animations that might have different bounds
   print('\nTesting bounds with jump animation:');
   drawable.animationState.setAnimation(0, 'jump', false);

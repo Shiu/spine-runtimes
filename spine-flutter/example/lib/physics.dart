@@ -48,8 +48,8 @@ class PhysicsState extends State<PhysicsTest> {
 
     controller = SpineWidgetController(
       onInitialized: (controller) {
-        controller.animationState.setAnimationByName(0, "eyeblink-long", true);
-        controller.animationState.setAnimationByName(1, "wings-and-feet", true);
+        controller.animationState.setAnimation(0, "eyeblink-long", true);
+        controller.animationState.setAnimation(1, "wings-and-feet", true);
       },
       onAfterUpdateWorldTransforms: (controller) {
         if (lastMousePosition == null) {

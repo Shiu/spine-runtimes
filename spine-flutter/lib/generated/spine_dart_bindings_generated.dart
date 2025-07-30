@@ -5867,6 +5867,793 @@ class SpineDartBindings {
   late final _spine_array_update_buffer =
       _spine_array_update_bufferPtr.asFunction<ffi.Pointer<spine_update> Function(spine_array_update)>();
 
+  spine_bone_pose spine_bone_pose_create() {
+    return _spine_bone_pose_create();
+  }
+
+  late final _spine_bone_pose_createPtr =
+      _lookup<ffi.NativeFunction<spine_bone_pose Function()>>('spine_bone_pose_create');
+  late final _spine_bone_pose_create = _spine_bone_pose_createPtr.asFunction<spine_bone_pose Function()>();
+
+  void spine_bone_pose_dispose(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_dispose(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_disposePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose)>>('spine_bone_pose_dispose');
+  late final _spine_bone_pose_dispose = _spine_bone_pose_disposePtr.asFunction<void Function(spine_bone_pose)>();
+
+  spine_rtti spine_bone_pose_get_rtti(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_rtti(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_rttiPtr =
+      _lookup<ffi.NativeFunction<spine_rtti Function(spine_bone_pose)>>('spine_bone_pose_get_rtti');
+  late final _spine_bone_pose_get_rtti =
+      _spine_bone_pose_get_rttiPtr.asFunction<spine_rtti Function(spine_bone_pose)>();
+
+  void spine_bone_pose_update(
+    spine_bone_pose self,
+    spine_skeleton skeleton,
+    int physics,
+  ) {
+    return _spine_bone_pose_update(
+      self,
+      skeleton,
+      physics,
+    );
+  }
+
+  late final _spine_bone_pose_updatePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_skeleton, ffi.Int32)>>(
+          'spine_bone_pose_update');
+  late final _spine_bone_pose_update =
+      _spine_bone_pose_updatePtr.asFunction<void Function(spine_bone_pose, spine_skeleton, int)>();
+
+  void spine_bone_pose_update_world_transform(
+    spine_bone_pose self,
+    spine_skeleton skeleton,
+  ) {
+    return _spine_bone_pose_update_world_transform(
+      self,
+      skeleton,
+    );
+  }
+
+  late final _spine_bone_pose_update_world_transformPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_skeleton)>>(
+          'spine_bone_pose_update_world_transform');
+  late final _spine_bone_pose_update_world_transform =
+      _spine_bone_pose_update_world_transformPtr.asFunction<void Function(spine_bone_pose, spine_skeleton)>();
+
+  void spine_bone_pose_update_local_transform(
+    spine_bone_pose self,
+    spine_skeleton skeleton,
+  ) {
+    return _spine_bone_pose_update_local_transform(
+      self,
+      skeleton,
+    );
+  }
+
+  late final _spine_bone_pose_update_local_transformPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_skeleton)>>(
+          'spine_bone_pose_update_local_transform');
+  late final _spine_bone_pose_update_local_transform =
+      _spine_bone_pose_update_local_transformPtr.asFunction<void Function(spine_bone_pose, spine_skeleton)>();
+
+  void spine_bone_pose_validate_local_transform(
+    spine_bone_pose self,
+    spine_skeleton skeleton,
+  ) {
+    return _spine_bone_pose_validate_local_transform(
+      self,
+      skeleton,
+    );
+  }
+
+  late final _spine_bone_pose_validate_local_transformPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_skeleton)>>(
+          'spine_bone_pose_validate_local_transform');
+  late final _spine_bone_pose_validate_local_transform =
+      _spine_bone_pose_validate_local_transformPtr.asFunction<void Function(spine_bone_pose, spine_skeleton)>();
+
+  void spine_bone_pose_modify_local(
+    spine_bone_pose self,
+    spine_skeleton skeleton,
+  ) {
+    return _spine_bone_pose_modify_local(
+      self,
+      skeleton,
+    );
+  }
+
+  late final _spine_bone_pose_modify_localPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_skeleton)>>('spine_bone_pose_modify_local');
+  late final _spine_bone_pose_modify_local =
+      _spine_bone_pose_modify_localPtr.asFunction<void Function(spine_bone_pose, spine_skeleton)>();
+
+  void spine_bone_pose_modify_world(
+    spine_bone_pose self,
+    int update,
+  ) {
+    return _spine_bone_pose_modify_world(
+      self,
+      update,
+    );
+  }
+
+  late final _spine_bone_pose_modify_worldPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Int)>>('spine_bone_pose_modify_world');
+  late final _spine_bone_pose_modify_world =
+      _spine_bone_pose_modify_worldPtr.asFunction<void Function(spine_bone_pose, int)>();
+
+  void spine_bone_pose_reset_world(
+    spine_bone_pose self,
+    int update,
+  ) {
+    return _spine_bone_pose_reset_world(
+      self,
+      update,
+    );
+  }
+
+  late final _spine_bone_pose_reset_worldPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Int)>>('spine_bone_pose_reset_world');
+  late final _spine_bone_pose_reset_world =
+      _spine_bone_pose_reset_worldPtr.asFunction<void Function(spine_bone_pose, int)>();
+
+  double spine_bone_pose_get_a(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_a(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_aPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_a');
+  late final _spine_bone_pose_get_a = _spine_bone_pose_get_aPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_a(
+    spine_bone_pose self,
+    double a,
+  ) {
+    return _spine_bone_pose_set_a(
+      self,
+      a,
+    );
+  }
+
+  late final _spine_bone_pose_set_aPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_a');
+  late final _spine_bone_pose_set_a = _spine_bone_pose_set_aPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_get_b(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_b(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_bPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_b');
+  late final _spine_bone_pose_get_b = _spine_bone_pose_get_bPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_b(
+    spine_bone_pose self,
+    double b,
+  ) {
+    return _spine_bone_pose_set_b(
+      self,
+      b,
+    );
+  }
+
+  late final _spine_bone_pose_set_bPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_b');
+  late final _spine_bone_pose_set_b = _spine_bone_pose_set_bPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_get_c(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_c(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_cPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_c');
+  late final _spine_bone_pose_get_c = _spine_bone_pose_get_cPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_c(
+    spine_bone_pose self,
+    double c,
+  ) {
+    return _spine_bone_pose_set_c(
+      self,
+      c,
+    );
+  }
+
+  late final _spine_bone_pose_set_cPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_c');
+  late final _spine_bone_pose_set_c = _spine_bone_pose_set_cPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_get_d(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_d(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_dPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_d');
+  late final _spine_bone_pose_get_d = _spine_bone_pose_get_dPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_d(
+    spine_bone_pose self,
+    double d,
+  ) {
+    return _spine_bone_pose_set_d(
+      self,
+      d,
+    );
+  }
+
+  late final _spine_bone_pose_set_dPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_d');
+  late final _spine_bone_pose_set_d = _spine_bone_pose_set_dPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_get_world_x(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_world_x(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_world_xPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_x');
+  late final _spine_bone_pose_get_world_x =
+      _spine_bone_pose_get_world_xPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_world_x(
+    spine_bone_pose self,
+    double worldX,
+  ) {
+    return _spine_bone_pose_set_world_x(
+      self,
+      worldX,
+    );
+  }
+
+  late final _spine_bone_pose_set_world_xPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_world_x');
+  late final _spine_bone_pose_set_world_x =
+      _spine_bone_pose_set_world_xPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_get_world_y(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_world_y(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_world_yPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_y');
+  late final _spine_bone_pose_get_world_y =
+      _spine_bone_pose_get_world_yPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_world_y(
+    spine_bone_pose self,
+    double worldY,
+  ) {
+    return _spine_bone_pose_set_world_y(
+      self,
+      worldY,
+    );
+  }
+
+  late final _spine_bone_pose_set_world_yPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_world_y');
+  late final _spine_bone_pose_set_world_y =
+      _spine_bone_pose_set_world_yPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_get_world_rotation_x(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_world_rotation_x(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_world_rotation_xPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_rotation_x');
+  late final _spine_bone_pose_get_world_rotation_x =
+      _spine_bone_pose_get_world_rotation_xPtr.asFunction<double Function(spine_bone_pose)>();
+
+  double spine_bone_pose_get_world_rotation_y(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_world_rotation_y(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_world_rotation_yPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_rotation_y');
+  late final _spine_bone_pose_get_world_rotation_y =
+      _spine_bone_pose_get_world_rotation_yPtr.asFunction<double Function(spine_bone_pose)>();
+
+  double spine_bone_pose_get_world_scale_x(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_world_scale_x(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_world_scale_xPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_scale_x');
+  late final _spine_bone_pose_get_world_scale_x =
+      _spine_bone_pose_get_world_scale_xPtr.asFunction<double Function(spine_bone_pose)>();
+
+  double spine_bone_pose_get_world_scale_y(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_world_scale_y(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_world_scale_yPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_scale_y');
+  late final _spine_bone_pose_get_world_scale_y =
+      _spine_bone_pose_get_world_scale_yPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_world_to_local(
+    spine_bone_pose self,
+    double worldX,
+    double worldY,
+    ffi.Pointer<ffi.Float> outLocalX,
+    ffi.Pointer<ffi.Float> outLocalY,
+  ) {
+    return _spine_bone_pose_world_to_local(
+      self,
+      worldX,
+      worldY,
+      outLocalX,
+      outLocalY,
+    );
+  }
+
+  late final _spine_bone_pose_world_to_localPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float, ffi.Pointer<ffi.Float>,
+              ffi.Pointer<ffi.Float>)>>('spine_bone_pose_world_to_local');
+  late final _spine_bone_pose_world_to_local = _spine_bone_pose_world_to_localPtr
+      .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
+
+  void spine_bone_pose_local_to_world(
+    spine_bone_pose self,
+    double localX,
+    double localY,
+    ffi.Pointer<ffi.Float> outWorldX,
+    ffi.Pointer<ffi.Float> outWorldY,
+  ) {
+    return _spine_bone_pose_local_to_world(
+      self,
+      localX,
+      localY,
+      outWorldX,
+      outWorldY,
+    );
+  }
+
+  late final _spine_bone_pose_local_to_worldPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float, ffi.Pointer<ffi.Float>,
+              ffi.Pointer<ffi.Float>)>>('spine_bone_pose_local_to_world');
+  late final _spine_bone_pose_local_to_world = _spine_bone_pose_local_to_worldPtr
+      .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
+
+  void spine_bone_pose_world_to_parent(
+    spine_bone_pose self,
+    double worldX,
+    double worldY,
+    ffi.Pointer<ffi.Float> outParentX,
+    ffi.Pointer<ffi.Float> outParentY,
+  ) {
+    return _spine_bone_pose_world_to_parent(
+      self,
+      worldX,
+      worldY,
+      outParentX,
+      outParentY,
+    );
+  }
+
+  late final _spine_bone_pose_world_to_parentPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float, ffi.Pointer<ffi.Float>,
+              ffi.Pointer<ffi.Float>)>>('spine_bone_pose_world_to_parent');
+  late final _spine_bone_pose_world_to_parent = _spine_bone_pose_world_to_parentPtr
+      .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
+
+  void spine_bone_pose_parent_to_world(
+    spine_bone_pose self,
+    double parentX,
+    double parentY,
+    ffi.Pointer<ffi.Float> outWorldX,
+    ffi.Pointer<ffi.Float> outWorldY,
+  ) {
+    return _spine_bone_pose_parent_to_world(
+      self,
+      parentX,
+      parentY,
+      outWorldX,
+      outWorldY,
+    );
+  }
+
+  late final _spine_bone_pose_parent_to_worldPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float, ffi.Pointer<ffi.Float>,
+              ffi.Pointer<ffi.Float>)>>('spine_bone_pose_parent_to_world');
+  late final _spine_bone_pose_parent_to_world = _spine_bone_pose_parent_to_worldPtr
+      .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
+
+  double spine_bone_pose_world_to_local_rotation(
+    spine_bone_pose self,
+    double worldRotation,
+  ) {
+    return _spine_bone_pose_world_to_local_rotation(
+      self,
+      worldRotation,
+    );
+  }
+
+  late final _spine_bone_pose_world_to_local_rotationPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose, ffi.Float)>>(
+          'spine_bone_pose_world_to_local_rotation');
+  late final _spine_bone_pose_world_to_local_rotation =
+      _spine_bone_pose_world_to_local_rotationPtr.asFunction<double Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_local_to_world_rotation(
+    spine_bone_pose self,
+    double localRotation,
+  ) {
+    return _spine_bone_pose_local_to_world_rotation(
+      self,
+      localRotation,
+    );
+  }
+
+  late final _spine_bone_pose_local_to_world_rotationPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose, ffi.Float)>>(
+          'spine_bone_pose_local_to_world_rotation');
+  late final _spine_bone_pose_local_to_world_rotation =
+      _spine_bone_pose_local_to_world_rotationPtr.asFunction<double Function(spine_bone_pose, double)>();
+
+  void spine_bone_pose_rotate_world(
+    spine_bone_pose self,
+    double degrees,
+  ) {
+    return _spine_bone_pose_rotate_world(
+      self,
+      degrees,
+    );
+  }
+
+  late final _spine_bone_pose_rotate_worldPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_rotate_world');
+  late final _spine_bone_pose_rotate_world =
+      _spine_bone_pose_rotate_worldPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  void spine_bone_pose_set(
+    spine_bone_pose self,
+    spine_bone_local pose,
+  ) {
+    return _spine_bone_pose_set(
+      self,
+      pose,
+    );
+  }
+
+  late final _spine_bone_pose_setPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_bone_local)>>('spine_bone_pose_set');
+  late final _spine_bone_pose_set =
+      _spine_bone_pose_setPtr.asFunction<void Function(spine_bone_pose, spine_bone_local)>();
+
+  double spine_bone_pose_get_x(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_x(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_xPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_x');
+  late final _spine_bone_pose_get_x = _spine_bone_pose_get_xPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_x(
+    spine_bone_pose self,
+    double x,
+  ) {
+    return _spine_bone_pose_set_x(
+      self,
+      x,
+    );
+  }
+
+  late final _spine_bone_pose_set_xPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_x');
+  late final _spine_bone_pose_set_x = _spine_bone_pose_set_xPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_get_y(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_y(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_yPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_y');
+  late final _spine_bone_pose_get_y = _spine_bone_pose_get_yPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_y(
+    spine_bone_pose self,
+    double y,
+  ) {
+    return _spine_bone_pose_set_y(
+      self,
+      y,
+    );
+  }
+
+  late final _spine_bone_pose_set_yPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_y');
+  late final _spine_bone_pose_set_y = _spine_bone_pose_set_yPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  void spine_bone_pose_set_position(
+    spine_bone_pose self,
+    double x,
+    double y,
+  ) {
+    return _spine_bone_pose_set_position(
+      self,
+      x,
+      y,
+    );
+  }
+
+  late final _spine_bone_pose_set_positionPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float)>>(
+          'spine_bone_pose_set_position');
+  late final _spine_bone_pose_set_position =
+      _spine_bone_pose_set_positionPtr.asFunction<void Function(spine_bone_pose, double, double)>();
+
+  double spine_bone_pose_get_rotation(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_rotation(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_rotationPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_rotation');
+  late final _spine_bone_pose_get_rotation =
+      _spine_bone_pose_get_rotationPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_rotation(
+    spine_bone_pose self,
+    double rotation,
+  ) {
+    return _spine_bone_pose_set_rotation(
+      self,
+      rotation,
+    );
+  }
+
+  late final _spine_bone_pose_set_rotationPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_rotation');
+  late final _spine_bone_pose_set_rotation =
+      _spine_bone_pose_set_rotationPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_get_scale_x(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_scale_x(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_scale_xPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_scale_x');
+  late final _spine_bone_pose_get_scale_x =
+      _spine_bone_pose_get_scale_xPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_scale_x(
+    spine_bone_pose self,
+    double scaleX,
+  ) {
+    return _spine_bone_pose_set_scale_x(
+      self,
+      scaleX,
+    );
+  }
+
+  late final _spine_bone_pose_set_scale_xPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_scale_x');
+  late final _spine_bone_pose_set_scale_x =
+      _spine_bone_pose_set_scale_xPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_get_scale_y(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_scale_y(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_scale_yPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_scale_y');
+  late final _spine_bone_pose_get_scale_y =
+      _spine_bone_pose_get_scale_yPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_scale_y(
+    spine_bone_pose self,
+    double scaleY,
+  ) {
+    return _spine_bone_pose_set_scale_y(
+      self,
+      scaleY,
+    );
+  }
+
+  late final _spine_bone_pose_set_scale_yPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_scale_y');
+  late final _spine_bone_pose_set_scale_y =
+      _spine_bone_pose_set_scale_yPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  void spine_bone_pose_set_scale_1(
+    spine_bone_pose self,
+    double scaleX,
+    double scaleY,
+  ) {
+    return _spine_bone_pose_set_scale_1(
+      self,
+      scaleX,
+      scaleY,
+    );
+  }
+
+  late final _spine_bone_pose_set_scale_1Ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float)>>(
+          'spine_bone_pose_set_scale_1');
+  late final _spine_bone_pose_set_scale_1 =
+      _spine_bone_pose_set_scale_1Ptr.asFunction<void Function(spine_bone_pose, double, double)>();
+
+  void spine_bone_pose_set_scale_2(
+    spine_bone_pose self,
+    double scale,
+  ) {
+    return _spine_bone_pose_set_scale_2(
+      self,
+      scale,
+    );
+  }
+
+  late final _spine_bone_pose_set_scale_2Ptr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_scale_2');
+  late final _spine_bone_pose_set_scale_2 =
+      _spine_bone_pose_set_scale_2Ptr.asFunction<void Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_get_shear_x(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_shear_x(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_shear_xPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_shear_x');
+  late final _spine_bone_pose_get_shear_x =
+      _spine_bone_pose_get_shear_xPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_shear_x(
+    spine_bone_pose self,
+    double shearX,
+  ) {
+    return _spine_bone_pose_set_shear_x(
+      self,
+      shearX,
+    );
+  }
+
+  late final _spine_bone_pose_set_shear_xPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_shear_x');
+  late final _spine_bone_pose_set_shear_x =
+      _spine_bone_pose_set_shear_xPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  double spine_bone_pose_get_shear_y(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_shear_y(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_shear_yPtr =
+      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_shear_y');
+  late final _spine_bone_pose_get_shear_y =
+      _spine_bone_pose_get_shear_yPtr.asFunction<double Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_shear_y(
+    spine_bone_pose self,
+    double shearY,
+  ) {
+    return _spine_bone_pose_set_shear_y(
+      self,
+      shearY,
+    );
+  }
+
+  late final _spine_bone_pose_set_shear_yPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_shear_y');
+  late final _spine_bone_pose_set_shear_y =
+      _spine_bone_pose_set_shear_yPtr.asFunction<void Function(spine_bone_pose, double)>();
+
+  int spine_bone_pose_get_inherit(
+    spine_bone_pose self,
+  ) {
+    return _spine_bone_pose_get_inherit(
+      self,
+    );
+  }
+
+  late final _spine_bone_pose_get_inheritPtr =
+      _lookup<ffi.NativeFunction<ffi.Int32 Function(spine_bone_pose)>>('spine_bone_pose_get_inherit');
+  late final _spine_bone_pose_get_inherit = _spine_bone_pose_get_inheritPtr.asFunction<int Function(spine_bone_pose)>();
+
+  void spine_bone_pose_set_inherit(
+    spine_bone_pose self,
+    int inherit,
+  ) {
+    return _spine_bone_pose_set_inherit(
+      self,
+      inherit,
+    );
+  }
+
+  late final _spine_bone_pose_set_inheritPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Int32)>>('spine_bone_pose_set_inherit');
+  late final _spine_bone_pose_set_inherit =
+      _spine_bone_pose_set_inheritPtr.asFunction<void Function(spine_bone_pose, int)>();
+
+  spine_rtti spine_bone_pose_rtti() {
+    return _spine_bone_pose_rtti();
+  }
+
+  late final _spine_bone_pose_rttiPtr = _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_bone_pose_rtti');
+  late final _spine_bone_pose_rtti = _spine_bone_pose_rttiPtr.asFunction<spine_rtti Function()>();
+
   void spine_atlas_dispose(
     spine_atlas self,
   ) {
@@ -6922,7 +7709,7 @@ class SpineDartBindings {
   late final _spine_skin_entry_get_attachment =
       _spine_skin_entry_get_attachmentPtr.asFunction<spine_attachment Function(spine_skin_entry)>();
 
-  /// Skeleton bounds function
+  /// Skeleton functions
   spine_bounds spine_skeleton_get_bounds(
     spine_skeleton skeleton,
   ) {
@@ -6935,6 +7722,92 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<spine_bounds Function(spine_skeleton)>>('spine_skeleton_get_bounds');
   late final _spine_skeleton_get_bounds =
       _spine_skeleton_get_boundsPtr.asFunction<spine_bounds Function(spine_skeleton)>();
+
+  spine_vector spine_skeleton_get_position_v(
+    spine_skeleton skeleton,
+  ) {
+    return _spine_skeleton_get_position_v(
+      skeleton,
+    );
+  }
+
+  late final _spine_skeleton_get_position_vPtr =
+      _lookup<ffi.NativeFunction<spine_vector Function(spine_skeleton)>>('spine_skeleton_get_position_v');
+  late final _spine_skeleton_get_position_v =
+      _spine_skeleton_get_position_vPtr.asFunction<spine_vector Function(spine_skeleton)>();
+
+  /// BonePose functions
+  spine_vector spine_bone_pose_world_to_local_v(
+    spine_bone_pose self,
+    double world_x,
+    double world_y,
+  ) {
+    return _spine_bone_pose_world_to_local_v(
+      self,
+      world_x,
+      world_y,
+    );
+  }
+
+  late final _spine_bone_pose_world_to_local_vPtr =
+      _lookup<ffi.NativeFunction<spine_vector Function(spine_bone_pose, ffi.Float, ffi.Float)>>(
+          'spine_bone_pose_world_to_local_v');
+  late final _spine_bone_pose_world_to_local_v =
+      _spine_bone_pose_world_to_local_vPtr.asFunction<spine_vector Function(spine_bone_pose, double, double)>();
+
+  spine_vector spine_bone_pose_local_to_world_v(
+    spine_bone_pose self,
+    double local_x,
+    double local_y,
+  ) {
+    return _spine_bone_pose_local_to_world_v(
+      self,
+      local_x,
+      local_y,
+    );
+  }
+
+  late final _spine_bone_pose_local_to_world_vPtr =
+      _lookup<ffi.NativeFunction<spine_vector Function(spine_bone_pose, ffi.Float, ffi.Float)>>(
+          'spine_bone_pose_local_to_world_v');
+  late final _spine_bone_pose_local_to_world_v =
+      _spine_bone_pose_local_to_world_vPtr.asFunction<spine_vector Function(spine_bone_pose, double, double)>();
+
+  spine_vector spine_bone_pose_world_to_parent_v(
+    spine_bone_pose self,
+    double world_x,
+    double world_y,
+  ) {
+    return _spine_bone_pose_world_to_parent_v(
+      self,
+      world_x,
+      world_y,
+    );
+  }
+
+  late final _spine_bone_pose_world_to_parent_vPtr =
+      _lookup<ffi.NativeFunction<spine_vector Function(spine_bone_pose, ffi.Float, ffi.Float)>>(
+          'spine_bone_pose_world_to_parent_v');
+  late final _spine_bone_pose_world_to_parent_v =
+      _spine_bone_pose_world_to_parent_vPtr.asFunction<spine_vector Function(spine_bone_pose, double, double)>();
+
+  spine_vector spine_bone_pose_parent_to_world_v(
+    spine_bone_pose self,
+    double parent_x,
+    double parent_y,
+  ) {
+    return _spine_bone_pose_parent_to_world_v(
+      self,
+      parent_x,
+      parent_y,
+    );
+  }
+
+  late final _spine_bone_pose_parent_to_world_vPtr =
+      _lookup<ffi.NativeFunction<spine_vector Function(spine_bone_pose, ffi.Float, ffi.Float)>>(
+          'spine_bone_pose_parent_to_world_v');
+  late final _spine_bone_pose_parent_to_world_v =
+      _spine_bone_pose_parent_to_world_vPtr.asFunction<spine_vector Function(spine_bone_pose, double, double)>();
 
   spine_alpha_timeline spine_alpha_timeline_create(
     int frameCount,
@@ -6985,7 +7858,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -6996,7 +7869,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -7467,7 +8340,7 @@ class SpineDartBindings {
     double lastTime,
     double time,
     bool loop,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -7479,7 +8352,7 @@ class SpineDartBindings {
       lastTime,
       time,
       loop,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -9567,7 +10440,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -9578,7 +10451,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -10452,793 +11325,6 @@ class SpineDartBindings {
   late final _spine_bone_local_set_inherit =
       _spine_bone_local_set_inheritPtr.asFunction<void Function(spine_bone_local, int)>();
 
-  spine_bone_pose spine_bone_pose_create() {
-    return _spine_bone_pose_create();
-  }
-
-  late final _spine_bone_pose_createPtr =
-      _lookup<ffi.NativeFunction<spine_bone_pose Function()>>('spine_bone_pose_create');
-  late final _spine_bone_pose_create = _spine_bone_pose_createPtr.asFunction<spine_bone_pose Function()>();
-
-  void spine_bone_pose_dispose(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_dispose(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_disposePtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose)>>('spine_bone_pose_dispose');
-  late final _spine_bone_pose_dispose = _spine_bone_pose_disposePtr.asFunction<void Function(spine_bone_pose)>();
-
-  spine_rtti spine_bone_pose_get_rtti(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_rtti(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_rttiPtr =
-      _lookup<ffi.NativeFunction<spine_rtti Function(spine_bone_pose)>>('spine_bone_pose_get_rtti');
-  late final _spine_bone_pose_get_rtti =
-      _spine_bone_pose_get_rttiPtr.asFunction<spine_rtti Function(spine_bone_pose)>();
-
-  void spine_bone_pose_update(
-    spine_bone_pose self,
-    spine_skeleton skeleton,
-    int physics,
-  ) {
-    return _spine_bone_pose_update(
-      self,
-      skeleton,
-      physics,
-    );
-  }
-
-  late final _spine_bone_pose_updatePtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_skeleton, ffi.Int32)>>(
-          'spine_bone_pose_update');
-  late final _spine_bone_pose_update =
-      _spine_bone_pose_updatePtr.asFunction<void Function(spine_bone_pose, spine_skeleton, int)>();
-
-  void spine_bone_pose_update_world_transform(
-    spine_bone_pose self,
-    spine_skeleton skeleton,
-  ) {
-    return _spine_bone_pose_update_world_transform(
-      self,
-      skeleton,
-    );
-  }
-
-  late final _spine_bone_pose_update_world_transformPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_skeleton)>>(
-          'spine_bone_pose_update_world_transform');
-  late final _spine_bone_pose_update_world_transform =
-      _spine_bone_pose_update_world_transformPtr.asFunction<void Function(spine_bone_pose, spine_skeleton)>();
-
-  void spine_bone_pose_update_local_transform(
-    spine_bone_pose self,
-    spine_skeleton skeleton,
-  ) {
-    return _spine_bone_pose_update_local_transform(
-      self,
-      skeleton,
-    );
-  }
-
-  late final _spine_bone_pose_update_local_transformPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_skeleton)>>(
-          'spine_bone_pose_update_local_transform');
-  late final _spine_bone_pose_update_local_transform =
-      _spine_bone_pose_update_local_transformPtr.asFunction<void Function(spine_bone_pose, spine_skeleton)>();
-
-  void spine_bone_pose_validate_local_transform(
-    spine_bone_pose self,
-    spine_skeleton skeleton,
-  ) {
-    return _spine_bone_pose_validate_local_transform(
-      self,
-      skeleton,
-    );
-  }
-
-  late final _spine_bone_pose_validate_local_transformPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_skeleton)>>(
-          'spine_bone_pose_validate_local_transform');
-  late final _spine_bone_pose_validate_local_transform =
-      _spine_bone_pose_validate_local_transformPtr.asFunction<void Function(spine_bone_pose, spine_skeleton)>();
-
-  void spine_bone_pose_modify_local(
-    spine_bone_pose self,
-    spine_skeleton skeleton,
-  ) {
-    return _spine_bone_pose_modify_local(
-      self,
-      skeleton,
-    );
-  }
-
-  late final _spine_bone_pose_modify_localPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_skeleton)>>('spine_bone_pose_modify_local');
-  late final _spine_bone_pose_modify_local =
-      _spine_bone_pose_modify_localPtr.asFunction<void Function(spine_bone_pose, spine_skeleton)>();
-
-  void spine_bone_pose_modify_world(
-    spine_bone_pose self,
-    int update,
-  ) {
-    return _spine_bone_pose_modify_world(
-      self,
-      update,
-    );
-  }
-
-  late final _spine_bone_pose_modify_worldPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Int)>>('spine_bone_pose_modify_world');
-  late final _spine_bone_pose_modify_world =
-      _spine_bone_pose_modify_worldPtr.asFunction<void Function(spine_bone_pose, int)>();
-
-  void spine_bone_pose_reset_world(
-    spine_bone_pose self,
-    int update,
-  ) {
-    return _spine_bone_pose_reset_world(
-      self,
-      update,
-    );
-  }
-
-  late final _spine_bone_pose_reset_worldPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Int)>>('spine_bone_pose_reset_world');
-  late final _spine_bone_pose_reset_world =
-      _spine_bone_pose_reset_worldPtr.asFunction<void Function(spine_bone_pose, int)>();
-
-  double spine_bone_pose_get_a(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_a(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_aPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_a');
-  late final _spine_bone_pose_get_a = _spine_bone_pose_get_aPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_a(
-    spine_bone_pose self,
-    double a,
-  ) {
-    return _spine_bone_pose_set_a(
-      self,
-      a,
-    );
-  }
-
-  late final _spine_bone_pose_set_aPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_a');
-  late final _spine_bone_pose_set_a = _spine_bone_pose_set_aPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_get_b(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_b(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_bPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_b');
-  late final _spine_bone_pose_get_b = _spine_bone_pose_get_bPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_b(
-    spine_bone_pose self,
-    double b,
-  ) {
-    return _spine_bone_pose_set_b(
-      self,
-      b,
-    );
-  }
-
-  late final _spine_bone_pose_set_bPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_b');
-  late final _spine_bone_pose_set_b = _spine_bone_pose_set_bPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_get_c(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_c(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_cPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_c');
-  late final _spine_bone_pose_get_c = _spine_bone_pose_get_cPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_c(
-    spine_bone_pose self,
-    double c,
-  ) {
-    return _spine_bone_pose_set_c(
-      self,
-      c,
-    );
-  }
-
-  late final _spine_bone_pose_set_cPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_c');
-  late final _spine_bone_pose_set_c = _spine_bone_pose_set_cPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_get_d(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_d(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_dPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_d');
-  late final _spine_bone_pose_get_d = _spine_bone_pose_get_dPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_d(
-    spine_bone_pose self,
-    double d,
-  ) {
-    return _spine_bone_pose_set_d(
-      self,
-      d,
-    );
-  }
-
-  late final _spine_bone_pose_set_dPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_d');
-  late final _spine_bone_pose_set_d = _spine_bone_pose_set_dPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_get_world_x(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_world_x(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_world_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_x');
-  late final _spine_bone_pose_get_world_x =
-      _spine_bone_pose_get_world_xPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_world_x(
-    spine_bone_pose self,
-    double worldX,
-  ) {
-    return _spine_bone_pose_set_world_x(
-      self,
-      worldX,
-    );
-  }
-
-  late final _spine_bone_pose_set_world_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_world_x');
-  late final _spine_bone_pose_set_world_x =
-      _spine_bone_pose_set_world_xPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_get_world_y(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_world_y(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_world_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_y');
-  late final _spine_bone_pose_get_world_y =
-      _spine_bone_pose_get_world_yPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_world_y(
-    spine_bone_pose self,
-    double worldY,
-  ) {
-    return _spine_bone_pose_set_world_y(
-      self,
-      worldY,
-    );
-  }
-
-  late final _spine_bone_pose_set_world_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_world_y');
-  late final _spine_bone_pose_set_world_y =
-      _spine_bone_pose_set_world_yPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_get_world_rotation_x(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_world_rotation_x(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_world_rotation_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_rotation_x');
-  late final _spine_bone_pose_get_world_rotation_x =
-      _spine_bone_pose_get_world_rotation_xPtr.asFunction<double Function(spine_bone_pose)>();
-
-  double spine_bone_pose_get_world_rotation_y(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_world_rotation_y(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_world_rotation_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_rotation_y');
-  late final _spine_bone_pose_get_world_rotation_y =
-      _spine_bone_pose_get_world_rotation_yPtr.asFunction<double Function(spine_bone_pose)>();
-
-  double spine_bone_pose_get_world_scale_x(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_world_scale_x(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_world_scale_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_scale_x');
-  late final _spine_bone_pose_get_world_scale_x =
-      _spine_bone_pose_get_world_scale_xPtr.asFunction<double Function(spine_bone_pose)>();
-
-  double spine_bone_pose_get_world_scale_y(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_world_scale_y(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_world_scale_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_world_scale_y');
-  late final _spine_bone_pose_get_world_scale_y =
-      _spine_bone_pose_get_world_scale_yPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_world_to_local(
-    spine_bone_pose self,
-    double worldX,
-    double worldY,
-    ffi.Pointer<ffi.Float> outLocalX,
-    ffi.Pointer<ffi.Float> outLocalY,
-  ) {
-    return _spine_bone_pose_world_to_local(
-      self,
-      worldX,
-      worldY,
-      outLocalX,
-      outLocalY,
-    );
-  }
-
-  late final _spine_bone_pose_world_to_localPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float, ffi.Pointer<ffi.Float>,
-              ffi.Pointer<ffi.Float>)>>('spine_bone_pose_world_to_local');
-  late final _spine_bone_pose_world_to_local = _spine_bone_pose_world_to_localPtr
-      .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
-
-  void spine_bone_pose_local_to_world(
-    spine_bone_pose self,
-    double localX,
-    double localY,
-    ffi.Pointer<ffi.Float> outWorldX,
-    ffi.Pointer<ffi.Float> outWorldY,
-  ) {
-    return _spine_bone_pose_local_to_world(
-      self,
-      localX,
-      localY,
-      outWorldX,
-      outWorldY,
-    );
-  }
-
-  late final _spine_bone_pose_local_to_worldPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float, ffi.Pointer<ffi.Float>,
-              ffi.Pointer<ffi.Float>)>>('spine_bone_pose_local_to_world');
-  late final _spine_bone_pose_local_to_world = _spine_bone_pose_local_to_worldPtr
-      .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
-
-  void spine_bone_pose_world_to_parent(
-    spine_bone_pose self,
-    double worldX,
-    double worldY,
-    ffi.Pointer<ffi.Float> outParentX,
-    ffi.Pointer<ffi.Float> outParentY,
-  ) {
-    return _spine_bone_pose_world_to_parent(
-      self,
-      worldX,
-      worldY,
-      outParentX,
-      outParentY,
-    );
-  }
-
-  late final _spine_bone_pose_world_to_parentPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float, ffi.Pointer<ffi.Float>,
-              ffi.Pointer<ffi.Float>)>>('spine_bone_pose_world_to_parent');
-  late final _spine_bone_pose_world_to_parent = _spine_bone_pose_world_to_parentPtr
-      .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
-
-  void spine_bone_pose_parent_to_world(
-    spine_bone_pose self,
-    double parentX,
-    double parentY,
-    ffi.Pointer<ffi.Float> outWorldX,
-    ffi.Pointer<ffi.Float> outWorldY,
-  ) {
-    return _spine_bone_pose_parent_to_world(
-      self,
-      parentX,
-      parentY,
-      outWorldX,
-      outWorldY,
-    );
-  }
-
-  late final _spine_bone_pose_parent_to_worldPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float, ffi.Pointer<ffi.Float>,
-              ffi.Pointer<ffi.Float>)>>('spine_bone_pose_parent_to_world');
-  late final _spine_bone_pose_parent_to_world = _spine_bone_pose_parent_to_worldPtr
-      .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
-
-  double spine_bone_pose_world_to_local_rotation(
-    spine_bone_pose self,
-    double worldRotation,
-  ) {
-    return _spine_bone_pose_world_to_local_rotation(
-      self,
-      worldRotation,
-    );
-  }
-
-  late final _spine_bone_pose_world_to_local_rotationPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose, ffi.Float)>>(
-          'spine_bone_pose_world_to_local_rotation');
-  late final _spine_bone_pose_world_to_local_rotation =
-      _spine_bone_pose_world_to_local_rotationPtr.asFunction<double Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_local_to_world_rotation(
-    spine_bone_pose self,
-    double localRotation,
-  ) {
-    return _spine_bone_pose_local_to_world_rotation(
-      self,
-      localRotation,
-    );
-  }
-
-  late final _spine_bone_pose_local_to_world_rotationPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose, ffi.Float)>>(
-          'spine_bone_pose_local_to_world_rotation');
-  late final _spine_bone_pose_local_to_world_rotation =
-      _spine_bone_pose_local_to_world_rotationPtr.asFunction<double Function(spine_bone_pose, double)>();
-
-  void spine_bone_pose_rotate_world(
-    spine_bone_pose self,
-    double degrees,
-  ) {
-    return _spine_bone_pose_rotate_world(
-      self,
-      degrees,
-    );
-  }
-
-  late final _spine_bone_pose_rotate_worldPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_rotate_world');
-  late final _spine_bone_pose_rotate_world =
-      _spine_bone_pose_rotate_worldPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  void spine_bone_pose_set(
-    spine_bone_pose self,
-    spine_bone_local pose,
-  ) {
-    return _spine_bone_pose_set(
-      self,
-      pose,
-    );
-  }
-
-  late final _spine_bone_pose_setPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, spine_bone_local)>>('spine_bone_pose_set');
-  late final _spine_bone_pose_set =
-      _spine_bone_pose_setPtr.asFunction<void Function(spine_bone_pose, spine_bone_local)>();
-
-  double spine_bone_pose_get_x(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_x(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_x');
-  late final _spine_bone_pose_get_x = _spine_bone_pose_get_xPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_x(
-    spine_bone_pose self,
-    double x,
-  ) {
-    return _spine_bone_pose_set_x(
-      self,
-      x,
-    );
-  }
-
-  late final _spine_bone_pose_set_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_x');
-  late final _spine_bone_pose_set_x = _spine_bone_pose_set_xPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_get_y(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_y(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_y');
-  late final _spine_bone_pose_get_y = _spine_bone_pose_get_yPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_y(
-    spine_bone_pose self,
-    double y,
-  ) {
-    return _spine_bone_pose_set_y(
-      self,
-      y,
-    );
-  }
-
-  late final _spine_bone_pose_set_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_y');
-  late final _spine_bone_pose_set_y = _spine_bone_pose_set_yPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  void spine_bone_pose_set_position(
-    spine_bone_pose self,
-    double x,
-    double y,
-  ) {
-    return _spine_bone_pose_set_position(
-      self,
-      x,
-      y,
-    );
-  }
-
-  late final _spine_bone_pose_set_positionPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float)>>(
-          'spine_bone_pose_set_position');
-  late final _spine_bone_pose_set_position =
-      _spine_bone_pose_set_positionPtr.asFunction<void Function(spine_bone_pose, double, double)>();
-
-  double spine_bone_pose_get_rotation(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_rotation(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_rotationPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_rotation');
-  late final _spine_bone_pose_get_rotation =
-      _spine_bone_pose_get_rotationPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_rotation(
-    spine_bone_pose self,
-    double rotation,
-  ) {
-    return _spine_bone_pose_set_rotation(
-      self,
-      rotation,
-    );
-  }
-
-  late final _spine_bone_pose_set_rotationPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_rotation');
-  late final _spine_bone_pose_set_rotation =
-      _spine_bone_pose_set_rotationPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_get_scale_x(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_scale_x(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_scale_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_scale_x');
-  late final _spine_bone_pose_get_scale_x =
-      _spine_bone_pose_get_scale_xPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_scale_x(
-    spine_bone_pose self,
-    double scaleX,
-  ) {
-    return _spine_bone_pose_set_scale_x(
-      self,
-      scaleX,
-    );
-  }
-
-  late final _spine_bone_pose_set_scale_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_scale_x');
-  late final _spine_bone_pose_set_scale_x =
-      _spine_bone_pose_set_scale_xPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_get_scale_y(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_scale_y(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_scale_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_scale_y');
-  late final _spine_bone_pose_get_scale_y =
-      _spine_bone_pose_get_scale_yPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_scale_y(
-    spine_bone_pose self,
-    double scaleY,
-  ) {
-    return _spine_bone_pose_set_scale_y(
-      self,
-      scaleY,
-    );
-  }
-
-  late final _spine_bone_pose_set_scale_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_scale_y');
-  late final _spine_bone_pose_set_scale_y =
-      _spine_bone_pose_set_scale_yPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  void spine_bone_pose_set_scale_1(
-    spine_bone_pose self,
-    double scaleX,
-    double scaleY,
-  ) {
-    return _spine_bone_pose_set_scale_1(
-      self,
-      scaleX,
-      scaleY,
-    );
-  }
-
-  late final _spine_bone_pose_set_scale_1Ptr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float, ffi.Float)>>(
-          'spine_bone_pose_set_scale_1');
-  late final _spine_bone_pose_set_scale_1 =
-      _spine_bone_pose_set_scale_1Ptr.asFunction<void Function(spine_bone_pose, double, double)>();
-
-  void spine_bone_pose_set_scale_2(
-    spine_bone_pose self,
-    double scale,
-  ) {
-    return _spine_bone_pose_set_scale_2(
-      self,
-      scale,
-    );
-  }
-
-  late final _spine_bone_pose_set_scale_2Ptr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_scale_2');
-  late final _spine_bone_pose_set_scale_2 =
-      _spine_bone_pose_set_scale_2Ptr.asFunction<void Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_get_shear_x(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_shear_x(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_shear_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_shear_x');
-  late final _spine_bone_pose_get_shear_x =
-      _spine_bone_pose_get_shear_xPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_shear_x(
-    spine_bone_pose self,
-    double shearX,
-  ) {
-    return _spine_bone_pose_set_shear_x(
-      self,
-      shearX,
-    );
-  }
-
-  late final _spine_bone_pose_set_shear_xPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_shear_x');
-  late final _spine_bone_pose_set_shear_x =
-      _spine_bone_pose_set_shear_xPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  double spine_bone_pose_get_shear_y(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_shear_y(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_shear_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Float Function(spine_bone_pose)>>('spine_bone_pose_get_shear_y');
-  late final _spine_bone_pose_get_shear_y =
-      _spine_bone_pose_get_shear_yPtr.asFunction<double Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_shear_y(
-    spine_bone_pose self,
-    double shearY,
-  ) {
-    return _spine_bone_pose_set_shear_y(
-      self,
-      shearY,
-    );
-  }
-
-  late final _spine_bone_pose_set_shear_yPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_shear_y');
-  late final _spine_bone_pose_set_shear_y =
-      _spine_bone_pose_set_shear_yPtr.asFunction<void Function(spine_bone_pose, double)>();
-
-  int spine_bone_pose_get_inherit(
-    spine_bone_pose self,
-  ) {
-    return _spine_bone_pose_get_inherit(
-      self,
-    );
-  }
-
-  late final _spine_bone_pose_get_inheritPtr =
-      _lookup<ffi.NativeFunction<ffi.Int32 Function(spine_bone_pose)>>('spine_bone_pose_get_inherit');
-  late final _spine_bone_pose_get_inherit = _spine_bone_pose_get_inheritPtr.asFunction<int Function(spine_bone_pose)>();
-
-  void spine_bone_pose_set_inherit(
-    spine_bone_pose self,
-    int inherit,
-  ) {
-    return _spine_bone_pose_set_inherit(
-      self,
-      inherit,
-    );
-  }
-
-  late final _spine_bone_pose_set_inheritPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Int32)>>('spine_bone_pose_set_inherit');
-  late final _spine_bone_pose_set_inherit =
-      _spine_bone_pose_set_inheritPtr.asFunction<void Function(spine_bone_pose, int)>();
-
-  spine_rtti spine_bone_pose_rtti() {
-    return _spine_bone_pose_rtti();
-  }
-
-  late final _spine_bone_pose_rttiPtr = _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_bone_pose_rtti');
-  late final _spine_bone_pose_rtti = _spine_bone_pose_rttiPtr.asFunction<spine_rtti Function()>();
-
   void spine_bone_timeline_dispose(
     spine_bone_timeline self,
   ) {
@@ -11333,7 +11419,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -11344,7 +11430,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -11737,7 +11823,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -11748,7 +11834,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -13564,7 +13650,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -13575,7 +13661,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -13804,7 +13890,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -13815,7 +13901,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -14181,7 +14267,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -14192,7 +14278,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -14453,7 +14539,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -14464,7 +14550,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -14683,7 +14769,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -14694,7 +14780,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -15360,7 +15446,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -15371,7 +15457,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -16742,7 +16828,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -16753,7 +16839,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -17091,7 +17177,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -17102,7 +17188,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -18982,7 +19068,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -18993,7 +19079,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -19507,7 +19593,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -19518,7 +19604,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -19979,7 +20065,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -19990,7 +20076,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -20759,7 +20845,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -20770,7 +20856,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -21808,7 +21894,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -21819,7 +21905,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -22282,7 +22368,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -22293,7 +22379,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -22755,7 +22841,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -22766,7 +22852,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -23224,7 +23310,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -23235,7 +23321,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -23937,7 +24023,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -23948,7 +24034,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -24160,7 +24246,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -24171,7 +24257,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -24615,7 +24701,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -24626,7 +24712,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -25069,7 +25155,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -25080,7 +25166,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -26703,7 +26789,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -26714,7 +26800,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -27017,7 +27103,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -27028,7 +27114,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -27326,7 +27412,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -27337,7 +27423,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -27632,7 +27718,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -27643,7 +27729,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -27912,7 +27998,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -27923,7 +28009,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -28390,7 +28476,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -28401,7 +28487,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -28694,7 +28780,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -28705,7 +28791,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -29121,7 +29207,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -29132,7 +29218,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -29740,7 +29826,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -29751,7 +29837,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -29961,7 +30047,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -29972,7 +30058,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -30265,7 +30351,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -30276,7 +30362,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -30692,7 +30778,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -30703,7 +30789,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -31481,7 +31567,7 @@ class SpineDartBindings {
     ffi.Pointer<ffi.Float> outWidth,
     ffi.Pointer<ffi.Float> outHeight,
     spine_array_float outVertexBuffer,
-    spine_skeleton_clipping clipper,
+    spine_skeleton_clipping clipping,
   ) {
     return _spine_skeleton_get_bounds_2(
       self,
@@ -31490,7 +31576,7 @@ class SpineDartBindings {
       outWidth,
       outHeight,
       outVertexBuffer,
-      clipper,
+      clipping,
     );
   }
 
@@ -31692,6 +31778,24 @@ class SpineDartBindings {
           'spine_skeleton_set_position');
   late final _spine_skeleton_set_position =
       _spine_skeleton_set_positionPtr.asFunction<void Function(spine_skeleton, double, double)>();
+
+  void spine_skeleton_get_position(
+    spine_skeleton self,
+    ffi.Pointer<ffi.Float> x,
+    ffi.Pointer<ffi.Float> y,
+  ) {
+    return _spine_skeleton_get_position(
+      self,
+      x,
+      y,
+    );
+  }
+
+  late final _spine_skeleton_get_positionPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_skeleton, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>>(
+          'spine_skeleton_get_position');
+  late final _spine_skeleton_get_position = _spine_skeleton_get_positionPtr
+      .asFunction<void Function(spine_skeleton, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
 
   double spine_skeleton_get_wind_x(
     spine_skeleton self,
@@ -33442,7 +33546,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -33453,7 +33557,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -33963,7 +34067,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -33974,7 +34078,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -34496,7 +34600,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -34507,7 +34611,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -35396,7 +35500,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -35407,7 +35511,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -37996,7 +38100,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -38007,7 +38111,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -38347,7 +38451,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -38358,7 +38462,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -38660,7 +38764,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -38671,7 +38775,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -39091,7 +39195,7 @@ class SpineDartBindings {
     spine_skeleton skeleton,
     double lastTime,
     double time,
-    spine_array_event pEvents,
+    spine_array_event events,
     double alpha,
     int blend,
     int direction,
@@ -39102,7 +39206,7 @@ class SpineDartBindings {
       skeleton,
       lastTime,
       time,
-      pEvents,
+      events,
       alpha,
       blend,
       direction,
@@ -40789,6 +40893,9 @@ typedef spine_array_track_entry = ffi.Pointer<spine_array_track_entry_wrapper>;
 typedef spine_track_entry = ffi.Pointer<spine_track_entry_wrapper>;
 typedef spine_array_update = ffi.Pointer<spine_array_update_wrapper>;
 typedef spine_update = ffi.Pointer<spine_update_wrapper>;
+typedef spine_rtti = ffi.Pointer<spine_rtti_wrapper>;
+typedef spine_skeleton = ffi.Pointer<spine_skeleton_wrapper>;
+typedef spine_bone_local = ffi.Pointer<spine_bone_local_wrapper>;
 typedef spine_atlas = ffi.Pointer<spine_atlas_wrapper>;
 typedef spine_skeleton_data = ffi.Pointer<spine_skeleton_data_wrapper>;
 
@@ -40827,24 +40934,6 @@ final class spine_texture_loader_wrapper extends ffi.Struct {
   external int _dummy;
 }
 
-typedef spine_atlas_result = ffi.Pointer<spine_atlas_result_wrapper>;
-
-/// Texture loader callbacks
-typedef spine_texture_loader_load_func = ffi.Pointer<ffi.NativeFunction<spine_texture_loader_load_funcFunction>>;
-typedef spine_texture_loader_load_funcFunction = ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Char> path);
-typedef spine_texture_loader_unload_func = ffi.Pointer<ffi.NativeFunction<spine_texture_loader_unload_funcFunction>>;
-typedef spine_texture_loader_unload_funcFunction = ffi.Void Function(ffi.Pointer<ffi.Void> texture);
-typedef Dartspine_texture_loader_unload_funcFunction = void Function(ffi.Pointer<ffi.Void> texture);
-typedef spine_skeleton_data_result = ffi.Pointer<spine_skeleton_data_result_wrapper>;
-typedef spine_skeleton_drawable = ffi.Pointer<spine_skeleton_drawable_wrapper>;
-typedef spine_render_command = ffi.Pointer<spine_render_command_wrapper>;
-typedef spine_skeleton = ffi.Pointer<spine_skeleton_wrapper>;
-typedef spine_animation_state = ffi.Pointer<spine_animation_state_wrapper>;
-typedef spine_animation_state_data = ffi.Pointer<spine_animation_state_data_wrapper>;
-typedef spine_animation_state_events = ffi.Pointer<spine_animation_state_events_wrapper>;
-typedef spine_skin_entries = ffi.Pointer<spine_skin_entries_wrapper>;
-typedef spine_skin_entry = ffi.Pointer<spine_skin_entry_wrapper>;
-
 /// Bounds struct
 final class spine_bounds extends ffi.Struct {
   @ffi.Float()
@@ -40860,8 +40949,32 @@ final class spine_bounds extends ffi.Struct {
   external double height;
 }
 
+/// Vector struct
+final class spine_vector extends ffi.Struct {
+  @ffi.Float()
+  external double x;
+
+  @ffi.Float()
+  external double y;
+}
+
+typedef spine_atlas_result = ffi.Pointer<spine_atlas_result_wrapper>;
+
+/// Texture loader callbacks
+typedef spine_texture_loader_load_func = ffi.Pointer<ffi.NativeFunction<spine_texture_loader_load_funcFunction>>;
+typedef spine_texture_loader_load_funcFunction = ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Char> path);
+typedef spine_texture_loader_unload_func = ffi.Pointer<ffi.NativeFunction<spine_texture_loader_unload_funcFunction>>;
+typedef spine_texture_loader_unload_funcFunction = ffi.Void Function(ffi.Pointer<ffi.Void> texture);
+typedef Dartspine_texture_loader_unload_funcFunction = void Function(ffi.Pointer<ffi.Void> texture);
+typedef spine_skeleton_data_result = ffi.Pointer<spine_skeleton_data_result_wrapper>;
+typedef spine_skeleton_drawable = ffi.Pointer<spine_skeleton_drawable_wrapper>;
+typedef spine_render_command = ffi.Pointer<spine_render_command_wrapper>;
+typedef spine_animation_state = ffi.Pointer<spine_animation_state_wrapper>;
+typedef spine_animation_state_data = ffi.Pointer<spine_animation_state_data_wrapper>;
+typedef spine_animation_state_events = ffi.Pointer<spine_animation_state_events_wrapper>;
+typedef spine_skin_entries = ffi.Pointer<spine_skin_entries_wrapper>;
+typedef spine_skin_entry = ffi.Pointer<spine_skin_entry_wrapper>;
 typedef spine_alpha_timeline = ffi.Pointer<spine_alpha_timeline_wrapper>;
-typedef spine_rtti = ffi.Pointer<spine_rtti_wrapper>;
 typedef spine_atlas_attachment_loader = ffi.Pointer<spine_atlas_attachment_loader_wrapper>;
 typedef spine_region_attachment = ffi.Pointer<spine_region_attachment_wrapper>;
 typedef spine_sequence = ffi.Pointer<spine_sequence_wrapper>;
@@ -40871,7 +40984,6 @@ typedef spine_point_attachment = ffi.Pointer<spine_point_attachment_wrapper>;
 typedef spine_clipping_attachment = ffi.Pointer<spine_clipping_attachment_wrapper>;
 typedef spine_attachment_loader = ffi.Pointer<spine_attachment_loader_wrapper>;
 typedef spine_attachment_timeline = ffi.Pointer<spine_attachment_timeline_wrapper>;
-typedef spine_bone_local = ffi.Pointer<spine_bone_local_wrapper>;
 typedef spine_color = ffi.Pointer<spine_color_wrapper>;
 typedef spine_bone_timeline = ffi.Pointer<spine_bone_timeline_wrapper>;
 typedef spine_bone_timeline1 = ffi.Pointer<spine_bone_timeline1_wrapper>;

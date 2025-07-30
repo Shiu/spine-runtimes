@@ -41,7 +41,7 @@ class DressUp extends StatefulWidget {
 
 class DressUpState extends State<DressUp> {
   static const double thumbnailSize = 200;
-  late SkeletonDrawable _drawable;
+  late SkeletonDrawableFlutter _drawable;
   Skin? _customSkin;
   final Map<String, RawImageData> _skinImages = {};
   final Map<String, bool> _selectedSkins = {};
@@ -50,17 +50,19 @@ class DressUpState extends State<DressUp> {
   void initState() {
     reportLeaks();
     super.initState();
-    SkeletonDrawable.fromAsset("assets/mix-and-match.atlas", "assets/mix-and-match-pro.skel").then((drawable) async {
+    SkeletonDrawableFlutter.fromAsset("assets/mix-and-match.atlas", "assets/mix-and-match-pro.skel")
+        .then((drawable) async {
       _drawable = drawable;
-      for (var skin in drawable.skeletonData.getSkins()) {
-        if (skin.getName() == "default") continue;
+      for (var skin in drawable.skeletonData.skins) {
+        if (skin == null) continue;
+        if (skin.name == "default") continue;
         var skeleton = drawable.skeleton;
-        skeleton.setSkin(skin);
-        skeleton.setToSetupPose();
+        skeleton.setSkin2(skin);
+        skeleton.setupPose();
         skeleton.update(0);
         skeleton.updateWorldTransform(Physics.update);
-        _skinImages[skin.getName()] = await drawable.renderToRawImageData(thumbnailSize, thumbnailSize, 0xffffffff);
-        _selectedSkins[skin.getName()] = false;
+        _skinImages[skin.name] = await drawable.renderToRawImageData(thumbnailSize, thumbnailSize, 0xffffffff);
+        _selectedSkins[skin.name] = false;
       }
       _toggleSkin("full-skins/girl");
       setState(() {});
@@ -69,7 +71,7 @@ class DressUpState extends State<DressUp> {
 
   void _toggleSkin(String skinName) {
     _selectedSkins[skinName] = !_selectedSkins[skinName]!;
-    _drawable.skeleton.setSkinByName("default");
+    _drawable.skeleton.setSkin("default");
     if (_customSkin != null) _customSkin?.dispose();
     _customSkin = Skin("custom-skin");
     for (var skinName in _selectedSkins.keys) {
@@ -78,15 +80,15 @@ class DressUpState extends State<DressUp> {
         if (skin != null) _customSkin?.addSkin(skin);
       }
     }
-    _drawable.skeleton.setSkin(_customSkin!);
-    _drawable.skeleton.setSlotsToSetupPose();
+    _drawable.skeleton.setSkin2(_customSkin!);
+    _drawable.skeleton.setupPoseSlots();
   }
 
   @override
   Widget build(BuildContext context) {
     final controller = SpineWidgetController(
       onInitialized: (controller) {
-        controller.animationState.setAnimationByName(0, "dance", true);
+        controller.animationState.setAnimation(0, "dance", true);
       },
     );
 

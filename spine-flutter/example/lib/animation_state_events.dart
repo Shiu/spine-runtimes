@@ -24,7 +24,7 @@ class AnimationStateEvents extends StatelessWidget {
         controller.animationState.setListener((type, trackEntry, event) {
           if (type == EventType.event) {
             print(
-              "User event: { name: ${event?.getData().getName()}, intValue: ${event?.getIntValue()}, floatValue: ${event?.getFloatValue()}, stringValue: ${event?.getStringValue()} }",
+              "User event: { name: ${event?.data.name}, intValue: ${event?.intValue}, floatValue: ${event?.floatValue}, stringValue: ${event?.stringValue} }",
             );
           }
         });

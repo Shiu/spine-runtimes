@@ -80,10 +80,10 @@ class Animation {
     SpineBindings.bindings.spine_animation_set_duration(_ptr, value);
   }
 
-  void apply(Skeleton skeleton, double lastTime, double time, bool loop, ArrayEvent? pEvents, double alpha,
+  void apply(Skeleton skeleton, double lastTime, double time, bool loop, ArrayEvent? events, double alpha,
       MixBlend blend, MixDirection direction, bool appliedPose) {
     SpineBindings.bindings.spine_animation_apply(_ptr, skeleton.nativePtr.cast(), lastTime, time, loop,
-        pEvents?.nativePtr.cast() ?? Pointer.fromAddress(0), alpha, blend.value, direction.value, appliedPose);
+        events?.nativePtr.cast() ?? Pointer.fromAddress(0), alpha, blend.value, direction.value, appliedPose);
   }
 
   String get name {

@@ -31,7 +31,7 @@ import 'package:spine_flutter/spine_flutter.dart';
 import 'package:flutter/material.dart';
 
 class PlayPauseAnimation extends StatefulWidget {
-  const PlayPauseAnimation({Key? key}) : super(key: key);
+  const PlayPauseAnimation({super.key});
 
   @override
   PlayPauseAnimationState createState() => PlayPauseAnimationState();
@@ -45,7 +45,7 @@ class PlayPauseAnimationState extends State<PlayPauseAnimation> {
     super.initState();
     controller = SpineWidgetController(
       onInitialized: (controller) {
-        controller.animationState.setAnimationByName(0, "flying", true);
+        controller.animationState.setAnimation(0, "flying", true);
       },
     );
   }

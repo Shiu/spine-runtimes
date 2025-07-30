@@ -24,14 +24,13 @@ Future<void> initSpineFlutter({bool useStaticLinkage = false, bool enableMemoryD
 }
 
 /// Flutter wrapper for Atlas that manages texture loading and Paint creation
-class AtlasFlutter {
+class AtlasFlutter extends Atlas {
   static FilterQuality filterQuality = FilterQuality.low;
-  final Atlas atlas;
   final List<Image> atlasPages;
   final List<Map<BlendMode, Paint>> atlasPagePaints;
   bool _disposed = false;
 
-  AtlasFlutter._(this.atlas, this.atlasPages, this.atlasPagePaints);
+  AtlasFlutter._(super.ptr, this.atlasPages, this.atlasPagePaints) : super.fromPointer();
 
   /// Internal method to load atlas and images
   static Future<AtlasFlutter> _load(String atlasFileName, Future<Uint8List> Function(String name) loadFile) async {
@@ -77,7 +76,7 @@ class AtlasFlutter {
       paints.add(pagePaints);
     }
 
-    return AtlasFlutter._(atlas, pages, paints);
+    return AtlasFlutter._(atlas.nativePtr.cast(), pages, paints);
   }
 
   /// Loads an [AtlasFlutter] from the file [atlasFileName] in the root bundle or the optionally provided [bundle].
@@ -103,14 +102,73 @@ class AtlasFlutter {
   }
 
   /// Disposes all resources including the native atlas and images
+  @override
   void dispose() {
     if (_disposed) return;
     _disposed = true;
-    atlas.dispose();
+    super.dispose();
     for (final image in atlasPages) {
       image.dispose();
     }
     atlasPagePaints.clear();
+  }
+}
+
+/// Flutter wrapper for SkeletonData that provides convenient loading methods
+class SkeletonDataFlutter extends SkeletonData {
+  SkeletonDataFlutter._(super.ptr) : super.fromPointer();
+
+  /// Loads a [SkeletonDataFlutter] from the file [skeletonFile] in the root bundle or the optionally provided [bundle].
+  /// Uses the provided [atlasFlutter] to resolve attachment images.
+  ///
+  /// Throws an [Exception] in case the skeleton data could not be loaded.
+  static Future<SkeletonDataFlutter> fromAsset(AtlasFlutter atlas, String skeletonFile, {AssetBundle? bundle}) async {
+    bundle ??= rootBundle;
+    if (skeletonFile.endsWith(".json")) {
+      final jsonData = await bundle.loadString(skeletonFile);
+      final skeletonData = loadSkeletonDataJson(atlas, jsonData, path: skeletonFile);
+      return SkeletonDataFlutter._(skeletonData.nativePtr.cast());
+    } else {
+      final binaryData = (await bundle.load(skeletonFile)).buffer.asUint8List();
+      final skeletonData = loadSkeletonDataBinary(atlas, binaryData, path: skeletonFile);
+      return SkeletonDataFlutter._(skeletonData.nativePtr.cast());
+    }
+  }
+
+  /// Loads a [SkeletonDataFlutter] from the file [skeletonFile]. Uses the provided [atlasFlutter] to resolve attachment images.
+  ///
+  /// Throws an [Exception] in case the skeleton data could not be loaded.
+  static Future<SkeletonDataFlutter> fromFile(AtlasFlutter atlasFlutter, String skeletonFile) async {
+    if (skeletonFile.endsWith(".json")) {
+      final jsonData = await File(skeletonFile).readAsString();
+      final skeletonData = loadSkeletonDataJson(atlasFlutter, jsonData, path: skeletonFile);
+      return SkeletonDataFlutter._(skeletonData.nativePtr.cast());
+    } else {
+      final binaryData = await File(skeletonFile).readAsBytes();
+      final skeletonData = loadSkeletonDataBinary(atlasFlutter, binaryData, path: skeletonFile);
+      return SkeletonDataFlutter._(skeletonData.nativePtr.cast());
+    }
+  }
+
+  /// Loads a [SkeletonDataFlutter] from the URL [skeletonURL]. Uses the provided [atlasFlutter] to resolve attachment images.
+  ///
+  /// Throws an [Exception] in case the skeleton data could not be loaded.
+  static Future<SkeletonDataFlutter> fromHttp(AtlasFlutter atlasFlutter, String skeletonURL) async {
+    if (skeletonURL.endsWith(".json")) {
+      final response = await http.get(Uri.parse(skeletonURL));
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load skeleton from $skeletonURL: ${response.statusCode}');
+      }
+      final skeletonData = loadSkeletonDataJson(atlasFlutter, response.body, path: skeletonURL);
+      return SkeletonDataFlutter._(skeletonData.nativePtr.cast());
+    } else {
+      final response = await http.get(Uri.parse(skeletonURL));
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load skeleton from $skeletonURL: ${response.statusCode}');
+      }
+      final skeletonData = loadSkeletonDataBinary(atlasFlutter, response.bodyBytes, path: skeletonURL);
+      return SkeletonDataFlutter._(skeletonData.nativePtr.cast());
+    }
   }
 }
 
@@ -184,7 +242,6 @@ class RenderCommandFlutter {
       // See https://github.com/flutter/flutter/issues/127486
       //
       // We thus batch all meshes not only by atlas page and blend mode, but also vertex color.
-      // See spine_flutter.cpp, batch_commands().
       //
       // If the vertex color equals (1, 1, 1, 1), we do not store
       // colors, which will trigger the fast path in Impeller. Otherwise we have to go the slow path, which
@@ -218,13 +275,13 @@ class RenderCommandFlutter {
   }
 }
 
-/// A SkeletonDrawable bundles loading, updating, and rendering an [Atlas], [Skeleton], and [AnimationState]
+/// A SkeletonDrawable bundles loading, updating, and rendering an [AtlasFlutter], [Skeleton], and [AnimationState]
 /// into a single easy to use class.
 ///
 /// Use the [fromAsset], [fromFile], or [fromHttp] methods to construct a SkeletonDrawable. To have
-/// multiple skeleton drawable instances share the same [Atlas] and [SkeletonData], use the constructor.
+/// multiple skeleton drawable instances share the same [AtlasFlutter] and [SkeletonDataFlutter], use the constructor.
 ///
-/// You can then directly access the [atlas], [skeletonData], [skeleton], [animationStateData], and [animationState]
+/// You can then directly access the [atlasFlutter], [skeletonDataFlutter], [skeleton], [animationStateData], and [animationState]
 /// to query and animate the skeleton. Use the [AnimationState] to queue animations on one or more tracks
 /// via [AnimationState.setAnimation] or [AnimationState.addAnimation].
 ///
@@ -235,27 +292,18 @@ class RenderCommandFlutter {
 /// [renderToPng], or [renderToRawImageData], depending on your needs.
 ///
 /// When the skeleton drawable is no longer needed, call the [dispose] method to release its resources. If
-/// the skeleton drawable was constructed from a shared [Atlas] and [SkeletonData], make sure to dispose the
+/// the skeleton drawable was constructed from a shared [AtlasFlutter] and [SkeletonDataFlutter], make sure to dispose the
 /// atlas and skeleton data as well, if no skeleton drawable references them anymore.
-class SkeletonDrawableFlutter {
+class SkeletonDrawableFlutter extends SkeletonDrawable {
   final AtlasFlutter atlasFlutter;
   final SkeletonData skeletonData;
-  late final SkeletonDrawable _drawable;
-  late final Skeleton skeleton;
-  late final AnimationStateData animationStateData;
-  late final AnimationState animationState;
   final bool _ownsAtlasAndSkeletonData;
   bool _disposed = false;
 
-  /// Constructs a new skeleton drawable from the given (possibly shared) [Atlas] and [SkeletonData]. If
+  /// Constructs a new skeleton drawable from the given (possibly shared) [AtlasFlutter] and [SkeletonDataFlutter]. If
   /// the atlas and skeleton data are not shared, the drawable can take ownership by passing true for [_ownsAtlasAndSkeletonData].
   /// In that case a call to [dispose] will also dispose the atlas and skeleton data.
-  SkeletonDrawableFlutter(this.atlasFlutter, this.skeletonData, this._ownsAtlasAndSkeletonData) {
-    _drawable = SkeletonDrawable(skeletonData);
-    skeleton = _drawable.skeleton;
-    animationStateData = _drawable.animationStateData;
-    animationState = _drawable.animationState;
-  }
+  SkeletonDrawableFlutter(this.atlasFlutter, this.skeletonData, this._ownsAtlasAndSkeletonData) : super(skeletonData);
 
   /// Constructs a new skeleton drawable from the [atlasFile] and [skeletonFile] from the root asset bundle
   /// or the optionally provided [bundle].
@@ -264,13 +312,8 @@ class SkeletonDrawableFlutter {
   static Future<SkeletonDrawableFlutter> fromAsset(String atlasFile, String skeletonFile, {AssetBundle? bundle}) async {
     bundle ??= rootBundle;
     final atlasFlutter = await AtlasFlutter.fromAsset(atlasFile, bundle: bundle);
-
-    final skeletonData = await bundle.loadString(skeletonFile);
-    final skeleton = skeletonFile.endsWith('.json')
-        ? loadSkeletonDataJson(atlasFlutter.atlas, skeletonData)
-        : throw Exception('Binary skeleton data loading from assets not yet implemented');
-
-    return SkeletonDrawableFlutter(atlasFlutter, skeleton, true);
+    final skeletonDataFlutter = await SkeletonDataFlutter.fromAsset(atlasFlutter, skeletonFile, bundle: bundle);
+    return SkeletonDrawableFlutter(atlasFlutter, skeletonDataFlutter, true);
   }
 
   /// Constructs a new skeleton drawable from the [atlasFile] and [skeletonFile].
@@ -278,17 +321,8 @@ class SkeletonDrawableFlutter {
   /// Throws an exception in case the data could not be loaded.
   static Future<SkeletonDrawableFlutter> fromFile(String atlasFile, String skeletonFile) async {
     final atlasFlutter = await AtlasFlutter.fromFile(atlasFile);
-
-    final SkeletonData skeleton;
-    if (skeletonFile.endsWith('.json')) {
-      final skeletonData = await File(skeletonFile).readAsString();
-      skeleton = loadSkeletonDataJson(atlasFlutter.atlas, skeletonData);
-    } else {
-      final skeletonData = await File(skeletonFile).readAsBytes();
-      skeleton = loadSkeletonDataBinary(atlasFlutter.atlas, skeletonData);
-    }
-
-    return SkeletonDrawableFlutter(atlasFlutter, skeleton, true);
+    final skeletonDataFlutter = await SkeletonDataFlutter.fromFile(atlasFlutter, skeletonFile);
+    return SkeletonDrawableFlutter(atlasFlutter, skeletonDataFlutter, true);
   }
 
   /// Constructs a new skeleton drawable from the [atlasUrl] and [skeletonUrl].
@@ -296,45 +330,22 @@ class SkeletonDrawableFlutter {
   /// Throws an exception in case the data could not be loaded.
   static Future<SkeletonDrawableFlutter> fromHttp(String atlasUrl, String skeletonUrl) async {
     final atlasFlutter = await AtlasFlutter.fromHttp(atlasUrl);
-
-    final SkeletonData skeleton;
-    if (skeletonUrl.endsWith('.json')) {
-      final skeletonResponse = await http.get(Uri.parse(skeletonUrl));
-      if (skeletonResponse.statusCode != 200) {
-        throw Exception('Failed to load skeleton from $skeletonUrl: ${skeletonResponse.statusCode}');
-      }
-      skeleton = loadSkeletonDataJson(atlasFlutter.atlas, skeletonResponse.body);
-    } else {
-      final skeletonResponse = await http.get(Uri.parse(skeletonUrl));
-      if (skeletonResponse.statusCode != 200) {
-        throw Exception('Failed to load skeleton from $skeletonUrl: ${skeletonResponse.statusCode}');
-      }
-      skeleton = loadSkeletonDataBinary(atlasFlutter.atlas, skeletonResponse.bodyBytes);
-    }
-
-    return SkeletonDrawableFlutter(atlasFlutter, skeleton, true);
-  }
-
-  /// Updates the [AnimationState] using the [delta] time given in seconds, applies the
-  /// animation state to the [Skeleton] and updates the world transforms of the skeleton
-  /// to calculate its current pose.
-  void update(double delta) {
-    if (_disposed) return;
-    _drawable.update(delta);
+    final skeletonDataFlutter = await SkeletonDataFlutter.fromHttp(atlasFlutter, skeletonUrl);
+    return SkeletonDrawableFlutter(atlasFlutter, skeletonDataFlutter, true);
   }
 
   /// Renders to current skeleton pose to a list of [RenderCommandFlutter] instances. The render commands
   /// can be rendered via [Canvas.drawVertices].
-  List<RenderCommandFlutter> render() {
+  List<RenderCommandFlutter> renderFlutter() {
     if (_disposed) return [];
 
     var commands = <RenderCommandFlutter>[];
-    var nativeCmd = _drawable.render();
+    var nativeCmd = render();
 
     while (nativeCmd != null) {
       // Get page dimensions from atlas
       final pageIndex = nativeCmd.texture?.address ?? 0;
-      final pages = atlasFlutter.atlas.pages;
+      final pages = atlasFlutter.pages;
       final page = pages[pageIndex];
       if (page != null) {
         commands.add(RenderCommandFlutter._(nativeCmd, page.width.toDouble(), page.height.toDouble()));
@@ -350,7 +361,7 @@ class SkeletonDrawableFlutter {
   /// Renders the skeleton drawable's current pose to the given [canvas]. Does not perform any
   /// scaling or fitting.
   List<RenderCommandFlutter> renderToCanvas(Canvas canvas) {
-    var commands = render();
+    var commands = renderFlutter();
 
     for (final cmd in commands) {
       // Get the paint for this atlas page and blend mode
@@ -425,10 +436,11 @@ class SkeletonDrawableFlutter {
   /// Disposes the skeleton drawable's resources. If the skeleton drawable owns the atlas
   /// and skeleton data, they are disposed as well. Must be called when the skeleton drawable
   /// is no longer in use.
+  @override
   void dispose() {
     if (_disposed) return;
     _disposed = true;
-    _drawable.dispose();
+    super.dispose();
 
     if (_ownsAtlasAndSkeletonData) {
       atlasFlutter.dispose();

@@ -21,6 +21,16 @@ if [ ! -d "codegen/node_modules" ]; then
     fi
 fi
 
+# Generating spine-c bindings
+log_action "Generating spine-c bindings"
+if LOG=$(cd ../spine-c && ./build.sh codegen 2>&1); then
+    log_ok
+else
+    log_fail
+    log_error_output "$LOG"
+    exit 1
+fi
+
 # Copy spine-c and spine-cpp sources
 log_action "Setting up source files"
 if ./setup.sh > /dev/null 2>&1; then
@@ -32,19 +42,21 @@ fi
 
 # Run the codegen
 log_action "Generating Dart bindings"
-if npx tsx codegen/src/index.ts > /dev/null 2>&1; then
+if LOG=$(npx tsx codegen/src/index.ts 2>&1); then
     log_ok
 else
     log_fail
+    log_error_output "$LOG"
     exit 1
 fi
 
 # Build test spine_flutter shared library
 log_action "Building test library"
-if (cd test && ./build.sh > /dev/null 2>&1); then
+if LOG=$(cd test && ./build.sh 2>&1); then
     log_ok
 else
     log_fail
+    log_error_output "$LOG"
     exit 1
 fi
 

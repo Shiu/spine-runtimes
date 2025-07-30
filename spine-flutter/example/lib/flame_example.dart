@@ -36,7 +36,7 @@ import 'package:flutter/material.dart';
 
 class SpineComponent extends PositionComponent {
   final BoundsProvider _boundsProvider;
-  final SkeletonDrawable _drawable;
+  final SkeletonDrawableFlutter _drawable;
   late final Bounds _bounds;
   final bool _ownsDrawable;
 
@@ -70,7 +70,7 @@ class SpineComponent extends PositionComponent {
     int? priority,
   }) async {
     return SpineComponent(
-      await SkeletonDrawable.fromAsset(atlasFile, skeletonFile, bundle: bundle),
+      await SkeletonDrawableFlutter.fromAsset(atlasFile, skeletonFile, bundle: bundle),
       ownsDrawable: true,
       boundsProvider: boundsProvider,
       position: position,
@@ -137,15 +137,15 @@ class SimpleFlameExample extends FlameGame {
 }
 
 class DragonExample extends FlameGame {
-  late final Atlas cachedAtlas;
+  late final AtlasFlutter cachedAtlas;
   late final SkeletonData cachedSkeletonData;
   late final SpineComponent dragon;
 
   @override
   Future<void> onLoad() async {
-    cachedAtlas = await Atlas.fromAsset("assets/dragon.atlas");
-    cachedSkeletonData = await SkeletonData.fromAsset(cachedAtlas, "assets/dragon-ess.skel");
-    final drawable = SkeletonDrawable(cachedAtlas, cachedSkeletonData, false);
+    cachedAtlas = await AtlasFlutter.fromAsset("assets/dragon.atlas");
+    cachedSkeletonData = await SkeletonDataFlutter.fromAsset(cachedAtlas, "assets/dragon-ess.skel");
+    final drawable = SkeletonDrawableFlutter(cachedAtlas, cachedSkeletonData, false);
     dragon = SpineComponent(
       drawable,
       scale: Vector2(0.4, 0.4),
@@ -168,21 +168,21 @@ class DragonExample extends FlameGame {
 
 class PreloadAndShareSpineDataExample extends FlameGame {
   late final SkeletonData cachedSkeletonData;
-  late final Atlas cachedAtlas;
+  late final AtlasFlutter cachedAtlas;
   late final List<SpineComponent> spineboys = [];
 
   @override
   Future<void> onLoad() async {
     // Pre-load the atlas and skeleton data once.
-    cachedAtlas = await Atlas.fromAsset("assets/spineboy.atlas");
-    cachedSkeletonData = await SkeletonData.fromAsset(cachedAtlas, "assets/spineboy-pro.skel");
+    cachedAtlas = await AtlasFlutter.fromAsset("assets/spineboy.atlas");
+    cachedSkeletonData = await SkeletonDataFlutter.fromAsset(cachedAtlas, "assets/spineboy-pro.skel");
 
     // Instantiate many spineboys from the pre-loaded data. Each SpineComponent
     // gets their own SkeletonDrawable copy derived from the cached data. The
     // SkeletonDrawable copies do not own the underlying skeleton data and atlas.
     final rng = Random();
     for (int i = 0; i < 100; i++) {
-      final drawable = SkeletonDrawable(cachedAtlas, cachedSkeletonData, false);
+      final drawable = SkeletonDrawableFlutter(cachedAtlas, cachedSkeletonData, false);
       final scale = 0.1 + rng.nextDouble() * 0.2;
       final position = Vector2(rng.nextDouble() * size.x, rng.nextDouble() * size.y);
       final spineboy = SpineComponent(drawable, scale: Vector2(scale, scale), position: position);

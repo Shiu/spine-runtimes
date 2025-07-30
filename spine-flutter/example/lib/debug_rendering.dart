@@ -40,7 +40,7 @@ class DebugRendering extends StatelessWidget {
     const debugRenderer = DebugRenderer();
     final controller = SpineWidgetController(
       onInitialized: (controller) {
-        controller.animationState.setAnimationByName(0, "walk", true);
+        controller.animationState.setAnimation(0, "walk", true);
       },
       onBeforePaint: (controller, canvas) {
         // Save the current transform and other canvas state

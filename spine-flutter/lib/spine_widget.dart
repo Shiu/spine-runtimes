@@ -26,6 +26,7 @@
 /// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 /// THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///
+library;
 
 import 'dart:math';
 
@@ -34,7 +35,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-import 'spine_dart.dart';
+import 'spine_flutter.dart';
 
 /// Controls how the skeleton of a [SpineWidget] is animated and rendered.
 ///
@@ -54,7 +55,7 @@ import 'spine_dart.dart';
 /// [SpineWidget] then renderes the skeleton's current pose, and finally calls the optional [onAfterPaint], which
 /// can render additional objects on top of the skeleton.
 ///
-/// The underlying [Atlas], [SkeletonData], [Skeleton], [AnimationStateData], [AnimationState], and [SkeletonDrawable]
+/// The underlying [AtlasFlutter], [SkeletonData], [Skeleton], [AnimationStateData], [AnimationState], and [SkeletonDrawableFlutter]
 /// can be accessed through their respective getters to inspect and/or modify the skeleton and its associated data. Accessing
 /// this data is only allowed if the [SpineWidget] and its data have been initialized and have not been disposed yet.
 ///
@@ -62,7 +63,7 @@ import 'spine_dart.dart';
 /// and rendering the skeleton. The [resume] method resumes updating and rendering the skeleton. The [isPlaying] getter
 /// reports the current state.
 class SpineWidgetController {
-  SkeletonDrawable? _drawable;
+  SkeletonDrawableFlutter? _drawable;
   double _offsetX = 0, _offsetY = 0, _scaleX = 1, _scaleY = 1;
   bool _isPlaying = true;
   _SpineRenderObject? _renderObject;
@@ -70,7 +71,8 @@ class SpineWidgetController {
   final void Function(SpineWidgetController controller)? onBeforeUpdateWorldTransforms;
   final void Function(SpineWidgetController controller)? onAfterUpdateWorldTransforms;
   final void Function(SpineWidgetController controller, Canvas canvas)? onBeforePaint;
-  final void Function(SpineWidgetController controller, Canvas canvas, List<RenderCommand> commands)? onAfterPaint;
+  final void Function(SpineWidgetController controller, Canvas canvas, List<RenderCommandFlutter> commands)?
+      onAfterPaint;
 
   /// Constructs a new [SpineWidget] controller. See the class documentation of [SpineWidgetController] for information on
   /// the optional arguments.
@@ -82,16 +84,16 @@ class SpineWidgetController {
     this.onAfterPaint,
   });
 
-  void _initialize(SkeletonDrawable drawable) {
+  void _initialize(SkeletonDrawableFlutter drawable) {
     var wasInitialized = _drawable != null;
     _drawable = drawable;
     if (!wasInitialized) onInitialized?.call(this);
   }
 
-  /// The [Atlas] from which images to render the skeleton are sourced.
-  Atlas get atlas {
+  /// The [AtlasFlutter] from which images to render the skeleton are sourced.
+  AtlasFlutter get atlasFlutter {
     if (_drawable == null) throw Exception("Controller is not initialized yet.");
-    return _drawable!.atlas;
+    return _drawable!.atlasFlutter;
   }
 
   /// The setup-pose data used by the skeleton.
@@ -119,8 +121,8 @@ class SpineWidgetController {
     return _drawable!.skeleton;
   }
 
-  /// The [SkeletonDrawable]
-  SkeletonDrawable get drawable {
+  /// The [SkeletonDrawableFlutter]
+  SkeletonDrawableFlutter get drawable {
     if (_drawable == null) throw Exception("Controller is not initialized yet.");
     return _drawable!;
   }
@@ -170,7 +172,7 @@ enum _AssetType { asset, file, http, drawable }
 abstract class BoundsProvider {
   const BoundsProvider();
 
-  Bounds computeBounds(SkeletonDrawable drawable);
+  Bounds computeBounds(SkeletonDrawableFlutter drawable);
 }
 
 /// A [BoundsProvider] that calculates the bounding box of the skeleton based on the visible
@@ -179,8 +181,10 @@ class SetupPoseBounds extends BoundsProvider {
   const SetupPoseBounds();
 
   @override
-  Bounds computeBounds(SkeletonDrawable drawable) {
-    return drawable.skeleton.getBounds();
+  Bounds computeBounds(SkeletonDrawableFlutter drawable) {
+    drawable.skeleton.setupPose();
+    drawable.skeleton.updateWorldTransform(Physics.none);
+    return drawable.skeleton.bounds;
   }
 }
 
@@ -191,8 +195,8 @@ class RawBounds extends BoundsProvider {
   RawBounds(this.x, this.y, this.width, this.height);
 
   @override
-  Bounds computeBounds(SkeletonDrawable drawable) {
-    return Bounds(x, y, width, height);
+  Bounds computeBounds(SkeletonDrawableFlutter drawable) {
+    return Bounds(x: x, y: y, width: width, height: height);
   }
 }
 
@@ -211,17 +215,17 @@ class SkinAndAnimationBounds extends BoundsProvider {
       : skins = skins == null || skins.isEmpty ? ["default"] : skins;
 
   @override
-  Bounds computeBounds(SkeletonDrawable drawable) {
+  Bounds computeBounds(SkeletonDrawableFlutter drawable) {
     final data = drawable.skeletonData;
-    final oldSkin = drawable.skeleton.getSkin();
+    final oldSkin = drawable.skeleton.skin;
     final customSkin = Skin("custom-skin");
     for (final skinName in skins) {
       final skin = data.findSkin(skinName);
       if (skin == null) continue;
       customSkin.addSkin(skin);
     }
-    drawable.skeleton.setSkin(customSkin);
-    drawable.skeleton.setToSetupPose();
+    drawable.skeleton.setSkin2(customSkin);
+    drawable.skeleton.setupPose();
 
     final animation = this.animation != null ? data.findAnimation(this.animation!) : null;
     double minX = double.infinity;
@@ -229,35 +233,37 @@ class SkinAndAnimationBounds extends BoundsProvider {
     double maxX = double.negativeInfinity;
     double maxY = double.negativeInfinity;
     if (animation == null) {
-      final bounds = drawable.skeleton.getBounds();
+      drawable.skeleton.updateWorldTransform(Physics.none);
+      final bounds = drawable.skeleton.bounds;
       minX = bounds.x;
       minY = bounds.y;
       maxX = minX + bounds.width;
       maxY = minY + bounds.height;
     } else {
-      drawable.animationState.setAnimation(0, animation, false);
-      final steps = max(animation.getDuration() / stepTime, 1.0).toInt();
+      drawable.animationState.setAnimation(0, animation.name, false);
+      final steps = max(animation.duration / stepTime, 1.0).toInt();
       for (int i = 0; i < steps; i++) {
         drawable.update(i > 0 ? stepTime : 0);
-        final bounds = drawable.skeleton.getBounds();
+        drawable.skeleton.updateWorldTransform(Physics.none);
+        final bounds = drawable.skeleton.bounds;
         minX = min(minX, bounds.x);
         minY = min(minY, bounds.y);
         maxX = max(maxX, minX + bounds.width);
         maxY = max(maxY, minY + bounds.height);
       }
     }
-    drawable.skeleton.setSkinByName("default");
+    drawable.skeleton.setSkin("default");
     drawable.animationState.clearTracks();
-    if (oldSkin != null) drawable.skeleton.setSkin(oldSkin);
-    drawable.skeleton.setToSetupPose();
+    if (oldSkin != null) drawable.skeleton.setSkin2(oldSkin);
+    drawable.skeleton.setupPose();
     drawable.update(0);
     customSkin.dispose();
-    return Bounds(minX, minY, maxX - minX, maxY - minY);
+    return Bounds(x: minX, y: minY, width: maxX - minX, height: maxY - minY);
   }
 }
 
 /// A [StatefulWidget] to display a Spine skeleton. The skeleton can be loaded from an asset bundle ([SpineWidget.fromAsset],
-/// local files [SpineWidget.fromFile], URLs [SpineWidget.fromHttp], or a pre-loaded [SkeletonDrawable] ([SpineWidget.fromDrawable]).
+/// local files [SpineWidget.fromFile], URLs [SpineWidget.fromHttp], or a pre-loaded [SkeletonDrawableFlutter] ([SpineWidget.fromDrawable]).
 ///
 /// The skeleton displayed by a `SpineWidget` can be controlled via a [SpineWidgetController].
 ///
@@ -268,7 +274,7 @@ class SpineWidget extends StatefulWidget {
   final AssetBundle? _bundle;
   final String? _skeletonFile;
   final String? _atlasFile;
-  final SkeletonDrawable? _drawable;
+  final SkeletonDrawableFlutter? _drawable;
   final SpineWidgetController _controller;
   final BoxFit _fit;
   final Alignment _alignment;
@@ -361,7 +367,7 @@ class SpineWidget extends StatefulWidget {
         _sizedByBounds = sizedByBounds ?? false,
         _drawable = null;
 
-  /// Constructs a new [SpineWidget] from a [SkeletonDrawable].
+  /// Constructs a new [SpineWidget] from a [SkeletonDrawableFlutter].
   ///
   /// After initialization is complete, the provided [_controller] is invoked as per the [SpineWidgetController] semantics, to allow
   /// modifying how the skeleton inside the widget is animated and rendered.
@@ -394,7 +400,7 @@ class SpineWidget extends StatefulWidget {
 
 class _SpineWidgetState extends State<SpineWidget> {
   late Bounds _computedBounds;
-  SkeletonDrawable? _drawable;
+  SkeletonDrawableFlutter? _drawable;
 
   @override
   void initState() {
@@ -436,7 +442,7 @@ class _SpineWidgetState extends State<SpineWidget> {
     }
   }
 
-  void loadDrawable(SkeletonDrawable drawable) {
+  void loadDrawable(SkeletonDrawableFlutter drawable) {
     _drawable = drawable;
     _computedBounds = widget._boundsProvider.computeBounds(drawable);
     widget._controller._initialize(drawable);
@@ -446,13 +452,13 @@ class _SpineWidgetState extends State<SpineWidget> {
   void loadFromAsset(AssetBundle? bundle, String atlasFile, String skeletonFile, _AssetType assetType) async {
     switch (assetType) {
       case _AssetType.asset:
-        loadDrawable(await SkeletonDrawable.fromAsset(atlasFile, skeletonFile, bundle: bundle));
+        loadDrawable(await SkeletonDrawableFlutter.fromAsset(atlasFile, skeletonFile, bundle: bundle));
         break;
       case _AssetType.file:
-        loadDrawable(await SkeletonDrawable.fromFile(atlasFile, skeletonFile));
+        loadDrawable(await SkeletonDrawableFlutter.fromFile(atlasFile, skeletonFile));
         break;
       case _AssetType.http:
-        loadDrawable(await SkeletonDrawable.fromHttp(atlasFile, skeletonFile));
+        loadDrawable(await SkeletonDrawableFlutter.fromHttp(atlasFile, skeletonFile));
         break;
       case _AssetType.drawable:
         throw Exception("Drawable can not be loaded via loadFromAsset().");
@@ -483,7 +489,7 @@ class _SpineWidgetState extends State<SpineWidget> {
 }
 
 class _SpineRenderObjectWidget extends LeafRenderObjectWidget {
-  final SkeletonDrawable _skeletonDrawable;
+  final SkeletonDrawableFlutter _skeletonDrawable;
   final SpineWidgetController _controller;
   final BoxFit _fit;
   final Alignment _alignment;
@@ -515,7 +521,7 @@ class _SpineRenderObjectWidget extends LeafRenderObjectWidget {
 }
 
 class _SpineRenderObject extends RenderBox {
-  SkeletonDrawable _skeletonDrawable;
+  SkeletonDrawableFlutter _skeletonDrawable;
   final SpineWidgetController _controller;
   double _deltaTime = 0;
   final Stopwatch _stopwatch = Stopwatch();
@@ -535,7 +541,7 @@ class _SpineRenderObject extends RenderBox {
     this._sizedByBounds,
   );
 
-  set skeletonDrawable(SkeletonDrawable skeletonDrawable) {
+  set skeletonDrawable(SkeletonDrawableFlutter skeletonDrawable) {
     if (_skeletonDrawable == skeletonDrawable) return;
 
     _skeletonDrawable = skeletonDrawable;
@@ -721,7 +727,11 @@ class _SpineRenderObject extends RenderBox {
 
     if (_firstUpdated) {
       _controller.onBeforePaint?.call(_controller, canvas);
-      final commands = _skeletonDrawable.renderToCanvas(canvas);
+      final commands = _skeletonDrawable.renderFlutter();
+      for (final cmd in commands) {
+        final paint = _skeletonDrawable.atlasFlutter.atlasPagePaints[cmd.atlasPageIndex][cmd.blendMode]!;
+        canvas.drawVertices(cmd.vertices, rendering.BlendMode.modulate, paint);
+      }
       _controller.onAfterPaint?.call(_controller, canvas, commands);
     }
 
