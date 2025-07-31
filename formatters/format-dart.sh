@@ -19,11 +19,16 @@ if command -v dart &> /dev/null; then
 
     if [ "$dart_files" -gt 0 ]; then
         log_action "Formatting $dart_files Dart files"
+        # Debug: show dart version and format command
+        echo "Dart version: $(dart --version)"
+        echo "Running dart format with page-width 120 on all dart files"
+        
+        # Use xargs instead of -exec to ensure proper argument passing
         if DART_OUTPUT=$(find .. -name "*.dart" \
             -not -path "*/.*" \
             -not -path "*/node_modules/*" \
             -not -path "*/build/*" \
-            -exec dart format --page-width 120 {} + 2>&1); then
+            -print0 | xargs -0 dart format --page-width 120 2>&1); then
             log_ok
         else
             log_fail
