@@ -32,7 +32,6 @@ package com.esotericsoftware.spine;
 import java.util.Arrays;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.StringBuilder;
 
 import com.esotericsoftware.spine.Animation.EventTimeline;
 import com.esotericsoftware.spine.Animation.MixBlend;
@@ -79,7 +78,7 @@ public class EventTimelineTests {
 	private void test (float... frames) {
 		int eventCount = frames.length;
 
-		StringBuilder buffer = new StringBuilder();
+		var buffer = new StringBuilder();
 		for (int i = 0; i < eventCount; i++)
 			buffer.append((char)('a' + i));
 
