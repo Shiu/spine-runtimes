@@ -4,8 +4,6 @@ The spine-flutter runtime provides functionality to load, manipulate and render 
 
 # See the [spine-flutter documentation](https://esotericsoftware.com/spine-flutter) for in-depth information.
 
-The `spine_flutter` package name was previously used to publish the [Spine Flutter Runtime in plain Dart](https://github.com/jtakakura/spine_flutter/) by Junji Takakura. Junji has kindly transferred the package name to us and is now publishing his Dart-only Spine Flutter Runtime under the package name [spine_flutter_dart](https://pub.dev/packages/spine_flutter_dart).
-
 ## Licensing
 
 You are welcome to evaluate the Spine Runtimes and the examples we provide in this repository free of charge.
@@ -18,16 +16,12 @@ For the official legal terms governing the Spine Runtimes, please read the [Spin
 
 ## Spine version
 
-spine-flutter works with data exported from Spine 4.2.xx.
+spine-flutter works with data exported from Spine 4.3.xx.
 
 spine-flutter supports all Spine features, except two-color tinting and the screen blend mode.
 
 ## Supported platforms
-The spine-flutter runtime works on desktop, mobile and web. Web deployment requires canvaskit, which will add about 2mb of dependencies to your web deployment. You can compile your app for web with Canvaskit like this:
-
-```
-flutter build web --web-renderer canvaskit
-```
+The spine-flutter runtime works on desktop, mobile and web.
 
 ## Setup
 To add `spine_flutter` to your Flutter project, add the following dependency to your `pubspec.yaml` file:
@@ -35,29 +29,21 @@ To add `spine_flutter` to your Flutter project, add the following dependency to 
 ```yaml
 dependencies:
   ...
-  spine_flutter: ^4.2.11
+  # See https://pub.dev/packages/spine_flutter for the latest version
+  spine_flutter: ^4.3.0
 ```
 
-In your `main()`, add these two lines in the beginning to initialize the Spine Flutter runtime:
+In your `main()`, add this line in the beginning to initialize the Spine Flutter runtime:
 
 ```dart
-void main() {
-    WidgetsFlutterBinding.ensureInitialized();
+void main() async {
     await initSpineFlutter(enableMemoryDebugging: false);
     ...
 }
 ```
 
 ## Example
-If you have pulled the `spine_flutter` package from [pub.dev](https://pub.dev) directly, you can run the example in the `example/` folder as is:
-
-```bash
-cd path/to/downloaded/spine_flutter
-cd example
-flutter run
-```
-
-Otherwise you can run the example like this:
+You can run the example like this:
 
 1. install the [Flutter SDK](https://docs.flutter.dev/get-started/install), then run `flutter doctor` which will instruct you what other dependencies to install.
 2. Clone this repository `git clone https://github.com/esotericsoftware/spine-runtimes`
