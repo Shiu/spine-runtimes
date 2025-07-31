@@ -296,7 +296,6 @@ export class Spine extends Container {
 	beforeUpdateWorldTransforms: (object: Spine) => void = () => { };
 	afterUpdateWorldTransforms: (object: Spine) => void = () => { };
 
-	private autoUpdateWarned: boolean = false;
 	private _autoUpdate: boolean = true;
 	public get autoUpdate (): boolean {
 		return this._autoUpdate;
@@ -305,7 +304,6 @@ export class Spine extends Container {
 	public set autoUpdate (value: boolean) {
 		if (value) {
 			Ticker.shared.add(this.internalUpdate, this);
-			this.autoUpdateWarned = false;
 		} else {
 			Ticker.shared.remove(this.internalUpdate, this);
 		}
@@ -401,10 +399,6 @@ export class Spine extends Container {
 
 	/** If {@link Spine.autoUpdate} is `false`, this method allows to update the AnimationState and the Skeleton with the given delta. */
 	public update (deltaSeconds: number): void {
-		if (this.autoUpdate && !this.autoUpdateWarned) {
-			console.warn("You are calling update on a Spine instance that has autoUpdate set to true. This is probably not what you want.");
-			this.autoUpdateWarned = true;
-		}
 		this.internalUpdate(0, deltaSeconds);
 	}
 
