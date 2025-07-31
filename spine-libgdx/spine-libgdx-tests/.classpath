@@ -8,7 +8,9 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/gdx-box2d/libs/gdx-box2d-natives.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/spine-libgdx"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/gdx-backend-lwjgl3"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/spine-libgdx"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/gdx-box2d"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/gdx-backend-headless"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
