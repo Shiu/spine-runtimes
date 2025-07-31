@@ -23,13 +23,13 @@ Read [analysis.md](./analysis.md) in full for analysis results and context.
    - Handle nullability with Swift optionals
    - Generate proper class/protocol inheritance
 
-- [ ] Generate Swift classes from CIR
+- [x] Generate Swift classes from CIR
    - Concrete classes with NSObject inheritance and @objc annotations
    - Abstract classes with proper subclass requirements
    - Protocols for interface types (like Constraint, Update)
    - Proper memory management with deinit methods
 
-- [ ] Generate Swift enums
+- [x] Generate Swift enums
    - Use Swift enums with raw values for C enums
    - Add fromValue static methods for reverse lookup
    - Generate proper case names from C enum values
@@ -39,24 +39,24 @@ Read [analysis.md](./analysis.md) in full for analysis results and context.
    - Implement subscript operators and collection protocols
    - Handle memory ownership and disposal
 
-- [ ] Handle RTTI-based instantiation
+- [x] Handle RTTI-based instantiation
    - Generate switch statements for abstract type instantiation
    - Map C++ class names to Swift concrete types
    - Handle unknown types gracefully
 
-- [ ] Generate method implementations
+- [x] Generate method implementations
    - Convert C function calls to Swift methods
    - Handle method overloading (numbered C methods)
    - Generate computed properties for getter/setter pairs
    - Add proper null checking and optional unwrapping
 
-- [ ] Create output file structure
+- [x] Create output file structure
    - Generate individual .swift files per type
    - Create Arrays.swift for all array types
    - Create Enums.swift for all enum types
    - Generate main exports file
 
-- [ ] Add build integration
+- [x] Add build integration
    - Create build script to run the generator
    - Update spine-ios Package.swift to include generated files
 

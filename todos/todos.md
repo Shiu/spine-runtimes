@@ -2,7 +2,6 @@
     - Will be used to snapshottesting via HeadlessTest, see also tests/
     - Can go into main package in all core runtimes, except for spine-libgdx, where it must go next to SkeletonSerializer in spine-libgdx-tests
 - Fix Dart NativeArray wrt to resize/add/remove. Current impl is wonky. Either make it read-only or support full mutabiliy (prefer latter)
-- Generate bindings for Swift from spine-c generate() like dart-writer.ts
 - Generate Godot wrappers from C++ types and/or spine-c generate() (unlike dart-writer.ts)?
 - headless-test improvements
     - should take cli args for ad-hoc testing

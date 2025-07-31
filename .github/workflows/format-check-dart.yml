@@ -25,4 +25,23 @@ jobs:
     - name: Check for changes
       run: |
         git ls-files -m
-        if [[ `git ls-files -m` ]]; then echo "Detected Dart formatting errors!" && exit 1; fi
+        if [[ `git ls-files -m` ]]; then 
+          echo "Detected Dart formatting errors!"
+          echo "Creating diff files..."
+          mkdir -p dart-format-diff
+          git diff > dart-format-diff/full-diff.txt
+          git ls-files -m > dart-format-diff/modified-files.txt
+          for file in $(git ls-files -m | head -10); do
+            echo "=== Diff for $file ===" >> dart-format-diff/file-diffs.txt
+            git diff "$file" >> dart-format-diff/file-diffs.txt
+            echo -e "\n\n" >> dart-format-diff/file-diffs.txt
+          done
+          exit 1
+        fi
+    
+    - name: Upload diff artifact
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: dart-format-diff
+        path: dart-format-diff/

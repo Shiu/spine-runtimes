@@ -20,6 +20,10 @@ spine-c works with data exported from spine 4.3.xx.
 
 spine-c supports all spine features.
 
+## Usage
+
+### [Please see the spine-c guide for full documentation](http://esotericsoftware.com/spine-c)
+
 ## Setup
 
 ### Manual Copy
@@ -43,10 +47,6 @@ FetchContent_MakeAvailable(spine-runtimes)
 add_subdirectory(${spine-runtimes_SOURCE_DIR}/spine-c ${spine-runtimes_BINARY_DIR}/spine-c)
 target_link_libraries(your_target PRIVATE spine-c)
 ```
-
-## Usage
-
-### [Please see the spine-c guide for full documentation](http://esotericsoftware.com/spine-c)
 
 ## Runtimes extending spine-c
 - [spine-ios](../spine-ios)
