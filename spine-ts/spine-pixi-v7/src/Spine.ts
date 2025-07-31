@@ -297,15 +297,15 @@ export class Spine extends Container {
 	beforeUpdateWorldTransforms: (object: Spine) => void = () => { };
 	afterUpdateWorldTransforms: (object: Spine) => void = () => { };
 
-	private _autoUpdate: boolean = true;
+	private _autoUpdate: boolean = false;
 	public get autoUpdate (): boolean {
 		return this._autoUpdate;
 	}
 	/** When `true`, the Spine AnimationState and the Skeleton will be automatically updated using the {@link Ticker.shared} instance. */
 	public set autoUpdate (value: boolean) {
-		if (value) {
+		if (value && !this._autoUpdate) {
 			Ticker.shared.add(this.internalUpdate, this);
-		} else {
+		} else if (!value && this._autoUpdate) {
 			Ticker.shared.remove(this.internalUpdate, this);
 		}
 		this._autoUpdate = value;
