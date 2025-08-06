@@ -39,7 +39,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonMatcher;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.SerializationException;
@@ -125,6 +125,8 @@ import com.esotericsoftware.spine.attachments.VertexAttachment;
 public class SkeletonJson extends SkeletonLoader {
 	private final Array<LinkedMesh> linkedMeshes = new Array(true, 8, LinkedMesh[]::new);
 
+	private final JsonMatcher parser = new JsonMatcher();
+
 	public SkeletonJson (AttachmentLoader attachmentLoader) {
 		super(attachmentLoader);
 	}
@@ -136,7 +138,7 @@ public class SkeletonJson extends SkeletonLoader {
 	public SkeletonData readSkeletonData (FileHandle file) {
 		if (file == null) throw new IllegalArgumentException("file cannot be null.");
 		try {
-			SkeletonData skeletonData = readSkeletonData(new JsonReader().parse(file));
+			SkeletonData skeletonData = readSkeletonData(parser.parseRoot(file));
 			skeletonData.name = file.nameWithoutExtension();
 			return skeletonData;
 		} catch (Throwable ex) {
@@ -147,7 +149,7 @@ public class SkeletonJson extends SkeletonLoader {
 	public SkeletonData readSkeletonData (InputStream input) {
 		if (input == null) throw new IllegalArgumentException("dataInput cannot be null.");
 		try {
-			return readSkeletonData(new JsonReader().parse(input));
+			return readSkeletonData(parser.parseRoot(input));
 		} catch (Throwable ex) {
 			throw new SerializationException("Error reading JSON skeleton data.", ex);
 		}

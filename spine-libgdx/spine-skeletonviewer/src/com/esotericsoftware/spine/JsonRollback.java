@@ -73,9 +73,7 @@ public class JsonRollback {
 		if (skeleton == null) {
 			skeleton = new JsonValue(ValueType.object);
 			skeleton.name = "skeleton";
-			JsonValue first = root.child;
-			root.child = skeleton;
-			skeleton.next = first;
+			root.addChildFirst(skeleton);
 		}
 		JsonValue spine = skeleton.get("spine");
 		if (spine != null)
