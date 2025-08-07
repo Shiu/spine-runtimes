@@ -138,7 +138,7 @@ public class SkeletonJson extends SkeletonLoader {
 	public SkeletonData readSkeletonData (FileHandle file) {
 		if (file == null) throw new IllegalArgumentException("file cannot be null.");
 		try {
-			SkeletonData skeletonData = readSkeletonData(parser.parseRoot(file));
+			SkeletonData skeletonData = readSkeletonData(parser.parseValue(file));
 			skeletonData.name = file.nameWithoutExtension();
 			return skeletonData;
 		} catch (Throwable ex) {
@@ -149,7 +149,7 @@ public class SkeletonJson extends SkeletonLoader {
 	public SkeletonData readSkeletonData (InputStream input) {
 		if (input == null) throw new IllegalArgumentException("dataInput cannot be null.");
 		try {
-			return readSkeletonData(parser.parseRoot(input));
+			return readSkeletonData(parser.parseValue(input));
 		} catch (Throwable ex) {
 			throw new SerializationException("Error reading JSON skeleton data.", ex);
 		}
