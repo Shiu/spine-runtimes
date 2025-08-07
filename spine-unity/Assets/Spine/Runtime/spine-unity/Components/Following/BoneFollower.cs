@@ -199,8 +199,9 @@ namespace Spine.Unity {
 					q.w = Mathf.Cos(halfRotation);
 					thisTransform.localRotation = q;
 				}
-			} else {
-				// For special cases: Use transform world properties if transform relationship is complicated
+			} else { // For special cases: Use transform world properties if transform relationship is complicated
+				if (!skeletonTransform) return;
+
 				Vector3 targetWorldPosition = skeletonTransform.TransformPoint(new Vector3(bone.AppliedPose.WorldX, bone.AppliedPose.WorldY, 0f));
 				if (!followZPosition) targetWorldPosition.z = thisTransform.position.z;
 				if (!followXYPosition) {

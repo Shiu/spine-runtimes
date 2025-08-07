@@ -174,8 +174,9 @@ namespace Spine.Unity {
 														followXYPosition ? bone.AppliedPose.WorldY * scale + offset.y : thisTransform.localPosition.y,
 														followZPosition ? 0f : thisTransform.localPosition.z);
 				if (followBoneRotation) thisTransform.localRotation = bone.GetQuaternion();
-			} else {
-				// For special cases: Use transform world properties if transform relationship is complicated
+			} else { // For special cases: Use transform world properties if transform relationship is complicated
+				if (!skeletonTransform) return;
+
 				Vector3 targetWorldPosition = skeletonTransform.TransformPoint(
 					new Vector3(bone.AppliedPose.WorldX * scale + offset.x, bone.AppliedPose.WorldY * scale + offset.y, 0f));
 				if (!followZPosition) targetWorldPosition.z = thisTransform.position.z;
