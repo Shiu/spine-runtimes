@@ -255,20 +255,83 @@ The SpineSwift module now compiles successfully! Remaining 27 errors are in Spin
 - [x] All type conversions and memory management working correctly
 
 ### TODO - Next Steps
-- [ ] Test SpineSwift module on iOS platform (current 27 errors are macOS/UIKit incompatibility)
-- [ ] Complete SpineSwift high-level API (port from spine_dart.dart)
+- [x] Investigate how SkeletonDrawable is implemented in spine-flutter
+  - [x] Check spine_flutter/lib/spine_dart.dart for extensions
+  - [x] Understand how SkeletonDrawable is exposed in Dart
+  - [x] Check if it's manually implemented or generated
+  
+### Investigation Results - spine_dart.dart Structure
 
-- [ ] Complete SpineSwift high-level API (port from spine_dart.dart)
-   - [ ] SkeletonDrawable class
-   - [ ] AnimationStateEventManager
-   - [ ] Bounds and Vector types
-   - [ ] Skin extensions (getEntries)
-   - [ ] BonePose coordinate transformations
-   - [ ] Animation state listener management
+The Dart implementation has these manually-written high-level components in spine_dart.dart:
 
-- [ ] Create skeleton_drawable_test_swift to use SpineSwift API
-   - Port skeleton_drawable_test_swift.swift which uses C bindings directly
-   - Should test the high-level Swift API once working
+1. **SkeletonDrawable class** (lines 409-492)
+   - Wraps spine_skeleton_drawable C functions
+   - Combines skeleton, animation state, and rendering
+   - Handles update cycle and event processing
+   - Methods: update(delta), render(), dispose()
+
+2. **AnimationStateEventManager** (lines 232-305)
+   - Singleton for managing animation event listeners
+   - Maps native pointer addresses to listeners
+   - Handles both state-level and track-entry-level listeners
+
+3. **Helper classes**:
+   - **Bounds** (lines 327-339): AABB with x, y, width, height
+   - **Vector** (lines 341-346): 2D vector with x, y
+   - **SkinEntry** (lines 155-162): Slot index and attachment pair
+
+4. **Extensions**:
+   - **SkinExtensions** (lines 164-229): getEntries() method
+   - **AnimationStateListeners** (lines 308-318): listener property setter/getter
+   - **TrackEntryExtensions** (lines 319-324): listener property setter/getter  
+   - **SkeletonExtensions** (lines 349-371): bounds property, getPosition()
+   - **BonePoseExtensions** (lines 373-406): worldToLocal, localToWorld coordinate transforms
+
+5. **Top-level functions**:
+   - loadAtlas(String atlasData)
+   - loadSkeletonData(Atlas atlas, String jsonData)
+   - loadSkeletonDataBinary(Atlas atlas, Uint8List binaryData)
+
+### COMPLETED - SpineSwift High-Level API Implementation ✅
+- [x] Port SkeletonDrawable and extensions to SpineSwift
+  - [x] Created SkeletonDrawable class wrapping spine_skeleton_drawable functions
+  - [x] Implemented AnimationStateEventManager singleton
+  - [x] Added Bounds and Vector helper structs
+  - [x] Added extensions for Skeleton, Skin, AnimationState, TrackEntry, BonePose
+  - [x] Mirrored the update/render cycle from Dart implementation
+  
+- [x] Complete SpineSwift high-level API (port from spine_dart.dart)
+   - [x] SkeletonDrawable class (`Extensions/SkeletonDrawable.swift`)
+   - [x] AnimationStateEventManager (`Extensions/AnimationStateEventManager.swift`)
+   - [x] Bounds and Vector types (`Extensions/Types.swift`)
+   - [x] Skin extensions - getEntries (`Extensions/SkinExtensions.swift`)
+   - [x] BonePose coordinate transformations (`Extensions/BonePoseExtensions.swift`)
+   - [x] Animation state listener management (`Extensions/AnimationStateEventManager.swift`)
+   - [x] Skeleton extensions - bounds, getPosition (`Extensions/SkeletonExtensions.swift`)
+
+- [x] Create skeleton_drawable_test_swift to use SpineSwift API
+   - [x] Created test that uses the high-level SpineSwift API
+   - [x] Tests loading atlas and skeleton data with Swift API
+   - [x] Tests SkeletonDrawable update/render cycle
+   - [x] Tests animation state listeners and events
+   - [x] Tests bounds and position tracking
+   - [x] Tests skin entries iteration
+
+### Files Created (Session 5)
+- `spine-ios/Sources/SpineSwift/Extensions/SkeletonDrawable.swift`
+- `spine-ios/Sources/SpineSwift/Extensions/AnimationStateEventManager.swift`
+- `spine-ios/Sources/SpineSwift/Extensions/Types.swift`
+- `spine-ios/Sources/SpineSwift/Extensions/SkeletonExtensions.swift`
+- `spine-ios/Sources/SpineSwift/Extensions/SkinExtensions.swift`
+- `spine-ios/Sources/SpineSwift/Extensions/BonePoseExtensions.swift`
+- `spine-ios/test/src/skeleton_drawable_test_swift.swift`
+- `spine-ios/test/src/main.swift`
+
+### Build Status
+- SpineSwift module compiles successfully with 0 errors ✅
+- Test package builds and runs successfully ✅
+- C API test passes all checks ✅
+- SpineSwift API test implementation complete (may have runtime issues to debug)
 
 ### File Locations Reference
 - Codegen: `spine-ios/codegen/src/swift-writer.ts`

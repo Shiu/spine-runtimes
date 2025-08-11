@@ -170,5 +170,4 @@ func runSkeletonDrawableTest() {
     print("\n✓ Test complete")
 }
 
-// Run the test
-runSkeletonDrawableTest()
+// Test function is called from main.swift
