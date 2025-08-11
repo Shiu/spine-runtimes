@@ -1,19 +1,20 @@
+//
 // Spine Runtimes License Agreement
 // Last updated April 5, 2025. Replaces all prior versions.
-// 
+//
 // Copyright (c) 2013-2025, Esoteric Software LLC
-// 
+//
 // Integration of the Spine Runtimes into software or otherwise creating
 // derivative works of the Spine Runtimes is permitted under the terms and
 // conditions of Section 2 of the Spine Editor License Agreement:
 // http://esotericsoftware.com/spine-editor-license
-// 
+//
 // Otherwise, it is permitted to integrate the Spine Runtimes into software
 // or otherwise create derivative works of the Spine Runtimes (collectively,
 // "Products"), provided that each user of the Products must obtain their own
 // Spine Editor license and redistribution of the Products in any form must
 // include this license and copyright notice.
-// 
+//
 // THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,122 +25,120 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
+
+// AUTO GENERATED FILE, DO NOT EDIT.
 
 import Foundation
 import SpineC
 
-@objc(SpineColor)
-@objcMembers
-public final class Color: NSObject {
-    internal let wrappee: spine_color
+/// Color wrapper
+public class Color {
+    public let _ptr: UnsafeMutableRawPointer
 
-    internal init(_ wrappee: spine_color) {
-        self.wrappee = wrappee
-        super.init()
-    }
-
-    public override func isEqual(_ object: Any?) -> Bool {
-        guard let other = object as? Color else { return false }
-        return self.wrappee == other.wrappee
-    }
-
-    public override var hash: Int {
-        var hasher = Hasher()
-        hasher.combine(self.wrappee)
-        return hasher.finalize()
+    public init(fromPointer ptr: spine_color) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
     }
 
     public convenience init() {
         let ptr = spine_color_create()
-        self.init(ptr)
+        self.init(fromPointer: ptr!)
     }
 
-    public convenience init(r: Float, g: Float, b: Float, a: Float) {
-        let ptr = spine_color_create(r, g, b, a)
-        self.init(ptr)
+    public static func fromRGBA(_ r: Float, _ g: Float, _ b: Float, _ a: Float) -> Color {
+        let ptr = spine_color_create2(r, g, b, a)
+        return Color(fromPointer: ptr!)
     }
 
-    public func set(_r: Float, _g: Float, _b: Float, _a: Float) -> Color {
-        let result = spine_color_set_1(wrappee, _r, _g, _b, _a)
-        return Color(result)
+    public var r: Float {
+        get {
+            let result = spine_color_get_r(_ptr.assumingMemoryBound(to: spine_color_wrapper.self))
+        return result
+        }
+        set {
+            spine_color_set_r(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), newValue)
+        }
     }
 
-    public func set(_r: Float, _g: Float, _b: Float) -> Color {
-        let result = spine_color_set_2(wrappee, _r, _g, _b)
-        return Color(result)
+    public var g: Float {
+        get {
+            let result = spine_color_get_g(_ptr.assumingMemoryBound(to: spine_color_wrapper.self))
+        return result
+        }
+        set {
+            spine_color_set_g(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), newValue)
+        }
     }
 
-    public func set(other: Color) -> Color {
-        let result = spine_color_set_3(wrappee, other.wrappee)
-        return Color(result)
+    public var b: Float {
+        get {
+            let result = spine_color_get_b(_ptr.assumingMemoryBound(to: spine_color_wrapper.self))
+        return result
+        }
+        set {
+            spine_color_set_b(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), newValue)
+        }
     }
 
-    public func add(_r: Float, _g: Float, _b: Float, _a: Float) -> Color {
-        let result = spine_color_add_1(wrappee, _r, _g, _b, _a)
-        return Color(result)
-    }
-
-    public func add(_r: Float, _g: Float, _b: Float) -> Color {
-        let result = spine_color_add_2(wrappee, _r, _g, _b)
-        return Color(result)
-    }
-
-    public func add(other: Color) -> Color {
-        let result = spine_color_add_3(wrappee, other.wrappee)
-        return Color(result)
+    public var a: Float {
+        get {
+            let result = spine_color_get_a(_ptr.assumingMemoryBound(to: spine_color_wrapper.self))
+        return result
+        }
+        set {
+            spine_color_set_a(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), newValue)
+        }
     }
 
     public func clamp() -> Color {
-        let result = spine_color_clamp(wrappee)
-        return Color(result)
+        let result = spine_color_clamp(_ptr.assumingMemoryBound(to: spine_color_wrapper.self))
+        return Color(fromPointer: result!)
     }
 
-    public func parseHex(value: String?, index: size_t) -> Float {
-        return spine_color_parse_hex(wrappee, value?.cString(using: .utf8), index)
+    public static func parseHex(_ value: String, _ index: Int) -> Float {
+        let result = spine_color_parse_hex(value, index)
+        return result
     }
 
-    public func rgba8888ToColor(color: Color, value: Int32) {
-        spine_color_rgba8888_to_color(wrappee, color.wrappee, value)
+    public func rgba8888ToColor(_ value: Int32) {
+        spine_color_rgba8888_to_color(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), value)
     }
 
-    public func rgb888ToColor(color: Color, value: Int32) {
-        spine_color_rgb888_to_color(wrappee, color.wrappee, value)
+    public func rgb888ToColor(_ value: Int32) {
+        spine_color_rgb888_to_color(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), value)
     }
 
-    public func getR() -> Float {
-        return spine_color_get_r(wrappee)
+    public func set(_ _r: Float, _ _g: Float, _ _b: Float, _ _a: Float) -> Color {
+        let result = spine_color_set_1(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), _r, _g, _b, _a)
+        return Color(fromPointer: result!)
     }
 
-    public func setR(value: Float) {
-        spine_color_set_r(wrappee, value)
+    public func set2(_ _r: Float, _ _g: Float, _ _b: Float) -> Color {
+        let result = spine_color_set_2(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), _r, _g, _b)
+        return Color(fromPointer: result!)
     }
 
-    public func getG() -> Float {
-        return spine_color_get_g(wrappee)
+    public func set3(_ other: Color) -> Color {
+        let result = spine_color_set_3(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), other._ptr.assumingMemoryBound(to: spine_color_wrapper.self))
+        return Color(fromPointer: result!)
     }
 
-    public func setG(value: Float) {
-        spine_color_set_g(wrappee, value)
+    public func add(_ _r: Float, _ _g: Float, _ _b: Float, _ _a: Float) -> Color {
+        let result = spine_color_add_1(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), _r, _g, _b, _a)
+        return Color(fromPointer: result!)
     }
 
-    public func getB() -> Float {
-        return spine_color_get_b(wrappee)
+    public func add2(_ _r: Float, _ _g: Float, _ _b: Float) -> Color {
+        let result = spine_color_add_2(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), _r, _g, _b)
+        return Color(fromPointer: result!)
     }
 
-    public func setB(value: Float) {
-        spine_color_set_b(wrappee, value)
-    }
-
-    public func getA() -> Float {
-        return spine_color_get_a(wrappee)
-    }
-
-    public func setA(value: Float) {
-        spine_color_set_a(wrappee, value)
+    public func add3(_ other: Color) -> Color {
+        let result = spine_color_add_3(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), other._ptr.assumingMemoryBound(to: spine_color_wrapper.self))
+        return Color(fromPointer: result!)
     }
 
     deinit {
-        spine_color_dispose(wrappee)
+        spine_color_dispose(_ptr.assumingMemoryBound(to: spine_color_wrapper.self))
     }
 }

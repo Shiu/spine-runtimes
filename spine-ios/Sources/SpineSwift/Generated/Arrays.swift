@@ -1,19 +1,20 @@
+//
 // Spine Runtimes License Agreement
 // Last updated April 5, 2025. Replaces all prior versions.
-// 
+//
 // Copyright (c) 2013-2025, Esoteric Software LLC
-// 
+//
 // Integration of the Spine Runtimes into software or otherwise creating
 // derivative works of the Spine Runtimes is permitted under the terms and
 // conditions of Section 2 of the Spine Editor License Agreement:
 // http://esotericsoftware.com/spine-editor-license
-// 
+//
 // Otherwise, it is permitted to integrate the Spine Runtimes into software
 // or otherwise create derivative works of the Spine Runtimes (collectively,
 // "Products"), provided that each user of the Products must obtain their own
 // Spine Editor license and redistribution of the Products in any form must
 // include this license and copyright notice.
-// 
+//
 // THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,1947 +25,2214 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
+
+// AUTO GENERATED FILE, DO NOT EDIT.
 
 import Foundation
 import SpineC
 
-/// ArrayFloat wrapper class
-@objc(SpineArrayFloat)
-@objcMembers
-public final class ArrayFloat: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayFloat wrapper
+public class ArrayFloat {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_float, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_float_create()
+        let ptr = spine_array_float_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_float_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_float_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_float_size(ptr)
+        return spine_array_float_size(_ptr)
     }
 
     public subscript(index: Int32) -> Float {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_float_buffer(ptr)
-            return buffer!.assumingMemoryBound(to: Float.self)[Int(index)]
+            let buffer = spine_array_float_buffer(_ptr)!
+            return buffer.assumingMemoryBound(to: Float.self)[Int(index)]
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Float) {
-        spine_array_float_add(ptr, value)
+        spine_array_float_add(_ptr, value)
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_float_clear(ptr)
+    public func clear() {
+        spine_array_float_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Float {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_float_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_float_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_float_set_size(ptr, newSize, 0.0)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_float_set_size(_ptr, newValue, 0.0)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_float_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_float_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_float_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_float_dispose(_ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
         }
     }
 }
 
-/// ArrayInt wrapper class
-@objc(SpineArrayInt)
-@objcMembers
-public final class ArrayInt: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayInt wrapper
+public class ArrayInt {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_int, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_int_create()
+        let ptr = spine_array_int_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_int_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_int_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_int_size(ptr)
+        return spine_array_int_size(_ptr)
     }
 
     public subscript(index: Int32) -> Int32 {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_int_buffer(ptr)
-            return buffer!.assumingMemoryBound(to: Int32.self)[Int(index)]
+            let buffer = spine_array_int_buffer(_ptr)!
+            return buffer.assumingMemoryBound(to: Int32.self)[Int(index)]
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Int32) {
-        spine_array_int_add(ptr, value)
+        spine_array_int_add(_ptr, value)
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_int_clear(ptr)
+    public func clear() {
+        spine_array_int_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Int32 {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_int_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_int_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_int_set_size(ptr, newSize, 0)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_int_set_size(_ptr, newValue, 0)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_int_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_int_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_int_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_int_dispose(_ptr.assumingMemoryBound(to: spine_array_int_wrapper.self))
         }
     }
 }
 
-/// ArrayUnsignedShort wrapper class
-@objc(SpineArrayUnsignedShort)
-@objcMembers
-public final class ArrayUnsignedShort: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayUnsignedShort wrapper
+public class ArrayUnsignedShort {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_unsigned_short, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_unsigned_short_create()
+        let ptr = spine_array_unsigned_short_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_unsigned_short_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_unsigned_short_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_unsigned_short_size(ptr)
+        return spine_array_unsigned_short_size(_ptr)
     }
 
     public subscript(index: Int32) -> UInt16 {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_unsigned_short_buffer(ptr)
-            return buffer!.assumingMemoryBound(to: UInt16.self)[Int(index)]
+            let buffer = spine_array_unsigned_short_buffer(_ptr)!
+            return buffer.assumingMemoryBound(to: UInt16.self)[Int(index)]
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: UInt16) {
-        spine_array_unsigned_short_add(ptr, value)
+        spine_array_unsigned_short_add(_ptr, value)
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_unsigned_short_clear(ptr)
+    public func clear() {
+        spine_array_unsigned_short_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> UInt16 {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_unsigned_short_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_unsigned_short_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_unsigned_short_set_size(ptr, newSize, 0)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_unsigned_short_set_size(_ptr, newValue, 0)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_unsigned_short_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_unsigned_short_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_unsigned_short_dispose(_ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self))
         }
     }
 }
 
-/// ArrayPropertyId wrapper class
-@objc(SpineArrayPropertyId)
-@objcMembers
-public final class ArrayPropertyId: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayPropertyId wrapper
+public class ArrayPropertyId {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_property_id, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_property_id_create()
+        let ptr = spine_array_property_id_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_property_id_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_property_id_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_property_id_size(ptr)
+        return spine_array_property_id_size(_ptr)
     }
 
     public subscript(index: Int32) -> Int64 {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_property_id_buffer(ptr)
-            return buffer!.assumingMemoryBound(to: Int64.self)[Int(index)]
+            let buffer = spine_array_property_id_buffer(_ptr)!
+            return buffer.assumingMemoryBound(to: Int64.self)[Int(index)]
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Int64) {
-        spine_array_property_id_add(ptr, value)
+        spine_array_property_id_add(_ptr, value)
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_property_id_clear(ptr)
+    public func clear() {
+        spine_array_property_id_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Int64 {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_property_id_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_property_id_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_property_id_set_size(ptr, newSize, 0)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_property_id_set_size(_ptr, newValue, 0)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_property_id_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_property_id_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_property_id_dispose(_ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self))
         }
     }
 }
 
-/// ArrayAnimation wrapper class
-@objc(SpineArrayAnimation)
-@objcMembers
-public final class ArrayAnimation: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayAnimation wrapper
+public class ArrayAnimation {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_animation, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_animation_create()
+        let ptr = spine_array_animation_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_animation_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_animation_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_animation_size(ptr)
+        return spine_array_animation_size(_ptr)
     }
 
     public subscript(index: Int32) -> Animation? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_animation_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : Animation(fromPointer: elementPtr!)
+            let buffer = spine_array_animation_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_animation?.self)[Int(index)]
+            return elementPtr.map { Animation(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Animation?) {
-        spine_array_animation_add(ptr, value?.nativePtr)
+        spine_array_animation_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_animation_clear(ptr)
+    public func clear() {
+        spine_array_animation_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Animation? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_animation_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_animation_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_animation_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_animation_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_animation_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_animation_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_animation_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_animation_dispose(_ptr.assumingMemoryBound(to: spine_array_animation_wrapper.self))
         }
     }
 }
 
-/// ArrayAtlasPage wrapper class
-@objc(SpineArrayAtlasPage)
-@objcMembers
-public final class ArrayAtlasPage: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayAtlasPage wrapper
+public class ArrayAtlasPage {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_atlas_page, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_atlas_page_create()
+        let ptr = spine_array_atlas_page_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_atlas_page_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_atlas_page_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_atlas_page_size(ptr)
+        return spine_array_atlas_page_size(_ptr)
     }
 
     public subscript(index: Int32) -> AtlasPage? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_atlas_page_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : AtlasPage(fromPointer: elementPtr!)
+            let buffer = spine_array_atlas_page_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_atlas_page?.self)[Int(index)]
+            return elementPtr.map { AtlasPage(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: AtlasPage?) {
-        spine_array_atlas_page_add(ptr, value?.nativePtr)
+        spine_array_atlas_page_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_atlas_page_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_atlas_page_clear(ptr)
+    public func clear() {
+        spine_array_atlas_page_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> AtlasPage? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_atlas_page_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_atlas_page_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_atlas_page_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_atlas_page_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_atlas_page_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_atlas_page_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_atlas_page_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_atlas_page_dispose(_ptr.assumingMemoryBound(to: spine_array_atlas_page_wrapper.self))
         }
     }
 }
 
-/// ArrayAtlasRegion wrapper class
-@objc(SpineArrayAtlasRegion)
-@objcMembers
-public final class ArrayAtlasRegion: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayAtlasRegion wrapper
+public class ArrayAtlasRegion {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_atlas_region, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_atlas_region_create()
+        let ptr = spine_array_atlas_region_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_atlas_region_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_atlas_region_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_atlas_region_size(ptr)
+        return spine_array_atlas_region_size(_ptr)
     }
 
     public subscript(index: Int32) -> AtlasRegion? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_atlas_region_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : AtlasRegion(fromPointer: elementPtr!)
+            let buffer = spine_array_atlas_region_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_atlas_region?.self)[Int(index)]
+            return elementPtr.map { AtlasRegion(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: AtlasRegion?) {
-        spine_array_atlas_region_add(ptr, value?.nativePtr)
+        spine_array_atlas_region_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_atlas_region_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_atlas_region_clear(ptr)
+    public func clear() {
+        spine_array_atlas_region_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> AtlasRegion? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_atlas_region_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_atlas_region_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_atlas_region_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_atlas_region_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_atlas_region_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_atlas_region_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_atlas_region_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_atlas_region_dispose(_ptr.assumingMemoryBound(to: spine_array_atlas_region_wrapper.self))
         }
     }
 }
 
-/// ArrayAttachment wrapper class
-@objc(SpineArrayAttachment)
-@objcMembers
-public final class ArrayAttachment: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayAttachment wrapper
+public class ArrayAttachment {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_attachment, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_attachment_create()
+        let ptr = spine_array_attachment_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_attachment_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_attachment_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_attachment_size(ptr)
+        return spine_array_attachment_size(_ptr)
     }
 
     public subscript(index: Int32) -> Attachment? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_attachment_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : Attachment(fromPointer: elementPtr!)
+            let buffer = spine_array_attachment_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_attachment?.self)[Int(index)]
+            guard let ptr = elementPtr else { return nil }
+            let rtti = spine_attachment_get_rtti(ptr)
+        let className = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch className {
+        case "spine_bounding_box_attachment":
+            return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
+        case "spine_clipping_attachment":
+            return ClippingAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_clipping_attachment_wrapper.self))
+        case "spine_mesh_attachment":
+            return MeshAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
+        case "spine_path_attachment":
+            return PathAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_path_attachment_wrapper.self))
+        case "spine_point_attachment":
+            return PointAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_point_attachment_wrapper.self))
+        case "spine_region_attachment":
+            return RegionAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
+        default:
+            fatalError("Unknown concrete type: \(className) for abstract class Attachment")
+        }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Attachment?) {
-        spine_array_attachment_add(ptr, value?.nativePtr)
+        spine_array_attachment_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_attachment_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_attachment_clear(ptr)
+    public func clear() {
+        spine_array_attachment_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Attachment? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_attachment_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_attachment_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_attachment_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_attachment_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_attachment_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_attachment_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_attachment_dispose(_ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self))
         }
     }
 }
 
-/// ArrayBone wrapper class
-@objc(SpineArrayBone)
-@objcMembers
-public final class ArrayBone: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayBone wrapper
+public class ArrayBone {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_bone, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_bone_create()
+        let ptr = spine_array_bone_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_bone_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_bone_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_bone_size(ptr)
+        return spine_array_bone_size(_ptr)
     }
 
     public subscript(index: Int32) -> Bone? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_bone_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : Bone(fromPointer: elementPtr!)
+            let buffer = spine_array_bone_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_bone?.self)[Int(index)]
+            return elementPtr.map { Bone(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Bone?) {
-        spine_array_bone_add(ptr, value?.nativePtr)
+        spine_array_bone_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_bone_clear(ptr)
+    public func clear() {
+        spine_array_bone_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Bone? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_bone_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_bone_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_bone_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_bone_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_bone_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_bone_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bone_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_bone_dispose(_ptr.assumingMemoryBound(to: spine_array_bone_wrapper.self))
         }
     }
 }
 
-/// ArrayBoneData wrapper class
-@objc(SpineArrayBoneData)
-@objcMembers
-public final class ArrayBoneData: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayBoneData wrapper
+public class ArrayBoneData {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_bone_data, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_bone_data_create()
+        let ptr = spine_array_bone_data_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_bone_data_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_bone_data_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_bone_data_size(ptr)
+        return spine_array_bone_data_size(_ptr)
     }
 
     public subscript(index: Int32) -> BoneData? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_bone_data_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : BoneData(fromPointer: elementPtr!)
+            let buffer = spine_array_bone_data_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_bone_data?.self)[Int(index)]
+            return elementPtr.map { BoneData(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: BoneData?) {
-        spine_array_bone_data_add(ptr, value?.nativePtr)
+        spine_array_bone_data_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_bone_data_clear(ptr)
+    public func clear() {
+        spine_array_bone_data_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> BoneData? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_bone_data_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_bone_data_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_bone_data_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_bone_data_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_bone_data_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_bone_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bone_data_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_bone_data_dispose(_ptr.assumingMemoryBound(to: spine_array_bone_data_wrapper.self))
         }
     }
 }
 
-/// ArrayBonePose wrapper class
-@objc(SpineArrayBonePose)
-@objcMembers
-public final class ArrayBonePose: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayBonePose wrapper
+public class ArrayBonePose {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_bone_pose, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_bone_pose_create()
+        let ptr = spine_array_bone_pose_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_bone_pose_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_bone_pose_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_bone_pose_size(ptr)
+        return spine_array_bone_pose_size(_ptr)
     }
 
     public subscript(index: Int32) -> BonePose? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_bone_pose_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : BonePose(fromPointer: elementPtr!)
+            let buffer = spine_array_bone_pose_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_bone_pose?.self)[Int(index)]
+            return elementPtr.map { BonePose(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: BonePose?) {
-        spine_array_bone_pose_add(ptr, value?.nativePtr)
+        spine_array_bone_pose_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_bone_pose_clear(ptr)
+    public func clear() {
+        spine_array_bone_pose_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> BonePose? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_bone_pose_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_bone_pose_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_bone_pose_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_bone_pose_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_bone_pose_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_bone_pose_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bone_pose_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_bone_pose_dispose(_ptr.assumingMemoryBound(to: spine_array_bone_pose_wrapper.self))
         }
     }
 }
 
-/// ArrayBoundingBoxAttachment wrapper class
-@objc(SpineArrayBoundingBoxAttachment)
-@objcMembers
-public final class ArrayBoundingBoxAttachment: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayBoundingBoxAttachment wrapper
+public class ArrayBoundingBoxAttachment {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_bounding_box_attachment, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_bounding_box_attachment_create()
+        let ptr = spine_array_bounding_box_attachment_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_bounding_box_attachment_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_bounding_box_attachment_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_bounding_box_attachment_size(ptr)
+        return spine_array_bounding_box_attachment_size(_ptr)
     }
 
     public subscript(index: Int32) -> BoundingBoxAttachment? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_bounding_box_attachment_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : BoundingBoxAttachment(fromPointer: elementPtr!)
+            let buffer = spine_array_bounding_box_attachment_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_bounding_box_attachment?.self)[Int(index)]
+            return elementPtr.map { BoundingBoxAttachment(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: BoundingBoxAttachment?) {
-        spine_array_bounding_box_attachment_add(ptr, value?.nativePtr)
+        spine_array_bounding_box_attachment_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_bounding_box_attachment_clear(ptr)
+    public func clear() {
+        spine_array_bounding_box_attachment_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> BoundingBoxAttachment? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_bounding_box_attachment_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_bounding_box_attachment_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_bounding_box_attachment_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_bounding_box_attachment_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_bounding_box_attachment_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_bounding_box_attachment_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bounding_box_attachment_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_bounding_box_attachment_dispose(_ptr.assumingMemoryBound(to: spine_array_bounding_box_attachment_wrapper.self))
         }
     }
 }
 
-/// ArrayConstraint wrapper class
-@objc(SpineArrayConstraint)
-@objcMembers
-public final class ArrayConstraint: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayConstraint wrapper
+public class ArrayConstraint {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_constraint, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_constraint_create()
+        let ptr = spine_array_constraint_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_constraint_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_constraint_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_constraint_size(ptr)
+        return spine_array_constraint_size(_ptr)
     }
 
     public subscript(index: Int32) -> Constraint? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_constraint_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : Constraint(fromPointer: elementPtr!)
+            let buffer = spine_array_constraint_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_constraint?.self)[Int(index)]
+            guard let ptr = elementPtr else { return nil }
+            let rtti = spine_constraint_get_rtti(ptr)
+        let className = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch className {
+        case "spine_ik_constraint":
+            return IkConstraint(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
+        case "spine_path_constraint":
+            return PathConstraint(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_path_constraint_wrapper.self))
+        case "spine_physics_constraint":
+            return PhysicsConstraint(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_wrapper.self))
+        case "spine_slider":
+            return Slider(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_slider_wrapper.self))
+        case "spine_transform_constraint":
+            return TransformConstraint(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
+        default:
+            fatalError("Unknown concrete type: \(className) for abstract class Constraint")
+        }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Constraint?) {
-        spine_array_constraint_add(ptr, value?.nativePtr)
+        spine_array_constraint_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_constraint_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_constraint_clear(ptr)
+    public func clear() {
+        spine_array_constraint_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Constraint? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_constraint_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_constraint_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_constraint_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_constraint_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_constraint_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_constraint_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_constraint_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_constraint_dispose(_ptr.assumingMemoryBound(to: spine_array_constraint_wrapper.self))
         }
     }
 }
 
-/// ArrayConstraintData wrapper class
-@objc(SpineArrayConstraintData)
-@objcMembers
-public final class ArrayConstraintData: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayConstraintData wrapper
+public class ArrayConstraintData {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_constraint_data, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_constraint_data_create()
+        let ptr = spine_array_constraint_data_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_constraint_data_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_constraint_data_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_constraint_data_size(ptr)
+        return spine_array_constraint_data_size(_ptr)
     }
 
     public subscript(index: Int32) -> ConstraintData? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_constraint_data_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : ConstraintData(fromPointer: elementPtr!)
+            let buffer = spine_array_constraint_data_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_constraint_data?.self)[Int(index)]
+            guard let ptr = elementPtr else { return nil }
+            let rtti = spine_constraint_data_get_rtti(ptr)
+        let className = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch className {
+        case "spine_ik_constraint_data":
+            return IkConstraintData(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_ik_constraint_data_wrapper.self))
+        case "spine_path_constraint_data":
+            return PathConstraintData(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_path_constraint_data_wrapper.self))
+        case "spine_physics_constraint_data":
+            return PhysicsConstraintData(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
+        case "spine_slider_data":
+            return SliderData(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_slider_data_wrapper.self))
+        case "spine_transform_constraint_data":
+            return TransformConstraintData(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
+        default:
+            fatalError("Unknown concrete type: \(className) for abstract class ConstraintData")
+        }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: ConstraintData?) {
-        spine_array_constraint_data_add(ptr, value?.nativePtr)
+        spine_array_constraint_data_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_constraint_data_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_constraint_data_clear(ptr)
+    public func clear() {
+        spine_array_constraint_data_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> ConstraintData? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_constraint_data_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_constraint_data_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_constraint_data_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_constraint_data_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_constraint_data_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_constraint_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_constraint_data_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_constraint_data_dispose(_ptr.assumingMemoryBound(to: spine_array_constraint_data_wrapper.self))
         }
     }
 }
 
-/// ArrayEvent wrapper class
-@objc(SpineArrayEvent)
-@objcMembers
-public final class ArrayEvent: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayEvent wrapper
+public class ArrayEvent {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_event, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_event_create()
+        let ptr = spine_array_event_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_event_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_event_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_event_size(ptr)
+        return spine_array_event_size(_ptr)
     }
 
     public subscript(index: Int32) -> Event? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_event_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : Event(fromPointer: elementPtr!)
+            let buffer = spine_array_event_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_event?.self)[Int(index)]
+            return elementPtr.map { Event(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Event?) {
-        spine_array_event_add(ptr, value?.nativePtr)
+        spine_array_event_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_event_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_event_clear(ptr)
+    public func clear() {
+        spine_array_event_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Event? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_event_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_event_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_event_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_event_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_event_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_event_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_event_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_event_dispose(_ptr.assumingMemoryBound(to: spine_array_event_wrapper.self))
         }
     }
 }
 
-/// ArrayEventData wrapper class
-@objc(SpineArrayEventData)
-@objcMembers
-public final class ArrayEventData: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayEventData wrapper
+public class ArrayEventData {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_event_data, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_event_data_create()
+        let ptr = spine_array_event_data_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_event_data_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_event_data_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_event_data_size(ptr)
+        return spine_array_event_data_size(_ptr)
     }
 
     public subscript(index: Int32) -> EventData? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_event_data_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : EventData(fromPointer: elementPtr!)
+            let buffer = spine_array_event_data_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_event_data?.self)[Int(index)]
+            return elementPtr.map { EventData(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: EventData?) {
-        spine_array_event_data_add(ptr, value?.nativePtr)
+        spine_array_event_data_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_event_data_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_event_data_clear(ptr)
+    public func clear() {
+        spine_array_event_data_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> EventData? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_event_data_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_event_data_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_event_data_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_event_data_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_event_data_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_event_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_event_data_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_event_data_dispose(_ptr.assumingMemoryBound(to: spine_array_event_data_wrapper.self))
         }
     }
 }
 
-/// ArrayFromProperty wrapper class
-@objc(SpineArrayFromProperty)
-@objcMembers
-public final class ArrayFromProperty: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayFromProperty wrapper
+public class ArrayFromProperty {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_from_property, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_from_property_create()
+        let ptr = spine_array_from_property_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_from_property_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_from_property_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_from_property_size(ptr)
+        return spine_array_from_property_size(_ptr)
     }
 
     public subscript(index: Int32) -> FromProperty? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_from_property_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : FromProperty(fromPointer: elementPtr!)
+            let buffer = spine_array_from_property_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_from_property?.self)[Int(index)]
+            guard let ptr = elementPtr else { return nil }
+            let rtti = spine_from_property_get_rtti(ptr)
+        let className = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch className {
+        case "spine_from_rotate":
+            return FromRotate(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_rotate_wrapper.self))
+        case "spine_from_scale_x":
+            return FromScaleX(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_scale_x_wrapper.self))
+        case "spine_from_scale_y":
+            return FromScaleY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_scale_y_wrapper.self))
+        case "spine_from_shear_y":
+            return FromShearY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_shear_y_wrapper.self))
+        case "spine_from_x":
+            return FromX(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_x_wrapper.self))
+        case "spine_from_y":
+            return FromY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_y_wrapper.self))
+        default:
+            fatalError("Unknown concrete type: \(className) for abstract class FromProperty")
+        }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: FromProperty?) {
-        spine_array_from_property_add(ptr, value?.nativePtr)
+        spine_array_from_property_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_from_property_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_from_property_clear(ptr)
+    public func clear() {
+        spine_array_from_property_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> FromProperty? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_from_property_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_from_property_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_from_property_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_from_property_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_from_property_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_from_property_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_from_property_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_from_property_dispose(_ptr.assumingMemoryBound(to: spine_array_from_property_wrapper.self))
         }
     }
 }
 
-/// ArrayPhysicsConstraint wrapper class
-@objc(SpineArrayPhysicsConstraint)
-@objcMembers
-public final class ArrayPhysicsConstraint: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayPhysicsConstraint wrapper
+public class ArrayPhysicsConstraint {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_physics_constraint, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_physics_constraint_create()
+        let ptr = spine_array_physics_constraint_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_physics_constraint_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_physics_constraint_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_physics_constraint_size(ptr)
+        return spine_array_physics_constraint_size(_ptr)
     }
 
     public subscript(index: Int32) -> PhysicsConstraint? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_physics_constraint_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : PhysicsConstraint(fromPointer: elementPtr!)
+            let buffer = spine_array_physics_constraint_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_physics_constraint?.self)[Int(index)]
+            return elementPtr.map { PhysicsConstraint(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: PhysicsConstraint?) {
-        spine_array_physics_constraint_add(ptr, value?.nativePtr)
+        spine_array_physics_constraint_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_physics_constraint_clear(ptr)
+    public func clear() {
+        spine_array_physics_constraint_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> PhysicsConstraint? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_physics_constraint_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_physics_constraint_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_physics_constraint_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_physics_constraint_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_physics_constraint_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_physics_constraint_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_physics_constraint_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_physics_constraint_dispose(_ptr.assumingMemoryBound(to: spine_array_physics_constraint_wrapper.self))
         }
     }
 }
 
-/// ArrayPolygon wrapper class
-@objc(SpineArrayPolygon)
-@objcMembers
-public final class ArrayPolygon: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayPolygon wrapper
+public class ArrayPolygon {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_polygon, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_polygon_create()
+        let ptr = spine_array_polygon_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_polygon_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_polygon_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_polygon_size(ptr)
+        return spine_array_polygon_size(_ptr)
     }
 
     public subscript(index: Int32) -> Polygon? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_polygon_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : Polygon(fromPointer: elementPtr!)
+            let buffer = spine_array_polygon_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_polygon?.self)[Int(index)]
+            return elementPtr.map { Polygon(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Polygon?) {
-        spine_array_polygon_add(ptr, value?.nativePtr)
+        spine_array_polygon_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_polygon_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_polygon_clear(ptr)
+    public func clear() {
+        spine_array_polygon_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Polygon? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_polygon_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_polygon_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_polygon_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_polygon_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_polygon_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_polygon_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_polygon_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_polygon_dispose(_ptr.assumingMemoryBound(to: spine_array_polygon_wrapper.self))
         }
     }
 }
 
-/// ArraySkin wrapper class
-@objc(SpineArraySkin)
-@objcMembers
-public final class ArraySkin: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArraySkin wrapper
+public class ArraySkin {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_skin, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_skin_create()
+        let ptr = spine_array_skin_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_skin_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_skin_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_skin_size(ptr)
+        return spine_array_skin_size(_ptr)
     }
 
     public subscript(index: Int32) -> Skin? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_skin_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : Skin(fromPointer: elementPtr!)
+            let buffer = spine_array_skin_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_skin?.self)[Int(index)]
+            return elementPtr.map { Skin(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Skin?) {
-        spine_array_skin_add(ptr, value?.nativePtr)
+        spine_array_skin_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_skin_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_skin_clear(ptr)
+    public func clear() {
+        spine_array_skin_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Skin? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_skin_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_skin_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_skin_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_skin_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_skin_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_skin_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_skin_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_skin_dispose(_ptr.assumingMemoryBound(to: spine_array_skin_wrapper.self))
         }
     }
 }
 
-/// ArraySlot wrapper class
-@objc(SpineArraySlot)
-@objcMembers
-public final class ArraySlot: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArraySlot wrapper
+public class ArraySlot {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_slot, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_slot_create()
+        let ptr = spine_array_slot_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_slot_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_slot_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_slot_size(ptr)
+        return spine_array_slot_size(_ptr)
     }
 
     public subscript(index: Int32) -> Slot? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_slot_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : Slot(fromPointer: elementPtr!)
+            let buffer = spine_array_slot_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_slot?.self)[Int(index)]
+            return elementPtr.map { Slot(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Slot?) {
-        spine_array_slot_add(ptr, value?.nativePtr)
+        spine_array_slot_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_slot_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_slot_clear(ptr)
+    public func clear() {
+        spine_array_slot_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Slot? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_slot_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_slot_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_slot_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_slot_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_slot_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_slot_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_slot_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_slot_dispose(_ptr.assumingMemoryBound(to: spine_array_slot_wrapper.self))
         }
     }
 }
 
-/// ArraySlotData wrapper class
-@objc(SpineArraySlotData)
-@objcMembers
-public final class ArraySlotData: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArraySlotData wrapper
+public class ArraySlotData {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_slot_data, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_slot_data_create()
+        let ptr = spine_array_slot_data_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_slot_data_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_slot_data_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_slot_data_size(ptr)
+        return spine_array_slot_data_size(_ptr)
     }
 
     public subscript(index: Int32) -> SlotData? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_slot_data_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : SlotData(fromPointer: elementPtr!)
+            let buffer = spine_array_slot_data_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_slot_data?.self)[Int(index)]
+            return elementPtr.map { SlotData(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: SlotData?) {
-        spine_array_slot_data_add(ptr, value?.nativePtr)
+        spine_array_slot_data_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_slot_data_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_slot_data_clear(ptr)
+    public func clear() {
+        spine_array_slot_data_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> SlotData? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_slot_data_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_slot_data_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_slot_data_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_slot_data_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_slot_data_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_slot_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_slot_data_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_slot_data_dispose(_ptr.assumingMemoryBound(to: spine_array_slot_data_wrapper.self))
         }
     }
 }
 
-/// ArrayTextureRegion wrapper class
-@objc(SpineArrayTextureRegion)
-@objcMembers
-public final class ArrayTextureRegion: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayTextureRegion wrapper
+public class ArrayTextureRegion {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_texture_region, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_texture_region_create()
+        let ptr = spine_array_texture_region_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_texture_region_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_texture_region_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_texture_region_size(ptr)
+        return spine_array_texture_region_size(_ptr)
     }
 
     public subscript(index: Int32) -> TextureRegion? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_texture_region_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : TextureRegion(fromPointer: elementPtr!)
+            let buffer = spine_array_texture_region_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_texture_region?.self)[Int(index)]
+            return elementPtr.map { TextureRegion(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: TextureRegion?) {
-        spine_array_texture_region_add(ptr, value?.nativePtr)
+        spine_array_texture_region_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_texture_region_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_texture_region_clear(ptr)
+    public func clear() {
+        spine_array_texture_region_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> TextureRegion? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_texture_region_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_texture_region_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_texture_region_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_texture_region_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_texture_region_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_texture_region_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_texture_region_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_texture_region_dispose(_ptr.assumingMemoryBound(to: spine_array_texture_region_wrapper.self))
         }
     }
 }
 
-/// ArrayTimeline wrapper class
-@objc(SpineArrayTimeline)
-@objcMembers
-public final class ArrayTimeline: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayTimeline wrapper
+public class ArrayTimeline {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_timeline, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_timeline_create()
+        let ptr = spine_array_timeline_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_timeline_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_timeline_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_timeline_size(ptr)
+        return spine_array_timeline_size(_ptr)
     }
 
     public subscript(index: Int32) -> Timeline? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_timeline_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : Timeline(fromPointer: elementPtr!)
+            let buffer = spine_array_timeline_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_timeline?.self)[Int(index)]
+            guard let ptr = elementPtr else { return nil }
+            let rtti = spine_timeline_get_rtti(ptr)
+        let className = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch className {
+        case "spine_alpha_timeline":
+            return AlphaTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_alpha_timeline_wrapper.self))
+        case "spine_attachment_timeline":
+            return AttachmentTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_attachment_timeline_wrapper.self))
+        case "spine_deform_timeline":
+            return DeformTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_deform_timeline_wrapper.self))
+        case "spine_draw_order_timeline":
+            return DrawOrderTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_draw_order_timeline_wrapper.self))
+        case "spine_event_timeline":
+            return EventTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_event_timeline_wrapper.self))
+        case "spine_ik_constraint_timeline":
+            return IkConstraintTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_ik_constraint_timeline_wrapper.self))
+        case "spine_inherit_timeline":
+            return InheritTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_inherit_timeline_wrapper.self))
+        case "spine_path_constraint_mix_timeline":
+            return PathConstraintMixTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_path_constraint_mix_timeline_wrapper.self))
+        case "spine_path_constraint_position_timeline":
+            return PathConstraintPositionTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_path_constraint_position_timeline_wrapper.self))
+        case "spine_path_constraint_spacing_timeline":
+            return PathConstraintSpacingTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_path_constraint_spacing_timeline_wrapper.self))
+        case "spine_physics_constraint_damping_timeline":
+            return PhysicsConstraintDampingTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_damping_timeline_wrapper.self))
+        case "spine_physics_constraint_gravity_timeline":
+            return PhysicsConstraintGravityTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_gravity_timeline_wrapper.self))
+        case "spine_physics_constraint_inertia_timeline":
+            return PhysicsConstraintInertiaTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_inertia_timeline_wrapper.self))
+        case "spine_physics_constraint_mass_timeline":
+            return PhysicsConstraintMassTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_mass_timeline_wrapper.self))
+        case "spine_physics_constraint_mix_timeline":
+            return PhysicsConstraintMixTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_mix_timeline_wrapper.self))
+        case "spine_physics_constraint_reset_timeline":
+            return PhysicsConstraintResetTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_reset_timeline_wrapper.self))
+        case "spine_physics_constraint_strength_timeline":
+            return PhysicsConstraintStrengthTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_strength_timeline_wrapper.self))
+        case "spine_physics_constraint_wind_timeline":
+            return PhysicsConstraintWindTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_wind_timeline_wrapper.self))
+        case "spine_rgb2_timeline":
+            return Rgb2Timeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_rgb2_timeline_wrapper.self))
+        case "spine_rgba2_timeline":
+            return Rgba2Timeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_rgba2_timeline_wrapper.self))
+        case "spine_rgba_timeline":
+            return RgbaTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_rgba_timeline_wrapper.self))
+        case "spine_rgb_timeline":
+            return RgbTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_rgb_timeline_wrapper.self))
+        case "spine_rotate_timeline":
+            return RotateTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_rotate_timeline_wrapper.self))
+        case "spine_scale_timeline":
+            return ScaleTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_scale_timeline_wrapper.self))
+        case "spine_scale_x_timeline":
+            return ScaleXTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_scale_x_timeline_wrapper.self))
+        case "spine_scale_y_timeline":
+            return ScaleYTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_scale_y_timeline_wrapper.self))
+        case "spine_sequence_timeline":
+            return SequenceTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_sequence_timeline_wrapper.self))
+        case "spine_shear_timeline":
+            return ShearTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_shear_timeline_wrapper.self))
+        case "spine_shear_x_timeline":
+            return ShearXTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_shear_x_timeline_wrapper.self))
+        case "spine_shear_y_timeline":
+            return ShearYTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_shear_y_timeline_wrapper.self))
+        case "spine_slider_mix_timeline":
+            return SliderMixTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_slider_mix_timeline_wrapper.self))
+        case "spine_slider_timeline":
+            return SliderTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_slider_timeline_wrapper.self))
+        case "spine_transform_constraint_timeline":
+            return TransformConstraintTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_transform_constraint_timeline_wrapper.self))
+        case "spine_translate_timeline":
+            return TranslateTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_translate_timeline_wrapper.self))
+        case "spine_translate_x_timeline":
+            return TranslateXTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_translate_x_timeline_wrapper.self))
+        case "spine_translate_y_timeline":
+            return TranslateYTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_translate_y_timeline_wrapper.self))
+        default:
+            fatalError("Unknown concrete type: \(className) for abstract class Timeline")
+        }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Timeline?) {
-        spine_array_timeline_add(ptr, value?.nativePtr)
+        spine_array_timeline_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_timeline_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_timeline_clear(ptr)
+    public func clear() {
+        spine_array_timeline_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Timeline? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_timeline_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_timeline_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_timeline_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_timeline_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_timeline_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_timeline_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_timeline_dispose(_ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self))
         }
     }
 }
 
-/// ArrayToProperty wrapper class
-@objc(SpineArrayToProperty)
-@objcMembers
-public final class ArrayToProperty: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayToProperty wrapper
+public class ArrayToProperty {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_to_property, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_to_property_create()
+        let ptr = spine_array_to_property_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_to_property_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_to_property_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_to_property_size(ptr)
+        return spine_array_to_property_size(_ptr)
     }
 
     public subscript(index: Int32) -> ToProperty? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_to_property_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : ToProperty(fromPointer: elementPtr!)
+            let buffer = spine_array_to_property_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_to_property?.self)[Int(index)]
+            guard let ptr = elementPtr else { return nil }
+            let rtti = spine_to_property_get_rtti(ptr)
+        let className = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch className {
+        case "spine_to_rotate":
+            return ToRotate(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_to_rotate_wrapper.self))
+        case "spine_to_scale_x":
+            return ToScaleX(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_to_scale_x_wrapper.self))
+        case "spine_to_scale_y":
+            return ToScaleY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_to_scale_y_wrapper.self))
+        case "spine_to_shear_y":
+            return ToShearY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_to_shear_y_wrapper.self))
+        case "spine_to_x":
+            return ToX(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_to_x_wrapper.self))
+        case "spine_to_y":
+            return ToY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_to_y_wrapper.self))
+        default:
+            fatalError("Unknown concrete type: \(className) for abstract class ToProperty")
+        }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: ToProperty?) {
-        spine_array_to_property_add(ptr, value?.nativePtr)
+        spine_array_to_property_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_to_property_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_to_property_clear(ptr)
+    public func clear() {
+        spine_array_to_property_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> ToProperty? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_to_property_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_to_property_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_to_property_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_to_property_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_to_property_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_to_property_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_to_property_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_to_property_dispose(_ptr.assumingMemoryBound(to: spine_array_to_property_wrapper.self))
         }
     }
 }
 
-/// ArrayTrackEntry wrapper class
-@objc(SpineArrayTrackEntry)
-@objcMembers
-public final class ArrayTrackEntry: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayTrackEntry wrapper
+public class ArrayTrackEntry {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_track_entry, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_track_entry_create()
+        let ptr = spine_array_track_entry_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_track_entry_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_track_entry_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_track_entry_size(ptr)
+        return spine_array_track_entry_size(_ptr)
     }
 
     public subscript(index: Int32) -> TrackEntry? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_track_entry_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : TrackEntry(fromPointer: elementPtr!)
+            let buffer = spine_array_track_entry_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_track_entry?.self)[Int(index)]
+            return elementPtr.map { TrackEntry(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: TrackEntry?) {
-        spine_array_track_entry_add(ptr, value?.nativePtr)
+        spine_array_track_entry_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_track_entry_clear(ptr)
+    public func clear() {
+        spine_array_track_entry_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> TrackEntry? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_track_entry_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_track_entry_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_track_entry_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_track_entry_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_track_entry_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_track_entry_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_track_entry_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_track_entry_dispose(_ptr.assumingMemoryBound(to: spine_array_track_entry_wrapper.self))
         }
     }
 }
 
-/// ArrayUpdate wrapper class
-@objc(SpineArrayUpdate)
-@objcMembers
-public final class ArrayUpdate: NSObject {
-    internal let ptr: OpaquePointer
-    private let ownsMemory: Bool
+/// ArrayUpdate wrapper
+public class ArrayUpdate {
+    public let _ptr: UnsafeMutableRawPointer
+    private let _ownsMemory: Bool
 
-    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {
-        self.ptr = ptr
-        self.ownsMemory = ownsMemory
-        super.init()
+    public init(fromPointer ptr: spine_array_update, ownsMemory: Bool = false) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+        self._ownsMemory = ownsMemory
     }
+
 
     /// Create a new empty array
     public convenience init() {
-        let ptr = spine_array_update_create()
+        let ptr = spine_array_update_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
     /// Create a new array with the specified initial capacity
-    public convenience init(capacity: Int32) {
-        let ptr = spine_array_update_create_with_capacity(capacity)
+    public convenience init(capacity: Int) {
+        let ptr = spine_array_update_create_with_capacity(Int32(capacity))!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var nativePtr: OpaquePointer { ptr }
-
     public var count: Int32 {
-        return spine_array_update_size(ptr)
+        return spine_array_update_size(_ptr)
     }
 
     public subscript(index: Int32) -> Update? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_update_buffer(ptr)
-            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]
-            return elementPtr == nil ? nil : Update(fromPointer: elementPtr!)
+            let buffer = spine_array_update_buffer(_ptr)!
+            let elementPtr = buffer.assumingMemoryBound(to: spine_update?.self)[Int(index)]
+            guard let ptr = elementPtr else { return nil }
+            let rtti = spine_update_get_rtti(ptr)
+        let className = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch className {
+        case "spine_bone":
+            return Bone(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bone_wrapper.self))
+        case "spine_bone_pose":
+            return BonePose(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bone_pose_wrapper.self))
+        case "spine_ik_constraint":
+            return IkConstraint(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
+        case "spine_path_constraint":
+            return PathConstraint(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_path_constraint_wrapper.self))
+        case "spine_physics_constraint":
+            return PhysicsConstraint(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_wrapper.self))
+        case "spine_slider":
+            return Slider(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_slider_wrapper.self))
+        case "spine_transform_constraint":
+            return TransformConstraint(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
+        default:
+            fatalError("Unknown concrete type: \(className) for abstract class Update")
+        }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Update?) {
-        spine_array_update_add(ptr, value?.nativePtr)
+        spine_array_update_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_update_wrapper.self))
     }
 
     /// Removes all elements from this array
-    public func removeAll() {
-        spine_array_update_clear(ptr)
+    public func clear() {
+        spine_array_update_clear(_ptr)
     }
 
-    /// Removes the element at the specified index
-    public func remove(at index: Int32) {
+    /// Removes the element at the given index
+    @discardableResult
+    public func removeAt(_ index: Int32) -> Update? {
         precondition(index >= 0 && index < count, "Index out of bounds")
-        spine_array_update_remove_at(ptr, index)
+        let value = self[index]
+        spine_array_update_remove_at(_ptr, index)
+        return value
     }
 
     /// Sets the size of this array
-    public func resize(to newSize: Int32) {
-        spine_array_update_set_size(ptr, newSize, nil)
+    public var length: Int {
+        get { count }
+        set {
+            spine_array_update_set_size(_ptr, newValue, nil)
+        }
     }
 
-    /// Ensures the array has at least the specified capacity
-    public func ensureCapacity(_ capacity: Int32) {
-        spine_array_update_ensure_capacity(ptr, capacity)
+    /// Ensures this array has at least the given capacity
+    public func ensureCapacity(_ capacity: Int) {
+        spine_array_update_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_update_wrapper.self), Int32(capacity))
     }
 
     deinit {
-        if ownsMemory {
+        if _ownsMemory {
+            spine_array_update_dispose(_ptr.assumingMemoryBound(to: spine_array_update_wrapper.self))
         }
     }
 }

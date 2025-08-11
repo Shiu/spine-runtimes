@@ -1,286 +1,150 @@
-import * as fs from 'node:fs/promises';
+import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { CClassOrStruct, CEnum, CMethod, CParameter } from '../../../spine-c/codegen/src/c-types.js';
+import { toSnakeCase } from '../../../spine-c/codegen/src/types.js';
 
-export interface SwiftGenerationOptions {
-    outputDir: string;
-    licenseHeader: string;
-}
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Get license header from spine-cpp source
+const LICENSE_HEADER = fs.readFileSync(path.join(__dirname, '../../../spine-cpp/src/spine/Skeleton.cpp'), 'utf8')
+    .split('\n')
+    .slice(0, 28)
+    .map((line, index, array) => {
+        // Convert C++ block comment format to Swift line comment format
+        if (index === 0 && line.startsWith('/****')) {
+            return `//${line.substring(4).replace(/\*+/g, '')}`;
+        } else if (index === array.length - 1 && (line.startsWith(' ****') || line.trim() === '*/')) {
+            return `//${line.substring(line.indexOf('*') + 1).replace(/\*+/g, '').replace(/\//g, '')}`;
+        } else if (line.startsWith(' ****') || line.trim() === '*/') {
+            return `// ${line.substring(4)}`;
+        } else if (line.startsWith(' * ')) {
+            return `// ${line.substring(3)}`;
+        } else if (line.startsWith(' *')) {
+            return `//${line.substring(2)}`;
+        } else {
+            return line;
+        }
+    })
+    .join('\n');
+
+// Internal data model interfaces (mirroring Dart's structure)
 interface SwiftClass {
-    name: string;
-    cType: CClassOrStruct;
-    isAbstract: boolean;
-    isInterface: boolean;
-    parentClass?: string;
-    protocols: string[];
-    methods: SwiftMethod[];
-    properties: SwiftProperty[];
-    constructors: SwiftConstructor[];
+    name: string;                    // Swift class name (e.g., "Animation")
+    type: 'concrete' | 'abstract' | 'protocol';  // 'interface' becomes 'protocol' in Swift
+    inheritance: {
+        extends?: string;              // Single parent class
+        implements: string[];          // Multiple protocols
+    };
+    imports: string[];              // All required imports
+    members: SwiftMember[];          // All class members
+    hasRtti: boolean;               // Whether this class needs RTTI switching
 }
 
-interface SwiftMethod {
-    name: string;
-    cMethod: CMethod;
-    parameters: SwiftParameter[];
-    returnType: string;
-    isStatic: boolean;
-    implementation: string;
+interface SwiftMember {
+    type: 'constructor' | 'method' | 'getter' | 'setter' | 'static_method';
+    name: string;                   // Swift member name
+    swiftReturnType: string;        // Swift return type
+    parameters: SwiftParameter[];   // Parameters (excluding 'self')
+    isOverride: boolean;           // Whether to add override
+    implementation: string;         // The actual Swift code body
+    cMethodName?: string;          // Original C method name (for reference)
+    hasSetter?: boolean;           // For getters, indicates if there's also a setter
+    setterImplementation?: string; // Implementation for the setter part
 }
 
 interface SwiftParameter {
     name: string;
-    type: string;
-    cParam: CParameter;
+    swiftType: string;
+    cType: string;                 // Original C type for conversion
 }
 
-interface SwiftProperty {
+interface SwiftEnum {
     name: string;
-    type: string;
-    isReadOnly: boolean;
-    getter?: SwiftMethod;
-    setter?: SwiftMethod;
+    values: SwiftEnumValue[];
 }
 
-interface SwiftConstructor {
-    parameters: SwiftParameter[];
-    implementation: string;
+interface SwiftEnumValue {
+    name: string;
+    value: number;
 }
 
 export class SwiftWriter {
-    private cTypes: CClassOrStruct[];
-    private cEnums: CEnum[];
-    private cArrayTypes: CClassOrStruct[];
-    private inheritance: Map<string, InheritanceInfo>;
-    private isInterface: Map<string, boolean>;
-    private supertypes: Map<string, Set<string>>;
-    private subtypes: Map<string, Set<string>>;
-    private swiftClasses: Map<string, SwiftClass> = new Map();
+    private enumNames = new Set<string>();
+    private classMap = new Map<string, CClassOrStruct>(); // name -> class
+    private inheritance: Record<string, { extends?: string, mixins: string[] }> = {};
+    private isInterface: Record<string, boolean> = {};
+    private supertypes: Record<string, string[]> = {}; // for RTTI switching
+    private subtypes: Record<string, string[]> = {};
 
-    constructor(
+    constructor(private outputDir: string) {
+        this.cleanOutputDirectory();
+    }
+
+    private cleanOutputDirectory(): void {
+        if (fs.existsSync(this.outputDir)) {
+            fs.rmSync(this.outputDir, { recursive: true, force: true });
+        }
+        fs.mkdirSync(this.outputDir, { recursive: true });
+    }
+
+    // Step 1: Transform C types to clean Swift model
+    private transformToSwiftModel(
         cTypes: CClassOrStruct[],
         cEnums: CEnum[],
-        cArrayTypes: CClassOrStruct[],
-        inheritance: any,
-        isInterface: any,
-        supertypes: any,
-        subtypes: any
-    ) {
-        this.cTypes = cTypes;
-        this.cEnums = cEnums;
-        this.cArrayTypes = cArrayTypes;
-        this.inheritance = new Map(Object.entries(inheritance || {}));
-        this.isInterface = new Map(Object.entries(isInterface || {}));
-        this.supertypes = new Map(Object.entries(supertypes || {}).map(([k, v]) => [k, new Set(v as string[])]));
-        this.subtypes = new Map(Object.entries(subtypes || {}).map(([k, v]) => [k, new Set(v as string[])]));
-    }
+        inheritance: Record<string, { extends?: string, mixins: string[] }>,
+        isInterface: Record<string, boolean>,
+        supertypes: Record<string, string[]>
+    ): { classes: SwiftClass[], enums: SwiftEnum[] } {
 
-    async generate(options: SwiftGenerationOptions): Promise<void> {
-        console.log('Generating Swift bindings...');
+        // Store data for reference
+        this.inheritance = inheritance;
+        this.isInterface = isInterface;
+        this.supertypes = supertypes;
 
-        // Process all C types to create Swift class models
-        for (const cType of this.cTypes) {
-            this.processType(cType);
+        for (const cType of cTypes) {
+            this.classMap.set(cType.name, cType);
         }
 
-        // Generate individual Swift files for each type
-        for (const [typeName, swiftClass] of this.swiftClasses) {
-            await this.generateClassFile(swiftClass, options);
+        for (const cEnum of cEnums) {
+            this.enumNames.add(cEnum.name);
         }
 
-        // Generate enum file
-        await this.generateEnumsFile(options);
+        const swiftClasses: SwiftClass[] = [];
+        const swiftEnums: SwiftEnum[] = [];
 
-        // Generate arrays file
-        await this.generateArraysFile(options);
-
-        // Generate main exports file
-        await this.generateExportsFile(options);
-
-        console.log('Swift bindings generation complete!');
-    }
-
-    private processType(cType: CClassOrStruct): void {
-        const swiftName = this.getSwiftClassName(cType.name);
-        const inheritanceInfo = this.inheritance.get(cType.name);
-        const isAbstract = cType.cppType?.abstract || false;
-        const isInterface = this.isInterface.get(cType.name) || false;
-
-        const swiftClass: SwiftClass = {
-            name: swiftName,
-            cType: cType,
-            isAbstract,
-            isInterface,
-            parentClass: inheritanceInfo?.extends ? this.getSwiftClassName(inheritanceInfo.extends) : undefined,
-            protocols: inheritanceInfo?.im?.map(m => this.getSwiftClassName(m)) || [],
-            methods: [],
-            properties: [],
-            constructors: []
-        };
-
-        // Process constructors
-        for (const ctor of cType.constructors) {
-            swiftClass.constructors.push(this.processConstructor(ctor, cType));
+        // Transform enums
+        for (const cEnum of cEnums) {
+            swiftEnums.push(this.transformEnum(cEnum));
         }
 
-        // Process methods and detect properties
-        const getterSetterMap = new Map<string, { getter?: CMethod, setter?: CMethod }>();
-
-        for (const method of cType.methods) {
-            // Check if it's a getter/setter pattern
-            const getterMatch = method.name.match(/^get(.+)$/);
-            const setterMatch = method.name.match(/^set(.+)$/);
-
-            if (getterMatch && method.parameters.length === 0) {
-                const propName = this.lowercaseFirst(getterMatch[1]);
-                const prop = getterSetterMap.get(propName) || {};
-                prop.getter = method;
-                getterSetterMap.set(propName, prop);
-            } else if (setterMatch && method.parameters.length === 1) {
-                const propName = this.lowercaseFirst(setterMatch[1]);
-                const prop = getterSetterMap.get(propName) || {};
-                prop.setter = method;
-                getterSetterMap.set(propName, prop);
-            } else {
-                // Regular method
-                swiftClass.methods.push(this.processMethod(method, cType));
-            }
+        // Transform classes in dependency order
+        const sortedTypes = this.sortByInheritance(cTypes);
+        for (const cType of sortedTypes) {
+            swiftClasses.push(this.transformClass(cType));
         }
 
-        // Create properties from getter/setter pairs
-        for (const [propName, { getter, setter }] of getterSetterMap) {
-            if (getter) {
-                swiftClass.properties.push({
-                    name: propName,
-                    type: this.mapReturnType(getter.returnType, getter.returnTypeNullable),
-                    isReadOnly: !setter,
-                    getter: getter ? this.processMethod(getter, cType) : undefined,
-                    setter: setter ? this.processMethod(setter, cType) : undefined
-                });
-            }
-        }
-
-        this.swiftClasses.set(cType.name, swiftClass);
+        return { classes: swiftClasses, enums: swiftEnums };
     }
 
-    private processConstructor(ctor: any, cType: CClassOrStruct): SwiftConstructor {
-        const params = (ctor.parameters || []).map((p: CParameter) => this.processParameter(p));
-        return {
-            parameters: params,
-            implementation: this.generateConstructorImplementation(ctor, cType)
-        };
-    }
-
-    private processMethod(method: CMethod, cType: CClassOrStruct): SwiftMethod {
-        // Filter out 'self' parameter which is always the first one for instance methods
-        const params = method.parameters.filter(p => p.name !== 'self').map(p => this.processParameter(p));
-        return {
-            name: this.getSwiftMethodName(method.name, cType.name),
-            cMethod: method,
-            parameters: params,
-            returnType: this.mapReturnType(method.returnType, method.returnTypeNullable),
-            isStatic: method.isStatic || false,
-            implementation: this.generateMethodImplementation(method, cType)
-        };
-    }
-
-    private processParameter(param: CParameter): SwiftParameter {
-        return {
-            name: this.sanitizeParameterName(param.name),
-            type: this.mapParameterType(param.cType, param.isNullable),
-            cParam: param
-        };
-    }
-
-    private generateConstructorImplementation(ctor: any, cType: CClassOrStruct): string {
-        // TODO: Generate actual implementation
-        return '';
-    }
-
-    private generateMethodImplementation(method: CMethod, cType: CClassOrStruct): string {
-        // TODO: Generate actual implementation
-        return '';
-    }
-
-    private async generateClassFile(swiftClass: SwiftClass, options: SwiftGenerationOptions): Promise<void> {
-        const filePath = path.join(options.outputDir, `${swiftClass.name}.swift`);
-        const content = this.generateClassContent(swiftClass, options);
-        await fs.writeFile(filePath, content, 'utf-8');
-    }
-
-    private generateClassContent(swiftClass: SwiftClass, options: SwiftGenerationOptions): string {
+    // Step 2: Generate Swift code from clean model
+    private generateSwiftCode(swiftClass: SwiftClass): string {
         const lines: string[] = [];
 
-        // Add license header as comment
-        lines.push(...options.licenseHeader.split('\n').map(line => `// ${line}`));
-        lines.push('');
+        // Header
+        lines.push(this.generateHeader());
 
         // Imports
-        lines.push('import Foundation');
-        lines.push('import SpineC');
-        lines.push('');
+        lines.push(...this.generateImports(swiftClass.imports, swiftClass.hasRtti));
 
-        // Class declaration
-        const inheritance = this.buildInheritanceDeclaration(swiftClass);
-        lines.push(`@objc(Spine${swiftClass.name})`);
-        lines.push(`@objcMembers`);
-        lines.push(`public ${swiftClass.isAbstract ? 'class' : 'final class'} ${swiftClass.name}${inheritance} {`);
+        // Class/Protocol declaration
+        lines.push(this.generateClassDeclaration(swiftClass));
 
-        // Internal wrapper property
-        lines.push(`    internal let wrappee: ${swiftClass.cType.name}`);
-        lines.push('');
-
-        // Internal init
-        lines.push(`    internal init(_ wrappee: ${swiftClass.cType.name}) {`);
-        lines.push('        self.wrappee = wrappee');
-        if (swiftClass.parentClass && !swiftClass.isInterface) {
-            lines.push('        super.init(wrappee)');
+        // Class body
+        if (swiftClass.type === 'protocol') {
+            lines.push(...this.generateProtocolBody(swiftClass));
         } else {
-            lines.push('        super.init()');
-        }
-        lines.push('    }');
-        lines.push('');
-
-        // isEqual and hash
-        if (!swiftClass.parentClass || swiftClass.parentClass === 'NSObject') {
-            lines.push('    public override func isEqual(_ object: Any?) -> Bool {');
-            lines.push(`        guard let other = object as? ${swiftClass.name} else { return false }`);
-            lines.push('        return self.wrappee == other.wrappee');
-            lines.push('    }');
-            lines.push('');
-            lines.push('    public override var hash: Int {');
-            lines.push('        var hasher = Hasher()');
-            lines.push('        hasher.combine(self.wrappee)');
-            lines.push('        return hasher.finalize()');
-            lines.push('    }');
-            lines.push('');
-        }
-
-        // Add public constructors
-        if (!swiftClass.isAbstract && swiftClass.constructors.length > 0) {
-            for (const ctor of swiftClass.constructors) {
-                lines.push(...this.generateConstructor(ctor, swiftClass));
-                lines.push('');
-            }
-        }
-
-        // Add properties
-        for (const prop of swiftClass.properties) {
-            lines.push(...this.generateProperty(prop, swiftClass));
-            lines.push('');
-        }
-
-        // Add methods
-        for (const method of swiftClass.methods) {
-            lines.push(...this.generateMethod(method, swiftClass));
-            lines.push('');
-        }
-
-        // Add destructor if concrete class
-        if (!swiftClass.isAbstract && swiftClass.cType.destructor) {
-            lines.push('    deinit {');
-            lines.push(`        ${swiftClass.cType.destructor.name}(wrappee)`);
-            lines.push('    }');
+            lines.push(...this.generateClassBody(swiftClass));
         }
 
         lines.push('}');
@@ -288,550 +152,937 @@ export class SwiftWriter {
         return lines.join('\n');
     }
 
-    private buildInheritanceDeclaration(swiftClass: SwiftClass): string {
-        const parts: string[] = [];
+    // Step 3: Write files
+    async writeAll(
+        cTypes: CClassOrStruct[],
+        cEnums: CEnum[],
+        cArrayTypes: CClassOrStruct[],
+        inheritance: Record<string, { extends?: string, mixins: string[] }> = {},
+        isInterface: Record<string, boolean> = {},
+        supertypes: Record<string, string[]> = {},
+        subtypes: Record<string, string[]> = {}
+    ): Promise<void> {
+        this.subtypes = subtypes;
+        
+        // Step 1: Transform to clean model
+        const { classes, enums } = this.transformToSwiftModel(cTypes, cEnums, inheritance, isInterface, supertypes);
 
-        if (swiftClass.parentClass) {
-            parts.push(swiftClass.parentClass);
-        } else if (!swiftClass.isInterface) {
-            parts.push('NSObject');
+        // Step 2 & 3: Generate and write files
+        for (const swiftEnum of enums) {
+            const content = this.generateEnumCode(swiftEnum);
+            const fileName = `${toSnakeCase(swiftEnum.name)}.swift`;
+            const filePath = path.join(this.outputDir, fileName);
+            fs.writeFileSync(filePath, content);
         }
 
-        if (swiftClass.protocols.length > 0) {
-            parts.push(...swiftClass.protocols);
+        for (const swiftClass of classes) {
+            const content = this.generateSwiftCode(swiftClass);
+            const fileName = `${toSnakeCase(swiftClass.name)}.swift`;
+            const filePath = path.join(this.outputDir, fileName);
+            fs.writeFileSync(filePath, content);
         }
 
-        return parts.length > 0 ? `: ${parts.join(', ')}` : '';
+        // Generate arrays.swift
+        await this.writeArraysFile(cArrayTypes);
+
+        // Write main export file
+        await this.writeExportFile(classes, enums);
     }
 
-    private async generateEnumsFile(options: SwiftGenerationOptions): Promise<void> {
-        const filePath = path.join(options.outputDir, 'Enums.swift');
+    // Class type resolution
+    private determineClassType(cType: CClassOrStruct): 'concrete' | 'abstract' | 'protocol' {
+        if (this.isInterface[cType.name]) return 'protocol';
+        if (cType.cppType.isAbstract) return 'abstract';
+        return 'concrete';
+    }
+
+    // Inheritance resolution
+    private resolveInheritance(cType: CClassOrStruct): { extends?: string, implements: string[] } {
+        const inheritanceInfo = this.inheritance[cType.name];
+        return {
+            extends: inheritanceInfo?.extends ? this.toSwiftTypeName(inheritanceInfo.extends) : undefined,
+            implements: (inheritanceInfo?.mixins || []).map(mixin => this.toSwiftTypeName(mixin))
+        };
+    }
+
+    private transformEnum(cEnum: CEnum): SwiftEnum {
+        const swiftEnum = {
+            name: this.toSwiftTypeName(cEnum.name),
+            values: cEnum.values.map((value, index) => {
+                let parsedValue: number;
+                if (value.value !== undefined) {
+                    // Handle bit shift expressions like "1 << 0"
+                    const bitShiftMatch = value.value.match(/^(\d+)\s*<<\s*(\d+)$/);
+                    if (bitShiftMatch) {
+                        const base = parseInt(bitShiftMatch[1]);
+                        const shift = parseInt(bitShiftMatch[2]);
+                        parsedValue = base << shift;
+                    } else {
+                        // Try to parse as regular number
+                        parsedValue = Number.parseInt(value.value);
+                        if (isNaN(parsedValue)) {
+                            console.warn(`Warning: Could not parse enum value ${value.name} = ${value.value}, using index ${index}`);
+                            parsedValue = index;
+                        }
+                    }
+                } else {
+                    parsedValue = index;
+                }
+                return {
+                    name: this.toSwiftEnumValueName(value.name, cEnum.name),
+                    value: parsedValue
+                };
+            })
+        };
+        return swiftEnum;
+    }
+
+    private transformClass(cType: CClassOrStruct): SwiftClass {
+        const swiftName = this.toSwiftTypeName(cType.name);
+        const classType = this.determineClassType(cType);
+        const inheritance = this.resolveInheritance(cType);
+
+        return {
+            name: swiftName,
+            type: classType,
+            inheritance,
+            imports: this.collectImports(cType),
+            members: this.processMembers(cType, classType),
+            hasRtti: this.hasRttiMethod(cType),
+        };
+    }
+
+    // Unified Method Processing
+    private processMembers(cType: CClassOrStruct, classType: 'concrete' | 'abstract' | 'protocol'): SwiftMember[] {
+        const members: SwiftMember[] = [];
+
+        // Add constructors for concrete classes only
+        if (classType === 'concrete') {
+            for (const constr of cType.constructors) {
+                members.push(this.createConstructor(constr, cType));
+            }
+        }
+
+        // Add destructor as deinit for concrete classes
+        if (classType === 'concrete' && cType.destructor) {
+            members.push(this.createDisposeMethod(cType.destructor, cType));
+        }
+
+        // Process methods with unified logic
+        const validMethods = cType.methods.filter(method => {
+            if (this.hasRawPointerParameters(method)) {
+                return false;
+            }
+            if (this.isMethodInherited(method, cType)) {
+                return false;
+            }
+            return true;
+        });
+
+        const renumberedMethods = this.renumberMethods(validMethods, cType.name);
+
+        // Group getter/setter pairs to avoid duplicate property declarations
+        const propertyMap = new Map<string, { getter?: any, setter?: any }>();
+        const regularMethods: any[] = [];
+        const overloadedSetters = this.findOverloadedSetters(renumberedMethods);
+
+        for (const methodInfo of renumberedMethods) {
+            const { method, renamedMethod } = methodInfo;
+            
+            if (this.isGetter(method)) {
+                const propName = renamedMethod || this.extractPropertyName(method.name, cType.name);
+                const prop = propertyMap.get(propName) || {};
+                prop.getter = { method, renamedMethod };
+                propertyMap.set(propName, prop);
+            } else if (this.isSetter(method, overloadedSetters)) {
+                const propName = renamedMethod || this.extractPropertyName(method.name, cType.name);
+                const prop = propertyMap.get(propName) || {};
+                prop.setter = { method, renamedMethod };
+                propertyMap.set(propName, prop);
+            } else {
+                regularMethods.push({ method, renamedMethod });
+            }
+        }
+
+        // Create combined property members
+        for (const [propName, { getter, setter }] of propertyMap) {
+            if (getter && setter) {
+                // Combined getter/setter property
+                members.push(this.createCombinedProperty(getter.method, setter.method, cType, classType, propName));
+            } else if (getter) {
+                // Read-only property
+                members.push(this.createGetter(getter.method, cType, classType, getter.renamedMethod));
+            } else if (setter) {
+                // Write-only property (rare)
+                members.push(this.createSetter(setter.method, cType, classType, setter.renamedMethod));
+            }
+        }
+
+        // Add regular methods
+        for (const { method, renamedMethod } of regularMethods) {
+            members.push(this.createMethod(method, cType, classType, renamedMethod));
+        }
+
+        return members;
+    }
+
+    private createCombinedProperty(getter: CMethod, setter: CMethod, cType: CClassOrStruct, classType: 'concrete' | 'abstract' | 'protocol', propName: string): SwiftMember {
+        const swiftReturnType = this.toSwiftReturnType(getter.returnType, getter.returnTypeNullable);
+        
+        // For protocols, we just need the declaration
+        if (classType === 'protocol') {
+            return {
+                type: 'getter', // Will be rendered as a property with get/set
+                name: propName,
+                swiftReturnType,
+                parameters: [],
+                isOverride: false,
+                implementation: '', // No implementation for protocols
+                cMethodName: getter.name,
+                hasSetter: true // Mark that this property has a setter
+            };
+        }
+        
+        // For concrete/abstract classes, create implementation
+        const cTypeName = this.toCTypeName(this.toSwiftTypeName(cType.name));
+        const getterImpl = `let result = ${getter.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self))
+        ${this.generateReturnConversion(getter.returnType, 'result', getter.returnTypeNullable)}`;
+        
+        const setterParam = setter.parameters[1]; // First param is self
+        const setterImpl = `${setter.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self), ${this.convertSwiftToC('newValue', setterParam)})`;
+        
+        const isOverride = this.isMethodOverride(getter, cType) || this.isMethodOverride(setter, cType);
+        
+        return {
+            type: 'getter', // Combined property
+            name: propName,
+            swiftReturnType,
+            parameters: [],
+            isOverride,
+            implementation: getterImpl,
+            setterImplementation: setterImpl,
+            cMethodName: getter.name,
+            hasSetter: true
+        };
+    }
+
+    private processMethod(method: CMethod, cType: CClassOrStruct, classType: 'concrete' | 'abstract' | 'protocol', renamedMethod?: string, overloadedSetters?: Set<string>): SwiftMember {
+        if (this.isGetter(method)) {
+            return this.createGetter(method, cType, classType, renamedMethod);
+        } else if (this.isSetter(method, overloadedSetters)) {
+            return this.createSetter(method, cType, classType, renamedMethod);
+        } else {
+            return this.createMethod(method, cType, classType, renamedMethod);
+        }
+    }
+
+    // Unified getter detection for ALL classes
+    private isGetter(method: CMethod): boolean {
+        return (method.name.includes('_get_') && method.parameters.length === 1) ||
+            (method.returnType === 'bool' && method.parameters.length === 1 &&
+                (method.name.includes('_has_') || method.name.includes('_is_') || method.name.includes('_was_')));
+    }
+
+    private isSetter(method: CMethod, overloadedSetters?: Set<string>): boolean {
+        const isBasicSetter = method.returnType === 'void' &&
+            method.parameters.length === 2 &&
+            method.name.includes('_set_');
+
+        if (!isBasicSetter) return false;
+
+        // If this setter has overloads, don't generate it as a setter
+        if (overloadedSetters?.has(method.name)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private findOverloadedSetters(renumberedMethods: Array<{ method: CMethod, renamedMethod?: string }>): Set<string> {
+        const setterBasenames = new Map<string, string[]>();
+
+        // Group setter methods by their base name
+        for (const methodInfo of renumberedMethods) {
+            const method = methodInfo.method;
+            if (method.returnType === 'void' &&
+                method.parameters.length === 2 &&
+                method.name.includes('_set_')) {
+
+                // Extract base name by removing numbered suffix
+                const match = method.name.match(/^(.+?)_(\d+)$/);
+                const baseName = match ? match[1] : method.name;
+
+                if (!setterBasenames.has(baseName)) {
+                    setterBasenames.set(baseName, []);
+                }
+                setterBasenames.get(baseName)?.push(method.name);
+            }
+        }
+
+        // Find setters that have multiple methods with the same base name
+        const overloadedSetters = new Set<string>();
+        for (const [_baseName, methodNames] of setterBasenames) {
+            if (methodNames.length > 1) {
+                // Multiple setters with same base name - mark all as overloaded
+                for (const methodName of methodNames) {
+                    overloadedSetters.add(methodName);
+                }
+            }
+        }
+
+        return overloadedSetters;
+    }
+
+    private createDisposeMethod(destructor: CMethod, cType: CClassOrStruct): SwiftMember {
+        // In Swift, we don't expose dispose() method, it's handled in deinit
+        // This is just a marker for the code generator
+        const cTypeName = this.toCTypeName(this.toSwiftTypeName(cType.name));
+        return {
+            type: 'method',
+            name: '__dispose__',  // Special marker
+            swiftReturnType: 'Void',
+            parameters: [],
+            isOverride: false,
+            implementation: `${destructor.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self))`,
+            cMethodName: destructor.name
+        };
+    }
+
+    private createConstructor(constr: CMethod, cType: CClassOrStruct): SwiftMember {
+        const swiftClassName = this.toSwiftTypeName(cType.name);
+        const params = constr.parameters.map(p => ({
+            name: p.name,
+            swiftType: this.toSwiftParameterType(p),
+            cType: p.cType
+        }));
+
+        const args = constr.parameters.map(p => this.convertSwiftToC(p.name, p)).join(', ');
+        const implementation = `let ptr = ${constr.name}(${args})
+        return ${swiftClassName}(fromPointer: ptr!)`;
+
+        return {
+            type: 'constructor',
+            name: this.getConstructorName(constr, cType),
+            swiftReturnType: swiftClassName,
+            parameters: params,
+            isOverride: false,
+            implementation,
+            cMethodName: constr.name
+        };
+    }
+
+    private createGetter(method: CMethod, cType: CClassOrStruct, classType: 'concrete' | 'abstract' | 'protocol', renamedMethod?: string): SwiftMember {
+        const propertyName = renamedMethod || this.extractPropertyName(method.name, cType.name);
+        let swiftReturnType = this.toSwiftReturnType(method.returnType, method.returnTypeNullable);
+        
+        // Special handling for protocol conformance with covariant return types
+        // If this is a concrete class implementing a protocol, and the property is 'data',
+        // we need to return the protocol type instead of the concrete type
+        if (classType !== 'protocol' && propertyName === 'data' && 
+            this.inheritance[cType.name]?.mixins?.includes('spine_constraint')) {
+            // Check if the return type is any kind of constraint data
+            // (could be spine_ik_constraint_data, spine_slider_data, etc.)
+            const returnClass = this.classMap.get(method.returnType);
+            if (returnClass && this.inheritance[method.returnType]?.mixins?.includes('spine_constraint_data')) {
+                // Return the protocol type for proper conformance
+                swiftReturnType = swiftReturnType.endsWith('?') ? 'ConstraintData?' : 'ConstraintData';
+            }
+        }
+
+        // Protocol methods have no implementation
+        let implementation = '';
+        if (classType !== 'protocol') {
+            const cTypeName = this.toCTypeName(this.toSwiftTypeName(cType.name));
+            implementation = `let result = ${method.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self))
+        ${this.generateReturnConversion(method.returnType, 'result', method.returnTypeNullable)}`;
+        }
+
+        // Check if this is an override
+        const isOverride = this.isMethodOverride(method, cType);
+
+        return {
+            type: 'getter',
+            name: propertyName,
+            swiftReturnType,
+            parameters: [],
+            isOverride,
+            implementation,
+            cMethodName: method.name
+        };
+    }
+
+    private createSetter(method: CMethod, cType: CClassOrStruct, classType: 'concrete' | 'abstract' | 'protocol', renamedMethod?: string): SwiftMember {
+        let propertyName = renamedMethod || this.extractPropertyName(method.name, cType.name);
+        const param = method.parameters[1]; // First param is self
+        const swiftParam = {
+            name: 'value',
+            swiftType: this.toSwiftParameterType(param),
+            cType: param.cType
+        };
+
+        // Handle numeric suffixes in setter names
+        if (!renamedMethod) {
+            const match = propertyName.match(/^(\w+)_(\d+)$/);
+            if (match) {
+                propertyName = `${match[1]}${match[2]}`;
+            } else if (/^\d+$/.test(propertyName)) {
+                propertyName = `set${propertyName}`;
+            }
+        }
+
+        // Protocol methods have no implementation
+        let implementation = '';
+        if (classType !== 'protocol') {
+            const cTypeName = this.toCTypeName(this.toSwiftTypeName(cType.name));
+            implementation = `${method.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self), ${this.convertSwiftToC('newValue', param)})`;
+        }
+
+        const isOverride = this.isMethodOverride(method, cType);
+
+        return {
+            type: 'setter',
+            name: propertyName,
+            swiftReturnType: 'Void',
+            parameters: [swiftParam],
+            isOverride,
+            implementation,
+            cMethodName: method.name
+        };
+    }
+
+    private createMethod(method: CMethod, cType: CClassOrStruct, classType: 'concrete' | 'abstract' | 'protocol', renamedMethod?: string): SwiftMember {
+        let methodName = renamedMethod || this.toSwiftMethodName(method.name, cType.name);
+        const swiftReturnType = this.toSwiftReturnType(method.returnType, method.returnTypeNullable);
+
+        // Check if this is a static method
+        const isStatic = method.parameters.length === 0 ||
+            (method.parameters[0].name !== 'self' &&
+                !method.parameters[0].cType.startsWith(cType.name));
+
+        // Rename static rtti method to avoid conflict with getter
+        if (isStatic && methodName === 'rtti') {
+            methodName = 'rttiStatic';
+        }
+
+        // Handle Objective-C conflicts - rename problematic methods
+        if (methodName === 'copy') {
+            methodName = 'copyAttachment';  // Or another appropriate name based on context
+        }
+
+        // Parameters (skip 'self' parameter for instance methods)
+        const paramStartIndex = isStatic ? 0 : 1;
+        const params = method.parameters.slice(paramStartIndex).map(p => ({
+            name: p.name,
+            swiftType: this.toSwiftParameterType(p),
+            cType: p.cType
+        }));
+
+        // Protocol methods have no implementation (except rttiStatic)
+        let implementation = '';
+        if (classType !== 'protocol' || methodName === 'rttiStatic') {
+            const cTypeName = this.toCTypeName(this.toSwiftTypeName(cType.name));
+            const args = method.parameters.map((p, i) => {
+                if (!isStatic && i === 0) return `_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self)`; // self parameter
+                return this.convertSwiftToC(p.name, p);
+            }).join(', ');
+
+            if (method.returnType === 'void') {
+                implementation = `${method.name}(${args})`;
+            } else {
+                implementation = `let result = ${method.name}(${args})
+        ${this.generateReturnConversion(method.returnType, 'result', method.returnTypeNullable)}`;
+            }
+        }
+
+        const isOverride = this.isMethodOverride(method, cType);
+
+        return {
+            type: isStatic ? 'static_method' : 'method',
+            name: methodName,
+            swiftReturnType,
+            parameters: params,
+            isOverride,
+            implementation,
+            cMethodName: method.name
+        };
+    }
+
+    // Code generation methods
+
+    private generateHeader(): string {
+        return `${LICENSE_HEADER}
+
+// AUTO GENERATED FILE, DO NOT EDIT.`;
+    }
+
+    private generateImports(imports: string[], hasRtti: boolean): string[] {
         const lines: string[] = [];
 
-        // Add license header
-        lines.push(...options.licenseHeader.split('\n').map(line => `// ${line}`));
         lines.push('');
         lines.push('import Foundation');
         lines.push('import SpineC');
-        lines.push('');
 
-        // Generate each enum
-        for (const cEnum of this.cEnums) {
-            lines.push(`public typealias ${this.getSwiftClassName(cEnum.name)} = ${cEnum.name}`);
-        }
+        // In Swift, all types are in the same module, no need for individual imports
+        // RTTI is a type, not a module
 
-        await fs.writeFile(filePath, lines.join('\n'), 'utf-8');
+        return lines;
     }
 
-    private async generateArraysFile(options: SwiftGenerationOptions): Promise<void> {
-        const filePath = path.join(options.outputDir, 'Arrays.swift');
+    // Class declaration generation
+    private generateClassDeclaration(swiftClass: SwiftClass): string {
+        let declaration = '';
+
+        if (swiftClass.type === 'protocol') {
+            declaration = `public protocol ${swiftClass.name}`;
+        } else {
+            // Remove @objc annotations to avoid conflicts
+            if (swiftClass.type === 'abstract') {
+                declaration = `open class ${swiftClass.name}`;
+            } else {
+                declaration = `public class ${swiftClass.name}`;
+            }
+        }
+
+        // Inheritance
+        const inheritanceParts: string[] = [];
+        
+        if (swiftClass.inheritance.extends) {
+            inheritanceParts.push(swiftClass.inheritance.extends);
+        }
+        
+        // Add protocols
+        inheritanceParts.push(...swiftClass.inheritance.implements);
+
+        if (inheritanceParts.length > 0) {
+            declaration += `: ${inheritanceParts.join(', ')}`;
+        }
+
+        return `
+/// ${swiftClass.name} wrapper
+${declaration} {`;
+    }
+
+    private generateProtocolBody(swiftClass: SwiftClass): string[] {
         const lines: string[] = [];
 
-        // Add license header
-        lines.push(...options.licenseHeader.split('\n').map(line => `// ${line}`));
-        lines.push('');
-        lines.push('import Foundation');
-        lines.push('import SpineC');
-        lines.push('');
+        // Protocols need to declare _ptr so conforming types can be used polymorphically
+        lines.push('    var _ptr: UnsafeMutableRawPointer { get }');
+        
+        // Generate abstract method signatures for protocols
+        for (const member of swiftClass.members) {
+            lines.push(this.generateProtocolMember(member));
+        }
 
-        // Generate array wrapper classes
-        for (const arrayType of this.cArrayTypes) {
-            lines.push(...this.generateArrayClass(arrayType));
+        return lines;
+    }
+
+    // Class body generation
+    private generateClassBody(swiftClass: SwiftClass): string[] {
+        const lines: string[] = [];
+
+        // Only root classes declare _ptr field (as UnsafeMutableRawPointer)
+        // Public readonly so users can cast as needed
+        if (!swiftClass.inheritance.extends) {
+            lines.push('    public let _ptr: UnsafeMutableRawPointer');
             lines.push('');
         }
 
-        await fs.writeFile(filePath, lines.join('\n'), 'utf-8');
-    }
-
-    private async generateExportsFile(options: SwiftGenerationOptions): Promise<void> {
-        const filePath = path.join(options.outputDir, 'Spine.Generated.swift');
-        const lines: string[] = [];
-
-        // Add license header
-        lines.push(...options.licenseHeader.split('\n').map(line => `// ${line}`));
-        lines.push('');
-        lines.push('// This file exports all generated types');
+        // Constructor
+        lines.push(this.generatePointerConstructor(swiftClass));
         lines.push('');
 
-        await fs.writeFile(filePath, lines.join('\n'), 'utf-8');
-    }
+        // No computed properties - subclasses just use inherited _ptr
 
-    private mapCTypeToSwift(cType: string | undefined): string {
-        if (!cType) return 'Void';
-
-        const typeMap: Record<string, string> = {
-            'void': 'Void',
-            'spine_bool': 'Bool',
-            'bool': 'Bool',
-            'int': 'Int32',
-            'int32_t': 'Int32',
-            'uint32_t': 'UInt32',
-            'int16_t': 'Int16',
-            'uint16_t': 'UInt16',
-            'int64_t': 'Int64',
-            'uint64_t': 'UInt64',
-            'float': 'Float',
-            'double': 'Double',
-            'const char *': 'String?',
-            'char *': 'String?',
-            'const utf8 *': 'String?',
-            'utf8 *': 'String?',
-            'float *': 'UnsafeMutablePointer<Float>?',
-            'int *': 'UnsafeMutablePointer<Int32>?',
-            'int32_t *': 'UnsafeMutablePointer<Int32>?',
-        };
-
-        // Check if it's already in the map
-        if (typeMap[cType]) {
-            return typeMap[cType];
+        // Members
+        let hasDispose = false;
+        for (const member of swiftClass.members) {
+            if (member.name === '__dispose__') {
+                hasDispose = true;
+                continue; // Skip the dispose marker
+            }
+            lines.push(this.generateMember(member, swiftClass));
+            lines.push('');
         }
 
-        // Handle spine types
-        if (cType.startsWith('spine_')) {
-            // It's a spine type - map to Swift class
-            const swiftType = this.getSwiftClassName(cType);
-            return swiftType;
-        }
-
-        // Handle pointer types
-        if (cType.endsWith('*')) {
-            // It's a pointer to something
-            const baseType = cType.slice(0, -1).trim();
-            if (baseType.startsWith('spine_')) {
-                // Pointer to spine type
-                const swiftType = this.getSwiftClassName(baseType);
-                return swiftType + '?';
-            } else {
-                // Generic pointer
-                return 'OpaquePointer?';
+        // Add deinit if there's a dispose method
+        if (hasDispose) {
+            const disposeMethod = swiftClass.members.find(m => m.name === '__dispose__');
+            if (disposeMethod) {
+                lines.push('    deinit {');
+                lines.push(`        ${disposeMethod.implementation}`);
+                lines.push('    }');
             }
         }
-
-        return cType;
-    }
-
-    private mapReturnType(cType: string | undefined, isNullable: boolean): string {
-        if (!cType) return 'Void';
-
-        const baseType = this.mapCTypeToSwift(cType);
-
-        // Handle spine type pointers
-        if (cType.startsWith('spine_') && cType.endsWith('*')) {
-            const typeName = cType.slice(0, -1).trim(); // Remove pointer
-            const swiftType = this.getSwiftClassName(typeName);
-            return isNullable ? `${swiftType}?` : swiftType;
-        }
-
-        return baseType;
-    }
-
-    private mapParameterType(cType: string | undefined, isNullable: boolean): string {
-        return this.mapReturnType(cType, isNullable);
-    }
-
-    private getSwiftClassName(cTypeName: string): string {
-        // Remove spine_ prefix and convert to PascalCase
-        const name = cTypeName.replace(/^spine_/, '');
-        return name.split('_')
-            .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-            .join('');
-    }
-
-    private getSwiftMethodName(cMethodName: string, cTypeName: string): string {
-        // Remove the type prefix (e.g., spine_skeleton_update -> update)
-        let name = cMethodName;
-        if (name.startsWith(cTypeName + '_')) {
-            name = name.substring(cTypeName.length + 1);
-        }
-
-        // Handle numbered methods (e.g., setSkin_1 -> setSkin)
-        name = name.replace(/_\d+$/, '');
-
-        // Convert snake_case to camelCase
-        const parts = name.split('_');
-        if (parts.length > 1) {
-            name = parts[0] + parts.slice(1).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join('');
-        }
-
-        return name;
-    }
-
-    private lowercaseFirst(str: string): string {
-        return str.charAt(0).toLowerCase() + str.slice(1);
-    }
-
-    private sanitizeParameterName(name: string): string {
-        // Swift reserved words that need escaping
-        const reserved = ['in', 'var', 'let', 'func', 'class', 'struct', 'enum', 'protocol', 'extension'];
-        return reserved.includes(name) ? `\`${name}\`` : name;
-    }
-
-    private isNullableType(cType: string): boolean {
-        // Pointers can be null
-        return cType.includes('*');
-    }
-
-    private generateConstructor(ctor: SwiftConstructor, swiftClass: SwiftClass): string[] {
-        const lines: string[] = [];
-
-        // Generate parameter list
-        const params = ctor.parameters.map(p => `${p.name}: ${p.type}`).join(', ');
-
-        lines.push(`    public convenience init(${params}) {`);
-
-        // Generate C function call
-        const cParams = ctor.parameters.map(p => {
-            if (p.type.endsWith('?') && p.type !== 'String?') {
-                // It's an optional spine type
-                return `${p.name}?.wrappee ?? nil`;
-            } else if (p.type === 'String?') {
-                return p.name;
-            } else if (this.isSpineType(p.type)) {
-                return `${p.name}.wrappee`;
-            } else {
-                return p.name;
-            }
-        }).join(', ');
-
-        lines.push(`        let ptr = ${swiftClass.cType.constructors[0].name}(${cParams})`);
-        lines.push('        self.init(ptr)');
-        lines.push('    }');
 
         return lines;
     }
 
-    private generateProperty(prop: SwiftProperty, swiftClass: SwiftClass): string[] {
-        const lines: string[] = [];
-
-        if (prop.isReadOnly) {
-            // Read-only property
-            lines.push(`    public var ${prop.name}: ${prop.type} {`);
-            if (prop.getter) {
-                lines.push(...this.generatePropertyGetter(prop.getter, swiftClass));
-            }
-            lines.push('    }');
+    private generatePointerConstructor(swiftClass: SwiftClass): string {
+        const cTypeName = this.toCTypeName(swiftClass.name);
+        
+        if (swiftClass.inheritance.extends) {
+            const parentTypeName = this.toCTypeName(swiftClass.inheritance.extends);
+            // Subclass - NO ptr field, pass typed pointer cast to parent type
+            return `    public init(fromPointer ptr: ${cTypeName}) {
+        super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: ${parentTypeName}_wrapper.self))
+    }`;
         } else {
-            // Read-write property
-            lines.push(`    public var ${prop.name}: ${prop.type} {`);
-            lines.push('        get {');
-            if (prop.getter) {
-                lines.push(...this.generatePropertyGetter(prop.getter, swiftClass).map(l => '    ' + l));
-            }
-            lines.push('        }');
-            lines.push('        set {');
-            if (prop.setter) {
-                lines.push(...this.generatePropertySetter(prop.setter, swiftClass).map(l => '    ' + l));
-            }
-            lines.push('        }');
-            lines.push('    }');
+            // Root class - HAS _ptr field, store as UnsafeMutableRawPointer
+            return `    public init(fromPointer ptr: ${cTypeName}) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
+    }`;
         }
-
-        return lines;
     }
 
-    private generatePropertyGetter(method: SwiftMethod, swiftClass: SwiftClass): string[] {
-        const lines: string[] = [];
-        const returnType = method.returnType;
+    private generateProtocolMember(member: SwiftMember): string {
+        const params = member.parameters.map(p => `_ ${p.name}: ${p.swiftType}`).join(', ');
 
-        if (returnType === 'Void') {
-            lines.push(`        ${method.cMethod.name}(wrappee)`);
-        } else if (returnType === 'String?') {
-            lines.push(`        let result = ${method.cMethod.name}(wrappee)`);
-            lines.push('        return result != nil ? String(cString: result!) : nil');
-        } else if (returnType === 'Bool') {
-            lines.push(`        return ${method.cMethod.name}(wrappee) != 0`);
-        } else if (this.isSpineType(returnType)) {
-            const isOptional = returnType.endsWith('?');
-            const baseType = isOptional ? returnType.slice(0, -1) : returnType;
-
-            lines.push(`        let result = ${method.cMethod.name}(wrappee)`);
-            if (isOptional) {
-                lines.push(`        return result != nil ? ${baseType}(result!) : nil`);
-            } else {
-                lines.push(`        return ${baseType}(result)`);
-            }
-        } else {
-            lines.push(`        return ${method.cMethod.name}(wrappee)`);
-        }
-
-        return lines;
-    }
-
-    private generatePropertySetter(method: SwiftMethod, swiftClass: SwiftClass): string[] {
-        const lines: string[] = [];
-        const param = method.parameters[0];
-
-        let paramValue = 'newValue';
-        if (param.type === 'String?') {
-            paramValue = 'newValue?.cString(using: .utf8)';
-        } else if (param.type === 'Bool') {
-            paramValue = 'newValue ? 1 : 0';
-        } else if (this.isSpineType(param.type)) {
-            if (param.type.endsWith('?')) {
-                paramValue = 'newValue?.wrappee';
-            } else {
-                paramValue = 'newValue.wrappee';
-            }
-        }
-
-        lines.push(`        ${method.cMethod.name}(wrappee, ${paramValue})`);
-
-        return lines;
-    }
-
-    private generateMethod(method: SwiftMethod, swiftClass: SwiftClass): string[] {
-        const lines: string[] = [];
-
-        // Generate parameter list
-        const params = method.parameters.map(p => `${p.name}: ${p.type}`).join(', ');
-        const funcDecl = method.isStatic ? 'public static func' : 'public func';
-
-        lines.push(`    ${funcDecl} ${method.name}(${params})${method.returnType !== 'Void' ? ' -> ' + method.returnType : ''} {`);
-
-        // Generate method body
-        const cParams = [
-            !method.isStatic ? 'wrappee' : '',
-            ...method.parameters.map(p => {
-                if (p.type === 'String?') {
-                    return `${p.name}?.cString(using: .utf8)`;
-                } else if (p.type === 'Bool') {
-                    return `${p.name} ? 1 : 0`;
-                } else if (this.isSpineType(p.type)) {
-                    if (p.type.endsWith('?')) {
-                        return `${p.name}?.wrappee`;
-                    } else {
-                        return `${p.name}.wrappee`;
-                    }
+        switch (member.type) {
+            case 'getter':
+                // Check if this is a combined getter/setter property
+                if (member.hasSetter) {
+                    return `    var ${member.name}: ${member.swiftReturnType} { get set }`;
                 } else {
-                    return p.name;
+                    return `    var ${member.name}: ${member.swiftReturnType} { get }`;
                 }
-            })
-        ].filter(p => p !== '').join(', ');
+            case 'setter':
+                return `    var ${member.name}: ${member.parameters[0].swiftType} { get set }`;
+            case 'method':
+                if (member.swiftReturnType === 'Void') {
+                    return `    func ${member.name}(${params})`;
+                } else {
+                    return `    func ${member.name}(${params}) -> ${member.swiftReturnType}`;
+                }
+            case 'static_method':
+                // Protocols can't have method implementations in Swift
+                if (member.swiftReturnType === 'Void') {
+                    return `    static func ${member.name}(${params})`;
+                } else {
+                    return `    static func ${member.name}(${params}) -> ${member.swiftReturnType}`;
+                }
+            default:
+                return '';
+        }
+    }
 
-        if (method.returnType === 'Void') {
-            lines.push(`        ${method.cMethod.name}(${cParams})`);
-        } else if (method.returnType === 'String?') {
-            lines.push(`        let result = ${method.cMethod.name}(${cParams})`);
-            lines.push('        return result != nil ? String(cString: result!) : nil');
-        } else if (method.returnType === 'Bool') {
-            lines.push(`        return ${method.cMethod.name}(${cParams}) != 0`);
-        } else if (this.isSpineType(method.returnType)) {
-            const isOptional = method.returnType.endsWith('?');
-            const baseType = isOptional ? method.returnType.slice(0, -1) : method.returnType;
+    // Member generation
+    private generateMember(member: SwiftMember, swiftClass: SwiftClass): string {
+        const override = member.isOverride ? 'override ' : '';
 
-            lines.push(`        let result = ${method.cMethod.name}(${cParams})`);
-            if (isOptional) {
-                lines.push(`        return result != nil ? ${baseType}(result!) : nil`);
-            } else {
-                lines.push(`        return ${baseType}(result)`);
+        switch (member.type) {
+            case 'constructor':
+                return this.generateConstructorMember(member);
+            case 'getter':
+                // Check if this is a combined getter/setter property
+                if (member.hasSetter && member.setterImplementation) {
+                    return `    ${override}public var ${member.name}: ${member.swiftReturnType} {
+        get {
+            ${member.implementation}
+        }
+        set {
+            ${member.setterImplementation}
+        }
+    }`;
+                } else {
+                    return `    ${override}public var ${member.name}: ${member.swiftReturnType} {
+        ${member.implementation}
+    }`;
+                }
+            case 'setter': {
+                const param = member.parameters[0];
+                return `    ${override}public var ${member.name}: ${param.swiftType} {
+        get { fatalError("Setter-only property") }
+        set(newValue) {
+            ${member.implementation}
+        }
+    }`;
             }
+            case 'method':
+            case 'static_method': {
+                const params = member.parameters.map(p => `_ ${p.name}: ${p.swiftType}`).join(', ');
+                const static_ = member.type === 'static_method' ? 'static ' : '';
+                const returnClause = member.swiftReturnType !== 'Void' ? ` -> ${member.swiftReturnType}` : '';
+                return `    ${override}public ${static_}func ${member.name}(${params})${returnClause} {
+        ${member.implementation}
+    }`;
+            }
+            default:
+                return '';
+        }
+    }
+
+    private generateConstructorMember(member: SwiftMember): string {
+        const params = member.parameters.map(p => `_ ${p.name}: ${p.swiftType}`).join(', ');
+        const factoryName = member.name === member.swiftReturnType ? 'convenience init' : `static func ${member.name}`;
+
+        if (member.name === member.swiftReturnType) {
+            // Convenience initializer
+            return `    public convenience init(${params}) {
+        ${member.implementation.replace(`return ${member.swiftReturnType}(fromPointer: ptr!)`, 'self.init(fromPointer: ptr!)')}
+    }`;
         } else {
-            lines.push(`        return ${method.cMethod.name}(${cParams})`);
+            // Static factory method
+            return `    public static func ${member.name}(${params}) -> ${member.swiftReturnType} {
+        ${member.implementation}
+    }`;
+        }
+    }
+
+    private generateEnumCode(swiftEnum: SwiftEnum): string {
+        const lines: string[] = [];
+
+        lines.push(this.generateHeader());
+        lines.push('');
+        lines.push('import Foundation');
+        lines.push('');
+        lines.push(`/// ${swiftEnum.name} enum`);
+        lines.push(`public enum ${swiftEnum.name}: Int32, CaseIterable {`);
+
+        // Write enum values
+        for (const value of swiftEnum.values) {
+            lines.push(`    case ${value.name} = ${value.value}`);
         }
 
+        lines.push('');
+        lines.push(`    public static func fromValue(_ value: Int32) -> ${swiftEnum.name}? {`);
+        lines.push(`        return ${swiftEnum.name}(rawValue: value)`);
         lines.push('    }');
+        lines.push('}');
 
-        return lines;
+        return lines.join('\n');
     }
 
-    private isSpineType(type: string): boolean {
-        const baseType = type.endsWith('?') ? type.slice(0, -1) : type;
-        // Check if it's one of our generated Swift classes
-        return Array.from(this.swiftClasses.values()).some(c => c.name === baseType);
-    }
-
-    private generateArrayClass(arrayType: CClassOrStruct): string[] {
+    // Generate arrays.swift file
+    private async writeArraysFile(cArrayTypes: CClassOrStruct[]): Promise<void> {
         const lines: string[] = [];
-        const swiftClassName = this.getSwiftClassName(arrayType.name);
+
+        lines.push(this.generateHeader());
+        lines.push('');
+        lines.push('import Foundation');
+        lines.push('import SpineC');
+
+        // Collect all imports needed for all array types
+        const imports = new Set<string>();
+        for (const arrayType of cArrayTypes) {
+            const elementType = this.extractArrayElementType(arrayType.name);
+            if (!this.isPrimitiveArrayType(elementType)) {
+                // Import the element type
+                const swiftElementType = this.toSwiftTypeName(`spine_${toSnakeCase(elementType)}`);
+                // We don't need separate imports in Swift, they're all in the same module
+            }
+        }
+
+        // Generate all array classes
+        for (const arrayType of cArrayTypes) {
+            lines.push('');
+            lines.push(...this.generateArrayClassLines(arrayType));
+        }
+
+        const filePath = path.join(this.outputDir, 'arrays.swift');
+        fs.writeFileSync(filePath, lines.join('\n'));
+    }
+
+    // Array generation
+    private generateArrayClassLines(arrayType: CClassOrStruct): string[] {
+        const lines: string[] = [];
+        const swiftClassName = this.toSwiftTypeName(arrayType.name);
         const elementType = this.extractArrayElementType(arrayType.name);
 
-        lines.push(`/// ${swiftClassName} wrapper class`);
-        lines.push(`@objc(Spine${swiftClassName})`);
-        lines.push(`@objcMembers`);
-        lines.push(`public final class ${swiftClassName}: NSObject {`);
-        lines.push(`    internal let ptr: OpaquePointer`);
-        lines.push(`    private let ownsMemory: Bool`);
+        const cTypeName = this.toCTypeName(swiftClassName);
+        
+        lines.push(`/// ${swiftClassName} wrapper`);
+        lines.push(`public class ${swiftClassName} {`);
+        lines.push('    public let _ptr: UnsafeMutableRawPointer');
+        lines.push('    private let _ownsMemory: Bool');
         lines.push('');
 
         // Constructor
-        lines.push(`    internal init(fromPointer ptr: OpaquePointer, ownsMemory: Bool = false) {`);
-        lines.push(`        self.ptr = ptr`);
-        lines.push(`        self.ownsMemory = ownsMemory`);
-        lines.push(`        super.init()`);
-        lines.push(`    }`);
+        lines.push(`    public init(fromPointer ptr: ${cTypeName}, ownsMemory: Bool = false) {`);
+        lines.push('        self._ptr = UnsafeMutableRawPointer(ptr)');
+        lines.push('        self._ownsMemory = ownsMemory');
+        lines.push('    }');
         lines.push('');
 
-        // Factory constructors
+        // No computed property - cast _ptr inline when needed
+        lines.push('');
+
+        // Find create methods for constructors
         const createMethod = arrayType.constructors?.find(m => m.name === `${arrayType.name}_create`);
         const createWithCapacityMethod = arrayType.constructors?.find(m => m.name === `${arrayType.name}_create_with_capacity`);
 
+        // Add default constructor
         if (createMethod) {
-            lines.push(`    /// Create a new empty array`);
-            lines.push(`    public convenience init() {`);
-            lines.push(`        let ptr = ${createMethod.name}()`);
-            lines.push(`        self.init(fromPointer: ptr, ownsMemory: true)`);
-            lines.push(`    }`);
+            lines.push('    /// Create a new empty array');
+            lines.push('    public convenience init() {');
+            lines.push(`        let ptr = ${createMethod.name}()!`);
+            lines.push('        self.init(fromPointer: ptr, ownsMemory: true)');
+            lines.push('    }');
             lines.push('');
         }
 
+        // Add constructor with initial capacity
         if (createWithCapacityMethod) {
-            lines.push(`    /// Create a new array with the specified initial capacity`);
-            lines.push(`    public convenience init(capacity: Int32) {`);
-            lines.push(`        let ptr = ${createWithCapacityMethod.name}(capacity)`);
-            lines.push(`        self.init(fromPointer: ptr, ownsMemory: true)`);
-            lines.push(`    }`);
+            lines.push('    /// Create a new array with the specified initial capacity');
+            lines.push('    public convenience init(capacity: Int) {');
+            lines.push(`        let ptr = ${createWithCapacityMethod.name}(Int32(capacity))!`);
+            lines.push('        self.init(fromPointer: ptr, ownsMemory: true)');
+            lines.push('    }');
             lines.push('');
         }
 
-        // Native pointer accessor
-        lines.push(`    public var nativePtr: OpaquePointer { ptr }`);
-        lines.push('');
-
-        // Length property
+        // Find size and buffer methods
         const sizeMethod = arrayType.methods.find(m => m.name.endsWith('_size') && !m.name.endsWith('_set_size'));
-        if (sizeMethod) {
-            lines.push(`    public var count: Int32 {`);
-            lines.push(`        return ${sizeMethod.name}(ptr)`);
-            lines.push(`    }`);
-            lines.push('');
-        }
-
-        // Subscript operators
         const bufferMethod = arrayType.methods.find(m => m.name.endsWith('_buffer'));
         const setMethod = arrayType.methods.find(m => m.name.endsWith('_set') && m.parameters.length === 3);
+        const setSizeMethod = arrayType.methods.find(m => m.name.endsWith('_set_size'));
+        const addMethod = arrayType.methods.find(m => m.name.endsWith('_add') && !m.name.endsWith('_add_all'));
+        const clearMethod = arrayType.methods.find(m => m.name.endsWith('_clear') && !m.name.endsWith('_clear_and_add_all'));
+        const removeAtMethod = arrayType.methods.find(m => m.name.endsWith('_remove_at'));
+        const ensureCapacityMethod = arrayType.methods.find(m => m.name.endsWith('_ensure_capacity'));
+
+        if (sizeMethod) {
+            lines.push('    public var count: Int32 {');
+            lines.push(`        return ${sizeMethod.name}(_ptr)`);
+            lines.push('    }');
+            lines.push('');
+        }
 
         if (bufferMethod) {
-            const swiftElementType = this.mapArrayElementTypeToSwift(elementType);
+            const swiftElementType = this.toSwiftArrayElementType(elementType);
             lines.push(`    public subscript(index: Int32) -> ${swiftElementType} {`);
-            lines.push(`        get {`);
-            lines.push(`            precondition(index >= 0 && index < count, "Index out of bounds")`);
-            lines.push(`            let buffer = ${bufferMethod.name}(ptr)`);
+            lines.push('        get {');
+            lines.push('            precondition(index >= 0 && index < count, "Index out of bounds")');
+            lines.push(`            let buffer = ${bufferMethod.name}(_ptr)!`);
 
-            if (this.isPrimitiveArrayType(elementType)) {
-                // Handle primitive types
-                if (elementType === 'int') {
-                    lines.push(`            return buffer!.assumingMemoryBound(to: Int32.self)[Int(index)]`);
-                } else if (elementType === 'float') {
-                    lines.push(`            return buffer!.assumingMemoryBound(to: Float.self)[Int(index)]`);
-                } else if (elementType === 'bool') {
-                    lines.push(`            return buffer!.assumingMemoryBound(to: Int32.self)[Int(index)] != 0`);
-                } else if (elementType === 'unsigned_short') {
-                    lines.push(`            return buffer!.assumingMemoryBound(to: UInt16.self)[Int(index)]`);
-                } else if (elementType === 'property_id') {
-                    lines.push(`            return buffer!.assumingMemoryBound(to: Int64.self)[Int(index)]`);
-                }
+            // Handle different element types
+            if (elementType === 'int') {
+                lines.push('            return buffer.assumingMemoryBound(to: Int32.self)[Int(index)]');
+            } else if (elementType === 'float') {
+                lines.push('            return buffer.assumingMemoryBound(to: Float.self)[Int(index)]');
+            } else if (elementType === 'bool') {
+                lines.push('            return buffer.assumingMemoryBound(to: Int32.self)[Int(index)] != 0');
+            } else if (elementType === 'unsigned_short') {
+                lines.push('            return buffer.assumingMemoryBound(to: UInt16.self)[Int(index)]');
+            } else if (elementType === 'property_id') {
+                lines.push('            return buffer.assumingMemoryBound(to: Int64.self)[Int(index)]');
             } else {
-                // Handle object types - need to convert pointer to Swift class
-                const swiftType = this.getSwiftClassName(`spine_${elementType}`);
-                lines.push(`            let elementPtr = buffer!.assumingMemoryBound(to: OpaquePointer?.self)[Int(index)]`);
-                lines.push(`            return elementPtr == nil ? nil : ${swiftType}(fromPointer: elementPtr!)`);
+                // For object types
+                const swiftType = this.toSwiftTypeName(`spine_${toSnakeCase(elementType)}`);
+                const cElementType = `spine_${toSnakeCase(elementType)}`;
+                const cClass = this.classMap.get(cElementType);
+
+                const elementCType = this.getArrayElementCType(arrayType.name);
+                lines.push(`            let elementPtr = buffer.assumingMemoryBound(to: ${elementCType}?.self)[Int(index)]`);
+                
+                if (cClass && this.isAbstract(cClass)) {
+                    // Use RTTI to determine concrete type
+                    lines.push('            guard let ptr = elementPtr else { return nil }');
+                    const rttiCode = this.generateRttiBasedInstantiation(swiftType, 'ptr', cClass);
+                    lines.push(`            ${rttiCode}`);
+                } else {
+                    lines.push(`            return elementPtr.map { ${swiftType}(fromPointer: $0) }`);
+                }
             }
 
-            lines.push(`        }`);
+            lines.push('        }');
 
             // Setter if available
             if (setMethod) {
-                lines.push(`        set {`);
-                lines.push(`            precondition(index >= 0 && index < count, "Index out of bounds")`);
+                lines.push('        set {');
+                lines.push('            precondition(index >= 0 && index < count, "Index out of bounds")');
 
-                if (this.isPrimitiveArrayType(elementType)) {
-                    lines.push(`            ${setMethod.name}(ptr, index, newValue)`);
-                } else {
-                    lines.push(`            ${setMethod.name}(ptr, index, newValue?.nativePtr)`);
-                }
-
-                lines.push(`        }`);
+                const param = setMethod.parameters[2]; // The value parameter
+                const nullableParam = { ...param, isNullable: !this.isPrimitiveArrayType(elementType) };
+                const convertedValue = this.convertSwiftToC('newValue', nullableParam);
+                lines.push(`            ${setMethod.name}(_ptr, index, ${convertedValue})`);
+                lines.push('        }');
             }
 
-            lines.push(`    }`);
+            lines.push('    }');
             lines.push('');
         }
 
-        // Add method
-        const addMethod = arrayType.methods.find(m => m.name.endsWith('_add') && !m.name.endsWith('_add_all'));
+        // Add method if available
         if (addMethod) {
-            const swiftElementType = this.mapArrayElementTypeToSwift(elementType);
-            lines.push(`    /// Adds a value to the end of this array`);
+            const swiftElementType = this.toSwiftArrayElementType(elementType);
+            lines.push('    /// Adds a value to the end of this array');
             lines.push(`    public func add(_ value: ${swiftElementType}) {`);
 
-            if (this.isPrimitiveArrayType(elementType)) {
-                lines.push(`        ${addMethod.name}(ptr, value)`);
-            } else {
-                lines.push(`        ${addMethod.name}(ptr, value?.nativePtr)`);
-            }
-
-            lines.push(`    }`);
+            const param = addMethod.parameters[1];
+            const nullableParam = { ...param, isNullable: !this.isPrimitiveArrayType(elementType) };
+            const convertedValue = this.convertSwiftToC('value', nullableParam);
+            lines.push(`        ${addMethod.name}(_ptr, ${convertedValue})`);
+            lines.push('    }');
             lines.push('');
         }
 
-        // Clear method
-        const clearMethod = arrayType.methods.find(m => m.name.endsWith('_clear') && !m.name.endsWith('_clear_and_add_all'));
+        // Clear method if available
         if (clearMethod) {
-            lines.push(`    /// Removes all elements from this array`);
-            lines.push(`    public func removeAll() {`);
-            lines.push(`        ${clearMethod.name}(ptr)`);
-            lines.push(`    }`);
+            lines.push('    /// Removes all elements from this array');
+            lines.push('    public func clear() {');
+            lines.push(`        ${clearMethod.name}(_ptr)`);
+            lines.push('    }');
             lines.push('');
         }
 
-        // Remove at method
-        const removeAtMethod = arrayType.methods.find(m => m.name.endsWith('_remove_at'));
+        // RemoveAt method if available
         if (removeAtMethod) {
-            lines.push(`    /// Removes the element at the specified index`);
-            lines.push(`    public func remove(at index: Int32) {`);
-            lines.push(`        precondition(index >= 0 && index < count, "Index out of bounds")`);
-            lines.push(`        ${removeAtMethod.name}(ptr, index)`);
-            lines.push(`    }`);
+            const swiftElementType = this.toSwiftArrayElementType(elementType);
+            lines.push('    /// Removes the element at the given index');
+            lines.push(`    @discardableResult`);
+            lines.push(`    public func removeAt(_ index: Int32) -> ${swiftElementType} {`);
+            lines.push('        precondition(index >= 0 && index < count, "Index out of bounds")');
+            lines.push('        let value = self[index]');
+            lines.push(`        ${removeAtMethod.name}(_ptr, index)`);
+            lines.push('        return value');
+            lines.push('    }');
             lines.push('');
         }
 
         // Set size method
-        const setSizeMethod = arrayType.methods.find(m => m.name.endsWith('_set_size'));
         if (setSizeMethod) {
-            lines.push(`    /// Sets the size of this array`);
-            lines.push(`    public func resize(to newSize: Int32) {`);
+            lines.push('    /// Sets the size of this array');
+            lines.push('    public var length: Int {');
+            lines.push('        get { count }');
+            lines.push('        set {');
 
             if (this.isPrimitiveArrayType(elementType)) {
                 let defaultValue = '0';
                 if (elementType === 'float') defaultValue = '0.0';
                 else if (elementType === 'bool') defaultValue = 'false';
-                lines.push(`        ${setSizeMethod.name}(ptr, newSize, ${defaultValue})`);
+                lines.push(`            ${setSizeMethod.name}(_ptr, newValue, ${defaultValue})`);
             } else {
-                lines.push(`        ${setSizeMethod.name}(ptr, newSize, nil)`);
+                lines.push(`            ${setSizeMethod.name}(_ptr, newValue, nil)`);
             }
-
-            lines.push(`    }`);
+            lines.push('        }');
+            lines.push('    }');
             lines.push('');
         }
 
-        // Ensure capacity method
-        const ensureCapacityMethod = arrayType.methods.find(m => m.name.endsWith('_ensure_capacity'));
+        // EnsureCapacity method if available
         if (ensureCapacityMethod) {
-            lines.push(`    /// Ensures the array has at least the specified capacity`);
-            lines.push(`    public func ensureCapacity(_ capacity: Int32) {`);
-            lines.push(`        ${ensureCapacityMethod.name}(ptr, capacity)`);
-            lines.push(`    }`);
+            lines.push('    /// Ensures this array has at least the given capacity');
+            lines.push('    public func ensureCapacity(_ capacity: Int) {');
+            lines.push(`        ${ensureCapacityMethod.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self), Int32(capacity))`);
+            lines.push('    }');
             lines.push('');
         }
 
-        // Deinit for memory management
-        lines.push(`    deinit {`);
-        lines.push(`        if ownsMemory {`);
-        const disposeMethod = arrayType.destructors?.[0];
-        if (disposeMethod) {
-            lines.push(`            ${disposeMethod.name}(ptr)`);
+        // Deinit
+        if (arrayType.destructor) {
+            lines.push('    deinit {');
+            lines.push('        if _ownsMemory {');
+            lines.push(`            ${arrayType.destructor.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self))`);
+            lines.push('        }');
+            lines.push('    }');
         }
-        lines.push(`        }`);
-        lines.push(`    }`);
 
-        lines.push(`}`);
+        lines.push('}');
 
         return lines;
     }
 
     private extractArrayElementType(arrayTypeName: string): string {
-        // spine_array_animation -> animation
-        // spine_array_int -> int
         const match = arrayTypeName.match(/spine_array_(.+)/);
         if (match) {
             return match[1];
@@ -839,7 +1090,20 @@ export class SwiftWriter {
         return 'Any';
     }
 
-    private mapArrayElementTypeToSwift(elementType: string): string {
+    private getArrayElementCType(arrayTypeName: string): string {
+        const elementType = this.extractArrayElementType(arrayTypeName);
+        if (this.isPrimitiveArrayType(elementType)) {
+            if (elementType === 'int') return 'Int32';
+            if (elementType === 'float') return 'Float';
+            if (elementType === 'unsigned_short') return 'UInt16';
+            if (elementType === 'property_id') return 'Int64';
+            return elementType;
+        }
+        // For object types, return the C type name
+        return `spine_${elementType}`;
+    }
+
+    private toSwiftArrayElementType(elementType: string): string {
         if (this.isPrimitiveArrayType(elementType)) {
             if (elementType === 'int') return 'Int32';
             if (elementType === 'float') return 'Float';
@@ -849,11 +1113,483 @@ export class SwiftWriter {
         }
 
         // For object types, make them optional since arrays can contain nulls
-        const swiftType = this.getSwiftClassName(`spine_${elementType}`);
+        const swiftType = this.toSwiftTypeName(`spine_${toSnakeCase(elementType)}`);
         return swiftType + '?';
     }
 
     private isPrimitiveArrayType(elementType: string): boolean {
-        return ['int', 'float', 'bool', 'unsigned_short', 'property_id'].includes(elementType);
+        return ['int', 'float', 'bool', 'unsigned_short', 'property_id'].includes(elementType.toLowerCase());
+    }
+
+    // Helper methods
+
+    private sortByInheritance(cTypes: CClassOrStruct[]): CClassOrStruct[] {
+        const sorted: CClassOrStruct[] = [];
+        const processed = new Set<string>();
+
+        const processClass = (cType: CClassOrStruct) => {
+            if (processed.has(cType.name)) {
+                return;
+            }
+
+            // Process concrete parent first (skip interfaces)
+            const inheritanceInfo = this.inheritance[cType.name];
+            if (inheritanceInfo?.extends) {
+                const parent = this.classMap.get(inheritanceInfo.extends);
+                if (parent) {
+                    processClass(parent);
+                }
+            }
+
+            // Process interface dependencies
+            for (const interfaceName of inheritanceInfo?.mixins || []) {
+                const interfaceClass = this.classMap.get(interfaceName);
+                if (interfaceClass) {
+                    processClass(interfaceClass);
+                }
+            }
+
+            sorted.push(cType);
+            processed.add(cType.name);
+        };
+
+        for (const cType of cTypes) {
+            processClass(cType);
+        }
+
+        return sorted;
+    }
+
+    private hasRttiMethod(cType: CClassOrStruct): boolean {
+        return cType.methods.some(m => m.name === `${cType.name}_rtti` && m.parameters.length === 0);
+    }
+
+    private collectImports(cType: CClassOrStruct): string[] {
+        const imports = new Set<string>();
+
+        // In Swift, we don't need to import individual files within the same module
+        // All generated types are in the same module
+        
+        return Array.from(imports).sort();
+    }
+
+    private isMethodOverride(method: CMethod, cType: CClassOrStruct): boolean {
+        // Static methods cannot be overridden
+        const isStatic = method.parameters.length === 0 ||
+            (method.parameters[0].name !== 'self' &&
+                !method.parameters[0].cType.startsWith(cType.name));
+
+        if (isStatic) {
+            return false;
+        }
+
+        // In Swift, we only use 'override' when overriding a superclass method,
+        // NOT when implementing a protocol requirement
+        
+        // Check if this method exists in parent CLASS (not protocol/interface)
+        const parentName = this.inheritance[cType.name]?.extends;
+        if (parentName) {
+            const parent = this.classMap.get(parentName);
+            if (parent) {
+                const methodSuffix = this.getMethodSuffix(method.name, cType.name);
+                const parentMethodName = `${parentName}_${methodSuffix}`;
+                if (parent.methods.some(m => m.name === parentMethodName)) {
+                    return true;
+                }
+            }
+        }
+
+        // DO NOT check interfaces/protocols - implementing protocol requirements doesn't use 'override'
+        // Protocol conformance is handled without the override keyword in Swift
+
+        return false;
+    }
+
+    // Utility methods
+
+    private toSwiftTypeName(cTypeName: string): string {
+        if (cTypeName.startsWith('spine_')) {
+            const name = cTypeName.slice(6);
+            return this.toPascalCase(name);
+        }
+        return this.toPascalCase(cTypeName);
+    }
+
+    private toCTypeName(swiftTypeName: string): string {
+        return `spine_${toSnakeCase(swiftTypeName)}`;
+    }
+
+    private toSwiftMethodName(cMethodName: string, cTypeName: string): string {
+        const prefix = `${cTypeName}_`;
+        if (cMethodName.startsWith(prefix)) {
+            return this.toCamelCase(cMethodName.slice(prefix.length));
+        }
+        return this.toCamelCase(cMethodName);
+    }
+
+    private toSwiftEnumValueName(cValueName: string, cEnumName: string): string {
+        const enumNameUpper = cEnumName.toUpperCase();
+
+        const prefixes = [
+            `SPINE_${enumNameUpper}_`,
+            `${enumNameUpper}_`,
+            'SPINE_'
+        ];
+
+        let name = cValueName;
+        for (const prefix of prefixes) {
+            if (name.startsWith(prefix)) {
+                name = name.slice(prefix.length);
+                break;
+            }
+        }
+
+        const enumValue = this.toCamelCase(name.toLowerCase());
+
+        // Handle Swift reserved words
+        const swiftReservedWords = ['in', 'out', 'repeat', 'return', 'throw', 'continue', 'break', 'case', 'default', 'where', 'while', 'for', 'if', 'else', 'switch'];
+        if (swiftReservedWords.includes(enumValue)) {
+            return `\`${enumValue}\``;
+        }
+
+        return enumValue;
+    }
+
+    private toSwiftReturnType(cType: string, nullable?: boolean): string {
+        let baseType: string;
+        if (cType === 'void') return 'Void';
+        if (cType === 'char*' || cType === 'char *' || cType === 'const char*' || cType === 'const char *') baseType = 'String';
+        else if (cType === 'float' || cType === 'double') baseType = 'Float';
+        else if (cType === 'size_t') baseType = 'Int';
+        else if (cType === 'int' || cType === 'int32_t' || cType === 'uint32_t') baseType = 'Int32';
+        else if (cType === 'bool') baseType = 'Bool';
+        // Handle primitive pointer types
+        else if (cType === 'void*' || cType === 'void *') baseType = 'UnsafeMutableRawPointer';
+        else if (cType === 'float*' || cType === 'float *') baseType = 'UnsafeMutablePointer<Float>';
+        else if (cType === 'uint32_t*' || cType === 'uint32_t *') baseType = 'UnsafeMutablePointer<UInt32>';
+        else if (cType === 'uint16_t*' || cType === 'uint16_t *') baseType = 'UnsafeMutablePointer<UInt16>';
+        else if (cType === 'int*' || cType === 'int *') baseType = 'UnsafeMutablePointer<Int32>';
+        else baseType = this.toSwiftTypeName(cType);
+
+        return nullable ? `${baseType}?` : baseType;
+    }
+
+    private toSwiftParameterType(param: CParameter): string {
+        if (param.cType === 'char*' || param.cType === 'char *' || param.cType === 'const char*' || param.cType === 'const char *') {
+            return 'String';
+        }
+        // Handle void* parameters
+        if (param.cType === 'void*' || param.cType === 'void *') {
+            return 'UnsafeMutableRawPointer';
+        }
+        return this.toSwiftReturnType(param.cType, param.isNullable);
+    }
+
+    private convertSwiftToC(swiftValue: string, param: CParameter): string {
+        if (param.cType === 'char*' || param.cType === 'char *' || param.cType === 'const char*' || param.cType === 'const char *') {
+            return swiftValue;
+        }
+
+        if (this.enumNames.has(param.cType)) {
+            // Convert Swift enum to C enum
+            // C enums in Swift are their own types with rawValue
+            if (param.isNullable) {
+                return `${param.cType}(rawValue: UInt32(${swiftValue}?.rawValue ?? 0))`;
+            }
+            return `${param.cType}(rawValue: UInt32(${swiftValue}.rawValue))`;
+        }
+
+        if (param.cType.startsWith('spine_')) {
+            // Cast the raw pointer to the expected type
+            const cTypeName = this.toCTypeName(this.toSwiftTypeName(param.cType));
+            if (param.isNullable) {
+                return `${swiftValue}?._ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self)`;
+            }
+            return `${swiftValue}._ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self)`;
+        }
+
+        // size_t parameters are already Int in Swift, no conversion needed
+        if (param.cType === 'size_t') {
+            return swiftValue;
+        }
+        
+        // Keep int32_t and int as-is since Swift Int32 maps to these
+        if (param.cType === 'int' || param.cType === 'int32_t') {
+            return swiftValue;
+        }
+
+        return swiftValue;
+    }
+
+    private generateReturnConversion(cReturnType: string, resultVar: string, nullable?: boolean): string {
+        if (cReturnType === 'char*' || cReturnType === 'char *' || cReturnType === 'const char*' || cReturnType === 'const char *') {
+            if (nullable) {
+                return `return ${resultVar}.map { String(cString: $0) }`;
+            }
+            return `return String(cString: ${resultVar}!)`;
+        }
+
+        if (this.enumNames.has(cReturnType)) {
+            const swiftType = this.toSwiftTypeName(cReturnType);
+            // C enums in Swift are their own types with .rawValue property
+            if (nullable) {
+                return `return ${resultVar}.map { ${swiftType}(rawValue: Int32($0.rawValue)) }`;
+            }
+            return `return ${swiftType}(rawValue: Int32(${resultVar}.rawValue))!`;
+        }
+
+        if (cReturnType.startsWith('spine_array_')) {
+            const swiftType = this.toSwiftTypeName(cReturnType);
+            if (nullable) {
+                return `return ${resultVar}.map { ${swiftType}(fromPointer: $0) }`;
+            }
+            return `return ${swiftType}(fromPointer: ${resultVar}!)`;
+        }
+
+        if (cReturnType.startsWith('spine_')) {
+            const swiftType = this.toSwiftTypeName(cReturnType);
+            const cClass = this.classMap.get(cReturnType);
+
+            if (nullable) {
+                if (cClass && this.isAbstract(cClass)) {
+                    return `guard let ptr = ${resultVar} else { return nil }
+        ${this.generateRttiBasedInstantiation(swiftType, 'ptr', cClass)}`;
+                }
+                return `return ${resultVar}.map { ${swiftType}(fromPointer: $0) }`;
+            } else {
+                if (cClass && this.isAbstract(cClass)) {
+                    return this.generateRttiBasedInstantiation(swiftType, `${resultVar}!`, cClass);
+                }
+                return `return ${swiftType}(fromPointer: ${resultVar}!)`;
+            }
+        }
+
+        return `return ${resultVar}`;
+    }
+
+    private generateRttiBasedInstantiation(abstractType: string, resultVar: string, abstractClass: CClassOrStruct): string {
+        const lines: string[] = [];
+
+        const concreteSubclasses = this.getConcreteSubclasses(abstractClass.name);
+
+        if (concreteSubclasses.length === 0) {
+            return `fatalError("Cannot instantiate abstract class ${abstractType} from pointer - no concrete subclasses found")`;
+        }
+
+        lines.push(`let rtti = ${abstractClass.name}_get_rtti(${resultVar})`);
+        lines.push(`let className = String(cString: spine_rtti_get_class_name(rtti)!)`);
+        lines.push(`switch className {`);
+
+        for (const subclass of concreteSubclasses) {
+            const swiftSubclass = this.toSwiftTypeName(subclass);
+            lines.push(`case "${subclass}":`);
+            // Cast the pointer to the specific subclass type
+            const cSubclassTypeName = this.toCTypeName(swiftSubclass);
+            lines.push(`    return ${swiftSubclass}(fromPointer: UnsafeMutableRawPointer(${resultVar}).assumingMemoryBound(to: ${cSubclassTypeName}_wrapper.self))`);
+        }
+
+        lines.push(`default:`);
+        lines.push(`    fatalError("Unknown concrete type: \\(className) for abstract class ${abstractType}")`);
+        lines.push(`}`);
+
+        return lines.join('\n        ');
+    }
+
+    private getConcreteSubclasses(abstractClassName: string): string[] {
+        const concreteSubclasses: string[] = [];
+
+        for (const [childName, supertypeList] of Object.entries(this.supertypes || {})) {
+            if (supertypeList.includes(abstractClassName)) {
+                const childClass = this.classMap.get(childName);
+                if (childClass && !this.isAbstract(childClass)) {
+                    concreteSubclasses.push(childName);
+                }
+            }
+        }
+
+        return concreteSubclasses;
+    }
+
+    private isAbstract(cType: CClassOrStruct): boolean {
+        return cType.cppType.isAbstract === true;
+    }
+
+    private getConstructorName(constr: CMethod, cType: CClassOrStruct): string {
+        const swiftClassName = this.toSwiftTypeName(cType.name);
+        const cTypeName = this.toCTypeName(swiftClassName);
+        let constructorName = constr.name.replace(`${cTypeName}_create`, '');
+
+        if (constructorName) {
+            if (/^\d+$/.test(constructorName)) {
+                if (cType.name === 'spine_color' && constr.name === 'spine_color_create2') {
+                    constructorName = 'fromRGBA';
+                } else if (constr.parameters.length > 0) {
+                    const firstParamType = constr.parameters[0].cType.replace('*', '').trim();
+                    if (firstParamType === cType.name) {
+                        constructorName = 'from';
+                    } else {
+                        constructorName = `variant${constructorName}`;
+                    }
+                } else {
+                    constructorName = `variant${constructorName}`;
+                }
+            } else if (constructorName.startsWith('_')) {
+                constructorName = this.toCamelCase(constructorName.slice(1));
+            }
+        }
+
+        return constructorName || swiftClassName;
+    }
+
+    private extractPropertyName(methodName: string, typeName: string): string {
+        const prefix = `${typeName}_`;
+        let name = methodName.startsWith(prefix) ? methodName.slice(prefix.length) : methodName;
+
+        if (name.startsWith('get_')) {
+            name = name.slice(4);
+        } else if (name.startsWith('set_')) {
+            name = name.slice(4);
+        }
+
+        if (name === 'update_cache') {
+            return 'updateCacheList';
+        }
+
+        const typeNames = ['int', 'float', 'double', 'bool', 'string'];
+        if (typeNames.includes(name.toLowerCase())) {
+            return `${this.toCamelCase(name)}Value`;
+        }
+
+        return this.toCamelCase(name);
+    }
+
+    private hasRawPointerParameters(method: CMethod): boolean {
+        for (const param of method.parameters) {
+            if (this.isRawPointer(param.cType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private isRawPointer(cType: string): boolean {
+        if (cType === 'char*' || cType === 'char *' || cType === 'const char*' || cType === 'const char *') {
+            return false;
+        }
+
+        if (cType.includes('*')) {
+            const cleanType = cType.replace('*', '').trim();
+            if (!cleanType.startsWith('spine_')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private isMethodInherited(method: CMethod, cType: CClassOrStruct): boolean {
+        const parentName = this.inheritance[cType.name]?.extends;
+        if (!parentName) {
+            return false;
+        }
+
+        const parent = this.classMap.get(parentName);
+        if (!parent) {
+            return false;
+        }
+
+        const methodSuffix = this.getMethodSuffix(method.name, cType.name);
+
+        // Don't consider dispose methods as inherited - they're type-specific
+        if (methodSuffix === 'dispose') {
+            return false;
+        }
+
+        const parentMethodName = `${parentName}_${methodSuffix}`;
+
+        const hasInParent = parent.methods.some(m => m.name === parentMethodName);
+        if (hasInParent) {
+            return true;
+        }
+
+        return this.isMethodInherited(method, parent);
+    }
+
+    private getMethodSuffix(methodName: string, typeName: string): string {
+        const prefix = `${typeName}_`;
+        if (methodName.startsWith(prefix)) {
+            return methodName.slice(prefix.length);
+        }
+        return methodName;
+    }
+
+    private renumberMethods(methods: CMethod[], typeName: string): Array<{ method: CMethod, renamedMethod?: string }> {
+        const result: Array<{ method: CMethod, renamedMethod?: string }> = [];
+
+        const methodGroups = new Map<string, CMethod[]>();
+
+        for (const method of methods) {
+            const match = method.name.match(/^(.+?)_(\d+)$/);
+            if (match) {
+                const baseName = match[1];
+                if (!methodGroups.has(baseName)) {
+                    methodGroups.set(baseName, []);
+                }
+                methodGroups.get(baseName)!.push(method);
+            } else {
+                result.push({ method });
+            }
+        }
+
+        for (const [baseName, groupedMethods] of methodGroups) {
+            if (groupedMethods.length === 1) {
+                const method = groupedMethods[0];
+                const swiftMethodName = this.toSwiftMethodName(baseName, typeName);
+                result.push({ method, renamedMethod: swiftMethodName });
+            } else {
+                groupedMethods.sort((a, b) => {
+                    const aNum = parseInt(a.name.match(/_(\d+)$/)![1]);
+                    const bNum = parseInt(b.name.match(/_(\d+)$/)![1]);
+                    return aNum - bNum;
+                });
+
+                for (let i = 0; i < groupedMethods.length; i++) {
+                    const method = groupedMethods[i];
+                    const newNumber = i + 1;
+                    const currentNumber = parseInt(method.name.match(/_(\d+)$/)![1]);
+                    const baseSwiftName = this.toSwiftMethodName(baseName, typeName);
+
+                    if (i === 0) {
+                        // First method in the group - remove the number
+                        result.push({ method, renamedMethod: baseSwiftName });
+                    } else if (newNumber !== currentNumber) {
+                        // Need to renumber
+                        result.push({ method, renamedMethod: `${baseSwiftName}${newNumber}` });
+                    } else {
+                        // Number is correct, no renamed method needed
+                        result.push({ method });
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private async writeExportFile(classes: SwiftClass[], enums: SwiftEnum[]): Promise<void> {
+        // Swift doesn't need an export file like Dart does
+        // All public types are automatically available within the module
+        return;
+    }
+
+    private toPascalCase(str: string): string {
+        return str.split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join('');
+    }
+
+    private toCamelCase(str: string): string {
+        const pascal = this.toPascalCase(str);
+        return pascal.charAt(0).toLowerCase() + pascal.slice(1);
     }
 }

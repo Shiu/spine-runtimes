@@ -1,19 +1,20 @@
+//
 // Spine Runtimes License Agreement
 // Last updated April 5, 2025. Replaces all prior versions.
-// 
+//
 // Copyright (c) 2013-2025, Esoteric Software LLC
-// 
+//
 // Integration of the Spine Runtimes into software or otherwise creating
 // derivative works of the Spine Runtimes is permitted under the terms and
 // conditions of Section 2 of the Spine Editor License Agreement:
 // http://esotericsoftware.com/spine-editor-license
-// 
+//
 // Otherwise, it is permitted to integrate the Spine Runtimes into software
 // or otherwise create derivative works of the Spine Runtimes (collectively,
 // "Products"), provided that each user of the Products must obtain their own
 // Spine Editor license and redistribution of the Products in any form must
 // include this license and copyright notice.
-// 
+//
 // THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,98 +25,91 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
+
+// AUTO GENERATED FILE, DO NOT EDIT.
 
 import Foundation
 import SpineC
 
-@objc(SpineSlider)
-@objcMembers
-public final class Slider: PosedActive {
-    internal let wrappee: spine_slider
-
-    internal init(_ wrappee: spine_slider) {
-        self.wrappee = wrappee
-        super.init(wrappee)
+/// Slider wrapper
+public class Slider: PosedActive, Posed, Constraint {
+    public init(fromPointer ptr: spine_slider) {
+        super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_active_wrapper.self))
     }
 
-    public convenience init(data: SliderData, skeleton: Skeleton) {
-        let ptr = spine_slider_create(data.wrappee, skeleton.wrappee)
-        self.init(ptr)
+    public convenience init(_ data: SliderData, _ skeleton: Skeleton) {
+        let ptr = spine_slider_create(data._ptr.assumingMemoryBound(to: spine_slider_data_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        self.init(fromPointer: ptr!)
     }
 
-    public func getRtti() -> Rtti {
-        let result = spine_slider_get_rtti(wrappee)
-        return Rtti(result)
+    public var rtti: Rtti {
+        let result = spine_slider_get_rtti(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self))
+        return Rtti(fromPointer: result!)
     }
 
-    public func copy(skeleton: Skeleton) -> Slider {
-        let result = spine_slider_copy(wrappee, skeleton.wrappee)
-        return Slider(result)
+    public var isSourceActive: Bool {
+        let result = spine_slider_is_source_active(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self))
+        return result
     }
 
-    public func update(skeleton: Skeleton, physics: Physics) {
-        spine_slider_update(wrappee, skeleton.wrappee, physics)
+    public var bone: Bone {
+        get {
+            let result = spine_slider_get_bone(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self))
+        return Bone(fromPointer: result!)
+        }
+        set {
+            spine_slider_set_bone(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+        }
     }
 
-    public func sort(skeleton: Skeleton) {
-        spine_slider_sort(wrappee, skeleton.wrappee)
+    public var data: ConstraintData {
+        let result = spine_slider_get_data(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self))
+        return SliderData(fromPointer: result!)
     }
 
-    public func isSourceActive() -> Bool {
-        return spine_slider_is_source_active(wrappee) != 0
+    public var pose: SliderPose {
+        let result = spine_slider_get_pose(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self))
+        return SliderPose(fromPointer: result!)
     }
 
-    public func getBone() -> Bone {
-        let result = spine_slider_get_bone(wrappee)
-        return Bone(result)
+    public var appliedPose: SliderPose {
+        let result = spine_slider_get_applied_pose(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self))
+        return SliderPose(fromPointer: result!)
     }
 
-    public func setBone(bone: Bone) {
-        spine_slider_set_bone(wrappee, bone.wrappee)
+    public var isPoseEqualToApplied: Bool {
+        let result = spine_slider_is_pose_equal_to_applied(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self))
+        return result
     }
 
-    public func getData() -> SliderData {
-        let result = spine_slider_get_data(wrappee)
-        return SliderData(result)
+    public func copyAttachment(_ skeleton: Skeleton) -> Slider {
+        let result = spine_slider_copy(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        return Slider(fromPointer: result!)
     }
 
-    public func getPose() -> SliderPose {
-        let result = spine_slider_get_pose(wrappee)
-        return SliderPose(result)
+    public func update(_ skeleton: Skeleton, _ physics: Physics) {
+        spine_slider_update(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
     }
 
-    public func getAppliedPose() -> SliderPose {
-        let result = spine_slider_get_applied_pose(wrappee)
-        return SliderPose(result)
+    public func sort(_ skeleton: Skeleton) {
+        spine_slider_sort(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
     public func resetConstrained() {
-        spine_slider_reset_constrained(wrappee)
+        spine_slider_reset_constrained(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self))
     }
 
     public func constrained() {
-        spine_slider_constrained(wrappee)
+        spine_slider_constrained(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self))
     }
 
-    public func isPoseEqualToApplied() -> Bool {
-        return spine_slider_is_pose_equal_to_applied(wrappee) != 0
-    }
-
-    public func isActive() -> Bool {
-        return spine_slider_is_active(wrappee) != 0
-    }
-
-    public func setActive(active: Bool) {
-        spine_slider_set_active(wrappee, active ? 1 : 0)
-    }
-
-    public func rtti() -> Rtti {
-        let result = spine_slider_rtti(wrappee)
-        return Rtti(result)
+    public static func rttiStatic() -> Rtti {
+        let result = spine_slider_rtti()
+        return Rtti(fromPointer: result!)
     }
 
     deinit {
-        spine_slider_dispose(wrappee)
+        spine_slider_dispose(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self))
     }
 }

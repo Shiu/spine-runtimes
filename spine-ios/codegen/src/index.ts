@@ -13,8 +13,14 @@ async function main() {
     // Get the C intermediate representation from spine-c-codegen
     const { cTypes, cEnums, cArrayTypes, inheritance, supertypes, subtypes, isInterface } = await generate();
     
-    // Create the Swift writer
-    const writer = new SwiftWriter(
+    // Prepare output directory
+    const outputDir = path.join(__dirname, '..', '..', 'Sources', 'SpineSwift', 'Generated');
+    
+    // Create the Swift writer with output directory
+    const writer = new SwiftWriter(outputDir);
+    
+    // Generate Swift code using the writeAll method
+    await writer.writeAll(
         cTypes,
         cEnums,
         cArrayTypes,
@@ -23,20 +29,6 @@ async function main() {
         supertypes,
         subtypes
     );
-    
-    // Prepare output directory
-    const outputDir = path.join(__dirname, '..', '..', 'Sources', 'SpineSwift', 'Generated');
-    await fs.mkdir(outputDir, { recursive: true });
-    
-    // Read license header
-    const licenseHeaderPath = path.join(__dirname, '..', '..', '..', 'LICENSE');
-    const licenseHeader = await fs.readFile(licenseHeaderPath, 'utf-8');
-    
-    // Generate Swift code
-    await writer.generate({
-        outputDir,
-        licenseHeader
-    });
     
     console.log('Swift bindings generation complete!');
 }

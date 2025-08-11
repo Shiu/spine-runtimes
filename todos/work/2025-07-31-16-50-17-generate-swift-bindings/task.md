@@ -1,6 +1,6 @@
 # Generate bindings for Swift from spine-c
 **Status:** InProgress
-**Agent PID:** 83687
+**Agent PID:** 46440
 
 ## Original Todo
 Generate bindings for Swift from spine-c generate() like dart-writer.ts
@@ -121,11 +121,114 @@ We successfully restructured the spine-ios modules into three clean layers:
    - Cannot mix C/C++ and Swift in same target
    - Must keep SpineC and SpineSwift as separate modules
 
+### Major Swift Codegen Rewrite (Session 2 - COMPLETED)
+
+We completely rewrote the Swift code generator to fix fundamental architectural issues. The rewrite reduced compilation errors from 61,503 to ~17,500.
+
+#### Key Architectural Decisions
+
+1. **Pointer Management**
+   - Root classes have `public let _ptr: UnsafeMutableRawPointer` field
+   - Subclasses inherit `_ptr` from parent, no redeclaration
+   - All C function calls cast `_ptr` inline: `_ptr.assumingMemoryBound(to: spine_xxx_wrapper.self)`
+   - No computed properties, no `nativePtr`, no `ptr` - just `_ptr`
+
+2. **Initialization Pattern**
+   ```swift
+   // Root class
+   public init(fromPointer ptr: spine_timeline) {
+       self._ptr = UnsafeMutableRawPointer(ptr)
+   }
+   
+   // Subclass - cast to parent type
+   public init(fromPointer ptr: spine_alpha_timeline) {
+       super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_curve_timeline1_wrapper.self))
+   }
+   ```
+
+3. **Single Inheritance + Protocols**
+   - Swift doesn't support multiple inheritance
+   - Use single base class + protocol conformance (like Dart's mixins)
+   - Example: `class AlphaTimeline: CurveTimeline1, SlotTimeline`
+   - Protocols don't override properties - each class provides its own implementation
+
+4. **Property Synthesis**
+   - Merged getter/setter pairs into single properties
+   - Fixed duplicate property declarations in protocols
+   - Handled Swift reserved words with backticks
+
+5. **Type Conversions**
+   - Objects passed as parameters: `obj._ptr.assumingMemoryBound(to: spine_xxx_wrapper.self)`
+   - Enums: `spine_mix_blend(rawValue: UInt32(swiftEnum.rawValue))`
+   - size_t parameters: `Int(value)`
+   - Return values: Cast C pointers back to Swift wrapper types
+
+6. **No Objective-C Integration**
+   - Removed all @objc annotations
+   - Removed NSObject inheritance
+   - Fixed method name conflicts (copy, etc.)
+
+#### What Works Now
+- [x] AlphaTimeline compiles without errors
+- [x] Proper inheritance hierarchy established
+- [x] Pointer management is clean and consistent
+- [x] Protocol conformance working correctly
+- [x] Enum conversions functional
+
+#### Remaining Issues (~17,500 errors)
+- Casting between related pointer types in polymorphic scenarios
+- Some enum return type conversions
+- Array type handling in some edge cases
+- RTTI-based instantiation needs refinement
+
+### Progress Summary (Session 3)
+
+#### Compilation Error Reduction
+- **Starting errors**: ~17,500
+- **Current errors**: ~9,720  
+- **Total reduction**: ~7,780 errors (44.5% reduction)
+
+#### Fixes Applied
+1. **Protocol conformance issues** ✅
+   - Modified `data` property in constraint classes to return protocol type for proper conformance
+   - Added special handling for covariant return types in Swift protocols
+
+2. **RTTI-based instantiation** ✅
+   - Fixed pointer casting using `UnsafeMutableRawPointer` for concrete type instantiation
+   - Updated all RTTI switch statements to properly cast abstract pointers to concrete types
+
+3. **Enum value parsing** ✅
+   - Fixed parsing of bit-shifted enum values (e.g., `1 << 0`, `1 << 1`)
+   - Property enum now has correct values (1, 2, 4, 8, etc.) instead of all being 1
+
+4. **Int32 vs Int conversions** ✅
+   - Properly mapped `size_t` to `Int` instead of `Int32`
+   - Fixed ~1,666 type conversion errors
+
+5. **Array pointer conversions** ✅
+   - Added `assumingMemoryBound` casting for all array operations
+   - Fixed ~2,400 array-related compilation errors
+   - Updated array methods to use proper Int types for indices and counts
+
+6. **Enum return type conversions** ✅
+   - Fixed conversion from C enum types to Swift enums
+   - Added proper `.rawValue` extraction when needed
+
+7. **Protocol `_ptr` declaration** ✅
+   - Added `var _ptr: UnsafeMutableRawPointer { get }` to protocols
+   - Enables polymorphic usage of conforming types in arrays and other contexts
+   - Fixed ~31 errors related to protocol usage
+
+8. **Improved constraint data handling** ✅
+   - Extended fix to handle all constraint types (including Slider)
+   - Properly returns protocol type `ConstraintData` for all constraint implementations
+   - Fixed remaining protocol conformance issues
+
 ### TODO - High Priority
-- [ ] Fix Objective-C selector conflicts in generated Swift code
-   - Option 1: Rename conflicting methods (e.g., copy -> copyAttachment)
-   - Option 2: Remove @objc annotations where not needed
-   - Option 3: Use different selector names with @objc(customName:)
+- [ ] Fix remaining ~9,720 compilation errors
+- [ ] Investigate and categorize remaining error patterns
+- [ ] Test full compilation of SpineSwift module
+- [ ] Complete SpineSwift high-level API (port from spine_dart.dart)
 
 - [ ] Complete SpineSwift high-level API (port from spine_dart.dart)
    - [ ] SkeletonDrawable class
@@ -135,8 +238,8 @@ We successfully restructured the spine-ios modules into three clean layers:
    - [ ] BonePose coordinate transformations
    - [ ] Animation state listener management
 
-- [ ] Update skeleton_drawable_test to use SpineSwift API
-   - Currently uses SpineC directly
+- [ ] Create skeleton_drawable_test_swift to use SpineSwift API
+   - Port skeleton_drawable_test_swift.swift which uses C bindings directly
    - Should test the high-level Swift API once working
 
 ### File Locations Reference

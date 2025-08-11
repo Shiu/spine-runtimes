@@ -1,19 +1,20 @@
+//
 // Spine Runtimes License Agreement
 // Last updated April 5, 2025. Replaces all prior versions.
-// 
+//
 // Copyright (c) 2013-2025, Esoteric Software LLC
-// 
+//
 // Integration of the Spine Runtimes into software or otherwise creating
 // derivative works of the Spine Runtimes is permitted under the terms and
 // conditions of Section 2 of the Spine Editor License Agreement:
 // http://esotericsoftware.com/spine-editor-license
-// 
+//
 // Otherwise, it is permitted to integrate the Spine Runtimes into software
 // or otherwise create derivative works of the Spine Runtimes (collectively,
 // "Products"), provided that each user of the Products must obtain their own
 // Spine Editor license and redistribution of the Products in any form must
 // include this license and copyright notice.
-// 
+//
 // THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,98 +25,91 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
+
+// AUTO GENERATED FILE, DO NOT EDIT.
 
 import Foundation
 import SpineC
 
-@objc(SpineBone)
-@objcMembers
-public final class Bone: PosedActive {
-    internal let wrappee: spine_bone
-
-    internal init(_ wrappee: spine_bone) {
-        self.wrappee = wrappee
-        super.init(wrappee)
+/// Bone wrapper
+public class Bone: PosedActive, Posed, Update {
+    public init(fromPointer ptr: spine_bone) {
+        super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_active_wrapper.self))
     }
 
-    public convenience init(data: BoneData, parent: Bone) {
-        let ptr = spine_bone_create(data.wrappee, parent.wrappee)
-        self.init(ptr)
+    public convenience init(_ data: BoneData, _ parent: Bone?) {
+        let ptr = spine_bone_create(data._ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self), parent?._ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+        self.init(fromPointer: ptr!)
     }
 
-    public convenience init(bone: Bone, parent: Bone) {
-        let ptr = spine_bone_create(bone.wrappee, parent.wrappee)
-        self.init(ptr)
+    public static func from(_ bone: Bone, _ parent: Bone?) -> Bone {
+        let ptr = spine_bone_create2(bone._ptr.assumingMemoryBound(to: spine_bone_wrapper.self), parent?._ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+        return Bone(fromPointer: ptr!)
     }
 
-    public func getRtti() -> Rtti {
-        let result = spine_bone_get_rtti(wrappee)
-        return Rtti(result)
+    public var rtti: Rtti {
+        let result = spine_bone_get_rtti(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+        return Rtti(fromPointer: result!)
     }
 
-    public func getParent() -> Bone {
-        let result = spine_bone_get_parent(wrappee)
-        return Bone(result)
+    public var parent: Bone? {
+        let result = spine_bone_get_parent(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+        return result.map { Bone(fromPointer: $0) }
     }
 
-    public func getChildren() -> ArrayBone {
-        return spine_bone_get_children(wrappee)
+    public var children: ArrayBone {
+        let result = spine_bone_get_children(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+        return ArrayBone(fromPointer: result!)
     }
 
-    public func isYDown() -> Bool {
-        return spine_bone_is_y_down(wrappee) != 0
+    public var data: BoneData {
+        let result = spine_bone_get_data(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+        return BoneData(fromPointer: result!)
     }
 
-    public func setYDown(value: Bool) {
-        spine_bone_set_y_down(wrappee, value ? 1 : 0)
+    public var pose: BoneLocal {
+        let result = spine_bone_get_pose(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+        return BoneLocal(fromPointer: result!)
     }
 
-    public func update(skeleton: Skeleton, physics: Physics) {
-        spine_bone_update(wrappee, skeleton.wrappee, physics)
+    public var appliedPose: BonePose {
+        let result = spine_bone_get_applied_pose(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+        return BonePose(fromPointer: result!)
     }
 
-    public func getData() -> BoneData {
-        let result = spine_bone_get_data(wrappee)
-        return BoneData(result)
+    public var isPoseEqualToApplied: Bool {
+        let result = spine_bone_is_pose_equal_to_applied(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+        return result
     }
 
-    public func getPose() -> BoneLocal {
-        let result = spine_bone_get_pose(wrappee)
-        return BoneLocal(result)
+    public static func isYDown() -> Bool {
+        let result = spine_bone_is_y_down()
+        return result
     }
 
-    public func getAppliedPose() -> BonePose {
-        let result = spine_bone_get_applied_pose(wrappee)
-        return BonePose(result)
+    public static func setYDown(_ value: Bool) {
+        spine_bone_set_y_down(value)
+    }
+
+    public func update(_ skeleton: Skeleton, _ physics: Physics) {
+        spine_bone_update(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
     }
 
     public func resetConstrained() {
-        spine_bone_reset_constrained(wrappee)
+        spine_bone_reset_constrained(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
     }
 
     public func constrained() {
-        spine_bone_constrained(wrappee)
+        spine_bone_constrained(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
     }
 
-    public func isPoseEqualToApplied() -> Bool {
-        return spine_bone_is_pose_equal_to_applied(wrappee) != 0
-    }
-
-    public func isActive() -> Bool {
-        return spine_bone_is_active(wrappee) != 0
-    }
-
-    public func setActive(active: Bool) {
-        spine_bone_set_active(wrappee, active ? 1 : 0)
-    }
-
-    public func rtti() -> Rtti {
-        let result = spine_bone_rtti(wrappee)
-        return Rtti(result)
+    public static func rttiStatic() -> Rtti {
+        let result = spine_bone_rtti()
+        return Rtti(fromPointer: result!)
     }
 
     deinit {
-        spine_bone_dispose(wrappee)
+        spine_bone_dispose(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
     }
 }

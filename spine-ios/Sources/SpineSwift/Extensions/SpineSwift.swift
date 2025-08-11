@@ -28,6 +28,7 @@
  *****************************************************************************/
 
 import Foundation
+import SpineC
 
 // MARK: - Version
 
@@ -77,7 +78,7 @@ public func loadAtlas(_ atlasData: String) throws -> Atlas {
         throw SpineError("Couldn't get atlas from result")
     }
     
-    let atlas = Atlas(atlasPtr)
+    let atlas = Atlas(fromPointer: atlasPtr)
     spine_atlas_result_dispose(result)
     return atlas
 }
@@ -86,7 +87,7 @@ public func loadAtlas(_ atlasData: String) throws -> Atlas {
 
 /// Load skeleton data from JSON string
 public func loadSkeletonDataJson(atlas: Atlas, jsonData: String, path: String = "") throws -> SkeletonData {
-    let result = spine_skeleton_data_load_json(atlas.wrappee, jsonData, path)
+    let result = spine_skeleton_data_load_json(atlas._ptr.assumingMemoryBound(to: spine_atlas_wrapper.self), jsonData, path)
     
     // Check for error
     if let errorPtr = spine_skeleton_data_result_get_error(result) {
@@ -101,7 +102,7 @@ public func loadSkeletonDataJson(atlas: Atlas, jsonData: String, path: String = 
         throw SpineError("Couldn't get skeleton data from result")
     }
     
-    let skeletonData = SkeletonData(skeletonDataPtr)
+    let skeletonData = SkeletonData(fromPointer: skeletonDataPtr)
     spine_skeleton_data_result_dispose(result)
     return skeletonData
 }
@@ -110,7 +111,7 @@ public func loadSkeletonDataJson(atlas: Atlas, jsonData: String, path: String = 
 public func loadSkeletonDataBinary(atlas: Atlas, binaryData: Data, path: String = "") throws -> SkeletonData {
     let result = binaryData.withUnsafeBytes { buffer in
         spine_skeleton_data_load_binary(
-            atlas.wrappee,
+            atlas._ptr.assumingMemoryBound(to: spine_atlas_wrapper.self),
             buffer.bindMemory(to: UInt8.self).baseAddress,
             Int32(buffer.count),
             path
@@ -130,7 +131,7 @@ public func loadSkeletonDataBinary(atlas: Atlas, binaryData: Data, path: String 
         throw SpineError("Couldn't get skeleton data from result")
     }
     
-    let skeletonData = SkeletonData(skeletonDataPtr)
+    let skeletonData = SkeletonData(fromPointer: skeletonDataPtr)
     spine_skeleton_data_result_dispose(result)
     return skeletonData
 }

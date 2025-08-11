@@ -1,19 +1,20 @@
+//
 // Spine Runtimes License Agreement
 // Last updated April 5, 2025. Replaces all prior versions.
-// 
+//
 // Copyright (c) 2013-2025, Esoteric Software LLC
-// 
+//
 // Integration of the Spine Runtimes into software or otherwise creating
 // derivative works of the Spine Runtimes is permitted under the terms and
 // conditions of Section 2 of the Spine Editor License Agreement:
 // http://esotericsoftware.com/spine-editor-license
-// 
+//
 // Otherwise, it is permitted to integrate the Spine Runtimes into software
 // or otherwise create derivative works of the Spine Runtimes (collectively,
 // "Products"), provided that each user of the Products must obtain their own
 // Spine Editor license and redistribution of the Products in any form must
 // include this license and copyright notice.
-// 
+//
 // THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
 // EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 // WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,67 +25,58 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 // THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// 
+//
+
+// AUTO GENERATED FILE, DO NOT EDIT.
 
 import Foundation
 import SpineC
 
-@objc(SpineTimeline)
-@objcMembers
-public final class Timeline: NSObject {
-    internal let wrappee: spine_timeline
+/// Timeline wrapper
+open class Timeline {
+    public let _ptr: UnsafeMutableRawPointer
 
-    internal init(_ wrappee: spine_timeline) {
-        self.wrappee = wrappee
-        super.init()
+    public init(fromPointer ptr: spine_timeline) {
+        self._ptr = UnsafeMutableRawPointer(ptr)
     }
 
-    public override func isEqual(_ object: Any?) -> Bool {
-        guard let other = object as? Timeline else { return false }
-        return self.wrappee == other.wrappee
+    public var rtti: Rtti {
+        let result = spine_timeline_get_rtti(_ptr.assumingMemoryBound(to: spine_timeline_wrapper.self))
+        return Rtti(fromPointer: result!)
     }
 
-    public override var hash: Int {
-        var hasher = Hasher()
-        hasher.combine(self.wrappee)
-        return hasher.finalize()
+    public var frameEntries: Int {
+        let result = spine_timeline_get_frame_entries(_ptr.assumingMemoryBound(to: spine_timeline_wrapper.self))
+        return result
     }
 
-    public func getRtti() -> Rtti {
-        let result = spine_timeline_get_rtti(wrappee)
-        return Rtti(result)
+    public var frameCount: Int {
+        let result = spine_timeline_get_frame_count(_ptr.assumingMemoryBound(to: spine_timeline_wrapper.self))
+        return result
     }
 
-    public func apply(skeleton: Skeleton, lastTime: Float, time: Float, events: ArrayEvent, alpha: Float, blend: MixBlend, direction: MixDirection, appliedPose: Bool) {
-        spine_timeline_apply(wrappee, skeleton.wrappee, lastTime, time, events, alpha, blend, direction, appliedPose ? 1 : 0)
+    public var frames: ArrayFloat {
+        let result = spine_timeline_get_frames(_ptr.assumingMemoryBound(to: spine_timeline_wrapper.self))
+        return ArrayFloat(fromPointer: result!)
     }
 
-    public func getFrameEntries() -> size_t {
-        return spine_timeline_get_frame_entries(wrappee)
+    public var duration: Float {
+        let result = spine_timeline_get_duration(_ptr.assumingMemoryBound(to: spine_timeline_wrapper.self))
+        return result
     }
 
-    public func getFrameCount() -> size_t {
-        return spine_timeline_get_frame_count(wrappee)
+    public var propertyIds: ArrayPropertyId {
+        let result = spine_timeline_get_property_ids(_ptr.assumingMemoryBound(to: spine_timeline_wrapper.self))
+        return ArrayPropertyId(fromPointer: result!)
     }
 
-    public func getFrames() -> ArrayFloat {
-        return spine_timeline_get_frames(wrappee)
+    public func apply(_ skeleton: Skeleton, _ lastTime: Float, _ time: Float, _ events: ArrayEvent?, _ alpha: Float, _ blend: MixBlend, _ direction: MixDirection, _ appliedPose: Bool) {
+        spine_timeline_apply(_ptr.assumingMemoryBound(to: spine_timeline_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), lastTime, time, events?._ptr.assumingMemoryBound(to: spine_array_event_wrapper.self), alpha, spine_mix_blend(rawValue: UInt32(blend.rawValue)), spine_mix_direction(rawValue: UInt32(direction.rawValue)), appliedPose)
     }
 
-    public func getDuration() -> Float {
-        return spine_timeline_get_duration(wrappee)
+    public static func rttiStatic() -> Rtti {
+        let result = spine_timeline_rtti()
+        return Rtti(fromPointer: result!)
     }
 
-    public func getPropertyIds() -> ArrayPropertyId {
-        return spine_timeline_get_property_ids(wrappee)
-    }
-
-    public func rtti() -> Rtti {
-        let result = spine_timeline_rtti(wrappee)
-        return Rtti(result)
-    }
-
-    deinit {
-        spine_timeline_dispose(wrappee)
-    }
 }
