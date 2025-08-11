@@ -16,37 +16,54 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "Spine",
-            targets: ["SpineModule"]
+            name: "SpineC",
+            targets: ["SpineC"]
+        ),
+        .library(
+            name: "SpineSwift",
+            targets: ["SpineSwift"]
+        ),
+        .library(
+            name: "SpineiOS",
+            targets: ["SpineiOS"]
         )
     ],
     targets: [
         .target(
-            name: "SpineModule",
+            name: "SpineiOS",
             dependencies: [
-                .byName(
-                    name: "Spine",
-                    condition: .when(platforms: [
-                        .iOS
-                    ])
-                ),
-                "SpineCppLite",
+                "SpineSwift",
                 "SpineShadersStructs",
             ],
-            path: "spine-ios/Sources/SpineModule"
+            path: "spine-ios/Sources/SpineiOS"
         ),
         .target(
-            name: "Spine",
-            dependencies: [
-                "SpineCppLite", "SpineShadersStructs",
+            name: "SpineC",
+            path: "spine-ios/Sources/SpineC",
+            sources: [
+                "spine-c/src/extensions.cpp",
+                "spine-c/src/generated",
+                "spine-cpp/src/spine"
             ],
-            path: "spine-ios/Sources/Spine"
-        ),
-        .target(
-            name: "SpineCppLite",
-            path: "spine-ios/Sources/SpineCppLite",
+            publicHeadersPath: "spine-c/include",
+            cxxSettings: [
+                .headerSearchPath("spine-c/include"),
+                .headerSearchPath("spine-c/src"),
+                .headerSearchPath("spine-c/src/generated"),
+                .headerSearchPath("spine-cpp/include"),
+                .headerSearchPath("spine-cpp/src"),
+            ],
             linkerSettings: [
                 .linkedLibrary("c++")
+            ]
+        ),
+        .target(
+            name: "SpineSwift",
+            dependencies: ["SpineC"],
+            path: "spine-ios/Sources/SpineSwift",
+            sources: [
+                "Generated",
+                "Extensions"
             ]
         ),
         .systemLibrary(

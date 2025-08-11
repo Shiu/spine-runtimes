@@ -136,7 +136,7 @@ const { cTypes, cEnums, cArrayTypes, inheritance, supertypes, subtypes, isInterf
 
 The codegen consumes:
 - **cTypes**: All C wrapper types with nullability information
-- **cEnums**: Enum definitions  
+- **cEnums**: Enum definitions
 - **cArrayTypes**: Array specializations
 - **inheritance**: Extends/implements relationships
 - **isInterface**: Map of which types are pure interfaces
@@ -195,7 +195,7 @@ Bone? get rootBone {
 ```dart
 void sortBone(Bone? bone) {
   SpineBindings.bindings.spine_skeleton_sort_bone(
-    _ptr, 
+    _ptr,
     bone?.nativePtr.cast() ?? Pointer.fromAddress(0)
   );
 }
@@ -242,7 +242,7 @@ Handles C's numbered method pattern:
 // spine_skeleton_set_skin_1 → setSkin(String)
 void setSkin(String skinName) { ... }
 
-// spine_skeleton_set_skin_2 → setSkin2(Skin?)  
+// spine_skeleton_set_skin_2 → setSkin2(Skin?)
 void setSkin2(Skin? newSkin) { ... }
 ```
 
@@ -254,11 +254,11 @@ For abstract types, the codegen generates runtime type checking:
 Attachment? getAttachment(String slotName, String attachmentName) {
   final result = SpineBindings.bindings.spine_skeleton_get_attachment_1(...);
   if (result.address == 0) return null;
-  
+
   final rtti = SpineBindings.bindings.spine_attachment_get_rtti(result);
   final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti)
       .cast<Utf8>().toDartString();
-      
+
   switch (className) {
     case 'spine_region_attachment':
       return RegionAttachment.fromPointer(result.cast());
@@ -278,18 +278,18 @@ Arrays get specialized wrapper classes extending `NativeArray<T>`:
 ```dart
 class ArrayFloat extends NativeArray<double> {
   final bool _ownsMemory;
-  
+
   ArrayFloat.fromPointer(Pointer<spine_array_float_wrapper> ptr, {bool ownsMemory = false})
       : _ownsMemory = ownsMemory, super(ptr);
-      
+
   factory ArrayFloat() { /* create constructor */ }
-  
+
   @override
   int get length { /* implementation */ }
-  
-  @override  
+
+  @override
   double operator [](int index) { /* implementation */ }
-  
+
   void dispose() { /* only if _ownsMemory */ }
 }
 ```
@@ -332,13 +332,13 @@ Several patterns from the Dart implementation would translate well to Swift:
 // Swift equivalent of pointer wrapping
 class Skeleton {
     private let ptr: OpaquePointer
-    
+
     init(fromPointer ptr: OpaquePointer) {
         self.ptr = ptr
     }
-    
+
     var nativePtr: OpaquePointer { ptr }
-    
+
     deinit {
         spine_skeleton_dispose(ptr)
     }
@@ -361,10 +361,10 @@ func getAttachment(_ slotName: String, _ attachmentName: String) -> Attachment? 
     guard let result = spine_skeleton_get_attachment_1(ptr, slotName, attachmentName) else {
         return nil
     }
-    
+
     let rtti = spine_attachment_get_rtti(result)
     let className = String(cString: spine_rtti_get_class_name(rtti))
-    
+
     switch className {
     case "spine_region_attachment":
         return RegionAttachment(fromPointer: result)
@@ -390,7 +390,7 @@ protocol Constraint: Update {
 ### **10. Key Takeaways for Swift Implementation**
 
 1. **Consistent Architecture**: Use the same 3-step process (input CIR → transform → generate)
-2. **Nullability Mapping**: Leverage Swift's optionals to match CIR nullability exactly  
+2. **Nullability Mapping**: Leverage Swift's optionals to match CIR nullability exactly
 3. **Memory Management**: Use automatic reference counting with `deinit` for cleanup
 4. **Type Safety**: Generate compile-time safe wrappers around C pointers
 5. **RTTI Handling**: Use Swift's powerful switch statements for type resolution
@@ -412,7 +412,7 @@ The current generator uses a Python script that:
 
 - **Parses C++ header file** (`spine-cpp-lite.h`) using regex patterns to extract:
   - Opaque types (between `@start: opaque_types` and `@end: opaque_types`)
-  - Function declarations (between `@start: function_declarations` and `@end: function_declarations`) 
+  - Function declarations (between `@start: function_declarations` and `@end: function_declarations`)
   - Enums (between `@start: enums` and `@end: enums`)
 
 - **Type mapping** approach:
@@ -457,17 +457,17 @@ The generated code follows these patterns:
   @objcMembers
   public final class TransformConstraintData: NSObject {
       internal let wrappee: spine_transform_constraint_data
-      
+
       internal init(_ wrappee: spine_transform_constraint_data) {
           self.wrappee = wrappee
           super.init()
       }
-      
+
       public override func isEqual(_ object: Any?) -> Bool {
           guard let other = object as? TransformConstraintData else { return false }
           return self.wrappee == other.wrappee
       }
-      
+
       public override var hash: Int {
           var hasher = Hasher()
           hasher.combine(self.wrappee)
@@ -495,7 +495,7 @@ Contains manually written extensions that provide:
 
 ### 4. Module Map Setup
 
-**Files**: 
+**Files**:
 - `/Users/badlogic/workspaces/spine-runtimes/spine-ios/Sources/SpineCppLite/include/module.modulemap`
 - `/Users/badlogic/workspaces/spine-runtimes/spine-ios/Sources/SpineShadersStructs/module.modulemap`
 
@@ -506,43 +506,3 @@ module SpineCppLite {
     export *
 }
 ```
-
-### 5. TypeScript Infrastructure (Newer)
-
-The codebase shows transition to TypeScript-based generation:
-- Uses shared `spine-c-codegen` package
-- More sophisticated parsing and IR generation
-- Better type safety and maintainability
-
-## Recommendations
-
-### What to Keep:
-1. **Module map approach** - Simple and effective for C++ interop
-2. **Opaque pointer wrapping pattern** - Safe and follows Swift best practices
-3. **NSObject inheritance** - Good for Objective-C compatibility
-4. **Smart getter/setter detection** - Creates idiomatic Swift APIs
-5. **Array handling with num functions** - Proper memory management
-6. **Extensions pattern** - Separates generated from manual code
-
-### What Needs Improvement:
-1. **Move from Python to TypeScript** - Align with other runtimes
-2. **Better error handling** - More sophisticated null analysis
-3. **Memory management** - Explicit lifetime management
-4. **Documentation generation** - Add doc comments to generated code
-5. **Testing integration** - Generate test scaffolding
-
-### Swift-Specific Patterns to Maintain:
-1. **Sendable conformance** - For modern Swift concurrency
-2. **@objc compatibility** - For mixed Objective-C/Swift projects
-3. **Result types** - For better error handling
-4. **Async/await integration** - Already present in extensions
-5. **Property wrappers** - Could be useful for resource management
-
-### Suggested Architecture:
-1. Use the existing TypeScript infrastructure from `spine-c-codegen`
-2. Create Swift-specific type mappings and templates
-3. Generate both the main classes and extension scaffolding
-4. Maintain backward compatibility with existing APIs
-5. Add modern Swift features (Sendable, async/await, Result types)
-
-The current implementation is solid but could benefit from modernization and alignment with the TypeScript-based generation approach used elsewhere in the codebase.

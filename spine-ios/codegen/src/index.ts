@@ -25,7 +25,7 @@ async function main() {
     );
     
     // Prepare output directory
-    const outputDir = path.join(__dirname, '..', '..', 'Sources', 'Spine', 'Generated');
+    const outputDir = path.join(__dirname, '..', '..', 'Sources', 'SpineSwift', 'Generated');
     await fs.mkdir(outputDir, { recursive: true });
     
     // Read license header
