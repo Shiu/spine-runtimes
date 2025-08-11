@@ -11,4 +11,7 @@ runSkeletonDrawableTest()
 
 // Run the new SpineSwift API test
 print("\n=== Testing SpineSwift API ===")
+print("Starting SpineSwift test...")
+print("About to call runSkeletonDrawableTestSwift...")
 runSkeletonDrawableTestSwift()
+print("SpineSwift test completed")

@@ -4,19 +4,25 @@ import SpineSwift
 func runSkeletonDrawableTestSwift() {
     print("Testing SkeletonDrawable with SpineSwift API...")
     
+    print("Step 1: Enable debug extension")
     // Enable debug extension if needed
     enableDebugExtension(false)
+    print("  Debug extension configured")
     
+    print("Step 2: Load file paths")
     // Load atlas and skeleton data
     let atlasPath = "../../spine-ts/assets/spineboy.atlas"
     let jsonPath = "../../spine-ts/assets/spineboy-pro.json"
     
+    print("Step 3: Read atlas file")
     // Read atlas file
     guard let atlasData = try? String(contentsOfFile: atlasPath, encoding: .utf8) else {
         print("❌ Failed to read atlas file: \(atlasPath)")
         return
     }
+    print("  Atlas file read successfully")
     
+    print("Step 4: Load atlas with SpineSwift API")
     // Load atlas
     let atlas: Atlas
     do {
