@@ -924,7 +924,7 @@ ${declaration} {`;
         if (createWithCapacityMethod) {
             lines.push('    /// Create a new array with the specified initial capacity');
             lines.push('    public convenience init(capacity: Int) {');
-            lines.push(`        let ptr = ${createWithCapacityMethod.name}(Int32(capacity))!`);
+            lines.push(`        let ptr = ${createWithCapacityMethod.name}(capacity)!`);
             lines.push('        self.init(fromPointer: ptr, ownsMemory: true)');
             lines.push('    }');
             lines.push('');
@@ -941,30 +941,30 @@ ${declaration} {`;
         const ensureCapacityMethod = arrayType.methods.find(m => m.name.endsWith('_ensure_capacity'));
 
         if (sizeMethod) {
-            lines.push('    public var count: Int32 {');
-            lines.push(`        return ${sizeMethod.name}(_ptr)`);
+            lines.push('    public var count: Int {');
+            lines.push(`        return Int(${sizeMethod.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self)))`);
             lines.push('    }');
             lines.push('');
         }
 
         if (bufferMethod) {
             const swiftElementType = this.toSwiftArrayElementType(elementType);
-            lines.push(`    public subscript(index: Int32) -> ${swiftElementType} {`);
+            lines.push(`    public subscript(index: Int) -> ${swiftElementType} {`);
             lines.push('        get {');
             lines.push('            precondition(index >= 0 && index < count, "Index out of bounds")');
-            lines.push(`            let buffer = ${bufferMethod.name}(_ptr)!`);
+            lines.push(`            let buffer = ${bufferMethod.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self))!`);
 
             // Handle different element types
             if (elementType === 'int') {
-                lines.push('            return buffer.assumingMemoryBound(to: Int32.self)[Int(index)]');
+                lines.push('            return buffer[Int(index)]');
             } else if (elementType === 'float') {
-                lines.push('            return buffer.assumingMemoryBound(to: Float.self)[Int(index)]');
+                lines.push('            return buffer[Int(index)]');
             } else if (elementType === 'bool') {
-                lines.push('            return buffer.assumingMemoryBound(to: Int32.self)[Int(index)] != 0');
+                lines.push('            return buffer[Int(index)] != 0');
             } else if (elementType === 'unsigned_short') {
-                lines.push('            return buffer.assumingMemoryBound(to: UInt16.self)[Int(index)]');
+                lines.push('            return buffer[Int(index)]');
             } else if (elementType === 'property_id') {
-                lines.push('            return buffer.assumingMemoryBound(to: Int64.self)[Int(index)]');
+                lines.push('            return buffer[Int(index)]');
             } else {
                 // For object types
                 const swiftType = this.toSwiftTypeName(`spine_${toSnakeCase(elementType)}`);
@@ -972,7 +972,7 @@ ${declaration} {`;
                 const cClass = this.classMap.get(cElementType);
 
                 const elementCType = this.getArrayElementCType(arrayType.name);
-                lines.push(`            let elementPtr = buffer.assumingMemoryBound(to: ${elementCType}?.self)[Int(index)]`);
+                lines.push(`            let elementPtr = buffer[Int(index)]`);
                 
                 if (cClass && this.isAbstract(cClass)) {
                     // Use RTTI to determine concrete type
@@ -994,7 +994,7 @@ ${declaration} {`;
                 const param = setMethod.parameters[2]; // The value parameter
                 const nullableParam = { ...param, isNullable: !this.isPrimitiveArrayType(elementType) };
                 const convertedValue = this.convertSwiftToC('newValue', nullableParam);
-                lines.push(`            ${setMethod.name}(_ptr, index, ${convertedValue})`);
+                lines.push(`            ${setMethod.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self), index, ${convertedValue})`);
                 lines.push('        }');
             }
 
@@ -1011,7 +1011,7 @@ ${declaration} {`;
             const param = addMethod.parameters[1];
             const nullableParam = { ...param, isNullable: !this.isPrimitiveArrayType(elementType) };
             const convertedValue = this.convertSwiftToC('value', nullableParam);
-            lines.push(`        ${addMethod.name}(_ptr, ${convertedValue})`);
+            lines.push(`        ${addMethod.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self), ${convertedValue})`);
             lines.push('    }');
             lines.push('');
         }
@@ -1020,7 +1020,7 @@ ${declaration} {`;
         if (clearMethod) {
             lines.push('    /// Removes all elements from this array');
             lines.push('    public func clear() {');
-            lines.push(`        ${clearMethod.name}(_ptr)`);
+            lines.push(`        ${clearMethod.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self))`);
             lines.push('    }');
             lines.push('');
         }
@@ -1030,10 +1030,10 @@ ${declaration} {`;
             const swiftElementType = this.toSwiftArrayElementType(elementType);
             lines.push('    /// Removes the element at the given index');
             lines.push(`    @discardableResult`);
-            lines.push(`    public func removeAt(_ index: Int32) -> ${swiftElementType} {`);
+            lines.push(`    public func removeAt(_ index: Int) -> ${swiftElementType} {`);
             lines.push('        precondition(index >= 0 && index < count, "Index out of bounds")');
             lines.push('        let value = self[index]');
-            lines.push(`        ${removeAtMethod.name}(_ptr, index)`);
+            lines.push(`        ${removeAtMethod.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self), index)`);
             lines.push('        return value');
             lines.push('    }');
             lines.push('');
@@ -1050,9 +1050,9 @@ ${declaration} {`;
                 let defaultValue = '0';
                 if (elementType === 'float') defaultValue = '0.0';
                 else if (elementType === 'bool') defaultValue = 'false';
-                lines.push(`            ${setSizeMethod.name}(_ptr, newValue, ${defaultValue})`);
+                lines.push(`            ${setSizeMethod.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self), newValue, ${defaultValue})`);
             } else {
-                lines.push(`            ${setSizeMethod.name}(_ptr, newValue, nil)`);
+                lines.push(`            ${setSizeMethod.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self), newValue, nil)`);
             }
             lines.push('        }');
             lines.push('    }');
@@ -1063,7 +1063,7 @@ ${declaration} {`;
         if (ensureCapacityMethod) {
             lines.push('    /// Ensures this array has at least the given capacity');
             lines.push('    public func ensureCapacity(_ capacity: Int) {');
-            lines.push(`        ${ensureCapacityMethod.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self), Int32(capacity))`);
+            lines.push(`        ${ensureCapacityMethod.name}(_ptr.assumingMemoryBound(to: ${cTypeName}_wrapper.self), capacity)`);
             lines.push('    }');
             lines.push('');
         }

@@ -51,38 +51,38 @@ public class ArrayFloat {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_float_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_float_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_float_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_float_size(_ptr.assumingMemoryBound(to: spine_array_float_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Float {
+    public subscript(index: Int) -> Float {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_float_buffer(_ptr)!
-            return buffer.assumingMemoryBound(to: Float.self)[Int(index)]
+            let buffer = spine_array_float_buffer(_ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))!
+            return buffer[Int(index)]
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Float) {
-        spine_array_float_add(_ptr, value)
+        spine_array_float_add(_ptr.assumingMemoryBound(to: spine_array_float_wrapper.self), value)
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_float_clear(_ptr)
+        spine_array_float_clear(_ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Float {
+    public func removeAt(_ index: Int) -> Float {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_float_remove_at(_ptr, index)
+        spine_array_float_remove_at(_ptr.assumingMemoryBound(to: spine_array_float_wrapper.self), index)
         return value
     }
 
@@ -90,13 +90,13 @@ public class ArrayFloat {
     public var length: Int {
         get { count }
         set {
-            spine_array_float_set_size(_ptr, newValue, 0.0)
+            spine_array_float_set_size(_ptr.assumingMemoryBound(to: spine_array_float_wrapper.self), newValue, 0.0)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_float_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_float_wrapper.self), Int32(capacity))
+        spine_array_float_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_float_wrapper.self), capacity)
     }
 
     deinit {
@@ -125,38 +125,38 @@ public class ArrayInt {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_int_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_int_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_int_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_int_size(_ptr.assumingMemoryBound(to: spine_array_int_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Int32 {
+    public subscript(index: Int) -> Int32 {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_int_buffer(_ptr)!
-            return buffer.assumingMemoryBound(to: Int32.self)[Int(index)]
+            let buffer = spine_array_int_buffer(_ptr.assumingMemoryBound(to: spine_array_int_wrapper.self))!
+            return buffer[Int(index)]
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Int32) {
-        spine_array_int_add(_ptr, value)
+        spine_array_int_add(_ptr.assumingMemoryBound(to: spine_array_int_wrapper.self), value)
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_int_clear(_ptr)
+        spine_array_int_clear(_ptr.assumingMemoryBound(to: spine_array_int_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Int32 {
+    public func removeAt(_ index: Int) -> Int32 {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_int_remove_at(_ptr, index)
+        spine_array_int_remove_at(_ptr.assumingMemoryBound(to: spine_array_int_wrapper.self), index)
         return value
     }
 
@@ -164,13 +164,13 @@ public class ArrayInt {
     public var length: Int {
         get { count }
         set {
-            spine_array_int_set_size(_ptr, newValue, 0)
+            spine_array_int_set_size(_ptr.assumingMemoryBound(to: spine_array_int_wrapper.self), newValue, 0)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_int_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_int_wrapper.self), Int32(capacity))
+        spine_array_int_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_int_wrapper.self), capacity)
     }
 
     deinit {
@@ -199,38 +199,38 @@ public class ArrayUnsignedShort {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_unsigned_short_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_unsigned_short_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_unsigned_short_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_unsigned_short_size(_ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> UInt16 {
+    public subscript(index: Int) -> UInt16 {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_unsigned_short_buffer(_ptr)!
-            return buffer.assumingMemoryBound(to: UInt16.self)[Int(index)]
+            let buffer = spine_array_unsigned_short_buffer(_ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self))!
+            return buffer[Int(index)]
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: UInt16) {
-        spine_array_unsigned_short_add(_ptr, value)
+        spine_array_unsigned_short_add(_ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self), value)
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_unsigned_short_clear(_ptr)
+        spine_array_unsigned_short_clear(_ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> UInt16 {
+    public func removeAt(_ index: Int) -> UInt16 {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_unsigned_short_remove_at(_ptr, index)
+        spine_array_unsigned_short_remove_at(_ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self), index)
         return value
     }
 
@@ -238,13 +238,13 @@ public class ArrayUnsignedShort {
     public var length: Int {
         get { count }
         set {
-            spine_array_unsigned_short_set_size(_ptr, newValue, 0)
+            spine_array_unsigned_short_set_size(_ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self), newValue, 0)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_unsigned_short_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self), Int32(capacity))
+        spine_array_unsigned_short_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self), capacity)
     }
 
     deinit {
@@ -273,38 +273,38 @@ public class ArrayPropertyId {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_property_id_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_property_id_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_property_id_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_property_id_size(_ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Int64 {
+    public subscript(index: Int) -> Int64 {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_property_id_buffer(_ptr)!
-            return buffer.assumingMemoryBound(to: Int64.self)[Int(index)]
+            let buffer = spine_array_property_id_buffer(_ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self))!
+            return buffer[Int(index)]
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Int64) {
-        spine_array_property_id_add(_ptr, value)
+        spine_array_property_id_add(_ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self), value)
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_property_id_clear(_ptr)
+        spine_array_property_id_clear(_ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Int64 {
+    public func removeAt(_ index: Int) -> Int64 {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_property_id_remove_at(_ptr, index)
+        spine_array_property_id_remove_at(_ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self), index)
         return value
     }
 
@@ -312,13 +312,13 @@ public class ArrayPropertyId {
     public var length: Int {
         get { count }
         set {
-            spine_array_property_id_set_size(_ptr, newValue, 0)
+            spine_array_property_id_set_size(_ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self), newValue, 0)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_property_id_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self), Int32(capacity))
+        spine_array_property_id_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self), capacity)
     }
 
     deinit {
@@ -347,39 +347,39 @@ public class ArrayAnimation {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_animation_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_animation_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_animation_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_animation_size(_ptr.assumingMemoryBound(to: spine_array_animation_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Animation? {
+    public subscript(index: Int) -> Animation? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_animation_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_animation?.self)[Int(index)]
+            let buffer = spine_array_animation_buffer(_ptr.assumingMemoryBound(to: spine_array_animation_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { Animation(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Animation?) {
-        spine_array_animation_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
+        spine_array_animation_add(_ptr.assumingMemoryBound(to: spine_array_animation_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_animation_clear(_ptr)
+        spine_array_animation_clear(_ptr.assumingMemoryBound(to: spine_array_animation_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Animation? {
+    public func removeAt(_ index: Int) -> Animation? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_animation_remove_at(_ptr, index)
+        spine_array_animation_remove_at(_ptr.assumingMemoryBound(to: spine_array_animation_wrapper.self), index)
         return value
     }
 
@@ -387,13 +387,13 @@ public class ArrayAnimation {
     public var length: Int {
         get { count }
         set {
-            spine_array_animation_set_size(_ptr, newValue, nil)
+            spine_array_animation_set_size(_ptr.assumingMemoryBound(to: spine_array_animation_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_animation_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_animation_wrapper.self), Int32(capacity))
+        spine_array_animation_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_animation_wrapper.self), capacity)
     }
 
     deinit {
@@ -422,39 +422,39 @@ public class ArrayAtlasPage {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_atlas_page_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_atlas_page_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_atlas_page_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_atlas_page_size(_ptr.assumingMemoryBound(to: spine_array_atlas_page_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> AtlasPage? {
+    public subscript(index: Int) -> AtlasPage? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_atlas_page_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_atlas_page?.self)[Int(index)]
+            let buffer = spine_array_atlas_page_buffer(_ptr.assumingMemoryBound(to: spine_array_atlas_page_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { AtlasPage(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: AtlasPage?) {
-        spine_array_atlas_page_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_atlas_page_wrapper.self))
+        spine_array_atlas_page_add(_ptr.assumingMemoryBound(to: spine_array_atlas_page_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_atlas_page_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_atlas_page_clear(_ptr)
+        spine_array_atlas_page_clear(_ptr.assumingMemoryBound(to: spine_array_atlas_page_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> AtlasPage? {
+    public func removeAt(_ index: Int) -> AtlasPage? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_atlas_page_remove_at(_ptr, index)
+        spine_array_atlas_page_remove_at(_ptr.assumingMemoryBound(to: spine_array_atlas_page_wrapper.self), index)
         return value
     }
 
@@ -462,13 +462,13 @@ public class ArrayAtlasPage {
     public var length: Int {
         get { count }
         set {
-            spine_array_atlas_page_set_size(_ptr, newValue, nil)
+            spine_array_atlas_page_set_size(_ptr.assumingMemoryBound(to: spine_array_atlas_page_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_atlas_page_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_atlas_page_wrapper.self), Int32(capacity))
+        spine_array_atlas_page_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_atlas_page_wrapper.self), capacity)
     }
 
     deinit {
@@ -497,39 +497,39 @@ public class ArrayAtlasRegion {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_atlas_region_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_atlas_region_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_atlas_region_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_atlas_region_size(_ptr.assumingMemoryBound(to: spine_array_atlas_region_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> AtlasRegion? {
+    public subscript(index: Int) -> AtlasRegion? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_atlas_region_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_atlas_region?.self)[Int(index)]
+            let buffer = spine_array_atlas_region_buffer(_ptr.assumingMemoryBound(to: spine_array_atlas_region_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { AtlasRegion(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: AtlasRegion?) {
-        spine_array_atlas_region_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_atlas_region_wrapper.self))
+        spine_array_atlas_region_add(_ptr.assumingMemoryBound(to: spine_array_atlas_region_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_atlas_region_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_atlas_region_clear(_ptr)
+        spine_array_atlas_region_clear(_ptr.assumingMemoryBound(to: spine_array_atlas_region_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> AtlasRegion? {
+    public func removeAt(_ index: Int) -> AtlasRegion? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_atlas_region_remove_at(_ptr, index)
+        spine_array_atlas_region_remove_at(_ptr.assumingMemoryBound(to: spine_array_atlas_region_wrapper.self), index)
         return value
     }
 
@@ -537,13 +537,13 @@ public class ArrayAtlasRegion {
     public var length: Int {
         get { count }
         set {
-            spine_array_atlas_region_set_size(_ptr, newValue, nil)
+            spine_array_atlas_region_set_size(_ptr.assumingMemoryBound(to: spine_array_atlas_region_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_atlas_region_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_atlas_region_wrapper.self), Int32(capacity))
+        spine_array_atlas_region_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_atlas_region_wrapper.self), capacity)
     }
 
     deinit {
@@ -572,19 +572,19 @@ public class ArrayAttachment {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_attachment_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_attachment_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_attachment_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_attachment_size(_ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Attachment? {
+    public subscript(index: Int) -> Attachment? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_attachment_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_attachment?.self)[Int(index)]
+            let buffer = spine_array_attachment_buffer(_ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_attachment_get_rtti(ptr)
         let className = String(cString: spine_rtti_get_class_name(rtti)!)
@@ -609,20 +609,20 @@ public class ArrayAttachment {
 
     /// Adds a value to the end of this array
     public func add(_ value: Attachment?) {
-        spine_array_attachment_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_attachment_wrapper.self))
+        spine_array_attachment_add(_ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_attachment_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_attachment_clear(_ptr)
+        spine_array_attachment_clear(_ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Attachment? {
+    public func removeAt(_ index: Int) -> Attachment? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_attachment_remove_at(_ptr, index)
+        spine_array_attachment_remove_at(_ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self), index)
         return value
     }
 
@@ -630,13 +630,13 @@ public class ArrayAttachment {
     public var length: Int {
         get { count }
         set {
-            spine_array_attachment_set_size(_ptr, newValue, nil)
+            spine_array_attachment_set_size(_ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_attachment_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self), Int32(capacity))
+        spine_array_attachment_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self), capacity)
     }
 
     deinit {
@@ -665,39 +665,39 @@ public class ArrayBone {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_bone_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_bone_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_bone_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_bone_size(_ptr.assumingMemoryBound(to: spine_array_bone_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Bone? {
+    public subscript(index: Int) -> Bone? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_bone_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_bone?.self)[Int(index)]
+            let buffer = spine_array_bone_buffer(_ptr.assumingMemoryBound(to: spine_array_bone_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { Bone(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Bone?) {
-        spine_array_bone_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+        spine_array_bone_add(_ptr.assumingMemoryBound(to: spine_array_bone_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_bone_clear(_ptr)
+        spine_array_bone_clear(_ptr.assumingMemoryBound(to: spine_array_bone_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Bone? {
+    public func removeAt(_ index: Int) -> Bone? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_bone_remove_at(_ptr, index)
+        spine_array_bone_remove_at(_ptr.assumingMemoryBound(to: spine_array_bone_wrapper.self), index)
         return value
     }
 
@@ -705,13 +705,13 @@ public class ArrayBone {
     public var length: Int {
         get { count }
         set {
-            spine_array_bone_set_size(_ptr, newValue, nil)
+            spine_array_bone_set_size(_ptr.assumingMemoryBound(to: spine_array_bone_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_bone_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bone_wrapper.self), Int32(capacity))
+        spine_array_bone_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bone_wrapper.self), capacity)
     }
 
     deinit {
@@ -740,39 +740,39 @@ public class ArrayBoneData {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_bone_data_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_bone_data_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_bone_data_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_bone_data_size(_ptr.assumingMemoryBound(to: spine_array_bone_data_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> BoneData? {
+    public subscript(index: Int) -> BoneData? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_bone_data_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_bone_data?.self)[Int(index)]
+            let buffer = spine_array_bone_data_buffer(_ptr.assumingMemoryBound(to: spine_array_bone_data_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { BoneData(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: BoneData?) {
-        spine_array_bone_data_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self))
+        spine_array_bone_data_add(_ptr.assumingMemoryBound(to: spine_array_bone_data_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_bone_data_clear(_ptr)
+        spine_array_bone_data_clear(_ptr.assumingMemoryBound(to: spine_array_bone_data_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> BoneData? {
+    public func removeAt(_ index: Int) -> BoneData? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_bone_data_remove_at(_ptr, index)
+        spine_array_bone_data_remove_at(_ptr.assumingMemoryBound(to: spine_array_bone_data_wrapper.self), index)
         return value
     }
 
@@ -780,13 +780,13 @@ public class ArrayBoneData {
     public var length: Int {
         get { count }
         set {
-            spine_array_bone_data_set_size(_ptr, newValue, nil)
+            spine_array_bone_data_set_size(_ptr.assumingMemoryBound(to: spine_array_bone_data_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_bone_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bone_data_wrapper.self), Int32(capacity))
+        spine_array_bone_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bone_data_wrapper.self), capacity)
     }
 
     deinit {
@@ -815,39 +815,39 @@ public class ArrayBonePose {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_bone_pose_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_bone_pose_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_bone_pose_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_bone_pose_size(_ptr.assumingMemoryBound(to: spine_array_bone_pose_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> BonePose? {
+    public subscript(index: Int) -> BonePose? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_bone_pose_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_bone_pose?.self)[Int(index)]
+            let buffer = spine_array_bone_pose_buffer(_ptr.assumingMemoryBound(to: spine_array_bone_pose_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { BonePose(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: BonePose?) {
-        spine_array_bone_pose_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
+        spine_array_bone_pose_add(_ptr.assumingMemoryBound(to: spine_array_bone_pose_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_bone_pose_clear(_ptr)
+        spine_array_bone_pose_clear(_ptr.assumingMemoryBound(to: spine_array_bone_pose_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> BonePose? {
+    public func removeAt(_ index: Int) -> BonePose? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_bone_pose_remove_at(_ptr, index)
+        spine_array_bone_pose_remove_at(_ptr.assumingMemoryBound(to: spine_array_bone_pose_wrapper.self), index)
         return value
     }
 
@@ -855,13 +855,13 @@ public class ArrayBonePose {
     public var length: Int {
         get { count }
         set {
-            spine_array_bone_pose_set_size(_ptr, newValue, nil)
+            spine_array_bone_pose_set_size(_ptr.assumingMemoryBound(to: spine_array_bone_pose_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_bone_pose_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bone_pose_wrapper.self), Int32(capacity))
+        spine_array_bone_pose_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bone_pose_wrapper.self), capacity)
     }
 
     deinit {
@@ -890,39 +890,39 @@ public class ArrayBoundingBoxAttachment {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_bounding_box_attachment_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_bounding_box_attachment_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_bounding_box_attachment_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_bounding_box_attachment_size(_ptr.assumingMemoryBound(to: spine_array_bounding_box_attachment_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> BoundingBoxAttachment? {
+    public subscript(index: Int) -> BoundingBoxAttachment? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_bounding_box_attachment_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_bounding_box_attachment?.self)[Int(index)]
+            let buffer = spine_array_bounding_box_attachment_buffer(_ptr.assumingMemoryBound(to: spine_array_bounding_box_attachment_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { BoundingBoxAttachment(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: BoundingBoxAttachment?) {
-        spine_array_bounding_box_attachment_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
+        spine_array_bounding_box_attachment_add(_ptr.assumingMemoryBound(to: spine_array_bounding_box_attachment_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_bounding_box_attachment_clear(_ptr)
+        spine_array_bounding_box_attachment_clear(_ptr.assumingMemoryBound(to: spine_array_bounding_box_attachment_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> BoundingBoxAttachment? {
+    public func removeAt(_ index: Int) -> BoundingBoxAttachment? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_bounding_box_attachment_remove_at(_ptr, index)
+        spine_array_bounding_box_attachment_remove_at(_ptr.assumingMemoryBound(to: spine_array_bounding_box_attachment_wrapper.self), index)
         return value
     }
 
@@ -930,13 +930,13 @@ public class ArrayBoundingBoxAttachment {
     public var length: Int {
         get { count }
         set {
-            spine_array_bounding_box_attachment_set_size(_ptr, newValue, nil)
+            spine_array_bounding_box_attachment_set_size(_ptr.assumingMemoryBound(to: spine_array_bounding_box_attachment_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_bounding_box_attachment_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bounding_box_attachment_wrapper.self), Int32(capacity))
+        spine_array_bounding_box_attachment_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_bounding_box_attachment_wrapper.self), capacity)
     }
 
     deinit {
@@ -965,19 +965,19 @@ public class ArrayConstraint {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_constraint_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_constraint_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_constraint_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_constraint_size(_ptr.assumingMemoryBound(to: spine_array_constraint_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Constraint? {
+    public subscript(index: Int) -> Constraint? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_constraint_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_constraint?.self)[Int(index)]
+            let buffer = spine_array_constraint_buffer(_ptr.assumingMemoryBound(to: spine_array_constraint_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_constraint_get_rtti(ptr)
         let className = String(cString: spine_rtti_get_class_name(rtti)!)
@@ -1000,20 +1000,20 @@ public class ArrayConstraint {
 
     /// Adds a value to the end of this array
     public func add(_ value: Constraint?) {
-        spine_array_constraint_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_constraint_wrapper.self))
+        spine_array_constraint_add(_ptr.assumingMemoryBound(to: spine_array_constraint_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_constraint_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_constraint_clear(_ptr)
+        spine_array_constraint_clear(_ptr.assumingMemoryBound(to: spine_array_constraint_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Constraint? {
+    public func removeAt(_ index: Int) -> Constraint? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_constraint_remove_at(_ptr, index)
+        spine_array_constraint_remove_at(_ptr.assumingMemoryBound(to: spine_array_constraint_wrapper.self), index)
         return value
     }
 
@@ -1021,13 +1021,13 @@ public class ArrayConstraint {
     public var length: Int {
         get { count }
         set {
-            spine_array_constraint_set_size(_ptr, newValue, nil)
+            spine_array_constraint_set_size(_ptr.assumingMemoryBound(to: spine_array_constraint_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_constraint_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_constraint_wrapper.self), Int32(capacity))
+        spine_array_constraint_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_constraint_wrapper.self), capacity)
     }
 
     deinit {
@@ -1056,19 +1056,19 @@ public class ArrayConstraintData {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_constraint_data_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_constraint_data_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_constraint_data_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_constraint_data_size(_ptr.assumingMemoryBound(to: spine_array_constraint_data_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> ConstraintData? {
+    public subscript(index: Int) -> ConstraintData? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_constraint_data_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_constraint_data?.self)[Int(index)]
+            let buffer = spine_array_constraint_data_buffer(_ptr.assumingMemoryBound(to: spine_array_constraint_data_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_constraint_data_get_rtti(ptr)
         let className = String(cString: spine_rtti_get_class_name(rtti)!)
@@ -1091,20 +1091,20 @@ public class ArrayConstraintData {
 
     /// Adds a value to the end of this array
     public func add(_ value: ConstraintData?) {
-        spine_array_constraint_data_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_constraint_data_wrapper.self))
+        spine_array_constraint_data_add(_ptr.assumingMemoryBound(to: spine_array_constraint_data_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_constraint_data_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_constraint_data_clear(_ptr)
+        spine_array_constraint_data_clear(_ptr.assumingMemoryBound(to: spine_array_constraint_data_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> ConstraintData? {
+    public func removeAt(_ index: Int) -> ConstraintData? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_constraint_data_remove_at(_ptr, index)
+        spine_array_constraint_data_remove_at(_ptr.assumingMemoryBound(to: spine_array_constraint_data_wrapper.self), index)
         return value
     }
 
@@ -1112,13 +1112,13 @@ public class ArrayConstraintData {
     public var length: Int {
         get { count }
         set {
-            spine_array_constraint_data_set_size(_ptr, newValue, nil)
+            spine_array_constraint_data_set_size(_ptr.assumingMemoryBound(to: spine_array_constraint_data_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_constraint_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_constraint_data_wrapper.self), Int32(capacity))
+        spine_array_constraint_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_constraint_data_wrapper.self), capacity)
     }
 
     deinit {
@@ -1147,39 +1147,39 @@ public class ArrayEvent {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_event_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_event_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_event_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_event_size(_ptr.assumingMemoryBound(to: spine_array_event_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Event? {
+    public subscript(index: Int) -> Event? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_event_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_event?.self)[Int(index)]
+            let buffer = spine_array_event_buffer(_ptr.assumingMemoryBound(to: spine_array_event_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { Event(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Event?) {
-        spine_array_event_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_event_wrapper.self))
+        spine_array_event_add(_ptr.assumingMemoryBound(to: spine_array_event_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_event_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_event_clear(_ptr)
+        spine_array_event_clear(_ptr.assumingMemoryBound(to: spine_array_event_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Event? {
+    public func removeAt(_ index: Int) -> Event? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_event_remove_at(_ptr, index)
+        spine_array_event_remove_at(_ptr.assumingMemoryBound(to: spine_array_event_wrapper.self), index)
         return value
     }
 
@@ -1187,13 +1187,13 @@ public class ArrayEvent {
     public var length: Int {
         get { count }
         set {
-            spine_array_event_set_size(_ptr, newValue, nil)
+            spine_array_event_set_size(_ptr.assumingMemoryBound(to: spine_array_event_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_event_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_event_wrapper.self), Int32(capacity))
+        spine_array_event_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_event_wrapper.self), capacity)
     }
 
     deinit {
@@ -1222,39 +1222,39 @@ public class ArrayEventData {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_event_data_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_event_data_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_event_data_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_event_data_size(_ptr.assumingMemoryBound(to: spine_array_event_data_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> EventData? {
+    public subscript(index: Int) -> EventData? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_event_data_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_event_data?.self)[Int(index)]
+            let buffer = spine_array_event_data_buffer(_ptr.assumingMemoryBound(to: spine_array_event_data_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { EventData(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: EventData?) {
-        spine_array_event_data_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_event_data_wrapper.self))
+        spine_array_event_data_add(_ptr.assumingMemoryBound(to: spine_array_event_data_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_event_data_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_event_data_clear(_ptr)
+        spine_array_event_data_clear(_ptr.assumingMemoryBound(to: spine_array_event_data_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> EventData? {
+    public func removeAt(_ index: Int) -> EventData? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_event_data_remove_at(_ptr, index)
+        spine_array_event_data_remove_at(_ptr.assumingMemoryBound(to: spine_array_event_data_wrapper.self), index)
         return value
     }
 
@@ -1262,13 +1262,13 @@ public class ArrayEventData {
     public var length: Int {
         get { count }
         set {
-            spine_array_event_data_set_size(_ptr, newValue, nil)
+            spine_array_event_data_set_size(_ptr.assumingMemoryBound(to: spine_array_event_data_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_event_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_event_data_wrapper.self), Int32(capacity))
+        spine_array_event_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_event_data_wrapper.self), capacity)
     }
 
     deinit {
@@ -1297,19 +1297,19 @@ public class ArrayFromProperty {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_from_property_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_from_property_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_from_property_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_from_property_size(_ptr.assumingMemoryBound(to: spine_array_from_property_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> FromProperty? {
+    public subscript(index: Int) -> FromProperty? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_from_property_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_from_property?.self)[Int(index)]
+            let buffer = spine_array_from_property_buffer(_ptr.assumingMemoryBound(to: spine_array_from_property_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_from_property_get_rtti(ptr)
         let className = String(cString: spine_rtti_get_class_name(rtti)!)
@@ -1334,20 +1334,20 @@ public class ArrayFromProperty {
 
     /// Adds a value to the end of this array
     public func add(_ value: FromProperty?) {
-        spine_array_from_property_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_from_property_wrapper.self))
+        spine_array_from_property_add(_ptr.assumingMemoryBound(to: spine_array_from_property_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_from_property_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_from_property_clear(_ptr)
+        spine_array_from_property_clear(_ptr.assumingMemoryBound(to: spine_array_from_property_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> FromProperty? {
+    public func removeAt(_ index: Int) -> FromProperty? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_from_property_remove_at(_ptr, index)
+        spine_array_from_property_remove_at(_ptr.assumingMemoryBound(to: spine_array_from_property_wrapper.self), index)
         return value
     }
 
@@ -1355,13 +1355,13 @@ public class ArrayFromProperty {
     public var length: Int {
         get { count }
         set {
-            spine_array_from_property_set_size(_ptr, newValue, nil)
+            spine_array_from_property_set_size(_ptr.assumingMemoryBound(to: spine_array_from_property_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_from_property_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_from_property_wrapper.self), Int32(capacity))
+        spine_array_from_property_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_from_property_wrapper.self), capacity)
     }
 
     deinit {
@@ -1390,39 +1390,39 @@ public class ArrayPhysicsConstraint {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_physics_constraint_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_physics_constraint_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_physics_constraint_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_physics_constraint_size(_ptr.assumingMemoryBound(to: spine_array_physics_constraint_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> PhysicsConstraint? {
+    public subscript(index: Int) -> PhysicsConstraint? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_physics_constraint_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_physics_constraint?.self)[Int(index)]
+            let buffer = spine_array_physics_constraint_buffer(_ptr.assumingMemoryBound(to: spine_array_physics_constraint_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { PhysicsConstraint(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: PhysicsConstraint?) {
-        spine_array_physics_constraint_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self))
+        spine_array_physics_constraint_add(_ptr.assumingMemoryBound(to: spine_array_physics_constraint_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_physics_constraint_clear(_ptr)
+        spine_array_physics_constraint_clear(_ptr.assumingMemoryBound(to: spine_array_physics_constraint_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> PhysicsConstraint? {
+    public func removeAt(_ index: Int) -> PhysicsConstraint? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_physics_constraint_remove_at(_ptr, index)
+        spine_array_physics_constraint_remove_at(_ptr.assumingMemoryBound(to: spine_array_physics_constraint_wrapper.self), index)
         return value
     }
 
@@ -1430,13 +1430,13 @@ public class ArrayPhysicsConstraint {
     public var length: Int {
         get { count }
         set {
-            spine_array_physics_constraint_set_size(_ptr, newValue, nil)
+            spine_array_physics_constraint_set_size(_ptr.assumingMemoryBound(to: spine_array_physics_constraint_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_physics_constraint_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_physics_constraint_wrapper.self), Int32(capacity))
+        spine_array_physics_constraint_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_physics_constraint_wrapper.self), capacity)
     }
 
     deinit {
@@ -1465,39 +1465,39 @@ public class ArrayPolygon {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_polygon_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_polygon_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_polygon_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_polygon_size(_ptr.assumingMemoryBound(to: spine_array_polygon_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Polygon? {
+    public subscript(index: Int) -> Polygon? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_polygon_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_polygon?.self)[Int(index)]
+            let buffer = spine_array_polygon_buffer(_ptr.assumingMemoryBound(to: spine_array_polygon_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { Polygon(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Polygon?) {
-        spine_array_polygon_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_polygon_wrapper.self))
+        spine_array_polygon_add(_ptr.assumingMemoryBound(to: spine_array_polygon_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_polygon_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_polygon_clear(_ptr)
+        spine_array_polygon_clear(_ptr.assumingMemoryBound(to: spine_array_polygon_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Polygon? {
+    public func removeAt(_ index: Int) -> Polygon? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_polygon_remove_at(_ptr, index)
+        spine_array_polygon_remove_at(_ptr.assumingMemoryBound(to: spine_array_polygon_wrapper.self), index)
         return value
     }
 
@@ -1505,13 +1505,13 @@ public class ArrayPolygon {
     public var length: Int {
         get { count }
         set {
-            spine_array_polygon_set_size(_ptr, newValue, nil)
+            spine_array_polygon_set_size(_ptr.assumingMemoryBound(to: spine_array_polygon_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_polygon_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_polygon_wrapper.self), Int32(capacity))
+        spine_array_polygon_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_polygon_wrapper.self), capacity)
     }
 
     deinit {
@@ -1540,39 +1540,39 @@ public class ArraySkin {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_skin_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_skin_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_skin_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_skin_size(_ptr.assumingMemoryBound(to: spine_array_skin_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Skin? {
+    public subscript(index: Int) -> Skin? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_skin_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_skin?.self)[Int(index)]
+            let buffer = spine_array_skin_buffer(_ptr.assumingMemoryBound(to: spine_array_skin_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { Skin(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Skin?) {
-        spine_array_skin_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_skin_wrapper.self))
+        spine_array_skin_add(_ptr.assumingMemoryBound(to: spine_array_skin_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_skin_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_skin_clear(_ptr)
+        spine_array_skin_clear(_ptr.assumingMemoryBound(to: spine_array_skin_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Skin? {
+    public func removeAt(_ index: Int) -> Skin? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_skin_remove_at(_ptr, index)
+        spine_array_skin_remove_at(_ptr.assumingMemoryBound(to: spine_array_skin_wrapper.self), index)
         return value
     }
 
@@ -1580,13 +1580,13 @@ public class ArraySkin {
     public var length: Int {
         get { count }
         set {
-            spine_array_skin_set_size(_ptr, newValue, nil)
+            spine_array_skin_set_size(_ptr.assumingMemoryBound(to: spine_array_skin_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_skin_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_skin_wrapper.self), Int32(capacity))
+        spine_array_skin_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_skin_wrapper.self), capacity)
     }
 
     deinit {
@@ -1615,39 +1615,39 @@ public class ArraySlot {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_slot_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_slot_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_slot_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_slot_size(_ptr.assumingMemoryBound(to: spine_array_slot_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Slot? {
+    public subscript(index: Int) -> Slot? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_slot_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_slot?.self)[Int(index)]
+            let buffer = spine_array_slot_buffer(_ptr.assumingMemoryBound(to: spine_array_slot_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { Slot(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: Slot?) {
-        spine_array_slot_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_slot_wrapper.self))
+        spine_array_slot_add(_ptr.assumingMemoryBound(to: spine_array_slot_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_slot_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_slot_clear(_ptr)
+        spine_array_slot_clear(_ptr.assumingMemoryBound(to: spine_array_slot_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Slot? {
+    public func removeAt(_ index: Int) -> Slot? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_slot_remove_at(_ptr, index)
+        spine_array_slot_remove_at(_ptr.assumingMemoryBound(to: spine_array_slot_wrapper.self), index)
         return value
     }
 
@@ -1655,13 +1655,13 @@ public class ArraySlot {
     public var length: Int {
         get { count }
         set {
-            spine_array_slot_set_size(_ptr, newValue, nil)
+            spine_array_slot_set_size(_ptr.assumingMemoryBound(to: spine_array_slot_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_slot_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_slot_wrapper.self), Int32(capacity))
+        spine_array_slot_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_slot_wrapper.self), capacity)
     }
 
     deinit {
@@ -1690,39 +1690,39 @@ public class ArraySlotData {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_slot_data_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_slot_data_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_slot_data_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_slot_data_size(_ptr.assumingMemoryBound(to: spine_array_slot_data_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> SlotData? {
+    public subscript(index: Int) -> SlotData? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_slot_data_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_slot_data?.self)[Int(index)]
+            let buffer = spine_array_slot_data_buffer(_ptr.assumingMemoryBound(to: spine_array_slot_data_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { SlotData(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: SlotData?) {
-        spine_array_slot_data_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_slot_data_wrapper.self))
+        spine_array_slot_data_add(_ptr.assumingMemoryBound(to: spine_array_slot_data_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_slot_data_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_slot_data_clear(_ptr)
+        spine_array_slot_data_clear(_ptr.assumingMemoryBound(to: spine_array_slot_data_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> SlotData? {
+    public func removeAt(_ index: Int) -> SlotData? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_slot_data_remove_at(_ptr, index)
+        spine_array_slot_data_remove_at(_ptr.assumingMemoryBound(to: spine_array_slot_data_wrapper.self), index)
         return value
     }
 
@@ -1730,13 +1730,13 @@ public class ArraySlotData {
     public var length: Int {
         get { count }
         set {
-            spine_array_slot_data_set_size(_ptr, newValue, nil)
+            spine_array_slot_data_set_size(_ptr.assumingMemoryBound(to: spine_array_slot_data_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_slot_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_slot_data_wrapper.self), Int32(capacity))
+        spine_array_slot_data_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_slot_data_wrapper.self), capacity)
     }
 
     deinit {
@@ -1765,39 +1765,39 @@ public class ArrayTextureRegion {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_texture_region_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_texture_region_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_texture_region_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_texture_region_size(_ptr.assumingMemoryBound(to: spine_array_texture_region_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> TextureRegion? {
+    public subscript(index: Int) -> TextureRegion? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_texture_region_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_texture_region?.self)[Int(index)]
+            let buffer = spine_array_texture_region_buffer(_ptr.assumingMemoryBound(to: spine_array_texture_region_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { TextureRegion(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: TextureRegion?) {
-        spine_array_texture_region_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_texture_region_wrapper.self))
+        spine_array_texture_region_add(_ptr.assumingMemoryBound(to: spine_array_texture_region_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_texture_region_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_texture_region_clear(_ptr)
+        spine_array_texture_region_clear(_ptr.assumingMemoryBound(to: spine_array_texture_region_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> TextureRegion? {
+    public func removeAt(_ index: Int) -> TextureRegion? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_texture_region_remove_at(_ptr, index)
+        spine_array_texture_region_remove_at(_ptr.assumingMemoryBound(to: spine_array_texture_region_wrapper.self), index)
         return value
     }
 
@@ -1805,13 +1805,13 @@ public class ArrayTextureRegion {
     public var length: Int {
         get { count }
         set {
-            spine_array_texture_region_set_size(_ptr, newValue, nil)
+            spine_array_texture_region_set_size(_ptr.assumingMemoryBound(to: spine_array_texture_region_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_texture_region_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_texture_region_wrapper.self), Int32(capacity))
+        spine_array_texture_region_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_texture_region_wrapper.self), capacity)
     }
 
     deinit {
@@ -1840,19 +1840,19 @@ public class ArrayTimeline {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_timeline_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_timeline_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_timeline_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_timeline_size(_ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Timeline? {
+    public subscript(index: Int) -> Timeline? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_timeline_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_timeline?.self)[Int(index)]
+            let buffer = spine_array_timeline_buffer(_ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_timeline_get_rtti(ptr)
         let className = String(cString: spine_rtti_get_class_name(rtti)!)
@@ -1937,20 +1937,20 @@ public class ArrayTimeline {
 
     /// Adds a value to the end of this array
     public func add(_ value: Timeline?) {
-        spine_array_timeline_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_timeline_wrapper.self))
+        spine_array_timeline_add(_ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_timeline_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_timeline_clear(_ptr)
+        spine_array_timeline_clear(_ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Timeline? {
+    public func removeAt(_ index: Int) -> Timeline? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_timeline_remove_at(_ptr, index)
+        spine_array_timeline_remove_at(_ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self), index)
         return value
     }
 
@@ -1958,13 +1958,13 @@ public class ArrayTimeline {
     public var length: Int {
         get { count }
         set {
-            spine_array_timeline_set_size(_ptr, newValue, nil)
+            spine_array_timeline_set_size(_ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_timeline_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self), Int32(capacity))
+        spine_array_timeline_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self), capacity)
     }
 
     deinit {
@@ -1993,19 +1993,19 @@ public class ArrayToProperty {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_to_property_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_to_property_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_to_property_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_to_property_size(_ptr.assumingMemoryBound(to: spine_array_to_property_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> ToProperty? {
+    public subscript(index: Int) -> ToProperty? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_to_property_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_to_property?.self)[Int(index)]
+            let buffer = spine_array_to_property_buffer(_ptr.assumingMemoryBound(to: spine_array_to_property_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_to_property_get_rtti(ptr)
         let className = String(cString: spine_rtti_get_class_name(rtti)!)
@@ -2030,20 +2030,20 @@ public class ArrayToProperty {
 
     /// Adds a value to the end of this array
     public func add(_ value: ToProperty?) {
-        spine_array_to_property_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_to_property_wrapper.self))
+        spine_array_to_property_add(_ptr.assumingMemoryBound(to: spine_array_to_property_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_to_property_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_to_property_clear(_ptr)
+        spine_array_to_property_clear(_ptr.assumingMemoryBound(to: spine_array_to_property_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> ToProperty? {
+    public func removeAt(_ index: Int) -> ToProperty? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_to_property_remove_at(_ptr, index)
+        spine_array_to_property_remove_at(_ptr.assumingMemoryBound(to: spine_array_to_property_wrapper.self), index)
         return value
     }
 
@@ -2051,13 +2051,13 @@ public class ArrayToProperty {
     public var length: Int {
         get { count }
         set {
-            spine_array_to_property_set_size(_ptr, newValue, nil)
+            spine_array_to_property_set_size(_ptr.assumingMemoryBound(to: spine_array_to_property_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_to_property_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_to_property_wrapper.self), Int32(capacity))
+        spine_array_to_property_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_to_property_wrapper.self), capacity)
     }
 
     deinit {
@@ -2086,39 +2086,39 @@ public class ArrayTrackEntry {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_track_entry_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_track_entry_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_track_entry_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_track_entry_size(_ptr.assumingMemoryBound(to: spine_array_track_entry_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> TrackEntry? {
+    public subscript(index: Int) -> TrackEntry? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_track_entry_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_track_entry?.self)[Int(index)]
+            let buffer = spine_array_track_entry_buffer(_ptr.assumingMemoryBound(to: spine_array_track_entry_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             return elementPtr.map { TrackEntry(fromPointer: $0) }
         }
     }
 
     /// Adds a value to the end of this array
     public func add(_ value: TrackEntry?) {
-        spine_array_track_entry_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
+        spine_array_track_entry_add(_ptr.assumingMemoryBound(to: spine_array_track_entry_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_track_entry_clear(_ptr)
+        spine_array_track_entry_clear(_ptr.assumingMemoryBound(to: spine_array_track_entry_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> TrackEntry? {
+    public func removeAt(_ index: Int) -> TrackEntry? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_track_entry_remove_at(_ptr, index)
+        spine_array_track_entry_remove_at(_ptr.assumingMemoryBound(to: spine_array_track_entry_wrapper.self), index)
         return value
     }
 
@@ -2126,13 +2126,13 @@ public class ArrayTrackEntry {
     public var length: Int {
         get { count }
         set {
-            spine_array_track_entry_set_size(_ptr, newValue, nil)
+            spine_array_track_entry_set_size(_ptr.assumingMemoryBound(to: spine_array_track_entry_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_track_entry_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_track_entry_wrapper.self), Int32(capacity))
+        spine_array_track_entry_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_track_entry_wrapper.self), capacity)
     }
 
     deinit {
@@ -2161,19 +2161,19 @@ public class ArrayUpdate {
 
     /// Create a new array with the specified initial capacity
     public convenience init(capacity: Int) {
-        let ptr = spine_array_update_create_with_capacity(Int32(capacity))!
+        let ptr = spine_array_update_create_with_capacity(capacity)!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
 
-    public var count: Int32 {
-        return spine_array_update_size(_ptr)
+    public var count: Int {
+        return Int(spine_array_update_size(_ptr.assumingMemoryBound(to: spine_array_update_wrapper.self)))
     }
 
-    public subscript(index: Int32) -> Update? {
+    public subscript(index: Int) -> Update? {
         get {
             precondition(index >= 0 && index < count, "Index out of bounds")
-            let buffer = spine_array_update_buffer(_ptr)!
-            let elementPtr = buffer.assumingMemoryBound(to: spine_update?.self)[Int(index)]
+            let buffer = spine_array_update_buffer(_ptr.assumingMemoryBound(to: spine_array_update_wrapper.self))!
+            let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_update_get_rtti(ptr)
         let className = String(cString: spine_rtti_get_class_name(rtti)!)
@@ -2200,20 +2200,20 @@ public class ArrayUpdate {
 
     /// Adds a value to the end of this array
     public func add(_ value: Update?) {
-        spine_array_update_add(_ptr, value?._ptr.assumingMemoryBound(to: spine_update_wrapper.self))
+        spine_array_update_add(_ptr.assumingMemoryBound(to: spine_array_update_wrapper.self), value?._ptr.assumingMemoryBound(to: spine_update_wrapper.self))
     }
 
     /// Removes all elements from this array
     public func clear() {
-        spine_array_update_clear(_ptr)
+        spine_array_update_clear(_ptr.assumingMemoryBound(to: spine_array_update_wrapper.self))
     }
 
     /// Removes the element at the given index
     @discardableResult
-    public func removeAt(_ index: Int32) -> Update? {
+    public func removeAt(_ index: Int) -> Update? {
         precondition(index >= 0 && index < count, "Index out of bounds")
         let value = self[index]
-        spine_array_update_remove_at(_ptr, index)
+        spine_array_update_remove_at(_ptr.assumingMemoryBound(to: spine_array_update_wrapper.self), index)
         return value
     }
 
@@ -2221,13 +2221,13 @@ public class ArrayUpdate {
     public var length: Int {
         get { count }
         set {
-            spine_array_update_set_size(_ptr, newValue, nil)
+            spine_array_update_set_size(_ptr.assumingMemoryBound(to: spine_array_update_wrapper.self), newValue, nil)
         }
     }
 
     /// Ensures this array has at least the given capacity
     public func ensureCapacity(_ capacity: Int) {
-        spine_array_update_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_update_wrapper.self), Int32(capacity))
+        spine_array_update_ensure_capacity(_ptr.assumingMemoryBound(to: spine_array_update_wrapper.self), capacity)
     }
 
     deinit {
