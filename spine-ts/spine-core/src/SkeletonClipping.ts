@@ -43,6 +43,17 @@ export class SkeletonClipping {
 	clippedUVs = new Array<number>();
 
 	clippedTriangles = new Array<number>();
+
+	_clippedVerticesTyped = new Float32Array(1024);
+	_clippedUVsTyped = new Float32Array(1024);
+	_clippedTrianglesTyped = new Uint32Array(1024);
+	clippedVerticesTyped = new Float32Array(0);
+	clippedUVsTyped = new Float32Array(0);
+	clippedTrianglesTyped = new Uint32Array(0);
+	clippedVerticesLength = 0;
+	clippedUVsLength = 0;
+	clippedTrianglesLength = 0;
+
 	private scratch = new Array<number>();
 
 	private clipAttachment: ClippingAttachment | null = null;
@@ -76,6 +87,9 @@ export class SkeletonClipping {
 		this.clippedVertices.length = 0;
 		this.clippedTriangles.length = 0;
 		this.clippingPolygon.length = 0;
+		this.clippedVerticesLength = 0;
+		this.clippedUVsLength = 0;
+		this.clippedTrianglesLength = 0;
 	}
 
 	isClipping (): boolean {
@@ -308,55 +322,82 @@ export class SkeletonClipping {
 		return clipOutputItems != null;
 	}
 
-	public clipTrianglesUnpacked (vertices: NumberArrayLike, triangles: NumberArrayLike, trianglesLength: number, uvs: NumberArrayLike) {
-		let clipOutput = this.clipOutput, clippedVertices = this.clippedVertices, clippedUVs = this.clippedUVs;
-		let clippedTriangles = this.clippedTriangles;
-		let polygons = this.clippingPolygons!;
-		let polygonsCount = polygons.length;
+	public clipTrianglesUnpacked (vertices: NumberArrayLike, triangles: NumberArrayLike | Uint32Array, trianglesLength: number, uvs: NumberArrayLike) {
+		const clipOutput = this.clipOutput;
+		let clippedVertices = this._clippedVerticesTyped, clippedUVs = this._clippedUVsTyped, clippedTriangles = this._clippedTrianglesTyped;
+		const polygons = this.clippingPolygons!;
+		const polygonsCount = polygons.length;
 
 		let index = 0;
-		clippedVertices.length = 0;
-		clippedUVs.length = 0;
-		clippedTriangles.length = 0;
+		this.clippedVerticesLength = 0;
+		this.clippedUVsLength = 0;
+		this.clippedTrianglesLength = 0;
+
+		this._clippedVerticesTyped;
+		this._clippedUVsTyped;
+		this._clippedTrianglesTyped;
+
+		let clipped = false;
+
 		for (let i = 0; i < trianglesLength; i += 3) {
 			let v = triangles[i] << 1;
-			let x1 = vertices[v], y1 = vertices[v + 1];
-			let u1 = uvs[v], v1 = uvs[v + 1];
+			const x1 = vertices[v], y1 = vertices[v + 1];
+			const u1 = uvs[v], v1 = uvs[v + 1];
 
 			v = triangles[i + 1] << 1;
-			let x2 = vertices[v], y2 = vertices[v + 1];
-			let u2 = uvs[v], v2 = uvs[v + 1];
+			const x2 = vertices[v], y2 = vertices[v + 1];
+			const u2 = uvs[v], v2 = uvs[v + 1];
 
 			v = triangles[i + 2] << 1;
-			let x3 = vertices[v], y3 = vertices[v + 1];
-			let u3 = uvs[v], v3 = uvs[v + 1];
+			const x3 = vertices[v], y3 = vertices[v + 1];
+			const u3 = uvs[v], v3 = uvs[v + 1];
 
 			for (let p = 0; p < polygonsCount; p++) {
-				let s = clippedVertices.length;
+				let s = this.clippedVerticesLength;
 				if (this.clip(x1, y1, x2, y2, x3, y3, polygons[p], clipOutput)) {
-					let clipOutputLength = clipOutput.length;
-					if (clipOutputLength == 0) continue;
-					let d0 = y2 - y3, d1 = x3 - x2, d2 = x1 - x3, d4 = y3 - y1;
-					let d = 1 / (d0 * d2 + d1 * (y1 - y3));
+					const clipOutputLength = clipOutput.length;
+					if (clipOutputLength === 0) continue;
+					clipped = true;
+					const d0 = y2 - y3, d1 = x3 - x2, d2 = x1 - x3, d4 = y3 - y1;
+					const d = 1 / (d0 * d2 + d1 * (y1 - y3));
 
 					let clipOutputCount = clipOutputLength >> 1;
-					let clipOutputItems = this.clipOutput;
-					let clippedVerticesItems = Utils.setArraySize(clippedVertices, s + clipOutputCount * 2);
-					let clippedUVsItems = Utils.setArraySize(clippedUVs, s + clipOutputCount * 2);
+					const clipOutputItems = this.clipOutput;
+
+					const newLength = s + clipOutputCount * 2;
+					if (clippedVertices.length < newLength) {
+						this._clippedVerticesTyped = new Float32Array(newLength * 2);
+						this._clippedVerticesTyped.set(clippedVertices.subarray(0, s));
+						this._clippedUVsTyped = new Float32Array(newLength * 2);
+						this._clippedUVsTyped.set(clippedUVs.subarray(0, s));
+						clippedVertices = this._clippedVerticesTyped;
+						clippedUVs = this._clippedUVsTyped;
+					}
+					const clippedVerticesItems = clippedVertices;
+					const clippedUVsItems = clippedUVs;
+					this.clippedVerticesLength = newLength;
+					this.clippedUVsLength = newLength;
 					for (let ii = 0; ii < clipOutputLength; ii += 2, s += 2) {
-						let x = clipOutputItems[ii], y = clipOutputItems[ii + 1];
+						const x = clipOutputItems[ii], y = clipOutputItems[ii + 1];
 						clippedVerticesItems[s] = x;
 						clippedVerticesItems[s + 1] = y;
-						let c0 = x - x3, c1 = y - y3;
-						let a = (d0 * c0 + d1 * c1) * d;
-						let b = (d4 * c0 + d2 * c1) * d;
-						let c = 1 - a - b;
+						const c0 = x - x3, c1 = y - y3;
+						const a = (d0 * c0 + d1 * c1) * d;
+						const b = (d4 * c0 + d2 * c1) * d;
+						const c = 1 - a - b;
 						clippedUVsItems[s] = u1 * a + u2 * b + u3 * c;
 						clippedUVsItems[s + 1] = v1 * a + v2 * b + v3 * c;
 					}
 
-					s = clippedTriangles.length;
-					let clippedTrianglesItems = Utils.setArraySize(clippedTriangles, s + 3 * (clipOutputCount - 2));
+					s = this.clippedTrianglesLength;
+					const newLengthTriangles = s + 3 * (clipOutputCount - 2)
+					if (clippedTriangles.length < newLengthTriangles) {
+						this._clippedTrianglesTyped = new Uint32Array(newLengthTriangles * 2);
+						this._clippedTrianglesTyped.set(clippedTriangles.subarray(0, s));
+						clippedTriangles = this._clippedTrianglesTyped;
+					}
+					this.clippedTrianglesLength = newLengthTriangles;
+					const clippedTrianglesItems = clippedTriangles;
 					clipOutputCount--;
 					for (let ii = 1; ii < clipOutputCount; ii++, s += 3) {
 						clippedTrianglesItems[s] = index;
@@ -366,32 +407,58 @@ export class SkeletonClipping {
 					index += clipOutputCount + 1;
 
 				} else {
-					let clippedVerticesItems = Utils.setArraySize(clippedVertices, s + 3 * 2);
-					clippedVerticesItems[s] = x1;
-					clippedVerticesItems[s + 1] = y1;
-					clippedVerticesItems[s + 2] = x2;
-					clippedVerticesItems[s + 3] = y2;
-					clippedVerticesItems[s + 4] = x3;
-					clippedVerticesItems[s + 5] = y3;
 
-					let clippedUVSItems = Utils.setArraySize(clippedUVs, s + 3 * 2);
-					clippedUVSItems[s] = u1;
-					clippedUVSItems[s + 1] = v1;
-					clippedUVSItems[s + 2] = u2;
-					clippedUVSItems[s + 3] = v2;
-					clippedUVSItems[s + 4] = u3;
-					clippedUVSItems[s + 5] = v3;
+					let newLength = s + 3 * 2;
+					if (clippedVertices.length < newLength) {
+						this._clippedVerticesTyped = new Float32Array(newLength * 2);
+						this._clippedVerticesTyped.set(clippedVertices.subarray(0, s));
+						clippedVertices = this._clippedVerticesTyped;
+					}
+					clippedVertices[s] = x1;
+					clippedVertices[s + 1] = y1;
+					clippedVertices[s + 2] = x2;
+					clippedVertices[s + 3] = y2;
+					clippedVertices[s + 4] = x3;
+					clippedVertices[s + 5] = y3;
 
-					s = clippedTriangles.length;
-					let clippedTrianglesItems = Utils.setArraySize(clippedTriangles, s + 3);
-					clippedTrianglesItems[s] = index;
-					clippedTrianglesItems[s + 1] = (index + 1);
-					clippedTrianglesItems[s + 2] = (index + 2);
+					if (clippedUVs.length < newLength) {
+						this._clippedUVsTyped = new Float32Array(newLength * 2);
+						this._clippedUVsTyped.set(clippedUVs.subarray(0, s));
+						clippedUVs = this._clippedUVsTyped;
+					}
+					clippedUVs[s] = u1;
+					clippedUVs[s + 1] = v1;
+					clippedUVs[s + 2] = u2;
+					clippedUVs[s + 3] = v2;
+					clippedUVs[s + 4] = u3;
+					clippedUVs[s + 5] = v3;
+
+					this.clippedVerticesLength = newLength;
+					this.clippedUVsLength = newLength;
+
+					s = this.clippedTrianglesLength;
+					newLength = s + 3;
+					if (clippedTriangles.length < newLength) {
+						this._clippedTrianglesTyped = new Uint32Array(newLength * 2);
+						this._clippedTrianglesTyped.set(clippedTriangles.subarray(0, s));
+						clippedTriangles = this._clippedTrianglesTyped;
+					}
+
+					clippedTriangles[s] = index;
+					clippedTriangles[s + 1] = (index + 1);
+					clippedTriangles[s + 2] = (index + 2);
 					index += 3;
+
+					this.clippedTrianglesLength = newLength;
 					break;
 				}
 			}
 		}
+
+		this.clippedVerticesTyped = this._clippedVerticesTyped.subarray(0, this.clippedVerticesLength)
+		this.clippedUVsTyped = this._clippedUVsTyped.subarray(0, this.clippedUVsLength)
+		this.clippedTrianglesTyped = this._clippedTrianglesTyped.subarray(0, this.clippedTrianglesLength)
+		return clipped;
 	}
 
 	/** Clips the input triangle against the convex, clockwise clipping area. If the triangle lies entirely within the clipping

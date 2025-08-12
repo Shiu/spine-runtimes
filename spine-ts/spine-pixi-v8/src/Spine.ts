@@ -28,26 +28,11 @@
  *****************************************************************************/
 
 import {
-	Assets,
-	Bounds,
-	Cache,
-	Container,
-	ContainerOptions,
-	DestroyOptions,
-	fastCopy,
-	Graphics,
-	PointData,
-	Texture,
-	Ticker,
-	ViewContainer,
-} from 'pixi.js';
-import { ISpineDebugRenderer } from './SpineDebugRenderer.js';
-import {
 	AnimationState,
 	AnimationStateData,
 	AtlasAttachmentLoader,
-	Attachment,
-	Bone,
+	type Attachment,
+	type Bone,
 	ClippingAttachment,
 	Color,
 	MeshAttachment,
@@ -61,11 +46,26 @@ import {
 	SkeletonData,
 	SkeletonJson,
 	Skin,
-	Slot,
+	type Slot,
 	type TextureAtlas,
-	TrackEntry,
+	type TrackEntry,
 	Vector2,
 } from '@esotericsoftware/spine-core';
+import {
+	Assets,
+	type Bounds,
+	Cache,
+	Container,
+	type ContainerOptions,
+	type DestroyOptions,
+	fastCopy,
+	Graphics,
+	type PointData,
+	Texture,
+	Ticker,
+	ViewContainer,
+} from 'pixi.js';
+import type { ISpineDebugRenderer } from './SpineDebugRenderer.js';
 
 /**
  * Options to create a {@link Spine} using {@link Spine.from}.
@@ -142,7 +142,7 @@ export class SetupPoseBoundsProvider implements SpineBoundsProvider {
 		skeleton.setupPose();
 		skeleton.updateWorldTransform(Physics.update);
 		const bounds = skeleton.getBoundsRect(this.clipping ? new SkeletonClipping() : undefined);
-		return bounds.width == Number.NEGATIVE_INFINITY
+		return bounds.width === Number.NEGATIVE_INFINITY
 			? { x: 0, y: 0, width: 0, height: 0 }
 			: bounds;
 	}
@@ -180,7 +180,7 @@ export class SkinsAndAnimationBoundsProvider
 		const clipper = this.clipping ? new SkeletonClipping() : undefined;
 		const data = skeleton.data;
 		if (this.skins.length > 0) {
-			let customSkin = new Skin("custom-skin");
+			const customSkin = new Skin("custom-skin");
 			for (const skinName of this.skins) {
 				const skin = data.findSkin(skinName);
 				if (skin == null) continue;
@@ -190,12 +190,12 @@ export class SkinsAndAnimationBoundsProvider
 		}
 		skeleton.setupPose();
 
-		const animation = this.animation != null ? data.findAnimation(this.animation!) : null;
+		const animation = this.animation != null ? data.findAnimation(this.animation) : null;
 
 		if (animation == null) {
 			skeleton.updateWorldTransform(Physics.update);
 			const bounds = skeleton.getBoundsRect(clipper);
-			return bounds.width == Number.NEGATIVE_INFINITY
+			return bounds.width === Number.NEGATIVE_INFINITY
 				? { x: 0, y: 0, width: 0, height: 0 }
 				: bounds;
 		} else {
@@ -225,7 +225,7 @@ export class SkinsAndAnimationBoundsProvider
 				width: maxX - minX,
 				height: maxY - minY,
 			};
-			return bounds.width == Number.NEGATIVE_INFINITY
+			return bounds.width === Number.NEGATIVE_INFINITY
 				? { x: 0, y: 0, width: 0, height: 0 }
 				: bounds;
 		}
@@ -414,10 +414,10 @@ export class Spine extends ViewContainer {
 
 	/** If {@link Spine.autoUpdate} is `false`, this method allows to update the AnimationState and the Skeleton with the given delta. */
 	public update (dt: number): void {
-		this.internalUpdate(0, dt);
+		this.internalUpdate(undefined, dt);
 	}
 
-	protected internalUpdate (_deltaFrame: any, deltaSeconds?: number): void {
+	protected internalUpdate (ticker?: Ticker, deltaSeconds?: number): void {
 		// Because reasons, pixi uses deltaFrames at 60fps.
 		// We ignore the default deltaFrames and use the deltaSeconds from pixi ticker.
 		this._updateAndApplyState(deltaSeconds ?? Ticker.shared.deltaMS / 1000);
@@ -568,18 +568,18 @@ export class Spine extends ViewContainer {
 		const pose = slot.applied;
 		const attachment = pose.attachment;
 		if (attachment && attachment instanceof ClippingAttachment) {
-			const clip = (this.clippingSlotToPixiMasks[slot.data.name] ||= { slot, vertices: new Array<number>() });
+			const clip = (this.clippingSlotToPixiMasks[slot.data.name] ||= { slot, vertices: [] as number[] });
 			clip.maskComputed = false;
 			this.currentClippingSlot = this.clippingSlotToPixiMasks[slot.data.name];
 			return;
 		}
 
 		// assign the currentClippingSlot mask to the slot object
-		let currentClippingSlot = this.currentClippingSlot;
-		let slotObject = this._slotsObject[slot.data.name];
+		const currentClippingSlot = this.currentClippingSlot;
+		const slotObject = this._slotsObject[slot.data.name];
 		if (currentClippingSlot && slotObject) {
-			let slotClipping = currentClippingSlot.slot;
-			let clippingAttachment = slotClipping.pose.attachment as ClippingAttachment;
+			const slotClipping = currentClippingSlot.slot;
+			const clippingAttachment = slotClipping.pose.attachment as ClippingAttachment;
 
 			// create the pixi mask, only the first time and if the clipped slot is the first one clipped by this currentClippingSlot
 			let mask = currentClippingSlot.mask as Graphics;
@@ -604,7 +604,7 @@ export class Spine extends ViewContainer {
 		}
 
 		// if current slot is the ending one of the currentClippingSlot mask, set currentClippingSlot to undefined
-		if (currentClippingSlot && (currentClippingSlot.slot.applied.attachment as ClippingAttachment).endSlot == slot.data) {
+		if (currentClippingSlot && (currentClippingSlot.slot.applied.attachment as ClippingAttachment).endSlot === slot.data) {
 			this.currentClippingSlot = undefined;
 		}
 
@@ -711,10 +711,10 @@ export class Spine extends ViewContainer {
 			cacheData.uvs,
 		);
 
-		const { clippedVertices, clippedUVs, clippedTriangles } = clipper;
+		const { clippedVerticesTyped, clippedUVsTyped, clippedTrianglesTyped } = clipper;
 
-		const verticesCount = clippedVertices.length / 2;
-		const indicesCount = clippedTriangles.length;
+		const verticesCount = clipper.clippedVerticesLength / 2;
+		const indicesCount = clipper.clippedTrianglesLength;
 
 		if (!cacheData.clippedData) {
 			cacheData.clippedData = {
@@ -749,24 +749,10 @@ export class Spine extends ViewContainer {
 		}
 
 		const { vertices, uvs, indices } = clippedData;
-
-		for (let i = 0; i < verticesCount; i++) {
-			vertices[i * 2] = clippedVertices[i * 2];
-			vertices[(i * 2) + 1] = clippedVertices[(i * 2) + 1];
-
-			uvs[i * 2] = clippedUVs[(i * 2)];
-			uvs[(i * 2) + 1] = clippedUVs[(i * 2) + 1];
-		}
-
+		vertices.set(clippedVerticesTyped);
+		uvs.set(clippedUVsTyped);
+		indices.set(clippedTrianglesTyped);
 		clippedData.vertexCount = verticesCount;
-
-		for (let i = 0; i < indicesCount; i++) {
-			if (indices[i] !== clippedTriangles[i]) {
-				this.spineAttachmentsDirty = true;
-				indices[i] = clippedTriangles[i];
-			}
-		}
-
 		clippedData.indicesCount = indicesCount;
 	}
 

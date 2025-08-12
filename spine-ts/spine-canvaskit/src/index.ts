@@ -34,20 +34,14 @@ import {
 	AnimationStateData,
 	AtlasAttachmentLoader,
 	BlendMode,
-	ClippingAttachment,
-	MathUtils,
-	MeshAttachment,
-	type NumberArrayLike,
 	Physics,
-	RegionAttachment,
 	Skeleton,
 	SkeletonBinary,
-	SkeletonClipping,
 	type SkeletonData,
 	SkeletonJson,
+	SkeletonRendererCore,
 	Texture,
 	TextureAtlas,
-	Utils,
 } from "@esotericsoftware/spine-core";
 
 import type { Canvas, CanvasKit, Image, Paint, Shader } from "canvaskit-wasm";
@@ -223,11 +217,7 @@ export class SkeletonDrawable {
  * Renders a {@link Skeleton} or {@link SkeletonDrawable} to a CanvasKit {@link Canvas}.
  */
 export class SkeletonRenderer {
-	private clipper = new SkeletonClipping();
-	private static QUAD_TRIANGLES = [0, 1, 2, 2, 3, 0];
-	private scratchPositions = Utils.newFloatArray(100);
-	private scratchUVs = Utils.newFloatArray(100);
-	private scratchColors = new Uint32Array(100 / 4);
+	private skeletonRenderer = new SkeletonRendererCore();
 
 	/**
 	 * Creates a new skeleton renderer.
@@ -235,119 +225,34 @@ export class SkeletonRenderer {
 	 */
 	constructor (private ck: CanvasKit) { }
 
-	/**
-	 * Renders a skeleton or skeleton drawable in its current pose to the canvas.
-	 * @param canvas the canvas to render to.
-	 * @param skeleton the skeleton or drawable to render.
-	 */
 	render (canvas: Canvas, skeleton: Skeleton | SkeletonDrawable) {
 		if (skeleton instanceof SkeletonDrawable) skeleton = skeleton.skeleton;
-		const clipper = this.clipper;
-		const drawOrder = skeleton.drawOrder;
-		const skeletonColor = skeleton.color;
+		let command = this.skeletonRenderer.render(skeleton);
+		while (command) {
+			const { positions, uvs, colors, indices } = command;
+			const ckImage = command.texture.getImage();
+			const image = ckImage.image;
+			const width = image.width();
+			const height = image.height();
 
-		for (let i = 0, n = drawOrder.length; i < n; i++) {
-			const slot = drawOrder[i];
-			if (!slot.bone.active) {
-				clipper.clipEnd(slot);
-				continue;
+			for (let i = 0; i < uvs.length; i += 2) {
+				uvs[i] = uvs[i] * width;
+				uvs[i + 1] = uvs[i + 1] * height;
 			}
 
-			const pose = slot.applied;
-			const attachment = pose.attachment;
-			let positions = this.scratchPositions;
-			let triangles: Array<number>;
-			let numVertices = 4;
-
-			if (attachment instanceof RegionAttachment) {
-				attachment.computeWorldVertices(slot, positions, 0, 2);
-				triangles = SkeletonRenderer.QUAD_TRIANGLES;
-			} else if (attachment instanceof MeshAttachment) {
-				if (positions.length < attachment.worldVerticesLength) {
-					this.scratchPositions = Utils.newFloatArray(attachment.worldVerticesLength);
-					positions = this.scratchPositions;
-				}
-				numVertices = attachment.worldVerticesLength >> 1;
-				attachment.computeWorldVertices(
-					skeleton,
-					slot,
-					0,
-					attachment.worldVerticesLength,
-					positions,
-					0,
-					2
-				);
-				triangles = attachment.triangles;
-			} else if (attachment instanceof ClippingAttachment) {
-				clipper.clipStart(skeleton, slot, attachment);
-				continue;
-			} else {
-				clipper.clipEnd(slot);
-				continue;
-			}
-
-			const texture = attachment.region?.texture as CanvasKitTexture;
-			if (texture) {
-				let uvs = attachment.uvs;
-				let scaledUvs: NumberArrayLike;
-				let colors = this.scratchColors;
-				if (clipper.isClipping()) {
-					clipper.clipTrianglesUnpacked(positions, triangles, triangles.length, uvs);
-					if (clipper.clippedVertices.length <= 0) {
-						clipper.clipEnd(slot);
-						continue;
-					}
-					positions = clipper.clippedVertices;
-					uvs = scaledUvs = clipper.clippedUVs;
-					triangles = clipper.clippedTriangles;
-					numVertices = clipper.clippedVertices.length / 2;
-					colors = new Uint32Array(numVertices);
-				} else {
-					scaledUvs = this.scratchUVs;
-					if (this.scratchUVs.length < uvs.length)
-						scaledUvs = this.scratchUVs = Utils.newFloatArray(uvs.length);
-					if (colors.length < numVertices)
-						colors = this.scratchColors = new Uint32Array(numVertices);
-				}
-
-				const ckImage = texture.getImage();
-				const image = ckImage.image;
-				const width = image.width();
-				const height = image.height();
-				for (let i = 0; i < uvs.length; i += 2) {
-					scaledUvs[i] = uvs[i] * width;
-					scaledUvs[i + 1] = uvs[i + 1] * height;
-				}
-
-				const attachmentColor = attachment.color;
-				const slotColor = pose.color;
-
-				// using Uint32Array for colors allows to avoid canvaskit to allocate one each time
-				// but colors need to be in canvaskit format.
-				// See: https://github.com/google/skia/blob/bb8c36fdf7b915a8c096e35e2f08109e477fe1b8/modules/canvaskit/color.js#L163
-				const finalColor = (
-					MathUtils.clamp(skeletonColor.a * slotColor.a * attachmentColor.a * 255, 0, 255) << 24 |
-					MathUtils.clamp(skeletonColor.r * slotColor.r * attachmentColor.r * 255, 0, 255) << 16 |
-					MathUtils.clamp(skeletonColor.g * slotColor.g * attachmentColor.g * 255, 0, 255) << 8 |
-					MathUtils.clamp(skeletonColor.b * slotColor.b * attachmentColor.b * 255, 0, 255) << 0
-				) >>> 0;
-				for (let i = 0, n = numVertices; i < n; i++) colors[i] = finalColor;
-
-				const vertices = this.ck.MakeVertices(
-					this.ck.VertexMode.Triangles,
-					positions,
-					scaledUvs,
-					colors,
-					triangles,
-					false
-				);
-				const ckPaint = ckImage.paintPerBlendMode.get(slot.data.blendMode);
-				if (ckPaint) canvas.drawVertices(vertices, this.ck.BlendMode.Modulate, ckPaint);
-				vertices.delete();
-			}
-
-			clipper.clipEnd(slot);
+			const vertices = this.ck.MakeVertices(
+				this.ck.VertexMode.Triangles,
+				positions,
+				uvs,
+				colors,
+				indices as any as number[],
+				false
+			);
+			const ckPaint = ckImage.paintPerBlendMode.get(command.blendMode);
+			if (ckPaint) canvas.drawVertices(vertices, this.ck.BlendMode.Modulate, ckPaint);
+			vertices.delete();
+			command = command.next;
 		}
-		clipper.clipEnd();
 	}
+
 }
