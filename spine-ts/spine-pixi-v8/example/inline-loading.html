@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>spine-pixi-v8</title>
-    <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.4.1/dist/pixi.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@8.12/dist/pixi.js"></script>
     <script src="../dist/iife/spine-pixi-v8.js"></script>
     <link rel="stylesheet" href="../../index.css">
   </head>
@@ -32,21 +32,21 @@
 
         const textureBase64 = await PIXI.Assets.load({
           alias: 'textureBase64',
-          loadParser: 'loadTextures',
+          parser: 'loadTextures',
           src: base64Data.png,
         })
 
         PIXI.Assets.add({
           alias: "atlasBase64",
-          loadParser: "spineTextureAtlasLoader",
+          parser: "spineTextureAtlasLoader",
           src: base64Data.atlas,
           data: { images: { "inline.png": textureBase64.source } }
         })
 
         PIXI.Assets.add({
           alias: "skelBase64",
-          loadParser: "spineSkeletonLoader",
-          // loadParser: "loadJson", // use "loadJson", if asset is json
+          parser: "spineSkeletonLoader",
+          // parser: "loadJson", // use "loadJson", if asset is json
           src: base64Data.skel,
         })
         await PIXI.Assets.load(["skelBase64", "atlasBase64"]);
@@ -69,22 +69,22 @@
 
         const textureBlob = await PIXI.Assets.load({
           alias: 'textureBlob',
-          loadParser: 'loadTextures',
+          parser: 'loadTextures',
           src: URL.createObjectURL(blobData.png),
           // data: { alphaMode: PIXI.ALPHA_MODES.PMA } // if texture is pma uncomment this and set as pixi preference (preferCreateImageBitmap: false)
         })
 
         PIXI.Assets.add({
           alias: "atlasBlob",
-          loadParser: "spineTextureAtlasLoader",
+          parser: "spineTextureAtlasLoader",
           src: URL.createObjectURL(blobData.atlas),
           data: { images: { "inline.png": textureBlob.source } }
         })
 
         PIXI.Assets.add({
           alias: "skelBlob",
-          // loadParser: "spineSkeletonLoader", // use "spineSkeletonLoader", if asset is skel
-          loadParser: "loadJson",
+          // parser: "spineSkeletonLoader", // use "spineSkeletonLoader", if asset is skel
+          parser: "loadJson",
           src: URL.createObjectURL(blobData.json),
         })
         await PIXI.Assets.load(["skelBlob", "atlasBlob"]);
