@@ -34,6 +34,6 @@
     "@esotericsoftware/spine-core": "4.2.82"
   },
   "peerDependencies": {
-    "pixi.js": "^8.4.0"
+    "pixi.js": "^8.12.0"
   }
 }

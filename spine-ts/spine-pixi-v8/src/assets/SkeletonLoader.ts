@@ -31,10 +31,10 @@ import {
 	type AssetExtension,
 	checkExtension,
 	DOMAdapter,
-	extensions,
 	ExtensionType,
+	extensions,
 	LoaderParserPriority,
-	ResolvedAsset
+	type ResolvedAsset
 } from 'pixi.js';
 
 type SkeletonJsonAsset = any;
@@ -54,6 +54,7 @@ const spineLoaderExtension: AssetExtension<SkeletonJsonAsset | SkeletonBinaryAss
 	extension: ExtensionType.Asset,
 
 	loader: {
+		id: loaderName,
 		name: loaderName,
 		extension: {
 			type: ExtensionType.LoadParser,
@@ -75,7 +76,7 @@ const spineLoaderExtension: AssetExtension<SkeletonJsonAsset | SkeletonBinaryAss
 		testParse (asset: unknown, options: ResolvedAsset): Promise<boolean> {
 			const isJsonSpineModel = checkExtension(options.src!, '.json') && isJson(asset);
 			const isBinarySpineModel = checkExtension(options.src!, '.skel') && isBuffer(asset);
-			const isExplicitLoadParserSet = options.loadParser === loaderName;
+			const isExplicitLoadParserSet = options.parser === loaderName || options.loadParser === loaderName;
 
 			return Promise.resolve(isJsonSpineModel || isBinarySpineModel || isExplicitLoadParserSet);
 		},
