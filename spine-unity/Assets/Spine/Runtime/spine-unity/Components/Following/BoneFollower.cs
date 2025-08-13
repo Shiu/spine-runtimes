@@ -62,6 +62,7 @@ namespace Spine.Unity {
 
 		public bool followXYPosition = true;
 		public bool followZPosition = true;
+		public bool followAttachmentZSpacing = false;
 		public bool followBoneRotation = true;
 
 		[Tooltip("Follows the skeleton's flip state by controlling this Transform's local scale.")]
@@ -184,9 +185,10 @@ namespace Spine.Unity {
 
 			if (skeletonTransformIsParent) {
 				// Recommended setup: Use local transform properties if Spine GameObject is the immediate parent
-				thisTransform.localPosition = new Vector3(followXYPosition ? bone.AppliedPose.WorldX : thisTransform.localPosition.x,
-														followXYPosition ? bone.AppliedPose.WorldY : thisTransform.localPosition.y,
-														followZPosition ? 0f : thisTransform.localPosition.z);
+				thisTransform.localPosition = new Vector3(
+					followXYPosition ? bone.AppliedPose.WorldX : thisTransform.localPosition.x,
+					followXYPosition ? bone.AppliedPose.WorldY : thisTransform.localPosition.y,
+					followZPosition ? (followAttachmentZSpacing ? GetAttachmentZPosition() : 0f) : thisTransform.localPosition.z);
 				if (followBoneRotation) {
 					float halfRotation = Mathf.Atan2(bone.AppliedPose.C, bone.AppliedPose.A) * 0.5f;
 					if (followLocalScale && bone.AppliedPose.ScaleX < 0) // Negate rotation from negative scaleX. Don't use negative determinant. local scaleY doesn't factor into used rotation.
@@ -202,7 +204,8 @@ namespace Spine.Unity {
 			} else { // For special cases: Use transform world properties if transform relationship is complicated
 				if (!skeletonTransform) return;
 
-				Vector3 targetWorldPosition = skeletonTransform.TransformPoint(new Vector3(bone.AppliedPose.WorldX, bone.AppliedPose.WorldY, 0f));
+				float z0Position = (followZPosition && followAttachmentZSpacing) ? GetAttachmentZPosition() : 0f;
+				Vector3 targetWorldPosition = skeletonTransform.TransformPoint(new Vector3(bone.AppliedPose.WorldX, bone.AppliedPose.WorldY, z0Position));
 				if (!followZPosition) targetWorldPosition.z = thisTransform.position.z;
 				if (!followXYPosition) {
 					targetWorldPosition.x = thisTransform.position.x;
@@ -238,6 +241,12 @@ namespace Spine.Unity {
 				additionalFlipScale = Mathf.Sign(skeletonLossyScale.x * parentLossyScale.x
 												* skeletonLossyScale.y * parentLossyScale.y);
 			}
+		}
+
+		float GetAttachmentZPosition () {
+			int boneIndex = skeletonRenderer.Skeleton.DrawOrder.FindIndex(slot => slot.Bone == bone);
+			if (boneIndex < 0) return 0f;
+			return skeletonRenderer.zSpacing * boneIndex;
 		}
 	}
 }
