@@ -69,6 +69,10 @@ namespace Spine.Unity.Editor {
 	public static class SkeletonBaker {
 
 		const string SpineEventStringId = "SpineEvent";
+		public static UnityEngine.Object SpineEventObjectPlaceholder {
+			get { return SpineEditorUtilities.Icons.skeletonDataAssetIcon; }
+		}
+
 		const float EventTimeEqualityEpsilon = 0.01f;
 
 		#region SkeletonMecanim's Mecanim Clips
@@ -1531,6 +1535,8 @@ namespace Spine.Unity.Editor {
 
 				if (!string.IsNullOrEmpty(spineEvent.String)) {
 					unityAnimationEvent.stringParameter = spineEvent.String;
+					// if string (separate from name) is set in event, fallback to objectReferenceParameter.
+					unityAnimationEvent.objectReferenceParameter = SpineEventObjectPlaceholder;
 				} else if (spineEvent.Int != 0) {
 					unityAnimationEvent.intParameter = spineEvent.Int;
 				} else if (spineEvent.Float != 0) {
@@ -1543,7 +1549,8 @@ namespace Spine.Unity.Editor {
 
 		static void AddPreviousUserEvents (ref List<AnimationEvent> allEvents, AnimationEvent[] previousEvents) {
 			foreach (AnimationEvent previousEvent in previousEvents) {
-				if (previousEvent.stringParameter == SpineEventStringId)
+				if (previousEvent.stringParameter == SpineEventStringId ||
+					previousEvent.objectReferenceParameter == SpineEventObjectPlaceholder)
 					continue;
 				AnimationEvent identicalEvent = allEvents.Find(newEvent => {
 					return newEvent.functionName == previousEvent.functionName &&
