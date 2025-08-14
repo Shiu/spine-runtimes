@@ -125,6 +125,9 @@ namespace Spine.Unity.Editor {
 			return true;
 		}
 
+		internal const bool DEFAULT_APPLY_ADDITIVE_MATERIAL = false;
+		public bool applyAdditiveMaterial = DEFAULT_APPLY_ADDITIVE_MATERIAL;
+
 		public const string DEFAULT_TEXTURE_PRESET_STRAIGHT = "StraightAlphaPreset";
 		public const string DEFAULT_TEXTURE_PRESET_PMA = "PMATexturePreset";
 		public const string DEFAULT_TEXTURE_PRESET = DEFAULT_TEXTURE_PRESET_STRAIGHT;
@@ -338,6 +341,8 @@ namespace Spine.Unity.Editor {
 						}
 					}
 					bool isTexturePresetPMA = IsPMAWorkflow(textureSettingsRef.stringValue);
+					EditorGUILayout.PropertyField(settings.FindProperty("applyAdditiveMaterial"),
+						new GUIContent("Apply Additive Material", "The Default Apply Additive Material setting for newly imported SkeletonDataAssets."));
 					ShowBlendModeMaterialProperty(blendModeMaterialAdditive, "Additive", isTexturePresetPMA);
 					ShowBlendModeMaterialProperty(blendModeMaterialMultiply, "Multiply", isTexturePresetPMA);
 					ShowBlendModeMaterialProperty(blendModeMaterialScreen, "Screen", isTexturePresetPMA);

@@ -140,12 +140,16 @@ namespace Spine.Unity.Editor {
 				}
 			}
 
+			const string APPLY_ADDITIVE_MATERIAL_KEY = "SPINE_APPLY_ADDITIVE_MATERIAL";
 			const string BLEND_MODE_MATERIAL_MULTIPLY_KEY = "SPINE_BLENDMODE_MATERIAL_MULTIPLY";
 			const string BLEND_MODE_MATERIAL_SCREEN_KEY = "SPINE_BLENDMODE_MATERIAL_SCREEN";
 			const string BLEND_MODE_MATERIAL_ADDITIVE_KEY = "SPINE_BLENDMODE_MATERIAL_ADDITIVE";
+			public static bool applyAdditiveMaterial = false;
 			public static string blendModeMaterialMultiply = "";
 			public static string blendModeMaterialScreen = "";
 			public static string blendModeMaterialAdditive = "";
+
+			public const bool DEFAULT_APPLY_ADDITIVE_MATERIAL = SpinePreferences.DEFAULT_APPLY_ADDITIVE_MATERIAL;
 
 			public const string DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL_STRAIGHT = SpinePreferences.DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL_STRAIGHT;
 			public const string DEFAULT_BLEND_MODE_SCREEN_MATERIAL_STRAIGHT = SpinePreferences.DEFAULT_BLEND_MODE_SCREEN_MATERIAL_STRAIGHT;
@@ -220,6 +224,7 @@ namespace Spine.Unity.Editor {
 				reloadAfterPlayMode = EditorPrefs.GetBool(RELOAD_AFTER_PLAYMODE_KEY, SpinePreferences.DEFAULT_RELOAD_AFTER_PLAYMODE);
 				setTextureImporterSettings = EditorPrefs.GetBool(SET_TEXTUREIMPORTER_SETTINGS_KEY, SpinePreferences.DEFAULT_SET_TEXTUREIMPORTER_SETTINGS);
 				textureSettingsReference = EditorPrefs.GetString(TEXTURE_SETTINGS_REFERENCE_KEY, SpinePreferences.DEFAULT_TEXTURE_SETTINGS_REFERENCE);
+				applyAdditiveMaterial = EditorPrefs.GetBool(APPLY_ADDITIVE_MATERIAL_KEY, SpinePreferences.DEFAULT_APPLY_ADDITIVE_MATERIAL);
 				blendModeMaterialMultiply = EditorPrefs.GetString(BLEND_MODE_MATERIAL_MULTIPLY_KEY, "");
 				blendModeMaterialScreen = EditorPrefs.GetString(BLEND_MODE_MATERIAL_SCREEN_KEY, "");
 				blendModeMaterialAdditive = EditorPrefs.GetString(BLEND_MODE_MATERIAL_ADDITIVE_KEY, "");
@@ -335,6 +340,7 @@ namespace Spine.Unity.Editor {
 						AssignEditorPrefsAssetReference(ref textureSettingsReference, TEXTURE_SETTINGS_REFERENCE_KEY, DEFAULT_TEXTURE_TEMPLATE);
 					}
 
+					SpineEditorUtilities.BoolPrefsField(ref applyAdditiveMaterial, APPLY_ADDITIVE_MATERIAL_KEY, new GUIContent("Apply Additive Material", "The Default Apply Additive Material setting for newly imported SkeletonDataAssets."));
 					SpineEditorUtilities.MaterialPrefsField(ref blendModeMaterialAdditive, BLEND_MODE_MATERIAL_ADDITIVE_KEY, new GUIContent("Additive Material", "Additive blend mode Material template."));
 					if (string.IsNullOrEmpty(blendModeMaterialAdditive)) {
 						AssignEditorPrefsAssetReference(ref blendModeMaterialAdditive, BLEND_MODE_MATERIAL_ADDITIVE_KEY, DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL);
