@@ -40,7 +40,7 @@ import { SkeletonClipping } from "./SkeletonClipping.js";
 import { SkeletonData } from "./SkeletonData.js";
 import { Skin } from "./Skin.js";
 import { Slot } from "./Slot.js";
-import { Color, Utils, Vector2, NumberArrayLike } from "./Utils.js";
+import { Color, NumberArrayLike, Utils, Vector2 } from "./Utils.js";
 
 /** Stores the current pose for a skeleton.
  *
@@ -318,13 +318,13 @@ export class Skeleton {
 	 * After changing the skin, the visible attachments can be reset to those attached in the setup pose by calling
 	 * {@link setupPoseSlots()}. Also, often {@link AnimationState.apply(Skeleton)} is called before the next time the skeleton is
 	 * rendered to allow any attachment keys in the current animation(s) to hide or show attachments from the new skin. */
-	setSkin (newSkin: Skin): void;
+	setSkin (newSkin: Skin | null): void;
 
-	setSkin (newSkin: Skin | string): void {
-		if (newSkin instanceof Skin)
-			this.setSkinBySkin(newSkin);
-		else
+	setSkin (newSkin: Skin | null | string): void {
+		if (typeof newSkin === "string")
 			this.setSkinByName(newSkin);
+		else
+			this.setSkinBySkin(newSkin);
 	};
 
 	private setSkinByName (skinName: string) {
@@ -333,7 +333,7 @@ export class Skeleton {
 		this.setSkin(skin);
 	}
 
-	private setSkinBySkin (newSkin: Skin) {
+	private setSkinBySkin (newSkin: Skin | null) {
 		if (newSkin == this.skin) return;
 		if (newSkin) {
 			if (this.skin)
