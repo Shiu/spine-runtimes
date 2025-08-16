@@ -110,7 +110,7 @@ public class EventData {
         }
     }
 
-    deinit {
+    public func dispose() {
         spine_event_data_dispose(_ptr.assumingMemoryBound(to: spine_event_data_wrapper.self))
     }
 }

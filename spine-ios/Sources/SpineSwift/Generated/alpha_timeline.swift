@@ -53,7 +53,7 @@ public class AlphaTimeline: CurveTimeline1, SlotTimeline {
         }
     }
 
-    deinit {
+    public func dispose() {
         spine_alpha_timeline_dispose(_ptr.assumingMemoryBound(to: spine_alpha_timeline_wrapper.self))
     }
 }

@@ -79,7 +79,7 @@ public class SequenceTimeline: Timeline, SlotTimeline {
         spine_sequence_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_sequence_timeline_wrapper.self), frame, time, spine_sequence_mode(rawValue: UInt32(mode.rawValue)), index, delay)
     }
 
-    deinit {
+    public func dispose() {
         spine_sequence_timeline_dispose(_ptr.assumingMemoryBound(to: spine_sequence_timeline_wrapper.self))
     }
 }

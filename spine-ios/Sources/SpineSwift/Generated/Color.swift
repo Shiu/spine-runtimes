@@ -138,7 +138,7 @@ public class Color {
         return Color(fromPointer: result!)
     }
 
-    deinit {
+    public func dispose() {
         spine_color_dispose(_ptr.assumingMemoryBound(to: spine_color_wrapper.self))
     }
 }

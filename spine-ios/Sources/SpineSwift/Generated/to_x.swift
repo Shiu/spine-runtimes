@@ -43,7 +43,7 @@ public class ToX: ToProperty {
         self.init(fromPointer: ptr!)
     }
 
-    deinit {
+    public func dispose() {
         spine_to_x_dispose(_ptr.assumingMemoryBound(to: spine_to_x_wrapper.self))
     }
 }

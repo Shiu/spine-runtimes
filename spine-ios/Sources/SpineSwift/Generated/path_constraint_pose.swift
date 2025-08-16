@@ -99,7 +99,7 @@ public class PathConstraintPose {
         spine_path_constraint_pose_set(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self), pose._ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
     }
 
-    deinit {
+    public func dispose() {
         spine_path_constraint_pose_dispose(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
     }
 }

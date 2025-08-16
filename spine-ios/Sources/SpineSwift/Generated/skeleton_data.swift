@@ -220,7 +220,7 @@ public class SkeletonData {
         return result.map { Animation(fromPointer: $0) }
     }
 
-    deinit {
+    public func dispose() {
         spine_skeleton_data_dispose(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
     }
 }

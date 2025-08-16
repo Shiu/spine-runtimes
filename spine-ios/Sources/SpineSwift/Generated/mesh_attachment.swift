@@ -162,7 +162,7 @@ public class MeshAttachment: VertexAttachment {
         return MeshAttachment(fromPointer: result!)
     }
 
-    deinit {
+    public func dispose() {
         spine_mesh_attachment_dispose(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
     }
 }

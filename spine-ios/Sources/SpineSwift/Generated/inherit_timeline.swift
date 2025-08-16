@@ -57,7 +57,7 @@ public class InheritTimeline: Timeline, BoneTimeline {
         spine_inherit_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_inherit_timeline_wrapper.self), frame, time, spine_inherit(rawValue: UInt32(inherit.rawValue)))
     }
 
-    deinit {
+    public func dispose() {
         spine_inherit_timeline_dispose(_ptr.assumingMemoryBound(to: spine_inherit_timeline_wrapper.self))
     }
 }

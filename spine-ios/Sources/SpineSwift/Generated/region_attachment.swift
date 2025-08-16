@@ -166,7 +166,7 @@ public class RegionAttachment: Attachment {
         spine_region_attachment_compute_world_vertices_2(_ptr.assumingMemoryBound(to: spine_region_attachment_wrapper.self), slot._ptr.assumingMemoryBound(to: spine_slot_wrapper.self), worldVertices._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self), offset, stride)
     }
 
-    deinit {
+    public func dispose() {
         spine_region_attachment_dispose(_ptr.assumingMemoryBound(to: spine_region_attachment_wrapper.self))
     }
 }

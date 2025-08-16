@@ -57,7 +57,7 @@ public class TransformConstraintTimeline: CurveTimeline, ConstraintTimeline {
         spine_transform_constraint_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_transform_constraint_timeline_wrapper.self), frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY)
     }
 
-    deinit {
+    public func dispose() {
         spine_transform_constraint_timeline_dispose(_ptr.assumingMemoryBound(to: spine_transform_constraint_timeline_wrapper.self))
     }
 }

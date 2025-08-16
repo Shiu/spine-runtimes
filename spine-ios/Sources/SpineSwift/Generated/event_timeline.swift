@@ -52,7 +52,7 @@ public class EventTimeline: Timeline {
         spine_event_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_event_timeline_wrapper.self), frame, event._ptr.assumingMemoryBound(to: spine_event_wrapper.self))
     }
 
-    deinit {
+    public func dispose() {
         spine_event_timeline_dispose(_ptr.assumingMemoryBound(to: spine_event_timeline_wrapper.self))
     }
 }

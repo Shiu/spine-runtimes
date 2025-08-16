@@ -176,7 +176,7 @@ public class SliderData: PosedData, ConstraintData {
         return Rtti(fromPointer: result!)
     }
 
-    deinit {
+    public override func dispose() {
         spine_slider_data_dispose(_ptr.assumingMemoryBound(to: spine_slider_data_wrapper.self))
     }
 }

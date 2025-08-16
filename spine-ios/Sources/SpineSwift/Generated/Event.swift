@@ -105,7 +105,7 @@ public class Event {
         }
     }
 
-    deinit {
+    public func dispose() {
         spine_event_dispose(_ptr.assumingMemoryBound(to: spine_event_wrapper.self))
     }
 }

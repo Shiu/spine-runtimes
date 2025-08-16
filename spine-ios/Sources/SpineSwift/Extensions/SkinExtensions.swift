@@ -70,17 +70,17 @@ extension Skin {
                 let className = String(cString: classNamePtr)
                 
                 switch className {
-                case "spine_region_attachment":
+                case "RegionAttachment":
                     attachment = RegionAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
-                case "spine_mesh_attachment":
+                case "MeshAttachment":
                     attachment = MeshAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-                case "spine_bounding_box_attachment":
+                case "BoundingBoxAttachment":
                     attachment = BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
-                case "spine_clipping_attachment":
+                case "ClippingAttachment":
                     attachment = ClippingAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_clipping_attachment_wrapper.self))
-                case "spine_path_attachment":
+                case "PathAttachment":
                     attachment = PathAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_path_attachment_wrapper.self))
-                case "spine_point_attachment":
+                case "PointAttachment":
                     attachment = PointAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_point_attachment_wrapper.self))
                 default:
                     // Unknown attachment type, treat as generic Attachment

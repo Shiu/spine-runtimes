@@ -57,7 +57,7 @@ public class PhysicsConstraintResetTimeline: Timeline, ConstraintTimeline {
         spine_physics_constraint_reset_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_physics_constraint_reset_timeline_wrapper.self), frame, time)
     }
 
-    deinit {
+    public func dispose() {
         spine_physics_constraint_reset_timeline_dispose(_ptr.assumingMemoryBound(to: spine_physics_constraint_reset_timeline_wrapper.self))
     }
 }

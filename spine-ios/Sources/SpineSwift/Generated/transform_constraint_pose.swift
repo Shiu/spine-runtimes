@@ -109,7 +109,7 @@ public class TransformConstraintPose {
         spine_transform_constraint_pose_set(_ptr.assumingMemoryBound(to: spine_transform_constraint_pose_wrapper.self), pose._ptr.assumingMemoryBound(to: spine_transform_constraint_pose_wrapper.self))
     }
 
-    deinit {
+    public func dispose() {
         spine_transform_constraint_pose_dispose(_ptr.assumingMemoryBound(to: spine_transform_constraint_pose_wrapper.self))
     }
 }

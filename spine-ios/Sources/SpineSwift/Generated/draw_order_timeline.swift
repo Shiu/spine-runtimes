@@ -47,7 +47,7 @@ public class DrawOrderTimeline: Timeline {
         spine_draw_order_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_draw_order_timeline_wrapper.self), frame, time, drawOrder?._ptr.assumingMemoryBound(to: spine_array_int_wrapper.self))
     }
 
-    deinit {
+    public func dispose() {
         spine_draw_order_timeline_dispose(_ptr.assumingMemoryBound(to: spine_draw_order_timeline_wrapper.self))
     }
 }

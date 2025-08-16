@@ -704,11 +704,34 @@ ${declaration} {`;
             lines.push('');
         }
 
-        // Add deinit if there's a dispose method
+        // Add dispose() method instead of deinit
         if (hasDispose) {
             const disposeMethod = swiftClass.members.find(m => m.name === '__dispose__');
             if (disposeMethod) {
-                lines.push('    deinit {');
+                // Add override if this class extends another CONCRETE class (abstract classes don't have dispose)
+                let override = '';
+                if (swiftClass.inheritance.extends) {
+                    // Find the C++ name for this Swift class
+                    let cppName = '';
+                    for (const [cName, cClass] of this.classMap.entries()) {
+                        if (this.toSwiftTypeName(cName) === swiftClass.name) {
+                            cppName = cName;
+                            break;
+                        }
+                    }
+                    
+                    if (cppName) {
+                        const parentCName = this.inheritance[cppName]?.extends;
+                        if (parentCName) {
+                            const parentClass = this.classMap.get(parentCName);
+                            // Only override if parent is concrete and has destructor
+                            if (parentClass && !parentClass.cppType.isAbstract && parentClass.destructor) {
+                                override = 'override ';
+                            }
+                        }
+                    }
+                }
+                lines.push(`    public ${override}func dispose() {`);
                 lines.push(`        ${disposeMethod.implementation}`);
                 lines.push('    }');
             }

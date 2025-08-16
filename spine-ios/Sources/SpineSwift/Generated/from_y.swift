@@ -43,7 +43,7 @@ public class FromY: FromProperty {
         self.init(fromPointer: ptr!)
     }
 
-    deinit {
+    public func dispose() {
         spine_from_y_dispose(_ptr.assumingMemoryBound(to: spine_from_y_wrapper.self))
     }
 }

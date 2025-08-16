@@ -60,7 +60,7 @@ public class PosedData {
         }
     }
 
-    deinit {
+    public func dispose() {
         spine_posed_data_dispose(_ptr.assumingMemoryBound(to: spine_posed_data_wrapper.self))
     }
 }

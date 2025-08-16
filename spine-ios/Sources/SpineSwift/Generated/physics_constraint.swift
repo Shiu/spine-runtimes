@@ -121,7 +121,7 @@ public class PhysicsConstraint: PosedActive, Posed, Constraint {
         return Rtti(fromPointer: result!)
     }
 
-    deinit {
+    public override func dispose() {
         spine_physics_constraint_dispose(_ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self))
     }
 }

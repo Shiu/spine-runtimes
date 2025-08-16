@@ -57,7 +57,7 @@ public class IkConstraintTimeline: CurveTimeline, ConstraintTimeline {
         spine_ik_constraint_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_ik_constraint_timeline_wrapper.self), frame, time, mix, softness, bendDirection, compress, stretch)
     }
 
-    deinit {
+    public func dispose() {
         spine_ik_constraint_timeline_dispose(_ptr.assumingMemoryBound(to: spine_ik_constraint_timeline_wrapper.self))
     }
 }

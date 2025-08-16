@@ -43,7 +43,7 @@ public class TranslateTimeline: BoneTimeline2 {
         self.init(fromPointer: ptr!)
     }
 
-    deinit {
+    public func dispose() {
         spine_translate_timeline_dispose(_ptr.assumingMemoryBound(to: spine_translate_timeline_wrapper.self))
     }
 }

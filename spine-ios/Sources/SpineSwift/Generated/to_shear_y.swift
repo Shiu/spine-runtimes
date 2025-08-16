@@ -43,7 +43,7 @@ public class ToShearY: ToProperty {
         self.init(fromPointer: ptr!)
     }
 
-    deinit {
+    public func dispose() {
         spine_to_shear_y_dispose(_ptr.assumingMemoryBound(to: spine_to_shear_y_wrapper.self))
     }
 }

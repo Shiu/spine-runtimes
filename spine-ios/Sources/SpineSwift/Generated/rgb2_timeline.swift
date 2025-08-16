@@ -47,7 +47,7 @@ public class Rgb2Timeline: SlotCurveTimeline {
         spine_rgb2_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_rgb2_timeline_wrapper.self), frame, time, r, g, b, r2, g2, b2)
     }
 
-    deinit {
+    public func dispose() {
         spine_rgb2_timeline_dispose(_ptr.assumingMemoryBound(to: spine_rgb2_timeline_wrapper.self))
     }
 }

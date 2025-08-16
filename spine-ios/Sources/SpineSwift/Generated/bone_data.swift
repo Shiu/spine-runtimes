@@ -93,7 +93,7 @@ public class BoneData: PosedData {
         return BoneLocal(fromPointer: result!)
     }
 
-    deinit {
+    public override func dispose() {
         spine_bone_data_dispose(_ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self))
     }
 }

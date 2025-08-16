@@ -75,7 +75,7 @@ public class EventQueueEntry {
         }
     }
 
-    deinit {
+    public func dispose() {
         spine_event_queue_entry_dispose(_ptr.assumingMemoryBound(to: spine_event_queue_entry_wrapper.self))
     }
 }

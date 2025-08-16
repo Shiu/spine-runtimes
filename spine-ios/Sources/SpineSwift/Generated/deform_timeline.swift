@@ -75,7 +75,7 @@ public class DeformTimeline: SlotCurveTimeline {
         return result
     }
 
-    deinit {
+    public func dispose() {
         spine_deform_timeline_dispose(_ptr.assumingMemoryBound(to: spine_deform_timeline_wrapper.self))
     }
 }

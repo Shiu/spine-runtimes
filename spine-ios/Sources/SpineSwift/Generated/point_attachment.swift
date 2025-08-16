@@ -83,7 +83,7 @@ public class PointAttachment: Attachment {
         return result
     }
 
-    deinit {
+    public func dispose() {
         spine_point_attachment_dispose(_ptr.assumingMemoryBound(to: spine_point_attachment_wrapper.self))
     }
 }

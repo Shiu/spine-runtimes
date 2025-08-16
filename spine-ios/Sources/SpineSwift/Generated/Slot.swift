@@ -82,7 +82,7 @@ public class Slot: Posed {
         spine_slot_constrained(_ptr.assumingMemoryBound(to: spine_slot_wrapper.self))
     }
 
-    deinit {
+    public func dispose() {
         spine_slot_dispose(_ptr.assumingMemoryBound(to: spine_slot_wrapper.self))
     }
 }

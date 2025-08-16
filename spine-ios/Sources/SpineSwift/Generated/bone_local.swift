@@ -144,7 +144,7 @@ public class BoneLocal {
         spine_bone_local_set_scale_1(_ptr.assumingMemoryBound(to: spine_bone_local_wrapper.self), scaleX, scaleY)
     }
 
-    deinit {
+    public func dispose() {
         spine_bone_local_dispose(_ptr.assumingMemoryBound(to: spine_bone_local_wrapper.self))
     }
 }

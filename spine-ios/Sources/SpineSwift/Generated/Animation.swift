@@ -94,7 +94,7 @@ public class Animation {
         return result
     }
 
-    deinit {
+    public func dispose() {
         spine_animation_dispose(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
     }
 }

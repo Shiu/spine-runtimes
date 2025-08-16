@@ -134,7 +134,7 @@ public class SkeletonBounds {
         return result
     }
 
-    deinit {
+    public func dispose() {
         spine_skeleton_bounds_dispose(_ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self))
     }
 }

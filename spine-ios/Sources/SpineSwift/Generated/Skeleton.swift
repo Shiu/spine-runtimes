@@ -320,7 +320,7 @@ public class Skeleton {
         spine_skeleton_set_color_2(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), r, g, b, a)
     }
 
-    deinit {
+    public func dispose() {
         spine_skeleton_dispose(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 }

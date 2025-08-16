@@ -175,7 +175,7 @@ public class BonePose: BoneLocal, Update {
         return Rtti(fromPointer: result!)
     }
 
-    deinit {
+    public override func dispose() {
         spine_bone_pose_dispose(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
     }
 }

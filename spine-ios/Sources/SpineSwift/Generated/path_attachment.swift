@@ -78,7 +78,7 @@ public class PathAttachment: VertexAttachment {
         return Color(fromPointer: result!)
     }
 
-    deinit {
+    public func dispose() {
         spine_path_attachment_dispose(_ptr.assumingMemoryBound(to: spine_path_attachment_wrapper.self))
     }
 }

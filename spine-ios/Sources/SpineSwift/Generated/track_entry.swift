@@ -325,7 +325,7 @@ public class TrackEntry {
         spine_track_entry_set_mix_duration_2(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), mixDuration, delay)
     }
 
-    deinit {
+    public func dispose() {
         spine_track_entry_dispose(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
     }
 }

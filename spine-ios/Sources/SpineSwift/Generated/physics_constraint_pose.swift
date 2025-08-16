@@ -119,7 +119,7 @@ public class PhysicsConstraintPose {
         spine_physics_constraint_pose_set(_ptr.assumingMemoryBound(to: spine_physics_constraint_pose_wrapper.self), pose._ptr.assumingMemoryBound(to: spine_physics_constraint_pose_wrapper.self))
     }
 
-    deinit {
+    public func dispose() {
         spine_physics_constraint_pose_dispose(_ptr.assumingMemoryBound(to: spine_physics_constraint_pose_wrapper.self))
     }
 }

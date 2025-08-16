@@ -114,7 +114,7 @@ public class PathConstraint: PosedActive, Posed, Constraint {
         return Rtti(fromPointer: result!)
     }
 
-    deinit {
+    public override func dispose() {
         spine_path_constraint_dispose(_ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self))
     }
 }

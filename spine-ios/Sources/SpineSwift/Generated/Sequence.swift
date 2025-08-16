@@ -104,7 +104,7 @@ public class Sequence {
         return String(cString: result!)
     }
 
-    deinit {
+    public func dispose() {
         spine_sequence_dispose(_ptr.assumingMemoryBound(to: spine_sequence_wrapper.self))
     }
 }

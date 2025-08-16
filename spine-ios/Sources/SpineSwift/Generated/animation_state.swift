@@ -151,7 +151,7 @@ public class AnimationState {
         return TrackEntry(fromPointer: result!)
     }
 
-    deinit {
+    public func dispose() {
         spine_animation_state_dispose(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self))
     }
 }

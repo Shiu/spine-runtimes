@@ -43,7 +43,7 @@ public class PathConstraintSpacingTimeline: ConstraintTimeline1 {
         self.init(fromPointer: ptr!)
     }
 
-    deinit {
+    public func dispose() {
         spine_path_constraint_spacing_timeline_dispose(_ptr.assumingMemoryBound(to: spine_path_constraint_spacing_timeline_wrapper.self))
     }
 }

@@ -48,7 +48,7 @@ public class BoundingBoxAttachment: VertexAttachment {
         return Color(fromPointer: result!)
     }
 
-    deinit {
+    public func dispose() {
         spine_bounding_box_attachment_dispose(_ptr.assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
     }
 }

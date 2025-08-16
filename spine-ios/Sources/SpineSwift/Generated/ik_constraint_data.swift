@@ -103,7 +103,7 @@ public class IkConstraintData: PosedData, ConstraintData {
         return Rtti(fromPointer: result!)
     }
 
-    deinit {
+    public override func dispose() {
         spine_ik_constraint_data_dispose(_ptr.assumingMemoryBound(to: spine_ik_constraint_data_wrapper.self))
     }
 }

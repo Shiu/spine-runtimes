@@ -59,7 +59,7 @@ public class Atlas {
         return result.map { AtlasRegion(fromPointer: $0) }
     }
 
-    deinit {
+    public func dispose() {
         spine_atlas_dispose(_ptr.assumingMemoryBound(to: spine_atlas_wrapper.self))
     }
 }

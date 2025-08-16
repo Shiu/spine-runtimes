@@ -43,7 +43,7 @@ public class ShearXTimeline: BoneTimeline1 {
         self.init(fromPointer: ptr!)
     }
 
-    deinit {
+    public func dispose() {
         spine_shear_x_timeline_dispose(_ptr.assumingMemoryBound(to: spine_shear_x_timeline_wrapper.self))
     }
 }

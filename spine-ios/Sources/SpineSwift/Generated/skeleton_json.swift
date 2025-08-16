@@ -72,7 +72,7 @@ public class SkeletonJson {
         return result.map { SkeletonData(fromPointer: $0) }
     }
 
-    deinit {
+    public func dispose() {
         spine_skeleton_json_dispose(_ptr.assumingMemoryBound(to: spine_skeleton_json_wrapper.self))
     }
 }

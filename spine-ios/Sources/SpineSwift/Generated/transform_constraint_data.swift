@@ -198,7 +198,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         return Rtti(fromPointer: result!)
     }
 
-    deinit {
+    public override func dispose() {
         spine_transform_constraint_data_dispose(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
     }
 }

@@ -80,7 +80,7 @@ public class AtlasAttachmentLoader: AttachmentLoader {
         return result.map { AtlasRegion(fromPointer: $0) }
     }
 
-    deinit {
+    public func dispose() {
         spine_atlas_attachment_loader_dispose(_ptr.assumingMemoryBound(to: spine_atlas_attachment_loader_wrapper.self))
     }
 }

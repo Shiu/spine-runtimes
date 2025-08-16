@@ -108,7 +108,7 @@ public class Skin {
         spine_skin_copy_skin(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), other._ptr.assumingMemoryBound(to: spine_skin_wrapper.self))
     }
 
-    deinit {
+    public func dispose() {
         spine_skin_dispose(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self))
     }
 }

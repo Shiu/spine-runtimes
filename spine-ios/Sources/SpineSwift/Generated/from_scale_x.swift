@@ -43,7 +43,7 @@ public class FromScaleX: FromProperty {
         self.init(fromPointer: ptr!)
     }
 
-    deinit {
+    public func dispose() {
         spine_from_scale_x_dispose(_ptr.assumingMemoryBound(to: spine_from_scale_x_wrapper.self))
     }
 }

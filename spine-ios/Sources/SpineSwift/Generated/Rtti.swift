@@ -55,7 +55,7 @@ public class Rtti {
         return result
     }
 
-    deinit {
+    public func dispose() {
         spine_rtti_dispose(_ptr.assumingMemoryBound(to: spine_rtti_wrapper.self))
     }
 }

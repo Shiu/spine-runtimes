@@ -58,7 +58,7 @@ public class ClippingAttachment: VertexAttachment {
         return Color(fromPointer: result!)
     }
 
-    deinit {
+    public func dispose() {
         spine_clipping_attachment_dispose(_ptr.assumingMemoryBound(to: spine_clipping_attachment_wrapper.self))
     }
 }

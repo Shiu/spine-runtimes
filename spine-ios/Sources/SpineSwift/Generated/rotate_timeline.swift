@@ -43,7 +43,7 @@ public class RotateTimeline: BoneTimeline1 {
         self.init(fromPointer: ptr!)
     }
 
-    deinit {
+    public func dispose() {
         spine_rotate_timeline_dispose(_ptr.assumingMemoryBound(to: spine_rotate_timeline_wrapper.self))
     }
 }

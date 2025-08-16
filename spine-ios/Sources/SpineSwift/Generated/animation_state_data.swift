@@ -77,7 +77,7 @@ public class AnimationStateData {
         spine_animation_state_data_set_mix_2(_ptr.assumingMemoryBound(to: spine_animation_state_data_wrapper.self), from._ptr.assumingMemoryBound(to: spine_animation_wrapper.self), to._ptr.assumingMemoryBound(to: spine_animation_wrapper.self), duration)
     }
 
-    deinit {
+    public func dispose() {
         spine_animation_state_data_dispose(_ptr.assumingMemoryBound(to: spine_animation_state_data_wrapper.self))
     }
 }

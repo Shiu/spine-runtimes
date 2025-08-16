@@ -19,14 +19,6 @@ let package = Package(
                 .product(name: "SpineSwift", package: "spine-runtimes")
             ],
             path: "src"
-        ),
-        .executableTarget(
-            name: "SimpleTest",
-            dependencies: [
-                .product(name: "SpineC", package: "spine-runtimes"),
-                .product(name: "SpineSwift", package: "spine-runtimes")
-            ],
-            path: "simpletest"
         )
     ]
 )

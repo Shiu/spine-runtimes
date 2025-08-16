@@ -57,7 +57,7 @@ public class AttachmentTimeline: Timeline, SlotTimeline {
         spine_attachment_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_attachment_timeline_wrapper.self), frame, time, attachmentName)
     }
 
-    deinit {
+    public func dispose() {
         spine_attachment_timeline_dispose(_ptr.assumingMemoryBound(to: spine_attachment_timeline_wrapper.self))
     }
 }

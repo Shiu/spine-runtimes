@@ -52,7 +52,7 @@ public class PosedActive {
         }
     }
 
-    deinit {
+    public func dispose() {
         spine_posed_active_dispose(_ptr.assumingMemoryBound(to: spine_posed_active_wrapper.self))
     }
 }

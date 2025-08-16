@@ -43,7 +43,7 @@ public class PhysicsConstraintGravityTimeline: PhysicsConstraintTimeline {
         self.init(fromPointer: ptr!)
     }
 
-    deinit {
+    public func dispose() {
         spine_physics_constraint_gravity_timeline_dispose(_ptr.assumingMemoryBound(to: spine_physics_constraint_gravity_timeline_wrapper.self))
     }
 }

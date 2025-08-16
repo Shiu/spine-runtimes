@@ -122,7 +122,7 @@ public class IkConstraint: PosedActive, Posed, Constraint {
         spine_ik_constraint_apply_2(skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), parent._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), child._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), targetX, targetY, bendDirection, stretch, uniform, softness, mix)
     }
 
-    deinit {
+    public override func dispose() {
         spine_ik_constraint_dispose(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
     }
 }

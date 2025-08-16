@@ -43,7 +43,7 @@ public class ScaleTimeline: BoneTimeline2 {
         self.init(fromPointer: ptr!)
     }
 
-    deinit {
+    public func dispose() {
         spine_scale_timeline_dispose(_ptr.assumingMemoryBound(to: spine_scale_timeline_wrapper.self))
     }
 }

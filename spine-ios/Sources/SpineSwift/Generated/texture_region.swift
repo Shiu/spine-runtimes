@@ -115,7 +115,7 @@ public class TextureRegion {
         return Rtti(fromPointer: result!)
     }
 
-    deinit {
+    public func dispose() {
         spine_texture_region_dispose(_ptr.assumingMemoryBound(to: spine_texture_region_wrapper.self))
     }
 }

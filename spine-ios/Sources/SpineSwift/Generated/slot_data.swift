@@ -88,7 +88,7 @@ public class SlotData: PosedData {
         return SlotPose(fromPointer: result!)
     }
 
-    deinit {
+    public override func dispose() {
         spine_slot_data_dispose(_ptr.assumingMemoryBound(to: spine_slot_data_wrapper.self))
     }
 }

@@ -43,7 +43,7 @@ public class SliderTimeline: ConstraintTimeline1 {
         self.init(fromPointer: ptr!)
     }
 
-    deinit {
+    public func dispose() {
         spine_slider_timeline_dispose(_ptr.assumingMemoryBound(to: spine_slider_timeline_wrapper.self))
     }
 }

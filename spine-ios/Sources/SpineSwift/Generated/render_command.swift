@@ -90,7 +90,7 @@ public class RenderCommand {
         return result.map { RenderCommand(fromPointer: $0) }
     }
 
-    deinit {
+    public func dispose() {
         spine_render_command_dispose(_ptr.assumingMemoryBound(to: spine_render_command_wrapper.self))
     }
 }

@@ -67,7 +67,7 @@ public class SkeletonBinary {
         return result.map { SkeletonData(fromPointer: $0) }
     }
 
-    deinit {
+    public func dispose() {
         spine_skeleton_binary_dispose(_ptr.assumingMemoryBound(to: spine_skeleton_binary_wrapper.self))
     }
 }

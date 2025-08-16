@@ -65,7 +65,7 @@ public class Polygon {
         }
     }
 
-    deinit {
+    public func dispose() {
         spine_polygon_dispose(_ptr.assumingMemoryBound(to: spine_polygon_wrapper.self))
     }
 }

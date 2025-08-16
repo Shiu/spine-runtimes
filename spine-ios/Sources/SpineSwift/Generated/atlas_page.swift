@@ -160,7 +160,7 @@ public class AtlasPage {
         return result
     }
 
-    deinit {
+    public func dispose() {
         spine_atlas_page_dispose(_ptr.assumingMemoryBound(to: spine_atlas_page_wrapper.self))
     }
 }

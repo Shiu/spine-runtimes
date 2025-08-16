@@ -83,7 +83,7 @@ public class SkeletonClipping {
         return result
     }
 
-    deinit {
+    public func dispose() {
         spine_skeleton_clipping_dispose(_ptr.assumingMemoryBound(to: spine_skeleton_clipping_wrapper.self))
     }
 }

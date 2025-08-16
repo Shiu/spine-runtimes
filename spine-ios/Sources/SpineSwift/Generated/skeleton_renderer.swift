@@ -50,7 +50,7 @@ public class SkeletonRenderer {
         return result.map { RenderCommand(fromPointer: $0) }
     }
 
-    deinit {
+    public func dispose() {
         spine_skeleton_renderer_dispose(_ptr.assumingMemoryBound(to: spine_skeleton_renderer_wrapper.self))
     }
 }

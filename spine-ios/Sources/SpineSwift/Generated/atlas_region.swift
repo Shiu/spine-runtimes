@@ -203,7 +203,7 @@ public class AtlasRegion: TextureRegion {
         }
     }
 
-    deinit {
+    public override func dispose() {
         spine_atlas_region_dispose(_ptr.assumingMemoryBound(to: spine_atlas_region_wrapper.self))
     }
 }

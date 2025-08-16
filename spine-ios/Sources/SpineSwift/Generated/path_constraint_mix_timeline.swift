@@ -57,7 +57,7 @@ public class PathConstraintMixTimeline: CurveTimeline, ConstraintTimeline {
         spine_path_constraint_mix_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_path_constraint_mix_timeline_wrapper.self), frame, time, mixRotate, mixX, mixY)
     }
 
-    deinit {
+    public func dispose() {
         spine_path_constraint_mix_timeline_dispose(_ptr.assumingMemoryBound(to: spine_path_constraint_mix_timeline_wrapper.self))
     }
 }

@@ -109,7 +109,7 @@ public class Slider: PosedActive, Posed, Constraint {
         return Rtti(fromPointer: result!)
     }
 
-    deinit {
+    public override func dispose() {
         spine_slider_dispose(_ptr.assumingMemoryBound(to: spine_slider_wrapper.self))
     }
 }

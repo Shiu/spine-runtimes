@@ -112,7 +112,7 @@ public class SlotPose {
         spine_slot_pose_set(_ptr.assumingMemoryBound(to: spine_slot_pose_wrapper.self), pose._ptr.assumingMemoryBound(to: spine_slot_pose_wrapper.self))
     }
 
-    deinit {
+    public func dispose() {
         spine_slot_pose_dispose(_ptr.assumingMemoryBound(to: spine_slot_pose_wrapper.self))
     }
 }
