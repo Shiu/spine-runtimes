@@ -79,7 +79,6 @@ namespace Spine {
 			slots = new ExposedList<Slot>(data.slots.Count);
 			drawOrder = new ExposedList<Slot>(data.slots.Count);
 			foreach (SlotData slotData in data.slots) {
-				Bone bone = bonesItems[slotData.boneData.index];
 				Slot slot = new Slot(slotData, this);
 				slots.Add(slot);
 				drawOrder.Add(slot);
