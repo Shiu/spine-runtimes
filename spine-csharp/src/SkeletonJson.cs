@@ -297,7 +297,7 @@ namespace Spine {
 											}
 											to.offset = GetFloat(toEntry, "offset", 0) * toScale;
 											to.max = GetFloat(toEntry, "max", 1) * toScale;
-											to.scale = GetFloat(toEntry, "scale") * (toScale / fromScale);
+											to.scale = GetFloat(toEntry, "scale", 1) * (toScale / fromScale);
 											from.to.Add(to);
 										}
 									}
