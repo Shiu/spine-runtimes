@@ -237,7 +237,7 @@ namespace Spine.Unity {
 			else
 				state.ApplyEventTimelinesOnly(skeleton);
 
-			skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+			skeleton.UpdateWorldTransform(Physics.Update);
 		}
 
 		void Initialize (bool overwrite) {
@@ -287,7 +287,7 @@ namespace Spine.Unity {
 
 		protected void UpdateAnimation () {
 			this.state.ClearTracks();
-			skeleton.SetToSetupPose();
+			skeleton.SetupPose();
 
 			string displayedAnimation = Application.isPlaying ? startingAnimation : boundsAnimation;
 			if (!string.IsNullOrEmpty(displayedAnimation)) {

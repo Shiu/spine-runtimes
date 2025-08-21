@@ -92,14 +92,14 @@ namespace Spine.Unity.Editor {
 			Skeleton skeleton = new Skeleton(skeletonData);
 			if (!string.IsNullOrEmpty(skin) && !string.Equals(skin, "default", System.StringComparison.Ordinal))
 				skeleton.SetSkin(skin);
-			skeleton.SetSlotsToSetupPose();
+			skeleton.SetupPose();
 
 			Spine.Animation animation = skeletonData.FindAnimation(animationName);
 			if (animation != null)
-				animation.Apply(skeleton, -1, 0, false, null, 1.0f, MixBlend.First, MixDirection.In);
+				animation.Apply(skeleton, -1, 0, false, null, 1.0f, MixBlend.First, MixDirection.In, false);
 
 			skeleton.Update(0f);
-			skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+			skeleton.UpdateWorldTransform(Physics.Update);
 
 			float x, y, width, height;
 			SkeletonClipping clipper = new SkeletonClipping();
