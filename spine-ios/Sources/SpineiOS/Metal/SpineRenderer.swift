@@ -31,6 +31,7 @@ import Foundation
 import MetalKit
 import SpineSwift
 import SpineC
+import SpineShadersStructs
 
 protocol SpineRendererDelegate: AnyObject {
     func spineRendererWillUpdate(_ spineRenderer: SpineRenderer)
@@ -108,11 +109,11 @@ internal final class SpineRenderer: NSObject, MTKViewDelegate {
                 )
             }
 
-        let blendModes = [
-            SPINE_BLEND_MODE_NORMAL,
-            SPINE_BLEND_MODE_ADDITIVE,
-            SPINE_BLEND_MODE_MULTIPLY,
-            SPINE_BLEND_MODE_SCREEN,
+        let blendModes: [BlendMode] = [
+            .normal,
+            .additive,
+            .multiply,
+            .screen,
         ]
         for blendMode in blendModes {
             let descriptor = MTLRenderPipelineDescriptor()
@@ -185,7 +186,7 @@ internal final class SpineRenderer: NSObject, MTKViewDelegate {
         }
     }
 
-    private func setTransform(bounds: CGRect, mode: Spine.ContentMode, alignment: Spine.Alignment) {
+    private func setTransform(bounds: CGRect, mode: SpineContentMode, alignment: SpineAlignment) {
         let x = -bounds.minX - bounds.width / 2.0
         let y = -bounds.minY - bounds.height / 2.0
 
@@ -290,7 +291,8 @@ internal final class SpineRenderer: NSObject, MTKViewDelegate {
 
             let vertices = allVertices[index]
 
-            let textureIndex = Int(renderCommand.atlasPage)
+            // When using spine_atlas_load, texture is actually the atlas page index cast as a pointer
+            let textureIndex = Int(bitPattern: renderCommand.texture)
             if textures.indices.contains(textureIndex) {
                 renderEncoder.setFragmentTexture(
                     textures[textureIndex],
@@ -321,63 +323,55 @@ internal final class SpineRenderer: NSObject, MTKViewDelegate {
 extension BlendMode {
     fileprivate func sourceRGBBlendFactor(premultipliedAlpha: Bool) -> MTLBlendFactor {
         switch self {
-        case SPINE_BLEND_MODE_NORMAL:
+        case .normal:
             return premultipliedAlpha ? .one : .sourceAlpha
-        case SPINE_BLEND_MODE_ADDITIVE:
+        case .additive:
             // additvie only needs sourceAlpha multiply if it is not pma
             return premultipliedAlpha ? .one : .sourceAlpha
-        case SPINE_BLEND_MODE_MULTIPLY:
+        case .multiply:
             return .destinationColor
-        case SPINE_BLEND_MODE_SCREEN:
+        case .screen:
             return .one
-        default:
-            return .one  // Should never be called
         }
     }
 
     fileprivate var sourceAlphaBlendFactor: MTLBlendFactor {
         // pma and non-pma has no-relation ship with alpha blending
         switch self {
-        case SPINE_BLEND_MODE_NORMAL:
+        case .normal:
             return .one
-        case SPINE_BLEND_MODE_ADDITIVE:
+        case .additive:
             return .one
-        case SPINE_BLEND_MODE_MULTIPLY:
+        case .multiply:
             return .oneMinusSourceAlpha
-        case SPINE_BLEND_MODE_SCREEN:
+        case .screen:
             return .oneMinusSourceColor
-        default:
-            return .one  // Should never be called
         }
     }
 
     fileprivate var destinationRGBBlendFactor: MTLBlendFactor {
         switch self {
-        case SPINE_BLEND_MODE_NORMAL:
+        case .normal:
             return .oneMinusSourceAlpha
-        case SPINE_BLEND_MODE_ADDITIVE:
+        case .additive:
             return .one
-        case SPINE_BLEND_MODE_MULTIPLY:
+        case .multiply:
             return .oneMinusSourceAlpha
-        case SPINE_BLEND_MODE_SCREEN:
+        case .screen:
             return .oneMinusSourceColor
-        default:
-            return .one  // Should never be called
         }
     }
 
     fileprivate var destinationAlphaBlendFactor: MTLBlendFactor {
         switch self {
-        case SPINE_BLEND_MODE_NORMAL:
+        case .normal:
             return .oneMinusSourceAlpha
-        case SPINE_BLEND_MODE_ADDITIVE:
+        case .additive:
             return .one
-        case SPINE_BLEND_MODE_MULTIPLY:
+        case .multiply:
             return .oneMinusSourceAlpha
-        case SPINE_BLEND_MODE_SCREEN:
+        case .screen:
             return .oneMinusSourceColor
-        default:
-            return .one  // Should never be called
         }
     }
 }

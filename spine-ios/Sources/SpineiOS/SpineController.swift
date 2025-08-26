@@ -31,6 +31,7 @@ import CoreGraphics
 import Foundation
 import QuartzCore
 import UIKit
+import SpineSwift
 
 public typealias SpineControllerCallback = (_ controller: SpineController) -> Void
 
@@ -136,10 +137,6 @@ public final class SpineController: NSObject, ObservableObject {
         drawable.animationState
     }
 
-    /// The ``AnimationStateWrapper`` used to hold ``AnimationState``, register ``AnimationStateListener`` and call ``AnimationStateWrapper/update(delta:)``
-    public var animationStateWrapper: AnimationStateWrapper {
-        drawable.animationStateWrapper
-    }
 
     /// Transforms the coordinates given in the ``SpineUIView`` coordinate system in `position` to
     /// the skeleton coordinate system. See the `IKFollowing.swift` example how to use this
@@ -239,6 +236,14 @@ extension SpineController: SpineRendererDataSource {
     }
 
     func renderCommands(_ spineRenderer: SpineRenderer) -> [RenderCommand] {
-        return drawable?.skeletonDrawable.render() ?? []
+        guard let drawable = drawable else { return [] }
+        
+        var commands = [RenderCommand]()
+        var current = drawable.skeletonDrawable.render()
+        while let cmd = current {
+            commands.append(cmd)
+            current = cmd.next
+        }
+        return commands
     }
 }

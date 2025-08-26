@@ -43,8 +43,8 @@ public struct SpineView: UIViewRepresentable {
 
     private let source: SpineViewSource
     private let controller: SpineController
-    private let mode: Spine.ContentMode
-    private let alignment: Spine.Alignment
+    private let mode: SpineContentMode
+    private let alignment: SpineAlignment
     private let boundsProvider: BoundsProvider
     private let backgroundColor: UIColor  // Not using `SwiftUI.Color`, as briging to `UIColor` prior iOS 14 might not always work.
 
@@ -71,8 +71,8 @@ public struct SpineView: UIViewRepresentable {
     public init(
         from source: SpineViewSource,
         controller: SpineController = SpineController(),
-        mode: Spine.ContentMode = .fit,
-        alignment: Spine.Alignment = .center,
+        mode: SpineContentMode = .fit,
+        alignment: SpineAlignment = .center,
         boundsProvider: BoundsProvider = SetupPoseBounds(),
         backgroundColor: UIColor = .clear,
         isRendering: Binding<Bool?> = .constant(nil)

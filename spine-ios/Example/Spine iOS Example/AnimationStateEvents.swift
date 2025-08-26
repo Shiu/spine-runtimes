@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import Spine
-import SpineCppLite
+import SpineiOS
+import SpineSwift
 import SwiftUI
 
 struct AnimationStateEvents: View {
@@ -38,25 +38,25 @@ struct AnimationStateEvents: View {
         onInitialized: { controller in
             controller.skeleton.scaleX = 0.5
             controller.skeleton.scaleY = 0.5
-            controller.skeleton.findSlot(slotName: "gun")?.setColor(r: 1, g: 0, b: 0, a: 1)
+			controller.skeleton.findSlot("gun")?.appliedPose.color.set(1, 0, 0, 1)
             controller.animationStateData.defaultMix = 0.2
-            let walk = controller.animationState.setAnimationByName(trackIndex: 0, animationName: "walk", loop: true)
-            controller.animationStateWrapper.setTrackEntryListener(entry: walk) { type, entry, event in
+            let walk = controller.animationState.setAnimation(0, "walk", true)
+            walk.setListener { type, entry, event in
                 print("Walk animation event \(type)")
             }
-            controller.animationState.addAnimationByName(trackIndex: 0, animationName: "jump", loop: false, delay: 2)
-            let run = controller.animationState.addAnimationByName(trackIndex: 0, animationName: "run", loop: true, delay: 0)
-            controller.animationStateWrapper.setTrackEntryListener(entry: run) { type, entry, event in
+            controller.animationState.addAnimation(0, "jump", false, 2)
+            let run = controller.animationState.addAnimation(0, "run", true, 0)
+            run.setListener { type, entry, event in
                 print("Run animation event \(type)")
             }
-            controller.animationStateWrapper.setStateListener { type, entry, event in
-                if type == SPINE_EVENT_TYPE_EVENT, let event {
+            controller.animationState.setListener { type, entry, event in
+                if type == .event, let event {
                     print(
                         "User event: { name: \(event.data.name ?? "--"), intValue: \(event.intValue), floatValue: \(event.floatValue), stringValue: \(event.stringValue ?? "--") }"
                     )
                 }
             }
-            let current = controller.animationState.getCurrent(trackIndex: 0)?.animation.name ?? "--"
+            let current = controller.animationState.getCurrent(0)?.animation.name ?? "--"
             print("Current: \(current)")
         }
     )

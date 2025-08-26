@@ -27,7 +27,7 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import Spine
+import SpineiOS
 import SwiftUI
 
 struct PlayPauseAnimation: View {
@@ -35,11 +35,7 @@ struct PlayPauseAnimation: View {
     @StateObject
     var controller = SpineController(
         onInitialized: { controller in
-            controller.animationState.setAnimationByName(
-                trackIndex: 0,
-                animationName: "flying",
-                loop: true
-            )
+			controller.animationState.setAnimation(0, "flying", true)
         }
     )
 

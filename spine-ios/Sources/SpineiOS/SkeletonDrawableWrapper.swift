@@ -62,7 +62,6 @@ public final class SkeletonDrawableWrapper: NSObject {
     public let skeleton: Skeleton
     public let animationStateData: AnimationStateData
     public let animationState: AnimationState
-    public let animationStateWrapper: AnimationStateWrapper
 
     internal var disposed = false
 
@@ -121,30 +120,12 @@ public final class SkeletonDrawableWrapper: NSObject {
         self.atlasPages = atlasPages
         self.skeletonData = skeletonData
 
-        guard let nativeSkeletonDrawable = spine_skeleton_drawable_create(skeletonData.wrappee) else {
-            throw SpineError("Could not load native skeleton drawable")
-        }
-        skeletonDrawable = SkeletonDrawable(nativeSkeletonDrawable)
+        skeletonDrawable = SkeletonDrawable(skeletonData: skeletonData)
 
-        guard let nativeSkeleton = spine_skeleton_drawable_get_skeleton(skeletonDrawable.wrappee) else {
-            throw SpineError("Could not load native skeleton")
-        }
-        skeleton = Skeleton(nativeSkeleton)
-
-        guard let nativeAnimationStateData = spine_skeleton_drawable_get_animation_state_data(skeletonDrawable.wrappee) else {
-            throw SpineError("Could not load native animation state data")
-        }
-        animationStateData = AnimationStateData(nativeAnimationStateData)
-
-        guard let nativeAnimationState = spine_skeleton_drawable_get_animation_state(skeletonDrawable.wrappee) else {
-            throw SpineError("Could not load native animation state")
-        }
-        animationState = AnimationState(nativeAnimationState)
-        animationStateWrapper = AnimationStateWrapper(
-            animationState: animationState,
-            aninationStateEvents: skeletonDrawable.animationStateEvents
-        )
-        skeleton.updateWorldTransform(physics: SPINE_PHYSICS_NONE)
+        skeleton = skeletonDrawable.skeleton
+        animationStateData = skeletonDrawable.animationStateData
+        animationState = skeletonDrawable.animationState
+        skeleton.updateWorldTransform(Physics.none)
         super.init()
     }
 
@@ -154,11 +135,11 @@ public final class SkeletonDrawableWrapper: NSObject {
     public func update(delta: Float) {
         if disposed { return }
 
-        animationStateWrapper.update(delta: delta)
-        animationState.apply(skeleton: skeleton)
+        animationState.update(delta)
+        _ = animationState.apply(skeleton)
 
-        skeleton.update(delta: delta)
-        skeleton.updateWorldTransform(physics: SPINE_PHYSICS_UPDATE)
+        skeleton.update(delta)
+        skeleton.updateWorldTransform(Physics.update)
     }
 
     public func dispose() {
@@ -168,6 +149,6 @@ public final class SkeletonDrawableWrapper: NSObject {
         atlas.dispose()
         skeletonData.dispose()
 
-        skeletonDrawable.dispose()
+        // SkeletonDrawable disposal handled by ARC
     }
 }

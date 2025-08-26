@@ -27,7 +27,7 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import Spine
+import SpineiOS
 import SwiftUI
 
 struct Physics: View {
@@ -72,16 +72,8 @@ final class PhysicsModel: ObservableObject {
     init() {
         controller = SpineController(
             onInitialized: { controller in
-                controller.animationState.setAnimationByName(
-                    trackIndex: 0,
-                    animationName: "eyeblink",
-                    loop: true
-                )
-                controller.animationState.setAnimationByName(
-                    trackIndex: 1,
-                    animationName: "wings-and-feet",
-                    loop: true
-                )
+                controller.animationState.setAnimation(0, "eyeblink", true)
+                controller.animationState.setAnimation(1, "wings-and-feet", true)
             },
             onAfterUpdateWorldTransforms: {
                 [weak self] controller in
@@ -98,7 +90,7 @@ final class PhysicsModel: ObservableObject {
                 let dy = mousePosition.y - lastMousePosition.y
                 let positionX = controller.skeleton.x + Float(dx)
                 let positionY = controller.skeleton.y + Float(dy)
-                controller.skeleton.setPosition(x: positionX, y: positionY)
+                controller.skeleton.setPosition(positionX, positionY)
                 self.lastMousePosition = mousePosition
             }
         )

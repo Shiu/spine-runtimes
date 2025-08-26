@@ -28,6 +28,7 @@
  *****************************************************************************/
 
 import Foundation
+import SpineSwift
 import SpineShadersStructs
 import simd
 
@@ -35,19 +36,26 @@ extension RenderCommand {
     func getVertices() -> [SpineVertex] {
         var vertices = [SpineVertex]()
 
-        let indices = indices
-        let numVertices = numVertices
-        let positions = positions(numVertices: numVertices)
-        let uvs = uvs(numVertices: numVertices)
-        let colors = colors(numVertices: numVertices)
-        vertices.reserveCapacity(indices.count)
-        for i in 0..<indices.count {
-            let index = Int(indices[i])
+        let numVerts = Int(numVertices)
+        let numInds = Int(numIndices)
+        guard let indicesPtr = indices,
+              let positionsPtr = positions,
+              let uvsPtr = uvs,
+              let colorsPtr = colors else {
+            return vertices
+        }
+        let indicesArray = Array(UnsafeBufferPointer(start: indicesPtr, count: numInds))
+        let positionsArray = Array(UnsafeBufferPointer(start: positionsPtr, count: numVerts * 2))
+        let uvsArray = Array(UnsafeBufferPointer(start: uvsPtr, count: numVerts * 2))
+        let colorsArray = Array(UnsafeBufferPointer(start: colorsPtr, count: numVerts))
+        vertices.reserveCapacity(numInds)
+        for i in 0..<numInds {
+            let index = Int(indicesArray[i])
             let xIndex = 2 * index
             let yIndex = xIndex + 1
-            let position = SIMD2<Float>(positions[xIndex], positions[yIndex])
-            let uv = SIMD2<Float>(uvs[xIndex], uvs[yIndex])
-            let color = extractRGBA(from: colors[index])
+            let position = SIMD2<Float>(positionsArray[xIndex], positionsArray[yIndex])
+            let uv = SIMD2<Float>(uvsArray[xIndex], uvsArray[yIndex])
+            let color = extractRGBA(from: colorsArray[index])
             let vertex = SpineVertex(
                 position: position,
                 color: color,
@@ -59,10 +67,7 @@ extension RenderCommand {
         return vertices
     }
 
-    private func extractRGBA(from color: Int32) -> SIMD4<Float> {
-        guard color != -1 else {
-            return SIMD4<Float>(1.0, 1.0, 1.0, 1.0)
-        }
+    private func extractRGBA(from color: UInt32) -> SIMD4<Float> {
         let alpha = Float((color >> 24) & 0xFF) / 255.0
         let red = Float((color >> 16) & 0xFF) / 255.0
         let green = Float((color >> 8) & 0xFF) / 255.0

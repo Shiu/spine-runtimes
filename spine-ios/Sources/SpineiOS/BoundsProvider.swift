@@ -29,6 +29,7 @@
 
 import CoreGraphics
 import Foundation
+import SpineSwift
 
 /// Base class for bounds providers. A bounds provider calculates the axis aligned bounding box
 /// used to scale and fit a skeleton inside the bounds of a ``SpineUIView``.
@@ -102,23 +103,22 @@ public final class SkinAndAnimationBounds: NSObject, BoundsProvider {
     public func computeBounds(for drawable: SkeletonDrawableWrapper) -> CGRect {
         let data = drawable.skeletonData
         let oldSkin: Skin? = drawable.skeleton.skin
-        let customSkin = Skin.create(name: "custom-skin")
+        let customSkin = Skin("custom-skin")  // Use constructor directly
         for skinName in skins {
-            let skin = data.findSkin(name: skinName)
-            if let skin = data.findSkin(name: skinName) {
-                customSkin.addSkin(other: skin)
+            if let skin = data.findSkin(skinName) {
+                customSkin.addSkin(skin)
             }
         }
-        drawable.skeleton.skin = customSkin
-        drawable.skeleton.setToSetupPose()
+        drawable.skeleton.setSkin2(customSkin)
+        drawable.skeleton.setupPose()
 
-        let animation = animation.flatMap { data.findAnimation(name: $0) }
+        let animation = animation.flatMap { data.findAnimation($0) }
         var minX = Float.Magnitude.greatestFiniteMagnitude
         var minY = Float.Magnitude.greatestFiniteMagnitude
         var maxX = -Float.Magnitude.greatestFiniteMagnitude
         var maxY = -Float.Magnitude.greatestFiniteMagnitude
         if let animation {
-            drawable.animationState.setAnimation(trackIndex: 0, animation: animation, loop: false)
+            _ = drawable.animationState.setAnimation2(0, animation, false)
             let steps = Int(max(Double(animation.duration) / stepTime, 1.0))
             for i in 0..<steps {
                 drawable.update(delta: i > 0 ? Float(stepTime) : 0.0)
@@ -135,13 +135,13 @@ public final class SkinAndAnimationBounds: NSObject, BoundsProvider {
             maxX = minX + bounds.width
             maxY = minY + bounds.height
         }
-        drawable.skeleton.setSkinByName(skinName: "default")
+        drawable.skeleton.setSkin("default")
         drawable.animationState.clearTracks()
 
         if let oldSkin {
-            drawable.skeleton.skin = oldSkin
+            drawable.skeleton.setSkin2(oldSkin)
         }
-        drawable.skeleton.setToSetupPose()
+        drawable.skeleton.setupPose()
         drawable.update(delta: 0)
         customSkin.dispose()
         return CGRectMake(CGFloat(minX), CGFloat(minY), CGFloat(maxX - minX), CGFloat(maxY - minY))
@@ -150,7 +150,7 @@ public final class SkinAndAnimationBounds: NSObject, BoundsProvider {
 
 /// How a view should be inscribed into another view.
 @objc
-public enum ContentMode: Int {
+public enum SpineContentMode: Int {
     case fit
     /// As large as possible while still containing the source view entirely within the target view.
     case fill/// Fill the target view by distorting the source's aspect ratio.
@@ -158,7 +158,7 @@ public enum ContentMode: Int {
 
 /// How a view should aligned withing another view.
 @objc
-public enum Alignment: Int {
+public enum SpineAlignment: Int {
     case topLeft
     case topCenter
     case topRight

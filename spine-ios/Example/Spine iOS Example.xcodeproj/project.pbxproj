@@ -13,6 +13,7 @@
 		76381FDB2C2EF4F10087712B /* spineboy-pma.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 76381FD52C2EF4F00087712B /* spineboy-pma.atlas */; };
 		76381FDE2C2EF53A0087712B /* mix-and-match-pma.png in Resources */ = {isa = PBXBuildFile; fileRef = 76381FDC2C2EF53A0087712B /* mix-and-match-pma.png */; };
 		76381FDF2C2EF53A0087712B /* mix-and-match-pma.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 76381FDD2C2EF53A0087712B /* mix-and-match-pma.atlas */; };
+		76DD66952E5DE75400963397 /* SpineiOS in Frameworks */ = {isa = PBXBuildFile; productRef = 76DD66942E5DE75400963397 /* SpineiOS */; };
 		9205FCD42C0760B1006EE07E /* SimpleAnimationViewControllerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9205FCD32C0760B1006EE07E /* SimpleAnimationViewControllerRepresentable.swift */; };
 		920BD1162BEBC52D0050A5A9 /* spineboy-pro.skel in Resources */ = {isa = PBXBuildFile; fileRef = 920BD1122BEBC52D0050A5A9 /* spineboy-pro.skel */; };
 		920BD1182BEBC52D0050A5A9 /* spineboy-pro.json in Resources */ = {isa = PBXBuildFile; fileRef = 920BD1142BEBC52D0050A5A9 /* spineboy-pro.json */; };
@@ -33,10 +34,8 @@
 		924C0C182BCFCF21004E63F7 /* SimpleAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924C0C172BCFCF21004E63F7 /* SimpleAnimation.swift */; };
 		924C0C1A2BCFCF22004E63F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 924C0C192BCFCF22004E63F7 /* Assets.xcassets */; };
 		92579E772C1B0E9500FDC7D5 /* DisableRendering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92579E762C1B0E9500FDC7D5 /* DisableRendering.swift */; };
-		925CB7E92C19BC5A00C8F47F /* Spine in Frameworks */ = {isa = PBXBuildFile; productRef = 925CB7E82C19BC5A00C8F47F /* Spine */; };
 		9270C16E2BFE356000BD25BC /* Physics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9270C16D2BFE356000BD25BC /* Physics.swift */; };
 		9270C1742BFE389600BD25BC /* celestial-circus-pro.skel in Resources */ = {isa = PBXBuildFile; fileRef = 9270C1712BFE389600BD25BC /* celestial-circus-pro.skel */; };
-		928A8CC22BCFE7DF00D9D35B /* Spine in Frameworks */ = {isa = PBXBuildFile; productRef = 928A8CC12BCFE7DF00D9D35B /* Spine */; };
 		92D7DDA82BFF3C8800EB9E3A /* DebugRendering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D7DDA72BFF3C8800EB9E3A /* DebugRendering.swift */; };
 		92FE93292BF4AB9600CCDF48 /* IKFollowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FE93282BF4AB9600CCDF48 /* IKFollowing.swift */; };
 /* End PBXBuildFile section */
@@ -83,8 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				925CB7E92C19BC5A00C8F47F /* Spine in Frameworks */,
-				928A8CC22BCFE7DF00D9D35B /* Spine in Frameworks */,
+				76DD66952E5DE75400963397 /* SpineiOS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,8 +210,7 @@
 			);
 			name = "Spine iOS Example";
 			packageProductDependencies = (
-				928A8CC12BCFE7DF00D9D35B /* Spine */,
-				925CB7E82C19BC5A00C8F47F /* Spine */,
+				76DD66942E5DE75400963397 /* SpineiOS */,
 			);
 			productName = "Spine iOS Example";
 			productReference = 924C0C122BCFCF21004E63F7 /* Spine iOS Example.app */;
@@ -245,7 +242,7 @@
 			);
 			mainGroup = 924C0C092BCFCF21004E63F7;
 			packageReferences = (
-				925CB7E72C19BC5A00C8F47F /* XCLocalSwiftPackageReference "../.." */,
+				76DD668F2E5DE75400963397 /* XCLocalSwiftPackageReference "../../../spine-runtimes" */,
 			);
 			productRefGroup = 924C0C132BCFCF21004E63F7 /* Products */;
 			projectDirPath = "";
@@ -536,20 +533,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		925CB7E72C19BC5A00C8F47F /* XCLocalSwiftPackageReference "../.." */ = {
+		76DD668F2E5DE75400963397 /* XCLocalSwiftPackageReference "../../../spine-runtimes" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../..;
+			relativePath = "../../../spine-runtimes";
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		925CB7E82C19BC5A00C8F47F /* Spine */ = {
+		76DD66942E5DE75400963397 /* SpineiOS */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Spine;
-		};
-		928A8CC12BCFE7DF00D9D35B /* Spine */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Spine;
+			productName = SpineiOS;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

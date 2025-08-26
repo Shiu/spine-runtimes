@@ -29,6 +29,7 @@
 
 import MetalKit
 import UIKit
+import SpineSwift
 
 /// A ``UIView`` to display a Spine skeleton. The skeleton can be loaded from a bundle, local files, http, or a pre-loaded ``SkeletonDrawableWrapper``.
 ///
@@ -42,8 +43,8 @@ import UIKit
 public final class SpineUIView: MTKView {
 
     let controller: SpineController
-    let mode: Spine.ContentMode
-    let alignment: Spine.Alignment
+    let mode: SpineContentMode
+    let alignment: SpineAlignment
     let boundsProvider: BoundsProvider
 
     internal var computedBounds: CGRect = .zero
@@ -51,8 +52,8 @@ public final class SpineUIView: MTKView {
 
     @objc internal init(
         controller: SpineController = SpineController(),
-        mode: Spine.ContentMode = .fit,
-        alignment: Spine.Alignment = .center,
+        mode: SpineContentMode = .fit,
+        alignment: SpineAlignment = .center,
         boundsProvider: BoundsProvider = SetupPoseBounds(),
         backgroundColor: UIColor = .clear
     ) {
@@ -83,8 +84,8 @@ public final class SpineUIView: MTKView {
     public convenience init(
         from source: SpineViewSource,
         controller: SpineController = SpineController(),
-        mode: Spine.ContentMode = .fit,
-        alignment: Spine.Alignment = .center,
+        mode: SpineContentMode = .fit,
+        alignment: SpineAlignment = .center,
         boundsProvider: BoundsProvider = SetupPoseBounds(),
         backgroundColor: UIColor = .clear
     ) {
@@ -120,8 +121,8 @@ public final class SpineUIView: MTKView {
         skeletonFileName: String,
         bundle: Bundle = .main,
         controller: SpineController = SpineController(),
-        mode: Spine.ContentMode = .fit,
-        alignment: Spine.Alignment = .center,
+        mode: SpineContentMode = .fit,
+        alignment: SpineAlignment = .center,
         boundsProvider: BoundsProvider = SetupPoseBounds(),
         backgroundColor: UIColor = .clear
     ) {
@@ -149,8 +150,8 @@ public final class SpineUIView: MTKView {
         atlasFile: URL,
         skeletonFile: URL,
         controller: SpineController = SpineController(),
-        mode: Spine.ContentMode = .fit,
-        alignment: Spine.Alignment = .center,
+        mode: SpineContentMode = .fit,
+        alignment: SpineAlignment = .center,
         boundsProvider: BoundsProvider = SetupPoseBounds(),
         backgroundColor: UIColor = .clear
     ) {
@@ -178,8 +179,8 @@ public final class SpineUIView: MTKView {
         atlasURL: URL,
         skeletonURL: URL,
         controller: SpineController = SpineController(),
-        mode: Spine.ContentMode = .fit,
-        alignment: Spine.Alignment = .center,
+        mode: SpineContentMode = .fit,
+        alignment: SpineAlignment = .center,
         boundsProvider: BoundsProvider = SetupPoseBounds(),
         backgroundColor: UIColor = .clear
     ) {
@@ -204,8 +205,8 @@ public final class SpineUIView: MTKView {
     @objc public convenience init(
         drawable: SkeletonDrawableWrapper,
         controller: SpineController = SpineController(),
-        mode: Spine.ContentMode = .fit,
-        alignment: Spine.Alignment = .center,
+        mode: SpineContentMode = .fit,
+        alignment: SpineAlignment = .center,
         boundsProvider: BoundsProvider = SetupPoseBounds(),
         backgroundColor: UIColor = .clear
     ) {
@@ -251,7 +252,7 @@ extension SpineUIView {
             commandQueue: SpineObjects.shared.commandQueue,
             pixelFormat: colorPixelFormat,
             atlasPages: atlasPages,
-            pma: controller.drawable.atlas.isPma
+            pma: false  // TODO: Get PMA flag from atlas when API is available
         )
         renderer?.delegate = controller
         renderer?.dataSource = controller

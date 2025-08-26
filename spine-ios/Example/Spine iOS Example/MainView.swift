@@ -27,7 +27,7 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import Spine
+import SpineiOS
 import SwiftUI
 
 struct MainView: View {
@@ -72,7 +72,7 @@ struct MainView: View {
             } footer: {
                 HStack {
                     Spacer()
-                    Text("Spine \(Spine.version)")
+                    Text("Spine \(SpineiOS.version)")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                     Spacer()

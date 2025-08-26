@@ -30,24 +30,26 @@
 import Foundation
 import SpineSwift
 import SwiftUI
+import UIKit
 
+// Re-export version info from SpineSwift
 public var version: String {
-    return "\(majorVersion).\(minorVersion)"
+    return SpineSwift.version
 }
 
 public var majorVersion: Int {
-    return Int(spine_major_version())
+    return SpineSwift.majorVersion
 }
 
 public var minorVersion: Int {
-    return Int(spine_minor_version())
+    return SpineSwift.minorVersion
 }
 
 /// ``Atlas`` data loaded from a `.atlas` file and its corresponding `.png` files. For each atlas image,
 /// a corresponding `UIImage` is constructed, which is used when rendering a skeleton
 /// that uses this atlas.
 ///
-/// Use the static methods ``Atlas/fromBundle(_:bundle:)``, ``Atlas/fromFile(_:)``, and ``Atlas/fromHttp(_:)`` to load an atlas. Call ``Atlas/dispose()`
+/// Use the static methods ``Atlas/fromBundle(_:bundle:)``, ``Atlas/fromFile(_:)``, and ``Atlas/fromHttp(_:)`` to load an atlas. Call ``Atlas/dispose()``
 /// when the atlas is no longer in use to release its resources.
 extension Atlas {
 
@@ -89,34 +91,26 @@ extension Atlas {
         guard let atlasData = String(data: data, encoding: .utf8) else {
             throw SpineError("Couldn't read atlas bytes as utf8 string")
         }
-        let atlas = try atlasData.utf8CString.withUnsafeBufferPointer {
-            guard let atlas = spine_atlas_load($0.baseAddress) else {
-                throw SpineError("Couldn't load atlas data")
-            }
-            return atlas
-        }
-        if let error = spine_atlas_get_error(atlas) {
-            let message = String(cString: error)
-            spine_atlas_dispose(atlas)
-            throw SpineError("Couldn't load atlas: \(message)")
-        }
-
+        
+        // Use SpineSwift's loadAtlas function
+        let atlas = try loadAtlas(atlasData)
+        
         var atlasPages = [UIImage]()
-        let numImagePaths = spine_atlas_get_num_image_paths(atlas)
-
-        for i in 0..<numImagePaths {
-            guard let atlasPageFilePointer = spine_atlas_get_image_path(atlas, i) else {
-                continue
-            }
-            let atlasPageFile = String(cString: atlasPageFilePointer)
-            let imageData = try await loadFile(atlasPageFile)
+        
+        // Load images for each atlas page
+        let pages = atlas.pages
+        for i in 0..<pages.count {
+            guard let page = pages[i] else { continue }
+            let imagePath = page.texturePath
+            
+            let imageData = try await loadFile(imagePath)
             guard let image = UIImage(data: imageData) else {
                 continue
             }
             atlasPages.append(image)
         }
-
-        return (Atlas(atlas), atlasPages)
+        
+        return (atlas, atlasPages)
     }
 }
 
@@ -130,7 +124,8 @@ extension SkeletonData {
         return try fromData(
             atlas: atlas,
             data: try await FileSource.bundle(fileName: skeletonFileName, bundle: bundle).load(),
-            isJson: skeletonFileName.hasSuffix(".json")
+            isJson: skeletonFileName.hasSuffix(".json"),
+            path: skeletonFileName
         )
     }
 
@@ -141,7 +136,8 @@ extension SkeletonData {
         return try fromData(
             atlas: atlas,
             data: try await FileSource.file(skeletonFile).load(),
-            isJson: skeletonFile.absoluteString.hasSuffix(".json")
+            isJson: skeletonFile.absoluteString.hasSuffix(".json"),
+            path: skeletonFile.absoluteString
         )
     }
 
@@ -152,138 +148,20 @@ extension SkeletonData {
         return try fromData(
             atlas: atlas,
             data: try await FileSource.http(skeletonURL).load(),
-            isJson: skeletonURL.absoluteString.hasSuffix(".json")
+            isJson: skeletonURL.absoluteString.hasSuffix(".json"),
+            path: skeletonURL.absoluteString
         )
     }
 
-    /// Loads a ``SkeletonData`` from the ``binary`` skeleton `Data`, using the provided ``Atlas`` to resolve attachment images.
-    ///
-    /// Throws an `Error` in case the skeleton data could not be loaded.
-    public static func fromData(atlas: Atlas, data: Data) throws -> SkeletonData {
-        let result = try data.withUnsafeBytes {
-            try $0.withMemoryRebound(to: UInt8.self) { buffer in
-                guard let ptr = buffer.baseAddress else {
-                    throw SpineError("Couldn't read atlas binary")
-                }
-                return spine_skeleton_data_load_binary(
-                    atlas.wrappee,
-                    ptr,
-                    Int32(buffer.count)
-                )
-            }
-        }
-        guard let result else {
-            throw SpineError("Couldn't load skeleton data")
-        }
-        defer {
-            spine_skeleton_data_result_dispose(result)
-        }
-        if let error = spine_skeleton_data_result_get_error(result) {
-            let message = String(cString: error)
-            throw SpineError("Couldn't load skeleton data: \(message)")
-        }
-        guard let data = spine_skeleton_data_result_get_data(result) else {
-            throw SpineError("Couldn't load skeleton data from result")
-        }
-        return SkeletonData(data)
-    }
-
-    /// Loads a ``SkeletonData`` from the `json` string, using the provided ``Atlas`` to resolve attachment
-    /// images.
-    ///
-    /// Throws an `Error` in case the atlas could not be loaded.
-    public static func fromJson(atlas: Atlas, json: String) throws -> SkeletonData {
-        let result = try json.utf8CString.withUnsafeBufferPointer { buffer in
-            guard
-                let basePtr = buffer.baseAddress,
-                let result = spine_skeleton_data_load_json(atlas.wrappee, basePtr)
-            else {
-                throw SpineError("Couldn't load skeleton data json")
-            }
-            return result
-        }
-        defer {
-            spine_skeleton_data_result_dispose(result)
-        }
-        if let error = spine_skeleton_data_result_get_error(result) {
-            let message = String(cString: error)
-            throw SpineError("Couldn't load skeleton data: \(message)")
-        }
-        guard let data = spine_skeleton_data_result_get_data(result) else {
-            throw SpineError("Couldn't load skeleton data from result")
-        }
-        return SkeletonData(data)
-    }
-
-    private static func fromData(atlas: Atlas, data: Data, isJson: Bool) throws -> SkeletonData {
+    private static func fromData(atlas: Atlas, data: Data, isJson: Bool, path: String) throws -> SkeletonData {
         if isJson {
             guard let json = String(data: data, encoding: .utf8) else {
                 throw SpineError("Couldn't read skeleton data json string")
             }
-            return try fromJson(atlas: atlas, json: json)
+            return try loadSkeletonDataJson(atlas: atlas, jsonData: json, path: path)
         } else {
-            return try fromData(atlas: atlas, data: data)
+            return try loadSkeletonDataBinary(atlas: atlas, binaryData: data, path: path)
         }
-    }
-}
-
-extension SkeletonDrawable {
-
-    func render() -> [RenderCommand] {
-        var commands = [RenderCommand]()
-        if disposed { return commands }
-
-        var nativeCmd = spine_skeleton_drawable_render(wrappee)
-        repeat {
-            if let ncmd = nativeCmd {
-                commands.append(RenderCommand(ncmd))
-                nativeCmd = spine_render_command_get_next(ncmd)
-            } else {
-                nativeCmd = nil
-            }
-        } while nativeCmd != nil
-
-        return commands
-    }
-}
-
-extension RenderCommand {
-
-    var numVertices: Int {
-        Int(spine_render_command_get_num_vertices(wrappee))
-    }
-
-    func positions(numVertices: Int) -> [Float] {
-        let num = numVertices * 2
-        let ptr = spine_render_command_get_positions(wrappee)
-        guard let validPtr = ptr else { return [] }
-        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
-        return Array(buffer)
-    }
-
-    func uvs(numVertices: Int) -> [Float] {
-        let num = numVertices * 2
-        let ptr = spine_render_command_get_uvs(wrappee)
-        guard let validPtr = ptr else { return [] }
-        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
-        return Array(buffer)
-    }
-
-    func colors(numVertices: Int) -> [Int32] {
-        let num = numVertices
-        let ptr = spine_render_command_get_colors(wrappee)
-        guard let validPtr = ptr else { return [] }
-        let buffer = UnsafeBufferPointer(start: validPtr, count: num)
-        return Array(buffer)
-    }
-}
-
-extension Skin {
-
-    /// Constructs a new empty ``Skin`` using the given `name`. Skins constructed this way must be manually disposed via the `dispose` method
-    /// if they are no longer used.
-    public static func create(name: String) -> Skin {
-        return Skin(spine_skin_create(name))
     }
 }
 
@@ -380,26 +258,5 @@ internal enum FileSource {
     }
 }
 
-public struct SpineError: Error, CustomStringConvertible {
-
-    public let description: String
-
-    internal init(_ description: String) {
-        self.description = description
-    }
-
-}
-
-extension SkeletonBounds {
-    public static func create() -> SkeletonBounds {
-        return SkeletonBounds(spine_skeleton_bounds_create())
-    }
-}
-
-@objc extension Atlas {
-
-    public var imagePathCount: Int32 {
-        spine_atlas_get_num_image_paths(wrappee)
-    }
-
-}
+// Re-export SpineError from SpineSwift
+public typealias SpineError = SpineSwift.SpineError

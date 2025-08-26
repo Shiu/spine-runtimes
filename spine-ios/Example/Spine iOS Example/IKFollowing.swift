@@ -27,7 +27,7 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import Spine
+import SpineiOS
 import SwiftUI
 
 struct IKFollowing: View {
@@ -74,16 +74,8 @@ final class IKFollowingModel: ObservableObject {
     init() {
         controller = SpineController(
             onInitialized: { controller in
-                controller.animationState.setAnimationByName(
-                    trackIndex: 0,
-                    animationName: "walk",
-                    loop: true
-                )
-                controller.animationState.setAnimationByName(
-                    trackIndex: 1,
-                    animationName: "aim",
-                    loop: true
-                )
+                controller.animationState.setAnimation(0, "walk", true)
+                controller.animationState.setAnimation(1, "aim", true)
             },
             onAfterUpdateWorldTransforms: {
                 [weak self] controller in
@@ -91,11 +83,11 @@ final class IKFollowingModel: ObservableObject {
                 guard let worldPosition = self.crossHairPosition else {
                     return
                 }
-                let bone = controller.skeleton.findBone(boneName: "crosshair")!
+                let bone = controller.skeleton.findBone("crosshair")!
                 if let parent = bone.parent {
-                    let position = parent.worldToLocal(worldX: Float(worldPosition.x), worldY: Float(worldPosition.y))
-                    bone.x = position.x
-                    bone.y = position.y
+					let position = parent.appliedPose.worldToLocal(worldX: Float(worldPosition.x), worldY: Float(worldPosition.y))
+					bone.appliedPose.x = position.x
+					bone.appliedPose.y = position.y
                 }
             }
         )

@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import Spine
-import SpineCppLite
+import SpineiOS
+import SpineSwift
 import SwiftUI
 
 struct DressUp: View {
@@ -94,11 +94,7 @@ final class DressUpModel: ObservableObject {
     init() {
         controller = SpineController(
             onInitialized: { controller in
-                controller.animationState.setAnimationByName(
-                    trackIndex: 0,
-                    animationName: "dance",
-                    loop: true
-                )
+                controller.animationState.setAnimation(0, "dance", true)
             },
             disposeDrawableOnDeInit: false
         )
@@ -108,21 +104,22 @@ final class DressUpModel: ObservableObject {
                 skeletonFileName: "mix-and-match-pro.skel"
             )
             try await MainActor.run {
-                for skin in drawable.skeletonData.skins {
+                let skins = drawable.skeletonData.skins
+                for i in 0..<skins.count {
+                    guard let skin = skins[i] else { continue }
                     if skin.name == "default" { continue }
                     let skeleton = drawable.skeleton
-                    skeleton.skin = skin
-                    skeleton.setToSetupPose()
-                    skeleton.update(delta: 0)
-                    skeleton.updateWorldTransform(physics: SPINE_PHYSICS_UPDATE)
-                    try skin.name.flatMap { skinName in
-                        self.skinImages[skinName] = try drawable.renderToImage(
-                            size: self.thumbnailSize,
-                            backgroundColor: .white,
-                            scaleFactor: UIScreen.main.scale
-                        )
-                        self.selectedSkins[skinName] = false
-                    }
+                    skeleton.setSkin2(skin)
+                    skeleton.setupPose()
+                    skeleton.update(0)
+					skeleton.updateWorldTransform(SpineSwift.Physics.update)
+                    let skinName = skin.name
+                    self.skinImages[skinName] = try drawable.renderToImage(
+                        size: self.thumbnailSize,
+                        backgroundColor: .white,
+                        scaleFactor: UIScreen.main.scale
+                    )
+                    self.selectedSkins[skinName] = false
                 }
                 self.toggleSkin(skinName: "full-skins/girl", drawable: drawable)
                 self.drawable = drawable
@@ -144,15 +141,15 @@ final class DressUpModel: ObservableObject {
     func toggleSkin(skinName: String, drawable: SkeletonDrawableWrapper) {
         selectedSkins[skinName] = !(selectedSkins[skinName] ?? false)
         customSkin?.dispose()
-        customSkin = Skin.create(name: "custom-skin")
+        customSkin = Skin("custom-skin")
         for skinName in selectedSkins.keys {
             if selectedSkins[skinName] == true {
-                if let skin = drawable.skeletonData.findSkin(name: skinName) {
-                    customSkin?.addSkin(other: skin)
+                if let skin = drawable.skeletonData.findSkin(skinName) {
+                    customSkin?.addSkin(skin)
                 }
             }
         }
-        drawable.skeleton.skin = customSkin
-        drawable.skeleton.setToSetupPose()
+        drawable.skeleton.setSkin2(customSkin)
+        drawable.skeleton.setupPose()
     }
 }

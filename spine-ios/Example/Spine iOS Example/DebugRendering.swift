@@ -27,7 +27,7 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import Spine
+import SpineiOS
 import SwiftUI
 
 struct DebugRendering: View {
@@ -71,18 +71,16 @@ final class DebugRenderingModel: ObservableObject {
     init() {
         controller = SpineController(
             onInitialized: { controller in
-                controller.animationState.setAnimationByName(
-                    trackIndex: 0,
-                    animationName: "walk",
-                    loop: true
-                )
+                controller.animationState.setAnimation(0, "walk", true)
             },
             onAfterPaint: {
                 [weak self] controller in
                 guard let self else { return }
-                boneRects = controller.drawable.skeleton.bones.map { bone in
+                let bones = controller.drawable.skeleton.bones
+                boneRects = (0..<bones.count).compactMap { i -> BoneRect? in
+                    guard let bone = bones[i] else { return nil }
                     let position = controller.fromSkeletonCoordinates(
-                        position: CGPointMake(CGFloat(bone.worldX), CGFloat(bone.worldY))
+                        position: CGPointMake(CGFloat(bone.appliedPose.worldX), CGFloat(bone.appliedPose.worldY))
                     )
                     return BoneRect(
                         id: UUID(),

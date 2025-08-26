@@ -28,7 +28,7 @@
  *****************************************************************************/
 
 #import "SimpleAnimationViewController.h"
-@import Spine;
+@import SpineiOS;
 
 @interface SimpleAnimationViewController ()
 
