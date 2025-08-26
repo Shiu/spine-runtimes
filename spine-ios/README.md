@@ -19,3 +19,35 @@ For the official legal terms governing the Spine Runtimes, please read the [Spin
 spine-ios works with data exported from Spine 4.2.xx.
 
 spine-ios supports all Spine features except two-color tinting.
+
+## Building
+
+### SpineC and SpineSwift
+
+Build on any platform:
+```bash
+./setup.sh # Copy spine-c and spine-cpp sources
+swift build --product SpineC
+swift build --product SpineSwift
+```
+
+### SpineiOS
+
+Requires iOS/tvOS. Use Xcode:
+
+```bash
+# Open in Xcode (recommended)
+open Example/Spine\ iOS\ Example.xcodeproj
+
+# Or build from command line (requires iOS Simulator runtime)
+# Install iOS Simulator: Xcode > Settings > Platforms > iOS Simulator > Download
+xcodebuild -project Example/Spine\ iOS\ Example.xcodeproj -scheme "Spine iOS Example" -sdk iphonesimulator -destination "generic/platform=iOS Simulator" build
+```
+
+### Tests
+
+```bash
+cd test
+swift build
+swift run SpineTest
+```
