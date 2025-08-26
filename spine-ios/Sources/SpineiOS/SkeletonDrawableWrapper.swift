@@ -135,11 +135,7 @@ public final class SkeletonDrawableWrapper: NSObject {
     public func update(delta: Float) {
         if disposed { return }
 
-        animationState.update(delta)
-        _ = animationState.apply(skeleton)
-
-        skeleton.update(delta)
-        skeleton.updateWorldTransform(Physics.update)
+        skeletonDrawable.update(delta);
     }
 
     public func dispose() {
