@@ -1,6 +1,8 @@
 # spine-glfw
 
-The spine-glfw runtime provides basic functionality to load and manipulate [spine](http://esotericsoftware.com) skeletal animation data using C or C++ and render them via [GLFW](https://www.glfw.org/) and [glbinding](https://github.com/cginternals/glbinding).
+The spine-glfw runtime provides functionality to load, manipulate and render [Spine](http://esotericsoftware.com) skeletal animation data using [GLFW](https://www.glfw.org/) and OpenGL. spine-glfw is based on [spine-c](../spine-c) and [spine-cpp](../spine-cpp). Note that spine-c depends on spine-cpp, so both are required regardless of which API you choose to use.
+
+# See the [Spine Runtimes documentation](http://esotericsoftware.com/spine-documentation#runtimes) for in-depth information
 
 ## Licensing
 
@@ -14,6 +16,103 @@ For the official legal terms governing the Spine Runtimes, please read the [Spin
 
 ## Spine version
 
-spine-cpp works with data exported from spine 4.2.xx.
+spine-glfw works with data exported from Spine 4.3.xx.
 
-spine-cpp supports all spine features, except two color tinting.
+spine-glfw supports all Spine features.
+
+## Usage
+
+### Integration with CMake (Recommended)
+
+The easiest way to integrate spine-glfw into your project is via CMake FetchContent:
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(
+    spine-glfw
+    GIT_REPOSITORY https://github.com/esotericsoftware/spine-runtimes.git
+    GIT_TAG 4.3
+    SOURCE_SUBDIR spine-glfw
+)
+FetchContent_MakeAvailable(spine-glfw)
+
+# Link against spine-glfw (includes both C and C++ APIs)
+target_link_libraries(your_target spine-glfw)
+```
+
+This will automatically fetch and build spine-glfw along with its dependencies (spine-c, spine-cpp, GLFW, and glbinding).
+
+### Manual Integration
+
+If you prefer manual integration:
+
+1. Download the Spine Runtimes source using git (`git clone https://github.com/esotericsoftware/spine-runtimes`) or download it as a zip.
+2. Add the required source files to your project:
+   - Add sources from `spine-cpp/src`, `spine-c/src`, and `spine-glfw/src`
+3. Add the include directories: `spine-cpp/include`, `spine-c/include`, and `spine-glfw/src`
+4. Link against GLFW and OpenGL libraries
+
+See the [Spine Runtimes documentation](http://esotericsoftware.com/spine-documentation#runtimes) for detailed API usage.
+
+## Examples
+
+The repository includes example code for both C and C++ APIs:
+- C example: [example/main-c.cpp](example/main-c.cpp)
+- C++ example: [example/main.cpp](example/main.cpp)
+
+### Building the Examples
+
+The project includes a `build.sh` script for easy building:
+
+```bash
+cd spine-glfw
+./build.sh           # Build debug version
+./build.sh release   # Build release version
+./build.sh clean     # Clean and rebuild
+```
+
+### Windows
+
+1. Install [Visual Studio Community](https://visualstudio.microsoft.com/downloads/) with C++ support and Windows SDK.
+2. Install [CMake](https://cmake.org/download/) via the Windows installer package.
+3. Clone the repository: `git clone https://github.com/esotericsoftware/spine-runtimes`
+4. Run CMake GUI from the start menu
+5. Set source directory to `spine-runtimes/spine-glfw`
+6. Set build directory to `spine-runtimes/spine-glfw/build`
+7. Click `Configure`, then `Generate`
+8. Open the generated solution in Visual Studio
+9. Set `spine-glfw-example` or `spine-glfw-example-c` as the startup project
+10. Run the project
+
+### Linux
+
+1. Install dependencies:
+   ```bash
+   sudo apt-get install cmake ninja-build libgl1-mesa-dev libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev  # Ubuntu/Debian
+   # or equivalent for your distribution
+   ```
+2. Clone the repository: `git clone https://github.com/esotericsoftware/spine-runtimes`
+3. Build and run:
+   ```bash
+   cd spine-runtimes/spine-glfw
+   ./build.sh
+   ./build/debug/spine-glfw-example-c    # Run C example
+   ./build/debug/spine-glfw-example      # Run C++ example
+   ```
+
+### macOS
+
+1. Install [Xcode](https://developer.apple.com/xcode/)
+2. Install [Homebrew](http://brew.sh/)
+3. Install dependencies:
+   ```bash
+   brew install cmake ninja
+   ```
+4. Clone the repository: `git clone https://github.com/esotericsoftware/spine-runtimes`
+5. Build and run:
+   ```bash
+   cd spine-runtimes/spine-glfw
+   ./build.sh
+   ./build/debug/spine-glfw-example-c    # Run C example
+   ./build/debug/spine-glfw-example      # Run C++ example
+   ```
