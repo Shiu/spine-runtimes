@@ -147,7 +147,8 @@ export class SpinePipe implements RenderPipe<Spine> {
 				const container = containerAttachment.container;
 
 				container.includeInBuild = true;
-				collectAllRenderables(container, instructionSet, this.renderer);
+				// See https://github.com/pixijs/pixijs/blob/b4c050a791fe65e979e467c9cba2bda0c01a1c35/src/scene/container/utils/collectAllRenderables.ts#L28
+				container.collectRenderables(instructionSet, this.renderer, null!);
 				container.includeInBuild = false;
 			}
 		}
