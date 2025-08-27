@@ -39,50 +39,50 @@ int main() {
 		printf("Error: %s\n", SDL_GetError());
 		return -1;
 	}
-	
+
 	SDL_Window *window = SDL_CreateWindow("Spine SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, 0);
 	if (!window) {
 		printf("Error: %s\n", SDL_GetError());
 		return -1;
 	}
-	
+
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if (!renderer) {
 		printf("Error: %s\n", SDL_GetError());
 		return -1;
 	}
-	
+
 	// Load atlas and skeleton data
 	SDLTextureLoader textureLoader(renderer);
 	Atlas atlas("data/spineboy-pma.atlas", &textureLoader);
 	SkeletonJson json(atlas);
 	json.setScale(0.5f);
 	SkeletonData *skeletonData = json.readSkeletonDataFile("data/spineboy-pro.json");
-	
+
 	if (!skeletonData) {
 		printf("Failed to load skeleton data\n");
 		return -1;
 	}
-	
+
 	// Create skeleton and animation state
 	Skeleton skeleton(*skeletonData);
 	AnimationStateData animationStateData(*skeletonData);
 	animationStateData.setDefaultMix(0.2f);
 	AnimationState animationState(animationStateData);
-	
+
 	// Setup skeleton
 	skeleton.setPosition(400, 500);
 	skeleton.setupPose();
 	skeleton.update(0);
 	skeleton.updateWorldTransform(Physics_Update);
-	
+
 	// Setup animation
 	animationState.setAnimation(0, "portal", false);
 	animationState.addAnimation(0, "run", true, 0);
-	
+
 	bool quit = false;
 	uint64_t lastFrameTime = SDL_GetPerformanceCounter();
-	
+
 	while (!quit) {
 		SDL_Event event;
 		while (SDL_PollEvent(&event) != 0) {
@@ -91,32 +91,32 @@ int main() {
 				break;
 			}
 		}
-		
+
 		SDL_SetRenderDrawColor(renderer, 94, 93, 96, 255);
 		SDL_RenderClear(renderer);
-		
+
 		uint64_t now = SDL_GetPerformanceCounter();
-		double deltaTime = (now - lastFrameTime) / (double)SDL_GetPerformanceFrequency();
+		double deltaTime = (now - lastFrameTime) / (double) SDL_GetPerformanceFrequency();
 		lastFrameTime = now;
-		
+
 		// Update animation
 		animationState.update(deltaTime);
 		animationState.apply(skeleton);
 		skeleton.update(deltaTime);
 		skeleton.updateWorldTransform(Physics_Update);
-		
+
 		// Draw
 		SDL_draw(skeleton, renderer, true);
-		
+
 		SDL_RenderPresent(renderer);
 	}
-	
+
 	// Cleanup
 	delete skeletonData;
-	
+
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
-	
+
 	return 0;
 }

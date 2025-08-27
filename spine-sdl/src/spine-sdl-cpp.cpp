@@ -50,8 +50,8 @@ void spine::SDL_draw(Skeleton &skeleton, SDL_Renderer *renderer, bool premultipl
 	// Pre-allocate vertex and index arrays
 	int maxVertices = 1024;
 	int maxIndices = 1024 * 3;
-	SDL_Vertex *vertices = (SDL_Vertex*)malloc(sizeof(SDL_Vertex) * maxVertices);
-	int *indices = (int*)malloc(sizeof(int) * maxIndices);
+	SDL_Vertex *vertices = (SDL_Vertex *) malloc(sizeof(SDL_Vertex) * maxVertices);
+	int *indices = (int *) malloc(sizeof(int) * maxIndices);
 
 	while (command) {
 		int numVertices = command->numVertices;
@@ -60,11 +60,11 @@ void spine::SDL_draw(Skeleton &skeleton, SDL_Renderer *renderer, bool premultipl
 		// Resize buffers if needed
 		if (numVertices > maxVertices) {
 			maxVertices = numVertices * 2;
-			vertices = (SDL_Vertex*)realloc(vertices, sizeof(SDL_Vertex) * maxVertices);
+			vertices = (SDL_Vertex *) realloc(vertices, sizeof(SDL_Vertex) * maxVertices);
 		}
 		if (numIndices > maxIndices) {
 			maxIndices = numIndices * 2;
-			indices = (int*)realloc(indices, sizeof(int) * maxIndices);
+			indices = (int *) realloc(indices, sizeof(int) * maxIndices);
 		}
 
 		// Get vertex data from render command
@@ -72,7 +72,7 @@ void spine::SDL_draw(Skeleton &skeleton, SDL_Renderer *renderer, bool premultipl
 		float *uvs = command->uvs;
 		uint32_t *colors = command->colors;
 		uint16_t *commandIndices = command->indices;
-		SDL_Texture *texture = (SDL_Texture*)command->texture;
+		SDL_Texture *texture = (SDL_Texture *) command->texture;
 		BlendMode blendMode = command->blendMode;
 
 		// Fill SDL vertices
@@ -115,24 +115,21 @@ void spine::SDL_draw(Skeleton &skeleton, SDL_Renderer *renderer, bool premultipl
 			SDL_BlendMode target;
 			switch (blendMode) {
 				case BlendMode_Normal:
-					target = SDL_ComposeCustomBlendMode(
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD,
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
+					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD,
+														SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
 					SDL_SetTextureBlendMode(texture, target);
 					break;
 				case BlendMode_Multiply:
 					SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_MOD);
 					break;
 				case BlendMode_Additive:
-					target = SDL_ComposeCustomBlendMode(
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD,
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD);
+					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ONE,
+														SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD);
 					SDL_SetTextureBlendMode(texture, target);
 					break;
 				case BlendMode_Screen:
-					target = SDL_ComposeCustomBlendMode(
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD,
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
+					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD,
+														SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
 					SDL_SetTextureBlendMode(texture, target);
 					break;
 			}
@@ -174,7 +171,7 @@ void SDLTextureLoader::load(AtlasPage &page, const String &path) {
 }
 
 void SDLTextureLoader::unload(void *texture) {
-	SDL_DestroyTexture((SDL_Texture*)texture);
+	SDL_DestroyTexture((SDL_Texture *) texture);
 }
 
 // Default extension implementation for spine-cpp

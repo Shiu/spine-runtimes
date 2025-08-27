@@ -54,8 +54,8 @@ void spine_sdl_draw_skeleton(spine_skeleton skeleton, struct SDL_Renderer *sdl_r
 	// Pre-allocate vertex and index arrays
 	int max_vertices = 1024;
 	int max_indices = 1024 * 3;
-	SDL_Vertex *vertices = (SDL_Vertex*)malloc(sizeof(SDL_Vertex) * max_vertices);
-	int *indices = (int*)malloc(sizeof(int) * max_indices);
+	SDL_Vertex *vertices = (SDL_Vertex *) malloc(sizeof(SDL_Vertex) * max_vertices);
+	int *indices = (int *) malloc(sizeof(int) * max_indices);
 
 	while (command) {
 		int num_vertices = spine_render_command_get_num_vertices(command);
@@ -64,11 +64,11 @@ void spine_sdl_draw_skeleton(spine_skeleton skeleton, struct SDL_Renderer *sdl_r
 		// Resize buffers if needed
 		if (num_vertices > max_vertices) {
 			max_vertices = num_vertices * 2;
-			vertices = (SDL_Vertex*)realloc(vertices, sizeof(SDL_Vertex) * max_vertices);
+			vertices = (SDL_Vertex *) realloc(vertices, sizeof(SDL_Vertex) * max_vertices);
 		}
 		if (num_indices > max_indices) {
 			max_indices = num_indices * 2;
-			indices = (int*)realloc(indices, sizeof(int) * max_indices);
+			indices = (int *) realloc(indices, sizeof(int) * max_indices);
 		}
 
 		// Get vertex data from render command
@@ -76,7 +76,7 @@ void spine_sdl_draw_skeleton(spine_skeleton skeleton, struct SDL_Renderer *sdl_r
 		float *uvs = spine_render_command_get_uvs(command);
 		uint32_t *colors = spine_render_command_get_colors(command);
 		uint16_t *command_indices = spine_render_command_get_indices(command);
-		SDL_Texture *texture = (SDL_Texture*)spine_render_command_get_texture(command);
+		SDL_Texture *texture = (SDL_Texture *) spine_render_command_get_texture(command);
 		spine_blend_mode blend_mode = spine_render_command_get_blend_mode(command);
 
 		// Fill SDL vertices
@@ -119,24 +119,21 @@ void spine_sdl_draw_skeleton(spine_skeleton skeleton, struct SDL_Renderer *sdl_r
 			SDL_BlendMode target;
 			switch (blend_mode) {
 				case SPINE_BLEND_MODE_NORMAL:
-					target = SDL_ComposeCustomBlendMode(
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD,
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
+					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD,
+														SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
 					SDL_SetTextureBlendMode(texture, target);
 					break;
 				case SPINE_BLEND_MODE_MULTIPLY:
 					SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_MOD);
 					break;
 				case SPINE_BLEND_MODE_ADDITIVE:
-					target = SDL_ComposeCustomBlendMode(
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD,
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD);
+					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD, SDL_BLENDFACTOR_ONE,
+														SDL_BLENDFACTOR_ONE, SDL_BLENDOPERATION_ADD);
 					SDL_SetTextureBlendMode(texture, target);
 					break;
 				case SPINE_BLEND_MODE_SCREEN:
-					target = SDL_ComposeCustomBlendMode(
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD,
-						SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
+					target = SDL_ComposeCustomBlendMode(SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD,
+														SDL_BLENDFACTOR_ONE, SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, SDL_BLENDOPERATION_ADD);
 					SDL_SetTextureBlendMode(texture, target);
 					break;
 			}
@@ -177,5 +174,5 @@ void *load_texture(const char *path, SDL_Renderer *renderer) {
 }
 
 void unload_texture(void *texture) {
-	SDL_DestroyTexture((SDL_Texture*)texture);
+	SDL_DestroyTexture((SDL_Texture *) texture);
 }

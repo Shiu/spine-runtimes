@@ -43,7 +43,7 @@ void *load_texture_callback(const char *path) {
 }
 
 void unload_texture_callback(void *texture) {
-	SDL_DestroyTexture((SDL_Texture*)texture);
+	SDL_DestroyTexture((SDL_Texture *) texture);
 }
 
 char *read_file(const char *path, int *length) {
@@ -51,10 +51,10 @@ char *read_file(const char *path, int *length) {
 	if (!file) return NULL;
 
 	fseek(file, 0, SEEK_END);
-	*length = (int)ftell(file);
+	*length = (int) ftell(file);
 	fseek(file, 0, SEEK_SET);
 
-	char *data = (char*)malloc(*length + 1);
+	char *data = (char *) malloc(*length + 1);
 	fread(data, 1, *length, file);
 	data[*length] = '\0';
 	fclose(file);
@@ -155,11 +155,11 @@ int main(void) {
 		SDL_RenderClear(renderer);
 
 		uint64_t now = SDL_GetPerformanceCounter();
-		double deltaTime = (now - lastFrameTime) / (double)SDL_GetPerformanceFrequency();
+		double deltaTime = (now - lastFrameTime) / (double) SDL_GetPerformanceFrequency();
 		lastFrameTime = now;
 
 		// Update animation
-		spine_skeleton_drawable_update(drawable, (float)deltaTime);
+		spine_skeleton_drawable_update(drawable, (float) deltaTime);
 
 		// Draw
 		spine_sdl_draw(drawable, renderer, true);

@@ -36,14 +36,15 @@
 namespace spine {
 	/// Renders a spine::Skeleton using SDL_Renderer
 	void SDL_draw(Skeleton &skeleton, SDL_Renderer *renderer, bool premultipliedAlpha);
-	
+
 	/// SDL texture loader for use with Atlas
 	class SDLTextureLoader : public TextureLoader {
 		SDL_Renderer *renderer;
 
 	public:
-		SDLTextureLoader(SDL_Renderer *renderer) : renderer(renderer) {}
-		
+		SDLTextureLoader(SDL_Renderer *renderer) : renderer(renderer) {
+		}
+
 		void load(AtlasPage &page, const String &path);
 		void unload(void *texture);
 	};
