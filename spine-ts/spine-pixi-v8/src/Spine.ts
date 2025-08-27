@@ -663,31 +663,36 @@ export class Spine extends ViewContainer {
 
 					const skeletonColor = skeleton.color;
 					const slotColor = pose.color;
-
 					const attachmentColor = attachment.color;
+					const alpha = skeletonColor.a * slotColor.a * attachmentColor.a;
 
-					cacheData.color.set(
-						skeletonColor.r * slotColor.r * attachmentColor.r,
-						skeletonColor.g * slotColor.g * attachmentColor.g,
-						skeletonColor.b * slotColor.b * attachmentColor.b,
-						skeletonColor.a * slotColor.a * attachmentColor.a,
-					);
+					if (this.alpha === 0 || alpha === 0) {
+						cacheData.skipRender = true;
+					} else {
 
-					if (pose.darkColor) {
-						cacheData.darkColor.setFromColor(pose.darkColor);
-					}
+						cacheData.color.set(
+							skeletonColor.r * slotColor.r * attachmentColor.r,
+							skeletonColor.g * slotColor.g * attachmentColor.g,
+							skeletonColor.b * slotColor.b * attachmentColor.b,
+							alpha,
+						);
 
-					cacheData.skipRender = cacheData.clipped = false;
+						if (pose.darkColor) {
+							cacheData.darkColor.setFromColor(pose.darkColor);
+						}
 
-					const texture = attachment.region?.texture.texture || Texture.EMPTY;
+						cacheData.skipRender = cacheData.clipped = false;
 
-					if (cacheData.texture !== texture) {
-						cacheData.texture = texture;
-						this.spineTexturesDirty = true;
-					}
+						const texture = attachment.region?.texture.texture || Texture.EMPTY;
 
-					if (clipper.isClipping()) {
-						this.updateClippingData(cacheData);
+						if (cacheData.texture !== texture) {
+							cacheData.texture = texture;
+							this.spineTexturesDirty = true;
+						}
+
+						if (clipper.isClipping()) {
+							this.updateClippingData(cacheData);
+						}
 					}
 				}
 				else if (attachment instanceof ClippingAttachment) {
