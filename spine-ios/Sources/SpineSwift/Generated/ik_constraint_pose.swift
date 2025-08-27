@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// IkConstraintPose wrapper
-public class IkConstraintPose {
+@objc(SpineIkConstraintPose)
+@objcMembers
+public class IkConstraintPose: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_ik_constraint_pose) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_ik_constraint_pose_create()
         self.init(fromPointer: ptr!)
     }

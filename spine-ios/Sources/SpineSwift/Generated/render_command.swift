@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// RenderCommand wrapper
-public class RenderCommand {
+@objc(SpineRenderCommand)
+@objcMembers
+public class RenderCommand: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_render_command) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public var positions: UnsafeMutablePointer<Float>? {

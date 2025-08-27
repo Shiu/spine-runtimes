@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// PhysicsConstraintPose wrapper
-public class PhysicsConstraintPose {
+@objc(SpinePhysicsConstraintPose)
+@objcMembers
+public class PhysicsConstraintPose: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_physics_constraint_pose) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_physics_constraint_pose_create()
         self.init(fromPointer: ptr!)
     }

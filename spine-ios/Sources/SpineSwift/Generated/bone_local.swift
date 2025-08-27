@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// BoneLocal wrapper
-public class BoneLocal {
+@objc(SpineBoneLocal)
+@objcMembers
+public class BoneLocal: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_bone_local) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_bone_local_create()
         self.init(fromPointer: ptr!)
     }

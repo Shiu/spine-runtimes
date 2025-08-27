@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// ClippingAttachment wrapper
+@objc(SpineClippingAttachment)
+@objcMembers
 public class ClippingAttachment: VertexAttachment {
+    @nonobjc
     public init(fromPointer ptr: spine_clipping_attachment) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_vertex_attachment_wrapper.self))
     }

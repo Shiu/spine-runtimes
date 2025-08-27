@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// Sequence wrapper
-public class Sequence {
+@objc(SpineSequence)
+@objcMembers
+public class Sequence: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_sequence) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ count: Int32) {

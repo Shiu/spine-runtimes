@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// Attachment wrapper
-open class Attachment {
+@objc(SpineAttachment)
+@objcMembers
+open class Attachment: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_attachment) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public var rtti: Rtti {
@@ -58,8 +61,8 @@ open class Attachment {
     public func copyAttachment() -> Attachment {
         let result = spine_attachment_copy(_ptr.assumingMemoryBound(to: spine_attachment_wrapper.self))
         let rtti = spine_attachment_get_rtti(result!)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_bounding_box_attachment":
             return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         case "spine_clipping_attachment":
@@ -73,7 +76,7 @@ open class Attachment {
         case "spine_region_attachment":
             return RegionAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Attachment")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Attachment")
         }
     }
 

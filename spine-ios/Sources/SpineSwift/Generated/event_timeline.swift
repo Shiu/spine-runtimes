@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// EventTimeline wrapper
+@objc(SpineEventTimeline)
+@objcMembers
 public class EventTimeline: Timeline {
+    @nonobjc
     public init(fromPointer ptr: spine_event_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_timeline_wrapper.self))
     }

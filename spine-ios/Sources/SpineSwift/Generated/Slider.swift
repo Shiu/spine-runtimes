@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// Slider wrapper
+@objc(SpineSlider)
+@objcMembers
 public class Slider: PosedActive, Posed, Constraint {
+    @nonobjc
     public init(fromPointer ptr: spine_slider) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_active_wrapper.self))
     }

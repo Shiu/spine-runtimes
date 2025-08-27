@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// Color wrapper
-public class Color {
+@objc(SpineColor)
+@objcMembers
+public class Color: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_color) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_color_create()
         self.init(fromPointer: ptr!)
     }

@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// DrawOrderTimeline wrapper
+@objc(SpineDrawOrderTimeline)
+@objcMembers
 public class DrawOrderTimeline: Timeline {
+    @nonobjc
     public init(fromPointer ptr: spine_draw_order_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_timeline_wrapper.self))
     }

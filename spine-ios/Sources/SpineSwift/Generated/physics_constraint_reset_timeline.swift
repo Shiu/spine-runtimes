@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// PhysicsConstraintResetTimeline wrapper
+@objc(SpinePhysicsConstraintResetTimeline)
+@objcMembers
 public class PhysicsConstraintResetTimeline: Timeline, ConstraintTimeline {
+    @nonobjc
     public init(fromPointer ptr: spine_physics_constraint_reset_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_timeline_wrapper.self))
     }

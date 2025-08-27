@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// MeshAttachment wrapper
+@objc(SpineMeshAttachment)
+@objcMembers
 public class MeshAttachment: VertexAttachment {
+    @nonobjc
     public init(fromPointer ptr: spine_mesh_attachment) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_vertex_attachment_wrapper.self))
     }

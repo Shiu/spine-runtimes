@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// Skin wrapper
-public class Skin {
+@objc(SpineSkin)
+@objcMembers
+public class Skin: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_skin) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ name: String) {
@@ -73,8 +76,8 @@ public class Skin {
         let result = spine_skin_get_attachment(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), slotIndex, name)
         guard let ptr = result else { return nil }
         let rtti = spine_attachment_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_bounding_box_attachment":
             return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         case "spine_clipping_attachment":
@@ -88,7 +91,7 @@ public class Skin {
         case "spine_region_attachment":
             return RegionAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Attachment")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Attachment")
         }
     }
 

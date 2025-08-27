@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// Slot wrapper
-public class Slot: Posed {
+@objc(SpineSlot)
+@objcMembers
+public class Slot: NSObject, Posed {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_slot) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ data: SlotData, _ skeleton: Skeleton) {

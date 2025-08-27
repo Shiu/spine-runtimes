@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// AtlasPage wrapper
-public class AtlasPage {
+@objc(SpineAtlasPage)
+@objcMembers
+public class AtlasPage: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_atlas_page) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ inName: String) {

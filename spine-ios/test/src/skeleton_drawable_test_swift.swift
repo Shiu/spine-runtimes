@@ -165,7 +165,7 @@ func runSkeletonDrawableTestSwift() {
         for i in 0..<entriesToShow {
             let entry = entries[i]
             if let attachment = entry.attachment {
-                let attachmentType = attachment.rtti.className ?? "unknown"
+                let attachmentType = attachment.rtti.rttiClassName ?? "unknown"
                 let attachmentName = attachment.name
                 print("    Entry \(i): slot=\(entry.slotIndex), name=\(entry.name)")
                 print("      Attachment: name=\(attachmentName), type=\(attachmentType)")

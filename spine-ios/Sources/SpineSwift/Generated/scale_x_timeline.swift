@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// ScaleXTimeline wrapper
+@objc(SpineScaleXTimeline)
+@objcMembers
 public class ScaleXTimeline: BoneTimeline1 {
+    @nonobjc
     public init(fromPointer ptr: spine_scale_x_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bone_timeline1_wrapper.self))
     }

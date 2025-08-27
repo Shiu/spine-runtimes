@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// BoundingBoxAttachment wrapper
+@objc(SpineBoundingBoxAttachment)
+@objcMembers
 public class BoundingBoxAttachment: VertexAttachment {
+    @nonobjc
     public init(fromPointer ptr: spine_bounding_box_attachment) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_vertex_attachment_wrapper.self))
     }

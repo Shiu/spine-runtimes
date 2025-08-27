@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// Rtti wrapper
-public class Rtti {
+@objc(SpineRtti)
+@objcMembers
+public class Rtti: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_rtti) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public var className: String? {
+    public var rttiClassName: String? {
         let result = spine_rtti_get_class_name(_ptr.assumingMemoryBound(to: spine_rtti_wrapper.self))
         return result.map { String(cString: $0) }
     }

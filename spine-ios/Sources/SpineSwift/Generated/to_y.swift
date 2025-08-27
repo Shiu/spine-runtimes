@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// ToY wrapper
+@objc(SpineToY)
+@objcMembers
 public class ToY: ToProperty {
+    @nonobjc
     public init(fromPointer ptr: spine_to_y) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_to_property_wrapper.self))
     }

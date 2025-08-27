@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// SkeletonRenderer wrapper
-public class SkeletonRenderer {
+@objc(SpineSkeletonRenderer)
+@objcMembers
+public class SkeletonRenderer: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_skeleton_renderer) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_skeleton_renderer_create()
         self.init(fromPointer: ptr!)
     }

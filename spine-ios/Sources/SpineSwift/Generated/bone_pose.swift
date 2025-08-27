@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// BonePose wrapper
+@objc(SpineBonePose)
+@objcMembers
 public class BonePose: BoneLocal, Update {
+    @nonobjc
     public init(fromPointer ptr: spine_bone_pose) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bone_local_wrapper.self))
     }

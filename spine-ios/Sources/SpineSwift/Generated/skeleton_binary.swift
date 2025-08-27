@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// SkeletonBinary wrapper
-public class SkeletonBinary {
+@objc(SpineSkeletonBinary)
+@objcMembers
+public class SkeletonBinary: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_skeleton_binary) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ atlas: Atlas) {

@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// PhysicsConstraintMixTimeline wrapper
+@objc(SpinePhysicsConstraintMixTimeline)
+@objcMembers
 public class PhysicsConstraintMixTimeline: PhysicsConstraintTimeline {
+    @nonobjc
     public init(fromPointer ptr: spine_physics_constraint_mix_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_timeline_wrapper.self))
     }

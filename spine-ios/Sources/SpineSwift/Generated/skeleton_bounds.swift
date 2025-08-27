@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// SkeletonBounds wrapper
-public class SkeletonBounds {
+@objc(SpineSkeletonBounds)
+@objcMembers
+public class SkeletonBounds: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_skeleton_bounds) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_skeleton_bounds_create()
         self.init(fromPointer: ptr!)
     }

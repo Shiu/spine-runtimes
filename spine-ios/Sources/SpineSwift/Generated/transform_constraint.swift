@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// TransformConstraint wrapper
+@objc(SpineTransformConstraint)
+@objcMembers
 public class TransformConstraint: PosedActive, Posed, Constraint {
+    @nonobjc
     public init(fromPointer ptr: spine_transform_constraint) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_active_wrapper.self))
     }

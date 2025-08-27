@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// RgbaTimeline wrapper
+@objc(SpineRgbaTimeline)
+@objcMembers
 public class RgbaTimeline: SlotCurveTimeline {
+    @nonobjc
     public init(fromPointer ptr: spine_rgba_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_slot_curve_timeline_wrapper.self))
     }

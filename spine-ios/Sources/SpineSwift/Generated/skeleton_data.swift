@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// SkeletonData wrapper
-public class SkeletonData {
+@objc(SpineSkeletonData)
+@objcMembers
+public class SkeletonData: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_skeleton_data) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_skeleton_data_create()
         self.init(fromPointer: ptr!)
     }
@@ -155,7 +158,7 @@ public class SkeletonData {
         }
     }
 
-    public var hash: String {
+    public var hashString: String {
         get {
             let result = spine_skeleton_data_get_hash(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
         return String(cString: result!)

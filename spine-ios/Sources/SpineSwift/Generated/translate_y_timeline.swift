@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// TranslateYTimeline wrapper
+@objc(SpineTranslateYTimeline)
+@objcMembers
 public class TranslateYTimeline: BoneTimeline1 {
+    @nonobjc
     public init(fromPointer ptr: spine_translate_y_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bone_timeline1_wrapper.self))
     }

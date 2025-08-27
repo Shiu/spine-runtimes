@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// Animation wrapper
-public class Animation {
+@objc(SpineAnimation)
+@objcMembers
+public class Animation: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_animation) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ name: String, _ timelines: ArrayTimeline, _ duration: Float) {

@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// SkeletonClipping wrapper
-public class SkeletonClipping {
+@objc(SpineSkeletonClipping)
+@objcMembers
+public class SkeletonClipping: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_skeleton_clipping) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_skeleton_clipping_create()
         self.init(fromPointer: ptr!)
     }

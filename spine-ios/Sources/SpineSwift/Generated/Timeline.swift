@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// Timeline wrapper
-open class Timeline {
+@objc(SpineTimeline)
+@objcMembers
+open class Timeline: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_timeline) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public var rtti: Rtti {

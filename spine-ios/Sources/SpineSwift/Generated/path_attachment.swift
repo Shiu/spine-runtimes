@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// PathAttachment wrapper
+@objc(SpinePathAttachment)
+@objcMembers
 public class PathAttachment: VertexAttachment {
+    @nonobjc
     public init(fromPointer ptr: spine_path_attachment) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_vertex_attachment_wrapper.self))
     }

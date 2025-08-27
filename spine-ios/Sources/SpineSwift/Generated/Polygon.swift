@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// Polygon wrapper
-public class Polygon {
+@objc(SpinePolygon)
+@objcMembers
+public class Polygon: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_polygon) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_polygon_create()
         self.init(fromPointer: ptr!)
     }

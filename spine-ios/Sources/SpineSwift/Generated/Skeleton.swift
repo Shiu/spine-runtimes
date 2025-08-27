@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// Skeleton wrapper
-public class Skeleton {
+@objc(SpineSkeleton)
+@objcMembers
+public class Skeleton: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_skeleton) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ skeletonData: SkeletonData) {
@@ -274,8 +277,8 @@ public class Skeleton {
         let result = spine_skeleton_get_attachment_1(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), slotName, attachmentName)
         guard let ptr = result else { return nil }
         let rtti = spine_attachment_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_bounding_box_attachment":
             return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         case "spine_clipping_attachment":
@@ -289,7 +292,7 @@ public class Skeleton {
         case "spine_region_attachment":
             return RegionAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Attachment")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Attachment")
         }
     }
 
@@ -297,8 +300,8 @@ public class Skeleton {
         let result = spine_skeleton_get_attachment_2(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), slotIndex, attachmentName)
         guard let ptr = result else { return nil }
         let rtti = spine_attachment_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_bounding_box_attachment":
             return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         case "spine_clipping_attachment":
@@ -312,7 +315,7 @@ public class Skeleton {
         case "spine_region_attachment":
             return RegionAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Attachment")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Attachment")
         }
     }
 

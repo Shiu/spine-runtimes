@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// TextureRegion wrapper
-public class TextureRegion {
+@objc(SpineTextureRegion)
+@objcMembers
+public class TextureRegion: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_texture_region) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_texture_region_create()
         self.init(fromPointer: ptr!)
     }

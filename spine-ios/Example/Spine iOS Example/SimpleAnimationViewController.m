@@ -42,7 +42,7 @@
     self = [super init];
     if (self) {
         self.spineController = [[SpineController alloc] initOnInitialized:^(SpineController *controller) {
-            [controller.animationState setAnimationByNameWithTrackIndex:0 animationName:@"walk" loop:YES];
+            [controller.animationState setAnimation:0 :@"walk" :YES];
         }
                                             onBeforeUpdateWorldTransforms:nil
                                              onAfterUpdateWorldTransforms:nil
@@ -60,8 +60,8 @@
                                                        skeletonFileName:@"spineboy-pro.skel"
                                                                  bundle:[NSBundle mainBundle]
                                                              controller:self.spineController
-                                                                   mode:ContentModeFit
-                                                              alignment:AlignmentCenter
+                                                                   mode:SpineContentModeFit
+                                                              alignment:SpineAlignmentCenter
                                                          boundsProvider:[[SpineSetupPoseBounds alloc] init]
                                                         backgroundColor:[UIColor clearColor]];
     spineView.frame = self.view.bounds;

@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// Rgb2Timeline wrapper
+@objc(SpineRgb2Timeline)
+@objcMembers
 public class Rgb2Timeline: SlotCurveTimeline {
+    @nonobjc
     public init(fromPointer ptr: spine_rgb2_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_slot_curve_timeline_wrapper.self))
     }

@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// PosedActive wrapper
-public class PosedActive {
+@objc(SpinePosedActive)
+@objcMembers
+public class PosedActive: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_posed_active) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public var isActive: Bool {

@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// FromScaleY wrapper
+@objc(SpineFromScaleY)
+@objcMembers
 public class FromScaleY: FromProperty {
+    @nonobjc
     public init(fromPointer ptr: spine_from_scale_y) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_property_wrapper.self))
     }

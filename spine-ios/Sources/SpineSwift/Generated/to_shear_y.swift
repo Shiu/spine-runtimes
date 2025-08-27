@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// ToShearY wrapper
+@objc(SpineToShearY)
+@objcMembers
 public class ToShearY: ToProperty {
+    @nonobjc
     public init(fromPointer ptr: spine_to_shear_y) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_to_property_wrapper.self))
     }

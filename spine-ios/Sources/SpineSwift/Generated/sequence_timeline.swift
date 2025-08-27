@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// SequenceTimeline wrapper
+@objc(SpineSequenceTimeline)
+@objcMembers
 public class SequenceTimeline: Timeline, SlotTimeline {
+    @nonobjc
     public init(fromPointer ptr: spine_sequence_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_timeline_wrapper.self))
     }
@@ -46,8 +49,8 @@ public class SequenceTimeline: Timeline, SlotTimeline {
     public var attachment: Attachment {
         let result = spine_sequence_timeline_get_attachment(_ptr.assumingMemoryBound(to: spine_sequence_timeline_wrapper.self))
         let rtti = spine_attachment_get_rtti(result!)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_bounding_box_attachment":
             return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         case "spine_clipping_attachment":
@@ -61,7 +64,7 @@ public class SequenceTimeline: Timeline, SlotTimeline {
         case "spine_region_attachment":
             return RegionAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Attachment")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Attachment")
         }
     }
 

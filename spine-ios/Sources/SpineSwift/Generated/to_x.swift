@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// ToX wrapper
+@objc(SpineToX)
+@objcMembers
 public class ToX: ToProperty {
+    @nonobjc
     public init(fromPointer ptr: spine_to_x) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_to_property_wrapper.self))
     }

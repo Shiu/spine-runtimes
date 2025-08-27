@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// PhysicsConstraint wrapper
+@objc(SpinePhysicsConstraint)
+@objcMembers
 public class PhysicsConstraint: PosedActive, Posed, Constraint {
+    @nonobjc
     public init(fromPointer ptr: spine_physics_constraint) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_active_wrapper.self))
     }

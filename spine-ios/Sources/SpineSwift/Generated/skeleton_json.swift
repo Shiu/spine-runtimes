@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// SkeletonJson wrapper
-public class SkeletonJson {
+@objc(SpineSkeletonJson)
+@objcMembers
+public class SkeletonJson: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_skeleton_json) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ atlas: Atlas) {

@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// VertexAttachment wrapper
+@objc(SpineVertexAttachment)
+@objcMembers
 open class VertexAttachment: Attachment {
+    @nonobjc
     public init(fromPointer ptr: spine_vertex_attachment) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_attachment_wrapper.self))
     }
@@ -78,8 +81,8 @@ open class VertexAttachment: Attachment {
             let result = spine_vertex_attachment_get_timeline_attachment(_ptr.assumingMemoryBound(to: spine_vertex_attachment_wrapper.self))
         guard let ptr = result else { return nil }
         let rtti = spine_attachment_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_bounding_box_attachment":
             return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         case "spine_clipping_attachment":
@@ -93,7 +96,7 @@ open class VertexAttachment: Attachment {
         case "spine_region_attachment":
             return RegionAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Attachment")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Attachment")
         }
         }
         set {

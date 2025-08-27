@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// SliderMixTimeline wrapper
+@objc(SpineSliderMixTimeline)
+@objcMembers
 public class SliderMixTimeline: ConstraintTimeline1 {
+    @nonobjc
     public init(fromPointer ptr: spine_slider_mix_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_constraint_timeline1_wrapper.self))
     }

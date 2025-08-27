@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// AtlasRegion wrapper
+@objc(SpineAtlasRegion)
+@objcMembers
 public class AtlasRegion: TextureRegion {
+    @nonobjc
     public init(fromPointer ptr: spine_atlas_region) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_texture_region_wrapper.self))
     }

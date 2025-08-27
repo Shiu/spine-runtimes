@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// PosedData wrapper
-public class PosedData {
+@objc(SpinePosedData)
+@objcMembers
+public class PosedData: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_posed_data) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ name: String) {

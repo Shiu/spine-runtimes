@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// EventData wrapper
-public class EventData {
+@objc(SpineEventData)
+@objcMembers
+public class EventData: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_event_data) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ name: String) {

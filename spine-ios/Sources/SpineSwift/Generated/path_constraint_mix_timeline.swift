@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// PathConstraintMixTimeline wrapper
+@objc(SpinePathConstraintMixTimeline)
+@objcMembers
 public class PathConstraintMixTimeline: CurveTimeline, ConstraintTimeline {
+    @nonobjc
     public init(fromPointer ptr: spine_path_constraint_mix_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_curve_timeline_wrapper.self))
     }

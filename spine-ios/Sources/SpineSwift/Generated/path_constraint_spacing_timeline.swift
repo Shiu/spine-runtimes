@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// PathConstraintSpacingTimeline wrapper
+@objc(SpinePathConstraintSpacingTimeline)
+@objcMembers
 public class PathConstraintSpacingTimeline: ConstraintTimeline1 {
+    @nonobjc
     public init(fromPointer ptr: spine_path_constraint_spacing_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_constraint_timeline1_wrapper.self))
     }

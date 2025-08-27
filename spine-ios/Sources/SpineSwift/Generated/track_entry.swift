@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// TrackEntry wrapper
-public class TrackEntry {
+@objc(SpineTrackEntry)
+@objcMembers
+public class TrackEntry: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_track_entry) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_track_entry_create()
         self.init(fromPointer: ptr!)
     }

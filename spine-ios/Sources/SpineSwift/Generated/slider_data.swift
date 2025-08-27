@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// SliderData wrapper
+@objc(SpineSliderData)
+@objcMembers
 public class SliderData: PosedData, ConstraintData {
+    @nonobjc
     public init(fromPointer ptr: spine_slider_data) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_data_wrapper.self))
     }
@@ -93,8 +96,8 @@ public class SliderData: PosedData, ConstraintData {
             let result = spine_slider_data_get_property(_ptr.assumingMemoryBound(to: spine_slider_data_wrapper.self))
         guard let ptr = result else { return nil }
         let rtti = spine_from_property_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_from_rotate":
             return FromRotate(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_rotate_wrapper.self))
         case "spine_from_scale_x":
@@ -108,7 +111,7 @@ public class SliderData: PosedData, ConstraintData {
         case "spine_from_y":
             return FromY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_y_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class FromProperty")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class FromProperty")
         }
         }
         set {
@@ -154,8 +157,8 @@ public class SliderData: PosedData, ConstraintData {
     public func createMethod(_ skeleton: Skeleton) -> Constraint {
         let result = spine_slider_data_create_method(_ptr.assumingMemoryBound(to: spine_slider_data_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         let rtti = spine_constraint_get_rtti(result!)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_ik_constraint":
             return IkConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
         case "spine_path_constraint":
@@ -167,7 +170,7 @@ public class SliderData: PosedData, ConstraintData {
         case "spine_transform_constraint":
             return TransformConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Constraint")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Constraint")
         }
     }
 

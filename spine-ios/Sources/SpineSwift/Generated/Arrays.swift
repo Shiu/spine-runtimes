@@ -33,18 +33,21 @@ import Foundation
 import SpineC
 
 /// ArrayFloat wrapper
-public class ArrayFloat {
+@objc(SpineArrayFloat)
+@objcMembers
+public class ArrayFloat: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_float, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_float_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -107,18 +110,21 @@ public class ArrayFloat {
 }
 
 /// ArrayInt wrapper
-public class ArrayInt {
+@objc(SpineArrayInt)
+@objcMembers
+public class ArrayInt: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_int, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_int_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -181,18 +187,21 @@ public class ArrayInt {
 }
 
 /// ArrayUnsignedShort wrapper
-public class ArrayUnsignedShort {
+@objc(SpineArrayUnsignedShort)
+@objcMembers
+public class ArrayUnsignedShort: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_unsigned_short, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_unsigned_short_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -255,18 +264,21 @@ public class ArrayUnsignedShort {
 }
 
 /// ArrayPropertyId wrapper
-public class ArrayPropertyId {
+@objc(SpineArrayPropertyId)
+@objcMembers
+public class ArrayPropertyId: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_property_id, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_property_id_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -329,18 +341,21 @@ public class ArrayPropertyId {
 }
 
 /// ArrayAnimation wrapper
-public class ArrayAnimation {
+@objc(SpineArrayAnimation)
+@objcMembers
+public class ArrayAnimation: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_animation, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_animation_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -404,18 +419,21 @@ public class ArrayAnimation {
 }
 
 /// ArrayAtlasPage wrapper
-public class ArrayAtlasPage {
+@objc(SpineArrayAtlasPage)
+@objcMembers
+public class ArrayAtlasPage: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_atlas_page, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_atlas_page_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -479,18 +497,21 @@ public class ArrayAtlasPage {
 }
 
 /// ArrayAtlasRegion wrapper
-public class ArrayAtlasRegion {
+@objc(SpineArrayAtlasRegion)
+@objcMembers
+public class ArrayAtlasRegion: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_atlas_region, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_atlas_region_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -554,18 +575,21 @@ public class ArrayAtlasRegion {
 }
 
 /// ArrayAttachment wrapper
-public class ArrayAttachment {
+@objc(SpineArrayAttachment)
+@objcMembers
+public class ArrayAttachment: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_attachment, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_attachment_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -587,8 +611,8 @@ public class ArrayAttachment {
             let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_attachment_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_bounding_box_attachment":
             return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         case "spine_clipping_attachment":
@@ -602,7 +626,7 @@ public class ArrayAttachment {
         case "spine_region_attachment":
             return RegionAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Attachment")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Attachment")
         }
         }
     }
@@ -647,18 +671,21 @@ public class ArrayAttachment {
 }
 
 /// ArrayBone wrapper
-public class ArrayBone {
+@objc(SpineArrayBone)
+@objcMembers
+public class ArrayBone: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_bone, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_bone_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -722,18 +749,21 @@ public class ArrayBone {
 }
 
 /// ArrayBoneData wrapper
-public class ArrayBoneData {
+@objc(SpineArrayBoneData)
+@objcMembers
+public class ArrayBoneData: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_bone_data, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_bone_data_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -797,18 +827,21 @@ public class ArrayBoneData {
 }
 
 /// ArrayBonePose wrapper
-public class ArrayBonePose {
+@objc(SpineArrayBonePose)
+@objcMembers
+public class ArrayBonePose: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_bone_pose, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_bone_pose_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -872,18 +905,21 @@ public class ArrayBonePose {
 }
 
 /// ArrayBoundingBoxAttachment wrapper
-public class ArrayBoundingBoxAttachment {
+@objc(SpineArrayBoundingBoxAttachment)
+@objcMembers
+public class ArrayBoundingBoxAttachment: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_bounding_box_attachment, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_bounding_box_attachment_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -947,18 +983,21 @@ public class ArrayBoundingBoxAttachment {
 }
 
 /// ArrayConstraint wrapper
-public class ArrayConstraint {
+@objc(SpineArrayConstraint)
+@objcMembers
+public class ArrayConstraint: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_constraint, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_constraint_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -980,8 +1019,8 @@ public class ArrayConstraint {
             let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_constraint_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_ik_constraint":
             return IkConstraint(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
         case "spine_path_constraint":
@@ -993,7 +1032,7 @@ public class ArrayConstraint {
         case "spine_transform_constraint":
             return TransformConstraint(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Constraint")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Constraint")
         }
         }
     }
@@ -1038,18 +1077,21 @@ public class ArrayConstraint {
 }
 
 /// ArrayConstraintData wrapper
-public class ArrayConstraintData {
+@objc(SpineArrayConstraintData)
+@objcMembers
+public class ArrayConstraintData: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_constraint_data, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_constraint_data_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -1071,8 +1113,8 @@ public class ArrayConstraintData {
             let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_constraint_data_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_ik_constraint_data":
             return IkConstraintData(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_ik_constraint_data_wrapper.self))
         case "spine_path_constraint_data":
@@ -1084,7 +1126,7 @@ public class ArrayConstraintData {
         case "spine_transform_constraint_data":
             return TransformConstraintData(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class ConstraintData")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class ConstraintData")
         }
         }
     }
@@ -1129,18 +1171,21 @@ public class ArrayConstraintData {
 }
 
 /// ArrayEvent wrapper
-public class ArrayEvent {
+@objc(SpineArrayEvent)
+@objcMembers
+public class ArrayEvent: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_event, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_event_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -1204,18 +1249,21 @@ public class ArrayEvent {
 }
 
 /// ArrayEventData wrapper
-public class ArrayEventData {
+@objc(SpineArrayEventData)
+@objcMembers
+public class ArrayEventData: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_event_data, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_event_data_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -1279,18 +1327,21 @@ public class ArrayEventData {
 }
 
 /// ArrayFromProperty wrapper
-public class ArrayFromProperty {
+@objc(SpineArrayFromProperty)
+@objcMembers
+public class ArrayFromProperty: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_from_property, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_from_property_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -1312,8 +1363,8 @@ public class ArrayFromProperty {
             let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_from_property_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_from_rotate":
             return FromRotate(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_rotate_wrapper.self))
         case "spine_from_scale_x":
@@ -1327,7 +1378,7 @@ public class ArrayFromProperty {
         case "spine_from_y":
             return FromY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_y_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class FromProperty")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class FromProperty")
         }
         }
     }
@@ -1372,18 +1423,21 @@ public class ArrayFromProperty {
 }
 
 /// ArrayPhysicsConstraint wrapper
-public class ArrayPhysicsConstraint {
+@objc(SpineArrayPhysicsConstraint)
+@objcMembers
+public class ArrayPhysicsConstraint: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_physics_constraint, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_physics_constraint_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -1447,18 +1501,21 @@ public class ArrayPhysicsConstraint {
 }
 
 /// ArrayPolygon wrapper
-public class ArrayPolygon {
+@objc(SpineArrayPolygon)
+@objcMembers
+public class ArrayPolygon: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_polygon, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_polygon_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -1522,18 +1579,21 @@ public class ArrayPolygon {
 }
 
 /// ArraySkin wrapper
-public class ArraySkin {
+@objc(SpineArraySkin)
+@objcMembers
+public class ArraySkin: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_skin, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_skin_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -1597,18 +1657,21 @@ public class ArraySkin {
 }
 
 /// ArraySlot wrapper
-public class ArraySlot {
+@objc(SpineArraySlot)
+@objcMembers
+public class ArraySlot: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_slot, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_slot_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -1672,18 +1735,21 @@ public class ArraySlot {
 }
 
 /// ArraySlotData wrapper
-public class ArraySlotData {
+@objc(SpineArraySlotData)
+@objcMembers
+public class ArraySlotData: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_slot_data, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_slot_data_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -1747,18 +1813,21 @@ public class ArraySlotData {
 }
 
 /// ArrayTextureRegion wrapper
-public class ArrayTextureRegion {
+@objc(SpineArrayTextureRegion)
+@objcMembers
+public class ArrayTextureRegion: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_texture_region, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_texture_region_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -1822,18 +1891,21 @@ public class ArrayTextureRegion {
 }
 
 /// ArrayTimeline wrapper
-public class ArrayTimeline {
+@objc(SpineArrayTimeline)
+@objcMembers
+public class ArrayTimeline: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_timeline, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_timeline_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -1855,8 +1927,8 @@ public class ArrayTimeline {
             let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_timeline_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_alpha_timeline":
             return AlphaTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_alpha_timeline_wrapper.self))
         case "spine_attachment_timeline":
@@ -1930,7 +2002,7 @@ public class ArrayTimeline {
         case "spine_translate_y_timeline":
             return TranslateYTimeline(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_translate_y_timeline_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Timeline")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Timeline")
         }
         }
     }
@@ -1975,18 +2047,21 @@ public class ArrayTimeline {
 }
 
 /// ArrayToProperty wrapper
-public class ArrayToProperty {
+@objc(SpineArrayToProperty)
+@objcMembers
+public class ArrayToProperty: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_to_property, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_to_property_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -2008,8 +2083,8 @@ public class ArrayToProperty {
             let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_to_property_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_to_rotate":
             return ToRotate(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_to_rotate_wrapper.self))
         case "spine_to_scale_x":
@@ -2023,7 +2098,7 @@ public class ArrayToProperty {
         case "spine_to_y":
             return ToY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_to_y_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class ToProperty")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class ToProperty")
         }
         }
     }
@@ -2068,18 +2143,21 @@ public class ArrayToProperty {
 }
 
 /// ArrayTrackEntry wrapper
-public class ArrayTrackEntry {
+@objc(SpineArrayTrackEntry)
+@objcMembers
+public class ArrayTrackEntry: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_track_entry, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_track_entry_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -2143,18 +2221,21 @@ public class ArrayTrackEntry {
 }
 
 /// ArrayUpdate wrapper
-public class ArrayUpdate {
+@objc(SpineArrayUpdate)
+@objcMembers
+public class ArrayUpdate: NSObject {
     public let _ptr: UnsafeMutableRawPointer
     private let _ownsMemory: Bool
 
     public init(fromPointer ptr: spine_array_update, ownsMemory: Bool = false) {
         self._ptr = UnsafeMutableRawPointer(ptr)
         self._ownsMemory = ownsMemory
+        super.init()
     }
 
 
     /// Create a new empty array
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_array_update_create()!
         self.init(fromPointer: ptr, ownsMemory: true)
     }
@@ -2176,8 +2257,8 @@ public class ArrayUpdate {
             let elementPtr = buffer[Int(index)]
             guard let ptr = elementPtr else { return nil }
             let rtti = spine_update_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_bone":
             return Bone(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bone_wrapper.self))
         case "spine_bone_pose":
@@ -2193,7 +2274,7 @@ public class ArrayUpdate {
         case "spine_transform_constraint":
             return TransformConstraint(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Update")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Update")
         }
         }
     }

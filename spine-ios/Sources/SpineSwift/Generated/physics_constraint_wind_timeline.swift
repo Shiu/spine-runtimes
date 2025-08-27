@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// PhysicsConstraintWindTimeline wrapper
+@objc(SpinePhysicsConstraintWindTimeline)
+@objcMembers
 public class PhysicsConstraintWindTimeline: PhysicsConstraintTimeline {
+    @nonobjc
     public init(fromPointer ptr: spine_physics_constraint_wind_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_physics_constraint_timeline_wrapper.self))
     }

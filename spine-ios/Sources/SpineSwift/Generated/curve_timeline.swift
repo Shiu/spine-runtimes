@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// CurveTimeline wrapper
+@objc(SpineCurveTimeline)
+@objcMembers
 open class CurveTimeline: Timeline {
+    @nonobjc
     public init(fromPointer ptr: spine_curve_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_timeline_wrapper.self))
     }

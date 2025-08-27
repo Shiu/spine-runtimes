@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// IkConstraint wrapper
+@objc(SpineIkConstraint)
+@objcMembers
 public class IkConstraint: PosedActive, Posed, Constraint {
+    @nonobjc
     public init(fromPointer ptr: spine_ik_constraint) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_active_wrapper.self))
     }

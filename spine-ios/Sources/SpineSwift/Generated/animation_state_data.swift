@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// AnimationStateData wrapper
-public class AnimationStateData {
+@objc(SpineAnimationStateData)
+@objcMembers
+public class AnimationStateData: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_animation_state_data) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ skeletonData: SkeletonData) {

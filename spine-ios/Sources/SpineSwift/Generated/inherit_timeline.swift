@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// InheritTimeline wrapper
+@objc(SpineInheritTimeline)
+@objcMembers
 public class InheritTimeline: Timeline, BoneTimeline {
+    @nonobjc
     public init(fromPointer ptr: spine_inherit_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_timeline_wrapper.self))
     }

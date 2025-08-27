@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// ShearYTimeline wrapper
+@objc(SpineShearYTimeline)
+@objcMembers
 public class ShearYTimeline: BoneTimeline1 {
+    @nonobjc
     public init(fromPointer ptr: spine_shear_y_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bone_timeline1_wrapper.self))
     }

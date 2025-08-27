@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// ToProperty wrapper
-open class ToProperty {
+@objc(SpineToProperty)
+@objcMembers
+open class ToProperty: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_to_property) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public var rtti: Rtti {

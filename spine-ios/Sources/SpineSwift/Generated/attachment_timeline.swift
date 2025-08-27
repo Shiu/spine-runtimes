@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// AttachmentTimeline wrapper
+@objc(SpineAttachmentTimeline)
+@objcMembers
 public class AttachmentTimeline: Timeline, SlotTimeline {
+    @nonobjc
     public init(fromPointer ptr: spine_attachment_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_timeline_wrapper.self))
     }

@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// TransformConstraintPose wrapper
-public class TransformConstraintPose {
+@objc(SpineTransformConstraintPose)
+@objcMembers
+public class TransformConstraintPose: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_transform_constraint_pose) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_transform_constraint_pose_create()
         self.init(fromPointer: ptr!)
     }

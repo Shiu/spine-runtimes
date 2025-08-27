@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// TransformConstraintData wrapper
+@objc(SpineTransformConstraintData)
+@objcMembers
 public class TransformConstraintData: PosedData, ConstraintData {
+    @nonobjc
     public init(fromPointer ptr: spine_transform_constraint_data) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_data_wrapper.self))
     }
@@ -176,8 +179,8 @@ public class TransformConstraintData: PosedData, ConstraintData {
     public func createMethod(_ skeleton: Skeleton) -> Constraint {
         let result = spine_transform_constraint_data_create_method(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         let rtti = spine_constraint_get_rtti(result!)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_ik_constraint":
             return IkConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
         case "spine_path_constraint":
@@ -189,7 +192,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         case "spine_transform_constraint":
             return TransformConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Constraint")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Constraint")
         }
     }
 

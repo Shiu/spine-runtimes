@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// RegionAttachment wrapper
+@objc(SpineRegionAttachment)
+@objcMembers
 public class RegionAttachment: Attachment {
+    @nonobjc
     public init(fromPointer ptr: spine_region_attachment) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_attachment_wrapper.self))
     }

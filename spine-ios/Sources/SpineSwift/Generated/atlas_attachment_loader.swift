@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// AtlasAttachmentLoader wrapper
-public class AtlasAttachmentLoader: AttachmentLoader {
+@objc(SpineAtlasAttachmentLoader)
+@objcMembers
+public class AtlasAttachmentLoader: NSObject, AttachmentLoader {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_atlas_attachment_loader) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ atlas: Atlas) {

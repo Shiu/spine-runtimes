@@ -33,14 +33,17 @@ import Foundation
 import SpineC
 
 /// SlotPose wrapper
-public class SlotPose {
+@objc(SpineSlotPose)
+@objcMembers
+public class SlotPose: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_slot_pose) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
-    public convenience init() {
+    public override convenience init() {
         let ptr = spine_slot_pose_create()
         self.init(fromPointer: ptr!)
     }
@@ -70,8 +73,8 @@ public class SlotPose {
             let result = spine_slot_pose_get_attachment(_ptr.assumingMemoryBound(to: spine_slot_pose_wrapper.self))
         guard let ptr = result else { return nil }
         let rtti = spine_attachment_get_rtti(ptr)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_bounding_box_attachment":
             return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         case "spine_clipping_attachment":
@@ -85,7 +88,7 @@ public class SlotPose {
         case "spine_region_attachment":
             return RegionAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class Attachment")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class Attachment")
         }
         }
         set {

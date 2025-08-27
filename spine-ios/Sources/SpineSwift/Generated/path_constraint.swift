@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// PathConstraint wrapper
+@objc(SpinePathConstraint)
+@objcMembers
 public class PathConstraint: PosedActive, Posed, Constraint {
+    @nonobjc
     public init(fromPointer ptr: spine_path_constraint) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_active_wrapper.self))
     }

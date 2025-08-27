@@ -33,11 +33,14 @@ import Foundation
 import SpineC
 
 /// EventQueueEntry wrapper
-public class EventQueueEntry {
+@objc(SpineEventQueueEntry)
+@objcMembers
+public class EventQueueEntry: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_event_queue_entry) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }
 
     public convenience init(_ eventType: EventType, _ trackEntry: TrackEntry?, _ event: Event?) {

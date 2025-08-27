@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// DeformTimeline wrapper
+@objc(SpineDeformTimeline)
+@objcMembers
 public class DeformTimeline: SlotCurveTimeline {
+    @nonobjc
     public init(fromPointer ptr: spine_deform_timeline) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_slot_curve_timeline_wrapper.self))
     }
@@ -47,8 +50,8 @@ public class DeformTimeline: SlotCurveTimeline {
         get {
             let result = spine_deform_timeline_get_attachment(_ptr.assumingMemoryBound(to: spine_deform_timeline_wrapper.self))
         let rtti = spine_vertex_attachment_get_rtti(result!)
-        let className = String(cString: spine_rtti_get_class_name(rtti)!)
-        switch className {
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
         case "spine_bounding_box_attachment":
             return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         case "spine_clipping_attachment":
@@ -58,7 +61,7 @@ public class DeformTimeline: SlotCurveTimeline {
         case "spine_path_attachment":
             return PathAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_path_attachment_wrapper.self))
         default:
-            fatalError("Unknown concrete type: \(className) for abstract class VertexAttachment")
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class VertexAttachment")
         }
         }
         set {

@@ -33,7 +33,10 @@ import Foundation
 import SpineC
 
 /// FromRotate wrapper
+@objc(SpineFromRotate)
+@objcMembers
 public class FromRotate: FromProperty {
+    @nonobjc
     public init(fromPointer ptr: spine_from_rotate) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_property_wrapper.self))
     }

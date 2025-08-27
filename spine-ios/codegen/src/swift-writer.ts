@@ -635,11 +635,13 @@ export class SwiftWriter {
         if (swiftClass.type === 'protocol') {
             declaration = `public protocol ${swiftClass.name}`;
         } else {
-            // Remove @objc annotations to avoid conflicts
+            // Add @objc annotations for Objective-C compatibility
+            const objcAnnotations = `@objc(Spine${swiftClass.name})\n@objcMembers\n`;
+            
             if (swiftClass.type === 'abstract') {
-                declaration = `open class ${swiftClass.name}`;
+                declaration = `${objcAnnotations}open class ${swiftClass.name}`;
             } else {
-                declaration = `public class ${swiftClass.name}`;
+                declaration = `${objcAnnotations}public class ${swiftClass.name}`;
             }
         }
 
@@ -648,6 +650,9 @@ export class SwiftWriter {
         
         if (swiftClass.inheritance.extends) {
             inheritanceParts.push(swiftClass.inheritance.extends);
+        } else if (swiftClass.type !== 'protocol') {
+            // Root classes inherit from NSObject for Objective-C compatibility
+            inheritanceParts.push('NSObject');
         }
         
         // Add protocols
@@ -746,13 +751,17 @@ ${declaration} {`;
         if (swiftClass.inheritance.extends) {
             const parentTypeName = this.toCTypeName(swiftClass.inheritance.extends);
             // Subclass - NO ptr field, pass typed pointer cast to parent type
-            return `    public init(fromPointer ptr: ${cTypeName}) {
+            // Use @nonobjc to prevent Objective-C selector conflicts
+            return `    @nonobjc
+    public init(fromPointer ptr: ${cTypeName}) {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: ${parentTypeName}_wrapper.self))
     }`;
         } else {
             // Root class - HAS _ptr field, store as UnsafeMutableRawPointer
+            // Must call super.init() since we inherit from NSObject
             return `    public init(fromPointer ptr: ${cTypeName}) {
         self._ptr = UnsafeMutableRawPointer(ptr)
+        super.init()
     }`;
         }
     }
@@ -840,7 +849,12 @@ ${declaration} {`;
 
         if (member.name === member.swiftReturnType) {
             // Convenience initializer
-            return `    public convenience init(${params}) {
+            // Only root classes (not subclasses) need override for no-arg init
+            // Check if this is a root class by looking at swiftClass
+            const swiftClass = this.classMap.get(this.fromSwiftTypeName(member.swiftReturnType));
+            const isRootClass = swiftClass && !this.inheritance[swiftClass.name]?.extends;
+            const override = (params === '' && isRootClass) ? 'override ' : '';
+            return `    public ${override}convenience init(${params}) {
         ${member.implementation.replace(`return ${member.swiftReturnType}(fromPointer: ptr!)`, 'self.init(fromPointer: ptr!)')}
     }`;
         } else {
@@ -914,7 +928,9 @@ ${declaration} {`;
         const cTypeName = this.toCTypeName(swiftClassName);
         
         lines.push(`/// ${swiftClassName} wrapper`);
-        lines.push(`public class ${swiftClassName} {`);
+        lines.push(`@objc(Spine${swiftClassName})`);
+        lines.push(`@objcMembers`);
+        lines.push(`public class ${swiftClassName}: NSObject {`);
         lines.push('    public let _ptr: UnsafeMutableRawPointer');
         lines.push('    private let _ownsMemory: Bool');
         lines.push('');
@@ -923,6 +939,7 @@ ${declaration} {`;
         lines.push(`    public init(fromPointer ptr: ${cTypeName}, ownsMemory: Bool = false) {`);
         lines.push('        self._ptr = UnsafeMutableRawPointer(ptr)');
         lines.push('        self._ownsMemory = ownsMemory');
+        lines.push('        super.init()');
         lines.push('    }');
         lines.push('');
 
@@ -936,7 +953,7 @@ ${declaration} {`;
         // Add default constructor
         if (createMethod) {
             lines.push('    /// Create a new empty array');
-            lines.push('    public convenience init() {');
+            lines.push('    public override convenience init() {');
             lines.push(`        let ptr = ${createMethod.name}()!`);
             lines.push('        self.init(fromPointer: ptr, ownsMemory: true)');
             lines.push('    }');
@@ -1400,8 +1417,8 @@ ${declaration} {`;
         }
 
         lines.push(`let rtti = ${abstractClass.name}_get_rtti(${resultVar})`);
-        lines.push(`let className = String(cString: spine_rtti_get_class_name(rtti)!)`);
-        lines.push(`switch className {`);
+        lines.push(`let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)`);
+        lines.push(`switch rttiClassName {`);
 
         for (const subclass of concreteSubclasses) {
             const swiftSubclass = this.toSwiftTypeName(subclass);
@@ -1412,7 +1429,7 @@ ${declaration} {`;
         }
 
         lines.push(`default:`);
-        lines.push(`    fatalError("Unknown concrete type: \\(className) for abstract class ${abstractType}")`);
+        lines.push(`    fatalError("Unknown concrete type: \\(rttiClassName) for abstract class ${abstractType}")`);
         lines.push(`}`);
 
         return lines.join('\n        ');
@@ -1483,7 +1500,17 @@ ${declaration} {`;
             return `${this.toCamelCase(name)}Value`;
         }
 
-        return this.toCamelCase(name);
+        let propertyName = this.toCamelCase(name);
+        
+        // Rename properties that conflict with NSObject
+        if (propertyName === 'className') {
+            return 'rttiClassName';
+        }
+        if (propertyName === 'hash') {
+            return 'hashString';
+        }
+        
+        return propertyName;
     }
 
     private hasRawPointerParameters(method: CMethod): boolean {
@@ -1603,6 +1630,11 @@ ${declaration} {`;
         // Swift doesn't need an export file like Dart does
         // All public types are automatically available within the module
         return;
+    }
+
+    private fromSwiftTypeName(swiftTypeName: string): string {
+        // Convert Swift class name back to C type name
+        return `spine_${toSnakeCase(swiftTypeName)}`;
     }
 
     private toPascalCase(str: string): string {
