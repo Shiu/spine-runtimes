@@ -143,7 +143,7 @@ int main() {
 		gl::glClear(gl::GL_COLOR_BUFFER_BIT);
 
 		// Render the skeleton in its current pose
-		renderer_draw_lite(renderer, skeleton, true);
+		renderer_draw_c(renderer, skeleton, true);
 
 		// Present the rendering results and poll for events
 		glfwSwapBuffers(window);

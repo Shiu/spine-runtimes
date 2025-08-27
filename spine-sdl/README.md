@@ -68,16 +68,10 @@ The repository includes example code for both C and C++ APIs:
 
 ### Windows
 
-1. Install [Visual Studio Community](https://visualstudio.microsoft.com/downloads/) with C++ support and Windows SDK.
-2. Install [CMake](https://cmake.org/download/) via the Windows installer package.
-3. Clone the repository: `git clone https://github.com/esotericsoftware/spine-runtimes`
-4. Run CMake GUI from the start menu
-5. Set source directory to `spine-runtimes/spine-sdl`
-6. Set build directory to `spine-runtimes/spine-sdl/build`
-7. Click `Configure`, then `Generate`
-8. Open the generated solution in Visual Studio
-9. Set `spine-sdl-c-example` or `spine-sdl-cpp-example` as the startup project
-10. Run the project
+1. Install [Visual Studio Community](https://visualstudio.microsoft.com/downloads/). Make sure you install support for C++ and CMake.
+2. Download the Spine Runtimes repository using git (`git clone https://github.com/esotericsoftware/spine-runtimes`) or download it as a zip.
+3. Open Visual Studio Community, then open `spine-sdl/` via the **Open a local folder** button in the Visual Studio Community launcher.
+4. Wait for CMake to finish, then select either `spine-sdl-c-example.exe` or `spine-sdl-cpp-example.exe` as the start-up project and start debugging.
 
 ### Linux
 

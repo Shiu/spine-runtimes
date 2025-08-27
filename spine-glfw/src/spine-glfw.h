@@ -118,7 +118,7 @@ void renderer_draw(renderer_t *renderer, spine::Skeleton *skeleton, bool premult
 
 /// Draws the given skeleton. The atlas must be the atlas from which the drawable
 /// was constructed.
-void renderer_draw_lite(renderer_t *renderer, spine_skeleton skeleton, bool premultipliedAlpha);
+void renderer_draw_c(renderer_t *renderer, spine_skeleton skeleton, bool premultipliedAlpha);
 
 /// Disposes the renderer
 void renderer_dispose(renderer_t *renderer);

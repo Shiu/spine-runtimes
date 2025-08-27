@@ -315,7 +315,7 @@ void renderer_set_viewport_size(renderer_t *renderer, int width, int height) {
 	shader_set_matrix4(renderer->shader, "uMatrix", matrix);
 }
 
-void renderer_draw_lite(renderer_t *renderer, spine_skeleton skeleton, bool premultipliedAlpha) {
+void renderer_draw_c(renderer_t *renderer, spine_skeleton skeleton, bool premultipliedAlpha) {
 	renderer_draw(renderer, (Skeleton *) skeleton, premultipliedAlpha);
 }
 
