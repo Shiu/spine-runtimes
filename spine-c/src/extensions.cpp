@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include "base.h"
 #include "generated/types.h"
+#include "spine/Physics.h"
 #include "extensions.h"
 #include <spine/spine.h>
 #include <spine/Version.h>
@@ -325,6 +325,18 @@ spine_skeleton_drawable spine_skeleton_drawable_create(spine_skeleton_data skele
 	drawable->renderer = new (__FILE__, __LINE__) SkeletonRenderer();
 
 	return (spine_skeleton_drawable) drawable;
+}
+
+void spine_skeleton_drawable_update(spine_skeleton_drawable drawable, float delta) {
+	if (!drawable) return;
+	_spine_skeleton_drawable *_drawable = (_spine_skeleton_drawable *) drawable;
+	Skeleton *skeleton = (Skeleton *) _drawable->skeleton;
+	AnimationState *state = (AnimationState *) _drawable->animationState;
+
+	state->update(delta);
+	state->apply(*skeleton);
+	skeleton->update(delta);
+	skeleton->updateWorldTransform(spine::Physics_Update);
 }
 
 spine_render_command spine_skeleton_drawable_render(spine_skeleton_drawable drawable) {

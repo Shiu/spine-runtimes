@@ -2,8 +2,8 @@
   "name": "spine-c-codegen",
   "type": "module",
   "scripts": {
-    "generate": "tsx src/index.ts",
-    "null-analysis": "tsx src/null-analysis.ts"
+    "generate": "npx tsx src/index.ts",
+    "null-analysis": "npx tsx src/null-analysis.ts"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

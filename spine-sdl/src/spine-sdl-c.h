@@ -30,34 +30,18 @@
 #ifndef SPINE_SDL
 #define SPINE_SDL
 
-#include <spine/spine.h>
-
+#include <spine-c.h>
 #include <SDL.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-_SP_ARRAY_DECLARE_TYPE(spSdlVertexArray, struct SDL_Vertex)
+/// Renders a spine_skeleton_drawable using SDL_Renderer
+void spine_sdl_draw(spine_skeleton_drawable drawable, struct SDL_Renderer *renderer, bool premultipliedAlpha);
 
-typedef struct spSkeletonDrawable {
-	spSkeleton *skeleton;
-	spAnimationState *animationState;
-	int usePremultipliedAlpha;
-
-	spSkeletonClipping *clipper;
-	spFloatArray *worldVertices;
-	spSdlVertexArray *sdlVertices;
-	spIntArray *sdlIndices;
-} spSkeletonDrawable;
-
-SP_API spSkeletonDrawable *spSkeletonDrawable_create(spSkeletonData *skeletonData, spAnimationStateData *animationStateData);
-
-SP_API void spSkeletonDrawable_dispose(spSkeletonDrawable *self);
-
-SP_API void spSkeletonDrawable_update(spSkeletonDrawable *self, float delta, spPhysics physics);
-
-SP_API void spSkeletonDrawable_draw(spSkeletonDrawable *self, struct SDL_Renderer *renderer);
+/// Renders a spine_skeleton using SDL_Renderer
+void spine_sdl_draw_skeleton(spine_skeleton skeleton, struct SDL_Renderer *renderer, bool premultipliedAlpha);
 
 #ifdef __cplusplus
 }

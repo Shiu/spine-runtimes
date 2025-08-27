@@ -80,6 +80,7 @@ SPINE_C_API void spine_skeleton_data_result_dispose(spine_skeleton_data_result r
 
 // Skeleton drawable functionsp
 SPINE_C_API spine_skeleton_drawable spine_skeleton_drawable_create(spine_skeleton_data skeletonData);
+SPINE_C_API void spine_skeleton_drawable_update(spine_skeleton_drawable drawable, float delta);
 SPINE_C_API spine_render_command spine_skeleton_drawable_render(spine_skeleton_drawable drawable);
 SPINE_C_API void spine_skeleton_drawable_dispose(spine_skeleton_drawable drawable);
 SPINE_C_API spine_skeleton spine_skeleton_drawable_get_skeleton(spine_skeleton_drawable drawable);

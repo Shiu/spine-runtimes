@@ -22,6 +22,9 @@ spine-ios supports all Spine features except two-color tinting.
 
 ## Building
 
+### SpineC bindings
+
+
 ### SpineC and SpineSwift
 
 Build on any platform:

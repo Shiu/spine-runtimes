@@ -27,44 +27,26 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef SPINE_SDL
-#define SPINE_SDL
+#ifndef SPINE_SDL_CPP
+#define SPINE_SDL_CPP
 
 #include <spine/spine.h>
 #include <SDL.h>
 
 namespace spine {
-	class SkeletonDrawable {
-	public:
-		SkeletonDrawable(SkeletonData *skeletonData, AnimationStateData *animationStateData = nullptr);
-
-		~SkeletonDrawable();
-
-		void update(float delta, Physics physics);
-
-		void draw(SDL_Renderer *renderer);
-
-		Skeleton *skeleton;
-		AnimationState *animationState;
-		bool usePremultipliedAlpha;
-
-	private:
-		bool ownsAnimationStateData;
-		Vector<SDL_Vertex> sdlVertices;
-		Vector<int> sdlIndices;
-	};
-
-	class SDLTextureLoader : public spine::TextureLoader {
+	/// Renders a spine::Skeleton using SDL_Renderer
+	void SDL_draw(Skeleton &skeleton, SDL_Renderer *renderer, bool premultipliedAlpha);
+	
+	/// SDL texture loader for use with Atlas
+	class SDLTextureLoader : public TextureLoader {
 		SDL_Renderer *renderer;
 
 	public:
-		SDLTextureLoader(SDL_Renderer *renderer) : renderer(renderer) {
-		}
-
+		SDLTextureLoader(SDL_Renderer *renderer) : renderer(renderer) {}
+		
 		void load(AtlasPage &page, const String &path);
-
 		void unload(void *texture);
 	};
-}// namespace spine
+}
 
 #endif

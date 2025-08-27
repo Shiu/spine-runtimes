@@ -1,11 +1,10 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 4.0.0)
 project(spine-sdl)
 
 # Default flags
 include(${CMAKE_SOURCE_DIR}/../flags.cmake)
 
 # Add spine-cpp and spine-c
-add_subdirectory(${CMAKE_SOURCE_DIR}/../spine-cpp ${CMAKE_BINARY_DIR}/spine-cpp-build)
 add_subdirectory(${CMAKE_SOURCE_DIR}/../spine-c ${CMAKE_BINARY_DIR}/spine-c)
 
 # SDL
