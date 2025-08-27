@@ -28,7 +28,6 @@
  *****************************************************************************/
 
 import {
-	collectAllRenderables,
 	extensions, ExtensionType,
 	InstructionSet,
 	type BLEND_MODES,
