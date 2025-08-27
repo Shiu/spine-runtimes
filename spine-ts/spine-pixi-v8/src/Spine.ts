@@ -658,32 +658,37 @@ export class Spine extends ViewContainer {
 					const skeleton = slot.bone.skeleton;
 					const skeletonColor = skeleton.color;
 					const slotColor = slot.color;
-
 					const attachmentColor = attachment.color;
+					const alpha = skeletonColor.a * slotColor.a * attachmentColor.a;
 
 					cacheData.color.set(
 						skeletonColor.r * slotColor.r * attachmentColor.r,
 						skeletonColor.g * slotColor.g * attachmentColor.g,
 						skeletonColor.b * slotColor.b * attachmentColor.b,
-						skeletonColor.a * slotColor.a * attachmentColor.a,
+						alpha,
 					);
 
-					if (slot.darkColor) {
-						cacheData.darkColor.setFromColor(slot.darkColor);
+					if (this.alpha === 0 || alpha === 0) {
+						cacheData.skipRender = true;
+					} else {
+						if (slot.darkColor) {
+							cacheData.darkColor.setFromColor(slot.darkColor);
+						}
+
+						cacheData.skipRender = cacheData.clipped = false;
+
+						const texture = attachment.region?.texture.texture || Texture.EMPTY;
+
+						if (cacheData.texture !== texture) {
+							cacheData.texture = texture;
+							this.spineTexturesDirty = true;
+						}
+
+						if (clipper.isClipping()) {
+							this.updateClippingData(cacheData);
+						}
 					}
 
-					cacheData.skipRender = cacheData.clipped = false;
-
-					const texture = attachment.region?.texture.texture || Texture.EMPTY;
-
-					if (cacheData.texture !== texture) {
-						cacheData.texture = texture;
-						this.spineTexturesDirty = true;
-					}
-
-					if (clipper.isClipping()) {
-						this.updateClippingData(cacheData);
-					}
 				}
 				else if (attachment instanceof ClippingAttachment) {
 					clipper.clipStart(slot, attachment);
