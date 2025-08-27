@@ -247,12 +247,15 @@ extension SpineUIView {
     }
 
     private func initRenderer(atlasPages: [UIImage]) throws {
+        // Get PMA flag from first atlas page if available
+        let pmaFlag = controller.atlas.pages.count > 0 ? (controller.atlas.pages[0]?.pma ?? false) : false
+        
         renderer = try SpineRenderer(
             device: SpineObjects.shared.device,
             commandQueue: SpineObjects.shared.commandQueue,
             pixelFormat: colorPixelFormat,
             atlasPages: atlasPages,
-            pma: false  // TODO: Get PMA flag from atlas when API is available
+            pma: pmaFlag
         )
         renderer?.delegate = controller
         renderer?.dataSource = controller

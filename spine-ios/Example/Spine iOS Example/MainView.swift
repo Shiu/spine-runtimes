@@ -28,7 +28,24 @@
  *****************************************************************************/
 
 import SpineiOS
+import SpineSwift
 import SwiftUI
+
+// View modifier to report memory leaks when view disappears
+struct LeakReporter: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .onDisappear {
+                reportLeaks()
+            }
+    }
+}
+
+extension View {
+    func reportLeaksOnDisappear() -> some View {
+        modifier(LeakReporter())
+    }
+}
 
 struct MainView: View {
     var body: some View {
@@ -36,27 +53,35 @@ struct MainView: View {
             Section {
                 NavigationLink("Simple Animation") {
                     SimpleAnimation()
+                        .reportLeaksOnDisappear()
                 }
                 NavigationLink("Play/Pause") {
                     PlayPauseAnimation()
+                        .reportLeaksOnDisappear()
                 }
                 NavigationLink("Animation State Listener") {
                     AnimationStateEvents()
+                        .reportLeaksOnDisappear()
                 }
                 NavigationLink("Debug Rendering") {
                     DebugRendering()
+                        .reportLeaksOnDisappear()
                 }
                 NavigationLink("Dress Up") {
                     DressUp()
+                        .reportLeaksOnDisappear()
                 }
                 NavigationLink("IK Following") {
                     IKFollowing()
+                        .reportLeaksOnDisappear()
                 }
                 NavigationLink("Physics") {
                     Physics()
+                        .reportLeaksOnDisappear()
                 }
                 NavigationLink("Disable Rendering") {
                     DisableRendering()
+                        .reportLeaksOnDisappear()
                 }
             } header: {
                 Text("Swift + SwiftUI")
@@ -66,6 +91,7 @@ struct MainView: View {
                     SimpleAnimationViewControllerRepresentable()
                         .navigationTitle("Simple Animation")
                         .navigationBarTitleDisplayMode(.inline)
+                        .reportLeaksOnDisappear()
                 }
             } header: {
                 Text("ObjC + UIKit")

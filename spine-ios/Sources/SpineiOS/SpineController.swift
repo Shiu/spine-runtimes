@@ -110,6 +110,13 @@ public final class SpineController: NSObject, ObservableObject {
             drawable?.dispose()  // TODO move drawable out of view?
         }
     }
+    
+    /// Manually dispose the drawable. Call this when you know the controller is no longer needed.
+    /// This is useful in SwiftUI where views may be cached and deinit may be delayed.
+    public func dispose() {
+        drawable?.dispose()
+        drawable = nil
+    }
 
     /// The ``Atlas`` from which images to render the skeleton are sourced.
     public var atlas: Atlas {

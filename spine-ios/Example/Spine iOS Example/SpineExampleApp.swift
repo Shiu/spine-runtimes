@@ -28,10 +28,16 @@
  *****************************************************************************/
 
 import SpineiOS
+import SpineSwift
 import SwiftUI
 
 @main
 struct SpineExampleApp: App {
+
+    init() {
+        // Enable debug extension for memory leak detection
+        enableDebugExtension(true)
+    }
 
     var body: some Scene {
         WindowGroup {
