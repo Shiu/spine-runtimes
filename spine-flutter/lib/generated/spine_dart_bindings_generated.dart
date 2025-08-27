@@ -7452,6 +7452,22 @@ class SpineDartBindings {
   late final _spine_skeleton_drawable_create =
       _spine_skeleton_drawable_createPtr.asFunction<spine_skeleton_drawable Function(spine_skeleton_data)>();
 
+  void spine_skeleton_drawable_update(
+    spine_skeleton_drawable drawable,
+    double delta,
+  ) {
+    return _spine_skeleton_drawable_update(
+      drawable,
+      delta,
+    );
+  }
+
+  late final _spine_skeleton_drawable_updatePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_skeleton_drawable, ffi.Float)>>(
+          'spine_skeleton_drawable_update');
+  late final _spine_skeleton_drawable_update =
+      _spine_skeleton_drawable_updatePtr.asFunction<void Function(spine_skeleton_drawable, double)>();
+
   spine_render_command spine_skeleton_drawable_render(
     spine_skeleton_drawable drawable,
   ) {
@@ -39951,6 +39967,7 @@ class SpineDartBindings {
 /// mbstate_t is an opaque object to keep conversion state, during multibyte
 /// stream conversions.  The content must not be referenced by user programs.
 
+/// Forward declarations for all non-enum types
 final class spine_alpha_timeline_wrapper extends ffi.Opaque {}
 
 final class spine_animation_wrapper extends ffi.Opaque {}
@@ -40400,57 +40417,114 @@ typedef spine_array_int = ffi.Pointer<spine_array_int_wrapper>;
 typedef spine_array_unsigned_short = ffi.Pointer<spine_array_unsigned_short_wrapper>;
 typedef spine_array_property_id = ffi.Pointer<spine_array_property_id_wrapper>;
 typedef spine_array_animation = ffi.Pointer<spine_array_animation_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_animation = ffi.Pointer<spine_animation_wrapper>;
 typedef spine_array_atlas_page = ffi.Pointer<spine_array_atlas_page_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_atlas_page = ffi.Pointer<spine_atlas_page_wrapper>;
 typedef spine_array_atlas_region = ffi.Pointer<spine_array_atlas_region_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_atlas_region = ffi.Pointer<spine_atlas_region_wrapper>;
 typedef spine_array_attachment = ffi.Pointer<spine_array_attachment_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_attachment = ffi.Pointer<spine_attachment_wrapper>;
 typedef spine_array_bone = ffi.Pointer<spine_array_bone_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_bone = ffi.Pointer<spine_bone_wrapper>;
 typedef spine_array_bone_data = ffi.Pointer<spine_array_bone_data_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_bone_data = ffi.Pointer<spine_bone_data_wrapper>;
 typedef spine_array_bone_pose = ffi.Pointer<spine_array_bone_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_bone_pose = ffi.Pointer<spine_bone_pose_wrapper>;
 typedef spine_array_bounding_box_attachment = ffi.Pointer<spine_array_bounding_box_attachment_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_bounding_box_attachment = ffi.Pointer<spine_bounding_box_attachment_wrapper>;
 typedef spine_array_constraint = ffi.Pointer<spine_array_constraint_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_constraint = ffi.Pointer<spine_constraint_wrapper>;
 typedef spine_array_constraint_data = ffi.Pointer<spine_array_constraint_data_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_constraint_data = ffi.Pointer<spine_constraint_data_wrapper>;
 typedef spine_array_event = ffi.Pointer<spine_array_event_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_event = ffi.Pointer<spine_event_wrapper>;
 typedef spine_array_event_data = ffi.Pointer<spine_array_event_data_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_event_data = ffi.Pointer<spine_event_data_wrapper>;
 typedef spine_array_from_property = ffi.Pointer<spine_array_from_property_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_from_property = ffi.Pointer<spine_from_property_wrapper>;
 typedef spine_array_physics_constraint = ffi.Pointer<spine_array_physics_constraint_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint = ffi.Pointer<spine_physics_constraint_wrapper>;
 typedef spine_array_polygon = ffi.Pointer<spine_array_polygon_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_polygon = ffi.Pointer<spine_polygon_wrapper>;
 typedef spine_array_skin = ffi.Pointer<spine_array_skin_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_skin = ffi.Pointer<spine_skin_wrapper>;
 typedef spine_array_slot = ffi.Pointer<spine_array_slot_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_slot = ffi.Pointer<spine_slot_wrapper>;
 typedef spine_array_slot_data = ffi.Pointer<spine_array_slot_data_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_slot_data = ffi.Pointer<spine_slot_data_wrapper>;
 typedef spine_array_texture_region = ffi.Pointer<spine_array_texture_region_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_texture_region = ffi.Pointer<spine_texture_region_wrapper>;
 typedef spine_array_timeline = ffi.Pointer<spine_array_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_timeline = ffi.Pointer<spine_timeline_wrapper>;
 typedef spine_array_to_property = ffi.Pointer<spine_array_to_property_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_to_property = ffi.Pointer<spine_to_property_wrapper>;
 typedef spine_array_track_entry = ffi.Pointer<spine_array_track_entry_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_track_entry = ffi.Pointer<spine_track_entry_wrapper>;
 typedef spine_array_update = ffi.Pointer<spine_array_update_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_update = ffi.Pointer<spine_update_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_rtti = ffi.Pointer<spine_rtti_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_skeleton = ffi.Pointer<spine_skeleton_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_bone_local = ffi.Pointer<spine_bone_local_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_atlas = ffi.Pointer<spine_atlas_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_skeleton_data = ffi.Pointer<spine_skeleton_data_wrapper>;
 
+/// Custom types for spine-c-new (not generated)
 final class spine_atlas_result_wrapper extends ffi.Opaque {}
 
 final class spine_skeleton_data_result_wrapper extends ffi.Opaque {}
@@ -40465,6 +40539,7 @@ final class spine_skin_entries_wrapper extends ffi.Opaque {}
 
 final class spine_texture_loader_wrapper extends ffi.Opaque {}
 
+/// Custom types for spine-c-new (not generated)
 typedef spine_atlas_result = ffi.Pointer<spine_atlas_result_wrapper>;
 
 /// Texture loader callbacks
@@ -40473,104 +40548,296 @@ typedef spine_texture_loader_load_funcFunction = ffi.Pointer<ffi.Void> Function(
 typedef spine_texture_loader_unload_func = ffi.Pointer<ffi.NativeFunction<spine_texture_loader_unload_funcFunction>>;
 typedef spine_texture_loader_unload_funcFunction = ffi.Void Function(ffi.Pointer<ffi.Void> texture);
 typedef Dartspine_texture_loader_unload_funcFunction = void Function(ffi.Pointer<ffi.Void> texture);
+
+/// Custom types for spine-c-new (not generated)
 typedef spine_skeleton_data_result = ffi.Pointer<spine_skeleton_data_result_wrapper>;
+
+/// Custom types for spine-c-new (not generated)
 typedef spine_skeleton_drawable = ffi.Pointer<spine_skeleton_drawable_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_render_command = ffi.Pointer<spine_render_command_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_animation_state = ffi.Pointer<spine_animation_state_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_animation_state_data = ffi.Pointer<spine_animation_state_data_wrapper>;
+
+/// Custom types for spine-c-new (not generated)
 typedef spine_animation_state_events = ffi.Pointer<spine_animation_state_events_wrapper>;
+
+/// Custom types for spine-c-new (not generated)
 typedef spine_skin_entries = ffi.Pointer<spine_skin_entries_wrapper>;
+
+/// Custom types for spine-c-new (not generated)
 typedef spine_skin_entry = ffi.Pointer<spine_skin_entry_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_alpha_timeline = ffi.Pointer<spine_alpha_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_atlas_attachment_loader = ffi.Pointer<spine_atlas_attachment_loader_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_region_attachment = ffi.Pointer<spine_region_attachment_wrapper>;
 typedef spine_sequence = ffi.Pointer<spine_sequence_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_mesh_attachment = ffi.Pointer<spine_mesh_attachment_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_path_attachment = ffi.Pointer<spine_path_attachment_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_point_attachment = ffi.Pointer<spine_point_attachment_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_clipping_attachment = ffi.Pointer<spine_clipping_attachment_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_attachment_loader = ffi.Pointer<spine_attachment_loader_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_attachment_timeline = ffi.Pointer<spine_attachment_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_color = ffi.Pointer<spine_color_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_bone_timeline = ffi.Pointer<spine_bone_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_bone_timeline1 = ffi.Pointer<spine_bone_timeline1_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_bone_timeline2 = ffi.Pointer<spine_bone_timeline2_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_vertex_attachment = ffi.Pointer<spine_vertex_attachment_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_constraint_timeline = ffi.Pointer<spine_constraint_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_constraint_timeline1 = ffi.Pointer<spine_constraint_timeline1_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_curve_timeline = ffi.Pointer<spine_curve_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_curve_timeline1 = ffi.Pointer<spine_curve_timeline1_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_deform_timeline = ffi.Pointer<spine_deform_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_draw_order_timeline = ffi.Pointer<spine_draw_order_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_event_queue_entry = ffi.Pointer<spine_event_queue_entry_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_event_timeline = ffi.Pointer<spine_event_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_from_rotate = ffi.Pointer<spine_from_rotate_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_from_scale_x = ffi.Pointer<spine_from_scale_x_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_from_scale_y = ffi.Pointer<spine_from_scale_y_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_from_shear_y = ffi.Pointer<spine_from_shear_y_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_from_x = ffi.Pointer<spine_from_x_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_from_y = ffi.Pointer<spine_from_y_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_ik_constraint = ffi.Pointer<spine_ik_constraint_wrapper>;
 typedef spine_ik_constraint_data = ffi.Pointer<spine_ik_constraint_data_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_ik_constraint_pose = ffi.Pointer<spine_ik_constraint_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_ik_constraint_timeline = ffi.Pointer<spine_ik_constraint_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_inherit_timeline = ffi.Pointer<spine_inherit_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_linked_mesh = ffi.Pointer<spine_linked_mesh_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_path_constraint = ffi.Pointer<spine_path_constraint_wrapper>;
 typedef spine_path_constraint_data = ffi.Pointer<spine_path_constraint_data_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_path_constraint_pose = ffi.Pointer<spine_path_constraint_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_path_constraint_mix_timeline = ffi.Pointer<spine_path_constraint_mix_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_path_constraint_position_timeline = ffi.Pointer<spine_path_constraint_position_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_path_constraint_spacing_timeline = ffi.Pointer<spine_path_constraint_spacing_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_data = ffi.Pointer<spine_physics_constraint_data_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_pose = ffi.Pointer<spine_physics_constraint_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_damping_timeline = ffi.Pointer<spine_physics_constraint_damping_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_gravity_timeline = ffi.Pointer<spine_physics_constraint_gravity_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_inertia_timeline = ffi.Pointer<spine_physics_constraint_inertia_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_mass_timeline = ffi.Pointer<spine_physics_constraint_mass_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_mix_timeline = ffi.Pointer<spine_physics_constraint_mix_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_reset_timeline = ffi.Pointer<spine_physics_constraint_reset_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_strength_timeline = ffi.Pointer<spine_physics_constraint_strength_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_timeline = ffi.Pointer<spine_physics_constraint_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_wind_timeline = ffi.Pointer<spine_physics_constraint_wind_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_posed = ffi.Pointer<spine_posed_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_posed_active = ffi.Pointer<spine_posed_active_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_posed_data = ffi.Pointer<spine_posed_data_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_rgb2_timeline = ffi.Pointer<spine_rgb2_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_rgba2_timeline = ffi.Pointer<spine_rgba2_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_rgba_timeline = ffi.Pointer<spine_rgba_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_rgb_timeline = ffi.Pointer<spine_rgb_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_rotate_timeline = ffi.Pointer<spine_rotate_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_scale_timeline = ffi.Pointer<spine_scale_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_scale_x_timeline = ffi.Pointer<spine_scale_x_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_scale_y_timeline = ffi.Pointer<spine_scale_y_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_slot_pose = ffi.Pointer<spine_slot_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_sequence_timeline = ffi.Pointer<spine_sequence_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_shear_timeline = ffi.Pointer<spine_shear_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_shear_x_timeline = ffi.Pointer<spine_shear_x_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_shear_y_timeline = ffi.Pointer<spine_shear_y_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_skeleton_clipping = ffi.Pointer<spine_skeleton_clipping_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_skeleton_binary = ffi.Pointer<spine_skeleton_binary_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_skeleton_bounds = ffi.Pointer<spine_skeleton_bounds_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_skeleton_json = ffi.Pointer<spine_skeleton_json_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_skeleton_renderer = ffi.Pointer<spine_skeleton_renderer_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_slider = ffi.Pointer<spine_slider_wrapper>;
 typedef spine_slider_data = ffi.Pointer<spine_slider_data_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_slider_pose = ffi.Pointer<spine_slider_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_slider_mix_timeline = ffi.Pointer<spine_slider_mix_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_slider_timeline = ffi.Pointer<spine_slider_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_slot_curve_timeline = ffi.Pointer<spine_slot_curve_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_slot_timeline = ffi.Pointer<spine_slot_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_transform_constraint_pose = ffi.Pointer<spine_transform_constraint_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_to_rotate = ffi.Pointer<spine_to_rotate_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_to_scale_x = ffi.Pointer<spine_to_scale_x_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_to_scale_y = ffi.Pointer<spine_to_scale_y_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_to_shear_y = ffi.Pointer<spine_to_shear_y_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_to_x = ffi.Pointer<spine_to_x_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_to_y = ffi.Pointer<spine_to_y_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_transform_constraint = ffi.Pointer<spine_transform_constraint_wrapper>;
 typedef spine_transform_constraint_data = ffi.Pointer<spine_transform_constraint_data_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_transform_constraint_timeline = ffi.Pointer<spine_transform_constraint_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_translate_timeline = ffi.Pointer<spine_translate_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_translate_x_timeline = ffi.Pointer<spine_translate_x_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_translate_y_timeline = ffi.Pointer<spine_translate_y_timeline_wrapper>;
