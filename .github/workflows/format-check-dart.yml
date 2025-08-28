@@ -10,16 +10,17 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
+    - name: Setup Flutter SDK
+      uses: flutter-actions/setup-flutter@v4
       with:
-        flutter-version: '3.24.0'
-        channel: 'stable'
+        channel: stable
+        version: 3.32.6
 
-    - name: Check dart format version
+    - name: Check Flutter and Dart versions
       run: |
-        dart format --version
         flutter --version
+        dart --version
+        dart format --version
         
     - name: Resolve Flutter packages
       run: |
