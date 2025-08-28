@@ -35,8 +35,10 @@ jobs:
 
     - name: Check for changes
       run: |
-        git ls-files -m
-        if [[ `git ls-files -m` ]]; then
+        # Ignore generated files that might change during flutter pub get
+        git ls-files -m | grep -v "GeneratedPluginRegistrant" > /tmp/modified_files || true
+        if [ -s /tmp/modified_files ]; then
+          cat /tmp/modified_files
           echo "Detected Dart formatting errors!"
           echo "Creating diff files..."
           mkdir -p dart-format-diff
