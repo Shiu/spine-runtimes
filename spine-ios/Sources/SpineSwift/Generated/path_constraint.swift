@@ -42,7 +42,9 @@ public class PathConstraint: PosedActive, Posed, Constraint {
     }
 
     public convenience init(_ data: PathConstraintData, _ skeleton: Skeleton) {
-        let ptr = spine_path_constraint_create(data._ptr.assumingMemoryBound(to: spine_path_constraint_data_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        let ptr = spine_path_constraint_create(
+            data._ptr.assumingMemoryBound(to: spine_path_constraint_data_wrapper.self),
+            skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         self.init(fromPointer: ptr!)
     }
 
@@ -64,10 +66,11 @@ public class PathConstraint: PosedActive, Posed, Constraint {
     public var slot: Slot {
         get {
             let result = spine_path_constraint_get_slot(_ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self))
-        return Slot(fromPointer: result!)
+            return Slot(fromPointer: result!)
         }
         set {
-            spine_path_constraint_set_slot(_ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_slot_wrapper.self))
+            spine_path_constraint_set_slot(
+                _ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_slot_wrapper.self))
         }
     }
 
@@ -92,16 +95,20 @@ public class PathConstraint: PosedActive, Posed, Constraint {
     }
 
     public func copyAttachment(_ skeleton: Skeleton) -> PathConstraint {
-        let result = spine_path_constraint_copy(_ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        let result = spine_path_constraint_copy(
+            _ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         return PathConstraint(fromPointer: result!)
     }
 
     public func update(_ skeleton: Skeleton, _ physics: Physics) {
-        spine_path_constraint_update(_ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
+        spine_path_constraint_update(
+            _ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self),
+            spine_physics(rawValue: UInt32(physics.rawValue)))
     }
 
     public func sort(_ skeleton: Skeleton) {
-        spine_path_constraint_sort(_ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        spine_path_constraint_sort(
+            _ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
     public func resetConstrained() {

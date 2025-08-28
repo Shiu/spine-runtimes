@@ -135,7 +135,7 @@ public final class SkeletonDrawableWrapper: NSObject {
     public func update(delta: Float) {
         if disposed { return }
 
-        skeletonDrawable.update(delta);
+        skeletonDrawable.update(delta)
     }
 
     public func dispose() {

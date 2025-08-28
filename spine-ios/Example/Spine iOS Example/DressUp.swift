@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import SpineiOS
 import SpineSwift
+import SpineiOS
 import SwiftUI
 
 struct DressUp: View {
@@ -112,7 +112,7 @@ final class DressUpModel: ObservableObject {
                     skeleton.setSkin2(skin)
                     skeleton.setupPose()
                     skeleton.update(0)
-					skeleton.updateWorldTransform(SpineSwift.Physics.update)
+                    skeleton.updateWorldTransform(SpineSwift.Physics.update)
                     let skinName = skin.name
                     self.skinImages[skinName] = try drawable.renderToImage(
                         size: self.thumbnailSize,

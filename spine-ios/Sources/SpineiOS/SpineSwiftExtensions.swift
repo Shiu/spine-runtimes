@@ -91,25 +91,25 @@ extension Atlas {
         guard let atlasData = String(data: data, encoding: .utf8) else {
             throw SpineError("Couldn't read atlas bytes as utf8 string")
         }
-        
+
         // Use SpineSwift's loadAtlas function
         let atlas = try loadAtlas(atlasData)
-        
+
         var atlasPages = [UIImage]()
-        
+
         // Load images for each atlas page
         let pages = atlas.pages
         for i in 0..<pages.count {
             guard let page = pages[i] else { continue }
             let imagePath = page.texturePath
-            
+
             let imageData = try await loadFile(imagePath)
             guard let image = UIImage(data: imageData) else {
                 continue
             }
             atlasPages.append(image)
         }
-        
+
         return (atlas, atlasPages)
     }
 }

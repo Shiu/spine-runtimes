@@ -38,29 +38,29 @@ extension Skin {
         guard let entriesPtr = spine_skin_get_entries(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self)) else {
             return []
         }
-        
+
         defer {
             spine_skin_entries_dispose(entriesPtr)
         }
-        
+
         let numEntries = Int(spine_skin_entries_get_num_entries(entriesPtr))
         var entries: [SkinEntry] = []
-        
+
         for i in 0..<numEntries {
             guard let entryPtr = spine_skin_entries_get_entry(entriesPtr, Int32(i)) else {
                 continue
             }
-            
+
             let slotIndex = Int(spine_skin_entry_get_slot_index(entryPtr))
-            
+
             guard let namePtr = spine_skin_entry_get_name(entryPtr) else {
                 continue
             }
             let name = String(cString: namePtr)
-            
+
             let attachmentPtr = spine_skin_entry_get_attachment(entryPtr)
             var attachment: Attachment? = nil
-            
+
             if let attachmentPtr = attachmentPtr {
                 // Use RTTI to determine the concrete attachment type
                 let rtti = spine_attachment_get_rtti(attachmentPtr)
@@ -68,33 +68,40 @@ extension Skin {
                     continue
                 }
                 let className = String(cString: classNamePtr)
-                
+
                 switch className {
                 case "RegionAttachment":
-                    attachment = RegionAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
+                    attachment = RegionAttachment(
+                        fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
                 case "MeshAttachment":
-                    attachment = MeshAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
+                    attachment = MeshAttachment(
+                        fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
                 case "BoundingBoxAttachment":
-                    attachment = BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
+                    attachment = BoundingBoxAttachment(
+                        fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
                 case "ClippingAttachment":
-                    attachment = ClippingAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_clipping_attachment_wrapper.self))
+                    attachment = ClippingAttachment(
+                        fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_clipping_attachment_wrapper.self))
                 case "PathAttachment":
-                    attachment = PathAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_path_attachment_wrapper.self))
+                    attachment = PathAttachment(
+                        fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_path_attachment_wrapper.self))
                 case "PointAttachment":
-                    attachment = PointAttachment(fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_point_attachment_wrapper.self))
+                    attachment = PointAttachment(
+                        fromPointer: UnsafeMutableRawPointer(attachmentPtr).assumingMemoryBound(to: spine_point_attachment_wrapper.self))
                 default:
                     // Unknown attachment type, treat as generic Attachment
                     attachment = nil
                 }
             }
-            
-            entries.append(SkinEntry(
-                slotIndex: slotIndex,
-                name: name,
-                attachment: attachment
-            ))
+
+            entries.append(
+                SkinEntry(
+                    slotIndex: slotIndex,
+                    name: name,
+                    attachment: attachment
+                ))
         }
-        
+
         return entries
     }
 }

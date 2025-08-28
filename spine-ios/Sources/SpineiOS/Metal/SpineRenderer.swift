@@ -29,9 +29,9 @@
 
 import Foundation
 import MetalKit
-import SpineSwift
 import SpineC
 import SpineShadersStructs
+import SpineSwift
 
 protocol SpineRendererDelegate: AnyObject {
     func spineRendererWillUpdate(_ spineRenderer: SpineRenderer)

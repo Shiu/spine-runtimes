@@ -26,7 +26,7 @@ let package = Package(
         .library(
             name: "SpineiOS",
             targets: ["SpineiOS"]
-        )
+        ),
     ],
     targets: [
         .target(
@@ -43,7 +43,7 @@ let package = Package(
             sources: [
                 "spine-c/src/extensions.cpp",
                 "spine-c/src/generated",
-                "spine-cpp/src/spine"
+                "spine-cpp/src/spine",
             ],
             publicHeadersPath: "spine-c/include",
             cxxSettings: [
@@ -63,7 +63,7 @@ let package = Package(
             path: "spine-ios/Sources/SpineSwift",
             sources: [
                 "Generated",
-                "Extensions"
+                "Extensions",
             ]
         ),
         .systemLibrary(

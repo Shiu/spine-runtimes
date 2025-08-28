@@ -36,39 +36,43 @@ extension BonePose {
     /// Transform world coordinates to local coordinates
     public func worldToLocal(worldX: Float, worldY: Float) -> Vector {
         let output = ArrayFloat()
-        spine_bone_pose_world_to_local_v(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self),
-                                         worldX, worldY,
-                                         output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
+        spine_bone_pose_world_to_local_v(
+            _ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self),
+            worldX, worldY,
+            output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
         let vector = Vector(x: output[0], y: output[1])
         return vector
     }
-    
+
     /// Transform local coordinates to world coordinates
     public func localToWorld(localX: Float, localY: Float) -> Vector {
         let output = ArrayFloat()
-        spine_bone_pose_local_to_world_v(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self),
-                                         localX, localY,
-                                         output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
+        spine_bone_pose_local_to_world_v(
+            _ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self),
+            localX, localY,
+            output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
         let vector = Vector(x: output[0], y: output[1])
         return vector
     }
-    
+
     /// Transform world coordinates to parent coordinates
     public func worldToParent(worldX: Float, worldY: Float) -> Vector {
         let output = ArrayFloat()
-        spine_bone_pose_world_to_parent_v(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self),
-                                          worldX, worldY,
-                                          output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
+        spine_bone_pose_world_to_parent_v(
+            _ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self),
+            worldX, worldY,
+            output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
         let vector = Vector(x: output[0], y: output[1])
         return vector
     }
-    
+
     /// Transform parent coordinates to world coordinates
     public func parentToWorld(parentX: Float, parentY: Float) -> Vector {
         let output = ArrayFloat()
-        spine_bone_pose_parent_to_world_v(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self),
-                                          parentX, parentY,
-                                          output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
+        spine_bone_pose_parent_to_world_v(
+            _ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self),
+            parentX, parentY,
+            output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
         let vector = Vector(x: output[0], y: output[1])
         return vector
     }

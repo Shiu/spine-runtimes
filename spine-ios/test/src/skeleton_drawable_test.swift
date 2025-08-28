@@ -89,7 +89,7 @@ func runSkeletonDrawableTest() {
     // Set an animation and setup track entry listener
     let trackEntry = spine_animation_state_set_animation_1(animationState, 0, "walk", true)
     print("✓ Set animation: walk")
-    
+
     // Test track entry properties
     if let trackEntry = trackEntry {
         let trackIndex = spine_track_entry_get_track_index(trackEntry)
@@ -100,7 +100,7 @@ func runSkeletonDrawableTest() {
     // Update several times to trigger events
     print("\nUpdating animation state...")
     for i in 0..<5 {
-        spine_animation_state_update(animationState, 0.016) // ~60fps
+        spine_animation_state_update(animationState, 0.016)  // ~60fps
         spine_animation_state_apply(animationState, skeleton)
 
         // Check for events
@@ -152,7 +152,7 @@ func runSkeletonDrawableTest() {
     // Test with different animations that might have different bounds
     print("\nTesting bounds with jump animation:")
     spine_animation_state_set_animation_1(animationState, 0, "jump", false)
-    spine_animation_state_update(animationState, 0.5) // Update to middle of jump
+    spine_animation_state_update(animationState, 0.5)  // Update to middle of jump
     spine_animation_state_apply(animationState, skeleton)
     spine_skeleton_update_world_transform(skeleton, SPINE_PHYSICS_NONE)
 

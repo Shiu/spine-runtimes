@@ -65,7 +65,8 @@ func runSkeletonDrawableTestSwift() {
     drawable.skeleton.updateWorldTransform(Physics.none)
 
     let boundsAfterPose = drawable.skeleton.bounds
-    print("  Bounds after setupPose: x=\(boundsAfterPose.x), y=\(boundsAfterPose.y), width=\(boundsAfterPose.width), height=\(boundsAfterPose.height)")
+    print(
+        "  Bounds after setupPose: x=\(boundsAfterPose.x), y=\(boundsAfterPose.y), width=\(boundsAfterPose.width), height=\(boundsAfterPose.height)")
 
     // Test position
     let position = drawable.skeleton.getPosition()
@@ -96,7 +97,7 @@ func runSkeletonDrawableTestSwift() {
     // Update several times to trigger events
     print("\nUpdating animation state...")
     for i in 0..<5 {
-        drawable.update(0.016) // ~60fps
+        drawable.update(0.016)  // ~60fps
         print("  Frame \(i): updated")
     }
 
@@ -114,19 +115,21 @@ func runSkeletonDrawableTestSwift() {
     print("\nTesting bounds after animation:")
     drawable.skeleton.updateWorldTransform(Physics.none)
     let boundsAfterAnimation = drawable.skeleton.bounds
-    print("  Bounds after animation: x=\(boundsAfterAnimation.x), y=\(boundsAfterAnimation.y), width=\(boundsAfterAnimation.width), height=\(boundsAfterAnimation.height)")
+    print(
+        "  Bounds after animation: x=\(boundsAfterAnimation.x), y=\(boundsAfterAnimation.y), width=\(boundsAfterAnimation.width), height=\(boundsAfterAnimation.height)"
+    )
 
     // Test with different animations that might have different bounds
     print("\nTesting bounds with jump animation:")
     _ = drawable.animationState.setAnimation(0, "jump", false)
-    drawable.update(0.5) // Update to middle of jump
+    drawable.update(0.5)  // Update to middle of jump
 
     let boundsAfterJump = drawable.skeleton.bounds
     print("  Bounds during jump: x=\(boundsAfterJump.x), y=\(boundsAfterJump.y), width=\(boundsAfterJump.width), height=\(boundsAfterJump.height)")
 
     // Test skin entries
     print("\nTesting skin entries:")
-    
+
     // First, check available skins
     let skins = skeletonData.skins
     print("  Available skins: \(skins.count)")
@@ -137,29 +140,29 @@ func runSkeletonDrawableTestSwift() {
                 print("    Skin \(i): \(skin.name)")
             }
         }
-        
+
         // Set and test the first skin (or default skin)
         if let defaultSkin = skins[0] {
             // First get entries from the skin directly
             let entriesFromData = defaultSkin.getEntries()
             print("  Skin '\(defaultSkin.name)' from skeletonData has \(entriesFromData.count) entries")
-            
+
             // Count entries with attachments
             let withAttachments = entriesFromData.filter { $0.attachment != nil }.count
             print("    Entries with attachments: \(withAttachments)")
-            
+
             // Now set it on the skeleton
             drawable.skeleton.setSkin2(defaultSkin)
             drawable.skeleton.setupPoseSlots()  // Update slots after setting skin
             print("  Set skin on skeleton: \(defaultSkin.name)")
         }
     }
-    
+
     // Now test the skeleton's current skin
     if let skin = drawable.skeleton.skin {
         let entries = skin.getEntries()
         print("  Skeleton's current skin has \(entries.count) entries")
-        
+
         // Show first few entries (with or without attachments for debugging)
         let entriesToShow = min(5, entries.count)
         for i in 0..<entriesToShow {
@@ -173,11 +176,11 @@ func runSkeletonDrawableTestSwift() {
                 print("    Entry \(i): slot=\(entry.slotIndex), name=\(entry.name), attachment=nil")
             }
         }
-        
+
         // Count total entries with attachments
         let entriesWithAttachments = entries.filter { $0.attachment != nil }.count
         print("  Total entries with attachments: \(entriesWithAttachments) out of \(entries.count)")
-        
+
         if entries.count > 3 {
             print("    ... and \(entries.count - 3) more entries")
         }
@@ -191,7 +194,7 @@ func runSkeletonDrawableTestSwift() {
         // Test bone properties
         let bonePose = rootBone.appliedPose
         print("  Root bone: name=\(rootBone.data.name), x=\(bonePose.x), y=\(bonePose.y)")
-        
+
         // Get the bone's transform matrix from applied pose
         let a = bonePose.a
         let b = bonePose.b
@@ -200,27 +203,27 @@ func runSkeletonDrawableTestSwift() {
         let worldX = bonePose.worldX
         let worldY = bonePose.worldY
         print("  Root bone transform: a=\(a), b=\(b), c=\(c), d=\(d), worldX=\(worldX), worldY=\(worldY)")
-        
+
         // Use BonePose's built-in transformation methods
         let worldPoint = Vector(x: 100, y: 100)
         let localPoint = bonePose.worldToLocal(worldX: worldPoint.x, worldY: worldPoint.y)
         print("  World point (100, 100) -> Local: (\(localPoint.x), \(localPoint.y))")
-        
+
         // Test local to world transformation
         let backToWorld = bonePose.localToWorld(localX: localPoint.x, localY: localPoint.y)
         print("  Local back to world: (\(backToWorld.x), \(backToWorld.y))")
-        
+
         // Test rotation and scale from the pose
         let rotation = bonePose.rotation
         let scaleX = bonePose.scaleX
         let scaleY = bonePose.scaleY
         print("  Bone rotation: \(rotation), scale: (\(scaleX), \(scaleY))")
-        
+
         // Test parent transformation if parent exists
         if let parentBone = rootBone.parent {
             let parentPose = parentBone.appliedPose
             print("  Parent bone: name=\(parentBone.data.name), worldX=\(parentPose.worldX), worldY=\(parentPose.worldY)")
-            
+
             // Transform world to parent coordinates
             let parentPoint = bonePose.worldToParent(worldX: worldPoint.x, worldY: worldPoint.y)
             print("  World point (100, 100) -> Parent: (\(parentPoint.x), \(parentPoint.y))")

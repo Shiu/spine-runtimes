@@ -37,10 +37,10 @@ public class AnimationStateEventManager {
     // Use pointer addresses as keys since Swift wrapper objects might be recreated
     private var stateListeners: [Int: AnimationStateListener?] = [:]
     private var trackEntryListeners: [Int: [Int: AnimationStateListener]] = [:]
-    
+
     public static let instance = AnimationStateEventManager()
     private init() {}
-    
+
     func setStateListener(_ state: AnimationState, _ listener: AnimationStateListener?) {
         let key = Int(bitPattern: state._ptr)
         if listener == nil {
@@ -49,50 +49,50 @@ public class AnimationStateEventManager {
             stateListeners[key] = listener
         }
     }
-    
+
     func getStateListener(_ state: AnimationState) -> AnimationStateListener? {
         let key = Int(bitPattern: state._ptr)
         return stateListeners[key] ?? nil
     }
-    
+
     func setTrackEntryListener(_ entry: TrackEntry, _ listener: AnimationStateListener?) {
         // Get the animation state from the track entry itself
         guard let state = entry.animationState else {
             fatalError("TrackEntry does not have an associated AnimationState")
         }
-        
+
         let stateKey = Int(bitPattern: state._ptr)
         let entryKey = Int(bitPattern: entry._ptr)
-        
+
         if trackEntryListeners[stateKey] == nil {
             trackEntryListeners[stateKey] = [:]
         }
-        
+
         if listener == nil {
             trackEntryListeners[stateKey]?.removeValue(forKey: entryKey)
         } else {
             trackEntryListeners[stateKey]?[entryKey] = listener
         }
     }
-    
+
     func getTrackEntryListener(_ state: AnimationState, _ entry: TrackEntry) -> AnimationStateListener? {
         let stateKey = Int(bitPattern: state._ptr)
         let entryKey = Int(bitPattern: entry._ptr)
         return trackEntryListeners[stateKey]?[entryKey]
     }
-    
+
     func removeTrackEntry(_ state: AnimationState, _ entry: TrackEntry) {
         let stateKey = Int(bitPattern: state._ptr)
         let entryKey = Int(bitPattern: entry._ptr)
         trackEntryListeners[stateKey]?.removeValue(forKey: entryKey)
     }
-    
+
     func clearState(_ state: AnimationState) {
         let key = Int(bitPattern: state._ptr)
         stateListeners.removeValue(forKey: key)
         trackEntryListeners.removeValue(forKey: key)
     }
-    
+
     /// Debug method to inspect current state of the manager
     public func debugPrint() {
         print("\nAnimationStateEventManager contents:")
@@ -111,7 +111,7 @@ extension AnimationState {
     public func setListener(_ listener: AnimationStateListener?) {
         AnimationStateEventManager.instance.setStateListener(self, listener)
     }
-    
+
     /// Get the current state listener
     public var listener: AnimationStateListener? {
         return AnimationStateEventManager.instance.getStateListener(self)

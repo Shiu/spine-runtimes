@@ -42,7 +42,9 @@ public class IkConstraint: PosedActive, Posed, Constraint {
     }
 
     public convenience init(_ data: IkConstraintData, _ skeleton: Skeleton) {
-        let ptr = spine_ik_constraint_create(data._ptr.assumingMemoryBound(to: spine_ik_constraint_data_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        let ptr = spine_ik_constraint_create(
+            data._ptr.assumingMemoryBound(to: spine_ik_constraint_data_wrapper.self),
+            skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         self.init(fromPointer: ptr!)
     }
 
@@ -69,10 +71,11 @@ public class IkConstraint: PosedActive, Posed, Constraint {
     public var target: Bone {
         get {
             let result = spine_ik_constraint_get_target(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
-        return Bone(fromPointer: result!)
+            return Bone(fromPointer: result!)
         }
         set {
-            spine_ik_constraint_set_target(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
+            spine_ik_constraint_set_target(
+                _ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
         }
     }
 
@@ -92,16 +95,20 @@ public class IkConstraint: PosedActive, Posed, Constraint {
     }
 
     public func copyAttachment(_ skeleton: Skeleton) -> IkConstraint {
-        let result = spine_ik_constraint_copy(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        let result = spine_ik_constraint_copy(
+            _ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         return IkConstraint(fromPointer: result!)
     }
 
     public func update(_ skeleton: Skeleton, _ physics: Physics) {
-        spine_ik_constraint_update(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
+        spine_ik_constraint_update(
+            _ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self),
+            spine_physics(rawValue: UInt32(physics.rawValue)))
     }
 
     public func sort(_ skeleton: Skeleton) {
-        spine_ik_constraint_sort(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        spine_ik_constraint_sort(
+            _ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
     public func resetConstrained() {
@@ -117,12 +124,21 @@ public class IkConstraint: PosedActive, Posed, Constraint {
         return Rtti(fromPointer: result!)
     }
 
-    public static func apply(_ skeleton: Skeleton, _ bone: BonePose, _ targetX: Float, _ targetY: Float, _ compress: Bool, _ stretch: Bool, _ uniform: Bool, _ mix: Float) {
-        spine_ik_constraint_apply_1(skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), bone._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), targetX, targetY, compress, stretch, uniform, mix)
+    public static func apply(
+        _ skeleton: Skeleton, _ bone: BonePose, _ targetX: Float, _ targetY: Float, _ compress: Bool, _ stretch: Bool, _ uniform: Bool, _ mix: Float
+    ) {
+        spine_ik_constraint_apply_1(
+            skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), bone._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self),
+            targetX, targetY, compress, stretch, uniform, mix)
     }
 
-    public static func apply2(_ skeleton: Skeleton, _ parent: BonePose, _ child: BonePose, _ targetX: Float, _ targetY: Float, _ bendDirection: Int32, _ stretch: Bool, _ uniform: Bool, _ softness: Float, _ mix: Float) {
-        spine_ik_constraint_apply_2(skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), parent._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), child._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), targetX, targetY, bendDirection, stretch, uniform, softness, mix)
+    public static func apply2(
+        _ skeleton: Skeleton, _ parent: BonePose, _ child: BonePose, _ targetX: Float, _ targetY: Float, _ bendDirection: Int32, _ stretch: Bool,
+        _ uniform: Bool, _ softness: Float, _ mix: Float
+    ) {
+        spine_ik_constraint_apply_2(
+            skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), parent._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self),
+            child._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), targetX, targetY, bendDirection, stretch, uniform, softness, mix)
     }
 
     public override func dispose() {

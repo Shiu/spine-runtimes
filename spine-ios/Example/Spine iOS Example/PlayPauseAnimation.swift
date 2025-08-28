@@ -35,7 +35,7 @@ struct PlayPauseAnimation: View {
     @StateObject
     var controller = SpineController(
         onInitialized: { controller in
-			controller.animationState.setAnimation(0, "flying", true)
+            controller.animationState.setAnimation(0, "flying", true)
         }
     )
 

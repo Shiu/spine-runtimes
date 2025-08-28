@@ -28,8 +28,8 @@
  *****************************************************************************/
 
 import MetalKit
-import UIKit
 import SpineSwift
+import UIKit
 
 /// A ``UIView`` to display a Spine skeleton. The skeleton can be loaded from a bundle, local files, http, or a pre-loaded ``SkeletonDrawableWrapper``.
 ///
@@ -249,7 +249,7 @@ extension SpineUIView {
     private func initRenderer(atlasPages: [UIImage]) throws {
         // Get PMA flag from first atlas page if available
         let pmaFlag = controller.atlas.pages.count > 0 ? (controller.atlas.pages[0]?.pma ?? false) : false
-        
+
         renderer = try SpineRenderer(
             device: SpineObjects.shared.device,
             commandQueue: SpineObjects.shared.commandQueue,

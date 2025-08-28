@@ -47,7 +47,9 @@ public class DrawOrderTimeline: Timeline {
     }
 
     public func setFrame(_ frame: Int, _ time: Float, _ drawOrder: ArrayInt?) {
-        spine_draw_order_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_draw_order_timeline_wrapper.self), frame, time, drawOrder?._ptr.assumingMemoryBound(to: spine_array_int_wrapper.self))
+        spine_draw_order_timeline_set_frame(
+            _ptr.assumingMemoryBound(to: spine_draw_order_timeline_wrapper.self), frame, time,
+            drawOrder?._ptr.assumingMemoryBound(to: spine_array_int_wrapper.self))
     }
 
     public func dispose() {

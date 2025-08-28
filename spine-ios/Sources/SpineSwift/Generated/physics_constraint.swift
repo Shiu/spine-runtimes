@@ -42,7 +42,9 @@ public class PhysicsConstraint: PosedActive, Posed, Constraint {
     }
 
     public convenience init(_ data: PhysicsConstraintData, _ skeleton: Skeleton) {
-        let ptr = spine_physics_constraint_create(data._ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        let ptr = spine_physics_constraint_create(
+            data._ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self),
+            skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         self.init(fromPointer: ptr!)
     }
 
@@ -59,10 +61,12 @@ public class PhysicsConstraint: PosedActive, Posed, Constraint {
     public var bone: BonePose {
         get {
             let result = spine_physics_constraint_get_bone(_ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self))
-        return BonePose(fromPointer: result!)
+            return BonePose(fromPointer: result!)
         }
         set {
-            spine_physics_constraint_set_bone(_ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
+            spine_physics_constraint_set_bone(
+                _ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self),
+                newValue._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
         }
     }
 
@@ -87,20 +91,25 @@ public class PhysicsConstraint: PosedActive, Posed, Constraint {
     }
 
     public func update(_ skeleton: Skeleton, _ physics: Physics) {
-        spine_physics_constraint_update(_ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
+        spine_physics_constraint_update(
+            _ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self),
+            spine_physics(rawValue: UInt32(physics.rawValue)))
     }
 
     public func sort(_ skeleton: Skeleton) {
-        spine_physics_constraint_sort(_ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        spine_physics_constraint_sort(
+            _ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
     public func copyAttachment(_ skeleton: Skeleton) -> PhysicsConstraint {
-        let result = spine_physics_constraint_copy(_ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        let result = spine_physics_constraint_copy(
+            _ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         return PhysicsConstraint(fromPointer: result!)
     }
 
     public func reset(_ skeleton: Skeleton) {
-        spine_physics_constraint_reset(_ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        spine_physics_constraint_reset(
+            _ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
     public func translate(_ x: Float, _ y: Float) {

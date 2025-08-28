@@ -28,8 +28,8 @@
  *****************************************************************************/
 
 import Foundation
-import SpineSwift
 import SpineShadersStructs
+import SpineSwift
 import simd
 
 extension RenderCommand {
@@ -39,9 +39,10 @@ extension RenderCommand {
         let numVerts = Int(numVertices)
         let numInds = Int(numIndices)
         guard let indicesPtr = indices,
-              let positionsPtr = positions,
-              let uvsPtr = uvs,
-              let colorsPtr = colors else {
+            let positionsPtr = positions,
+            let uvsPtr = uvs,
+            let colorsPtr = colors
+        else {
             return vertices
         }
         let indicesArray = Array(UnsafeBufferPointer(start: indicesPtr, count: numInds))

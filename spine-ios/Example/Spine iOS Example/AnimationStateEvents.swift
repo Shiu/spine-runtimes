@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import SpineiOS
 import SpineSwift
+import SpineiOS
 import SwiftUI
 
 struct AnimationStateEvents: View {
@@ -38,7 +38,7 @@ struct AnimationStateEvents: View {
         onInitialized: { controller in
             controller.skeleton.scaleX = 0.5
             controller.skeleton.scaleY = 0.5
-			controller.skeleton.findSlot("gun")?.appliedPose.color.set(1, 0, 0, 1)
+            controller.skeleton.findSlot("gun")?.appliedPose.color.set(1, 0, 0, 1)
             controller.animationStateData.defaultMix = 0.2
             let walk = controller.animationState.setAnimation(0, "walk", true)
             walk.setListener { type, entry, event in

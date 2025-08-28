@@ -64,20 +64,20 @@ public func reportLeaks() {
 /// Load an Atlas from atlas data string
 public func loadAtlas(_ atlasData: String) throws -> Atlas {
     let result = spine_atlas_load(atlasData)
-    
+
     // Check for error
     if let errorPtr = spine_atlas_result_get_error(result) {
         let error = String(cString: errorPtr)
         spine_atlas_result_dispose(result)
         throw SpineError("Couldn't load atlas: \(error)")
     }
-    
+
     // Get atlas
     guard let atlasPtr = spine_atlas_result_get_atlas(result) else {
         spine_atlas_result_dispose(result)
         throw SpineError("Couldn't get atlas from result")
     }
-    
+
     let atlas = Atlas(fromPointer: atlasPtr)
     spine_atlas_result_dispose(result)
     return atlas
@@ -88,20 +88,20 @@ public func loadAtlas(_ atlasData: String) throws -> Atlas {
 /// Load skeleton data from JSON string
 public func loadSkeletonDataJson(atlas: Atlas, jsonData: String, path: String = "") throws -> SkeletonData {
     let result = spine_skeleton_data_load_json(atlas._ptr.assumingMemoryBound(to: spine_atlas_wrapper.self), jsonData, path)
-    
+
     // Check for error
     if let errorPtr = spine_skeleton_data_result_get_error(result) {
         let error = String(cString: errorPtr)
         spine_skeleton_data_result_dispose(result)
         throw SpineError("Couldn't load skeleton data: \(error)")
     }
-    
+
     // Get skeleton data
     guard let skeletonDataPtr = spine_skeleton_data_result_get_data(result) else {
         spine_skeleton_data_result_dispose(result)
         throw SpineError("Couldn't get skeleton data from result")
     }
-    
+
     let skeletonData = SkeletonData(fromPointer: skeletonDataPtr)
     spine_skeleton_data_result_dispose(result)
     return skeletonData
@@ -117,20 +117,20 @@ public func loadSkeletonDataBinary(atlas: Atlas, binaryData: Data, path: String 
             path
         )
     }
-    
+
     // Check for error
     if let errorPtr = spine_skeleton_data_result_get_error(result) {
         let error = String(cString: errorPtr)
         spine_skeleton_data_result_dispose(result)
         throw SpineError("Couldn't load skeleton data: \(error)")
     }
-    
+
     // Get skeleton data
     guard let skeletonDataPtr = spine_skeleton_data_result_get_data(result) else {
         spine_skeleton_data_result_dispose(result)
         throw SpineError("Couldn't get skeleton data from result")
     }
-    
+
     let skeletonData = SkeletonData(fromPointer: skeletonDataPtr)
     spine_skeleton_data_result_dispose(result)
     return skeletonData
@@ -140,7 +140,7 @@ public func loadSkeletonDataBinary(atlas: Atlas, binaryData: Data, path: String 
 
 public struct SpineError: Error, CustomStringConvertible {
     public let description: String
-    
+
     public init(_ description: String) {
         self.description = description
     }

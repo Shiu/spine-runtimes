@@ -36,8 +36,9 @@ extension Skeleton {
     /// Get the axis-aligned bounding box (AABB) containing all world vertices of the skeleton
     public var bounds: Bounds {
         let output = ArrayFloat()
-        spine_skeleton_get_bounds(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), 
-                                  output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
+        spine_skeleton_get_bounds(
+            _ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self),
+            output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
         let bounds = Bounds(
             x: output[0],
             y: output[1],
@@ -46,12 +47,13 @@ extension Skeleton {
         )
         return bounds
     }
-    
+
     /// Get the position of the skeleton
     public func getPosition() -> Vector {
         let output = ArrayFloat()
-        spine_skeleton_get_position_v(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self),
-                                      output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
+        spine_skeleton_get_position_v(
+            _ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self),
+            output._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
         let position = Vector(x: output[0], y: output[1])
         return position
     }

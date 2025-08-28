@@ -56,10 +56,11 @@ public class TrackEntry: NSObject {
     public var animation: Animation {
         get {
             let result = spine_track_entry_get_animation(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return Animation(fromPointer: result!)
+            return Animation(fromPointer: result!)
         }
         set {
-            spine_track_entry_set_animation(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
+            spine_track_entry_set_animation(
+                _ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
         }
     }
 
@@ -71,7 +72,7 @@ public class TrackEntry: NSObject {
     public var loop: Bool {
         get {
             let result = spine_track_entry_get_loop(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_loop(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -81,7 +82,7 @@ public class TrackEntry: NSObject {
     public var holdPrevious: Bool {
         get {
             let result = spine_track_entry_get_hold_previous(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_hold_previous(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -91,7 +92,7 @@ public class TrackEntry: NSObject {
     public var reverse: Bool {
         get {
             let result = spine_track_entry_get_reverse(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_reverse(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -101,7 +102,7 @@ public class TrackEntry: NSObject {
     public var shortestRotation: Bool {
         get {
             let result = spine_track_entry_get_shortest_rotation(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_shortest_rotation(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -111,7 +112,7 @@ public class TrackEntry: NSObject {
     public var delay: Float {
         get {
             let result = spine_track_entry_get_delay(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_delay(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -121,7 +122,7 @@ public class TrackEntry: NSObject {
     public var trackTime: Float {
         get {
             let result = spine_track_entry_get_track_time(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_track_time(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -131,7 +132,7 @@ public class TrackEntry: NSObject {
     public var trackEnd: Float {
         get {
             let result = spine_track_entry_get_track_end(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_track_end(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -141,7 +142,7 @@ public class TrackEntry: NSObject {
     public var animationStart: Float {
         get {
             let result = spine_track_entry_get_animation_start(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_animation_start(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -151,7 +152,7 @@ public class TrackEntry: NSObject {
     public var animationEnd: Float {
         get {
             let result = spine_track_entry_get_animation_end(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_animation_end(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -161,7 +162,7 @@ public class TrackEntry: NSObject {
     public var animationLast: Float {
         get {
             let result = spine_track_entry_get_animation_last(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_animation_last(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -176,7 +177,7 @@ public class TrackEntry: NSObject {
     public var timeScale: Float {
         get {
             let result = spine_track_entry_get_time_scale(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_time_scale(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -186,7 +187,7 @@ public class TrackEntry: NSObject {
     public var alpha: Float {
         get {
             let result = spine_track_entry_get_alpha(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_alpha(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -196,7 +197,7 @@ public class TrackEntry: NSObject {
     public var eventThreshold: Float {
         get {
             let result = spine_track_entry_get_event_threshold(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_event_threshold(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -206,7 +207,7 @@ public class TrackEntry: NSObject {
     public var mixAttachmentThreshold: Float {
         get {
             let result = spine_track_entry_get_mix_attachment_threshold(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_mix_attachment_threshold(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -216,7 +217,7 @@ public class TrackEntry: NSObject {
     public var alphaAttachmentThreshold: Float {
         get {
             let result = spine_track_entry_get_alpha_attachment_threshold(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_alpha_attachment_threshold(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -226,7 +227,7 @@ public class TrackEntry: NSObject {
     public var mixDrawOrderThreshold: Float {
         get {
             let result = spine_track_entry_get_mix_draw_order_threshold(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_mix_draw_order_threshold(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -246,7 +247,7 @@ public class TrackEntry: NSObject {
     public var mixTime: Float {
         get {
             let result = spine_track_entry_get_mix_time(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_track_entry_set_mix_time(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue)
@@ -261,10 +262,11 @@ public class TrackEntry: NSObject {
     public var mixBlend: MixBlend {
         get {
             let result = spine_track_entry_get_mix_blend(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return MixBlend(rawValue: Int32(result.rawValue))!
+            return MixBlend(rawValue: Int32(result.rawValue))!
         }
         set {
-            spine_track_entry_set_mix_blend(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), spine_mix_blend(rawValue: UInt32(newValue.rawValue)))
+            spine_track_entry_set_mix_blend(
+                _ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), spine_mix_blend(rawValue: UInt32(newValue.rawValue)))
         }
     }
 
@@ -301,10 +303,12 @@ public class TrackEntry: NSObject {
     public var animationState: AnimationState? {
         get {
             let result = spine_track_entry_get_animation_state(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
-        return result.map { AnimationState(fromPointer: $0) }
+            return result.map { AnimationState(fromPointer: $0) }
         }
         set {
-            spine_track_entry_set_animation_state(_ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self), newValue?._ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self))
+            spine_track_entry_set_animation_state(
+                _ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self),
+                newValue?._ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self))
         }
     }
 

@@ -37,7 +37,7 @@ public struct Bounds {
     public var y: Float
     public var width: Float
     public var height: Float
-    
+
     public init(x: Float, y: Float, width: Float, height: Float) {
         self.x = x
         self.y = y
@@ -50,7 +50,7 @@ public struct Bounds {
 public struct Vector {
     public var x: Float
     public var y: Float
-    
+
     public init(x: Float, y: Float) {
         self.x = x
         self.y = y
@@ -62,7 +62,7 @@ public struct SkinEntry {
     public let slotIndex: Int
     public let name: String
     public let attachment: Attachment?
-    
+
     internal init(slotIndex: Int, name: String, attachment: Attachment?) {
         self.slotIndex = slotIndex
         self.name = name

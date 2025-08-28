@@ -16,7 +16,7 @@ let package = Package(
             name: "SpineTest",
             dependencies: [
                 .product(name: "SpineC", package: "spine-runtimes"),
-                .product(name: "SpineSwift", package: "spine-runtimes")
+                .product(name: "SpineSwift", package: "spine-runtimes"),
             ],
             path: "src"
         )

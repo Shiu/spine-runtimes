@@ -51,17 +51,18 @@ public class Animation: NSObject {
     public var timelines: ArrayTimeline {
         get {
             let result = spine_animation_get_timelines(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
-        return ArrayTimeline(fromPointer: result!)
+            return ArrayTimeline(fromPointer: result!)
         }
         set {
-            spine_animation_set_timelines(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self))
+            spine_animation_set_timelines(
+                _ptr.assumingMemoryBound(to: spine_animation_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_array_timeline_wrapper.self))
         }
     }
 
     public var duration: Float {
         get {
             let result = spine_animation_get_duration(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_animation_set_duration(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self), newValue)
@@ -79,12 +80,19 @@ public class Animation: NSObject {
     }
 
     public func hasTimeline(_ ids: ArrayPropertyId) -> Bool {
-        let result = spine_animation_has_timeline(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self), ids._ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self))
+        let result = spine_animation_has_timeline(
+            _ptr.assumingMemoryBound(to: spine_animation_wrapper.self), ids._ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self))
         return result
     }
 
-    public func apply(_ skeleton: Skeleton, _ lastTime: Float, _ time: Float, _ loop: Bool, _ events: ArrayEvent?, _ alpha: Float, _ blend: MixBlend, _ direction: MixDirection, _ appliedPose: Bool) {
-        spine_animation_apply(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), lastTime, time, loop, events?._ptr.assumingMemoryBound(to: spine_array_event_wrapper.self), alpha, spine_mix_blend(rawValue: UInt32(blend.rawValue)), spine_mix_direction(rawValue: UInt32(direction.rawValue)), appliedPose)
+    public func apply(
+        _ skeleton: Skeleton, _ lastTime: Float, _ time: Float, _ loop: Bool, _ events: ArrayEvent?, _ alpha: Float, _ blend: MixBlend,
+        _ direction: MixDirection, _ appliedPose: Bool
+    ) {
+        spine_animation_apply(
+            _ptr.assumingMemoryBound(to: spine_animation_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), lastTime,
+            time, loop, events?._ptr.assumingMemoryBound(to: spine_array_event_wrapper.self), alpha,
+            spine_mix_blend(rawValue: UInt32(blend.rawValue)), spine_mix_direction(rawValue: UInt32(direction.rawValue)), appliedPose)
     }
 
     public static func search(_ values: ArrayFloat, _ target: Float) -> Int32 {

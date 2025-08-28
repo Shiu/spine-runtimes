@@ -51,7 +51,7 @@ public class PathConstraintPose: NSObject {
     public var position: Float {
         get {
             let result = spine_path_constraint_pose_get_position(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_path_constraint_pose_set_position(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self), newValue)
@@ -61,7 +61,7 @@ public class PathConstraintPose: NSObject {
     public var spacing: Float {
         get {
             let result = spine_path_constraint_pose_get_spacing(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_path_constraint_pose_set_spacing(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self), newValue)
@@ -71,7 +71,7 @@ public class PathConstraintPose: NSObject {
     public var mixRotate: Float {
         get {
             let result = spine_path_constraint_pose_get_mix_rotate(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_path_constraint_pose_set_mix_rotate(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self), newValue)
@@ -81,7 +81,7 @@ public class PathConstraintPose: NSObject {
     public var mixX: Float {
         get {
             let result = spine_path_constraint_pose_get_mix_x(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_path_constraint_pose_set_mix_x(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self), newValue)
@@ -91,7 +91,7 @@ public class PathConstraintPose: NSObject {
     public var mixY: Float {
         get {
             let result = spine_path_constraint_pose_get_mix_y(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
-        return result
+            return result
         }
         set {
             spine_path_constraint_pose_set_mix_y(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self), newValue)
@@ -99,7 +99,9 @@ public class PathConstraintPose: NSObject {
     }
 
     public func set(_ pose: PathConstraintPose) {
-        spine_path_constraint_pose_set(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self), pose._ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
+        spine_path_constraint_pose_set(
+            _ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self),
+            pose._ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
     }
 
     public func dispose() {

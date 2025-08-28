@@ -30,8 +30,8 @@
 import CoreGraphics
 import Foundation
 import QuartzCore
-import UIKit
 import SpineSwift
+import UIKit
 
 public typealias SpineControllerCallback = (_ controller: SpineController) -> Void
 
@@ -110,7 +110,7 @@ public final class SpineController: NSObject, ObservableObject {
             drawable?.dispose()  // TODO move drawable out of view?
         }
     }
-    
+
     /// Manually dispose the drawable. Call this when you know the controller is no longer needed.
     /// This is useful in SwiftUI where views may be cached and deinit may be delayed.
     public func dispose() {
@@ -244,7 +244,7 @@ extension SpineController: SpineRendererDataSource {
 
     func renderCommands(_ spineRenderer: SpineRenderer) -> [RenderCommand] {
         guard let drawable = drawable else { return [] }
-        
+
         var commands = [RenderCommand]()
         var current = drawable.skeletonDrawable.render()
         while let cmd = current {

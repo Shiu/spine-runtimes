@@ -27,8 +27,8 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import SpineiOS
 import SpineSwift
+import SpineiOS
 import SwiftUI
 
 @main
