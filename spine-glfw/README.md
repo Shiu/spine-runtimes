@@ -2,7 +2,7 @@
 
 The spine-glfw runtime provides functionality to load, manipulate and render [Spine](http://esotericsoftware.com) skeletal animation data using [GLFW](https://www.glfw.org/) and OpenGL. spine-glfw is based on [spine-c](../spine-c) and [spine-cpp](../spine-cpp). Note that spine-c depends on spine-cpp, so both are required regardless of which API you choose to use.
 
-# See the [Spine Runtimes documentation](http://esotericsoftware.com/spine-documentation#runtimes) for in-depth information
+# See the [spine-glfw documentation](http://esotericsoftware.com/spine-glfw) for in-depth information
 
 ## Licensing
 

@@ -2,7 +2,7 @@
 
 The spine-sfml runtime provides functionality to load, manipulate and render [Spine](http://esotericsoftware.com) skeletal animation data using [SFML](https://www.sfml-dev.org/). spine-sfml is based on [spine-cpp](../spine-cpp).
 
-# See the [Spine Runtimes documentation](http://esotericsoftware.com/spine-documentation#runtimes) for in-depth information
+# See the [spine-sfml documentation](http://esotericsoftware.com/spine-sfml) for in-depth information
 
 ## Licensing
 

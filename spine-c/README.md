@@ -1,8 +1,10 @@
 # spine-c
 
-The spine-c runtime provides basic functionality to load and manipulate [spine](http://esotericsoftware.com) skeletal animation data using C. It does not perform rendering but can be extended to enable spine animations for other projects that utilize C.
+The spine-c runtime provides basic functionality to load and manipulate [Spine](http://esotericsoftware.com) skeletal animation data using C. It contains a generic `SkeletonRenderer` that returns render commands that can be easily fed into any rendering API that supports textured triangle meshes with blend modes. See [spine-glfw](../spine-glfw), [spine-sdl](../spine-sdl), or [spine-sfml](../spine-sfml) for examples.
 
-**Note:** The spine-c code is generated using a code generator. For details on the code generation process, please see the [codegen/README.md](codegen/README.md).
+**Note:** spine-c is a C wrapper around [spine-cpp](../spine-cpp) for use in environments that cannot easily interact with C++ code. The spine-c code is generated using a code generator. For details on the code generation process, please see the [codegen/README.md](codegen/README.md).
+
+# See the [spine-c documentation](http://esotericsoftware.com/spine-c) for in-depth information
 
 ## Licensing
 
@@ -16,41 +18,46 @@ For the official legal terms governing the Spine Runtimes, please read the [Spin
 
 ## Spine version
 
-spine-c works with data exported from spine 4.3.xx.
+spine-c works with data exported from Spine 4.3.xx.
 
-spine-c supports all spine features.
+spine-c supports all Spine features.
 
 ## Usage
 
-### [Please see the spine-c guide for full documentation](http://esotericsoftware.com/spine-c)
+### Integration with CMake (Recommended)
 
-## Setup
-
-### Manual Copy
-
-1. Download the spine Runtimes source using [git](https://help.github.com/articles/set-up-git) or by downloading it as a zip via the download button above.
-2. Copy the contents of the `spine-c/src` and `spine-c/include` directories into your project. Be sure your header search is configured to find the contents of the `spine-c/include` directory.
-
-### CMake
-
-You can use CMake's FetchContent to include spine-c in your project:
+The easiest way to integrate spine-c into your project is via CMake FetchContent:
 
 ```cmake
 include(FetchContent)
 FetchContent_Declare(
-  spine-runtimes
-  GIT_REPOSITORY https://github.com/EsotericSoftware/spine-runtimes.git
-  GIT_TAG 4.3
+    spine-c
+    GIT_REPOSITORY https://github.com/esotericsoftware/spine-runtimes.git
+    GIT_TAG 4.3
+    SOURCE_SUBDIR spine-c
 )
-FetchContent_MakeAvailable(spine-runtimes)
+FetchContent_MakeAvailable(spine-c)
 
-add_subdirectory(${spine-runtimes_SOURCE_DIR}/spine-c ${spine-runtimes_BINARY_DIR}/spine-c)
-target_link_libraries(your_target PRIVATE spine-c)
+# Link against spine-c
+target_link_libraries(your_target spine-c)
 ```
 
+This will automatically fetch and build spine-c along with its dependency (spine-cpp).
+
+### Manual Integration
+
+If you prefer manual integration:
+
+1. Download the Spine Runtimes source using git (`git clone https://github.com/esotericsoftware/spine-runtimes`) or download it as a zip.
+2. Add the required source files to your project:
+   - Add sources from `spine-cpp/src`, `spine-c/src`
+3. Add the include directories: `spine-cpp/include`, `spine-c/include`
+
+See the [Spine Runtimes documentation](http://esotericsoftware.com/spine-documentation#runtimes) for detailed API usage.
+
 ## Runtimes extending spine-c
+
 - [spine-ios](../spine-ios)
 - [spine-flutter](../spine-flutter)
-- [spine-sfml/c](../spine-sfml/c)
 - [spine-sdl](../spine-sdl)
 - [spine-glfw](../spine-glfw)
