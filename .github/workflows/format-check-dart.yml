@@ -6,10 +6,10 @@ on:
 
 jobs:
   check-dart:
-    runs-on: ubuntu-24.04
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: Install Dart
       uses: dart-lang/setup-dart@v1
       with:
@@ -25,7 +25,7 @@ jobs:
     - name: Check for changes
       run: |
         git ls-files -m
-        if [[ `git ls-files -m` ]]; then 
+        if [[ `git ls-files -m` ]]; then
           echo "Detected Dart formatting errors!"
           echo "Creating diff files..."
           mkdir -p dart-format-diff
@@ -38,7 +38,7 @@ jobs:
           done
           exit 1
         fi
-    
+
     - name: Upload diff artifact
       if: failure()
       uses: actions/upload-artifact@v4
