@@ -22,10 +22,10 @@ jobs:
     - name: Resolve Dart packages
       run: |
         echo "=== Resolving packages to avoid format warnings ==="
+        cd spine-flutter
         dart pub get || true
         cd example && dart pub get || true
         cd ../test && dart pub get || true
-        cd ..
         
     - name: Format Dart
       run: ./formatters/format-dart.sh
