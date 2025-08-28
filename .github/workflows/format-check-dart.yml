@@ -15,6 +15,11 @@ jobs:
       with:
         sdk: '3.8.1'
 
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: 'stable'
+        
     - name: Check dart format version
       run: |
         dart format --version
@@ -42,6 +47,17 @@ jobs:
           od -c "$f" | head -2
         done
 
+    - name: Install Flutter packages
+      run: |
+        echo "=== Installing packages for spine-flutter ==="
+        flutter pub get
+        echo "=== Installing packages for example ==="
+        cd example && flutter pub get
+        cd ..
+        echo "=== Installing packages for test ==="
+        cd test && flutter pub get
+        cd ..
+        
     - name: Pre-format test
       run: |
         echo "=== Testing dart format behavior ==="
