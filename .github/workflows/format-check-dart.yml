@@ -42,6 +42,24 @@ jobs:
           od -c "$f" | head -2
         done
 
+    - name: Pre-format test
+      run: |
+        echo "=== Testing dart format behavior ==="
+        cd spine-flutter
+        echo "=== Testing with --output show ==="
+        dart format --page-width 120 --output show example/lib/dress_up.dart | head -60 | tail -10
+        echo "=== Testing with --output none (dry run) ==="
+        dart format --page-width 120 --output none example/lib/dress_up.dart && echo "No changes needed" || echo "Would format"
+        echo "=== Current file hash before format ==="
+        shasum example/lib/dress_up.dart
+        echo "=== Copy and format test file ==="
+        cp example/lib/dress_up.dart /tmp/test_dress_up.dart
+        dart format --page-width 120 /tmp/test_dress_up.dart
+        echo "=== Hash after format ==="
+        shasum /tmp/test_dress_up.dart
+        echo "=== Show diff if any ==="
+        diff -u example/lib/dress_up.dart /tmp/test_dress_up.dart | head -30 || true
+        
     - name: Format Dart
       run: ./formatters/format-dart.sh
 
