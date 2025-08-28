@@ -15,66 +15,17 @@ jobs:
       with:
         sdk: '3.8.1'
 
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: 'stable'
-        
     - name: Check dart format version
       run: |
         dart format --version
         
-    - name: Debug environment
+    - name: Resolve Dart packages
       run: |
-        echo "=== System Info ==="
-        uname -a
-        echo "=== Dart Info ==="
-        dart --version
-        which dart
-        echo "=== Current Directory ==="
-        pwd
-        echo "=== Git Config ==="
-        git config --list | grep -E "(core\.|user\.)" || true
-        echo "=== Line endings config ==="
-        git config core.autocrlf || echo "not set"
-        git config core.eol || echo "not set"
-        echo "=== Check .gitattributes ==="
-        if [ -f .gitattributes ]; then cat .gitattributes; else echo "No .gitattributes"; fi
-        echo "=== Sample Dart file (first 5) ==="
-        find . -name "*.dart" -not -path "*/.*" | head -5 | while read f; do
-          echo "File: $f"
-          file "$f"
-          od -c "$f" | head -2
-        done
-
-    - name: Install Flutter packages
-      run: |
-        echo "=== Installing packages for spine-flutter ==="
-        flutter pub get
-        echo "=== Installing packages for example ==="
-        cd example && flutter pub get
+        echo "=== Resolving packages to avoid format warnings ==="
+        dart pub get || true
+        cd example && dart pub get || true
+        cd ../test && dart pub get || true
         cd ..
-        echo "=== Installing packages for test ==="
-        cd test && flutter pub get
-        cd ..
-        
-    - name: Pre-format test
-      run: |
-        echo "=== Testing dart format behavior ==="
-        cd spine-flutter
-        echo "=== Testing with --output show ==="
-        dart format --page-width 120 --output show example/lib/dress_up.dart | head -60 | tail -10
-        echo "=== Testing with --output none (dry run) ==="
-        dart format --page-width 120 --output none example/lib/dress_up.dart && echo "No changes needed" || echo "Would format"
-        echo "=== Current file hash before format ==="
-        shasum example/lib/dress_up.dart
-        echo "=== Copy and format test file ==="
-        cp example/lib/dress_up.dart /tmp/test_dress_up.dart
-        dart format --page-width 120 /tmp/test_dress_up.dart
-        echo "=== Hash after format ==="
-        shasum /tmp/test_dress_up.dart
-        echo "=== Show diff if any ==="
-        diff -u example/lib/dress_up.dart /tmp/test_dress_up.dart | head -30 || true
         
     - name: Format Dart
       run: ./formatters/format-dart.sh
