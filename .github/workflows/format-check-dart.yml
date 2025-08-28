@@ -18,6 +18,29 @@ jobs:
     - name: Check dart format version
       run: |
         dart format --version
+        
+    - name: Debug environment
+      run: |
+        echo "=== System Info ==="
+        uname -a
+        echo "=== Dart Info ==="
+        dart --version
+        which dart
+        echo "=== Current Directory ==="
+        pwd
+        echo "=== Git Config ==="
+        git config --list | grep -E "(core\.|user\.)" || true
+        echo "=== Line endings config ==="
+        git config core.autocrlf || echo "not set"
+        git config core.eol || echo "not set"
+        echo "=== Check .gitattributes ==="
+        if [ -f .gitattributes ]; then cat .gitattributes; else echo "No .gitattributes"; fi
+        echo "=== Sample Dart file (first 5) ==="
+        find . -name "*.dart" -not -path "*/.*" | head -5 | while read f; do
+          echo "File: $f"
+          file "$f"
+          od -c "$f" | head -2
+        done
 
     - name: Format Dart
       run: ./formatters/format-dart.sh
