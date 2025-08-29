@@ -124,11 +124,7 @@ typedef void (*spine_animation_state_listener)(spine_animation_state state, spin
 
 SPINE_C_API void spine_animation_state_set_listener(spine_animation_state state, spine_animation_state_listener listener, void *user_data);
 
-SPINE_C_API void spine_animation_state_clear_listener(spine_animation_state state);
-
 SPINE_C_API void spine_track_entry_set_listener(spine_track_entry entry, spine_animation_state_listener listener, void *user_data);
-
-SPINE_C_API void spine_track_entry_clear_listener(spine_track_entry entry);
 
 #ifdef __cplusplus
 }

@@ -582,20 +582,8 @@ void spine_animation_state_set_listener(spine_animation_state state, spine_anima
 	_state->setListener((AnimationStateListener) listener, user_data);
 }
 
-void spine_animation_state_clear_listener(spine_animation_state state) {
-	if (!state) return;
-	AnimationState *_state = (AnimationState *) state;
-	_state->setListener((AnimationStateListener) nullptr, nullptr);
-}
-
 void spine_track_entry_set_listener(spine_track_entry entry, spine_animation_state_listener listener, void *user_data) {
 	if (!entry) return;
 	TrackEntry *_entry = (TrackEntry *) entry;
 	_entry->setListener((AnimationStateListener) listener, user_data);
-}
-
-void spine_track_entry_clear_listener(spine_track_entry entry) {
-	if (!entry) return;
-	TrackEntry *_entry = (TrackEntry *) entry;
-	_entry->setListener((AnimationStateListener) nullptr, nullptr);
 }
