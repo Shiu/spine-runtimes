@@ -118,6 +118,18 @@ SPINE_C_API void spine_bone_pose_local_to_world_v(spine_bone_pose self, float lo
 SPINE_C_API void spine_bone_pose_world_to_parent_v(spine_bone_pose self, float world_x, float world_y, spine_array_float output);
 SPINE_C_API void spine_bone_pose_parent_to_world_v(spine_bone_pose self, float parent_x, float parent_y, spine_array_float output);
 
+// Event listener functions
+typedef void (*spine_animation_state_listener)(spine_animation_state state, spine_event_type type, spine_track_entry entry, spine_event event,
+											   void *user_data);
+
+SPINE_C_API void spine_animation_state_set_listener(spine_animation_state state, spine_animation_state_listener listener, void *user_data);
+
+SPINE_C_API void spine_animation_state_clear_listener(spine_animation_state state);
+
+SPINE_C_API void spine_track_entry_set_listener(spine_track_entry entry, spine_animation_state_listener listener, void *user_data);
+
+SPINE_C_API void spine_track_entry_clear_listener(spine_track_entry entry);
+
 #ifdef __cplusplus
 }
 #endif
