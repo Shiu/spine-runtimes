@@ -236,6 +236,16 @@ void spine_atlas_region_set_region_height(spine_atlas_region self, int value) {
 	_self->setRegionHeight(value);
 }
 
+/*@null*/ void *spine_atlas_region_get_renderer_object(spine_atlas_region self) {
+	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	return _self->getRendererObject();
+}
+
+void spine_atlas_region_set_renderer_object(spine_atlas_region self, /*@null*/ void *value) {
+	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	_self->setRendererObject(value);
+}
+
 spine_rtti spine_atlas_region_rtti(void) {
 	return (spine_rtti) &AtlasRegion::rtti;
 }

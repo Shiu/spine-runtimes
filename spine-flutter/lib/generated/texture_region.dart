@@ -111,6 +111,11 @@ class TextureRegion {
     SpineBindings.bindings.spine_texture_region_set_region_height(_ptr, value);
   }
 
+  Pointer<Void>? get rendererObject {
+    final result = SpineBindings.bindings.spine_texture_region_get_renderer_object(_ptr);
+    return result;
+  }
+
   static Rtti rttiStatic() {
     final result = SpineBindings.bindings.spine_texture_region_rtti();
     return Rtti.fromPointer(result);

@@ -10217,6 +10217,36 @@ class SpineDartBindings {
   late final _spine_atlas_region_set_region_height =
       _spine_atlas_region_set_region_heightPtr.asFunction<void Function(spine_atlas_region, int)>();
 
+  ffi.Pointer<ffi.Void> spine_atlas_region_get_renderer_object(
+    spine_atlas_region self,
+  ) {
+    return _spine_atlas_region_get_renderer_object(
+      self,
+    );
+  }
+
+  late final _spine_atlas_region_get_renderer_objectPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(spine_atlas_region)>>(
+          'spine_atlas_region_get_renderer_object');
+  late final _spine_atlas_region_get_renderer_object =
+      _spine_atlas_region_get_renderer_objectPtr.asFunction<ffi.Pointer<ffi.Void> Function(spine_atlas_region)>();
+
+  void spine_atlas_region_set_renderer_object(
+    spine_atlas_region self,
+    ffi.Pointer<ffi.Void> value,
+  ) {
+    return _spine_atlas_region_set_renderer_object(
+      self,
+      value,
+    );
+  }
+
+  late final _spine_atlas_region_set_renderer_objectPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_atlas_region, ffi.Pointer<ffi.Void>)>>(
+          'spine_atlas_region_set_renderer_object');
+  late final _spine_atlas_region_set_renderer_object =
+      _spine_atlas_region_set_renderer_objectPtr.asFunction<void Function(spine_atlas_region, ffi.Pointer<ffi.Void>)>();
+
   spine_rtti spine_atlas_region_rtti() {
     return _spine_atlas_region_rtti();
   }
@@ -35529,6 +35559,36 @@ class SpineDartBindings {
           'spine_texture_region_set_region_height');
   late final _spine_texture_region_set_region_height =
       _spine_texture_region_set_region_heightPtr.asFunction<void Function(spine_texture_region, int)>();
+
+  ffi.Pointer<ffi.Void> spine_texture_region_get_renderer_object(
+    spine_texture_region self,
+  ) {
+    return _spine_texture_region_get_renderer_object(
+      self,
+    );
+  }
+
+  late final _spine_texture_region_get_renderer_objectPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(spine_texture_region)>>(
+          'spine_texture_region_get_renderer_object');
+  late final _spine_texture_region_get_renderer_object =
+      _spine_texture_region_get_renderer_objectPtr.asFunction<ffi.Pointer<ffi.Void> Function(spine_texture_region)>();
+
+  void spine_texture_region_set_renderer_object(
+    spine_texture_region self,
+    ffi.Pointer<ffi.Void> value,
+  ) {
+    return _spine_texture_region_set_renderer_object(
+      self,
+      value,
+    );
+  }
+
+  late final _spine_texture_region_set_renderer_objectPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_texture_region, ffi.Pointer<ffi.Void>)>>(
+          'spine_texture_region_set_renderer_object');
+  late final _spine_texture_region_set_renderer_object = _spine_texture_region_set_renderer_objectPtr
+      .asFunction<void Function(spine_texture_region, ffi.Pointer<ffi.Void>)>();
 
   spine_rtti spine_texture_region_rtti() {
     return _spine_texture_region_rtti();

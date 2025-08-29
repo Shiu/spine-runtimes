@@ -58,6 +58,8 @@ SPINE_C_API int spine_atlas_region_get_region_width(spine_atlas_region self);
 SPINE_C_API void spine_atlas_region_set_region_width(spine_atlas_region self, int value);
 SPINE_C_API int spine_atlas_region_get_region_height(spine_atlas_region self);
 SPINE_C_API void spine_atlas_region_set_region_height(spine_atlas_region self, int value);
+SPINE_C_API /*@null*/ void *spine_atlas_region_get_renderer_object(spine_atlas_region self);
+SPINE_C_API void spine_atlas_region_set_renderer_object(spine_atlas_region self, /*@null*/ void *value);
 SPINE_C_API spine_rtti spine_atlas_region_rtti(void);
 
 #ifdef __cplusplus

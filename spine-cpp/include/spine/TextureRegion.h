@@ -83,6 +83,12 @@ namespace spine {
 		void setRegionHeight(int value) {
 			_regionHeight = value;
 		}
+		void *getRendererObject() const {
+			return _rendererObject;
+		}
+		void setRendererObject(void *value) {
+			_rendererObject = value;
+		}
 
 	private:
 		void *_rendererObject;

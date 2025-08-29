@@ -113,6 +113,11 @@ public class TextureRegion: NSObject {
         }
     }
 
+    public var rendererObject: UnsafeMutableRawPointer? {
+        let result = spine_texture_region_get_renderer_object(_ptr.assumingMemoryBound(to: spine_texture_region_wrapper.self))
+        return result
+    }
+
     public static func rttiStatic() -> Rtti {
         let result = spine_texture_region_rtti()
         return Rtti(fromPointer: result!)

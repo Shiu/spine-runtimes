@@ -76,6 +76,16 @@ void spine_texture_region_set_region_height(spine_texture_region self, int value
 	_self->setRegionHeight(value);
 }
 
+/*@null*/ void *spine_texture_region_get_renderer_object(spine_texture_region self) {
+	TextureRegion *_self = (TextureRegion *) self;
+	return _self->getRendererObject();
+}
+
+void spine_texture_region_set_renderer_object(spine_texture_region self, /*@null*/ void *value) {
+	TextureRegion *_self = (TextureRegion *) self;
+	_self->setRendererObject(value);
+}
+
 spine_rtti spine_texture_region_rtti(void) {
 	return (spine_rtti) &TextureRegion::rtti;
 }
