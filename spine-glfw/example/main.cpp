@@ -88,7 +88,15 @@ int main() {
 	animationStateData.setDefaultMix(0.2f);
 	AnimationState animationState(animationStateData);
 	animationState.setAnimation(0, "portal", true);
-	animationState.addAnimation(0, "run", true, 0);
+	animationState.addAnimation(0, "run", true, 0).setListener([](AnimationState *state, EventType type, TrackEntry *entry, Event *event, void *userData) {
+		SP_UNUSED(state);
+		SP_UNUSED(entry);
+		SP_UNUSED(event);
+		SP_UNUSED(userData);
+		if (type == EventType_Event) {
+			printf("Custom event fired: %s\n", event->getData().getName().buffer());
+		}
+	});
 
 	// Create the renderer and set the viewport size to match the window size. This sets up a
 	// pixel perfect orthogonal projection for 2D rendering.

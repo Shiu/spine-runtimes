@@ -80,6 +80,16 @@ void unload_texture(void *texture) {
 	texture_dispose((texture_t) (uintptr_t) texture);
 }
 
+void track_listener(spine_animation_state state, spine_event_type type, spine_track_entry entry, spine_event event, void *user_data) {
+	SP_UNUSED(state);
+	SP_UNUSED(entry);
+	SP_UNUSED(event);
+	SP_UNUSED(user_data);
+	if (type == SPINE_EVENT_TYPE_EVENT) {
+		printf("Custom event fired: %s\n", spine_event_data_get_name(spine_event_get_data(event)));
+	}
+}
+
 int main() {
 	// Initialize GLFW and glbinding
 	GLFWwindow *window = init_glfw();
@@ -114,7 +124,8 @@ int main() {
 	spine_animation_state_data animation_state_data = spine_animation_state_get_data(animation_state);
 	spine_animation_state_data_set_default_mix(animation_state_data, 0.2f);
 	spine_animation_state_set_animation_1(animation_state, 0, "portal", true);
-	spine_animation_state_add_animation_1(animation_state, 0, "run", true, 0);
+	spine_track_entry entry = spine_animation_state_add_animation_1(animation_state, 0, "run", true, 0);
+	spine_track_entry_set_listener(entry, track_listener, NULL);
 
 	// Create the renderer and set the viewport size to match the window size. This sets up a
 	// pixel perfect orthogonal projection for 2D rendering.

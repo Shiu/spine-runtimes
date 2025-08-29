@@ -69,9 +69,7 @@ public class Skin: NSObject {
     }
 
     public func setAttachment(_ slotIndex: Int, _ name: String, _ attachment: Attachment) {
-        spine_skin_set_attachment(
-            _ptr.assumingMemoryBound(to: spine_skin_wrapper.self), slotIndex, name,
-            attachment._ptr.assumingMemoryBound(to: spine_attachment_wrapper.self))
+        spine_skin_set_attachment(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), slotIndex, name, attachment._ptr.assumingMemoryBound(to: spine_attachment_wrapper.self))
     }
 
     public func getAttachment(_ slotIndex: Int, _ name: String) -> Attachment? {
@@ -81,8 +79,7 @@ public class Skin: NSObject {
         let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
         switch rttiClassName {
         case "spine_bounding_box_attachment":
-            return BoundingBoxAttachment(
-                fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
+            return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         case "spine_clipping_attachment":
             return ClippingAttachment(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_clipping_attachment_wrapper.self))
         case "spine_mesh_attachment":
@@ -103,9 +100,7 @@ public class Skin: NSObject {
     }
 
     public func findAttachmentsForSlot(_ slotIndex: Int, _ attachments: ArrayAttachment) {
-        spine_skin_find_attachments_for_slot(
-            _ptr.assumingMemoryBound(to: spine_skin_wrapper.self), slotIndex,
-            attachments._ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self))
+        spine_skin_find_attachments_for_slot(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), slotIndex, attachments._ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self))
     }
 
     public func addSkin(_ other: Skin) {

@@ -61,7 +61,7 @@ public class Event: NSObject {
     public var intValue: Int32 {
         get {
             let result = spine_event_get_int(_ptr.assumingMemoryBound(to: spine_event_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_event_set_int(_ptr.assumingMemoryBound(to: spine_event_wrapper.self), newValue)
@@ -71,7 +71,7 @@ public class Event: NSObject {
     public var floatValue: Float {
         get {
             let result = spine_event_get_float(_ptr.assumingMemoryBound(to: spine_event_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_event_set_float(_ptr.assumingMemoryBound(to: spine_event_wrapper.self), newValue)
@@ -81,7 +81,7 @@ public class Event: NSObject {
     public var stringValue: String {
         get {
             let result = spine_event_get_string(_ptr.assumingMemoryBound(to: spine_event_wrapper.self))
-            return String(cString: result!)
+        return String(cString: result!)
         }
         set {
             spine_event_set_string(_ptr.assumingMemoryBound(to: spine_event_wrapper.self), newValue)
@@ -91,7 +91,7 @@ public class Event: NSObject {
     public var volume: Float {
         get {
             let result = spine_event_get_volume(_ptr.assumingMemoryBound(to: spine_event_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_event_set_volume(_ptr.assumingMemoryBound(to: spine_event_wrapper.self), newValue)
@@ -101,7 +101,7 @@ public class Event: NSObject {
     public var balance: Float {
         get {
             let result = spine_event_get_balance(_ptr.assumingMemoryBound(to: spine_event_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_event_set_balance(_ptr.assumingMemoryBound(to: spine_event_wrapper.self), newValue)

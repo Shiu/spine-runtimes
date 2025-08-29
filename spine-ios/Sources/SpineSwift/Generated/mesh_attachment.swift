@@ -49,7 +49,7 @@ public class MeshAttachment: VertexAttachment {
     public var hullLength: Int32 {
         get {
             let result = spine_mesh_attachment_get_hull_length(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_mesh_attachment_set_hull_length(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self), newValue)
@@ -59,12 +59,10 @@ public class MeshAttachment: VertexAttachment {
     public var regionUVs: ArrayFloat {
         get {
             let result = spine_mesh_attachment_get_region_u_vs(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-            return ArrayFloat(fromPointer: result!)
+        return ArrayFloat(fromPointer: result!)
         }
         set {
-            spine_mesh_attachment_set_region_u_vs(
-                _ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self),
-                newValue._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
+            spine_mesh_attachment_set_region_u_vs(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
         }
     }
 
@@ -76,12 +74,10 @@ public class MeshAttachment: VertexAttachment {
     public var triangles: ArrayUnsignedShort {
         get {
             let result = spine_mesh_attachment_get_triangles(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-            return ArrayUnsignedShort(fromPointer: result!)
+        return ArrayUnsignedShort(fromPointer: result!)
         }
         set {
-            spine_mesh_attachment_set_triangles(
-                _ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self),
-                newValue._ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self))
+            spine_mesh_attachment_set_triangles(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self))
         }
     }
 
@@ -93,7 +89,7 @@ public class MeshAttachment: VertexAttachment {
     public var path: String {
         get {
             let result = spine_mesh_attachment_get_path(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-            return String(cString: result!)
+        return String(cString: result!)
         }
         set {
             spine_mesh_attachment_set_path(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self), newValue)
@@ -103,54 +99,47 @@ public class MeshAttachment: VertexAttachment {
     public var region: TextureRegion? {
         get {
             let result = spine_mesh_attachment_get_region(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-            return result.map { TextureRegion(fromPointer: $0) }
+        return result.map { TextureRegion(fromPointer: $0) }
         }
         set {
-            spine_mesh_attachment_set_region(
-                _ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self),
-                newValue?._ptr.assumingMemoryBound(to: spine_texture_region_wrapper.self))
+            spine_mesh_attachment_set_region(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self), newValue?._ptr.assumingMemoryBound(to: spine_texture_region_wrapper.self))
         }
     }
 
     public var sequence: Sequence? {
         get {
             let result = spine_mesh_attachment_get_sequence(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-            return result.map { Sequence(fromPointer: $0) }
+        return result.map { Sequence(fromPointer: $0) }
         }
         set {
-            spine_mesh_attachment_set_sequence(
-                _ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self), newValue?._ptr.assumingMemoryBound(to: spine_sequence_wrapper.self))
+            spine_mesh_attachment_set_sequence(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self), newValue?._ptr.assumingMemoryBound(to: spine_sequence_wrapper.self))
         }
     }
 
     public var parentMesh: MeshAttachment? {
         get {
             let result = spine_mesh_attachment_get_parent_mesh(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-            return result.map { MeshAttachment(fromPointer: $0) }
+        return result.map { MeshAttachment(fromPointer: $0) }
         }
         set {
-            spine_mesh_attachment_set_parent_mesh(
-                _ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self),
-                newValue?._ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
+            spine_mesh_attachment_set_parent_mesh(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self), newValue?._ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
         }
     }
 
     public var edges: ArrayUnsignedShort {
         get {
             let result = spine_mesh_attachment_get_edges(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-            return ArrayUnsignedShort(fromPointer: result!)
+        return ArrayUnsignedShort(fromPointer: result!)
         }
         set {
-            spine_mesh_attachment_set_edges(
-                _ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self),
-                newValue._ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self))
+            spine_mesh_attachment_set_edges(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_array_unsigned_short_wrapper.self))
         }
     }
 
     public var width: Float {
         get {
             let result = spine_mesh_attachment_get_width(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_mesh_attachment_set_width(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self), newValue)
@@ -160,7 +149,7 @@ public class MeshAttachment: VertexAttachment {
     public var height: Float {
         get {
             let result = spine_mesh_attachment_get_height(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_mesh_attachment_set_height(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self), newValue)

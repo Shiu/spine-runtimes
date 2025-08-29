@@ -73,7 +73,7 @@ namespace spine {
 	typedef std::function<void(AnimationState *state, EventType type, TrackEntry *entry, Event *event)> AnimationStateListener;
 #else
 
-	typedef void (*AnimationStateListener)(AnimationState *state, EventType type, TrackEntry *entry, Event *event);
+	typedef void (*AnimationStateListener)(AnimationState *state, EventType type, TrackEntry *entry, Event *event, void *userData);
 
 #endif
 
@@ -308,7 +308,7 @@ namespace spine {
 
 		float getTrackComplete();
 
-		void setListener(AnimationStateListener listener);
+		void setListener(AnimationStateListener listener, void *userData = NULL);
 
 		void setListener(AnimationStateListenerObject *listener);
 
@@ -353,6 +353,7 @@ namespace spine {
 		Array<TrackEntry *> _timelineHoldMix;
 		Array<float> _timelinesRotation;
 		AnimationStateListener _listener;
+		void *_listenerUserData;
 		AnimationStateListenerObject *_listenerObject;
 		AnimationState *_state;
 
@@ -522,7 +523,7 @@ namespace spine {
 		void setTimeScale(float inValue);
 
 		/// Adds a listener to receive events for all track entries.
-		void setListener(AnimationStateListener listener);
+		void setListener(AnimationStateListener listener, void *userData = NULL);
 
 		/// Adds a listener to receive events for all track entries.
 		void setListener(AnimationStateListenerObject *listener);
@@ -558,6 +559,7 @@ namespace spine {
 		bool _animationsChanged;
 
 		AnimationStateListener _listener;
+		void *_listenerUserData;
 		AnimationStateListenerObject *_listenerObject;
 
 		int _unkeyedState;

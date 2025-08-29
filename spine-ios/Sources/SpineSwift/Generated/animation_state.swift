@@ -68,7 +68,7 @@ public class AnimationState: NSObject {
     public var timeScale: Float {
         get {
             let result = spine_animation_state_get_time_scale(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_animation_state_set_time_scale(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), newValue)
@@ -78,7 +78,7 @@ public class AnimationState: NSObject {
     public var manualTrackEntryDisposal: Bool {
         get {
             let result = spine_animation_state_get_manual_track_entry_disposal(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_animation_state_set_manual_track_entry_disposal(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), newValue)
@@ -95,8 +95,7 @@ public class AnimationState: NSObject {
     }
 
     public func apply(_ skeleton: Skeleton) -> Bool {
-        let result = spine_animation_state_apply(
-            _ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        let result = spine_animation_state_apply(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         return result
     }
 
@@ -109,14 +108,12 @@ public class AnimationState: NSObject {
     }
 
     public func setEmptyAnimation(_ trackIndex: Int, _ mixDuration: Float) -> TrackEntry {
-        let result = spine_animation_state_set_empty_animation(
-            _ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex, mixDuration)
+        let result = spine_animation_state_set_empty_animation(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex, mixDuration)
         return TrackEntry(fromPointer: result!)
     }
 
     public func addEmptyAnimation(_ trackIndex: Int, _ mixDuration: Float, _ delay: Float) -> TrackEntry {
-        let result = spine_animation_state_add_empty_animation(
-            _ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex, mixDuration, delay)
+        let result = spine_animation_state_add_empty_animation(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex, mixDuration, delay)
         return TrackEntry(fromPointer: result!)
     }
 
@@ -134,33 +131,26 @@ public class AnimationState: NSObject {
     }
 
     public func disposeTrackEntry(_ entry: TrackEntry?) {
-        spine_animation_state_dispose_track_entry(
-            _ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), entry?._ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
+        spine_animation_state_dispose_track_entry(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), entry?._ptr.assumingMemoryBound(to: spine_track_entry_wrapper.self))
     }
 
     public func setAnimation(_ trackIndex: Int, _ animationName: String, _ loop: Bool) -> TrackEntry {
-        let result = spine_animation_state_set_animation_1(
-            _ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex, animationName, loop)
+        let result = spine_animation_state_set_animation_1(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex, animationName, loop)
         return TrackEntry(fromPointer: result!)
     }
 
     public func setAnimation2(_ trackIndex: Int, _ animation: Animation, _ loop: Bool) -> TrackEntry {
-        let result = spine_animation_state_set_animation_2(
-            _ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex,
-            animation._ptr.assumingMemoryBound(to: spine_animation_wrapper.self), loop)
+        let result = spine_animation_state_set_animation_2(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex, animation._ptr.assumingMemoryBound(to: spine_animation_wrapper.self), loop)
         return TrackEntry(fromPointer: result!)
     }
 
     public func addAnimation(_ trackIndex: Int, _ animationName: String, _ loop: Bool, _ delay: Float) -> TrackEntry {
-        let result = spine_animation_state_add_animation_1(
-            _ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex, animationName, loop, delay)
+        let result = spine_animation_state_add_animation_1(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex, animationName, loop, delay)
         return TrackEntry(fromPointer: result!)
     }
 
     public func addAnimation2(_ trackIndex: Int, _ animation: Animation, _ loop: Bool, _ delay: Float) -> TrackEntry {
-        let result = spine_animation_state_add_animation_2(
-            _ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex,
-            animation._ptr.assumingMemoryBound(to: spine_animation_wrapper.self), loop, delay)
+        let result = spine_animation_state_add_animation_2(_ptr.assumingMemoryBound(to: spine_animation_state_wrapper.self), trackIndex, animation._ptr.assumingMemoryBound(to: spine_animation_wrapper.self), loop, delay)
         return TrackEntry(fromPointer: result!)
     }
 

@@ -89,9 +89,7 @@ public class SkeletonBounds: NSObject {
     }
 
     public func update(_ skeleton: Skeleton, _ updateAabb: Bool) {
-        spine_skeleton_bounds_update(
-            _ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self),
-            updateAabb)
+        spine_skeleton_bounds_update(_ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), updateAabb)
     }
 
     public func aabbContainsPoint(_ x: Float, _ y: Float) -> Bool {
@@ -105,27 +103,22 @@ public class SkeletonBounds: NSObject {
     }
 
     public func aabbIntersectsSkeleton(_ bounds: SkeletonBounds) -> Bool {
-        let result = spine_skeleton_bounds_aabb_intersects_skeleton(
-            _ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self), bounds._ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self))
+        let result = spine_skeleton_bounds_aabb_intersects_skeleton(_ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self), bounds._ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self))
         return result
     }
 
     public func getPolygon(_ attachment: BoundingBoxAttachment?) -> Polygon? {
-        let result = spine_skeleton_bounds_get_polygon(
-            _ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self),
-            attachment?._ptr.assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
+        let result = spine_skeleton_bounds_get_polygon(_ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self), attachment?._ptr.assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         return result.map { Polygon(fromPointer: $0) }
     }
 
     public func getBoundingBox(_ polygon: Polygon?) -> BoundingBoxAttachment? {
-        let result = spine_skeleton_bounds_get_bounding_box(
-            _ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self), polygon?._ptr.assumingMemoryBound(to: spine_polygon_wrapper.self))
+        let result = spine_skeleton_bounds_get_bounding_box(_ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self), polygon?._ptr.assumingMemoryBound(to: spine_polygon_wrapper.self))
         return result.map { BoundingBoxAttachment(fromPointer: $0) }
     }
 
     public func containsPoint(_ polygon: Polygon, _ x: Float, _ y: Float) -> Bool {
-        let result = spine_skeleton_bounds_contains_point_1(
-            _ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self), polygon._ptr.assumingMemoryBound(to: spine_polygon_wrapper.self), x, y)
+        let result = spine_skeleton_bounds_contains_point_1(_ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self), polygon._ptr.assumingMemoryBound(to: spine_polygon_wrapper.self), x, y)
         return result
     }
 
@@ -140,9 +133,7 @@ public class SkeletonBounds: NSObject {
     }
 
     public func intersectsSegment2(_ polygon: Polygon, _ x1: Float, _ y1: Float, _ x2: Float, _ y2: Float) -> Bool {
-        let result = spine_skeleton_bounds_intersects_segment_2(
-            _ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self), polygon._ptr.assumingMemoryBound(to: spine_polygon_wrapper.self), x1,
-            y1, x2, y2)
+        let result = spine_skeleton_bounds_intersects_segment_2(_ptr.assumingMemoryBound(to: spine_skeleton_bounds_wrapper.self), polygon._ptr.assumingMemoryBound(to: spine_polygon_wrapper.self), x1, y1, x2, y2)
         return result
     }
 

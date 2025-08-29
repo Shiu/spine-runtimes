@@ -59,20 +59,17 @@ public class TransformConstraintData: PosedData, ConstraintData {
     public var source: BoneData {
         get {
             let result = spine_transform_constraint_data_get_source(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
-            return BoneData(fromPointer: result!)
+        return BoneData(fromPointer: result!)
         }
         set {
-            spine_transform_constraint_data_set_source(
-                _ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self),
-                newValue._ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self))
+            spine_transform_constraint_data_set_source(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self))
         }
     }
 
     public var offsetRotation: Float {
         get {
-            let result = spine_transform_constraint_data_get_offset_rotation(
-                _ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
-            return result
+            let result = spine_transform_constraint_data_get_offset_rotation(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
+        return result
         }
         set {
             spine_transform_constraint_data_set_offset_rotation(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), newValue)
@@ -82,7 +79,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
     public var offsetX: Float {
         get {
             let result = spine_transform_constraint_data_get_offset_x(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_transform_constraint_data_set_offset_x(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), newValue)
@@ -92,7 +89,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
     public var offsetY: Float {
         get {
             let result = spine_transform_constraint_data_get_offset_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_transform_constraint_data_set_offset_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), newValue)
@@ -101,9 +98,8 @@ public class TransformConstraintData: PosedData, ConstraintData {
 
     public var offsetScaleX: Float {
         get {
-            let result = spine_transform_constraint_data_get_offset_scale_x(
-                _ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
-            return result
+            let result = spine_transform_constraint_data_get_offset_scale_x(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
+        return result
         }
         set {
             spine_transform_constraint_data_set_offset_scale_x(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), newValue)
@@ -112,9 +108,8 @@ public class TransformConstraintData: PosedData, ConstraintData {
 
     public var offsetScaleY: Float {
         get {
-            let result = spine_transform_constraint_data_get_offset_scale_y(
-                _ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
-            return result
+            let result = spine_transform_constraint_data_get_offset_scale_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
+        return result
         }
         set {
             spine_transform_constraint_data_set_offset_scale_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), newValue)
@@ -123,9 +118,8 @@ public class TransformConstraintData: PosedData, ConstraintData {
 
     public var offsetShearY: Float {
         get {
-            let result = spine_transform_constraint_data_get_offset_shear_y(
-                _ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
-            return result
+            let result = spine_transform_constraint_data_get_offset_shear_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
+        return result
         }
         set {
             spine_transform_constraint_data_set_offset_shear_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), newValue)
@@ -135,7 +129,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
     public var localSource: Bool {
         get {
             let result = spine_transform_constraint_data_get_local_source(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_transform_constraint_data_set_local_source(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), newValue)
@@ -145,7 +139,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
     public var localTarget: Bool {
         get {
             let result = spine_transform_constraint_data_get_local_target(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_transform_constraint_data_set_local_target(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), newValue)
@@ -155,7 +149,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
     public var additive: Bool {
         get {
             let result = spine_transform_constraint_data_get_additive(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_transform_constraint_data_set_additive(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), newValue)
@@ -165,7 +159,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
     public var clamp: Bool {
         get {
             let result = spine_transform_constraint_data_get_clamp(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_transform_constraint_data_set_clamp(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), newValue)
@@ -183,9 +177,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
     }
 
     public func createMethod(_ skeleton: Skeleton) -> Constraint {
-        let result = spine_transform_constraint_data_create_method(
-            _ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self),
-            skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        let result = spine_transform_constraint_data_create_method(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         let rtti = spine_constraint_get_rtti(result!)
         let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
         switch rttiClassName {

@@ -64,8 +64,7 @@ open class Attachment: NSObject {
         let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
         switch rttiClassName {
         case "spine_bounding_box_attachment":
-            return BoundingBoxAttachment(
-                fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
+            return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
         case "spine_clipping_attachment":
             return ClippingAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_clipping_attachment_wrapper.self))
         case "spine_mesh_attachment":

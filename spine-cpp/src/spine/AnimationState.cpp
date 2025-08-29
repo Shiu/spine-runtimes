@@ -46,11 +46,12 @@
 
 using namespace spine;
 
-void dummyOnAnimationEventFunc(AnimationState *state, EventType type, TrackEntry *entry, Event *event = NULL) {
+void dummyOnAnimationEventFunc(AnimationState *state, EventType type, TrackEntry *entry, Event *event, void *userData) {
 	SP_UNUSED(state);
 	SP_UNUSED(type);
 	SP_UNUSED(entry);
 	SP_UNUSED(event);
+	SP_UNUSED(userData);
 }
 
 TrackEntry::TrackEntry()
@@ -58,7 +59,7 @@ TrackEntry::TrackEntry()
 	  _reverse(false), _shortestRotation(false), _eventThreshold(0), _mixAttachmentThreshold(0), _alphaAttachmentThreshold(0),
 	  _mixDrawOrderThreshold(0), _animationStart(0), _animationEnd(0), _animationLast(0), _nextAnimationLast(0), _delay(0), _trackTime(0),
 	  _trackLast(0), _nextTrackLast(0), _trackEnd(0), _timeScale(1.0f), _alpha(0), _mixTime(0), _mixDuration(0), _interruptAlpha(0), _totalAlpha(0),
-	  _mixBlend(MixBlend_Replace), _listener(dummyOnAnimationEventFunc), _listenerObject(NULL), _state(NULL) {
+	  _mixBlend(MixBlend_Replace), _listener(dummyOnAnimationEventFunc), _listenerUserData(NULL), _listenerObject(NULL), _state(NULL) {
 }
 
 TrackEntry::~TrackEntry() {
@@ -277,13 +278,15 @@ void TrackEntry::resetRotationDirections() {
 	_timelinesRotation.clear();
 }
 
-void TrackEntry::setListener(AnimationStateListener inValue) {
+void TrackEntry::setListener(AnimationStateListener inValue, void *userData) {
 	_listener = inValue;
+	_listenerUserData = userData;
 	_listenerObject = NULL;
 }
 
 void TrackEntry::setListener(AnimationStateListenerObject *inValue) {
 	_listener = dummyOnAnimationEventFunc;
+	_listenerUserData = NULL;
 	_listenerObject = inValue;
 }
 
@@ -301,6 +304,7 @@ void TrackEntry::reset() {
 	_timelinesRotation.clear();
 
 	_listener = dummyOnAnimationEventFunc;
+	_listenerUserData = NULL;
 	_listenerObject = NULL;
 }
 
@@ -384,31 +388,31 @@ void EventQueue::drain() {
 			case EventType_Interrupt:
 			case EventType_Complete:
 				if (!trackEntry->_listenerObject)
-					trackEntry->_listener(&state, queueEntry._type, trackEntry, NULL);
+					trackEntry->_listener(&state, queueEntry._type, trackEntry, NULL, trackEntry->_listenerUserData);
 				else
 					trackEntry->_listenerObject->callback(&state, queueEntry._type, trackEntry, NULL);
 				if (!state._listenerObject)
-					state._listener(&state, queueEntry._type, trackEntry, NULL);
+					state._listener(&state, queueEntry._type, trackEntry, NULL, state._listenerUserData);
 				else
 					state._listenerObject->callback(&state, queueEntry._type, trackEntry, NULL);
 				break;
 			case EventType_End:
 				if (!trackEntry->_listenerObject)
-					trackEntry->_listener(&state, queueEntry._type, trackEntry, NULL);
+					trackEntry->_listener(&state, queueEntry._type, trackEntry, NULL, trackEntry->_listenerUserData);
 				else
 					trackEntry->_listenerObject->callback(&state, queueEntry._type, trackEntry, NULL);
 				if (!state._listenerObject)
-					state._listener(&state, queueEntry._type, trackEntry, NULL);
+					state._listener(&state, queueEntry._type, trackEntry, NULL, state._listenerUserData);
 				else
 					state._listenerObject->callback(&state, queueEntry._type, trackEntry, NULL);
 				/* Fall through. */
 			case EventType_Dispose:
 				if (!trackEntry->_listenerObject)
-					trackEntry->_listener(&state, EventType_Dispose, trackEntry, NULL);
+					trackEntry->_listener(&state, EventType_Dispose, trackEntry, NULL, trackEntry->_listenerUserData);
 				else
 					trackEntry->_listenerObject->callback(&state, EventType_Dispose, trackEntry, NULL);
 				if (!state._listenerObject)
-					state._listener(&state, EventType_Dispose, trackEntry, NULL);
+					state._listener(&state, EventType_Dispose, trackEntry, NULL, state._listenerUserData);
 				else
 					state._listenerObject->callback(&state, EventType_Dispose, trackEntry, NULL);
 
@@ -416,11 +420,11 @@ void EventQueue::drain() {
 				break;
 			case EventType_Event:
 				if (!trackEntry->_listenerObject)
-					trackEntry->_listener(&state, queueEntry._type, trackEntry, queueEntry._event);
+					trackEntry->_listener(&state, queueEntry._type, trackEntry, queueEntry._event, trackEntry->_listenerUserData);
 				else
 					trackEntry->_listenerObject->callback(&state, queueEntry._type, trackEntry, queueEntry._event);
 				if (!state._listenerObject)
-					state._listener(&state, queueEntry._type, trackEntry, queueEntry._event);
+					state._listener(&state, queueEntry._type, trackEntry, queueEntry._event, state._listenerUserData);
 				else
 					state._listenerObject->callback(&state, queueEntry._type, trackEntry, queueEntry._event);
 				break;
@@ -432,8 +436,8 @@ void EventQueue::drain() {
 }
 
 AnimationState::AnimationState(AnimationStateData &data)
-	: _data(&data), _queue(EventQueue::newEventQueue(*this)), _animationsChanged(false), _listener(dummyOnAnimationEventFunc), _listenerObject(NULL),
-	  _unkeyedState(0), _timeScale(1), _manualTrackEntryDisposal(false) {
+	: _data(&data), _queue(EventQueue::newEventQueue(*this)), _animationsChanged(false), _listener(dummyOnAnimationEventFunc),
+	  _listenerUserData(NULL), _listenerObject(NULL), _unkeyedState(0), _timeScale(1), _manualTrackEntryDisposal(false) {
 }
 
 AnimationState::~AnimationState() {
@@ -755,13 +759,15 @@ void AnimationState::setTimeScale(float inValue) {
 	_timeScale = inValue;
 }
 
-void AnimationState::setListener(AnimationStateListener inValue) {
+void AnimationState::setListener(AnimationStateListener inValue, void *userData) {
 	_listener = inValue;
+	_listenerUserData = userData;
 	_listenerObject = NULL;
 }
 
 void AnimationState::setListener(AnimationStateListenerObject *inValue) {
 	_listener = dummyOnAnimationEventFunc;
+	_listenerUserData = NULL;
 	_listenerObject = inValue;
 }
 

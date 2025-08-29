@@ -54,19 +54,17 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var bone: BoneData {
         get {
             let result = spine_physics_constraint_data_get_bone(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return BoneData(fromPointer: result!)
+        return BoneData(fromPointer: result!)
         }
         set {
-            spine_physics_constraint_data_set_bone(
-                _ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self),
-                newValue._ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self))
+            spine_physics_constraint_data_set_bone(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self))
         }
     }
 
     public var step: Float {
         get {
             let result = spine_physics_constraint_data_get_step(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_step(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -76,7 +74,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var x: Float {
         get {
             let result = spine_physics_constraint_data_get_x(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_x(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -86,7 +84,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var y: Float {
         get {
             let result = spine_physics_constraint_data_get_y(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_y(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -96,7 +94,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var rotate: Float {
         get {
             let result = spine_physics_constraint_data_get_rotate(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_rotate(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -106,7 +104,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var scaleX: Float {
         get {
             let result = spine_physics_constraint_data_get_scale_x(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_scale_x(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -116,7 +114,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var shearX: Float {
         get {
             let result = spine_physics_constraint_data_get_shear_x(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_shear_x(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -126,7 +124,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var limit: Float {
         get {
             let result = spine_physics_constraint_data_get_limit(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_limit(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -136,7 +134,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var inertiaGlobal: Bool {
         get {
             let result = spine_physics_constraint_data_get_inertia_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_inertia_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -146,7 +144,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var strengthGlobal: Bool {
         get {
             let result = spine_physics_constraint_data_get_strength_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_strength_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -156,7 +154,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var dampingGlobal: Bool {
         get {
             let result = spine_physics_constraint_data_get_damping_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_damping_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -166,7 +164,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var massGlobal: Bool {
         get {
             let result = spine_physics_constraint_data_get_mass_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_mass_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -176,7 +174,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var windGlobal: Bool {
         get {
             let result = spine_physics_constraint_data_get_wind_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_wind_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -186,7 +184,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var gravityGlobal: Bool {
         get {
             let result = spine_physics_constraint_data_get_gravity_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_gravity_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -196,7 +194,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     public var mixGlobal: Bool {
         get {
             let result = spine_physics_constraint_data_get_mix_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))
-            return result
+        return result
         }
         set {
             spine_physics_constraint_data_set_mix_global(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), newValue)
@@ -209,9 +207,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
     }
 
     public func createMethod(_ skeleton: Skeleton) -> Constraint {
-        let result = spine_physics_constraint_data_create_method(
-            _ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self),
-            skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
+        let result = spine_physics_constraint_data_create_method(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         let rtti = spine_constraint_get_rtti(result!)
         let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
         switch rttiClassName {

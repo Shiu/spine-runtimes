@@ -7838,6 +7838,70 @@ class SpineDartBindings {
   late final _spine_bone_pose_parent_to_world_v = _spine_bone_pose_parent_to_world_vPtr
       .asFunction<void Function(spine_bone_pose, double, double, spine_array_float)>();
 
+  void spine_animation_state_set_listener(
+    spine_animation_state state,
+    spine_animation_state_listener listener,
+    ffi.Pointer<ffi.Void> user_data,
+  ) {
+    return _spine_animation_state_set_listener(
+      state,
+      listener,
+      user_data,
+    );
+  }
+
+  late final _spine_animation_state_set_listenerPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(spine_animation_state, spine_animation_state_listener,
+              ffi.Pointer<ffi.Void>)>>('spine_animation_state_set_listener');
+  late final _spine_animation_state_set_listener = _spine_animation_state_set_listenerPtr
+      .asFunction<void Function(spine_animation_state, spine_animation_state_listener, ffi.Pointer<ffi.Void>)>();
+
+  void spine_animation_state_clear_listener(
+    spine_animation_state state,
+  ) {
+    return _spine_animation_state_clear_listener(
+      state,
+    );
+  }
+
+  late final _spine_animation_state_clear_listenerPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_animation_state)>>('spine_animation_state_clear_listener');
+  late final _spine_animation_state_clear_listener =
+      _spine_animation_state_clear_listenerPtr.asFunction<void Function(spine_animation_state)>();
+
+  void spine_track_entry_set_listener(
+    spine_track_entry entry,
+    spine_animation_state_listener listener,
+    ffi.Pointer<ffi.Void> user_data,
+  ) {
+    return _spine_track_entry_set_listener(
+      entry,
+      listener,
+      user_data,
+    );
+  }
+
+  late final _spine_track_entry_set_listenerPtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Void Function(spine_track_entry, spine_animation_state_listener, ffi.Pointer<ffi.Void>)>>(
+      'spine_track_entry_set_listener');
+  late final _spine_track_entry_set_listener = _spine_track_entry_set_listenerPtr
+      .asFunction<void Function(spine_track_entry, spine_animation_state_listener, ffi.Pointer<ffi.Void>)>();
+
+  void spine_track_entry_clear_listener(
+    spine_track_entry entry,
+  ) {
+    return _spine_track_entry_clear_listener(
+      entry,
+    );
+  }
+
+  late final _spine_track_entry_clear_listenerPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_track_entry)>>('spine_track_entry_clear_listener');
+  late final _spine_track_entry_clear_listener =
+      _spine_track_entry_clear_listenerPtr.asFunction<void Function(spine_track_entry)>();
+
   spine_alpha_timeline spine_alpha_timeline_create(
     int frameCount,
     int bezierCount,
@@ -40572,6 +40636,13 @@ typedef spine_skin_entries = ffi.Pointer<spine_skin_entries_wrapper>;
 
 /// Custom types for spine-c-new (not generated)
 typedef spine_skin_entry = ffi.Pointer<spine_skin_entry_wrapper>;
+
+/// Event listener functions
+typedef spine_animation_state_listener = ffi.Pointer<ffi.NativeFunction<spine_animation_state_listenerFunction>>;
+typedef spine_animation_state_listenerFunction = ffi.Void Function(spine_animation_state state, ffi.Int32 type,
+    spine_track_entry entry, spine_event event, ffi.Pointer<ffi.Void> user_data);
+typedef Dartspine_animation_state_listenerFunction = void Function(
+    spine_animation_state state, int type, spine_track_entry entry, spine_event event, ffi.Pointer<ffi.Void> user_data);
 
 /// Forward declarations for all non-enum types
 typedef spine_alpha_timeline = ffi.Pointer<spine_alpha_timeline_wrapper>;

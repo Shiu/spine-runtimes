@@ -48,19 +48,16 @@ public class PathConstraintMixTimeline: CurveTimeline, ConstraintTimeline {
 
     public var constraintIndex: Int32 {
         get {
-            let result = spine_path_constraint_mix_timeline_get_constraint_index(
-                _ptr.assumingMemoryBound(to: spine_path_constraint_mix_timeline_wrapper.self))
-            return result
+            let result = spine_path_constraint_mix_timeline_get_constraint_index(_ptr.assumingMemoryBound(to: spine_path_constraint_mix_timeline_wrapper.self))
+        return result
         }
         set {
-            spine_path_constraint_mix_timeline_set_constraint_index(
-                _ptr.assumingMemoryBound(to: spine_path_constraint_mix_timeline_wrapper.self), newValue)
+            spine_path_constraint_mix_timeline_set_constraint_index(_ptr.assumingMemoryBound(to: spine_path_constraint_mix_timeline_wrapper.self), newValue)
         }
     }
 
     public func setFrame(_ frame: Int32, _ time: Float, _ mixRotate: Float, _ mixX: Float, _ mixY: Float) {
-        spine_path_constraint_mix_timeline_set_frame(
-            _ptr.assumingMemoryBound(to: spine_path_constraint_mix_timeline_wrapper.self), frame, time, mixRotate, mixX, mixY)
+        spine_path_constraint_mix_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_path_constraint_mix_timeline_wrapper.self), frame, time, mixRotate, mixX, mixY)
     }
 
     public func dispose() {

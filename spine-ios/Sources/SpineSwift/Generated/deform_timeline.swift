@@ -42,42 +42,35 @@ public class DeformTimeline: SlotCurveTimeline {
     }
 
     public convenience init(_ frameCount: Int, _ bezierCount: Int, _ slotIndex: Int32, _ attachment: VertexAttachment) {
-        let ptr = spine_deform_timeline_create(
-            frameCount, bezierCount, slotIndex, attachment._ptr.assumingMemoryBound(to: spine_vertex_attachment_wrapper.self))
+        let ptr = spine_deform_timeline_create(frameCount, bezierCount, slotIndex, attachment._ptr.assumingMemoryBound(to: spine_vertex_attachment_wrapper.self))
         self.init(fromPointer: ptr!)
     }
 
     public var attachment: VertexAttachment {
         get {
             let result = spine_deform_timeline_get_attachment(_ptr.assumingMemoryBound(to: spine_deform_timeline_wrapper.self))
-            let rtti = spine_vertex_attachment_get_rtti(result!)
-            let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
-            switch rttiClassName {
-            case "spine_bounding_box_attachment":
-                return BoundingBoxAttachment(
-                    fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
-            case "spine_clipping_attachment":
-                return ClippingAttachment(
-                    fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_clipping_attachment_wrapper.self))
-            case "spine_mesh_attachment":
-                return MeshAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-            case "spine_path_attachment":
-                return PathAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_path_attachment_wrapper.self))
-            default:
-                fatalError("Unknown concrete type: \(rttiClassName) for abstract class VertexAttachment")
-            }
+        let rtti = spine_vertex_attachment_get_rtti(result!)
+        let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
+        switch rttiClassName {
+        case "spine_bounding_box_attachment":
+            return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
+        case "spine_clipping_attachment":
+            return ClippingAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_clipping_attachment_wrapper.self))
+        case "spine_mesh_attachment":
+            return MeshAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
+        case "spine_path_attachment":
+            return PathAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_path_attachment_wrapper.self))
+        default:
+            fatalError("Unknown concrete type: \(rttiClassName) for abstract class VertexAttachment")
+        }
         }
         set {
-            spine_deform_timeline_set_attachment(
-                _ptr.assumingMemoryBound(to: spine_deform_timeline_wrapper.self),
-                newValue._ptr.assumingMemoryBound(to: spine_vertex_attachment_wrapper.self))
+            spine_deform_timeline_set_attachment(_ptr.assumingMemoryBound(to: spine_deform_timeline_wrapper.self), newValue._ptr.assumingMemoryBound(to: spine_vertex_attachment_wrapper.self))
         }
     }
 
     public func setFrame(_ frameIndex: Int32, _ time: Float, _ vertices: ArrayFloat) {
-        spine_deform_timeline_set_frame(
-            _ptr.assumingMemoryBound(to: spine_deform_timeline_wrapper.self), frameIndex, time,
-            vertices._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
+        spine_deform_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_deform_timeline_wrapper.self), frameIndex, time, vertices._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
     }
 
     public func getCurvePercent(_ time: Float, _ frame: Int32) -> Float {
