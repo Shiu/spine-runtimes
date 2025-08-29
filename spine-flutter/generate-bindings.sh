@@ -50,6 +50,16 @@ else
     exit 1
 fi
 
+# Run WASM compilation
+log_action "Compiling to WebAssembly"
+if LOG=$(bash compile-wasm.sh 2>&1); then
+    log_ok
+else
+    log_fail
+    log_error_output "$LOG"
+    exit 1
+fi
+
 # Build test spine_flutter shared library
 log_action "Building test library"
 if LOG=$(cd test && ./build.sh 2>&1); then
