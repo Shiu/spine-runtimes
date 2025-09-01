@@ -1,18 +1,18 @@
 #ifndef VERTEX_LIT_FORWARD_PASS_URP_INCLUDED
 #define VERTEX_LIT_FORWARD_PASS_URP_INCLUDED
 
-#include "Include/Spine-Sprite-Common-URP.hlsl"
+#include "Packages/com.esotericsoftware.spine.urp-shaders/Shaders/Include/Spine-Sprite-Common-URP.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-#include "SpineCoreShaders/SpriteLighting.cginc"
-#include "SpineCoreShaders/Spine-Common.cginc"
-#include "Spine-Common-URP.hlsl"
+#include "Packages/com.esotericsoftware.spine.urp-shaders/Shaders/Include/SpineCoreShaders/SpriteLighting.cginc"
+#include "Packages/com.esotericsoftware.spine.urp-shaders/Shaders/Include/SpineCoreShaders/Spine-Common.cginc"
+#include "Packages/com.esotericsoftware.spine.urp-shaders/Shaders/Include/Spine-Common-URP.hlsl"
 
 #if defined(_ALPHAPREMULTIPLY_ON)
 	#undef _STRAIGHT_ALPHA_INPUT
 #elif !defined(_STRAIGHT_ALPHA_INPUT)
 	#define _STRAIGHT_ALPHA_INPUT
 #endif
-#include "SpineCoreShaders/Spine-Skeleton-Tint-Common.cginc"
+#include "Packages/com.esotericsoftware.spine.urp-shaders/Shaders/Include/SpineCoreShaders/Spine-Skeleton-Tint-Common.cginc"
 
 #if defined(_RIM_LIGHTING) || defined(_ADDITIONAL_LIGHTS) || defined(MAIN_LIGHT_CALCULATE_SHADOWS) || defined(USE_LIGHT_COOKIES)
 	#define NEEDS_POSITION_WS

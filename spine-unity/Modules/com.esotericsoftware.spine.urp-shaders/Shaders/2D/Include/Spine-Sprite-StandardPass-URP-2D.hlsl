@@ -1,14 +1,14 @@
 #ifndef SPRITE_STANDARD_PASS_URP_INCLUDED
 #define SPRITE_STANDARD_PASS_URP_INCLUDED
 
-#include "../Include/SpineCoreShaders/ShaderShared.cginc"
-#include "../Include/SpineCoreShaders/SpriteLighting.cginc"
+#include "Packages/com.esotericsoftware.spine.urp-shaders/Shaders/Include/SpineCoreShaders/ShaderShared.cginc"
+#include "Packages/com.esotericsoftware.spine.urp-shaders/Shaders/Include/SpineCoreShaders/SpriteLighting.cginc"
 #if defined(_ALPHAPREMULTIPLY_ON)
 	#undef _STRAIGHT_ALPHA_INPUT
 #elif !defined(_STRAIGHT_ALPHA_INPUT)
 	#define _STRAIGHT_ALPHA_INPUT
 #endif
-#include "../Include/SpineCoreShaders/Spine-Skeleton-Tint-Common.cginc"
+#include "Packages/com.esotericsoftware.spine.urp-shaders/Shaders/Include/SpineCoreShaders/Spine-Skeleton-Tint-Common.cginc"
 
 #if USE_SHAPE_LIGHT_TYPE_0
 SHAPE_LIGHT(0)
