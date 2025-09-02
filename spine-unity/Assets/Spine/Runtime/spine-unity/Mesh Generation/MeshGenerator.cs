@@ -605,9 +605,10 @@ namespace Spine.Unity {
 			for (int slotIndex = instruction.startSlot; slotIndex < instruction.endSlot; slotIndex++) {
 				Slot slot = drawOrderItems[slotIndex];
 				SlotPose slotPose = slot.AppliedPose;
+				Color slotC = slotPose.GetColor();
 				if (!slot.Bone.Active
 #if SLOT_ALPHA_DISABLES_ATTACHMENT
-					|| slot.A == 0f
+					|| slotC.a == 0f
 #endif
 				) {
 					clipper.ClipEnd(slot);
@@ -663,7 +664,6 @@ namespace Spine.Unity {
 				}
 
 				float tintBlackAlpha = 1.0f;
-				Color slotC = slotPose.GetColor();
 				Color combinedC = skeletonC * slotC * regionC;
 				if (pmaVertexColors) {
 					float alpha = combinedC.a;
