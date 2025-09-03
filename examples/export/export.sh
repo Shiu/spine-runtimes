@@ -45,6 +45,7 @@ rm -rf ../chibi-stickers/export/*
 rm -rf ../celestial-circus/export/*
 rm -rf ../snowglobe/export/*
 rm -rf ../cloud-pot/export/*
+rm -rf ../diamond/export/*
 rm -rf ../food-app/export/*
 rm -rf ../1-weight-and-mass/export/*
 rm -rf ../2-the-12-principles/export/*
@@ -114,6 +115,11 @@ echo "Exporting assets..."
 -i ../cloud-pot/cloud-pot-pro.spine -o ../cloud-pot/export -e binary.json \
 -i ../cloud-pot/images -o ../cloud-pot/export -n cloud-pot -j ../cloud-pot/cloud-pot-pro.spine -p atlas-0.5.json \
 -i ../cloud-pot/images -o ../cloud-pot/export -n cloud-pot-pma -j ../cloud-pot/cloud-pot-pro.spine -p atlas-0.5-pma.json \
+\
+-i ../diamond/diamond-pro.spine -o ../diamond/export -e json.json \
+-i ../diamond/diamond-pro.spine -o ../diamond/export -e binary.json \
+-i ../diamond/images -o ../diamond/export -n diamond -j ../diamond/diamond-pro.spine -p atlas-0.5.json \
+-i ../diamond/images -o ../diamond/export -n diamond-pma -j ../diamond/diamond-pro.spine -p atlas-0.5-pma.json \
 \
 -i ../food-app/food-app-ess.spine -o ../food-app/export -e json.json \
 -i ../food-app/food-app-ess.spine -o ../food-app/export -e binary.json \
