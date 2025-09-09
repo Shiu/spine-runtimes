@@ -187,7 +187,7 @@ void USpineSkeletonRendererComponent::UpdateMesh(USpineSkeletonComponent *compon
 	unsigned short quadIndices[] = {0, 1, 2, 0, 2, 3};
 
 	for (size_t i = 0; i < Skeleton->getSlots().size(); ++i) {
-		Vector<float> *attachmentVertices = &worldVertices;
+		Array<float> *attachmentVertices = &worldVertices;
 		unsigned short *attachmentIndices = nullptr;
 		int numVertices;
 		int numIndices;
@@ -197,9 +197,9 @@ void USpineSkeletonRendererComponent::UpdateMesh(USpineSkeletonComponent *compon
 		float *attachmentUvs = nullptr;
 
 		Slot *slot = Skeleton->getDrawOrder()[i];
-		Attachment *attachment = slot->getAttachment();
+		Attachment *attachment = slot->getPose().getAttachment();
 
-		if (slot->getColor().a == 0 || !slot->getBone().isActive()) {
+		if (slot->getPose().getColor().a == 0 || !slot->getBone().isActive()) {
 			clipper.clipEnd(*slot);
 			continue;
 		}
@@ -242,7 +242,7 @@ void USpineSkeletonRendererComponent::UpdateMesh(USpineSkeletonComponent *compon
 
 			attachmentColor.set(mesh->getColor());
 			attachmentVertices->setSize(mesh->getWorldVerticesLength(), 0);
-			mesh->computeWorldVertices(*slot, 0, mesh->getWorldVerticesLength(), attachmentVertices->buffer(), 0, 2);
+			mesh->computeWorldVertices(*Skeleton, *slot, 0, mesh->getWorldVerticesLength(), attachmentVertices->buffer(), 0, 2);
 			attachmentAtlasRegion = (AtlasRegion *) mesh->getRegion();
 			attachmentIndices = mesh->getTriangles().buffer();
 			attachmentUvs = mesh->getUVs().buffer();
@@ -250,7 +250,7 @@ void USpineSkeletonRendererComponent::UpdateMesh(USpineSkeletonComponent *compon
 			numIndices = mesh->getTriangles().size();
 		} else /* clipping */ {
 			ClippingAttachment *clip = (ClippingAttachment *) attachment;
-			clipper.clipStart(*slot, clip);
+			clipper.clipStart(*Skeleton, *slot, clip);
 			continue;
 		}
 
@@ -271,7 +271,7 @@ void USpineSkeletonRendererComponent::UpdateMesh(USpineSkeletonComponent *compon
 		// to the correct skeleton data yet, we won't find any regions.
 		// ignore regions for which we can't find a material
 		UMaterialInstanceDynamic *material = nullptr;
-		int foundPageIndex = (int) (intptr_t) attachmentAtlasRegion->rendererObject;
+		int foundPageIndex = (int) (intptr_t) attachmentAtlasRegion->getPageIndex();
 		if (foundPageIndex == -1) {
 			clipper.clipEnd(*slot);
 			continue;
@@ -316,10 +316,10 @@ void USpineSkeletonRendererComponent::UpdateMesh(USpineSkeletonComponent *compon
 
 		SetMaterial(meshSection, material);
 
-		uint8 r = static_cast<uint8>(Skeleton->getColor().r * slot->getColor().r * attachmentColor.r * 255);
-		uint8 g = static_cast<uint8>(Skeleton->getColor().g * slot->getColor().g * attachmentColor.g * 255);
-		uint8 b = static_cast<uint8>(Skeleton->getColor().b * slot->getColor().b * attachmentColor.b * 255);
-		uint8 a = static_cast<uint8>(Skeleton->getColor().a * slot->getColor().a * attachmentColor.a * 255);
+		uint8 r = static_cast<uint8>(Skeleton->getColor().r * slot->getPose().getColor().r * attachmentColor.r * 255);
+		uint8 g = static_cast<uint8>(Skeleton->getColor().g * slot->getPose().getColor().g * attachmentColor.g * 255);
+		uint8 b = static_cast<uint8>(Skeleton->getColor().b * slot->getPose().getColor().b * attachmentColor.b * 255);
+		uint8 a = static_cast<uint8>(Skeleton->getColor().a * slot->getPose().getColor().a * attachmentColor.a * 255);
 
 		float *verticesPtr = attachmentVertices->buffer();
 		for (int j = 0; j < numVertices << 1; j += 2) {

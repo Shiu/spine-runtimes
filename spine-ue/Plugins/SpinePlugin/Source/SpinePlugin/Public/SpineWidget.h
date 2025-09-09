@@ -273,7 +273,7 @@ protected:
 	TArray<UMaterialInstanceDynamic *> atlasScreenBlendMaterials;
 	TMap<spine::AtlasPage *, UMaterialInstanceDynamic *> pageToScreenBlendMaterial;
 
-	spine::Vector<float> worldVertices;
+	spine::Array<float> worldVertices;
 	spine::SkeletonClipping clipper;
 
 	// keep track of track entries so they won't get GCed while

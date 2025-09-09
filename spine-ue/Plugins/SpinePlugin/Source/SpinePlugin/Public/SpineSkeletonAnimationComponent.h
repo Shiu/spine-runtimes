@@ -46,11 +46,11 @@ public:
 
 	void SetEvent(spine::Event *event) {
 		Name = FString(UTF8_TO_TCHAR(event->getData().getName().buffer()));
-		if (!event->getStringValue().isEmpty()) {
-			StringValue = FString(UTF8_TO_TCHAR(event->getStringValue().buffer()));
+		if (!event->getString().isEmpty()) {
+			StringValue = FString(UTF8_TO_TCHAR(event->getString().buffer()));
 		}
-		this->IntValue = event->getIntValue();
-		this->FloatValue = event->getFloatValue();
+		this->IntValue = event->getInt();
+		this->FloatValue = event->getFloat();
 		this->Time = event->getTime();
 	}
 
@@ -232,12 +232,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	FString getAnimationName() {
-		return entry ? entry->getAnimation()->getName().buffer() : "";
+		return entry ? entry->getAnimation().getName().buffer() : "";
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")
 	float getAnimationDuration() {
-		return entry ? entry->getAnimation()->getDuration() : 0;
+		return entry ? entry->getAnimation().getDuration() : 0;
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|TrackEntry")

@@ -98,7 +98,7 @@ protected:
 	void Flush(int &Idx, TArray<FVector> &Vertices, TArray<int32> &Indices, TArray<FVector> &Normals, TArray<FVector2D> &Uvs, TArray<FColor> &Colors,
 			   UMaterialInstanceDynamic *Material);
 
-	spine::Vector<float> worldVertices;
+	spine::Array<float> worldVertices;
 	spine::SkeletonClipping clipper;
 
 	UPROPERTY();

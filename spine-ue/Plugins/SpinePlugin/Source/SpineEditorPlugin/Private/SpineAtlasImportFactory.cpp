@@ -131,7 +131,7 @@ void USpineAtlasAssetFactory::LoadAtlas(USpineAtlasAsset *Asset, const FString &
 
 	const FString targetTexturePath = LongPackagePath / TEXT("Textures");
 
-	Vector<AtlasPage *> &pages = atlas->getPages();
+	Array<AtlasPage *> &pages = atlas->getPages();
 	for (size_t i = 0, n = pages.size(); i < n; i++) {
 		AtlasPage *page = pages[i];
 		const FString sourceTextureFilename = FPaths::Combine(*CurrentSourcePath, UTF8_TO_TCHAR(page->name.buffer()));

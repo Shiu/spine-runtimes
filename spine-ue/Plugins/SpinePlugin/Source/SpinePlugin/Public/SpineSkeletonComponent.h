@@ -83,13 +83,13 @@ public:
 	void UpdateWorldTransform();
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Skeleton")
-	void SetToSetupPose();
+	void SetupPose();
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Skeleton")
-	void SetBonesToSetupPose();
+	void SetupPoseBones();
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Skeleton")
-	void SetSlotsToSetupPose();
+	void SetupPoseSlots();
 
 	UFUNCTION(BlueprintCallable, Category = "Components|Spine|Skeleton")
 	void SetScaleX(float scaleX);

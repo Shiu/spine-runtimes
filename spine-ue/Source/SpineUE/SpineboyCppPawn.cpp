@@ -25,7 +25,7 @@ void ASpineboyCppPawn::Tick(float DeltaTime) {
 	spine::AnimationState *state = animationComponent->GetAnimationState();
 	spine::TrackEntry *entry = state->getCurrent(0);
 	if (entry) {
-		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString(entry->getAnimation()->getName().buffer()));
+		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Yellow, FString(entry->getAnimation().getName().buffer()));
 	}
 }
 
