@@ -116,7 +116,7 @@ SkeletonData *SkeletonBinary::readSkeletonDataFile(const String &path) {
 		String nameWithoutExtension(filename);
 		const char *lastDot = strrchr(nameWithoutExtension.buffer(), '.');
 		if (lastDot) {
-			int length = (int) (lastDot - nameWithoutExtension.buffer());
+			length = (int) (lastDot - nameWithoutExtension.buffer());
 			nameWithoutExtension = nameWithoutExtension.substring(0, length);
 		}
 		skeletonData->_name = nameWithoutExtension;
@@ -464,7 +464,8 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 
 		/* Linked meshes. */
 		Array<LinkedMesh *> &items = _linkedMeshes;
-		for (int i = 0, n = (int) items.size(); i < n; i++) {
+		n = (int) items.size();
+		for (int i = 0; i < n; i++) {
 			LinkedMesh *linkedMesh = items[i];
 			Skin *skin = skeletonData->_skins[linkedMesh->_skinIndex];
 			Attachment *parent = skin->getAttachment(linkedMesh->_slotIndex, linkedMesh->_parent);
@@ -1248,7 +1249,7 @@ Animation *SkeletonBinary::readAnimation(DataInput &input, const String &name, S
 							if (end == 0) {
 								if (weighted) {
 									deform.setSize(deformLength, 0);
-									for (int i = 0; i < deformLength; ++i) deform[i] = 0;
+									for (int iiii = 0; iiii < deformLength; ++iiii) deform[iiii] = 0;
 								} else {
 									deform.clearAndAddAll(vertices);
 								}

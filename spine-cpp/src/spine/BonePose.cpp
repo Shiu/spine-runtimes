@@ -163,12 +163,12 @@ void BonePose::updateLocalTransform(Skeleton &skeleton) {
 	if (_bone->getParent() == nullptr) {
 		_x = _worldX - skeleton.getX();
 		_y = _worldY - skeleton.getY();
-		float _a = this->_a, _b = this->_b, _c = this->_c, _d = this->_d;
-		_rotation = MathUtil::atan2(_c, _a) * MathUtil::Rad_Deg;
-		_scaleX = MathUtil::sqrt(_a * _a + _c * _c);
-		_scaleY = MathUtil::sqrt(_b * _b + _d * _d);
+		float a = this->_a, b = this->_b, c = this->_c, d = this->_d;
+		_rotation = MathUtil::atan2(c, a) * MathUtil::Rad_Deg;
+		_scaleX = MathUtil::sqrt(a * a + c * c);
+		_scaleY = MathUtil::sqrt(b * b + d * d);
 		_shearX = 0;
-		_shearY = MathUtil::atan2(_a * _b + _c * _d, _a * _d - _b * _c) * MathUtil::Rad_Deg;
+		_shearY = MathUtil::atan2(a * b + c * d, a * d - b * c) * MathUtil::Rad_Deg;
 		return;
 	}
 
@@ -306,16 +306,16 @@ float BonePose::getWorldX() {
 	return _worldX;
 }
 
-void BonePose::setWorldX(float _worldX) {
-	this->_worldX = _worldX;
+void BonePose::setWorldX(float worldX) {
+	this->_worldX = worldX;
 }
 
 float BonePose::getWorldY() {
 	return _worldY;
 }
 
-void BonePose::setWorldY(float _worldY) {
-	this->_worldY = _worldY;
+void BonePose::setWorldY(float worldY) {
+	this->_worldY = worldY;
 }
 
 float BonePose::getWorldRotationX() {
@@ -337,9 +337,9 @@ float BonePose::getWorldScaleY() {
 
 void BonePose::worldToLocal(float worldX, float worldY, float &outLocalX, float &outLocalY) {
 	float det = _a * _d - _b * _c;
-	float _x = worldX - _worldX, _y = worldY - _worldY;
-	outLocalX = (_x * _d - _y * _b) / det;
-	outLocalY = (_y * _a - _x * _c) / det;
+	float x = worldX - _worldX, y = worldY - _worldY;
+	outLocalX = (x * _d - y * _b) / det;
+	outLocalY = (y * _a - x * _c) / det;
 }
 
 void BonePose::localToWorld(float localX, float localY, float &outWorldX, float &outWorldY) {
