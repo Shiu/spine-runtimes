@@ -246,7 +246,12 @@ namespace spine {
 	class SP_API TransformConstraintData : public ConstraintDataGeneric<TransformConstraint, TransformConstraintPose> {
 	public:
 		RTTI_DECL
-		static const int ROTATION, X, Y, SCALEX, SCALEY, SHEARY;
+		static const int ROTATION;
+		static const int X;
+		static const int Y;
+		static const int SCALEX;
+		static const int SCALEY;
+		static const int SHEARY;
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class TransformConstraint;

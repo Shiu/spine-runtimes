@@ -60,7 +60,9 @@ namespace spine {
 
 	public:
 		static const float epsilon;
-		static const int NONE, BEFORE, AFTER;
+		static const int NONE;
+		static const int BEFORE;
+		static const int AFTER;
 
 		PathConstraint(PathConstraintData &data, Skeleton &skeleton);
 
