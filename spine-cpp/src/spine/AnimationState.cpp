@@ -46,7 +46,7 @@
 
 using namespace spine;
 
-void dummyOnAnimationEventFunc(AnimationState *state, EventType type, TrackEntry *entry, Event *event, void *userData) {
+void dummyOnAnimationEventFunc(AnimationState *state, spine::EventType type, TrackEntry *entry, Event *event, void *userData) {
 	SP_UNUSED(state);
 	SP_UNUSED(type);
 	SP_UNUSED(entry);

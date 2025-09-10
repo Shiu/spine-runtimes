@@ -178,17 +178,17 @@ bool SkeletonBounds::intersectsSegment(Polygon &polygon, float x1, float y1, flo
 	return false;
 }
 
-Polygon *SkeletonBounds::getPolygon(BoundingBoxAttachment *attachment) {
+spine::Polygon *SkeletonBounds::getPolygon(BoundingBoxAttachment *attachment) {
 	int index = _boundingBoxes.indexOf(attachment);
 	return index == -1 ? NULL : _polygons[index];
 }
 
-BoundingBoxAttachment *SkeletonBounds::getBoundingBox(Polygon *polygon) {
+BoundingBoxAttachment *SkeletonBounds::getBoundingBox(spine::Polygon *polygon) {
 	int index = _polygons.indexOf(polygon);
 	return index == -1 ? NULL : _boundingBoxes[index];
 }
 
-Array<Polygon *> &SkeletonBounds::getPolygons() {
+Array<spine::Polygon *> &SkeletonBounds::getPolygons() {
 	return _polygons;
 }
 
