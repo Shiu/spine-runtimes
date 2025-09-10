@@ -29,6 +29,7 @@
 
 #include "SpinePlugin.h"
 #include "spine/Extension.h"
+#include "spine/Bone.h"
 
 DEFINE_LOG_CATEGORY(SpineLog);
 
@@ -40,6 +41,7 @@ class FSpinePlugin : public SpinePlugin {
 IMPLEMENT_MODULE(FSpinePlugin, SpinePlugin)
 
 void FSpinePlugin::StartupModule() {
+	spine::Bone::setYDown(false);
 }
 
 void FSpinePlugin::ShutdownModule() {

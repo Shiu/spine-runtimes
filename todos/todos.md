@@ -1,5 +1,7 @@
 - 4.3 release work
     - update docs
+        - [ ] spine-godot
+        - [ ] spine-ue (setToSetupXXX nodes have been renamed to follow new nomenclature)
         - [x] spine-c
         - [x] spine-cpp
         - [x] spine-flutter

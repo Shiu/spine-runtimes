@@ -1,13 +1,13 @@
 {
 "skeleton": {
-	"hash": "aVkcAf14pos",
-	"spine": "4.3.37-beta",
+	"hash": "UKNfIjHXMsA",
+	"spine": "4.3.39-beta",
 	"x": -434,
 	"y": -133,
 	"width": 868,
 	"height": 322,
 	"images": "./images/",
-	"audio": ""
+	"audio": null
 },
 "bones": [
 	{ "name": "root" },
