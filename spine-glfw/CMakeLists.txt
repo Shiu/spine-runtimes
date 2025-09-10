@@ -70,7 +70,19 @@ target_link_libraries(spine-glfw-example-c PRIVATE glbinding::glbinding)
 set_property(TARGET spine-glfw-example-c PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/spine-glfw")
 
 
+# Physics example
+add_executable(spine-glfw-physics example/physics.cpp)
+target_link_libraries(spine-glfw-physics PRIVATE glfw)
+target_link_libraries(spine-glfw-physics PRIVATE OpenGL::GL)
+target_link_libraries(spine-glfw-physics LINK_PUBLIC spine-glfw)
+target_link_libraries(spine-glfw-physics PRIVATE glbinding::glbinding)
+set_property(TARGET spine-glfw-physics PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/spine-glfw")
+
 # copy data to build directory
 add_custom_command(TARGET spine-glfw-example PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_CURRENT_LIST_DIR}/data $<TARGET_FILE_DIR:spine-glfw-example>/data)
+
+add_custom_command(TARGET spine-glfw-physics PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_LIST_DIR}/data $<TARGET_FILE_DIR:spine-glfw-physics>/data)
