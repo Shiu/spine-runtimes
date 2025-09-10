@@ -35,7 +35,7 @@
 namespace spine {
 
 	/// Changes a path constraint's PathConstraintPose::getPosition().
-	class PathConstraintPositionTimeline : public ConstraintTimeline1 {
+	class SP_API PathConstraintPositionTimeline : public ConstraintTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

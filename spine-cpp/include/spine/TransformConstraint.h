@@ -40,7 +40,7 @@ namespace spine {
 	class Bone;
 	class BonePose;
 
-	class TransformConstraint : public ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
+	class SP_API TransformConstraint : public ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
 		friend class Skeleton;
 		friend class TransformConstraintTimeline;
 

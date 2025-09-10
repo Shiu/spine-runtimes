@@ -34,7 +34,7 @@
 
 namespace spine {
 	/// Changes a slider's SliderPose::getMix().
-	class SliderMixTimeline : public ConstraintTimeline1 {
+	class SP_API SliderMixTimeline : public ConstraintTimeline1 {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 

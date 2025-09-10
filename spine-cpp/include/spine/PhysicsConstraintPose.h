@@ -35,7 +35,7 @@
 
 namespace spine {
 	/// Stores a pose for a physics constraint.
-	class PhysicsConstraintPose : public Pose<PhysicsConstraintPose> {
+	class SP_API PhysicsConstraintPose : public Pose<PhysicsConstraintPose> {
 		friend class PhysicsConstraint;
 		friend class PhysicsConstraintTimeline;
 		friend class SkeletonJson;

@@ -37,7 +37,7 @@
 
 namespace spine {
 	template<typename T>
-	class Array : public SpineObject {
+	class SP_API Array : public SpineObject {
 	public:
 		using size_type = size_t;
 		using value_type = T;

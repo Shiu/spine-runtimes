@@ -34,7 +34,7 @@
 
 namespace spine {
 	/// Changes a slider's SliderPose::getTime().
-	class SliderTimeline : public ConstraintTimeline1 {
+	class SP_API SliderTimeline : public ConstraintTimeline1 {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 

@@ -35,7 +35,7 @@
 
 namespace spine {
 	/// Stores a pose for a transform constraint.
-	class TransformConstraintPose : public Pose<TransformConstraintPose> {
+	class SP_API TransformConstraintPose : public Pose<TransformConstraintPose> {
 		friend class FromProperty;
 		friend class ToProperty;
 		friend class FromRotate;

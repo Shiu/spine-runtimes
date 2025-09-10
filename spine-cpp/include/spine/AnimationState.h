@@ -78,7 +78,7 @@ namespace spine {
 #endif
 
 	/// Abstract class to inherit from to create a callback object
-	class AnimationStateListenerObject {
+	class SP_API AnimationStateListenerObject {
 	public:
 		AnimationStateListenerObject() {};
 
@@ -90,7 +90,7 @@ namespace spine {
 	};
 
 	/// State for the playback of an animation
-	class TrackEntry : public SpineObject, public HasRendererObject {
+	class SP_API TrackEntry : public SpineObject, public HasRendererObject {
 		friend class EventQueue;
 
 		friend class AnimationState;
@@ -360,7 +360,7 @@ namespace spine {
 		void reset();
 	};
 
-	class EventQueueEntry : public SpineObject {
+	class SP_API EventQueueEntry : public SpineObject {
 		friend class EventQueue;
 
 	public:
@@ -371,7 +371,7 @@ namespace spine {
 		EventQueueEntry(EventType eventType, TrackEntry *trackEntry, Event *event = NULL);
 	};
 
-	class EventQueue : public SpineObject {
+	class SP_API EventQueue : public SpineObject {
 		friend class AnimationState;
 
 	private:
@@ -403,7 +403,7 @@ namespace spine {
 		void drain();
 	};
 
-	class AnimationState : public SpineObject, public HasRendererObject {
+	class SP_API AnimationState : public SpineObject, public HasRendererObject {
 		friend class TrackEntry;
 
 		friend class EventQueue;

@@ -41,7 +41,7 @@ namespace spine {
 	class Bone;
 	class BonePose;
 
-	class IkConstraint : public ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> {
+	class SP_API IkConstraint : public ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> {
 		friend class Skeleton;
 
 		friend class IkConstraintTimeline;

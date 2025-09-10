@@ -35,7 +35,7 @@
 
 namespace spine {
 	/// Stores a pose for a path constraint.
-	class PathConstraintPose : public Pose<PathConstraintPose> {
+	class SP_API PathConstraintPose : public Pose<PathConstraintPose> {
 		friend class PathConstraint;
 		friend class PathConstraintPositionTimeline;
 		friend class PathConstraintSpacingTimeline;

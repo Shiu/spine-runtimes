@@ -34,7 +34,7 @@
 
 namespace spine {
 	/// Changes a bone's local BoneLocal::getShearX() and BoneLocal::getShearY().
-	class ShearTimeline : public BoneTimeline2 {
+	class SP_API ShearTimeline : public BoneTimeline2 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -49,7 +49,7 @@ namespace spine {
 	};
 
 	/// Changes a bone's local BoneLocal::getShearX().
-	class ShearXTimeline : public BoneTimeline1 {
+	class SP_API ShearXTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -64,7 +64,7 @@ namespace spine {
 	};
 
 	/// Changes a bone's local BoneLocal::getShearY().
-	class ShearYTimeline : public BoneTimeline1 {
+	class SP_API ShearYTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

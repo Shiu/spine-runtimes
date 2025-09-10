@@ -36,7 +36,7 @@
 namespace spine {
 
 	/// Stores the current pose for an IK constraint.
-	class IkConstraintPose : public Pose<IkConstraintPose> {
+	class SP_API IkConstraintPose : public Pose<IkConstraintPose> {
 		friend class IkConstraint;
 		friend class IkConstraintTimeline;
 		friend class SkeletonJson;

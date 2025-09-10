@@ -65,7 +65,7 @@ namespace spine {
 
 	class Sequence;
 
-	class SkeletonBinary : public SpineObject {
+	class SP_API SkeletonBinary : public SpineObject {
 	public:
 		static const int BONE_ROTATE = 0;
 		static const int BONE_TRANSLATE = 1;

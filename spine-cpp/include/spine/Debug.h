@@ -48,7 +48,7 @@ namespace spine {
 		class DebugEntry;
 
 	public:
-		class DebugPair {
+		class SP_API DebugPair {
 		public:
 			explicit DebugPair(K &k, V &v) : key(k), value(v) {
 			}
@@ -57,7 +57,7 @@ namespace spine {
 			V &value;
 		};
 
-		class DebugEntries {
+		class SP_API DebugEntries {
 		public:
 			friend class DebugHashMap;
 
@@ -183,7 +183,7 @@ namespace spine {
 			return NULL;
 		}
 
-		class DebugEntry {
+		class SP_API DebugEntry {
 		public:
 			K _key;
 			V _value;
@@ -199,7 +199,7 @@ namespace spine {
 	};
 #endif// SPINE_NO_CPP_RT
 
-	class DebugExtension : public SpineExtension {
+	class SP_API DebugExtension : public SpineExtension {
 		struct Allocation {
 			void *address;
 			size_t size;

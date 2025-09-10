@@ -39,7 +39,7 @@ namespace spine {
 	class Skeleton;
 	class Constraint;
 
-	class ConstraintData : public SpineObject {
+	class SP_API ConstraintData : public SpineObject {
 		RTTI_DECL_NOPARENT
 		friend class Skeleton;
 		friend class Constraint;

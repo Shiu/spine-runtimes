@@ -59,7 +59,7 @@ namespace spine {
 	///
 	/// See <a href="https://esotericsoftware.com/spine-runtime-architecture#Data-objects">Data objects</a> in the Spine Runtimes
 	/// Guide.
-	class SkeletonData : public SpineObject {
+	class SP_API SkeletonData : public SpineObject {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

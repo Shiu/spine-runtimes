@@ -44,7 +44,7 @@ namespace spine {
 	/// Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
 	///
 	/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide.
-	class PhysicsConstraint : public ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> {
+	class SP_API PhysicsConstraint : public ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> {
 		friend class Skeleton;
 		friend class PhysicsConstraintTimeline;
 		friend class PhysicsConstraintInertiaTimeline;

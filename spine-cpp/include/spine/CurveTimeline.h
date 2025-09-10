@@ -35,7 +35,7 @@
 
 namespace spine {
 	/// Base class for frames that use an interpolation bezier curve.
-	class CurveTimeline : public Timeline {
+	class SP_API CurveTimeline : public Timeline {
 		RTTI_DECL
 
 	public:
@@ -64,7 +64,7 @@ namespace spine {
 	};
 
 	/// The base class for a CurveTimeline that sets one property.
-	class CurveTimeline1 : public CurveTimeline {
+	class SP_API CurveTimeline1 : public CurveTimeline {
 		RTTI_DECL
 
 	public:

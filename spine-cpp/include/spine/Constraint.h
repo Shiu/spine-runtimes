@@ -39,7 +39,7 @@
 namespace spine {
 	class Skeleton;
 
-	class Constraint : public Update {
+	class SP_API Constraint : public Update {
 		friend class Skeleton;
 
 	public:

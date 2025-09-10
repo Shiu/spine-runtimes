@@ -40,7 +40,7 @@ namespace spine {
 	///
 	/// See Timeline::apply(), AnimationStateListener::event(), and
 	/// @see https://esotericsoftware.com/spine-events Events in the Spine User Guide.
-	class Event : public SpineObject {
+	class SP_API Event : public SpineObject {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

@@ -41,7 +41,7 @@ namespace spine {
 	/// Stores the setup pose for a PhysicsConstraint.
 	///
 	/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide.
-	class PhysicsConstraintData : public ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose> {
+	class SP_API PhysicsConstraintData : public ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose> {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class PhysicsConstraint;

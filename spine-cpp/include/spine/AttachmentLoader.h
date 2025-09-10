@@ -53,7 +53,7 @@ namespace spine {
 
 	class Sequence;
 
-	class AttachmentLoader : public SpineObject {
+	class SP_API AttachmentLoader : public SpineObject {
 	public:
 		AttachmentLoader();
 

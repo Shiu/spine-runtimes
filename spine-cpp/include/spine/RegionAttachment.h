@@ -43,7 +43,7 @@ namespace spine {
 	class Slot;
 
 	/// Attachment that displays a texture region.
-	class RegionAttachment : public Attachment {
+	class SP_API RegionAttachment : public Attachment {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

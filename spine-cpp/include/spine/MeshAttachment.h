@@ -39,7 +39,7 @@
 
 namespace spine {
 	/// Attachment that displays a texture region using a mesh.
-	class MeshAttachment : public VertexAttachment {
+	class SP_API MeshAttachment : public VertexAttachment {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

@@ -40,7 +40,7 @@ namespace spine {
 	class BoneData;
 
 	/// Stores the setup pose for a Slot.
-	class SlotData : public PosedDataGeneric<SlotPose> {
+	class SP_API SlotData : public PosedDataGeneric<SlotPose> {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class PathConstraint;

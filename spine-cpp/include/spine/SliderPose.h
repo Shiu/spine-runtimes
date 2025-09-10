@@ -37,7 +37,7 @@ namespace spine {
 	class Slider;
 
 	/// Stores a pose for a slider.
-	class SliderPose : public Pose<SliderPose> {
+	class SP_API SliderPose : public Pose<SliderPose> {
 		friend class Slider;
 		friend class SliderMixTimeline;
 		friend class SliderTimeline;

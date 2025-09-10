@@ -27,30 +27,25 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#ifndef Spine_PosedActive_h
-#define Spine_PosedActive_h
+#ifndef SPINE_SHAREDLIB_H
+#define SPINE_SHAREDLIB_H
 
-#include <spine/dll.h>
+#ifdef _WIN32
+#define DLLIMPORT __declspec(dllimport)
+#define DLLEXPORT __declspec(dllexport)
+#else
+#ifndef DLLIMPORT
+#define DLLIMPORT
+#endif
+#ifndef DLLEXPORT
+#define DLLEXPORT
+#endif
+#endif
 
-namespace spine {
-	/// Simple mixin class that adds active state tracking
-	class SP_API PosedActive {
-	protected:
-		bool _active;
+#ifdef SPINEPLUGIN_API
+#define SP_API SPINEPLUGIN_API
+#else
+#define SP_API
+#endif
 
-	public:
-		PosedActive() : _active(true) {
-		}
-		virtual ~PosedActive() {
-		}
-
-		bool isActive() const {
-			return _active;
-		}
-		void setActive(bool active) {
-			_active = active;
-		}
-	};
-}
-
-#endif /* Spine_PosedActive_h */
+#endif /* SPINE_SHAREDLIB_H */

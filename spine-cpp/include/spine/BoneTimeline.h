@@ -31,7 +31,7 @@
 #define Spine_BoneTimeline_h
 
 #include <cstddef>
-
+#include <spine/dll.h>
 #include <spine/CurveTimeline.h>
 
 namespace spine {
@@ -40,7 +40,7 @@ namespace spine {
 	class BoneLocal;
 
 	/// An interface for timelines which change the property of a bone.
-	class BoneTimeline {
+	class SP_API BoneTimeline {
 		RTTI_DECL_NOPARENT
 
 	public:
@@ -56,7 +56,7 @@ namespace spine {
 	};
 
 	/// Base class for timelines that animate a single bone property.
-	class BoneTimeline1 : public CurveTimeline1, public BoneTimeline {
+	class SP_API BoneTimeline1 : public CurveTimeline1, public BoneTimeline {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class AnimationState;
@@ -85,7 +85,7 @@ namespace spine {
 	};
 
 	/// Base class for timelines that animate two bone properties.
-	class BoneTimeline2 : public CurveTimeline, public BoneTimeline {
+	class SP_API BoneTimeline2 : public CurveTimeline, public BoneTimeline {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class AnimationState;

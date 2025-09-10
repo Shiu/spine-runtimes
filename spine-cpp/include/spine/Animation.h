@@ -49,7 +49,7 @@ namespace spine {
 	class AnimationState;
 
 	/// Stores a list of timelines to animate a skeleton's pose over time.
-	class Animation : public SpineObject {
+	class SP_API Animation : public SpineObject {
 		friend class AnimationState;
 
 		friend class TrackEntry;

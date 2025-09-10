@@ -37,7 +37,7 @@
 namespace spine {
 	class Skeleton;
 
-	struct RenderCommand {
+	struct SP_API RenderCommand {
 		float *positions;
 		float *uvs;
 		uint32_t *colors;
@@ -50,7 +50,7 @@ namespace spine {
 		RenderCommand *next;
 	};
 
-	class SkeletonRenderer : public SpineObject {
+	class SP_API SkeletonRenderer : public SpineObject {
 	public:
 		explicit SkeletonRenderer();
 

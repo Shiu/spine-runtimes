@@ -34,7 +34,7 @@
 
 namespace spine {
 	/// Changes a bone's local BoneLocal::getScaleX() and BoneLocal::getScaleY().
-	class ScaleTimeline : public BoneTimeline2 {
+	class SP_API ScaleTimeline : public BoneTimeline2 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -49,7 +49,7 @@ namespace spine {
 	};
 
 	/// Changes a bone's local BoneLocal::getScaleX().
-	class ScaleXTimeline : public BoneTimeline1 {
+	class SP_API ScaleXTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -64,7 +64,7 @@ namespace spine {
 	};
 
 	/// Changes a bone's local BoneLocal::getScaleY().
-	class ScaleYTimeline : public BoneTimeline1 {
+	class SP_API ScaleYTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

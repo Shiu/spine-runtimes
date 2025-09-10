@@ -30,13 +30,13 @@
 #ifndef Spine_SlotTimeline_h
 #define Spine_SlotTimeline_h
 
-
+#include <spine/dll.h>
 #include <spine/RTTI.h>
 
 namespace spine {
 
 	/// An interface for timelines which change the property of a slot.
-	class SlotTimeline {
+	class SP_API SlotTimeline {
 		RTTI_DECL_NOPARENT
 
 		friend class AlphaTimeline;

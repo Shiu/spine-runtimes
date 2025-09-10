@@ -36,7 +36,7 @@
 
 namespace spine {
 	/// Base class for single-value constraint timelines.
-	class ConstraintTimeline1 : public CurveTimeline1, public ConstraintTimeline {
+	class SP_API ConstraintTimeline1 : public CurveTimeline1, public ConstraintTimeline {
 		RTTI_DECL
 
 	public:

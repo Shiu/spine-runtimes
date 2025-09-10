@@ -48,7 +48,7 @@ namespace spine {
 
 	class Event;
 
-	class AttachmentTimeline : public Timeline, public SlotTimeline {
+	class SP_API AttachmentTimeline : public Timeline, public SlotTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

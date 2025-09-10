@@ -38,7 +38,7 @@ namespace spine {
 	class SlotPose;
 
 	/// Base class for slot timelines that use curves.
-	class SlotCurveTimeline : public CurveTimeline, public SlotTimeline {
+	class SP_API SlotCurveTimeline : public CurveTimeline, public SlotTimeline {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 

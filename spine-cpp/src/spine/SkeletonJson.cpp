@@ -84,7 +84,7 @@
 
 using namespace spine;
 
-class Vertices : public SpineObject {
+class SP_API Vertices : public SpineObject {
 public:
 	Array<int> _bones;
 	Array<float> _weights;
