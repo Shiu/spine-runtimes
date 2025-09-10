@@ -230,7 +230,7 @@ void USpineSkeletonDataAsset::LoadInfo() {
 	NullAttachmentLoader loader;
 	SkeletonData *skeletonData = nullptr;
 	if (skeletonDataFileName.GetPlainNameString().Contains(TEXT(".json"))) {
-		SkeletonJson *json = new (__FILE__, __LINE__) SkeletonJson(&loader);
+		SkeletonJson *json = new (__FILE__, __LINE__) SkeletonJson(loader);
 		if (checkJson((const char *) rawData.GetData())) skeletonData = json->readSkeletonData((const char *) rawData.GetData());
 		if (!skeletonData) {
 			FMessageDialog::Debugf(FText::FromString(FString("Couldn't load skeleton data and/or atlas. Please ensure the "
@@ -242,7 +242,7 @@ void USpineSkeletonDataAsset::LoadInfo() {
 		}
 		delete json;
 	} else {
-		SkeletonBinary *binary = new (__FILE__, __LINE__) SkeletonBinary(&loader);
+		SkeletonBinary *binary = new (__FILE__, __LINE__) SkeletonBinary(loader);
 		if (checkBinary((const char *) rawData.GetData(), (int) rawData.Num()))
 			skeletonData = binary->readSkeletonData((const unsigned char *) rawData.GetData(), (int) rawData.Num());
 		if (!skeletonData) {
@@ -283,7 +283,7 @@ SkeletonData *USpineSkeletonDataAsset::GetSkeletonData(Atlas *Atlas) {
 	if (!skeletonData) {
 		int dataLen = rawData.Num();
 		if (skeletonDataFileName.GetPlainNameString().Contains(TEXT(".json"))) {
-			SkeletonJson *json = new (__FILE__, __LINE__) SkeletonJson(Atlas);
+			SkeletonJson *json = new (__FILE__, __LINE__) SkeletonJson(*Atlas);
 			if (checkJson((const char *) rawData.GetData())) skeletonData = json->readSkeletonData((const char *) rawData.GetData());
 			if (!skeletonData) {
 #if WITH_EDITORONLY_DATA
@@ -297,7 +297,7 @@ SkeletonData *USpineSkeletonDataAsset::GetSkeletonData(Atlas *Atlas) {
 			}
 			delete json;
 		} else {
-			SkeletonBinary *binary = new (__FILE__, __LINE__) SkeletonBinary(Atlas);
+			SkeletonBinary *binary = new (__FILE__, __LINE__) SkeletonBinary(*Atlas);
 			if (checkBinary((const char *) rawData.GetData(), (int) rawData.Num()))
 				skeletonData = binary->readSkeletonData((const unsigned char *) rawData.GetData(), (int) rawData.Num());
 			if (!skeletonData) {
@@ -314,7 +314,7 @@ SkeletonData *USpineSkeletonDataAsset::GetSkeletonData(Atlas *Atlas) {
 		}
 
 		if (skeletonData) {
-			animationStateData = new (__FILE__, __LINE__) AnimationStateData(skeletonData);
+			animationStateData = new (__FILE__, __LINE__) AnimationStateData(*skeletonData);
 			SetMixes(animationStateData);
 			atlasToNativeData.Add(Atlas, {skeletonData, animationStateData});
 		}

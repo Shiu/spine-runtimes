@@ -36,7 +36,7 @@
 
 using namespace spine;
 
-void callbackWidget(AnimationState *state, spine::EventType type, TrackEntry *entry, Event *event) {
+void callbackWidget(AnimationState *state, spine::EventType type, TrackEntry *entry, Event *event, void *userData) {
 	USpineWidget *component = (USpineWidget *) state->getRendererObject();
 
 	if (entry->getRendererObject()) {
@@ -157,7 +157,7 @@ void USpineWidget::CheckState() {
 			if (lastSpineAtlas != atlas) {
 				needsUpdate = true;
 			}
-			if (skeleton && skeleton->getData() != SkeletonData->GetSkeletonData(atlas)) {
+			if (skeleton && &skeleton->getData() != SkeletonData->GetSkeletonData(atlas)) {
 				needsUpdate = true;
 			}
 		}
@@ -169,13 +169,13 @@ void USpineWidget::CheckState() {
 		if (Atlas && SkeletonData) {
 			spine::SkeletonData *data = SkeletonData->GetSkeletonData(Atlas->GetAtlas());
 			if (data) {
-				skeleton = new (__FILE__, __LINE__) Skeleton(data);
+				skeleton = new (__FILE__, __LINE__) Skeleton(*data);
 				AnimationStateData *stateData = SkeletonData->GetAnimationStateData(Atlas->GetAtlas());
-				state = new (__FILE__, __LINE__) AnimationState(stateData);
+				state = new (__FILE__, __LINE__) AnimationState(*stateData);
 				state->setRendererObject((void *) this);
-				state->setListener(callbackWidget);
+				state->setListener(callbackWidget, nullptr);
 				trackEntries.Empty();
-				skeleton->setToSetupPose();
+				skeleton->setupPose();
 				skeleton->updateWorldTransform(Physics_Update);
 				slateWidget->SetData(this);
 			}
@@ -214,7 +214,7 @@ void USpineWidget::FinishDestroy() {
 bool USpineWidget::SetSkin(const FString skinName) {
 	CheckState();
 	if (skeleton) {
-		spine::Skin *skin = skeleton->getData()->findSkin(TCHAR_TO_UTF8(*skinName));
+		spine::Skin *skin = skeleton->getData().findSkin(TCHAR_TO_UTF8(*skinName));
 		if (!skin) return false;
 		skeleton->setSkin(skin);
 		bSkinInitialized = true;
@@ -228,12 +228,12 @@ bool USpineWidget::SetSkins(UPARAM(ref) TArray<FString> &SkinNames) {
 	if (skeleton) {
 		spine::Skin *newSkin = new spine::Skin("__spine-ue3_custom_skin");
 		for (auto &skinName : SkinNames) {
-			spine::Skin *skin = skeleton->getData()->findSkin(TCHAR_TO_UTF8(*skinName));
+			spine::Skin *skin = skeleton->getData().findSkin(TCHAR_TO_UTF8(*skinName));
 			if (!skin) {
 				delete newSkin;
 				return false;
 			}
-			newSkin->addSkin(skin);
+			newSkin->addSkin(*skin);
 		}
 		skeleton->setSkin(newSkin);
 		bSkinInitialized = true;
@@ -249,8 +249,8 @@ bool USpineWidget::SetSkins(UPARAM(ref) TArray<FString> &SkinNames) {
 void USpineWidget::GetSkins(TArray<FString> &Skins) {
 	CheckState();
 	if (skeleton) {
-		for (size_t i = 0, n = skeleton->getData()->getSkins().size(); i < n; i++) {
-			Skins.Add(skeleton->getData()->getSkins()[i]->getName().buffer());
+		for (size_t i = 0, n = skeleton->getData().getSkins().size(); i < n; i++) {
+			Skins.Add(skeleton->getData().getSkins()[i]->getName().buffer());
 		}
 	}
 }
@@ -258,7 +258,7 @@ void USpineWidget::GetSkins(TArray<FString> &Skins) {
 bool USpineWidget::HasSkin(const FString skinName) {
 	CheckState();
 	if (skeleton) {
-		return skeleton->getData()->findSkin(TCHAR_TO_UTF8(*skinName)) != nullptr;
+		return skeleton->getData().findSkin(TCHAR_TO_UTF8(*skinName)) != nullptr;
 	}
 	return false;
 }
@@ -286,17 +286,17 @@ void USpineWidget::UpdateWorldTransform() {
 
 void USpineWidget::SetToSetupPose() {
 	CheckState();
-	if (skeleton) skeleton->setToSetupPose();
+	if (skeleton) skeleton->setupPose();
 }
 
 void USpineWidget::SetBonesToSetupPose() {
 	CheckState();
-	if (skeleton) skeleton->setBonesToSetupPose();
+	if (skeleton) skeleton->setupPoseBones();
 }
 
 void USpineWidget::SetSlotsToSetupPose() {
 	CheckState();
-	if (skeleton) skeleton->setSlotsToSetupPose();
+	if (skeleton) skeleton->setupPoseSlots();
 }
 
 void USpineWidget::SetScaleX(float scaleX) {
@@ -333,7 +333,7 @@ void USpineWidget::GetBones(TArray<FString> &Bones) {
 bool USpineWidget::HasBone(const FString BoneName) {
 	CheckState();
 	if (skeleton) {
-		return skeleton->getData()->findBone(TCHAR_TO_UTF8(*BoneName)) != nullptr;
+		return skeleton->getData().findBone(TCHAR_TO_UTF8(*BoneName)) != nullptr;
 	}
 	return false;
 }
@@ -346,9 +346,9 @@ FTransform USpineWidget::GetBoneTransform(const FString &BoneName) {
 
 		FMatrix localTransform;
 		localTransform.SetIdentity();
-		localTransform.SetAxis(2, FVector(bone->getA(), 0, bone->getC()));
-		localTransform.SetAxis(0, FVector(bone->getB(), 0, bone->getD()));
-		localTransform.SetOrigin(FVector(bone->getWorldX(), 0, bone->getWorldY()));
+		localTransform.SetAxis(2, FVector(bone->getAppliedPose().getA(), 0, bone->getAppliedPose().getC()));
+		localTransform.SetAxis(0, FVector(bone->getAppliedPose().getB(), 0, bone->getAppliedPose().getD()));
+		localTransform.SetOrigin(FVector(bone->getAppliedPose().getWorldX(), 0, bone->getAppliedPose().getWorldY()));
 
 		FTransform result;
 		result.SetFromMatrix(localTransform);
@@ -369,7 +369,7 @@ void USpineWidget::GetSlots(TArray<FString> &Slots) {
 bool USpineWidget::HasSlot(const FString SlotName) {
 	CheckState();
 	if (skeleton) {
-		return skeleton->getData()->findSlot(TCHAR_TO_UTF8(*SlotName)) != nullptr;
+		return skeleton->getData().findSlot(TCHAR_TO_UTF8(*SlotName)) != nullptr;
 	}
 	return false;
 }
@@ -379,7 +379,7 @@ void USpineWidget::SetSlotColor(const FString SlotName, const FColor SlotColor) 
 	if (skeleton) {
 		spine::Slot *slot = skeleton->findSlot(TCHAR_TO_UTF8(*SlotName));
 		if (slot) {
-			slot->getColor().set(SlotColor.R / 255.f, SlotColor.G / 255.f, SlotColor.B / 255.f, SlotColor.A / 255.f);
+			slot->getPose().getColor().set(SlotColor.R / 255.f, SlotColor.G / 255.f, SlotColor.B / 255.f, SlotColor.A / 255.f);
 		}
 	}
 }
@@ -387,8 +387,8 @@ void USpineWidget::SetSlotColor(const FString SlotName, const FColor SlotColor) 
 void USpineWidget::GetAnimations(TArray<FString> &Animations) {
 	CheckState();
 	if (skeleton) {
-		for (size_t i = 0, n = skeleton->getData()->getAnimations().size(); i < n; i++) {
-			Animations.Add(skeleton->getData()->getAnimations()[i]->getName().buffer());
+		for (size_t i = 0, n = skeleton->getData().getAnimations().size(); i < n; i++) {
+			Animations.Add(skeleton->getData().getAnimations()[i]->getName().buffer());
 		}
 	}
 }
@@ -396,7 +396,7 @@ void USpineWidget::GetAnimations(TArray<FString> &Animations) {
 bool USpineWidget::HasAnimation(FString AnimationName) {
 	CheckState();
 	if (skeleton) {
-		return skeleton->getData()->findAnimation(TCHAR_TO_UTF8(*AnimationName)) != nullptr;
+		return skeleton->getData().findAnimation(TCHAR_TO_UTF8(*AnimationName)) != nullptr;
 	}
 	return false;
 }
@@ -404,7 +404,7 @@ bool USpineWidget::HasAnimation(FString AnimationName) {
 float USpineWidget::GetAnimationDuration(FString AnimationName) {
 	CheckState();
 	if (skeleton) {
-		spine::Animation *animation = skeleton->getData()->findAnimation(TCHAR_TO_UTF8(*AnimationName));
+		spine::Animation *animation = skeleton->getData().findAnimation(TCHAR_TO_UTF8(*AnimationName));
 		if (animation == nullptr)
 			return 0;
 		else
@@ -421,9 +421,9 @@ void USpineWidget::SetPlaybackTime(float InPlaybackTime, bool bCallDelegates) {
 	CheckState();
 
 	if (state && state->getCurrent(0)) {
-		spine::Animation *CurrentAnimation = state->getCurrent(0)->getAnimation();
+		spine::Animation &CurrentAnimation = state->getCurrent(0)->getAnimation();
 		const float CurrentTime = state->getCurrent(0)->getTrackTime();
-		InPlaybackTime = FMath::Clamp(InPlaybackTime, 0.0f, CurrentAnimation->getDuration());
+		InPlaybackTime = FMath::Clamp(InPlaybackTime, 0.0f, CurrentAnimation.getDuration());
 		const float DeltaTime = InPlaybackTime - CurrentTime;
 		state->update(DeltaTime);
 		state->apply(*skeleton);
@@ -452,12 +452,12 @@ float USpineWidget::GetTimeScale() {
 
 UTrackEntry *USpineWidget::SetAnimation(int trackIndex, FString animationName, bool loop) {
 	CheckState();
-	if (state && skeleton->getData()->findAnimation(TCHAR_TO_UTF8(*animationName))) {
+	if (state && skeleton->getData().findAnimation(TCHAR_TO_UTF8(*animationName))) {
 		state->disableQueue();
-		TrackEntry *entry = state->setAnimation(trackIndex, TCHAR_TO_UTF8(*animationName), loop);
+		TrackEntry &entry = state->setAnimation(trackIndex, TCHAR_TO_UTF8(*animationName), loop);
 		state->enableQueue();
 		UTrackEntry *uEntry = NewObject<UTrackEntry>();
-		uEntry->SetTrackEntry(entry);
+		uEntry->SetTrackEntry(&entry);
 		trackEntries.Add(uEntry);
 		return uEntry;
 	} else
@@ -466,12 +466,12 @@ UTrackEntry *USpineWidget::SetAnimation(int trackIndex, FString animationName, b
 
 UTrackEntry *USpineWidget::AddAnimation(int trackIndex, FString animationName, bool loop, float delay) {
 	CheckState();
-	if (state && skeleton->getData()->findAnimation(TCHAR_TO_UTF8(*animationName))) {
+	if (state && skeleton->getData().findAnimation(TCHAR_TO_UTF8(*animationName))) {
 		state->disableQueue();
-		TrackEntry *entry = state->addAnimation(trackIndex, TCHAR_TO_UTF8(*animationName), loop, delay);
+		TrackEntry &entry = state->addAnimation(trackIndex, TCHAR_TO_UTF8(*animationName), loop, delay);
 		state->enableQueue();
 		UTrackEntry *uEntry = NewObject<UTrackEntry>();
-		uEntry->SetTrackEntry(entry);
+		uEntry->SetTrackEntry(&entry);
 		trackEntries.Add(uEntry);
 		return uEntry;
 	} else
@@ -481,9 +481,9 @@ UTrackEntry *USpineWidget::AddAnimation(int trackIndex, FString animationName, b
 UTrackEntry *USpineWidget::SetEmptyAnimation(int trackIndex, float mixDuration) {
 	CheckState();
 	if (state) {
-		TrackEntry *entry = state->setEmptyAnimation(trackIndex, mixDuration);
+		TrackEntry &entry = state->setEmptyAnimation(trackIndex, mixDuration);
 		UTrackEntry *uEntry = NewObject<UTrackEntry>();
-		uEntry->SetTrackEntry(entry);
+		uEntry->SetTrackEntry(&entry);
 		trackEntries.Add(uEntry);
 		return uEntry;
 	} else
@@ -493,9 +493,9 @@ UTrackEntry *USpineWidget::SetEmptyAnimation(int trackIndex, float mixDuration) 
 UTrackEntry *USpineWidget::AddEmptyAnimation(int trackIndex, float mixDuration, float delay) {
 	CheckState();
 	if (state) {
-		TrackEntry *entry = state->addEmptyAnimation(trackIndex, mixDuration, delay);
+		TrackEntry &entry = state->addEmptyAnimation(trackIndex, mixDuration, delay);
 		UTrackEntry *uEntry = NewObject<UTrackEntry>();
-		uEntry->SetTrackEntry(entry);
+		uEntry->SetTrackEntry(&entry);
 		trackEntries.Add(uEntry);
 		return uEntry;
 	} else
@@ -549,9 +549,9 @@ void USpineWidget::PhysicsRotate(float x, float y, float degrees) {
 void USpineWidget::ResetPhysicsConstraints() {
 	CheckState();
 	if (skeleton) {
-		Vector<PhysicsConstraint *> &constraints = skeleton->getPhysicsConstraints();
+		Array<PhysicsConstraint *> &constraints = skeleton->getPhysicsConstraints();
 		for (int i = 0, n = (int) constraints.size(); i < n; i++) {
-			constraints[i]->reset();
+			constraints[i]->reset(*skeleton);
 		}
 	}
 }

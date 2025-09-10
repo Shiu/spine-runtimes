@@ -156,7 +156,7 @@ void USpineSkeletonAnimationComponent::CheckState() {
 				AnimationStateData *stateData = SkeletonData->GetAnimationStateData(Atlas->GetAtlas());
 				state = new (__FILE__, __LINE__) AnimationState(*stateData);
 				state->setRendererObject((void *) this);
-				state->setListener(callback);
+				state->setListener(callback, nullptr);
 				trackEntries.Empty();
 			}
 		}
@@ -227,7 +227,7 @@ UTrackEntry *USpineSkeletonAnimationComponent::SetAnimation(int trackIndex, FStr
 	CheckState();
 	if (state && skeleton->getData().findAnimation(TCHAR_TO_UTF8(*animationName))) {
 		state->disableQueue();
-		TrackEntry &entry = &state->setAnimation(trackIndex, TCHAR_TO_UTF8(*animationName), loop);
+		TrackEntry &entry = state->setAnimation(trackIndex, TCHAR_TO_UTF8(*animationName), loop);
 		state->enableQueue();
 		UTrackEntry *uEntry = NewObject<UTrackEntry>();
 		uEntry->SetTrackEntry(&entry);
@@ -239,7 +239,7 @@ UTrackEntry *USpineSkeletonAnimationComponent::SetAnimation(int trackIndex, FStr
 
 UTrackEntry *USpineSkeletonAnimationComponent::AddAnimation(int trackIndex, FString animationName, bool loop, float delay) {
 	CheckState();
-	if (state && skeleton->getData()->findAnimation(TCHAR_TO_UTF8(*animationName))) {
+	if (state && skeleton->getData().findAnimation(TCHAR_TO_UTF8(*animationName))) {
 		state->disableQueue();
 		TrackEntry &entry = state->addAnimation(trackIndex, TCHAR_TO_UTF8(*animationName), loop, delay);
 		state->enableQueue();
@@ -268,7 +268,7 @@ UTrackEntry *USpineSkeletonAnimationComponent::AddEmptyAnimation(int trackIndex,
 	if (state) {
 		TrackEntry &entry = state->addEmptyAnimation(trackIndex, mixDuration, delay);
 		UTrackEntry *uEntry = NewObject<UTrackEntry>();
-		uEntry->SetTrackEntry(entry);
+		uEntry->SetTrackEntry(&entry);
 		trackEntries.Add(uEntry);
 		return uEntry;
 	} else

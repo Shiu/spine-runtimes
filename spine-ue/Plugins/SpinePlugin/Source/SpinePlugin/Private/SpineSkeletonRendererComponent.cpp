@@ -197,9 +197,9 @@ void USpineSkeletonRendererComponent::UpdateMesh(USpineSkeletonComponent *compon
 		float *attachmentUvs = nullptr;
 
 		Slot *slot = Skeleton->getDrawOrder()[i];
-		Attachment *attachment = slot->getPose().getAttachment();
+		Attachment *attachment = slot->getAppliedPose().getAttachment();
 
-		if (slot->getPose().getColor().a == 0 || !slot->getBone().isActive()) {
+		if (slot->getAppliedPose().getColor().a == 0 || !slot->getBone().isActive()) {
 			clipper.clipEnd(*slot);
 			continue;
 		}
@@ -271,7 +271,7 @@ void USpineSkeletonRendererComponent::UpdateMesh(USpineSkeletonComponent *compon
 		// to the correct skeleton data yet, we won't find any regions.
 		// ignore regions for which we can't find a material
 		UMaterialInstanceDynamic *material = nullptr;
-		int foundPageIndex = (int) (intptr_t) attachmentAtlasRegion->getPageIndex();
+		int foundPageIndex = attachmentAtlasRegion->getPage() ? attachmentAtlasRegion->getPage()->index : -1;
 		if (foundPageIndex == -1) {
 			clipper.clipEnd(*slot);
 			continue;
@@ -316,10 +316,10 @@ void USpineSkeletonRendererComponent::UpdateMesh(USpineSkeletonComponent *compon
 
 		SetMaterial(meshSection, material);
 
-		uint8 r = static_cast<uint8>(Skeleton->getColor().r * slot->getPose().getColor().r * attachmentColor.r * 255);
-		uint8 g = static_cast<uint8>(Skeleton->getColor().g * slot->getPose().getColor().g * attachmentColor.g * 255);
-		uint8 b = static_cast<uint8>(Skeleton->getColor().b * slot->getPose().getColor().b * attachmentColor.b * 255);
-		uint8 a = static_cast<uint8>(Skeleton->getColor().a * slot->getPose().getColor().a * attachmentColor.a * 255);
+		uint8 r = static_cast<uint8>(Skeleton->getColor().r * slot->getAppliedPose().getColor().r * attachmentColor.r * 255);
+		uint8 g = static_cast<uint8>(Skeleton->getColor().g * slot->getAppliedPose().getColor().g * attachmentColor.g * 255);
+		uint8 b = static_cast<uint8>(Skeleton->getColor().b * slot->getAppliedPose().getColor().b * attachmentColor.b * 255);
+		uint8 a = static_cast<uint8>(Skeleton->getColor().a * slot->getAppliedPose().getColor().a * attachmentColor.a * 255);
 
 		float *verticesPtr = attachmentVertices->buffer();
 		for (int j = 0; j < numVertices << 1; j += 2) {

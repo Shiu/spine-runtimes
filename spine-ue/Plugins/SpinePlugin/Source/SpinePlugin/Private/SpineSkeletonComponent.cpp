@@ -194,7 +194,7 @@ void USpineSkeletonComponent::SetupPoseBones() {
 
 void USpineSkeletonComponent::SetupPoseSlots() {
 	CheckState();
-	if (skeleton) skeleton->SetupPoseSlots();
+	if (skeleton) skeleton->setupPoseSlots();
 }
 
 void USpineSkeletonComponent::SetScaleX(float scaleX) {
@@ -231,7 +231,7 @@ void USpineSkeletonComponent::GetBones(TArray<FString> &Bones) {
 bool USpineSkeletonComponent::HasBone(const FString BoneName) {
 	CheckState();
 	if (skeleton) {
-		return skeleton->getData()->findBone(TCHAR_TO_UTF8(*BoneName)) != nullptr;
+		return skeleton->getData().findBone(TCHAR_TO_UTF8(*BoneName)) != nullptr;
 	}
 	return false;
 }
@@ -248,7 +248,7 @@ void USpineSkeletonComponent::GetSlots(TArray<FString> &Slots) {
 bool USpineSkeletonComponent::HasSlot(const FString SlotName) {
 	CheckState();
 	if (skeleton) {
-		return skeleton->getData()->findSlot(TCHAR_TO_UTF8(*SlotName)) != nullptr;
+		return skeleton->getData().findSlot(TCHAR_TO_UTF8(*SlotName)) != nullptr;
 	}
 	return false;
 }
@@ -258,7 +258,7 @@ void USpineSkeletonComponent::SetSlotColor(const FString SlotName, const FColor 
 	if (skeleton) {
 		Slot *slot = skeleton->findSlot(TCHAR_TO_UTF8(*SlotName));
 		if (slot) {
-			slot->getColor().set(color.R / 255.f, color.G / 255.f, color.B / 255.f, color.A / 255.f);
+			slot->getPose().getColor().set(color.R / 255.f, color.G / 255.f, color.B / 255.f, color.A / 255.f);
 		}
 	}
 }
@@ -275,7 +275,7 @@ void USpineSkeletonComponent::GetAnimations(TArray<FString> &Animations) {
 bool USpineSkeletonComponent::HasAnimation(FString AnimationName) {
 	CheckState();
 	if (skeleton) {
-		return skeleton->getData()->findAnimation(TCHAR_TO_UTF8(*AnimationName)) != nullptr;
+		return skeleton->getData().findAnimation(TCHAR_TO_UTF8(*AnimationName)) != nullptr;
 	}
 	return false;
 }
@@ -309,9 +309,9 @@ void USpineSkeletonComponent::PhysicsRotate(float x, float y, float degrees) {
 void USpineSkeletonComponent::ResetPhysicsConstraints() {
 	CheckState();
 	if (skeleton) {
-		Vector<PhysicsConstraint *> &constraints = skeleton->getPhysicsConstraints();
+		Array<PhysicsConstraint *> &constraints = skeleton->getPhysicsConstraints();
 		for (int i = 0, n = (int) constraints.size(); i < n; i++) {
-			constraints[i]->reset();
+			constraints[i]->reset(*skeleton);
 		}
 	}
 }
@@ -346,7 +346,7 @@ void USpineSkeletonComponent::CheckState() {
 			if (lastSpineAtlas != atlas) {
 				needsUpdate = true;
 			}
-			if (skeleton && skeleton->getData() != SkeletonData->GetSkeletonData(atlas)) {
+			if (skeleton && &skeleton->getData() != SkeletonData->GetSkeletonData(atlas)) {
 				needsUpdate = true;
 			}
 		}
@@ -357,7 +357,7 @@ void USpineSkeletonComponent::CheckState() {
 
 		if (Atlas && SkeletonData) {
 			spine::SkeletonData *data = SkeletonData->GetSkeletonData(Atlas->GetAtlas());
-			skeleton = new (__FILE__, __LINE__) Skeleton(data);
+			skeleton = new (__FILE__, __LINE__) Skeleton(*data);
 		}
 
 		lastAtlas = Atlas;

@@ -81,11 +81,10 @@ void SSpineWidget::SetData(USpineWidget *Widget) {
 	this->widget = Widget;
 	if (widget && widget->skeleton && widget->Atlas) {
 		Skeleton *skeleton = widget->skeleton;
-		skeleton->setToSetupPose();
+		skeleton->setupPose();
 		skeleton->updateWorldTransform(Physics_None);
-		Vector<float> scratchBuffer;
 		float x, y, w, h;
-		skeleton->getBounds(x, y, w, h, scratchBuffer);
+		skeleton->getBounds(x, y, w, h);
 		boundsMin.X = x;
 		boundsMin.Y = y;
 		boundsSize.X = w;
@@ -271,13 +270,13 @@ void SSpineWidget::UpdateMesh(int32 LayerId, FSlateWindowElementList &OutDrawEle
 	UMaterialInstanceDynamic *lastMaterial = nullptr;
 
 	SkeletonClipping &clipper = widget->clipper;
-	Vector<float> &worldVertices = widget->worldVertices;
+	Array<float> &worldVertices = widget->worldVertices;
 
 	float depthOffset = 0;
 	unsigned short quadIndices[] = {0, 1, 2, 0, 2, 3};
 
 	for (int i = 0; i < (int) Skeleton->getSlots().size(); ++i) {
-		Vector<float> *attachmentVertices = &worldVertices;
+		Array<float> *attachmentVertices = &worldVertices;
 		unsigned short *attachmentIndices = nullptr;
 		int numVertices;
 		int numIndices;
@@ -292,7 +291,7 @@ void SSpineWidget::UpdateMesh(int32 LayerId, FSlateWindowElementList &OutDrawEle
 			continue;
 		}
 
-		Attachment *attachment = slot->getAttachment();
+		Attachment *attachment = slot->getAppliedPose().getAttachment();
 		if (!attachment) {
 			clipper.clipEnd(*slot);
 			continue;
@@ -317,7 +316,7 @@ void SSpineWidget::UpdateMesh(int32 LayerId, FSlateWindowElementList &OutDrawEle
 			MeshAttachment *mesh = (MeshAttachment *) attachment;
 			attachmentColor.set(mesh->getColor());
 			attachmentVertices->setSize(mesh->getWorldVerticesLength(), 0);
-			mesh->computeWorldVertices(*slot, 0, mesh->getWorldVerticesLength(), attachmentVertices->buffer(), 0, 2);
+			mesh->computeWorldVertices(*Skeleton, *slot, 0, mesh->getWorldVerticesLength(), attachmentVertices->buffer(), 0, 2);
 			attachmentAtlasRegion = (AtlasRegion *) mesh->getRegion();
 			attachmentIndices = mesh->getTriangles().buffer();
 			attachmentUvs = mesh->getUVs().buffer();
@@ -325,7 +324,7 @@ void SSpineWidget::UpdateMesh(int32 LayerId, FSlateWindowElementList &OutDrawEle
 			numIndices = mesh->getTriangles().size();
 		} else /* clipping */ {
 			ClippingAttachment *clip = (ClippingAttachment *) attachment;
-			clipper.clipStart(*slot, clip);
+			clipper.clipStart(*Skeleton, *slot, clip);
 			continue;
 		}
 
@@ -335,39 +334,39 @@ void SSpineWidget::UpdateMesh(int32 LayerId, FSlateWindowElementList &OutDrawEle
 		UMaterialInstanceDynamic *material = nullptr;
 		switch (slot->getData().getBlendMode()) {
 			case BlendMode_Normal:
-				if (!widget->pageToNormalBlendMaterial.Contains(attachmentAtlasRegion->page)) {
+				if (!widget->pageToNormalBlendMaterial.Contains(attachmentAtlasRegion->getPage())) {
 					clipper.clipEnd(*slot);
 					continue;
 				}
-				material = widget->pageToNormalBlendMaterial[attachmentAtlasRegion->page];
+				material = widget->pageToNormalBlendMaterial[attachmentAtlasRegion->getPage()];
 				break;
 			case BlendMode_Additive:
-				if (!widget->pageToAdditiveBlendMaterial.Contains(attachmentAtlasRegion->page)) {
+				if (!widget->pageToAdditiveBlendMaterial.Contains(attachmentAtlasRegion->getPage())) {
 					clipper.clipEnd(*slot);
 					continue;
 				}
-				material = widget->pageToAdditiveBlendMaterial[attachmentAtlasRegion->page];
+				material = widget->pageToAdditiveBlendMaterial[attachmentAtlasRegion->getPage()];
 				break;
 			case BlendMode_Multiply:
-				if (!widget->pageToMultiplyBlendMaterial.Contains(attachmentAtlasRegion->page)) {
+				if (!widget->pageToMultiplyBlendMaterial.Contains(attachmentAtlasRegion->getPage())) {
 					clipper.clipEnd(*slot);
 					continue;
 				}
-				material = widget->pageToMultiplyBlendMaterial[attachmentAtlasRegion->page];
+				material = widget->pageToMultiplyBlendMaterial[attachmentAtlasRegion->getPage()];
 				break;
 			case BlendMode_Screen:
-				if (!widget->pageToScreenBlendMaterial.Contains(attachmentAtlasRegion->page)) {
+				if (!widget->pageToScreenBlendMaterial.Contains(attachmentAtlasRegion->getPage())) {
 					clipper.clipEnd(*slot);
 					continue;
 				}
-				material = widget->pageToScreenBlendMaterial[attachmentAtlasRegion->page];
+				material = widget->pageToScreenBlendMaterial[attachmentAtlasRegion->getPage()];
 				break;
 			default:
-				if (!widget->pageToNormalBlendMaterial.Contains(attachmentAtlasRegion->page)) {
+				if (!widget->pageToNormalBlendMaterial.Contains(attachmentAtlasRegion->getPage())) {
 					clipper.clipEnd(*slot);
 					continue;
 				}
-				material = widget->pageToNormalBlendMaterial[attachmentAtlasRegion->page];
+				material = widget->pageToNormalBlendMaterial[attachmentAtlasRegion->getPage()];
 		}
 
 		if (clipper.isClipping()) {
@@ -389,14 +388,14 @@ void SSpineWidget::UpdateMesh(int32 LayerId, FSlateWindowElementList &OutDrawEle
 			idx = 0;
 		}
 
-		uint8 r = static_cast<uint8>(Skeleton->getColor().r * slot->getColor().r * attachmentColor.r * 255);
-		uint8 g = static_cast<uint8>(Skeleton->getColor().g * slot->getColor().g * attachmentColor.g * 255);
-		uint8 b = static_cast<uint8>(Skeleton->getColor().b * slot->getColor().b * attachmentColor.b * 255);
-		uint8 a = static_cast<uint8>(Skeleton->getColor().a * slot->getColor().a * attachmentColor.a * 255);
+		uint8 r = static_cast<uint8>(Skeleton->getColor().r * slot->getAppliedPose().getColor().r * attachmentColor.r * 255);
+		uint8 g = static_cast<uint8>(Skeleton->getColor().g * slot->getAppliedPose().getColor().g * attachmentColor.g * 255);
+		uint8 b = static_cast<uint8>(Skeleton->getColor().b * slot->getAppliedPose().getColor().b * attachmentColor.b * 255);
+		uint8 a = static_cast<uint8>(Skeleton->getColor().a * slot->getAppliedPose().getColor().a * attachmentColor.a * 255);
 
-		float dr = slot->hasDarkColor() ? slot->getDarkColor().r : 0.0f;
-		float dg = slot->hasDarkColor() ? slot->getDarkColor().g : 0.0f;
-		float db = slot->hasDarkColor() ? slot->getDarkColor().b : 0.0f;
+		float dr = slot->getAppliedPose().hasDarkColor() ? slot->getAppliedPose().getDarkColor().r : 0.0f;
+		float dg = slot->getAppliedPose().hasDarkColor() ? slot->getAppliedPose().getDarkColor().g : 0.0f;
+		float db = slot->getAppliedPose().hasDarkColor() ? slot->getAppliedPose().getDarkColor().b : 0.0f;
 
 		float *verticesPtr = attachmentVertices->buffer();
 		for (int j = 0; j < numVertices << 1; j += 2) {
