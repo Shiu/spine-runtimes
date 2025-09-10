@@ -38,7 +38,7 @@ namespace spine {
 	class Skeleton;
 	class ClippingAttachment;
 
-	class SP_API SkeletonClipping : public SpineObject {
+	class SkeletonClipping : public SpineObject {
 	public:
 		SkeletonClipping();
 

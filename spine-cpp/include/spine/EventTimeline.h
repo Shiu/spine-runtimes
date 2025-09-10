@@ -34,7 +34,7 @@
 
 namespace spine {
 	/// Fires an Event when specific animation times are reached.
-	class SP_API EventTimeline : public Timeline {
+	class EventTimeline : public Timeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

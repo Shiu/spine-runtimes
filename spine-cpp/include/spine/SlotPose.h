@@ -40,7 +40,7 @@ namespace spine {
 	class Attachment;
 	class VertexAttachment;
 
-	class SP_API SlotPose : public Pose<SlotPose> {
+	class SlotPose : public Pose<SlotPose> {
 		friend class Slot;
 		friend class SlotCurveTimeline;
 		friend class DeformTimeline;

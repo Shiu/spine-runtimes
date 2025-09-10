@@ -30,12 +30,12 @@
 #ifndef Spine_ConstraintTimeline_h
 #define Spine_ConstraintTimeline_h
 
-#include <spine/dll.h>
+
 #include <spine/RTTI.h>
 
 namespace spine {
 	/// An interface for timelines which change the property of a constraint.
-	class SP_API ConstraintTimeline {
+	class ConstraintTimeline {
 		RTTI_DECL_NOPARENT
 
 	public:

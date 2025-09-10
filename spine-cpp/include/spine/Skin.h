@@ -46,15 +46,15 @@ namespace spine {
 	/// Stores attachments by slot index and attachment name.
 	/// See SkeletonData::getDefaultSkin, Skeleton::getSkin, and
 	/// http://esotericsoftware.com/spine-runtime-skins in the Spine Runtimes Guide.
-	class SP_API Skin : public SpineObject {
+	class Skin : public SpineObject {
 		friend class Skeleton;
 
 	public:
-		class SP_API AttachmentMap : public SpineObject {
+		class AttachmentMap : public SpineObject {
 			friend class Skin;
 
 		public:
-			struct SP_API Entry {
+			struct Entry {
 				size_t _slotIndex;
 				String _name;
 				Attachment *_attachment;
@@ -63,7 +63,7 @@ namespace spine {
 				}
 			};
 
-			class SP_API Entries {
+			class Entries {
 				friend class AttachmentMap;
 
 			public:

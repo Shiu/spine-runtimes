@@ -34,7 +34,7 @@
 
 namespace spine {
 	/// Changes a skeleton's Skeleton::getDrawOrder().
-	class SP_API DrawOrderTimeline : public Timeline {
+	class DrawOrderTimeline : public Timeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

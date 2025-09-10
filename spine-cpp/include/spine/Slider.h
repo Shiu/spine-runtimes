@@ -42,7 +42,7 @@ namespace spine {
 	/// Stores the setup pose for a PhysicsConstraint.
 	///
 	/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User Guide.
-	class SP_API Slider : public ConstraintGeneric<Slider, SliderData, SliderPose> {
+	class Slider : public ConstraintGeneric<Slider, SliderData, SliderPose> {
 		friend class Skeleton;
 		friend class SliderTimeline;
 		friend class SliderMixTimeline;

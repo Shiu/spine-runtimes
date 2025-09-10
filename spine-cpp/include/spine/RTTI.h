@@ -30,10 +30,10 @@
 #ifndef Spine_RTTI_h
 #define Spine_RTTI_h
 
-#include <spine/dll.h>
+
 
 namespace spine {
-	class SP_API RTTI {
+	class RTTI {
 	public:
 		explicit RTTI(const char *className);
 

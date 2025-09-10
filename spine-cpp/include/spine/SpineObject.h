@@ -33,12 +33,12 @@
 #include <new>
 #include <stddef.h>
 
-#include <spine/dll.h>
+
 
 namespace spine {
 	class String;
 
-	class SP_API SpineObject {
+	class SpineObject {
 	public:
 		void *operator new(size_t sz);
 

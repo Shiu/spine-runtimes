@@ -39,7 +39,7 @@
 
 namespace spine {
 
-	class SP_API MathUtil : public SpineObject {
+	class MathUtil : public SpineObject {
 	private:
 		MathUtil();
 

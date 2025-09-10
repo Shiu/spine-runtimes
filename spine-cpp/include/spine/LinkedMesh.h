@@ -36,7 +36,7 @@
 namespace spine {
 	class MeshAttachment;
 
-	class SP_API LinkedMesh : public SpineObject {
+	class LinkedMesh : public SpineObject {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

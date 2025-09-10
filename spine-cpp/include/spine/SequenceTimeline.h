@@ -39,7 +39,7 @@ namespace spine {
 	class HasTextureRegion;
 
 	/// Changes a slot's SlotPose::getSequenceIndex() for an attachment's Sequence.
-	class SP_API SequenceTimeline : public Timeline, public SlotTimeline {
+	class SequenceTimeline : public Timeline, public SlotTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

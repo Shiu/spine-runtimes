@@ -45,7 +45,7 @@ namespace spine {
 	class ToProperty;
 
 	/// Source property for a TransformConstraint.
-	class SP_API FromProperty : public SpineObject {
+	class FromProperty : public SpineObject {
 		friend class SkeletonBinary;
 
 	public:
@@ -65,7 +65,7 @@ namespace spine {
 	};
 
 	/// Constrained property for a TransformConstraint.
-	class SP_API ToProperty : public SpineObject {
+	class ToProperty : public SpineObject {
 		friend class SkeletonBinary;
 
 	public:
@@ -90,7 +90,7 @@ namespace spine {
 		virtual void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) = 0;
 	};
 
-	class SP_API FromRotate : public FromProperty {
+	class FromRotate : public FromProperty {
 	public:
 		RTTI_DECL
 
@@ -102,7 +102,7 @@ namespace spine {
 		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
-	class SP_API ToRotate : public ToProperty {
+	class ToRotate : public ToProperty {
 	public:
 		RTTI_DECL
 
@@ -115,7 +115,7 @@ namespace spine {
 		void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) override;
 	};
 
-	class SP_API FromX : public FromProperty {
+	class FromX : public FromProperty {
 	public:
 		RTTI_DECL
 
@@ -127,7 +127,7 @@ namespace spine {
 		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
-	class SP_API ToX : public ToProperty {
+	class ToX : public ToProperty {
 	public:
 		RTTI_DECL
 
@@ -140,7 +140,7 @@ namespace spine {
 		void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) override;
 	};
 
-	class SP_API FromY : public FromProperty {
+	class FromY : public FromProperty {
 	public:
 		RTTI_DECL
 
@@ -152,7 +152,7 @@ namespace spine {
 		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
-	class SP_API ToY : public ToProperty {
+	class ToY : public ToProperty {
 	public:
 		RTTI_DECL
 
@@ -165,7 +165,7 @@ namespace spine {
 		void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) override;
 	};
 
-	class SP_API FromScaleX : public FromProperty {
+	class FromScaleX : public FromProperty {
 	public:
 		RTTI_DECL
 
@@ -177,7 +177,7 @@ namespace spine {
 		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
-	class SP_API ToScaleX : public ToProperty {
+	class ToScaleX : public ToProperty {
 	public:
 		RTTI_DECL
 
@@ -190,7 +190,7 @@ namespace spine {
 		void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) override;
 	};
 
-	class SP_API FromScaleY : public FromProperty {
+	class FromScaleY : public FromProperty {
 	public:
 		RTTI_DECL
 
@@ -202,7 +202,7 @@ namespace spine {
 		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
-	class SP_API ToScaleY : public ToProperty {
+	class ToScaleY : public ToProperty {
 	public:
 		RTTI_DECL
 
@@ -215,7 +215,7 @@ namespace spine {
 		void apply(Skeleton &skeleton, TransformConstraintPose &pose, BonePose &bone, float value, bool local, bool additive) override;
 	};
 
-	class SP_API FromShearY : public FromProperty {
+	class FromShearY : public FromProperty {
 	public:
 		RTTI_DECL
 
@@ -227,7 +227,7 @@ namespace spine {
 		float value(Skeleton &skeleton, BonePose &source, bool local, float *offsets) override;
 	};
 
-	class SP_API ToShearY : public ToProperty {
+	class ToShearY : public ToProperty {
 	public:
 		RTTI_DECL
 
@@ -243,7 +243,7 @@ namespace spine {
 	/// Stores the setup pose for a TransformConstraint.
 	///
 	/// See https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine User Guide.
-	class SP_API TransformConstraintData : public ConstraintDataGeneric<TransformConstraint, TransformConstraintPose> {
+	class TransformConstraintData : public ConstraintDataGeneric<TransformConstraint, TransformConstraintPose> {
 	public:
 		RTTI_DECL
 		static const int ROTATION;

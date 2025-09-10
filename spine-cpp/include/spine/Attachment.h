@@ -35,7 +35,7 @@
 #include <spine/SpineString.h>
 
 namespace spine {
-	class SP_API Attachment : public SpineObject {
+	class Attachment : public SpineObject {
 		RTTI_DECL_NOPARENT
 
 	public:

@@ -49,7 +49,7 @@ namespace spine {
 	/// constrained bones so they follow a PathAttachment.
 	///
 	/// See https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User Guide.
-	class SP_API PathConstraint : public ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose> {
+	class PathConstraint : public ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose> {
 		friend class Skeleton;
 		friend class PathConstraintMixTimeline;
 		friend class PathConstraintPositionTimeline;

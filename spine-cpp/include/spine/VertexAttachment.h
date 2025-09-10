@@ -40,7 +40,7 @@ namespace spine {
 
 	/// An attachment with vertices that are transformed by one or more bones and can be deformed by a slot's
 	/// SlotPose::getDeform().
-	class SP_API VertexAttachment : public Attachment {
+	class VertexAttachment : public Attachment {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

@@ -42,7 +42,7 @@ namespace spine {
 
 	class Event;
 
-	class SP_API Timeline : public SpineObject {
+	class Timeline : public SpineObject {
 		RTTI_DECL_NOPARENT
 
 	public:

@@ -30,13 +30,13 @@
 #ifndef Spine_HasRendererObject_h
 #define Spine_HasRendererObject_h
 
-#include <spine/dll.h>
+
 
 namespace spine {
 
 	typedef void (*DisposeRendererObject)(void *rendererObject);
 
-	class SP_API HasRendererObject {
+	class HasRendererObject {
 	public:
 		explicit HasRendererObject() : _rendererObject(0), _dispose(0) {};
 

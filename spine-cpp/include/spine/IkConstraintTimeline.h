@@ -37,7 +37,7 @@ namespace spine {
 
 	/// Changes an IK constraint's IkConstraintPose::getMix(), IkConstraintPose::getSoftness(),
 	/// IkConstraintPose::getBendDirection(), IkConstraintPose::getStretch(), and IkConstraintPose::getCompress().
-	class SP_API IkConstraintTimeline : public CurveTimeline, public ConstraintTimeline {
+	class IkConstraintTimeline : public CurveTimeline, public ConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

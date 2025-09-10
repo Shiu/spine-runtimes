@@ -30,11 +30,11 @@
 #ifndef Spine_PosedActive_h
 #define Spine_PosedActive_h
 
-#include <spine/dll.h>
+
 
 namespace spine {
 	/// Simple mixin class that adds active state tracking
-	class SP_API PosedActive {
+	class PosedActive {
 	protected:
 		bool _active;
 

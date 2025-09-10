@@ -183,7 +183,7 @@ namespace spine {
 			return NULL;
 		}
 
-		class SP_API Entry : public SpineObject {
+		class Entry : public SpineObject {
 		public:
 			K _key;
 			V _value;

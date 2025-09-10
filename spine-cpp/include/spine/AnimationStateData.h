@@ -42,7 +42,7 @@ namespace spine {
 	class Animation;
 
 	/// Stores mix (crossfade) durations to be applied when AnimationState animations are changed.
-	class SP_API AnimationStateData : public SpineObject {
+	class AnimationStateData : public SpineObject {
 		friend class AnimationState;
 
 	public:

@@ -82,7 +82,7 @@ namespace spine {
 		TextureWrap_Repeat
 	};
 
-	class SP_API AtlasPage : public SpineObject {
+	class AtlasPage : public SpineObject {
 	public:
 		String name;
 		String texturePath;
@@ -107,7 +107,7 @@ namespace spine {
 		}
 	};
 
-	class SP_API AtlasRegion : public TextureRegion {
+	class AtlasRegion : public TextureRegion {
 		friend class Atlas;
 		friend class RegionAttachment;
 		friend class MeshAttachment;
@@ -242,7 +242,7 @@ namespace spine {
 
 	class TextureLoader;
 
-	class SP_API Atlas : public SpineObject {
+	class Atlas : public SpineObject {
 	public:
 		Atlas(const String &path, TextureLoader *textureLoader, bool createTexture = true);
 

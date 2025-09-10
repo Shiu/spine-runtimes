@@ -44,7 +44,7 @@ namespace spine {
 	///
 	/// See https://esotericsoftware.com/spine-loading-skeleton-data#JSON-and-binary-data Loading skeleton data in the
 	/// Spine Runtimes Guide.
-	class SP_API AtlasAttachmentLoader : public AttachmentLoader {
+	class AtlasAttachmentLoader : public AttachmentLoader {
 	public:
 		explicit AtlasAttachmentLoader(Atlas &atlas);
 

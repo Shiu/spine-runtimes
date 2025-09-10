@@ -35,7 +35,7 @@
 
 namespace spine {
 	/// Changes a slot's SlotPose::getColor().
-	class SP_API RGBATimeline : public SlotCurveTimeline {
+	class RGBATimeline : public SlotCurveTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -63,7 +63,7 @@ namespace spine {
 	};
 
 	/// Changes the RGB for a slot's SlotPose::getColor().
-	class SP_API RGBTimeline : public SlotCurveTimeline {
+	class RGBTimeline : public SlotCurveTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -89,7 +89,7 @@ namespace spine {
 		static const int B = 3;
 	};
 
-	class SP_API AlphaTimeline : public CurveTimeline1, public SlotTimeline {
+	class AlphaTimeline : public CurveTimeline1, public SlotTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -113,7 +113,7 @@ namespace spine {
 	};
 
 	/// Changes a slot's SlotPose::getColor() and SlotPose::getDarkColor() for two color tinting.
-	class SP_API RGBA2Timeline : public SlotCurveTimeline {
+	class RGBA2Timeline : public SlotCurveTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -144,7 +144,7 @@ namespace spine {
 	};
 
 	/// Changes the RGB for a slot's SlotPose::getColor() and SlotPose::getDarkColor() for two color tinting.
-	class SP_API RGB2Timeline : public SlotCurveTimeline {
+	class RGB2Timeline : public SlotCurveTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

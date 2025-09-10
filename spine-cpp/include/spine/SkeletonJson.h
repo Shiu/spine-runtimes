@@ -65,7 +65,7 @@ namespace spine {
 
 	class Attachment;
 
-	class SP_API SkeletonJson : public SpineObject {
+	class SkeletonJson : public SpineObject {
 	public:
 		explicit SkeletonJson(Atlas &atlas);
 

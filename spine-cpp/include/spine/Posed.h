@@ -33,7 +33,7 @@
 #include <spine/SpineObject.h>
 
 namespace spine {
-	class SP_API Posed {
+	class Posed {
 	public:
 		Posed() {
 		}

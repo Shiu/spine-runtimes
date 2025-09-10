@@ -37,7 +37,7 @@
 #include <spine/RTTI.h>
 
 namespace spine {
-	class SP_API BoneData : public PosedDataGeneric<BoneLocal> {
+	class BoneData : public PosedDataGeneric<BoneLocal> {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

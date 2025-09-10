@@ -35,7 +35,7 @@
 namespace spine {
 
 	/// Changes a bone's local X and Y translation.
-	class SP_API TranslateTimeline : public BoneTimeline2 {
+	class TranslateTimeline : public BoneTimeline2 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -50,7 +50,7 @@ namespace spine {
 	};
 
 	/// Changes a bone's local X translation.
-	class SP_API TranslateXTimeline : public BoneTimeline1 {
+	class TranslateXTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -65,7 +65,7 @@ namespace spine {
 	};
 
 	/// Changes a bone's local Y translation.
-	class SP_API TranslateYTimeline : public BoneTimeline1 {
+	class TranslateYTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

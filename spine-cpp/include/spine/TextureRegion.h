@@ -34,7 +34,7 @@
 #include <spine/RTTI.h>
 
 namespace spine {
-	class SP_API TextureRegion : public SpineObject {
+	class TextureRegion : public SpineObject {
 		friend class MeshAttachment;
 		friend class RegionAttachment;
 		friend class Atlas;

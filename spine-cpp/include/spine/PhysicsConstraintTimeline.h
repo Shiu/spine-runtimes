@@ -39,7 +39,7 @@
 namespace spine {
 
 	/// The base class for most PhysicsConstraint timelines.
-	class SP_API PhysicsConstraintTimeline : public CurveTimeline1, public ConstraintTimeline {
+	class PhysicsConstraintTimeline : public CurveTimeline1, public ConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -70,7 +70,7 @@ namespace spine {
 	};
 
 	/// Changes a physics constraint's PhysicsConstraintPose::getInertia().
-	class SP_API PhysicsConstraintInertiaTimeline : public PhysicsConstraintTimeline {
+	class PhysicsConstraintInertiaTimeline : public PhysicsConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -96,7 +96,7 @@ namespace spine {
 	};
 
 	/// Changes a physics constraint's PhysicsConstraintPose::getStrength().
-	class SP_API PhysicsConstraintStrengthTimeline : public PhysicsConstraintTimeline {
+	class PhysicsConstraintStrengthTimeline : public PhysicsConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -122,7 +122,7 @@ namespace spine {
 	};
 
 	/// Changes a physics constraint's PhysicsConstraintPose::getDamping().
-	class SP_API PhysicsConstraintDampingTimeline : public PhysicsConstraintTimeline {
+	class PhysicsConstraintDampingTimeline : public PhysicsConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -149,7 +149,7 @@ namespace spine {
 
 	/// Changes a physics constraint's PhysicsConstraintPose::getMassInverse(). The
 	/// timeline values are not inverted.
-	class SP_API PhysicsConstraintMassTimeline : public PhysicsConstraintTimeline {
+	class PhysicsConstraintMassTimeline : public PhysicsConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -175,7 +175,7 @@ namespace spine {
 	};
 
 	/// Changes a physics constraint's PhysicsConstraintPose::getWind().
-	class SP_API PhysicsConstraintWindTimeline : public PhysicsConstraintTimeline {
+	class PhysicsConstraintWindTimeline : public PhysicsConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -201,7 +201,7 @@ namespace spine {
 	};
 
 	/// Changes a physics constraint's PhysicsConstraintPose::getGravity().
-	class SP_API PhysicsConstraintGravityTimeline : public PhysicsConstraintTimeline {
+	class PhysicsConstraintGravityTimeline : public PhysicsConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -227,7 +227,7 @@ namespace spine {
 	};
 
 	/// Changes a physics constraint's PhysicsConstraintPose::getMix().
-	class SP_API PhysicsConstraintMixTimeline : public PhysicsConstraintTimeline {
+	class PhysicsConstraintMixTimeline : public PhysicsConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;
@@ -253,7 +253,7 @@ namespace spine {
 	};
 
 	/// Resets a physics constraint when specific animation times are reached.
-	class SP_API PhysicsConstraintResetTimeline : public Timeline, public ConstraintTimeline {
+	class PhysicsConstraintResetTimeline : public Timeline, public ConstraintTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

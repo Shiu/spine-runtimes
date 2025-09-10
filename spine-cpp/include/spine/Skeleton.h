@@ -65,7 +65,7 @@ namespace spine {
 
 	class SkeletonClipping;
 
-	class SP_API Skeleton : public SpineObject {
+	class Skeleton : public SpineObject {
 		friend class AnimationState;
 
 		friend class SkeletonBounds;

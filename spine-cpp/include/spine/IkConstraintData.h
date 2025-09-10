@@ -41,7 +41,7 @@ namespace spine {
 	class BoneData;
 	class IkConstraint;
 
-	class SP_API IkConstraintData : public ConstraintDataGeneric<IkConstraint, IkConstraintPose> {
+	class IkConstraintData : public ConstraintDataGeneric<IkConstraint, IkConstraintPose> {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

@@ -34,7 +34,7 @@
 #include <spine/Pool.h>
 
 namespace spine {
-	class SP_API Triangulator : public SpineObject {
+	class Triangulator : public SpineObject {
 	public:
 		~Triangulator();
 

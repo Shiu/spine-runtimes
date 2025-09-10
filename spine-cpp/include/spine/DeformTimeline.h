@@ -36,7 +36,7 @@ namespace spine {
 	class VertexAttachment;
 
 	/// Changes a slot's SlotPose::getDeform() to deform a VertexAttachment.
-	class SP_API DeformTimeline : public SlotCurveTimeline {
+	class DeformTimeline : public SlotCurveTimeline {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

@@ -34,7 +34,7 @@
 
 namespace spine {
 	/// Changes a bone's local rotation.
-	class SP_API RotateTimeline : public BoneTimeline1 {
+	class RotateTimeline : public BoneTimeline1 {
 		friend class SkeletonBinary;
 
 		friend class SkeletonJson;

@@ -36,7 +36,7 @@
 
 namespace spine {
 	/// Attachment that has a polygon for bounds checking.
-	class SP_API BoundingBoxAttachment : public VertexAttachment {
+	class BoundingBoxAttachment : public VertexAttachment {
 		RTTI_DECL
 
 	public:

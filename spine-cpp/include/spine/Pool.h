@@ -37,7 +37,7 @@
 
 namespace spine {
 	template<typename T>
-	class SP_API Pool : public SpineObject {
+	class Pool : public SpineObject {
 	public:
 		Pool() {
 		}

@@ -34,7 +34,7 @@
 
 namespace spine {
 	template<class P>
-	class SP_API Pose : public SpineObject {
+	class Pose : public SpineObject {
 	public:
 		Pose() {};
 		virtual ~Pose() {};

@@ -42,7 +42,7 @@ namespace spine {
 	class SkeletonBinary;
 	class SkeletonJson;
 
-	class SP_API Sequence : public SpineObject {
+	class Sequence : public SpineObject {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 

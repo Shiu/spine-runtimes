@@ -37,7 +37,7 @@ namespace spine {
 	template<class P>
 	class Pose;
 
-	class SP_API PosedData : public SpineObject {
+	class PosedData : public SpineObject {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class BoneTimeline1;
