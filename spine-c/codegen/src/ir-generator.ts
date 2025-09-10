@@ -685,10 +685,7 @@ function generateMethod(type: ClassOrStruct, method: Method, cTypeName: string, 
             methodCall = `${cppTypeName}::${method.name}(${buildCppArgs(method.parameters || [], cParams, knownTypeNames)})`;
             body = generateReturnStatement(method.returnType, methodCall, knownTypeNames);
         } else {
-            // Use local variable to avoid cast->method line breaks
-            const instanceVar = method.fromSupertype ?
-                `${method.fromSupertype} *_self = (${method.fromSupertype} *) (${cppTypeName} *) self;` :
-                `${cppTypeName} *_self = (${cppTypeName} *) self;`;
+            const instanceVar = `${cppTypeName} *_self = (${cppTypeName} *) self;`;
             methodCall = `_self->${method.name}(${buildCppArgs(method.parameters || [], cParams.slice(1), knownTypeNames)})`;
             const returnStatement = generateReturnStatement(method.returnType, methodCall, knownTypeNames);
             body = `${instanceVar}\n\t${returnStatement}`;
