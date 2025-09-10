@@ -114,8 +114,8 @@ namespace spine {
 
 		int _boneIndex;
 
-		static const int ENTRIES = 3;
-		static const int VALUE1 = 1, VALUE2 = 2;
+		static const int ENTRIES;
+		static const int VALUE1, VALUE2;
 	};
 }
 

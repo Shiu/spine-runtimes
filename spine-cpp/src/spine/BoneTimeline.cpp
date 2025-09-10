@@ -38,6 +38,11 @@
 
 using namespace spine;
 
+// Define static constants for BoneTimeline2
+const int BoneTimeline2::ENTRIES = 3;
+const int BoneTimeline2::VALUE1 = 1;
+const int BoneTimeline2::VALUE2 = 2;
+
 RTTI_IMPL_NOPARENT(BoneTimeline)
 
 RTTI_IMPL_MULTI(BoneTimeline1, CurveTimeline1, BoneTimeline)

@@ -38,6 +38,14 @@
 
 using namespace spine;
 
+// Define static constants for TransformConstraintData
+const int TransformConstraintData::ROTATION = 0;
+const int TransformConstraintData::X = 1;
+const int TransformConstraintData::Y = 2;
+const int TransformConstraintData::SCALEX = 3;
+const int TransformConstraintData::SCALEY = 4;
+const int TransformConstraintData::SHEARY = 5;
+
 RTTI_IMPL(TransformConstraintData, ConstraintData)
 RTTI_IMPL_NOPARENT(FromProperty)
 RTTI_IMPL_NOPARENT(ToProperty)
