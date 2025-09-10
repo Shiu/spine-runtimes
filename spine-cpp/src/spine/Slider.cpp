@@ -50,7 +50,7 @@ RTTI_IMPL(Slider, Constraint)
 
 float Slider::_offsets[6];
 
-Slider::Slider(SliderData &data, Skeleton &skeleton) : ConstraintGeneric<Slider, SliderData, SliderPose>(data), _bone(NULL) {
+Slider::Slider(SliderData &data, Skeleton &skeleton) : SliderBase(data), _bone(NULL) {
 	if (data._bone != NULL) {
 		_bone = skeleton._bones[data._bone->getIndex()];
 	}

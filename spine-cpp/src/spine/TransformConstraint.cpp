@@ -41,8 +41,7 @@ using namespace spine;
 
 RTTI_IMPL(TransformConstraint, Constraint)
 
-TransformConstraint::TransformConstraint(TransformConstraintData &data, Skeleton &skeleton)
-	: ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose>(data) {
+TransformConstraint::TransformConstraint(TransformConstraintData &data, Skeleton &skeleton) : TransformConstraintBase(data) {
 
 	_bones.ensureCapacity(data.getBones().size());
 	for (size_t i = 0; i < data.getBones().size(); i++) {

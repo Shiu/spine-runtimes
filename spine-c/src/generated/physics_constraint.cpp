@@ -62,50 +62,42 @@ void spine_physics_constraint_set_bone(spine_physics_constraint self, spine_bone
 }
 
 spine_physics_constraint_data spine_physics_constraint_get_data(spine_physics_constraint self) {
-	ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>
-		*_self = (ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> *) (PhysicsConstraint *) self;
+	PhysicsConstraintBase *_self = (PhysicsConstraintBase *) (PhysicsConstraint *) self;
 	return (spine_physics_constraint_data) &_self->getData();
 }
 
 spine_physics_constraint_pose spine_physics_constraint_get_pose(spine_physics_constraint self) {
-	ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>
-		*_self = (ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> *) (PhysicsConstraint *) self;
+	PhysicsConstraintBase *_self = (PhysicsConstraintBase *) (PhysicsConstraint *) self;
 	return (spine_physics_constraint_pose) &_self->getPose();
 }
 
 spine_physics_constraint_pose spine_physics_constraint_get_applied_pose(spine_physics_constraint self) {
-	ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>
-		*_self = (ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> *) (PhysicsConstraint *) self;
+	PhysicsConstraintBase *_self = (PhysicsConstraintBase *) (PhysicsConstraint *) self;
 	return (spine_physics_constraint_pose) &_self->getAppliedPose();
 }
 
 void spine_physics_constraint_reset_constrained(spine_physics_constraint self) {
-	ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>
-		*_self = (ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> *) (PhysicsConstraint *) self;
+	PhysicsConstraintBase *_self = (PhysicsConstraintBase *) (PhysicsConstraint *) self;
 	_self->resetConstrained();
 }
 
 void spine_physics_constraint_constrained(spine_physics_constraint self) {
-	ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>
-		*_self = (ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> *) (PhysicsConstraint *) self;
+	PhysicsConstraintBase *_self = (PhysicsConstraintBase *) (PhysicsConstraint *) self;
 	_self->constrained();
 }
 
 bool spine_physics_constraint_is_pose_equal_to_applied(spine_physics_constraint self) {
-	ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>
-		*_self = (ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> *) (PhysicsConstraint *) self;
+	PhysicsConstraintBase *_self = (PhysicsConstraintBase *) (PhysicsConstraint *) self;
 	return _self->isPoseEqualToApplied();
 }
 
 bool spine_physics_constraint_is_active(spine_physics_constraint self) {
-	ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>
-		*_self = (ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> *) (PhysicsConstraint *) self;
+	PhysicsConstraintBase *_self = (PhysicsConstraintBase *) (PhysicsConstraint *) self;
 	return _self->isActive();
 }
 
 void spine_physics_constraint_set_active(spine_physics_constraint self, bool active) {
-	ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose>
-		*_self = (ConstraintGeneric<PhysicsConstraint, PhysicsConstraintData, PhysicsConstraintPose> *) (PhysicsConstraint *) self;
+	PhysicsConstraintBase *_self = (PhysicsConstraintBase *) (PhysicsConstraint *) self;
 	_self->setActive(active);
 }
 

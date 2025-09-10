@@ -49,7 +49,14 @@ namespace spine {
 	/// constrained bones so they follow a PathAttachment.
 	///
 	/// See https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User Guide.
-	class SP_API PathConstraint : public ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose> {
+	// Non-exported base class that inherits from the template
+	class PathConstraintBase : public ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose> {
+	public:
+		PathConstraintBase(PathConstraintData &data) : ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>(data) {
+		}
+	};
+
+	class SP_API PathConstraint : public PathConstraintBase {
 		friend class Skeleton;
 		friend class PathConstraintMixTimeline;
 		friend class PathConstraintPositionTimeline;
@@ -82,9 +89,6 @@ namespace spine {
 		Slot &getSlot();
 
 		void setSlot(Slot &slot);
-
-		virtual PathConstraintData &getData() override;
-
 
 	private:
 		Array<BonePose *> _bones;

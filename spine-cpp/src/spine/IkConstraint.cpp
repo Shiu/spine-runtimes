@@ -41,8 +41,7 @@ using namespace spine;
 
 RTTI_IMPL(IkConstraint, Constraint)
 
-IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton)
-	: ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>(data), _target(skeleton._bones[data._target->getIndex()]) {
+IkConstraint::IkConstraint(IkConstraintData &data, Skeleton &skeleton) : IkConstraintBase(data), _target(skeleton._bones[data._target->getIndex()]) {
 
 	_bones.ensureCapacity(data._bones.size());
 	for (size_t i = 0; i < data._bones.size(); i++) {
@@ -81,10 +80,6 @@ void IkConstraint::sort(Skeleton &skeleton) {
 	skeleton.sortReset(parent->_children);
 	skeleton.constrained(*parent);
 	if (_bones.size() > 1) skeleton.constrained(*_bones[1]->_bone);
-}
-
-IkConstraintData &IkConstraint::getData() {
-	return _data;
 }
 
 Array<BonePose *> &IkConstraint::getBones() {

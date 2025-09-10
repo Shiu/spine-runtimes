@@ -36,11 +36,6 @@ bool spine_ik_constraint_is_source_active(spine_ik_constraint self) {
 	return _self->isSourceActive();
 }
 
-spine_ik_constraint_data spine_ik_constraint_get_data(spine_ik_constraint self) {
-	IkConstraint *_self = (IkConstraint *) self;
-	return (spine_ik_constraint_data) &_self->getData();
-}
-
 spine_array_bone_pose spine_ik_constraint_get_bones(spine_ik_constraint self) {
 	IkConstraint *_self = (IkConstraint *) self;
 	return (spine_array_bone_pose) &_self->getBones();
@@ -67,45 +62,43 @@ void spine_ik_constraint_apply_2(spine_skeleton skeleton, spine_bone_pose parent
 						softness, mix);
 }
 
+spine_ik_constraint_data spine_ik_constraint_get_data(spine_ik_constraint self) {
+	IkConstraintBase *_self = (IkConstraintBase *) (IkConstraint *) self;
+	return (spine_ik_constraint_data) &_self->getData();
+}
+
 spine_ik_constraint_pose spine_ik_constraint_get_pose(spine_ik_constraint self) {
-	ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>
-		*_self = (ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> *) (IkConstraint *) self;
+	IkConstraintBase *_self = (IkConstraintBase *) (IkConstraint *) self;
 	return (spine_ik_constraint_pose) &_self->getPose();
 }
 
 spine_ik_constraint_pose spine_ik_constraint_get_applied_pose(spine_ik_constraint self) {
-	ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>
-		*_self = (ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> *) (IkConstraint *) self;
+	IkConstraintBase *_self = (IkConstraintBase *) (IkConstraint *) self;
 	return (spine_ik_constraint_pose) &_self->getAppliedPose();
 }
 
 void spine_ik_constraint_reset_constrained(spine_ik_constraint self) {
-	ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>
-		*_self = (ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> *) (IkConstraint *) self;
+	IkConstraintBase *_self = (IkConstraintBase *) (IkConstraint *) self;
 	_self->resetConstrained();
 }
 
 void spine_ik_constraint_constrained(spine_ik_constraint self) {
-	ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>
-		*_self = (ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> *) (IkConstraint *) self;
+	IkConstraintBase *_self = (IkConstraintBase *) (IkConstraint *) self;
 	_self->constrained();
 }
 
 bool spine_ik_constraint_is_pose_equal_to_applied(spine_ik_constraint self) {
-	ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>
-		*_self = (ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> *) (IkConstraint *) self;
+	IkConstraintBase *_self = (IkConstraintBase *) (IkConstraint *) self;
 	return _self->isPoseEqualToApplied();
 }
 
 bool spine_ik_constraint_is_active(spine_ik_constraint self) {
-	ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>
-		*_self = (ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> *) (IkConstraint *) self;
+	IkConstraintBase *_self = (IkConstraintBase *) (IkConstraint *) self;
 	return _self->isActive();
 }
 
 void spine_ik_constraint_set_active(spine_ik_constraint self, bool active) {
-	ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>
-		*_self = (ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> *) (IkConstraint *) self;
+	IkConstraintBase *_self = (IkConstraintBase *) (IkConstraint *) self;
 	_self->setActive(active);
 }
 

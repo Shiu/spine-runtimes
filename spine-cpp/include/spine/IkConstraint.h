@@ -41,7 +41,14 @@ namespace spine {
 	class Bone;
 	class BonePose;
 
-	class SP_API IkConstraint : public ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> {
+	// Non-exported base class that inherits from the template
+	class IkConstraintBase : public ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose> {
+	public:
+		IkConstraintBase(IkConstraintData &data) : ConstraintGeneric<IkConstraint, IkConstraintData, IkConstraintPose>(data) {
+		}
+	};
+
+	class SP_API IkConstraint : public IkConstraintBase {
 		friend class Skeleton;
 
 		friend class IkConstraintTimeline;
@@ -58,8 +65,6 @@ namespace spine {
 		virtual void sort(Skeleton &skeleton) override;
 
 		virtual bool isSourceActive() override;
-
-		IkConstraintData &getData() override;
 
 		Array<BonePose *> &getBones();
 

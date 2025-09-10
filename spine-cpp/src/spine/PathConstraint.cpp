@@ -51,8 +51,7 @@ const int PathConstraint::NONE = -1;
 const int PathConstraint::BEFORE = -2;
 const int PathConstraint::AFTER = -3;
 
-PathConstraint::PathConstraint(PathConstraintData &data, Skeleton &skeleton)
-	: ConstraintGeneric<PathConstraint, PathConstraintData, PathConstraintPose>(data) {
+PathConstraint::PathConstraint(PathConstraintData &data, Skeleton &skeleton) : PathConstraintBase(data) {
 
 	_bones.ensureCapacity(data.getBones().size());
 	for (size_t i = 0; i < data.getBones().size(); i++) {
@@ -234,10 +233,6 @@ void PathConstraint::sort(Skeleton &skeleton) {
 
 bool PathConstraint::isSourceActive() {
 	return _slot->getBone().isActive();
-}
-
-PathConstraintData &PathConstraint::getData() {
-	return _data;
 }
 
 Array<BonePose *> &PathConstraint::getBones() {

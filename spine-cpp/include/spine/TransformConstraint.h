@@ -40,7 +40,15 @@ namespace spine {
 	class Bone;
 	class BonePose;
 
-	class SP_API TransformConstraint : public ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
+	// Non-exported base class that inherits from the template
+	class TransformConstraintBase : public ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose> {
+	public:
+		TransformConstraintBase(TransformConstraintData &data)
+			: ConstraintGeneric<TransformConstraint, TransformConstraintData, TransformConstraintPose>(data) {
+		}
+	};
+
+	class SP_API TransformConstraint : public TransformConstraintBase {
 		friend class Skeleton;
 		friend class TransformConstraintTimeline;
 
