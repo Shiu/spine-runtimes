@@ -79,7 +79,7 @@ namespace spine {
 
 	protected:
 		/// Applies changes to the pose based on the timeline values.
-		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) = 0;
+		virtual void _apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) = 0;
 
 		int _boneIndex;
 	};
@@ -110,7 +110,7 @@ namespace spine {
 
 	protected:
 		/// Applies changes to the pose based on the timeline values.
-		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) = 0;
+		virtual void _apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) = 0;
 
 		int _boneIndex;
 

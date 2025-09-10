@@ -46,7 +46,7 @@ ScaleTimeline::ScaleTimeline(size_t frameCount, size_t bezierCount, int boneInde
 	: BoneTimeline2(frameCount, bezierCount, boneIndex, Property_ScaleX, Property_ScaleY) {
 }
 
-void ScaleTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+void ScaleTimeline::_apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	if (time < _frames[0]) {
 		switch (blend) {
 			case MixBlend_Setup:
@@ -146,7 +146,7 @@ ScaleXTimeline::ScaleXTimeline(size_t frameCount, size_t bezierCount, int boneIn
 	: BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ScaleX) {
 }
 
-void ScaleXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+void ScaleXTimeline::_apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	pose._scaleX = getScaleValue(time, alpha, blend, direction, pose._scaleX, setup._scaleX);
 }
 
@@ -156,6 +156,6 @@ ScaleYTimeline::ScaleYTimeline(size_t frameCount, size_t bezierCount, int boneIn
 	: BoneTimeline1(frameCount, bezierCount, boneIndex, Property_ScaleY) {
 }
 
-void ScaleYTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+void ScaleYTimeline::_apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	pose._scaleY = getScaleValue(time, alpha, blend, direction, pose._scaleY, setup._scaleY);
 }

@@ -56,7 +56,7 @@ DeformTimeline::DeformTimeline(size_t frameCount, size_t bezierCount, int slotIn
 }
 
 
-void DeformTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
+void DeformTimeline::_apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
 	Attachment *slotAttachment = pose._attachment;
 	if (slotAttachment == NULL || !slotAttachment->getRTTI().instanceOf(VertexAttachment::rtti)) {
 		return;

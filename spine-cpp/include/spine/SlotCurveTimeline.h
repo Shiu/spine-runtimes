@@ -58,7 +58,7 @@ namespace spine {
 
 	protected:
 		/// Applies the timeline to the slot pose.
-		virtual void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) = 0;
+		virtual void _apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) = 0;
 
 		int _slotIndex;
 	};

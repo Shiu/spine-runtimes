@@ -46,7 +46,7 @@ TranslateTimeline::TranslateTimeline(size_t frameCount, size_t bezierCount, int 
 	: BoneTimeline2(frameCount, bezierCount, boneIndex, Property_X, Property_Y) {
 }
 
-void TranslateTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+void TranslateTimeline::_apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	if (time < _frames[0]) {
 		switch (blend) {
 			case MixBlend_Setup:
@@ -108,7 +108,7 @@ TranslateXTimeline::TranslateXTimeline(size_t frameCount, size_t bezierCount, in
 	: BoneTimeline1(frameCount, bezierCount, boneIndex, Property_X) {
 }
 
-void TranslateXTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+void TranslateXTimeline::_apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	pose._x = getRelativeValue(time, alpha, blend, pose._x, setup._x);
 }
 
@@ -118,6 +118,6 @@ TranslateYTimeline::TranslateYTimeline(size_t frameCount, size_t bezierCount, in
 	: BoneTimeline1(frameCount, bezierCount, boneIndex, Property_Y) {
 }
 
-void TranslateYTimeline::apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
+void TranslateYTimeline::_apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) {
 	pose._y = getRelativeValue(time, alpha, blend, pose._y, setup._y);
 }

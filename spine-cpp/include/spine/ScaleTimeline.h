@@ -45,7 +45,7 @@ namespace spine {
 		explicit ScaleTimeline(size_t frameCount, size_t bezierCount, int boneIndex);
 
 	protected:
-		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) override;
+		virtual void _apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) override;
 	};
 
 	/// Changes a bone's local BoneLocal::getScaleX().
@@ -60,7 +60,7 @@ namespace spine {
 		explicit ScaleXTimeline(size_t frameCount, size_t bezierCount, int boneIndex);
 
 	protected:
-		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) override;
+		virtual void _apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) override;
 	};
 
 	/// Changes a bone's local BoneLocal::getScaleY().
@@ -75,7 +75,7 @@ namespace spine {
 		explicit ScaleYTimeline(size_t frameCount, size_t bezierCount, int boneIndex);
 
 	protected:
-		virtual void apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) override;
+		virtual void _apply(BoneLocal &pose, BoneLocal &setup, float time, float alpha, MixBlend blend, MixDirection direction) override;
 	};
 }
 

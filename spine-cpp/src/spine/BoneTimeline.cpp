@@ -60,7 +60,7 @@ void BoneTimeline1::apply(Skeleton &skeleton, float lastTime, float time, Array<
 
 	Bone *bone = skeleton._bones[_boneIndex];
 	if (bone->isActive()) {
-		apply(appliedPose ? *bone->_applied : bone->_pose, bone->_data._setup, time, alpha, blend, direction);
+		_apply(appliedPose ? *bone->_applied : bone->_pose, bone->_data._setup, time, alpha, blend, direction);
 	}
 }
 
@@ -79,7 +79,7 @@ void BoneTimeline2::apply(Skeleton &skeleton, float lastTime, float time, Array<
 
 	Bone *bone = skeleton._bones[_boneIndex];
 	if (bone->isActive()) {
-		apply(appliedPose ? *bone->_applied : bone->_pose, bone->_data._setup, time, alpha, blend, direction);
+		_apply(appliedPose ? *bone->_applied : bone->_pose, bone->_data._setup, time, alpha, blend, direction);
 	}
 }
 

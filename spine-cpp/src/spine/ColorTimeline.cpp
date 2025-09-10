@@ -59,7 +59,7 @@ void RGBATimeline::setFrame(int frame, float time, float r, float g, float b, fl
 	_frames[frame + A] = a;
 }
 
-void RGBATimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
+void RGBATimeline::_apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
 	Color &color = pose._color;
 	if (time < _frames[0]) {
 		Color &setup = slot._data._setup._color;
@@ -134,7 +134,7 @@ void RGBTimeline::setFrame(int frame, float time, float r, float g, float b) {
 	_frames[frame + B] = b;
 }
 
-void RGBTimeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
+void RGBTimeline::_apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
 	Color &color = pose._color;
 	if (time < _frames[0]) {
 		Color &setup = slot._data._setup._color;
@@ -275,7 +275,7 @@ void RGBA2Timeline::setFrame(int frame, float time, float r, float g, float b, f
 	_frames[frame + B2] = b2;
 }
 
-void RGBA2Timeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
+void RGBA2Timeline::_apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
 	Color &light = pose._color;
 	Color &dark = pose._darkColor;
 	if (time < _frames[0]) {
@@ -388,7 +388,7 @@ void RGB2Timeline::setFrame(int frame, float time, float r, float g, float b, fl
 	_frames[frame + B2] = b2;
 }
 
-void RGB2Timeline::apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
+void RGB2Timeline::_apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) {
 	Color &light = pose._color;
 	Color &dark = pose._darkColor;
 	if (time < _frames[0]) {

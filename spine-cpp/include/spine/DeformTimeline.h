@@ -67,7 +67,7 @@ namespace spine {
 		}
 
 	protected:
-		void apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) override;
+		void _apply(Slot &slot, SlotPose &pose, float time, float alpha, MixBlend blend) override;
 
 	private:
 		Array<Array<float>> _vertices;
