@@ -27,8 +27,8 @@
  * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-#include "spine/RTTI.h"
 #include <spine/BonePose.h>
+#include "spine/RTTI.h"
 #include <spine/Bone.h>
 #include <spine/BoneData.h>
 #include <spine/Skeleton.h>
