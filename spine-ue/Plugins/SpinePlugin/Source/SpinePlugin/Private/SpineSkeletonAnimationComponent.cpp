@@ -205,6 +205,7 @@ void USpineSkeletonAnimationComponent::SetPlaybackTime(float InPlaybackTime, boo
 		if (bCallDelegates) {
 			BeforeUpdateWorldTransform.Broadcast(this);
 		}
+		skeleton->update(physicsTimeScale * DeltaTime);
 		skeleton->updateWorldTransform(Physics_Update);
 		if (bCallDelegates) {
 			AfterUpdateWorldTransform.Broadcast(this);

@@ -104,12 +104,11 @@ int main() {
 	GlTextureLoader textureLoader;
 	Atlas *atlas = new Atlas("data/celestial-circus-pma.atlas", &textureLoader);
 	SkeletonBinary binary(*atlas);
+	binary.setScale(0.2f);
 	SkeletonData *skeletonData = binary.readSkeletonDataFile("data/celestial-circus-pro.skel");
 
 	// Create a skeleton from the data
 	Skeleton skeleton(*skeletonData);
-	skeleton.setScaleX(0.2);
-	skeleton.setScaleY(0.2);
 	skeleton.setupPose();
 	skeleton.update(0);
 	skeleton.updateWorldTransform(Physics_Update);
