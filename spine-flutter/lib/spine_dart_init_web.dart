@@ -117,6 +117,7 @@ Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {
     registerOpaqueType<spine_from_shear_y_wrapper>();
     registerOpaqueType<spine_from_x_wrapper>();
     registerOpaqueType<spine_from_y_wrapper>();
+    registerOpaqueType<spine_ik_constraint_base_wrapper>();
     registerOpaqueType<spine_ik_constraint_data_wrapper>();
     registerOpaqueType<spine_ik_constraint_pose_wrapper>();
     registerOpaqueType<spine_ik_constraint_timeline_wrapper>();
@@ -125,12 +126,14 @@ Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {
     registerOpaqueType<spine_linked_mesh_wrapper>();
     registerOpaqueType<spine_mesh_attachment_wrapper>();
     registerOpaqueType<spine_path_attachment_wrapper>();
+    registerOpaqueType<spine_path_constraint_base_wrapper>();
     registerOpaqueType<spine_path_constraint_data_wrapper>();
     registerOpaqueType<spine_path_constraint_mix_timeline_wrapper>();
     registerOpaqueType<spine_path_constraint_pose_wrapper>();
     registerOpaqueType<spine_path_constraint_position_timeline_wrapper>();
     registerOpaqueType<spine_path_constraint_spacing_timeline_wrapper>();
     registerOpaqueType<spine_path_constraint_wrapper>();
+    registerOpaqueType<spine_physics_constraint_base_wrapper>();
     registerOpaqueType<spine_physics_constraint_damping_timeline_wrapper>();
     registerOpaqueType<spine_physics_constraint_data_wrapper>();
     registerOpaqueType<spine_physics_constraint_gravity_timeline_wrapper>();
@@ -176,6 +179,7 @@ Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {
     registerOpaqueType<spine_skin_entries_wrapper>();
     registerOpaqueType<spine_skin_entry_wrapper>();
     registerOpaqueType<spine_skin_wrapper>();
+    registerOpaqueType<spine_slider_base_wrapper>();
     registerOpaqueType<spine_slider_data_wrapper>();
     registerOpaqueType<spine_slider_mix_timeline_wrapper>();
     registerOpaqueType<spine_slider_pose_wrapper>();
@@ -197,6 +201,7 @@ Future<SpineDartFFI> initSpineDartFFI(bool useStaticLinkage) async {
     registerOpaqueType<spine_to_x_wrapper>();
     registerOpaqueType<spine_to_y_wrapper>();
     registerOpaqueType<spine_track_entry_wrapper>();
+    registerOpaqueType<spine_transform_constraint_base_wrapper>();
     registerOpaqueType<spine_transform_constraint_data_wrapper>();
     registerOpaqueType<spine_transform_constraint_pose_wrapper>();
     registerOpaqueType<spine_transform_constraint_timeline_wrapper>();

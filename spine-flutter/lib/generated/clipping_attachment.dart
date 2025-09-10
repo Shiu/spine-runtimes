@@ -41,7 +41,8 @@ import 'vertex_attachment.dart';
 class ClippingAttachment extends VertexAttachment {
   final Pointer<spine_clipping_attachment_wrapper> _ptr;
 
-  ClippingAttachment.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  ClippingAttachment.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_clipping_attachment_cast_to_vertex_attachment(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

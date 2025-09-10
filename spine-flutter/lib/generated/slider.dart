@@ -32,21 +32,16 @@
 import 'package:universal_ffi/ffi.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
 import 'bone.dart';
-import 'constraint.dart';
-import 'physics.dart';
-import 'posed.dart';
-import 'posed_active.dart';
 import 'skeleton.dart';
+import 'slider_base.dart';
 import 'slider_data.dart';
-import 'slider_pose.dart';
 
 /// Slider wrapper
-class Slider extends PosedActive implements Posed, Constraint {
+class Slider extends SliderBase {
   final Pointer<spine_slider_wrapper> _ptr;
 
-  Slider.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  Slider.fromPointer(this._ptr) : super.fromPointer(SpineBindings.bindings.spine_slider_cast_to_slider_base(_ptr));
 
   /// Get the native pointer for FFI calls
   @override
@@ -62,31 +57,9 @@ class Slider extends PosedActive implements Posed, Constraint {
     SpineBindings.bindings.spine_slider_dispose(_ptr);
   }
 
-  @override
-  Rtti get rtti {
-    final result = SpineBindings.bindings.spine_slider_get_rtti(_ptr);
-    return Rtti.fromPointer(result);
-  }
-
   Slider copy(Skeleton skeleton) {
     final result = SpineBindings.bindings.spine_slider_copy(_ptr, skeleton.nativePtr.cast());
     return Slider.fromPointer(result);
-  }
-
-  @override
-  void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings.spine_slider_update(_ptr, skeleton.nativePtr.cast(), physics.value);
-  }
-
-  @override
-  void sort(Skeleton skeleton) {
-    SpineBindings.bindings.spine_slider_sort(_ptr, skeleton.nativePtr.cast());
-  }
-
-  @override
-  bool get isSourceActive {
-    final result = SpineBindings.bindings.spine_slider_is_source_active(_ptr);
-    return result;
   }
 
   Bone get bone {
@@ -96,42 +69,5 @@ class Slider extends PosedActive implements Posed, Constraint {
 
   set bone(Bone value) {
     SpineBindings.bindings.spine_slider_set_bone(_ptr, value.nativePtr.cast());
-  }
-
-  @override
-  SliderData get data {
-    final result = SpineBindings.bindings.spine_slider_get_data(_ptr);
-    return SliderData.fromPointer(result);
-  }
-
-  SliderPose get pose {
-    final result = SpineBindings.bindings.spine_slider_get_pose(_ptr);
-    return SliderPose.fromPointer(result);
-  }
-
-  SliderPose get appliedPose {
-    final result = SpineBindings.bindings.spine_slider_get_applied_pose(_ptr);
-    return SliderPose.fromPointer(result);
-  }
-
-  @override
-  void resetConstrained() {
-    SpineBindings.bindings.spine_slider_reset_constrained(_ptr);
-  }
-
-  @override
-  void constrained() {
-    SpineBindings.bindings.spine_slider_constrained(_ptr);
-  }
-
-  @override
-  bool get isPoseEqualToApplied {
-    final result = SpineBindings.bindings.spine_slider_is_pose_equal_to_applied(_ptr);
-    return result;
-  }
-
-  static Rtti rttiStatic() {
-    final result = SpineBindings.bindings.spine_slider_rtti();
-    return Rtti.fromPointer(result);
   }
 }

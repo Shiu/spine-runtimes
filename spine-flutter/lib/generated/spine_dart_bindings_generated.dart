@@ -7876,6 +7876,7238 @@ class SpineDartBindings {
   late final _spine_track_entry_set_listener = _spine_track_entry_set_listenerPtr
       .asFunction<void Function(spine_track_entry, spine_animation_state_listener, ffi.Pointer<ffi.Void>)>();
 
+  /// Upcast functions (derived to base) - always safe
+  spine_curve_timeline1 spine_alpha_timeline_cast_to_curve_timeline1(
+    spine_alpha_timeline obj,
+  ) {
+    return _spine_alpha_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_alpha_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_alpha_timeline)>>(
+          'spine_alpha_timeline_cast_to_curve_timeline1');
+  late final _spine_alpha_timeline_cast_to_curve_timeline1 = _spine_alpha_timeline_cast_to_curve_timeline1Ptr
+      .asFunction<spine_curve_timeline1 Function(spine_alpha_timeline)>();
+
+  spine_curve_timeline spine_alpha_timeline_cast_to_curve_timeline(
+    spine_alpha_timeline obj,
+  ) {
+    return _spine_alpha_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_alpha_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_alpha_timeline)>>(
+          'spine_alpha_timeline_cast_to_curve_timeline');
+  late final _spine_alpha_timeline_cast_to_curve_timeline =
+      _spine_alpha_timeline_cast_to_curve_timelinePtr.asFunction<spine_curve_timeline Function(spine_alpha_timeline)>();
+
+  spine_timeline spine_alpha_timeline_cast_to_timeline(
+    spine_alpha_timeline obj,
+  ) {
+    return _spine_alpha_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_alpha_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_alpha_timeline)>>(
+          'spine_alpha_timeline_cast_to_timeline');
+  late final _spine_alpha_timeline_cast_to_timeline =
+      _spine_alpha_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_alpha_timeline)>();
+
+  spine_slot_timeline spine_alpha_timeline_cast_to_slot_timeline(
+    spine_alpha_timeline obj,
+  ) {
+    return _spine_alpha_timeline_cast_to_slot_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_alpha_timeline_cast_to_slot_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_timeline Function(spine_alpha_timeline)>>(
+          'spine_alpha_timeline_cast_to_slot_timeline');
+  late final _spine_alpha_timeline_cast_to_slot_timeline =
+      _spine_alpha_timeline_cast_to_slot_timelinePtr.asFunction<spine_slot_timeline Function(spine_alpha_timeline)>();
+
+  spine_attachment_loader spine_atlas_attachment_loader_cast_to_attachment_loader(
+    spine_atlas_attachment_loader obj,
+  ) {
+    return _spine_atlas_attachment_loader_cast_to_attachment_loader(
+      obj,
+    );
+  }
+
+  late final _spine_atlas_attachment_loader_cast_to_attachment_loaderPtr =
+      _lookup<ffi.NativeFunction<spine_attachment_loader Function(spine_atlas_attachment_loader)>>(
+          'spine_atlas_attachment_loader_cast_to_attachment_loader');
+  late final _spine_atlas_attachment_loader_cast_to_attachment_loader =
+      _spine_atlas_attachment_loader_cast_to_attachment_loaderPtr
+          .asFunction<spine_attachment_loader Function(spine_atlas_attachment_loader)>();
+
+  spine_texture_region spine_atlas_region_cast_to_texture_region(
+    spine_atlas_region obj,
+  ) {
+    return _spine_atlas_region_cast_to_texture_region(
+      obj,
+    );
+  }
+
+  late final _spine_atlas_region_cast_to_texture_regionPtr =
+      _lookup<ffi.NativeFunction<spine_texture_region Function(spine_atlas_region)>>(
+          'spine_atlas_region_cast_to_texture_region');
+  late final _spine_atlas_region_cast_to_texture_region =
+      _spine_atlas_region_cast_to_texture_regionPtr.asFunction<spine_texture_region Function(spine_atlas_region)>();
+
+  spine_timeline spine_attachment_timeline_cast_to_timeline(
+    spine_attachment_timeline obj,
+  ) {
+    return _spine_attachment_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_attachment_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_attachment_timeline)>>(
+          'spine_attachment_timeline_cast_to_timeline');
+  late final _spine_attachment_timeline_cast_to_timeline =
+      _spine_attachment_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_attachment_timeline)>();
+
+  spine_slot_timeline spine_attachment_timeline_cast_to_slot_timeline(
+    spine_attachment_timeline obj,
+  ) {
+    return _spine_attachment_timeline_cast_to_slot_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_attachment_timeline_cast_to_slot_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_timeline Function(spine_attachment_timeline)>>(
+          'spine_attachment_timeline_cast_to_slot_timeline');
+  late final _spine_attachment_timeline_cast_to_slot_timeline = _spine_attachment_timeline_cast_to_slot_timelinePtr
+      .asFunction<spine_slot_timeline Function(spine_attachment_timeline)>();
+
+  spine_posed spine_bone_cast_to_posed(
+    spine_bone obj,
+  ) {
+    return _spine_bone_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_bone_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_bone)>>('spine_bone_cast_to_posed');
+  late final _spine_bone_cast_to_posed = _spine_bone_cast_to_posedPtr.asFunction<spine_posed Function(spine_bone)>();
+
+  spine_posed_active spine_bone_cast_to_posed_active(
+    spine_bone obj,
+  ) {
+    return _spine_bone_cast_to_posed_active(
+      obj,
+    );
+  }
+
+  late final _spine_bone_cast_to_posed_activePtr =
+      _lookup<ffi.NativeFunction<spine_posed_active Function(spine_bone)>>('spine_bone_cast_to_posed_active');
+  late final _spine_bone_cast_to_posed_active =
+      _spine_bone_cast_to_posed_activePtr.asFunction<spine_posed_active Function(spine_bone)>();
+
+  spine_update spine_bone_cast_to_update(
+    spine_bone obj,
+  ) {
+    return _spine_bone_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_bone_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_bone)>>('spine_bone_cast_to_update');
+  late final _spine_bone_cast_to_update = _spine_bone_cast_to_updatePtr.asFunction<spine_update Function(spine_bone)>();
+
+  spine_posed_data spine_bone_data_cast_to_posed_data(
+    spine_bone_data obj,
+  ) {
+    return _spine_bone_data_cast_to_posed_data(
+      obj,
+    );
+  }
+
+  late final _spine_bone_data_cast_to_posed_dataPtr =
+      _lookup<ffi.NativeFunction<spine_posed_data Function(spine_bone_data)>>('spine_bone_data_cast_to_posed_data');
+  late final _spine_bone_data_cast_to_posed_data =
+      _spine_bone_data_cast_to_posed_dataPtr.asFunction<spine_posed_data Function(spine_bone_data)>();
+
+  spine_bone_local spine_bone_pose_cast_to_bone_local(
+    spine_bone_pose obj,
+  ) {
+    return _spine_bone_pose_cast_to_bone_local(
+      obj,
+    );
+  }
+
+  late final _spine_bone_pose_cast_to_bone_localPtr =
+      _lookup<ffi.NativeFunction<spine_bone_local Function(spine_bone_pose)>>('spine_bone_pose_cast_to_bone_local');
+  late final _spine_bone_pose_cast_to_bone_local =
+      _spine_bone_pose_cast_to_bone_localPtr.asFunction<spine_bone_local Function(spine_bone_pose)>();
+
+  spine_update spine_bone_pose_cast_to_update(
+    spine_bone_pose obj,
+  ) {
+    return _spine_bone_pose_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_bone_pose_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_bone_pose)>>('spine_bone_pose_cast_to_update');
+  late final _spine_bone_pose_cast_to_update =
+      _spine_bone_pose_cast_to_updatePtr.asFunction<spine_update Function(spine_bone_pose)>();
+
+  spine_curve_timeline1 spine_bone_timeline1_cast_to_curve_timeline1(
+    spine_bone_timeline1 obj,
+  ) {
+    return _spine_bone_timeline1_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline1_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_bone_timeline1)>>(
+          'spine_bone_timeline1_cast_to_curve_timeline1');
+  late final _spine_bone_timeline1_cast_to_curve_timeline1 = _spine_bone_timeline1_cast_to_curve_timeline1Ptr
+      .asFunction<spine_curve_timeline1 Function(spine_bone_timeline1)>();
+
+  spine_curve_timeline spine_bone_timeline1_cast_to_curve_timeline(
+    spine_bone_timeline1 obj,
+  ) {
+    return _spine_bone_timeline1_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline1_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_bone_timeline1)>>(
+          'spine_bone_timeline1_cast_to_curve_timeline');
+  late final _spine_bone_timeline1_cast_to_curve_timeline =
+      _spine_bone_timeline1_cast_to_curve_timelinePtr.asFunction<spine_curve_timeline Function(spine_bone_timeline1)>();
+
+  spine_timeline spine_bone_timeline1_cast_to_timeline(
+    spine_bone_timeline1 obj,
+  ) {
+    return _spine_bone_timeline1_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline1_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_bone_timeline1)>>(
+          'spine_bone_timeline1_cast_to_timeline');
+  late final _spine_bone_timeline1_cast_to_timeline =
+      _spine_bone_timeline1_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_bone_timeline1)>();
+
+  spine_bone_timeline spine_bone_timeline1_cast_to_bone_timeline(
+    spine_bone_timeline1 obj,
+  ) {
+    return _spine_bone_timeline1_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline1_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_bone_timeline1)>>(
+          'spine_bone_timeline1_cast_to_bone_timeline');
+  late final _spine_bone_timeline1_cast_to_bone_timeline =
+      _spine_bone_timeline1_cast_to_bone_timelinePtr.asFunction<spine_bone_timeline Function(spine_bone_timeline1)>();
+
+  spine_curve_timeline spine_bone_timeline2_cast_to_curve_timeline(
+    spine_bone_timeline2 obj,
+  ) {
+    return _spine_bone_timeline2_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline2_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_bone_timeline2)>>(
+          'spine_bone_timeline2_cast_to_curve_timeline');
+  late final _spine_bone_timeline2_cast_to_curve_timeline =
+      _spine_bone_timeline2_cast_to_curve_timelinePtr.asFunction<spine_curve_timeline Function(spine_bone_timeline2)>();
+
+  spine_timeline spine_bone_timeline2_cast_to_timeline(
+    spine_bone_timeline2 obj,
+  ) {
+    return _spine_bone_timeline2_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline2_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_bone_timeline2)>>(
+          'spine_bone_timeline2_cast_to_timeline');
+  late final _spine_bone_timeline2_cast_to_timeline =
+      _spine_bone_timeline2_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_bone_timeline2)>();
+
+  spine_bone_timeline spine_bone_timeline2_cast_to_bone_timeline(
+    spine_bone_timeline2 obj,
+  ) {
+    return _spine_bone_timeline2_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline2_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_bone_timeline2)>>(
+          'spine_bone_timeline2_cast_to_bone_timeline');
+  late final _spine_bone_timeline2_cast_to_bone_timeline =
+      _spine_bone_timeline2_cast_to_bone_timelinePtr.asFunction<spine_bone_timeline Function(spine_bone_timeline2)>();
+
+  spine_vertex_attachment spine_bounding_box_attachment_cast_to_vertex_attachment(
+    spine_bounding_box_attachment obj,
+  ) {
+    return _spine_bounding_box_attachment_cast_to_vertex_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_bounding_box_attachment_cast_to_vertex_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_vertex_attachment Function(spine_bounding_box_attachment)>>(
+          'spine_bounding_box_attachment_cast_to_vertex_attachment');
+  late final _spine_bounding_box_attachment_cast_to_vertex_attachment =
+      _spine_bounding_box_attachment_cast_to_vertex_attachmentPtr
+          .asFunction<spine_vertex_attachment Function(spine_bounding_box_attachment)>();
+
+  spine_attachment spine_bounding_box_attachment_cast_to_attachment(
+    spine_bounding_box_attachment obj,
+  ) {
+    return _spine_bounding_box_attachment_cast_to_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_bounding_box_attachment_cast_to_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_attachment Function(spine_bounding_box_attachment)>>(
+          'spine_bounding_box_attachment_cast_to_attachment');
+  late final _spine_bounding_box_attachment_cast_to_attachment = _spine_bounding_box_attachment_cast_to_attachmentPtr
+      .asFunction<spine_attachment Function(spine_bounding_box_attachment)>();
+
+  spine_vertex_attachment spine_clipping_attachment_cast_to_vertex_attachment(
+    spine_clipping_attachment obj,
+  ) {
+    return _spine_clipping_attachment_cast_to_vertex_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_clipping_attachment_cast_to_vertex_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_vertex_attachment Function(spine_clipping_attachment)>>(
+          'spine_clipping_attachment_cast_to_vertex_attachment');
+  late final _spine_clipping_attachment_cast_to_vertex_attachment =
+      _spine_clipping_attachment_cast_to_vertex_attachmentPtr
+          .asFunction<spine_vertex_attachment Function(spine_clipping_attachment)>();
+
+  spine_attachment spine_clipping_attachment_cast_to_attachment(
+    spine_clipping_attachment obj,
+  ) {
+    return _spine_clipping_attachment_cast_to_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_clipping_attachment_cast_to_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_attachment Function(spine_clipping_attachment)>>(
+          'spine_clipping_attachment_cast_to_attachment');
+  late final _spine_clipping_attachment_cast_to_attachment = _spine_clipping_attachment_cast_to_attachmentPtr
+      .asFunction<spine_attachment Function(spine_clipping_attachment)>();
+
+  spine_update spine_constraint_cast_to_update(
+    spine_constraint obj,
+  ) {
+    return _spine_constraint_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_constraint)>>('spine_constraint_cast_to_update');
+  late final _spine_constraint_cast_to_update =
+      _spine_constraint_cast_to_updatePtr.asFunction<spine_update Function(spine_constraint)>();
+
+  spine_curve_timeline1 spine_constraint_timeline1_cast_to_curve_timeline1(
+    spine_constraint_timeline1 obj,
+  ) {
+    return _spine_constraint_timeline1_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline1_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_constraint_timeline1)>>(
+          'spine_constraint_timeline1_cast_to_curve_timeline1');
+  late final _spine_constraint_timeline1_cast_to_curve_timeline1 =
+      _spine_constraint_timeline1_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_constraint_timeline1)>();
+
+  spine_curve_timeline spine_constraint_timeline1_cast_to_curve_timeline(
+    spine_constraint_timeline1 obj,
+  ) {
+    return _spine_constraint_timeline1_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline1_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_constraint_timeline1)>>(
+          'spine_constraint_timeline1_cast_to_curve_timeline');
+  late final _spine_constraint_timeline1_cast_to_curve_timeline = _spine_constraint_timeline1_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_constraint_timeline1)>();
+
+  spine_timeline spine_constraint_timeline1_cast_to_timeline(
+    spine_constraint_timeline1 obj,
+  ) {
+    return _spine_constraint_timeline1_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline1_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_constraint_timeline1)>>(
+          'spine_constraint_timeline1_cast_to_timeline');
+  late final _spine_constraint_timeline1_cast_to_timeline =
+      _spine_constraint_timeline1_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_constraint_timeline1)>();
+
+  spine_constraint_timeline spine_constraint_timeline1_cast_to_constraint_timeline(
+    spine_constraint_timeline1 obj,
+  ) {
+    return _spine_constraint_timeline1_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline1_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_constraint_timeline1)>>(
+          'spine_constraint_timeline1_cast_to_constraint_timeline');
+  late final _spine_constraint_timeline1_cast_to_constraint_timeline =
+      _spine_constraint_timeline1_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_constraint_timeline1)>();
+
+  spine_timeline spine_curve_timeline_cast_to_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_timeline');
+  late final _spine_curve_timeline_cast_to_timeline =
+      _spine_curve_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_curve_timeline)>();
+
+  spine_curve_timeline spine_curve_timeline1_cast_to_curve_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_curve_timeline');
+  late final _spine_curve_timeline1_cast_to_curve_timeline = _spine_curve_timeline1_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_curve_timeline1)>();
+
+  spine_timeline spine_curve_timeline1_cast_to_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_timeline');
+  late final _spine_curve_timeline1_cast_to_timeline =
+      _spine_curve_timeline1_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_curve_timeline1)>();
+
+  spine_slot_curve_timeline spine_deform_timeline_cast_to_slot_curve_timeline(
+    spine_deform_timeline obj,
+  ) {
+    return _spine_deform_timeline_cast_to_slot_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_deform_timeline_cast_to_slot_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_curve_timeline Function(spine_deform_timeline)>>(
+          'spine_deform_timeline_cast_to_slot_curve_timeline');
+  late final _spine_deform_timeline_cast_to_slot_curve_timeline = _spine_deform_timeline_cast_to_slot_curve_timelinePtr
+      .asFunction<spine_slot_curve_timeline Function(spine_deform_timeline)>();
+
+  spine_curve_timeline spine_deform_timeline_cast_to_curve_timeline(
+    spine_deform_timeline obj,
+  ) {
+    return _spine_deform_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_deform_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_deform_timeline)>>(
+          'spine_deform_timeline_cast_to_curve_timeline');
+  late final _spine_deform_timeline_cast_to_curve_timeline = _spine_deform_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_deform_timeline)>();
+
+  spine_timeline spine_deform_timeline_cast_to_timeline(
+    spine_deform_timeline obj,
+  ) {
+    return _spine_deform_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_deform_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_deform_timeline)>>(
+          'spine_deform_timeline_cast_to_timeline');
+  late final _spine_deform_timeline_cast_to_timeline =
+      _spine_deform_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_deform_timeline)>();
+
+  spine_slot_timeline spine_deform_timeline_cast_to_slot_timeline(
+    spine_deform_timeline obj,
+  ) {
+    return _spine_deform_timeline_cast_to_slot_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_deform_timeline_cast_to_slot_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_timeline Function(spine_deform_timeline)>>(
+          'spine_deform_timeline_cast_to_slot_timeline');
+  late final _spine_deform_timeline_cast_to_slot_timeline =
+      _spine_deform_timeline_cast_to_slot_timelinePtr.asFunction<spine_slot_timeline Function(spine_deform_timeline)>();
+
+  spine_timeline spine_draw_order_timeline_cast_to_timeline(
+    spine_draw_order_timeline obj,
+  ) {
+    return _spine_draw_order_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_draw_order_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_draw_order_timeline)>>(
+          'spine_draw_order_timeline_cast_to_timeline');
+  late final _spine_draw_order_timeline_cast_to_timeline =
+      _spine_draw_order_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_draw_order_timeline)>();
+
+  spine_timeline spine_event_timeline_cast_to_timeline(
+    spine_event_timeline obj,
+  ) {
+    return _spine_event_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_event_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_event_timeline)>>(
+          'spine_event_timeline_cast_to_timeline');
+  late final _spine_event_timeline_cast_to_timeline =
+      _spine_event_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_event_timeline)>();
+
+  spine_from_property spine_from_rotate_cast_to_from_property(
+    spine_from_rotate obj,
+  ) {
+    return _spine_from_rotate_cast_to_from_property(
+      obj,
+    );
+  }
+
+  late final _spine_from_rotate_cast_to_from_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_from_property Function(spine_from_rotate)>>(
+          'spine_from_rotate_cast_to_from_property');
+  late final _spine_from_rotate_cast_to_from_property =
+      _spine_from_rotate_cast_to_from_propertyPtr.asFunction<spine_from_property Function(spine_from_rotate)>();
+
+  spine_from_property spine_from_scale_x_cast_to_from_property(
+    spine_from_scale_x obj,
+  ) {
+    return _spine_from_scale_x_cast_to_from_property(
+      obj,
+    );
+  }
+
+  late final _spine_from_scale_x_cast_to_from_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_from_property Function(spine_from_scale_x)>>(
+          'spine_from_scale_x_cast_to_from_property');
+  late final _spine_from_scale_x_cast_to_from_property =
+      _spine_from_scale_x_cast_to_from_propertyPtr.asFunction<spine_from_property Function(spine_from_scale_x)>();
+
+  spine_from_property spine_from_scale_y_cast_to_from_property(
+    spine_from_scale_y obj,
+  ) {
+    return _spine_from_scale_y_cast_to_from_property(
+      obj,
+    );
+  }
+
+  late final _spine_from_scale_y_cast_to_from_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_from_property Function(spine_from_scale_y)>>(
+          'spine_from_scale_y_cast_to_from_property');
+  late final _spine_from_scale_y_cast_to_from_property =
+      _spine_from_scale_y_cast_to_from_propertyPtr.asFunction<spine_from_property Function(spine_from_scale_y)>();
+
+  spine_from_property spine_from_shear_y_cast_to_from_property(
+    spine_from_shear_y obj,
+  ) {
+    return _spine_from_shear_y_cast_to_from_property(
+      obj,
+    );
+  }
+
+  late final _spine_from_shear_y_cast_to_from_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_from_property Function(spine_from_shear_y)>>(
+          'spine_from_shear_y_cast_to_from_property');
+  late final _spine_from_shear_y_cast_to_from_property =
+      _spine_from_shear_y_cast_to_from_propertyPtr.asFunction<spine_from_property Function(spine_from_shear_y)>();
+
+  spine_from_property spine_from_x_cast_to_from_property(
+    spine_from_x obj,
+  ) {
+    return _spine_from_x_cast_to_from_property(
+      obj,
+    );
+  }
+
+  late final _spine_from_x_cast_to_from_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_from_property Function(spine_from_x)>>('spine_from_x_cast_to_from_property');
+  late final _spine_from_x_cast_to_from_property =
+      _spine_from_x_cast_to_from_propertyPtr.asFunction<spine_from_property Function(spine_from_x)>();
+
+  spine_from_property spine_from_y_cast_to_from_property(
+    spine_from_y obj,
+  ) {
+    return _spine_from_y_cast_to_from_property(
+      obj,
+    );
+  }
+
+  late final _spine_from_y_cast_to_from_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_from_property Function(spine_from_y)>>('spine_from_y_cast_to_from_property');
+  late final _spine_from_y_cast_to_from_property =
+      _spine_from_y_cast_to_from_propertyPtr.asFunction<spine_from_property Function(spine_from_y)>();
+
+  spine_ik_constraint_base spine_ik_constraint_cast_to_ik_constraint_base(
+    spine_ik_constraint obj,
+  ) {
+    return _spine_ik_constraint_cast_to_ik_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_cast_to_ik_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_base Function(spine_ik_constraint)>>(
+          'spine_ik_constraint_cast_to_ik_constraint_base');
+  late final _spine_ik_constraint_cast_to_ik_constraint_base = _spine_ik_constraint_cast_to_ik_constraint_basePtr
+      .asFunction<spine_ik_constraint_base Function(spine_ik_constraint)>();
+
+  spine_posed spine_ik_constraint_cast_to_posed(
+    spine_ik_constraint obj,
+  ) {
+    return _spine_ik_constraint_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_ik_constraint)>>('spine_ik_constraint_cast_to_posed');
+  late final _spine_ik_constraint_cast_to_posed =
+      _spine_ik_constraint_cast_to_posedPtr.asFunction<spine_posed Function(spine_ik_constraint)>();
+
+  spine_posed_active spine_ik_constraint_cast_to_posed_active(
+    spine_ik_constraint obj,
+  ) {
+    return _spine_ik_constraint_cast_to_posed_active(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_cast_to_posed_activePtr =
+      _lookup<ffi.NativeFunction<spine_posed_active Function(spine_ik_constraint)>>(
+          'spine_ik_constraint_cast_to_posed_active');
+  late final _spine_ik_constraint_cast_to_posed_active =
+      _spine_ik_constraint_cast_to_posed_activePtr.asFunction<spine_posed_active Function(spine_ik_constraint)>();
+
+  spine_constraint spine_ik_constraint_cast_to_constraint(
+    spine_ik_constraint obj,
+  ) {
+    return _spine_ik_constraint_cast_to_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_cast_to_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_constraint Function(spine_ik_constraint)>>(
+          'spine_ik_constraint_cast_to_constraint');
+  late final _spine_ik_constraint_cast_to_constraint =
+      _spine_ik_constraint_cast_to_constraintPtr.asFunction<spine_constraint Function(spine_ik_constraint)>();
+
+  spine_update spine_ik_constraint_cast_to_update(
+    spine_ik_constraint obj,
+  ) {
+    return _spine_ik_constraint_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_ik_constraint)>>('spine_ik_constraint_cast_to_update');
+  late final _spine_ik_constraint_cast_to_update =
+      _spine_ik_constraint_cast_to_updatePtr.asFunction<spine_update Function(spine_ik_constraint)>();
+
+  spine_posed spine_ik_constraint_base_cast_to_posed(
+    spine_ik_constraint_base obj,
+  ) {
+    return _spine_ik_constraint_base_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_base_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_ik_constraint_base)>>(
+          'spine_ik_constraint_base_cast_to_posed');
+  late final _spine_ik_constraint_base_cast_to_posed =
+      _spine_ik_constraint_base_cast_to_posedPtr.asFunction<spine_posed Function(spine_ik_constraint_base)>();
+
+  spine_posed_active spine_ik_constraint_base_cast_to_posed_active(
+    spine_ik_constraint_base obj,
+  ) {
+    return _spine_ik_constraint_base_cast_to_posed_active(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_base_cast_to_posed_activePtr =
+      _lookup<ffi.NativeFunction<spine_posed_active Function(spine_ik_constraint_base)>>(
+          'spine_ik_constraint_base_cast_to_posed_active');
+  late final _spine_ik_constraint_base_cast_to_posed_active = _spine_ik_constraint_base_cast_to_posed_activePtr
+      .asFunction<spine_posed_active Function(spine_ik_constraint_base)>();
+
+  spine_constraint spine_ik_constraint_base_cast_to_constraint(
+    spine_ik_constraint_base obj,
+  ) {
+    return _spine_ik_constraint_base_cast_to_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_base_cast_to_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_constraint Function(spine_ik_constraint_base)>>(
+          'spine_ik_constraint_base_cast_to_constraint');
+  late final _spine_ik_constraint_base_cast_to_constraint =
+      _spine_ik_constraint_base_cast_to_constraintPtr.asFunction<spine_constraint Function(spine_ik_constraint_base)>();
+
+  spine_update spine_ik_constraint_base_cast_to_update(
+    spine_ik_constraint_base obj,
+  ) {
+    return _spine_ik_constraint_base_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_base_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_ik_constraint_base)>>(
+          'spine_ik_constraint_base_cast_to_update');
+  late final _spine_ik_constraint_base_cast_to_update =
+      _spine_ik_constraint_base_cast_to_updatePtr.asFunction<spine_update Function(spine_ik_constraint_base)>();
+
+  spine_posed_data spine_ik_constraint_data_cast_to_posed_data(
+    spine_ik_constraint_data obj,
+  ) {
+    return _spine_ik_constraint_data_cast_to_posed_data(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_data_cast_to_posed_dataPtr =
+      _lookup<ffi.NativeFunction<spine_posed_data Function(spine_ik_constraint_data)>>(
+          'spine_ik_constraint_data_cast_to_posed_data');
+  late final _spine_ik_constraint_data_cast_to_posed_data =
+      _spine_ik_constraint_data_cast_to_posed_dataPtr.asFunction<spine_posed_data Function(spine_ik_constraint_data)>();
+
+  spine_constraint_data spine_ik_constraint_data_cast_to_constraint_data(
+    spine_ik_constraint_data obj,
+  ) {
+    return _spine_ik_constraint_data_cast_to_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_data_cast_to_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_constraint_data Function(spine_ik_constraint_data)>>(
+          'spine_ik_constraint_data_cast_to_constraint_data');
+  late final _spine_ik_constraint_data_cast_to_constraint_data = _spine_ik_constraint_data_cast_to_constraint_dataPtr
+      .asFunction<spine_constraint_data Function(spine_ik_constraint_data)>();
+
+  spine_curve_timeline spine_ik_constraint_timeline_cast_to_curve_timeline(
+    spine_ik_constraint_timeline obj,
+  ) {
+    return _spine_ik_constraint_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_ik_constraint_timeline)>>(
+          'spine_ik_constraint_timeline_cast_to_curve_timeline');
+  late final _spine_ik_constraint_timeline_cast_to_curve_timeline =
+      _spine_ik_constraint_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_ik_constraint_timeline)>();
+
+  spine_timeline spine_ik_constraint_timeline_cast_to_timeline(
+    spine_ik_constraint_timeline obj,
+  ) {
+    return _spine_ik_constraint_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_ik_constraint_timeline)>>(
+          'spine_ik_constraint_timeline_cast_to_timeline');
+  late final _spine_ik_constraint_timeline_cast_to_timeline = _spine_ik_constraint_timeline_cast_to_timelinePtr
+      .asFunction<spine_timeline Function(spine_ik_constraint_timeline)>();
+
+  spine_constraint_timeline spine_ik_constraint_timeline_cast_to_constraint_timeline(
+    spine_ik_constraint_timeline obj,
+  ) {
+    return _spine_ik_constraint_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_ik_constraint_timeline)>>(
+          'spine_ik_constraint_timeline_cast_to_constraint_timeline');
+  late final _spine_ik_constraint_timeline_cast_to_constraint_timeline =
+      _spine_ik_constraint_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_ik_constraint_timeline)>();
+
+  spine_timeline spine_inherit_timeline_cast_to_timeline(
+    spine_inherit_timeline obj,
+  ) {
+    return _spine_inherit_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_inherit_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_inherit_timeline)>>(
+          'spine_inherit_timeline_cast_to_timeline');
+  late final _spine_inherit_timeline_cast_to_timeline =
+      _spine_inherit_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_inherit_timeline)>();
+
+  spine_bone_timeline spine_inherit_timeline_cast_to_bone_timeline(
+    spine_inherit_timeline obj,
+  ) {
+    return _spine_inherit_timeline_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_inherit_timeline_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_inherit_timeline)>>(
+          'spine_inherit_timeline_cast_to_bone_timeline');
+  late final _spine_inherit_timeline_cast_to_bone_timeline = _spine_inherit_timeline_cast_to_bone_timelinePtr
+      .asFunction<spine_bone_timeline Function(spine_inherit_timeline)>();
+
+  spine_vertex_attachment spine_mesh_attachment_cast_to_vertex_attachment(
+    spine_mesh_attachment obj,
+  ) {
+    return _spine_mesh_attachment_cast_to_vertex_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_mesh_attachment_cast_to_vertex_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_vertex_attachment Function(spine_mesh_attachment)>>(
+          'spine_mesh_attachment_cast_to_vertex_attachment');
+  late final _spine_mesh_attachment_cast_to_vertex_attachment = _spine_mesh_attachment_cast_to_vertex_attachmentPtr
+      .asFunction<spine_vertex_attachment Function(spine_mesh_attachment)>();
+
+  spine_attachment spine_mesh_attachment_cast_to_attachment(
+    spine_mesh_attachment obj,
+  ) {
+    return _spine_mesh_attachment_cast_to_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_mesh_attachment_cast_to_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_attachment Function(spine_mesh_attachment)>>(
+          'spine_mesh_attachment_cast_to_attachment');
+  late final _spine_mesh_attachment_cast_to_attachment =
+      _spine_mesh_attachment_cast_to_attachmentPtr.asFunction<spine_attachment Function(spine_mesh_attachment)>();
+
+  spine_vertex_attachment spine_path_attachment_cast_to_vertex_attachment(
+    spine_path_attachment obj,
+  ) {
+    return _spine_path_attachment_cast_to_vertex_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_path_attachment_cast_to_vertex_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_vertex_attachment Function(spine_path_attachment)>>(
+          'spine_path_attachment_cast_to_vertex_attachment');
+  late final _spine_path_attachment_cast_to_vertex_attachment = _spine_path_attachment_cast_to_vertex_attachmentPtr
+      .asFunction<spine_vertex_attachment Function(spine_path_attachment)>();
+
+  spine_attachment spine_path_attachment_cast_to_attachment(
+    spine_path_attachment obj,
+  ) {
+    return _spine_path_attachment_cast_to_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_path_attachment_cast_to_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_attachment Function(spine_path_attachment)>>(
+          'spine_path_attachment_cast_to_attachment');
+  late final _spine_path_attachment_cast_to_attachment =
+      _spine_path_attachment_cast_to_attachmentPtr.asFunction<spine_attachment Function(spine_path_attachment)>();
+
+  spine_path_constraint_base spine_path_constraint_cast_to_path_constraint_base(
+    spine_path_constraint obj,
+  ) {
+    return _spine_path_constraint_cast_to_path_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_cast_to_path_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_base Function(spine_path_constraint)>>(
+          'spine_path_constraint_cast_to_path_constraint_base');
+  late final _spine_path_constraint_cast_to_path_constraint_base =
+      _spine_path_constraint_cast_to_path_constraint_basePtr
+          .asFunction<spine_path_constraint_base Function(spine_path_constraint)>();
+
+  spine_posed spine_path_constraint_cast_to_posed(
+    spine_path_constraint obj,
+  ) {
+    return _spine_path_constraint_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_path_constraint)>>('spine_path_constraint_cast_to_posed');
+  late final _spine_path_constraint_cast_to_posed =
+      _spine_path_constraint_cast_to_posedPtr.asFunction<spine_posed Function(spine_path_constraint)>();
+
+  spine_posed_active spine_path_constraint_cast_to_posed_active(
+    spine_path_constraint obj,
+  ) {
+    return _spine_path_constraint_cast_to_posed_active(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_cast_to_posed_activePtr =
+      _lookup<ffi.NativeFunction<spine_posed_active Function(spine_path_constraint)>>(
+          'spine_path_constraint_cast_to_posed_active');
+  late final _spine_path_constraint_cast_to_posed_active =
+      _spine_path_constraint_cast_to_posed_activePtr.asFunction<spine_posed_active Function(spine_path_constraint)>();
+
+  spine_constraint spine_path_constraint_cast_to_constraint(
+    spine_path_constraint obj,
+  ) {
+    return _spine_path_constraint_cast_to_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_cast_to_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_constraint Function(spine_path_constraint)>>(
+          'spine_path_constraint_cast_to_constraint');
+  late final _spine_path_constraint_cast_to_constraint =
+      _spine_path_constraint_cast_to_constraintPtr.asFunction<spine_constraint Function(spine_path_constraint)>();
+
+  spine_update spine_path_constraint_cast_to_update(
+    spine_path_constraint obj,
+  ) {
+    return _spine_path_constraint_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_path_constraint)>>('spine_path_constraint_cast_to_update');
+  late final _spine_path_constraint_cast_to_update =
+      _spine_path_constraint_cast_to_updatePtr.asFunction<spine_update Function(spine_path_constraint)>();
+
+  spine_posed spine_path_constraint_base_cast_to_posed(
+    spine_path_constraint_base obj,
+  ) {
+    return _spine_path_constraint_base_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_base_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_cast_to_posed');
+  late final _spine_path_constraint_base_cast_to_posed =
+      _spine_path_constraint_base_cast_to_posedPtr.asFunction<spine_posed Function(spine_path_constraint_base)>();
+
+  spine_posed_active spine_path_constraint_base_cast_to_posed_active(
+    spine_path_constraint_base obj,
+  ) {
+    return _spine_path_constraint_base_cast_to_posed_active(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_base_cast_to_posed_activePtr =
+      _lookup<ffi.NativeFunction<spine_posed_active Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_cast_to_posed_active');
+  late final _spine_path_constraint_base_cast_to_posed_active = _spine_path_constraint_base_cast_to_posed_activePtr
+      .asFunction<spine_posed_active Function(spine_path_constraint_base)>();
+
+  spine_constraint spine_path_constraint_base_cast_to_constraint(
+    spine_path_constraint_base obj,
+  ) {
+    return _spine_path_constraint_base_cast_to_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_base_cast_to_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_constraint Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_cast_to_constraint');
+  late final _spine_path_constraint_base_cast_to_constraint = _spine_path_constraint_base_cast_to_constraintPtr
+      .asFunction<spine_constraint Function(spine_path_constraint_base)>();
+
+  spine_update spine_path_constraint_base_cast_to_update(
+    spine_path_constraint_base obj,
+  ) {
+    return _spine_path_constraint_base_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_base_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_cast_to_update');
+  late final _spine_path_constraint_base_cast_to_update =
+      _spine_path_constraint_base_cast_to_updatePtr.asFunction<spine_update Function(spine_path_constraint_base)>();
+
+  spine_posed_data spine_path_constraint_data_cast_to_posed_data(
+    spine_path_constraint_data obj,
+  ) {
+    return _spine_path_constraint_data_cast_to_posed_data(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_data_cast_to_posed_dataPtr =
+      _lookup<ffi.NativeFunction<spine_posed_data Function(spine_path_constraint_data)>>(
+          'spine_path_constraint_data_cast_to_posed_data');
+  late final _spine_path_constraint_data_cast_to_posed_data = _spine_path_constraint_data_cast_to_posed_dataPtr
+      .asFunction<spine_posed_data Function(spine_path_constraint_data)>();
+
+  spine_constraint_data spine_path_constraint_data_cast_to_constraint_data(
+    spine_path_constraint_data obj,
+  ) {
+    return _spine_path_constraint_data_cast_to_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_data_cast_to_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_constraint_data Function(spine_path_constraint_data)>>(
+          'spine_path_constraint_data_cast_to_constraint_data');
+  late final _spine_path_constraint_data_cast_to_constraint_data =
+      _spine_path_constraint_data_cast_to_constraint_dataPtr
+          .asFunction<spine_constraint_data Function(spine_path_constraint_data)>();
+
+  spine_curve_timeline spine_path_constraint_mix_timeline_cast_to_curve_timeline(
+    spine_path_constraint_mix_timeline obj,
+  ) {
+    return _spine_path_constraint_mix_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_mix_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_path_constraint_mix_timeline)>>(
+          'spine_path_constraint_mix_timeline_cast_to_curve_timeline');
+  late final _spine_path_constraint_mix_timeline_cast_to_curve_timeline =
+      _spine_path_constraint_mix_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_path_constraint_mix_timeline)>();
+
+  spine_timeline spine_path_constraint_mix_timeline_cast_to_timeline(
+    spine_path_constraint_mix_timeline obj,
+  ) {
+    return _spine_path_constraint_mix_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_mix_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_path_constraint_mix_timeline)>>(
+          'spine_path_constraint_mix_timeline_cast_to_timeline');
+  late final _spine_path_constraint_mix_timeline_cast_to_timeline =
+      _spine_path_constraint_mix_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_path_constraint_mix_timeline)>();
+
+  spine_constraint_timeline spine_path_constraint_mix_timeline_cast_to_constraint_timeline(
+    spine_path_constraint_mix_timeline obj,
+  ) {
+    return _spine_path_constraint_mix_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_mix_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_path_constraint_mix_timeline)>>(
+          'spine_path_constraint_mix_timeline_cast_to_constraint_timeline');
+  late final _spine_path_constraint_mix_timeline_cast_to_constraint_timeline =
+      _spine_path_constraint_mix_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_path_constraint_mix_timeline)>();
+
+  spine_constraint_timeline1 spine_path_constraint_position_timeline_cast_to_constraint_timeline1(
+    spine_path_constraint_position_timeline obj,
+  ) {
+    return _spine_path_constraint_position_timeline_cast_to_constraint_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_position_timeline_cast_to_constraint_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline1 Function(spine_path_constraint_position_timeline)>>(
+          'spine_path_constraint_position_timeline_cast_to_constraint_timeline1');
+  late final _spine_path_constraint_position_timeline_cast_to_constraint_timeline1 =
+      _spine_path_constraint_position_timeline_cast_to_constraint_timeline1Ptr
+          .asFunction<spine_constraint_timeline1 Function(spine_path_constraint_position_timeline)>();
+
+  spine_curve_timeline1 spine_path_constraint_position_timeline_cast_to_curve_timeline1(
+    spine_path_constraint_position_timeline obj,
+  ) {
+    return _spine_path_constraint_position_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_position_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_path_constraint_position_timeline)>>(
+          'spine_path_constraint_position_timeline_cast_to_curve_timeline1');
+  late final _spine_path_constraint_position_timeline_cast_to_curve_timeline1 =
+      _spine_path_constraint_position_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_path_constraint_position_timeline)>();
+
+  spine_curve_timeline spine_path_constraint_position_timeline_cast_to_curve_timeline(
+    spine_path_constraint_position_timeline obj,
+  ) {
+    return _spine_path_constraint_position_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_position_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_path_constraint_position_timeline)>>(
+          'spine_path_constraint_position_timeline_cast_to_curve_timeline');
+  late final _spine_path_constraint_position_timeline_cast_to_curve_timeline =
+      _spine_path_constraint_position_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_path_constraint_position_timeline)>();
+
+  spine_timeline spine_path_constraint_position_timeline_cast_to_timeline(
+    spine_path_constraint_position_timeline obj,
+  ) {
+    return _spine_path_constraint_position_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_position_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_path_constraint_position_timeline)>>(
+          'spine_path_constraint_position_timeline_cast_to_timeline');
+  late final _spine_path_constraint_position_timeline_cast_to_timeline =
+      _spine_path_constraint_position_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_path_constraint_position_timeline)>();
+
+  spine_constraint_timeline spine_path_constraint_position_timeline_cast_to_constraint_timeline(
+    spine_path_constraint_position_timeline obj,
+  ) {
+    return _spine_path_constraint_position_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_position_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_path_constraint_position_timeline)>>(
+          'spine_path_constraint_position_timeline_cast_to_constraint_timeline');
+  late final _spine_path_constraint_position_timeline_cast_to_constraint_timeline =
+      _spine_path_constraint_position_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_path_constraint_position_timeline)>();
+
+  spine_constraint_timeline1 spine_path_constraint_spacing_timeline_cast_to_constraint_timeline1(
+    spine_path_constraint_spacing_timeline obj,
+  ) {
+    return _spine_path_constraint_spacing_timeline_cast_to_constraint_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_spacing_timeline_cast_to_constraint_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline1 Function(spine_path_constraint_spacing_timeline)>>(
+          'spine_path_constraint_spacing_timeline_cast_to_constraint_timeline1');
+  late final _spine_path_constraint_spacing_timeline_cast_to_constraint_timeline1 =
+      _spine_path_constraint_spacing_timeline_cast_to_constraint_timeline1Ptr
+          .asFunction<spine_constraint_timeline1 Function(spine_path_constraint_spacing_timeline)>();
+
+  spine_curve_timeline1 spine_path_constraint_spacing_timeline_cast_to_curve_timeline1(
+    spine_path_constraint_spacing_timeline obj,
+  ) {
+    return _spine_path_constraint_spacing_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_spacing_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_path_constraint_spacing_timeline)>>(
+          'spine_path_constraint_spacing_timeline_cast_to_curve_timeline1');
+  late final _spine_path_constraint_spacing_timeline_cast_to_curve_timeline1 =
+      _spine_path_constraint_spacing_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_path_constraint_spacing_timeline)>();
+
+  spine_curve_timeline spine_path_constraint_spacing_timeline_cast_to_curve_timeline(
+    spine_path_constraint_spacing_timeline obj,
+  ) {
+    return _spine_path_constraint_spacing_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_spacing_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_path_constraint_spacing_timeline)>>(
+          'spine_path_constraint_spacing_timeline_cast_to_curve_timeline');
+  late final _spine_path_constraint_spacing_timeline_cast_to_curve_timeline =
+      _spine_path_constraint_spacing_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_path_constraint_spacing_timeline)>();
+
+  spine_timeline spine_path_constraint_spacing_timeline_cast_to_timeline(
+    spine_path_constraint_spacing_timeline obj,
+  ) {
+    return _spine_path_constraint_spacing_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_spacing_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_path_constraint_spacing_timeline)>>(
+          'spine_path_constraint_spacing_timeline_cast_to_timeline');
+  late final _spine_path_constraint_spacing_timeline_cast_to_timeline =
+      _spine_path_constraint_spacing_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_path_constraint_spacing_timeline)>();
+
+  spine_constraint_timeline spine_path_constraint_spacing_timeline_cast_to_constraint_timeline(
+    spine_path_constraint_spacing_timeline obj,
+  ) {
+    return _spine_path_constraint_spacing_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_spacing_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_path_constraint_spacing_timeline)>>(
+          'spine_path_constraint_spacing_timeline_cast_to_constraint_timeline');
+  late final _spine_path_constraint_spacing_timeline_cast_to_constraint_timeline =
+      _spine_path_constraint_spacing_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_path_constraint_spacing_timeline)>();
+
+  spine_physics_constraint_base spine_physics_constraint_cast_to_physics_constraint_base(
+    spine_physics_constraint obj,
+  ) {
+    return _spine_physics_constraint_cast_to_physics_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_cast_to_physics_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_base Function(spine_physics_constraint)>>(
+          'spine_physics_constraint_cast_to_physics_constraint_base');
+  late final _spine_physics_constraint_cast_to_physics_constraint_base =
+      _spine_physics_constraint_cast_to_physics_constraint_basePtr
+          .asFunction<spine_physics_constraint_base Function(spine_physics_constraint)>();
+
+  spine_posed spine_physics_constraint_cast_to_posed(
+    spine_physics_constraint obj,
+  ) {
+    return _spine_physics_constraint_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_physics_constraint)>>(
+          'spine_physics_constraint_cast_to_posed');
+  late final _spine_physics_constraint_cast_to_posed =
+      _spine_physics_constraint_cast_to_posedPtr.asFunction<spine_posed Function(spine_physics_constraint)>();
+
+  spine_posed_active spine_physics_constraint_cast_to_posed_active(
+    spine_physics_constraint obj,
+  ) {
+    return _spine_physics_constraint_cast_to_posed_active(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_cast_to_posed_activePtr =
+      _lookup<ffi.NativeFunction<spine_posed_active Function(spine_physics_constraint)>>(
+          'spine_physics_constraint_cast_to_posed_active');
+  late final _spine_physics_constraint_cast_to_posed_active = _spine_physics_constraint_cast_to_posed_activePtr
+      .asFunction<spine_posed_active Function(spine_physics_constraint)>();
+
+  spine_constraint spine_physics_constraint_cast_to_constraint(
+    spine_physics_constraint obj,
+  ) {
+    return _spine_physics_constraint_cast_to_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_cast_to_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_constraint Function(spine_physics_constraint)>>(
+          'spine_physics_constraint_cast_to_constraint');
+  late final _spine_physics_constraint_cast_to_constraint =
+      _spine_physics_constraint_cast_to_constraintPtr.asFunction<spine_constraint Function(spine_physics_constraint)>();
+
+  spine_update spine_physics_constraint_cast_to_update(
+    spine_physics_constraint obj,
+  ) {
+    return _spine_physics_constraint_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_physics_constraint)>>(
+          'spine_physics_constraint_cast_to_update');
+  late final _spine_physics_constraint_cast_to_update =
+      _spine_physics_constraint_cast_to_updatePtr.asFunction<spine_update Function(spine_physics_constraint)>();
+
+  spine_posed spine_physics_constraint_base_cast_to_posed(
+    spine_physics_constraint_base obj,
+  ) {
+    return _spine_physics_constraint_base_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_base_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_cast_to_posed');
+  late final _spine_physics_constraint_base_cast_to_posed =
+      _spine_physics_constraint_base_cast_to_posedPtr.asFunction<spine_posed Function(spine_physics_constraint_base)>();
+
+  spine_posed_active spine_physics_constraint_base_cast_to_posed_active(
+    spine_physics_constraint_base obj,
+  ) {
+    return _spine_physics_constraint_base_cast_to_posed_active(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_base_cast_to_posed_activePtr =
+      _lookup<ffi.NativeFunction<spine_posed_active Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_cast_to_posed_active');
+  late final _spine_physics_constraint_base_cast_to_posed_active =
+      _spine_physics_constraint_base_cast_to_posed_activePtr
+          .asFunction<spine_posed_active Function(spine_physics_constraint_base)>();
+
+  spine_constraint spine_physics_constraint_base_cast_to_constraint(
+    spine_physics_constraint_base obj,
+  ) {
+    return _spine_physics_constraint_base_cast_to_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_base_cast_to_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_constraint Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_cast_to_constraint');
+  late final _spine_physics_constraint_base_cast_to_constraint = _spine_physics_constraint_base_cast_to_constraintPtr
+      .asFunction<spine_constraint Function(spine_physics_constraint_base)>();
+
+  spine_update spine_physics_constraint_base_cast_to_update(
+    spine_physics_constraint_base obj,
+  ) {
+    return _spine_physics_constraint_base_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_base_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_cast_to_update');
+  late final _spine_physics_constraint_base_cast_to_update = _spine_physics_constraint_base_cast_to_updatePtr
+      .asFunction<spine_update Function(spine_physics_constraint_base)>();
+
+  spine_physics_constraint_timeline spine_physics_constraint_damping_timeline_cast_to_physics_constraint_timeline(
+    spine_physics_constraint_damping_timeline obj,
+  ) {
+    return _spine_physics_constraint_damping_timeline_cast_to_physics_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_damping_timeline_cast_to_physics_constraint_timelinePtr = _lookup<
+          ffi.NativeFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_damping_timeline)>>(
+      'spine_physics_constraint_damping_timeline_cast_to_physics_constraint_timeline');
+  late final _spine_physics_constraint_damping_timeline_cast_to_physics_constraint_timeline =
+      _spine_physics_constraint_damping_timeline_cast_to_physics_constraint_timelinePtr
+          .asFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_damping_timeline)>();
+
+  spine_curve_timeline1 spine_physics_constraint_damping_timeline_cast_to_curve_timeline1(
+    spine_physics_constraint_damping_timeline obj,
+  ) {
+    return _spine_physics_constraint_damping_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_damping_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_physics_constraint_damping_timeline)>>(
+          'spine_physics_constraint_damping_timeline_cast_to_curve_timeline1');
+  late final _spine_physics_constraint_damping_timeline_cast_to_curve_timeline1 =
+      _spine_physics_constraint_damping_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_physics_constraint_damping_timeline)>();
+
+  spine_curve_timeline spine_physics_constraint_damping_timeline_cast_to_curve_timeline(
+    spine_physics_constraint_damping_timeline obj,
+  ) {
+    return _spine_physics_constraint_damping_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_damping_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_physics_constraint_damping_timeline)>>(
+          'spine_physics_constraint_damping_timeline_cast_to_curve_timeline');
+  late final _spine_physics_constraint_damping_timeline_cast_to_curve_timeline =
+      _spine_physics_constraint_damping_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_physics_constraint_damping_timeline)>();
+
+  spine_timeline spine_physics_constraint_damping_timeline_cast_to_timeline(
+    spine_physics_constraint_damping_timeline obj,
+  ) {
+    return _spine_physics_constraint_damping_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_damping_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_physics_constraint_damping_timeline)>>(
+          'spine_physics_constraint_damping_timeline_cast_to_timeline');
+  late final _spine_physics_constraint_damping_timeline_cast_to_timeline =
+      _spine_physics_constraint_damping_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_physics_constraint_damping_timeline)>();
+
+  spine_constraint_timeline spine_physics_constraint_damping_timeline_cast_to_constraint_timeline(
+    spine_physics_constraint_damping_timeline obj,
+  ) {
+    return _spine_physics_constraint_damping_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_damping_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_physics_constraint_damping_timeline)>>(
+          'spine_physics_constraint_damping_timeline_cast_to_constraint_timeline');
+  late final _spine_physics_constraint_damping_timeline_cast_to_constraint_timeline =
+      _spine_physics_constraint_damping_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_physics_constraint_damping_timeline)>();
+
+  spine_posed_data spine_physics_constraint_data_cast_to_posed_data(
+    spine_physics_constraint_data obj,
+  ) {
+    return _spine_physics_constraint_data_cast_to_posed_data(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_data_cast_to_posed_dataPtr =
+      _lookup<ffi.NativeFunction<spine_posed_data Function(spine_physics_constraint_data)>>(
+          'spine_physics_constraint_data_cast_to_posed_data');
+  late final _spine_physics_constraint_data_cast_to_posed_data = _spine_physics_constraint_data_cast_to_posed_dataPtr
+      .asFunction<spine_posed_data Function(spine_physics_constraint_data)>();
+
+  spine_constraint_data spine_physics_constraint_data_cast_to_constraint_data(
+    spine_physics_constraint_data obj,
+  ) {
+    return _spine_physics_constraint_data_cast_to_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_data_cast_to_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_constraint_data Function(spine_physics_constraint_data)>>(
+          'spine_physics_constraint_data_cast_to_constraint_data');
+  late final _spine_physics_constraint_data_cast_to_constraint_data =
+      _spine_physics_constraint_data_cast_to_constraint_dataPtr
+          .asFunction<spine_constraint_data Function(spine_physics_constraint_data)>();
+
+  spine_physics_constraint_timeline spine_physics_constraint_gravity_timeline_cast_to_physics_constraint_timeline(
+    spine_physics_constraint_gravity_timeline obj,
+  ) {
+    return _spine_physics_constraint_gravity_timeline_cast_to_physics_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_gravity_timeline_cast_to_physics_constraint_timelinePtr = _lookup<
+          ffi.NativeFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_gravity_timeline)>>(
+      'spine_physics_constraint_gravity_timeline_cast_to_physics_constraint_timeline');
+  late final _spine_physics_constraint_gravity_timeline_cast_to_physics_constraint_timeline =
+      _spine_physics_constraint_gravity_timeline_cast_to_physics_constraint_timelinePtr
+          .asFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_gravity_timeline)>();
+
+  spine_curve_timeline1 spine_physics_constraint_gravity_timeline_cast_to_curve_timeline1(
+    spine_physics_constraint_gravity_timeline obj,
+  ) {
+    return _spine_physics_constraint_gravity_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_gravity_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_physics_constraint_gravity_timeline)>>(
+          'spine_physics_constraint_gravity_timeline_cast_to_curve_timeline1');
+  late final _spine_physics_constraint_gravity_timeline_cast_to_curve_timeline1 =
+      _spine_physics_constraint_gravity_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_physics_constraint_gravity_timeline)>();
+
+  spine_curve_timeline spine_physics_constraint_gravity_timeline_cast_to_curve_timeline(
+    spine_physics_constraint_gravity_timeline obj,
+  ) {
+    return _spine_physics_constraint_gravity_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_gravity_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_physics_constraint_gravity_timeline)>>(
+          'spine_physics_constraint_gravity_timeline_cast_to_curve_timeline');
+  late final _spine_physics_constraint_gravity_timeline_cast_to_curve_timeline =
+      _spine_physics_constraint_gravity_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_physics_constraint_gravity_timeline)>();
+
+  spine_timeline spine_physics_constraint_gravity_timeline_cast_to_timeline(
+    spine_physics_constraint_gravity_timeline obj,
+  ) {
+    return _spine_physics_constraint_gravity_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_gravity_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_physics_constraint_gravity_timeline)>>(
+          'spine_physics_constraint_gravity_timeline_cast_to_timeline');
+  late final _spine_physics_constraint_gravity_timeline_cast_to_timeline =
+      _spine_physics_constraint_gravity_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_physics_constraint_gravity_timeline)>();
+
+  spine_constraint_timeline spine_physics_constraint_gravity_timeline_cast_to_constraint_timeline(
+    spine_physics_constraint_gravity_timeline obj,
+  ) {
+    return _spine_physics_constraint_gravity_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_gravity_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_physics_constraint_gravity_timeline)>>(
+          'spine_physics_constraint_gravity_timeline_cast_to_constraint_timeline');
+  late final _spine_physics_constraint_gravity_timeline_cast_to_constraint_timeline =
+      _spine_physics_constraint_gravity_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_physics_constraint_gravity_timeline)>();
+
+  spine_physics_constraint_timeline spine_physics_constraint_inertia_timeline_cast_to_physics_constraint_timeline(
+    spine_physics_constraint_inertia_timeline obj,
+  ) {
+    return _spine_physics_constraint_inertia_timeline_cast_to_physics_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_inertia_timeline_cast_to_physics_constraint_timelinePtr = _lookup<
+          ffi.NativeFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_inertia_timeline)>>(
+      'spine_physics_constraint_inertia_timeline_cast_to_physics_constraint_timeline');
+  late final _spine_physics_constraint_inertia_timeline_cast_to_physics_constraint_timeline =
+      _spine_physics_constraint_inertia_timeline_cast_to_physics_constraint_timelinePtr
+          .asFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_inertia_timeline)>();
+
+  spine_curve_timeline1 spine_physics_constraint_inertia_timeline_cast_to_curve_timeline1(
+    spine_physics_constraint_inertia_timeline obj,
+  ) {
+    return _spine_physics_constraint_inertia_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_inertia_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_physics_constraint_inertia_timeline)>>(
+          'spine_physics_constraint_inertia_timeline_cast_to_curve_timeline1');
+  late final _spine_physics_constraint_inertia_timeline_cast_to_curve_timeline1 =
+      _spine_physics_constraint_inertia_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_physics_constraint_inertia_timeline)>();
+
+  spine_curve_timeline spine_physics_constraint_inertia_timeline_cast_to_curve_timeline(
+    spine_physics_constraint_inertia_timeline obj,
+  ) {
+    return _spine_physics_constraint_inertia_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_inertia_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_physics_constraint_inertia_timeline)>>(
+          'spine_physics_constraint_inertia_timeline_cast_to_curve_timeline');
+  late final _spine_physics_constraint_inertia_timeline_cast_to_curve_timeline =
+      _spine_physics_constraint_inertia_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_physics_constraint_inertia_timeline)>();
+
+  spine_timeline spine_physics_constraint_inertia_timeline_cast_to_timeline(
+    spine_physics_constraint_inertia_timeline obj,
+  ) {
+    return _spine_physics_constraint_inertia_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_inertia_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_physics_constraint_inertia_timeline)>>(
+          'spine_physics_constraint_inertia_timeline_cast_to_timeline');
+  late final _spine_physics_constraint_inertia_timeline_cast_to_timeline =
+      _spine_physics_constraint_inertia_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_physics_constraint_inertia_timeline)>();
+
+  spine_constraint_timeline spine_physics_constraint_inertia_timeline_cast_to_constraint_timeline(
+    spine_physics_constraint_inertia_timeline obj,
+  ) {
+    return _spine_physics_constraint_inertia_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_inertia_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_physics_constraint_inertia_timeline)>>(
+          'spine_physics_constraint_inertia_timeline_cast_to_constraint_timeline');
+  late final _spine_physics_constraint_inertia_timeline_cast_to_constraint_timeline =
+      _spine_physics_constraint_inertia_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_physics_constraint_inertia_timeline)>();
+
+  spine_physics_constraint_timeline spine_physics_constraint_mass_timeline_cast_to_physics_constraint_timeline(
+    spine_physics_constraint_mass_timeline obj,
+  ) {
+    return _spine_physics_constraint_mass_timeline_cast_to_physics_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_mass_timeline_cast_to_physics_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_mass_timeline)>>(
+          'spine_physics_constraint_mass_timeline_cast_to_physics_constraint_timeline');
+  late final _spine_physics_constraint_mass_timeline_cast_to_physics_constraint_timeline =
+      _spine_physics_constraint_mass_timeline_cast_to_physics_constraint_timelinePtr
+          .asFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_mass_timeline)>();
+
+  spine_curve_timeline1 spine_physics_constraint_mass_timeline_cast_to_curve_timeline1(
+    spine_physics_constraint_mass_timeline obj,
+  ) {
+    return _spine_physics_constraint_mass_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_mass_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_physics_constraint_mass_timeline)>>(
+          'spine_physics_constraint_mass_timeline_cast_to_curve_timeline1');
+  late final _spine_physics_constraint_mass_timeline_cast_to_curve_timeline1 =
+      _spine_physics_constraint_mass_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_physics_constraint_mass_timeline)>();
+
+  spine_curve_timeline spine_physics_constraint_mass_timeline_cast_to_curve_timeline(
+    spine_physics_constraint_mass_timeline obj,
+  ) {
+    return _spine_physics_constraint_mass_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_mass_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_physics_constraint_mass_timeline)>>(
+          'spine_physics_constraint_mass_timeline_cast_to_curve_timeline');
+  late final _spine_physics_constraint_mass_timeline_cast_to_curve_timeline =
+      _spine_physics_constraint_mass_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_physics_constraint_mass_timeline)>();
+
+  spine_timeline spine_physics_constraint_mass_timeline_cast_to_timeline(
+    spine_physics_constraint_mass_timeline obj,
+  ) {
+    return _spine_physics_constraint_mass_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_mass_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_physics_constraint_mass_timeline)>>(
+          'spine_physics_constraint_mass_timeline_cast_to_timeline');
+  late final _spine_physics_constraint_mass_timeline_cast_to_timeline =
+      _spine_physics_constraint_mass_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_physics_constraint_mass_timeline)>();
+
+  spine_constraint_timeline spine_physics_constraint_mass_timeline_cast_to_constraint_timeline(
+    spine_physics_constraint_mass_timeline obj,
+  ) {
+    return _spine_physics_constraint_mass_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_mass_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_physics_constraint_mass_timeline)>>(
+          'spine_physics_constraint_mass_timeline_cast_to_constraint_timeline');
+  late final _spine_physics_constraint_mass_timeline_cast_to_constraint_timeline =
+      _spine_physics_constraint_mass_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_physics_constraint_mass_timeline)>();
+
+  spine_physics_constraint_timeline spine_physics_constraint_mix_timeline_cast_to_physics_constraint_timeline(
+    spine_physics_constraint_mix_timeline obj,
+  ) {
+    return _spine_physics_constraint_mix_timeline_cast_to_physics_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_mix_timeline_cast_to_physics_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_mix_timeline)>>(
+          'spine_physics_constraint_mix_timeline_cast_to_physics_constraint_timeline');
+  late final _spine_physics_constraint_mix_timeline_cast_to_physics_constraint_timeline =
+      _spine_physics_constraint_mix_timeline_cast_to_physics_constraint_timelinePtr
+          .asFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_mix_timeline)>();
+
+  spine_curve_timeline1 spine_physics_constraint_mix_timeline_cast_to_curve_timeline1(
+    spine_physics_constraint_mix_timeline obj,
+  ) {
+    return _spine_physics_constraint_mix_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_mix_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_physics_constraint_mix_timeline)>>(
+          'spine_physics_constraint_mix_timeline_cast_to_curve_timeline1');
+  late final _spine_physics_constraint_mix_timeline_cast_to_curve_timeline1 =
+      _spine_physics_constraint_mix_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_physics_constraint_mix_timeline)>();
+
+  spine_curve_timeline spine_physics_constraint_mix_timeline_cast_to_curve_timeline(
+    spine_physics_constraint_mix_timeline obj,
+  ) {
+    return _spine_physics_constraint_mix_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_mix_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_physics_constraint_mix_timeline)>>(
+          'spine_physics_constraint_mix_timeline_cast_to_curve_timeline');
+  late final _spine_physics_constraint_mix_timeline_cast_to_curve_timeline =
+      _spine_physics_constraint_mix_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_physics_constraint_mix_timeline)>();
+
+  spine_timeline spine_physics_constraint_mix_timeline_cast_to_timeline(
+    spine_physics_constraint_mix_timeline obj,
+  ) {
+    return _spine_physics_constraint_mix_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_mix_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_physics_constraint_mix_timeline)>>(
+          'spine_physics_constraint_mix_timeline_cast_to_timeline');
+  late final _spine_physics_constraint_mix_timeline_cast_to_timeline =
+      _spine_physics_constraint_mix_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_physics_constraint_mix_timeline)>();
+
+  spine_constraint_timeline spine_physics_constraint_mix_timeline_cast_to_constraint_timeline(
+    spine_physics_constraint_mix_timeline obj,
+  ) {
+    return _spine_physics_constraint_mix_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_mix_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_physics_constraint_mix_timeline)>>(
+          'spine_physics_constraint_mix_timeline_cast_to_constraint_timeline');
+  late final _spine_physics_constraint_mix_timeline_cast_to_constraint_timeline =
+      _spine_physics_constraint_mix_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_physics_constraint_mix_timeline)>();
+
+  spine_timeline spine_physics_constraint_reset_timeline_cast_to_timeline(
+    spine_physics_constraint_reset_timeline obj,
+  ) {
+    return _spine_physics_constraint_reset_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_reset_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_physics_constraint_reset_timeline)>>(
+          'spine_physics_constraint_reset_timeline_cast_to_timeline');
+  late final _spine_physics_constraint_reset_timeline_cast_to_timeline =
+      _spine_physics_constraint_reset_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_physics_constraint_reset_timeline)>();
+
+  spine_constraint_timeline spine_physics_constraint_reset_timeline_cast_to_constraint_timeline(
+    spine_physics_constraint_reset_timeline obj,
+  ) {
+    return _spine_physics_constraint_reset_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_reset_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_physics_constraint_reset_timeline)>>(
+          'spine_physics_constraint_reset_timeline_cast_to_constraint_timeline');
+  late final _spine_physics_constraint_reset_timeline_cast_to_constraint_timeline =
+      _spine_physics_constraint_reset_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_physics_constraint_reset_timeline)>();
+
+  spine_physics_constraint_timeline spine_physics_constraint_strength_timeline_cast_to_physics_constraint_timeline(
+    spine_physics_constraint_strength_timeline obj,
+  ) {
+    return _spine_physics_constraint_strength_timeline_cast_to_physics_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_strength_timeline_cast_to_physics_constraint_timelinePtr = _lookup<
+          ffi.NativeFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_strength_timeline)>>(
+      'spine_physics_constraint_strength_timeline_cast_to_physics_constraint_timeline');
+  late final _spine_physics_constraint_strength_timeline_cast_to_physics_constraint_timeline =
+      _spine_physics_constraint_strength_timeline_cast_to_physics_constraint_timelinePtr
+          .asFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_strength_timeline)>();
+
+  spine_curve_timeline1 spine_physics_constraint_strength_timeline_cast_to_curve_timeline1(
+    spine_physics_constraint_strength_timeline obj,
+  ) {
+    return _spine_physics_constraint_strength_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_strength_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_physics_constraint_strength_timeline)>>(
+          'spine_physics_constraint_strength_timeline_cast_to_curve_timeline1');
+  late final _spine_physics_constraint_strength_timeline_cast_to_curve_timeline1 =
+      _spine_physics_constraint_strength_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_physics_constraint_strength_timeline)>();
+
+  spine_curve_timeline spine_physics_constraint_strength_timeline_cast_to_curve_timeline(
+    spine_physics_constraint_strength_timeline obj,
+  ) {
+    return _spine_physics_constraint_strength_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_strength_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_physics_constraint_strength_timeline)>>(
+          'spine_physics_constraint_strength_timeline_cast_to_curve_timeline');
+  late final _spine_physics_constraint_strength_timeline_cast_to_curve_timeline =
+      _spine_physics_constraint_strength_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_physics_constraint_strength_timeline)>();
+
+  spine_timeline spine_physics_constraint_strength_timeline_cast_to_timeline(
+    spine_physics_constraint_strength_timeline obj,
+  ) {
+    return _spine_physics_constraint_strength_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_strength_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_physics_constraint_strength_timeline)>>(
+          'spine_physics_constraint_strength_timeline_cast_to_timeline');
+  late final _spine_physics_constraint_strength_timeline_cast_to_timeline =
+      _spine_physics_constraint_strength_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_physics_constraint_strength_timeline)>();
+
+  spine_constraint_timeline spine_physics_constraint_strength_timeline_cast_to_constraint_timeline(
+    spine_physics_constraint_strength_timeline obj,
+  ) {
+    return _spine_physics_constraint_strength_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_strength_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_physics_constraint_strength_timeline)>>(
+          'spine_physics_constraint_strength_timeline_cast_to_constraint_timeline');
+  late final _spine_physics_constraint_strength_timeline_cast_to_constraint_timeline =
+      _spine_physics_constraint_strength_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_physics_constraint_strength_timeline)>();
+
+  spine_curve_timeline1 spine_physics_constraint_timeline_cast_to_curve_timeline1(
+    spine_physics_constraint_timeline obj,
+  ) {
+    return _spine_physics_constraint_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_physics_constraint_timeline)>>(
+          'spine_physics_constraint_timeline_cast_to_curve_timeline1');
+  late final _spine_physics_constraint_timeline_cast_to_curve_timeline1 =
+      _spine_physics_constraint_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_physics_constraint_timeline)>();
+
+  spine_curve_timeline spine_physics_constraint_timeline_cast_to_curve_timeline(
+    spine_physics_constraint_timeline obj,
+  ) {
+    return _spine_physics_constraint_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_physics_constraint_timeline)>>(
+          'spine_physics_constraint_timeline_cast_to_curve_timeline');
+  late final _spine_physics_constraint_timeline_cast_to_curve_timeline =
+      _spine_physics_constraint_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_physics_constraint_timeline)>();
+
+  spine_timeline spine_physics_constraint_timeline_cast_to_timeline(
+    spine_physics_constraint_timeline obj,
+  ) {
+    return _spine_physics_constraint_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_physics_constraint_timeline)>>(
+          'spine_physics_constraint_timeline_cast_to_timeline');
+  late final _spine_physics_constraint_timeline_cast_to_timeline =
+      _spine_physics_constraint_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_physics_constraint_timeline)>();
+
+  spine_constraint_timeline spine_physics_constraint_timeline_cast_to_constraint_timeline(
+    spine_physics_constraint_timeline obj,
+  ) {
+    return _spine_physics_constraint_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_physics_constraint_timeline)>>(
+          'spine_physics_constraint_timeline_cast_to_constraint_timeline');
+  late final _spine_physics_constraint_timeline_cast_to_constraint_timeline =
+      _spine_physics_constraint_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_physics_constraint_timeline)>();
+
+  spine_physics_constraint_timeline spine_physics_constraint_wind_timeline_cast_to_physics_constraint_timeline(
+    spine_physics_constraint_wind_timeline obj,
+  ) {
+    return _spine_physics_constraint_wind_timeline_cast_to_physics_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_wind_timeline_cast_to_physics_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_wind_timeline)>>(
+          'spine_physics_constraint_wind_timeline_cast_to_physics_constraint_timeline');
+  late final _spine_physics_constraint_wind_timeline_cast_to_physics_constraint_timeline =
+      _spine_physics_constraint_wind_timeline_cast_to_physics_constraint_timelinePtr
+          .asFunction<spine_physics_constraint_timeline Function(spine_physics_constraint_wind_timeline)>();
+
+  spine_curve_timeline1 spine_physics_constraint_wind_timeline_cast_to_curve_timeline1(
+    spine_physics_constraint_wind_timeline obj,
+  ) {
+    return _spine_physics_constraint_wind_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_wind_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_physics_constraint_wind_timeline)>>(
+          'spine_physics_constraint_wind_timeline_cast_to_curve_timeline1');
+  late final _spine_physics_constraint_wind_timeline_cast_to_curve_timeline1 =
+      _spine_physics_constraint_wind_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_physics_constraint_wind_timeline)>();
+
+  spine_curve_timeline spine_physics_constraint_wind_timeline_cast_to_curve_timeline(
+    spine_physics_constraint_wind_timeline obj,
+  ) {
+    return _spine_physics_constraint_wind_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_wind_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_physics_constraint_wind_timeline)>>(
+          'spine_physics_constraint_wind_timeline_cast_to_curve_timeline');
+  late final _spine_physics_constraint_wind_timeline_cast_to_curve_timeline =
+      _spine_physics_constraint_wind_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_physics_constraint_wind_timeline)>();
+
+  spine_timeline spine_physics_constraint_wind_timeline_cast_to_timeline(
+    spine_physics_constraint_wind_timeline obj,
+  ) {
+    return _spine_physics_constraint_wind_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_wind_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_physics_constraint_wind_timeline)>>(
+          'spine_physics_constraint_wind_timeline_cast_to_timeline');
+  late final _spine_physics_constraint_wind_timeline_cast_to_timeline =
+      _spine_physics_constraint_wind_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_physics_constraint_wind_timeline)>();
+
+  spine_constraint_timeline spine_physics_constraint_wind_timeline_cast_to_constraint_timeline(
+    spine_physics_constraint_wind_timeline obj,
+  ) {
+    return _spine_physics_constraint_wind_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_wind_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_physics_constraint_wind_timeline)>>(
+          'spine_physics_constraint_wind_timeline_cast_to_constraint_timeline');
+  late final _spine_physics_constraint_wind_timeline_cast_to_constraint_timeline =
+      _spine_physics_constraint_wind_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_physics_constraint_wind_timeline)>();
+
+  spine_attachment spine_point_attachment_cast_to_attachment(
+    spine_point_attachment obj,
+  ) {
+    return _spine_point_attachment_cast_to_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_point_attachment_cast_to_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_attachment Function(spine_point_attachment)>>(
+          'spine_point_attachment_cast_to_attachment');
+  late final _spine_point_attachment_cast_to_attachment =
+      _spine_point_attachment_cast_to_attachmentPtr.asFunction<spine_attachment Function(spine_point_attachment)>();
+
+  spine_attachment spine_region_attachment_cast_to_attachment(
+    spine_region_attachment obj,
+  ) {
+    return _spine_region_attachment_cast_to_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_region_attachment_cast_to_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_attachment Function(spine_region_attachment)>>(
+          'spine_region_attachment_cast_to_attachment');
+  late final _spine_region_attachment_cast_to_attachment =
+      _spine_region_attachment_cast_to_attachmentPtr.asFunction<spine_attachment Function(spine_region_attachment)>();
+
+  spine_slot_curve_timeline spine_rgb2_timeline_cast_to_slot_curve_timeline(
+    spine_rgb2_timeline obj,
+  ) {
+    return _spine_rgb2_timeline_cast_to_slot_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgb2_timeline_cast_to_slot_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_curve_timeline Function(spine_rgb2_timeline)>>(
+          'spine_rgb2_timeline_cast_to_slot_curve_timeline');
+  late final _spine_rgb2_timeline_cast_to_slot_curve_timeline = _spine_rgb2_timeline_cast_to_slot_curve_timelinePtr
+      .asFunction<spine_slot_curve_timeline Function(spine_rgb2_timeline)>();
+
+  spine_curve_timeline spine_rgb2_timeline_cast_to_curve_timeline(
+    spine_rgb2_timeline obj,
+  ) {
+    return _spine_rgb2_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgb2_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_rgb2_timeline)>>(
+          'spine_rgb2_timeline_cast_to_curve_timeline');
+  late final _spine_rgb2_timeline_cast_to_curve_timeline =
+      _spine_rgb2_timeline_cast_to_curve_timelinePtr.asFunction<spine_curve_timeline Function(spine_rgb2_timeline)>();
+
+  spine_timeline spine_rgb2_timeline_cast_to_timeline(
+    spine_rgb2_timeline obj,
+  ) {
+    return _spine_rgb2_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgb2_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_rgb2_timeline)>>('spine_rgb2_timeline_cast_to_timeline');
+  late final _spine_rgb2_timeline_cast_to_timeline =
+      _spine_rgb2_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_rgb2_timeline)>();
+
+  spine_slot_timeline spine_rgb2_timeline_cast_to_slot_timeline(
+    spine_rgb2_timeline obj,
+  ) {
+    return _spine_rgb2_timeline_cast_to_slot_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgb2_timeline_cast_to_slot_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_timeline Function(spine_rgb2_timeline)>>(
+          'spine_rgb2_timeline_cast_to_slot_timeline');
+  late final _spine_rgb2_timeline_cast_to_slot_timeline =
+      _spine_rgb2_timeline_cast_to_slot_timelinePtr.asFunction<spine_slot_timeline Function(spine_rgb2_timeline)>();
+
+  spine_slot_curve_timeline spine_rgba2_timeline_cast_to_slot_curve_timeline(
+    spine_rgba2_timeline obj,
+  ) {
+    return _spine_rgba2_timeline_cast_to_slot_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgba2_timeline_cast_to_slot_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_curve_timeline Function(spine_rgba2_timeline)>>(
+          'spine_rgba2_timeline_cast_to_slot_curve_timeline');
+  late final _spine_rgba2_timeline_cast_to_slot_curve_timeline = _spine_rgba2_timeline_cast_to_slot_curve_timelinePtr
+      .asFunction<spine_slot_curve_timeline Function(spine_rgba2_timeline)>();
+
+  spine_curve_timeline spine_rgba2_timeline_cast_to_curve_timeline(
+    spine_rgba2_timeline obj,
+  ) {
+    return _spine_rgba2_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgba2_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_rgba2_timeline)>>(
+          'spine_rgba2_timeline_cast_to_curve_timeline');
+  late final _spine_rgba2_timeline_cast_to_curve_timeline =
+      _spine_rgba2_timeline_cast_to_curve_timelinePtr.asFunction<spine_curve_timeline Function(spine_rgba2_timeline)>();
+
+  spine_timeline spine_rgba2_timeline_cast_to_timeline(
+    spine_rgba2_timeline obj,
+  ) {
+    return _spine_rgba2_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgba2_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_rgba2_timeline)>>(
+          'spine_rgba2_timeline_cast_to_timeline');
+  late final _spine_rgba2_timeline_cast_to_timeline =
+      _spine_rgba2_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_rgba2_timeline)>();
+
+  spine_slot_timeline spine_rgba2_timeline_cast_to_slot_timeline(
+    spine_rgba2_timeline obj,
+  ) {
+    return _spine_rgba2_timeline_cast_to_slot_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgba2_timeline_cast_to_slot_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_timeline Function(spine_rgba2_timeline)>>(
+          'spine_rgba2_timeline_cast_to_slot_timeline');
+  late final _spine_rgba2_timeline_cast_to_slot_timeline =
+      _spine_rgba2_timeline_cast_to_slot_timelinePtr.asFunction<spine_slot_timeline Function(spine_rgba2_timeline)>();
+
+  spine_slot_curve_timeline spine_rgba_timeline_cast_to_slot_curve_timeline(
+    spine_rgba_timeline obj,
+  ) {
+    return _spine_rgba_timeline_cast_to_slot_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgba_timeline_cast_to_slot_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_curve_timeline Function(spine_rgba_timeline)>>(
+          'spine_rgba_timeline_cast_to_slot_curve_timeline');
+  late final _spine_rgba_timeline_cast_to_slot_curve_timeline = _spine_rgba_timeline_cast_to_slot_curve_timelinePtr
+      .asFunction<spine_slot_curve_timeline Function(spine_rgba_timeline)>();
+
+  spine_curve_timeline spine_rgba_timeline_cast_to_curve_timeline(
+    spine_rgba_timeline obj,
+  ) {
+    return _spine_rgba_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgba_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_rgba_timeline)>>(
+          'spine_rgba_timeline_cast_to_curve_timeline');
+  late final _spine_rgba_timeline_cast_to_curve_timeline =
+      _spine_rgba_timeline_cast_to_curve_timelinePtr.asFunction<spine_curve_timeline Function(spine_rgba_timeline)>();
+
+  spine_timeline spine_rgba_timeline_cast_to_timeline(
+    spine_rgba_timeline obj,
+  ) {
+    return _spine_rgba_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgba_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_rgba_timeline)>>('spine_rgba_timeline_cast_to_timeline');
+  late final _spine_rgba_timeline_cast_to_timeline =
+      _spine_rgba_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_rgba_timeline)>();
+
+  spine_slot_timeline spine_rgba_timeline_cast_to_slot_timeline(
+    spine_rgba_timeline obj,
+  ) {
+    return _spine_rgba_timeline_cast_to_slot_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgba_timeline_cast_to_slot_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_timeline Function(spine_rgba_timeline)>>(
+          'spine_rgba_timeline_cast_to_slot_timeline');
+  late final _spine_rgba_timeline_cast_to_slot_timeline =
+      _spine_rgba_timeline_cast_to_slot_timelinePtr.asFunction<spine_slot_timeline Function(spine_rgba_timeline)>();
+
+  spine_slot_curve_timeline spine_rgb_timeline_cast_to_slot_curve_timeline(
+    spine_rgb_timeline obj,
+  ) {
+    return _spine_rgb_timeline_cast_to_slot_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgb_timeline_cast_to_slot_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_curve_timeline Function(spine_rgb_timeline)>>(
+          'spine_rgb_timeline_cast_to_slot_curve_timeline');
+  late final _spine_rgb_timeline_cast_to_slot_curve_timeline = _spine_rgb_timeline_cast_to_slot_curve_timelinePtr
+      .asFunction<spine_slot_curve_timeline Function(spine_rgb_timeline)>();
+
+  spine_curve_timeline spine_rgb_timeline_cast_to_curve_timeline(
+    spine_rgb_timeline obj,
+  ) {
+    return _spine_rgb_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgb_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_rgb_timeline)>>(
+          'spine_rgb_timeline_cast_to_curve_timeline');
+  late final _spine_rgb_timeline_cast_to_curve_timeline =
+      _spine_rgb_timeline_cast_to_curve_timelinePtr.asFunction<spine_curve_timeline Function(spine_rgb_timeline)>();
+
+  spine_timeline spine_rgb_timeline_cast_to_timeline(
+    spine_rgb_timeline obj,
+  ) {
+    return _spine_rgb_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgb_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_rgb_timeline)>>('spine_rgb_timeline_cast_to_timeline');
+  late final _spine_rgb_timeline_cast_to_timeline =
+      _spine_rgb_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_rgb_timeline)>();
+
+  spine_slot_timeline spine_rgb_timeline_cast_to_slot_timeline(
+    spine_rgb_timeline obj,
+  ) {
+    return _spine_rgb_timeline_cast_to_slot_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rgb_timeline_cast_to_slot_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_timeline Function(spine_rgb_timeline)>>(
+          'spine_rgb_timeline_cast_to_slot_timeline');
+  late final _spine_rgb_timeline_cast_to_slot_timeline =
+      _spine_rgb_timeline_cast_to_slot_timelinePtr.asFunction<spine_slot_timeline Function(spine_rgb_timeline)>();
+
+  spine_bone_timeline1 spine_rotate_timeline_cast_to_bone_timeline1(
+    spine_rotate_timeline obj,
+  ) {
+    return _spine_rotate_timeline_cast_to_bone_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_rotate_timeline_cast_to_bone_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline1 Function(spine_rotate_timeline)>>(
+          'spine_rotate_timeline_cast_to_bone_timeline1');
+  late final _spine_rotate_timeline_cast_to_bone_timeline1 = _spine_rotate_timeline_cast_to_bone_timeline1Ptr
+      .asFunction<spine_bone_timeline1 Function(spine_rotate_timeline)>();
+
+  spine_curve_timeline1 spine_rotate_timeline_cast_to_curve_timeline1(
+    spine_rotate_timeline obj,
+  ) {
+    return _spine_rotate_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_rotate_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_rotate_timeline)>>(
+          'spine_rotate_timeline_cast_to_curve_timeline1');
+  late final _spine_rotate_timeline_cast_to_curve_timeline1 = _spine_rotate_timeline_cast_to_curve_timeline1Ptr
+      .asFunction<spine_curve_timeline1 Function(spine_rotate_timeline)>();
+
+  spine_curve_timeline spine_rotate_timeline_cast_to_curve_timeline(
+    spine_rotate_timeline obj,
+  ) {
+    return _spine_rotate_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rotate_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_rotate_timeline)>>(
+          'spine_rotate_timeline_cast_to_curve_timeline');
+  late final _spine_rotate_timeline_cast_to_curve_timeline = _spine_rotate_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_rotate_timeline)>();
+
+  spine_timeline spine_rotate_timeline_cast_to_timeline(
+    spine_rotate_timeline obj,
+  ) {
+    return _spine_rotate_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rotate_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_rotate_timeline)>>(
+          'spine_rotate_timeline_cast_to_timeline');
+  late final _spine_rotate_timeline_cast_to_timeline =
+      _spine_rotate_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_rotate_timeline)>();
+
+  spine_bone_timeline spine_rotate_timeline_cast_to_bone_timeline(
+    spine_rotate_timeline obj,
+  ) {
+    return _spine_rotate_timeline_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_rotate_timeline_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_rotate_timeline)>>(
+          'spine_rotate_timeline_cast_to_bone_timeline');
+  late final _spine_rotate_timeline_cast_to_bone_timeline =
+      _spine_rotate_timeline_cast_to_bone_timelinePtr.asFunction<spine_bone_timeline Function(spine_rotate_timeline)>();
+
+  spine_bone_timeline2 spine_scale_timeline_cast_to_bone_timeline2(
+    spine_scale_timeline obj,
+  ) {
+    return _spine_scale_timeline_cast_to_bone_timeline2(
+      obj,
+    );
+  }
+
+  late final _spine_scale_timeline_cast_to_bone_timeline2Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline2 Function(spine_scale_timeline)>>(
+          'spine_scale_timeline_cast_to_bone_timeline2');
+  late final _spine_scale_timeline_cast_to_bone_timeline2 =
+      _spine_scale_timeline_cast_to_bone_timeline2Ptr.asFunction<spine_bone_timeline2 Function(spine_scale_timeline)>();
+
+  spine_curve_timeline spine_scale_timeline_cast_to_curve_timeline(
+    spine_scale_timeline obj,
+  ) {
+    return _spine_scale_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_scale_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_scale_timeline)>>(
+          'spine_scale_timeline_cast_to_curve_timeline');
+  late final _spine_scale_timeline_cast_to_curve_timeline =
+      _spine_scale_timeline_cast_to_curve_timelinePtr.asFunction<spine_curve_timeline Function(spine_scale_timeline)>();
+
+  spine_timeline spine_scale_timeline_cast_to_timeline(
+    spine_scale_timeline obj,
+  ) {
+    return _spine_scale_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_scale_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_scale_timeline)>>(
+          'spine_scale_timeline_cast_to_timeline');
+  late final _spine_scale_timeline_cast_to_timeline =
+      _spine_scale_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_scale_timeline)>();
+
+  spine_bone_timeline spine_scale_timeline_cast_to_bone_timeline(
+    spine_scale_timeline obj,
+  ) {
+    return _spine_scale_timeline_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_scale_timeline_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_scale_timeline)>>(
+          'spine_scale_timeline_cast_to_bone_timeline');
+  late final _spine_scale_timeline_cast_to_bone_timeline =
+      _spine_scale_timeline_cast_to_bone_timelinePtr.asFunction<spine_bone_timeline Function(spine_scale_timeline)>();
+
+  spine_bone_timeline1 spine_scale_x_timeline_cast_to_bone_timeline1(
+    spine_scale_x_timeline obj,
+  ) {
+    return _spine_scale_x_timeline_cast_to_bone_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_scale_x_timeline_cast_to_bone_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline1 Function(spine_scale_x_timeline)>>(
+          'spine_scale_x_timeline_cast_to_bone_timeline1');
+  late final _spine_scale_x_timeline_cast_to_bone_timeline1 = _spine_scale_x_timeline_cast_to_bone_timeline1Ptr
+      .asFunction<spine_bone_timeline1 Function(spine_scale_x_timeline)>();
+
+  spine_curve_timeline1 spine_scale_x_timeline_cast_to_curve_timeline1(
+    spine_scale_x_timeline obj,
+  ) {
+    return _spine_scale_x_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_scale_x_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_scale_x_timeline)>>(
+          'spine_scale_x_timeline_cast_to_curve_timeline1');
+  late final _spine_scale_x_timeline_cast_to_curve_timeline1 = _spine_scale_x_timeline_cast_to_curve_timeline1Ptr
+      .asFunction<spine_curve_timeline1 Function(spine_scale_x_timeline)>();
+
+  spine_curve_timeline spine_scale_x_timeline_cast_to_curve_timeline(
+    spine_scale_x_timeline obj,
+  ) {
+    return _spine_scale_x_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_scale_x_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_scale_x_timeline)>>(
+          'spine_scale_x_timeline_cast_to_curve_timeline');
+  late final _spine_scale_x_timeline_cast_to_curve_timeline = _spine_scale_x_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_scale_x_timeline)>();
+
+  spine_timeline spine_scale_x_timeline_cast_to_timeline(
+    spine_scale_x_timeline obj,
+  ) {
+    return _spine_scale_x_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_scale_x_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_scale_x_timeline)>>(
+          'spine_scale_x_timeline_cast_to_timeline');
+  late final _spine_scale_x_timeline_cast_to_timeline =
+      _spine_scale_x_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_scale_x_timeline)>();
+
+  spine_bone_timeline spine_scale_x_timeline_cast_to_bone_timeline(
+    spine_scale_x_timeline obj,
+  ) {
+    return _spine_scale_x_timeline_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_scale_x_timeline_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_scale_x_timeline)>>(
+          'spine_scale_x_timeline_cast_to_bone_timeline');
+  late final _spine_scale_x_timeline_cast_to_bone_timeline = _spine_scale_x_timeline_cast_to_bone_timelinePtr
+      .asFunction<spine_bone_timeline Function(spine_scale_x_timeline)>();
+
+  spine_bone_timeline1 spine_scale_y_timeline_cast_to_bone_timeline1(
+    spine_scale_y_timeline obj,
+  ) {
+    return _spine_scale_y_timeline_cast_to_bone_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_scale_y_timeline_cast_to_bone_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline1 Function(spine_scale_y_timeline)>>(
+          'spine_scale_y_timeline_cast_to_bone_timeline1');
+  late final _spine_scale_y_timeline_cast_to_bone_timeline1 = _spine_scale_y_timeline_cast_to_bone_timeline1Ptr
+      .asFunction<spine_bone_timeline1 Function(spine_scale_y_timeline)>();
+
+  spine_curve_timeline1 spine_scale_y_timeline_cast_to_curve_timeline1(
+    spine_scale_y_timeline obj,
+  ) {
+    return _spine_scale_y_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_scale_y_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_scale_y_timeline)>>(
+          'spine_scale_y_timeline_cast_to_curve_timeline1');
+  late final _spine_scale_y_timeline_cast_to_curve_timeline1 = _spine_scale_y_timeline_cast_to_curve_timeline1Ptr
+      .asFunction<spine_curve_timeline1 Function(spine_scale_y_timeline)>();
+
+  spine_curve_timeline spine_scale_y_timeline_cast_to_curve_timeline(
+    spine_scale_y_timeline obj,
+  ) {
+    return _spine_scale_y_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_scale_y_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_scale_y_timeline)>>(
+          'spine_scale_y_timeline_cast_to_curve_timeline');
+  late final _spine_scale_y_timeline_cast_to_curve_timeline = _spine_scale_y_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_scale_y_timeline)>();
+
+  spine_timeline spine_scale_y_timeline_cast_to_timeline(
+    spine_scale_y_timeline obj,
+  ) {
+    return _spine_scale_y_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_scale_y_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_scale_y_timeline)>>(
+          'spine_scale_y_timeline_cast_to_timeline');
+  late final _spine_scale_y_timeline_cast_to_timeline =
+      _spine_scale_y_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_scale_y_timeline)>();
+
+  spine_bone_timeline spine_scale_y_timeline_cast_to_bone_timeline(
+    spine_scale_y_timeline obj,
+  ) {
+    return _spine_scale_y_timeline_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_scale_y_timeline_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_scale_y_timeline)>>(
+          'spine_scale_y_timeline_cast_to_bone_timeline');
+  late final _spine_scale_y_timeline_cast_to_bone_timeline = _spine_scale_y_timeline_cast_to_bone_timelinePtr
+      .asFunction<spine_bone_timeline Function(spine_scale_y_timeline)>();
+
+  spine_timeline spine_sequence_timeline_cast_to_timeline(
+    spine_sequence_timeline obj,
+  ) {
+    return _spine_sequence_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_sequence_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_sequence_timeline)>>(
+          'spine_sequence_timeline_cast_to_timeline');
+  late final _spine_sequence_timeline_cast_to_timeline =
+      _spine_sequence_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_sequence_timeline)>();
+
+  spine_slot_timeline spine_sequence_timeline_cast_to_slot_timeline(
+    spine_sequence_timeline obj,
+  ) {
+    return _spine_sequence_timeline_cast_to_slot_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_sequence_timeline_cast_to_slot_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_timeline Function(spine_sequence_timeline)>>(
+          'spine_sequence_timeline_cast_to_slot_timeline');
+  late final _spine_sequence_timeline_cast_to_slot_timeline = _spine_sequence_timeline_cast_to_slot_timelinePtr
+      .asFunction<spine_slot_timeline Function(spine_sequence_timeline)>();
+
+  spine_bone_timeline2 spine_shear_timeline_cast_to_bone_timeline2(
+    spine_shear_timeline obj,
+  ) {
+    return _spine_shear_timeline_cast_to_bone_timeline2(
+      obj,
+    );
+  }
+
+  late final _spine_shear_timeline_cast_to_bone_timeline2Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline2 Function(spine_shear_timeline)>>(
+          'spine_shear_timeline_cast_to_bone_timeline2');
+  late final _spine_shear_timeline_cast_to_bone_timeline2 =
+      _spine_shear_timeline_cast_to_bone_timeline2Ptr.asFunction<spine_bone_timeline2 Function(spine_shear_timeline)>();
+
+  spine_curve_timeline spine_shear_timeline_cast_to_curve_timeline(
+    spine_shear_timeline obj,
+  ) {
+    return _spine_shear_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_shear_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_shear_timeline)>>(
+          'spine_shear_timeline_cast_to_curve_timeline');
+  late final _spine_shear_timeline_cast_to_curve_timeline =
+      _spine_shear_timeline_cast_to_curve_timelinePtr.asFunction<spine_curve_timeline Function(spine_shear_timeline)>();
+
+  spine_timeline spine_shear_timeline_cast_to_timeline(
+    spine_shear_timeline obj,
+  ) {
+    return _spine_shear_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_shear_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_shear_timeline)>>(
+          'spine_shear_timeline_cast_to_timeline');
+  late final _spine_shear_timeline_cast_to_timeline =
+      _spine_shear_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_shear_timeline)>();
+
+  spine_bone_timeline spine_shear_timeline_cast_to_bone_timeline(
+    spine_shear_timeline obj,
+  ) {
+    return _spine_shear_timeline_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_shear_timeline_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_shear_timeline)>>(
+          'spine_shear_timeline_cast_to_bone_timeline');
+  late final _spine_shear_timeline_cast_to_bone_timeline =
+      _spine_shear_timeline_cast_to_bone_timelinePtr.asFunction<spine_bone_timeline Function(spine_shear_timeline)>();
+
+  spine_bone_timeline1 spine_shear_x_timeline_cast_to_bone_timeline1(
+    spine_shear_x_timeline obj,
+  ) {
+    return _spine_shear_x_timeline_cast_to_bone_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_shear_x_timeline_cast_to_bone_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline1 Function(spine_shear_x_timeline)>>(
+          'spine_shear_x_timeline_cast_to_bone_timeline1');
+  late final _spine_shear_x_timeline_cast_to_bone_timeline1 = _spine_shear_x_timeline_cast_to_bone_timeline1Ptr
+      .asFunction<spine_bone_timeline1 Function(spine_shear_x_timeline)>();
+
+  spine_curve_timeline1 spine_shear_x_timeline_cast_to_curve_timeline1(
+    spine_shear_x_timeline obj,
+  ) {
+    return _spine_shear_x_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_shear_x_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_shear_x_timeline)>>(
+          'spine_shear_x_timeline_cast_to_curve_timeline1');
+  late final _spine_shear_x_timeline_cast_to_curve_timeline1 = _spine_shear_x_timeline_cast_to_curve_timeline1Ptr
+      .asFunction<spine_curve_timeline1 Function(spine_shear_x_timeline)>();
+
+  spine_curve_timeline spine_shear_x_timeline_cast_to_curve_timeline(
+    spine_shear_x_timeline obj,
+  ) {
+    return _spine_shear_x_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_shear_x_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_shear_x_timeline)>>(
+          'spine_shear_x_timeline_cast_to_curve_timeline');
+  late final _spine_shear_x_timeline_cast_to_curve_timeline = _spine_shear_x_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_shear_x_timeline)>();
+
+  spine_timeline spine_shear_x_timeline_cast_to_timeline(
+    spine_shear_x_timeline obj,
+  ) {
+    return _spine_shear_x_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_shear_x_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_shear_x_timeline)>>(
+          'spine_shear_x_timeline_cast_to_timeline');
+  late final _spine_shear_x_timeline_cast_to_timeline =
+      _spine_shear_x_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_shear_x_timeline)>();
+
+  spine_bone_timeline spine_shear_x_timeline_cast_to_bone_timeline(
+    spine_shear_x_timeline obj,
+  ) {
+    return _spine_shear_x_timeline_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_shear_x_timeline_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_shear_x_timeline)>>(
+          'spine_shear_x_timeline_cast_to_bone_timeline');
+  late final _spine_shear_x_timeline_cast_to_bone_timeline = _spine_shear_x_timeline_cast_to_bone_timelinePtr
+      .asFunction<spine_bone_timeline Function(spine_shear_x_timeline)>();
+
+  spine_bone_timeline1 spine_shear_y_timeline_cast_to_bone_timeline1(
+    spine_shear_y_timeline obj,
+  ) {
+    return _spine_shear_y_timeline_cast_to_bone_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_shear_y_timeline_cast_to_bone_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline1 Function(spine_shear_y_timeline)>>(
+          'spine_shear_y_timeline_cast_to_bone_timeline1');
+  late final _spine_shear_y_timeline_cast_to_bone_timeline1 = _spine_shear_y_timeline_cast_to_bone_timeline1Ptr
+      .asFunction<spine_bone_timeline1 Function(spine_shear_y_timeline)>();
+
+  spine_curve_timeline1 spine_shear_y_timeline_cast_to_curve_timeline1(
+    spine_shear_y_timeline obj,
+  ) {
+    return _spine_shear_y_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_shear_y_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_shear_y_timeline)>>(
+          'spine_shear_y_timeline_cast_to_curve_timeline1');
+  late final _spine_shear_y_timeline_cast_to_curve_timeline1 = _spine_shear_y_timeline_cast_to_curve_timeline1Ptr
+      .asFunction<spine_curve_timeline1 Function(spine_shear_y_timeline)>();
+
+  spine_curve_timeline spine_shear_y_timeline_cast_to_curve_timeline(
+    spine_shear_y_timeline obj,
+  ) {
+    return _spine_shear_y_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_shear_y_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_shear_y_timeline)>>(
+          'spine_shear_y_timeline_cast_to_curve_timeline');
+  late final _spine_shear_y_timeline_cast_to_curve_timeline = _spine_shear_y_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_shear_y_timeline)>();
+
+  spine_timeline spine_shear_y_timeline_cast_to_timeline(
+    spine_shear_y_timeline obj,
+  ) {
+    return _spine_shear_y_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_shear_y_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_shear_y_timeline)>>(
+          'spine_shear_y_timeline_cast_to_timeline');
+  late final _spine_shear_y_timeline_cast_to_timeline =
+      _spine_shear_y_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_shear_y_timeline)>();
+
+  spine_bone_timeline spine_shear_y_timeline_cast_to_bone_timeline(
+    spine_shear_y_timeline obj,
+  ) {
+    return _spine_shear_y_timeline_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_shear_y_timeline_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_shear_y_timeline)>>(
+          'spine_shear_y_timeline_cast_to_bone_timeline');
+  late final _spine_shear_y_timeline_cast_to_bone_timeline = _spine_shear_y_timeline_cast_to_bone_timelinePtr
+      .asFunction<spine_bone_timeline Function(spine_shear_y_timeline)>();
+
+  spine_slider_base spine_slider_cast_to_slider_base(
+    spine_slider obj,
+  ) {
+    return _spine_slider_cast_to_slider_base(
+      obj,
+    );
+  }
+
+  late final _spine_slider_cast_to_slider_basePtr =
+      _lookup<ffi.NativeFunction<spine_slider_base Function(spine_slider)>>('spine_slider_cast_to_slider_base');
+  late final _spine_slider_cast_to_slider_base =
+      _spine_slider_cast_to_slider_basePtr.asFunction<spine_slider_base Function(spine_slider)>();
+
+  spine_posed spine_slider_cast_to_posed(
+    spine_slider obj,
+  ) {
+    return _spine_slider_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_slider_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_slider)>>('spine_slider_cast_to_posed');
+  late final _spine_slider_cast_to_posed =
+      _spine_slider_cast_to_posedPtr.asFunction<spine_posed Function(spine_slider)>();
+
+  spine_posed_active spine_slider_cast_to_posed_active(
+    spine_slider obj,
+  ) {
+    return _spine_slider_cast_to_posed_active(
+      obj,
+    );
+  }
+
+  late final _spine_slider_cast_to_posed_activePtr =
+      _lookup<ffi.NativeFunction<spine_posed_active Function(spine_slider)>>('spine_slider_cast_to_posed_active');
+  late final _spine_slider_cast_to_posed_active =
+      _spine_slider_cast_to_posed_activePtr.asFunction<spine_posed_active Function(spine_slider)>();
+
+  spine_constraint spine_slider_cast_to_constraint(
+    spine_slider obj,
+  ) {
+    return _spine_slider_cast_to_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_slider_cast_to_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_constraint Function(spine_slider)>>('spine_slider_cast_to_constraint');
+  late final _spine_slider_cast_to_constraint =
+      _spine_slider_cast_to_constraintPtr.asFunction<spine_constraint Function(spine_slider)>();
+
+  spine_update spine_slider_cast_to_update(
+    spine_slider obj,
+  ) {
+    return _spine_slider_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_slider_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_slider)>>('spine_slider_cast_to_update');
+  late final _spine_slider_cast_to_update =
+      _spine_slider_cast_to_updatePtr.asFunction<spine_update Function(spine_slider)>();
+
+  spine_posed spine_slider_base_cast_to_posed(
+    spine_slider_base obj,
+  ) {
+    return _spine_slider_base_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_slider_base_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_slider_base)>>('spine_slider_base_cast_to_posed');
+  late final _spine_slider_base_cast_to_posed =
+      _spine_slider_base_cast_to_posedPtr.asFunction<spine_posed Function(spine_slider_base)>();
+
+  spine_posed_active spine_slider_base_cast_to_posed_active(
+    spine_slider_base obj,
+  ) {
+    return _spine_slider_base_cast_to_posed_active(
+      obj,
+    );
+  }
+
+  late final _spine_slider_base_cast_to_posed_activePtr =
+      _lookup<ffi.NativeFunction<spine_posed_active Function(spine_slider_base)>>(
+          'spine_slider_base_cast_to_posed_active');
+  late final _spine_slider_base_cast_to_posed_active =
+      _spine_slider_base_cast_to_posed_activePtr.asFunction<spine_posed_active Function(spine_slider_base)>();
+
+  spine_constraint spine_slider_base_cast_to_constraint(
+    spine_slider_base obj,
+  ) {
+    return _spine_slider_base_cast_to_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_slider_base_cast_to_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_constraint Function(spine_slider_base)>>('spine_slider_base_cast_to_constraint');
+  late final _spine_slider_base_cast_to_constraint =
+      _spine_slider_base_cast_to_constraintPtr.asFunction<spine_constraint Function(spine_slider_base)>();
+
+  spine_update spine_slider_base_cast_to_update(
+    spine_slider_base obj,
+  ) {
+    return _spine_slider_base_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_slider_base_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_slider_base)>>('spine_slider_base_cast_to_update');
+  late final _spine_slider_base_cast_to_update =
+      _spine_slider_base_cast_to_updatePtr.asFunction<spine_update Function(spine_slider_base)>();
+
+  spine_posed_data spine_slider_data_cast_to_posed_data(
+    spine_slider_data obj,
+  ) {
+    return _spine_slider_data_cast_to_posed_data(
+      obj,
+    );
+  }
+
+  late final _spine_slider_data_cast_to_posed_dataPtr =
+      _lookup<ffi.NativeFunction<spine_posed_data Function(spine_slider_data)>>('spine_slider_data_cast_to_posed_data');
+  late final _spine_slider_data_cast_to_posed_data =
+      _spine_slider_data_cast_to_posed_dataPtr.asFunction<spine_posed_data Function(spine_slider_data)>();
+
+  spine_constraint_data spine_slider_data_cast_to_constraint_data(
+    spine_slider_data obj,
+  ) {
+    return _spine_slider_data_cast_to_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_slider_data_cast_to_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_constraint_data Function(spine_slider_data)>>(
+          'spine_slider_data_cast_to_constraint_data');
+  late final _spine_slider_data_cast_to_constraint_data =
+      _spine_slider_data_cast_to_constraint_dataPtr.asFunction<spine_constraint_data Function(spine_slider_data)>();
+
+  spine_constraint_timeline1 spine_slider_mix_timeline_cast_to_constraint_timeline1(
+    spine_slider_mix_timeline obj,
+  ) {
+    return _spine_slider_mix_timeline_cast_to_constraint_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_slider_mix_timeline_cast_to_constraint_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline1 Function(spine_slider_mix_timeline)>>(
+          'spine_slider_mix_timeline_cast_to_constraint_timeline1');
+  late final _spine_slider_mix_timeline_cast_to_constraint_timeline1 =
+      _spine_slider_mix_timeline_cast_to_constraint_timeline1Ptr
+          .asFunction<spine_constraint_timeline1 Function(spine_slider_mix_timeline)>();
+
+  spine_curve_timeline1 spine_slider_mix_timeline_cast_to_curve_timeline1(
+    spine_slider_mix_timeline obj,
+  ) {
+    return _spine_slider_mix_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_slider_mix_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_slider_mix_timeline)>>(
+          'spine_slider_mix_timeline_cast_to_curve_timeline1');
+  late final _spine_slider_mix_timeline_cast_to_curve_timeline1 = _spine_slider_mix_timeline_cast_to_curve_timeline1Ptr
+      .asFunction<spine_curve_timeline1 Function(spine_slider_mix_timeline)>();
+
+  spine_curve_timeline spine_slider_mix_timeline_cast_to_curve_timeline(
+    spine_slider_mix_timeline obj,
+  ) {
+    return _spine_slider_mix_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slider_mix_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_slider_mix_timeline)>>(
+          'spine_slider_mix_timeline_cast_to_curve_timeline');
+  late final _spine_slider_mix_timeline_cast_to_curve_timeline = _spine_slider_mix_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_slider_mix_timeline)>();
+
+  spine_timeline spine_slider_mix_timeline_cast_to_timeline(
+    spine_slider_mix_timeline obj,
+  ) {
+    return _spine_slider_mix_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slider_mix_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_slider_mix_timeline)>>(
+          'spine_slider_mix_timeline_cast_to_timeline');
+  late final _spine_slider_mix_timeline_cast_to_timeline =
+      _spine_slider_mix_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_slider_mix_timeline)>();
+
+  spine_constraint_timeline spine_slider_mix_timeline_cast_to_constraint_timeline(
+    spine_slider_mix_timeline obj,
+  ) {
+    return _spine_slider_mix_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slider_mix_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_slider_mix_timeline)>>(
+          'spine_slider_mix_timeline_cast_to_constraint_timeline');
+  late final _spine_slider_mix_timeline_cast_to_constraint_timeline =
+      _spine_slider_mix_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_slider_mix_timeline)>();
+
+  spine_constraint_timeline1 spine_slider_timeline_cast_to_constraint_timeline1(
+    spine_slider_timeline obj,
+  ) {
+    return _spine_slider_timeline_cast_to_constraint_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_slider_timeline_cast_to_constraint_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline1 Function(spine_slider_timeline)>>(
+          'spine_slider_timeline_cast_to_constraint_timeline1');
+  late final _spine_slider_timeline_cast_to_constraint_timeline1 =
+      _spine_slider_timeline_cast_to_constraint_timeline1Ptr
+          .asFunction<spine_constraint_timeline1 Function(spine_slider_timeline)>();
+
+  spine_curve_timeline1 spine_slider_timeline_cast_to_curve_timeline1(
+    spine_slider_timeline obj,
+  ) {
+    return _spine_slider_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_slider_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_slider_timeline)>>(
+          'spine_slider_timeline_cast_to_curve_timeline1');
+  late final _spine_slider_timeline_cast_to_curve_timeline1 = _spine_slider_timeline_cast_to_curve_timeline1Ptr
+      .asFunction<spine_curve_timeline1 Function(spine_slider_timeline)>();
+
+  spine_curve_timeline spine_slider_timeline_cast_to_curve_timeline(
+    spine_slider_timeline obj,
+  ) {
+    return _spine_slider_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slider_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_slider_timeline)>>(
+          'spine_slider_timeline_cast_to_curve_timeline');
+  late final _spine_slider_timeline_cast_to_curve_timeline = _spine_slider_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_slider_timeline)>();
+
+  spine_timeline spine_slider_timeline_cast_to_timeline(
+    spine_slider_timeline obj,
+  ) {
+    return _spine_slider_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slider_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_slider_timeline)>>(
+          'spine_slider_timeline_cast_to_timeline');
+  late final _spine_slider_timeline_cast_to_timeline =
+      _spine_slider_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_slider_timeline)>();
+
+  spine_constraint_timeline spine_slider_timeline_cast_to_constraint_timeline(
+    spine_slider_timeline obj,
+  ) {
+    return _spine_slider_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slider_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_slider_timeline)>>(
+          'spine_slider_timeline_cast_to_constraint_timeline');
+  late final _spine_slider_timeline_cast_to_constraint_timeline = _spine_slider_timeline_cast_to_constraint_timelinePtr
+      .asFunction<spine_constraint_timeline Function(spine_slider_timeline)>();
+
+  spine_posed spine_slot_cast_to_posed(
+    spine_slot obj,
+  ) {
+    return _spine_slot_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_slot_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_slot)>>('spine_slot_cast_to_posed');
+  late final _spine_slot_cast_to_posed = _spine_slot_cast_to_posedPtr.asFunction<spine_posed Function(spine_slot)>();
+
+  spine_curve_timeline spine_slot_curve_timeline_cast_to_curve_timeline(
+    spine_slot_curve_timeline obj,
+  ) {
+    return _spine_slot_curve_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_curve_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_slot_curve_timeline)>>(
+          'spine_slot_curve_timeline_cast_to_curve_timeline');
+  late final _spine_slot_curve_timeline_cast_to_curve_timeline = _spine_slot_curve_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_slot_curve_timeline)>();
+
+  spine_timeline spine_slot_curve_timeline_cast_to_timeline(
+    spine_slot_curve_timeline obj,
+  ) {
+    return _spine_slot_curve_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_curve_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_slot_curve_timeline)>>(
+          'spine_slot_curve_timeline_cast_to_timeline');
+  late final _spine_slot_curve_timeline_cast_to_timeline =
+      _spine_slot_curve_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_slot_curve_timeline)>();
+
+  spine_slot_timeline spine_slot_curve_timeline_cast_to_slot_timeline(
+    spine_slot_curve_timeline obj,
+  ) {
+    return _spine_slot_curve_timeline_cast_to_slot_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_curve_timeline_cast_to_slot_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_timeline Function(spine_slot_curve_timeline)>>(
+          'spine_slot_curve_timeline_cast_to_slot_timeline');
+  late final _spine_slot_curve_timeline_cast_to_slot_timeline = _spine_slot_curve_timeline_cast_to_slot_timelinePtr
+      .asFunction<spine_slot_timeline Function(spine_slot_curve_timeline)>();
+
+  spine_posed_data spine_slot_data_cast_to_posed_data(
+    spine_slot_data obj,
+  ) {
+    return _spine_slot_data_cast_to_posed_data(
+      obj,
+    );
+  }
+
+  late final _spine_slot_data_cast_to_posed_dataPtr =
+      _lookup<ffi.NativeFunction<spine_posed_data Function(spine_slot_data)>>('spine_slot_data_cast_to_posed_data');
+  late final _spine_slot_data_cast_to_posed_data =
+      _spine_slot_data_cast_to_posed_dataPtr.asFunction<spine_posed_data Function(spine_slot_data)>();
+
+  spine_to_property spine_to_rotate_cast_to_to_property(
+    spine_to_rotate obj,
+  ) {
+    return _spine_to_rotate_cast_to_to_property(
+      obj,
+    );
+  }
+
+  late final _spine_to_rotate_cast_to_to_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_to_property Function(spine_to_rotate)>>('spine_to_rotate_cast_to_to_property');
+  late final _spine_to_rotate_cast_to_to_property =
+      _spine_to_rotate_cast_to_to_propertyPtr.asFunction<spine_to_property Function(spine_to_rotate)>();
+
+  spine_to_property spine_to_scale_x_cast_to_to_property(
+    spine_to_scale_x obj,
+  ) {
+    return _spine_to_scale_x_cast_to_to_property(
+      obj,
+    );
+  }
+
+  late final _spine_to_scale_x_cast_to_to_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_to_property Function(spine_to_scale_x)>>('spine_to_scale_x_cast_to_to_property');
+  late final _spine_to_scale_x_cast_to_to_property =
+      _spine_to_scale_x_cast_to_to_propertyPtr.asFunction<spine_to_property Function(spine_to_scale_x)>();
+
+  spine_to_property spine_to_scale_y_cast_to_to_property(
+    spine_to_scale_y obj,
+  ) {
+    return _spine_to_scale_y_cast_to_to_property(
+      obj,
+    );
+  }
+
+  late final _spine_to_scale_y_cast_to_to_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_to_property Function(spine_to_scale_y)>>('spine_to_scale_y_cast_to_to_property');
+  late final _spine_to_scale_y_cast_to_to_property =
+      _spine_to_scale_y_cast_to_to_propertyPtr.asFunction<spine_to_property Function(spine_to_scale_y)>();
+
+  spine_to_property spine_to_shear_y_cast_to_to_property(
+    spine_to_shear_y obj,
+  ) {
+    return _spine_to_shear_y_cast_to_to_property(
+      obj,
+    );
+  }
+
+  late final _spine_to_shear_y_cast_to_to_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_to_property Function(spine_to_shear_y)>>('spine_to_shear_y_cast_to_to_property');
+  late final _spine_to_shear_y_cast_to_to_property =
+      _spine_to_shear_y_cast_to_to_propertyPtr.asFunction<spine_to_property Function(spine_to_shear_y)>();
+
+  spine_to_property spine_to_x_cast_to_to_property(
+    spine_to_x obj,
+  ) {
+    return _spine_to_x_cast_to_to_property(
+      obj,
+    );
+  }
+
+  late final _spine_to_x_cast_to_to_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_to_property Function(spine_to_x)>>('spine_to_x_cast_to_to_property');
+  late final _spine_to_x_cast_to_to_property =
+      _spine_to_x_cast_to_to_propertyPtr.asFunction<spine_to_property Function(spine_to_x)>();
+
+  spine_to_property spine_to_y_cast_to_to_property(
+    spine_to_y obj,
+  ) {
+    return _spine_to_y_cast_to_to_property(
+      obj,
+    );
+  }
+
+  late final _spine_to_y_cast_to_to_propertyPtr =
+      _lookup<ffi.NativeFunction<spine_to_property Function(spine_to_y)>>('spine_to_y_cast_to_to_property');
+  late final _spine_to_y_cast_to_to_property =
+      _spine_to_y_cast_to_to_propertyPtr.asFunction<spine_to_property Function(spine_to_y)>();
+
+  spine_transform_constraint_base spine_transform_constraint_cast_to_transform_constraint_base(
+    spine_transform_constraint obj,
+  ) {
+    return _spine_transform_constraint_cast_to_transform_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_cast_to_transform_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_base Function(spine_transform_constraint)>>(
+          'spine_transform_constraint_cast_to_transform_constraint_base');
+  late final _spine_transform_constraint_cast_to_transform_constraint_base =
+      _spine_transform_constraint_cast_to_transform_constraint_basePtr
+          .asFunction<spine_transform_constraint_base Function(spine_transform_constraint)>();
+
+  spine_posed spine_transform_constraint_cast_to_posed(
+    spine_transform_constraint obj,
+  ) {
+    return _spine_transform_constraint_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_transform_constraint)>>(
+          'spine_transform_constraint_cast_to_posed');
+  late final _spine_transform_constraint_cast_to_posed =
+      _spine_transform_constraint_cast_to_posedPtr.asFunction<spine_posed Function(spine_transform_constraint)>();
+
+  spine_posed_active spine_transform_constraint_cast_to_posed_active(
+    spine_transform_constraint obj,
+  ) {
+    return _spine_transform_constraint_cast_to_posed_active(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_cast_to_posed_activePtr =
+      _lookup<ffi.NativeFunction<spine_posed_active Function(spine_transform_constraint)>>(
+          'spine_transform_constraint_cast_to_posed_active');
+  late final _spine_transform_constraint_cast_to_posed_active = _spine_transform_constraint_cast_to_posed_activePtr
+      .asFunction<spine_posed_active Function(spine_transform_constraint)>();
+
+  spine_constraint spine_transform_constraint_cast_to_constraint(
+    spine_transform_constraint obj,
+  ) {
+    return _spine_transform_constraint_cast_to_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_cast_to_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_constraint Function(spine_transform_constraint)>>(
+          'spine_transform_constraint_cast_to_constraint');
+  late final _spine_transform_constraint_cast_to_constraint = _spine_transform_constraint_cast_to_constraintPtr
+      .asFunction<spine_constraint Function(spine_transform_constraint)>();
+
+  spine_update spine_transform_constraint_cast_to_update(
+    spine_transform_constraint obj,
+  ) {
+    return _spine_transform_constraint_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_transform_constraint)>>(
+          'spine_transform_constraint_cast_to_update');
+  late final _spine_transform_constraint_cast_to_update =
+      _spine_transform_constraint_cast_to_updatePtr.asFunction<spine_update Function(spine_transform_constraint)>();
+
+  spine_posed spine_transform_constraint_base_cast_to_posed(
+    spine_transform_constraint_base obj,
+  ) {
+    return _spine_transform_constraint_base_cast_to_posed(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_base_cast_to_posedPtr =
+      _lookup<ffi.NativeFunction<spine_posed Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_cast_to_posed');
+  late final _spine_transform_constraint_base_cast_to_posed = _spine_transform_constraint_base_cast_to_posedPtr
+      .asFunction<spine_posed Function(spine_transform_constraint_base)>();
+
+  spine_posed_active spine_transform_constraint_base_cast_to_posed_active(
+    spine_transform_constraint_base obj,
+  ) {
+    return _spine_transform_constraint_base_cast_to_posed_active(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_base_cast_to_posed_activePtr =
+      _lookup<ffi.NativeFunction<spine_posed_active Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_cast_to_posed_active');
+  late final _spine_transform_constraint_base_cast_to_posed_active =
+      _spine_transform_constraint_base_cast_to_posed_activePtr
+          .asFunction<spine_posed_active Function(spine_transform_constraint_base)>();
+
+  spine_constraint spine_transform_constraint_base_cast_to_constraint(
+    spine_transform_constraint_base obj,
+  ) {
+    return _spine_transform_constraint_base_cast_to_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_base_cast_to_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_constraint Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_cast_to_constraint');
+  late final _spine_transform_constraint_base_cast_to_constraint =
+      _spine_transform_constraint_base_cast_to_constraintPtr
+          .asFunction<spine_constraint Function(spine_transform_constraint_base)>();
+
+  spine_update spine_transform_constraint_base_cast_to_update(
+    spine_transform_constraint_base obj,
+  ) {
+    return _spine_transform_constraint_base_cast_to_update(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_base_cast_to_updatePtr =
+      _lookup<ffi.NativeFunction<spine_update Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_cast_to_update');
+  late final _spine_transform_constraint_base_cast_to_update = _spine_transform_constraint_base_cast_to_updatePtr
+      .asFunction<spine_update Function(spine_transform_constraint_base)>();
+
+  spine_posed_data spine_transform_constraint_data_cast_to_posed_data(
+    spine_transform_constraint_data obj,
+  ) {
+    return _spine_transform_constraint_data_cast_to_posed_data(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_data_cast_to_posed_dataPtr =
+      _lookup<ffi.NativeFunction<spine_posed_data Function(spine_transform_constraint_data)>>(
+          'spine_transform_constraint_data_cast_to_posed_data');
+  late final _spine_transform_constraint_data_cast_to_posed_data =
+      _spine_transform_constraint_data_cast_to_posed_dataPtr
+          .asFunction<spine_posed_data Function(spine_transform_constraint_data)>();
+
+  spine_constraint_data spine_transform_constraint_data_cast_to_constraint_data(
+    spine_transform_constraint_data obj,
+  ) {
+    return _spine_transform_constraint_data_cast_to_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_data_cast_to_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_constraint_data Function(spine_transform_constraint_data)>>(
+          'spine_transform_constraint_data_cast_to_constraint_data');
+  late final _spine_transform_constraint_data_cast_to_constraint_data =
+      _spine_transform_constraint_data_cast_to_constraint_dataPtr
+          .asFunction<spine_constraint_data Function(spine_transform_constraint_data)>();
+
+  spine_curve_timeline spine_transform_constraint_timeline_cast_to_curve_timeline(
+    spine_transform_constraint_timeline obj,
+  ) {
+    return _spine_transform_constraint_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_transform_constraint_timeline)>>(
+          'spine_transform_constraint_timeline_cast_to_curve_timeline');
+  late final _spine_transform_constraint_timeline_cast_to_curve_timeline =
+      _spine_transform_constraint_timeline_cast_to_curve_timelinePtr
+          .asFunction<spine_curve_timeline Function(spine_transform_constraint_timeline)>();
+
+  spine_timeline spine_transform_constraint_timeline_cast_to_timeline(
+    spine_transform_constraint_timeline obj,
+  ) {
+    return _spine_transform_constraint_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_transform_constraint_timeline)>>(
+          'spine_transform_constraint_timeline_cast_to_timeline');
+  late final _spine_transform_constraint_timeline_cast_to_timeline =
+      _spine_transform_constraint_timeline_cast_to_timelinePtr
+          .asFunction<spine_timeline Function(spine_transform_constraint_timeline)>();
+
+  spine_constraint_timeline spine_transform_constraint_timeline_cast_to_constraint_timeline(
+    spine_transform_constraint_timeline obj,
+  ) {
+    return _spine_transform_constraint_timeline_cast_to_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_timeline_cast_to_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline Function(spine_transform_constraint_timeline)>>(
+          'spine_transform_constraint_timeline_cast_to_constraint_timeline');
+  late final _spine_transform_constraint_timeline_cast_to_constraint_timeline =
+      _spine_transform_constraint_timeline_cast_to_constraint_timelinePtr
+          .asFunction<spine_constraint_timeline Function(spine_transform_constraint_timeline)>();
+
+  spine_bone_timeline2 spine_translate_timeline_cast_to_bone_timeline2(
+    spine_translate_timeline obj,
+  ) {
+    return _spine_translate_timeline_cast_to_bone_timeline2(
+      obj,
+    );
+  }
+
+  late final _spine_translate_timeline_cast_to_bone_timeline2Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline2 Function(spine_translate_timeline)>>(
+          'spine_translate_timeline_cast_to_bone_timeline2');
+  late final _spine_translate_timeline_cast_to_bone_timeline2 = _spine_translate_timeline_cast_to_bone_timeline2Ptr
+      .asFunction<spine_bone_timeline2 Function(spine_translate_timeline)>();
+
+  spine_curve_timeline spine_translate_timeline_cast_to_curve_timeline(
+    spine_translate_timeline obj,
+  ) {
+    return _spine_translate_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_translate_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_translate_timeline)>>(
+          'spine_translate_timeline_cast_to_curve_timeline');
+  late final _spine_translate_timeline_cast_to_curve_timeline = _spine_translate_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_translate_timeline)>();
+
+  spine_timeline spine_translate_timeline_cast_to_timeline(
+    spine_translate_timeline obj,
+  ) {
+    return _spine_translate_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_translate_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_translate_timeline)>>(
+          'spine_translate_timeline_cast_to_timeline');
+  late final _spine_translate_timeline_cast_to_timeline =
+      _spine_translate_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_translate_timeline)>();
+
+  spine_bone_timeline spine_translate_timeline_cast_to_bone_timeline(
+    spine_translate_timeline obj,
+  ) {
+    return _spine_translate_timeline_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_translate_timeline_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_translate_timeline)>>(
+          'spine_translate_timeline_cast_to_bone_timeline');
+  late final _spine_translate_timeline_cast_to_bone_timeline = _spine_translate_timeline_cast_to_bone_timelinePtr
+      .asFunction<spine_bone_timeline Function(spine_translate_timeline)>();
+
+  spine_bone_timeline1 spine_translate_x_timeline_cast_to_bone_timeline1(
+    spine_translate_x_timeline obj,
+  ) {
+    return _spine_translate_x_timeline_cast_to_bone_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_translate_x_timeline_cast_to_bone_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline1 Function(spine_translate_x_timeline)>>(
+          'spine_translate_x_timeline_cast_to_bone_timeline1');
+  late final _spine_translate_x_timeline_cast_to_bone_timeline1 = _spine_translate_x_timeline_cast_to_bone_timeline1Ptr
+      .asFunction<spine_bone_timeline1 Function(spine_translate_x_timeline)>();
+
+  spine_curve_timeline1 spine_translate_x_timeline_cast_to_curve_timeline1(
+    spine_translate_x_timeline obj,
+  ) {
+    return _spine_translate_x_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_translate_x_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_translate_x_timeline)>>(
+          'spine_translate_x_timeline_cast_to_curve_timeline1');
+  late final _spine_translate_x_timeline_cast_to_curve_timeline1 =
+      _spine_translate_x_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_translate_x_timeline)>();
+
+  spine_curve_timeline spine_translate_x_timeline_cast_to_curve_timeline(
+    spine_translate_x_timeline obj,
+  ) {
+    return _spine_translate_x_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_translate_x_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_translate_x_timeline)>>(
+          'spine_translate_x_timeline_cast_to_curve_timeline');
+  late final _spine_translate_x_timeline_cast_to_curve_timeline = _spine_translate_x_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_translate_x_timeline)>();
+
+  spine_timeline spine_translate_x_timeline_cast_to_timeline(
+    spine_translate_x_timeline obj,
+  ) {
+    return _spine_translate_x_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_translate_x_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_translate_x_timeline)>>(
+          'spine_translate_x_timeline_cast_to_timeline');
+  late final _spine_translate_x_timeline_cast_to_timeline =
+      _spine_translate_x_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_translate_x_timeline)>();
+
+  spine_bone_timeline spine_translate_x_timeline_cast_to_bone_timeline(
+    spine_translate_x_timeline obj,
+  ) {
+    return _spine_translate_x_timeline_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_translate_x_timeline_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_translate_x_timeline)>>(
+          'spine_translate_x_timeline_cast_to_bone_timeline');
+  late final _spine_translate_x_timeline_cast_to_bone_timeline = _spine_translate_x_timeline_cast_to_bone_timelinePtr
+      .asFunction<spine_bone_timeline Function(spine_translate_x_timeline)>();
+
+  spine_bone_timeline1 spine_translate_y_timeline_cast_to_bone_timeline1(
+    spine_translate_y_timeline obj,
+  ) {
+    return _spine_translate_y_timeline_cast_to_bone_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_translate_y_timeline_cast_to_bone_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline1 Function(spine_translate_y_timeline)>>(
+          'spine_translate_y_timeline_cast_to_bone_timeline1');
+  late final _spine_translate_y_timeline_cast_to_bone_timeline1 = _spine_translate_y_timeline_cast_to_bone_timeline1Ptr
+      .asFunction<spine_bone_timeline1 Function(spine_translate_y_timeline)>();
+
+  spine_curve_timeline1 spine_translate_y_timeline_cast_to_curve_timeline1(
+    spine_translate_y_timeline obj,
+  ) {
+    return _spine_translate_y_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_translate_y_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_translate_y_timeline)>>(
+          'spine_translate_y_timeline_cast_to_curve_timeline1');
+  late final _spine_translate_y_timeline_cast_to_curve_timeline1 =
+      _spine_translate_y_timeline_cast_to_curve_timeline1Ptr
+          .asFunction<spine_curve_timeline1 Function(spine_translate_y_timeline)>();
+
+  spine_curve_timeline spine_translate_y_timeline_cast_to_curve_timeline(
+    spine_translate_y_timeline obj,
+  ) {
+    return _spine_translate_y_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_translate_y_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_translate_y_timeline)>>(
+          'spine_translate_y_timeline_cast_to_curve_timeline');
+  late final _spine_translate_y_timeline_cast_to_curve_timeline = _spine_translate_y_timeline_cast_to_curve_timelinePtr
+      .asFunction<spine_curve_timeline Function(spine_translate_y_timeline)>();
+
+  spine_timeline spine_translate_y_timeline_cast_to_timeline(
+    spine_translate_y_timeline obj,
+  ) {
+    return _spine_translate_y_timeline_cast_to_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_translate_y_timeline_cast_to_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_timeline Function(spine_translate_y_timeline)>>(
+          'spine_translate_y_timeline_cast_to_timeline');
+  late final _spine_translate_y_timeline_cast_to_timeline =
+      _spine_translate_y_timeline_cast_to_timelinePtr.asFunction<spine_timeline Function(spine_translate_y_timeline)>();
+
+  spine_bone_timeline spine_translate_y_timeline_cast_to_bone_timeline(
+    spine_translate_y_timeline obj,
+  ) {
+    return _spine_translate_y_timeline_cast_to_bone_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_translate_y_timeline_cast_to_bone_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline Function(spine_translate_y_timeline)>>(
+          'spine_translate_y_timeline_cast_to_bone_timeline');
+  late final _spine_translate_y_timeline_cast_to_bone_timeline = _spine_translate_y_timeline_cast_to_bone_timelinePtr
+      .asFunction<spine_bone_timeline Function(spine_translate_y_timeline)>();
+
+  spine_attachment spine_vertex_attachment_cast_to_attachment(
+    spine_vertex_attachment obj,
+  ) {
+    return _spine_vertex_attachment_cast_to_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_vertex_attachment_cast_to_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_attachment Function(spine_vertex_attachment)>>(
+          'spine_vertex_attachment_cast_to_attachment');
+  late final _spine_vertex_attachment_cast_to_attachment =
+      _spine_vertex_attachment_cast_to_attachmentPtr.asFunction<spine_attachment Function(spine_vertex_attachment)>();
+
+  /// Downcast functions (base to derived) - user must ensure correct type
+  spine_alpha_timeline spine_curve_timeline1_cast_to_alpha_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_alpha_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_alpha_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_alpha_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_alpha_timeline');
+  late final _spine_curve_timeline1_cast_to_alpha_timeline = _spine_curve_timeline1_cast_to_alpha_timelinePtr
+      .asFunction<spine_alpha_timeline Function(spine_curve_timeline1)>();
+
+  spine_bone_timeline1 spine_curve_timeline1_cast_to_bone_timeline1(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_bone_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_bone_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline1 Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_bone_timeline1');
+  late final _spine_curve_timeline1_cast_to_bone_timeline1 = _spine_curve_timeline1_cast_to_bone_timeline1Ptr
+      .asFunction<spine_bone_timeline1 Function(spine_curve_timeline1)>();
+
+  spine_constraint_timeline1 spine_curve_timeline1_cast_to_constraint_timeline1(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_constraint_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_constraint_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline1 Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_constraint_timeline1');
+  late final _spine_curve_timeline1_cast_to_constraint_timeline1 =
+      _spine_curve_timeline1_cast_to_constraint_timeline1Ptr
+          .asFunction<spine_constraint_timeline1 Function(spine_curve_timeline1)>();
+
+  spine_path_constraint_position_timeline spine_curve_timeline1_cast_to_path_constraint_position_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_path_constraint_position_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_path_constraint_position_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_position_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_path_constraint_position_timeline');
+  late final _spine_curve_timeline1_cast_to_path_constraint_position_timeline =
+      _spine_curve_timeline1_cast_to_path_constraint_position_timelinePtr
+          .asFunction<spine_path_constraint_position_timeline Function(spine_curve_timeline1)>();
+
+  spine_path_constraint_spacing_timeline spine_curve_timeline1_cast_to_path_constraint_spacing_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_path_constraint_spacing_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_path_constraint_spacing_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_spacing_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_path_constraint_spacing_timeline');
+  late final _spine_curve_timeline1_cast_to_path_constraint_spacing_timeline =
+      _spine_curve_timeline1_cast_to_path_constraint_spacing_timelinePtr
+          .asFunction<spine_path_constraint_spacing_timeline Function(spine_curve_timeline1)>();
+
+  spine_physics_constraint_damping_timeline spine_curve_timeline1_cast_to_physics_constraint_damping_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_physics_constraint_damping_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_physics_constraint_damping_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_damping_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_physics_constraint_damping_timeline');
+  late final _spine_curve_timeline1_cast_to_physics_constraint_damping_timeline =
+      _spine_curve_timeline1_cast_to_physics_constraint_damping_timelinePtr
+          .asFunction<spine_physics_constraint_damping_timeline Function(spine_curve_timeline1)>();
+
+  spine_physics_constraint_gravity_timeline spine_curve_timeline1_cast_to_physics_constraint_gravity_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_physics_constraint_gravity_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_physics_constraint_gravity_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_gravity_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_physics_constraint_gravity_timeline');
+  late final _spine_curve_timeline1_cast_to_physics_constraint_gravity_timeline =
+      _spine_curve_timeline1_cast_to_physics_constraint_gravity_timelinePtr
+          .asFunction<spine_physics_constraint_gravity_timeline Function(spine_curve_timeline1)>();
+
+  spine_physics_constraint_inertia_timeline spine_curve_timeline1_cast_to_physics_constraint_inertia_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_physics_constraint_inertia_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_physics_constraint_inertia_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_inertia_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_physics_constraint_inertia_timeline');
+  late final _spine_curve_timeline1_cast_to_physics_constraint_inertia_timeline =
+      _spine_curve_timeline1_cast_to_physics_constraint_inertia_timelinePtr
+          .asFunction<spine_physics_constraint_inertia_timeline Function(spine_curve_timeline1)>();
+
+  spine_physics_constraint_mass_timeline spine_curve_timeline1_cast_to_physics_constraint_mass_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_physics_constraint_mass_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_physics_constraint_mass_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_mass_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_physics_constraint_mass_timeline');
+  late final _spine_curve_timeline1_cast_to_physics_constraint_mass_timeline =
+      _spine_curve_timeline1_cast_to_physics_constraint_mass_timelinePtr
+          .asFunction<spine_physics_constraint_mass_timeline Function(spine_curve_timeline1)>();
+
+  spine_physics_constraint_mix_timeline spine_curve_timeline1_cast_to_physics_constraint_mix_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_physics_constraint_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_physics_constraint_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_mix_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_physics_constraint_mix_timeline');
+  late final _spine_curve_timeline1_cast_to_physics_constraint_mix_timeline =
+      _spine_curve_timeline1_cast_to_physics_constraint_mix_timelinePtr
+          .asFunction<spine_physics_constraint_mix_timeline Function(spine_curve_timeline1)>();
+
+  spine_physics_constraint_strength_timeline spine_curve_timeline1_cast_to_physics_constraint_strength_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_physics_constraint_strength_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_physics_constraint_strength_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_strength_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_physics_constraint_strength_timeline');
+  late final _spine_curve_timeline1_cast_to_physics_constraint_strength_timeline =
+      _spine_curve_timeline1_cast_to_physics_constraint_strength_timelinePtr
+          .asFunction<spine_physics_constraint_strength_timeline Function(spine_curve_timeline1)>();
+
+  spine_physics_constraint_timeline spine_curve_timeline1_cast_to_physics_constraint_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_physics_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_physics_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_physics_constraint_timeline');
+  late final _spine_curve_timeline1_cast_to_physics_constraint_timeline =
+      _spine_curve_timeline1_cast_to_physics_constraint_timelinePtr
+          .asFunction<spine_physics_constraint_timeline Function(spine_curve_timeline1)>();
+
+  spine_physics_constraint_wind_timeline spine_curve_timeline1_cast_to_physics_constraint_wind_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_physics_constraint_wind_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_physics_constraint_wind_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_wind_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_physics_constraint_wind_timeline');
+  late final _spine_curve_timeline1_cast_to_physics_constraint_wind_timeline =
+      _spine_curve_timeline1_cast_to_physics_constraint_wind_timelinePtr
+          .asFunction<spine_physics_constraint_wind_timeline Function(spine_curve_timeline1)>();
+
+  spine_rotate_timeline spine_curve_timeline1_cast_to_rotate_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_rotate_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_rotate_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rotate_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_rotate_timeline');
+  late final _spine_curve_timeline1_cast_to_rotate_timeline = _spine_curve_timeline1_cast_to_rotate_timelinePtr
+      .asFunction<spine_rotate_timeline Function(spine_curve_timeline1)>();
+
+  spine_scale_x_timeline spine_curve_timeline1_cast_to_scale_x_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_scale_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_scale_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_x_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_scale_x_timeline');
+  late final _spine_curve_timeline1_cast_to_scale_x_timeline = _spine_curve_timeline1_cast_to_scale_x_timelinePtr
+      .asFunction<spine_scale_x_timeline Function(spine_curve_timeline1)>();
+
+  spine_scale_y_timeline spine_curve_timeline1_cast_to_scale_y_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_scale_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_scale_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_y_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_scale_y_timeline');
+  late final _spine_curve_timeline1_cast_to_scale_y_timeline = _spine_curve_timeline1_cast_to_scale_y_timelinePtr
+      .asFunction<spine_scale_y_timeline Function(spine_curve_timeline1)>();
+
+  spine_shear_x_timeline spine_curve_timeline1_cast_to_shear_x_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_shear_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_shear_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_x_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_shear_x_timeline');
+  late final _spine_curve_timeline1_cast_to_shear_x_timeline = _spine_curve_timeline1_cast_to_shear_x_timelinePtr
+      .asFunction<spine_shear_x_timeline Function(spine_curve_timeline1)>();
+
+  spine_shear_y_timeline spine_curve_timeline1_cast_to_shear_y_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_shear_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_shear_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_y_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_shear_y_timeline');
+  late final _spine_curve_timeline1_cast_to_shear_y_timeline = _spine_curve_timeline1_cast_to_shear_y_timelinePtr
+      .asFunction<spine_shear_y_timeline Function(spine_curve_timeline1)>();
+
+  spine_slider_mix_timeline spine_curve_timeline1_cast_to_slider_mix_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_slider_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_slider_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slider_mix_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_slider_mix_timeline');
+  late final _spine_curve_timeline1_cast_to_slider_mix_timeline = _spine_curve_timeline1_cast_to_slider_mix_timelinePtr
+      .asFunction<spine_slider_mix_timeline Function(spine_curve_timeline1)>();
+
+  spine_slider_timeline spine_curve_timeline1_cast_to_slider_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_slider_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_slider_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slider_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_slider_timeline');
+  late final _spine_curve_timeline1_cast_to_slider_timeline = _spine_curve_timeline1_cast_to_slider_timelinePtr
+      .asFunction<spine_slider_timeline Function(spine_curve_timeline1)>();
+
+  spine_translate_x_timeline spine_curve_timeline1_cast_to_translate_x_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_translate_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_translate_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_x_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_translate_x_timeline');
+  late final _spine_curve_timeline1_cast_to_translate_x_timeline =
+      _spine_curve_timeline1_cast_to_translate_x_timelinePtr
+          .asFunction<spine_translate_x_timeline Function(spine_curve_timeline1)>();
+
+  spine_translate_y_timeline spine_curve_timeline1_cast_to_translate_y_timeline(
+    spine_curve_timeline1 obj,
+  ) {
+    return _spine_curve_timeline1_cast_to_translate_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline1_cast_to_translate_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_y_timeline Function(spine_curve_timeline1)>>(
+          'spine_curve_timeline1_cast_to_translate_y_timeline');
+  late final _spine_curve_timeline1_cast_to_translate_y_timeline =
+      _spine_curve_timeline1_cast_to_translate_y_timelinePtr
+          .asFunction<spine_translate_y_timeline Function(spine_curve_timeline1)>();
+
+  spine_alpha_timeline spine_curve_timeline_cast_to_alpha_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_alpha_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_alpha_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_alpha_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_alpha_timeline');
+  late final _spine_curve_timeline_cast_to_alpha_timeline =
+      _spine_curve_timeline_cast_to_alpha_timelinePtr.asFunction<spine_alpha_timeline Function(spine_curve_timeline)>();
+
+  spine_bone_timeline1 spine_curve_timeline_cast_to_bone_timeline1(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_bone_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_bone_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline1 Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_bone_timeline1');
+  late final _spine_curve_timeline_cast_to_bone_timeline1 =
+      _spine_curve_timeline_cast_to_bone_timeline1Ptr.asFunction<spine_bone_timeline1 Function(spine_curve_timeline)>();
+
+  spine_bone_timeline2 spine_curve_timeline_cast_to_bone_timeline2(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_bone_timeline2(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_bone_timeline2Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline2 Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_bone_timeline2');
+  late final _spine_curve_timeline_cast_to_bone_timeline2 =
+      _spine_curve_timeline_cast_to_bone_timeline2Ptr.asFunction<spine_bone_timeline2 Function(spine_curve_timeline)>();
+
+  spine_constraint_timeline1 spine_curve_timeline_cast_to_constraint_timeline1(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_constraint_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_constraint_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline1 Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_constraint_timeline1');
+  late final _spine_curve_timeline_cast_to_constraint_timeline1 = _spine_curve_timeline_cast_to_constraint_timeline1Ptr
+      .asFunction<spine_constraint_timeline1 Function(spine_curve_timeline)>();
+
+  spine_curve_timeline1 spine_curve_timeline_cast_to_curve_timeline1(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_curve_timeline1');
+  late final _spine_curve_timeline_cast_to_curve_timeline1 = _spine_curve_timeline_cast_to_curve_timeline1Ptr
+      .asFunction<spine_curve_timeline1 Function(spine_curve_timeline)>();
+
+  spine_deform_timeline spine_curve_timeline_cast_to_deform_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_deform_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_deform_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_deform_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_deform_timeline');
+  late final _spine_curve_timeline_cast_to_deform_timeline = _spine_curve_timeline_cast_to_deform_timelinePtr
+      .asFunction<spine_deform_timeline Function(spine_curve_timeline)>();
+
+  spine_ik_constraint_timeline spine_curve_timeline_cast_to_ik_constraint_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_ik_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_ik_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_ik_constraint_timeline');
+  late final _spine_curve_timeline_cast_to_ik_constraint_timeline =
+      _spine_curve_timeline_cast_to_ik_constraint_timelinePtr
+          .asFunction<spine_ik_constraint_timeline Function(spine_curve_timeline)>();
+
+  spine_path_constraint_mix_timeline spine_curve_timeline_cast_to_path_constraint_mix_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_path_constraint_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_path_constraint_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_mix_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_path_constraint_mix_timeline');
+  late final _spine_curve_timeline_cast_to_path_constraint_mix_timeline =
+      _spine_curve_timeline_cast_to_path_constraint_mix_timelinePtr
+          .asFunction<spine_path_constraint_mix_timeline Function(spine_curve_timeline)>();
+
+  spine_path_constraint_position_timeline spine_curve_timeline_cast_to_path_constraint_position_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_path_constraint_position_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_path_constraint_position_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_position_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_path_constraint_position_timeline');
+  late final _spine_curve_timeline_cast_to_path_constraint_position_timeline =
+      _spine_curve_timeline_cast_to_path_constraint_position_timelinePtr
+          .asFunction<spine_path_constraint_position_timeline Function(spine_curve_timeline)>();
+
+  spine_path_constraint_spacing_timeline spine_curve_timeline_cast_to_path_constraint_spacing_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_path_constraint_spacing_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_path_constraint_spacing_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_spacing_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_path_constraint_spacing_timeline');
+  late final _spine_curve_timeline_cast_to_path_constraint_spacing_timeline =
+      _spine_curve_timeline_cast_to_path_constraint_spacing_timelinePtr
+          .asFunction<spine_path_constraint_spacing_timeline Function(spine_curve_timeline)>();
+
+  spine_physics_constraint_damping_timeline spine_curve_timeline_cast_to_physics_constraint_damping_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_physics_constraint_damping_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_physics_constraint_damping_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_damping_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_physics_constraint_damping_timeline');
+  late final _spine_curve_timeline_cast_to_physics_constraint_damping_timeline =
+      _spine_curve_timeline_cast_to_physics_constraint_damping_timelinePtr
+          .asFunction<spine_physics_constraint_damping_timeline Function(spine_curve_timeline)>();
+
+  spine_physics_constraint_gravity_timeline spine_curve_timeline_cast_to_physics_constraint_gravity_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_physics_constraint_gravity_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_physics_constraint_gravity_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_gravity_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_physics_constraint_gravity_timeline');
+  late final _spine_curve_timeline_cast_to_physics_constraint_gravity_timeline =
+      _spine_curve_timeline_cast_to_physics_constraint_gravity_timelinePtr
+          .asFunction<spine_physics_constraint_gravity_timeline Function(spine_curve_timeline)>();
+
+  spine_physics_constraint_inertia_timeline spine_curve_timeline_cast_to_physics_constraint_inertia_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_physics_constraint_inertia_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_physics_constraint_inertia_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_inertia_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_physics_constraint_inertia_timeline');
+  late final _spine_curve_timeline_cast_to_physics_constraint_inertia_timeline =
+      _spine_curve_timeline_cast_to_physics_constraint_inertia_timelinePtr
+          .asFunction<spine_physics_constraint_inertia_timeline Function(spine_curve_timeline)>();
+
+  spine_physics_constraint_mass_timeline spine_curve_timeline_cast_to_physics_constraint_mass_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_physics_constraint_mass_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_physics_constraint_mass_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_mass_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_physics_constraint_mass_timeline');
+  late final _spine_curve_timeline_cast_to_physics_constraint_mass_timeline =
+      _spine_curve_timeline_cast_to_physics_constraint_mass_timelinePtr
+          .asFunction<spine_physics_constraint_mass_timeline Function(spine_curve_timeline)>();
+
+  spine_physics_constraint_mix_timeline spine_curve_timeline_cast_to_physics_constraint_mix_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_physics_constraint_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_physics_constraint_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_mix_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_physics_constraint_mix_timeline');
+  late final _spine_curve_timeline_cast_to_physics_constraint_mix_timeline =
+      _spine_curve_timeline_cast_to_physics_constraint_mix_timelinePtr
+          .asFunction<spine_physics_constraint_mix_timeline Function(spine_curve_timeline)>();
+
+  spine_physics_constraint_strength_timeline spine_curve_timeline_cast_to_physics_constraint_strength_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_physics_constraint_strength_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_physics_constraint_strength_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_strength_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_physics_constraint_strength_timeline');
+  late final _spine_curve_timeline_cast_to_physics_constraint_strength_timeline =
+      _spine_curve_timeline_cast_to_physics_constraint_strength_timelinePtr
+          .asFunction<spine_physics_constraint_strength_timeline Function(spine_curve_timeline)>();
+
+  spine_physics_constraint_timeline spine_curve_timeline_cast_to_physics_constraint_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_physics_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_physics_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_physics_constraint_timeline');
+  late final _spine_curve_timeline_cast_to_physics_constraint_timeline =
+      _spine_curve_timeline_cast_to_physics_constraint_timelinePtr
+          .asFunction<spine_physics_constraint_timeline Function(spine_curve_timeline)>();
+
+  spine_physics_constraint_wind_timeline spine_curve_timeline_cast_to_physics_constraint_wind_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_physics_constraint_wind_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_physics_constraint_wind_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_wind_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_physics_constraint_wind_timeline');
+  late final _spine_curve_timeline_cast_to_physics_constraint_wind_timeline =
+      _spine_curve_timeline_cast_to_physics_constraint_wind_timelinePtr
+          .asFunction<spine_physics_constraint_wind_timeline Function(spine_curve_timeline)>();
+
+  spine_rgb2_timeline spine_curve_timeline_cast_to_rgb2_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_rgb2_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_rgb2_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgb2_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_rgb2_timeline');
+  late final _spine_curve_timeline_cast_to_rgb2_timeline =
+      _spine_curve_timeline_cast_to_rgb2_timelinePtr.asFunction<spine_rgb2_timeline Function(spine_curve_timeline)>();
+
+  spine_rgba2_timeline spine_curve_timeline_cast_to_rgba2_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_rgba2_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_rgba2_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgba2_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_rgba2_timeline');
+  late final _spine_curve_timeline_cast_to_rgba2_timeline =
+      _spine_curve_timeline_cast_to_rgba2_timelinePtr.asFunction<spine_rgba2_timeline Function(spine_curve_timeline)>();
+
+  spine_rgba_timeline spine_curve_timeline_cast_to_rgba_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_rgba_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_rgba_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgba_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_rgba_timeline');
+  late final _spine_curve_timeline_cast_to_rgba_timeline =
+      _spine_curve_timeline_cast_to_rgba_timelinePtr.asFunction<spine_rgba_timeline Function(spine_curve_timeline)>();
+
+  spine_rgb_timeline spine_curve_timeline_cast_to_rgb_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_rgb_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_rgb_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgb_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_rgb_timeline');
+  late final _spine_curve_timeline_cast_to_rgb_timeline =
+      _spine_curve_timeline_cast_to_rgb_timelinePtr.asFunction<spine_rgb_timeline Function(spine_curve_timeline)>();
+
+  spine_rotate_timeline spine_curve_timeline_cast_to_rotate_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_rotate_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_rotate_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rotate_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_rotate_timeline');
+  late final _spine_curve_timeline_cast_to_rotate_timeline = _spine_curve_timeline_cast_to_rotate_timelinePtr
+      .asFunction<spine_rotate_timeline Function(spine_curve_timeline)>();
+
+  spine_scale_timeline spine_curve_timeline_cast_to_scale_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_scale_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_scale_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_scale_timeline');
+  late final _spine_curve_timeline_cast_to_scale_timeline =
+      _spine_curve_timeline_cast_to_scale_timelinePtr.asFunction<spine_scale_timeline Function(spine_curve_timeline)>();
+
+  spine_scale_x_timeline spine_curve_timeline_cast_to_scale_x_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_scale_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_scale_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_x_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_scale_x_timeline');
+  late final _spine_curve_timeline_cast_to_scale_x_timeline = _spine_curve_timeline_cast_to_scale_x_timelinePtr
+      .asFunction<spine_scale_x_timeline Function(spine_curve_timeline)>();
+
+  spine_scale_y_timeline spine_curve_timeline_cast_to_scale_y_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_scale_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_scale_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_y_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_scale_y_timeline');
+  late final _spine_curve_timeline_cast_to_scale_y_timeline = _spine_curve_timeline_cast_to_scale_y_timelinePtr
+      .asFunction<spine_scale_y_timeline Function(spine_curve_timeline)>();
+
+  spine_shear_timeline spine_curve_timeline_cast_to_shear_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_shear_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_shear_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_shear_timeline');
+  late final _spine_curve_timeline_cast_to_shear_timeline =
+      _spine_curve_timeline_cast_to_shear_timelinePtr.asFunction<spine_shear_timeline Function(spine_curve_timeline)>();
+
+  spine_shear_x_timeline spine_curve_timeline_cast_to_shear_x_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_shear_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_shear_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_x_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_shear_x_timeline');
+  late final _spine_curve_timeline_cast_to_shear_x_timeline = _spine_curve_timeline_cast_to_shear_x_timelinePtr
+      .asFunction<spine_shear_x_timeline Function(spine_curve_timeline)>();
+
+  spine_shear_y_timeline spine_curve_timeline_cast_to_shear_y_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_shear_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_shear_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_y_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_shear_y_timeline');
+  late final _spine_curve_timeline_cast_to_shear_y_timeline = _spine_curve_timeline_cast_to_shear_y_timelinePtr
+      .asFunction<spine_shear_y_timeline Function(spine_curve_timeline)>();
+
+  spine_slider_mix_timeline spine_curve_timeline_cast_to_slider_mix_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_slider_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_slider_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slider_mix_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_slider_mix_timeline');
+  late final _spine_curve_timeline_cast_to_slider_mix_timeline = _spine_curve_timeline_cast_to_slider_mix_timelinePtr
+      .asFunction<spine_slider_mix_timeline Function(spine_curve_timeline)>();
+
+  spine_slider_timeline spine_curve_timeline_cast_to_slider_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_slider_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_slider_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slider_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_slider_timeline');
+  late final _spine_curve_timeline_cast_to_slider_timeline = _spine_curve_timeline_cast_to_slider_timelinePtr
+      .asFunction<spine_slider_timeline Function(spine_curve_timeline)>();
+
+  spine_slot_curve_timeline spine_curve_timeline_cast_to_slot_curve_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_slot_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_slot_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_curve_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_slot_curve_timeline');
+  late final _spine_curve_timeline_cast_to_slot_curve_timeline = _spine_curve_timeline_cast_to_slot_curve_timelinePtr
+      .asFunction<spine_slot_curve_timeline Function(spine_curve_timeline)>();
+
+  spine_transform_constraint_timeline spine_curve_timeline_cast_to_transform_constraint_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_transform_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_transform_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_transform_constraint_timeline');
+  late final _spine_curve_timeline_cast_to_transform_constraint_timeline =
+      _spine_curve_timeline_cast_to_transform_constraint_timelinePtr
+          .asFunction<spine_transform_constraint_timeline Function(spine_curve_timeline)>();
+
+  spine_translate_timeline spine_curve_timeline_cast_to_translate_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_translate_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_translate_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_translate_timeline');
+  late final _spine_curve_timeline_cast_to_translate_timeline = _spine_curve_timeline_cast_to_translate_timelinePtr
+      .asFunction<spine_translate_timeline Function(spine_curve_timeline)>();
+
+  spine_translate_x_timeline spine_curve_timeline_cast_to_translate_x_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_translate_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_translate_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_x_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_translate_x_timeline');
+  late final _spine_curve_timeline_cast_to_translate_x_timeline = _spine_curve_timeline_cast_to_translate_x_timelinePtr
+      .asFunction<spine_translate_x_timeline Function(spine_curve_timeline)>();
+
+  spine_translate_y_timeline spine_curve_timeline_cast_to_translate_y_timeline(
+    spine_curve_timeline obj,
+  ) {
+    return _spine_curve_timeline_cast_to_translate_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_curve_timeline_cast_to_translate_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_y_timeline Function(spine_curve_timeline)>>(
+          'spine_curve_timeline_cast_to_translate_y_timeline');
+  late final _spine_curve_timeline_cast_to_translate_y_timeline = _spine_curve_timeline_cast_to_translate_y_timelinePtr
+      .asFunction<spine_translate_y_timeline Function(spine_curve_timeline)>();
+
+  spine_alpha_timeline spine_timeline_cast_to_alpha_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_alpha_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_alpha_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_alpha_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_alpha_timeline');
+  late final _spine_timeline_cast_to_alpha_timeline =
+      _spine_timeline_cast_to_alpha_timelinePtr.asFunction<spine_alpha_timeline Function(spine_timeline)>();
+
+  spine_attachment_timeline spine_timeline_cast_to_attachment_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_attachment_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_attachment_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_attachment_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_attachment_timeline');
+  late final _spine_timeline_cast_to_attachment_timeline =
+      _spine_timeline_cast_to_attachment_timelinePtr.asFunction<spine_attachment_timeline Function(spine_timeline)>();
+
+  spine_bone_timeline1 spine_timeline_cast_to_bone_timeline1(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_bone_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_bone_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline1 Function(spine_timeline)>>(
+          'spine_timeline_cast_to_bone_timeline1');
+  late final _spine_timeline_cast_to_bone_timeline1 =
+      _spine_timeline_cast_to_bone_timeline1Ptr.asFunction<spine_bone_timeline1 Function(spine_timeline)>();
+
+  spine_bone_timeline2 spine_timeline_cast_to_bone_timeline2(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_bone_timeline2(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_bone_timeline2Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline2 Function(spine_timeline)>>(
+          'spine_timeline_cast_to_bone_timeline2');
+  late final _spine_timeline_cast_to_bone_timeline2 =
+      _spine_timeline_cast_to_bone_timeline2Ptr.asFunction<spine_bone_timeline2 Function(spine_timeline)>();
+
+  spine_constraint_timeline1 spine_timeline_cast_to_constraint_timeline1(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_constraint_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_constraint_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline1 Function(spine_timeline)>>(
+          'spine_timeline_cast_to_constraint_timeline1');
+  late final _spine_timeline_cast_to_constraint_timeline1 =
+      _spine_timeline_cast_to_constraint_timeline1Ptr.asFunction<spine_constraint_timeline1 Function(spine_timeline)>();
+
+  spine_curve_timeline spine_timeline_cast_to_curve_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_curve_timeline');
+  late final _spine_timeline_cast_to_curve_timeline =
+      _spine_timeline_cast_to_curve_timelinePtr.asFunction<spine_curve_timeline Function(spine_timeline)>();
+
+  spine_curve_timeline1 spine_timeline_cast_to_curve_timeline1(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_curve_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_curve_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_curve_timeline1 Function(spine_timeline)>>(
+          'spine_timeline_cast_to_curve_timeline1');
+  late final _spine_timeline_cast_to_curve_timeline1 =
+      _spine_timeline_cast_to_curve_timeline1Ptr.asFunction<spine_curve_timeline1 Function(spine_timeline)>();
+
+  spine_deform_timeline spine_timeline_cast_to_deform_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_deform_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_deform_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_deform_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_deform_timeline');
+  late final _spine_timeline_cast_to_deform_timeline =
+      _spine_timeline_cast_to_deform_timelinePtr.asFunction<spine_deform_timeline Function(spine_timeline)>();
+
+  spine_draw_order_timeline spine_timeline_cast_to_draw_order_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_draw_order_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_draw_order_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_draw_order_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_draw_order_timeline');
+  late final _spine_timeline_cast_to_draw_order_timeline =
+      _spine_timeline_cast_to_draw_order_timelinePtr.asFunction<spine_draw_order_timeline Function(spine_timeline)>();
+
+  spine_event_timeline spine_timeline_cast_to_event_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_event_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_event_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_event_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_event_timeline');
+  late final _spine_timeline_cast_to_event_timeline =
+      _spine_timeline_cast_to_event_timelinePtr.asFunction<spine_event_timeline Function(spine_timeline)>();
+
+  spine_ik_constraint_timeline spine_timeline_cast_to_ik_constraint_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_ik_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_ik_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_ik_constraint_timeline');
+  late final _spine_timeline_cast_to_ik_constraint_timeline = _spine_timeline_cast_to_ik_constraint_timelinePtr
+      .asFunction<spine_ik_constraint_timeline Function(spine_timeline)>();
+
+  spine_inherit_timeline spine_timeline_cast_to_inherit_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_inherit_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_inherit_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_inherit_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_inherit_timeline');
+  late final _spine_timeline_cast_to_inherit_timeline =
+      _spine_timeline_cast_to_inherit_timelinePtr.asFunction<spine_inherit_timeline Function(spine_timeline)>();
+
+  spine_path_constraint_mix_timeline spine_timeline_cast_to_path_constraint_mix_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_path_constraint_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_path_constraint_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_mix_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_path_constraint_mix_timeline');
+  late final _spine_timeline_cast_to_path_constraint_mix_timeline =
+      _spine_timeline_cast_to_path_constraint_mix_timelinePtr
+          .asFunction<spine_path_constraint_mix_timeline Function(spine_timeline)>();
+
+  spine_path_constraint_position_timeline spine_timeline_cast_to_path_constraint_position_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_path_constraint_position_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_path_constraint_position_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_position_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_path_constraint_position_timeline');
+  late final _spine_timeline_cast_to_path_constraint_position_timeline =
+      _spine_timeline_cast_to_path_constraint_position_timelinePtr
+          .asFunction<spine_path_constraint_position_timeline Function(spine_timeline)>();
+
+  spine_path_constraint_spacing_timeline spine_timeline_cast_to_path_constraint_spacing_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_path_constraint_spacing_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_path_constraint_spacing_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_spacing_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_path_constraint_spacing_timeline');
+  late final _spine_timeline_cast_to_path_constraint_spacing_timeline =
+      _spine_timeline_cast_to_path_constraint_spacing_timelinePtr
+          .asFunction<spine_path_constraint_spacing_timeline Function(spine_timeline)>();
+
+  spine_physics_constraint_damping_timeline spine_timeline_cast_to_physics_constraint_damping_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_physics_constraint_damping_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_physics_constraint_damping_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_damping_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_physics_constraint_damping_timeline');
+  late final _spine_timeline_cast_to_physics_constraint_damping_timeline =
+      _spine_timeline_cast_to_physics_constraint_damping_timelinePtr
+          .asFunction<spine_physics_constraint_damping_timeline Function(spine_timeline)>();
+
+  spine_physics_constraint_gravity_timeline spine_timeline_cast_to_physics_constraint_gravity_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_physics_constraint_gravity_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_physics_constraint_gravity_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_gravity_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_physics_constraint_gravity_timeline');
+  late final _spine_timeline_cast_to_physics_constraint_gravity_timeline =
+      _spine_timeline_cast_to_physics_constraint_gravity_timelinePtr
+          .asFunction<spine_physics_constraint_gravity_timeline Function(spine_timeline)>();
+
+  spine_physics_constraint_inertia_timeline spine_timeline_cast_to_physics_constraint_inertia_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_physics_constraint_inertia_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_physics_constraint_inertia_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_inertia_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_physics_constraint_inertia_timeline');
+  late final _spine_timeline_cast_to_physics_constraint_inertia_timeline =
+      _spine_timeline_cast_to_physics_constraint_inertia_timelinePtr
+          .asFunction<spine_physics_constraint_inertia_timeline Function(spine_timeline)>();
+
+  spine_physics_constraint_mass_timeline spine_timeline_cast_to_physics_constraint_mass_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_physics_constraint_mass_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_physics_constraint_mass_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_mass_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_physics_constraint_mass_timeline');
+  late final _spine_timeline_cast_to_physics_constraint_mass_timeline =
+      _spine_timeline_cast_to_physics_constraint_mass_timelinePtr
+          .asFunction<spine_physics_constraint_mass_timeline Function(spine_timeline)>();
+
+  spine_physics_constraint_mix_timeline spine_timeline_cast_to_physics_constraint_mix_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_physics_constraint_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_physics_constraint_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_mix_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_physics_constraint_mix_timeline');
+  late final _spine_timeline_cast_to_physics_constraint_mix_timeline =
+      _spine_timeline_cast_to_physics_constraint_mix_timelinePtr
+          .asFunction<spine_physics_constraint_mix_timeline Function(spine_timeline)>();
+
+  spine_physics_constraint_reset_timeline spine_timeline_cast_to_physics_constraint_reset_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_physics_constraint_reset_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_physics_constraint_reset_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_reset_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_physics_constraint_reset_timeline');
+  late final _spine_timeline_cast_to_physics_constraint_reset_timeline =
+      _spine_timeline_cast_to_physics_constraint_reset_timelinePtr
+          .asFunction<spine_physics_constraint_reset_timeline Function(spine_timeline)>();
+
+  spine_physics_constraint_strength_timeline spine_timeline_cast_to_physics_constraint_strength_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_physics_constraint_strength_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_physics_constraint_strength_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_strength_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_physics_constraint_strength_timeline');
+  late final _spine_timeline_cast_to_physics_constraint_strength_timeline =
+      _spine_timeline_cast_to_physics_constraint_strength_timelinePtr
+          .asFunction<spine_physics_constraint_strength_timeline Function(spine_timeline)>();
+
+  spine_physics_constraint_timeline spine_timeline_cast_to_physics_constraint_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_physics_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_physics_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_physics_constraint_timeline');
+  late final _spine_timeline_cast_to_physics_constraint_timeline =
+      _spine_timeline_cast_to_physics_constraint_timelinePtr
+          .asFunction<spine_physics_constraint_timeline Function(spine_timeline)>();
+
+  spine_physics_constraint_wind_timeline spine_timeline_cast_to_physics_constraint_wind_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_physics_constraint_wind_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_physics_constraint_wind_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_wind_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_physics_constraint_wind_timeline');
+  late final _spine_timeline_cast_to_physics_constraint_wind_timeline =
+      _spine_timeline_cast_to_physics_constraint_wind_timelinePtr
+          .asFunction<spine_physics_constraint_wind_timeline Function(spine_timeline)>();
+
+  spine_rgb2_timeline spine_timeline_cast_to_rgb2_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_rgb2_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_rgb2_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgb2_timeline Function(spine_timeline)>>('spine_timeline_cast_to_rgb2_timeline');
+  late final _spine_timeline_cast_to_rgb2_timeline =
+      _spine_timeline_cast_to_rgb2_timelinePtr.asFunction<spine_rgb2_timeline Function(spine_timeline)>();
+
+  spine_rgba2_timeline spine_timeline_cast_to_rgba2_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_rgba2_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_rgba2_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgba2_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_rgba2_timeline');
+  late final _spine_timeline_cast_to_rgba2_timeline =
+      _spine_timeline_cast_to_rgba2_timelinePtr.asFunction<spine_rgba2_timeline Function(spine_timeline)>();
+
+  spine_rgba_timeline spine_timeline_cast_to_rgba_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_rgba_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_rgba_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgba_timeline Function(spine_timeline)>>('spine_timeline_cast_to_rgba_timeline');
+  late final _spine_timeline_cast_to_rgba_timeline =
+      _spine_timeline_cast_to_rgba_timelinePtr.asFunction<spine_rgba_timeline Function(spine_timeline)>();
+
+  spine_rgb_timeline spine_timeline_cast_to_rgb_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_rgb_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_rgb_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgb_timeline Function(spine_timeline)>>('spine_timeline_cast_to_rgb_timeline');
+  late final _spine_timeline_cast_to_rgb_timeline =
+      _spine_timeline_cast_to_rgb_timelinePtr.asFunction<spine_rgb_timeline Function(spine_timeline)>();
+
+  spine_rotate_timeline spine_timeline_cast_to_rotate_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_rotate_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_rotate_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rotate_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_rotate_timeline');
+  late final _spine_timeline_cast_to_rotate_timeline =
+      _spine_timeline_cast_to_rotate_timelinePtr.asFunction<spine_rotate_timeline Function(spine_timeline)>();
+
+  spine_scale_timeline spine_timeline_cast_to_scale_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_scale_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_scale_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_scale_timeline');
+  late final _spine_timeline_cast_to_scale_timeline =
+      _spine_timeline_cast_to_scale_timelinePtr.asFunction<spine_scale_timeline Function(spine_timeline)>();
+
+  spine_scale_x_timeline spine_timeline_cast_to_scale_x_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_scale_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_scale_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_x_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_scale_x_timeline');
+  late final _spine_timeline_cast_to_scale_x_timeline =
+      _spine_timeline_cast_to_scale_x_timelinePtr.asFunction<spine_scale_x_timeline Function(spine_timeline)>();
+
+  spine_scale_y_timeline spine_timeline_cast_to_scale_y_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_scale_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_scale_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_y_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_scale_y_timeline');
+  late final _spine_timeline_cast_to_scale_y_timeline =
+      _spine_timeline_cast_to_scale_y_timelinePtr.asFunction<spine_scale_y_timeline Function(spine_timeline)>();
+
+  spine_sequence_timeline spine_timeline_cast_to_sequence_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_sequence_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_sequence_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_sequence_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_sequence_timeline');
+  late final _spine_timeline_cast_to_sequence_timeline =
+      _spine_timeline_cast_to_sequence_timelinePtr.asFunction<spine_sequence_timeline Function(spine_timeline)>();
+
+  spine_shear_timeline spine_timeline_cast_to_shear_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_shear_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_shear_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_shear_timeline');
+  late final _spine_timeline_cast_to_shear_timeline =
+      _spine_timeline_cast_to_shear_timelinePtr.asFunction<spine_shear_timeline Function(spine_timeline)>();
+
+  spine_shear_x_timeline spine_timeline_cast_to_shear_x_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_shear_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_shear_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_x_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_shear_x_timeline');
+  late final _spine_timeline_cast_to_shear_x_timeline =
+      _spine_timeline_cast_to_shear_x_timelinePtr.asFunction<spine_shear_x_timeline Function(spine_timeline)>();
+
+  spine_shear_y_timeline spine_timeline_cast_to_shear_y_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_shear_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_shear_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_y_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_shear_y_timeline');
+  late final _spine_timeline_cast_to_shear_y_timeline =
+      _spine_timeline_cast_to_shear_y_timelinePtr.asFunction<spine_shear_y_timeline Function(spine_timeline)>();
+
+  spine_slider_mix_timeline spine_timeline_cast_to_slider_mix_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_slider_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_slider_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slider_mix_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_slider_mix_timeline');
+  late final _spine_timeline_cast_to_slider_mix_timeline =
+      _spine_timeline_cast_to_slider_mix_timelinePtr.asFunction<spine_slider_mix_timeline Function(spine_timeline)>();
+
+  spine_slider_timeline spine_timeline_cast_to_slider_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_slider_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_slider_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slider_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_slider_timeline');
+  late final _spine_timeline_cast_to_slider_timeline =
+      _spine_timeline_cast_to_slider_timelinePtr.asFunction<spine_slider_timeline Function(spine_timeline)>();
+
+  spine_slot_curve_timeline spine_timeline_cast_to_slot_curve_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_slot_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_slot_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_curve_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_slot_curve_timeline');
+  late final _spine_timeline_cast_to_slot_curve_timeline =
+      _spine_timeline_cast_to_slot_curve_timelinePtr.asFunction<spine_slot_curve_timeline Function(spine_timeline)>();
+
+  spine_transform_constraint_timeline spine_timeline_cast_to_transform_constraint_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_transform_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_transform_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_transform_constraint_timeline');
+  late final _spine_timeline_cast_to_transform_constraint_timeline =
+      _spine_timeline_cast_to_transform_constraint_timelinePtr
+          .asFunction<spine_transform_constraint_timeline Function(spine_timeline)>();
+
+  spine_translate_timeline spine_timeline_cast_to_translate_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_translate_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_translate_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_translate_timeline');
+  late final _spine_timeline_cast_to_translate_timeline =
+      _spine_timeline_cast_to_translate_timelinePtr.asFunction<spine_translate_timeline Function(spine_timeline)>();
+
+  spine_translate_x_timeline spine_timeline_cast_to_translate_x_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_translate_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_translate_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_x_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_translate_x_timeline');
+  late final _spine_timeline_cast_to_translate_x_timeline =
+      _spine_timeline_cast_to_translate_x_timelinePtr.asFunction<spine_translate_x_timeline Function(spine_timeline)>();
+
+  spine_translate_y_timeline spine_timeline_cast_to_translate_y_timeline(
+    spine_timeline obj,
+  ) {
+    return _spine_timeline_cast_to_translate_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_timeline_cast_to_translate_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_y_timeline Function(spine_timeline)>>(
+          'spine_timeline_cast_to_translate_y_timeline');
+  late final _spine_timeline_cast_to_translate_y_timeline =
+      _spine_timeline_cast_to_translate_y_timelinePtr.asFunction<spine_translate_y_timeline Function(spine_timeline)>();
+
+  spine_alpha_timeline spine_slot_timeline_cast_to_alpha_timeline(
+    spine_slot_timeline obj,
+  ) {
+    return _spine_slot_timeline_cast_to_alpha_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_timeline_cast_to_alpha_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_alpha_timeline Function(spine_slot_timeline)>>(
+          'spine_slot_timeline_cast_to_alpha_timeline');
+  late final _spine_slot_timeline_cast_to_alpha_timeline =
+      _spine_slot_timeline_cast_to_alpha_timelinePtr.asFunction<spine_alpha_timeline Function(spine_slot_timeline)>();
+
+  spine_attachment_timeline spine_slot_timeline_cast_to_attachment_timeline(
+    spine_slot_timeline obj,
+  ) {
+    return _spine_slot_timeline_cast_to_attachment_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_timeline_cast_to_attachment_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_attachment_timeline Function(spine_slot_timeline)>>(
+          'spine_slot_timeline_cast_to_attachment_timeline');
+  late final _spine_slot_timeline_cast_to_attachment_timeline = _spine_slot_timeline_cast_to_attachment_timelinePtr
+      .asFunction<spine_attachment_timeline Function(spine_slot_timeline)>();
+
+  spine_deform_timeline spine_slot_timeline_cast_to_deform_timeline(
+    spine_slot_timeline obj,
+  ) {
+    return _spine_slot_timeline_cast_to_deform_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_timeline_cast_to_deform_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_deform_timeline Function(spine_slot_timeline)>>(
+          'spine_slot_timeline_cast_to_deform_timeline');
+  late final _spine_slot_timeline_cast_to_deform_timeline =
+      _spine_slot_timeline_cast_to_deform_timelinePtr.asFunction<spine_deform_timeline Function(spine_slot_timeline)>();
+
+  spine_rgb2_timeline spine_slot_timeline_cast_to_rgb2_timeline(
+    spine_slot_timeline obj,
+  ) {
+    return _spine_slot_timeline_cast_to_rgb2_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_timeline_cast_to_rgb2_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgb2_timeline Function(spine_slot_timeline)>>(
+          'spine_slot_timeline_cast_to_rgb2_timeline');
+  late final _spine_slot_timeline_cast_to_rgb2_timeline =
+      _spine_slot_timeline_cast_to_rgb2_timelinePtr.asFunction<spine_rgb2_timeline Function(spine_slot_timeline)>();
+
+  spine_rgba2_timeline spine_slot_timeline_cast_to_rgba2_timeline(
+    spine_slot_timeline obj,
+  ) {
+    return _spine_slot_timeline_cast_to_rgba2_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_timeline_cast_to_rgba2_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgba2_timeline Function(spine_slot_timeline)>>(
+          'spine_slot_timeline_cast_to_rgba2_timeline');
+  late final _spine_slot_timeline_cast_to_rgba2_timeline =
+      _spine_slot_timeline_cast_to_rgba2_timelinePtr.asFunction<spine_rgba2_timeline Function(spine_slot_timeline)>();
+
+  spine_rgba_timeline spine_slot_timeline_cast_to_rgba_timeline(
+    spine_slot_timeline obj,
+  ) {
+    return _spine_slot_timeline_cast_to_rgba_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_timeline_cast_to_rgba_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgba_timeline Function(spine_slot_timeline)>>(
+          'spine_slot_timeline_cast_to_rgba_timeline');
+  late final _spine_slot_timeline_cast_to_rgba_timeline =
+      _spine_slot_timeline_cast_to_rgba_timelinePtr.asFunction<spine_rgba_timeline Function(spine_slot_timeline)>();
+
+  spine_rgb_timeline spine_slot_timeline_cast_to_rgb_timeline(
+    spine_slot_timeline obj,
+  ) {
+    return _spine_slot_timeline_cast_to_rgb_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_timeline_cast_to_rgb_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgb_timeline Function(spine_slot_timeline)>>(
+          'spine_slot_timeline_cast_to_rgb_timeline');
+  late final _spine_slot_timeline_cast_to_rgb_timeline =
+      _spine_slot_timeline_cast_to_rgb_timelinePtr.asFunction<spine_rgb_timeline Function(spine_slot_timeline)>();
+
+  spine_sequence_timeline spine_slot_timeline_cast_to_sequence_timeline(
+    spine_slot_timeline obj,
+  ) {
+    return _spine_slot_timeline_cast_to_sequence_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_timeline_cast_to_sequence_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_sequence_timeline Function(spine_slot_timeline)>>(
+          'spine_slot_timeline_cast_to_sequence_timeline');
+  late final _spine_slot_timeline_cast_to_sequence_timeline = _spine_slot_timeline_cast_to_sequence_timelinePtr
+      .asFunction<spine_sequence_timeline Function(spine_slot_timeline)>();
+
+  spine_slot_curve_timeline spine_slot_timeline_cast_to_slot_curve_timeline(
+    spine_slot_timeline obj,
+  ) {
+    return _spine_slot_timeline_cast_to_slot_curve_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_timeline_cast_to_slot_curve_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slot_curve_timeline Function(spine_slot_timeline)>>(
+          'spine_slot_timeline_cast_to_slot_curve_timeline');
+  late final _spine_slot_timeline_cast_to_slot_curve_timeline = _spine_slot_timeline_cast_to_slot_curve_timelinePtr
+      .asFunction<spine_slot_curve_timeline Function(spine_slot_timeline)>();
+
+  spine_atlas_attachment_loader spine_attachment_loader_cast_to_atlas_attachment_loader(
+    spine_attachment_loader obj,
+  ) {
+    return _spine_attachment_loader_cast_to_atlas_attachment_loader(
+      obj,
+    );
+  }
+
+  late final _spine_attachment_loader_cast_to_atlas_attachment_loaderPtr =
+      _lookup<ffi.NativeFunction<spine_atlas_attachment_loader Function(spine_attachment_loader)>>(
+          'spine_attachment_loader_cast_to_atlas_attachment_loader');
+  late final _spine_attachment_loader_cast_to_atlas_attachment_loader =
+      _spine_attachment_loader_cast_to_atlas_attachment_loaderPtr
+          .asFunction<spine_atlas_attachment_loader Function(spine_attachment_loader)>();
+
+  spine_atlas_region spine_texture_region_cast_to_atlas_region(
+    spine_texture_region obj,
+  ) {
+    return _spine_texture_region_cast_to_atlas_region(
+      obj,
+    );
+  }
+
+  late final _spine_texture_region_cast_to_atlas_regionPtr =
+      _lookup<ffi.NativeFunction<spine_atlas_region Function(spine_texture_region)>>(
+          'spine_texture_region_cast_to_atlas_region');
+  late final _spine_texture_region_cast_to_atlas_region =
+      _spine_texture_region_cast_to_atlas_regionPtr.asFunction<spine_atlas_region Function(spine_texture_region)>();
+
+  spine_bone spine_posed_cast_to_bone(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_bone(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_bonePtr =
+      _lookup<ffi.NativeFunction<spine_bone Function(spine_posed)>>('spine_posed_cast_to_bone');
+  late final _spine_posed_cast_to_bone = _spine_posed_cast_to_bonePtr.asFunction<spine_bone Function(spine_posed)>();
+
+  spine_ik_constraint spine_posed_cast_to_ik_constraint(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_ik_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_ik_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint Function(spine_posed)>>('spine_posed_cast_to_ik_constraint');
+  late final _spine_posed_cast_to_ik_constraint =
+      _spine_posed_cast_to_ik_constraintPtr.asFunction<spine_ik_constraint Function(spine_posed)>();
+
+  spine_ik_constraint_base spine_posed_cast_to_ik_constraint_base(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_ik_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_ik_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_base Function(spine_posed)>>(
+          'spine_posed_cast_to_ik_constraint_base');
+  late final _spine_posed_cast_to_ik_constraint_base =
+      _spine_posed_cast_to_ik_constraint_basePtr.asFunction<spine_ik_constraint_base Function(spine_posed)>();
+
+  spine_path_constraint spine_posed_cast_to_path_constraint(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_path_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_path_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint Function(spine_posed)>>('spine_posed_cast_to_path_constraint');
+  late final _spine_posed_cast_to_path_constraint =
+      _spine_posed_cast_to_path_constraintPtr.asFunction<spine_path_constraint Function(spine_posed)>();
+
+  spine_path_constraint_base spine_posed_cast_to_path_constraint_base(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_path_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_path_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_base Function(spine_posed)>>(
+          'spine_posed_cast_to_path_constraint_base');
+  late final _spine_posed_cast_to_path_constraint_base =
+      _spine_posed_cast_to_path_constraint_basePtr.asFunction<spine_path_constraint_base Function(spine_posed)>();
+
+  spine_physics_constraint spine_posed_cast_to_physics_constraint(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_physics_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_physics_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint Function(spine_posed)>>(
+          'spine_posed_cast_to_physics_constraint');
+  late final _spine_posed_cast_to_physics_constraint =
+      _spine_posed_cast_to_physics_constraintPtr.asFunction<spine_physics_constraint Function(spine_posed)>();
+
+  spine_physics_constraint_base spine_posed_cast_to_physics_constraint_base(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_physics_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_physics_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_base Function(spine_posed)>>(
+          'spine_posed_cast_to_physics_constraint_base');
+  late final _spine_posed_cast_to_physics_constraint_base =
+      _spine_posed_cast_to_physics_constraint_basePtr.asFunction<spine_physics_constraint_base Function(spine_posed)>();
+
+  spine_slider spine_posed_cast_to_slider(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_slider(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_sliderPtr =
+      _lookup<ffi.NativeFunction<spine_slider Function(spine_posed)>>('spine_posed_cast_to_slider');
+  late final _spine_posed_cast_to_slider =
+      _spine_posed_cast_to_sliderPtr.asFunction<spine_slider Function(spine_posed)>();
+
+  spine_slider_base spine_posed_cast_to_slider_base(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_slider_base(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_slider_basePtr =
+      _lookup<ffi.NativeFunction<spine_slider_base Function(spine_posed)>>('spine_posed_cast_to_slider_base');
+  late final _spine_posed_cast_to_slider_base =
+      _spine_posed_cast_to_slider_basePtr.asFunction<spine_slider_base Function(spine_posed)>();
+
+  spine_slot spine_posed_cast_to_slot(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_slot(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_slotPtr =
+      _lookup<ffi.NativeFunction<spine_slot Function(spine_posed)>>('spine_posed_cast_to_slot');
+  late final _spine_posed_cast_to_slot = _spine_posed_cast_to_slotPtr.asFunction<spine_slot Function(spine_posed)>();
+
+  spine_transform_constraint spine_posed_cast_to_transform_constraint(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_transform_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_transform_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint Function(spine_posed)>>(
+          'spine_posed_cast_to_transform_constraint');
+  late final _spine_posed_cast_to_transform_constraint =
+      _spine_posed_cast_to_transform_constraintPtr.asFunction<spine_transform_constraint Function(spine_posed)>();
+
+  spine_transform_constraint_base spine_posed_cast_to_transform_constraint_base(
+    spine_posed obj,
+  ) {
+    return _spine_posed_cast_to_transform_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_posed_cast_to_transform_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_base Function(spine_posed)>>(
+          'spine_posed_cast_to_transform_constraint_base');
+  late final _spine_posed_cast_to_transform_constraint_base = _spine_posed_cast_to_transform_constraint_basePtr
+      .asFunction<spine_transform_constraint_base Function(spine_posed)>();
+
+  spine_bone spine_posed_active_cast_to_bone(
+    spine_posed_active obj,
+  ) {
+    return _spine_posed_active_cast_to_bone(
+      obj,
+    );
+  }
+
+  late final _spine_posed_active_cast_to_bonePtr =
+      _lookup<ffi.NativeFunction<spine_bone Function(spine_posed_active)>>('spine_posed_active_cast_to_bone');
+  late final _spine_posed_active_cast_to_bone =
+      _spine_posed_active_cast_to_bonePtr.asFunction<spine_bone Function(spine_posed_active)>();
+
+  spine_ik_constraint spine_posed_active_cast_to_ik_constraint(
+    spine_posed_active obj,
+  ) {
+    return _spine_posed_active_cast_to_ik_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_posed_active_cast_to_ik_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint Function(spine_posed_active)>>(
+          'spine_posed_active_cast_to_ik_constraint');
+  late final _spine_posed_active_cast_to_ik_constraint =
+      _spine_posed_active_cast_to_ik_constraintPtr.asFunction<spine_ik_constraint Function(spine_posed_active)>();
+
+  spine_ik_constraint_base spine_posed_active_cast_to_ik_constraint_base(
+    spine_posed_active obj,
+  ) {
+    return _spine_posed_active_cast_to_ik_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_posed_active_cast_to_ik_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_base Function(spine_posed_active)>>(
+          'spine_posed_active_cast_to_ik_constraint_base');
+  late final _spine_posed_active_cast_to_ik_constraint_base = _spine_posed_active_cast_to_ik_constraint_basePtr
+      .asFunction<spine_ik_constraint_base Function(spine_posed_active)>();
+
+  spine_path_constraint spine_posed_active_cast_to_path_constraint(
+    spine_posed_active obj,
+  ) {
+    return _spine_posed_active_cast_to_path_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_posed_active_cast_to_path_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint Function(spine_posed_active)>>(
+          'spine_posed_active_cast_to_path_constraint');
+  late final _spine_posed_active_cast_to_path_constraint =
+      _spine_posed_active_cast_to_path_constraintPtr.asFunction<spine_path_constraint Function(spine_posed_active)>();
+
+  spine_path_constraint_base spine_posed_active_cast_to_path_constraint_base(
+    spine_posed_active obj,
+  ) {
+    return _spine_posed_active_cast_to_path_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_posed_active_cast_to_path_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_base Function(spine_posed_active)>>(
+          'spine_posed_active_cast_to_path_constraint_base');
+  late final _spine_posed_active_cast_to_path_constraint_base = _spine_posed_active_cast_to_path_constraint_basePtr
+      .asFunction<spine_path_constraint_base Function(spine_posed_active)>();
+
+  spine_physics_constraint spine_posed_active_cast_to_physics_constraint(
+    spine_posed_active obj,
+  ) {
+    return _spine_posed_active_cast_to_physics_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_posed_active_cast_to_physics_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint Function(spine_posed_active)>>(
+          'spine_posed_active_cast_to_physics_constraint');
+  late final _spine_posed_active_cast_to_physics_constraint = _spine_posed_active_cast_to_physics_constraintPtr
+      .asFunction<spine_physics_constraint Function(spine_posed_active)>();
+
+  spine_physics_constraint_base spine_posed_active_cast_to_physics_constraint_base(
+    spine_posed_active obj,
+  ) {
+    return _spine_posed_active_cast_to_physics_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_posed_active_cast_to_physics_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_base Function(spine_posed_active)>>(
+          'spine_posed_active_cast_to_physics_constraint_base');
+  late final _spine_posed_active_cast_to_physics_constraint_base =
+      _spine_posed_active_cast_to_physics_constraint_basePtr
+          .asFunction<spine_physics_constraint_base Function(spine_posed_active)>();
+
+  spine_slider spine_posed_active_cast_to_slider(
+    spine_posed_active obj,
+  ) {
+    return _spine_posed_active_cast_to_slider(
+      obj,
+    );
+  }
+
+  late final _spine_posed_active_cast_to_sliderPtr =
+      _lookup<ffi.NativeFunction<spine_slider Function(spine_posed_active)>>('spine_posed_active_cast_to_slider');
+  late final _spine_posed_active_cast_to_slider =
+      _spine_posed_active_cast_to_sliderPtr.asFunction<spine_slider Function(spine_posed_active)>();
+
+  spine_slider_base spine_posed_active_cast_to_slider_base(
+    spine_posed_active obj,
+  ) {
+    return _spine_posed_active_cast_to_slider_base(
+      obj,
+    );
+  }
+
+  late final _spine_posed_active_cast_to_slider_basePtr =
+      _lookup<ffi.NativeFunction<spine_slider_base Function(spine_posed_active)>>(
+          'spine_posed_active_cast_to_slider_base');
+  late final _spine_posed_active_cast_to_slider_base =
+      _spine_posed_active_cast_to_slider_basePtr.asFunction<spine_slider_base Function(spine_posed_active)>();
+
+  spine_transform_constraint spine_posed_active_cast_to_transform_constraint(
+    spine_posed_active obj,
+  ) {
+    return _spine_posed_active_cast_to_transform_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_posed_active_cast_to_transform_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint Function(spine_posed_active)>>(
+          'spine_posed_active_cast_to_transform_constraint');
+  late final _spine_posed_active_cast_to_transform_constraint = _spine_posed_active_cast_to_transform_constraintPtr
+      .asFunction<spine_transform_constraint Function(spine_posed_active)>();
+
+  spine_transform_constraint_base spine_posed_active_cast_to_transform_constraint_base(
+    spine_posed_active obj,
+  ) {
+    return _spine_posed_active_cast_to_transform_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_posed_active_cast_to_transform_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_base Function(spine_posed_active)>>(
+          'spine_posed_active_cast_to_transform_constraint_base');
+  late final _spine_posed_active_cast_to_transform_constraint_base =
+      _spine_posed_active_cast_to_transform_constraint_basePtr
+          .asFunction<spine_transform_constraint_base Function(spine_posed_active)>();
+
+  spine_bone spine_update_cast_to_bone(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_bone(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_bonePtr =
+      _lookup<ffi.NativeFunction<spine_bone Function(spine_update)>>('spine_update_cast_to_bone');
+  late final _spine_update_cast_to_bone = _spine_update_cast_to_bonePtr.asFunction<spine_bone Function(spine_update)>();
+
+  spine_bone_pose spine_update_cast_to_bone_pose(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_bone_pose(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_bone_posePtr =
+      _lookup<ffi.NativeFunction<spine_bone_pose Function(spine_update)>>('spine_update_cast_to_bone_pose');
+  late final _spine_update_cast_to_bone_pose =
+      _spine_update_cast_to_bone_posePtr.asFunction<spine_bone_pose Function(spine_update)>();
+
+  spine_constraint spine_update_cast_to_constraint(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_constraint Function(spine_update)>>('spine_update_cast_to_constraint');
+  late final _spine_update_cast_to_constraint =
+      _spine_update_cast_to_constraintPtr.asFunction<spine_constraint Function(spine_update)>();
+
+  spine_ik_constraint spine_update_cast_to_ik_constraint(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_ik_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_ik_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint Function(spine_update)>>('spine_update_cast_to_ik_constraint');
+  late final _spine_update_cast_to_ik_constraint =
+      _spine_update_cast_to_ik_constraintPtr.asFunction<spine_ik_constraint Function(spine_update)>();
+
+  spine_ik_constraint_base spine_update_cast_to_ik_constraint_base(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_ik_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_ik_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_base Function(spine_update)>>(
+          'spine_update_cast_to_ik_constraint_base');
+  late final _spine_update_cast_to_ik_constraint_base =
+      _spine_update_cast_to_ik_constraint_basePtr.asFunction<spine_ik_constraint_base Function(spine_update)>();
+
+  spine_path_constraint spine_update_cast_to_path_constraint(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_path_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_path_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint Function(spine_update)>>('spine_update_cast_to_path_constraint');
+  late final _spine_update_cast_to_path_constraint =
+      _spine_update_cast_to_path_constraintPtr.asFunction<spine_path_constraint Function(spine_update)>();
+
+  spine_path_constraint_base spine_update_cast_to_path_constraint_base(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_path_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_path_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_base Function(spine_update)>>(
+          'spine_update_cast_to_path_constraint_base');
+  late final _spine_update_cast_to_path_constraint_base =
+      _spine_update_cast_to_path_constraint_basePtr.asFunction<spine_path_constraint_base Function(spine_update)>();
+
+  spine_physics_constraint spine_update_cast_to_physics_constraint(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_physics_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_physics_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint Function(spine_update)>>(
+          'spine_update_cast_to_physics_constraint');
+  late final _spine_update_cast_to_physics_constraint =
+      _spine_update_cast_to_physics_constraintPtr.asFunction<spine_physics_constraint Function(spine_update)>();
+
+  spine_physics_constraint_base spine_update_cast_to_physics_constraint_base(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_physics_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_physics_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_base Function(spine_update)>>(
+          'spine_update_cast_to_physics_constraint_base');
+  late final _spine_update_cast_to_physics_constraint_base = _spine_update_cast_to_physics_constraint_basePtr
+      .asFunction<spine_physics_constraint_base Function(spine_update)>();
+
+  spine_slider spine_update_cast_to_slider(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_slider(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_sliderPtr =
+      _lookup<ffi.NativeFunction<spine_slider Function(spine_update)>>('spine_update_cast_to_slider');
+  late final _spine_update_cast_to_slider =
+      _spine_update_cast_to_sliderPtr.asFunction<spine_slider Function(spine_update)>();
+
+  spine_slider_base spine_update_cast_to_slider_base(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_slider_base(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_slider_basePtr =
+      _lookup<ffi.NativeFunction<spine_slider_base Function(spine_update)>>('spine_update_cast_to_slider_base');
+  late final _spine_update_cast_to_slider_base =
+      _spine_update_cast_to_slider_basePtr.asFunction<spine_slider_base Function(spine_update)>();
+
+  spine_transform_constraint spine_update_cast_to_transform_constraint(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_transform_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_transform_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint Function(spine_update)>>(
+          'spine_update_cast_to_transform_constraint');
+  late final _spine_update_cast_to_transform_constraint =
+      _spine_update_cast_to_transform_constraintPtr.asFunction<spine_transform_constraint Function(spine_update)>();
+
+  spine_transform_constraint_base spine_update_cast_to_transform_constraint_base(
+    spine_update obj,
+  ) {
+    return _spine_update_cast_to_transform_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_update_cast_to_transform_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_base Function(spine_update)>>(
+          'spine_update_cast_to_transform_constraint_base');
+  late final _spine_update_cast_to_transform_constraint_base = _spine_update_cast_to_transform_constraint_basePtr
+      .asFunction<spine_transform_constraint_base Function(spine_update)>();
+
+  spine_bone_data spine_posed_data_cast_to_bone_data(
+    spine_posed_data obj,
+  ) {
+    return _spine_posed_data_cast_to_bone_data(
+      obj,
+    );
+  }
+
+  late final _spine_posed_data_cast_to_bone_dataPtr =
+      _lookup<ffi.NativeFunction<spine_bone_data Function(spine_posed_data)>>('spine_posed_data_cast_to_bone_data');
+  late final _spine_posed_data_cast_to_bone_data =
+      _spine_posed_data_cast_to_bone_dataPtr.asFunction<spine_bone_data Function(spine_posed_data)>();
+
+  spine_ik_constraint_data spine_posed_data_cast_to_ik_constraint_data(
+    spine_posed_data obj,
+  ) {
+    return _spine_posed_data_cast_to_ik_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_posed_data_cast_to_ik_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_data Function(spine_posed_data)>>(
+          'spine_posed_data_cast_to_ik_constraint_data');
+  late final _spine_posed_data_cast_to_ik_constraint_data =
+      _spine_posed_data_cast_to_ik_constraint_dataPtr.asFunction<spine_ik_constraint_data Function(spine_posed_data)>();
+
+  spine_path_constraint_data spine_posed_data_cast_to_path_constraint_data(
+    spine_posed_data obj,
+  ) {
+    return _spine_posed_data_cast_to_path_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_posed_data_cast_to_path_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_data Function(spine_posed_data)>>(
+          'spine_posed_data_cast_to_path_constraint_data');
+  late final _spine_posed_data_cast_to_path_constraint_data = _spine_posed_data_cast_to_path_constraint_dataPtr
+      .asFunction<spine_path_constraint_data Function(spine_posed_data)>();
+
+  spine_physics_constraint_data spine_posed_data_cast_to_physics_constraint_data(
+    spine_posed_data obj,
+  ) {
+    return _spine_posed_data_cast_to_physics_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_posed_data_cast_to_physics_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_data Function(spine_posed_data)>>(
+          'spine_posed_data_cast_to_physics_constraint_data');
+  late final _spine_posed_data_cast_to_physics_constraint_data = _spine_posed_data_cast_to_physics_constraint_dataPtr
+      .asFunction<spine_physics_constraint_data Function(spine_posed_data)>();
+
+  spine_slider_data spine_posed_data_cast_to_slider_data(
+    spine_posed_data obj,
+  ) {
+    return _spine_posed_data_cast_to_slider_data(
+      obj,
+    );
+  }
+
+  late final _spine_posed_data_cast_to_slider_dataPtr =
+      _lookup<ffi.NativeFunction<spine_slider_data Function(spine_posed_data)>>('spine_posed_data_cast_to_slider_data');
+  late final _spine_posed_data_cast_to_slider_data =
+      _spine_posed_data_cast_to_slider_dataPtr.asFunction<spine_slider_data Function(spine_posed_data)>();
+
+  spine_slot_data spine_posed_data_cast_to_slot_data(
+    spine_posed_data obj,
+  ) {
+    return _spine_posed_data_cast_to_slot_data(
+      obj,
+    );
+  }
+
+  late final _spine_posed_data_cast_to_slot_dataPtr =
+      _lookup<ffi.NativeFunction<spine_slot_data Function(spine_posed_data)>>('spine_posed_data_cast_to_slot_data');
+  late final _spine_posed_data_cast_to_slot_data =
+      _spine_posed_data_cast_to_slot_dataPtr.asFunction<spine_slot_data Function(spine_posed_data)>();
+
+  spine_transform_constraint_data spine_posed_data_cast_to_transform_constraint_data(
+    spine_posed_data obj,
+  ) {
+    return _spine_posed_data_cast_to_transform_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_posed_data_cast_to_transform_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_data Function(spine_posed_data)>>(
+          'spine_posed_data_cast_to_transform_constraint_data');
+  late final _spine_posed_data_cast_to_transform_constraint_data =
+      _spine_posed_data_cast_to_transform_constraint_dataPtr
+          .asFunction<spine_transform_constraint_data Function(spine_posed_data)>();
+
+  spine_bone_pose spine_bone_local_cast_to_bone_pose(
+    spine_bone_local obj,
+  ) {
+    return _spine_bone_local_cast_to_bone_pose(
+      obj,
+    );
+  }
+
+  late final _spine_bone_local_cast_to_bone_posePtr =
+      _lookup<ffi.NativeFunction<spine_bone_pose Function(spine_bone_local)>>('spine_bone_local_cast_to_bone_pose');
+  late final _spine_bone_local_cast_to_bone_pose =
+      _spine_bone_local_cast_to_bone_posePtr.asFunction<spine_bone_pose Function(spine_bone_local)>();
+
+  spine_bone_timeline1 spine_bone_timeline_cast_to_bone_timeline1(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_bone_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_bone_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline1 Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_bone_timeline1');
+  late final _spine_bone_timeline_cast_to_bone_timeline1 =
+      _spine_bone_timeline_cast_to_bone_timeline1Ptr.asFunction<spine_bone_timeline1 Function(spine_bone_timeline)>();
+
+  spine_bone_timeline2 spine_bone_timeline_cast_to_bone_timeline2(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_bone_timeline2(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_bone_timeline2Ptr =
+      _lookup<ffi.NativeFunction<spine_bone_timeline2 Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_bone_timeline2');
+  late final _spine_bone_timeline_cast_to_bone_timeline2 =
+      _spine_bone_timeline_cast_to_bone_timeline2Ptr.asFunction<spine_bone_timeline2 Function(spine_bone_timeline)>();
+
+  spine_inherit_timeline spine_bone_timeline_cast_to_inherit_timeline(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_inherit_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_inherit_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_inherit_timeline Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_inherit_timeline');
+  late final _spine_bone_timeline_cast_to_inherit_timeline = _spine_bone_timeline_cast_to_inherit_timelinePtr
+      .asFunction<spine_inherit_timeline Function(spine_bone_timeline)>();
+
+  spine_rotate_timeline spine_bone_timeline_cast_to_rotate_timeline(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_rotate_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_rotate_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rotate_timeline Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_rotate_timeline');
+  late final _spine_bone_timeline_cast_to_rotate_timeline =
+      _spine_bone_timeline_cast_to_rotate_timelinePtr.asFunction<spine_rotate_timeline Function(spine_bone_timeline)>();
+
+  spine_scale_timeline spine_bone_timeline_cast_to_scale_timeline(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_scale_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_scale_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_timeline Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_scale_timeline');
+  late final _spine_bone_timeline_cast_to_scale_timeline =
+      _spine_bone_timeline_cast_to_scale_timelinePtr.asFunction<spine_scale_timeline Function(spine_bone_timeline)>();
+
+  spine_scale_x_timeline spine_bone_timeline_cast_to_scale_x_timeline(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_scale_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_scale_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_x_timeline Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_scale_x_timeline');
+  late final _spine_bone_timeline_cast_to_scale_x_timeline = _spine_bone_timeline_cast_to_scale_x_timelinePtr
+      .asFunction<spine_scale_x_timeline Function(spine_bone_timeline)>();
+
+  spine_scale_y_timeline spine_bone_timeline_cast_to_scale_y_timeline(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_scale_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_scale_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_y_timeline Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_scale_y_timeline');
+  late final _spine_bone_timeline_cast_to_scale_y_timeline = _spine_bone_timeline_cast_to_scale_y_timelinePtr
+      .asFunction<spine_scale_y_timeline Function(spine_bone_timeline)>();
+
+  spine_shear_timeline spine_bone_timeline_cast_to_shear_timeline(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_shear_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_shear_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_timeline Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_shear_timeline');
+  late final _spine_bone_timeline_cast_to_shear_timeline =
+      _spine_bone_timeline_cast_to_shear_timelinePtr.asFunction<spine_shear_timeline Function(spine_bone_timeline)>();
+
+  spine_shear_x_timeline spine_bone_timeline_cast_to_shear_x_timeline(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_shear_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_shear_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_x_timeline Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_shear_x_timeline');
+  late final _spine_bone_timeline_cast_to_shear_x_timeline = _spine_bone_timeline_cast_to_shear_x_timelinePtr
+      .asFunction<spine_shear_x_timeline Function(spine_bone_timeline)>();
+
+  spine_shear_y_timeline spine_bone_timeline_cast_to_shear_y_timeline(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_shear_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_shear_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_y_timeline Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_shear_y_timeline');
+  late final _spine_bone_timeline_cast_to_shear_y_timeline = _spine_bone_timeline_cast_to_shear_y_timelinePtr
+      .asFunction<spine_shear_y_timeline Function(spine_bone_timeline)>();
+
+  spine_translate_timeline spine_bone_timeline_cast_to_translate_timeline(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_translate_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_translate_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_timeline Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_translate_timeline');
+  late final _spine_bone_timeline_cast_to_translate_timeline = _spine_bone_timeline_cast_to_translate_timelinePtr
+      .asFunction<spine_translate_timeline Function(spine_bone_timeline)>();
+
+  spine_translate_x_timeline spine_bone_timeline_cast_to_translate_x_timeline(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_translate_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_translate_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_x_timeline Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_translate_x_timeline');
+  late final _spine_bone_timeline_cast_to_translate_x_timeline = _spine_bone_timeline_cast_to_translate_x_timelinePtr
+      .asFunction<spine_translate_x_timeline Function(spine_bone_timeline)>();
+
+  spine_translate_y_timeline spine_bone_timeline_cast_to_translate_y_timeline(
+    spine_bone_timeline obj,
+  ) {
+    return _spine_bone_timeline_cast_to_translate_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline_cast_to_translate_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_y_timeline Function(spine_bone_timeline)>>(
+          'spine_bone_timeline_cast_to_translate_y_timeline');
+  late final _spine_bone_timeline_cast_to_translate_y_timeline = _spine_bone_timeline_cast_to_translate_y_timelinePtr
+      .asFunction<spine_translate_y_timeline Function(spine_bone_timeline)>();
+
+  spine_bounding_box_attachment spine_vertex_attachment_cast_to_bounding_box_attachment(
+    spine_vertex_attachment obj,
+  ) {
+    return _spine_vertex_attachment_cast_to_bounding_box_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_vertex_attachment_cast_to_bounding_box_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_bounding_box_attachment Function(spine_vertex_attachment)>>(
+          'spine_vertex_attachment_cast_to_bounding_box_attachment');
+  late final _spine_vertex_attachment_cast_to_bounding_box_attachment =
+      _spine_vertex_attachment_cast_to_bounding_box_attachmentPtr
+          .asFunction<spine_bounding_box_attachment Function(spine_vertex_attachment)>();
+
+  spine_clipping_attachment spine_vertex_attachment_cast_to_clipping_attachment(
+    spine_vertex_attachment obj,
+  ) {
+    return _spine_vertex_attachment_cast_to_clipping_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_vertex_attachment_cast_to_clipping_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_clipping_attachment Function(spine_vertex_attachment)>>(
+          'spine_vertex_attachment_cast_to_clipping_attachment');
+  late final _spine_vertex_attachment_cast_to_clipping_attachment =
+      _spine_vertex_attachment_cast_to_clipping_attachmentPtr
+          .asFunction<spine_clipping_attachment Function(spine_vertex_attachment)>();
+
+  spine_mesh_attachment spine_vertex_attachment_cast_to_mesh_attachment(
+    spine_vertex_attachment obj,
+  ) {
+    return _spine_vertex_attachment_cast_to_mesh_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_vertex_attachment_cast_to_mesh_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_mesh_attachment Function(spine_vertex_attachment)>>(
+          'spine_vertex_attachment_cast_to_mesh_attachment');
+  late final _spine_vertex_attachment_cast_to_mesh_attachment = _spine_vertex_attachment_cast_to_mesh_attachmentPtr
+      .asFunction<spine_mesh_attachment Function(spine_vertex_attachment)>();
+
+  spine_path_attachment spine_vertex_attachment_cast_to_path_attachment(
+    spine_vertex_attachment obj,
+  ) {
+    return _spine_vertex_attachment_cast_to_path_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_vertex_attachment_cast_to_path_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_path_attachment Function(spine_vertex_attachment)>>(
+          'spine_vertex_attachment_cast_to_path_attachment');
+  late final _spine_vertex_attachment_cast_to_path_attachment = _spine_vertex_attachment_cast_to_path_attachmentPtr
+      .asFunction<spine_path_attachment Function(spine_vertex_attachment)>();
+
+  spine_bounding_box_attachment spine_attachment_cast_to_bounding_box_attachment(
+    spine_attachment obj,
+  ) {
+    return _spine_attachment_cast_to_bounding_box_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_attachment_cast_to_bounding_box_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_bounding_box_attachment Function(spine_attachment)>>(
+          'spine_attachment_cast_to_bounding_box_attachment');
+  late final _spine_attachment_cast_to_bounding_box_attachment = _spine_attachment_cast_to_bounding_box_attachmentPtr
+      .asFunction<spine_bounding_box_attachment Function(spine_attachment)>();
+
+  spine_clipping_attachment spine_attachment_cast_to_clipping_attachment(
+    spine_attachment obj,
+  ) {
+    return _spine_attachment_cast_to_clipping_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_attachment_cast_to_clipping_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_clipping_attachment Function(spine_attachment)>>(
+          'spine_attachment_cast_to_clipping_attachment');
+  late final _spine_attachment_cast_to_clipping_attachment = _spine_attachment_cast_to_clipping_attachmentPtr
+      .asFunction<spine_clipping_attachment Function(spine_attachment)>();
+
+  spine_mesh_attachment spine_attachment_cast_to_mesh_attachment(
+    spine_attachment obj,
+  ) {
+    return _spine_attachment_cast_to_mesh_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_attachment_cast_to_mesh_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_mesh_attachment Function(spine_attachment)>>(
+          'spine_attachment_cast_to_mesh_attachment');
+  late final _spine_attachment_cast_to_mesh_attachment =
+      _spine_attachment_cast_to_mesh_attachmentPtr.asFunction<spine_mesh_attachment Function(spine_attachment)>();
+
+  spine_path_attachment spine_attachment_cast_to_path_attachment(
+    spine_attachment obj,
+  ) {
+    return _spine_attachment_cast_to_path_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_attachment_cast_to_path_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_path_attachment Function(spine_attachment)>>(
+          'spine_attachment_cast_to_path_attachment');
+  late final _spine_attachment_cast_to_path_attachment =
+      _spine_attachment_cast_to_path_attachmentPtr.asFunction<spine_path_attachment Function(spine_attachment)>();
+
+  spine_point_attachment spine_attachment_cast_to_point_attachment(
+    spine_attachment obj,
+  ) {
+    return _spine_attachment_cast_to_point_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_attachment_cast_to_point_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_point_attachment Function(spine_attachment)>>(
+          'spine_attachment_cast_to_point_attachment');
+  late final _spine_attachment_cast_to_point_attachment =
+      _spine_attachment_cast_to_point_attachmentPtr.asFunction<spine_point_attachment Function(spine_attachment)>();
+
+  spine_region_attachment spine_attachment_cast_to_region_attachment(
+    spine_attachment obj,
+  ) {
+    return _spine_attachment_cast_to_region_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_attachment_cast_to_region_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_region_attachment Function(spine_attachment)>>(
+          'spine_attachment_cast_to_region_attachment');
+  late final _spine_attachment_cast_to_region_attachment =
+      _spine_attachment_cast_to_region_attachmentPtr.asFunction<spine_region_attachment Function(spine_attachment)>();
+
+  spine_vertex_attachment spine_attachment_cast_to_vertex_attachment(
+    spine_attachment obj,
+  ) {
+    return _spine_attachment_cast_to_vertex_attachment(
+      obj,
+    );
+  }
+
+  late final _spine_attachment_cast_to_vertex_attachmentPtr =
+      _lookup<ffi.NativeFunction<spine_vertex_attachment Function(spine_attachment)>>(
+          'spine_attachment_cast_to_vertex_attachment');
+  late final _spine_attachment_cast_to_vertex_attachment =
+      _spine_attachment_cast_to_vertex_attachmentPtr.asFunction<spine_vertex_attachment Function(spine_attachment)>();
+
+  spine_constraint_timeline1 spine_constraint_timeline_cast_to_constraint_timeline1(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_constraint_timeline1(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_constraint_timeline1Ptr =
+      _lookup<ffi.NativeFunction<spine_constraint_timeline1 Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_constraint_timeline1');
+  late final _spine_constraint_timeline_cast_to_constraint_timeline1 =
+      _spine_constraint_timeline_cast_to_constraint_timeline1Ptr
+          .asFunction<spine_constraint_timeline1 Function(spine_constraint_timeline)>();
+
+  spine_ik_constraint_timeline spine_constraint_timeline_cast_to_ik_constraint_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_ik_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_ik_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_ik_constraint_timeline');
+  late final _spine_constraint_timeline_cast_to_ik_constraint_timeline =
+      _spine_constraint_timeline_cast_to_ik_constraint_timelinePtr
+          .asFunction<spine_ik_constraint_timeline Function(spine_constraint_timeline)>();
+
+  spine_path_constraint_mix_timeline spine_constraint_timeline_cast_to_path_constraint_mix_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_path_constraint_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_path_constraint_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_mix_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_path_constraint_mix_timeline');
+  late final _spine_constraint_timeline_cast_to_path_constraint_mix_timeline =
+      _spine_constraint_timeline_cast_to_path_constraint_mix_timelinePtr
+          .asFunction<spine_path_constraint_mix_timeline Function(spine_constraint_timeline)>();
+
+  spine_path_constraint_position_timeline spine_constraint_timeline_cast_to_path_constraint_position_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_path_constraint_position_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_path_constraint_position_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_position_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_path_constraint_position_timeline');
+  late final _spine_constraint_timeline_cast_to_path_constraint_position_timeline =
+      _spine_constraint_timeline_cast_to_path_constraint_position_timelinePtr
+          .asFunction<spine_path_constraint_position_timeline Function(spine_constraint_timeline)>();
+
+  spine_path_constraint_spacing_timeline spine_constraint_timeline_cast_to_path_constraint_spacing_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_path_constraint_spacing_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_path_constraint_spacing_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_spacing_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_path_constraint_spacing_timeline');
+  late final _spine_constraint_timeline_cast_to_path_constraint_spacing_timeline =
+      _spine_constraint_timeline_cast_to_path_constraint_spacing_timelinePtr
+          .asFunction<spine_path_constraint_spacing_timeline Function(spine_constraint_timeline)>();
+
+  spine_physics_constraint_damping_timeline spine_constraint_timeline_cast_to_physics_constraint_damping_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_physics_constraint_damping_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_physics_constraint_damping_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_damping_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_physics_constraint_damping_timeline');
+  late final _spine_constraint_timeline_cast_to_physics_constraint_damping_timeline =
+      _spine_constraint_timeline_cast_to_physics_constraint_damping_timelinePtr
+          .asFunction<spine_physics_constraint_damping_timeline Function(spine_constraint_timeline)>();
+
+  spine_physics_constraint_gravity_timeline spine_constraint_timeline_cast_to_physics_constraint_gravity_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_physics_constraint_gravity_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_physics_constraint_gravity_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_gravity_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_physics_constraint_gravity_timeline');
+  late final _spine_constraint_timeline_cast_to_physics_constraint_gravity_timeline =
+      _spine_constraint_timeline_cast_to_physics_constraint_gravity_timelinePtr
+          .asFunction<spine_physics_constraint_gravity_timeline Function(spine_constraint_timeline)>();
+
+  spine_physics_constraint_inertia_timeline spine_constraint_timeline_cast_to_physics_constraint_inertia_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_physics_constraint_inertia_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_physics_constraint_inertia_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_inertia_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_physics_constraint_inertia_timeline');
+  late final _spine_constraint_timeline_cast_to_physics_constraint_inertia_timeline =
+      _spine_constraint_timeline_cast_to_physics_constraint_inertia_timelinePtr
+          .asFunction<spine_physics_constraint_inertia_timeline Function(spine_constraint_timeline)>();
+
+  spine_physics_constraint_mass_timeline spine_constraint_timeline_cast_to_physics_constraint_mass_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_physics_constraint_mass_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_physics_constraint_mass_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_mass_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_physics_constraint_mass_timeline');
+  late final _spine_constraint_timeline_cast_to_physics_constraint_mass_timeline =
+      _spine_constraint_timeline_cast_to_physics_constraint_mass_timelinePtr
+          .asFunction<spine_physics_constraint_mass_timeline Function(spine_constraint_timeline)>();
+
+  spine_physics_constraint_mix_timeline spine_constraint_timeline_cast_to_physics_constraint_mix_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_physics_constraint_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_physics_constraint_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_mix_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_physics_constraint_mix_timeline');
+  late final _spine_constraint_timeline_cast_to_physics_constraint_mix_timeline =
+      _spine_constraint_timeline_cast_to_physics_constraint_mix_timelinePtr
+          .asFunction<spine_physics_constraint_mix_timeline Function(spine_constraint_timeline)>();
+
+  spine_physics_constraint_reset_timeline spine_constraint_timeline_cast_to_physics_constraint_reset_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_physics_constraint_reset_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_physics_constraint_reset_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_reset_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_physics_constraint_reset_timeline');
+  late final _spine_constraint_timeline_cast_to_physics_constraint_reset_timeline =
+      _spine_constraint_timeline_cast_to_physics_constraint_reset_timelinePtr
+          .asFunction<spine_physics_constraint_reset_timeline Function(spine_constraint_timeline)>();
+
+  spine_physics_constraint_strength_timeline spine_constraint_timeline_cast_to_physics_constraint_strength_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_physics_constraint_strength_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_physics_constraint_strength_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_strength_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_physics_constraint_strength_timeline');
+  late final _spine_constraint_timeline_cast_to_physics_constraint_strength_timeline =
+      _spine_constraint_timeline_cast_to_physics_constraint_strength_timelinePtr
+          .asFunction<spine_physics_constraint_strength_timeline Function(spine_constraint_timeline)>();
+
+  spine_physics_constraint_timeline spine_constraint_timeline_cast_to_physics_constraint_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_physics_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_physics_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_physics_constraint_timeline');
+  late final _spine_constraint_timeline_cast_to_physics_constraint_timeline =
+      _spine_constraint_timeline_cast_to_physics_constraint_timelinePtr
+          .asFunction<spine_physics_constraint_timeline Function(spine_constraint_timeline)>();
+
+  spine_physics_constraint_wind_timeline spine_constraint_timeline_cast_to_physics_constraint_wind_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_physics_constraint_wind_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_physics_constraint_wind_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_wind_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_physics_constraint_wind_timeline');
+  late final _spine_constraint_timeline_cast_to_physics_constraint_wind_timeline =
+      _spine_constraint_timeline_cast_to_physics_constraint_wind_timelinePtr
+          .asFunction<spine_physics_constraint_wind_timeline Function(spine_constraint_timeline)>();
+
+  spine_slider_mix_timeline spine_constraint_timeline_cast_to_slider_mix_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_slider_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_slider_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slider_mix_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_slider_mix_timeline');
+  late final _spine_constraint_timeline_cast_to_slider_mix_timeline =
+      _spine_constraint_timeline_cast_to_slider_mix_timelinePtr
+          .asFunction<spine_slider_mix_timeline Function(spine_constraint_timeline)>();
+
+  spine_slider_timeline spine_constraint_timeline_cast_to_slider_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_slider_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_slider_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slider_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_slider_timeline');
+  late final _spine_constraint_timeline_cast_to_slider_timeline = _spine_constraint_timeline_cast_to_slider_timelinePtr
+      .asFunction<spine_slider_timeline Function(spine_constraint_timeline)>();
+
+  spine_transform_constraint_timeline spine_constraint_timeline_cast_to_transform_constraint_timeline(
+    spine_constraint_timeline obj,
+  ) {
+    return _spine_constraint_timeline_cast_to_transform_constraint_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline_cast_to_transform_constraint_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_timeline Function(spine_constraint_timeline)>>(
+          'spine_constraint_timeline_cast_to_transform_constraint_timeline');
+  late final _spine_constraint_timeline_cast_to_transform_constraint_timeline =
+      _spine_constraint_timeline_cast_to_transform_constraint_timelinePtr
+          .asFunction<spine_transform_constraint_timeline Function(spine_constraint_timeline)>();
+
+  spine_deform_timeline spine_slot_curve_timeline_cast_to_deform_timeline(
+    spine_slot_curve_timeline obj,
+  ) {
+    return _spine_slot_curve_timeline_cast_to_deform_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_curve_timeline_cast_to_deform_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_deform_timeline Function(spine_slot_curve_timeline)>>(
+          'spine_slot_curve_timeline_cast_to_deform_timeline');
+  late final _spine_slot_curve_timeline_cast_to_deform_timeline = _spine_slot_curve_timeline_cast_to_deform_timelinePtr
+      .asFunction<spine_deform_timeline Function(spine_slot_curve_timeline)>();
+
+  spine_rgb2_timeline spine_slot_curve_timeline_cast_to_rgb2_timeline(
+    spine_slot_curve_timeline obj,
+  ) {
+    return _spine_slot_curve_timeline_cast_to_rgb2_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_curve_timeline_cast_to_rgb2_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgb2_timeline Function(spine_slot_curve_timeline)>>(
+          'spine_slot_curve_timeline_cast_to_rgb2_timeline');
+  late final _spine_slot_curve_timeline_cast_to_rgb2_timeline = _spine_slot_curve_timeline_cast_to_rgb2_timelinePtr
+      .asFunction<spine_rgb2_timeline Function(spine_slot_curve_timeline)>();
+
+  spine_rgba2_timeline spine_slot_curve_timeline_cast_to_rgba2_timeline(
+    spine_slot_curve_timeline obj,
+  ) {
+    return _spine_slot_curve_timeline_cast_to_rgba2_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_curve_timeline_cast_to_rgba2_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgba2_timeline Function(spine_slot_curve_timeline)>>(
+          'spine_slot_curve_timeline_cast_to_rgba2_timeline');
+  late final _spine_slot_curve_timeline_cast_to_rgba2_timeline = _spine_slot_curve_timeline_cast_to_rgba2_timelinePtr
+      .asFunction<spine_rgba2_timeline Function(spine_slot_curve_timeline)>();
+
+  spine_rgba_timeline spine_slot_curve_timeline_cast_to_rgba_timeline(
+    spine_slot_curve_timeline obj,
+  ) {
+    return _spine_slot_curve_timeline_cast_to_rgba_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_curve_timeline_cast_to_rgba_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgba_timeline Function(spine_slot_curve_timeline)>>(
+          'spine_slot_curve_timeline_cast_to_rgba_timeline');
+  late final _spine_slot_curve_timeline_cast_to_rgba_timeline = _spine_slot_curve_timeline_cast_to_rgba_timelinePtr
+      .asFunction<spine_rgba_timeline Function(spine_slot_curve_timeline)>();
+
+  spine_rgb_timeline spine_slot_curve_timeline_cast_to_rgb_timeline(
+    spine_slot_curve_timeline obj,
+  ) {
+    return _spine_slot_curve_timeline_cast_to_rgb_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_slot_curve_timeline_cast_to_rgb_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rgb_timeline Function(spine_slot_curve_timeline)>>(
+          'spine_slot_curve_timeline_cast_to_rgb_timeline');
+  late final _spine_slot_curve_timeline_cast_to_rgb_timeline = _spine_slot_curve_timeline_cast_to_rgb_timelinePtr
+      .asFunction<spine_rgb_timeline Function(spine_slot_curve_timeline)>();
+
+  spine_from_rotate spine_from_property_cast_to_from_rotate(
+    spine_from_property obj,
+  ) {
+    return _spine_from_property_cast_to_from_rotate(
+      obj,
+    );
+  }
+
+  late final _spine_from_property_cast_to_from_rotatePtr =
+      _lookup<ffi.NativeFunction<spine_from_rotate Function(spine_from_property)>>(
+          'spine_from_property_cast_to_from_rotate');
+  late final _spine_from_property_cast_to_from_rotate =
+      _spine_from_property_cast_to_from_rotatePtr.asFunction<spine_from_rotate Function(spine_from_property)>();
+
+  spine_from_scale_x spine_from_property_cast_to_from_scale_x(
+    spine_from_property obj,
+  ) {
+    return _spine_from_property_cast_to_from_scale_x(
+      obj,
+    );
+  }
+
+  late final _spine_from_property_cast_to_from_scale_xPtr =
+      _lookup<ffi.NativeFunction<spine_from_scale_x Function(spine_from_property)>>(
+          'spine_from_property_cast_to_from_scale_x');
+  late final _spine_from_property_cast_to_from_scale_x =
+      _spine_from_property_cast_to_from_scale_xPtr.asFunction<spine_from_scale_x Function(spine_from_property)>();
+
+  spine_from_scale_y spine_from_property_cast_to_from_scale_y(
+    spine_from_property obj,
+  ) {
+    return _spine_from_property_cast_to_from_scale_y(
+      obj,
+    );
+  }
+
+  late final _spine_from_property_cast_to_from_scale_yPtr =
+      _lookup<ffi.NativeFunction<spine_from_scale_y Function(spine_from_property)>>(
+          'spine_from_property_cast_to_from_scale_y');
+  late final _spine_from_property_cast_to_from_scale_y =
+      _spine_from_property_cast_to_from_scale_yPtr.asFunction<spine_from_scale_y Function(spine_from_property)>();
+
+  spine_from_shear_y spine_from_property_cast_to_from_shear_y(
+    spine_from_property obj,
+  ) {
+    return _spine_from_property_cast_to_from_shear_y(
+      obj,
+    );
+  }
+
+  late final _spine_from_property_cast_to_from_shear_yPtr =
+      _lookup<ffi.NativeFunction<spine_from_shear_y Function(spine_from_property)>>(
+          'spine_from_property_cast_to_from_shear_y');
+  late final _spine_from_property_cast_to_from_shear_y =
+      _spine_from_property_cast_to_from_shear_yPtr.asFunction<spine_from_shear_y Function(spine_from_property)>();
+
+  spine_from_x spine_from_property_cast_to_from_x(
+    spine_from_property obj,
+  ) {
+    return _spine_from_property_cast_to_from_x(
+      obj,
+    );
+  }
+
+  late final _spine_from_property_cast_to_from_xPtr =
+      _lookup<ffi.NativeFunction<spine_from_x Function(spine_from_property)>>('spine_from_property_cast_to_from_x');
+  late final _spine_from_property_cast_to_from_x =
+      _spine_from_property_cast_to_from_xPtr.asFunction<spine_from_x Function(spine_from_property)>();
+
+  spine_from_y spine_from_property_cast_to_from_y(
+    spine_from_property obj,
+  ) {
+    return _spine_from_property_cast_to_from_y(
+      obj,
+    );
+  }
+
+  late final _spine_from_property_cast_to_from_yPtr =
+      _lookup<ffi.NativeFunction<spine_from_y Function(spine_from_property)>>('spine_from_property_cast_to_from_y');
+  late final _spine_from_property_cast_to_from_y =
+      _spine_from_property_cast_to_from_yPtr.asFunction<spine_from_y Function(spine_from_property)>();
+
+  spine_ik_constraint spine_ik_constraint_base_cast_to_ik_constraint(
+    spine_ik_constraint_base obj,
+  ) {
+    return _spine_ik_constraint_base_cast_to_ik_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_ik_constraint_base_cast_to_ik_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint Function(spine_ik_constraint_base)>>(
+          'spine_ik_constraint_base_cast_to_ik_constraint');
+  late final _spine_ik_constraint_base_cast_to_ik_constraint = _spine_ik_constraint_base_cast_to_ik_constraintPtr
+      .asFunction<spine_ik_constraint Function(spine_ik_constraint_base)>();
+
+  spine_ik_constraint spine_constraint_cast_to_ik_constraint(
+    spine_constraint obj,
+  ) {
+    return _spine_constraint_cast_to_ik_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_cast_to_ik_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint Function(spine_constraint)>>(
+          'spine_constraint_cast_to_ik_constraint');
+  late final _spine_constraint_cast_to_ik_constraint =
+      _spine_constraint_cast_to_ik_constraintPtr.asFunction<spine_ik_constraint Function(spine_constraint)>();
+
+  spine_ik_constraint_base spine_constraint_cast_to_ik_constraint_base(
+    spine_constraint obj,
+  ) {
+    return _spine_constraint_cast_to_ik_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_cast_to_ik_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_base Function(spine_constraint)>>(
+          'spine_constraint_cast_to_ik_constraint_base');
+  late final _spine_constraint_cast_to_ik_constraint_base =
+      _spine_constraint_cast_to_ik_constraint_basePtr.asFunction<spine_ik_constraint_base Function(spine_constraint)>();
+
+  spine_path_constraint spine_constraint_cast_to_path_constraint(
+    spine_constraint obj,
+  ) {
+    return _spine_constraint_cast_to_path_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_cast_to_path_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint Function(spine_constraint)>>(
+          'spine_constraint_cast_to_path_constraint');
+  late final _spine_constraint_cast_to_path_constraint =
+      _spine_constraint_cast_to_path_constraintPtr.asFunction<spine_path_constraint Function(spine_constraint)>();
+
+  spine_path_constraint_base spine_constraint_cast_to_path_constraint_base(
+    spine_constraint obj,
+  ) {
+    return _spine_constraint_cast_to_path_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_cast_to_path_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_base Function(spine_constraint)>>(
+          'spine_constraint_cast_to_path_constraint_base');
+  late final _spine_constraint_cast_to_path_constraint_base = _spine_constraint_cast_to_path_constraint_basePtr
+      .asFunction<spine_path_constraint_base Function(spine_constraint)>();
+
+  spine_physics_constraint spine_constraint_cast_to_physics_constraint(
+    spine_constraint obj,
+  ) {
+    return _spine_constraint_cast_to_physics_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_cast_to_physics_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint Function(spine_constraint)>>(
+          'spine_constraint_cast_to_physics_constraint');
+  late final _spine_constraint_cast_to_physics_constraint =
+      _spine_constraint_cast_to_physics_constraintPtr.asFunction<spine_physics_constraint Function(spine_constraint)>();
+
+  spine_physics_constraint_base spine_constraint_cast_to_physics_constraint_base(
+    spine_constraint obj,
+  ) {
+    return _spine_constraint_cast_to_physics_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_cast_to_physics_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_base Function(spine_constraint)>>(
+          'spine_constraint_cast_to_physics_constraint_base');
+  late final _spine_constraint_cast_to_physics_constraint_base = _spine_constraint_cast_to_physics_constraint_basePtr
+      .asFunction<spine_physics_constraint_base Function(spine_constraint)>();
+
+  spine_slider spine_constraint_cast_to_slider(
+    spine_constraint obj,
+  ) {
+    return _spine_constraint_cast_to_slider(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_cast_to_sliderPtr =
+      _lookup<ffi.NativeFunction<spine_slider Function(spine_constraint)>>('spine_constraint_cast_to_slider');
+  late final _spine_constraint_cast_to_slider =
+      _spine_constraint_cast_to_sliderPtr.asFunction<spine_slider Function(spine_constraint)>();
+
+  spine_slider_base spine_constraint_cast_to_slider_base(
+    spine_constraint obj,
+  ) {
+    return _spine_constraint_cast_to_slider_base(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_cast_to_slider_basePtr =
+      _lookup<ffi.NativeFunction<spine_slider_base Function(spine_constraint)>>('spine_constraint_cast_to_slider_base');
+  late final _spine_constraint_cast_to_slider_base =
+      _spine_constraint_cast_to_slider_basePtr.asFunction<spine_slider_base Function(spine_constraint)>();
+
+  spine_transform_constraint spine_constraint_cast_to_transform_constraint(
+    spine_constraint obj,
+  ) {
+    return _spine_constraint_cast_to_transform_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_cast_to_transform_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint Function(spine_constraint)>>(
+          'spine_constraint_cast_to_transform_constraint');
+  late final _spine_constraint_cast_to_transform_constraint = _spine_constraint_cast_to_transform_constraintPtr
+      .asFunction<spine_transform_constraint Function(spine_constraint)>();
+
+  spine_transform_constraint_base spine_constraint_cast_to_transform_constraint_base(
+    spine_constraint obj,
+  ) {
+    return _spine_constraint_cast_to_transform_constraint_base(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_cast_to_transform_constraint_basePtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_base Function(spine_constraint)>>(
+          'spine_constraint_cast_to_transform_constraint_base');
+  late final _spine_constraint_cast_to_transform_constraint_base =
+      _spine_constraint_cast_to_transform_constraint_basePtr
+          .asFunction<spine_transform_constraint_base Function(spine_constraint)>();
+
+  spine_ik_constraint_data spine_constraint_data_cast_to_ik_constraint_data(
+    spine_constraint_data obj,
+  ) {
+    return _spine_constraint_data_cast_to_ik_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_data_cast_to_ik_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_data Function(spine_constraint_data)>>(
+          'spine_constraint_data_cast_to_ik_constraint_data');
+  late final _spine_constraint_data_cast_to_ik_constraint_data = _spine_constraint_data_cast_to_ik_constraint_dataPtr
+      .asFunction<spine_ik_constraint_data Function(spine_constraint_data)>();
+
+  spine_path_constraint_data spine_constraint_data_cast_to_path_constraint_data(
+    spine_constraint_data obj,
+  ) {
+    return _spine_constraint_data_cast_to_path_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_data_cast_to_path_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_data Function(spine_constraint_data)>>(
+          'spine_constraint_data_cast_to_path_constraint_data');
+  late final _spine_constraint_data_cast_to_path_constraint_data =
+      _spine_constraint_data_cast_to_path_constraint_dataPtr
+          .asFunction<spine_path_constraint_data Function(spine_constraint_data)>();
+
+  spine_physics_constraint_data spine_constraint_data_cast_to_physics_constraint_data(
+    spine_constraint_data obj,
+  ) {
+    return _spine_constraint_data_cast_to_physics_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_data_cast_to_physics_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_data Function(spine_constraint_data)>>(
+          'spine_constraint_data_cast_to_physics_constraint_data');
+  late final _spine_constraint_data_cast_to_physics_constraint_data =
+      _spine_constraint_data_cast_to_physics_constraint_dataPtr
+          .asFunction<spine_physics_constraint_data Function(spine_constraint_data)>();
+
+  spine_slider_data spine_constraint_data_cast_to_slider_data(
+    spine_constraint_data obj,
+  ) {
+    return _spine_constraint_data_cast_to_slider_data(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_data_cast_to_slider_dataPtr =
+      _lookup<ffi.NativeFunction<spine_slider_data Function(spine_constraint_data)>>(
+          'spine_constraint_data_cast_to_slider_data');
+  late final _spine_constraint_data_cast_to_slider_data =
+      _spine_constraint_data_cast_to_slider_dataPtr.asFunction<spine_slider_data Function(spine_constraint_data)>();
+
+  spine_transform_constraint_data spine_constraint_data_cast_to_transform_constraint_data(
+    spine_constraint_data obj,
+  ) {
+    return _spine_constraint_data_cast_to_transform_constraint_data(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_data_cast_to_transform_constraint_dataPtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_data Function(spine_constraint_data)>>(
+          'spine_constraint_data_cast_to_transform_constraint_data');
+  late final _spine_constraint_data_cast_to_transform_constraint_data =
+      _spine_constraint_data_cast_to_transform_constraint_dataPtr
+          .asFunction<spine_transform_constraint_data Function(spine_constraint_data)>();
+
+  spine_path_constraint spine_path_constraint_base_cast_to_path_constraint(
+    spine_path_constraint_base obj,
+  ) {
+    return _spine_path_constraint_base_cast_to_path_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_path_constraint_base_cast_to_path_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_cast_to_path_constraint');
+  late final _spine_path_constraint_base_cast_to_path_constraint =
+      _spine_path_constraint_base_cast_to_path_constraintPtr
+          .asFunction<spine_path_constraint Function(spine_path_constraint_base)>();
+
+  spine_path_constraint_position_timeline spine_constraint_timeline1_cast_to_path_constraint_position_timeline(
+    spine_constraint_timeline1 obj,
+  ) {
+    return _spine_constraint_timeline1_cast_to_path_constraint_position_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline1_cast_to_path_constraint_position_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_position_timeline Function(spine_constraint_timeline1)>>(
+          'spine_constraint_timeline1_cast_to_path_constraint_position_timeline');
+  late final _spine_constraint_timeline1_cast_to_path_constraint_position_timeline =
+      _spine_constraint_timeline1_cast_to_path_constraint_position_timelinePtr
+          .asFunction<spine_path_constraint_position_timeline Function(spine_constraint_timeline1)>();
+
+  spine_path_constraint_spacing_timeline spine_constraint_timeline1_cast_to_path_constraint_spacing_timeline(
+    spine_constraint_timeline1 obj,
+  ) {
+    return _spine_constraint_timeline1_cast_to_path_constraint_spacing_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline1_cast_to_path_constraint_spacing_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_spacing_timeline Function(spine_constraint_timeline1)>>(
+          'spine_constraint_timeline1_cast_to_path_constraint_spacing_timeline');
+  late final _spine_constraint_timeline1_cast_to_path_constraint_spacing_timeline =
+      _spine_constraint_timeline1_cast_to_path_constraint_spacing_timelinePtr
+          .asFunction<spine_path_constraint_spacing_timeline Function(spine_constraint_timeline1)>();
+
+  spine_slider_mix_timeline spine_constraint_timeline1_cast_to_slider_mix_timeline(
+    spine_constraint_timeline1 obj,
+  ) {
+    return _spine_constraint_timeline1_cast_to_slider_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline1_cast_to_slider_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slider_mix_timeline Function(spine_constraint_timeline1)>>(
+          'spine_constraint_timeline1_cast_to_slider_mix_timeline');
+  late final _spine_constraint_timeline1_cast_to_slider_mix_timeline =
+      _spine_constraint_timeline1_cast_to_slider_mix_timelinePtr
+          .asFunction<spine_slider_mix_timeline Function(spine_constraint_timeline1)>();
+
+  spine_slider_timeline spine_constraint_timeline1_cast_to_slider_timeline(
+    spine_constraint_timeline1 obj,
+  ) {
+    return _spine_constraint_timeline1_cast_to_slider_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_constraint_timeline1_cast_to_slider_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_slider_timeline Function(spine_constraint_timeline1)>>(
+          'spine_constraint_timeline1_cast_to_slider_timeline');
+  late final _spine_constraint_timeline1_cast_to_slider_timeline =
+      _spine_constraint_timeline1_cast_to_slider_timelinePtr
+          .asFunction<spine_slider_timeline Function(spine_constraint_timeline1)>();
+
+  spine_physics_constraint spine_physics_constraint_base_cast_to_physics_constraint(
+    spine_physics_constraint_base obj,
+  ) {
+    return _spine_physics_constraint_base_cast_to_physics_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_base_cast_to_physics_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_cast_to_physics_constraint');
+  late final _spine_physics_constraint_base_cast_to_physics_constraint =
+      _spine_physics_constraint_base_cast_to_physics_constraintPtr
+          .asFunction<spine_physics_constraint Function(spine_physics_constraint_base)>();
+
+  spine_physics_constraint_damping_timeline
+      spine_physics_constraint_timeline_cast_to_physics_constraint_damping_timeline(
+    spine_physics_constraint_timeline obj,
+  ) {
+    return _spine_physics_constraint_timeline_cast_to_physics_constraint_damping_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_damping_timelinePtr = _lookup<
+          ffi.NativeFunction<spine_physics_constraint_damping_timeline Function(spine_physics_constraint_timeline)>>(
+      'spine_physics_constraint_timeline_cast_to_physics_constraint_damping_timeline');
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_damping_timeline =
+      _spine_physics_constraint_timeline_cast_to_physics_constraint_damping_timelinePtr
+          .asFunction<spine_physics_constraint_damping_timeline Function(spine_physics_constraint_timeline)>();
+
+  spine_physics_constraint_gravity_timeline
+      spine_physics_constraint_timeline_cast_to_physics_constraint_gravity_timeline(
+    spine_physics_constraint_timeline obj,
+  ) {
+    return _spine_physics_constraint_timeline_cast_to_physics_constraint_gravity_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_gravity_timelinePtr = _lookup<
+          ffi.NativeFunction<spine_physics_constraint_gravity_timeline Function(spine_physics_constraint_timeline)>>(
+      'spine_physics_constraint_timeline_cast_to_physics_constraint_gravity_timeline');
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_gravity_timeline =
+      _spine_physics_constraint_timeline_cast_to_physics_constraint_gravity_timelinePtr
+          .asFunction<spine_physics_constraint_gravity_timeline Function(spine_physics_constraint_timeline)>();
+
+  spine_physics_constraint_inertia_timeline
+      spine_physics_constraint_timeline_cast_to_physics_constraint_inertia_timeline(
+    spine_physics_constraint_timeline obj,
+  ) {
+    return _spine_physics_constraint_timeline_cast_to_physics_constraint_inertia_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_inertia_timelinePtr = _lookup<
+          ffi.NativeFunction<spine_physics_constraint_inertia_timeline Function(spine_physics_constraint_timeline)>>(
+      'spine_physics_constraint_timeline_cast_to_physics_constraint_inertia_timeline');
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_inertia_timeline =
+      _spine_physics_constraint_timeline_cast_to_physics_constraint_inertia_timelinePtr
+          .asFunction<spine_physics_constraint_inertia_timeline Function(spine_physics_constraint_timeline)>();
+
+  spine_physics_constraint_mass_timeline spine_physics_constraint_timeline_cast_to_physics_constraint_mass_timeline(
+    spine_physics_constraint_timeline obj,
+  ) {
+    return _spine_physics_constraint_timeline_cast_to_physics_constraint_mass_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_mass_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_mass_timeline Function(spine_physics_constraint_timeline)>>(
+          'spine_physics_constraint_timeline_cast_to_physics_constraint_mass_timeline');
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_mass_timeline =
+      _spine_physics_constraint_timeline_cast_to_physics_constraint_mass_timelinePtr
+          .asFunction<spine_physics_constraint_mass_timeline Function(spine_physics_constraint_timeline)>();
+
+  spine_physics_constraint_mix_timeline spine_physics_constraint_timeline_cast_to_physics_constraint_mix_timeline(
+    spine_physics_constraint_timeline obj,
+  ) {
+    return _spine_physics_constraint_timeline_cast_to_physics_constraint_mix_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_mix_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_mix_timeline Function(spine_physics_constraint_timeline)>>(
+          'spine_physics_constraint_timeline_cast_to_physics_constraint_mix_timeline');
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_mix_timeline =
+      _spine_physics_constraint_timeline_cast_to_physics_constraint_mix_timelinePtr
+          .asFunction<spine_physics_constraint_mix_timeline Function(spine_physics_constraint_timeline)>();
+
+  spine_physics_constraint_strength_timeline
+      spine_physics_constraint_timeline_cast_to_physics_constraint_strength_timeline(
+    spine_physics_constraint_timeline obj,
+  ) {
+    return _spine_physics_constraint_timeline_cast_to_physics_constraint_strength_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_strength_timelinePtr = _lookup<
+          ffi.NativeFunction<spine_physics_constraint_strength_timeline Function(spine_physics_constraint_timeline)>>(
+      'spine_physics_constraint_timeline_cast_to_physics_constraint_strength_timeline');
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_strength_timeline =
+      _spine_physics_constraint_timeline_cast_to_physics_constraint_strength_timelinePtr
+          .asFunction<spine_physics_constraint_strength_timeline Function(spine_physics_constraint_timeline)>();
+
+  spine_physics_constraint_wind_timeline spine_physics_constraint_timeline_cast_to_physics_constraint_wind_timeline(
+    spine_physics_constraint_timeline obj,
+  ) {
+    return _spine_physics_constraint_timeline_cast_to_physics_constraint_wind_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_wind_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_wind_timeline Function(spine_physics_constraint_timeline)>>(
+          'spine_physics_constraint_timeline_cast_to_physics_constraint_wind_timeline');
+  late final _spine_physics_constraint_timeline_cast_to_physics_constraint_wind_timeline =
+      _spine_physics_constraint_timeline_cast_to_physics_constraint_wind_timelinePtr
+          .asFunction<spine_physics_constraint_wind_timeline Function(spine_physics_constraint_timeline)>();
+
+  spine_rotate_timeline spine_bone_timeline1_cast_to_rotate_timeline(
+    spine_bone_timeline1 obj,
+  ) {
+    return _spine_bone_timeline1_cast_to_rotate_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline1_cast_to_rotate_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_rotate_timeline Function(spine_bone_timeline1)>>(
+          'spine_bone_timeline1_cast_to_rotate_timeline');
+  late final _spine_bone_timeline1_cast_to_rotate_timeline = _spine_bone_timeline1_cast_to_rotate_timelinePtr
+      .asFunction<spine_rotate_timeline Function(spine_bone_timeline1)>();
+
+  spine_scale_x_timeline spine_bone_timeline1_cast_to_scale_x_timeline(
+    spine_bone_timeline1 obj,
+  ) {
+    return _spine_bone_timeline1_cast_to_scale_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline1_cast_to_scale_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_x_timeline Function(spine_bone_timeline1)>>(
+          'spine_bone_timeline1_cast_to_scale_x_timeline');
+  late final _spine_bone_timeline1_cast_to_scale_x_timeline = _spine_bone_timeline1_cast_to_scale_x_timelinePtr
+      .asFunction<spine_scale_x_timeline Function(spine_bone_timeline1)>();
+
+  spine_scale_y_timeline spine_bone_timeline1_cast_to_scale_y_timeline(
+    spine_bone_timeline1 obj,
+  ) {
+    return _spine_bone_timeline1_cast_to_scale_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline1_cast_to_scale_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_y_timeline Function(spine_bone_timeline1)>>(
+          'spine_bone_timeline1_cast_to_scale_y_timeline');
+  late final _spine_bone_timeline1_cast_to_scale_y_timeline = _spine_bone_timeline1_cast_to_scale_y_timelinePtr
+      .asFunction<spine_scale_y_timeline Function(spine_bone_timeline1)>();
+
+  spine_shear_x_timeline spine_bone_timeline1_cast_to_shear_x_timeline(
+    spine_bone_timeline1 obj,
+  ) {
+    return _spine_bone_timeline1_cast_to_shear_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline1_cast_to_shear_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_x_timeline Function(spine_bone_timeline1)>>(
+          'spine_bone_timeline1_cast_to_shear_x_timeline');
+  late final _spine_bone_timeline1_cast_to_shear_x_timeline = _spine_bone_timeline1_cast_to_shear_x_timelinePtr
+      .asFunction<spine_shear_x_timeline Function(spine_bone_timeline1)>();
+
+  spine_shear_y_timeline spine_bone_timeline1_cast_to_shear_y_timeline(
+    spine_bone_timeline1 obj,
+  ) {
+    return _spine_bone_timeline1_cast_to_shear_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline1_cast_to_shear_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_y_timeline Function(spine_bone_timeline1)>>(
+          'spine_bone_timeline1_cast_to_shear_y_timeline');
+  late final _spine_bone_timeline1_cast_to_shear_y_timeline = _spine_bone_timeline1_cast_to_shear_y_timelinePtr
+      .asFunction<spine_shear_y_timeline Function(spine_bone_timeline1)>();
+
+  spine_translate_x_timeline spine_bone_timeline1_cast_to_translate_x_timeline(
+    spine_bone_timeline1 obj,
+  ) {
+    return _spine_bone_timeline1_cast_to_translate_x_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline1_cast_to_translate_x_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_x_timeline Function(spine_bone_timeline1)>>(
+          'spine_bone_timeline1_cast_to_translate_x_timeline');
+  late final _spine_bone_timeline1_cast_to_translate_x_timeline = _spine_bone_timeline1_cast_to_translate_x_timelinePtr
+      .asFunction<spine_translate_x_timeline Function(spine_bone_timeline1)>();
+
+  spine_translate_y_timeline spine_bone_timeline1_cast_to_translate_y_timeline(
+    spine_bone_timeline1 obj,
+  ) {
+    return _spine_bone_timeline1_cast_to_translate_y_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline1_cast_to_translate_y_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_y_timeline Function(spine_bone_timeline1)>>(
+          'spine_bone_timeline1_cast_to_translate_y_timeline');
+  late final _spine_bone_timeline1_cast_to_translate_y_timeline = _spine_bone_timeline1_cast_to_translate_y_timelinePtr
+      .asFunction<spine_translate_y_timeline Function(spine_bone_timeline1)>();
+
+  spine_scale_timeline spine_bone_timeline2_cast_to_scale_timeline(
+    spine_bone_timeline2 obj,
+  ) {
+    return _spine_bone_timeline2_cast_to_scale_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline2_cast_to_scale_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_scale_timeline Function(spine_bone_timeline2)>>(
+          'spine_bone_timeline2_cast_to_scale_timeline');
+  late final _spine_bone_timeline2_cast_to_scale_timeline =
+      _spine_bone_timeline2_cast_to_scale_timelinePtr.asFunction<spine_scale_timeline Function(spine_bone_timeline2)>();
+
+  spine_shear_timeline spine_bone_timeline2_cast_to_shear_timeline(
+    spine_bone_timeline2 obj,
+  ) {
+    return _spine_bone_timeline2_cast_to_shear_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline2_cast_to_shear_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_shear_timeline Function(spine_bone_timeline2)>>(
+          'spine_bone_timeline2_cast_to_shear_timeline');
+  late final _spine_bone_timeline2_cast_to_shear_timeline =
+      _spine_bone_timeline2_cast_to_shear_timelinePtr.asFunction<spine_shear_timeline Function(spine_bone_timeline2)>();
+
+  spine_translate_timeline spine_bone_timeline2_cast_to_translate_timeline(
+    spine_bone_timeline2 obj,
+  ) {
+    return _spine_bone_timeline2_cast_to_translate_timeline(
+      obj,
+    );
+  }
+
+  late final _spine_bone_timeline2_cast_to_translate_timelinePtr =
+      _lookup<ffi.NativeFunction<spine_translate_timeline Function(spine_bone_timeline2)>>(
+          'spine_bone_timeline2_cast_to_translate_timeline');
+  late final _spine_bone_timeline2_cast_to_translate_timeline = _spine_bone_timeline2_cast_to_translate_timelinePtr
+      .asFunction<spine_translate_timeline Function(spine_bone_timeline2)>();
+
+  spine_slider spine_slider_base_cast_to_slider(
+    spine_slider_base obj,
+  ) {
+    return _spine_slider_base_cast_to_slider(
+      obj,
+    );
+  }
+
+  late final _spine_slider_base_cast_to_sliderPtr =
+      _lookup<ffi.NativeFunction<spine_slider Function(spine_slider_base)>>('spine_slider_base_cast_to_slider');
+  late final _spine_slider_base_cast_to_slider =
+      _spine_slider_base_cast_to_sliderPtr.asFunction<spine_slider Function(spine_slider_base)>();
+
+  spine_to_rotate spine_to_property_cast_to_to_rotate(
+    spine_to_property obj,
+  ) {
+    return _spine_to_property_cast_to_to_rotate(
+      obj,
+    );
+  }
+
+  late final _spine_to_property_cast_to_to_rotatePtr =
+      _lookup<ffi.NativeFunction<spine_to_rotate Function(spine_to_property)>>('spine_to_property_cast_to_to_rotate');
+  late final _spine_to_property_cast_to_to_rotate =
+      _spine_to_property_cast_to_to_rotatePtr.asFunction<spine_to_rotate Function(spine_to_property)>();
+
+  spine_to_scale_x spine_to_property_cast_to_to_scale_x(
+    spine_to_property obj,
+  ) {
+    return _spine_to_property_cast_to_to_scale_x(
+      obj,
+    );
+  }
+
+  late final _spine_to_property_cast_to_to_scale_xPtr =
+      _lookup<ffi.NativeFunction<spine_to_scale_x Function(spine_to_property)>>('spine_to_property_cast_to_to_scale_x');
+  late final _spine_to_property_cast_to_to_scale_x =
+      _spine_to_property_cast_to_to_scale_xPtr.asFunction<spine_to_scale_x Function(spine_to_property)>();
+
+  spine_to_scale_y spine_to_property_cast_to_to_scale_y(
+    spine_to_property obj,
+  ) {
+    return _spine_to_property_cast_to_to_scale_y(
+      obj,
+    );
+  }
+
+  late final _spine_to_property_cast_to_to_scale_yPtr =
+      _lookup<ffi.NativeFunction<spine_to_scale_y Function(spine_to_property)>>('spine_to_property_cast_to_to_scale_y');
+  late final _spine_to_property_cast_to_to_scale_y =
+      _spine_to_property_cast_to_to_scale_yPtr.asFunction<spine_to_scale_y Function(spine_to_property)>();
+
+  spine_to_shear_y spine_to_property_cast_to_to_shear_y(
+    spine_to_property obj,
+  ) {
+    return _spine_to_property_cast_to_to_shear_y(
+      obj,
+    );
+  }
+
+  late final _spine_to_property_cast_to_to_shear_yPtr =
+      _lookup<ffi.NativeFunction<spine_to_shear_y Function(spine_to_property)>>('spine_to_property_cast_to_to_shear_y');
+  late final _spine_to_property_cast_to_to_shear_y =
+      _spine_to_property_cast_to_to_shear_yPtr.asFunction<spine_to_shear_y Function(spine_to_property)>();
+
+  spine_to_x spine_to_property_cast_to_to_x(
+    spine_to_property obj,
+  ) {
+    return _spine_to_property_cast_to_to_x(
+      obj,
+    );
+  }
+
+  late final _spine_to_property_cast_to_to_xPtr =
+      _lookup<ffi.NativeFunction<spine_to_x Function(spine_to_property)>>('spine_to_property_cast_to_to_x');
+  late final _spine_to_property_cast_to_to_x =
+      _spine_to_property_cast_to_to_xPtr.asFunction<spine_to_x Function(spine_to_property)>();
+
+  spine_to_y spine_to_property_cast_to_to_y(
+    spine_to_property obj,
+  ) {
+    return _spine_to_property_cast_to_to_y(
+      obj,
+    );
+  }
+
+  late final _spine_to_property_cast_to_to_yPtr =
+      _lookup<ffi.NativeFunction<spine_to_y Function(spine_to_property)>>('spine_to_property_cast_to_to_y');
+  late final _spine_to_property_cast_to_to_y =
+      _spine_to_property_cast_to_to_yPtr.asFunction<spine_to_y Function(spine_to_property)>();
+
+  spine_transform_constraint spine_transform_constraint_base_cast_to_transform_constraint(
+    spine_transform_constraint_base obj,
+  ) {
+    return _spine_transform_constraint_base_cast_to_transform_constraint(
+      obj,
+    );
+  }
+
+  late final _spine_transform_constraint_base_cast_to_transform_constraintPtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_cast_to_transform_constraint');
+  late final _spine_transform_constraint_base_cast_to_transform_constraint =
+      _spine_transform_constraint_base_cast_to_transform_constraintPtr
+          .asFunction<spine_transform_constraint Function(spine_transform_constraint_base)>();
+
   spine_alpha_timeline spine_alpha_timeline_create(
     int frameCount,
     int bezierCount,
@@ -16272,20 +23504,6 @@ class SpineDartBindings {
   late final _spine_ik_constraint_is_source_active =
       _spine_ik_constraint_is_source_activePtr.asFunction<bool Function(spine_ik_constraint)>();
 
-  spine_ik_constraint_data spine_ik_constraint_get_data(
-    spine_ik_constraint self,
-  ) {
-    return _spine_ik_constraint_get_data(
-      self,
-    );
-  }
-
-  late final _spine_ik_constraint_get_dataPtr =
-      _lookup<ffi.NativeFunction<spine_ik_constraint_data Function(spine_ik_constraint)>>(
-          'spine_ik_constraint_get_data');
-  late final _spine_ik_constraint_get_data =
-      _spine_ik_constraint_get_dataPtr.asFunction<spine_ik_constraint_data Function(spine_ik_constraint)>();
-
   spine_array_bone_pose spine_ik_constraint_get_bones(
     spine_ik_constraint self,
   ) {
@@ -16390,6 +23608,20 @@ class SpineDartBindings {
       void Function(
           spine_skeleton, spine_bone_pose, spine_bone_pose, double, double, int, bool, bool, double, double)>();
 
+  spine_ik_constraint_data spine_ik_constraint_get_data(
+    spine_ik_constraint self,
+  ) {
+    return _spine_ik_constraint_get_data(
+      self,
+    );
+  }
+
+  late final _spine_ik_constraint_get_dataPtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_data Function(spine_ik_constraint)>>(
+          'spine_ik_constraint_get_data');
+  late final _spine_ik_constraint_get_data =
+      _spine_ik_constraint_get_dataPtr.asFunction<spine_ik_constraint_data Function(spine_ik_constraint)>();
+
   spine_ik_constraint_pose spine_ik_constraint_get_pose(
     spine_ik_constraint self,
   ) {
@@ -16493,6 +23725,200 @@ class SpineDartBindings {
   late final _spine_ik_constraint_rttiPtr =
       _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_ik_constraint_rtti');
   late final _spine_ik_constraint_rtti = _spine_ik_constraint_rttiPtr.asFunction<spine_rtti Function()>();
+
+  void spine_ik_constraint_base_dispose(
+    spine_ik_constraint_base self,
+  ) {
+    return _spine_ik_constraint_base_dispose(
+      self,
+    );
+  }
+
+  late final _spine_ik_constraint_base_disposePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_ik_constraint_base)>>('spine_ik_constraint_base_dispose');
+  late final _spine_ik_constraint_base_dispose =
+      _spine_ik_constraint_base_disposePtr.asFunction<void Function(spine_ik_constraint_base)>();
+
+  spine_ik_constraint_data spine_ik_constraint_base_get_data(
+    spine_ik_constraint_base self,
+  ) {
+    return _spine_ik_constraint_base_get_data(
+      self,
+    );
+  }
+
+  late final _spine_ik_constraint_base_get_dataPtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_data Function(spine_ik_constraint_base)>>(
+          'spine_ik_constraint_base_get_data');
+  late final _spine_ik_constraint_base_get_data =
+      _spine_ik_constraint_base_get_dataPtr.asFunction<spine_ik_constraint_data Function(spine_ik_constraint_base)>();
+
+  spine_ik_constraint_pose spine_ik_constraint_base_get_pose(
+    spine_ik_constraint_base self,
+  ) {
+    return _spine_ik_constraint_base_get_pose(
+      self,
+    );
+  }
+
+  late final _spine_ik_constraint_base_get_posePtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_pose Function(spine_ik_constraint_base)>>(
+          'spine_ik_constraint_base_get_pose');
+  late final _spine_ik_constraint_base_get_pose =
+      _spine_ik_constraint_base_get_posePtr.asFunction<spine_ik_constraint_pose Function(spine_ik_constraint_base)>();
+
+  spine_ik_constraint_pose spine_ik_constraint_base_get_applied_pose(
+    spine_ik_constraint_base self,
+  ) {
+    return _spine_ik_constraint_base_get_applied_pose(
+      self,
+    );
+  }
+
+  late final _spine_ik_constraint_base_get_applied_posePtr =
+      _lookup<ffi.NativeFunction<spine_ik_constraint_pose Function(spine_ik_constraint_base)>>(
+          'spine_ik_constraint_base_get_applied_pose');
+  late final _spine_ik_constraint_base_get_applied_pose = _spine_ik_constraint_base_get_applied_posePtr
+      .asFunction<spine_ik_constraint_pose Function(spine_ik_constraint_base)>();
+
+  void spine_ik_constraint_base_reset_constrained(
+    spine_ik_constraint_base self,
+  ) {
+    return _spine_ik_constraint_base_reset_constrained(
+      self,
+    );
+  }
+
+  late final _spine_ik_constraint_base_reset_constrainedPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_ik_constraint_base)>>(
+          'spine_ik_constraint_base_reset_constrained');
+  late final _spine_ik_constraint_base_reset_constrained =
+      _spine_ik_constraint_base_reset_constrainedPtr.asFunction<void Function(spine_ik_constraint_base)>();
+
+  void spine_ik_constraint_base_constrained(
+    spine_ik_constraint_base self,
+  ) {
+    return _spine_ik_constraint_base_constrained(
+      self,
+    );
+  }
+
+  late final _spine_ik_constraint_base_constrainedPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_ik_constraint_base)>>('spine_ik_constraint_base_constrained');
+  late final _spine_ik_constraint_base_constrained =
+      _spine_ik_constraint_base_constrainedPtr.asFunction<void Function(spine_ik_constraint_base)>();
+
+  bool spine_ik_constraint_base_is_pose_equal_to_applied(
+    spine_ik_constraint_base self,
+  ) {
+    return _spine_ik_constraint_base_is_pose_equal_to_applied(
+      self,
+    );
+  }
+
+  late final _spine_ik_constraint_base_is_pose_equal_to_appliedPtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_ik_constraint_base)>>(
+          'spine_ik_constraint_base_is_pose_equal_to_applied');
+  late final _spine_ik_constraint_base_is_pose_equal_to_applied =
+      _spine_ik_constraint_base_is_pose_equal_to_appliedPtr.asFunction<bool Function(spine_ik_constraint_base)>();
+
+  bool spine_ik_constraint_base_is_active(
+    spine_ik_constraint_base self,
+  ) {
+    return _spine_ik_constraint_base_is_active(
+      self,
+    );
+  }
+
+  late final _spine_ik_constraint_base_is_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_ik_constraint_base)>>('spine_ik_constraint_base_is_active');
+  late final _spine_ik_constraint_base_is_active =
+      _spine_ik_constraint_base_is_activePtr.asFunction<bool Function(spine_ik_constraint_base)>();
+
+  void spine_ik_constraint_base_set_active(
+    spine_ik_constraint_base self,
+    bool active,
+  ) {
+    return _spine_ik_constraint_base_set_active(
+      self,
+      active,
+    );
+  }
+
+  late final _spine_ik_constraint_base_set_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_ik_constraint_base, ffi.Bool)>>(
+          'spine_ik_constraint_base_set_active');
+  late final _spine_ik_constraint_base_set_active =
+      _spine_ik_constraint_base_set_activePtr.asFunction<void Function(spine_ik_constraint_base, bool)>();
+
+  spine_rtti spine_ik_constraint_base_get_rtti(
+    spine_ik_constraint_base self,
+  ) {
+    return _spine_ik_constraint_base_get_rtti(
+      self,
+    );
+  }
+
+  late final _spine_ik_constraint_base_get_rttiPtr =
+      _lookup<ffi.NativeFunction<spine_rtti Function(spine_ik_constraint_base)>>('spine_ik_constraint_base_get_rtti');
+  late final _spine_ik_constraint_base_get_rtti =
+      _spine_ik_constraint_base_get_rttiPtr.asFunction<spine_rtti Function(spine_ik_constraint_base)>();
+
+  void spine_ik_constraint_base_sort(
+    spine_ik_constraint_base self,
+    spine_skeleton skeleton,
+  ) {
+    return _spine_ik_constraint_base_sort(
+      self,
+      skeleton,
+    );
+  }
+
+  late final _spine_ik_constraint_base_sortPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_ik_constraint_base, spine_skeleton)>>(
+          'spine_ik_constraint_base_sort');
+  late final _spine_ik_constraint_base_sort =
+      _spine_ik_constraint_base_sortPtr.asFunction<void Function(spine_ik_constraint_base, spine_skeleton)>();
+
+  bool spine_ik_constraint_base_is_source_active(
+    spine_ik_constraint_base self,
+  ) {
+    return _spine_ik_constraint_base_is_source_active(
+      self,
+    );
+  }
+
+  late final _spine_ik_constraint_base_is_source_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_ik_constraint_base)>>(
+          'spine_ik_constraint_base_is_source_active');
+  late final _spine_ik_constraint_base_is_source_active =
+      _spine_ik_constraint_base_is_source_activePtr.asFunction<bool Function(spine_ik_constraint_base)>();
+
+  void spine_ik_constraint_base_update(
+    spine_ik_constraint_base self,
+    spine_skeleton skeleton,
+    int physics,
+  ) {
+    return _spine_ik_constraint_base_update(
+      self,
+      skeleton,
+      physics,
+    );
+  }
+
+  late final _spine_ik_constraint_base_updatePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_ik_constraint_base, spine_skeleton, ffi.Int32)>>(
+          'spine_ik_constraint_base_update');
+  late final _spine_ik_constraint_base_update =
+      _spine_ik_constraint_base_updatePtr.asFunction<void Function(spine_ik_constraint_base, spine_skeleton, int)>();
+
+  spine_rtti spine_ik_constraint_base_rtti() {
+    return _spine_ik_constraint_base_rtti();
+  }
+
+  late final _spine_ik_constraint_base_rttiPtr =
+      _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_ik_constraint_base_rtti');
+  late final _spine_ik_constraint_base_rtti = _spine_ik_constraint_base_rttiPtr.asFunction<spine_rtti Function()>();
 
   spine_ik_constraint_data spine_ik_constraint_data_create(
     ffi.Pointer<ffi.Char> name,
@@ -18827,6 +26253,203 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_path_constraint_rtti');
   late final _spine_path_constraint_rtti = _spine_path_constraint_rttiPtr.asFunction<spine_rtti Function()>();
 
+  void spine_path_constraint_base_dispose(
+    spine_path_constraint_base self,
+  ) {
+    return _spine_path_constraint_base_dispose(
+      self,
+    );
+  }
+
+  late final _spine_path_constraint_base_disposePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_path_constraint_base)>>('spine_path_constraint_base_dispose');
+  late final _spine_path_constraint_base_dispose =
+      _spine_path_constraint_base_disposePtr.asFunction<void Function(spine_path_constraint_base)>();
+
+  spine_path_constraint_data spine_path_constraint_base_get_data(
+    spine_path_constraint_base self,
+  ) {
+    return _spine_path_constraint_base_get_data(
+      self,
+    );
+  }
+
+  late final _spine_path_constraint_base_get_dataPtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_data Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_get_data');
+  late final _spine_path_constraint_base_get_data = _spine_path_constraint_base_get_dataPtr
+      .asFunction<spine_path_constraint_data Function(spine_path_constraint_base)>();
+
+  spine_path_constraint_pose spine_path_constraint_base_get_pose(
+    spine_path_constraint_base self,
+  ) {
+    return _spine_path_constraint_base_get_pose(
+      self,
+    );
+  }
+
+  late final _spine_path_constraint_base_get_posePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_pose Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_get_pose');
+  late final _spine_path_constraint_base_get_pose = _spine_path_constraint_base_get_posePtr
+      .asFunction<spine_path_constraint_pose Function(spine_path_constraint_base)>();
+
+  spine_path_constraint_pose spine_path_constraint_base_get_applied_pose(
+    spine_path_constraint_base self,
+  ) {
+    return _spine_path_constraint_base_get_applied_pose(
+      self,
+    );
+  }
+
+  late final _spine_path_constraint_base_get_applied_posePtr =
+      _lookup<ffi.NativeFunction<spine_path_constraint_pose Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_get_applied_pose');
+  late final _spine_path_constraint_base_get_applied_pose = _spine_path_constraint_base_get_applied_posePtr
+      .asFunction<spine_path_constraint_pose Function(spine_path_constraint_base)>();
+
+  void spine_path_constraint_base_reset_constrained(
+    spine_path_constraint_base self,
+  ) {
+    return _spine_path_constraint_base_reset_constrained(
+      self,
+    );
+  }
+
+  late final _spine_path_constraint_base_reset_constrainedPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_reset_constrained');
+  late final _spine_path_constraint_base_reset_constrained =
+      _spine_path_constraint_base_reset_constrainedPtr.asFunction<void Function(spine_path_constraint_base)>();
+
+  void spine_path_constraint_base_constrained(
+    spine_path_constraint_base self,
+  ) {
+    return _spine_path_constraint_base_constrained(
+      self,
+    );
+  }
+
+  late final _spine_path_constraint_base_constrainedPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_constrained');
+  late final _spine_path_constraint_base_constrained =
+      _spine_path_constraint_base_constrainedPtr.asFunction<void Function(spine_path_constraint_base)>();
+
+  bool spine_path_constraint_base_is_pose_equal_to_applied(
+    spine_path_constraint_base self,
+  ) {
+    return _spine_path_constraint_base_is_pose_equal_to_applied(
+      self,
+    );
+  }
+
+  late final _spine_path_constraint_base_is_pose_equal_to_appliedPtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_is_pose_equal_to_applied');
+  late final _spine_path_constraint_base_is_pose_equal_to_applied =
+      _spine_path_constraint_base_is_pose_equal_to_appliedPtr.asFunction<bool Function(spine_path_constraint_base)>();
+
+  bool spine_path_constraint_base_is_active(
+    spine_path_constraint_base self,
+  ) {
+    return _spine_path_constraint_base_is_active(
+      self,
+    );
+  }
+
+  late final _spine_path_constraint_base_is_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_is_active');
+  late final _spine_path_constraint_base_is_active =
+      _spine_path_constraint_base_is_activePtr.asFunction<bool Function(spine_path_constraint_base)>();
+
+  void spine_path_constraint_base_set_active(
+    spine_path_constraint_base self,
+    bool active,
+  ) {
+    return _spine_path_constraint_base_set_active(
+      self,
+      active,
+    );
+  }
+
+  late final _spine_path_constraint_base_set_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_path_constraint_base, ffi.Bool)>>(
+          'spine_path_constraint_base_set_active');
+  late final _spine_path_constraint_base_set_active =
+      _spine_path_constraint_base_set_activePtr.asFunction<void Function(spine_path_constraint_base, bool)>();
+
+  spine_rtti spine_path_constraint_base_get_rtti(
+    spine_path_constraint_base self,
+  ) {
+    return _spine_path_constraint_base_get_rtti(
+      self,
+    );
+  }
+
+  late final _spine_path_constraint_base_get_rttiPtr =
+      _lookup<ffi.NativeFunction<spine_rtti Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_get_rtti');
+  late final _spine_path_constraint_base_get_rtti =
+      _spine_path_constraint_base_get_rttiPtr.asFunction<spine_rtti Function(spine_path_constraint_base)>();
+
+  void spine_path_constraint_base_sort(
+    spine_path_constraint_base self,
+    spine_skeleton skeleton,
+  ) {
+    return _spine_path_constraint_base_sort(
+      self,
+      skeleton,
+    );
+  }
+
+  late final _spine_path_constraint_base_sortPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_path_constraint_base, spine_skeleton)>>(
+          'spine_path_constraint_base_sort');
+  late final _spine_path_constraint_base_sort =
+      _spine_path_constraint_base_sortPtr.asFunction<void Function(spine_path_constraint_base, spine_skeleton)>();
+
+  bool spine_path_constraint_base_is_source_active(
+    spine_path_constraint_base self,
+  ) {
+    return _spine_path_constraint_base_is_source_active(
+      self,
+    );
+  }
+
+  late final _spine_path_constraint_base_is_source_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_path_constraint_base)>>(
+          'spine_path_constraint_base_is_source_active');
+  late final _spine_path_constraint_base_is_source_active =
+      _spine_path_constraint_base_is_source_activePtr.asFunction<bool Function(spine_path_constraint_base)>();
+
+  void spine_path_constraint_base_update(
+    spine_path_constraint_base self,
+    spine_skeleton skeleton,
+    int physics,
+  ) {
+    return _spine_path_constraint_base_update(
+      self,
+      skeleton,
+      physics,
+    );
+  }
+
+  late final _spine_path_constraint_base_updatePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_path_constraint_base, spine_skeleton, ffi.Int32)>>(
+          'spine_path_constraint_base_update');
+  late final _spine_path_constraint_base_update = _spine_path_constraint_base_updatePtr
+      .asFunction<void Function(spine_path_constraint_base, spine_skeleton, int)>();
+
+  spine_rtti spine_path_constraint_base_rtti() {
+    return _spine_path_constraint_base_rtti();
+  }
+
+  late final _spine_path_constraint_base_rttiPtr =
+      _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_path_constraint_base_rtti');
+  late final _spine_path_constraint_base_rtti = _spine_path_constraint_base_rttiPtr.asFunction<spine_rtti Function()>();
+
   spine_path_constraint_data spine_path_constraint_data_create(
     ffi.Pointer<ffi.Char> name,
   ) {
@@ -20889,6 +28512,206 @@ class SpineDartBindings {
   late final _spine_physics_constraint_rttiPtr =
       _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_physics_constraint_rtti');
   late final _spine_physics_constraint_rtti = _spine_physics_constraint_rttiPtr.asFunction<spine_rtti Function()>();
+
+  void spine_physics_constraint_base_dispose(
+    spine_physics_constraint_base self,
+  ) {
+    return _spine_physics_constraint_base_dispose(
+      self,
+    );
+  }
+
+  late final _spine_physics_constraint_base_disposePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_dispose');
+  late final _spine_physics_constraint_base_dispose =
+      _spine_physics_constraint_base_disposePtr.asFunction<void Function(spine_physics_constraint_base)>();
+
+  spine_physics_constraint_data spine_physics_constraint_base_get_data(
+    spine_physics_constraint_base self,
+  ) {
+    return _spine_physics_constraint_base_get_data(
+      self,
+    );
+  }
+
+  late final _spine_physics_constraint_base_get_dataPtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_data Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_get_data');
+  late final _spine_physics_constraint_base_get_data = _spine_physics_constraint_base_get_dataPtr
+      .asFunction<spine_physics_constraint_data Function(spine_physics_constraint_base)>();
+
+  spine_physics_constraint_pose spine_physics_constraint_base_get_pose(
+    spine_physics_constraint_base self,
+  ) {
+    return _spine_physics_constraint_base_get_pose(
+      self,
+    );
+  }
+
+  late final _spine_physics_constraint_base_get_posePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_pose Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_get_pose');
+  late final _spine_physics_constraint_base_get_pose = _spine_physics_constraint_base_get_posePtr
+      .asFunction<spine_physics_constraint_pose Function(spine_physics_constraint_base)>();
+
+  spine_physics_constraint_pose spine_physics_constraint_base_get_applied_pose(
+    spine_physics_constraint_base self,
+  ) {
+    return _spine_physics_constraint_base_get_applied_pose(
+      self,
+    );
+  }
+
+  late final _spine_physics_constraint_base_get_applied_posePtr =
+      _lookup<ffi.NativeFunction<spine_physics_constraint_pose Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_get_applied_pose');
+  late final _spine_physics_constraint_base_get_applied_pose = _spine_physics_constraint_base_get_applied_posePtr
+      .asFunction<spine_physics_constraint_pose Function(spine_physics_constraint_base)>();
+
+  void spine_physics_constraint_base_reset_constrained(
+    spine_physics_constraint_base self,
+  ) {
+    return _spine_physics_constraint_base_reset_constrained(
+      self,
+    );
+  }
+
+  late final _spine_physics_constraint_base_reset_constrainedPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_reset_constrained');
+  late final _spine_physics_constraint_base_reset_constrained =
+      _spine_physics_constraint_base_reset_constrainedPtr.asFunction<void Function(spine_physics_constraint_base)>();
+
+  void spine_physics_constraint_base_constrained(
+    spine_physics_constraint_base self,
+  ) {
+    return _spine_physics_constraint_base_constrained(
+      self,
+    );
+  }
+
+  late final _spine_physics_constraint_base_constrainedPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_constrained');
+  late final _spine_physics_constraint_base_constrained =
+      _spine_physics_constraint_base_constrainedPtr.asFunction<void Function(spine_physics_constraint_base)>();
+
+  bool spine_physics_constraint_base_is_pose_equal_to_applied(
+    spine_physics_constraint_base self,
+  ) {
+    return _spine_physics_constraint_base_is_pose_equal_to_applied(
+      self,
+    );
+  }
+
+  late final _spine_physics_constraint_base_is_pose_equal_to_appliedPtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_is_pose_equal_to_applied');
+  late final _spine_physics_constraint_base_is_pose_equal_to_applied =
+      _spine_physics_constraint_base_is_pose_equal_to_appliedPtr
+          .asFunction<bool Function(spine_physics_constraint_base)>();
+
+  bool spine_physics_constraint_base_is_active(
+    spine_physics_constraint_base self,
+  ) {
+    return _spine_physics_constraint_base_is_active(
+      self,
+    );
+  }
+
+  late final _spine_physics_constraint_base_is_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_is_active');
+  late final _spine_physics_constraint_base_is_active =
+      _spine_physics_constraint_base_is_activePtr.asFunction<bool Function(spine_physics_constraint_base)>();
+
+  void spine_physics_constraint_base_set_active(
+    spine_physics_constraint_base self,
+    bool active,
+  ) {
+    return _spine_physics_constraint_base_set_active(
+      self,
+      active,
+    );
+  }
+
+  late final _spine_physics_constraint_base_set_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_physics_constraint_base, ffi.Bool)>>(
+          'spine_physics_constraint_base_set_active');
+  late final _spine_physics_constraint_base_set_active =
+      _spine_physics_constraint_base_set_activePtr.asFunction<void Function(spine_physics_constraint_base, bool)>();
+
+  spine_rtti spine_physics_constraint_base_get_rtti(
+    spine_physics_constraint_base self,
+  ) {
+    return _spine_physics_constraint_base_get_rtti(
+      self,
+    );
+  }
+
+  late final _spine_physics_constraint_base_get_rttiPtr =
+      _lookup<ffi.NativeFunction<spine_rtti Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_get_rtti');
+  late final _spine_physics_constraint_base_get_rtti =
+      _spine_physics_constraint_base_get_rttiPtr.asFunction<spine_rtti Function(spine_physics_constraint_base)>();
+
+  void spine_physics_constraint_base_sort(
+    spine_physics_constraint_base self,
+    spine_skeleton skeleton,
+  ) {
+    return _spine_physics_constraint_base_sort(
+      self,
+      skeleton,
+    );
+  }
+
+  late final _spine_physics_constraint_base_sortPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_physics_constraint_base, spine_skeleton)>>(
+          'spine_physics_constraint_base_sort');
+  late final _spine_physics_constraint_base_sort =
+      _spine_physics_constraint_base_sortPtr.asFunction<void Function(spine_physics_constraint_base, spine_skeleton)>();
+
+  bool spine_physics_constraint_base_is_source_active(
+    spine_physics_constraint_base self,
+  ) {
+    return _spine_physics_constraint_base_is_source_active(
+      self,
+    );
+  }
+
+  late final _spine_physics_constraint_base_is_source_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_physics_constraint_base)>>(
+          'spine_physics_constraint_base_is_source_active');
+  late final _spine_physics_constraint_base_is_source_active =
+      _spine_physics_constraint_base_is_source_activePtr.asFunction<bool Function(spine_physics_constraint_base)>();
+
+  void spine_physics_constraint_base_update(
+    spine_physics_constraint_base self,
+    spine_skeleton skeleton,
+    int physics,
+  ) {
+    return _spine_physics_constraint_base_update(
+      self,
+      skeleton,
+      physics,
+    );
+  }
+
+  late final _spine_physics_constraint_base_updatePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_physics_constraint_base, spine_skeleton, ffi.Int32)>>(
+          'spine_physics_constraint_base_update');
+  late final _spine_physics_constraint_base_update = _spine_physics_constraint_base_updatePtr
+      .asFunction<void Function(spine_physics_constraint_base, spine_skeleton, int)>();
+
+  spine_rtti spine_physics_constraint_base_rtti() {
+    return _spine_physics_constraint_base_rtti();
+  }
+
+  late final _spine_physics_constraint_base_rttiPtr =
+      _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_physics_constraint_base_rtti');
+  late final _spine_physics_constraint_base_rtti =
+      _spine_physics_constraint_base_rttiPtr.asFunction<spine_rtti Function()>();
 
   spine_physics_constraint_damping_timeline spine_physics_constraint_damping_timeline_create(
     int frameCount,
@@ -33252,6 +41075,190 @@ class SpineDartBindings {
   late final _spine_slider_rttiPtr = _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_slider_rtti');
   late final _spine_slider_rtti = _spine_slider_rttiPtr.asFunction<spine_rtti Function()>();
 
+  void spine_slider_base_dispose(
+    spine_slider_base self,
+  ) {
+    return _spine_slider_base_dispose(
+      self,
+    );
+  }
+
+  late final _spine_slider_base_disposePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_slider_base)>>('spine_slider_base_dispose');
+  late final _spine_slider_base_dispose = _spine_slider_base_disposePtr.asFunction<void Function(spine_slider_base)>();
+
+  spine_slider_data spine_slider_base_get_data(
+    spine_slider_base self,
+  ) {
+    return _spine_slider_base_get_data(
+      self,
+    );
+  }
+
+  late final _spine_slider_base_get_dataPtr =
+      _lookup<ffi.NativeFunction<spine_slider_data Function(spine_slider_base)>>('spine_slider_base_get_data');
+  late final _spine_slider_base_get_data =
+      _spine_slider_base_get_dataPtr.asFunction<spine_slider_data Function(spine_slider_base)>();
+
+  spine_slider_pose spine_slider_base_get_pose(
+    spine_slider_base self,
+  ) {
+    return _spine_slider_base_get_pose(
+      self,
+    );
+  }
+
+  late final _spine_slider_base_get_posePtr =
+      _lookup<ffi.NativeFunction<spine_slider_pose Function(spine_slider_base)>>('spine_slider_base_get_pose');
+  late final _spine_slider_base_get_pose =
+      _spine_slider_base_get_posePtr.asFunction<spine_slider_pose Function(spine_slider_base)>();
+
+  spine_slider_pose spine_slider_base_get_applied_pose(
+    spine_slider_base self,
+  ) {
+    return _spine_slider_base_get_applied_pose(
+      self,
+    );
+  }
+
+  late final _spine_slider_base_get_applied_posePtr =
+      _lookup<ffi.NativeFunction<spine_slider_pose Function(spine_slider_base)>>('spine_slider_base_get_applied_pose');
+  late final _spine_slider_base_get_applied_pose =
+      _spine_slider_base_get_applied_posePtr.asFunction<spine_slider_pose Function(spine_slider_base)>();
+
+  void spine_slider_base_reset_constrained(
+    spine_slider_base self,
+  ) {
+    return _spine_slider_base_reset_constrained(
+      self,
+    );
+  }
+
+  late final _spine_slider_base_reset_constrainedPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_slider_base)>>('spine_slider_base_reset_constrained');
+  late final _spine_slider_base_reset_constrained =
+      _spine_slider_base_reset_constrainedPtr.asFunction<void Function(spine_slider_base)>();
+
+  void spine_slider_base_constrained(
+    spine_slider_base self,
+  ) {
+    return _spine_slider_base_constrained(
+      self,
+    );
+  }
+
+  late final _spine_slider_base_constrainedPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_slider_base)>>('spine_slider_base_constrained');
+  late final _spine_slider_base_constrained =
+      _spine_slider_base_constrainedPtr.asFunction<void Function(spine_slider_base)>();
+
+  bool spine_slider_base_is_pose_equal_to_applied(
+    spine_slider_base self,
+  ) {
+    return _spine_slider_base_is_pose_equal_to_applied(
+      self,
+    );
+  }
+
+  late final _spine_slider_base_is_pose_equal_to_appliedPtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_slider_base)>>('spine_slider_base_is_pose_equal_to_applied');
+  late final _spine_slider_base_is_pose_equal_to_applied =
+      _spine_slider_base_is_pose_equal_to_appliedPtr.asFunction<bool Function(spine_slider_base)>();
+
+  bool spine_slider_base_is_active(
+    spine_slider_base self,
+  ) {
+    return _spine_slider_base_is_active(
+      self,
+    );
+  }
+
+  late final _spine_slider_base_is_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_slider_base)>>('spine_slider_base_is_active');
+  late final _spine_slider_base_is_active =
+      _spine_slider_base_is_activePtr.asFunction<bool Function(spine_slider_base)>();
+
+  void spine_slider_base_set_active(
+    spine_slider_base self,
+    bool active,
+  ) {
+    return _spine_slider_base_set_active(
+      self,
+      active,
+    );
+  }
+
+  late final _spine_slider_base_set_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_slider_base, ffi.Bool)>>('spine_slider_base_set_active');
+  late final _spine_slider_base_set_active =
+      _spine_slider_base_set_activePtr.asFunction<void Function(spine_slider_base, bool)>();
+
+  spine_rtti spine_slider_base_get_rtti(
+    spine_slider_base self,
+  ) {
+    return _spine_slider_base_get_rtti(
+      self,
+    );
+  }
+
+  late final _spine_slider_base_get_rttiPtr =
+      _lookup<ffi.NativeFunction<spine_rtti Function(spine_slider_base)>>('spine_slider_base_get_rtti');
+  late final _spine_slider_base_get_rtti =
+      _spine_slider_base_get_rttiPtr.asFunction<spine_rtti Function(spine_slider_base)>();
+
+  void spine_slider_base_sort(
+    spine_slider_base self,
+    spine_skeleton skeleton,
+  ) {
+    return _spine_slider_base_sort(
+      self,
+      skeleton,
+    );
+  }
+
+  late final _spine_slider_base_sortPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_slider_base, spine_skeleton)>>('spine_slider_base_sort');
+  late final _spine_slider_base_sort =
+      _spine_slider_base_sortPtr.asFunction<void Function(spine_slider_base, spine_skeleton)>();
+
+  bool spine_slider_base_is_source_active(
+    spine_slider_base self,
+  ) {
+    return _spine_slider_base_is_source_active(
+      self,
+    );
+  }
+
+  late final _spine_slider_base_is_source_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_slider_base)>>('spine_slider_base_is_source_active');
+  late final _spine_slider_base_is_source_active =
+      _spine_slider_base_is_source_activePtr.asFunction<bool Function(spine_slider_base)>();
+
+  void spine_slider_base_update(
+    spine_slider_base self,
+    spine_skeleton skeleton,
+    int physics,
+  ) {
+    return _spine_slider_base_update(
+      self,
+      skeleton,
+      physics,
+    );
+  }
+
+  late final _spine_slider_base_updatePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_slider_base, spine_skeleton, ffi.Int32)>>(
+          'spine_slider_base_update');
+  late final _spine_slider_base_update =
+      _spine_slider_base_updatePtr.asFunction<void Function(spine_slider_base, spine_skeleton, int)>();
+
+  spine_rtti spine_slider_base_rtti() {
+    return _spine_slider_base_rtti();
+  }
+
+  late final _spine_slider_base_rttiPtr = _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_slider_base_rtti');
+  late final _spine_slider_base_rtti = _spine_slider_base_rttiPtr.asFunction<spine_rtti Function()>();
+
   spine_slider_data spine_slider_data_create(
     ffi.Pointer<ffi.Char> name,
   ) {
@@ -37466,6 +45473,206 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_transform_constraint_rtti');
   late final _spine_transform_constraint_rtti = _spine_transform_constraint_rttiPtr.asFunction<spine_rtti Function()>();
 
+  void spine_transform_constraint_base_dispose(
+    spine_transform_constraint_base self,
+  ) {
+    return _spine_transform_constraint_base_dispose(
+      self,
+    );
+  }
+
+  late final _spine_transform_constraint_base_disposePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_dispose');
+  late final _spine_transform_constraint_base_dispose =
+      _spine_transform_constraint_base_disposePtr.asFunction<void Function(spine_transform_constraint_base)>();
+
+  spine_transform_constraint_data spine_transform_constraint_base_get_data(
+    spine_transform_constraint_base self,
+  ) {
+    return _spine_transform_constraint_base_get_data(
+      self,
+    );
+  }
+
+  late final _spine_transform_constraint_base_get_dataPtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_data Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_get_data');
+  late final _spine_transform_constraint_base_get_data = _spine_transform_constraint_base_get_dataPtr
+      .asFunction<spine_transform_constraint_data Function(spine_transform_constraint_base)>();
+
+  spine_transform_constraint_pose spine_transform_constraint_base_get_pose(
+    spine_transform_constraint_base self,
+  ) {
+    return _spine_transform_constraint_base_get_pose(
+      self,
+    );
+  }
+
+  late final _spine_transform_constraint_base_get_posePtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_pose Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_get_pose');
+  late final _spine_transform_constraint_base_get_pose = _spine_transform_constraint_base_get_posePtr
+      .asFunction<spine_transform_constraint_pose Function(spine_transform_constraint_base)>();
+
+  spine_transform_constraint_pose spine_transform_constraint_base_get_applied_pose(
+    spine_transform_constraint_base self,
+  ) {
+    return _spine_transform_constraint_base_get_applied_pose(
+      self,
+    );
+  }
+
+  late final _spine_transform_constraint_base_get_applied_posePtr =
+      _lookup<ffi.NativeFunction<spine_transform_constraint_pose Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_get_applied_pose');
+  late final _spine_transform_constraint_base_get_applied_pose = _spine_transform_constraint_base_get_applied_posePtr
+      .asFunction<spine_transform_constraint_pose Function(spine_transform_constraint_base)>();
+
+  void spine_transform_constraint_base_reset_constrained(
+    spine_transform_constraint_base self,
+  ) {
+    return _spine_transform_constraint_base_reset_constrained(
+      self,
+    );
+  }
+
+  late final _spine_transform_constraint_base_reset_constrainedPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_reset_constrained');
+  late final _spine_transform_constraint_base_reset_constrained = _spine_transform_constraint_base_reset_constrainedPtr
+      .asFunction<void Function(spine_transform_constraint_base)>();
+
+  void spine_transform_constraint_base_constrained(
+    spine_transform_constraint_base self,
+  ) {
+    return _spine_transform_constraint_base_constrained(
+      self,
+    );
+  }
+
+  late final _spine_transform_constraint_base_constrainedPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_constrained');
+  late final _spine_transform_constraint_base_constrained =
+      _spine_transform_constraint_base_constrainedPtr.asFunction<void Function(spine_transform_constraint_base)>();
+
+  bool spine_transform_constraint_base_is_pose_equal_to_applied(
+    spine_transform_constraint_base self,
+  ) {
+    return _spine_transform_constraint_base_is_pose_equal_to_applied(
+      self,
+    );
+  }
+
+  late final _spine_transform_constraint_base_is_pose_equal_to_appliedPtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_is_pose_equal_to_applied');
+  late final _spine_transform_constraint_base_is_pose_equal_to_applied =
+      _spine_transform_constraint_base_is_pose_equal_to_appliedPtr
+          .asFunction<bool Function(spine_transform_constraint_base)>();
+
+  bool spine_transform_constraint_base_is_active(
+    spine_transform_constraint_base self,
+  ) {
+    return _spine_transform_constraint_base_is_active(
+      self,
+    );
+  }
+
+  late final _spine_transform_constraint_base_is_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_is_active');
+  late final _spine_transform_constraint_base_is_active =
+      _spine_transform_constraint_base_is_activePtr.asFunction<bool Function(spine_transform_constraint_base)>();
+
+  void spine_transform_constraint_base_set_active(
+    spine_transform_constraint_base self,
+    bool active,
+  ) {
+    return _spine_transform_constraint_base_set_active(
+      self,
+      active,
+    );
+  }
+
+  late final _spine_transform_constraint_base_set_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_transform_constraint_base, ffi.Bool)>>(
+          'spine_transform_constraint_base_set_active');
+  late final _spine_transform_constraint_base_set_active =
+      _spine_transform_constraint_base_set_activePtr.asFunction<void Function(spine_transform_constraint_base, bool)>();
+
+  spine_rtti spine_transform_constraint_base_get_rtti(
+    spine_transform_constraint_base self,
+  ) {
+    return _spine_transform_constraint_base_get_rtti(
+      self,
+    );
+  }
+
+  late final _spine_transform_constraint_base_get_rttiPtr =
+      _lookup<ffi.NativeFunction<spine_rtti Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_get_rtti');
+  late final _spine_transform_constraint_base_get_rtti =
+      _spine_transform_constraint_base_get_rttiPtr.asFunction<spine_rtti Function(spine_transform_constraint_base)>();
+
+  void spine_transform_constraint_base_sort(
+    spine_transform_constraint_base self,
+    spine_skeleton skeleton,
+  ) {
+    return _spine_transform_constraint_base_sort(
+      self,
+      skeleton,
+    );
+  }
+
+  late final _spine_transform_constraint_base_sortPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_transform_constraint_base, spine_skeleton)>>(
+          'spine_transform_constraint_base_sort');
+  late final _spine_transform_constraint_base_sort = _spine_transform_constraint_base_sortPtr
+      .asFunction<void Function(spine_transform_constraint_base, spine_skeleton)>();
+
+  bool spine_transform_constraint_base_is_source_active(
+    spine_transform_constraint_base self,
+  ) {
+    return _spine_transform_constraint_base_is_source_active(
+      self,
+    );
+  }
+
+  late final _spine_transform_constraint_base_is_source_activePtr =
+      _lookup<ffi.NativeFunction<ffi.Bool Function(spine_transform_constraint_base)>>(
+          'spine_transform_constraint_base_is_source_active');
+  late final _spine_transform_constraint_base_is_source_active =
+      _spine_transform_constraint_base_is_source_activePtr.asFunction<bool Function(spine_transform_constraint_base)>();
+
+  void spine_transform_constraint_base_update(
+    spine_transform_constraint_base self,
+    spine_skeleton skeleton,
+    int physics,
+  ) {
+    return _spine_transform_constraint_base_update(
+      self,
+      skeleton,
+      physics,
+    );
+  }
+
+  late final _spine_transform_constraint_base_updatePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(spine_transform_constraint_base, spine_skeleton, ffi.Int32)>>(
+          'spine_transform_constraint_base_update');
+  late final _spine_transform_constraint_base_update = _spine_transform_constraint_base_updatePtr
+      .asFunction<void Function(spine_transform_constraint_base, spine_skeleton, int)>();
+
+  spine_rtti spine_transform_constraint_base_rtti() {
+    return _spine_transform_constraint_base_rtti();
+  }
+
+  late final _spine_transform_constraint_base_rttiPtr =
+      _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_transform_constraint_base_rtti');
+  late final _spine_transform_constraint_base_rtti =
+      _spine_transform_constraint_base_rttiPtr.asFunction<spine_rtti Function()>();
+
   spine_transform_constraint_data spine_transform_constraint_data_create(
     ffi.Pointer<ffi.Char> name,
   ) {
@@ -40148,6 +48355,8 @@ final class spine_from_y_wrapper extends ffi.Opaque {}
 
 final class spine_ik_constraint_wrapper extends ffi.Opaque {}
 
+final class spine_ik_constraint_base_wrapper extends ffi.Opaque {}
+
 final class spine_ik_constraint_data_wrapper extends ffi.Opaque {}
 
 final class spine_ik_constraint_pose_wrapper extends ffi.Opaque {}
@@ -40164,6 +48373,8 @@ final class spine_path_attachment_wrapper extends ffi.Opaque {}
 
 final class spine_path_constraint_wrapper extends ffi.Opaque {}
 
+final class spine_path_constraint_base_wrapper extends ffi.Opaque {}
+
 final class spine_path_constraint_data_wrapper extends ffi.Opaque {}
 
 final class spine_path_constraint_mix_timeline_wrapper extends ffi.Opaque {}
@@ -40175,6 +48386,8 @@ final class spine_path_constraint_position_timeline_wrapper extends ffi.Opaque {
 final class spine_path_constraint_spacing_timeline_wrapper extends ffi.Opaque {}
 
 final class spine_physics_constraint_wrapper extends ffi.Opaque {}
+
+final class spine_physics_constraint_base_wrapper extends ffi.Opaque {}
 
 final class spine_physics_constraint_damping_timeline_wrapper extends ffi.Opaque {}
 
@@ -40258,6 +48471,8 @@ final class spine_skin_wrapper extends ffi.Opaque {}
 
 final class spine_slider_wrapper extends ffi.Opaque {}
 
+final class spine_slider_base_wrapper extends ffi.Opaque {}
+
 final class spine_slider_data_wrapper extends ffi.Opaque {}
 
 final class spine_slider_mix_timeline_wrapper extends ffi.Opaque {}
@@ -40297,6 +48512,8 @@ final class spine_to_y_wrapper extends ffi.Opaque {}
 final class spine_track_entry_wrapper extends ffi.Opaque {}
 
 final class spine_transform_constraint_wrapper extends ffi.Opaque {}
+
+final class spine_transform_constraint_base_wrapper extends ffi.Opaque {}
 
 final class spine_transform_constraint_data_wrapper extends ffi.Opaque {}
 
@@ -40679,41 +48896,36 @@ typedef Dartspine_animation_state_listenerFunction = void Function(
     spine_animation_state state, int type, spine_track_entry entry, spine_event event, ffi.Pointer<ffi.Void> user_data);
 
 /// Forward declarations for all non-enum types
+typedef spine_curve_timeline1 = ffi.Pointer<spine_curve_timeline1_wrapper>;
 typedef spine_alpha_timeline = ffi.Pointer<spine_alpha_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_atlas_attachment_loader = ffi.Pointer<spine_atlas_attachment_loader_wrapper>;
+typedef spine_curve_timeline = ffi.Pointer<spine_curve_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_region_attachment = ffi.Pointer<spine_region_attachment_wrapper>;
-typedef spine_sequence = ffi.Pointer<spine_sequence_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_mesh_attachment = ffi.Pointer<spine_mesh_attachment_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_path_attachment = ffi.Pointer<spine_path_attachment_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_point_attachment = ffi.Pointer<spine_point_attachment_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_clipping_attachment = ffi.Pointer<spine_clipping_attachment_wrapper>;
+typedef spine_slot_timeline = ffi.Pointer<spine_slot_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_attachment_loader = ffi.Pointer<spine_attachment_loader_wrapper>;
+typedef spine_atlas_attachment_loader = ffi.Pointer<spine_atlas_attachment_loader_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_attachment_timeline = ffi.Pointer<spine_attachment_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_color = ffi.Pointer<spine_color_wrapper>;
+typedef spine_posed = ffi.Pointer<spine_posed_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_bone_timeline = ffi.Pointer<spine_bone_timeline_wrapper>;
+typedef spine_posed_active = ffi.Pointer<spine_posed_active_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_posed_data = ffi.Pointer<spine_posed_data_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_bone_timeline1 = ffi.Pointer<spine_bone_timeline1_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_bone_timeline = ffi.Pointer<spine_bone_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_bone_timeline2 = ffi.Pointer<spine_bone_timeline2_wrapper>;
@@ -40722,25 +48934,20 @@ typedef spine_bone_timeline2 = ffi.Pointer<spine_bone_timeline2_wrapper>;
 typedef spine_vertex_attachment = ffi.Pointer<spine_vertex_attachment_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_constraint_timeline = ffi.Pointer<spine_constraint_timeline_wrapper>;
+typedef spine_clipping_attachment = ffi.Pointer<spine_clipping_attachment_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_constraint_timeline1 = ffi.Pointer<spine_constraint_timeline1_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_curve_timeline = ffi.Pointer<spine_curve_timeline_wrapper>;
+typedef spine_constraint_timeline = ffi.Pointer<spine_constraint_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_curve_timeline1 = ffi.Pointer<spine_curve_timeline1_wrapper>;
-
-/// Forward declarations for all non-enum types
+typedef spine_slot_curve_timeline = ffi.Pointer<spine_slot_curve_timeline_wrapper>;
 typedef spine_deform_timeline = ffi.Pointer<spine_deform_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_draw_order_timeline = ffi.Pointer<spine_draw_order_timeline_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_event_queue_entry = ffi.Pointer<spine_event_queue_entry_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_event_timeline = ffi.Pointer<spine_event_timeline_wrapper>;
@@ -40764,11 +48971,11 @@ typedef spine_from_x = ffi.Pointer<spine_from_x_wrapper>;
 typedef spine_from_y = ffi.Pointer<spine_from_y_wrapper>;
 
 /// Forward declarations for all non-enum types
+typedef spine_ik_constraint_base = ffi.Pointer<spine_ik_constraint_base_wrapper>;
 typedef spine_ik_constraint = ffi.Pointer<spine_ik_constraint_wrapper>;
-typedef spine_ik_constraint_data = ffi.Pointer<spine_ik_constraint_data_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_ik_constraint_pose = ffi.Pointer<spine_ik_constraint_pose_wrapper>;
+typedef spine_ik_constraint_data = ffi.Pointer<spine_ik_constraint_data_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_ik_constraint_timeline = ffi.Pointer<spine_ik_constraint_timeline_wrapper>;
@@ -40777,14 +48984,17 @@ typedef spine_ik_constraint_timeline = ffi.Pointer<spine_ik_constraint_timeline_
 typedef spine_inherit_timeline = ffi.Pointer<spine_inherit_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_linked_mesh = ffi.Pointer<spine_linked_mesh_wrapper>;
+typedef spine_mesh_attachment = ffi.Pointer<spine_mesh_attachment_wrapper>;
 
 /// Forward declarations for all non-enum types
+typedef spine_path_attachment = ffi.Pointer<spine_path_attachment_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_path_constraint_base = ffi.Pointer<spine_path_constraint_base_wrapper>;
 typedef spine_path_constraint = ffi.Pointer<spine_path_constraint_wrapper>;
-typedef spine_path_constraint_data = ffi.Pointer<spine_path_constraint_data_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_path_constraint_pose = ffi.Pointer<spine_path_constraint_pose_wrapper>;
+typedef spine_path_constraint_data = ffi.Pointer<spine_path_constraint_data_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_path_constraint_mix_timeline = ffi.Pointer<spine_path_constraint_mix_timeline_wrapper>;
@@ -40796,13 +49006,14 @@ typedef spine_path_constraint_position_timeline = ffi.Pointer<spine_path_constra
 typedef spine_path_constraint_spacing_timeline = ffi.Pointer<spine_path_constraint_spacing_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_physics_constraint_data = ffi.Pointer<spine_physics_constraint_data_wrapper>;
+typedef spine_physics_constraint_base = ffi.Pointer<spine_physics_constraint_base_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_physics_constraint_pose = ffi.Pointer<spine_physics_constraint_pose_wrapper>;
-
-/// Forward declarations for all non-enum types
+typedef spine_physics_constraint_timeline = ffi.Pointer<spine_physics_constraint_timeline_wrapper>;
 typedef spine_physics_constraint_damping_timeline = ffi.Pointer<spine_physics_constraint_damping_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_physics_constraint_data = ffi.Pointer<spine_physics_constraint_data_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_physics_constraint_gravity_timeline = ffi.Pointer<spine_physics_constraint_gravity_timeline_wrapper>;
@@ -40823,19 +49034,13 @@ typedef spine_physics_constraint_reset_timeline = ffi.Pointer<spine_physics_cons
 typedef spine_physics_constraint_strength_timeline = ffi.Pointer<spine_physics_constraint_strength_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_physics_constraint_timeline = ffi.Pointer<spine_physics_constraint_timeline_wrapper>;
-
-/// Forward declarations for all non-enum types
 typedef spine_physics_constraint_wind_timeline = ffi.Pointer<spine_physics_constraint_wind_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_posed = ffi.Pointer<spine_posed_wrapper>;
+typedef spine_point_attachment = ffi.Pointer<spine_point_attachment_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_posed_active = ffi.Pointer<spine_posed_active_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_posed_data = ffi.Pointer<spine_posed_data_wrapper>;
+typedef spine_region_attachment = ffi.Pointer<spine_region_attachment_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_rgb2_timeline = ffi.Pointer<spine_rgb2_timeline_wrapper>;
@@ -40862,9 +49067,6 @@ typedef spine_scale_x_timeline = ffi.Pointer<spine_scale_x_timeline_wrapper>;
 typedef spine_scale_y_timeline = ffi.Pointer<spine_scale_y_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_slot_pose = ffi.Pointer<spine_slot_pose_wrapper>;
-
-/// Forward declarations for all non-enum types
 typedef spine_sequence_timeline = ffi.Pointer<spine_sequence_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
@@ -40877,41 +49079,17 @@ typedef spine_shear_x_timeline = ffi.Pointer<spine_shear_x_timeline_wrapper>;
 typedef spine_shear_y_timeline = ffi.Pointer<spine_shear_y_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_skeleton_clipping = ffi.Pointer<spine_skeleton_clipping_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_skeleton_binary = ffi.Pointer<spine_skeleton_binary_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_skeleton_bounds = ffi.Pointer<spine_skeleton_bounds_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_skeleton_json = ffi.Pointer<spine_skeleton_json_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_skeleton_renderer = ffi.Pointer<spine_skeleton_renderer_wrapper>;
-
-/// Forward declarations for all non-enum types
+typedef spine_slider_base = ffi.Pointer<spine_slider_base_wrapper>;
 typedef spine_slider = ffi.Pointer<spine_slider_wrapper>;
-typedef spine_slider_data = ffi.Pointer<spine_slider_data_wrapper>;
 
 /// Forward declarations for all non-enum types
-typedef spine_slider_pose = ffi.Pointer<spine_slider_pose_wrapper>;
+typedef spine_slider_data = ffi.Pointer<spine_slider_data_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_slider_mix_timeline = ffi.Pointer<spine_slider_mix_timeline_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_slider_timeline = ffi.Pointer<spine_slider_timeline_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_slot_curve_timeline = ffi.Pointer<spine_slot_curve_timeline_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_slot_timeline = ffi.Pointer<spine_slot_timeline_wrapper>;
-
-/// Forward declarations for all non-enum types
-typedef spine_transform_constraint_pose = ffi.Pointer<spine_transform_constraint_pose_wrapper>;
 
 /// Forward declarations for all non-enum types
 typedef spine_to_rotate = ffi.Pointer<spine_to_rotate_wrapper>;
@@ -40932,7 +49110,10 @@ typedef spine_to_x = ffi.Pointer<spine_to_x_wrapper>;
 typedef spine_to_y = ffi.Pointer<spine_to_y_wrapper>;
 
 /// Forward declarations for all non-enum types
+typedef spine_transform_constraint_base = ffi.Pointer<spine_transform_constraint_base_wrapper>;
 typedef spine_transform_constraint = ffi.Pointer<spine_transform_constraint_wrapper>;
+
+/// Forward declarations for all non-enum types
 typedef spine_transform_constraint_data = ffi.Pointer<spine_transform_constraint_data_wrapper>;
 
 /// Forward declarations for all non-enum types
@@ -40946,3 +49127,48 @@ typedef spine_translate_x_timeline = ffi.Pointer<spine_translate_x_timeline_wrap
 
 /// Forward declarations for all non-enum types
 typedef spine_translate_y_timeline = ffi.Pointer<spine_translate_y_timeline_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_sequence = ffi.Pointer<spine_sequence_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_color = ffi.Pointer<spine_color_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_event_queue_entry = ffi.Pointer<spine_event_queue_entry_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_ik_constraint_pose = ffi.Pointer<spine_ik_constraint_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_linked_mesh = ffi.Pointer<spine_linked_mesh_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_path_constraint_pose = ffi.Pointer<spine_path_constraint_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_physics_constraint_pose = ffi.Pointer<spine_physics_constraint_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_slot_pose = ffi.Pointer<spine_slot_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_skeleton_clipping = ffi.Pointer<spine_skeleton_clipping_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_skeleton_binary = ffi.Pointer<spine_skeleton_binary_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_skeleton_bounds = ffi.Pointer<spine_skeleton_bounds_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_skeleton_json = ffi.Pointer<spine_skeleton_json_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_skeleton_renderer = ffi.Pointer<spine_skeleton_renderer_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_slider_pose = ffi.Pointer<spine_slider_pose_wrapper>;
+
+/// Forward declarations for all non-enum types
+typedef spine_transform_constraint_pose = ffi.Pointer<spine_transform_constraint_pose_wrapper>;

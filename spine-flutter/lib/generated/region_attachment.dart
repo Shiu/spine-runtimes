@@ -44,7 +44,8 @@ import 'texture_region.dart';
 class RegionAttachment extends Attachment {
   final Pointer<spine_region_attachment_wrapper> _ptr;
 
-  RegionAttachment.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  RegionAttachment.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_region_attachment_cast_to_attachment(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

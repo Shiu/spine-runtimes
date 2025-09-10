@@ -38,7 +38,8 @@ import 'from_property.dart';
 class FromRotate extends FromProperty {
   final Pointer<spine_from_rotate_wrapper> _ptr;
 
-  FromRotate.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  FromRotate.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_from_rotate_cast_to_from_property(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

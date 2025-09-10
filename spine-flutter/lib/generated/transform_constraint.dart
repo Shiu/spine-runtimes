@@ -32,22 +32,18 @@
 import 'package:universal_ffi/ffi.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
-import 'rtti.dart';
 import 'arrays.dart';
 import 'bone.dart';
-import 'constraint.dart';
-import 'physics.dart';
-import 'posed.dart';
-import 'posed_active.dart';
 import 'skeleton.dart';
+import 'transform_constraint_base.dart';
 import 'transform_constraint_data.dart';
-import 'transform_constraint_pose.dart';
 
 /// TransformConstraint wrapper
-class TransformConstraint extends PosedActive implements Posed, Constraint {
+class TransformConstraint extends TransformConstraintBase {
   final Pointer<spine_transform_constraint_wrapper> _ptr;
 
-  TransformConstraint.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  TransformConstraint.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_transform_constraint_cast_to_transform_constraint_base(_ptr));
 
   /// Get the native pointer for FFI calls
   @override
@@ -64,31 +60,9 @@ class TransformConstraint extends PosedActive implements Posed, Constraint {
     SpineBindings.bindings.spine_transform_constraint_dispose(_ptr);
   }
 
-  @override
-  Rtti get rtti {
-    final result = SpineBindings.bindings.spine_transform_constraint_get_rtti(_ptr);
-    return Rtti.fromPointer(result);
-  }
-
   TransformConstraint copy(Skeleton skeleton) {
     final result = SpineBindings.bindings.spine_transform_constraint_copy(_ptr, skeleton.nativePtr.cast());
     return TransformConstraint.fromPointer(result);
-  }
-
-  @override
-  void update(Skeleton skeleton, Physics physics) {
-    SpineBindings.bindings.spine_transform_constraint_update(_ptr, skeleton.nativePtr.cast(), physics.value);
-  }
-
-  @override
-  void sort(Skeleton skeleton) {
-    SpineBindings.bindings.spine_transform_constraint_sort(_ptr, skeleton.nativePtr.cast());
-  }
-
-  @override
-  bool get isSourceActive {
-    final result = SpineBindings.bindings.spine_transform_constraint_is_source_active(_ptr);
-    return result;
   }
 
   ArrayBonePose get bones {
@@ -103,42 +77,5 @@ class TransformConstraint extends PosedActive implements Posed, Constraint {
 
   set source(Bone value) {
     SpineBindings.bindings.spine_transform_constraint_set_source(_ptr, value.nativePtr.cast());
-  }
-
-  @override
-  TransformConstraintData get data {
-    final result = SpineBindings.bindings.spine_transform_constraint_get_data(_ptr);
-    return TransformConstraintData.fromPointer(result);
-  }
-
-  TransformConstraintPose get pose {
-    final result = SpineBindings.bindings.spine_transform_constraint_get_pose(_ptr);
-    return TransformConstraintPose.fromPointer(result);
-  }
-
-  TransformConstraintPose get appliedPose {
-    final result = SpineBindings.bindings.spine_transform_constraint_get_applied_pose(_ptr);
-    return TransformConstraintPose.fromPointer(result);
-  }
-
-  @override
-  void resetConstrained() {
-    SpineBindings.bindings.spine_transform_constraint_reset_constrained(_ptr);
-  }
-
-  @override
-  void constrained() {
-    SpineBindings.bindings.spine_transform_constraint_constrained(_ptr);
-  }
-
-  @override
-  bool get isPoseEqualToApplied {
-    final result = SpineBindings.bindings.spine_transform_constraint_is_pose_equal_to_applied(_ptr);
-    return result;
-  }
-
-  static Rtti rttiStatic() {
-    final result = SpineBindings.bindings.spine_transform_constraint_rtti();
-    return Rtti.fromPointer(result);
   }
 }

@@ -39,7 +39,8 @@ import 'timeline.dart';
 class DrawOrderTimeline extends Timeline {
   final Pointer<spine_draw_order_timeline_wrapper> _ptr;
 
-  DrawOrderTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  DrawOrderTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_draw_order_timeline_cast_to_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

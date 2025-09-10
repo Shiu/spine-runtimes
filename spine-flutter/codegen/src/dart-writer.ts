@@ -599,7 +599,15 @@ ${declaration} {`;
 
 	private generatePointerConstructor (dartClass: DartClass): string {
 		if (dartClass.inheritance.extends) {
-			return `  ${dartClass.name}.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());`;
+			// Use C cast function to handle multiple inheritance pointer adjustments
+			const childCType = this.toCTypeName(dartClass.name); // "spine_transform_constraint"
+			const parentCType = this.toCTypeName(dartClass.inheritance.extends); // "spine_transform_constraint_base"
+			const toType = parentCType.replace('spine_', ''); // "transform_constraint_base"
+			const castFunctionName = `${childCType}_cast_to_${toType}`;
+			
+			return `  ${dartClass.name}.fromPointer(this._ptr) : super.fromPointer(
+      SpineBindings.bindings.${castFunctionName}(_ptr)
+    );`;
 		} else {
 			return `  ${dartClass.name}.fromPointer(this._ptr);`;
 		}
@@ -1340,7 +1348,15 @@ ${declaration} {`;
 			if (!cppClass) throw Error(`Class ${subclass} not found in class map`);
 			const dartSubclass = this.toDartTypeName(subclass);
 			lines.push(`  case '${cppClass.cppType.name}':`);
-			lines.push(`    return ${dartSubclass}.fromPointer(${resultVar}.cast());`);
+			
+			// Use C cast function to handle multiple inheritance pointer adjustments
+			// abstractClass.name is like "spine_constraint"
+			// subclass is like "spine_transform_constraint"
+			const toType = subclass.replace('spine_', ''); // "transform_constraint"
+			const castFunctionName = `${abstractClass.name}_cast_to_${toType}`;
+			
+			lines.push(`    final castedPtr = SpineBindings.bindings.${castFunctionName}(${resultVar});`);
+			lines.push(`    return ${dartSubclass}.fromPointer(castedPtr);`);
 		}
 
 		lines.push(`  default:`);

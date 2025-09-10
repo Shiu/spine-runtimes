@@ -42,7 +42,7 @@ import 'update.dart';
 class BonePose extends BoneLocal implements Update {
   final Pointer<spine_bone_pose_wrapper> _ptr;
 
-  BonePose.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  BonePose.fromPointer(this._ptr) : super.fromPointer(SpineBindings.bindings.spine_bone_pose_cast_to_bone_local(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

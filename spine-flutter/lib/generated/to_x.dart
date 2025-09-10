@@ -38,7 +38,7 @@ import 'to_property.dart';
 class ToX extends ToProperty {
   final Pointer<spine_to_x_wrapper> _ptr;
 
-  ToX.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  ToX.fromPointer(this._ptr) : super.fromPointer(SpineBindings.bindings.spine_to_x_cast_to_to_property(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

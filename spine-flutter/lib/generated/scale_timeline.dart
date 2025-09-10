@@ -38,7 +38,8 @@ import 'bone_timeline2.dart';
 class ScaleTimeline extends BoneTimeline2 {
   final Pointer<spine_scale_timeline_wrapper> _ptr;
 
-  ScaleTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  ScaleTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_scale_timeline_cast_to_bone_timeline2(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

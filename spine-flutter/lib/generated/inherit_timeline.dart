@@ -40,7 +40,8 @@ import 'timeline.dart';
 class InheritTimeline extends Timeline implements BoneTimeline {
   final Pointer<spine_inherit_timeline_wrapper> _ptr;
 
-  InheritTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  InheritTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_inherit_timeline_cast_to_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

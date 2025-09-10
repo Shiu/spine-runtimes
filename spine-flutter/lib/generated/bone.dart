@@ -47,7 +47,7 @@ import 'update.dart';
 class Bone extends PosedActive implements Posed, Update {
   final Pointer<spine_bone_wrapper> _ptr;
 
-  Bone.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  Bone.fromPointer(this._ptr) : super.fromPointer(SpineBindings.bindings.spine_bone_cast_to_posed_active(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

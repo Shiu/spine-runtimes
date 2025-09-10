@@ -43,7 +43,8 @@ import 'vertex_attachment.dart';
 class MeshAttachment extends VertexAttachment {
   final Pointer<spine_mesh_attachment_wrapper> _ptr;
 
-  MeshAttachment.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  MeshAttachment.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_mesh_attachment_cast_to_vertex_attachment(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

@@ -38,7 +38,8 @@ import 'bone_timeline1.dart';
 class TranslateXTimeline extends BoneTimeline1 {
   final Pointer<spine_translate_x_timeline_wrapper> _ptr;
 
-  TranslateXTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  TranslateXTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_translate_x_timeline_cast_to_bone_timeline1(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

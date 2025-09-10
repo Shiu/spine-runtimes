@@ -39,7 +39,8 @@ import 'curve_timeline.dart';
 class TransformConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
   final Pointer<spine_transform_constraint_timeline_wrapper> _ptr;
 
-  TransformConstraintTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  TransformConstraintTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_transform_constraint_timeline_cast_to_curve_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

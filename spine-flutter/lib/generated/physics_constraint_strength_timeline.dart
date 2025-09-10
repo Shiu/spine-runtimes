@@ -38,7 +38,9 @@ import 'physics_constraint_timeline.dart';
 class PhysicsConstraintStrengthTimeline extends PhysicsConstraintTimeline {
   final Pointer<spine_physics_constraint_strength_timeline_wrapper> _ptr;
 
-  PhysicsConstraintStrengthTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  PhysicsConstraintStrengthTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings
+            .spine_physics_constraint_strength_timeline_cast_to_physics_constraint_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

@@ -39,7 +39,8 @@ import 'timeline.dart';
 abstract class CurveTimeline extends Timeline {
   final Pointer<spine_curve_timeline_wrapper> _ptr;
 
-  CurveTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  CurveTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_curve_timeline_cast_to_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

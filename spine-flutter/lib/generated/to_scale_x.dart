@@ -38,7 +38,8 @@ import 'to_property.dart';
 class ToScaleX extends ToProperty {
   final Pointer<spine_to_scale_x_wrapper> _ptr;
 
-  ToScaleX.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  ToScaleX.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_to_scale_x_cast_to_to_property(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

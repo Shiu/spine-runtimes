@@ -697,18 +697,24 @@ class ArrayAttachment extends NativeArray<Attachment?> {
     final rtti = SpineBindings.bindings.spine_attachment_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
-      case 'spine_bounding_box_attachment':
-        return BoundingBoxAttachment.fromPointer(buffer[index].cast());
-      case 'spine_clipping_attachment':
-        return ClippingAttachment.fromPointer(buffer[index].cast());
-      case 'spine_mesh_attachment':
-        return MeshAttachment.fromPointer(buffer[index].cast());
-      case 'spine_path_attachment':
-        return PathAttachment.fromPointer(buffer[index].cast());
-      case 'spine_point_attachment':
-        return PointAttachment.fromPointer(buffer[index].cast());
-      case 'spine_region_attachment':
-        return RegionAttachment.fromPointer(buffer[index].cast());
+      case 'BoundingBoxAttachment':
+        final castedPtr = SpineBindings.bindings.spine_attachment_cast_to_bounding_box_attachment(buffer[index]);
+        return BoundingBoxAttachment.fromPointer(castedPtr);
+      case 'ClippingAttachment':
+        final castedPtr = SpineBindings.bindings.spine_attachment_cast_to_clipping_attachment(buffer[index]);
+        return ClippingAttachment.fromPointer(castedPtr);
+      case 'MeshAttachment':
+        final castedPtr = SpineBindings.bindings.spine_attachment_cast_to_mesh_attachment(buffer[index]);
+        return MeshAttachment.fromPointer(castedPtr);
+      case 'PathAttachment':
+        final castedPtr = SpineBindings.bindings.spine_attachment_cast_to_path_attachment(buffer[index]);
+        return PathAttachment.fromPointer(castedPtr);
+      case 'PointAttachment':
+        final castedPtr = SpineBindings.bindings.spine_attachment_cast_to_point_attachment(buffer[index]);
+        return PointAttachment.fromPointer(castedPtr);
+      case 'RegionAttachment':
+        final castedPtr = SpineBindings.bindings.spine_attachment_cast_to_region_attachment(buffer[index]);
+        return RegionAttachment.fromPointer(castedPtr);
       default:
         throw UnsupportedError('Unknown concrete type: $className for abstract class Attachment');
     }
@@ -1106,16 +1112,21 @@ class ArrayConstraint extends NativeArray<Constraint?> {
     final rtti = SpineBindings.bindings.spine_constraint_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
-      case 'spine_ik_constraint':
-        return IkConstraint.fromPointer(buffer[index].cast());
-      case 'spine_path_constraint':
-        return PathConstraint.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint':
-        return PhysicsConstraint.fromPointer(buffer[index].cast());
-      case 'spine_slider':
-        return Slider.fromPointer(buffer[index].cast());
-      case 'spine_transform_constraint':
-        return TransformConstraint.fromPointer(buffer[index].cast());
+      case 'IkConstraint':
+        final castedPtr = SpineBindings.bindings.spine_constraint_cast_to_ik_constraint(buffer[index]);
+        return IkConstraint.fromPointer(castedPtr);
+      case 'PathConstraint':
+        final castedPtr = SpineBindings.bindings.spine_constraint_cast_to_path_constraint(buffer[index]);
+        return PathConstraint.fromPointer(castedPtr);
+      case 'PhysicsConstraint':
+        final castedPtr = SpineBindings.bindings.spine_constraint_cast_to_physics_constraint(buffer[index]);
+        return PhysicsConstraint.fromPointer(castedPtr);
+      case 'Slider':
+        final castedPtr = SpineBindings.bindings.spine_constraint_cast_to_slider(buffer[index]);
+        return Slider.fromPointer(castedPtr);
+      case 'TransformConstraint':
+        final castedPtr = SpineBindings.bindings.spine_constraint_cast_to_transform_constraint(buffer[index]);
+        return TransformConstraint.fromPointer(castedPtr);
       default:
         throw UnsupportedError('Unknown concrete type: $className for abstract class Constraint');
     }
@@ -1200,16 +1211,21 @@ class ArrayConstraintData extends NativeArray<ConstraintData?> {
     final rtti = SpineBindings.bindings.spine_constraint_data_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
-      case 'spine_ik_constraint_data':
-        return IkConstraintData.fromPointer(buffer[index].cast());
-      case 'spine_path_constraint_data':
-        return PathConstraintData.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint_data':
-        return PhysicsConstraintData.fromPointer(buffer[index].cast());
-      case 'spine_slider_data':
-        return SliderData.fromPointer(buffer[index].cast());
-      case 'spine_transform_constraint_data':
-        return TransformConstraintData.fromPointer(buffer[index].cast());
+      case 'IkConstraintData':
+        final castedPtr = SpineBindings.bindings.spine_constraint_data_cast_to_ik_constraint_data(buffer[index]);
+        return IkConstraintData.fromPointer(castedPtr);
+      case 'PathConstraintData':
+        final castedPtr = SpineBindings.bindings.spine_constraint_data_cast_to_path_constraint_data(buffer[index]);
+        return PathConstraintData.fromPointer(castedPtr);
+      case 'PhysicsConstraintData':
+        final castedPtr = SpineBindings.bindings.spine_constraint_data_cast_to_physics_constraint_data(buffer[index]);
+        return PhysicsConstraintData.fromPointer(castedPtr);
+      case 'SliderData':
+        final castedPtr = SpineBindings.bindings.spine_constraint_data_cast_to_slider_data(buffer[index]);
+        return SliderData.fromPointer(castedPtr);
+      case 'TransformConstraintData':
+        final castedPtr = SpineBindings.bindings.spine_constraint_data_cast_to_transform_constraint_data(buffer[index]);
+        return TransformConstraintData.fromPointer(castedPtr);
       default:
         throw UnsupportedError('Unknown concrete type: $className for abstract class ConstraintData');
     }
@@ -1449,18 +1465,24 @@ class ArrayFromProperty extends NativeArray<FromProperty?> {
     final rtti = SpineBindings.bindings.spine_from_property_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
-      case 'spine_from_rotate':
-        return FromRotate.fromPointer(buffer[index].cast());
-      case 'spine_from_scale_x':
-        return FromScaleX.fromPointer(buffer[index].cast());
-      case 'spine_from_scale_y':
-        return FromScaleY.fromPointer(buffer[index].cast());
-      case 'spine_from_shear_y':
-        return FromShearY.fromPointer(buffer[index].cast());
-      case 'spine_from_x':
-        return FromX.fromPointer(buffer[index].cast());
-      case 'spine_from_y':
-        return FromY.fromPointer(buffer[index].cast());
+      case 'FromRotate':
+        final castedPtr = SpineBindings.bindings.spine_from_property_cast_to_from_rotate(buffer[index]);
+        return FromRotate.fromPointer(castedPtr);
+      case 'FromScaleX':
+        final castedPtr = SpineBindings.bindings.spine_from_property_cast_to_from_scale_x(buffer[index]);
+        return FromScaleX.fromPointer(castedPtr);
+      case 'FromScaleY':
+        final castedPtr = SpineBindings.bindings.spine_from_property_cast_to_from_scale_y(buffer[index]);
+        return FromScaleY.fromPointer(castedPtr);
+      case 'FromShearY':
+        final castedPtr = SpineBindings.bindings.spine_from_property_cast_to_from_shear_y(buffer[index]);
+        return FromShearY.fromPointer(castedPtr);
+      case 'FromX':
+        final castedPtr = SpineBindings.bindings.spine_from_property_cast_to_from_x(buffer[index]);
+        return FromX.fromPointer(castedPtr);
+      case 'FromY':
+        final castedPtr = SpineBindings.bindings.spine_from_property_cast_to_from_y(buffer[index]);
+        return FromY.fromPointer(castedPtr);
       default:
         throw UnsupportedError('Unknown concrete type: $className for abstract class FromProperty');
     }
@@ -2011,78 +2033,120 @@ class ArrayTimeline extends NativeArray<Timeline?> {
     final rtti = SpineBindings.bindings.spine_timeline_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
-      case 'spine_alpha_timeline':
-        return AlphaTimeline.fromPointer(buffer[index].cast());
-      case 'spine_attachment_timeline':
-        return AttachmentTimeline.fromPointer(buffer[index].cast());
-      case 'spine_deform_timeline':
-        return DeformTimeline.fromPointer(buffer[index].cast());
-      case 'spine_draw_order_timeline':
-        return DrawOrderTimeline.fromPointer(buffer[index].cast());
-      case 'spine_event_timeline':
-        return EventTimeline.fromPointer(buffer[index].cast());
-      case 'spine_ik_constraint_timeline':
-        return IkConstraintTimeline.fromPointer(buffer[index].cast());
-      case 'spine_inherit_timeline':
-        return InheritTimeline.fromPointer(buffer[index].cast());
-      case 'spine_path_constraint_mix_timeline':
-        return PathConstraintMixTimeline.fromPointer(buffer[index].cast());
-      case 'spine_path_constraint_position_timeline':
-        return PathConstraintPositionTimeline.fromPointer(buffer[index].cast());
-      case 'spine_path_constraint_spacing_timeline':
-        return PathConstraintSpacingTimeline.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint_damping_timeline':
-        return PhysicsConstraintDampingTimeline.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint_gravity_timeline':
-        return PhysicsConstraintGravityTimeline.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint_inertia_timeline':
-        return PhysicsConstraintInertiaTimeline.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint_mass_timeline':
-        return PhysicsConstraintMassTimeline.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint_mix_timeline':
-        return PhysicsConstraintMixTimeline.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint_reset_timeline':
-        return PhysicsConstraintResetTimeline.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint_strength_timeline':
-        return PhysicsConstraintStrengthTimeline.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint_wind_timeline':
-        return PhysicsConstraintWindTimeline.fromPointer(buffer[index].cast());
-      case 'spine_rgb2_timeline':
-        return Rgb2Timeline.fromPointer(buffer[index].cast());
-      case 'spine_rgba2_timeline':
-        return Rgba2Timeline.fromPointer(buffer[index].cast());
-      case 'spine_rgba_timeline':
-        return RgbaTimeline.fromPointer(buffer[index].cast());
-      case 'spine_rgb_timeline':
-        return RgbTimeline.fromPointer(buffer[index].cast());
-      case 'spine_rotate_timeline':
-        return RotateTimeline.fromPointer(buffer[index].cast());
-      case 'spine_scale_timeline':
-        return ScaleTimeline.fromPointer(buffer[index].cast());
-      case 'spine_scale_x_timeline':
-        return ScaleXTimeline.fromPointer(buffer[index].cast());
-      case 'spine_scale_y_timeline':
-        return ScaleYTimeline.fromPointer(buffer[index].cast());
-      case 'spine_sequence_timeline':
-        return SequenceTimeline.fromPointer(buffer[index].cast());
-      case 'spine_shear_timeline':
-        return ShearTimeline.fromPointer(buffer[index].cast());
-      case 'spine_shear_x_timeline':
-        return ShearXTimeline.fromPointer(buffer[index].cast());
-      case 'spine_shear_y_timeline':
-        return ShearYTimeline.fromPointer(buffer[index].cast());
-      case 'spine_slider_mix_timeline':
-        return SliderMixTimeline.fromPointer(buffer[index].cast());
-      case 'spine_slider_timeline':
-        return SliderTimeline.fromPointer(buffer[index].cast());
-      case 'spine_transform_constraint_timeline':
-        return TransformConstraintTimeline.fromPointer(buffer[index].cast());
-      case 'spine_translate_timeline':
-        return TranslateTimeline.fromPointer(buffer[index].cast());
-      case 'spine_translate_x_timeline':
-        return TranslateXTimeline.fromPointer(buffer[index].cast());
-      case 'spine_translate_y_timeline':
-        return TranslateYTimeline.fromPointer(buffer[index].cast());
+      case 'AlphaTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_alpha_timeline(buffer[index]);
+        return AlphaTimeline.fromPointer(castedPtr);
+      case 'AttachmentTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_attachment_timeline(buffer[index]);
+        return AttachmentTimeline.fromPointer(castedPtr);
+      case 'DeformTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_deform_timeline(buffer[index]);
+        return DeformTimeline.fromPointer(castedPtr);
+      case 'DrawOrderTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_draw_order_timeline(buffer[index]);
+        return DrawOrderTimeline.fromPointer(castedPtr);
+      case 'EventTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_event_timeline(buffer[index]);
+        return EventTimeline.fromPointer(castedPtr);
+      case 'IkConstraintTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_ik_constraint_timeline(buffer[index]);
+        return IkConstraintTimeline.fromPointer(castedPtr);
+      case 'InheritTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_inherit_timeline(buffer[index]);
+        return InheritTimeline.fromPointer(castedPtr);
+      case 'PathConstraintMixTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_path_constraint_mix_timeline(buffer[index]);
+        return PathConstraintMixTimeline.fromPointer(castedPtr);
+      case 'PathConstraintPositionTimeline':
+        final castedPtr =
+            SpineBindings.bindings.spine_timeline_cast_to_path_constraint_position_timeline(buffer[index]);
+        return PathConstraintPositionTimeline.fromPointer(castedPtr);
+      case 'PathConstraintSpacingTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_path_constraint_spacing_timeline(buffer[index]);
+        return PathConstraintSpacingTimeline.fromPointer(castedPtr);
+      case 'PhysicsConstraintDampingTimeline':
+        final castedPtr =
+            SpineBindings.bindings.spine_timeline_cast_to_physics_constraint_damping_timeline(buffer[index]);
+        return PhysicsConstraintDampingTimeline.fromPointer(castedPtr);
+      case 'PhysicsConstraintGravityTimeline':
+        final castedPtr =
+            SpineBindings.bindings.spine_timeline_cast_to_physics_constraint_gravity_timeline(buffer[index]);
+        return PhysicsConstraintGravityTimeline.fromPointer(castedPtr);
+      case 'PhysicsConstraintInertiaTimeline':
+        final castedPtr =
+            SpineBindings.bindings.spine_timeline_cast_to_physics_constraint_inertia_timeline(buffer[index]);
+        return PhysicsConstraintInertiaTimeline.fromPointer(castedPtr);
+      case 'PhysicsConstraintMassTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_physics_constraint_mass_timeline(buffer[index]);
+        return PhysicsConstraintMassTimeline.fromPointer(castedPtr);
+      case 'PhysicsConstraintMixTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_physics_constraint_mix_timeline(buffer[index]);
+        return PhysicsConstraintMixTimeline.fromPointer(castedPtr);
+      case 'PhysicsConstraintResetTimeline':
+        final castedPtr =
+            SpineBindings.bindings.spine_timeline_cast_to_physics_constraint_reset_timeline(buffer[index]);
+        return PhysicsConstraintResetTimeline.fromPointer(castedPtr);
+      case 'PhysicsConstraintStrengthTimeline':
+        final castedPtr =
+            SpineBindings.bindings.spine_timeline_cast_to_physics_constraint_strength_timeline(buffer[index]);
+        return PhysicsConstraintStrengthTimeline.fromPointer(castedPtr);
+      case 'PhysicsConstraintWindTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_physics_constraint_wind_timeline(buffer[index]);
+        return PhysicsConstraintWindTimeline.fromPointer(castedPtr);
+      case 'RGB2Timeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_rgb2_timeline(buffer[index]);
+        return Rgb2Timeline.fromPointer(castedPtr);
+      case 'RGBA2Timeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_rgba2_timeline(buffer[index]);
+        return Rgba2Timeline.fromPointer(castedPtr);
+      case 'RGBATimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_rgba_timeline(buffer[index]);
+        return RgbaTimeline.fromPointer(castedPtr);
+      case 'RGBTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_rgb_timeline(buffer[index]);
+        return RgbTimeline.fromPointer(castedPtr);
+      case 'RotateTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_rotate_timeline(buffer[index]);
+        return RotateTimeline.fromPointer(castedPtr);
+      case 'ScaleTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_scale_timeline(buffer[index]);
+        return ScaleTimeline.fromPointer(castedPtr);
+      case 'ScaleXTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_scale_x_timeline(buffer[index]);
+        return ScaleXTimeline.fromPointer(castedPtr);
+      case 'ScaleYTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_scale_y_timeline(buffer[index]);
+        return ScaleYTimeline.fromPointer(castedPtr);
+      case 'SequenceTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_sequence_timeline(buffer[index]);
+        return SequenceTimeline.fromPointer(castedPtr);
+      case 'ShearTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_shear_timeline(buffer[index]);
+        return ShearTimeline.fromPointer(castedPtr);
+      case 'ShearXTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_shear_x_timeline(buffer[index]);
+        return ShearXTimeline.fromPointer(castedPtr);
+      case 'ShearYTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_shear_y_timeline(buffer[index]);
+        return ShearYTimeline.fromPointer(castedPtr);
+      case 'SliderMixTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_slider_mix_timeline(buffer[index]);
+        return SliderMixTimeline.fromPointer(castedPtr);
+      case 'SliderTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_slider_timeline(buffer[index]);
+        return SliderTimeline.fromPointer(castedPtr);
+      case 'TransformConstraintTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_transform_constraint_timeline(buffer[index]);
+        return TransformConstraintTimeline.fromPointer(castedPtr);
+      case 'TranslateTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_translate_timeline(buffer[index]);
+        return TranslateTimeline.fromPointer(castedPtr);
+      case 'TranslateXTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_translate_x_timeline(buffer[index]);
+        return TranslateXTimeline.fromPointer(castedPtr);
+      case 'TranslateYTimeline':
+        final castedPtr = SpineBindings.bindings.spine_timeline_cast_to_translate_y_timeline(buffer[index]);
+        return TranslateYTimeline.fromPointer(castedPtr);
       default:
         throw UnsupportedError('Unknown concrete type: $className for abstract class Timeline');
     }
@@ -2167,18 +2231,24 @@ class ArrayToProperty extends NativeArray<ToProperty?> {
     final rtti = SpineBindings.bindings.spine_to_property_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
-      case 'spine_to_rotate':
-        return ToRotate.fromPointer(buffer[index].cast());
-      case 'spine_to_scale_x':
-        return ToScaleX.fromPointer(buffer[index].cast());
-      case 'spine_to_scale_y':
-        return ToScaleY.fromPointer(buffer[index].cast());
-      case 'spine_to_shear_y':
-        return ToShearY.fromPointer(buffer[index].cast());
-      case 'spine_to_x':
-        return ToX.fromPointer(buffer[index].cast());
-      case 'spine_to_y':
-        return ToY.fromPointer(buffer[index].cast());
+      case 'ToRotate':
+        final castedPtr = SpineBindings.bindings.spine_to_property_cast_to_to_rotate(buffer[index]);
+        return ToRotate.fromPointer(castedPtr);
+      case 'ToScaleX':
+        final castedPtr = SpineBindings.bindings.spine_to_property_cast_to_to_scale_x(buffer[index]);
+        return ToScaleX.fromPointer(castedPtr);
+      case 'ToScaleY':
+        final castedPtr = SpineBindings.bindings.spine_to_property_cast_to_to_scale_y(buffer[index]);
+        return ToScaleY.fromPointer(castedPtr);
+      case 'ToShearY':
+        final castedPtr = SpineBindings.bindings.spine_to_property_cast_to_to_shear_y(buffer[index]);
+        return ToShearY.fromPointer(castedPtr);
+      case 'ToX':
+        final castedPtr = SpineBindings.bindings.spine_to_property_cast_to_to_x(buffer[index]);
+        return ToX.fromPointer(castedPtr);
+      case 'ToY':
+        final castedPtr = SpineBindings.bindings.spine_to_property_cast_to_to_y(buffer[index]);
+        return ToY.fromPointer(castedPtr);
       default:
         throw UnsupportedError('Unknown concrete type: $className for abstract class ToProperty');
     }
@@ -2341,20 +2411,27 @@ class ArrayUpdate extends NativeArray<Update?> {
     final rtti = SpineBindings.bindings.spine_update_get_rtti(buffer[index]);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
-      case 'spine_bone':
-        return Bone.fromPointer(buffer[index].cast());
-      case 'spine_bone_pose':
-        return BonePose.fromPointer(buffer[index].cast());
-      case 'spine_ik_constraint':
-        return IkConstraint.fromPointer(buffer[index].cast());
-      case 'spine_path_constraint':
-        return PathConstraint.fromPointer(buffer[index].cast());
-      case 'spine_physics_constraint':
-        return PhysicsConstraint.fromPointer(buffer[index].cast());
-      case 'spine_slider':
-        return Slider.fromPointer(buffer[index].cast());
-      case 'spine_transform_constraint':
-        return TransformConstraint.fromPointer(buffer[index].cast());
+      case 'Bone':
+        final castedPtr = SpineBindings.bindings.spine_update_cast_to_bone(buffer[index]);
+        return Bone.fromPointer(castedPtr);
+      case 'BonePose':
+        final castedPtr = SpineBindings.bindings.spine_update_cast_to_bone_pose(buffer[index]);
+        return BonePose.fromPointer(castedPtr);
+      case 'IkConstraint':
+        final castedPtr = SpineBindings.bindings.spine_update_cast_to_ik_constraint(buffer[index]);
+        return IkConstraint.fromPointer(castedPtr);
+      case 'PathConstraint':
+        final castedPtr = SpineBindings.bindings.spine_update_cast_to_path_constraint(buffer[index]);
+        return PathConstraint.fromPointer(castedPtr);
+      case 'PhysicsConstraint':
+        final castedPtr = SpineBindings.bindings.spine_update_cast_to_physics_constraint(buffer[index]);
+        return PhysicsConstraint.fromPointer(castedPtr);
+      case 'Slider':
+        final castedPtr = SpineBindings.bindings.spine_update_cast_to_slider(buffer[index]);
+        return Slider.fromPointer(castedPtr);
+      case 'TransformConstraint':
+        final castedPtr = SpineBindings.bindings.spine_update_cast_to_transform_constraint(buffer[index]);
+        return TransformConstraint.fromPointer(castedPtr);
       default:
         throw UnsupportedError('Unknown concrete type: $className for abstract class Update');
     }

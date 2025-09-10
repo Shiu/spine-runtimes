@@ -41,7 +41,7 @@ import 'posed_data.dart';
 class BoneData extends PosedData {
   final Pointer<spine_bone_data_wrapper> _ptr;
 
-  BoneData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  BoneData.fromPointer(this._ptr) : super.fromPointer(SpineBindings.bindings.spine_bone_data_cast_to_posed_data(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

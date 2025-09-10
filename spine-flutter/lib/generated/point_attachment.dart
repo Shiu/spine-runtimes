@@ -41,7 +41,8 @@ import 'color.dart';
 class PointAttachment extends Attachment {
   final Pointer<spine_point_attachment_wrapper> _ptr;
 
-  PointAttachment.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  PointAttachment.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_point_attachment_cast_to_attachment(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

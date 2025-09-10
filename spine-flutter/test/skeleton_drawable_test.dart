@@ -99,7 +99,8 @@ void main() async {
   for (final constraint in drawable.skeleton.constraints) {
     final data = constraint?.data;
     print('  Constraint type: ${constraint?.rtti.className}');
-    print('  Constraint data type: ${constraint?.data?.rtti.className}');
+    print('  Constraint data type: ${constraint?.data.rtti.className}');
+    print('  Constraint name: ${data?.name}');
   }
 
   // Check manager state before cleanup

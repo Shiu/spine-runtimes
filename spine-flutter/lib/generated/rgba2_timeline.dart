@@ -38,7 +38,8 @@ import 'slot_curve_timeline.dart';
 class Rgba2Timeline extends SlotCurveTimeline {
   final Pointer<spine_rgba2_timeline_wrapper> _ptr;
 
-  Rgba2Timeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  Rgba2Timeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_rgba2_timeline_cast_to_slot_curve_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

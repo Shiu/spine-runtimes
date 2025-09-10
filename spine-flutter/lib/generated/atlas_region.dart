@@ -41,7 +41,8 @@ import 'texture_region.dart';
 class AtlasRegion extends TextureRegion {
   final Pointer<spine_atlas_region_wrapper> _ptr;
 
-  AtlasRegion.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  AtlasRegion.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_atlas_region_cast_to_texture_region(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

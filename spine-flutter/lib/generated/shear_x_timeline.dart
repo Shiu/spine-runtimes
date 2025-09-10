@@ -38,7 +38,8 @@ import 'bone_timeline1.dart';
 class ShearXTimeline extends BoneTimeline1 {
   final Pointer<spine_shear_x_timeline_wrapper> _ptr;
 
-  ShearXTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  ShearXTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_shear_x_timeline_cast_to_bone_timeline1(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

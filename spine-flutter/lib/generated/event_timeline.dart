@@ -40,7 +40,8 @@ import 'timeline.dart';
 class EventTimeline extends Timeline {
   final Pointer<spine_event_timeline_wrapper> _ptr;
 
-  EventTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  EventTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_event_timeline_cast_to_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

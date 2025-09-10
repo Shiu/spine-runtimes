@@ -50,7 +50,8 @@ import 'transform_constraint.dart';
 class PhysicsConstraintData extends PosedData implements ConstraintData {
   final Pointer<spine_physics_constraint_data_wrapper> _ptr;
 
-  PhysicsConstraintData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  PhysicsConstraintData.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_physics_constraint_data_cast_to_posed_data(_ptr));
 
   /// Get the native pointer for FFI calls
   @override
@@ -78,16 +79,21 @@ class PhysicsConstraintData extends PosedData implements ConstraintData {
     final rtti = SpineBindings.bindings.spine_constraint_get_rtti(result);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
-      case 'spine_ik_constraint':
-        return IkConstraint.fromPointer(result.cast());
-      case 'spine_path_constraint':
-        return PathConstraint.fromPointer(result.cast());
-      case 'spine_physics_constraint':
-        return PhysicsConstraint.fromPointer(result.cast());
-      case 'spine_slider':
-        return Slider.fromPointer(result.cast());
-      case 'spine_transform_constraint':
-        return TransformConstraint.fromPointer(result.cast());
+      case 'IkConstraint':
+        final castedPtr = SpineBindings.bindings.spine_constraint_cast_to_ik_constraint(result);
+        return IkConstraint.fromPointer(castedPtr);
+      case 'PathConstraint':
+        final castedPtr = SpineBindings.bindings.spine_constraint_cast_to_path_constraint(result);
+        return PathConstraint.fromPointer(castedPtr);
+      case 'PhysicsConstraint':
+        final castedPtr = SpineBindings.bindings.spine_constraint_cast_to_physics_constraint(result);
+        return PhysicsConstraint.fromPointer(castedPtr);
+      case 'Slider':
+        final castedPtr = SpineBindings.bindings.spine_constraint_cast_to_slider(result);
+        return Slider.fromPointer(castedPtr);
+      case 'TransformConstraint':
+        final castedPtr = SpineBindings.bindings.spine_constraint_cast_to_transform_constraint(result);
+        return TransformConstraint.fromPointer(castedPtr);
       default:
         throw UnsupportedError('Unknown concrete type: $className for abstract class Constraint');
     }

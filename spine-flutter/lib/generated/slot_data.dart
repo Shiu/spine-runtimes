@@ -42,7 +42,7 @@ import 'slot_pose.dart';
 class SlotData extends PosedData {
   final Pointer<spine_slot_data_wrapper> _ptr;
 
-  SlotData.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  SlotData.fromPointer(this._ptr) : super.fromPointer(SpineBindings.bindings.spine_slot_data_cast_to_posed_data(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

@@ -39,7 +39,8 @@ import 'curve_timeline1.dart';
 abstract class BoneTimeline1 extends CurveTimeline1 implements BoneTimeline {
   final Pointer<spine_bone_timeline1_wrapper> _ptr;
 
-  BoneTimeline1.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  BoneTimeline1.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_bone_timeline1_cast_to_curve_timeline1(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

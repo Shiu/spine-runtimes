@@ -39,7 +39,8 @@ import 'curve_timeline1.dart';
 abstract class PhysicsConstraintTimeline extends CurveTimeline1 implements ConstraintTimeline {
   final Pointer<spine_physics_constraint_timeline_wrapper> _ptr;
 
-  PhysicsConstraintTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  PhysicsConstraintTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_physics_constraint_timeline_cast_to_curve_timeline1(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

@@ -38,7 +38,8 @@ import 'constraint_timeline1.dart';
 class SliderTimeline extends ConstraintTimeline1 {
   final Pointer<spine_slider_timeline_wrapper> _ptr;
 
-  SliderTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  SliderTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_slider_timeline_cast_to_constraint_timeline1(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

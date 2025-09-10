@@ -45,7 +45,8 @@ import 'vertex_attachment.dart';
 class DeformTimeline extends SlotCurveTimeline {
   final Pointer<spine_deform_timeline_wrapper> _ptr;
 
-  DeformTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  DeformTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_deform_timeline_cast_to_slot_curve_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override
@@ -70,14 +71,18 @@ class DeformTimeline extends SlotCurveTimeline {
     final rtti = SpineBindings.bindings.spine_vertex_attachment_get_rtti(result);
     final className = SpineBindings.bindings.spine_rtti_get_class_name(rtti).cast<Utf8>().toDartString();
     switch (className) {
-      case 'spine_bounding_box_attachment':
-        return BoundingBoxAttachment.fromPointer(result.cast());
-      case 'spine_clipping_attachment':
-        return ClippingAttachment.fromPointer(result.cast());
-      case 'spine_mesh_attachment':
-        return MeshAttachment.fromPointer(result.cast());
-      case 'spine_path_attachment':
-        return PathAttachment.fromPointer(result.cast());
+      case 'BoundingBoxAttachment':
+        final castedPtr = SpineBindings.bindings.spine_vertex_attachment_cast_to_bounding_box_attachment(result);
+        return BoundingBoxAttachment.fromPointer(castedPtr);
+      case 'ClippingAttachment':
+        final castedPtr = SpineBindings.bindings.spine_vertex_attachment_cast_to_clipping_attachment(result);
+        return ClippingAttachment.fromPointer(castedPtr);
+      case 'MeshAttachment':
+        final castedPtr = SpineBindings.bindings.spine_vertex_attachment_cast_to_mesh_attachment(result);
+        return MeshAttachment.fromPointer(castedPtr);
+      case 'PathAttachment':
+        final castedPtr = SpineBindings.bindings.spine_vertex_attachment_cast_to_path_attachment(result);
+        return PathAttachment.fromPointer(castedPtr);
       default:
         throw UnsupportedError('Unknown concrete type: $className for abstract class VertexAttachment');
     }

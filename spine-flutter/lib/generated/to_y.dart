@@ -38,7 +38,7 @@ import 'to_property.dart';
 class ToY extends ToProperty {
   final Pointer<spine_to_y_wrapper> _ptr;
 
-  ToY.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  ToY.fromPointer(this._ptr) : super.fromPointer(SpineBindings.bindings.spine_to_y_cast_to_to_property(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

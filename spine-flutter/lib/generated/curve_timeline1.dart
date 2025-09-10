@@ -40,7 +40,8 @@ import 'mix_direction.dart';
 abstract class CurveTimeline1 extends CurveTimeline {
   final Pointer<spine_curve_timeline1_wrapper> _ptr;
 
-  CurveTimeline1.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  CurveTimeline1.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_curve_timeline1_cast_to_curve_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

@@ -39,7 +39,8 @@ import 'timeline.dart';
 class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimeline {
   final Pointer<spine_physics_constraint_reset_timeline_wrapper> _ptr;
 
-  PhysicsConstraintResetTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  PhysicsConstraintResetTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_physics_constraint_reset_timeline_cast_to_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

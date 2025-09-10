@@ -38,7 +38,8 @@ import 'from_property.dart';
 class FromScaleX extends FromProperty {
   final Pointer<spine_from_scale_x_wrapper> _ptr;
 
-  FromScaleX.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  FromScaleX.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_from_scale_x_cast_to_from_property(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

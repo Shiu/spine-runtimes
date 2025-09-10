@@ -39,7 +39,8 @@ import 'slot_timeline.dart';
 abstract class SlotCurveTimeline extends CurveTimeline implements SlotTimeline {
   final Pointer<spine_slot_curve_timeline_wrapper> _ptr;
 
-  SlotCurveTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  SlotCurveTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_slot_curve_timeline_cast_to_curve_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

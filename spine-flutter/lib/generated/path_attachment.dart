@@ -41,7 +41,8 @@ import 'vertex_attachment.dart';
 class PathAttachment extends VertexAttachment {
   final Pointer<spine_path_attachment_wrapper> _ptr;
 
-  PathAttachment.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  PathAttachment.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_path_attachment_cast_to_vertex_attachment(_ptr));
 
   /// Get the native pointer for FFI calls
   @override

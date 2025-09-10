@@ -39,7 +39,8 @@ import 'curve_timeline.dart';
 class PathConstraintMixTimeline extends CurveTimeline implements ConstraintTimeline {
   final Pointer<spine_path_constraint_mix_timeline_wrapper> _ptr;
 
-  PathConstraintMixTimeline.fromPointer(this._ptr) : super.fromPointer(_ptr.cast());
+  PathConstraintMixTimeline.fromPointer(this._ptr)
+      : super.fromPointer(SpineBindings.bindings.spine_path_constraint_mix_timeline_cast_to_curve_timeline(_ptr));
 
   /// Get the native pointer for FFI calls
   @override
