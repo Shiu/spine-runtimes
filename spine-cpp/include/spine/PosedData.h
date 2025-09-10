@@ -95,7 +95,7 @@ namespace spine {
 
 	/// The base class for all constrained datas.
 	template<class P>
-	class SP_API PosedDataGeneric : public PosedData {
+	class PosedDataGeneric : public PosedData {
 		friend class SkeletonBinary;
 		friend class SkeletonJson;
 		friend class BoneTimeline1;

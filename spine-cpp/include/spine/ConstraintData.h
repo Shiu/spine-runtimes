@@ -59,7 +59,7 @@ namespace spine {
 
 	/// Base class for all constraint data types.
 	template<class T, class P>
-	class SP_API ConstraintDataGeneric : public PosedDataGeneric<P>, public ConstraintData {
+	class ConstraintDataGeneric : public PosedDataGeneric<P>, public ConstraintData {
 	public:
 		ConstraintDataGeneric(const String &name) : PosedDataGeneric<P>(name), ConstraintData(name) {
 		}

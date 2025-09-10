@@ -66,7 +66,7 @@ namespace spine {
 	};
 
 	template<class T, class D, class P>
-	class SP_API ConstraintGeneric : public PosedGeneric<D, P, P>, public PosedActive, public Constraint {
+	class ConstraintGeneric : public PosedGeneric<D, P, P>, public PosedActive, public Constraint {
 	public:
 		ConstraintGeneric(D &data) : PosedGeneric<D, P, P>(data), PosedActive(), Constraint() {
 		}

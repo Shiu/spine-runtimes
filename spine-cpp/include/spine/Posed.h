@@ -53,7 +53,7 @@ namespace spine {
 	};
 
 	template<class D, class P, class A>
-	class SP_API PosedGeneric : public Posed, public SpineObject {
+	class PosedGeneric : public Posed, public SpineObject {
 		friend class AnimationState;
 		friend class BoneTimeline1;
 		friend class BoneTimeline2;

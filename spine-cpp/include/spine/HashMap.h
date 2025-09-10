@@ -43,12 +43,12 @@
 
 namespace spine {
 	template<typename K, typename V>
-	class SP_API HashMap : public SpineObject {
+	class HashMap : public SpineObject {
 	private:
 		class Entry;
 
 	public:
-		class SP_API Pair {
+		class Pair {
 		public:
 			explicit Pair(K &k, V &v) : key(k), value(v) {
 			}
@@ -57,7 +57,7 @@ namespace spine {
 			V &value;
 		};
 
-		class SP_API Entries {
+		class Entries {
 		public:
 			friend class HashMap;
 
