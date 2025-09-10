@@ -1336,8 +1336,10 @@ ${declaration} {`;
 		lines.push(`switch (className) {`);
 
 		for (const subclass of concreteSubclasses) {
+			const cppClass = this.classMap.get(subclass);
+			if (!cppClass) throw Error(`Class ${subclass} not found in class map`);
 			const dartSubclass = this.toDartTypeName(subclass);
-			lines.push(`  case '${subclass}':`);
+			lines.push(`  case '${cppClass.cppType.name}':`);
 			lines.push(`    return ${dartSubclass}.fromPointer(${resultVar}.cast());`);
 		}
 

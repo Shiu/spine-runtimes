@@ -91,6 +91,17 @@ void main() async {
   final boundsInJump = drawable.skeleton.bounds;
   print('  Bounds during jump: $boundsInJump');
 
+  // Test constraint RTTI
+  print('\nTesting constraint RTTI:');
+
+  // IK Constraints
+  print('  Constraints:');
+  for (final constraint in drawable.skeleton.constraints) {
+    final data = constraint?.data;
+    print('  Constraint type: ${constraint?.rtti.className}');
+    print('  Constraint data type: ${constraint?.data?.rtti.className}');
+  }
+
   // Check manager state before cleanup
   print('\nBefore cleanup:');
   AnimationStateEventManager.instance.debugPrint();
