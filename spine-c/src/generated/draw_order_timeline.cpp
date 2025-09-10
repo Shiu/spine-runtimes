@@ -34,22 +34,22 @@ void spine_draw_order_timeline_set_frame(spine_draw_order_timeline self, size_t 
 }
 
 size_t spine_draw_order_timeline_get_frame_entries(spine_draw_order_timeline self) {
-	Timeline *_self = (Timeline *) (DrawOrderTimeline *) self;
+	DrawOrderTimeline *_self = (DrawOrderTimeline *) self;
 	return _self->getFrameEntries();
 }
 
 spine_array_float spine_draw_order_timeline_get_frames(spine_draw_order_timeline self) {
-	Timeline *_self = (Timeline *) (DrawOrderTimeline *) self;
+	DrawOrderTimeline *_self = (DrawOrderTimeline *) self;
 	return (spine_array_float) &_self->getFrames();
 }
 
 float spine_draw_order_timeline_get_duration(spine_draw_order_timeline self) {
-	Timeline *_self = (Timeline *) (DrawOrderTimeline *) self;
+	DrawOrderTimeline *_self = (DrawOrderTimeline *) self;
 	return _self->getDuration();
 }
 
 spine_array_property_id spine_draw_order_timeline_get_property_ids(spine_draw_order_timeline self) {
-	Timeline *_self = (Timeline *) (DrawOrderTimeline *) self;
+	DrawOrderTimeline *_self = (DrawOrderTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
 }
 

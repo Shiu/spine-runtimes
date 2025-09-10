@@ -24,7 +24,7 @@ void spine_mesh_attachment_compute_world_vertices_1(spine_mesh_attachment self, 
 
 void spine_mesh_attachment_compute_world_vertices_2(spine_mesh_attachment self, spine_skeleton skeleton, spine_slot slot, size_t start, size_t count,
 													spine_array_float worldVertices, size_t offset, size_t stride) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	_self->computeWorldVertices(*((Skeleton *) skeleton), *((Slot *) slot), start, count, *((Array<float> *) worldVertices), offset, stride);
 }
 
@@ -154,72 +154,72 @@ spine_mesh_attachment spine_mesh_attachment_new_linked_mesh(spine_mesh_attachmen
 }
 
 int spine_mesh_attachment_get_id(spine_mesh_attachment self) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	return _self->getId();
 }
 
 spine_array_int spine_mesh_attachment_get_bones(spine_mesh_attachment self) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	return (spine_array_int) &_self->getBones();
 }
 
 void spine_mesh_attachment_set_bones(spine_mesh_attachment self, spine_array_int bones) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	_self->setBones(*((Array<int> *) bones));
 }
 
 spine_array_float spine_mesh_attachment_get_vertices(spine_mesh_attachment self) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	return (spine_array_float) &_self->getVertices();
 }
 
 void spine_mesh_attachment_set_vertices(spine_mesh_attachment self, spine_array_float vertices) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	_self->setVertices(*((Array<float> *) vertices));
 }
 
 size_t spine_mesh_attachment_get_world_vertices_length(spine_mesh_attachment self) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	return _self->getWorldVerticesLength();
 }
 
 void spine_mesh_attachment_set_world_vertices_length(spine_mesh_attachment self, size_t inValue) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	_self->setWorldVerticesLength(inValue);
 }
 
 /*@null*/ spine_attachment spine_mesh_attachment_get_timeline_attachment(spine_mesh_attachment self) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	return (spine_attachment) _self->getTimelineAttachment();
 }
 
 void spine_mesh_attachment_set_timeline_attachment(spine_mesh_attachment self, /*@null*/ spine_attachment attachment) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	_self->setTimelineAttachment((Attachment *) attachment);
 }
 
 void spine_mesh_attachment_copy_to(spine_mesh_attachment self, spine_vertex_attachment other) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	_self->copyTo(*((VertexAttachment *) other));
 }
 
 const char *spine_mesh_attachment_get_name(spine_mesh_attachment self) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	return _self->getName().buffer();
 }
 
 int spine_mesh_attachment_get_ref_count(spine_mesh_attachment self) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	return _self->getRefCount();
 }
 
 void spine_mesh_attachment_reference(spine_mesh_attachment self) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	_self->reference();
 }
 
 void spine_mesh_attachment_dereference(spine_mesh_attachment self) {
-	VertexAttachment *_self = (VertexAttachment *) (MeshAttachment *) self;
+	MeshAttachment *_self = (MeshAttachment *) self;
 	_self->dereference();
 }
 

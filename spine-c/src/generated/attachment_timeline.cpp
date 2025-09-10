@@ -39,27 +39,27 @@ void spine_attachment_timeline_set_slot_index(spine_attachment_timeline self, in
 }
 
 size_t spine_attachment_timeline_get_frame_entries(spine_attachment_timeline self) {
-	Timeline *_self = (Timeline *) (AttachmentTimeline *) self;
+	AttachmentTimeline *_self = (AttachmentTimeline *) self;
 	return _self->getFrameEntries();
 }
 
 size_t spine_attachment_timeline_get_frame_count(spine_attachment_timeline self) {
-	Timeline *_self = (Timeline *) (AttachmentTimeline *) self;
+	AttachmentTimeline *_self = (AttachmentTimeline *) self;
 	return _self->getFrameCount();
 }
 
 spine_array_float spine_attachment_timeline_get_frames(spine_attachment_timeline self) {
-	Timeline *_self = (Timeline *) (AttachmentTimeline *) self;
+	AttachmentTimeline *_self = (AttachmentTimeline *) self;
 	return (spine_array_float) &_self->getFrames();
 }
 
 float spine_attachment_timeline_get_duration(spine_attachment_timeline self) {
-	Timeline *_self = (Timeline *) (AttachmentTimeline *) self;
+	AttachmentTimeline *_self = (AttachmentTimeline *) self;
 	return _self->getDuration();
 }
 
 spine_array_property_id spine_attachment_timeline_get_property_ids(spine_attachment_timeline self) {
-	Timeline *_self = (Timeline *) (AttachmentTimeline *) self;
+	AttachmentTimeline *_self = (AttachmentTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
 }
 

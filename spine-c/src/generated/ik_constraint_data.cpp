@@ -47,26 +47,22 @@ void spine_ik_constraint_data_set_uniform(spine_ik_constraint_data self, bool un
 }
 
 const char *spine_ik_constraint_data_get_name(spine_ik_constraint_data self) {
-	ConstraintDataGeneric<IkConstraint, IkConstraintPose> *_self = (ConstraintDataGeneric<IkConstraint, IkConstraintPose> *) (IkConstraintData *)
-		self;
+	IkConstraintData *_self = (IkConstraintData *) self;
 	return _self->getName().buffer();
 }
 
 bool spine_ik_constraint_data_get_skin_required(spine_ik_constraint_data self) {
-	ConstraintDataGeneric<IkConstraint, IkConstraintPose> *_self = (ConstraintDataGeneric<IkConstraint, IkConstraintPose> *) (IkConstraintData *)
-		self;
+	IkConstraintData *_self = (IkConstraintData *) self;
 	return _self->getSkinRequired();
 }
 
 spine_ik_constraint_pose spine_ik_constraint_data_get_setup_pose(spine_ik_constraint_data self) {
-	ConstraintDataGeneric<IkConstraint, IkConstraintPose> *_self = (ConstraintDataGeneric<IkConstraint, IkConstraintPose> *) (IkConstraintData *)
-		self;
+	IkConstraintData *_self = (IkConstraintData *) self;
 	return (spine_ik_constraint_pose) &_self->getSetupPose();
 }
 
 void spine_ik_constraint_data_set_skin_required(spine_ik_constraint_data self, bool skinRequired) {
-	ConstraintDataGeneric<IkConstraint, IkConstraintPose> *_self = (ConstraintDataGeneric<IkConstraint, IkConstraintPose> *) (IkConstraintData *)
-		self;
+	IkConstraintData *_self = (IkConstraintData *) self;
 	_self->setSkinRequired(skinRequired);
 }
 

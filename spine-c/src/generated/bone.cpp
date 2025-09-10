@@ -44,42 +44,42 @@ void spine_bone_update(spine_bone self, spine_skeleton skeleton, spine_physics p
 }
 
 spine_bone_data spine_bone_get_data(spine_bone self) {
-	PosedGeneric<BoneData, BoneLocal, BonePose> *_self = (PosedGeneric<BoneData, BoneLocal, BonePose> *) (Bone *) self;
+	Bone *_self = (Bone *) self;
 	return (spine_bone_data) &_self->getData();
 }
 
 spine_bone_local spine_bone_get_pose(spine_bone self) {
-	PosedGeneric<BoneData, BoneLocal, BonePose> *_self = (PosedGeneric<BoneData, BoneLocal, BonePose> *) (Bone *) self;
+	Bone *_self = (Bone *) self;
 	return (spine_bone_local) &_self->getPose();
 }
 
 spine_bone_pose spine_bone_get_applied_pose(spine_bone self) {
-	PosedGeneric<BoneData, BoneLocal, BonePose> *_self = (PosedGeneric<BoneData, BoneLocal, BonePose> *) (Bone *) self;
+	Bone *_self = (Bone *) self;
 	return (spine_bone_pose) &_self->getAppliedPose();
 }
 
 void spine_bone_reset_constrained(spine_bone self) {
-	PosedGeneric<BoneData, BoneLocal, BonePose> *_self = (PosedGeneric<BoneData, BoneLocal, BonePose> *) (Bone *) self;
+	Bone *_self = (Bone *) self;
 	_self->resetConstrained();
 }
 
 void spine_bone_constrained(spine_bone self) {
-	PosedGeneric<BoneData, BoneLocal, BonePose> *_self = (PosedGeneric<BoneData, BoneLocal, BonePose> *) (Bone *) self;
+	Bone *_self = (Bone *) self;
 	_self->constrained();
 }
 
 bool spine_bone_is_pose_equal_to_applied(spine_bone self) {
-	PosedGeneric<BoneData, BoneLocal, BonePose> *_self = (PosedGeneric<BoneData, BoneLocal, BonePose> *) (Bone *) self;
+	Bone *_self = (Bone *) self;
 	return _self->isPoseEqualToApplied();
 }
 
 bool spine_bone_is_active(spine_bone self) {
-	PosedActive *_self = (PosedActive *) (Bone *) self;
+	Bone *_self = (Bone *) self;
 	return _self->isActive();
 }
 
 void spine_bone_set_active(spine_bone self, bool active) {
-	PosedActive *_self = (PosedActive *) (Bone *) self;
+	Bone *_self = (Bone *) self;
 	_self->setActive(active);
 }
 

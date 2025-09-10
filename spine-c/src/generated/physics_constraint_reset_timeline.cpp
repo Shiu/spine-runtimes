@@ -44,22 +44,22 @@ void spine_physics_constraint_reset_timeline_set_frame(spine_physics_constraint_
 }
 
 size_t spine_physics_constraint_reset_timeline_get_frame_entries(spine_physics_constraint_reset_timeline self) {
-	Timeline *_self = (Timeline *) (PhysicsConstraintResetTimeline *) self;
+	PhysicsConstraintResetTimeline *_self = (PhysicsConstraintResetTimeline *) self;
 	return _self->getFrameEntries();
 }
 
 spine_array_float spine_physics_constraint_reset_timeline_get_frames(spine_physics_constraint_reset_timeline self) {
-	Timeline *_self = (Timeline *) (PhysicsConstraintResetTimeline *) self;
+	PhysicsConstraintResetTimeline *_self = (PhysicsConstraintResetTimeline *) self;
 	return (spine_array_float) &_self->getFrames();
 }
 
 float spine_physics_constraint_reset_timeline_get_duration(spine_physics_constraint_reset_timeline self) {
-	Timeline *_self = (Timeline *) (PhysicsConstraintResetTimeline *) self;
+	PhysicsConstraintResetTimeline *_self = (PhysicsConstraintResetTimeline *) self;
 	return _self->getDuration();
 }
 
 spine_array_property_id spine_physics_constraint_reset_timeline_get_property_ids(spine_physics_constraint_reset_timeline self) {
-	Timeline *_self = (Timeline *) (PhysicsConstraintResetTimeline *) self;
+	PhysicsConstraintResetTimeline *_self = (PhysicsConstraintResetTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
 }
 

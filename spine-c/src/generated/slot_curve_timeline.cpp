@@ -30,53 +30,53 @@ void spine_slot_curve_timeline_set_slot_index(spine_slot_curve_timeline self, in
 }
 
 void spine_slot_curve_timeline_set_linear(spine_slot_curve_timeline self, size_t frame) {
-	CurveTimeline *_self = (CurveTimeline *) (SlotCurveTimeline *) self;
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) self;
 	_self->setLinear(frame);
 }
 
 void spine_slot_curve_timeline_set_stepped(spine_slot_curve_timeline self, size_t frame) {
-	CurveTimeline *_self = (CurveTimeline *) (SlotCurveTimeline *) self;
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) self;
 	_self->setStepped(frame);
 }
 
 void spine_slot_curve_timeline_set_bezier(spine_slot_curve_timeline self, size_t bezier, size_t frame, float value, float time1, float value1,
 										  float cx1, float cy1, float cx2, float cy2, float time2, float value2) {
-	CurveTimeline *_self = (CurveTimeline *) (SlotCurveTimeline *) self;
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) self;
 	_self->setBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
 }
 
 float spine_slot_curve_timeline_get_bezier_value(spine_slot_curve_timeline self, float time, size_t frame, size_t valueOffset, size_t i) {
-	CurveTimeline *_self = (CurveTimeline *) (SlotCurveTimeline *) self;
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) self;
 	return _self->getBezierValue(time, frame, valueOffset, i);
 }
 
 spine_array_float spine_slot_curve_timeline_get_curves(spine_slot_curve_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (SlotCurveTimeline *) self;
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) self;
 	return (spine_array_float) &_self->getCurves();
 }
 
 size_t spine_slot_curve_timeline_get_frame_entries(spine_slot_curve_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (SlotCurveTimeline *) self;
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) self;
 	return _self->getFrameEntries();
 }
 
 size_t spine_slot_curve_timeline_get_frame_count(spine_slot_curve_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (SlotCurveTimeline *) self;
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) self;
 	return _self->getFrameCount();
 }
 
 spine_array_float spine_slot_curve_timeline_get_frames(spine_slot_curve_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (SlotCurveTimeline *) self;
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) self;
 	return (spine_array_float) &_self->getFrames();
 }
 
 float spine_slot_curve_timeline_get_duration(spine_slot_curve_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (SlotCurveTimeline *) self;
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) self;
 	return _self->getDuration();
 }
 
 spine_array_property_id spine_slot_curve_timeline_get_property_ids(spine_slot_curve_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (SlotCurveTimeline *) self;
+	SlotCurveTimeline *_self = (SlotCurveTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
 }
 

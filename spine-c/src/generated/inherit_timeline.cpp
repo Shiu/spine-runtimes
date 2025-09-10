@@ -39,27 +39,27 @@ void spine_inherit_timeline_set_bone_index(spine_inherit_timeline self, int inVa
 }
 
 size_t spine_inherit_timeline_get_frame_entries(spine_inherit_timeline self) {
-	Timeline *_self = (Timeline *) (InheritTimeline *) self;
+	InheritTimeline *_self = (InheritTimeline *) self;
 	return _self->getFrameEntries();
 }
 
 size_t spine_inherit_timeline_get_frame_count(spine_inherit_timeline self) {
-	Timeline *_self = (Timeline *) (InheritTimeline *) self;
+	InheritTimeline *_self = (InheritTimeline *) self;
 	return _self->getFrameCount();
 }
 
 spine_array_float spine_inherit_timeline_get_frames(spine_inherit_timeline self) {
-	Timeline *_self = (Timeline *) (InheritTimeline *) self;
+	InheritTimeline *_self = (InheritTimeline *) self;
 	return (spine_array_float) &_self->getFrames();
 }
 
 float spine_inherit_timeline_get_duration(spine_inherit_timeline self) {
-	Timeline *_self = (Timeline *) (InheritTimeline *) self;
+	InheritTimeline *_self = (InheritTimeline *) self;
 	return _self->getDuration();
 }
 
 spine_array_property_id spine_inherit_timeline_get_property_ids(spine_inherit_timeline self) {
-	Timeline *_self = (Timeline *) (InheritTimeline *) self;
+	InheritTimeline *_self = (InheritTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
 }
 

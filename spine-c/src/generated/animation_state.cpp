@@ -119,6 +119,6 @@ void spine_animation_state_dispose_track_entry(spine_animation_state self, /*@nu
 }
 
 /*@null*/ void *spine_animation_state_get_renderer_object(spine_animation_state self) {
-	HasRendererObject *_self = (HasRendererObject *) (AnimationState *) self;
+	AnimationState *_self = (AnimationState *) self;
 	return _self->getRendererObject();
 }

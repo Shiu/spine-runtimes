@@ -41,54 +41,54 @@ void spine_transform_constraint_timeline_set_constraint_index(spine_transform_co
 }
 
 void spine_transform_constraint_timeline_set_linear(spine_transform_constraint_timeline self, size_t frame) {
-	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
 	_self->setLinear(frame);
 }
 
 void spine_transform_constraint_timeline_set_stepped(spine_transform_constraint_timeline self, size_t frame) {
-	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
 	_self->setStepped(frame);
 }
 
 void spine_transform_constraint_timeline_set_bezier(spine_transform_constraint_timeline self, size_t bezier, size_t frame, float value, float time1,
 													float value1, float cx1, float cy1, float cx2, float cy2, float time2, float value2) {
-	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
 	_self->setBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
 }
 
 float spine_transform_constraint_timeline_get_bezier_value(spine_transform_constraint_timeline self, float time, size_t frame, size_t valueOffset,
 														   size_t i) {
-	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
 	return _self->getBezierValue(time, frame, valueOffset, i);
 }
 
 spine_array_float spine_transform_constraint_timeline_get_curves(spine_transform_constraint_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
 	return (spine_array_float) &_self->getCurves();
 }
 
 size_t spine_transform_constraint_timeline_get_frame_entries(spine_transform_constraint_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
 	return _self->getFrameEntries();
 }
 
 size_t spine_transform_constraint_timeline_get_frame_count(spine_transform_constraint_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
 	return _self->getFrameCount();
 }
 
 spine_array_float spine_transform_constraint_timeline_get_frames(spine_transform_constraint_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
 	return (spine_array_float) &_self->getFrames();
 }
 
 float spine_transform_constraint_timeline_get_duration(spine_transform_constraint_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
 	return _self->getDuration();
 }
 
 spine_array_property_id spine_transform_constraint_timeline_get_property_ids(spine_transform_constraint_timeline self) {
-	CurveTimeline *_self = (CurveTimeline *) (TransformConstraintTimeline *) self;
+	TransformConstraintTimeline *_self = (TransformConstraintTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
 }
 

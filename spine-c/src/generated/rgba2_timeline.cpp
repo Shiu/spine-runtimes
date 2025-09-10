@@ -24,68 +24,68 @@ void spine_rgba2_timeline_set_frame(spine_rgba2_timeline self, int frame, float 
 
 void spine_rgba2_timeline_apply(spine_rgba2_timeline self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event events,
 								float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) events, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
 int spine_rgba2_timeline_get_slot_index(spine_rgba2_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	return _self->getSlotIndex();
 }
 
 void spine_rgba2_timeline_set_slot_index(spine_rgba2_timeline self, int inValue) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	_self->setSlotIndex(inValue);
 }
 
 void spine_rgba2_timeline_set_linear(spine_rgba2_timeline self, size_t frame) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	_self->setLinear(frame);
 }
 
 void spine_rgba2_timeline_set_stepped(spine_rgba2_timeline self, size_t frame) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	_self->setStepped(frame);
 }
 
 void spine_rgba2_timeline_set_bezier(spine_rgba2_timeline self, size_t bezier, size_t frame, float value, float time1, float value1, float cx1,
 									 float cy1, float cx2, float cy2, float time2, float value2) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	_self->setBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
 }
 
 float spine_rgba2_timeline_get_bezier_value(spine_rgba2_timeline self, float time, size_t frame, size_t valueOffset, size_t i) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	return _self->getBezierValue(time, frame, valueOffset, i);
 }
 
 spine_array_float spine_rgba2_timeline_get_curves(spine_rgba2_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	return (spine_array_float) &_self->getCurves();
 }
 
 size_t spine_rgba2_timeline_get_frame_entries(spine_rgba2_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	return _self->getFrameEntries();
 }
 
 size_t spine_rgba2_timeline_get_frame_count(spine_rgba2_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	return _self->getFrameCount();
 }
 
 spine_array_float spine_rgba2_timeline_get_frames(spine_rgba2_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	return (spine_array_float) &_self->getFrames();
 }
 
 float spine_rgba2_timeline_get_duration(spine_rgba2_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	return _self->getDuration();
 }
 
 spine_array_property_id spine_rgba2_timeline_get_property_ids(spine_rgba2_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (RGBA2Timeline *) self;
+	RGBA2Timeline *_self = (RGBA2Timeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
 }
 

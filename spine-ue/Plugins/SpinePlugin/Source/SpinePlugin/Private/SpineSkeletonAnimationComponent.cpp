@@ -40,7 +40,7 @@ void UTrackEntry::SetTrackEntry(TrackEntry *trackEntry) {
 	if (entry) entry->setRendererObject((void *) this);
 }
 
-void callback(AnimationState *state, spine::EventType type, TrackEntry *entry, Event *event, void* userData) {
+void callback(AnimationState *state, spine::EventType type, TrackEntry *entry, Event *event, void *userData) {
 	USpineSkeletonAnimationComponent *component = (USpineSkeletonAnimationComponent *) state->getRendererObject();
 
 	if (entry->getRendererObject()) {

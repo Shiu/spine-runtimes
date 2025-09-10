@@ -47,42 +47,42 @@ void spine_slider_set_bone(spine_slider self, spine_bone bone) {
 }
 
 spine_slider_data spine_slider_get_data(spine_slider self) {
-	SliderBase *_self = (SliderBase *) (Slider *) self;
+	Slider *_self = (Slider *) self;
 	return (spine_slider_data) &_self->getData();
 }
 
 spine_slider_pose spine_slider_get_pose(spine_slider self) {
-	SliderBase *_self = (SliderBase *) (Slider *) self;
+	Slider *_self = (Slider *) self;
 	return (spine_slider_pose) &_self->getPose();
 }
 
 spine_slider_pose spine_slider_get_applied_pose(spine_slider self) {
-	SliderBase *_self = (SliderBase *) (Slider *) self;
+	Slider *_self = (Slider *) self;
 	return (spine_slider_pose) &_self->getAppliedPose();
 }
 
 void spine_slider_reset_constrained(spine_slider self) {
-	SliderBase *_self = (SliderBase *) (Slider *) self;
+	Slider *_self = (Slider *) self;
 	_self->resetConstrained();
 }
 
 void spine_slider_constrained(spine_slider self) {
-	SliderBase *_self = (SliderBase *) (Slider *) self;
+	Slider *_self = (Slider *) self;
 	_self->constrained();
 }
 
 bool spine_slider_is_pose_equal_to_applied(spine_slider self) {
-	SliderBase *_self = (SliderBase *) (Slider *) self;
+	Slider *_self = (Slider *) self;
 	return _self->isPoseEqualToApplied();
 }
 
 bool spine_slider_is_active(spine_slider self) {
-	SliderBase *_self = (SliderBase *) (Slider *) self;
+	Slider *_self = (Slider *) self;
 	return _self->isActive();
 }
 
 void spine_slider_set_active(spine_slider self, bool active) {
-	SliderBase *_self = (SliderBase *) (Slider *) self;
+	Slider *_self = (Slider *) self;
 	_self->setActive(active);
 }
 

@@ -39,6 +39,9 @@
 // Extension types & functions
 #include "../src/extensions.h"
 
+// Cast functions for type conversions
+#include "../src/generated/casts.h"
+
 // Generated class types
 #include "../src/generated/alpha_timeline.h"
 #include "../src/generated/animation.h"

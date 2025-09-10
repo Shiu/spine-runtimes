@@ -77,26 +77,22 @@ void spine_path_constraint_data_set_offset_rotation(spine_path_constraint_data s
 }
 
 const char *spine_path_constraint_data_get_name(spine_path_constraint_data self) {
-	ConstraintDataGeneric<PathConstraint, PathConstraintPose>
-		*_self = (ConstraintDataGeneric<PathConstraint, PathConstraintPose> *) (PathConstraintData *) self;
+	PathConstraintData *_self = (PathConstraintData *) self;
 	return _self->getName().buffer();
 }
 
 bool spine_path_constraint_data_get_skin_required(spine_path_constraint_data self) {
-	ConstraintDataGeneric<PathConstraint, PathConstraintPose>
-		*_self = (ConstraintDataGeneric<PathConstraint, PathConstraintPose> *) (PathConstraintData *) self;
+	PathConstraintData *_self = (PathConstraintData *) self;
 	return _self->getSkinRequired();
 }
 
 spine_path_constraint_pose spine_path_constraint_data_get_setup_pose(spine_path_constraint_data self) {
-	ConstraintDataGeneric<PathConstraint, PathConstraintPose>
-		*_self = (ConstraintDataGeneric<PathConstraint, PathConstraintPose> *) (PathConstraintData *) self;
+	PathConstraintData *_self = (PathConstraintData *) self;
 	return (spine_path_constraint_pose) &_self->getSetupPose();
 }
 
 void spine_path_constraint_data_set_skin_required(spine_path_constraint_data self, bool skinRequired) {
-	ConstraintDataGeneric<PathConstraint, PathConstraintPose>
-		*_self = (ConstraintDataGeneric<PathConstraint, PathConstraintPose> *) (PathConstraintData *) self;
+	PathConstraintData *_self = (PathConstraintData *) self;
 	_self->setSkinRequired(skinRequired);
 }
 

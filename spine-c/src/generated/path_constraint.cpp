@@ -52,42 +52,42 @@ void spine_path_constraint_set_slot(spine_path_constraint self, spine_slot slot)
 }
 
 spine_path_constraint_data spine_path_constraint_get_data(spine_path_constraint self) {
-	PathConstraintBase *_self = (PathConstraintBase *) (PathConstraint *) self;
+	PathConstraint *_self = (PathConstraint *) self;
 	return (spine_path_constraint_data) &_self->getData();
 }
 
 spine_path_constraint_pose spine_path_constraint_get_pose(spine_path_constraint self) {
-	PathConstraintBase *_self = (PathConstraintBase *) (PathConstraint *) self;
+	PathConstraint *_self = (PathConstraint *) self;
 	return (spine_path_constraint_pose) &_self->getPose();
 }
 
 spine_path_constraint_pose spine_path_constraint_get_applied_pose(spine_path_constraint self) {
-	PathConstraintBase *_self = (PathConstraintBase *) (PathConstraint *) self;
+	PathConstraint *_self = (PathConstraint *) self;
 	return (spine_path_constraint_pose) &_self->getAppliedPose();
 }
 
 void spine_path_constraint_reset_constrained(spine_path_constraint self) {
-	PathConstraintBase *_self = (PathConstraintBase *) (PathConstraint *) self;
+	PathConstraint *_self = (PathConstraint *) self;
 	_self->resetConstrained();
 }
 
 void spine_path_constraint_constrained(spine_path_constraint self) {
-	PathConstraintBase *_self = (PathConstraintBase *) (PathConstraint *) self;
+	PathConstraint *_self = (PathConstraint *) self;
 	_self->constrained();
 }
 
 bool spine_path_constraint_is_pose_equal_to_applied(spine_path_constraint self) {
-	PathConstraintBase *_self = (PathConstraintBase *) (PathConstraint *) self;
+	PathConstraint *_self = (PathConstraint *) self;
 	return _self->isPoseEqualToApplied();
 }
 
 bool spine_path_constraint_is_active(spine_path_constraint self) {
-	PathConstraintBase *_self = (PathConstraintBase *) (PathConstraint *) self;
+	PathConstraint *_self = (PathConstraint *) self;
 	return _self->isActive();
 }
 
 void spine_path_constraint_set_active(spine_path_constraint self, bool active) {
-	PathConstraintBase *_self = (PathConstraintBase *) (PathConstraint *) self;
+	PathConstraint *_self = (PathConstraint *) self;
 	_self->setActive(active);
 }
 

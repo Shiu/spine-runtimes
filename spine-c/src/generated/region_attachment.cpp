@@ -154,22 +154,22 @@ spine_attachment spine_region_attachment_copy(spine_region_attachment self) {
 }
 
 const char *spine_region_attachment_get_name(spine_region_attachment self) {
-	Attachment *_self = (Attachment *) (RegionAttachment *) self;
+	RegionAttachment *_self = (RegionAttachment *) self;
 	return _self->getName().buffer();
 }
 
 int spine_region_attachment_get_ref_count(spine_region_attachment self) {
-	Attachment *_self = (Attachment *) (RegionAttachment *) self;
+	RegionAttachment *_self = (RegionAttachment *) self;
 	return _self->getRefCount();
 }
 
 void spine_region_attachment_reference(spine_region_attachment self) {
-	Attachment *_self = (Attachment *) (RegionAttachment *) self;
+	RegionAttachment *_self = (RegionAttachment *) self;
 	_self->reference();
 }
 
 void spine_region_attachment_dereference(spine_region_attachment self) {
-	Attachment *_self = (Attachment *) (RegionAttachment *) self;
+	RegionAttachment *_self = (RegionAttachment *) self;
 	_self->dereference();
 }
 

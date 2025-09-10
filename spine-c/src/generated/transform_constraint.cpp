@@ -52,42 +52,42 @@ void spine_transform_constraint_set_source(spine_transform_constraint self, spin
 }
 
 spine_transform_constraint_data spine_transform_constraint_get_data(spine_transform_constraint self) {
-	TransformConstraintBase *_self = (TransformConstraintBase *) (TransformConstraint *) self;
+	TransformConstraint *_self = (TransformConstraint *) self;
 	return (spine_transform_constraint_data) &_self->getData();
 }
 
 spine_transform_constraint_pose spine_transform_constraint_get_pose(spine_transform_constraint self) {
-	TransformConstraintBase *_self = (TransformConstraintBase *) (TransformConstraint *) self;
+	TransformConstraint *_self = (TransformConstraint *) self;
 	return (spine_transform_constraint_pose) &_self->getPose();
 }
 
 spine_transform_constraint_pose spine_transform_constraint_get_applied_pose(spine_transform_constraint self) {
-	TransformConstraintBase *_self = (TransformConstraintBase *) (TransformConstraint *) self;
+	TransformConstraint *_self = (TransformConstraint *) self;
 	return (spine_transform_constraint_pose) &_self->getAppliedPose();
 }
 
 void spine_transform_constraint_reset_constrained(spine_transform_constraint self) {
-	TransformConstraintBase *_self = (TransformConstraintBase *) (TransformConstraint *) self;
+	TransformConstraint *_self = (TransformConstraint *) self;
 	_self->resetConstrained();
 }
 
 void spine_transform_constraint_constrained(spine_transform_constraint self) {
-	TransformConstraintBase *_self = (TransformConstraintBase *) (TransformConstraint *) self;
+	TransformConstraint *_self = (TransformConstraint *) self;
 	_self->constrained();
 }
 
 bool spine_transform_constraint_is_pose_equal_to_applied(spine_transform_constraint self) {
-	TransformConstraintBase *_self = (TransformConstraintBase *) (TransformConstraint *) self;
+	TransformConstraint *_self = (TransformConstraint *) self;
 	return _self->isPoseEqualToApplied();
 }
 
 bool spine_transform_constraint_is_active(spine_transform_constraint self) {
-	TransformConstraintBase *_self = (TransformConstraintBase *) (TransformConstraint *) self;
+	TransformConstraint *_self = (TransformConstraint *) self;
 	return _self->isActive();
 }
 
 void spine_transform_constraint_set_active(spine_transform_constraint self, bool active) {
-	TransformConstraintBase *_self = (TransformConstraintBase *) (TransformConstraint *) self;
+	TransformConstraint *_self = (TransformConstraint *) self;
 	_self->setActive(active);
 }
 

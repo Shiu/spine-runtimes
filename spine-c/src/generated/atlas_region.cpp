@@ -177,72 +177,72 @@ void spine_atlas_region_set_values(spine_atlas_region self, spine_array_float va
 }
 
 float spine_atlas_region_get_u(spine_atlas_region self) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	return _self->getU();
 }
 
 void spine_atlas_region_set_u(spine_atlas_region self, float value) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	_self->setU(value);
 }
 
 float spine_atlas_region_get_v(spine_atlas_region self) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	return _self->getV();
 }
 
 void spine_atlas_region_set_v(spine_atlas_region self, float value) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	_self->setV(value);
 }
 
 float spine_atlas_region_get_u2(spine_atlas_region self) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	return _self->getU2();
 }
 
 void spine_atlas_region_set_u2(spine_atlas_region self, float value) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	_self->setU2(value);
 }
 
 float spine_atlas_region_get_v2(spine_atlas_region self) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	return _self->getV2();
 }
 
 void spine_atlas_region_set_v2(spine_atlas_region self, float value) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	_self->setV2(value);
 }
 
 int spine_atlas_region_get_region_width(spine_atlas_region self) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	return _self->getRegionWidth();
 }
 
 void spine_atlas_region_set_region_width(spine_atlas_region self, int value) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	_self->setRegionWidth(value);
 }
 
 int spine_atlas_region_get_region_height(spine_atlas_region self) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	return _self->getRegionHeight();
 }
 
 void spine_atlas_region_set_region_height(spine_atlas_region self, int value) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	_self->setRegionHeight(value);
 }
 
 /*@null*/ void *spine_atlas_region_get_renderer_object(spine_atlas_region self) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	return _self->getRendererObject();
 }
 
 void spine_atlas_region_set_renderer_object(spine_atlas_region self, /*@null*/ void *value) {
-	TextureRegion *_self = (TextureRegion *) (AtlasRegion *) self;
+	AtlasRegion *_self = (AtlasRegion *) self;
 	_self->setRendererObject(value);
 }
 

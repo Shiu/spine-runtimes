@@ -57,21 +57,21 @@ void spine_bone_data_set_visible(spine_bone_data self, bool inValue) {
 }
 
 spine_bone_local spine_bone_data_get_setup_pose(spine_bone_data self) {
-	PosedDataGeneric<BoneLocal> *_self = (PosedDataGeneric<BoneLocal> *) (BoneData *) self;
+	BoneData *_self = (BoneData *) self;
 	return (spine_bone_local) &_self->getSetupPose();
 }
 
 const char *spine_bone_data_get_name(spine_bone_data self) {
-	PosedDataGeneric<BoneLocal> *_self = (PosedDataGeneric<BoneLocal> *) (BoneData *) self;
+	BoneData *_self = (BoneData *) self;
 	return _self->getName().buffer();
 }
 
 bool spine_bone_data_get_skin_required(spine_bone_data self) {
-	PosedDataGeneric<BoneLocal> *_self = (PosedDataGeneric<BoneLocal> *) (BoneData *) self;
+	BoneData *_self = (BoneData *) self;
 	return _self->getSkinRequired();
 }
 
 void spine_bone_data_set_skin_required(spine_bone_data self, bool skinRequired) {
-	PosedDataGeneric<BoneLocal> *_self = (PosedDataGeneric<BoneLocal> *) (BoneData *) self;
+	BoneData *_self = (BoneData *) self;
 	_self->setSkinRequired(skinRequired);
 }

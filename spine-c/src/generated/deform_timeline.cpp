@@ -49,57 +49,57 @@ size_t spine_deform_timeline_get_frame_count(spine_deform_timeline self) {
 
 void spine_deform_timeline_apply(spine_deform_timeline self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event events,
 								 float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	DeformTimeline *_self = (DeformTimeline *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) events, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
 int spine_deform_timeline_get_slot_index(spine_deform_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	DeformTimeline *_self = (DeformTimeline *) self;
 	return _self->getSlotIndex();
 }
 
 void spine_deform_timeline_set_slot_index(spine_deform_timeline self, int inValue) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	DeformTimeline *_self = (DeformTimeline *) self;
 	_self->setSlotIndex(inValue);
 }
 
 void spine_deform_timeline_set_linear(spine_deform_timeline self, size_t frame) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	DeformTimeline *_self = (DeformTimeline *) self;
 	_self->setLinear(frame);
 }
 
 void spine_deform_timeline_set_stepped(spine_deform_timeline self, size_t frame) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	DeformTimeline *_self = (DeformTimeline *) self;
 	_self->setStepped(frame);
 }
 
 float spine_deform_timeline_get_bezier_value(spine_deform_timeline self, float time, size_t frame, size_t valueOffset, size_t i) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	DeformTimeline *_self = (DeformTimeline *) self;
 	return _self->getBezierValue(time, frame, valueOffset, i);
 }
 
 spine_array_float spine_deform_timeline_get_curves(spine_deform_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	DeformTimeline *_self = (DeformTimeline *) self;
 	return (spine_array_float) &_self->getCurves();
 }
 
 size_t spine_deform_timeline_get_frame_entries(spine_deform_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	DeformTimeline *_self = (DeformTimeline *) self;
 	return _self->getFrameEntries();
 }
 
 spine_array_float spine_deform_timeline_get_frames(spine_deform_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	DeformTimeline *_self = (DeformTimeline *) self;
 	return (spine_array_float) &_self->getFrames();
 }
 
 float spine_deform_timeline_get_duration(spine_deform_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	DeformTimeline *_self = (DeformTimeline *) self;
 	return _self->getDuration();
 }
 
 spine_array_property_id spine_deform_timeline_get_property_ids(spine_deform_timeline self) {
-	SlotCurveTimeline *_self = (SlotCurveTimeline *) (DeformTimeline *) self;
+	DeformTimeline *_self = (DeformTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
 }
 

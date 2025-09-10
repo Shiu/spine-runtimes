@@ -142,26 +142,22 @@ spine_array_from_property spine_transform_constraint_data_get_properties(spine_t
 }
 
 const char *spine_transform_constraint_data_get_name(spine_transform_constraint_data self) {
-	ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>
-		*_self = (ConstraintDataGeneric<TransformConstraint, TransformConstraintPose> *) (TransformConstraintData *) self;
+	TransformConstraintData *_self = (TransformConstraintData *) self;
 	return _self->getName().buffer();
 }
 
 bool spine_transform_constraint_data_get_skin_required(spine_transform_constraint_data self) {
-	ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>
-		*_self = (ConstraintDataGeneric<TransformConstraint, TransformConstraintPose> *) (TransformConstraintData *) self;
+	TransformConstraintData *_self = (TransformConstraintData *) self;
 	return _self->getSkinRequired();
 }
 
 spine_transform_constraint_pose spine_transform_constraint_data_get_setup_pose(spine_transform_constraint_data self) {
-	ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>
-		*_self = (ConstraintDataGeneric<TransformConstraint, TransformConstraintPose> *) (TransformConstraintData *) self;
+	TransformConstraintData *_self = (TransformConstraintData *) self;
 	return (spine_transform_constraint_pose) &_self->getSetupPose();
 }
 
 void spine_transform_constraint_data_set_skin_required(spine_transform_constraint_data self, bool skinRequired) {
-	ConstraintDataGeneric<TransformConstraint, TransformConstraintPose>
-		*_self = (ConstraintDataGeneric<TransformConstraint, TransformConstraintPose> *) (TransformConstraintData *) self;
+	TransformConstraintData *_self = (TransformConstraintData *) self;
 	_self->setSkinRequired(skinRequired);
 }
 

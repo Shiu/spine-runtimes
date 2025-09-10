@@ -47,7 +47,10 @@ target_link_libraries(your_target spine-c)
 
 This will automatically fetch and build spine-c along with its dependency (spine-cpp).
 
-Include `spine-c.h` in your code, which provides the complete API. All code samples in this guide assume `#include <spine-c.h>`.
+Include spine-c headers in your code:
+```c
+#include <spine-c.h>
+```
 
 ## Manual Integration
 
@@ -58,9 +61,10 @@ If you prefer manual integration:
    - Add sources from `spine-cpp/src`, `spine-c/src`
 3. Add the include directories: `spine-cpp/include`, `spine-c/include`
 
-Include `spine-c.h` in your code, which provides the complete API. All code samples in this guide assume `#include <spine-c.h>`.
-
-See the [example integrations](#introduction) for complete implementations.
+Include spine-c headers in your code:
+```c
+#include <spine-c.h>
+```
 
 # Exporting Spine assets for spine-c
 ![](/img/spine-runtimes-guide/spine-ue4/export.png)
@@ -109,12 +113,16 @@ if (spine_atlas_result_get_error(result)) {
 spine_atlas atlas = spine_atlas_result_get_atlas(result);
 spine_atlas_result_dispose(result);
 
-// Now manually load textures for each page
+// Manual texture loading: spine_atlas_load sets page indices, not texture pointers
+// You need to load textures and set them on the regions for each page
 spine_array_atlas_page pages = spine_atlas_get_pages(atlas);
 int num_pages = spine_array_atlas_page_size(pages);
 
+// Load texture for each page
+void** page_textures = malloc(num_pages * sizeof(void*));
+spine_atlas_page* pages_buffer = spine_array_atlas_page_buffer(pages);
 for (int i = 0; i < num_pages; i++) {
-    spine_atlas_page page = spine_array_atlas_page_get(pages, i);
+    spine_atlas_page page = pages_buffer[i];
 
     // Get the texture filename from the atlas
     const char* texture_name = spine_atlas_page_get_texture_path(page);
@@ -124,13 +132,26 @@ for (int i = 0; i < num_pages; i++) {
     snprintf(full_path, sizeof(full_path), "%s/%s", atlas_dir, texture_name);
 
     // Load texture using your engine
-    void* texture = engine_load_texture(full_path);
-
-    // Store the texture in the page
-    spine_atlas_page_set_texture(page, texture);
-    spine_atlas_page_set_width(page, texture_width);
-    spine_atlas_page_set_height(page, texture_height);
+    page_textures[i] = engine_load_texture(full_path);
 }
+
+// Set renderer objects on all regions to point to their page's texture
+spine_array_atlas_region regions = spine_atlas_get_regions(atlas);
+int num_regions = spine_array_atlas_region_size(regions);
+spine_atlas_region* regions_buffer = spine_array_atlas_region_buffer(regions);
+
+for (int i = 0; i < num_regions; i++) {
+    spine_atlas_region region = regions_buffer[i];
+    spine_atlas_page page = spine_atlas_region_get_page(region);
+
+    // spine_atlas_load stores the page index in the page's texture field
+    int page_index = (int)(intptr_t)spine_atlas_page_get_texture(page);
+
+    // Set the actual texture as the region's renderer object
+    spine_atlas_region_set_renderer_object(region, page_textures[page_index]);
+}
+
+free(page_textures);
 ```
 
 ### Option 2: Provide texture loading callbacks
@@ -740,7 +761,7 @@ Iterate through commands and submit them to your graphics API:
 // Simplified graphics API for illustration
 void render_skeleton(spine_render_command first_command) {
     spine_render_command command = first_command;
-    
+
     while (command) {
         // Get command data
         float* positions = spine_render_command_get_positions(command);
@@ -749,19 +770,19 @@ void render_skeleton(spine_render_command first_command) {
         uint16_t* indices = spine_render_command_get_indices(command);
         int num_vertices = spine_render_command_get_num_vertices(command);
         int num_indices = spine_render_command_get_num_indices(command);
-        
+
         // Get texture and blend mode
         void* texture = spine_render_command_get_texture(command);
         spine_blend_mode blend_mode = spine_render_command_get_blend_mode(command);
-        
+
         // Set graphics state
         graphics_bind_texture(texture);
         graphics_set_blend_mode(blend_mode);
-        
+
         // Submit vertices and indices to GPU
         graphics_set_vertices(positions, uvs, colors, num_vertices);
         graphics_draw_indexed(indices, num_indices);
-        
+
         // Move to next command
         command = spine_render_command_get_next(command);
     }
@@ -797,7 +818,7 @@ void graphics_set_blend_mode(spine_blend_mode mode, bool premultiplied_alpha) {
 
 For complete rendering implementations, see:
 * [spine-sfml](/spine-sfml): SFML-based renderer
-* [spine-sdl](/spine-sdl): SDL-based renderer  
+* [spine-sdl](/spine-sdl): SDL-based renderer
 * [spine-glfw](/spine-glfw): OpenGL renderer with GLFW
 
 These examples show how to integrate spine-c rendering with different graphics APIs and frameworks.
@@ -817,3 +838,98 @@ When creating objects, you pass references to other objects. The referencing obj
 * Disposing `spine_skeleton` does not dispose `spine_skeleton_data` or `spine_atlas`. The skeleton data is likely shared by other skeleton instances.
 * Disposing `spine_skeleton_data` does not dispose `spine_atlas`. The atlas may be shared by multiple skeleton data instances.
 * Disposing `spine_skeleton_drawable` disposes its skeleton and animation state, but not the skeleton data.
+
+# Type information and casting
+
+spine-c uses opaque pointers to represent C++ objects. Some types have inheritance relationships that require explicit casting when converting between base and derived types.
+
+## RTTI (Runtime Type Information)
+
+Every polymorphic type in spine-c provides RTTI to identify its concrete type at runtime:
+
+```c
+spine_array_constraint constraints = spine_skeleton_get_constraints(skeleton);
+spine_constraint* buffer = spine_array_constraint_buffer(constraints);
+
+for (int i = 0; i < spine_array_constraint_size(constraints); i++) {
+    spine_constraint constraint = buffer[i];
+    spine_rtti rtti = spine_constraint_get_rtti(constraint);
+    
+    // Check the exact type
+    if (spine_rtti_is_exactly(rtti, spine_transform_constraint_rtti())) {
+        // This is exactly a TransformConstraint
+    }
+    
+    // Check if it's an instance of a type (includes derived types)
+    if (spine_rtti_is_instance_of(rtti, spine_constraint_rtti())) {
+        // This is a Constraint or derived from Constraint
+    }
+    
+    // Get the class name for debugging
+    const char* class_name = spine_rtti_get_class_name(rtti);
+    printf("Constraint type: %s\n", class_name);
+}
+```
+
+## Type casting
+
+Due to C++ multiple inheritance, pointer values change when casting between types. spine-c provides cast functions that handle these adjustments correctly.
+
+### Upcasting (derived to base)
+
+Upcasting is always safe and used when storing derived types in base-type containers:
+
+```c
+spine_transform_constraint tc = /* ... */;
+
+// Cast to base type for storage in array
+spine_constraint base = spine_transform_constraint_cast_to_constraint(tc);
+spine_array_constraint_add(constraints_array, base);
+```
+
+### Downcasting (base to derived)
+
+Downcasting requires knowing the actual type. Use RTTI to verify before casting:
+
+```c
+spine_constraint constraint = buffer[i];
+
+// Check type before downcasting
+spine_rtti rtti = spine_constraint_get_rtti(constraint);
+if (spine_rtti_is_exactly(rtti, spine_transform_constraint_rtti())) {
+    // Safe to downcast
+    spine_transform_constraint tc = spine_constraint_cast_to_transform_constraint(constraint);
+    spine_transform_constraint_data data = spine_transform_constraint_get_data(tc);
+    // Use the transform constraint...
+}
+```
+
+### Common type hierarchies
+
+Key inheritance relationships that require casting:
+
+* **Constraints**: `IkConstraint`, `PathConstraint`, `PhysicsConstraint`, `TransformConstraint` → `Constraint`
+* **Constraint data**: `IkConstraintData`, `PathConstraintData`, etc. → `ConstraintData`
+* **Attachments**: `RegionAttachment`, `MeshAttachment`, `BoundingBoxAttachment`, etc. → `Attachment`
+* **Timelines**: Many timeline types → `CurveTimeline` → `Timeline`
+
+Example with attachments:
+
+```c
+spine_slot slot = spine_skeleton_find_slot(skeleton, "weapon");
+spine_attachment attachment = spine_slot_get_attachment(slot);
+
+if (attachment) {
+    spine_rtti rtti = spine_attachment_get_rtti(attachment);
+    
+    if (spine_rtti_is_exactly(rtti, spine_region_attachment_rtti())) {
+        spine_region_attachment region = spine_attachment_cast_to_region_attachment(attachment);
+        // Work with region attachment...
+    } else if (spine_rtti_is_exactly(rtti, spine_mesh_attachment_rtti())) {
+        spine_mesh_attachment mesh = spine_attachment_cast_to_mesh_attachment(attachment);
+        // Work with mesh attachment...
+    }
+}
+```
+
+> **Note:** Never use C-style casts between spine-c types. Always use the provided cast functions to ensure correct pointer adjustment.

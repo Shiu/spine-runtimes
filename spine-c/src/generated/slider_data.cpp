@@ -102,22 +102,22 @@ void spine_slider_data_set_local(spine_slider_data self, bool local) {
 }
 
 const char *spine_slider_data_get_name(spine_slider_data self) {
-	ConstraintDataGeneric<Slider, SliderPose> *_self = (ConstraintDataGeneric<Slider, SliderPose> *) (SliderData *) self;
+	SliderData *_self = (SliderData *) self;
 	return _self->getName().buffer();
 }
 
 bool spine_slider_data_get_skin_required(spine_slider_data self) {
-	ConstraintDataGeneric<Slider, SliderPose> *_self = (ConstraintDataGeneric<Slider, SliderPose> *) (SliderData *) self;
+	SliderData *_self = (SliderData *) self;
 	return _self->getSkinRequired();
 }
 
 spine_slider_pose spine_slider_data_get_setup_pose(spine_slider_data self) {
-	ConstraintDataGeneric<Slider, SliderPose> *_self = (ConstraintDataGeneric<Slider, SliderPose> *) (SliderData *) self;
+	SliderData *_self = (SliderData *) self;
 	return (spine_slider_pose) &_self->getSetupPose();
 }
 
 void spine_slider_data_set_skin_required(spine_slider_data self, bool skinRequired) {
-	ConstraintDataGeneric<Slider, SliderPose> *_self = (ConstraintDataGeneric<Slider, SliderPose> *) (SliderData *) self;
+	SliderData *_self = (SliderData *) self;
 	_self->setSkinRequired(skinRequired);
 }
 

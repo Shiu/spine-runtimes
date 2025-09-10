@@ -1,7 +1,7 @@
 - 4.3 release work
     - update docs
-        - [ ] spine-c
-        - [ ] spine-cpp
+        - [x] spine-c
+        - [x] spine-cpp
         - [x] spine-flutter
         - [x] spine-ios
         - [x] spine-sdl

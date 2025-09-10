@@ -75,27 +75,27 @@ void spine_vertex_attachment_copy_to(spine_vertex_attachment self, spine_vertex_
 }
 
 const char *spine_vertex_attachment_get_name(spine_vertex_attachment self) {
-	Attachment *_self = (Attachment *) (VertexAttachment *) self;
+	VertexAttachment *_self = (VertexAttachment *) self;
 	return _self->getName().buffer();
 }
 
 spine_attachment spine_vertex_attachment_copy(spine_vertex_attachment self) {
-	Attachment *_self = (Attachment *) (VertexAttachment *) self;
+	VertexAttachment *_self = (VertexAttachment *) self;
 	return (spine_attachment) &_self->copy();
 }
 
 int spine_vertex_attachment_get_ref_count(spine_vertex_attachment self) {
-	Attachment *_self = (Attachment *) (VertexAttachment *) self;
+	VertexAttachment *_self = (VertexAttachment *) self;
 	return _self->getRefCount();
 }
 
 void spine_vertex_attachment_reference(spine_vertex_attachment self) {
-	Attachment *_self = (Attachment *) (VertexAttachment *) self;
+	VertexAttachment *_self = (VertexAttachment *) self;
 	_self->reference();
 }
 
 void spine_vertex_attachment_dereference(spine_vertex_attachment self) {
-	Attachment *_self = (Attachment *) (VertexAttachment *) self;
+	VertexAttachment *_self = (VertexAttachment *) self;
 	_self->dereference();
 }
 

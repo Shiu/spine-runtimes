@@ -215,6 +215,9 @@ export class CWriter {
             '// Extension types & functions',
             '#include "../src/extensions.h"',
             '',
+            '// Cast functions for type conversions',
+            '#include "../src/generated/casts.h"',
+            '',
             '// Generated class types'
         ];
 
@@ -304,6 +307,117 @@ export class CWriter {
         fs.writeFileSync(sourcePath, arraySourceLines.join('\n'));
     }
 
+    async writeCasts(supertypes: Record<string, string[]>, subtypes: Record<string, string[]>, 
+                     cNameToCppName: Record<string, string>): Promise<void> {
+        console.log('\nGenerating casts.h/casts.cpp...');
+
+        // Generate header
+        const castHeaderLines: string[] = [];
+        
+        castHeaderLines.push(LICENSE_HEADER);
+        castHeaderLines.push('');
+        castHeaderLines.push('#ifndef SPINE_C_CASTS_H');
+        castHeaderLines.push('#define SPINE_C_CASTS_H');
+        castHeaderLines.push('');
+        castHeaderLines.push('#include "../base.h"');
+        castHeaderLines.push('#include "types.h"');
+        castHeaderLines.push('');
+        castHeaderLines.push('#ifdef __cplusplus');
+        castHeaderLines.push('extern "C" {');
+        castHeaderLines.push('#endif');
+        castHeaderLines.push('');
+        
+        // Generate upcast functions (derived to base)
+        castHeaderLines.push('// Upcast functions (derived to base) - always safe');
+        for (const [derivedType, supertypeList] of Object.entries(supertypes)) {
+            for (const baseType of supertypeList) {
+                const funcName = `${derivedType}_cast_to_${baseType.replace('spine_', '')}`;
+                castHeaderLines.push(`SPINE_C_API ${baseType} ${funcName}(${derivedType} obj);`);
+            }
+        }
+        
+        castHeaderLines.push('');
+        castHeaderLines.push('// Downcast functions (base to derived) - user must ensure correct type');
+        
+        // Generate downcast functions (base to derived)
+        for (const [baseType, subtypeList] of Object.entries(subtypes)) {
+            for (const derivedType of subtypeList) {
+                const funcName = `${baseType}_cast_to_${derivedType.replace('spine_', '')}`;
+                castHeaderLines.push(`SPINE_C_API ${derivedType} ${funcName}(${baseType} obj);`);
+            }
+        }
+        
+        castHeaderLines.push('');
+        castHeaderLines.push('#ifdef __cplusplus');
+        castHeaderLines.push('}');
+        castHeaderLines.push('#endif');
+        castHeaderLines.push('');
+        castHeaderLines.push('#endif /* SPINE_C_CASTS_H */');
+        castHeaderLines.push('');
+        
+        // Generate source
+        const castSourceLines: string[] = [];
+        
+        castSourceLines.push(LICENSE_HEADER);
+        castSourceLines.push('');
+        castSourceLines.push('#include "casts.h"');
+        castSourceLines.push('#include <spine/spine.h>');
+        castSourceLines.push('');
+        castSourceLines.push('using namespace spine;');
+        castSourceLines.push('');
+        
+        // Helper function to get C++ class name from C name
+        const toCppClassName = (cName: string): string => {
+            const cppName = cNameToCppName[cName];
+            if (!cppName) {
+                throw new Error(`Cannot find C++ class name for C type '${cName}'. Make sure the type is properly generated.`);
+            }
+            return cppName;
+        };
+        
+        // Generate upcast implementations
+        castSourceLines.push('// Upcast function implementations');
+        for (const [derivedType, supertypeList] of Object.entries(supertypes)) {
+            const derivedCppClass = toCppClassName(derivedType);
+            
+            for (const baseType of supertypeList) {
+                const baseCppClass = toCppClassName(baseType);
+                const funcName = `${derivedType}_cast_to_${baseType.replace('spine_', '')}`;
+                
+                castSourceLines.push(`${baseType} ${funcName}(${derivedType} obj) {`);
+                castSourceLines.push(`    ${derivedCppClass}* derived = (${derivedCppClass}*)obj;`);
+                castSourceLines.push(`    ${baseCppClass}* base = static_cast<${baseCppClass}*>(derived);`);
+                castSourceLines.push(`    return (${baseType})base;`);
+                castSourceLines.push(`}`);
+                castSourceLines.push('');
+            }
+        }
+        
+        // Generate downcast implementations
+        castSourceLines.push('// Downcast function implementations');
+        for (const [baseType, subtypeList] of Object.entries(subtypes)) {
+            const baseCppClass = toCppClassName(baseType);
+            
+            for (const derivedType of subtypeList) {
+                const derivedCppClass = toCppClassName(derivedType);
+                const funcName = `${baseType}_cast_to_${derivedType.replace('spine_', '')}`;
+                
+                castSourceLines.push(`${derivedType} ${funcName}(${baseType} obj) {`);
+                castSourceLines.push(`    ${baseCppClass}* base = (${baseCppClass}*)obj;`);
+                castSourceLines.push(`    ${derivedCppClass}* derived = static_cast<${derivedCppClass}*>(base);`);
+                castSourceLines.push(`    return (${derivedType})derived;`);
+                castSourceLines.push(`}`);
+                castSourceLines.push('');
+            }
+        }
+        
+        const headerPath = path.join(this.outputDir, 'casts.h');
+        const sourcePath = path.join(this.outputDir, 'casts.cpp');
+        
+        fs.writeFileSync(headerPath, castHeaderLines.join('\n'));
+        fs.writeFileSync(sourcePath, castSourceLines.join('\n'));
+    }
+
     /** Writes the types.h file, which includes all class forward declarations and enum types. */
     async writeTypesHeader(cClasses: CClassOrStruct[], cEnums: CEnum[]): Promise<void> {
         const headerPath = path.join(this.outputDir, 'types.h');
@@ -346,10 +460,19 @@ export class CWriter {
         fs.writeFileSync(headerPath, lines.join('\n'));
     }
 
-    async writeAll(cClasses: CClassOrStruct[], cEnums: CEnum[], cArrayTypes: CClassOrStruct[]): Promise<void> {
+    async writeAll(cClasses: CClassOrStruct[], cEnums: CEnum[], cArrayTypes: CClassOrStruct[], 
+                   supertypes: Record<string, string[]>, subtypes: Record<string, string[]>): Promise<void> {
         await this.writeTypesHeader(cClasses, cEnums);
         await this.writeMainHeader(cClasses);
         await this.writeArrays(cArrayTypes);
+        
+        // Build C name to C++ name mapping
+        const cNameToCppName: Record<string, string> = {};
+        for (const cClass of cClasses) {
+            cNameToCppName[cClass.name] = cClass.cppType.name;
+        }
+        
+        await this.writeCasts(supertypes, subtypes, cNameToCppName);
 
         // Write all class files
         for (const classType of cClasses) {

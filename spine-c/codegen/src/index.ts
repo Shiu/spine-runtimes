@@ -322,7 +322,7 @@ async function main() {
 
     // Write all files to disk
     const cWriter = new CWriter(path.join(__dirname, '../../src/generated'));
-    await cWriter.writeAll(cTypes, cEnums, cArrayTypes);
+    await cWriter.writeAll(cTypes, cEnums, cArrayTypes, supertypes, subtypes);
 
     // Format the generated code
     console.log('Formatting generated code...');

@@ -172,26 +172,22 @@ void spine_physics_constraint_data_set_mix_global(spine_physics_constraint_data 
 }
 
 const char *spine_physics_constraint_data_get_name(spine_physics_constraint_data self) {
-	ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>
-		*_self = (ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose> *) (PhysicsConstraintData *) self;
+	PhysicsConstraintData *_self = (PhysicsConstraintData *) self;
 	return _self->getName().buffer();
 }
 
 bool spine_physics_constraint_data_get_skin_required(spine_physics_constraint_data self) {
-	ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>
-		*_self = (ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose> *) (PhysicsConstraintData *) self;
+	PhysicsConstraintData *_self = (PhysicsConstraintData *) self;
 	return _self->getSkinRequired();
 }
 
 spine_physics_constraint_pose spine_physics_constraint_data_get_setup_pose(spine_physics_constraint_data self) {
-	ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>
-		*_self = (ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose> *) (PhysicsConstraintData *) self;
+	PhysicsConstraintData *_self = (PhysicsConstraintData *) self;
 	return (spine_physics_constraint_pose) &_self->getSetupPose();
 }
 
 void spine_physics_constraint_data_set_skin_required(spine_physics_constraint_data self, bool skinRequired) {
-	ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose>
-		*_self = (ConstraintDataGeneric<PhysicsConstraint, PhysicsConstraintPose> *) (PhysicsConstraintData *) self;
+	PhysicsConstraintData *_self = (PhysicsConstraintData *) self;
 	_self->setSkinRequired(skinRequired);
 }
 

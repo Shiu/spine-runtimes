@@ -287,6 +287,6 @@ void spine_track_entry_set_animation_state(spine_track_entry self, /*@null*/ spi
 }
 
 /*@null*/ void *spine_track_entry_get_renderer_object(spine_track_entry self) {
-	HasRendererObject *_self = (HasRendererObject *) (TrackEntry *) self;
+	TrackEntry *_self = (TrackEntry *) self;
 	return _self->getRendererObject();
 }

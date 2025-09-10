@@ -52,21 +52,21 @@ void spine_slot_data_set_visible(spine_slot_data self, bool visible) {
 }
 
 spine_slot_pose spine_slot_data_get_setup_pose(spine_slot_data self) {
-	PosedDataGeneric<SlotPose> *_self = (PosedDataGeneric<SlotPose> *) (SlotData *) self;
+	SlotData *_self = (SlotData *) self;
 	return (spine_slot_pose) &_self->getSetupPose();
 }
 
 const char *spine_slot_data_get_name(spine_slot_data self) {
-	PosedDataGeneric<SlotPose> *_self = (PosedDataGeneric<SlotPose> *) (SlotData *) self;
+	SlotData *_self = (SlotData *) self;
 	return _self->getName().buffer();
 }
 
 bool spine_slot_data_get_skin_required(spine_slot_data self) {
-	PosedDataGeneric<SlotPose> *_self = (PosedDataGeneric<SlotPose> *) (SlotData *) self;
+	SlotData *_self = (SlotData *) self;
 	return _self->getSkinRequired();
 }
 
 void spine_slot_data_set_skin_required(spine_slot_data self, bool skinRequired) {
-	PosedDataGeneric<SlotPose> *_self = (PosedDataGeneric<SlotPose> *) (SlotData *) self;
+	SlotData *_self = (SlotData *) self;
 	_self->setSkinRequired(skinRequired);
 }

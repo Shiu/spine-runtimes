@@ -38,22 +38,22 @@ void spine_event_timeline_set_frame(spine_event_timeline self, size_t frame, spi
 }
 
 size_t spine_event_timeline_get_frame_entries(spine_event_timeline self) {
-	Timeline *_self = (Timeline *) (EventTimeline *) self;
+	EventTimeline *_self = (EventTimeline *) self;
 	return _self->getFrameEntries();
 }
 
 spine_array_float spine_event_timeline_get_frames(spine_event_timeline self) {
-	Timeline *_self = (Timeline *) (EventTimeline *) self;
+	EventTimeline *_self = (EventTimeline *) self;
 	return (spine_array_float) &_self->getFrames();
 }
 
 float spine_event_timeline_get_duration(spine_event_timeline self) {
-	Timeline *_self = (Timeline *) (EventTimeline *) self;
+	EventTimeline *_self = (EventTimeline *) self;
 	return _self->getDuration();
 }
 
 spine_array_property_id spine_event_timeline_get_property_ids(spine_event_timeline self) {
-	Timeline *_self = (Timeline *) (EventTimeline *) self;
+	EventTimeline *_self = (EventTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
 }
 

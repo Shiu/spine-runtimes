@@ -40,32 +40,32 @@ spine_array_float spine_curve_timeline_get_curves(spine_curve_timeline self) {
 
 void spine_curve_timeline_apply(spine_curve_timeline self, spine_skeleton skeleton, float lastTime, float time, /*@null*/ spine_array_event events,
 								float alpha, spine_mix_blend blend, spine_mix_direction direction, bool appliedPose) {
-	Timeline *_self = (Timeline *) (CurveTimeline *) self;
+	CurveTimeline *_self = (CurveTimeline *) self;
 	_self->apply(*((Skeleton *) skeleton), lastTime, time, (Array<Event *> *) events, alpha, (MixBlend) blend, (MixDirection) direction, appliedPose);
 }
 
 size_t spine_curve_timeline_get_frame_entries(spine_curve_timeline self) {
-	Timeline *_self = (Timeline *) (CurveTimeline *) self;
+	CurveTimeline *_self = (CurveTimeline *) self;
 	return _self->getFrameEntries();
 }
 
 size_t spine_curve_timeline_get_frame_count(spine_curve_timeline self) {
-	Timeline *_self = (Timeline *) (CurveTimeline *) self;
+	CurveTimeline *_self = (CurveTimeline *) self;
 	return _self->getFrameCount();
 }
 
 spine_array_float spine_curve_timeline_get_frames(spine_curve_timeline self) {
-	Timeline *_self = (Timeline *) (CurveTimeline *) self;
+	CurveTimeline *_self = (CurveTimeline *) self;
 	return (spine_array_float) &_self->getFrames();
 }
 
 float spine_curve_timeline_get_duration(spine_curve_timeline self) {
-	Timeline *_self = (Timeline *) (CurveTimeline *) self;
+	CurveTimeline *_self = (CurveTimeline *) self;
 	return _self->getDuration();
 }
 
 spine_array_property_id spine_curve_timeline_get_property_ids(spine_curve_timeline self) {
-	Timeline *_self = (Timeline *) (CurveTimeline *) self;
+	CurveTimeline *_self = (CurveTimeline *) self;
 	return (spine_array_property_id) &_self->getPropertyIds();
 }
 
