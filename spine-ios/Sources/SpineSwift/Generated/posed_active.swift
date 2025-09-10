@@ -35,7 +35,7 @@ import SpineC
 /// PosedActive wrapper
 @objc(SpinePosedActive)
 @objcMembers
-public class PosedActive: NSObject {
+open class PosedActive: NSObject {
     public let _ptr: UnsafeMutableRawPointer
 
     public init(fromPointer ptr: spine_posed_active) {

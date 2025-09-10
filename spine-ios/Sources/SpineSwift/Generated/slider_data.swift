@@ -98,18 +98,24 @@ public class SliderData: PosedData, ConstraintData {
         let rtti = spine_from_property_get_rtti(ptr)
         let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
         switch rttiClassName {
-        case "spine_from_rotate":
-            return FromRotate(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_rotate_wrapper.self))
-        case "spine_from_scale_x":
-            return FromScaleX(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_scale_x_wrapper.self))
-        case "spine_from_scale_y":
-            return FromScaleY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_scale_y_wrapper.self))
-        case "spine_from_shear_y":
-            return FromShearY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_shear_y_wrapper.self))
-        case "spine_from_x":
-            return FromX(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_x_wrapper.self))
-        case "spine_from_y":
-            return FromY(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_from_y_wrapper.self))
+        case "FromRotate":
+            let castedPtr = spine_from_property_cast_to_from_rotate(ptr)
+            return FromRotate(fromPointer: castedPtr!)
+        case "FromScaleX":
+            let castedPtr = spine_from_property_cast_to_from_scale_x(ptr)
+            return FromScaleX(fromPointer: castedPtr!)
+        case "FromScaleY":
+            let castedPtr = spine_from_property_cast_to_from_scale_y(ptr)
+            return FromScaleY(fromPointer: castedPtr!)
+        case "FromShearY":
+            let castedPtr = spine_from_property_cast_to_from_shear_y(ptr)
+            return FromShearY(fromPointer: castedPtr!)
+        case "FromX":
+            let castedPtr = spine_from_property_cast_to_from_x(ptr)
+            return FromX(fromPointer: castedPtr!)
+        case "FromY":
+            let castedPtr = spine_from_property_cast_to_from_y(ptr)
+            return FromY(fromPointer: castedPtr!)
         default:
             fatalError("Unknown concrete type: \(rttiClassName) for abstract class FromProperty")
         }
@@ -159,16 +165,21 @@ public class SliderData: PosedData, ConstraintData {
         let rtti = spine_constraint_get_rtti(result!)
         let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
         switch rttiClassName {
-        case "spine_ik_constraint":
-            return IkConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
-        case "spine_path_constraint":
-            return PathConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_path_constraint_wrapper.self))
-        case "spine_physics_constraint":
-            return PhysicsConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_physics_constraint_wrapper.self))
-        case "spine_slider":
-            return Slider(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_slider_wrapper.self))
-        case "spine_transform_constraint":
-            return TransformConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
+        case "IkConstraint":
+            let castedPtr = spine_constraint_cast_to_ik_constraint(result!)
+            return IkConstraint(fromPointer: castedPtr!)
+        case "PathConstraint":
+            let castedPtr = spine_constraint_cast_to_path_constraint(result!)
+            return PathConstraint(fromPointer: castedPtr!)
+        case "PhysicsConstraint":
+            let castedPtr = spine_constraint_cast_to_physics_constraint(result!)
+            return PhysicsConstraint(fromPointer: castedPtr!)
+        case "Slider":
+            let castedPtr = spine_constraint_cast_to_slider(result!)
+            return Slider(fromPointer: castedPtr!)
+        case "TransformConstraint":
+            let castedPtr = spine_constraint_cast_to_transform_constraint(result!)
+            return TransformConstraint(fromPointer: castedPtr!)
         default:
             fatalError("Unknown concrete type: \(rttiClassName) for abstract class Constraint")
         }

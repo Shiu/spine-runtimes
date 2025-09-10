@@ -641,7 +641,26 @@ export class SwiftWriter {
             if (swiftClass.type === 'abstract') {
                 declaration = `${objcAnnotations}open class ${swiftClass.name}`;
             } else {
-                declaration = `${objcAnnotations}public class ${swiftClass.name}`;
+                // Check if any abstract class extends from this class
+                // If so, this class needs to be open as well
+                let needsOpen = false;
+                // Find the C type name for this Swift class
+                const cTypeName = this.fromSwiftTypeName(swiftClass.name);
+                for (const [childName, inheritanceInfo] of Object.entries(this.inheritance)) {
+                    if (inheritanceInfo.extends === cTypeName) {
+                        const childClass = this.classMap.get(childName);
+                        if (childClass && this.isAbstract(childClass)) {
+                            needsOpen = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (needsOpen) {
+                    declaration = `${objcAnnotations}open class ${swiftClass.name}`;
+                } else {
+                    declaration = `${objcAnnotations}public class ${swiftClass.name}`;
+                }
             }
         }
 
@@ -713,7 +732,8 @@ ${declaration} {`;
         if (hasDispose) {
             const disposeMethod = swiftClass.members.find(m => m.name === '__dispose__');
             if (disposeMethod) {
-                // Add override if this class extends another CONCRETE class (abstract classes don't have dispose)
+                // Only add override if a parent class has a destructor that we generated dispose() for
+                // Abstract classes don't get dispose() generated, only concrete classes do
                 let override = '';
                 if (swiftClass.inheritance.extends) {
                     // Find the C++ name for this Swift class
@@ -726,13 +746,17 @@ ${declaration} {`;
                     }
                     
                     if (cppName) {
-                        const parentCName = this.inheritance[cppName]?.extends;
-                        if (parentCName) {
+                        // Check all parents in the hierarchy to see if any has a destructor AND is concrete
+                        let parentCName = this.inheritance[cppName]?.extends;
+                        while (parentCName) {
                             const parentClass = this.classMap.get(parentCName);
-                            // Only override if parent is concrete and has destructor
-                            if (parentClass && !parentClass.cppType.isAbstract && parentClass.destructor) {
+                            // Only concrete classes get dispose() generated
+                            if (parentClass && parentClass.destructor && !this.isAbstract(parentClass)) {
                                 override = 'override ';
+                                break;
                             }
+                            // Check next parent in hierarchy
+                            parentCName = this.inheritance[parentCName]?.extends;
                         }
                     }
                 }
@@ -1422,10 +1446,15 @@ ${declaration} {`;
 
         for (const subclass of concreteSubclasses) {
             const swiftSubclass = this.toSwiftTypeName(subclass);
-            lines.push(`case "${subclass}":`);
-            // Cast the pointer to the specific subclass type
-            const cSubclassTypeName = this.toCTypeName(swiftSubclass);
-            lines.push(`    return ${swiftSubclass}(fromPointer: UnsafeMutableRawPointer(${resultVar}).assumingMemoryBound(to: ${cSubclassTypeName}_wrapper.self))`);
+            // RTTI returns the C++ class name in PascalCase (e.g., "TransformConstraint")
+            // We need to convert spine_transform_constraint -> TransformConstraint
+            const cppClassName = this.toPascalCase(subclass.replace('spine_', ''));
+            lines.push(`case "${cppClassName}":`);
+            // Use C cast function to handle pointer adjustment
+            const toType = subclass.replace('spine_', '');
+            const castFunctionName = `${abstractClass.name}_cast_to_${toType}`;
+            lines.push(`    let castedPtr = ${castFunctionName}(${resultVar})`);
+            lines.push(`    return ${swiftSubclass}(fromPointer: castedPtr!)`);
         }
 
         lines.push(`default:`);

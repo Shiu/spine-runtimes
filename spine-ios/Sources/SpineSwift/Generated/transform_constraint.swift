@@ -35,25 +35,15 @@ import SpineC
 /// TransformConstraint wrapper
 @objc(SpineTransformConstraint)
 @objcMembers
-public class TransformConstraint: PosedActive, Posed, Constraint {
+public class TransformConstraint: TransformConstraintBase {
     @nonobjc
     public init(fromPointer ptr: spine_transform_constraint) {
-        super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_active_wrapper.self))
+        super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_transform_constraint_base_wrapper.self))
     }
 
     public convenience init(_ data: TransformConstraintData, _ skeleton: Skeleton) {
         let ptr = spine_transform_constraint_create(data._ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         self.init(fromPointer: ptr!)
-    }
-
-    public var rtti: Rtti {
-        let result = spine_transform_constraint_get_rtti(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
-        return Rtti(fromPointer: result!)
-    }
-
-    public var isSourceActive: Bool {
-        let result = spine_transform_constraint_is_source_active(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
-        return result
     }
 
     public var bones: ArrayBonePose {
@@ -71,50 +61,9 @@ public class TransformConstraint: PosedActive, Posed, Constraint {
         }
     }
 
-    public var data: ConstraintData {
-        let result = spine_transform_constraint_get_data(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
-        return TransformConstraintData(fromPointer: result!)
-    }
-
-    public var pose: TransformConstraintPose {
-        let result = spine_transform_constraint_get_pose(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
-        return TransformConstraintPose(fromPointer: result!)
-    }
-
-    public var appliedPose: TransformConstraintPose {
-        let result = spine_transform_constraint_get_applied_pose(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
-        return TransformConstraintPose(fromPointer: result!)
-    }
-
-    public var isPoseEqualToApplied: Bool {
-        let result = spine_transform_constraint_is_pose_equal_to_applied(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
-        return result
-    }
-
     public func copyAttachment(_ skeleton: Skeleton) -> TransformConstraint {
         let result = spine_transform_constraint_copy(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         return TransformConstraint(fromPointer: result!)
-    }
-
-    public func update(_ skeleton: Skeleton, _ physics: Physics) {
-        spine_transform_constraint_update(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
-    }
-
-    public func sort(_ skeleton: Skeleton) {
-        spine_transform_constraint_sort(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
-    }
-
-    public func resetConstrained() {
-        spine_transform_constraint_reset_constrained(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
-    }
-
-    public func constrained() {
-        spine_transform_constraint_constrained(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
-    }
-
-    public static func rttiStatic() -> Rtti {
-        let result = spine_transform_constraint_rtti()
-        return Rtti(fromPointer: result!)
     }
 
     public override func dispose() {

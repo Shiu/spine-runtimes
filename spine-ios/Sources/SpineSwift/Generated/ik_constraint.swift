@@ -35,30 +35,15 @@ import SpineC
 /// IkConstraint wrapper
 @objc(SpineIkConstraint)
 @objcMembers
-public class IkConstraint: PosedActive, Posed, Constraint {
+public class IkConstraint: IkConstraintBase {
     @nonobjc
     public init(fromPointer ptr: spine_ik_constraint) {
-        super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_active_wrapper.self))
+        super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_ik_constraint_base_wrapper.self))
     }
 
     public convenience init(_ data: IkConstraintData, _ skeleton: Skeleton) {
         let ptr = spine_ik_constraint_create(data._ptr.assumingMemoryBound(to: spine_ik_constraint_data_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         self.init(fromPointer: ptr!)
-    }
-
-    public var rtti: Rtti {
-        let result = spine_ik_constraint_get_rtti(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
-        return Rtti(fromPointer: result!)
-    }
-
-    public var isSourceActive: Bool {
-        let result = spine_ik_constraint_is_source_active(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
-        return result
-    }
-
-    public var data: ConstraintData {
-        let result = spine_ik_constraint_get_data(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
-        return IkConstraintData(fromPointer: result!)
     }
 
     public var bones: ArrayBonePose {
@@ -76,45 +61,9 @@ public class IkConstraint: PosedActive, Posed, Constraint {
         }
     }
 
-    public var pose: IkConstraintPose {
-        let result = spine_ik_constraint_get_pose(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
-        return IkConstraintPose(fromPointer: result!)
-    }
-
-    public var appliedPose: IkConstraintPose {
-        let result = spine_ik_constraint_get_applied_pose(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
-        return IkConstraintPose(fromPointer: result!)
-    }
-
-    public var isPoseEqualToApplied: Bool {
-        let result = spine_ik_constraint_is_pose_equal_to_applied(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
-        return result
-    }
-
     public func copyAttachment(_ skeleton: Skeleton) -> IkConstraint {
         let result = spine_ik_constraint_copy(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         return IkConstraint(fromPointer: result!)
-    }
-
-    public func update(_ skeleton: Skeleton, _ physics: Physics) {
-        spine_ik_constraint_update(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
-    }
-
-    public func sort(_ skeleton: Skeleton) {
-        spine_ik_constraint_sort(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
-    }
-
-    public func resetConstrained() {
-        spine_ik_constraint_reset_constrained(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
-    }
-
-    public func constrained() {
-        spine_ik_constraint_constrained(_ptr.assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
-    }
-
-    public static func rttiStatic() -> Rtti {
-        let result = spine_ik_constraint_rtti()
-        return Rtti(fromPointer: result!)
     }
 
     public static func apply(_ skeleton: Skeleton, _ bone: BonePose, _ targetX: Float, _ targetY: Float, _ compress: Bool, _ stretch: Bool, _ uniform: Bool, _ mix: Float) {

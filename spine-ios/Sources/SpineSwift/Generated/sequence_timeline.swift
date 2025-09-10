@@ -51,18 +51,24 @@ public class SequenceTimeline: Timeline, SlotTimeline {
         let rtti = spine_attachment_get_rtti(result!)
         let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
         switch rttiClassName {
-        case "spine_bounding_box_attachment":
-            return BoundingBoxAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_bounding_box_attachment_wrapper.self))
-        case "spine_clipping_attachment":
-            return ClippingAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_clipping_attachment_wrapper.self))
-        case "spine_mesh_attachment":
-            return MeshAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
-        case "spine_path_attachment":
-            return PathAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_path_attachment_wrapper.self))
-        case "spine_point_attachment":
-            return PointAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_point_attachment_wrapper.self))
-        case "spine_region_attachment":
-            return RegionAttachment(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_region_attachment_wrapper.self))
+        case "BoundingBoxAttachment":
+            let castedPtr = spine_attachment_cast_to_bounding_box_attachment(result!)
+            return BoundingBoxAttachment(fromPointer: castedPtr!)
+        case "ClippingAttachment":
+            let castedPtr = spine_attachment_cast_to_clipping_attachment(result!)
+            return ClippingAttachment(fromPointer: castedPtr!)
+        case "MeshAttachment":
+            let castedPtr = spine_attachment_cast_to_mesh_attachment(result!)
+            return MeshAttachment(fromPointer: castedPtr!)
+        case "PathAttachment":
+            let castedPtr = spine_attachment_cast_to_path_attachment(result!)
+            return PathAttachment(fromPointer: castedPtr!)
+        case "PointAttachment":
+            let castedPtr = spine_attachment_cast_to_point_attachment(result!)
+            return PointAttachment(fromPointer: castedPtr!)
+        case "RegionAttachment":
+            let castedPtr = spine_attachment_cast_to_region_attachment(result!)
+            return RegionAttachment(fromPointer: castedPtr!)
         default:
             fatalError("Unknown concrete type: \(rttiClassName) for abstract class Attachment")
         }

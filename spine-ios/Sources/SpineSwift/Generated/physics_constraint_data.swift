@@ -211,16 +211,21 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
         let rtti = spine_constraint_get_rtti(result!)
         let rttiClassName = String(cString: spine_rtti_get_class_name(rtti)!)
         switch rttiClassName {
-        case "spine_ik_constraint":
-            return IkConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_ik_constraint_wrapper.self))
-        case "spine_path_constraint":
-            return PathConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_path_constraint_wrapper.self))
-        case "spine_physics_constraint":
-            return PhysicsConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_physics_constraint_wrapper.self))
-        case "spine_slider":
-            return Slider(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_slider_wrapper.self))
-        case "spine_transform_constraint":
-            return TransformConstraint(fromPointer: UnsafeMutableRawPointer(result!).assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
+        case "IkConstraint":
+            let castedPtr = spine_constraint_cast_to_ik_constraint(result!)
+            return IkConstraint(fromPointer: castedPtr!)
+        case "PathConstraint":
+            let castedPtr = spine_constraint_cast_to_path_constraint(result!)
+            return PathConstraint(fromPointer: castedPtr!)
+        case "PhysicsConstraint":
+            let castedPtr = spine_constraint_cast_to_physics_constraint(result!)
+            return PhysicsConstraint(fromPointer: castedPtr!)
+        case "Slider":
+            let castedPtr = spine_constraint_cast_to_slider(result!)
+            return Slider(fromPointer: castedPtr!)
+        case "TransformConstraint":
+            let castedPtr = spine_constraint_cast_to_transform_constraint(result!)
+            return TransformConstraint(fromPointer: castedPtr!)
         default:
             fatalError("Unknown concrete type: \(rttiClassName) for abstract class Constraint")
         }
