@@ -127,8 +127,8 @@ namespace Spine {
 					ux = bx;
 					uy = by;
 				} else {
-					float a = remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1, m = 0, e = 0, ax = 0, ay = 0,
-						qx = data.limit * delta, qy = qx * Math.Abs(skeleton.ScaleY);
+					float a = remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1, m = 0, e = 0, qx = data.limit * delta,
+						qy = qx * Math.Abs(skeleton.ScaleY);
 					qx *= Math.Abs(skeleton.ScaleX);
 
 					if (x || y) {
@@ -148,8 +148,8 @@ namespace Spine {
 							m = t * p.massInverse;
 							e = p.strength;
 							float w = f * p.wind, g = f * p.gravity;
-							ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
-							ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.ScaleY;
+							float ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
+							float ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.ScaleY;
 							do {
 								if (x) {
 									xVelocity += (ax - xOffset * e) * m;
@@ -204,10 +204,9 @@ namespace Spine {
 								d = (float)Math.Pow(p.damping, 60 * t);
 								m = t * p.massInverse;
 								e = p.strength;
-								float w = f * p.wind, g = f * p.gravity;
-								ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
-								ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.ScaleY;
 							}
+							float ax = p.wind * skeleton.windX - p.gravity * skeleton.gravityX;
+							float ay = p.wind * skeleton.windY + p.gravity * skeleton.gravityY;
 							float rs = rotateOffset, ss = scaleOffset, h = l / f;
 							if (Spine.Bone.yDown) ay = -ay;
 							while (true) {
