@@ -205,7 +205,7 @@ namespace Spine {
 								m = t * p.massInverse;
 								e = p.strength;
 							}
-							float ax = p.wind * skeleton.windX - p.gravity * skeleton.gravityX;
+							float ax = p.wind * skeleton.windX + p.gravity * skeleton.gravityX;
 							float ay = p.wind * skeleton.windY + p.gravity * skeleton.gravityY;
 							float rs = rotateOffset, ss = scaleOffset, h = l / f;
 							if (Spine.Bone.yDown) ay = -ay;
