@@ -667,8 +667,11 @@ export class Spine extends ViewContainer {
 					const alpha = skeletonColor.a * slotColor.a * attachmentColor.a;
 
 					if (this.alpha === 0 || alpha === 0) {
+						if (!cacheData.skipRender) this.spineAttachmentsDirty = true;
 						cacheData.skipRender = true;
 					} else {
+						if (cacheData.skipRender) this.spineAttachmentsDirty = true;
+						cacheData.skipRender = cacheData.clipped = false;
 
 						cacheData.color.set(
 							skeletonColor.r * slotColor.r * attachmentColor.r,
@@ -680,8 +683,6 @@ export class Spine extends ViewContainer {
 						if (pose.darkColor) {
 							cacheData.darkColor.setFromColor(pose.darkColor);
 						}
-
-						cacheData.skipRender = cacheData.clipped = false;
 
 						const texture = attachment.region?.texture.texture || Texture.EMPTY;
 
