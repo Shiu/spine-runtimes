@@ -44,7 +44,8 @@ import 'region_attachment.dart';
 import 'skeleton.dart';
 import 'slot.dart';
 
-/// VertexAttachment wrapper
+/// An attachment with vertices that are transformed by one or more bones and
+/// can be deformed by a slot's SlotPose::getDeform().
 abstract class VertexAttachment extends Attachment {
   final Pointer<spine_vertex_attachment_wrapper> _ptr;
 
@@ -55,6 +56,7 @@ abstract class VertexAttachment extends Attachment {
   @override
   Pointer get nativePtr => _ptr;
 
+  /// Gets a unique ID for this attachment.
   int get id {
     final result = SpineBindings.bindings.spine_vertex_attachment_get_id(_ptr);
     return result;

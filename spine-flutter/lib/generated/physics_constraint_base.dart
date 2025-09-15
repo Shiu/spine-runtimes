@@ -41,7 +41,12 @@ import 'posed.dart';
 import 'posed_active.dart';
 import 'skeleton.dart';
 
-/// PhysicsConstraintBase wrapper
+/// Stores the current pose for a physics constraint. A physics constraint
+/// applies physics to bones.
+///
+/// See https://esotericsoftware.com/spine-physics-constraints Physics
+/// constraints in the Spine User Guide. Non-exported base class that inherits
+/// from the template
 abstract class PhysicsConstraintBase extends PosedActive implements Posed, Constraint {
   final Pointer<spine_physics_constraint_base_wrapper> _ptr;
 
@@ -101,6 +106,7 @@ abstract class PhysicsConstraintBase extends PosedActive implements Posed, Const
     return result;
   }
 
+  /// Inherited from Update
   @override
   void update(Skeleton skeleton, Physics physics) {
     SpineBindings.bindings.spine_physics_constraint_base_update(_ptr, skeleton.nativePtr.cast(), physics.value);

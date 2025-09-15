@@ -33,7 +33,7 @@ import 'package:universal_ffi/ffi.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
 
-/// BoneTimeline wrapper
+/// An interface for timelines which change the property of a bone.
 abstract class BoneTimeline {
   Pointer get nativePtr;
   Rtti get rtti;

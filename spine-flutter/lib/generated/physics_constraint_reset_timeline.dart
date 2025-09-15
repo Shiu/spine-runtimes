@@ -35,7 +35,7 @@ import '../spine_bindings.dart';
 import 'constraint_timeline.dart';
 import 'timeline.dart';
 
-/// PhysicsConstraintResetTimeline wrapper
+/// Resets a physics constraint when specific animation times are reached.
 class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimeline {
   final Pointer<spine_physics_constraint_reset_timeline_wrapper> _ptr;
 
@@ -46,6 +46,7 @@ class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimel
   @override
   Pointer get nativePtr => _ptr;
 
+  /// [constraintIndex] -1 for all physics constraints in the skeleton.
   factory PhysicsConstraintResetTimeline(int frameCount, int constraintIndex) {
     final ptr = SpineBindings.bindings.spine_physics_constraint_reset_timeline_create(frameCount, constraintIndex);
     return PhysicsConstraintResetTimeline.fromPointer(ptr);
@@ -66,6 +67,7 @@ class PhysicsConstraintResetTimeline extends Timeline implements ConstraintTimel
     SpineBindings.bindings.spine_physics_constraint_reset_timeline_set_constraint_index(_ptr, value);
   }
 
+  /// Sets the time for the specified frame.
   void setFrame(int frame, double time) {
     SpineBindings.bindings.spine_physics_constraint_reset_timeline_set_frame(_ptr, frame, time);
   }

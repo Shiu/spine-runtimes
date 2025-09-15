@@ -32,7 +32,11 @@
 import Foundation
 import SpineC
 
-/// PointAttachment wrapper
+/// An attachment which is a single point and a rotation. This can be used to spawn projectiles,
+/// particles, etc. A bone can be used in similar ways, but a PointAttachment is slightly less
+/// expensive to compute and can be hidden, shown, and placed in a skin.
+///
+/// See https://esotericsoftware.com/spine-points for Point Attachments in the Spine User Guide.
 @objc(SpinePointAttachment)
 @objcMembers
 public class PointAttachment: Attachment {

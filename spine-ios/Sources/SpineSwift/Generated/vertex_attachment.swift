@@ -32,7 +32,8 @@
 import Foundation
 import SpineC
 
-/// VertexAttachment wrapper
+/// An attachment with vertices that are transformed by one or more bones and can be deformed by a
+/// slot's SlotPose::getDeform().
 @objc(SpineVertexAttachment)
 @objcMembers
 open class VertexAttachment: Attachment {
@@ -41,6 +42,7 @@ open class VertexAttachment: Attachment {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_attachment_wrapper.self))
     }
 
+    /// Gets a unique ID for this attachment.
     public var id: Int32 {
         let result = spine_vertex_attachment_get_id(_ptr.assumingMemoryBound(to: spine_vertex_attachment_wrapper.self))
         return result

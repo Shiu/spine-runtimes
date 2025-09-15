@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// AnimationStateData wrapper
+/// Stores mix (crossfade) durations to be applied when AnimationState animations are changed.
 @objc(SpineAnimationStateData)
 @objcMembers
 public class AnimationStateData: NSObject {
@@ -48,11 +48,14 @@ public class AnimationStateData: NSObject {
         self.init(fromPointer: ptr!)
     }
 
+    /// The SkeletonData to look up animations when they are specified by name.
     public var skeletonData: SkeletonData {
         let result = spine_animation_state_data_get_skeleton_data(_ptr.assumingMemoryBound(to: spine_animation_state_data_wrapper.self))
         return SkeletonData(fromPointer: result!)
     }
 
+    /// The mix duration to use when no mix duration has been specifically defined between two
+    /// animations.
     public var defaultMix: Float {
         get {
             let result = spine_animation_state_data_get_default_mix(_ptr.assumingMemoryBound(to: spine_animation_state_data_wrapper.self))
@@ -63,19 +66,25 @@ public class AnimationStateData: NSObject {
         }
     }
 
+    /// The mix duration to use when changing from the specified animation to the other, or the
+    /// DefaultMix if no mix duration has been set.
     public func getMix(_ from: Animation, _ to: Animation) -> Float {
         let result = spine_animation_state_data_get_mix(_ptr.assumingMemoryBound(to: spine_animation_state_data_wrapper.self), from._ptr.assumingMemoryBound(to: spine_animation_wrapper.self), to._ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
         return result
     }
 
+    /// Removes all mixes and sets the default mix to 0.
     public func clear() {
         spine_animation_state_data_clear(_ptr.assumingMemoryBound(to: spine_animation_state_data_wrapper.self))
     }
 
+    /// Sets a mix duration by animation names.
     public func setMix(_ fromName: String, _ toName: String, _ duration: Float) {
         spine_animation_state_data_set_mix_1(_ptr.assumingMemoryBound(to: spine_animation_state_data_wrapper.self), fromName, toName, duration)
     }
 
+    /// Sets a mix duration when changing from the specified animation to the other. See
+    /// TrackEntry.MixDuration.
     public func setMix2(_ from: Animation, _ to: Animation, _ duration: Float) {
         spine_animation_state_data_set_mix_2(_ptr.assumingMemoryBound(to: spine_animation_state_data_wrapper.self), from._ptr.assumingMemoryBound(to: spine_animation_wrapper.self), to._ptr.assumingMemoryBound(to: spine_animation_wrapper.self), duration)
     }

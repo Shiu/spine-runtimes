@@ -46,7 +46,10 @@ import 'skeleton.dart';
 import 'slider.dart';
 import 'transform_constraint.dart';
 
-/// PhysicsConstraintData wrapper
+/// Stores the setup pose for a PhysicsConstraint.
+///
+/// See https://esotericsoftware.com/spine-physics-constraints Physics
+/// constraints in the Spine User Guide.
 class PhysicsConstraintData extends PosedData implements ConstraintData {
   final Pointer<spine_physics_constraint_data_wrapper> _ptr;
 
@@ -99,6 +102,7 @@ class PhysicsConstraintData extends PosedData implements ConstraintData {
     }
   }
 
+  /// The bone constrained by this physics constraint.
   BoneData get bone {
     final result = SpineBindings.bindings.spine_physics_constraint_data_get_bone(_ptr);
     return BoneData.fromPointer(result);

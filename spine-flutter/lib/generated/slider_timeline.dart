@@ -34,7 +34,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'constraint_timeline1.dart';
 
-/// SliderTimeline wrapper
+/// Changes a slider's SliderPose::getTime().
 class SliderTimeline extends ConstraintTimeline1 {
   final Pointer<spine_slider_timeline_wrapper> _ptr;
 

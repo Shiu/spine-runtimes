@@ -46,6 +46,7 @@ public class PathAttachment: VertexAttachment {
         self.init(fromPointer: ptr!)
     }
 
+    /// The length in the setup pose from the start of the path to the end of each curve.
     public var lengths: ArrayFloat {
         get {
             let result = spine_path_attachment_get_lengths(_ptr.assumingMemoryBound(to: spine_path_attachment_wrapper.self))

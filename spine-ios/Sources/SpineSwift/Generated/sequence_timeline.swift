@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// SequenceTimeline wrapper
+/// Changes a slot's SlotPose::getSequenceIndex() for an attachment's Sequence.
 @objc(SpineSequenceTimeline)
 @objcMembers
 public class SequenceTimeline: Timeline, SlotTimeline {
@@ -84,6 +84,10 @@ public class SequenceTimeline: Timeline, SlotTimeline {
         }
     }
 
+    /// Sets the time, mode, index, and frame time for the specified frame.
+    ///
+    /// - Parameter frame: Between 0 and frameCount, inclusive.
+    /// - Parameter delay: Seconds between frames.
     public func setFrame(_ frame: Int32, _ time: Float, _ mode: SequenceMode, _ index: Int32, _ delay: Float) {
         spine_sequence_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_sequence_timeline_wrapper.self), frame, time, spine_sequence_mode(rawValue: UInt32(mode.rawValue)), index, delay)
     }

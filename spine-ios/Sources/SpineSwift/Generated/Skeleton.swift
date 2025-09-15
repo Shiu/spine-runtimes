@@ -195,6 +195,8 @@ public class Skeleton: NSObject {
         }
     }
 
+    /// Caches information about bones and constraints. Must be called if bones, constraints or
+    /// weighted path attachments are added or removed.
     public func updateCache() {
         spine_skeleton_update_cache(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
@@ -215,14 +217,20 @@ public class Skeleton: NSObject {
         spine_skeleton_sort_reset(bones._ptr.assumingMemoryBound(to: spine_array_bone_wrapper.self))
     }
 
+    /// Updates the world transform for each bone and applies all constraints.
+    ///
+    /// See [World transforms](http://esotericsoftware.com/spine-runtime-skeletons#World-transforms)
+    /// in the Spine Runtimes Guide.
     public func updateWorldTransform(_ physics: Physics) {
         spine_skeleton_update_world_transform(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
     }
 
+    /// Sets the bones, constraints, and slots to their setup pose values.
     public func setupPose() {
         spine_skeleton_setup_pose(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
+    /// Sets the bones and constraints to their setup pose values.
     public func setupPoseBones() {
         spine_skeleton_setup_pose_bones(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
@@ -231,16 +239,19 @@ public class Skeleton: NSObject {
         spine_skeleton_setup_pose_slots(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
+    /// - Returns: May be NULL.
     public func findBone(_ boneName: String) -> Bone? {
         let result = spine_skeleton_find_bone(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), boneName)
         return result.map { Bone(fromPointer: $0) }
     }
 
+    /// - Returns: May be NULL.
     public func findSlot(_ slotName: String) -> Slot? {
         let result = spine_skeleton_find_slot(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), slotName)
         return result.map { Slot(fromPointer: $0) }
     }
 
+    /// - Parameter attachmentName: May be empty.
     public func setAttachment(_ slotName: String, _ attachmentName: String) {
         spine_skeleton_set_attachment(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), slotName, attachmentName)
     }
@@ -253,10 +264,12 @@ public class Skeleton: NSObject {
         spine_skeleton_set_position(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), x, y)
     }
 
+    /// Rotates the physics constraint so next {
     public func physicsTranslate(_ x: Float, _ y: Float) {
         spine_skeleton_physics_translate(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), x, y)
     }
 
+    /// Calls {
     public func physicsRotate(_ x: Float, _ y: Float, _ degrees: Float) {
         spine_skeleton_physics_rotate(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), x, y, degrees)
     }
@@ -265,14 +278,25 @@ public class Skeleton: NSObject {
         spine_skeleton_update(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), delta)
     }
 
+    /// Sets a skin by name (see setSkin).
     public func setSkin(_ skinName: String) {
         spine_skeleton_set_skin_1(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), skinName)
     }
 
+    /// Attachments from the new skin are attached if the corresponding attachment from the old skin
+    /// was attached. If there was no old skin, each slot's setup mode attachment is attached from
+    /// the new skin. After changing the skin, the visible attachments can be reset to those
+    /// attached in the setup pose by calling See Skeleton::setSlotsToSetupPose() Also, often
+    /// AnimationState::apply(Skeleton & ) is called before the next time the skeleton is rendered
+    /// to allow any attachment keys in the current animation(s) to hide or show attachments from
+    /// the new skin.
+    ///
+    /// - Parameter newSkin: May be NULL.
     public func setSkin2(_ newSkin: Skin?) {
         spine_skeleton_set_skin_2(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), newSkin?._ptr.assumingMemoryBound(to: spine_skin_wrapper.self))
     }
 
+    /// - Returns: May be NULL.
     public func getAttachment(_ slotName: String, _ attachmentName: String) -> Attachment? {
         let result = spine_skeleton_get_attachment_1(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), slotName, attachmentName)
         guard let ptr = result else { return nil }
@@ -302,6 +326,7 @@ public class Skeleton: NSObject {
         }
     }
 
+    /// - Returns: May be NULL.
     public func getAttachment2(_ slotIndex: Int32, _ attachmentName: String) -> Attachment? {
         let result = spine_skeleton_get_attachment_2(_ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), slotIndex, attachmentName)
         guard let ptr = result else { return nil }

@@ -58,11 +58,13 @@ class BoneData extends PosedData {
     SpineBindings.bindings.spine_bone_data_dispose(_ptr);
   }
 
+  /// The index of the bone in Skeleton.Bones
   int get index {
     final result = SpineBindings.bindings.spine_bone_data_get_index(_ptr);
     return result;
   }
 
+  /// May be NULL.
   BoneData? get parent {
     final result = SpineBindings.bindings.spine_bone_data_get_parent(_ptr);
     return result.address == 0 ? null : BoneData.fromPointer(result);

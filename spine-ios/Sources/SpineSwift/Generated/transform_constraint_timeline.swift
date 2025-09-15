@@ -32,7 +32,10 @@
 import Foundation
 import SpineC
 
-/// TransformConstraintTimeline wrapper
+/// Changes a transform constraint's TransformConstraintPose::getMixRotate(),
+/// TransformConstraintPose::getMixX(), TransformConstraintPose::getMixY(),
+/// TransformConstraintPose::getMixScaleX(), TransformConstraintPose::getMixScaleY(), and
+/// TransformConstraintPose::getMixShearY().
 @objc(SpineTransformConstraintTimeline)
 @objcMembers
 public class TransformConstraintTimeline: CurveTimeline, ConstraintTimeline {
@@ -56,6 +59,10 @@ public class TransformConstraintTimeline: CurveTimeline, ConstraintTimeline {
         }
     }
 
+    /// Sets the time, rotate mix, translate mix, scale mix, and shear mix for the specified frame.
+    ///
+    /// - Parameter frame: Between 0 and frameCount, inclusive.
+    /// - Parameter time: The frame time in seconds.
     public func setFrame(_ frame: Int32, _ time: Float, _ mixRotate: Float, _ mixX: Float, _ mixY: Float, _ mixScaleX: Float, _ mixScaleY: Float, _ mixShearY: Float) {
         spine_transform_constraint_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_transform_constraint_timeline_wrapper.self), frame, time, mixRotate, mixX, mixY, mixScaleX, mixScaleY, mixShearY)
     }

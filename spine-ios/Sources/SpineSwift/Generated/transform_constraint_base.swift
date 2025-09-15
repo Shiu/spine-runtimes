@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// TransformConstraintBase wrapper
+/// Non-exported base class that inherits from the template
 @objc(SpineTransformConstraintBase)
 @objcMembers
 open class TransformConstraintBase: PosedActive, Posed, Constraint {
@@ -83,6 +83,7 @@ open class TransformConstraintBase: PosedActive, Posed, Constraint {
         spine_transform_constraint_base_sort(_ptr.assumingMemoryBound(to: spine_transform_constraint_base_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
+    /// Inherited from Update
     public func update(_ skeleton: Skeleton, _ physics: Physics) {
         spine_transform_constraint_base_update(_ptr.assumingMemoryBound(to: spine_transform_constraint_base_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
     }

@@ -33,7 +33,7 @@ import 'package:universal_ffi/ffi.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
-/// PathConstraintPose wrapper
+/// Stores a pose for a path constraint.
 class PathConstraintPose {
   final Pointer<spine_path_constraint_pose_wrapper> _ptr;
 
@@ -55,6 +55,7 @@ class PathConstraintPose {
     SpineBindings.bindings.spine_path_constraint_pose_set(_ptr, pose.nativePtr.cast());
   }
 
+  /// The position along the path.
   double get position {
     final result = SpineBindings.bindings.spine_path_constraint_pose_get_position(_ptr);
     return result;
@@ -64,6 +65,7 @@ class PathConstraintPose {
     SpineBindings.bindings.spine_path_constraint_pose_set_position(_ptr, value);
   }
 
+  /// The spacing between bones.
   double get spacing {
     final result = SpineBindings.bindings.spine_path_constraint_pose_get_spacing(_ptr);
     return result;
@@ -73,6 +75,8 @@ class PathConstraintPose {
     SpineBindings.bindings.spine_path_constraint_pose_set_spacing(_ptr, value);
   }
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained rotation.
   double get mixRotate {
     final result = SpineBindings.bindings.spine_path_constraint_pose_get_mix_rotate(_ptr);
     return result;
@@ -82,6 +86,8 @@ class PathConstraintPose {
     SpineBindings.bindings.spine_path_constraint_pose_set_mix_rotate(_ptr, value);
   }
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained translation X.
   double get mixX {
     final result = SpineBindings.bindings.spine_path_constraint_pose_get_mix_x(_ptr);
     return result;
@@ -91,6 +97,8 @@ class PathConstraintPose {
     SpineBindings.bindings.spine_path_constraint_pose_set_mix_x(_ptr, value);
   }
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained translation Y.
   double get mixY {
     final result = SpineBindings.bindings.spine_path_constraint_pose_get_mix_y(_ptr);
     return result;

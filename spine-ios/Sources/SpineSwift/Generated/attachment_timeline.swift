@@ -56,6 +56,10 @@ public class AttachmentTimeline: Timeline, SlotTimeline {
         }
     }
 
+    /// Sets the time and attachment name for the specified frame.
+    ///
+    /// - Parameter frame: Between 0 and frameCount, inclusive.
+    /// - Parameter time: The frame time in seconds.
     public func setFrame(_ frame: Int32, _ time: Float, _ attachmentName: String) {
         spine_attachment_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_attachment_timeline_wrapper.self), frame, time, attachmentName)
     }

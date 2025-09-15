@@ -35,7 +35,11 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'event_data.dart';
 
-/// Event wrapper
+/// Stores the current pose values for an Event.
+///
+/// See Timeline::apply(), AnimationStateListener::event(), and
+///
+/// See also: https://esotericsoftware.com/spine-events Events in the Spine User Guide.
 class Event {
   final Pointer<spine_event_wrapper> _ptr;
 
@@ -53,11 +57,13 @@ class Event {
     SpineBindings.bindings.spine_event_dispose(_ptr);
   }
 
+  /// The event's setup pose data.
   EventData get data {
     final result = SpineBindings.bindings.spine_event_get_data(_ptr);
     return EventData.fromPointer(result);
   }
 
+  /// The animation time this event was keyed.
   double get time {
     final result = SpineBindings.bindings.spine_event_get_time(_ptr);
     return result;

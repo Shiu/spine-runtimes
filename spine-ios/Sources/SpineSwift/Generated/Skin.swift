@@ -32,7 +32,9 @@
 import Foundation
 import SpineC
 
-/// Skin wrapper
+/// Stores attachments by slot index and attachment name. See SkeletonData::getDefaultSkin,
+/// Skeleton::getSkin, and http://esotericsoftware.com/spine-runtime-skins in the Spine Runtimes
+/// Guide.
 @objc(SpineSkin)
 @objcMembers
 public class Skin: NSObject {
@@ -68,10 +70,13 @@ public class Skin: NSObject {
         return Color(fromPointer: result!)
     }
 
+    /// Adds an attachment to the skin for the specified slot index and name. If the name already
+    /// exists for the slot, the previous value is replaced.
     public func setAttachment(_ slotIndex: Int, _ name: String, _ attachment: Attachment) {
         spine_skin_set_attachment(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), slotIndex, name, attachment._ptr.assumingMemoryBound(to: spine_attachment_wrapper.self))
     }
 
+    /// Returns the attachment for the specified slot index and name, or NULL.
     public func getAttachment(_ slotIndex: Int, _ name: String) -> Attachment? {
         let result = spine_skin_get_attachment(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), slotIndex, name)
         guard let ptr = result else { return nil }
@@ -101,18 +106,27 @@ public class Skin: NSObject {
         }
     }
 
+    /// Removes the attachment from the skin.
     public func removeAttachment(_ slotIndex: Int, _ name: String) {
         spine_skin_remove_attachment(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), slotIndex, name)
     }
 
+    /// Finds the attachments for a given slot. The results are added to the passed array of
+    /// Attachments.
+    ///
+    /// - Parameter slotIndex: The target slotIndex. To find the slot index, use SkeletonData::findSlot and SlotData::getIndex.
+    /// - Parameter attachments: Found Attachments will be added to this array.
     public func findAttachmentsForSlot(_ slotIndex: Int, _ attachments: ArrayAttachment) {
         spine_skin_find_attachments_for_slot(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), slotIndex, attachments._ptr.assumingMemoryBound(to: spine_array_attachment_wrapper.self))
     }
 
+    /// Adds all attachments, bones, and constraints from the specified skin to this skin.
     public func addSkin(_ other: Skin) {
         spine_skin_add_skin(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), other._ptr.assumingMemoryBound(to: spine_skin_wrapper.self))
     }
 
+    /// Adds all attachments, bones, and constraints from the specified skin to this skin.
+    /// Attachments are deep copied.
     public func copySkin(_ other: Skin) {
         spine_skin_copy_skin(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), other._ptr.assumingMemoryBound(to: spine_skin_wrapper.self))
     }

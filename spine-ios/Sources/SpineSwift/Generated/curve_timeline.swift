@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// CurveTimeline wrapper
+/// Base class for frames that use an interpolation bezier curve.
 @objc(SpineCurveTimeline)
 @objcMembers
 open class CurveTimeline: Timeline {

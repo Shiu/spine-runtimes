@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { CClassOrStruct, CEnum, CMethod, CParameter } from '../../../spine-c/codegen/src/c-types.js';
+import type { DocumentationComment } from '../../../spine-c/codegen/src/types.js';
 import { toSnakeCase } from '../../../spine-c/codegen/src/types.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -38,6 +39,7 @@ interface DartClass {
 	members: DartMember[];          // All class members
 	hasRtti: boolean;               // Whether this class needs RTTI switching
 	needsPackageFfi: boolean;       // Whether to import package:ffi
+	documentation?: DocumentationComment;  // Class-level documentation from C++ source
 }
 
 interface DartMember {
@@ -48,6 +50,7 @@ interface DartMember {
 	isOverride: boolean;           // Whether to add @override
 	implementation: string;         // The actual Dart code body
 	cMethodName?: string;          // Original C method name (for reference)
+	documentation?: DocumentationComment;  // Documentation from C++ source
 }
 
 interface DartParameter {
@@ -225,7 +228,8 @@ export class DartWriter {
 			imports: this.collectImports(cType),
 			members: this.processMembers(cType, classType),
 			hasRtti: this.hasRttiMethod(cType),
-			needsPackageFfi: this.needsStringConversions(cType)
+			needsPackageFfi: this.needsStringConversions(cType),
+			documentation: cType.cppType?.documentation
 		};
 	}
 
@@ -348,7 +352,8 @@ export class DartWriter {
 			parameters: [],
 			isOverride: false,
 			implementation,
-			cMethodName: destructor.name
+			cMethodName: destructor.name,
+			documentation: destructor.documentation
 		};
 	}
 
@@ -371,7 +376,8 @@ export class DartWriter {
 			parameters: params,
 			isOverride: false,
 			implementation,
-			cMethodName: constr.name
+			cMethodName: constr.name,
+			documentation: constr.documentation
 		};
 	}
 
@@ -396,7 +402,8 @@ export class DartWriter {
 			parameters: [],
 			isOverride,
 			implementation,
-			cMethodName: method.name
+			cMethodName: method.name,
+			documentation: method.documentation
 		};
 	}
 
@@ -434,7 +441,8 @@ export class DartWriter {
 			parameters: [dartParam],
 			isOverride,
 			implementation,
-			cMethodName: method.name
+			cMethodName: method.name,
+			documentation: method.documentation
 		};
 	}
 
@@ -486,7 +494,8 @@ export class DartWriter {
 			parameters: params,
 			isOverride,
 			implementation,
-			cMethodName: method.name
+			cMethodName: method.name,
+			documentation: method.documentation
 		};
 	}
 
@@ -550,8 +559,11 @@ export class DartWriter {
 			declaration += ` implements ${implementsClasses.join(', ')}`;
 		}
 
+		// Generate class documentation
+		const docComment = this.formatClassDocumentation(dartClass.documentation, dartClass.name);
+
 		return `
-/// ${dartClass.name} wrapper
+${docComment}
 ${declaration} {`;
 	}
 
@@ -640,17 +652,18 @@ ${declaration} {`;
 	// Member generation (from spec)
 	private generateMember (member: DartMember): string {
 		const override = member.isOverride ? '@override\n  ' : '  ';
+		const docComment = this.formatDartDocumentation(member.documentation, member);
 
 		switch (member.type) {
 			case 'constructor':
 				return this.generateConstructorMember(member);
 			case 'getter':
-				return `${override}${member.dartReturnType} get ${member.name} {
+				return `${docComment}${override}${member.dartReturnType} get ${member.name} {
     ${member.implementation}
   }`;
 			case 'setter': {
 				const param = member.parameters[0];
-				return `${override}set ${member.name}(${param.dartType} ${param.name}) {
+				return `${docComment}${override}set ${member.name}(${param.dartType} ${param.name}) {
     ${member.implementation}
   }`;
 			}
@@ -658,7 +671,7 @@ ${declaration} {`;
 			case 'static_method': {
 				const params = member.parameters.map(p => `${p.dartType} ${p.name}`).join(', ');
 				const static_ = member.type === 'static_method' ? 'static ' : '';
-				return `${override}${static_}${member.dartReturnType} ${member.name}(${params}) {
+				return `${docComment}${override}${static_}${member.dartReturnType} ${member.name}(${params}) {
     ${member.implementation}
   }`;
 			}
@@ -670,10 +683,149 @@ ${declaration} {`;
 	private generateConstructorMember (member: DartMember): string {
 		const params = member.parameters.map(p => `${p.dartType} ${p.name}`).join(', ');
 		const factoryName = member.name === member.dartReturnType ? '' : `.${member.name}`;
+		const docComment = this.formatDartDocumentation(member.documentation, member);
 
-		return `  factory ${member.dartReturnType}${factoryName}(${params}) {
+		return `${docComment}  factory ${member.dartReturnType}${factoryName}(${params}) {
     ${member.implementation}
   }`;
+	}
+
+	private formatClassDocumentation(doc: DocumentationComment | undefined, className: string): string {
+		if (!doc) {
+			// Default documentation if none exists
+			return `/// ${className} wrapper`;
+		}
+
+		const lines: string[] = [];
+
+		// Add summary
+		if (doc.summary) {
+			this.wrapDocText(doc.summary, lines, '/// ');
+		} else {
+			// Fallback to default if no summary
+			lines.push(`/// ${className} wrapper`);
+		}
+
+		// Add details if present
+		if (doc.details) {
+			lines.push('///');
+			this.wrapDocText(doc.details, lines, '/// ');
+		}
+
+		// Add deprecation notice
+		if (doc.deprecated) {
+			if (lines.length > 0) lines.push('///');
+			lines.push(`/// @deprecated ${doc.deprecated}`);
+		}
+
+		// Add since version
+		if (doc.since) {
+			if (lines.length > 0) lines.push('///');
+			lines.push(`/// @since ${doc.since}`);
+		}
+
+		// Add see also references
+		if (doc.see && doc.see.length > 0) {
+			if (lines.length > 0) lines.push('///');
+			for (const ref of doc.see) {
+				lines.push(`/// See also: ${ref}`);
+			}
+		}
+
+		if (lines.length > 0) {
+			return lines.join('\n');
+		}
+		return `/// ${className} wrapper`;
+	}
+
+	private formatDartDocumentation(doc: DocumentationComment | undefined, member: DartMember): string {
+		if (!doc) return '';
+
+		const lines: string[] = [];
+
+		// Add summary
+		if (doc.summary) {
+			this.wrapDocText(doc.summary, lines, '  /// ');
+		}
+
+		// Add details if present
+		if (doc.details) {
+			if (doc.summary) {
+				lines.push('  ///');
+			}
+			this.wrapDocText(doc.details, lines, '  /// ');
+		}
+
+		// Add parameter documentation (skip 'self' and 'value' for setters)
+		if (doc.params && Object.keys(doc.params).length > 0) {
+			const hasContent = doc.summary || doc.details;
+			if (hasContent) lines.push('  ///');
+
+			for (const [paramName, paramDesc] of Object.entries(doc.params)) {
+				// Skip 'self' parameter documentation as it's implicit
+				if (paramName === 'self' || paramName === 'this') continue;
+				// For setters, map the parameter documentation to 'value'
+				if (member.type === 'setter' && member.parameters[0]) {
+					lines.push(`  /// [value] ${paramDesc}`);
+				} else {
+					// Check if this parameter exists in the member
+					const paramExists = member.parameters.some(p => p.name === paramName);
+					if (paramExists) {
+						lines.push(`  /// [${paramName}] ${paramDesc}`);
+					}
+				}
+			}
+		}
+
+		// Add return documentation (not for setters or constructors)
+		if (doc.returns && member.type !== 'setter' && member.type !== 'constructor') {
+			if (lines.length > 0) lines.push('  ///');
+			lines.push(`  /// Returns ${doc.returns}`);
+		}
+
+		// Add deprecation notice
+		if (doc.deprecated) {
+			if (lines.length > 0) lines.push('  ///');
+			lines.push(`  /// @deprecated ${doc.deprecated}`);
+		}
+
+		if (lines.length > 0) {
+			return lines.join('\n') + '\n';
+		}
+		return '';
+	}
+
+	private wrapDocText(text: string, lines: string[], prefix: string): void {
+		const maxLineLength = 80;
+		const maxTextLength = maxLineLength - prefix.length;
+
+		// Split text into paragraphs
+		const paragraphs = text.split('\n\n');
+
+		for (let i = 0; i < paragraphs.length; i++) {
+			if (i > 0) {
+				lines.push(prefix.trim());
+			}
+
+			const paragraph = paragraphs[i].replace(/\n/g, ' ');
+			const words = paragraph.split(' ');
+			let currentLine = '';
+
+			for (const word of words) {
+				if (currentLine.length === 0) {
+					currentLine = word;
+				} else if (currentLine.length + word.length + 1 <= maxTextLength) {
+					currentLine += ' ' + word;
+				} else {
+					lines.push(prefix + currentLine);
+					currentLine = word;
+				}
+			}
+
+			if (currentLine.length > 0) {
+				lines.push(prefix + currentLine);
+			}
+		}
 	}
 
 	private generateEnumCode (dartEnum: DartEnum): string {

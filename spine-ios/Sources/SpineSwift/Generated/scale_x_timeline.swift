@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// ScaleXTimeline wrapper
+/// Changes a bone's local BoneLocal::getScaleX().
 @objc(SpineScaleXTimeline)
 @objcMembers
 public class ScaleXTimeline: BoneTimeline1 {

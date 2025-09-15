@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// SlotCurveTimeline wrapper
+/// Base class for slot timelines that use curves.
 @objc(SpineSlotCurveTimeline)
 @objcMembers
 open class SlotCurveTimeline: CurveTimeline, SlotTimeline {

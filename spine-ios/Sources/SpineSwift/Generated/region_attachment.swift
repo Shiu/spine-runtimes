@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// RegionAttachment wrapper
+/// Attachment that displays a texture region.
 @objc(SpineRegionAttachment)
 @objcMembers
 public class RegionAttachment: Attachment {

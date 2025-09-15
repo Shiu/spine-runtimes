@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// ShearTimeline wrapper
+/// Changes a bone's local BoneLocal::getShearX() and BoneLocal::getShearY().
 @objc(SpineShearTimeline)
 @objcMembers
 public class ShearTimeline: BoneTimeline2 {

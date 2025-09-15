@@ -44,7 +44,7 @@ import 'sequence_mode.dart';
 import 'slot_timeline.dart';
 import 'timeline.dart';
 
-/// SequenceTimeline wrapper
+/// Changes a slot's SlotPose::getSequenceIndex() for an attachment's Sequence.
 class SequenceTimeline extends Timeline implements SlotTimeline {
   final Pointer<spine_sequence_timeline_wrapper> _ptr;
 
@@ -65,6 +65,10 @@ class SequenceTimeline extends Timeline implements SlotTimeline {
     SpineBindings.bindings.spine_sequence_timeline_dispose(_ptr);
   }
 
+  /// Sets the time, mode, index, and frame time for the specified frame.
+  ///
+  /// [frame] Between 0 and frameCount, inclusive.
+  /// [delay] Seconds between frames.
   void setFrame(int frame, double time, SequenceMode mode, int index, double delay) {
     SpineBindings.bindings.spine_sequence_timeline_set_frame(_ptr, frame, time, mode.value, index, delay);
   }

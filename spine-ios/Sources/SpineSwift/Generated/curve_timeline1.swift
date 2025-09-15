@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// CurveTimeline1 wrapper
+/// The base class for a CurveTimeline that sets one property.
 @objc(SpineCurveTimeline1)
 @objcMembers
 open class CurveTimeline1: CurveTimeline {
@@ -41,10 +41,15 @@ open class CurveTimeline1: CurveTimeline {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_curve_timeline_wrapper.self))
     }
 
+    /// Sets the time and value for the specified frame.
+    ///
+    /// - Parameter frame: Between 0 and frameCount, inclusive.
+    /// - Parameter time: The frame time in seconds.
     public func setFrame(_ frame: Int, _ time: Float, _ value: Float) {
         spine_curve_timeline1_set_frame(_ptr.assumingMemoryBound(to: spine_curve_timeline1_wrapper.self), frame, time, value)
     }
 
+    /// Returns the interpolated value for the specified time.
     public func getCurveValue(_ time: Float) -> Float {
         let result = spine_curve_timeline1_get_curve_value(_ptr.assumingMemoryBound(to: spine_curve_timeline1_wrapper.self), time)
         return result

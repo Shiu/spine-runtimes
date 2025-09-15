@@ -46,11 +46,13 @@ public class PathConstraint: PathConstraintBase {
         self.init(fromPointer: ptr!)
     }
 
+    /// The bones that will be modified by this path constraint.
     public var bones: ArrayBonePose {
         let result = spine_path_constraint_get_bones(_ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self))
         return ArrayBonePose(fromPointer: result!)
     }
 
+    /// The slot whose path attachment will be used to constrained the bones.
     public var slot: Slot {
         get {
             let result = spine_path_constraint_get_slot(_ptr.assumingMemoryBound(to: spine_path_constraint_wrapper.self))

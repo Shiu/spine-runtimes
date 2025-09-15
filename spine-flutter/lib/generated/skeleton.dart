@@ -67,6 +67,8 @@ class Skeleton {
     SpineBindings.bindings.spine_skeleton_dispose(_ptr);
   }
 
+  /// Caches information about bones and constraints. Must be called if bones,
+  /// constraints or weighted path attachments are added or removed.
   void updateCache() {
     SpineBindings.bindings.spine_skeleton_update_cache(_ptr);
   }
@@ -87,14 +89,21 @@ class Skeleton {
     SpineBindings.bindings.spine_skeleton_sort_reset(bones.nativePtr.cast());
   }
 
+  /// Updates the world transform for each bone and applies all constraints.
+  ///
+  /// See [World
+  /// transforms](http://esotericsoftware.com/spine-runtime-skeletons#World-transforms)
+  /// in the Spine Runtimes Guide.
   void updateWorldTransform(Physics physics) {
     SpineBindings.bindings.spine_skeleton_update_world_transform(_ptr, physics.value);
   }
 
+  /// Sets the bones, constraints, and slots to their setup pose values.
   void setupPose() {
     SpineBindings.bindings.spine_skeleton_setup_pose(_ptr);
   }
 
+  /// Sets the bones and constraints to their setup pose values.
   void setupPoseBones() {
     SpineBindings.bindings.spine_skeleton_setup_pose_bones(_ptr);
   }
@@ -123,6 +132,7 @@ class Skeleton {
     return result.address == 0 ? null : Bone.fromPointer(result);
   }
 
+  /// Returns May be NULL.
   Bone? findBone(String boneName) {
     final result = SpineBindings.bindings.spine_skeleton_find_bone(_ptr, boneName.toNativeUtf8().cast<Char>());
     return result.address == 0 ? null : Bone.fromPointer(result);
@@ -133,6 +143,7 @@ class Skeleton {
     return ArraySlot.fromPointer(result);
   }
 
+  /// Returns May be NULL.
   Slot? findSlot(String slotName) {
     final result = SpineBindings.bindings.spine_skeleton_find_slot(_ptr, slotName.toNativeUtf8().cast<Char>());
     return result.address == 0 ? null : Slot.fromPointer(result);
@@ -148,6 +159,7 @@ class Skeleton {
     return result.address == 0 ? null : Skin.fromPointer(result);
   }
 
+  /// [attachmentName] May be empty.
   void setAttachment(String slotName, String attachmentName) {
     SpineBindings.bindings.spine_skeleton_set_attachment(
         _ptr, slotName.toNativeUtf8().cast<Char>(), attachmentName.toNativeUtf8().cast<Char>());
@@ -248,10 +260,12 @@ class Skeleton {
     SpineBindings.bindings.spine_skeleton_set_gravity_y(_ptr, value);
   }
 
+  /// Rotates the physics constraint so next {
   void physicsTranslate(double x, double y) {
     SpineBindings.bindings.spine_skeleton_physics_translate(_ptr, x, y);
   }
 
+  /// Calls {
   void physicsRotate(double x, double y, double degrees) {
     SpineBindings.bindings.spine_skeleton_physics_rotate(_ptr, x, y, degrees);
   }
@@ -269,14 +283,26 @@ class Skeleton {
     SpineBindings.bindings.spine_skeleton_update(_ptr, delta);
   }
 
+  /// Sets a skin by name (see setSkin).
   void setSkin(String skinName) {
     SpineBindings.bindings.spine_skeleton_set_skin_1(_ptr, skinName.toNativeUtf8().cast<Char>());
   }
 
+  /// Attachments from the new skin are attached if the corresponding attachment
+  /// from the old skin was attached. If there was no old skin, each slot's
+  /// setup mode attachment is attached from the new skin. After changing the
+  /// skin, the visible attachments can be reset to those attached in the setup
+  /// pose by calling See Skeleton::setSlotsToSetupPose() Also, often
+  /// AnimationState::apply(Skeleton & ) is called before the next time the
+  /// skeleton is rendered to allow any attachment keys in the current
+  /// animation(s) to hide or show attachments from the new skin.
+  ///
+  /// [newSkin] May be NULL.
   void setSkin2(Skin? newSkin) {
     SpineBindings.bindings.spine_skeleton_set_skin_2(_ptr, newSkin?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
+  /// Returns May be NULL.
   Attachment? getAttachment(String slotName, String attachmentName) {
     final result = SpineBindings.bindings.spine_skeleton_get_attachment_1(
         _ptr, slotName.toNativeUtf8().cast<Char>(), attachmentName.toNativeUtf8().cast<Char>());
@@ -307,6 +333,7 @@ class Skeleton {
     }
   }
 
+  /// Returns May be NULL.
   Attachment? getAttachment2(int slotIndex, String attachmentName) {
     final result = SpineBindings.bindings
         .spine_skeleton_get_attachment_2(_ptr, slotIndex, attachmentName.toNativeUtf8().cast<Char>());

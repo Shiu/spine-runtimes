@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// ConstraintTimeline1 wrapper
+/// Base class for single-value constraint timelines.
 @objc(SpineConstraintTimeline1)
 @objcMembers
 open class ConstraintTimeline1: CurveTimeline1, ConstraintTimeline {

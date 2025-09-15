@@ -41,7 +41,13 @@ import 'posed.dart';
 import 'posed_active.dart';
 import 'skeleton.dart';
 
-/// PathConstraintBase wrapper
+/// Stores the current pose for a path constraint. A path constraint adjusts the
+/// rotation, translation, and scale of the constrained bones so they follow a
+/// PathAttachment.
+///
+/// See https://esotericsoftware.com/spine-path-constraints Path constraints in
+/// the Spine User Guide. Non-exported base class that inherits from the
+/// template
 abstract class PathConstraintBase extends PosedActive implements Posed, Constraint {
   final Pointer<spine_path_constraint_base_wrapper> _ptr;
 
@@ -101,6 +107,7 @@ abstract class PathConstraintBase extends PosedActive implements Posed, Constrai
     return result;
   }
 
+  /// Inherited from Update
   @override
   void update(Skeleton skeleton, Physics physics) {
     SpineBindings.bindings.spine_path_constraint_base_update(_ptr, skeleton.nativePtr.cast(), physics.value);

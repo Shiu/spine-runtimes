@@ -33,7 +33,7 @@ import 'package:universal_ffi/ffi.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
 
-/// ConstraintTimeline wrapper
+/// An interface for timelines which change the property of a constraint.
 abstract class ConstraintTimeline {
   Pointer get nativePtr;
   Rtti get rtti;

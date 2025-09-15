@@ -175,8 +175,9 @@ SPINE_C_API void spine_track_entry_set_mix_attachment_threshold(spine_track_entr
 /**
  * When getAlpha() is greater than alphaAttachmentThreshold, attachment
  * timelines are applied. Defaults to 0, so attachment timelines are always
- * applied. */
-* / SPINE_C_API float spine_track_entry_get_alpha_attachment_threshold(spine_track_entry self);
+ * applied.
+ */
+SPINE_C_API float spine_track_entry_get_alpha_attachment_threshold(spine_track_entry self);
 SPINE_C_API void spine_track_entry_set_alpha_attachment_threshold(spine_track_entry self, float inValue);
 /**
  * When the mix percentage (mix time / mix duration) is less than the draw order

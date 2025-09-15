@@ -33,7 +33,7 @@ import 'package:universal_ffi/ffi.dart';
 import '../spine_bindings.dart';
 import 'rtti.dart';
 
-/// SlotTimeline wrapper
+/// An interface for timelines which change the property of a slot.
 abstract class SlotTimeline {
   Pointer get nativePtr;
   Rtti get rtti;

@@ -51,11 +51,13 @@ public class IkConstraintData: PosedData, ConstraintData {
         return Rtti(fromPointer: result!)
     }
 
+    /// The bones that are constrained by this IK Constraint.
     public var bones: ArrayBoneData {
         let result = spine_ik_constraint_data_get_bones(_ptr.assumingMemoryBound(to: spine_ik_constraint_data_wrapper.self))
         return ArrayBoneData(fromPointer: result!)
     }
 
+    /// The bone that is the IK target.
     public var target: BoneData {
         get {
             let result = spine_ik_constraint_data_get_target(_ptr.assumingMemoryBound(to: spine_ik_constraint_data_wrapper.self))
@@ -66,6 +68,8 @@ public class IkConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// When true and IkConstraintPose compress or stretch is used, the bone is scaled on both the X
+    /// and Y axes.
     public var uniform: Bool {
         get {
             let result = spine_ik_constraint_data_get_uniform(_ptr.assumingMemoryBound(to: spine_ik_constraint_data_wrapper.self))

@@ -35,7 +35,8 @@ import '../spine_bindings.dart';
 import 'constraint_timeline.dart';
 import 'curve_timeline.dart';
 
-/// PathConstraintMixTimeline wrapper
+/// Changes a path constraint's PathConstraintPose::getMixRotate(),
+/// PathConstraintPose::getMixX(), and PathConstraintPose::getMixY().
 class PathConstraintMixTimeline extends CurveTimeline implements ConstraintTimeline {
   final Pointer<spine_path_constraint_mix_timeline_wrapper> _ptr;
 
@@ -56,6 +57,10 @@ class PathConstraintMixTimeline extends CurveTimeline implements ConstraintTimel
     SpineBindings.bindings.spine_path_constraint_mix_timeline_dispose(_ptr);
   }
 
+  /// Sets the time and color for the specified frame.
+  ///
+  /// [frame] Between 0 and frameCount, inclusive.
+  /// [time] The frame time in seconds.
   void setFrame(int frame, double time, double mixRotate, double mixX, double mixY) {
     SpineBindings.bindings.spine_path_constraint_mix_timeline_set_frame(_ptr, frame, time, mixRotate, mixX, mixY);
   }

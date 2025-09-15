@@ -34,7 +34,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'inherit.dart';
 
-/// BoneLocal wrapper
+/// Stores a bone's local pose.
 class BoneLocal {
   final Pointer<spine_bone_local_wrapper> _ptr;
 
@@ -56,6 +56,7 @@ class BoneLocal {
     SpineBindings.bindings.spine_bone_local_set(_ptr, pose.nativePtr.cast());
   }
 
+  /// The local x translation.
   double get x {
     final result = SpineBindings.bindings.spine_bone_local_get_x(_ptr);
     return result;
@@ -65,6 +66,7 @@ class BoneLocal {
     SpineBindings.bindings.spine_bone_local_set_x(_ptr, value);
   }
 
+  /// The local y translation.
   double get y {
     final result = SpineBindings.bindings.spine_bone_local_get_y(_ptr);
     return result;
@@ -78,6 +80,7 @@ class BoneLocal {
     SpineBindings.bindings.spine_bone_local_set_position(_ptr, x, y);
   }
 
+  /// The local rotation in degrees, counter clockwise.
   double get rotation {
     final result = SpineBindings.bindings.spine_bone_local_get_rotation(_ptr);
     return result;
@@ -87,6 +90,7 @@ class BoneLocal {
     SpineBindings.bindings.spine_bone_local_set_rotation(_ptr, value);
   }
 
+  /// The local scaleX.
   double get scaleX {
     final result = SpineBindings.bindings.spine_bone_local_get_scale_x(_ptr);
     return result;
@@ -96,6 +100,7 @@ class BoneLocal {
     SpineBindings.bindings.spine_bone_local_set_scale_x(_ptr, value);
   }
 
+  /// The local scaleY.
   double get scaleY {
     final result = SpineBindings.bindings.spine_bone_local_get_scale_y(_ptr);
     return result;
@@ -105,6 +110,7 @@ class BoneLocal {
     SpineBindings.bindings.spine_bone_local_set_scale_y(_ptr, value);
   }
 
+  /// The local shearX.
   double get shearX {
     final result = SpineBindings.bindings.spine_bone_local_get_shear_x(_ptr);
     return result;
@@ -114,6 +120,7 @@ class BoneLocal {
     SpineBindings.bindings.spine_bone_local_set_shear_x(_ptr, value);
   }
 
+  /// The local shearY.
   double get shearY {
     final result = SpineBindings.bindings.spine_bone_local_get_shear_y(_ptr);
     return result;
@@ -123,6 +130,7 @@ class BoneLocal {
     SpineBindings.bindings.spine_bone_local_set_shear_y(_ptr, value);
   }
 
+  /// Determines how parent world transforms affect this bone.
   Inherit get inherit {
     final result = SpineBindings.bindings.spine_bone_local_get_inherit(_ptr);
     return Inherit.fromValue(result);

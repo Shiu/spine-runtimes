@@ -38,7 +38,7 @@ import 'bone_data.dart';
 import 'posed_data.dart';
 import 'slot_pose.dart';
 
-/// SlotData wrapper
+/// Stores the setup pose for a Slot.
 class SlotData extends PosedData {
   final Pointer<spine_slot_data_wrapper> _ptr;
 
@@ -59,11 +59,13 @@ class SlotData extends PosedData {
     SpineBindings.bindings.spine_slot_data_dispose(_ptr);
   }
 
+  /// The index of the slot in Skeleton::getSlots().
   int get index {
     final result = SpineBindings.bindings.spine_slot_data_get_index(_ptr);
     return result;
   }
 
+  /// The bone this slot belongs to.
   BoneData get boneData {
     final result = SpineBindings.bindings.spine_slot_data_get_bone_data(_ptr);
     return BoneData.fromPointer(result);
@@ -73,11 +75,14 @@ class SlotData extends PosedData {
     SpineBindings.bindings.spine_slot_data_set_attachment_name(_ptr, value.toNativeUtf8().cast<Char>());
   }
 
+  /// The name of the attachment that is visible for this slot in the setup
+  /// pose, or empty if no attachment is visible.
   String get attachmentName {
     final result = SpineBindings.bindings.spine_slot_data_get_attachment_name(_ptr);
     return result.cast<Utf8>().toDartString();
   }
 
+  /// The blend mode for drawing the slot's attachment.
   BlendMode get blendMode {
     final result = SpineBindings.bindings.spine_slot_data_get_blend_mode(_ptr);
     return BlendMode.fromValue(result);
@@ -87,6 +92,8 @@ class SlotData extends PosedData {
     SpineBindings.bindings.spine_slot_data_set_blend_mode(_ptr, value.value);
   }
 
+  /// False if the slot was hidden in Spine and nonessential data was exported.
+  /// Does not affect runtime rendering.
   bool get visible {
     final result = SpineBindings.bindings.spine_slot_data_get_visible(_ptr);
     return result;

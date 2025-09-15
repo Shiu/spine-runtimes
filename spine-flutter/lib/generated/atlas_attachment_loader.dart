@@ -45,7 +45,12 @@ import 'region_attachment.dart';
 import 'sequence.dart';
 import 'skin.dart';
 
-/// AtlasAttachmentLoader wrapper
+/// An AttachmentLoader that configures attachments using texture regions from
+/// an Atlas.
+///
+/// See
+/// https://esotericsoftware.com/spine-loading-skeleton-data#JSON-and-binary-data
+/// Loading skeleton data in the Spine Runtimes Guide.
 class AtlasAttachmentLoader implements AttachmentLoader {
   final Pointer<spine_atlas_attachment_loader_wrapper> _ptr;
 

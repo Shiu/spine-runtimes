@@ -38,7 +38,10 @@ import 'skeleton.dart';
 import 'slot_data.dart';
 import 'slot_pose.dart';
 
-/// Slot wrapper
+/// Stores a slot's current pose. Slots organize attachments for Skeleton
+/// drawOrder purposes and provide a place to store state for an attachment.
+/// State cannot be stored in an attachment itself because attachments are
+/// stateless and may be shared across multiple skeletons.
 class Slot implements Posed {
   final Pointer<spine_slot_wrapper> _ptr;
 
@@ -57,6 +60,7 @@ class Slot implements Posed {
     SpineBindings.bindings.spine_slot_dispose(_ptr);
   }
 
+  /// The bone this slot belongs to.
   Bone get bone {
     final result = SpineBindings.bindings.spine_slot_get_bone(_ptr);
     return Bone.fromPointer(result);
@@ -66,6 +70,7 @@ class Slot implements Posed {
     SpineBindings.bindings.spine_slot_setup_pose(_ptr);
   }
 
+  /// The constraint's setup pose data.
   SlotData get data {
     final result = SpineBindings.bindings.spine_slot_get_data(_ptr);
     return SlotData.fromPointer(result);

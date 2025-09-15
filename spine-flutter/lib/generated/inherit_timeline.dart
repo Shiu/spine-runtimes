@@ -36,7 +36,7 @@ import 'bone_timeline.dart';
 import 'inherit.dart';
 import 'timeline.dart';
 
-/// InheritTimeline wrapper
+/// Changes a bone's BoneLocal::getInherit().
 class InheritTimeline extends Timeline implements BoneTimeline {
   final Pointer<spine_inherit_timeline_wrapper> _ptr;
 
@@ -56,6 +56,10 @@ class InheritTimeline extends Timeline implements BoneTimeline {
     SpineBindings.bindings.spine_inherit_timeline_dispose(_ptr);
   }
 
+  /// Sets the inherit transform mode for the specified frame.
+  ///
+  /// [frame] Between 0 and frameCount, inclusive.
+  /// [time] The frame time in seconds.
   void setFrame(int frame, double time, Inherit inherit) {
     SpineBindings.bindings.spine_inherit_timeline_set_frame(_ptr, frame, time, inherit.value);
   }

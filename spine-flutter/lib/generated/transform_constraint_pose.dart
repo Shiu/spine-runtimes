@@ -33,7 +33,7 @@ import 'package:universal_ffi/ffi.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
-/// TransformConstraintPose wrapper
+/// Stores a pose for a transform constraint.
 class TransformConstraintPose {
   final Pointer<spine_transform_constraint_pose_wrapper> _ptr;
 
@@ -55,6 +55,8 @@ class TransformConstraintPose {
     SpineBindings.bindings.spine_transform_constraint_pose_set(_ptr, pose.nativePtr.cast());
   }
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained rotation.
   double get mixRotate {
     final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_rotate(_ptr);
     return result;
@@ -64,6 +66,8 @@ class TransformConstraintPose {
     SpineBindings.bindings.spine_transform_constraint_pose_set_mix_rotate(_ptr, value);
   }
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained translation X.
   double get mixX {
     final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_x(_ptr);
     return result;
@@ -73,6 +77,8 @@ class TransformConstraintPose {
     SpineBindings.bindings.spine_transform_constraint_pose_set_mix_x(_ptr, value);
   }
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained translation Y.
   double get mixY {
     final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_y(_ptr);
     return result;
@@ -82,6 +88,8 @@ class TransformConstraintPose {
     SpineBindings.bindings.spine_transform_constraint_pose_set_mix_y(_ptr, value);
   }
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained scale X.
   double get mixScaleX {
     final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_scale_x(_ptr);
     return result;
@@ -91,6 +99,8 @@ class TransformConstraintPose {
     SpineBindings.bindings.spine_transform_constraint_pose_set_mix_scale_x(_ptr, value);
   }
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained scale Y.
   double get mixScaleY {
     final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_scale_y(_ptr);
     return result;
@@ -100,6 +110,8 @@ class TransformConstraintPose {
     SpineBindings.bindings.spine_transform_constraint_pose_set_mix_scale_y(_ptr, value);
   }
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained shear Y.
   double get mixShearY {
     final result = SpineBindings.bindings.spine_transform_constraint_pose_get_mix_shear_y(_ptr);
     return result;

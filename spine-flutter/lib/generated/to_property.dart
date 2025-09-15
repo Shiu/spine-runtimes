@@ -37,7 +37,7 @@ import 'bone_pose.dart';
 import 'skeleton.dart';
 import 'transform_constraint_pose.dart';
 
-/// ToProperty wrapper
+/// Constrained property for a TransformConstraint.
 abstract class ToProperty {
   final Pointer<spine_to_property_wrapper> _ptr;
 
@@ -51,11 +51,13 @@ abstract class ToProperty {
     return Rtti.fromPointer(result);
   }
 
+  /// Reads the mix for this property from the specified pose.
   double mix(TransformConstraintPose pose) {
     final result = SpineBindings.bindings.spine_to_property_mix(_ptr, pose.nativePtr.cast());
     return result;
   }
 
+  /// Applies the value to this property.
   void apply(Skeleton skeleton, TransformConstraintPose pose, BonePose bone, double value, bool local, bool additive) {
     SpineBindings.bindings.spine_to_property_apply(
         _ptr, skeleton.nativePtr.cast(), pose.nativePtr.cast(), bone.nativePtr.cast(), value, local, additive);

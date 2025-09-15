@@ -57,6 +57,11 @@ public class Atlas: NSObject {
         spine_atlas_flip_v(_ptr.assumingMemoryBound(to: spine_atlas_wrapper.self))
     }
 
+    /// Returns the first region found with the specified name. This method uses String comparison
+    /// to find the region, so the result should be cached rather than calling this method multiple
+    /// times.
+    ///
+    /// - Returns: The region, or nullptr.
     public func findRegion(_ name: String) -> AtlasRegion? {
         let result = spine_atlas_find_region(_ptr.assumingMemoryBound(to: spine_atlas_wrapper.self), name)
         return result.map { AtlasRegion(fromPointer: $0) }

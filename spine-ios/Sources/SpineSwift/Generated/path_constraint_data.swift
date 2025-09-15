@@ -32,7 +32,10 @@
 import Foundation
 import SpineC
 
-/// PathConstraintData wrapper
+/// Stores the setup pose for a PathConstraint.
+///
+/// See https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User
+/// Guide.
 @objc(SpinePathConstraintData)
 @objcMembers
 public class PathConstraintData: PosedData, ConstraintData {
@@ -51,11 +54,13 @@ public class PathConstraintData: PosedData, ConstraintData {
         return Rtti(fromPointer: result!)
     }
 
+    /// The bones that will be modified by this path constraint.
     public var bones: ArrayBoneData {
         let result = spine_path_constraint_data_get_bones(_ptr.assumingMemoryBound(to: spine_path_constraint_data_wrapper.self))
         return ArrayBoneData(fromPointer: result!)
     }
 
+    /// The slot whose path attachment will be used to constrained the bones.
     public var slot: SlotData {
         get {
             let result = spine_path_constraint_data_get_slot(_ptr.assumingMemoryBound(to: spine_path_constraint_data_wrapper.self))
@@ -66,6 +71,7 @@ public class PathConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// The mode for positioning the first bone on the path.
     public var positionMode: PositionMode {
         get {
             let result = spine_path_constraint_data_get_position_mode(_ptr.assumingMemoryBound(to: spine_path_constraint_data_wrapper.self))
@@ -76,6 +82,7 @@ public class PathConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// The mode for positioning the bones after the first bone on the path.
     public var spacingMode: SpacingMode {
         get {
             let result = spine_path_constraint_data_get_spacing_mode(_ptr.assumingMemoryBound(to: spine_path_constraint_data_wrapper.self))
@@ -86,6 +93,7 @@ public class PathConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// The mode for adjusting the rotation of the bones.
     public var rotateMode: RotateMode {
         get {
             let result = spine_path_constraint_data_get_rotate_mode(_ptr.assumingMemoryBound(to: spine_path_constraint_data_wrapper.self))
@@ -96,6 +104,7 @@ public class PathConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// An offset added to the constrained bone rotation.
     public var offsetRotation: Float {
         get {
             let result = spine_path_constraint_data_get_offset_rotation(_ptr.assumingMemoryBound(to: spine_path_constraint_data_wrapper.self))

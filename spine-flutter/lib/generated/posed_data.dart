@@ -52,11 +52,17 @@ class PosedData {
     SpineBindings.bindings.spine_posed_data_dispose(_ptr);
   }
 
+  /// The constraint's name, which is unique across all constraints in the
+  /// skeleton of the same type.
   String get name {
     final result = SpineBindings.bindings.spine_posed_data_get_name(_ptr);
     return result.cast<Utf8>().toDartString();
   }
 
+  /// When true, Skeleton::updateWorldTransform(Physics) only updates this
+  /// constraint if the Skeleton::getSkin() contains this constraint.
+  ///
+  /// See Skin::getConstraints().
   bool get skinRequired {
     final result = SpineBindings.bindings.spine_posed_data_get_skin_required(_ptr);
     return result;

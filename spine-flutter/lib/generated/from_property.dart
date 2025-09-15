@@ -35,7 +35,7 @@ import '../spine_bindings.dart';
 import 'rtti.dart';
 import 'arrays.dart';
 
-/// FromProperty wrapper
+/// Source property for a TransformConstraint.
 abstract class FromProperty {
   final Pointer<spine_from_property_wrapper> _ptr;
 

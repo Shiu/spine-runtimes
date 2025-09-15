@@ -112,10 +112,10 @@ SPINE_C_API spine_track_entry spine_animation_state_set_empty_animation(spine_an
  * TrackEntry::getMixDuration(). If the track has no entries, it is equivalent
  * to calling setEmptyAnimation(int, float).
  *
- * See setEmptyAnimation(int, float) and  Empty animations in the Spine Runtimes
+ * See setEmptyAnimation(int, float) and Empty animations in the Spine Runtimes
  * Guide.
  *
- * @param delay If > 0, sets TrackEntry::getDelay(). If < = 0, the delay set is the duration of the previous track entry minus any mix duration plus the specified delay (ie the mix ends at ( delay = 0) or before ( delay  < 0) the previous track entry duration). If the previous entry is looping, its next loop completion is used instead of its duration.
+ * @param delay If > 0, sets TrackEntry::getDelay(). If < = 0, the delay set is the duration of the previous track entry minus any mix duration plus the specified delay (ie the mix ends at ( delay = 0) or before ( delay < 0) the previous track entry duration). If the previous entry is looping, its next loop completion is used instead of its duration.
  *
  * @return A track entry to allow further customization of animation playback. References to the track entry must not be kept after the AnimationStateListener::dispose(TrackEntry) event occurs.
  */

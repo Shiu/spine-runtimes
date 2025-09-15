@@ -103,10 +103,12 @@ public class Color: NSObject {
         return result
     }
 
+    /// Convert packed RGBA8888 integer to Color
     public func rgba8888ToColor(_ value: Int32) {
         spine_color_rgba8888_to_color(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), value)
     }
 
+    /// Convert packed RGB888 integer to Color (no alpha)
     public func rgb888ToColor(_ value: Int32) {
         spine_color_rgb888_to_color(_ptr.assumingMemoryBound(to: spine_color_wrapper.self), value)
     }

@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// SlotTimeline wrapper
+/// An interface for timelines which change the property of a slot.
 public protocol SlotTimeline {
     var _ptr: UnsafeMutableRawPointer { get }
     var rtti: Rtti { get }

@@ -64,11 +64,13 @@ class PathConstraint extends PathConstraintBase {
     return PathConstraint.fromPointer(result);
   }
 
+  /// The bones that will be modified by this path constraint.
   ArrayBonePose get bones {
     final result = SpineBindings.bindings.spine_path_constraint_get_bones(_ptr);
     return ArrayBonePose.fromPointer(result);
   }
 
+  /// The slot whose path attachment will be used to constrained the bones.
   Slot get slot {
     final result = SpineBindings.bindings.spine_path_constraint_get_slot(_ptr);
     return Slot.fromPointer(result);

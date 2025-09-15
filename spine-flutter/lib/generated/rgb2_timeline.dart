@@ -34,7 +34,8 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'slot_curve_timeline.dart';
 
-/// Rgb2Timeline wrapper
+/// Changes the RGB for a slot's SlotPose::getColor() and
+/// SlotPose::getDarkColor() for two color tinting.
 class Rgb2Timeline extends SlotCurveTimeline {
   final Pointer<spine_rgb2_timeline_wrapper> _ptr;
 
@@ -54,6 +55,10 @@ class Rgb2Timeline extends SlotCurveTimeline {
     SpineBindings.bindings.spine_rgb2_timeline_dispose(_ptr);
   }
 
+  /// Sets the time, light color, and dark color for the specified frame.
+  ///
+  /// [frame] Between 0 and frameCount, inclusive.
+  /// [time] The frame time in seconds.
   void setFrame(int frame, double time, double r, double g, double b, double r2, double g2, double b2) {
     SpineBindings.bindings.spine_rgb2_timeline_set_frame(_ptr, frame, time, r, g, b, r2, g2, b2);
   }

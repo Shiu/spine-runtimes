@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// BoneTimeline wrapper
+/// An interface for timelines which change the property of a bone.
 public protocol BoneTimeline {
     var _ptr: UnsafeMutableRawPointer { get }
     var rtti: Rtti { get }

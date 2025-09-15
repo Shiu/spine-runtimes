@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// PhysicsConstraintResetTimeline wrapper
+/// Resets a physics constraint when specific animation times are reached.
 @objc(SpinePhysicsConstraintResetTimeline)
 @objcMembers
 public class PhysicsConstraintResetTimeline: Timeline, ConstraintTimeline {
@@ -41,6 +41,7 @@ public class PhysicsConstraintResetTimeline: Timeline, ConstraintTimeline {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_timeline_wrapper.self))
     }
 
+    /// - Parameter constraintIndex: -1 for all physics constraints in the skeleton.
     public convenience init(_ frameCount: Int, _ constraintIndex: Int32) {
         let ptr = spine_physics_constraint_reset_timeline_create(frameCount, constraintIndex)
         self.init(fromPointer: ptr!)
@@ -56,6 +57,7 @@ public class PhysicsConstraintResetTimeline: Timeline, ConstraintTimeline {
         }
     }
 
+    /// Sets the time for the specified frame.
     public func setFrame(_ frame: Int32, _ time: Float) {
         spine_physics_constraint_reset_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_physics_constraint_reset_timeline_wrapper.self), frame, time)
     }

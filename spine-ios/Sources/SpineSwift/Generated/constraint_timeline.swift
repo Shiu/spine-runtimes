@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// ConstraintTimeline wrapper
+/// An interface for timelines which change the property of a constraint.
 public protocol ConstraintTimeline {
     var _ptr: UnsafeMutableRawPointer { get }
     var rtti: Rtti { get }

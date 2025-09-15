@@ -48,16 +48,21 @@ public class SlotPose: NSObject {
         self.init(fromPointer: ptr!)
     }
 
+    /// The color used to tint the slot's attachment. If getDarkColor() is set, this is used as the
+    /// light color for two color tinting.
     public var color: Color {
         let result = spine_slot_pose_get_color(_ptr.assumingMemoryBound(to: spine_slot_pose_wrapper.self))
         return Color(fromPointer: result!)
     }
 
+    /// The dark color used to tint the slot's attachment for two color tinting. The dark color's
+    /// alpha is not used.
     public var darkColor: Color {
         let result = spine_slot_pose_get_dark_color(_ptr.assumingMemoryBound(to: spine_slot_pose_wrapper.self))
         return Color(fromPointer: result!)
     }
 
+    /// Returns true if this slot has a dark color.
     public var hasDarkColor: Bool {
         get {
             let result = spine_slot_pose_has_dark_color(_ptr.assumingMemoryBound(to: spine_slot_pose_wrapper.self))
@@ -68,6 +73,7 @@ public class SlotPose: NSObject {
         }
     }
 
+    /// The current attachment for the slot, or null if the slot has no attachment.
     public var attachment: Attachment? {
         get {
             let result = spine_slot_pose_get_attachment(_ptr.assumingMemoryBound(to: spine_slot_pose_wrapper.self))
@@ -102,6 +108,8 @@ public class SlotPose: NSObject {
         }
     }
 
+    /// The index of the texture region to display when the slot's attachment has a Sequence. -1
+    /// represents the Sequence::getSetupIndex().
     public var sequenceIndex: Int32 {
         get {
             let result = spine_slot_pose_get_sequence_index(_ptr.assumingMemoryBound(to: spine_slot_pose_wrapper.self))
@@ -112,6 +120,11 @@ public class SlotPose: NSObject {
         }
     }
 
+    /// Values to deform the slot's attachment. For an unweighted mesh, the entries are local
+    /// positions for each vertex. For a weighted mesh, the entries are an offset for each vertex
+    /// which will be added to the mesh's local vertex positions.
+    ///
+    /// See VertexAttachment::computeWorldVertices() and DeformTimeline.
     public var deform: ArrayFloat {
         let result = spine_slot_pose_get_deform(_ptr.assumingMemoryBound(to: spine_slot_pose_wrapper.self))
         return ArrayFloat(fromPointer: result!)

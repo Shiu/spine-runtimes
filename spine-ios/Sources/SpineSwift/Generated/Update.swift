@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// Update wrapper
+/// The interface for items updated by Skeleton::updateWorldTransform().
 public protocol Update {
     var _ptr: UnsafeMutableRawPointer { get }
     var rtti: Rtti { get }

@@ -37,7 +37,9 @@ import 'bounding_box_attachment.dart';
 import 'polygon.dart';
 import 'skeleton.dart';
 
-/// SkeletonBounds wrapper
+/// Collects each BoundingBoxAttachment that is visible and computes the world
+/// vertices for its polygon. The polygon vertices are provided along with
+/// convenience methods for doing hit detection.
 class SkeletonBounds {
   final Pointer<spine_skeleton_bounds_wrapper> _ptr;
 
@@ -55,92 +57,123 @@ class SkeletonBounds {
     SpineBindings.bindings.spine_skeleton_bounds_dispose(_ptr);
   }
 
+  /// Clears any previous polygons, finds all visible bounding box attachments,
+  /// and computes the world vertices for each bounding box's polygon.
+  ///
+  /// [skeleton] The skeleton.
+  /// [updateAabb] If true, the axis aligned bounding box containing all the polygons is computed. If false, the SkeletonBounds AABB methods will always return true.
   void update(Skeleton skeleton, bool updateAabb) {
     SpineBindings.bindings.spine_skeleton_bounds_update(_ptr, skeleton.nativePtr.cast(), updateAabb);
   }
 
+  /// Returns true if the axis aligned bounding box contains the point.
   bool aabbContainsPoint(double x, double y) {
     final result = SpineBindings.bindings.spine_skeleton_bounds_aabb_contains_point(_ptr, x, y);
     return result;
   }
 
+  /// Returns true if the axis aligned bounding box intersects the line segment.
   bool aabbIntersectsSegment(double x1, double y1, double x2, double y2) {
     final result = SpineBindings.bindings.spine_skeleton_bounds_aabb_intersects_segment(_ptr, x1, y1, x2, y2);
     return result;
   }
 
+  /// Returns true if the axis aligned bounding box intersects the axis aligned
+  /// bounding box of the specified bounds.
   bool aabbIntersectsSkeleton(SkeletonBounds bounds) {
     final result = SpineBindings.bindings.spine_skeleton_bounds_aabb_intersects_skeleton(_ptr, bounds.nativePtr.cast());
     return result;
   }
 
+  /// Returns the polygon for the given bounding box attachment or null if no
+  /// polygon can be found for the attachment. Requires a call to update()
+  /// first.
   Polygon? getPolygon(BoundingBoxAttachment? attachment) {
     final result = SpineBindings.bindings
         .spine_skeleton_bounds_get_polygon(_ptr, attachment?.nativePtr.cast() ?? Pointer.fromAddress(0));
     return result.address == 0 ? null : Polygon.fromPointer(result);
   }
 
+  /// Returns the bounding box for the given polygon or null. Requires a call to
+  /// update() first.
   BoundingBoxAttachment? getBoundingBox(Polygon? polygon) {
     final result = SpineBindings.bindings
         .spine_skeleton_bounds_get_bounding_box(_ptr, polygon?.nativePtr.cast() ?? Pointer.fromAddress(0));
     return result.address == 0 ? null : BoundingBoxAttachment.fromPointer(result);
   }
 
+  /// Returns all polygons or an empty array. Requires a call to update() first.
   ArrayPolygon get polygons {
     final result = SpineBindings.bindings.spine_skeleton_bounds_get_polygons(_ptr);
     return ArrayPolygon.fromPointer(result);
   }
 
+  /// Returns all bounding boxes. Requires a call to update() first.
   ArrayBoundingBoxAttachment get boundingBoxes {
     final result = SpineBindings.bindings.spine_skeleton_bounds_get_bounding_boxes(_ptr);
     return ArrayBoundingBoxAttachment.fromPointer(result);
   }
 
+  /// The left edge of the axis aligned bounding box.
   double get minX {
     final result = SpineBindings.bindings.spine_skeleton_bounds_get_min_x(_ptr);
     return result;
   }
 
+  /// The bottom edge of the axis aligned bounding box.
   double get minY {
     final result = SpineBindings.bindings.spine_skeleton_bounds_get_min_y(_ptr);
     return result;
   }
 
+  /// The right edge of the axis aligned bounding box.
   double get maxX {
     final result = SpineBindings.bindings.spine_skeleton_bounds_get_max_x(_ptr);
     return result;
   }
 
+  /// The top edge of the axis aligned bounding box.
   double get maxY {
     final result = SpineBindings.bindings.spine_skeleton_bounds_get_max_y(_ptr);
     return result;
   }
 
+  /// The width of the axis aligned bounding box.
   double get width {
     final result = SpineBindings.bindings.spine_skeleton_bounds_get_width(_ptr);
     return result;
   }
 
+  /// The height of the axis aligned bounding box.
   double get height {
     final result = SpineBindings.bindings.spine_skeleton_bounds_get_height(_ptr);
     return result;
   }
 
+  /// Returns true if the polygon contains the point.
   bool containsPoint(Polygon polygon, double x, double y) {
     final result = SpineBindings.bindings.spine_skeleton_bounds_contains_point_1(_ptr, polygon.nativePtr.cast(), x, y);
     return result;
   }
 
+  /// Returns the first bounding box attachment that contains the point, or
+  /// null. When doing many checks, it is usually more efficient to only call
+  /// this method if aabbContainsPoint(float, float) returns true.
   BoundingBoxAttachment? containsPoint2(double x, double y) {
     final result = SpineBindings.bindings.spine_skeleton_bounds_contains_point_2(_ptr, x, y);
     return result.address == 0 ? null : BoundingBoxAttachment.fromPointer(result);
   }
 
+  /// Returns the first bounding box attachment that contains any part of the
+  /// line segment, or null. When doing many checks, it is usually more
+  /// efficient to only call this method if aabbIntersectsSegment(float, float,
+  /// float, float) returns true.
   BoundingBoxAttachment? intersectsSegment(double x1, double y1, double x2, double y2) {
     final result = SpineBindings.bindings.spine_skeleton_bounds_intersects_segment_1(_ptr, x1, y1, x2, y2);
     return result.address == 0 ? null : BoundingBoxAttachment.fromPointer(result);
   }
 
+  /// Returns true if the polygon contains any part of the line segment.
   bool intersectsSegment2(Polygon polygon, double x1, double y1, double x2, double y2) {
     final result = SpineBindings.bindings
         .spine_skeleton_bounds_intersects_segment_2(_ptr, polygon.nativePtr.cast(), x1, y1, x2, y2);

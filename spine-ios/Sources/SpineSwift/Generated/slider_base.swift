@@ -32,7 +32,10 @@
 import Foundation
 import SpineC
 
-/// SliderBase wrapper
+/// Stores the setup pose for a PhysicsConstraint.
+///
+/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User
+/// Guide. Non-exported base class that inherits from the template
 @objc(SpineSliderBase)
 @objcMembers
 open class SliderBase: PosedActive, Posed, Constraint {
@@ -83,6 +86,7 @@ open class SliderBase: PosedActive, Posed, Constraint {
         spine_slider_base_sort(_ptr.assumingMemoryBound(to: spine_slider_base_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
+    /// Inherited from Update
     public func update(_ skeleton: Skeleton, _ physics: Physics) {
         spine_slider_base_update(_ptr.assumingMemoryBound(to: spine_slider_base_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
     }

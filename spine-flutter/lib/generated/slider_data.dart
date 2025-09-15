@@ -54,7 +54,7 @@ import 'slider.dart';
 import 'slider_pose.dart';
 import 'transform_constraint.dart';
 
-/// SliderData wrapper
+/// Stores the setup pose for a Slider
 class SliderData extends PosedData implements ConstraintData {
   final Pointer<spine_slider_data_wrapper> _ptr;
 
@@ -81,6 +81,7 @@ class SliderData extends PosedData implements ConstraintData {
     return Rtti.fromPointer(result);
   }
 
+  /// Creates a slider instance.
   @override
   Constraint createMethod(Skeleton skeleton) {
     final result = SpineBindings.bindings.spine_slider_data_create_method(_ptr, skeleton.nativePtr.cast());

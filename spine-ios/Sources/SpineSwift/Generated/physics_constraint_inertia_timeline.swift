@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// PhysicsConstraintInertiaTimeline wrapper
+/// Changes a physics constraint's PhysicsConstraintPose::getInertia().
 @objc(SpinePhysicsConstraintInertiaTimeline)
 @objcMembers
 public class PhysicsConstraintInertiaTimeline: PhysicsConstraintTimeline {

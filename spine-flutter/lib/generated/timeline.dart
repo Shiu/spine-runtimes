@@ -52,6 +52,16 @@ abstract class Timeline {
     return Rtti.fromPointer(result);
   }
 
+  /// Sets the value(s) for the specified time.
+  ///
+  /// [skeleton] The skeleton the timeline is being applied to. This provides access to the bones, slots, and other skeleton components the timeline may change.
+  /// [lastTime] lastTime The time this timeline was last applied. Timelines such as EventTimeline trigger only at specific times rather than every frame. In that case, the timeline triggers everything between lastTime (exclusive) and time (inclusive).
+  /// [time] The time within the animation. Most timelines find the key before and the key after this time so they can interpolate between the keys.
+  /// [events] If any events are fired, they are added to this array. Can be NULL to ignore firing events or if the timeline does not fire events. May be NULL.
+  /// [alpha] alpha 0 applies the current or setup pose value (depending on pose parameter). 1 applies the timeline value. Between 0 and 1 applies a value between the current or setup pose and the timeline value. By adjusting alpha over time, an animation can be mixed in or out. alpha can also be useful to apply animations on top of each other (layered).
+  /// [blend] Controls how mixing is applied when alpha is than 1.
+  /// [direction] Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions such as DrawOrderTimeline and AttachmentTimeline.
+  /// [appliedPose] True to modify the applied pose.
   void apply(Skeleton skeleton, double lastTime, double time, ArrayEvent? events, double alpha, MixBlend blend,
       MixDirection direction, bool appliedPose) {
     SpineBindings.bindings.spine_timeline_apply(_ptr, skeleton.nativePtr.cast(), lastTime, time,

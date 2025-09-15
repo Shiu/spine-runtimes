@@ -35,7 +35,7 @@ import '../spine_bindings.dart';
 import 'curve_timeline.dart';
 import 'slot_timeline.dart';
 
-/// SlotCurveTimeline wrapper
+/// Base class for slot timelines that use curves.
 abstract class SlotCurveTimeline extends CurveTimeline implements SlotTimeline {
   final Pointer<spine_slot_curve_timeline_wrapper> _ptr;
 

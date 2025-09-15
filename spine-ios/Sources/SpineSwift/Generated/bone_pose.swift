@@ -32,7 +32,8 @@
 import Foundation
 import SpineC
 
-/// BonePose wrapper
+/// The applied pose for a bone. This is the Bone pose with constraints applied and the world
+/// transform computed by Skeleton::updateWorldTransform(Physics).
 @objc(SpineBonePose)
 @objcMembers
 public class BonePose: BoneLocal, Update {
@@ -51,6 +52,8 @@ public class BonePose: BoneLocal, Update {
         return Rtti(fromPointer: result!)
     }
 
+    /// Part of the world transform matrix for the X axis. If changed, updateLocalTransform() should
+    /// be called.
     public var a: Float {
         get {
             let result = spine_bone_pose_get_a(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
@@ -61,6 +64,8 @@ public class BonePose: BoneLocal, Update {
         }
     }
 
+    /// Part of the world transform matrix for the Y axis. If changed, updateLocalTransform() should
+    /// be called.
     public var b: Float {
         get {
             let result = spine_bone_pose_get_b(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
@@ -71,6 +76,8 @@ public class BonePose: BoneLocal, Update {
         }
     }
 
+    /// Part of the world transform matrix for the X axis. If changed, updateLocalTransform() should
+    /// be called.
     public var c: Float {
         get {
             let result = spine_bone_pose_get_c(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
@@ -81,6 +88,8 @@ public class BonePose: BoneLocal, Update {
         }
     }
 
+    /// Part of the world transform matrix for the Y axis. If changed, updateLocalTransform() should
+    /// be called.
     public var d: Float {
         get {
             let result = spine_bone_pose_get_d(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
@@ -91,6 +100,7 @@ public class BonePose: BoneLocal, Update {
         }
     }
 
+    /// The world X position. If changed, updateLocalTransform() should be called.
     public var worldX: Float {
         get {
             let result = spine_bone_pose_get_world_x(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
@@ -101,6 +111,7 @@ public class BonePose: BoneLocal, Update {
         }
     }
 
+    /// The world Y position. If changed, updateLocalTransform() should be called.
     public var worldY: Float {
         get {
             let result = spine_bone_pose_get_world_y(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
@@ -111,38 +122,58 @@ public class BonePose: BoneLocal, Update {
         }
     }
 
+    /// The world rotation for the X axis, calculated using a and c.
     public var worldRotationX: Float {
         let result = spine_bone_pose_get_world_rotation_x(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
         return result
     }
 
+    /// The world rotation for the Y axis, calculated using b and d.
     public var worldRotationY: Float {
         let result = spine_bone_pose_get_world_rotation_y(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
         return result
     }
 
+    /// The magnitude (always positive) of the world scale X, calculated using a and c.
     public var worldScaleX: Float {
         let result = spine_bone_pose_get_world_scale_x(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
         return result
     }
 
+    /// The magnitude (always positive) of the world scale Y, calculated using b and d.
     public var worldScaleY: Float {
         let result = spine_bone_pose_get_world_scale_y(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self))
         return result
     }
 
+    /// Called by Skeleton::updateCache() to compute the world transform, if needed.
     public func update(_ skeleton: Skeleton, _ physics: Physics) {
         spine_bone_pose_update(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
     }
 
+    /// Computes the world transform using the parent bone's applied pose and this pose. Child bones
+    /// are not updated.
+    ///
+    /// See World transforms in the Spine Runtimes Guide.
     public func updateWorldTransform(_ skeleton: Skeleton) {
         spine_bone_pose_update_world_transform(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
+    /// Computes the local transform values from the world transform.
+    ///
+    /// If the world transform is modified (by a constraint, rotateWorld(), etc) then this method
+    /// should be called so the local transform matches the world transform. The local transform may
+    /// be needed by other code (eg to apply another constraint).
+///
+    /// Some information is ambiguous in the world transform, such as -1,-1 scale versus 180
+    /// rotation. The local transform after calling this method is equivalent to the local transform
+    /// used to compute the world transform, but may not be identical.
     public func updateLocalTransform(_ skeleton: Skeleton) {
         spine_bone_pose_update_local_transform(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
+    /// If the world transform has been modified and the local transform no longer matches,
+    /// updateLocalTransform() is called.
     public func validateLocalTransform(_ skeleton: Skeleton) {
         spine_bone_pose_validate_local_transform(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
@@ -159,16 +190,22 @@ public class BonePose: BoneLocal, Update {
         spine_bone_pose_reset_world(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), update)
     }
 
+    /// Transforms a world rotation to a local rotation.
     public func worldToLocalRotation(_ worldRotation: Float) -> Float {
         let result = spine_bone_pose_world_to_local_rotation(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), worldRotation)
         return result
     }
 
+    /// Transforms a local rotation to a world rotation.
     public func localToWorldRotation(_ localRotation: Float) -> Float {
         let result = spine_bone_pose_local_to_world_rotation(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), localRotation)
         return result
     }
 
+    /// Rotates the world transform the specified amount.
+    ///
+    /// After changes are made to the world transform, updateLocalTransform() should be called on
+    /// this bone and any child bones, recursively.
     public func rotateWorld(_ degrees: Float) {
         spine_bone_pose_rotate_world(_ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), degrees)
     }

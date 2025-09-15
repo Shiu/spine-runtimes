@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// DeformTimeline wrapper
+/// Changes a slot's SlotPose::getDeform() to deform a VertexAttachment.
 @objc(SpineDeformTimeline)
 @objcMembers
 public class DeformTimeline: SlotCurveTimeline {
@@ -46,6 +46,7 @@ public class DeformTimeline: SlotCurveTimeline {
         self.init(fromPointer: ptr!)
     }
 
+    /// The attachment that will be deformed.
     public var attachment: VertexAttachment {
         get {
             let result = spine_deform_timeline_get_attachment(_ptr.assumingMemoryBound(to: spine_deform_timeline_wrapper.self))
@@ -73,6 +74,7 @@ public class DeformTimeline: SlotCurveTimeline {
         }
     }
 
+    /// Sets the time and vertices for the specified frame.
     public func setFrame(_ frameIndex: Int32, _ time: Float, _ vertices: ArrayFloat) {
         spine_deform_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_deform_timeline_wrapper.self), frameIndex, time, vertices._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self))
     }

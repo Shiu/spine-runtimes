@@ -43,7 +43,9 @@ import 'path_attachment.dart';
 import 'point_attachment.dart';
 import 'region_attachment.dart';
 
-/// Skin wrapper
+/// Stores attachments by slot index and attachment name. See
+/// SkeletonData::getDefaultSkin, Skeleton::getSkin, and
+/// http://esotericsoftware.com/spine-runtime-skins in the Spine Runtimes Guide.
 class Skin {
   final Pointer<spine_skin_wrapper> _ptr;
 
@@ -61,11 +63,14 @@ class Skin {
     SpineBindings.bindings.spine_skin_dispose(_ptr);
   }
 
+  /// Adds an attachment to the skin for the specified slot index and name. If
+  /// the name already exists for the slot, the previous value is replaced.
   void setAttachment(int slotIndex, String name, Attachment attachment) {
     SpineBindings.bindings
         .spine_skin_set_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>(), attachment.nativePtr.cast());
   }
 
+  /// Returns the attachment for the specified slot index and name, or NULL.
   Attachment? getAttachment(int slotIndex, String name) {
     final result = SpineBindings.bindings.spine_skin_get_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>());
     if (result.address == 0) return null;
@@ -95,10 +100,16 @@ class Skin {
     }
   }
 
+  /// Removes the attachment from the skin.
   void removeAttachment(int slotIndex, String name) {
     SpineBindings.bindings.spine_skin_remove_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>());
   }
 
+  /// Finds the attachments for a given slot. The results are added to the
+  /// passed array of Attachments.
+  ///
+  /// [slotIndex] The target slotIndex. To find the slot index, use SkeletonData::findSlot and SlotData::getIndex.
+  /// [attachments] Found Attachments will be added to this array.
   void findAttachmentsForSlot(int slotIndex, ArrayAttachment attachments) {
     SpineBindings.bindings.spine_skin_find_attachments_for_slot(_ptr, slotIndex, attachments.nativePtr.cast());
   }
@@ -108,10 +119,14 @@ class Skin {
     return result.cast<Utf8>().toDartString();
   }
 
+  /// Adds all attachments, bones, and constraints from the specified skin to
+  /// this skin.
   void addSkin(Skin other) {
     SpineBindings.bindings.spine_skin_add_skin(_ptr, other.nativePtr.cast());
   }
 
+  /// Adds all attachments, bones, and constraints from the specified skin to
+  /// this skin. Attachments are deep copied.
   void copySkin(Skin other) {
     SpineBindings.bindings.spine_skin_copy_skin(_ptr, other.nativePtr.cast());
   }

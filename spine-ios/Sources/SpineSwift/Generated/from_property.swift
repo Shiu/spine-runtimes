@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// FromProperty wrapper
+/// Source property for a TransformConstraint.
 @objc(SpineFromProperty)
 @objcMembers
 open class FromProperty: NSObject {

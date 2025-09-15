@@ -73,6 +73,16 @@ open class Timeline: NSObject {
         return ArrayPropertyId(fromPointer: result!)
     }
 
+    /// Sets the value(s) for the specified time.
+    ///
+    /// - Parameter skeleton: The skeleton the timeline is being applied to. This provides access to the bones, slots, and other skeleton components the timeline may change.
+    /// - Parameter lastTime: lastTime The time this timeline was last applied. Timelines such as EventTimeline trigger only at specific times rather than every frame. In that case, the timeline triggers everything between lastTime (exclusive) and time (inclusive).
+    /// - Parameter time: The time within the animation. Most timelines find the key before and the key after this time so they can interpolate between the keys.
+    /// - Parameter events: If any events are fired, they are added to this array. Can be NULL to ignore firing events or if the timeline does not fire events. May be NULL.
+    /// - Parameter alpha: alpha 0 applies the current or setup pose value (depending on pose parameter). 1 applies the timeline value. Between 0 and 1 applies a value between the current or setup pose and the timeline value. By adjusting alpha over time, an animation can be mixed in or out. alpha can also be useful to apply animations on top of each other (layered).
+    /// - Parameter blend: Controls how mixing is applied when alpha is than 1.
+    /// - Parameter direction: Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions such as DrawOrderTimeline and AttachmentTimeline.
+    /// - Parameter appliedPose: True to modify the applied pose.
     public func apply(_ skeleton: Skeleton, _ lastTime: Float, _ time: Float, _ events: ArrayEvent?, _ alpha: Float, _ blend: MixBlend, _ direction: MixDirection, _ appliedPose: Bool) {
         spine_timeline_apply(_ptr.assumingMemoryBound(to: spine_timeline_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), lastTime, time, events?._ptr.assumingMemoryBound(to: spine_array_event_wrapper.self), alpha, spine_mix_blend(rawValue: UInt32(blend.rawValue)), spine_mix_direction(rawValue: UInt32(direction.rawValue)), appliedPose)
     }

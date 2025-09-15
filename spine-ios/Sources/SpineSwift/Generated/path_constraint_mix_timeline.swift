@@ -32,7 +32,8 @@
 import Foundation
 import SpineC
 
-/// PathConstraintMixTimeline wrapper
+/// Changes a path constraint's PathConstraintPose::getMixRotate(), PathConstraintPose::getMixX(),
+/// and PathConstraintPose::getMixY().
 @objc(SpinePathConstraintMixTimeline)
 @objcMembers
 public class PathConstraintMixTimeline: CurveTimeline, ConstraintTimeline {
@@ -56,6 +57,10 @@ public class PathConstraintMixTimeline: CurveTimeline, ConstraintTimeline {
         }
     }
 
+    /// Sets the time and color for the specified frame.
+    ///
+    /// - Parameter frame: Between 0 and frameCount, inclusive.
+    /// - Parameter time: The frame time in seconds.
     public func setFrame(_ frame: Int32, _ time: Float, _ mixRotate: Float, _ mixX: Float, _ mixY: Float) {
         spine_path_constraint_mix_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_path_constraint_mix_timeline_wrapper.self), frame, time, mixRotate, mixX, mixY)
     }

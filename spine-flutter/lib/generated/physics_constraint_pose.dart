@@ -33,7 +33,7 @@ import 'package:universal_ffi/ffi.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
-/// PhysicsConstraintPose wrapper
+/// Stores a pose for a physics constraint.
 class PhysicsConstraintPose {
   final Pointer<spine_physics_constraint_pose_wrapper> _ptr;
 
@@ -109,6 +109,8 @@ class PhysicsConstraintPose {
     SpineBindings.bindings.spine_physics_constraint_pose_set_gravity(_ptr, value);
   }
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained poses.
   double get mix {
     final result = SpineBindings.bindings.spine_physics_constraint_pose_get_mix(_ptr);
     return result;

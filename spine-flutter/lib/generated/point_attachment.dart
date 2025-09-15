@@ -37,7 +37,13 @@ import 'attachment.dart';
 import 'bone_pose.dart';
 import 'color.dart';
 
-/// PointAttachment wrapper
+/// An attachment which is a single point and a rotation. This can be used to
+/// spawn projectiles, particles, etc. A bone can be used in similar ways, but a
+/// PointAttachment is slightly less expensive to compute and can be hidden,
+/// shown, and placed in a skin.
+///
+/// See https://esotericsoftware.com/spine-points for Point Attachments in the
+/// Spine User Guide.
 class PointAttachment extends Attachment {
   final Pointer<spine_point_attachment_wrapper> _ptr;
 

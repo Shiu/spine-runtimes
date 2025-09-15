@@ -32,7 +32,11 @@
 import Foundation
 import SpineC
 
-/// PathConstraintBase wrapper
+/// Stores the current pose for a path constraint. A path constraint adjusts the rotation,
+/// translation, and scale of the constrained bones so they follow a PathAttachment.
+///
+/// See https://esotericsoftware.com/spine-path-constraints Path constraints in the Spine User
+/// Guide. Non-exported base class that inherits from the template
 @objc(SpinePathConstraintBase)
 @objcMembers
 open class PathConstraintBase: PosedActive, Posed, Constraint {
@@ -83,6 +87,7 @@ open class PathConstraintBase: PosedActive, Posed, Constraint {
         spine_path_constraint_base_sort(_ptr.assumingMemoryBound(to: spine_path_constraint_base_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
+    /// Inherited from Update
     public func update(_ skeleton: Skeleton, _ physics: Physics) {
         spine_path_constraint_base_update(_ptr.assumingMemoryBound(to: spine_path_constraint_base_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
     }

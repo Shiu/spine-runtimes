@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// BoneTimeline1 wrapper
+/// Base class for timelines that animate a single bone property.
 @objc(SpineBoneTimeline1)
 @objcMembers
 open class BoneTimeline1: CurveTimeline1, BoneTimeline {

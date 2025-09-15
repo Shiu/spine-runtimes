@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// PhysicsConstraintTimeline wrapper
+/// The base class for most PhysicsConstraint timelines.
 @objc(SpinePhysicsConstraintTimeline)
 @objcMembers
 open class PhysicsConstraintTimeline: CurveTimeline1, ConstraintTimeline {

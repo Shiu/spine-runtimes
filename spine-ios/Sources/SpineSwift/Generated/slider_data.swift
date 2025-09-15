@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// SliderData wrapper
+/// Stores the setup pose for a Slider
 @objc(SpineSliderData)
 @objcMembers
 public class SliderData: PosedData, ConstraintData {
@@ -160,6 +160,7 @@ public class SliderData: PosedData, ConstraintData {
         return SliderPose(fromPointer: result!)
     }
 
+    /// Creates a slider instance.
     public func createMethod(_ skeleton: Skeleton) -> Constraint {
         let result = spine_slider_data_create_method(_ptr.assumingMemoryBound(to: spine_slider_data_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
         let rtti = spine_constraint_get_rtti(result!)

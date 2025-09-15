@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// TranslateXTimeline wrapper
+/// Changes a bone's local X translation.
 @objc(SpineTranslateXTimeline)
 @objcMembers
 public class TranslateXTimeline: BoneTimeline1 {

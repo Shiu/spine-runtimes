@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// TransformConstraintPose wrapper
+/// Stores a pose for a transform constraint.
 @objc(SpineTransformConstraintPose)
 @objcMembers
 public class TransformConstraintPose: NSObject {
@@ -48,6 +48,7 @@ public class TransformConstraintPose: NSObject {
         self.init(fromPointer: ptr!)
     }
 
+    /// A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
     public var mixRotate: Float {
         get {
             let result = spine_transform_constraint_pose_get_mix_rotate(_ptr.assumingMemoryBound(to: spine_transform_constraint_pose_wrapper.self))
@@ -58,6 +59,8 @@ public class TransformConstraintPose: NSObject {
         }
     }
 
+    /// A percentage (0-1) that controls the mix between the constrained and unconstrained
+    /// translation X.
     public var mixX: Float {
         get {
             let result = spine_transform_constraint_pose_get_mix_x(_ptr.assumingMemoryBound(to: spine_transform_constraint_pose_wrapper.self))
@@ -68,6 +71,8 @@ public class TransformConstraintPose: NSObject {
         }
     }
 
+    /// A percentage (0-1) that controls the mix between the constrained and unconstrained
+    /// translation Y.
     public var mixY: Float {
         get {
             let result = spine_transform_constraint_pose_get_mix_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_pose_wrapper.self))
@@ -78,6 +83,7 @@ public class TransformConstraintPose: NSObject {
         }
     }
 
+    /// A percentage (0-1) that controls the mix between the constrained and unconstrained scale X.
     public var mixScaleX: Float {
         get {
             let result = spine_transform_constraint_pose_get_mix_scale_x(_ptr.assumingMemoryBound(to: spine_transform_constraint_pose_wrapper.self))
@@ -88,6 +94,7 @@ public class TransformConstraintPose: NSObject {
         }
     }
 
+    /// A percentage (0-1) that controls the mix between the constrained and unconstrained scale Y.
     public var mixScaleY: Float {
         get {
             let result = spine_transform_constraint_pose_get_mix_scale_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_pose_wrapper.self))
@@ -98,6 +105,7 @@ public class TransformConstraintPose: NSObject {
         }
     }
 
+    /// A percentage (0-1) that controls the mix between the constrained and unconstrained shear Y.
     public var mixShearY: Float {
         get {
             let result = spine_transform_constraint_pose_get_mix_shear_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_pose_wrapper.self))

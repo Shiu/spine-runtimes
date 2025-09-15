@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// PathConstraintPose wrapper
+/// Stores a pose for a path constraint.
 @objc(SpinePathConstraintPose)
 @objcMembers
 public class PathConstraintPose: NSObject {
@@ -48,6 +48,7 @@ public class PathConstraintPose: NSObject {
         self.init(fromPointer: ptr!)
     }
 
+    /// The position along the path.
     public var position: Float {
         get {
             let result = spine_path_constraint_pose_get_position(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
@@ -58,6 +59,7 @@ public class PathConstraintPose: NSObject {
         }
     }
 
+    /// The spacing between bones.
     public var spacing: Float {
         get {
             let result = spine_path_constraint_pose_get_spacing(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
@@ -68,6 +70,7 @@ public class PathConstraintPose: NSObject {
         }
     }
 
+    /// A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
     public var mixRotate: Float {
         get {
             let result = spine_path_constraint_pose_get_mix_rotate(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
@@ -78,6 +81,8 @@ public class PathConstraintPose: NSObject {
         }
     }
 
+    /// A percentage (0-1) that controls the mix between the constrained and unconstrained
+    /// translation X.
     public var mixX: Float {
         get {
             let result = spine_path_constraint_pose_get_mix_x(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))
@@ -88,6 +93,8 @@ public class PathConstraintPose: NSObject {
         }
     }
 
+    /// A percentage (0-1) that controls the mix between the constrained and unconstrained
+    /// translation Y.
     public var mixY: Float {
         get {
             let result = spine_path_constraint_pose_get_mix_y(_ptr.assumingMemoryBound(to: spine_path_constraint_pose_wrapper.self))

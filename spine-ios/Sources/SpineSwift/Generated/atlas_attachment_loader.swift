@@ -32,7 +32,10 @@
 import Foundation
 import SpineC
 
-/// AtlasAttachmentLoader wrapper
+/// An AttachmentLoader that configures attachments using texture regions from an Atlas.
+///
+/// See https://esotericsoftware.com/spine-loading-skeleton-data#JSON-and-binary-data Loading
+/// skeleton data in the Spine Runtimes Guide.
 @objc(SpineAtlasAttachmentLoader)
 @objcMembers
 public class AtlasAttachmentLoader: NSObject, AttachmentLoader {

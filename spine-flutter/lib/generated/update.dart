@@ -35,7 +35,7 @@ import 'rtti.dart';
 import 'physics.dart';
 import 'skeleton.dart';
 
-/// Update wrapper
+/// The interface for items updated by Skeleton::updateWorldTransform().
 abstract class Update {
   Pointer get nativePtr;
   Rtti get rtti;

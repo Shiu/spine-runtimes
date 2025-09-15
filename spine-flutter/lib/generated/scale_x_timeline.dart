@@ -34,7 +34,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'bone_timeline1.dart';
 
-/// ScaleXTimeline wrapper
+/// Changes a bone's local BoneLocal::getScaleX().
 class ScaleXTimeline extends BoneTimeline1 {
   final Pointer<spine_scale_x_timeline_wrapper> _ptr;
 

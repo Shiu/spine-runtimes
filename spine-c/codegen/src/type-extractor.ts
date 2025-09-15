@@ -122,12 +122,26 @@ function extractTextFromParagraph(paragraphNode: any): string {
 
     for (const inner of paragraphNode.inner || []) {
         if (inner.kind === 'TextComment' && inner.text) {
-            texts.push(inner.text.trim());
+            // Clean up any stray comment markers that might have been included
+            let text = inner.text.trim();
+            // Remove trailing */ if present
+            text = text.replace(/\*\/\s*$/, '').trim();
+            // Remove leading /* if present
+            text = text.replace(/^\/\*\s*/, '').trim();
+            if (text) {
+                texts.push(text);
+            }
         } else if (inner.kind === 'InlineCommandComment' && inner.inner) {
             // Handle inline commands like \c (code) or \b (bold)
             for (const textNode of inner.inner) {
                 if (textNode.kind === 'TextComment' && textNode.text) {
-                    texts.push(textNode.text.trim());
+                    let text = textNode.text.trim();
+                    // Clean up comment markers here too
+                    text = text.replace(/\*\/\s*$/, '').trim();
+                    text = text.replace(/^\/\*\s*/, '').trim();
+                    if (text) {
+                        texts.push(text);
+                    }
                 }
             }
         }

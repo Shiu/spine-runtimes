@@ -34,7 +34,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'bone_timeline1.dart';
 
-/// RotateTimeline wrapper
+/// Changes a bone's local rotation.
 class RotateTimeline extends BoneTimeline1 {
   final Pointer<spine_rotate_timeline_wrapper> _ptr;
 

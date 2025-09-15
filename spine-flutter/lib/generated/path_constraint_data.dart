@@ -50,7 +50,10 @@ import 'slot_data.dart';
 import 'spacing_mode.dart';
 import 'transform_constraint.dart';
 
-/// PathConstraintData wrapper
+/// Stores the setup pose for a PathConstraint.
+///
+/// See https://esotericsoftware.com/spine-path-constraints Path constraints in
+/// the Spine User Guide.
 class PathConstraintData extends PosedData implements ConstraintData {
   final Pointer<spine_path_constraint_data_wrapper> _ptr;
 
@@ -103,11 +106,13 @@ class PathConstraintData extends PosedData implements ConstraintData {
     }
   }
 
+  /// The bones that will be modified by this path constraint.
   ArrayBoneData get bones {
     final result = SpineBindings.bindings.spine_path_constraint_data_get_bones(_ptr);
     return ArrayBoneData.fromPointer(result);
   }
 
+  /// The slot whose path attachment will be used to constrained the bones.
   SlotData get slot {
     final result = SpineBindings.bindings.spine_path_constraint_data_get_slot(_ptr);
     return SlotData.fromPointer(result);
@@ -117,6 +122,7 @@ class PathConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_path_constraint_data_set_slot(_ptr, value.nativePtr.cast());
   }
 
+  /// The mode for positioning the first bone on the path.
   PositionMode get positionMode {
     final result = SpineBindings.bindings.spine_path_constraint_data_get_position_mode(_ptr);
     return PositionMode.fromValue(result);
@@ -126,6 +132,7 @@ class PathConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_path_constraint_data_set_position_mode(_ptr, value.value);
   }
 
+  /// The mode for positioning the bones after the first bone on the path.
   SpacingMode get spacingMode {
     final result = SpineBindings.bindings.spine_path_constraint_data_get_spacing_mode(_ptr);
     return SpacingMode.fromValue(result);
@@ -135,6 +142,7 @@ class PathConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_path_constraint_data_set_spacing_mode(_ptr, value.value);
   }
 
+  /// The mode for adjusting the rotation of the bones.
   RotateMode get rotateMode {
     final result = SpineBindings.bindings.spine_path_constraint_data_get_rotate_mode(_ptr);
     return RotateMode.fromValue(result);
@@ -144,6 +152,7 @@ class PathConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_path_constraint_data_set_rotate_mode(_ptr, value.value);
   }
 
+  /// An offset added to the constrained bone rotation.
   double get offsetRotation {
     final result = SpineBindings.bindings.spine_path_constraint_data_get_offset_rotation(_ptr);
     return result;

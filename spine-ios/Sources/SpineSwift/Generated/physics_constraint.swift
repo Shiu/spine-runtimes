@@ -46,6 +46,7 @@ public class PhysicsConstraint: PhysicsConstraintBase {
         self.init(fromPointer: ptr!)
     }
 
+    /// The bone constrained by this physics constraint.
     public var bone: BonePose {
         get {
             let result = spine_physics_constraint_get_bone(_ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self))
@@ -65,10 +66,14 @@ public class PhysicsConstraint: PhysicsConstraintBase {
         spine_physics_constraint_reset(_ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
+    /// Translates the physics constraint so next update() forces are applied as if the bone moved
+    /// an additional amount in world space.
     public func translate(_ x: Float, _ y: Float) {
         spine_physics_constraint_translate(_ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), x, y)
     }
 
+    /// Rotates the physics constraint so next update() forces are applied as if the bone rotated
+    /// around the specified point in world space.
     public func rotate(_ x: Float, _ y: Float, _ degrees: Float) {
         spine_physics_constraint_rotate(_ptr.assumingMemoryBound(to: spine_physics_constraint_wrapper.self), x, y, degrees)
     }

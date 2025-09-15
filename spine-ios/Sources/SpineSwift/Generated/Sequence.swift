@@ -48,6 +48,7 @@ public class Sequence: NSObject {
         self.init(fromPointer: ptr!)
     }
 
+    /// Returns a unique ID for this attachment.
     public var id: Int32 {
         get {
             let result = spine_sequence_get_id(_ptr.assumingMemoryBound(to: spine_sequence_wrapper.self))
@@ -78,6 +79,7 @@ public class Sequence: NSObject {
         }
     }
 
+    /// The index of the region to show for the setup pose.
     public var setupIndex: Int32 {
         get {
             let result = spine_sequence_get_setup_index(_ptr.assumingMemoryBound(to: spine_sequence_wrapper.self))

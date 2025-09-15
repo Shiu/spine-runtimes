@@ -35,7 +35,9 @@ import '../spine_bindings.dart';
 import 'constraint_timeline.dart';
 import 'curve_timeline.dart';
 
-/// IkConstraintTimeline wrapper
+/// Changes an IK constraint's IkConstraintPose::getMix(),
+/// IkConstraintPose::getSoftness(), IkConstraintPose::getBendDirection(),
+/// IkConstraintPose::getStretch(), and IkConstraintPose::getCompress().
 class IkConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
   final Pointer<spine_ik_constraint_timeline_wrapper> _ptr;
 
@@ -55,6 +57,12 @@ class IkConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
     SpineBindings.bindings.spine_ik_constraint_timeline_dispose(_ptr);
   }
 
+  /// Sets the time, mix, softness, bend direction, compress, and stretch for
+  /// the specified frame.
+  ///
+  /// [frame] Between 0 and frameCount, inclusive.
+  /// [time] The frame time in seconds.
+  /// [bendDirection] 1 or -1.
   void setFrame(int frame, double time, double mix, double softness, int bendDirection, bool compress, bool stretch) {
     SpineBindings.bindings
         .spine_ik_constraint_timeline_set_frame(_ptr, frame, time, mix, softness, bendDirection, compress, stretch);

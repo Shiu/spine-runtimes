@@ -35,7 +35,7 @@ import '../spine_bindings.dart';
 import 'arrays.dart';
 import 'timeline.dart';
 
-/// DrawOrderTimeline wrapper
+/// Changes a skeleton's Skeleton::getDrawOrder().
 class DrawOrderTimeline extends Timeline {
   final Pointer<spine_draw_order_timeline_wrapper> _ptr;
 
@@ -55,6 +55,11 @@ class DrawOrderTimeline extends Timeline {
     SpineBindings.bindings.spine_draw_order_timeline_dispose(_ptr);
   }
 
+  /// Sets the time and draw order for the specified frame.
+  ///
+  /// [frame] Between 0 and frameCount, inclusive.
+  /// [time] The frame time in seconds.
+  /// [drawOrder] For each slot in Skeleton::slots, the index of the slot in the new draw order. May be null to use setup pose draw order.
   void setFrame(int frame, double time, ArrayInt? drawOrder) {
     SpineBindings.bindings
         .spine_draw_order_timeline_set_frame(_ptr, frame, time, drawOrder?.nativePtr.cast() ?? Pointer.fromAddress(0));

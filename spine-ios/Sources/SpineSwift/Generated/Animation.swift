@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// Animation wrapper
+/// Stores a list of timelines to animate a skeleton's pose over time.
 @objc(SpineAnimation)
 @objcMembers
 public class Animation: NSObject {
@@ -48,6 +48,8 @@ public class Animation: NSObject {
         self.init(fromPointer: ptr!)
     }
 
+    /// If the returned array or the timelines it contains are modified, setTimelines() must be
+    /// called.
     public var timelines: ArrayTimeline {
         get {
             let result = spine_animation_get_timelines(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
@@ -58,6 +60,9 @@ public class Animation: NSObject {
         }
     }
 
+    /// The duration of the animation in seconds, which is usually the highest time of all frames in
+    /// the timeline. The duration is used to know when it has completed and when it should loop
+    /// back to the start.
     public var duration: Float {
         get {
             let result = spine_animation_get_duration(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
@@ -68,25 +73,41 @@ public class Animation: NSObject {
         }
     }
 
+    /// The animation's name, which is unique across all animations in the skeleton.
     public var name: String {
         let result = spine_animation_get_name(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
         return String(cString: result!)
     }
 
+    /// The bone indices affected by this animation.
     public var bones: ArrayInt {
         let result = spine_animation_get_bones(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self))
         return ArrayInt(fromPointer: result!)
     }
 
+    /// Returns true if this animation contains a timeline with any of the specified property IDs.
     public func hasTimeline(_ ids: ArrayPropertyId) -> Bool {
         let result = spine_animation_has_timeline(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self), ids._ptr.assumingMemoryBound(to: spine_array_property_id_wrapper.self))
         return result
     }
 
+    /// Applies the animation's timelines to the specified skeleton.
+    ///
+    /// See Timeline::apply().
+    ///
+    /// - Parameter skeleton: The skeleton the animation is being applied to. This provides access to the bones, slots, and other skeleton components the timelines may change.
+    /// - Parameter lastTime: The last time in seconds this animation was applied. Some timelines trigger only at specific times rather than every frame. Pass -1 the first time an animation is applied to ensure frame 0 is triggered.
+    /// - Parameter time: The time in seconds the skeleton is being posed for. Most timelines find the frame before and the frame after this time and interpolate between the frame values. If beyond the getDuration() and loop is true then the animation will repeat, else the last frame will be applied.
+    /// - Parameter loop: If true, the animation repeats after the getDuration().
+    /// - Parameter events: If any events are fired, they are added to this list. Can be null to ignore fired events or if no timelines fire events.
+    /// - Parameter alpha: 0 applies the current or setup values (depending on blend). 1 applies the timeline values. Between 0 and 1 applies values between the current or setup values and the timeline values. By adjusting alpha over time, an animation can be mixed in or out. alpha can also be useful to apply animations on top of each other (layering).
+    /// - Parameter blend: Controls how mixing is applied when alpha < 1.
+    /// - Parameter direction: Indicates whether the timelines are mixing in or out. Used by timelines which perform instant transitions, such as DrawOrderTimeline or AttachmentTimeline.
     public func apply(_ skeleton: Skeleton, _ lastTime: Float, _ time: Float, _ loop: Bool, _ events: ArrayEvent?, _ alpha: Float, _ blend: MixBlend, _ direction: MixDirection, _ appliedPose: Bool) {
         spine_animation_apply(_ptr.assumingMemoryBound(to: spine_animation_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), lastTime, time, loop, events?._ptr.assumingMemoryBound(to: spine_array_event_wrapper.self), alpha, spine_mix_blend(rawValue: UInt32(blend.rawValue)), spine_mix_direction(rawValue: UInt32(direction.rawValue)), appliedPose)
     }
 
+    /// - Parameter target: After the first and before the last entry.
     public static func search(_ values: ArrayFloat, _ target: Float) -> Int32 {
         let result = spine_animation_search_1(values._ptr.assumingMemoryBound(to: spine_array_float_wrapper.self), target)
         return result

@@ -32,7 +32,9 @@
 import Foundation
 import SpineC
 
-/// Slot wrapper
+/// Stores a slot's current pose. Slots organize attachments for Skeleton drawOrder purposes and
+/// provide a place to store state for an attachment. State cannot be stored in an attachment itself
+/// because attachments are stateless and may be shared across multiple skeletons.
 @objc(SpineSlot)
 @objcMembers
 public class Slot: NSObject, Posed {
@@ -48,11 +50,13 @@ public class Slot: NSObject, Posed {
         self.init(fromPointer: ptr!)
     }
 
+    /// The bone this slot belongs to.
     public var bone: Bone {
         let result = spine_slot_get_bone(_ptr.assumingMemoryBound(to: spine_slot_wrapper.self))
         return Bone(fromPointer: result!)
     }
 
+    /// The constraint's setup pose data.
     public var data: SlotData {
         let result = spine_slot_get_data(_ptr.assumingMemoryBound(to: spine_slot_wrapper.self))
         return SlotData(fromPointer: result!)

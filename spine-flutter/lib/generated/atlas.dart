@@ -53,6 +53,11 @@ class Atlas {
     SpineBindings.bindings.spine_atlas_flip_v(_ptr);
   }
 
+  /// Returns the first region found with the specified name. This method uses
+  /// String comparison to find the region, so the result should be cached
+  /// rather than calling this method multiple times.
+  ///
+  /// Returns The region, or nullptr.
   AtlasRegion? findRegion(String name) {
     final result = SpineBindings.bindings.spine_atlas_find_region(_ptr, name.toNativeUtf8().cast<Char>());
     return result.address == 0 ? null : AtlasRegion.fromPointer(result);

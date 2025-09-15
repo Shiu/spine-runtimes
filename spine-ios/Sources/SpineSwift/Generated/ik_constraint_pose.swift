@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// IkConstraintPose wrapper
+/// Stores the current pose for an IK constraint.
 @objc(SpineIkConstraintPose)
 @objcMembers
 public class IkConstraintPose: NSObject {
@@ -48,6 +48,10 @@ public class IkConstraintPose: NSObject {
         self.init(fromPointer: ptr!)
     }
 
+    /// A percentage (0-1) that controls the mix between the constrained and unconstrained rotation.
+    ///
+    /// For two bone IK: if the parent bone has local nonuniform scale, the child bone's local Y
+    /// translation is set to 0.
     public var mix: Float {
         get {
             let result = spine_ik_constraint_pose_get_mix(_ptr.assumingMemoryBound(to: spine_ik_constraint_pose_wrapper.self))
@@ -58,6 +62,9 @@ public class IkConstraintPose: NSObject {
         }
     }
 
+    /// For two bone IK, the target bone's distance from the maximum reach of the bones where
+    /// rotation begins to slow. The bones will not straighten completely until the target is this
+    /// far out of range.
     public var softness: Float {
         get {
             let result = spine_ik_constraint_pose_get_softness(_ptr.assumingMemoryBound(to: spine_ik_constraint_pose_wrapper.self))
@@ -68,6 +75,7 @@ public class IkConstraintPose: NSObject {
         }
     }
 
+    /// For two bone IK, controls the bend direction of the IK bones, either 1 or -1.
     public var bendDirection: Int32 {
         get {
             let result = spine_ik_constraint_pose_get_bend_direction(_ptr.assumingMemoryBound(to: spine_ik_constraint_pose_wrapper.self))
@@ -78,6 +86,7 @@ public class IkConstraintPose: NSObject {
         }
     }
 
+    /// For one bone IK, when true and the target is too close, the bone is scaled to reach it.
     public var compress: Bool {
         get {
             let result = spine_ik_constraint_pose_get_compress(_ptr.assumingMemoryBound(to: spine_ik_constraint_pose_wrapper.self))
@@ -88,6 +97,11 @@ public class IkConstraintPose: NSObject {
         }
     }
 
+    /// When true and the target is out of range, the parent bone is scaled to reach it.
+    ///
+    /// For two bone IK: 1) the child bone's local Y translation is set to 0, 2) stretch is not
+    /// applied if getSoftness() is > 0, and 3) if the parent bone has local nonuniform scale,
+    /// stretch is not applied.
     public var stretch: Bool {
         get {
             let result = spine_ik_constraint_pose_get_stretch(_ptr.assumingMemoryBound(to: spine_ik_constraint_pose_wrapper.self))

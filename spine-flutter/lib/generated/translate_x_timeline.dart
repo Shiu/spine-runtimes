@@ -34,7 +34,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'bone_timeline1.dart';
 
-/// TranslateXTimeline wrapper
+/// Changes a bone's local X translation.
 class TranslateXTimeline extends BoneTimeline1 {
   final Pointer<spine_translate_x_timeline_wrapper> _ptr;
 

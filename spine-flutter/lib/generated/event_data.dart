@@ -34,7 +34,7 @@ import 'package:universal_ffi/ffi_utils.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
-/// EventData wrapper
+/// Stores the setup pose values for an Event.
 class EventData {
   final Pointer<spine_event_data_wrapper> _ptr;
 
@@ -52,6 +52,7 @@ class EventData {
     SpineBindings.bindings.spine_event_data_dispose(_ptr);
   }
 
+  /// The name of the event, which is unique within the skeleton.
   String get name {
     final result = SpineBindings.bindings.spine_event_data_get_name(_ptr);
     return result.cast<Utf8>().toDartString();

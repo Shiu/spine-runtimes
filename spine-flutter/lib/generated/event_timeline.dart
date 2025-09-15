@@ -36,7 +36,7 @@ import 'arrays.dart';
 import 'event.dart';
 import 'timeline.dart';
 
-/// EventTimeline wrapper
+/// Fires an Event when specific animation times are reached.
 class EventTimeline extends Timeline {
   final Pointer<spine_event_timeline_wrapper> _ptr;
 
@@ -56,11 +56,15 @@ class EventTimeline extends Timeline {
     SpineBindings.bindings.spine_event_timeline_dispose(_ptr);
   }
 
+  /// The event for each frame.
   ArrayEvent get events {
     final result = SpineBindings.bindings.spine_event_timeline_get_events(_ptr);
     return ArrayEvent.fromPointer(result);
   }
 
+  /// Sets the time and event for the specified frame.
+  ///
+  /// [frame] Between 0 and frameCount, inclusive.
   void setFrame(int frame, Event event) {
     SpineBindings.bindings.spine_event_timeline_set_frame(_ptr, frame, event.nativePtr.cast());
   }

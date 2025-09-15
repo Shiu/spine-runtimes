@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// SlotData wrapper
+/// Stores the setup pose for a Slot.
 @objc(SpineSlotData)
 @objcMembers
 public class SlotData: PosedData {
@@ -46,16 +46,20 @@ public class SlotData: PosedData {
         self.init(fromPointer: ptr!)
     }
 
+    /// The index of the slot in Skeleton::getSlots().
     public var index: Int32 {
         let result = spine_slot_data_get_index(_ptr.assumingMemoryBound(to: spine_slot_data_wrapper.self))
         return result
     }
 
+    /// The bone this slot belongs to.
     public var boneData: BoneData {
         let result = spine_slot_data_get_bone_data(_ptr.assumingMemoryBound(to: spine_slot_data_wrapper.self))
         return BoneData(fromPointer: result!)
     }
 
+    /// The name of the attachment that is visible for this slot in the setup pose, or empty if no
+    /// attachment is visible.
     public var attachmentName: String {
         get {
             let result = spine_slot_data_get_attachment_name(_ptr.assumingMemoryBound(to: spine_slot_data_wrapper.self))
@@ -66,6 +70,7 @@ public class SlotData: PosedData {
         }
     }
 
+    /// The blend mode for drawing the slot's attachment.
     public var blendMode: BlendMode {
         get {
             let result = spine_slot_data_get_blend_mode(_ptr.assumingMemoryBound(to: spine_slot_data_wrapper.self))
@@ -76,6 +81,8 @@ public class SlotData: PosedData {
         }
     }
 
+    /// False if the slot was hidden in Spine and nonessential data was exported. Does not affect
+    /// runtime rendering.
     public var visible: Bool {
         get {
             let result = spine_slot_data_get_visible(_ptr.assumingMemoryBound(to: spine_slot_data_wrapper.self))

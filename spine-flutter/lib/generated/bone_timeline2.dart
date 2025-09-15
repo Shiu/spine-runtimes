@@ -35,7 +35,7 @@ import '../spine_bindings.dart';
 import 'bone_timeline.dart';
 import 'curve_timeline.dart';
 
-/// BoneTimeline2 wrapper
+/// Base class for timelines that animate two bone properties.
 abstract class BoneTimeline2 extends CurveTimeline implements BoneTimeline {
   final Pointer<spine_bone_timeline2_wrapper> _ptr;
 

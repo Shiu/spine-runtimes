@@ -35,7 +35,7 @@ import '../spine_bindings.dart';
 import 'constraint_timeline.dart';
 import 'curve_timeline1.dart';
 
-/// PhysicsConstraintTimeline wrapper
+/// The base class for most PhysicsConstraint timelines.
 abstract class PhysicsConstraintTimeline extends CurveTimeline1 implements ConstraintTimeline {
   final Pointer<spine_physics_constraint_timeline_wrapper> _ptr;
 

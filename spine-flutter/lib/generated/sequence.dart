@@ -70,6 +70,7 @@ class Sequence {
     return result.cast<Utf8>().toDartString();
   }
 
+  /// Returns a unique ID for this attachment.
   int get id {
     final result = SpineBindings.bindings.spine_sequence_get_id(_ptr);
     return result;
@@ -97,6 +98,7 @@ class Sequence {
     SpineBindings.bindings.spine_sequence_set_digits(_ptr, value);
   }
 
+  /// The index of the region to show for the setup pose.
   int get setupIndex {
     final result = SpineBindings.bindings.spine_sequence_get_setup_index(_ptr);
     return result;

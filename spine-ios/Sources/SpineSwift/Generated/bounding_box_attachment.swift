@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// BoundingBoxAttachment wrapper
+/// Attachment that has a polygon for bounds checking.
 @objc(SpineBoundingBoxAttachment)
 @objcMembers
 public class BoundingBoxAttachment: VertexAttachment {

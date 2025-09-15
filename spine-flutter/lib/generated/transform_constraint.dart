@@ -65,11 +65,13 @@ class TransformConstraint extends TransformConstraintBase {
     return TransformConstraint.fromPointer(result);
   }
 
+  /// The bones that will be modified by this transform constraint.
   ArrayBonePose get bones {
     final result = SpineBindings.bindings.spine_transform_constraint_get_bones(_ptr);
     return ArrayBonePose.fromPointer(result);
   }
 
+  /// The bone whose world transform will be copied to the constrained bones.
   Bone get source {
     final result = SpineBindings.bindings.spine_transform_constraint_get_source(_ptr);
     return Bone.fromPointer(result);

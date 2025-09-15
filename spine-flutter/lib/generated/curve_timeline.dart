@@ -35,7 +35,7 @@ import '../spine_bindings.dart';
 import 'arrays.dart';
 import 'timeline.dart';
 
-/// CurveTimeline wrapper
+/// Base class for frames that use an interpolation bezier curve.
 abstract class CurveTimeline extends Timeline {
   final Pointer<spine_curve_timeline_wrapper> _ptr;
 

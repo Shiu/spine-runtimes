@@ -41,7 +41,7 @@ import 'posed.dart';
 import 'posed_active.dart';
 import 'skeleton.dart';
 
-/// IkConstraintBase wrapper
+/// Non-exported base class that inherits from the template
 abstract class IkConstraintBase extends PosedActive implements Posed, Constraint {
   final Pointer<spine_ik_constraint_base_wrapper> _ptr;
 
@@ -101,6 +101,7 @@ abstract class IkConstraintBase extends PosedActive implements Posed, Constraint
     return result;
   }
 
+  /// Inherited from Update
   @override
   void update(Skeleton skeleton, Physics physics) {
     SpineBindings.bindings.spine_ik_constraint_base_update(_ptr, skeleton.nativePtr.cast(), physics.value);

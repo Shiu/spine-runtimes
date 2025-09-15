@@ -33,7 +33,7 @@ import 'package:universal_ffi/ffi.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
-/// SliderPose wrapper
+/// Stores a pose for a slider.
 class SliderPose {
   final Pointer<spine_slider_pose_wrapper> _ptr;
 

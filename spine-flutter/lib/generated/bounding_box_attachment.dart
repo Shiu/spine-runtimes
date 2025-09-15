@@ -36,7 +36,7 @@ import '../spine_bindings.dart';
 import 'color.dart';
 import 'vertex_attachment.dart';
 
-/// BoundingBoxAttachment wrapper
+/// Attachment that has a polygon for bounds checking.
 class BoundingBoxAttachment extends VertexAttachment {
   final Pointer<spine_bounding_box_attachment_wrapper> _ptr;
 

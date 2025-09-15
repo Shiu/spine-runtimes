@@ -34,7 +34,7 @@ import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 import 'slot_curve_timeline.dart';
 
-/// RgbaTimeline wrapper
+/// Changes a slot's SlotPose::getColor().
 class RgbaTimeline extends SlotCurveTimeline {
   final Pointer<spine_rgba_timeline_wrapper> _ptr;
 
@@ -54,6 +54,10 @@ class RgbaTimeline extends SlotCurveTimeline {
     SpineBindings.bindings.spine_rgba_timeline_dispose(_ptr);
   }
 
+  /// Sets the time and color for the specified frame.
+  ///
+  /// [frame] Between 0 and frameCount, inclusive.
+  /// [time] The frame time in seconds.
   void setFrame(int frame, double time, double r, double g, double b, double a) {
     SpineBindings.bindings.spine_rgba_timeline_set_frame(_ptr, frame, time, r, g, b, a);
   }

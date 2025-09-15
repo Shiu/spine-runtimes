@@ -36,7 +36,7 @@ import 'curve_timeline.dart';
 import 'mix_blend.dart';
 import 'mix_direction.dart';
 
-/// CurveTimeline1 wrapper
+/// The base class for a CurveTimeline that sets one property.
 abstract class CurveTimeline1 extends CurveTimeline {
   final Pointer<spine_curve_timeline1_wrapper> _ptr;
 
@@ -47,10 +47,15 @@ abstract class CurveTimeline1 extends CurveTimeline {
   @override
   Pointer get nativePtr => _ptr;
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// [frame] Between 0 and frameCount, inclusive.
+  /// [time] The frame time in seconds.
   void setFrame(int frame, double time, double value) {
     SpineBindings.bindings.spine_curve_timeline1_set_frame(_ptr, frame, time, value);
   }
 
+  /// Returns the interpolated value for the specified time.
   double getCurveValue(double time) {
     final result = SpineBindings.bindings.spine_curve_timeline1_get_curve_value(_ptr, time);
     return result;

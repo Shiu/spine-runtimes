@@ -32,7 +32,9 @@
 import Foundation
 import SpineC
 
-/// SkeletonData wrapper
+/// Stores the setup pose and all of the stateless data for a skeleton.
+///
+/// See Data objects in the Spine Runtimes Guide.
 @objc(SpineSkeletonData)
 @objcMembers
 public class SkeletonData: NSObject {
@@ -48,6 +50,8 @@ public class SkeletonData: NSObject {
         self.init(fromPointer: ptr!)
     }
 
+    /// The skeleton's name, which by default is the name of the skeleton data file when possible,
+    /// or null when a name hasn't been set.
     public var name: String {
         get {
             let result = spine_skeleton_data_get_name(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -58,21 +62,28 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// The skeleton's bones, sorted parent first. The root bone is always the first bone.
     public var bones: ArrayBoneData {
         let result = spine_skeleton_data_get_bones(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
         return ArrayBoneData(fromPointer: result!)
     }
 
+    /// The skeleton's slots in the setup pose draw order.
     public var slots: ArraySlotData {
         let result = spine_skeleton_data_get_slots(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
         return ArraySlotData(fromPointer: result!)
     }
 
+    /// All skins, including the default skin.
     public var skins: ArraySkin {
         let result = spine_skeleton_data_get_skins(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
         return ArraySkin(fromPointer: result!)
     }
 
+    /// The skeleton's default skin. By default this skin contains all attachments that were not in
+    /// a skin in Spine.
+    ///
+    /// - Returns: May be NULL.
     public var defaultSkin: Skin? {
         get {
             let result = spine_skeleton_data_get_default_skin(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -83,21 +94,25 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// The skeleton's events.
     public var events: ArrayEventData {
         let result = spine_skeleton_data_get_events(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
         return ArrayEventData(fromPointer: result!)
     }
 
+    /// The skeleton's animations.
     public var animations: ArrayAnimation {
         let result = spine_skeleton_data_get_animations(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
         return ArrayAnimation(fromPointer: result!)
     }
 
+    /// The skeleton's constraints.
     public var constraints: ArrayConstraintData {
         let result = spine_skeleton_data_get_constraints(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
         return ArrayConstraintData(fromPointer: result!)
     }
 
+    /// The X coordinate of the skeleton's axis aligned bounding box in the setup pose.
     public var x: Float {
         get {
             let result = spine_skeleton_data_get_x(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -108,6 +123,7 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// The Y coordinate of the skeleton's axis aligned bounding box in the setup pose.
     public var y: Float {
         get {
             let result = spine_skeleton_data_get_y(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -118,6 +134,7 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// The width of the skeleton's axis aligned bounding box in the setup pose.
     public var width: Float {
         get {
             let result = spine_skeleton_data_get_width(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -128,6 +145,7 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// The height of the skeleton's axis aligned bounding box in the setup pose.
     public var height: Float {
         get {
             let result = spine_skeleton_data_get_height(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -138,6 +156,8 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// Baseline scale factor for applying physics and other effects based on distance to
+    /// non-scalable properties, such as angle or scale. Default is 100.
     public var referenceScale: Float {
         get {
             let result = spine_skeleton_data_get_reference_scale(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -148,6 +168,7 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// The Spine version used to export this data, or NULL.
     public var version: String {
         get {
             let result = spine_skeleton_data_get_version(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -158,6 +179,7 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// The skeleton data hash. This value will change if any of the skeleton data has changed.
     public var hashString: String {
         get {
             let result = spine_skeleton_data_get_hash(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -168,6 +190,8 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// The path to the images directory as defined in Spine, or null if nonessential data was not
+    /// exported.
     public var imagesPath: String {
         get {
             let result = spine_skeleton_data_get_images_path(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -178,6 +202,8 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// The path to the audio directory as defined in Spine, or null if nonessential data was not
+    /// exported.
     public var audioPath: String {
         get {
             let result = spine_skeleton_data_get_audio_path(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -188,6 +214,7 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// The dopesheet FPS in Spine. Available only when nonessential data was exported.
     public var fps: Float {
         get {
             let result = spine_skeleton_data_get_fps(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self))
@@ -198,26 +225,34 @@ public class SkeletonData: NSObject {
         }
     }
 
+    /// Finds a bone by comparing each bone's name. It is more efficient to cache the results of
+    /// this method than to call it multiple times.
+    ///
+    /// - Returns: May be NULL.
     public func findBone(_ boneName: String) -> BoneData? {
         let result = spine_skeleton_data_find_bone(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self), boneName)
         return result.map { BoneData(fromPointer: $0) }
     }
 
+    /// - Returns: May be NULL.
     public func findSlot(_ slotName: String) -> SlotData? {
         let result = spine_skeleton_data_find_slot(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self), slotName)
         return result.map { SlotData(fromPointer: $0) }
     }
 
+    /// - Returns: May be NULL.
     public func findSkin(_ skinName: String) -> Skin? {
         let result = spine_skeleton_data_find_skin(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self), skinName)
         return result.map { Skin(fromPointer: $0) }
     }
 
+    /// - Returns: May be NULL.
     public func findEvent(_ eventDataName: String) -> EventData? {
         let result = spine_skeleton_data_find_event(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self), eventDataName)
         return result.map { EventData(fromPointer: $0) }
     }
 
+    /// - Returns: May be NULL.
     public func findAnimation(_ animationName: String) -> Animation? {
         let result = spine_skeleton_data_find_animation(_ptr.assumingMemoryBound(to: spine_skeleton_data_wrapper.self), animationName)
         return result.map { Animation(fromPointer: $0) }

@@ -33,7 +33,7 @@ import 'package:universal_ffi/ffi.dart';
 import 'spine_dart_bindings_generated.dart';
 import '../spine_bindings.dart';
 
-/// PosedActive wrapper
+/// Simple mixin class that adds active state tracking
 class PosedActive {
   final Pointer<spine_posed_active_wrapper> _ptr;
 

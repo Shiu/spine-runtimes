@@ -32,7 +32,12 @@
 import Foundation
 import SpineC
 
-/// Event wrapper
+/// Stores the current pose values for an Event.
+///
+/// See Timeline::apply(), AnimationStateListener::event(), and
+///
+/// - SeeAlso:
+///   - https://esotericsoftware.com/spine-events Events in the Spine User Guide.
 @objc(SpineEvent)
 @objcMembers
 public class Event: NSObject {
@@ -48,11 +53,13 @@ public class Event: NSObject {
         self.init(fromPointer: ptr!)
     }
 
+    /// The event's setup pose data.
     public var data: EventData {
         let result = spine_event_get_data(_ptr.assumingMemoryBound(to: spine_event_wrapper.self))
         return EventData(fromPointer: result!)
     }
 
+    /// The animation time this event was keyed.
     public var time: Float {
         let result = spine_event_get_time(_ptr.assumingMemoryBound(to: spine_event_wrapper.self))
         return result

@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// EventData wrapper
+/// Stores the setup pose values for an Event.
 @objc(SpineEventData)
 @objcMembers
 public class EventData: NSObject {
@@ -48,6 +48,7 @@ public class EventData: NSObject {
         self.init(fromPointer: ptr!)
     }
 
+    /// The name of the event, which is unique within the skeleton.
     public var name: String {
         let result = spine_event_data_get_name(_ptr.assumingMemoryBound(to: spine_event_data_wrapper.self))
         return String(cString: result!)

@@ -67,10 +67,12 @@ class Color {
     return result;
   }
 
+  /// Convert packed RGBA8888 integer to Color
   void rgba8888ToColor(int value) {
     SpineBindings.bindings.spine_color_rgba8888_to_color(_ptr, value);
   }
 
+  /// Convert packed RGB888 integer to Color (no alpha)
   void rgb888ToColor(int value) {
     SpineBindings.bindings.spine_color_rgb888_to_color(_ptr, value);
   }

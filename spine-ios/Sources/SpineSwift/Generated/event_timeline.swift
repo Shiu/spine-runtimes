@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// EventTimeline wrapper
+/// Fires an Event when specific animation times are reached.
 @objc(SpineEventTimeline)
 @objcMembers
 public class EventTimeline: Timeline {
@@ -46,11 +46,15 @@ public class EventTimeline: Timeline {
         self.init(fromPointer: ptr!)
     }
 
+    /// The event for each frame.
     public var events: ArrayEvent {
         let result = spine_event_timeline_get_events(_ptr.assumingMemoryBound(to: spine_event_timeline_wrapper.self))
         return ArrayEvent(fromPointer: result!)
     }
 
+    /// Sets the time and event for the specified frame.
+    ///
+    /// - Parameter frame: Between 0 and frameCount, inclusive.
     public func setFrame(_ frame: Int, _ event: Event) {
         spine_event_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_event_timeline_wrapper.self), frame, event._ptr.assumingMemoryBound(to: spine_event_wrapper.self))
     }

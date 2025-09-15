@@ -79,12 +79,19 @@ class IkConstraint extends IkConstraintBase {
     SpineBindings.bindings.spine_ik_constraint_set_target(_ptr, value.nativePtr.cast());
   }
 
+  /// Adjusts the bone rotation so the tip is as close to the target position as
+  /// possible. The target is specified in the world coordinate system.
   static void apply(Skeleton skeleton, BonePose bone, double targetX, double targetY, bool compress, bool stretch,
       bool uniform, double mix) {
     SpineBindings.bindings.spine_ik_constraint_apply_1(
         skeleton.nativePtr.cast(), bone.nativePtr.cast(), targetX, targetY, compress, stretch, uniform, mix);
   }
 
+  /// Adjusts the parent and child bone rotations so the tip of the child is as
+  /// close to the target position as possible. The target is specified in the
+  /// world coordinate system.
+  ///
+  /// [child] A direct descendant of the parent bone.
   static void apply2(Skeleton skeleton, BonePose parent, BonePose child, double targetX, double targetY,
       int bendDirection, bool stretch, bool uniform, double softness, double mix) {
     SpineBindings.bindings.spine_ik_constraint_apply_2(skeleton.nativePtr.cast(), parent.nativePtr.cast(),

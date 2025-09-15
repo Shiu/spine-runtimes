@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// InheritTimeline wrapper
+/// Changes a bone's BoneLocal::getInherit().
 @objc(SpineInheritTimeline)
 @objcMembers
 public class InheritTimeline: Timeline, BoneTimeline {
@@ -56,6 +56,10 @@ public class InheritTimeline: Timeline, BoneTimeline {
         }
     }
 
+    /// Sets the inherit transform mode for the specified frame.
+    ///
+    /// - Parameter frame: Between 0 and frameCount, inclusive.
+    /// - Parameter time: The frame time in seconds.
     public func setFrame(_ frame: Int32, _ time: Float, _ inherit: Inherit) {
         spine_inherit_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_inherit_timeline_wrapper.self), frame, time, spine_inherit(rawValue: UInt32(inherit.rawValue)))
     }

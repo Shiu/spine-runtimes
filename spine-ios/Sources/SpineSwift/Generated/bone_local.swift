@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// BoneLocal wrapper
+/// Stores a bone's local pose.
 @objc(SpineBoneLocal)
 @objcMembers
 public class BoneLocal: NSObject {
@@ -48,6 +48,7 @@ public class BoneLocal: NSObject {
         self.init(fromPointer: ptr!)
     }
 
+    /// The local x translation.
     public var x: Float {
         get {
             let result = spine_bone_local_get_x(_ptr.assumingMemoryBound(to: spine_bone_local_wrapper.self))
@@ -58,6 +59,7 @@ public class BoneLocal: NSObject {
         }
     }
 
+    /// The local y translation.
     public var y: Float {
         get {
             let result = spine_bone_local_get_y(_ptr.assumingMemoryBound(to: spine_bone_local_wrapper.self))
@@ -68,6 +70,7 @@ public class BoneLocal: NSObject {
         }
     }
 
+    /// The local rotation in degrees, counter clockwise.
     public var rotation: Float {
         get {
             let result = spine_bone_local_get_rotation(_ptr.assumingMemoryBound(to: spine_bone_local_wrapper.self))
@@ -78,6 +81,7 @@ public class BoneLocal: NSObject {
         }
     }
 
+    /// The local scaleX.
     public var scaleX: Float {
         get {
             let result = spine_bone_local_get_scale_x(_ptr.assumingMemoryBound(to: spine_bone_local_wrapper.self))
@@ -88,6 +92,7 @@ public class BoneLocal: NSObject {
         }
     }
 
+    /// The local scaleY.
     public var scaleY: Float {
         get {
             let result = spine_bone_local_get_scale_y(_ptr.assumingMemoryBound(to: spine_bone_local_wrapper.self))
@@ -98,6 +103,7 @@ public class BoneLocal: NSObject {
         }
     }
 
+    /// The local shearX.
     public var shearX: Float {
         get {
             let result = spine_bone_local_get_shear_x(_ptr.assumingMemoryBound(to: spine_bone_local_wrapper.self))
@@ -108,6 +114,7 @@ public class BoneLocal: NSObject {
         }
     }
 
+    /// The local shearY.
     public var shearY: Float {
         get {
             let result = spine_bone_local_get_shear_y(_ptr.assumingMemoryBound(to: spine_bone_local_wrapper.self))
@@ -118,6 +125,7 @@ public class BoneLocal: NSObject {
         }
     }
 
+    /// Determines how parent world transforms affect this bone.
     public var inherit: Inherit {
         get {
             let result = spine_bone_local_get_inherit(_ptr.assumingMemoryBound(to: spine_bone_local_wrapper.self))

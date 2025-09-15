@@ -43,7 +43,13 @@ import 'posed_active.dart';
 import 'skeleton.dart';
 import 'update.dart';
 
-/// Bone wrapper
+/// The current pose for a bone, before constraints are applied.
+///
+/// A bone has a local transform which is used to compute its world transform. A
+/// bone also has an applied transform, which is a local transform that can be
+/// applied to compute the world transform. The local transform and applied
+/// transform may differ if a constraint or application code modifies the world
+/// transform after it was computed from the local transform.
 class Bone extends PosedActive implements Posed, Update {
   final Pointer<spine_bone_wrapper> _ptr;
 
@@ -53,12 +59,14 @@ class Bone extends PosedActive implements Posed, Update {
   @override
   Pointer get nativePtr => _ptr;
 
+  /// [parent] May be NULL.
   factory Bone(BoneData data, Bone? parent) {
     final ptr = SpineBindings.bindings
         .spine_bone_create(data.nativePtr.cast(), parent?.nativePtr.cast() ?? Pointer.fromAddress(0));
     return Bone.fromPointer(ptr);
   }
 
+  /// Copy constructor. Does not copy the children bones.
   factory Bone.from(Bone bone, Bone? parent) {
     final ptr = SpineBindings.bindings
         .spine_bone_create2(bone.nativePtr.cast(), parent?.nativePtr.cast() ?? Pointer.fromAddress(0));
@@ -76,11 +84,13 @@ class Bone extends PosedActive implements Posed, Update {
     return Rtti.fromPointer(result);
   }
 
+  /// The parent bone, or null if this is the root bone.
   Bone? get parent {
     final result = SpineBindings.bindings.spine_bone_get_parent(_ptr);
     return result.address == 0 ? null : Bone.fromPointer(result);
   }
 
+  /// The immediate children of this bone.
   ArrayBone get children {
     final result = SpineBindings.bindings.spine_bone_get_children(_ptr);
     return ArrayBone.fromPointer(result);
@@ -100,6 +110,7 @@ class Bone extends PosedActive implements Posed, Update {
     SpineBindings.bindings.spine_bone_update(_ptr, skeleton.nativePtr.cast(), physics.value);
   }
 
+  /// The constraint's setup pose data.
   BoneData get data {
     final result = SpineBindings.bindings.spine_bone_get_data(_ptr);
     return BoneData.fromPointer(result);

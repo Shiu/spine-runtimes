@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// RgbTimeline wrapper
+/// Changes the RGB for a slot's SlotPose::getColor().
 @objc(SpineRgbTimeline)
 @objcMembers
 public class RgbTimeline: SlotCurveTimeline {
@@ -46,6 +46,10 @@ public class RgbTimeline: SlotCurveTimeline {
         self.init(fromPointer: ptr!)
     }
 
+    /// Sets the time and color for the specified frame.
+    ///
+    /// - Parameter frame: Between 0 and frameCount, inclusive.
+    /// - Parameter time: The frame time in seconds.
     public func setFrame(_ frame: Int32, _ time: Float, _ r: Float, _ g: Float, _ b: Float) {
         spine_rgb_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_rgb_timeline_wrapper.self), frame, time, r, g, b)
     }

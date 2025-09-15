@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// RotateTimeline wrapper
+/// Changes a bone's local rotation.
 @objc(SpineRotateTimeline)
 @objcMembers
 public class RotateTimeline: BoneTimeline1 {

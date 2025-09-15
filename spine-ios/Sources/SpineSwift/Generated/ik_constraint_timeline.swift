@@ -32,7 +32,9 @@
 import Foundation
 import SpineC
 
-/// IkConstraintTimeline wrapper
+/// Changes an IK constraint's IkConstraintPose::getMix(), IkConstraintPose::getSoftness(),
+/// IkConstraintPose::getBendDirection(), IkConstraintPose::getStretch(), and
+/// IkConstraintPose::getCompress().
 @objc(SpineIkConstraintTimeline)
 @objcMembers
 public class IkConstraintTimeline: CurveTimeline, ConstraintTimeline {
@@ -56,6 +58,11 @@ public class IkConstraintTimeline: CurveTimeline, ConstraintTimeline {
         }
     }
 
+    /// Sets the time, mix, softness, bend direction, compress, and stretch for the specified frame.
+    ///
+    /// - Parameter frame: Between 0 and frameCount, inclusive.
+    /// - Parameter time: The frame time in seconds.
+    /// - Parameter bendDirection: 1 or -1.
     public func setFrame(_ frame: Int32, _ time: Float, _ mix: Float, _ softness: Float, _ bendDirection: Int32, _ compress: Bool, _ stretch: Bool) {
         spine_ik_constraint_timeline_set_frame(_ptr.assumingMemoryBound(to: spine_ik_constraint_timeline_wrapper.self), frame, time, mix, softness, bendDirection, compress, stretch)
     }

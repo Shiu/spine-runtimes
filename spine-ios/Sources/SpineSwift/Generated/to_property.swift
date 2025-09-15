@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// ToProperty wrapper
+/// Constrained property for a TransformConstraint.
 @objc(SpineToProperty)
 @objcMembers
 open class ToProperty: NSObject {
@@ -78,11 +78,13 @@ open class ToProperty: NSObject {
         }
     }
 
+    /// Reads the mix for this property from the specified pose.
     public func mix(_ pose: TransformConstraintPose) -> Float {
         let result = spine_to_property_mix(_ptr.assumingMemoryBound(to: spine_to_property_wrapper.self), pose._ptr.assumingMemoryBound(to: spine_transform_constraint_pose_wrapper.self))
         return result
     }
 
+    /// Applies the value to this property.
     public func apply(_ skeleton: Skeleton, _ pose: TransformConstraintPose, _ bone: BonePose, _ value: Float, _ local: Bool, _ additive: Bool) {
         spine_to_property_apply(_ptr.assumingMemoryBound(to: spine_to_property_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), pose._ptr.assumingMemoryBound(to: spine_transform_constraint_pose_wrapper.self), bone._ptr.assumingMemoryBound(to: spine_bone_pose_wrapper.self), value, local, additive)
     }

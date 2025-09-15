@@ -100,11 +100,13 @@ class IkConstraintData extends PosedData implements ConstraintData {
     }
   }
 
+  /// The bones that are constrained by this IK Constraint.
   ArrayBoneData get bones {
     final result = SpineBindings.bindings.spine_ik_constraint_data_get_bones(_ptr);
     return ArrayBoneData.fromPointer(result);
   }
 
+  /// The bone that is the IK target.
   BoneData get target {
     final result = SpineBindings.bindings.spine_ik_constraint_data_get_target(_ptr);
     return BoneData.fromPointer(result);
@@ -114,6 +116,8 @@ class IkConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_ik_constraint_data_set_target(_ptr, value.nativePtr.cast());
   }
 
+  /// When true and IkConstraintPose compress or stretch is used, the bone is
+  /// scaled on both the X and Y axes.
   bool get uniform {
     final result = SpineBindings.bindings.spine_ik_constraint_data_get_uniform(_ptr);
     return result;

@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// PhysicsConstraintGravityTimeline wrapper
+/// Changes a physics constraint's PhysicsConstraintPose::getGravity().
 @objc(SpinePhysicsConstraintGravityTimeline)
 @objcMembers
 public class PhysicsConstraintGravityTimeline: PhysicsConstraintTimeline {

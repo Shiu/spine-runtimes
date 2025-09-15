@@ -41,7 +41,7 @@ import 'skeleton.dart';
 import 'transform_constraint_data.dart';
 import 'transform_constraint_pose.dart';
 
-/// TransformConstraintBase wrapper
+/// Non-exported base class that inherits from the template
 abstract class TransformConstraintBase extends PosedActive implements Posed, Constraint {
   final Pointer<spine_transform_constraint_base_wrapper> _ptr;
 
@@ -101,6 +101,7 @@ abstract class TransformConstraintBase extends PosedActive implements Posed, Con
     return result;
   }
 
+  /// Inherited from Update
   @override
   void update(Skeleton skeleton, Physics physics) {
     SpineBindings.bindings.spine_transform_constraint_base_update(_ptr, skeleton.nativePtr.cast(), physics.value);

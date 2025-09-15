@@ -6,6 +6,7 @@
 # Get the directory containing this script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+rm -rf "$SCRIPT_DIR/spine-c/codegen/spine-cpp-types.json"
 rm -rf "$SCRIPT_DIR/spine-c/codegen/node_modules"
 rm -rf "$SCRIPT_DIR/spine-flutter/codegen/node_modules"
 rm -rf "$SCRIPT_DIR/spine-ios/codegen/node_modules"

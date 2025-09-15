@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// SliderPose wrapper
+/// Stores a pose for a slider.
 @objc(SpineSliderPose)
 @objcMembers
 public class SliderPose: NSObject {

@@ -38,7 +38,8 @@ import 'physics.dart';
 import 'skeleton.dart';
 import 'update.dart';
 
-/// BonePose wrapper
+/// The applied pose for a bone. This is the Bone pose with constraints applied
+/// and the world transform computed by Skeleton::updateWorldTransform(Physics).
 class BonePose extends BoneLocal implements Update {
   final Pointer<spine_bone_pose_wrapper> _ptr;
 
@@ -64,19 +65,38 @@ class BonePose extends BoneLocal implements Update {
     return Rtti.fromPointer(result);
   }
 
+  /// Called by Skeleton::updateCache() to compute the world transform, if
+  /// needed.
   @override
   void update(Skeleton skeleton, Physics physics) {
     SpineBindings.bindings.spine_bone_pose_update(_ptr, skeleton.nativePtr.cast(), physics.value);
   }
 
+  /// Computes the world transform using the parent bone's applied pose and this
+  /// pose. Child bones are not updated.
+  ///
+  /// See World transforms in the Spine Runtimes Guide.
   void updateWorldTransform(Skeleton skeleton) {
     SpineBindings.bindings.spine_bone_pose_update_world_transform(_ptr, skeleton.nativePtr.cast());
   }
 
+  /// Computes the local transform values from the world transform.
+  ///
+  /// If the world transform is modified (by a constraint, rotateWorld(), etc)
+  /// then this method should be called so the local transform matches the world
+  /// transform. The local transform may be needed by other code (eg to apply
+  /// another constraint).
+  ///
+  /// Some information is ambiguous in the world transform, such as -1,-1 scale
+  /// versus 180 rotation. The local transform after calling this method is
+  /// equivalent to the local transform used to compute the world transform, but
+  /// may not be identical.
   void updateLocalTransform(Skeleton skeleton) {
     SpineBindings.bindings.spine_bone_pose_update_local_transform(_ptr, skeleton.nativePtr.cast());
   }
 
+  /// If the world transform has been modified and the local transform no longer
+  /// matches, updateLocalTransform() is called.
   void validateLocalTransform(Skeleton skeleton) {
     SpineBindings.bindings.spine_bone_pose_validate_local_transform(_ptr, skeleton.nativePtr.cast());
   }
@@ -93,6 +113,8 @@ class BonePose extends BoneLocal implements Update {
     SpineBindings.bindings.spine_bone_pose_reset_world(_ptr, update);
   }
 
+  /// Part of the world transform matrix for the X axis. If changed,
+  /// updateLocalTransform() should be called.
   double get a {
     final result = SpineBindings.bindings.spine_bone_pose_get_a(_ptr);
     return result;
@@ -102,6 +124,8 @@ class BonePose extends BoneLocal implements Update {
     SpineBindings.bindings.spine_bone_pose_set_a(_ptr, value);
   }
 
+  /// Part of the world transform matrix for the Y axis. If changed,
+  /// updateLocalTransform() should be called.
   double get b {
     final result = SpineBindings.bindings.spine_bone_pose_get_b(_ptr);
     return result;
@@ -111,6 +135,8 @@ class BonePose extends BoneLocal implements Update {
     SpineBindings.bindings.spine_bone_pose_set_b(_ptr, value);
   }
 
+  /// Part of the world transform matrix for the X axis. If changed,
+  /// updateLocalTransform() should be called.
   double get c {
     final result = SpineBindings.bindings.spine_bone_pose_get_c(_ptr);
     return result;
@@ -120,6 +146,8 @@ class BonePose extends BoneLocal implements Update {
     SpineBindings.bindings.spine_bone_pose_set_c(_ptr, value);
   }
 
+  /// Part of the world transform matrix for the Y axis. If changed,
+  /// updateLocalTransform() should be called.
   double get d {
     final result = SpineBindings.bindings.spine_bone_pose_get_d(_ptr);
     return result;
@@ -129,6 +157,7 @@ class BonePose extends BoneLocal implements Update {
     SpineBindings.bindings.spine_bone_pose_set_d(_ptr, value);
   }
 
+  /// The world X position. If changed, updateLocalTransform() should be called.
   double get worldX {
     final result = SpineBindings.bindings.spine_bone_pose_get_world_x(_ptr);
     return result;
@@ -138,6 +167,7 @@ class BonePose extends BoneLocal implements Update {
     SpineBindings.bindings.spine_bone_pose_set_world_x(_ptr, value);
   }
 
+  /// The world Y position. If changed, updateLocalTransform() should be called.
   double get worldY {
     final result = SpineBindings.bindings.spine_bone_pose_get_world_y(_ptr);
     return result;
@@ -147,36 +177,48 @@ class BonePose extends BoneLocal implements Update {
     SpineBindings.bindings.spine_bone_pose_set_world_y(_ptr, value);
   }
 
+  /// The world rotation for the X axis, calculated using a and c.
   double get worldRotationX {
     final result = SpineBindings.bindings.spine_bone_pose_get_world_rotation_x(_ptr);
     return result;
   }
 
+  /// The world rotation for the Y axis, calculated using b and d.
   double get worldRotationY {
     final result = SpineBindings.bindings.spine_bone_pose_get_world_rotation_y(_ptr);
     return result;
   }
 
+  /// The magnitude (always positive) of the world scale X, calculated using a
+  /// and c.
   double get worldScaleX {
     final result = SpineBindings.bindings.spine_bone_pose_get_world_scale_x(_ptr);
     return result;
   }
 
+  /// The magnitude (always positive) of the world scale Y, calculated using b
+  /// and d.
   double get worldScaleY {
     final result = SpineBindings.bindings.spine_bone_pose_get_world_scale_y(_ptr);
     return result;
   }
 
+  /// Transforms a world rotation to a local rotation.
   double worldToLocalRotation(double worldRotation) {
     final result = SpineBindings.bindings.spine_bone_pose_world_to_local_rotation(_ptr, worldRotation);
     return result;
   }
 
+  /// Transforms a local rotation to a world rotation.
   double localToWorldRotation(double localRotation) {
     final result = SpineBindings.bindings.spine_bone_pose_local_to_world_rotation(_ptr, localRotation);
     return result;
   }
 
+  /// Rotates the world transform the specified amount.
+  ///
+  /// After changes are made to the world transform, updateLocalTransform()
+  /// should be called on this bone and any child bones, recursively.
   void rotateWorld(double degrees) {
     SpineBindings.bindings.spine_bone_pose_rotate_world(_ptr, degrees);
   }

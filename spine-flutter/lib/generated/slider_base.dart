@@ -41,7 +41,11 @@ import 'skeleton.dart';
 import 'slider_data.dart';
 import 'slider_pose.dart';
 
-/// SliderBase wrapper
+/// Stores the setup pose for a PhysicsConstraint.
+///
+/// See https://esotericsoftware.com/spine-physics-constraints Physics
+/// constraints in the Spine User Guide. Non-exported base class that inherits
+/// from the template
 abstract class SliderBase extends PosedActive implements Posed, Constraint {
   final Pointer<spine_slider_base_wrapper> _ptr;
 
@@ -101,6 +105,7 @@ abstract class SliderBase extends PosedActive implements Posed, Constraint {
     return result;
   }
 
+  /// Inherited from Update
   @override
   void update(Skeleton skeleton, Physics physics) {
     SpineBindings.bindings.spine_slider_base_update(_ptr, skeleton.nativePtr.cast(), physics.value);

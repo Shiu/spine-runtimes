@@ -46,11 +46,13 @@ public class BoneData: PosedData {
         self.init(fromPointer: ptr!)
     }
 
+    /// The index of the bone in Skeleton.Bones
     public var index: Int32 {
         let result = spine_bone_data_get_index(_ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self))
         return result
     }
 
+    /// May be NULL.
     public var parent: BoneData? {
         let result = spine_bone_data_get_parent(_ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self))
         return result.map { BoneData(fromPointer: $0) }

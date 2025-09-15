@@ -32,7 +32,10 @@
 import Foundation
 import SpineC
 
-/// TransformConstraintData wrapper
+/// Stores the setup pose for a TransformConstraint.
+///
+/// See https://esotericsoftware.com/spine-transform-constraints Transform constraints in the Spine
+/// User Guide.
 @objc(SpineTransformConstraintData)
 @objcMembers
 public class TransformConstraintData: PosedData, ConstraintData {
@@ -51,11 +54,13 @@ public class TransformConstraintData: PosedData, ConstraintData {
         return Rtti(fromPointer: result!)
     }
 
+    /// The bones that will be modified by this transform constraint.
     public var bones: ArrayBoneData {
         let result = spine_transform_constraint_data_get_bones(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
         return ArrayBoneData(fromPointer: result!)
     }
 
+    /// The bone whose world transform will be copied to the constrained bones.
     public var source: BoneData {
         get {
             let result = spine_transform_constraint_data_get_source(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
@@ -66,6 +71,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// An offset added to the constrained bone rotation.
     public var offsetRotation: Float {
         get {
             let result = spine_transform_constraint_data_get_offset_rotation(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
@@ -76,6 +82,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// An offset added to the constrained bone X translation.
     public var offsetX: Float {
         get {
             let result = spine_transform_constraint_data_get_offset_x(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
@@ -86,6 +93,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// An offset added to the constrained bone Y translation.
     public var offsetY: Float {
         get {
             let result = spine_transform_constraint_data_get_offset_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
@@ -96,6 +104,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// An offset added to the constrained bone scaleX.
     public var offsetScaleX: Float {
         get {
             let result = spine_transform_constraint_data_get_offset_scale_x(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
@@ -106,6 +115,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// An offset added to the constrained bone scaleY.
     public var offsetScaleY: Float {
         get {
             let result = spine_transform_constraint_data_get_offset_scale_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
@@ -116,6 +126,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// An offset added to the constrained bone shearY.
     public var offsetShearY: Float {
         get {
             let result = spine_transform_constraint_data_get_offset_shear_y(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
@@ -126,6 +137,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// Reads the source bone's local transform instead of its world transform.
     public var localSource: Bool {
         get {
             let result = spine_transform_constraint_data_get_local_source(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
@@ -136,6 +148,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// Sets the constrained bones' local transforms instead of their world transforms.
     public var localTarget: Bool {
         get {
             let result = spine_transform_constraint_data_get_local_target(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
@@ -146,6 +159,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// Adds the source bone transform to the constrained bones instead of setting it absolutely.
     public var additive: Bool {
         get {
             let result = spine_transform_constraint_data_get_additive(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
@@ -156,6 +170,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// Prevents constrained bones from exceeding the ranged defined by offset and max.
     public var clamp: Bool {
         get {
             let result = spine_transform_constraint_data_get_clamp(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
@@ -166,6 +181,7 @@ public class TransformConstraintData: PosedData, ConstraintData {
         }
     }
 
+    /// The mapping of transform properties to other transform properties.
     public var properties: ArrayFromProperty {
         let result = spine_transform_constraint_data_get_properties(_ptr.assumingMemoryBound(to: spine_transform_constraint_data_wrapper.self))
         return ArrayFromProperty(fromPointer: result!)

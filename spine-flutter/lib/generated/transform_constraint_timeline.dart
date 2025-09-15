@@ -35,7 +35,11 @@ import '../spine_bindings.dart';
 import 'constraint_timeline.dart';
 import 'curve_timeline.dart';
 
-/// TransformConstraintTimeline wrapper
+/// Changes a transform constraint's TransformConstraintPose::getMixRotate(),
+/// TransformConstraintPose::getMixX(), TransformConstraintPose::getMixY(),
+/// TransformConstraintPose::getMixScaleX(),
+/// TransformConstraintPose::getMixScaleY(), and
+/// TransformConstraintPose::getMixShearY().
 class TransformConstraintTimeline extends CurveTimeline implements ConstraintTimeline {
   final Pointer<spine_transform_constraint_timeline_wrapper> _ptr;
 
@@ -56,6 +60,11 @@ class TransformConstraintTimeline extends CurveTimeline implements ConstraintTim
     SpineBindings.bindings.spine_transform_constraint_timeline_dispose(_ptr);
   }
 
+  /// Sets the time, rotate mix, translate mix, scale mix, and shear mix for the
+  /// specified frame.
+  ///
+  /// [frame] Between 0 and frameCount, inclusive.
+  /// [time] The frame time in seconds.
   void setFrame(int frame, double time, double mixRotate, double mixX, double mixY, double mixScaleX, double mixScaleY,
       double mixShearY) {
     SpineBindings.bindings.spine_transform_constraint_timeline_set_frame(

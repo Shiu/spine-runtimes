@@ -40,7 +40,7 @@ import 'sequence.dart';
 import 'slot.dart';
 import 'texture_region.dart';
 
-/// RegionAttachment wrapper
+/// Attachment that displays a texture region.
 class RegionAttachment extends Attachment {
   final Pointer<spine_region_attachment_wrapper> _ptr;
 

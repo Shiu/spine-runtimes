@@ -5900,6 +5900,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_get_rtti =
       _spine_bone_pose_get_rttiPtr.asFunction<spine_rtti Function(spine_bone_pose)>();
 
+  /// Called by Skeleton::updateCache() to compute the world transform, if needed.
   void spine_bone_pose_update(
     spine_bone_pose self,
     spine_skeleton skeleton,
@@ -5918,6 +5919,10 @@ class SpineDartBindings {
   late final _spine_bone_pose_update =
       _spine_bone_pose_updatePtr.asFunction<void Function(spine_bone_pose, spine_skeleton, int)>();
 
+  /// Computes the world transform using the parent bone's applied pose and this
+  /// pose. Child bones are not updated.
+  ///
+  /// See World transforms in the Spine Runtimes Guide.
   void spine_bone_pose_update_world_transform(
     spine_bone_pose self,
     spine_skeleton skeleton,
@@ -5934,6 +5939,17 @@ class SpineDartBindings {
   late final _spine_bone_pose_update_world_transform =
       _spine_bone_pose_update_world_transformPtr.asFunction<void Function(spine_bone_pose, spine_skeleton)>();
 
+  /// Computes the local transform values from the world transform.
+  ///
+  /// If the world transform is modified (by a constraint, rotateWorld(), etc) then
+  /// this method should be called so the local transform matches the world
+  /// transform. The local transform may be needed by other code (eg to apply
+  /// another constraint).
+  ///
+  /// Some information is ambiguous in the world transform, such as -1,-1 scale
+  /// versus 180 rotation. The local transform after calling this method is
+  /// equivalent to the local transform used to compute the world transform, but
+  /// may not be identical.
   void spine_bone_pose_update_local_transform(
     spine_bone_pose self,
     spine_skeleton skeleton,
@@ -5950,6 +5966,8 @@ class SpineDartBindings {
   late final _spine_bone_pose_update_local_transform =
       _spine_bone_pose_update_local_transformPtr.asFunction<void Function(spine_bone_pose, spine_skeleton)>();
 
+  /// If the world transform has been modified and the local transform no longer
+  /// matches, updateLocalTransform() is called.
   void spine_bone_pose_validate_local_transform(
     spine_bone_pose self,
     spine_skeleton skeleton,
@@ -6011,6 +6029,8 @@ class SpineDartBindings {
   late final _spine_bone_pose_reset_world =
       _spine_bone_pose_reset_worldPtr.asFunction<void Function(spine_bone_pose, int)>();
 
+  /// Part of the world transform matrix for the X axis. If changed,
+  /// updateLocalTransform() should be called.
   double spine_bone_pose_get_a(
     spine_bone_pose self,
   ) {
@@ -6037,6 +6057,8 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_a');
   late final _spine_bone_pose_set_a = _spine_bone_pose_set_aPtr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// Part of the world transform matrix for the Y axis. If changed,
+  /// updateLocalTransform() should be called.
   double spine_bone_pose_get_b(
     spine_bone_pose self,
   ) {
@@ -6063,6 +6085,8 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_b');
   late final _spine_bone_pose_set_b = _spine_bone_pose_set_bPtr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// Part of the world transform matrix for the X axis. If changed,
+  /// updateLocalTransform() should be called.
   double spine_bone_pose_get_c(
     spine_bone_pose self,
   ) {
@@ -6089,6 +6113,8 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_c');
   late final _spine_bone_pose_set_c = _spine_bone_pose_set_cPtr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// Part of the world transform matrix for the Y axis. If changed,
+  /// updateLocalTransform() should be called.
   double spine_bone_pose_get_d(
     spine_bone_pose self,
   ) {
@@ -6115,6 +6141,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_d');
   late final _spine_bone_pose_set_d = _spine_bone_pose_set_dPtr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// The world X position. If changed, updateLocalTransform() should be called.
   double spine_bone_pose_get_world_x(
     spine_bone_pose self,
   ) {
@@ -6143,6 +6170,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_set_world_x =
       _spine_bone_pose_set_world_xPtr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// The world Y position. If changed, updateLocalTransform() should be called.
   double spine_bone_pose_get_world_y(
     spine_bone_pose self,
   ) {
@@ -6171,6 +6199,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_set_world_y =
       _spine_bone_pose_set_world_yPtr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// The world rotation for the X axis, calculated using a and c.
   double spine_bone_pose_get_world_rotation_x(
     spine_bone_pose self,
   ) {
@@ -6184,6 +6213,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_get_world_rotation_x =
       _spine_bone_pose_get_world_rotation_xPtr.asFunction<double Function(spine_bone_pose)>();
 
+  /// The world rotation for the Y axis, calculated using b and d.
   double spine_bone_pose_get_world_rotation_y(
     spine_bone_pose self,
   ) {
@@ -6197,6 +6227,8 @@ class SpineDartBindings {
   late final _spine_bone_pose_get_world_rotation_y =
       _spine_bone_pose_get_world_rotation_yPtr.asFunction<double Function(spine_bone_pose)>();
 
+  /// The magnitude (always positive) of the world scale X, calculated using a and
+  /// c.
   double spine_bone_pose_get_world_scale_x(
     spine_bone_pose self,
   ) {
@@ -6210,6 +6242,8 @@ class SpineDartBindings {
   late final _spine_bone_pose_get_world_scale_x =
       _spine_bone_pose_get_world_scale_xPtr.asFunction<double Function(spine_bone_pose)>();
 
+  /// The magnitude (always positive) of the world scale Y, calculated using b and
+  /// d.
   double spine_bone_pose_get_world_scale_y(
     spine_bone_pose self,
   ) {
@@ -6223,6 +6257,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_get_world_scale_y =
       _spine_bone_pose_get_world_scale_yPtr.asFunction<double Function(spine_bone_pose)>();
 
+  /// Transforms a point from world coordinates to the bone's local coordinates.
   void spine_bone_pose_world_to_local(
     spine_bone_pose self,
     double worldX,
@@ -6246,6 +6281,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_world_to_local = _spine_bone_pose_world_to_localPtr
       .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
 
+  /// Transforms a point from the bone's local coordinates to world coordinates.
   void spine_bone_pose_local_to_world(
     spine_bone_pose self,
     double localX,
@@ -6269,6 +6305,8 @@ class SpineDartBindings {
   late final _spine_bone_pose_local_to_world = _spine_bone_pose_local_to_worldPtr
       .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
 
+  /// Transforms a point from world coordinates to the parent bone's local
+  /// coordinates.
   void spine_bone_pose_world_to_parent(
     spine_bone_pose self,
     double worldX,
@@ -6292,6 +6330,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_world_to_parent = _spine_bone_pose_world_to_parentPtr
       .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
 
+  /// Transforms a point from the parent bone's coordinates to world coordinates.
   void spine_bone_pose_parent_to_world(
     spine_bone_pose self,
     double parentX,
@@ -6315,6 +6354,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_parent_to_world = _spine_bone_pose_parent_to_worldPtr
       .asFunction<void Function(spine_bone_pose, double, double, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>();
 
+  /// Transforms a world rotation to a local rotation.
   double spine_bone_pose_world_to_local_rotation(
     spine_bone_pose self,
     double worldRotation,
@@ -6331,6 +6371,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_world_to_local_rotation =
       _spine_bone_pose_world_to_local_rotationPtr.asFunction<double Function(spine_bone_pose, double)>();
 
+  /// Transforms a local rotation to a world rotation.
   double spine_bone_pose_local_to_world_rotation(
     spine_bone_pose self,
     double localRotation,
@@ -6347,6 +6388,10 @@ class SpineDartBindings {
   late final _spine_bone_pose_local_to_world_rotation =
       _spine_bone_pose_local_to_world_rotationPtr.asFunction<double Function(spine_bone_pose, double)>();
 
+  /// Rotates the world transform the specified amount.
+  ///
+  /// After changes are made to the world transform, updateLocalTransform() should
+  /// be called on this bone and any child bones, recursively.
   void spine_bone_pose_rotate_world(
     spine_bone_pose self,
     double degrees,
@@ -6377,6 +6422,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_set =
       _spine_bone_pose_setPtr.asFunction<void Function(spine_bone_pose, spine_bone_local)>();
 
+  /// The local x translation.
   double spine_bone_pose_get_x(
     spine_bone_pose self,
   ) {
@@ -6403,6 +6449,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_pose, ffi.Float)>>('spine_bone_pose_set_x');
   late final _spine_bone_pose_set_x = _spine_bone_pose_set_xPtr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// The local y translation.
   double spine_bone_pose_get_y(
     spine_bone_pose self,
   ) {
@@ -6447,6 +6494,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_set_position =
       _spine_bone_pose_set_positionPtr.asFunction<void Function(spine_bone_pose, double, double)>();
 
+  /// The local rotation in degrees, counter clockwise.
   double spine_bone_pose_get_rotation(
     spine_bone_pose self,
   ) {
@@ -6475,6 +6523,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_set_rotation =
       _spine_bone_pose_set_rotationPtr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// The local scaleX.
   double spine_bone_pose_get_scale_x(
     spine_bone_pose self,
   ) {
@@ -6503,6 +6552,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_set_scale_x =
       _spine_bone_pose_set_scale_xPtr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// The local scaleY.
   double spine_bone_pose_get_scale_y(
     spine_bone_pose self,
   ) {
@@ -6564,6 +6614,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_set_scale_2 =
       _spine_bone_pose_set_scale_2Ptr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// The local shearX.
   double spine_bone_pose_get_shear_x(
     spine_bone_pose self,
   ) {
@@ -6592,6 +6643,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_set_shear_x =
       _spine_bone_pose_set_shear_xPtr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// The local shearY.
   double spine_bone_pose_get_shear_y(
     spine_bone_pose self,
   ) {
@@ -6620,6 +6672,7 @@ class SpineDartBindings {
   late final _spine_bone_pose_set_shear_y =
       _spine_bone_pose_set_shear_yPtr.asFunction<void Function(spine_bone_pose, double)>();
 
+  /// Determines how parent world transforms affect this bone.
   int spine_bone_pose_get_inherit(
     spine_bone_pose self,
   ) {
@@ -6820,6 +6873,8 @@ class SpineDartBindings {
   late final _spine_skeleton_data_find_animation = _spine_skeleton_data_find_animationPtr
       .asFunction<spine_animation Function(spine_skeleton_data, ffi.Pointer<ffi.Char>)>();
 
+  /// The skeleton's name, which by default is the name of the skeleton data file
+  /// when possible, or null when a name hasn't been set.
   ffi.Pointer<ffi.Char> spine_skeleton_data_get_name(
     spine_skeleton_data self,
   ) {
@@ -6849,6 +6904,8 @@ class SpineDartBindings {
   late final _spine_skeleton_data_set_name =
       _spine_skeleton_data_set_namePtr.asFunction<void Function(spine_skeleton_data, ffi.Pointer<ffi.Char>)>();
 
+  /// The skeleton's bones, sorted parent first. The root bone is always the first
+  /// bone.
   spine_array_bone_data spine_skeleton_data_get_bones(
     spine_skeleton_data self,
   ) {
@@ -6862,6 +6919,7 @@ class SpineDartBindings {
   late final _spine_skeleton_data_get_bones =
       _spine_skeleton_data_get_bonesPtr.asFunction<spine_array_bone_data Function(spine_skeleton_data)>();
 
+  /// The skeleton's slots in the setup pose draw order.
   spine_array_slot_data spine_skeleton_data_get_slots(
     spine_skeleton_data self,
   ) {
@@ -6875,6 +6933,7 @@ class SpineDartBindings {
   late final _spine_skeleton_data_get_slots =
       _spine_skeleton_data_get_slotsPtr.asFunction<spine_array_slot_data Function(spine_skeleton_data)>();
 
+  /// All skins, including the default skin.
   spine_array_skin spine_skeleton_data_get_skins(
     spine_skeleton_data self,
   ) {
@@ -6917,6 +6976,7 @@ class SpineDartBindings {
   late final _spine_skeleton_data_set_default_skin =
       _spine_skeleton_data_set_default_skinPtr.asFunction<void Function(spine_skeleton_data, spine_skin)>();
 
+  /// The skeleton's events.
   spine_array_event_data spine_skeleton_data_get_events(
     spine_skeleton_data self,
   ) {
@@ -6931,6 +6991,7 @@ class SpineDartBindings {
   late final _spine_skeleton_data_get_events =
       _spine_skeleton_data_get_eventsPtr.asFunction<spine_array_event_data Function(spine_skeleton_data)>();
 
+  /// The skeleton's animations.
   spine_array_animation spine_skeleton_data_get_animations(
     spine_skeleton_data self,
   ) {
@@ -6945,6 +7006,7 @@ class SpineDartBindings {
   late final _spine_skeleton_data_get_animations =
       _spine_skeleton_data_get_animationsPtr.asFunction<spine_array_animation Function(spine_skeleton_data)>();
 
+  /// The skeleton's constraints.
   spine_array_constraint_data spine_skeleton_data_get_constraints(
     spine_skeleton_data self,
   ) {
@@ -6959,6 +7021,8 @@ class SpineDartBindings {
   late final _spine_skeleton_data_get_constraints =
       _spine_skeleton_data_get_constraintsPtr.asFunction<spine_array_constraint_data Function(spine_skeleton_data)>();
 
+  /// The X coordinate of the skeleton's axis aligned bounding box in the setup
+  /// pose.
   double spine_skeleton_data_get_x(
     spine_skeleton_data self,
   ) {
@@ -6987,6 +7051,8 @@ class SpineDartBindings {
   late final _spine_skeleton_data_set_x =
       _spine_skeleton_data_set_xPtr.asFunction<void Function(spine_skeleton_data, double)>();
 
+  /// The Y coordinate of the skeleton's axis aligned bounding box in the setup
+  /// pose.
   double spine_skeleton_data_get_y(
     spine_skeleton_data self,
   ) {
@@ -7015,6 +7081,7 @@ class SpineDartBindings {
   late final _spine_skeleton_data_set_y =
       _spine_skeleton_data_set_yPtr.asFunction<void Function(spine_skeleton_data, double)>();
 
+  /// The width of the skeleton's axis aligned bounding box in the setup pose.
   double spine_skeleton_data_get_width(
     spine_skeleton_data self,
   ) {
@@ -7043,6 +7110,7 @@ class SpineDartBindings {
   late final _spine_skeleton_data_set_width =
       _spine_skeleton_data_set_widthPtr.asFunction<void Function(spine_skeleton_data, double)>();
 
+  /// The height of the skeleton's axis aligned bounding box in the setup pose.
   double spine_skeleton_data_get_height(
     spine_skeleton_data self,
   ) {
@@ -7071,6 +7139,8 @@ class SpineDartBindings {
   late final _spine_skeleton_data_set_height =
       _spine_skeleton_data_set_heightPtr.asFunction<void Function(spine_skeleton_data, double)>();
 
+  /// Baseline scale factor for applying physics and other effects based on
+  /// distance to non-scalable properties, such as angle or scale. Default is 100.
   double spine_skeleton_data_get_reference_scale(
     spine_skeleton_data self,
   ) {
@@ -7100,6 +7170,7 @@ class SpineDartBindings {
   late final _spine_skeleton_data_set_reference_scale =
       _spine_skeleton_data_set_reference_scalePtr.asFunction<void Function(spine_skeleton_data, double)>();
 
+  /// The Spine version used to export this data, or NULL.
   ffi.Pointer<ffi.Char> spine_skeleton_data_get_version(
     spine_skeleton_data self,
   ) {
@@ -7130,6 +7201,8 @@ class SpineDartBindings {
   late final _spine_skeleton_data_set_version =
       _spine_skeleton_data_set_versionPtr.asFunction<void Function(spine_skeleton_data, ffi.Pointer<ffi.Char>)>();
 
+  /// The skeleton data hash. This value will change if any of the skeleton data
+  /// has changed.
   ffi.Pointer<ffi.Char> spine_skeleton_data_get_hash(
     spine_skeleton_data self,
   ) {
@@ -7159,6 +7232,8 @@ class SpineDartBindings {
   late final _spine_skeleton_data_set_hash =
       _spine_skeleton_data_set_hashPtr.asFunction<void Function(spine_skeleton_data, ffi.Pointer<ffi.Char>)>();
 
+  /// The path to the images directory as defined in Spine, or null if nonessential
+  /// data was not exported.
   ffi.Pointer<ffi.Char> spine_skeleton_data_get_images_path(
     spine_skeleton_data self,
   ) {
@@ -7189,6 +7264,8 @@ class SpineDartBindings {
   late final _spine_skeleton_data_set_images_path =
       _spine_skeleton_data_set_images_pathPtr.asFunction<void Function(spine_skeleton_data, ffi.Pointer<ffi.Char>)>();
 
+  /// The path to the audio directory as defined in Spine, or null if nonessential
+  /// data was not exported.
   ffi.Pointer<ffi.Char> spine_skeleton_data_get_audio_path(
     spine_skeleton_data self,
   ) {
@@ -7219,6 +7296,8 @@ class SpineDartBindings {
   late final _spine_skeleton_data_set_audio_path =
       _spine_skeleton_data_set_audio_pathPtr.asFunction<void Function(spine_skeleton_data, ffi.Pointer<ffi.Char>)>();
 
+  /// The dopesheet FPS in Spine. Available only when nonessential data was
+  /// exported.
   double spine_skeleton_data_get_fps(
     spine_skeleton_data self,
   ) {
@@ -15212,6 +15291,10 @@ class SpineDartBindings {
   late final _spine_alpha_timeline_set_slot_index =
       _spine_alpha_timeline_set_slot_indexPtr.asFunction<void Function(spine_alpha_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_alpha_timeline_set_frame(
     spine_alpha_timeline self,
     int frame,
@@ -15232,6 +15315,7 @@ class SpineDartBindings {
   late final _spine_alpha_timeline_set_frame =
       _spine_alpha_timeline_set_framePtr.asFunction<void Function(spine_alpha_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_alpha_timeline_get_curve_value(
     spine_alpha_timeline self,
     double time,
@@ -15560,6 +15644,8 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_animation)>>('spine_animation_dispose');
   late final _spine_animation_dispose = _spine_animation_disposePtr.asFunction<void Function(spine_animation)>();
 
+  /// If the returned array or the timelines it contains are modified,
+  /// setTimelines() must be called.
   spine_array_timeline spine_animation_get_timelines(
     spine_animation self,
   ) {
@@ -15589,6 +15675,8 @@ class SpineDartBindings {
   late final _spine_animation_set_timelines =
       _spine_animation_set_timelinesPtr.asFunction<void Function(spine_animation, spine_array_timeline)>();
 
+  /// Returns true if this animation contains a timeline with any of the specified
+  /// property IDs.
   bool spine_animation_has_timeline(
     spine_animation self,
     spine_array_property_id ids,
@@ -15605,6 +15693,9 @@ class SpineDartBindings {
   late final _spine_animation_has_timeline =
       _spine_animation_has_timelinePtr.asFunction<bool Function(spine_animation, spine_array_property_id)>();
 
+  /// The duration of the animation in seconds, which is usually the highest time
+  /// of all frames in the timeline. The duration is used to know when it has
+  /// completed and when it should loop back to the start.
   double spine_animation_get_duration(
     spine_animation self,
   ) {
@@ -15633,6 +15724,18 @@ class SpineDartBindings {
   late final _spine_animation_set_duration =
       _spine_animation_set_durationPtr.asFunction<void Function(spine_animation, double)>();
 
+  /// Applies the animation's timelines to the specified skeleton.
+  ///
+  /// See Timeline::apply().
+  ///
+  /// @param skeleton The skeleton the animation is being applied to. This provides access to the bones, slots, and other skeleton components the timelines may change.
+  /// @param lastTime The last time in seconds this animation was applied. Some timelines trigger only at specific times rather than every frame. Pass -1 the first time an animation is applied to ensure frame 0 is triggered.
+  /// @param time The time in seconds the skeleton is being posed for. Most timelines find the frame before and the frame after this time and interpolate between the frame values. If beyond the getDuration() and loop is true then the animation will repeat, else the last frame will be applied.
+  /// @param loop If true, the animation repeats after the getDuration().
+  /// @param events If any events are fired, they are added to this list. Can be null to ignore fired events or if no timelines fire events.
+  /// @param alpha 0 applies the current or setup values (depending on blend). 1 applies the timeline values. Between 0 and 1 applies values between the current or setup values and the timeline values. By adjusting alpha over time, an animation can be mixed in or out. alpha can also be useful to apply animations on top of each other (layering).
+  /// @param blend Controls how mixing is applied when alpha < 1.
+  /// @param direction Indicates whether the timelines are mixing in or out. Used by timelines which perform instant transitions, such as DrawOrderTimeline or AttachmentTimeline.
   void spine_animation_apply(
     spine_animation self,
     spine_skeleton skeleton,
@@ -15667,6 +15770,7 @@ class SpineDartBindings {
       void Function(
           spine_animation, spine_skeleton, double, double, bool, spine_array_event, double, int, int, bool)>();
 
+  /// The animation's name, which is unique across all animations in the skeleton.
   ffi.Pointer<ffi.Char> spine_animation_get_name(
     spine_animation self,
   ) {
@@ -15680,6 +15784,7 @@ class SpineDartBindings {
   late final _spine_animation_get_name =
       _spine_animation_get_namePtr.asFunction<ffi.Pointer<ffi.Char> Function(spine_animation)>();
 
+  /// The bone indices affected by this animation.
   spine_array_int spine_animation_get_bones(
     spine_animation self,
   ) {
@@ -15693,6 +15798,7 @@ class SpineDartBindings {
   late final _spine_animation_get_bones =
       _spine_animation_get_bonesPtr.asFunction<spine_array_int Function(spine_animation)>();
 
+  /// @param target After the first and before the last entry.
   int spine_animation_search_1(
     spine_array_float values,
     double target,
@@ -15752,6 +15858,8 @@ class SpineDartBindings {
   late final _spine_animation_state_dispose =
       _spine_animation_state_disposePtr.asFunction<void Function(spine_animation_state)>();
 
+  /// Increments each track entry TrackEntry::getTrackTime(), setting queued
+  /// animations as current if needed.
   void spine_animation_state_update(
     spine_animation_state self,
     double delta,
@@ -15767,6 +15875,11 @@ class SpineDartBindings {
   late final _spine_animation_state_update =
       _spine_animation_state_updatePtr.asFunction<void Function(spine_animation_state, double)>();
 
+  /// Poses the skeleton using the track entry animations. The animation state is
+  /// not changed, so can be applied to multiple skeletons to pose them
+  /// identically.
+  ///
+  /// @return True if any animations were applied.
   bool spine_animation_state_apply(
     spine_animation_state self,
     spine_skeleton skeleton,
@@ -15783,6 +15896,12 @@ class SpineDartBindings {
   late final _spine_animation_state_apply =
       _spine_animation_state_applyPtr.asFunction<bool Function(spine_animation_state, spine_skeleton)>();
 
+  /// Removes all animations from all tracks, leaving skeletons in their current
+  /// pose.
+  ///
+  /// It may be desired to use AnimationState::setEmptyAnimations(float) to mix the
+  /// skeletons back to the setup pose, rather than leaving them in their current
+  /// pose.
   void spine_animation_state_clear_tracks(
     spine_animation_state self,
   ) {
@@ -15796,6 +15915,12 @@ class SpineDartBindings {
   late final _spine_animation_state_clear_tracks =
       _spine_animation_state_clear_tracksPtr.asFunction<void Function(spine_animation_state)>();
 
+  /// Removes all animations from the track, leaving skeletons in their current
+  /// pose.
+  ///
+  /// It may be desired to use AnimationState::setEmptyAnimation(int, float) to mix
+  /// the skeletons back to the setup pose, rather than leaving them in their
+  /// current pose.
   void spine_animation_state_clear_track(
     spine_animation_state self,
     int trackIndex,
@@ -15812,6 +15937,9 @@ class SpineDartBindings {
   late final _spine_animation_state_clear_track =
       _spine_animation_state_clear_trackPtr.asFunction<void Function(spine_animation_state, int)>();
 
+  /// Sets an animation by name.
+  ///
+  /// See setAnimation(int, Animation, bool).
   spine_track_entry spine_animation_state_set_animation_1(
     spine_animation_state self,
     int trackIndex,
@@ -15833,6 +15961,14 @@ class SpineDartBindings {
   late final _spine_animation_state_set_animation_1 = _spine_animation_state_set_animation_1Ptr
       .asFunction<spine_track_entry Function(spine_animation_state, int, ffi.Pointer<ffi.Char>, bool)>();
 
+  /// Sets the current animation for a track, discarding any queued animations.
+  ///
+  /// If the formerly current track entry is for the same animation and was never
+  /// applied to a skeleton, it is replaced (not mixed from).
+  ///
+  /// @param loop If true, the animation will repeat. If false, it will not, instead its last frame is applied if played beyond its duration. In either case TrackEntry.TrackEnd determines when the track is cleared.
+  ///
+  /// @return A track entry to allow further customization of animation playback. References to the track entry must not be kept after AnimationState.Dispose.
   spine_track_entry spine_animation_state_set_animation_2(
     spine_animation_state self,
     int trackIndex,
@@ -15853,6 +15989,9 @@ class SpineDartBindings {
   late final _spine_animation_state_set_animation_2 = _spine_animation_state_set_animation_2Ptr
       .asFunction<spine_track_entry Function(spine_animation_state, int, spine_animation, bool)>();
 
+  /// Queues an animation by name.
+  ///
+  /// See addAnimation(int, Animation, bool, float).
   spine_track_entry spine_animation_state_add_animation_1(
     spine_animation_state self,
     int trackIndex,
@@ -15876,6 +16015,13 @@ class SpineDartBindings {
   late final _spine_animation_state_add_animation_1 = _spine_animation_state_add_animation_1Ptr
       .asFunction<spine_track_entry Function(spine_animation_state, int, ffi.Pointer<ffi.Char>, bool, double)>();
 
+  /// Adds an animation to be played delay seconds after the current or last queued
+  /// animation for a track. If the track has no entries, this is equivalent to
+  /// calling setAnimation.
+  ///
+  /// @param delay Seconds to begin this animation after the start of the previous animation. May be < = 0 to use the animation duration of the previous track minus any mix duration plus the negative delay.
+  ///
+  /// @return A track entry to allow further customization of animation playback. References to the track entry must not be kept after AnimationState.Dispose
   spine_track_entry spine_animation_state_add_animation_2(
     spine_animation_state self,
     int trackIndex,
@@ -15899,6 +16045,28 @@ class SpineDartBindings {
   late final _spine_animation_state_add_animation_2 = _spine_animation_state_add_animation_2Ptr
       .asFunction<spine_track_entry Function(spine_animation_state, int, spine_animation, bool, double)>();
 
+  /// Sets an empty animation for a track, discarding any queued animations, and
+  /// sets the track entry's TrackEntry::getMixDuration(). An empty animation has
+  /// no timelines and serves as a placeholder for mixing in or out.
+  ///
+  /// Mixing out is done by setting an empty animation with a mix duration using
+  /// either setEmptyAnimation(int, float), setEmptyAnimations(float), or
+  /// addEmptyAnimation(int, float, float). Mixing to an empty animation causes the
+  /// previous animation to be applied less and less over the mix duration.
+  /// Properties keyed in the previous animation transition to the value from lower
+  /// tracks or to the setup pose value if no lower tracks key the property. A mix
+  /// duration of 0 still mixes out over one frame.
+  ///
+  /// Mixing in is done by first setting an empty animation, then adding an
+  /// animation using addAnimation(int, Animation, bool, float) with the desired
+  /// delay (an empty animation has a duration of 0) and on the returned track
+  /// entry, set the TrackEntry::setMixDuration(float). Mixing from an empty
+  /// animation causes the new animation to be applied more and more over the mix
+  /// duration. Properties keyed in the new animation transition from the value
+  /// from lower tracks or from the setup pose value if no lower tracks key the
+  /// property to the value keyed in the new animation.
+  ///
+  /// See Empty animations in the Spine Runtimes Guide.
   spine_track_entry spine_animation_state_set_empty_animation(
     spine_animation_state self,
     int trackIndex,
@@ -15917,6 +16085,17 @@ class SpineDartBindings {
   late final _spine_animation_state_set_empty_animation = _spine_animation_state_set_empty_animationPtr
       .asFunction<spine_track_entry Function(spine_animation_state, int, double)>();
 
+  /// Adds an empty animation to be played after the current or last queued
+  /// animation for a track, and sets the track entry's
+  /// TrackEntry::getMixDuration(). If the track has no entries, it is equivalent
+  /// to calling setEmptyAnimation(int, float).
+  ///
+  /// See setEmptyAnimation(int, float) and Empty animations in the Spine Runtimes
+  /// Guide.
+  ///
+  /// @param delay If > 0, sets TrackEntry::getDelay(). If < = 0, the delay set is the duration of the previous track entry minus any mix duration plus the specified delay (ie the mix ends at ( delay = 0) or before ( delay < 0) the previous track entry duration). If the previous entry is looping, its next loop completion is used instead of its duration.
+  ///
+  /// @return A track entry to allow further customization of animation playback. References to the track entry must not be kept after the AnimationStateListener::dispose(TrackEntry) event occurs.
   spine_track_entry spine_animation_state_add_empty_animation(
     spine_animation_state self,
     int trackIndex,
@@ -15937,6 +16116,10 @@ class SpineDartBindings {
   late final _spine_animation_state_add_empty_animation = _spine_animation_state_add_empty_animationPtr
       .asFunction<spine_track_entry Function(spine_animation_state, int, double, double)>();
 
+  /// Sets an empty animation for every track, discarding any queued animations,
+  /// and mixes to it over the specified mix duration.
+  ///
+  /// See Empty animations in the Spine Runtimes Guide.
   void spine_animation_state_set_empty_animations(
     spine_animation_state self,
     double mixDuration,
@@ -15969,6 +16152,7 @@ class SpineDartBindings {
   late final _spine_animation_state_get_current =
       _spine_animation_state_get_currentPtr.asFunction<spine_track_entry Function(spine_animation_state, int)>();
 
+  /// The AnimationStateData to look up mix durations.
   spine_animation_state_data spine_animation_state_get_data(
     spine_animation_state self,
   ) {
@@ -15983,6 +16167,8 @@ class SpineDartBindings {
   late final _spine_animation_state_get_data =
       _spine_animation_state_get_dataPtr.asFunction<spine_animation_state_data Function(spine_animation_state)>();
 
+  /// The list of tracks that have had animations, which may contain null entries
+  /// for tracks that currently have no animation.
   spine_array_track_entry spine_animation_state_get_tracks(
     spine_animation_state self,
   ) {
@@ -15997,6 +16183,10 @@ class SpineDartBindings {
   late final _spine_animation_state_get_tracks =
       _spine_animation_state_get_tracksPtr.asFunction<spine_array_track_entry Function(spine_animation_state)>();
 
+  /// Multiplier for the delta time when the animation state is updated, causing
+  /// time for all animations and mixes to play slower or faster. Defaults to 1.
+  ///
+  /// See TrackEntry TrackEntry::getTimeScale() for affecting a single animation.
   double spine_animation_state_get_time_scale(
     spine_animation_state self,
   ) {
@@ -16140,6 +16330,7 @@ class SpineDartBindings {
   late final _spine_animation_state_data_dispose =
       _spine_animation_state_data_disposePtr.asFunction<void Function(spine_animation_state_data)>();
 
+  /// The SkeletonData to look up animations when they are specified by name.
   spine_skeleton_data spine_animation_state_data_get_skeleton_data(
     spine_animation_state_data self,
   ) {
@@ -16154,6 +16345,8 @@ class SpineDartBindings {
   late final _spine_animation_state_data_get_skeleton_data = _spine_animation_state_data_get_skeleton_dataPtr
       .asFunction<spine_skeleton_data Function(spine_animation_state_data)>();
 
+  /// The mix duration to use when no mix duration has been specifically defined
+  /// between two animations.
   double spine_animation_state_data_get_default_mix(
     spine_animation_state_data self,
   ) {
@@ -16184,6 +16377,7 @@ class SpineDartBindings {
   late final _spine_animation_state_data_set_default_mix =
       _spine_animation_state_data_set_default_mixPtr.asFunction<void Function(spine_animation_state_data, double)>();
 
+  /// Sets a mix duration by animation names.
   void spine_animation_state_data_set_mix_1(
     spine_animation_state_data self,
     ffi.Pointer<ffi.Char> fromName,
@@ -16205,6 +16399,8 @@ class SpineDartBindings {
   late final _spine_animation_state_data_set_mix_1 = _spine_animation_state_data_set_mix_1Ptr
       .asFunction<void Function(spine_animation_state_data, ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>, double)>();
 
+  /// Sets a mix duration when changing from the specified animation to the other.
+  /// See TrackEntry.MixDuration.
   void spine_animation_state_data_set_mix_2(
     spine_animation_state_data self,
     spine_animation from,
@@ -16226,6 +16422,8 @@ class SpineDartBindings {
   late final _spine_animation_state_data_set_mix_2 = _spine_animation_state_data_set_mix_2Ptr
       .asFunction<void Function(spine_animation_state_data, spine_animation, spine_animation, double)>();
 
+  /// The mix duration to use when changing from the specified animation to the
+  /// other, or the DefaultMix if no mix duration has been set.
   double spine_animation_state_data_get_mix(
     spine_animation_state_data self,
     spine_animation from,
@@ -16244,6 +16442,7 @@ class SpineDartBindings {
   late final _spine_animation_state_data_get_mix = _spine_animation_state_data_get_mixPtr
       .asFunction<double Function(spine_animation_state_data, spine_animation, spine_animation)>();
 
+  /// Removes all mixes and sets the default mix to 0.
   void spine_animation_state_data_clear(
     spine_animation_state_data self,
   ) {
@@ -17796,6 +17995,10 @@ class SpineDartBindings {
       void Function(
           spine_attachment_timeline, spine_skeleton, double, double, spine_array_event, double, int, int, bool)>();
 
+  /// Sets the time and attachment name for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_attachment_timeline_set_frame(
     spine_attachment_timeline self,
     int frame,
@@ -17924,6 +18127,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<spine_rtti Function()>>('spine_attachment_timeline_rtti');
   late final _spine_attachment_timeline_rtti = _spine_attachment_timeline_rttiPtr.asFunction<spine_rtti Function()>();
 
+  /// @param parent May be NULL.
   spine_bone spine_bone_create(
     spine_bone_data data,
     spine_bone parent,
@@ -17938,6 +18142,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<spine_bone Function(spine_bone_data, spine_bone)>>('spine_bone_create');
   late final _spine_bone_create = _spine_bone_createPtr.asFunction<spine_bone Function(spine_bone_data, spine_bone)>();
 
+  /// Copy constructor. Does not copy the children bones.
   spine_bone spine_bone_create2(
     spine_bone bone,
     spine_bone parent,
@@ -17987,6 +18192,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<spine_bone Function(spine_bone)>>('spine_bone_get_parent');
   late final _spine_bone_get_parent = _spine_bone_get_parentPtr.asFunction<spine_bone Function(spine_bone)>();
 
+  /// The immediate children of this bone.
   spine_array_bone spine_bone_get_children(
     spine_bone self,
   ) {
@@ -18034,6 +18240,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone, spine_skeleton, ffi.Int32)>>('spine_bone_update');
   late final _spine_bone_update = _spine_bone_updatePtr.asFunction<void Function(spine_bone, spine_skeleton, int)>();
 
+  /// The constraint's setup pose data.
   spine_bone_data spine_bone_get_data(
     spine_bone self,
   ) {
@@ -18171,6 +18378,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_data)>>('spine_bone_data_dispose');
   late final _spine_bone_data_dispose = _spine_bone_data_disposePtr.asFunction<void Function(spine_bone_data)>();
 
+  /// The index of the bone in Skeleton.Bones
   int spine_bone_data_get_index(
     spine_bone_data self,
   ) {
@@ -18307,6 +18515,8 @@ class SpineDartBindings {
   late final _spine_bone_data_get_setup_pose =
       _spine_bone_data_get_setup_posePtr.asFunction<spine_bone_local Function(spine_bone_data)>();
 
+  /// The constraint's name, which is unique across all constraints in the skeleton
+  /// of the same type.
   ffi.Pointer<ffi.Char> spine_bone_data_get_name(
     spine_bone_data self,
   ) {
@@ -18320,6 +18530,10 @@ class SpineDartBindings {
   late final _spine_bone_data_get_name =
       _spine_bone_data_get_namePtr.asFunction<ffi.Pointer<ffi.Char> Function(spine_bone_data)>();
 
+  /// When true, Skeleton::updateWorldTransform(Physics) only updates this
+  /// constraint if the Skeleton::getSkin() contains this constraint.
+  ///
+  /// See Skin::getConstraints().
   bool spine_bone_data_get_skin_required(
     spine_bone_data self,
   ) {
@@ -18383,6 +18597,7 @@ class SpineDartBindings {
   late final _spine_bone_local_set =
       _spine_bone_local_setPtr.asFunction<void Function(spine_bone_local, spine_bone_local)>();
 
+  /// The local x translation.
   double spine_bone_local_get_x(
     spine_bone_local self,
   ) {
@@ -18409,6 +18624,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_bone_local, ffi.Float)>>('spine_bone_local_set_x');
   late final _spine_bone_local_set_x = _spine_bone_local_set_xPtr.asFunction<void Function(spine_bone_local, double)>();
 
+  /// The local y translation.
   double spine_bone_local_get_y(
     spine_bone_local self,
   ) {
@@ -18453,6 +18669,7 @@ class SpineDartBindings {
   late final _spine_bone_local_set_position =
       _spine_bone_local_set_positionPtr.asFunction<void Function(spine_bone_local, double, double)>();
 
+  /// The local rotation in degrees, counter clockwise.
   double spine_bone_local_get_rotation(
     spine_bone_local self,
   ) {
@@ -18481,6 +18698,7 @@ class SpineDartBindings {
   late final _spine_bone_local_set_rotation =
       _spine_bone_local_set_rotationPtr.asFunction<void Function(spine_bone_local, double)>();
 
+  /// The local scaleX.
   double spine_bone_local_get_scale_x(
     spine_bone_local self,
   ) {
@@ -18509,6 +18727,7 @@ class SpineDartBindings {
   late final _spine_bone_local_set_scale_x =
       _spine_bone_local_set_scale_xPtr.asFunction<void Function(spine_bone_local, double)>();
 
+  /// The local scaleY.
   double spine_bone_local_get_scale_y(
     spine_bone_local self,
   ) {
@@ -18570,6 +18789,7 @@ class SpineDartBindings {
   late final _spine_bone_local_set_scale_2 =
       _spine_bone_local_set_scale_2Ptr.asFunction<void Function(spine_bone_local, double)>();
 
+  /// The local shearX.
   double spine_bone_local_get_shear_x(
     spine_bone_local self,
   ) {
@@ -18598,6 +18818,7 @@ class SpineDartBindings {
   late final _spine_bone_local_set_shear_x =
       _spine_bone_local_set_shear_xPtr.asFunction<void Function(spine_bone_local, double)>();
 
+  /// The local shearY.
   double spine_bone_local_get_shear_y(
     spine_bone_local self,
   ) {
@@ -18626,6 +18847,7 @@ class SpineDartBindings {
   late final _spine_bone_local_set_shear_y =
       _spine_bone_local_set_shear_yPtr.asFunction<void Function(spine_bone_local, double)>();
 
+  /// Determines how parent world transforms affect this bone.
   int spine_bone_local_get_inherit(
     spine_bone_local self,
   ) {
@@ -18680,6 +18902,8 @@ class SpineDartBindings {
   late final _spine_bone_timeline_get_rtti =
       _spine_bone_timeline_get_rttiPtr.asFunction<spine_rtti Function(spine_bone_timeline)>();
 
+  /// The index of the bone in Skeleton::getBones() that will be changed when this
+  /// timeline is applied.
   int spine_bone_timeline_get_bone_index(
     spine_bone_timeline self,
   ) {
@@ -18803,6 +19027,10 @@ class SpineDartBindings {
   late final _spine_bone_timeline1_set_bone_index =
       _spine_bone_timeline1_set_bone_indexPtr.asFunction<void Function(spine_bone_timeline1, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_bone_timeline1_set_frame(
     spine_bone_timeline1 self,
     int frame,
@@ -18823,6 +19051,7 @@ class SpineDartBindings {
   late final _spine_bone_timeline1_set_frame =
       _spine_bone_timeline1_set_framePtr.asFunction<void Function(spine_bone_timeline1, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_bone_timeline1_get_curve_value(
     spine_bone_timeline1 self,
     double time,
@@ -19477,6 +19706,17 @@ class SpineDartBindings {
   late final _spine_bounding_box_attachment_copy =
       _spine_bounding_box_attachment_copyPtr.asFunction<spine_attachment Function(spine_bounding_box_attachment)>();
 
+  /// Transforms the attachment's local vertices to world coordinates. If the
+  /// slot's SlotPose::getDeform() is not empty, it is used to deform the vertices.
+  ///
+  /// See https://esotericsoftware.com/spine-runtime-skeletons#World-transforms
+  /// World transforms in the Spine Runtimes Guide.
+  ///
+  /// @param start The index of the first vertices value to transform. Each vertex has 2 values, x and y.
+  /// @param count The number of world vertex values to output. Must be < = WorldVerticesLength - start.
+  /// @param worldVertices The output world vertices. Must have a length >= offset + count * stride / 2.
+  /// @param offset The worldVertices index to begin writing values.
+  /// @param stride The number of worldVertices entries between the value pairs written.
   void spine_bounding_box_attachment_compute_world_vertices_1(
     spine_bounding_box_attachment self,
     spine_skeleton skeleton,
@@ -19539,6 +19779,7 @@ class SpineDartBindings {
           void Function(
               spine_bounding_box_attachment, spine_skeleton, spine_slot, int, int, spine_array_float, int, int)>();
 
+  /// Gets a unique ID for this attachment.
   int spine_bounding_box_attachment_get_id(
     spine_bounding_box_attachment self,
   ) {
@@ -19856,6 +20097,17 @@ class SpineDartBindings {
   late final _spine_clipping_attachment_copy =
       _spine_clipping_attachment_copyPtr.asFunction<spine_attachment Function(spine_clipping_attachment)>();
 
+  /// Transforms the attachment's local vertices to world coordinates. If the
+  /// slot's SlotPose::getDeform() is not empty, it is used to deform the vertices.
+  ///
+  /// See https://esotericsoftware.com/spine-runtime-skeletons#World-transforms
+  /// World transforms in the Spine Runtimes Guide.
+  ///
+  /// @param start The index of the first vertices value to transform. Each vertex has 2 values, x and y.
+  /// @param count The number of world vertex values to output. Must be < = WorldVerticesLength - start.
+  /// @param worldVertices The output world vertices. Must have a length >= offset + count * stride / 2.
+  /// @param offset The worldVertices index to begin writing values.
+  /// @param stride The number of worldVertices entries between the value pairs written.
   void spine_clipping_attachment_compute_world_vertices_1(
     spine_clipping_attachment self,
     spine_skeleton skeleton,
@@ -19918,6 +20170,7 @@ class SpineDartBindings {
           void Function(
               spine_clipping_attachment, spine_skeleton, spine_slot, int, int, spine_array_float, int, int)>();
 
+  /// Gets a unique ID for this attachment.
   int spine_clipping_attachment_get_id(
     spine_clipping_attachment self,
   ) {
@@ -20309,6 +20562,7 @@ class SpineDartBindings {
   late final _spine_color_parse_hex =
       _spine_color_parse_hexPtr.asFunction<double Function(ffi.Pointer<ffi.Char>, int)>();
 
+  /// Convert packed RGBA8888 integer to Color
   void spine_color_rgba8888_to_color(
     spine_color color,
     int value,
@@ -20324,6 +20578,7 @@ class SpineDartBindings {
   late final _spine_color_rgba8888_to_color =
       _spine_color_rgba8888_to_colorPtr.asFunction<void Function(spine_color, int)>();
 
+  /// Convert packed RGB888 integer to Color (no alpha)
   void spine_color_rgb888_to_color(
     spine_color color,
     int value,
@@ -20505,6 +20760,7 @@ class SpineDartBindings {
   late final _spine_constraint_is_source_active =
       _spine_constraint_is_source_activePtr.asFunction<bool Function(spine_constraint)>();
 
+  /// Inherited from Update
   void spine_constraint_update(
     spine_constraint self,
     spine_skeleton skeleton,
@@ -20633,6 +20889,8 @@ class SpineDartBindings {
   late final _spine_constraint_timeline_get_rtti =
       _spine_constraint_timeline_get_rttiPtr.asFunction<spine_rtti Function(spine_constraint_timeline)>();
 
+  /// The index of the constraint in Skeleton::getConstraints() that will be
+  /// changed when this timeline is applied.
   int spine_constraint_timeline_get_constraint_index(
     spine_constraint_timeline self,
   ) {
@@ -20728,6 +20986,10 @@ class SpineDartBindings {
   late final _spine_constraint_timeline1_set_constraint_index =
       _spine_constraint_timeline1_set_constraint_indexPtr.asFunction<void Function(spine_constraint_timeline1, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_constraint_timeline1_set_frame(
     spine_constraint_timeline1 self,
     int frame,
@@ -20748,6 +21010,7 @@ class SpineDartBindings {
   late final _spine_constraint_timeline1_set_frame = _spine_constraint_timeline1_set_framePtr
       .asFunction<void Function(spine_constraint_timeline1, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_constraint_timeline1_get_curve_value(
     spine_constraint_timeline1 self,
     double time,
@@ -20974,6 +21237,16 @@ class SpineDartBindings {
   late final _spine_constraint_timeline1_get_curves =
       _spine_constraint_timeline1_get_curvesPtr.asFunction<spine_array_float Function(spine_constraint_timeline1)>();
 
+  /// Sets the value(s) for the specified time.
+  ///
+  /// @param skeleton The skeleton the timeline is being applied to. This provides access to the bones, slots, and other skeleton components the timeline may change.
+  /// @param lastTime lastTime The time this timeline was last applied. Timelines such as EventTimeline trigger only at specific times rather than every frame. In that case, the timeline triggers everything between lastTime (exclusive) and time (inclusive).
+  /// @param time The time within the animation. Most timelines find the key before and the key after this time so they can interpolate between the keys.
+  /// @param events If any events are fired, they are added to this array. Can be NULL to ignore firing events or if the timeline does not fire events. May be NULL.
+  /// @param alpha alpha 0 applies the current or setup pose value (depending on pose parameter). 1 applies the timeline value. Between 0 and 1 applies a value between the current or setup pose and the timeline value. By adjusting alpha over time, an animation can be mixed in or out. alpha can also be useful to apply animations on top of each other (layered).
+  /// @param blend Controls how mixing is applied when alpha is than 1.
+  /// @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions such as DrawOrderTimeline and AttachmentTimeline.
+  /// @param appliedPose True to modify the applied pose.
   void spine_constraint_timeline1_apply(
     spine_constraint_timeline1 self,
     spine_skeleton skeleton,
@@ -21214,6 +21487,16 @@ class SpineDartBindings {
   late final _spine_curve_timeline_get_curves =
       _spine_curve_timeline_get_curvesPtr.asFunction<spine_array_float Function(spine_curve_timeline)>();
 
+  /// Sets the value(s) for the specified time.
+  ///
+  /// @param skeleton The skeleton the timeline is being applied to. This provides access to the bones, slots, and other skeleton components the timeline may change.
+  /// @param lastTime lastTime The time this timeline was last applied. Timelines such as EventTimeline trigger only at specific times rather than every frame. In that case, the timeline triggers everything between lastTime (exclusive) and time (inclusive).
+  /// @param time The time within the animation. Most timelines find the key before and the key after this time so they can interpolate between the keys.
+  /// @param events If any events are fired, they are added to this array. Can be NULL to ignore firing events or if the timeline does not fire events. May be NULL.
+  /// @param alpha alpha 0 applies the current or setup pose value (depending on pose parameter). 1 applies the timeline value. Between 0 and 1 applies a value between the current or setup pose and the timeline value. By adjusting alpha over time, an animation can be mixed in or out. alpha can also be useful to apply animations on top of each other (layered).
+  /// @param blend Controls how mixing is applied when alpha is than 1.
+  /// @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions such as DrawOrderTimeline and AttachmentTimeline.
+  /// @param appliedPose True to modify the applied pose.
   void spine_curve_timeline_apply(
     spine_curve_timeline self,
     spine_skeleton skeleton,
@@ -21345,6 +21628,10 @@ class SpineDartBindings {
   late final _spine_curve_timeline1_get_rtti =
       _spine_curve_timeline1_get_rttiPtr.asFunction<spine_rtti Function(spine_curve_timeline1)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_curve_timeline1_set_frame(
     spine_curve_timeline1 self,
     int frame,
@@ -21365,6 +21652,7 @@ class SpineDartBindings {
   late final _spine_curve_timeline1_set_frame =
       _spine_curve_timeline1_set_framePtr.asFunction<void Function(spine_curve_timeline1, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_curve_timeline1_get_curve_value(
     spine_curve_timeline1 self,
     double time,
@@ -21591,6 +21879,16 @@ class SpineDartBindings {
   late final _spine_curve_timeline1_get_curves =
       _spine_curve_timeline1_get_curvesPtr.asFunction<spine_array_float Function(spine_curve_timeline1)>();
 
+  /// Sets the value(s) for the specified time.
+  ///
+  /// @param skeleton The skeleton the timeline is being applied to. This provides access to the bones, slots, and other skeleton components the timeline may change.
+  /// @param lastTime lastTime The time this timeline was last applied. Timelines such as EventTimeline trigger only at specific times rather than every frame. In that case, the timeline triggers everything between lastTime (exclusive) and time (inclusive).
+  /// @param time The time within the animation. Most timelines find the key before and the key after this time so they can interpolate between the keys.
+  /// @param events If any events are fired, they are added to this array. Can be NULL to ignore firing events or if the timeline does not fire events. May be NULL.
+  /// @param alpha alpha 0 applies the current or setup pose value (depending on pose parameter). 1 applies the timeline value. Between 0 and 1 applies a value between the current or setup pose and the timeline value. By adjusting alpha over time, an animation can be mixed in or out. alpha can also be useful to apply animations on top of each other (layered).
+  /// @param blend Controls how mixing is applied when alpha is than 1.
+  /// @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions such as DrawOrderTimeline and AttachmentTimeline.
+  /// @param appliedPose True to modify the applied pose.
   void spine_curve_timeline1_apply(
     spine_curve_timeline1 self,
     spine_skeleton skeleton,
@@ -21744,6 +22042,7 @@ class SpineDartBindings {
   late final _spine_deform_timeline_get_rtti =
       _spine_deform_timeline_get_rttiPtr.asFunction<spine_rtti Function(spine_deform_timeline)>();
 
+  /// Sets the time and vertices for the specified frame.
   void spine_deform_timeline_set_frame(
     spine_deform_timeline self,
     int frameIndex,
@@ -21764,6 +22063,7 @@ class SpineDartBindings {
   late final _spine_deform_timeline_set_frame = _spine_deform_timeline_set_framePtr
       .asFunction<void Function(spine_deform_timeline, int, double, spine_array_float)>();
 
+  /// The attachment that will be deformed.
   spine_vertex_attachment spine_deform_timeline_get_attachment(
     spine_deform_timeline self,
   ) {
@@ -22139,6 +22439,11 @@ class SpineDartBindings {
   late final _spine_draw_order_timeline_get_frame_count =
       _spine_draw_order_timeline_get_frame_countPtr.asFunction<int Function(spine_draw_order_timeline)>();
 
+  /// Sets the time and draw order for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
+  /// @param drawOrder For each slot in Skeleton::slots, the index of the slot in the new draw order. May be null to use setup pose draw order.
   void spine_draw_order_timeline_set_frame(
     spine_draw_order_timeline self,
     int frame,
@@ -22249,6 +22554,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_event)>>('spine_event_dispose');
   late final _spine_event_dispose = _spine_event_disposePtr.asFunction<void Function(spine_event)>();
 
+  /// The event's setup pose data.
   spine_event_data spine_event_get_data(
     spine_event self,
   ) {
@@ -22261,6 +22567,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<spine_event_data Function(spine_event)>>('spine_event_get_data');
   late final _spine_event_get_data = _spine_event_get_dataPtr.asFunction<spine_event_data Function(spine_event)>();
 
+  /// The animation time this event was keyed.
   double spine_event_get_time(
     spine_event self,
   ) {
@@ -22430,6 +22737,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_event_data)>>('spine_event_data_dispose');
   late final _spine_event_data_dispose = _spine_event_data_disposePtr.asFunction<void Function(spine_event_data)>();
 
+  /// The name of the event, which is unique within the skeleton.
   ffi.Pointer<ffi.Char> spine_event_data_get_name(
     spine_event_data self,
   ) {
@@ -22770,6 +23078,7 @@ class SpineDartBindings {
   late final _spine_event_timeline_get_rtti =
       _spine_event_timeline_get_rttiPtr.asFunction<spine_rtti Function(spine_event_timeline)>();
 
+  /// Fires events for frames > lastTime and < = time.
   void spine_event_timeline_apply(
     spine_event_timeline self,
     spine_skeleton skeleton,
@@ -22814,6 +23123,7 @@ class SpineDartBindings {
   late final _spine_event_timeline_get_frame_count =
       _spine_event_timeline_get_frame_countPtr.asFunction<int Function(spine_event_timeline)>();
 
+  /// The event for each frame.
   spine_array_event spine_event_timeline_get_events(
     spine_event_timeline self,
   ) {
@@ -22827,6 +23137,9 @@ class SpineDartBindings {
   late final _spine_event_timeline_get_events =
       _spine_event_timeline_get_eventsPtr.asFunction<spine_array_event Function(spine_event_timeline)>();
 
+  /// Sets the time and event for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
   void spine_event_timeline_set_frame(
     spine_event_timeline self,
     int frame,
@@ -22932,6 +23245,7 @@ class SpineDartBindings {
   late final _spine_from_property_get_rtti =
       _spine_from_property_get_rttiPtr.asFunction<spine_rtti Function(spine_from_property)>();
 
+  /// Reads this property from the specified bone.
   double spine_from_property_value(
     spine_from_property self,
     spine_skeleton skeleton,
@@ -23545,6 +23859,8 @@ class SpineDartBindings {
   late final _spine_ik_constraint_set_target =
       _spine_ik_constraint_set_targetPtr.asFunction<void Function(spine_ik_constraint, spine_bone)>();
 
+  /// Adjusts the bone rotation so the tip is as close to the target position as
+  /// possible. The target is specified in the world coordinate system.
   void spine_ik_constraint_apply_1(
     spine_skeleton skeleton,
     spine_bone_pose bone,
@@ -23574,6 +23890,11 @@ class SpineDartBindings {
   late final _spine_ik_constraint_apply_1 = _spine_ik_constraint_apply_1Ptr
       .asFunction<void Function(spine_skeleton, spine_bone_pose, double, double, bool, bool, bool, double)>();
 
+  /// Adjusts the parent and child bone rotations so the tip of the child is as
+  /// close to the target position as possible. The target is specified in the
+  /// world coordinate system.
+  ///
+  /// @param child A direct descendant of the parent bone.
   void spine_ik_constraint_apply_2(
     spine_skeleton skeleton,
     spine_bone_pose parent,
@@ -23894,6 +24215,7 @@ class SpineDartBindings {
   late final _spine_ik_constraint_base_is_source_active =
       _spine_ik_constraint_base_is_source_activePtr.asFunction<bool Function(spine_ik_constraint_base)>();
 
+  /// Inherited from Update
   void spine_ik_constraint_base_update(
     spine_ik_constraint_base self,
     spine_skeleton skeleton,
@@ -23976,6 +24298,7 @@ class SpineDartBindings {
   late final _spine_ik_constraint_data_create_method = _spine_ik_constraint_data_create_methodPtr
       .asFunction<spine_constraint Function(spine_ik_constraint_data, spine_skeleton)>();
 
+  /// The bones that are constrained by this IK Constraint.
   spine_array_bone_data spine_ik_constraint_data_get_bones(
     spine_ik_constraint_data self,
   ) {
@@ -23990,6 +24313,7 @@ class SpineDartBindings {
   late final _spine_ik_constraint_data_get_bones =
       _spine_ik_constraint_data_get_bonesPtr.asFunction<spine_array_bone_data Function(spine_ik_constraint_data)>();
 
+  /// The bone that is the IK target.
   spine_bone_data spine_ik_constraint_data_get_target(
     spine_ik_constraint_data self,
   ) {
@@ -24020,6 +24344,8 @@ class SpineDartBindings {
   late final _spine_ik_constraint_data_set_target =
       _spine_ik_constraint_data_set_targetPtr.asFunction<void Function(spine_ik_constraint_data, spine_bone_data)>();
 
+  /// When true and IkConstraintPose compress or stretch is used, the bone is
+  /// scaled on both the X and Y axes.
   bool spine_ik_constraint_data_get_uniform(
     spine_ik_constraint_data self,
   ) {
@@ -24049,6 +24375,7 @@ class SpineDartBindings {
   late final _spine_ik_constraint_data_set_uniform =
       _spine_ik_constraint_data_set_uniformPtr.asFunction<void Function(spine_ik_constraint_data, bool)>();
 
+  /// Resolve ambiguity by forwarding to PosedData's implementation
   ffi.Pointer<ffi.Char> spine_ik_constraint_data_get_name(
     spine_ik_constraint_data self,
   ) {
@@ -24153,6 +24480,11 @@ class SpineDartBindings {
   late final _spine_ik_constraint_pose_set =
       _spine_ik_constraint_pose_setPtr.asFunction<void Function(spine_ik_constraint_pose, spine_ik_constraint_pose)>();
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained rotation.
+  ///
+  /// For two bone IK: if the parent bone has local nonuniform scale, the child
+  /// bone's local Y translation is set to 0.
   double spine_ik_constraint_pose_get_mix(
     spine_ik_constraint_pose self,
   ) {
@@ -24182,6 +24514,9 @@ class SpineDartBindings {
   late final _spine_ik_constraint_pose_set_mix =
       _spine_ik_constraint_pose_set_mixPtr.asFunction<void Function(spine_ik_constraint_pose, double)>();
 
+  /// For two bone IK, the target bone's distance from the maximum reach of the
+  /// bones where rotation begins to slow. The bones will not straighten completely
+  /// until the target is this far out of range.
   double spine_ik_constraint_pose_get_softness(
     spine_ik_constraint_pose self,
   ) {
@@ -24212,6 +24547,7 @@ class SpineDartBindings {
   late final _spine_ik_constraint_pose_set_softness =
       _spine_ik_constraint_pose_set_softnessPtr.asFunction<void Function(spine_ik_constraint_pose, double)>();
 
+  /// For two bone IK, controls the bend direction of the IK bones, either 1 or -1.
   int spine_ik_constraint_pose_get_bend_direction(
     spine_ik_constraint_pose self,
   ) {
@@ -24242,6 +24578,8 @@ class SpineDartBindings {
   late final _spine_ik_constraint_pose_set_bend_direction =
       _spine_ik_constraint_pose_set_bend_directionPtr.asFunction<void Function(spine_ik_constraint_pose, int)>();
 
+  /// For one bone IK, when true and the target is too close, the bone is scaled to
+  /// reach it.
   bool spine_ik_constraint_pose_get_compress(
     spine_ik_constraint_pose self,
   ) {
@@ -24271,6 +24609,12 @@ class SpineDartBindings {
   late final _spine_ik_constraint_pose_set_compress =
       _spine_ik_constraint_pose_set_compressPtr.asFunction<void Function(spine_ik_constraint_pose, bool)>();
 
+  /// When true and the target is out of range, the parent bone is scaled to reach
+  /// it.
+  ///
+  /// For two bone IK: 1) the child bone's local Y translation is set to 0, 2)
+  /// stretch is not applied if getSoftness() is > 0, and 3) if the parent bone has
+  /// local nonuniform scale, stretch is not applied.
   bool spine_ik_constraint_pose_get_stretch(
     spine_ik_constraint_pose self,
   ) {
@@ -24378,6 +24722,12 @@ class SpineDartBindings {
       void Function(
           spine_ik_constraint_timeline, spine_skeleton, double, double, spine_array_event, double, int, int, bool)>();
 
+  /// Sets the time, mix, softness, bend direction, compress, and stretch for the
+  /// specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
+  /// @param bendDirection 1 or -1.
   void spine_ik_constraint_timeline_set_frame(
     spine_ik_constraint_timeline self,
     int frame,
@@ -24675,6 +25025,10 @@ class SpineDartBindings {
   late final _spine_inherit_timeline_get_rtti =
       _spine_inherit_timeline_get_rttiPtr.asFunction<spine_rtti Function(spine_inherit_timeline)>();
 
+  /// Sets the inherit transform mode for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_inherit_timeline_set_frame(
     spine_inherit_timeline self,
     int frame,
@@ -25063,6 +25417,8 @@ class SpineDartBindings {
   late final _spine_mesh_attachment_set_region_u_vs =
       _spine_mesh_attachment_set_region_u_vsPtr.asFunction<void Function(spine_mesh_attachment, spine_array_float)>();
 
+  /// The UV pair for each vertex, normalized within the entire texture. See also
+  /// MeshAttachment::updateRegion
   spine_array_float spine_mesh_attachment_get_u_vs(
     spine_mesh_attachment self,
   ) {
@@ -25238,6 +25594,7 @@ class SpineDartBindings {
   late final _spine_mesh_attachment_set_parent_mesh = _spine_mesh_attachment_set_parent_meshPtr
       .asFunction<void Function(spine_mesh_attachment, spine_mesh_attachment)>();
 
+  /// Nonessential.
   spine_array_unsigned_short spine_mesh_attachment_get_edges(
     spine_mesh_attachment self,
   ) {
@@ -25353,6 +25710,7 @@ class SpineDartBindings {
   late final _spine_mesh_attachment_new_linked_mesh =
       _spine_mesh_attachment_new_linked_meshPtr.asFunction<spine_mesh_attachment Function(spine_mesh_attachment)>();
 
+  /// Gets a unique ID for this attachment.
   int spine_mesh_attachment_get_id(
     spine_mesh_attachment self,
   ) {
@@ -25602,6 +25960,8 @@ class SpineDartBindings {
   late final _spine_path_attachment_get_rtti =
       _spine_path_attachment_get_rttiPtr.asFunction<spine_rtti Function(spine_path_attachment)>();
 
+  /// The length in the setup pose from the start of the path to the end of each
+  /// curve.
   spine_array_float spine_path_attachment_get_lengths(
     spine_path_attachment self,
   ) {
@@ -25716,6 +26076,17 @@ class SpineDartBindings {
   late final _spine_path_attachment_copy =
       _spine_path_attachment_copyPtr.asFunction<spine_attachment Function(spine_path_attachment)>();
 
+  /// Transforms the attachment's local vertices to world coordinates. If the
+  /// slot's SlotPose::getDeform() is not empty, it is used to deform the vertices.
+  ///
+  /// See https://esotericsoftware.com/spine-runtime-skeletons#World-transforms
+  /// World transforms in the Spine Runtimes Guide.
+  ///
+  /// @param start The index of the first vertices value to transform. Each vertex has 2 values, x and y.
+  /// @param count The number of world vertex values to output. Must be < = WorldVerticesLength - start.
+  /// @param worldVertices The output world vertices. Must have a length >= offset + count * stride / 2.
+  /// @param offset The worldVertices index to begin writing values.
+  /// @param stride The number of worldVertices entries between the value pairs written.
   void spine_path_attachment_compute_world_vertices_1(
     spine_path_attachment self,
     spine_skeleton skeleton,
@@ -25777,6 +26148,7 @@ class SpineDartBindings {
       _spine_path_attachment_compute_world_vertices_2Ptr.asFunction<
           void Function(spine_path_attachment, spine_skeleton, spine_slot, int, int, spine_array_float, int, int)>();
 
+  /// Gets a unique ID for this attachment.
   int spine_path_attachment_get_id(
     spine_path_attachment self,
   ) {
@@ -26044,6 +26416,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_copy = _spine_path_constraint_copyPtr
       .asFunction<spine_path_constraint Function(spine_path_constraint, spine_skeleton)>();
 
+  /// Applies the constraint to the constrained bones.
   void spine_path_constraint_update(
     spine_path_constraint self,
     spine_skeleton skeleton,
@@ -26091,6 +26464,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_is_source_active =
       _spine_path_constraint_is_source_activePtr.asFunction<bool Function(spine_path_constraint)>();
 
+  /// The bones that will be modified by this path constraint.
   spine_array_bone_pose spine_path_constraint_get_bones(
     spine_path_constraint self,
   ) {
@@ -26105,6 +26479,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_get_bones =
       _spine_path_constraint_get_bonesPtr.asFunction<spine_array_bone_pose Function(spine_path_constraint)>();
 
+  /// The slot whose path attachment will be used to constrained the bones.
   spine_slot spine_path_constraint_get_slot(
     spine_path_constraint self,
   ) {
@@ -26424,6 +26799,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_base_is_source_active =
       _spine_path_constraint_base_is_source_activePtr.asFunction<bool Function(spine_path_constraint_base)>();
 
+  /// Inherited from Update
   void spine_path_constraint_base_update(
     spine_path_constraint_base self,
     spine_skeleton skeleton,
@@ -26507,6 +26883,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_data_create_method = _spine_path_constraint_data_create_methodPtr
       .asFunction<spine_constraint Function(spine_path_constraint_data, spine_skeleton)>();
 
+  /// The bones that will be modified by this path constraint.
   spine_array_bone_data spine_path_constraint_data_get_bones(
     spine_path_constraint_data self,
   ) {
@@ -26521,6 +26898,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_data_get_bones =
       _spine_path_constraint_data_get_bonesPtr.asFunction<spine_array_bone_data Function(spine_path_constraint_data)>();
 
+  /// The slot whose path attachment will be used to constrained the bones.
   spine_slot_data spine_path_constraint_data_get_slot(
     spine_path_constraint_data self,
   ) {
@@ -26551,6 +26929,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_data_set_slot =
       _spine_path_constraint_data_set_slotPtr.asFunction<void Function(spine_path_constraint_data, spine_slot_data)>();
 
+  /// The mode for positioning the first bone on the path.
   int spine_path_constraint_data_get_position_mode(
     spine_path_constraint_data self,
   ) {
@@ -26581,6 +26960,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_data_set_position_mode =
       _spine_path_constraint_data_set_position_modePtr.asFunction<void Function(spine_path_constraint_data, int)>();
 
+  /// The mode for positioning the bones after the first bone on the path.
   int spine_path_constraint_data_get_spacing_mode(
     spine_path_constraint_data self,
   ) {
@@ -26611,6 +26991,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_data_set_spacing_mode =
       _spine_path_constraint_data_set_spacing_modePtr.asFunction<void Function(spine_path_constraint_data, int)>();
 
+  /// The mode for adjusting the rotation of the bones.
   int spine_path_constraint_data_get_rotate_mode(
     spine_path_constraint_data self,
   ) {
@@ -26641,6 +27022,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_data_set_rotate_mode =
       _spine_path_constraint_data_set_rotate_modePtr.asFunction<void Function(spine_path_constraint_data, int)>();
 
+  /// An offset added to the constrained bone rotation.
   double spine_path_constraint_data_get_offset_rotation(
     spine_path_constraint_data self,
   ) {
@@ -26671,6 +27053,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_data_set_offset_rotation = _spine_path_constraint_data_set_offset_rotationPtr
       .asFunction<void Function(spine_path_constraint_data, double)>();
 
+  /// Resolve ambiguity by forwarding to PosedData's implementation
   ffi.Pointer<ffi.Char> spine_path_constraint_data_get_name(
     spine_path_constraint_data self,
   ) {
@@ -26815,6 +27198,10 @@ class SpineDartBindings {
       void Function(spine_path_constraint_mix_timeline, spine_skeleton, double, double, spine_array_event, double, int,
           int, bool)>();
 
+  /// Sets the time and color for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_path_constraint_mix_timeline_set_frame(
     spine_path_constraint_mix_timeline self,
     int frame,
@@ -27112,6 +27499,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_pose_set = _spine_path_constraint_pose_setPtr
       .asFunction<void Function(spine_path_constraint_pose, spine_path_constraint_pose)>();
 
+  /// The position along the path.
   double spine_path_constraint_pose_get_position(
     spine_path_constraint_pose self,
   ) {
@@ -27142,6 +27530,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_pose_set_position =
       _spine_path_constraint_pose_set_positionPtr.asFunction<void Function(spine_path_constraint_pose, double)>();
 
+  /// The spacing between bones.
   double spine_path_constraint_pose_get_spacing(
     spine_path_constraint_pose self,
   ) {
@@ -27172,6 +27561,8 @@ class SpineDartBindings {
   late final _spine_path_constraint_pose_set_spacing =
       _spine_path_constraint_pose_set_spacingPtr.asFunction<void Function(spine_path_constraint_pose, double)>();
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained rotation.
   double spine_path_constraint_pose_get_mix_rotate(
     spine_path_constraint_pose self,
   ) {
@@ -27202,6 +27593,8 @@ class SpineDartBindings {
   late final _spine_path_constraint_pose_set_mix_rotate =
       _spine_path_constraint_pose_set_mix_rotatePtr.asFunction<void Function(spine_path_constraint_pose, double)>();
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained translation X.
   double spine_path_constraint_pose_get_mix_x(
     spine_path_constraint_pose self,
   ) {
@@ -27232,6 +27625,8 @@ class SpineDartBindings {
   late final _spine_path_constraint_pose_set_mix_x =
       _spine_path_constraint_pose_set_mix_xPtr.asFunction<void Function(spine_path_constraint_pose, double)>();
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained translation Y.
   double spine_path_constraint_pose_get_mix_y(
     spine_path_constraint_pose self,
   ) {
@@ -27381,6 +27776,10 @@ class SpineDartBindings {
       _spine_path_constraint_position_timeline_set_constraint_indexPtr
           .asFunction<void Function(spine_path_constraint_position_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_path_constraint_position_timeline_set_frame(
     spine_path_constraint_position_timeline self,
     int frame,
@@ -27402,6 +27801,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_position_timeline_set_frame = _spine_path_constraint_position_timeline_set_framePtr
       .asFunction<void Function(spine_path_constraint_position_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_path_constraint_position_timeline_get_curve_value(
     spine_path_constraint_position_timeline self,
     double time,
@@ -27853,6 +28253,10 @@ class SpineDartBindings {
       _spine_path_constraint_spacing_timeline_set_constraint_indexPtr
           .asFunction<void Function(spine_path_constraint_spacing_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_path_constraint_spacing_timeline_set_frame(
     spine_path_constraint_spacing_timeline self,
     int frame,
@@ -27874,6 +28278,7 @@ class SpineDartBindings {
   late final _spine_path_constraint_spacing_timeline_set_frame = _spine_path_constraint_spacing_timeline_set_framePtr
       .asFunction<void Function(spine_path_constraint_spacing_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_path_constraint_spacing_timeline_get_curve_value(
     spine_path_constraint_spacing_timeline self,
     double time,
@@ -28325,6 +28730,8 @@ class SpineDartBindings {
   late final _spine_physics_constraint_reset =
       _spine_physics_constraint_resetPtr.asFunction<void Function(spine_physics_constraint, spine_skeleton)>();
 
+  /// Translates the physics constraint so next update() forces are applied as if
+  /// the bone moved an additional amount in world space.
   void spine_physics_constraint_translate(
     spine_physics_constraint self,
     double x,
@@ -28343,6 +28750,8 @@ class SpineDartBindings {
   late final _spine_physics_constraint_translate =
       _spine_physics_constraint_translatePtr.asFunction<void Function(spine_physics_constraint, double, double)>();
 
+  /// Rotates the physics constraint so next update() forces are applied as if the
+  /// bone rotated around the specified point in world space.
   void spine_physics_constraint_rotate(
     spine_physics_constraint self,
     double x,
@@ -28363,6 +28772,7 @@ class SpineDartBindings {
   late final _spine_physics_constraint_rotate =
       _spine_physics_constraint_rotatePtr.asFunction<void Function(spine_physics_constraint, double, double, double)>();
 
+  /// The bone constrained by this physics constraint.
   spine_bone_pose spine_physics_constraint_get_bone(
     spine_physics_constraint self,
   ) {
@@ -28686,6 +29096,7 @@ class SpineDartBindings {
   late final _spine_physics_constraint_base_is_source_active =
       _spine_physics_constraint_base_is_source_activePtr.asFunction<bool Function(spine_physics_constraint_base)>();
 
+  /// Inherited from Update
   void spine_physics_constraint_base_update(
     spine_physics_constraint_base self,
     spine_skeleton skeleton,
@@ -28833,6 +29244,10 @@ class SpineDartBindings {
       _spine_physics_constraint_damping_timeline_set_constraint_indexPtr
           .asFunction<void Function(spine_physics_constraint_damping_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_physics_constraint_damping_timeline_set_frame(
     spine_physics_constraint_damping_timeline self,
     int frame,
@@ -28855,6 +29270,7 @@ class SpineDartBindings {
       _spine_physics_constraint_damping_timeline_set_framePtr
           .asFunction<void Function(spine_physics_constraint_damping_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_physics_constraint_damping_timeline_get_curve_value(
     spine_physics_constraint_damping_timeline self,
     double time,
@@ -29245,6 +29661,7 @@ class SpineDartBindings {
   late final _spine_physics_constraint_data_create_method = _spine_physics_constraint_data_create_methodPtr
       .asFunction<spine_constraint Function(spine_physics_constraint_data, spine_skeleton)>();
 
+  /// The bone constrained by this physics constraint.
   spine_bone_data spine_physics_constraint_data_get_bone(
     spine_physics_constraint_data self,
   ) {
@@ -29695,6 +30112,7 @@ class SpineDartBindings {
   late final _spine_physics_constraint_data_set_mix_global =
       _spine_physics_constraint_data_set_mix_globalPtr.asFunction<void Function(spine_physics_constraint_data, bool)>();
 
+  /// Resolve ambiguity by forwarding to PosedData's implementation
   ffi.Pointer<ffi.Char> spine_physics_constraint_data_get_name(
     spine_physics_constraint_data self,
   ) {
@@ -29882,6 +30300,10 @@ class SpineDartBindings {
       _spine_physics_constraint_gravity_timeline_set_constraint_indexPtr
           .asFunction<void Function(spine_physics_constraint_gravity_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_physics_constraint_gravity_timeline_set_frame(
     spine_physics_constraint_gravity_timeline self,
     int frame,
@@ -29904,6 +30326,7 @@ class SpineDartBindings {
       _spine_physics_constraint_gravity_timeline_set_framePtr
           .asFunction<void Function(spine_physics_constraint_gravity_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_physics_constraint_gravity_timeline_get_curve_value(
     spine_physics_constraint_gravity_timeline self,
     double time,
@@ -30356,6 +30779,10 @@ class SpineDartBindings {
       _spine_physics_constraint_inertia_timeline_set_constraint_indexPtr
           .asFunction<void Function(spine_physics_constraint_inertia_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_physics_constraint_inertia_timeline_set_frame(
     spine_physics_constraint_inertia_timeline self,
     int frame,
@@ -30378,6 +30805,7 @@ class SpineDartBindings {
       _spine_physics_constraint_inertia_timeline_set_framePtr
           .asFunction<void Function(spine_physics_constraint_inertia_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_physics_constraint_inertia_timeline_get_curve_value(
     spine_physics_constraint_inertia_timeline self,
     double time,
@@ -30829,6 +31257,10 @@ class SpineDartBindings {
       _spine_physics_constraint_mass_timeline_set_constraint_indexPtr
           .asFunction<void Function(spine_physics_constraint_mass_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_physics_constraint_mass_timeline_set_frame(
     spine_physics_constraint_mass_timeline self,
     int frame,
@@ -30850,6 +31282,7 @@ class SpineDartBindings {
   late final _spine_physics_constraint_mass_timeline_set_frame = _spine_physics_constraint_mass_timeline_set_framePtr
       .asFunction<void Function(spine_physics_constraint_mass_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_physics_constraint_mass_timeline_get_curve_value(
     spine_physics_constraint_mass_timeline self,
     double time,
@@ -31297,6 +31730,10 @@ class SpineDartBindings {
       _spine_physics_constraint_mix_timeline_set_constraint_indexPtr
           .asFunction<void Function(spine_physics_constraint_mix_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_physics_constraint_mix_timeline_set_frame(
     spine_physics_constraint_mix_timeline self,
     int frame,
@@ -31317,6 +31754,7 @@ class SpineDartBindings {
   late final _spine_physics_constraint_mix_timeline_set_frame = _spine_physics_constraint_mix_timeline_set_framePtr
       .asFunction<void Function(spine_physics_constraint_mix_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_physics_constraint_mix_timeline_get_curve_value(
     spine_physics_constraint_mix_timeline self,
     double time,
@@ -31864,6 +32302,8 @@ class SpineDartBindings {
   late final _spine_physics_constraint_pose_set_gravity =
       _spine_physics_constraint_pose_set_gravityPtr.asFunction<void Function(spine_physics_constraint_pose, double)>();
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained poses.
   double spine_physics_constraint_pose_get_mix(
     spine_physics_constraint_pose self,
   ) {
@@ -31894,6 +32334,7 @@ class SpineDartBindings {
   late final _spine_physics_constraint_pose_set_mix =
       _spine_physics_constraint_pose_set_mixPtr.asFunction<void Function(spine_physics_constraint_pose, double)>();
 
+  /// @param constraintIndex -1 for all physics constraints in the skeleton.
   spine_physics_constraint_reset_timeline spine_physics_constraint_reset_timeline_create(
     int frameCount,
     int constraintIndex,
@@ -32026,6 +32467,7 @@ class SpineDartBindings {
       _spine_physics_constraint_reset_timeline_set_constraint_indexPtr
           .asFunction<void Function(spine_physics_constraint_reset_timeline, int)>();
 
+  /// Sets the time for the specified frame.
   void spine_physics_constraint_reset_timeline_set_frame(
     spine_physics_constraint_reset_timeline self,
     int frame,
@@ -32234,6 +32676,10 @@ class SpineDartBindings {
       _spine_physics_constraint_strength_timeline_set_constraint_indexPtr
           .asFunction<void Function(spine_physics_constraint_strength_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_physics_constraint_strength_timeline_set_frame(
     spine_physics_constraint_strength_timeline self,
     int frame,
@@ -32256,6 +32702,7 @@ class SpineDartBindings {
       _spine_physics_constraint_strength_timeline_set_framePtr
           .asFunction<void Function(spine_physics_constraint_strength_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_physics_constraint_strength_timeline_get_curve_value(
     spine_physics_constraint_strength_timeline self,
     double time,
@@ -32680,6 +33127,10 @@ class SpineDartBindings {
       _spine_physics_constraint_timeline_set_constraint_indexPtr
           .asFunction<void Function(spine_physics_constraint_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_physics_constraint_timeline_set_frame(
     spine_physics_constraint_timeline self,
     int frame,
@@ -32700,6 +33151,7 @@ class SpineDartBindings {
   late final _spine_physics_constraint_timeline_set_frame = _spine_physics_constraint_timeline_set_framePtr
       .asFunction<void Function(spine_physics_constraint_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_physics_constraint_timeline_get_curve_value(
     spine_physics_constraint_timeline self,
     double time,
@@ -33143,6 +33595,10 @@ class SpineDartBindings {
       _spine_physics_constraint_wind_timeline_set_constraint_indexPtr
           .asFunction<void Function(spine_physics_constraint_wind_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_physics_constraint_wind_timeline_set_frame(
     spine_physics_constraint_wind_timeline self,
     int frame,
@@ -33164,6 +33620,7 @@ class SpineDartBindings {
   late final _spine_physics_constraint_wind_timeline_set_frame = _spine_physics_constraint_wind_timeline_set_framePtr
       .asFunction<void Function(spine_physics_constraint_wind_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_physics_constraint_wind_timeline_get_curve_value(
     spine_physics_constraint_wind_timeline self,
     double time,
@@ -33932,6 +34389,8 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_posed_data)>>('spine_posed_data_dispose');
   late final _spine_posed_data_dispose = _spine_posed_data_disposePtr.asFunction<void Function(spine_posed_data)>();
 
+  /// The constraint's name, which is unique across all constraints in the skeleton
+  /// of the same type.
   ffi.Pointer<ffi.Char> spine_posed_data_get_name(
     spine_posed_data self,
   ) {
@@ -33945,6 +34404,10 @@ class SpineDartBindings {
   late final _spine_posed_data_get_name =
       _spine_posed_data_get_namePtr.asFunction<ffi.Pointer<ffi.Char> Function(spine_posed_data)>();
 
+  /// When true, Skeleton::updateWorldTransform(Physics) only updates this
+  /// constraint if the Skeleton::getSkin() contains this constraint.
+  ///
+  /// See Skin::getConstraints().
   bool spine_posed_data_get_skin_required(
     spine_posed_data self,
   ) {
@@ -34026,6 +34489,12 @@ class SpineDartBindings {
   late final _spine_region_attachment_update_region =
       _spine_region_attachment_update_regionPtr.asFunction<void Function(spine_region_attachment)>();
 
+  /// Transforms the attachment's four vertices to world coordinates.
+  ///
+  /// @param slot The parent slot.
+  /// @param worldVertices The output world vertices. Must have a length greater than or equal to offset + 8.
+  /// @param offset The worldVertices index to begin writing values.
+  /// @param stride The number of worldVertices entries between the value pairs written.
   void spine_region_attachment_compute_world_vertices_1(
     spine_region_attachment self,
     spine_slot slot,
@@ -34673,6 +35142,10 @@ class SpineDartBindings {
   late final _spine_rgb2_timeline_get_rtti =
       _spine_rgb2_timeline_get_rttiPtr.asFunction<spine_rtti Function(spine_rgb2_timeline)>();
 
+  /// Sets the time, light color, and dark color for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_rgb2_timeline_set_frame(
     spine_rgb2_timeline self,
     int frame,
@@ -34985,6 +35458,10 @@ class SpineDartBindings {
   late final _spine_rgba2_timeline_get_rtti =
       _spine_rgba2_timeline_get_rttiPtr.asFunction<spine_rtti Function(spine_rgba2_timeline)>();
 
+  /// Sets the time, light color, and dark color for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_rgba2_timeline_set_frame(
     spine_rgba2_timeline self,
     int frame,
@@ -35300,6 +35777,10 @@ class SpineDartBindings {
   late final _spine_rgba_timeline_get_rtti =
       _spine_rgba_timeline_get_rttiPtr.asFunction<spine_rtti Function(spine_rgba_timeline)>();
 
+  /// Sets the time and color for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_rgba_timeline_set_frame(
     spine_rgba_timeline self,
     int frame,
@@ -35608,6 +36089,10 @@ class SpineDartBindings {
   late final _spine_rgb_timeline_get_rtti =
       _spine_rgb_timeline_get_rttiPtr.asFunction<spine_rtti Function(spine_rgb_timeline)>();
 
+  /// Sets the time and color for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_rgb_timeline_set_frame(
     spine_rgb_timeline self,
     int frame,
@@ -35974,6 +36459,10 @@ class SpineDartBindings {
   late final _spine_rotate_timeline_set_bone_index =
       _spine_rotate_timeline_set_bone_indexPtr.asFunction<void Function(spine_rotate_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_rotate_timeline_set_frame(
     spine_rotate_timeline self,
     int frame,
@@ -35994,6 +36483,7 @@ class SpineDartBindings {
   late final _spine_rotate_timeline_set_frame =
       _spine_rotate_timeline_set_framePtr.asFunction<void Function(spine_rotate_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_rotate_timeline_get_curve_value(
     spine_rotate_timeline self,
     double time,
@@ -36756,6 +37246,10 @@ class SpineDartBindings {
   late final _spine_scale_x_timeline_set_bone_index =
       _spine_scale_x_timeline_set_bone_indexPtr.asFunction<void Function(spine_scale_x_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_scale_x_timeline_set_frame(
     spine_scale_x_timeline self,
     int frame,
@@ -36776,6 +37270,7 @@ class SpineDartBindings {
   late final _spine_scale_x_timeline_set_frame =
       _spine_scale_x_timeline_set_framePtr.asFunction<void Function(spine_scale_x_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_scale_x_timeline_get_curve_value(
     spine_scale_x_timeline self,
     double time,
@@ -37183,6 +37678,10 @@ class SpineDartBindings {
   late final _spine_scale_y_timeline_set_bone_index =
       _spine_scale_y_timeline_set_bone_indexPtr.asFunction<void Function(spine_scale_y_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_scale_y_timeline_set_frame(
     spine_scale_y_timeline self,
     int frame,
@@ -37203,6 +37702,7 @@ class SpineDartBindings {
   late final _spine_scale_y_timeline_set_frame =
       _spine_scale_y_timeline_set_framePtr.asFunction<void Function(spine_scale_y_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_scale_y_timeline_get_curve_value(
     spine_scale_y_timeline self,
     double time,
@@ -37577,6 +38077,7 @@ class SpineDartBindings {
   late final _spine_sequence_get_path = _spine_sequence_get_pathPtr
       .asFunction<ffi.Pointer<ffi.Char> Function(spine_sequence, ffi.Pointer<ffi.Char>, int)>();
 
+  /// Returns a unique ID for this attachment.
   int spine_sequence_get_id(
     spine_sequence self,
   ) {
@@ -37656,6 +38157,7 @@ class SpineDartBindings {
   late final _spine_sequence_set_digits =
       _spine_sequence_set_digitsPtr.asFunction<void Function(spine_sequence, int)>();
 
+  /// The index of the region to show for the setup pose.
   int spine_sequence_get_setup_index(
     spine_sequence self,
   ) {
@@ -37773,6 +38275,10 @@ class SpineDartBindings {
       void Function(
           spine_sequence_timeline, spine_skeleton, double, double, spine_array_event, double, int, int, bool)>();
 
+  /// Sets the time, mode, index, and frame time for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param delay Seconds between frames.
   void spine_sequence_timeline_set_frame(
     spine_sequence_timeline self,
     int frame,
@@ -38327,6 +38833,10 @@ class SpineDartBindings {
   late final _spine_shear_x_timeline_set_bone_index =
       _spine_shear_x_timeline_set_bone_indexPtr.asFunction<void Function(spine_shear_x_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_shear_x_timeline_set_frame(
     spine_shear_x_timeline self,
     int frame,
@@ -38347,6 +38857,7 @@ class SpineDartBindings {
   late final _spine_shear_x_timeline_set_frame =
       _spine_shear_x_timeline_set_framePtr.asFunction<void Function(spine_shear_x_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_shear_x_timeline_get_curve_value(
     spine_shear_x_timeline self,
     double time,
@@ -38754,6 +39265,10 @@ class SpineDartBindings {
   late final _spine_shear_y_timeline_set_bone_index =
       _spine_shear_y_timeline_set_bone_indexPtr.asFunction<void Function(spine_shear_y_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_shear_y_timeline_set_frame(
     spine_shear_y_timeline self,
     int frame,
@@ -38774,6 +39289,7 @@ class SpineDartBindings {
   late final _spine_shear_y_timeline_set_frame =
       _spine_shear_y_timeline_set_framePtr.asFunction<void Function(spine_shear_y_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_shear_y_timeline_get_curve_value(
     spine_shear_y_timeline self,
     double time,
@@ -39101,6 +39617,8 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_skeleton)>>('spine_skeleton_dispose');
   late final _spine_skeleton_dispose = _spine_skeleton_disposePtr.asFunction<void Function(spine_skeleton)>();
 
+  /// Caches information about bones and constraints. Must be called if bones,
+  /// constraints or weighted path attachments are added or removed.
   void spine_skeleton_update_cache(
     spine_skeleton self,
   ) {
@@ -39168,6 +39686,11 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_array_bone)>>('spine_skeleton_sort_reset');
   late final _spine_skeleton_sort_reset = _spine_skeleton_sort_resetPtr.asFunction<void Function(spine_array_bone)>();
 
+  /// Updates the world transform for each bone and applies all constraints.
+  ///
+  /// See [World
+  /// transforms](http://esotericsoftware.com/spine-runtime-skeletons#World-transforms)
+  /// in the Spine Runtimes Guide.
   void spine_skeleton_update_world_transform(
     spine_skeleton self,
     int physics,
@@ -39184,6 +39707,7 @@ class SpineDartBindings {
   late final _spine_skeleton_update_world_transform =
       _spine_skeleton_update_world_transformPtr.asFunction<void Function(spine_skeleton, int)>();
 
+  /// Sets the bones, constraints, and slots to their setup pose values.
   void spine_skeleton_setup_pose(
     spine_skeleton self,
   ) {
@@ -39196,6 +39720,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_skeleton)>>('spine_skeleton_setup_pose');
   late final _spine_skeleton_setup_pose = _spine_skeleton_setup_posePtr.asFunction<void Function(spine_skeleton)>();
 
+  /// Sets the bones and constraints to their setup pose values.
   void spine_skeleton_setup_pose_bones(
     spine_skeleton self,
   ) {
@@ -39344,6 +39869,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<spine_skin Function(spine_skeleton)>>('spine_skeleton_get_skin');
   late final _spine_skeleton_get_skin = _spine_skeleton_get_skinPtr.asFunction<spine_skin Function(spine_skeleton)>();
 
+  /// Sets a skin by name (see setSkin).
   void spine_skeleton_set_skin_1(
     spine_skeleton self,
     ffi.Pointer<ffi.Char> skinName,
@@ -39360,6 +39886,16 @@ class SpineDartBindings {
   late final _spine_skeleton_set_skin_1 =
       _spine_skeleton_set_skin_1Ptr.asFunction<void Function(spine_skeleton, ffi.Pointer<ffi.Char>)>();
 
+  /// Attachments from the new skin are attached if the corresponding attachment
+  /// from the old skin was attached. If there was no old skin, each slot's setup
+  /// mode attachment is attached from the new skin. After changing the skin, the
+  /// visible attachments can be reset to those attached in the setup pose by
+  /// calling See Skeleton::setSlotsToSetupPose() Also, often
+  /// AnimationState::apply(Skeleton & ) is called before the next time the
+  /// skeleton is rendered to allow any attachment keys in the current animation(s)
+  /// to hide or show attachments from the new skin.
+  ///
+  /// @param newSkin May be NULL.
   void spine_skeleton_set_skin_2(
     spine_skeleton self,
     spine_skin newSkin,
@@ -39411,6 +39947,7 @@ class SpineDartBindings {
   late final _spine_skeleton_get_attachment_2 = _spine_skeleton_get_attachment_2Ptr
       .asFunction<spine_attachment Function(spine_skeleton, int, ffi.Pointer<ffi.Char>)>();
 
+  /// @param attachmentName May be empty.
   void spine_skeleton_set_attachment(
     spine_skeleton self,
     ffi.Pointer<ffi.Char> slotName,
@@ -39456,6 +39993,13 @@ class SpineDartBindings {
   late final _spine_skeleton_get_physics_constraints =
       _spine_skeleton_get_physics_constraintsPtr.asFunction<spine_array_physics_constraint Function(spine_skeleton)>();
 
+  /// Returns the axis aligned bounding box (AABB) of the region and mesh
+  /// attachments for the current pose.
+  ///
+  /// @param outX The horizontal distance between the skeleton origin and the left side of the AABB.
+  /// @param outY The vertical distance between the skeleton origin and the bottom side of the AABB.
+  /// @param outWidth The width of the AABB
+  /// @param outHeight The height of the AABB.
   void spine_skeleton_get_bounds_1(
     spine_skeleton self,
     ffi.Pointer<ffi.Float> outX,
@@ -39480,6 +40024,15 @@ class SpineDartBindings {
       void Function(spine_skeleton, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>,
           ffi.Pointer<ffi.Float>)>();
 
+  /// Returns the axis aligned bounding box (AABB) of the region and mesh
+  /// attachments for the current pose.
+  ///
+  /// @param outX The horizontal distance between the skeleton origin and the left side of the AABB.
+  /// @param outY The vertical distance between the skeleton origin and the bottom side of the AABB.
+  /// @param outWidth The width of the AABB
+  /// @param outHeight The height of the AABB.
+  /// @param outVertexBuffer Reference to hold an array of floats. This method will assign it with new floats as needed.
+  /// @param clipping Pointer to a SkeletonClipping instance or NULL. If a clipper is given, clipping attachments will be taken into account.
   void spine_skeleton_get_bounds_2(
     spine_skeleton self,
     ffi.Pointer<ffi.Float> outX,
@@ -39827,6 +40380,7 @@ class SpineDartBindings {
   late final _spine_skeleton_set_gravity_y =
       _spine_skeleton_set_gravity_yPtr.asFunction<void Function(spine_skeleton, double)>();
 
+  /// Rotates the physics constraint so next {
   void spine_skeleton_physics_translate(
     spine_skeleton self,
     double x,
@@ -39845,6 +40399,7 @@ class SpineDartBindings {
   late final _spine_skeleton_physics_translate =
       _spine_skeleton_physics_translatePtr.asFunction<void Function(spine_skeleton, double, double)>();
 
+  /// Calls {
   void spine_skeleton_physics_rotate(
     spine_skeleton self,
     double x,
@@ -40034,6 +40589,11 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_dispose =
       _spine_skeleton_bounds_disposePtr.asFunction<void Function(spine_skeleton_bounds)>();
 
+  /// Clears any previous polygons, finds all visible bounding box attachments, and
+  /// computes the world vertices for each bounding box's polygon.
+  ///
+  /// @param skeleton The skeleton.
+  /// @param updateAabb If true, the axis aligned bounding box containing all the polygons is computed. If false, the SkeletonBounds AABB methods will always return true.
   void spine_skeleton_bounds_update(
     spine_skeleton_bounds self,
     spine_skeleton skeleton,
@@ -40052,6 +40612,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_update =
       _spine_skeleton_bounds_updatePtr.asFunction<void Function(spine_skeleton_bounds, spine_skeleton, bool)>();
 
+  /// Returns true if the axis aligned bounding box contains the point.
   bool spine_skeleton_bounds_aabb_contains_point(
     spine_skeleton_bounds self,
     double x,
@@ -40070,6 +40631,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_aabb_contains_point =
       _spine_skeleton_bounds_aabb_contains_pointPtr.asFunction<bool Function(spine_skeleton_bounds, double, double)>();
 
+  /// Returns true if the axis aligned bounding box intersects the line segment.
   bool spine_skeleton_bounds_aabb_intersects_segment(
     spine_skeleton_bounds self,
     double x1,
@@ -40092,6 +40654,8 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_aabb_intersects_segment = _spine_skeleton_bounds_aabb_intersects_segmentPtr
       .asFunction<bool Function(spine_skeleton_bounds, double, double, double, double)>();
 
+  /// Returns true if the axis aligned bounding box intersects the axis aligned
+  /// bounding box of the specified bounds.
   bool spine_skeleton_bounds_aabb_intersects_skeleton(
     spine_skeleton_bounds self,
     spine_skeleton_bounds bounds,
@@ -40108,6 +40672,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_aabb_intersects_skeleton = _spine_skeleton_bounds_aabb_intersects_skeletonPtr
       .asFunction<bool Function(spine_skeleton_bounds, spine_skeleton_bounds)>();
 
+  /// Returns true if the polygon contains the point.
   bool spine_skeleton_bounds_contains_point_1(
     spine_skeleton_bounds self,
     spine_polygon polygon,
@@ -40169,6 +40734,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_intersects_segment_1 = _spine_skeleton_bounds_intersects_segment_1Ptr
       .asFunction<spine_bounding_box_attachment Function(spine_skeleton_bounds, double, double, double, double)>();
 
+  /// Returns true if the polygon contains any part of the line segment.
   bool spine_skeleton_bounds_intersects_segment_2(
     spine_skeleton_bounds self,
     spine_polygon polygon,
@@ -40226,6 +40792,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_get_bounding_box = _spine_skeleton_bounds_get_bounding_boxPtr
       .asFunction<spine_bounding_box_attachment Function(spine_skeleton_bounds, spine_polygon)>();
 
+  /// Returns all polygons or an empty array. Requires a call to update() first.
   spine_array_polygon spine_skeleton_bounds_get_polygons(
     spine_skeleton_bounds self,
   ) {
@@ -40240,6 +40807,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_get_polygons =
       _spine_skeleton_bounds_get_polygonsPtr.asFunction<spine_array_polygon Function(spine_skeleton_bounds)>();
 
+  /// Returns all bounding boxes. Requires a call to update() first.
   spine_array_bounding_box_attachment spine_skeleton_bounds_get_bounding_boxes(
     spine_skeleton_bounds self,
   ) {
@@ -40254,6 +40822,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_get_bounding_boxes = _spine_skeleton_bounds_get_bounding_boxesPtr
       .asFunction<spine_array_bounding_box_attachment Function(spine_skeleton_bounds)>();
 
+  /// The left edge of the axis aligned bounding box.
   double spine_skeleton_bounds_get_min_x(
     spine_skeleton_bounds self,
   ) {
@@ -40267,6 +40836,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_get_min_x =
       _spine_skeleton_bounds_get_min_xPtr.asFunction<double Function(spine_skeleton_bounds)>();
 
+  /// The bottom edge of the axis aligned bounding box.
   double spine_skeleton_bounds_get_min_y(
     spine_skeleton_bounds self,
   ) {
@@ -40280,6 +40850,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_get_min_y =
       _spine_skeleton_bounds_get_min_yPtr.asFunction<double Function(spine_skeleton_bounds)>();
 
+  /// The right edge of the axis aligned bounding box.
   double spine_skeleton_bounds_get_max_x(
     spine_skeleton_bounds self,
   ) {
@@ -40293,6 +40864,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_get_max_x =
       _spine_skeleton_bounds_get_max_xPtr.asFunction<double Function(spine_skeleton_bounds)>();
 
+  /// The top edge of the axis aligned bounding box.
   double spine_skeleton_bounds_get_max_y(
     spine_skeleton_bounds self,
   ) {
@@ -40306,6 +40878,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_get_max_y =
       _spine_skeleton_bounds_get_max_yPtr.asFunction<double Function(spine_skeleton_bounds)>();
 
+  /// The width of the axis aligned bounding box.
   double spine_skeleton_bounds_get_width(
     spine_skeleton_bounds self,
   ) {
@@ -40319,6 +40892,7 @@ class SpineDartBindings {
   late final _spine_skeleton_bounds_get_width =
       _spine_skeleton_bounds_get_widthPtr.asFunction<double Function(spine_skeleton_bounds)>();
 
+  /// The height of the axis aligned bounding box.
   double spine_skeleton_bounds_get_height(
     spine_skeleton_bounds self,
   ) {
@@ -40692,6 +41266,8 @@ class SpineDartBindings {
   late final _spine_skin_disposePtr = _lookup<ffi.NativeFunction<ffi.Void Function(spine_skin)>>('spine_skin_dispose');
   late final _spine_skin_dispose = _spine_skin_disposePtr.asFunction<void Function(spine_skin)>();
 
+  /// Adds an attachment to the skin for the specified slot index and name. If the
+  /// name already exists for the slot, the previous value is replaced.
   void spine_skin_set_attachment(
     spine_skin self,
     int slotIndex,
@@ -40730,6 +41306,7 @@ class SpineDartBindings {
   late final _spine_skin_get_attachment =
       _spine_skin_get_attachmentPtr.asFunction<spine_attachment Function(spine_skin, int, ffi.Pointer<ffi.Char>)>();
 
+  /// Removes the attachment from the skin.
   void spine_skin_remove_attachment(
     spine_skin self,
     int slotIndex,
@@ -40748,6 +41325,11 @@ class SpineDartBindings {
   late final _spine_skin_remove_attachment =
       _spine_skin_remove_attachmentPtr.asFunction<void Function(spine_skin, int, ffi.Pointer<ffi.Char>)>();
 
+  /// Finds the attachments for a given slot. The results are added to the passed
+  /// array of Attachments.
+  ///
+  /// @param slotIndex The target slotIndex. To find the slot index, use SkeletonData::findSlot and SlotData::getIndex.
+  /// @param attachments Found Attachments will be added to this array.
   void spine_skin_find_attachments_for_slot(
     spine_skin self,
     int slotIndex,
@@ -40778,6 +41360,8 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function(spine_skin)>>('spine_skin_get_name');
   late final _spine_skin_get_name = _spine_skin_get_namePtr.asFunction<ffi.Pointer<ffi.Char> Function(spine_skin)>();
 
+  /// Adds all attachments, bones, and constraints from the specified skin to this
+  /// skin.
   void spine_skin_add_skin(
     spine_skin self,
     spine_skin other,
@@ -40792,6 +41376,8 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_skin, spine_skin)>>('spine_skin_add_skin');
   late final _spine_skin_add_skin = _spine_skin_add_skinPtr.asFunction<void Function(spine_skin, spine_skin)>();
 
+  /// Adds all attachments, bones, and constraints from the specified skin to this
+  /// skin. Attachments are deep copied.
   void spine_skin_copy_skin(
     spine_skin self,
     spine_skin other,
@@ -41234,6 +41820,7 @@ class SpineDartBindings {
   late final _spine_slider_base_is_source_active =
       _spine_slider_base_is_source_activePtr.asFunction<bool Function(spine_slider_base)>();
 
+  /// Inherited from Update
   void spine_slider_base_update(
     spine_slider_base self,
     spine_skeleton skeleton,
@@ -41297,6 +41884,7 @@ class SpineDartBindings {
   late final _spine_slider_data_get_rtti =
       _spine_slider_data_get_rttiPtr.asFunction<spine_rtti Function(spine_slider_data)>();
 
+  /// Creates a slider instance.
   spine_constraint spine_slider_data_create_method(
     spine_slider_data self,
     spine_skeleton skeleton,
@@ -41539,6 +42127,7 @@ class SpineDartBindings {
   late final _spine_slider_data_set_local =
       _spine_slider_data_set_localPtr.asFunction<void Function(spine_slider_data, bool)>();
 
+  /// Resolve ambiguity by forwarding to PosedData's implementation
   ffi.Pointer<ffi.Char> spine_slider_data_get_name(
     spine_slider_data self,
   ) {
@@ -41707,6 +42296,10 @@ class SpineDartBindings {
   late final _spine_slider_mix_timeline_set_constraint_index =
       _spine_slider_mix_timeline_set_constraint_indexPtr.asFunction<void Function(spine_slider_mix_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_slider_mix_timeline_set_frame(
     spine_slider_mix_timeline self,
     int frame,
@@ -41727,6 +42320,7 @@ class SpineDartBindings {
   late final _spine_slider_mix_timeline_set_frame = _spine_slider_mix_timeline_set_framePtr
       .asFunction<void Function(spine_slider_mix_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_slider_mix_timeline_get_curve_value(
     spine_slider_mix_timeline self,
     double time,
@@ -42228,6 +42822,10 @@ class SpineDartBindings {
   late final _spine_slider_timeline_set_constraint_index =
       _spine_slider_timeline_set_constraint_indexPtr.asFunction<void Function(spine_slider_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_slider_timeline_set_frame(
     spine_slider_timeline self,
     int frame,
@@ -42248,6 +42846,7 @@ class SpineDartBindings {
   late final _spine_slider_timeline_set_frame =
       _spine_slider_timeline_set_framePtr.asFunction<void Function(spine_slider_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_slider_timeline_get_curve_value(
     spine_slider_timeline self,
     double time,
@@ -42575,6 +43174,7 @@ class SpineDartBindings {
   late final _spine_slot_disposePtr = _lookup<ffi.NativeFunction<ffi.Void Function(spine_slot)>>('spine_slot_dispose');
   late final _spine_slot_dispose = _spine_slot_disposePtr.asFunction<void Function(spine_slot)>();
 
+  /// The bone this slot belongs to.
   spine_bone spine_slot_get_bone(
     spine_slot self,
   ) {
@@ -42599,6 +43199,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_slot)>>('spine_slot_setup_pose');
   late final _spine_slot_setup_pose = _spine_slot_setup_posePtr.asFunction<void Function(spine_slot)>();
 
+  /// The constraint's setup pose data.
   spine_slot_data spine_slot_get_data(
     spine_slot self,
   ) {
@@ -42975,6 +43576,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_slot_data)>>('spine_slot_data_dispose');
   late final _spine_slot_data_dispose = _spine_slot_data_disposePtr.asFunction<void Function(spine_slot_data)>();
 
+  /// The index of the slot in Skeleton::getSlots().
   int spine_slot_data_get_index(
     spine_slot_data self,
   ) {
@@ -42987,6 +43589,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Int Function(spine_slot_data)>>('spine_slot_data_get_index');
   late final _spine_slot_data_get_index = _spine_slot_data_get_indexPtr.asFunction<int Function(spine_slot_data)>();
 
+  /// The bone this slot belongs to.
   spine_bone_data spine_slot_data_get_bone_data(
     spine_slot_data self,
   ) {
@@ -43016,6 +43619,8 @@ class SpineDartBindings {
   late final _spine_slot_data_set_attachment_name =
       _spine_slot_data_set_attachment_namePtr.asFunction<void Function(spine_slot_data, ffi.Pointer<ffi.Char>)>();
 
+  /// The name of the attachment that is visible for this slot in the setup pose,
+  /// or empty if no attachment is visible.
   ffi.Pointer<ffi.Char> spine_slot_data_get_attachment_name(
     spine_slot_data self,
   ) {
@@ -43030,6 +43635,7 @@ class SpineDartBindings {
   late final _spine_slot_data_get_attachment_name =
       _spine_slot_data_get_attachment_namePtr.asFunction<ffi.Pointer<ffi.Char> Function(spine_slot_data)>();
 
+  /// The blend mode for drawing the slot's attachment.
   int spine_slot_data_get_blend_mode(
     spine_slot_data self,
   ) {
@@ -43058,6 +43664,8 @@ class SpineDartBindings {
   late final _spine_slot_data_set_blend_mode =
       _spine_slot_data_set_blend_modePtr.asFunction<void Function(spine_slot_data, int)>();
 
+  /// False if the slot was hidden in Spine and nonessential data was exported.
+  /// Does not affect runtime rendering.
   bool spine_slot_data_get_visible(
     spine_slot_data self,
   ) {
@@ -43099,6 +43707,8 @@ class SpineDartBindings {
   late final _spine_slot_data_get_setup_pose =
       _spine_slot_data_get_setup_posePtr.asFunction<spine_slot_pose Function(spine_slot_data)>();
 
+  /// The constraint's name, which is unique across all constraints in the skeleton
+  /// of the same type.
   ffi.Pointer<ffi.Char> spine_slot_data_get_name(
     spine_slot_data self,
   ) {
@@ -43112,6 +43722,10 @@ class SpineDartBindings {
   late final _spine_slot_data_get_name =
       _spine_slot_data_get_namePtr.asFunction<ffi.Pointer<ffi.Char> Function(spine_slot_data)>();
 
+  /// When true, Skeleton::updateWorldTransform(Physics) only updates this
+  /// constraint if the Skeleton::getSkin() contains this constraint.
+  ///
+  /// See Skin::getConstraints().
   bool spine_slot_data_get_skin_required(
     spine_slot_data self,
   ) {
@@ -43175,6 +43789,8 @@ class SpineDartBindings {
   late final _spine_slot_pose_set =
       _spine_slot_pose_setPtr.asFunction<void Function(spine_slot_pose, spine_slot_pose)>();
 
+  /// The color used to tint the slot's attachment. If getDarkColor() is set, this
+  /// is used as the light color for two color tinting.
   spine_color spine_slot_pose_get_color(
     spine_slot_pose self,
   ) {
@@ -43188,6 +43804,8 @@ class SpineDartBindings {
   late final _spine_slot_pose_get_color =
       _spine_slot_pose_get_colorPtr.asFunction<spine_color Function(spine_slot_pose)>();
 
+  /// The dark color used to tint the slot's attachment for two color tinting. The
+  /// dark color's alpha is not used.
   spine_color spine_slot_pose_get_dark_color(
     spine_slot_pose self,
   ) {
@@ -43201,6 +43819,7 @@ class SpineDartBindings {
   late final _spine_slot_pose_get_dark_color =
       _spine_slot_pose_get_dark_colorPtr.asFunction<spine_color Function(spine_slot_pose)>();
 
+  /// Returns true if this slot has a dark color.
   bool spine_slot_pose_has_dark_color(
     spine_slot_pose self,
   ) {
@@ -43242,6 +43861,10 @@ class SpineDartBindings {
   late final _spine_slot_pose_get_attachment =
       _spine_slot_pose_get_attachmentPtr.asFunction<spine_attachment Function(spine_slot_pose)>();
 
+  /// Sets the slot's attachment and, if the attachment changed, resets
+  /// sequenceIndex and clears the deform. The deform is not cleared if the old
+  /// attachment has the same VertexAttachment::getTimelineAttachment() as the
+  /// specified attachment.
   void spine_slot_pose_set_attachment(
     spine_slot_pose self,
     spine_attachment attachment,
@@ -43258,6 +43881,8 @@ class SpineDartBindings {
   late final _spine_slot_pose_set_attachment =
       _spine_slot_pose_set_attachmentPtr.asFunction<void Function(spine_slot_pose, spine_attachment)>();
 
+  /// The index of the texture region to display when the slot's attachment has a
+  /// Sequence. -1 represents the Sequence::getSetupIndex().
   int spine_slot_pose_get_sequence_index(
     spine_slot_pose self,
   ) {
@@ -43286,6 +43911,12 @@ class SpineDartBindings {
   late final _spine_slot_pose_set_sequence_index =
       _spine_slot_pose_set_sequence_indexPtr.asFunction<void Function(spine_slot_pose, int)>();
 
+  /// Values to deform the slot's attachment. For an unweighted mesh, the entries
+  /// are local positions for each vertex. For a weighted mesh, the entries are an
+  /// offset for each vertex which will be added to the mesh's local vertex
+  /// positions.
+  ///
+  /// See VertexAttachment::computeWorldVertices() and DeformTimeline.
   spine_array_float spine_slot_pose_get_deform(
     spine_slot_pose self,
   ) {
@@ -43325,6 +43956,8 @@ class SpineDartBindings {
   late final _spine_slot_timeline_get_rtti =
       _spine_slot_timeline_get_rttiPtr.asFunction<spine_rtti Function(spine_slot_timeline)>();
 
+  /// The index of the slot in Skeleton::getSlots() that will be changed when this
+  /// timeline is applied.
   int spine_slot_timeline_get_slot_index(
     spine_slot_timeline self,
   ) {
@@ -43629,6 +44262,16 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<spine_rtti Function(spine_timeline)>>('spine_timeline_get_rtti');
   late final _spine_timeline_get_rtti = _spine_timeline_get_rttiPtr.asFunction<spine_rtti Function(spine_timeline)>();
 
+  /// Sets the value(s) for the specified time.
+  ///
+  /// @param skeleton The skeleton the timeline is being applied to. This provides access to the bones, slots, and other skeleton components the timeline may change.
+  /// @param lastTime lastTime The time this timeline was last applied. Timelines such as EventTimeline trigger only at specific times rather than every frame. In that case, the timeline triggers everything between lastTime (exclusive) and time (inclusive).
+  /// @param time The time within the animation. Most timelines find the key before and the key after this time so they can interpolate between the keys.
+  /// @param events If any events are fired, they are added to this array. Can be NULL to ignore firing events or if the timeline does not fire events. May be NULL.
+  /// @param alpha alpha 0 applies the current or setup pose value (depending on pose parameter). 1 applies the timeline value. Between 0 and 1 applies a value between the current or setup pose and the timeline value. By adjusting alpha over time, an animation can be mixed in or out. alpha can also be useful to apply animations on top of each other (layered).
+  /// @param blend Controls how mixing is applied when alpha is than 1.
+  /// @param direction Indicates whether the timeline is mixing in or out. Used by timelines which perform instant transitions such as DrawOrderTimeline and AttachmentTimeline.
+  /// @param appliedPose True to modify the applied pose.
   void spine_timeline_apply(
     spine_timeline self,
     spine_skeleton skeleton,
@@ -43757,6 +44400,7 @@ class SpineDartBindings {
   late final _spine_to_property_get_rtti =
       _spine_to_property_get_rttiPtr.asFunction<spine_rtti Function(spine_to_property)>();
 
+  /// Reads the mix for this property from the specified pose.
   double spine_to_property_mix(
     spine_to_property self,
     spine_transform_constraint_pose pose,
@@ -43773,6 +44417,7 @@ class SpineDartBindings {
   late final _spine_to_property_mix =
       _spine_to_property_mixPtr.asFunction<double Function(spine_to_property, spine_transform_constraint_pose)>();
 
+  /// Applies the value to this property.
   void spine_to_property_apply(
     spine_to_property self,
     spine_skeleton skeleton,
@@ -44408,6 +45053,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<ffi.Void Function(spine_track_entry)>>('spine_track_entry_dispose');
   late final _spine_track_entry_dispose = _spine_track_entry_disposePtr.asFunction<void Function(spine_track_entry)>();
 
+  /// The index of the track where this entry is either current or queued.
   int spine_track_entry_get_track_index(
     spine_track_entry self,
   ) {
@@ -44421,6 +45067,7 @@ class SpineDartBindings {
   late final _spine_track_entry_get_track_index =
       _spine_track_entry_get_track_indexPtr.asFunction<int Function(spine_track_entry)>();
 
+  /// The animation to apply for this track entry.
   spine_animation spine_track_entry_get_animation(
     spine_track_entry self,
   ) {
@@ -44434,6 +45081,7 @@ class SpineDartBindings {
   late final _spine_track_entry_get_animation =
       _spine_track_entry_get_animationPtr.asFunction<spine_animation Function(spine_track_entry)>();
 
+  /// Sets the animation for this track entry.
   void spine_track_entry_set_animation(
     spine_track_entry self,
     spine_animation animation,
@@ -44463,6 +45111,8 @@ class SpineDartBindings {
   late final _spine_track_entry_get_previous =
       _spine_track_entry_get_previousPtr.asFunction<spine_track_entry Function(spine_track_entry)>();
 
+  /// If true, the animation will repeat. If false, it will not, instead its last
+  /// frame is applied if played beyond its duration.
   bool spine_track_entry_get_loop(
     spine_track_entry self,
   ) {
@@ -44491,6 +45141,20 @@ class SpineDartBindings {
   late final _spine_track_entry_set_loop =
       _spine_track_entry_set_loopPtr.asFunction<void Function(spine_track_entry, bool)>();
 
+  /// If true, when mixing from the previous animation to this animation, the
+  /// previous animation is applied as normal instead of being mixed out.
+  ///
+  /// When mixing between animations that key the same property, if a lower track
+  /// also keys that property then the value will briefly dip toward the lower
+  /// track value during the mix. This happens because the first animation mixes
+  /// from 100% to 0% while the second animation mixes from 0% to 100%. Setting
+  /// holdPrevious to true applies the first animation at 100% during the mix so
+  /// the lower track value is overwritten. Such dipping does not occur on the
+  /// lowest track which keys the property, only when a higher track also keys the
+  /// property.
+  ///
+  /// Snapping will occur if holdPrevious is true and this animation does not key
+  /// all the same properties as the previous animation.
   bool spine_track_entry_get_hold_previous(
     spine_track_entry self,
   ) {
@@ -44577,6 +45241,19 @@ class SpineDartBindings {
   late final _spine_track_entry_set_shortest_rotation =
       _spine_track_entry_set_shortest_rotationPtr.asFunction<void Function(spine_track_entry, bool)>();
 
+  /// Seconds to postpone playing the animation. Must be >= 0. When this track
+  /// entry is the current track entry, delay postpones incrementing the
+  /// getTrackTime(). When this track entry is queued, delay is the time from the
+  /// start of the previous animation to when this track entry will become the
+  /// current track entry (ie when the previous track entry getTrackTime() >= this
+  /// track entry's delay).
+  ///
+  /// getTimeScale() affects the delay.
+  ///
+  /// When passing delay < = 0 to AnimationState::addAnimation(int, Animation,
+  /// bool, float) this delay is set using a mix duration from AnimationStateData.
+  /// To change the getMixDuration() afterward, use setMixDuration(float, float) so
+  /// this delay is adjusted.
   double spine_track_entry_get_delay(
     spine_track_entry self,
   ) {
@@ -44605,6 +45282,9 @@ class SpineDartBindings {
   late final _spine_track_entry_set_delay =
       _spine_track_entry_set_delayPtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// Current time in seconds this track entry has been the current track entry.
+  /// The track time determines getAnimationTime(). The track time can be set to
+  /// start the animation at a time other than 0, without affecting looping.
   double spine_track_entry_get_track_time(
     spine_track_entry self,
   ) {
@@ -44633,6 +45313,15 @@ class SpineDartBindings {
   late final _spine_track_entry_set_track_time =
       _spine_track_entry_set_track_timePtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// The track time in seconds when this animation will be removed from the track.
+  /// Defaults to the highest possible float value, meaning the animation will be
+  /// applied until a new animation is set or the track is cleared. If the track
+  /// end time is reached, no other animations are queued for playback, and mixing
+  /// from any previous animations is complete, then the properties keyed by the
+  /// animation are set to the setup pose and the track is cleared.
+  ///
+  /// It may be desired to use AnimationState::addEmptyAnimation(int, float, float)
+  /// rather than have the animation abruptly cease being applied.
   double spine_track_entry_get_track_end(
     spine_track_entry self,
   ) {
@@ -44661,6 +45350,12 @@ class SpineDartBindings {
   late final _spine_track_entry_set_track_end =
       _spine_track_entry_set_track_endPtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// Seconds when this animation starts, both initially and after looping.
+  /// Defaults to 0.
+  ///
+  /// When changing the animation start time, it often makes sense to set
+  /// TrackEntry.AnimationLast to the same value to prevent timeline keys before
+  /// the start time from triggering.
   double spine_track_entry_get_animation_start(
     spine_track_entry self,
   ) {
@@ -44690,6 +45385,9 @@ class SpineDartBindings {
   late final _spine_track_entry_set_animation_start =
       _spine_track_entry_set_animation_startPtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// Seconds for the last frame of this animation. Non-looping animations won't
+  /// play past this time. Looping animations will loop back to
+  /// TrackEntry.AnimationStart at this time. Defaults to the animation duration.
   double spine_track_entry_get_animation_end(
     spine_track_entry self,
   ) {
@@ -44719,6 +45417,11 @@ class SpineDartBindings {
   late final _spine_track_entry_set_animation_end =
       _spine_track_entry_set_animation_endPtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// The time in seconds this animation was last applied. Some timelines use this
+  /// for one-time triggers. Eg, when this animation is applied, event timelines
+  /// will fire all events between the animation last time (exclusive) and
+  /// animation time (inclusive). Defaults to -1 to ensure triggers on frame 0
+  /// happen the first time this animation is applied.
   double spine_track_entry_get_animation_last(
     spine_track_entry self,
   ) {
@@ -44748,6 +45451,13 @@ class SpineDartBindings {
   late final _spine_track_entry_set_animation_last =
       _spine_track_entry_set_animation_lastPtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// Uses getTrackTime() to compute the animationTime. When the trackTime is 0,
+  /// the animationTime is equal to the animationStart time.
+  ///
+  /// The animationTime is between getAnimationStart() and getAnimationEnd(),
+  /// except if this track entry is non-looping and getAnimationEnd() is >= to the
+  /// animation duration, then animationTime continues to increase past
+  /// getAnimationEnd().
   double spine_track_entry_get_animation_time(
     spine_track_entry self,
   ) {
@@ -44761,6 +45471,21 @@ class SpineDartBindings {
   late final _spine_track_entry_get_animation_time =
       _spine_track_entry_get_animation_timePtr.asFunction<double Function(spine_track_entry)>();
 
+  /// Multiplier for the delta time when this track entry is updated, causing time
+  /// for this animation to pass slower or faster. Defaults to 1.
+  ///
+  /// Values < 0 are not supported. To play an animation in reverse, use
+  /// getReverse().
+  ///
+  /// getMixTime() is not affected by track entry time scale, so getMixDuration()
+  /// may need to be adjusted to match the animation speed.
+  ///
+  /// When using AnimationState::addAnimation(int, Animation, bool, float) with a
+  /// delay < = 0, the getDelay() is set using the mix duration from the
+  /// AnimationStateData, assuming time scale to be 1. If the time scale is not 1,
+  /// the delay may need to be adjusted.
+  ///
+  /// See AnimationState getTimeScale() for affecting all animations.
   double spine_track_entry_get_time_scale(
     spine_track_entry self,
   ) {
@@ -44789,6 +45514,12 @@ class SpineDartBindings {
   late final _spine_track_entry_set_time_scale =
       _spine_track_entry_set_time_scalePtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// Values less than 1 mix this animation with the last skeleton pose. Defaults
+  /// to 1, which overwrites the last skeleton pose with this animation.
+  ///
+  /// Typically track 0 is used to completely pose the skeleton, then alpha can be
+  /// used on higher tracks. It doesn't make sense to use alpha on track 0 if the
+  /// skeleton pose is from the last frame render.
   double spine_track_entry_get_alpha(
     spine_track_entry self,
   ) {
@@ -44817,6 +45548,10 @@ class SpineDartBindings {
   late final _spine_track_entry_set_alpha =
       _spine_track_entry_set_alphaPtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// When the mix percentage (mix time / mix duration) is less than the event
+  /// threshold, event timelines for the animation being mixed out will be applied.
+  /// Defaults to 0, so event timelines are not applied for an animation being
+  /// mixed out.
   double spine_track_entry_get_event_threshold(
     spine_track_entry self,
   ) {
@@ -44846,6 +45581,10 @@ class SpineDartBindings {
   late final _spine_track_entry_set_event_threshold =
       _spine_track_entry_set_event_thresholdPtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// When the mix percentage (mix time / mix duration) is less than the attachment
+  /// threshold, attachment timelines for the animation being mixed out will be
+  /// applied. Defaults to 0, so attachment timelines are not applied for an
+  /// animation being mixed out.
   double spine_track_entry_get_mix_attachment_threshold(
     spine_track_entry self,
   ) {
@@ -44876,6 +45615,9 @@ class SpineDartBindings {
   late final _spine_track_entry_set_mix_attachment_threshold =
       _spine_track_entry_set_mix_attachment_thresholdPtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// When getAlpha() is greater than alphaAttachmentThreshold, attachment
+  /// timelines are applied. Defaults to 0, so attachment timelines are always
+  /// applied.
   double spine_track_entry_get_alpha_attachment_threshold(
     spine_track_entry self,
   ) {
@@ -44906,6 +45648,10 @@ class SpineDartBindings {
   late final _spine_track_entry_set_alpha_attachment_threshold =
       _spine_track_entry_set_alpha_attachment_thresholdPtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// When the mix percentage (mix time / mix duration) is less than the draw order
+  /// threshold, draw order timelines for the animation being mixed out will be
+  /// applied. Defaults to 0, so draw order timelines are not applied for an
+  /// animation being mixed out.
   double spine_track_entry_get_mix_draw_order_threshold(
     spine_track_entry self,
   ) {
@@ -44949,6 +45695,7 @@ class SpineDartBindings {
   late final _spine_track_entry_get_next =
       _spine_track_entry_get_nextPtr.asFunction<spine_track_entry Function(spine_track_entry)>();
 
+  /// Returns true if at least one loop has been completed.
   bool spine_track_entry_is_complete(
     spine_track_entry self,
   ) {
@@ -44962,6 +45709,9 @@ class SpineDartBindings {
   late final _spine_track_entry_is_complete =
       _spine_track_entry_is_completePtr.asFunction<bool Function(spine_track_entry)>();
 
+  /// Seconds from 0 to the mix duration when mixing from the previous animation to
+  /// this animation. May be slightly more than TrackEntry.MixDuration when the mix
+  /// is complete.
   double spine_track_entry_get_mix_time(
     spine_track_entry self,
   ) {
@@ -44990,6 +45740,17 @@ class SpineDartBindings {
   late final _spine_track_entry_set_mix_time =
       _spine_track_entry_set_mix_timePtr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// Seconds for mixing from the previous animation to this animation. Defaults to
+  /// the value provided by AnimationStateData based on the animation before this
+  /// animation (if any).
+  ///
+  /// The mix duration can be set manually rather than use the value from
+  /// AnimationStateData.GetMix. In that case, the mixDuration must be set before
+  /// AnimationState.update(float) is next called.
+  ///
+  /// When using AnimationState::addAnimation(int, Animation, bool, float) with a
+  /// delay less than or equal to 0, note the Delay is set using the mix duration
+  /// from the AnimationStateData
   double spine_track_entry_get_mix_duration(
     spine_track_entry self,
   ) {
@@ -45019,6 +45780,9 @@ class SpineDartBindings {
   late final _spine_track_entry_set_mix_duration_1 =
       _spine_track_entry_set_mix_duration_1Ptr.asFunction<void Function(spine_track_entry, double)>();
 
+  /// Sets both getMixDuration() and getDelay().
+  ///
+  /// @param delay If > 0, sets TrackEntry::getDelay(). If < = 0, the delay set is the duration of the previous track entry minus the specified mix duration plus the specified delay (ie the mix ends at (delay = 0) or before (delay < 0) the previous track entry duration). If the previous entry is looping, its next loop completion is used instead of its duration.
   void spine_track_entry_set_mix_duration_2(
     spine_track_entry self,
     double mixDuration,
@@ -45091,6 +45855,16 @@ class SpineDartBindings {
   late final _spine_track_entry_get_mixing_to =
       _spine_track_entry_get_mixing_toPtr.asFunction<spine_track_entry Function(spine_track_entry)>();
 
+  /// Resets the rotation directions for mixing this entry's rotate timelines. This
+  /// can be useful to avoid bones rotating the long way around when using alpha
+  /// and starting animations on other tracks.
+  ///
+  /// Mixing involves finding a rotation between two others, which has two possible
+  /// solutions: the short way or the long way around. The two rotations likely
+  /// change over time, so which direction is the short or long way also changes.
+  /// If the short way was always chosen, bones would flip to the other side when
+  /// that direction became the long way. TrackEntry chooses the short way the
+  /// first time it is applied and remembers that direction.
   void spine_track_entry_reset_rotation_directions(
     spine_track_entry self,
   ) {
@@ -45117,6 +45891,7 @@ class SpineDartBindings {
   late final _spine_track_entry_get_track_complete =
       _spine_track_entry_get_track_completePtr.asFunction<double Function(spine_track_entry)>();
 
+  /// Returns true if this entry is for the empty animation.
   bool spine_track_entry_is_empty_animation(
     spine_track_entry self,
   ) {
@@ -45130,6 +45905,9 @@ class SpineDartBindings {
   late final _spine_track_entry_is_empty_animation =
       _spine_track_entry_is_empty_animationPtr.asFunction<bool Function(spine_track_entry)>();
 
+  /// Returns true if this track entry has been applied at least once.
+  ///
+  /// See AnimationState::apply(Skeleton).
   bool spine_track_entry_was_applied(
     spine_track_entry self,
   ) {
@@ -45143,6 +45921,8 @@ class SpineDartBindings {
   late final _spine_track_entry_was_applied =
       _spine_track_entry_was_appliedPtr.asFunction<bool Function(spine_track_entry)>();
 
+  /// Returns true if there is a getNext() track entry that is ready to become the
+  /// current track entry during the next AnimationState::update(float)}
   bool spine_track_entry_is_next_ready(
     spine_track_entry self,
   ) {
@@ -45259,6 +46039,7 @@ class SpineDartBindings {
   late final _spine_transform_constraint_copy = _spine_transform_constraint_copyPtr
       .asFunction<spine_transform_constraint Function(spine_transform_constraint, spine_skeleton)>();
 
+  /// Applies the constraint to the constrained bones.
   void spine_transform_constraint_update(
     spine_transform_constraint self,
     spine_skeleton skeleton,
@@ -45307,6 +46088,7 @@ class SpineDartBindings {
   late final _spine_transform_constraint_is_source_active =
       _spine_transform_constraint_is_source_activePtr.asFunction<bool Function(spine_transform_constraint)>();
 
+  /// The bones that will be modified by this transform constraint.
   spine_array_bone_pose spine_transform_constraint_get_bones(
     spine_transform_constraint self,
   ) {
@@ -45321,6 +46103,7 @@ class SpineDartBindings {
   late final _spine_transform_constraint_get_bones =
       _spine_transform_constraint_get_bonesPtr.asFunction<spine_array_bone_pose Function(spine_transform_constraint)>();
 
+  /// The bone whose world transform will be copied to the constrained bones.
   spine_bone spine_transform_constraint_get_source(
     spine_transform_constraint self,
   ) {
@@ -45646,6 +46429,7 @@ class SpineDartBindings {
   late final _spine_transform_constraint_base_is_source_active =
       _spine_transform_constraint_base_is_source_activePtr.asFunction<bool Function(spine_transform_constraint_base)>();
 
+  /// Inherited from Update
   void spine_transform_constraint_base_update(
     spine_transform_constraint_base self,
     spine_skeleton skeleton,
@@ -45731,6 +46515,7 @@ class SpineDartBindings {
   late final _spine_transform_constraint_data_create_method = _spine_transform_constraint_data_create_methodPtr
       .asFunction<spine_constraint Function(spine_transform_constraint_data, spine_skeleton)>();
 
+  /// The bones that will be modified by this transform constraint.
   spine_array_bone_data spine_transform_constraint_data_get_bones(
     spine_transform_constraint_data self,
   ) {
@@ -45745,6 +46530,7 @@ class SpineDartBindings {
   late final _spine_transform_constraint_data_get_bones = _spine_transform_constraint_data_get_bonesPtr
       .asFunction<spine_array_bone_data Function(spine_transform_constraint_data)>();
 
+  /// The bone whose world transform will be copied to the constrained bones.
   spine_bone_data spine_transform_constraint_data_get_source(
     spine_transform_constraint_data self,
   ) {
@@ -45775,6 +46561,7 @@ class SpineDartBindings {
   late final _spine_transform_constraint_data_set_source = _spine_transform_constraint_data_set_sourcePtr
       .asFunction<void Function(spine_transform_constraint_data, spine_bone_data)>();
 
+  /// An offset added to the constrained bone rotation.
   double spine_transform_constraint_data_get_offset_rotation(
     spine_transform_constraint_data self,
   ) {
@@ -45807,6 +46594,7 @@ class SpineDartBindings {
       _spine_transform_constraint_data_set_offset_rotationPtr
           .asFunction<void Function(spine_transform_constraint_data, double)>();
 
+  /// An offset added to the constrained bone X translation.
   double spine_transform_constraint_data_get_offset_x(
     spine_transform_constraint_data self,
   ) {
@@ -45837,6 +46625,7 @@ class SpineDartBindings {
   late final _spine_transform_constraint_data_set_offset_x = _spine_transform_constraint_data_set_offset_xPtr
       .asFunction<void Function(spine_transform_constraint_data, double)>();
 
+  /// An offset added to the constrained bone Y translation.
   double spine_transform_constraint_data_get_offset_y(
     spine_transform_constraint_data self,
   ) {
@@ -45867,6 +46656,7 @@ class SpineDartBindings {
   late final _spine_transform_constraint_data_set_offset_y = _spine_transform_constraint_data_set_offset_yPtr
       .asFunction<void Function(spine_transform_constraint_data, double)>();
 
+  /// An offset added to the constrained bone scaleX.
   double spine_transform_constraint_data_get_offset_scale_x(
     spine_transform_constraint_data self,
   ) {
@@ -45899,6 +46689,7 @@ class SpineDartBindings {
       _spine_transform_constraint_data_set_offset_scale_xPtr
           .asFunction<void Function(spine_transform_constraint_data, double)>();
 
+  /// An offset added to the constrained bone scaleY.
   double spine_transform_constraint_data_get_offset_scale_y(
     spine_transform_constraint_data self,
   ) {
@@ -45931,6 +46722,7 @@ class SpineDartBindings {
       _spine_transform_constraint_data_set_offset_scale_yPtr
           .asFunction<void Function(spine_transform_constraint_data, double)>();
 
+  /// An offset added to the constrained bone shearY.
   double spine_transform_constraint_data_get_offset_shear_y(
     spine_transform_constraint_data self,
   ) {
@@ -45963,6 +46755,7 @@ class SpineDartBindings {
       _spine_transform_constraint_data_set_offset_shear_yPtr
           .asFunction<void Function(spine_transform_constraint_data, double)>();
 
+  /// Reads the source bone's local transform instead of its world transform.
   bool spine_transform_constraint_data_get_local_source(
     spine_transform_constraint_data self,
   ) {
@@ -45993,6 +46786,8 @@ class SpineDartBindings {
   late final _spine_transform_constraint_data_set_local_source = _spine_transform_constraint_data_set_local_sourcePtr
       .asFunction<void Function(spine_transform_constraint_data, bool)>();
 
+  /// Sets the constrained bones' local transforms instead of their world
+  /// transforms.
   bool spine_transform_constraint_data_get_local_target(
     spine_transform_constraint_data self,
   ) {
@@ -46023,6 +46818,8 @@ class SpineDartBindings {
   late final _spine_transform_constraint_data_set_local_target = _spine_transform_constraint_data_set_local_targetPtr
       .asFunction<void Function(spine_transform_constraint_data, bool)>();
 
+  /// Adds the source bone transform to the constrained bones instead of setting it
+  /// absolutely.
   bool spine_transform_constraint_data_get_additive(
     spine_transform_constraint_data self,
   ) {
@@ -46053,6 +46850,8 @@ class SpineDartBindings {
   late final _spine_transform_constraint_data_set_additive = _spine_transform_constraint_data_set_additivePtr
       .asFunction<void Function(spine_transform_constraint_data, bool)>();
 
+  /// Prevents constrained bones from exceeding the ranged defined by offset and
+  /// max.
   bool spine_transform_constraint_data_get_clamp(
     spine_transform_constraint_data self,
   ) {
@@ -46083,6 +46882,7 @@ class SpineDartBindings {
   late final _spine_transform_constraint_data_set_clamp =
       _spine_transform_constraint_data_set_clampPtr.asFunction<void Function(spine_transform_constraint_data, bool)>();
 
+  /// The mapping of transform properties to other transform properties.
   spine_array_from_property spine_transform_constraint_data_get_properties(
     spine_transform_constraint_data self,
   ) {
@@ -46097,6 +46897,7 @@ class SpineDartBindings {
   late final _spine_transform_constraint_data_get_properties = _spine_transform_constraint_data_get_propertiesPtr
       .asFunction<spine_array_from_property Function(spine_transform_constraint_data)>();
 
+  /// Resolve ambiguity by forwarding to PosedData's implementation
   ffi.Pointer<ffi.Char> spine_transform_constraint_data_get_name(
     spine_transform_constraint_data self,
   ) {
@@ -46203,6 +47004,8 @@ class SpineDartBindings {
   late final _spine_transform_constraint_pose_set = _spine_transform_constraint_pose_setPtr
       .asFunction<void Function(spine_transform_constraint_pose, spine_transform_constraint_pose)>();
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained rotation.
   double spine_transform_constraint_pose_get_mix_rotate(
     spine_transform_constraint_pose self,
   ) {
@@ -46233,6 +47036,8 @@ class SpineDartBindings {
   late final _spine_transform_constraint_pose_set_mix_rotate = _spine_transform_constraint_pose_set_mix_rotatePtr
       .asFunction<void Function(spine_transform_constraint_pose, double)>();
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained translation X.
   double spine_transform_constraint_pose_get_mix_x(
     spine_transform_constraint_pose self,
   ) {
@@ -46263,6 +47068,8 @@ class SpineDartBindings {
   late final _spine_transform_constraint_pose_set_mix_x = _spine_transform_constraint_pose_set_mix_xPtr
       .asFunction<void Function(spine_transform_constraint_pose, double)>();
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained translation Y.
   double spine_transform_constraint_pose_get_mix_y(
     spine_transform_constraint_pose self,
   ) {
@@ -46293,6 +47100,8 @@ class SpineDartBindings {
   late final _spine_transform_constraint_pose_set_mix_y = _spine_transform_constraint_pose_set_mix_yPtr
       .asFunction<void Function(spine_transform_constraint_pose, double)>();
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained scale X.
   double spine_transform_constraint_pose_get_mix_scale_x(
     spine_transform_constraint_pose self,
   ) {
@@ -46323,6 +47132,8 @@ class SpineDartBindings {
   late final _spine_transform_constraint_pose_set_mix_scale_x = _spine_transform_constraint_pose_set_mix_scale_xPtr
       .asFunction<void Function(spine_transform_constraint_pose, double)>();
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained scale Y.
   double spine_transform_constraint_pose_get_mix_scale_y(
     spine_transform_constraint_pose self,
   ) {
@@ -46353,6 +47164,8 @@ class SpineDartBindings {
   late final _spine_transform_constraint_pose_set_mix_scale_y = _spine_transform_constraint_pose_set_mix_scale_yPtr
       .asFunction<void Function(spine_transform_constraint_pose, double)>();
 
+  /// A percentage (0-1) that controls the mix between the constrained and
+  /// unconstrained shear Y.
   double spine_transform_constraint_pose_get_mix_shear_y(
     spine_transform_constraint_pose self,
   ) {
@@ -46469,6 +47282,11 @@ class SpineDartBindings {
       void Function(spine_transform_constraint_timeline, spine_skeleton, double, double, spine_array_event, double, int,
           int, bool)>();
 
+  /// Sets the time, rotate mix, translate mix, scale mix, and shear mix for the
+  /// specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_transform_constraint_timeline_set_frame(
     spine_transform_constraint_timeline self,
     int frame,
@@ -47155,6 +47973,10 @@ class SpineDartBindings {
   late final _spine_translate_x_timeline_set_bone_index =
       _spine_translate_x_timeline_set_bone_indexPtr.asFunction<void Function(spine_translate_x_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_translate_x_timeline_set_frame(
     spine_translate_x_timeline self,
     int frame,
@@ -47175,6 +47997,7 @@ class SpineDartBindings {
   late final _spine_translate_x_timeline_set_frame = _spine_translate_x_timeline_set_framePtr
       .asFunction<void Function(spine_translate_x_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_translate_x_timeline_get_curve_value(
     spine_translate_x_timeline self,
     double time,
@@ -47586,6 +48409,10 @@ class SpineDartBindings {
   late final _spine_translate_y_timeline_set_bone_index =
       _spine_translate_y_timeline_set_bone_indexPtr.asFunction<void Function(spine_translate_y_timeline, int)>();
 
+  /// Sets the time and value for the specified frame.
+  ///
+  /// @param frame Between 0 and frameCount, inclusive.
+  /// @param time The frame time in seconds.
   void spine_translate_y_timeline_set_frame(
     spine_translate_y_timeline self,
     int frame,
@@ -47606,6 +48433,7 @@ class SpineDartBindings {
   late final _spine_translate_y_timeline_set_frame = _spine_translate_y_timeline_set_framePtr
       .asFunction<void Function(spine_translate_y_timeline, int, double, double)>();
 
+  /// Returns the interpolated value for the specified time.
   double spine_translate_y_timeline_get_curve_value(
     spine_translate_y_timeline self,
     double time,
@@ -47934,6 +48762,7 @@ class SpineDartBindings {
       _lookup<ffi.NativeFunction<spine_rtti Function(spine_update)>>('spine_update_get_rtti');
   late final _spine_update_get_rtti = _spine_update_get_rttiPtr.asFunction<spine_rtti Function(spine_update)>();
 
+  /// @param physics Determines how physics and other non-deterministic updates are applied.
   void spine_update_update(
     spine_update self,
     spine_skeleton skeleton,
@@ -47984,6 +48813,17 @@ class SpineDartBindings {
   late final _spine_vertex_attachment_get_rtti =
       _spine_vertex_attachment_get_rttiPtr.asFunction<spine_rtti Function(spine_vertex_attachment)>();
 
+  /// Transforms the attachment's local vertices to world coordinates. If the
+  /// slot's SlotPose::getDeform() is not empty, it is used to deform the vertices.
+  ///
+  /// See https://esotericsoftware.com/spine-runtime-skeletons#World-transforms
+  /// World transforms in the Spine Runtimes Guide.
+  ///
+  /// @param start The index of the first vertices value to transform. Each vertex has 2 values, x and y.
+  /// @param count The number of world vertex values to output. Must be < = WorldVerticesLength - start.
+  /// @param worldVertices The output world vertices. Must have a length >= offset + count * stride / 2.
+  /// @param offset The worldVertices index to begin writing values.
+  /// @param stride The number of worldVertices entries between the value pairs written.
   void spine_vertex_attachment_compute_world_vertices_1(
     spine_vertex_attachment self,
     spine_skeleton skeleton,
@@ -48045,6 +48885,7 @@ class SpineDartBindings {
       _spine_vertex_attachment_compute_world_vertices_2Ptr.asFunction<
           void Function(spine_vertex_attachment, spine_skeleton, spine_slot, int, int, spine_array_float, int, int)>();
 
+  /// Gets a unique ID for this attachment.
   int spine_vertex_attachment_get_id(
     spine_vertex_attachment self,
   ) {

@@ -47,7 +47,10 @@ import 'slider.dart';
 import 'transform_constraint.dart';
 import 'transform_constraint_pose.dart';
 
-/// TransformConstraintData wrapper
+/// Stores the setup pose for a TransformConstraint.
+///
+/// See https://esotericsoftware.com/spine-transform-constraints Transform
+/// constraints in the Spine User Guide.
 class TransformConstraintData extends PosedData implements ConstraintData {
   final Pointer<spine_transform_constraint_data_wrapper> _ptr;
 
@@ -101,11 +104,13 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     }
   }
 
+  /// The bones that will be modified by this transform constraint.
   ArrayBoneData get bones {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_bones(_ptr);
     return ArrayBoneData.fromPointer(result);
   }
 
+  /// The bone whose world transform will be copied to the constrained bones.
   BoneData get source {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_source(_ptr);
     return BoneData.fromPointer(result);
@@ -115,6 +120,7 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_transform_constraint_data_set_source(_ptr, value.nativePtr.cast());
   }
 
+  /// An offset added to the constrained bone rotation.
   double get offsetRotation {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_rotation(_ptr);
     return result;
@@ -124,6 +130,7 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_transform_constraint_data_set_offset_rotation(_ptr, value);
   }
 
+  /// An offset added to the constrained bone X translation.
   double get offsetX {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_x(_ptr);
     return result;
@@ -133,6 +140,7 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_transform_constraint_data_set_offset_x(_ptr, value);
   }
 
+  /// An offset added to the constrained bone Y translation.
   double get offsetY {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_y(_ptr);
     return result;
@@ -142,6 +150,7 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_transform_constraint_data_set_offset_y(_ptr, value);
   }
 
+  /// An offset added to the constrained bone scaleX.
   double get offsetScaleX {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_scale_x(_ptr);
     return result;
@@ -151,6 +160,7 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_transform_constraint_data_set_offset_scale_x(_ptr, value);
   }
 
+  /// An offset added to the constrained bone scaleY.
   double get offsetScaleY {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_scale_y(_ptr);
     return result;
@@ -160,6 +170,7 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_transform_constraint_data_set_offset_scale_y(_ptr, value);
   }
 
+  /// An offset added to the constrained bone shearY.
   double get offsetShearY {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_offset_shear_y(_ptr);
     return result;
@@ -169,6 +180,7 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_transform_constraint_data_set_offset_shear_y(_ptr, value);
   }
 
+  /// Reads the source bone's local transform instead of its world transform.
   bool get localSource {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_local_source(_ptr);
     return result;
@@ -178,6 +190,8 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_transform_constraint_data_set_local_source(_ptr, value);
   }
 
+  /// Sets the constrained bones' local transforms instead of their world
+  /// transforms.
   bool get localTarget {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_local_target(_ptr);
     return result;
@@ -187,6 +201,8 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_transform_constraint_data_set_local_target(_ptr, value);
   }
 
+  /// Adds the source bone transform to the constrained bones instead of setting
+  /// it absolutely.
   bool get additive {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_additive(_ptr);
     return result;
@@ -196,6 +212,8 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_transform_constraint_data_set_additive(_ptr, value);
   }
 
+  /// Prevents constrained bones from exceeding the ranged defined by offset and
+  /// max.
   bool get clamp {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_clamp(_ptr);
     return result;
@@ -205,6 +223,7 @@ class TransformConstraintData extends PosedData implements ConstraintData {
     SpineBindings.bindings.spine_transform_constraint_data_set_clamp(_ptr, value);
   }
 
+  /// The mapping of transform properties to other transform properties.
   ArrayFromProperty get properties {
     final result = SpineBindings.bindings.spine_transform_constraint_data_get_properties(_ptr);
     return ArrayFromProperty.fromPointer(result);

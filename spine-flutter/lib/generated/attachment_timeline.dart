@@ -56,6 +56,10 @@ class AttachmentTimeline extends Timeline implements SlotTimeline {
     SpineBindings.bindings.spine_attachment_timeline_dispose(_ptr);
   }
 
+  /// Sets the time and attachment name for the specified frame.
+  ///
+  /// [frame] Between 0 and frameCount, inclusive.
+  /// [time] The frame time in seconds.
   void setFrame(int frame, double time, String attachmentName) {
     SpineBindings.bindings
         .spine_attachment_timeline_set_frame(_ptr, frame, time, attachmentName.toNativeUtf8().cast<Char>());

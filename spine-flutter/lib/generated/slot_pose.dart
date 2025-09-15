@@ -65,16 +65,21 @@ class SlotPose {
     SpineBindings.bindings.spine_slot_pose_set(_ptr, pose.nativePtr.cast());
   }
 
+  /// The color used to tint the slot's attachment. If getDarkColor() is set,
+  /// this is used as the light color for two color tinting.
   Color get color {
     final result = SpineBindings.bindings.spine_slot_pose_get_color(_ptr);
     return Color.fromPointer(result);
   }
 
+  /// The dark color used to tint the slot's attachment for two color tinting.
+  /// The dark color's alpha is not used.
   Color get darkColor {
     final result = SpineBindings.bindings.spine_slot_pose_get_dark_color(_ptr);
     return Color.fromPointer(result);
   }
 
+  /// Returns true if this slot has a dark color.
   bool get hasDarkColor {
     final result = SpineBindings.bindings.spine_slot_pose_has_dark_color(_ptr);
     return result;
@@ -84,6 +89,8 @@ class SlotPose {
     SpineBindings.bindings.spine_slot_pose_set_has_dark_color(_ptr, value);
   }
 
+  /// The current attachment for the slot, or null if the slot has no
+  /// attachment.
   Attachment? get attachment {
     final result = SpineBindings.bindings.spine_slot_pose_get_attachment(_ptr);
     if (result.address == 0) return null;
@@ -113,10 +120,16 @@ class SlotPose {
     }
   }
 
+  /// Sets the slot's attachment and, if the attachment changed, resets
+  /// sequenceIndex and clears the deform. The deform is not cleared if the old
+  /// attachment has the same VertexAttachment::getTimelineAttachment() as the
+  /// specified attachment.
   set attachment(Attachment? value) {
     SpineBindings.bindings.spine_slot_pose_set_attachment(_ptr, value?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
+  /// The index of the texture region to display when the slot's attachment has
+  /// a Sequence. -1 represents the Sequence::getSetupIndex().
   int get sequenceIndex {
     final result = SpineBindings.bindings.spine_slot_pose_get_sequence_index(_ptr);
     return result;
@@ -126,6 +139,12 @@ class SlotPose {
     SpineBindings.bindings.spine_slot_pose_set_sequence_index(_ptr, value);
   }
 
+  /// Values to deform the slot's attachment. For an unweighted mesh, the
+  /// entries are local positions for each vertex. For a weighted mesh, the
+  /// entries are an offset for each vertex which will be added to the mesh's
+  /// local vertex positions.
+  ///
+  /// See VertexAttachment::computeWorldVertices() and DeformTimeline.
   ArrayFloat get deform {
     final result = SpineBindings.bindings.spine_slot_pose_get_deform(_ptr);
     return ArrayFloat.fromPointer(result);

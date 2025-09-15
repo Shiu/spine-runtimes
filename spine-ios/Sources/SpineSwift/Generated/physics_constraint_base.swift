@@ -32,7 +32,10 @@
 import Foundation
 import SpineC
 
-/// PhysicsConstraintBase wrapper
+/// Stores the current pose for a physics constraint. A physics constraint applies physics to bones.
+///
+/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User
+/// Guide. Non-exported base class that inherits from the template
 @objc(SpinePhysicsConstraintBase)
 @objcMembers
 open class PhysicsConstraintBase: PosedActive, Posed, Constraint {
@@ -83,6 +86,7 @@ open class PhysicsConstraintBase: PosedActive, Posed, Constraint {
         spine_physics_constraint_base_sort(_ptr.assumingMemoryBound(to: spine_physics_constraint_base_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self))
     }
 
+    /// Inherited from Update
     public func update(_ skeleton: Skeleton, _ physics: Physics) {
         spine_physics_constraint_base_update(_ptr.assumingMemoryBound(to: spine_physics_constraint_base_wrapper.self), skeleton._ptr.assumingMemoryBound(to: spine_skeleton_wrapper.self), spine_physics(rawValue: UInt32(physics.rawValue)))
     }

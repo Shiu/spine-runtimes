@@ -32,7 +32,10 @@
 import Foundation
 import SpineC
 
-/// PhysicsConstraintData wrapper
+/// Stores the setup pose for a PhysicsConstraint.
+///
+/// See https://esotericsoftware.com/spine-physics-constraints Physics constraints in the Spine User
+/// Guide.
 @objc(SpinePhysicsConstraintData)
 @objcMembers
 public class PhysicsConstraintData: PosedData, ConstraintData {
@@ -51,6 +54,7 @@ public class PhysicsConstraintData: PosedData, ConstraintData {
         return Rtti(fromPointer: result!)
     }
 
+    /// The bone constrained by this physics constraint.
     public var bone: BoneData {
         get {
             let result = spine_physics_constraint_data_get_bone(_ptr.assumingMemoryBound(to: spine_physics_constraint_data_wrapper.self))

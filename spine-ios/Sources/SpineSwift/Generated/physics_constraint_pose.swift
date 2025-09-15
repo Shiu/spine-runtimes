@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// PhysicsConstraintPose wrapper
+/// Stores a pose for a physics constraint.
 @objc(SpinePhysicsConstraintPose)
 @objcMembers
 public class PhysicsConstraintPose: NSObject {
@@ -108,6 +108,7 @@ public class PhysicsConstraintPose: NSObject {
         }
     }
 
+    /// A percentage (0-1) that controls the mix between the constrained and unconstrained poses.
     public var mix: Float {
         get {
             let result = spine_physics_constraint_pose_get_mix(_ptr.assumingMemoryBound(to: spine_physics_constraint_pose_wrapper.self))

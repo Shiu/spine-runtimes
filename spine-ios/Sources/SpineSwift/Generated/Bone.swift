@@ -32,7 +32,12 @@
 import Foundation
 import SpineC
 
-/// Bone wrapper
+/// The current pose for a bone, before constraints are applied.
+///
+/// A bone has a local transform which is used to compute its world transform. A bone also has an
+/// applied transform, which is a local transform that can be applied to compute the world
+/// transform. The local transform and applied transform may differ if a constraint or application
+/// code modifies the world transform after it was computed from the local transform.
 @objc(SpineBone)
 @objcMembers
 public class Bone: PosedActive, Posed, Update {
@@ -41,11 +46,13 @@ public class Bone: PosedActive, Posed, Update {
         super.init(fromPointer: UnsafeMutableRawPointer(ptr).assumingMemoryBound(to: spine_posed_active_wrapper.self))
     }
 
+    /// - Parameter parent: May be NULL.
     public convenience init(_ data: BoneData, _ parent: Bone?) {
         let ptr = spine_bone_create(data._ptr.assumingMemoryBound(to: spine_bone_data_wrapper.self), parent?._ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
         self.init(fromPointer: ptr!)
     }
 
+    /// Copy constructor. Does not copy the children bones.
     public static func from(_ bone: Bone, _ parent: Bone?) -> Bone {
         let ptr = spine_bone_create2(bone._ptr.assumingMemoryBound(to: spine_bone_wrapper.self), parent?._ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
         return Bone(fromPointer: ptr!)
@@ -56,16 +63,19 @@ public class Bone: PosedActive, Posed, Update {
         return Rtti(fromPointer: result!)
     }
 
+    /// The parent bone, or null if this is the root bone.
     public var parent: Bone? {
         let result = spine_bone_get_parent(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
         return result.map { Bone(fromPointer: $0) }
     }
 
+    /// The immediate children of this bone.
     public var children: ArrayBone {
         let result = spine_bone_get_children(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
         return ArrayBone(fromPointer: result!)
     }
 
+    /// The constraint's setup pose data.
     public var data: BoneData {
         let result = spine_bone_get_data(_ptr.assumingMemoryBound(to: spine_bone_wrapper.self))
         return BoneData(fromPointer: result!)

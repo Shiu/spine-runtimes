@@ -32,7 +32,7 @@
 import Foundation
 import SpineC
 
-/// MeshAttachment wrapper
+/// Attachment that displays a texture region using a mesh.
 @objc(SpineMeshAttachment)
 @objcMembers
 public class MeshAttachment: VertexAttachment {
@@ -66,6 +66,8 @@ public class MeshAttachment: VertexAttachment {
         }
     }
 
+    /// The UV pair for each vertex, normalized within the entire texture. See also
+    /// MeshAttachment::updateRegion
     public var uVs: ArrayFloat {
         let result = spine_mesh_attachment_get_u_vs(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))
         return ArrayFloat(fromPointer: result!)
@@ -126,6 +128,7 @@ public class MeshAttachment: VertexAttachment {
         }
     }
 
+    /// Nonessential.
     public var edges: ArrayUnsignedShort {
         get {
             let result = spine_mesh_attachment_get_edges(_ptr.assumingMemoryBound(to: spine_mesh_attachment_wrapper.self))

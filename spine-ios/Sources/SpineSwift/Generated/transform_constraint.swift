@@ -46,11 +46,13 @@ public class TransformConstraint: TransformConstraintBase {
         self.init(fromPointer: ptr!)
     }
 
+    /// The bones that will be modified by this transform constraint.
     public var bones: ArrayBonePose {
         let result = spine_transform_constraint_get_bones(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
         return ArrayBonePose(fromPointer: result!)
     }
 
+    /// The bone whose world transform will be copied to the constrained bones.
     public var source: Bone {
         get {
             let result = spine_transform_constraint_get_source(_ptr.assumingMemoryBound(to: spine_transform_constraint_wrapper.self))
