@@ -28,21 +28,6 @@
  *****************************************************************************/
 
 import {
-	Assets,
-	Bounds,
-	Cache,
-	Container,
-	ContainerOptions,
-	DestroyOptions,
-	fastCopy,
-	Graphics,
-	PointData,
-	Texture,
-	Ticker,
-	ViewContainer,
-} from 'pixi.js';
-import { ISpineDebugRenderer } from './SpineDebugRenderer.js';
-import {
 	AnimationState,
 	AnimationStateData,
 	AtlasAttachmentLoader,
@@ -66,6 +51,21 @@ import {
 	TrackEntry,
 	Vector2,
 } from '@esotericsoftware/spine-core';
+import {
+	Assets,
+	Bounds,
+	Cache,
+	Container,
+	ContainerOptions,
+	DestroyOptions,
+	fastCopy,
+	Graphics,
+	PointData,
+	Texture,
+	Ticker,
+	ViewContainer,
+} from 'pixi.js';
+import { ISpineDebugRenderer } from './SpineDebugRenderer.js';
 
 /**
  * Options to create a {@link Spine} using {@link Spine.from}.
@@ -669,13 +669,15 @@ export class Spine extends ViewContainer {
 					);
 
 					if (this.alpha === 0 || alpha === 0) {
+						if (!cacheData.skipRender) this.spineAttachmentsDirty = true;
 						cacheData.skipRender = true;
 					} else {
+						if (cacheData.skipRender) this.spineAttachmentsDirty = true;
+						cacheData.skipRender = cacheData.clipped = false;
+
 						if (slot.darkColor) {
 							cacheData.darkColor.setFromColor(slot.darkColor);
 						}
-
-						cacheData.skipRender = cacheData.clipped = false;
 
 						const texture = attachment.region?.texture.texture || Texture.EMPTY;
 
