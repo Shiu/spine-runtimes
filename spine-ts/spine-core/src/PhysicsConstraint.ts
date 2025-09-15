@@ -27,10 +27,10 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import { BonePose } from "./BonePose.js";
+import type { BonePose } from "./BonePose.js";
 import { Constraint } from "./Constraint.js";
 import { Physics } from "./Physics.js";
-import { PhysicsConstraintData } from "./PhysicsConstraintData.js";
+import type { PhysicsConstraintData } from "./PhysicsConstraintData.js";
 import { PhysicsConstraintPose } from "./PhysicsConstraintPose.js";
 import { Skeleton } from "./Skeleton.js";
 import { MathUtils } from "./Utils.js";
@@ -125,10 +125,10 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 		switch (physics) {
 			case Physics.none:
 				return;
+			// biome-ignore lint/suspicious/noFallthroughSwitchClause: fall through expected
 			case Physics.reset:
-				this.reset(skeleton);
-			// Fall through.
-			case Physics.update:
+				this.reset(skeleton); // Fall through.
+			case Physics.update: {
 				const delta = Math.max(skeleton.time - this.lastTime, 0), aa = this.remaining;
 				this.remaining += delta;
 				this.lastTime = skeleton.time;
@@ -139,8 +139,8 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 					this.ux = bx;
 					this.uy = by;
 				} else {
-					let a = this.remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1, m = 0, e = 0, ax = 0, ay = 0,
-						qx = this.data.limit * delta, qy = qx * Math.abs(skeleton.scaleY);
+					let a = this.remaining, i = p.inertia, f = skeleton.data.referenceScale, d = -1, m = 0, e = 0, qx = this.data.limit * delta,
+						qy = qx * Math.abs(skeleton.scaleY);
 					qx *= Math.abs(skeleton.scaleX);
 					if (x || y) {
 						if (x) {
@@ -154,13 +154,13 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 							this.uy = by;
 						}
 						if (a >= t) {
-							let xs = this.xOffset, ys = this.yOffset;
-							d = Math.pow(p.damping, 60 * t);
+							const xs = this.xOffset, ys = this.yOffset;
+							d = p.damping ** (60 * t);
 							m = t * p.massInverse;
 							e = p.strength;
-							let w = f * p.wind, g = f * p.gravity;
-							ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
-							ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.scaleY;
+							const w = f * p.wind, g = f * p.gravity;
+							const ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
+							const ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.scaleY;
 							do {
 								if (x) {
 									this.xVelocity += (ax - this.xOffset * e) * m;
@@ -182,7 +182,7 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 						if (y) bone.worldY += (this.yOffset - this.yLag * z) * mix * this.data.y;
 					}
 					if (rotateOrShearX || scaleX) {
-						let ca = Math.atan2(bone.c, bone.a), c, s, mr = 0, dx = this.cx - bone.worldX, dy = this.cy - bone.worldY;
+						let ca = Math.atan2(bone.c, bone.a), c = 0, s = 0, mr = 0, dx = this.cx - bone.worldX, dy = this.cy - bone.worldY;
 						if (dx > qx)
 							dx = qx;
 						else if (dx < -qx) //
@@ -207,19 +207,18 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 						} else {
 							c = Math.cos(ca);
 							s = Math.sin(ca);
-							let r = l * bone.getWorldScaleX() - this.scaleLag * Math.max(0, 1 - aa / t);
+							const r = l * bone.getWorldScaleX() - this.scaleLag * Math.max(0, 1 - aa / t);
 							if (r > 0) this.scaleOffset += (dx * c + dy * s) * i / r;
 						}
 						if (a >= t) {
-							if (d == -1) {
-								d = Math.pow(p.damping, 60 * t);
+							if (d === -1) {
+								d = p.damping ** (60 * t);
 								m = t * p.massInverse;
 								e = p.strength;
-								const w = f * p.wind, g = f * p.gravity * Skeleton.yDir;
-								ax = (w * skeleton.windX + g * skeleton.gravityX) * skeleton.scaleX;
-								ay = (w * skeleton.windY + g * skeleton.gravityY) * skeleton.scaleY;
 							}
-							let rs = this.rotateOffset, ss = this.scaleOffset, h = l / f
+							const ax = p.wind * skeleton.windX + p.gravity * skeleton.gravityX;
+							const ay = (p.wind * skeleton.windY + p.gravity * skeleton.gravityY) * Skeleton.yDir;
+							const rs = this.rotateOffset, ss = this.scaleOffset, h = l / f;
 							while (true) {
 								a -= t;
 								if (scaleX) {
@@ -248,6 +247,7 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 				this.cx = bone.worldX;
 				this.cy = bone.worldY;
 				break;
+			}
 			case Physics.pose:
 				z = Math.max(0, 1 - this.remaining / t);
 				if (x) bone.worldX += (this.xOffset - this.xLag * z) * mix * this.data.x;
@@ -289,7 +289,7 @@ export class PhysicsConstraint extends Constraint<PhysicsConstraint, PhysicsCons
 			bone.a *= s;
 			bone.c *= s;
 		}
-		if (physics != Physics.pose) {
+		if (physics !== Physics.pose) {
 			this.tx = l * bone.a;
 			this.ty = l * bone.c;
 		}
