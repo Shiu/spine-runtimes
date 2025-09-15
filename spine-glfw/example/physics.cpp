@@ -125,6 +125,7 @@ int main() {
 
 	// Set the "eyeblink-long" animation like in the web example
 	animationState.setAnimation(0, "eyeblink-long", true);
+	animationState.setAnimation(1, "wind-idle", true);
 
 	// Create the renderer and set the viewport size to match the window size. This sets up a
 	// pixel perfect orthogonal projection for 2D rendering.

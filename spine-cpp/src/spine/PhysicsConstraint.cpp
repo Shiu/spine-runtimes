@@ -112,7 +112,7 @@ void PhysicsConstraint::update(Skeleton &skeleton, Physics physics) {
 				_ux = bx;
 				_uy = by;
 			} else {
-				float a = _remaining, i = p._inertia, f = skeleton._data.getReferenceScale(), d = -1, m = 0, e = 0, ax = 0, ay = 0,
+				float a = _remaining, i = p._inertia, f = skeleton._data.getReferenceScale(), d = -1, m = 0, e = 0,
 					  qx = _data._limit * delta, qy = qx * MathUtil::abs(skeleton.getScaleY());
 				qx *= MathUtil::abs(skeleton._scaleX);
 				if (x || y) {
@@ -132,8 +132,8 @@ void PhysicsConstraint::update(Skeleton &skeleton, Physics physics) {
 						m = t * p._massInverse;
 						e = p._strength;
 						float w = f * p._wind, g = f * p._gravity;
-						ax = (w * skeleton._windX + g * skeleton._gravityX) * skeleton._scaleX;
-						ay = (w * skeleton._windY + g * skeleton._gravityY) * skeleton.getScaleY();
+						float ax = (w * skeleton._windX + g * skeleton._gravityX) * skeleton._scaleX;
+						float ay = (w * skeleton._windY + g * skeleton._gravityY) * skeleton.getScaleY();
 						do {
 							if (x) {
 								_xVelocity += (ax - _xOffset * e) * m;
@@ -188,10 +188,9 @@ void PhysicsConstraint::update(Skeleton &skeleton, Physics physics) {
 							d = MathUtil::pow(p._damping, 60 * t);
 							m = t * p._massInverse;
 							e = p._strength;
-							float w = f * p._wind, g = f * p._gravity;
-							ax = (w * skeleton._windX + g * skeleton._gravityX) * skeleton._scaleX;
-							ay = (w * skeleton._windY + g * skeleton._gravityY) * skeleton.getScaleY();
 						}
+						float ax = p._wind * skeleton._windX + p._gravity * skeleton._gravityX;
+						float ay = p._wind * skeleton._windY + p._gravity * skeleton._gravityY;
 						float rs = _rotateOffset, ss = _scaleOffset, h = l / f;
 						while (true) {
 							a -= t;
