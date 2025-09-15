@@ -1,5 +1,6 @@
 {
   "cmake.configureOnOpen": false,
+  "clangd.enable": false,
   "C_Cpp.intelliSenseEngine": "default",
   "C_Cpp.default.browse.path": [
     "${workspaceFolder}/godot-cpp/gen",

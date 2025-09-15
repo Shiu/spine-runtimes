@@ -60,7 +60,7 @@ if [ $dev = "true" ]; then
 		./build/install-macos-vulkan-sdk.sh
 	fi
 fi
-cp -r ../spine-cpp/spine-cpp spine_godot
+cp -r ../spine-cpp spine_godot
 
 # Apply patch for 4.3-stable, see https://github.com/godotengine/godot/issues/95861/#issuecomment-2486021565
 if [ "$branch" = "4.3-stable" ]; then

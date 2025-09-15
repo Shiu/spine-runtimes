@@ -69,7 +69,7 @@ if [ $dev == "true" ]; then
 fi
 
 cp spine_godot_extension.gdextension example-v4-extension/bin
-cp -r ../spine-cpp/spine-cpp spine_godot
+cp -r ../spine-cpp spine_godot
 
 popd
 popd > /dev/null
