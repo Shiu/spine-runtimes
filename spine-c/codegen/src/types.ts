@@ -1,3 +1,13 @@
+export interface DocumentationComment {
+    summary?: string;          // Main description
+    details?: string;          // Extended description
+    params?: { [name: string]: string };  // Parameter descriptions
+    returns?: string;          // Return value description
+    deprecated?: string;       // Deprecation notice
+    since?: string;           // Version info
+    see?: string[];           // Related references
+}
+
 export interface Parameter {
     name: string;
     type: string;
@@ -9,6 +19,7 @@ export type Field = {
     type: string;
     isStatic?: boolean;
     fromSupertype?: string;
+    documentation?: DocumentationComment;
     loc: {
         line: number;
         col: number;
@@ -25,6 +36,7 @@ export type Method = {
     isPure?: boolean;
     isConst?: boolean;
     fromSupertype?: string;
+    documentation?: DocumentationComment;
     loc: {
         line: number;
         col: number;
@@ -36,6 +48,7 @@ export type Constructor = {
     name: string;
     parameters?: Parameter[];
     fromSupertype?: string;
+    documentation?: DocumentationComment;
     loc: {
         line: number;
         col: number;
@@ -48,6 +61,7 @@ export type Destructor = {
     isVirtual?: boolean;
     isPure?: boolean;
     fromSupertype?: string;
+    documentation?: DocumentationComment;
     loc: {
         line: number;
         col: number;
@@ -64,6 +78,7 @@ export type Enum = {
     kind: 'enum';
     name: string;
     values: EnumValue[];
+    documentation?: DocumentationComment;
     loc: {
         line: number;
         col: number;
@@ -87,6 +102,7 @@ export interface ClassOrStruct {
     isAbstract?: boolean;
     isTemplate?: boolean;
     templateParams?: string[];
+    documentation?: DocumentationComment;
 }
 
 export type Type = ClassOrStruct | Enum;

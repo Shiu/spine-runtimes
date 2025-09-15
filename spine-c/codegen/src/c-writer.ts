@@ -151,6 +151,13 @@ export class CWriter {
     private writeMethodDeclaration(method: CMethod): string {
         const params = this.formatParameters(method.parameters);
         const returnTypeWithAnnotation = method.returnTypeNullable ? `/*@null*/ ${method.returnType}` : method.returnType;
+
+        // Generate documentation comment if available
+        const docComment = this.formatDocumentationComment(method);
+        if (docComment) {
+            return `${docComment}\nSPINE_C_API ${returnTypeWithAnnotation} ${method.name}(${params});`;
+        }
+
         return `SPINE_C_API ${returnTypeWithAnnotation} ${method.name}(${params});`;
     }
 
@@ -175,6 +182,104 @@ export class CWriter {
                 return `${typeWithAnnotation} ${p.name}`;
             })
             .join(', ');
+    }
+
+    private formatDocumentationComment(method: CMethod): string | null {
+        if (!method.documentation) {
+            return null;
+        }
+
+        const doc = method.documentation;
+        const lines: string[] = [];
+
+        lines.push('/**');
+
+        // Add summary
+        if (doc.summary) {
+            this.wrapCommentText(doc.summary, lines);
+        }
+
+        // Add details if present
+        if (doc.details) {
+            if (doc.summary) {
+                lines.push(' *');
+            }
+            this.wrapCommentText(doc.details, lines);
+        }
+
+        // Add parameter documentation
+        if (doc.params && Object.keys(doc.params).length > 0) {
+            lines.push(' *');
+            for (const [paramName, paramDesc] of Object.entries(doc.params)) {
+                // Skip 'self' parameter documentation as it's implicit in C API
+                if (paramName === 'self' || paramName === 'this') continue;
+                lines.push(` * @param ${paramName} ${paramDesc}`);
+            }
+        }
+
+        // Add return documentation
+        if (doc.returns) {
+            lines.push(' *');
+            lines.push(` * @return ${doc.returns}`);
+        }
+
+        // Add deprecation notice
+        if (doc.deprecated) {
+            lines.push(' *');
+            lines.push(` * @deprecated ${doc.deprecated}`);
+        }
+
+        // Add since version
+        if (doc.since) {
+            lines.push(' *');
+            lines.push(` * @since ${doc.since}`);
+        }
+
+        // Add see also references
+        if (doc.see && doc.see.length > 0) {
+            lines.push(' *');
+            for (const ref of doc.see) {
+                lines.push(` * @see ${ref}`);
+            }
+        }
+
+        lines.push(' */');
+
+        return lines.join('\n');
+    }
+
+    private wrapCommentText(text: string, lines: string[]): void {
+        const maxLineLength = 80;
+        const prefix = ' * ';
+        const maxTextLength = maxLineLength - prefix.length;
+
+        // Split text into paragraphs
+        const paragraphs = text.split('\n\n');
+
+        for (let i = 0; i < paragraphs.length; i++) {
+            if (i > 0) {
+                lines.push(' *');
+            }
+
+            const paragraph = paragraphs[i].replace(/\n/g, ' ');
+            const words = paragraph.split(' ');
+            let currentLine = '';
+
+            for (const word of words) {
+                if (currentLine.length === 0) {
+                    currentLine = word;
+                } else if (currentLine.length + word.length + 1 <= maxTextLength) {
+                    currentLine += ' ' + word;
+                } else {
+                    lines.push(prefix + currentLine);
+                    currentLine = word;
+                }
+            }
+
+            if (currentLine.length > 0) {
+                lines.push(prefix + currentLine);
+            }
+        }
     }
 
     async writeType(typeName: string, headerContent: string, sourceContent?: string): Promise<void> {

@@ -41,9 +41,9 @@ int width = 800, height = 600;
 // Mouse dragging state
 bool isDragging = false;
 double lastMouseX = 0, lastMouseY = 0;
-Skeleton* dragSkeleton = nullptr;
+Skeleton *dragSkeleton = nullptr;
 
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
 	if (button == GLFW_MOUSE_BUTTON_LEFT) {
 		if (action == GLFW_PRESS) {
 			isDragging = true;
@@ -54,7 +54,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	}
 }
 
-void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
 	if (isDragging && dragSkeleton != nullptr) {
 		// Both GLFW and our renderer use y-down coordinate system
 		double deltaX = xpos - lastMouseX;

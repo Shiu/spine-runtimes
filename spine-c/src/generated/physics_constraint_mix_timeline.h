@@ -20,7 +20,16 @@ SPINE_C_API void spine_physics_constraint_mix_timeline_apply(spine_physics_const
 															 spine_mix_direction direction, bool appliedPose);
 SPINE_C_API int spine_physics_constraint_mix_timeline_get_constraint_index(spine_physics_constraint_mix_timeline self);
 SPINE_C_API void spine_physics_constraint_mix_timeline_set_constraint_index(spine_physics_constraint_mix_timeline self, int inValue);
+/**
+ * Sets the time and value for the specified frame.
+ *
+ * @param frame Between 0 and frameCount, inclusive.
+ * @param time The frame time in seconds.
+ */
 SPINE_C_API void spine_physics_constraint_mix_timeline_set_frame(spine_physics_constraint_mix_timeline self, size_t frame, float time, float value);
+/**
+ * Returns the interpolated value for the specified time.
+ */
 SPINE_C_API float spine_physics_constraint_mix_timeline_get_curve_value(spine_physics_constraint_mix_timeline self, float time);
 SPINE_C_API float spine_physics_constraint_mix_timeline_get_relative_value(spine_physics_constraint_mix_timeline self, float time, float alpha,
 																		   spine_mix_blend blend, float current, float setup);

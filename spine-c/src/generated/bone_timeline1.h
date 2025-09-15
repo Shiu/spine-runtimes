@@ -17,7 +17,16 @@ SPINE_C_API void spine_bone_timeline1_apply(spine_bone_timeline1 self, spine_ske
 											bool appliedPose);
 SPINE_C_API int spine_bone_timeline1_get_bone_index(spine_bone_timeline1 self);
 SPINE_C_API void spine_bone_timeline1_set_bone_index(spine_bone_timeline1 self, int inValue);
+/**
+ * Sets the time and value for the specified frame.
+ *
+ * @param frame Between 0 and frameCount, inclusive.
+ * @param time The frame time in seconds.
+ */
 SPINE_C_API void spine_bone_timeline1_set_frame(spine_bone_timeline1 self, size_t frame, float time, float value);
+/**
+ * Returns the interpolated value for the specified time.
+ */
 SPINE_C_API float spine_bone_timeline1_get_curve_value(spine_bone_timeline1 self, float time);
 SPINE_C_API float spine_bone_timeline1_get_relative_value(spine_bone_timeline1 self, float time, float alpha, spine_mix_blend blend, float current,
 														  float setup);

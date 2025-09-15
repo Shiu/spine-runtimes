@@ -2,7 +2,7 @@ import { execSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { ClassOrStruct, Constructor, Destructor, Enum, EnumValue, Field, Member, Method, Parameter, Type } from './types';
+import type { ClassOrStruct, Constructor, Destructor, DocumentationComment, Enum, EnumValue, Field, Member, Method, Parameter, Type } from './types';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SPINE_CPP_PATH = path.join(__dirname, '../../../spine-cpp');
@@ -115,6 +115,105 @@ function isInTargetFile(node: any, targetPath: string): boolean {
 }
 
 /**
+ * Extracts text from a paragraph comment node
+ */
+function extractTextFromParagraph(paragraphNode: any): string {
+    const texts: string[] = [];
+
+    for (const inner of paragraphNode.inner || []) {
+        if (inner.kind === 'TextComment' && inner.text) {
+            texts.push(inner.text.trim());
+        } else if (inner.kind === 'InlineCommandComment' && inner.inner) {
+            // Handle inline commands like \c (code) or \b (bold)
+            for (const textNode of inner.inner) {
+                if (textNode.kind === 'TextComment' && textNode.text) {
+                    texts.push(textNode.text.trim());
+                }
+            }
+        }
+    }
+
+    return texts.join(' ').trim();
+}
+
+/**
+ * Parses a FullComment node into a DocumentationComment
+ */
+function parseFullComment(commentNode: any): DocumentationComment | undefined {
+    const doc: DocumentationComment = {};
+
+    for (const inner of commentNode.inner || []) {
+        if (inner.kind === 'ParagraphComment') {
+            const text = extractTextFromParagraph(inner);
+            if (text) {
+                if (!doc.summary) {
+                    doc.summary = text;
+                } else {
+                    doc.details = (doc.details ? doc.details + '\n\n' : '') + text;
+                }
+            }
+        } else if (inner.kind === 'ParamCommandComment') {
+            if (!doc.params) doc.params = {};
+            // ParamCommandComment has its content in inner array
+            let paramText = '';
+            for (const paramInner of inner.inner || []) {
+                if (paramInner.kind === 'ParagraphComment') {
+                    const text = extractTextFromParagraph(paramInner);
+                    if (text) {
+                        paramText = (paramText ? paramText + ' ' : '') + text;
+                    }
+                }
+            }
+            if (inner.param && paramText) {
+                doc.params[inner.param] = paramText;
+            }
+        } else if (inner.kind === 'BlockCommandComment') {
+            // BlockCommandComment also has its content in inner array
+            let blockText = '';
+            for (const blockInner of inner.inner || []) {
+                if (blockInner.kind === 'ParagraphComment') {
+                    const text = extractTextFromParagraph(blockInner);
+                    if (text) {
+                        blockText = (blockText ? blockText + ' ' : '') + text;
+                    }
+                }
+            }
+            if (blockText) {
+                switch (inner.name) {
+                    case 'return':
+                    case 'returns':
+                        doc.returns = blockText;
+                        break;
+                    case 'deprecated':
+                        doc.deprecated = blockText;
+                        break;
+                    case 'since':
+                        doc.since = blockText;
+                        break;
+                    case 'see':
+                        if (!doc.see) doc.see = [];
+                        doc.see.push(blockText);
+                        break;
+                }
+            }
+        }
+    }
+
+    return Object.keys(doc).length > 0 ? doc : undefined;
+}
+
+/**
+ * Extracts documentation comment from an AST node
+ */
+function extractDocumentationComment(node: any): DocumentationComment | undefined {
+    // Look for FullComment in node.inner
+    const fullComment = (node.inner || []).find((n: any) => n.kind === 'FullComment');
+    if (!fullComment) return undefined;
+
+    return parseFullComment(fullComment);
+}
+
+/**
  * Extracts member information from an AST node
  */
 function extractMember(inner: any, parent: any): Member & { access?: 'public' | 'protected' } | null {
@@ -131,6 +230,7 @@ function extractMember(inner: any, parent: any): Member & { access?: 'public' | 
                 type: inner.type?.qualType || '',
                 isStatic: inner.storageClass === 'static',
                 access: 'public', // Will be set correctly later
+                documentation: extractDocumentationComment(inner),
                 loc: {
                     line: inner.loc.line || 0,
                     col: inner.loc.col || 0
@@ -156,6 +256,7 @@ function extractMember(inner: any, parent: any): Member & { access?: 'public' | 
                 isPure: inner.pure || false,
                 isConst: inner.constQualifier || false,
                 access: 'public', // Will be set correctly later
+                documentation: extractDocumentationComment(inner),
                 loc: {
                     line: inner.loc.line || 0,
                     col: inner.loc.col || 0
@@ -172,6 +273,7 @@ function extractMember(inner: any, parent: any): Member & { access?: 'public' | 
                 name: inner.name || parent.name || '',
                 parameters: extractParameters(inner),
                 access: 'public', // Will be set correctly later
+                documentation: extractDocumentationComment(inner),
                 loc: {
                     line: inner.loc.line || 0,
                     col: inner.loc.col || 0
@@ -190,6 +292,7 @@ function extractMember(inner: any, parent: any): Member & { access?: 'public' | 
                 isVirtual: inner.virtual || false,
                 isPure: inner.pure || false,
                 access: 'public', // Will be set correctly later
+                documentation: extractDocumentationComment(inner),
                 loc: {
                     line: inner.loc.line || 0,
                     col: inner.loc.col || 0
@@ -227,6 +330,7 @@ function extractTypeInfo(node: any, sourceLines: string[]): Type {
 
                     return enumValue;
                 }),
+            documentation: extractDocumentationComment(node),
             loc: {
                 line: node.loc?.line || 0,
                 col: node.loc?.col || 0
@@ -239,6 +343,7 @@ function extractTypeInfo(node: any, sourceLines: string[]): Type {
     const info: ClassOrStruct = {
         name: node.name || '',
         kind: (node.tagUsed || 'class') as 'class' | 'struct',
+        documentation: extractDocumentationComment(node),
         loc: {
             line: node.loc?.line || 0,
             col: node.loc?.col || 0
@@ -378,8 +483,8 @@ function extractLocalTypes(headerFile: string, typeMap: Map<string, Type> | null
     const sourceContent = fs.readFileSync(absHeaderPath, 'utf8');
     const sourceLines = sourceContent.split('\n');
 
-    // Get AST from clang
-    const cmd = `clang++ -Xclang -ast-dump=json -fsyntax-only -std=c++11 -I "${SPINE_INCLUDE_DIR}" "${absHeaderPath}" 2>/dev/null`;
+    // Get AST from clang with comment parsing enabled
+    const cmd = `clang++ -Xclang -ast-dump=json -fsyntax-only -std=c++11 -fparse-all-comments -I "${SPINE_INCLUDE_DIR}" "${absHeaderPath}" 2>/dev/null`;
     const maxBuffer = headerFile.includes('Debug.h') ? 500 : 200; // MB
 
     let astJson: any;

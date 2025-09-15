@@ -104,7 +104,8 @@ export function generateConstructors(type: ClassOrStruct, knownTypeNames: Set<st
                 returnType: cTypeName,
                 parameters: [],
                 body: `return (${cTypeName}) new (__FILE__, __LINE__) ${cppTypeName}();`,
-                returnTypeNullable: false  // Constructors never return null on success
+                returnTypeNullable: false,  // Constructors never return null on success
+                documentation: ctor.documentation
             });
         } else {
             // Parameterized constructor
@@ -119,7 +120,8 @@ export function generateConstructors(type: ClassOrStruct, knownTypeNames: Set<st
                 returnType: cTypeName,
                 parameters: cParams,
                 body: `return (${cTypeName}) new (__FILE__, __LINE__) ${cppTypeName}(${cppArgs});`,
-                returnTypeNullable: false  // Constructors never return null on success
+                returnTypeNullable: false,  // Constructors never return null on success
+                documentation: ctor.documentation
             });
         }
         i++;
@@ -696,7 +698,8 @@ function generateMethod(type: ClassOrStruct, method: Method, cTypeName: string, 
             returnType: cReturnType,
             parameters: cParams,
             body,
-            returnTypeNullable: isNullable(method.returnType)
+            returnTypeNullable: isNullable(method.returnType),
+            documentation: method.documentation
         };
     } catch (e) {
         console.warn(`Skipping method ${type.name}::${method.name}: ${e}`);
@@ -840,7 +843,8 @@ function generateArrayMethod(cTypeName: string, method: Method, cppElementType: 
             returnType: cReturnType,
             parameters: cParams,
             body,
-            returnTypeNullable: isNullable(method.returnType)
+            returnTypeNullable: isNullable(method.returnType),
+            documentation: method.documentation
         };
     } catch (e) {
         console.warn(`Skipping array method ${method.name}: ${e}`);

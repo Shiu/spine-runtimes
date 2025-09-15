@@ -15,6 +15,9 @@ SPINE_C_API void spine_physics_constraint_data_dispose(spine_physics_constraint_
 
 SPINE_C_API spine_rtti spine_physics_constraint_data_get_rtti(spine_physics_constraint_data self);
 SPINE_C_API spine_constraint spine_physics_constraint_data_create_method(spine_physics_constraint_data self, spine_skeleton skeleton);
+/**
+ * The bone constrained by this physics constraint.
+ */
 SPINE_C_API spine_bone_data spine_physics_constraint_data_get_bone(spine_physics_constraint_data self);
 SPINE_C_API void spine_physics_constraint_data_set_bone(spine_physics_constraint_data self, spine_bone_data bone);
 SPINE_C_API float spine_physics_constraint_data_get_step(spine_physics_constraint_data self);
@@ -45,6 +48,9 @@ SPINE_C_API bool spine_physics_constraint_data_get_gravity_global(spine_physics_
 SPINE_C_API void spine_physics_constraint_data_set_gravity_global(spine_physics_constraint_data self, bool gravityGlobal);
 SPINE_C_API bool spine_physics_constraint_data_get_mix_global(spine_physics_constraint_data self);
 SPINE_C_API void spine_physics_constraint_data_set_mix_global(spine_physics_constraint_data self, bool mixGlobal);
+/**
+ * Resolve ambiguity by forwarding to PosedData's implementation
+ */
 SPINE_C_API const char *spine_physics_constraint_data_get_name(spine_physics_constraint_data self);
 SPINE_C_API bool spine_physics_constraint_data_get_skin_required(spine_physics_constraint_data self);
 SPINE_C_API spine_physics_constraint_pose spine_physics_constraint_data_get_setup_pose(spine_physics_constraint_data self);

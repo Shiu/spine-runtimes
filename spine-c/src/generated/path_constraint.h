@@ -15,10 +15,19 @@ SPINE_C_API void spine_path_constraint_dispose(spine_path_constraint self);
 
 SPINE_C_API spine_rtti spine_path_constraint_get_rtti(spine_path_constraint self);
 SPINE_C_API spine_path_constraint spine_path_constraint_copy(spine_path_constraint self, spine_skeleton skeleton);
+/**
+ * Applies the constraint to the constrained bones.
+ */
 SPINE_C_API void spine_path_constraint_update(spine_path_constraint self, spine_skeleton skeleton, spine_physics physics);
 SPINE_C_API void spine_path_constraint_sort(spine_path_constraint self, spine_skeleton skeleton);
 SPINE_C_API bool spine_path_constraint_is_source_active(spine_path_constraint self);
+/**
+ * The bones that will be modified by this path constraint.
+ */
 SPINE_C_API spine_array_bone_pose spine_path_constraint_get_bones(spine_path_constraint self);
+/**
+ * The slot whose path attachment will be used to constrained the bones.
+ */
 SPINE_C_API spine_slot spine_path_constraint_get_slot(spine_path_constraint self);
 SPINE_C_API void spine_path_constraint_set_slot(spine_path_constraint self, spine_slot slot);
 SPINE_C_API spine_path_constraint_data spine_path_constraint_get_data(spine_path_constraint self);

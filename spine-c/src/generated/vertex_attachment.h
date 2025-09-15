@@ -12,12 +12,28 @@ extern "C" {
 SPINE_C_API void spine_vertex_attachment_dispose(spine_vertex_attachment self);
 
 SPINE_C_API spine_rtti spine_vertex_attachment_get_rtti(spine_vertex_attachment self);
+/**
+ * Transforms the attachment's local vertices to world coordinates. If the
+ * slot's SlotPose::getDeform() is not empty, it is used to deform the vertices.
+ *
+ * See https://esotericsoftware.com/spine-runtime-skeletons#World-transforms
+ * World transforms in the Spine Runtimes Guide.
+ *
+ * @param start The index of the first vertices value to transform. Each vertex has 2 values, x and y.
+ * @param count The number of world vertex values to output. Must be < = WorldVerticesLength - start.
+ * @param worldVertices The output world vertices. Must have a length >= offset + count * stride / 2.
+ * @param offset The worldVertices index to begin writing values.
+ * @param stride The number of worldVertices entries between the value pairs written.
+ */
 SPINE_C_API void spine_vertex_attachment_compute_world_vertices_1(spine_vertex_attachment self, spine_skeleton skeleton, spine_slot slot,
 																  size_t start, size_t count, /*@null*/ float *worldVertices, size_t offset,
 																  size_t stride);
 SPINE_C_API void spine_vertex_attachment_compute_world_vertices_2(spine_vertex_attachment self, spine_skeleton skeleton, spine_slot slot,
 																  size_t start, size_t count, spine_array_float worldVertices, size_t offset,
 																  size_t stride);
+/**
+ * Gets a unique ID for this attachment.
+ */
 SPINE_C_API int spine_vertex_attachment_get_id(spine_vertex_attachment self);
 SPINE_C_API spine_array_int spine_vertex_attachment_get_bones(spine_vertex_attachment self);
 SPINE_C_API void spine_vertex_attachment_set_bones(spine_vertex_attachment self, spine_array_int bones);

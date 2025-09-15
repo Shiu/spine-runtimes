@@ -22,6 +22,9 @@ SPINE_C_API void spine_physics_constraint_base_set_active(spine_physics_constrai
 SPINE_C_API spine_rtti spine_physics_constraint_base_get_rtti(spine_physics_constraint_base self);
 SPINE_C_API void spine_physics_constraint_base_sort(spine_physics_constraint_base self, spine_skeleton skeleton);
 SPINE_C_API bool spine_physics_constraint_base_is_source_active(spine_physics_constraint_base self);
+/**
+ * Inherited from Update
+ */
 SPINE_C_API void spine_physics_constraint_base_update(spine_physics_constraint_base self, spine_skeleton skeleton, spine_physics physics);
 SPINE_C_API spine_rtti spine_physics_constraint_base_rtti(void);
 

@@ -15,6 +15,14 @@ SPINE_C_API void spine_region_attachment_dispose(spine_region_attachment self);
 
 SPINE_C_API spine_rtti spine_region_attachment_get_rtti(spine_region_attachment self);
 SPINE_C_API void spine_region_attachment_update_region(spine_region_attachment self);
+/**
+ * Transforms the attachment's four vertices to world coordinates.
+ *
+ * @param slot The parent slot.
+ * @param worldVertices The output world vertices. Must have a length greater than or equal to offset + 8.
+ * @param offset The worldVertices index to begin writing values.
+ * @param stride The number of worldVertices entries between the value pairs written.
+ */
 SPINE_C_API void spine_region_attachment_compute_world_vertices_1(spine_region_attachment self, spine_slot slot, /*@null*/ float *worldVertices,
 																  size_t offset, size_t stride);
 SPINE_C_API void spine_region_attachment_compute_world_vertices_2(spine_region_attachment self, spine_slot slot, spine_array_float worldVertices,

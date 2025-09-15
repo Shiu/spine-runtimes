@@ -1,4 +1,4 @@
-import type { ClassOrStruct, Enum } from './types';
+import type { ClassOrStruct, DocumentationComment, Enum } from './types';
 
 export interface CParameter {
     name: string;          // Parameter name in C
@@ -14,6 +14,7 @@ export interface CMethod {
     parameters: CParameter[];
     body: string;          // The actual implementation code (e.g., "return ((Bone*)self)->getX();")
     returnTypeNullable: boolean;  // true if return type can be null (pointer types)
+    documentation?: DocumentationComment;  // Documentation from C++ source
 }
 
 export interface CClassOrStruct {

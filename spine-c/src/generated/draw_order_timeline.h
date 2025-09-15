@@ -18,6 +18,13 @@ SPINE_C_API void spine_draw_order_timeline_apply(spine_draw_order_timeline self,
 												 /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend,
 												 spine_mix_direction direction, bool appliedPose);
 SPINE_C_API size_t spine_draw_order_timeline_get_frame_count(spine_draw_order_timeline self);
+/**
+ * Sets the time and draw order for the specified frame.
+ *
+ * @param frame Between 0 and frameCount, inclusive.
+ * @param time The frame time in seconds.
+ * @param drawOrder For each slot in Skeleton::slots, the index of the slot in the new draw order. May be null to use setup pose draw order.
+ */
 SPINE_C_API void spine_draw_order_timeline_set_frame(spine_draw_order_timeline self, size_t frame, float time, /*@null*/ spine_array_int drawOrder);
 SPINE_C_API size_t spine_draw_order_timeline_get_frame_entries(spine_draw_order_timeline self);
 SPINE_C_API spine_array_float spine_draw_order_timeline_get_frames(spine_draw_order_timeline self);

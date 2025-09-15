@@ -14,6 +14,9 @@ SPINE_C_API spine_slider_data spine_slider_data_create(const char *name);
 SPINE_C_API void spine_slider_data_dispose(spine_slider_data self);
 
 SPINE_C_API spine_rtti spine_slider_data_get_rtti(spine_slider_data self);
+/**
+ * Creates a slider instance.
+ */
 SPINE_C_API spine_constraint spine_slider_data_create_method(spine_slider_data self, spine_skeleton skeleton);
 SPINE_C_API spine_animation spine_slider_data_get_animation(spine_slider_data self);
 SPINE_C_API void spine_slider_data_set_animation(spine_slider_data self, spine_animation animation);
@@ -31,6 +34,9 @@ SPINE_C_API float spine_slider_data_get_offset(spine_slider_data self);
 SPINE_C_API void spine_slider_data_set_offset(spine_slider_data self, float offset);
 SPINE_C_API bool spine_slider_data_get_local(spine_slider_data self);
 SPINE_C_API void spine_slider_data_set_local(spine_slider_data self, bool local);
+/**
+ * Resolve ambiguity by forwarding to PosedData's implementation
+ */
 SPINE_C_API const char *spine_slider_data_get_name(spine_slider_data self);
 SPINE_C_API bool spine_slider_data_get_skin_required(spine_slider_data self);
 SPINE_C_API spine_slider_pose spine_slider_data_get_setup_pose(spine_slider_data self);

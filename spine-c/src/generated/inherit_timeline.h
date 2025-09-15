@@ -14,6 +14,12 @@ SPINE_C_API spine_inherit_timeline spine_inherit_timeline_create(size_t frameCou
 SPINE_C_API void spine_inherit_timeline_dispose(spine_inherit_timeline self);
 
 SPINE_C_API spine_rtti spine_inherit_timeline_get_rtti(spine_inherit_timeline self);
+/**
+ * Sets the inherit transform mode for the specified frame.
+ *
+ * @param frame Between 0 and frameCount, inclusive.
+ * @param time The frame time in seconds.
+ */
 SPINE_C_API void spine_inherit_timeline_set_frame(spine_inherit_timeline self, int frame, float time, spine_inherit inherit);
 SPINE_C_API void spine_inherit_timeline_apply(spine_inherit_timeline self, spine_skeleton skeleton, float lastTime, float time,
 											  /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend, spine_mix_direction direction,

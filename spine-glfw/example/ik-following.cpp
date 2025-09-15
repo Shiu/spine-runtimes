@@ -40,9 +40,9 @@ int width = 800, height = 600;
 
 // Mouse position for IK targeting
 double mouseX = 400, mouseY = 300;
-Skeleton* ikSkeleton = nullptr;
+Skeleton *ikSkeleton = nullptr;
 
-void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
 	mouseX = xpos;
 	mouseY = ypos;
 }
@@ -124,9 +124,9 @@ int main() {
 		skeleton.update(delta);
 
 		// Update the crosshair bone position based on mouse position
-		Bone* crosshairBone = skeleton.findBone("crosshair");
+		Bone *crosshairBone = skeleton.findBone("crosshair");
 		if (crosshairBone != nullptr) {
-			Bone* parent = crosshairBone->getParent();
+			Bone *parent = crosshairBone->getParent();
 			if (parent != nullptr) {
 				// Convert mouse position to world coordinates
 				float worldX = mouseX;

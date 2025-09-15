@@ -15,10 +15,19 @@ SPINE_C_API void spine_transform_constraint_dispose(spine_transform_constraint s
 
 SPINE_C_API spine_rtti spine_transform_constraint_get_rtti(spine_transform_constraint self);
 SPINE_C_API spine_transform_constraint spine_transform_constraint_copy(spine_transform_constraint self, spine_skeleton skeleton);
+/**
+ * Applies the constraint to the constrained bones.
+ */
 SPINE_C_API void spine_transform_constraint_update(spine_transform_constraint self, spine_skeleton skeleton, spine_physics physics);
 SPINE_C_API void spine_transform_constraint_sort(spine_transform_constraint self, spine_skeleton skeleton);
 SPINE_C_API bool spine_transform_constraint_is_source_active(spine_transform_constraint self);
+/**
+ * The bones that will be modified by this transform constraint.
+ */
 SPINE_C_API spine_array_bone_pose spine_transform_constraint_get_bones(spine_transform_constraint self);
+/**
+ * The bone whose world transform will be copied to the constrained bones.
+ */
 SPINE_C_API spine_bone spine_transform_constraint_get_source(spine_transform_constraint self);
 SPINE_C_API void spine_transform_constraint_set_source(spine_transform_constraint self, spine_bone source);
 SPINE_C_API spine_transform_constraint_data spine_transform_constraint_get_data(spine_transform_constraint self);

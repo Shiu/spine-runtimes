@@ -112,8 +112,8 @@ void PhysicsConstraint::update(Skeleton &skeleton, Physics physics) {
 				_ux = bx;
 				_uy = by;
 			} else {
-				float a = _remaining, i = p._inertia, f = skeleton._data.getReferenceScale(), d = -1, m = 0, e = 0,
-					  qx = _data._limit * delta, qy = qx * MathUtil::abs(skeleton.getScaleY());
+				float a = _remaining, i = p._inertia, f = skeleton._data.getReferenceScale(), d = -1, m = 0, e = 0, qx = _data._limit * delta,
+					  qy = qx * MathUtil::abs(skeleton.getScaleY());
 				qx *= MathUtil::abs(skeleton._scaleX);
 				if (x || y) {
 					if (x) {

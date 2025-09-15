@@ -18,12 +18,28 @@ SPINE_C_API /*@null*/ spine_slot_data spine_clipping_attachment_get_end_slot(spi
 SPINE_C_API void spine_clipping_attachment_set_end_slot(spine_clipping_attachment self, /*@null*/ spine_slot_data inValue);
 SPINE_C_API spine_color spine_clipping_attachment_get_color(spine_clipping_attachment self);
 SPINE_C_API spine_attachment spine_clipping_attachment_copy(spine_clipping_attachment self);
+/**
+ * Transforms the attachment's local vertices to world coordinates. If the
+ * slot's SlotPose::getDeform() is not empty, it is used to deform the vertices.
+ *
+ * See https://esotericsoftware.com/spine-runtime-skeletons#World-transforms
+ * World transforms in the Spine Runtimes Guide.
+ *
+ * @param start The index of the first vertices value to transform. Each vertex has 2 values, x and y.
+ * @param count The number of world vertex values to output. Must be < = WorldVerticesLength - start.
+ * @param worldVertices The output world vertices. Must have a length >= offset + count * stride / 2.
+ * @param offset The worldVertices index to begin writing values.
+ * @param stride The number of worldVertices entries between the value pairs written.
+ */
 SPINE_C_API void spine_clipping_attachment_compute_world_vertices_1(spine_clipping_attachment self, spine_skeleton skeleton, spine_slot slot,
 																	size_t start, size_t count, /*@null*/ float *worldVertices, size_t offset,
 																	size_t stride);
 SPINE_C_API void spine_clipping_attachment_compute_world_vertices_2(spine_clipping_attachment self, spine_skeleton skeleton, spine_slot slot,
 																	size_t start, size_t count, spine_array_float worldVertices, size_t offset,
 																	size_t stride);
+/**
+ * Gets a unique ID for this attachment.
+ */
 SPINE_C_API int spine_clipping_attachment_get_id(spine_clipping_attachment self);
 SPINE_C_API spine_array_int spine_clipping_attachment_get_bones(spine_clipping_attachment self);
 SPINE_C_API void spine_clipping_attachment_set_bones(spine_clipping_attachment self, spine_array_int bones);

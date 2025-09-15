@@ -18,6 +18,13 @@ SPINE_C_API spine_rtti spine_transform_constraint_timeline_get_rtti(spine_transf
 SPINE_C_API void spine_transform_constraint_timeline_apply(spine_transform_constraint_timeline self, spine_skeleton skeleton, float lastTime,
 														   float time, /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend,
 														   spine_mix_direction direction, bool appliedPose);
+/**
+ * Sets the time, rotate mix, translate mix, scale mix, and shear mix for the
+ * specified frame.
+ *
+ * @param frame Between 0 and frameCount, inclusive.
+ * @param time The frame time in seconds.
+ */
 SPINE_C_API void spine_transform_constraint_timeline_set_frame(spine_transform_constraint_timeline self, int frame, float time, float mixRotate,
 															   float mixX, float mixY, float mixScaleX, float mixScaleY, float mixShearY);
 SPINE_C_API int spine_transform_constraint_timeline_get_constraint_index(spine_transform_constraint_timeline self);

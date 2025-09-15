@@ -17,6 +17,14 @@ SPINE_C_API spine_rtti spine_ik_constraint_timeline_get_rtti(spine_ik_constraint
 SPINE_C_API void spine_ik_constraint_timeline_apply(spine_ik_constraint_timeline self, spine_skeleton skeleton, float lastTime, float time,
 													/*@null*/ spine_array_event events, float alpha, spine_mix_blend blend,
 													spine_mix_direction direction, bool appliedPose);
+/**
+ * Sets the time, mix, softness, bend direction, compress, and stretch for the
+ * specified frame.
+ *
+ * @param frame Between 0 and frameCount, inclusive.
+ * @param time The frame time in seconds.
+ * @param bendDirection 1 or -1.
+ */
 SPINE_C_API void spine_ik_constraint_timeline_set_frame(spine_ik_constraint_timeline self, int frame, float time, float mix, float softness,
 														int bendDirection, bool compress, bool stretch);
 SPINE_C_API int spine_ik_constraint_timeline_get_constraint_index(spine_ik_constraint_timeline self);

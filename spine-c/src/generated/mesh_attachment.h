@@ -23,6 +23,10 @@ SPINE_C_API int spine_mesh_attachment_get_hull_length(spine_mesh_attachment self
 SPINE_C_API void spine_mesh_attachment_set_hull_length(spine_mesh_attachment self, int inValue);
 SPINE_C_API spine_array_float spine_mesh_attachment_get_region_u_vs(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_region_u_vs(spine_mesh_attachment self, spine_array_float inValue);
+/**
+ * The UV pair for each vertex, normalized within the entire texture. See also
+ * MeshAttachment::updateRegion
+ */
 SPINE_C_API spine_array_float spine_mesh_attachment_get_u_vs(spine_mesh_attachment self);
 SPINE_C_API spine_array_unsigned_short spine_mesh_attachment_get_triangles(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_triangles(spine_mesh_attachment self, spine_array_unsigned_short inValue);
@@ -35,6 +39,9 @@ SPINE_C_API /*@null*/ spine_sequence spine_mesh_attachment_get_sequence(spine_me
 SPINE_C_API void spine_mesh_attachment_set_sequence(spine_mesh_attachment self, /*@null*/ spine_sequence sequence);
 SPINE_C_API /*@null*/ spine_mesh_attachment spine_mesh_attachment_get_parent_mesh(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_parent_mesh(spine_mesh_attachment self, /*@null*/ spine_mesh_attachment inValue);
+/**
+ * Nonessential.
+ */
 SPINE_C_API spine_array_unsigned_short spine_mesh_attachment_get_edges(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_edges(spine_mesh_attachment self, spine_array_unsigned_short inValue);
 SPINE_C_API float spine_mesh_attachment_get_width(spine_mesh_attachment self);
@@ -43,6 +50,9 @@ SPINE_C_API float spine_mesh_attachment_get_height(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_height(spine_mesh_attachment self, float inValue);
 SPINE_C_API spine_attachment spine_mesh_attachment_copy(spine_mesh_attachment self);
 SPINE_C_API spine_mesh_attachment spine_mesh_attachment_new_linked_mesh(spine_mesh_attachment self);
+/**
+ * Gets a unique ID for this attachment.
+ */
 SPINE_C_API int spine_mesh_attachment_get_id(spine_mesh_attachment self);
 SPINE_C_API spine_array_int spine_mesh_attachment_get_bones(spine_mesh_attachment self);
 SPINE_C_API void spine_mesh_attachment_set_bones(spine_mesh_attachment self, spine_array_int bones);

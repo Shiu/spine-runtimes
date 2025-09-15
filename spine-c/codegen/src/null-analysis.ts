@@ -93,7 +93,7 @@ function analyzeNullableMethods(): void {
             if (method.fromSupertype) continue;
             
             // Skip excluded methods
-            if (isMethodExcluded(classType.name, method.name, exclusions, method)) {
+            if (isMethodExcluded(classType.name, method.name, exclusions, member.kind === 'method' ? method as Method : undefined)) {
                 continue;
             }
             

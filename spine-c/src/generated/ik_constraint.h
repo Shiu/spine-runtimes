@@ -21,8 +21,19 @@ SPINE_C_API bool spine_ik_constraint_is_source_active(spine_ik_constraint self);
 SPINE_C_API spine_array_bone_pose spine_ik_constraint_get_bones(spine_ik_constraint self);
 SPINE_C_API spine_bone spine_ik_constraint_get_target(spine_ik_constraint self);
 SPINE_C_API void spine_ik_constraint_set_target(spine_ik_constraint self, spine_bone inValue);
+/**
+ * Adjusts the bone rotation so the tip is as close to the target position as
+ * possible. The target is specified in the world coordinate system.
+ */
 SPINE_C_API void spine_ik_constraint_apply_1(spine_skeleton skeleton, spine_bone_pose bone, float targetX, float targetY, bool compress, bool stretch,
 											 bool uniform, float mix);
+/**
+ * Adjusts the parent and child bone rotations so the tip of the child is as
+ * close to the target position as possible. The target is specified in the
+ * world coordinate system.
+ *
+ * @param child A direct descendant of the parent bone.
+ */
 SPINE_C_API void spine_ik_constraint_apply_2(spine_skeleton skeleton, spine_bone_pose parent, spine_bone_pose child, float targetX, float targetY,
 											 int bendDirection, bool stretch, bool uniform, float softness, float mix);
 SPINE_C_API spine_ik_constraint_data spine_ik_constraint_get_data(spine_ik_constraint self);

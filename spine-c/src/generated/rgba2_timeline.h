@@ -14,6 +14,12 @@ SPINE_C_API spine_rgba2_timeline spine_rgba2_timeline_create(size_t frameCount, 
 SPINE_C_API void spine_rgba2_timeline_dispose(spine_rgba2_timeline self);
 
 SPINE_C_API spine_rtti spine_rgba2_timeline_get_rtti(spine_rgba2_timeline self);
+/**
+ * Sets the time, light color, and dark color for the specified frame.
+ *
+ * @param frame Between 0 and frameCount, inclusive.
+ * @param time The frame time in seconds.
+ */
 SPINE_C_API void spine_rgba2_timeline_set_frame(spine_rgba2_timeline self, int frame, float time, float r, float g, float b, float a, float r2,
 												float g2, float b2);
 SPINE_C_API void spine_rgba2_timeline_apply(spine_rgba2_timeline self, spine_skeleton skeleton, float lastTime, float time,

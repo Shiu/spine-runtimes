@@ -14,6 +14,12 @@ SPINE_C_API spine_rgba_timeline spine_rgba_timeline_create(size_t frameCount, si
 SPINE_C_API void spine_rgba_timeline_dispose(spine_rgba_timeline self);
 
 SPINE_C_API spine_rtti spine_rgba_timeline_get_rtti(spine_rgba_timeline self);
+/**
+ * Sets the time and color for the specified frame.
+ *
+ * @param frame Between 0 and frameCount, inclusive.
+ * @param time The frame time in seconds.
+ */
 SPINE_C_API void spine_rgba_timeline_set_frame(spine_rgba_timeline self, int frame, float time, float r, float g, float b, float a);
 SPINE_C_API void spine_rgba_timeline_apply(spine_rgba_timeline self, spine_skeleton skeleton, float lastTime, float time,
 										   /*@null*/ spine_array_event events, float alpha, spine_mix_blend blend, spine_mix_direction direction,

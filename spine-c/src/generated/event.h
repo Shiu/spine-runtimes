@@ -13,7 +13,13 @@ SPINE_C_API spine_event spine_event_create(float time, spine_event_data data);
 
 SPINE_C_API void spine_event_dispose(spine_event self);
 
+/**
+ * The event's setup pose data.
+ */
 SPINE_C_API spine_event_data spine_event_get_data(spine_event self);
+/**
+ * The animation time this event was keyed.
+ */
 SPINE_C_API float spine_event_get_time(spine_event self);
 SPINE_C_API int spine_event_get_int(spine_event self);
 SPINE_C_API void spine_event_set_int(spine_event self, int inValue);

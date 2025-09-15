@@ -26,6 +26,10 @@ SPINE_C_API float spine_physics_constraint_pose_get_wind(spine_physics_constrain
 SPINE_C_API void spine_physics_constraint_pose_set_wind(spine_physics_constraint_pose self, float wind);
 SPINE_C_API float spine_physics_constraint_pose_get_gravity(spine_physics_constraint_pose self);
 SPINE_C_API void spine_physics_constraint_pose_set_gravity(spine_physics_constraint_pose self, float gravity);
+/**
+ * A percentage (0-1) that controls the mix between the constrained and
+ * unconstrained poses.
+ */
 SPINE_C_API float spine_physics_constraint_pose_get_mix(spine_physics_constraint_pose self);
 SPINE_C_API void spine_physics_constraint_pose_set_mix(spine_physics_constraint_pose self, float mix);
 

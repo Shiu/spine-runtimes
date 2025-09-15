@@ -22,6 +22,9 @@ SPINE_C_API void spine_slider_base_set_active(spine_slider_base self, bool activ
 SPINE_C_API spine_rtti spine_slider_base_get_rtti(spine_slider_base self);
 SPINE_C_API void spine_slider_base_sort(spine_slider_base self, spine_skeleton skeleton);
 SPINE_C_API bool spine_slider_base_is_source_active(spine_slider_base self);
+/**
+ * Inherited from Update
+ */
 SPINE_C_API void spine_slider_base_update(spine_slider_base self, spine_skeleton skeleton, spine_physics physics);
 SPINE_C_API spine_rtti spine_slider_base_rtti(void);
 

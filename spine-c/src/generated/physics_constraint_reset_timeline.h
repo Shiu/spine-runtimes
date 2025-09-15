@@ -9,6 +9,10 @@
 extern "C" {
 #endif
 
+/**
+ *
+ * @param constraintIndex -1 for all physics constraints in the skeleton.
+ */
 SPINE_C_API spine_physics_constraint_reset_timeline spine_physics_constraint_reset_timeline_create(size_t frameCount, int constraintIndex);
 
 SPINE_C_API void spine_physics_constraint_reset_timeline_dispose(spine_physics_constraint_reset_timeline self);
@@ -20,6 +24,9 @@ SPINE_C_API void spine_physics_constraint_reset_timeline_apply(spine_physics_con
 SPINE_C_API int spine_physics_constraint_reset_timeline_get_frame_count(spine_physics_constraint_reset_timeline self);
 SPINE_C_API int spine_physics_constraint_reset_timeline_get_constraint_index(spine_physics_constraint_reset_timeline self);
 SPINE_C_API void spine_physics_constraint_reset_timeline_set_constraint_index(spine_physics_constraint_reset_timeline self, int inValue);
+/**
+ * Sets the time for the specified frame.
+ */
 SPINE_C_API void spine_physics_constraint_reset_timeline_set_frame(spine_physics_constraint_reset_timeline self, int frame, float time);
 SPINE_C_API size_t spine_physics_constraint_reset_timeline_get_frame_entries(spine_physics_constraint_reset_timeline self);
 SPINE_C_API spine_array_float spine_physics_constraint_reset_timeline_get_frames(spine_physics_constraint_reset_timeline self);
