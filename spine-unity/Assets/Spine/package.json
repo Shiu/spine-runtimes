@@ -29,6 +29,13 @@
 		"animation"
 	],
 	"license": "SEE LICENSE IN LICENSE",
+	"samples": [
+		{
+			"displayName": "Spine Examples",
+			"description": "Contains examples for the spine-unity runtime",
+			"path": "Samples~/Spine Examples"
+		}
+	],
 	"bugs": {
 		"url": "https://github.com/EsotericSoftware/spine-runtimes/issues"
 	},

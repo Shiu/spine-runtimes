@@ -1,7 +1,7 @@
 {
   "name": "com.esotericsoftware.spine.spine-unity-examples",
   "displayName": "spine-unity Runtime Examples",
-  "description": "This plugin provides example scenes and scripts for the spine-unity runtime.",
+  "description": "Examples have been moved to main spine-unity Runtime package. Please install via Package Manager, select 'spine-unity Runtime', navigate to tab 'Samples' and select 'Import'.",
   "version": "4.3.2",
   "unity": "2018.3",
   "author": {
