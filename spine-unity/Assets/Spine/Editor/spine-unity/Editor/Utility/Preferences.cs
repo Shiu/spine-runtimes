@@ -304,9 +304,11 @@ namespace Spine.Unity.Editor {
 						EditorPrefs.SetString(DEFAULT_SHADER_KEY, defaultShader);
 
 					SpineEditorUtilities.BoolPrefsField(ref setTextureImporterSettings, SET_TEXTUREIMPORTER_SETTINGS_KEY, new GUIContent("Apply Atlas Texture Settings", "Apply the recommended settings for Texture Importers."));
-					SpineEditorUtilities.Texture2DPrefsField(ref textureSettingsReference, TEXTURE_SETTINGS_REFERENCE_KEY, new GUIContent("Atlas Texture Reference Settings", "Apply the selected reference texture import settings at newly imported atlas textures. When exporting atlas textures from Spine with \"Premultiply alpha\" enabled (the default), you can leave it at \"PMAPresetTemplate\". If you have disabled \"Premultiply alpha\", set it to \"StraightAlphaPresetTemplate\". You can also create your own reference texture asset and assign it here."));
+					SpineEditorUtilities.Texture2DPrefsField(ref textureSettingsReference, TEXTURE_SETTINGS_REFERENCE_KEY, new GUIContent("Atlas Texture Reference Settings", "Apply the selected reference texture import settings at newly imported atlas textures.\n\n" +
+						"When exporting atlas textures from Spine with \"Premultiply alpha\" enabled (the default, requires Gamma color space), assign \"PMAPresetTemplate\". If you have disabled \"Premultiply alpha\", leave it at \"StraightAlphaPresetTemplate\".\n\n" +
+						"You can also create your own reference texture asset and assign it here."));
 					if (string.IsNullOrEmpty(textureSettingsReference)) {
-						string[] pmaTextureSettingsReferenceGUIDS = AssetDatabase.FindAssets("PMAPresetTemplate");
+						string[] pmaTextureSettingsReferenceGUIDS = AssetDatabase.FindAssets("StraightAlphaPresetTemplate");
 						if (pmaTextureSettingsReferenceGUIDS.Length > 0) {
 							textureSettingsReference = AssetDatabase.GUIDToAssetPath(pmaTextureSettingsReferenceGUIDS[0]);
 							EditorPrefs.SetString(TEXTURE_SETTINGS_REFERENCE_KEY, textureSettingsReference);

@@ -125,9 +125,9 @@ namespace Spine.Unity.Editor {
 			return true;
 		}
 
-		public const string DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL = "SkeletonPMAMultiply";
-		public const string DEFAULT_BLEND_MODE_SCREEN_MATERIAL = "SkeletonPMAScreen";
-		public const string DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL = "SkeletonPMAAdditive";
+		public const string DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL = "SkeletonStraightMultiply";
+		public const string DEFAULT_BLEND_MODE_SCREEN_MATERIAL = "SkeletonStraightScreen";
+		public const string DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL = "SkeletonStraightAdditive";
 
 		public Material blendModeMaterialMultiply = null;
 		public Material blendModeMaterialScreen = null;
@@ -294,9 +294,11 @@ namespace Spine.Unity.Editor {
 
 					EditorGUILayout.PropertyField(settings.FindProperty("setTextureImporterSettings"), new GUIContent("Apply Atlas Texture Settings", "Apply reference settings for Texture Importers."));
 					SerializedProperty textureSettingsRef = settings.FindProperty("textureSettingsReference");
-					SpineEditorUtilities.PresetAssetPropertyField(textureSettingsRef, new GUIContent("Atlas Texture Settings", "Apply the selected texture import settings at newly imported atlas textures. When exporting atlas textures from Spine with \"Premultiply alpha\" enabled (the default), you can leave it at \"PMATexturePreset\". If you have disabled \"Premultiply alpha\", set it to \"StraightAlphaTexturePreset\". You can also create your own TextureImporter Preset asset and assign it here."));
+					SpineEditorUtilities.PresetAssetPropertyField(textureSettingsRef, new GUIContent("Atlas Texture Settings", "Apply the selected texture import settings at newly imported atlas textures.\n\n" +
+						"When exporting atlas textures from Spine with \"Premultiply alpha\" enabled (the default), assign \"PMATexturePreset\". If you have disabled \"Premultiply alpha\", leave it at \"StraightAlphaPreset\".\n\n" +
+						"You can also create your own TextureImporter Preset asset and assign it here."));
 					if (string.IsNullOrEmpty(textureSettingsRef.stringValue)) {
-						string[] pmaTextureSettingsReferenceGUIDS = AssetDatabase.FindAssets("PMATexturePreset");
+						string[] pmaTextureSettingsReferenceGUIDS = AssetDatabase.FindAssets("StraightAlphaPreset");
 						if (pmaTextureSettingsReferenceGUIDS.Length > 0) {
 							string assetPath = AssetDatabase.GUIDToAssetPath(pmaTextureSettingsReferenceGUIDS[0]);
 							if (!string.IsNullOrEmpty(assetPath))
