@@ -27,17 +27,17 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
+import { MeshAttachment, RegionAttachment } from '@esotericsoftware/spine-core';
 import {
-	extensions, ExtensionType,
-	InstructionSet,
 	type BLEND_MODES,
-	type Container,
+	type Container, ExtensionType,
+	extensions,
+	type InstructionSet,
 	type Renderer,
 	type RenderPipe,
 } from 'pixi.js';
 import { BatchableSpineSlot } from './BatchableSpineSlot.js';
-import { Spine } from './Spine.js';
-import { MeshAttachment, RegionAttachment } from '@esotericsoftware/spine-core';
+import type { Spine } from './Spine.js';
 
 const spineBlendModeMap: Record<number, BLEND_MODES> = {
 	0: 'normal',
@@ -123,6 +123,7 @@ export class SpinePipe implements RenderPipe<Spine> {
 			const slot = drawOrder[i];
 			const attachment = slot.getAttachment();
 			const blendMode = spineBlendModeMap[slot.data.blendMode];
+			let skipRender = false;
 
 			if (attachment instanceof RegionAttachment || attachment instanceof MeshAttachment) {
 				const cacheData = spine._getCachedData(slot, attachment);
@@ -135,7 +136,8 @@ export class SpinePipe implements RenderPipe<Spine> {
 					roundPixels
 				);
 
-				if (!cacheData.skipRender) {
+				skipRender = cacheData.skipRender;
+				if (!skipRender) {
 					batcher.addToBatch(batchableSpineSlot, instructionSet);
 				}
 			}
@@ -145,9 +147,12 @@ export class SpinePipe implements RenderPipe<Spine> {
 			if (containerAttachment) {
 				const container = containerAttachment.container;
 
-				container.includeInBuild = true;
-				// See https://github.com/pixijs/pixijs/blob/b4c050a791fe65e979e467c9cba2bda0c01a1c35/src/scene/container/utils/collectAllRenderables.ts#L28
-				container.collectRenderables(instructionSet, this.renderer, null!);
+				if (!skipRender) {
+					container.includeInBuild = true;
+					// See https://github.com/pixijs/pixijs/blob/b4c050a791fe65e979e467c9cba2bda0c01a1c35/src/scene/container/utils/collectAllRenderables.ts#L28
+					container.collectRenderables(instructionSet, this.renderer, null!);
+				}
+
 				container.includeInBuild = false;
 			}
 		}
