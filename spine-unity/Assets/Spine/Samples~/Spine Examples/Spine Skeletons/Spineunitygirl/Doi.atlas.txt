@@ -1,7 +1,6 @@
 Doi.png
 	size: 1024, 512
 	filter: Linear, Linear
-	pma: true
 armL
 	bounds: 502, 178, 163, 133
 	rotate: 90

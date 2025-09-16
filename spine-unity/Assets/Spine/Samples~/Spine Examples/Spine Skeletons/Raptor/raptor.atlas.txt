@@ -1,7 +1,6 @@
 raptor.png
 	size: 1024, 1024
 	filter: Linear, Linear
-	pma: true
 back_arm
 	bounds: 407, 496, 46, 29
 back_bracer

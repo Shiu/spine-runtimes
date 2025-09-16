@@ -1,7 +1,6 @@
 dragon.png
 	size: 1024, 1024
 	filter: Linear, Linear
-	pma: true
 front-toe-a
 	bounds: 300, 929, 29, 50
 front-toe-b
@@ -32,7 +31,6 @@ thiagobrayner
 dragon2.png
 	size: 1024, 1024
 	filter: Linear, Linear
-	pma: true
 back
 	bounds: 647, 57, 190, 185
 chin
@@ -60,7 +58,6 @@ tail05
 dragon3.png
 	size: 1024, 1024
 	filter: Linear, Linear
-	pma: true
 chest
 	bounds: 858, 299, 136, 122
 left-front-thigh
@@ -93,7 +90,6 @@ tail02
 dragon4.png
 	size: 1024, 1024
 	filter: Linear, Linear
-	pma: true
 left-wing03
 	bounds: 2, 2, 264, 589
 	rotate: 90
@@ -107,7 +103,6 @@ left-wing06
 dragon5.png
 	size: 1024, 1024
 	filter: Linear, Linear
-	pma: true
 left-wing01
 	bounds: 268, 2, 264, 589
 left-wing02

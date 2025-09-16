@@ -1,7 +1,6 @@
 hero-pro.png
 	size: 1024, 256
 	filter: Linear, Linear
-	pma: true
 body
 	bounds: 742, 77, 97, 95
 	rotate: 90

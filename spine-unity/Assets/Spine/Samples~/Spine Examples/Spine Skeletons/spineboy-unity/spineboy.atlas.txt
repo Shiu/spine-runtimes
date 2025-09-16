@@ -1,7 +1,6 @@
 spineboy.png
 	size: 1024, 1024
 	filter: Linear, Linear
-	pma: true
 eye_indifferent
 	bounds: 747, 451, 93, 89
 eye_surprised

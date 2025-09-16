@@ -1,7 +1,6 @@
 Raggedy Spineboy.png
 	size: 256, 256
 	filter: Linear, Linear
-	pma: true
 arm
 	bounds: 140, 17, 71, 75
 head

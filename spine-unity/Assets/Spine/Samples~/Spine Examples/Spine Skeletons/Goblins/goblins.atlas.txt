@@ -1,7 +1,6 @@
 goblins.png
 	size: 1024, 128
 	filter: Linear, Linear
-	pma: true
 dagger
 	bounds: 372, 99, 26, 108
 	rotate: 90

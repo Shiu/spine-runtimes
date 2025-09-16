@@ -1,7 +1,6 @@
 spineboy-pro.png
 	size: 2048, 1024
 	filter: Linear, Linear
-	pma: true
 crosshair
 	bounds: 538, 418, 89, 89
 dust01
