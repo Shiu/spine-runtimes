@@ -66,27 +66,6 @@ class TransformConstraintData extends ConstraintData<TransformConstraint, Transf
 	/** The mapping of transform properties to other transform properties. */
 	public final properties = new Array<FromProperty>();
 
-	/** An offset added to the constrained bone rotation. */
-	public var offsetRotation:Float = 0;
-
-	/** An offset added to the constrained bone X translation. */
-	public var offsetX:Float = 0;
-
-	/** An offset added to the constrained bone Y translation. */
-	public var offsetY:Float = 0;
-
-	/** An offset added to the constrained bone scaleX. */
-	public var offsetScaleX:Float = 0;
-
-	/** An offset added to the constrained bone scaleY. */
-	public var offsetScaleY:Float = 0;
-
-	/** An offset added to the constrained bone shearY. */
-	public var offsetShearY:Float = 0;
-
-	public var relative:Bool = false;
-	public var local:Bool = false;
-
 	public function new(name:String) {
 		super(name, new TransformConstraintPose());
 	}
@@ -366,9 +345,9 @@ class FromShearY extends FromProperty {
 	public function value(skeleton:Skeleton, source:BonePose, local:Bool, offsets:Array<Float>):Float {
 		if (local)
 			return source.shearY + offsets[TransformConstraintData.SHEARY];
-		var sx = 1 / skeleton.scaleX, sy = 1 / skeleton.scaleY;
-		return (Math.atan2(source.d * sy, source.b * sx)
-			- Math.atan2(source.c * sy, source.a * sx)) * MathUtils.radDeg
+		var ix = 1 / skeleton.scaleX, iy = 1 / skeleton.scaleY;
+		return (Math.atan2(source.d * iy, source.b * ix)
+			- Math.atan2(source.c * iy, source.a * ix)) * MathUtils.radDeg
 			- 90
 			+ offsets[TransformConstraintData.SHEARY];
 	}

@@ -270,7 +270,7 @@ class SkeletonJson {
 								}
 								to.offset = getFloat(toEntry, "offset", 0) * toScale;
 								to.max = getFloat(toEntry, "max", 1) * toScale;
-								to.scale = getFloat(toEntry, "scale") * toScale / fromScale;
+								to.scale = getFloat(toEntry, "scale", 1) * toScale / fromScale;
 								from.to.push(to);
 							}
 							if (from.to.length > 0)
