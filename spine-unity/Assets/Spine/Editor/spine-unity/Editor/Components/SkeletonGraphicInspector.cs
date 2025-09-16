@@ -878,19 +878,35 @@ namespace Spine.Unity.Editor {
 		}
 
 		public static Material DefaultSkeletonGraphicMaterial {
-			get { return MaterialWithName("SkeletonGraphicDefault"); }
+			get {
+				return MaterialWithName(SpineEditorUtilities.Preferences.UsesPMAWorkflow ?
+					"SkeletonGraphicDefault" :
+					"SkeletonGraphicDefault-Straight");
+			}
 		}
 
 		public static Material DefaultSkeletonGraphicAdditiveMaterial {
-			get { return MaterialWithName("SkeletonGraphicAdditive"); }
+			get {
+				return MaterialWithName(SpineEditorUtilities.Preferences.UsesPMAWorkflow ?
+					"SkeletonGraphicAdditive" :
+					"SkeletonGraphicAdditive-Straight");
+			}
 		}
 
 		public static Material DefaultSkeletonGraphicMultiplyMaterial {
-			get { return MaterialWithName("SkeletonGraphicMultiply"); }
+			get {
+				return MaterialWithName(SpineEditorUtilities.Preferences.UsesPMAWorkflow ?
+					"SkeletonGraphicMultiply" :
+					"SkeletonGraphicMultiply-Straight");
+			}
 		}
 
 		public static Material DefaultSkeletonGraphicScreenMaterial {
-			get { return MaterialWithName("SkeletonGraphicScreen"); }
+			get {
+				return MaterialWithName(SpineEditorUtilities.Preferences.UsesPMAWorkflow ?
+					"SkeletonGraphicScreen" :
+					"SkeletonGraphicScreen-Straight");
+			}
 		}
 
 		protected static Material MaterialWithName (string name) {
