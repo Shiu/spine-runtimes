@@ -146,9 +146,22 @@ namespace Spine.Unity.Editor {
 			public static string blendModeMaterialMultiply = "";
 			public static string blendModeMaterialScreen = "";
 			public static string blendModeMaterialAdditive = "";
+
+			public const string DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL_STRAIGHT = SpinePreferences.DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL_STRAIGHT;
+			public const string DEFAULT_BLEND_MODE_SCREEN_MATERIAL_STRAIGHT = SpinePreferences.DEFAULT_BLEND_MODE_SCREEN_MATERIAL_STRAIGHT;
+			public const string DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL_STRAIGHT = SpinePreferences.DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL_STRAIGHT;
+
+			public const string DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL_PMA = SpinePreferences.DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL_PMA;
+			public const string DEFAULT_BLEND_MODE_SCREEN_MATERIAL_PMA = SpinePreferences.DEFAULT_BLEND_MODE_SCREEN_MATERIAL_PMA;
+			public const string DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL_PMA = SpinePreferences.DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL_PMA;
+
 			public const string DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL = SpinePreferences.DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL;
 			public const string DEFAULT_BLEND_MODE_SCREEN_MATERIAL = SpinePreferences.DEFAULT_BLEND_MODE_SCREEN_MATERIAL;
 			public const string DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL = SpinePreferences.DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL;
+
+			public const string DEFAULT_TEXTURE_TEMPLATE_STRAIGHT = "StraightAlphaPresetTemplate";
+			public const string DEFAULT_TEXTURE_TEMPLATE_PMA = "PMAPresetTemplate";
+			public const string DEFAULT_TEXTURE_TEMPLATE = DEFAULT_TEXTURE_TEMPLATE_STRAIGHT;
 
 			public static Material BlendModeMaterialMultiply {
 				get { return AssetDatabase.LoadAssetAtPath<Material>(blendModeMaterialMultiply); }
@@ -303,38 +316,36 @@ namespace Spine.Unity.Editor {
 					if (EditorGUI.EndChangeCheck())
 						EditorPrefs.SetString(DEFAULT_SHADER_KEY, defaultShader);
 
+					EditorGUILayout.Space();
+					using (new GUILayout.HorizontalScope()) {
+						EditorGUILayout.PrefixLabel("Switch Texture Workflow");
+						if (GUILayout.Button("Straight Alpha", GUILayout.Width(96)))
+							SwitchToStraightAlphaDefaults();
+						if (GUILayout.Button("PMA", GUILayout.Width(64)))
+							SwitchToPMADefaults();
+					}
+
 					SpineEditorUtilities.BoolPrefsField(ref setTextureImporterSettings, SET_TEXTUREIMPORTER_SETTINGS_KEY, new GUIContent("Apply Atlas Texture Settings", "Apply the recommended settings for Texture Importers."));
-					SpineEditorUtilities.Texture2DPrefsField(ref textureSettingsReference, TEXTURE_SETTINGS_REFERENCE_KEY, new GUIContent("Atlas Texture Reference Settings", "Apply the selected reference texture import settings at newly imported atlas textures.\n\n" +
-						"When exporting atlas textures from Spine with \"Premultiply alpha\" enabled (the default, requires Gamma color space), assign \"PMAPresetTemplate\". If you have disabled \"Premultiply alpha\", leave it at \"StraightAlphaPresetTemplate\".\n\n" +
-						"You can also create your own reference texture asset and assign it here."));
+					SpineEditorUtilities.Texture2DPrefsField(ref textureSettingsReference, TEXTURE_SETTINGS_REFERENCE_KEY, new GUIContent("Atlas Texture Reference Settings",
+						string.Format("Apply the selected reference texture import settings at newly imported atlas textures.\n\n" +
+						"When exporting atlas textures from Spine with \"Premultiply alpha\" enabled (the default, requires Gamma color space), assign \"{0}\". If you have disabled \"Premultiply alpha\", leave it at \"{1}\".\n\n" +
+						"You can also create your own reference texture asset and assign it here.",
+						DEFAULT_TEXTURE_TEMPLATE_PMA, DEFAULT_TEXTURE_TEMPLATE_STRAIGHT)));
 					if (string.IsNullOrEmpty(textureSettingsReference)) {
-						string[] pmaTextureSettingsReferenceGUIDS = AssetDatabase.FindAssets("StraightAlphaPresetTemplate");
-						if (pmaTextureSettingsReferenceGUIDS.Length > 0) {
-							textureSettingsReference = AssetDatabase.GUIDToAssetPath(pmaTextureSettingsReferenceGUIDS[0]);
-							EditorPrefs.SetString(TEXTURE_SETTINGS_REFERENCE_KEY, textureSettingsReference);
-						}
+						AssignEditorPrefsAssetReference(ref textureSettingsReference, TEXTURE_SETTINGS_REFERENCE_KEY, DEFAULT_TEXTURE_TEMPLATE);
 					}
 
 					SpineEditorUtilities.MaterialPrefsField(ref blendModeMaterialAdditive, BLEND_MODE_MATERIAL_ADDITIVE_KEY, new GUIContent("Additive Material", "Additive blend mode Material template."));
 					if (string.IsNullOrEmpty(blendModeMaterialAdditive)) {
-						string[] blendModeMaterialAdditiveGUIDS = AssetDatabase.FindAssets(DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL);
-						if (blendModeMaterialAdditiveGUIDS.Length > 0) {
-							blendModeMaterialAdditive = AssetDatabase.GUIDToAssetPath(blendModeMaterialAdditiveGUIDS[0]);
-						}
+						AssignEditorPrefsAssetReference(ref blendModeMaterialAdditive, BLEND_MODE_MATERIAL_ADDITIVE_KEY, DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL);
 					}
 					SpineEditorUtilities.MaterialPrefsField(ref blendModeMaterialMultiply, BLEND_MODE_MATERIAL_MULTIPLY_KEY, new GUIContent("Multiply Material", "Multiply blend mode Material template."));
 					if (string.IsNullOrEmpty(blendModeMaterialMultiply)) {
-						string[] blendModeMaterialMultiplyGUIDS = AssetDatabase.FindAssets(DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL);
-						if (blendModeMaterialMultiplyGUIDS.Length > 0) {
-							blendModeMaterialMultiply = AssetDatabase.GUIDToAssetPath(blendModeMaterialMultiplyGUIDS[0]);
-						}
+						AssignEditorPrefsAssetReference(ref blendModeMaterialMultiply, BLEND_MODE_MATERIAL_MULTIPLY_KEY, DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL);
 					}
 					SpineEditorUtilities.MaterialPrefsField(ref blendModeMaterialScreen, BLEND_MODE_MATERIAL_SCREEN_KEY, new GUIContent("Screen Material", "Screen blend mode Material template."));
 					if (string.IsNullOrEmpty(blendModeMaterialScreen)) {
-						string[] blendModeMaterialScreenGUIDS = AssetDatabase.FindAssets(DEFAULT_BLEND_MODE_SCREEN_MATERIAL);
-						if (blendModeMaterialScreenGUIDS.Length > 0) {
-							blendModeMaterialScreen = AssetDatabase.GUIDToAssetPath(blendModeMaterialScreenGUIDS[0]);
-						}
+						AssignEditorPrefsAssetReference(ref blendModeMaterialScreen, BLEND_MODE_MATERIAL_SCREEN_KEY, DEFAULT_BLEND_MODE_SCREEN_MATERIAL);
 					}
 				}
 
@@ -418,7 +429,29 @@ namespace Spine.Unity.Editor {
 					SpineEditorUtilities.BoolPrefsField(ref timelineUseBlendDuration, TIMELINE_USE_BLEND_DURATION_KEY, new GUIContent("Use Blend Duration", "When enabled, MixDuration will be synced with timeline clip transition duration 'Ease In Duration'."));
 				}
 			}
+
+			static void SwitchToStraightAlphaDefaults () {
+				AssignEditorPrefsAssetReference(ref textureSettingsReference, TEXTURE_SETTINGS_REFERENCE_KEY, DEFAULT_TEXTURE_TEMPLATE_STRAIGHT);
+				AssignEditorPrefsAssetReference(ref blendModeMaterialAdditive, BLEND_MODE_MATERIAL_ADDITIVE_KEY, DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL_STRAIGHT);
+				AssignEditorPrefsAssetReference(ref blendModeMaterialMultiply, BLEND_MODE_MATERIAL_MULTIPLY_KEY, DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL_STRAIGHT);
+				AssignEditorPrefsAssetReference(ref blendModeMaterialScreen, BLEND_MODE_MATERIAL_SCREEN_KEY, DEFAULT_BLEND_MODE_SCREEN_MATERIAL_STRAIGHT);
+			}
+
+			static void SwitchToPMADefaults () {
+				AssignEditorPrefsAssetReference(ref textureSettingsReference, TEXTURE_SETTINGS_REFERENCE_KEY, DEFAULT_TEXTURE_TEMPLATE_PMA);
+				AssignEditorPrefsAssetReference(ref blendModeMaterialAdditive, BLEND_MODE_MATERIAL_ADDITIVE_KEY, DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL_PMA);
+				AssignEditorPrefsAssetReference(ref blendModeMaterialMultiply, BLEND_MODE_MATERIAL_MULTIPLY_KEY, DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL_PMA);
+				AssignEditorPrefsAssetReference(ref blendModeMaterialScreen, BLEND_MODE_MATERIAL_SCREEN_KEY, DEFAULT_BLEND_MODE_SCREEN_MATERIAL_PMA);
+			}
 #endif // !NEW_PREFERENCES_SETTINGS_PROVIDER
+		}
+
+		static void AssignEditorPrefsAssetReference (ref string textureSettingsReference, string editorPrefsKey, string assetName) {
+			string[] guids = AssetDatabase.FindAssets(assetName);
+			if (guids.Length > 0) {
+				textureSettingsReference = AssetDatabase.GUIDToAssetPath(guids[0]);
+				EditorPrefs.SetString(editorPrefsKey, textureSettingsReference);
+			}
 		}
 
 		static void BoolPrefsField (ref bool currentValue, string editorPrefsKey, GUIContent label) {
