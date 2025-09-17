@@ -1,3 +1,27 @@
+# 4.3
+
+## C#
+
+- **Additions**
+- **Breaking changes**
+
+### Unity
+
+- **Officially supported Unity versions are 2017.1-6000.1**.
+
+- **Additions**
+
+- **Breaking changes**
+  - Example skeletons in Spine Examples are now using straight alpha textures and materials for better compatibility with Linear colorspace.
+
+- **Changes of default values**
+  - Changed default atlas texture workflow from PMA to straight alpha textures. This move was done because straight alpha textures are compatible with both Gamma and Linear color space, with the latter being the default for quite some time now in Unity. Note that `PMA Vertex Color` is unaffected and shall be enabled as usual to allow for single-pass additive rendering.
+
+- **Deprecated**
+
+- **Restructuring (Non-Breaking)**
+  - Spine Examples have been moved and are now part of the main spine-unity UPM package. To import, select the `spine-unity Runtime` package in the Package Manager window, and in the `Samples` tab and hit `Import`.
+
 # 4.2
 
 ## C
@@ -192,8 +216,7 @@
   - Fixed SkeletonRootMotion components ignoring parent bone scale when set by transform constraints. Using applied scale of parent bone now. If you need the old behaviour, comment out the line `#define USE_APPLIED_PARENT_SCALE` in SkeletonRootMotionBase.cs.
   - Fixed SkeletonUtility callback update order when used with SkeletonRootMotion components so that the position when following a bone is updated after SkeletonRootMotion clears root-bone position. The order of SkeletonUtilityBone callbacks is changed to be later to achieve this. This is a breaking change in the unlikely case that you are using SkeletonRootMotion together with SkeletonUtility and subscribed to `UpdateLocal`, `UpdateWorld` or `UpdateComplete` yourself and relied on a certain callback order. One solution is to then resubscribe your own callback events accordingly by calling
   `.UpdateLocal -= Callback; .UpdateLocal += Callback;`.
-  - Changed default atlas texture workflow from PMA to straight alpha textures. This move was done because straight alpha textures allow for both Gamma and Linear color space, with the latter being the default for quite some time now in Unity. Example assets and scenes also reflect this change and are all using straight alpha texture and material settings now. (Note that `PMA Vertex Color` is unaffected and shall be enabled as usual to allow for single-pass additive rendering.)
-
+  
 - **Changes of default values**
 
 - **Deprecated**
