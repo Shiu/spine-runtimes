@@ -10,6 +10,7 @@
 - **Officially supported Unity versions are 2017.1-6000.1**.
 
 - **Additions**
+  - Added Spine Preferences `Switch Texture Workflow` functionality to quickly switch to the respective PMA or straight-alpha texture and material presets.
 
 - **Breaking changes**
   - Example skeletons in Spine Examples are now using straight alpha textures and materials for better compatibility with Linear colorspace.
