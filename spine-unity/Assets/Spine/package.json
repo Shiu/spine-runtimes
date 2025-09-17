@@ -1,8 +1,8 @@
 {
 	"name": "com.esotericsoftware.spine.spine-unity",
 	"displayName": "spine-unity Runtime",
-	"description": "This plugin provides the spine-unity runtime core.",
-	"version": "4.3.4",
+	"description": "This plugin provides the spine-unity runtime core and examples. Spine Examples can be installed via the Samples tab.",
+	"version": "4.3.5",
 	"unity": "2018.3",
 	"author": {
 		"name": "Esoteric Software",
