@@ -738,6 +738,8 @@ namespace Spine.Unity.Editor {
 			atlasAsset.Clear();
 			atlas = atlasAsset.GetAtlas(onlyMetaData: false);
 			if (atlas != null) {
+				IssuePMAWarnings(atlas, atlasAsset);
+
 				FieldInfo field = typeof(Atlas).GetField("regions", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.NonPublic);
 				List<AtlasRegion> regions = (List<AtlasRegion>)field.GetValue(atlas);
 				string atlasAssetPath = AssetDatabase.GetAssetPath(atlasAsset);
@@ -766,6 +768,32 @@ namespace Spine.Unity.Editor {
 			// asset returns null, regardless of refresh calls.
 			AtlasAssetBase loadedAtlas = (AtlasAssetBase)AssetDatabase.LoadAssetAtPath(atlasPath, typeof(AtlasAssetBase));
 			return loadedAtlas != null ? loadedAtlas : atlasAsset;
+		}
+
+		static void IssuePMAWarnings (Atlas atlas, SpineAtlasAsset atlasAsset) {
+			bool isPMA = atlas.Pages.Count > 0 && atlas.Pages[0].pma;
+			if (QualitySettings.activeColorSpace == ColorSpace.Linear && isPMA)
+				Debug.LogWarning(string.Format("{0} :: Atlas was exported as PMA but your color space is set to Linear. " +
+					"Please\n"
+					+ "a) re-export atlas as straight alpha texture with 'premultiply alpha' unchecked.\n"
+					+ "b) switch to Gamma color space via\nProject Settings - Player - Other Settings - Color Space.\n",
+					atlasAsset.name), atlasAsset);
+			else if (SpineEditorUtilities.Preferences.UsesPMAWorkflow != isPMA) {
+				if (isPMA)
+					Debug.LogWarning(string.Format("{0} :: Atlas was exported as PMA but Spine Preferences are set " +
+						"to use straight-alpha import presets. Please\n"
+					+ "a) re-export atlas as straight-alpha texture with 'premultiply alpha' disabled, or\n"
+					+ "b) Select 'Edit - Preferences - Spine - Switch Texture Workflow' - 'PMA'. " +
+					"Select `Reimport` on the skeleton directory afterwards.\n",
+					atlasAsset.name), atlasAsset);
+				else
+					Debug.LogWarning(string.Format("{0} :: Atlas was exported as straight-alpha but Spine Preferences are set " +
+						"to use PMA import presets. Please\n"
+					+ "a) re-export atlas as PMA texture with 'premultiply alpha' enabled, or\n"
+					+ "b) Select 'Edit - Preferences - Spine - Switch Texture Workflow' - 'Straight Alpha'. " +
+					"Select `Reimport` on the skeleton directory afterwards.\n",
+					atlasAsset.name), atlasAsset);
+			}
 		}
 
 		static bool HasCustomMaterialsAssigned (List<Material> vestigialMaterials, string primaryName, List<string> pageFiles) {
