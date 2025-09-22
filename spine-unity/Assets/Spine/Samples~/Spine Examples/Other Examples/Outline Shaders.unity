@@ -180,7 +180,7 @@ MonoBehaviour:
   timeScale: 1
   freeze: 0
   layoutScaleMode: 0
-  referenceSize: {x: 683.73193, y: 689.5855}
+  referenceSize: {x: 683.73193, y: 689.73535}
   pivotOffset: {x: 0, y: 0}
   referenceScale: 1
   layoutScale: 1
@@ -228,9 +228,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skeletonGraphic: {fileID: 432616241}
-  materialWithoutOutline: {fileID: 2100000, guid: b66cf7a186d13054989b33a5c90044e4,
+  materialWithoutOutline: {fileID: 2100000, guid: 9c6ec24bca5fc42489fe47358fef0d4a,
     type: 2}
-  materialWithOutline: {fileID: 2100000, guid: c4ee0f8f4be17434aa3df5774a03b366, type: 2}
+  materialWithOutline: {fileID: 2100000, guid: eb5fcf8085792c14088ce1aeb552cfba, type: 2}
 --- !u!114 &432616244
 MonoBehaviour:
   m_ObjectHideFlags: 0
