@@ -41,7 +41,7 @@
 #include "core/io/resource_loader.h"
 #include "core/io/resource_saver.h"
 #endif
-#include <spine/Vector.h>
+#include <spine/Array.h>
 
 class SpineSkeletonFileResource : public Resource {
 	GDCLASS(SpineSkeletonFileResource, Resource);

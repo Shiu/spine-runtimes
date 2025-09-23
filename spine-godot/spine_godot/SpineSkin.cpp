@@ -95,7 +95,7 @@ void SpineSkin::remove_attachment(int slot_index, const String &name) {
 Array SpineSkin::find_names_for_slot(int slot_index) {
 	Array result;
 	SPINE_CHECK(get_spine_object(), result)
-	spine::Vector<spine::String> names;
+	spine::Array<spine::String> names;
 	get_spine_object()->findNamesForSlot(slot_index, names);
 	result.resize((int) names.size());
 	for (int i = 0; i < names.size(); ++i) {
@@ -107,7 +107,7 @@ Array SpineSkin::find_names_for_slot(int slot_index) {
 Array SpineSkin::find_attachments_for_slot(int slot_index) {
 	Array result;
 	SPINE_CHECK(get_spine_object(), result)
-	spine::Vector<spine::Attachment *> attachments;
+	spine::Array<spine::Attachment *> attachments;
 	get_spine_object()->findAttachmentsForSlot(slot_index, attachments);
 	result.resize((int) attachments.size());
 	for (int i = 0; i < attachments.size(); ++i) {
@@ -135,7 +135,7 @@ void SpineSkin::add_skin(Ref<SpineSkin> other) {
 		ERR_PRINT("other is not a valid SpineSkin.");
 		return;
 	}
-	get_spine_object()->addSkin(other->get_spine_object());
+	get_spine_object()->addSkin(*other->get_spine_object());
 }
 
 void SpineSkin::copy_skin(Ref<SpineSkin> other) {
@@ -144,7 +144,7 @@ void SpineSkin::copy_skin(Ref<SpineSkin> other) {
 		ERR_PRINT("other is not a valid SpineSkin.");
 		return;
 	}
-	get_spine_object()->copySkin(other->get_spine_object());
+	get_spine_object()->copySkin(*other->get_spine_object());
 }
 
 Array SpineSkin::get_attachments() {

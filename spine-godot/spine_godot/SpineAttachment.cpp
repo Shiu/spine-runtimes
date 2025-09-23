@@ -48,7 +48,7 @@ String SpineAttachment::get_attachment_name() {
 
 Ref<SpineAttachment> SpineAttachment::copy() {
 	SPINE_CHECK(get_spine_object(), nullptr)
-	auto copy = get_spine_object()->copy();
+	auto copy = &get_spine_object()->copy();
 	if (!copy) return nullptr;
 	Ref<SpineAttachment> attachment_ref(memnew(SpineAttachment));
 	attachment_ref->set_spine_object(get_spine_owner(), copy);

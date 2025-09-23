@@ -29,10 +29,11 @@
 
 #include "SpineTransformConstraint.h"
 #include "SpineCommon.h"
+#include "SpineSkeleton.h"
 #include "SpineSprite.h"
 
 void SpineTransformConstraint::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("update"), &SpineTransformConstraint::update);
+	ClassDB::bind_method(D_METHOD("update", "skeleton"), &SpineTransformConstraint::update);
 	ClassDB::bind_method(D_METHOD("get_data"), &SpineTransformConstraint::get_data);
 	ClassDB::bind_method(D_METHOD("get_bones"), &SpineTransformConstraint::get_bones);
 	ClassDB::bind_method(D_METHOD("get_target"), &SpineTransformConstraint::get_target);
@@ -53,14 +54,9 @@ void SpineTransformConstraint::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_active", "v"), &SpineTransformConstraint::set_active);
 }
 
-void SpineTransformConstraint::update() {
+void SpineTransformConstraint::update(Ref<SpineSkeleton> skeleton) {
 	SPINE_CHECK(get_spine_object(), )
-	get_spine_object()->update(spine::Physics_Update);
-}
-
-int SpineTransformConstraint::get_order() {
-	SPINE_CHECK(get_spine_object(), 0)
-	return get_spine_object()->getOrder();
+	get_spine_object()->update(*skeleton->get_spine_object(), spine::Physics_Update);
 }
 
 Ref<SpineTransformConstraintData> SpineTransformConstraint::get_data() {

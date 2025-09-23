@@ -48,9 +48,9 @@ protected:
 public:
 	Array get_bones();
 
-	Ref<SpineSlotData> get_target();
+	Ref<SpineSlotData> get_slot();
 
-	void set_target(Ref<SpineSlotData> v);
+	void set_slot(Ref<SpineSlotData> v);
 
 	SpineConstant::PositionMode get_position_mode();
 

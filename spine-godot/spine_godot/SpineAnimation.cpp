@@ -40,7 +40,7 @@ void SpineAnimation::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_duration"), &SpineAnimation::get_duration);
 	ClassDB::bind_method(D_METHOD("set_duration", "duration"), &SpineAnimation::set_duration);
 
-	ClassDB::bind_method(D_METHOD("apply", "skeleton", "last_time", "time", "loop", "events", "alpha", "blend", "direction"), &SpineAnimation::apply);
+	ClassDB::bind_method(D_METHOD("apply", "skeleton", "last_time", "time", "loop", "events", "alpha", "blend", "direction", "appliedPose"), &SpineAnimation::apply);
 	ClassDB::bind_method(D_METHOD("get_timelines"), &SpineAnimation::get_timelines);
 	ClassDB::bind_method(D_METHOD("has_timeline", "ids"), &SpineAnimation::has_timeline);
 }
@@ -63,11 +63,11 @@ void SpineAnimation::set_duration(float duration) {
 }
 
 void SpineAnimation::apply(Ref<SpineSkeleton> skeleton, float last_time, float time, bool loop, Array events, float alpha,
-						   SpineConstant::MixBlend blend, SpineConstant::MixDirection direction) {
+						   SpineConstant::MixBlend blend, SpineConstant::MixDirection direction, bool appliedPose) {
 	SPINE_CHECK(get_spine_object(), )
-	spine::Vector<spine::Event *> spineEvents;
+	spine::Array<spine::Event *> spineEvents;
 	get_spine_object()->apply(*(skeleton->get_spine_object()), last_time, time, loop, &spineEvents, alpha, (spine::MixBlend) blend,
-							  (spine::MixDirection) direction);
+							  (spine::MixDirection) direction, appliedPose);
 	for (int i = 0; i < (int) spineEvents.size(); ++i) {
 		auto event_ref = memnew(SpineEvent);
 		event_ref->set_spine_object(skeleton->get_spine_owner(), spineEvents[i]);
@@ -95,7 +95,7 @@ Array SpineAnimation::get_timelines() {
 
 bool SpineAnimation::has_timeline(Array ids) {
 	SPINE_CHECK(get_spine_object(), false)
-	spine::Vector<spine::PropertyId> property_ids;
+	spine::Array<spine::PropertyId> property_ids;
 	property_ids.setSize(ids.size(), 0);
 
 	for (int i = 0; i < (int) property_ids.size(); ++i) {

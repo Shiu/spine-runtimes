@@ -41,7 +41,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	void update(SpineConstant::Physics physics);
+	void update(Ref<SpineSkeleton> skeleton, SpineConstant::Physics physics);
 
 	Ref<SpinePhysicsConstraintData> get_data();
 
@@ -70,61 +70,7 @@ public:
 	void set_mix(float value);
 	float get_mix();
 
-	void set_reset(bool value);
-	bool get_reset();
-
-	void set_ux(float value);
-	float get_ux();
-
-	void set_uy(float value);
-	float get_uy();
-
-	void set_cx(float value);
-	float get_cx();
-
-	void set_cy(float value);
-	float get_cy();
-
-	void set_tx(float value);
-	float get_tx();
-
-	void set_ty(float value);
-	float get_ty();
-
-	void set_x_offset(float value);
-	float get_x_offset();
-
-	void set_x_velocity(float value);
-	float get_x_velocity();
-
-	void set_y_offset(float value);
-	float get_y_offset();
-
-	void set_y_velocity(float value);
-	float get_y_velocity();
-
-	void set_rotate_offset(float value);
-	float get_rotate_offset();
-
-	void set_rotate_velocity(float value);
-	float get_rotate_velocity();
-
-	void set_scale_offset(float value);
-	float get_scale_offset();
-
-	void set_scale_velocity(float value);
-	float get_scale_velocity();
-
-	void set_active(bool value);
-	bool is_active();
-
-	void set_remaining(float value);
-	float get_remaining();
-
-	void set_last_Time(float value);
-	float get_last_Time();
-
-	void reset();
+	void reset(Ref<SpineSkeleton> skeleton);
 
 	void translate(float x, float y);
 

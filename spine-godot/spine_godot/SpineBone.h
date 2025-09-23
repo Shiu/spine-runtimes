@@ -49,10 +49,6 @@ protected:
 	static void _bind_methods();
 
 public:
-	void update_world_transform();
-
-	void set_to_setup_pose();
-
 	Vector2 world_to_local(Vector2 world_position);
 
 	Vector2 world_to_parent(Vector2 world_position);
@@ -66,10 +62,6 @@ public:
 	float local_to_world_rotation(float local_rotation);
 
 	void rotate_world(float degrees);
-
-	float get_world_to_local_rotation_x();
-
-	float get_world_to_local_rotation_y();
 
 	Ref<SpineBoneData> get_data();
 

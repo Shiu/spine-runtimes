@@ -60,32 +60,32 @@ float SpineEvent::get_time() {
 
 int SpineEvent::get_int_value() {
 	SPINE_CHECK(get_spine_object(), 0)
-	return get_spine_object()->getIntValue();
+	return get_spine_object()->getInt();
 }
 
 void SpineEvent::set_int_value(int v) {
 	SPINE_CHECK(get_spine_object(), )
-	get_spine_object()->setIntValue(v);
+	get_spine_object()->setInt(v);
 }
 
 float SpineEvent::get_float_value() {
 	SPINE_CHECK(get_spine_object(), 0)
-	return get_spine_object()->getFloatValue();
+	return get_spine_object()->getFloat();
 }
 
 void SpineEvent::set_float_value(float v) {
 	SPINE_CHECK(get_spine_object(), )
-	get_spine_object()->setFloatValue(v);
+	get_spine_object()->setFloat(v);
 }
 
 String SpineEvent::get_string_value() {
 	SPINE_CHECK(get_spine_object(), "")
-	return get_spine_object()->getStringValue().buffer();
+	return get_spine_object()->getString().buffer();
 }
 
 void SpineEvent::set_string_value(const String &v) {
 	SPINE_CHECK(get_spine_object(), )
-	get_spine_object()->setStringValue(spine::String(v.utf8()));
+	get_spine_object()->setString(spine::String(v.utf8()));
 }
 
 float SpineEvent::get_volume() {

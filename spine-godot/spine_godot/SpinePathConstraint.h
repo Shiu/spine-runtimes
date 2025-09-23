@@ -40,9 +40,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	void update();
-
-	int get_order();
+	void update(Ref<SpineSkeleton> skeleton);
 
 	float get_position();
 
@@ -66,9 +64,9 @@ public:
 
 	Array get_bones();
 
-	Ref<SpineSlot> get_target();
+	Ref<SpineSlot> get_slot();
 
-	void set_target(Ref<SpineSlot> v);
+	void set_slot(Ref<SpineSlot> v);
 
 	Ref<SpinePathConstraintData> get_data();
 

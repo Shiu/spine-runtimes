@@ -31,6 +31,7 @@
 
 #include "SpineIkConstraintData.h"
 #include <spine/IkConstraint.h>
+#include "SpineSkeleton.h"
 
 class SpineBone;
 class SpineSprite;
@@ -42,9 +43,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	void update();
-
-	int get_order();
+	void update(Ref<SpineSkeleton> skeleton);
 
 	Ref<SpineIkConstraintData> get_data();
 

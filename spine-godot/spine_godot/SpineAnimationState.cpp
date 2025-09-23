@@ -62,7 +62,7 @@ void SpineAnimationState::set_spine_sprite(SpineSprite *_sprite) {
 	animation_state = nullptr;
 	sprite = _sprite;
 	if (!sprite || !sprite->get_skeleton_data_res().is_valid() || !sprite->get_skeleton_data_res()->is_skeleton_data_loaded()) return;
-	animation_state = new spine::AnimationState(sprite->get_skeleton_data_res()->get_animation_state_data());
+	animation_state = new spine::AnimationState(*sprite->get_skeleton_data_res()->get_animation_state_data());
 }
 
 void SpineAnimationState::update(float delta) {
@@ -98,13 +98,13 @@ int SpineAnimationState::get_num_tracks() {
 
 Ref<SpineTrackEntry> SpineAnimationState::set_animation(const String &animation_name, bool loop, int track) {
 	SPINE_CHECK(animation_state, nullptr)
-	auto skeleton_data = animation_state->getData()->getSkeletonData();
-	auto animation = skeleton_data->findAnimation(animation_name.utf8().ptr());
+	auto &skeleton_data = animation_state->getData().getSkeletonData();
+	auto animation = skeleton_data.findAnimation(animation_name.utf8().ptr());
 	if (!animation) {
 		ERR_PRINT(String("Can not find animation: ") + animation_name);
 		return nullptr;
 	}
-	auto track_entry = animation_state->setAnimation(track, animation, loop);
+	auto track_entry = &animation_state->setAnimation(track, *animation, loop);
 	Ref<SpineTrackEntry> track_entry_ref(memnew(SpineTrackEntry));
 	track_entry_ref->set_spine_object(sprite, track_entry);
 	return track_entry_ref;
@@ -112,13 +112,13 @@ Ref<SpineTrackEntry> SpineAnimationState::set_animation(const String &animation_
 
 Ref<SpineTrackEntry> SpineAnimationState::add_animation(const String &animation_name, float delay, bool loop, int track) {
 	SPINE_CHECK(animation_state, nullptr)
-	auto skeleton_data = animation_state->getData()->getSkeletonData();
-	auto animation = skeleton_data->findAnimation(animation_name.utf8().ptr());
+	auto &skeleton_data = animation_state->getData().getSkeletonData();
+	auto animation = skeleton_data.findAnimation(animation_name.utf8().ptr());
 	if (!animation) {
 		ERR_PRINT(String("Can not find animation: ") + animation_name);
 		return nullptr;
 	}
-	auto track_entry = animation_state->addAnimation(track, animation, loop, delay);
+	auto track_entry = &animation_state->addAnimation(track, *animation, loop, delay);
 	Ref<SpineTrackEntry> track_entry_ref(memnew(SpineTrackEntry));
 	track_entry_ref->set_spine_object(sprite, track_entry);
 	return track_entry_ref;
@@ -126,14 +126,14 @@ Ref<SpineTrackEntry> SpineAnimationState::add_animation(const String &animation_
 
 Ref<SpineTrackEntry> SpineAnimationState::set_empty_animation(int track_id, float mix_duration) {
 	SPINE_CHECK(animation_state, nullptr)
-	auto track_entry = animation_state->setEmptyAnimation(track_id, mix_duration);
+	auto track_entry = &animation_state->setEmptyAnimation(track_id, mix_duration);
 	Ref<SpineTrackEntry> track_entry_ref(memnew(SpineTrackEntry));
 	track_entry_ref->set_spine_object(sprite, track_entry);
 	return track_entry_ref;
 }
 Ref<SpineTrackEntry> SpineAnimationState::add_empty_animation(int track_id, float mix_duration, float delay) {
 	SPINE_CHECK(animation_state, nullptr)
-	auto track_entry = animation_state->addEmptyAnimation(track_id, mix_duration, delay);
+	auto track_entry = &animation_state->addEmptyAnimation(track_id, mix_duration, delay);
 	Ref<SpineTrackEntry> track_entry_ref(memnew(SpineTrackEntry));
 	track_entry_ref->set_spine_object(sprite, track_entry);
 	return track_entry_ref;

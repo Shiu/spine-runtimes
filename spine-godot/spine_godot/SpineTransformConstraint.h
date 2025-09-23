@@ -30,6 +30,7 @@
 #pragma once
 
 #include "SpineCommon.h"
+#include "SpineSkeleton.h"
 #include "SpineTransformConstraintData.h"
 #include "SpineBone.h"
 #include <spine/TransformConstraint.h>
@@ -41,9 +42,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	void update();
-
-	int get_order();
+	void update(Ref<SpineSkeleton> skeleton);
 
 	Ref<SpineTransformConstraintData> get_data();
 

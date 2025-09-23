@@ -54,6 +54,10 @@ class SpineSkeleton : public REFCOUNTED {
 	friend class SpineAnimationTrack;
 	friend class SpineBoneNode;
 	friend class SpineSlotNode;
+	friend class SpinePhysicsConstraint;
+	friend class SpineIkConstraint;
+	friend class SpineTransformConstraint;
+	friend class SpinePathConstraint;
 
 protected:
 	static void _bind_methods();
@@ -70,7 +74,7 @@ protected:
 private:
 	spine::Skeleton *skeleton;
 	SpineSprite *sprite;
-	spine::Vector<float> bounds_vertex_buffer;
+	spine::Array<float> bounds_vertex_buffer;
 	Ref<SpineSkin> last_skin;
 
 	std::unordered_map<spine::Bone *, Ref<SpineBone>> _cached_bones;

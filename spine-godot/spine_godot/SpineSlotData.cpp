@@ -68,36 +68,36 @@ Ref<SpineBoneData> SpineSlotData::get_bone_data() {
 
 Color SpineSlotData::get_color() {
 	SPINE_CHECK(get_spine_object(), Color(0, 0, 0, 0))
-	auto &color = get_spine_object()->getColor();
+	auto &color = get_spine_object()->getSetupPose().getColor();
 	return Color(color.r, color.g, color.b, color.a);
 }
 
 void SpineSlotData::set_color(Color v) {
 	SPINE_CHECK(get_spine_object(), )
-	auto &color = get_spine_object()->getColor();
+	auto &color = get_spine_object()->getSetupPose().getColor();
 	color.set(v.r, v.g, v.b, v.a);
 }
 
 Color SpineSlotData::get_dark_color() {
 	SPINE_CHECK(get_spine_object(), Color(0, 0, 0, 0))
-	auto &color = get_spine_object()->getDarkColor();
+	auto &color = get_spine_object()->getSetupPose().getDarkColor();
 	return Color(color.r, color.g, color.b, color.a);
 }
 
 void SpineSlotData::set_dark_color(Color v) {
 	SPINE_CHECK(get_spine_object(), )
-	auto &color = get_spine_object()->getDarkColor();
+	auto &color = get_spine_object()->getSetupPose().getDarkColor();
 	color.set(v.r, v.g, v.b, v.a);
 }
 
 bool SpineSlotData::has_dark_color() {
 	SPINE_CHECK(get_spine_object(), false)
-	return get_spine_object()->hasDarkColor();
+	return get_spine_object()->getSetupPose().hasDarkColor();
 }
 
 void SpineSlotData::set_has_dark_color(bool v) {
 	SPINE_CHECK(get_spine_object(), )
-	get_spine_object()->setHasDarkColor(v);
+	get_spine_object()->getSetupPose().setHasDarkColor(v);
 }
 
 String SpineSlotData::get_attachment_name() {

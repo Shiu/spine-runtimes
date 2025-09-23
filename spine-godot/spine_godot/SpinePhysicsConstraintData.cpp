@@ -55,7 +55,7 @@ void SpinePhysicsConstraintData::_bind_methods() {
 
 Ref<SpineBoneData> SpinePhysicsConstraintData::get_bone() {
 	SPINE_CHECK(get_spine_constraint_data(), nullptr)
-	auto bone = get_spine_constraint_data()->getBone();
+	auto bone = &get_spine_constraint_data()->getBone();
 	if (!bone) return nullptr;
 	Ref<SpineBoneData> slot_ref(memnew(SpineBoneData));
 	slot_ref->set_spine_object(get_spine_owner(), bone);
@@ -84,70 +84,70 @@ float SpinePhysicsConstraintData::get_step() {
 
 float SpinePhysicsConstraintData::get_inertia() {
 	SPINE_CHECK(get_spine_constraint_data(), 0)
-	return get_spine_constraint_data()->getInertia();
+	return get_spine_constraint_data()->getSetupPose().getInertia();
 }
 
 float SpinePhysicsConstraintData::get_strength() {
 	SPINE_CHECK(get_spine_constraint_data(), 0)
-	return get_spine_constraint_data()->getStrength();
+	return get_spine_constraint_data()->getSetupPose().getStrength();
 }
 
 float SpinePhysicsConstraintData::get_damping() {
 	SPINE_CHECK(get_spine_constraint_data(), 0)
-	return get_spine_constraint_data()->getDamping();
+	return get_spine_constraint_data()->getSetupPose().getDamping();
 }
 
 float SpinePhysicsConstraintData::get_mass_inverse() {
 	SPINE_CHECK(get_spine_constraint_data(), 0)
-	return get_spine_constraint_data()->getMassInverse();
+	return get_spine_constraint_data()->getSetupPose().getMassInverse();
 }
 
 float SpinePhysicsConstraintData::get_wind() {
 	SPINE_CHECK(get_spine_constraint_data(), 0)
-	return get_spine_constraint_data()->getWind();
+	return get_spine_constraint_data()->getSetupPose().getWind();
 }
 
 float SpinePhysicsConstraintData::get_gravity() {
 	SPINE_CHECK(get_spine_constraint_data(), 0)
-	return get_spine_constraint_data()->getGravity();
+	return get_spine_constraint_data()->getSetupPose().getGravity();
 }
 
 float SpinePhysicsConstraintData::get_mix() {
 	SPINE_CHECK(get_spine_constraint_data(), 0)
-	return get_spine_constraint_data()->getMix();
+	return get_spine_constraint_data()->getSetupPose().getMix();
 }
 
 bool SpinePhysicsConstraintData::is_inertia_global() {
 	SPINE_CHECK(get_spine_constraint_data(), false)
-	return get_spine_constraint_data()->isInertiaGlobal();
+	return get_spine_constraint_data()->getInertiaGlobal();
 }
 
 bool SpinePhysicsConstraintData::is_strength_global() {
 	SPINE_CHECK(get_spine_constraint_data(), false)
-	return get_spine_constraint_data()->isStrengthGlobal();
+	return get_spine_constraint_data()->getStrengthGlobal();
 }
 
 bool SpinePhysicsConstraintData::is_damping_global() {
 	SPINE_CHECK(get_spine_constraint_data(), false)
-	return get_spine_constraint_data()->isDampingGlobal();
+	return get_spine_constraint_data()->getDampingGlobal();
 }
 
 bool SpinePhysicsConstraintData::is_mass_global() {
 	SPINE_CHECK(get_spine_constraint_data(), false)
-	return get_spine_constraint_data()->isMassGlobal();
+	return get_spine_constraint_data()->getMassGlobal();
 }
 
 bool SpinePhysicsConstraintData::is_wind_global() {
 	SPINE_CHECK(get_spine_constraint_data(), false)
-	return get_spine_constraint_data()->isWindGlobal();
+	return get_spine_constraint_data()->getWindGlobal();
 }
 
 bool SpinePhysicsConstraintData::is_gravity_global() {
 	SPINE_CHECK(get_spine_constraint_data(), false)
-	return get_spine_constraint_data()->isGravityGlobal();
+	return get_spine_constraint_data()->getGravityGlobal();
 }
 
 bool SpinePhysicsConstraintData::is_mix_global() {
 	SPINE_CHECK(get_spine_constraint_data(), false)
-	return get_spine_constraint_data()->isMixGlobal();
+	return get_spine_constraint_data()->getMixGlobal();
 }

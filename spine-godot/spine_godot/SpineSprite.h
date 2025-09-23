@@ -159,7 +159,7 @@ protected:
 	bool debug_clipping;
 	Color debug_clipping_color;
 
-	spine::Vector<spine::Vector<SpineSlotNode *>> slot_nodes;
+	spine::Array<spine::Array<SpineSlotNode *>> slot_nodes;
 	Vector<SpineMesh2D *> mesh_instances;
 	Ref<Material> normal_material;
 	Ref<Material> additive_material;
