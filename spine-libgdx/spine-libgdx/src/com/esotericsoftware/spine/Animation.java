@@ -1903,7 +1903,8 @@ public class Animation {
 	}
 
 	static public interface ConstraintTimeline {
-		/** The index of the constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is applied. */
+		/** The index of the constraint in {@link Skeleton#getConstraints()} that will be changed when this timeline is applied, or
+		 * -1 if a specific constraint will not be changed. */
 		public int getConstraintIndex ();
 	}
 

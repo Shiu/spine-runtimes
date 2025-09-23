@@ -110,8 +110,10 @@ public class Slider extends Constraint<Slider, SliderData, SliderPose> {
 						skeleton.constrained(physics[ii]);
 				} else
 					skeleton.constrained(constraints[timeline.constraintIndex]);
-			} else if (t instanceof ConstraintTimeline timeline) //
-				skeleton.constrained(constraints[timeline.getConstraintIndex()]);
+			} else if (t instanceof ConstraintTimeline timeline) {
+				int constraintIndex = timeline.getConstraintIndex();
+				if (constraintIndex != -1) skeleton.constrained(constraints[constraintIndex]);
+			}
 		}
 	}
 
