@@ -65,9 +65,9 @@ class Skin {
 
   /// Adds an attachment to the skin for the specified slot index and name. If
   /// the name already exists for the slot, the previous value is replaced.
-  void setAttachment(int slotIndex, String name, Attachment attachment) {
-    SpineBindings.bindings
-        .spine_skin_set_attachment(_ptr, slotIndex, name.toNativeUtf8().cast<Char>(), attachment.nativePtr.cast());
+  void setAttachment(int slotIndex, String name, Attachment? attachment) {
+    SpineBindings.bindings.spine_skin_set_attachment(
+        _ptr, slotIndex, name.toNativeUtf8().cast<Char>(), attachment?.nativePtr.cast() ?? Pointer.fromAddress(0));
   }
 
   /// Returns the attachment for the specified slot index and name, or NULL.

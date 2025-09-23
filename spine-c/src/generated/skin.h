@@ -17,7 +17,7 @@ SPINE_C_API void spine_skin_dispose(spine_skin self);
  * Adds an attachment to the skin for the specified slot index and name. If the
  * name already exists for the slot, the previous value is replaced.
  */
-SPINE_C_API void spine_skin_set_attachment(spine_skin self, size_t slotIndex, const char *name, spine_attachment attachment);
+SPINE_C_API void spine_skin_set_attachment(spine_skin self, size_t slotIndex, const char *name, /*@null*/ spine_attachment attachment);
 /**
  * Returns the attachment for the specified slot index and name, or NULL.
  */

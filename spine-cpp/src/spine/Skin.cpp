@@ -99,8 +99,8 @@ Skin::~Skin() {
 	}
 }
 
-void Skin::setAttachment(size_t slotIndex, const String &name, Attachment &attachment) {
-	_attachments.put(slotIndex, name, &attachment);
+void Skin::setAttachment(size_t slotIndex, const String &name, Attachment *attachment) {
+	_attachments.put(slotIndex, name, attachment);
 }
 
 Attachment *Skin::getAttachment(size_t slotIndex, const String &name) {
@@ -162,7 +162,7 @@ void Skin::addSkin(Skin &other) {
 	AttachmentMap::Entries entries = other.getAttachments();
 	while (entries.hasNext()) {
 		AttachmentMap::Entry &entry = entries.next();
-		setAttachment(entry._slotIndex, entry._name, *entry._attachment);
+		setAttachment(entry._slotIndex, entry._name, entry._attachment);
 	}
 }
 
@@ -177,9 +177,9 @@ void Skin::copySkin(Skin &other) {
 	while (entries.hasNext()) {
 		AttachmentMap::Entry &entry = entries.next();
 		if (entry._attachment->getRTTI().isExactly(MeshAttachment::rtti))
-			setAttachment(entry._slotIndex, entry._name, static_cast<MeshAttachment *>(entry._attachment)->newLinkedMesh());
+			setAttachment(entry._slotIndex, entry._name, &static_cast<MeshAttachment *>(entry._attachment)->newLinkedMesh());
 		else
-			setAttachment(entry._slotIndex, entry._name, entry._attachment->copy());
+			setAttachment(entry._slotIndex, entry._name, &entry._attachment->copy());
 	}
 }
 

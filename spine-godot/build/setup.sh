@@ -72,4 +72,31 @@ fi
 
 popd
 
+# Generate compile_commands.json for IDE integration
+echo "Generating compile_commands.json for IDE integration..."
+pushd ../godot > /dev/null
+
+# Detect architecture for macOS
+arch=""
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	if [ `uname -m` == "arm64" ]; then
+		arch="arch=arm64"
+	else
+		arch="arch=x86_64"
+	fi
+fi
+
+# Generate compilation database without building
+scons compiledb=yes custom_modules="../spine_godot" opengl3=yes $arch compiledb
+
+# Copy to parent directory for easy IDE access
+if [ -f compile_commands.json ]; then
+	cp compile_commands.json ..
+	echo "compile_commands.json generated successfully and copied to spine-godot/"
+else
+	echo "Warning: Failed to generate compile_commands.json"
+fi
+
+popd > /dev/null
+
 popd > /dev/null

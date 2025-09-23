@@ -11,9 +11,9 @@ void spine_skin_dispose(spine_skin self) {
 	delete (Skin *) self;
 }
 
-void spine_skin_set_attachment(spine_skin self, size_t slotIndex, const char *name, spine_attachment attachment) {
+void spine_skin_set_attachment(spine_skin self, size_t slotIndex, const char *name, /*@null*/ spine_attachment attachment) {
 	Skin *_self = (Skin *) self;
-	_self->setAttachment(slotIndex, String(name), *((Attachment *) attachment));
+	_self->setAttachment(slotIndex, String(name), (Attachment *) attachment);
 }
 
 /*@null*/ spine_attachment spine_skin_get_attachment(spine_skin self, size_t slotIndex, const char *name) {

@@ -537,7 +537,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 					for (Json *entry = slotEntry->_child; entry; entry = entry->_next) {
 						Attachment *attachment = readAttachment(entry, skin, slot->getIndex(), entry->_name, skeletonData);
 						if (attachment)
-							skin->setAttachment(slot->getIndex(), entry->_name, *attachment);
+							skin->setAttachment(slot->getIndex(), entry->_name, attachment);
 						else
 							SKELETON_JSON_ERROR(root, "Error reading attachment: ", entry->_name);
 					}

@@ -560,7 +560,7 @@ Skin *SkeletonBinary::readSkin(DataInput &input, SkeletonData &skeletonData, boo
 			String name(input.readStringRef());
 			Attachment *attachment = readAttachment(input, *skin, slotIndex, name, skeletonData, nonessential);
 			if (attachment)
-				skin->setAttachment(slotIndex, name, *attachment);
+				skin->setAttachment(slotIndex, name, attachment);
 			else {
 				setError("Error reading attachment: ", name.buffer());
 				delete skin;

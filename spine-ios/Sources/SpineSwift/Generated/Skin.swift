@@ -72,8 +72,8 @@ public class Skin: NSObject {
 
     /// Adds an attachment to the skin for the specified slot index and name. If the name already
     /// exists for the slot, the previous value is replaced.
-    public func setAttachment(_ slotIndex: Int, _ name: String, _ attachment: Attachment) {
-        spine_skin_set_attachment(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), slotIndex, name, attachment._ptr.assumingMemoryBound(to: spine_attachment_wrapper.self))
+    public func setAttachment(_ slotIndex: Int, _ name: String, _ attachment: Attachment?) {
+        spine_skin_set_attachment(_ptr.assumingMemoryBound(to: spine_skin_wrapper.self), slotIndex, name, attachment?._ptr.assumingMemoryBound(to: spine_attachment_wrapper.self))
     }
 
     /// Returns the attachment for the specified slot index and name, or NULL.
