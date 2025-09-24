@@ -408,7 +408,7 @@ static const char *parse_object(Json *item, const char *value) {
 	if (*value != ':') {
 		ep = value;
 		return 0;
-	}                                                  /* fail! */
+	} /* fail! */
 	value = skip(parse_value(child, skip(value + 1))); /* skip any spacing, get the value. */
 	if (!value) return 0;
 	item->size = 1;
@@ -428,7 +428,7 @@ static const char *parse_object(Json *item, const char *value) {
 		if (*value != ':') {
 			ep = value;
 			return 0;
-		}                                                  /* fail! */
+		} /* fail! */
 		value = skip(parse_value(child, skip(value + 1))); /* skip any spacing, get the value. */
 		if (!value) return 0;
 		item->size++;
