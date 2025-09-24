@@ -293,7 +293,7 @@ void spIkConstraint_apply2(spBone *parent, spBone *child, float targetX, float t
 			}
 		}
 	}
-break_outer: {
+break_outer : {
 	float os = ATAN2(cy, cx) * s2;
 	float rotation = parent->arotation;
 	a1 = (a1 - os) * RAD_DEG + o1 - rotation;
