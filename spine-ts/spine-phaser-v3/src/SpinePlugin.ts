@@ -27,11 +27,13 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-import * as Phaser from "phaser";
-import { SPINE_ATLAS_CACHE_KEY, SPINE_GAME_OBJECT_TYPE, SPINE_SKELETON_DATA_FILE_TYPE, SPINE_ATLAS_FILE_TYPE, SPINE_SKELETON_FILE_CACHE_KEY as SPINE_SKELETON_DATA_CACHE_KEY } from "./keys.js";
-import { AtlasAttachmentLoader, GLTexture, SceneRenderer, Skeleton, SkeletonBinary, SkeletonData, SkeletonJson, TextureAtlas } from "@esotericsoftware/spine-webgl"
-import { SpineGameObject, SpineGameObjectBoundsProvider } from "./SpineGameObject.js";
 import { CanvasTexture, SkeletonRenderer } from "@esotericsoftware/spine-canvas";
+import { AtlasAttachmentLoader, GLTexture, SceneRenderer, Skeleton, SkeletonBinary, type SkeletonData, SkeletonJson, TextureAtlas } from "@esotericsoftware/spine-webgl"
+import * as Phaser from "phaser";
+import { SPINE_ATLAS_CACHE_KEY, SPINE_ATLAS_FILE_TYPE, SPINE_GAME_OBJECT_TYPE, SPINE_SKELETON_FILE_CACHE_KEY as SPINE_SKELETON_DATA_CACHE_KEY, SPINE_SKELETON_DATA_FILE_TYPE } from "./keys.js";
+import { SpineGameObject, type SpineGameObjectBoundsProvider } from "./SpineGameObject.js";
+
+Skeleton.yDown = true;
 
 /**
  * Configuration object used when creating {@link SpineGameObject} instances via a scene's
@@ -86,6 +88,7 @@ export class SpinePlugin extends Phaser.Plugins.ScenePlugin {
 
 	constructor (scene: Phaser.Scene, pluginManager: Phaser.Plugins.PluginManager, pluginKey: string) {
 		super(scene, pluginManager, pluginKey);
+		console.log(pluginKey);
 		this.game = pluginManager.game;
 		this.isWebGL = this.game.config.renderType === 2;
 		this.gl = this.isWebGL ? (this.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).gl : null;
@@ -94,41 +97,44 @@ export class SpinePlugin extends Phaser.Plugins.ScenePlugin {
 		this.skeletonDataCache = this.game.cache.addCustom(SPINE_SKELETON_DATA_CACHE_KEY);
 		this.atlasCache = this.game.cache.addCustom(SPINE_ATLAS_CACHE_KEY);
 
-		let skeletonJsonFileCallback = function (this: any, key: string,
+		const skeletonJsonFileCallback = function (this: Phaser.Loader.LoaderPlugin, key: string,
 			url: string,
 			xhrSettings: Phaser.Types.Loader.XHRSettingsObject) {
-			let file = new SpineSkeletonDataFile(this as any, key, url, SpineSkeletonDataFileType.json, xhrSettings);
+			const file = new SpineSkeletonDataFile(this, key, url, SpineSkeletonDataFileType.json, xhrSettings);
 			this.addFile(file.files);
+
+			console.log(this);
+
 			return this;
 		};
 		pluginManager.registerFileType("spineJson", skeletonJsonFileCallback, scene);
 
-		let skeletonBinaryFileCallback = function (this: any, key: string,
+		const skeletonBinaryFileCallback = function (this: Phaser.Loader.LoaderPlugin, key: string,
 			url: string,
 			xhrSettings: Phaser.Types.Loader.XHRSettingsObject) {
-			let file = new SpineSkeletonDataFile(this as any, key, url, SpineSkeletonDataFileType.binary, xhrSettings);
+			const file = new SpineSkeletonDataFile(this, key, url, SpineSkeletonDataFileType.binary, xhrSettings);
 			this.addFile(file.files);
 			return this;
 		};
 		pluginManager.registerFileType("spineBinary", skeletonBinaryFileCallback, scene);
 
-		let atlasFileCallback = function (this: any, key: string,
+		const atlasFileCallback = function (this: Phaser.Loader.LoaderPlugin, key: string,
 			url: string,
 			premultipliedAlpha: boolean,
 			xhrSettings: Phaser.Types.Loader.XHRSettingsObject) {
-			let file = new SpineAtlasFile(this as any, key, url, premultipliedAlpha, xhrSettings);
+			const file = new SpineAtlasFile(this, key, url, premultipliedAlpha, xhrSettings);
 			this.addFile(file.files);
 			return this;
 		};
 		pluginManager.registerFileType("spineAtlas", atlasFileCallback, scene);
 
-		let addSpineGameObject = function (this: Phaser.GameObjects.GameObjectFactory, x: number, y: number, dataKey: string, atlasKey: string, boundsProvider: SpineGameObjectBoundsProvider) {
+		const addSpineGameObject = function (this: Phaser.GameObjects.GameObjectFactory, x: number, y: number, dataKey: string, atlasKey: string, boundsProvider: SpineGameObjectBoundsProvider) {
 			if (this.scene.sys.renderer instanceof Phaser.Renderer.WebGL.WebGLRenderer) {
 				this.scene.sys.renderer.pipelines.clear();
 			}
 
-			const spinePlugin = (this.scene.sys as any)[pluginKey] as SpinePlugin;
-			let gameObject = new SpineGameObject(this.scene, spinePlugin, x, y, dataKey, atlasKey, boundsProvider);
+			const spinePlugin = (this.scene.sys as Phaser.Scenes.Systems & Record<string, SpinePlugin>)[pluginKey];
+			const gameObject = new SpineGameObject(this.scene, spinePlugin, x, y, dataKey, atlasKey, boundsProvider);
 			this.displayList.add(gameObject);
 			this.updateList.add(gameObject);
 
@@ -139,17 +145,17 @@ export class SpinePlugin extends Phaser.Plugins.ScenePlugin {
 			return gameObject;
 		};
 
-		let makeSpineGameObject = function (this: Phaser.GameObjects.GameObjectFactory, config: SpineGameObjectConfig, addToScene: boolean = false) {
+		const makeSpineGameObject = function (this: Phaser.GameObjects.GameObjectFactory, config: SpineGameObjectConfig, addToScene: boolean = false) {
 			if (this.scene.sys.renderer instanceof Phaser.Renderer.WebGL.WebGLRenderer) {
 				this.scene.sys.renderer.pipelines.clear();
 			}
 
-			let x = config.x ? config.x : 0;
-			let y = config.y ? config.y : 0;
-			let boundsProvider = config.boundsProvider ? config.boundsProvider : undefined;
+			const x = config.x ? config.x : 0;
+			const y = config.y ? config.y : 0;
+			const boundsProvider = config.boundsProvider ? config.boundsProvider : undefined;
 
-			const spinePlugin = (this.scene.sys as any)[pluginKey] as SpinePlugin;
-			let gameObject = new SpineGameObject(this.scene, spinePlugin, x, y, config.dataKey, config.atlasKey, boundsProvider);
+			const spinePlugin = (this.scene.sys as Phaser.Scenes.Systems & Record<string, SpinePlugin>)[pluginKey] as SpinePlugin;
+			const gameObject = new SpineGameObject(this.scene, spinePlugin, x, y, config.dataKey, config.atlasKey, boundsProvider);
 			if (addToScene !== undefined) {
 				config.add = addToScene;
 			}
@@ -160,37 +166,34 @@ export class SpinePlugin extends Phaser.Plugins.ScenePlugin {
 
 			return Phaser.GameObjects.BuildGameObject(this.scene, gameObject, config);
 		}
-		pluginManager.registerGameObject((window as any).SPINE_GAME_OBJECT_TYPE ? (window as any).SPINE_GAME_OBJECT_TYPE : SPINE_GAME_OBJECT_TYPE, addSpineGameObject, makeSpineGameObject);
+		pluginManager.registerGameObject(window.SPINE_GAME_OBJECT_TYPE ?? SPINE_GAME_OBJECT_TYPE, addSpineGameObject, makeSpineGameObject);
 	}
 
 	static rendererId = 0;
 	boot () {
-		Skeleton.yDown = true;
-		if (this.isWebGL) {
-			if (!SpinePlugin.gameWebGLRenderer) {
-				SpinePlugin.gameWebGLRenderer = new SceneRenderer((this.game.renderer! as Phaser.Renderer.WebGL.WebGLRenderer).canvas, this.gl!, true);
-			}
-			this.onResize();
-			this.game.scale.on(Phaser.Scale.Events.RESIZE, this.onResize, this);
-		} else {
-			if (!this.canvasRenderer) {
-				this.canvasRenderer = new SkeletonRenderer(this.scene!.sys.context);
-			}
+		if (this.isWebGL && this.gl) {
+			SpinePlugin.gameWebGLRenderer ||= new SceneRenderer((this.game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).canvas, this.gl, true);
+		} else if (this.scene) {
+			this.canvasRenderer ||= new SkeletonRenderer(this.scene.sys.context);
 		}
 
-		var eventEmitter = this.systems!.events;
-		eventEmitter.once('shutdown', this.shutdown, this);
-		eventEmitter.once('destroy', this.destroy, this);
-		this.game.events.once('destroy', this.gameDestroy, this);
+		this.onResize();
+		if (this.systems) {
+			this.systems.events.once("destroy", this.destroy, this);
+			this.systems.events.on("start", this.onStart, this);
+			this.systems.events.on("shutdown", this.shutdown, this);
+		}
+
+		this.game.events.once("destroy", this.gameDestroy, this);
 	}
 
 	onResize () {
-		var phaserRenderer = this.game.renderer;
-		var sceneRenderer = this.webGLRenderer;
+		const phaserRenderer = this.game.renderer;
+		const sceneRenderer = this.webGLRenderer;
 
 		if (phaserRenderer && sceneRenderer) {
-			var viewportWidth = phaserRenderer.width;
-			var viewportHeight = phaserRenderer.height;
+			const viewportWidth = phaserRenderer.width;
+			const viewportHeight = phaserRenderer.height;
 			sceneRenderer.camera.position.x = viewportWidth / 2;
 			sceneRenderer.camera.position.y = viewportHeight / 2;
 			sceneRenderer.camera.up.y = -1;
@@ -199,19 +202,24 @@ export class SpinePlugin extends Phaser.Plugins.ScenePlugin {
 		}
 	}
 
+	onStart () {
+		this.game.scale.on(Phaser.Scale.Events.RESIZE, this.onResize, this);
+	}
+
 	shutdown () {
-		this.systems!.events.off("shutdown", this.shutdown, this);
 		if (this.isWebGL) {
 			this.game.scale.off(Phaser.Scale.Events.RESIZE, this.onResize, this);
 		}
 	}
 
 	destroy () {
-		this.shutdown()
+		this.shutdown();
+		this.systems?.events.off("start", this.onStart, this);
+		this.systems?.events.off("shutdown", this.shutdown, this);
 	}
 
 	gameDestroy () {
-		this.pluginManager.removeGameObject((window as any).SPINE_GAME_OBJECT_TYPE ? (window as any).SPINE_GAME_OBJECT_TYPE : SPINE_GAME_OBJECT_TYPE, true, true);
+		this.pluginManager.removeGameObject(window.SPINE_GAME_OBJECT_TYPE ?? SPINE_GAME_OBJECT_TYPE, true, true);
 		if (this.webGLRenderer) this.webGLRenderer.dispose();
 		SpinePlugin.gameWebGLRenderer = null;
 	}
@@ -222,19 +230,19 @@ export class SpinePlugin extends Phaser.Plugins.ScenePlugin {
 		if (this.atlasCache.exists(atlasKey)) {
 			atlas = this.atlasCache.get(atlasKey);
 		} else {
-			let atlasFile = this.game.cache.text.get(atlasKey) as { data: string, premultipliedAlpha: boolean };
+			const atlasFile = this.game.cache.text.get(atlasKey) as { data: string, premultipliedAlpha: boolean };
 			atlas = new TextureAtlas(atlasFile.data);
-			if (this.isWebGL) {
-				let gl = this.gl!;
+			if (this.isWebGL && this.gl) {
+				const gl = this.gl;
 				const phaserUnpackPmaValue = gl.getParameter(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL);
 				if (phaserUnpackPmaValue) gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
-				for (let atlasPage of atlas.pages) {
-					atlasPage.setTexture(new GLTexture(gl, this.game.textures.get(atlasKey + "!" + atlasPage.name).getSourceImage() as HTMLImageElement | ImageBitmap, false));
+				for (const atlasPage of atlas.pages) {
+					atlasPage.setTexture(new GLTexture(gl, this.game.textures.get(`${atlasKey}!${atlasPage.name}`).getSourceImage() as HTMLImageElement | ImageBitmap, false));
 				}
 				if (phaserUnpackPmaValue) gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 			} else {
-				for (let atlasPage of atlas.pages) {
-					atlasPage.setTexture(new CanvasTexture(this.game.textures.get(atlasKey + "!" + atlasPage.name).getSourceImage() as HTMLImageElement | ImageBitmap));
+				for (const atlasPage of atlas.pages) {
+					atlasPage.setTexture(new CanvasTexture(this.game.textures.get(`${atlasKey}!${atlasPage.name}`).getSourceImage() as HTMLImageElement | ImageBitmap));
 				}
 			}
 			this.atlasCache.add(atlasKey, atlas);
@@ -244,7 +252,7 @@ export class SpinePlugin extends Phaser.Plugins.ScenePlugin {
 
 	/** Returns whether the TextureAtlas uses premultiplied alpha */
 	isAtlasPremultiplied (atlasKey: string) {
-		let atlasFile = this.game.cache.text.get(atlasKey);
+		const atlasFile = this.game.cache.text.get(atlasKey);
 		if (!atlasFile) return false;
 		return atlasFile.premultipliedAlpha;
 	}
@@ -258,12 +266,12 @@ export class SpinePlugin extends Phaser.Plugins.ScenePlugin {
 			skeletonData = this.skeletonDataCache.get(combinedKey);
 		} else {
 			if (this.game.cache.json.exists(dataKey)) {
-				let jsonFile = this.game.cache.json.get(dataKey) as any;
-				let json = new SkeletonJson(new AtlasAttachmentLoader(atlas));
+				const jsonFile = this.game.cache.json.get(dataKey);
+				const json = new SkeletonJson(new AtlasAttachmentLoader(atlas));
 				skeletonData = json.readSkeletonData(jsonFile);
 			} else {
-				let binaryFile = this.game.cache.binary.get(dataKey) as ArrayBuffer;
-				let binary = new SkeletonBinary(new AtlasAttachmentLoader(atlas));
+				const binaryFile = this.game.cache.binary.get(dataKey) as ArrayBuffer;
+				const binary = new SkeletonBinary(new AtlasAttachmentLoader(atlas));
 				skeletonData = binary.readSkeletonData(new Uint8Array(binaryFile));
 			}
 			this.skeletonDataCache.add(combinedKey, skeletonData);
@@ -299,7 +307,7 @@ class SpineSkeletonDataFile extends Phaser.Loader.MultiFile {
 			xhrSettings = config.xhrSettings;
 		}
 		let file = null;
-		let isJson = fileType == SpineSkeletonDataFileType.json;
+		const isJson = fileType === SpineSkeletonDataFileType.json;
 		if (isJson) {
 			file = new Phaser.Loader.FileTypes.JSONFile(loader, {
 				key: key,
@@ -318,7 +326,7 @@ class SpineSkeletonDataFile extends Phaser.Loader.MultiFile {
 		super(loader, SPINE_SKELETON_DATA_FILE_TYPE, key, [file]);
 	}
 
-	onFileComplete (file: Phaser.Loader.File) {
+	onFileComplete () {
 		this.pending--;
 	}
 
@@ -355,15 +363,15 @@ class SpineAtlasFile extends Phaser.Loader.MultiFile {
 	}
 
 	onFileComplete (file: Phaser.Loader.File) {
-		if (this.files.indexOf(file) != -1) {
+		if (this.files.indexOf(file) !== -1) {
 			this.pending--;
 
-			if (file.type == "text") {
-				var lines = file.data.split(/\r\n|\r|\n/);
-				let textures = [];
+			if (file.type === "text") {
+				const lines = file.data.split(/\r\n|\r|\n/);
+				const textures = [];
 				textures.push(lines[0]);
-				for (var t = 1; t < lines.length; t++) {
-					var line = lines[t];
+				for (let t = 1; t < lines.length; t++) {
+					let line = lines[t];
 					if (line.trim() === '' && t < lines.length - 1) {
 						line = lines[t + 1];
 						textures.push(line);
@@ -374,10 +382,10 @@ class SpineAtlasFile extends Phaser.Loader.MultiFile {
 				if (this.loader.path && this.loader.path.length > 0 && basePath.startsWith(this.loader.path))
 					basePath = basePath.slice(this.loader.path.length);
 
-				for (var i = 0; i < textures.length; i++) {
-					var url = basePath + textures[i];
-					var key = file.key + "!" + textures[i];
-					var image = new Phaser.Loader.FileTypes.ImageFile(this.loader, key, url);
+				for (let i = 0; i < textures.length; i++) {
+					const url = basePath + textures[i];
+					const key = `${file.key}!${textures[i]}`;
+					const image = new Phaser.Loader.FileTypes.ImageFile(this.loader, key, url);
 
 					if (!this.loader.keyExists(image)) {
 						this.addToMultiFile(image);
@@ -390,9 +398,9 @@ class SpineAtlasFile extends Phaser.Loader.MultiFile {
 
 	addToCache () {
 		if (this.isReadyToProcess()) {
-			let textureManager = this.loader.textureManager;
-			for (let file of this.files) {
-				if (file.type == "image") {
+			const textureManager = this.loader.textureManager;
+			for (const file of this.files) {
+				if (file.type === "image") {
 					if (!textureManager.exists(file.key)) {
 						textureManager.addImage(file.key, file.data);
 					}
@@ -406,5 +414,11 @@ class SpineAtlasFile extends Phaser.Loader.MultiFile {
 				}
 			}
 		}
+	}
+}
+
+declare global {
+	interface Window {
+		SPINE_GAME_OBJECT_TYPE?: typeof SPINE_GAME_OBJECT_TYPE;
 	}
 }
