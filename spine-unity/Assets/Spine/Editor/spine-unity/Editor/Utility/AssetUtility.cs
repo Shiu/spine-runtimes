@@ -667,6 +667,7 @@ namespace Spine.Unity.Editor {
 			if (atlas != null) {
 				foreach (AtlasPage page in atlas.Pages)
 					pageFiles.Add(page.name);
+				IssuePMAWarnings(atlas, atlasAsset);
 			}
 			bool atlasHasCustomMaterials = HasCustomMaterialsAssigned(vestigialMaterials, primaryName, pageFiles);
 
@@ -738,8 +739,6 @@ namespace Spine.Unity.Editor {
 			atlasAsset.Clear();
 			atlas = atlasAsset.GetAtlas(onlyMetaData: false);
 			if (atlas != null) {
-				IssuePMAWarnings(atlas, atlasAsset);
-
 				FieldInfo field = typeof(Atlas).GetField("regions", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.NonPublic);
 				List<AtlasRegion> regions = (List<AtlasRegion>)field.GetValue(atlas);
 				string atlasAssetPath = AssetDatabase.GetAssetPath(atlasAsset);
@@ -772,28 +771,47 @@ namespace Spine.Unity.Editor {
 
 		static void IssuePMAWarnings (Atlas atlas, SpineAtlasAsset atlasAsset) {
 			bool isPMA = atlas.Pages.Count > 0 && atlas.Pages[0].pma;
-			if (QualitySettings.activeColorSpace == ColorSpace.Linear && isPMA)
-				Debug.LogWarning(string.Format("{0} :: Atlas was exported as PMA but your color space is set to Linear. " +
+			if (QualitySettings.activeColorSpace == ColorSpace.Linear && isPMA) {
+				bool wasFixed = false;
+				if (SpineEditorUtilities.Preferences.ShowWorkflowMismatchDialog)
+					wasFixed = ShowWorkflowMismatchDialog(atlasAsset, isLinearPMAMismatch: true, atlasIsPMA: isPMA);
+				if (!wasFixed) {
+					Debug.LogWarning(string.Format("{0} :: Atlas was exported as PMA but your color space is set to Linear. " +
 					"Please\n"
 					+ "a) re-export atlas as straight alpha texture with 'premultiply alpha' unchecked.\n"
 					+ "b) switch to Gamma color space via\nProject Settings - Player - Other Settings - Color Space.\n",
 					atlasAsset.name), atlasAsset);
-			else if (SpineEditorUtilities.Preferences.UsesPMAWorkflow != isPMA) {
-				if (isPMA)
-					Debug.LogWarning(string.Format("{0} :: Atlas was exported as PMA but Spine Preferences are set " +
-						"to use straight-alpha import presets. Please\n"
-					+ "a) re-export atlas as straight-alpha texture with 'premultiply alpha' disabled, or\n"
-					+ "b) Select 'Edit - Preferences - Spine - Switch Texture Workflow' - 'PMA'. " +
-					"Select `Reimport` on the skeleton directory afterwards.\n",
-					atlasAsset.name), atlasAsset);
-				else
-					Debug.LogWarning(string.Format("{0} :: Atlas was exported as straight-alpha but Spine Preferences are set " +
-						"to use PMA import presets. Please\n"
-					+ "a) re-export atlas as PMA texture with 'premultiply alpha' enabled, or\n"
-					+ "b) Select 'Edit - Preferences - Spine - Switch Texture Workflow' - 'Straight Alpha'. " +
-					"Select `Reimport` on the skeleton directory afterwards.\n",
-					atlasAsset.name), atlasAsset);
+				}
+			} else if (SpineEditorUtilities.Preferences.UsesPMAWorkflow != isPMA) {
+				bool wasFixed = false;
+				if (SpineEditorUtilities.Preferences.ShowWorkflowMismatchDialog)
+					wasFixed = ShowWorkflowMismatchDialog(atlasAsset, isLinearPMAMismatch: false, atlasIsPMA: isPMA);
+				if (!wasFixed) {
+					if (isPMA)
+						Debug.LogWarning(string.Format("{0} :: Atlas was exported as PMA but Spine Preferences are set " +
+							"to use straight-alpha import presets. Please\n"
+						+ "a) re-export atlas as straight-alpha texture with 'premultiply alpha' disabled, or\n"
+						+ "b) Select 'Edit - Preferences - Spine - Switch Texture Workflow' - 'PMA'. " +
+						"Select `Reimport` on the skeleton directory afterwards.\n",
+						atlasAsset.name), atlasAsset);
+					else
+						Debug.LogWarning(string.Format("{0} :: Atlas was exported as straight-alpha but Spine Preferences are set " +
+							"to use PMA import presets. Please\n"
+						+ "a) re-export atlas as PMA texture with 'premultiply alpha' enabled, or\n"
+						+ "b) Select 'Edit - Preferences - Spine - Switch Texture Workflow' - 'Straight Alpha'. " +
+						"Select `Reimport` on the skeleton directory afterwards.\n",
+						atlasAsset.name), atlasAsset);
+				}
 			}
+		}
+
+		/// <returns>True if automatic fixing by switching to suitable settings was selected.</returns>
+		static bool ShowWorkflowMismatchDialog (SpineAtlasAsset atlasAsset, bool isLinearPMAMismatch, bool atlasIsPMA) {
+			string atlasFileName = atlasAsset.atlasFile.name;
+			Selection.activeObject = atlasAsset.atlasFile;
+			EditorGUIUtility.PingObject(atlasAsset.atlasFile);
+			return WorkflowMismatchDialog.ShowDialog(atlasFileName + ".txt", isLinearPMAMismatch, atlasIsPMA)
+				== WorkflowMismatchDialog.DialogResult.Switch;
 		}
 
 		static bool HasCustomMaterialsAssigned (List<Material> vestigialMaterials, string primaryName, List<string> pageFiles) {

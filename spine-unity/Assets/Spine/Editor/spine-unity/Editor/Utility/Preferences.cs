@@ -140,6 +140,15 @@ namespace Spine.Unity.Editor {
 				}
 			}
 
+			public static bool ShowWorkflowMismatchDialog {
+				get { return workflowMismatchDialog; }
+				set {
+					if (workflowMismatchDialog == value) return;
+					workflowMismatchDialog = value;
+					EditorPrefs.SetBool(WORKFLOW_MISMATCH_DIALOG_KEY, workflowMismatchDialog);
+				}
+			}
+
 			const string APPLY_ADDITIVE_MATERIAL_KEY = "SPINE_APPLY_ADDITIVE_MATERIAL";
 			const string BLEND_MODE_MATERIAL_MULTIPLY_KEY = "SPINE_BLENDMODE_MATERIAL_MULTIPLY";
 			const string BLEND_MODE_MATERIAL_SCREEN_KEY = "SPINE_BLENDMODE_MATERIAL_SCREEN";
@@ -189,6 +198,9 @@ namespace Spine.Unity.Editor {
 			const string SKELETONDATA_ASSET_NO_FILE_ERROR_KEY = "SPINE_SKELETONDATA_ASSET_NO_FILE_ERROR";
 			public static bool skeletonDataAssetNoFileError = SpinePreferences.DEFAULT_SKELETONDATA_ASSET_NO_FILE_ERROR;
 
+			const string WORKFLOW_MISMATCH_DIALOG_KEY = "SPINE_WORKFLOW_MISMATCH_DIALOG";
+			public static bool workflowMismatchDialog = SpinePreferences.DEFAULT_WORKFLOW_MISMATCH_DIALOG;
+
 			public const float DEFAULT_MIPMAPBIAS = SpinePreferences.DEFAULT_MIPMAPBIAS;
 
 			public const string SCENE_ICONS_SCALE_KEY = "SPINE_SCENE_ICONS_SCALE";
@@ -234,6 +246,7 @@ namespace Spine.Unity.Editor {
 				textureImporterWarning = EditorPrefs.GetBool(TEXTUREIMPORTER_WARNING_KEY, SpinePreferences.DEFAULT_TEXTUREIMPORTER_WARNING);
 				componentMaterialWarning = EditorPrefs.GetBool(COMPONENTMATERIAL_WARNING_KEY, SpinePreferences.DEFAULT_COMPONENTMATERIAL_WARNING);
 				skeletonDataAssetNoFileError = EditorPrefs.GetBool(SKELETONDATA_ASSET_NO_FILE_ERROR_KEY, SpinePreferences.DEFAULT_SKELETONDATA_ASSET_NO_FILE_ERROR);
+				workflowMismatchDialog = EditorPrefs.GetBool(WORKFLOW_MISMATCH_DIALOG_KEY, SpinePreferences.DEFAULT_WORKFLOW_MISMATCH_DIALOG);
 				timelineDefaultMixDuration = EditorPrefs.GetBool(TIMELINE_DEFAULT_MIX_DURATION_KEY, SpinePreferences.DEFAULT_TIMELINE_DEFAULT_MIX_DURATION);
 				timelineUseBlendDuration = EditorPrefs.GetBool(TIMELINE_USE_BLEND_DURATION_KEY, SpinePreferences.DEFAULT_TIMELINE_USE_BLEND_DURATION);
 				handleScale = EditorPrefs.GetFloat(SCENE_ICONS_SCALE_KEY, SpinePreferences.DEFAULT_SCENE_ICONS_SCALE);
@@ -260,6 +273,7 @@ namespace Spine.Unity.Editor {
 				newPreferences.textureImporterWarning = EditorPrefs.GetBool(TEXTUREIMPORTER_WARNING_KEY, SpinePreferences.DEFAULT_TEXTUREIMPORTER_WARNING);
 				newPreferences.componentMaterialWarning = EditorPrefs.GetBool(COMPONENTMATERIAL_WARNING_KEY, SpinePreferences.DEFAULT_COMPONENTMATERIAL_WARNING);
 				newPreferences.skeletonDataAssetNoFileError = EditorPrefs.GetBool(SKELETONDATA_ASSET_NO_FILE_ERROR_KEY, SpinePreferences.DEFAULT_SKELETONDATA_ASSET_NO_FILE_ERROR);
+				newPreferences.workflowMismatchDialog = EditorPrefs.GetBool(WORKFLOW_MISMATCH_DIALOG_KEY, SpinePreferences.DEFAULT_WORKFLOW_MISMATCH_DIALOG);
 				newPreferences.timelineDefaultMixDuration = EditorPrefs.GetBool(TIMELINE_DEFAULT_MIX_DURATION_KEY, SpinePreferences.DEFAULT_TIMELINE_DEFAULT_MIX_DURATION);
 				newPreferences.timelineUseBlendDuration = EditorPrefs.GetBool(TIMELINE_USE_BLEND_DURATION_KEY, SpinePreferences.DEFAULT_TIMELINE_USE_BLEND_DURATION);
 				newPreferences.handleScale = EditorPrefs.GetFloat(SCENE_ICONS_SCALE_KEY, SpinePreferences.DEFAULT_SCENE_ICONS_SCALE);
@@ -284,6 +298,7 @@ namespace Spine.Unity.Editor {
 				EditorPrefs.SetBool(TEXTUREIMPORTER_WARNING_KEY, preferences.textureImporterWarning);
 				EditorPrefs.SetBool(COMPONENTMATERIAL_WARNING_KEY, preferences.componentMaterialWarning);
 				EditorPrefs.SetBool(SKELETONDATA_ASSET_NO_FILE_ERROR_KEY, preferences.skeletonDataAssetNoFileError);
+				EditorPrefs.SetBool(WORKFLOW_MISMATCH_DIALOG_KEY, preferences.workflowMismatchDialog);
 				EditorPrefs.SetBool(TIMELINE_DEFAULT_MIX_DURATION_KEY, preferences.timelineDefaultMixDuration);
 				EditorPrefs.SetBool(TIMELINE_USE_BLEND_DURATION_KEY, preferences.timelineUseBlendDuration);
 				EditorPrefs.SetFloat(SCENE_ICONS_SCALE_KEY, preferences.handleScale);
@@ -362,6 +377,7 @@ namespace Spine.Unity.Editor {
 					SpineEditorUtilities.BoolPrefsField(ref textureImporterWarning, TEXTUREIMPORTER_WARNING_KEY, new GUIContent("Texture Settings Warning", "Log a warning and recommendation whenever Texture Import Settings are detected that could lead to undesired effects, e.g. white border artifacts."));
 					SpineEditorUtilities.BoolPrefsField(ref componentMaterialWarning, COMPONENTMATERIAL_WARNING_KEY, new GUIContent("Component & Material Warning", "Log a warning and recommendation whenever Component and Material settings are not compatible."));
 					SpineEditorUtilities.BoolPrefsField(ref skeletonDataAssetNoFileError, SKELETONDATA_ASSET_NO_FILE_ERROR_KEY, new GUIContent("SkeletonDataAsset no file Error", "Log an error when querying SkeletonData from SkeletonDataAsset with no json or binary file assigned."));
+					SpineEditorUtilities.BoolPrefsField(ref workflowMismatchDialog, WORKFLOW_MISMATCH_DIALOG_KEY, new GUIContent("Workflow Mismatch Dialog", "Show warning dialog when PMA atlas is detected but not supported with current project settings."));
 					SkeletonDataAsset.errorIfSkeletonFileNullGlobal = skeletonDataAssetNoFileError;
 				}
 
@@ -436,14 +452,14 @@ namespace Spine.Unity.Editor {
 				}
 			}
 
-			static void SwitchToStraightAlphaDefaults () {
+			public static void SwitchToStraightAlphaDefaults () {
 				AssignEditorPrefsAssetReference(ref textureSettingsReference, TEXTURE_SETTINGS_REFERENCE_KEY, DEFAULT_TEXTURE_TEMPLATE_STRAIGHT);
 				AssignEditorPrefsAssetReference(ref blendModeMaterialAdditive, BLEND_MODE_MATERIAL_ADDITIVE_KEY, DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL_STRAIGHT);
 				AssignEditorPrefsAssetReference(ref blendModeMaterialMultiply, BLEND_MODE_MATERIAL_MULTIPLY_KEY, DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL_STRAIGHT);
 				AssignEditorPrefsAssetReference(ref blendModeMaterialScreen, BLEND_MODE_MATERIAL_SCREEN_KEY, DEFAULT_BLEND_MODE_SCREEN_MATERIAL_STRAIGHT);
 			}
 
-			static void SwitchToPMADefaults () {
+			public static void SwitchToPMADefaults () {
 				AssignEditorPrefsAssetReference(ref textureSettingsReference, TEXTURE_SETTINGS_REFERENCE_KEY, DEFAULT_TEXTURE_TEMPLATE_PMA);
 				AssignEditorPrefsAssetReference(ref blendModeMaterialAdditive, BLEND_MODE_MATERIAL_ADDITIVE_KEY, DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL_PMA);
 				AssignEditorPrefsAssetReference(ref blendModeMaterialMultiply, BLEND_MODE_MATERIAL_MULTIPLY_KEY, DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL_PMA);

@@ -11,6 +11,7 @@
 
 - **Additions**
   - Added Spine Preferences `Switch Texture Workflow` functionality to quickly switch to the respective PMA or straight-alpha texture and material presets.
+  - Added a workflow mismatch dialog showing whenever problematic PMA vs. straight alpha settings are detected at a newly imported `.atlas.txt` file. Invalid settings include the atlas being PMA and project using Linear color space, and a mismatch of Auto-Import presets set to straight alpha compared to the atlas being PMA and vice versa. The dialog offers an option to automatically fix the problematic setting on the import side and links website documentation for export settings. This dialog can be disabled and re-enabled via Spine preferences.
 
 - **Breaking changes**
   - Example skeletons in Spine Examples are now using straight alpha textures and materials for better compatibility with Linear colorspace.
