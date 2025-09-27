@@ -100,7 +100,7 @@ export class TransformConstraint extends Constraint<TransformConstraint, Transfo
 							else
 								clamped = MathUtils.clamp(clamped, to.max, to.offset);
 						}
-						to.apply(skeleton, p, bone, clamped, localTarget, additive);
+						to.apply(skeleton, p, bone, clamped, localTarget, additive, from);
 					}
 				}
 			}

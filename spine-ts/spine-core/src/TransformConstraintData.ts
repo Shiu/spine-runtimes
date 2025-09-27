@@ -171,7 +171,7 @@ export abstract class ToProperty {
 	abstract mix (pose: TransformConstraintPose): number;
 
 	/** Applies the value to this property. */
-	abstract apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void;
+	abstract apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean, from?: FromProperty): void;
 }
 
 export class FromRotate extends FromProperty {
@@ -190,7 +190,7 @@ export class ToRotate extends ToProperty {
 		return pose.mixRotate;
 	}
 
-	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean, from?: FromProperty): void {
 		if (local)
 			bone.rotation += (additive ? value : value - bone.rotation) * pose.mixRotate;
 		else {
@@ -214,21 +214,89 @@ export class ToRotate extends ToProperty {
 
 export class FromX extends FromProperty {
 	value (skeleton: Skeleton, source: BonePose, local: boolean, offsets: Array<number>): number {
-		return local
-			? source.x + offsets[TransformConstraintData.X]
-			: (offsets[TransformConstraintData.X] * source.a + offsets[TransformConstraintData.Y] * source.b + source.worldX) / skeleton.scaleX;
+		if (local) {
+			// In local mode, read the source bone's X position in its parent's coordinate space
+			return source.x + offsets[TransformConstraintData.X];
+		} else {
+			return (offsets[TransformConstraintData.X] * source.a + offsets[TransformConstraintData.Y] * source.b + source.worldX) / skeleton.scaleX;
+		}
 	}
 }
 
 export class ToX extends ToProperty {
+	// Track previous source position for delta calculation
+	private prevSourceX: number | undefined = undefined;
+	// Track accumulated position to persist across frames
+	private accumulatedX: number = 0;
+	private accumulatedY: number = 0;
+	// Expose for debugging
+	public lastDelta = 0;
+	public lastValue = 0;
+
 	mix (pose: TransformConstraintPose): number {
 		return pose.mixX;
 	}
 
-	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
-		if (local)
-			bone.x += (additive ? value : value - bone.x) * pose.mixX;
-		else {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean, from?: FromProperty): void {
+		if (local) {
+			if (additive) {
+				// Get the actual source position from the constraint
+				let deltaX = 0;
+
+				// Find the constraint that owns this ToX
+				const constraint = skeleton.constraints.find(c => {
+					if (c.data && c.data.properties) {
+						for (const prop of c.data.properties) {
+							if (prop.to && prop.to.includes(this)) {
+								return true;
+							}
+						}
+					}
+					return false;
+				});
+
+				if (constraint && 'source' in constraint) {
+					const source = (constraint as any).source;
+					if (source && source.applied) {
+						const currentSourceX = source.applied.x;
+
+						// Store raw values for debugging
+						(this as any).debugCurrentX = currentSourceX;
+						(this as any).debugPrevX = this.prevSourceX;
+
+						// Calculate delta from previous frame
+						if (this.prevSourceX !== undefined) {
+							deltaX = currentSourceX - this.prevSourceX;
+						}
+						this.prevSourceX = currentSourceX;
+
+						// Store for debugging
+						this.lastDelta = deltaX;
+					}
+				}
+
+				// Store for debugging
+				this.lastValue = value;
+
+				// Apply delta along the target's CURRENT rotated X-axis
+				// This ensures we move in the direction the bone is facing RIGHT NOW
+				const rotation = (bone.rotation + bone.shearX) * MathUtils.degRad;
+				const cos = Math.cos(rotation);
+				const sin = Math.sin(rotation);
+
+				// Add delta to accumulated position
+				this.accumulatedX += deltaX * cos * pose.mixX;
+				this.accumulatedY += deltaX * sin * pose.mixX;
+
+				// Apply the accumulated offset to bone position
+				// This persists the movement across frames
+				bone.x += this.accumulatedX;
+				bone.y += this.accumulatedY;
+			} else {
+				// In non-additive + local mode, set the target's local X position
+				bone.x += (value - bone.x) * pose.mixX;
+			}
+		} else {
 			if (!additive) value -= bone.worldX / skeleton.scaleX;
 			bone.worldX += value * pose.mixX * skeleton.scaleX;
 		}
@@ -237,21 +305,85 @@ export class ToX extends ToProperty {
 
 export class FromY extends FromProperty {
 	value (skeleton: Skeleton, source: BonePose, local: boolean, offsets: Array<number>): number {
-		return local
-			? source.y + offsets[TransformConstraintData.Y]
-			: (offsets[TransformConstraintData.X] * source.c + offsets[TransformConstraintData.Y] * source.d + source.worldY) / skeleton.scaleY;
+		if (local) {
+			// In local mode, read the source bone's Y position in its parent's coordinate space
+			return source.y + offsets[TransformConstraintData.Y];
+		} else {
+			return (offsets[TransformConstraintData.X] * source.c + offsets[TransformConstraintData.Y] * source.d + source.worldY) / skeleton.scaleY;
+		}
 	}
 }
 
 export class ToY extends ToProperty {
+	// Track previous source position for delta calculation
+	private prevSourceY: number | undefined = undefined;
+	// Track accumulated position to persist across frames
+	private accumulatedX: number = 0;
+	private accumulatedY: number = 0;
+	// Expose for debugging
+	public lastDelta = 0;
+	public lastValue = 0;
+
 	mix (pose: TransformConstraintPose): number {
 		return pose.mixY;
 	}
 
-	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
-		if (local)
-			bone.y += (additive ? value : value - bone.y) * pose.mixY;
-		else {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean, from?: FromProperty): void {
+		if (local) {
+			if (additive) {
+				// Get the actual source position from the constraint
+				let deltaY = 0;
+
+				// Find the constraint that owns this ToY
+				const constraint = skeleton.constraints.find(c => {
+					if (c.data && c.data.properties) {
+						for (const prop of c.data.properties) {
+							if (prop.to && prop.to.includes(this)) {
+								return true;
+							}
+						}
+					}
+					return false;
+				});
+
+				if (constraint && 'source' in constraint) {
+					const source = (constraint as any).source;
+					if (source && source.applied) {
+						const currentSourceY = source.applied.y;
+
+						// Calculate delta from previous frame
+						if (this.prevSourceY !== undefined) {
+							deltaY = currentSourceY - this.prevSourceY;
+						}
+						this.prevSourceY = currentSourceY;
+
+						// Store for debugging
+						this.lastDelta = deltaY;
+					}
+				}
+
+				// Store for debugging
+				this.lastValue = value;
+
+				// Apply delta along the target's CURRENT rotated Y-axis
+				// This ensures we move in the direction the bone is facing RIGHT NOW
+				const rotation = (bone.rotation + 90 + bone.shearY) * MathUtils.degRad;
+				const cos = Math.cos(rotation);
+				const sin = Math.sin(rotation);
+
+				// Add delta to accumulated position
+				this.accumulatedX += deltaY * cos * pose.mixY;
+				this.accumulatedY += deltaY * sin * pose.mixY;
+
+				// Apply the accumulated offset to bone position
+				// This persists the movement across frames
+				bone.x += this.accumulatedX;
+				bone.y += this.accumulatedY;
+			} else {
+				// In non-additive + local mode, set the target's local Y position
+				bone.y += (value - bone.y) * pose.mixY;
+			}
+		} else {
 			if (!additive) value -= bone.worldY / skeleton.scaleY;
 			bone.worldY += value * pose.mixY * skeleton.scaleY;
 		}
@@ -271,7 +403,7 @@ export class ToScaleX extends ToProperty {
 		return pose.mixScaleX;
 	}
 
-	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean, from?: FromProperty): void {
 		if (local) {
 			if (additive)
 				bone.scaleX *= 1 + (value - 1) * pose.mixScaleX;
@@ -305,7 +437,7 @@ export class ToScaleY extends ToProperty {
 		return pose.mixScaleY;
 	}
 
-	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean, from?: FromProperty): void {
 		if (local) {
 			if (additive)
 				bone.scaleY *= 1 + (value - 1) * pose.mixScaleY;
@@ -339,7 +471,7 @@ export class ToShearY extends ToProperty {
 		return pose.mixShearY;
 	}
 
-	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
+	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean, from?: FromProperty): void {
 		if (local) {
 			if (!additive) value -= bone.shearY;
 			bone.shearY += value * pose.mixShearY;
