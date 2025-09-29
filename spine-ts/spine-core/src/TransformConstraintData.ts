@@ -221,16 +221,58 @@ export class FromX extends FromProperty {
 }
 
 export class ToX extends ToProperty {
+	// Track previous source position for delta calculation (like PhysicsConstraint)
+	private lastSourceX: number | undefined = undefined;
+	// Accumulated position offsets in parent space
+	private accumulatedX = 0;
+	private accumulatedY = 0;
+
 	mix (pose: TransformConstraintPose): number {
 		return pose.mixX;
 	}
 
 	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
-		if (local)
-			bone.x += (additive ? value : value - bone.x) * pose.mixX;
-		else {
+		// Handle world space
+		if (!local) {
 			if (!additive) value -= bone.worldX / skeleton.scaleX;
 			bone.worldX += value * pose.mixX * skeleton.scaleX;
+			return;
+		}
+
+		// Handle both additive and non-additive local the same way
+		// (they both track source deltas and apply them along the bone's local axis)
+
+		// First frame initialization
+		if (this.lastSourceX === undefined) {
+			this.lastSourceX = value;
+			return;
+		}
+
+		// Calculate delta
+		const deltaX = value - this.lastSourceX;
+		const mixedDelta = deltaX * pose.mixX;
+
+		// Apply delta along bone's current rotation
+		const rotation = bone.rotation * MathUtils.degRad;
+		const cos = Math.cos(rotation);
+		const sin = Math.sin(rotation);
+
+		// Accumulate the rotated offset
+		this.accumulatedX += mixedDelta * cos;
+		this.accumulatedY += mixedDelta * sin;
+
+		// Store current value for next frame
+		this.lastSourceX = value;
+
+		// Apply movement to bone
+		if (additive) {
+			// Additive: add to bone's current position
+			bone.x += this.accumulatedX;
+			bone.y += this.accumulatedY;
+		} else {
+			// Non-additive: set bone position (replaces local position)
+			bone.x = this.accumulatedX;
+			bone.y = this.accumulatedY;
 		}
 	}
 }
@@ -244,16 +286,59 @@ export class FromY extends FromProperty {
 }
 
 export class ToY extends ToProperty {
+	// Track previous source position for delta calculation (like PhysicsConstraint)
+	private lastSourceY: number | undefined = undefined;
+	// Accumulated position offsets in parent space
+	private accumulatedX = 0;
+	private accumulatedY = 0;
+
 	mix (pose: TransformConstraintPose): number {
 		return pose.mixY;
 	}
 
 	apply (skeleton: Skeleton, pose: TransformConstraintPose, bone: BonePose, value: number, local: boolean, additive: boolean): void {
-		if (local)
-			bone.y += (additive ? value : value - bone.y) * pose.mixY;
-		else {
+		// Handle world space
+		if (!local) {
 			if (!additive) value -= bone.worldY / skeleton.scaleY;
 			bone.worldY += value * pose.mixY * skeleton.scaleY;
+			return;
+		}
+
+		// Handle both additive and non-additive local the same way
+		// (they both track source deltas and apply them along the bone's local axis)
+
+		// First frame initialization
+		if (this.lastSourceY === undefined) {
+			this.lastSourceY = value;
+			return;
+		}
+
+		// Calculate delta
+		const deltaY = value - this.lastSourceY;
+		const mixedDelta = deltaY * pose.mixY;
+
+		// Apply delta along bone's current rotation
+		const rotation = bone.rotation * MathUtils.degRad;
+		const cos = Math.cos(rotation);
+		const sin = Math.sin(rotation);
+
+		// Y axis is perpendicular to X axis (rotated by 90 degrees)
+		// Accumulate the rotated offset
+		this.accumulatedX += mixedDelta * (-sin);
+		this.accumulatedY += mixedDelta * cos;
+
+		// Store current value for next frame
+		this.lastSourceY = value;
+
+		// Apply movement to bone
+		if (additive) {
+			// Additive: add to bone's current position
+			bone.x += this.accumulatedX;
+			bone.y += this.accumulatedY;
+		} else {
+			// Non-additive: set bone position (replaces local position)
+			bone.x = this.accumulatedX;
+			bone.y = this.accumulatedY;
 		}
 	}
 }
